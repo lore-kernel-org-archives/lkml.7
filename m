@@ -2,113 +2,247 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C497C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2581EC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:40:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F703223AB
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:38:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1F3921D7F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:40:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tgR7O9Kc"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GjFjSF4E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728326AbfKSPiK (ORCPT
+        id S1728199AbfKSPkf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 10:38:10 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:35509 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727505AbfKSPiJ (ORCPT
+        Tue, 19 Nov 2019 10:40:35 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:50060 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727849AbfKSPke (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 10:38:09 -0500
-Received: by mail-io1-f65.google.com with SMTP id x21so23715846ior.2;
-        Tue, 19 Nov 2019 07:38:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+aA8kllhbmf7SaJ49Rl3eadbxFpnLArVBB5k6qFkePI=;
-        b=tgR7O9KctrJr2cHitt43wLn244YdnM8UGcA97A4tnRg3Cr+V+h0xdvnoOj5dFMlwlH
-         eGY6BbfHF7EDq2cCEvIlbtvMAyrzmMrIxPRKxv5bHgqiIO/eQuEv5HZyqKJJoK34XeUk
-         RGoZRAk1koI1ij5Q3fxClec4Qy0xJaz6JIc50CIYsDA0Cu2sfRQZN0JVYSAjELI0rirT
-         CzUx/vTlgtIW0QPJmb0XMofbWK2/ncYbwedDDpowhoKEuhjZdN1vb5dtP30UY7IBrk2p
-         3wFjFzK6IqZiis2j2242TU+TYblUFupQfgOyvD8GZ66n0YSlzzG/apFDgxgbvZJK8PhD
-         pp3g==
+        Tue, 19 Nov 2019 10:40:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574178033;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=MNe4ndK8WdSlkwGJufBA82BQjblnirabjNcrpn5neeU=;
+        b=GjFjSF4EJnaVdF5U8r9aVoxRFTOJnepT8Rmb3MXKbkwThgUi0KGU5phUSAm642K9uFvsnZ
+        o8q8kjENf36omrx0ezPAvRtIzta2fRe637dVxdW7fXR2ejRb0moHsM233SgWuyeE9DMEDl
+        Zv5hiN6YcJCMSnS78unZ6neSmm1R7n8=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-278-Gf8HfWvoMDSAwufhBaz2jw-1; Tue, 19 Nov 2019 10:40:29 -0500
+Received: by mail-wr1-f71.google.com with SMTP id q12so18575244wrr.3
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 07:40:29 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+aA8kllhbmf7SaJ49Rl3eadbxFpnLArVBB5k6qFkePI=;
-        b=MMuq6dSk8w4oVUHxzY7UsJVkSAWBDrZYy2TBcRGhQkcPLPhsowRz4jY0LxhVyQ24/q
-         CPBoqPHW34ij+L7uwSXQnmjEmi3J6xleuKSD/uK+jsfUbGOQ8COvhVIBEpm/ToysBQOr
-         YeBlGLNfqX7XLGTxrkH02mJtBSTCjL1/EP2/PU/pCkwv0gBojFkde6TCsaqqbXPmY38j
-         vIpDHIkYgioDZxyurnULZLp8iGhM1KTDipTJdmtNuPAHogGFAbknta0j9NOKx0sNoybx
-         PQujzz5dy3B+tiYFO9tNkJOtEZtTL6g8ZgLkcGTmzD9+g4TTcAeGBLOSSlB7RBbFobVJ
-         Zlhw==
-X-Gm-Message-State: APjAAAVyLipIncEfvpjLp53lFM4a9s0jil9l1nKLPNtngqw3D/GUMdLx
-        Z87CZHyR6C9yHnDE2+JxvI4vx7L8pyPr+f1HK/Q=
-X-Google-Smtp-Source: APXvYqwAFFo0t0y1g8caum4zUH2fgSu3r8rkRHLGEpTBTxhzhQB12bzMfxB4EzLgHiS+gW+7Bos6JSbmeo7zNxl/F+o=
-X-Received: by 2002:a6b:7846:: with SMTP id h6mr13839903iop.33.1574177889000;
- Tue, 19 Nov 2019 07:38:09 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=dZRjNZXZ61hhKmaHtSnRk7b5EzibrobN0AxAOUBtmvI=;
+        b=X09IS/j/ZQJcIcU9ahR1xxODctf4YGlH3X2nGM4/yGPSg6FN03jlkNwiqD+BUm202u
+         AgurBgRyU+OsyzCqCik3iEjEMQ0wTiWVhupxGK3hEz/RP3bug9e9fwzawyJn3nVEOQdk
+         JT4E2SgqVECghx8xQBMP0FRtJVtSbOU87kj0ApRD0IabMz0zt2KNeFSW5PaTZpc7ZXeK
+         gbDppCsidm0RYIAHnUvdh7zLbrRGvD0f5v1q4rwqOvsuwS9ZL7Hk33ccmE/ju8Lhdz0r
+         XcTOX91j+EdN1YbqR9aV6MlHj1RIt2/fxLUxH85cdC5CpZuK4cGpuPhdBugwBgTWZ8eb
+         J/RQ==
+X-Gm-Message-State: APjAAAXIZyyKDyICzebRW98gcPH7lWjzGNHbWbgVwjt5o103u4bC/9uo
+        vruxxHBYmaW16c5/2AMbaowNrBVe5bysLU7o0kRwnV+mJ2hiZiwAg4PF1vE+ap2pTX4T51cO0Ms
+        B5GgHBTKI3jDJp2O6WrjloFeC
+X-Received: by 2002:adf:ed48:: with SMTP id u8mr7988233wro.28.1574178028398;
+        Tue, 19 Nov 2019 07:40:28 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzldw8DoEiwEyUqdk+tBwVApBnkrf0/oTRZ75PevuEveEyel5xjSPzurgJDjHaBmQNEW3Zcbw==
+X-Received: by 2002:adf:ed48:: with SMTP id u8mr7988198wro.28.1574178028152;
+        Tue, 19 Nov 2019 07:40:28 -0800 (PST)
+Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
+        by smtp.gmail.com with ESMTPSA id w7sm26878892wru.62.2019.11.19.07.40.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 19 Nov 2019 07:40:27 -0800 (PST)
+Subject: Re: [PATCH v2] efi: Only print errors about failing to get certs if
+ EFI vars are found
+To:     Javier Martinez Canillas <javierm@redhat.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Peter Jones <pjones@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jmorris@namei.org>,
+        Josh Boyer <jwboyer@fedoraproject.org>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        linux-security-module@vger.kernel.org
+References: <20191119115043.21585-1-javierm@redhat.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <bb68bacf-4982-0d86-d2cb-7799e47200f5@redhat.com>
+Date:   Tue, 19 Nov 2019 16:40:26 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-References: <20191119011823.379100-1-bjorn.andersson@linaro.org>
-In-Reply-To: <20191119011823.379100-1-bjorn.andersson@linaro.org>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Tue, 19 Nov 2019 08:37:58 -0700
-Message-ID: <CAOCk7NrvmVFu5PgQsaDJO69kpMAzWdV9DCiGrtQyQRFf6xX5Nw@mail.gmail.com>
-Subject: Re: [PATCH v2] arm64: dts: qcom: msm8998-mtp: Add alias for blsp1_uart3
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191119115043.21585-1-javierm@redhat.com>
+Content-Language: en-US
+X-MC-Unique: Gf8HfWvoMDSAwufhBaz2jw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 18, 2019 at 6:18 PM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> The msm_serial driver has a predefined set of uart ports defined, which
-> is allocated either by reading aliases or if no match is found a simple
-> counter, starting at index 0. But there's no logic in place to prevent
-> these two allocation mechanism from colliding. As a result either none
-> or all of the active msm_serial instances must be listed as aliases.
->
-> Define blsp1_uart3 as "serial1" to mitigate this problem.
->
-> Fixes: 4cffb9f2c700 ("arm64: dts: qcom: msm8998-mtp: Enable bluetooth")
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Hi,
 
-Seems good to me.
-
-Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-
+On 19-11-2019 12:50, Javier Martinez Canillas wrote:
+> If CONFIG_LOAD_UEFI_KEYS is enabled, the kernel attempts to load the cert=
+s
+> from the db, dbx and MokListRT EFI variables into the appropriate keyring=
+s.
+>=20
+> But it just assumes that the variables will be present and prints an erro=
+r
+> if the certs can't be loaded, even when is possible that the variables ma=
+y
+> not exist. For example the MokListRT variable will only be present if shi=
+m
+> is used.
+>=20
+> So only print an error message about failing to get the certs list from a=
+n
+> EFI variable if this is found. Otherwise these printed errors just pollut=
+e
+> the kernel ring buffer with confusing messages like the following:
+>=20
+> [    5.427251] Couldn't get size: 0x800000000000000e
+> [    5.427261] MODSIGN: Couldn't get UEFI db list
+> [    5.428012] Couldn't get size: 0x800000000000000e
+> [    5.428023] Couldn't get UEFI MokListRT
+>=20
+> Reported-by: Hans de Goede <hdegoede@redhat.com>
+> Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
+>=20
 > ---
->
-> Changes since v1:
-> - Rewrote commit message
->
->  arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
-> index 5f101a20a20a..e08fcb426bbf 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
-> @@ -9,6 +9,7 @@
->  / {
->         aliases {
->                 serial0 = &blsp2_uart1;
-> +               serial1 = &blsp1_uart3;
->         };
->
->         chosen {
-> --
-> 2.23.0
->
+> Hans,
+>=20
+> I'll really appreciate if you can test this patch. I just built tested it
+> because I don't have access to a machine to reproduce the issue right now=
+.
+
+Ok, I've given this a test-run just now, works as advertised for me:
+
+Tested-by: Hans de Goede <hdegoede@redhat.com>
+
+Regards,
+
+Hans
+
+
+
+> Changes in v2:
+> - Fix flaws in the logic, that caused the signature list was parsed if
+>    the return code was EFI_NOT_FOUND that pointed out Hans de Goede.
+> - Print debug messages if the variables are not found.
+>=20
+>   security/integrity/platform_certs/load_uefi.c | 40 ++++++++++++-------
+>   1 file changed, 26 insertions(+), 14 deletions(-)
+>=20
+> diff --git a/security/integrity/platform_certs/load_uefi.c b/security/int=
+egrity/platform_certs/load_uefi.c
+> index 81b19c52832..020fc7a11ef 100644
+> --- a/security/integrity/platform_certs/load_uefi.c
+> +++ b/security/integrity/platform_certs/load_uefi.c
+> @@ -39,16 +39,18 @@ static __init bool uefi_check_ignore_db(void)
+>    * Get a certificate list blob from the named EFI variable.
+>    */
+>   static __init void *get_cert_list(efi_char16_t *name, efi_guid_t *guid,
+> -=09=09=09=09  unsigned long *size)
+> +=09=09=09=09  unsigned long *size, efi_status_t *status)
+>   {
+> -=09efi_status_t status;
+>   =09unsigned long lsize =3D 4;
+>   =09unsigned long tmpdb[4];
+>   =09void *db;
+>  =20
+> -=09status =3D efi.get_variable(name, guid, NULL, &lsize, &tmpdb);
+> -=09if (status !=3D EFI_BUFFER_TOO_SMALL) {
+> -=09=09pr_err("Couldn't get size: 0x%lx\n", status);
+> +=09*status =3D efi.get_variable(name, guid, NULL, &lsize, &tmpdb);
+> +=09if (*status =3D=3D EFI_NOT_FOUND)
+> +=09=09return NULL;
+> +
+> +=09if (*status !=3D EFI_BUFFER_TOO_SMALL) {
+> +=09=09pr_err("Couldn't get size: 0x%lx\n", *status);
+>   =09=09return NULL;
+>   =09}
+>  =20
+> @@ -56,10 +58,10 @@ static __init void *get_cert_list(efi_char16_t *name,=
+ efi_guid_t *guid,
+>   =09if (!db)
+>   =09=09return NULL;
+>  =20
+> -=09status =3D efi.get_variable(name, guid, NULL, &lsize, db);
+> -=09if (status !=3D EFI_SUCCESS) {
+> +=09*status =3D efi.get_variable(name, guid, NULL, &lsize, db);
+> +=09if (*status !=3D EFI_SUCCESS) {
+>   =09=09kfree(db);
+> -=09=09pr_err("Error reading db var: 0x%lx\n", status);
+> +=09=09pr_err("Error reading db var: 0x%lx\n", *status);
+>   =09=09return NULL;
+>   =09}
+>  =20
+> @@ -144,6 +146,7 @@ static int __init load_uefi_certs(void)
+>   =09efi_guid_t mok_var =3D EFI_SHIM_LOCK_GUID;
+>   =09void *db =3D NULL, *dbx =3D NULL, *mok =3D NULL;
+>   =09unsigned long dbsize =3D 0, dbxsize =3D 0, moksize =3D 0;
+> +=09efi_status_t status;
+>   =09int rc =3D 0;
+>  =20
+>   =09if (!efi.get_variable)
+> @@ -153,9 +156,12 @@ static int __init load_uefi_certs(void)
+>   =09 * an error if we can't get them.
+>   =09 */
+>   =09if (!uefi_check_ignore_db()) {
+> -=09=09db =3D get_cert_list(L"db", &secure_var, &dbsize);
+> +=09=09db =3D get_cert_list(L"db", &secure_var, &dbsize, &status);
+>   =09=09if (!db) {
+> -=09=09=09pr_err("MODSIGN: Couldn't get UEFI db list\n");
+> +=09=09=09if (status =3D=3D EFI_NOT_FOUND)
+> +=09=09=09=09pr_debug("MODSIGN: db variable wasn't found\n");
+> +=09=09=09else
+> +=09=09=09=09pr_err("MODSIGN: Couldn't get UEFI db list\n");
+>   =09=09} else {
+>   =09=09=09rc =3D parse_efi_signature_list("UEFI:db",
+>   =09=09=09=09=09db, dbsize, get_handler_for_db);
+> @@ -166,9 +172,12 @@ static int __init load_uefi_certs(void)
+>   =09=09}
+>   =09}
+>  =20
+> -=09mok =3D get_cert_list(L"MokListRT", &mok_var, &moksize);
+> +=09mok =3D get_cert_list(L"MokListRT", &mok_var, &moksize, &status);
+>   =09if (!mok) {
+> -=09=09pr_info("Couldn't get UEFI MokListRT\n");
+> +=09=09if (status =3D=3D EFI_NOT_FOUND)
+> +=09=09=09pr_debug("MokListRT variable wasn't found\n");
+> +=09=09else
+> +=09=09=09pr_info("Couldn't get UEFI MokListRT\n");
+>   =09} else {
+>   =09=09rc =3D parse_efi_signature_list("UEFI:MokListRT",
+>   =09=09=09=09=09      mok, moksize, get_handler_for_db);
+> @@ -177,9 +186,12 @@ static int __init load_uefi_certs(void)
+>   =09=09kfree(mok);
+>   =09}
+>  =20
+> -=09dbx =3D get_cert_list(L"dbx", &secure_var, &dbxsize);
+> +=09dbx =3D get_cert_list(L"dbx", &secure_var, &dbxsize, &status);
+>   =09if (!dbx) {
+> -=09=09pr_info("Couldn't get UEFI dbx list\n");
+> +=09=09if (status =3D=3D EFI_NOT_FOUND)
+> +=09=09=09pr_debug("dbx variable wasn't found\n");
+> +=09=09else
+> +=09=09=09pr_info("Couldn't get UEFI dbx list\n");
+>   =09} else {
+>   =09=09rc =3D parse_efi_signature_list("UEFI:dbx",
+>   =09=09=09=09=09      dbx, dbxsize,
+>=20
+
