@@ -2,94 +2,75 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD37DC43141
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 13:19:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A84C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 13:20:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE96E222B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 13:19:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0A74222B5
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 13:20:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574169650;
+	bh=t4XReblODWNSE1CTYCwaKhK65whPDslrhtvW2X5LD8Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Rv09jKc3nC1UEmwMgozPUz2R9Ki2lX7uwQvczUoBiQIwF87b0gDu6CUdr7KCf/VGI
+	 QXDUPHuJxKo7rR5VgESjazbIQ14bw2vZ/R+DRP3mD0DA/kK7lvXKR3+3YPi0FbqyLM
+	 rYnzSa1pMkib3FtrqwdpQEc+qKirxAykrbPelr8g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727825AbfKSNT0 (ORCPT
+        id S1727692AbfKSNUs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 08:19:26 -0500
-Received: from relay.sw.ru ([185.231.240.75]:37432 "EHLO relay.sw.ru"
+        Tue, 19 Nov 2019 08:20:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726378AbfKSNT0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 08:19:26 -0500
-Received: from dhcp-172-16-25-5.sw.ru ([172.16.25.5] helo=i7.sw.ru)
-        by relay.sw.ru with esmtp (Exim 4.92.3)
-        (envelope-from <aryabinin@virtuozzo.com>)
-        id 1iX3PT-0007Sl-0S; Tue, 19 Nov 2019 16:19:11 +0300
-From:   Andrey Ryabinin <aryabinin@virtuozzo.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Hugh Dickins <hughd@google.com>,
-        Andrea Arcangeli <aarcange@redhat.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        stable@vger.kernel.org
-Subject: [PATCH] mm/ksm: Don't WARN if page is still mapped in remove_stable_node()
-Date:   Tue, 19 Nov 2019 16:18:50 +0300
-Message-Id: <20191119131850.5675-1-aryabinin@virtuozzo.com>
-X-Mailer: git-send-email 2.23.0
+        id S1725798AbfKSNUs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 08:20:48 -0500
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF2C3222B5;
+        Tue, 19 Nov 2019 13:20:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574169648;
+        bh=t4XReblODWNSE1CTYCwaKhK65whPDslrhtvW2X5LD8Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UOp2AlPLA0rTcaJRHCq8ceAIbKoKFyJlNmL5h4jTJEva0V1mNaB5mBWLbnoU77FGW
+         pXMz9EdTxmLhXj2UB+SAR6UA8kxykdKvxiXBIUf/gc+8VSh6FO3Up5S1F32ZvsI9nH
+         L4O9UBma0VCjVOFL7gT3NsR/NgJvHlT+UzAYv02U=
+Date:   Tue, 19 Nov 2019 08:20:46 -0500
+From:   Sasha Levin <sashal@kernel.org>
+To:     Davidlohr Bueso <dave@stgolabs.net>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        Davidlohr Bueso <dbueso@suse.de>
+Subject: Re: [PATCH] drivers/hv: Replace binary semaphore with mutex
+Message-ID: <20191119132046.GE16867@sasha-vm>
+References: <20191101200004.20318-1-dave@stgolabs.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20191101200004.20318-1-dave@stgolabs.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's possible to hit the WARN_ON_ONCE(page_mapped(page)) in
-remove_stable_node() when it races with __mmput() and squeezes
-in between ksm_exit() and exit_mmap().
+On Fri, Nov 01, 2019 at 01:00:04PM -0700, Davidlohr Bueso wrote:
+>At a slight footprint cost (24 vs 32 bytes), mutexes are more optimal
+>than semaphores; it's also a nicer interface for mutual exclusion,
+>which is why they are encouraged over binary semaphores, when possible.
+>
+>Replace the hyperv_mmio_lock, its semantics implies traditional lock
+>ownership; that is, the lock owner is the same for both lock/unlock
+>operations. Therefore it is safe to convert.
+>
+>Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
 
- WARNING: CPU: 0 PID: 3295 at mm/ksm.c:888 remove_stable_node+0x10c/0x150
+Queued up for hyperv-next, thank you.
 
- Call Trace:
-  remove_all_stable_nodes+0x12b/0x330
-  run_store+0x4ef/0x7b0
-  kernfs_fop_write+0x200/0x420
-  vfs_write+0x154/0x450
-  ksys_write+0xf9/0x1d0
-  do_syscall_64+0x99/0x510
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Remove the warning as there is nothing scary going on.
-
-Fixes: cbf86cfe04a6 ("ksm: remove old stable nodes more thoroughly")
-Signed-off-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: <stable@vger.kernel.org>
----
- mm/ksm.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
-
-diff --git a/mm/ksm.c b/mm/ksm.c
-index dbee2eb4dd05..7905934cd3ad 100644
---- a/mm/ksm.c
-+++ b/mm/ksm.c
-@@ -885,13 +885,13 @@ static int remove_stable_node(struct stable_node *stable_node)
- 		return 0;
- 	}
- 
--	if (WARN_ON_ONCE(page_mapped(page))) {
--		/*
--		 * This should not happen: but if it does, just refuse to let
--		 * merge_across_nodes be switched - there is no need to panic.
--		 */
--		err = -EBUSY;
--	} else {
-+	/*
-+	 * Page could be still mapped if this races with __mmput() running in
-+	 * between ksm_exit() and exit_mmap(). Just refuse to let
-+	 * merge_across_nodes/max_page_sharing be switched.
-+	 */
-+	err = -EBUSY;
-+	if (!page_mapped(page)) {
- 		/*
- 		 * The stable node did not yet appear stale to get_ksm_page(),
- 		 * since that allows for an unmapped ksm page to be recognized
 -- 
-2.23.0
-
+Thanks,
+Sasha
