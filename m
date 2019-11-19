@@ -2,121 +2,79 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AE70C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:37:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5159AC43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:38:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53E8C22304
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:37:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27E0D22384
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:38:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fS5ID8C8"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jw21mr9V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728140AbfKSPhi (ORCPT
+        id S1728220AbfKSPiH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 10:37:38 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:39934 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727682AbfKSPhi (ORCPT
+        Tue, 19 Nov 2019 10:38:07 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:38290 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727505AbfKSPiG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 10:37:38 -0500
-Received: by mail-lj1-f195.google.com with SMTP id p18so23856299ljc.6;
-        Tue, 19 Nov 2019 07:37:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xAyUdfmJiJi4RpgjaU0REjjASDaV/bWU7/WG+YER0uc=;
-        b=fS5ID8C8Ou3hctvXS249gt3CgzjMHu6QOznB0d4VTxqRkdLzJoQc4Juz7F0SjgYoDM
-         /rhuxUNH7ktJpyqkCV0DVsvKMeh9GTQZrD4JyHWuxdewlgEgvBlguPaE7RK9rvO5XRfH
-         sdk3uRQBula1q2w5uvVf2fXq2AdbNDg8s41w7CN3LLW2r1pAGNyDkQElIX7/b6uZrekV
-         /z8c73jF5ZfMT5LncrJBsGihL99X3+tjCMa4cgWhiz+0IOe4CibvLD4yzXC2OYkM3crB
-         jk3EoJOETFTzJMzi9pseRuqH2jeo/stYJugWSweN9pDMetK2Y8oyYs72BGOqUV2CEOLr
-         DQIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xAyUdfmJiJi4RpgjaU0REjjASDaV/bWU7/WG+YER0uc=;
-        b=J1fIAKzpwWIc4P2Cvf+SnBOlV1YRYNqjGnPGhMahpAGG9XwnMKOhFiVJd9h57dTegt
-         B2tdx22faIk2vy+oYttQu5EeC/fmusq9zcJs4RU93RdPnCV88c4kNBkT8VrbC0DEyTD3
-         2cU5NVNLrqrrzvQYXLf0VnuFO+w6VKeZebX3YzaBKQe51HiGUfenDgDqVL7+uNHnthLP
-         PVQqeXSxmAgowCqLD+0tQGqPBHNpnuE3S8IZuo4FJL3jJs5VRjIRRH+N5C/ZspPFOoYb
-         Qol49O71MXCf1k+UUucFHr4lJX/XIpyn32z9b7iRN6vPplXiG+AIffgbQRVMTz9BNRKZ
-         Qodg==
-X-Gm-Message-State: APjAAAX9TuFYj07OK3xMhbAaAR3fJugFCAesbM2Y+JnPjTTckSV53jzM
-        +73rDmO+wb6TpsILXgNtHCcBiiygUIC937Nk/0o=
-X-Google-Smtp-Source: APXvYqwM5CuCM0cMaXsnBmFFYQh73bBkZRAdGfG3BteYMFXCaRaY935y4lBJiyme/ufuVZgdkox3YAKYAYngH5QeuYI=
-X-Received: by 2002:a2e:970a:: with SMTP id r10mr4614470lji.142.1574177855313;
- Tue, 19 Nov 2019 07:37:35 -0800 (PST)
+        Tue, 19 Nov 2019 10:38:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=K+kVvT7tsBTbSnTMawe6RXRvGys013zzmPiihyV73Eg=; b=jw21mr9VbIGbwVBuUsJyltrrP
+        7qAhno3zr5CTueQza+Ko8A8Jp06MN6AZDHmgrkNhQULmZt0MAAcpX84sX4MDcFj37i23OzHgPvq+f
+        W+V5MgGFfbmAAxDEvoFUQVOegvmMaTRBJG5JvbIqgJIG4cs3FTQgeHVCk4RcX3C4VKhGL+CxLWxsN
+        16kC0ihEjNAzoPonY/vnI9q77oqsu78dVMkesg+qUttKHO9KhVZsB32z8yQIlI9phVy5+6AENU8tx
+        z0XJtzLCy+TxYHopDF/mIO51YTW3WBwmLtSxbhjUmfC+L+2dLEyWaOnHfj7hNT2AyDHPnkbZsROAm
+        EUWRIkOWg==;
+Received: from [2601:1c0:6280:3f0::5a22]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iX5Zs-0003nO-57; Tue, 19 Nov 2019 15:38:04 +0000
+Subject: Re: linux-next: Tree for Nov 19 (objtool)
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+References: <20191119194658.39af50d0@canb.auug.org.au>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <a5d9048b-2393-7a81-626f-c7aee8cf5730@infradead.org>
+Date:   Tue, 19 Nov 2019 07:38:03 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-References: <20191114194636.811109457@goodmis.org> <20191114194738.938540273@goodmis.org>
- <20191115215125.mbqv7taqnx376yed@ast-mbp.dhcp.thefacebook.com>
- <20191117171835.35af6c0e@gandalf.local.home> <CAADnVQ+OzTikM9EhrfsC7NFsVYhATW1SVHxK64w3xn9qpk81pg@mail.gmail.com>
- <20191119091304.2c775b35@gandalf.local.home>
-In-Reply-To: <20191119091304.2c775b35@gandalf.local.home>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Tue, 19 Nov 2019 07:37:23 -0800
-Message-ID: <CAADnVQJ7ymcPRCw4iWBuec-tYLXSH-62r96WNAVNwQTLA+DGsg@mail.gmail.com>
-Subject: Re: [RFC][PATCH 1/2] ftrace: Add modify_ftrace_direct()
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     bpf <bpf@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191119194658.39af50d0@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 6:13 AM Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> On Mon, 18 Nov 2019 22:04:28 -0800
-> Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
->
-> > I took your for-next without the extra patch and used it from bpf trampoline.
-> > It's looking good so far. Passed basic testing. Will add more stress tests.
-> >
-> > Do you mind doing:
-> > diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-> > index 73eb2e93593f..6ddb203ca550 100644
-> > --- a/include/linux/ftrace.h
-> > +++ b/include/linux/ftrace.h
-> > @@ -256,16 +256,16 @@ struct ftrace_direct_func
-> > *ftrace_find_direct_func(unsigned long addr);
-> >  # define ftrace_direct_func_count 0
-> >  static inline int register_ftrace_direct(unsigned long ip, unsigned long addr)
-> >  {
-> > -       return -ENODEV;
-> > +       return -ENOTSUPP;
-> >  }
-> >  static inline int unregister_ftrace_direct(unsigned long ip, unsigned
-> > long addr)
-> >  {
-> > -       return -ENODEV;
-> > +       return -ENOTSUPP;
-> >  }
-> >  static inline int modify_ftrace_direct(unsigned long ip,
-> >                                        unsigned long old_addr,
-> > unsigned long new_addr)
-> >  {
-> > -       return -ENODEV;
-> > +       return -ENOTSUPP;
-> >  }
-> >
-> > otherwise ENODEV is a valid error when ip is incorrect which is
-> > indistinguishable from ftrace not compiled in.
->
-> Sure I can add this. Want to add a Signed-off-by to it, and I'll just
-> pull it in directly? I can write up the change log.
+On 11/19/19 12:46 AM, Stephen Rothwell wrote:
+> Hi all,
+> 
+> Changes since 20191118:
+> 
 
-Whichever way is easier for you.
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Thanks!
+on x86_64:
 
-> -- Steve
+arch/x86/kernel/cpu/mce/core.o: warning: objtool: mce_timed_out()+0x23: unreachable instruction
+kernel/exit.o: warning: objtool: __x64_sys_exit_group()+0x14: unreachable instruction  [known]
+kernel/cred.o: warning: objtool: prepare_creds()+0xf0: unreachable instruction
+samples/ftrace/ftrace-direct.o: warning: objtool: .text+0x0: unreachable instruction
+samples/ftrace/ftrace-direct-too.o: warning: objtool: .text+0x0: unreachable instruction
+samples/ftrace/ftrace-direct-modify.o: warning: objtool: .text+0x0: unreachable instruction
+
+
+-- 
+~Randy
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
