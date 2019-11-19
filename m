@@ -2,111 +2,110 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE5CBC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:18:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8DB0C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6E4F22317
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:18:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="c7Kdgz48"
+	by mail.kernel.org (Postfix) with ESMTP id B008322318
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:20:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574140856;
+	bh=gagPvq14l/FjVKgsosA9x6pT3JAylAPfu5sJqog4YyQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Km96pslvP5KR23W0HxDYv+ISPpYzFJdiQ5QpFpewMAQNSnnSt/XqZlGsTqdQzrdlx
+	 YTI6+k7BdWt3+8+723AaJVVyvz95sj0aP9KPVqhV6txhLu0Dz/y2Lq3rieT/psSPVj
+	 kV5R7y1AuuOBMVCVwg0vwuZSEddgWyVx6goAB15c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727072AbfKSFSv (ORCPT
+        id S1726555AbfKSFUz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:18:51 -0500
-Received: from mail-vk1-f195.google.com ([209.85.221.195]:33095 "EHLO
-        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725280AbfKSFSv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:18:51 -0500
-Received: by mail-vk1-f195.google.com with SMTP id b64so4275884vkg.0
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 21:18:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jDmWyWEB6X6hwrCpbp9uiQYwQF5jG8Fol62ACoWdqew=;
-        b=c7Kdgz48g3DqmoLb5/0VghHmU09mTfosgKrO2YFfZPUvxt/RdRNli50PhjfWMgc4ne
-         uonk3fenlMZy18GUcL68KuWUqJPsoMMCbzpudzypbhBT6G7/5MjrqMYVVh3gDukcvMoZ
-         LbeoSYrtDWSK0Y9udIKVMAzyn/shXDgGetomc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jDmWyWEB6X6hwrCpbp9uiQYwQF5jG8Fol62ACoWdqew=;
-        b=UR3Wn7qOtUITo0OdVyzUqOAnfeaoFlMGGBYA6y1IuvBPIqTCRNjDPL9ujG9bX04O53
-         37pFOUgdxk8yrpfuChwV1uYp1WQR65eWc0HzM8UpCm/fGNEwvQORQqmHCA/ZhUCzRtad
-         Za6jGqQXRIZthW8mkfDs6JydwIQrnkfqLt8OcNiQ03VeW7VxnHLg/9bKG1x14SHotir/
-         RbA87fHE7sypBwDS8miSp+jscUcth/6kV3ZQnE65sPm2JUfsox2Mes1Cbu03BXgCIQho
-         Ie8Lnj0kxBHYOX6kikXI9ifzvleGEyeHxHJgYmfIZmRjqF4TpLCQ6/s6EZpfio6hBVYQ
-         zMuw==
-X-Gm-Message-State: APjAAAXvDavO2ZgWIQgbRGqY7A+vKk0uBrY9DAAL85OnWnTRuljyAOlr
-        bYK+r7yFHhQXLYfOFr8TpVBWJtsookfFfjs0kCmr3A==
-X-Google-Smtp-Source: APXvYqzmN805E8eN41XyzvJqz/8UfDTMFSoZBSua6kbhailEbajnHsqg9CvbSCG2iONWHTyO5oZA5JWDZTSYdRVIGRE=
-X-Received: by 2002:a1f:2556:: with SMTP id l83mr18367851vkl.77.1574140729713;
- Mon, 18 Nov 2019 21:18:49 -0800 (PST)
+        Tue, 19 Nov 2019 00:20:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35226 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725784AbfKSFUz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:20:55 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F5D322317;
+        Tue, 19 Nov 2019 05:20:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574140854;
+        bh=gagPvq14l/FjVKgsosA9x6pT3JAylAPfu5sJqog4YyQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=oLYoId29zBXbypDaSaivZ6E2D5LM48j7Y7GocCS3eUQ8aruHdEHqyAyWNOLAowLym
+         BFRUZx1DeDEGFLNoC1GxbFOkGNyowT8duqufs/DeqWQdN6zCKc8T98gWulXwvdlf4g
+         FnyHOLaZWURSStlV17X3XeAbcerW7PVzn1AB5Gm4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Finn Thain <fthain@telegraphics.com.au>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.3 01/48] scsi: core: Handle drivers which set sg_tablesize to zero
+Date:   Tue, 19 Nov 2019 06:19:21 +0100
+Message-Id: <20191119050948.105105561@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191119050946.745015350@linuxfoundation.org>
+References: <20191119050946.745015350@linuxfoundation.org>
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-References: <20191117033149.259303-1-ikjn@chromium.org> <Pine.LNX.4.44L0.1911171043060.7716-100000@netrider.rowland.org>
-In-Reply-To: <Pine.LNX.4.44L0.1911171043060.7716-100000@netrider.rowland.org>
-From:   Ikjoon Jang <ikjn@chromium.org>
-Date:   Tue, 19 Nov 2019 13:18:38 +0800
-Message-ID: <CAATdQgBPrk=obCOiMAe1zAoP1As21MuzGzn-ixU56EmSkdQr1w@mail.gmail.com>
-Subject: Re: [PATCH 0/2] usb: override hub device bInterval with device node
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Suwan Kim <suwan.kim027@gmail.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Johan Hovold <johan@kernel.org>,
-        Nicolas Boitchat <drinkcat@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Nov 17, 2019 at 11:46 PM Alan Stern <stern@rowland.harvard.edu> wrote:
->
-> On Sun, 17 Nov 2019, Ikjoon Jang wrote:
->
-> > This patchset enables hard wired hub device to use different bInterval
-> > from its descriptor when the hub has a combined device node.
-> >
-> > When we know the specific hard wired hub supports changing its polling
-> > interval, we can adjust hub's interval to reduce the time of waking up
-> > from autosuspend or connect detection of HIDs.
->
-> In fact, _all_ hubs support changing the polling interval.  The value
-> given in the USB spec is just an upper limit; any smaller value is
-> equally acceptable.
->
-> So why are you doing this only for hard-wired hubs?  Why not for all
-> hubs?
+From: Michael Schmitz <schmitzmic@gmail.com>
 
-Because we only want to apply it to a specific device instance under
-our control.
-We apply autosuspend to built-in touchpad device for power savings,
+commit 9393c8de628cf0968d81a17cc11841e42191e041 upstream.
 
-Users can attach external hub devices with same VID:PID that we don't want to
-change the behavior. Maybe disabling autosuspend for external HIDs
-can be more reasonable for that case?
+In scsi_mq_setup_tags(), cmd_size is calculated based on zero size for the
+scatter-gather list in case the low level driver uses SG_NONE in its host
+template.
 
->
-> And is 250 ms really too long to wait for remote wakeup or connect
-> detection?  What's the real motivation behind this change?
+cmd_size is passed on to the block layer for calculation of the request
+size, and we've seen NULL pointer dereference errors from the block layer
+in drivers where SG_NONE is used and a mq IO scheduler is active,
+apparently as a consequence of this (see commit 68ab2d76e4be ("scsi:
+cxlflash: Set sg_tablesize to 1 instead of SG_NONE"), and a recent patch by
+Finn Thain converting the three m68k NFR5380 drivers to avoid setting
+SG_NONE).
 
-When a user starts to move the cursor while touchpad is in autosuspend state,
-It takes more than >250ms (worst case can be >500ms) to wake up and response.
-That makes the cursor stuck for a while and warp to another location suddenly.
+Try to avoid these errors by accounting for at least one sg list entry when
+calculating cmd_size, regardless of whether the low level driver set a zero
+sg_tablesize.
 
-Thanks.
->
-> Alan Stern
->
+Tested on 030 m68k with the atari_scsi driver - setting sg_tablesize to
+SG_NONE no longer results in a crash when loading this driver.
+
+CC: Finn Thain <fthain@telegraphics.com.au>
+Link: https://lore.kernel.org/r/1572922150-4358-1-git-send-email-schmitzmic@gmail.com
+Signed-off-by: Michael Schmitz <schmitzmic@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/scsi/scsi_lib.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+--- a/drivers/scsi/scsi_lib.c
++++ b/drivers/scsi/scsi_lib.c
+@@ -1854,7 +1854,8 @@ int scsi_mq_setup_tags(struct Scsi_Host
+ {
+ 	unsigned int cmd_size, sgl_size;
+ 
+-	sgl_size = scsi_mq_inline_sgl_size(shost);
++	sgl_size = max_t(unsigned int, sizeof(struct scatterlist),
++				scsi_mq_inline_sgl_size(shost));
+ 	cmd_size = sizeof(struct scsi_cmnd) + shost->hostt->cmd_size + sgl_size;
+ 	if (scsi_host_get_prot(shost))
+ 		cmd_size += sizeof(struct scsi_data_buffer) +
+
+
