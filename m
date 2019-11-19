@@ -5,50 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 714C2C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:56:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 703FDC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:56:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38EE7218BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:56:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4929721850
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:56:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142970;
-	bh=gFH7RF9kjuycd1v3SceNDYD8T8HQ4LSITu6INg04wGw=;
+	s=default; t=1574142976;
+	bh=BpnwpGuXXtlyoebxNxuNBkJRbnnyc53jKXJmL7lQueM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jaJ8eEVFEv+C7SfzXHEc0ZoD7+JNbW7Vt01KD3jF6RdTaX2H1JJJlMB90wseq1+/t
-	 mD/9hdL80uytcaf7a/rVOcu2Zub8E3szaI5jCwnWvUrg+7uM9PhX2SrkCqjke2moyp
-	 ZMWzC4P52dDoEDpsnKaJ4oVIiLoqcSoNS+D14TFQ=
+	b=msJCn4Zoiz/pO0jIFby9e+86f6ImIcnLxdENUruo7+uVpGulTXxgVU8oZqxkUsJTy
+	 5pAkfif6Fuk3Ik/xLmsmIoLIXoOgipQHCnqP+UNjW/ba3hgsUloeVJSMgCclx4v440
+	 EFDXvPoMftWWgKYsKLAD3rYGJrnG+GfHpCQZBV/I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731746AbfKSF4I (ORCPT
+        id S1732064AbfKSFxr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:56:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52390 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:53:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732110AbfKSFyQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:54:16 -0500
+        id S1727237AbfKSFxo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:53:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 500F12084D;
-        Tue, 19 Nov 2019 05:54:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7E4C21783;
+        Tue, 19 Nov 2019 05:53:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142855;
-        bh=gFH7RF9kjuycd1v3SceNDYD8T8HQ4LSITu6INg04wGw=;
+        s=default; t=1574142823;
+        bh=BpnwpGuXXtlyoebxNxuNBkJRbnnyc53jKXJmL7lQueM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cCVGkNe7DHXTZ20TrVoz9X/eoJvLkcaV2RQ/9+tDlRsmV1APSnKTg+m24U+lSB5nr
-         48dcMPnQs0SFkj5p/BSMRIn5BEu2Vyp6m1GU/1FGvutPopEZKZts0x1gz4BNbZiE5N
-         S5RPzZwX+SWJzUV6vADHo9HO+31aVOgkIdgGRFF4=
+        b=UW0nXiSB63F0V4iJuBoZCpGvyiIlGP5k6O52KBhI6oS9oe2wZtHmfCCi8QSlfBGWq
+         UpcdUTAmzFB70dosSOzJUHbiHcHgibFHL2kaDknc008IYJOEKP8B3NkOPfTEBaCDLL
+         8HcA3EoXzs/bqtEPmzL72vIpTQtPJGKJJqwtQQwQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Schmitz <schmitzmic@gmail.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 224/239] scsi: NCR5380: Check for invalid reselection target
-Date:   Tue, 19 Nov 2019 06:20:24 +0100
-Message-Id: <20191119051339.675079350@linuxfoundation.org>
+        stable@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 210/239] ARM: dts: realview: Fix SPI controller node names
+Date:   Tue, 19 Nov 2019 06:20:10 +0100
+Message-Id: <20191119051337.959920534@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -61,39 +59,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Finn Thain <fthain@telegraphics.com.au>
+From: Rob Herring <robh@kernel.org>
 
-[ Upstream commit 7ef55f6744c45e3d7c85a3f74ada39b67ac741dd ]
+[ Upstream commit 016add12977bcc30f77d7e48fc9a3a024cb46645 ]
 
-The X3T9.2 specification (draft) says, under "6.1.4.1 RESELECTION", that "the
-initiator shall not respond to a RESELECTION phase if other than two SCSI ID
-bits are on the DATA BUS." This issue (too many bits set) has been observed in
-the wild, so add a check.
+SPI controller nodes should be named 'spi' rather than 'ssp'. Fixing the
+name enables dtc SPI bus checks.
 
-Tested-by: Michael Schmitz <schmitzmic@gmail.com>
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/NCR5380.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm/boot/dts/arm-realview-eb.dtsi    | 2 +-
+ arch/arm/boot/dts/arm-realview-pb1176.dts | 2 +-
+ arch/arm/boot/dts/arm-realview-pb11mp.dts | 2 +-
+ arch/arm/boot/dts/arm-realview-pbx.dtsi   | 2 +-
+ arch/arm/boot/dts/versatile-ab.dts        | 2 +-
+ 5 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/scsi/NCR5380.c b/drivers/scsi/NCR5380.c
-index 00397e89d652d..a290ec632248e 100644
---- a/drivers/scsi/NCR5380.c
-+++ b/drivers/scsi/NCR5380.c
-@@ -2014,6 +2014,11 @@ static void NCR5380_reselect(struct Scsi_Host *instance)
- 	NCR5380_write(MODE_REG, MR_BASE);
+diff --git a/arch/arm/boot/dts/arm-realview-eb.dtsi b/arch/arm/boot/dts/arm-realview-eb.dtsi
+index e2e9599596e25..05379b6c1c13b 100644
+--- a/arch/arm/boot/dts/arm-realview-eb.dtsi
++++ b/arch/arm/boot/dts/arm-realview-eb.dtsi
+@@ -334,7 +334,7 @@
+ 			clock-names = "uartclk", "apb_pclk";
+ 		};
  
- 	target_mask = NCR5380_read(CURRENT_SCSI_DATA_REG) & ~(hostdata->id_mask);
-+	if (!target_mask || target_mask & (target_mask - 1)) {
-+		shost_printk(KERN_WARNING, instance,
-+			     "reselect: bad target_mask 0x%02x\n", target_mask);
-+		return;
-+	}
+-		ssp: ssp@1000d000 {
++		ssp: spi@1000d000 {
+ 			compatible = "arm,pl022", "arm,primecell";
+ 			reg = <0x1000d000 0x1000>;
+ 			clocks = <&sspclk>, <&pclk>;
+diff --git a/arch/arm/boot/dts/arm-realview-pb1176.dts b/arch/arm/boot/dts/arm-realview-pb1176.dts
+index c789564f28033..c1fd5615ddfe3 100644
+--- a/arch/arm/boot/dts/arm-realview-pb1176.dts
++++ b/arch/arm/boot/dts/arm-realview-pb1176.dts
+@@ -343,7 +343,7 @@
+ 			clock-names = "apb_pclk";
+ 		};
  
- 	dsprintk(NDEBUG_RESELECTION, instance, "reselect\n");
+-		pb1176_ssp: ssp@1010b000 {
++		pb1176_ssp: spi@1010b000 {
+ 			compatible = "arm,pl022", "arm,primecell";
+ 			reg = <0x1010b000 0x1000>;
+ 			interrupt-parent = <&intc_dc1176>;
+diff --git a/arch/arm/boot/dts/arm-realview-pb11mp.dts b/arch/arm/boot/dts/arm-realview-pb11mp.dts
+index 3944765ac4b06..e306f1cceb4ec 100644
+--- a/arch/arm/boot/dts/arm-realview-pb11mp.dts
++++ b/arch/arm/boot/dts/arm-realview-pb11mp.dts
+@@ -480,7 +480,7 @@
+ 			clock-names = "uartclk", "apb_pclk";
+ 		};
  
+-		ssp@1000d000 {
++		spi@1000d000 {
+ 			compatible = "arm,pl022", "arm,primecell";
+ 			reg = <0x1000d000 0x1000>;
+ 			interrupt-parent = <&intc_pb11mp>;
+diff --git a/arch/arm/boot/dts/arm-realview-pbx.dtsi b/arch/arm/boot/dts/arm-realview-pbx.dtsi
+index aeb49c4bd773f..2bf3958b2e6b9 100644
+--- a/arch/arm/boot/dts/arm-realview-pbx.dtsi
++++ b/arch/arm/boot/dts/arm-realview-pbx.dtsi
+@@ -318,7 +318,7 @@
+ 			clock-names = "uartclk", "apb_pclk";
+ 		};
+ 
+-		ssp: ssp@1000d000 {
++		ssp: spi@1000d000 {
+ 			compatible = "arm,pl022", "arm,primecell";
+ 			reg = <0x1000d000 0x1000>;
+ 			clocks = <&sspclk>, <&pclk>;
+diff --git a/arch/arm/boot/dts/versatile-ab.dts b/arch/arm/boot/dts/versatile-ab.dts
+index 4a51612996bc2..a9000d22b2c00 100644
+--- a/arch/arm/boot/dts/versatile-ab.dts
++++ b/arch/arm/boot/dts/versatile-ab.dts
+@@ -304,7 +304,7 @@
+ 			clock-names = "apb_pclk";
+ 		};
+ 
+-		ssp@101f4000 {
++		spi@101f4000 {
+ 			compatible = "arm,pl022", "arm,primecell";
+ 			reg = <0x101f4000 0x1000>;
+ 			interrupts = <11>;
 -- 
 2.20.1
 
