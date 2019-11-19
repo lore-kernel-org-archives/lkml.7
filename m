@@ -2,172 +2,159 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B6FC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:58:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DCE9C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:58:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D92A2084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:58:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T79AY6oC"
+	by mail.kernel.org (Postfix) with ESMTP id E87A9206DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:58:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574143128;
+	bh=fyEovHonIi28L8n/cm3MK/odCyRSRZIyQ7OjuLbLtdA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=eamUPm2pC/G2aYCI4c29gkwrUdmRv5vX0K8sSXAr1NrwPIJYqXW6R1D86mNhUAQfx
+	 gL5RhCSHB+SSwcSUe7EtHnfcupcpfptrEYPN4gQ2ajyvOVKiTF1bZEDnOpcZ5AriM3
+	 4VSafc4VGPSCBKlfClEHkAgIYgCBUZy326wiuInc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731649AbfKSF6k (ORCPT
+        id S1731749AbfKSF6q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:58:40 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:42754 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731424AbfKSFtF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:49:05 -0500
-Received: by mail-pf1-f195.google.com with SMTP id s5so11577403pfh.9
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 21:49:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=7OLkh5H/ucrzGh1Q5+S7PwZCVoMIrIc0kVwMB4oywiY=;
-        b=T79AY6oCrcY9WkARAR7g/vMcApkFufxFzSkYgKFVG58CkLC1gyMOK9RpUVuHOzLN9V
-         UuUQbtcRVeh0oZbSGc/N2TZubqVgmPQbg+73q//z1IclKQSvUgmkmJTT+uTLSgst3OxE
-         BKJEMKrHvTJW6p993n/SDnzcBFpFe+aZz0UoEos+Qu+kZNlJa+hJWqX3BDbI01vGZ/F4
-         ll1047nAJQBf7Q9/pk/72wMVV3EfsekmiW1t0VKX0UFmNNdmobNqXFY0WRC9YKvMrxfy
-         JG6PL0/QGnWypkuEXvbzHZ1YJxUtdLgPM8KcxuTgWKh8bPlRDh/ulakfOvfz11v0Re/9
-         OK1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7OLkh5H/ucrzGh1Q5+S7PwZCVoMIrIc0kVwMB4oywiY=;
-        b=jp+yJBL9pJyBpLhfIxsgtnqMGE7rdEvGtUP12VIwqIG89DmEcjDaP0KqU0Mf4Cyk0C
-         tcP3NYRNKavnjFBU9ISIfAIhq1qrsIpaz5F0YObncErAaylwz8bDKvMuYgA3vVKxARwJ
-         RKGpA+3g4bdONnQGznAwiV2Yz/Su5z8GANdqgaDG6fWJEDGt94VyKJ2cGb/6w4ba+Ubw
-         KZE/FiNNb2iHIDyB52+/3pN1i3PfBPjNbMdHF607l2D62rk7e3COtOTCtLelsmNhU45G
-         6RrNtpkqMflVSGkbSCXhKXNTheP5iG17oeePD9AuHSRDDStFTIcgQiWGSnJxupz13L0k
-         ULEg==
-X-Gm-Message-State: APjAAAW31ekYOkxdAUP/fT49ltsDtwcaFfD/hmcs//tCegnrFiAvG1k7
-        QKL3z6iIc5m8cRt5akk76uu08A==
-X-Google-Smtp-Source: APXvYqzSv72HWYX9/l0aZSvtiLQMSrYlS422iAg/YV7tQl3rYW8UQlPAgnqgdjjuFBx37ipGmPSzbw==
-X-Received: by 2002:a63:4961:: with SMTP id y33mr3649995pgk.264.1574142544341;
-        Mon, 18 Nov 2019 21:49:04 -0800 (PST)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id x21sm22210789pfi.122.2019.11.18.21.49.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 21:49:03 -0800 (PST)
-Date:   Mon, 18 Nov 2019 21:49:00 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     srinivas.kandagatla@linaro.org, robh+dt@kernel.org,
-        tsoni@codeaurora.org, agross@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        rnayak@codeaurora.org
-Subject: Re: [PATCH 2/3] dt-bindings: soc: qcom: apr: Add protection domain
- bindings
-Message-ID: <20191119054900.GD18024@yoga>
-References: <20191118142728.30187-1-sibis@codeaurora.org>
- <0101016e7ee9c786-fcf80f4e-9b57-4d6b-8806-9ca408e21b55-000000@us-west-2.amazonses.com>
+        Tue, 19 Nov 2019 00:58:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45616 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731414AbfKSFtB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:49:01 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 216AA20862;
+        Tue, 19 Nov 2019 05:48:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574142540;
+        bh=fyEovHonIi28L8n/cm3MK/odCyRSRZIyQ7OjuLbLtdA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=in8DGZx7cCrl1yDixAK9lWA9kAe95AUIKFbRDvQLMcUXAUMvuJareo94QR9kht/HL
+         ZGegzzea5jdrNzttVU/bBuUZEyJjZeiGrbI3oiJqvjkvwP6pCq20A+QNdkYfv5f0/o
+         DlusjFy7qfF0YC/5N/UlAYEEKs9BKFTmJ3a7aMeA=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Alan Modra <amodra@gmail.com>,
+        Reza Arbab <arbab@linux.ibm.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 115/239] powerpc/vdso: Correct call frame information
+Date:   Tue, 19 Nov 2019 06:18:35 +0100
+Message-Id: <20191119051328.957111578@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
+References: <20191119051255.850204959@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0101016e7ee9c786-fcf80f4e-9b57-4d6b-8806-9ca408e21b55-000000@us-west-2.amazonses.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 18 Nov 06:28 PST 2019, Sibi Sankar wrote:
+From: Alan Modra <amodra@gmail.com>
 
-> Add optional "qcom,protection-domain" bindings for APR services. This
-> helps to capture the dependencies between APR services and the PD on
-> which each apr service run.
-> 
+[ Upstream commit 56d20861c027498b5a1112b4f9f05b56d906fdda ]
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Call Frame Information is used by gdb for back-traces and inserting
+breakpoints on function return for the "finish" command.  This failed
+when inside __kernel_clock_gettime.  More concerning than difficulty
+debugging is that CFI is also used by stack frame unwinding code to
+implement exceptions.  If you have an app that needs to handle
+asynchronous exceptions for some reason, and you are unlucky enough to
+get one inside the VDSO time functions, your app will crash.
 
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> ---
->  .../devicetree/bindings/soc/qcom/qcom,apr.txt | 59 +++++++++++++++++++
->  1 file changed, 59 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
-> index db501269f47b8..f87c0b2a48de4 100644
-> --- a/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
-> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
-> @@ -45,6 +45,12 @@ by the individual bindings for the specific service
->  			12 - Ultrasound stream manager.
->  			13 - Listen stream manager.
->  
-> +- qcom,protection-domain
-> +	Usage: optional
-> +	Value type: <stringlist>
-> +	Definition: Must list the protection domain service name and path
-> +		    that the particular apr service has a dependency on.
-> +
->  = EXAMPLE
->  The following example represents a QDSP based sound card on a MSM8996 device
->  which uses apr as communication between Apps and QDSP.
-> @@ -82,3 +88,56 @@ which uses apr as communication between Apps and QDSP.
->  			...
->  		};
->  	};
-> +
-> += EXAMPLE 2
-> +The following example represents a QDSP based sound card on SDM845 device.
-> +Here the apr services are dependent on "avs/audio" service running on AUDIO
-> +Protection Domain hosted on ADSP remote processor.
-> +
-> +	apr {
-> +		compatible = "qcom,apr-v2";
-> +		qcom,glink-channels = "apr_audio_svc";
-> +		qcom,apr-domain = <APR_DOMAIN_ADSP>;
-> +
-> +		q6core {
-> +			compatible = "qcom,q6core";
-> +			reg = <APR_SVC_ADSP_CORE>;
-> +			qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
-> +		};
-> +
-> +		q6afe: q6afe {
-> +			compatible = "qcom,q6afe";
-> +			reg = <APR_SVC_AFE>;
-> +			qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
-> +			q6afedai: dais {
-> +				compatible = "qcom,q6afe-dais";
-> +				#sound-dai-cells = <1>;
-> +
-> +				qi2s@22 {
-> +					reg = <22>;
-> +					qcom,sd-lines = <3>;
-> +				};
-> +			};
-> +		};
-> +
-> +		q6asm: q6asm {
-> +			compatible = "qcom,q6asm";
-> +			reg = <APR_SVC_ASM>;
-> +			qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
-> +			q6asmdai: dais {
-> +				compatible = "qcom,q6asm-dais";
-> +				#sound-dai-cells = <1>;
-> +				iommus = <&apps_smmu 0x1821 0x0>;
-> +			};
-> +		};
-> +
-> +		q6adm: q6adm {
-> +			compatible = "qcom,q6adm";
-> +			reg = <APR_SVC_ADM>;
-> +			qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
-> +			q6routing: routing {
-> +				compatible = "qcom,q6adm-routing";
-> +				#sound-dai-cells = <0>;
-> +			};
-> +		};
-> +	};
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> 
+What's wrong:  There is control flow in __kernel_clock_gettime that
+reaches label 99 without saving lr in r12.  CFI info however is
+interpreted by the unwinder without reference to control flow: It's a
+simple matter of "Execute all the CFI opcodes up to the current
+address".  That means the unwinder thinks r12 contains the return
+address at label 99.  Disabuse it of that notion by resetting CFI for
+the return address at label 99.
+
+Note that the ".cfi_restore lr" could have gone anywhere from the
+"mtlr r12" a few instructions earlier to the instruction at label 99.
+I put the CFI as late as possible, because in general that's best
+practice (and if possible grouped with other CFI in order to reduce
+the number of CFI opcodes executed when unwinding).  Using r12 as the
+return address is perfectly fine after the "mtlr r12" since r12 on
+that code path still contains the return address.
+
+__get_datapage also has a CFI error.  That function temporarily saves
+lr in r0, and reflects that fact with ".cfi_register lr,r0".  A later
+use of r0 means the CFI at that point isn't correct, as r0 no longer
+contains the return address.  Fix that too.
+
+Signed-off-by: Alan Modra <amodra@gmail.com>
+Tested-by: Reza Arbab <arbab@linux.ibm.com>
+Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/powerpc/kernel/vdso32/datapage.S     | 1 +
+ arch/powerpc/kernel/vdso32/gettimeofday.S | 1 +
+ arch/powerpc/kernel/vdso64/datapage.S     | 1 +
+ arch/powerpc/kernel/vdso64/gettimeofday.S | 1 +
+ 4 files changed, 4 insertions(+)
+
+diff --git a/arch/powerpc/kernel/vdso32/datapage.S b/arch/powerpc/kernel/vdso32/datapage.S
+index 3745113fcc652..2a7eb5452aba7 100644
+--- a/arch/powerpc/kernel/vdso32/datapage.S
++++ b/arch/powerpc/kernel/vdso32/datapage.S
+@@ -37,6 +37,7 @@ data_page_branch:
+ 	mtlr	r0
+ 	addi	r3, r3, __kernel_datapage_offset-data_page_branch
+ 	lwz	r0,0(r3)
++  .cfi_restore lr
+ 	add	r3,r0,r3
+ 	blr
+   .cfi_endproc
+diff --git a/arch/powerpc/kernel/vdso32/gettimeofday.S b/arch/powerpc/kernel/vdso32/gettimeofday.S
+index 769c2624e0a6b..1e0bc5955a400 100644
+--- a/arch/powerpc/kernel/vdso32/gettimeofday.S
++++ b/arch/powerpc/kernel/vdso32/gettimeofday.S
+@@ -139,6 +139,7 @@ V_FUNCTION_BEGIN(__kernel_clock_gettime)
+ 	 */
+ 99:
+ 	li	r0,__NR_clock_gettime
++  .cfi_restore lr
+ 	sc
+ 	blr
+   .cfi_endproc
+diff --git a/arch/powerpc/kernel/vdso64/datapage.S b/arch/powerpc/kernel/vdso64/datapage.S
+index abf17feffe404..bf96686915116 100644
+--- a/arch/powerpc/kernel/vdso64/datapage.S
++++ b/arch/powerpc/kernel/vdso64/datapage.S
+@@ -37,6 +37,7 @@ data_page_branch:
+ 	mtlr	r0
+ 	addi	r3, r3, __kernel_datapage_offset-data_page_branch
+ 	lwz	r0,0(r3)
++  .cfi_restore lr
+ 	add	r3,r0,r3
+ 	blr
+   .cfi_endproc
+diff --git a/arch/powerpc/kernel/vdso64/gettimeofday.S b/arch/powerpc/kernel/vdso64/gettimeofday.S
+index 3820213248836..09b2a49f6dd53 100644
+--- a/arch/powerpc/kernel/vdso64/gettimeofday.S
++++ b/arch/powerpc/kernel/vdso64/gettimeofday.S
+@@ -124,6 +124,7 @@ V_FUNCTION_BEGIN(__kernel_clock_gettime)
+ 	 */
+ 99:
+ 	li	r0,__NR_clock_gettime
++  .cfi_restore lr
+ 	sc
+ 	blr
+   .cfi_endproc
+-- 
+2.20.1
+
+
+
