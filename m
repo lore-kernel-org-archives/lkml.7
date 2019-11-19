@@ -2,122 +2,221 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F53C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:27:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF13AC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:28:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5574221850
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:27:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCE2420730
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:28:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NLkWeI8u"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="XlWppwGS";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="bUGAhwd9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728002AbfKSM07 (ORCPT
+        id S1728000AbfKSM2a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 07:26:59 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:36480 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726555AbfKSM05 (ORCPT
+        Tue, 19 Nov 2019 07:28:30 -0500
+Received: from a27-21.smtp-out.us-west-2.amazonses.com ([54.240.27.21]:51942
+        "EHLO a27-21.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726351AbfKSM2a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 07:26:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574166416;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=J3mOxYKpBUtrD3Eqhq7wj1DaBWOdzGNG7B02AqP8/hk=;
-        b=NLkWeI8ucX14T04b25xPQAKDIVsvWm9r1sJU41iuRVI49PqH1o5Ad4zOpTPB4kSmeM9SAX
-        IBhDlH60NDojRgnI0GooYVT/1Dspzp9W36KkyyY1yj6iDGhsLvB3VeQjhmjtPXyRo20jUg
-        NR8RdD0j920ad7nYgX41fxKb6tQKcbg=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-186--gp4uBufNUSA0e-H8apqKw-1; Tue, 19 Nov 2019 07:26:53 -0500
-Received: by mail-wr1-f72.google.com with SMTP id p4so18100002wrw.15
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 04:26:53 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=awmu6I9Y99dmJSWRPIQLmc8tQlVRK2cI0mOpA3pzvDw=;
-        b=Zy+SYI1hkaWUcjnIOr2TN+QGkGx1tsC/91RKEgbpGkN502aX1wtLm3BNuoovfT1FYZ
-         AeHnrmqWV7W7cvB6g30M/itRO6su6+1jMoGEPozcDbqFcZ5i64//blJYWlufG0Z21mAz
-         obGZxOnQwRLKFJ6sMh4HcocS2piR2ArtHK9y+DqTdTIAY2PtiplVehE6FStVxcEgBNbY
-         uvB/d7+ciWudLyoccw6PJY4bKckBJ4bRT3EHl2wgC2dA6x2eaSvEd3zzEBQTqIlGrCc1
-         1NEs86/WVM/8g6DsbXk63Sb3ZzbQO+nbw7ijvSNUMCT2A/OLTrQfXksllgRM4pWunkIg
-         jBow==
-X-Gm-Message-State: APjAAAW1c6jAYuTUrtDu1i9Re8mCzuCFj7XjuFyWyISGIDDUxDUNNgAD
-        M4RJStinFpA9Jpf3mENNG9CK0FtpTnfPTPKCEOXTyuAXUN78gF0HV2WFTouIHCnFPl5pH6hUJUR
-        hvXQ8DSkY3evnqNgROcJtNhpw
-X-Received: by 2002:a5d:4ecd:: with SMTP id s13mr24376672wrv.216.1574166412579;
-        Tue, 19 Nov 2019 04:26:52 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzB7t6Kre2ZE9oFyNHnTMEuPPAI1X0nkDnc5BMRHHjljrglZNrSttKN8ypZKLm/cv+A52kMjQ==
-X-Received: by 2002:a5d:4ecd:: with SMTP id s13mr24376651wrv.216.1574166412383;
-        Tue, 19 Nov 2019 04:26:52 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id n13sm2816854wmi.25.2019.11.19.04.26.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Nov 2019 04:26:51 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Wanpeng Li <kernellwp@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Subject: Re: [PATCH v2 1/2] KVM: VMX: FIXED+PHYSICAL mode single target IPI fastpath
-In-Reply-To: <CANRm+CzcWDvRA0+iaQZ6hd2HGRKyZpRnurghQXdagDCffKaSPg@mail.gmail.com>
-References: <1574145389-12149-1-git-send-email-wanpengli@tencent.com> <87r224gjyt.fsf@vitty.brq.redhat.com> <CANRm+CzcWDvRA0+iaQZ6hd2HGRKyZpRnurghQXdagDCffKaSPg@mail.gmail.com>
-Date:   Tue, 19 Nov 2019 13:26:51 +0100
-Message-ID: <87lfscgigk.fsf@vitty.brq.redhat.com>
+        Tue, 19 Nov 2019 07:28:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574166509;
+        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
+        bh=xoQLRZCLDsBMqnDsNRCUgvBqNo28d18ZvpB3a0moVPk=;
+        b=XlWppwGSlVgsDXhMLFWelSGcZZqwH1eZVvLmNjOYn8GSRXHgssMMZqqBKjkf/m2V
+        aRHkpoK9a7cgvptGG9xGSSpqPiyraQClf2/wTjk9zksR7iKIo45c2SCxIjXjQqg96KS
+        wZ0/DcH1fS/np7x9GAmCRRvsw0MjZftQ9NQuY6Js=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574166509;
+        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
+        bh=xoQLRZCLDsBMqnDsNRCUgvBqNo28d18ZvpB3a0moVPk=;
+        b=bUGAhwd9fxN24fAxEZsp07uihoX6f2nlakFMkFA8ly6AEk717ruvEsOSvbwS0Gsg
+        5y8bJkfQVORK2YTR//hFvkLl8/r8rPtPUcaYtJuoK68K2Awtm9wNOXL5/Dqk0HyeB7o
+        asdqALf5DQ7brSas5exF1PZvLaY0q789Ga24f17o=
 MIME-Version: 1.0
-X-MC-Unique: -gp4uBufNUSA0e-H8apqKw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 19 Nov 2019 12:28:29 +0000
+From:   sibis@codeaurora.org
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Mark Rutland <mark.rutland@arm.com>, p.zabel@pengutronix.de,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        linux-remoteproc@vger.kernel.org,
+        DTML <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        linux-remoteproc-owner@vger.kernel.org
+Subject: Re: [PATCH 13/16] arm64: dts: qcom: msm8998: Update reserved memory
+ map
+In-Reply-To: <CAOCk7NogQY3Vjo+cL5_0anVO=K1LfTqG69b8AGi9HQsTMEsCug@mail.gmail.com>
+References: <20191118214250.14002-1-sibis@codeaurora.org>
+ <0101016e807915dc-5f8701fd-5c4a-45a5-a9ee-9e4d8700a3fa-000000@us-west-2.amazonses.com>
+ <CAOCk7NogQY3Vjo+cL5_0anVO=K1LfTqG69b8AGi9HQsTMEsCug@mail.gmail.com>
+Message-ID: <0101016e83a2b64f-7d9f9170-7720-4198-adae-7f39a846c432-000000@us-west-2.amazonses.com>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
+X-SES-Outgoing: 2019.11.19-54.240.27.21
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Wanpeng Li <kernellwp@gmail.com> writes:
+Hey Jeff,
+Thanks for taking time to review
+the series.
 
-> On Tue, 19 Nov 2019 at 19:54, Vitaly Kuznetsov <vkuznets@redhat.com> wrot=
-e:
->>
->> Wanpeng Li <kernellwp@gmail.com> writes:
->>
->> > From: Wanpeng Li <wanpengli@tencent.com>
->> >
->> > +     if (lapic_in_kernel(vcpu) && apic_x2apic_mode(vcpu->arch.apic)) =
-{
->> > +             /*
->> > +              * fastpath to IPI target, FIXED+PHYSICAL which is popul=
-ar
->> > +              */
->> > +             index =3D kvm_rcx_read(vcpu);
->> > +             data =3D kvm_read_edx_eax(vcpu);
->> > +
->> > +             if (((index - APIC_BASE_MSR) << 4 =3D=3D APIC_ICR) &&
->>
->> What if index (RCX) is < APIC_BASE_MSR?
->
-> How about if (index =3D=3D (APIC_BASE_MSR + 0x300) &&
->
+On 2019-11-19 03:34, Jeffrey Hugo wrote:
+> On Mon, Nov 18, 2019 at 2:45 PM Sibi Sankar <sibis@codeaurora.org> 
+> wrote:
+>> 
+>> Update existing and add missing regions to the reserved memory map, as
+>> described in version 7.1
+>> 
+>> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+>> ---
+>>  arch/arm64/boot/dts/qcom/msm8998.dtsi | 62 
+>> ++++++++++++++++++++++++---
+>>  1 file changed, 55 insertions(+), 7 deletions(-)
+>> 
+>> diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi 
+>> b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+>> index fc7838ea9a010..707673e3cf28a 100644
+>> --- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+>> @@ -28,8 +28,13 @@
+>>                 #size-cells = <2>;
+>>                 ranges;
+>> 
+>> -               memory@85800000 {
+>> -                       reg = <0x0 0x85800000 0x0 0x800000>;
+>> +               hyp_mem: memory@85800000 {
+>> +                       reg = <0x0 0x85800000 0x0 0x600000>;
+>> +                       no-map;
+>> +               };
+>> +
+>> +               xbl_mem: memory@85e00000 {
+> 
+> Are we ever going to use this label?
 
-What about ' << 4', don't we still need it? :-) And better APIC_ICR
-instead of 0x300...
+just leaving it here for info with the
+added benefit of being deleteable
+if MSM8998 uses a different boot chain
+where xbl_mem/tz_mem remains unused as
+in the case of Cheza
 
-Personally, I'd write something like
+> 
+>> +                       reg = <0x0 0x85e00000 0x0 0x100000>;
+>>                         no-map;
+>>                 };
+>> 
+>> @@ -38,21 +43,64 @@
+>>                         no-map;
+>>                 };
+>> 
+>> -               memory@86200000 {
+>> +               tz_mem: memory@86200000 {
+> 
+> Again, are we ever going to use this?
 
-if (index > APIC_BASE_MSR && (index - APIC_BASE_MSR) =3D=3D APIC_ICR >> 4)
+ditto
 
-and let compiler optimize this, I bet it's going to be equally good.
+> 
+>>                         reg = <0x0 0x86200000 0x0 0x2d00000>;
+>>                         no-map;
+>>                 };
+>> 
+>> -               rmtfs {
+>> +               rmtfs_mem: memory@88f00000 {
+>>                         compatible = "qcom,rmtfs-mem";
+>> -
+>> -                       size = <0x0 0x200000>;
+>> -                       alloc-ranges = <0x0 0xa0000000 0x0 0x2000000>;
+>> +                       reg = <0x0 0x88f00000 0x0 0x200000>;
+> 
+> This seems to overlap with a defined region in the memory map.
+> 0x9fa00000 seems to be a better address.
 
---=20
-Vitaly
+just following the what we did
+for SDM845 SoC 0x88f00000 should
+be safe to use.
 
+> 
+>>                         no-map;
+>> 
+>>                         qcom,client-id = <1>;
+>>                         qcom,vmid = <15>;
+>>                 };
+>> +
+>> +               spss_mem: memory@8ab00000 {
+>> +                       reg = <0x0 0x8ab00000 0x0 0x700000>;
+>> +                       no-map;
+>> +               };
+>> +
+>> +               adsp_mem: memory@8b200000 {
+>> +                       reg = <0x0 0x8b200000 0x0 0x1a00000>;
+>> +                       no-map;
+>> +               };
+>> +
+>> +               mpss_mem: memory@8cc00000 {
+>> +                       reg = <0x0 0x8cc00000 0x0 0x7000000>;
+>> +                       no-map;
+>> +               };
+>> +
+>> +               venus_mem: memory@93c00000 {
+>> +                       reg = <0x0 0x93c00000 0x0 0x500000>;
+>> +                       no-map;
+>> +               };
+>> +
+>> +               mba_mem: memory@94100000 {
+>> +                       reg = <0x0 0x94100000 0x0 0x200000>;
+>> +                       no-map;
+>> +               };
+>> +
+>> +               slpi_mem: memory@94300000 {
+>> +                       reg = <0x0 0x94300000 0x0 0xf00000>;
+>> +                       no-map;
+>> +               };
+>> +
+>> +               ipa_fw_mem: memory@95200000 {
+>> +                       reg = <0x0 0x95200000 0x0 0x10000>;
+>> +                       no-map;
+>> +               };
+>> +
+>> +               ipa_gsi_mem: memory@95210000 {
+>> +                       reg = <0x0 0x95210000 0x0 0x5000>;
+>> +                       no-map;
+>> +               };
+>> +
+>> +               gpu_mem: memory@95215000 {
+>> +                       reg = <0x0 0x95215000 0x0 0x1000>;
+> 
+> This is the wrong size for the zap region.
+
+double checked the memory maps,
+gpu mem size is mentioned as 4kb
+is that not the case?
+
+
+> 
+>> +                       no-map;
+>> +               };
+>>         };
+>> 
+>>         clocks {
+>> --
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
+>> Forum,
+>> a Linux Foundation Collaborative Project
+>> 
