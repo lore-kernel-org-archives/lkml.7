@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE5FBC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:49:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB9DC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:49:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 837E521783
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:49:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9F5320721
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:49:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142564;
-	bh=lgzmDY7hvgwZlBz91lc4Dp9NshUnGaue5baV8VcMsmk=;
+	s=default; t=1574142562;
+	bh=ZeDtjHcS4F7h4sPEOoNT2gxFQHsLvg4xtMYXjgeG0y0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hf8dh1CXOSq3D5lPK9XwMsfd6li0RUuLZVWdPmfkNz315AEo9gHu41IKCSioqsmPx
-	 S82RLGQt8kx2TcCQLt4gGKrhHkyWA57IrZN+qhar8bdSaPwJzgInCLIPDOiLArwJv8
-	 L9aqb4n3/8Og5VHCndKWvjciPpPBm0IO9n5fVU5w=
+	b=ylYlH7UJfZ29vT80IXp5ZFSFA0ZDdef81HvEerpXeECs3ug40Jl7AThonNxcovk2O
+	 XsPCClghMEY4TQgrhg8q8sFXVojb3R/4XrbajLhF2cl86p09+q6KspMvxLuq79xotj
+	 l1QAdjAg7yeCxNJChRBHj09zpzQId4fSikOqOckE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730457AbfKSFtX (ORCPT
+        id S1731475AbfKSFtU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:49:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46028 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:49:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731470AbfKSFtT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:49:19 -0500
+        id S1731467AbfKSFtQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:49:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06CD621783;
-        Tue, 19 Nov 2019 05:49:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D92B208C3;
+        Tue, 19 Nov 2019 05:49:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142558;
-        bh=lgzmDY7hvgwZlBz91lc4Dp9NshUnGaue5baV8VcMsmk=;
+        s=default; t=1574142555;
+        bh=ZeDtjHcS4F7h4sPEOoNT2gxFQHsLvg4xtMYXjgeG0y0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GJa0n4CqYQ1gXRx6MyRVsAFw6/WDMCtH1IUOOyJb12qdw5KrdRLI+xasrbDOCSI6w
-         YWLzOh6uyBijmSng+5K/Rs96UpUCkMWD/xG4WfYB0ipkeF32cisSNc/7qhwEY39veJ
-         u3156/4CZ9TYG/EJpyfq92apcmZvciBRfOJkeMZs=
+        b=K9mduQ2AIwCjEa3Ri7A7LPmKrsoVgbRZk2wpkXCj4zHJGxoajBgVHaBz9FJZ2mrKQ
+         zfjdShQKrUjNbg36yFD956QrvsrDg2oteYsg6TpNzX9PeDS9D5wabwQCGjFXupNzvc
+         SRGGhR5BJlyowA/wHI5LQ9XIxnjatQhklvHvunjE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Silsby <dansilsby@gmail.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Mathieu Malaterre <malat@debian.org>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 085/239] dmaengine: dma-jz4780: Further residue status fix
-Date:   Tue, 19 Nov 2019 06:18:05 +0100
-Message-Id: <20191119051317.783541817@linuxfoundation.org>
+        stable@vger.kernel.org, Carlo Caione <carlo@caione.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        linux-amlogic@lists.infradead.org, Rob Herring <robh@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 120/239] arm64: dts: meson: Fix erroneous SPI bus warnings
+Date:   Tue, 19 Nov 2019 06:18:40 +0100
+Message-Id: <20191119051329.617803561@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -61,44 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Silsby <dansilsby@gmail.com>
+From: Rob Herring <robh@kernel.org>
 
-[ Upstream commit 83ef4fb7556b6a673f755da670cbacab7e2c7f1b ]
+[ Upstream commit 68ecb5c1920c5b98b1e717fd2349fba2ee5d4031 ]
 
-Func jz4780_dma_desc_residue() expects the index to the next hw
-descriptor as its last parameter. Caller func jz4780_dma_tx_status(),
-however, applied modulus before passing it. When the current hw
-descriptor was last in the list, the index passed became zero.
+dtc has new checks for SPI buses. The meson dts files have a node named
+spi' which causes false positive warnings. As the node is a pinctrl child
+node, change the node name to be 'spi-pins' to fix the warnings.
 
-The resulting excess of reported residue especially caused problems
-with cyclic DMA transfer clients, i.e. ALSA AIC audio output, which
-rely on this for determining current DMA location within buffer.
+arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dtb: Warning (spi_bus_bridge): /soc/periphs@c8834000/pinctrl@4b0/spi: incorrect #address-cells for SPI bus
 
-Combined with the recent and related residue-reporting fixes, spurious
-ALSA audio underruns on jz4770 hardware are now fixed.
-
-Signed-off-by: Daniel Silsby <dansilsby@gmail.com>
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Tested-by: Mathieu Malaterre <malat@debian.org>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Cc: Carlo Caione <carlo@caione.org>
+Cc: Kevin Hilman <khilman@baylibre.com>
+Cc: linux-amlogic@lists.infradead.org
+Signed-off-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/dma-jz4780.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 2 +-
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
-index 803cfb4523b08..aca2d6fd92d56 100644
---- a/drivers/dma/dma-jz4780.c
-+++ b/drivers/dma/dma-jz4780.c
-@@ -580,7 +580,7 @@ static enum dma_status jz4780_dma_tx_status(struct dma_chan *chan,
- 					to_jz4780_dma_desc(vdesc), 0);
- 	} else if (cookie == jzchan->desc->vdesc.tx.cookie) {
- 		txstate->residue = jz4780_dma_desc_residue(jzchan, jzchan->desc,
--			  (jzchan->curr_hwdesc + 1) % jzchan->desc->count);
-+					jzchan->curr_hwdesc + 1);
- 	} else
- 		txstate->residue = 0;
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+index af834cdbba791..250b5c11c0e25 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+@@ -413,7 +413,7 @@
+ 			};
+ 		};
  
+-		spi_pins: spi {
++		spi_pins: spi-pins {
+ 			mux {
+ 				groups = "spi_miso",
+ 					"spi_mosi",
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+index fb8d76a17bc5d..3c30579449608 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+@@ -310,7 +310,7 @@
+ 			};
+ 		};
+ 
+-		spi_pins: spi {
++		spi_pins: spi-pins {
+ 			mux {
+ 				groups = "spi_miso",
+ 					"spi_mosi",
 -- 
 2.20.1
 
