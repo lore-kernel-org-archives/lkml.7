@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2686C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 11:34:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34C82C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 11:34:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84B6F22310
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 11:34:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A1802230F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 11:34:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574163256;
-	bh=VRiVTY6n2yC4nsNuuX0yZJoGgVecYpN9xZjz+/JQW+E=;
+	s=default; t=1574163262;
+	bh=sdLUW/3RYP2Ne8eeKGiOg2q24i/rbWA++p3JrRvxOxE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R+i7AkVApTGDe5XreoPKdexaaK25P0Sj+fvr7S6oJfoPTWaxQfDkqQ2Suf7EcShr0
-	 lE+C/kP7hwUuX6RYgrHcOcaI8pTzmFBKXUKusXSwbjFAgA74zG3mjqOOBgP+cHC/gA
-	 UHpNlP/PGD47angLvaLKjjF3y11l8Hriw2wlahng=
+	b=nAWIKDPf+Zqj8eKt8KnEf7aOzi0O6tI2CSSNZ8NGeGdd9gYbchPdrpd0xt0PYbap6
+	 zAp1n7ax/twILyKHyiB3HSzlswmF/ZxTnvzZqMqk8G3P7YffRAqMp0Yu7Z7oYFU6Az
+	 424cAHdTYSRbBRqEMDg1mwW4pEBQG/AMtgv2ADGs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728135AbfKSLeO (ORCPT
+        id S1728154AbfKSLeU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 06:34:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48236 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 06:34:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48342 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728030AbfKSLeL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 06:34:11 -0500
+        id S1728030AbfKSLeP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 06:34:15 -0500
 Received: from quaco.ghostprotocols.net (179.176.11.138.dynamic.adsl.gvt.net.br [179.176.11.138])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7044822302;
-        Tue, 19 Nov 2019 11:34:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0F1320679;
+        Tue, 19 Nov 2019 11:34:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574163250;
-        bh=VRiVTY6n2yC4nsNuuX0yZJoGgVecYpN9xZjz+/JQW+E=;
+        s=default; t=1574163254;
+        bh=sdLUW/3RYP2Ne8eeKGiOg2q24i/rbWA++p3JrRvxOxE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NS6bMhTNEU4nA4UNRL04ZZSqzRKmrbx4/aa8bcaKJjaDIFjwl6Mgkwxkva8Mo6MOG
-         Eggxn6rzFue8lFPD95ml7SvDioAyJanNGYTi8tCY8vjgpKdHNKZFV9t+YPm6b+pCZ8
-         WWge/blQBbtW0cRs7LRK+IGcRlc+JKmgzPdagcx8=
+        b=mrKSI3AFLqd0w0W8R4evDtcEA2KHR+xCS7MkIfZ4sQQXH2L+JqLnCiKxQQyeDAtWo
+         xbNN2SQcjDJovEnzJaC9qOjpATt8BeRgas43NkY314tJza32+PNvtE9k9n9d+N3j5Z
+         1f0tfmGtfI0QfcyaUwFq5X6EuRUEDo6z5a1UCq08=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -50,9 +50,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         Tom Zanussi <tom.zanussi@linux.intel.com>
-Subject: [PATCH 18/25] perf probe: Show correct statement line number by perf probe -l
-Date:   Tue, 19 Nov 2019 08:32:38 -0300
-Message-Id: <20191119113245.19593-19-acme@kernel.org>
+Subject: [PATCH 19/25] perf probe: Verify given line is a representive line
+Date:   Tue, 19 Nov 2019 08:32:39 -0300
+Message-Id: <20191119113245.19593-20-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191119113245.19593-1-acme@kernel.org>
 References: <20191119113245.19593-1-acme@kernel.org>
@@ -65,139 +65,102 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Masami Hiramatsu <mhiramat@kernel.org>
 
-The dwarf_getsrc_die() can return the line which is not a statement nor
-the least line number among the lines which shares same address.
+Verify user given probe line is a representive line (which doesn't share
+the address with other lines or the line is the least line among the
+lines which shares same address), and if not, it shows what is the
+representive line.
 
-This can lead perf probe --list shows incorrect line number for probed
-address.
+Without this fix, user can put a probe on the lines which is not a a
+representive line. But since this is not a representive line, perf probe
+-l shows a representive line number instead of user given line number.
+e.g. (put kernel_read:3, but listed as kernel_read:2)
 
-To fix this, this introduces cu_getsrc_die() which returns only a
-statement line and which is the least line number (we call it the
-representive line for an address), and use it in cu_find_lineinfo().
-
-Also, if the given address is the entry address of a real function,
-cu_find_lineinfo() returns the function declared line number instead of
-the start line number of the function body.
-
-For example, without this change perf probe -l shows incorrect line as
-below.
-
-  # perf probe -a kernel_read:2
+  # perf probe -a kernel_read:3
   Added new event:
-    probe:kernel_read    (on kernel_read:2)
+    probe:kernel_read    (on kernel_read:3)
 
   You can now use it in all perf tools, such as:
 
   	perf record -e probe:kernel_read -aR sleep 1
 
   # perf probe -l
-    probe:kernel_read    (on kernel_read:1@linux-5.0.0/fs/read_write.c)
-
-With this fix, it shows correct line number as below;
-
-  # perf probe -l
     probe:kernel_read    (on kernel_read:2@linux-5.0.0/fs/read_write.c)
 
-Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+With this fix, perf probe doesn't allow user to put a probe on a
+representive line, and tell what is the representive line.
+
+  # perf probe -a kernel_read:3
+  This line is sharing the addrees with other lines.
+  Please try to probe at kernel_read:2 instead.
+    Error: Failed to add events.
+
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Cc: Tom Zanussi <tom.zanussi@linux.intel.com>
-Link: http://lore.kernel.org/lkml/157406471067.24476.17463149618465494448.stgit@devnote2
+Link: http://lore.kernel.org/lkml/157406472071.24476.14915451439785001021.stgit@devnote2
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/dwarf-aux.c | 62 ++++++++++++++++++++++++++++++++++---
- 1 file changed, 58 insertions(+), 4 deletions(-)
+ tools/perf/util/probe-finder.c | 36 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
-diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-index 5544bfbd0f6c..aa898014ad12 100644
---- a/tools/perf/util/dwarf-aux.c
-+++ b/tools/perf/util/dwarf-aux.c
-@@ -59,6 +59,51 @@ const char *cu_get_comp_dir(Dwarf_Die *cu_die)
- 	return dwarf_formstring(&attr);
+diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
+index 9ecea45da4ca..ef1b320cedf8 100644
+--- a/tools/perf/util/probe-finder.c
++++ b/tools/perf/util/probe-finder.c
+@@ -776,6 +776,39 @@ static Dwarf_Die *find_best_scope(struct probe_finder *pf, Dwarf_Die *die_mem)
+ 	return fsp.found ? die_mem : NULL;
  }
  
-+/* Unlike dwarf_getsrc_die(), cu_getsrc_die() only returns statement line */
-+static Dwarf_Line *cu_getsrc_die(Dwarf_Die *cu_die, Dwarf_Addr addr)
++static int verify_representive_line(struct probe_finder *pf, const char *fname,
++				int lineno, Dwarf_Addr addr)
 +{
-+	Dwarf_Addr laddr;
-+	Dwarf_Lines *lines;
-+	Dwarf_Line *line;
-+	size_t nlines, l, u, n;
-+	bool flag;
++	const char *__fname, *__func = NULL;
++	Dwarf_Die die_mem;
++	int __lineno;
 +
-+	if (dwarf_getsrclines(cu_die, &lines, &nlines) != 0 ||
-+	    nlines == 0)
-+		return NULL;
++	/* Verify line number and address by reverse search */
++	if (cu_find_lineinfo(&pf->cu_die, addr, &__fname, &__lineno) < 0)
++		return 0;
 +
-+	/* Lines are sorted by address, use binary search */
-+	l = 0; u = nlines - 1;
-+	while (l < u) {
-+		n = u - (u - l) / 2;
-+		line = dwarf_onesrcline(lines, n);
-+		if (!line || dwarf_lineaddr(line, &laddr) != 0)
-+			return NULL;
-+		if (addr < laddr)
-+			u = n - 1;
-+		else
-+			l = n;
++	pr_debug2("Reversed line: %s:%d\n", __fname, __lineno);
++	if (strcmp(fname, __fname) || lineno == __lineno)
++		return 0;
++
++	pr_warning("This line is sharing the addrees with other lines.\n");
++
++	if (pf->pev->point.function) {
++		/* Find best match function name and lines */
++		pf->addr = addr;
++		if (find_best_scope(pf, &die_mem)
++		    && die_match_name(&die_mem, pf->pev->point.function)
++		    && dwarf_decl_line(&die_mem, &lineno) == 0) {
++			__func = dwarf_diename(&die_mem);
++			__lineno -= lineno;
++		}
 +	}
-+	/* Going backward to find the lowest line */
-+	do {
-+		line = dwarf_onesrcline(lines, --l);
-+		if (!line || dwarf_lineaddr(line, &laddr) != 0)
-+			return NULL;
-+	} while (laddr == addr);
-+	l++;
-+	/* Going foward to find the statement line */
-+	do {
-+		line = dwarf_onesrcline(lines, l++);
-+		if (!line || dwarf_lineaddr(line, &laddr) != 0 ||
-+		    dwarf_linebeginstatement(line, &flag) != 0)
-+			return NULL;
-+		if (laddr > addr)
-+			return NULL;
-+	} while (!flag);
++	pr_warning("Please try to probe at %s:%d instead.\n",
++		   __func ? : __fname, __lineno);
 +
-+	return line;
++	return -ENOENT;
 +}
 +
- /**
-  * cu_find_lineinfo - Get a line number and file name for given address
-  * @cu_die: a CU DIE
-@@ -72,17 +117,26 @@ int cu_find_lineinfo(Dwarf_Die *cu_die, unsigned long addr,
- 		    const char **fname, int *lineno)
+ static int probe_point_line_walker(const char *fname, int lineno,
+ 				   Dwarf_Addr addr, void *data)
  {
- 	Dwarf_Line *line;
--	Dwarf_Addr laddr;
-+	Dwarf_Die die_mem;
-+	Dwarf_Addr faddr;
+@@ -786,6 +819,9 @@ static int probe_point_line_walker(const char *fname, int lineno,
+ 	if (lineno != pf->lno || strtailcmp(fname, pf->fname) != 0)
+ 		return 0;
  
--	line = dwarf_getsrc_die(cu_die, (Dwarf_Addr)addr);
--	if (line && dwarf_lineaddr(line, &laddr) == 0 &&
--	    addr == (unsigned long)laddr && dwarf_lineno(line, lineno) == 0) {
-+	if (die_find_realfunc(cu_die, (Dwarf_Addr)addr, &die_mem)
-+	    && die_entrypc(&die_mem, &faddr) == 0 &&
-+	    faddr == addr) {
-+		*fname = dwarf_decl_file(&die_mem);
-+		dwarf_decl_line(&die_mem, lineno);
-+		goto out;
-+	}
++	if (verify_representive_line(pf, fname, lineno, addr))
++		return -ENOENT;
 +
-+	line = cu_getsrc_die(cu_die, (Dwarf_Addr)addr);
-+	if (line && dwarf_lineno(line, lineno) == 0) {
- 		*fname = dwarf_linesrc(line, NULL, NULL);
- 		if (!*fname)
- 			/* line number is useless without filename */
- 			*lineno = 0;
- 	}
- 
-+out:
- 	return *lineno ?: -ENOENT;
- }
- 
+ 	pf->addr = addr;
+ 	sc_die = find_best_scope(pf, &die_mem);
+ 	if (!sc_die) {
 -- 
 2.21.0
 
