@@ -2,358 +2,103 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB19BC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 22:27:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01066C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 22:30:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DE4122449
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 22:27:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aVwDHGhV"
+	by mail.kernel.org (Postfix) with ESMTP id C699D22449
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 22:30:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574202601;
+	bh=uof2dJFEEcUQ1D6TFhVx7qJFmPUWdTGkUmc5EasLIHs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=IXm8ziAnE4W7WJvKKYTw6nuKTjy/BT/OQ3jYqptpWsLC03XpNg/GvWLcoOwK/t8lA
+	 VeHRPpUA4uQs5aaErbjrCieZq8nhW7QM1osdtX4YOQ+26QjdlrqNHHNZyYoK621FbU
+	 OZSFy4gqp5yzQZVEbNlgtn2nz0j+IThD7S69ix6w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727500AbfKSW1C (ORCPT
+        id S1727212AbfKSWaA convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 17:27:02 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:26100 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726196AbfKSW1C (ORCPT
+        Tue, 19 Nov 2019 17:30:00 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:41727 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726196AbfKSWaA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 17:27:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574202420;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=l9+2Of/JdwkMJ/5DVFqN56BMJnwie49nbvR6omMsAHk=;
-        b=aVwDHGhVcg6lavYUsVZSKxd2C4Iotp4OU/u6mdjK/b2yp0u2oGXe5/4ENrjt/1LtaRY8Wi
-        5MqNvX1BWE6r+JQDP/i4Os2LCg3XGK1booI9h8GYxoHQlO0TZPfNxhVOy+kROBCjXuX5ZM
-        1/5abJQYw2DVe2Yrf6CwGxkhE21CFTo=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-267-Uir3K_pnMISxyNv9XqLj3g-1; Tue, 19 Nov 2019 17:26:57 -0500
-Received: by mail-qt1-f200.google.com with SMTP id s8so15665625qtq.17
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 14:26:57 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0JJ9qTkIZ5pbEqHxQeFx7D/UDQ3GJJHCp8GOIGv7IY0=;
-        b=h3rfBRgzSyguERtAZmhyPZ4RAtNgoQKd/t+12sHQBnJIuk1QTyBuilVyKs1DDbDDRQ
-         4kMnitINbDh6xrYQdeurnNxYzcF0PGb1zHYdjggnxYN10TD4WbtmiTyIsfYA/5+lVYvO
-         Of6/Jp0XndnzdDr3OSZfYOIrf+pjAF0F2sugIBBtFY6+i4q5LbNOfzvfdZsXx27lGHWn
-         4pZtiJu5N38iPEbuJSMtC191btkpA/xaDETc7EYVGleUfNCqP+eJLrQwgQ7Fsdb7/adJ
-         tPf5ak02nmhvuJnQhqqd1euFf73Svyr80BtfJqeiEnrg8/GTTT/WLnzLgup7lq2MNepw
-         Z/4w==
-X-Gm-Message-State: APjAAAW+pNt/efYoPCgyB5xQU/ZtcWJfYop/ogVbEjU1yfhyiRZR1q12
-        7eahkqkpSAduRP+IDNBxUQ9H2bzmCCdOUzfikX7KY5aiouaoO0/yknVY0TfC0FyIEn6xGmi2TOM
-        2MzIlb7sgqEaRYYOjCyEBoLJSaQbzLlBiEp7Ma3V2
-X-Received: by 2002:ad4:57aa:: with SMTP id g10mr33792328qvx.164.1574202416559;
-        Tue, 19 Nov 2019 14:26:56 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxjkmduJajkhDyL8hf02lCTu0z/7c6ej7rn+GB+Bsw0kebnFXtswdrtZS2lguoJuTWz7/XJSH3kak+1V3EIa9I=
-X-Received: by 2002:ad4:57aa:: with SMTP id g10mr33792310qvx.164.1574202416211;
- Tue, 19 Nov 2019 14:26:56 -0800 (PST)
+        Tue, 19 Nov 2019 17:30:00 -0500
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
+        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
+        (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iXC0T-0002Ng-JU; Tue, 19 Nov 2019 23:29:57 +0100
+Date:   Tue, 19 Nov 2019 22:29:56 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Andreas =?UTF-8?Q?F=C3=A4rber?= <afaerber@suse.de>
+Cc:     linux-realtek-soc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Aleix Roca Nonell <kernelrocks@gmail.com>,
+        James Tai <james.tai@realtek.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH v4 2/8] irqchip: Add Realtek RTD1295 mux driver
+Message-ID: <20191119222956.23665e5d@why>
+In-Reply-To: <e98364c5-a859-7981-8ccf-f8e5b5069379@suse.de>
+References: <20191119021917.15917-1-afaerber@suse.de>
+        <20191119021917.15917-3-afaerber@suse.de>
+        <a34e00cac16899b53d0b6445f0e81f4c@www.loen.fr>
+        <e98364c5-a859-7981-8ccf-f8e5b5069379@suse.de>
+Organization: Approximate
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20191017121901.13699-1-kherbst@redhat.com> <20191119214955.GA223696@google.com>
-In-Reply-To: <20191119214955.GA223696@google.com>
-From:   Karol Herbst <kherbst@redhat.com>
-Date:   Tue, 19 Nov 2019 23:26:45 +0100
-Message-ID: <CACO55tu+8VeyMw1Lb6QvNspaJm9LDgoRbooVhr0s3v9uBt=feg@mail.gmail.com>
-Subject: Re: [PATCH v4] pci: prevent putting nvidia GPUs into lower device
- states on certain intel bridges
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Lyude Paul <lyude@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Mika Westerberg <mika.westerberg@intel.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        Dave Airlie <airlied@gmail.com>
-X-MC-Unique: Uir3K_pnMISxyNv9XqLj3g-1
-X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8BIT
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: afaerber@suse.de, linux-realtek-soc@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernelrocks@gmail.com, james.tai@realtek.com, tglx@linutronix.de, jason@lakedaemon.net
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 10:50 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> [+cc Dave]
->
-> On Thu, Oct 17, 2019 at 02:19:01PM +0200, Karol Herbst wrote:
-> > Fixes state transitions of Nvidia Pascal GPUs from D3cold into higher d=
-evice
-> > states.
-> >
-> > v2: convert to pci_dev quirk
-> >     put a proper technical explanation of the issue as a in-code commen=
-t
-> > v3: disable it only for certain combinations of intel and nvidia hardwa=
-re
-> > v4: simplify quirk by setting flag on the GPU itself
->
-> I have zero confidence that we understand the real problem, but we do
-> need to do something with this.  I'll merge it for v5.5 if we get the
-> minor procedural stuff below straightened out.
->
+On Tue, 19 Nov 2019 21:56:48 +0100
+Andreas Färber <afaerber@suse.de> wrote:
 
-Thanks, and I agree with your statement, but at this point I think
-only Intel can help out digging deeper as I see no way to debug this
-further.
+> Am 19.11.19 um 13:01 schrieb Marc Zyngier:
+> > On 2019-11-19 02:19, Andreas Färber wrote:  
+> >> +static void rtd1195_mux_enable_irq(struct irq_data *data)
+> >> +{
+> >> +    struct rtd1195_irq_mux_data *mux_data =
+> >> irq_data_get_irq_chip_data(data);
+> >> +    unsigned long flags;
+> >> +    u32 mask;
+> >> +
+> >> +    mask = mux_data->info->isr_to_int_en_mask[data->hwirq];
+> >> +    if (!mask)
+> >> +        return;  
+> > 
+> > How can this happen? You've mapped the interrupt, so it exists.
+> > I can't see how you can decide to fail such enable.  
+> 
+> The [UMSK_]ISR bits and the SCPU_INT_EN bits are not (all) the same.
+> 
+> My ..._isr_to_scpu_int_en[] arrays have 32 entries for O(1) lookup, but
+> are sparsely populated. So there are circumstances such as WDOG_NMI as
+> well as reserved bits that we cannot enable.
 
-> > Signed-off-by: Karol Herbst <kherbst@redhat.com>
-> > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > Cc: Lyude Paul <lyude@redhat.com>
-> > Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
-> > Cc: Mika Westerberg <mika.westerberg@intel.com>
-> > Cc: linux-pci@vger.kernel.org
-> > Cc: linux-pm@vger.kernel.org
-> > Cc: dri-devel@lists.freedesktop.org
-> > Cc: nouveau@lists.freedesktop.org
-> > ---
-> >  drivers/pci/pci.c    |  7 ++++++
-> >  drivers/pci/quirks.c | 53 ++++++++++++++++++++++++++++++++++++++++++++
-> >  include/linux/pci.h  |  1 +
-> >  3 files changed, 61 insertions(+)
-> >
-> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > index b97d9e10c9cc..02e71e0bcdd7 100644
-> > --- a/drivers/pci/pci.c
-> > +++ b/drivers/pci/pci.c
-> > @@ -850,6 +850,13 @@ static int pci_raw_set_power_state(struct pci_dev =
-*dev, pci_power_t state)
-> >          || (state =3D=3D PCI_D2 && !dev->d2_support))
-> >               return -EIO;
-> >
-> > +     /*
-> > +      * check if we have a bad combination of bridge controller and nv=
-idia
-> > +         * GPU, see quirk_broken_nv_runpm for more info
->
-> Whitespace damage.  Capitalized incorrectly (see other comments
-> nearby).
->
-> > +      */
-> > +     if (state !=3D PCI_D0 && dev->broken_nv_runpm)
-> > +             return 0;
-> > +
-> >       pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
-> >
-> >       /*
-> > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> > index 44c4ae1abd00..0006c9e37b6f 100644
-> > --- a/drivers/pci/quirks.c
-> > +++ b/drivers/pci/quirks.c
-> > @@ -5268,3 +5268,56 @@ static void quirk_reset_lenovo_thinkpad_p50_nvgp=
-u(struct pci_dev *pdev)
-> >  DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, 0x13b1,
-> >                             PCI_CLASS_DISPLAY_VGA, 8,
-> >                             quirk_reset_lenovo_thinkpad_p50_nvgpu);
-> > +
-> > +/*
-> > + * Some Intel PCIe bridges cause devices to disappear from the PCIe bu=
-s after
-> > + * those were put into D3cold state if they were put into a non D0 PCI=
- PM
-> > + * device state before doing so.
->
-> A device in D3cold is off the bus by definition.
->
-> IIUC the problem is that the sequence D0 -> D3hot -> D3cold -> D0 for
-> the GPU fails in the transition back to D0, while D0 -> D3cold -> D0
-> works fine.
->
-> So I guess the problem is that we can put the device in D3cold with no
-> problem, but if we put in D3hot before going to D3cold, the device
-> never comes back to D0.  Right?
->
+But the you should have failed the map. The moment you allow the
+mapping to occur, you have accepted the contract that this interrupt is
+usable.
 
-correct. It By the way, it doesn't matter if I put the device into D1
-instead, as long as the device is not in D0 state before putting it
-into D3cold, it fails.
+> This check should be
+> identical to v3; the equivalent mask check inside the interrupt handler
+> was extended with "mask &&" to do the same in this v4.
 
-> > + * This leads to various issue different issues which all manifest dif=
-ferently,
->
-> s/issue different//
->
-> Actually, I think there's only one underlying issue with several
-> manifestations.
->
-> > + * but have the same root cause:
-> > + *  - AIML code execution hits an infinite loop (as the coe waits on d=
-evice
-> > + *    memory to change).
->
-> s/AIML/AML/
-> s/coe/code/
->
-> > + *  - kernel crashes, as all pci reads return -1, which most code isn'=
-t able
-> > + *    to handle well enough.
->
-> s/pci/PCI/
->
-> More details about these crashes would be useful as we look at places
-> that *should* be able to handle errors like this.
->
-
-makes sense, I could ,orthogonal to this, make the code more robust if
-we hit issues like this in the future. What I am mostly wondering
-about is, why pci core doesn't give up if the device doesn't come back
-from D3cold? It sounds like, that the most sane thing to do here is to
-just give up and fail runtime_resume and report errors back to
-userspace trying to make use of the devices.
-
-> > + *  - sudden shutdowns, as the kernel identified an unrecoverable erro=
-r after
-> > + *    userspace tries to access the GPU.
->
-> This doesn't fit with the others and more details might be
-> informative here as well.
->
-
-yeah.. I try to get more infos on that. But at least for me (and it
-might be a distribution thing) if I execute lspci, the system shuts
-down, or at least tries to and might fail.
-
-> > + * In all cases dmesg will contain at least one line like this:
-> > + * 'nouveau 0000:01:00.0: Refused to change power state, currently in =
-D3'
-> > + * followed by a lot of nouveau timeouts.
-> > + *
-> > + * ACPI code writes bit 0x80 to the not documented PCI register 0x248 =
-of the
-> > + * PCIe bridge controller in order to power down the GPU.
-> > + * Nonetheless, there are other code paths inside the ACPI firmware wh=
-ich use
-> > + * other registers, which seem to work fine:
-> > + *  - 0xbc bit 0x20 (publicly available documentation claims 'reserved=
-')
-> > + *  - 0xb0 bit 0x10 (link disable)
->
-> All these register addresses are device-specific, so they're useless
-> without identifying the device.  "lspci -vvnn" output would let us at
-> least connect this with something.  It would be nice to have that info
-> archived along with your acpidump and python repro scripts in a
-> bugzilla with the URL in the commit log.
->
-> These are likely in PCI capabilities.  If I make the leap of assuming
-> the "link disable" bit is PCI_EXP_LNKCTL_LD, that would mean the Link
-> Control register is at 0xb0 and the register at 0xbc would be the Root
-> Control register, and indeed 0x20 in Root Control is reserved.
->
-> I don't know what the relevance of all this is, though.  It's not
-> remarkable that accesses to these registers work.
->
-
-those are registers on the bridge controller and are using inside ACPI
-to power down the link. Depending on the OS detected other methods are
-used afaik.
-
-> Unless you mean you can access these registers *after* trying to put
-> the device back in D0, but other accesses to the device fail.  That
-> would indeed be very interesting.
->
-> > + * Changing the conditions inside the firmware by poking into the rele=
-vant
-> > + * addresses does resolve the issue, but it seemed to be ACPI private =
-memory
-> > + * and not any device accessible memory at all, so there is no portabl=
-e way of
-> > + * changing the conditions.
-> > + *
-> > + * The only systems where this behavior can be seen are hybrid graphic=
-s laptops
-> > + * with a secondary Nvidia Pascal GPU. It cannot be ruled out that thi=
-s issue
-> > + * only occurs in combination with listed Intel PCIe bridge controller=
-s and
-> > + * the mentioned GPUs or if it's only a hw bug in the bridge controlle=
-r.
-> > + *
-> > + * But because this issue was NOT seen on laptops with an Nvidia Pasca=
-l GPU
-> > + * and an Intel Coffee Lake SoC, there is a higher chance of there bei=
-ng a bug
-> > + * in the bridge controller rather than in the GPU.
->
-> I don't think we can conclude anything about where the defect is and I
-> don't think speculating here will help future readers of this code.
->
-> I *would* still like to see a bugzilla listing the systems where this
-> problem has been seen with the "lspci -vvnn", dmesg logs, and at least
-> one acpidump.  I think there's more to this story, and I suspect we
-> may be revisiting this in the future.
->
-
-one big one is https://bugzilla.kernel.org/show_bug.cgi?id=3D156341 but
-it's filled with a lot of different reports, but I am sure most of
-them point to this very issue.
-
-Sadly nobody thought of checking lspci with runpm disabled.. but I
-could check for other bugs.
-
-> > + * This issue was not able to be reproduced on non laptop systems.
-> > + */
-> > +
-> > +static void quirk_broken_nv_runpm(struct pci_dev *dev)
-> > +{
-> > +     struct pci_dev *bridge =3D pci_upstream_bridge(dev);
-> > +
-> > +     if (bridge->vendor =3D=3D PCI_VENDOR_ID_INTEL &&
-> > +         bridge->device =3D=3D 0x1901)
->
-> pci_upstream_bridge() may return NULL, so you need
->
->   if (bridge && bridge->vendor =3D=3D PCI_VENDOR_ID_INTEL ...
->
-> https://lore.kernel.org/r/20190927144421.22608-1-kherbst@redhat.com
-> says Skylake and Kaby Lake SoCs are affected.  But here you only check
-> for one Device ID?
->
-
-yes, I found this bridge controllers on skylake and kaby lake SoCs,
-but I could verify there are systems with a different architecture
-(using the "PCI Express Root Port" devices instead of "Processor PCIe
-Controller") do not show this issue, so I think it might indeed be
-just this one bridge controller. I couldn't verify this issue on any
-other so far.
-
-But I could verify this issue with this one bridge controller in
-combination with Maxwell, Pascal and Turing Nvidia GPUs.
-
-> > +             dev->broken_nv_runpm =3D 1;
-> > +}
-> > +DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID,
-> > +                           PCI_BASE_CLASS_DISPLAY, 16,
-> > +                           quirk_broken_nv_runpm);
-> > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> > index ac8a6c4e1792..903a0b3a39ec 100644
-> > --- a/include/linux/pci.h
-> > +++ b/include/linux/pci.h
-> > @@ -416,6 +416,7 @@ struct pci_dev {
-> >       unsigned int    __aer_firmware_first_valid:1;
-> >       unsigned int    __aer_firmware_first:1;
-> >       unsigned int    broken_intx_masking:1;  /* INTx masking can't be =
-used */
-> > +     unsigned int    broken_nv_runpm:1;      /* some combinations of i=
-ntel bridge controller and nvidia GPUs break rtd3 */
-> >       unsigned int    io_window_1k:1;         /* Intel bridge 1K I/O wi=
-ndows */
-> >       unsigned int    irq_managed:1;
-> >       unsigned int    has_secondary_link:1;
-> > --
-> > 2.21.0
-> >
->
-
-Will send out a v5 later addressing you review. Thanks!
-
+Spurious interrupts are a different matter. What I'm objecting to here
+is a simple question of logic, whether or not you are allowed to fail
+enabling an interrupt that you've otherwise allowed to be populated.
+ 
+	M.
+-- 
+Jazz is not dead. It just smells funny...
