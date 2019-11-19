@@ -2,163 +2,146 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87E4CC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:07:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21D17C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:08:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 502E7222DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:07:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DED3B22304
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:08:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="Wr9FxwD6"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="RjmkYfaE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727626AbfKSOHi (ORCPT
+        id S1727791AbfKSOIm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 09:07:38 -0500
-Received: from mail-eopbgr740089.outbound.protection.outlook.com ([40.107.74.89]:53601
-        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
+        Tue, 19 Nov 2019 09:08:42 -0500
+Received: from mail-eopbgr10062.outbound.protection.outlook.com ([40.107.1.62]:54881
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725904AbfKSOHi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 09:07:38 -0500
+        id S1726369AbfKSOIm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 09:08:42 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=R6pdZ2cAbGOzUeTVtdyVCRjVRpqUYVahjpdwY7tBtgbogcgzRMwRV2SGCaLee8i2ZxOKZIrkA5f/PdwGBv98n5bvBLH1iA8ffEIl/1G15HFRQEsrCuzi95t99wSSKC06z9a0k7ksjuFvugFuqo9ukGMX4X9g9X7/ubO2Ed+jwM/U+Ek+LBLJOivagKGs0h2KovHcXUuO1LciSsDtsHjXk3udiXtK07mWGjK4nhXr45fZH6QKTOeDIIgjR9pCMkvSOtzrnu4h9v3zoeeoc2UiOHRaVWh/pTo4Cl0OWAjWOS2HoTnDWZogvbnS3xzYwWGrV+CyHWADuvNCuFMUeGX5rw==
+ b=VfDwNtAlEW0KERsdbA9yVd3mLbcw/NOZ+s4l8YjQE8/RYPH59Sc8PgHXs7UckiEMjA0HKTL3eBeZNmml7TFKsSC1ATHokWn+H22223Vva7/BEvAd7XEBqO8A5gunzDtEa8iaVnshNCimjvJVgOLRGT1VuGc8X6s9u26gfLDaFrbOMpMm1ioiQWnNCYG45fkwXdS1FgPKoeVNR8bCL8zwEbOka2u1kDiOdWBb2Ed69oDeUPXPPGbFh6tDId1h+B4hgWxz0HmTgFbiaX39dTH1kSsYZwsk51+hOrsPvZ4NjbF3L68E0CbRIIjj4cCjPp/hUcaOf0FIypVvBCn0FzvVUA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JZEdJXCrGvHDtdw/ckeNFvXFe9dK+0pFHHThOMFHD9M=;
- b=c5Pd7hmPbUxo6+ggZmwFPirBJUccbRgYNc3QYdvDjfOj7SMsnE4FAEttDfNUTv8O5jSiv88Xj2gwXZKpzhzyGZ46clb2qnGSOIPX4ZTgnfz4lUQ2ybivOYHs2HM50Cn0PkNLGlsDfu19+DXzRdvZszj9pmTV7yOcvW6dVRf7JlXfyztVu4m6W2pbBiYr098L+IPljCKCsi6xb89VJoiHuSMnzqVGJC0I7V/aHVuUsVPfu3mQ/R0dzpttdaOBMWTNYXvlO9KqMNqyYv0L9pZD7GNYYmcpVxnSN/cBP2mu5uBff07GfoW8RjGUsAhUS3F1YFu4CQPFJeNPT4hWDAHGyA==
+ bh=SqfRX6RY0z9UsmuVpXOfE2+tikp/DfpE2xdLYXBhwAg=;
+ b=nLBqYsZ+AI+IuzokB3CZUGE4zBeP0PCUT4qjk7FXR7N3EZZ8L0kjPsrn4ppHCKlvdpIPIGVjH7egRMTMUxGeaz7UMsrKh/ZLEaeO0y91Sij3dHox67UiLXcvSLtFpB2dqsvfHbkEq6AeOmuGTysH7PN8mfmgp/C/7sfHb0Pe5OJSFqSPHUsTky6x6oddg6X9IX6X3lckB7hWlFPLqlQPE4kwP35GWqKX9nLn+5HyDr6RKINl1EDob4+3U4oDTZUjJ4xa3UPHd/8vqEeo62gY7f5TuKiuHM/wdyiwtyV9GjbSy4Xa7vR+hRrcBZ5hAOXT4Hg7RImOCBOOmstVz7LPGg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JZEdJXCrGvHDtdw/ckeNFvXFe9dK+0pFHHThOMFHD9M=;
- b=Wr9FxwD6opdt1UmEQTYouGRAoD7EawUr3Ch0q1HwP6CHjbfYbXsRAFcKeFRODR+M0BEfdhSH1XF/JYQZYvRhSDHZADWsBjuZhIiXryOgAoRLJc+hijuBLMXJ+3sVQmcbQOT9wNb2kBdKzajP8ujwf4z8nwQy+ZRm/MUgl/+kYN4=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=brijesh.singh@amd.com; 
-Received: from DM6PR12MB2682.namprd12.prod.outlook.com (20.176.118.13) by
- DM6PR12MB4267.namprd12.prod.outlook.com (10.141.187.144) with Microsoft SMTP
+ bh=SqfRX6RY0z9UsmuVpXOfE2+tikp/DfpE2xdLYXBhwAg=;
+ b=RjmkYfaEr1hUODhS4BvJZD/6j9tt4BXnddK8ujokQIbSvb+2QS+LH/FM9KcuXFqkVMOYlDcj1J6d8R2YcXoSRzCJTBxQZHFWZfG4DsZdTnBeVhB8oOa8qatW2xETxJ0MIvFCtcHuxoXtn+9JPUl5ykT8tQqqig68y2iZkkDqyus=
+Received: from AM0PR04MB5779.eurprd04.prod.outlook.com (20.178.202.151) by
+ AM0PR04MB7044.eurprd04.prod.outlook.com (10.186.128.20) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2451.28; Tue, 19 Nov 2019 14:06:54 +0000
-Received: from DM6PR12MB2682.namprd12.prod.outlook.com
- ([fe80::edfa:96b9:b6fd:fbf9]) by DM6PR12MB2682.namprd12.prod.outlook.com
- ([fe80::edfa:96b9:b6fd:fbf9%7]) with mapi id 15.20.2451.029; Tue, 19 Nov 2019
- 14:06:54 +0000
-Cc:     brijesh.singh@amd.com, "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>, Borislav Petkov <bp@suse.de>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 01/11] KVM: SVM: Add KVM_SEV SEND_START command
-To:     Peter Gonda <pgonda@google.com>
-References: <20190710201244.25195-1-brijesh.singh@amd.com>
- <20190710201244.25195-2-brijesh.singh@amd.com>
- <CAMkAt6pzXrZw1TZgcX-G0wDNZBjf=1bQdErAJTxfzYQ2MJDZvw@mail.gmail.com>
- <4f509f43-a576-144d-efd4-ab0362f1d667@amd.com>
- <CAMkAt6qfPyqGuNv9gKirote=zj6Vha=9Vu1HSFkxx334s-GV1g@mail.gmail.com>
-From:   Brijesh Singh <brijesh.singh@amd.com>
-Message-ID: <a1c99bbc-b30f-53b0-6598-545d05b18e1c@amd.com>
-Date:   Tue, 19 Nov 2019 08:06:51 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-In-Reply-To: <CAMkAt6qfPyqGuNv9gKirote=zj6Vha=9Vu1HSFkxx334s-GV1g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+ 15.20.2451.23; Tue, 19 Nov 2019 14:08:38 +0000
+Received: from AM0PR04MB5779.eurprd04.prod.outlook.com
+ ([fe80::fd44:1b14:587c:9fde]) by AM0PR04MB5779.eurprd04.prod.outlook.com
+ ([fe80::fd44:1b14:587c:9fde%7]) with mapi id 15.20.2451.029; Tue, 19 Nov 2019
+ 14:08:38 +0000
+From:   Abel Vesa <abel.vesa@nxp.com>
+To:     Aisheng Dong <aisheng.dong@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Jacky Bai <ping.bai@nxp.com>
+CC:     Peng Fan <peng.fan@nxp.com>, dl-linux-imx <linux-imx@nxp.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Abel Vesa <abel.vesa@nxp.com>
+Subject: [PATCH 0/9] clk: imx: Trivial cleanups for clk_hw based API
+Thread-Topic: [PATCH 0/9] clk: imx: Trivial cleanups for clk_hw based API
+Thread-Index: AQHVnuLWT6CchFdcV0y5WK5bSM6Nyg==
+Date:   Tue, 19 Nov 2019 14:08:38 +0000
+Message-ID: <1574172496-12987-1-git-send-email-abel.vesa@nxp.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN4PR0501CA0130.namprd05.prod.outlook.com
- (2603:10b6:803:42::47) To DM6PR12MB2682.namprd12.prod.outlook.com
- (2603:10b6:5:42::13)
-MIME-Version: 1.0
-X-Originating-IP: [165.204.77.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 095c8699-32f1-4129-7ad7-08d76cf9bb1e
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4267:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR12MB4267BC5A1B7728252422BBBEE54C0@DM6PR12MB4267.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-Forefront-PRVS: 022649CC2C
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(396003)(39860400002)(366004)(136003)(346002)(199004)(189003)(31696002)(31686004)(229853002)(50466002)(2906002)(4326008)(86362001)(58126008)(44832011)(6246003)(6486002)(54906003)(230700001)(305945005)(6116002)(3846002)(7736002)(476003)(6436002)(14444005)(6512007)(65956001)(65806001)(486006)(66066001)(47776003)(2616005)(5660300002)(36756003)(53546011)(6666004)(316002)(99286004)(26005)(478600001)(6506007)(7416002)(8936002)(386003)(186003)(14454004)(6916009)(76176011)(52116002)(2486003)(23676004)(11346002)(81156014)(81166006)(66946007)(8676002)(66556008)(66476007)(446003)(25786009);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB4267;H:DM6PR12MB2682.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM0PR04CA0026.eurprd04.prod.outlook.com
+ (2603:10a6:208:122::39) To AM0PR04MB5779.eurprd04.prod.outlook.com
+ (2603:10a6:208:131::23)
+x-originating-ip: [89.37.124.34]
+x-mailer: git-send-email 2.7.4
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=abel.vesa@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: bb83b43a-2109-4748-5e10-08d76cf9f92f
+x-ms-traffictypediagnostic: AM0PR04MB7044:|AM0PR04MB7044:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB7044FE4898978834B74BBC2AF64C0@AM0PR04MB7044.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1091;
+x-forefront-prvs: 022649CC2C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(366004)(396003)(346002)(39860400002)(199004)(189003)(86362001)(66066001)(50226002)(386003)(486006)(102836004)(6506007)(26005)(66946007)(2906002)(6116002)(3846002)(6512007)(6486002)(4326008)(5660300002)(6436002)(7736002)(25786009)(14454004)(71200400001)(305945005)(8936002)(6636002)(478600001)(44832011)(476003)(71190400001)(2616005)(36756003)(256004)(316002)(66476007)(81156014)(81166006)(186003)(54906003)(110136005)(99286004)(8676002)(66446008)(52116002)(64756008)(66556008);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB7044;H:AM0PR04MB5779.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: pz3qwgrjvmjTX9u5XZk3jZSrfshiYCA/q8RaVLbacdGErq18wPiyGpuxBkF0kSR7yLu7AlYZVOgwaYsC5f/6c+zfn7BpcRUDWY3BZEmu58cHuwG5Hx8KucRBRnLgYQeHFeLxhxbpyggF+wGAuynuJQGMhM87L25ZkJCB3gSnXeFk7Ld3r5UgzuQaeqleuc76cC6w3MJ1uQGxwERDcc+YmNQ5iuaf+zCED54swwEhiE5V+csuR1QUGLEUTQFHRecJEQ2iOhu5ozT4buq71WqPf4pEmC5QW8rUVN16RhhLW5BDJyEQNmuyENYb3IqVf9SOXEH5S/tdQhsOc+ymT10PnryTo1GdI/OgkXw4wejWoV/Mx+qYyHzRso8uie8xilfzwfhd5i0UhXguwN39Rnh10uS1qRct9vOlt5ovjKuFasw41VCKbS0/KG1nlrTWqVTx
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 095c8699-32f1-4129-7ad7-08d76cf9bb1e
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Nov 2019 14:06:54.4933
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: t6Ipbn/Tq+kKaMw4nTF3OI/dJiDlyz9iXa8g9DQfOe7pUbeQ8FiudTGXN+vHBOQmefp5brgVv2GuChNNLkH0WhbWLnckAMS+phGpj3A61kWgcddSmr9cQTginwfP2xeRVK8DcJUySTYlkTbQD8gcTcFOZuolE1h5mvoOQMfzkRNrQSz79NjLKXEi84vmh8vgeMMBz3LX91Rd2zBe2f4Ki/JalCnNN0VsrE91MCNQnzEpjgZdvwbA49RGS6oX2z9ZUjJjpc0BsxcvknNnLaco+a39r/oT3c7R/W/7knih2BikUD3AdBPKZJKejQ/WT7GJ0H+xo4fyoZ2XiQ7kmYJ5xjJw+M28cYba+39hXb6m5yYCQsy+XV1dp/yx5ROAWpZcw5nKb660d7Tj/NX3jLuXKmdV8dctm6TklnOXE+igMpeRUoBtE7L0L4F/+t6rW0qD
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bb83b43a-2109-4748-5e10-08d76cf9f92f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Nov 2019 14:08:38.1031
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: sg4YdveydHjJ54uEDLK+mXdQlBo86x1KbVqo3CfFbfNOeOBfjK4xSx4GoQMBGPJbANGVlWzZyV3vh93jKRM5cw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4267
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: UYS709/n5yxZbFsZO8QAHquwgMG1aumTlBR3JrLSn6hdx3aj9bWISGQPOUDwfIulnxfmVhMqayPZgWefMHS5Fg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB7044
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+These changes are cleanups for the clk_hw based API i.MX clock drivers swit=
+ch
+longterm effort. As mentioned in the commit messages, the end goal here is =
+to
+have all the i.MX drivers use clk_hw based API only.
 
+I've put these all in a single patchset since they do not impact in any way
+the expected behavior of the drivers and they are quite obvious trivial one=
+s.
+More patches to follow for the older i.MX platforms but those might not be =
+as
+harmless (and trivial) as these ones.
 
-On 11/14/19 1:27 PM, Peter Gonda wrote:
-> On Tue, Nov 12, 2019 at 2:27 PM Brijesh Singh <brijesh.singh@amd.com> wrote:
->>
->>
->> On 11/12/19 12:35 PM, Peter Gonda wrote:
->>> On Wed, Jul 10, 2019 at 1:13 PM Singh, Brijesh <brijesh.singh@amd.com> wrote:
->>>> +static int sev_send_start(struct kvm *kvm, struct kvm_sev_cmd *argp)
->>>> +{
->>>> +       struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
->>>> +       void *amd_cert = NULL, *session_data = NULL;
->>>> +       void *pdh_cert = NULL, *plat_cert = NULL;
->>>> +       struct sev_data_send_start *data = NULL;
->>>> +       struct kvm_sev_send_start params;
->>>> +       int ret;
->>>> +
->>>> +       if (!sev_guest(kvm))
->>>> +               return -ENOTTY;
->>>> +
->>>> +       if (copy_from_user(&params, (void __user *)(uintptr_t)argp->data,
->>>> +                               sizeof(struct kvm_sev_send_start)))
->>>> +               return -EFAULT;
->>>> +
->>>> +       data = kzalloc(sizeof(*data), GFP_KERNEL);
->>>> +       if (!data)
->>>> +               return -ENOMEM;
->>>> +
->>>> +       /* userspace wants to query the session length */
->>>> +       if (!params.session_len)
->>>> +               goto cmd;
->>>> +
->>>> +       if (!params.pdh_cert_uaddr || !params.pdh_cert_len ||
->>>> +           !params.session_uaddr)
->>>> +               return -EINVAL;
->>> I think pdh_cert is only required if the guest policy SEV bit is set.
->>> Can pdh_cert be optional?
->>
->>
->> We don't cache the policy information in kernel, having said so we can
->> try caching it during the LAUNCH_START to optimize this case. I have to
->> check with FW folks but I believe all those fields are required. IIRC,
->> When I passed NULL then SEND_START failed for me. But I double check it
->> and update you on this.
-> 
-> 
-> I must have misinterpreted the this line of the spec:
-> "If GCTX.POLICY.SEV is 1, the PDH, PEK, CEK, ASK, and ARK certificates
-> are validated."
-> I thought that since they were not validated they were not needed.
-> 
+Abel Vesa (9):
+  clk: imx: Replace all the clk based helpers with macros
+  clk: imx: pllv1: Switch to clk_hw based API
+  clk: imx: pllv2: Switch to clk_hw based API
+  clk: imx: imx7ulp composite: Rename to show is clk_hw based
+  clk: imx: Rename sccg and frac pll register to suggest clk_hw
+  clk: imx: Rename the imx_clk_pllv4 to imply it's clk_hw based
+  clk: imx: Rename the imx_clk_pfdv2 to imply it's clk_hw based
+  clk: imx: Rename the imx_clk_divider_gate to imply it's clk_hw based
+  clk: imx7up: Rename the clks to hws
 
-I have confirmed that these fields are required by the SEND_START
-even when GCTX.POLICY.SEV=0. The FW needs us to pass certificate
-chain, if POLICY.SEV=1 then FW will validating the chain otherwise
-ignore it.
+ drivers/clk/imx/clk-composite-7ulp.c |   2 +-
+ drivers/clk/imx/clk-divider-gate.c   |   2 +-
+ drivers/clk/imx/clk-frac-pll.c       |   7 +-
+ drivers/clk/imx/clk-imx7ulp.c        | 182 +++++++++++++++++--------------=
+----
+ drivers/clk/imx/clk-pfdv2.c          |   2 +-
+ drivers/clk/imx/clk-pllv1.c          |  14 ++-
+ drivers/clk/imx/clk-pllv2.c          |  14 ++-
+ drivers/clk/imx/clk-pllv4.c          |   2 +-
+ drivers/clk/imx/clk-sccg-pll.c       |   4 +-
+ drivers/clk/imx/clk.h                |  69 +++++++------
+ 10 files changed, 153 insertions(+), 145 deletions(-)
+
+--=20
+2.7.4
+
