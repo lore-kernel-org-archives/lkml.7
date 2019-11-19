@@ -2,113 +2,170 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C096DC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 01:24:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B48E0C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 01:26:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99FDB20692
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 01:24:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Uvv+qMR/"
+	by mail.kernel.org (Postfix) with ESMTP id 959BE20692
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 01:26:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727255AbfKSBYr (ORCPT
+        id S1727126AbfKSB0L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 20:24:47 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:38825 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726939AbfKSBYr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 20:24:47 -0500
-Received: by mail-pj1-f65.google.com with SMTP id f7so2040684pjw.5
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 17:24:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=u+EElGaeg7B4NHLzEdMEmecs3hx9HYQQt4MBfsxoGp4=;
-        b=Uvv+qMR/YvSIV89+KOuySyIJSm4e4O8lhyJ4qzs92d2olMqEp9kxbAHwujSp/QcdyY
-         1ikn1NyGEK1bTHUCPN2ReOTEP4BwNPd/W2fYw82oR5zuyyok3HUHSlXiwDRO5DvqNeQK
-         kXUorqKAnxgoZ+vVnQLRK2tiy77SYX6dLHf7WUdBfG1dFN3EYNwGl1MLezFQtxNfWCeO
-         FKCqQjRgAyWT3IhJ50fwUNjk5H2d5C5PrJ2bWdo8gzNdc1s6uMMEHft0PoI8IRCuCumK
-         UzLRPVaBr4MFBZBOpTZguBQJBX6qjjqVFu0HFirRUDHSE9/fpX4v+Yf0mCoEJpa5jZDq
-         F8eQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=u+EElGaeg7B4NHLzEdMEmecs3hx9HYQQt4MBfsxoGp4=;
-        b=qP8mXUwR/DFe9HA68pjfJ3Uo8mlCEhoFHMae1XgM4HeqFJcla0l3y8/zQcIcpYy3ds
-         JBZM5QgGj8hNOxXefWvliu70m5D+t6u8KcKxtW9oCaEJQujlcB9IONL5eonHF6wmT4rJ
-         2jD+3dHpQfVBanW+Sk+0Yp4pYbobcEo51br8/GxooK4hqby8eCJqUZ4UnfR2O7UNcaJe
-         9eCkXkBlemmIB7jODRSwjW8KUfUGNV6gk6eh1BH1+VWaSCNIkL2SYVbCgDApXQVcMWE2
-         oeJj4eHNsAhFAdAvidet/tmd+svj43NXdtuHYItaibYCp00+Z9lF5vvwEVyj/jTFKxY4
-         GItQ==
-X-Gm-Message-State: APjAAAWA3dhyUNKe/ZHl12zIfUmu8p8wU6cfXpLKPQgoVKncbcavgAMb
-        LsR23L2m+EY+XjX/4KWMxdqV5T21b0VisfEfbkllEQ==
-X-Google-Smtp-Source: APXvYqyQ0yIu5BJfhnGVAf7ZY450gOCdnTPdioyEqCBN6cL7YR/zlO5q8oTmMwfOkenfyH5sRhoTBLvV7xDeXBn6IOg=
-X-Received: by 2002:a17:902:be14:: with SMTP id r20mr31102887pls.297.1574126685459;
- Mon, 18 Nov 2019 17:24:45 -0800 (PST)
+        Mon, 18 Nov 2019 20:26:11 -0500
+Received: from mga09.intel.com ([134.134.136.24]:25527 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726775AbfKSB0L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 20:26:11 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Nov 2019 17:26:10 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,322,1569308400"; 
+   d="scan'208";a="380852691"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga005.jf.intel.com with ESMTP; 18 Nov 2019 17:26:10 -0800
+Received: from [10.226.38.254] (unknown [10.226.38.254])
+        by linux.intel.com (Postfix) with ESMTP id 9E0795800FE;
+        Mon, 18 Nov 2019 17:26:07 -0800 (PST)
+Subject: Re: [PATCH v7 2/3] dwc: PCI: intel: PCIe RC controller driver
+To:     Jingoo Han <jingoohan1@gmail.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        "helgaas@kernel.org" <helgaas@kernel.org>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "martin.blumenstingl@googlemail.com" 
+        <martin.blumenstingl@googlemail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "andriy.shevchenko@intel.com" <andriy.shevchenko@intel.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "cheol.yong.kim@intel.com" <cheol.yong.kim@intel.com>,
+        "chuanhua.lei@linux.intel.com" <chuanhua.lei@linux.intel.com>,
+        "qi-ming.wu@intel.com" <qi-ming.wu@intel.com>
+References: <cover.1573784557.git.eswara.kota@linux.intel.com>
+ <99a29f5a4ce18df26bd300ac6728433ec025631b.1573784557.git.eswara.kota@linux.intel.com>
+ <SL2P216MB01056231B6036941BEF71738AA700@SL2P216MB0105.KORP216.PROD.OUTLOOK.COM>
+ <50dabbc6-eae5-5ae5-95a0-f195c1ef7362@linux.intel.com>
+ <SL2P216MB010580C028A7F88E8FB72574AA4D0@SL2P216MB0105.KORP216.PROD.OUTLOOK.COM>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <5fc0001f-e73c-af1d-4182-d2d2448741fd@linux.intel.com>
+Date:   Tue, 19 Nov 2019 09:26:06 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <1573812972-10529-1-git-send-email-alan.maguire@oracle.com>
- <1573812972-10529-5-git-send-email-alan.maguire@oracle.com> <20191118220958.GS11244@42.do-not-panic.com>
-In-Reply-To: <20191118220958.GS11244@42.do-not-panic.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Mon, 18 Nov 2019 17:24:33 -0800
-Message-ID: <CAFd5g46PQ_kWERgoVC--QAUNOWT6p9AwsJPTV4sM7uv6L+iB2g@mail.gmail.com>
-Subject: Re: [PATCH v4 linux-kselftest-test 4/6] kunit: remove timeout
- dependence on sysctl_hung_task_timeout_seconds
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Alan Maguire <alan.maguire@oracle.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        catalin.marinas@arm.com, joe.lawrence@redhat.com,
-        penguin-kernel@i-love.sakura.ne.jp, schowdary@nvidia.com,
-        urezki@gmail.com, andriy.shevchenko@linux.intel.com,
-        Jonathan Corbet <corbet@lwn.net>,
-        "Theodore Ts'o" <tytso@mit.edu>, adilger.kernel@dilger.ca,
-        changbin.du@intel.com, linux-ext4@vger.kernel.org,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Knut Omang <knut.omang@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <SL2P216MB010580C028A7F88E8FB72574AA4D0@SL2P216MB0105.KORP216.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 18, 2019 at 2:10 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
+On 11/19/2019 12:40 AM, Jingoo Han wrote:
 >
-> On Fri, Nov 15, 2019 at 10:16:10AM +0000, Alan Maguire wrote:
-> > In discussion of how to handle timeouts, it was noted that if
-> > sysctl_hung_task_timeout_seconds is exceeded for a kunit test,
-> > the test task will be killed and an oops generated.  This should
-> > suffice as a means of debugging such timeout issues for now.
-> >
-> > Hence remove use of sysctl_hung_task_timeout_secs, which has the
-> > added benefit of avoiding the need to export that symbol from
-> > the core kernel.
-> >
-> > Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
-> > Signed-off-by: Knut Omang <knut.omang@oracle.com>
+> ﻿On 11/18/19, 2:58 AM, Dilip Kota wrote:
 >
-> This seems like a workaround for sysctl_hung_task_timeout_secs not being
-> exported. If true, this can be addressed by creating a symbol namespace
-> (new) and using that namespace on this path.
+>> On 11/16/2019 4:40 AM, Jingoo Han wrote:
+>>> On 11/14/19, 9:31 PM, Dilip Kota wrote:
+>>>
+>>>> Add support to PCIe RC controller on Intel Gateway SoCs.
+>>>> PCIe controller is based of Synopsys DesignWare PCIe core.
+>>>>
+>>>> Intel PCIe driver requires Upconfigure support, Fast Training
+>>>> Sequence and link speed configurations. So adding the respective
+>>>> helper functions in the PCIe DesignWare framework.
+>>>> It also programs hardware autonomous speed during speed
+>>>> configuration so defining it in pci_regs.h.
+>>>>
+>>>> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+>>>> Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+>>>> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+>>>> ---
+>>> [.....]
+>>>
+>>>>    drivers/pci/controller/dwc/Kconfig           |  10 +
+>>>>    drivers/pci/controller/dwc/Makefile          |   1 +
+>>>>    drivers/pci/controller/dwc/pcie-designware.c |  57 +++
+>>>>    drivers/pci/controller/dwc/pcie-designware.h |  12 +
+>>>>    drivers/pci/controller/dwc/pcie-intel-gw.c   | 542 +++++++++++++++++++++++++++
+>>>>    include/uapi/linux/pci_regs.h                |   1 +
+>>>>    6 files changed, 623 insertions(+)
+>>>>    create mode 100644 drivers/pci/controller/dwc/pcie-intel-gw.c
+>>>>
+>>>> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+>>>> index 0ba988b5b5bc..fb6d474477df 100644
+>>>> --- a/drivers/pci/controller/dwc/Kconfig
+>>>> +++ b/drivers/pci/controller/dwc/Kconfig
+>>>> @@ -82,6 +82,16 @@ config PCIE_DW_PLAT_EP
+>>>>    	  order to enable device-specific features PCI_DW_PLAT_EP must be
+>>>>    	  selected.
+>>>>    
+>>>> +config PCIE_INTEL_GW
+>>>> +	bool "Intel Gateway PCIe host controller support"
+>>>> +	depends on OF && (X86 || COMPILE_TEST)
+>>>> +	select PCIE_DW_HOST
+>>>> +	help
+>>>> +	  Say 'Y' here to enable PCIe Host controller support on Intel
+>>>> +	  Gateway SoCs.
+>>>> +	  The PCIe controller uses the DesignWare core plus Intel-specific
+>>>> +	  hardware wrappers.
+>>>> +
+>>> Please add this config alphabetical order!
+>>> So, this config should be after 'config PCI_IMX6'.
+>>> There is no reason to put this config at the first place.
+>>>
+>>>>    config PCI_EXYNOS
+>>>>    	bool "Samsung Exynos PCIe controller"
+>>>>    	depends on SOC_EXYNOS5440 || COMPILE_TEST
+>>>> diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
+>>>> index b30336181d46..99db83cd2f35 100644
+>>>> --- a/drivers/pci/controller/dwc/Makefile
+>>>> +++ b/drivers/pci/controller/dwc/Makefile
+>>>> @@ -3,6 +3,7 @@ obj-$(CONFIG_PCIE_DW) += pcie-designware.o
+>>>>    obj-$(CONFIG_PCIE_DW_HOST) += pcie-designware-host.o
+>>>>    obj-$(CONFIG_PCIE_DW_EP) += pcie-designware-ep.o
+>>>>    obj-$(CONFIG_PCIE_DW_PLAT) += pcie-designware-plat.o
+>>>> +obj-$(CONFIG_PCIE_INTEL_GW) += pcie-intel-gw.o
+>>> Ditto.
+>> PCIE_INTEL_GW wouldnt come after PCI_IMX6, the complete Makefile and
+>> Kconfig are not in order,( PCI_* and PCIE_* are not in any order). So i
+>> just followed PCIE_DW and placed PCIE_INTEL_GW after PCIE_DW as I is
+>> after D (and i see PCI_* immediately after the PCIE_DW*, so i placed
+>> PCIE_INTEL_GW after PCIE_DW* and before PCI_*).
+> Hey, although some of them are not in order, you don't have a right to do so.
+> If some people do not follow the law, it does not mean that you can break the law.
+> Anyway, if you don't follow an alphabetical order, my answer is NACK.
+> Also, other people or I will send a patch to fix the order of other drivers.
 
-It is; as discussed on in v3[1]. I don't really feel strongly one way
-or the other, I can see arguments for either side. Still, I don't want
-to give Alan the run-around. I think this is the 3rd or 4th time he
-has tried to address this issue.
+I am not against following the order. I kept PCIE_INTEL_GW after 
+PCIE_DW* by checking the best possible order.
+As per the alphabetical order, i see all CONFIG_PCIE_* comes first and 
+CONFIG_PCI_* follows. So, by following this, i placed PCIE_INTEL_GW 
+after PCIE_DW* (for the same reason PCIE_INTEL_GW cannot be placed after 
+PCI_IMX6).
+Even after re-ordering the Kconfig and Makefile, still PCIE_INTEL_GW 
+comes after PCIE_DW_PLAT( and PCIE_HISI_STB).
 
-[1] https://lore.kernel.org/linux-kselftest/CAFd5g44esDP6WFmkjOiH+my_4iBeqMpFoScMCm_hQ0aFwNS9qw@mail.gmail.com/
+Regards,
+Dilip
+
+>
+>
+>> Regards,
+>> Dilip
+>> Best regards,
+>> Jingoo Han
+>>
+>>>    obj-$(CONFIG_PCI_DRA7XX) += pci-dra7xx.o
+>>>    obj-$(CONFIG_PCI_EXYNOS) += pci-exynos.o
+>>>    obj-$(CONFIG_PCI_IMX6) += pci-imx6.o
+>>> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+>>> index 820488dfeaed..479e250695a0 100644
+>> [.....]
