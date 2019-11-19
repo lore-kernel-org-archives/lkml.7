@@ -2,187 +2,171 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0346C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:48:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69BAAC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:51:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 858E4222F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:48:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C4A0222F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:51:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="V5mI8M5g"
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="hq9IXkC5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727521AbfKSKsz (ORCPT
+        id S1727637AbfKSKvM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 05:48:55 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.82]:30305 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725798AbfKSKsz (ORCPT
+        Tue, 19 Nov 2019 05:51:12 -0500
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:44865 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725798AbfKSKvM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 05:48:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1574160530;
-        s=strato-dkim-0002; d=chronox.de;
-        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=gPjxvO5Rr/ZhzjVabnFPel2PR7oXPN4jAOJIkIfrL3w=;
-        b=V5mI8M5g/zcmQMfBuQScL5pLLfo2BcTLYpDkE8qc0aS3ZflQGszP+JFBsRJL3wYH6O
-        qsBI4Lsf0O26+2t2ARyJP1VanbNf8UulxP347HJnpRl2LyVbqzQSV/V+afYDIpD7QT+H
-        qOlyMfp8A4fAw7SqfG+SXnwZ9mVEdUYJppfQG00vvX6F3JzVXf08mLSDOv6BDkxLmrqN
-        n5+JdwnSf5/YkBVV6tgPqj6ARtTHBoM4gPjDVomVTjYXzb/tttvhZRFf9K/Y2uJEHxba
-        VP5WzIEIwpd6LW4v0fMmB+qYpvI7O6hz7Z43r5NOMuKRvGFq7N403cc4X7scCMQrG+RC
-        0H8A==
-X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9zT8DNpa83PTIPmLqL6mXsiNby0r49Q+bn6Gzw6e9E9jMEY/jj9Sk"
-X-RZG-CLASS-ID: mo00
-Received: from tauon.chronox.de
-        by smtp.strato.de (RZmta 44.29.0 AUTH)
-        with ESMTPSA id N09a57vAJAkqepr
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Tue, 19 Nov 2019 11:46:52 +0100 (CET)
-From:   Stephan Mueller <smueller@chronox.de>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        Nicolai Stange <nstange@suse.de>,
-        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
-        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
-        Roman Drahtmueller <draht@schaltsekun.de>,
-        Neil Horman <nhorman@redhat.com>
-Subject: Re: [PATCH v25 10/12] LRNG - add TRNG support
-Date:   Tue, 19 Nov 2019 11:46:51 +0100
-Message-ID: <25235737.Vo4cOZQZay@tauon.chronox.de>
-In-Reply-To: <CALCETrUKDO1LSMnHNcPiAFQh2ri6saRiRBi9b5e699cm1_Mgsw@mail.gmail.com>
-References: <5390778.VeFRgus4bQ@positron.chronox.de> <3159012.PsEOTp9LqO@positron.chronox.de> <CALCETrUKDO1LSMnHNcPiAFQh2ri6saRiRBi9b5e699cm1_Mgsw@mail.gmail.com>
+        Tue, 19 Nov 2019 05:51:12 -0500
+Received: by mail-vs1-f66.google.com with SMTP id j85so13859613vsd.11
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 02:51:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5xtsF1Sv+l+9zrpE4z0KioV1mHpXZsbvecSOZbkb/Q8=;
+        b=hq9IXkC5JKzFG1aE2B51COqqquq5bFvThTVH4Gj/fldrzI5Ih6wXfn8pRZtOIvDcHK
+         TRmglLfHOF89Yqcd16P05oO2z3Mdqk5uq7Qg11ljMwZjl2b/RmJjIfD2jaeAl1sooMRx
+         lbHE39wwvW4fQxrzcA5mvM2tv3VmDvWqxYWp45B+g0+B5lfPIau2Mo5JUKISVZ2RLRpH
+         VPMcP9Y19RjKPtx8vC2M2dxJQsNerXAKWZPfhnekCyVD3gS+RXpmqV07yAKmRnyjOqio
+         w71saYZE26s3KxvG8TI3xUBpK4mVz11A2rzF2ADEr8SOYxKEpurX27BOx+LXK3yWHKqb
+         CwCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5xtsF1Sv+l+9zrpE4z0KioV1mHpXZsbvecSOZbkb/Q8=;
+        b=YjNRoHVN7uLlEDU+cU7CCMm/8Aq21xQJqbnakaEht4vl4EI2hE2DNJxkbYTB+J+GR3
+         eY9XOmhaD0YNDPvtqmRxrlwrzDiHU9ft/w7biG87uihIEH0XoDNb6c3u0vgRoMthRdcM
+         XtLtmMl4YvE3syesTRZg2aXZlTvQTA2Yi8YNmE7iUZOqcmweREwpKEaVUPdPNT25Xtd4
+         KWtujx+V784SFMMXP1Rj9OsPoW+oioi9rwX08KSQKy31TqsIAfYPyfqL4PYA/Db97EJw
+         NqUqHW56VlrFJDmYhatLp3sdZM3rrcJiM4A/LREw+b+ayFhhyrtxU8VtBFOaCOPs4cBH
+         CX8A==
+X-Gm-Message-State: APjAAAXuWusJWTjsYAdqF+E2JxCLZ86sN0g5utKrky9c6/4PZ1WhRyCV
+        uhk0zN0nl7IJw3k6XRDWn87svAfUEAZrrlxdF3WbsHYs
+X-Google-Smtp-Source: APXvYqwPaPOP/tvcGP9mQYoUq0M6Kxu+nl2EbUWFxWA6q3Mapgn1ahClizb5eOnSjYBRzGlia1hHLCKzm9KhCHqtPYA=
+X-Received: by 2002:a67:da85:: with SMTP id w5mr22162061vsj.159.1574160669891;
+ Tue, 19 Nov 2019 02:51:09 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+References: <1572979786-20361-1-git-send-email-thara.gopinath@linaro.org> <1572979786-20361-2-git-send-email-thara.gopinath@linaro.org>
+In-Reply-To: <1572979786-20361-2-git-send-email-thara.gopinath@linaro.org>
+From:   Amit Kucheria <amit.kucheria@verdurent.com>
+Date:   Tue, 19 Nov 2019 16:20:58 +0530
+Message-ID: <CAHLCerP6AyB1QZrUdL9XU6PcTjQWgRuQdRvPamtWjBNJNhL=HA@mail.gmail.com>
+Subject: Re: [Patch v5 1/6] sched/pelt.c: Add support to track thermal pressure
+To:     Thara Gopinath <thara.gopinath@linaro.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>, ionela.voinescu@arm.com,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>, qperret@google.com,
+        LKML <linux-kernel@vger.kernel.org>,
+        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
+        Javi Merino <javi.merino@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Dienstag, 19. November 2019, 11:07:40 CET schrieb Andy Lutomirski:
+On Wed, Nov 6, 2019 at 12:20 AM Thara Gopinath
+<thara.gopinath@linaro.org> wrote:
+>
+> Extrapolating on the exisiting framework to track rt/dl utilization using
+> pelt signals, add a similar mechanism to track thermal pressure. The
+> difference here from rt/dl utilization tracking is that, instead of
+> tracking time spent by a cpu running a rt/dl task through util_avg,
+> the average thermal pressure is tracked through load_avg. This is
+> because thermal pressure signal is weighted "delta" capacity
+> and is not binary(util_avg is binary). "delta capacity" here
+> means delta between the actual capacity of a cpu and the decreased
+> capacity a cpu due to a thermal event.
 
-Hi Andy,
+Use a blank line here. And reflow the paragraph text.
 
-> On Sun, Nov 17, 2019 at 3:11 AM Stephan M=C3=BCller <smueller@chronox.de>=
- wrote:
-> > Am Samstag, 16. November 2019, 17:09:09 CET schrieb Andy Lutomirski:
-> >=20
-> > Hi Andy,
-> >=20
-> > > > On Nov 16, 2019, at 1:40 AM, Stephan M=C3=BCller <smueller@chronox.=
-de>
-> > > > wrote:
-> > > >=20
-> > > > =EF=BB=BFThe True Random Number Generator (TRNG) provides a random =
-number
-> > > > generator with prediction resistance (SP800-90A terminology) or an
-> > > > NTG.1
-> > > > (AIS 31 terminology).
-> > >=20
-> > > ...
-> > >=20
-> > > > The secondary DRNGs seed from the TRNG if it is present. In additio=
-n,
-> > > > the /dev/random device accesses the TRNG.
-> > > >=20
-> > > > If the TRNG is disabled, the secondary DRNGs seed from the entropy
-> > > > pool
-> > > > and /dev/random behaves like getrandom(2).
-> > >=20
-> > > As mentioned before, I don=E2=80=99t like this API.  An application t=
-hat, for
-> > > some
-> > > reason, needs a TRNG, should have an API by which it either gets a TR=
-NG
-> > > or
-> > > an error. Similarly, an application that wants cryptographically secu=
-re
-> > > random numbers efficiently should have an API that does that.  With y=
-our
-> > > design, /dev/random tries to cater to both use cases, but one of the =
-use
-> > > cases fails depending on kernel config.
-> > >=20
-> > > I think /dev/random should wait for enough entropy to initialize the
-> > > system
-> > > but should not block after that. A TRNG should have an entirely new A=
-PI
-> > > that is better than /dev/random.
-> >=20
-> > I apologize for the misunderstanding. I assumed we would introduce such
-> > /dev/ true_random at a later stage.
-> >=20
-> > If you agree, I can certainly add /dev/true_random right now that links
-> > with the TRNG and make /dev/random behave as discussed, i.e. behave
-> > exactly like getrandom(..., 0);
->=20
-> Given that your series is already a decently large ABI change, I think
-> it would be polite to users to make all the anticipated changes all at
-> once to reduce the amount of churn everyone needs to deal with.
+> In order to track average thermal pressure, a new sched_avg variable
+> avg_thermal is introduced. Function update_thermal_load_avg can be called
+> to do the periodic bookeeping (accumulate, decay and average)
+> of the thermal pressure.
+>
+> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+> ---
+>  kernel/sched/pelt.c  | 13 +++++++++++++
+>  kernel/sched/pelt.h  |  7 +++++++
+>  kernel/sched/sched.h |  1 +
+>  3 files changed, 21 insertions(+)
+>
+> diff --git a/kernel/sched/pelt.c b/kernel/sched/pelt.c
+> index a96db50..3821069 100644
+> --- a/kernel/sched/pelt.c
+> +++ b/kernel/sched/pelt.c
+> @@ -353,6 +353,19 @@ int update_dl_rq_load_avg(u64 now, struct rq *rq, int running)
+>         return 0;
+>  }
+>
+> +int update_thermal_load_avg(u64 now, struct rq *rq, u64 capacity)
+> +{
+> +       if (___update_load_sum(now, &rq->avg_thermal,
+> +                              capacity,
+> +                              capacity,
+> +                              capacity)) {
+> +               ___update_load_avg(&rq->avg_thermal, 1, 1);
+> +               return 1;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+>  #ifdef CONFIG_HAVE_SCHED_AVG_IRQ
+>  /*
+>   * irq:
+> diff --git a/kernel/sched/pelt.h b/kernel/sched/pelt.h
+> index afff644..c74226d 100644
+> --- a/kernel/sched/pelt.h
+> +++ b/kernel/sched/pelt.h
+> @@ -6,6 +6,7 @@ int __update_load_avg_se(u64 now, struct cfs_rq *cfs_rq, struct sched_entity *se
+>  int __update_load_avg_cfs_rq(u64 now, struct cfs_rq *cfs_rq);
+>  int update_rt_rq_load_avg(u64 now, struct rq *rq, int running);
+>  int update_dl_rq_load_avg(u64 now, struct rq *rq, int running);
+> +int update_thermal_load_avg(u64 now, struct rq *rq, u64 capacity);
+>
+>  #ifdef CONFIG_HAVE_SCHED_AVG_IRQ
+>  int update_irq_load_avg(struct rq *rq, u64 running);
+> @@ -159,6 +160,12 @@ update_dl_rq_load_avg(u64 now, struct rq *rq, int running)
+>  }
+>
+>  static inline int
+> +update_thermal_load_avg(u64 now, struct rq *rq, u64 capacity)
+> +{
+> +       return 0;
+> +}
+> +
+> +static inline int
+>  update_irq_load_avg(struct rq *rq, u64 running)
+>  {
+>         return 0;
+> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+> index 0db2c1b..d5d82c8 100644
+> --- a/kernel/sched/sched.h
+> +++ b/kernel/sched/sched.h
+> @@ -944,6 +944,7 @@ struct rq {
+>  #ifdef CONFIG_HAVE_SCHED_AVG_IRQ
+>         struct sched_avg        avg_irq;
+>  #endif
+> +       struct sched_avg        avg_thermal;
 
-I fully agree with that. This is the reason for my question to ask for how =
-to=20
-approach adding such additional interface for the TRNG. Considering that th=
-ere=20
-are use cases for the blocking interfaces, I would like to have it present=
-=20
-from the start.
-
-That said, are you planning to keep the blocking_pool considering our=20
-discussion?
-
-But may I ask why you say that there are ABI changes? The LRNG set tries to=
- be=20
-100% API and ABI compliant to the existing random.c interfaces.
-
-The only change is the runtime-behavior (e.g. time when something is seeded=
-),=20
-performance of the interrupt handling and the kernel/user interfaces that m=
-ay=20
-be noticeable by users. I.e. there are timing changes, but no technical=20
-changes.
-
-The LRNG though would add one optional interface for kernel internal use an=
-d=20
-then the discussed /dev/true_random interface.
->=20
-> > As this would introduce a new device file now, is there a special proce=
-ss
-> > that I need to follow or do I need to copy? Which major/minor number
-> > should I use?
-> >=20
-> > Looking into static const struct memdev devlist[] I see
-> >=20
-> >          [8] =3D { "random", 0666, &random_fops, 0 },
-> >          [9] =3D { "urandom", 0666, &urandom_fops, 0 },
-> >=20
-> > Shall a true_random be added here with [10]?
->=20
-> I am not at all an expert on chardevs, but this sounds generally
-> reasonable.  gregkh is probably the real authority here.
-
-Thank you for the hint. Then I would like to wait for Greg on this.
-
-Ciao
-Stephan
+Have your considered putting this inside a #ifdef
+CONFIG_HAVE_SCHED_THERMAL_PRESSURE?
 
 
+>         u64                     idle_stamp;
+>         u64                     avg_idle;
+>
+> --
+> 2.1.4
+>
