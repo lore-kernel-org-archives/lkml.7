@@ -2,122 +2,124 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A74EEC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3285C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:43:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CB6D222B5
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:43:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="JgnqN+VB"
+	by mail.kernel.org (Postfix) with ESMTP id 841D420637
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:43:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728055AbfKSMnh (ORCPT
+        id S1728091AbfKSMnr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 07:43:37 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:43074 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727646AbfKSMnh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 07:43:37 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAJCPNIB069833;
-        Tue, 19 Nov 2019 12:42:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=J1DVFWDWgRDlJNqhrtPfMZhXf4YNBEMKWsybmojvTLo=;
- b=JgnqN+VBvqZZJ86GuNVp+b1Ft61fTaXz3I1+uwYOAS5cE8ccyiXt3+XDKCQErW4byYg7
- LOUIJNY9zoyFWLXgfu77EZLnt7zaH08pKn0ucWpmFEcXSVYeqIotvFgfxFIapIAbLMqC
- 5GNH1EwRat2Z1PGDhwT4/m4JKOl5+MqlWL6TayJ/jhrBtFAyaHkfjBqx3zYmAzWtQyGw
- weoD1PTW2+I1lvoj+EkgSUY4+UNNIukOkr0LDPUoqpZoUpWDgl9+gFMHdW+ctdKnGfMx
- 5OTXTBAlnwApcHzY13V4I43jmorxsV98qvVi8vPb19OLm2tpmRgOdDOKVsSMjQaupnQt gg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2wa92ppj87-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 19 Nov 2019 12:42:17 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAJCSEIk167569;
-        Tue, 19 Nov 2019 12:40:17 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2wcem8sa94-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 19 Nov 2019 12:40:17 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xAJCeDVh026432;
-        Tue, 19 Nov 2019 12:40:13 GMT
-Received: from kadam (/41.210.141.188)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 19 Nov 2019 04:40:12 -0800
-Date:   Tue, 19 Nov 2019 15:39:56 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Mao Wenan <maowenan@huawei.com>, pbonzini@redhat.com,
-        rkrcmar@redhat.com, sean.j.christopherson@intel.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH -next] KVM: x86: remove set but not used variable 'called'
-Message-ID: <20191119123956.GC5604@kadam>
-References: <20191119030640.25097-1-maowenan@huawei.com>
- <87o8x8gjr5.fsf@vitty.brq.redhat.com>
- <20191119121423.GB5604@kadam>
- <87imnggidr.fsf@vitty.brq.redhat.com>
+        Tue, 19 Nov 2019 07:43:47 -0500
+Received: from mx2.suse.de ([195.135.220.15]:45166 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728060AbfKSMnr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 07:43:47 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 61E29AA35;
+        Tue, 19 Nov 2019 12:43:43 +0000 (UTC)
+Message-ID: <56cbba61d92f9bc7d0a33c1de379bcd5cf411cb8.camel@suse.de>
+Subject: Re: [PATCH v2 1/6] linux/log2.h: Add roundup/rounddown_pow_two64()
+ family of functions
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Andrew Murray <andrew.murray@arm.com>
+Cc:     Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-rdma@vger.kernel.org, maz@kernel.org, phil@raspberrypi.org,
+        iommu@lists.linux-foundation.org,
+        linux-rockchip@lists.infradead.org, f.fainelli@gmail.com,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-arm-kernel@lists.infradead.org, mbrugger@suse.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jeremy.linton@arm.com, Tom Joseph <tjoseph@cadence.com>,
+        wahrenst@gmx.net, james.quinlan@broadcom.com,
+        Robin Murphy <robin.murphy@arm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Tariq Toukan <tariqt@mellanox.com>
+Date:   Tue, 19 Nov 2019 13:43:39 +0100
+In-Reply-To: <052d07fb4eb79b29dd58cab577d59bab6684329a.camel@suse.de>
+References: <20191112155926.16476-1-nsaenzjulienne@suse.de>
+         <20191112155926.16476-2-nsaenzjulienne@suse.de>
+         <20191119111320.GP43905@e119886-lin.cambridge.arm.com>
+         <052d07fb4eb79b29dd58cab577d59bab6684329a.camel@suse.de>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-PEkTPRiOa1AqhiKRErKs"
+User-Agent: Evolution 3.34.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87imnggidr.fsf@vitty.brq.redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1911190116
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1911190116
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 01:28:32PM +0100, Vitaly Kuznetsov wrote:
-> Dan Carpenter <dan.carpenter@oracle.com> writes:
-> 
-> > On Tue, Nov 19, 2019 at 12:58:54PM +0100, Vitaly Kuznetsov wrote:
-> >> Mao Wenan <maowenan@huawei.com> writes:
-> >> 
-> >> > Fixes gcc '-Wunused-but-set-variable' warning:
-> >> >
-> >> > arch/x86/kvm/x86.c: In function kvm_make_scan_ioapic_request_mask:
-> >> > arch/x86/kvm/x86.c:7911:7: warning: variable called set but not
-> >> > used [-Wunused-but-set-variable]
-> >> >
-> >> > It is not used since commit 7ee30bc132c6 ("KVM: x86: deliver KVM
-> >> > IOAPIC scan request to target vCPUs")
-> >> 
-> >> Better expressed as 
-> >> 
-> >> Fixes: 7ee30bc132c6 ("KVM: x86: deliver KVM IOAPIC scan request to target vCPUs")
-> >> 
-> >
-> > There is sort of a debate about this whether the Fixes tag should be
-> > used if it's only a cleanup.
-> >
-> 
-> I have to admit I'm involved in doing backporting sometimes and I really
-> appreciate Fixes: tags. Just so you know on which side of the debate I
-> am :-)
 
-But we're not going to backport this hopefully?
+--=-PEkTPRiOa1AqhiKRErKs
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-regards,
-dan carpenter
+On Tue, 2019-11-19 at 12:30 +0100, Nicolas Saenz Julienne wrote:
+> Hi Andrew, thanks for the review.
+> > > +/**
+> > > + * __roundup_pow_of_two64() - round 64bit value up to nearest power =
+of
+> > > two
+> > > + * @n: value to round up
+> > > + */
+> > > +static inline __attribute__((const)) __u64 __roundup_pow_of_two64(__=
+u64
+> > > n)
+> >=20
+> > To be consistent with other functions in the same file (__ilog_u64) you=
+ may
+> > want to rename this to __roundup_pow_of_two_u64.
+>=20
+> Sounds good to me.
+>=20
+> > Also do you know why u64 is used in some places and __u64 in others?
+>=20
+> That's unwarranted, it should be __u64 everywhere.
+
+Sorry, now that I look deeper into it, it should be u64.
+
+> > > +{
+> > > +	return 1UL << fls64(n - 1);
+> >=20
+> > Does this need to be (and for the others):
+> >=20
+> > return 1ULL << fls64(n - 1);
+> >=20
+> > Notice that the PCI drivers you convert, all use 1ULL.
+>=20
+> Noted
+>=20
+> Regards,
+> Nicolas
+>=20
+
+
+--=-PEkTPRiOa1AqhiKRErKs
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3T43sACgkQlfZmHno8
+x/7LuAf/c4Ft9xBoQ5DrEpF3NZnrHpWnbCYGBZ5Q00PjCEwaMwf7zN1jspazlRC1
+8u+n3yELpEHEhnu5CArHUsydAcMXpcZ05JTf+ii7TGVQfZmFY/iII/4C0WEQPif5
+T19cDHz4f+qS+CVqpEWBvFt5YBDXfVst7ezSwZSRfRYNVjYMG4d2zbTRqSlVmOT5
+6FKyeFGOK+lGpYpAaAu09PG7IFFqMEae3x6TkHfO2cfzUzy88FyOVNZ8G4Oucvhe
+90OcIAUpPGgfX+Q2mQPBsITErw/o+Z4qY6t/kwwLcj9YjCFjh9MuwoDpS24a8Tmq
+5XWFnFRetCT6rYY15K2BujP0/VQBBQ==
+=sJh7
+-----END PGP SIGNATURE-----
+
+--=-PEkTPRiOa1AqhiKRErKs--
 
