@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 188A9C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:34:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E06C4C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:34:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E20FD208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:34:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF30D214DE
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:34:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141685;
-	bh=Skao6+giRM+BTw2RKzLY/18Rl/+xSoa8wM3mstDU30g=;
+	s=default; t=1574141687;
+	bh=oO0gUUG/vj63i5VoHzt41VVsBO2NgniuaSJlilhfdaM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tlw6PhfAZQXBrb3ahKGGZA4h7aPbX4q+NBWacXf0Bwcu7t7xCqKcucaYTwGYQIql0
-	 IRONex/GC7EhRMnaXz3Eeq8I0s4+EgXORvOuY81tPDH8YwHKug1WfKIbkWc9/4a1mH
-	 QXoVGzSUz2iQuUQmkfWRelDvDkXK1Fllc/1AUhZM=
+	b=rnPPwfcjGuNe4Zr/kHaoSfB/bdKq8lGNxo33cKprFk1HuVlbfxFpu0JHSYfXuEIfY
+	 CYN34qpBahwVKkkMmxWBGEmNzhEH0fx5i1L/TPo4eYeav2CUMCesE5KAFEOjD1Xnve
+	 l6N+eo+vFoV6rgKxbqhwK6EHPQZvo2wrOsb6rtss=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729723AbfKSFen (ORCPT
+        id S1729731AbfKSFeq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:34:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55442 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:34:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55508 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728557AbfKSFel (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:34:41 -0500
+        id S1729722AbfKSFeo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:34:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40A3D208C3;
-        Tue, 19 Nov 2019 05:34:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7A7C214DE;
+        Tue, 19 Nov 2019 05:34:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141680;
-        bh=Skao6+giRM+BTw2RKzLY/18Rl/+xSoa8wM3mstDU30g=;
+        s=default; t=1574141683;
+        bh=oO0gUUG/vj63i5VoHzt41VVsBO2NgniuaSJlilhfdaM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yXGqfwLi0EofGm3vi8/6IA9oX2xIOs7xtg8Zk9p7PQK02uMw3eP2zLhHxv1o94H6p
-         C1H63jiNSXv2ZLxMPlX7JIeNzs1PtFA5+Y02yGG5yWQE7+K9kGjYoJX5bW9+p1tpZ3
-         Ew/WuQBUGygNHTgDyOxalG2dDNn0zkGHx8PUmBAI=
+        b=0PoXAs+6jyDCwAkO9+zggvdR25rvOyiABy0FSGdeJiBNYE9LwZcM1iaQ7+BvTjwbc
+         XaOrOqffcxPhgUaSpEnICNCyyG2FznQEHOAvUsoKzYRn9P1JZ/kvIrwU4FuOeI4v6Y
+         AFAZ7IdXRuiwvB0rHH0Lz5z0O5vurvjG7JFUVeTA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nava kishore Manne <navam@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
+        stable@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 244/422] serial: uartps: Fix suspend functionality
-Date:   Tue, 19 Nov 2019 06:17:21 +0100
-Message-Id: <20191119051414.817459724@linuxfoundation.org>
+Subject: [PATCH 4.19 245/422] serial: samsung: Enable baud clock for UART reset procedure in resume
+Date:   Tue, 19 Nov 2019 06:17:22 +0100
+Message-Id: <20191119051414.877369929@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -60,102 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nava kishore Manne <nava.manne@xilinx.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit 4b9d33c6a30688344a3e95179654ea31b07f59b7 ]
+[ Upstream commit 1ff3652bc7111df26b5807037f624be294cf69d5 ]
 
-The driver's suspend/resume functions were buggy.
-If UART node contains any child node in the DT and
-the child is established a communication path with
-the parent UART. The relevant /dev/ttyPS* node will
-be not available for other operations.
-If the driver is trying to do any operations like
-suspend/resume without checking the tty->dev status
-it leads to the kernel crash/hang.
+Ensure that the baud clock is also enabled for UART register writes in
+driver resume. On Exynos5433 SoC this is needed to avoid external abort
+issue.
 
-This patch fix this issue by call the device_may_wake()
-with the generic parameter of type struct device.
-in the uart suspend and resume paths.
-
-It also fixes a race condition in the uart suspend
-path(i.e uart_suspend_port() should be called at the
-end of cdns_uart_suspend API this path updates the same)
-
-Signed-off-by: Nava kishore Manne <navam@xilinx.com>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/xilinx_uartps.c | 41 +++++++++---------------------
- 1 file changed, 12 insertions(+), 29 deletions(-)
+ drivers/tty/serial/samsung.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/tty/serial/xilinx_uartps.c b/drivers/tty/serial/xilinx_uartps.c
-index 77efa0a43fe76..66d49d5118853 100644
---- a/drivers/tty/serial/xilinx_uartps.c
-+++ b/drivers/tty/serial/xilinx_uartps.c
-@@ -1279,24 +1279,11 @@ static struct uart_driver cdns_uart_uart_driver = {
- static int cdns_uart_suspend(struct device *device)
- {
- 	struct uart_port *port = dev_get_drvdata(device);
--	struct tty_struct *tty;
--	struct device *tty_dev;
--	int may_wake = 0;
--
--	/* Get the tty which could be NULL so don't assume it's valid */
--	tty = tty_port_tty_get(&port->state->port);
--	if (tty) {
--		tty_dev = tty->dev;
--		may_wake = device_may_wakeup(tty_dev);
--		tty_kref_put(tty);
--	}
-+	int may_wake;
+diff --git a/drivers/tty/serial/samsung.c b/drivers/tty/serial/samsung.c
+index c6058b52d5d59..2a49b6d876b87 100644
+--- a/drivers/tty/serial/samsung.c
++++ b/drivers/tty/serial/samsung.c
+@@ -1944,7 +1944,11 @@ static int s3c24xx_serial_resume(struct device *dev)
  
--	/*
--	 * Call the API provided in serial_core.c file which handles
--	 * the suspend.
--	 */
--	uart_suspend_port(&cdns_uart_uart_driver, port);
--	if (!(console_suspend_enabled && !may_wake)) {
-+	may_wake = device_may_wakeup(device);
-+
-+	if (console_suspend_enabled && may_wake) {
- 		unsigned long flags = 0;
+ 	if (port) {
+ 		clk_prepare_enable(ourport->clk);
++		if (!IS_ERR(ourport->baudclk))
++			clk_prepare_enable(ourport->baudclk);
+ 		s3c24xx_serial_resetport(port, s3c24xx_port_to_cfg(port));
++		if (!IS_ERR(ourport->baudclk))
++			clk_disable_unprepare(ourport->baudclk);
+ 		clk_disable_unprepare(ourport->clk);
  
- 		spin_lock_irqsave(&port->lock, flags);
-@@ -1311,7 +1298,11 @@ static int cdns_uart_suspend(struct device *device)
- 		spin_unlock_irqrestore(&port->lock, flags);
+ 		uart_resume_port(&s3c24xx_uart_drv, port);
+@@ -1967,7 +1971,11 @@ static int s3c24xx_serial_resume_noirq(struct device *dev)
+ 			if (rx_enabled(port))
+ 				uintm &= ~S3C64XX_UINTM_RXD_MSK;
+ 			clk_prepare_enable(ourport->clk);
++			if (!IS_ERR(ourport->baudclk))
++				clk_prepare_enable(ourport->baudclk);
+ 			wr_regl(port, S3C64XX_UINTM, uintm);
++			if (!IS_ERR(ourport->baudclk))
++				clk_disable_unprepare(ourport->baudclk);
+ 			clk_disable_unprepare(ourport->clk);
+ 		}
  	}
- 
--	return 0;
-+	/*
-+	 * Call the API provided in serial_core.c file which handles
-+	 * the suspend.
-+	 */
-+	return uart_suspend_port(&cdns_uart_uart_driver, port);
- }
- 
- /**
-@@ -1325,17 +1316,9 @@ static int cdns_uart_resume(struct device *device)
- 	struct uart_port *port = dev_get_drvdata(device);
- 	unsigned long flags = 0;
- 	u32 ctrl_reg;
--	struct tty_struct *tty;
--	struct device *tty_dev;
--	int may_wake = 0;
--
--	/* Get the tty which could be NULL so don't assume it's valid */
--	tty = tty_port_tty_get(&port->state->port);
--	if (tty) {
--		tty_dev = tty->dev;
--		may_wake = device_may_wakeup(tty_dev);
--		tty_kref_put(tty);
--	}
-+	int may_wake;
-+
-+	may_wake = device_may_wakeup(device);
- 
- 	if (console_suspend_enabled && !may_wake) {
- 		struct cdns_uart *cdns_uart = port->private_data;
 -- 
 2.20.1
 
