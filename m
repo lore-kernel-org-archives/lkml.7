@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B630DC43141
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:09:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A82DC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:09:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89D1C208CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:09:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8F3E208CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:09:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574143781;
-	bh=ofw07OPqfVsTRQQpssHKxW1SwJBvUUdFDL1NMDfnIdA=;
+	s=default; t=1574143780;
+	bh=HYdL5GQ3OQvT0aFNudvAPyRyi+SuJmdXbbSLSZAqU6U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GqHnmw/lgLvt5B5kcJSEIDnh5yBsoGUlQ/By+WZQrPxYx3AXn6qSodhsYynxdWDqh
-	 iogHBEepzIL1RHt4IfXfkAviZjz/3QCA3OKRmuxGucFg9JTlSfoflI0ueMsSNV4Lc8
-	 TkpwgJRRfdBAtYiVCLxooQ+HZVlF3x+IJyzwRiLw=
+	b=v/rBSVAqpo63upuGm/FIhO0YQVYLyppLSi1TOGm2kQz8yBLvE68+RwF2K7VYJtI7B
+	 q+c6YiLB2Ra95QBMU6gZLf7rYarfydbxrRkP3tkEWHhm6bIxXw/84DQSYKhcGxyvBN
+	 mvjWvwrVWe0arT4QkOHzyOF7FZbvNHdXP4UFhlh8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727843AbfKSF23 (ORCPT
+        id S1727972AbfKSF2d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:28:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46870 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:28:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727417AbfKSF2W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:28:22 -0500
+        id S1727389AbfKSF2Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:28:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF7DD21783;
-        Tue, 19 Nov 2019 05:28:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF28A208C3;
+        Tue, 19 Nov 2019 05:28:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141301;
-        bh=ofw07OPqfVsTRQQpssHKxW1SwJBvUUdFDL1NMDfnIdA=;
+        s=default; t=1574141304;
+        bh=HYdL5GQ3OQvT0aFNudvAPyRyi+SuJmdXbbSLSZAqU6U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fJNZdE108fDkBZt9I3BoWxkm2KK/J2O8PMn1DPwezCapyEpJgKxvYnZl5KRu10qKC
-         XoSHLxftWZehGEK4+6YopYvc+QPIroi6aKHgrO9mAY3JD1cmZnIAqK0GGkNzhWcfS7
-         Dq68LFZTc9Pov5GhqDH1BsEzIjVPecXysrC+rjZw=
+        b=eUbEQjgZsoEltFQeZ86X5v76hPtuvHa4e2YxUZDPvqsqpTUlCl/y54lWYsM9JvE/W
+         iw4OahG/7AgFEtU1/bZJEdr4pCLVN99H3c7ee5ajipGRHcidZ2D6Xy704JU3TJrv03
+         eRtQiQgB2FVZuox/9ZpUzmIY3MfpFhdniWC+IBbc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kurt Kanzenbach <kurt@linutronix.de>,
+        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
         Miquel Raynal <miquel.raynal@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 114/422] mtd: rawnand: fsl_ifc: fixup SRAM init for newer ctrl versions
-Date:   Tue, 19 Nov 2019 06:15:11 +0100
-Message-Id: <20191119051406.485678076@linuxfoundation.org>
+Subject: [PATCH 4.19 115/422] mtd: rawnand: qcom: dont include dma-direct.h
+Date:   Tue, 19 Nov 2019 06:15:12 +0100
+Message-Id: <20191119051406.540796298@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -60,100 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kurt Kanzenbach <kurt@linutronix.de>
+From: Christoph Hellwig <hch@lst.de>
 
-[ Upstream commit ff8648f29fe58c2d94d32a076d2de7b92be4b485 ]
+[ Upstream commit ab0fb17c7d46406e1aac2dda265874751946626d ]
 
-Newer versions of the IFC controller use a different method of initializing the
-internal SRAM: Instead of reading from flash, a bit in the NAND configuration
-register has to be set in order to trigger the self-initializing process.
+A recent commit removed the incorrect use of phys_to_dma from this
+driver, but failed to remove the dma-direct.h include, so do that
+now.
 
-Signed-off-by: Kurt Kanzenbach <kurt@linutronix.de>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/nand/raw/fsl_ifc_nand.c | 33 +++++++++++++++++++++++------
- include/linux/fsl_ifc.h             |  2 ++
- 2 files changed, 28 insertions(+), 7 deletions(-)
+ drivers/mtd/nand/raw/qcom_nandc.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/mtd/nand/raw/fsl_ifc_nand.c b/drivers/mtd/nand/raw/fsl_ifc_nand.c
-index e4f5792dc5893..7e7729df78278 100644
---- a/drivers/mtd/nand/raw/fsl_ifc_nand.c
-+++ b/drivers/mtd/nand/raw/fsl_ifc_nand.c
-@@ -30,6 +30,7 @@
- #include <linux/mtd/partitions.h>
- #include <linux/mtd/nand_ecc.h>
- #include <linux/fsl_ifc.h>
-+#include <linux/iopoll.h>
+diff --git a/drivers/mtd/nand/raw/qcom_nandc.c b/drivers/mtd/nand/raw/qcom_nandc.c
+index 880e75f63a19b..07d8750313fd6 100644
+--- a/drivers/mtd/nand/raw/qcom_nandc.c
++++ b/drivers/mtd/nand/raw/qcom_nandc.c
+@@ -23,7 +23,6 @@
+ #include <linux/of_device.h>
+ #include <linux/delay.h>
+ #include <linux/dma/qcom_bam_dma.h>
+-#include <linux/dma-direct.h> /* XXX: drivers shall never use this directly! */
  
- #define ERR_BYTE		0xFF /* Value returned for read
- 					bytes when read failed	*/
-@@ -769,6 +770,27 @@ static int fsl_ifc_sram_init(struct fsl_ifc_mtd *priv)
- 	uint32_t csor = 0, csor_8k = 0, csor_ext = 0;
- 	uint32_t cs = priv->bank;
- 
-+	if (ctrl->version < FSL_IFC_VERSION_1_1_0)
-+		return 0;
-+
-+	if (ctrl->version > FSL_IFC_VERSION_1_1_0) {
-+		u32 ncfgr, status;
-+		int ret;
-+
-+		/* Trigger auto initialization */
-+		ncfgr = ifc_in32(&ifc_runtime->ifc_nand.ncfgr);
-+		ifc_out32(ncfgr | IFC_NAND_NCFGR_SRAM_INIT_EN, &ifc_runtime->ifc_nand.ncfgr);
-+
-+		/* Wait until done */
-+		ret = readx_poll_timeout(ifc_in32, &ifc_runtime->ifc_nand.ncfgr,
-+					 status, !(status & IFC_NAND_NCFGR_SRAM_INIT_EN),
-+					 10, IFC_TIMEOUT_MSECS * 1000);
-+		if (ret)
-+			dev_err(priv->dev, "Failed to initialize SRAM!\n");
-+
-+		return ret;
-+	}
-+
- 	/* Save CSOR and CSOR_ext */
- 	csor = ifc_in32(&ifc_global->csor_cs[cs].csor);
- 	csor_ext = ifc_in32(&ifc_global->csor_cs[cs].csor_ext);
-@@ -825,6 +847,7 @@ static int fsl_ifc_chip_init(struct fsl_ifc_mtd *priv)
- 	struct nand_chip *chip = &priv->chip;
- 	struct mtd_info *mtd = nand_to_mtd(&priv->chip);
- 	u32 csor;
-+	int ret;
- 
- 	/* Fill in fsl_ifc_mtd structure */
- 	mtd->dev.parent = priv->dev;
-@@ -918,13 +941,9 @@ static int fsl_ifc_chip_init(struct fsl_ifc_mtd *priv)
- 		chip->ecc.algo = NAND_ECC_HAMMING;
- 	}
- 
--	if (ctrl->version >= FSL_IFC_VERSION_1_1_0) {
--		int ret;
--
--		ret = fsl_ifc_sram_init(priv);
--		if (ret)
--			return ret;
--	}
-+	ret = fsl_ifc_sram_init(priv);
-+	if (ret)
-+		return ret;
- 
- 	/*
- 	 * As IFC version 2.0.0 has 16KB of internal SRAM as compared to older
-diff --git a/include/linux/fsl_ifc.h b/include/linux/fsl_ifc.h
-index 3fdfede2f0f3e..5f343b796ad95 100644
---- a/include/linux/fsl_ifc.h
-+++ b/include/linux/fsl_ifc.h
-@@ -274,6 +274,8 @@
-  */
- /* Auto Boot Mode */
- #define IFC_NAND_NCFGR_BOOT		0x80000000
-+/* SRAM Initialization */
-+#define IFC_NAND_NCFGR_SRAM_INIT_EN	0x20000000
- /* Addressing Mode-ROW0+n/COL0 */
- #define IFC_NAND_NCFGR_ADDR_MODE_RC0	0x00000000
- /* Addressing Mode-ROW0+n/COL0+n */
+ /* NANDc reg offsets */
+ #define	NAND_FLASH_CMD			0x00
 -- 
 2.20.1
 
