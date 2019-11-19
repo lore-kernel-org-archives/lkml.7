@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59E75C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:46:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E840C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:46:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23D142071B
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:46:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23AE421783
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:46:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142414;
-	bh=5y7jySM1EY7FEWm+rSzD2iseCEIB0/ban7fS0k4+TEA=;
+	s=default; t=1574142419;
+	bh=1YNBzt0jbY+niUzO7ze/IcroOlW0T0+ZDdhYKHwxpCk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zh6ZgstBeuLDkng35RFfo+9WzZrPDoypcJVwVSNprFTCHo62hpKnsOFgz/RsV32YI
-	 i70GezeG5fUiribXNIBAkSI8iT47SayZ8tppa/zN1jSe3uCNp7J00PO/xweJPWYJ8k
-	 LWNZoPhgncuEsCtVpQGU2EChjBspKms48haBdFfg=
+	b=R6SbTuTGRNWPEGIKmBRYGSWiR7Kok9++4/zXS2d7agG9zbSe02McA/Fij7oTeucbv
+	 Ls8vLRfjOLXhG2YifGyMkhLDKSqN6zDNv8mUJXd1+7xf/NiX8ZBiIQvO3WJ3QJMZge
+	 ERE5hPk4CRwHZeElpxTHJKJ8JHtCUjrPEsNB1Sis=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731160AbfKSFqx (ORCPT
+        id S1731179AbfKSFq5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:46:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43024 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:46:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730650AbfKSFqt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:46:49 -0500
+        id S1730637AbfKSFqz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:46:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6628F2071B;
-        Tue, 19 Nov 2019 05:46:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C86D208CC;
+        Tue, 19 Nov 2019 05:46:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142408;
-        bh=5y7jySM1EY7FEWm+rSzD2iseCEIB0/ban7fS0k4+TEA=;
+        s=default; t=1574142414;
+        bh=1YNBzt0jbY+niUzO7ze/IcroOlW0T0+ZDdhYKHwxpCk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZJm42z5BUicUjoUcBzGGuolHUVp8mX9OJLQT27wT+1bHtZVLVVvm8lVnxl912QjvH
-         sV+AkslNTWWk0tDz6SlC+7TrABnKD70hHxM0dnVWYWmtu9KGxs0vMOHu4dhjUGXUo5
-         NfzGOEjglPgjgZHJ2sIfj5GwGf2r7/6LmOewOQ7w=
+        b=WJ6mCeEeGWOWShPXEGQYX4hSpUvIasp731l8nY3zVE/aQ88dajVHU4aS/uFynoao3
+         R7JE6Sw52ku2GcAK+muZc2ppdBqW5bda5qtyUYPDW8EYbVvyfZnCUDCtMtMIBJtRoJ
+         1IWh4Opkqbta7AkitCTCjRRq/0iOabOcMe8DF86Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Muhammad Sammar <muhammads@mellanox.com>,
-        Feras Daoud <ferasda@mellanox.com>,
+        stable@vger.kernel.org, Parav Pandit <parav@mellanox.com>,
+        Daniel Jurgens <danielj@mellanox.com>,
         Leon Romanovsky <leonro@mellanox.com>,
         Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 070/239] IB/ipoib: Ensure that MTU isnt less than minimum permitted
-Date:   Tue, 19 Nov 2019 06:17:50 +0100
-Message-Id: <20191119051313.031606081@linuxfoundation.org>
+Subject: [PATCH 4.14 072/239] RDMA/core: Follow correct unregister order between sysfs and cgroup
+Date:   Tue, 19 Nov 2019 06:17:52 +0100
+Message-Id: <20191119051313.449436537@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -62,39 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Muhammad Sammar <muhammads@mellanox.com>
+From: Parav Pandit <parav@mellanox.com>
 
-[ Upstream commit 142a9c287613560edf5a03c8d142c8b6ebc1995b ]
+[ Upstream commit c715a39541bb399eb03d728a996b224d90ce1336 ]
 
-It is illegal to change MTU to a value lower than the minimum MTU
-stated in ethernet spec. In addition to that we need to add 4 bytes
-for encapsulation header (IPOIB_ENCAP_LEN).
+During register_device() init sequence is,
+(a) register with rdma cgroup followed by
+(b) register with sysfs
 
-Before "ifconfig ib0 mtu 0" command, succeeds while it obviously shouldn't.
+Therefore, unregister_device() sequence should follow the reverse order.
 
-Signed-off-by: Muhammad Sammar <muhammads@mellanox.com>
-Reviewed-by: Feras Daoud <ferasda@mellanox.com>
+Signed-off-by: Parav Pandit <parav@mellanox.com>
+Reviewed-by: Daniel Jurgens <danielj@mellanox.com>
 Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
 Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/ulp/ipoib/ipoib_main.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/infiniband/core/device.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/ulp/ipoib/ipoib_main.c b/drivers/infiniband/ulp/ipoib/ipoib_main.c
-index 1a93d3d58c8a4..caae4bfab950d 100644
---- a/drivers/infiniband/ulp/ipoib/ipoib_main.c
-+++ b/drivers/infiniband/ulp/ipoib/ipoib_main.c
-@@ -249,7 +249,8 @@ static int ipoib_change_mtu(struct net_device *dev, int new_mtu)
- 		return 0;
+diff --git a/drivers/infiniband/core/device.c b/drivers/infiniband/core/device.c
+index 61ade4b3e7bb5..6b0d1d8609cad 100644
+--- a/drivers/infiniband/core/device.c
++++ b/drivers/infiniband/core/device.c
+@@ -599,8 +599,8 @@ void ib_unregister_device(struct ib_device *device)
  	}
+ 	up_read(&lists_rwsem);
  
--	if (new_mtu > IPOIB_UD_MTU(priv->max_ib_mtu))
-+	if (new_mtu < (ETH_MIN_MTU + IPOIB_ENCAP_LEN) ||
-+	    new_mtu > IPOIB_UD_MTU(priv->max_ib_mtu))
- 		return -EINVAL;
+-	ib_device_unregister_rdmacg(device);
+ 	ib_device_unregister_sysfs(device);
++	ib_device_unregister_rdmacg(device);
  
- 	priv->admin_mtu = new_mtu;
+ 	mutex_unlock(&device_mutex);
+ 
 -- 
 2.20.1
 
