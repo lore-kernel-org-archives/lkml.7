@@ -2,101 +2,146 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2397C43141
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:29:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B4DDC43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:29:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BFE321823
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:29:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 240252231D
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:29:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141361;
-	bh=yXJ6Nbeh5e1xKhtBk4G9bNNBN67AaO4fXPVEf4EEI/A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mUldxUpWpWc4z29/B9HZKT/iPsqI6+4slN0T4LHsJfqdlzaWFpopRS2z9Ejtre/Xz
-	 o+zkLCJdgby5ZEIUTH9MQYfjZMD4kWKJH6dYVIyMMLBN2o0mqWKzw56AtUl++lvcBu
-	 NSp1Qglh5zkceN0+ZzNSa101VC8I0VvksZeIPvtA=
+	s=default; t=1574141359;
+	bh=8JMcbCa2WKKz+0rsNJcoxlfJyTxFxkW6Mt8zV/xTAdU=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=HLyzRLSmN6lostcn+I5E/lW1E5WQ3LhfLwNCZCXoIo6TafFg8+xlw63eO1KQycGgB
+	 7NtwG/+7KfMwzsnQKoRvAqrbZsQ0SWzD8vSxJzMX4xzI5nFmGL3DaOm3AwpmhF82j9
+	 zbkj2aGIFLl7ggbYSQvLxbNjklnQj49iSBQKz0qA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728983AbfKSF3T (ORCPT
+        id S1727825AbfKSF3S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:29:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47736 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:29:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47770 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728954AbfKSF3O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:29:14 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1728944AbfKSF3P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:29:15 -0500
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 738D921939;
-        Tue, 19 Nov 2019 05:29:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EA8421823;
+        Tue, 19 Nov 2019 05:29:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141353;
-        bh=yXJ6Nbeh5e1xKhtBk4G9bNNBN67AaO4fXPVEf4EEI/A=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NsKqK1ZlUhMTSlVUOcBkElQN44cpKKXQCnBaRpFROiItTTB7xQRDv0/s7Bv04Myno
-         RlwRgmD3oAPCByQVI4KHrIuwvCrdOFqEVsjkcAVhGiEE2KrOb5AEUlyuChbol9Q//Z
-         MTlJzvbKjRDjZMRiUI5KbBnMkBuIocwRF68/ozgs=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Parav Pandit <parav@mellanox.com>,
-        Daniel Jurgens <danielj@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 131/422] RDMA/core: Follow correct unregister order between sysfs and cgroup
-Date:   Tue, 19 Nov 2019 06:15:28 +0100
-Message-Id: <20191119051407.383478759@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
-References: <20191119051400.261610025@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1574141354;
+        bh=8JMcbCa2WKKz+0rsNJcoxlfJyTxFxkW6Mt8zV/xTAdU=;
+        h=Date:From:To:Subject:References:In-Reply-To:From;
+        b=qabvm+IvlkJYQun3fh27xE5jpHp5kNB4XaC5w+hBEUkzXWqYOJ9RD7p4ruZVj2C+a
+         Q0g2vTvCkC2rV+GHtwbgcE92wdyNLRaiwlUeX9rV/6oQV49PegVHILWShVFQjwlt9v
+         sC35xaQOKfKinpwSGZYPN/n64Iuf4AKMwwhgB3Ww=
+Date:   Mon, 18 Nov 2019 21:29:12 -0800
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     bpf <bpf@vger.kernel.org>, netdev <netdev@vger.kernel.org>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        syzbot <syzbot+83979935eb6304f8cd46@syzkaller.appspotmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Subject: Re: kernel panic: stack is corrupted in __lock_acquire (4)
+Message-ID: <20191119052912.GM163020@sol.localdomain>
+References: <0000000000009b3b80058af452ae@google.com>
+ <0000000000000ec274059185a63e@google.com>
+ <CACT4Y+aT5z65OZE6_TQieU5zUYWDvDtAogC45f6ifLkshBK2iw@mail.gmail.com>
+ <20191017162505.GB726@sol.localdomain>
+ <20191017163007.GC726@sol.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191017163007.GC726@sol.localdomain>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Parav Pandit <parav@mellanox.com>
+On Thu, Oct 17, 2019 at 09:30:07AM -0700, Eric Biggers wrote:
+> On Thu, Oct 17, 2019 at 09:25:05AM -0700, Eric Biggers wrote:
+> > On Sun, Sep 01, 2019 at 08:23:42PM -0700, 'Dmitry Vyukov' via syzkaller-bugs wrote:
+> > > On Sun, Sep 1, 2019 at 3:48 PM syzbot
+> > > <syzbot+83979935eb6304f8cd46@syzkaller.appspotmail.com> wrote:
+> > > >
+> > > > syzbot has found a reproducer for the following crash on:
+> > > >
+> > > > HEAD commit:    38320f69 Merge branch 'Minor-cleanup-in-devlink'
+> > > > git tree:       net-next
+> > > > console output: https://syzkaller.appspot.com/x/log.txt?x=13d74356600000
+> > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=1bbf70b6300045af
+> > > > dashboard link: https://syzkaller.appspot.com/bug?extid=83979935eb6304f8cd46
+> > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1008b232600000
+> > > 
+> > > Stack corruption + bpf maps in repro triggers some bells. +bpf mailing list.
+> > > 
+> > > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > > > Reported-by: syzbot+83979935eb6304f8cd46@syzkaller.appspotmail.com
+> > > >
+> > > > Kernel panic - not syncing: stack-protector: Kernel stack is corrupted in:
+> > > > __lock_acquire+0x36fa/0x4c30 kernel/locking/lockdep.c:3907
+> > > > CPU: 0 PID: 8662 Comm: syz-executor.4 Not tainted 5.3.0-rc6+ #153
+> > > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> > > > Google 01/01/2011
+> > > > Call Trace:
+> > > > Kernel Offset: disabled
+> > > > Rebooting in 86400 seconds..
+> > > >
+> > 
+> > This is still reproducible on latest net tree, but using a different kconfig I
+> > was able to get a more informative crash output.  Apparently tcp_bpf_unhash() is
+> > being called recursively.  Anyone know why this might happen?
+> > 
+> > This is using the syzkaller language reproducer linked above -- I ran it with:
+> > 
+> > 	syz-execprog -threaded=1 -collide=1 -cover=0 -repeat=0 -procs=8 -sandbox=none -enable=net_dev,net_reset,tun syz_bpf.txt
+> > 
+> > Crash report on net/master:
+> > 
+> > PANIC: double fault, error_code: 0x0
+> > CPU: 3 PID: 8328 Comm: syz-executor Not tainted 5.4.0-rc1-00118-ge497c20e2036 #31
+> > Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20191013_105130-anatol 04/01/2014
+> > RIP: 0010:mark_lock+0x4/0x640 kernel/locking/lockdep.c:3631
+> > Code: a2 7f 27 01 85 c0 0f 84 f3 42 00 00 48 8d 65 d8 5b 41 5c 41 5d 41 5e 41 5f 5d c3 66 66 2e 0f 1f 84 00 00 00 00 00 55 48 89 e5 <41> 57 41 56 41 55 41 54 53 48 83 ec 18 83 fa 08 76 21 44 8b 25 ab
+> > RSP: 0018:ffffc9000010d000 EFLAGS: 00010046
+> > RAX: 0000000000000000 RBX: 0000000000000005 RCX: 0000000000000000
+> > RDX: 0000000000000008 RSI: ffff888071f92dd8 RDI: ffff888071f92600
+> > RBP: ffffc9000010d000 R08: 0000000000000000 R09: 0000000000022023
+> > R10: 00000000000000c8 R11: 0000000000000000 R12: ffff888071f92600
+> > R13: ffff888071f92dd8 R14: 0000000000000023 R15: 0000000000000000
+> > FS:  00007ff9f7765700(0000) GS:ffff88807fd80000(0000) knlGS:0000000000000000
+> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > CR2: ffffc9000010cff8 CR3: 000000000221d000 CR4: 00000000003406e0
+> > Call Trace:
+> >  <IRQ>
+> >  mark_usage kernel/locking/lockdep.c:3592 [inline]
+> >  __lock_acquire+0x22f/0xf80 kernel/locking/lockdep.c:3909
+> >  lock_acquire+0x99/0x170 kernel/locking/lockdep.c:4487
+> >  rcu_lock_acquire include/linux/rcupdate.h:208 [inline]
+> >  rcu_read_lock include/linux/rcupdate.h:599 [inline]
+> >  tcp_bpf_unhash+0x33/0x1d0 net/ipv4/tcp_bpf.c:549
+> >  tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
+> >  tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
+> >  tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
+> >  tcp_bpf_unhash+0x19b/0x1d0 net/ipv4/tcp_bpf.c:554
+> [...]
+> 
+> Recursive tcp_bpf_unhash() also showed up in
+> "BUG: unable to handle kernel paging request in tls_prots"
+> (https://lkml.kernel.org/lkml/000000000000d7bcbb058c3758a1@google.com/T/)
+> which was claimed to be fixed by
+> "bpf: sockmap/tls, close can race with map free".
+> But that fix was months ago; this crash is on latest net tree.
+> 
 
-[ Upstream commit c715a39541bb399eb03d728a996b224d90ce1336 ]
+Is anyone planning to look into this?  This is still occurring on net-next
+(4 days ago).
 
-During register_device() init sequence is,
-(a) register with rdma cgroup followed by
-(b) register with sysfs
-
-Therefore, unregister_device() sequence should follow the reverse order.
-
-Signed-off-by: Parav Pandit <parav@mellanox.com>
-Reviewed-by: Daniel Jurgens <danielj@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/infiniband/core/device.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/infiniband/core/device.c b/drivers/infiniband/core/device.c
-index 6d8ac51a39cc0..6a585c3e21923 100644
---- a/drivers/infiniband/core/device.c
-+++ b/drivers/infiniband/core/device.c
-@@ -599,8 +599,8 @@ void ib_unregister_device(struct ib_device *device)
- 	}
- 	up_read(&lists_rwsem);
- 
--	ib_device_unregister_rdmacg(device);
- 	ib_device_unregister_sysfs(device);
-+	ib_device_unregister_rdmacg(device);
- 
- 	mutex_unlock(&device_mutex);
- 
--- 
-2.20.1
-
-
-
+- Eric
