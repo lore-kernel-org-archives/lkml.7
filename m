@@ -2,139 +2,141 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDC4C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:46:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59FECC43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:46:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D90EA222D1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:46:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="BhooZjoG"
+	by mail.kernel.org (Postfix) with ESMTP id 3968E222D1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:46:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728237AbfKSOqA (ORCPT
+        id S1728159AbfKSOq3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 09:46:00 -0500
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:8891 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727255AbfKSOp7 (ORCPT
+        Tue, 19 Nov 2019 09:46:29 -0500
+Received: from mout.kundenserver.de ([217.72.192.75]:53513 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727066AbfKSOq2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 09:45:59 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dd400290000>; Tue, 19 Nov 2019 06:46:01 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 19 Nov 2019 06:45:59 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 19 Nov 2019 06:45:59 -0800
-Received: from [10.21.133.51] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 19 Nov
- 2019 14:45:56 +0000
-Subject: Re: [PATCH 4.14 000/239] 4.14.155-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     <linux-kernel@vger.kernel.org>, <torvalds@linux-foundation.org>,
-        <akpm@linux-foundation.org>, <linux@roeck-us.net>,
-        <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>
-References: <20191119051255.850204959@linuxfoundation.org>
- <cc1129c8-797d-7a1d-e59b-16c826270fad@nvidia.com>
- <20191119122535.GB1913916@kroah.com> <20191119123135.GB1948960@kroah.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <1bdb0348-7f51-1488-6246-c6cd2f74afcb@nvidia.com>
-Date:   Tue, 19 Nov 2019 14:45:54 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 19 Nov 2019 09:46:28 -0500
+Received: from mail-qt1-f172.google.com ([209.85.160.172]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MiIhU-1ht5ev1Ys2-00fP8b; Tue, 19 Nov 2019 15:46:27 +0100
+Received: by mail-qt1-f172.google.com with SMTP id p20so24864316qtq.5;
+        Tue, 19 Nov 2019 06:46:27 -0800 (PST)
+X-Gm-Message-State: APjAAAUYO7AmvoilwFNaZ4eHUBwJx4CBw4GEW5GCsqcfPHJmZmQ3ACie
+        CPuqHI1qTndYL7yKi8BzqWhJyH8HNNM9BdEIRDM=
+X-Google-Smtp-Source: APXvYqyZthyLNHmwLrvGE3UI0NVhTMLNX0GD/xv+616jGA+AJH2A6naRt3YGzH0AczzOYwHYd6VDdgQ8yfjqRnWYRW4=
+X-Received: by 2002:ac8:1908:: with SMTP id t8mr32535797qtj.18.1574174786183;
+ Tue, 19 Nov 2019 06:46:26 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191119123135.GB1948960@kroah.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1574174762; bh=tOsdNg2Z7Z+OkFmLIUtPFRoEqHmS5nfsi0rZWHffKtw=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=BhooZjoGLX4GgoIGfbV/WvEURl9nWObLPashDS4laun6EeqCGpR6ayXztPhFOHP1c
-         LW2r9+7cZWDdEgzQyI6TW0FK1e6PoNW9DSqAhnVT+jQxDlN7P4UXNHeKLIJC8nOpLI
-         q9H6tlIF3KTljOzmkb/sG7ocjP0nC/qw/6RLn5SfMzfZjmySWmdk1rbuyUrWXAGhq1
-         CUng+zC9LlOwq5G1we215+Ql4uMBKo7Rf/jsEiEzdtB0hzzFM0K6K6I0KP7Lz/9bia
-         F0HRXaPNcPJO2FYGUrfWP6/tVooCZwBZjwREo5o4mm+MqXufrTCvmhvfszaLaJWhsZ
-         PWIApfsuvfOgQ==
+References: <20191114114525.12675-1-orson.zhai@unisoc.com> <20191114114525.12675-2-orson.zhai@unisoc.com>
+ <CAK8P3a23jcNgFErik1PFr=tG6n8kc8Pj9fARw47n=ou8t8iV+Q@mail.gmail.com> <20191118083952.GB6039@spreadtrum.com>
+In-Reply-To: <20191118083952.GB6039@spreadtrum.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 19 Nov 2019 15:46:09 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a2d2=BejX=R0jmw0zt64mPF-rjKSi1Eh5Koz1cqku-nRA@mail.gmail.com>
+Message-ID: <CAK8P3a2d2=BejX=R0jmw0zt64mPF-rjKSi1Eh5Koz1cqku-nRA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: Add syscon-names support
+To:     Orson Zhai <orson.zhai@spreadtrum.com>
+Cc:     Orson Zhai <orson.zhai@unisoc.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        kevin.tang@unisoc.com
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:SjwzpAUsg1VI3ER4QUyL0Fd5YUZOgF6BGz6sNVf4D9LH8gXEEO8
+ YODOQcph9RGmtUTtgP5OdwIDMeJoiMOBxxnvVpKprlkVAwCY7fG8ZIKLU7HeG0WlDFblQS7
+ codUWH2Z65XBciJmw9/e2RlAUG79bEefqQte1f+P3SbVm7NyiJ5wuD7KtPeJkPCQKodB3GV
+ ShSnKDp7w78PaBCzdGCKw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ecSILaxw7Tg=:tYzpVdFLNU9thDNNE+4o1x
+ 4+q2F2fFPtLc+Aeq4KUKiufr+C6ERYgY8ttQGY4c9MZiyPd4l5KZjFcNg9dIugEM86g9VCRZy
+ /USSSBcraVNwctOCrR1LDDH6of1INvHdCWF1yZMqeSRjBfN4OY6SCTyf825ZpVD1Rq/2KmC/D
+ VSTL6qnYm4Y46dVowuzGCUz/TlQ6D//lU/VlT/e4SmzXOAsVLIleNbBFjn8W5WlQayUlHnBvm
+ rtJ3UlNgtqfhAjtsqipMzLLXAGpdEiWK0b2ccMakAZU12fXTEFTFFlpvo9lk3C/ZHbc45GihP
+ bxWNwCkLLpMRBGazWQpXLgprlvzGztJJEIoozHBo0ii5sQ7WJnZj2Cb7YuJ/vO9Pp8037BtXU
+ Y9okOKWQx+D6RPhbQa0JB8Rx09LSgeRWWa/I9xK90cLHieAukbSHhEILZNSE1tYkw+o57SKx3
+ vUeLCkyCCDsOov15+BYiuD/NGgbEA9a72PMVEIRR3cl8UhjVevfXqT672E353aE3HW+L5yUV4
+ aegnKxMeeYFiAxQO0R/6szbtTzPYmVDsqsTQTd6HMZisvTLyR+YjCyfLJFRDY7PLjwo+y0wBh
+ g7mic+5oHmVua1KLgZ+oIMiiWwL+AImlJU8KRSVAIyafSxbBoU9zOY6CeE50mKAbKKVKtlE6t
+ fMVZGxFUqbFdEjXNnug+DPv+wj04VY1MSxjI4hak1Z70xnMdrk62IUJ+p1s4HGuui74/FujXK
+ lq6fR6XX14MYZrZKwwc5HMjQs563p7TA5fO96YEizQ5xd+lXsv7EbL0HIWWac7VRYMsWhorNA
+ 6ozju9EbVXyZpbknCbx4No7VuT8OKUIt/T+BZNKl9WcMKLhOVmw5A+FrbQMp77g+ZK2MhAF68
+ fuwr4r96tpwVC1uRUKAQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Nov 18, 2019 at 9:42 AM Orson Zhai <orson.zhai@spreadtrum.com> wrote:
+>
+> Hi Arnd,
+>
+> On Fri, Nov 15, 2019 at 10:33:30AM +0100, Arnd Bergmann wrote:
+> > On Thu, Nov 14, 2019 at 12:48 PM Orson Zhai <orson.zhai@unisoc.com> wrote:
+> > >
+> > >
+> > > Make life easier when syscon consumer want to access multiple syscon
+> > > nodes.
+> > > Add syscon-names and relative properties to help manage complicated
+> > > cases when accessing more one syscon node.
+> > >
+> > > Signed-off-by: Orson Zhai <orson.zhai@unisoc.com>
+> >
+> > Hi Orson,
+> >
+> > Can you explain why the number of cells in this binding is specific
+> > to the syscon node rather than the node referencing it?
+>
+> The story is like this. I found there are too many global registers in
+> Unisoc(former Spreadtrum) chips. Dozens of offset with dozens of modules
+> were needed to be specified. So I thought the dts files would seem "horrible"
+> with a big chunk of syscon-xxx (say more than 20 lines)
+>
+> I learned from reg-names way which might look clean to hold all these mess things.
+> But to implement this, the users need to konw the cell-size if we add arguments to syscon node.
+> I thought to add cell-size into every syscon consumer node is a duplicated work and
+> I wanted to take advantage of of_parse_phandle_with_args.
+> So the bindings were created then.
 
-On 19/11/2019 12:31, Greg Kroah-Hartman wrote:
-> On Tue, Nov 19, 2019 at 01:25:35PM +0100, Greg Kroah-Hartman wrote:
->> On Tue, Nov 19, 2019 at 09:12:48AM +0000, Jon Hunter wrote:
->>>
->>> On 19/11/2019 05:16, Greg Kroah-Hartman wrote:
->>>> This is the start of the stable review cycle for the 4.14.155 release.
->>>> There are 239 patches in this series, all will be posted as a response
->>>> to this one.  If anyone has any issues with these being applied, please
->>>> let me know.
->>>>
->>>> Responses should be made by Thu, 21 Nov 2019 05:02:35 +0000.
->>>> Anything received after that time might be too late.
->>>>
->>>> The whole patch series can be found in one patch at:
->>>> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.155-rc1.gz
->>>> or in the git tree and branch at:
->>>> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
->>>> and the diffstat can be found below.
->>>>
->>>> thanks,
->>>>
->>>> greg k-h
->>>>
->>>> -------------
->>>
->>> ...
->>>
->>>> Heiko Stuebner <heiko@sntech.de>
->>>>     arm64: dts: rockchip: enable display nodes on rk3328-rock64
->>> The above commit is causing the following build error for ARM64 ...
->>>
->>> Error: arch/arm64/boot/dts/rockchip/rk3328-rock64.dts:149.1-6 Label or path hdmi not found
->>> Error: arch/arm64/boot/dts/rockchip/rk3328-rock64.dts:153.1-9 Label or path hdmiphy not found
->>> Error: arch/arm64/boot/dts/rockchip/rk3328-rock64.dts:345.1-5 Label or path vop not found
->>> FATAL ERROR: Syntax error parsing input tree
->>> scripts/Makefile.lib:317: recipe for target 'arch/arm64/boot/dts/rockchip/rk3328-rock64.dtb' failed
->>> make[2]: *** [arch/arm64/boot/dts/rockchip/rk3328-rock64.dtb] Error 1
->>> scripts/Makefile.build:585: recipe for target 'arch/arm64/boot/dts/rockchip' failed
->>> make[1]: *** [arch/arm64/boot/dts/rockchip] Error 2
->>> arch/arm64/Makefile:138: recipe for target 'dtbs' failed
->>> make: *** [dtbs] Error 2
->>
->> Will go drop this, thanks.
-> 
-> -rc2 is out with this patch removed, thanks.
+Ok, that makes sense.
 
-Thanks. This looks better!
+> > The way would otherwise handle the example from your binding
+> > would be with two separate properties in the display node, like
+> >
+> > syscon-enable = <&ap_apb_regs 0x4 0xf00>;
+> > syscon-power = <&aon_regs 0x8>;
+>
+> This is an option for consumers all the time.
+> Acturally my patches are not going to replace this.
+> I'd like to provide another option to save people like desperate engineers in Spreadtrum :)
+>
+> >
+> > in which case, the syscon driver does not need to know anything
+>
+> Whould it be better if I add syscon-cells into consumer's node?
 
-All tests passing for Tegra ...
+As I see it, there is no reason to put the syscon-cells property into any node,
+as this is implied by the driver binding using the syscon reference.  I would
+only use the #xyz-cells style property if there are multiple interpretations
+that all make sense for the same binding.
 
-Test results for stable-v4.14:
-    8 builds:	8 pass, 0 fail
-    16 boots:	16 pass, 0 fail
-    24 tests:	24 pass, 0 fail
+> Then I could read the cell size and use "of_parse_phandle_with_fixed_args()" instead.
+> This will not involve syscon node itself at all.
 
-Linux version:	4.14.155-rc2-g086940936515
-Boards tested:	tegra124-jetson-tk1, tegra20-ventana,
-                tegra210-p2371-2180, tegra30-cardhu-a04
+This sounds better to me, yes. I had not even remembered this function
+exists, but I think this is a good idea.
 
-Cheers
-Jon
+I can also see a point in favor of adding more infrastructure around this,
+possibly naming the entries in a syscon-names property as you suggested,
+combining of_parse_phandle_with_fixed_args() with a name, or
+combining with syscon_regmap_lookup_by_phandle() for convenience.
 
--- 
-nvpublic
+This should all be possible without adding complexity to the syscon
+DT binding itself, and it would give more structure to the way it
+is used by drivers.
+
+       Arnd
