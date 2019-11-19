@@ -2,200 +2,389 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC33CC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6477CC43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:13:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B67CE222D1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:13:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 224B1222DC
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:13:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="i34BzZ2z"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="a4lj3B5M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727983AbfKSMND (ORCPT
+        id S1727826AbfKSMNE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 19 Nov 2019 07:13:04 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:48912 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727951AbfKSMND (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 19 Nov 2019 07:13:03 -0500
-Received: from mail-eopbgr790047.outbound.protection.outlook.com ([40.107.79.47]:19289
-        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725798AbfKSMND (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 07:13:03 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cQ7TqXzUBBXqMpQ+MCBb8GuWtluZmVM2IqvKbbuGpGdaobaeQeh8cdc8oe3drbuAyI2muSgBJEWSYQo58cfKJ4SXpIyH+pCsTievwDyEBH9J7+zv+Il5IkcoXhCgK1U9eNfkOISkp2LnYu7xWQiws9WDkhPHjLWzTBIOTaUV6pC/TBJDI1yF14edeqLofMwyMSA0JzOBS70bSwlIHGCdQmZEPDGDvp9XCN4XtobOXI1D6R3f5/O3lyLqF/8+XtArH7PsPSlVqu/l4/i4b4DScoW897tvUk372+h+CCURjgsxdGWfrEkH0cA4yyE9eUqlls3wNWJrPZbSe3A6yL5gcw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SdqAZdh5U6sOBgDkyVbY7DpGtb3eXsXXJFDNqcmuy34=;
- b=UvPasBAhEtcZ6/ouyaeinL77dA4eBgTBbnHcl7ztorT2GnvzjTebAu2z4MWBJv/+LAUHbWDj8TEJv1PKXAeEHaFQSfZxEULP3/4PfLwXJFsrJyxjsuHL40OkuD6ZuBzE2LLuBbQnwbIAqc51WsybGyFs9L8bwfLrF5xme9uny35WnqC5yBNS27S8B5+UJ4TGQCcxxqdveTllotONVe0+nXJ8GxQjye/UWkH9shfyn3OIWkwLELAecHV53RnRnp1uXknO1TdIZmlQDiqGjR4WsQ66Y3buWBjBHEbUfsffgcZUDjfWYjb+q9EgJoLGv/Sxyy/k6UA+qFB73Rc+sirStw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
- 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com;
- dmarc=permerror action=none header.from=amd.com; dkim=none (message not
- signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SdqAZdh5U6sOBgDkyVbY7DpGtb3eXsXXJFDNqcmuy34=;
- b=i34BzZ2zugP0wAsyNcjr+qRRBWrE274fDAtAYEZXDKeik/oMPKsPh/2F1yrXr+XW5HI+HuuYItHitiU9FERaDdt07zEIxKKISRYCqmGkLWps74kjS5CDV8/jb3UfXjgMsVXQBCUAOGyUQlk2v34Wkuy+MnYEFOiinZ0xP3g4wI0=
-Received: from DM3PR12CA0078.namprd12.prod.outlook.com (2603:10b6:0:57::22) by
- BN6PR1201MB2464.namprd12.prod.outlook.com (2603:10b6:404:ae::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2474.16; Tue, 19 Nov
- 2019 12:12:57 +0000
-Received: from BN8NAM11FT005.eop-nam11.prod.protection.outlook.com
- (2a01:111:f400:7eae::206) by DM3PR12CA0078.outlook.office365.com
- (2603:10b6:0:57::22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2474.16 via Frontend
- Transport; Tue, 19 Nov 2019 12:12:57 +0000
-Authentication-Results: spf=none (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; google.com; dkim=none (message not signed)
- header.d=none;google.com; dmarc=permerror action=none header.from=amd.com;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-Received: from SATLEXMB02.amd.com (165.204.84.17) by
- BN8NAM11FT005.mail.protection.outlook.com (10.13.176.69) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.20.2451.23 via Frontend Transport; Tue, 19 Nov 2019 12:12:57 +0000
-Received: from SATLEXMB01.amd.com (10.181.40.142) by SATLEXMB02.amd.com
- (10.181.40.143) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 19 Nov
- 2019 06:12:56 -0600
-Received: from vishnu-All-Series.amd.com (10.180.168.240) by
- SATLEXMB01.amd.com (10.181.40.142) with Microsoft SMTP Server id 15.1.1713.5
- via Frontend Transport; Tue, 19 Nov 2019 06:12:53 -0600
-From:   Ravulapati Vishnu vardhan rao 
-        <Vishnuvardhanrao.Ravulapati@amd.com>
-CC:     <Alexander.Deucher@amd.com>, <djkurtz@google.com>,
-        <Akshu.Agrawal@amd.com>,
-        Ravulapati Vishnu vardhan rao 
-        <Vishnuvardhanrao.Ravulapati@amd.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        "Takashi Iwai" <tiwai@suse.com>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: [RESEND PATCH v9 4/6] ASoC: amd: add ACP3x TDM mode support
-Date:   Tue, 19 Nov 2019 17:41:14 +0530
-Message-ID: <1574165476-24987-5-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1574165476-24987-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
-References: <1574165476-24987-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:165.204.84.17;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(346002)(376002)(136003)(428003)(199004)(189003)(316002)(16586007)(5660300002)(7696005)(8936002)(51416003)(50226002)(76176011)(4326008)(54906003)(86362001)(8676002)(81156014)(81166006)(109986005)(186003)(36756003)(11346002)(48376002)(1671002)(478600001)(53416004)(26005)(446003)(70586007)(70206006)(426003)(336012)(305945005)(6666004)(47776003)(356004)(486006)(476003)(126002)(2616005)(50466002)(2906002)(266003)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:BN6PR1201MB2464;H:SATLEXMB02.amd.com;FPR:;SPF:None;LANG:en;PTR:InfoDomainNonexistent;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: ffc24277-17c9-4790-bfc9-08d76ce9d04f
-X-MS-TrafficTypeDiagnostic: BN6PR1201MB2464:
-X-Microsoft-Antispam-PRVS: <BN6PR1201MB24646E1320F37E807E35A327E74C0@BN6PR1201MB2464.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2512;
-X-Forefront-PRVS: 022649CC2C
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: vNkXRNPfCvuGHOTVq1+mUe9m0eu/C1xc0mDPU1RF09PhkvFCD2i5Irzjb3JIdZmw0z7eO1WEd/IxJIr3FpSCU0d18OifsNkXtL9AT2kGtaAwXiEmjBPgJmJcbY7TbAT+pbYTLLGYur6AHC44xKMkj8YA0djvOe8NIAcylEucxoht2d4CJNrUZBUDXCVY+bBjW/mqSZT7Jkh96yM3AN3dJFxhW0NeXlLv/veze1p6e33KSVMCgd4/rmCTDvjBNTYHuVtsMSc9k3Na4OvtDT5TkJiODWppaVs3A957I9jTcVuKq+PyQMeff+LZjEnOcUFZ4DzgA0oRoQTxCrc0YdBMYHtxRoQm05qZkTHSn4pNLiAqQaNFShRSmMDD1Q67Mso5g/sE6P9lE03GVzE8V7vWSqhRDuMZbj8MkFhHGuU+c7/ElcGQlkFjUAHLpOABWSlO
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Nov 2019 12:12:57.3861
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ffc24277-17c9-4790-bfc9-08d76ce9d04f
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB02.amd.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR1201MB2464
-To:     unlisted-recipients:; (no To-header on input)
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAJC8uKE042522;
+        Tue, 19 Nov 2019 12:11:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2019-08-05; bh=6VslcxNNBVO0SmhupZgqcfLd/Yue4nN9ld+yM7qCaJg=;
+ b=a4lj3B5MlEIZ3WvDdRd/G65w3Pq1mYhD2rhMmGsweycbvUuYP3lrl/nR1S1h74sK4quP
+ YUVcW1dE2MSw5/qOMMvwSpFVtvOC8mNnwZq4TBBendaEQ/nBFGpwBedRnxJC8tS7taPf
+ tIWASL2ilwHFqPnAnMqlA91HdqjRdc1R4TelGbsSQx3bipK2Ynue8YGu+hK1fMV6ywRQ
+ n17egAQ9SCjY46niu+lj2eTgUbMaqTjoUlLkdLN5bcc4NIxN5TbsfrsfgOklxiSTSmvM
+ vLMiP6KCZv9OfiCC7SM+vcjdMRT6XCroC+sZCFV2u1daN9O7N930FyoQ6EikuElxbyZx TQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2wa9rqeccr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 Nov 2019 12:11:49 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAJC95Wb110095;
+        Tue, 19 Nov 2019 12:11:49 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2wc0aga2sh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 Nov 2019 12:11:48 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xAJCBkiw016202;
+        Tue, 19 Nov 2019 12:11:47 GMT
+Received: from [192.168.14.112] (/79.181.226.113)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 19 Nov 2019 04:11:46 -0800
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
+Subject: Re: [PATCH v2 1/2] KVM: VMX: FIXED+PHYSICAL mode single target IPI
+ fastpath
+From:   Liran Alon <liran.alon@oracle.com>
+In-Reply-To: <1574145389-12149-1-git-send-email-wanpengli@tencent.com>
+Date:   Tue, 19 Nov 2019 14:11:41 +0200
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?utf-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <09CD3BD3-1F5E-48DA-82ED-58E3196DBD83@oracle.com>
+References: <1574145389-12149-1-git-send-email-wanpengli@tencent.com>
+To:     Wanpeng Li <kernellwp@gmail.com>
+X-Mailer: Apple Mail (2.3445.4.7)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=996
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1911190113
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1911190113
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ACP3x I2S (CPU DAI) can act in normal I2S and TDM modes. Added support
-for TDM mode. Desired mode can be selected from ASoC machine driver.
 
-Signed-off-by: Ravulapati Vishnu vardhan rao <Vishnuvardhanrao.Ravulapati@amd.com>
----
- sound/soc/amd/raven/acp3x-i2s.c | 42 +++++++++++++++++++++++++++++++----------
- sound/soc/amd/raven/acp3x.h     |  2 ++
- 2 files changed, 34 insertions(+), 10 deletions(-)
 
-diff --git a/sound/soc/amd/raven/acp3x-i2s.c b/sound/soc/amd/raven/acp3x-i2s.c
-index b039dac..d7aa345 100644
---- a/sound/soc/amd/raven/acp3x-i2s.c
-+++ b/sound/soc/amd/raven/acp3x-i2s.c
-@@ -44,8 +44,8 @@ static int acp3x_i2s_set_tdm_slot(struct snd_soc_dai *cpu_dai, u32 tx_mask,
- 		u32 rx_mask, int slots, int slot_width)
- {
- 	struct i2s_dev_data *adata;
--	u32 val;
- 	u16 slot_len;
-+	u32 val, flen, reg_val, frmt_reg;
- 
- 	adata = snd_soc_dai_get_drvdata(cpu_dai);
- 
-@@ -68,16 +68,38 @@ static int acp3x_i2s_set_tdm_slot(struct snd_soc_dai *cpu_dai, u32 tx_mask,
- 		return -EINVAL;
- 	}
- 
--	val = rv_readl(adata->acp3x_base + mmACP_BTTDM_ITER);
--	rv_writel(val | 0x2, adata->acp3x_base + mmACP_BTTDM_ITER);
--	val = rv_readl(adata->acp3x_base + mmACP_BTTDM_IRER);
--	rv_writel(val | 0x2, adata->acp3x_base + mmACP_BTTDM_IRER);
--
--	val = FRM_LEN | (slots << 15) | (slot_len << 18);
--	rv_writel(val, adata->acp3x_base + mmACP_BTTDM_TXFRMT);
--	rv_writel(val, adata->acp3x_base + mmACP_BTTDM_RXFRMT);
-+	/* Enable I2S / BT channels TDM and respective
-+	 * I2S/BT`s TX/RX Formats frame lengths.
-+	 */
-+	flen = FRM_LEN | (slots << 15) | (slot_len << 18);
- 
--	adata->tdm_fmt = val;
-+	if (adata->substream_type == SNDRV_PCM_STREAM_PLAYBACK) {
-+		switch (adata->i2s_instance) {
-+		case I2S_BT_INSTANCE:
-+			reg_val = mmACP_BTTDM_ITER;
-+			frmt_reg = mmACP_BTTDM_TXFRMT;
-+			break;
-+		case I2S_SP_INSTANCE:
-+		default:
-+			reg_val = mmACP_I2STDM_ITER;
-+			frmt_reg = mmACP_I2STDM_TXFRMT;
-+		}
-+	} else {
-+		switch (adata->i2s_instance) {
-+		case I2S_BT_INSTANCE:
-+			reg_val = mmACP_BTTDM_IRER;
-+			frmt_reg = mmACP_BTTDM_RXFRMT;
-+			break;
-+		case I2S_SP_INSTANCE:
-+		default:
-+			reg_val = mmACP_I2STDM_IRER;
-+			frmt_reg = mmACP_I2STDM_RXFRMT;
-+		}
-+	}
-+	val = rv_readl(adata->acp3x_base + reg_val);
-+	rv_writel(val | 0x2, adata->acp3x_base + reg_val);
-+	rv_writel(flen,	adata->acp3x_base + frmt_reg);
-+	adata->tdm_fmt = flen;
- 	return 0;
- }
- 
-diff --git a/sound/soc/amd/raven/acp3x.h b/sound/soc/amd/raven/acp3x.h
-index c071477..01b283a 100644
---- a/sound/soc/amd/raven/acp3x.h
-+++ b/sound/soc/amd/raven/acp3x.h
-@@ -76,6 +76,8 @@ struct i2s_dev_data {
- 	bool tdm_mode;
- 	unsigned int i2s_irq;
- 	u32 tdm_fmt;
-+	u16 i2s_instance;
-+	u32 substream_type;
- 	void __iomem *acp3x_base;
- 	struct snd_pcm_substream *play_stream;
- 	struct snd_pcm_substream *capture_stream;
--- 
-2.7.4
+> On 19 Nov 2019, at 8:36, Wanpeng Li <kernellwp@gmail.com> wrote:
+>=20
+> From: Wanpeng Li <wanpengli@tencent.com>
+>=20
+> ICR and TSCDEADLINE MSRs write cause the main MSRs write vmexits in=20
+> our product observation, multicast IPIs are not as common as unicast=20=
+
+> IPI like RESCHEDULE_VECTOR and CALL_FUNCTION_SINGLE_VECTOR etc.
+>=20
+> This patch tries to optimize x2apic physical destination mode, fixed=20=
+
+> delivery mode single target IPI by delivering IPI to receiver as soon=20=
+
+> as possible after sender writes ICR vmexit to avoid various checks=20
+> when possible, especially when running guest w/ --overcommit cpu-pm=3Don=
+
+> or guest can keep running, IPI can be injected to target vCPU by=20
+> posted-interrupt immediately.
+>=20
+> Testing on Xeon Skylake server:
+>=20
+> The virtual IPI latency from sender send to receiver receive reduces=20=
+
+> more than 200+ cpu cycles.
+>=20
+> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> ---
+> v1 -> v2:
+> * add tracepoint
+> * Instead of a separate vcpu->fast_vmexit, set exit_reason
+>   to vmx->exit_reason to -1 if the fast path succeeds.
+> * move the "kvm_skip_emulated_instruction(vcpu)" to vmx_handle_exit
+> * moving the handling into vmx_handle_exit_irqoff()
+>=20
+> arch/x86/include/asm/kvm_host.h |  4 ++--
+> arch/x86/include/uapi/asm/vmx.h |  1 +
+> arch/x86/kvm/svm.c              |  4 ++--
+> arch/x86/kvm/vmx/vmx.c          | 40 =
++++++++++++++++++++++++++++++++++++++---
+> arch/x86/kvm/x86.c              |  5 +++--
+> 5 files changed, 45 insertions(+), 9 deletions(-)
+>=20
+> diff --git a/arch/x86/include/asm/kvm_host.h =
+b/arch/x86/include/asm/kvm_host.h
+> index 898ab9e..0daafa9 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -1084,7 +1084,7 @@ struct kvm_x86_ops {
+> 	void (*tlb_flush_gva)(struct kvm_vcpu *vcpu, gva_t addr);
+>=20
+> 	void (*run)(struct kvm_vcpu *vcpu);
+> -	int (*handle_exit)(struct kvm_vcpu *vcpu);
+> +	int (*handle_exit)(struct kvm_vcpu *vcpu, u32 =
+*vcpu_exit_reason);
+> 	int (*skip_emulated_instruction)(struct kvm_vcpu *vcpu);
+> 	void (*set_interrupt_shadow)(struct kvm_vcpu *vcpu, int mask);
+> 	u32 (*get_interrupt_shadow)(struct kvm_vcpu *vcpu);
+> @@ -1134,7 +1134,7 @@ struct kvm_x86_ops {
+> 	int (*check_intercept)(struct kvm_vcpu *vcpu,
+> 			       struct x86_instruction_info *info,
+> 			       enum x86_intercept_stage stage);
+> -	void (*handle_exit_irqoff)(struct kvm_vcpu *vcpu);
+> +	void (*handle_exit_irqoff)(struct kvm_vcpu *vcpu, u32 =
+*vcpu_exit_reason);
+> 	bool (*mpx_supported)(void);
+> 	bool (*xsaves_supported)(void);
+> 	bool (*umip_emulated)(void);
+> diff --git a/arch/x86/include/uapi/asm/vmx.h =
+b/arch/x86/include/uapi/asm/vmx.h
+> index 3eb8411..b33c6e1 100644
+> --- a/arch/x86/include/uapi/asm/vmx.h
+> +++ b/arch/x86/include/uapi/asm/vmx.h
+> @@ -88,6 +88,7 @@
+> #define EXIT_REASON_XRSTORS             64
+> #define EXIT_REASON_UMWAIT              67
+> #define EXIT_REASON_TPAUSE              68
+> +#define EXIT_REASON_NEED_SKIP_EMULATED_INSN -1
+>=20
+> #define VMX_EXIT_REASONS \
+> 	{ EXIT_REASON_EXCEPTION_NMI,         "EXCEPTION_NMI" }, \
+> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> index d02a73a..c8e063a 100644
+> --- a/arch/x86/kvm/svm.c
+> +++ b/arch/x86/kvm/svm.c
+> @@ -4929,7 +4929,7 @@ static void svm_get_exit_info(struct kvm_vcpu =
+*vcpu, u64 *info1, u64 *info2)
+> 	*info2 =3D control->exit_info_2;
+> }
+>=20
+> -static int handle_exit(struct kvm_vcpu *vcpu)
+> +static int handle_exit(struct kvm_vcpu *vcpu, u32 *vcpu_exit_reason)
+> {
+> 	struct vcpu_svm *svm =3D to_svm(vcpu);
+> 	struct kvm_run *kvm_run =3D vcpu->run;
+> @@ -6187,7 +6187,7 @@ static int svm_check_intercept(struct kvm_vcpu =
+*vcpu,
+> 	return ret;
+> }
+>=20
+> -static void svm_handle_exit_irqoff(struct kvm_vcpu *vcpu)
+> +static void svm_handle_exit_irqoff(struct kvm_vcpu *vcpu, u32 =
+*vcpu_exit_reason)
+> {
+>=20
+> }
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 621142e5..b98198d 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -5792,7 +5792,7 @@ void dump_vmcs(void)
+>  * The guest has exited.  See if we can fix it or if we need userspace
+>  * assistance.
+>  */
+> -static int vmx_handle_exit(struct kvm_vcpu *vcpu)
+> +static int vmx_handle_exit(struct kvm_vcpu *vcpu, u32 =
+*vcpu_exit_reason)
+
+vmx_handle_exit() should get second parameter by value and not by =
+pointer. As it doesn=E2=80=99t need to modify it.
+
+I would also rename parameter to =E2=80=9Caccel_exit_completion=E2=80=9D =
+to indicate this is additional work that needs to happen to complete =
+accelerated-exit handling.
+This parameter should be an enum that currently only have 2 values: =
+ACCEL_EXIT_NONE and ACCEL_EXIT_SKIP_EMUL_INS.
+
+> {
+> 	struct vcpu_vmx *vmx =3D to_vmx(vcpu);
+> 	u32 exit_reason =3D vmx->exit_reason;
+> @@ -5878,7 +5878,10 @@ static int vmx_handle_exit(struct kvm_vcpu =
+*vcpu)
+> 		}
+> 	}
+>=20
+> -	if (exit_reason < kvm_vmx_max_exit_handlers
+> +	if (*vcpu_exit_reason =3D=3D =
+EXIT_REASON_NEED_SKIP_EMULATED_INSN) {
+> +		kvm_skip_emulated_instruction(vcpu);
+> +		return 1;
+> +	} else if (exit_reason < kvm_vmx_max_exit_handlers
+> 	    && kvm_vmx_exit_handlers[exit_reason]) {
+> #ifdef CONFIG_RETPOLINE
+> 		if (exit_reason =3D=3D EXIT_REASON_MSR_WRITE)
+> @@ -6223,7 +6226,36 @@ static void =
+handle_external_interrupt_irqoff(struct kvm_vcpu *vcpu)
+> }
+> STACK_FRAME_NON_STANDARD(handle_external_interrupt_irqoff);
+>=20
+> -static void vmx_handle_exit_irqoff(struct kvm_vcpu *vcpu)
+> +static u32 handle_ipi_fastpath(struct kvm_vcpu *vcpu)
+> +{
+> +	u32 index;
+> +	u64 data;
+> +	int ret =3D 0;
+> +
+> +	if (lapic_in_kernel(vcpu) && apic_x2apic_mode(vcpu->arch.apic)) =
+{
+> +		/*
+> +		 * fastpath to IPI target, FIXED+PHYSICAL which is =
+popular
+> +		 */
+> +		index =3D kvm_rcx_read(vcpu);
+> +		data =3D kvm_read_edx_eax(vcpu);
+> +
+> +		if (((index - APIC_BASE_MSR) << 4 =3D=3D APIC_ICR) &&
+> +			((data & KVM_APIC_DEST_MASK) =3D=3D =
+APIC_DEST_PHYSICAL) &&
+> +			((data & APIC_MODE_MASK) =3D=3D APIC_DM_FIXED)) =
+{
+> +
+> +			trace_kvm_msr_write(index, data);
+
+On a standard EXIT_REASON_MSR_WRITE VMExit, this trace will be printed =
+only after LAPIC emulation logic happens.
+You should preserve same ordering.
+
+> +			kvm_lapic_set_reg(vcpu->arch.apic, APIC_ICR2, =
+(u32)(data >> 32));
+> +			ret =3D kvm_lapic_reg_write(vcpu->arch.apic, =
+APIC_ICR, (u32)data);
+> +
+> +			if (ret =3D=3D 0)
+> +				return =
+EXIT_REASON_NEED_SKIP_EMULATED_INSN;
+> +		}
+> +	}
+> +
+> +	return ret;
+> +}
+
+Maybe it would be more elegant to modify this function as follows?
+
+static int handle_accel_set_x2apic_icr_irqoff(struct kvm_vcpu *vcpu, u32 =
+msr, u64 data)
+{
+    if (lapic_in_kernel(vcpu) && apic_x2apic_mode(vcpu->arch.apic) &&
+        ((data & KVM_APIC_DEST_MASK) =3D=3D APIC_DEST_PHYSICAL) &&
+        ((data & APIC_MODE_MASK) =3D=3D APIC_DM_FIXED)) {
+
+        kvm_lapic_set_reg(vcpu->arch.apic, APIC_ICR2, (u32)(data >> =
+32));
+        return kvm_lapic_reg_write(vcpu->arch.apic, APIC_ICR, =
+(u32)data);
+    }
+
+    return 1;
+}
+
+static enum accel_exit_completion handle_accel_set_msr_irqoff(struct =
+kvm_vcpu *vcpu)
+{
+    u32 msr =3D kvm_rcx_read(vcpu);
+    u64 data =3D kvm_read_edx_eax(vcpu);
+    int ret =3D 0;
+
+    switch (msr) {
+    case APIC_BASE_MSR + (APIC_ICR >> 4):
+        ret =3D handle_accel_set_x2apic_icr_irqoff(vcpu, msr, data);
+        break;
+    default:
+        return ACCEL_EXIT_NONE;
+    }
+
+    if (!ret) {
+        trace_kvm_msr_write(msr, data);
+        return ACCEL_EXIT_SKIP_EMUL_INS;
+    }
+
+    return ACCEL_EXIT_NONE;
+}
+
+> +
+> +static void vmx_handle_exit_irqoff(struct kvm_vcpu *vcpu, u32 =
+*exit_reason)
+> {
+> 	struct vcpu_vmx *vmx =3D to_vmx(vcpu);
+>=20
+> @@ -6231,6 +6263,8 @@ static void vmx_handle_exit_irqoff(struct =
+kvm_vcpu *vcpu)
+> 		handle_external_interrupt_irqoff(vcpu);
+> 	else if (vmx->exit_reason =3D=3D EXIT_REASON_EXCEPTION_NMI)
+> 		handle_exception_nmi_irqoff(vmx);
+> +	else if (vmx->exit_reason =3D=3D EXIT_REASON_MSR_WRITE)
+> +		*exit_reason =3D handle_ipi_fastpath(vcpu);
+
+1) This case requires a comment as the only reason it is called here is =
+an optimisation.
+In contrast to the other cases which must be called before interrupts =
+are enabled on the host.
+
+2) I would rename handler to handle_accel_set_msr_irqoff().
+To signal this handler runs with host interrupts disabled and to make it =
+a general place for accelerating WRMSRs in case we would require more in =
+the future.
+
+-Liran
+
+> }
+>=20
+> static bool vmx_has_emulated_msr(int index)
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 991dd01..a53bce3 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -7981,6 +7981,7 @@ EXPORT_SYMBOL_GPL(__kvm_request_immediate_exit);
+> static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+> {
+> 	int r;
+> +	u32 exit_reason =3D 0;
+> 	bool req_int_win =3D
+> 		dm_request_for_irq_injection(vcpu) &&
+> 		kvm_cpu_accept_dm_intr(vcpu);
+> @@ -8226,7 +8227,7 @@ static int vcpu_enter_guest(struct kvm_vcpu =
+*vcpu)
+> 	vcpu->mode =3D OUTSIDE_GUEST_MODE;
+> 	smp_wmb();
+>=20
+> -	kvm_x86_ops->handle_exit_irqoff(vcpu);
+> +	kvm_x86_ops->handle_exit_irqoff(vcpu, &exit_reason);
+>=20
+> 	/*
+> 	 * Consume any pending interrupts, including the possible source =
+of
+> @@ -8270,7 +8271,7 @@ static int vcpu_enter_guest(struct kvm_vcpu =
+*vcpu)
+> 		kvm_lapic_sync_from_vapic(vcpu);
+>=20
+> 	vcpu->arch.gpa_available =3D false;
+> -	r =3D kvm_x86_ops->handle_exit(vcpu);
+> +	r =3D kvm_x86_ops->handle_exit(vcpu, &exit_reason);
+> 	return r;
+>=20
+> cancel_injection:
+> --=20
+> 2.7.4
+>=20
 
