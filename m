@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F9DBC43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:39:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D484C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:39:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D59CC2071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:39:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 328412071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:39:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141945;
-	bh=Iu7gAt/xIf/ir9J21Ao8/LJXs4C083qHyOe+HTPl+4U=;
+	s=default; t=1574141951;
+	bh=NMPNEBM0ZqzblQuub571ZXHEph2ZQyjpjHS66QSs94U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KC17Wrfw1vEd0k0Z65kPgvk2+cOrhobpaOydQ0rSkIlxSz+bpL8IIvgR8Qb1HxB6e
-	 QBDIFUQNagSXb2nVRS4KLbYMzCcmkBD5z2iZEougQ36CDR7HOo3XC2LkJXhBYksR4A
-	 v/1M/d6RktZjF1u7x1VCam9ODHdYUBQ+VpLB2L2Q=
+	b=sTI6nW2FQLIE5jKE1smJtgXnSnr9H1zHkmNj82qXn4E3YS5PEINEFaOWdXYFdUkzj
+	 dg5GCvUmPi/JMhIJCn8uvy56s+n4T16tBjdAaFBjh4vf+wRfjuazvp9W9mX6kNJZcR
+	 nDFmIHtXYfx7sy2KtvHFOfDep8UKz4YFJLlKNzto=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730241AbfKSFjE (ORCPT
+        id S1730245AbfKSFjK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:39:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32986 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:39:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729113AbfKSFi7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:38:59 -0500
+        id S1729113AbfKSFjF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:39:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96266206EC;
-        Tue, 19 Nov 2019 05:38:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7ED90206EC;
+        Tue, 19 Nov 2019 05:39:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141939;
-        bh=Iu7gAt/xIf/ir9J21Ao8/LJXs4C083qHyOe+HTPl+4U=;
+        s=default; t=1574141945;
+        bh=NMPNEBM0ZqzblQuub571ZXHEph2ZQyjpjHS66QSs94U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=etz7z4/BpNyr09Ve5y7E8AEujpEji4f8txdstCZZZvQh2hWApmJn6Tx9OoWJDor5n
-         qa6vqwMqvr+uxw15+ua89/5KJwLrheVldIfIp37N89vLq4DKmawYtpENSkEbQSaSYg
-         euXADpyYR2b4QtUPy6fIoHRggHzAXz7Lk1WJ/N+4=
+        b=GYFKn/5YlOFXEcvTY8xIB0WDy9n8fon/VAyazlZFtj0v+WaJheplbYni4blrkbQIU
+         uNeTeOeK79PHhLb7BWHGcDcHiTG7U/WQYhDlQ38cqY3WNhzFiG72guNe27ydpv1SvS
+         RStg8p+QZDvV/wVzaOaXFpaLef4zENJhSlr741vs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Joel Pepper <joel.pepper@rwth-aachen.de>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        stable@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 332/422] usb: gadget: uvc: configfs: Prevent format changes after linking header
-Date:   Tue, 19 Nov 2019 06:18:49 +0100
-Message-Id: <20191119051420.530974951@linuxfoundation.org>
+Subject: [PATCH 4.19 334/422] ARM: dts: exynos: Correct audio subsystem parent clock on Peach Chromebooks
+Date:   Tue, 19 Nov 2019 06:18:51 +0100
+Message-Id: <20191119051420.660741996@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -61,44 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joel Pepper <joel.pepper@rwth-aachen.de>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit cb2200f7af8341aaf0c6abd7ba37e4c667c41639 ]
+[ Upstream commit ff1e37c6809daab75f7b2dea1efe69330e8eb65b ]
 
-While checks are in place to avoid attributes and children of a format
-being manipulated after the format is linked into the streaming header,
-the linked flag was never actually set, invalidating the protections.
-Update the flag as appropriate in the header link calls.
+The proper parent clock for audio subsystem for Exynos5420 and Exynos5800
+SoCs is CLK_MAU_EPLL. This fixes following warning:
 
-Signed-off-by: Joel Pepper <joel.pepper@rwth-aachen.de>
-Reviewed-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
-Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+    clk: failed to reparent mout_audss to fout_epll: -22
+
+Fixes: ed7d1307077e: ARM: dts: exynos: Enable HDMI audio support on Peach Pit
+Fixes: bae0f445c1e7: ARM: dts: exynos: Enable HDMI audio support on Peach Pi
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/function/uvc_configfs.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm/boot/dts/exynos5420-peach-pit.dts | 2 +-
+ arch/arm/boot/dts/exynos5800-peach-pi.dts  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/gadget/function/uvc_configfs.c b/drivers/usb/gadget/function/uvc_configfs.c
-index dc4edba95a478..9478a7cdb1433 100644
---- a/drivers/usb/gadget/function/uvc_configfs.c
-+++ b/drivers/usb/gadget/function/uvc_configfs.c
-@@ -766,6 +766,7 @@ static int uvcg_streaming_header_allow_link(struct config_item *src,
- 	format_ptr->fmt = target_fmt;
- 	list_add_tail(&format_ptr->entry, &src_hdr->formats);
- 	++src_hdr->num_fmt;
-+	++target_fmt->linked;
+diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+index 769d60d6c9006..9eb48cabcca45 100644
+--- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
++++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+@@ -153,7 +153,7 @@
  
- out:
- 	mutex_unlock(&opts->lock);
-@@ -803,6 +804,8 @@ static void uvcg_streaming_header_drop_link(struct config_item *src,
- 			break;
- 		}
+ &clock_audss {
+ 	assigned-clocks = <&clock_audss EXYNOS_MOUT_AUDSS>;
+-	assigned-clock-parents = <&clock CLK_FOUT_EPLL>;
++	assigned-clock-parents = <&clock CLK_MAU_EPLL>;
+ };
  
-+	--target_fmt->linked;
-+
- out:
- 	mutex_unlock(&opts->lock);
- 	mutex_unlock(su_mutex);
+ &cpu0 {
+diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+index 492e2cd2e559e..4398f2d1fe881 100644
+--- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
++++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+@@ -153,7 +153,7 @@
+ 
+ &clock_audss {
+ 	assigned-clocks = <&clock_audss EXYNOS_MOUT_AUDSS>;
+-	assigned-clock-parents = <&clock CLK_FOUT_EPLL>;
++	assigned-clock-parents = <&clock CLK_MAU_EPLL>;
+ };
+ 
+ &cpu0 {
 -- 
 2.20.1
 
