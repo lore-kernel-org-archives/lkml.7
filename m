@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12312C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:04:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE9CFC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:04:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD83020857
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:04:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91F7321850
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:04:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574143461;
-	bh=8DD4osZh3pqSw/v3Z8lBeKCbS7/Ml7qR65jLNRSZyrc=;
+	s=default; t=1574143464;
+	bh=QBninmn1N0bnodZPUNG5LFWIH1SXzGqrLbKpZ9NwMJs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q+WFjCkSuFqV3RJY/giVEP3MNHdb5NQMXK/oTWs1/eGKYpZeG0YyF9PJscOvIV5L/
-	 kaNVwFpF6hKC00VTHPWsNSuDHKETbQelkczkfeIznjVbG2wfIxCw87ejxaVR6sUCfZ
-	 ertLeTEXMF8PyV0o2RmLALagbAWEDnppCjP1w1So=
+	b=1fJo0SYGjd/555XhykQqCajP1/vhIBteVLr3D5xhdl2Sq1NZzD9pfzZBiDfkkcVvk
+	 4u20w5rwiDWH6dQXDGqtguN+rm7PIsLQ0pIxtKnvROXH5cx662MqhTU7H60nK2K5iZ
+	 FuNfnIGzu3teB9Y6WxjfvIbQ1RzcntdykTytxTCU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729803AbfKSFih (ORCPT
+        id S1729843AbfKSGEX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:38:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60540 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 01:04:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730201AbfKSFia (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:38:30 -0500
+        id S1729826AbfKSFih (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:38:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B217222A4;
-        Tue, 19 Nov 2019 05:38:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DEBF20862;
+        Tue, 19 Nov 2019 05:38:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141909;
-        bh=8DD4osZh3pqSw/v3Z8lBeKCbS7/Ml7qR65jLNRSZyrc=;
+        s=default; t=1574141915;
+        bh=QBninmn1N0bnodZPUNG5LFWIH1SXzGqrLbKpZ9NwMJs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XYerfH1qpsQWupximigg2HVKWhy9zsZfAZ8APJmZbd7yEvyLCk5UTkHjFXKGL2hS0
-         m592pdLalLwf4gheEaFGJZX9Q0o5bcvqHVhM2gDKWbRdS5qbq6Wb/GF94dtt0geK2F
-         U12z2EPylvEW1uy+pETgaZGFoYWapdpD28/mfd04=
+        b=Q1W96JjidyfI7Y/3AKYfkMJw2WK5wYL4/BWd5OR9+Nw3BOtXnejqF6NNSqMZHgPfu
+         T1pw7rqPNPSfpZu+YNLq7TKUyZ9quVWwIQKrp4zJudpMnZN8s/9/0QNJU2PBetNSCK
+         q3vx/CptVOt0/h2n1pKA+SUB/8/Sg88tcrufBir8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rachel Mozes <rachel.mozes@intel.com>,
-        Dengcheng Zhu <dzhu@wavecomp.com>,
-        Paul Burton <paul.burton@mips.com>, pburton@wavecomp.com,
-        ralf@linux-mips.org, linux-mips@linux-mips.org,
+        stable@vger.kernel.org, Petr Machata <petrm@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 323/422] MIPS: kexec: Relax memory restriction
-Date:   Tue, 19 Nov 2019 06:18:40 +0100
-Message-Id: <20191119051419.940745799@linuxfoundation.org>
+Subject: [PATCH 4.19 325/422] mlxsw: Make MLXSW_SP1_FWREV_MINOR a hard requirement
+Date:   Tue, 19 Nov 2019 06:18:42 +0100
+Message-Id: <20191119051420.076010542@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -62,48 +62,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dengcheng Zhu <dzhu@wavecomp.com>
+From: Petr Machata <petrm@mellanox.com>
 
-[ Upstream commit a6da4d6fdf8bd512c98d3ac7f1d16bc4bb282919 ]
+[ Upstream commit 12ba7e1045521ec9f251c93ae0a6735cc3f42337 ]
 
-We can rely on the system kernel and the dump capture kernel themselves in
-memory usage.
+Up until now, mlxsw tolerated firmware versions that weren't exactly
+matching the required version, if the branch number matched. That
+allowed the users to test various firmware versions as long as they were
+on the right branch.
 
-Being restrictive with 512MB limit may cause kexec tool failure on some
-platforms.
+On the other hand, it made it impossible for mlxsw to put a hard lower
+bound on a version that fixes all problems known to date. If a user had
+a somewhat older FW version installed, mlxsw would start up just fine,
+possibly performing non-optimally as it would use features that trigger
+problematic behavior.
 
-Tested-by: Rachel Mozes <rachel.mozes@intel.com>
-Reported-by: Rachel Mozes <rachel.mozes@intel.com>
-Signed-off-by: Dengcheng Zhu <dzhu@wavecomp.com>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Patchwork: https://patchwork.linux-mips.org/patch/20568/
-Cc: pburton@wavecomp.com
-Cc: ralf@linux-mips.org
-Cc: linux-mips@linux-mips.org
+Therefore tweak the check to accept any FW version that is:
+
+- on the same branch as the preferred version, and
+- the same as or newer than the preferred version.
+
+Signed-off-by: Petr Machata <petrm@mellanox.com>
+Reviewed-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/include/asm/kexec.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/mellanox/mlxsw/spectrum.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/mips/include/asm/kexec.h b/arch/mips/include/asm/kexec.h
-index 493a3cc7c39ad..cfdbe66575f4d 100644
---- a/arch/mips/include/asm/kexec.h
-+++ b/arch/mips/include/asm/kexec.h
-@@ -12,11 +12,11 @@
- #include <asm/stacktrace.h>
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
+index 1c170a0fd2cc9..e498ee95bacab 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
+@@ -336,7 +336,10 @@ static int mlxsw_sp_fw_rev_validate(struct mlxsw_sp *mlxsw_sp)
+ 		return -EINVAL;
+ 	}
+ 	if (MLXSW_SP_FWREV_MINOR_TO_BRANCH(rev->minor) ==
+-	    MLXSW_SP_FWREV_MINOR_TO_BRANCH(req_rev->minor))
++	    MLXSW_SP_FWREV_MINOR_TO_BRANCH(req_rev->minor) &&
++	    (rev->minor > req_rev->minor ||
++	     (rev->minor == req_rev->minor &&
++	      rev->subminor >= req_rev->subminor)))
+ 		return 0;
  
- /* Maximum physical address we can use pages from */
--#define KEXEC_SOURCE_MEMORY_LIMIT (0x20000000)
-+#define KEXEC_SOURCE_MEMORY_LIMIT (-1UL)
- /* Maximum address we can reach in physical address mode */
--#define KEXEC_DESTINATION_MEMORY_LIMIT (0x20000000)
-+#define KEXEC_DESTINATION_MEMORY_LIMIT (-1UL)
-  /* Maximum address we can use for the control code buffer */
--#define KEXEC_CONTROL_MEMORY_LIMIT (0x20000000)
-+#define KEXEC_CONTROL_MEMORY_LIMIT (-1UL)
- /* Reserve 3*4096 bytes for board-specific info */
- #define KEXEC_CONTROL_PAGE_SIZE (4096 + 3*4096)
- 
+ 	dev_info(mlxsw_sp->bus_info->dev, "The firmware version %d.%d.%d is incompatible with the driver\n",
 -- 
 2.20.1
 
