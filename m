@@ -2,180 +2,98 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D85D9C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:00:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B1DBC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:00:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA6DC206DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:00:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J6Z97g+q"
+	by mail.kernel.org (Postfix) with ESMTP id EBB0520872
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:00:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574143228;
+	bh=L/S6jj7DjumFJ+aYhX8gtox1aMBuIiR/X1oK5cVsu1Q=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=T2i8AxYigV+WeXXGJz/CP1QOO6rrT8pxcxsF+xuExEh4EwdkKiNZzy1uEtyJo+czx
+	 s++374+irS/2meisgLg9DA/4amY0+15IKE6JE9n4DhBU5t4G5sLlk8wDlvNdSb1CNJ
+	 sWHWBuEEYzfFU3NS8WzqOZihcYfXeIj5Bi7MF17A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728231AbfKSGAS (ORCPT
+        id S1728388AbfKSGA0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 01:00:18 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:36465 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730295AbfKSFqL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:46:11 -0500
-Received: by mail-pj1-f65.google.com with SMTP id cq11so2240671pjb.3
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 21:46:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=TwTrHFfUEXPF0AdUJSKGrhG7MiL19etHomK5sNh967I=;
-        b=J6Z97g+qaqyRgX61FIN/BkQqzrRD+3LDgXXlfrFFZUoLkXr3VLk5HxrFc6KPw5VfYv
-         mPoKIl19kU5HhwhdhdkAWzztoA0y2uE4VaYw+uHYmgYHjZBYEtSUDbmfcIoXEzCbUJBy
-         cw+J+sJeTJgo/WX3zDt3uGuy8amvs6hITpY/ha3yrfiZTntAO6fHEiqksp0x4S9efA4U
-         aic+9ItWAQjBiV2GBVuc/PteN5zRsmNhPssJmFr06wR/eK2arqFLIWuZL8EJtn0wpp7J
-         HsVMJByIUyx82zeS2IB/dVia5hQPA3f5xGsyzam3wZeRnsWZ+PZ4OCZykcACpxI2iSB2
-         4NqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TwTrHFfUEXPF0AdUJSKGrhG7MiL19etHomK5sNh967I=;
-        b=eVAbMMrnXxlyGqPAxEXMToE1lHLfoxVALlYBuXCjWKtnwinfkcxyeBwL+65EuBNVOg
-         uvyDaQttGVcgoH7aC0iMlUDAqZ84yq0JFbwCaRyQ6AiLR4diaCiwYdXl1TTgXp3RXlfP
-         dRvOm51sBi82QWOjKMveuiDoGG2061Cw5A1hT0FhfUZBMzzgFu6M6hc2a8MbRZji6li6
-         UTXR1kPaeJwnJuDQzwaWPlNjqDZiJTS07TA36SjG0HFlA1PCJXbEigUK+SAeU7q30W5C
-         9Y88Lpij8Y3v7k9KplHKa4gLsdK7ynkgNlps8NGgQiOh6Wvf6nndEld2Tz0B9OxWKAos
-         xdxg==
-X-Gm-Message-State: APjAAAWciDxtr02+WCmnpLUR9Lk8OOffSIcIX7hvnWPBf+1JbdNWBAOf
-        HWs0DgBEtYcfAub7SApnXU6kpA==
-X-Google-Smtp-Source: APXvYqwqcOsssd3YquYy0WRNNJ5pR2v2XZW1TLZfs/VZBu5jO8v1LBqaLVMMQWSkuKN7wawDZ28Phw==
-X-Received: by 2002:a17:90a:c2:: with SMTP id v2mr3866143pjd.140.1574142370364;
-        Mon, 18 Nov 2019 21:46:10 -0800 (PST)
-Received: from localhost ([223.226.74.76])
-        by smtp.gmail.com with ESMTPSA id z1sm1494163pju.27.2019.11.18.21.46.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 18 Nov 2019 21:46:09 -0800 (PST)
-Date:   Tue, 19 Nov 2019 11:16:07 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     rjw@rjwysocki.net, edubezval@gmail.com, rui.zhang@intel.com,
-        linux-pm@vger.kernel.org, amit.kucheria@linaro.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] thermal/drivers/Kconfig: Convert the CPU cooling
- device to a choice
-Message-ID: <20191119054607.m4bcztc5euhe3jve@vireshk-i7>
-References: <20191113084042.5707-1-daniel.lezcano@linaro.org>
+        Tue, 19 Nov 2019 01:00:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41578 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728009AbfKSFpr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:45:47 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CCFC2075E;
+        Tue, 19 Nov 2019 05:45:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574142346;
+        bh=L/S6jj7DjumFJ+aYhX8gtox1aMBuIiR/X1oK5cVsu1Q=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=SXY9QJor5QHutRsDpQ6l4He79eLJEk6KmRUJZFVTnga0h5U4L8mloIPiuTJw6YxSC
+         LS1eQfptlQUtMQhRkY3aKF50QF9guU55xsseZmlaq35Yfb1hs0Nbt28jcfNOCHRhLi
+         ZTTWlVGOz8C5XMMBeEwhSN3vzhb/yGjJXCfp5pkk=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Mitch Williams <mitch.a.williams@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 051/239] i40e: use correct length for strncpy
+Date:   Tue, 19 Nov 2019 06:17:31 +0100
+Message-Id: <20191119051307.569380070@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
+References: <20191119051255.850204959@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191113084042.5707-1-daniel.lezcano@linaro.org>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13-11-19, 09:40, Daniel Lezcano wrote:
-> The next changes will add a new way to cool down a CPU by injecting
-> idle cycles. With the current configuration, a CPU cooling device is
-> the cpufreq cooling device. As we want to add a new CPU cooling
-> device, let's convert the CPU cooling to a choice giving a list of CPU
-> cooling devices. At this point, there is obviously only one CPU
-> cooling device.
-> 
-> There is no functional changes.
-> 
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> ---
->  drivers/thermal/Kconfig     | 13 +++++++++++--
->  drivers/thermal/Makefile    |  2 +-
->  include/linux/cpu_cooling.h |  6 +++---
->  3 files changed, 15 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-> index 001a21abcc28..2b82c4861091 100644
-> --- a/drivers/thermal/Kconfig
-> +++ b/drivers/thermal/Kconfig
-> @@ -150,8 +150,17 @@ config THERMAL_GOV_POWER_ALLOCATOR
->  
->  config CPU_THERMAL
->  	bool "Generic cpu cooling support"
-> -	depends on CPU_FREQ
->  	depends on THERMAL_OF
-> +	help
-> +	  Enable the CPU cooling features. If the system has no active
-> +	  cooling device available, this option allows to use the CPU
-> +	  as a cooling device.
-> +
-> +if CPU_THERMAL
-> +
-> +config CPU_FREQ_THERMAL
-> +	bool "CPU frequency cooling device"
-> +	depends on CPU_FREQ
+From: Mitch Williams <mitch.a.williams@intel.com>
 
-Many of the current set of defconfigs have CONFIG_CPU_THERMAL=y for
-them and they will break now as CONFIG_CPU_FREQ_THERMAL won't be
-selected for them without any defconfig changes. Can we have this
-option selected by default if CONFIG_CPU_THERMAL is enabled ?
+[ Upstream commit 7eb74ff891b4e94b8bac48f648a21e4b94ddee64 ]
 
->  	help
->  	  This implements the generic cpu cooling mechanism through frequency
->  	  reduction. An ACPI version of this already exists
-> @@ -159,7 +168,7 @@ config CPU_THERMAL
->  	  This will be useful for platforms using the generic thermal interface
->  	  and not the ACPI interface.
->  
-> -	  If you want this support, you should say Y here.
-> +endif
->  
->  config CLOCK_THERMAL
->  	bool "Generic clock cooling support"
-> diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-> index 74a37c7f847a..d3b01cc96981 100644
-> --- a/drivers/thermal/Makefile
-> +++ b/drivers/thermal/Makefile
-> @@ -19,7 +19,7 @@ thermal_sys-$(CONFIG_THERMAL_GOV_USER_SPACE)	+= user_space.o
->  thermal_sys-$(CONFIG_THERMAL_GOV_POWER_ALLOCATOR)	+= power_allocator.o
->  
->  # cpufreq cooling
-> -thermal_sys-$(CONFIG_CPU_THERMAL)	+= cpu_cooling.o
-> +thermal_sys-$(CONFIG_CPU_FREQ_THERMAL)	+= cpu_cooling.o
->  
->  # clock cooling
->  thermal_sys-$(CONFIG_CLOCK_THERMAL)	+= clock_cooling.o
-> diff --git a/include/linux/cpu_cooling.h b/include/linux/cpu_cooling.h
-> index b74732535e4b..3cdd85f987d7 100644
-> --- a/include/linux/cpu_cooling.h
-> +++ b/include/linux/cpu_cooling.h
-> @@ -19,7 +19,7 @@
->  
->  struct cpufreq_policy;
->  
-> -#ifdef CONFIG_CPU_THERMAL
-> +#ifdef CONFIG_CPU_FREQ_THERMAL
->  /**
->   * cpufreq_cooling_register - function to create cpufreq cooling device.
->   * @policy: cpufreq policy.
-> @@ -40,7 +40,7 @@ void cpufreq_cooling_unregister(struct thermal_cooling_device *cdev);
->  struct thermal_cooling_device *
->  of_cpufreq_cooling_register(struct cpufreq_policy *policy);
->  
-> -#else /* !CONFIG_CPU_THERMAL */
-> +#else /* !CONFIG_CPU_FREQ_THERMAL */
->  static inline struct thermal_cooling_device *
->  cpufreq_cooling_register(struct cpufreq_policy *policy)
->  {
-> @@ -58,6 +58,6 @@ of_cpufreq_cooling_register(struct cpufreq_policy *policy)
->  {
->  	return NULL;
->  }
-> -#endif /* CONFIG_CPU_THERMAL */
-> +#endif /* CONFIG_CPU_FREQ_THERMAL */
->  
->  #endif /* __CPU_COOLING_H__ */
-> -- 
-> 2.17.1
+Caught by GCC 8. When we provide a length for strncpy, we should not
+include the terminating null. So we must tell it one less than the size
+of the destination buffer.
 
+Signed-off-by: Mitch Williams <mitch.a.williams@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/intel/i40e/i40e_ptp.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/intel/i40e/i40e_ptp.c b/drivers/net/ethernet/intel/i40e/i40e_ptp.c
+index ef242dbae116b..5fc8707574809 100644
+--- a/drivers/net/ethernet/intel/i40e/i40e_ptp.c
++++ b/drivers/net/ethernet/intel/i40e/i40e_ptp.c
+@@ -704,7 +704,8 @@ static long i40e_ptp_create_clock(struct i40e_pf *pf)
+ 	if (!IS_ERR_OR_NULL(pf->ptp_clock))
+ 		return 0;
+ 
+-	strncpy(pf->ptp_caps.name, i40e_driver_name, sizeof(pf->ptp_caps.name));
++	strncpy(pf->ptp_caps.name, i40e_driver_name,
++		sizeof(pf->ptp_caps.name) - 1);
+ 	pf->ptp_caps.owner = THIS_MODULE;
+ 	pf->ptp_caps.max_adj = 999999999;
+ 	pf->ptp_caps.n_ext_ts = 0;
 -- 
-viresh
+2.20.1
+
+
+
