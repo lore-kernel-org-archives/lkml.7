@@ -2,139 +2,133 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9793C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:59:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9781C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:59:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9005F2230F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:59:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ktleR1Qk"
+	by mail.kernel.org (Postfix) with ESMTP id AC811208D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:59:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728991AbfKSQ67 (ORCPT
+        id S1728652AbfKSQ5G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 11:58:59 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:44258 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728967AbfKSQ6x (ORCPT
+        Tue, 19 Nov 2019 11:57:06 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:52788 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728601AbfKSQ5D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 11:58:53 -0500
-Received: by mail-lf1-f67.google.com with SMTP id n186so5224379lfd.11;
-        Tue, 19 Nov 2019 08:58:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=xiX0EqzPXmfl9+8cycQGn6gTe/lI1705Bk47uYfm4oU=;
-        b=ktleR1QkiRWXpJ1PymOF+AnwE7Q9PBQG4UVHVcltdxluMcrO7oMme2qW6uYcxu9BmM
-         5eVsufxlWyMMLypvEN5Rft13s81NH2I12Nhodkw5VzivVryLVBn78eJPsiCjavVjwiVE
-         crv4IfEd/KThz46OLInqN0ZxYZerI0Hz0a6/Poj40xkFmg6RM/xpzNyhzSLIfslGeSXP
-         SU+ZGVH00vtrS+muuiIgHjd1kYOHNSL7kDvVA88gYYRKFLMJKQRkf+pCNKLlHuLPlKV7
-         ZFY4YR6GsuOrwjsGk5fH9j0kpxj7xB02oBoAd1mNClvz1VZ5Wtewa9dBJZQbsw5VgAKE
-         VqaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=xiX0EqzPXmfl9+8cycQGn6gTe/lI1705Bk47uYfm4oU=;
-        b=qCLW9QeB8ootVjRjp0/5dFKp5SbHPVLYfThbnWS4Ur4nn5MydtjXYXC92fQ6pLPN+k
-         /PGqJ70vR/xeRHRfKo/wJAodh1qDggP8ti2M8KxytH6d6xk3wtltXzQC+jRfj+8q0gDX
-         5KKbBiRx8E1PMwDth27v/vA0aHDebATWr3Tol5Fjeo+Fsy6jyG03BJ9bofCvsC9Es3DS
-         vVoTka0efbZCyXYGF8B8tbWUMalebwwRD42+0HGYtoJquyoae1RbUlSrP3H/g0hrjAzW
-         LAVWmIEhv1cwkya3OMi/O2Qzz/FzJrxENNuCPh/2JUkyqchvpAY2OGZVdLU5JtG0pgVI
-         smXw==
-X-Gm-Message-State: APjAAAU5loJp8fxqHtdBmtKyK7yW2B1bAd5NlPqsSM+nDdH990Z6OaHV
-        Vt5wvVwkQvXCwyfsOtOdk8+c0M/2
-X-Google-Smtp-Source: APXvYqxOFPeDqctZEbuJVO4GYrRKbyIayL3pi6tIsdyQWNkua6J7ci15SiL5pULo3eySWzEJD8Bv1A==
-X-Received: by 2002:ac2:5216:: with SMTP id a22mr4824691lfl.169.1574182731139;
-        Tue, 19 Nov 2019 08:58:51 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id 141sm10189491ljj.37.2019.11.19.08.58.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 Nov 2019 08:58:50 -0800 (PST)
-Subject: Re: [PATCH v1 12/29] interconnect: Add memory interconnection
- providers for NVIDIA Tegra SoCs
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Mikko Perttunen <mperttunen@nvidia.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-tegra@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-References: <20191118200247.3567-1-digetx@gmail.com>
- <20191118200247.3567-13-digetx@gmail.com> <20191119063002.GE2462695@ulmo>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <a16b54bf-a881-84d0-4437-993dc275487c@gmail.com>
-Date:   Tue, 19 Nov 2019 19:58:49 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Tue, 19 Nov 2019 11:57:03 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iX6o2-0007J8-J7; Tue, 19 Nov 2019 17:56:46 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 2D22E1C19CA;
+        Tue, 19 Nov 2019 17:56:46 +0100 (CET)
+Date:   Tue, 19 Nov 2019 16:56:46 -0000
+From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: core/kprobes] x86/alternatives: Use INT3_INSN_SIZE
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Brian Gerst <brgerst@gmail.com>,
+        Denys Vlasenko <dvlasenk@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20191111132458.460144656@infradead.org>
+References: <20191111132458.460144656@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20191119063002.GE2462695@ulmo>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Message-ID: <157418260605.12247.6108560460837005010.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-19.11.2019 09:30, Thierry Reding пишет:
-> On Mon, Nov 18, 2019 at 11:02:30PM +0300, Dmitry Osipenko wrote:
->> All NVIDIA Tegra SoCs have identical topology in regards to memory
->> interconnection between memory clients and memory controllers.
->> The memory controller (MC) and external memory controller (EMC) are
->> providing memory clients with required memory bandwidth. The memory
->> controller performs arbitration between memory clients, while the
->> external memory controller transfers data from/to DRAM and pipes that
->> data from/to memory controller. Memory controller interconnect provider
->> aggregates bandwidth requests from memory clients and sends the aggregated
->> request to EMC provider that scales DRAM frequency in order to satisfy the
->> bandwidth requirement. Memory controller provider could adjust hardware
->> configuration for a more optimal arbitration depending on bandwidth
->> requirements from memory clients, but this is unimplemented for now.
->>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> ---
->>  drivers/interconnect/Kconfig               |   1 +
->>  drivers/interconnect/Makefile              |   1 +
->>  drivers/interconnect/tegra/Kconfig         |   6 +
->>  drivers/interconnect/tegra/Makefile        |   4 +
->>  drivers/interconnect/tegra/tegra-icc-emc.c | 138 +++++++++++++++++++++
->>  drivers/interconnect/tegra/tegra-icc-mc.c  | 130 +++++++++++++++++++
->>  include/soc/tegra/mc.h                     |  26 ++++
->>  7 files changed, 306 insertions(+)
->>  create mode 100644 drivers/interconnect/tegra/Kconfig
->>  create mode 100644 drivers/interconnect/tegra/Makefile
->>  create mode 100644 drivers/interconnect/tegra/tegra-icc-emc.c
->>  create mode 100644 drivers/interconnect/tegra/tegra-icc-mc.c
-> 
-> Why does this have to be separate from the memory controller driver in
-> drivers/memory/tegra? It seems like this requires a bunch of boilerplate
-> just so that this code can live in the drivers/interconnect directory.
+The following commit has been merged into the core/kprobes branch of tip:
 
-It fits with the IOMMU separation. To me that it's a bit nicer to have
-the separation for the ICC as well, but having ICC within memory
-controller driver also will be fine.
+Commit-ID:     0be6748cdf517626d10a055f3ac9f388a4ab1cce
+Gitweb:        https://git.kernel.org/tip/0be6748cdf517626d10a055f3ac9f388a4ab1cce
+Author:        Peter Zijlstra <peterz@infradead.org>
+AuthorDate:    Mon, 11 Nov 2019 14:08:26 +01:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Tue, 19 Nov 2019 13:13:09 +01:00
 
-Indeed it looks like there is not much in the MC's provider code right
-now, but maybe more stuff will be added later on.
+x86/alternatives: Use INT3_INSN_SIZE
 
-> If Georgi doesn't insist, I'd prefer if we carried this code directly in
-> the drivers/memory/tegra directory so that we don't have so many
-> indirections.
-> 
-> Also, and I already briefly mentioned this in another reply, I think we
-> don't need two providers here. The only one we're really interested in
-> is the memory-client to memory-controller paths. The MC to EMC path is
-> static.
+Use INT3_INSN_SIZE instead of sizeof(int3).
 
-Perhaps it is fine to drop EMC path, I'll revisit it.
+Suggested-by: Ingo Molnar <mingo@kernel.org>
+Tested-by: Alexei Starovoitov <ast@kernel.org>
+Tested-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Alexei Starovoitov <ast@kernel.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Brian Gerst <brgerst@gmail.com>
+Cc: Denys Vlasenko <dvlasenk@redhat.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20191111132458.460144656@infradead.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ arch/x86/kernel/alternative.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-[snip]
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index 6455902..4552795 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -1088,7 +1088,7 @@ static void text_poke_bp_batch(struct text_poke_loc *tp, unsigned int nr_entries
+ 	 * First step: add a int3 trap to the address that will be patched.
+ 	 */
+ 	for (i = 0; i < nr_entries; i++)
+-		text_poke(text_poke_addr(&tp[i]), &int3, sizeof(int3));
++		text_poke(text_poke_addr(&tp[i]), &int3, INT3_INSN_SIZE);
+ 
+ 	text_poke_sync();
+ 
+@@ -1098,10 +1098,10 @@ static void text_poke_bp_batch(struct text_poke_loc *tp, unsigned int nr_entries
+ 	for (do_sync = 0, i = 0; i < nr_entries; i++) {
+ 		int len = text_opcode_size(tp[i].opcode);
+ 
+-		if (len - sizeof(int3) > 0) {
+-			text_poke(text_poke_addr(&tp[i]) + sizeof(int3),
+-				  (const char *)tp[i].text + sizeof(int3),
+-				  len - sizeof(int3));
++		if (len - INT3_INSN_SIZE > 0) {
++			text_poke(text_poke_addr(&tp[i]) + INT3_INSN_SIZE,
++				  (const char *)tp[i].text + INT3_INSN_SIZE,
++				  len - INT3_INSN_SIZE);
+ 			do_sync++;
+ 		}
+ 	}
+@@ -1123,7 +1123,7 @@ static void text_poke_bp_batch(struct text_poke_loc *tp, unsigned int nr_entries
+ 		if (tp[i].text[0] == INT3_INSN_OPCODE)
+ 			continue;
+ 
+-		text_poke(text_poke_addr(&tp[i]), tp[i].text, sizeof(int3));
++		text_poke(text_poke_addr(&tp[i]), tp[i].text, INT3_INSN_SIZE);
+ 		do_sync++;
+ 	}
+ 
