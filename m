@@ -2,141 +2,112 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33281C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:08:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6001C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:08:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CFE0222AB
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:08:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574183333;
-	bh=pkHzWxOjTd25A2p/Z4roNeK2bk1cL7yvjXxVjNqNAOk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OWnnpOpFXa7H1QqZoGjvsYO95wpoaHyr7T/TQuv9SipracFetAYWfXlZs/YDDZzbD
-	 11/DpgXPJr4LT2iBxod3VcmWUYwRWe9/XM8rZoCp+/WO1PPDdvEc25Hrgb6iAVbN1F
-	 TVuETv5QHeos6UPAXTB7CCOl0nIefs49LXB7FKbg=
+	by mail.kernel.org (Postfix) with ESMTP id 7CF7A222AB
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:08:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=origamienergy.com header.i=@origamienergy.com header.b="KAzQ+ttn";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="V8ySTx77"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728560AbfKSRIw (ORCPT
+        id S1728587AbfKSRIz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 12:08:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59128 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726985AbfKSRIv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 12:08:51 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 505612068F;
-        Tue, 19 Nov 2019 17:08:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574183330;
-        bh=pkHzWxOjTd25A2p/Z4roNeK2bk1cL7yvjXxVjNqNAOk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=I2vySoLYOfHFSJs6/Pffc65rhNu5VNIoLgB+HvWAHLpO/s1594hfxgww1dbA36GA0
-         ZtXQCT30Zm6wcYjG9yGg86j7ZbBznUcUUwFfo97hOWrFf44iHhww/tW27IO6ZNrNvc
-         Q1muEoHzy6/90uL3DYyCw5Y5E9FP9yLJz+KK7pcc=
-Date:   Tue, 19 Nov 2019 18:08:48 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Chris Paterson <Chris.Paterson2@renesas.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "cip-dev@lists.cip-project.org" <cip-dev@lists.cip-project.org>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "shuah@kernel.org" <shuah@kernel.org>,
-        "patches@kernelci.org" <patches@kernelci.org>,
-        "ben.hutchings@codethink.co.uk" <ben.hutchings@codethink.co.uk>,
-        "lkft-triage@lists.linaro.org" <lkft-triage@lists.linaro.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH 4.19 000/422] 4.19.85-stable review
-Message-ID: <20191119170848.GA2197253@kroah.com>
-References: <20191119051400.261610025@linuxfoundation.org>
- <TYAPR01MB22854E4F20C28F3A10DA65E3B74C0@TYAPR01MB2285.jpnprd01.prod.outlook.com>
- <20191119122909.GC1913916@kroah.com>
- <20191119164626.GA5739@roeck-us.net>
- <20191119170246.GA2139063@kroah.com>
+        Tue, 19 Nov 2019 12:08:55 -0500
+Received: from a6-42.smtp-out.eu-west-1.amazonses.com ([54.240.6.42]:39576
+        "EHLO a6-42.smtp-out.eu-west-1.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727849AbfKSRIx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 12:08:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=awgt3ic55kqhwizgro5hhdlz56bi7lbf; d=origamienergy.com;
+        t=1574183331;
+        h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Transfer-Encoding;
+        bh=VTATiDbH0jh8GD8FKDhfky6IOJwNiN1hMmT21Lr7NKc=;
+        b=KAzQ+ttnegkL0cbqRJRtB4afoyfug6VZJ11FDA5HGmwLNmgVI6o6aAN7VanLaz3N
+        gdMbvQepy8abbPoXD1Y6ofzyhkModUKbfI8uVGR0C7qizup3BA6wmtj60TtqBGIPkTD
+        4oA/G1BmG2JaAmI1++A3lg9Eg1djXin4cYRVZnrs=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=ihchhvubuqgjsxyuhssfvqohv7z3u4hn; d=amazonses.com; t=1574183331;
+        h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Transfer-Encoding:Feedback-ID;
+        bh=VTATiDbH0jh8GD8FKDhfky6IOJwNiN1hMmT21Lr7NKc=;
+        b=V8ySTx77RE/2L2A3RCVhQhvyeYhQ/tdUeUX+229ZDKIB0qWC+24ldLhI2KASex6p
+        9q1n57OEjWTZTuDfGBAEFc4YLaqk4/AveA+rN0l43cOO332NeA7lTXstLKj70AhztHd
+        grzvnAJeo01qr8OHCrkWl4vMebK5UOoQmpFvVfd8=
+From:   James Byrne <james.byrne@origamienergy.com>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     James Byrne <james.byrne@origamienergy.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: [PATCH 0/2] printk: Support message continuation from /dev/kmsg
+Date:   Tue, 19 Nov 2019 17:08:50 +0000
+Message-ID: <0102016e84a36465-3c9627a0-8511-4bfb-9f49-9cc62fe1f692-000000@eu-west-1.amazonses.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191119170246.GA2139063@kroah.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
+X-SES-Outgoing: 2019.11.19-54.240.6.42
+Feedback-ID: 1.eu-west-1.sQ65CuNSNkrvjFrT7j7oeWmhxZgivYoP5c3BHSC7Qc8=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 06:02:46PM +0100, Greg Kroah-Hartman wrote:
-> On Tue, Nov 19, 2019 at 08:46:26AM -0800, Guenter Roeck wrote:
-> > On Tue, Nov 19, 2019 at 01:29:09PM +0100, Greg Kroah-Hartman wrote:
-> > > On Tue, Nov 19, 2019 at 08:54:25AM +0000, Chris Paterson wrote:
-> > > > Hello Greg, all,
-> > > > 
-> > > > > From: stable-owner@vger.kernel.org <stable-owner@vger.kernel.org> On
-> > > > > Behalf Of Greg Kroah-Hartman
-> > > > > Sent: 19 November 2019 05:13
-> > > > > 
-> > > > > This is the start of the stable review cycle for the 4.19.85 release.
-> > > > > There are 422 patches in this series, all will be posted as a response
-> > > > > to this one.  If anyone has any issues with these being applied, please
-> > > > > let me know.
-> > > > 
-> > > > I'm seeing some build issues with module compilation with this release (1b1960cc Linux 4.19.85-rc1), I also saw them with the previous two versions of Linux 4.19.85-rc1 (cd21ecdb and 1fd0ac64).
-> > > > 
-> > > > Full log available on GitLab [0]. Build conf [1].
-> > > > [0] https://gitlab.com/cip-playground/linux-stable-rc-ci/-/jobs/354591285
-> > > > [1] https://gitlab.com/cip-playground/linux-stable-rc-ci/-/jobs/354591285/artifacts/file/output/4.19.85-rc1_1b1960cc7/x86/siemens_iot2000.config/config/.config
-> > > > 
-> > > > Main error below:
-> > > > 
-> > > > 3907   CC [M]  drivers/net/ethernet/mellanox/mlx4/main.o
-> > > > 3908   LD [M]  fs/ntfs/ntfs.o
-> > > > 3909   CC [M]  drivers/net/ethernet/intel/i40evf/i40e_txrx.o
-> > > > 3910   CC [M]  drivers/usb/musb/musb_core.o
-> > > > 3911   CC [M]  drivers/net/ethernet/nvidia/forcedeth.o
-> > > > 3912   CC [M]  fs/udf/balloc.o
-> > > > 3913   CC [M]  drivers/net/ethernet/intel/fm10k/fm10k_debugfs.o
-> > > > 3914   CC [M]  fs/udf/dir.o
-> > > > 3915   CC [M]  drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.o
-> > > > 3916   CC [M]  drivers/net/ethernet/intel/i40e/i40e_ptp.o
-> > > > 3917 drivers/net/ethernet/mellanox/mlx4/main.c: In function 'mlx4_init_one':
-> > > > 3918 drivers/net/ethernet/mellanox/mlx4/main.c:3985:2: error: implicit declaration of function 'devlink_reload_enable'; did you mean 'devlink_region_create'? [-Werror=implicit-function-declaration]
-> > > > 3919   devlink_reload_enable(devlink);
-> > > > 3920   ^~~~~~~~~~~~~~~~~~~~~
-> > > > 3921   devlink_region_create
-> > > > 3922   CC [M]  drivers/net/ethernet/chelsio/cxgb4/cxgb4_cudbg.o
-> > > > 3923 drivers/net/ethernet/mellanox/mlx4/main.c: In function 'mlx4_remove_one':
-> > > > 3924 drivers/net/ethernet/mellanox/mlx4/main.c:4097:2: error: implicit declaration of function 'devlink_reload_disable'; did you mean 'devlink_region_destroy'? [-Werror=implicit-function-declaration]
-> > > > 3925   devlink_reload_disable(devlink);
-> > > > 3926   ^~~~~~~~~~~~~~~~~~~~~~
-> > > > 3927   devlink_region_destroy
-> > > > 3928   CC [M]  drivers/net/ethernet/packetengines/hamachi.o
-> > > > 3929   CC [M]  fs/udf/file.o
-> > > > 3930   LD [M]  drivers/net/ethernet/intel/fm10k/fm10k.o
-> > > > 
-> > > > I haven't tried to trace the issue further yet, sorry.
-> > > 
-> > > Any chance you can bisect this?  I don't see any obvious reason why this
-> > > error should be happening, and it isn't showing up here :(
-> > > 
-> > I see the problem as well, with powerpc:defconfig.
-> > 
-> > Underlying issue is that devlink_reload_disable() is only declared in the
-> > include file if CONFIG_NET_DEVLINK is enabled. There is no dummy otherwise.
-> > The dummy declarations which still exist in 4.19 were removed with commit
-> > f6b19b354d50c ("net: devlink: select NET_DEVLINK from drivers") in the
-> > upstream kernel.
-> 
-> Ok, let me take part of that patch and backport it.  I'll push out a
-> -rc3 now to hopefully resolve this issue.
+Hello,
 
-Ok, that failed horribly :(
+I am submitting two patches to printk which possibly need a little
+context to explain why we found them to be necessary.
 
-Let me work on this after dinner...
+We develop an embedded Linux device in which we use a unified logging
+scheme where the userspace applications write their logs into /dev/kmsg,
+and then log reader applications (like dmesg) read them out for logging
+to the console and syslog. There are some advantages to this scheme,
+such as having common timestamps for kernel and userspace messages and
+being more easily able to correlate how userspace application events
+trigger kernel activity.
 
-thanks,
+We recently upgraded our kernel from 3.18 to 4.14 and found that
+behaviour around continuation lines we had been using no longer worked.
+Since it is not possible to write more than LOG_LINE_MAX (992) bytes
+into /dev/kmsg in one write, we were relying on the fact that we could
+break up a longer message into several consecutive writes where only the
+last write of the sequence was terminated by a newline, and the kernel
+would treat the messages as a sequence of continuations. When you then
+read the messages back from /dev/kmsg you could tell this because the
+first record of the sequence would be flagged with 'c' and subsequent
+ones with '+', meaning that the log reader could easily join them back
+together. Obviously there are times where a sequence could be broken by
+an unrelated printk occuring in the middle, but it generally worked very
+well.
 
-greg k-h
+Subsequent kernel changes mean that it is currently not possible to
+write continuation lines into the printk buffer from userspace, and also
+that the flags that you read back in /dev/kmsg records are now either
+'-' or 'c', something I previously submitted a documentation patch for
+in commit 085a3a8fdf3e ("ABI: Update dev-kmsg documentation to match
+current kernel behaviour"), which makes the documentation correct, but
+glosses over the fact that the flags are no longer useful.
+
+These patches are what we have done to resolve this issue, by giving a
+new way to write continuation lines into /dev/kmsg from userspace, and
+the have meaningful flags come back that will allow a reader to join the
+lines together again.
+
+James Byrne
+
+
+James Byrne (2):
+  printk: Make continuation flags from /dev/kmsg useful again
+  printk: Support message continuation from /dev/kmsg
+
+ Documentation/ABI/testing/dev-kmsg | 20 +++++++++++++-------
+ kernel/printk/printk.c             | 25 +++++++++++++++++++++++--
+ 2 files changed, 36 insertions(+), 9 deletions(-)
+
+-- 
+2.24.0
+
