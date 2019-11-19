@@ -2,97 +2,143 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 561EBC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F351C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:00:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 399D3208D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:59:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7691B2230F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:00:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aV6b0zLK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728635AbfKSQ5E (ORCPT
+        id S1728576AbfKSRAD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 11:57:04 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:52799 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728619AbfKSQ5D (ORCPT
+        Tue, 19 Nov 2019 12:00:03 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:43698 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727212AbfKSRAC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 11:57:03 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iX6oB-0007RT-Nh; Tue, 19 Nov 2019 17:56:55 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 97BB41C19D6;
-        Tue, 19 Nov 2019 17:56:49 +0100 (CET)
-Date:   Tue, 19 Nov 2019 16:56:49 -0000
-From:   "tip-bot2 for Adrian Hunter" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf callchain: Fix segfault in
- thread__resolve_callchain_sample()
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>, Ingo Molnar <mingo@kernel.org>,
-        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
-In-Reply-To: <20191114142538.4097-1-adrian.hunter@intel.com>
-References: <20191114142538.4097-1-adrian.hunter@intel.com>
+        Tue, 19 Nov 2019 12:00:02 -0500
+Received: by mail-lj1-f196.google.com with SMTP id y23so24148254ljh.10;
+        Tue, 19 Nov 2019 09:00:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=EWN1ZpXN/f4GXP8V3XISkI6qP/p5d7CKryKCLpJongQ=;
+        b=aV6b0zLK4e7wbM1ZqDppNii3W6Ag4g5//no+UHoUiVeNIQgXKDrnfxRLKpfBT8VqBo
+         qBtgQiapfJ2JKvZBuaMVlROzz3SCBM1cugVluR5kWQm9fi25lc1zS5klcPis9FLahaOw
+         /g53hBUEu5u43bK+URJzsoM4AP7d7MRZ0plD0maa7r8BksyFqTxy+wx+noGZ78dxUphQ
+         DxNRXt5wJMus1KC/9ZmV+GbBAx4KC+htMC4PFs6IZTzwlKFHeHHv6gFLlOIhMrEdnbcX
+         +NTUIVuLZB+X/Q55XOgdgGj4hV9lYO2GhTsR//EEFh5Kh29XPZZzEnlad3pPE9lF22WV
+         u+nQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=EWN1ZpXN/f4GXP8V3XISkI6qP/p5d7CKryKCLpJongQ=;
+        b=L1HHSRhY2H1Rn9eTedq8IBNNCU+W+Q0vXhuJOZaoMWbV0oM1RU9KEguQ4550L6Uzvk
+         kvtQzxI1rbPQS3BP8RqEHNCvOPW4ZUUhcp0n89BUYDDCcM2EsEyhPouaK2CHsfK6GSdi
+         uEYPKGaeC4R8P8feMKU5X/3UxlVEZjOTXFzPg7k0z3WDG4vZtxKMRQLIwJasOkTwJAXH
+         otXEB37f80unDeyrMMlREgqHkaM4EVdVRBfndQ7tomCa0t6+LsXuZdmbi8LXIogc4b1+
+         52Lr9ymZoeawq8/ye1Qr7L2FcCK3BXaOUd2Px8sV7g1kKZvncHD/I9GtPX9cy5SD+Ulf
+         DMYA==
+X-Gm-Message-State: APjAAAXdKj715bdU3pGy+XZMP2oXh95M6eYsLJYfSOXM4xRVoL8tr5Jd
+        qqtmu5cxHP0FOxcQOXCfcK8n3Bcm
+X-Google-Smtp-Source: APXvYqzUJ15qHXRQXDdLUOjO7y7PndvAwTYq5Hd82LpDfgGl42VActAGgmwBJM+mFWepTDd8E6UwPQ==
+X-Received: by 2002:a05:651c:390:: with SMTP id e16mr4856596ljp.196.1574182799913;
+        Tue, 19 Nov 2019 08:59:59 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id 206sm1213375lfb.20.2019.11.19.08.59.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 19 Nov 2019 08:59:59 -0800 (PST)
+Subject: Re: [PATCH v1 12/29] interconnect: Add memory interconnection
+ providers for NVIDIA Tegra SoCs
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Mikko Perttunen <mperttunen@nvidia.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-tegra@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+References: <20191118200247.3567-1-digetx@gmail.com>
+ <20191118200247.3567-13-digetx@gmail.com> <20191119063139.GF2462695@ulmo>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <044b17a8-7186-fec0-e786-5ec5a13e5873@gmail.com>
+Date:   Tue, 19 Nov 2019 19:59:58 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Message-ID: <157418260955.12247.4526297141472417242.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <20191119063139.GF2462695@ulmo>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the perf/core branch of tip:
+19.11.2019 09:31, Thierry Reding пишет:
+> On Mon, Nov 18, 2019 at 11:02:30PM +0300, Dmitry Osipenko wrote:
+> [...]
+>> diff --git a/include/soc/tegra/mc.h b/include/soc/tegra/mc.h
+>> index 1238e35653d1..593954324259 100644
+>> --- a/include/soc/tegra/mc.h
+>> +++ b/include/soc/tegra/mc.h
+>> @@ -141,6 +141,11 @@ struct tegra_mc_reset_ops {
+>>  			    const struct tegra_mc_reset *rst);
+>>  };
+>>  
+>> +struct tegra_mc_icc_node {
+>> +	const char *name;
+>> +	unsigned int id;
+>> +};
+>> +
+>>  struct tegra_mc_soc {
+>>  	const struct tegra_mc_client *clients;
+>>  	unsigned int num_clients;
+>> @@ -160,6 +165,9 @@ struct tegra_mc_soc {
+>>  	const struct tegra_mc_reset_ops *reset_ops;
+>>  	const struct tegra_mc_reset *resets;
+>>  	unsigned int num_resets;
+>> +
+>> +	const struct tegra_mc_icc_node *icc_nodes;
+>> +	unsigned int num_icc_nodes;
+>>  };
+>>  
+>>  struct tegra_mc {
+>> @@ -184,4 +192,22 @@ struct tegra_mc {
+>>  int tegra_mc_write_emem_configuration(struct tegra_mc *mc, unsigned long rate);
+>>  unsigned int tegra_mc_get_emem_device_count(struct tegra_mc *mc);
+>>  
+>> +#ifdef CONFIG_INTERCONNECT_TEGRA
+>> +int tegra_icc_mc_setup_interconnect(struct tegra_mc *mc);
+>> +int tegra_icc_emc_setup_interconnect(struct device *emc_dev,
+>> +				     unsigned int dram_data_bus_width_bytes);
+>> +#else
+>> +static inline int tegra_icc_mc_setup_interconnect(struct tegra_mc *mc);
+>> +{
+>> +	return 0;
+>> +}
+>> +
+>> +static inline int
+>> +tegra_icc_emc_setup_interconnect(struct device *emc_dev,
+>> +				 unsigned int dram_data_bus_width_bytes)
+>> +{
+>> +	return 0;
+>> +}
+>> +#endif
+> 
+> Is there really any reason why we should make this support optional? It
+> seems to me like we would always want this enabled once it's tested and
+> known to work.
 
-Commit-ID:     aceb98261ea7d9fe38f9c140c5531f0b13623832
-Gitweb:        https://git.kernel.org/tip/aceb98261ea7d9fe38f9c140c5531f0b13623832
-Author:        Adrian Hunter <adrian.hunter@intel.com>
-AuthorDate:    Thu, 14 Nov 2019 16:25:38 +02:00
-Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Mon, 18 Nov 2019 13:01:59 -03:00
-
-perf callchain: Fix segfault in thread__resolve_callchain_sample()
-
-Do not dereference 'chain' when it is NULL.
-
-  $ perf record -e intel_pt//u -e branch-misses:u uname
-  $ perf report --itrace=l --branch-history
-  perf: Segmentation fault
-
-Fixes: e9024d519d89 ("perf callchain: Honour the ordering of PERF_CONTEXT_{USER,KERNEL,etc}")
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lore.kernel.org/lkml/20191114142538.4097-1-adrian.hunter@intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/machine.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 7d2e211..71ee078 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -2385,7 +2385,7 @@ static int thread__resolve_callchain_sample(struct thread *thread,
- 	}
- 
- check_calls:
--	if (callchain_param.order != ORDER_CALLEE) {
-+	if (chain && callchain_param.order != ORDER_CALLEE) {
- 		err = find_prev_cpumode(chain, thread, cursor, parent, root_al,
- 					&cpumode, chain->nr - first_call);
- 		if (err)
+There is always some room for bugs, should be better to have an option
+to disable ICC entirely (IMO).
