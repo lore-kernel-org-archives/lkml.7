@@ -2,113 +2,122 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D221C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 07:39:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 533CBC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 07:43:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05DB321850
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 07:39:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bEgICEq7"
+	by mail.kernel.org (Postfix) with ESMTP id 2DBC621739
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 07:43:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727453AbfKSHj3 (ORCPT
+        id S1727171AbfKSHnv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 02:39:29 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39043 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725536AbfKSHj3 (ORCPT
+        Tue, 19 Nov 2019 02:43:51 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.164]:25910 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725869AbfKSHnv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 02:39:29 -0500
-Received: by mail-wm1-f67.google.com with SMTP id t26so2240745wmi.4;
-        Mon, 18 Nov 2019 23:39:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=hh4VbnNsZd0cQjCcxR1lcKBnthPXIf0SZTjvhg2Wu+o=;
-        b=bEgICEq769u8g2rEZbD8dQT+znw/d/3WiyLyxRoRw2phf9OfSNgEj8y7rBFWslHOfR
-         CiDX77/A2ElzxR1iC6wn+xj3FwhUSO1TYld/LPBHJisQ26P/zTwkIc2faQKEab7S9K5B
-         HsH8dMCSHs/jsDlCzwdlZl8P42r0ysTzoTlKPEhcOd/U6WJ8NYaSCsSwPONBhtWibdVU
-         SaHbl7L/aToxU7ObEv/bZMg9vy9ctB82/goQrJvUIEM+ALSx/ebIDGYx97nXEBsoQ5WG
-         b3wj/0dg22lPqwiTsNcqSgc9D20S/yZXLdypRwgJ4EhsEqTuwdOdADXw1Nm8sCNBDoAQ
-         ySOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hh4VbnNsZd0cQjCcxR1lcKBnthPXIf0SZTjvhg2Wu+o=;
-        b=qsE8YujaLHU1tTa7hnLuScZ5jvQpKiJcEQ8C+XMVQCIWPCab7mxcMnCMuqyPAuFAkX
-         m7oyX5Vk/qi0NbVbKcnR3tkTChAOAa4jsSAZ8p0rS/WO3OF30vIL6YtcvQI0PGnqZRfU
-         eZ7tFGhzV4I9xVnBXPXDiN4QYDzg4+fX+SEPg9os2U54f/qaO7vAlFJIyCnM7OXpa23G
-         XR6q2jfDVtmsGRE9M1J/MGybRfmwYEWILpMoFR+v7AniTmpdsVqR26uUuUCxF3YKBJ/b
-         wAY+bT8HuTHzaqqXXSJLoweKoiOHpeM8/eMaH3sFqRNwRuw23U9sha3Bpj9gcxLm1Z/4
-         go0Q==
-X-Gm-Message-State: APjAAAUz5EGHvtok/Oz9gRVlYnQADcyusy2Rn+0HYLrggxLKmVTLARnF
-        ec43VyUfMlseUn4RhXeYmzOXY4HE
-X-Google-Smtp-Source: APXvYqz0gH537B8rU2w00QiT/qNEHBVmoinFUpSwuRNgUqOSFjcLDQplIaEzENzq42pnIhByD4QFUw==
-X-Received: by 2002:a05:600c:22c1:: with SMTP id 1mr3946744wmg.142.1574149166955;
-        Mon, 18 Nov 2019 23:39:26 -0800 (PST)
-Received: from Red ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id k125sm2206895wmf.2.2019.11.18.23.39.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 23:39:26 -0800 (PST)
-Date:   Tue, 19 Nov 2019 08:39:24 +0100
-From:   Corentin Labbe <clabbe.montjoie@gmail.com>
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     davem@davemloft.net, herbert@gondor.apana.org.au,
-        mark.rutland@arm.com, robh+dt@kernel.org, wens@csie.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: Re: [PATCH 2/3] ARM: dts: sun8i: a33: add the new SecuritySystem
- compatible
-Message-ID: <20191119073924.GA32060@Red>
-References: <20191114144812.22747-1-clabbe.montjoie@gmail.com>
- <20191114144812.22747-3-clabbe.montjoie@gmail.com>
- <20191118111143.GF4345@gilmour.lan>
+        Tue, 19 Nov 2019 02:43:51 -0500
+X-Greylist: delayed 468 seconds by postgrey-1.27 at vger.kernel.org; Tue, 19 Nov 2019 02:43:50 EST
+X-RZG-AUTH: ":P2MHfkW8eP4Mre39l357AZT/I7AY/7nT2yrDxb8mjG14FZxedJy6qgO1o3PMaViOoLMJVch5l0xf"
+X-RZG-CLASS-ID: mo00
+Received: from [192.168.1.177]
+        by smtp.strato.de (RZmta 44.29.0 DYNA|AUTH)
+        with ESMTPSA id C03a03vAJ7hk2Al
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Tue, 19 Nov 2019 08:43:46 +0100 (CET)
+Subject: Re: [PATCH 5.3 09/48] slip: Fix memory leak in slip_open error path
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     stable@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Jouni Hogander <jouni.hogander@unikie.com>
+References: <20191119050946.745015350@linuxfoundation.org>
+ <20191119050955.380296035@linuxfoundation.org>
+From:   Oliver Hartkopp <socketcan@hartkopp.net>
+Message-ID: <eb6fcac2-abdd-cb83-0942-09878b5e4751@hartkopp.net>
+Date:   Tue, 19 Nov 2019 08:43:45 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191118111143.GF4345@gilmour.lan>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191119050955.380296035@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 18, 2019 at 12:11:43PM +0100, Maxime Ripard wrote:
-> Hi,
-> 
-> On Thu, Nov 14, 2019 at 03:48:11PM +0100, Corentin Labbe wrote:
-> > Add the new A33 SecuritySystem compatible to the crypto node.
-> >
-> > Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
-> > ---
-> >  arch/arm/boot/dts/sun8i-a33.dtsi | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/arch/arm/boot/dts/sun8i-a33.dtsi b/arch/arm/boot/dts/sun8i-a33.dtsi
-> > index 1532a0e59af4..5680fa1de102 100644
-> > --- a/arch/arm/boot/dts/sun8i-a33.dtsi
-> > +++ b/arch/arm/boot/dts/sun8i-a33.dtsi
-> > @@ -215,7 +215,8 @@
-> >  		};
-> >
-> >  		crypto: crypto-engine@1c15000 {
-> > -			compatible = "allwinner,sun4i-a10-crypto";
-> > +			compatible = "allwinner,sun8i-a33-crypto",
-> > +				     "allwinner,sun4i-a10-crypto";
-> 
-> If some algorithms aren't working properly, we can't really fall back
-> to it, we should just use the a33 compatible.
-> 
+Hello Greg,
 
-Since crypto selftest detect the problem, the fallback could be used and SS will just be in degraded mode (no sha1).
-But since nobody reported this problem since 4 years (when SS was added in a33 dts), the absence of sha1 is clearly not an issue.
+thanks for taking care of the slip.c patches.
 
-Regards
+The original issue was reported by Jouni for "slcan.c" which is also 
+referenced in this commit message. But it was probably overlooked at 
+upstream time that it should go into stable too.
+
+The slcan.c fix is here:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=ed50e1600b4483c049ce76e6bd3b665a6a9300ed
+
+Best regards,
+Oliver
+
+On 19/11/2019 06.19, Greg Kroah-Hartman wrote:
+> From: Jouni Hogander <jouni.hogander@unikie.com>
+> 
+> [ Upstream commit 3b5a39979dafea9d0cd69c7ae06088f7a84cdafa ]
+> 
+> Driver/net/can/slcan.c is derived from slip.c. Memory leak was detected
+> by Syzkaller in slcan. Same issue exists in slip.c and this patch is
+> addressing the leak in slip.c.
+> 
+> Here is the slcan memory leak trace reported by Syzkaller:
+> 
+> BUG: memory leak unreferenced object 0xffff888067f65500 (size 4096):
+>    comm "syz-executor043", pid 454, jiffies 4294759719 (age 11.930s)
+>    hex dump (first 32 bytes):
+>      73 6c 63 61 6e 30 00 00 00 00 00 00 00 00 00 00 slcan0..........
+>      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+>    backtrace:
+>      [<00000000a06eec0d>] __kmalloc+0x18b/0x2c0
+>      [<0000000083306e66>] kvmalloc_node+0x3a/0xc0
+>      [<000000006ac27f87>] alloc_netdev_mqs+0x17a/0x1080
+>      [<0000000061a996c9>] slcan_open+0x3ae/0x9a0
+>      [<000000001226f0f9>] tty_ldisc_open.isra.1+0x76/0xc0
+>      [<0000000019289631>] tty_set_ldisc+0x28c/0x5f0
+>      [<000000004de5a617>] tty_ioctl+0x48d/0x1590
+>      [<00000000daef496f>] do_vfs_ioctl+0x1c7/0x1510
+>      [<0000000059068dbc>] ksys_ioctl+0x99/0xb0
+>      [<000000009a6eb334>] __x64_sys_ioctl+0x78/0xb0
+>      [<0000000053d0332e>] do_syscall_64+0x16f/0x580
+>      [<0000000021b83b99>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>      [<000000008ea75434>] 0xfffffffffffffff
+> 
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Oliver Hartkopp <socketcan@hartkopp.net>
+> Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+> Signed-off-by: Jouni Hogander <jouni.hogander@unikie.com>
+> Signed-off-by: David S. Miller <davem@davemloft.net>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> ---
+>   drivers/net/slip/slip.c |    1 +
+>   1 file changed, 1 insertion(+)
+> 
+> --- a/drivers/net/slip/slip.c
+> +++ b/drivers/net/slip/slip.c
+> @@ -855,6 +855,7 @@ err_free_chan:
+>   	sl->tty = NULL;
+>   	tty->disc_data = NULL;
+>   	clear_bit(SLF_INUSE, &sl->flags);
+> +	free_netdev(sl->dev);
+>   
+>   err_exit:
+>   	rtnl_unlock();
+> 
+> 
