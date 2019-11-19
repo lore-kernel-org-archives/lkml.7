@@ -2,106 +2,89 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 331A1C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:47:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA86C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:48:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09417222DC
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:47:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CED7F222DC
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:48:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="my9n7z/+"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yEbnVhm3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728338AbfKSOrN (ORCPT
+        id S1728025AbfKSOs2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 09:47:13 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:33978 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727693AbfKSOrM (ORCPT
+        Tue, 19 Nov 2019 09:48:28 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:43238 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726736AbfKSOs1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 09:47:12 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAJEl3L1127708;
-        Tue, 19 Nov 2019 08:47:03 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574174823;
-        bh=OXUbZruzHdM6LcZR/07PxuUSjLDUqi60DA1vaZg2jFs=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=my9n7z/+Rv8yLMeHxUFRDKMKyXZCTkd2eq1EOENBQJhIjjv+X2MCk+ILG43vMY/NV
-         OzT4NwDWpErX+LIvRquDkBzX9slilH2Ze8hsSjOylwIjXAt5BPPbCh9LGE2yx2QCyR
-         YA8OKf8gkUrwNRlae7WFchWC2WpNlYRdPXV9pRjU=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAJEl2VQ068335
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 19 Nov 2019 08:47:03 -0600
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 19
- Nov 2019 08:47:01 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 19 Nov 2019 08:47:01 -0600
-Received: from [10.250.33.226] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAJEl1j4013921;
-        Tue, 19 Nov 2019 08:47:01 -0600
-Subject: Re: [PATCH 2/2] can: m_can_platform: remove unnecessary
- m_can_class_resume() call
-To:     Pankaj Sharma <pankj.sharma@samsung.com>,
-        <linux-can@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <wg@grandegger.com>, <mkl@pengutronix.de>, <davem@davemloft.net>,
-        <rcsekar@samsung.com>, <pankaj.dubey@samsung.com>,
-        Sriram Dash <sriram.dash@samsung.com>
-References: <1574158838-4616-1-git-send-email-pankj.sharma@samsung.com>
- <CGME20191119102201epcas5p4e215c25d5d07269a7afb1f86fac0be65@epcas5p4.samsung.com>
- <1574158838-4616-3-git-send-email-pankj.sharma@samsung.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <0af3a926-fa28-2ddd-a6ef-1c516f674fc9@ti.com>
-Date:   Tue, 19 Nov 2019 08:45:30 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 19 Nov 2019 09:48:27 -0500
+Received: by mail-lj1-f193.google.com with SMTP id y23so23626602ljh.10
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 06:48:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=byAFlXzzH8jPBQ/aAVNrm3vOvpWN1xVTx4/MeZUVxQY=;
+        b=yEbnVhm3gtJp5uGUSL7Pok3vTzWxNUWEt1wdLYeOpm9jbdCBolEwskTVQ5PPDzUlh5
+         aasWp3wAeGWK7XJ7cTRBQEJmRMZF4DXusWa+M/9ixNWaB0xYJHE1+6XNAUcksjyT8/AY
+         bVsChNiPEolUgUcff17R6SZYq72sKm00riC8Rvd02w9Ihz5auKvSUFdJfW0mEc51weHj
+         4i4Mm+CCIg0kl4HPX2swUJOd4+Fj5InmXm+KjvmXCTl60j/d+VgpY/bnKkbsSw9mlopQ
+         LtYKgQfjNOS+Q4ycfuSJGIVlUp3c+E0sJppMRHweG5oK4v+M/reknYklyUJDp4bE5/NO
+         KwIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=byAFlXzzH8jPBQ/aAVNrm3vOvpWN1xVTx4/MeZUVxQY=;
+        b=KrCQ23SCmiSnc60NuVW3U51Xui14kS41vyxw+hgMiKjcPQdZik5Fr5E301RzQdqQXA
+         CqxDTZkpEDynj18MpZYB28xwkTa06BfSdW0/EC1O9WT3IUnE8y8j46HxU7a1P89ME7uE
+         ouS3g1cy6tqETWR1YCKnVE6zLLCPBpdCdB/rf/X8K9nwT+rh2J4/TX7YvB5vhgLwtIw0
+         +iXb9/oU67/Ips/2LRoMaVj8Efamg5oxJ3ww/WdUmPxku/7xpJF4myZvPltKyfSlJ46q
+         QtudBdqNPno4cTzm+fXZ6A0+VxwA+7fYSoeS6GnQjKdovFjKQuGciHHxARbrBriNBIEb
+         JI9w==
+X-Gm-Message-State: APjAAAWDKnPBCscszt3gpVey9NuSIml2UVivcoX0f8eyx1iEqcQiKrBa
+        HBNZSZubc5y9DCLEza+x1v80Tp+i7uh2LdowuttRPQ==
+X-Google-Smtp-Source: APXvYqypBpdcDjYi+awRNbMnaJ0xM8pEhAZMyB5wBSCbVU5PNhff35CN/EVhx1NFDxhNSxkHQUg4ODsr5mR56jda/Ns=
+X-Received: by 2002:a2e:9a12:: with SMTP id o18mr4247059lji.191.1574174905582;
+ Tue, 19 Nov 2019 06:48:25 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1574158838-4616-3-git-send-email-pankj.sharma@samsung.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20191116005240.15722-1-robh@kernel.org>
+In-Reply-To: <20191116005240.15722-1-robh@kernel.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 19 Nov 2019 15:48:12 +0100
+Message-ID: <CACRpkdbiBAU451Tt1NqTGhemg800CH-sZQ7YMZ-RR18rzjv6fw@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: PCI: Convert Arm Versatile binding to DT schema
+To:     Rob Herring <robh@kernel.org>
+Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pankaj
+On Sat, Nov 16, 2019 at 1:52 AM Rob Herring <robh@kernel.org> wrote:
 
-On 11/19/19 4:20 AM, Pankaj Sharma wrote:
-> The function m_can_runtime_resume() is getting recursively called from
-> m_can_class_resume(). This results in a lock up.
+> Convert the Arm Versatile PCI host binding to a DT schema.
 >
-> We need not call m_can_class_resume() during m_can_runtime_resume().
->
-> Fixes: f524f829b75a ("can: m_can: Create a m_can platform framework")
->
-> Signed-off-by: Pankaj Sharma <pankj.sharma@samsung.com>
-> Signed-off-by: Sriram Dash <sriram.dash@samsung.com>
-> ---
->   drivers/net/can/m_can/m_can_platform.c | 2 --
->   1 file changed, 2 deletions(-)
->
-> diff --git a/drivers/net/can/m_can/m_can_platform.c b/drivers/net/can/m_can/m_can_platform.c
-> index 2eaa354..38ea5e6 100644
-> --- a/drivers/net/can/m_can/m_can_platform.c
-> +++ b/drivers/net/can/m_can/m_can_platform.c
-> @@ -166,8 +166,6 @@ static int __maybe_unused m_can_runtime_resume(struct device *dev)
->   	if (err)
->   		clk_disable_unprepare(mcan_class->hclk);
->   
-> -	m_can_class_resume(dev);
-> -
->   	return err;
->   }
->   
-Acked-by: Dan Murphy <dmurphy@ti.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Cc: Andrew Murray <andrew.murray@arm.com>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+
+Thanks for doing this.
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+
+Yours,
+Linus Walleij
