@@ -2,51 +2,53 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E600EC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46916C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:25:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDF6421823
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:25:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B73021823
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:25:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141117;
-	bh=Z0XLCHhWRD+g0j9Y20TTDvAwkXt8dSUR3lB27fEGWqQ=;
+	s=default; t=1574141119;
+	bh=0ELM6zDJ08rmARJey1y7Zf1Nztqs6EAE8lZ79+tiF/U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=diN8OWvqPFbHFvew+78AnJEKN7lokPJkqD8lFi1bbOhGdGtGT6cAZDAUQ5OyGjLjz
-	 eB3oKAKWErF+Q1mzKgoi5aYNoBV1YkGNvcZfrCILctm+n4+h4KnK3mgNhdBbUiYvmH
-	 iL8tgEBr4z6FqjeFdcHb57QRCRCwz85T+oBetpFg=
+	b=f50l00jputAJfQ7FLfgKfTaj9c46AhnQUYo4jcWP4ji6GDjRSThOKjgsAyHUg7IGQ
+	 Nv1IIgYRD/BCVn1UX6Wrk21sON5/H8GKs00rTMGWtzOsv7eVi1eq1uE+cSUzYC/BmV
+	 4q7w5fMXVdgduf7fO07NasLeW14mwRlMe5M86474=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728355AbfKSFZP (ORCPT
+        id S1728366AbfKSFZR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:25:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42196 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:25:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728339AbfKSFZN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:25:13 -0500
+        id S1728357AbfKSFZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:25:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 442A421823;
-        Tue, 19 Nov 2019 05:25:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D2D0222A2;
+        Tue, 19 Nov 2019 05:25:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141112;
-        bh=Z0XLCHhWRD+g0j9Y20TTDvAwkXt8dSUR3lB27fEGWqQ=;
+        s=default; t=1574141115;
+        bh=0ELM6zDJ08rmARJey1y7Zf1Nztqs6EAE8lZ79+tiF/U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eTE5bZW90McaIiwVWNum1u018n5TyoLoqcwYMiyXJQbfar1sqjF7ulMS2TzpYPSI7
-         EeIMQATsJ1u2WU/gZzduwTry8vRc9c6IrDuCDJ+ClsoqaLw91i4BnQbEKKwbdJS0OT
-         9zjyrOHg0Njue+wQarxZghY5idnwKEEgTylVEehw=
+        b=qlLxV3zaAFgAGlogLiUkoCQ5S0TCBfzTL9bGyn/pT4BKNvKHTDpBTtjI4DN9WkZed
+         FMTi06XxhO5+6AihsefO6kgQKQkFIOgFTi4fI38LCiD6ifszXQ/QMwjIcBDX1U/Nrl
+         aYS7BCUx8iIQRreehISIi9zS/nwRGP8Itw+jcE7E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Machek <pavel@denx.de>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 012/422] ALSA: usb-audio: Fix incorrect NULL check in create_yamaha_midi_quirk()
-Date:   Tue, 19 Nov 2019 06:13:29 +0100
-Message-Id: <20191119051400.964197147@linuxfoundation.org>
+        stable@vger.kernel.org, Jay Foster <jayfoster@ieee.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 048/422] ARM: dts: at91/trivial: Fix USART1 definition for at91sam9g45
+Date:   Tue, 19 Nov 2019 06:14:05 +0100
+Message-Id: <20191119051402.977272617@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -59,40 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Jay Foster <jayfoster@ieee.org>
 
-commit cc9dbfa9707868fb0ca864c05e0c42d3f4d15cf2 upstream.
+[ Upstream commit 10af10db8c76fa5b9bf1f52a895c1cb2c0ac24da ]
 
-The commit 60849562a5db ("ALSA: usb-audio: Fix possible NULL
-dereference at create_yamaha_midi_quirk()") added NULL checks in
-create_yamaha_midi_quirk(), but there was an overlook.  The code
-allows one of either injd or outjd is NULL, but the second if check
-made returning -ENODEV if any of them is NULL.  Fix it in a proper
-form.
+Fix a typo. No functional change made by this patch.
 
-Fixes: 60849562a5db ("ALSA: usb-audio: Fix possible NULL dereference at create_yamaha_midi_quirk()")
-Reported-by: Pavel Machek <pavel@denx.de>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191113111259.24123-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Jay Foster <jayfoster@ieee.org>
+Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/usb/quirks.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/at91sam9g45.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/usb/quirks.c
-+++ b/sound/usb/quirks.c
-@@ -259,8 +259,8 @@ static int create_yamaha_midi_quirk(stru
- 					NULL, USB_MS_MIDI_OUT_JACK);
- 	if (!injd && !outjd)
- 		return -ENODEV;
--	if (!(injd && snd_usb_validate_midi_desc(injd)) ||
--	    !(outjd && snd_usb_validate_midi_desc(outjd)))
-+	if ((injd && !snd_usb_validate_midi_desc(injd)) ||
-+	    (outjd && !snd_usb_validate_midi_desc(outjd)))
- 		return -ENODEV;
- 	if (injd && (injd->bLength < 5 ||
- 		     (injd->bJackType != USB_MS_EMBEDDED &&
+diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
+index 1ee25a475be87..d16db1fa7e15c 100644
+--- a/arch/arm/boot/dts/at91sam9g45.dtsi
++++ b/arch/arm/boot/dts/at91sam9g45.dtsi
+@@ -570,7 +570,7 @@
+ 					};
+ 				};
+ 
+-				uart1 {
++				usart1 {
+ 					pinctrl_usart1: usart1-0 {
+ 						atmel,pins =
+ 							<AT91_PIOB 4 AT91_PERIPH_A AT91_PINCTRL_NONE
+-- 
+2.20.1
+
 
 
