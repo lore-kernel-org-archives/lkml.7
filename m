@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7309C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:46:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB1E0C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:46:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEB602084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:46:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C5B52075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:46:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142377;
-	bh=HImH6DBQCdYDbrYV5nm8VU8wabB9MtuWvxvVxo2aZSQ=;
+	s=default; t=1574142384;
+	bh=EGOy6xUak/D4P5zc7KNc2Rs4carT6OwSr6QBfTr+Sm0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wowsu4Ihyk5AsaipLtBnrvik3iofVmnkod/nzCD3f2oLv0/RzZeBOvhSH8kyY6flD
-	 1nN8uvxg0UytgCtlA2vs/zN14CGid7g36nnxxRfqn+lQZyVpdpx40ALsl7aIqO8ZMe
-	 ZKxNBsVKXkee5uqfhiAU0g6y7UwxkfybYo48O/BM=
+	b=KfWULRnBJCaARpaD27XKxrPsv/WOxB+G1/ykarNcg0Vhlskji8pr1wR+CiZ6SCQgG
+	 wUi5Q7P1Kn6niB7SUYDlhvHZGBnXNUmsk24cdb3DYwgyJdRKA096yV29D0KWlVmG+T
+	 peKes7gIQHrp6xlX4vAR1bNzw5CKPezsIvLpnLxM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731079AbfKSFqQ (ORCPT
+        id S1731089AbfKSFqX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:46:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42286 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:46:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731060AbfKSFqN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:46:13 -0500
+        id S1731076AbfKSFqT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:46:19 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0D232084D;
-        Tue, 19 Nov 2019 05:46:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F6562082F;
+        Tue, 19 Nov 2019 05:46:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142373;
-        bh=HImH6DBQCdYDbrYV5nm8VU8wabB9MtuWvxvVxo2aZSQ=;
+        s=default; t=1574142379;
+        bh=EGOy6xUak/D4P5zc7KNc2Rs4carT6OwSr6QBfTr+Sm0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H1kUDNNRAw9/Aocytv1Sso0s2DOVyjTde7aK8nIM2Fto7DUMo8nHrxtquIx5tLkds
-         Dwyq31yOa5ArLb8/1g00bTDM1fobAIuj660nrt8rjHnCWxGz9tc0KSqNYmLTL+Bequ
-         ziLljpLUOOJDZgwKEZkgMgbUigjcPjJbS1IXGP/I=
+        b=doTdZkVcvasfMbCABV3DRdXFKHVW/ZNMOcPckuL6V6nqHyePctBqKwWvPe8zX1Bkv
+         UJt0NlU6NRHYoCQQzWN5pCEkX/paoW+p/wWnSJFCKh5fW2RbL+eLkXF9nYiqSZWDg8
+         5OapgJGhSI+mNY5QYPRMoE+OjEj6n1mXN9XHr+hk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Larry Finger <Larry.Finger@lwfinger.net>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Jiada Wang <jiada_wang@mentor.com>,
+        Timo Wischer <twischer@de.adit-jv.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Hiroyuki Yokoyama <hiroyuki.yokoyama.vx@renesas.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 059/239] rtl8187: Fix warning generated when strncpy() destination length matches the sixe argument
-Date:   Tue, 19 Nov 2019 06:17:39 +0100
-Message-Id: <20191119051309.776060306@linuxfoundation.org>
+Subject: [PATCH 4.14 061/239] ASoC: rsnd: ssi: Fix issue in dma data address assignment
+Date:   Tue, 19 Nov 2019 06:17:41 +0100
+Message-Id: <20191119051310.567501461@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -60,34 +63,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Larry Finger <Larry.Finger@lwfinger.net>
+From: Jiada Wang <jiada_wang@mentor.com>
 
-[ Upstream commit 199ba9faca909e77ac533449ecd1248123ce89e7 ]
+[ Upstream commit 0e289012b47a2de1f029a6b61c75998e2f159dd9 ]
 
-In gcc8, when the 3rd argument (size) of a call to strncpy() matches the
-length of the first argument, the compiler warns of the possibility of an
-unterminated string. Using strlcpy() forces a null at the end.
+Same SSI device may be used in different dai links,
+by only having one dma struct in rsnd_ssi, after the first
+instance's dma config be initilized, the following instances
+can no longer configure dma, this causes issue, when their
+dma data address are different from the first instance.
 
-Signed-off-by: Larry Finger <Larry.Finger@lwfinger.net>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+Signed-off-by: Timo Wischer <twischer@de.adit-jv.com>
+[Kuninori: tidyup for upstream]
+Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Tested-by: Hiroyuki Yokoyama <hiroyuki.yokoyama.vx@renesas.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtl818x/rtl8187/leds.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/sh/rcar/rsnd.h | 1 +
+ sound/soc/sh/rcar/ssi.c  | 4 +---
+ 2 files changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/wireless/realtek/rtl818x/rtl8187/leds.c b/drivers/net/wireless/realtek/rtl818x/rtl8187/leds.c
-index c2d5b495c179a..c089540116fa7 100644
---- a/drivers/net/wireless/realtek/rtl818x/rtl8187/leds.c
-+++ b/drivers/net/wireless/realtek/rtl818x/rtl8187/leds.c
-@@ -146,7 +146,7 @@ static int rtl8187_register_led(struct ieee80211_hw *dev,
- 	led->dev = dev;
- 	led->ledpin = ledpin;
- 	led->is_radio = is_radio;
--	strncpy(led->name, name, sizeof(led->name));
-+	strlcpy(led->name, name, sizeof(led->name));
+diff --git a/sound/soc/sh/rcar/rsnd.h b/sound/soc/sh/rcar/rsnd.h
+index 1768a0ae469d0..c68b31483c7be 100644
+--- a/sound/soc/sh/rcar/rsnd.h
++++ b/sound/soc/sh/rcar/rsnd.h
+@@ -432,6 +432,7 @@ struct rsnd_dai_stream {
+ 	char name[RSND_DAI_NAME_SIZE];
+ 	struct snd_pcm_substream *substream;
+ 	struct rsnd_mod *mod[RSND_MOD_MAX];
++	struct rsnd_mod *dma;
+ 	struct rsnd_dai *rdai;
+ 	u32 parent_ssi_status;
+ };
+diff --git a/sound/soc/sh/rcar/ssi.c b/sound/soc/sh/rcar/ssi.c
+index 60cc550c5a4ca..cae9ed6a0cdb9 100644
+--- a/sound/soc/sh/rcar/ssi.c
++++ b/sound/soc/sh/rcar/ssi.c
+@@ -66,7 +66,6 @@
  
- 	led->led_dev.name = led->name;
- 	led->led_dev.default_trigger = default_trigger;
+ struct rsnd_ssi {
+ 	struct rsnd_mod mod;
+-	struct rsnd_mod *dma;
+ 
+ 	u32 flags;
+ 	u32 cr_own;
+@@ -868,7 +867,6 @@ static int rsnd_ssi_dma_probe(struct rsnd_mod *mod,
+ 			      struct rsnd_dai_stream *io,
+ 			      struct rsnd_priv *priv)
+ {
+-	struct rsnd_ssi *ssi = rsnd_mod_to_ssi(mod);
+ 	int ret;
+ 
+ 	/*
+@@ -883,7 +881,7 @@ static int rsnd_ssi_dma_probe(struct rsnd_mod *mod,
+ 		return ret;
+ 
+ 	/* SSI probe might be called many times in MUX multi path */
+-	ret = rsnd_dma_attach(io, mod, &ssi->dma);
++	ret = rsnd_dma_attach(io, mod, &io->dma);
+ 
+ 	return ret;
+ }
 -- 
 2.20.1
 
