@@ -2,100 +2,133 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81F6EC43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 20:40:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E6D9C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 20:43:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B4142245C
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 20:40:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pojpkqbd"
+	by mail.kernel.org (Postfix) with ESMTP id D214C206CC
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 20:43:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727348AbfKSUk5 (ORCPT
+        id S1727217AbfKSUnr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 15:40:57 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:38346 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726711AbfKSUk4 (ORCPT
+        Tue, 19 Nov 2019 15:43:47 -0500
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:52065 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726711AbfKSUnr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 15:40:56 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAJKemnp003319;
-        Tue, 19 Nov 2019 14:40:48 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574196048;
-        bh=BZMZhIOhih6YWB34NAzn3mDl5RjnHoAwoyYhzzDXlMM=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=pojpkqbdgJivQrnErcOzv/20vn8gRtjnv0zV6pa0n10JWMQsJn6uUYJXgErIv0nFC
-         59xX2J5VFE/RZ//QXSjV0E/V6aRid6Td62yLdIN3rKm1MP+XeHLpPlHivX6r/NCiP+
-         37UngNfXN8XM4xOTdXQpK5jQD0z4wL3i53FvyLJo=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAJKemcF077835
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 19 Nov 2019 14:40:48 -0600
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 19
- Nov 2019 14:40:47 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 19 Nov 2019 14:40:47 -0600
-Received: from [10.250.45.147] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAJKekhh012907;
-        Tue, 19 Nov 2019 14:40:46 -0600
-Subject: Re: [PATCH 0/1] ARM: dts: am5729: beaglebone-ai: enable board
-To:     Caleb Robey <c-robey@ti.com>, <linux-omap@vger.kernel.org>
-CC:     Jason Kridner <jkridner@gmail.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>, Jason Kridner <jdk@ti.com>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        Andreas Dannenberg <dannenberg@ti.com>,
-        Jean-Jacques Hiblot <jjhiblot@ti.com>,
-        Praneeth Bajjuri <praneeth@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Tom Rini <trini@konsulko.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20191119202850.18149-1-c-robey@ti.com>
-From:   "Andrew F. Davis" <afd@ti.com>
-Message-ID: <a117b152-8fcb-01a8-5a53-2cb615e87111@ti.com>
-Date:   Tue, 19 Nov 2019 15:40:46 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 19 Nov 2019 15:43:47 -0500
+Received: from dread.disaster.area (pa49-181-255-80.pa.nsw.optusnet.com.au [49.181.255.80])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 2216E43F136;
+        Wed, 20 Nov 2019 07:43:41 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1iXALc-0007gT-7X; Wed, 20 Nov 2019 07:43:40 +1100
+Date:   Wed, 20 Nov 2019 07:43:40 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Chengguang Xu <cgxu519@mykernel.net>
+Cc:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
+        darrick.wong@oracle.com, jaegeuk@kernel.org, chao@kernel.org,
+        tytso@mit.edu, adilger.kernel@dilger.ca
+Subject: Re: [RFC PATCH 3/3] xfs: show prjquota info on statfs for a file
+Message-ID: <20191119204340.GZ4614@dread.disaster.area>
+References: <20191118050949.15629-1-cgxu519@mykernel.net>
+ <20191118050949.15629-3-cgxu519@mykernel.net>
 MIME-Version: 1.0
-In-Reply-To: <20191119202850.18149-1-c-robey@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191118050949.15629-3-cgxu519@mykernel.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0
+        a=XqaD5fcB6dAc7xyKljs8OA==:117 a=XqaD5fcB6dAc7xyKljs8OA==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=8nJEP1OIZ-IA:10 a=MeAgGD-zjQ4A:10
+        a=aKLo6qE4AAAA:8 a=7-415B0cAAAA:8 a=2IXG0JadBsM__kedw_oA:9
+        a=wPNLvfGTeEIA:10 a=O0NXIRw7_9tMP-H1FTy7:22 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/19/19 3:28 PM, Caleb Robey wrote:
-> The following patch adds the device tree file for BeagleBone AI
+On Mon, Nov 18, 2019 at 01:09:49PM +0800, Chengguang Xu wrote:
+> Currently we replace filesystem statistics using prjquota info
+> on statfs when specified directory has project id inherit flag.
+> However, statfs on a file(accurately non-dir) which is under the
+> project quota dir(with inherit flag) still shows whole filesystem
+> statistics. In container use case, it will give container user
+> inconsistent experience and cause confusion about available free
+> space.
+> 
+> Detail info like below:
+> We use project quota to limit disk space usage for a container
+> and run df command inside container.
+> 
+> Run df on a directory:
+> 
+> [root /]# df -h /etc/
+> Filesystem      Size  Used Avail Use% Mounted on
+> kataShared      1.0G   13M 1012M   2% /
+> 
+> Run df on a file:
+> 
+> [root /]# df -h /etc/exports
+> Filesystem      Size  Used Avail Use% Mounted on
+> kataShared      1.5T  778M  1.5T   1% /
+> 
+> Signed-off-by: Chengguang Xu <cgxu519@mykernel.net>
+> ---
+>  fs/xfs/xfs_super.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+> index 8d1df9f8be07..9f4d9e86572a 100644
+> --- a/fs/xfs/xfs_super.c
+> +++ b/fs/xfs/xfs_super.c
+> @@ -1125,7 +1125,8 @@ xfs_fs_statfs(
+>  	statp->f_ffree = max_t(int64_t, ffree, 0);
 >  
+>  
+> -	if ((ip->i_d.di_flags & XFS_DIFLAG_PROJINHERIT) &&
+> +	if (((ip->i_d.di_flags & XFS_DIFLAG_PROJINHERIT) ||
+> +	     !S_ISDIR(dentry->d_inode->i_mode)) &&
+>  	    ((mp->m_qflags & (XFS_PQUOTA_ACCT|XFS_PQUOTA_ENFD))) ==
+>  			      (XFS_PQUOTA_ACCT|XFS_PQUOTA_ENFD))
+>  		xfs_qm_statvfs(ip, statp);
 
+So this also changes statfs() for non-directory quota uses. It will
+now *always* report project quota info for a file, whether directory
+quotas are in use or not. This is going to confuse users who see the
+full filesystem info when they statfs a directory, then see project
+quota limits when they statfs a file.
 
-Cover-letter for a single patch is probably not needed, especially when
-you don't add anything useful in the cover letter.
+i.e. all this patch does is move the inconsistency in reporting to
+non-directory based project quota users.
 
-Andrew
+So from that perspective, this is not a viable solution.
 
+What is a viable solution is to add an explicit dirquota mount
+option (which we've recently discussed) that explicitly presents all
+directory quota specific behaviours to userspace without tying them
+to the internal project quota-based on-disk implementation. This is
+the only sane way to solve this problem as it tells the filesysetm
+exactly what behaviour set it should be exposing to userspace.
 
-> Caleb Robey (1):
->   ARM: dts: am5729: beaglebone-ai: adding device tree
-> 
->  arch/arm/boot/dts/Makefile                |   1 +
->  arch/arm/boot/dts/am5729-beagleboneai.dts | 782 ++++++++++++++++++++++
->  2 files changed, 783 insertions(+)
->  create mode 100644 arch/arm/boot/dts/am5729-beagleboneai.dts
-> 
+IOWs, the statfs code should probably end up looking like this:
+
+-	if ((ip->i_d.di_flags & XFS_DIFLAG_PROJINHERIT) &&
++	if ((mp->m_flags & XFS_MOUNT_DIRQUOTA) &&
+ 	    ((mp->m_qflags & (XFS_PQUOTA_ACCT|XFS_PQUOTA_ENFD))) ==
+ 			      (XFS_PQUOTA_ACCT|XFS_PQUOTA_ENFD))
+ 		xfs_qm_statvfs(ip, statp);
+
+Cheers,
+
+Dave.
+
+-- 
+Dave Chinner
+david@fromorbit.com
