@@ -2,918 +2,414 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1506C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 20:29:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 120C4C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 20:29:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA5572240E
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 20:29:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9CE122464
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 20:29:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="A357EMLW"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Dxe/rhD+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727329AbfKSU3h (ORCPT
+        id S1727398AbfKSU35 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 15:29:37 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:49394 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726711AbfKSU3h (ORCPT
+        Tue, 19 Nov 2019 15:29:57 -0500
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:17817 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726711AbfKSU34 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 15:29:37 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAJKTSCC119662;
-        Tue, 19 Nov 2019 14:29:28 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574195368;
-        bh=FKckCKSLFyTfdnv0OHnTvS7tmr1a6EWuycDiWVpe24w=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=A357EMLWDNdOejbWgQJNXdJmBCrZB2TpRcb67UIkMnUn/XNskuE9ljFj5bynVb60S
-         BmTpk4nqZS2doLylH8seWZP2RtZ8F08Gk+YOdOSmYZv3YOzRaunmkaoFsCn8l9kfE2
-         RF6HMSytfKpM5ScRUA0UVsP2JoNGYnEjQda9h0T8=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAJKTSJm060833
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 19 Nov 2019 14:29:28 -0600
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 19
- Nov 2019 14:29:27 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 19 Nov 2019 14:29:27 -0600
-Received: from legion.dal.design.ti.com (legion.dal.design.ti.com [128.247.22.53])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAJKTRkA122899;
-        Tue, 19 Nov 2019 14:29:27 -0600
-Received: from localhost (ulb0232989.dhcp.ti.com [128.247.59.95])
-        by legion.dal.design.ti.com (8.11.7p1+Sun/8.11.7) with ESMTP id xAJKTRu26307;
-        Tue, 19 Nov 2019 14:29:27 -0600 (CST)
-From:   Caleb Robey <c-robey@ti.com>
-To:     <linux-omap@vger.kernel.org>
-CC:     Jason Kridner <jkridner@gmail.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>, Jason Kridner <jdk@ti.com>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        Andreas Dannenberg <dannenberg@ti.com>,
-        Jean-Jacques Hiblot <jjhiblot@ti.com>,
-        Caleb Robey <c-robey@ti.com>,
-        Praneeth Bajjuri <praneeth@ti.com>,
-        "Andrew F . Davis" <afd@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Tom Rini <trini@konsulko.com>,
-        Robert Nelson <robertcnelson@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>, <devicetree@vger.kernel.org>,
+        Tue, 19 Nov 2019 15:29:56 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dd450c20000>; Tue, 19 Nov 2019 12:29:54 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 19 Nov 2019 12:29:53 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 19 Nov 2019 12:29:53 -0800
+Received: from [10.2.175.254] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 19 Nov
+ 2019 20:29:51 +0000
+Subject: Re: [PATCH v1 04/17] soc: tegra: Add Tegra PMC clock registrations
+ into PMC driver
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <mperttunen@nvidia.com>,
+        <gregkh@linuxfoundation.org>, <sboyd@kernel.org>,
+        <tglx@linutronix.de>, <robh+dt@kernel.org>, <mark.rutland@arm.com>
+CC:     <allison@lohutok.net>, <pdeschrijver@nvidia.com>,
+        <pgaikwad@nvidia.com>, <mturquette@baylibre.com>,
+        <horms+renesas@verge.net.au>, <Jisheng.Zhang@synaptics.com>,
+        <krzk@kernel.org>, <arnd@arndb.de>, <spujar@nvidia.com>,
+        <josephl@nvidia.com>, <vidyas@nvidia.com>,
+        <daniel.lezcano@linaro.org>, <mmaddireddy@nvidia.com>,
+        <markz@nvidia.com>, <devicetree@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH 1/1] ARM: dts: am5729: beaglebone-ai: adding device tree
-Date:   Tue, 19 Nov 2019 14:28:49 -0600
-Message-ID: <20191119202850.18149-2-c-robey@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191119202850.18149-1-c-robey@ti.com>
-References: <20191119202850.18149-1-c-robey@ti.com>
+References: <1574146234-3871-1-git-send-email-skomatineni@nvidia.com>
+ <1574146234-3871-5-git-send-email-skomatineni@nvidia.com>
+ <d072bd37-9628-4eb2-1706-a1f640606b8d@gmail.com>
+ <d76f4689-5986-9239-9c67-9dd125f6547e@nvidia.com>
+Message-ID: <7d01a1cb-1e40-9c4f-f68c-c1b25b775f18@nvidia.com>
+Date:   Tue, 19 Nov 2019 12:29:14 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <d76f4689-5986-9239-9c67-9dd125f6547e@nvidia.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1574195394; bh=OS3Yt0Ll6x3Cu7osIW+X35SFkMoPMYcvEfMLe8DyliM=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=Dxe/rhD+vS7WgFAt2B8sAAMGVD5+3mxXiCZqrMER73pXqtJwg53GRo8UKzxEgd4uC
+         BAmetIYtREstnl903dvSXR3QK/wORkisTFFGWD1PkIYJrSlT9d/tM0OwhWIn1QqQom
+         28OP2z5TjjiHEJDu54uo0f/aCA2mvOEpQ1kU+NWfdeGv5bVZdOe7l6G9ma7QvvjDuX
+         rFHEO8W5DE10RTk6Ok3ZGGK2jrpstuBS81E+OxmUKYjr8E+JbF5JoXpBWOMHwOTS8K
+         amRccInXzf1d0hq3r343Hww3VYtsvsZHtSFRedHIxMGeiYXFGcgXAp3PRTyl7t5fSa
+         Rw6i6v8nkyxZw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Kridner <jdk@ti.com>
 
-BeagleBoard.org BeagleBone AI is an open source hardware single
-board computer based on the Texas Instruments AM5729 SoC featuring
-dual-core 1.5GHz Arm Cortex-A15 processor, dual-core C66 digital
-signal processor (DSP), quad-core embedded vision engine (EVE),
-Arm Cortex-M4 processors, dual programmable realtime unit
-industrial control subsystems and more. The board features 1GB
-DDR3L, USB3.0 Type-C, USB HS Type-A, microHDMI, 16GB eMMC flash,
-1G Ethernet, 802.11ac 2/5GHz, Bluetooth, and BeagleBone expansion
-headers.
+On 11/19/19 12:08 PM, Sowjanya Komatineni wrote:
+>
+> On 11/19/19 11:33 AM, Dmitry Osipenko wrote:
+>> 19.11.2019 09:50, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>> Tegra PMC has clk_out_1, clk_out_2, clk_out_3 with mux and gate for
+>>> each of these clocks.
+>>>
+>>> Currently these PMC clocks are registered by Tegra clock driver using
+>>> clk_register_mux and clk_register_gate by passing PMC base address
+>>> and register offsets and PMC programming for these clocks happens
+>>> through direct PMC access by the clock driver.
+>>>
+>>> With this, when PMC is in secure mode any direct PMC access from the
+>>> non-secure world does not go through and these clocks will not be
+>>> functional.
+>>>
+>>> This patch adds these clocks registration with PMC as a clock provider
+>>> for these clocks. clk_ops callback implementations for these clocks
+>>> uses tegra_pmc_readl and tegra_pmc_writel which supports PMC=20
+>>> programming
+>>> in secure mode and non-secure mode.
+>>>
+>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>> ---
+>>> =C2=A0 drivers/soc/tegra/pmc.c | 330=20
+>>> ++++++++++++++++++++++++++++++++++++++++++++++++
+>>> =C2=A0 1 file changed, 330 insertions(+)
+>>>
+>>> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+>>> index 7a5aab0b993b..790a6619ba32 100644
+>>> --- a/drivers/soc/tegra/pmc.c
+>>> +++ b/drivers/soc/tegra/pmc.c
+>>> @@ -13,6 +13,9 @@
+>>> =C2=A0 =C2=A0 #include <linux/arm-smccc.h>
+>>> =C2=A0 #include <linux/clk.h>
+>>> +#include <linux/clk-provider.h>
+>>> +#include <linux/clkdev.h>
+>>> +#include <linux/clk/clk-conf.h>
+>>> =C2=A0 #include <linux/clk/tegra.h>
+>>> =C2=A0 #include <linux/debugfs.h>
+>>> =C2=A0 #include <linux/delay.h>
+>>> @@ -48,6 +51,7 @@
+>>> =C2=A0 #include <dt-bindings/pinctrl/pinctrl-tegra-io-pad.h>
+>>> =C2=A0 #include <dt-bindings/gpio/tegra186-gpio.h>
+>>> =C2=A0 #include <dt-bindings/gpio/tegra194-gpio.h>
+>>> +#include <dt-bindings/soc/tegra-pmc.h>
+>>> =C2=A0 =C2=A0 #define PMC_CNTRL=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x0
+>>> =C2=A0 #define=C2=A0 PMC_CNTRL_INTR_POLARITY=C2=A0=C2=A0=C2=A0 BIT(17) =
+/* inverts INTR=20
+>>> polarity */
+>>> @@ -108,6 +112,7 @@
+>>> =C2=A0 #define PMC_WAKE2_STATUS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 0x168
+>>> =C2=A0 #define PMC_SW_WAKE2_STATUS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 0x16c
+>>> =C2=A0 +#define PMC_CLK_OUT_CNTRL=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 0x1a8
+>>> =C2=A0 #define PMC_SATA_PWRGT=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 0x1ac
+>>> =C2=A0 #define PMC_SATA_PWRGT_PLLE_IDDQ_VALUE BIT(5)
+>>> =C2=A0 #define PMC_SATA_PWRGT_PLLE_IDDQ_SWCTL BIT(4)
+>>> @@ -170,6 +175,78 @@
+>>> =C2=A0 #define=C2=A0 TEGRA_SMC_PMC_READ=C2=A0=C2=A0=C2=A0 0xaa
+>>> =C2=A0 #define=C2=A0 TEGRA_SMC_PMC_WRITE=C2=A0=C2=A0=C2=A0 0xbb
+>>> =C2=A0 +struct pmc_clk_mux {
+>>> +=C2=A0=C2=A0=C2=A0 struct clk_hw=C2=A0=C2=A0=C2=A0 hw;
+>>> +=C2=A0=C2=A0=C2=A0 unsigned long=C2=A0=C2=A0=C2=A0 offs;
+>>> +=C2=A0=C2=A0=C2=A0 u32=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mask;
+>>> +=C2=A0=C2=A0=C2=A0 u32=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 shift=
+;
+>>> +=C2=A0=C2=A0=C2=A0 /* register lock */
+>>> +=C2=A0=C2=A0=C2=A0 spinlock_t=C2=A0=C2=A0=C2=A0 *lock;
+>>> +};
+>>> +
+>>> +#define to_pmc_clk_mux(_hw) container_of(_hw, struct pmc_clk_mux, hw)
+>>> +
+>>> +struct pmc_clk_gate {
+>>> +=C2=A0=C2=A0=C2=A0 struct clk_hw=C2=A0=C2=A0=C2=A0 hw;
+>>> +=C2=A0=C2=A0=C2=A0 unsigned long=C2=A0=C2=A0=C2=A0 offs;
+>>> +=C2=A0=C2=A0=C2=A0 u32=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 shift=
+;
+>>> +=C2=A0=C2=A0=C2=A0 /* register lock */
+>>> +=C2=A0=C2=A0=C2=A0 spinlock_t=C2=A0=C2=A0=C2=A0 *lock;
+>>> +};
+>>> +
+>>> +#define to_pmc_clk_gate(_hw) container_of(_hw, struct pmc_clk_gate,=20
+>>> hw)
+>>> +
+>>> +struct pmc_clk_init_data {
+>>> +=C2=A0=C2=A0=C2=A0 char *mux_name;
+>>> +=C2=A0=C2=A0=C2=A0 char *gate_name;
+>>> +=C2=A0=C2=A0=C2=A0 const char **parents;
+>>> +=C2=A0=C2=A0=C2=A0 int num_parents;
+>>> +=C2=A0=C2=A0=C2=A0 int mux_id;
+>>> +=C2=A0=C2=A0=C2=A0 int gate_id;
+>>> +=C2=A0=C2=A0=C2=A0 char *dev_name;
+>>> +=C2=A0=C2=A0=C2=A0 u8 mux_shift;
+>>> +=C2=A0=C2=A0=C2=A0 u8 gate_shift;
+>>> +=C2=A0=C2=A0=C2=A0 u8 init_parent;
+>>> +=C2=A0=C2=A0=C2=A0 int init_state;
+>>> +=C2=A0=C2=A0=C2=A0 struct pmc_clk_mux mux;
+>>> +=C2=A0=C2=A0=C2=A0 struct pmc_clk_gate gate;
+>>> +};
+>>> +
+>>> +#define PMC_CLK(_num, _mux_shift, _gate_shift, _init_parent,=20
+>>> _init_state)\
+>>> +=C2=A0=C2=A0=C2=A0 {\
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .mux_name =3D "clk_out_" #_=
+num "_mux",\
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .gate_name =3D "clk_out_" #=
+_num,\
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .parents =3D clk_out ##_num=
+ ##_parents,\
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .num_parents =3D ARRAY_SIZE=
+(clk_out ##_num ##_parents),\
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .mux_id =3D TEGRA_PMC_CLK_O=
+UT_ ##_num ##_MUX,\
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .gate_id =3D TEGRA_PMC_CLK_=
+OUT_ ##_num,\
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .dev_name =3D "extern" #_nu=
+m,\
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .mux_shift =3D _mux_shift,\
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .gate_shift =3D _gate_shift=
+,\
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .init_parent =3D _init_pare=
+nt,\
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .init_state =3D _init_state=
+,\
+>>> +=C2=A0=C2=A0=C2=A0 }
+>>> +
+>>> +static DEFINE_SPINLOCK(clk_out_lock);
+>>> +
+>>> +static const char *clk_out1_parents[] =3D { "clk_m", "clk_m_div2",
+>>> +=C2=A0=C2=A0=C2=A0 "clk_m_div4", "extern1",
+>>> +};
+>>> +
+>>> +static const char *clk_out2_parents[] =3D { "clk_m", "clk_m_div2",
+>>> +=C2=A0=C2=A0=C2=A0 "clk_m_div4", "extern2",
+>>> +};
+>>> +
+>>> +static const char *clk_out3_parents[] =3D { "clk_m", "clk_m_div2",
+>>> +=C2=A0=C2=A0=C2=A0 "clk_m_div4", "extern3",
+>>> +};
+>> Why these are unused?
+> They are used in PMC_CLK macro
+>>
+>>> +static struct pmc_clk_init_data tegra_pmc_clks_data[] =3D {
+>>> +=C2=A0=C2=A0=C2=A0 PMC_CLK(1, 6, 2, 3, 1),
+>>> +=C2=A0=C2=A0=C2=A0 PMC_CLK(2, 14, 10, 0, 0),
+>>> +=C2=A0=C2=A0=C2=A0 PMC_CLK(3, 22, 18, 0, 0),
+>>> +};
+>>> +
+>>> =C2=A0 struct tegra_powergate {
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct generic_pm_domain genpd;
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct tegra_pmc *pmc;
+>>> @@ -279,6 +356,9 @@ struct tegra_pmc_soc {
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 const struct tegra_wake_event *wake_even=
+ts;
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int num_wake_events;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 struct pmc_clk_init_data *pmc_clks_data;
+>>> +=C2=A0=C2=A0=C2=A0 unsigned int num_pmc_clks;
+>>> =C2=A0 };
+>>> =C2=A0 =C2=A0 static const char * const tegra186_reset_sources[] =3D {
+>>> @@ -2299,6 +2379,241 @@ static int tegra_pmc_clk_notify_cb(struct=20
+>>> notifier_block *nb,
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return NOTIFY_OK;
+>>> =C2=A0 }
+>>> =C2=A0 +static void pmc_clk_fence_udelay(u32 offset)
+>>> +{
+>>> +=C2=A0=C2=A0=C2=A0 tegra_pmc_readl(pmc, offset);
+>>> +=C2=A0=C2=A0=C2=A0 /* pmc clk propagation delay 2 us */
+>>> +=C2=A0=C2=A0=C2=A0 udelay(2);
+>>> +}
+>>> +
+>>> +static u8 pmc_clk_mux_get_parent(struct clk_hw *hw)
+>>> +{
+>>> +=C2=A0=C2=A0=C2=A0 struct pmc_clk_mux *mux =3D to_pmc_clk_mux(hw);
+>>> +=C2=A0=C2=A0=C2=A0 int num_parents =3D clk_hw_get_num_parents(hw);
+>>> +=C2=A0=C2=A0=C2=A0 u32 val;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 val =3D tegra_pmc_readl(pmc, mux->offs) >> mux->shi=
+ft;
+>>> +=C2=A0=C2=A0=C2=A0 val &=3D mux->mask;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 if (val >=3D num_parents)
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EINVAL;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 return val;
+>>> +}
+>>> +
+>>> +static int pmc_clk_mux_set_parent(struct clk_hw *hw, u8 index)
+>>> +{
+>>> +=C2=A0=C2=A0=C2=A0 struct pmc_clk_mux *mux =3D to_pmc_clk_mux(hw);
+>>> +=C2=A0=C2=A0=C2=A0 u32 val;
+>>> +=C2=A0=C2=A0=C2=A0 unsigned long flags =3D 0;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 spin_lock_irqsave(mux->lock, flags);
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 val =3D tegra_pmc_readl(pmc, mux->offs);
+>>> +=C2=A0=C2=A0=C2=A0 val &=3D ~(mux->mask << mux->shift);
+>>> +=C2=A0=C2=A0=C2=A0 val |=3D index << mux->shift;
+>>> +=C2=A0=C2=A0=C2=A0 tegra_pmc_writel(pmc, val, mux->offs);
+>>> +=C2=A0=C2=A0=C2=A0 pmc_clk_fence_udelay(mux->offs);
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 spin_unlock_irqrestore(mux->lock, flags);
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 return 0;
+>>> +}
+>>> +
+>>> +static const struct clk_ops pmc_clk_mux_ops =3D {
+>>> +=C2=A0=C2=A0=C2=A0 .get_parent =3D pmc_clk_mux_get_parent,
+>>> +=C2=A0=C2=A0=C2=A0 .set_parent =3D pmc_clk_mux_set_parent,
+>>> +=C2=A0=C2=A0=C2=A0 .determine_rate =3D __clk_mux_determine_rate,
+>>> +};
+>>> +
+>>> +static struct clk *
+>>> +tegra_pmc_clk_mux_register(const char *name, const char * const=20
+>>> *parent_names,
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 int num_parents, unsigned long flags,
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 struct pmc_clk_mux *mux, unsigned long offset,
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 u32 shift, u32 mask, spinlock_t *lock)
+>>> +{
+>>> +=C2=A0=C2=A0=C2=A0 struct clk_init_data init;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 mux =3D kzalloc(sizeof(*mux), GFP_KERNEL);
+>>> +=C2=A0=C2=A0=C2=A0 if (!mux)
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ERR_PTR(-ENOMEM);
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 init.name =3D name;
+>>> +=C2=A0=C2=A0=C2=A0 init.ops =3D &pmc_clk_mux_ops;
+>>> +=C2=A0=C2=A0=C2=A0 init.parent_names =3D parent_names;
+>>> +=C2=A0=C2=A0=C2=A0 init.num_parents =3D num_parents;
+>>> +=C2=A0=C2=A0=C2=A0 init.flags =3D flags;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 mux->hw.init =3D &init;
+>>> +=C2=A0=C2=A0=C2=A0 mux->offs =3D offset;
+>>> +=C2=A0=C2=A0=C2=A0 mux->mask =3D mask;
+>>> +=C2=A0=C2=A0=C2=A0 mux->shift =3D shift;
+>>> +=C2=A0=C2=A0=C2=A0 mux->lock =3D lock;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 return clk_register(NULL, &mux->hw);
+>>> +}
+>>> +
+>>> +static int pmc_clk_is_enabled(struct clk_hw *hw)
+>>> +{
+>>> +=C2=A0=C2=A0=C2=A0 struct pmc_clk_gate *gate =3D to_pmc_clk_gate(hw);
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 return tegra_pmc_readl(pmc, gate->offs) & BIT(gate-=
+>shift) ? 1=20
+>>> : 0;
+>>> +}
+>>> +
+>>> +static void pmc_clk_set_state(struct clk_hw *hw, int state)
+>>> +{
+>>> +=C2=A0=C2=A0=C2=A0 struct pmc_clk_gate *gate =3D to_pmc_clk_gate(hw);
+>>> +=C2=A0=C2=A0=C2=A0 u32 val;
+>>> +=C2=A0=C2=A0=C2=A0 unsigned long flags =3D 0;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 spin_lock_irqsave(gate->lock, flags);
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 val =3D tegra_pmc_readl(pmc, gate->offs);
+>>> +=C2=A0=C2=A0=C2=A0 val =3D state ? (val | BIT(gate->shift)) : (val &=20
+>>> ~BIT(gate->shift));
+>>> +=C2=A0=C2=A0=C2=A0 tegra_pmc_writel(pmc, val, gate->offs);
+>>> +=C2=A0=C2=A0=C2=A0 pmc_clk_fence_udelay(gate->offs);
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 spin_unlock_irqrestore(gate->lock, flags);
+>>> +}
+>>> +
+>>> +static int pmc_clk_enable(struct clk_hw *hw)
+>>> +{
+>>> +=C2=A0=C2=A0=C2=A0 pmc_clk_set_state(hw, 1);
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 return 0;
+>>> +}
+>>> +
+>>> +static void pmc_clk_disable(struct clk_hw *hw)
+>>> +{
+>>> +=C2=A0=C2=A0=C2=A0 pmc_clk_set_state(hw, 0);
+>>> +}
+>>> +
+>>> +static const struct clk_ops pmc_clk_gate_ops =3D {
+>>> +=C2=A0=C2=A0=C2=A0 .is_enabled =3D pmc_clk_is_enabled,
+>>> +=C2=A0=C2=A0=C2=A0 .enable =3D pmc_clk_enable,
+>>> +=C2=A0=C2=A0=C2=A0 .disable =3D pmc_clk_disable,
+>>> +};
+>>> +
+>>> +static struct clk *
+>>> +tegra_pmc_clk_gate_register(const char *name, const char *parent_name,
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 unsigned long flags, struct pmc_clk_gate *gate,
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 unsigned long offset, u32 shift, spinlock_t *lock)
+>>> +{
+>>> +=C2=A0=C2=A0=C2=A0 struct clk_init_data init;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 gate =3D kzalloc(sizeof(*gate), GFP_KERNEL);
+>>> +=C2=A0=C2=A0=C2=A0 if (!gate)
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ERR_PTR(-ENOMEM);
+>> Why *gate is a function argument?
+> for storing corresponding gate register info to use for gate clk_ops
 
-For more information, refer to:
-https://beaglebone.ai
+I had gate and mux as members of pmc_clk_init_data.
 
-This patch introduces the BeagleBone AI device tree.
+Actually we don't need that so will remove it and also passing argument=20
+in next version
 
-Note that the device use the "ti,tpd12s016" component which is
-software compatible with "ti,tpd12s015". Thus we only use the
-latter driver.
-
-Signed-off-by: Jason Kridner <jdk@ti.com>
-Signed-off-by: Caleb Robey <c-robey@ti.com>
-Cc: Robert Nelson <robertcnelson@gmail.com>
-
----
- arch/arm/boot/dts/Makefile                |   1 +
- arch/arm/boot/dts/am5729-beagleboneai.dts | 782 ++++++++++++++++++++++
- 2 files changed, 783 insertions(+)
- create mode 100644 arch/arm/boot/dts/am5729-beagleboneai.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index b21b3a64641a..b1154dbda73c 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -791,6 +791,7 @@ dtb-$(CONFIG_SOC_DRA7XX) += \
- 	am57xx-beagle-x15.dtb \
- 	am57xx-beagle-x15-revb1.dtb \
- 	am57xx-beagle-x15-revc.dtb \
-+	am5729-beagleboneai.dtb \
- 	am57xx-cl-som-am57x.dtb \
- 	am57xx-sbc-am57x.dtb \
- 	am572x-idk.dtb \
-diff --git a/arch/arm/boot/dts/am5729-beagleboneai.dts b/arch/arm/boot/dts/am5729-beagleboneai.dts
-new file mode 100644
-index 000000000000..7d0e132e6a23
---- /dev/null
-+++ b/arch/arm/boot/dts/am5729-beagleboneai.dts
-@@ -0,0 +1,782 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2014-2019 Texas Instruments Incorporated - http://www.ti.com/
-+ */
-+
-+/dts-v1/;
-+
-+#include "dra74x.dtsi"
-+#include "am57xx-commercial-grade.dtsi"
-+#include "dra74x-mmc-iodelay.dtsi"
-+#include "dra74-ipu-dsp-common.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/pinctrl/dra.h>
-+
-+/ {
-+	model = "BeagleBoard.org BeagleBone AI";
-+	compatible = "beagleboard.org,am5729-beagleboneai", "ti,am5728",
-+		     "ti,dra742", "ti,dra74", "ti,dra7";
-+
-+	aliases {
-+		rtc0 = &tps659038_rtc;
-+		rtc1 = &rtc;
-+		display0 = &hdmi_conn;
-+	};
-+
-+	chosen {
-+		stdout-path = &uart1;
-+	};
-+
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x0 0x80000000 0x0 0x40000000>;
-+	};
-+
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		ipu2_memory_region: ipu2-memory@95800000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x0 0x95800000 0x0 0x3800000>;
-+			reusable;
-+			status = "okay";
-+		};
-+
-+		dsp1_memory_region: dsp1-memory@99000000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x0 0x99000000 0x0 0x4000000>;
-+			reusable;
-+			status = "okay";
-+		};
-+
-+		ipu1_memory_region: ipu1-memory@9d000000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x0 0x9d000000 0x0 0x2000000>;
-+			reusable;
-+			status = "okay";
-+		};
-+
-+		dsp2_memory_region: dsp2-memory@9f000000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x0 0x9f000000 0x0 0x800000>;
-+			reusable;
-+			status = "okay";
-+		};
-+
-+	};
-+
-+	vdd_adc: gpioregulator-vdd_adc {
-+		compatible = "regulator-gpio";
-+		regulator-name = "vdd_adc";
-+		vin-supply = <&vdd_5v>;
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+		gpios = <&gpio3 27 GPIO_ACTIVE_HIGH>;
-+		states = <1800000 0
-+			3300000 1>;
-+	};
-+
-+	vdd_5v: fixedregulator-vdd_5v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vdd_5v";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+
-+	vtt_fixed: fixedregulator-vtt {
-+		/* TPS51200 */
-+		compatible = "regulator-fixed";
-+		regulator-name = "vtt_fixed";
-+		vin-supply = <&vdd_ddr>;
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		led0 {
-+			label = "beaglebone:green:usr0";
-+			gpios = <&gpio3 17 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "heartbeat";
-+			default-state = "off";
-+		};
-+
-+		led1 {
-+			label = "beaglebone:green:usr1";
-+			gpios = <&gpio5 5 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "mmc0";
-+			default-state = "off";
-+		};
-+
-+		led2 {
-+			label = "beaglebone:green:usr2";
-+			gpios = <&gpio3 15 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "cpu";
-+			default-state = "off";
-+		};
-+
-+		led3 {
-+			label = "beaglebone:green:usr3";
-+			gpios = <&gpio3 14 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "mmc1";
-+			default-state = "off";
-+		};
-+
-+		led4 {
-+			label = "beaglebone:green:usr4";
-+			gpios = <&gpio3 7 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "netdev";
-+			default-state = "off";
-+		};
-+	};
-+
-+	hdmi_conn: connector@0 {
-+		compatible = "hdmi-connector";
-+		label = "hdmi";
-+		type = "a";
-+
-+		port {
-+			hdmi_connector_in: endpoint {
-+				remote-endpoint = <&hdmi_encoder_out>;
-+			};
-+		};
-+	};
-+
-+	hdmi_enc: encoder@0 {
-+		/* "ti,tpd12s016" software compatible with "ti,tpd12s015"
-+		 *  no need for individual driver
-+		 */
-+		compatible = "ti,tpd12s015";
-+		gpios = <0>,
-+			<0>,
-+			<&gpio7 12 GPIO_ACTIVE_HIGH>;
-+
-+		ports {
-+			#address-cells = <0x1>;
-+			#size-cells = <0x0>;
-+
-+			port@0 {
-+				reg = <0x0>;
-+
-+				hdmi_encoder_in: endpoint@0 {
-+					remote-endpoint = <&hdmi_out>;
-+				};
-+			};
-+
-+			port@1 {
-+				reg = <0x1>;
-+
-+				hdmi_encoder_out: endpoint@0 {
-+					remote-endpoint = <&hdmi_connector_in>;
-+				};
-+			};
-+		};
-+	};
-+
-+	emmc_pwrseq: emmc_pwrseq {
-+		compatible = "mmc-pwrseq-emmc";
-+		reset-gpios = <&gpio5 7 GPIO_ACTIVE_LOW>;
-+	};
-+
-+	brcmf_pwrseq: brcmf_pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		reset-gpios = <&gpio3 22 GPIO_ACTIVE_LOW>,	/* BT-REG-ON */
-+				<&gpio3 18 GPIO_ACTIVE_LOW>;	/* WL-REG-ON */
-+	};
-+
-+	extcon_usb1: extcon_usb1 {
-+		compatible = "linux,extcon-usb-gpio";
-+		ti,enable-id-detection;
-+		id-gpio = <&gpio3 13 GPIO_ACTIVE_HIGH>;
-+	};
-+};
-+
-+&vip2 {
-+	status = "okay";
-+};
-+
-+&i2c1 {
-+	status = "okay";
-+	clock-frequency = <400000>;
-+
-+	tps659038: tps659038@58 {
-+		compatible = "ti,tps659038";
-+		reg = <0x58>;
-+		interrupt-parent = <&gpio6>;
-+		interrupts = <16 IRQ_TYPE_LEVEL_LOW>;
-+
-+		#interrupt-cells = <2>;
-+		interrupt-controller;
-+
-+		ti,system-power-controller;
-+		ti,palmas-override-powerhold;
-+
-+		tps659038_pmic {
-+			compatible = "ti,tps659038-pmic";
-+
-+			smps12-in-supply = <&vdd_5v>;
-+			smps3-in-supply = <&vdd_5v>;
-+			smps45-in-supply = <&vdd_5v>;
-+			smps6-in-supply = <&vdd_5v>;
-+			smps7-in-supply = <&vdd_5v>;
-+			mps3-in-supply = <&vdd_5v>;
-+			smps8-in-supply = <&vdd_5v>;
-+			smps9-in-supply = <&vdd_5v>;
-+			ldo1-in-supply = <&vdd_5v>;
-+			ldo2-in-supply = <&vdd_5v>;
-+			ldo3-in-supply = <&vdd_5v>;
-+			ldo4-in-supply = <&vdd_5v>;
-+			ldo9-in-supply = <&vdd_5v>;
-+			ldoln-in-supply = <&vdd_5v>;
-+			ldousb-in-supply = <&vdd_5v>;
-+			ldortc-in-supply = <&vdd_5v>;
-+
-+			regulators {
-+				vdd_mpu: smps12 {
-+					/* VDD_MPU */
-+					regulator-name = "smps12";
-+					regulator-min-microvolt = <850000>;
-+					regulator-max-microvolt = <1250000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				vdd_ddr: smps3 {
-+					/* VDD_DDR EMIF1 EMIF2 */
-+					regulator-name = "smps3";
-+					regulator-min-microvolt = <1350000>;
-+					regulator-max-microvolt = <1350000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				vdd_dspeve: smps45 {
-+					/* VDD_DSPEVE on AM572 */
-+					regulator-name = "smps45";
-+					regulator-min-microvolt = < 850000>;
-+					regulator-max-microvolt = <1250000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				vdd_gpu: smps6 {
-+					/* VDD_GPU */
-+					regulator-name = "smps6";
-+					regulator-min-microvolt = < 850000>;
-+					regulator-max-microvolt = <1250000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				vdd_core: smps7 {
-+					/* VDD_CORE */
-+					regulator-name = "smps7";
-+					regulator-min-microvolt = < 850000>;	/*** 1.15V */
-+					regulator-max-microvolt = <1150000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				vdd_iva: smps8 {
-+					/* VDD_IVAHD */				/*** 1.06V */
-+					regulator-name = "smps8";
-+				};
-+
-+				vdd_3v3: smps9 {
-+					/* VDD_3V3 */
-+					regulator-name = "smps9";
-+					regulator-min-microvolt = <3300000>;
-+					regulator-max-microvolt = <3300000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				vdd_sd: ldo1 {
-+					/* VDDSHV8 - VSDMMC  */
-+					regulator-name = "ldo1";
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <3300000>;
-+					regulator-boot-on;
-+					regulator-always-on;
-+				};
-+
-+				vdd_1v8: ldo2 {
-+					/* VDDSH18V */
-+					regulator-name = "ldo2";
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <1800000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				vdd_1v8_phy_ldo3: ldo3 {
-+					/* R1.3a 572x V1_8PHY_LDO3: USB, SATA */
-+					regulator-name = "ldo3";
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <1800000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				vdd_1v8_phy_ldo4: ldo4 {
-+					/* R1.3a 572x V1_8PHY_LDO4: PCIE, HDMI*/
-+					regulator-name = "ldo4";
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <1800000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				/* LDO5-8 unused */
-+
-+				vdd_rtc: ldo9 {
-+					/* VDD_RTC  */
-+					regulator-name = "ldo9";
-+					regulator-min-microvolt = < 840000>;
-+					regulator-max-microvolt = <1160000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				vdd_1v8_pll: ldoln {
-+					/* VDDA_1V8_PLL */
-+					regulator-name = "ldoln";
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <1800000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				ldousb_reg: ldousb {
-+					/* VDDA_3V_USB: VDDA_USBHS33 */
-+					regulator-name = "ldousb";
-+					regulator-min-microvolt = <3300000>;
-+					regulator-max-microvolt = <3300000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				ldortc_reg: ldortc {
-+					/* VDDA_RTC  */
-+					regulator-name = "ldortc";
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <1800000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				regen1: regen1 {
-+					/* VDD_3V3_ON */
-+					regulator-name = "regen1";
-+					regulator-boot-on;
-+					regulator-always-on;
-+				};
-+
-+				regen2: regen2 {
-+					/* Needed for PMIC internal resource */
-+					regulator-name = "regen2";
-+					regulator-boot-on;
-+					regulator-always-on;
-+				};
-+			};
-+		};
-+
-+		tps659038_rtc: tps659038_rtc {
-+			compatible = "ti,palmas-rtc";
-+			interrupt-parent = <&tps659038>;
-+			interrupts = <8 IRQ_TYPE_EDGE_FALLING>;
-+			wakeup-source;
-+		};
-+
-+		tps659038_pwr_button: tps659038_pwr_button {
-+			compatible = "ti,palmas-pwrbutton";
-+			interrupt-parent = <&tps659038>;
-+			interrupts = <1 IRQ_TYPE_EDGE_FALLING>;
-+			wakeup-source;
-+			ti,palmas-long-press-seconds = <12>;
-+		};
-+
-+		tps659038_gpio: tps659038_gpio {
-+			compatible = "ti,palmas-gpio";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+		};
-+	};
-+
-+	/* STMPE811 touch screen controller */
-+	stmpe811@41 {
-+		compatible = "st,stmpe811";
-+		reg = <0x41>;
-+		interrupts = <30 IRQ_TYPE_LEVEL_LOW>;
-+		interrupt-parent = <&gpio2>;
-+		interrupt-controller;
-+		id = <0>;
-+		blocks = <0x5>;
-+		irq-trigger = <0x1>;
-+		st,mod-12b = <1>; /* 12-bit ADC */
-+		st,ref-sel = <0>; /* internal ADC reference */
-+		st,adc-freq = <1>; /* 3.25 MHz ADC clock speed */
-+		st,sample-time = <4>; /* ADC converstion time: 80 clocks */
-+
-+		stmpe_adc {
-+			compatible = "st,stmpe-adc";
-+			st,norequest-mask = <0x00>; /* mask any channels to be used by touchscreen */
-+			adc0: iio-device@0 {
-+				#io-channel-cells = <1>;
-+				iio-channels = <&adc0 4>, <&adc0 1>, <&adc0 2>, <&adc0 3>, <&adc0 4>, <&adc0 5>, <&adc0 6>;
-+				iio-channel-names = "AIN0_P9_39", "AIN1_P9_40", "AIN2_P9_37", "AIN3_P9_38",
-+					"AIN4_P9_33", "AIN5_P9_36", "AIN6_P9_35";
-+			};
-+		};
-+
-+		stmpe_touchscreen {
-+			status = "disabled";
-+			compatible = "st,stmpe-ts";
-+			/* 8 sample average control */
-+			st,ave-ctrl = <3>;
-+			/* 7 length fractional part in z */
-+			st,fraction-z = <7>;
-+			/*
-+			 * 50 mA typical 80 mA max touchscreen drivers
-+			 * current limit value
-+			 */
-+			st,i-drive = <1>;
-+			/* 1 ms panel driver settling time */
-+			st,settling = <3>;
-+			/* 5 ms touch detect interrupt delay */
-+			st,touch-det-delay = <5>;
-+		};
-+
-+		stmpe_gpio {
-+			compatible = "st,stmpe-gpio";
-+		};
-+
-+		stmpe_pwm {
-+			compatible = "st,stmpe-pwm";
-+			#pwm-cells = <2>;
-+		};
-+	};
-+};
-+
-+&mcspi3 {
-+	status = "okay";
-+	ti,pindir-d0-out-d1-in;
-+
-+	sn65hvs882: sn65hvs882@0 {
-+		compatible = "pisosr-gpio";
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+
-+		reg = <0>;
-+		spi-max-frequency = <1000000>;
-+		spi-cpol;
-+	};
-+};
-+
-+&cpu0 {
-+	vdd-supply = <&vdd_mpu>;
-+	voltage-tolerance = <1>;
-+};
-+
-+&gpu {
-+	status = "ok";
-+};
-+
-+&pruss_soc_bus1 {
-+	status = "okay";
-+
-+	pruss1: pruss@4b200000 {
-+		status = "okay";
-+	};
-+};
-+
-+&pruss_soc_bus2 {
-+	status = "okay";
-+
-+	pruss2: pruss@4b280000 {
-+		status = "okay";
-+	};
-+};
-+
-+&pruss2_mdio {
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	status = "okay";
-+};
-+
-+&davinci_mdio {
-+	reset-gpios = <&gpio2 23 GPIO_ACTIVE_LOW>;
-+	reset-delay-us = <2>;
-+
-+	phy0: ethernet-phy@1 {
-+		reg = <4>;
-+		compatible = "ethernet-phy-id004d.d072",
-+			"ethernet-phy-ieee802.3-c22";
-+		eee-broken-100tx;
-+		eee-broken-1000t;
-+	};
-+};
-+
-+&mac {
-+	slaves = <1>;
-+	status = "okay";
-+};
-+
-+&ocp {
-+	pruss1_shmem: pruss_shmem@4b200000 {
-+		status = "okay";
-+		compatible = "ti,pruss-shmem";
-+		reg = <0x4b200000 0x020000>;
-+	};
-+
-+	pruss2_shmem: pruss_shmem@4b280000 {
-+		status = "okay";
-+		compatible = "ti,pruss-shmem";
-+		reg = <0x4b280000 0x020000>;
-+	};
-+};
-+
-+&ipu2 {
-+	status = "okay";
-+	memory-region = <&ipu2_memory_region>;
-+};
-+
-+&ipu1 {
-+	status = "okay";
-+	memory-region = <&ipu1_memory_region>;
-+};
-+
-+&dsp1 {
-+	status = "okay";
-+	memory-region = <&dsp1_memory_region>;
-+};
-+
-+&dsp2 {
-+	status = "okay";
-+	memory-region = <&dsp2_memory_region>;
-+};
-+
-+&cpsw_emac0 {
-+	phy-handle = <&phy0>;
-+	phy-mode = "rgmii";
-+};
-+
-+&mmc1 {
-+	status = "okay";
-+	vmmc-supply = <&vdd_3v3>;
-+	vqmmc-supply = <&vdd_sd>;
-+	bus-width = <4>;
-+	cd-gpios = <&gpio6 27 GPIO_ACTIVE_LOW>; /* gpio 219 */
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc1_pins_default>;
-+};
-+
-+&mmc2 {
-+	status = "okay";
-+	vmmc-supply = <&vdd_1v8>;
-+	vqmmc-supply = <&vdd_1v8>;
-+	bus-width = <8>;
-+	ti,non-removable;
-+	non-removable;
-+	mmc-pwrseq = <&emmc_pwrseq>;
-+
-+	ti,needs-special-reset;
-+	dmas = <&sdma_xbar 47>, <&sdma_xbar 48>;
-+	dma-names = "tx", "rx";
-+
-+};
-+
-+&mmc4 {
-+	/* DS: Default speed (DS) up to 25 MHz, including 1- and 4-bit modes (3.3 V signaling). */
-+	/* HS: High speed up to 50 MHz (3.3 V signaling). */
-+	/* SDR12: SDR up to 25 MHz (1.8 V signaling). */
-+	/* SDR25: SDR up to 50 MHz (1.8 V signaling). */
-+	/* SDR50: SDR up to 100 MHz (1.8 V signaling). */
-+	/* SDR104: SDR up to 208 MHz (1.8 V signaling) */
-+	/* DDR50: DDR up to 50 MHz (1.8 V signaling). */
-+	status = "okay";
-+
-+	ti,needs-special-reset;
-+	vmmc-supply = <&vdd_3v3>;
-+	cap-power-off-card;
-+	keep-power-in-suspend;
-+	bus-width = <4>;
-+	ti,non-removable;
-+	non-removable;
-+	no-1-8-v;
-+	max-frequency = <24000000>;
-+
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	mmc-pwrseq = <&brcmf_pwrseq>;
-+
-+	brcmf: wifi@1 {
-+		status = "okay";
-+		reg = <1>;
-+		compatible = "brcm,bcm4329-fmac";
-+
-+		brcm,sd-head-align = <4>;
-+		brcm,sd_head_align = <4>;
-+		brcm,sd_sgentry_align = <512>;
-+
-+		interrupt-parent = <&gpio3>;
-+		interrupts = <23 IRQ_TYPE_LEVEL_LOW>;
-+		interrupt-names = "host-wake";
-+	};
-+};
-+
-+&usb2_phy1 {
-+	phy-supply = <&ldousb_reg>;
-+};
-+
-+&usb2_phy2 {
-+	phy-supply = <&ldousb_reg>;
-+};
-+
-+&usb1 {
-+	status = "okay";
-+	dr_mode = "otg";
-+};
-+
-+&omap_dwc3_1 {
-+	extcon = <&extcon_usb1>;
-+};
-+
-+&usb2 {
-+	status = "okay";
-+	dr_mode = "host";
-+};
-+
-+&dss {
-+	status = "okay";
-+	vdda_video-supply = <&vdd_1v8_pll>;
-+};
-+
-+&hdmi {
-+	status = "okay";
-+	vdda-supply = <&vdd_1v8_phy_ldo4>;
-+
-+	port {
-+		hdmi_out: endpoint {
-+			remote-endpoint = <&hdmi_encoder_in>;
-+		};
-+	};
-+};
-+
-+&bandgap {
-+	status = "okay";
-+};
-+
-+&mailbox1 {
-+	status = "okay";
-+};
-+
-+&mailbox2 {
-+	status = "okay";
-+};
-+
-+&mailbox3 {
-+	status = "okay";
-+};
-+
-+&mailbox4 {
-+	status = "okay";
-+};
-+
-+&mailbox5 {
-+	status = "okay";
-+};
-+
-+&mailbox6 {
-+	status = "okay";
-+};
-+
-+&mailbox7 {
-+	status = "okay";
-+};
-+
-+&mailbox8 {
-+	status = "okay";
-+};
-+
-+&mailbox9 {
-+	status = "okay";
-+};
-+
-+&mailbox10 {
-+	status = "okay";
-+};
-+
-+&mailbox11 {
-+	status = "okay";
-+};
-+
-+&mailbox12 {
-+	status = "okay";
-+};
-+
-+&mailbox13 {
-+	status = "okay";
-+};
-+
-+&cpu_alert0 {
-+	temperature = <55000>; /* milliCelsius */
-+};
-+
-+&cpu_crit {
-+	temperature = <85000>; /* milliCelsius */
-+};
-+
-+&gpu_crit {
-+	temperature = <85000>; /* milliCelsius */
-+};
-+
-+&core_crit {
-+	temperature = <85000>; /* milliCelsius */
-+};
-+
-+&dspeve_crit {
-+	temperature = <85000>; /* milliCelsius */
-+};
-+
-+&iva_crit {
-+	temperature = <85000>; /* milliCelsius */
-+};
-+
-+&sata {
-+	status = "disabled";
-+};
-+
-+&sata_phy {
-+	status = "disabled";
-+};
-+
-+/* bluetooth */
-+&uart6 {
-+	status = "okay";
-+};
-+
-+/* cape header stuff */
-+&i2c4 {
-+	status = "okay";
-+	clock-frequency = <100000>;
-+};
-+
-+&cpu0_opp_table {
-+	opp_slow-500000000 {
-+		opp-shared;
-+	};
-+};
--- 
-2.17.1
-
+>>
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 init.name =3D name;
+>>> +=C2=A0=C2=A0=C2=A0 init.ops =3D &pmc_clk_gate_ops;
+>>> +=C2=A0=C2=A0=C2=A0 init.parent_names =3D &parent_name;
+>>> +=C2=A0=C2=A0=C2=A0 init.num_parents =3D 1;
+>>> +=C2=A0=C2=A0=C2=A0 init.flags =3D flags;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 gate->hw.init =3D &init;
+>>> +=C2=A0=C2=A0=C2=A0 gate->offs =3D offset;
+>>> +=C2=A0=C2=A0=C2=A0 gate->shift =3D shift;
+>>> +=C2=A0=C2=A0=C2=A0 gate->lock =3D lock;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 return clk_register(NULL, &gate->hw);
+>>> +}
+>> [snip]
