@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B998C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:25:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1065AC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:25:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC29022309
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:25:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D574521823
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:25:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141153;
-	bh=qJjbPrjFRY495K0HIO7+KLACd1NUusqk87DGaGw81ZA=;
+	s=default; t=1574141158;
+	bh=GQey7TwbKvULlRfhwuWfjNyOcIhpTbmyqmXpesqkp0Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eNa6JGKARpX3Fv6X/bTlYl5HDSuqnkbtEl2hwq/Ac+QL5jxP3+GzMzpRVkDWVHK1A
-	 W50LklFx8NGTKa7rcaXkFAoyj57guYkN1erIQ5j3wdLTkVRu6xRuxEDho/bV46JkXB
-	 iJcnpbcD4lB1/xfGxoS1tm/xb8Al59Vs6mTuD3Kk=
+	b=AndqnubkTEGmlghvoF1DJcyEKybVrdSfhNdDXJTW0O/v/oiJJvnp3lgKoANGryjfa
+	 R9nyTaTRzrKFwO/Rt25uHpeAvCBg8TjpjkJrTLG6UPhoBxNyCHydN+wnNZjZREQqCy
+	 vrDOGm5RdUVwzvujcx8KgkCUQNTSWrlDY+SeMOHw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728461AbfKSFZv (ORCPT
+        id S1728476AbfKSFZ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:25:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43652 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:25:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43836 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728444AbfKSFZs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:25:48 -0500
+        id S1728466AbfKSFZy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:25:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F5B021823;
-        Tue, 19 Nov 2019 05:25:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70941222DC;
+        Tue, 19 Nov 2019 05:25:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141148;
-        bh=qJjbPrjFRY495K0HIO7+KLACd1NUusqk87DGaGw81ZA=;
+        s=default; t=1574141153;
+        bh=GQey7TwbKvULlRfhwuWfjNyOcIhpTbmyqmXpesqkp0Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=imNF/OHtPiLSsARR/8zIyxZxwBYlQQWt3kCVZGKZG6e0F+pzNZxISk/UVrzDmbtE3
-         7yyMFSeZ8MfM3IVMKqqCQCJrlOz/VE200ctsQ3pkxb9OZeb/hjkx2qRB2jvb8RV3dH
-         6aULDeY9i6DcPsSxJigQsE3yktpCYfehCQGtutD0=
+        b=HKRv6ewWJVV9TD30hEhrMYVyratk9RlewdhSvWRiHAvBaEHax6Gb8Dl4tgrKcHr9Y
+         yBMv6vLKZ8GdmGL5geSb+m6Ut8lYl06r00HIorj/gQM7w4wdqNLUXe7Y5s/bNXmxuN
+         YNCZmVwN1D8WMpKhjait1TnwtDUKGSvIaXa/a+OU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Nowlin <dan.nowlin@intel.com>,
-        Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>,
-        Tony Brelinski <tonyx.brelinski@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        stable@vger.kernel.org, Bob Peterson <rpeterso@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 062/422] ice: Update request resource command to latest specification
-Date:   Tue, 19 Nov 2019 06:14:19 +0100
-Message-Id: <20191119051403.728963915@linuxfoundation.org>
+Subject: [PATCH 4.19 064/422] gfs2: Dont set GFS2_RDF_UPTODATE when the lvb is updated
+Date:   Tue, 19 Nov 2019 06:14:21 +0100
+Message-Id: <20191119051403.840934993@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -62,206 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Nowlin <dan.nowlin@intel.com>
+From: Bob Peterson <rpeterso@redhat.com>
 
-[ Upstream commit ff2b13213a6a0baca105bc3bc724225f0adde1f8 ]
+[ Upstream commit 4f36cb36c9d14340bb200d2ad9117b03ce992cfe ]
 
-Align Request Resource Ownership AQ command (0x0008) to the latest
-specification. This includes:
+The GFS2_RDF_UPTODATE flag in the rgrp is used to determine when
+a rgrp buffer is valid. It's cleared when the glock is invalidated,
+signifying that the buffer data is now invalid. But before this
+patch, function update_rgrp_lvb was setting the flag when it
+determined it had a valid lvb. But that's an invalid assumption:
+just because you have a valid lvb doesn't mean you have valid
+buffers. After all, another node may have made the lvb valid,
+and this node just fetched it from the glock via dlm.
 
-- Correcting the resource IDs for the Global Cfg and Change locks.
-- new enum ICE_CHANGE_LOCK_RES_ID
-- new enum ICE_GLOBAL_CFG_LOCK_RES_ID
-- Altering the flow for Global Config Lock to allow only the first PF to
-  download the package.
+Consider this scenario:
+1. The file system is mounted with RGRPLVB option.
+2. In gfs2_inplace_reserve it locks the rgrp glock EX, but thanks
+   to GL_SKIP, it skips the gfs2_rgrp_bh_get.
+3. Since loops == 0 and the allocation target (ap->target) is
+   bigger than the largest known chunk of blocks in the rgrp
+   (rs->rs_rbm.rgd->rd_extfail_pt) it skips that rgrp and bypasses
+   the call to gfs2_rgrp_bh_get there as well.
+4. update_rgrp_lvb sees the lvb MAGIC number is valid, so bypasses
+   gfs2_rgrp_bh_get, but it still sets sets GFS2_RDF_UPTODATE due
+   to this invalid assumption.
+5. The next time update_rgrp_lvb is called, it sees the bit is set
+   and just returns 0, assuming both the lvb and rgrp are both
+   uptodate. But since this is a smaller allocation, or space has
+   been freed by another node, thus adjusting the lvb values,
+   it decides to use the rgrp for allocations, with invalid rd_free
+   due to the fact it was never updated.
 
-Signed-off-by: Dan Nowlin <dan.nowlin@intel.com>
-Signed-off-by: Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>
-Tested-by: Tony Brelinski <tonyx.brelinski@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+This patch changes update_rgrp_lvb so it doesn't set the UPTODATE
+flag anymore. That way, it has no choice but to fetch the latest
+values.
+
+Signed-off-by: Bob Peterson <rpeterso@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ice/ice_common.c | 75 ++++++++++++++++-----
- drivers/net/ethernet/intel/ice/ice_common.h |  2 +-
- drivers/net/ethernet/intel/ice/ice_nvm.c    |  2 +-
- drivers/net/ethernet/intel/ice/ice_type.h   |  9 ++-
- 4 files changed, 67 insertions(+), 21 deletions(-)
+ fs/gfs2/rgrp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/intel/ice/ice_common.c b/drivers/net/ethernet/intel/ice/ice_common.c
-index 661beea6af795..f8d00263d9019 100644
---- a/drivers/net/ethernet/intel/ice/ice_common.c
-+++ b/drivers/net/ethernet/intel/ice/ice_common.c
-@@ -904,7 +904,22 @@ enum ice_status ice_aq_q_shutdown(struct ice_hw *hw, bool unloading)
-  * @timeout: the maximum time in ms that the driver may hold the resource
-  * @cd: pointer to command details structure or NULL
-  *
-- * requests common resource using the admin queue commands (0x0008)
-+ * Requests common resource using the admin queue commands (0x0008).
-+ * When attempting to acquire the Global Config Lock, the driver can
-+ * learn of three states:
-+ *  1) ICE_SUCCESS -        acquired lock, and can perform download package
-+ *  2) ICE_ERR_AQ_ERROR -   did not get lock, driver should fail to load
-+ *  3) ICE_ERR_AQ_NO_WORK - did not get lock, but another driver has
-+ *                          successfully downloaded the package; the driver does
-+ *                          not have to download the package and can continue
-+ *                          loading
-+ *
-+ * Note that if the caller is in an acquire lock, perform action, release lock
-+ * phase of operation, it is possible that the FW may detect a timeout and issue
-+ * a CORER. In this case, the driver will receive a CORER interrupt and will
-+ * have to determine its cause. The calling thread that is handling this flow
-+ * will likely get an error propagated back to it indicating the Download
-+ * Package, Update Package or the Release Resource AQ commands timed out.
-  */
- static enum ice_status
- ice_aq_req_res(struct ice_hw *hw, enum ice_aq_res_ids res,
-@@ -922,13 +937,43 @@ ice_aq_req_res(struct ice_hw *hw, enum ice_aq_res_ids res,
- 	cmd_resp->res_id = cpu_to_le16(res);
- 	cmd_resp->access_type = cpu_to_le16(access);
- 	cmd_resp->res_number = cpu_to_le32(sdp_number);
-+	cmd_resp->timeout = cpu_to_le32(*timeout);
-+	*timeout = 0;
- 
- 	status = ice_aq_send_cmd(hw, &desc, NULL, 0, cd);
-+
- 	/* The completion specifies the maximum time in ms that the driver
- 	 * may hold the resource in the Timeout field.
--	 * If the resource is held by someone else, the command completes with
--	 * busy return value and the timeout field indicates the maximum time
--	 * the current owner of the resource has to free it.
-+	 */
-+
-+	/* Global config lock response utilizes an additional status field.
-+	 *
-+	 * If the Global config lock resource is held by some other driver, the
-+	 * command completes with ICE_AQ_RES_GLBL_IN_PROG in the status field
-+	 * and the timeout field indicates the maximum time the current owner
-+	 * of the resource has to free it.
-+	 */
-+	if (res == ICE_GLOBAL_CFG_LOCK_RES_ID) {
-+		if (le16_to_cpu(cmd_resp->status) == ICE_AQ_RES_GLBL_SUCCESS) {
-+			*timeout = le32_to_cpu(cmd_resp->timeout);
-+			return 0;
-+		} else if (le16_to_cpu(cmd_resp->status) ==
-+			   ICE_AQ_RES_GLBL_IN_PROG) {
-+			*timeout = le32_to_cpu(cmd_resp->timeout);
-+			return ICE_ERR_AQ_ERROR;
-+		} else if (le16_to_cpu(cmd_resp->status) ==
-+			   ICE_AQ_RES_GLBL_DONE) {
-+			return ICE_ERR_AQ_NO_WORK;
-+		}
-+
-+		/* invalid FW response, force a timeout immediately */
-+		*timeout = 0;
-+		return ICE_ERR_AQ_ERROR;
-+	}
-+
-+	/* If the resource is held by some other driver, the command completes
-+	 * with a busy return value and the timeout field indicates the maximum
-+	 * time the current owner of the resource has to free it.
- 	 */
- 	if (!status || hw->adminq.sq_last_status == ICE_AQ_RC_EBUSY)
- 		*timeout = le32_to_cpu(cmd_resp->timeout);
-@@ -967,30 +1012,28 @@ ice_aq_release_res(struct ice_hw *hw, enum ice_aq_res_ids res, u8 sdp_number,
-  * @hw: pointer to the HW structure
-  * @res: resource id
-  * @access: access type (read or write)
-+ * @timeout: timeout in milliseconds
-  *
-  * This function will attempt to acquire the ownership of a resource.
-  */
- enum ice_status
- ice_acquire_res(struct ice_hw *hw, enum ice_aq_res_ids res,
--		enum ice_aq_res_access_type access)
-+		enum ice_aq_res_access_type access, u32 timeout)
- {
- #define ICE_RES_POLLING_DELAY_MS	10
- 	u32 delay = ICE_RES_POLLING_DELAY_MS;
-+	u32 time_left = timeout;
- 	enum ice_status status;
--	u32 time_left = 0;
--	u32 timeout;
- 
- 	status = ice_aq_req_res(hw, res, access, 0, &time_left, NULL);
- 
--	/* An admin queue return code of ICE_AQ_RC_EEXIST means that another
--	 * driver has previously acquired the resource and performed any
--	 * necessary updates; in this case the caller does not obtain the
--	 * resource and has no further work to do.
-+	/* A return code of ICE_ERR_AQ_NO_WORK means that another driver has
-+	 * previously acquired the resource and performed any necessary updates;
-+	 * in this case the caller does not obtain the resource and has no
-+	 * further work to do.
- 	 */
--	if (hw->adminq.sq_last_status == ICE_AQ_RC_EEXIST) {
--		status = ICE_ERR_AQ_NO_WORK;
-+	if (status == ICE_ERR_AQ_NO_WORK)
- 		goto ice_acquire_res_exit;
--	}
- 
- 	if (status)
- 		ice_debug(hw, ICE_DBG_RES,
-@@ -1003,11 +1046,9 @@ ice_acquire_res(struct ice_hw *hw, enum ice_aq_res_ids res,
- 		timeout = (timeout > delay) ? timeout - delay : 0;
- 		status = ice_aq_req_res(hw, res, access, 0, &time_left, NULL);
- 
--		if (hw->adminq.sq_last_status == ICE_AQ_RC_EEXIST) {
-+		if (status == ICE_ERR_AQ_NO_WORK)
- 			/* lock free, but no work to do */
--			status = ICE_ERR_AQ_NO_WORK;
- 			break;
--		}
- 
- 		if (!status)
- 			/* lock acquired */
-diff --git a/drivers/net/ethernet/intel/ice/ice_common.h b/drivers/net/ethernet/intel/ice/ice_common.h
-index 9a5519130af13..6455b6952ec8e 100644
---- a/drivers/net/ethernet/intel/ice/ice_common.h
-+++ b/drivers/net/ethernet/intel/ice/ice_common.h
-@@ -23,7 +23,7 @@ enum ice_status
- ice_get_link_status(struct ice_port_info *pi, bool *link_up);
- enum ice_status
- ice_acquire_res(struct ice_hw *hw, enum ice_aq_res_ids res,
--		enum ice_aq_res_access_type access);
-+		enum ice_aq_res_access_type access, u32 timeout);
- void ice_release_res(struct ice_hw *hw, enum ice_aq_res_ids res);
- enum ice_status ice_init_nvm(struct ice_hw *hw);
- enum ice_status
-diff --git a/drivers/net/ethernet/intel/ice/ice_nvm.c b/drivers/net/ethernet/intel/ice/ice_nvm.c
-index 295a8cd87fc16..3274c543283c6 100644
---- a/drivers/net/ethernet/intel/ice/ice_nvm.c
-+++ b/drivers/net/ethernet/intel/ice/ice_nvm.c
-@@ -137,7 +137,7 @@ ice_acquire_nvm(struct ice_hw *hw, enum ice_aq_res_access_type access)
- 	if (hw->nvm.blank_nvm_mode)
- 		return 0;
- 
--	return ice_acquire_res(hw, ICE_NVM_RES_ID, access);
-+	return ice_acquire_res(hw, ICE_NVM_RES_ID, access, ICE_NVM_TIMEOUT);
- }
- 
- /**
-diff --git a/drivers/net/ethernet/intel/ice/ice_type.h b/drivers/net/ethernet/intel/ice/ice_type.h
-index ba11b58988331..a509fe5f1e543 100644
---- a/drivers/net/ethernet/intel/ice/ice_type.h
-+++ b/drivers/net/ethernet/intel/ice/ice_type.h
-@@ -34,10 +34,15 @@ static inline bool ice_is_tc_ena(u8 bitmap, u8 tc)
- enum ice_aq_res_ids {
- 	ICE_NVM_RES_ID = 1,
- 	ICE_SPD_RES_ID,
--	ICE_GLOBAL_CFG_LOCK_RES_ID,
--	ICE_CHANGE_LOCK_RES_ID
-+	ICE_CHANGE_LOCK_RES_ID,
-+	ICE_GLOBAL_CFG_LOCK_RES_ID
- };
- 
-+/* FW update timeout definitions are in milliseconds */
-+#define ICE_NVM_TIMEOUT			180000
-+#define ICE_CHANGE_LOCK_TIMEOUT		1000
-+#define ICE_GLOBAL_CFG_LOCK_TIMEOUT	3000
-+
- enum ice_aq_res_access_type {
- 	ICE_RES_READ = 1,
- 	ICE_RES_WRITE
+diff --git a/fs/gfs2/rgrp.c b/fs/gfs2/rgrp.c
+index 449d0cb45a845..63e5387c84d26 100644
+--- a/fs/gfs2/rgrp.c
++++ b/fs/gfs2/rgrp.c
+@@ -1227,7 +1227,7 @@ static int update_rgrp_lvb(struct gfs2_rgrpd *rgd)
+ 	rl_flags = be32_to_cpu(rgd->rd_rgl->rl_flags);
+ 	rl_flags &= ~GFS2_RDF_MASK;
+ 	rgd->rd_flags &= GFS2_RDF_MASK;
+-	rgd->rd_flags |= (rl_flags | GFS2_RDF_UPTODATE | GFS2_RDF_CHECK);
++	rgd->rd_flags |= (rl_flags | GFS2_RDF_CHECK);
+ 	if (rgd->rd_rgl->rl_unlinked == 0)
+ 		rgd->rd_flags &= ~GFS2_RDF_CHECK;
+ 	rgd->rd_free = be32_to_cpu(rgd->rd_rgl->rl_free);
 -- 
 2.20.1
 
