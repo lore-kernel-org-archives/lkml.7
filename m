@@ -2,99 +2,104 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF70C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 04:45:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44710C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 04:47:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D563222DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 04:45:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qemxDWm3"
+	by mail.kernel.org (Postfix) with ESMTP id 1237022318
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 04:47:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574138828;
+	bh=ZDGgR81wu4Yd4RDYraq0eHaQhXVp4oDD2gmqGqLN0cc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oPCo0gbWQxzPGnKGRyGxrtlgxrgL45QA+wPMmjbpRHJ90OBk48MhMXuG2vmT2Wvcn
+	 BWcYGRNN+VWhgbQT+J2IutUouV5PB2DagKsEkdoT9M1Ty7N9SM+joTaThrqGLZmT1Y
+	 zeDLM8+hHMRDxRNLjj3mKuEb/RW/jyao5BM2HUnk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727109AbfKSEpP (ORCPT
+        id S1727102AbfKSErH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 23:45:15 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:43836 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726911AbfKSEpP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 23:45:15 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAJ4hhOX077926;
-        Tue, 19 Nov 2019 04:45:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2019-08-05;
- bh=P4T/RLDFvJ6qN2Upx5OjPezOF8dhMaemsOxf3TvuhPA=;
- b=qemxDWm3kRD/JDCjIc5A9ANgWjO1V1RjB925J5trWKfuKX6zGu+s9b+xCqU5FDbq8pkb
- ViDcZTgranHhbycHozFYNKIMy49wuSZ4J98b1v5EMeqT1eTF3v+NRJMYT7XyBmwVGQSC
- HImP1ktnxRtnzFyvRgLtIeADr1mCYfhe1fTO4PMi21WyRePbGeAUeRMHWqkF41ls8pxd
- /ITTC/qiXvLytuf7LtGahRerzfsIkswZxMwhddjcqpcJ5VHjD2zjRgwI+zXVSOY3Rqg6
- ZDzqfNI3YjieNoqBko1Q22dRMTAy/3TG50efPqJNaZJFNVaIgUh88tEBGGyFxTTKk2/y zw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2wa9rqcb1d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 19 Nov 2019 04:45:09 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAJ4gXfD096995;
-        Tue, 19 Nov 2019 04:45:08 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2wbxgdy50a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 19 Nov 2019 04:45:08 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xAJ4j6Cf028121;
-        Tue, 19 Nov 2019 04:45:06 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 18 Nov 2019 20:45:05 -0800
-To:     Finn Thain <fthain@telegraphics.com.au>
-Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "Michael Schmitz" <schmitzmic@gmail.com>,
-        "Ondrej Zary" <linux@zary.sk>, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] NCR5380: Unconditionally clear ICR after do_abort()
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <4277b28ee2551f884aefa85965ef3c498344f301.1573875417.git.fthain@telegraphics.com.au>
-Date:   Mon, 18 Nov 2019 23:45:03 -0500
-In-Reply-To: <4277b28ee2551f884aefa85965ef3c498344f301.1573875417.git.fthain@telegraphics.com.au>
-        (Finn Thain's message of "Sat, 16 Nov 2019 14:36:57 +1100")
-Message-ID: <yq1wobwiieo.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Mon, 18 Nov 2019 23:47:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56128 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726748AbfKSErG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 23:47:06 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6AA23222DD;
+        Tue, 19 Nov 2019 04:47:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574138825;
+        bh=ZDGgR81wu4Yd4RDYraq0eHaQhXVp4oDD2gmqGqLN0cc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mWov7ZdrgYqDjH05QstC5trCuQaiY9e3tjOg42AhJ9FSlO0UEF6cqp1Ur0iLBQUw9
+         YkcbPzDvFdJ67qg1oMFDPJvigWPh6So4zHvNKNQZJWBT2JWB/56jCd7zgWikkX3o2S
+         f/myLuPAyNOq6U6g/KBh7B+0S3UJihCN8ds3vT+8=
+Date:   Tue, 19 Nov 2019 05:47:03 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Ralph Siemsen <ralph.siemsen@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        syzbot+899a33dc0fa0dbaf06a6@syzkaller.appspotmail.com,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Jeremy Cline <jcline@redhat.com>,
+        Marcel Holtmann <marcel@holtmann.org>
+Subject: Re: [PATCH 4.9 02/31] Bluetooth: hci_ldisc: Postpone
+ HCI_UART_PROTO_READY bit set in hci_uart_set_proto()
+Message-ID: <20191119044703.GA1451491@kroah.com>
+References: <20191115062009.813108457@linuxfoundation.org>
+ <20191115062010.682028342@linuxfoundation.org>
+ <20191115161029.GA32365@maple.netwinder.org>
+ <20191116075614.GB381281@kroah.com>
+ <20191118202712.GA14832@maple.netwinder.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=653
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1911190042
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=724 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1911190042
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191118202712.GA14832@maple.netwinder.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Nov 18, 2019 at 03:27:12PM -0500, Ralph Siemsen wrote:
+> On Sat, Nov 16, 2019 at 03:56:14PM +0800, Greg Kroah-Hartman wrote:
+> > > 
+> > > BTW, this also seems to be missing from 4.4 branch, although it was merged
+> > > for 3.16 (per https://lore.kernel.org/stable/?q=Postpone+HCI).
+> > 
+> > Odd that it was merged into 3.16, perhaps it was done there because some
+> > earlier patch added the problem?
+> 
+> This patch should really be viewed as a correction to an earlier commit:
+> 84cb3df02aea ("Bluetooth: hci_ldisc: Fix null pointer derefence in case of
+> early data"). This was merged 2016-Apr-08 into v4.7, and therefore is
+> included in 4.9 and higher.
+> 
+> Only very recently, on 2019-Sep-23, this was backported to 3.16, along with
+> the correction. Both appeared in v3.16.74.
 
-Finn,
+Ok, that makes more sense now.  The "fix" didn't apply as it was not a
+fix for an old issue, but rather a new one.
 
-> When do_abort() succeeds, the target will go to BUS FREE phase and
-> there will be no connected command. Therefore, that function should
-> clear the Initiator Command Register before returning. It already does
-> so in case of NCR5380_poll_politely() failure; do the same for the
-> other error case too, that is, NCR5380_transfer_pio() failure.
+> > I say this as I do not think this is
+> > relevant for the 4.4.y kernel, do you?  Have you tried to apply this
+> > patch there?
+> 
+> The patch does not apply, but this is mainly due to the earlier commit
+> missing. It seems to me like that earlier fix is desirable (and it was put
+> into 3.16), along with the followup. So I would think we want it in 4.4 as
+> well.
 
-Applied to 5.5/scsi-queue, thanks!
+I've queued them both up now, thanks.
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+> [Aside: I'm really only interested in 4.9 and 4.19, so the 4.4 stuff is just
+> a diversion. But figured I might as well mention what I found...]
+
+Other people at your company care about 4.4.y :)
+
+thanks,
+
+greg k-h
