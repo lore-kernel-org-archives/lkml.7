@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BB3DC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:05:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9679C33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:05:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3FBD2082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:05:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A21282082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:05:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574143506;
-	bh=tXpvznd+oBOZN2eCbwim3PFiLXJbR9UB2tAzNx1l3vY=;
+	s=default; t=1574143510;
+	bh=JimTXPtAbX8YoTT19Gr8WHDW98DSZBe8ND3dur/LtAQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=obG2lir13G18YuXb+oQrGabH8FfmypPy/pZ7Fn2n8X81Zrvkvw+HWfhYZan1i/0SE
-	 liJJQ4Pk7hof+RU7ae4dxNrbZ9wj744sLstb7Smss0z47Y+OticClIWc3FCfjS7mH6
-	 a9oRS535gVC/GeC0MkrFFsYKBr2Xwqv5A3h/bpHE=
+	b=ekBQ7MgORp+tJxBILhzFjS4F73tdEgdIizjIvlNNFLyed/D949LPb2m8h1ILyF3vo
+	 +SuLA1eggkcebsCA7N+Inbku4CL2CJNVefdROM1e2wiK4/NHMAdkx8UKyXQgXSwDe9
+	 bvbyFFc7YwdcLUyG8Od1LaPpqyK9xqkJiqLqmnOc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730067AbfKSFhS (ORCPT
+        id S1730043AbfKSFhG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:37:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59008 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:37:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727121AbfKSFhQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:37:16 -0500
+        id S1730032AbfKSFhC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:37:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A274214DE;
-        Tue, 19 Nov 2019 05:37:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2EC93214DE;
+        Tue, 19 Nov 2019 05:37:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141836;
-        bh=tXpvznd+oBOZN2eCbwim3PFiLXJbR9UB2tAzNx1l3vY=;
+        s=default; t=1574141821;
+        bh=JimTXPtAbX8YoTT19Gr8WHDW98DSZBe8ND3dur/LtAQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N3A6S7+F8kv0/5jvnMOSUbMNIED0b+Ia6fS/jUgXuBISeRnpst9+/GTJQ+xZDMF8B
-         Ls3lcRANN07DC4DS8VLHRkT4mhipqKDN7NO5AbW/E/XZEqUGySI/aF1q85YagIqfay
-         N9IgHoZ0/daN2YOY++lsl8gNMpaW6oDLsCI6Vww4=
+        b=lpcIpKXhTiQOoT+DOFIrYUUggtdcYwUMzQorWT4gCj0zYLfWjCqz0wVUcvkeuauLX
+         X2sS0ej+Vp4vUwzUgBKv2NwSFC4mUUwzBdyGYycR0afAekQa+J2jMuZM0el84pzmlm
+         HBvthojrCckgngzk5wgf7cjJ9Kyfvb3SWXHVrDtQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, Rob Herring <robh@kernel.org>,
+        stable@vger.kernel.org,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Pieter-Paul Giesberts <pieter-paul.giesberts@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 270/422] libfdt: Ensure INT_MAX is defined in libfdt_env.h
-Date:   Tue, 19 Nov 2019 06:17:47 +0100
-Message-Id: <20191119051416.483788543@linuxfoundation.org>
+Subject: [PATCH 4.19 292/422] brcmfmac: increase buffer for obtaining firmware capabilities
+Date:   Tue, 19 Nov 2019 06:18:09 +0100
+Message-Id: <20191119051417.914114118@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -64,66 +64,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Herring <robh@kernel.org>
+From: Arend van Spriel <arend.vanspriel@broadcom.com>
 
-[ Upstream commit 53dd9dce6979bc54d64a3a09a2fb20187a025be7 ]
+[ Upstream commit 59c2a30d36c8ae430d26a902c4c9665ea33ccee5 ]
 
-The next update of libfdt has a new dependency on INT_MAX. Update the
-instances of libfdt_env.h in the kernel to either include the necessary
-header with the definition or define it locally.
+When obtaining the firmware capability a buffer is provided of 512
+bytes. However, if all features in firmware are supported the buffer
+needs to be 565 bytes as otherwise truncated information is retrieved
+from firmware. Increasing the buffer to 768 bytes on stack.
 
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linuxppc-dev@lists.ozlabs.org
-Signed-off-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Hante Meuleman <hante.meuleman@broadcom.com>
+Reviewed-by: Pieter-Paul Giesberts <pieter-paul.giesberts@broadcom.com>
+Reviewed-by: Franky Lin <franky.lin@broadcom.com>
+Signed-off-by: Arend van Spriel <arend.vanspriel@broadcom.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/compressed/libfdt_env.h | 2 ++
- arch/powerpc/boot/libfdt_env.h        | 2 ++
- include/linux/libfdt_env.h            | 1 +
- 3 files changed, 5 insertions(+)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/compressed/libfdt_env.h b/arch/arm/boot/compressed/libfdt_env.h
-index 07437816e0986..b36c0289a308e 100644
---- a/arch/arm/boot/compressed/libfdt_env.h
-+++ b/arch/arm/boot/compressed/libfdt_env.h
-@@ -6,6 +6,8 @@
- #include <linux/string.h>
- #include <asm/byteorder.h>
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c
+index 8347da632a5b0..4c5a3995dc352 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/feature.c
+@@ -178,7 +178,7 @@ static void brcmf_feat_iovar_data_set(struct brcmf_if *ifp,
+ 	ifp->fwil_fwerr = false;
+ }
  
-+#define INT_MAX			((int)(~0U>>1))
-+
- typedef __be16 fdt16_t;
- typedef __be32 fdt32_t;
- typedef __be64 fdt64_t;
-diff --git a/arch/powerpc/boot/libfdt_env.h b/arch/powerpc/boot/libfdt_env.h
-index 2a0c8b1bf1479..2abc8e83b95e9 100644
---- a/arch/powerpc/boot/libfdt_env.h
-+++ b/arch/powerpc/boot/libfdt_env.h
-@@ -5,6 +5,8 @@
- #include <types.h>
- #include <string.h>
- 
-+#define INT_MAX			((int)(~0U>>1))
-+
- #include "of.h"
- 
- typedef unsigned long uintptr_t;
-diff --git a/include/linux/libfdt_env.h b/include/linux/libfdt_env.h
-index c6ac1fe7ec68a..edb0f0c309044 100644
---- a/include/linux/libfdt_env.h
-+++ b/include/linux/libfdt_env.h
-@@ -2,6 +2,7 @@
- #ifndef LIBFDT_ENV_H
- #define LIBFDT_ENV_H
- 
-+#include <linux/kernel.h>	/* For INT_MAX */
- #include <linux/string.h>
- 
- #include <asm/byteorder.h>
+-#define MAX_CAPS_BUFFER_SIZE	512
++#define MAX_CAPS_BUFFER_SIZE	768
+ static void brcmf_feat_firmware_capabilities(struct brcmf_if *ifp)
+ {
+ 	char caps[MAX_CAPS_BUFFER_SIZE];
 -- 
 2.20.1
 
