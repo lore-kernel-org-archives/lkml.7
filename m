@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A2F3C43141
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:58:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E4FFC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:58:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 458E6206DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:58:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB5D0206DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:58:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574143133;
-	bh=zgHqDerHD9mq/I9eqXtCLJJAz7f74cQc2mKojojxA2o=;
+	s=default; t=1574143137;
+	bh=X33pF3J0S4PQTHIOi6rgmmFFe9etwYPH/2MIH3bxg/g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tsnZXPB9LJf5iJqojCUFjzlrr/ZfS9INTXW7drFAGrADtlK5C11Tfw8DPBKSl0JV6
-	 tseIXI8kXvTvZy5L+0XaR43BAnjo656jwdnKpWK4nSVhSyOTNz2yIU3O489Nil1IsU
-	 hs+KxG/qUoEpe51WZRA1/SG5u+tkkp/FPMIQ5CdI=
+	b=YQT3Tvdx9GZ6PDr1wd//xlNuR94PsehmvBECfl99U621huDUD/qop7yAEZznXIstC
+	 /w3ZkQZn1RsmxUT/RsLIrGWryNEwg4Uuv4VXEDr8Qk6lbddg7Dx39vpEvaVBIzALzB
+	 kGi8RiYDYiTGiNdlAeKmR/77y9DAP/ZLoHnBw21U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731885AbfKSF6w (ORCPT
+        id S1730045AbfKSFsi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:58:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45396 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:48:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727836AbfKSFsq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:48:46 -0500
+        id S1731090AbfKSFsf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:48:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2EE620862;
-        Tue, 19 Nov 2019 05:48:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 047E8208CC;
+        Tue, 19 Nov 2019 05:48:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142526;
-        bh=zgHqDerHD9mq/I9eqXtCLJJAz7f74cQc2mKojojxA2o=;
+        s=default; t=1574142514;
+        bh=X33pF3J0S4PQTHIOi6rgmmFFe9etwYPH/2MIH3bxg/g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PoMPCd8JSYVJlKl4E06WJ0Ucl0zFUOFUv8gvpLttcvj9r8/IUfuNGdDou7c9Ftrli
-         DZBf6vgQD9bWA6syJ0zAPmUreGxVAcW9fQLzMzgDW1c3BPHmB8Q/dfFbGbcYTnd8d5
-         6AWHW1IbnohQsRgVel0a9zLk9YVXsCtZ3ZprImtc=
+        b=JTjwgBHIW3quhObtLgHi5m3gNiknwR1PCsXsQY9HMMK/DwKScqA6rp85pvxkOtFKM
+         T0rqk+GaJIoz+B6N7SbCKtwi9G6hnZC7J3G0hP+kC0RNXLv9/yZldwRBqd8xpuhLQb
+         UwEL5FC3kwlCLuka9dUWu7fdHUQNT97OVcw/5spU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 084/239] dmaengine: dma-jz4780: Dont depend on MACH_JZ4780
-Date:   Tue, 19 Nov 2019 06:18:04 +0100
-Message-Id: <20191119051316.867688057@linuxfoundation.org>
+        stable@vger.kernel.org, Lao Wei <zrlw@qq.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 107/239] media: fix: media: pci: meye: validate offset to avoid arbitrary access
+Date:   Tue, 19 Nov 2019 06:18:27 +0100
+Message-Id: <20191119051326.536887890@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -59,35 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Cercueil <paul@crapouillou.net>
+From: Lao Wei <zrlw@qq.com>
 
-[ Upstream commit c558ecd21c852c97ff98dc6c61f715ba420ec251 ]
+[ Upstream commit eac7230fdb4672c2cb56f6a01a1744f562c01f80 ]
 
-If we make this driver depend on MACH_JZ4780, that means it can be
-enabled only if we're building a kernel specially crafted for a
-JZ4780-based board, while most GNU/Linux distributions will want one
-generic MIPS kernel that works on multiple boards.
+Motion eye video4linux driver for Sony Vaio PictureBook desn't validate user-controlled parameter
+'vma->vm_pgoff', a malicious process might access all of kernel memory from user space by trying
+pass different arbitrary address.
+Discussion: http://www.openwall.com/lists/oss-security/2018/07/06/1
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Lao Wei <zrlw@qq.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/Kconfig | 2 +-
+ drivers/media/pci/meye/meye.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index fadc4d8783bd8..79b809dbfda01 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -143,7 +143,7 @@ config DMA_JZ4740
+diff --git a/drivers/media/pci/meye/meye.c b/drivers/media/pci/meye/meye.c
+index 49e047e4a81ee..926707c997acb 100644
+--- a/drivers/media/pci/meye/meye.c
++++ b/drivers/media/pci/meye/meye.c
+@@ -1460,7 +1460,7 @@ static int meye_mmap(struct file *file, struct vm_area_struct *vma)
+ 	unsigned long page, pos;
  
- config DMA_JZ4780
- 	tristate "JZ4780 DMA support"
--	depends on MACH_JZ4780 || COMPILE_TEST
-+	depends on MIPS || COMPILE_TEST
- 	select DMA_ENGINE
- 	select DMA_VIRTUAL_CHANNELS
- 	help
+ 	mutex_lock(&meye.lock);
+-	if (size > gbuffers * gbufsize) {
++	if (size > gbuffers * gbufsize || offset > gbuffers * gbufsize - size) {
+ 		mutex_unlock(&meye.lock);
+ 		return -EINVAL;
+ 	}
 -- 
 2.20.1
 
