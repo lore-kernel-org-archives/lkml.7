@@ -2,168 +2,270 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F04C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:34:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B53C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:36:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FFD6222D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:34:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 285812082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:36:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="btWLNutl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eUNzbHt2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727711AbfKSGec (ORCPT
+        id S1727727AbfKSGgm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 01:34:32 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:47000 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726023AbfKSGec (ORCPT
+        Tue, 19 Nov 2019 01:36:42 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:41449 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726023AbfKSGgl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 01:34:32 -0500
-Received: by mail-wr1-f65.google.com with SMTP id b3so22351033wrs.13;
-        Mon, 18 Nov 2019 22:34:30 -0800 (PST)
+        Tue, 19 Nov 2019 01:36:41 -0500
+Received: by mail-pg1-f193.google.com with SMTP id 207so3499275pge.8;
+        Mon, 18 Nov 2019 22:36:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=STYck0ldpmlPgUWK/QtmnwfKy44OyOjUVjCG3r/tKEs=;
-        b=btWLNutlP2kDY/yLaixh/BuLXocKTIXi9Ge/nc2DSdpsZX3wYLJ8Va1hZj8xQh+5ve
-         iQ7046zUAQFVSyyc9bYlRZNYXpVAhyfjVCVsoORr8Ght4Oh73ERcgnlCHKs0Is77j/Ai
-         7TLjUMW+5IDBBSYBaQoWf55T5ETIK8T5jtd3t92ndP6tm3FvbYhzQFmAHC6d12UHiRt7
-         sgy5G2u1jw8Q0iCDYYTPJAsEitOV9NWFcj7tZuzq827+rUhMNDYLN1vlJHgba2WpSZ+n
-         m3neIJRvPGUsuRaKNs6bR8d9Uuaq1s6KxKMcb7xqh1zHh/22AixIq62t39PCTiwclEi1
-         5Hig==
+        h=from:to:cc:subject:date:message-id;
+        bh=mUsgHBil/Lo3OlLi4dMluLwGf3lqB7AGOtuRDY2yI2M=;
+        b=eUNzbHt2jiY3ChCfeaUCmUn8kMYSAosJnf+drBsys0bmjLyD0wqR71H71iFtpqbjwn
+         4O8Hbmfxb75CgOUbyFIqyzucWvcXhjJDtVapTMVagrJB+1Tuh6abncBcoKYZIHUs51qx
+         yZSRLyshSCcuQOAvTDrL5ufWR56QHSDzEvSl6YcEQFp9rzcA8keJ+pvw/sj2i9XOdG3V
+         jeeLdymY3vWmX5VKu6BD7iITNU4nMtmg4IUEWEIhmKxxzG8aOuc9v8/6kFDzluRi88Oo
+         E1m5EbFiZ7hGkzI8XIvBBrQYxgHkJ75Z8aJecKGL2BCn/y28aGqro0OCO8kD43AY8FQn
+         fK1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=STYck0ldpmlPgUWK/QtmnwfKy44OyOjUVjCG3r/tKEs=;
-        b=QOCHNq3fClP1pmZXIBug+HH4NmOCCyX1j21sZWUsgoT3s2K0aOmpOArgr0ke4l2Y8Y
-         RRpGPntjfXIxmM6ksJ8zoD46sIAPYfyfTCRHv1mCHPJkNhPkdorypXuKn44WjnUi2Qcf
-         AC2I0J04AuU2rMOgjln8FcuAT+OFqh39pMQGnpTCYZIYSXPydM+HdWDBKxRtsyXFPmdX
-         KPLdjSK8cHBHkTgmJIJea8xztOf5p9QaBKAc/rA5VP8lM1O0CQUyA11qE67dl93YSk7O
-         cdWbl78Kk13RnwMXjR3Vznh0IgnHrJXEFY1BO0PgFFPU+YC9LrR+8IUD8jIZePjokXIK
-         1AeA==
-X-Gm-Message-State: APjAAAVyjzr7CoxSYIlnIys8MNLrcG3Zj3NQTNg69JT6jnk33NpQKWU7
-        PKL2sP3imv6MwORGeR1ptWU=
-X-Google-Smtp-Source: APXvYqzhNxj3/SJm0AqF0zMY4b2l3tY6B3JVFHzcm50DLbqWtLqLll98yGl8UaG/HY2uDbZ8yq8Icw==
-X-Received: by 2002:adf:f203:: with SMTP id p3mr36441140wro.2.1574145269573;
-        Mon, 18 Nov 2019 22:34:29 -0800 (PST)
-Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
-        by smtp.gmail.com with ESMTPSA id q15sm25965385wrs.91.2019.11.18.22.34.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 22:34:28 -0800 (PST)
-Date:   Tue, 19 Nov 2019 07:34:27 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Mikko Perttunen <mperttunen@nvidia.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-tegra@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v1 14/29] memory: tegra: Add interconnect nodes for
- Terga20 display controllers
-Message-ID: <20191119063427.GG2462695@ulmo>
-References: <20191118200247.3567-1-digetx@gmail.com>
- <20191118200247.3567-15-digetx@gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="I3tAPq1Rm2pUxvsp"
-Content-Disposition: inline
-In-Reply-To: <20191118200247.3567-15-digetx@gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=mUsgHBil/Lo3OlLi4dMluLwGf3lqB7AGOtuRDY2yI2M=;
+        b=C5yjwxql1OaPJBM3PJRrXsrGmoZvd7s9WlRSZT4zoDqje7QqI2BzgUJO32dwN2EKqi
+         3f/jtO8ii9SF4Rp1c0lBlIzZmpk3zpZjSNsVmn6P6QgRK96dZAJoxAXycXXLKF3YWSzI
+         suWvAvdmyE1uXfTCxmxpWvxZpYKTkrJoo5E26FfzofxaZ4Qdt21SRam3jYR+yry0p41W
+         C4KUeUPptpZfZMFRMke5jN4jHX4afcvtt2mHQ7oNvM+LcUX5oI95w4TEdSjHThtjgNzL
+         IITK9hMTGZiIpzTprB7MHCWbzzXFVZpzLxbfnx4CvPYmw8X3Z1PDw8Wz47LzOUKkmfyN
+         RuaA==
+X-Gm-Message-State: APjAAAXhRsNiU9c1FpTEF5LJXto3SOdCd7Gx7nbD5j9QKtn1mqYfCeGc
+        5U9oAZiFkwLWzZipW73gL5AlDUOS
+X-Google-Smtp-Source: APXvYqwRTvaGRgxh3GFLqHSGTFW7iPYjnWWLmi+jQS7q6nFRqxN27P1m0ntEs/wR0YzmC6SxLxJ0cQ==
+X-Received: by 2002:a63:4556:: with SMTP id u22mr2515624pgk.2.1574145398636;
+        Mon, 18 Nov 2019 22:36:38 -0800 (PST)
+Received: from localhost.localdomain ([203.205.141.123])
+        by smtp.googlemail.com with ESMTPSA id e17sm22994274pgg.5.2019.11.18.22.36.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 18 Nov 2019 22:36:38 -0800 (PST)
+From:   Wanpeng Li <kernellwp@gmail.com>
+X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Subject: [PATCH v2 1/2] KVM: VMX: FIXED+PHYSICAL mode single target IPI fastpath
+Date:   Tue, 19 Nov 2019 14:36:28 +0800
+Message-Id: <1574145389-12149-1-git-send-email-wanpengli@tencent.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Wanpeng Li <wanpengli@tencent.com>
 
---I3tAPq1Rm2pUxvsp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+ICR and TSCDEADLINE MSRs write cause the main MSRs write vmexits in 
+our product observation, multicast IPIs are not as common as unicast 
+IPI like RESCHEDULE_VECTOR and CALL_FUNCTION_SINGLE_VECTOR etc.
 
-On Mon, Nov 18, 2019 at 11:02:32PM +0300, Dmitry Osipenko wrote:
-> Add initial interconnect nodes that allow display controller driver
-> to perform memory bandwidth requests using interconnect API.
->=20
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/memory/tegra/tegra20.c | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
->=20
-> diff --git a/drivers/memory/tegra/tegra20.c b/drivers/memory/tegra/tegra2=
-0.c
-> index a8098bff91d9..dfcd9fdb7ce7 100644
-> --- a/drivers/memory/tegra/tegra20.c
-> +++ b/drivers/memory/tegra/tegra20.c
-> @@ -3,6 +3,7 @@
->   * Copyright (C) 2012 NVIDIA CORPORATION.  All rights reserved.
->   */
-> =20
-> +#include <dt-bindings/interconnect/tegra-icc.h>
->  #include <dt-bindings/memory/tegra20-mc.h>
-> =20
->  #include "mc.h"
-> @@ -280,6 +281,17 @@ static const struct tegra_mc_reset_ops tegra20_mc_re=
-set_ops =3D {
->  	.reset_status =3D tegra20_mc_reset_status,
->  };
-> =20
-> +#define TEGRA20_MC_ICC(_name)				\
-> +	{						\
-> +		.name =3D #_name,				\
-> +		.id =3D TEGRA_ICC_MC_##_name,		\
-> +	}
-> +
-> +static const struct tegra_mc_icc_node tegra20_mc_icc_nodes[] =3D {
-> +	TEGRA20_MC_ICC(DC),
-> +	TEGRA20_MC_ICC(DCB),
-> +};
-> +
->  const struct tegra_mc_soc tegra20_mc_soc =3D {
->  	.clients =3D tegra20_mc_clients,
->  	.num_clients =3D ARRAY_SIZE(tegra20_mc_clients),
-> @@ -290,4 +302,6 @@ const struct tegra_mc_soc tegra20_mc_soc =3D {
->  	.reset_ops =3D &tegra20_mc_reset_ops,
->  	.resets =3D tegra20_mc_resets,
->  	.num_resets =3D ARRAY_SIZE(tegra20_mc_resets),
-> +	.icc_nodes =3D tegra20_mc_icc_nodes,
-> +	.num_icc_nodes =3D ARRAY_SIZE(tegra20_mc_icc_nodes),
->  };
+This patch tries to optimize x2apic physical destination mode, fixed 
+delivery mode single target IPI by delivering IPI to receiver as soon 
+as possible after sender writes ICR vmexit to avoid various checks 
+when possible, especially when running guest w/ --overcommit cpu-pm=on
+or guest can keep running, IPI can be injected to target vCPU by 
+posted-interrupt immediately.
 
-As I mentioned, we already have most (if not all) of the information
-that we need for this in the various struct tegra_mc_client tables.
-Those tables also contain some definitions for latency allowance
-registers that we are eventually going to need to do more tweaking as
-you suggested in your cover letter.
+Testing on Xeon Skylake server:
 
-Thierry
+The virtual IPI latency from sender send to receiver receive reduces 
+more than 200+ cpu cycles.
 
---I3tAPq1Rm2pUxvsp
-Content-Type: application/pgp-signature; name="signature.asc"
+Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+---
+v1 -> v2:
+ * add tracepoint
+ * Instead of a separate vcpu->fast_vmexit, set exit_reason
+   to vmx->exit_reason to -1 if the fast path succeeds.
+ * move the "kvm_skip_emulated_instruction(vcpu)" to vmx_handle_exit
+ * moving the handling into vmx_handle_exit_irqoff()
 
------BEGIN PGP SIGNATURE-----
+ arch/x86/include/asm/kvm_host.h |  4 ++--
+ arch/x86/include/uapi/asm/vmx.h |  1 +
+ arch/x86/kvm/svm.c              |  4 ++--
+ arch/x86/kvm/vmx/vmx.c          | 40 +++++++++++++++++++++++++++++++++++++---
+ arch/x86/kvm/x86.c              |  5 +++--
+ 5 files changed, 45 insertions(+), 9 deletions(-)
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl3TjPIACgkQ3SOs138+
-s6EdSBAAkJq6NUF8h85zOp4aN7BmEM9zr6aQU87PcpheYtxkxBSWJB3FL3ZbULKr
-uWUELJntyp3KXLEuosHFkUZTpvhzDhhyVi5pZ9r45M45uGgZqO1pMPunN9Ha1Uku
-8RzxboJvFEGLAok5/9XW9tsotQ/wjhRQKIQWgzGfxLz2jFEWF0nPc5akod1RHQTz
-dcmDT9D9gDXJqiAHJINlHxfA6O+pkTI3s7K2qr0O9C4ao+xgSOqcjWqr0yCOggw2
-GSerhri3lwwbEAQk8FMi10nIU0gD8DDOD3iVGNqnR6djOzkZMMEfG2i5RzWzHk7G
-ijkE6CnihiZwbDIUKdE9XBQGOp+fdEGnaznERMG1GWyi68u+nSmkGDnCtivJkL8j
-yur3Wdk2RoLyVii0RScej4aAndbyVNhRslgPEhu0hs1e6YNI44L1i6LcAZFck87N
-q/KQl6aiOpVajQ+7eiHgHOeYQYGXcz/GGRWToOmo9RHAu1gMqVdG03wgpAKDYkkQ
-ls3DMn/qSgfH6YeuKWPes9x4gQgXtAtx22hlXxXC3P5cSw4XWXpiQFv9YLN3I/zs
-SLrm0uaV8jsjyI0fF8dWO2RWQMlkyKj/kGQIL44ZRiYgO4iop1Rc3dIUPpn/NtYe
-bOPFW64ShM7Ex2qHSHhiHnv60kq1YqYAUo1mxFa7XE12ygIkn3s=
-=85iP
------END PGP SIGNATURE-----
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 898ab9e..0daafa9 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1084,7 +1084,7 @@ struct kvm_x86_ops {
+ 	void (*tlb_flush_gva)(struct kvm_vcpu *vcpu, gva_t addr);
+ 
+ 	void (*run)(struct kvm_vcpu *vcpu);
+-	int (*handle_exit)(struct kvm_vcpu *vcpu);
++	int (*handle_exit)(struct kvm_vcpu *vcpu, u32 *vcpu_exit_reason);
+ 	int (*skip_emulated_instruction)(struct kvm_vcpu *vcpu);
+ 	void (*set_interrupt_shadow)(struct kvm_vcpu *vcpu, int mask);
+ 	u32 (*get_interrupt_shadow)(struct kvm_vcpu *vcpu);
+@@ -1134,7 +1134,7 @@ struct kvm_x86_ops {
+ 	int (*check_intercept)(struct kvm_vcpu *vcpu,
+ 			       struct x86_instruction_info *info,
+ 			       enum x86_intercept_stage stage);
+-	void (*handle_exit_irqoff)(struct kvm_vcpu *vcpu);
++	void (*handle_exit_irqoff)(struct kvm_vcpu *vcpu, u32 *vcpu_exit_reason);
+ 	bool (*mpx_supported)(void);
+ 	bool (*xsaves_supported)(void);
+ 	bool (*umip_emulated)(void);
+diff --git a/arch/x86/include/uapi/asm/vmx.h b/arch/x86/include/uapi/asm/vmx.h
+index 3eb8411..b33c6e1 100644
+--- a/arch/x86/include/uapi/asm/vmx.h
++++ b/arch/x86/include/uapi/asm/vmx.h
+@@ -88,6 +88,7 @@
+ #define EXIT_REASON_XRSTORS             64
+ #define EXIT_REASON_UMWAIT              67
+ #define EXIT_REASON_TPAUSE              68
++#define EXIT_REASON_NEED_SKIP_EMULATED_INSN -1
+ 
+ #define VMX_EXIT_REASONS \
+ 	{ EXIT_REASON_EXCEPTION_NMI,         "EXCEPTION_NMI" }, \
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index d02a73a..c8e063a 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -4929,7 +4929,7 @@ static void svm_get_exit_info(struct kvm_vcpu *vcpu, u64 *info1, u64 *info2)
+ 	*info2 = control->exit_info_2;
+ }
+ 
+-static int handle_exit(struct kvm_vcpu *vcpu)
++static int handle_exit(struct kvm_vcpu *vcpu, u32 *vcpu_exit_reason)
+ {
+ 	struct vcpu_svm *svm = to_svm(vcpu);
+ 	struct kvm_run *kvm_run = vcpu->run;
+@@ -6187,7 +6187,7 @@ static int svm_check_intercept(struct kvm_vcpu *vcpu,
+ 	return ret;
+ }
+ 
+-static void svm_handle_exit_irqoff(struct kvm_vcpu *vcpu)
++static void svm_handle_exit_irqoff(struct kvm_vcpu *vcpu, u32 *vcpu_exit_reason)
+ {
+ 
+ }
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 621142e5..b98198d 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -5792,7 +5792,7 @@ void dump_vmcs(void)
+  * The guest has exited.  See if we can fix it or if we need userspace
+  * assistance.
+  */
+-static int vmx_handle_exit(struct kvm_vcpu *vcpu)
++static int vmx_handle_exit(struct kvm_vcpu *vcpu, u32 *vcpu_exit_reason)
+ {
+ 	struct vcpu_vmx *vmx = to_vmx(vcpu);
+ 	u32 exit_reason = vmx->exit_reason;
+@@ -5878,7 +5878,10 @@ static int vmx_handle_exit(struct kvm_vcpu *vcpu)
+ 		}
+ 	}
+ 
+-	if (exit_reason < kvm_vmx_max_exit_handlers
++	if (*vcpu_exit_reason == EXIT_REASON_NEED_SKIP_EMULATED_INSN) {
++		kvm_skip_emulated_instruction(vcpu);
++		return 1;
++	} else if (exit_reason < kvm_vmx_max_exit_handlers
+ 	    && kvm_vmx_exit_handlers[exit_reason]) {
+ #ifdef CONFIG_RETPOLINE
+ 		if (exit_reason == EXIT_REASON_MSR_WRITE)
+@@ -6223,7 +6226,36 @@ static void handle_external_interrupt_irqoff(struct kvm_vcpu *vcpu)
+ }
+ STACK_FRAME_NON_STANDARD(handle_external_interrupt_irqoff);
+ 
+-static void vmx_handle_exit_irqoff(struct kvm_vcpu *vcpu)
++static u32 handle_ipi_fastpath(struct kvm_vcpu *vcpu)
++{
++	u32 index;
++	u64 data;
++	int ret = 0;
++
++	if (lapic_in_kernel(vcpu) && apic_x2apic_mode(vcpu->arch.apic)) {
++		/*
++		 * fastpath to IPI target, FIXED+PHYSICAL which is popular
++		 */
++		index = kvm_rcx_read(vcpu);
++		data = kvm_read_edx_eax(vcpu);
++
++		if (((index - APIC_BASE_MSR) << 4 == APIC_ICR) &&
++			((data & KVM_APIC_DEST_MASK) == APIC_DEST_PHYSICAL) &&
++			((data & APIC_MODE_MASK) == APIC_DM_FIXED)) {
++
++			trace_kvm_msr_write(index, data);
++			kvm_lapic_set_reg(vcpu->arch.apic, APIC_ICR2, (u32)(data >> 32));
++			ret = kvm_lapic_reg_write(vcpu->arch.apic, APIC_ICR, (u32)data);
++
++			if (ret == 0)
++				return EXIT_REASON_NEED_SKIP_EMULATED_INSN;
++		}
++	}
++
++	return ret;
++}
++
++static void vmx_handle_exit_irqoff(struct kvm_vcpu *vcpu, u32 *exit_reason)
+ {
+ 	struct vcpu_vmx *vmx = to_vmx(vcpu);
+ 
+@@ -6231,6 +6263,8 @@ static void vmx_handle_exit_irqoff(struct kvm_vcpu *vcpu)
+ 		handle_external_interrupt_irqoff(vcpu);
+ 	else if (vmx->exit_reason == EXIT_REASON_EXCEPTION_NMI)
+ 		handle_exception_nmi_irqoff(vmx);
++	else if (vmx->exit_reason == EXIT_REASON_MSR_WRITE)
++		*exit_reason = handle_ipi_fastpath(vcpu);
+ }
+ 
+ static bool vmx_has_emulated_msr(int index)
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 991dd01..a53bce3 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -7981,6 +7981,7 @@ EXPORT_SYMBOL_GPL(__kvm_request_immediate_exit);
+ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+ {
+ 	int r;
++	u32 exit_reason = 0;
+ 	bool req_int_win =
+ 		dm_request_for_irq_injection(vcpu) &&
+ 		kvm_cpu_accept_dm_intr(vcpu);
+@@ -8226,7 +8227,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+ 	vcpu->mode = OUTSIDE_GUEST_MODE;
+ 	smp_wmb();
+ 
+-	kvm_x86_ops->handle_exit_irqoff(vcpu);
++	kvm_x86_ops->handle_exit_irqoff(vcpu, &exit_reason);
+ 
+ 	/*
+ 	 * Consume any pending interrupts, including the possible source of
+@@ -8270,7 +8271,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+ 		kvm_lapic_sync_from_vapic(vcpu);
+ 
+ 	vcpu->arch.gpa_available = false;
+-	r = kvm_x86_ops->handle_exit(vcpu);
++	r = kvm_x86_ops->handle_exit(vcpu, &exit_reason);
+ 	return r;
+ 
+ cancel_injection:
+-- 
+2.7.4
 
---I3tAPq1Rm2pUxvsp--
