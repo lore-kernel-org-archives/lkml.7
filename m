@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC207C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:35:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E96EC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:35:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C29B720862
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:35:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5223320672
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:35:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141741;
-	bh=A3cExw9CqJgzdtqRXjlxgfhaTlG665RQFAEildQhG8M=;
+	s=default; t=1574141738;
+	bh=SXNKvy0fhdk/59LQap0bFKFWEbNXfleA9TbgtbVruJo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ioFyTbJADHsnBFwLichdDAL5saLsaLWUlKh3qaHk7XQc/A2S/VxmhYxJYqOv7xNcW
-	 a3rus7ZDAR27ehHCSkD7Y6SkqZvEfk7t9D89Ea2fuWeABud9h97xGmRn1eBT5UOpyv
-	 kaNrJazgyI/seoY3UIPO3/tb2nyuss/3LzPJjUfQ=
+	b=u1SVClZ2xkYWRGtD588MwYJdXuxlZ9iu+yRYl8d/8oUuR1LoI9RRz6jySCmHe5EAT
+	 kG1CDGJVVLlR5ysynolZ2tw3ORoH64y9ORdK7yZE0Cd0yjtKTZAzVBnOxawP+11Ve+
+	 IZTxYeUUA+BxbuBnBDdG04CJAlRfRGA1VEct6iO8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729372AbfKSFfk (ORCPT
+        id S1728753AbfKSFfh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:35:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56548 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:35:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728314AbfKSFfg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:35:36 -0500
+        id S1727383AbfKSFfe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:35:34 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF0B1206EC;
-        Tue, 19 Nov 2019 05:35:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D9B220672;
+        Tue, 19 Nov 2019 05:35:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141736;
-        bh=A3cExw9CqJgzdtqRXjlxgfhaTlG665RQFAEildQhG8M=;
+        s=default; t=1574141733;
+        bh=SXNKvy0fhdk/59LQap0bFKFWEbNXfleA9TbgtbVruJo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BjxQZTzoxb5/ppDO6CmUwlIPSqgElwDoEc38FooTRPsun3WN6fnFUMmFhOIUJvRcW
-         KprHZL3HrWpHDgcXt+mxf9sQA44jPhiX8Q+Qsbj6YXD5F0t9QhM44aLlNhn2c31OWw
-         hAzkBHA9afECCnGp7n1sruBsh1xWdv+6Nt28cNEQ=
+        b=zZXifavFfAZQOMNoJKInriPxUHT6vT56p43FJndskOIUSm9UvOTxTut4yvPQ3PC1r
+         ULP7Zytyfq+FiFEx2OUkRXy8ShgD3HSqUH9o09BXh7taFeZR4bZ4tBrudLrE/Ss3K1
+         JbYRWdYVZoTdNv6i37xQ30V5pjSsZZaSnf/7agzM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>,
+        stable@vger.kernel.org, Breno Leitao <leitao@debian.org>,
+        Gustavo Romero <gromero@linux.ibm.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 262/422] powerpc/64s/hash: Fix stab_rr off by one initialization
-Date:   Tue, 19 Nov 2019 06:17:39 +0100
-Message-Id: <20191119051415.969681930@linuxfoundation.org>
+Subject: [PATCH 4.19 261/422] selftests/powerpc: Do not fail with reschedule
+Date:   Tue, 19 Nov 2019 06:17:38 +0100
+Message-Id: <20191119051415.905614318@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -60,34 +61,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Piggin <npiggin@gmail.com>
+From: Breno Leitao <leitao@debian.org>
 
-[ Upstream commit 09b4438db13fa83b6219aee5993711a2aa2a0c64 ]
+[ Upstream commit 44d947eff19d64384efc06069509db7a0a1103b0 ]
 
-This causes SLB alloation to start 1 beyond the start of the SLB.
-There is no real problem because after it wraps it stats behaving
-properly, it's just surprisig to see when looking at SLB traces.
+There are cases where the test is not expecting to have the transaction
+aborted, but, the test process might have been rescheduled, either in the
+OS level or by KVM (if it is running on a KVM guest machine). The process
+reschedule will cause a treclaim/recheckpoint which will cause the
+transaction to doom, aborting the transaction as soon as the process is
+rescheduled back to the CPU. This might cause the test to fail, but this is
+not a failure in essence.
 
-Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+If that is the case, TEXASR[FC] is indicated with either
+TM_CAUSE_RESCHEDULE or TM_CAUSE_KVM_RESCHEDULE for KVM interruptions.
+
+In this scenario, ignore these two failures and avoid the whole test to
+return failure.
+
+Signed-off-by: Breno Leitao <leitao@debian.org>
+Reviewed-by: Gustavo Romero <gromero@linux.ibm.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/mm/slb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/testing/selftests/powerpc/tm/tm-unavailable.c | 9 ++++++---
+ tools/testing/selftests/powerpc/tm/tm.h             | 9 +++++++++
+ 2 files changed, 15 insertions(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/mm/slb.c b/arch/powerpc/mm/slb.c
-index 9f574e59d1786..2f162c6e52d4f 100644
---- a/arch/powerpc/mm/slb.c
-+++ b/arch/powerpc/mm/slb.c
-@@ -355,7 +355,7 @@ void slb_initialize(void)
- #endif
+diff --git a/tools/testing/selftests/powerpc/tm/tm-unavailable.c b/tools/testing/selftests/powerpc/tm/tm-unavailable.c
+index 156c8e750259b..09894f4ff62e6 100644
+--- a/tools/testing/selftests/powerpc/tm/tm-unavailable.c
++++ b/tools/testing/selftests/powerpc/tm/tm-unavailable.c
+@@ -236,7 +236,8 @@ void *tm_una_ping(void *input)
  	}
  
--	get_paca()->stab_rr = SLB_NUM_BOLTED;
-+	get_paca()->stab_rr = SLB_NUM_BOLTED - 1;
+ 	/* Check if we were not expecting a failure and a it occurred. */
+-	if (!expecting_failure() && is_failure(cr_)) {
++	if (!expecting_failure() && is_failure(cr_) &&
++	    !failure_is_reschedule()) {
+ 		printf("\n\tUnexpected transaction failure 0x%02lx\n\t",
+ 			failure_code());
+ 		return (void *) -1;
+@@ -244,9 +245,11 @@ void *tm_una_ping(void *input)
  
- 	lflags = SLB_VSID_KERNEL | linear_llp;
- 	vflags = SLB_VSID_KERNEL | vmalloc_llp;
+ 	/*
+ 	 * Check if TM failed due to the cause we were expecting. 0xda is a
+-	 * TM_CAUSE_FAC_UNAV cause, otherwise it's an unexpected cause.
++	 * TM_CAUSE_FAC_UNAV cause, otherwise it's an unexpected cause, unless
++	 * it was caused by a reschedule.
+ 	 */
+-	if (is_failure(cr_) && !failure_is_unavailable()) {
++	if (is_failure(cr_) && !failure_is_unavailable() &&
++	    !failure_is_reschedule()) {
+ 		printf("\n\tUnexpected failure cause 0x%02lx\n\t",
+ 			failure_code());
+ 		return (void *) -1;
+diff --git a/tools/testing/selftests/powerpc/tm/tm.h b/tools/testing/selftests/powerpc/tm/tm.h
+index df4204247d45c..5518b1d4ef8b2 100644
+--- a/tools/testing/selftests/powerpc/tm/tm.h
++++ b/tools/testing/selftests/powerpc/tm/tm.h
+@@ -52,6 +52,15 @@ static inline bool failure_is_unavailable(void)
+ 	return (failure_code() & TM_CAUSE_FAC_UNAV) == TM_CAUSE_FAC_UNAV;
+ }
+ 
++static inline bool failure_is_reschedule(void)
++{
++	if ((failure_code() & TM_CAUSE_RESCHED) == TM_CAUSE_RESCHED ||
++	    (failure_code() & TM_CAUSE_KVM_RESCHED) == TM_CAUSE_KVM_RESCHED)
++		return true;
++
++	return false;
++}
++
+ static inline bool failure_is_nesting(void)
+ {
+ 	return (__builtin_get_texasru() & 0x400000);
 -- 
 2.20.1
 
