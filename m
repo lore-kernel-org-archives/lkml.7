@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85860C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:08:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D610C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:08:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5553D20692
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:08:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06091208CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:08:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574143725;
-	bh=jVMivIphEJg/VS15640mhwO4FSp2BARzrIpoBp8ADYM=;
+	s=default; t=1574143735;
+	bh=L5ZKUrc/TBLLpyooRleWyieQNY5ylLKmZ/vovfO3UOc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dgEqnnMdBkcdZZyLPW9Lp/ttbuZHqnt0JoB2bny0Tzg2YCz3XETBixyB3/ssqHTLg
-	 RND6VHX8jEnAM343hS9fEP6B9kZXVR37ljZGlFd4aQOo7Dg8ZqVEqwYxt0n8uGoVrz
-	 JMMyzlcS7nRfBRGJaGlHbcfezSo5Hc8nrb2ecCOY=
+	b=yJiyLpLRB30vkqijoe4HH7odbnHb1WLC4vLOZcJibkWpBCL6NG4BiLNORcJxzr4xk
+	 S+vfwKz664FOTOtBgcf1yiMzMiZmN4Vy8jNWz0ATcNi9FmbVES8tq06/l/lnpXFnnb
+	 /JRAjdl8HfLHpvRmW4yCJ4mHlxKxhdQIW5kUpwLw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728056AbfKSFaW (ORCPT
+        id S1729048AbfKSF3y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:30:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49032 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:29:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729109AbfKSFaQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:30:16 -0500
+        id S1728549AbfKSF3t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:29:49 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A276B222A2;
-        Tue, 19 Nov 2019 05:30:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B511E222DF;
+        Tue, 19 Nov 2019 05:29:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141416;
-        bh=jVMivIphEJg/VS15640mhwO4FSp2BARzrIpoBp8ADYM=;
+        s=default; t=1574141389;
+        bh=L5ZKUrc/TBLLpyooRleWyieQNY5ylLKmZ/vovfO3UOc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nVTP2Tk2qjkMhuvXE/uOglPZGapFMSs83MJ8lhq//IM9Bq6rXQ/b0MgH9zFnloa+h
-         miXWq/z6lsvIG/3nerXmj2+pmwzzFl1hvAR4vPZBu/Ubx1/oQdjEGkJd58yumrureS
-         6Wxep0yq/WTI9Krg3ixYGQ65V5W0E4OJ2/Vk000c=
+        b=oQMvbvgEy2wF2X4wtvV5qg/5XqDQQ33YsRaquCU2AKusc1DXwnAEm2cn7NhvvuPOp
+         bAICiL78RV3Yn+mBHQ4vFuoMId9OoWYBQ5kkxhoXv8gYXPBd8j8bBzWFa8mfhloOY0
+         UQ+Oz6E63WNSfll9dbmbVkUOjf/OIO8oIntrSIiU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Silsby <dansilsby@gmail.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Mathieu Malaterre <malat@debian.org>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 154/422] dmaengine: dma-jz4780: Further residue status fix
-Date:   Tue, 19 Nov 2019 06:15:51 +0100
-Message-Id: <20191119051408.565147387@linuxfoundation.org>
+        stable@vger.kernel.org, Huazhong Tan <tanhuazhong@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
+        Salil Mehta <salil.mehta@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 103/422] net: hns3: Fix for multicast failure
+Date:   Tue, 19 Nov 2019 06:15:00 +0100
+Message-Id: <20191119051405.885975982@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -61,44 +62,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Silsby <dansilsby@gmail.com>
+From: Huazhong Tan <tanhuazhong@huawei.com>
 
-[ Upstream commit 83ef4fb7556b6a673f755da670cbacab7e2c7f1b ]
+[ Upstream commit fd5f9da3f6583046215d614a87792b46e55785e2 ]
 
-Func jz4780_dma_desc_residue() expects the index to the next hw
-descriptor as its last parameter. Caller func jz4780_dma_tx_status(),
-however, applied modulus before passing it. When the current hw
-descriptor was last in the list, the index passed became zero.
+When the lower 24 bits of the IPV6 link-local addresses at both
+ends are the same, the multicast MAC address for Neigbour Discovery
+is the same. The multicast for Neigbour Discovery will fail.
 
-The resulting excess of reported residue especially caused problems
-with cyclic DMA transfer clients, i.e. ALSA AIC audio output, which
-rely on this for determining current DMA location within buffer.
+This patch fixes it by including the bonding uplink port in the
+multicast group.
 
-Combined with the recent and related residue-reporting fixes, spurious
-ALSA audio underruns on jz4770 hardware are now fixed.
-
-Signed-off-by: Daniel Silsby <dansilsby@gmail.com>
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Tested-by: Mathieu Malaterre <malat@debian.org>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Fixes: 46a3df9f9718("net: hns3: Add HNS3 Acceleration Engine & Compatibility Layer Support")
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: Salil Mehta <salil.mehta@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/dma-jz4780.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
-index 987899610b461..edff93aacad36 100644
---- a/drivers/dma/dma-jz4780.c
-+++ b/drivers/dma/dma-jz4780.c
-@@ -587,7 +587,7 @@ static enum dma_status jz4780_dma_tx_status(struct dma_chan *chan,
- 					to_jz4780_dma_desc(vdesc), 0);
- 	} else if (cookie == jzchan->desc->vdesc.tx.cookie) {
- 		txstate->residue = jz4780_dma_desc_residue(jzchan, jzchan->desc,
--			  (jzchan->curr_hwdesc + 1) % jzchan->desc->count);
-+					jzchan->curr_hwdesc + 1);
- 	} else
- 		txstate->residue = 0;
- 
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index 89ca69fa2b97b..44d0cb3f73a44 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -4374,7 +4374,7 @@ int hclge_add_mc_addr_common(struct hclge_vport *vport,
+ 	hnae3_set_bit(req.flags, HCLGE_MAC_VLAN_BIT0_EN_B, 1);
+ 	hnae3_set_bit(req.entry_type, HCLGE_MAC_VLAN_BIT0_EN_B, 0);
+ 	hnae3_set_bit(req.entry_type, HCLGE_MAC_VLAN_BIT1_EN_B, 1);
+-	hnae3_set_bit(req.mc_mac_en, HCLGE_MAC_VLAN_BIT0_EN_B, 0);
++	hnae3_set_bit(req.mc_mac_en, HCLGE_MAC_VLAN_BIT0_EN_B, 1);
+ 	hclge_prepare_mac_addr(&req, addr);
+ 	status = hclge_lookup_mac_vlan_tbl(vport, &req, desc, true);
+ 	if (!status) {
+@@ -4441,7 +4441,7 @@ int hclge_rm_mc_addr_common(struct hclge_vport *vport,
+ 	hnae3_set_bit(req.flags, HCLGE_MAC_VLAN_BIT0_EN_B, 1);
+ 	hnae3_set_bit(req.entry_type, HCLGE_MAC_VLAN_BIT0_EN_B, 0);
+ 	hnae3_set_bit(req.entry_type, HCLGE_MAC_VLAN_BIT1_EN_B, 1);
+-	hnae3_set_bit(req.mc_mac_en, HCLGE_MAC_VLAN_BIT0_EN_B, 0);
++	hnae3_set_bit(req.mc_mac_en, HCLGE_MAC_VLAN_BIT0_EN_B, 1);
+ 	hclge_prepare_mac_addr(&req, addr);
+ 	status = hclge_lookup_mac_vlan_tbl(vport, &req, desc, true);
+ 	if (!status) {
 -- 
 2.20.1
 
