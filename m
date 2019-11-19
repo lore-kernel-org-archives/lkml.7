@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 946ACC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:08:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85860C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:08:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E40020672
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:08:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5553D20692
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:08:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574143721;
-	bh=OS2+qgrCbkCbhxnpunNNpc1RfxAu+IH0Z3mHb8Di0xg=;
+	s=default; t=1574143725;
+	bh=jVMivIphEJg/VS15640mhwO4FSp2BARzrIpoBp8ADYM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cv8v/+bobUN3R+K/QtD08zZZy0o6qzWeRkcAJSPSOaqqZhmo8ZbQqqUvw8ipzdqgM
-	 mNc4yqJhhIQdLS+cJjb7Y9L7CNZIC5F9KWl9W/Usi3tEPSnkd5AQly+TMw1dGowhcJ
-	 pzxTdPtF3vrLys4jhC/DFB83OX4piAEuzPWpjk2k=
+	b=dgEqnnMdBkcdZZyLPW9Lp/ttbuZHqnt0JoB2bny0Tzg2YCz3XETBixyB3/ssqHTLg
+	 RND6VHX8jEnAM343hS9fEP6B9kZXVR37ljZGlFd4aQOo7Dg8ZqVEqwYxt0n8uGoVrz
+	 JMMyzlcS7nRfBRGJaGlHbcfezSo5Hc8nrb2ecCOY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728318AbfKSGIj (ORCPT
+        id S1728056AbfKSFaW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 01:08:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49242 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:30:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49032 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727250AbfKSFa2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:30:28 -0500
+        id S1729109AbfKSFaQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:30:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87AB521939;
-        Tue, 19 Nov 2019 05:30:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A276B222A2;
+        Tue, 19 Nov 2019 05:30:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141428;
-        bh=OS2+qgrCbkCbhxnpunNNpc1RfxAu+IH0Z3mHb8Di0xg=;
+        s=default; t=1574141416;
+        bh=jVMivIphEJg/VS15640mhwO4FSp2BARzrIpoBp8ADYM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eugRn+N7m9SoppSCHzWqQIlM/Fuk6k3EN6cqglWviVOMeoC5zCNh7zF1nEg5FEDZq
-         MfbtSqiwWjmRo2rejJZMdnVo91ETiiDEayQMCqexou5eV/CbkaSdIQ86qexxGpVawL
-         onFjHrw8jgbjXplx2M4XYHbU7TmyxTy+mGhuOP4I=
+        b=nVTP2Tk2qjkMhuvXE/uOglPZGapFMSs83MJ8lhq//IM9Bq6rXQ/b0MgH9zFnloa+h
+         miXWq/z6lsvIG/3nerXmj2+pmwzzFl1hvAR4vPZBu/Ubx1/oQdjEGkJd58yumrureS
+         6Wxep0yq/WTI9Krg3ixYGQ65V5W0E4OJ2/Vk000c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 140/422] ARM: dts: omap3-gta04: tvout: enable as display1 alias
-Date:   Tue, 19 Nov 2019 06:15:37 +0100
-Message-Id: <20191119051407.848146714@linuxfoundation.org>
+        stable@vger.kernel.org, Daniel Silsby <dansilsby@gmail.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Mathieu Malaterre <malat@debian.org>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 154/422] dmaengine: dma-jz4780: Further residue status fix
+Date:   Tue, 19 Nov 2019 06:15:51 +0100
+Message-Id: <20191119051408.565147387@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -60,33 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: H. Nikolaus Schaller <hns@goldelico.com>
+From: Daniel Silsby <dansilsby@gmail.com>
 
-[ Upstream commit 8905592b6e50cec905e6c6035bbd36201a3bfac1 ]
+[ Upstream commit 83ef4fb7556b6a673f755da670cbacab7e2c7f1b ]
 
-The omap dss susbystem takes the display aliases to find
-out which displays exist. To enable tv-out we must define
-an alias.
+Func jz4780_dma_desc_residue() expects the index to the next hw
+descriptor as its last parameter. Caller func jz4780_dma_tx_status(),
+however, applied modulus before passing it. When the current hw
+descriptor was last in the list, the index passed became zero.
 
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+The resulting excess of reported residue especially caused problems
+with cyclic DMA transfer clients, i.e. ALSA AIC audio output, which
+rely on this for determining current DMA location within buffer.
+
+Combined with the recent and related residue-reporting fixes, spurious
+ALSA audio underruns on jz4770 hardware are now fixed.
+
+Signed-off-by: Daniel Silsby <dansilsby@gmail.com>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Tested-by: Mathieu Malaterre <malat@debian.org>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/omap3-gta04.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/dma/dma-jz4780.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
-index eee5fa0035071..79d708ce3a93f 100644
---- a/arch/arm/boot/dts/omap3-gta04.dtsi
-+++ b/arch/arm/boot/dts/omap3-gta04.dtsi
-@@ -28,6 +28,7 @@
+diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
+index 987899610b461..edff93aacad36 100644
+--- a/drivers/dma/dma-jz4780.c
++++ b/drivers/dma/dma-jz4780.c
+@@ -587,7 +587,7 @@ static enum dma_status jz4780_dma_tx_status(struct dma_chan *chan,
+ 					to_jz4780_dma_desc(vdesc), 0);
+ 	} else if (cookie == jzchan->desc->vdesc.tx.cookie) {
+ 		txstate->residue = jz4780_dma_desc_residue(jzchan, jzchan->desc,
+-			  (jzchan->curr_hwdesc + 1) % jzchan->desc->count);
++					jzchan->curr_hwdesc + 1);
+ 	} else
+ 		txstate->residue = 0;
  
- 	aliases {
- 		display0 = &lcd;
-+		display1 = &tv0;
- 	};
- 
- 	/* fixed 26MHz oscillator */
 -- 
 2.20.1
 
