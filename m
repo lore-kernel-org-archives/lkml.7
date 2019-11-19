@@ -2,132 +2,145 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D08DBC43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:15:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C84DCC43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:16:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B826D22440
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:15:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D62322440
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:16:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eVXKgI2I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727329AbfKSTPL (ORCPT
+        id S1727394AbfKSTQ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 14:15:11 -0500
-Received: from xavier.telenet-ops.be ([195.130.132.52]:49614 "EHLO
-        xavier.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726711AbfKSTPK (ORCPT
+        Tue, 19 Nov 2019 14:16:27 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:44636 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726939AbfKSTQ0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 14:15:10 -0500
-Received: from ramsan ([84.195.182.253])
-        by xavier.telenet-ops.be with bizsmtp
-        id TvF62100k5USYZQ01vF6vt; Tue, 19 Nov 2019 20:15:07 +0100
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1iX8xu-0008N8-CQ; Tue, 19 Nov 2019 20:15:06 +0100
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1iX8xu-0006ae-9O; Tue, 19 Nov 2019 20:15:06 +0100
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Rob Herring <robh@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Andrew Murray <andrew.murray@arm.com>,
-        Srinath Mannam <srinath.mannam@broadcom.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] PCI: of: Restore alignment/indentation in host bridge window table
-Date:   Tue, 19 Nov 2019 20:15:05 +0100
-Message-Id: <20191119191505.25286-1-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
+        Tue, 19 Nov 2019 14:16:26 -0500
+Received: by mail-pl1-f196.google.com with SMTP id az9so12271525plb.11
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 11:16:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xNq8z5XtG5KO8tgWaEJzHz1qCmBffX1guY4gM/pjvEA=;
+        b=eVXKgI2IjM93eDDhQ1EynosRG3oZTbq4/39Piic0R6q2ar80FuTCHo/oGwZ/kJzLF0
+         xi3rp/RH27oeawYS7HnmLIZ8hwnizmGzKd5mhp/2fmEs8QJTcXsj1aoMid9QUtxHh0jS
+         C58KKN9ozkId0OvoJ+Q6Ifv/oyU9uqh/b6SaIpcVeSp8uE/t1CdkzVxUO7YMth0O8b4r
+         z2VYw1HEyrhpRx8pnMcLoxKq0ZnEUglLUXItBaCEv0QyAmC7SuLLiwx+H3AiS+KUFAwI
+         fpL1/FMtHPHFVKxTjdxzZpxwDK43lg+okztQUOt1brBU+5xOnk74uM9BP/mPrkSdb10+
+         fkqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xNq8z5XtG5KO8tgWaEJzHz1qCmBffX1guY4gM/pjvEA=;
+        b=G4ZnT59CQ6RkOMX3zxaRNrQb0626Ttug9JZefqO7Lh0A4gDjaHL7YqQFPRBAW4SiyZ
+         KqONuk+/l8WThXqNglAiZZu6kyIJ2EuPV//t2KUXtLqYjPW16L5F+zUCgB41UvcEpkUw
+         Y72Lo8V6Tj89KZY2b5toox4c18ngk+nh1CCsQv7M+GnlqYp9NewkfKWSg0wcD6WBIgP1
+         UuJl1u2qh8uO7ubMROWSnkFOIgBubGG1EgMCawYtJhiz/B7wH+gtclWVdz0UFinvXz6o
+         ZS8F7Jx0U/L/AjAQG2CZEnFOmL10mfD1DoosEIaPJ28INGQMr3Mmso0hS6DwK2sq+1UR
+         lsHg==
+X-Gm-Message-State: APjAAAUWfmWaJFMNHH50c3V8bGu66mNx13lpV/XOjzvYiW9bjStwuw0T
+        CXS0aEa3d1bSL1rR/sxMxs5DeeJaY+XoIj0lwGoq3w==
+X-Google-Smtp-Source: APXvYqyAfZ8iphdg2LYP5pGF7y4vhTOtVs4nX4gS1JEZemNK7UZsDn+akGWXkMl0CcqMxHIzqs8XhZK+6qvgtASJbBY=
+X-Received: by 2002:a17:90a:ff02:: with SMTP id ce2mr8519075pjb.117.1574190985408;
+ Tue, 19 Nov 2019 11:16:25 -0800 (PST)
+MIME-Version: 1.0
+References: <1573812972-10529-1-git-send-email-alan.maguire@oracle.com> <1573812972-10529-4-git-send-email-alan.maguire@oracle.com>
+In-Reply-To: <1573812972-10529-4-git-send-email-alan.maguire@oracle.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Tue, 19 Nov 2019 11:16:14 -0800
+Message-ID: <CAFd5g473rHeUk6EJ_KnvRin5LrKyW4cNQxNHXmT2zkai5V=q1w@mail.gmail.com>
+Subject: Re: [PATCH v4 linux-kselftest-test 3/6] kunit: allow kunit tests to
+ be loaded as a module
+To:     Alan Maguire <alan.maguire@oracle.com>,
+        David Gow <davidgow@google.com>,
+        Iurii Zaikin <yzaikin@google.com>,
+        "Theodore Ts'o" <tytso@mit.edu>, Kees Cook <keescook@chromium.org>
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        catalin.marinas@arm.com, joe.lawrence@redhat.com,
+        penguin-kernel@i-love.sakura.ne.jp, schowdary@nvidia.com,
+        urezki@gmail.com, andriy.shevchenko@linux.intel.com,
+        Jonathan Corbet <corbet@lwn.net>, adilger.kernel@dilger.ca,
+        Luis Chamberlain <mcgrof@kernel.org>, changbin.du@intel.com,
+        linux-ext4@vger.kernel.org,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Knut Omang <knut.omang@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the printing of the inbound resources was added, alignment and
-indentation of the host bridge window table is broken because of two
-reasons:
-  1. The "IB MEM" row header is longer than the other headers,
-  2. Inbound ranges typically extend beyond 32-bit address space, and thus
-     don't fit in "#010llx".
+On Fri, Nov 15, 2019 at 2:16 AM Alan Maguire <alan.maguire@oracle.com> wrote:
+>
+> As tests are added to kunit, it will become less feasible to execute
+> all built tests together.  By supporting modular tests we provide
+> a simple way to do selective execution on a running system; specifying
+>
+> CONFIG_KUNIT=y
+> CONFIG_KUNIT_EXAMPLE_TEST=m
+>
+> ...means we can simply "insmod example-test.ko" to run the tests.
+>
+> To achieve this we need to do the following:
+>
+> o export the required symbols in kunit
+> o string-stream tests utilize non-exported symbols so for now we skip
+>   building them when CONFIG_KUNIT_TEST=m.
+> o support a new way of declaring test suites.  Because a module cannot
+>   do multiple late_initcall()s, we provide a kunit_test_suites() macro
+>   to declare multiple suites within the same module at once.
+> o some test module names would have been too general ("test-test"
+>   and "example-test" for kunit tests, "inode-test" for ext4 tests);
+>   rename these as appropriate ("kunit-test", "kunit-example-test"
+>   and "ext4-inode-test" respectively).
 
-Fix this by extending the row header field to 6 characters, and the
-format string to 40-bit addresses.
+Hmm...should we maybe apply this naming scheme to all the tests then?
+I think Kees might have suggested this. I am actually not sure whether
+or not we should and would like to get other people's input.
 
-Use "%6s" to handle field size and right-alignment, instead of manual
-preparation using error-prone snprintf() calls.  Use the exact same
-format string for both cases, to allow sharing.
+It is a valid point that test-test or example-test are too general of
+names for modules, but if this is the case, I think that inode-test is
+probably too general as well. But if we are going that far, maybe we
+should rename everything *-kunit-test.c.
 
-Impact on kernel boot log on r8a7791/koelsch:
-
-     rcar-pcie fe000000.pcie: host bridge /soc/pcie@fe000000 ranges:
-    -rcar-pcie fe000000.pcie:    IO 0xfe100000..0xfe1fffff -> 0x00000000
-    -rcar-pcie fe000000.pcie:   MEM 0xfe200000..0xfe3fffff -> 0xfe200000
-    -rcar-pcie fe000000.pcie:   MEM 0x30000000..0x37ffffff -> 0x30000000
-    -rcar-pcie fe000000.pcie:   MEM 0x38000000..0x3fffffff -> 0x38000000
-    -rcar-pcie fe000000.pcie: IB MEM 0x40000000..0xbfffffff -> 0x40000000
-    -rcar-pcie fe000000.pcie: IB MEM 0x200000000..0x2ffffffff -> 0x200000000
-    +rcar-pcie fe000000.pcie:       IO 0x00fe100000..0x00fe1fffff -> 0x0000000000
-    +rcar-pcie fe000000.pcie:      MEM 0x00fe200000..0x00fe3fffff -> 0x00fe200000
-    +rcar-pcie fe000000.pcie:      MEM 0x0030000000..0x0037ffffff -> 0x0030000000
-    +rcar-pcie fe000000.pcie:      MEM 0x0038000000..0x003fffffff -> 0x0038000000
-    +rcar-pcie fe000000.pcie:   IB MEM 0x0040000000..0x00bfffffff -> 0x0040000000
-    +rcar-pcie fe000000.pcie:   IB MEM 0x0200000000..0x02ffffffff -> 0x0200000000
-
-Fixes: 52ac576f88f9f701 ("PCI: of: Add inbound resource parsing to helpers")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- drivers/pci/of.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-index e7e12adcff3a3836..81ceeaa6f1d5a2c5 100644
---- a/drivers/pci/of.c
-+++ b/drivers/pci/of.c
-@@ -265,7 +265,7 @@ static int devm_of_pci_get_host_bridge_resources(struct device *dev,
- 	struct resource *bus_range;
- 	struct of_pci_range range;
- 	struct of_pci_range_parser parser;
--	char range_type[4];
-+	const char *range_type;
- 	int err;
- 
- 	if (io_base)
-@@ -299,12 +299,12 @@ static int devm_of_pci_get_host_bridge_resources(struct device *dev,
- 	for_each_of_pci_range(&parser, &range) {
- 		/* Read next ranges element */
- 		if ((range.flags & IORESOURCE_TYPE_BITS) == IORESOURCE_IO)
--			snprintf(range_type, 4, " IO");
-+			range_type = "IO";
- 		else if ((range.flags & IORESOURCE_TYPE_BITS) == IORESOURCE_MEM)
--			snprintf(range_type, 4, "MEM");
-+			range_type = "MEM";
- 		else
--			snprintf(range_type, 4, "err");
--		dev_info(dev, "  %s %#010llx..%#010llx -> %#010llx\n",
-+			range_type = "err";
-+		dev_info(dev, "  %6s %#012llx..%#012llx -> %#012llx\n",
- 			 range_type, range.cpu_addr,
- 			 range.cpu_addr + range.size - 1, range.pci_addr);
- 
-@@ -359,8 +359,8 @@ static int devm_of_pci_get_host_bridge_resources(struct device *dev,
- 		    range.cpu_addr == OF_BAD_ADDR || range.size == 0)
- 			continue;
- 
--		dev_info(dev, "IB MEM %#010llx..%#010llx -> %#010llx\n",
--			 range.cpu_addr,
-+		dev_info(dev, "  %6s %#012llx..%#012llx -> %#012llx\n",
-+			 "IB MEM", range.cpu_addr,
- 			 range.cpu_addr + range.size - 1, range.pci_addr);
- 
- 
--- 
-2.17.1
-
+> Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+> Signed-off-by: Knut Omang <knut.omang@oracle.com>
+> ---
+>  fs/ext4/Kconfig                |   2 +-
+>  fs/ext4/Makefile               |   5 +
+>  fs/ext4/inode-test.c           |   4 +-
+>  include/kunit/test.h           |  35 +++--
+>  kernel/sysctl-test.c           |   4 +-
+>  lib/Kconfig.debug              |   4 +-
+>  lib/kunit/Kconfig              |   4 +-
+>  lib/kunit/Makefile             |  10 +-
+>  lib/kunit/assert.c             |   8 +
+>  lib/kunit/example-test.c       |  88 -----------
+>  lib/kunit/kunit-example-test.c |  90 +++++++++++
+>  lib/kunit/kunit-test.c         | 334 +++++++++++++++++++++++++++++++++++++++++
+>  lib/kunit/string-stream-test.c |   2 +-
+>  lib/kunit/test-test.c          | 333 ----------------------------------------
+>  lib/kunit/test.c               |   8 +
+>  lib/kunit/try-catch.c          |   2 +
+>  lib/list-test.c                |   4 +-
+>  17 files changed, 494 insertions(+), 443 deletions(-)
+>  delete mode 100644 lib/kunit/example-test.c
+>  create mode 100644 lib/kunit/kunit-example-test.c
+>  create mode 100644 lib/kunit/kunit-test.c
+>  delete mode 100644 lib/kunit/test-test.c
