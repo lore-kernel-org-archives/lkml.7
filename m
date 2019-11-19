@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE5CC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:34:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80E01C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:34:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFD5E20862
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:34:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 476C8214DE
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:34:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141661;
-	bh=n6QzZCLFvjcRY9Gen25EumCUyRvB0LU/DHo9DES47YM=;
+	s=default; t=1574141672;
+	bh=Qm0LlYR6QOexdgjcFK6pfnyQ30ddksaltJsl7gtvWFc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nqFQ/ogzwecwjV08RBZNDbsBrpwbp/jsRO+TpMozwHJam908lq2YK/i8cIhuHggfe
-	 o7BayunHzVxLa/eIWRp2aHrrlwVnIiyjf2t0WQbsJQG7HkjlAOSJT3GMKNeL6+wnot
-	 6hCuqNRZnVVAQlaxQhcs+fZm3p40lbXC3fYKhaKA=
+	b=QdzGmPNbxfYvc+phvUDBZUVs2CJzg0wJAIvGIh5/M30+w+V5vFvL9B3RQ0Nldbgyz
+	 1YDob1tPHupxP7+Pn6ySJAJYG49iwZMAo80VrixLRLopBhUTymgIR071LqiXdrdnlA
+	 gqtaZTGcoUU+mTnm5y3oU5uOZge8RlXZZ557eXj0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729638AbfKSFeU (ORCPT
+        id S1729680AbfKSFeb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:34:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55012 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:34:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55216 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729631AbfKSFeR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:34:17 -0500
+        id S1729665AbfKSFe2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:34:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6614F20672;
-        Tue, 19 Nov 2019 05:34:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC52320862;
+        Tue, 19 Nov 2019 05:34:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141656;
-        bh=n6QzZCLFvjcRY9Gen25EumCUyRvB0LU/DHo9DES47YM=;
+        s=default; t=1574141667;
+        bh=Qm0LlYR6QOexdgjcFK6pfnyQ30ddksaltJsl7gtvWFc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VuTh8EkfacZIgIWA0je7ab1Oh17Uw8hn+Et95imG702PlNCRsb7yITDdiiNeWTkLv
-         5egzIzmHP5f7ZRV9wPE/XPTRGbyFXK6lbl+siX5li7Gdim7B6Agvti/J8CA4gnETod
-         bHsNd2cLPHE/8ExljaR3fe633XmQUwOQ/FQI8aWY=
+        b=IfWVEgGJ3pzefJKGkRZU95QgwCwkp0nnaPsPFaT3nQm6HPKAMQ6++LMtSwtWraAOU
+         gi+LQwZ4cfhCAaRGggn4YOe70tykuemaJC/J8uOj24PGT10Kd5Yxl8YZ4JH72xc7Iv
+         7cq4BFuBuJwY1XufpRkIV4s4Obn97q8iEEuYvwJ0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julian Wiedmann <jwi@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Michael Kelley <mikelley@microsoft.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 236/422] s390/qeth: invoke softirqs after napi_schedule()
-Date:   Tue, 19 Nov 2019 06:17:13 +0100
-Message-Id: <20191119051414.378040494@linuxfoundation.org>
+Subject: [PATCH 4.19 240/422] PCI/ACPI: Correct error message for ASPM disabling
+Date:   Tue, 19 Nov 2019 06:17:17 +0100
+Message-Id: <20191119051414.585379292@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -60,60 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julian Wiedmann <jwi@linux.ibm.com>
+From: Sinan Kaya <okaya@kernel.org>
 
-[ Upstream commit 4d19db777a2f32c9b76f6fd517ed8960576cb43e ]
+[ Upstream commit 1ad61b612b95980a4d970c52022aa01dfc0f6068 ]
 
-Calling napi_schedule() from process context does not ensure that the
-NET_RX softirq is run in a timely fashion. So trigger it manually.
+If _OSC execution fails today for platforms without an _OSC entry, code is
+printing a misleading message saying disabling ASPM as follows:
 
-This is no big issue with current code. A call to ndo_open() is usually
-followed by a ndo_set_rx_mode() call, and for qeth this contains a
-spin_unlock_bh(). Except for OSN, where qeth_l2_set_rx_mode() bails out
-early.
-Nevertheless it's best to not depend on this behaviour, and just fix
-the issue at its source like all other drivers do. For instance see
-commit 83a0c6e58901 ("i40e: Invoke softirqs after napi_reschedule").
+  acpi PNP0A03:00: _OSC failed (AE_NOT_FOUND); disabling ASPM
 
-Fixes: a1c3ed4c9ca0 ("qeth: NAPI support for l2 and l3 discipline")
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+We need to ensure that platform supports ASPM to begin with.
+
+Reported-by: Michael Kelley <mikelley@microsoft.com>
+Signed-off-by: Sinan Kaya <okaya@kernel.org>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/net/qeth_l2_main.c | 3 +++
- drivers/s390/net/qeth_l3_main.c | 3 +++
- 2 files changed, 6 insertions(+)
+ drivers/acpi/pci_root.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/s390/net/qeth_l2_main.c b/drivers/s390/net/qeth_l2_main.c
-index c1c35eccd5b65..95669d47c389e 100644
---- a/drivers/s390/net/qeth_l2_main.c
-+++ b/drivers/s390/net/qeth_l2_main.c
-@@ -789,7 +789,10 @@ static int __qeth_l2_open(struct net_device *dev)
- 
- 	if (qdio_stop_irq(card->data.ccwdev, 0) >= 0) {
- 		napi_enable(&card->napi);
-+		local_bh_disable();
- 		napi_schedule(&card->napi);
-+		/* kick-start the NAPI softirq: */
-+		local_bh_enable();
- 	} else
- 		rc = -EIO;
- 	return rc;
-diff --git a/drivers/s390/net/qeth_l3_main.c b/drivers/s390/net/qeth_l3_main.c
-index 9c5e801b3f6cb..52e0ae4dc7241 100644
---- a/drivers/s390/net/qeth_l3_main.c
-+++ b/drivers/s390/net/qeth_l3_main.c
-@@ -2414,7 +2414,10 @@ static int __qeth_l3_open(struct net_device *dev)
- 
- 	if (qdio_stop_irq(card->data.ccwdev, 0) >= 0) {
- 		napi_enable(&card->napi);
-+		local_bh_disable();
- 		napi_schedule(&card->napi);
-+		/* kick-start the NAPI softirq: */
-+		local_bh_enable();
- 	} else
- 		rc = -EIO;
- 	return rc;
+diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+index 7433035ded955..e465e720eab20 100644
+--- a/drivers/acpi/pci_root.c
++++ b/drivers/acpi/pci_root.c
+@@ -455,8 +455,9 @@ static void negotiate_os_control(struct acpi_pci_root *root, int *no_aspm)
+ 	decode_osc_support(root, "OS supports", support);
+ 	status = acpi_pci_osc_support(root, support);
+ 	if (ACPI_FAILURE(status)) {
+-		dev_info(&device->dev, "_OSC failed (%s); disabling ASPM\n",
+-			 acpi_format_exception(status));
++		dev_info(&device->dev, "_OSC failed (%s)%s\n",
++			 acpi_format_exception(status),
++			 pcie_aspm_support_enabled() ? "; disabling ASPM" : "");
+ 		*no_aspm = 1;
+ 		return;
+ 	}
 -- 
 2.20.1
 
