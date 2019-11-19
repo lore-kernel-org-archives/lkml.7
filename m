@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A72F2C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:26:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47590C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:26:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FB0B21823
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:26:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1023321939
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:26:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141186;
-	bh=Q4mGNBQr66Q94q9GgnenfCd+MuSvKRlgye09kJ8YuMQ=;
+	s=default; t=1574141191;
+	bh=V4E15JTP8Ncram5dpMtDGj4oBuQLPirvzgjhs8k4/tk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J0lubsOkXuhgLUySytpX/4PwAxSe5kCFC6NT4K22b451g0UNMVMZzqf2RwKNveQEm
-	 s8kr/4OnMPhrtTdwSWKAVg/b8LhRxG+6ovwWGOm7VXlkWk3iUe+Y+ngHG6mKYHsXxu
-	 qBMVM9zB5MSuafzppVjtgG+i0jT+A9YgvRjbB7Ag=
+	b=iXwhXuG7BZBD/Kr6os3UyQIn7QeTEGzRsFOuVqHiLSx1/CXGUpb2o+JUZ8lqxpGxb
+	 3rpXQtfo8t4byd0pnURWu3dRwPzB67Jp2Nb1k47/D8O0DqGW80+qfSiYox6FyNrnCj
+	 XCNX+npIpr8PUPxqVs5prjOXPAlvFdz3wVJ8Er9Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728563AbfKSF0Z (ORCPT
+        id S1728570AbfKSF03 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:26:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44382 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:26:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44442 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727718AbfKSF0V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:26:21 -0500
+        id S1728555AbfKSF0Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:26:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C06AA21823;
-        Tue, 19 Nov 2019 05:26:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67099222ED;
+        Tue, 19 Nov 2019 05:26:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141181;
-        bh=Q4mGNBQr66Q94q9GgnenfCd+MuSvKRlgye09kJ8YuMQ=;
+        s=default; t=1574141183;
+        bh=V4E15JTP8Ncram5dpMtDGj4oBuQLPirvzgjhs8k4/tk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dV/T2qsZarKvrLUKpGXyBAWvujHUJljr3ipsdGSHw//Hq1lngsy5bbOFeMNcV/WH5
-         lCtCsClo6Zs0sqdrYDbtjdqV/BkuebvVHlnisrF7qI4fnCWvx3jba8yReaDGS7txdf
-         uz5LV2aRMhtYBjDSqdN9bugaWAtLrgDa2SCj1AdY=
+        b=J5yxcXlOcecwKKpcbFECt5HKnr6UWSrNda89KGjekr+EwFfzcwJlELRDxJXm80x5v
+         YV57xaRaD7U1TeyUUsLEDGEtaQmkRa7Z0gaSwlzE0QN8A+/obqWh0gWEAZ7DCRTrVF
+         6UVqYB3CAR40orMhRp/vFY/28NVcuCC0xX6bpcbw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Andrzej Hajda <a.hajda@samsung.com>,
         Krzysztof Kozlowski <krzk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 072/422] ARM: dts: exynos: Use i2c-gpio for HDMI-DDC on Arndale
-Date:   Tue, 19 Nov 2019 06:14:29 +0100
-Message-Id: <20191119051404.265698564@linuxfoundation.org>
+Subject: [PATCH 4.19 073/422] ARM: dts: exynos: Fix HDMI-HPD line handling on Arndale
+Date:   Tue, 19 Nov 2019 06:14:30 +0100
+Message-Id: <20191119051404.317414910@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -62,86 +62,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andrzej Hajda <a.hajda@samsung.com>
 
-[ Upstream commit 620375c8fdf2f9f5110ed48d6c407cc4b7554f86 ]
+[ Upstream commit 21cb5a27483a3cfdbcb7508a06a30c0a485e1211 ]
 
-HDMI-DDC for unknown reasons doesn't work with Exynos I2C controllers.
-Fortunately i2c-gpio comes to the rescue.
+HDMI-HPD was set active low, moreover by default pincontrol chip sets
+pull-down on the pin. As a result HDMI driver assumes TV is always
+connected regardless of actual state.  The patch fixes it.
 
 Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/exynos5250-arndale.dts  | 28 ++++++++++++++++-------
- arch/arm/boot/dts/exynos5250-pinctrl.dtsi |  6 +++++
- 2 files changed, 26 insertions(+), 8 deletions(-)
+ arch/arm/boot/dts/exynos5250-arndale.dts  | 4 +++-
+ arch/arm/boot/dts/exynos5250-pinctrl.dtsi | 5 +++++
+ 2 files changed, 8 insertions(+), 1 deletion(-)
 
 diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts b/arch/arm/boot/dts/exynos5250-arndale.dts
-index 7a8a5c55701a8..bb3fcd652b5d7 100644
+index bb3fcd652b5d7..9c8ab4b7fb2cf 100644
 --- a/arch/arm/boot/dts/exynos5250-arndale.dts
 +++ b/arch/arm/boot/dts/exynos5250-arndale.dts
-@@ -150,7 +150,7 @@
+@@ -149,9 +149,11 @@
+ };
  
  &hdmi {
++	pinctrl-names = "default";
++	pinctrl-0 = <&hdmi_hpd>;
  	status = "okay";
--	ddc = <&i2c_2>;
-+	ddc = <&i2c_ddc>;
- 	hpd-gpios = <&gpx3 7 GPIO_ACTIVE_LOW>;
+ 	ddc = <&i2c_ddc>;
+-	hpd-gpios = <&gpx3 7 GPIO_ACTIVE_LOW>;
++	hpd-gpios = <&gpx3 7 GPIO_ACTIVE_HIGH>;
  	vdd_osc-supply = <&ldo10_reg>;
  	vdd_pll-supply = <&ldo8_reg>;
-@@ -452,13 +452,6 @@
- 	};
- };
- 
--&i2c_2 {
--	status = "okay";
--	/* used by HDMI DDC */
--	samsung,i2c-sda-delay = <100>;
--	samsung,i2c-max-bus-freq = <66000>;
--};
--
- &i2c_3 {
- 	status = "okay";
- 
-@@ -547,3 +540,22 @@
- 	status = "okay";
- 	samsung,exynos-sataphy-i2c-phandle = <&sata_phy_i2c>;
- };
-+
-+&soc {
-+	/*
-+	 * For unknown reasons HDMI-DDC does not work with Exynos I2C
-+	 * controllers. Lets use software I2C over GPIO pins as a workaround.
-+	 */
-+	i2c_ddc: i2c-gpio {
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&i2c2_gpio_bus>;
-+		status = "okay";
-+		compatible = "i2c-gpio";
-+		gpios = <&gpa0 6 0 /* sda */
-+			 &gpa0 7 0 /* scl */
-+			>;
-+		i2c-gpio,delay-us = <2>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+};
+ 	vdd-supply = <&ldo8_reg>;
 diff --git a/arch/arm/boot/dts/exynos5250-pinctrl.dtsi b/arch/arm/boot/dts/exynos5250-pinctrl.dtsi
-index 6ff6dea29d449..b25d520393b8b 100644
+index b25d520393b8b..d31a68672bfac 100644
 --- a/arch/arm/boot/dts/exynos5250-pinctrl.dtsi
 +++ b/arch/arm/boot/dts/exynos5250-pinctrl.dtsi
-@@ -225,6 +225,12 @@
+@@ -599,6 +599,11 @@
+ 		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
  		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
  	};
- 
-+	i2c2_gpio_bus: i2c2-gpio-bus {
-+		samsung,pins = "gpa0-6", "gpa0-7";
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-+		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
-+	};
 +
- 	uart2_data: uart2-data {
- 		samsung,pins = "gpa1-0", "gpa1-1";
- 		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
++	hdmi_hpd: hdmi-hpd {
++		samsung,pins = "gpx3-7";
++		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
++	};
+ };
+ 
+ &pinctrl_1 {
 -- 
 2.20.1
 
