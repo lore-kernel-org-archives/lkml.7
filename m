@@ -7,168 +7,207 @@ X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39047C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 11:17:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ECBDC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 11:17:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CA8D222DE
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 11:17:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D2C9222F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 11:17:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727781AbfKSLQ7 (ORCPT
+        id S1727802AbfKSLRj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 06:16:59 -0500
-Received: from mx2.suse.de ([195.135.220.15]:56066 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726000AbfKSLQ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 06:16:58 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 7A4B4BA37;
-        Tue, 19 Nov 2019 11:16:55 +0000 (UTC)
-Subject: Re: [PATCH v2 2/3] hwrng: iproc-rng200: Add support for BCM2711
-To:     Stephen Brennan <stephen@brennan.io>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Scott Branden <sbranden@broadcom.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-kernel@lists.infradead.org, Ray Jui <rjui@broadcom.com>,
-        linux-kernel@vger.kernel.org, Eric Anholt <eric@anholt.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com,
+        Tue, 19 Nov 2019 06:17:39 -0500
+Received: from foss.arm.com ([217.140.110.172]:50930 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727296AbfKSLRj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 06:17:39 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 61DDAC86;
+        Tue, 19 Nov 2019 03:17:38 -0800 (PST)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9772B3F703;
+        Tue, 19 Nov 2019 03:17:37 -0800 (PST)
+Date:   Tue, 19 Nov 2019 11:17:35 +0000
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     maz@kernel.org, linux-kernel@vger.kernel.org,
+        Eric Anholt <eric@anholt.net>,
         Stefan Wahren <wahrenst@gmx.net>,
-        Matt Mackall <mpm@selenic.com>, Arnd Bergmann <arnd@arndb.de>,
-        linux-crypto@vger.kernel.org
-References: <20191119061407.69911-1-stephen@brennan.io>
- <20191119061407.69911-3-stephen@brennan.io>
-From:   Matthias Brugger <mbrugger@suse.com>
-Autocrypt: addr=mbrugger@suse.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <83d065b1-da68-2f97-bf9f-d636ee15056f@suse.com>
-Date:   Tue, 19 Nov 2019 12:16:53 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        james.quinlan@broadcom.com, mbrugger@suse.com,
+        phil@raspberrypi.org, jeremy.linton@arm.com,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rpi-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 2/6] dt-bindings: PCI: Add bindings for brcmstb's PCIe
+ device
+Message-ID: <20191119111735.GQ43905@e119886-lin.cambridge.arm.com>
+References: <20191112155926.16476-1-nsaenzjulienne@suse.de>
+ <20191112155926.16476-3-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
-In-Reply-To: <20191119061407.69911-3-stephen@brennan.io>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191112155926.16476-3-nsaenzjulienne@suse.de>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 19/11/2019 07:14, Stephen Brennan wrote:
-> From: Stefan Wahren <wahrenst@gmx.net>
+On Tue, Nov 12, 2019 at 04:59:21PM +0100, Nicolas Saenz Julienne wrote:
+> From: Jim Quinlan <james.quinlan@broadcom.com>
 > 
-> BCM2711 features a RNG200 hardware random number generator block.
-> So make the driver available.
+> The DT bindings description of the brcmstb PCIe device is described.
+> This node can only be used for now on the Raspberry Pi 4.
 > 
-> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-> Signed-off-by: Stephen Brennan <stephen@brennan.io>
-
-Reviewed-by: Matthias Brugger <mbrugger@suse.com>
-
+> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+> Co-developed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> 
 > ---
->  drivers/char/hw_random/Kconfig        | 2 +-
->  drivers/char/hw_random/iproc-rng200.c | 1 +
->  2 files changed, 2 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
-> index 7c7fecfa2fb2..77e848fca531 100644
-> --- a/drivers/char/hw_random/Kconfig
-> +++ b/drivers/char/hw_random/Kconfig
-> @@ -90,7 +90,7 @@ config HW_RANDOM_BCM2835
->  
->  config HW_RANDOM_IPROC_RNG200
->  	tristate "Broadcom iProc/STB RNG200 support"
-> -	depends on ARCH_BCM_IPROC || ARCH_BRCMSTB
-> +	depends on ARCH_BCM_IPROC || ARCH_BCM2835 || ARCH_BRCMSTB
->  	default HW_RANDOM
->  	---help---
->  	  This driver provides kernel-side support for the RNG200
-> diff --git a/drivers/char/hw_random/iproc-rng200.c b/drivers/char/hw_random/iproc-rng200.c
-> index 899ff25f4f28..32d9fe61a225 100644
-> --- a/drivers/char/hw_random/iproc-rng200.c
-> +++ b/drivers/char/hw_random/iproc-rng200.c
-> @@ -213,6 +213,7 @@ static int iproc_rng200_probe(struct platform_device *pdev)
->  }
->  
->  static const struct of_device_id iproc_rng200_of_match[] = {
-> +	{ .compatible = "brcm,bcm2711-rng200", },
->  	{ .compatible = "brcm,bcm7211-rng200", },
->  	{ .compatible = "brcm,bcm7278-rng200", },
->  	{ .compatible = "brcm,iproc-rng200", },
+> Changes since v1:
+>   - Fix commit Subject
+>   - Remove linux,pci-domain
+> 
+> This was based on Jim's original submission[1], converted to yaml and
+> adapted to the RPi4 case.
+> 
+> [1] https://patchwork.kernel.org/patch/10605937/
+> 
+>  .../bindings/pci/brcm,stb-pcie.yaml           | 110 ++++++++++++++++++
+>  1 file changed, 110 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> new file mode 100644
+> index 000000000000..4cbb18821300
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> @@ -0,0 +1,110 @@
+> +# SPDX-License-Identifier: GPL-2.0
+
+I think in the last revision Rob asked you to change the license to
+the following:
+
+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+
+Thanks,
+
+Andrew Murray
+
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pci/brcm,stb-pcie.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Brcmstb PCIe Host Controller Device Tree Bindings
+> +
+> +maintainers:
+> +  - Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> +
+> +properties:
+> +  compatible:
+> +    const: brcm,bcm2711-pcie # The Raspberry Pi 4
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    minItems: 1
+> +    maxItems: 2
+> +    items:
+> +      - description: PCIe host controller
+> +      - description: builtin MSI controller
+> +
+> +  interrupt-names:
+> +    minItems: 1
+> +    maxItems: 2
+> +    items:
+> +      - const: pcie
+> +      - const: msi
+> +
+> +  "#address-cells":
+> +    const: 3
+> +
+> +  "#size-cells":
+> +    const: 2
+> +
+> +  "#interrupt-cells":
+> +    const: 1
+> +
+> +  interrupt-map-mask: true
+> +
+> +  interrupt-map: true
+> +
+> +  ranges: true
+> +
+> +  dma-ranges: true
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    items:
+> +      - const: sw_pcie
+> +
+> +  msi-controller:
+> +    description: Identifies the node as an MSI controller.
+> +    type: boolean
+> +
+> +  msi-parent:
+> +    description: MSI controller the device is capable of using.
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +
+> +  brcm,enable-ssc:
+> +    description: Indicates usage of spread-spectrum clocking.
+> +    type: boolean
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +  - "#interrupt-cells"
+> +  - interrupt-map-mask
+> +  - interrupt-map
+> +  - ranges
+> +  - dma-ranges
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +    scb {
+> +            #address-cells = <2>;
+> +            #size-cells = <1>;
+> +            pcie0: pcie@7d500000 {
+> +                    compatible = "brcm,bcm2711-pcie";
+> +                    reg = <0x0 0x7d500000 0x9310>;
+> +                    #address-cells = <3>;
+> +                    #size-cells = <2>;
+> +                    #interrupt-cells = <1>;
+> +                    interrupts = <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>,
+> +                                 <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
+> +                    interrupt-names = "pcie", "msi";
+> +                    interrupt-map-mask = <0x0 0x0 0x0 0x7>;
+> +                    interrupt-map = <0 0 0 1 &gicv2 GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH
+> +                                     0 0 0 2 &gicv2 GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH
+> +                                     0 0 0 3 &gicv2 GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH
+> +                                     0 0 0 4 &gicv2 GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>;
+> +                    msi-parent = <&pcie0>;
+> +                    msi-controller;
+> +                    ranges = <0x02000000 0x0 0xf8000000 0x6 0x00000000 0x0 0x04000000>;
+> +                    dma-ranges = <0x02000000 0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>;
+> +                    brcm,enable-ssc;
+> +            };
+> +    };
+> -- 
+> 2.24.0
 > 
