@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 075AAC33C9F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:03:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFAFAC43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:03:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8CAE22302
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:03:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3C8F20872
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:03:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574143427;
-	bh=VnAEBOD27XWMulR9/EeVPCt6n+USTqJyjGRRcoqKhTc=;
+	s=default; t=1574143422;
+	bh=Y+QVWnNnofIfKEsSwHOQQRLh8sUpAcQANW9LqVyxVs4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MJLVZ1+gHhb1iuYoWdDjF5/EvUcbr/GjJ5xMoK9nJpK/3vNFj1KtHLHFIjUTIO/fW
-	 sd0K84dTU0viros/NO3RKl4mp7xnWNfRMKhqYoWgAZerP4qwELoQMYgu/Brn0xJmUX
-	 DYUjU3RNll5kv4p2teTaVchVKIH0zpuCeOieoaMs=
+	b=Hj8zuTISGAdy2Wl0Nnbn0+2eAfQ8vBT7c0wUMNawF96ceCEgg+56TNAylZZhIAkzV
+	 Umz4SQYgzfkAXaPofSwDl/oJS4XFN6Lv/OIiOpZObK2gRrhGtCnHR98UOqVUraPo3m
+	 DImnm4MhL0qK2/nlz3ia+QC/5uzzcQuatQWOTPVg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730297AbfKSFjd (ORCPT
+        id S1729366AbfKSFjp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:39:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33576 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:39:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33760 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730285AbfKSFj3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:39:29 -0500
+        id S1728329AbfKSFjm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:39:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D01A4208C3;
-        Tue, 19 Nov 2019 05:39:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9FE7208C3;
+        Tue, 19 Nov 2019 05:39:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141968;
-        bh=VnAEBOD27XWMulR9/EeVPCt6n+USTqJyjGRRcoqKhTc=;
+        s=default; t=1574141980;
+        bh=Y+QVWnNnofIfKEsSwHOQQRLh8sUpAcQANW9LqVyxVs4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uD/ry+kBVYsieQoF4rn+pjwiPmpcumYj/tvyd/DdJNGlq0joSa+n8yRrDn4+YERP7
-         wzCspRkpJg0MlEmeIJyhT19LJ4CQ0avx1GKzFdqLMd/k7w1L2A4V2yoRxpHp+2vZKJ
-         g2vJQQTvtXSQNmWHMpHn+clwKqmJrgGM7Bq3ExLk=
+        b=j8yXsJDlLEvCfUJ3yvUnORiYVpmv009jHcvLk+83IIfnggXjdWEksV//V7H3mTAPI
+         4tGiLLncnJ4WpkjwdO0R3oAacBbiLhQcDEq4OsBUAanTH8/Mo/ixq4ed4zMK5clFUr
+         FUZCiIGYG++6rGitL/oBnGg3Vfh6i4eVi+vO4j2o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anson Huang <Anson.Huang@nxp.com>,
-        =?UTF-8?q?S=C3=A9bastien=20Szymanski?= 
-        <sebastien.szymanski@armadeus.com>,
-        Shawn Guo <shawnguo@kernel.org>,
+        stable@vger.kernel.org,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 341/422] ARM: dts: imx6ull: update vdd_soc voltage for 900MHz operating point
-Date:   Tue, 19 Nov 2019 06:18:58 +0100
-Message-Id: <20191119051421.112711980@linuxfoundation.org>
+Subject: [PATCH 4.19 345/422] coresight: Fix handling of sinks
+Date:   Tue, 19 Nov 2019 06:19:02 +0100
+Message-Id: <20191119051421.369859388@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -62,35 +61,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-[ Upstream commit 245f880c25dbd8927af0f33aa5d1404370013957 ]
+[ Upstream commit c71369de02b285d9da526a526d8f2affc7b17c59 ]
 
-Update VDD_SOC voltage to 1.25V for 900MHz operating point
-according to datasheet Rev. 1.3, 08/2018, 25mV is added to
-the minimum allowed values to cover power supply ripple.
+The coresight components could be operated either in sysfs mode or in perf
+mode. For some of the components, the mode of operation doesn't matter as
+they simply relay the data to the next component in the trace path. But for
+sinks, they need to be able to provide the trace data back to the user.
+Thus we need to make sure that "mode" is handled appropriately. e.g,
+the sysfs mode could have multiple sources driving the trace data, while
+perf mode doesn't allow sharing the sink.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Reviewed-by: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+The coresight_enable_sink() however doesn't really allow this check to
+trigger as it skips the "enable_sink" callback if the component is
+already enabled, irrespective of the mode. This could cause mixing
+of data from different modes or even same mode (in perf), if the
+sources are different. Also, if we fail to enable the sink while
+enabling a path (where sink is the first component enabled),
+we could end up in disabling the components in the "entire"
+path which were not enabled in this trial, causing disruptions
+in the existing trace paths.
+
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx6ull.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hwtracing/coresight/coresight.c | 22 +++++++++++++++-------
+ 1 file changed, 15 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6ull.dtsi b/arch/arm/boot/dts/imx6ull.dtsi
-index cd1776a7015ac..796ed35d4ac9a 100644
---- a/arch/arm/boot/dts/imx6ull.dtsi
-+++ b/arch/arm/boot/dts/imx6ull.dtsi
-@@ -22,7 +22,7 @@
- 	>;
- 	fsl,soc-operating-points = <
- 		/* KHz	uV */
--		900000	1175000
-+		900000	1250000
- 		792000	1175000
- 		528000	1175000
- 		396000	1175000
+diff --git a/drivers/hwtracing/coresight/coresight.c b/drivers/hwtracing/coresight/coresight.c
+index 3e07fd335f8cf..c0dabbddc1e49 100644
+--- a/drivers/hwtracing/coresight/coresight.c
++++ b/drivers/hwtracing/coresight/coresight.c
+@@ -132,12 +132,14 @@ static int coresight_enable_sink(struct coresight_device *csdev, u32 mode)
+ {
+ 	int ret;
+ 
+-	if (!csdev->enable) {
+-		if (sink_ops(csdev)->enable) {
+-			ret = sink_ops(csdev)->enable(csdev, mode);
+-			if (ret)
+-				return ret;
+-		}
++	/*
++	 * We need to make sure the "new" session is compatible with the
++	 * existing "mode" of operation.
++	 */
++	if (sink_ops(csdev)->enable) {
++		ret = sink_ops(csdev)->enable(csdev, mode);
++		if (ret)
++			return ret;
+ 		csdev->enable = true;
+ 	}
+ 
+@@ -339,8 +341,14 @@ int coresight_enable_path(struct list_head *path, u32 mode)
+ 		switch (type) {
+ 		case CORESIGHT_DEV_TYPE_SINK:
+ 			ret = coresight_enable_sink(csdev, mode);
++			/*
++			 * Sink is the first component turned on. If we
++			 * failed to enable the sink, there are no components
++			 * that need disabling. Disabling the path here
++			 * would mean we could disrupt an existing session.
++			 */
+ 			if (ret)
+-				goto err;
++				goto out;
+ 			break;
+ 		case CORESIGHT_DEV_TYPE_SOURCE:
+ 			/* sources are enabled from either sysFS or Perf */
 -- 
 2.20.1
 
