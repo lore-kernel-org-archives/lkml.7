@@ -5,48 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A60C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:46:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1642C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:46:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F5952071B
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:46:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8948D2075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:46:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142407;
-	bh=ib4vu3ssWv+BcS446FDJwbNCxuG0zk6e/VuXGHHpq9s=;
+	s=default; t=1574142409;
+	bh=JMzbT0jpHdIV1pZ8eUDKVYmn7oMS7LIGuRRUm5UaNrk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a4wAOtQaCriBYVGXBcSy27g1Ob1jaSw3gNQV674Z/YffATKDnJ4XH0CvgNI5ZFJuM
-	 AUEiX7dylmuj0j22SHG74jUXz+JFRcI6iW0BkSI78yIVcidM8Bj92cltneGzaJy4T2
-	 jjnkCJRTPHFF0r2z0NtEbiblrBSXmhf17A/GwKMM=
+	b=jy5ougcdh7OVK6eldTJCvnqbfWN0I4jAjZ8WbjGQE+IfNEfBam3zoj9PAC0OzW5Kk
+	 WvNPNFSb/gY4ArsVWgpKV+SubgElu/C8bl9/FyUKQG0lIcsGp8+LPu3PT8DtKdF9tq
+	 QWwFIpgfpIHF8DB8xcK074O7u24c8fcEwuUtQgIo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731140AbfKSFqq (ORCPT
+        id S1731154AbfKSFqs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:46:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42824 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:46:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730839AbfKSFqk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:46:40 -0500
+        id S1731128AbfKSFqq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:46:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BD6A2071B;
-        Tue, 19 Nov 2019 05:46:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DBD32075E;
+        Tue, 19 Nov 2019 05:46:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142399;
-        bh=ib4vu3ssWv+BcS446FDJwbNCxuG0zk6e/VuXGHHpq9s=;
+        s=default; t=1574142405;
+        bh=JMzbT0jpHdIV1pZ8eUDKVYmn7oMS7LIGuRRUm5UaNrk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2IkxXuGSiQ4PicaBuZmEwZoCd8zv5Qi1TL4UyHbAnP3vT2gMXJynurbpff9KWPl7Y
-         WMfjqW/KPM/qEBIyDFt0ZnTkrfT3UYpKZcCKbR/8j6hd/nvzmyrpjaLwEcma1uCYwx
-         T1dfzd4+rG6L8sMOuwopVNVough03EAk/r1jZAxI=
+        b=tJlk2pi0hfnIfS2PckIXQFdEwbLVu4k2lE2B7T79l0zgs5IBdelmm/F8WR58iKtq0
+         SfzyXz/C8AEex3yKf2f0nt32dZ+pA7MhqLBkYpp/Rwm8w+6EPSGBMGByznE5VX3++J
+         maeQV4Gv8CMpmS9StpPgK+FpievA1N0LtU2Rz6t0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        stable@vger.kernel.org, Erik Stromdahl <erik.stromdahl@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 041/239] ALSA: seq: Do error checks at creating system ports
-Date:   Tue, 19 Nov 2019 06:17:21 +0100
-Message-Id: <20191119051305.553503093@linuxfoundation.org>
+Subject: [PATCH 4.14 069/239] ath10k: wmi: disable softirqs while calling ieee80211_rx
+Date:   Tue, 19 Nov 2019 06:17:49 +0100
+Message-Id: <20191119051312.930008187@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -59,69 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Erik Stromdahl <erik.stromdahl@gmail.com>
 
-[ Upstream commit b8e131542b47b81236ecf6768c923128e1f5db6e ]
+[ Upstream commit 37f62c0d5822f631b786b29a1b1069ab714d1a28 ]
 
-snd_seq_system_client_init() doesn't check the errors returned from
-its port creations.  Let's do it properly and handle the error paths.
+This is done in order not to trig the below warning in
+ieee80211_rx_napi:
 
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+WARN_ON_ONCE(softirq_count() == 0);
+
+ieee80211_rx_napi requires that softirq's are disabled during
+execution.
+
+The High latency bus drivers (SDIO and USB) sometimes call the wmi
+ep_rx_complete callback from non softirq context, resulting in a trigger
+of the above warning.
+
+Calling ieee80211_rx_ni with softirq's already disabled (e.g., from
+softirq context) should be safe as the local_bh_disable and
+local_bh_enable functions (called from ieee80211_rx_ni) are fully
+reentrant.
+
+Signed-off-by: Erik Stromdahl <erik.stromdahl@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/core/seq/seq_system.c | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
+ drivers/net/wireless/ath/ath10k/wmi.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/sound/core/seq/seq_system.c b/sound/core/seq/seq_system.c
-index 8ce1d0b40dce1..ce1f1e4727ab1 100644
---- a/sound/core/seq/seq_system.c
-+++ b/sound/core/seq/seq_system.c
-@@ -123,6 +123,7 @@ int __init snd_seq_system_client_init(void)
- {
- 	struct snd_seq_port_callback pcallbacks;
- 	struct snd_seq_port_info *port;
-+	int err;
+diff --git a/drivers/net/wireless/ath/ath10k/wmi.c b/drivers/net/wireless/ath/ath10k/wmi.c
+index ab8eb9cdfda0f..4d6c2986c40dd 100644
+--- a/drivers/net/wireless/ath/ath10k/wmi.c
++++ b/drivers/net/wireless/ath/ath10k/wmi.c
+@@ -2414,7 +2414,8 @@ int ath10k_wmi_event_mgmt_rx(struct ath10k *ar, struct sk_buff *skb)
+ 		   status->freq, status->band, status->signal,
+ 		   status->rate_idx);
  
- 	port = kzalloc(sizeof(*port), GFP_KERNEL);
- 	if (!port)
-@@ -144,7 +145,10 @@ int __init snd_seq_system_client_init(void)
- 	port->flags = SNDRV_SEQ_PORT_FLG_GIVEN_PORT;
- 	port->addr.client = sysclient;
- 	port->addr.port = SNDRV_SEQ_PORT_SYSTEM_TIMER;
--	snd_seq_kernel_client_ctl(sysclient, SNDRV_SEQ_IOCTL_CREATE_PORT, port);
-+	err = snd_seq_kernel_client_ctl(sysclient, SNDRV_SEQ_IOCTL_CREATE_PORT,
-+					port);
-+	if (err < 0)
-+		goto error_port;
- 
- 	/* register announcement port */
- 	strcpy(port->name, "Announce");
-@@ -154,16 +158,24 @@ int __init snd_seq_system_client_init(void)
- 	port->flags = SNDRV_SEQ_PORT_FLG_GIVEN_PORT;
- 	port->addr.client = sysclient;
- 	port->addr.port = SNDRV_SEQ_PORT_SYSTEM_ANNOUNCE;
--	snd_seq_kernel_client_ctl(sysclient, SNDRV_SEQ_IOCTL_CREATE_PORT, port);
-+	err = snd_seq_kernel_client_ctl(sysclient, SNDRV_SEQ_IOCTL_CREATE_PORT,
-+					port);
-+	if (err < 0)
-+		goto error_port;
- 	announce_port = port->addr.port;
- 
- 	kfree(port);
- 	return 0;
+-	ieee80211_rx(ar->hw, skb);
++	ieee80211_rx_ni(ar->hw, skb);
 +
-+ error_port:
-+	snd_seq_system_client_done();
-+	kfree(port);
-+	return err;
+ 	return 0;
  }
- 
- 
- /* unregister our internal client */
--void __exit snd_seq_system_client_done(void)
-+void snd_seq_system_client_done(void)
- {
- 	int oldsysclient = sysclient;
  
 -- 
 2.20.1
