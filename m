@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1BDBC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:49:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0FBBC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:49:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 904B720862
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:49:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5CB220862
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:49:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142579;
-	bh=DgnMDlLLXfeQeKctRy7xaYZdYGgwE1jsdDjdNnqBmGA=;
+	s=default; t=1574142583;
+	bh=Vooz1Os3ADptGxCHgQSrrCLjgPdhf0blMOl7JrvYjUE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cd+QeniaJjpekznDrZxz6OjaeCkedWc95omsqImjMKh0kk23WlR+1DbOkSVk1kadE
-	 DkNCgmYYm1RbmGErVVuuoGVOer/tSMtrvlbq4Bl/F30wNEP9NbsfqPr+gFvzfa5GYI
-	 +M3t+vlSYymUjHf0NXkh3QkuGjw2LS4LYkhK7bIk=
+	b=OxLIuqVya673DspCA1+vLGmiLmXGF/gdtQZdw3gINH6z0SDHQaKlp/I4ievNWT6kt
+	 ToQBn0BGNSsCrbfa63qt4rmM4drd5MQPVNRACeEZFun0Sy+yjgdE40gKOfIUkgdRgO
+	 SRLVSf3jjhPJY5QCMNBPYiV0OPlRL8tc4T2nFqxY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731519AbfKSFti (ORCPT
+        id S1731525AbfKSFtm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:49:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46444 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:49:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731486AbfKSFtg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:49:36 -0500
+        id S1728994AbfKSFtk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:49:40 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B65820721;
-        Tue, 19 Nov 2019 05:49:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2AB4220721;
+        Tue, 19 Nov 2019 05:49:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142576;
-        bh=DgnMDlLLXfeQeKctRy7xaYZdYGgwE1jsdDjdNnqBmGA=;
+        s=default; t=1574142579;
+        bh=Vooz1Os3ADptGxCHgQSrrCLjgPdhf0blMOl7JrvYjUE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CjuqBj+lpMPdvbbEaLVcPnbiuP2rf1gEM3g2kxqnKNV0KFAWXvgZAwAmE7VJdKnI0
-         QoDit+l+0CRAyLUkv/FNWztkwahgj9TUttt9HDRYfyetxUDqMBBRUPvdBo7/NZlTcL
-         exCje0AeX7wyswwWOiVim2S5N97ANBtx1c38f2Ug=
+        b=lqZKd0xRcWSeB6twuWFnDFjYq5PnQo/TIu43w8YahAwsi2oKKHrqerOCLw5IsoW+S
+         UG1Fs8Gv+iY/dXRpZ+cf+0XCKdo35eqGEI8zHvBjN7ZRUqh2PY4oNcLLkwP52Gv3tO
+         GTkAYv8EwTE8mU68zxkNzZTG1K4xVaJh+QpArRuA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        stable@vger.kernel.org, Felix Fietkau <nbd@nbd.name>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 088/239] rtc: pl030: fix possible race condition
-Date:   Tue, 19 Nov 2019 06:18:08 +0100
-Message-Id: <20191119051318.980849038@linuxfoundation.org>
+Subject: [PATCH 4.14 089/239] ath9k: add back support for using active monitor interfaces for tx99
+Date:   Tue, 19 Nov 2019 06:18:09 +0100
+Message-Id: <20191119051319.296217759@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -60,64 +60,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+From: Felix Fietkau <nbd@nbd.name>
 
-[ Upstream commit c778ec85825dc895936940072aea9fe9037db684 ]
+[ Upstream commit 6df0580be8bc30803c4d8b2ed9c2230a2740c795 ]
 
-The IRQ is requested before the struct rtc is allocated and registered, but
-this struct is used in the IRQ handler. This may lead to a NULL pointer
-dereference.
+Various documented examples on how to set up tx99 with ath9k rely
+on setting up a regular monitor interface for setting the channel.
+My previous patch "ath9k: fix tx99 with monitor mode interface" made
+it possible to set it up this way again. However, it was removing support
+for using an active monitor interface, which is required for controlling
+the bitrate as well, since the bitrate is not passed down with a regular
+monitor interface.
 
-Switch to devm_rtc_allocate_device/rtc_register_device to allocate the rtc
-before requesting the IRQ.
+This patch partially reverts the previous one, but keeps support for using
+a regular monitor interface to keep documented steps working in cases
+where the bitrate does not matter
 
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Fixes: d9c52fd17cb48 ("ath9k: fix tx99 with monitor mode interface")
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-pl030.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ drivers/net/wireless/ath/ath9k/ath9k.h |  1 +
+ drivers/net/wireless/ath/ath9k/main.c  | 10 ++++++++--
+ drivers/net/wireless/ath/ath9k/tx99.c  |  7 +++++++
+ drivers/net/wireless/ath/ath9k/xmit.c  |  2 +-
+ 4 files changed, 17 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/rtc/rtc-pl030.c b/drivers/rtc/rtc-pl030.c
-index f85a1a93e669f..343bb6ed17839 100644
---- a/drivers/rtc/rtc-pl030.c
-+++ b/drivers/rtc/rtc-pl030.c
-@@ -112,6 +112,13 @@ static int pl030_probe(struct amba_device *dev, const struct amba_id *id)
- 		goto err_rtc;
- 	}
+diff --git a/drivers/net/wireless/ath/ath9k/ath9k.h b/drivers/net/wireless/ath/ath9k/ath9k.h
+index db2b119199d7b..f9339b5c3624b 100644
+--- a/drivers/net/wireless/ath/ath9k/ath9k.h
++++ b/drivers/net/wireless/ath/ath9k/ath9k.h
+@@ -1074,6 +1074,7 @@ struct ath_softc {
  
-+	rtc->rtc = devm_rtc_allocate_device(&dev->dev);
-+	if (IS_ERR(rtc->rtc)) {
-+		ret = PTR_ERR(rtc->rtc);
-+		goto err_rtc;
+ 	struct ath_spec_scan_priv spec_priv;
+ 
++	struct ieee80211_vif *tx99_vif;
+ 	struct sk_buff *tx99_skb;
+ 	bool tx99_state;
+ 	s16 tx99_power;
+diff --git a/drivers/net/wireless/ath/ath9k/main.c b/drivers/net/wireless/ath/ath9k/main.c
+index 055f869516804..3589f1f3e744d 100644
+--- a/drivers/net/wireless/ath/ath9k/main.c
++++ b/drivers/net/wireless/ath/ath9k/main.c
+@@ -1250,8 +1250,13 @@ static int ath9k_add_interface(struct ieee80211_hw *hw,
+ 	struct ath_vif *avp = (void *)vif->drv_priv;
+ 	struct ath_node *an = &avp->mcast_node;
+ 
+-	if (IS_ENABLED(CONFIG_ATH9K_TX99))
+-		return -EOPNOTSUPP;
++	if (IS_ENABLED(CONFIG_ATH9K_TX99)) {
++		if (sc->cur_chan->nvifs >= 1) {
++			mutex_unlock(&sc->mutex);
++			return -EOPNOTSUPP;
++		}
++		sc->tx99_vif = vif;
++	}
+ 
+ 	mutex_lock(&sc->mutex);
+ 
+@@ -1336,6 +1341,7 @@ static void ath9k_remove_interface(struct ieee80211_hw *hw,
+ 	ath9k_p2p_remove_vif(sc, vif);
+ 
+ 	sc->cur_chan->nvifs--;
++	sc->tx99_vif = NULL;
+ 	if (!ath9k_is_chanctx_enabled())
+ 		list_del(&avp->list);
+ 
+diff --git a/drivers/net/wireless/ath/ath9k/tx99.c b/drivers/net/wireless/ath/ath9k/tx99.c
+index 311547f532bc3..87d09d1e74aa0 100644
+--- a/drivers/net/wireless/ath/ath9k/tx99.c
++++ b/drivers/net/wireless/ath/ath9k/tx99.c
+@@ -54,6 +54,7 @@ static struct sk_buff *ath9k_build_tx99_skb(struct ath_softc *sc)
+ 	struct ieee80211_hdr *hdr;
+ 	struct ieee80211_tx_info *tx_info;
+ 	struct sk_buff *skb;
++	struct ath_vif *avp;
+ 
+ 	skb = alloc_skb(len, GFP_KERNEL);
+ 	if (!skb)
+@@ -71,11 +72,17 @@ static struct sk_buff *ath9k_build_tx99_skb(struct ath_softc *sc)
+ 	memcpy(hdr->addr2, hw->wiphy->perm_addr, ETH_ALEN);
+ 	memcpy(hdr->addr3, hw->wiphy->perm_addr, ETH_ALEN);
+ 
++	if (sc->tx99_vif) {
++		avp = (struct ath_vif *) sc->tx99_vif->drv_priv;
++		hdr->seq_ctrl |= cpu_to_le16(avp->seq_no);
 +	}
 +
-+	rtc->rtc->ops = &pl030_ops;
- 	rtc->base = ioremap(dev->res.start, resource_size(&dev->res));
- 	if (!rtc->base) {
- 		ret = -ENOMEM;
-@@ -128,12 +135,9 @@ static int pl030_probe(struct amba_device *dev, const struct amba_id *id)
- 	if (ret)
- 		goto err_irq;
+ 	tx_info = IEEE80211_SKB_CB(skb);
+ 	memset(tx_info, 0, sizeof(*tx_info));
+ 	rate = &tx_info->control.rates[0];
+ 	tx_info->band = sc->cur_chan->chandef.chan->band;
+ 	tx_info->flags = IEEE80211_TX_CTL_NO_ACK;
++	tx_info->control.vif = sc->tx99_vif;
+ 	rate->count = 1;
+ 	if (ah->curchan && IS_CHAN_HT(ah->curchan)) {
+ 		rate->flags |= IEEE80211_TX_RC_MCS;
+diff --git a/drivers/net/wireless/ath/ath9k/xmit.c b/drivers/net/wireless/ath/ath9k/xmit.c
+index a743e3535d0a8..458c4f53ba5d1 100644
+--- a/drivers/net/wireless/ath/ath9k/xmit.c
++++ b/drivers/net/wireless/ath/ath9k/xmit.c
+@@ -2952,7 +2952,7 @@ int ath9k_tx99_send(struct ath_softc *sc, struct sk_buff *skb,
+ 		return -EINVAL;
+ 	}
  
--	rtc->rtc = rtc_device_register("pl030", &dev->dev, &pl030_ops,
--				       THIS_MODULE);
--	if (IS_ERR(rtc->rtc)) {
--		ret = PTR_ERR(rtc->rtc);
-+	ret = rtc_register_device(rtc->rtc);
-+	if (ret)
- 		goto err_reg;
--	}
+-	ath_set_rates(NULL, NULL, bf);
++	ath_set_rates(sc->tx99_vif, NULL, bf);
  
- 	return 0;
- 
-@@ -154,7 +158,6 @@ static int pl030_remove(struct amba_device *dev)
- 	writel(0, rtc->base + RTC_CR);
- 
- 	free_irq(dev->irq[0], rtc);
--	rtc_device_unregister(rtc->rtc);
- 	iounmap(rtc->base);
- 	amba_release_regions(dev);
- 
+ 	ath9k_hw_set_desc_link(sc->sc_ah, bf->bf_desc, bf->bf_daddr);
+ 	ath9k_hw_tx99_start(sc->sc_ah, txctl->txq->axq_qnum);
 -- 
 2.20.1
 
