@@ -2,105 +2,118 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E621C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:04:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ECD4C43141
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9873206DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:04:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574143483;
-	bh=UI1J+tDPK+dDqNQkuwW+1DwMI88CGJiKXEB/ID8jN98=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hyI8KUYoeZj8UwntSLgWTo7n68So3hmd4NY/0lVDIds3CeViI2AZ+SyvOuyUvN0Nb
-	 Rdqur4u3XcLVpak7alMFrlDVV/MWVM/mY6a1Zo+/1qlTR2xPXK58kI2bm/EKbnEAW1
-	 3lN5Syf06mvJqS+gvI3VlL55/4Posj6VTE4duEr0=
+	by mail.kernel.org (Postfix) with ESMTP id 3096C206DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:04:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pzo7t/rd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729681AbfKSFht (ORCPT
+        id S1729986AbfKSGEp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:37:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59660 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729673AbfKSFhq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:37:46 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1D22206EC;
-        Tue, 19 Nov 2019 05:37:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141865;
-        bh=UI1J+tDPK+dDqNQkuwW+1DwMI88CGJiKXEB/ID8jN98=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X1trF26yzpdlINHSiqygi6TLN4r4sVT/FMvAfKRhVBVw4JTclE2VJd7jsMKGFuIX/
-         rxO7rBSXvnqhk0s/c3qGi8ewWQuSakMWKeJAIX43YqAxPBz8PoCJ95yPXL8+S/D6YG
-         bqeIvEFm4hvNJL2lGfvgkmzlWq1ttt6p0YB3U0DI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Agner <stefan@agner.ch>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 306/422] crypto: arm/crc32 - avoid warning when compiling with Clang
-Date:   Tue, 19 Nov 2019 06:18:23 +0100
-Message-Id: <20191119051418.829007409@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
-References: <20191119051400.261610025@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 19 Nov 2019 01:04:45 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:43217 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728668AbfKSGEm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 01:04:42 -0500
+Received: by mail-lj1-f194.google.com with SMTP id y23so21841560ljh.10;
+        Mon, 18 Nov 2019 22:04:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LWwgCpo+ONcCb1xvseKQ8V1GFmEQ8iCPPdkSeh2r6dE=;
+        b=Pzo7t/rdLPqs5Nh2p+mkIgQ+P64x4igcfBM1hW/EFhKBXktBcoEdHd4i1xc6go+vDe
+         Ki3j3wlgAUso/nWk2wqVzKzEHyoKr/dtEHuCxoUtlQiS/ZyvqlEyCNshAFkDSAGRjNrr
+         Q2fONQKrfaS7iMz21SbEZ4lggxI/mu85xksbOwA2t+cwhB8VFVeJE/A4PGH1GqWi+U+E
+         IbjnhBKUZ/yDt7iVe45EBNvSus8oPgEHqqBXBbU9B5SsPRb+FmJdI7bxh4ROMD0t175A
+         YsWIofbiM8o8V2AyNusI5krU33Z7BdAFg6tCQmqeSJO5pkH75ohFRe9XTUQfCdCVXIbK
+         TqMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LWwgCpo+ONcCb1xvseKQ8V1GFmEQ8iCPPdkSeh2r6dE=;
+        b=JARsTbbGTzUxRijVlvSZ6PTc9FdHBoGKjiP7wULR3/mL2jEmCNvqU3F8M47gzjtwym
+         EEGkwiI7CH72Fl2biL1zYzhdxbiSjUE6PQXLgrphz69gexBM4UPErWuciAjBB0viBrg2
+         mDZc+OIQsE/ril4sknuOEFcZbW16lHA8WO5uUWpzcQDa0UcfHleoCiB9zKaWQJa89qMA
+         YswXwrQ3Zy6auD7pzbsGefbtvNiVO2ChAIqy0Kye30tnR5ntt528fgPDPloaDBJBNN8M
+         OOD9PsLsZXqAKyxBGBkNX1MGkAPbzNIrKCFqoDXoqa+cQUk2PrN5CY+MF9sGxuQrUfkb
+         Ov5w==
+X-Gm-Message-State: APjAAAU78UhCDeWExt/Mag5Mon6XvmamHqJxnnz8n5LE2q2qdXxRTzhl
+        hyeXZCyVh0L/lTSDeH451JEOG1D/zWjD5T2hSuA=
+X-Google-Smtp-Source: APXvYqwtBfqqZPW51aleFh11Rq4IMdt72P+yjWQChrFc5L2+g8hcqM9UfSWGDKHEwtgDfjNdefSRYxkwkV8XSN5wPEs=
+X-Received: by 2002:a2e:970a:: with SMTP id r10mr2346980lji.142.1574143479689;
+ Mon, 18 Nov 2019 22:04:39 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20191114194636.811109457@goodmis.org> <20191114194738.938540273@goodmis.org>
+ <20191115215125.mbqv7taqnx376yed@ast-mbp.dhcp.thefacebook.com> <20191117171835.35af6c0e@gandalf.local.home>
+In-Reply-To: <20191117171835.35af6c0e@gandalf.local.home>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Mon, 18 Nov 2019 22:04:28 -0800
+Message-ID: <CAADnVQ+OzTikM9EhrfsC7NFsVYhATW1SVHxK64w3xn9qpk81pg@mail.gmail.com>
+Subject: Re: [RFC][PATCH 1/2] ftrace: Add modify_ftrace_direct()
+To:     Steven Rostedt <rostedt@goodmis.org>, bpf <bpf@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Agner <stefan@agner.ch>
+On Sun, Nov 17, 2019 at 2:18 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> On Fri, 15 Nov 2019 13:51:26 -0800
+> Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+>
+> > Thanks a lot for implementing it.
+> > Switching to iterator just to modify the call.. hmm.
+> > So "call direct_bpf_A" gets replaced to "call ftrace_stub" to do the iterator
+> > only to patch "call direct_bpf_B" later. I'm struggling to see why do that when
+> > arch can provide call to call rewrite easily. x86 and others have such ability
+> > already. I don't understand why you want to sacrifice simplicity here.
+> > Anyway with all 3 apis (register, modify, unreg) it looks complete.
+> > I'll start playing with it on Monday.
+>
+> Now if you take my latest for-next branch, and add the patch below,
 
-[ Upstream commit cd560235d8f9ddd94aa51e1c4dabdf3212b9b241 ]
+I took your for-next without the extra patch and used it from bpf trampoline.
+It's looking good so far. Passed basic testing. Will add more stress tests.
 
-The table id (second) argument to MODULE_DEVICE_TABLE is often
-referenced otherwise. This is not the case for CPU features. This
-leads to a warning when building the kernel with Clang:
-  arch/arm/crypto/crc32-ce-glue.c:239:33: warning: variable
-    'crc32_cpu_feature' is not needed and will not be emitted
-    [-Wunneeded-internal-declaration]
-  static const struct cpu_feature crc32_cpu_feature[] = {
-                                  ^
-
-Avoid warnings by using __maybe_unused, similar to commit 1f318a8bafcf
-("modules: mark __inittest/__exittest as __maybe_unused").
-
-Fixes: 2a9faf8b7e43 ("crypto: arm/crc32 - enable module autoloading based on CPU feature bits")
-Signed-off-by: Stefan Agner <stefan@agner.ch>
-Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/crypto/crc32-ce-glue.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/crypto/crc32-ce-glue.c b/arch/arm/crypto/crc32-ce-glue.c
-index 96e62ec105d06..cd9e93b46c2dd 100644
---- a/arch/arm/crypto/crc32-ce-glue.c
-+++ b/arch/arm/crypto/crc32-ce-glue.c
-@@ -236,7 +236,7 @@ static void __exit crc32_pmull_mod_exit(void)
- 				  ARRAY_SIZE(crc32_pmull_algs));
+Do you mind doing:
+diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+index 73eb2e93593f..6ddb203ca550 100644
+--- a/include/linux/ftrace.h
++++ b/include/linux/ftrace.h
+@@ -256,16 +256,16 @@ struct ftrace_direct_func
+*ftrace_find_direct_func(unsigned long addr);
+ # define ftrace_direct_func_count 0
+ static inline int register_ftrace_direct(unsigned long ip, unsigned long addr)
+ {
+-       return -ENODEV;
++       return -ENOTSUPP;
  }
- 
--static const struct cpu_feature crc32_cpu_feature[] = {
-+static const struct cpu_feature __maybe_unused crc32_cpu_feature[] = {
- 	{ cpu_feature(CRC32) }, { cpu_feature(PMULL) }, { }
- };
- MODULE_DEVICE_TABLE(cpu, crc32_cpu_feature);
--- 
-2.20.1
+ static inline int unregister_ftrace_direct(unsigned long ip, unsigned
+long addr)
+ {
+-       return -ENODEV;
++       return -ENOTSUPP;
+ }
+ static inline int modify_ftrace_direct(unsigned long ip,
+                                       unsigned long old_addr,
+unsigned long new_addr)
+ {
+-       return -ENODEV;
++       return -ENOTSUPP;
+ }
 
-
-
+otherwise ENODEV is a valid error when ip is incorrect which is
+indistinguishable from ftrace not compiled in.
