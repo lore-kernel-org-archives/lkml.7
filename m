@@ -2,93 +2,106 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B53F1C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 03:27:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DCECC33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 03:29:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 927FB214D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 03:27:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 126F6222A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 03:29:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e9pPJgmp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727573AbfKSD1d (ORCPT
+        id S1727601AbfKSD3I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 22:27:33 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:48802 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727018AbfKSD1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 22:27:33 -0500
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id C966391C286B9FECAB46;
-        Tue, 19 Nov 2019 11:27:30 +0800 (CST)
-Received: from [127.0.0.1] (10.177.251.225) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Tue, 19 Nov 2019
- 11:27:21 +0800
-To:     Thomas Gleixner <tglx@linutronix.de>
-CC:     <gregkh@linuxfoundation.org>, <bvanassche@acm.org>,
-        <alexander.h.duyck@linux.intel.com>, <bhelgaas@google.com>,
-        <sakari.ailus@linux.intel.com>, <linux-kernel@vger.kernel.org>,
-        "hushiyuan@huawei.com" <hushiyuan@huawei.com>,
-        "linfeilong@huawei.com" <linfeilong@huawei.com>
-From:   Yunfeng Ye <yeyunfeng@huawei.com>
-Subject: [PATCH v3] async: Let kfree() out of the critical area of the lock
-Message-ID: <89da0082-ebad-25c0-d82f-4a2feae628e6@huawei.com>
-Date:   Tue, 19 Nov 2019 11:26:57 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 18 Nov 2019 22:29:08 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:33027 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727239AbfKSD3I (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 22:29:08 -0500
+Received: by mail-ed1-f65.google.com with SMTP id a24so15801750edt.0;
+        Mon, 18 Nov 2019 19:29:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vlbYDXkHVS11+pIejDVy67CBctjo9Cx4yVStRKhyhsY=;
+        b=e9pPJgmpwWB5+H/T4XPYX2ke0+dZt2xHpk3ckSpB6R7lZPpyKhFvMTnAivjVxKyFuN
+         GCz2ah4YfBBzxbC7LgRaAffoRqYIqVE7CERvk/g63OuQsy+sp1EctRsi5AaCdpWx3SoC
+         jae+MrHMcDGNaM46fcMal8dRAtyd/TRFRv2lG/sIQ1RlqbJXDofQVZP4jibg6f6O5kNM
+         /SETT9+jW9R0YjL8IMaAjlAT4m++Y4mLbIArvmmKhm8daU5d3EefjKkAqXWHWsyfZsDF
+         THHID6CAyNQnJ6NPyXN4EHvQ/EGjTj6T6KGGfrCBtDokPoqbhEaVTI0+tWQPD63oxtly
+         UgGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vlbYDXkHVS11+pIejDVy67CBctjo9Cx4yVStRKhyhsY=;
+        b=BQyiJG0dGaXK9dp6w1RkGVPI049YCGVc9JQ5UWQgeiIOnSJJHwwb0NC3bnhxVt4yV6
+         cXF5YHjlO3raLgPX1s2Bthuf+Bm7nscj+w6PdCf710E6v/Q8wpljvp3mUqCnU/cum2UG
+         TUKDkQDfYYv05tDXk4DMToEjEf2xb/G/SZ63zNGlgJYti2rWPKE3b1mM8424V2JcCn1v
+         cg1SE/pj22aBzI3ll2koiZt5c1mVuzWskSoae/avljQcBD9GwhlOQagWrWl67u8L06G+
+         80VJKj53e5jHFBn1B30s6qgojf1+u7D80e1HJuhWn9NeApKVyNLeof6YEuAOQdRsFryV
+         sFNw==
+X-Gm-Message-State: APjAAAXK8KQO+OfuqCKSkylT1DZh4sQShRLNxsQDUyWn20bZqCKZlOyT
+        3bzo8Mk0BxNxBa1R76DyDod99UhN+xQQ+XiApXQ=
+X-Google-Smtp-Source: APXvYqxm1W9gpI9FbX3HkqAKkjJm3EXrNSSNVFtuevJ5u3ngnRzXg4dB/mAf3Ptai6GpG8/qoxqvKAOFtqnVhTSt45k=
+X-Received: by 2002:a17:906:aad5:: with SMTP id kt21mr1593370ejb.228.1574134146033;
+ Mon, 18 Nov 2019 19:29:06 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.251.225]
-X-CFilter-Loop: Reflected
+References: <20191118234043.331542-1-robdclark@gmail.com> <5dd33824.1c69fb81.2d94a.4f12@mx.google.com>
+In-Reply-To: <5dd33824.1c69fb81.2d94a.4f12@mx.google.com>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Mon, 18 Nov 2019 19:28:55 -0800
+Message-ID: <CAF6AEGsT6NrHp99AjgAERBsf77TC3E7OUhC733z2tFuu9XE39w@mail.gmail.com>
+Subject: Re: [PATCH] drm/msm/a6xx: restore previous freq on resume
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Mamta Shukla <mamtashukla555@gmail.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The async_lock is big global lock, and kfree() is not always cheap, it
-will increase lock contention. it's better let kfree() outside the lock
-to keep the critical area as short as possible.
+On Mon, Nov 18, 2019 at 4:32 PM Stephen Boyd <swboyd@chromium.org> wrote:
+>
+> Quoting Rob Clark (2019-11-18 15:40:38)
+> > diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.h b/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
+> > index 39a26dd63674..2af91ed7ed0c 100644
+> > --- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
+> > +++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
+> > @@ -63,6 +63,9 @@ struct a6xx_gmu {
+> >         struct clk_bulk_data *clocks;
+> >         struct clk *core_clk;
+> >
+> > +       /* current performance index set externally */
+> > +       int current_perf_index;
+> > +
+>
+> Is there a reason this isn't unsigned? It looks like
+> __a6xx_gmu_set_freq() takes an int, but maybe it should take a u16 or
+> something?
+>
 
-Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
-Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
----
-v2 -> v3:
- - move kfree() after wake_up(&async_done)
+no particular reason, other than other things where already using an
+int.. this is just an index into the table of opp's so it is never
+going to be a large int.
 
-v1 -> v2:
- - update the description
- - add "Reviewed-by"
+Depending on GMU_DCVS_PERF_SETTING it could probably be a u8 (I'm not
+*entirely* sure from the code how large that bitfield is)
 
- kernel/async.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/kernel/async.c b/kernel/async.c
-index 4f9c1d614016..d2ab75e8b1ab 100644
---- a/kernel/async.c
-+++ b/kernel/async.c
-@@ -135,14 +135,14 @@ static void async_run_entry_fn(struct work_struct *work)
- 	list_del_init(&entry->domain_list);
- 	list_del_init(&entry->global_list);
-
--	/* 3) free the entry */
--	kfree(entry);
- 	atomic_dec(&entry_count);
--
- 	spin_unlock_irqrestore(&async_lock, flags);
-
--	/* 4) wake up any waiters */
-+	/* 3) wake up any waiters */
- 	wake_up(&async_done);
-+
-+	/* 4) free the entry */
-+	kfree(entry);
- }
-
- /**
--- 
-2.7.4
-
+BR,
+-R
