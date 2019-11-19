@@ -2,221 +2,129 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 293F5C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:02:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B9E2C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:02:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEA372241E
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:02:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E666E2241E
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:02:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EuzDHzZz"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="sQhEDOK4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727357AbfKSTCY (ORCPT
+        id S1727233AbfKSTCw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 14:02:24 -0500
-Received: from mail-il1-f195.google.com ([209.85.166.195]:33879 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726711AbfKSTCX (ORCPT
+        Tue, 19 Nov 2019 14:02:52 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:34618 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727234AbfKSTCw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 14:02:23 -0500
-Received: by mail-il1-f195.google.com with SMTP id p6so20732267ilp.1
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 11:02:22 -0800 (PST)
+        Tue, 19 Nov 2019 14:02:52 -0500
+Received: by mail-qk1-f196.google.com with SMTP id 205so18873214qkk.1
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 11:02:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=N5IXEqqYz7IFwy+gEurJhn05Az2pV/jf6zB5Y5rRxrU=;
-        b=EuzDHzZzwMf9YDBFrVfiFws0Iew/P7Ki1TvB06d1mxqNSPP7AgdCaHL370iKwv5YqT
-         WmQ21HBtq+tEcd3X0LqhBHsgbeEvhKBTTkxQr06rBrmfG8JAbP5drJoaDAkudj53TB0F
-         LP2o9b77UViL6qR6tMqNrKVIOJ1vQcQdGbVaAYYiWScCLm0HiRSWDdslLQgyUEiVT/8Q
-         0mwIuGZVfTUn3aSbi3XteKRPQEGqRU2YKYSaPHpp/Azv0l+FFbFFIbxP3ioYiTFn9sHe
-         71x1IpjIIg8IUllPT/X5eLWETggefEdx74zEhMqWp7FhOZv1+g0V9x/lgJ3AZT7XFROL
-         ogGg==
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=nOtlx8W5kFFOHYOOqCInicVcS9VMgxzZJDB6vPZYj8Y=;
+        b=sQhEDOK4h+CjNaAZJ9SFqIFRU0lboojWtdHt3nnRoeYgfxiMCtz9gtLqjnu3lw3Rfx
+         qgeYu1QBVnZIytPjZBXhr9qU3GO+4sKhsDZg7xFANVamLGatVP/HrFrh1MKqnZooAnFA
+         hm1/LCDx1vxUMZEbMG3d+Hwj+JIU4g2ie4V6LqnKMULSN1r2g0v2f5e2DL/X3gOxZvgl
+         mXkIk/zjztybwsp0TuSuWidAjNSc7nI7lD5OUOpCASUZ/8uACLWmbFS4otqJCIK21c+i
+         etNf14xwCT/4kJ787XpYK/YYl17I6F4BNO1Z+hK0y33+kQmz8JWW5AfhCBdLVfTA6blx
+         qseA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=N5IXEqqYz7IFwy+gEurJhn05Az2pV/jf6zB5Y5rRxrU=;
-        b=GsRD8E9sf1S7kE+zWfNx+gpRck8qTQjknvrv9GCDIugcbPyp6+cVeJJe+fLYkHyS1N
-         2qtYfJtqW2bScgcrwMfx9BiqqOBa0xCm50s/LM7982BaZZgwgLZcr4CrrdTX5AaT/O3A
-         +cpBgAoBMAQN1p6w8FtWHpREeuT92Bf78I2bx84/gDlB95+BUF55gXowvLPKbUl7kKgN
-         xJXHituKfkWMEfKxeoybc+PfBvAgwbHRD0GhCKqO+2FfnHbnh4itC9ifpbc3WEVEHmF9
-         nFyPbfn19oVba+Nent5DPIefnxC5Cqi1Ua25BMEVVcf7zDnomygcHJsT3+oIWzif2008
-         TqVA==
-X-Gm-Message-State: APjAAAVfQ7UR4z6t8G5jWaQc7iDA5C3Cc+0CeFhWWvvQO3lRJHLksM5Q
-        fMHqpnynwK6fHEli77yq3eyxtRSW8kROxmbMhXusxUua
-X-Google-Smtp-Source: APXvYqygY0WZPAlqymeVmHoh5U5FF5pVHvTF/uK+WhMRNR06djsVHQOMW04efXXzpKzyR5IvdCctq+8bERDeAygkOpI=
-X-Received: by 2002:a92:dd8e:: with SMTP id g14mr22948154iln.129.1574190141871;
- Tue, 19 Nov 2019 11:02:21 -0800 (PST)
-MIME-Version: 1.0
-References: <20191119143411.3482-1-kan.liang@linux.intel.com> <20191119143411.3482-2-kan.liang@linux.intel.com>
-In-Reply-To: <20191119143411.3482-2-kan.liang@linux.intel.com>
-From:   Stephane Eranian <eranian@google.com>
-Date:   Tue, 19 Nov 2019 11:02:10 -0800
-Message-ID: <CABPqkBRrPgW+Kdkiqy0dTu6e_8G55XLfFh5mCLt1_UQEHU=Zbg@mail.gmail.com>
-Subject: Re: [PATCH V4 01/13] perf/core: Add new branch sample type for LBR TOS
-To:     "Liang, Kan" <kan.liang@linux.intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        vitaly.slobodskoy@intel.com, pavel.gerasimov@intel.com,
-        Andi Kleen <ak@linux.intel.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=nOtlx8W5kFFOHYOOqCInicVcS9VMgxzZJDB6vPZYj8Y=;
+        b=oOXLMyN6mdGYaPrxg/yIBC/7PUzq7xLiB1aZCUaDMU5lEVhlwgEBvlbEaYAvoz720T
+         NQMq1xOj64xse+hllYaQ/vx9nJFV2Xq7bvFVK+/I/nSWZRat8ReinPlOO2biO8CBjCHA
+         aAeYkuQlc855y1UjYC3ch6e1sS1XggqFJT/n2Dw63jD55wxCDYZco5qtIw2OcEle3Pto
+         TvGzZ/gpuFlq81Pv7yjfuvyqtlhZ256FUTuoNscqy1maJtoVxzub3J2FZ7yTs0GsxpOd
+         E4WAWGTd+apt3nOiug/yAeoi3QKPB0oovFakwMYF5TonQ7cERLOyl6RdiDlrApdVntPA
+         bfwg==
+X-Gm-Message-State: APjAAAW64TmM3dHeom5NlhopiCSsCMo32w6scKBV8gvGRWOkpZoHNHNd
+        xKhyKqdBPMFPBMcDe8yajy5MJw==
+X-Google-Smtp-Source: APXvYqyD2BKIzD//N3zQpcyJ1rmzra5E3wCaew6QFo/eNzHpGF9HocziQ4dVo4GzBFaAv8YiYlh/eA==
+X-Received: by 2002:a37:6643:: with SMTP id a64mr31950602qkc.144.1574190171109;
+        Tue, 19 Nov 2019 11:02:51 -0800 (PST)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id w5sm10384776qkf.43.2019.11.19.11.02.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 19 Nov 2019 11:02:50 -0800 (PST)
+Message-ID: <1574190168.9585.4.camel@lca.pw>
+Subject: Re: linux-next: Tree for Nov 19 (kcsan)
+From:   Qian Cai <cai@lca.pw>
+To:     Marco Elver <elver@google.com>,
+        Randy Dunlap <rdunlap@infradead.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>
+Date:   Tue, 19 Nov 2019 14:02:48 -0500
+In-Reply-To: <20191119183407.GA68739@google.com>
+References: <20191119194658.39af50d0@canb.auug.org.au>
+         <e75be639-110a-c615-3ec7-a107318b7746@infradead.org>
+         <CANpmjNMpnY54kDdGwOPOD84UDf=Fzqtu62ifTds2vZn4t4YigQ@mail.gmail.com>
+         <fb7e25d8-aba4-3dcf-7761-cb7ecb3ebb71@infradead.org>
+         <20191119183407.GA68739@google.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 6:35 AM <kan.liang@linux.intel.com> wrote:
->
-> From: Kan Liang <kan.liang@linux.intel.com>
->
-> In LBR call stack mode, the depth of reconstructed LBR call stack limits
-> to the number of LBR registers. With LBR Top-of-Stack (TOS) information,
-> perf tool may stitch the stacks of two samples. The reconstructed LBR
-> call stack can break the HW limitation.
->
-> Add a new branch sample type to retrieve LBR TOS. The new type is PMU
-> specific. Add it at the end of enum perf_branch_sample_type.
-> Add a macro to retrieve defined bits of branch sample type.
-> Update perf_copy_attr() to handle the new bit.
->
-> Only when the new branch sample type is set, the TOS information is
-> dumped into the PERF_SAMPLE_BRANCH_STACK output.
-> Perf tool should check the attr.branch_sample_type, and apply the
-> corresponding format for PERF_SAMPLE_BRANCH_STACK samples.
-> Otherwise, some user case may be broken. For example, users may parse a
-> perf.data, which include the new branch sample type, with an old version
-> perf tool (without the check). Users probably get incorrect information
-> without any warning.
->
-> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-> ---
->  include/linux/perf_event.h      |  2 ++
->  include/uapi/linux/perf_event.h | 16 ++++++++++++++--
->  kernel/events/core.c            | 13 ++++++++++++-
->  3 files changed, 28 insertions(+), 3 deletions(-)
->
-> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> index 011dcbdbccc2..761021c7ee8a 100644
-> --- a/include/linux/perf_event.h
-> +++ b/include/linux/perf_event.h
-> @@ -93,6 +93,7 @@ struct perf_raw_record {
->  /*
->   * branch stack layout:
->   *  nr: number of taken branches stored in entries[]
-> + *  tos: Top-of-Stack (TOS) information. PMU specific data.
->   *
->   * Note that nr can vary from sample to sample
->   * branches (to, from) are stored from most recent
-> @@ -101,6 +102,7 @@ struct perf_raw_record {
->   */
->  struct perf_branch_stack {
->         __u64                           nr;
-> +       __u64                           tos; /* PMU specific data */
->         struct perf_branch_entry        entries[0];
->  };
->
-Same remark as with the other patch. You need to abstract this.
-The TOS and PMU specific data should be limited to  x86/event/intel/*.[ch].
+On Tue, 2019-11-19 at 19:34 +0100, 'Marco Elver' via kasan-dev wrote:
+> On Tue, 19 Nov 2019, Randy Dunlap wrote:
+> 
+> > On 11/19/19 8:12 AM, Marco Elver wrote:
+> > > On Tue, 19 Nov 2019 at 16:11, Randy Dunlap <rdunlap@infradead.org> wrote:
+> > > > 
+> > > > On 11/19/19 12:46 AM, Stephen Rothwell wrote:
+> > > > > Hi all,
+> > > > > 
+> > > > > Changes since 20191118:
+> > > > > 
+> > > > 
+> > > > on x86_64:
+> > > > 
+> > > > It seems that this function can already be known by the compiler as a
+> > > > builtin:
+> > > > 
+> > > > ../kernel/kcsan/core.c:619:6: warning: conflicting types for built-in function ‘__tsan_func_exit’ [-Wbuiltin-declaration-mismatch]
+> > > >  void __tsan_func_exit(void)
+> > > >       ^~~~~~~~~~~~~~~~
+> > > > 
+> > > > 
+> > > > $ gcc --version
+> > > > gcc (SUSE Linux) 7.4.1 20190905 [gcc-7-branch revision 275407]
+> > > 
+> > > Interesting. Could you share the .config? So far I haven't been able
+> > > to reproduce.
+> > 
+> > Sure, it's attached.
+> 
+> Thanks, the config did the trick, even for gcc 9.0.0.
+> 
+> The problem is CONFIG_UBSAN=y. We haven't explicitly disallowed it like
+> with KASAN. In principle there should be nothing wrong with KCSAN+UBSAN.
+> 
+> There are 3 options:
+> 1. Just disable UBSAN for KCSAN, and also disable KCSAN for UBSAN.
+> 2. Restrict the config to not allow combining KCSAN and UBSAN.
+> 3. Leave things as-is.
+> 
+> Option 1 probably makes most sense, and I'll send a patch for that
+> unless there are major objections.
 
-> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
-> index bb7b271397a6..c2da61c9ace7 100644
-> --- a/include/uapi/linux/perf_event.h
-> +++ b/include/uapi/linux/perf_event.h
-> @@ -180,7 +180,10 @@ enum perf_branch_sample_type_shift {
->
->         PERF_SAMPLE_BRANCH_TYPE_SAVE_SHIFT      = 16, /* save branch type */
->
-> -       PERF_SAMPLE_BRANCH_MAX_SHIFT            /* non-ABI */
-> +       PERF_SAMPLE_BRANCH_MAX_SHIFT            = 17, /* non-ABI */
-> +
-> +       /* PMU specific */
-> +       PERF_SAMPLE_BRANCH_LBR_TOS_SHIFT        = 63, /* save LBR TOS */
->  };
->
->  enum perf_branch_sample_type {
-> @@ -208,8 +211,13 @@ enum perf_branch_sample_type {
->                 1U << PERF_SAMPLE_BRANCH_TYPE_SAVE_SHIFT,
->
->         PERF_SAMPLE_BRANCH_MAX          = 1U << PERF_SAMPLE_BRANCH_MAX_SHIFT,
-> +
-> +       PERF_SAMPLE_BRANCH_LBR_TOS      = 1ULL << PERF_SAMPLE_BRANCH_LBR_TOS_SHIFT,
->  };
->
-> +#define PERF_SAMPLE_BRANCH_MASK                ((PERF_SAMPLE_BRANCH_MAX - 1) |\
-> +                                        PERF_SAMPLE_BRANCH_LBR_TOS)
-> +
->  /*
->   * Common flow change classification
->   */
-> @@ -849,7 +857,11 @@ enum perf_event_type {
->          *        char                  data[size];}&& PERF_SAMPLE_RAW
->          *
->          *      { u64                   nr;
-> -        *        { u64 from, to, flags } lbr[nr];} && PERF_SAMPLE_BRANCH_STACK
-> +        *        { u64 from, to, flags } lbr[nr];
-> +        *
-> +        *        # only available if PERF_SAMPLE_BRANCH_LBR_TOS is set
-> +        *        u64                   tos;
-> +        *      } && PERF_SAMPLE_BRANCH_STACK
->          *
->          *      { u64                   abi; # enum perf_sample_regs_abi
->          *        u64                   regs[weight(mask)]; } && PERF_SAMPLE_REGS_USER
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index cfd89b4a02d8..8aff3aad43b5 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -6391,6 +6391,11 @@ static void perf_output_read(struct perf_output_handle *handle,
->                 perf_output_read_one(handle, event, enabled, running);
->  }
->
-> +static inline bool perf_sample_save_lbr_tos(struct perf_event *event)
-> +{
-> +       return event->attr.branch_sample_type & PERF_SAMPLE_BRANCH_LBR_TOS;
-> +}
-> +
->  void perf_output_sample(struct perf_output_handle *handle,
->                         struct perf_event_header *header,
->                         struct perf_sample_data *data,
-> @@ -6480,6 +6485,8 @@ void perf_output_sample(struct perf_output_handle *handle,
->
->                         perf_output_put(handle, data->br_stack->nr);
->                         perf_output_copy(handle, data->br_stack->entries, size);
-> +                       if (perf_sample_save_lbr_tos(event))
-> +                               perf_output_put(handle, data->br_stack->tos);
->                 } else {
->                         /*
->                          * we always store at least the value of nr
-> @@ -6667,7 +6674,11 @@ void perf_prepare_sample(struct perf_event_header *header,
->                 if (data->br_stack) {
->                         size += data->br_stack->nr
->                               * sizeof(struct perf_branch_entry);
-> +
-> +                       if (perf_sample_save_lbr_tos(event))
-> +                               size += sizeof(u64);
->                 }
-> +
->                 header->size += size;
->         }
->
-> @@ -10731,7 +10742,7 @@ static int perf_copy_attr(struct perf_event_attr __user *uattr,
->                 u64 mask = attr->branch_sample_type;
->
->                 /* only using defined bits */
-> -               if (mask & ~(PERF_SAMPLE_BRANCH_MAX-1))
-> +               if (mask & ~PERF_SAMPLE_BRANCH_MASK)
->                         return -EINVAL;
->
->                 /* at least one branch bit must be set */
-> --
-> 2.17.1
->
+Both option #1 and #2 sounds quite unfortunate, as UBSAN is quite valuable for
+debugging. Hence, it is desire to make both work at the same time.
