@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A85D0C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:21:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDB63C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:22:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F5A62231E
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:21:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA9212231E
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:22:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574140917;
-	bh=FBXtfcqgNgTv3eFRYajpHeZCHGp/in2KKwzbydDtM7A=;
+	s=default; t=1574140921;
+	bh=Jx7N3naRKuizoBu6BtVpPJsrEwHfHDwHNVNCUvzTgPk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O2nauoIga9/RYdA6zOAhSj2yE8qdnICR4g6QKbXrVtAXufBNRhycUcy9Xp6WewCVT
-	 jXKslAtIy9Yj2a/OoY5wVQBoKsCmDOkEFTypvEFNk0umb3tH2WXQCpluPkbcFT7jr2
-	 K1SFmXQSNilP1jaGLujcAKgHAMLaTziCt+GFYen0=
+	b=VJ/3dkkxPpZtbFRTav84gKIq5umLKlq0vjUp1aae6aqrR+rsfq5sOPm38thSvfKR0
+	 WH4IKvH5wXFaAB68LfPRCrIEbqMTNpJBDZ1lYHDtaeXhCF8U6hudGqONn5VIx87fx/
+	 UCsbpgVS14/y/5cjQEqKFT3sQcrzNVuisBI30894=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727589AbfKSFV4 (ORCPT
+        id S1727614AbfKSFWA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:21:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37066 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:22:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727539AbfKSFVy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:21:54 -0500
+        id S1727539AbfKSFV6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:21:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E5612231E;
-        Tue, 19 Nov 2019 05:21:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6CF2022317;
+        Tue, 19 Nov 2019 05:21:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574140913;
-        bh=FBXtfcqgNgTv3eFRYajpHeZCHGp/in2KKwzbydDtM7A=;
+        s=default; t=1574140916;
+        bh=Jx7N3naRKuizoBu6BtVpPJsrEwHfHDwHNVNCUvzTgPk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Op8b/F2JyqP7ElmWa5Z4jv6uLF0g6ast4AuaTL5qmb7Bu6iY4H9sVrAf9y4eO9ZsG
-         LGEwKEsj7dCSRpRZ4FT35CNhmsbpwjUVFWRF/i67i7KODEA0S2rOeM7vevbIG0Mk5V
-         UA8LKpffK8gNvix8gtEGxtiUlbiYTo4vLoWyRExw=
+        b=WqN1/A2GzX74/6RQCRxmQyW2iDKgSe9FfNyXPeWhl4sBlG3eJuZlICpWyTNrEFKqh
+         Yde5In4m7OPh0SpXOpYPF0UMfrbYlGr4+wl6H8wXy2XI/jPLa7rWxHzcKoE9tM0Bl0
+         Ic50pB2X3OeCIJnTElIOg/Uercyrjjj/d+pTN/Jw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Kaike Wan <kaike.wan@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Subject: [PATCH 5.3 29/48] IB/hfi1: TID RDMA WRITE should not return IB_WC_RNR_RETRY_EXC_ERR
-Date:   Tue, 19 Nov 2019 06:19:49 +0100
-Message-Id: <20191119051010.504303261@linuxfoundation.org>
+        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.3 03/48] devlink: disallow reload operation during device cleanup
+Date:   Tue, 19 Nov 2019 06:19:23 +0100
+Message-Id: <20191119050949.815080213@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119050946.745015350@linuxfoundation.org>
 References: <20191119050946.745015350@linuxfoundation.org>
@@ -62,60 +60,176 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kaike Wan <kaike.wan@intel.com>
+From: Jiri Pirko <jiri@mellanox.com>
 
-commit ce8e8087cf3b5b4f19d29248bfc7deef95525490 upstream.
+[ Upstream commit 5a508a254bed9a2e36a5fb96c9065532a6bf1e9c ]
 
-Normal RDMA WRITE request never returns IB_WC_RNR_RETRY_EXC_ERR to ULPs
-because it does not need post receive buffer on the responder side.
-Consequently, as an enhancement to normal RDMA WRITE request inside the
-hfi1 driver, TID RDMA WRITE request should not return such an error status
-to ULPs, although it does receive RNR NAKs from the responder when TID
-resources are not available. This behavior is violated when
-qp->s_rnr_retry_cnt is set in current hfi1 implementation.
+There is a race between driver code that does setup/cleanup of device
+and devlink reload operation that in some drivers works with the same
+code. Use after free could we easily obtained by running:
 
-This patch enforces these semantics by avoiding any reaction to the updates
-of the RNR QP attributes.
+while true; do
+        echo "0000:00:10.0" >/sys/bus/pci/drivers/mlxsw_spectrum2/bind
+        devlink dev reload pci/0000:00:10.0 &
+        echo "0000:00:10.0" >/sys/bus/pci/drivers/mlxsw_spectrum2/unbind
+done
 
-Fixes: 3c6cb20a0d17 ("IB/hfi1: Add TID RDMA WRITE functionality into RDMA verbs")
-Link: https://lore.kernel.org/r/20191025195842.106825.71532.stgit@awfm-01.aw.intel.com
-Cc: <stable@vger.kernel.org>
-Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Reviewed-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Kaike Wan <kaike.wan@intel.com>
-Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fix this by enabling reload only after setup of device is complete and
+disabling it at the beginning of the cleanup process.
+
+Reported-by: Ido Schimmel <idosch@mellanox.com>
+Fixes: 2d8dc5bbf4e7 ("devlink: Add support for reload")
+Signed-off-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/infiniband/hw/hfi1/rc.c |   16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ drivers/net/ethernet/mellanox/mlx4/main.c  |    3 ++
+ drivers/net/ethernet/mellanox/mlxsw/core.c |    6 +++-
+ drivers/net/netdevsim/dev.c                |    2 +
+ include/net/devlink.h                      |    3 ++
+ net/core/devlink.c                         |   39 ++++++++++++++++++++++++++++-
+ 5 files changed, 51 insertions(+), 2 deletions(-)
 
---- a/drivers/infiniband/hw/hfi1/rc.c
-+++ b/drivers/infiniband/hw/hfi1/rc.c
-@@ -2210,15 +2210,15 @@ int do_rc_ack(struct rvt_qp *qp, u32 aet
- 		if (qp->s_flags & RVT_S_WAIT_RNR)
- 			goto bail_stop;
- 		rdi = ib_to_rvt(qp->ibqp.device);
--		if (qp->s_rnr_retry == 0 &&
--		    !((rdi->post_parms[wqe->wr.opcode].flags &
--		      RVT_OPERATION_IGN_RNR_CNT) &&
--		      qp->s_rnr_retry_cnt == 0)) {
--			status = IB_WC_RNR_RETRY_EXC_ERR;
--			goto class_b;
-+		if (!(rdi->post_parms[wqe->wr.opcode].flags &
-+		       RVT_OPERATION_IGN_RNR_CNT)) {
-+			if (qp->s_rnr_retry == 0) {
-+				status = IB_WC_RNR_RETRY_EXC_ERR;
-+				goto class_b;
-+			}
-+			if (qp->s_rnr_retry_cnt < 7 && qp->s_rnr_retry_cnt > 0)
-+				qp->s_rnr_retry--;
- 		}
--		if (qp->s_rnr_retry_cnt < 7 && qp->s_rnr_retry_cnt > 0)
--			qp->s_rnr_retry--;
+--- a/drivers/net/ethernet/mellanox/mlx4/main.c
++++ b/drivers/net/ethernet/mellanox/mlx4/main.c
+@@ -3982,6 +3982,7 @@ static int mlx4_init_one(struct pci_dev
+ 		goto err_params_unregister;
  
- 		/*
- 		 * The last valid PSN is the previous PSN. For TID RDMA WRITE
+ 	devlink_params_publish(devlink);
++	devlink_reload_enable(devlink);
+ 	pci_save_state(pdev);
+ 	return 0;
+ 
+@@ -4093,6 +4094,8 @@ static void mlx4_remove_one(struct pci_d
+ 	struct devlink *devlink = priv_to_devlink(priv);
+ 	int active_vfs = 0;
+ 
++	devlink_reload_disable(devlink);
++
+ 	if (mlx4_is_slave(dev))
+ 		persist->interface_state |= MLX4_INTERFACE_STATE_NOWAIT;
+ 
+--- a/drivers/net/ethernet/mellanox/mlxsw/core.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/core.c
+@@ -1128,8 +1128,10 @@ __mlxsw_core_bus_device_register(const s
+ 	if (err)
+ 		goto err_thermal_init;
+ 
+-	if (mlxsw_driver->params_register)
++	if (mlxsw_driver->params_register) {
+ 		devlink_params_publish(devlink);
++		devlink_reload_enable(devlink);
++	}
+ 
+ 	return 0;
+ 
+@@ -1191,6 +1193,8 @@ void mlxsw_core_bus_device_unregister(st
+ {
+ 	struct devlink *devlink = priv_to_devlink(mlxsw_core);
+ 
++	if (!reload)
++		devlink_reload_disable(devlink);
+ 	if (mlxsw_core->reload_fail) {
+ 		if (!reload)
+ 			/* Only the parts that were not de-initialized in the
+--- a/drivers/net/netdevsim/dev.c
++++ b/drivers/net/netdevsim/dev.c
+@@ -297,6 +297,7 @@ nsim_dev_create(struct nsim_bus_dev *nsi
+ 	if (err)
+ 		goto err_debugfs_exit;
+ 
++	devlink_reload_enable(devlink);
+ 	return nsim_dev;
+ 
+ err_debugfs_exit:
+@@ -314,6 +315,7 @@ static void nsim_dev_destroy(struct nsim
+ {
+ 	struct devlink *devlink = priv_to_devlink(nsim_dev);
+ 
++	devlink_reload_disable(devlink);
+ 	nsim_bpf_dev_exit(nsim_dev);
+ 	nsim_dev_debugfs_exit(nsim_dev);
+ 	devlink_unregister(devlink);
+--- a/include/net/devlink.h
++++ b/include/net/devlink.h
+@@ -35,6 +35,7 @@ struct devlink {
+ 	struct device *dev;
+ 	possible_net_t _net;
+ 	struct mutex lock;
++	u8 reload_enabled:1;
+ 	char priv[0] __aligned(NETDEV_ALIGN);
+ };
+ 
+@@ -594,6 +595,8 @@ struct ib_device;
+ struct devlink *devlink_alloc(const struct devlink_ops *ops, size_t priv_size);
+ int devlink_register(struct devlink *devlink, struct device *dev);
+ void devlink_unregister(struct devlink *devlink);
++void devlink_reload_enable(struct devlink *devlink);
++void devlink_reload_disable(struct devlink *devlink);
+ void devlink_free(struct devlink *devlink);
+ int devlink_port_register(struct devlink *devlink,
+ 			  struct devlink_port *devlink_port,
+--- a/net/core/devlink.c
++++ b/net/core/devlink.c
+@@ -2677,7 +2677,7 @@ static int devlink_nl_cmd_reload(struct
+ 	struct devlink *devlink = info->user_ptr[0];
+ 	int err;
+ 
+-	if (!devlink->ops->reload)
++	if (!devlink->ops->reload || !devlink->reload_enabled)
+ 		return -EOPNOTSUPP;
+ 
+ 	err = devlink_resources_validate(devlink, NULL, info);
+@@ -5559,6 +5559,8 @@ EXPORT_SYMBOL_GPL(devlink_register);
+ void devlink_unregister(struct devlink *devlink)
+ {
+ 	mutex_lock(&devlink_mutex);
++	WARN_ON(devlink_reload_supported(devlink) &&
++		devlink->reload_enabled);
+ 	devlink_notify(devlink, DEVLINK_CMD_DEL);
+ 	list_del(&devlink->list);
+ 	mutex_unlock(&devlink_mutex);
+@@ -5566,6 +5568,41 @@ void devlink_unregister(struct devlink *
+ EXPORT_SYMBOL_GPL(devlink_unregister);
+ 
+ /**
++ *	devlink_reload_enable - Enable reload of devlink instance
++ *
++ *	@devlink: devlink
++ *
++ *	Should be called at end of device initialization
++ *	process when reload operation is supported.
++ */
++void devlink_reload_enable(struct devlink *devlink)
++{
++	mutex_lock(&devlink_mutex);
++	devlink->reload_enabled = true;
++	mutex_unlock(&devlink_mutex);
++}
++EXPORT_SYMBOL_GPL(devlink_reload_enable);
++
++/**
++ *	devlink_reload_disable - Disable reload of devlink instance
++ *
++ *	@devlink: devlink
++ *
++ *	Should be called at the beginning of device cleanup
++ *	process when reload operation is supported.
++ */
++void devlink_reload_disable(struct devlink *devlink)
++{
++	mutex_lock(&devlink_mutex);
++	/* Mutex is taken which ensures that no reload operation is in
++	 * progress while setting up forbidded flag.
++	 */
++	devlink->reload_enabled = false;
++	mutex_unlock(&devlink_mutex);
++}
++EXPORT_SYMBOL_GPL(devlink_reload_disable);
++
++/**
+  *	devlink_free - Free devlink instance resources
+  *
+  *	@devlink: devlink
 
 
