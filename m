@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0884C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:02:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE9A9C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:02:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B441F21850
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:02:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76D0520872
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:02:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574143333;
-	bh=6zIYvAQLeAqmRqLZCnOGn1hGP8lmOux0Wh75nSABTTI=;
+	s=default; t=1574143338;
+	bh=FsKtONwnJ0E+3juQFQYvpQtt820kG0TE5BDmYoercLA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BnkHV5XfRZQ9YwZ6p5VEkaFRQDfSxRinACB6osgvIxanXoSfaOGlTzPol9rYpDCq0
-	 kQOB18659bm4bvBCPP6v++utL8aK5FTkgOjAY6pbBsZGqqsW5YITIxmHtP0Tn+slZd
-	 1AkYsCRxYTw+hqIs/XFzaoD7jvp1mqrReAY7YF+Y=
+	b=1Ih4zofjb6de5TE1W98xTbQiQ2SAUiU80Bp90mJg7/AqyB3r1GVWHLVwl6y0iHEMl
+	 yfqY1NXOoI5CygqLogYSHreoX23Yw8bH5aqJV3cV7UsrxBJSw9lB2AXglxoHQ90T8e
+	 QXpUwWnCOrvSI2AOLj3rLw+5toL/lRcsG1qa36lU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729148AbfKSGCI (ORCPT
+        id S1730648AbfKSFmf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 01:02:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37650 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:42:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37244 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730672AbfKSFmt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:42:49 -0500
+        id S1730077AbfKSFma (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:42:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A407421783;
-        Tue, 19 Nov 2019 05:42:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13CAA21783;
+        Tue, 19 Nov 2019 05:42:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142168;
-        bh=6zIYvAQLeAqmRqLZCnOGn1hGP8lmOux0Wh75nSABTTI=;
+        s=default; t=1574142149;
+        bh=FsKtONwnJ0E+3juQFQYvpQtt820kG0TE5BDmYoercLA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OEM/Xisf9L7sdhTOIYYlXNLt+jenKWanvmkRzT3XhBbTCqvxa0e494qZVFo7WUGfS
-         GwiCG3hmOPjhBSS7usP8ERcChfCLknqp+c8sDtXM4eOdGQ/zHVY9iXgaRO5Tk1Ltx1
-         //ruXGNyIBfdgvy18ALkoQu4vwAyK/cWvAKxrFqA=
+        b=pQW7XKiCztl+5fWSww0N5F9SP6okNL49+ETU6x3fakvj18vU2/GxpgsTBNJQElC3j
+         cTr+TKs29EF4bwmyqjh6fjOe0aPwfNSECFJ43ayhe2Wv/q57SjccPi2QDb2/8JBau0
+         PnKXUFmY2D5QfprRtFt3fusQWo3SCX7ykzSwtVVs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        stable@vger.kernel.org, Michael Schmitz <schmitzmic@gmail.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 413/422] rtc: armada38x: fix possible race condition
-Date:   Tue, 19 Nov 2019 06:20:10 +0100
-Message-Id: <20191119051425.956631885@linuxfoundation.org>
+Subject: [PATCH 4.19 406/422] scsi: NCR5380: Handle BUS FREE during reselection
+Date:   Tue, 19 Nov 2019 06:20:03 +0100
+Message-Id: <20191119051425.489299340@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -60,82 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+From: Finn Thain <fthain@telegraphics.com.au>
 
-[ Upstream commit 7d61cbb945a753af08e247b5f10bdd5dbb8d6c80 ]
+[ Upstream commit ca694afad707cb3ae2fdef3b28454444d9ac726e ]
 
-The IRQ is requested before the struct rtc is allocated and registered, but
-this struct is used in the IRQ handler. This may lead to a NULL pointer
-dereference.
+The X3T9.2 specification (draft) says, under "6.1.4.2 RESELECTION time-out
+procedure", that a target may assert RST or go to BUS FREE phase if the
+initiator does not respond within 200 us. Something like this has been
+observed with AztecMonster II target. When it happens, all we can do is wait
+for the target to try again.
 
-Switch to devm_rtc_allocate_device/rtc_register_device to allocate the rtc
-before requesting the IRQ.
-
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Tested-by: Michael Schmitz <schmitzmic@gmail.com>
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-armada38x.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+ drivers/scsi/NCR5380.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/rtc/rtc-armada38x.c b/drivers/rtc/rtc-armada38x.c
-index bde53c8ccee2c..b74338d6dde60 100644
---- a/drivers/rtc/rtc-armada38x.c
-+++ b/drivers/rtc/rtc-armada38x.c
-@@ -514,7 +514,6 @@ MODULE_DEVICE_TABLE(of, armada38x_rtc_of_match_table);
+diff --git a/drivers/scsi/NCR5380.c b/drivers/scsi/NCR5380.c
+index 5c3ffb466bb10..bce6c990d060a 100644
+--- a/drivers/scsi/NCR5380.c
++++ b/drivers/scsi/NCR5380.c
+@@ -2039,6 +2039,9 @@ static void NCR5380_reselect(struct Scsi_Host *instance)
  
- static __init int armada38x_rtc_probe(struct platform_device *pdev)
- {
--	const struct rtc_class_ops *ops;
- 	struct resource *res;
- 	struct armada38x_rtc *rtc;
- 	const struct of_device_id *match;
-@@ -551,6 +550,11 @@ static __init int armada38x_rtc_probe(struct platform_device *pdev)
- 		dev_err(&pdev->dev, "no irq\n");
- 		return rtc->irq;
- 	}
-+
-+	rtc->rtc_dev = devm_rtc_allocate_device(&pdev->dev);
-+	if (IS_ERR(rtc->rtc_dev))
-+		return PTR_ERR(rtc->rtc_dev);
-+
- 	if (devm_request_irq(&pdev->dev, rtc->irq, armada38x_rtc_alarm_irq,
- 				0, pdev->name, rtc) < 0) {
- 		dev_warn(&pdev->dev, "Interrupt not available.\n");
-@@ -560,28 +564,24 @@ static __init int armada38x_rtc_probe(struct platform_device *pdev)
- 
- 	if (rtc->irq != -1) {
- 		device_init_wakeup(&pdev->dev, 1);
--		ops = &armada38x_rtc_ops;
-+		rtc->rtc_dev->ops = &armada38x_rtc_ops;
- 	} else {
- 		/*
- 		 * If there is no interrupt available then we can't
- 		 * use the alarm
- 		 */
--		ops = &armada38x_rtc_ops_noirq;
-+		rtc->rtc_dev->ops = &armada38x_rtc_ops_noirq;
- 	}
- 	rtc->data = (struct armada38x_rtc_data *)match->data;
- 
--
- 	/* Update RTC-MBUS bridge timing parameters */
- 	rtc->data->update_mbus_timing(rtc);
- 
--	rtc->rtc_dev = devm_rtc_device_register(&pdev->dev, pdev->name,
--						ops, THIS_MODULE);
--	if (IS_ERR(rtc->rtc_dev)) {
--		ret = PTR_ERR(rtc->rtc_dev);
-+	ret = rtc_register_device(rtc->rtc_dev);
-+	if (ret)
- 		dev_err(&pdev->dev, "Failed to register RTC device: %d\n", ret);
--		return ret;
--	}
--	return 0;
-+
-+	return ret;
- }
- 
- #ifdef CONFIG_PM_SLEEP
+ 	if (NCR5380_poll_politely(hostdata,
+ 	                          STATUS_REG, SR_REQ, SR_REQ, 2 * HZ) < 0) {
++		if ((NCR5380_read(STATUS_REG) & (SR_BSY | SR_SEL)) == 0)
++			/* BUS FREE phase */
++			return;
+ 		shost_printk(KERN_ERR, instance, "reselect: REQ timeout\n");
+ 		do_abort(instance);
+ 		return;
 -- 
 2.20.1
 
