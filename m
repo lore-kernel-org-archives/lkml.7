@@ -2,137 +2,114 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A29ACC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:22:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94322C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:24:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DE6420878
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:22:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65C5C219F6
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:24:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="S4ZMl20j"
+	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="ePCnXgAU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727714AbfKSKWF (ORCPT
+        id S1727605AbfKSKYE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 05:22:05 -0500
-Received: from mailout3.samsung.com ([203.254.224.33]:46897 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727601AbfKSKWE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 05:22:04 -0500
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191119102202epoutp038175d33fb715243939291635c42fdbb5~YiTMUB2sW1695416954epoutp03C
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 10:22:02 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191119102202epoutp038175d33fb715243939291635c42fdbb5~YiTMUB2sW1695416954epoutp03C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1574158922;
-        bh=giaC8e3t68Zws4SFTQRyK+lQ99Gv3gmyFIFl7bI7GhU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S4ZMl20juRNpdutESt5gT44wIwV5BjoWLrgaAPmvchTscCx0nPImNGG3li7206cFU
-         kNUyr0Dr68N73MuxBv2jARQZOE87Y/6/FdJVkgRpxUkGmBrUEFXJLx+GfW2ygW1+iI
-         9rqcU1rxghAq8yFVN4MQRQ50Sf8tjgg4LMdeFEjE=
-Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
-        epcas5p2.samsung.com (KnoxPortal) with ESMTP id
-        20191119102201epcas5p26e77afa93f5e79ac27a673f94431a2e5~YiTLyUUqf1672116721epcas5p2G;
-        Tue, 19 Nov 2019 10:22:01 +0000 (GMT)
-Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
-        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        1F.00.04403.942C3DD5; Tue, 19 Nov 2019 19:22:01 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-        20191119102201epcas5p4e215c25d5d07269a7afb1f86fac0be65~YiTLYkMH12821228212epcas5p4p;
-        Tue, 19 Nov 2019 10:22:01 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191119102201epsmtrp251279e5a4f57d71f101ea270c40c4340~YiTLXrDY82129221292epsmtrp2j;
-        Tue, 19 Nov 2019 10:22:01 +0000 (GMT)
-X-AuditID: b6c32a4a-3cbff70000001133-0b-5dd3c2493a40
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        6F.55.03814.942C3DD5; Tue, 19 Nov 2019 19:22:01 +0900 (KST)
-Received: from ubuntu.sa.corp.samsungelectronics.net (unknown
-        [107.108.83.125]) by epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20191119102159epsmtip1dba7c7040027ecf90e7da6f8ef02b58f~YiTJux4Sh3094930949epsmtip1c;
-        Tue, 19 Nov 2019 10:21:59 +0000 (GMT)
-From:   Pankaj Sharma <pankj.sharma@samsung.com>
-To:     linux-can@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     wg@grandegger.com, mkl@pengutronix.de, davem@davemloft.net,
-        dmurphy@ti.com, rcsekar@samsung.com, pankaj.dubey@samsung.com,
-        Pankaj Sharma <pankj.sharma@samsung.com>,
-        Sriram Dash <sriram.dash@samsung.com>
-Subject: [PATCH 2/2] can: m_can_platform: remove unnecessary
- m_can_class_resume() call
-Date:   Tue, 19 Nov 2019 15:50:38 +0530
-Message-Id: <1574158838-4616-3-git-send-email-pankj.sharma@samsung.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1574158838-4616-1-git-send-email-pankj.sharma@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrFIsWRmVeSWpSXmKPExsWy7bCmuq7nocuxBt+PKFnMOd/CYtF9egur
-        xarvU5ktLu+aw2axftEUFotjC8QsFm39wm6xvOs+s8WsCztYLW6sZ7dYem8nqwO3x5aVN5k8
-        Pl66zejR/9fAo2/LKkaP4ze2M3l83iQXwBbFZZOSmpNZllqkb5fAlfF40yS2ghb2is6vJxgb
-        GJvYuhg5OSQETCQ2TpzJ0sXIxSEksJtRovfoYTYI5xOjxIe2G4wQzjdGiUnfprDDtExrOc4M
-        kdjLKNG3aSErhNPCJNE28w8zSBWbgJ7EpfeTwZaICIRKLOudAFbELHCJUWLO+RWsIAlhgQiJ
-        bT2zgIo4OFgEVCUmbwgHCfMKuEtsbz8HdaCcxM1znWAzOQU8JB7MmMkEMkdC4AibxOxbJ5hB
-        eiUEXCR2zLSHqBeWeHV8C9SlUhKf3+2FmpMtsXB3PwtEeYVE2wxhiLC9xIErc8DCzAKaEut3
-        6YOEmQX4JHp/P2GCqOaV6GgTgqhWk5j69B0jhC0jcefRZqjhHhIPb0+FhuJsRokXj9axTmCU
-        nYUwdQEj4ypGydSC4tz01GLTAqO81HK94sTc4tK8dL3k/NxNjOAUoeW1g3HZOZ9DjAIcjEo8
-        vCdULscKsSaWFVfmHmKU4GBWEuH1e3QhVog3JbGyKrUoP76oNCe1+BCjNAeLkjjvJNarMUIC
-        6YklqdmpqQWpRTBZJg5OqQZGu+rco5Hrph8r26U5W1uCyfehXuSanf+9QmYssnZaGuH5Yp7K
-        DC7XI+dr1eY3PXqbIifHe1JAbP0T6e8bllX9LDMVLRBm7PcP3fV4DetZk1nvs93Fn6nPWfSt
-        YxPXBuWK0rsl677x3H50e8us1TkWCoq2fZV3r551fL/3ZmC5skX45zMxfCHiSizFGYmGWsxF
-        xYkAUDndcg0DAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrJLMWRmVeSWpSXmKPExsWy7bCSnK7nocuxBl8XcVrMOd/CYtF9egur
-        xarvU5ktLu+aw2axftEUFotjC8QsFm39wm6xvOs+s8WsCztYLW6sZ7dYem8nqwO3x5aVN5k8
-        Pl66zejR/9fAo2/LKkaP4ze2M3l83iQXwBbFZZOSmpNZllqkb5fAlfF40yS2ghb2is6vJxgb
-        GJvYuhg5OSQETCSmtRxn7mLk4hAS2M0osf38TMYuRg6ghIzE4s/VEDXCEiv/PWeHqGliklj8
-        7AIzSIJNQE/i0vvJYINEBMIldk7oYgIpYha4wyjx4/88VpCEsECYxPIPW9hAhrIIqEpM3hAO
-        EuYVcJfY3n4O6gg5iZvnOsFmcgp4SDyYMZMJxBYCqvmz+RnLBEa+BYwMqxglUwuKc9Nziw0L
-        jPJSy/WKE3OLS/PS9ZLzczcxggNUS2sH44kT8YcYBTgYlXh4T6hcjhViTSwrrsw9xCjBwawk
-        wuv36EKsEG9KYmVValF+fFFpTmrxIUZpDhYlcV75/GORQgLpiSWp2ampBalFMFkmDk6pBsby
-        bTPZd3Ltb16cbPLgvn6ffeiMX72ne92rVOffvFe6J2H/oRNqcoJ7EiycdsQ7xS3bv3+Zb6XD
-        6iBh+chLh7T4NGufb95Xox0U/V1u2oFZ/ZV8zH2xstv/P7b/aliT5vmLISz4w6vzM8oqEmbY
-        LpzzOORt4MzD6v6c9gd44rUm/LDl0/mueUOJpTgj0VCLuag4EQBMiBZnTAIAAA==
-X-CMS-MailID: 20191119102201epcas5p4e215c25d5d07269a7afb1f86fac0be65
-X-Msg-Generator: CA
+        Tue, 19 Nov 2019 05:24:04 -0500
+Received: from mail-eopbgr150124.outbound.protection.outlook.com ([40.107.15.124]:64736
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726858AbfKSKYE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 05:24:04 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fnKqHR4C68k6WdjPgODraJkSGFvc7nlvCDg7xTeq081SpUL8c7QRkEM7y3cfCP0BKgUn2TqXk5mFLoeeqooo/MV2wCr15UI42pyljk6gg+4D1GbHTQ+ky2iTFKnlUfWNnKSgzB+NWk8Y/IF2NhT3c44BILCzsk9yRNILUNHfH1WCFlpcR+GhdGiworw84ZCnxC8rjDoo1Q3v2/lBwmRFFEfxx6PunfB0naSnpgr8cJpfMYnUtdcXvQPsbDWUqjrdN70gkDc4KvYwwPYTH/Pj1cC4kDD0ieXzxysJ+jryF/2f+SpnUTMpnbT10IR/NrfbVY15Ku4X/XAv+wdXzb3dzQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=elawqTr5xI5rS09nko2ixzI2cpSxG0K1tRKLByyPJSQ=;
+ b=DiDzB0bwSrUJBoWTScnccpkCnwV0jVubJX9LwzvGEB2Xr0vn0PBEmZ2N1cRi7zv7P+PKyz+Jjvn9cfeJcIrOi1rhLpbwXaitDNecLQyZ1drDD69Y5SLQsMQt8MBi/MV/Ssbwl/BN7xo82ipwC2UK3bgoeQjXWC94iYYiG0Sza7zmCrv0XUnj16n6hUtw6mG8SeXdwaDMCfGT6sNzh0hTD/k8dBFMtTez5PtAzqmDYkWS/3XQxCf4S2LI2rQguM3I7o1JtwsJ4RqPt7xzb/ZtNyLTKqV7VY+QhLHPTQ3AhB8xVNlHdhDDCVu57F6raGoIDfE1zuJNPBcTuaslLItV9A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
+ dkim=pass header.d=axentia.se; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=elawqTr5xI5rS09nko2ixzI2cpSxG0K1tRKLByyPJSQ=;
+ b=ePCnXgAUZBGTDeG+oPiH9QF9x85r+jlSwWhpcXJPRyOmSaNRjTiMlvzfCiU1JmNLPHG6MpkjWVHOogSgnY/JUZ5StfVE0Vgft9HVhXJMWjZlmujwTQyPhcOoCo9SgWb7KvSTEzJ97ZHtNHP9Is23d+DTdae6Fjb1MTQQpsAdhwY=
+Received: from AM6PR0202MB3432.eurprd02.prod.outlook.com (52.133.11.29) by
+ AM6PR0202MB3368.eurprd02.prod.outlook.com (52.133.10.23) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2451.27; Tue, 19 Nov 2019 10:24:00 +0000
+Received: from AM6PR0202MB3432.eurprd02.prod.outlook.com
+ ([fe80::dc43:ed2c:945a:cd5]) by AM6PR0202MB3432.eurprd02.prod.outlook.com
+ ([fe80::dc43:ed2c:945a:cd5%6]) with mapi id 15.20.2451.031; Tue, 19 Nov 2019
+ 10:24:00 +0000
+From:   Peter Rosin <peda@axentia.se>
+To:     Lei YU <mine260309@gmail.com>
+CC:     Wolfram Sang <wsa@the-dreams.de>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] docs: i2c: Fix return value of i2c_smbus_xxx functions
+Thread-Topic: [PATCH] docs: i2c: Fix return value of i2c_smbus_xxx functions
+Thread-Index: AQHVnrdKJrKxiOciCEaViJqC+aa9maeSS/0A///yPYCAAAs+gA==
+Date:   Tue, 19 Nov 2019 10:24:00 +0000
+Message-ID: <c8aeb189-16da-0585-db6e-ec61a87eafba@axentia.se>
+References: <1574153778-59977-1-git-send-email-mine260309@gmail.com>
+ <a1444cbf-3a1d-6f17-97a9-77664a95d304@axentia.se>
+ <CAARXrtmHh-7smvGi1_0J81zRfR9iiEG2+DJK2nDi_fThOKggmA@mail.gmail.com>
+In-Reply-To: <CAARXrtmHh-7smvGi1_0J81zRfR9iiEG2+DJK2nDi_fThOKggmA@mail.gmail.com>
+Accept-Language: en-US, sv-SE
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
+x-originating-ip: [213.112.138.100]
+x-clientproxiedby: HE1PR09CA0060.eurprd09.prod.outlook.com
+ (2603:10a6:7:3c::28) To AM6PR0202MB3432.eurprd02.prod.outlook.com
+ (2603:10a6:209:26::29)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peda@axentia.se; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 93699f84-4389-45c3-3fd4-08d76cda97da
+x-ms-traffictypediagnostic: AM6PR0202MB3368:
+x-microsoft-antispam-prvs: <AM6PR0202MB3368BDC01C150926018861C0BC4C0@AM6PR0202MB3368.eurprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 022649CC2C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(39830400003)(346002)(136003)(396003)(366004)(189003)(199004)(186003)(4326008)(52116002)(6486002)(26005)(1411001)(8676002)(76176011)(71190400001)(71200400001)(386003)(6506007)(53546011)(8936002)(6246003)(229853002)(66476007)(36756003)(86362001)(6916009)(31696002)(6436002)(6512007)(102836004)(81156014)(66946007)(66556008)(64756008)(66446008)(4744005)(2906002)(7736002)(305945005)(14454004)(4001150100001)(508600001)(81166006)(54906003)(58126008)(99286004)(6116002)(3846002)(316002)(25786009)(31686004)(66066001)(65806001)(65956001)(446003)(476003)(11346002)(2616005)(486006)(256004)(14444005)(5660300002);DIR:OUT;SFP:1102;SCL:1;SRVR:AM6PR0202MB3368;H:AM6PR0202MB3432.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: axentia.se does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: sYWVv+a5XxbuHZBqwZlftjvLpYzWfDWOufRfdLjA73j0CbMGWBPqMVfoThYR0/iwopyI5++LBbbszwdCjec0P54IXWjN8MCgvKRgD9crQMCLgNlIBXm+0IVVAR3ND7FKXYuedOb7jIPnIBPU60ch1j3Jls4qokt0su4kuO2pqfHHB4rXISlfJaQ/Bk/yAa/UDI3a1MYRAejdfOtBwCr8yGnv+0icw5gjIvPJYF7FYVV864yYZKxDZeJu2ZuciXc9XMP13Do60uB0/xXu+yydJZ1bv/PjIyiywmjJcFZrr04dAgwGknIcPagOocksvTuQktpZJ5bxyPAPAlJ6mbqtyLjahwjfd6A9CCF7GjPwMyp1ojqtfs8SvfHcQnRrQJiehWIAkQdTh/KnR6mo9YRrJ+KtCESup4by3BUbRIBEA9aKMXPRz6SQ5+T4g6M1G9cH
+x-ms-exchange-transport-forked: True
 Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20191119102201epcas5p4e215c25d5d07269a7afb1f86fac0be65
-References: <1574158838-4616-1-git-send-email-pankj.sharma@samsung.com>
-        <CGME20191119102201epcas5p4e215c25d5d07269a7afb1f86fac0be65@epcas5p4.samsung.com>
+Content-ID: <9F5053F4363FAC45AD7B7374A1315585@eurprd02.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: axentia.se
+X-MS-Exchange-CrossTenant-Network-Message-Id: 93699f84-4389-45c3-3fd4-08d76cda97da
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Nov 2019 10:24:00.4056
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: GKZ3ww9Zqrgi1kNPv9t/OI4GTiYXOcUAM3JI8PEQ9HZJJQmvQ05wM75RtdO9RGgD
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0202MB3368
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The function m_can_runtime_resume() is getting recursively called from
-m_can_class_resume(). This results in a lock up.
-
-We need not call m_can_class_resume() during m_can_runtime_resume().
-
-Fixes: f524f829b75a ("can: m_can: Create a m_can platform framework")
-
-Signed-off-by: Pankaj Sharma <pankj.sharma@samsung.com>
-Signed-off-by: Sriram Dash <sriram.dash@samsung.com>
----
- drivers/net/can/m_can/m_can_platform.c | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/drivers/net/can/m_can/m_can_platform.c b/drivers/net/can/m_can/m_can_platform.c
-index 2eaa354..38ea5e6 100644
---- a/drivers/net/can/m_can/m_can_platform.c
-+++ b/drivers/net/can/m_can/m_can_platform.c
-@@ -166,8 +166,6 @@ static int __maybe_unused m_can_runtime_resume(struct device *dev)
- 	if (err)
- 		clk_disable_unprepare(mcan_class->hclk);
- 
--	m_can_class_resume(dev);
--
- 	return err;
- }
- 
--- 
-2.7.4
-
+T24gMjAxOS0xMS0xOSAxMDo0MywgTGVpIFlVIHdyb3RlOg0KPiBPbiBUdWUsIE5vdiAxOSwgMjAx
+OSBhdCA1OjMzIFBNIFBldGVyIFJvc2luIDxwZWRhQGF4ZW50aWEuc2U+IHdyb3RlOg0KPj4gQW5k
+IHRoZSBsaW5lIGlzIG5vdyB0b28gbG9uZyBjb21wYXJlZCB0byB0aGUgcmVzdCBvZiB0aGUgdGV4
+dCwgc28geW91DQo+PiBuZWVkIHRvIHJld3JhcCB0aGUgcGFyYWdyYXBoLg0KPiANCj4gSW4gdGhp
+cyBwYXRjaCBpdCdzIGF0IGNvbHVtbiA3OCwgdGhhdCBzaG91bGQgYmUgT0suDQoNCk5vLCB0aGF0
+J3Mgbm90IG9rLiBJZiB0aGUgcmVzdA0Kb2YgdGhlIHBhcmFncmFwaCBpcyB3cmFwcGVkIGF0IDcy
+IChvciBzb21ldGhpbmcgc3VjaCksIGEgc2luZ2xlIGxpbmUNCmJyZWFraW5nIHRoYXQgcGF0dGVy
+biB3aWxsIGJlDQpkaXN0dXJiaW5nIHRvIHRoZSByZWFkZXIuIFRoZQ0KZmFjdCB0aGF0IHlvdSBk
+b24ndCBnZXQgc29tZQ0KY2hlY2twYXRjaCB3YXJuaW5nIGhhcyBub3RoaW5nDQp0byBkbyB3aXRo
+IHRoYXQuDQoNCkNoZWVycywNClBldGVyDQo=
