@@ -2,204 +2,152 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0865C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 18:47:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06C70C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 18:47:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 763E2208A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 18:47:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE912208A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 18:47:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho.nsa.gov header.i=@tycho.nsa.gov header.b="HQuay805"
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="kPt8IbHB";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="Ns9eWvNM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727383AbfKSSrP (ORCPT
+        id S1727417AbfKSSr2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 13:47:15 -0500
-Received: from USAT19PA25.eemsg.mail.mil ([214.24.22.199]:62283 "EHLO
-        USAT19PA25.eemsg.mail.mil" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727016AbfKSSrP (ORCPT
+        Tue, 19 Nov 2019 13:47:28 -0500
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:23006 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726792AbfKSSr2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 13:47:15 -0500
-X-EEMSG-check-017: 52443221|USAT19PA25_ESA_OUT06.csd.disa.mil
-X-IronPort-AV: E=Sophos;i="5.69,219,1571702400"; 
-   d="scan'208";a="52443221"
-Received: from emsm-gh1-uea11.ncsc.mil ([214.29.60.3])
-  by USAT19PA25.eemsg.mail.mil with ESMTP/TLS/DHE-RSA-AES256-SHA256; 19 Nov 2019 18:46:39 +0000
+        Tue, 19 Nov 2019 13:47:28 -0500
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAJIjtm9029041;
+        Tue, 19 Nov 2019 10:47:14 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=pfpt0818;
+ bh=fVwou1cwdHpI7+SoHixSqd70XiclbDxRh1WpAM9L4ek=;
+ b=kPt8IbHBnXaeiKgoR0baC6+Ztbh+zQDcBpm+P36kV5XYVSEO03r82UQgQDj+T6QS0VMi
+ 6QeF/HarUxHeeegJTFKVLZtJhwLbFqKO+grjTvAiSpvFuG3vg6EzGyd1nYz98SE5gNeQ
+ 10nIUjONi4w03Bd4s9tbGvW6g0daQ70gziXghYhbG8mSV9qhkezp7gCzKwMNf4Vpzs17
+ Vd6GXbSjd4fcRbHc09xexqywd3SCWZfli0Z04/mIqttxLSaUaZsy9bZAFydLV7A6CEVO
+ dr1rrOcrJjfbmmFVJr2zcRDwc9vxL6r/AbUMfaf+e33+5KUCBg5Encf4D8cy+NkBPsuH gQ== 
+Received: from sc-exch02.marvell.com ([199.233.58.182])
+        by mx0a-0016f401.pphosted.com with ESMTP id 2wc8423j0m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Tue, 19 Nov 2019 10:47:14 -0800
+Received: from SC-EXCH02.marvell.com (10.93.176.82) by SC-EXCH02.marvell.com
+ (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Tue, 19 Nov
+ 2019 10:47:13 -0800
+Received: from NAM04-CO1-obe.outbound.protection.outlook.com (104.47.45.51) by
+ SC-EXCH02.marvell.com (10.93.176.82) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Tue, 19 Nov 2019 10:47:13 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bEJxem/CCLiZdVbNCDmOdUq3mc7qZ1OpTigYuLnfdF6/PPdeIN53rCYqY1m8MQnmaaRCWldE8huMz6fwdX5oXHi8eBzPxApQLoF4Kx2YQdOoLp7ZJzcCNBoopxYJCPYUhSSe+bZ2Wv+DNT7cqC1tYjTPgZLfcCFVv9VhUK1ENxJfYrSJ/GjPMSlHAwAL7T4HF1W59h5undPFEQNnNuHss+zqYKQi3jwrQNqUuzO3C4XwK/YnYeh+A69zeBPUhzO/njPAd807XbuvkAkT8LF5xke0vkDajgzePwnOOYNpuSgYfXhgsjmO0Bm7p8RFJgooXy32F0pUOjJwffXLaSF3bw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fVwou1cwdHpI7+SoHixSqd70XiclbDxRh1WpAM9L4ek=;
+ b=WboR907Fby7+YZK1kYvQ1oQ/4EdP48VrslBNmXJ8LxScp3p/N6QtrVSlQxvGk3GECI06ysyYjSEHODjy6qtnO3TOMs0yUecIh+c+3jczWHfEpUBbj97F6qQC5K3MSk7bsYEBs/vgPm6D/VL3LzBg+Hyc7uBFLmU9s7zD02w3n9PTnWLxMkzM/pM2JtKY5bpMhjlHLxVQ3Ae70p0HGLf9iEk7kT4LUnrzBsYM5CFhUAcsKPX2SuOk0pipJ21nCPqhkjv20+jzbAGndmeJ7VmdUJYQOwkIeorSj94jxfGPeOlxwK7tL5Wl+YPutJQv14aJPm7e5h59VGen81D9Muzllw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
+ dkim=pass header.d=marvell.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tycho.nsa.gov; i=@tycho.nsa.gov; q=dns/txt;
-  s=tycho.nsa.gov; t=1574189199; x=1605725199;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=a1qenierVxR6C2UDlTKgZhfyk6t3yvYhwifbLvyty/Q=;
-  b=HQuay805RzPyFadheWPiLVpV7eHY6+AlvWvRdIbevJjWeNpjPUXtNJVH
-   2kjF9RqGhWojaUR77cxuhMepuGQU7q1Gwjg3FmLyNQYwQz75rhwHptq3h
-   QieNDuCfmBE7TkVGqMJY1b2Ck0JYGAenYBIjafNnT6q+N/t3lO9Ll4wk9
-   0hVUIUy3GE5hChD0xNQQhLBpT+Zzxi9fj+PMmaa2Cdirvex6D2Bc15R1l
-   DW4glhjUaX4jnzD+Oi5Agydo61Kb6woMlYFSLwkj3RYb/2ff2kd45lh8Z
-   hXRKU2nx08KnoYyCLvEnXFGYERfGNdSRzFWaC/VWCz6j7tdSHlQepTyYS
-   w==;
-X-IronPort-AV: E=Sophos;i="5.69,219,1571702400"; 
-   d="scan'208";a="35731673"
-IronPort-PHdr: =?us-ascii?q?9a23=3AXwZHGxYblDdFJnpLN7uD913/LSx+4OfEezUN45?=
- =?us-ascii?q?9isYplN5qZrsiybnLW6fgltlLVR4KTs6sC17ON9fm8CSdZuMjJmUtBWaQEbw?=
- =?us-ascii?q?UCh8QSkl5oK+++Imq/EsTXaTcnFt9JTl5v8iLzG0FUHMHjew+a+SXqvnYdFR?=
- =?us-ascii?q?rlKAV6OPn+FJLMgMSrzeCy/IDYbxlViDanbr5+MRu7oR/MusQZgoZuJbs9xg?=
- =?us-ascii?q?bIr3BVZ+lY2GRkKE6JkR3h/Mmw5plj8ypRu/Il6cFNVLjxcro7Q7JFEjkoKn?=
- =?us-ascii?q?g568L3uxbNSwuP/WYcXX4NkhVUGQjF7Qr1UYn3vyDnq+dywiiaPcnxTbApRT?=
- =?us-ascii?q?Sv6rpgRRH0hCsbMTMy7XragdJsgq1FvB2hpgR/w4/Kb4GTKPp+Zb7WcdcDSW?=
- =?us-ascii?q?ZcQspdSylND4WyYIsVC+oKIPhWoY/zqVATqReyHAehCefqxjJOm3T437A10/?=
- =?us-ascii?q?45HA/bwgIgEdIAvnfaotr7O6gdU/y6wqbTwDXfbf5bwyvx5JTGfx0jp/yHQL?=
- =?us-ascii?q?J+cdDWyUkqDw7Lk0mQppL9PzOVyOsNtXWQ4fdlVe21j24nrx9+oziyzcorkY?=
- =?us-ascii?q?nGm5kVx0vY9SR53Ik1Jdq4RFR9Yd6/CpRcrS6aN4xoQs47RWxjpSU0yqUetJ?=
- =?us-ascii?q?KmcyUHx44ryh7CZ/CdbYSF7QzvWPyMLTp+mXlrYqiwhwyo/kil0uD8U86030?=
- =?us-ascii?q?tUoSddidnMs2wN1wTU6siaVvtx5keh1iiL1wDU8uxEPVo7lbDaK5482b48jI?=
- =?us-ascii?q?YTsETfES/2n0X6lqmWeVk/+ue08ejnZ7TmppuEO491jAHxLLgul9SiDek3PQ?=
- =?us-ascii?q?UCRWiW9fmm2LH98kD1Xq9GguAunqncqp/aJMAbpqCjAw9S14Yu8w2/ACq90N?=
- =?us-ascii?q?kDgXkGLE5KeBKAj4TzPVHOO+r3Ae2wg1Srjjdn3+rGMaH5ApXRMnjDl6/sfL?=
- =?us-ascii?q?h8605YzAo+1tNf6IxOCrEHPv3zXlX9tNvCDh82Kwa02froCM1h1oMCXmKCGr?=
- =?us-ascii?q?SZP73WsV+J4OIvPuaNaZQLuDbyNfcl/eTijXwnll8He6mmw58XZGq/HvR8LE?=
- =?us-ascii?q?WTeWDsjcsZEWcWogo+S/TniFmDUT5VenazULsw5jIlB4K8C4fMWIStjaef3C?=
- =?us-ascii?q?e0AJJWfHpKClOSHnfycYWLRfMMZDiVIs97nTxXHYSmHrAg0RXmmALzwL1hZr?=
- =?us-ascii?q?7L+ykcnZHuzt5446vUjx5ksXRvAsCc1XydZ397k3lORDIs2q1750tnxQSty6?=
- =?us-ascii?q?991sdEGMRT6vUBaQIzMZrR3qQuENzpch7QddeODlC9S5OpBi9nHYF5+MMHf0?=
- =?us-ascii?q?soQ4bqtRvExSf/RuZOxrE=3D?=
-X-IPAS-Result: =?us-ascii?q?A2BOAAB5N9Rd/wHyM5BlGgEBAQEBAQEBAQMBAQEBEQEBA?=
- =?us-ascii?q?QICAQEBAYF+gXQsgUAzKoQqj1oBAQEBAQEGgREliWaKH4ckCQEBAQEBAQEBA?=
- =?us-ascii?q?TQBAgEBhEACgiUkOBMCEAEBAQQBAQEBAQUDAQFshUOCOykBgmwBAQEBAgEjB?=
- =?us-ascii?q?BFBEAsYAgImAgJXBgEMBgIBAYJfP4JTBSCwUnV/M4VOgy2BSIEOKIgig3MYe?=
- =?us-ascii?q?IEHgTgMgio1PodVgl4EjQ+JTEZ0lhSCNYI3kxIGG4I+h2iEOosxLY4bnBkig?=
- =?us-ascii?q?VgrCAIYCCEPgydQERSRJhcVjiwjAzCBBQEBjjIBAQ?=
-Received: from tarius.tycho.ncsc.mil ([144.51.242.1])
-  by emsm-gh1-uea11.NCSC.MIL with ESMTP; 19 Nov 2019 18:46:37 +0000
-Received: from moss-pluto.infosec.tycho.ncsc.mil (moss-pluto [192.168.25.131])
-        by tarius.tycho.ncsc.mil (8.14.4/8.14.4) with ESMTP id xAJIkbj2004921;
-        Tue, 19 Nov 2019 13:46:37 -0500
-Subject: Re: [RFC PATCH 2/2] selinux: Propagate RCU walk status from
- 'security_inode_follow_link()'
-To:     Will Deacon <will@kernel.org>, selinux@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org
-References: <20191119184057.14961-1-will@kernel.org>
- <20191119184057.14961-3-will@kernel.org>
-From:   Stephen Smalley <sds@tycho.nsa.gov>
-Message-ID: <d1b03e3f-2906-d022-3578-e443a5ebb1a0@tycho.nsa.gov>
-Date:   Tue, 19 Nov 2019 13:46:37 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <20191119184057.14961-3-will@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+ d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fVwou1cwdHpI7+SoHixSqd70XiclbDxRh1WpAM9L4ek=;
+ b=Ns9eWvNM6IWUsObRhqDUVffrhhXrj54up6JUoa5xnW9kRDrr2ZG8Sw0dleeJ8VF+C8K3JF1jXh4l8huusQRPIezydJ6rdLa8FqfioIcLfARq7lPQKZGMIyu2hbgqO3J6GSnFpBeHdIY4iyAFP/oz/j0SAuOn2LlNfow3OlHvN0Y=
+Received: from MN2PR18MB3408.namprd18.prod.outlook.com (10.255.237.10) by
+ MN2PR18MB3328.namprd18.prod.outlook.com (10.255.237.16) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2451.22; Tue, 19 Nov 2019 18:47:12 +0000
+Received: from MN2PR18MB3408.namprd18.prod.outlook.com
+ ([fe80::657c:6c81:859d:106]) by MN2PR18MB3408.namprd18.prod.outlook.com
+ ([fe80::657c:6c81:859d:106%7]) with mapi id 15.20.2451.029; Tue, 19 Nov 2019
+ 18:47:12 +0000
+From:   Robert Richter <rrichter@marvell.com>
+To:     Baruch Siach <baruch@tkos.co.il>,
+        Jan Glauber <jglauber@marvell.com>
+CC:     Arnd Bergmann <arnd@arndb.de>, arm soc <arm@kernel.org>,
+        "Ganapatrao Prabhakerrao Kulkarni" <gkulkarni@marvell.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "soc@kernel.org" <soc@kernel.org>,
+        "George Cherian" <gcherian@marvell.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Will Deacon <will@kernel.org>,
+        "Sunil Kovvuri Goutham" <sgoutham@marvell.com>
+Subject: Re: [PATCH 1/2] MAINTAINERS: Update Cavium ThunderX drivers
+Thread-Topic: [PATCH 1/2] MAINTAINERS: Update Cavium ThunderX drivers
+Thread-Index: AQHVnwnBWbWzqpNF6EqB5ClGRnz9uw==
+Date:   Tue, 19 Nov 2019 18:47:12 +0000
+Message-ID: <20191119184657.2g5v36rq6p4nm5pr@rric.localdomain>
+References: <20191119165549.14570-1-rrichter@marvell.com>
+ <20191119165549.14570-3-rrichter@marvell.com>
+ <20191119170207.cwfowgc57rvhg2td@sapphire.tkos.co.il>
+In-Reply-To: <20191119170207.cwfowgc57rvhg2td@sapphire.tkos.co.il>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HE1PR0701CA0043.eurprd07.prod.outlook.com
+ (2603:10a6:3:9e::11) To MN2PR18MB3408.namprd18.prod.outlook.com
+ (2603:10b6:208:165::10)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [31.208.96.227]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 56bcf628-3f96-4114-d37f-08d76d20e381
+x-ms-traffictypediagnostic: MN2PR18MB3328:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR18MB332854E3A827A4BF91014EA9D94C0@MN2PR18MB3328.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 022649CC2C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(39860400002)(366004)(396003)(136003)(199004)(189003)(186003)(25786009)(6246003)(81166006)(107886003)(102836004)(478600001)(76176011)(66066001)(14454004)(52116002)(6636002)(7736002)(4744005)(305945005)(6116002)(3846002)(8936002)(64756008)(66446008)(256004)(66946007)(476003)(66556008)(14444005)(66476007)(26005)(81156014)(6436002)(386003)(53546011)(1076003)(5660300002)(486006)(110136005)(6506007)(86362001)(54906003)(71200400001)(4326008)(316002)(2906002)(71190400001)(11346002)(446003)(9686003)(6512007)(6486002)(229853002)(8676002)(99286004);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB3328;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: marvell.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: tulj+FbYeIBizla2v1EiSJ57+upKpTOaLtkROh00BssvvnQv3U5ytbU5Zs+O2x61kq83kXuWvap/shjkIRyw7Tt/lw7XB0aJOURYTgWZPMKXr1EYBVCGT65LGqUqGlRH/Uu9grV1oSNULjMzf/yf/MWnRgT1N+GIZ9X1a0AkPdu4YZLtbuwGNuAS1rGiQVW1X8t4An48WQpSgSEGuD8dw09nTdpEaI5MtUNSXZJoYamZRZyeySh5jCvDXsbc9JRUIKCeS1LEkfXvSDcjYha4XsblBhr40EqA/LrTQo355+iqjpSkFgQ20RL70YwqFrEsuM/XTOr1VjBsfHRq6IoIX1u6As47ZlTU1z0mBU8Mp3OKmTZ/7j/N4hz58E7k1Q7gExFWcS39R2K+AN60nEFbvzsrKJ3tveXJVAupvZaWUi6th1yNZOWElY/1z9N388y7
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <682405F23D2E6A40995A8BAB8B467197@namprd18.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 56bcf628-3f96-4114-d37f-08d76d20e381
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Nov 2019 18:47:12.2050
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: mbeJiSHtarFsdKGVZIseZbtLdJRHoTZYuv2nXnvtJgU+Wf+TB66CBZj5A2+Q6PlCzb8S0URH0d0Y1VnOAmCRWw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB3328
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-19_06:2019-11-15,2019-11-19 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/19/19 1:40 PM, Will Deacon wrote:
-> 'selinux_inode_follow_link()' can be called as part of an RCU path walk,
-> and is passed a 'bool rcu' parameter to indicate whether or not it is
-> being called from within an RCU read-side critical section.
-> 
-> Unfortunately, this knowledge is not propagated further and, instead,
-> 'avc_has_perm()' unconditionally passes a flags argument of '0' to both
-> 'avc_has_perm_noaudit()' and 'avc_audit()' which may block.
-> 
-> Introduce 'avc_has_perm_flags()' which can be used safely from within an
-> RCU read-side critical section.
+On 19.11.19 19:02:07, Baruch Siach wrote:
+> On Tue, Nov 19, 2019 at 04:56:26PM +0000, Robert Richter wrote:
+> > From: Jan Glauber <jglauber@marvell.com>
+> >=20
+> > Remove my maintainer entries for ThunderX drivers as I'm moving on
+> > and won't have access to ThunderX hardware anymore and add Robert.
+> > Also remove the obsolete addresses of David Daney and Steven Hill.
+> >=20
+> > Add an entry to .mailmap for my various email addresses.
+>=20
+> Couldn't find that part in this patch.
 
-Please see e46e01eebbbcf2ff6d28ee7cae9f117e9d1572c8 ("selinux: stop 
-passing MAY_NOT_BLOCK to the AVC upon follow_link").
+Right, this got lost during patch flow, have fixed that.
 
-> 
-> Signed-off-by: Will Deacon <will@kernel.org>
-> ---
->   security/selinux/avc.c         | 12 +++++++-----
->   security/selinux/hooks.c       |  5 +++--
->   security/selinux/include/avc.h | 12 ++++++++----
->   3 files changed, 18 insertions(+), 11 deletions(-)
-> 
-> diff --git a/security/selinux/avc.c b/security/selinux/avc.c
-> index 9c183c899e92..7d99dadd24d0 100644
-> --- a/security/selinux/avc.c
-> +++ b/security/selinux/avc.c
-> @@ -1177,11 +1177,12 @@ inline int avc_has_perm_noaudit(struct selinux_state *state,
->   }
->   
->   /**
-> - * avc_has_perm - Check permissions and perform any appropriate auditing.
-> + * avc_has_perm_flags - Check permissions and perform any appropriate auditing.
->    * @ssid: source security identifier
->    * @tsid: target security identifier
->    * @tclass: target security class
->    * @requested: requested permissions, interpreted based on @tclass
-> + * @flags: AVC_STRICT, AVC_NONBLOCKING, or 0
->    * @auditdata: auxiliary audit data
->    *
->    * Check the AVC to determine whether the @requested permissions are granted
-> @@ -1192,17 +1193,18 @@ inline int avc_has_perm_noaudit(struct selinux_state *state,
->    * permissions are granted, -%EACCES if any permissions are denied, or
->    * another -errno upon other errors.
->    */
-> -int avc_has_perm(struct selinux_state *state, u32 ssid, u32 tsid, u16 tclass,
-> -		 u32 requested, struct common_audit_data *auditdata)
-> +int avc_has_perm_flags(struct selinux_state *state, u32 ssid, u32 tsid,
-> +		       u16 tclass, u32 requested, unsigned int flags,
-> +		       struct common_audit_data *auditdata)
->   {
->   	struct av_decision avd;
->   	int rc, rc2;
->   
-> -	rc = avc_has_perm_noaudit(state, ssid, tsid, tclass, requested, 0,
-> +	rc = avc_has_perm_noaudit(state, ssid, tsid, tclass, requested, flags,
->   				  &avd);
->   
->   	rc2 = avc_audit(state, ssid, tsid, tclass, requested, &avd, rc,
-> -			auditdata, 0);
-> +			auditdata, flags);
->   	if (rc2)
->   		return rc2;
->   	return rc;
-> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-> index 9625b99e677f..0c09f59a2740 100644
-> --- a/security/selinux/hooks.c
-> +++ b/security/selinux/hooks.c
-> @@ -3008,8 +3008,9 @@ static int selinux_inode_follow_link(struct dentry *dentry, struct inode *inode,
->   	if (IS_ERR(isec))
->   		return PTR_ERR(isec);
->   
-> -	return avc_has_perm(&selinux_state,
-> -			    sid, isec->sid, isec->sclass, FILE__READ, &ad);
-> +	return avc_has_perm_flags(&selinux_state, sid, isec->sid, isec->sclass,
-> +				  rcu ? AVC_NONBLOCKING : 0,
-> +				  FILE__READ, &ad);
->   }
->   
->   static noinline int audit_inode_permission(struct inode *inode,
-> diff --git a/security/selinux/include/avc.h b/security/selinux/include/avc.h
-> index 7be0e1e90e8b..0450e1b88182 100644
-> --- a/security/selinux/include/avc.h
-> +++ b/security/selinux/include/avc.h
-> @@ -149,10 +149,14 @@ int avc_has_perm_noaudit(struct selinux_state *state,
->   			 unsigned flags,
->   			 struct av_decision *avd);
->   
-> -int avc_has_perm(struct selinux_state *state,
-> -		 u32 ssid, u32 tsid,
-> -		 u16 tclass, u32 requested,
-> -		 struct common_audit_data *auditdata);
-> +int avc_has_perm_flags(struct selinux_state *state,
-> +		       u32 ssid, u32 tsid,
-> +		       u16 tclass, u32 requested,
-> +		       unsigned flags,
-> +		       struct common_audit_data *auditdata);
-> +
-> +#define avc_has_perm(state, ssid, tsid, tclass, requested, auditdata) \
-> +	avc_has_perm_flags(state, ssid, tsid, tclass, requested, 0, auditdata)
->   
->   int avc_has_extended_perms(struct selinux_state *state,
->   			   u32 ssid, u32 tsid, u16 tclass, u32 requested,
-> 
+Will send v2.
 
+Thanks,
+
+-Robert
