@@ -2,107 +2,142 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F32DC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 00:44:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 125F6C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 00:46:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FE41206CC
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 00:44:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2BE3206CC
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 00:46:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727139AbfKSAoo (ORCPT
+        id S1727099AbfKSAqN convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 19:44:44 -0500
-Received: from mail-ot1-f50.google.com ([209.85.210.50]:35886 "EHLO
-        mail-ot1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726809AbfKSAoo (ORCPT
+        Mon, 18 Nov 2019 19:46:13 -0500
+Received: from relmlor1.renesas.com ([210.160.252.171]:61506 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726809AbfKSAqN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 19:44:44 -0500
-Received: by mail-ot1-f50.google.com with SMTP id f10so16328528oto.3;
-        Mon, 18 Nov 2019 16:44:43 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KK5FYD8PxRF0A+U6gGDQIfKZHAve6NPMN8YtVyh0Ls4=;
-        b=TX7NBv3RMPn9zsA4hKKt9yCAudhBXoXrsk1080njT7aXGRA4iSr6DF7Ac7Rhvi+Qo2
-         7DmmaebQw4bl7AV6yAvFf+QMqwhKLfobWh3o+lQTA0HM+gvsnFGM6YEpoxI5asGIuEPh
-         rP5Z2gLEOzNSqXqhqmkSWJyNnrJiQK3DhI00oZCclZlGQg/TJ+bN0yknml+Vgj2KfKpN
-         /tA6RT1kDOomgIdhAtHb+fqKT3wcKMnwYTPV5yCrJHvyk2iqxWRLwVt7cy840hsNpHHK
-         QF2yoMgynVKLz7T4PpZ03HCTrj0sIrBbxLUaVZ6ByTU1lvcPcSNssY0+rRGBzMrne7nS
-         yKWg==
-X-Gm-Message-State: APjAAAVd3XN3hRlRwXr9y8clWjl952CtZu1QejKReglMf41J16QbmHCX
-        ubh4d0ViMPZ2mwPn500C1oVGf+WbjJ90EI/oBnU=
-X-Google-Smtp-Source: APXvYqz8vlbzWtw6HaYn2YK7CSJv8YIqAwxUC5AlU5cHaNxx+FVcsQ6Zxsu3Nnk0YdAKCbEdeBf9P5RAIwTpaJL28n8=
-X-Received: by 2002:a9d:6649:: with SMTP id q9mr1568242otm.106.1574124283140;
- Mon, 18 Nov 2019 16:44:43 -0800 (PST)
-MIME-Version: 1.0
-References: <20191117101545.6406-1-matwey@sai.msu.ru> <1784520.t1z2W423De@phil>
- <CAJs94EZPLedH4w3+5vfJA+f+1+zLETBdETpqNPytp3LG63az9Q@mail.gmail.com>
-In-Reply-To: <CAJs94EZPLedH4w3+5vfJA+f+1+zLETBdETpqNPytp3LG63az9Q@mail.gmail.com>
-From:   Tom Cubie <tom@radxa.com>
-Date:   Tue, 19 Nov 2019 08:44:06 +0800
-Message-ID: <CAFjve-AT6c-yweF0mOPea-caG3n43nZzVPcwef-qp+n35JN9ig@mail.gmail.com>
-Subject: Re: [PATCH v2] arm64: dts: rockchip: Enable PCIe for Radxa Rock Pi 4 board
-To:     "Matwey V. Kornilov" <matwey.kornilov@gmail.com>
-Cc:     Heiko Stuebner <heiko@sntech.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC support" 
-        <linux-rockchip@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Akash Gajjar <akash@openedev.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        "moderated list:ARM/Rockchip SoC support" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 18 Nov 2019 19:46:13 -0500
+Date:   19 Nov 2019 09:46:12 +0900
+X-IronPort-AV: E=Sophos;i="5.68,321,1569250800"; 
+   d="scan'208";a="32026178"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie5.idc.renesas.com with ESMTP; 19 Nov 2019 09:46:12 +0900
+Received: from morimoto-PC.renesas.com (unknown [10.166.18.140])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id DC54F4001B60;
+        Tue, 19 Nov 2019 09:46:11 +0900 (JST)
+Message-ID: <8736ek7kx8.wl-kuninori.morimoto.gx@renesas.com>
+From:   Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+To:     Eugeniu Rosca <erosca@de.adit-jv.com>
+Cc:     Jiada Wang <jiada_wang@mentor.com>,
+        Mark Brown <broonie@kernel.org>, <alsa-devel@alsa-project.org>,
+        <linux-kernel@vger.kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>,
+        Nilkanth Ahirrao <anilkanth@jp.adit-jv.com>,
+        Hiroyuki Yokoyama <hiroyuki.yokoyama.vx@renesas.com>,
+        Andrew Gabbasov <andrew_gabbasov@mentor.com>
+Subject: Re: [PATCH] ASoC: rsnd: fix DALIGN register for SSIU
+In-Reply-To: <20191118140126.23596-1-erosca@de.adit-jv.com>
+References: <20191118140126.23596-1-erosca@de.adit-jv.com>
+User-Agent: Wanderlust/2.15.9 Emacs/24.5 Mule/6.0
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=ISO-8859-7
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Matwey
 
-On Tue, Nov 19, 2019 at 2:41 AM Matwey V. Kornilov
-<matwey.kornilov@gmail.com> wrote:
->
-> Current schematics
-> (https://dl.radxa.com/rockpi4/docs/hw/rockpi4/rockpi4_v13_sch_20181112.pdf)
-> is controversial on 1.8 supply:
->
-> On sheet 15 it says that 1.8 is supplied by VCC_1V8
-> at the same time on sheet 3 it says that it is supplied by VCCA_1V8
+Hi Eugeniu
 
-I am sorry for the confusion of the schematic. Please ignore the power
-tree on sheet 3, it's from the original reference design, I think we
-have different power paths on ROCK Pi 4. Please refer the circuits
-starting from sheet 5 below. It reflects the real hardware. We will
-fix the power tree and upload a new version of the schematic.
+Thank you for your patch.
 
->
-> >
-> > Thanks
-> > Heiko
-> >
-> >
->
->
-> --
-> With best regards,
-> Matwey V. Kornilov
->
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+> From: Nilkanth Ahirrao <anilkanth@jp.adit-jv.com>
+> 
+> The current driver only sets 0x76543210 and 0x67452301 for DALIGN.
+> This doesn¢t work well for TDM split and ex-split mode for all SSIU.
+> This patch programs the DALIGN registers based on the SSIU number.
+> 
+> Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> Cc: Hiroyuki Yokoyama <hiroyuki.yokoyama.vx@renesas.com>
+> Cc: Jiada Wang <jiada_wang@mentor.com>
+> Cc: Andrew Gabbasov <andrew_gabbasov@mentor.com>
+> Fixes: a914e44693d41b ("ASoC: rsnd: more clear rsnd_get_dalign() for DALIGN")
+> Signed-off-by: Nilkanth Ahirrao <anilkanth@jp.adit-jv.com>
+> [erosca: Adjust Fixes: tag, reformat patch description]
+> Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+> ---
+>  sound/soc/sh/rcar/core.c | 25 +++++++++++++++++++++----
+>  1 file changed, 21 insertions(+), 4 deletions(-)
+> 
+> diff --git a/sound/soc/sh/rcar/core.c b/sound/soc/sh/rcar/core.c
+> index e9596c2096cd..ae05ed08a2b3 100644
+> --- a/sound/soc/sh/rcar/core.c
+> +++ b/sound/soc/sh/rcar/core.c
+> @@ -376,6 +376,16 @@ u32 rsnd_get_adinr_bit(struct rsnd_mod *mod, struct rsnd_dai_stream *io)
+>   */
+>  u32 rsnd_get_dalign(struct rsnd_mod *mod, struct rsnd_dai_stream *io)
+>  {
+> +	static const u32 dalign_values[8][2] = {
+> +		{0x76543210, 0x67452301},
+> +		{0x00000032, 0x00000023},
+> +		{0x00007654, 0x00006745},
+> +		{0x00000076, 0x00000067},
+> +		{0xfedcba98, 0xefcdab89},
+> +		{0x000000ba, 0x000000ab},
+> +		{0x0000fedc, 0x0000efcd},
+> +		{0x000000fe, 0x000000ef},
+> +	};
+>  	struct rsnd_mod *ssiu = rsnd_io_to_mod_ssiu(io);
+>  	struct rsnd_mod *target;
+>  	struct snd_pcm_runtime *runtime = rsnd_io_to_runtime(io);
+> @@ -413,11 +423,18 @@ u32 rsnd_get_dalign(struct rsnd_mod *mod, struct rsnd_dai_stream *io)
+>  
+>  	/* Non target mod or non 16bit needs normal DALIGN */
+>  	if ((snd_pcm_format_width(runtime->format) != 16) ||
+> -	    (mod != target))
+> -		return 0x76543210;
+> +	    (mod != target)) {
+> +		if (mod == ssiu)
+> +			return dalign_values[rsnd_mod_id_sub(mod)][0];
+> +		else
+> +			return 0x76543210;
+>  	/* Target mod needs inverted DALIGN when 16bit */
+> -	else
+> -		return 0x67452301;
+> +	} else {
+> +		if (mod == ssiu)
+> +			return dalign_values[rsnd_mod_id_sub(mod)][1];
+> +		else
+> +			return 0x67452301;
+> +	}
+>  }
 
+Basically I have no objection.
+But we can reuse dalign_values[0][x] value ?
 
+	id  = 0;
+	if ((snd_pcm_format_width(runtime->format) != 16) ||
+	    (mod != target)) {
+		inv = 0;
+		if (mod == ssiu))
+			id = rsnd_mod_id_sub(mod);
+	/* Target mod needs inverted DALIGN when 16bit */
+	} else {
+		inv = 1;
+		if (mod == ssiu)
+			id = rsnd_mod_id_sub(mod);
+	}
 
--- 
-radxa rock pi 4 - the next generation Pi.
+	return dalign_values[id][inv];
 
-radxa.com
+Thank you for your help !!
+Best regards
+---
+Kuninori Morimoto
