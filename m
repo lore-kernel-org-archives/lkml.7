@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00C74C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:31:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B336C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:31:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C382F21783
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:31:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5667E21783
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:31:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141474;
-	bh=B3Bt96iKRJBUIJiPv6nnlkBt+SfcTWmHGv9a1VBmFjw=;
+	s=default; t=1574141480;
+	bh=dCT13uGBIsVx/oGMOfn3IyzwIG3bK91+YxGQFljnVqc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oIabzOG8K02IILSmpNIXTDUqQS7eJKj6QowEtdZPzr20Nc0CVTzZDO43lYpQ86MWT
-	 v8SGzgv1IW82eRGW2Y3wKHI7jYAlesce9VzDDvPPIR/HeoWUxNADGsOoiOsCGWy0tz
-	 leT1nsmDWqQwzHnpm6SlFxUd01B40rWu9e13CaCU=
+	b=wHCtlCaHlcHWbqL5bKSRNbeDbkJoJL0XpAChiO9M4y8jeSPM503ki/r+Fj9DCbhpw
+	 FUXc8/9zoZZ5YcoDYDmNNgXXo/yAWJRNgUN7QYFk3NEK4EZEIvDzKPyDs8geJbjggI
+	 cXYSEBmyJ0eVAniU4jQXe+IIxkKk9GfVKlm1zJoU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729223AbfKSFbN (ORCPT
+        id S1728407AbfKSFbS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:31:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50058 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:31:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50162 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729204AbfKSFbJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:31:09 -0500
+        id S1728109AbfKSFbQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:31:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90F0121783;
-        Tue, 19 Nov 2019 05:31:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87A7A208C3;
+        Tue, 19 Nov 2019 05:31:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141469;
-        bh=B3Bt96iKRJBUIJiPv6nnlkBt+SfcTWmHGv9a1VBmFjw=;
+        s=default; t=1574141475;
+        bh=dCT13uGBIsVx/oGMOfn3IyzwIG3bK91+YxGQFljnVqc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cLKewZm75qBeSj4hXnVShlgImOPbub3ITv4V7awDflgzV7NYWqLgh8EDGu0bxczQY
-         hV2aUuQ4hwkG4QFv6jXleEpenheqkMERcL+ZZ7b8oDE77yhtYIvO8sDgX6iSZDowPZ
-         J9oVxziC8KKBlNcqSxkmG8NfpCigWDipi5mLjnGo=
+        b=FfGilmChu9hcEQql1oDp+HYo1uTvhSEzDnjoIAj+sxIY2ZjOF43LlBe09nQOrIin2
+         Rk8RRdV6vrwjexbW9zve9E3NXkrw6w41zCpiAZtQkiEVKKSvQAwmBwbfV1Hl2xou0A
+         Tk7ud8SmmNTOoDl2kFpqwtI1zgBz++SFEzdAFybE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Himanshu Madhani <himanshu.madhani@cavium.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 170/422] scsi: qla2xxx: Defer chip reset until target mode is enabled
-Date:   Tue, 19 Nov 2019 06:16:07 +0100
-Message-Id: <20191119051409.435750100@linuxfoundation.org>
+Subject: [PATCH 4.19 172/422] scsi: qla2xxx: Fix deadlock between ATIO and HW lock
+Date:   Tue, 19 Nov 2019 06:16:09 +0100
+Message-Id: <20191119051409.570618975@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -63,69 +63,148 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Quinn Tran <quinn.tran@cavium.com>
 
-[ Upstream commit 93eca6135183f7a71e36acd47655a085ed11bcdc ]
+[ Upstream commit 1073daa470d906f1853ed4b828f16e2350a5875c ]
 
-For target mode, any chip reset triggered before target mode is enabled will
-be held off until user is ready to enable.  This prevents the chip from
-starting or running before it is intended.
+Move ATIO queue processing out of hardware_lock to prevent deadlock.
 
+Fixes: 3bb67df5b5f8 ("qla2xxx: Check for online flag instead of active reset when transmitting responses")
 Signed-off-by: Quinn Tran <quinn.tran@cavium.com>
 Signed-off-by: Himanshu Madhani <himanshu.madhani@cavium.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_os.c | 28 +++++++++++++++++++++-------
- 1 file changed, 21 insertions(+), 7 deletions(-)
+ drivers/scsi/qla2xxx/qla_init.c | 17 +++---------
+ drivers/scsi/qla2xxx/qla_isr.c  | 48 +++++++++++++++------------------
+ 2 files changed, 26 insertions(+), 39 deletions(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
-index 18ee614fe07f5..d978ea1344625 100644
---- a/drivers/scsi/qla2xxx/qla_os.c
-+++ b/drivers/scsi/qla2xxx/qla_os.c
-@@ -6059,12 +6059,27 @@ qla2x00_do_dpc(void *data)
- 		if (test_and_clear_bit
- 		    (ISP_ABORT_NEEDED, &base_vha->dpc_flags) &&
- 		    !test_bit(UNLOADING, &base_vha->dpc_flags)) {
-+			bool do_reset = true;
-+
-+			switch (ql2x_ini_mode) {
-+			case QLA2XXX_INI_MODE_ENABLED:
-+				break;
-+			case QLA2XXX_INI_MODE_DISABLED:
-+				if (!qla_tgt_mode_enabled(base_vha))
-+					do_reset = false;
-+				break;
-+			case QLA2XXX_INI_MODE_DUAL:
-+				if (!qla_dual_mode_enabled(base_vha))
-+					do_reset = false;
-+				break;
-+			default:
-+				break;
-+			}
- 
--			ql_dbg(ql_dbg_dpc, base_vha, 0x4007,
--			    "ISP abort scheduled.\n");
--			if (!(test_and_set_bit(ABORT_ISP_ACTIVE,
-+			if (do_reset && !(test_and_set_bit(ABORT_ISP_ACTIVE,
- 			    &base_vha->dpc_flags))) {
--
-+				ql_dbg(ql_dbg_dpc, base_vha, 0x4007,
-+				    "ISP abort scheduled.\n");
- 				if (ha->isp_ops->abort_isp(base_vha)) {
- 					/* failed. retry later */
- 					set_bit(ISP_ABORT_NEEDED,
-@@ -6072,10 +6087,9 @@ qla2x00_do_dpc(void *data)
- 				}
- 				clear_bit(ABORT_ISP_ACTIVE,
- 						&base_vha->dpc_flags);
-+				ql_dbg(ql_dbg_dpc, base_vha, 0x4008,
-+				    "ISP abort end.\n");
+diff --git a/drivers/scsi/qla2xxx/qla_init.c b/drivers/scsi/qla2xxx/qla_init.c
+index e5ecef94aebdb..733a55c09b1ca 100644
+--- a/drivers/scsi/qla2xxx/qla_init.c
++++ b/drivers/scsi/qla2xxx/qla_init.c
+@@ -4869,19 +4869,10 @@ qla2x00_configure_loop(scsi_qla_host_t *vha)
+ 			 */
+ 			if (qla_tgt_mode_enabled(vha) ||
+ 			    qla_dual_mode_enabled(vha)) {
+-				if (IS_QLA27XX(ha) || IS_QLA83XX(ha)) {
+-					spin_lock_irqsave(&ha->tgt.atio_lock,
+-					    flags);
+-					qlt_24xx_process_atio_queue(vha, 0);
+-					spin_unlock_irqrestore(
+-					    &ha->tgt.atio_lock, flags);
+-				} else {
+-					spin_lock_irqsave(&ha->hardware_lock,
+-					    flags);
+-					qlt_24xx_process_atio_queue(vha, 1);
+-					spin_unlock_irqrestore(
+-					    &ha->hardware_lock, flags);
+-				}
++				spin_lock_irqsave(&ha->tgt.atio_lock, flags);
++				qlt_24xx_process_atio_queue(vha, 0);
++				spin_unlock_irqrestore(&ha->tgt.atio_lock,
++				    flags);
  			}
--
--			ql_dbg(ql_dbg_dpc, base_vha, 0x4008,
--			    "ISP abort end.\n");
  		}
+ 	}
+diff --git a/drivers/scsi/qla2xxx/qla_isr.c b/drivers/scsi/qla2xxx/qla_isr.c
+index 88d8acf86a2a4..f559beda8d5ad 100644
+--- a/drivers/scsi/qla2xxx/qla_isr.c
++++ b/drivers/scsi/qla2xxx/qla_isr.c
+@@ -3121,6 +3121,7 @@ qla24xx_intr_handler(int irq, void *dev_id)
+ 	uint16_t	mb[8];
+ 	struct rsp_que *rsp;
+ 	unsigned long	flags;
++	bool process_atio = false;
  
- 		if (test_and_clear_bit(FCPORT_UPDATE_NEEDED,
+ 	rsp = (struct rsp_que *) dev_id;
+ 	if (!rsp) {
+@@ -3181,22 +3182,13 @@ qla24xx_intr_handler(int irq, void *dev_id)
+ 			qla24xx_process_response_queue(vha, rsp);
+ 			break;
+ 		case INTR_ATIO_QUE_UPDATE_27XX:
+-		case INTR_ATIO_QUE_UPDATE:{
+-			unsigned long flags2;
+-			spin_lock_irqsave(&ha->tgt.atio_lock, flags2);
+-			qlt_24xx_process_atio_queue(vha, 1);
+-			spin_unlock_irqrestore(&ha->tgt.atio_lock, flags2);
++		case INTR_ATIO_QUE_UPDATE:
++			process_atio = true;
+ 			break;
+-		}
+-		case INTR_ATIO_RSP_QUE_UPDATE: {
+-			unsigned long flags2;
+-			spin_lock_irqsave(&ha->tgt.atio_lock, flags2);
+-			qlt_24xx_process_atio_queue(vha, 1);
+-			spin_unlock_irqrestore(&ha->tgt.atio_lock, flags2);
+-
++		case INTR_ATIO_RSP_QUE_UPDATE:
++			process_atio = true;
+ 			qla24xx_process_response_queue(vha, rsp);
+ 			break;
+-		}
+ 		default:
+ 			ql_dbg(ql_dbg_async, vha, 0x504f,
+ 			    "Unrecognized interrupt type (%d).\n", stat * 0xff);
+@@ -3210,6 +3202,12 @@ qla24xx_intr_handler(int irq, void *dev_id)
+ 	qla2x00_handle_mbx_completion(ha, status);
+ 	spin_unlock_irqrestore(&ha->hardware_lock, flags);
+ 
++	if (process_atio) {
++		spin_lock_irqsave(&ha->tgt.atio_lock, flags);
++		qlt_24xx_process_atio_queue(vha, 0);
++		spin_unlock_irqrestore(&ha->tgt.atio_lock, flags);
++	}
++
+ 	return IRQ_HANDLED;
+ }
+ 
+@@ -3256,6 +3254,7 @@ qla24xx_msix_default(int irq, void *dev_id)
+ 	uint32_t	hccr;
+ 	uint16_t	mb[8];
+ 	unsigned long flags;
++	bool process_atio = false;
+ 
+ 	rsp = (struct rsp_que *) dev_id;
+ 	if (!rsp) {
+@@ -3312,22 +3311,13 @@ qla24xx_msix_default(int irq, void *dev_id)
+ 			qla24xx_process_response_queue(vha, rsp);
+ 			break;
+ 		case INTR_ATIO_QUE_UPDATE_27XX:
+-		case INTR_ATIO_QUE_UPDATE:{
+-			unsigned long flags2;
+-			spin_lock_irqsave(&ha->tgt.atio_lock, flags2);
+-			qlt_24xx_process_atio_queue(vha, 1);
+-			spin_unlock_irqrestore(&ha->tgt.atio_lock, flags2);
++		case INTR_ATIO_QUE_UPDATE:
++			process_atio = true;
+ 			break;
+-		}
+-		case INTR_ATIO_RSP_QUE_UPDATE: {
+-			unsigned long flags2;
+-			spin_lock_irqsave(&ha->tgt.atio_lock, flags2);
+-			qlt_24xx_process_atio_queue(vha, 1);
+-			spin_unlock_irqrestore(&ha->tgt.atio_lock, flags2);
+-
++		case INTR_ATIO_RSP_QUE_UPDATE:
++			process_atio = true;
+ 			qla24xx_process_response_queue(vha, rsp);
+ 			break;
+-		}
+ 		default:
+ 			ql_dbg(ql_dbg_async, vha, 0x5051,
+ 			    "Unrecognized interrupt type (%d).\n", stat & 0xff);
+@@ -3338,6 +3328,12 @@ qla24xx_msix_default(int irq, void *dev_id)
+ 	qla2x00_handle_mbx_completion(ha, status);
+ 	spin_unlock_irqrestore(&ha->hardware_lock, flags);
+ 
++	if (process_atio) {
++		spin_lock_irqsave(&ha->tgt.atio_lock, flags);
++		qlt_24xx_process_atio_queue(vha, 0);
++		spin_unlock_irqrestore(&ha->tgt.atio_lock, flags);
++	}
++
+ 	return IRQ_HANDLED;
+ }
+ 
 -- 
 2.20.1
 
