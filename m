@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33BD2C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:50:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC12C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:50:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03C7620862
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:50:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F24321783
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:50:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142619;
-	bh=0nt6omekfdvnZbVzvocj9xSl1eWhEFqOqV5EXwNxaH0=;
+	s=default; t=1574142621;
+	bh=2nG+f6/8R2SGBJCEGEqoz1aBXB5qp42nEOs/chALn5Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vwhXiQcCigSUo1TqxH6af8XAk4KL0by/YV2DQjv0K0WfY7QuNp4t9TaGdMG4HlN8y
-	 lletIoA1vpu5vFSmTFX/OFqVxytZq0cLsZ/8Lj1ncmXiLqfgz9wv8phTbUcYUAYkfv
-	 VT4tZd+L6uGcvXKTrGjBWaSgUtG1BmeArNtiCBMo=
+	b=o8tPUE2QIf3s1piiJP6Vf5U3EIf3mh31e3rjV/4LWyNkkmj6lldsy9cdL512XU9bD
+	 K2zGlh4ZPXF9TrTzX3TDCDLYSCvmnkXghoSUcA1zU8k/eDxKJcawfeY4mNS/3rHkXr
+	 f9xZOTrkdnehwuP+2a0Z/D8AiZkWHYwUJ+L2M6/8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731037AbfKSFuS (ORCPT
+        id S1731610AbfKSFuU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:50:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47192 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:50:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47330 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731592AbfKSFuM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:50:12 -0500
+        id S1731604AbfKSFuS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:50:18 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E305A20862;
-        Tue, 19 Nov 2019 05:50:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B5E4218BA;
+        Tue, 19 Nov 2019 05:50:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142611;
-        bh=0nt6omekfdvnZbVzvocj9xSl1eWhEFqOqV5EXwNxaH0=;
+        s=default; t=1574142617;
+        bh=2nG+f6/8R2SGBJCEGEqoz1aBXB5qp42nEOs/chALn5Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=auZniHqSvWJjd6NKWjszbEaAjyfL/lpUA3KGfnpp0A7hLY8oKn5jhVNtGUR/TUHy8
-         ZLtSPbDqFuyD2MOekp1no+8J/tvnd8fCb3ZCp6r84x2N1jqBml/gYPyfcchCsaUAO9
-         BjwisHZ0ZJuJ8E5FMOTrplzkOx3LR5d6wfucdwJ4=
+        b=fFzd9k/sCqupCpgq1O9QXgw4IXhiMFtIFJlh8XXT4OWeWq4DSu5/5/UrHm0UbwvzX
+         M7M0xHar942F/TofrMA6rZczy52rwGttUeIUsC5PZ76ID0mJRsvXglogH532lLdCfG
+         Dw4c58RooKQJIX4NhSKv6XghtYRgG/XaLB158Oqk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nathan Fontenot <nfont@linux.vnet.ibm.com>,
-        Tyrel Datwyler <tyreld@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 141/239] powerpc/pseries: Disable CPU hotplug across migrations
-Date:   Tue, 19 Nov 2019 06:19:01 +0100
-Message-Id: <20191119051331.714026993@linuxfoundation.org>
+Subject: [PATCH 4.14 143/239] RDMA/i40iw: Fix incorrect iterator type
+Date:   Tue, 19 Nov 2019 06:19:03 +0100
+Message-Id: <20191119051331.974668137@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -61,51 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Fontenot <nfont@linux.vnet.ibm.com>
+From: Håkon Bugge <Haakon.Bugge@oracle.com>
 
-[ Upstream commit 85a88cabad57d26d826dd94ea34d3a785824d802 ]
+[ Upstream commit 802fa45cd320de319e86c93bca72abec028ba059 ]
 
-When performing partition migrations all present CPUs must be online
-as all present CPUs must make the H_JOIN call as part of the migration
-process. Once all present CPUs make the H_JOIN call, one CPU is returned
-to make the rtas call to perform the migration to the destination system.
+Commit f27b4746f378 ("i40iw: add connection management code") uses an
+incorrect rcu iterator, whilst holding the rtnl_lock. Since the
+critical region invokes i40iw_manage_qhash(), which is a sleeping
+function, the rcu locking and traversal cannot be used.
 
-During testing of migration and changing the SMT state we have found
-instances where CPUs are offlined, as part of the SMT state change,
-before they make the H_JOIN call. This results in a hung system where
-every CPU is either in H_JOIN or offline.
-
-To prevent this this patch disables CPU hotplug during the migration
-process.
-
-Signed-off-by: Nathan Fontenot <nfont@linux.vnet.ibm.com>
-Reviewed-by: Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Håkon Bugge <haakon.bugge@oracle.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/rtas.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/infiniband/hw/i40iw/i40iw_cm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/kernel/rtas.c b/arch/powerpc/kernel/rtas.c
-index 141d192c69538..a01f83ba739ef 100644
---- a/arch/powerpc/kernel/rtas.c
-+++ b/arch/powerpc/kernel/rtas.c
-@@ -984,6 +984,7 @@ int rtas_ibm_suspend_me(u64 handle)
- 		goto out;
- 	}
+diff --git a/drivers/infiniband/hw/i40iw/i40iw_cm.c b/drivers/infiniband/hw/i40iw/i40iw_cm.c
+index b7f1ce5333cb8..880c63579ba88 100644
+--- a/drivers/infiniband/hw/i40iw/i40iw_cm.c
++++ b/drivers/infiniband/hw/i40iw/i40iw_cm.c
+@@ -1667,7 +1667,7 @@ static enum i40iw_status_code i40iw_add_mqh_6(struct i40iw_device *iwdev,
+ 	unsigned long flags;
  
-+	cpu_hotplug_disable();
- 	stop_topology_update();
- 
- 	/* Call function on all CPUs.  One of us will make the
-@@ -998,6 +999,7 @@ int rtas_ibm_suspend_me(u64 handle)
- 		printk(KERN_ERR "Error doing global join\n");
- 
- 	start_topology_update();
-+	cpu_hotplug_enable();
- 
- 	/* Take down CPUs not online prior to suspend */
- 	cpuret = rtas_offline_cpus_mask(offline_mask);
+ 	rtnl_lock();
+-	for_each_netdev_rcu(&init_net, ip_dev) {
++	for_each_netdev(&init_net, ip_dev) {
+ 		if ((((rdma_vlan_dev_vlan_id(ip_dev) < I40IW_NO_VLAN) &&
+ 		      (rdma_vlan_dev_real_dev(ip_dev) == iwdev->netdev)) ||
+ 		     (ip_dev == iwdev->netdev)) && (ip_dev->flags & IFF_UP)) {
 -- 
 2.20.1
 
