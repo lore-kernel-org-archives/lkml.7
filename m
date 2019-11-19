@@ -2,81 +2,118 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11BA4C43141
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:08:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3568BC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:08:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D517E206DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:08:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A20E206DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:08:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574143687;
+	bh=nbOFxwzTXJEvjhEzo/ISqTtdrt+QvFHEEBN114iqTos=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=SuYPOmJFrp4OBQ7e/ShfUTKClruEIdx/czPUHu9WFZaUqmfWO9hNu9l6zSZpzP47L
+	 khp7mvzVvT60UJsoJtYQg1fusJ8/kzpi4Rrx3yuL3pGjX0Wt49wBBxtujzmqSOVPys
+	 RBKn4HACxrXSNQR3z9Dr0z49jheFzd/8JfpZ78bE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729338AbfKSFcA (ORCPT
+        id S1728460AbfKSGIF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:32:00 -0500
-Received: from mga03.intel.com ([134.134.136.65]:42535 "EHLO mga03.intel.com"
+        Tue, 19 Nov 2019 01:08:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728238AbfKSFb6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:31:58 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Nov 2019 21:31:58 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,322,1569308400"; 
-   d="scan'208";a="204411168"
-Received: from unknown (HELO [10.239.13.7]) ([10.239.13.7])
-  by fmsmga007.fm.intel.com with ESMTP; 18 Nov 2019 21:31:56 -0800
-Message-ID: <5DD37FE4.4000407@intel.com>
-Date:   Tue, 19 Nov 2019 13:38:44 +0800
-From:   Wei Wang <wei.w.wang@intel.com>
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:31.0) Gecko/20100101 Thunderbird/31.7.0
+        id S1727173AbfKSFb4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:31:56 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E39521783;
+        Tue, 19 Nov 2019 05:31:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574141516;
+        bh=nbOFxwzTXJEvjhEzo/ISqTtdrt+QvFHEEBN114iqTos=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=syBSO3Gqlkkn7VwO9IOXrTmoAb82LgRdPwLZb7NuM6WzSNvWMdwZgpgJBeE6iAgg7
+         3IyRCVYRBNu0/g+mRzcJWLks9azGU5MewbTnWqkkFIxKcJ5JhJFHdZqDvZjrngEHzL
+         doNEzDJXvJceivBZAF9+phLhGD2xXkNxnUverVnA=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>, kernel@pengutronix.de,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 147/422] sched/debug: Use symbolic names for task state constants
+Date:   Tue, 19 Nov 2019 06:15:44 +0100
+Message-Id: <20191119051408.207416457@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
+References: <20191119051400.261610025@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-To:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Khazhismel Kumykov <khazhy@google.com>
-CC:     jasowang@redhat.com, linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH 1/2] virtio_balloon: fix pages_to_free calculation
-References: <CACGdZYJoHSN3vkj_QBz6Txmec9mJMmkH66j2XtqzpUWpfpw4Tg@mail.gmail.com> <20191118213811.22017-1-khazhy@google.com> <20191118175648-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20191118175648-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/19/2019 07:08 AM, Michael S. Tsirkin wrote:
-> So I really think we should do something like the below instead.
-> Limit playing with balloon pages so we can gradually limit it to legacy.
-> Testing, review would be appreciated.
->
-> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
->
->
-> diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
-> index 226fbb995fb0..7cee05cdf3fb 100644
-> --- a/drivers/virtio/virtio_balloon.c
-> +++ b/drivers/virtio/virtio_balloon.c
-> @@ -772,6 +772,13 @@ static unsigned long shrink_free_pages(struct virtio_balloon *vb,
->   	return blocks_freed << VIRTIO_BALLOON_FREE_PAGE_ORDER;
->   }
->   
-> +static unsigned long leak_balloon_pages(struct virtio_balloon *vb,
-> +                                          unsigned long pages_to_free)
-> +{
-> +	return leak_balloon(vb, pages_to_free * VIRTIO_BALLOON_PAGES_PER_PAGE) /
-> +		VIRTIO_BALLOON_PAGES_PER_PAGE;
-> +}
-> +
+From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-Looks good to me, too. (just a reminder that the returning type of 
-leak_balloon is "unsigned int",
-we may want them to be consistent).
+[ Upstream commit ff28915fd31ccafc0d38e6f84b66df280ed9e86a ]
 
-Reviewed-by: Wei Wang <wei.w.wang@intel.com>
+include/trace/events/sched.h includes <linux/sched.h> (via
+<linux/sched/numa_balancing.h>) and so knows about the TASK_* constants
+used to interpret .prev_state. So instead of duplicating the magic
+numbers make use of the defined macros to ease understanding the
+mapping from state bits to letters which isn't completely intuitive for
+an outsider.
 
-Best,
-Wei
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: kernel@pengutronix.de
+Link: http://lkml.kernel.org/r/20180905093636.24068-1-u.kleine-koenig@pengutronix.de
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ include/trace/events/sched.h | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
+
+diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+index 5e1a7578c9edd..9a4bdfadab077 100644
+--- a/include/trace/events/sched.h
++++ b/include/trace/events/sched.h
+@@ -169,9 +169,14 @@ TRACE_EVENT(sched_switch,
+ 
+ 		(__entry->prev_state & (TASK_REPORT_MAX - 1)) ?
+ 		  __print_flags(__entry->prev_state & (TASK_REPORT_MAX - 1), "|",
+-				{ 0x01, "S" }, { 0x02, "D" }, { 0x04, "T" },
+-				{ 0x08, "t" }, { 0x10, "X" }, { 0x20, "Z" },
+-				{ 0x40, "P" }, { 0x80, "I" }) :
++				{ TASK_INTERRUPTIBLE, "S" },
++				{ TASK_UNINTERRUPTIBLE, "D" },
++				{ __TASK_STOPPED, "T" },
++				{ __TASK_TRACED, "t" },
++				{ EXIT_DEAD, "X" },
++				{ EXIT_ZOMBIE, "Z" },
++				{ TASK_PARKED, "P" },
++				{ TASK_DEAD, "I" }) :
+ 		  "R",
+ 
+ 		__entry->prev_state & TASK_REPORT_MAX ? "+" : "",
+-- 
+2.20.1
+
+
 
