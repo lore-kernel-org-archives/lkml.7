@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64952C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:50:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D167C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:50:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E54221850
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:50:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73368218BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:50:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142629;
-	bh=eCG85q6t7YJoJKlRi9ND0119j3qWg7j8OP8APe9k2Zg=;
+	s=default; t=1574142633;
+	bh=Xty7iWILayDsbcoONT7/PYhnmYTucCABnBcNNL2l8eU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lYcSmCr4bO+wLlf7l+3bAJ0CPzbBLGYeDH/jtnVpzc5hw8LD/Z2j/K9oUueclXmM6
-	 Sw38eO+UhI9IMRbrMNdYYYa3Tq9iTq/29WnRCfcvg37T0BirSUym5S0TUDSCziNUcO
-	 PKomjx4843PtY1kpPHHW5l6JXBJ89uM7dPEPUQSE=
+	b=u3K4W3mYGVv0whBvEN2b0RhYTj6Vp8/cYViry1dE5aEeGGugC36qCkWmPmCLP94gu
+	 FZ1AtdSCszcMxQobv+O8Nxsy+W3t23JrhVk4poBUQkqF5JkJz3Bsyy63l6P00NLmdt
+	 +26KENJboRDCTeXUn3Y6c/+WcilGt54oIJvhfyq4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731629AbfKSFu2 (ORCPT
+        id S1731644AbfKSFuc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:50:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47450 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:50:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731611AbfKSFuY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:50:24 -0500
+        id S1731635AbfKSFua (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:50:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4782B21783;
-        Tue, 19 Nov 2019 05:50:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CA1C21783;
+        Tue, 19 Nov 2019 05:50:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142624;
-        bh=eCG85q6t7YJoJKlRi9ND0119j3qWg7j8OP8APe9k2Zg=;
+        s=default; t=1574142629;
+        bh=Xty7iWILayDsbcoONT7/PYhnmYTucCABnBcNNL2l8eU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vLCMPMXskpmsffM4DNq/HbWmvPZLoOv8AMtu3EzHTjBvG4ZIIOHciL6e53nqdC9xd
-         EqDarZEiPZc7/geayIrjJbPrcILj2MpjL6Z/cEqDHCMVFurmSWdEcrJkhX9bIC1rzX
-         so7S3NAmVwEaz2p8sOjvvPMQ/M7T63weHwWrW+fs=
+        b=dyRqyMXcnbhi/H6V/Fd2rE/uqZNCWxYEguPSeoxJLEVahOWFEnJ7+psImzlqearr3
+         A0k4Cp3jrmGT0nXomirWiGb1/TGMw9aU7egs9hat8e+msZ47I3V+dLYLGQNGfYGwQE
+         qinjxEg9iVaJiL8Iq2BTwbhtR5puw9jFe/0+WZF4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Niklas Cassel <niklas.cassel@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
+        stable@vger.kernel.org, Andreas Kemnade <andreas@kemnade.info>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 144/239] OPP: Protect dev_list with opp_table lock
-Date:   Tue, 19 Nov 2019 06:19:04 +0100
-Message-Id: <20191119051332.034700923@linuxfoundation.org>
+Subject: [PATCH 4.14 146/239] power: supply: twl4030_charger: fix charging current out-of-bounds
+Date:   Tue, 19 Nov 2019 06:19:06 +0100
+Message-Id: <20191119051332.337633058@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -60,134 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Viresh Kumar <viresh.kumar@linaro.org>
+From: Andreas Kemnade <andreas@kemnade.info>
 
-[ Upstream commit 3d2556992a878a2210d3be498416aee39e0c32aa ]
+[ Upstream commit 8314c212f995bc0d06b54ad02ef0ab4089781540 ]
 
-The dev_list needs to be protected with a lock, else we may have
-simultaneous access (addition/removal) to it and that would be racy.
-Extend scope of the opp_table lock to protect dev_list as well.
+the charging current uses unsigned int variables, if we step back
+if the current is still low, we would run into negative which
+means setting the target to a huge value.
+Better add checks here.
 
-Tested-by: Niklas Cassel <niklas.cassel@linaro.org>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/power/opp/core.c | 21 +++++++++++++++++++--
- drivers/base/power/opp/cpu.c  |  2 ++
- drivers/base/power/opp/opp.h  |  2 +-
- 3 files changed, 22 insertions(+), 3 deletions(-)
+ drivers/power/supply/twl4030_charger.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/base/power/opp/core.c b/drivers/base/power/opp/core.c
-index d5e7e8cc4f221..8100c87691497 100644
---- a/drivers/base/power/opp/core.c
-+++ b/drivers/base/power/opp/core.c
-@@ -49,9 +49,14 @@ static struct opp_device *_find_opp_dev(const struct device *dev,
- static struct opp_table *_find_opp_table_unlocked(struct device *dev)
- {
- 	struct opp_table *opp_table;
-+	bool found;
+diff --git a/drivers/power/supply/twl4030_charger.c b/drivers/power/supply/twl4030_charger.c
+index 0cc12bfe7b020..d3cba954bab54 100644
+--- a/drivers/power/supply/twl4030_charger.c
++++ b/drivers/power/supply/twl4030_charger.c
+@@ -420,7 +420,8 @@ static void twl4030_current_worker(struct work_struct *data)
  
- 	list_for_each_entry(opp_table, &opp_tables, node) {
--		if (_find_opp_dev(dev, opp_table)) {
-+		mutex_lock(&opp_table->lock);
-+		found = !!_find_opp_dev(dev, opp_table);
-+		mutex_unlock(&opp_table->lock);
-+
-+		if (found) {
- 			_get_opp_table_kref(opp_table);
- 
- 			return opp_table;
-@@ -711,6 +716,8 @@ struct opp_device *_add_opp_dev(const struct device *dev,
- 
- 	/* Initialize opp-dev */
- 	opp_dev->dev = dev;
-+
-+	mutex_lock(&opp_table->lock);
- 	list_add(&opp_dev->node, &opp_table->dev_list);
- 
- 	/* Create debugfs entries for the opp_table */
-@@ -718,6 +725,7 @@ struct opp_device *_add_opp_dev(const struct device *dev,
- 	if (ret)
- 		dev_err(dev, "%s: Failed to register opp debugfs (%d)\n",
- 			__func__, ret);
-+	mutex_unlock(&opp_table->lock);
- 
- 	return opp_dev;
- }
-@@ -736,6 +744,7 @@ static struct opp_table *_allocate_opp_table(struct device *dev)
- 	if (!opp_table)
- 		return NULL;
- 
-+	mutex_init(&opp_table->lock);
- 	INIT_LIST_HEAD(&opp_table->dev_list);
- 
- 	opp_dev = _add_opp_dev(dev, opp_table);
-@@ -757,7 +766,6 @@ static struct opp_table *_allocate_opp_table(struct device *dev)
- 
- 	BLOCKING_INIT_NOTIFIER_HEAD(&opp_table->head);
- 	INIT_LIST_HEAD(&opp_table->opp_list);
--	mutex_init(&opp_table->lock);
- 	kref_init(&opp_table->kref);
- 
- 	/* Secure the device table modification */
-@@ -799,6 +807,10 @@ static void _opp_table_kref_release(struct kref *kref)
- 	if (!IS_ERR(opp_table->clk))
- 		clk_put(opp_table->clk);
- 
-+	/*
-+	 * No need to take opp_table->lock here as we are guaranteed that no
-+	 * references to the OPP table are taken at this point.
-+	 */
- 	opp_dev = list_first_entry(&opp_table->dev_list, struct opp_device,
- 				   node);
- 
-@@ -1702,6 +1714,9 @@ void _dev_pm_opp_remove_table(struct opp_table *opp_table, struct device *dev,
- {
- 	struct dev_pm_opp *opp, *tmp;
- 
-+	/* Protect dev_list */
-+	mutex_lock(&opp_table->lock);
-+
- 	/* Find if opp_table manages a single device */
- 	if (list_is_singular(&opp_table->dev_list)) {
- 		/* Free static OPPs */
-@@ -1712,6 +1727,8 @@ void _dev_pm_opp_remove_table(struct opp_table *opp_table, struct device *dev,
- 	} else {
- 		_remove_opp_dev(_find_opp_dev(dev, opp_table), opp_table);
- 	}
-+
-+	mutex_unlock(&opp_table->lock);
- }
- 
- void _dev_pm_opp_find_and_remove_table(struct device *dev, bool remove_all)
-diff --git a/drivers/base/power/opp/cpu.c b/drivers/base/power/opp/cpu.c
-index 2d87bc1adf38b..66e406bd4d628 100644
---- a/drivers/base/power/opp/cpu.c
-+++ b/drivers/base/power/opp/cpu.c
-@@ -222,8 +222,10 @@ int dev_pm_opp_get_sharing_cpus(struct device *cpu_dev, struct cpumask *cpumask)
- 	cpumask_clear(cpumask);
- 
- 	if (opp_table->shared_opp == OPP_TABLE_ACCESS_SHARED) {
-+		mutex_lock(&opp_table->lock);
- 		list_for_each_entry(opp_dev, &opp_table->dev_list, node)
- 			cpumask_set_cpu(opp_dev->dev->id, cpumask);
-+		mutex_unlock(&opp_table->lock);
- 	} else {
- 		cpumask_set_cpu(cpu_dev->id, cpumask);
- 	}
-diff --git a/drivers/base/power/opp/opp.h b/drivers/base/power/opp/opp.h
-index 166eef9905995..0a206c6b90868 100644
---- a/drivers/base/power/opp/opp.h
-+++ b/drivers/base/power/opp/opp.h
-@@ -124,7 +124,7 @@ enum opp_table_access {
-  * @dev_list:	list of devices that share these OPPs
-  * @opp_list:	table of opps
-  * @kref:	for reference count of the table.
-- * @lock:	mutex protecting the opp_list.
-+ * @lock:	mutex protecting the opp_list and dev_list.
-  * @np:		struct device_node pointer for opp's DT node.
-  * @clock_latency_ns_max: Max clock latency in nanoseconds.
-  * @shared_opp: OPP is shared between multiple devices.
+ 	if (v < USB_MIN_VOLT) {
+ 		/* Back up and stop adjusting. */
+-		bci->usb_cur -= USB_CUR_STEP;
++		if (bci->usb_cur >= USB_CUR_STEP)
++			bci->usb_cur -= USB_CUR_STEP;
+ 		bci->usb_cur_target = bci->usb_cur;
+ 	} else if (bci->usb_cur >= bci->usb_cur_target ||
+ 		   bci->usb_cur + USB_CUR_STEP > USB_MAX_CURRENT) {
 -- 
 2.20.1
 
