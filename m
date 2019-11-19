@@ -2,108 +2,98 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A5C5C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 11:15:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25633C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 11:15:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4177222DE
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 11:15:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="TCAKKh4J"
+	by mail.kernel.org (Postfix) with ESMTP id F275C222DE
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 11:15:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727698AbfKSLPP (ORCPT
+        id S1727741AbfKSLPc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 06:15:15 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:50036 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725904AbfKSLPO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 06:15:14 -0500
-Received: from zn.tnic (p200300EC2F0EDC00DDCC46785D6B318A.dip0.t-ipconnect.de [IPv6:2003:ec:2f0e:dc00:ddcc:4678:5d6b:318a])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id ED7521EC0CAF;
-        Tue, 19 Nov 2019 12:15:12 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1574162113;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=G8bIPI7eMqwT4OGw64KYwiD4+/Nz3AJ6bpqyvoHxzGE=;
-        b=TCAKKh4JmkRfTPQI9eYekH1jkcNRfLWs2H7MPLEUB7wha5+Lq494+gA97L1SeLaGW53dkj
-        7lYAoRjzC4VBvHeUtDK5doEfPxgW2MvVKPiGQpKSb83sxjMbFd2mMgulnY9OmgO7vGuqPs
-        5EISsFBde5P8qseJj7C9XA9+xybjNJw=
-Date:   Tue, 19 Nov 2019 12:15:08 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Tue, 19 Nov 2019 06:15:32 -0500
+Received: from mx2.suse.de ([195.135.220.15]:55640 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727699AbfKSLPb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 06:15:31 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 0E48BBA0D;
+        Tue, 19 Nov 2019 11:15:30 +0000 (UTC)
+Subject: Re: [PATCH 5/7] ARM: dts: rtd1195: Introduce r-bus
+To:     James Tai <james.tai@realtek.com>
+Cc:     "linux-realtek-soc@lists.infradead.org" 
+        <linux-realtek-soc@lists.infradead.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
-        Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v3 01/19] x86/msr-index: Clean up bit defines for
- IA32_FEATURE_CONTROL MSR
-Message-ID: <20191119111445.GB27787@zn.tnic>
-References: <20191119031240.7779-1-sean.j.christopherson@intel.com>
- <20191119031240.7779-2-sean.j.christopherson@intel.com>
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <20191111030434.29977-1-afaerber@suse.de>
+ <20191111030434.29977-6-afaerber@suse.de>
+ <a43d184d74c34e269714858b2635c35e@realtek.com>
+ <960a80b9-b1bf-3709-bbb7-fc2a3c3ae1da@suse.de>
+ <753c18eee3fb4e9ea25d42798542b3dd@realtek.com>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Organization: SUSE Software Solutions Germany GmbH
+Message-ID: <ed66e712-4ceb-374c-dd36-476d79706251@suse.de>
+Date:   Tue, 19 Nov 2019 12:15:28 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
+In-Reply-To: <753c18eee3fb4e9ea25d42798542b3dd@realtek.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191119031240.7779-2-sean.j.christopherson@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 18, 2019 at 07:12:22PM -0800, Sean Christopherson wrote:
-> As pointed out by Boris, the defines for bits in IA32_FEATURE_CONTROL
-> are quite a mouthful, especially the VMX bits which must differentiate
-> between enabling VMX inside and outside SMX (TXT) operation.  Rename the
-> bit defines to abbreviate FEATURE_CONTROL as FEAT_CTL so that they're a
-> little friendlier on the eyes.  Keep the full name for the MSR itself to
-> help even the most obtuse reader decipher the abbreviation, and to match
-> the name used by the Intel SDM.
+Hi James,
+
+Am 18.11.19 um 07:53 schrieb James Tai:
+>> So another question, applicable to all SoCs: This reserved Boot ROM area at
+>> the start of the address space, here of size 0xa800, is that copied into RAM, or
+>> is that the actual ROM overlapping RAM? If the latter, we should exclude it
+>> from /memory@0's reg (making it /memory@a800), and add it to soc's ranges
+>> here for correctness.
+>>
+> Yes, we should exclude it from /memory@0's reg.
+
+OK, will look into it.
+
 > 
-> Opportunistically fix a few other annoyances with the defines:
+>> With the follow-up question: Is it correct that, given the size 0xa800, I have a
+>> gap between /memreserve/s from 0xa800 to 0xc000, or should we reserve that
+>> gap by extending the next /memreserve/ or inserting one?
 > 
->   - Relocate the bit defines so that they immediately follow the MSR
->     define, e.g. aren't mistaken as belonging to MISC_FEATURE_CONTROL.
->   - Add whitespace around the block of feature control defines to make
->     it clear that FEAT_CTL is indeed short for FEATURE_CONTROL.
->   - Use BIT() instead of manually encoding the bit shift.
->   - Use "VMX" instead of "VMXON" to match the SDM.
->   - Append "_ENABLED" to the LMCE bit to be consistent with the verbiage
->     used for all other feature control bits.  (LCME is an acronym for
->     Local Machine Check Exception, i.e. LMCE_ENABLED is not redundant).
+> We should reserve memory address from 0x0000 to 0xa800 for the internal ROM.
 
-Sure but SDM calls it LMCE_ON. What is our current decision on sticking
-to SDM bit names? I guess we don't...
+Please see [1] - I had already updated the second reservation to start
+at 0xa800 and extended it to 0x100000 before your response here.
 
-But above you say "to match the SDM"...
+The previous "bootcode" size of 0xc000 can be found here:
+https://github.com/BPI-SINOVOIP/BPI-M4-bsp/blob/master/linux-rtk/arch/arm/mach-rtd119x/include/mach/memory.h
+https://github.com/BPI-SINOVOIP/BPI-M4-bsp/blob/master/linux-rtk/arch/arm/boot/dts/realtek/rtd119x/rtd-119x-horseradish.dts
 
-Thx.
+As you can see the 0xc000 and 0xf4000 were hardcoded and did not depend
+on SYS_BOOTCODE_MEMSIZE...
+For later SoCs I saw some FIXME(?) comment that area up to 0x100000 was
+reserved due to some Jira ticket and should get fixed? Any insights on
+what is in that memory range causing problems?
+
+Regards,
+Andreas
+
+[1] https://patchwork.kernel.org/patch/11248033/
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer
+HRB 36809 (AG Nürnberg)
