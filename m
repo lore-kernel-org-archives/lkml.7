@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBBCDC43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:35:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FF6EC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:35:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACFEA222B0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:35:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24590222B0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:35:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728383AbfKSOfj (ORCPT
+        id S1728397AbfKSOfq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 09:35:39 -0500
+        Tue, 19 Nov 2019 09:35:46 -0500
 Received: from mga04.intel.com ([192.55.52.120]:64767 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728311AbfKSOfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 09:35:19 -0500
+        id S1728243AbfKSOfL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 09:35:11 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Nov 2019 06:35:19 -0800
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Nov 2019 06:35:11 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,324,1569308400"; 
-   d="scan'208";a="215552428"
+   d="scan'208";a="215552396"
 Received: from labuser-ice-lake-client-platform.jf.intel.com ([10.54.55.50])
-  by fmsmga001.fm.intel.com with ESMTP; 19 Nov 2019 06:35:18 -0800
+  by fmsmga001.fm.intel.com with ESMTP; 19 Nov 2019 06:35:10 -0800
 From:   kan.liang@linux.intel.com
 To:     peterz@infradead.org, acme@redhat.com, mingo@kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     jolsa@kernel.org, namhyung@kernel.org, vitaly.slobodskoy@intel.com,
         pavel.gerasimov@intel.com, ak@linux.intel.com, eranian@google.com,
         mpe@ellerman.id.au, Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V4 12/13] perf c2c: Add option to enable the LBR stitching approach
-Date:   Tue, 19 Nov 2019 06:34:10 -0800
-Message-Id: <20191119143411.3482-13-kan.liang@linux.intel.com>
+Subject: [PATCH V4 06/13] perf header: Support CPU PMU capabilities
+Date:   Tue, 19 Nov 2019 06:34:04 -0800
+Message-Id: <20191119143411.3482-7-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191119143411.3482-1-kan.liang@linux.intel.com>
 References: <20191119143411.3482-1-kan.liang@linux.intel.com>
@@ -47,74 +47,262 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-With the LBR stitching approach, the reconstructed LBR call stack
-can break the HW limitation. However, it may reconstruct invalid call
-stacks in some cases, e.g. exception handing such as setjmp/longjmp.
-Also, it may impact the processing time especially when the number of
-samples with stitched LBRs are huge.
+To stitch LBR call stack, the max LBR information is required. So the
+CPU PMU capabilities information has to be stored in perf header.
 
-Add an option to enable the approach.
+Add a new feature HEADER_CPU_PMU_CAPS for CPU PMU capabilities.
+Retrieve all CPU PMU capabilities, not just max LBR information.
+
+Add variable max_branches to facilitate future usage.
+
+The CPU PMU capabilities information is only useful for LBR call stack
+mode. Clear the feature for perf stat and other perf record mode.
 
 Reviewed-by: Andi Kleen <ak@linux.intel.com>
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 ---
- tools/perf/Documentation/perf-c2c.txt | 11 +++++++++++
- tools/perf/builtin-c2c.c              |  6 ++++++
- 2 files changed, 17 insertions(+)
+ .../Documentation/perf.data-file-format.txt   |  16 +++
+ tools/perf/builtin-record.c                   |   3 +
+ tools/perf/builtin-stat.c                     |   1 +
+ tools/perf/util/env.h                         |   3 +
+ tools/perf/util/header.c                      | 110 ++++++++++++++++++
+ tools/perf/util/header.h                      |   1 +
+ 6 files changed, 134 insertions(+)
 
-diff --git a/tools/perf/Documentation/perf-c2c.txt b/tools/perf/Documentation/perf-c2c.txt
-index e6150f21267d..2133eb320cb0 100644
---- a/tools/perf/Documentation/perf-c2c.txt
-+++ b/tools/perf/Documentation/perf-c2c.txt
-@@ -111,6 +111,17 @@ REPORT OPTIONS
- --display::
- 	Switch to HITM type (rmt, lcl) to display and sort on. Total HITMs as default.
+diff --git a/tools/perf/Documentation/perf.data-file-format.txt b/tools/perf/Documentation/perf.data-file-format.txt
+index b0152e1095c5..b6472e463284 100644
+--- a/tools/perf/Documentation/perf.data-file-format.txt
++++ b/tools/perf/Documentation/perf.data-file-format.txt
+@@ -373,6 +373,22 @@ struct {
+ Indicates that trace contains records of PERF_RECORD_COMPRESSED type
+ that have perf_events records in compressed form.
  
-+--stitch-lbr::
-+	Show callgraph with stitched LBRs, which may have more complete
-+	callgraph. The perf.data file must have been obtained using
-+	perf c2c record --call-graph lbr.
-+	Disabled by default. In common cases with call stack overflows,
-+	it can recreate better call stacks than the default lbr call stack
-+	output. But this approach is not full proof. There can be cases
-+	where it creates incorrect call stacks from incorrect matches.
-+	The known limitations include exception handing such as
-+	setjmp/longjmp will have calls/returns not match.
++	HEADER_CPU_PMU_CAPS = 28,
 +
- C2C RECORD
- ----------
- The perf c2c record command setup options related to HITM cacheline analysis
-diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-index e69f44941aad..91c6277f958a 100644
---- a/tools/perf/builtin-c2c.c
-+++ b/tools/perf/builtin-c2c.c
-@@ -95,6 +95,7 @@ struct perf_c2c {
- 	bool			 use_stdio;
- 	bool			 stats_only;
- 	bool			 symbol_full;
-+	bool			 stitch_lbr;
- 
- 	/* HITM shared clines stats */
- 	struct c2c_stats	hitm_stats;
-@@ -273,6 +274,9 @@ static int process_sample_event(struct perf_tool *tool __maybe_unused,
- 		return -1;
- 	}
- 
-+	if (c2c.stitch_lbr)
-+		al.thread->lbr_stitch_enable = true;
++	A list of cpu PMU capabilities. The format of data is as below.
 +
- 	ret = sample__resolve_callchain(sample, &callchain_cursor, NULL,
- 					evsel, &al, sysctl_perf_event_max_stack);
- 	if (ret)
-@@ -2750,6 +2754,8 @@ static int perf_c2c__report(int argc, const char **argv)
- 	OPT_STRING('c', "coalesce", &coalesce, "coalesce fields",
- 		   "coalesce fields: pid,tid,iaddr,dso"),
- 	OPT_BOOLEAN('f', "force", &symbol_conf.force, "don't complain, do it"),
-+	OPT_BOOLEAN(0, "stitch-lbr", &c2c.stitch_lbr,
-+		    "Enable LBR callgraph stitching approach"),
- 	OPT_PARENT(c2c_options),
- 	OPT_END()
- 	};
++struct {
++	u32 nr_cpu_pmu_caps;
++	{
++		char	name[];
++		char	value[];
++	} [nr_cpu_pmu_caps]
++};
++
++
++Example:
++ cpu pmu capabilities: branches=32, max_precise=3, pmu_name=icelake
++
+ 	other bits are reserved and should ignored for now
+ 	HEADER_FEAT_BITS	= 256,
+ 
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index b95c000c1ed9..b53e19eb4b6c 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -1106,6 +1106,9 @@ static void record__init_features(struct record *rec)
+ 	if (!record__comp_enabled(rec))
+ 		perf_header__clear_feat(&session->header, HEADER_COMPRESSED);
+ 
++	if (!callchain_param.enabled || (callchain_param.record_mode != CALLCHAIN_LBR))
++		perf_header__clear_feat(&session->header, HEADER_CPU_PMU_CAPS);
++
+ 	perf_header__clear_feat(&session->header, HEADER_STAT);
+ }
+ 
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 5964e808d73d..ed2d0aa7a861 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -1471,6 +1471,7 @@ static void init_features(struct perf_session *session)
+ 	perf_header__clear_feat(&session->header, HEADER_TRACING_DATA);
+ 	perf_header__clear_feat(&session->header, HEADER_BRANCH_STACK);
+ 	perf_header__clear_feat(&session->header, HEADER_AUXTRACE);
++	perf_header__clear_feat(&session->header, HEADER_CPU_PMU_CAPS);
+ }
+ 
+ static int __cmd_record(int argc, const char **argv)
+diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
+index 11d05ae3606a..d286d478b4d8 100644
+--- a/tools/perf/util/env.h
++++ b/tools/perf/util/env.h
+@@ -48,6 +48,7 @@ struct perf_env {
+ 	char			*cpuid;
+ 	unsigned long long	total_mem;
+ 	unsigned int		msr_pmu_type;
++	unsigned int		max_branches;
+ 
+ 	int			nr_cmdline;
+ 	int			nr_sibling_cores;
+@@ -57,12 +58,14 @@ struct perf_env {
+ 	int			nr_memory_nodes;
+ 	int			nr_pmu_mappings;
+ 	int			nr_groups;
++	int			nr_cpu_pmu_caps;
+ 	char			*cmdline;
+ 	const char		**cmdline_argv;
+ 	char			*sibling_cores;
+ 	char			*sibling_dies;
+ 	char			*sibling_threads;
+ 	char			*pmu_mappings;
++	char			*cpu_pmu_caps;
+ 	struct cpu_topology_map	*cpu;
+ 	struct cpu_cache_level	*caches;
+ 	int			 caches_cnt;
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 7ed481c9bcdf..6d32e5f1192c 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -1404,6 +1404,39 @@ static int write_compressed(struct feat_fd *ff __maybe_unused,
+ 	return do_write(ff, &(ff->ph->env.comp_mmap_len), sizeof(ff->ph->env.comp_mmap_len));
+ }
+ 
++static int write_cpu_pmu_caps(struct feat_fd *ff,
++			      struct evlist *evlist __maybe_unused)
++{
++	struct perf_pmu_caps *caps = NULL;
++	struct perf_pmu *cpu_pmu;
++	int nr_caps;
++	int ret;
++
++	cpu_pmu = perf_pmu__find("cpu");
++	if (!cpu_pmu)
++		return -ENOENT;
++
++	nr_caps = perf_pmu__caps_parse(cpu_pmu);
++	if (nr_caps < 0)
++		return nr_caps;
++
++	ret = do_write(ff, &nr_caps, sizeof(nr_caps));
++	if (ret < 0)
++		return ret;
++
++	while ((caps = perf_pmu__scan_caps(cpu_pmu, caps))) {
++		ret = do_write_string(ff, caps->name);
++		if (ret < 0)
++			return ret;
++
++		ret = do_write_string(ff, caps->value);
++		if (ret < 0)
++			return ret;
++	}
++
++	return ret;
++}
++
+ static void print_hostname(struct feat_fd *ff, FILE *fp)
+ {
+ 	fprintf(fp, "# hostname : %s\n", ff->ph->env.hostname);
+@@ -1819,6 +1852,28 @@ static void print_compressed(struct feat_fd *ff, FILE *fp)
+ 		ff->ph->env.comp_level, ff->ph->env.comp_ratio);
+ }
+ 
++static void print_cpu_pmu_caps(struct feat_fd *ff, FILE *fp)
++{
++	const char *delimiter = "# cpu pmu capabilities: ";
++	char *str;
++	u32 nr_caps;
++
++	nr_caps = ff->ph->env.nr_cpu_pmu_caps;
++	if (!nr_caps) {
++		fprintf(fp, "# cpu pmu capabilities: not available\n");
++		return;
++	}
++
++	str = ff->ph->env.cpu_pmu_caps;
++	while (nr_caps--) {
++		fprintf(fp, "%s%s", delimiter, str);
++		delimiter = ", ";
++		str += strlen(str) + 1;
++	}
++
++	fprintf(fp, "\n");
++}
++
+ static void print_pmu_mappings(struct feat_fd *ff, FILE *fp)
+ {
+ 	const char *delimiter = "# pmu mappings: ";
+@@ -2856,6 +2911,60 @@ static int process_compressed(struct feat_fd *ff,
+ 	return 0;
+ }
+ 
++static int process_cpu_pmu_caps(struct feat_fd *ff,
++				void *data __maybe_unused)
++{
++	char *name, *value;
++	struct strbuf sb;
++	u32 nr_caps;
++
++	if (do_read_u32(ff, &nr_caps))
++		return -1;
++
++	if (!nr_caps) {
++		pr_debug("cpu pmu capabilities not available\n");
++		return 0;
++	}
++
++	ff->ph->env.nr_cpu_pmu_caps = nr_caps;
++
++	if (strbuf_init(&sb, 128) < 0)
++		return -1;
++
++	while (nr_caps--) {
++		name = do_read_string(ff);
++		if (!name)
++			goto error;
++
++		value = do_read_string(ff);
++		if (!value)
++			goto free_name;
++
++		if (strbuf_addf(&sb, "%s=%s", name, value) < 0)
++			goto free_value;
++
++		/* include a NULL character at the end */
++		if (strbuf_add(&sb, "", 1) < 0)
++			goto free_value;
++
++		if (!strcmp(name, "branches"))
++			ff->ph->env.max_branches = atoi(value);
++
++		free(value);
++		free(name);
++	}
++	ff->ph->env.cpu_pmu_caps = strbuf_detach(&sb, NULL);
++	return 0;
++
++free_value:
++	free(value);
++free_name:
++	free(name);
++error:
++	strbuf_release(&sb);
++	return -1;
++}
++
+ #define FEAT_OPR(n, func, __full_only) \
+ 	[HEADER_##n] = {					\
+ 		.name	    = __stringify(n),			\
+@@ -2913,6 +3022,7 @@ const struct perf_header_feature_ops feat_ops[HEADER_LAST_FEATURE] = {
+ 	FEAT_OPR(BPF_PROG_INFO, bpf_prog_info,  false),
+ 	FEAT_OPR(BPF_BTF,       bpf_btf,        false),
+ 	FEAT_OPR(COMPRESSED,	compressed,	false),
++	FEAT_OPR(CPU_PMU_CAPS,	cpu_pmu_caps,	false),
+ };
+ 
+ struct header_print_data {
+diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
+index 840f95cee349..650bd1c7a99b 100644
+--- a/tools/perf/util/header.h
++++ b/tools/perf/util/header.h
+@@ -43,6 +43,7 @@ enum {
+ 	HEADER_BPF_PROG_INFO,
+ 	HEADER_BPF_BTF,
+ 	HEADER_COMPRESSED,
++	HEADER_CPU_PMU_CAPS,
+ 	HEADER_LAST_FEATURE,
+ 	HEADER_FEAT_BITS	= 256,
+ };
 -- 
 2.17.1
 
