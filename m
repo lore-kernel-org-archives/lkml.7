@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE546C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:08:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D848C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:09:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C622A208CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:08:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F71E208CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:09:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574143738;
-	bh=gCbS15XtXj4oIuSuRwt5i3q+8lCfPki4Urq31VaAOrw=;
+	s=default; t=1574143741;
+	bh=ZPSKGSZEulSokc6OQ6g3QxfBYvIV5a0XHwF8ROZCzws=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xy+XQghx9I869vfR+Shaz+Xx4nOyvFdnNAVEzil8kqDTYvW7LnRIxgnWVMxbCXAAp
-	 aPCJD0P3tF2b7zSsY0jcZ/kTvcry3JRZk0+Ps7XcvNxb931QH8lDS+3AtS5Rd2YhMz
-	 T+a32jXCbS69cZznqiX1ham4kVLnm9YihBXHEyNY=
+	b=NsAn3MQT0HuiqFfCjsWhDS7Rba1oEK1Z3pOQQBgwLFTxRmHqSj62mmKABGeJOSKUC
+	 Wer+Wf3GtDkjiuRt1UiHToX9tdjbFADzcsfY4r5Y6iNptCF1LCgrfPSkzYDX4OtJzH
+	 c3OlcuK2VEjokHxk3b4EusD2f0CROKQwLb5kAnx8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729014AbfKSF3h (ORCPT
+        id S1729204AbfKSGI7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:29:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48112 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 01:08:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48264 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729001AbfKSF3c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:29:32 -0500
+        id S1727333AbfKSF3l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:29:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2902121939;
-        Tue, 19 Nov 2019 05:29:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DC5E21783;
+        Tue, 19 Nov 2019 05:29:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141371;
-        bh=gCbS15XtXj4oIuSuRwt5i3q+8lCfPki4Urq31VaAOrw=;
+        s=default; t=1574141380;
+        bh=ZPSKGSZEulSokc6OQ6g3QxfBYvIV5a0XHwF8ROZCzws=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VsLMGc9QxTXcIabn5cUFXAucA/JieAw5lG0cDI81/jfdnktGu4xP5w5+lyVp1nSWi
-         W53fUpp5MAiGuIkeyIH2LvbDu+7x65dJl2ZWpSyYG5BjMaJx+2Phy4t7AB7ZEWFr9M
-         7vuN0yxfNKOARWpvKB2dnyYJHJqsJzJgYSJFdUuM=
+        b=ufbx80CNWEHclkgKtqQRJGfFj23gdHOBXD5h5YIl05rMsRRHEBuPzVPqWflK+UtFd
+         ru5kzRwrsGoUyiB25JSNHcOBVj1hLsc2Qan6vN5V+RywAFcAdOo2RLZWcuSJs4KeAR
+         KaaHNFFT3qIMP6fmJT+0+mFsZDO8JJVW8VWLwAiA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Suman Trpathi <stripathi@amperecomputing.com>,
-        Rameshwar Prasad Sahu <rameshwar.sahu@amperecomputing.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 136/422] ata: Disable AHCI ALPM feature for Ampere Computing eMAG SATA
-Date:   Tue, 19 Nov 2019 06:15:33 +0100
-Message-Id: <20191119051407.639411260@linuxfoundation.org>
+        stable@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 100/422] mt76: Fix comparisons with invalid hardware key index
+Date:   Tue, 19 Nov 2019 06:14:57 +0100
+Message-Id: <20191119051405.729889312@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -61,69 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suman Tripathi <stripathi@amperecomputing.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
 
-[ Upstream commit 20bdc376b427cb420836f39ee8f281ea85dbaeef ]
+[ Upstream commit 81c8eccc2404d06082025b773f1d90e8c861bc6a ]
 
-Due to hardware errata, Ampere Computing eMAG SATA can't support
-AHCI ALPM feature. This patch disables the AHCI ALPM feature for
-eMAG SATA.
+With gcc 4.1.2:
 
-Signed-off-by: Suman Trpathi <stripathi@amperecomputing.com>
-Signed-off-by: Rameshwar Prasad Sahu <rameshwar.sahu@amperecomputing.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+    drivers/net/wireless/mediatek/mt76/mt76x0/tx.c: In function ‘mt76x0_tx’:
+    drivers/net/wireless/mediatek/mt76/mt76x0/tx.c:169: warning: comparison is always true due to limited range of data type
+    drivers/net/wireless/mediatek/mt76/mt76x2_tx_common.c: In function ‘mt76x2_tx’:
+    drivers/net/wireless/mediatek/mt76/mt76x2_tx_common.c:35: warning: comparison is always true due to limited range of data type
+
+While assigning -1 to a u8 works fine, comparing with -1 does not work
+as expected.
+
+Fix this by comparing with 0xff, like is already done in some other
+places.
+
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ata/ahci_platform.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ drivers/net/wireless/mediatek/mt76/mt76x0/tx.c        | 2 +-
+ drivers/net/wireless/mediatek/mt76/mt76x2_tx_common.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/ata/ahci_platform.c b/drivers/ata/ahci_platform.c
-index 46f0bd75eff79..cf1e0e18a7a98 100644
---- a/drivers/ata/ahci_platform.c
-+++ b/drivers/ata/ahci_platform.c
-@@ -33,6 +33,13 @@ static const struct ata_port_info ahci_port_info = {
- 	.port_ops	= &ahci_platform_ops,
- };
+diff --git a/drivers/net/wireless/mediatek/mt76/mt76x0/tx.c b/drivers/net/wireless/mediatek/mt76/mt76x0/tx.c
+index 751b49c28ae53..c45d05d5aab1d 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt76x0/tx.c
++++ b/drivers/net/wireless/mediatek/mt76/mt76x0/tx.c
+@@ -166,7 +166,7 @@ void mt76x0_tx(struct ieee80211_hw *hw, struct ieee80211_tx_control *control,
+ 	if (sta) {
+ 		msta = (struct mt76_sta *) sta->drv_priv;
+ 		wcid = &msta->wcid;
+-	} else if (vif && (!info->control.hw_key && wcid->hw_key_idx != -1)) {
++	} else if (vif && (!info->control.hw_key && wcid->hw_key_idx != 0xff)) {
+ 		struct mt76_vif *mvif = (struct mt76_vif *)vif->drv_priv;
  
-+static const struct ata_port_info ahci_port_info_nolpm = {
-+	.flags		= AHCI_FLAG_COMMON | ATA_FLAG_NO_LPM,
-+	.pio_mask	= ATA_PIO4,
-+	.udma_mask	= ATA_UDMA6,
-+	.port_ops	= &ahci_platform_ops,
-+};
-+
- static struct scsi_host_template ahci_platform_sht = {
- 	AHCI_SHT(DRV_NAME),
- };
-@@ -41,6 +48,7 @@ static int ahci_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct ahci_host_priv *hpriv;
-+	const struct ata_port_info *port;
- 	int rc;
+ 		wcid = &mvif->group_wcid;
+diff --git a/drivers/net/wireless/mediatek/mt76/mt76x2_tx_common.c b/drivers/net/wireless/mediatek/mt76/mt76x2_tx_common.c
+index 36afb166fa3ff..c0ca0df84ed8b 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt76x2_tx_common.c
++++ b/drivers/net/wireless/mediatek/mt76/mt76x2_tx_common.c
+@@ -32,7 +32,7 @@ void mt76x2_tx(struct ieee80211_hw *hw, struct ieee80211_tx_control *control,
+ 		msta = (struct mt76x2_sta *)control->sta->drv_priv;
+ 		wcid = &msta->wcid;
+ 		/* sw encrypted frames */
+-		if (!info->control.hw_key && wcid->hw_key_idx != -1)
++		if (!info->control.hw_key && wcid->hw_key_idx != 0xff)
+ 			control->sta = NULL;
+ 	}
  
- 	hpriv = ahci_platform_get_resources(pdev,
-@@ -58,7 +66,11 @@ static int ahci_probe(struct platform_device *pdev)
- 	if (of_device_is_compatible(dev->of_node, "hisilicon,hisi-ahci"))
- 		hpriv->flags |= AHCI_HFLAG_NO_FBS | AHCI_HFLAG_NO_NCQ;
- 
--	rc = ahci_platform_init_host(pdev, hpriv, &ahci_port_info,
-+	port = acpi_device_get_match_data(dev);
-+	if (!port)
-+		port = &ahci_port_info;
-+
-+	rc = ahci_platform_init_host(pdev, hpriv, port,
- 				     &ahci_platform_sht);
- 	if (rc)
- 		goto disable_resources;
-@@ -85,6 +97,7 @@ static const struct of_device_id ahci_of_match[] = {
- MODULE_DEVICE_TABLE(of, ahci_of_match);
- 
- static const struct acpi_device_id ahci_acpi_match[] = {
-+	{ "APMC0D33", (unsigned long)&ahci_port_info_nolpm },
- 	{ ACPI_DEVICE_CLASS(PCI_CLASS_STORAGE_SATA_AHCI, 0xffffff) },
- 	{},
- };
 -- 
 2.20.1
 
