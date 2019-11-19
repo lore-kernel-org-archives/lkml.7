@@ -2,150 +2,195 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 738E9C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 13:32:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4382FC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 13:33:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AD97222C7
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 13:32:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF405222C7
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 13:33:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="OSTB4eBB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727450AbfKSNc5 (ORCPT
+        id S1727677AbfKSNdQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 08:32:57 -0500
-Received: from mx2.suse.de ([195.135.220.15]:46122 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725280AbfKSNc4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 08:32:56 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 996C5B3EE;
-        Tue, 19 Nov 2019 13:32:53 +0000 (UTC)
-Date:   Tue, 19 Nov 2019 14:32:53 +0100
-From:   Daniel Wagner <dwagner@suse.de>
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     James Smart <james.smart@broadcom.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] scsi: lpfc: Move work items to a stack list
-Message-ID: <20191119133253.r3uhiitehhc4o5qw@beryllium.lan>
-References: <20191105080855.16881-1-dwagner@suse.de>
- <yq1h838pivf.fsf@oracle.com>
- <20191119132854.mwkxx4fixjaoxv4w@beryllium.lan>
+        Tue, 19 Nov 2019 08:33:16 -0500
+Received: from mout.web.de ([212.227.17.12]:39257 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725280AbfKSNdP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 08:33:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1574170378;
+        bh=J0nlCot3D5m63Vr8bCyo808UTTRfDNMnYGsfOvTgHno=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=OSTB4eBBD+yXG9QBwuGQ3EB4zcwtXOoGrm2L+BHQ7CMGhygyInGGIeYU+CN/3bQKE
+         oQ2PoqhjSC0Z2XTz082C7Ne34rzB9SS93x3VaUaVUwWE42JJa8UxDohXc0LS7NN+GK
+         J34QSrGo0lY86uuccBr6rFxtAPNaPfc9/Fcyeesc=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.3] ([2.243.93.164]) by smtp.web.de (mrweb103
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0MJTVP-1iYQ8Q3QqZ-0036KV; Tue, 19
+ Nov 2019 14:32:57 +0100
+Subject: Re: [PATCH v3 02/13] exfat: add super block operations
+To:     Namjae Jeon <namjae.jeon@samsung.com>,
+        linux-fsdevel@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>,
+        Daniel Wagner <dwagner@suse.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sungjong Seo <sj1557.seo@samsung.com>,
+        =?UTF-8?Q?Valdis_Kl=c4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        linkinjeon@gmail.com
+References: <20191119093718.3501-1-namjae.jeon@samsung.com>
+ <CGME20191119094021epcas1p1ef79711e2ea59c4e909a30a9ac2daa3d@epcas1p1.samsung.com>
+ <20191119093718.3501-3-namjae.jeon@samsung.com>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <3bf9fea7-99d3-3a9b-6565-39d62f5ee473@web.de>
+Date:   Tue, 19 Nov 2019 14:32:55 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191119132854.mwkxx4fixjaoxv4w@beryllium.lan>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191119093718.3501-3-namjae.jeon@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:+LhCsVf5ZSyc7xF1CIwC4YJHjV6/SDldnJnKztI6+s1Pw1F4uEw
+ yMt3DjWnf9LHcw49mYgtxBaB+zSHLVTNI5oQ3/ARx08hdoMTQA6EYEnzZMv0rWHj3+pTBxS
+ QdWM9CUt/GRrTtUsYKC95DEQATxcQaNjmG/Fa8iJpMTk4KgAzafICV/b+7MiyybTY7W0ekp
+ 0pA84IwA7iZ5387zzo8FQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:v2m+BP4dEJk=:odSbwjcRPE4mQ/8DiBQXCq
+ KEZCzOUPt9Lv+v0PLB/an8f56dhxcFnQT434j0h0S9l0U/dMR0nkrUSaHWquT8lePRakgzGH6
+ jSjze9B1hXa4BYMzjG8tViFAH39kOuEjIKMWDIWeqeWzPBrDWM7xV15G3013HSY1fYlxhRWrP
+ 4l/cAtNWEtgU9C0LNdjcAsjlXWoEc2v7Keq1GXMwiuIpfe3dldf+6V4xFqMX9i/xJ/5kzrjoC
+ FhJ3wLxP/JnBv6xGFDW9biWw/mJWCnTL2wNIc6EkF08cKxOF5UNBHcUUkyFrmPh9LrzpZqH+p
+ abYcO4yyWRPNHQ1enOGRgpC3qVlvxlxL7RRbL7WNJVjEdkBt7FWv27y2S1yO0c2HYFb/RenbP
+ LUI13FPGYrWu1GrGDuS5fQAPKa8Z95VXZtQwq0uk2cqi3y442dNHknkGQ5JnGJdkpeCNhRliQ
+ OYKwyeR7VSQM2GfWaL1Vbo/q8NNmcGRpLDLdLqfhjPV8OsITZyADbCM+hnC0JbFRrceHbBVPL
+ KfsE11oNIbuFJiTou0CE4kIQv659Z9KUU1jWMRmtIHIf+0do3HVllJhIglqkzU+611w8xr6Jw
+ 6QpWFzI8bAGNl3K+LN9pUCIAU7aYztSxq8H1FXTkQm+zlFsaBJx4qeFr79i0Kavr6m2CVmKaP
+ YxexAn5usE5USm8YHaYWtUcYPjNqCqdzMfcAuvfCdtqVOuy9vAm9G0cSqjIo/9zD92lk5MHu5
+ NQ6dOAySBXotwVdY4QR8lgUijAOXPUQ1O3oxxBskiF2nupXHY6ZBm8CnbD1KPNSFVVeliA7re
+ UldjvdfYyrELHoxqYz5rEuPl461fblcrxT5KY6V/WvTelceKvqZDp4dTJiphM1ZgPBq+DYzRW
+ hCU8TyYkdR27+g6Yr8jzj9xXrJY2TQApr9Bg9rVO1k6eIG5rYKLZhWg45fhlm+IIk5AVUUKhV
+ S/5zpOc+47mCDcP/xCNNLxdH/1sQq0nSW/e2aGJB2HoUxc635HgKysvRllJlFSfzrfCoVvNh5
+ C96poPRxp8hIaseNDvPv2rQ14//l3iKxBoG4GZNzOpcq1VTxSHe2VcYamNOhf1/sBEDvUg7y3
+ 9uC18OLJSacA2Kd8lgDonlKneRWKypbM1hJpCmwp9RdF/xnOJn682LOsVC340yA5eECpsrohe
+ GbFFk50Kb5bDZ4Tf+FzZA9zwFvE0toqL37fYwgm1eLS+JUzzuPH99eJZYGlJ1ONfVJ31IkZ0h
+ 6lyyixS4vVgVyp3Rxhh9d8s2ccxWxzf4vVDp0xQA96E6798BPfUmw1X0B1yU=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 02:28:54PM +0100, Daniel Wagner wrote:
-> On Tue, Nov 12, 2019 at 10:15:00PM -0500, Martin K. Petersen wrote:
-> > > While trying to understand what's going on in the Oops below I figured
-> > > that it could be the result of the invalid pointer access. The patch
-> > > still needs testing by our customer but indepent of this I think the
-> > > patch fixes a real bug.
-> 
-> I was able to reproduce the same stack trace with this patch
-> applied... That is obviously bad. The good news, I have access to this
-> machine, so maybe I able to figure out what's the root cause of this
-> crash.
+=E2=80=A6
+> +++ b/fs/exfat/super.c
+=E2=80=A6
+> +static int __exfat_fill_super(struct super_block *sb)
+> +{
+=E2=80=A6
+> +free_upcase:
+> +	exfat_free_upcase_table(sb);
 
-Forgot to append the KASAN trace which points at the same place. Don't
-know if this is the same thing or not.
+Label alternatives?
+* free_table
+* free_upcase_table
 
 
-[  329.217804] ==================================================================
-[  329.280494] BUG: KASAN: slab-out-of-bounds in lpfc_sli4_io_xri_aborted+0x29c/0x3c0 [lpfc]
-[  329.351654] Read of size 8 at addr ffff88984f160000 by task kworker/77:1/488
-[  329.396559] nvme nvme3: Removing ctrl: NQN "nqn.2014-08.org.nvmexpress.discovery"
-[  329.412326] 
-[  329.412335] CPU: 77 PID: 488 Comm: kworker/77:1 Kdump: loaded Tainted: G            E     5.4.0-rc1-default+ #3
-[  329.412338] Hardware name: HP ProLiant DL580 Gen9/ProLiant DL580 Gen9, BIOS U17 07/21/2019
-[  329.412414] Workqueue: lpfc_wq lpfc_sli4_hba_process_cq [lpfc]
-[  329.428650] nvme nvme0: Removing ctrl: NQN "nqn.2014-08.org.nvmexpress.discovery"
-[  329.765863] Call Trace:
-[  329.765888]  dump_stack+0x71/0xab
-[  329.765967]  ? lpfc_sli4_io_xri_aborted+0x29c/0x3c0 [lpfc]
-[  329.765981]  print_address_description.constprop.6+0x1b/0x2f0
-[  329.912961]  ? lpfc_sli4_io_xri_aborted+0x29c/0x3c0 [lpfc]
-[  329.913001]  ? lpfc_sli4_io_xri_aborted+0x29c/0x3c0 [lpfc]
-[  330.009190]  __kasan_report+0x14e/0x192
-[  330.009255]  ? lpfc_sli4_io_xri_aborted+0x29c/0x3c0 [lpfc]
-[  330.009261]  kasan_report+0xe/0x20
-[  330.120620]  lpfc_sli4_io_xri_aborted+0x29c/0x3c0 [lpfc]
-[  330.120660]  lpfc_sli4_sp_handle_abort_xri_wcqe.isra.55+0x59/0x280 [lpfc]
-[  330.226013]  ? __update_load_avg_cfs_rq+0x244/0x470
-[  330.226052]  ? lpfc_sli4_fp_handle_cqe+0x127/0x8e0 [lpfc]
-[  330.226089]  lpfc_sli4_fp_handle_cqe+0x127/0x8e0 [lpfc]
-[  330.358896]  ? lpfc_sli4_sp_handle_abort_xri_wcqe.isra.55+0x280/0x280 [lpfc]
-[  330.358907]  ? __switch_to_asm+0x40/0x70
-[  330.452995]  ? __switch_to_asm+0x34/0x70
-[  330.452998]  ? __switch_to_asm+0x40/0x70
-[  330.453000]  ? __switch_to_asm+0x34/0x70
-[  330.453002]  ? __switch_to_asm+0x40/0x70
-[  330.453005]  ? __switch_to_asm+0x34/0x70
-[  330.453041]  __lpfc_sli4_process_cq+0x1e1/0x470 [lpfc]
-[  330.453078]  ? lpfc_sli4_sp_handle_abort_xri_wcqe.isra.55+0x280/0x280 [lpfc]
-[  330.728428]  ? __switch_to_asm+0x40/0x70
-[  330.728466]  __lpfc_sli4_hba_process_cq+0x88/0x1d0 [lpfc]
-[  330.728503]  ? lpfc_sli4_fp_handle_cqe+0x8e0/0x8e0 [lpfc]
-[  330.855605]  process_one_work+0x46e/0x7f0
-[  330.855610]  worker_thread+0x69/0x6b0
-[  330.855615]  ? process_one_work+0x7f0/0x7f0
-[  330.855620]  kthread+0x1b3/0x1d0
-[  330.855624]  ? kthread_create_worker_on_cpu+0xc0/0xc0
-[  330.855627]  ret_from_fork+0x35/0x40
-[  330.855631] 
-[  330.855634] Allocated by task 5171:
-[  330.855644]  save_stack+0x19/0x80
-[  330.855650]  __kasan_kmalloc.constprop.9+0xa0/0xd0
-[  331.175452]  __kmalloc+0xfb/0x5d0
-[  331.175461]  alloc_pipe_info+0xff/0x210
-[  331.175464]  create_pipe_files+0x66/0x2e0
-[  331.175467]  __do_pipe_flags+0x2c/0x100
-[  331.175470]  do_pipe2+0x80/0x130
-[  331.175472]  __x64_sys_pipe2+0x2b/0x30
-[  331.175486]  do_syscall_64+0x73/0x230
-[  331.395309]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[  331.395310] 
-[  331.395312] Freed by task 5171:
-[  331.395317]  save_stack+0x19/0x80
-[  331.395319]  __kasan_slab_free+0x105/0x150
-[  331.395321]  kfree+0xa6/0x150
-[  331.395324]  free_pipe_info+0x106/0x120
-[  331.395327]  pipe_release+0xcb/0xf0
-[  331.395335]  __fput+0x11d/0x330
-[  331.395338]  task_work_run+0xc6/0xf0
-[  331.395344]  exit_to_usermode_loop+0x11d/0x120
-[  331.730019]  do_syscall_64+0x203/0x230
-[  331.730023]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[  331.730023] 
-[  331.730027] The buggy address belongs to the object at ffff88984f160040
-[  331.730027]  which belongs to the cache kmalloc-1k of size 1024
-[  331.730030] The buggy address is located 64 bytes to the left of
-[  331.730030]  1024-byte region [ffff88984f160040, ffff88984f160440)
-[  331.730031] The buggy address belongs to the page:
-[  331.730036] page:ffffea00613c5800 refcount:1 mapcount:0 mapping:ffff888107c00700 index:0x0 compound_mapcount: 0
-[  331.730042] flags: 0x97ffffc0010200(slab|head)
-[  331.730050] raw: 0097ffffc0010200 ffffea00613c4608 ffffea00613c7f88 ffff888107c00700
-[  332.266508] raw: 0000000000000000 ffff88984f160040 0000000100000007 0000000000000000
-[  332.266509] page dumped because: kasan: bad access detected
-[  332.266510] 
-[  332.266511] Memory state around the buggy address:
-[  332.266516]  ffff88984f15ff00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-[  332.266518]  ffff88984f15ff80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-[  332.266521] >ffff88984f160000: fc fc fc fc fc fc fc fc fb fb fb fb fb fb fb fb
-[  332.266522]                    ^
-[  332.266525]  ffff88984f160080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[  332.266527]  ffff88984f160100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[  332.266528] ==================================================================
+=E2=80=A6
+> +static int exfat_fill_super(struct super_block *sb, struct fs_context *=
+fc)
+> +{
+=E2=80=A6
+> +	if (EXFAT_SB(sb)->options.case_sensitive)
+> +		sb->s_d_op =3D &exfat_dentry_ops;
+> +	else
+> +		sb->s_d_op =3D &exfat_ci_dentry_ops;
 
-The kernel I used to create the above KASAN trace is mkp/queue (clean
-without my patch), c0bf9a264e10 ("scsi: iscsi: Don't send data to
-unbound connection")
+How do you think about the usage of conditional operators at similar place=
+s?
+
++	sb->s_d_op =3D EXFAT_SB(sb)->options.case_sensitive
++		     ? &exfat_dentry_ops;
++		     : &exfat_ci_dentry_ops;
+
+
+=E2=80=A6
+> +failed_mount3:
+> +	iput(root_inode);
+
+I find the label =E2=80=9Cput_inode=E2=80=9D more appropriate.
+
+
+=E2=80=A6
+> +failed_mount2:
+> +	exfat_free_upcase_table(sb);
+
+I find the label =E2=80=9Cfree_table=E2=80=9D more helpful.
+
+
+=E2=80=A6
+> +failed_mount:
+> +	if (sbi->nls_io)
+> +		unload_nls(sbi->nls_io);
+
+Can the label =E2=80=9Ccheck_nls_io=E2=80=9D be nicer?
+
+
+=E2=80=A6
+> +static int __init init_exfat_fs(void)
+> +{
+=E2=80=A6
+> +shutdown_cache:
+> +	exfat_cache_shutdown();
+> +
+> +	return err;
+
+Would you like to omit blank lines at similar places?
+
+Regards,
+Markus
