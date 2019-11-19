@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E72BAC43141
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:47:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 360D4C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:47:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEAC82075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:47:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08CDD218BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:47:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142465;
-	bh=csGxPfHGGw7vrgsXdVIZiGSXswdvnVTZni67Jb2fpOE=;
+	s=default; t=1574142469;
+	bh=RvVTYuH6J/bWSf35l6x4RJtqEASHSYMDdLh47axTfxE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uexDm7MvxAE5zRo0MpR4yMEPXi9vsZILt9qkPgkQj4q0t4ezB0rkWxw6IwxJO9FWU
-	 dw+A/khypI9nuxu+7sQOguK1mP9UVKibqGtHIwP7I+/GGhjQyUQ38d/5IURaeFKWoP
-	 KKkHTd838HA/Dp5rzPOXtAJotAhLXMG58AxYgHVQ=
+	b=0xnyFa5wmBVCpC4gZwi9KRo7UF9HivtuJ6rtfzU2leKYGsv/PmIbBRmbGY+YYu2wC
+	 x50UmUXJ8IS95bt2zcXjLtVZcwCfRtIVZ6zpDsx4OPJhJF0sKjPpHwwP1hZNBTrnJu
+	 RjjC0KmTLDDa8QPfQwtA1AB0bRead4zEhk0wLIrE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725819AbfKSFro (ORCPT
+        id S1731275AbfKSFrs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:47:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43974 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:47:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730961AbfKSFrg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:47:36 -0500
+        id S1731258AbfKSFrj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:47:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4AE2C2075E;
-        Tue, 19 Nov 2019 05:47:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA05B2071B;
+        Tue, 19 Nov 2019 05:47:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142455;
-        bh=csGxPfHGGw7vrgsXdVIZiGSXswdvnVTZni67Jb2fpOE=;
+        s=default; t=1574142458;
+        bh=RvVTYuH6J/bWSf35l6x4RJtqEASHSYMDdLh47axTfxE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cUbg9H8G25XoTztaIn870/KE1FtxLJn65OSWCWrg2T7IC5I1hrT6YIOhbHKC+Qv88
-         +2nuQrddcy+k8QbRp+BnIqKBBpiiP1MCDZjR6OjtbVDaWW8kYI5goGNWuTfd2n98Ay
-         EzzC8SyQ89cNA/+X+qXJa1cxmXPG5CG6XjKV8LGU=
+        b=ZFsyKyuv6OfzvUHGnlpC/NqsqFODo7e/38MScJU0UsOUijV/eqrk16NaNMo5SKj4i
+         0cqFDGu6f2sifX4/qcXNtpK6VbQ3pN4XG3MGXdKd1zhJ8VaNnBwOHUbqNpS5KqybDK
+         /6GlU1jKCO2eeD5MOROoBpMiJljUlL1YJiOzbMlQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>,
-        Hauke Mehrtens <hauke@hauke-m.de>,
-        Paul Burton <paul.burton@mips.com>,
-        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>,
-        linux-mips@linux-mips.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 047/239] MIPS: BCM47XX: Enable USB power on Netgear WNDR3400v3
-Date:   Tue, 19 Nov 2019 06:17:27 +0100
-Message-Id: <20191119051306.683775274@linuxfoundation.org>
+        stable@vger.kernel.org, Suman Anna <s-anna@ti.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 038/239] remoteproc/davinci: Use %zx for formating size_t
+Date:   Tue, 19 Nov 2019 06:17:18 +0100
+Message-Id: <20191119051304.990573093@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -62,53 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-[ Upstream commit feef7918667b84f9d5653c501542dd8d84ae32af ]
+[ Upstream commit 1e28dbbeced6152b9ea7c417ff8cef3f7dcf0f19 ]
 
-Setting GPIO 21 high seems to be required to enable power to USB ports
-on the WNDR3400v3. As there is already similar code for WNR3500L,
-make the existing USB power GPIO code generic and use that.
+da8xx_rproc_mem size is of type size_t, so use %zx to format the debug
+print of it to avoid a compile warning.
 
-Signed-off-by: Tuomas Tynkkynen <tuomas.tynkkynen@iki.fi>
-Acked-by: Hauke Mehrtens <hauke@hauke-m.de>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Patchwork: https://patchwork.linux-mips.org/patch/20259/
-Cc: Rafał Miłecki <zajec5@gmail.com>
-Cc: linux-mips@linux-mips.org
-Cc: linux-kernel@vger.kernel.org
+Acked-by: Suman Anna <s-anna@ti.com>
+Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/bcm47xx/workarounds.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/remoteproc/da8xx_remoteproc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/mips/bcm47xx/workarounds.c b/arch/mips/bcm47xx/workarounds.c
-index 1a8a07e7a5633..46eddbec8d9fd 100644
---- a/arch/mips/bcm47xx/workarounds.c
-+++ b/arch/mips/bcm47xx/workarounds.c
-@@ -5,9 +5,8 @@
- #include <bcm47xx_board.h>
- #include <bcm47xx.h>
+diff --git a/drivers/remoteproc/da8xx_remoteproc.c b/drivers/remoteproc/da8xx_remoteproc.c
+index bf3b9034c319e..a127d2ccd7ca5 100644
+--- a/drivers/remoteproc/da8xx_remoteproc.c
++++ b/drivers/remoteproc/da8xx_remoteproc.c
+@@ -207,7 +207,7 @@ static int da8xx_rproc_get_internal_memories(struct platform_device *pdev,
+ 				res->start & DA8XX_RPROC_LOCAL_ADDRESS_MASK;
+ 		drproc->mem[i].size = resource_size(res);
  
--static void __init bcm47xx_workarounds_netgear_wnr3500l(void)
-+static void __init bcm47xx_workarounds_enable_usb_power(int usb_power)
- {
--	const int usb_power = 12;
- 	int err;
- 
- 	err = gpio_request_one(usb_power, GPIOF_OUT_INIT_HIGH, "usb_power");
-@@ -23,7 +22,10 @@ void __init bcm47xx_workarounds(void)
- 
- 	switch (board) {
- 	case BCM47XX_BOARD_NETGEAR_WNR3500L:
--		bcm47xx_workarounds_netgear_wnr3500l();
-+		bcm47xx_workarounds_enable_usb_power(12);
-+		break;
-+	case BCM47XX_BOARD_NETGEAR_WNDR3400_V3:
-+		bcm47xx_workarounds_enable_usb_power(21);
- 		break;
- 	default:
- 		/* No workaround(s) needed */
+-		dev_dbg(dev, "memory %8s: bus addr %pa size 0x%x va %p da 0x%x\n",
++		dev_dbg(dev, "memory %8s: bus addr %pa size 0x%zx va %p da 0x%x\n",
+ 			mem_names[i], &drproc->mem[i].bus_addr,
+ 			drproc->mem[i].size, drproc->mem[i].cpu_addr,
+ 			drproc->mem[i].dev_addr);
 -- 
 2.20.1
 
