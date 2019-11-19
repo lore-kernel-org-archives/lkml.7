@@ -2,147 +2,105 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE51C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 23:13:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73328C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 23:14:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85C612245B
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 23:13:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4633D222AB
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 23:14:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="CFH6B8zX"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="yeBek2H2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727437AbfKSXNh (ORCPT
+        id S1727491AbfKSXOH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 18:13:37 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:46095 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726025AbfKSXNh (ORCPT
+        Tue, 19 Nov 2019 18:14:07 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:42889 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727217AbfKSXOG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 18:13:37 -0500
-Received: by mail-qk1-f193.google.com with SMTP id h15so19523980qka.13
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 15:13:36 -0800 (PST)
+        Tue, 19 Nov 2019 18:14:06 -0500
+Received: by mail-lf1-f66.google.com with SMTP id z12so18525853lfj.9
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 15:14:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=17yvYiAWU0HGRGp9KcOWNDREPdtmfZAOUWmEXa5IV8Q=;
-        b=CFH6B8zXYbvy1pYUJJbcu8xh9P/QVD9z5JiNaOpP03dFNMTRSirDeSciisIuN1TsQA
-         As/ijGNvAx9+OyE4Hnp1DTwaPgjRcoWWq+wiBHbdq7EhD17YdSipISWg1TICLdaMuIXY
-         lM/H1EChksx8g0UiRlsq0Y+KPp0tlPL8gbAsgj2UFVJ6GZ56v1/7ShRrNC83MmE56Mty
-         /F4A+sZS8mMHYRF2AmUmsD/CJquhlsSwT99zGQSlFyFCQj7eYOxXZCzRsxMIwt4BzBwB
-         HTtkNUPosiSiG5VzFAK0aWuUW9tXvIFDKo/43Zb30icp121XVTBDnTlDnBB4yim04UzW
-         KUAw==
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=ir9irrJOMESWTUpMxjgf2j9zIILW0SvYAjvCo24hEOs=;
+        b=yeBek2H2Lh83q24+IC9sstjDwUdjPe0Hy/cFCn/aNxEVZlaiEHBievvhaiiTqAJldO
+         CnnDU1mg6MMoN3A/s/fPb/GLq3/y5I/auK5FCTyJf0i8HcEPGpuv3hFklYLZr6Hyb2O8
+         bNw4GkI3ToqfAdiHBgz8IKnGZegIRB7kfjovriwWYyUqJDSSoptTt7c6ZWOwm9dbAeF7
+         UR1eFdlf8N1u5sMvmOfbBEw39e89tEgoYakysAJhWPPuVfDjOnNsCpsVTn0aMBNSut8b
+         RAFwc2GMonc3dBRheCWXUZ17OEzmJEe8qn1X6woO36L958QLne82o4jSxPqCaMdlhbsT
+         K2dA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=17yvYiAWU0HGRGp9KcOWNDREPdtmfZAOUWmEXa5IV8Q=;
-        b=Qe0y00YY1W3Ei26ubtA6/ZNsmR15wT0aIxmoOUC+nYNGPZ/rtUyzMek/JxzdwV4VK+
-         LrAomLtFvWcMjUvAKVH+Kxgu+CmBDNpqZc1gx3NHpQLVzhSI/17bPZlFpBZo1nfYSTWs
-         hkgU5g4YH9RXEan1m3jc0SnZH9OW1sCkV7nXx9R+FzcaHc7pRSct7oiVciGKB7AQ1r7E
-         /sSQNfWdMKHhtuc++ahP2e2WRtOLnuf1utcA14YxIDGrDpu4JhRxDqbsS1fgQyQoG4sM
-         uzqb2/0ilakJrOQ02OFr4xNYCkQMfDLZkdq4lMz4U7t7Se4LvNWo8SBsqm6lm5aFdi1i
-         7JoQ==
-X-Gm-Message-State: APjAAAUo27M4Mcr8vtfJQMP9uU9NTwqJx1vI9YJOXouosgg/jYQHy1FY
-        GdHICnPKxsmnvM+Udqm3u7mZ2A==
-X-Google-Smtp-Source: APXvYqxkAxQNe/mh+W9e4zwMrMhZARAyEI1xOqHgisjcDpSWmv77QsRLXTnzw8xWHepRdkYoW9QjIQ==
-X-Received: by 2002:ae9:e702:: with SMTP id m2mr106007qka.269.1574205216019;
-        Tue, 19 Nov 2019 15:13:36 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-162-113-180.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.180])
-        by smtp.gmail.com with ESMTPSA id b4sm297485qka.75.2019.11.19.15.13.35
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 19 Nov 2019 15:13:35 -0800 (PST)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1iXCgh-0004m0-03; Tue, 19 Nov 2019 19:13:35 -0400
-Date:   Tue, 19 Nov 2019 19:13:34 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Rao Shoaib <rao.shoaib@oracle.com>
-Cc:     monis@mellanox.com, dledford@redhat.com, sean.hefty@intel.com,
-        hal.rosenstock@gmail.com, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] Introduce maximum WQE size to check limits
-Message-ID: <20191119231334.GO4991@ziepe.ca>
-References: <1574106879-19211-1-git-send-email-rao.shoaib@oracle.com>
- <1574106879-19211-2-git-send-email-rao.shoaib@oracle.com>
- <20191119203138.GA13145@ziepe.ca>
- <44d1242a-fc32-9918-dd53-cd27ebf61811@oracle.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=ir9irrJOMESWTUpMxjgf2j9zIILW0SvYAjvCo24hEOs=;
+        b=DywB1576TlVWBRkojqFfELfRJuSiYsoX55zMDOJ9do1AmI1k1XOxMPreYhkmrbG2vB
+         jbNziCxnTDVVPhjt9ENh1bKmWb2nEtfSalKbMUlHnv2nQb1kXFYMuTx92U/jVyJMDNVw
+         hsbOh7Qgfa9QaoXcbxOp3dTUC+taZG7LjWHtLGrQCCWyRXe73/uetm8bRC5TyN9Phv3m
+         cipKWiwpv7aONmIIU7cdd0KrQ3DOVzUsapd+CGjv9/dHLVkLDGEadL7q9flwMILa+6nU
+         s5DBlif2ZJDwEmQI3aBzpHKQNGEtTwGNhEp1UXk2ntlBHjVinxesNLTPR+bLOfth4ikq
+         4k4w==
+X-Gm-Message-State: APjAAAWnBmisUuSNHl+lRbuRYKKFjNmnqy8G1LHSPWDmfaF/Y5yVVZi+
+        JSa3ALavyMmjU9ztPK+tTGZhow==
+X-Google-Smtp-Source: APXvYqwHOzNI1rbF48ly4PEH2Jq0GjpAfNRQf0Gr/4kPUrdNNRFtGVbwH61ArBAzhhCUQUNgcrAfqQ==
+X-Received: by 2002:a19:7d06:: with SMTP id y6mr151844lfc.120.1574205244690;
+        Tue, 19 Nov 2019 15:14:04 -0800 (PST)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id i190sm13837624lfi.45.2019.11.19.15.14.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Nov 2019 15:14:04 -0800 (PST)
+Date:   Tue, 19 Nov 2019 15:13:50 -0800
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     <netdev@vger.kernel.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Ivan Vecera <ivecera@redhat.com>,
+        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>
+Subject: Re: [PATCH v7 net-next 10/13] Documentation: networking: add cpsw
+ switchdev based driver documentation
+Message-ID: <20191119151350.75c72c40@cakuba.netronome.com>
+In-Reply-To: <20191119221925.28426-11-grygorii.strashko@ti.com>
+References: <20191119221925.28426-1-grygorii.strashko@ti.com>
+        <20191119221925.28426-11-grygorii.strashko@ti.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <44d1242a-fc32-9918-dd53-cd27ebf61811@oracle.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 02:38:23PM -0800, Rao Shoaib wrote:
-> 
-> On 11/19/19 12:31 PM, Jason Gunthorpe wrote:
-> > On Mon, Nov 18, 2019 at 11:54:38AM -0800, rao Shoaib wrote:
-> > > From: Rao Shoaib <rao.shoaib@oracle.com>
-> > > 
-> > > Introduce maximum WQE size to impose limits on max SGE's and inline data
-> > > 
-> > > Signed-off-by: Rao Shoaib <rao.shoaib@oracle.com>
-> > >   drivers/infiniband/sw/rxe/rxe_param.h | 3 ++-
-> > >   drivers/infiniband/sw/rxe/rxe_qp.c    | 7 +++++--
-> > >   2 files changed, 7 insertions(+), 3 deletions(-)
-> > > 
-> > > diff --git a/drivers/infiniband/sw/rxe/rxe_param.h b/drivers/infiniband/sw/rxe/rxe_param.h
-> > > index 1b596fb..31fb5c7 100644
-> > > +++ b/drivers/infiniband/sw/rxe/rxe_param.h
-> > > @@ -68,7 +68,6 @@ enum rxe_device_param {
-> > >   	RXE_HW_VER			= 0,
-> > >   	RXE_MAX_QP			= 0x10000,
-> > >   	RXE_MAX_QP_WR			= 0x4000,
-> > > -	RXE_MAX_INLINE_DATA		= 400,
-> > >   	RXE_DEVICE_CAP_FLAGS		= IB_DEVICE_BAD_PKEY_CNTR
-> > >   					| IB_DEVICE_BAD_QKEY_CNTR
-> > >   					| IB_DEVICE_AUTO_PATH_MIG
-> > > @@ -79,7 +78,9 @@ enum rxe_device_param {
-> > >   					| IB_DEVICE_RC_RNR_NAK_GEN
-> > >   					| IB_DEVICE_SRQ_RESIZE
-> > >   					| IB_DEVICE_MEM_MGT_EXTENSIONS,
-> > > +	RXE_MAX_WQE_SIZE		= 0x2d0, /* For RXE_MAX_SGE */
-> > This shouldn't just be a random constant, I think you are trying to
-> > say:
-> > 
-> >    RXE_MAX_WQE_SIZE = sizeof(struct rxe_send_wqe) + sizeof(struct ib_sge)*RXE_MAX_SGE
+On Wed, 20 Nov 2019 00:19:22 +0200, Grygorii Strashko wrote:
+> diff --git a/Documentation/networking/devlink-params-ti-cpsw-switch.txt b/Documentation/networking/devlink-params-ti-cpsw-switch.txt
+> new file mode 100644
+> index 000000000000..4037458499f7
+> --- /dev/null
+> +++ b/Documentation/networking/devlink-params-ti-cpsw-switch.txt
+> @@ -0,0 +1,10 @@
+> +ale_bypass	[DEVICE, DRIVER-SPECIFIC]
+> +		Allows to enable ALE_CONTROL(4).BYPASS mode for debug purposes.
+> +		All packets will be sent to the Host port only if enabled.
+> +		Type: bool
+> +		Configuration mode: runtime
+> +
+> +switch_mode	[DEVICE, DRIVER-SPECIFIC]
+> +		Enable switch mode
+> +		Type: bool
+> +		Configuration mode: runtime
 
-> I thought you wanted this value to be independent of RXE_MAX_SGE, else why
-> are defining it.
-
-Then define 
-
-   RXE_MAX_SGE = (RXE_MAX_WQE_SIZE - sizeof(rxe_send_wqe))/sizeof(rxe_sge)
-
-And drive everything off RXE_MAX_WQE_SIZE, which sounds good
-
-> > Just say that
-> > 
-> > >   	RXE_MAX_SGE			= 32,
-> > > +	RXE_MAX_INLINE_DATA		= RXE_MAX_WQE_SIZE,
-> > This is mixed up now, it should be
-> > 
-> >    RXE_MAX_INLINE_DATA = RXE_MAX_WQE_SIZE - sizeof(rxe_send_wqe)
-> 
-> I agree to what you are suggesting, it will make the current patch better.
-> However, In my previous patch I had
-> 
-> RXE_MAX_INLINE_DATA		= RXE_MAX_SGE * sizeof(struct ib_sge)
-> 
-> IMHO that conveys the intent much better. I do not see the reason for
-> defining RXE_MAX_WQE_SIZE, ib_device_attr does not even have an entry for it
-> and hence the value is not used anywhere by rxe or by any other relevant
-> driver.
-
-Because WQE_SIZE is what you are actually concerned with here, using
-MAX_SGE as a proxy for the max WQE is confusing
-
-Jason
+Ah, you got it here, sorry :)
