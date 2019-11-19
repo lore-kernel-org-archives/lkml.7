@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5670CC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 11:33:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DB99C43141
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 11:33:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CA1122311
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 11:33:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36C6722316
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 11:33:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574163214;
-	bh=3ddu5QVxyGIk6W7UKdItO2YVwGQCZTha3WJFIAop07M=;
+	s=default; t=1574163220;
+	bh=ebt4oAmvud3x4YqFAHba1lQhIjVOa0Q42SixfNZD5/k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Kd714zFfKi1u0NZpBVxjF56WwO/q8jfA0p/uD8wZBH3gaa7odhpQ7WorVV/2TbmjN
-	 q/7YNjoIwglpzyE1AeEzR/ijjYizWL1EV7q0K/v68fTAX6Wq4n4EkVmxqvsqYsWHG8
-	 zjjIH32D0lhFLV2SxVaOIvfjy1ZoE+m/r0pLeNZI=
+	b=1YvCr3GD8FG1Lh8E8xd65njvhXGDJzL+OAcTDUZX+3ZVAy0ARVPzGHfiu/QNMmpx1
+	 u3Kc+d3UNOzK3uA7g+diuqe2Saf2f/OaoxVbHzCwgPN3S9YZ+DGABTqGoi1mxDslPl
+	 45Uf78JEbT0jr/kbek1yZ+SfvbmpWx87rhGxm6Eg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727970AbfKSLdc (ORCPT
+        id S1728001AbfKSLdj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 06:33:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47286 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 06:33:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727504AbfKSLdc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 06:33:32 -0500
+        id S1727504AbfKSLdh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 06:33:37 -0500
 Received: from quaco.ghostprotocols.net (179.176.11.138.dynamic.adsl.gvt.net.br [179.176.11.138])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D20D22304;
-        Tue, 19 Nov 2019 11:33:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0DFE822310;
+        Tue, 19 Nov 2019 11:33:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574163210;
-        bh=3ddu5QVxyGIk6W7UKdItO2YVwGQCZTha3WJFIAop07M=;
+        s=default; t=1574163216;
+        bh=ebt4oAmvud3x4YqFAHba1lQhIjVOa0Q42SixfNZD5/k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iy4uLBZ4JrFoSiqHqe6yZRdUItvxxQNumid5Yhof0JkV1HFBRKY76aN2ZtqPFmxkk
-         fGn1X5el8mScRq8gVu+9BuOdnQ/UmzuRP3/yUqmaEEJbvHUVBWXdw6qjsZF3ZlCaz+
-         EBF2XBD2SvfNNZLrYrALq06IhdmT3d8BnYD5AUpo=
+        b=tGcTIqNzdpyza5wzb/duC8d+mIFH6Al6FZmmJBbUnM6+rml18450hHbmyngprUfV9
+         y+eRnJCqV2UHzN56wHZk1/PiXI9Ux0mcvr8WVid59heuFpsUi4I4cILJbg1j5V2sVy
+         yJLnfm1mWno3CePhzlWTzDZuIiMnv8pD1BrPh9i0=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -47,10 +47,10 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>, Wang Nan <wangnan0@huawei.com>
-Subject: [PATCH 08/25] perf map: No need to adjust the long name of modules
-Date:   Tue, 19 Nov 2019 08:32:28 -0300
-Message-Id: <20191119113245.19593-9-acme@kernel.org>
+        Andi Kleen <ak@linux.intel.com>
+Subject: [PATCH 10/25] perf machine: No need to check if kernel module maps pre-exist
+Date:   Tue, 19 Nov 2019 08:32:30 -0300
+Message-Id: <20191119113245.19593-11-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191119113245.19593-1-acme@kernel.org>
 References: <20191119113245.19593-1-acme@kernel.org>
@@ -63,241 +63,99 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-At some point in the past we needed to make sure we would get the long
-name of modules and not just what we get from /proc/modules, but that
-need, as described in the cset that introduced the adjustment function:
+We'only populating maps for kernel modules either from perf.data file
+PERF_RECORD_MMAP records or when parsing /proc/modules, so there is no
+need to first look if we already have those module maps in the list,
+that would mean the kernel has duplicate entries.
 
-Fixes: c03d5184f0e9 ("perf machine: Adjust dso->long_name for offline module")
-
-Without using the buildid-cache:
-
-  # lsmod | grep trusted
-  # insmod trusted.ko
-  # lsmod | grep trusted
-  trusted                24576  0
-  # strace -e open,openat perf probe -m ./trusted.ko key_seal |& grep trusted
-  openat(AT_FDCWD, "/sys/module/trusted/notes/.note.gnu.build-id", O_RDONLY) = 4
-  openat(AT_FDCWD, "/sys/module/trusted/notes/.note.gnu.build-id", O_RDONLY) = 7
-  openat(AT_FDCWD, "/root/trusted.ko", O_RDONLY) = 3
-  openat(AT_FDCWD, "/root/.debug/root/trusted.ko/dd3d355d567394d540f527e093e0f64b95879584/probes", O_RDWR|O_CREAT, 0644) = 3
-  openat(AT_FDCWD, "/usr/lib/debug/root/trusted.ko.debug", O_RDONLY) = -1 ENOENT (No such file or directory)
-  openat(AT_FDCWD, "/usr/lib/debug/root/trusted.ko", O_RDONLY) = -1 ENOENT (No such file or directory)
-  openat(AT_FDCWD, "/root/.debug/trusted.ko", O_RDONLY) = -1 ENOENT (No such file or directory)
-  openat(AT_FDCWD, "/root/trusted.ko", O_RDONLY) = 3
-  openat(AT_FDCWD, "trusted.ko.debug", O_RDONLY) = -1 ENOENT (No such file or directory)
-  openat(AT_FDCWD, ".debug/trusted.ko.debug", O_RDONLY) = -1 ENOENT (No such file or directory)
-  openat(AT_FDCWD, "trusted.ko.debug", O_RDONLY) = -1 ENOENT (No such file or directory)
-  openat(AT_FDCWD, "/root/trusted.ko", O_RDONLY) = 3
-  openat(AT_FDCWD, "/root/trusted.ko", O_RDONLY) = 3
-  openat(AT_FDCWD, "/root/trusted.ko", O_RDONLY) = 4
-  openat(AT_FDCWD, "/root/trusted.ko", O_RDONLY) = 3
-    probe:key_seal       (on key_seal in trusted)
-  # perf probe -l
-    probe:key_seal       (on key_seal in trusted)
-  #
-
-No attempt at opening '[trusted]'.
-
-Now using the build-id cache:
-
-  # rmmod trusted
-  # perf buildid-cache --add ./trusted.ko
-  # insmod trusted.ko
-  # strace -e open,openat perf probe -m ./trusted.ko key_seal |& grep trusted
-  openat(AT_FDCWD, "/sys/module/trusted/notes/.note.gnu.build-id", O_RDONLY) = 4
-  openat(AT_FDCWD, "/sys/module/trusted/notes/.note.gnu.build-id", O_RDONLY) = 7
-  openat(AT_FDCWD, "/root/trusted.ko", O_RDONLY) = 3
-  openat(AT_FDCWD, "/root/.debug/root/trusted.ko/dd3d355d567394d540f527e093e0f64b95879584/probes", O_RDWR|O_CREAT, 0644) = 3
-  openat(AT_FDCWD, "/usr/lib/debug/root/trusted.ko.debug", O_RDONLY) = -1 ENOENT (No such file or directory)
-  openat(AT_FDCWD, "/usr/lib/debug/root/trusted.ko", O_RDONLY) = -1 ENOENT (No such file or directory)
-  openat(AT_FDCWD, "/root/.debug/trusted.ko", O_RDONLY) = -1 ENOENT (No such file or directory)
-  openat(AT_FDCWD, "/root/trusted.ko", O_RDONLY) = 3
-  openat(AT_FDCWD, "trusted.ko.debug", O_RDONLY) = -1 ENOENT (No such file or directory)
-  openat(AT_FDCWD, ".debug/trusted.ko.debug", O_RDONLY) = -1 ENOENT (No such file or directory)
-  openat(AT_FDCWD, "trusted.ko.debug", O_RDONLY) = -1 ENOENT (No such file or directory)
-  openat(AT_FDCWD, "/root/trusted.ko", O_RDONLY) = 3
-  openat(AT_FDCWD, "/root/trusted.ko", O_RDONLY) = 3
-  openat(AT_FDCWD, "/root/trusted.ko", O_RDONLY) = 4
-  openat(AT_FDCWD, "/root/trusted.ko", O_RDONLY) = 3
-  #
-
-Again, no attempt at reading '[trusted]'.
-
-Finally, adding a probe to that function and then using:
-
-[root@quaco ~]# perf trace -e probe_perf:*/max-stack=16/ --max-events=2
-     0.000 perf/13456 probe_perf:dso__adjust_kmod_long_name(__probe_ip: 5492263)
-                                       dso__adjust_kmod_long_name (/home/acme/bin/perf)
-                                       machine__process_kernel_mmap_event (/home/acme/bin/perf)
-                                       machine__process_mmap_event (/home/acme/bin/perf)
-                                       perf_event__process_mmap (/home/acme/bin/perf)
-                                       machines__deliver_event (/home/acme/bin/perf)
-                                       perf_session__deliver_event (/home/acme/bin/perf)
-                                       perf_session__process_event (/home/acme/bin/perf)
-                                       process_simple (/home/acme/bin/perf)
-                                       reader__process_events (/home/acme/bin/perf)
-                                       __perf_session__process_events (/home/acme/bin/perf)
-                                       perf_session__process_events (/home/acme/bin/perf)
-                                       process_buildids (/home/acme/bin/perf)
-                                       record__finish_output (/home/acme/bin/perf)
-                                       __cmd_record (/home/acme/bin/perf)
-                                       cmd_record (/home/acme/bin/perf)
-                                       run_builtin (/home/acme/bin/perf)
-     0.055 perf/13456 probe_perf:dso__adjust_kmod_long_name(__probe_ip: 5492263)
-                                       dso__adjust_kmod_long_name (/home/acme/bin/perf)
-                                       machine__process_kernel_mmap_event (/home/acme/bin/perf)
-                                       machine__process_mmap_event (/home/acme/bin/perf)
-                                       perf_event__process_mmap (/home/acme/bin/perf)
-                                       machines__deliver_event (/home/acme/bin/perf)
-                                       perf_session__deliver_event (/home/acme/bin/perf)
-                                       perf_session__process_event (/home/acme/bin/perf)
-                                       process_simple (/home/acme/bin/perf)
-                                       reader__process_events (/home/acme/bin/perf)
-                                       __perf_session__process_events (/home/acme/bin/perf)
-                                       perf_session__process_events (/home/acme/bin/perf)
-                                       process_buildids (/home/acme/bin/perf)
-                                       record__finish_output (/home/acme/bin/perf)
-                                       __cmd_record (/home/acme/bin/perf)
-                                       cmd_record (/home/acme/bin/perf)
-                                       run_builtin (/home/acme/bin/perf)
-  #
-
-This was the only path I could find using the perf tools that reach at this
-function, then as of november/2019, if we put a probe in the line where the
-actuall setting of the dso->long_name is done:
-
-  # perf trace -e probe_perf:*
-  ^C[root@quaco ~]
-  # perf stat -e probe_perf:*  -I 2000
-       2.000404265                  0      probe_perf:dso__adjust_kmod_long_name
-       4.001142200                  0      probe_perf:dso__adjust_kmod_long_name
-       6.001704120                  0      probe_perf:dso__adjust_kmod_long_name
-       8.002398316                  0      probe_perf:dso__adjust_kmod_long_name
-      10.002984010                  0      probe_perf:dso__adjust_kmod_long_name
-      12.003597851                  0      probe_perf:dso__adjust_kmod_long_name
-      14.004113303                  0      probe_perf:dso__adjust_kmod_long_name
-      16.004582773                  0      probe_perf:dso__adjust_kmod_long_name
-      18.005176373                  0      probe_perf:dso__adjust_kmod_long_name
-      20.005801605                  0      probe_perf:dso__adjust_kmod_long_name
-      22.006467540                  0      probe_perf:dso__adjust_kmod_long_name
-  ^C    23.683261941                  0      probe_perf:dso__adjust_kmod_long_name
-
-  #
-
-Its not being used at all.
-
-To further test this I used kvm.ko as the offline module, i.e. removed
-if from the buildid-cache by nuking it completely (rm -rf ~/.debug) and
-moved it from the normal kernel distro path, removed the modules, stoped
-the kvm guest, and then installed it manually, etc.
-
-  # rmmod kvm-intel
-  # rmmod kvm
-  # lsmod | grep kvm
-  # modprobe kvm-intel
-  modprobe: ERROR: ctx=0x55d3b1722260 path=/lib/modules/5.3.8-200.fc30.x86_64/kernel/arch/x86/kvm/kvm.ko.xz error=No such file or directory
-  modprobe: ERROR: ctx=0x55d3b1722260 path=/lib/modules/5.3.8-200.fc30.x86_64/kernel/arch/x86/kvm/kvm.ko.xz error=No such file or directory
-  modprobe: ERROR: could not insert 'kvm_intel': Unknown symbol in module, or unknown parameter (see dmesg)
-  # insmod ./kvm.ko
-  # modprobe kvm-intel
-  modprobe: ERROR: ctx=0x562f34026260 path=/lib/modules/5.3.8-200.fc30.x86_64/kernel/arch/x86/kvm/kvm.ko.xz error=No such file or directory
-  modprobe: ERROR: ctx=0x562f34026260 path=/lib/modules/5.3.8-200.fc30.x86_64/kernel/arch/x86/kvm/kvm.ko.xz error=No such file or directory
-  # lsmod | grep kvm
-  kvm_intel             299008  0
-  kvm                   765952  1 kvm_intel
-  irqbypass              16384  1 kvm
-  #
-  # perf probe -x ~/bin/perf machine__findnew_module_map:12 mname=m.name:string filename=filename:string 'dso_long_name=map->dso->long_name:string' 'dso_name=map->dso->name:string'
-  # perf probe -l
-    probe_perf:machine__findnew_module_map (on machine__findnew_module_map:12@util/machine.c in /home/acme/bin/perf with mname filename dso_long_name dso_name)
-  # perf record
-  ^C[ perf record: Woken up 2 times to write data ]
-  [ perf record: Captured and wrote 3.416 MB perf.data (33956 samples) ]
-  # perf trace -e probe_perf:machine*
-  <SNIP>
-       6.322 perf/23099 probe_perf:machine__findnew_module_map(__probe_ip: 5492493, mname: "[salsa20_generic]", filename: "/lib/modules/5.3.8-200.fc30.x86_64/kernel/crypto/salsa20_generic.ko.xz", dso_long_name: "/lib/modules/5.3.8-200.fc30.x86_64/kernel/crypto/salsa20_generic.ko.xz", dso_name: "[salsa20_generic]")
-       6.375 perf/23099 probe_perf:machine__findnew_module_map(__probe_ip: 5492493, mname: "[kvm]", filename: "[kvm]", dso_long_name: "[kvm]", dso_name: "[kvm]")
-  <SNIP>
-
-The filename doesn't come with the path, no point in trying to set the dso->long_name.
-
-  [root@quaco ~]# strace -e open,openat perf probe -m ./kvm.ko kvm_apic_local_deliver |& egrep 'open.*kvm'
-  openat(AT_FDCWD, "/sys/module/kvm_intel/notes/.note.gnu.build-id", O_RDONLY) = 4
-  openat(AT_FDCWD, "/sys/module/kvm/notes/.note.gnu.build-id", O_RDONLY) = 4
-  openat(AT_FDCWD, "/lib/modules/5.3.8-200.fc30.x86_64/kernel/arch/x86/kvm", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY) = 7
-  openat(AT_FDCWD, "/sys/module/kvm_intel/notes/.note.gnu.build-id", O_RDONLY) = 8
-  openat(AT_FDCWD, "/root/kvm.ko", O_RDONLY) = 3
-  openat(AT_FDCWD, "/root/.debug/root/kvm.ko/5955f426cb93f03f30f3e876814be2db80ab0b55/probes", O_RDWR|O_CREAT, 0644) = 3
-  openat(AT_FDCWD, "/usr/lib/debug/root/kvm.ko.debug", O_RDONLY) = -1 ENOENT (No such file or directory)
-  openat(AT_FDCWD, "/usr/lib/debug/root/kvm.ko", O_RDONLY) = -1 ENOENT (No such file or directory)
-  openat(AT_FDCWD, "/root/.debug/kvm.ko", O_RDONLY) = -1 ENOENT (No such file or directory)
-  openat(AT_FDCWD, "/root/kvm.ko", O_RDONLY) = 3
-  openat(AT_FDCWD, "kvm.ko.debug", O_RDONLY) = -1 ENOENT (No such file or directory)
-  openat(AT_FDCWD, ".debug/kvm.ko.debug", O_RDONLY) = -1 ENOENT (No such file or directory)
-  openat(AT_FDCWD, "kvm.ko.debug", O_RDONLY) = -1 ENOENT (No such file or directory)
-  openat(AT_FDCWD, "/root/kvm.ko", O_RDONLY) = 3
-  openat(AT_FDCWD, "/root/kvm.ko", O_RDONLY) = 3
-  openat(AT_FDCWD, "/root/kvm.ko", O_RDONLY) = 4
-  openat(AT_FDCWD, "/root/kvm.ko", O_RDONLY) = 3
-  [root@quaco ~]#
+So ditch one use of looking up maps by name.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-jlfew3lyb24d58egrp0o72o2@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-gnzjg2hhuz6jnrw91m35059y@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/machine.c | 27 +--------------------------
- 1 file changed, 1 insertion(+), 26 deletions(-)
+ tools/perf/util/machine.c | 16 ++++++----------
+ tools/perf/util/machine.h |  2 --
+ tools/perf/util/symbol.c  |  2 +-
+ 3 files changed, 7 insertions(+), 13 deletions(-)
 
 diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 6a0f5c25ce3e..6804c8247782 100644
+index 6804c8247782..7d2e211e376c 100644
 --- a/tools/perf/util/machine.c
 +++ b/tools/perf/util/machine.c
-@@ -772,24 +772,6 @@ int machine__process_ksymbol(struct machine *machine __maybe_unused,
+@@ -772,20 +772,16 @@ int machine__process_ksymbol(struct machine *machine __maybe_unused,
  	return machine__process_ksymbol_register(machine, event, sample);
  }
  
--static void dso__adjust_kmod_long_name(struct dso *dso, const char *filename)
--{
--	const char *dup_filename;
--
--	if (!filename || !dso || !dso->long_name)
--		return;
--	if (dso->long_name[0] != '[')
--		return;
--	if (!strchr(filename, '/'))
--		return;
--
--	dup_filename = strdup(filename);
--	if (!dup_filename)
--		return;
--
--	dso__set_long_name(dso, dup_filename, true);
--}
--
- struct map *machine__findnew_module_map(struct machine *machine, u64 start,
- 					const char *filename)
+-struct map *machine__findnew_module_map(struct machine *machine, u64 start,
+-					const char *filename)
++static struct map *machine__addnew_module_map(struct machine *machine, u64 start,
++					      const char *filename)
  {
-@@ -801,15 +783,8 @@ struct map *machine__findnew_module_map(struct machine *machine, u64 start,
+ 	struct map *map = NULL;
+-	struct dso *dso = NULL;
+ 	struct kmod_path m;
++	struct dso *dso;
+ 
+ 	if (kmod_path__parse_name(&m, filename))
  		return NULL;
  
- 	map = map_groups__find_by_name(&machine->kmaps, m.name);
--	if (map) {
--		/*
--		 * If the map's dso is an offline module, give dso__load()
--		 * a chance to find the file path of that module by fixing
--		 * long_name.
--		 */
--		dso__adjust_kmod_long_name(map->dso, filename);
-+	if (map)
- 		goto out;
--	}
- 
+-	map = map_groups__find_by_name(&machine->kmaps, m.name);
+-	if (map)
+-		goto out;
+-
  	dso = machine__findnew_module_dso(machine, &m, filename);
  	if (dso == NULL)
+ 		goto out;
+@@ -1384,7 +1380,7 @@ static int machine__create_module(void *arg, const char *name, u64 start,
+ 	if (arch__fix_module_text_start(&start, &size, name) < 0)
+ 		return -1;
+ 
+-	map = machine__findnew_module_map(machine, start, name);
++	map = machine__addnew_module_map(machine, start, name);
+ 	if (map == NULL)
+ 		return -1;
+ 	map->end = start + size;
+@@ -1559,8 +1555,8 @@ static int machine__process_kernel_mmap_event(struct machine *machine,
+ 				strlen(machine->mmap_name) - 1) == 0;
+ 	if (event->mmap.filename[0] == '/' ||
+ 	    (!is_kernel_mmap && event->mmap.filename[0] == '[')) {
+-		map = machine__findnew_module_map(machine, event->mmap.start,
+-						  event->mmap.filename);
++		map = machine__addnew_module_map(machine, event->mmap.start,
++						 event->mmap.filename);
+ 		if (map == NULL)
+ 			goto out_problem;
+ 
+diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
+index 18e13c0ccd6a..1016978f575a 100644
+--- a/tools/perf/util/machine.h
++++ b/tools/perf/util/machine.h
+@@ -221,8 +221,6 @@ struct symbol *machine__find_kernel_symbol_by_name(struct machine *machine,
+ 	return map_groups__find_symbol_by_name(&machine->kmaps, name, mapp);
+ }
+ 
+-struct map *machine__findnew_module_map(struct machine *machine, u64 start,
+-					const char *filename);
+ int arch__fix_module_text_start(u64 *start, u64 *size, const char *name);
+ 
+ int machine__load_kallsyms(struct machine *machine, const char *filename);
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index b146d87176e7..b5ae82a11d4b 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -1530,7 +1530,7 @@ static bool dso__is_compatible_symtab_type(struct dso *dso, bool kmod,
+ 	case DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE_COMP:
+ 		/*
+ 		 * kernel modules know their symtab type - it's set when
+-		 * creating a module dso in machine__findnew_module_map().
++		 * creating a module dso in machine__addnew_module_map().
+ 		 */
+ 		return kmod && dso->symtab_type == type;
+ 
 -- 
 2.21.0
 
