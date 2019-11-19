@@ -7,51 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69507C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:22:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE70DC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:22:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 428EE2231D
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:22:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C49D121939
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:22:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574140949;
-	bh=KgLFUxqiQqCPOgQl8/HEsbp+YfedIZzmvbyG4jLGpcM=;
+	s=default; t=1574140953;
+	bh=L6RLN0ga6Us/fJjLbQ77BUQSJt7aTgp1YF6JLRdVaYY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qdu1RxmcsWitJYOIgVOtNQdCnBYJC9JuE17s5Nhk91DCcGT8nNgF+iuyDE72ALxsE
-	 QibcTLNLqU52vmzUqLEZjPHW4LfFO4s4EjVBciddXhaqn7jkxSKKEBtjXSz51DybTm
-	 jh4m+rrD0GDXa4t2H8Nj8JUMA4ePn6O/QfTU2oXs=
+	b=gUHhA6tRL5iPAnPZSzsqcRGZqyHErTWftc0d2CvAE1FKcd8jMjtAqA536l9bX0ZAZ
+	 WP1M8EuCxk2XHqLVP8fsJ7psNjzAqiQlbzSKm/TDsoKL9QtlGLBaNl4ZhzHEkZitir
+	 0n6q6FEOxJ9LPYNDUt5h6JfHq/erfvJE/+QKAQ9Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726939AbfKSFW2 (ORCPT
+        id S1727764AbfKSFWc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:22:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37712 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:22:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727716AbfKSFWX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:22:23 -0500
+        id S1727744AbfKSFW3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:22:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F80A21939;
-        Tue, 19 Nov 2019 05:22:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66F182231A;
+        Tue, 19 Nov 2019 05:22:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574140943;
-        bh=KgLFUxqiQqCPOgQl8/HEsbp+YfedIZzmvbyG4jLGpcM=;
+        s=default; t=1574140948;
+        bh=L6RLN0ga6Us/fJjLbQ77BUQSJt7aTgp1YF6JLRdVaYY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B5+2qh30e40+uLsmSvIgwdBw2cX59dPwBFu9rHysmlf/pKlTQ9uHNDXcaq0nnZtKI
-         OleKwF0fm8J9C2n8KL2lRwE0XpFAIrhcC5GUfe4Ju1STo/aECDPzslGy4QqsftMq/W
-         OE1PEemTilxSyjalkCrS559siH35Jv9b9jIgMBPU=
+        b=BwIBtN2iFWstX+x5dXS/mSqbGkU3pbG0/EpVrKikaAIYLjLmFwnNxrvvhqCnlquBd
+         kP9uiOH0skOl3VVtFu3G4fiAqjHORX/yzXsKG3tOzLRcZv5Ism/xjSeMXdsvONm8+A
+         sWtVKjjRt2ViB7SaVx5AKU3HxpLpfHUWuV591V5Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Francisco Jerez <francisco.jerez.plata@intel.com>,
-        Jon Bloomfield <jon.bloomfield@intel.com>,
-        Lucas De Marchi <lucas.demarchi@intel.com>,
-        Matt Roper <matthew.d.roper@intel.com>,
-        Francisco Jerez <currojerez@riseup.net>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>
-Subject: [PATCH 5.3 38/48] Revert "drm/i915/ehl: Update MOCS table for EHL"
-Date:   Tue, 19 Nov 2019 06:19:58 +0100
-Message-Id: <20191119051019.893089107@linuxfoundation.org>
+        stable@vger.kernel.org, Guillaume Nault <gnault@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.3 04/48] ipmr: Fix skb headroom in ipmr_get_route().
+Date:   Tue, 19 Nov 2019 06:19:24 +0100
+Message-Id: <20191119050950.798307156@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119050946.745015350@linuxfoundation.org>
 References: <20191119050946.745015350@linuxfoundation.org>
@@ -64,55 +59,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matt Roper <matthew.d.roper@intel.com>
+From: Guillaume Nault <gnault@redhat.com>
 
-commit ed77d88752aea56b33731aee42e7146379b90769 upstream.
+[ Upstream commit 7901cd97963d6cbde88fa25a4a446db3554c16c6 ]
 
-This reverts commit f4071997f1de016780ec6b79c63d90cd5886ee83.
+In route.c, inet_rtm_getroute_build_skb() creates an skb with no
+headroom. This skb is then used by inet_rtm_getroute() which may pass
+it to rt_fill_info() and, from there, to ipmr_get_route(). The later
+might try to reuse this skb by cloning it and prepending an IPv4
+header. But since the original skb has no headroom, skb_push() triggers
+skb_under_panic():
 
-These extra EHL entries won't behave as expected without a bit more work
-on the kernel side so let's drop them until that kernel work has had a
-chance to land.  Userspace trying to use these new entries won't get the
-advantage of the new functionality these entries are meant to provide,
-but at least it won't misbehave.
+skbuff: skb_under_panic: text:00000000ca46ad8a len:80 put:20 head:00000000cd28494e data:000000009366fd6b tail:0x3c end:0xec0 dev:veth0
+------------[ cut here ]------------
+kernel BUG at net/core/skbuff.c:108!
+invalid opcode: 0000 [#1] SMP KASAN PTI
+CPU: 6 PID: 587 Comm: ip Not tainted 5.4.0-rc6+ #1
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-2.fc30 04/01/2014
+RIP: 0010:skb_panic+0xbf/0xd0
+Code: 41 a2 ff 8b 4b 70 4c 8b 4d d0 48 c7 c7 20 76 f5 8b 44 8b 45 bc 48 8b 55 c0 48 8b 75 c8 41 54 41 57 41 56 41 55 e8 75 dc 7a ff <0f> 0b 0f 1f 44 00 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00
+RSP: 0018:ffff888059ddf0b0 EFLAGS: 00010286
+RAX: 0000000000000086 RBX: ffff888060a315c0 RCX: ffffffff8abe4822
+RDX: 0000000000000000 RSI: 0000000000000008 RDI: ffff88806c9a79cc
+RBP: ffff888059ddf118 R08: ffffed100d9361b1 R09: ffffed100d9361b0
+R10: ffff88805c68aee3 R11: ffffed100d9361b1 R12: ffff88805d218000
+R13: ffff88805c689fec R14: 000000000000003c R15: 0000000000000ec0
+FS:  00007f6af184b700(0000) GS:ffff88806c980000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007ffc8204a000 CR3: 0000000057b40006 CR4: 0000000000360ee0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ skb_push+0x7e/0x80
+ ipmr_get_route+0x459/0x6fa
+ rt_fill_info+0x692/0x9f0
+ inet_rtm_getroute+0xd26/0xf20
+ rtnetlink_rcv_msg+0x45d/0x630
+ netlink_rcv_skb+0x1a5/0x220
+ rtnetlink_rcv+0x15/0x20
+ netlink_unicast+0x305/0x3a0
+ netlink_sendmsg+0x575/0x730
+ sock_sendmsg+0xb5/0xc0
+ ___sys_sendmsg+0x497/0x4f0
+ __sys_sendmsg+0xcb/0x150
+ __x64_sys_sendmsg+0x48/0x50
+ do_syscall_64+0xd2/0xac0
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-When we do add these back in the future, we'll probably want to
-explicitly use separate tables for ICL and EHL so that userspace
-software that mistakenly uses these entries (which are undefined on ICL)
-sees the same behavior it sees with all the other undefined entries.
+Actually the original skb used to have enough headroom, but the
+reserve_skb() call was lost with the introduction of
+inet_rtm_getroute_build_skb() by commit 404eb77ea766 ("ipv4: support
+sport, dport and ip_proto in RTM_GETROUTE").
 
-Cc: Francisco Jerez <francisco.jerez.plata@intel.com>
-Cc: Jon Bloomfield <jon.bloomfield@intel.com>
-Cc: Lucas De Marchi <lucas.demarchi@intel.com>
-Cc: <stable@vger.kernel.org> # v5.3+
-Fixes: f4071997f1de ("drm/i915/ehl: Update MOCS table for EHL")
-Signed-off-by: Matt Roper <matthew.d.roper@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191112224757.25116-1-matthew.d.roper@intel.com
-Reviewed-by: Francisco Jerez <currojerez@riseup.net>
-(cherry picked from commit 046091758b50a5fff79726a31c1391614a3d84c8)
-Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+We could reserve some headroom again in inet_rtm_getroute_build_skb(),
+but this function shouldn't be responsible for handling the special
+case of ipmr_get_route(). Let's handle that directly in
+ipmr_get_route() by calling skb_realloc_headroom() instead of
+skb_clone().
+
+Fixes: 404eb77ea766 ("ipv4: support sport, dport and ip_proto in RTM_GETROUTE")
+Signed-off-by: Guillaume Nault <gnault@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/gpu/drm/i915/gt/intel_mocs.c |    8 --------
- 1 file changed, 8 deletions(-)
+ net/ipv4/ipmr.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/i915/gt/intel_mocs.c
-+++ b/drivers/gpu/drm/i915/gt/intel_mocs.c
-@@ -200,14 +200,6 @@ static const struct drm_i915_mocs_entry
- 	MOCS_ENTRY(15, \
- 		   LE_3_WB | LE_TC_1_LLC | LE_LRUM(2) | LE_AOM(1), \
- 		   L3_3_WB), \
--	/* Bypass LLC - Uncached (EHL+) */ \
--	MOCS_ENTRY(16, \
--		   LE_1_UC | LE_TC_1_LLC | LE_SCF(1), \
--		   L3_1_UC), \
--	/* Bypass LLC - L3 (Read-Only) (EHL+) */ \
--	MOCS_ENTRY(17, \
--		   LE_1_UC | LE_TC_1_LLC | LE_SCF(1), \
--		   L3_3_WB), \
- 	/* Self-Snoop - L3 + LLC */ \
- 	MOCS_ENTRY(18, \
- 		   LE_3_WB | LE_TC_1_LLC | LE_LRUM(3) | LE_SSE(3), \
+--- a/net/ipv4/ipmr.c
++++ b/net/ipv4/ipmr.c
+@@ -2289,7 +2289,8 @@ int ipmr_get_route(struct net *net, stru
+ 			rcu_read_unlock();
+ 			return -ENODEV;
+ 		}
+-		skb2 = skb_clone(skb, GFP_ATOMIC);
++
++		skb2 = skb_realloc_headroom(skb, sizeof(struct iphdr));
+ 		if (!skb2) {
+ 			read_unlock(&mrt_lock);
+ 			rcu_read_unlock();
 
 
