@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE9CFC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE27C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:04:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91F7321850
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:04:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70946206DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:04:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574143464;
-	bh=QBninmn1N0bnodZPUNG5LFWIH1SXzGqrLbKpZ9NwMJs=;
+	s=default; t=1574143471;
+	bh=Pa+1bqzlHTxkfUjfKa31CFk8+ScYZo409VTH4/09YAA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1fJo0SYGjd/555XhykQqCajP1/vhIBteVLr3D5xhdl2Sq1NZzD9pfzZBiDfkkcVvk
-	 4u20w5rwiDWH6dQXDGqtguN+rm7PIsLQ0pIxtKnvROXH5cx662MqhTU7H60nK2K5iZ
-	 FuNfnIGzu3teB9Y6WxjfvIbQ1RzcntdykTytxTCU=
+	b=vzw06bnUjCxqQA6+kWe/e4ZGdIPxf+vtiwoYTBk/y3XPdGObWjwy7I6VwFe+asp18
+	 FQzevaGBf7r1qvg/xkt6I7rWLhVsVwSH6R35gNlsFzKESf54pGtSRCHxa1hJ5fmDsd
+	 uwTK29vBsXHEPnPgfbuOJWlzxuRuOWHrReJ+zUWw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729843AbfKSGEX (ORCPT
+        id S1730166AbfKSFiR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 01:04:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60646 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:38:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60094 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729826AbfKSFih (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:38:37 -0500
+        id S1729755AbfKSFiK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:38:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DEBF20862;
-        Tue, 19 Nov 2019 05:38:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F3472231C;
+        Tue, 19 Nov 2019 05:38:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141915;
-        bh=QBninmn1N0bnodZPUNG5LFWIH1SXzGqrLbKpZ9NwMJs=;
+        s=default; t=1574141888;
+        bh=Pa+1bqzlHTxkfUjfKa31CFk8+ScYZo409VTH4/09YAA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q1W96JjidyfI7Y/3AKYfkMJw2WK5wYL4/BWd5OR9+Nw3BOtXnejqF6NNSqMZHgPfu
-         T1pw7rqPNPSfpZu+YNLq7TKUyZ9quVWwIQKrp4zJudpMnZN8s/9/0QNJU2PBetNSCK
-         q3vx/CptVOt0/h2n1pKA+SUB/8/Sg88tcrufBir8=
+        b=RIWUMng1PbfJeDluwnyTxsCHWzdRdRKAB7Ym7mVpRXdsBCWQ/vIClymWnrejexlMV
+         ZqLvu4V7iuPwOThl/wzWXiRhYEOESvUa7EChiZbiNO1izyiymko3vMHy89UuQ2S/gT
+         +B443KyYpnUpF+qeRXNrT8L4Cre826BRwsxxV3Qs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Petr Machata <petrm@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 325/422] mlxsw: Make MLXSW_SP1_FWREV_MINOR a hard requirement
-Date:   Tue, 19 Nov 2019 06:18:42 +0100
-Message-Id: <20191119051420.076010542@linuxfoundation.org>
+Subject: [PATCH 4.19 275/422] net: toshiba: fix return type of ndo_start_xmit function
+Date:   Tue, 19 Nov 2019 06:17:52 +0100
+Message-Id: <20191119051416.808773223@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -62,51 +60,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Petr Machata <petrm@mellanox.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 12ba7e1045521ec9f251c93ae0a6735cc3f42337 ]
+[ Upstream commit bacade822524e02f662d88f784d2ae821a5546fb ]
 
-Up until now, mlxsw tolerated firmware versions that weren't exactly
-matching the required version, if the branch number matched. That
-allowed the users to test various firmware versions as long as they were
-on the right branch.
+The method ndo_start_xmit() is defined as returning an 'netdev_tx_t',
+which is a typedef for an enum type, so make sure the implementation in
+this driver has returns 'netdev_tx_t' value, and change the function
+return type to netdev_tx_t.
 
-On the other hand, it made it impossible for mlxsw to put a hard lower
-bound on a version that fixes all problems known to date. If a user had
-a somewhat older FW version installed, mlxsw would start up just fine,
-possibly performing non-optimally as it would use features that trigger
-problematic behavior.
+Found by coccinelle.
 
-Therefore tweak the check to accept any FW version that is:
-
-- on the same branch as the preferred version, and
-- the same as or newer than the preferred version.
-
-Signed-off-by: Petr Machata <petrm@mellanox.com>
-Reviewed-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlxsw/spectrum.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/toshiba/ps3_gelic_net.c | 4 ++--
+ drivers/net/ethernet/toshiba/ps3_gelic_net.h | 2 +-
+ drivers/net/ethernet/toshiba/spider_net.c    | 4 ++--
+ drivers/net/ethernet/toshiba/tc35815.c       | 6 ++++--
+ 4 files changed, 9 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-index 1c170a0fd2cc9..e498ee95bacab 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-@@ -336,7 +336,10 @@ static int mlxsw_sp_fw_rev_validate(struct mlxsw_sp *mlxsw_sp)
- 		return -EINVAL;
- 	}
- 	if (MLXSW_SP_FWREV_MINOR_TO_BRANCH(rev->minor) ==
--	    MLXSW_SP_FWREV_MINOR_TO_BRANCH(req_rev->minor))
-+	    MLXSW_SP_FWREV_MINOR_TO_BRANCH(req_rev->minor) &&
-+	    (rev->minor > req_rev->minor ||
-+	     (rev->minor == req_rev->minor &&
-+	      rev->subminor >= req_rev->subminor)))
- 		return 0;
+diff --git a/drivers/net/ethernet/toshiba/ps3_gelic_net.c b/drivers/net/ethernet/toshiba/ps3_gelic_net.c
+index 88d74aef218a2..75237c81c63d6 100644
+--- a/drivers/net/ethernet/toshiba/ps3_gelic_net.c
++++ b/drivers/net/ethernet/toshiba/ps3_gelic_net.c
+@@ -845,9 +845,9 @@ static int gelic_card_kick_txdma(struct gelic_card *card,
+  * @skb: packet to send out
+  * @netdev: interface device structure
+  *
+- * returns 0 on success, <0 on failure
++ * returns NETDEV_TX_OK on success, NETDEV_TX_BUSY on failure
+  */
+-int gelic_net_xmit(struct sk_buff *skb, struct net_device *netdev)
++netdev_tx_t gelic_net_xmit(struct sk_buff *skb, struct net_device *netdev)
+ {
+ 	struct gelic_card *card = netdev_card(netdev);
+ 	struct gelic_descr *descr;
+diff --git a/drivers/net/ethernet/toshiba/ps3_gelic_net.h b/drivers/net/ethernet/toshiba/ps3_gelic_net.h
+index 003d0452d9cb1..fbbf9b54b173b 100644
+--- a/drivers/net/ethernet/toshiba/ps3_gelic_net.h
++++ b/drivers/net/ethernet/toshiba/ps3_gelic_net.h
+@@ -370,7 +370,7 @@ void gelic_card_up(struct gelic_card *card);
+ void gelic_card_down(struct gelic_card *card);
+ int gelic_net_open(struct net_device *netdev);
+ int gelic_net_stop(struct net_device *netdev);
+-int gelic_net_xmit(struct sk_buff *skb, struct net_device *netdev);
++netdev_tx_t gelic_net_xmit(struct sk_buff *skb, struct net_device *netdev);
+ void gelic_net_set_multi(struct net_device *netdev);
+ void gelic_net_tx_timeout(struct net_device *netdev);
+ int gelic_net_setup_netdev(struct net_device *netdev, struct gelic_card *card);
+diff --git a/drivers/net/ethernet/toshiba/spider_net.c b/drivers/net/ethernet/toshiba/spider_net.c
+index d925b82039966..23417266b7ecc 100644
+--- a/drivers/net/ethernet/toshiba/spider_net.c
++++ b/drivers/net/ethernet/toshiba/spider_net.c
+@@ -880,9 +880,9 @@ out:
+  * @skb: packet to send out
+  * @netdev: interface device structure
+  *
+- * returns 0 on success, !0 on failure
++ * returns NETDEV_TX_OK on success, NETDEV_TX_BUSY on failure
+  */
+-static int
++static netdev_tx_t
+ spider_net_xmit(struct sk_buff *skb, struct net_device *netdev)
+ {
+ 	int cnt;
+diff --git a/drivers/net/ethernet/toshiba/tc35815.c b/drivers/net/ethernet/toshiba/tc35815.c
+index 9146068979d2c..03afc4d8c3ec1 100644
+--- a/drivers/net/ethernet/toshiba/tc35815.c
++++ b/drivers/net/ethernet/toshiba/tc35815.c
+@@ -474,7 +474,8 @@ static void free_rxbuf_skb(struct pci_dev *hwdev, struct sk_buff *skb, dma_addr_
+ /* Index to functions, as function prototypes. */
  
- 	dev_info(mlxsw_sp->bus_info->dev, "The firmware version %d.%d.%d is incompatible with the driver\n",
+ static int	tc35815_open(struct net_device *dev);
+-static int	tc35815_send_packet(struct sk_buff *skb, struct net_device *dev);
++static netdev_tx_t	tc35815_send_packet(struct sk_buff *skb,
++					    struct net_device *dev);
+ static irqreturn_t	tc35815_interrupt(int irq, void *dev_id);
+ static int	tc35815_rx(struct net_device *dev, int limit);
+ static int	tc35815_poll(struct napi_struct *napi, int budget);
+@@ -1248,7 +1249,8 @@ tc35815_open(struct net_device *dev)
+  * invariant will hold if you make sure that the netif_*_queue()
+  * calls are done at the proper times.
+  */
+-static int tc35815_send_packet(struct sk_buff *skb, struct net_device *dev)
++static netdev_tx_t
++tc35815_send_packet(struct sk_buff *skb, struct net_device *dev)
+ {
+ 	struct tc35815_local *lp = netdev_priv(dev);
+ 	struct TxFD *txfd;
 -- 
 2.20.1
 
