@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9F40C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:27:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E8FEC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:27:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC0EF222DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:27:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73764222DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:27:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141248;
-	bh=T0NdGXpxX/JOdmUIDSeN9sirnn0R81CApny5woGcC0g=;
+	s=default; t=1574141255;
+	bh=dcjRh652H+XEuWKwLgX9wdRsjFVakecNt9ObboueuPk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fWL8urTJJmTY0ryYtwghx7L6qSSqrYgCVnpPa1ljAH/lsS/NPZdzkGgZR05X//YOU
-	 /O+sHOamYp63iYa69oxiI/j2+s2YljOTis1H7R2G0c9y8hPXWfBVTyNzrVML2Lyzpt
-	 AxQa+WvDtqQfsboP6SPa5nk6GKifZ3bbV7Jl7KUk=
+	b=rqa1lcEiTsPaQJuMX0GM5llP1sV4DtBrnUy4DzxoW9JhJ3aTgL+BNb+rdyT9BMSXG
+	 s1pMP3TYwkNdqZcMMv2/bNHCjzQ1+1lYM8BYaMFUcY/ST/BzeWz/XgoNIYXDWOXMEb
+	 23SoZMWt5HEbPcUQCm+WLOiOrUZ/AZw3ZbNs8Sxw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727233AbfKSF11 (ORCPT
+        id S1728768AbfKSF1e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:27:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45678 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:27:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727723AbfKSF10 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:27:26 -0500
+        id S1726170AbfKSF1c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:27:32 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63718208C3;
-        Tue, 19 Nov 2019 05:27:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C3BD21783;
+        Tue, 19 Nov 2019 05:27:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141245;
-        bh=T0NdGXpxX/JOdmUIDSeN9sirnn0R81CApny5woGcC0g=;
+        s=default; t=1574141251;
+        bh=dcjRh652H+XEuWKwLgX9wdRsjFVakecNt9ObboueuPk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FlEVFV7G7ePPShmyS8IyH+BymWNtUNChaqrjfFBgRv6EAASq59m0Nzc0+eq9KtR+s
-         H6n9dy4c3hom5esHCA4IrTWKr/up+qT0h1wE3nUkruwBCxK7DZXOVnV1HtWgPAsyG2
-         Y76y5vW6RG3XjcINiY4NCCwMRX+omIqRDF+TruEU=
+        b=fKso55oIC5x9oQNaSmDllmUR0a0u/lRkwFLkYZGb/LS7D+9KhrHSJZOl3YHx7UdeM
+         SM8nOw+fCpdGOEyuUD6Bu0A+vSx7OSnme0BlD/LUKi9y7BrjX/RX4BOjSUkQlgN8j/
+         3CYKQrtPzoEXooAKvQ2WboxajiLQp2/Z0/E4KTgY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexey Khoroshilov <khoroshilov@ispras.ru>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Maya Erez <merez@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 093/422] media: ov772x: Disable clk on error path
-Date:   Tue, 19 Nov 2019 06:14:50 +0100
-Message-Id: <20191119051405.369484596@linuxfoundation.org>
+Subject: [PATCH 4.19 058/422] wil6210: set edma variables only for Talyn-MB devices
+Date:   Tue, 19 Nov 2019 06:14:15 +0100
+Message-Id: <20191119051403.513925406@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -62,36 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexey Khoroshilov <khoroshilov@ispras.ru>
+From: Maya Erez <merez@codeaurora.org>
 
-[ Upstream commit 1d18c2cd9d38ad639b2e00546b9ee638f2cef4b0 ]
+[ Upstream commit 596bdbcce90fa93f43ebcb99cefea34bd2e27707 ]
 
-If ov772x_power_on() is unable to get GPIO rstb,
-the clock is left undisabled.
+use_rx_hw_reordering is already set to true in wil_set_capabilities
+for Talyn-MB devices. Remove its setting from wil_priv_init to
+prevent its activation for older chips.
+Similarly, move the setting of use_compressed_rx_status to
+wil_set_capabilities.
 
-Found by Linux Driver Verification project (linuxtesting.org).
-
-Signed-off-by: Alexey Khoroshilov <khoroshilov@ispras.ru>
-Acked-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Maya Erez <merez@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/ov772x.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/wireless/ath/wil6210/main.c     | 2 --
+ drivers/net/wireless/ath/wil6210/pcie_bus.c | 1 +
+ 2 files changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
-index 7158c31d8403b..4eae5f2f7d318 100644
---- a/drivers/media/i2c/ov772x.c
-+++ b/drivers/media/i2c/ov772x.c
-@@ -896,6 +896,7 @@ static int ov772x_power_on(struct ov772x_priv *priv)
- 					     GPIOD_OUT_LOW);
- 	if (IS_ERR(priv->rstb_gpio)) {
- 		dev_info(&client->dev, "Unable to get GPIO \"reset\"");
-+		clk_disable_unprepare(priv->clk);
- 		return PTR_ERR(priv->rstb_gpio);
- 	}
+diff --git a/drivers/net/wireless/ath/wil6210/main.c b/drivers/net/wireless/ath/wil6210/main.c
+index a0fe8cbad104f..d186b6886c6bf 100644
+--- a/drivers/net/wireless/ath/wil6210/main.c
++++ b/drivers/net/wireless/ath/wil6210/main.c
+@@ -653,8 +653,6 @@ int wil_priv_init(struct wil6210_priv *wil)
  
+ 	/* edma configuration can be updated via debugfs before allocation */
+ 	wil->num_rx_status_rings = WIL_DEFAULT_NUM_RX_STATUS_RINGS;
+-	wil->use_compressed_rx_status = true;
+-	wil->use_rx_hw_reordering = true;
+ 	wil->tx_status_ring_order = WIL_TX_SRING_SIZE_ORDER_DEFAULT;
+ 
+ 	/* Rx status ring size should be bigger than the number of RX buffers
+diff --git a/drivers/net/wireless/ath/wil6210/pcie_bus.c b/drivers/net/wireless/ath/wil6210/pcie_bus.c
+index 89119e7facd00..c8c6613371d1b 100644
+--- a/drivers/net/wireless/ath/wil6210/pcie_bus.c
++++ b/drivers/net/wireless/ath/wil6210/pcie_bus.c
+@@ -108,6 +108,7 @@ int wil_set_capabilities(struct wil6210_priv *wil)
+ 		set_bit(hw_capa_no_flash, wil->hw_capa);
+ 		wil->use_enhanced_dma_hw = true;
+ 		wil->use_rx_hw_reordering = true;
++		wil->use_compressed_rx_status = true;
+ 		wil_fw_name = ftm_mode ? WIL_FW_NAME_FTM_TALYN :
+ 			      WIL_FW_NAME_TALYN;
+ 		if (wil_fw_verify_file_exists(wil, wil_fw_name))
 -- 
 2.20.1
 
