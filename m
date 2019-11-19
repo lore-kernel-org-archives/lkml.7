@@ -2,202 +2,172 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B75C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:58:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B6FC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:58:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AFAD2084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:58:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574143109;
-	bh=UfxJx9uniduwgP9FegUeu7x2UFPsH3p8h2KakbrthM8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fU3nm6N1gsVFiLSo8mFxK9gg5lOHKx6ITKBtwobh6hcoN2A45ooqNAaUvZYtU8lIU
-	 yJmJbWMc8SmdlP8OksDJCaBwW5dbSJlKFbZ5zngQ78m422GPBPq/ccDRlOSh7AXnrP
-	 XdgNP4TztdEHIv23REGAciCfbrDSc3FgeaADVlNM=
+	by mail.kernel.org (Postfix) with ESMTP id 3D92A2084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:58:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T79AY6oC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731642AbfKSF62 (ORCPT
+        id S1731649AbfKSF6k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:58:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46246 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730917AbfKSFtb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:49:31 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A31C020721;
-        Tue, 19 Nov 2019 05:49:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142570;
-        bh=UfxJx9uniduwgP9FegUeu7x2UFPsH3p8h2KakbrthM8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fWvOkmQzjKpa4lQ9EWRrgw3PnH4m4YUzNL6tC0IiaIGyIMQVQgJj7347nZTvjt5c4
-         G7/aBC9jQV6KRWfcYQBsmotslRQ7J6jeVJZiorZ0xSZx1h4rQJpq3WFkC0LaRpEqxV
-         Wk4GJz8aONnjFBw3oHBtA3RKzwwevVOMbg/vX0qg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
-        Aristeu Rozanski <aris@redhat.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-edac <linux-edac@vger.kernel.org>,
-        Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@suse.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 086/239] EDAC, sb_edac: Return early on ADDRV bit and address type test
-Date:   Tue, 19 Nov 2019 06:18:06 +0100
-Message-Id: <20191119051318.011363831@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
-References: <20191119051255.850204959@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 19 Nov 2019 00:58:40 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:42754 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731424AbfKSFtF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:49:05 -0500
+Received: by mail-pf1-f195.google.com with SMTP id s5so11577403pfh.9
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 21:49:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=7OLkh5H/ucrzGh1Q5+S7PwZCVoMIrIc0kVwMB4oywiY=;
+        b=T79AY6oCrcY9WkARAR7g/vMcApkFufxFzSkYgKFVG58CkLC1gyMOK9RpUVuHOzLN9V
+         UuUQbtcRVeh0oZbSGc/N2TZubqVgmPQbg+73q//z1IclKQSvUgmkmJTT+uTLSgst3OxE
+         BKJEMKrHvTJW6p993n/SDnzcBFpFe+aZz0UoEos+Qu+kZNlJa+hJWqX3BDbI01vGZ/F4
+         ll1047nAJQBf7Q9/pk/72wMVV3EfsekmiW1t0VKX0UFmNNdmobNqXFY0WRC9YKvMrxfy
+         JG6PL0/QGnWypkuEXvbzHZ1YJxUtdLgPM8KcxuTgWKh8bPlRDh/ulakfOvfz11v0Re/9
+         OK1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7OLkh5H/ucrzGh1Q5+S7PwZCVoMIrIc0kVwMB4oywiY=;
+        b=jp+yJBL9pJyBpLhfIxsgtnqMGE7rdEvGtUP12VIwqIG89DmEcjDaP0KqU0Mf4Cyk0C
+         tcP3NYRNKavnjFBU9ISIfAIhq1qrsIpaz5F0YObncErAaylwz8bDKvMuYgA3vVKxARwJ
+         RKGpA+3g4bdONnQGznAwiV2Yz/Su5z8GANdqgaDG6fWJEDGt94VyKJ2cGb/6w4ba+Ubw
+         KZE/FiNNb2iHIDyB52+/3pN1i3PfBPjNbMdHF607l2D62rk7e3COtOTCtLelsmNhU45G
+         6RrNtpkqMflVSGkbSCXhKXNTheP5iG17oeePD9AuHSRDDStFTIcgQiWGSnJxupz13L0k
+         ULEg==
+X-Gm-Message-State: APjAAAW31ekYOkxdAUP/fT49ltsDtwcaFfD/hmcs//tCegnrFiAvG1k7
+        QKL3z6iIc5m8cRt5akk76uu08A==
+X-Google-Smtp-Source: APXvYqzSv72HWYX9/l0aZSvtiLQMSrYlS422iAg/YV7tQl3rYW8UQlPAgnqgdjjuFBx37ipGmPSzbw==
+X-Received: by 2002:a63:4961:: with SMTP id y33mr3649995pgk.264.1574142544341;
+        Mon, 18 Nov 2019 21:49:04 -0800 (PST)
+Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id x21sm22210789pfi.122.2019.11.18.21.49.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Nov 2019 21:49:03 -0800 (PST)
+Date:   Mon, 18 Nov 2019 21:49:00 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     srinivas.kandagatla@linaro.org, robh+dt@kernel.org,
+        tsoni@codeaurora.org, agross@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        rnayak@codeaurora.org
+Subject: Re: [PATCH 2/3] dt-bindings: soc: qcom: apr: Add protection domain
+ bindings
+Message-ID: <20191119054900.GD18024@yoga>
+References: <20191118142728.30187-1-sibis@codeaurora.org>
+ <0101016e7ee9c786-fcf80f4e-9b57-4d6b-8806-9ca408e21b55-000000@us-west-2.amazonses.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0101016e7ee9c786-fcf80f4e-9b57-4d6b-8806-9ca408e21b55-000000@us-west-2.amazonses.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+On Mon 18 Nov 06:28 PST 2019, Sibi Sankar wrote:
 
-[ Upstream commit dcc960b225ceb2bd66c45e0845d03e577f7010f9 ]
+> Add optional "qcom,protection-domain" bindings for APR services. This
+> helps to capture the dependencies between APR services and the PD on
+> which each apr service run.
+> 
 
-Users of the mce_register_decode_chain() are called for every logged
-error. EDAC drivers should check:
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-1) Is this a memory error? [bit 7 in status register]
-2) Is there a valid address? [bit 58 in status register]
-3) Is the address a system address? [bitfield 8:6 in misc register]
-
-The sb_edac driver performed test "1" twice. Waited far too long to
-perform check "2". Didn't do check "3" at all.
-
-Fix it by moving the test for valid address from
-sbridge_mce_output_error() into sbridge_mce_check_error() and add a test
-for the type immediately after. Delete the redundant check for the type
-of the error from sbridge_mce_output_error().
-
-Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Cc: Aristeu Rozanski <aris@redhat.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Cc: linux-edac <linux-edac@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20180907230828.13901-2-tony.luck@intel.com
-[ Re-word commit message. ]
-Signed-off-by: Tony Luck <tony.luck@intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/edac/sb_edac.c | 68 ++++++++++++++++++++++--------------------
- 1 file changed, 35 insertions(+), 33 deletions(-)
-
-diff --git a/drivers/edac/sb_edac.c b/drivers/edac/sb_edac.c
-index b0b390a1da154..ddd5990211f8a 100644
---- a/drivers/edac/sb_edac.c
-+++ b/drivers/edac/sb_edac.c
-@@ -2915,35 +2915,27 @@ static void sbridge_mce_output_error(struct mem_ctl_info *mci,
- 	 *	cccc = channel
- 	 * If the mask doesn't match, report an error to the parsing logic
- 	 */
--	if (! ((errcode & 0xef80) == 0x80)) {
--		optype = "Can't parse: it is not a mem";
--	} else {
--		switch (optypenum) {
--		case 0:
--			optype = "generic undef request error";
--			break;
--		case 1:
--			optype = "memory read error";
--			break;
--		case 2:
--			optype = "memory write error";
--			break;
--		case 3:
--			optype = "addr/cmd error";
--			break;
--		case 4:
--			optype = "memory scrubbing error";
--			break;
--		default:
--			optype = "reserved";
--			break;
--		}
-+	switch (optypenum) {
-+	case 0:
-+		optype = "generic undef request error";
-+		break;
-+	case 1:
-+		optype = "memory read error";
-+		break;
-+	case 2:
-+		optype = "memory write error";
-+		break;
-+	case 3:
-+		optype = "addr/cmd error";
-+		break;
-+	case 4:
-+		optype = "memory scrubbing error";
-+		break;
-+	default:
-+		optype = "reserved";
-+		break;
- 	}
- 
--	/* Only decode errors with an valid address (ADDRV) */
--	if (!GET_BITFIELD(m->status, 58, 58))
--		return;
--
- 	if (pvt->info.type == KNIGHTS_LANDING) {
- 		if (channel == 14) {
- 			edac_dbg(0, "%s%s err_code:%04x:%04x EDRAM bank %d\n",
-@@ -3049,17 +3041,11 @@ static int sbridge_mce_check_error(struct notifier_block *nb, unsigned long val,
- {
- 	struct mce *mce = (struct mce *)data;
- 	struct mem_ctl_info *mci;
--	struct sbridge_pvt *pvt;
- 	char *type;
- 
- 	if (edac_get_report_status() == EDAC_REPORTING_DISABLED)
- 		return NOTIFY_DONE;
- 
--	mci = get_mci_for_node_id(mce->socketid, IMC0);
--	if (!mci)
--		return NOTIFY_DONE;
--	pvt = mci->pvt_info;
--
- 	/*
- 	 * Just let mcelog handle it if the error is
- 	 * outside the memory controller. A memory error
-@@ -3069,6 +3055,22 @@ static int sbridge_mce_check_error(struct notifier_block *nb, unsigned long val,
- 	if ((mce->status & 0xefff) >> 7 != 1)
- 		return NOTIFY_DONE;
- 
-+	/* Check ADDRV bit in STATUS */
-+	if (!GET_BITFIELD(mce->status, 58, 58))
-+		return NOTIFY_DONE;
-+
-+	/* Check MISCV bit in STATUS */
-+	if (!GET_BITFIELD(mce->status, 59, 59))
-+		return NOTIFY_DONE;
-+
-+	/* Check address type in MISC (physical address only) */
-+	if (GET_BITFIELD(mce->misc, 6, 8) != 2)
-+		return NOTIFY_DONE;
-+
-+	mci = get_mci_for_node_id(mce->socketid, IMC0);
-+	if (!mci)
-+		return NOTIFY_DONE;
-+
- 	if (mce->mcgstatus & MCG_STATUS_MCIP)
- 		type = "Exception";
- 	else
--- 
-2.20.1
-
-
-
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> ---
+>  .../devicetree/bindings/soc/qcom/qcom,apr.txt | 59 +++++++++++++++++++
+>  1 file changed, 59 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
+> index db501269f47b8..f87c0b2a48de4 100644
+> --- a/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
+> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
+> @@ -45,6 +45,12 @@ by the individual bindings for the specific service
+>  			12 - Ultrasound stream manager.
+>  			13 - Listen stream manager.
+>  
+> +- qcom,protection-domain
+> +	Usage: optional
+> +	Value type: <stringlist>
+> +	Definition: Must list the protection domain service name and path
+> +		    that the particular apr service has a dependency on.
+> +
+>  = EXAMPLE
+>  The following example represents a QDSP based sound card on a MSM8996 device
+>  which uses apr as communication between Apps and QDSP.
+> @@ -82,3 +88,56 @@ which uses apr as communication between Apps and QDSP.
+>  			...
+>  		};
+>  	};
+> +
+> += EXAMPLE 2
+> +The following example represents a QDSP based sound card on SDM845 device.
+> +Here the apr services are dependent on "avs/audio" service running on AUDIO
+> +Protection Domain hosted on ADSP remote processor.
+> +
+> +	apr {
+> +		compatible = "qcom,apr-v2";
+> +		qcom,glink-channels = "apr_audio_svc";
+> +		qcom,apr-domain = <APR_DOMAIN_ADSP>;
+> +
+> +		q6core {
+> +			compatible = "qcom,q6core";
+> +			reg = <APR_SVC_ADSP_CORE>;
+> +			qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
+> +		};
+> +
+> +		q6afe: q6afe {
+> +			compatible = "qcom,q6afe";
+> +			reg = <APR_SVC_AFE>;
+> +			qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
+> +			q6afedai: dais {
+> +				compatible = "qcom,q6afe-dais";
+> +				#sound-dai-cells = <1>;
+> +
+> +				qi2s@22 {
+> +					reg = <22>;
+> +					qcom,sd-lines = <3>;
+> +				};
+> +			};
+> +		};
+> +
+> +		q6asm: q6asm {
+> +			compatible = "qcom,q6asm";
+> +			reg = <APR_SVC_ASM>;
+> +			qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
+> +			q6asmdai: dais {
+> +				compatible = "qcom,q6asm-dais";
+> +				#sound-dai-cells = <1>;
+> +				iommus = <&apps_smmu 0x1821 0x0>;
+> +			};
+> +		};
+> +
+> +		q6adm: q6adm {
+> +			compatible = "qcom,q6adm";
+> +			reg = <APR_SVC_ADM>;
+> +			qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
+> +			q6routing: routing {
+> +				compatible = "qcom,q6adm-routing";
+> +				#sound-dai-cells = <0>;
+> +			};
+> +		};
+> +	};
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
