@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E60CC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:35:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAA24C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:35:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E63A208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:35:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D6BA20672
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:35:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141714;
-	bh=rOUJTLLDLcIrzkoJgb4s/aQqCIxC8gU62BXczugNZz8=;
+	s=default; t=1574141717;
+	bh=mzQmq4oJQVKcMHvyvWtxQ3TSswoR90o9R63qzljJswI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Kf313N8vGSXW1ia7U5/BJQdPfP2atsCPPGOSW1vc0WvKLvbnawDqI13QRevWCfwcx
-	 G+zYa9gMXtxc0LzBwFG64Wwkiwbl1maN6Y6d+WiiylRTnzlKDxz5Pzk/AUcQbmGEPx
-	 nAEFtqabsjxdNblOEABs54LtzHrI7BglxG7YqTzs=
+	b=wqPjWInHJcSiKPbIlDyungyXu7lPfPVALIoh3bkdLj8FXOhBe+P4AWiR5N2UmFV+h
+	 9SgunpWIBd4o/CUmMOpogGq5mI1K745nqrW849ASy7jIlEquocOWb+1PAJZ9x20pdM
+	 3LDjY5Him+9jmoGBUYerpZ0ZYdmCOcXoOm8QN9Rg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729306AbfKSFfN (ORCPT
+        id S1729291AbfKSFfQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:35:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55986 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:35:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729290AbfKSFfH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:35:07 -0500
+        id S1729774AbfKSFfE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:35:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FB48208C3;
-        Tue, 19 Nov 2019 05:35:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B61E21783;
+        Tue, 19 Nov 2019 05:35:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141706;
-        bh=rOUJTLLDLcIrzkoJgb4s/aQqCIxC8gU62BXczugNZz8=;
+        s=default; t=1574141704;
+        bh=mzQmq4oJQVKcMHvyvWtxQ3TSswoR90o9R63qzljJswI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qDN/PTmsq+WJFUURyGrEf1BsmYj5P8tLjiFYBqG+agBO6h7T/XGprzlN7F7nttIkM
-         NtdVvrUdw0UlUsIX5i+qBKkW5bWz6hZdUEalh1BDH3uQB0b/lPIIz2bNYgWFiNVIyZ
-         w4auzy2+zlyKVKQa5FJtFYH2XdELSpnuzNXdXEwg=
+        b=UNFevKfwBhrEfK+5KOK9rrGcBkY63i4MSMJNVpPh5P8LkjUcq9W4XTjW5V6dpT/Ka
+         zUk9yGUL77w7eB+/FdQukLCkf3wq3XCTCoijIfPwNFozHq3wdTMGNxUs6Sg0IMDzP+
+         MEFLFLUWbxkoqRGGcLm7snsFJ95fjwU7fD4vJPWE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Meelis Roos <mroos@linux.ee>,
-        Corey Minyard <cminyard@mvista.com>,
+        stable@vger.kernel.org, Shuming Fan <shumingf@realtek.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 253/422] ipmi_si_pci: fix NULL device in ipmi_si error message
-Date:   Tue, 19 Nov 2019 06:17:30 +0100
-Message-Id: <20191119051415.383023929@linuxfoundation.org>
+Subject: [PATCH 4.19 252/422] ASoC: rt5682: Fix the boost volume at the begining of playback
+Date:   Tue, 19 Nov 2019 06:17:29 +0100
+Message-Id: <20191119051415.318432600@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -60,53 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Meelis Roos <mroos@linux.ee>
+From: Shuming Fan <shumingf@realtek.com>
 
-[ Upstream commit 01508d9ebf4fc863f2fc4561c390bf4b7c3301a6 ]
+[ Upstream commit 28b20dde5e1c943ab899549a655ac4935cffccbb ]
 
-I noticed that 4.17.0 logs the follwing during ipmi_si setup:
+This patch fixed the boost volume at the begining of playback
+while DAC volume set to lower level.
 
- ipmi_si 0000:01:04.6: probing via PCI
- (NULL device *): Could not setup I/O space
- ipmi_si 0000:01:04.6: [mem 0xf5ef0000-0xf5ef00ff] regsize 1 spacing 1 irq 21
-
-Fix the "NULL device *) by moving io.dev assignment before its potential
-use by ipmi_pci_probe_regspacing().
-
-Result:
- ipmi_si 0000:01:04.6: probing via PCI
- ipmi_si 0000:01:04.6: Could not setup I/O space
- ipmi_si 0000:01:04.6: [mem 0xf5ef0000-0xf5ef00ff] regsize 1 spacing 1 irq 21
-
-Signed-off-by: Meelis Roos <mroos@linux.ee>
-Signed-off-by: Corey Minyard <cminyard@mvista.com>
+Signed-off-by: Shuming Fan <shumingf@realtek.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/ipmi/ipmi_si_pci.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/soc/codecs/rt5682.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/char/ipmi/ipmi_si_pci.c b/drivers/char/ipmi/ipmi_si_pci.c
-index f54ca6869ed2c..022e03634ce2a 100644
---- a/drivers/char/ipmi/ipmi_si_pci.c
-+++ b/drivers/char/ipmi/ipmi_si_pci.c
-@@ -120,6 +120,8 @@ static int ipmi_pci_probe(struct pci_dev *pdev,
- 	}
- 	io.addr_data = pci_resource_start(pdev, 0);
+diff --git a/sound/soc/codecs/rt5682.c b/sound/soc/codecs/rt5682.c
+index 21e7c430baf7f..7a78bb00f874d 100644
+--- a/sound/soc/codecs/rt5682.c
++++ b/sound/soc/codecs/rt5682.c
+@@ -68,6 +68,7 @@ struct rt5682_priv {
  
-+	io.dev = &pdev->dev;
-+
- 	io.regspacing = ipmi_pci_probe_regspacing(&io);
- 	io.regsize = DEFAULT_REGSIZE;
- 	io.regshift = 0;
-@@ -128,8 +130,6 @@ static int ipmi_pci_probe(struct pci_dev *pdev,
- 	if (io.irq)
- 		io.irq_setup = ipmi_std_irq_setup;
+ static const struct reg_sequence patch_list[] = {
+ 	{0x01c1, 0x1000},
++	{RT5682_DAC_ADC_DIG_VOL1, 0xa020},
+ };
  
--	io.dev = &pdev->dev;
--
- 	dev_info(&pdev->dev, "%pR regsize %d spacing %d irq %d\n",
- 		&pdev->resource[0], io.regsize, io.regspacing, io.irq);
+ static const struct reg_default rt5682_reg[] = {
+@@ -1457,6 +1458,8 @@ static int rt5682_hp_event(struct snd_soc_dapm_widget *w,
+ 			RT5682_NG2_EN_MASK, RT5682_NG2_EN);
+ 		snd_soc_component_update_bits(component,
+ 			RT5682_DEPOP_1, 0x60, 0x60);
++		snd_soc_component_update_bits(component,
++			RT5682_DAC_ADC_DIG_VOL1, 0x00c0, 0x0080);
+ 		break;
  
+ 	case SND_SOC_DAPM_POST_PMD:
+@@ -1464,6 +1467,8 @@ static int rt5682_hp_event(struct snd_soc_dapm_widget *w,
+ 			RT5682_DEPOP_1, 0x60, 0x0);
+ 		snd_soc_component_write(component,
+ 			RT5682_HP_CTRL_2, 0x0000);
++		snd_soc_component_update_bits(component,
++			RT5682_DAC_ADC_DIG_VOL1, 0x00c0, 0x0000);
+ 		break;
+ 
+ 	default:
 -- 
 2.20.1
 
