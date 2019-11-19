@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D8E5C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:59:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF083C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:59:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50244222C7
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:59:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9A5C222C7
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:59:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574143156;
-	bh=TpkzKMyFzG2aSK2ygTyId2XlAG8Nb4XPxuop5Fac2x8=;
+	s=default; t=1574143160;
+	bh=ZD0xjZxf+rBGGbulxvdMIUcuFcIPAo9Xn7A7JcL8GCg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v6hn6lYRE06Uv5LAt6j36qghLTcM4eC9lLKH16zbVXm5igjY12cTkX17IplAhSTW5
-	 WqvA/1QX3jOZ0nzt6fcULyyF5qxje/wFrsYViygt9NMLBn2NsL0v5ykg1KlS1YrIpR
-	 +ZBrmvMxXjLPdSZC9uPDg9GsgzylPqCM/eT/6yc8=
+	b=O3M00OODBj1ooC2i0YioewFh7h+arFAC2VZeIVVRamVuqC9lLQqRof4hSFBPuYJl7
+	 ceFHDl+WaENOODWSYHTTW8u/FygwbJraBdUo3ORo+ueX+4h4JNT7ejCp4Rn1NnssfU
+	 RaWuM85csfzm989hJndEjZaNhAjytALMb4I1UGEY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731894AbfKSF7P (ORCPT
+        id S1731289AbfKSFrx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:59:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44422 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:47:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727481AbfKSFr7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:47:59 -0500
+        id S1730978AbfKSFrp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:47:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94F46218BA;
-        Tue, 19 Nov 2019 05:47:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFF4F208C3;
+        Tue, 19 Nov 2019 05:47:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142479;
-        bh=TpkzKMyFzG2aSK2ygTyId2XlAG8Nb4XPxuop5Fac2x8=;
+        s=default; t=1574142464;
+        bh=ZD0xjZxf+rBGGbulxvdMIUcuFcIPAo9Xn7A7JcL8GCg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vOg5sNC8qvFHJZY/3RebfCaCVpqvndz5wylxQCYQzNEKSi0H/qRxEdE/iNxCbAaN0
-         9BEGO6whB+5npCkpAjBDDns/b49ueEsOQ720/Ol5PnuKbEJxEXeshHjPPjR4sBQy0k
-         mdSFsUI3+ZJmxIRT5sTR/NE5zUypaW/gb7J3NSGc=
+        b=mVDylcLy2MzlnRY+QXIbCv4efRawyixXg8KmhEYae5/or1hgNoPRcGIHX4ecqplNs
+         msxKv9VuSaNDRlR1Obdprx0NCJAISRi/jNK9Jtz2FChY166dfrDiTaJxAlai4YPiNS
+         QxGWuKqraTAMUGNEe4R6iFykEiVjAFJRi+IDy+eM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Quinn Tran <quinn.tran@cavium.com>,
-        Himanshu Madhani <himanshu.madhani@cavium.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 096/239] scsi: qla2xxx: Defer chip reset until target mode is enabled
-Date:   Tue, 19 Nov 2019 06:18:16 +0100
-Message-Id: <20191119051322.867369592@linuxfoundation.org>
+Subject: [PATCH 4.14 091/239] signal: Always ignore SIGKILL and SIGSTOP sent to the global init
+Date:   Tue, 19 Nov 2019 06:18:11 +0100
+Message-Id: <20191119051319.779339966@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -61,71 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Quinn Tran <quinn.tran@cavium.com>
+From: Eric W. Biederman <ebiederm@xmission.com>
 
-[ Upstream commit 93eca6135183f7a71e36acd47655a085ed11bcdc ]
+[ Upstream commit 86989c41b5ea08776c450cb759592532314a4ed6 ]
 
-For target mode, any chip reset triggered before target mode is enabled will
-be held off until user is ready to enable.  This prevents the chip from
-starting or running before it is intended.
+If the first process started (aka /sbin/init) receives a SIGKILL it
+will panic the system if it is delivered.  Making the system unusable
+and undebugable.  It isn't much better if the first process started
+receives SIGSTOP.
 
-Signed-off-by: Quinn Tran <quinn.tran@cavium.com>
-Signed-off-by: Himanshu Madhani <himanshu.madhani@cavium.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+So always ignore SIGSTOP and SIGKILL sent to init.
+
+This is done in a separate clause in sig_task_ignored as force_sig_info
+can clear SIG_UNKILLABLE and this protection should work even then.
+
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_os.c | 28 +++++++++++++++++++++-------
- 1 file changed, 21 insertions(+), 7 deletions(-)
+ kernel/signal.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
-index 343fbaa6d2a2d..5617bb18c2335 100644
---- a/drivers/scsi/qla2xxx/qla_os.c
-+++ b/drivers/scsi/qla2xxx/qla_os.c
-@@ -5801,12 +5801,27 @@ qla2x00_do_dpc(void *data)
- 		if (test_and_clear_bit
- 		    (ISP_ABORT_NEEDED, &base_vha->dpc_flags) &&
- 		    !test_bit(UNLOADING, &base_vha->dpc_flags)) {
-+			bool do_reset = true;
+diff --git a/kernel/signal.c b/kernel/signal.c
+index bb801156628ee..c9b203875001e 100644
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -77,6 +77,10 @@ static int sig_task_ignored(struct task_struct *t, int sig, bool force)
+ 
+ 	handler = sig_handler(t, sig);
+ 
++	/* SIGKILL and SIGSTOP may not be sent to the global init */
++	if (unlikely(is_global_init(t) && sig_kernel_only(sig)))
++		return true;
 +
-+			switch (ql2x_ini_mode) {
-+			case QLA2XXX_INI_MODE_ENABLED:
-+				break;
-+			case QLA2XXX_INI_MODE_DISABLED:
-+				if (!qla_tgt_mode_enabled(base_vha))
-+					do_reset = false;
-+				break;
-+			case QLA2XXX_INI_MODE_DUAL:
-+				if (!qla_dual_mode_enabled(base_vha))
-+					do_reset = false;
-+				break;
-+			default:
-+				break;
-+			}
- 
--			ql_dbg(ql_dbg_dpc, base_vha, 0x4007,
--			    "ISP abort scheduled.\n");
--			if (!(test_and_set_bit(ABORT_ISP_ACTIVE,
-+			if (do_reset && !(test_and_set_bit(ABORT_ISP_ACTIVE,
- 			    &base_vha->dpc_flags))) {
--
-+				ql_dbg(ql_dbg_dpc, base_vha, 0x4007,
-+				    "ISP abort scheduled.\n");
- 				if (ha->isp_ops->abort_isp(base_vha)) {
- 					/* failed. retry later */
- 					set_bit(ISP_ABORT_NEEDED,
-@@ -5814,10 +5829,9 @@ qla2x00_do_dpc(void *data)
- 				}
- 				clear_bit(ABORT_ISP_ACTIVE,
- 						&base_vha->dpc_flags);
-+				ql_dbg(ql_dbg_dpc, base_vha, 0x4008,
-+				    "ISP abort end.\n");
- 			}
--
--			ql_dbg(ql_dbg_dpc, base_vha, 0x4008,
--			    "ISP abort end.\n");
- 		}
- 
- 		if (test_and_clear_bit(FCPORT_UPDATE_NEEDED,
+ 	if (unlikely(t->signal->flags & SIGNAL_UNKILLABLE) &&
+ 	    handler == SIG_DFL && !(force && sig_kernel_only(sig)))
+ 		return 1;
 -- 
 2.20.1
 
