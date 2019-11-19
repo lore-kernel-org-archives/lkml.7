@@ -2,94 +2,195 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54CABC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 02:04:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51D15C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 02:05:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A9A222313
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 02:04:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D19322313
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 02:05:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="KQnLdzLL"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="nhWJqFQP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727334AbfKSCEd (ORCPT
+        id S1727362AbfKSCFA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 21:04:33 -0500
-Received: from pb-smtp2.pobox.com ([64.147.108.71]:54934 "EHLO
-        pb-smtp2.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726761AbfKSCEc (ORCPT
+        Mon, 18 Nov 2019 21:05:00 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:42584 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726761AbfKSCE7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 21:04:32 -0500
-Received: from pb-smtp2.pobox.com (unknown [127.0.0.1])
-        by pb-smtp2.pobox.com (Postfix) with ESMTP id 41443375BD;
-        Mon, 18 Nov 2019 21:04:30 -0500 (EST)
-        (envelope-from junio@pobox.com)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=from:to:cc
-        :subject:references:date:in-reply-to:message-id:mime-version
-        :content-type; s=sasl; bh=Kc4GpS3M7pYEjoIfVuBA8disg2A=; b=KQnLdz
-        LLEqjoNYynBy6AgGzi8I8lGH42zZwK2Ot/ehpgTchI1+3/FXUvNgsvMxb4raXjRs
-        iZd/nOL3Ux6HaKQ7hCJyYuJLbU+/58LAAiOYQXN8oLUvRLaEzNYoSF0lQbP+IP2j
-        XLrK937zlTeCZwO7LCXoBgwRz+dvFavtzLhZU=
-DomainKey-Signature: a=rsa-sha1; c=nofws; d=pobox.com; h=from:to:cc
-        :subject:references:date:in-reply-to:message-id:mime-version
-        :content-type; q=dns; s=sasl; b=HhkkIp7d5LxDFAIH51OFlxsusZQ/Hep2
-        y2lUu6aXvhUrSZCCjyyEUqlWiXOY1BcK/qMv5iTNpaWlNNgEj71gbB37lLDrijx3
-        r5mhxUN4fPz9AlYV2ygLgq+XZMq6MiwsxDeJbzi2j2UBBIGOc+HdqTeyua7kg3Rs
-        7NJib530J+0=
-Received: from pb-smtp2.nyi.icgroup.com (unknown [127.0.0.1])
-        by pb-smtp2.pobox.com (Postfix) with ESMTP id 38D6C375BC;
-        Mon, 18 Nov 2019 21:04:30 -0500 (EST)
-        (envelope-from junio@pobox.com)
-Received: from pobox.com (unknown [34.76.80.147])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by pb-smtp2.pobox.com (Postfix) with ESMTPSA id 9C16E375BB;
-        Mon, 18 Nov 2019 21:04:29 -0500 (EST)
-        (envelope-from junio@pobox.com)
-From:   Junio C Hamano <gitster@pobox.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Eugeniu Rosca <erosca@de.adit-jv.com>, git@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Felipe Balbi <balbi@kernel.org>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>
-Subject: Re: Signal conflict on merging metadata-differing patches
-References: <20191118172917.GA6063@vmlxhi-102.adit-jv.com>
-        <20191118173517.GA599094@kroah.com>
-        <20191118184523.GA6894@vmlxhi-102.adit-jv.com>
-        <20191118194804.GA662468@kroah.com>
-Date:   Tue, 19 Nov 2019 11:04:28 +0900
-In-Reply-To: <20191118194804.GA662468@kroah.com> (Greg KH's message of "Mon,
-        18 Nov 2019 20:48:04 +0100")
-Message-ID: <xmqqo8x8zknn.fsf@gitster-ct.c.googlers.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        Mon, 18 Nov 2019 21:04:59 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAJ20JOq174419;
+        Tue, 19 Nov 2019 02:02:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
+ cc : references : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=LwULDTBc+rigjf0sejI3ferVE3V7uWPReTZ8S+pp39s=;
+ b=nhWJqFQPkRIoMDNFK7WxEUVy8QzdSc+fs2Wc6Y3w+YAb9AqfvqN5wDV5ElCfPoHEUkjX
+ lLuO9+DwoNmXSapMrkqBvjaG+Ksppzaai/gCAXn9gVXxhR2lJKMIELISSIOwLqESBcFr
+ NdO2JxTm/oeAvwpE6EgHNNFpw0PGBK8hIT8V1XTtlxGBGQfQp557AdzPVeCZEmp3At0S
+ pWnvuN5AhiaKiUSo7nxeMS+/o1rkagV7qyJ7RiMKWW1Wn9Kcju1YHmllNaKHRzGlhXdi
+ a46VvEb73TrvmbFYIPEBuvtN/RlPGcCx2GvCtGdUTGjNJ8gpQ0KwCkRNuDqLKb2LtRML 5g== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2wa92pkvs7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 Nov 2019 02:02:09 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAJ1xPOD118317;
+        Tue, 19 Nov 2019 02:02:08 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2wc09wja66-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 Nov 2019 02:02:08 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xAJ225L5024440;
+        Tue, 19 Nov 2019 02:02:05 GMT
+Received: from [10.191.19.228] (/10.191.19.228)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 18 Nov 2019 18:02:04 -0800
+Subject: Re: [PATCH v8 0/5] Add a unified parameter "nopvspin"
+From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
+To:     linux-kernel@vger.kernel.org, tglx@linutronix.de,
+        pbonzini@redhat.com
+Cc:     mingo@redhat.com, bp@alien8.de, x86@kernel.org, rkrcmar@redhat.com,
+        sean.j.christopherson@intel.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        boris.ostrovsky@oracle.com, jgross@suse.com, peterz@infradead.org,
+        will@kernel.org, linux-hyperv@vger.kernel.org, kvm@vger.kernel.org,
+        mikelley@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
+        sthemmin@microsoft.com, sashal@kernel.org
+References: <1571829384-5309-1-git-send-email-zhenzhong.duan@oracle.com>
+ <86263ee3-f94f-8a6b-3842-f15fb0316798@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <1ef9b26d-3b21-f285-bb93-063ee30e546f@oracle.com>
+Date:   Tue, 19 Nov 2019 10:01:53 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Pobox-Relay-ID: EBC799C4-0A70-11EA-8EBE-D1361DBA3BAF-77302942!pb-smtp2.pobox.com
+In-Reply-To: <86263ee3-f94f-8a6b-3842-f15fb0316798@oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1911190016
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1911190016
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Greg KH <gregkh@linuxfoundation.org> writes:
+Hi Maintainers,
 
->> I don't advocate for "git merge" to fail in the above scenarios. No.
->> I just say that Git could likely detect such scenarios and help people
->> like you not pushing v2 and v5 of the same patch into the main tree.
+May I get a final update on this patchset?
+
+There is only a few days remaining before my layoff at Oracle. I can't 
+login the mail address after that.
+
+No matter if you prefer to reject it, please let me know. I'd like to 
+get an end to this patchset.
+
+Thanks
+
+Zhenzhong
+
+
+On 2019/10/29 9:33, Zhenzhong Duan wrote:
+> Hi Baolo, Thomas
 >
-> But what should it do in either of those above situations?  Fail the
-> merge?  No, that's not ok as those different branches were just fine on
-> their own and I will never expect them to be rebased/rewritten just for
-> something like this.  That's crazy.
-
-;-)
-
-I agree that the requested "feature" would make no sense for kernel
-maintainers at various levels, as long as they are dealing with
-merges among published branches.  What's done at the submaintainers'
-trees are better treated as "already cast in stone".
-
-It may be a useful feature when one maintains a bag of local/private
-branches that haven't been published, though.  I however do not know
-what its implementation would look like X-<.
-
+> This patchset is reviewed pass and keep silent for a while, will 
+> anyone of you
+>
+> consider to pick it up? Thanks
+>
+> Zhenzhong
+>
+> On 2019/10/23 19:16, Zhenzhong Duan wrote:
+>> There are cases folks want to disable spinlock optimization for
+>> debug/test purpose. Xen and hyperv already have parameters 
+>> "xen_nopvspin"
+>> and "hv_nopvspin" to support that, but kvm doesn't.
+>>
+>> The first patch adds that feature to KVM guest with "nopvspin".
+>>
+>> For compatibility reason original parameters "xen_nopvspin" and
+>> "hv_nopvspin" are retained and marked obsolete.
+>>
+>> v8:
+>> PATCH2: use 'kvm-guest' instead of 'kvm_guest'        [Sean 
+>> Christopherson]
+>> PATCH3: add a comment to explain missed 'return'      [Sean 
+>> Christopherson]
+>>
+>> v7:
+>> PATCH3: update comment and use goto, add RB              [Vitaly 
+>> Kuznetsov]
+>>
+>> v6:
+>> PATCH1: add Reviewed-by                                  [Vitaly 
+>> Kuznetsov]
+>> PATCH2: change 'pv' to 'PV', add Reviewed-by             [Vitaly 
+>> Kuznetsov]
+>> PATCH3: refactor 'if' branch in kvm_spinlock_init()      [Vitaly 
+>> Kuznetsov]
+>>
+>> v5:
+>> PATCH1: new patch to revert a currently unnecessory commit,
+>>          code is simpler a bit after that change.         [Boris 
+>> Ostrovsky]
+>> PATCH3: fold 'if' statement,add comments on virt_spin_lock_key,
+>>          reorder with PATCH2 to better reflect dependency
+>> PATCH4: fold 'if' statement, add Reviewed-by             [Boris 
+>> Ostrovsky]
+>> PATCH5: add Reviewed-by [Michael Kelley]
+>>
+>> v4:
+>> PATCH1: use variable name nopvspin instead of pvspin and
+>>          defined it as __initdata, changed print message,
+>>          updated patch description                     [Sean 
+>> Christopherson]
+>> PATCH2: remove Suggested-by, use "kvm-guest:" prefix  [Sean 
+>> Christopherson]
+>> PATCH3: make variable nopvsin and xen_pvspin coexist
+>>          remove Reviewed-by due to code change         [Sean 
+>> Christopherson]
+>> PATCH4: make variable nopvsin and hv_pvspin coexist   [Sean 
+>> Christopherson]
+>>
+>> v3:
+>> PATCH2: Fix indentation
+>>
+>> v2:
+>> PATCH1: pick the print code change into separate PATCH2,
+>>          updated patch description             [Vitaly Kuznetsov]
+>> PATCH2: new patch with print code change      [Vitaly Kuznetsov]
+>> PATCH3: add Reviewed-by                       [Juergen Gross]
+>>
+>> Zhenzhong Duan (5):
+>>    Revert "KVM: X86: Fix setup the virt_spin_lock_key before static key
+>>      get initialized"
+>>    x86/kvm: Change print code to use pr_*() format
+>>    x86/kvm: Add "nopvspin" parameter to disable PV spinlocks
+>>    xen: Mark "xen_nopvspin" parameter obsolete
+>>    x86/hyperv: Mark "hv_nopvspin" parameter obsolete
+>>
+>>   Documentation/admin-guide/kernel-parameters.txt | 14 ++++-
+>>   arch/x86/hyperv/hv_spinlock.c                   |  4 ++
+>>   arch/x86/include/asm/qspinlock.h                |  1 +
+>>   arch/x86/kernel/kvm.c                           | 79 
+>> ++++++++++++++++---------
+>>   arch/x86/xen/spinlock.c                         |  4 +-
+>>   kernel/locking/qspinlock.c                      |  7 +++
+>>   6 files changed, 76 insertions(+), 33 deletions(-)
+>>
