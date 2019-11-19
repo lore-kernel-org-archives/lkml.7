@@ -2,132 +2,138 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B070EC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:54:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACDA6C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:57:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A07E222DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:54:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F914222DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:57:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="L1aemyzM"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="PQ3F5gHz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727435AbfKSKya (ORCPT
+        id S1727573AbfKSK5W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 05:54:30 -0500
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:37268 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726000AbfKSKy3 (ORCPT
+        Tue, 19 Nov 2019 05:57:22 -0500
+Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.80]:30729 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726170AbfKSK5W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 05:54:29 -0500
-Received: by mail-vs1-f67.google.com with SMTP id u6so13890828vsp.4
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 02:54:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jLtkUESkDarsYpGMcY5/LJpQLbfAZdXaCoyZyWBflKA=;
-        b=L1aemyzM1aduLNZwAbSrTDiqpcLqDVmLQ7XFSgddc8EA+l5K2jXQ6ORT6r7115VWVX
-         HiPcECQnLNwTf8AgAVbGAc/i6t1DRLeCHqDF8aUnnwq5YXgQSqijLylFm5O6Viqw7sGA
-         umY24/2n7asnmh0cQllGJf4akM8O6Cm8mCQCgJtPO3zqYfyVx3zTpgeXD6ZmsprgQetG
-         j0S0AU/puPjqxtBYPd7hjJBHzISRmVPBjfO9focyR4OZuN2flk4K+2oD/70HNi0NC/Jz
-         ku7V+SEgTxHDPkTow8ajnSe1pler3XauB+52VpNsCMfF7m6q95iYXMvHvA7Bxzoh/fHW
-         xdXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jLtkUESkDarsYpGMcY5/LJpQLbfAZdXaCoyZyWBflKA=;
-        b=kcR8kNC1tZZrHC8soRNDeJhJF+wizq3SeCIgiIITcbeDReYGMfC1PU1zMBoamhrFU+
-         GP5szBtSThiCNemUZDMQEs37p9bJko0jXvatg66y8vmIprm3gVO7FlXG5yn/+pWCaxrl
-         KkYCbxHmpfBwQB+ez7hTd7v6PRnynRyYAxvQHAhkTUzQcnyUeAAW2WJ5dRtxybpruKff
-         4d1W6qBGlFli85pvqUwfY07HoDNBrvBdBchKitKC94UmMPxyJf8G9ReMjyOBuzL8LCu9
-         /n/YcIbAMKbvpNvEbj3iM15P/3yRT8+c0hNI9PRfhLSmyXIR3e7OsaqoUAoypWgRGtUH
-         4V7g==
-X-Gm-Message-State: APjAAAUmxrjc4E+QMB4DwVWYs1tMdiIuwsDhVRKMNaoWLiMpLYkjTFOT
-        QHZESTrAfag5uL/SbsHuDvZsXjGqQ8HBhQ3jEmNidg==
-X-Google-Smtp-Source: APXvYqw/jaAhqAUxnB8KffVvYBscfdFeLbX307kwZidhP2VTnhqF+a6zd3OJ6FkoYzjz+UIZHRushldSgGNRpOfmnLw=
-X-Received: by 2002:a67:3217:: with SMTP id y23mr22858901vsy.182.1574160868651;
- Tue, 19 Nov 2019 02:54:28 -0800 (PST)
-MIME-Version: 1.0
-References: <1572979786-20361-1-git-send-email-thara.gopinath@linaro.org>
-In-Reply-To: <1572979786-20361-1-git-send-email-thara.gopinath@linaro.org>
-From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Tue, 19 Nov 2019 16:24:17 +0530
-Message-ID: <CAHLCerNoPW4DSD5-j=CFQ7K9Pn_YzSAz1qKx7n6=_pvCXdzfFg@mail.gmail.com>
-Subject: Re: [Patch v5 0/6] Introduce Thermal Pressure
-To:     Thara Gopinath <thara.gopinath@linaro.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>, ionela.voinescu@arm.com,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>, qperret@google.com,
+        Tue, 19 Nov 2019 05:57:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1574161039;
+        s=strato-dkim-0002; d=chronox.de;
+        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=WnvWEcD1OrisdQgGt5N9I3ouD0nZvk5Ggwkbt0h9+NM=;
+        b=PQ3F5gHzfWRsdXUMqQBIHETC07qc1jHFDZUSMFCejtlKP7vFn9iMan8Pisuo/mPFhc
+        OhR8tshwaBoyr6673hfVB1NwaPDXA10atBcnSTbTpXqLhndus48Cq2zhAH0HQhE7i+O+
+        nVJViTOYC2RFi2Xgkz0OUno2cuMMBROiowZ9ndUDWN/3Jc6lse/AAxEoPafQUkyO2xH4
+        qisGi9xvAyjXspSeDAY3vSG4pyerXDq/ISl+eFwlZoIw+wITIgCJMDPU1kGd92sUgAuV
+        QVVgjq8aIqVP2ie9tpiZifKBinWPQj3D+y9iyZsf00rXk1gz2bSEEQN8gcXilYjGHOXt
+        qkDw==
+X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9zT8DNpa83PTIPmLqL6mXsiNby0r49Q+bn6Gzw6e9E9jMEY/jj9Sk"
+X-RZG-CLASS-ID: mo00
+Received: from tauon.chronox.de
+        by smtp.strato.de (RZmta 44.29.0 AUTH)
+        with ESMTPSA id N09a57vAJAtTetb
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Tue, 19 Nov 2019 11:55:29 +0100 (CET)
+From:   Stephan Mueller <smueller@chronox.de>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
-        Javi Merino <javi.merino@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
+        Linux API <linux-api@vger.kernel.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        zhangjs <zachary@baishancloud.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        Nicolai Stange <nstange@suse.de>,
+        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
+        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
+        Roman Drahtmueller <draht@schaltsekun.de>,
+        Neil Horman <nhorman@redhat.com>
+Subject: Re: [PATCH v25 03/12] LRNG - /proc interface
+Date:   Tue, 19 Nov 2019 11:55:23 +0100
+Message-ID: <5323691.yyFvDVlHDV@tauon.chronox.de>
+In-Reply-To: <CALCETrVXGuShozaf5RpgmQnwtTpAbmaTVny+E0q8OE4OLuWwAQ@mail.gmail.com>
+References: <2476454.l8LQlgn7Hv@positron.chronox.de> <3043322.Kq9igzfA0K@positron.chronox.de> <CALCETrVXGuShozaf5RpgmQnwtTpAbmaTVny+E0q8OE4OLuWwAQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 6, 2019 at 12:20 AM Thara Gopinath
-<thara.gopinath@linaro.org> wrote:
->
-> Thermal governors can respond to an overheat event of a cpu by
-> capping the cpu's maximum possible frequency. This in turn
-> means that the maximum available compute capacity of the
-> cpu is restricted. But today in the kernel, task scheduler is
-> not notified of capping of maximum frequency of a cpu.
-> In other words, scheduler is unaware of maximum capacity
-> restrictions placed on a cpu due to thermal activity.
-> This patch series attempts to address this issue.
-> The benefits identified are better task placement among available
-> cpus in event of overheating which in turn leads to better
-> performance numbers.
->
-> The reduction in the maximum possible capacity of a cpu due to a
-> thermal event can be considered as thermal pressure. Instantaneous
-> thermal pressure is hard to record and can sometime be erroneous
-> as there can be mismatch between the actual capping of capacity
-> and scheduler recording it. Thus solution is to have a weighted
-> average per cpu value for thermal pressure over time.
-> The weight reflects the amount of time the cpu has spent at a
-> capped maximum frequency. Since thermal pressure is recorded as
-> an average, it must be decayed periodically. Exisiting algorithm
-> in the kernel scheduler pelt framework is re-used to calculate
-> the weighted average. This patch series also defines a sysctl
-> inerface to allow for a configurable decay period.
->
-> Regarding testing, basic build, boot and sanity testing have been
-> performed on db845c platform with debian file system.
-> Further, dhrystone and hackbench tests have been
-> run with the thermal pressure algorithm. During testing, due to
-> constraints of step wise governor in dealing with big little systems,
+Am Dienstag, 19. November 2019, 11:06:02 CET schrieb Andy Lutomirski:
 
-What contraints?
+Hi Andy,
 
-> trip point 0 temperature was made assymetric between cpus in little
-> cluster and big cluster; the idea being that
-> big core will heat up and cpu cooling device will throttle the
-> frequency of the big cores faster, there by limiting the maximum available
-> capacity and the scheduler will spread out tasks to little cores as well.
+> On Sun, Nov 17, 2019 at 4:16 AM Stephan M=C3=BCller <smueller@chronox.de>=
+ wrote:
+> > Am Samstag, 16. November 2019, 17:39:40 CET schrieb Andy Lutomirski:
+> >=20
+> > Hi Andy,
+> >=20
+> > > > On Nov 16, 2019, at 1:40 AM, Stephan M=C3=BCller <smueller@chronox.=
+de>
+> > > > wrote:
+> > > >=20
+> > > > =EF=BB=BFThe LRNG /proc interface provides the same files as the le=
+gacy
+> > > > /dev/random. These files behave identically. Yet, all files are
+> > > > documented at [1].
+> > >=20
+> > > Why?
+> >=20
+> > I am not sure here: are you referring to the documentation? Or the one
+> > additional file?
+> >=20
+> > If it is the documentation, do you want me to add it to the patch
+> > description? I initially did not add it as these files were present and
+> > seemingly known what they provide. But I would add that documentation to
+> > the patch description if this is desired.
+>=20
+> Sorry, I should have been a lot more explicit.  Why do you want to add
+> a new interface to read the RNG?  What's wrong with the old one?
 
-Can you share the hack to get this behaviour as well so I can try to
-reproduce on 845c?
+There is nothing wrong at all. I actually want to be 100% API and ABI=20
+compliant with the existing random.c. Thus, the list of the sysctls are=20
+identical to the existing random.c with the same behavior (hence I skipped =
+the=20
+documentation of these files).
 
-> Test Results
->
-> Hackbench: 1 group , 30000 loops, 10 runs
->                                                Result         SD
->                                                (Secs)     (% of mean)
->  No Thermal Pressure                            14.03       2.69%
->  Thermal Pressure PELT Algo. Decay : 32 ms      13.29       0.56%
->  Thermal Pressure PELT Algo. Decay : 64 ms      12.57       1.56%
->  Thermal Pressure PELT Algo. Decay : 128 ms     12.71       1.04%
->  Thermal Pressure PELT Algo. Decay : 256 ms     12.29       1.42%
->  Thermal Pressure PELT Algo. Decay : 512 ms     12.42       1.15%
->
+Yet, the wiring up of the interfaces to internal data structures and handle=
+rs=20
+is different than for the existing random.c.
+
+Also, the reason why I created a separate lrng_proc.c (and lrng_interface.c=
+)=20
+is to allow a possible merger of this similar code with the existing random=
+=2Ec.=20
+The only question that needs to be solved is to find a common way to invoke=
+=20
+the random.c internal logic and the LRNG internal logic with these interfac=
+es.
+>=20
+> I think your patch description should explain the purpose of the patch.
+
+Ok, I can surely add a description for each file to the patch description.
+
+Ciao
+Stephan
+
+
