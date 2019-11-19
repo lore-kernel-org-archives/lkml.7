@@ -2,98 +2,99 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53A7CC43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 20:19:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D5FAC43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 20:22:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DFF122448
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 20:19:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 773692235D
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 20:22:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RNYBUFvV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727334AbfKSUTs (ORCPT
+        id S1727239AbfKSUWj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 15:19:48 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:50728 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726722AbfKSUTs (ORCPT
+        Tue, 19 Nov 2019 15:22:39 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:37667 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726722AbfKSUWj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 15:19:48 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 3D40A1C1984; Tue, 19 Nov 2019 21:19:46 +0100 (CET)
-Date:   Tue, 19 Nov 2019 21:19:45 +0100
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Oleksij Rempel <o.rempel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 182/422] ARM: imx6: register pm_power_off handler if
- "fsl,pmic-stby-poweroff" is set
-Message-ID: <20191119201945.GA4495@amd>
-References: <20191119051400.261610025@linuxfoundation.org>
- <20191119051410.265926410@linuxfoundation.org>
+        Tue, 19 Nov 2019 15:22:39 -0500
+Received: by mail-oi1-f193.google.com with SMTP id y194so20281093oie.4;
+        Tue, 19 Nov 2019 12:22:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EaTTkxHDmEcbt3U07gxobyJb6+sGwOBuoJv50bL/JxA=;
+        b=RNYBUFvVJbWTpntO45DEDvG9rS5TKy6ZiEJVDCOo9tUG3s9Hz7h0Ve3T76zsFtyBNb
+         1Hi5fdwg9mlhLGNCYbvu//6ptLxjVt5/cZSw/aaA7jZALCUCXnNiYE7AVny+LpCVy9k8
+         LZB4SAQra2BE09vc5/a2VyQ6dTlLaEfZHBVBNKLXSD7P2BtY+bKNeJwK94GhSC9eEkla
+         8ej+cQXGIjG8Owe9M1Tq2EPKbO45KhhMQsy8KLl78dm/8NvkediEjAxSePPJ4p8WFAU6
+         iAX3bI0IF87KXPnV4tTHcP0OkN0Fb/iu1ZPGXGZfgEF6mJE/HnZtcdmnF3EhDoxc6Suy
+         GlAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EaTTkxHDmEcbt3U07gxobyJb6+sGwOBuoJv50bL/JxA=;
+        b=suTtKMO+Z9m0BEMQYrCKjYiNriQ6fI0CckoJPifVpOMtUPUIKXiJpez92q07r1m3kE
+         B6ZoRel6GH3Ag+npTz2/3Pm60Yp8O2D7pFuBl1mgKkZ6JgKQRy6XcAUwOaFfEQ1acH3z
+         LFzHqXnsD/GyfdsOHLxDiShBDDkyAEmLFwk0Zbcj6pBDDL+RJfV6a82bufoQX4ApD3Vq
+         rF7a8STXMN4proWDwbqw7jDV5hY9xcdBUbmErWSBbmbkLYTL7iFsQoq/2wfgMlfoEjPi
+         3PlFRhsrxtL5RfAiJ0i7UlvtsZNV2C7qLXFr6ApYmwzwWZNV6TiGVWk1dLgtvbqe7AUK
+         QFjA==
+X-Gm-Message-State: APjAAAUS1h9Sqc1W9UvlNKzb/GLFNsG8NEFazHGh06V2BFsEun/BZMno
+        m5P2NFShYWuj6hbV2NoNRmjc8LaO/ei3OpCJgvc=
+X-Google-Smtp-Source: APXvYqw9UESCyKM+zUzYQlWNuuB5qfg03HMHFwEnI6OGKoFwxweBxCdAijIYWCJnQxNu51CFhAfe+j5UnT4j/aOpx1Q=
+X-Received: by 2002:aca:4c57:: with SMTP id z84mr5651946oia.92.1574194956618;
+ Tue, 19 Nov 2019 12:22:36 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="bg08WKrSYDhXBjb5"
-Content-Disposition: inline
-In-Reply-To: <20191119051410.265926410@linuxfoundation.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <20191119154611.29625-1-TheSven73@gmail.com> <20191119154611.29625-5-TheSven73@gmail.com>
+ <a37d098e-12ea-af2e-22cd-cb5ec2856b6d@ti.com> <CAGngYiU_8Obd6jKO9-fukK4K6hYYhFYVSjzxqVxVwwKeCmUkaw@mail.gmail.com>
+ <b2ea6130-cfce-4d41-0b35-ba076f599402@gmail.com>
+In-Reply-To: <b2ea6130-cfce-4d41-0b35-ba076f599402@gmail.com>
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+Date:   Tue, 19 Nov 2019 15:22:25 -0500
+Message-ID: <CAGngYiUDPc+xMO6zzr+bN=i7-QFTUaNE0P5iP+QELjRHnfqUsw@mail.gmail.com>
+Subject: Re: [PATCH v2 4/4] dt-bindings: mfd: update TI tps6105x chip bindings
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc:     Dan Murphy <dmurphy@ti.com>, Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Grigoryev Denis <grigoryev@fastwel.ru>,
+        Axel Lin <axel.lin@ingics.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-leds@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Nov 19, 2019 at 2:38 PM Jacek Anaszewski
+<jacek.anaszewski@gmail.com> wrote:
+>
+> label DT property was recently deprecated. We now encourage using
+> 'function' and/or 'color'. Please refer to
+> Documentation/devicetree/bindings/leds/common.txt.
 
---bg08WKrSYDhXBjb5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Ah, I see.
 
-Hi!
+I'm actually back-porting this from a 4.19 vendor kernel, which I believe
+does not have function/color support. If I introduce it here, I wouldn't
+be able to test it easily, and I'd have to forward/back-port.
 
-> From: Oleksij Rempel <o.rempel@pengutronix.de>
->=20
-> [ Upstream commit 8148d2136002da2e2887caf6a07bbd9c033f14f3 ]
->=20
-> One of the Freescale recommended sequences for power off with external
-> PMIC is the following:
-> ...
-> 3.  SoC is programming PMIC for power off when standby is asserted.
-> 4.  In CCM STOP mode, Standby is asserted, PMIC gates SoC supplies.
->=20
-> See:
-> http://www.nxp.com/assets/documents/data/en/reference-manuals/IMX6DQRM.pdf
-> page 5083
->=20
-> This patch implements step 4. of this sequence.
+All I need is a single led in the system. So I'll just remove the 'label'
+code/description, and hard-code the led name to 'tps6105x'. If
+anyone wants to use this driver and wants named leds, they can
+always add it themselves.
 
-
-> +	if (of_property_read_bool(np, "fsl,pmic-stby-poweroff"))
-> +		imx6_pm_stby_poweroff_probe();
->  }
-
-This is only active when fsl,pmic-stby-poweroff is present somewhere
-in the tree, and that is not the case for 4.19-stable AFAICT. Is it
-still good idea to have it stable branch?
-
-								Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---bg08WKrSYDhXBjb5
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl3UTmEACgkQMOfwapXb+vJ0hACfVyx4kkZSWTMN9WsDOCImBKP7
-45IAnirmpyk+OFm8ehXefqz9nCRfcfmI
-=hYAp
------END PGP SIGNATURE-----
-
---bg08WKrSYDhXBjb5--
+Jacek and Dan, does that satisfy your concerns?
