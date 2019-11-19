@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E8FEC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:27:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D4FFC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:27:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73764222DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:27:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D37B621939
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:27:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141255;
-	bh=dcjRh652H+XEuWKwLgX9wdRsjFVakecNt9ObboueuPk=;
+	s=default; t=1574141258;
+	bh=dD/bHB9IMDtRfXZwt5TsNRbb32hxDd5JIvgnXY4MEV0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rqa1lcEiTsPaQJuMX0GM5llP1sV4DtBrnUy4DzxoW9JhJ3aTgL+BNb+rdyT9BMSXG
-	 s1pMP3TYwkNdqZcMMv2/bNHCjzQ1+1lYM8BYaMFUcY/ST/BzeWz/XgoNIYXDWOXMEb
-	 23SoZMWt5HEbPcUQCm+WLOiOrUZ/AZw3ZbNs8Sxw=
+	b=hcscjCU95iMPrr2fpbsMtuRA2NCy7Gm9E8lCE6Tt7dl2yqz9hsOUzBrJkceUVk6eQ
+	 Zr4+NzSc8WfNeNuy0OZZFv4fVRSFonbKp1NQRgLgO91544garAWPJH/vh2zFfPmNBz
+	 2Or27fq8Baye4s0OCeNc+UZmnPwP2g4mMpEKcqb4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728768AbfKSF1e (ORCPT
+        id S1728778AbfKSF1h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:27:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45802 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:27:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726170AbfKSF1c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:27:32 -0500
+        id S1726170AbfKSF1f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:27:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C3BD21783;
-        Tue, 19 Nov 2019 05:27:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C755121783;
+        Tue, 19 Nov 2019 05:27:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141251;
-        bh=dcjRh652H+XEuWKwLgX9wdRsjFVakecNt9ObboueuPk=;
+        s=default; t=1574141254;
+        bh=dD/bHB9IMDtRfXZwt5TsNRbb32hxDd5JIvgnXY4MEV0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fKso55oIC5x9oQNaSmDllmUR0a0u/lRkwFLkYZGb/LS7D+9KhrHSJZOl3YHx7UdeM
-         SM8nOw+fCpdGOEyuUD6Bu0A+vSx7OSnme0BlD/LUKi9y7BrjX/RX4BOjSUkQlgN8j/
-         3CYKQrtPzoEXooAKvQ2WboxajiLQp2/Z0/E4KTgY=
+        b=QHXA95KknhRniMt5VogXKwUUs9TjAs19jDjCPJfY553TUhdTSMIMdSDif0opjLu7R
+         H12iJ8Ll70DBIu73CGsAPXUAovB0YJsYnL5Y4gmEsWLnQQJRVCOF57pAULV56oxa2P
+         ciGOoJZ3Jh2uEINxNiIVUSHposqk2tcLFvcv1HdI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Maya Erez <merez@codeaurora.org>,
         Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 058/422] wil6210: set edma variables only for Talyn-MB devices
-Date:   Tue, 19 Nov 2019 06:14:15 +0100
-Message-Id: <20191119051403.513925406@linuxfoundation.org>
+Subject: [PATCH 4.19 059/422] wil6210: prevent usage of tx ring 0 for eDMA
+Date:   Tue, 19 Nov 2019 06:14:16 +0100
+Message-Id: <20191119051403.567562124@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -62,47 +62,88 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Maya Erez <merez@codeaurora.org>
 
-[ Upstream commit 596bdbcce90fa93f43ebcb99cefea34bd2e27707 ]
+[ Upstream commit df2b53884a5a454bf441ca78e5b57307262c73f4 ]
 
-use_rx_hw_reordering is already set to true in wil_set_capabilities
-for Talyn-MB devices. Remove its setting from wil_priv_init to
-prevent its activation for older chips.
-Similarly, move the setting of use_compressed_rx_status to
-wil_set_capabilities.
+In enhanced DMA ring 0 is used for RX ring, hence TX ring 0
+is an unused element in ring_tx and ring2cid_tid arrays.
+Initialize ring2cid_tid CID to WIL6210_MAX_CID to prevent a false
+match of CID 0.
+Go over the ring_tx and ring2cid_tid from wil_get_min_tx_ring_id
+and on to prevent access to index 0 in eDMA.
 
 Signed-off-by: Maya Erez <merez@codeaurora.org>
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/wil6210/main.c     | 2 --
- drivers/net/wireless/ath/wil6210/pcie_bus.c | 1 +
- 2 files changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/wireless/ath/wil6210/main.c | 7 +++++--
+ drivers/net/wireless/ath/wil6210/txrx.c | 6 ++++--
+ 2 files changed, 9 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/net/wireless/ath/wil6210/main.c b/drivers/net/wireless/ath/wil6210/main.c
-index a0fe8cbad104f..d186b6886c6bf 100644
+index d186b6886c6bf..920cb233f4db7 100644
 --- a/drivers/net/wireless/ath/wil6210/main.c
 +++ b/drivers/net/wireless/ath/wil6210/main.c
-@@ -653,8 +653,6 @@ int wil_priv_init(struct wil6210_priv *wil)
+@@ -223,6 +223,7 @@ __acquires(&sta->tid_rx_lock) __releases(&sta->tid_rx_lock)
+ 	struct net_device *ndev = vif_to_ndev(vif);
+ 	struct wireless_dev *wdev = vif_to_wdev(vif);
+ 	struct wil_sta_info *sta = &wil->sta[cid];
++	int min_ring_id = wil_get_min_tx_ring_id(wil);
  
- 	/* edma configuration can be updated via debugfs before allocation */
- 	wil->num_rx_status_rings = WIL_DEFAULT_NUM_RX_STATUS_RINGS;
--	wil->use_compressed_rx_status = true;
--	wil->use_rx_hw_reordering = true;
- 	wil->tx_status_ring_order = WIL_TX_SRING_SIZE_ORDER_DEFAULT;
+ 	might_sleep();
+ 	wil_dbg_misc(wil, "disconnect_cid: CID %d, MID %d, status %d\n",
+@@ -273,7 +274,7 @@ __acquires(&sta->tid_rx_lock) __releases(&sta->tid_rx_lock)
+ 	memset(sta->tid_crypto_rx, 0, sizeof(sta->tid_crypto_rx));
+ 	memset(&sta->group_crypto_rx, 0, sizeof(sta->group_crypto_rx));
+ 	/* release vrings */
+-	for (i = 0; i < ARRAY_SIZE(wil->ring_tx); i++) {
++	for (i = min_ring_id; i < ARRAY_SIZE(wil->ring_tx); i++) {
+ 		if (wil->ring2cid_tid[i][0] == cid)
+ 			wil_ring_fini_tx(wil, i);
+ 	}
+@@ -604,8 +605,10 @@ int wil_priv_init(struct wil6210_priv *wil)
+ 		wil->sta[i].mid = U8_MAX;
+ 	}
  
- 	/* Rx status ring size should be bigger than the number of RX buffers
-diff --git a/drivers/net/wireless/ath/wil6210/pcie_bus.c b/drivers/net/wireless/ath/wil6210/pcie_bus.c
-index 89119e7facd00..c8c6613371d1b 100644
---- a/drivers/net/wireless/ath/wil6210/pcie_bus.c
-+++ b/drivers/net/wireless/ath/wil6210/pcie_bus.c
-@@ -108,6 +108,7 @@ int wil_set_capabilities(struct wil6210_priv *wil)
- 		set_bit(hw_capa_no_flash, wil->hw_capa);
- 		wil->use_enhanced_dma_hw = true;
- 		wil->use_rx_hw_reordering = true;
-+		wil->use_compressed_rx_status = true;
- 		wil_fw_name = ftm_mode ? WIL_FW_NAME_FTM_TALYN :
- 			      WIL_FW_NAME_TALYN;
- 		if (wil_fw_verify_file_exists(wil, wil_fw_name))
+-	for (i = 0; i < WIL6210_MAX_TX_RINGS; i++)
++	for (i = 0; i < WIL6210_MAX_TX_RINGS; i++) {
+ 		spin_lock_init(&wil->ring_tx_data[i].lock);
++		wil->ring2cid_tid[i][0] = WIL6210_MAX_CID;
++	}
+ 
+ 	mutex_init(&wil->mutex);
+ 	mutex_init(&wil->vif_mutex);
+diff --git a/drivers/net/wireless/ath/wil6210/txrx.c b/drivers/net/wireless/ath/wil6210/txrx.c
+index 25a65ca424c84..73cdf54521f9b 100644
+--- a/drivers/net/wireless/ath/wil6210/txrx.c
++++ b/drivers/net/wireless/ath/wil6210/txrx.c
+@@ -77,8 +77,9 @@ bool wil_is_tx_idle(struct wil6210_priv *wil)
+ {
+ 	int i;
+ 	unsigned long data_comp_to;
++	int min_ring_id = wil_get_min_tx_ring_id(wil);
+ 
+-	for (i = 0; i < WIL6210_MAX_TX_RINGS; i++) {
++	for (i = min_ring_id; i < WIL6210_MAX_TX_RINGS; i++) {
+ 		struct wil_ring *vring = &wil->ring_tx[i];
+ 		int vring_index = vring - wil->ring_tx;
+ 		struct wil_ring_tx_data *txdata =
+@@ -1945,6 +1946,7 @@ static inline void __wil_update_net_queues(struct wil6210_priv *wil,
+ 					   bool check_stop)
+ {
+ 	int i;
++	int min_ring_id = wil_get_min_tx_ring_id(wil);
+ 
+ 	if (unlikely(!vif))
+ 		return;
+@@ -1977,7 +1979,7 @@ static inline void __wil_update_net_queues(struct wil6210_priv *wil,
+ 		return;
+ 
+ 	/* check wake */
+-	for (i = 0; i < WIL6210_MAX_TX_RINGS; i++) {
++	for (i = min_ring_id; i < WIL6210_MAX_TX_RINGS; i++) {
+ 		struct wil_ring *cur_ring = &wil->ring_tx[i];
+ 		struct wil_ring_tx_data  *txdata = &wil->ring_tx_data[i];
+ 
 -- 
 2.20.1
 
