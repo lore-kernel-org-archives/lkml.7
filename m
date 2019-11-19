@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0472C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:47:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D800C33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:47:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 736482075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:47:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32CA02075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:47:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142446;
-	bh=pSw7uiwKU3m54jes5UMXjKZUbujlTtbnIbcoSotGoXg=;
+	s=default; t=1574142452;
+	bh=RKRTRBPAlk+f+aw3C7A6A3UDnlrwH0Cc8yXEXBYKvkA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EfT2HGkui79i7Ig4v3GVm9vFfI0g5jnq19YzxvapVcrBl0olnDkKfbLN+gQ2sGe4e
-	 K//ZScyl4OmQzb6SgogOV7FCFVzstAdJt2cqaSjyq86H8NEFEAD/dK+ukQKq3HYQTo
-	 mbmM5ELXxqu2pj6+udjgPuPtoWSSJxBzvCSJTtuA=
+	b=IigLKfgUmPpzGyO+PsMX5+/UZs4IWLM83wNdUhfBDypAbnqNGxOjs07+8GfYwwyyu
+	 dmvHe4d0i/iifDTrHPwwhEx9BVFjeouLMnN/8aSx0xa3xCfPWJ2LoJhSV0UQen2q3/
+	 GE8x97de4HmIMR9Nq6FV1IMuCPRAa7ITOrN2VyGk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730940AbfKSFrZ (ORCPT
+        id S1730707AbfKSFra (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:47:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43708 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:47:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43768 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731234AbfKSFrV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:47:21 -0500
+        id S1730714AbfKSFrZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:47:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50B772071B;
-        Tue, 19 Nov 2019 05:47:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BE292071B;
+        Tue, 19 Nov 2019 05:47:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142440;
-        bh=pSw7uiwKU3m54jes5UMXjKZUbujlTtbnIbcoSotGoXg=;
+        s=default; t=1574142443;
+        bh=RKRTRBPAlk+f+aw3C7A6A3UDnlrwH0Cc8yXEXBYKvkA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oT1+N+dR1sCJKACH8tC3+q1rQEqHymRR8aJg0YxeO+OThM8ez1+JxJVkfCFtlZrnc
-         ELjVS5z6wEGTLcv+0p4uoBJ5eUADXMM5vWwGsp2q9piG8yb6GVZv461ww5CDy50I2p
-         jEPDli5yKzAd9LTisXI9EPaPX/fhaVSRqc89gSRo=
+        b=hAyURS4nP0LAubSYxncjvCGQCmaWa1j7bb1A+mLeqpND+cYt9wGzUPCXuCBeQ4ZU2
+         /lbI56blQtu3CwWyLVxp8Rq+sCxytdeSwETI5TLUzBYSvJPulCfvSKvcezTJbPBHjU
+         7mCfesy/L5IHtrGdaE6iLdd9c93uqZWboC8X10gU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Tony Lindgren <tony@atomide.com>,
+        stable@vger.kernel.org,
+        Sven Eckelmann <sven.eckelmann@openmesh.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 080/239] ARM: dts: omap3-gta04: make NAND partitions compatible with recent U-Boot
-Date:   Tue, 19 Nov 2019 06:18:00 +0100
-Message-Id: <20191119051315.195914422@linuxfoundation.org>
+Subject: [PATCH 4.14 043/239] ath10k: limit available channels via DT ieee80211-freq-limit
+Date:   Tue, 19 Nov 2019 06:17:23 +0100
+Message-Id: <20191119051306.116827965@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -60,59 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: H. Nikolaus Schaller <hns@goldelico.com>
+From: Sven Eckelmann <sven.eckelmann@openmesh.com>
 
-[ Upstream commit fa99c21ecb3cd4021a60d0e8bf880e78b5bd0729 ]
+[ Upstream commit 34d5629d2ca89d847b7040762b87964c696c14da ]
 
-Vendor defined U-Boot has changed the partition scheme a while ago:
+Tri-band devices (1x 2.4GHz + 2x 5GHz) often incorporate special filters in
+the RX and TX path. These filtered channel can in theory still be used by
+the hardware but the signal strength is reduced so much that it makes no
+sense.
 
-* kernel partition 6MB
-* file system partition uses the remainder up to end of the NAND
-* increased size of the environment partition (to get an OneNAND compatible base address)
-* shrink the U-Boot partition
+There is already a DT property to limit the available channels but ath10k
+has to manually call this functionality to limit the currrently set wiphy
+channels further.
 
-Let's be compatible (e.g. Debian kernel built from upstream).
-
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Sven Eckelmann <sven.eckelmann@openmesh.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/omap3-gta04.dtsi | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/net/wireless/ath/ath10k/mac.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
-index 11daca2f19c32..7992489b953e8 100644
---- a/arch/arm/boot/dts/omap3-gta04.dtsi
-+++ b/arch/arm/boot/dts/omap3-gta04.dtsi
-@@ -608,22 +608,22 @@
+diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
+index 58a3c42c4aedb..8c4bb56c262f6 100644
+--- a/drivers/net/wireless/ath/ath10k/mac.c
++++ b/drivers/net/wireless/ath/ath10k/mac.c
+@@ -17,6 +17,7 @@
  
- 		bootloaders@80000 {
- 			label = "U-Boot";
--			reg = <0x80000 0x1e0000>;
-+			reg = <0x80000 0x1c0000>;
- 		};
+ #include "mac.h"
  
--		bootloaders_env@260000 {
-+		bootloaders_env@240000 {
- 			label = "U-Boot Env";
--			reg = <0x260000 0x20000>;
-+			reg = <0x240000 0x40000>;
- 		};
++#include <net/cfg80211.h>
+ #include <net/mac80211.h>
+ #include <linux/etherdevice.h>
+ #include <linux/acpi.h>
+@@ -8174,6 +8175,7 @@ int ath10k_mac_register(struct ath10k *ar)
+ 		ar->hw->wiphy->bands[NL80211_BAND_5GHZ] = band;
+ 	}
  
- 		kernel@280000 {
- 			label = "Kernel";
--			reg = <0x280000 0x400000>;
-+			reg = <0x280000 0x600000>;
- 		};
++	wiphy_read_of_freq_limits(ar->hw->wiphy);
+ 	ath10k_mac_setup_ht_vht_cap(ar);
  
--		filesystem@680000 {
-+		filesystem@880000 {
- 			label = "File System";
--			reg = <0x680000 0xf980000>;
-+			reg = <0x880000 0>;	/* 0 = MTDPART_SIZ_FULL */
- 		};
- 	};
- };
+ 	ar->hw->wiphy->interface_modes =
 -- 
 2.20.1
 
