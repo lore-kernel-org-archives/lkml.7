@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 595E1C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:34:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E00C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:34:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E4DF2235D
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:34:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B983E206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:34:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141680;
-	bh=RHlaMWsk/Gruwmgw+Oi5SSkGWnNFBDQD7HA7XGA8KwY=;
+	s=default; t=1574141682;
+	bh=djqdZXlQ3iLn+R5cPJY6lBtwWI+0PBuh+RGdpxjWQW0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Spnf8Id6H+3NfpUAlFKwyArah0WkWXd570GyeLNB3AmyB4zKG4pSgv9b0EkMuVPzC
-	 5Ej6lNwhZ8iC9xFKsKESkXctLJ9yAl+5A371EM+RaaN+W0ffPGkxCU5fzSDlDJwumZ
-	 9Umy8z3k6OA2ZvwvC5uaqDX65CXb8l71IqWSQkOs=
+	b=ue9vQj9G87uPNWgkZ32UpG4XgaAVS92myxX3jnc54dhxZ/f46l4llFtwXDx3aDf3g
+	 +fjb2EqefkvVdVM78Hp+CInc8dmkdOu+N4g1t5mMQ7SdYyHqqDIEGD0M7Bf1Gaq75L
+	 8KfZsqfl1WmFOYop6YKnX/zf7Wc/Now19ZKLPbm0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728060AbfKSFej (ORCPT
+        id S1729714AbfKSFek (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:34:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55326 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:34:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728393AbfKSFeg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:34:36 -0500
+        id S1729702AbfKSFei (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:34:38 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC128214DE;
-        Tue, 19 Nov 2019 05:34:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86B41208C3;
+        Tue, 19 Nov 2019 05:34:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141675;
-        bh=RHlaMWsk/Gruwmgw+Oi5SSkGWnNFBDQD7HA7XGA8KwY=;
+        s=default; t=1574141678;
+        bh=djqdZXlQ3iLn+R5cPJY6lBtwWI+0PBuh+RGdpxjWQW0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ks2QrNsQQezwVLJE/NgxKj4gqF9RfBOVgC7aPKv4kxXDDSBU6WGD9S03SHegegXyS
-         0UuDgr6qBAMBz3MgV8pFnrn19dmpC4OakiRCFSqZEQXCbtM+TsXssuKBAWlfOoOGFC
-         S3eoCWXfv1VZbTt/BB7SOaIp73FJojtGLwJ6id4A=
+        b=YfqscCqfTI+O3T0VNKb2Im/2Hfa0r+y+fkGswlIVhxggbTGeWgpo/PHuDTvOws92Y
+         dgq9NfUSoUQUhXUankT7vYhK3RR3ew3sv+i2LO+9gmFbEATOY//arccliB3+qX976m
+         KrGpzeNSjDSqDQixaqvkDOTwUy6QZLVGjU3mPw2Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>,
-        Rob Herring <robh@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 243/422] ARM: dts: xilinx: Fix I2C and SPI bus warnings
-Date:   Tue, 19 Nov 2019 06:17:20 +0100
-Message-Id: <20191119051414.758196086@linuxfoundation.org>
+        stable@vger.kernel.org, Banajit Goswami <bgoswami@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 226/422] component: fix loop condition to call unbind() if bind() fails
+Date:   Tue, 19 Nov 2019 06:17:03 +0100
+Message-Id: <20191119051413.281574543@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -59,83 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Herring <robh@kernel.org>
+From: Banajit Goswami <bgoswami@codeaurora.org>
 
-[ Upstream commit f5054ceed420b1f38d37920a4c65446fcc5d6b90 ]
+[ Upstream commit bdae566d5d9733b6e32b378668b84eadf28a94d4 ]
 
-dtc has new checks for I2C and SPI buses. Fix the warnings in node names
-and unit-addresses.
+During component_bind_all(), if bind() fails for any
+particular component associated with a master, unbind()
+should be called for all previous components in that
+master's match array, whose bind() might have completed
+successfully. As per the current logic, if bind() fails
+for the component at position 'n' in the master's match
+array, it would start calling unbind() from component in
+'n'th position itself and work backwards, and will always
+skip calling unbind() for component in 0th position in the
+master's match array.
+Fix this by updating the loop condition, and the logic to
+refer to the components in master's match array, so that
+unbind() is called for all components starting from 'n-1'st
+position in the array, until (and including) component in
+0th position.
 
-arch/arm/boot/dts/zynq-zc702.dtb: Warning (i2c_bus_reg): /amba/i2c@e0004000/i2c-mux@74/i2c@7/hwmon@52: I2C bus unit address format error, expected "34"
-arch/arm/boot/dts/zynq-zc702.dtb: Warning (i2c_bus_reg): /amba/i2c@e0004000/i2c-mux@74/i2c@7/hwmon@53: I2C bus unit address format error, expected "35"
-arch/arm/boot/dts/zynq-zc702.dtb: Warning (i2c_bus_reg): /amba/i2c@e0004000/i2c-mux@74/i2c@7/hwmon@54: I2C bus unit address format error, expected "36"
-arch/arm/boot/dts/zynq-zc770-xm013.dtb: Warning (spi_bus_reg): /amba/spi@e0006000/eeprom@0: SPI bus unit address format error, expected "2"
-arch/arm/boot/dts/zynq-zc770-xm010.dtb: Warning (spi_bus_reg): /amba/spi@e0007000/flash@0: SPI bus unit address format error, expected "1"
-
-Cc: Michal Simek <michal.simek@xilinx.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Signed-off-by: Banajit Goswami <bgoswami@codeaurora.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/zynq-zc702.dts       | 12 ++++++------
- arch/arm/boot/dts/zynq-zc770-xm010.dts |  2 +-
- arch/arm/boot/dts/zynq-zc770-xm013.dts |  2 +-
- 3 files changed, 8 insertions(+), 8 deletions(-)
+ drivers/base/component.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/zynq-zc702.dts b/arch/arm/boot/dts/zynq-zc702.dts
-index cc5a3dc2b4a08..27cd6cb52f1ba 100644
---- a/arch/arm/boot/dts/zynq-zc702.dts
-+++ b/arch/arm/boot/dts/zynq-zc702.dts
-@@ -174,17 +174,17 @@
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			reg = <7>;
--			hwmon@52 {
-+			hwmon@34 {
- 				compatible = "ti,ucd9248";
--				reg = <52>;
-+				reg = <0x34>;
- 			};
--			hwmon@53 {
-+			hwmon@35 {
- 				compatible = "ti,ucd9248";
--				reg = <53>;
-+				reg = <0x35>;
- 			};
--			hwmon@54 {
-+			hwmon@36 {
- 				compatible = "ti,ucd9248";
--				reg = <54>;
-+				reg = <0x36>;
- 			};
- 		};
- 	};
-diff --git a/arch/arm/boot/dts/zynq-zc770-xm010.dts b/arch/arm/boot/dts/zynq-zc770-xm010.dts
-index 0e1bfdd3421ff..0dd352289a45e 100644
---- a/arch/arm/boot/dts/zynq-zc770-xm010.dts
-+++ b/arch/arm/boot/dts/zynq-zc770-xm010.dts
-@@ -68,7 +68,7 @@
- 	status = "okay";
- 	num-cs = <4>;
- 	is-decoded-cs = <0>;
--	flash@0 {
-+	flash@1 {
- 		compatible = "sst25wf080", "jedec,spi-nor";
- 		reg = <1>;
- 		spi-max-frequency = <1000000>;
-diff --git a/arch/arm/boot/dts/zynq-zc770-xm013.dts b/arch/arm/boot/dts/zynq-zc770-xm013.dts
-index 651913f1afa2a..4ae2c85df3a00 100644
---- a/arch/arm/boot/dts/zynq-zc770-xm013.dts
-+++ b/arch/arm/boot/dts/zynq-zc770-xm013.dts
-@@ -62,7 +62,7 @@
- 	status = "okay";
- 	num-cs = <4>;
- 	is-decoded-cs = <0>;
--	eeprom: eeprom@0 {
-+	eeprom: eeprom@2 {
- 		at25,byte-len = <8192>;
- 		at25,addr-mode = <2>;
- 		at25,page-size = <32>;
+diff --git a/drivers/base/component.c b/drivers/base/component.c
+index 8946dfee4768e..e8d676fad0c95 100644
+--- a/drivers/base/component.c
++++ b/drivers/base/component.c
+@@ -536,9 +536,9 @@ int component_bind_all(struct device *master_dev, void *data)
+ 		}
+ 
+ 	if (ret != 0) {
+-		for (; i--; )
+-			if (!master->match->compare[i].duplicate) {
+-				c = master->match->compare[i].component;
++		for (; i > 0; i--)
++			if (!master->match->compare[i - 1].duplicate) {
++				c = master->match->compare[i - 1].component;
+ 				component_unbind(c, master, data);
+ 			}
+ 	}
 -- 
 2.20.1
 
