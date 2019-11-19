@@ -2,106 +2,115 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 657A9C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:02:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11818C43141
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:02:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43F6F208D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:02:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBC9922360
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:02:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574182950;
+	bh=9xlP6l6zc8LrRTuryqi4QOF5/Hg74NZf0SPlZK2mEU8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=oMrF9nSUnqZYF+4Po4d49JX4rumi1pAAlYgvWogl3/C+tx/Zy7NqxTQS3ysgzsWkt
+	 XxRghne+q2Pqaqz2vljhtWoVarHCK8j90cuUY4sWMG/jXpOdzh2ODVzeonVjozf5rs
+	 EjOzhrFTMybaC5g8t90MAPxwyVCiTaR7dhTL8lHI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728580AbfKSRCC (ORCPT
+        id S1728684AbfKSRC3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 12:02:02 -0500
-Received: from mga03.intel.com ([134.134.136.65]:23294 "EHLO mga03.intel.com"
+        Tue, 19 Nov 2019 12:02:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728071AbfKSRCB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 12:02:01 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Nov 2019 09:01:53 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,218,1571727600"; 
-   d="scan'208";a="289664932"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga001.jf.intel.com with ESMTP; 19 Nov 2019 09:01:53 -0800
-Date:   Tue, 19 Nov 2019 09:06:28 -0800
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-Cc:     Auger Eric <eric.auger@redhat.com>,
-        iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>, Yi Liu <yi.l.liu@intel.com>,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v2 01/10] iommu/vt-d: Introduce native SVM capable flag
-Message-ID: <20191119090628.7295cd7d@jacob-builder>
-In-Reply-To: <efe5a47d-1209-2c09-bc66-b1ebbc671439@linux.intel.com>
-References: <1574106153-45867-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <1574106153-45867-2-git-send-email-jacob.jun.pan@linux.intel.com>
-        <cb44724d-a396-0291-63c4-0039788fd26b@redhat.com>
-        <20191118134809.66b9fda4@jacob-builder>
-        <efe5a47d-1209-2c09-bc66-b1ebbc671439@linux.intel.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        id S1727560AbfKSRC3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 12:02:29 -0500
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 522C222384;
+        Tue, 19 Nov 2019 17:02:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574182943;
+        bh=9xlP6l6zc8LrRTuryqi4QOF5/Hg74NZf0SPlZK2mEU8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=hHdDFqFWJkwOuMKZk0NzaOxgeAE6UqGlvZAVH+WTtjEaZ3CCkLs6cDI5yFhIl9SRE
+         54T4E31B4t+satNSKMSJ+416Ec7m0NKdD49RPHEpukOMZs6k0mxIRc9AHYb5zIBbTG
+         bNPOVvg5RSncACs08sPyTJmxe1NXOpvf8io01pqY=
+Received: by mail-qk1-f179.google.com with SMTP id z16so18462574qkg.7;
+        Tue, 19 Nov 2019 09:02:23 -0800 (PST)
+X-Gm-Message-State: APjAAAWDgqNzuLMJs8sFoNhCpmKJ/NCyiGWxa3+rUuO7R+v5e5LWatrG
+        AnMysVzyQOrrnIp3ZSRcxGlXeEucbJgpgLW1ZA==
+X-Google-Smtp-Source: APXvYqxucfdWSXPgW2vd8l9633HeMvIH864eMJ/p+Bk0FhDvh444Pum/yEC+Gs6buUxeu7x2jucgvrCcmOz57phmAkg=
+X-Received: by 2002:a05:620a:205d:: with SMTP id d29mr30290391qka.152.1574182942398;
+ Tue, 19 Nov 2019 09:02:22 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20191119144315.11261-1-krzk@kernel.org>
+In-Reply-To: <20191119144315.11261-1-krzk@kernel.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 19 Nov 2019 11:02:11 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+1hHneSW5DzLNxU00AqQJ49chTyULJ0S3JR-CqfOfTgA@mail.gmail.com>
+Message-ID: <CAL_Jsq+1hHneSW5DzLNxU00AqQJ49chTyULJ0S3JR-CqfOfTgA@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: power: Fix path to power-domain.txt bindings
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        etnaviv@lists.freedesktop.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        linux-tegra@vger.kernel.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 19 Nov 2019 10:55:29 +0800
-Lu Baolu <baolu.lu@linux.intel.com> wrote:
+On Tue, Nov 19, 2019 at 8:43 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> With split of power domain controller bindings to power-domain.yaml, the
+> consumer part was renamed to power-domain.txt.  Update the references in
+> other bindings.
+>
+> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> Fixes: abb4805e343a ("dt-bindings: power: Convert Samsung Exynos Power Domain bindings to json-schema")
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/clock/clk-exynos-audss.txt  | 2 +-
+>  Documentation/devicetree/bindings/clock/exynos5433-clock.txt  | 2 +-
+>  .../devicetree/bindings/clock/renesas,r8a7778-cpg-clocks.txt  | 2 +-
+>  .../devicetree/bindings/clock/renesas,r8a7779-cpg-clocks.txt  | 2 +-
+>  .../bindings/clock/renesas,rcar-gen2-cpg-clocks.txt           | 2 +-
+>  .../devicetree/bindings/clock/renesas,rz-cpg-clocks.txt       | 2 +-
+>  .../devicetree/bindings/display/etnaviv/etnaviv-drm.txt       | 2 +-
+>  Documentation/devicetree/bindings/display/msm/dpu.txt         | 2 +-
+>  Documentation/devicetree/bindings/display/msm/mdp5.txt        | 2 +-
+>  Documentation/devicetree/bindings/dsp/fsl,dsp.yaml            | 2 +-
+>  Documentation/devicetree/bindings/media/imx7-mipi-csi2.txt    | 2 +-
+>  .../devicetree/bindings/media/mediatek-jpeg-decoder.txt       | 2 +-
+>  Documentation/devicetree/bindings/media/mediatek-mdp.txt      | 2 +-
+>  Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt  | 2 +-
+>  Documentation/devicetree/bindings/pci/pci-keystone.txt        | 2 +-
+>  Documentation/devicetree/bindings/phy/ti,phy-am654-serdes.txt | 2 +-
+>  Documentation/devicetree/bindings/power/qcom,rpmpd.txt        | 2 +-
+>  Documentation/devicetree/bindings/power/renesas,rcar-sysc.txt | 2 +-
+>  .../devicetree/bindings/usb/nvidia,tegra124-xusb.txt          | 4 ++--
+>  19 files changed, 20 insertions(+), 20 deletions(-)
 
-> Hi,
-> 
-> On 11/19/19 5:48 AM, Jacob Pan wrote:
-> > On Mon, 18 Nov 2019 21:33:53 +0100
-> > Auger Eric <eric.auger@redhat.com> wrote:
-> >   
-> >> Hi Jacob,
-> >>
-> >> On 11/18/19 8:42 PM, Jacob Pan wrote:  
-> >>> Shared Virtual Memory(SVM) is based on a collective set of
-> >>> hardware features detected at runtime. There are requirements for
-> >>> matching CPU and IOMMU capabilities.
-> >>>
-> >>> This patch introduces a flag which will be used to mark and test
-> >>> the capability of SVM.
-> >>>
-> >>> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> >>> Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
-> >>> ---
-> >>>   include/linux/intel-iommu.h | 1 +
-> >>>   1 file changed, 1 insertion(+)
-> >>>
-> >>> diff --git a/include/linux/intel-iommu.h
-> >>> b/include/linux/intel-iommu.h index ed11ef594378..63118991824c
-> >>> 100644 --- a/include/linux/intel-iommu.h
-> >>> +++ b/include/linux/intel-iommu.h
-> >>> @@ -433,6 +433,7 @@ enum {
-> >>>   
-> >>>   #define VTD_FLAG_TRANS_PRE_ENABLED	(1 << 0)
-> >>>   #define VTD_FLAG_IRQ_REMAP_PRE_ENABLED	(1 << 1)
-> >>> +#define VTD_FLAG_SVM_CAPABLE		(1 << 2)  
-> >>
-> >> I think I would rather squash this into the next patch as there is
-> >> no user here.
-> >>  
-> > Sure, I don't have strong preference. Baolu, what is your call?  
-> 
-> It's okay for me.
-> 
-will squash then.
-Thanks!
-> Best regards,
-> baolu
+Please no. Can you just undo the renaming back to power_domain.txt
 
-[Jacob Pan]
+Rob
