@@ -2,144 +2,131 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7297C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 09:26:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51083C43141
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 09:26:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CBF9222C7
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 09:26:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="ikbsjyFh"
+	by mail.kernel.org (Postfix) with ESMTP id 294A22230E
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 09:26:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574155613;
+	bh=6pJAHvS/vr09/agJP71ir2SyOeCxfUSjUCG+MgWwCzA=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=qAQX0OmCVKy2jdgHwcrWiKfwRYCqRe5AonOaLpbXaCmZxRxirgv8k6QIfFS88ytao
+	 RIUn93TxYytteeunkXosHAluYLWdYgDpGhQ+LGVJwyqFzhjUKGmu5guI7NKSIoTn+b
+	 2YuNw2x5J+DkcCYNQILf3i+oD/WIoVVHoTJYiGyU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727217AbfKSJ0K (ORCPT
+        id S1727398AbfKSJ0w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 04:26:10 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:45389 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbfKSJ0K (ORCPT
+        Tue, 19 Nov 2019 04:26:52 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:39195 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725280AbfKSJ0v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 04:26:10 -0500
-Received: by mail-lj1-f195.google.com with SMTP id n21so22430195ljg.12
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 01:26:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=EaDBGaUrTCyGilB8DhkN1F/kJnvQ8bUshlfDqjHoxzk=;
-        b=ikbsjyFhsTnrhXVyUK14RaUtYzx0tqRfpB9YUHH//6RbExWy1uHu91Bw1ZqhWuYbEu
-         J39r/tOknfZ3t8x8kShgq6SCikWU4DYb7MMMWoysNVhfxTMkRSwbTzcPvhMD4p8sgjAU
-         4QjeCxbJ16VrHpovL5nIUKdXL9z22ioGdACH8vuzEQZROcVKDeT1ubAEzquTuG95sM2A
-         dQCjEhbvewCWNLPG1cGfqrZ0tgg/uwcrzxR+vXipT65+wKK/fp/j6aSUv+FahTBJgOLG
-         e3S4cGKWcfCPPuk+115tGtCk7iM7aynce+d36C6WeC1EWFqlTNcwmG/e0hO5Gj5du2CC
-         xLrw==
+        Tue, 19 Nov 2019 04:26:51 -0500
+Received: by mail-wm1-f66.google.com with SMTP id t26so2626062wmi.4
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 01:26:50 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=EaDBGaUrTCyGilB8DhkN1F/kJnvQ8bUshlfDqjHoxzk=;
-        b=FdG1/5beJ7seMfLSSlxY0CvWP4Tu9kKTKeEeWosavmFNzug3Jh+a12LJCfznVmLa1Z
-         R/vGqSJYl3hY4CC1fgrtV5wdpbuRSA7ybV5v48zCp/WO++VxiFP6tLLGTw+3fMFQdzrK
-         12CzjiWkWIjDpXTqKjt6448OdIxpQ96UDB5US7AP9a0paWOMR9y03uL75kGL/SFjqSAr
-         cmUi/boB1eJPSMH0wSv+seO2w/Tfqrt7cOylTYc9C5LjVzz/cwESghZJzTaPECARavDW
-         Sk6gWq4SZ2KbiihYhicLwx5iyxz6MdEDDlrsq5xK9wKtwydlupO/IGAnJHWCmrpte0JP
-         btBw==
-X-Gm-Message-State: APjAAAXnHFIB+CccFuXN/mlrGqDZms6XXLEuFKxHL3K/9jaAJsbuz42J
-        N9TyiS+6U5nxFTuO5B5qOtey+j8TM52A9A==
-X-Google-Smtp-Source: APXvYqxfnIPD6olHEqZuEZ+IBMXW4FA6tTunsko04mShwCPVfe7DxsvfHXGljZgNnffteATkneZFuQ==
-X-Received: by 2002:a05:651c:1053:: with SMTP id x19mr2976201ljm.39.1574155567470;
-        Tue, 19 Nov 2019 01:26:07 -0800 (PST)
-Received: from ?IPv6:2a00:1fa0:21a:5b37:6d7b:a689:ba65:5cea? ([2a00:1fa0:21a:5b37:6d7b:a689:ba65:5cea])
-        by smtp.gmail.com with ESMTPSA id u2sm10244727ljg.34.2019.11.19.01.26.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 19 Nov 2019 01:26:06 -0800 (PST)
-Subject: Re: [net-next] seg6: allow local packet processing for SRv6 End.DT6
- behavior
-To:     Andrea Mayer <andrea.mayer@uniroma2.it>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        David Lebrun <dav.lebrun@gmail.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191118182026.2634-1-andrea.mayer@uniroma2.it>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <703510f1-22af-aca1-b066-d2c38fe572b1@cogentembedded.com>
-Date:   Tue, 19 Nov 2019 12:25:16 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        bh=M+2OHFpC0q55v8InPSssCQHOt0deRDCWxkFPtuptQPU=;
+        b=Xo9k8qxwJ8CemHuMuK5jKw02L9dHGRWwbE01ns3jLPKrYSennEoz1DuC/OiLrDD/On
+         Vyjaxqag0CEjttU0pXqTRRCxVtGLJeyurWMAvinB0D5PH1Petu3VI8NCz6u/KanqwTc+
+         J5hI7wqZUlpVAJTwErKz7jNhF7uzmW6l0BQiumtJdmsgwPXtg7a76dXXc3S0SwHzm3rX
+         pEfma9eg2TxNMFCh7aTIuYxuTRoabrSr3sv4+hLg4M2280ObC738Xbi+eqcE1JGGtZi0
+         b8j+dwfF4QlSx/pPzIs6bOOqpc9/KXz7Pvx9PiaLiqlZjENzG3Ui4m6l8L+ixluYi2Cl
+         XxeA==
+X-Gm-Message-State: APjAAAUOe+NIMXvpP55xP/WmzRV61qbXmk5daD9n+xVWOWw+XNM8l9Ni
+        HOA5A+geQYP95DNCWM50j68=
+X-Google-Smtp-Source: APXvYqy1wQcmGCsaSRfc1zaf+MRHK4ds374WMhyJbp+jps3aovj80g9aPVmycHMKppG3CGpTvkm36Q==
+X-Received: by 2002:a7b:cbd9:: with SMTP id n25mr4583498wmi.64.1574155609894;
+        Tue, 19 Nov 2019 01:26:49 -0800 (PST)
+Received: from tiehlicka.microfocus.com (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id c15sm26392622wrx.78.2019.11.19.01.26.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Nov 2019 01:26:48 -0800 (PST)
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        Oscar Salvador <OSalvador@suse.com>,
+        David Hildenbrand <david@redhat.com>, <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Michal Hocko <mhocko@suse.com>
+Subject: [PATCH] mm, sparse: do not waste pre allocated memmap space
+Date:   Tue, 19 Nov 2019 10:26:42 +0100
+Message-Id: <20191119092642.31799-1-mhocko@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20191118182026.2634-1-andrea.mayer@uniroma2.it>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18.11.2019 21:20, Andrea Mayer wrote:
+From: Michal Hocko <mhocko@suse.com>
 
-> End.DT6 behavior makes use of seg6_lookup_nexthop() function which drops
-> all packets that are destined to be locally processed. However, DT* should
-> be able to delivery decapsulated packets that are destined to local
+Vincent has noticed [1] that there is something unusual with the memmap
+allocations going on on his platform
+: I noticed this because on my ARM64 platform, with 1 GiB of memory the
+: first [and only] section is allocated from the zeroing path while with
+: 2 GiB of memory the first 1 GiB section is allocated from the
+: non-zeroing path.
 
-    Deliver?
+The underlying problem is that although sparse_buffer_init allocates enough
+memory for all sections on the node sparse_buffer_alloc is not able to
+consume them due to mismatch in the expected allocation alignement.
+While sparse_buffer_init preallocation uses the PAGE_SIZE alignment the
+real memmap has to be aligned to section_map_size() this results in a
+wasted initial chunk of the preallocated memmap and unnecessary fallback
+allocation for a section.
 
-> addresses. Function seg6_lookup_nexthop() is also used by DX6, so in order
-> to maintain compatibility I created another routing helper function which
-> is called seg6_lookup_any_nexthop(). This function is able to take into
-> account both packets that have to be processed locally and the ones that
-> are destined to be forwarded directly to another machine. Hence,
-> seg6_lookup_any_nexthop() is used in DT6 rather than seg6_lookup_nexthop()
-> to allow local delivery.
-> 
-> Signed-off-by: Andrea Mayer <andrea.mayer@uniroma2.it>
-> ---
->   net/ipv6/seg6_local.c | 22 ++++++++++++++++++----
->   1 file changed, 18 insertions(+), 4 deletions(-)
-> 
-> diff --git a/net/ipv6/seg6_local.c b/net/ipv6/seg6_local.c
-> index e70567446f28..43f3c9f1b4c1 100644
-> --- a/net/ipv6/seg6_local.c
-> +++ b/net/ipv6/seg6_local.c
-> @@ -149,8 +149,9 @@ static void advance_nextseg(struct ipv6_sr_hdr *srh, struct in6_addr *daddr)
->   	*daddr = *addr;
->   }
->   
-> -int seg6_lookup_nexthop(struct sk_buff *skb, struct in6_addr *nhaddr,
-> -			u32 tbl_id)
-> +static int
-> +seg6_lookup_any_nexthop(struct sk_buff *skb, struct in6_addr *nhaddr,
-> +			u32 tbl_id, int local_delivery)
->   {
->   	struct net *net = dev_net(skb->dev);
->   	struct ipv6hdr *hdr = ipv6_hdr(skb);
-[...]
-> @@ -199,6 +207,12 @@ int seg6_lookup_nexthop(struct sk_buff *skb, struct in6_addr *nhaddr,
->   	return dst->error;
->   }
->   
-> +inline int seg6_lookup_nexthop(struct sk_buff *skb,
-> +			       struct in6_addr *nhaddr, u32 tbl_id)
-> +{
-> +	return seg6_lookup_any_nexthop(skb, nhaddr, tbl_id, false);
+While we are at it also change __populate_section_memmap to align to the
+requested size because at least VMEMMAP has constrains to have memmap
+properly aligned.
 
-    The last parameter to that function is of type *int*, not 'bool'. Be 
-consistent please...
+[1] http://lkml.kernel.org/r/20191030131122.8256-1-vincent.whitchurch@axis.com
+Reported-and-debugged-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
+Fixes: 35fd1eb1e821 ("mm/sparse: abstract sparse buffer allocations")
+Signed-off-by: Michal Hocko <mhocko@suse.com>
+---
+ mm/sparse.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-> @@ -396,7 +410,7 @@ static int input_action_end_dt6(struct sk_buff *skb,
->   
->   	skb_set_transport_header(skb, sizeof(struct ipv6hdr));
->   
-> -	seg6_lookup_nexthop(skb, NULL, slwt->table);
-> +	seg6_lookup_any_nexthop(skb, NULL, slwt->table, true);
+diff --git a/mm/sparse.c b/mm/sparse.c
+index f6891c1992b1..079f3e3c4cab 100644
+--- a/mm/sparse.c
++++ b/mm/sparse.c
+@@ -458,8 +458,7 @@ struct page __init *__populate_section_memmap(unsigned long pfn,
+ 	if (map)
+ 		return map;
+ 
+-	map = memblock_alloc_try_nid(size,
+-					  PAGE_SIZE, addr,
++	map = memblock_alloc_try_nid(size, size, addr,
+ 					  MEMBLOCK_ALLOC_ACCESSIBLE, nid);
+ 	if (!map)
+ 		panic("%s: Failed to allocate %lu bytes align=0x%lx nid=%d from=%pa\n",
+@@ -482,8 +481,13 @@ static void __init sparse_buffer_init(unsigned long size, int nid)
+ {
+ 	phys_addr_t addr = __pa(MAX_DMA_ADDRESS);
+ 	WARN_ON(sparsemap_buf);	/* forgot to call sparse_buffer_fini()? */
++	/*
++	 * Pre-allocated buffer is mainly used by __populate_section_memmap
++	 * and we want it to be properly aligned to the section size - this is
++	 * especially the case for VMEMMAP which maps memmap to PMDs
++	 */
+ 	sparsemap_buf =
+-		memblock_alloc_try_nid_raw(size, PAGE_SIZE,
++		memblock_alloc_try_nid_raw(size, section_map_size(),
+ 						addr,
+ 						MEMBLOCK_ALLOC_ACCESSIBLE, nid);
+ 	sparsemap_buf_end = sparsemap_buf + size;
+-- 
+2.20.1
 
-    Same here, just declare the last parameter as 'bool'.
-
-[...]
-
-MBR, Sergei
