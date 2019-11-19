@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3A3BC43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:45:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1EADC43141
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:46:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C51502071B
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:45:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 884212075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:46:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142354;
-	bh=eUkZ04H25tcOU3XzyAJgSjCwZ1Hp4q0z9s2RJC9opNE=;
+	s=default; t=1574142360;
+	bh=82XU3aU5ABFzGlRmWBE0XT+9t7AA0CAjUdCcZDInlf8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pToM8p0vj4ooZTX3OzPwivsKE7PkQ/cEN/4+3yr1OWJHTevuHEMqOPf8pcalnhPY8
-	 4uhJnNGabb3JYnpe6YOPOJGW6c5DzYQdbWfUmGkf84C1ia5VfqIC3P3+EAhPFqpFHf
-	 uflhMAPjjxLVJGRqKzOtfYJJaW7Aurn/zqZk7690=
+	b=pBSmX2EsEXYWUYpI5ricJXCd+OGwQAKZhr5sSGQ+RbZbb6NAi0ELe5VwrvLL8Dqey
+	 slKOKVOqsQIOaH74bTvqc9ov6zPmd/M6nmdXBo5e6shOz5NeqE4KjuK9x1i7CL5rcN
+	 K+T72zZ/mO98cYdGXTUv+3mDE+YB6I33BGk/jJXA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731021AbfKSFpw (ORCPT
+        id S1731035AbfKSFp7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:45:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41668 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:45:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731007AbfKSFpu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:45:50 -0500
+        id S1731026AbfKSFp4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:45:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DC702071B;
-        Tue, 19 Nov 2019 05:45:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35F932075E;
+        Tue, 19 Nov 2019 05:45:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142349;
-        bh=eUkZ04H25tcOU3XzyAJgSjCwZ1Hp4q0z9s2RJC9opNE=;
+        s=default; t=1574142355;
+        bh=82XU3aU5ABFzGlRmWBE0XT+9t7AA0CAjUdCcZDInlf8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ovri21FDhi6ajKHNZ1Fhkko6wl7DBxHqb6H6emI/mxgd6OT6VtZtKULIpK17idzMK
-         QhjzMUBSJO6Y6gG8S99QcB5wZOMvZKNlQuJypgLyvkxsqB3hpkAk+pbm35upradx0S
-         m5KAkQ8GBp4OCxYMmNxzBTS+ZJyXg2kj/D9JVRRM=
+        b=piXoLK6WL/Dd7d2edNnIgOoVA+ShTzaC/EwozeRS0R4bNOYHrIxIi6gxsvGnQZXzZ
+         UgWj2Zp5ykil885niXpgLQPR8+E3VPh6rdKIj4N4ZNSJjAQ1xjBUvR8tbV4N2cZER5
+         TJPIFdvRnWq+sie42Cy0ilr2PHsrbPsjWYi674nk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Patryk=20Ma=C5=82ek?= <patryk.malek@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        stable@vger.kernel.org, Vijay Immanuel <vijayi@attalasystems.com>,
+        Doug Ledford <dledford@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 052/239] i40e: hold the rtnl lock on clearing interrupt scheme
-Date:   Tue, 19 Nov 2019 06:17:32 +0100
-Message-Id: <20191119051307.645659152@linuxfoundation.org>
+Subject: [PATCH 4.14 054/239] IB/rxe: fixes for rdma read retry
+Date:   Tue, 19 Nov 2019 06:17:34 +0100
+Message-Id: <20191119051308.130440267@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -62,55 +60,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Patryk Małek <patryk.malek@intel.com>
+From: Vijay Immanuel <vijayi@attalasystems.com>
 
-[ Upstream commit 5cba17b14182696d6bb0ec83a1d087933f252241 ]
+[ Upstream commit 030e46e495af855a13964a0aab9753ea82a96edc ]
 
-Hold the rtnl lock when we're clearing interrupt scheme
-in i40e_shutdown and in i40e_remove.
+When a read request is retried for the remaining partial
+data, the response may restart from read response first
+or read response only. So support those cases.
 
-Signed-off-by: Patryk Małek <patryk.malek@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Do not advance the comp psn beyond the current wqe's last_psn
+as that could skip over an entire read wqe and will cause the
+req_retry() logic to set an incorrect req psn.
+An example sequence is as follows:
+Write        PSN 40 -- this is the current WQE.
+Read request PSN 41
+Write        PSN 42
+Receive ACK  PSN 42 -- this will complete the current WQE
+for PSN 40, and set the comp psn to 42 which is a problem
+because the read request at PSN 41 has been skipped over.
+So when req_retry() tries to retransmit the read request,
+it sets the req psn to 42 which is incorrect.
+
+When retrying a read request, calculate the number of psns
+completed based on the dma resid instead of the wqe first_psn.
+The wqe first_psn could have moved if the read request was
+retried multiple times.
+
+Set the reth length to the dma resid to handle read retries for
+the remaining partial data.
+
+Signed-off-by: Vijay Immanuel <vijayi@attalasystems.com>
+Signed-off-by: Doug Ledford <dledford@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/i40e/i40e_main.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/infiniband/sw/rxe/rxe_comp.c | 21 ++++++++++++++++-----
+ drivers/infiniband/sw/rxe/rxe_req.c  | 15 +++++++++------
+ 2 files changed, 25 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c b/drivers/net/ethernet/intel/i40e/i40e_main.c
-index 39029a12a2337..aa2b446d6ad0f 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_main.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
-@@ -11885,6 +11885,7 @@ static void i40e_remove(struct pci_dev *pdev)
- 	mutex_destroy(&hw->aq.asq_mutex);
- 
- 	/* Clear all dynamic memory lists of rings, q_vectors, and VSIs */
-+	rtnl_lock();
- 	i40e_clear_interrupt_scheme(pf);
- 	for (i = 0; i < pf->num_alloc_vsi; i++) {
- 		if (pf->vsi[i]) {
-@@ -11893,6 +11894,7 @@ static void i40e_remove(struct pci_dev *pdev)
- 			pf->vsi[i] = NULL;
+diff --git a/drivers/infiniband/sw/rxe/rxe_comp.c b/drivers/infiniband/sw/rxe/rxe_comp.c
+index 83cfe44f070ec..fd9ce03dbd292 100644
+--- a/drivers/infiniband/sw/rxe/rxe_comp.c
++++ b/drivers/infiniband/sw/rxe/rxe_comp.c
+@@ -253,6 +253,17 @@ static inline enum comp_state check_ack(struct rxe_qp *qp,
+ 	case IB_OPCODE_RC_RDMA_READ_RESPONSE_MIDDLE:
+ 		if (pkt->opcode != IB_OPCODE_RC_RDMA_READ_RESPONSE_MIDDLE &&
+ 		    pkt->opcode != IB_OPCODE_RC_RDMA_READ_RESPONSE_LAST) {
++			/* read retries of partial data may restart from
++			 * read response first or response only.
++			 */
++			if ((pkt->psn == wqe->first_psn &&
++			     pkt->opcode ==
++			     IB_OPCODE_RC_RDMA_READ_RESPONSE_FIRST) ||
++			    (wqe->first_psn == wqe->last_psn &&
++			     pkt->opcode ==
++			     IB_OPCODE_RC_RDMA_READ_RESPONSE_ONLY))
++				break;
++
+ 			return COMPST_ERROR;
  		}
+ 		break;
+@@ -501,11 +512,11 @@ static inline enum comp_state complete_wqe(struct rxe_qp *qp,
+ 					   struct rxe_pkt_info *pkt,
+ 					   struct rxe_send_wqe *wqe)
+ {
+-	qp->comp.opcode = -1;
+-
+-	if (pkt) {
+-		if (psn_compare(pkt->psn, qp->comp.psn) >= 0)
+-			qp->comp.psn = (pkt->psn + 1) & BTH_PSN_MASK;
++	if (pkt && wqe->state == wqe_state_pending) {
++		if (psn_compare(wqe->last_psn, qp->comp.psn) >= 0) {
++			qp->comp.psn = (wqe->last_psn + 1) & BTH_PSN_MASK;
++			qp->comp.opcode = -1;
++		}
+ 
+ 		if (qp->req.wait_psn) {
+ 			qp->req.wait_psn = 0;
+diff --git a/drivers/infiniband/sw/rxe/rxe_req.c b/drivers/infiniband/sw/rxe/rxe_req.c
+index 08ae4f3a6a379..9fd4f04df3b33 100644
+--- a/drivers/infiniband/sw/rxe/rxe_req.c
++++ b/drivers/infiniband/sw/rxe/rxe_req.c
+@@ -73,9 +73,6 @@ static void req_retry(struct rxe_qp *qp)
+ 	int npsn;
+ 	int first = 1;
+ 
+-	wqe = queue_head(qp->sq.queue);
+-	npsn = (qp->comp.psn - wqe->first_psn) & BTH_PSN_MASK;
+-
+ 	qp->req.wqe_index	= consumer_index(qp->sq.queue);
+ 	qp->req.psn		= qp->comp.psn;
+ 	qp->req.opcode		= -1;
+@@ -107,11 +104,17 @@ static void req_retry(struct rxe_qp *qp)
+ 		if (first) {
+ 			first = 0;
+ 
+-			if (mask & WR_WRITE_OR_SEND_MASK)
++			if (mask & WR_WRITE_OR_SEND_MASK) {
++				npsn = (qp->comp.psn - wqe->first_psn) &
++					BTH_PSN_MASK;
+ 				retry_first_write_send(qp, wqe, mask, npsn);
++			}
+ 
+-			if (mask & WR_READ_MASK)
++			if (mask & WR_READ_MASK) {
++				npsn = (wqe->dma.length - wqe->dma.resid) /
++					qp->mtu;
+ 				wqe->iova += npsn * qp->mtu;
++			}
+ 		}
+ 
+ 		wqe->state = wqe_state_posted;
+@@ -435,7 +438,7 @@ static struct sk_buff *init_req_packet(struct rxe_qp *qp,
+ 	if (pkt->mask & RXE_RETH_MASK) {
+ 		reth_set_rkey(pkt, ibwr->wr.rdma.rkey);
+ 		reth_set_va(pkt, wqe->iova);
+-		reth_set_len(pkt, wqe->dma.length);
++		reth_set_len(pkt, wqe->dma.resid);
  	}
-+	rtnl_unlock();
  
- 	for (i = 0; i < I40E_MAX_VEB; i++) {
- 		kfree(pf->veb[i]);
-@@ -12086,7 +12088,13 @@ static void i40e_shutdown(struct pci_dev *pdev)
- 	wr32(hw, I40E_PFPM_WUFC,
- 	     (pf->wol_en ? I40E_PFPM_WUFC_MAG_MASK : 0));
- 
-+	/* Since we're going to destroy queues during the
-+	 * i40e_clear_interrupt_scheme() we should hold the RTNL lock for this
-+	 * whole section
-+	 */
-+	rtnl_lock();
- 	i40e_clear_interrupt_scheme(pf);
-+	rtnl_unlock();
- 
- 	if (system_state == SYSTEM_POWER_OFF) {
- 		pci_wake_from_d3(pdev, pf->wol_en);
+ 	if (pkt->mask & RXE_IMMDT_MASK)
 -- 
 2.20.1
 
