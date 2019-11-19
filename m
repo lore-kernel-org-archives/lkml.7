@@ -2,100 +2,111 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42187C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:26:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC6DCC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:27:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AC29222B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:26:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="T/uoVxbx"
+	by mail.kernel.org (Postfix) with ESMTP id C0CEB222B6
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:27:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728568AbfKSR0A (ORCPT
+        id S1728478AbfKSR14 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 12:26:00 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:36750 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728443AbfKSRZ7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 12:25:59 -0500
-Received: by mail-wr1-f65.google.com with SMTP id r10so24842093wrx.3
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 09:25:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=OMBD2QQQoCU7yP4WQk94AyQxF7iHg8KGVWW/zSQqulg=;
-        b=T/uoVxbxYaOGX9wqZEjZPIu86xOQXEOo+zSrnymeJE1BmxQ/5isXpNgw9KaEwUfy4f
-         aqGEmmCCeQ4tk7QUk0CmJwerFOFZ7PCOlzDjm5WHRqZ9EPuQCNrXQcd7/Zim1qZpRPQ6
-         U2CLL7GQMMk57BFK/eDnq8Wy2pXqSLH+Dv8eg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=OMBD2QQQoCU7yP4WQk94AyQxF7iHg8KGVWW/zSQqulg=;
-        b=JagAbeitFKerGRXu3k0T7fAakRDdxvYt75mH5JBb/qQg9o8coGnNcBClXerUBRe37L
-         xjPAW0+LOmdpGbb6HgL+cP9jn256LwmfftkPVLv3sC6Bqvo0Q0MeixHeEDHCQ2LAuUeF
-         X8ETuxLb6buMMjy5DHc8zRryoV0umIju0X2dpVbfnPMZoLafv3PkfoO8i9waXuxcqEAN
-         R6Qdv1yJEYHoCaJEFobGhK4R5TbGliIiM0Lz4MMNfyWAOp8mpZFo84mOtXcX+1Qknr0v
-         H/zgleW8sNMlyMjYMkgngLgtEOArHklqA5nvonXOJf2ssgtMJgHXQXvpdq/wO7QBiOKu
-         7qmg==
-X-Gm-Message-State: APjAAAUr31QqNHLWO/H+GVJ87Dhs0roKXFYvZfTsoXkAGvSZQXmPpNQ0
-        g44vv9/pO+I/r+vVpmki+OcmNg==
-X-Google-Smtp-Source: APXvYqwRxcjVLzTu9mvOATHREjWzHA6YUWlAbUmR0OMRD1Z4pbe9YbkHAsoujaznD5BMXjTcATrEJg==
-X-Received: by 2002:adf:c786:: with SMTP id l6mr36689212wrg.45.1574184357732;
-        Tue, 19 Nov 2019 09:25:57 -0800 (PST)
-Received: from [10.69.45.46] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id y16sm27846357wro.25.2019.11.19.09.25.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 19 Nov 2019 09:25:57 -0800 (PST)
-Subject: Re: [PATCH] scsi: lpfc: Move work items to a stack list
-To:     Daniel Wagner <dwagner@suse.de>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     Dick Kennedy <dick.kennedy@broadcom.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        James Smart <james.smart@broadcom.com>
-References: <20191105080855.16881-1-dwagner@suse.de>
- <yq1h838pivf.fsf@oracle.com> <20191119132854.mwkxx4fixjaoxv4w@beryllium.lan>
-From:   James Smart <james.smart@broadcom.com>
-Message-ID: <4a1fedc9-03f1-7312-fd50-a041a78c0294@broadcom.com>
-Date:   Tue, 19 Nov 2019 09:25:54 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Tue, 19 Nov 2019 12:27:56 -0500
+Received: from mga14.intel.com ([192.55.52.115]:15490 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728060AbfKSR14 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 12:27:56 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Nov 2019 09:27:55 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,218,1571727600"; 
+   d="scan'208";a="289673313"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga001.jf.intel.com with ESMTP; 19 Nov 2019 09:27:55 -0800
+Date:   Tue, 19 Nov 2019 09:32:31 -0800
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Auger Eric <eric.auger@redhat.com>
+Cc:     iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>, Yi Liu <yi.l.liu@intel.com>,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v2 02/10] iommu/vt-d: Fix CPU and IOMMU SVM feature
+ matching checks
+Message-ID: <20191119093231.65fb3b3f@jacob-builder>
+In-Reply-To: <3634dee5-3f9f-4618-951e-8bb5e4988223@redhat.com>
+References: <1574106153-45867-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1574106153-45867-3-git-send-email-jacob.jun.pan@linux.intel.com>
+        <26d1e79b-3a16-0a8f-895e-e2c41c8d3b28@redhat.com>
+        <20191118134719.6835981b@jacob-builder>
+        <3634dee5-3f9f-4618-951e-8bb5e4988223@redhat.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20191119132854.mwkxx4fixjaoxv4w@beryllium.lan>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 19 Nov 2019 09:02:26 +0100
+Auger Eric <eric.auger@redhat.com> wrote:
 
+> Hi Jacob,
+> 
+> On 11/18/19 10:47 PM, Jacob Pan wrote:
+> > On Mon, 18 Nov 2019 21:33:34 +0100
+> > Auger Eric <eric.auger@redhat.com> wrote:
+> >   
+> >> Hi Jacob,
+> >>
+> >> On 11/18/19 8:42 PM, Jacob Pan wrote:  
+> >>> The current code checks CPU and IOMMU feature set for SVM support
+> >>> but the result is never stored nor used. Therefore, SVM can still
+> >>> be used even when these checks failed.    
+> >> "SVM can still be used even when these checks failed". What were
+> >> the consequences if it happened? Does it fix this cleanly now.  
+> >>>  
+> > The consequence is DMA cannot reach above 48-bit virtual address
+> > range when CPU does 5-level and IOMMU can only do 4-level. With is
+> > fix, svm_bind_mm will fail in the first place to prevent SVM use by
+> > DMA.  
+> OK thank you for the clarification. Maybe this latter can be added in
+> the commit message
+> >
+Yes, will do.   
+>  [...]  
+> >> nit: is it really an error or just a warning?  
+> > I think it is an error in that there is an illegal configuration.
+> > It is mostly for vIOMMU, we expect native HW should have these
+> > features matched.  
+> 
+> OK
+> 
+> Thanks
+> 
+> Eric
+> >   
+>  [...]  
+> >> Besides,
+> >> Reviewed-by: Eric Auger <eric.auger@redhat.com>
+> >>
+> >> Thanks
+> >>
+> >> Eric
+> >>  
+> > 
+> > [Jacob Pan]
+> >   
+> 
 
-On 11/19/2019 5:28 AM, Daniel Wagner wrote:
-> On Tue, Nov 12, 2019 at 10:15:00PM -0500, Martin K. Petersen wrote:
->>> While trying to understand what's going on in the Oops below I figured
->>> that it could be the result of the invalid pointer access. The patch
->>> still needs testing by our customer but indepent of this I think the
->>> patch fixes a real bug.
-> I was able to reproduce the same stack trace with this patch
-> applied... That is obviously bad. The good news, I have access to this
-> machine, so maybe I able to figure out what's the root cause of this
-> crash.
-
-fyi - Dick and I were taking our time reviewing your patch as the major 
-concern we had with it was that the splice and then the re-add of the 
-work-list could have an abort complete before the IO, which could lead 
-to DC.
-
-We'll look anew at your repro.
-
--- james
-
+[Jacob Pan]
