@@ -2,140 +2,154 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 987A9C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 18:37:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92CEFC43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 18:38:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 754E322318
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 18:37:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FF1D223BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 18:38:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="RMXEHvj3"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xUaj7hMn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727435AbfKSShN (ORCPT
+        id S1727436AbfKSSiC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 13:37:13 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:34370 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727399AbfKSShM (ORCPT
+        Tue, 19 Nov 2019 13:38:02 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:44006 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727173AbfKSSiB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 13:37:12 -0500
-Received: by mail-io1-f67.google.com with SMTP id q83so24460691iod.1
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 10:37:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=48NxQ9DqPXE8NNblSh0ekMtCcPv6pfnlvSzVAtj6Tnc=;
-        b=RMXEHvj3EoauWpOTHC9DGe2xoQbch3nIQRppx+5a165AAFr2pXgjUUUcZOaEHUPwVO
-         EbptRRN5y8bbR5Tg/n04tP0tF49AfrZSxvH38R5PT69YyQHS9ID7YHSRFS9g7N8k6cIl
-         mnyyWcmiq7sek6yIXKi7adOO9vcgTB0Aer4/Y=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=48NxQ9DqPXE8NNblSh0ekMtCcPv6pfnlvSzVAtj6Tnc=;
-        b=rY9e32dcEScV++i/VjrM2bRdqqHS9UxqyFobvm+Rt37zJEIqwxNyzJHghmHckGZJP/
-         hNBQIbQQOEUgkCKruuEa8ZjZHfgsbwcKAQfQBHryr6bIhoWtyHMIzHCy1z5ODl1cbELr
-         0PSLWHpdBPlXplSsMDdVybrLXmECioRGl+exJkfBiaZ/fD8nQbIKKKHNhI9qdiUGeZF0
-         KkraSyKcEVYd8Fp/+eEYAfM6CEkJsQk0WPsHfxeLwiOP7/qmdOA24TqGMGHXGqiEVXkb
-         yg9LHzSUcRXzT5VMg9gx0dfOzC+ZAcBevL8eYOladx50uTYR1/0N9Zlm+JKJfNeEe9Cm
-         pdBg==
-X-Gm-Message-State: APjAAAUD19QgZGdlGXei+dieE5aJBMaNG5tHV6mjT8W9F2RbJFWamA6p
-        kIsrtVg0cKiwWlILJKBCMgKQhGdLs0lT4MODsqD88Q==
-X-Google-Smtp-Source: APXvYqwYaIa41MQNB9e1+xoq9LMSDYgTQd8k/iRldb6PKHtKb3zsRsZfVSlY4FuBFaJw+EBwP4jzXXipsmNnY6w6UBQ=
-X-Received: by 2002:a6b:7307:: with SMTP id e7mr3495492ioh.218.1574188630704;
- Tue, 19 Nov 2019 10:37:10 -0800 (PST)
+        Tue, 19 Nov 2019 13:38:01 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAJIbr6Z039222;
+        Tue, 19 Nov 2019 12:37:53 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1574188673;
+        bh=200y+IYezlbg1I7CHIbsZoBP5uAkW4mrYcSZBakSEkA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=xUaj7hMnZ4gydoPBzKyzJX1x7VBnBrpEwwFvuYeXRF1HpccFXeJEEpvlbW3AuWBoQ
+         7ruduYMQfXtKq7jYsxvHSdU2wlGXe1n0FBnOIoner3JZxpHEx80H8kGQ3UVJBqNXeM
+         QCjfZyu2GY3zoMIjhubrfN+6oSavdipD25/p96QI=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAJIbqOZ061176
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 19 Nov 2019 12:37:52 -0600
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 19
+ Nov 2019 12:37:52 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 19 Nov 2019 12:37:52 -0600
+Received: from [10.250.33.226] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAJIbqTW082910;
+        Tue, 19 Nov 2019 12:37:52 -0600
+Subject: Re: [PATCH v2 4/4] dt-bindings: mfd: update TI tps6105x chip bindings
+To:     Sven Van Asbroeck <thesven73@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>
+CC:     Linus Walleij <linus.walleij@linaro.org>,
+        Grigoryev Denis <grigoryev@fastwel.ru>,
+        Axel Lin <axel.lin@ingics.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-leds@vger.kernel.org>
+References: <20191119154611.29625-1-TheSven73@gmail.com>
+ <20191119154611.29625-5-TheSven73@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <a37d098e-12ea-af2e-22cd-cb5ec2856b6d@ti.com>
+Date:   Tue, 19 Nov 2019 12:36:21 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <CAHrpVsUHgJA3wjh4fDg43y5OFCCvQb-HSRpyGyhFEKXcWw8WnQ@mail.gmail.com>
- <CAHrpVsW6jRUYK_mu+dLaBvucAAtUPQ0zcH6_NxsUsTrPewiY_w@mail.gmail.com>
- <20191114095737.wl5nvxu3w6p5thfc@pathway.suse.cz> <20191115043356.GA220831@google.com>
- <CAHrpVsWu54rKg3bGhY6WVj5d-myYxGSEkxGhOJKTyyc1EH4qOA@mail.gmail.com> <20191119113027.74lp3dsg5ftvylp4@pathway.suse.cz>
-In-Reply-To: <20191119113027.74lp3dsg5ftvylp4@pathway.suse.cz>
-From:   Jonathan Richardson <jonathan.richardson@broadcom.com>
-Date:   Tue, 19 Nov 2019 10:36:59 -0800
-Message-ID: <CAHrpVsXvENe_0-iQOsbopmNrqDnqNE72JKTdZ8qhQWi5575qJQ@mail.gmail.com>
-Subject: Re: console output duplicated when registering additional consoles
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        gregkh@linuxfoundation.org, jslaby@suse.com,
-        sergey.senozhatsky@gmail.com, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Scott Branden <scott.branden@broadcom.com>,
-        Ray Jui <ray.jui@broadcom.com>,
-        Srinath Mannam <srinath.mannam@broadcom.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191119154611.29625-5-TheSven73@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 3:30 AM Petr Mladek <pmladek@suse.com> wrote:
->
-> On Mon 2019-11-18 13:38:04, Jonathan Richardson wrote:
-> > On Thu, Nov 14, 2019 at 8:33 PM Sergey Senozhatsky
-> > <sergey.senozhatsky.work@gmail.com> wrote:
-> > >
-> > > Gosh, that part of printk is really complex.
-> > >
-> > > On (19/11/14 10:57), Petr Mladek wrote:
-> > > > For a proper solution we would need to match boot and real
-> > > > consoles that write messages into the physical device.
-> > > > But I am afraid that there is no support for this.
-> > >
-> > > Wouldn't those have same tty driver?
->
-> Interesting idea. Well, do early consoles have tty driver?
->
-> > > ---
-> > >
-> > >  kernel/printk/printk.c | 16 ++++++++++++++++
-> > >  1 file changed, 16 insertions(+)
-> > >
-> > > diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-> > > index f1b08015d3fa..a84cb20acf42 100644
-> > > --- a/kernel/printk/printk.c
-> > > +++ b/kernel/printk/printk.c
-> > > @@ -2690,6 +2690,19 @@ static int __init keep_bootcon_setup(char *str)
-> > >
-> > >  early_param("keep_bootcon", keep_bootcon_setup);
-> > >
-> > > +static bool known_console_driver(struct console *newcon)
-> > > +{
-> > > +       struct console *con;
-> > > +
-> > > +       for_each_console(con) {
-> > > +               if (!(con->flags & CON_ENABLED))
-> > > +                       continue;
-> > > +               if (con->device && con->device == newcon->device)
-> > > +                       return true;
-> > > +       }
-> > > +       return false;
-> > > +}
-> > > +
-> > >  /*
-> > >   * The console driver calls this routine during kernel initialization
-> > >   * to register the console printing procedure with printk() and to
-> > > @@ -2828,6 +2841,9 @@ void register_console(struct console *newcon)
-> > >         if (newcon->flags & CON_EXTENDED)
-> > >                 nr_ext_console_drivers++;
-> > >
-> > > +       if (known_console_driver(newcon))
-> > > +               newcon->flags &= ~CON_PRINTBUFFER;
-> > > +
-> > >         if (newcon->flags & CON_PRINTBUFFER) {
-> > >                 /*
-> > >                  * console_unlock(); will print out the buffered messages
-> >
-> > Thanks.
->
-> Jonathan, have you tried this patch, please?
-> Does it solve your problem?
+Sven
 
-I've tried it and it doesn't solve the problem. newcon is not a known
-console at the time I register my second console. The only thing I can
-do is not replay the log by not setting CON_PRINTBUFFER and I
-shouldn't have to do that after reading Sergey's last response.
+On 11/19/19 9:46 AM, Sven Van Asbroeck wrote:
+> The driver has been extended to optionally get its operational
+> mode, regulator init data and led label from the devicetree.
+>
+> Tree: next-20191118
+> Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+> ---
+>   .../devicetree/bindings/mfd/tps6105x.txt      | 42 ++++++++++++++++++-
+>   1 file changed, 41 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/mfd/tps6105x.txt b/Documentation/devicetree/bindings/mfd/tps6105x.txt
+> index 93602c7a19c8..ab5d4c52074f 100644
+> --- a/Documentation/devicetree/bindings/mfd/tps6105x.txt
+> +++ b/Documentation/devicetree/bindings/mfd/tps6105x.txt
+> @@ -7,11 +7,51 @@ Required properties:
+>   - compatible:		"ti,tps61050" or "ti,tps61052"
+>   - reg:			Specifies the I2C slave address
+>   
+> -Example:
+> +Optional sub-node:
+> +
+> +This subnode selects the chip's operational mode.
+> +There can be at most one single available subnode.
+> +
+> +- regulator: presence of this sub-node puts the chip in regulator mode.
+> +	see Documentation/devicetree/bindings/regulator/regulator.txt
+> +
+> +- led: presence of this sub-node puts the chip in led mode.
+> +	Optional properties:
+> +		- label: see Documentation/devicetree/bindings/leds/common.txt
+> +
+> +Example (GPIO operation only):
+> +
+> +i2c0 {
+> +	tps61052@33 {
+> +		compatible = "ti,tps61052";
+> +		reg = <0x33>;
+> +	};
+> +};
+> +
+> +Example (GPIO + regulator operation):
+>   
+>   i2c0 {
+>   	tps61052@33 {
+>   		compatible = "ti,tps61052";
+>   		reg = <0x33>;
+> +
+> +		regulator {
+> +			regulator-min-microvolt = <5000000>;
+> +			regulator-max-microvolt = <5000000>;
+> +			regulator-always-on;
+> +		};
+> +	};
+> +};
+> +
+> +Example (GPIO + led operation):
+What part of the example is GPIO? Is that the default function?
+> +
+> +i2c0 {
+> +	tps61052@33 {
+> +		compatible = "ti,tps61052";
+> +		reg = <0x33>;
+> +
+> +		led {
+> +			label = "tps-torch";
+
+function and color examples?
+
+
+> +		};
+>   	};
+>   };
