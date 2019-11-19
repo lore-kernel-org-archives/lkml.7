@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF5EFC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:49:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBF94C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:49:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C469920721
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:49:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88EA620721
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:49:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142544;
-	bh=fTe/6jv6vp2P2ZrGxFtNky6NeEAfIueFoy7sJP/UR2c=;
+	s=default; t=1574142548;
+	bh=nrwlX0+o3IBQvyjj/20EPhRXPTRgqzdCYKUR/stkalw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lR/eSgzG77ACblBmaOFiRzqTvOFOz8k+oBPIdZdSmZi27vmikriJxagGAdrpgNbiF
-	 3tdnOC5NNVaga2j/yQql+MQTF3M7dlBqKFROYxdvyP+SxLUHtuWyM/C6e8IkBtW6ct
-	 RgHCtUhJIa8ZDcfHOxIsOvn/vzDuj3zKl7MyWBww=
+	b=EZSMqO4ivJ8nFSZqdMjoygeKq0cfaVrhXYbHQEpxgDMLFjdoCuR6UD3PGEl4rIb4I
+	 c19VT60rDmUsasQpbqR+WtDGwUAwu4kP87BjSttOuidQlivo0i05dy28gyvqKYRK3p
+	 rzwdna9dggHXz4lQ8fRv0T5rGv6JKYkjka5ybGnE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731436AbfKSFtD (ORCPT
+        id S1728849AbfKSFtH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:49:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45576 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:49:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731424AbfKSFs6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:48:58 -0500
+        id S1731012AbfKSFtE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:49:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CAD320862;
-        Tue, 19 Nov 2019 05:48:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 668B120721;
+        Tue, 19 Nov 2019 05:49:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142538;
-        bh=fTe/6jv6vp2P2ZrGxFtNky6NeEAfIueFoy7sJP/UR2c=;
+        s=default; t=1574142543;
+        bh=nrwlX0+o3IBQvyjj/20EPhRXPTRgqzdCYKUR/stkalw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UMRCAfJbeR52VIJi9GXGRhulBK0q/D5p6NiR7p6Qf6BjfjaqEpzssxbq28YHEZ+Cp
-         W25hIjUIlqeIm0v/0oli0lhI2ybsS4kZvECZt4RzFzULnl9t9C7qj50kgLBNcEYp/8
-         5RJtYeEUmBW2RixX6yP8WIX0tscWNfI2UaAmrQQM=
+        b=eHsgPknTN0XLQ1NyaHfkDKHjoUbhUKiUbmE1+nVy9PzALh5dE77x41Nv/s/iBNhaP
+         iS0piYSWv9+xv9vz1mrcgZAla4cWrvvSiWB7x/x/GOe3R0sRk2CWPoKudTc9ADM7Er
+         Yjd7LMnidk69lSeihNsh7PITpMIXUON1JturenwM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Niklas Cassel <niklas.cassel@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <andy.gross@linaro.org>,
+        stable@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        Dinh Nguyen <dinguyen@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 114/239] soc: qcom: wcnss_ctrl: Avoid string overflow
-Date:   Tue, 19 Nov 2019 06:18:34 +0100
-Message-Id: <20191119051328.514908397@linuxfoundation.org>
+Subject: [PATCH 4.14 116/239] ARM: dts: socfpga: Fix I2C bus unit-address error
+Date:   Tue, 19 Nov 2019 06:18:36 +0100
+Message-Id: <20191119051329.015669223@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -61,40 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Niklas Cassel <niklas.cassel@linaro.org>
+From: Dinh Nguyen <dinguyen@kernel.org>
 
-[ Upstream commit 4c96ed170d658d8826d94edec8ac93ee777981a2 ]
+[ Upstream commit cbbc488ed85061a765cf370c3e41f383c1e0add6 ]
 
-'chinfo.name' is used as a NUL-terminated string, but using strncpy() with
-the length equal to the buffer size may result in lack of the termination:
+dtc has new checks for I2C buses. Fix the warnings in unit-addresses.
 
-drivers//soc/qcom/wcnss_ctrl.c: In function 'qcom_wcnss_open_channel':
-drivers//soc/qcom/wcnss_ctrl.c:284:2: warning: 'strncpy' specified bound 32 equals destination size [-Wstringop-truncation]
-  strncpy(chinfo.name, name, sizeof(chinfo.name));
-  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dtb: Warning (i2c_bus_reg): /soc/i2c@ffc04000/adxl345@0: I2C bus unit address format error, expected "53"
 
-This changes it to use the safer strscpy() instead.
-
-Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Andy Gross <andy.gross@linaro.org>
+Signed-off-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/qcom/wcnss_ctrl.c | 2 +-
+ arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/soc/qcom/wcnss_ctrl.c b/drivers/soc/qcom/wcnss_ctrl.c
-index df3ccb30bc2dd..373400dd816d6 100644
---- a/drivers/soc/qcom/wcnss_ctrl.c
-+++ b/drivers/soc/qcom/wcnss_ctrl.c
-@@ -281,7 +281,7 @@ struct rpmsg_endpoint *qcom_wcnss_open_channel(void *wcnss, const char *name, rp
- 	struct rpmsg_channel_info chinfo;
- 	struct wcnss_ctrl *_wcnss = wcnss;
+diff --git a/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts b/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
+index b280e64941938..31b01a998b2ed 100644
+--- a/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
++++ b/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
+@@ -88,7 +88,7 @@
+ 	status = "okay";
+ 	clock-frequency = <100000>;
  
--	strncpy(chinfo.name, name, sizeof(chinfo.name));
-+	strscpy(chinfo.name, name, sizeof(chinfo.name));
- 	chinfo.src = RPMSG_ADDR_ANY;
- 	chinfo.dst = RPMSG_ADDR_ANY;
+-	adxl345: adxl345@0 {
++	adxl345: adxl345@53 {
+ 		compatible = "adi,adxl345";
+ 		reg = <0x53>;
  
 -- 
 2.20.1
