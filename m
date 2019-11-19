@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FCBAC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:33:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A6AEC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:33:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5403C208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:33:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C3B3222DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:33:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141609;
-	bh=fzxvrBp3LsbCgd4FvX0URPQl8gN42nJGUeUp4p/M1dU=;
+	s=default; t=1574141614;
+	bh=0vx65RjpRJZQ4ULHxxgE65D1vts6kuf75w99/xFy9+8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bVWQkZ4772zF3NPQgD4DSjbnDmDi+sBGLazxPYw48Fry3dMJE4jVP2xXwD5BXnv7o
-	 NxoFZb+eGi4yL/bOSCPtGPSKq3b3DiBWUU/jH7hRiDkO4H2uQBt7pb7NBJ1T/2LGH1
-	 5XtwKNVga58YtHzuh2WLC2ncOFYGkmyTUbNwzqa0=
+	b=HY3WngG/j7qxy9gbaFW3GR4/8tTk97PHWTe+6SjXz14qJ3YHQj6en0hN2Oc4LPBLr
+	 imicYtwWknV7u/jQByb6pawzzPLyfCmCVt+LvPnXAiIQ2CUTglJLmUOs03XB1C7A3f
+	 W4O+ZsbO4uZELR20YCAJFbh5cHKhvkxyJiELk9yc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727677AbfKSFd2 (ORCPT
+        id S1729550AbfKSFdc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:33:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53878 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:33:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729023AbfKSFdV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:33:21 -0500
+        id S1729534AbfKSFd1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:33:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A1E4222DF;
-        Tue, 19 Nov 2019 05:33:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4715C21783;
+        Tue, 19 Nov 2019 05:33:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141600;
-        bh=fzxvrBp3LsbCgd4FvX0URPQl8gN42nJGUeUp4p/M1dU=;
+        s=default; t=1574141606;
+        bh=0vx65RjpRJZQ4ULHxxgE65D1vts6kuf75w99/xFy9+8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uHMMCWgYrrZH7l5PBeYETf6w9v/cLKBBF/ORcW+tAgaX6Y1JuDNuzlTKt7mpfo5hi
-         ibo+SM/zWS2azeZGvD6hi7TBy4K87ewv6ubTqov5ioftiSAlw1/W7hzC7aVsrjTvue
-         xu/AxioQwpZ7jUAXhYMQ//E8QGXTPcDH/y18KWQM=
+        b=L96mwMtaV1I6C3NBuvCXBKL4U/cGoUHAS4HhSk2Q3KpU5MYuo5LL3Ibx4eC+Hr8W7
+         R6AMzoiIt0odpLMveqFyefj9dIbkEXH339Z4IvWTz9DdAkgroadYhOUH042TbG0jm5
+         +JZnVamXB2MWij951hK9l56HxnQ8g2FfIAIU6PGs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        =?UTF-8?q?Arve=20Hj=C3=B8nnev=C3=A5g?= <arve@android.com>,
+        Sherry Yang <sherryy@android.com>,
+        Martijn Coenen <maco@android.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 215/422] pinctrl: at91: dont use the same irqchip with multiple gpiochips
-Date:   Tue, 19 Nov 2019 06:16:52 +0100
-Message-Id: <20191119051412.537446950@linuxfoundation.org>
+Subject: [PATCH 4.19 217/422] android: binder: no outgoing transaction when thread todo has transaction
+Date:   Tue, 19 Nov 2019 06:16:54 +0100
+Message-Id: <20191119051412.676992843@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -61,86 +62,137 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ludovic Desroches <ludovic.desroches@microchip.com>
+From: Sherry Yang <sherryy@android.com>
 
-[ Upstream commit 0c3dfa176912b5f87732545598200fb55e9c1978 ]
+[ Upstream commit 44b73962cb25f1c8170ea695c4564b05a75e1fd4 ]
 
-Sharing the same irqchip with multiple gpiochips is not a good
-practice. For instance, when installing hooks, we change the state
-of the irqchip. The initial state of the irqchip for the second
-gpiochip to register is then disrupted.
+When a process dies, failed reply is sent to the sender of any transaction
+queued on a dead thread's todo list. The sender asserts that the
+received failed reply corresponds to the head of the transaction stack.
+This assert can fail if the dead thread is allowed to send outgoing
+transactions when there is already a transaction on its todo list,
+because this new transaction can end up on the transaction stack of the
+original sender. The following steps illustrate how this assertion can
+fail.
 
-Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+1. Thread1 sends txn19 to Thread2
+   (T1->transaction_stack=txn19, T2->todo+=txn19)
+2. Without processing todo list, Thread2 sends txn20 to Thread1
+   (T1->todo+=txn20, T2->transaction_stack=txn20)
+3. T1 processes txn20 on its todo list
+   (T1->transaction_stack=txn20->txn19, T1->todo=<empty>)
+4. T2 dies, T2->todo cleanup attempts to send failed reply for txn19, but
+   T1->transaction_stack points to txn20 -- assertion failes
+
+Step 2. is the incorrect behavior. When there is a transaction on a
+thread's todo list, this thread should not be able to send any outgoing
+synchronous transactions. Only the head of the todo list needs to be
+checked because only threads that are waiting for proc work can directly
+receive work from another thread, and no work is allowed to be queued
+on such a thread without waking up the thread. This patch also enforces
+that a thread is not waiting for proc work when a work is directly
+enqueued to its todo list.
+
+Acked-by: Arve Hjønnevåg <arve@android.com>
+Signed-off-by: Sherry Yang <sherryy@android.com>
+Reviewed-by: Martijn Coenen <maco@android.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/pinctrl-at91.c | 28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+ drivers/android/binder.c | 44 +++++++++++++++++++++++++++++-----------
+ 1 file changed, 32 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
-index 50f0ec42c6372..fad0e132ead84 100644
---- a/drivers/pinctrl/pinctrl-at91.c
-+++ b/drivers/pinctrl/pinctrl-at91.c
-@@ -1574,16 +1574,6 @@ void at91_pinctrl_gpio_resume(void)
- #define gpio_irq_set_wake	NULL
- #endif /* CONFIG_PM */
- 
--static struct irq_chip gpio_irqchip = {
--	.name		= "GPIO",
--	.irq_ack	= gpio_irq_ack,
--	.irq_disable	= gpio_irq_mask,
--	.irq_mask	= gpio_irq_mask,
--	.irq_unmask	= gpio_irq_unmask,
--	/* .irq_set_type is set dynamically */
--	.irq_set_wake	= gpio_irq_set_wake,
--};
--
- static void gpio_irq_handler(struct irq_desc *desc)
+diff --git a/drivers/android/binder.c b/drivers/android/binder.c
+index 6e04e7a707a12..cf4367135a00b 100644
+--- a/drivers/android/binder.c
++++ b/drivers/android/binder.c
+@@ -822,6 +822,7 @@ static void
+ binder_enqueue_deferred_thread_work_ilocked(struct binder_thread *thread,
+ 					    struct binder_work *work)
  {
- 	struct irq_chip *chip = irq_desc_get_chip(desc);
-@@ -1624,12 +1614,22 @@ static int at91_gpio_of_irq_setup(struct platform_device *pdev,
- 	struct gpio_chip	*gpiochip_prev = NULL;
- 	struct at91_gpio_chip   *prev = NULL;
- 	struct irq_data		*d = irq_get_irq_data(at91_gpio->pioc_virq);
-+	struct irq_chip		*gpio_irqchip;
- 	int ret, i;
++	WARN_ON(!list_empty(&thread->waiting_thread_node));
+ 	binder_enqueue_work_ilocked(work, &thread->todo);
+ }
  
-+	gpio_irqchip = devm_kzalloc(&pdev->dev, sizeof(*gpio_irqchip), GFP_KERNEL);
-+	if (!gpio_irqchip)
-+		return -ENOMEM;
+@@ -839,6 +840,7 @@ static void
+ binder_enqueue_thread_work_ilocked(struct binder_thread *thread,
+ 				   struct binder_work *work)
+ {
++	WARN_ON(!list_empty(&thread->waiting_thread_node));
+ 	binder_enqueue_work_ilocked(work, &thread->todo);
+ 	thread->process_todo = true;
+ }
+@@ -1270,19 +1272,12 @@ static int binder_inc_node_nilocked(struct binder_node *node, int strong,
+ 		} else
+ 			node->local_strong_refs++;
+ 		if (!node->has_strong_ref && target_list) {
++			struct binder_thread *thread = container_of(target_list,
++						    struct binder_thread, todo);
+ 			binder_dequeue_work_ilocked(&node->work);
+-			/*
+-			 * Note: this function is the only place where we queue
+-			 * directly to a thread->todo without using the
+-			 * corresponding binder_enqueue_thread_work() helper
+-			 * functions; in this case it's ok to not set the
+-			 * process_todo flag, since we know this node work will
+-			 * always be followed by other work that starts queue
+-			 * processing: in case of synchronous transactions, a
+-			 * BR_REPLY or BR_ERROR; in case of oneway
+-			 * transactions, a BR_TRANSACTION_COMPLETE.
+-			 */
+-			binder_enqueue_work_ilocked(&node->work, target_list);
++			BUG_ON(&thread->todo != target_list);
++			binder_enqueue_deferred_thread_work_ilocked(thread,
++								   &node->work);
+ 		}
+ 	} else {
+ 		if (!internal)
+@@ -2733,6 +2728,7 @@ static void binder_transaction(struct binder_proc *proc,
+ {
+ 	int ret;
+ 	struct binder_transaction *t;
++	struct binder_work *w;
+ 	struct binder_work *tcomplete;
+ 	binder_size_t *offp, *off_end, *off_start;
+ 	binder_size_t off_min;
+@@ -2874,6 +2870,29 @@ static void binder_transaction(struct binder_proc *proc,
+ 			goto err_invalid_target_handle;
+ 		}
+ 		binder_inner_proc_lock(proc);
 +
- 	at91_gpio->pioc_hwirq = irqd_to_hwirq(d);
++		w = list_first_entry_or_null(&thread->todo,
++					     struct binder_work, entry);
++		if (!(tr->flags & TF_ONE_WAY) && w &&
++		    w->type == BINDER_WORK_TRANSACTION) {
++			/*
++			 * Do not allow new outgoing transaction from a
++			 * thread that has a transaction at the head of
++			 * its todo list. Only need to check the head
++			 * because binder_select_thread_ilocked picks a
++			 * thread from proc->waiting_threads to enqueue
++			 * the transaction, and nothing is queued to the
++			 * todo list while the thread is on waiting_threads.
++			 */
++			binder_user_error("%d:%d new transaction not allowed when there is a transaction on thread todo\n",
++					  proc->pid, thread->pid);
++			binder_inner_proc_unlock(proc);
++			return_error = BR_FAILED_REPLY;
++			return_error_param = -EPROTO;
++			return_error_line = __LINE__;
++			goto err_bad_todo_list;
++		}
++
+ 		if (!(tr->flags & TF_ONE_WAY) && thread->transaction_stack) {
+ 			struct binder_transaction *tmp;
  
--	/* Setup proper .irq_set_type function */
--	gpio_irqchip.irq_set_type = at91_gpio->ops->irq_type;
-+	gpio_irqchip->name = "GPIO";
-+	gpio_irqchip->irq_ack = gpio_irq_ack;
-+	gpio_irqchip->irq_disable = gpio_irq_mask;
-+	gpio_irqchip->irq_mask = gpio_irq_mask;
-+	gpio_irqchip->irq_unmask = gpio_irq_unmask;
-+	gpio_irqchip->irq_set_wake = gpio_irq_set_wake,
-+	gpio_irqchip->irq_set_type = at91_gpio->ops->irq_type;
- 
- 	/* Disable irqs of this PIO controller */
- 	writel_relaxed(~0, at91_gpio->regbase + PIO_IDR);
-@@ -1640,7 +1640,7 @@ static int at91_gpio_of_irq_setup(struct platform_device *pdev,
- 	 * interrupt.
- 	 */
- 	ret = gpiochip_irqchip_add(&at91_gpio->chip,
--				   &gpio_irqchip,
-+				   gpio_irqchip,
- 				   0,
- 				   handle_edge_irq,
- 				   IRQ_TYPE_NONE);
-@@ -1658,7 +1658,7 @@ static int at91_gpio_of_irq_setup(struct platform_device *pdev,
- 	if (!gpiochip_prev) {
- 		/* Then register the chain on the parent IRQ */
- 		gpiochip_set_chained_irqchip(&at91_gpio->chip,
--					     &gpio_irqchip,
-+					     gpio_irqchip,
- 					     at91_gpio->pioc_virq,
- 					     gpio_irq_handler);
- 		return 0;
+@@ -3256,6 +3275,7 @@ err_alloc_tcomplete_failed:
+ 	kfree(t);
+ 	binder_stats_deleted(BINDER_STAT_TRANSACTION);
+ err_alloc_t_failed:
++err_bad_todo_list:
+ err_bad_call_stack:
+ err_empty_call_stack:
+ err_dead_binder:
 -- 
 2.20.1
 
