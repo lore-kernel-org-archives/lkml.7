@@ -2,87 +2,91 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 446CEC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 23:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 725F1C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 23:03:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14F822245B
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 23:01:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 466A72245B
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 23:03:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727262AbfKSXBa (ORCPT
+        id S1727436AbfKSXDD convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 18:01:30 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:54881 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726025AbfKSXBa (ORCPT
+        Tue, 19 Nov 2019 18:03:03 -0500
+Received: from coyote.holtmann.net ([212.227.132.17]:45762 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727329AbfKSXDD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 18:01:30 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iXCUo-0005ZH-PJ; Wed, 20 Nov 2019 00:01:18 +0100
-Date:   Wed, 20 Nov 2019 00:01:17 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Qais Yousef <qais.yousef@arm.com>
-cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Steve Capper <steve.capper@arm.com>,
-        Richard Fontana <rfontana@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Jiri Kosina <jkosina@suse.cz>,
-        Pavankumar Kondeti <pkondeti@codeaurora.org>,
-        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 01/12] arm64: hibernate.c: create a new function to handle
- cpu_up(sleep_cpu)
-In-Reply-To: <20191119225100.gqiiiwoyt3yntdoj@e107158-lin.cambridge.arm.com>
-Message-ID: <alpine.DEB.2.21.1911192359530.6731@nanos.tec.linutronix.de>
-References: <20191030153837.18107-1-qais.yousef@arm.com> <20191030153837.18107-2-qais.yousef@arm.com> <alpine.DEB.2.21.1911192326120.6731@nanos.tec.linutronix.de> <20191119225100.gqiiiwoyt3yntdoj@e107158-lin.cambridge.arm.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Tue, 19 Nov 2019 18:03:03 -0500
+Received: from marcel-macbook.fritz.box (p4FF9F0D1.dip0.t-ipconnect.de [79.249.240.209])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 816E8CECFA;
+        Wed, 20 Nov 2019 00:12:07 +0100 (CET)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3601.0.10\))
+Subject: Re: general protection fault in kernfs_add_one
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <CAHk-=wjg0JXgwb6rkFK0q_JvW7YdGpiPtMVWe=YhFK1y_2-F7Q@mail.gmail.com>
+Date:   Wed, 20 Nov 2019 00:03:00 +0100
+Cc:     syzbot <syzbot+db1637662f412ac0d556@syzkaller.appspotmail.com>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rafael Wysocki <rafael@kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Tejun Heo <tj@kernel.org>,
+        linux-bluetooth <linux-bluetooth@vger.kernel.org>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <E16EEFD7-7EF3-4152-B406-30997EED8B86@holtmann.org>
+References: <000000000000bf6bd30575fec528@google.com>
+ <000000000000e2ac670597ad2663@google.com>
+ <CAHk-=wjg0JXgwb6rkFK0q_JvW7YdGpiPtMVWe=YhFK1y_2-F7Q@mail.gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+X-Mailer: Apple Mail (2.3601.0.10)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 19 Nov 2019, Qais Yousef wrote:
-> On 11/19/19 23:31, Thomas Gleixner wrote:
-> > On Wed, 30 Oct 2019, Qais Yousef wrote:
-> > >  
-> > > +int hibernation_bringup_sleep_cpu(unsigned int sleep_cpu)
-> > 
-> > That function name is horrible. Aside of that I really have to ask how you
-> > end up hibernating on an offline CPU?
-> 
-> James Morse can probably explain better.
-> 
-> But AFAIU we could sleep on any CPU, but on the next cold boot that CPU could
-> become offline as a side effect of using maxcpus= for example.
-> 
-> How about bringup_hibernate_cpu() as a name? I could add the above as an
-> explanation of why we need this call too.
-> 
-> It does seem to me that this is a generic problem that we might be able to
-> handle generically, but I'm not sure how.
+Hi Linus,
 
-Don't know about other architectures, but x86 does not have that issue as
-we force hibernation on CPU0 for historical reasons (Broken BIOSes etc.).
+> So looking at the decode, as usual the noise generated by KASAN isn't
+> being very helpful, but it does look like at least one of the reports
+> (I picked 5.2 because I don't care about 4.19 etc) is because
+> 'kernfs_root(kn) is NULL in kernfs_add_one().
+> 
+> Looking at the reports, every single one seems to have a call chain
+> that comes from vhci_write() -> vhci_get_user() ->
+> vhci_create_device() -> __vhci_create_device() -> hci_register_dev()
+> -> device_add() -> kobject_add().
+> 
+> (In this case, "every single one" is by looking at the last 10 reports
+> sorted by date, it wasn't exhaustive).
+> 
+> The way it got into 'write()' can be a bit varied (splice, write, whatever).
+> 
+> That makes me think it's bluetooth that is the problem, but it might
+> be an effect of how syzbot groups the reports too, of course.
+> 
+> Might the device have been added at the same time that the last
+> previous device was removed, so that the parent was deleted as the new
+> device was aded? I dunno. The repro seem to be a repeated "open
+> /dev/vhci, write two random bytes to it"
+> 
+> Or might it be some "it happens after you've added enough devices that
+> something overflows" issue?
 
-Thanks,
+long time ago there used to be an issue with quick device remove / device add operations, but that was fixed. I am just too fuzzy on the details since it has been a while.
 
-	tglx
+We also haven’t touched our sysfs integration in a while and Bluetooth support is so old that this might have been bit-rotting.
+
+I need to run the re-producer myself and see if something stands out that I can spot.
+
+Regards
+
+Marcel
+
