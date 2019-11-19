@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC183C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:09:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0DC3C33CA1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:09:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B607521850
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:09:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87E6021850
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:09:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574143784;
-	bh=1lS/UyAtBNQsiqwWb7YJnxOKYosA1o14gN2Xh6864as=;
+	s=default; t=1574143789;
+	bh=j6XVAzC0ieNUfh1cyp9AOv/YHbTteimGWOdKlSY9CQw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WC48ioq37NdDC89BzilpTf2BooCGH5reufi4hqsFD+BY+Kus/0yWbljFmDCOIMct2
-	 8ElWzBn0AMh28wigqcCW7ApmZIEQIIz/hbasO/tNxNL/UNyiY8asyJJ3FdaBLis3xw
-	 Q4fEDW6TCEk8ctJHA95CCeOG2HYZsBcqNE3UVjP0=
+	b=o7t9/qElPOGyiPIt2YarsesMutcrTX3kg95TXcNI7A+ybRY/rP+ezXJ3dEPem3CuF
+	 5oCgDeWrCsqxX6rGZlIYrXfpW6CoCvIvWrdQOlgP/NGNXdhQO0CB4yrmGwVUAnQOl7
+	 XDnJohopr3q7ostZjUo8Nv6KDDbGtt7EOGfqJpvM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728857AbfKSF2M (ORCPT
+        id S1728819AbfKSF1w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:28:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46590 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:27:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727059AbfKSF2K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:28:10 -0500
+        id S1727826AbfKSF1u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:27:50 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1401921783;
-        Tue, 19 Nov 2019 05:28:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE2A021939;
+        Tue, 19 Nov 2019 05:27:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141289;
-        bh=1lS/UyAtBNQsiqwWb7YJnxOKYosA1o14gN2Xh6864as=;
+        s=default; t=1574141269;
+        bh=j6XVAzC0ieNUfh1cyp9AOv/YHbTteimGWOdKlSY9CQw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ktmIkyNXp+AYhj5kWTwssigMIaDkSnhm5jRK0VRqdpStrxwWiR1qylSEqAIGNSU2h
-         EcYLgORCQJIXOiq4V8uRik41ImiV0GfQd4a7At6BDi6iAB4lhVmj5futipMqlTqK5/
-         ++xEJ2NOmDlWFesU8+ES5dIbZzSS5TKIXMS8TCUc=
+        b=UhBRuHLLwZTxeKyYpatrlrhWbEbZ32npFmooHZYOhL4j9sqcN6O1FmsUviTfh8Tws
+         RalUcUwXYsOd7LcL+0DVevH+DQg2TaSlet+MUIhTUcLUM0A57meWNfiLiKvtZYIPfl
+         bDiUFz4YxkXvX+xm2+z8Vo5p7TJu5/tmzCnqmc00=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
+        stable@vger.kernel.org, Jian Shen <shenjian15@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
+        Salil Mehta <salil.mehta@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 111/422] ARM: dts: meson8b: fix the clock controller register size
-Date:   Tue, 19 Nov 2019 06:15:08 +0100
-Message-Id: <20191119051406.316279717@linuxfoundation.org>
+Subject: [PATCH 4.19 104/422] net: hns3: Fix error of checking used vlan id
+Date:   Tue, 19 Nov 2019 06:15:01 +0100
+Message-Id: <20191119051405.938621122@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -62,42 +62,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+From: Jian Shen <shenjian15@huawei.com>
 
-[ Upstream commit f31094fe8c16fbd2ca47921acf93b744b045aace ]
+[ Upstream commit 54e97d117bafa161b08c6ade243a335d92890d94 ]
 
-The clock controller registers are not 0x460 wide because the reset
-controller starts at CBUS 0x4404. This currently overlaps with the
-clock controller (which is at CBUS 0x4000).
+PF uses hdev->vlan_table to manage the port vlan table. In function
+hclge_set_vlan_filter_hw(), it checks whether a vlan id has been used,
+by foreach all the vport bits. It should use macro HCLGE_VPORT_NUM,
+not VLAN_N_VID as the foreach condition.
 
-There is no public documentation available on the actual size of the
-clock controller's register area (also called "HHI"). However, in
-Amlogic's GPL kernel sources the last "HHI" register is
-HHI_HDMI_PHY_CNTL2 at CBUS + 0x43a8. 0x400 was chosen because that size
-doesn't seem unlikely.
-
-Fixes: 4a69fcd3a10803 ("ARM: meson: Add DTS for Odroid-C1 and Tronfy MXQ boards")
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+Fixes: 6c251711b37f ("net: hns3: Disable vf vlan filter when vf vlan table is full")
+Signed-off-by: Jian Shen <shenjian15@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: Salil Mehta <salil.mehta@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/meson8b.dtsi | 2 +-
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
-index 5b3e5c50c72f7..4293047a4b76b 100644
---- a/arch/arm/boot/dts/meson8b.dtsi
-+++ b/arch/arm/boot/dts/meson8b.dtsi
-@@ -163,7 +163,7 @@
- 		#clock-cells = <1>;
- 		#reset-cells = <1>;
- 		compatible = "amlogic,meson8b-clkc";
--		reg = <0x8000 0x4>, <0x4000 0x460>;
-+		reg = <0x8000 0x4>, <0x4000 0x400>;
- 	};
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index 44d0cb3f73a44..0e7c92f624e91 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -4784,7 +4784,7 @@ static int hclge_set_vlan_filter_hw(struct hclge_dev *hdev, __be16 proto,
+ 		return -EINVAL;
+ 	}
  
- 	reset: reset-controller@4404 {
+-	for_each_set_bit(vport_idx, hdev->vlan_table[vlan_id], VLAN_N_VID)
++	for_each_set_bit(vport_idx, hdev->vlan_table[vlan_id], HCLGE_VPORT_NUM)
+ 		vport_num++;
+ 
+ 	if ((is_kill && vport_num == 0) || (!is_kill && vport_num == 1))
 -- 
 2.20.1
 
