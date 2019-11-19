@@ -5,131 +5,138 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A740C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 07:14:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F5F3C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 07:14:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49C2220872
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 07:14:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C50C222DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 07:14:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="SAZqnBIh"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="shQmnGNi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727841AbfKSHOs (ORCPT
+        id S1727867AbfKSHOu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 02:14:48 -0500
-Received: from mailout4.samsung.com ([203.254.224.34]:35517 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727343AbfKSHOL (ORCPT
+        Tue, 19 Nov 2019 02:14:50 -0500
+Received: from mailout3.samsung.com ([203.254.224.33]:49637 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727363AbfKSHOL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 19 Nov 2019 02:14:11 -0500
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20191119071407epoutp04f4037775d1d4875909e1bf78ae5af1c6~YfvIVLA241949319493epoutp04F
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 07:14:07 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20191119071407epoutp04f4037775d1d4875909e1bf78ae5af1c6~YfvIVLA241949319493epoutp04F
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191119071408epoutp03673c8dee43af9cf60787f67c69f7ac73~YfvIY7BMR2843828438epoutp03B
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 07:14:08 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191119071408epoutp03673c8dee43af9cf60787f67c69f7ac73~YfvIY7BMR2843828438epoutp03B
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
         s=mail20170921; t=1574147648;
-        bh=moFSjqom8tMKVgnAIE+bliJo2nyGZ77U3BbjnQGWtEE=;
+        bh=cMpYo+3xAlzGcb/z0sUvvooDr48c4npcG1qhTtMBMh8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SAZqnBIhNh7K3LceeHn8uobPMA+4GMsC4zAgtlnqWrksIgWsViDX/XiDUIWN4CS1P
-         PgmUBVaSnDgnhNLvtNLR17X8nQEySZ5cOnEaDAkVGp/Y8JGrEisML3jtKHktC3NdxS
-         NXer8a2uZEyGsLVHgCLsqzoi+ziEZCqE5flmpU54=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20191119071407epcas1p2e1051e841f2846887fb7ec1d583ed056~YfvIAoxfE1345313453epcas1p2D;
+        b=shQmnGNiHdzMV5R1wFVTOCeygNdl33PMPz8KUwdBNnP1H8EoRRITz4qORCNh63N9q
+         eKDWZ0+tWkjHTYE84Cjd8LQvoAXncN8vc+5kWA8+v0R/266m/gkYKMMsKMk7ZxNywN
+         Zg144TrxBK9qD1BZ7N4HnU0TlWHPXtsWtD3DElBQ=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+        20191119071407epcas1p430f22ba9b297930eacfe7bad467a67cb~YfvH-HOR90775207752epcas1p4h;
         Tue, 19 Nov 2019 07:14:07 +0000 (GMT)
-Received: from epsmges1p1.samsung.com (unknown [182.195.40.164]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 47HHB64SWjzMqYm1; Tue, 19 Nov
+Received: from epsmges1p3.samsung.com (unknown [182.195.40.161]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 47HHB6459CzMqYkW; Tue, 19 Nov
         2019 07:14:06 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        7F.6B.04072.D3693DD5; Tue, 19 Nov 2019 16:14:05 +0900 (KST)
+Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
+        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        EF.3F.04080.E3693DD5; Tue, 19 Nov 2019 16:14:06 +0900 (KST)
 Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20191119071405epcas1p29e1af8242cce221c45eb529921028e48~YfvFyNF8c1345313453epcas1p28;
-        Tue, 19 Nov 2019 07:14:05 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
+        20191119071406epcas1p34788f32abd876190f2b0a5c2ba39e4b1~YfvGvYVyz2635426354epcas1p3z;
+        Tue, 19 Nov 2019 07:14:06 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
         epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20191119071405epsmtrp15d7e934aede522fa7359bee17b85e6fc~YfvFu3eGc3109231092epsmtrp17;
-        Tue, 19 Nov 2019 07:14:05 +0000 (GMT)
-X-AuditID: b6c32a35-9bdff70000000fe8-a2-5dd3963ddb5d
+        20191119071406epsmtrp1572392cc270817e68b679085b6fa55b1~YfvGuvkJB3109131091epsmtrp1D;
+        Tue, 19 Nov 2019 07:14:06 +0000 (GMT)
+X-AuditID: b6c32a37-c29d39c000000ff0-43-5dd3963ee751
 Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        AB.84.03814.C3693DD5; Tue, 19 Nov 2019 16:14:05 +0900 (KST)
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        4C.14.03654.E3693DD5; Tue, 19 Nov 2019 16:14:06 +0900 (KST)
 Received: from localhost.localdomain (unknown [10.88.103.87]) by
         epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20191119071404epsmtip121d635b38fbd09398eaf56d236c30020~YfvFfhz3g1281112811epsmtip1b;
-        Tue, 19 Nov 2019 07:14:04 +0000 (GMT)
+        20191119071405epsmtip12cec80fb64360259dde18b8fdf31cca3~YfvGfbXOD1281112811epsmtip1d;
+        Tue, 19 Nov 2019 07:14:05 +0000 (GMT)
 From:   Namjae Jeon <namjae.jeon@samsung.com>
 To:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
 Cc:     gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
         linkinjeon@gmail.com, Markus.Elfring@web.de,
         sj1557.seo@samsung.com, Namjae Jeon <namjae.jeon@samsung.com>
-Subject: [PATCH v2 06/13] exfat: add exfat entry operations
-Date:   Tue, 19 Nov 2019 02:11:00 -0500
-Message-Id: <20191119071107.1947-7-namjae.jeon@samsung.com>
+Subject: [PATCH v2 08/13] exfat: add exfat cache
+Date:   Tue, 19 Nov 2019 02:11:02 -0500
+Message-Id: <20191119071107.1947-9-namjae.jeon@samsung.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191119071107.1947-1-namjae.jeon@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrFKsWRmVeSWpSXmKPExsWy7bCmga7dtMuxBseOqFg0L17PZrFy9VEm
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrDKsWRmVeSWpSXmKPExsWy7bCmnq7dtMuxBhOuKFo0L17PZrFy9VEm
         i+t3bzFb7Nl7ksXi8q45bBb/Zz1ntfgxvd5iy78jrBaX3n9gceD02DnrLrvH/rlr2D1232xg
         8+jbsorR4/MmOY9D29+wedx+to0lgD0qxyYjNTEltUghNS85PyUzL91WyTs43jne1MzAUNfQ
         0sJcSSEvMTfVVsnFJ0DXLTMH6DIlhbLEnFKgUEBicbGSvp1NUX5pSapCRn5xia1SakFKToGh
-        QYFecWJucWleul5yfq6VoYGBkSlQZUJOxq0lpgVNURXH/55hamDscOti5OCQEDCROLvWtIuR
-        i0NIYAejxOrvWxghnE+MEvuXH2GHcL4xSvSu/AiU4QTruHj6ClRiL6PExH3PEFp2NTYwgcxl
-        E9CW+LNFFKRBRMBeYvPsAywgNcwCmxklHm5aygKSEBawltj17hjYVBYBVYnn26eD2bxA8aUX
-        v7BDbJOXWL3hADOIzSlgI9E/7ztUfAebxLEWCQjbRWLT1lMsELawxKvjW6BqpCRe9rexQ/xZ
-        LfFxPzNEuINR4sV3WwjbWOLm+g2sICXMApoS63fpQ4QVJXb+ngt2DbMAn8S7rz2sEFN4JTra
-        hCBKVCX6Lh1mgrClJbraP0At9ZA4OXs6GyRE+hkl5j7uYZ/AKDcLYcMCRsZVjGKpBcW56anF
-        hgWGyNG1iRGc7rRMdzBOOedziFGAg1GJh1dB/XKsEGtiWXFl7iFGCQ5mJRFev0cXYoV4UxIr
-        q1KL8uOLSnNSiw8xmgLDcSKzlGhyPjAV55XEG5oaGRsbW5iYmZuZGiuJ83L8uBgrJJCeWJKa
-        nZpakFoE08fEwSnVwCgoeHphVv8TNh3Gf737jPbaPLhiobgySqdu3m7ht8lNu40uN7EL6F5m
-        9Jv6WdTrjPXcwrnb3gbuf8tjfv5Nfa6AhVqESNMd1bV9EmdCZrvv5d4jsXmO0BGF9nt1POxN
-        AUdvLX9z4s5GsYfKcvkrlnEYOYq6Oe/KaBObHMeRs/bencnOS545zFZiKc5INNRiLipOBABu
-        o3XdjQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrKLMWRmVeSWpSXmKPExsWy7bCSnK7ttMuxBtefs1g0L17PZrFy9VEm
-        i+t3bzFb7Nl7ksXi8q45bBb/Zz1ntfgxvd5iy78jrBaX3n9gceD02DnrLrvH/rlr2D1232xg
-        8+jbsorR4/MmOY9D29+wedx+to0lgD2KyyYlNSezLLVI3y6BK+PWEtOCpqiK43/PMDUwdrh1
-        MXJySAiYSFw8fYW9i5GLQ0hgN6PEpC8PWSAS0hLHTpxh7mLkALKFJQ4fLoao+cAocfrUZyaQ
-        OJuAtsSfLaIg5SICjhK9uw6zgNQwg8zZMv0XI0hCWMBaYte7Y2A2i4CqxPPt08FsXqD40otf
-        2CF2yUus3nCAGcTmFLCR6J/3HSwuBFSzedES1gmMfAsYGVYxSqYWFOem5xYbFhjlpZbrFSfm
-        Fpfmpesl5+duYgQHppbWDsYTJ+IPMQpwMCrx8J5QuRwrxJpYVlyZe4hRgoNZSYTX79GFWCHe
-        lMTKqtSi/Pii0pzU4kOM0hwsSuK88vnHIoUE0hNLUrNTUwtSi2CyTBycUg2MbaeXSLCtvfns
-        0qzrD5JjfAVME1Z+uZ799kd51hRRHZHqu+sY3xeGbV+54rNB3YXT395f3F4n13dRWkhq38yi
-        3W5xl7ymmTVdK9D5klV8hV/UykjsiV2PEouETddTz/1PvgosYv3k1c8eLmz2KT1IYmqHe6OX
-        59aD0W4HHda8sEutKdz1UM5BiaU4I9FQi7moOBEAne5BCUgCAAA=
-X-CMS-MailID: 20191119071405epcas1p29e1af8242cce221c45eb529921028e48
+        QYFecWJucWleul5yfq6VoYGBkSlQZUJOxoP2j6wFbW4VexeeY2lgXG3RxcjBISFgInHjrE4X
+        IxeHkMAORom9y1azQDifGCWaHs9lg3C+MUrcO3kbyOEE63hyaCo7RGIvo0TblslMcC1nPs5i
+        AZnLJqAt8WeLKEiDiIC9xObZB8DGMgtsZpR4uGkpC0hCWMBA4vPsa2BTWQRUJS4uXcwOYvMK
+        WEusvP2QEWKbvMTqDQeYQWxOARuJ/nnfwTZLCBxgk5jXPJkdoshF4uaWtcwQtrDEq+NboOJS
+        Ei/729ghHq2W+LgfqqSDUeLFd1sI21ji5voNrCAlzAKaEut36UOEFSV2/p4LdgKzAJ/Eu689
+        rBBTeCU62oQgSlQl+i4dZoKwpSW62j9ALfWQeLZ8MzTg+hkl5s65wzyBUW4WwoYFjIyrGMVS
+        C4pz01OLDQuMkSNsEyM45WmZ72DccM7nEKMAB6MSD6+C+uVYIdbEsuLK3EOMEhzMSiK8fo8u
+        xArxpiRWVqUW5ccXleakFh9iNAUG5ERmKdHkfGA6ziuJNzQ1MjY2tjAxMzczNVYS5+X4cTFW
+        SCA9sSQ1OzW1ILUIpo+Jg1OqgbH/oXr+b1OO2pQZqiZ8aju2rd7EGmi4/KfP+b6C5Rek6wsq
+        LkyJUHg2757KDNWU3AWPfu+eWPLL7xR3wYNlyXoq14JMHXtUOpj/T3tzV7Ihr4HlYuuxbRxR
+        tVnnr7x/45slpPE5aDfv9OPvhU/9d68JPNBgJNGv2tTdL/mm6Jnyq81X9+lEqyqxFGckGmox
+        FxUnAgBFwH0FjwMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrGLMWRmVeSWpSXmKPExsWy7bCSnK7dtMuxBu1/2SyaF69ns1i5+iiT
+        xfW7t5gt9uw9yWJxedccNov/s56zWvyYXm+x5d8RVotL7z+wOHB67Jx1l91j/9w17B67bzaw
+        efRtWcXo8XmTnMeh7W/YPG4/28YSwB7FZZOSmpNZllqkb5fAlfGg/SNrQZtbxd6F51gaGFdb
+        dDFyckgImEg8OTSVvYuRi0NIYDejRGfLbVaIhLTEsRNnmLsYOYBsYYnDh4shaj4wSnRfmcoE
+        EmcT0Jb4s0UUpFxEwFGid9dhFpAaZpA5W6b/YgRJCAsYSHyefY0NxGYRUJW4uHQxO4jNK2At
+        sfL2Q0aIXfISqzccYAaxOQVsJPrnfQerEQKq2bxoCesERr4FjAyrGCVTC4pz03OLDQsM81LL
+        9YoTc4tL89L1kvNzNzGCQ1NLcwfj5SXxhxgFOBiVeHhPqFyOFWJNLCuuzD3EKMHBrCTC6/fo
+        QqwQb0piZVVqUX58UWlOavEhRmkOFiVx3qd5xyKFBNITS1KzU1MLUotgskwcnFINjMJvZ06Z
+        raB2/e7cpqbs9baN620aRFfvF746X2PhvdO/7j8oaTxWurp9/X+Nnb3NzzM7MvmtfR6/+cu3
+        6h7nubXn/tVOnsghu5N3plRLZudnK/FOxg9sDCVrDQ9yePRLM/zV3rRc5HrOSaup6TFH34Yf
+        aCgTL3hdp+0bsP9GaPJ077Bpms8U/ymxFGckGmoxFxUnAgCluQGISQIAAA==
+X-CMS-MailID: 20191119071406epcas1p34788f32abd876190f2b0a5c2ba39e4b1
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 X-Sendblock-Type: SVC_REQ_APPROVE
 CMS-TYPE: 101P
 DLP-Filter: Pass
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20191119071405epcas1p29e1af8242cce221c45eb529921028e48
+X-CMS-RootMailID: 20191119071406epcas1p34788f32abd876190f2b0a5c2ba39e4b1
 References: <20191119071107.1947-1-namjae.jeon@samsung.com>
-        <CGME20191119071405epcas1p29e1af8242cce221c45eb529921028e48@epcas1p2.samsung.com>
+        <CGME20191119071406epcas1p34788f32abd876190f2b0a5c2ba39e4b1@epcas1p3.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds the implementation of exfat entry operations for exfat.
+This adds the implementation of exfat cache.
 
 Signed-off-by: Namjae Jeon <namjae.jeon@samsung.com>
 Signed-off-by: Sungjong Seo <sj1557.seo@samsung.com>
 ---
- fs/exfat/fatent.c | 475 ++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 475 insertions(+)
- create mode 100644 fs/exfat/fatent.c
+ fs/exfat/cache.c | 325 +++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 325 insertions(+)
+ create mode 100644 fs/exfat/cache.c
 
-diff --git a/fs/exfat/fatent.c b/fs/exfat/fatent.c
+diff --git a/fs/exfat/cache.c b/fs/exfat/cache.c
 new file mode 100644
-index 000000000000..006c513ae5c0
+index 000000000000..b87438360103
 --- /dev/null
-+++ b/fs/exfat/fatent.c
-@@ -0,0 +1,475 @@
++++ b/fs/exfat/cache.c
+@@ -0,0 +1,325 @@
 +// SPDX-License-Identifier: GPL-2.0-or-later
 +/*
-+ * Copyright (C) 2012-2013 Samsung Electronics Co., Ltd.
++ *  linux/fs/fat/cache.c
++ *
++ *  Written 1992,1993 by Werner Almesberger
++ *
++ *  Mar 1999. AV. Changed cache, so that it uses the starting cluster instead
++ *	of inode number.
++ *  May 1999. AV. Fixed the bogosity with FAT32 (read "FAT28"). Fscking lusers.
++ *  Copyright (C) 2012-2013 Samsung Electronics Co., Ltd.
 + */
 +
 +#include <linux/slab.h>
@@ -139,468 +146,311 @@ index 000000000000..006c513ae5c0
 +#include "exfat_raw.h"
 +#include "exfat_fs.h"
 +
-+static int __exfat_ent_get(struct super_block *sb, unsigned int loc,
-+		unsigned int *content)
++#define EXFAT_CACHE_VALID	0
++#define EXFAT_MAX_CACHE		16
++
++struct exfat_cache {
++	struct list_head cache_list;
++	unsigned int nr_contig;	/* number of contiguous clusters */
++	unsigned int fcluster;	/* cluster number in the file. */
++	unsigned int dcluster;	/* cluster number on disk. */
++};
++
++struct exfat_cache_id {
++	unsigned int id;
++	unsigned int nr_contig;
++	unsigned int fcluster;
++	unsigned int dcluster;
++};
++
++static struct kmem_cache *exfat_cachep;
++
++static void exfat_cache_init_once(void *c)
 +{
-+	unsigned int off, _content;
-+	sector_t sec;
-+	struct exfat_sb_info *sbi = EXFAT_SB(sb);
-+	struct buffer_head *bh;
++	struct exfat_cache *cache = (struct exfat_cache *)c;
 +
-+	sec = sbi->FAT1_start_sector + (loc >> (sb->s_blocksize_bits-2));
-+	off = (loc << 2) & (sb->s_blocksize - 1);
++	INIT_LIST_HEAD(&cache->cache_list);
++}
 +
-+	bh = sb_bread(sb, sec);
-+	if (!bh)
-+		return -EIO;
-+
-+	_content = le32_to_cpu(*(__le32 *)(&bh->b_data[off]));
-+
-+	/* remap reserved clusters to simplify code */
-+	if (_content >= CLUSTER_32(0xFFFFFFF8))
-+		_content = EOF_CLUSTER;
-+
-+	*content = CLUSTER_32(_content);
-+	brelse(bh);
++int exfat_cache_init(void)
++{
++	exfat_cachep = kmem_cache_create("exfat_cache",
++				sizeof(struct exfat_cache),
++				0, SLAB_RECLAIM_ACCOUNT|SLAB_MEM_SPREAD,
++				exfat_cache_init_once);
++	if (!exfat_cachep)
++		return -ENOMEM;
 +	return 0;
 +}
 +
-+int exfat_ent_set(struct super_block *sb, unsigned int loc,
-+		unsigned int content)
++void exfat_cache_shutdown(void)
 +{
-+	unsigned int off;
-+	sector_t sec;
-+	__le32 *fat_entry;
-+	struct exfat_sb_info *sbi = EXFAT_SB(sb);
-+	struct buffer_head *bh;
-+
-+	sec = sbi->FAT1_start_sector + (loc >> (sb->s_blocksize_bits-2));
-+	off = (loc << 2) & (sb->s_blocksize - 1);
-+
-+	bh = sb_bread(sb, sec);
-+	if (!bh)
-+		return -EIO;
-+
-+	fat_entry = (__le32 *)&(bh->b_data[off]);
-+	*fat_entry = cpu_to_le32(content);
-+	exfat_update_bh(sb, bh, sb->s_flags & SB_SYNCHRONOUS);
-+	exfat_mirror_bh(sb, sec, bh);
-+	brelse(bh);
-+	return 0;
++	if (!exfat_cachep)
++		return;
++	kmem_cache_destroy(exfat_cachep);
 +}
 +
-+static inline bool is_reserved_cluster(unsigned int clus)
++void exfat_cache_init_inode(struct inode *inode)
 +{
-+	if (clus == FREE_CLUSTER || clus == EOF_CLUSTER || clus == BAD_CLUSTER)
-+		return true;
-+	return false;
++	struct exfat_inode_info *ei = EXFAT_I(inode);
++
++	spin_lock_init(&ei->cache_lru_lock);
++	ei->nr_caches = 0;
++	ei->cache_valid_id = EXFAT_CACHE_VALID + 1;
++	INIT_LIST_HEAD(&ei->cache_lru);
 +}
 +
-+static inline bool is_valid_cluster(struct exfat_sb_info *sbi,
-+		unsigned int clus)
++static inline struct exfat_cache *exfat_cache_alloc(void)
 +{
-+	if (clus < BASE_CLUSTER || sbi->num_clusters <= clus)
-+		return false;
-+	return true;
++	return kmem_cache_alloc(exfat_cachep, GFP_NOFS);
 +}
 +
-+int exfat_ent_get(struct super_block *sb, unsigned int loc,
-+		unsigned int *content)
++static inline void exfat_cache_free(struct exfat_cache *cache)
 +{
-+	struct exfat_sb_info *sbi = EXFAT_SB(sb);
-+	int err;
-+
-+	if (!is_valid_cluster(sbi, loc)) {
-+		exfat_fs_error(sb, "invalid access to FAT (entry 0x%08x)",
-+			loc);
-+		return -EIO;
-+	}
-+
-+	err = __exfat_ent_get(sb, loc, content);
-+	if (err) {
-+		exfat_fs_error(sb,
-+			"failed to access to FAT (entry 0x%08x, err:%d)",
-+			loc, err);
-+		return err;
-+	}
-+
-+	if (!is_reserved_cluster(*content) &&
-+			!is_valid_cluster(sbi, *content)) {
-+		exfat_fs_error(sb,
-+			"invalid access to FAT (entry 0x%08x) bogus content (0x%08x)",
-+			loc, *content);
-+		return -EIO;
-+	}
-+
-+	if (*content == FREE_CLUSTER) {
-+		exfat_fs_error(sb,
-+			"invalid access to FAT free cluster (entry 0x%08x)",
-+			loc);
-+		return -EIO;
-+	}
-+
-+	if (*content == BAD_CLUSTER) {
-+		exfat_fs_error(sb,
-+			"invalid access to FAT bad cluster (entry 0x%08x)",
-+			loc);
-+		return -EIO;
-+	}
-+
-+	return 0;
++	WARN_ON(!list_empty(&cache->cache_list));
++	kmem_cache_free(exfat_cachep, cache);
 +}
 +
-+int exfat_chain_cont_cluster(struct super_block *sb, unsigned int chain,
-+		unsigned int len)
++static inline void exfat_cache_update_lru(struct inode *inode,
++		struct exfat_cache *cache)
 +{
-+	if (!len)
-+		return 0;
++	struct exfat_inode_info *ei = EXFAT_I(inode);
 +
-+	while (len > 1) {
-+		if (exfat_ent_set(sb, chain, chain + 1))
-+			return -EIO;
-+		chain++;
-+		len--;
-+	}
-+
-+	if (exfat_ent_set(sb, chain, EOF_CLUSTER))
-+		return -EIO;
-+	return 0;
++	if (ei->cache_lru.next != &cache->cache_list)
++		list_move(&cache->cache_list, &ei->cache_lru);
 +}
 +
-+int exfat_free_cluster(struct inode *inode, struct exfat_chain *p_chain)
++static unsigned int exfat_cache_lookup(struct inode *inode,
++		unsigned int fclus, struct exfat_cache_id *cid,
++		unsigned int *cached_fclus, unsigned int *cached_dclus)
 +{
-+	unsigned int num_clusters = 0;
-+	unsigned int clu;
-+	struct super_block *sb = inode->i_sb;
-+	struct exfat_sb_info *sbi = EXFAT_SB(sb);
++	struct exfat_inode_info *ei = EXFAT_I(inode);
++	static struct exfat_cache nohit = { .fcluster = 0, };
++	struct exfat_cache *hit = &nohit, *p;
++	unsigned int offset = EOF_CLUSTER;
 +
-+	/* invalid cluster number */
-+	if (p_chain->dir == FREE_CLUSTER || p_chain->dir == EOF_CLUSTER)
-+		return 0;
-+
-+	/* no cluster to truncate */
-+	if (p_chain->size == 0)
-+		return 0;
-+
-+	/* check cluster validation */
-+	if (p_chain->dir < 2 && p_chain->dir >= sbi->num_clusters) {
-+		exfat_msg(sb, KERN_ERR, "invalid start cluster (%u)",
-+				p_chain->dir);
-+		return -EIO;
-+	}
-+
-+	WRITE_ONCE(sbi->s_dirt, true);
-+	clu = p_chain->dir;
-+
-+	if (p_chain->flags == 0x03) {
-+		do {
-+			exfat_clear_bitmap(inode, clu-2);
-+			clu++;
-+
-+			num_clusters++;
-+		} while (num_clusters < p_chain->size);
-+	} else {
-+		do {
-+			exfat_clear_bitmap(inode, (clu - BASE_CLUSTER));
-+
-+			if (exfat_get_next_cluster(sb, &clu))
-+				goto out;
-+
-+			num_clusters++;
-+		} while (clu != EOF_CLUSTER);
-+	}
-+
-+out:
-+	sbi->used_clusters -= num_clusters;
-+	return 0;
-+}
-+
-+int exfat_find_last_cluster(struct super_block *sb, struct exfat_chain *p_chain,
-+		unsigned int *ret_clu)
-+{
-+	unsigned int clu, next;
-+	unsigned int count = 0;
-+
-+	next = p_chain->dir;
-+	if (p_chain->flags == 0x03) {
-+		*ret_clu = next + p_chain->size - 1;
-+		return 0;
-+	}
-+
-+	do {
-+		count++;
-+		clu = next;
-+		if (exfat_ent_get(sb, clu, &next))
-+			return -EIO;
-+	} while (next != EOF_CLUSTER);
-+
-+	if (p_chain->size != count) {
-+		exfat_fs_error(sb,
-+			"bogus directory size (clus : ondisk(%d) != counted(%d))",
-+			p_chain->size, count);
-+		return -EIO;
-+	}
-+
-+	*ret_clu = clu;
-+	return 0;
-+}
-+
-+static inline int exfat_sync_bhs(struct buffer_head **bhs, int nr_bhs)
-+{
-+	int i, err = 0;
-+
-+	for (i = 0; i < nr_bhs; i++)
-+		write_dirty_buffer(bhs[i], 0);
-+
-+	for (i = 0; i < nr_bhs; i++) {
-+		wait_on_buffer(bhs[i]);
-+		if (!err && !buffer_uptodate(bhs[i]))
-+			err = -EIO;
-+	}
-+	return err;
-+}
-+
-+int exfat_zeroed_cluster(struct inode *dir, unsigned int clu)
-+{
-+	struct super_block *sb = dir->i_sb;
-+	struct exfat_sb_info *sbi = EXFAT_SB(sb);
-+	struct buffer_head *bhs[MAX_BUF_PER_PAGE];
-+	int nr_bhs = MAX_BUF_PER_PAGE;
-+	sector_t blknr, last_blknr;
-+	int err, i, n;
-+
-+	blknr = exfat_cluster_to_sector(sbi, clu);
-+	last_blknr = blknr + sbi->sect_per_clus;
-+
-+	if (last_blknr > sbi->num_sectors && sbi->num_sectors > 0) {
-+		exfat_fs_error_ratelimit(sb,
-+			"%s: out of range(sect:%llu len:%u)",
-+			__func__, (unsigned long long)blknr,
-+			sbi->sect_per_clus);
-+		return -EIO;
-+	}
-+
-+	/* Zeroing the unused blocks on this cluster */
-+	n = 0;
-+	while (blknr < last_blknr) {
-+		bhs[n] = sb_getblk(sb, blknr);
-+		if (!bhs[n]) {
-+			err = -ENOMEM;
-+			goto error;
++	spin_lock(&ei->cache_lru_lock);
++	list_for_each_entry(p, &ei->cache_lru, cache_list) {
++		/* Find the cache of "fclus" or nearest cache. */
++		if (p->fcluster <= fclus && hit->fcluster < p->fcluster) {
++			hit = p;
++			if (hit->fcluster + hit->nr_contig < fclus) {
++				offset = hit->nr_contig;
++			} else {
++				offset = fclus - hit->fcluster;
++				break;
++			}
 +		}
-+		memset(bhs[n]->b_data, 0, sb->s_blocksize);
-+		exfat_update_bh(sb, bhs[n], 0);
++	}
++	if (hit != &nohit) {
++		exfat_cache_update_lru(inode, hit);
 +
-+		n++;
-+		blknr++;
++		cid->id = ei->cache_valid_id;
++		cid->nr_contig = hit->nr_contig;
++		cid->fcluster = hit->fcluster;
++		cid->dcluster = hit->dcluster;
++		*cached_fclus = cid->fcluster + offset;
++		*cached_dclus = cid->dcluster + offset;
++	}
++	spin_unlock(&ei->cache_lru_lock);
 +
-+		if (n == nr_bhs) {
-+			if (IS_DIRSYNC(dir)) {
-+				err = exfat_sync_bhs(bhs, n);
-+				if (err)
-+					goto error;
++	return offset;
++}
++
++static struct exfat_cache *exfat_cache_merge(struct inode *inode,
++		struct exfat_cache_id *new)
++{
++	struct exfat_inode_info *ei = EXFAT_I(inode);
++	struct exfat_cache *p;
++
++	list_for_each_entry(p, &ei->cache_lru, cache_list) {
++		/* Find the same part as "new" in cluster-chain. */
++		if (p->fcluster == new->fcluster) {
++			if (new->nr_contig > p->nr_contig)
++				p->nr_contig = new->nr_contig;
++			return p;
++		}
++	}
++	return NULL;
++}
++
++static void exfat_cache_add(struct inode *inode,
++		struct exfat_cache_id *new)
++{
++	struct exfat_inode_info *ei = EXFAT_I(inode);
++	struct exfat_cache *cache, *tmp;
++
++	if (new->fcluster == EOF_CLUSTER) /* dummy cache */
++		return;
++
++	spin_lock(&ei->cache_lru_lock);
++	if (new->id != EXFAT_CACHE_VALID &&
++	    new->id != ei->cache_valid_id)
++		goto out;	/* this cache was invalidated */
++
++	cache = exfat_cache_merge(inode, new);
++	if (cache == NULL) {
++		if (ei->nr_caches < EXFAT_MAX_CACHE) {
++			ei->nr_caches++;
++			spin_unlock(&ei->cache_lru_lock);
++
++			tmp = exfat_cache_alloc();
++			if (!tmp) {
++				spin_lock(&ei->cache_lru_lock);
++				ei->nr_caches--;
++				spin_unlock(&ei->cache_lru_lock);
++				return;
 +			}
 +
-+			for (i = 0; i < n; i++)
-+				brelse(bhs[i]);
-+			n = 0;
++			spin_lock(&ei->cache_lru_lock);
++			cache = exfat_cache_merge(inode, new);
++			if (cache != NULL) {
++				ei->nr_caches--;
++				exfat_cache_free(tmp);
++				goto out_update_lru;
++			}
++			cache = tmp;
++		} else {
++			struct list_head *p = ei->cache_lru.prev;
++
++			cache = list_entry(p,
++					struct exfat_cache, cache_list);
 +		}
++		cache->fcluster = new->fcluster;
++		cache->dcluster = new->dcluster;
++		cache->nr_contig = new->nr_contig;
 +	}
-+
-+	if (IS_DIRSYNC(dir)) {
-+		err = exfat_sync_bhs(bhs, n);
-+		if (err)
-+			goto error;
-+	}
-+
-+	for (i = 0; i < n; i++)
-+		brelse(bhs[i]);
-+
-+	return 0;
-+
-+error:
-+	exfat_msg(sb, KERN_ERR, "failed zeroed sect %llu\n",
-+		(unsigned long long)blknr);
-+	for (i = 0; i < n; i++)
-+		bforget(bhs[i]);
-+
-+	return err;
++out_update_lru:
++	exfat_cache_update_lru(inode, cache);
++out:
++	spin_unlock(&ei->cache_lru_lock);
 +}
 +
-+int exfat_alloc_cluster(struct inode *inode, unsigned int num_alloc,
-+		struct exfat_chain *p_chain)
++/*
++ * Cache invalidation occurs rarely, thus the LRU chain is not updated. It
++ * fixes itself after a while.
++ */
++static void __exfat_cache_inval_inode(struct inode *inode)
 +{
-+	int ret = -ENOSPC;
-+	unsigned int num_clusters = 0, total_cnt;
-+	unsigned int hint_clu, new_clu, last_clu = EOF_CLUSTER;
++	struct exfat_inode_info *ei = EXFAT_I(inode);
++	struct exfat_cache *cache;
++
++	while (!list_empty(&ei->cache_lru)) {
++		cache = list_entry(ei->cache_lru.next,
++				   struct exfat_cache, cache_list);
++		list_del_init(&cache->cache_list);
++		ei->nr_caches--;
++		exfat_cache_free(cache);
++	}
++	/* Update. The copy of caches before this id is discarded. */
++	ei->cache_valid_id++;
++	if (ei->cache_valid_id == EXFAT_CACHE_VALID)
++		ei->cache_valid_id++;
++}
++
++void exfat_cache_inval_inode(struct inode *inode)
++{
++	struct exfat_inode_info *ei = EXFAT_I(inode);
++
++	spin_lock(&ei->cache_lru_lock);
++	__exfat_cache_inval_inode(inode);
++	spin_unlock(&ei->cache_lru_lock);
++}
++
++static inline int cache_contiguous(struct exfat_cache_id *cid,
++		unsigned int dclus)
++{
++	cid->nr_contig++;
++	return cid->dcluster + cid->nr_contig == dclus;
++}
++
++static inline void cache_init(struct exfat_cache_id *cid,
++		unsigned int fclus, unsigned int dclus)
++{
++	cid->id = EXFAT_CACHE_VALID;
++	cid->fcluster = fclus;
++	cid->dcluster = dclus;
++	cid->nr_contig = 0;
++}
++
++int exfat_get_cluster(struct inode *inode, unsigned int cluster,
++		unsigned int *fclus, unsigned int *dclus,
++		unsigned int *last_dclus, int allow_eof)
++{
 +	struct super_block *sb = inode->i_sb;
 +	struct exfat_sb_info *sbi = EXFAT_SB(sb);
++	unsigned int limit = sbi->num_clusters;
++	struct exfat_inode_info *ei = EXFAT_I(inode);
++	struct exfat_cache_id cid;
++	unsigned int content;
 +
-+	total_cnt = sbi->num_clusters - BASE_CLUSTER;
-+
-+	if (unlikely(total_cnt < sbi->used_clusters)) {
-+		exfat_fs_error_ratelimit(sb,
-+			"%s: invalid used clusters(t:%u,u:%u)\n",
-+			__func__, total_cnt, sbi->used_clusters);
++	if (ei->start_clu == FREE_CLUSTER) {
++		exfat_fs_error(sb,
++			"invalid access to exfat cache (entry 0x%08x)",
++			ei->start_clu);
 +		return -EIO;
 +	}
 +
-+	if (num_alloc > total_cnt - sbi->used_clusters)
-+		return -ENOSPC;
++	*fclus = 0;
++	*dclus = ei->start_clu;
++	*last_dclus = *dclus;
 +
-+	hint_clu = p_chain->dir;
-+	/* find new cluster */
-+	if (hint_clu == EOF_CLUSTER) {
-+		if (sbi->clu_srch_ptr < BASE_CLUSTER) {
-+			exfat_msg(sb, KERN_ERR,
-+				"sbi->clu_srch_ptr is invalid (%u)\n",
-+				sbi->clu_srch_ptr);
-+			sbi->clu_srch_ptr = BASE_CLUSTER;
-+		}
++	/*
++	 * Don`t use exfat_cache if zero offset or non-cluster allocation
++	 */
++	if (cluster == 0 || *dclus == EOF_CLUSTER)
++		return 0;
 +
-+		hint_clu = exfat_test_bitmap(sb,
-+				sbi->clu_srch_ptr - BASE_CLUSTER);
-+		if (hint_clu == EOF_CLUSTER)
-+			return -ENOSPC;
++	cache_init(&cid, EOF_CLUSTER, EOF_CLUSTER);
++
++	if (exfat_cache_lookup(inode, cluster, &cid, fclus, dclus) ==
++			EOF_CLUSTER) {
++		/*
++		 * dummy, always not contiguous
++		 * This is reinitialized by cache_init(), later.
++		 */
++		WARN_ON(cid.id != EXFAT_CACHE_VALID ||
++			cid.fcluster != EOF_CLUSTER ||
++			cid.dcluster != EOF_CLUSTER ||
++			cid.nr_contig != 0);
 +	}
 +
-+	/* check cluster validation */
-+	if (hint_clu < BASE_CLUSTER && hint_clu >= sbi->num_clusters) {
-+		exfat_msg(sb, KERN_ERR, "hint_cluster is invalid (%u)\n",
-+			hint_clu);
-+		hint_clu = BASE_CLUSTER;
-+		if (p_chain->flags == 0x03) {
-+			if (exfat_chain_cont_cluster(sb, p_chain->dir,
-+					num_clusters))
++	if (*fclus == cluster)
++		return 0;
++
++	while (*fclus < cluster) {
++		/* prevent the infinite loop of cluster chain */
++		if (*fclus > limit) {
++			exfat_fs_error(sb,
++				"detected the cluster chain loop (i_pos %u)",
++				(*fclus));
++			return -EIO;
++		}
++
++		if (exfat_ent_get(sb, *dclus, &content))
++			return -EIO;
++
++		*last_dclus = *dclus;
++		*dclus = content;
++		(*fclus)++;
++
++		if (content == EOF_CLUSTER) {
++			if (!allow_eof) {
++				exfat_fs_error(sb,
++				       "invalid cluster chain (i_pos %u, last_clus 0x%08x is EOF)",
++				       *fclus, (*last_dclus));
 +				return -EIO;
-+			p_chain->flags = 0x01;
-+		}
-+	}
-+
-+	WRITE_ONCE(sbi->s_dirt, true);
-+
-+	p_chain->dir = EOF_CLUSTER;
-+
-+	while ((new_clu = exfat_test_bitmap(sb,
-+			hint_clu - BASE_CLUSTER)) != EOF_CLUSTER) {
-+		if (new_clu != hint_clu && p_chain->flags == 0x03) {
-+			if (exfat_chain_cont_cluster(sb, p_chain->dir,
-+					num_clusters)) {
-+				ret = -EIO;
-+				goto error;
 +			}
-+			p_chain->flags = 0x01;
-+		}
 +
-+		/* update allocation bitmap */
-+		if (exfat_set_bitmap(inode, new_clu - BASE_CLUSTER)) {
-+			ret = -EIO;
-+			goto error;
-+		}
-+
-+		num_clusters++;
-+
-+		/* update FAT table */
-+		if (p_chain->flags == 0x01) {
-+			if (exfat_ent_set(sb, new_clu, EOF_CLUSTER)) {
-+				ret = -EIO;
-+				goto error;
-+			}
-+		}
-+
-+		if (p_chain->dir == EOF_CLUSTER) {
-+			p_chain->dir = new_clu;
-+		} else if (p_chain->flags == 0x01) {
-+			if (exfat_ent_set(sb, last_clu, new_clu)) {
-+				ret = -EIO;
-+				goto error;
-+			}
-+		}
-+		last_clu = new_clu;
-+
-+		if (--num_alloc == 0) {
-+			sbi->clu_srch_ptr = hint_clu;
-+			sbi->used_clusters += num_clusters;
-+
-+			p_chain->size += num_clusters;
-+			return 0;
-+		}
-+
-+		hint_clu = new_clu + 1;
-+		if (hint_clu >= sbi->num_clusters) {
-+			hint_clu = BASE_CLUSTER;
-+
-+			if (p_chain->flags == 0x03) {
-+				if (exfat_chain_cont_cluster(sb, p_chain->dir,
-+						num_clusters)) {
-+					ret = -EIO;
-+					goto error;
-+				}
-+				p_chain->flags = 0x01;
-+			}
-+		}
-+	}
-+error:
-+	if (num_clusters)
-+		exfat_free_cluster(inode, p_chain);
-+	return ret;
-+}
-+
-+int exfat_count_num_clusters(struct super_block *sb,
-+		struct exfat_chain *p_chain, unsigned int *ret_count)
-+{
-+	unsigned int i, count;
-+	unsigned int clu;
-+	struct exfat_sb_info *sbi = EXFAT_SB(sb);
-+
-+	if (!p_chain->dir || p_chain->dir == EOF_CLUSTER) {
-+		*ret_count = 0;
-+		return 0;
-+	}
-+
-+	if (p_chain->flags == 0x03) {
-+		*ret_count = p_chain->size;
-+		return 0;
-+	}
-+
-+	clu = p_chain->dir;
-+	count = 0;
-+	for (i = BASE_CLUSTER; i < sbi->num_clusters; i++) {
-+		count++;
-+		if (exfat_ent_get(sb, clu, &clu))
-+			return -EIO;
-+		if (clu == EOF_CLUSTER)
 +			break;
-+	}
-+
-+	*ret_count = count;
-+	return 0;
-+}
-+
-+int exfat_mirror_bh(struct super_block *sb, sector_t sec,
-+		struct buffer_head *bh)
-+{
-+	struct buffer_head *c_bh;
-+	struct exfat_sb_info *sbi = EXFAT_SB(sb);
-+	sector_t sec2;
-+	int err = 0;
-+
-+	if (sbi->FAT2_start_sector != sbi->FAT1_start_sector) {
-+		sec2 = sec - sbi->FAT1_start_sector + sbi->FAT2_start_sector;
-+		c_bh = sb_getblk(sb, sec2);
-+		if (!c_bh) {
-+			err = -ENOMEM;
-+			goto out;
 +		}
-+		memcpy(c_bh->b_data, bh->b_data, sb->s_blocksize);
-+		set_buffer_uptodate(c_bh);
-+		mark_buffer_dirty(c_bh);
-+		if (sb->s_flags & SB_SYNCHRONOUS)
-+			err = sync_dirty_buffer(c_bh);
-+		brelse(c_bh);
++
++		if (!cache_contiguous(&cid, *dclus))
++			cache_init(&cid, *fclus, *dclus);
 +	}
-+out:
-+	return err;
++
++	exfat_cache_add(inode, &cid);
++	return 0;
 +}
 -- 
 2.17.1
