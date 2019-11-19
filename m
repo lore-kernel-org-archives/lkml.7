@@ -7,63 +7,64 @@ X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6929BC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 13:33:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A9C3C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 13:35:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B75520891
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 13:33:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3FD8222F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 13:35:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="s1nTY8lI"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="H5OEA6kM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727767AbfKSNdt (ORCPT
+        id S1727911AbfKSNf2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 08:33:49 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:36971 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725280AbfKSNds (ORCPT
+        Tue, 19 Nov 2019 08:35:28 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:36721 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726590AbfKSNf1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 08:33:48 -0500
-Received: by mail-pl1-f196.google.com with SMTP id bb5so11776522plb.4
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 05:33:48 -0800 (PST)
+        Tue, 19 Nov 2019 08:35:27 -0500
+Received: by mail-pg1-f195.google.com with SMTP id k13so11387921pgh.3
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 05:35:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=rJwVIsRx3AazC18GtEPRsLmuOqGwQRmE+0eQ3O5nq0w=;
-        b=s1nTY8lIAmSwKqbsnP/zO1Qtk0Q6pZ7MsmpAv4Us4+AlTpFfQcUqJGyAQQK7Q1aH8E
-         +AJtV6B4l/dGQ7c1swwfSXZYtwUS5KWCgd/Xs3p6pwIqYhS3qkx/anVSbKsDBQWrYQiP
-         g8d3TzuWQEoyCmWQh0scuODR+ZBEMV90nJru6HAuuut707l0lu0s76oY4UqsgMon7Y7f
-         6oFe6CJY6p2Pnsf0NfvTOSYhEUEHxliatE5nxmgmJqeAisOHpKn+6mvstuAE2iFYBEgP
-         /8d9N9oxajG2CnKa3blysQbEHsuSXgyglAFnvP8+uPPceNGBW7FspjmxMrLDFlEdysDM
-         0tHw==
+        bh=mlL4JdbEktI9zkObkASn7TbhSwKiSPzPVUMi6U8vf2E=;
+        b=H5OEA6kMS0jCMTcFH3iKYxZa78SKxenglMSWLMOp6yInuynmqeA2hc7M9GioyuCiWx
+         3NbEHnsdTOrOqYDZd5GV3C3fkYTCVU+WsH5e57HL0mpAF/obR+xG1pE4SVLJZlPSPRIm
+         mEPN+3ecGnBf6mpvjHUSaJ6Z/EWzfLoFXyyAarIbORfxAX8KFCpuOO8+nnZgH6X0+nOK
+         u8uOow8qTm644lreNoTQMltmz+k9NFc3/GDhP3y7njQutN3kbJ7A9ThzBxWswOruBlur
+         B6byDGSmsHhIZZgxeJo4DQQWewV0DJMjz9avWU+cmLSEiQ/nj9gWCb4/Qn4T9jQAdO3J
+         CLVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=rJwVIsRx3AazC18GtEPRsLmuOqGwQRmE+0eQ3O5nq0w=;
-        b=QkOAca4uJ0litOqbwCWjF3a0pvEVAlzUInasijydz+KzwVIpbM543mvr+RSSRsXnlS
-         7+UNhj5gXsNyAtuBOCO4/vYIHmGrsXgqFpTNUKllRF8pmFJqHT6/SFLhO5za+k6mtj5M
-         PNKvpDC+FLN4Zl40Q8oHZC9L06vnf+0gHmvrIVVWK7wcmyRfgcnxebcqRFnnwhq2zHFW
-         oRZZregjebp3JjBqa5vma5BwKRjGuaO/xlXg+/yD0Pq2lY94QS+X/N1LKj0WOJ+8LRfh
-         +SymcaTDIwnHQgxzQeNiBoXJQppdkCZDDfSfqHOG85p6EoiLHBL47ayx7cQq71k2qGh/
-         yuqA==
-X-Gm-Message-State: APjAAAXaH6HBXkmLUsyx7OeihyCuvYdrgKqZQbZkFxPZqmAJ49XOj5EC
-        29Gce5BaqBYOgEFtijl1ECUvMUJxZZNHwOZbqQiNuUjhk/s=
-X-Google-Smtp-Source: APXvYqygC5QgVi6scwq1SsK5M2ZG6A0RvZmIHZlXlYYMsAhejCNKfjmbCP9HTKyv2i4mF4qDlkimVavZrbMl24oYCGc=
-X-Received: by 2002:a17:90a:35d0:: with SMTP id r74mr6485311pjb.47.1574170427315;
- Tue, 19 Nov 2019 05:33:47 -0800 (PST)
+        bh=mlL4JdbEktI9zkObkASn7TbhSwKiSPzPVUMi6U8vf2E=;
+        b=sjxupfp+IM+e+edJCMl9gnJ13D6VOQhnmt4uga1qIOUpZUM3HtB3CUQBBbPeQbyOxk
+         mNigyose62Ik8lP0OZgoLQCX5UkuThiqC8ZXPlW1fNrEnx2MPu96OlJ3S9qQaWUKWEUi
+         dYJxzHMT8b7ECsrnDzBA624+xvC9zO4zOLcQ5TYazk4u7f6u7iTfjNH1C1aXMO19yGgJ
+         98hO0nvab8Loh2oVV37rgEpa119QIISW3iuuSbwoGXUL8z4GybMSK/mpGNNN4fYG9JDN
+         RoDhEImDA8ygrpJE7nMNWfep409P+Rb89yJuYvxYC1Ce1npNep5wyk3Z67b17WyctqV/
+         ovOQ==
+X-Gm-Message-State: APjAAAVj1U5dz5w9cygAOcI0GOfp1JP8OGSUEiox2Z6PKcY1iqaW28iT
+        E2MAxvvu5juSmaecOXOX6GVPSFptv0hOFdIW0NyJjGn89SU=
+X-Google-Smtp-Source: APXvYqwJPep0pkr6Pm8D9lD8AXtrHo+fVEFaCUUTFGdphUt+aPWWPkqpij8kFvDzlmTBMo17l+ODwzZ4xneNzmK3iA4=
+X-Received: by 2002:a62:53c6:: with SMTP id h189mr5775991pfb.93.1574170525792;
+ Tue, 19 Nov 2019 05:35:25 -0800 (PST)
 MIME-Version: 1.0
-References: <000000000000a901ed058d51adc3@google.com>
-In-Reply-To: <000000000000a901ed058d51adc3@google.com>
+References: <000000000000c4157e0590123002@google.com>
+In-Reply-To: <000000000000c4157e0590123002@google.com>
 From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Tue, 19 Nov 2019 14:33:34 +0100
-Message-ID: <CAAeHK+xEqkHCmnu8e0MJ63DCQ4dqi0zneoL6wffzRe4jw30SWA@mail.gmail.com>
-Subject: Re: WARNING in iforce_get_id_packet/usb_submit_urb
-To:     syzbot <syzbot+9584b712baf1965b590c@syzkaller.appspotmail.com>
+Date:   Tue, 19 Nov 2019 14:35:13 +0100
+Message-ID: <CAAeHK+x1gdMaVf8uXKATnsj1+qZ40AJVE7-ZXxFv0NVNi0OuTw@mail.gmail.com>
+Subject: Re: divide error in usbtmc_generic_read
+To:     syzbot <syzbot+55b0304b360654a7537b@syzkaller.appspotmail.com>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        guido.kiener@rohde-schwarz.com,
         LKML <linux-kernel@vger.kernel.org>,
         USB list <linux-usb@vger.kernel.org>,
+        steve_bayless@keysight.com,
         syzkaller-bugs <syzkaller-bugs@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
@@ -71,95 +72,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 1:07 PM syzbot
-<syzbot+9584b712baf1965b590c@syzkaller.appspotmail.com> wrote:
+On Wed, Aug 14, 2019 at 1:38 PM syzbot
+<syzbot+55b0304b360654a7537b@syzkaller.appspotmail.com> wrote:
 >
 > Hello,
 >
 > syzbot found the following crash on:
 >
-> HEAD commit:    7829a896 usb-fuzzer: main usb gadget fuzzer driver
+> HEAD commit:    d0847550 usb-fuzzer: main usb gadget fuzzer driver
 > git tree:       https://github.com/google/kasan.git usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=15b6b3f8600000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=f6d4561982f71f63
-> dashboard link: https://syzkaller.appspot.com/bug?extid=9584b712baf1965b590c
+> console output: https://syzkaller.appspot.com/x/log.txt?x=16295d4a600000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=dbc9c80cc095da19
+> dashboard link: https://syzkaller.appspot.com/bug?extid=55b0304b360654a7537b
 > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12d09e28600000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1410e1f7a00000
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1288a31c600000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15282e86600000
 >
 > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+9584b712baf1965b590c@syzkaller.appspotmail.com
+> Reported-by: syzbot+55b0304b360654a7537b@syzkaller.appspotmail.com
 >
-> usb 1-1: config 0 interface 47 altsetting 0 bulk endpoint 0x8A has invalid
-> maxpacket 0
-> usb 1-1: New USB device found, idVendor=061c, idProduct=c0a4,
-> bcdDevice=4e.a0
-> usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
-> usb 1-1: config 0 descriptor??
-> ------------[ cut here ]------------
-> URB 0000000044363614 submitted while active
-> WARNING: CPU: 0 PID: 12 at drivers/usb/core/urb.c:362
-> usb_submit_urb+0x10c1/0x13b0 drivers/usb/core/urb.c:362
-> Kernel panic - not syncing: panic_on_warn set ...
-> CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.2.0-rc6+ #13
+> divide error: 0000 [#1] SMP KASAN
+> CPU: 1 PID: 1761 Comm: syz-executor063 Not tainted 5.3.0-rc4+ #26
 > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
 > Google 01/01/2011
-> Workqueue: usb_hub_wq hub_event
+> RIP: 0010:usbtmc_generic_read+0x135/0x1190 drivers/usb/class/usbtmc.c:816
+> Code: 48 c1 ea 03 0f b6 14 02 48 89 f8 83 e0 07 83 c0 01 38 d0 7c 08 84 d2
+> 0f 85 50 08 00 00 41 0f b7 6e 34 31 d2 31 ff 8b 44 24 28 <f7> f5 89 d6 41
+> 89 d4 e8 2f 54 c9 fd 44 8b 6c 24 28 45 85 e4 44 89
+> RSP: 0018:ffff8881d2b77a58 EFLAGS: 00010246
+> RAX: 0000000000000002 RBX: 000000004f894bad RCX: ffffffff837487cd
+> RDX: 0000000000000000 RSI: ffffffff837487da RDI: 0000000000000000
+> RBP: 0000000000000000 R08: ffff8881d20a0000 R09: ffffed103a56ef90
+> R10: ffffed103a56ef8f R11: 0000000000000003 R12: ffff8881d08e7180
+> R13: 0000000020000000 R14: ffff8881d0404c80 R15: ffff8881d08e7180
+> FS:  0000555555b74880(0000) GS:ffff8881db300000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00000000006cc090 CR3: 00000001d615e000 CR4: 00000000001406e0
 > Call Trace:
->   __dump_stack lib/dump_stack.c:77 [inline]
->   dump_stack+0xca/0x13e lib/dump_stack.c:113
->   panic+0x292/0x6c9 kernel/panic.c:219
->   __warn.cold+0x20/0x4b kernel/panic.c:576
->   report_bug+0x262/0x2a0 lib/bug.c:186
->   fixup_bug arch/x86/kernel/traps.c:179 [inline]
->   fixup_bug arch/x86/kernel/traps.c:174 [inline]
->   do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:272
->   do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:291
->   invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:986
-> RIP: 0010:usb_submit_urb+0x10c1/0x13b0 drivers/usb/core/urb.c:362
-> Code: 89 de e8 72 dd e8 fd 84 db 0f 85 42 f6 ff ff e8 35 dc e8 fd 4c 89 fe
-> 48 c7 c7 00 23 1a 86 c6 05 4b 78 57 04 01 e8 ca a0 be fd <0f> 0b e9 20 f6
-> ff ff c7 44 24 14 01 00 00 00 e9 d7 f6 ff ff 41 bd
-> RSP: 0018:ffff8881d9e0f010 EFLAGS: 00010286
-> RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
-> RDX: 0000000000000000 RSI: ffffffff8127ef3d RDI: ffffed103b3c1df4
-> RBP: ffff8881d4b67d00 R08: ffff8881d9df9800 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000000 R12: ffff8881cf2c9980
-> R13: 00000000fffffff0 R14: ffffffff862df820 R15: ffff8881d4b67d00
->   iforce_get_id_packet+0x19c/0x52c
-> drivers/input/joystick/iforce/iforce-packets.c:238
->   iforce_init_device+0x391/0x138d
-> drivers/input/joystick/iforce/iforce-main.c:293
->   iforce_usb_probe+0x97c/0xd90 drivers/input/joystick/iforce/iforce-usb.c:163
->   usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
->   really_probe+0x281/0x660 drivers/base/dd.c:509
->   driver_probe_device+0x104/0x210 drivers/base/dd.c:670
->   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
->   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
->   __device_attach+0x217/0x360 drivers/base/dd.c:843
->   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
->   device_add+0xae6/0x16f0 drivers/base/core.c:2111
->   usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
->   generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
->   usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
->   really_probe+0x281/0x660 drivers/base/dd.c:509
->   driver_probe_device+0x104/0x210 drivers/base/dd.c:670
->   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:777
->   bus_for_each_drv+0x15c/0x1e0 drivers/base/bus.c:454
->   __device_attach+0x217/0x360 drivers/base/dd.c:843
->   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
->   device_add+0xae6/0x16f0 drivers/base/core.c:2111
->   usb_new_device.cold+0x8c1/0x1016 drivers/usb/core/hub.c:2534
->   hub_port_connect drivers/usb/core/hub.c:5089 [inline]
->   hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
->   port_event drivers/usb/core/hub.c:5350 [inline]
->   hub_event+0x1ada/0x3590 drivers/usb/core/hub.c:5432
->   process_one_work+0x905/0x1570 kernel/workqueue.c:2269
->   worker_thread+0x96/0xe20 kernel/workqueue.c:2415
->   kthread+0x30b/0x410 kernel/kthread.c:255
->   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-> Kernel Offset: disabled
-> Rebooting in 86400 seconds..
+>   usbtmc_ioctl_generic_read drivers/usb/class/usbtmc.c:1029 [inline]
+>   usbtmc_ioctl+0x27d/0x2ab0 drivers/usb/class/usbtmc.c:2089
+>   vfs_ioctl fs/ioctl.c:46 [inline]
+>   file_ioctl fs/ioctl.c:509 [inline]
+>   do_vfs_ioctl+0xd2d/0x1330 fs/ioctl.c:696
+>   ksys_ioctl+0x9b/0xc0 fs/ioctl.c:713
+>   __do_sys_ioctl fs/ioctl.c:720 [inline]
+>   __se_sys_ioctl fs/ioctl.c:718 [inline]
+>   __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:718
+>   do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
+>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x4419a9
+> Code: e8 8c e8 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7
+> 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
+> ff 0f 83 cb 08 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+> RSP: 002b:00007ffd0abd6738 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+> RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00000000004419a9
+> RDX: 0000000020000000 RSI: 00000000c0145b0e RDI: 0000000000000004
+> RBP: 000000000000a984 R08: 000000000000000f R09: 00000000004002c8
+> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000402700
+> R13: 0000000000402790 R14: 0000000000000000 R15: 0000000000000000
+> Modules linked in:
+> ---[ end trace a91d281a4d83213c ]---
+> RIP: 0010:usbtmc_generic_read+0x135/0x1190 drivers/usb/class/usbtmc.c:816
+> Code: 48 c1 ea 03 0f b6 14 02 48 89 f8 83 e0 07 83 c0 01 38 d0 7c 08 84 d2
+> 0f 85 50 08 00 00 41 0f b7 6e 34 31 d2 31 ff 8b 44 24 28 <f7> f5 89 d6 41
+> 89 d4 e8 2f 54 c9 fd 44 8b 6c 24 28 45 85 e4 44 89
+> RSP: 0018:ffff8881d2b77a58 EFLAGS: 00010246
+> RAX: 0000000000000002 RBX: 000000004f894bad RCX: ffffffff837487cd
+> RDX: 0000000000000000 RSI: ffffffff837487da RDI: 0000000000000000
+> RBP: 0000000000000000 R08: ffff8881d20a0000 R09: ffffed103a56ef90
+> R10: ffffed103a56ef8f R11: 0000000000000003 R12: ffff8881d08e7180
+> R13: 0000000020000000 R14: ffff8881d0404c80 R15: ffff8881d08e7180
+> FS:  0000555555b74880(0000) GS:ffff8881db300000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00000000006cc090 CR3: 00000001d615e000 CR4: 00000000001406e0
 >
 >
 > ---
@@ -172,4 +157,4 @@ On Wed, Jul 10, 2019 at 1:07 PM syzbot
 > syzbot can test patches for this bug, for details see:
 > https://goo.gl/tpsmEJ#testing-patches
 
-#syz dup: WARNING in __iforce_usb_xmit/usb_submit_urb
+#syz fix: usbtmc: more sanity checking for packet size
