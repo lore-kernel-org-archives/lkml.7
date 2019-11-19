@@ -2,198 +2,174 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE5BC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:52:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F1D6C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:53:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9462D2231A
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:52:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 068352235E
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:53:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bx22B959"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727533AbfKSRw0 (ORCPT
+        id S1727261AbfKSRx2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 12:52:26 -0500
-Received: from mga14.intel.com ([192.55.52.115]:17665 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727289AbfKSRwA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 12:52:00 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Nov 2019 09:51:59 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,218,1571727600"; 
-   d="scan'208";a="209488269"
-Received: from jacob-builder.jf.intel.com ([10.7.199.155])
-  by orsmga006.jf.intel.com with ESMTP; 19 Nov 2019 09:51:58 -0800
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        "Lu Baolu" <baolu.lu@linux.intel.com>,
-        David Woodhouse <dwmw2@infradead.org>
-Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>, "Yi Liu" <yi.l.liu@intel.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        "Mehta, Sohil" <sohil.mehta@intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: [PATCH v3 1/8] iommu/vt-d: Fix CPU and IOMMU SVM feature matching checks
-Date:   Tue, 19 Nov 2019 09:56:25 -0800
-Message-Id: <1574186193-30457-2-git-send-email-jacob.jun.pan@linux.intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1574186193-30457-1-git-send-email-jacob.jun.pan@linux.intel.com>
-References: <1574186193-30457-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        Tue, 19 Nov 2019 12:53:28 -0500
+Received: from mail-wr1-f48.google.com ([209.85.221.48]:40339 "EHLO
+        mail-wr1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726939AbfKSRx1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 12:53:27 -0500
+Received: by mail-wr1-f48.google.com with SMTP id q15so12144089wrw.7;
+        Tue, 19 Nov 2019 09:53:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=KpxeRwM+qEoa4VAc9BPhZpNvjuA7mG+/4K8rmEaY6mQ=;
+        b=bx22B9591gBTbNsaJPnRIhrdB/HobDRSuf8N/+RQ9vfgk//8OYwdPjFEWXeCbw2el7
+         OtR8xn3BePNX7Aa1zV/8zUU2IU8jcimexfTHG1xPtdoHp4pTcd11hdJZbNeiKX23TKcI
+         opTob0wiEguEjhHWaxkF8u7gvO7xeD+kMS6mSGyN4Ul//IuNFsWSM1b0ktJ9i6HcAA8L
+         fQcG2ljYoL/j0baD5omgDh3BD4BKgLIVlOfuwDbqyP7Gyx7xSOlwlUDv/EVI0S85hoS/
+         NvKqjMIxsZUU2mF4uszX1Y4515VQ+C/T4q7+pKYVBWXUM5YUXVhjbeKFoUOJ+DFMD3C3
+         ZxFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=KpxeRwM+qEoa4VAc9BPhZpNvjuA7mG+/4K8rmEaY6mQ=;
+        b=R2BRyWluUEde9QItUF30/s+qX4j1eGAuFhwllQSOCl7J9cg8eDX8LemSuXlSYyiCLe
+         bZ/HH7+3F+mbLRymZKkkeYCeiXgHZCZW9PSO77gnLlxK98l7E3PqjGB+q7KsijTjrVX4
+         mHf1MtgvFbfrkc2p2qqMCho9LRs/3NZQ8uJdGKQnyRZU+U0fYJXF4nzjWzKMoGRl7izd
+         x11mpMg41Pe57OGvNyBaK1+jR/F7MDC89K1baLoMMsNp8/VLcUIqMkpLZjJxL9MRbenD
+         1Yz28vWjaZJrVHRc68imrEG0fDRRt3oSegzq4raeKHP1fS71GpczfIGvp9dggcEuuUH7
+         EQXQ==
+X-Gm-Message-State: APjAAAVFjq0CZ4KdgHm76MjwZV9vXzHCyCPrEwdpaf+7HsuaHE/1Hasl
+        stANazjefI7gc17bOzfLeKM=
+X-Google-Smtp-Source: APXvYqzRPud+LGIWs0JP7TgLZFqPoXTmaPDi4j3Bz5kBu2ryyj8/BvNdjOcJSRbKl1ehPz/aD1c7ng==
+X-Received: by 2002:a5d:51c8:: with SMTP id n8mr38156093wrv.302.1574186005316;
+        Tue, 19 Nov 2019 09:53:25 -0800 (PST)
+Received: from clement-Latitude-7490.outsight.local (lputeaux-656-1-11-33.w82-127.abo.wanadoo.fr. [82.127.142.33])
+        by smtp.gmail.com with ESMTPSA id l13sm3772618wmh.12.2019.11.19.09.53.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Nov 2019 09:53:24 -0800 (PST)
+From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Philipp Zabel <pza@pengutronix.de>
+Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [PATCH v7 1/8] dt-bindings: pwm: allwinner: Add H6 PWM description
+Date:   Tue, 19 Nov 2019 18:53:12 +0100
+Message-Id: <20191119175319.16561-2-peron.clem@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191119175319.16561-1-peron.clem@gmail.com>
+References: <20191119175319.16561-1-peron.clem@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Shared Virtual Memory(SVM) is based on a collective set of hardware
-features detected at runtime. There are requirements for matching CPU
-and IOMMU capabilities.
+From: Jernej Skrabec <jernej.skrabec@siol.net>
 
-The current code checks CPU and IOMMU feature set for SVM support but
-the result is never stored nor used. Therefore, SVM can still be used
-even when these checks failed. The consequences can be:
-1. CPU uses 5-level paging mode for virtual address of 57 bits, but
-IOMMU can only support 4-level paging mode with 48 bits address for DMA.
-2. 1GB page size is used by CPU but IOMMU does not support it. VT-d
-unrecoverable faults may be generated.
+H6 PWM block is basically the same as A20 PWM, except that it also has
+bus clock and reset line which needs to be handled accordingly.
 
-The best solution to fix these problems is to prevent them in the first
-place.
+Expand Allwinner PWM binding with H6 PWM specifics.
 
-This patch consolidates code for checking PASID, CPU vs. IOMMU paging
-mode compatibility, as well as provides specific error messages for
-each failed checks. On sane hardware configurations, these error message
-shall never appear in kernel log.
-
-Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Clément Péron <peron.clem@gmail.com>
 ---
- drivers/iommu/intel-iommu.c | 10 ++--------
- drivers/iommu/intel-svm.c   | 40 +++++++++++++++++++++++++++-------------
- include/linux/intel-iommu.h |  5 ++++-
- 3 files changed, 33 insertions(+), 22 deletions(-)
+ .../bindings/pwm/allwinner,sun4i-a10-pwm.yaml | 48 +++++++++++++++++++
+ 1 file changed, 48 insertions(+)
 
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 3f974919d3bd..d598168e410d 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -3289,10 +3289,7 @@ static int __init init_dmars(void)
+diff --git a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
+index 0ac52f83a58c..a7dc19fc347a 100644
+--- a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
++++ b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
+@@ -30,13 +30,51 @@ properties:
+       - items:
+           - const: allwinner,sun50i-h5-pwm
+           - const: allwinner,sun5i-a13-pwm
++      - const: allwinner,sun50i-h6-pwm
  
- 		if (!ecap_pass_through(iommu->ecap))
- 			hw_pass_through = 0;
--#ifdef CONFIG_INTEL_IOMMU_SVM
--		if (pasid_supported(iommu))
--			intel_svm_init(iommu);
--#endif
-+		intel_svm_check(iommu);
- 	}
+   reg:
+     maxItems: 1
  
- 	/*
-@@ -4471,10 +4468,7 @@ static int intel_iommu_add(struct dmar_drhd_unit *dmaru)
- 	if (ret)
- 		goto out;
- 
--#ifdef CONFIG_INTEL_IOMMU_SVM
--	if (pasid_supported(iommu))
--		intel_svm_init(iommu);
--#endif
-+	intel_svm_check(iommu);
- 
- 	if (dmaru->ignored) {
- 		/*
-diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
-index 9b159132405d..716c543488f6 100644
---- a/drivers/iommu/intel-svm.c
-+++ b/drivers/iommu/intel-svm.c
-@@ -23,19 +23,6 @@
- 
- static irqreturn_t prq_event_thread(int irq, void *d);
- 
--int intel_svm_init(struct intel_iommu *iommu)
--{
--	if (cpu_feature_enabled(X86_FEATURE_GBPAGES) &&
--			!cap_fl1gp_support(iommu->cap))
--		return -EINVAL;
--
--	if (cpu_feature_enabled(X86_FEATURE_LA57) &&
--			!cap_5lp_support(iommu->cap))
--		return -EINVAL;
--
--	return 0;
--}
--
- #define PRQ_ORDER 0
- 
- int intel_svm_enable_prq(struct intel_iommu *iommu)
-@@ -99,6 +86,33 @@ int intel_svm_finish_prq(struct intel_iommu *iommu)
- 	return 0;
- }
- 
-+static inline bool intel_svm_capable(struct intel_iommu *iommu)
-+{
-+	return iommu->flags & VTD_FLAG_SVM_CAPABLE;
-+}
+   clocks:
++    minItems: 1
++    maxItems: 2
++    items:
++      - description: Module Clock
++      - description: Bus Clock
 +
-+void intel_svm_check(struct intel_iommu *iommu)
-+{
-+	if (!pasid_supported(iommu))
-+		return;
++  # Even though it only applies to subschemas under the conditionals,
++  # not listing them here will trigger a warning because of the
++  # additionalsProperties set to false.
++  clock-names: true
 +
-+	if (cpu_feature_enabled(X86_FEATURE_GBPAGES) &&
-+	    !cap_fl1gp_support(iommu->cap)) {
-+		pr_err("%s SVM disabled, incompatible 1GB page capability\n",
-+		       iommu->name);
-+		return;
-+	}
++  resets:
+     maxItems: 1
+ 
++if:
++  properties:
++    compatible:
++      contains:
++        const: allwinner,sun50i-h6-pwm
 +
-+	if (cpu_feature_enabled(X86_FEATURE_LA57) &&
-+	    !cap_5lp_support(iommu->cap)) {
-+		pr_err("%s SVM disabled, incompatible paging mode\n",
-+		       iommu->name);
-+		return;
-+	}
++then:
++  properties:
++    clocks:
++      maxItems: 2
 +
-+	iommu->flags |= VTD_FLAG_SVM_CAPABLE;
-+}
++    clock-names:
++      items:
++        - const: mod
++        - const: bus
 +
- static void intel_flush_svm_range_dev (struct intel_svm *svm, struct intel_svm_dev *sdev,
- 				unsigned long address, unsigned long pages, int ih)
- {
-diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
-index ed11ef594378..7dcfa1c4a844 100644
---- a/include/linux/intel-iommu.h
-+++ b/include/linux/intel-iommu.h
-@@ -433,6 +433,7 @@ enum {
++  required:
++    - clock-names
++    - resets
++
++else:
++  properties:
++    clocks:
++      maxItems: 1
++
+ required:
+   - "#pwm-cells"
+   - compatible
+@@ -54,4 +92,14 @@ examples:
+         #pwm-cells = <3>;
+     };
  
- #define VTD_FLAG_TRANS_PRE_ENABLED	(1 << 0)
- #define VTD_FLAG_IRQ_REMAP_PRE_ENABLED	(1 << 1)
-+#define VTD_FLAG_SVM_CAPABLE		(1 << 2)
- 
- extern int intel_iommu_sm;
- 
-@@ -656,7 +657,7 @@ void iommu_flush_write_buffer(struct intel_iommu *iommu);
- int intel_iommu_enable_pasid(struct intel_iommu *iommu, struct device *dev);
- 
- #ifdef CONFIG_INTEL_IOMMU_SVM
--int intel_svm_init(struct intel_iommu *iommu);
-+extern void intel_svm_check(struct intel_iommu *iommu);
- extern int intel_svm_enable_prq(struct intel_iommu *iommu);
- extern int intel_svm_finish_prq(struct intel_iommu *iommu);
- 
-@@ -684,6 +685,8 @@ struct intel_svm {
- };
- 
- extern struct intel_iommu *intel_svm_device_to_iommu(struct device *dev);
-+#else
-+static inline void intel_svm_check(struct intel_iommu *iommu) {}
- #endif
- 
- #ifdef CONFIG_INTEL_IOMMU_DEBUGFS
++  - |
++    pwm@300a000 {
++      compatible = "allwinner,sun50i-h6-pwm";
++      reg = <0x0300a000 0x400>;
++      clocks = <&osc24M>, <&ccu CLK_BUS_PWM>;
++      clock-names = "mod", "bus";
++      resets = <&ccu RST_BUS_PWM>;
++      #pwm-cells = <3>;
++    };
++
+ ...
 -- 
-2.7.4
+2.20.1
 
