@@ -2,66 +2,120 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F09E7C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:20:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD9FEC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:22:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEED2223C6
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:20:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9229A222A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:22:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728348AbfKSQUW (ORCPT
+        id S1728471AbfKSQWB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 11:20:22 -0500
-Received: from mga17.intel.com ([192.55.52.151]:59090 "EHLO mga17.intel.com"
+        Tue, 19 Nov 2019 11:22:01 -0500
+Received: from muru.com ([72.249.23.125]:42904 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727456AbfKSQUW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 11:20:22 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Nov 2019 08:20:22 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,218,1571727600"; 
-   d="scan'208";a="215568768"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 19 Nov 2019 08:20:19 -0800
-Received: by lahna (sSMTP sendmail emulation); Tue, 19 Nov 2019 18:20:18 +0200
-Date:   Tue, 19 Nov 2019 18:20:18 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Andreas Noever <andreas.noever@gmail.com>,
-        Michael Jamet <michael.jamet@intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Lukas Wunner <lukas@wunner.de>, linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] Thunderbolt change for v5.5 part 2
-Message-ID: <20191119162018.GN11621@lahna.fi.intel.com>
-References: <20191119130751.GK11621@lahna.fi.intel.com>
- <20191119160022.GA2027670@kroah.com>
+        id S1726307AbfKSQWB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 11:22:01 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 47F57809B;
+        Tue, 19 Nov 2019 16:22:37 +0000 (UTC)
+Date:   Tue, 19 Nov 2019 08:21:57 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     "Andrew F. Davis" <afd@ti.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: OMAP: Use ARM SMC Calling Convention when OP-TEE is
+ available
+Message-ID: <20191119162157.GJ35479@atomide.com>
+References: <20191118165236.22136-1-afd@ti.com>
+ <20191118215759.GD35479@atomide.com>
+ <b86e1d66-1566-521c-a445-4f0ae2fd95d6@ti.com>
+ <20191118223128.GE35479@atomide.com>
+ <29db708e-119e-8a89-7d43-e38e2a10dc07@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191119160022.GA2027670@kroah.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <29db708e-119e-8a89-7d43-e38e2a10dc07@ti.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 05:00:22PM +0100, Greg Kroah-Hartman wrote:
-> On Tue, Nov 19, 2019 at 03:07:51PM +0200, Mika Westerberg wrote:
-> > Hi Greg,
+* Andrew F. Davis <afd@ti.com> [191119 01:14]:
+> On 11/18/19 5:31 PM, Tony Lindgren wrote:
+> > * Andrew F. Davis <afd@ti.com> [191118 22:14]:
+> >> On 11/18/19 4:57 PM, Tony Lindgren wrote:
+> >>> Hi,
+> >>>
+> >>> * Andrew F. Davis <afd@ti.com> [191118 08:53]:
+> >>>> +#define OMAP_SIP_SMC_STD_CALL_VAL(func_num) \
+> >>>> +	ARM_SMCCC_CALL_VAL(ARM_SMCCC_STD_CALL, ARM_SMCCC_SMC_32, \
+> >>>> +	ARM_SMCCC_OWNER_SIP, (func_num))
+> >>>> +
+> >>>> +void omap_smc1(u32 fn, u32 arg)
+> >>>> +{
+> >>>> +	struct device_node *optee;
+> >>>> +	struct arm_smccc_res res;
+> >>>> +
+> >>>> +	/*
+> >>>> +	 * If this platform has OP-TEE installed we use ARM SMC calls
+> >>>> +	 * otherwise fall back to the OMAP ROM style calls.
+> >>>> +	 */
+> >>>> +	optee = of_find_node_by_path("/firmware/optee");
+> >>>> +	if (optee) {
+> >>>> +		arm_smccc_smc(OMAP_SIP_SMC_STD_CALL_VAL(fn), arg,
+> >>>> +			      0, 0, 0, 0, 0, 0, &res);
+> >>>> +		WARN(res.a0, "Secure function call 0x%08x failed\n", fn);
+> >>>> +	} else {
+> >>>> +		_omap_smc1(fn, arg);
+> >>>> +	}
+> >>>> +}
+> >>>
+> >>> I think we're better off just making arm_smccc_smc() work properly.
+> >>> See cat arch/arm*/kernel/smccc-call.S.
+> >>>
+> >>
+> >>
+> >> arm_smccc_smc() does work properly already, I'm using it here.
 > > 
-> > There is one more Thunderbolt driver improvement that I would like to
-> > get into v5.5 merge window. Please consider pulling.
+> > OK. I guess I don't follow then why we can't use arm_smccc_smc()
+> > for old code.
+> > 
 > 
-> Hey, that sounds like the problem my laptop was having!  :)
 > 
-> Should this also go to stable for 5.4.y?
+> Our ROM code needs r12 to have the function code in it, where as the ARM
+> SMC calling convention standard requires that (plus some other
+> information) stored in r0. Our ROM doesn't know anything about the that
+> standard that came out years after we shipped these devices. And as such
+> is not complaint.
 
-Yes, I think it makes sense to have it there. Do you want me to mark it
-for stable or you do it?
+Right.
+
+> A generic smc() call would be nice, but arm_smccc_smc() is specifically
+> for SMCCC.
+
+To me it seeems that HAVE_ARM_SMCCC is a generic feature though.
+It's not limited to OPTEE. We have select HAVE_ARM_SMCCC if CPU_V7
+in arch/arm/Kconfig, and OPTEE depends on HAVE_ARM_SMCCC.
+
+From that point of view it seems that we could have HAVE_ARM_SMCCC
+enabled also for v6 and use it for all mach-omap2 with a wrapper.
+
+So I'd like to have our smc callers eventually just call generic
+generic arm_smccc_smc(OMAP_SIP_SMC_STD_CALL_VAL(fn)...) rather
+than the custom calls. And we want to update to using the generic
+functions one case at a time as the features get tested :)
+
+In any case, you should do the necessary checks for HAVE_ARM_SMCCC
+only once during init. I'm not sure how much checking for
+"/firmware/optee" helps here, sounds like we have a broken system
+if the firmware is not there while the arm_smccc_smc() should
+still work just fine :)
+
+Regards,
+
+Tony
