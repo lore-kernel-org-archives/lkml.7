@@ -2,226 +2,174 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38872C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 18:33:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D6FCC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 18:34:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D6E5222AB
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 18:33:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18EEB223BD
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 18:34:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="V6SuhijJ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LJwr2bvb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727254AbfKSSd5 (ORCPT
+        id S1727336AbfKSSeR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 13:33:57 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:43648 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726307AbfKSSd4 (ORCPT
+        Tue, 19 Nov 2019 13:34:17 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:34183 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726307AbfKSSeQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 13:33:56 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAJIXgds037810;
-        Tue, 19 Nov 2019 12:33:42 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574188422;
-        bh=8pK3SXLXjYCxY82v7l4ZX3F1pn7se04Pm/vVlaxoCso=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=V6SuhijJgP4JlwdJ1DVfiviwwoS40GyKCK0Wn/5rQWdlzTx/wGOVlGB/NGnHJqcOQ
-         07b6VGs8ChQo3Lc3xww+nFTehMSQK7bq23Q8s9a3iA0aKOWTPn+ChogmVCHRHpCqwt
-         Bwn3TkaYNHbkn0C5rhb43DWypnoQcN7f4b5myp2Q=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAJIXgH4103677
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 19 Nov 2019 12:33:42 -0600
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 19
- Nov 2019 12:33:42 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 19 Nov 2019 12:33:42 -0600
-Received: from [10.250.33.226] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAJIXfXh105615;
-        Tue, 19 Nov 2019 12:33:42 -0600
-Subject: Re: [PATCH v2 3/4] leds: tps6105x: add driver for mfd chip led mode
-To:     Sven Van Asbroeck <thesven73@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>
-CC:     Linus Walleij <linus.walleij@linaro.org>,
-        Grigoryev Denis <grigoryev@fastwel.ru>,
-        Axel Lin <axel.lin@ingics.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-leds@vger.kernel.org>
-References: <20191119154611.29625-1-TheSven73@gmail.com>
- <20191119154611.29625-4-TheSven73@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <23217b5b-90f4-748a-c008-9ae7ef82c6dd@ti.com>
-Date:   Tue, 19 Nov 2019 12:32:05 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 19 Nov 2019 13:34:16 -0500
+Received: by mail-wm1-f67.google.com with SMTP id j18so3154526wmk.1
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 10:34:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=Bn+l2Wf/udyhGlzXiaSqVzyU1KUJVXlbjswoz1SSVPI=;
+        b=LJwr2bvbV/j2pKgFg1ivR/Cl9JD7Nj7DSYfCANE/CkK+qtGi5DLB9WxTt0HXwN90lG
+         9eDo7bbfD5r+Q7K5te8zJUwQ7c/4sLZ4FEMxZxcnC46QN5y/CGbFgDgFYx7YCGBVJEDu
+         QZT4lrUcwgKV6x8Z/Tbrp6M8xTI13Juvyep88lWnnH3lGu5+6DtrQVJSosOGB15JROO2
+         1BW1s4XvC0d3OdxDE2OWKckdxmy9wCxiOXihH5k1vEHf9NGxyq8ZK/OTMdEhvhCp3n9/
+         nT6eoOwHu0zc4nOS6vSyrs1AG4YU2HxZ5z6RXpIaeHaNk4i9kH2sxEFJPeSQhL4caLFm
+         PrCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=Bn+l2Wf/udyhGlzXiaSqVzyU1KUJVXlbjswoz1SSVPI=;
+        b=sdhfacT2jBM4CfHe1YeG1oQ9rdlZUqmN3e2ETNjoMcXvCrGu9DyqPnqQH6tG7aC68m
+         4Y/+3fPtKMyodhx1Rk0B+Vj2NGUp+e2K2+k6FZjg80dRVOH/+ET5ts1Td57i7PIZ6dmy
+         KcM6Fep0OI3uEzUm5wYZKeYOXIcrZsXZrUpGMy+efMMgdjUZr1eOceo+tOHddO4bDK+Z
+         3TZ4PaxbCbLbFQy40IfZyziD4CFNgVRYbOvgnb0CiTFVpgDBQdI/pvgc3ISkAg0EiI+h
+         mwR8hltj7YqYSxW4peGCDiuboy8xBG3budOJcWQtJKfcS/nLJzcZ4VOCSmQrpeIjHW6N
+         pq/w==
+X-Gm-Message-State: APjAAAVaGIW5dZ2TBa0iZ6KUTRWDV0xe0UiHagQoazLUm+mu9lnObd3y
+        r0WiomEtEYgNRxrO6n1PkYByw4vLJxMYaQ==
+X-Google-Smtp-Source: APXvYqz8IHkZ+KMun88d98El+sWtlJ2+nFsVuMX3hoNljvu/FT5dVZKPbVu8aRFB2F+eF7342Kfzsw==
+X-Received: by 2002:a05:600c:295:: with SMTP id 21mr7306267wmk.43.1574188453718;
+        Tue, 19 Nov 2019 10:34:13 -0800 (PST)
+Received: from google.com ([100.105.32.75])
+        by smtp.gmail.com with ESMTPSA id l10sm31930113wrg.90.2019.11.19.10.34.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Nov 2019 10:34:12 -0800 (PST)
+Date:   Tue, 19 Nov 2019 19:34:07 +0100
+From:   Marco Elver <elver@google.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>
+Subject: Re: linux-next: Tree for Nov 19 (kcsan)
+Message-ID: <20191119183407.GA68739@google.com>
+References: <20191119194658.39af50d0@canb.auug.org.au>
+ <e75be639-110a-c615-3ec7-a107318b7746@infradead.org>
+ <CANpmjNMpnY54kDdGwOPOD84UDf=Fzqtu62ifTds2vZn4t4YigQ@mail.gmail.com>
+ <fb7e25d8-aba4-3dcf-7761-cb7ecb3ebb71@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20191119154611.29625-4-TheSven73@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <fb7e25d8-aba4-3dcf-7761-cb7ecb3ebb71@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sven
+On Tue, 19 Nov 2019, Randy Dunlap wrote:
 
-On 11/19/19 9:46 AM, Sven Van Asbroeck wrote:
-> This driver adds support for the led operational mode of the
-> tps6105x mfd device.
-How many LEDs does this device support?
->
-> Example usage, devicetree:
->
-> i2c0 {
-> 	tps61052@33 {
-> 		compatible = "ti,tps61052";
-> 		reg = <0x33>;
->
-> 		led {
-> 			label = "tps-led";
-> 		};
-> 	};
-> };
->
-> Example usage, platform data in machine layer:
->
->   #include <linux/mfd/tps6105x.h>
->
->   struct tps6105x_platform_data pdata = {
->           .mode = TPS6105X_MODE_TORCH,
->           .led_label = "tps-led",
->   };
->
-> Tree: next-20191118
-> Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
-> ---
->   drivers/leds/Kconfig         | 10 +++++
->   drivers/leds/Makefile        |  1 +
->   drivers/leds/leds-tps6105x.c | 87 ++++++++++++++++++++++++++++++++++++
->   include/linux/mfd/tps6105x.h |  1 +
->   4 files changed, 99 insertions(+)
->   create mode 100644 drivers/leds/leds-tps6105x.c
->
-> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-> index 4b68520ac251..7c7ceaa824a2 100644
-> --- a/drivers/leds/Kconfig
-> +++ b/drivers/leds/Kconfig
-> @@ -836,6 +836,16 @@ config LEDS_LM36274
->   	  Say Y to enable the LM36274 LED driver for TI LMU devices.
->   	  This supports the LED device LM36274.
->   
-> +config LEDS_TPS6105X
-> +	tristate "LED support for TI TPS6105X"
-> +	depends on LEDS_CLASS
-> +	depends on TPS6105X
-> +	default y if TPS6105X
-> +	help
-> +	  This driver supports TPS61050/TPS61052 led chips.
-> +	  It is a single boost converter primarily for white LEDs and
-> +	  audio amplifiers.
-> +
->   comment "LED Triggers"
->   source "drivers/leds/trigger/Kconfig"
->   
-> diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
-> index 2da39e896ce8..d7e1107753fb 100644
-> --- a/drivers/leds/Makefile
-> +++ b/drivers/leds/Makefile
-> @@ -85,6 +85,7 @@ obj-$(CONFIG_LEDS_LM3601X)		+= leds-lm3601x.o
->   obj-$(CONFIG_LEDS_TI_LMU_COMMON)	+= leds-ti-lmu-common.o
->   obj-$(CONFIG_LEDS_LM3697)		+= leds-lm3697.o
->   obj-$(CONFIG_LEDS_LM36274)		+= leds-lm36274.o
-> +obj-$(CONFIG_LEDS_TPS6105X)		+= leds-tps6105x.o
->   
->   # LED SPI Drivers
->   obj-$(CONFIG_LEDS_CR0014114)		+= leds-cr0014114.o
-> diff --git a/drivers/leds/leds-tps6105x.c b/drivers/leds/leds-tps6105x.c
-> new file mode 100644
-> index 000000000000..87dbe4846df6
-> --- /dev/null
-> +++ b/drivers/leds/leds-tps6105x.c
-> @@ -0,0 +1,87 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +
-> +#include <linux/leds.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/mfd/tps6105x.h>
-> +#include <linux/regmap.h>
-> +
-> +struct tps6105x_priv {
-> +	struct regmap *regmap;
-> +	struct led_classdev cdev;
-> +};
-> +
-> +static int tps6105x_brightness_set(struct led_classdev *cdev,
-> +				  enum led_brightness brightness)
-> +{
-> +	struct tps6105x_priv *priv = container_of(cdev, struct tps6105x_priv,
-> +							cdev);
-> +
-> +	return regmap_update_bits(priv->regmap, TPS6105X_REG_0,
-> +		TPS6105X_REG0_TORCHC_MASK,
-> +		brightness << TPS6105X_REG0_TORCHC_SHIFT);
-> +}
-> +
-> +static const char *label_from_dt(struct device *dev)
-> +{
-> +	struct device_node *led =
-> +		of_get_child_by_name(dev->parent->of_node, "led");
-Prefer device_* calls as opposed to of_* calls.
-> +	const char *label;
-> +
-> +	if (!led) {
-> +		dev_err(dev, "led node not found");
-> +		return NULL;
-> +	}
-> +	if (of_property_read_string(led, "label", &label))
-same as above
-> +		label = NULL;
-> +	of_node_put(led);
-> +
-> +	return label;
-> +}
-> +
-> +static int tps6105x_led_probe(struct platform_device *pdev)
-> +{
-> +	struct tps6105x *tps6105x = dev_get_platdata(&pdev->dev);
-> +	struct tps6105x_platform_data *pdata = tps6105x->pdata;
-> +	struct tps6105x_priv *priv;
-> +	const char *label;
-> +	int ret;
-> +
-> +	/* This instance is not set for torch mode so bail out */
-> +	if (pdata->mode != TPS6105X_MODE_TORCH) {
-> +		dev_info(&pdev->dev,
-> +			"chip not in torch mode, exit probe");
-> +		return -EINVAL;
-> +	}
-> +
-> +	label = pdata->led_label ?: label_from_dt(&pdev->dev);
+> On 11/19/19 8:12 AM, Marco Elver wrote:
+> > On Tue, 19 Nov 2019 at 16:11, Randy Dunlap <rdunlap@infradead.org> wrot=
+e:
+> >>
+> >> On 11/19/19 12:46 AM, Stephen Rothwell wrote:
+> >>> Hi all,
+> >>>
+> >>> Changes since 20191118:
+> >>>
+> >>
+> >> on x86_64:
+> >>
+> >> It seems that this function can already be known by the compiler as a
+> >> builtin:
+> >>
+> >> ../kernel/kcsan/core.c:619:6: warning: conflicting types for built-in =
+function =E2=80=98__tsan_func_exit=E2=80=99 [-Wbuiltin-declaration-mismatch]
+> >>  void __tsan_func_exit(void)
+> >>       ^~~~~~~~~~~~~~~~
+> >>
+> >>
+> >> $ gcc --version
+> >> gcc (SUSE Linux) 7.4.1 20190905 [gcc-7-branch revision 275407]
+> >=20
+> > Interesting. Could you share the .config? So far I haven't been able
+> > to reproduce.
+>=20
+> Sure, it's attached.
 
-Since this is a new driver do we really have to continue to use the 
-pdata for the init
+Thanks, the config did the trick, even for gcc 9.0.0.
 
-data?  Can't we just get the label from the DT node now like other drivers?
+The problem is CONFIG_UBSAN=3Dy. We haven't explicitly disallowed it like
+with KASAN. In principle there should be nothing wrong with KCSAN+UBSAN.
 
-Dan
+There are 3 options:
+1. Just disable UBSAN for KCSAN, and also disable KCSAN for UBSAN.
+2. Restrict the config to not allow combining KCSAN and UBSAN.
+3. Leave things as-is.
 
+Option 1 probably makes most sense, and I'll send a patch for that
+unless there are major objections.
 
+> > I can get the warning if I manually add -fsanitize=3Dthread to flags for
+> > kcsan/core.c (but normally disabled via KCSAN_SANITIZE :=3D n). If
+> > possible could you also share the output of `make V=3D1` for
+> > kcsan/core.c?
+>=20
+> here:
+
+>   gcc -Wp,-MD,kernel/kcsan/.core.o.d  -nostdinc -isystem /usr/lib64/gcc/x=
+86_64-suse-linux/7/include -I../arch/x86/include -I./arch/x86/include/gener=
+ated -I../include -I./include -I../arch/x86/include/uapi -I./arch/x86/inclu=
+de/generated/uapi -I../include/uapi -I./include/generated/uapi -include ../=
+include/linux/kconfig.h -include ../include/linux/compiler_types.h -D__KERN=
+EL__ -Wall -Wundef -Werror=3Dstrict-prototypes -Wno-trigraphs -fno-strict-a=
+liasing -fno-common -fshort-wchar -fno-PIE -Werror=3Dimplicit-function-decl=
+aration -Werror=3Dimplicit-int -Wno-format-security -std=3Dgnu89 -mno-sse -=
+mno-mmx -mno-sse2 -mno-3dnow -mno-avx -m64 -falign-jumps=3D1 -falign-loops=
+=3D1 -mno-80387 -mno-fp-ret-in-387 -mpreferred-stack-boundary=3D3 -mskip-ra=
+x-setup -mtune=3Dgeneric -mno-red-zone -mcmodel=3Dkernel -DCONFIG_AS_CFI=3D=
+1 -DCONFIG_AS_CFI_SIGNAL_FRAME=3D1 -DCONFIG_AS_CFI_SECTIONS=3D1 -DCONFIG_AS=
+_SSSE3=3D1 -DCONFIG_AS_AVX=3D1 -DCONFIG_AS_AVX2=3D1 -DCONFIG_AS_AVX512=3D1 =
+-DCONFIG_AS_SHA1_NI=3D1 -DCONFIG_AS_SHA256_NI=3D1 -Wno-sign-compare -fno-as=
+ynchronous-unwind-tables -fno-delete-null-pointer-checks -Wno-frame-address=
+ -Wno-format-truncation -Wno-format-overflow -O2 --param=3Dallow-store-data=
+-races=3D0 -Wframe-larger-than=3D2048 -fno-stack-protector -Wno-unused-but-=
+set-variable -Wimplicit-fallthrough -Wno-unused-const-variable -fno-omit-fr=
+ame-pointer -fno-optimize-sibling-calls -fno-var-tracking-assignments -Wdec=
+laration-after-statement -Wvla -Wno-pointer-sign -fno-strict-overflow -fno-=
+merge-all-constants -fmerge-constants -fno-stack-check -fconserve-stack -We=
+rror=3Ddate-time -Werror=3Dincompatible-pointer-types -Werror=3Ddesignated-=
+init -fno-conserve-stack -fno-stack-protector  -fprofile-arcs -ftest-covera=
+ge -fno-tree-loop-im -Wno-maybe-uninitialized    -fsanitize=3Dshift  -fsani=
+tize=3Dinteger-divide-by-zero  -fsanitize=3Dunreachable  -fsanitize=3Dsigne=
+d-integer-overflow  -fsanitize=3Dbounds  -fsanitize=3Dobject-size  -fsaniti=
+ze=3Dbool  -fsanitize=3Denum  -Wno-maybe-uninitialized   -I ../kernel/kcsan=
+ -I ./kernel/kcsan    -DKBUILD_BASENAME=3D'"core"' -DKBUILD_MODNAME=3D'"cor=
+e"' -c -o kernel/kcsan/core.o ../kernel/kcsan/core.c
+> ../kernel/kcsan/core.c:619:6: warning: conflicting types for built-in fun=
+ction =E2=80=98__tsan_func_exit=E2=80=99 [-Wbuiltin-declaration-mismatch]
+
+Adding '-fsanitize=3D<anything>' seems to make gcc think that these are
+builtins. So this is partially also a gcc problem, but if we disable all
+sanitizers with the runtime, then this goes away.
+
+Thanks,
+-- Marco
