@@ -2,165 +2,142 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 954DDC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 02:48:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C149CC33CA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 02:48:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F6B422315
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 02:48:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574131690;
-	bh=chJiUFBueFIJcuh6rMJxGq5GZ3knKQF/bdVQNfdWuEA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zg8+bDpWkpnty5ueWQYa4DfeixBuZJgnOJjupgSqiE3ZZIIUMEN5Xuj2Lua5VN/aG
-	 Uuk9csP4Ow7BbNOB88jlGcbzjJgP3BFtaVpyRxD3vM5foyt8jaCbxb8fsbbwvHTvEF
-	 nbMBti4i6lgpL679IKbD4drcyKrJxCzVFNbYM/I4=
+	by mail.kernel.org (Postfix) with ESMTP id A34682231A
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 02:48:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727298AbfKSCsJ (ORCPT
+        id S1727363AbfKSCso (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 21:48:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51872 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726996AbfKSCsJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 21:48:09 -0500
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 18 Nov 2019 21:48:44 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:34638 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727146AbfKSCso (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 21:48:44 -0500
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAJ2kuCS118554
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 21:48:41 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2way216047-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 21:48:41 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
+        Tue, 19 Nov 2019 02:48:39 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 19 Nov 2019 02:48:31 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAJ2mUkX393582
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 Nov 2019 02:48:30 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C46E1A405C;
+        Tue, 19 Nov 2019 02:48:30 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6D8F3A4054;
+        Tue, 19 Nov 2019 02:48:30 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 19 Nov 2019 02:48:30 +0000 (GMT)
+Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2393722313;
-        Tue, 19 Nov 2019 02:48:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574131687;
-        bh=chJiUFBueFIJcuh6rMJxGq5GZ3knKQF/bdVQNfdWuEA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Dq0TTHshYwwgqWuV3GwEqRCUOSEcIClaq6CNMF/19FTKYFhmuj+68tCMrh8pk41sJ
-         XI3dPYp9HRzLHNc0NJoYe3X/WC18oga6QhLkBj0mqK/hngGLT0JPgZcW8MuqIzVzBZ
-         szM2voG+0iVWHqKeI1MFv14KBXPcX5lZ/u7TZjmQ=
-Date:   Mon, 18 Nov 2019 18:48:05 -0800
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Marco Elver <elver@google.com>,
-        syzbot <syzbot+08f3e9d26e5541e1ecf2@syzkaller.appspotmail.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Josh Triplett <josh@joshtriplett.org>, axboe@kernel.dk,
-        justin@coraid.com, linux-block@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: KCSAN: data-race in process_srcu / synchronize_srcu
-Message-ID: <20191119024805.GF3147@sol.localdomain>
-References: <000000000000b587670596839fab@google.com>
- <CANpmjNPpvyxZv9N042Uz1gQb7R0B1MOmCa255-czqWsc7SiOxg@mail.gmail.com>
- <20191104161152.GB20975@paulmck-ThinkPad-P72>
- <CANpmjNNFQbtDpBzbf-RkBp=mzhzXCLOO=scA=oB6xSWD3X9zEw@mail.gmail.com>
- <20191104165303.GG20975@paulmck-ThinkPad-P72>
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id D0373A012A;
+        Tue, 19 Nov 2019 13:48:25 +1100 (AEDT)
+Subject: Re: [PATCH 08/10] nvdimm: Add driver for OpenCAPI Storage Class
+ Memory
+From:   "Alastair D'Silva" <alastair@au1.ibm.com>
+To:     Andrew Donnellan <ajd@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Frederic Barrat <fbarrat@linux.ibm.com>
+Cc:     Oscar Salvador <osalvador@suse.com>,
+        Michal Hocko <mhocko@suse.com>,
+        David Hildenbrand <david@redhat.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>, Greg Kurz <groug@kaod.org>,
+        Nicholas Piggin <npiggin@gmail.com>, Qian Cai <cai@lca.pw>,
+        =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        Linux MM <linux-mm@kvack.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Date:   Tue, 19 Nov 2019 13:48:26 +1100
+In-Reply-To: <02374c9a-39fb-5693-3d9c-aa7e7674a6c1@linux.ibm.com>
+References: <20191025044721.16617-1-alastair@au1.ibm.com>
+         <20191025044721.16617-9-alastair@au1.ibm.com>
+         <8232c1a6-d52a-6c32-6178-de082174a92a@linux.ibm.com>
+         <CAPcyv4g9b6PyREurH9NcQf4BO2YcRGJPBZDqGKy-Vz91mBKjew@mail.gmail.com>
+         <02374c9a-39fb-5693-3d9c-aa7e7674a6c1@linux.ibm.com>
+Organization: IBM Australia
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.1 (3.34.1-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191104165303.GG20975@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19111902-0020-0000-0000-0000038A0D94
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19111902-0021-0000-0000-000021E0371A
+Message-Id: <7fd5a4571062a06da8f09f18300794b48ead5dc1.camel@au1.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-18_08:2019-11-15,2019-11-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=886
+ malwarescore=0 bulkscore=0 suspectscore=0 spamscore=0 adultscore=0
+ clxscore=1015 mlxscore=0 priorityscore=1501 impostorscore=0 phishscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1911190024
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 04, 2019 at 08:53:03AM -0800, Paul E. McKenney wrote:
-> On Mon, Nov 04, 2019 at 05:14:50PM +0100, Marco Elver wrote:
-> > On Mon, 4 Nov 2019 at 17:11, Paul E. McKenney <paulmck@kernel.org> wrote:
-> > >
-> > > On Mon, Nov 04, 2019 at 12:31:56PM +0100, Marco Elver wrote:
-> > > > +RCU folks, since this is probably a data race in RCU.
-> > > >
-> > > > On Mon, 4 Nov 2019 at 12:29, syzbot
-> > > > <syzbot+08f3e9d26e5541e1ecf2@syzkaller.appspotmail.com> wrote:
-> > > > >
-> > > > > Hello,
-> > > > >
-> > > > > syzbot found the following crash on:
-> > > > >
-> > > > > HEAD commit:    05f22368 x86, kcsan: Enable KCSAN for x86
-> > > > > git tree:       https://github.com/google/ktsan.git kcsan
-> > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=17ade7ef600000
-> > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=87d111955f40591f
-> > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=08f3e9d26e5541e1ecf2
-> > > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > > > >
-> > > > > Unfortunately, I don't have any reproducer for this crash yet.
-> > > > >
-> > > > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > > > > Reported-by: syzbot+08f3e9d26e5541e1ecf2@syzkaller.appspotmail.com
-> > > > >
-> > > > > ==================================================================
-> > > > > BUG: KCSAN: data-race in process_srcu / synchronize_srcu
-> > > > >
-> > > > > write to 0xffffffff8604e8a0 of 8 bytes by task 17 on cpu 1:
-> > > > >   srcu_gp_end kernel/rcu/srcutree.c:533 [inline]
-> > > > >   srcu_advance_state kernel/rcu/srcutree.c:1146 [inline]
-> > > > >   process_srcu+0x207/0x780 kernel/rcu/srcutree.c:1237
-> > > > >   process_one_work+0x3d4/0x890 kernel/workqueue.c:2269
-> > > > >   worker_thread+0xa0/0x800 kernel/workqueue.c:2415
-> > > > >   kthread+0x1d4/0x200 drivers/block/aoe/aoecmd.c:1253
-> > > > >   ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
-> > > > >
-> > > > > read to 0xffffffff8604e8a0 of 8 bytes by task 12515 on cpu 0:
-> > > > >   srcu_might_be_idle kernel/rcu/srcutree.c:784 [inline]
-> > > > >   synchronize_srcu+0x107/0x214 kernel/rcu/srcutree.c:996
-> > > > >   fsnotify_connector_destroy_workfn+0x63/0xb0 fs/notify/mark.c:164
-> > > > >   process_one_work+0x3d4/0x890 kernel/workqueue.c:2269
-> > > > >   worker_thread+0xa0/0x800 kernel/workqueue.c:2415
-> > > > >   kthread+0x1d4/0x200 drivers/block/aoe/aoecmd.c:1253
-> > > > >   ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
-> > > > >
-> > > > > Reported by Kernel Concurrency Sanitizer on:
-> > > > > CPU: 0 PID: 12515 Comm: kworker/u4:8 Not tainted 5.4.0-rc3+ #0
-> > > > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > > > > Google 01/01/2011
-> > > > > Workqueue: events_unbound fsnotify_connector_destroy_workfn
-> > > > > ==================================================================
-> > > > > Kernel panic - not syncing: panic_on_warn set ...
-> > > > > CPU: 0 PID: 12515 Comm: kworker/u4:8 Not tainted 5.4.0-rc3+ #0
-> > > > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > > > > Google 01/01/2011
-> > > > > Workqueue: events_unbound fsnotify_connector_destroy_workfn
-> > > > > Call Trace:
-> > > > >   __dump_stack lib/dump_stack.c:77 [inline]
-> > > > >   dump_stack+0xf5/0x159 lib/dump_stack.c:113
-> > > > >   panic+0x210/0x640 kernel/panic.c:221
-> > > > >   kcsan_report.cold+0xc/0x10 kernel/kcsan/report.c:302
-> > > > >   __kcsan_setup_watchpoint+0x32e/0x4a0 kernel/kcsan/core.c:411
-> > > > >   __tsan_read8 kernel/kcsan/kcsan.c:36 [inline]
-> > > > >   __tsan_read8+0x2c/0x30 kernel/kcsan/kcsan.c:36
-> > > > >   srcu_might_be_idle kernel/rcu/srcutree.c:784 [inline]
-> > > > >   synchronize_srcu+0x107/0x214 kernel/rcu/srcutree.c:996
-> > > > >   fsnotify_connector_destroy_workfn+0x63/0xb0 fs/notify/mark.c:164
-> > > > >   process_one_work+0x3d4/0x890 kernel/workqueue.c:2269
-> > > > >   worker_thread+0xa0/0x800 kernel/workqueue.c:2415
-> > > > >   kthread+0x1d4/0x200 drivers/block/aoe/aoecmd.c:1253
-> > > > >   ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
-> > > > > Kernel Offset: disabled
-> > > > > Rebooting in 86400 seconds..
-> > > > >
-> > > > >
-> > > > > ---
-> > > > > This bug is generated by a bot. It may contain errors.
-> > > > > See https://goo.gl/tpsmEJ for more information about syzbot.
-> > > > > syzbot engineers can be reached at syzkaller@googlegroups.com.
-> > > > >
-> > > > > syzbot will keep track of this bug report. See:
-> > > > > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> > >
-> > > Good catch!  Does the patch below help?
+On Tue, 2019-11-19 at 10:47 +1100, Andrew Donnellan wrote:
+> On 15/11/19 3:35 am, Dan Williams wrote:
+> > > Have you discussed with the directory owner if it's ok to split
+> > > the
+> > > driver over several files?
 > > 
-> > Looks good to me, thanks for the quick fix.
-> > 
-> > Acked-by: Marco Elver <elver@google.com>
+> > My thought is to establish drivers/opencapi/ and move this and the
+> > existing drivers/misc/ocxl/ bits there.
 > 
-> Applied, thank you!
+> Is there any other justification for this we can think of apart from
+> not 
+> wanting to put this driver in the nvdimm directory? OpenCAPI drivers 
+> aren't really a category of driver unto themselves.
 > 
-> 							Thanx, Paul
 
-This patch is not in linux-next.  What happened to it?
+There is a precedent for bus-based dirs, eg. drivers/(ide|w1|spi) all
+contain drivers for both controllers & connected devices.
 
-- Eric
+Fred, how do you feel about moving the generic OpenCAPI driver out of
+drivers/misc?
+
+-- 
+Alastair D'Silva
+Open Source Developer
+Linux Technology Centre, IBM Australia
+mob: 0423 762 819
+
