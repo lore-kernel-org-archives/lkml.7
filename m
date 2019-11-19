@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 833FDC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:51:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49DE0C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:51:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C51E20862
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:51:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 209AB20862
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:51:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142684;
-	bh=5UlIQR2DCq+pOvDPurmJbhIK5FNedXV0/VZEjZx8hAs=;
+	s=default; t=1574142686;
+	bh=faCWoOYAfIbvkx3JZpbhyswh7/Ci/iA7KBk4Qo6abWQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d1Cmh/TVQhTNi29ZVq1e/oofWIhS9yI/oJ+hIqPFJ8nE55rLDqAabMrPOArHnRbKR
-	 MEc15OT2M78a/uT1fTTsR9FRb8CIaXL/nXONuRVRZ/Y8ETZ60yH1JMO3EERseg7H7o
-	 G76xgrO7zvL26cUZ/OoncGWsiIrsqO+7sIpJjyTI=
+	b=bQ9Jk8d4qPDDpRiac2RB1gaCATTiG4Kek1kFZsUDHzVjXn0khuMAaa030p1KgsFCb
+	 ay0qH1lPOZofww6WNqSj11ijRlS6uWYDBXY0zfiWL/YH0yVyzdCBJ5FeQBDJYCddoJ
+	 qMRwIi7CzZJ+GbGxKUhCmLpYWsXx300JiLXd8Htg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731781AbfKSFvX (ORCPT
+        id S1731457AbfKSFvZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:51:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48734 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:51:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731758AbfKSFvU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:51:20 -0500
+        id S1731777AbfKSFvW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:51:22 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2487208C3;
-        Tue, 19 Nov 2019 05:51:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F589208C3;
+        Tue, 19 Nov 2019 05:51:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142679;
-        bh=5UlIQR2DCq+pOvDPurmJbhIK5FNedXV0/VZEjZx8hAs=;
+        s=default; t=1574142682;
+        bh=faCWoOYAfIbvkx3JZpbhyswh7/Ci/iA7KBk4Qo6abWQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EVt3mhv689n+7tQmB5qZpxCPLL903GoFggVl35nfd3DqhSfbRyLoBn0M6Mfmj/fA3
-         etNsGpaKSTDIrAgtn1+uF9gUW8PSP2T6+kvP2+IzZv9fiRefjQm56X1qQLp3dhIspC
-         VyC1oIq4UpTWCEBwaDmg4tzgvtdLt9AA7wjz0KcM=
+        b=RpLdfsOaHhjBngJ90w5RAlNiQZkYaYHBe+2vQwgWDU+gz9nbmY2EP+mJxWZkHkyVW
+         jIYZ/jzTWIxo60XA9FvusOZoY5DN2UNoTOgD1zXSYz8H+hpTReTqlfsmmeCOnifENE
+         twFmTAodOZk8oZgjYpcWZw46toiHoV3xKAZWZyJA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 162/239] ARM: dts: ux500: Fix LCDA clock line muxing
-Date:   Tue, 19 Nov 2019 06:19:22 +0100
-Message-Id: <20191119051333.435722076@linuxfoundation.org>
+Subject: [PATCH 4.14 163/239] ARM: dts: ste: Fix SPI controller node names
+Date:   Tue, 19 Nov 2019 06:19:23 +0100
+Message-Id: <20191119051333.501044561@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -59,47 +60,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Walleij <linus.walleij@linaro.org>
+From: Rob Herring <robh@kernel.org>
 
-[ Upstream commit ecde29569e3484e1d0a032bf4074449bce4d4a03 ]
+[ Upstream commit 2f967f9e9fa076affb711da1a8389b5d33814fc6 ]
 
-The "lcdaclk_b_1" group is muxed with the function "lcd"
-but needs a separate entry to be muxed in with "lcda"
-rather than "lcd".
+SPI controller nodes should be named 'spi' rather than 'ssp'. Fixing the
+name enables dtc SPI bus checks.
 
+Signed-off-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/ste-href-family-pinctrl.dtsi | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/ste-dbx5x0.dtsi     | 4 ++--
+ arch/arm/boot/dts/ste-hrefprev60.dtsi | 2 +-
+ arch/arm/boot/dts/ste-snowball.dts    | 2 +-
+ arch/arm/boot/dts/ste-u300.dts        | 2 +-
+ 4 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm/boot/dts/ste-href-family-pinctrl.dtsi b/arch/arm/boot/dts/ste-href-family-pinctrl.dtsi
-index 5c5cea232743d..1ec193b0c5065 100644
---- a/arch/arm/boot/dts/ste-href-family-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/ste-href-family-pinctrl.dtsi
-@@ -607,16 +607,20 @@
+diff --git a/arch/arm/boot/dts/ste-dbx5x0.dtsi b/arch/arm/boot/dts/ste-dbx5x0.dtsi
+index 3dc0028e108b3..986767735e249 100644
+--- a/arch/arm/boot/dts/ste-dbx5x0.dtsi
++++ b/arch/arm/boot/dts/ste-dbx5x0.dtsi
+@@ -878,7 +878,7 @@
+ 			power-domains = <&pm_domains DOMAIN_VAPE>;
+ 		};
  
- 			mcde {
- 				lcd_default_mode: lcd_default {
--					default_mux {
-+					default_mux1 {
- 						/* Mux in VSI0 and all the data lines */
- 						function = "lcd";
- 						groups =
- 						"lcdvsi0_a_1", /* VSI0 for LCD */
- 						"lcd_d0_d7_a_1", /* Data lines */
- 						"lcd_d8_d11_a_1", /* TV-out */
--						"lcdaclk_b_1", /* Clock line for TV-out */
- 						"lcdvsi1_a_1"; /* VSI1 for HDMI */
- 					};
-+					default_mux2 {
-+						function = "lcda";
-+						groups =
-+						"lcdaclk_b_1"; /* Clock line for TV-out */
-+					};
- 					default_cfg1 {
- 						pins =
- 						"GPIO68_E1", /* VSI0 */
+-		ssp@80002000 {
++		spi@80002000 {
+ 			compatible = "arm,pl022", "arm,primecell";
+ 			reg = <0x80002000 0x1000>;
+ 			interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
+@@ -892,7 +892,7 @@
+ 			power-domains = <&pm_domains DOMAIN_VAPE>;
+ 		};
+ 
+-		ssp@80003000 {
++		spi@80003000 {
+ 			compatible = "arm,pl022", "arm,primecell";
+ 			reg = <0x80003000 0x1000>;
+ 			interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
+diff --git a/arch/arm/boot/dts/ste-hrefprev60.dtsi b/arch/arm/boot/dts/ste-hrefprev60.dtsi
+index 3f14b4df69b4e..94eeb7f1c9478 100644
+--- a/arch/arm/boot/dts/ste-hrefprev60.dtsi
++++ b/arch/arm/boot/dts/ste-hrefprev60.dtsi
+@@ -57,7 +57,7 @@
+ 			};
+ 		};
+ 
+-		ssp@80002000 {
++		spi@80002000 {
+ 			/*
+ 			 * On the first generation boards, this SSP/SPI port was connected
+ 			 * to the AB8500.
+diff --git a/arch/arm/boot/dts/ste-snowball.dts b/arch/arm/boot/dts/ste-snowball.dts
+index ade1d0d4e5f45..1bf4358f8fa71 100644
+--- a/arch/arm/boot/dts/ste-snowball.dts
++++ b/arch/arm/boot/dts/ste-snowball.dts
+@@ -376,7 +376,7 @@
+ 			pinctrl-1 = <&i2c3_sleep_mode>;
+ 		};
+ 
+-		ssp@80002000 {
++		spi@80002000 {
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&ssp0_snowball_mode>;
+ 		};
+diff --git a/arch/arm/boot/dts/ste-u300.dts b/arch/arm/boot/dts/ste-u300.dts
+index 62ecb6a2fa39e..1bd1aba3322f1 100644
+--- a/arch/arm/boot/dts/ste-u300.dts
++++ b/arch/arm/boot/dts/ste-u300.dts
+@@ -442,7 +442,7 @@
+ 			dma-names = "rx";
+ 		};
+ 
+-		spi: ssp@c0006000 {
++		spi: spi@c0006000 {
+ 			compatible = "arm,pl022", "arm,primecell";
+ 			reg = <0xc0006000 0x1000>;
+ 			interrupt-parent = <&vica>;
 -- 
 2.20.1
 
