@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE70DC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:22:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38BE8C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:22:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C49D121939
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:22:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FC8222317
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:22:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574140953;
-	bh=L6RLN0ga6Us/fJjLbQ77BUQSJt7aTgp1YF6JLRdVaYY=;
+	s=default; t=1574140957;
+	bh=e6CICMOupY8NFEmXVT/oiRzp/oDxkEoLf0qYaYMSIQk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gUHhA6tRL5iPAnPZSzsqcRGZqyHErTWftc0d2CvAE1FKcd8jMjtAqA536l9bX0ZAZ
-	 WP1M8EuCxk2XHqLVP8fsJ7psNjzAqiQlbzSKm/TDsoKL9QtlGLBaNl4ZhzHEkZitir
-	 0n6q6FEOxJ9LPYNDUt5h6JfHq/erfvJE/+QKAQ9Y=
+	b=w0LuBaELC88qKJVGjjaXS6fu9iRI5C4Ky574m96xgICYLUqTjyOvJMhmZiCZrKMjN
+	 0jFopJ4XB5zcDFJ1grp29gIxcF+LBYS/tQVrFbh1qLLpyWTr/R5FySnM/CVBV/Owhh
+	 dW+5vM/QPwAAmAWajCHARZUnoGrwMh/TZgQZd42w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727764AbfKSFWc (ORCPT
+        id S1727781AbfKSFWf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:22:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37796 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:22:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727744AbfKSFW3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:22:29 -0500
+        id S1727744AbfKSFWc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:22:32 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66F182231A;
-        Tue, 19 Nov 2019 05:22:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A22832231A;
+        Tue, 19 Nov 2019 05:22:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574140948;
-        bh=L6RLN0ga6Us/fJjLbQ77BUQSJt7aTgp1YF6JLRdVaYY=;
+        s=default; t=1574140952;
+        bh=e6CICMOupY8NFEmXVT/oiRzp/oDxkEoLf0qYaYMSIQk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BwIBtN2iFWstX+x5dXS/mSqbGkU3pbG0/EpVrKikaAIYLjLmFwnNxrvvhqCnlquBd
-         kP9uiOH0skOl3VVtFu3G4fiAqjHORX/yzXsKG3tOzLRcZv5Ism/xjSeMXdsvONm8+A
-         sWtVKjjRt2ViB7SaVx5AKU3HxpLpfHUWuV591V5Q=
+        b=NYVCs9G9GVDzlQXAwAS6LlMbavY7+L8AHiFW6Dw2XVk8AvKCDWCP6QYAz5IQBUlIe
+         HCM+Irx796xre6eNpCc+mYimOvvUOGZQGWkN9Jj+NLg/s/I/4AxVfqYuehxvMbhyoE
+         L4Qv46hD6/DpNdOUNKajC/MBhDUcfDaAz9N5FNA4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guillaume Nault <gnault@redhat.com>,
+        stable@vger.kernel.org, Corentin Labbe <clabbe@baylibre.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 04/48] ipmr: Fix skb headroom in ipmr_get_route().
-Date:   Tue, 19 Nov 2019 06:19:24 +0100
-Message-Id: <20191119050950.798307156@linuxfoundation.org>
+Subject: [PATCH 5.3 40/48] net: ethernet: dwmac-sun8i: Use the correct function in exit path
+Date:   Tue, 19 Nov 2019 06:20:00 +0100
+Message-Id: <20191119051022.818468781@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119050946.745015350@linuxfoundation.org>
 References: <20191119050946.745015350@linuxfoundation.org>
@@ -59,83 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guillaume Nault <gnault@redhat.com>
+From: Corentin Labbe <clabbe@baylibre.com>
 
-[ Upstream commit 7901cd97963d6cbde88fa25a4a446db3554c16c6 ]
+commit 40a1dcee2d1846a24619fe9ca45c661ca0db7dda upstream.
 
-In route.c, inet_rtm_getroute_build_skb() creates an skb with no
-headroom. This skb is then used by inet_rtm_getroute() which may pass
-it to rt_fill_info() and, from there, to ipmr_get_route(). The later
-might try to reuse this skb by cloning it and prepending an IPv4
-header. But since the original skb has no headroom, skb_push() triggers
-skb_under_panic():
-
-skbuff: skb_under_panic: text:00000000ca46ad8a len:80 put:20 head:00000000cd28494e data:000000009366fd6b tail:0x3c end:0xec0 dev:veth0
+When PHY is not powered, the probe function fail and some resource are
+still unallocated.
+Furthermore some BUG happens:
+dwmac-sun8i 5020000.ethernet: EMAC reset timeout
 ------------[ cut here ]------------
-kernel BUG at net/core/skbuff.c:108!
-invalid opcode: 0000 [#1] SMP KASAN PTI
-CPU: 6 PID: 587 Comm: ip Not tainted 5.4.0-rc6+ #1
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-2.fc30 04/01/2014
-RIP: 0010:skb_panic+0xbf/0xd0
-Code: 41 a2 ff 8b 4b 70 4c 8b 4d d0 48 c7 c7 20 76 f5 8b 44 8b 45 bc 48 8b 55 c0 48 8b 75 c8 41 54 41 57 41 56 41 55 e8 75 dc 7a ff <0f> 0b 0f 1f 44 00 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00
-RSP: 0018:ffff888059ddf0b0 EFLAGS: 00010286
-RAX: 0000000000000086 RBX: ffff888060a315c0 RCX: ffffffff8abe4822
-RDX: 0000000000000000 RSI: 0000000000000008 RDI: ffff88806c9a79cc
-RBP: ffff888059ddf118 R08: ffffed100d9361b1 R09: ffffed100d9361b0
-R10: ffff88805c68aee3 R11: ffffed100d9361b1 R12: ffff88805d218000
-R13: ffff88805c689fec R14: 000000000000003c R15: 0000000000000ec0
-FS:  00007f6af184b700(0000) GS:ffff88806c980000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007ffc8204a000 CR3: 0000000057b40006 CR4: 0000000000360ee0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- skb_push+0x7e/0x80
- ipmr_get_route+0x459/0x6fa
- rt_fill_info+0x692/0x9f0
- inet_rtm_getroute+0xd26/0xf20
- rtnetlink_rcv_msg+0x45d/0x630
- netlink_rcv_skb+0x1a5/0x220
- rtnetlink_rcv+0x15/0x20
- netlink_unicast+0x305/0x3a0
- netlink_sendmsg+0x575/0x730
- sock_sendmsg+0xb5/0xc0
- ___sys_sendmsg+0x497/0x4f0
- __sys_sendmsg+0xcb/0x150
- __x64_sys_sendmsg+0x48/0x50
- do_syscall_64+0xd2/0xac0
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
+kernel BUG at /linux-next/net/core/dev.c:9844!
 
-Actually the original skb used to have enough headroom, but the
-reserve_skb() call was lost with the introduction of
-inet_rtm_getroute_build_skb() by commit 404eb77ea766 ("ipv4: support
-sport, dport and ip_proto in RTM_GETROUTE").
+So let's use the right function (stmmac_pltfr_remove) in the error path.
 
-We could reserve some headroom again in inet_rtm_getroute_build_skb(),
-but this function shouldn't be responsible for handling the special
-case of ipmr_get_route(). Let's handle that directly in
-ipmr_get_route() by calling skb_realloc_headroom() instead of
-skb_clone().
-
-Fixes: 404eb77ea766 ("ipv4: support sport, dport and ip_proto in RTM_GETROUTE")
-Signed-off-by: Guillaume Nault <gnault@redhat.com>
+Fixes: 9f93ac8d4085 ("net-next: stmmac: Add dwmac-sun8i")
+Cc: <stable@vger.kernel.org> # v4.15+
+Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ipv4/ipmr.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/net/ipv4/ipmr.c
-+++ b/net/ipv4/ipmr.c
-@@ -2289,7 +2289,8 @@ int ipmr_get_route(struct net *net, stru
- 			rcu_read_unlock();
- 			return -ENODEV;
- 		}
--		skb2 = skb_clone(skb, GFP_ATOMIC);
-+
-+		skb2 = skb_realloc_headroom(skb, sizeof(struct iphdr));
- 		if (!skb2) {
- 			read_unlock(&mrt_lock);
- 			rcu_read_unlock();
+---
+ drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
+@@ -1225,7 +1225,7 @@ static int sun8i_dwmac_probe(struct plat
+ dwmac_mux:
+ 	sun8i_dwmac_unset_syscon(gmac);
+ dwmac_exit:
+-	sun8i_dwmac_exit(pdev, plat_dat->bsp_priv);
++	stmmac_pltfr_remove(pdev);
+ return ret;
+ }
+ 
 
 
