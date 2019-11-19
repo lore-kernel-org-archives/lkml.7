@@ -2,110 +2,170 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FORGED_MUA_MOZILLA,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADB68C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:23:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B861C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:25:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DD15222D1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:23:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B17A222D1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:25:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="cNRMj3kz";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="f6qkpTGC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728208AbfKSPXl (ORCPT
+        id S1728145AbfKSPZs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 10:23:41 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:46242 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726637AbfKSPXl (ORCPT
+        Tue, 19 Nov 2019 10:25:48 -0500
+Received: from a27-10.smtp-out.us-west-2.amazonses.com ([54.240.27.10]:34286
+        "EHLO a27-10.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727505AbfKSPZs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 10:23:41 -0500
-Received: from [192.168.4.242] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1iX5Lt-0007Sx-88; Tue, 19 Nov 2019 15:23:37 +0000
-Received: from ben by deadeye with local (Exim 4.93-RC1)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1iX5Ls-0006Si-Ru; Tue, 19 Nov 2019 15:23:36 +0000
-Message-ID: <2962b899411bcb9c1463310dd3d5eda733bf4b63.camel@decadent.org.uk>
-Subject: Re: [PATCH AUTOSEL 4.20 072/117] btrfs: alloc_chunk: fix more DUP
- stripe size handling
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     Hans van Kranenburg <Hans.van.Kranenburg@mendix.com>,
-        Sasha Levin <sashal@kernel.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        David Sterba <dsterba@suse.com>,
-        "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>
-Date:   Tue, 19 Nov 2019 15:23:31 +0000
-In-Reply-To: <84061712-32b6-35b7-eb1f-27eb9f85fd11@mendix.com>
-References: <20190108192628.121270-1-sashal@kernel.org>
-         <20190108192628.121270-72-sashal@kernel.org>
-         <783ccf1f-65df-d388-079c-9449d4319c27@mendix.com>
-         <20190123143732.GL202535@sasha-vm>
-         <cb62ab8d-7d6f-de02-2912-3d9391a2bbb2@mendix.com>
-         <20190123181805.GM202535@sasha-vm>
-         <84061712-32b6-35b7-eb1f-27eb9f85fd11@mendix.com>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-kMH/KTWFcu9xkthxoQQ2"
-User-Agent: Evolution 3.30.5-1.1 
+        Tue, 19 Nov 2019 10:25:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574177146;
+        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+        bh=9eIeIDGYpRoajHOA6V6r5A1WHGey/lyjLwLkgP/Ouzg=;
+        b=cNRMj3kz9XDvGdr4Pa1Srgz2f+pUltYIVyHg6bI7H91i2q18wqxvL6mFf7HjwYJq
+        YnD10cw0b5aUdu5OORfNrItNRjuzaE0z1ebk37fdAUzQl/hHOTfV7xzb8fSLU1ls2RK
+        G3HL+TMIXYVQSCQRMHZYJgQleJ6wS56oz7eq1YTM=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574177146;
+        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID;
+        bh=9eIeIDGYpRoajHOA6V6r5A1WHGey/lyjLwLkgP/Ouzg=;
+        b=f6qkpTGCJxTehWmRZG++Bysymr9EQog0V8yQJTl3EfueVybCnxYzv0byKBO6S2kD
+        GeK2Aee5nXlQsC6m+cxYKLzM7AXUHGAcuW+04bHkrGNYHXriCgmqTOmCAQlRUxaa6Mn
+        Y+HoIb1A6C62Gmxk4+C/mHrBZNJigK5y8oQNx6n8=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 409E3C447A6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
+Subject: Re: [PATCH 01/16] remoteproc: q6v5-mss: fixup MSM8998 MSS out of
+ reset sequence
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Mark Rutland <mark.rutland@arm.com>, p.zabel@pengutronix.de,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        linux-remoteproc@vger.kernel.org,
+        DTML <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>
+References: <20191118214250.14002-1-sibis@codeaurora.org>
+ <0101016e80782dd7-2617455b-7d73-4e68-8a9a-b63c29e9ad76-000000@us-west-2.amazonses.com>
+ <CAOCk7Nou94bxk_48JArrXhQw2KR+3bKanLe+hb2=d7_j6y3VbQ@mail.gmail.com>
+From:   Sibi Sankar <sibis@codeaurora.org>
+Message-ID: <0101016e844507bb-3be95e27-404d-48bb-a251-e5edf8731d67-000000@us-west-2.amazonses.com>
+Date:   Tue, 19 Nov 2019 15:25:46 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 192.168.4.242
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+In-Reply-To: <CAOCk7Nou94bxk_48JArrXhQw2KR+3bKanLe+hb2=d7_j6y3VbQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SES-Outgoing: 2019.11.19-54.240.27.10
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hey Jeff,
 
---=-kMH/KTWFcu9xkthxoQQ2
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On 11/19/19 3:24 AM, Jeffrey Hugo wrote:
+> On Mon, Nov 18, 2019 at 2:43 PM Sibi Sankar <sibis@codeaurora.org> wrote:
+>>
+>> Fixup the following in the MSS out of reset sequence on MSM8998:
+>> * skip ACC override on MSM8998.
+>> * wait for BHS_EN_REST_ACK to be set before setting the LDO to bypass.
+>> * remove "mem" clock from the active pool.
+> 
+> Why any of this is necessary isn't explained.
 
-On Wed, 2019-01-23 at 19:32 +0000, Hans van Kranenburg wrote:
-[...]
-> For 3.16.y it also first needs a little part of b8b93addde from David
-> Sterba, which is a collection of coding style changes in quite some
-> places. After that 793ff2c88c6 and then baf92114c7 apply cleanly, only
-> touch that single part of the code and end up with the right thing.
->=20
-> I attached 3.16.y-WIP-partially-apply-b8b93addde.patch as quick and
-> dirty example, please let me know how this should be done properly.
->=20
-> For 4.4, 4.9 and 4.14, first 793ff2c88c6 and then baf92114c7 indeed also
-> end up with the right thing. I just tried that here.
+Honestly the above two fixes didn't seem to have any impact when I
+tested it on MSM8998 MTP just making sure that we allign with the
+out of reset sequence found on msm-4.4.
 
-I've belatedly queued up the required changes for 3.16, thanks.
+> Seems like it should be 3 separate patches.
+> Regarding the mem clock change, wouldn't it be an issue if we don't
+> vote for that?
 
-Ben.
+we already proxy vote for it though.
 
---=20
-Ben Hutchings
-Theory and practice are closer in theory than in practice - John Levine
+> 
+>>
+>> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+>> ---
+>>   drivers/remoteproc/qcom_q6v5_mss.c | 23 ++++++++++++++++++++---
+>>   1 file changed, 20 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
+>> index 471128a2e7239..2becf6dade936 100644
+>> --- a/drivers/remoteproc/qcom_q6v5_mss.c
+>> +++ b/drivers/remoteproc/qcom_q6v5_mss.c
+>> @@ -100,6 +100,11 @@
+>>   #define QDSP6SS_XO_CBCR                0x0038
+>>   #define QDSP6SS_ACC_OVERRIDE_VAL               0x20
+>>
+>> +/* QDSP6v62 parameters */
+>> +#define QDSP6SS_BHS_EN_REST_ACK                BIT(0)
+>> +#define BHS_CHECK_MAX_LOOPS            200
+>> +#define QDSP6SS_BHS_STATUS             0x0C4
+>> +
+>>   /* QDSP6v65 parameters */
+>>   #define QDSP6SS_SLEEP                   0x3C
+>>   #define QDSP6SS_BOOT_CORE_START         0x400
+>> @@ -505,8 +510,9 @@ static int q6v5proc_reset(struct q6v5 *qproc)
+>>                  int mem_pwr_ctl;
+>>
+>>                  /* Override the ACC value if required */
+>> -               writel(QDSP6SS_ACC_OVERRIDE_VAL,
+>> -                      qproc->reg_base + QDSP6SS_STRAP_ACC);
+>> +               if (qproc->version == MSS_MSM8996)
+>> +                       writel(QDSP6SS_ACC_OVERRIDE_VAL,
+>> +                              qproc->reg_base + QDSP6SS_STRAP_ACC);
+>>
+>>                  /* Assert resets, stop core */
+>>                  val = readl(qproc->reg_base + QDSP6SS_RESET_REG);
+>> @@ -534,6 +540,18 @@ static int q6v5proc_reset(struct q6v5 *qproc)
+>>                  val |= readl(qproc->reg_base + QDSP6SS_PWR_CTL_REG);
+>>                  udelay(1);
+>>
+>> +               /* wait for BHS_EN_REST_ACK to be set */
+>> +               if (qproc->version == MSS_MSM8998) {
+>> +                       ret = readl_poll_timeout(qproc->reg_base + QDSP6SS_BHS_STATUS,
+>> +                                                val, (val & QDSP6SS_BHS_EN_REST_ACK),
+>> +                                                1, BHS_CHECK_MAX_LOOPS);
+>> +                       if (ret) {
+>> +                               dev_err(qproc->dev,
+>> +                                       "QDSP6SS_BHS_EN_REST_ACK timedout\n");
+>> +                               return -ETIMEDOUT;
+>> +                       }
+>> +               }
+>> +
+>>                  /* Put LDO in bypass mode */
+>>                  val |= QDSP6v56_LDO_BYP;
+>>                  writel(val, qproc->reg_base + QDSP6SS_PWR_CTL_REG);
+>> @@ -1594,7 +1612,6 @@ static const struct rproc_hexagon_res msm8998_mss = {
+>>          .active_clk_names = (char*[]){
+>>                          "iface",
+>>                          "bus",
+>> -                       "mem",
+>>                          "gpll0_mss",
+>>                          "mnoc_axi",
+>>                          "snoc_axi",
+>> --
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+>> a Linux Foundation Collaborative Project
+>>
+> 
 
-
-
---=-kMH/KTWFcu9xkthxoQQ2
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl3UCPMACgkQ57/I7JWG
-EQkRexAAvNvLIEUL5XuEtxfH//0tW9T2ku6MYy5ONh8XvltoGrI8hy4FOCYmiGXp
-EZLobTTjCDlQfk4cyj4Ep8e04yv3/0ZSCKnTYgRQgwB5qZanB5fo3c6OMH49UiqL
-nih34ht8AW+JOZAPvr285zSrlp/8Ooi7NtRU9gvdTDO9mqU2k8nJxRjOTMm2Y2AL
-17NTuHcxJJYh4+BNWgtn6L+1hOEV9K0PzFLuys+nWiTnZcDN39EF78kFCuCgWHfA
-pRobX1PuuJoFnOisVnNH4rSAGKHAR2mgj/ke34qy3hhYL59MUmAKjg8kyVHUhl6Q
-CxyqQmPf4Ryag9re+8zK7g+IB096OcoT5arKxLyffiCSwaIpXSYqdHa0GaMdpSRS
-nvhe4iZFm+Ie6res16o0x5wj9UC0tOk+CwvzgUqHc9UxrL0zJoL1rGmb5ezzAKU+
-4WhODiFhJP1bXairgknahxRqCtKEOCrdCdb1LbGZmPLdgtsxX5L6IbYxFEE9WQBN
-Ac/ys+vjIEOfhPDgrUcX2lu+sSr9NFX+3tZuDQOLwYUCPPsdypWmNsCJyz/Snxb1
-jWB98nZPVGvvQuG1qursHEH9JM1yCeQjIyjt6BGLDBLApX8N3ncNQnjECyLYFnnM
-5K0/IzpiFfuNvYHCw6EjuPS/pO7hnu08Ree4Ty9iZlVvvIXywR0=
-=LWIb
------END PGP SIGNATURE-----
-
---=-kMH/KTWFcu9xkthxoQQ2--
+-- 
+Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc, is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
