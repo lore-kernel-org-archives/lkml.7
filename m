@@ -2,107 +2,236 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A24C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 04:06:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D45C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 04:07:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98985222A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 04:06:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574136393;
-	bh=h3O05lBsTS2ujFG2b7XJbkSMdiqsVY8miz0OJT9ljAY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UIjkK/hVTQjngfP0fTFBGmUWO7mstMk9yQWXLX7z6ju1U0z4F4lX/BL2PV/6iiqbm
-	 Ifu2A0A5D3+6HIZuibaesYASTRZxmMEl7kPR0Uf1V2XhZlbqkRvQDzpQH2VpmaSsZo
-	 VhPXTT+RSu1/yoCGB0RiI2rhvJcl0MZQek57zvBA=
+	by mail.kernel.org (Postfix) with ESMTP id 824E1222A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 04:07:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727645AbfKSEGc (ORCPT
+        id S1727664AbfKSEHT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 23:06:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34030 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727586AbfKSEGc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 23:06:32 -0500
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26BC522316;
-        Tue, 19 Nov 2019 04:06:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574136391;
-        bh=h3O05lBsTS2ujFG2b7XJbkSMdiqsVY8miz0OJT9ljAY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=b+wRyXD2zkHzq/hfU2wpIHEKPrRjEnfGHdPYpW6XIAGvEiJnMIO1aOU38pEBXDBJf
-         3dZtX+Fxj4RlMNrhWsb05DRyCbiqi9cngiD2oWhJz18y/EVOPgYUjdzC5iFJaYuj3/
-         VnSB9m7TpKXSzZSzP1klBNd6sjyAafs5+BJnsBKw=
-Date:   Mon, 18 Nov 2019 20:06:29 -0800
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     syzbot <syzbot+a0fc447639c6ffa66b59@syzkaller.appspotmail.com>
-Cc:     Steven Price <steven.price@arm.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Re: general protection fault in pagemap_pmd_range
-Message-ID: <20191119040629.GA163020@sol.localdomain>
-References: <000000000000ca5b3f0596a21e0c@google.com>
+        Mon, 18 Nov 2019 23:07:19 -0500
+Received: from spam01.hygon.cn ([110.188.70.11]:35091 "EHLO spam1.hygon.cn"
+        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727512AbfKSEHS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 23:07:18 -0500
+Received: from MK-DB.hygon.cn ([172.23.18.60])
+        by spam1.hygon.cn with ESMTP id xAJ42Tvq043165;
+        Tue, 19 Nov 2019 12:02:29 +0800 (GMT-8)
+        (envelope-from linjiasen@hygon.cn)
+Received: from cncheex01.Hygon.cn ([172.23.18.10])
+        by MK-DB.hygon.cn with ESMTP id xAJ42Sc9010582;
+        Tue, 19 Nov 2019 12:02:28 +0800 (GMT-8)
+        (envelope-from linjiasen@hygon.cn)
+Received: from ubuntu.localdomain (172.23.18.44) by cncheex01.Hygon.cn
+ (172.23.18.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1466.3; Tue, 19 Nov
+ 2019 12:02:28 +0800
+From:   Jiasen Lin <linjiasen@hygon.cn>
+To:     <linux-kernel@vger.kernel.org>, <linux-ntb@googlegroups.com>,
+        <jdmason@kudzu.us>
+CC:     <allenbh@gmail.com>, <dave.jiang@intel.com>, <logang@deltatee.com>,
+        <linjiasen@hygon.cn>
+Subject: [PATCH v2] NTB: ntb_perf: Fix address err in perf_copy_chunk
+Date:   Mon, 18 Nov 2019 20:02:01 -0800
+Message-ID: <1574136121-7941-1-git-send-email-linjiasen@hygon.cn>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <000000000000ca5b3f0596a21e0c@google.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain
+X-Originating-IP: [172.23.18.44]
+X-ClientProxiedBy: cncheex02.Hygon.cn (172.23.18.12) To cncheex01.Hygon.cn
+ (172.23.18.10)
+X-MAIL: spam1.hygon.cn xAJ42Tvq043165
+X-DNSRBL: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[trimmed down ridiculous Cc list]
+peer->outbuf is a virtual address which is get by ioremap, it can not
+be converted to a physical address by virt_to_page and page_to_phys.
+This conversion will result in DMA error, because the destination address
+which is converted by page_to_phys is invalid.
 
-On Tue, Nov 05, 2019 at 03:52:08PM -0800, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    51309b9d Add linux-next specific files for 20191105
-> git tree:       linux-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=11ad1658e00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=a9b1a641c1f1fc52
-> dashboard link: https://syzkaller.appspot.com/bug?extid=a0fc447639c6ffa66b59
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=164e5f92e00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15c65bcce00000
-> 
-> The bug was bisected to:
-> 
-> commit 181be542ef3c9ca495500143d4c23f4d58beb5ab
-> Author: Steven Price <steven.price@arm.com>
-> Date:   Mon Nov 4 22:57:54 2019 +0000
-> 
->     mm: pagewalk: allow walking without vma
-> 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11341968e00000
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=13341968e00000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=15341968e00000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+a0fc447639c6ffa66b59@syzkaller.appspotmail.com
-> Fixes: 181be542ef3c ("mm: pagewalk: allow walking without vma")
-> 
-> kasan: CONFIG_KASAN_INLINE enabled
-> kasan: GPF could be caused by NULL-ptr deref or user memory access
-> general protection fault: 0000 [#1] PREEMPT SMP KASAN
-> CPU: 0 PID: 8839 Comm: syz-executor009 Not tainted 5.4.0-rc6-next-20191105
-> #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> RIP: 0010:pmd_trans_huge_lock include/linux/huge_mm.h:219 [inline]
-> RIP: 0010:pagemap_pmd_range+0x83/0x1e40 fs/proc/task_mmu.c:1373
+This patch save the MMIO address of NTB BARx in perf_setup_peer_mw,
+and map the BAR space to DMA address after we assign the DMA channel.
+Then fill the destination address of DMA descriptor with this DMA address
+to guarantee that the address of memory write requests fall into
+memory window of NBT BARx with IOMMU enabled and disabled.
 
-From some quick tests, this seems to have been fixed by
-mm-pagewalk-allow-walking-without-vma-v15
-(http://lkml.kernel.org/r/20191101140942.51554-13-steven.price@arm.com).
-And it's consistent with syzbot last seeing this crash on next-20191105.
+Changes since v1:
+  * Map NTB BARx MMIO address to DMA address after assign the DMA channel,
+    to ensure the destination address in valid. (per suggestion from Logan)
 
-As this fix will be folded in, let's invalidate this syzbot bug report:
+Fixes: 5648e56d03fa ("NTB: ntb_perf: Add full multi-port NTB API support")
+Signed-off-by: Jiasen Lin <linjiasen@hygon.cn>
+---
+ drivers/ntb/test/ntb_perf.c | 69 ++++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 56 insertions(+), 13 deletions(-)
 
-#syz invalid
+diff --git a/drivers/ntb/test/ntb_perf.c b/drivers/ntb/test/ntb_perf.c
+index e9b7c2d..dfca7e1 100644
+--- a/drivers/ntb/test/ntb_perf.c
++++ b/drivers/ntb/test/ntb_perf.c
+@@ -149,7 +149,8 @@ struct perf_peer {
+ 	u64 outbuf_xlat;
+ 	resource_size_t outbuf_size;
+ 	void __iomem *outbuf;
+-
++	phys_addr_t out_phys_addr;
++	dma_addr_t dma_dst_addr;
+ 	/* Inbound MW params */
+ 	dma_addr_t inbuf_xlat;
+ 	resource_size_t inbuf_size;
+@@ -776,7 +777,8 @@ static void perf_dma_copy_callback(void *data)
+ }
+ 
+ static int perf_copy_chunk(struct perf_thread *pthr,
+-			   void __iomem *dst, void *src, size_t len)
++			   void __iomem *dst, void *src, size_t len,
++			   dma_addr_t dst_dma_addr)
+ {
+ 	struct dma_async_tx_descriptor *tx;
+ 	struct dmaengine_unmap_data *unmap;
+@@ -807,8 +809,7 @@ static int perf_copy_chunk(struct perf_thread *pthr,
+ 	}
+ 	unmap->to_cnt = 1;
+ 
+-	unmap->addr[1] = dma_map_page(dma_dev, virt_to_page(dst),
+-		offset_in_page(dst), len, DMA_FROM_DEVICE);
++	unmap->addr[1] = dst_dma_addr;
+ 	if (dma_mapping_error(dma_dev, unmap->addr[1])) {
+ 		ret = -EIO;
+ 		goto err_free_resource;
+@@ -865,6 +866,7 @@ static int perf_init_test(struct perf_thread *pthr)
+ {
+ 	struct perf_ctx *perf = pthr->perf;
+ 	dma_cap_mask_t dma_mask;
++	struct perf_peer *peer = pthr->perf->test_peer;
+ 
+ 	pthr->src = kmalloc_node(perf->test_peer->outbuf_size, GFP_KERNEL,
+ 				 dev_to_node(&perf->ntb->dev));
+@@ -882,15 +884,33 @@ static int perf_init_test(struct perf_thread *pthr)
+ 	if (!pthr->dma_chan) {
+ 		dev_err(&perf->ntb->dev, "%d: Failed to get DMA channel\n",
+ 			pthr->tidx);
+-		atomic_dec(&perf->tsync);
+-		wake_up(&perf->twait);
+-		kfree(pthr->src);
+-		return -ENODEV;
++		goto err_free;
++	}
++	peer->dma_dst_addr =
++		dma_map_resource(pthr->dma_chan->device->dev,
++				 peer->out_phys_addr, peer->outbuf_size,
++				 DMA_FROM_DEVICE, 0);
++	if (dma_mapping_error(pthr->dma_chan->device->dev,
++			      peer->dma_dst_addr)) {
++		dev_err(pthr->dma_chan->device->dev, "%d: Failed to map DMA addr\n",
++			pthr->tidx);
++		peer->dma_dst_addr = 0;
++		dma_release_channel(pthr->dma_chan);
++		goto err_free;
+ 	}
++	dev_dbg(pthr->dma_chan->device->dev, "%d: Map MMIO %pa to DMA addr %pad\n",
++			pthr->tidx,
++			&peer->out_phys_addr,
++			&peer->dma_dst_addr);
+ 
+ 	atomic_set(&pthr->dma_sync, 0);
+-
+ 	return 0;
++
++err_free:
++	atomic_dec(&perf->tsync);
++	wake_up(&perf->twait);
++	kfree(pthr->src);
++	return -ENODEV;
+ }
+ 
+ static int perf_run_test(struct perf_thread *pthr)
+@@ -901,6 +921,8 @@ static int perf_run_test(struct perf_thread *pthr)
+ 	u64 total_size, chunk_size;
+ 	void *flt_src;
+ 	int ret = 0;
++	dma_addr_t flt_dma_addr;
++	dma_addr_t bnd_dma_addr;
+ 
+ 	total_size = 1ULL << total_order;
+ 	chunk_size = 1ULL << chunk_order;
+@@ -910,11 +932,15 @@ static int perf_run_test(struct perf_thread *pthr)
+ 	bnd_dst = peer->outbuf + peer->outbuf_size;
+ 	flt_dst = peer->outbuf;
+ 
++	flt_dma_addr = peer->dma_dst_addr;
++	bnd_dma_addr = peer->dma_dst_addr + peer->outbuf_size;
++
+ 	pthr->duration = ktime_get();
+ 
+ 	/* Copied field is cleared on test launch stage */
+ 	while (pthr->copied < total_size) {
+-		ret = perf_copy_chunk(pthr, flt_dst, flt_src, chunk_size);
++		ret = perf_copy_chunk(pthr, flt_dst, flt_src, chunk_size,
++				flt_dma_addr);
+ 		if (ret) {
+ 			dev_err(&perf->ntb->dev, "%d: Got error %d on test\n",
+ 				pthr->tidx, ret);
+@@ -925,8 +951,15 @@ static int perf_run_test(struct perf_thread *pthr)
+ 
+ 		flt_dst += chunk_size;
+ 		flt_src += chunk_size;
+-		if (flt_dst >= bnd_dst || flt_dst < peer->outbuf) {
++		flt_dma_addr += chunk_size;
++
++		if (flt_dst >= bnd_dst ||
++		    flt_dst < peer->outbuf ||
++		    flt_dma_addr >= bnd_dma_addr ||
++		    flt_dma_addr < peer->dma_dst_addr) {
++
+ 			flt_dst = peer->outbuf;
++			flt_dma_addr = peer->dma_dst_addr;
+ 			flt_src = pthr->src;
+ 		}
+ 
+@@ -978,8 +1011,13 @@ static void perf_clear_test(struct perf_thread *pthr)
+ 	 * We call it anyway just to be sure of the transfers completion.
+ 	 */
+ 	(void)dmaengine_terminate_sync(pthr->dma_chan);
+-
+-	dma_release_channel(pthr->dma_chan);
++	if (pthr->perf->test_peer->dma_dst_addr)
++		dma_unmap_resource(pthr->dma_chan->device->dev,
++				   pthr->perf->test_peer->dma_dst_addr,
++				   pthr->perf->test_peer->outbuf_size,
++				   DMA_FROM_DEVICE, 0);
++	if (pthr->dma_chan)
++		dma_release_channel(pthr->dma_chan);
+ 
+ no_dma_notify:
+ 	atomic_dec(&perf->tsync);
+@@ -1195,6 +1233,9 @@ static ssize_t perf_dbgfs_read_info(struct file *filep, char __user *ubuf,
+ 			"\tOut buffer addr 0x%pK\n", peer->outbuf);
+ 
+ 		pos += scnprintf(buf + pos, buf_size - pos,
++			"\tOut buff phys addr %pa[p]\n", &peer->out_phys_addr);
++
++		pos += scnprintf(buf + pos, buf_size - pos,
+ 			"\tOut buffer size %pa\n", &peer->outbuf_size);
+ 
+ 		pos += scnprintf(buf + pos, buf_size - pos,
+@@ -1388,6 +1429,8 @@ static int perf_setup_peer_mw(struct perf_peer *peer)
+ 	if (!peer->outbuf)
+ 		return -ENOMEM;
+ 
++	peer->out_phys_addr = phys_addr;
++
+ 	if (max_mw_size && peer->outbuf_size > max_mw_size) {
+ 		peer->outbuf_size = max_mw_size;
+ 		dev_warn(&peer->perf->ntb->dev,
+-- 
+2.7.4
+
