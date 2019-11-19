@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7DA8C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:37:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3488DC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:37:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71F66214DE
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:37:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00C0021823
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:37:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141823;
-	bh=uGWYfVg65/HzkdeuzxNxaCvqxmyX3trBbFNbZSXOU/s=;
+	s=default; t=1574141829;
+	bh=G8lJ2j3/oBPS6i/yoR6pbKyVq2pXSDmOnUhlWt+bOgk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gIZwMISSaK1WpmmptFHpa0xcE80OftT6kFqjQ92SFoqJ+ZEyQkahcZ+HhY4Qbebpn
-	 yU47b+E2g5kB35CuxNBA4k8tZ5wgb/kFfHxYYN20jAeB5Awi3MqcViJkXTMQH8mYSM
-	 fjAw+P/2nhb9653PcVRC5n0CTql9+Dz5d2aupfwM=
+	b=B//pn7NK9TFW4+LZfeu9L0E3qtfWGNHOzkihG5JL2LMoj9bY8U6Ym6YzgZRne9a3u
+	 rCZ7lOH3OeNZCzg+76IThxzg71TjFBD8OsN1A6Onurk18DhaTwfnkxOmMTviy6wp3F
+	 DTT/DOL5E6GjG0IH2hsqVr6EmwwTsHNRqKarUotM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729562AbfKSFhC (ORCPT
+        id S1730050AbfKSFhH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:37:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58586 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:37:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730026AbfKSFg7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:36:59 -0500
+        id S1730026AbfKSFhF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:37:05 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F04FF21783;
-        Tue, 19 Nov 2019 05:36:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE45E21823;
+        Tue, 19 Nov 2019 05:37:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141818;
-        bh=uGWYfVg65/HzkdeuzxNxaCvqxmyX3trBbFNbZSXOU/s=;
+        s=default; t=1574141824;
+        bh=G8lJ2j3/oBPS6i/yoR6pbKyVq2pXSDmOnUhlWt+bOgk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=05DA47/PdsFG8w/RoUTeigqsKUBv7R8PNfOj94mwnuDPcbPZcuCkE30WKDKA/3gku
-         pn8+JcLZSEijpyDC+8Fq+tvTSk1dT74z6RCTJl5j70TyTY2VVKALgb/NV8un+1bEOx
-         rCbZyUteWldEsMdzIpZB7Oe/K5XmGl7z6trCcRco=
+        b=wEtGWEwcvYRiZYdY2hSldDw+tarO0LXEDxKnzzqfHxdezrKen4JkAjYtOFJsJb0fd
+         e/I+HcCZyDs0XKO9cjDaiSlHUpqzzJyMIXj00jTVVL+3SMzx0mYKVwt6BhdEimHQ9a
+         MlRr5ESbxSC4orG3dvZ2DJpiXHAQFxZrVjIoogi0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Hendrik Brueckner <brueckner@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 291/422] s390/vdso: correct CFI annotations of vDSO functions
-Date:   Tue, 19 Nov 2019 06:18:08 +0100
-Message-Id: <20191119051417.848414867@linuxfoundation.org>
+Subject: [PATCH 4.19 293/422] brcmsmac: Use kvmalloc() for ucode allocations
+Date:   Tue, 19 Nov 2019 06:18:10 +0100
+Message-Id: <20191119051417.979638039@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -62,210 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Gorbik <gor@linux.ibm.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 26f4414a45b808f83d42d6fd2fbf4a59ef25e84b ]
+[ Upstream commit 6c3efbe77bc78bf49db851aec7f385be475afca6 ]
 
-Correct stack frame overhead for 31-bit vdso, which should be 96 rather
-then 160. This is done by reusing STACK_FRAME_OVERHEAD definition which
-contains correct value based on build flags. This fixes stack unwinding
-within vdso code for 31-bit processes. While at it replace all hard coded
-stack frame overhead values with the same definition in vdso64 as well.
+The ucode chunk might be relatively large and the allocation with
+kmalloc() may fail occasionally.  Since the data isn't DMA-transferred
+but by manual loops, we can use vmalloc instead of kmalloc.
+For a better performance, though, kvmalloc() would be the best choice
+in such a case, so let's replace with it.
 
-Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Bugzilla: https://bugzilla.suse.com/show_bug.cgi?id=1103431
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/vdso32/clock_gettime.S | 19 ++++++++++---------
- arch/s390/kernel/vdso32/gettimeofday.S  |  3 ++-
- arch/s390/kernel/vdso64/clock_gettime.S | 25 +++++++++++++------------
- arch/s390/kernel/vdso64/gettimeofday.S  |  3 ++-
- 4 files changed, 27 insertions(+), 23 deletions(-)
+ .../net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c  | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/s390/kernel/vdso32/clock_gettime.S b/arch/s390/kernel/vdso32/clock_gettime.S
-index a9418bf975db5..ada5c11a16e5a 100644
---- a/arch/s390/kernel/vdso32/clock_gettime.S
-+++ b/arch/s390/kernel/vdso32/clock_gettime.S
-@@ -10,6 +10,7 @@
- #include <asm/asm-offsets.h>
- #include <asm/unistd.h>
- #include <asm/dwarf.h>
-+#include <asm/ptrace.h>
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c
+index ecc89e718b9c1..6255fb6d97a70 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/mac80211_if.c
+@@ -1578,10 +1578,10 @@ int brcms_ucode_init_buf(struct brcms_info *wl, void **pbuf, u32 idx)
+ 			if (le32_to_cpu(hdr->idx) == idx) {
+ 				pdata = wl->fw.fw_bin[i]->data +
+ 					le32_to_cpu(hdr->offset);
+-				*pbuf = kmemdup(pdata, len, GFP_KERNEL);
++				*pbuf = kvmalloc(len, GFP_KERNEL);
+ 				if (*pbuf == NULL)
+ 					goto fail;
+-
++				memcpy(*pbuf, pdata, len);
+ 				return 0;
+ 			}
+ 		}
+@@ -1629,7 +1629,7 @@ int brcms_ucode_init_uint(struct brcms_info *wl, size_t *n_bytes, u32 idx)
+  */
+ void brcms_ucode_free_buf(void *p)
+ {
+-	kfree(p);
++	kvfree(p);
+ }
  
- 	.text
- 	.align 4
-@@ -18,8 +19,8 @@
- __kernel_clock_gettime:
- 	CFI_STARTPROC
- 	ahi	%r15,-16
--	CFI_DEF_CFA_OFFSET 176
--	CFI_VAL_OFFSET 15, -160
-+	CFI_DEF_CFA_OFFSET STACK_FRAME_OVERHEAD+16
-+	CFI_VAL_OFFSET 15, -STACK_FRAME_OVERHEAD
- 	basr	%r5,0
- 0:	al	%r5,21f-0b(%r5)			/* get &_vdso_data */
- 	chi	%r2,__CLOCK_REALTIME_COARSE
-@@ -72,13 +73,13 @@ __kernel_clock_gettime:
- 	st	%r1,4(%r3)			/* store tp->tv_nsec */
- 	lhi	%r2,0
- 	ahi	%r15,16
--	CFI_DEF_CFA_OFFSET 160
-+	CFI_DEF_CFA_OFFSET STACK_FRAME_OVERHEAD
- 	CFI_RESTORE 15
- 	br	%r14
- 
- 	/* CLOCK_MONOTONIC_COARSE */
--	CFI_DEF_CFA_OFFSET 176
--	CFI_VAL_OFFSET 15, -160
-+	CFI_DEF_CFA_OFFSET STACK_FRAME_OVERHEAD+16
-+	CFI_VAL_OFFSET 15, -STACK_FRAME_OVERHEAD
- 9:	l	%r4,__VDSO_UPD_COUNT+4(%r5)	/* load update counter */
- 	tml	%r4,0x0001			/* pending update ? loop */
- 	jnz	9b
-@@ -158,17 +159,17 @@ __kernel_clock_gettime:
- 	st	%r1,4(%r3)			/* store tp->tv_nsec */
- 	lhi	%r2,0
- 	ahi	%r15,16
--	CFI_DEF_CFA_OFFSET 160
-+	CFI_DEF_CFA_OFFSET STACK_FRAME_OVERHEAD
- 	CFI_RESTORE 15
- 	br	%r14
- 
- 	/* Fallback to system call */
--	CFI_DEF_CFA_OFFSET 176
--	CFI_VAL_OFFSET 15, -160
-+	CFI_DEF_CFA_OFFSET STACK_FRAME_OVERHEAD+16
-+	CFI_VAL_OFFSET 15, -STACK_FRAME_OVERHEAD
- 19:	lhi	%r1,__NR_clock_gettime
- 	svc	0
- 	ahi	%r15,16
--	CFI_DEF_CFA_OFFSET 160
-+	CFI_DEF_CFA_OFFSET STACK_FRAME_OVERHEAD
- 	CFI_RESTORE 15
- 	br	%r14
- 	CFI_ENDPROC
-diff --git a/arch/s390/kernel/vdso32/gettimeofday.S b/arch/s390/kernel/vdso32/gettimeofday.S
-index 3c0db0fa6ad90..b23063fbc892c 100644
---- a/arch/s390/kernel/vdso32/gettimeofday.S
-+++ b/arch/s390/kernel/vdso32/gettimeofday.S
-@@ -10,6 +10,7 @@
- #include <asm/asm-offsets.h>
- #include <asm/unistd.h>
- #include <asm/dwarf.h>
-+#include <asm/ptrace.h>
- 
- 	.text
- 	.align 4
-@@ -19,7 +20,7 @@ __kernel_gettimeofday:
- 	CFI_STARTPROC
- 	ahi	%r15,-16
- 	CFI_ADJUST_CFA_OFFSET 16
--	CFI_VAL_OFFSET 15, -160
-+	CFI_VAL_OFFSET 15, -STACK_FRAME_OVERHEAD
- 	basr	%r5,0
- 0:	al	%r5,13f-0b(%r5)			/* get &_vdso_data */
- 1:	ltr	%r3,%r3				/* check if tz is NULL */
-diff --git a/arch/s390/kernel/vdso64/clock_gettime.S b/arch/s390/kernel/vdso64/clock_gettime.S
-index fac3ab5ec83a9..9d2ee79b90f25 100644
---- a/arch/s390/kernel/vdso64/clock_gettime.S
-+++ b/arch/s390/kernel/vdso64/clock_gettime.S
-@@ -10,6 +10,7 @@
- #include <asm/asm-offsets.h>
- #include <asm/unistd.h>
- #include <asm/dwarf.h>
-+#include <asm/ptrace.h>
- 
- 	.text
- 	.align 4
-@@ -18,8 +19,8 @@
- __kernel_clock_gettime:
- 	CFI_STARTPROC
- 	aghi	%r15,-16
--	CFI_DEF_CFA_OFFSET 176
--	CFI_VAL_OFFSET 15, -160
-+	CFI_DEF_CFA_OFFSET STACK_FRAME_OVERHEAD+16
-+	CFI_VAL_OFFSET 15, -STACK_FRAME_OVERHEAD
- 	larl	%r5,_vdso_data
- 	cghi	%r2,__CLOCK_REALTIME_COARSE
- 	je	4f
-@@ -56,13 +57,13 @@ __kernel_clock_gettime:
- 	stg	%r1,8(%r3)			/* store tp->tv_nsec */
- 	lghi	%r2,0
- 	aghi	%r15,16
--	CFI_DEF_CFA_OFFSET 160
-+	CFI_DEF_CFA_OFFSET STACK_FRAME_OVERHEAD
- 	CFI_RESTORE 15
- 	br	%r14
- 
- 	/* CLOCK_MONOTONIC_COARSE */
--	CFI_DEF_CFA_OFFSET 176
--	CFI_VAL_OFFSET 15, -160
-+	CFI_DEF_CFA_OFFSET STACK_FRAME_OVERHEAD+16
-+	CFI_VAL_OFFSET 15, -STACK_FRAME_OVERHEAD
- 3:	lg	%r4,__VDSO_UPD_COUNT(%r5)	/* load update counter */
- 	tmll	%r4,0x0001			/* pending update ? loop */
- 	jnz	3b
-@@ -115,13 +116,13 @@ __kernel_clock_gettime:
- 	stg	%r1,8(%r3)			/* store tp->tv_nsec */
- 	lghi	%r2,0
- 	aghi	%r15,16
--	CFI_DEF_CFA_OFFSET 160
-+	CFI_DEF_CFA_OFFSET STACK_FRAME_OVERHEAD
- 	CFI_RESTORE 15
- 	br	%r14
- 
- 	/* CPUCLOCK_VIRT for this thread */
--	CFI_DEF_CFA_OFFSET 176
--	CFI_VAL_OFFSET 15, -160
-+	CFI_DEF_CFA_OFFSET STACK_FRAME_OVERHEAD+16
-+	CFI_VAL_OFFSET 15, -STACK_FRAME_OVERHEAD
- 9:	lghi	%r4,0
- 	icm	%r0,15,__VDSO_ECTG_OK(%r5)
- 	jz	12f
-@@ -142,17 +143,17 @@ __kernel_clock_gettime:
- 	stg	%r4,8(%r3)
- 	lghi	%r2,0
- 	aghi	%r15,16
--	CFI_DEF_CFA_OFFSET 160
-+	CFI_DEF_CFA_OFFSET STACK_FRAME_OVERHEAD
- 	CFI_RESTORE 15
- 	br	%r14
- 
- 	/* Fallback to system call */
--	CFI_DEF_CFA_OFFSET 176
--	CFI_VAL_OFFSET 15, -160
-+	CFI_DEF_CFA_OFFSET STACK_FRAME_OVERHEAD+16
-+	CFI_VAL_OFFSET 15, -STACK_FRAME_OVERHEAD
- 12:	lghi	%r1,__NR_clock_gettime
- 	svc	0
- 	aghi	%r15,16
--	CFI_DEF_CFA_OFFSET 160
-+	CFI_DEF_CFA_OFFSET STACK_FRAME_OVERHEAD
- 	CFI_RESTORE 15
- 	br	%r14
- 	CFI_ENDPROC
-diff --git a/arch/s390/kernel/vdso64/gettimeofday.S b/arch/s390/kernel/vdso64/gettimeofday.S
-index 6e1f0b421695a..aebe10dc7c99a 100644
---- a/arch/s390/kernel/vdso64/gettimeofday.S
-+++ b/arch/s390/kernel/vdso64/gettimeofday.S
-@@ -10,6 +10,7 @@
- #include <asm/asm-offsets.h>
- #include <asm/unistd.h>
- #include <asm/dwarf.h>
-+#include <asm/ptrace.h>
- 
- 	.text
- 	.align 4
-@@ -19,7 +20,7 @@ __kernel_gettimeofday:
- 	CFI_STARTPROC
- 	aghi	%r15,-16
- 	CFI_ADJUST_CFA_OFFSET 16
--	CFI_VAL_OFFSET 15, -160
-+	CFI_VAL_OFFSET 15, -STACK_FRAME_OVERHEAD
- 	larl	%r5,_vdso_data
- 0:	ltgr	%r3,%r3				/* check if tz is NULL */
- 	je	1f
+ /*
 -- 
 2.20.1
 
