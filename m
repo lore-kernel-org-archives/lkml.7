@@ -2,67 +2,115 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F32D9C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 03:09:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AFFEC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 03:10:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D461B22315
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 03:09:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AD2F22318
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 03:10:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574133025;
+	bh=OvPo829X0NAds8jIa2J1IO7KdmDGATW9k1H4VdHCgZg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ID7ZMH4JMHwTO/Qo6RP9IqGAb5f4A2W17jKrsqD9yhSPX0zrPBvS6zk5Xv8HZP57B
+	 YbFn7GCAx6/ZwivWhU0jjFFvVKg4npcKcbO9u1NXljEE5U/1ZU5QGcl+XeJfUn8lz/
+	 Dg7JPzkXp8uH61ZzprqtqbQfWVaHgFi27Lg6BebQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727545AbfKSDJi (ORCPT
+        id S1727557AbfKSDKY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 22:09:38 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:51444 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727428AbfKSDJi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 22:09:38 -0500
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 9FF187A00CF49560C90A;
-        Tue, 19 Nov 2019 11:09:36 +0800 (CST)
-Received: from huawei.com (10.90.53.225) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Tue, 19 Nov 2019
- 11:09:30 +0800
-From:   Sun Ke <sunke32@huawei.com>
-To:     <sunke32@huawei.com>, <josef@toxicpanda.com>, <axboe@kernel.dk>,
-        <linux-block@vger.kernel.org>, <nbd@other.debian.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] nbd:fix memory leak in nbd_get_socket()
-Date:   Tue, 19 Nov 2019 11:16:48 +0800
-Message-ID: <1574133408-77202-1-git-send-email-sunke32@huawei.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 18 Nov 2019 22:10:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44296 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727014AbfKSDKX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 22:10:23 -0500
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4CFE2070E;
+        Tue, 19 Nov 2019 03:10:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574133023;
+        bh=OvPo829X0NAds8jIa2J1IO7KdmDGATW9k1H4VdHCgZg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bc79nIT9S2/aFOSzlDK80fUaTc6Zz43X96zMIi1Er/0IDrt1qAxMI389WCzvYks5X
+         mm/a9p3FFANlWHsCGxvGIL7UwmW6F2Hv9IqBR/OCIv7BKHYMtC72zCXTKEVuli/chM
+         Kt17k27cyDap7yAUdDizjzTL4Mafnwy5Gnqgx9Jk=
+Date:   Mon, 18 Nov 2019 19:10:21 -0800
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Matthew Bobrowski <mbobrowski@mbobrowski.org>
+Cc:     Jan Kara <jack@suse.cz>,
+        syzbot <syzbot+991400e8eba7e00a26e1@syzkaller.appspotmail.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        riteshh@linux.ibm.com, syzkaller-bugs@googlegroups.com,
+        tytso@mit.edu, viro@zeniv.linux.org.uk
+Subject: Re: WARNING in iov_iter_pipe
+Message-ID: <20191119031021.GI3147@sol.localdomain>
+References: <000000000000d60aa50596c63063@google.com>
+ <20191108103148.GE20863@quack2.suse.cz>
+ <20191111081628.GB14058@bobrowski>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.90.53.225]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191111081628.GB14058@bobrowski>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Before return NULL,put the sock first.
+On Mon, Nov 11, 2019 at 07:16:29PM +1100, Matthew Bobrowski wrote:
+> On Fri, Nov 08, 2019 at 11:31:48AM +0100, Jan Kara wrote:
+> > On Thu 07-11-19 10:54:10, syzbot wrote:
+> > > syzbot found the following crash on:
+> > > 
+> > > HEAD commit:    c68c5373 Add linux-next specific files for 20191107
+> > > git tree:       linux-next
+> > > console output: https://syzkaller.appspot.com/x/log.txt?x=13d6bcfce00000
+> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=742545dcdea21726
+> > > dashboard link: https://syzkaller.appspot.com/bug?extid=991400e8eba7e00a26e1
+> > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1529829ae00000
+> > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16a55c0ce00000
+> > > 
+> > > The bug was bisected to:
+> > > 
+> > > commit b1b4705d54abedfd69dcdf42779c521aa1e0fbd3
+> > > Author: Matthew Bobrowski <mbobrowski@mbobrowski.org>
+> > > Date:   Tue Nov 5 12:01:37 2019 +0000
+> > > 
+> > >     ext4: introduce direct I/O read using iomap infrastructure
+> > 
+> > Hum, interesting and from the first looks the problem looks real.
+> > Deciphered reproducer is:
+> > 
+> > int fd0 = open("./file0", O_RDWR | O_CREAT | O_EXCL | O_DIRECT, 0);
+> > int fd1 = open("./file0, O_RDONLY);
+> > write(fd0, "some_data...", 512);
+> > sendfile(fd0, fd1, NULL, 0x7fffffa7);
+> >   -> this is interesting as it will result in reading data from 'file0' at
+> >      offset X with buffered read and writing them with direct write to
+> >      offset X+512. So this way we'll grow the file up to those ~2GB in
+> >      512-byte chunks.
+> > - not sure if we ever get there but the remainder of the reproducer is:
+> > fd2 = open("./file0", O_RDWR | O_CREAT | O_NOATIME | O_SYNC, 0);
+> > sendfile(fd2, fd0, NULL, 0xffffffff)
+> >   -> doesn't seem too interesting as fd0 is at EOF so this shouldn't do
+> >      anything.
+> > 
+> > Matthew, can you have a look?
+> 
+> Sorry Jan, I've been crazy busy lately and I'm out at training this
+> week. Let me take a look at this and see whether I can determine
+> what's happening here.
+> 
 
-Fixes: cf1b2326b734 ("nbd: verify socket is supported during setup")
-Signed-off-by: Sun Ke <sunke32@huawei.com>
----
- drivers/block/nbd.c | 1 +
- 1 file changed, 1 insertion(+)
+FYI, syzbot is still seeing this on linux-next.
 
-diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index a94ee45..19e7599 100644
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -993,6 +993,7 @@ static struct socket *nbd_get_socket(struct nbd_device *nbd, unsigned long fd,
- 	if (sock->ops->shutdown == sock_no_shutdown) {
- 		dev_err(disk_to_dev(nbd->disk), "Unsupported socket: shutdown callout must be supported.\n");
- 		*err = -EINVAL;
-+		sockfd_put(sock);
- 		return NULL;
- 	}
- 
--- 
-2.7.4
+Also, a new thread was started to discuss this:
+https://lkml.kernel.org/linux-ext4/20191113180032.GB12013@quack2.suse.cz/T/#u
+(Mentioning this in case anyone is following this thread only.)
 
+- Eric
