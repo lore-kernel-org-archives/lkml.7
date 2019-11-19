@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75C1DC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:40:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 657BEC43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:41:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3518F208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:40:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3333021783
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:41:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142052;
-	bh=BuT6bfjFp5cxw/27srU4vhqsluei9tEzvXuetTk1On4=;
+	s=default; t=1574142060;
+	bh=k8d5s75KhVKjgm3jmwxPY/yUWZ6JYWL1KLUdROsgTKk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wcehe48qGoF4K1G79eDRhELBZPghI/6vJy4zIPPuJ4Dg3XnPWWqlPcn2VVFTD9wHL
-	 k1rJVPDQmP3XzD/prVFqO5btGul39krGEPbzZgp1lTKjB6OHAFbFETyqvmdoNF3vFa
-	 LgwukpgURRln9qb1P3XRKVJdBodlAydsyHgNj6h4=
+	b=rDdyBAPZY7FdVG2o/aUjCigaEYZVvAe6d+aNBV5cNR9BdkHZMuUZmxQmBdB9DZoxU
+	 7kBB4wpef6xNCb6a5gEkL6HfNpesXf1q61oX0oAopPSiMojeeBI+jKj4JPx+bAFH9D
+	 58zTJ2JYbEo24NYF5uv5Ma9FdUJu75eo3qwW+FMA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729851AbfKSFkv (ORCPT
+        id S1730465AbfKSFk6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:40:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34984 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:40:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35184 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730443AbfKSFkq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:40:46 -0500
+        id S1730458AbfKSFky (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:40:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6BECE208C3;
-        Tue, 19 Nov 2019 05:40:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15E3F208C3;
+        Tue, 19 Nov 2019 05:40:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142044;
-        bh=BuT6bfjFp5cxw/27srU4vhqsluei9tEzvXuetTk1On4=;
+        s=default; t=1574142053;
+        bh=k8d5s75KhVKjgm3jmwxPY/yUWZ6JYWL1KLUdROsgTKk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gWA/BP7UxA73pwrvKzaBBcfPWTHn2d8JoitoURsGnfysaUjoQJv4izH53akY/G3br
-         URBNwggQZdwhKeTjVtdj4tBeeau4HPUvk7ZMQwOFD/Qa2x900kwFPPTkWut/pfRrzJ
-         KotdivEqeMJaZTYkFRifbP4E7hQRvN3Qv58ZYiT4=
+        b=g7AaRCcBxppnbYZ6rkLcA8bgrNDBTANvr4jmVmePF/IYtKFule66w0lCar/iJdCm5
+         /JkXnTcQHiUqT33lSEyYa5nJWUqZGVfyo99nAeffbkvdgZFA0bdvn/CwGkRI+6OEry
+         1Vl1CNTpNISGFKIZ4Rx7puEVjNywWl3DWxKc+1EU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Thierry Reding <treding@nvidia.com>,
+        stable@vger.kernel.org, Laura Abbott <labbott@redhat.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 370/422] ARM: tegra: apalis_t30: fix mmc1 cmd pull-up
-Date:   Tue, 19 Nov 2019 06:19:27 +0100
-Message-Id: <20191119051422.988680265@linuxfoundation.org>
+Subject: [PATCH 4.19 355/422] misc: kgdbts: Fix restrict error
+Date:   Tue, 19 Nov 2019 06:19:12 +0100
+Message-Id: <20191119051422.023773594@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -61,42 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+From: Laura Abbott <labbott@redhat.com>
 
-[ Upstream commit 1c997fe4becdc6fcbc06e23982ceb65621e6572a ]
+[ Upstream commit fa0218ef733e6f247a1a3986e3eb12460064ac77 ]
 
-Fix MMC1 cmd pin pull-up causing issues on carrier boards without
-external pull-up.
+kgdbts current fails when compiled with restrict:
 
-Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+drivers/misc/kgdbts.c: In function ‘configure_kgdbts’:
+drivers/misc/kgdbts.c:1070:2: error: ‘strcpy’ source argument is the same as destination [-Werror=restrict]
+  strcpy(config, opt);
+  ^~~~~~~~~~~~~~~~~~~
+
+As the error says, config is being used in both the source and destination.
+Refactor the code to avoid the extra copy and put the parsing closer to
+the actual location.
+
+Signed-off-by: Laura Abbott <labbott@redhat.com>
+Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/tegra30-apalis.dtsi | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/misc/kgdbts.c | 16 ++++++----------
+ 1 file changed, 6 insertions(+), 10 deletions(-)
 
-diff --git a/arch/arm/boot/dts/tegra30-apalis.dtsi b/arch/arm/boot/dts/tegra30-apalis.dtsi
-index 2f807d40c1b79..e749e047db7ab 100644
---- a/arch/arm/boot/dts/tegra30-apalis.dtsi
-+++ b/arch/arm/boot/dts/tegra30-apalis.dtsi
-@@ -171,14 +171,14 @@
+diff --git a/drivers/misc/kgdbts.c b/drivers/misc/kgdbts.c
+index eb4d90b7d99e1..8b01257783dd8 100644
+--- a/drivers/misc/kgdbts.c
++++ b/drivers/misc/kgdbts.c
+@@ -985,6 +985,12 @@ static void kgdbts_run_tests(void)
+ 	int nmi_sleep = 0;
+ 	int i;
  
- 			/* Apalis MMC1 */
- 			sdmmc3_clk_pa6 {
--				nvidia,pins = "sdmmc3_clk_pa6",
--					      "sdmmc3_cmd_pa7";
-+				nvidia,pins = "sdmmc3_clk_pa6";
- 				nvidia,function = "sdmmc3";
- 				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
- 				nvidia,tristate = <TEGRA_PIN_DISABLE>;
- 			};
- 			sdmmc3_dat0_pb7 {
--				nvidia,pins = "sdmmc3_dat0_pb7",
-+				nvidia,pins = "sdmmc3_cmd_pa7",
-+					      "sdmmc3_dat0_pb7",
- 					      "sdmmc3_dat1_pb6",
- 					      "sdmmc3_dat2_pb5",
- 					      "sdmmc3_dat3_pb4",
++	verbose = 0;
++	if (strstr(config, "V1"))
++		verbose = 1;
++	if (strstr(config, "V2"))
++		verbose = 2;
++
+ 	ptr = strchr(config, 'F');
+ 	if (ptr)
+ 		fork_test = simple_strtol(ptr + 1, NULL, 10);
+@@ -1068,13 +1074,6 @@ static int kgdbts_option_setup(char *opt)
+ 		return -ENOSPC;
+ 	}
+ 	strcpy(config, opt);
+-
+-	verbose = 0;
+-	if (strstr(config, "V1"))
+-		verbose = 1;
+-	if (strstr(config, "V2"))
+-		verbose = 2;
+-
+ 	return 0;
+ }
+ 
+@@ -1086,9 +1085,6 @@ static int configure_kgdbts(void)
+ 
+ 	if (!strlen(config) || isspace(config[0]))
+ 		goto noconfig;
+-	err = kgdbts_option_setup(config);
+-	if (err)
+-		goto noconfig;
+ 
+ 	final_ack = 0;
+ 	run_plant_and_detach_test(1);
 -- 
 2.20.1
 
