@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D76B6C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:31:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D776C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:31:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9859222DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:31:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EE6821783
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:31:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141507;
-	bh=lTCx1fao8rSjs1HsCWHXN5FTFBsGcEklA2XINxZ1/+w=;
+	s=default; t=1574141515;
+	bh=IEDcQfMvzR+IzJeitdKQq+ocOapyJqcmGHUCSGPIY50=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hV57L7wKK+ndz7e9hpRm3fefBTe3+JgMEanzQMBqwAviP8K/PTi7VQQ8q2xg7r5dM
-	 0iQ6rvLl9X4CzpnkOck4xsMjUtdWXcC0UppVhfWWwbOgx2cVTQynrNJ3SdNTE0YBlo
-	 UxVvQPB1aO1EW8WLIMBRUfLByzhjZUrs6nKDcTuQ=
+	b=hRKEdv3nncn5TL9wlUgXPKof+pyvxG89ERYUrHw1nob0iS+CGJdIRDGnz4JyA1aYV
+	 kOeIlkheP5qoJttewy5Y3NYrol5EXdBGmvTESe5eefd2AMrTeTg5A76x+wrGvXYRTL
+	 9+0AzDOCwzGvoEO4VO5r2kL6suCRVKx+8C6dZdeI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727903AbfKSFbq (ORCPT
+        id S1729313AbfKSFby (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:31:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51076 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:31:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51504 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729289AbfKSFbl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:31:41 -0500
+        id S1727173AbfKSFbu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:31:50 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB001222A2;
-        Tue, 19 Nov 2019 05:31:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B04AA21939;
+        Tue, 19 Nov 2019 05:31:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141501;
-        bh=lTCx1fao8rSjs1HsCWHXN5FTFBsGcEklA2XINxZ1/+w=;
+        s=default; t=1574141510;
+        bh=IEDcQfMvzR+IzJeitdKQq+ocOapyJqcmGHUCSGPIY50=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1aRPLeMdDzX8RHOuM09n44yy/9ZZGAuJbDf+SOhBmdX4t30DwJPpIzfRIQWrhMS09
-         3EGNYLPtWYF2UqbSM5KfK9hYPB1TaTZTl8C7RQJx4gY9XK/GJNEoti6IRY4uawBO63
-         p5xUSPwI2y1i6+h2rWZFNxN0JP9/7Ot3n9r5aOUE=
+        b=DWsaYH0mGPmi6A2AsVjRR0fH8xYRZCP61J+pWRzd7zlZZHbb4dfKZLmQeq3NNM7kX
+         QhqPEJbMsL2aD1NAsXgsrKX1HvU/3P23aU0a0AKEelmQFi9MwmvziIz6JKGC1nvRlR
+         hFJv5a5/hdu/y710kM8/pD9zOpUTO3boPqJylvVo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
-        James Smart <james.smart@broadcom.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 180/422] scsi: lpfc: Fix errors in log messages.
-Date:   Tue, 19 Nov 2019 06:16:17 +0100
-Message-Id: <20191119051410.122875018@linuxfoundation.org>
+Subject: [PATCH 4.19 145/422] failover: Fix error return code in net_failover_create
+Date:   Tue, 19 Nov 2019 06:15:42 +0100
+Message-Id: <20191119051408.102485521@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -61,61 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 2879265f514b1f4154288243c91438ddbedb3ed4 ]
+[ Upstream commit 09317da317e55e70ccbe23f65008348a4a1b7c7f ]
 
-Message 6408 is displayed for each entry in an array, but the cpu and queue
-numbers were incorrect for the entry.  Message 6001 includes an extraneous
-character.
+if failover_register failed, 'err' code should be set correctly
 
-Resolve both issues
-
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <james.smart@broadcom.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: cfc80d9a1163 ("net: Introduce net_failover driver")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_nvme.c  | 2 +-
- drivers/scsi/lpfc/lpfc_nvmet.c | 7 +++----
- 2 files changed, 4 insertions(+), 5 deletions(-)
+ drivers/net/net_failover.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_nvme.c b/drivers/scsi/lpfc/lpfc_nvme.c
-index 645ffb5332b4a..8ee585e453dcf 100644
---- a/drivers/scsi/lpfc/lpfc_nvme.c
-+++ b/drivers/scsi/lpfc/lpfc_nvme.c
-@@ -282,7 +282,7 @@ lpfc_nvme_delete_queue(struct nvme_fc_local_port *pnvme_lport,
- 	vport = lport->vport;
+diff --git a/drivers/net/net_failover.c b/drivers/net/net_failover.c
+index 5a749dc25bec4..beeb7eb76ca32 100644
+--- a/drivers/net/net_failover.c
++++ b/drivers/net/net_failover.c
+@@ -765,8 +765,10 @@ struct failover *net_failover_create(struct net_device *standby_dev)
+ 	netif_carrier_off(failover_dev);
  
- 	lpfc_printf_vlog(vport, KERN_INFO, LOG_NVME,
--			"6001 ENTER.  lpfc_pnvme %p, qidx x%xi qhandle %p\n",
-+			"6001 ENTER.  lpfc_pnvme %p, qidx x%x qhandle %p\n",
- 			lport, qidx, handle);
- 	kfree(handle);
- }
-diff --git a/drivers/scsi/lpfc/lpfc_nvmet.c b/drivers/scsi/lpfc/lpfc_nvmet.c
-index 22efefcc6cd84..768eba8c111d9 100644
---- a/drivers/scsi/lpfc/lpfc_nvmet.c
-+++ b/drivers/scsi/lpfc/lpfc_nvmet.c
-@@ -1340,15 +1340,14 @@ lpfc_nvmet_setup_io_context(struct lpfc_hba *phba)
- 			idx = 0;
- 	}
+ 	failover = failover_register(failover_dev, &net_failover_ops);
+-	if (IS_ERR(failover))
++	if (IS_ERR(failover)) {
++		err = PTR_ERR(failover);
+ 		goto err_failover_register;
++	}
  
--	infop = phba->sli4_hba.nvmet_ctx_info;
--	for (j = 0; j < phba->cfg_nvmet_mrq; j++) {
--		for (i = 0; i < phba->sli4_hba.num_present_cpu; i++) {
-+	for (i = 0; i < phba->sli4_hba.num_present_cpu; i++) {
-+		for (j = 0; j < phba->cfg_nvmet_mrq; j++) {
-+			infop = lpfc_get_ctx_list(phba, i, j);
- 			lpfc_printf_log(phba, KERN_INFO, LOG_NVME | LOG_INIT,
- 					"6408 TOTAL NVMET ctx for CPU %d "
- 					"MRQ %d: cnt %d nextcpu %p\n",
- 					i, j, infop->nvmet_ctx_list_cnt,
- 					infop->nvmet_ctx_next_cpu);
--			infop++;
- 		}
- 	}
- 	return 0;
+ 	return failover;
+ 
 -- 
 2.20.1
 
