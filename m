@@ -2,118 +2,81 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 125C1C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:42:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C5AEC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E06B922317
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:42:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574185347;
-	bh=5CpZAgS92mSvLsDp8eiwhNfpZxP3RgkMymtz27c4Qfo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kzYr2n3ohJyqF/Qaeb9PunKU8jciHgcQLdt30iaf9kltJrrT3XugbSinfdOOLn5cd
-	 eVSfdMBRlejTWJ7smzf/SWRD3e2Xc06HBh7QinPahud0+/xQaf4tzpJh4C9DqNkfUQ
-	 1ZK1JVG7taA9dUdYdOZS0n2NZL7mkhybapfITYkI=
+	by mail.kernel.org (Postfix) with ESMTP id 197E722318
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:49:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728610AbfKSRm1 (ORCPT
+        id S1727004AbfKSRtu convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 12:42:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45220 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 12:49:50 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:39729 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728060AbfKSRm0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 12:42:26 -0500
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 986A420718;
-        Tue, 19 Nov 2019 17:42:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574185345;
-        bh=5CpZAgS92mSvLsDp8eiwhNfpZxP3RgkMymtz27c4Qfo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xB5OhM4wTyqZebgSeaTdJ4euEEj4BOPM5PRDEZYuixl8l9EBwhZ3TO5Hy9fJANEVA
-         YpslYSOQBUj6HZGBPsxlPLf6c2stcvTVfNrkFtqZswzUrh4rfQ792h0+3z6muctUhS
-         16+yUKRxY4hqlzZRMbUoZPwugHUoy16fofefBayI=
-Date:   Tue, 19 Nov 2019 09:42:24 -0800
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        syzbot <syzbot+ce541a23cf58c1f6b1b1@syzkaller.appspotmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Yunfeng Ye <yeyunfeng@huawei.com>, Len Brown <lenb@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: linux-next boot error: can't ssh into the instance (3)
-Message-ID: <20191119174224.GC819@sol.localdomain>
-References: <000000000000ee674f0597a18709@google.com>
- <CACT4Y+aHkU46kF26a6afuQ+UO3N3W9Ur898dFBa+mQ2q6QzoQQ@mail.gmail.com>
- <CAHp75Vf6hfh0+MxX7G5=skcTx+_37ypz_KMi-NYLGB7wW5zs5g@mail.gmail.com>
- <20191119050219.GJ163020@sol.localdomain>
- <CAJZ5v0h6EVqXpP7p=-WiLKOQAaDCn-DX_H7dbKAfQ+o=fmmEWA@mail.gmail.com>
+        id S1726555AbfKSRtt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 12:49:49 -0500
+Received: from localhost (mailhub1-ext [192.168.12.233])
+        by localhost (Postfix) with ESMTP id 47HYHb6zBXz9tyMG;
+        Tue, 19 Nov 2019 18:49:47 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id XqvRI0tj-P3k; Tue, 19 Nov 2019 18:49:47 +0100 (CET)
+Received: from vm-hermes.si.c-s.fr (vm-hermes.si.c-s.fr [192.168.25.253])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 47HYHb5ktBz9tyM0;
+        Tue, 19 Nov 2019 18:49:47 +0100 (CET)
+Received: by vm-hermes.si.c-s.fr (Postfix, from userid 33)
+        id AD0F387D; Tue, 19 Nov 2019 18:49:48 +0100 (CET)
+Received: from 37-173-93-145.coucou-networks.fr
+ (37-173-93-145.coucou-networks.fr [37.173.93.145]) by messagerie.si.c-s.fr
+ (Horde Framework) with HTTP; Tue, 19 Nov 2019 18:49:48 +0100
+Date:   Tue, 19 Nov 2019 18:49:48 +0100
+Message-ID: <20191119184948.Horde.Roz3CrP_eBhY_YnNAgMQ7w1@messagerie.si.c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Paul Mackerras <paulus@samba.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH] powerpc/8xx: Fix permanently mapped IMMR region.
+References: <ad9d45119a48a92bf122781d0c79c9407baa12d7.1566554026.git.christophe.leroy@c-s.fr>
+ <87sgmlcu1x.fsf@mpe.ellerman.id.au>
+In-Reply-To: <87sgmlcu1x.fsf@mpe.ellerman.id.au>
+User-Agent: Internet Messaging Program (IMP) H5 (6.2.3)
+Content-Type: text/plain; charset=UTF-8; format=flowed; DelSp=Yes
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJZ5v0h6EVqXpP7p=-WiLKOQAaDCn-DX_H7dbKAfQ+o=fmmEWA@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 09:27:27AM +0100, Rafael J. Wysocki wrote:
-> On Tue, Nov 19, 2019 at 6:02 AM Eric Biggers <ebiggers@kernel.org> wrote:
-> >
-> > On Mon, Nov 18, 2019 at 07:37:27PM +0200, Andy Shevchenko wrote:
-> > > On Mon, Nov 18, 2019 at 7:16 PM Dmitry Vyukov <dvyukov@google.com> wrote:
-> > > >
-> > > > On Mon, Nov 18, 2019 at 5:35 PM syzbot
-> > > > <syzbot+ce541a23cf58c1f6b1b1@syzkaller.appspotmail.com> wrote:
-> > > > >
-> > > > > Hello,
-> > > > >
-> > > > > syzbot found the following crash on:
-> > > > >
-> > > > > HEAD commit:    519ead8f Add linux-next specific files for 20191118
-> > > > > git tree:       linux-next
-> > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=14653416e00000
-> > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=652dd3906d691711
-> > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=ce541a23cf58c1f6b1b1
-> > > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > > > >
-> > > > > Unfortunately, I don't have any reproducer for this crash yet.
-> > > > >
-> > > > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > > > > Reported-by: syzbot+ce541a23cf58c1f6b1b1@syzkaller.appspotmail.com
-> > > >
-> > > >
-> > > > Looks at the console output, this seems to be related to:
-> > > >
-> > > > commit eb09878e13013f0faee0a97562da557c4026b8a1
-> > > > Author: Yunfeng Ye <yeyunfeng@huawei.com>
-> > > > Date:   Thu Nov 14 15:16:24 2019 +0800
-> > > >
-> > > >     ACPI: sysfs: Change ACPI_MASKABLE_GPE_MAX to 0x100
-> > > >
-> > > > +drivers/acpi/sysfs.c maintainers
-> > >
-> > > Just bisected to the same
-> > >
-> >
-> > I had to revert this in order to boot linux-next as well.  Rafael, can this
-> > please be reverted?
-> 
-> Dropped already from my linux-next branch, should not be there in
-> linux-next any more.
-> 
+Michael Ellerman <mpe@ellerman.id.au> a écrit :
 
-next-20191119 works for me, thanks for the quick revert.
+> Christophe Leroy <christophe.leroy@c-s.fr> writes:
+>> When not using large TLBs, the IMMR region is still
+>> mapped as a whole block in the FIXMAP area.
+>>
+>> Do not remove pages mapped in the FIXMAP region when
+>> initialising paging.
+>>
+>> Properly report that the IMMR region is block-mapped even
+>> when not using large TLBs.
+>>
+>> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+>> ---
+>>  arch/powerpc/mm/mem.c        |  8 --------
+>>  arch/powerpc/mm/nohash/8xx.c | 13 +++++++------
+>>  2 files changed, 7 insertions(+), 14 deletions(-)
+>
+> This blows up pmac32_defconfig + qemu mac99 for me with:
 
-Let's invalidate this syzbot report:
+Ok, then there is still something I have not understood about fixmap.  
+I'll look at it next week
 
-#syz invalid
+Christophe
+
