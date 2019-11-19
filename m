@@ -2,101 +2,273 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F14EDC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 00:22:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D9A1C33CA1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 00:22:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6E4822315
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 00:22:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE10A22313
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 00:22:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="kZWTJaB6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727591AbfKSAWe (ORCPT
+        id S1727631AbfKSAWq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 19:22:34 -0500
-Received: from mga18.intel.com ([134.134.136.126]:64622 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727146AbfKSAVj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 19:21:39 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Nov 2019 16:21:38 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,321,1569308400"; 
-   d="scan'208";a="215412016"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
-  by fmsmga001.fm.intel.com with ESMTP; 18 Nov 2019 16:21:37 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>
-Cc:     Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Nadav Amit <namit@vmware.com>,
-        "VMware, Inc." <pv-drivers@vmware.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-acpi@vger.kernel.org, alsa-devel@alsa-project.org
-Subject: [PATCH 01/12] x86/efi: Explicitly include realmode.h to handle RM trampoline quirk
-Date:   Mon, 18 Nov 2019 16:21:10 -0800
-Message-Id: <20191119002121.4107-2-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191119002121.4107-1-sean.j.christopherson@intel.com>
-References: <20191119002121.4107-1-sean.j.christopherson@intel.com>
+        Mon, 18 Nov 2019 19:22:46 -0500
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:6982 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726952AbfKSAWp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 19:22:45 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dd335d60001>; Mon, 18 Nov 2019 16:22:46 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 18 Nov 2019 16:22:44 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 18 Nov 2019 16:22:44 -0800
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 19 Nov
+ 2019 00:22:43 +0000
+Subject: Re: [PATCH v5 17/24] mm/gup: track FOLL_PIN pages
+To:     Jan Kara <jack@suse.cz>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
+References: <20191115055340.1825745-1-jhubbard@nvidia.com>
+ <20191115055340.1825745-18-jhubbard@nvidia.com>
+ <20191118115829.GJ17319@quack2.suse.cz>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <8424f891-271d-5c34-8f7c-ebf3e3aa6664@nvidia.com>
+Date:   Mon, 18 Nov 2019 16:22:43 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191118115829.GJ17319@quack2.suse.cz>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1574122967; bh=ip2xVJC+jxbL/7d2eWhZjqdIi4kB0uoxgzyWnYDs5q4=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=kZWTJaB6BUYpdW+z0HXxRztjdsBPgYMtIagp6++GXQ1xMYEqmDvkuTu5SJexcfc3Z
+         aqvcG/+YbvfnrntTmKpTzXcCcJ1vacUs8Vt+kkZFmecCKGt5ESA8XOWs62Cbve3dr3
+         XsCtQVKM4yFI8r3EtkYIToV94nBwkk0bzSnRfhI6IY4EfMEr9iYp9o7iElBN+PNDoe
+         GYMLDs4YJjT+MkCB6avfM8/DST4lwWHJbTQrh01mIBzcPCF4cBGDQd1OqtdqCqvly5
+         URQ6TTy1wBAC/IlVtHZs8b+E7d7tANvL2AVJcuHSx7ushKjPgli8Izd92XqBpLulsV
+         NLxmWdrhMpwGw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Explicitly include asm/realmode.h, which is needed to handle a real mode
-trampoline quirk in efi_free_boot_services(), instead of picking it up
-by way of linux/acpi.h.  acpi.h will soon stop including realmode.h so
-that changing realmode.h doesn't require a full kernel rebuild.
+On 11/18/19 3:58 AM, Jan Kara wrote:
+> On Thu 14-11-19 21:53:33, John Hubbard wrote:
+>> Add tracking of pages that were pinned via FOLL_PIN.
+>>
+>> As mentioned in the FOLL_PIN documentation, callers who effectively set
+>> FOLL_PIN are required to ultimately free such pages via put_user_page().
+>> The effect is similar to FOLL_GET, and may be thought of as "FOLL_GET
+>> for DIO and/or RDMA use".
+>>
+>> Pages that have been pinned via FOLL_PIN are identifiable via a
+>> new function call:
+>>
+>>    bool page_dma_pinned(struct page *page);
+>>
+>> What to do in response to encountering such a page, is left to later
+>> patchsets. There is discussion about this in [1].
+> 						^^ missing this reference
+> in the changelog...
 
-Fixes: 5bc653b731821 ("x86/efi: Allocate a trampoline if needed in efi_free_boot_services()")
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- arch/x86/platform/efi/quirks.c | 1 +
- 1 file changed, 1 insertion(+)
+I'll add that.=20
 
-diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
-index 3b9fd679cea9..f9ef5c5346ca 100644
---- a/arch/x86/platform/efi/quirks.c
-+++ b/arch/x86/platform/efi/quirks.c
-@@ -16,6 +16,7 @@
- #include <asm/efi.h>
- #include <asm/uv/uv.h>
- #include <asm/cpu_device_id.h>
-+#include <asm/realmode.h>
- #include <asm/reboot.h>
- 
- #define EFI_MIN_RESERVE 5120
--- 
-2.24.0
+>=20
+>> This also changes a BUG_ON(), to a WARN_ON(), in follow_page_mask().
+>>
+>> Suggested-by: Jan Kara <jack@suse.cz>
+>> Suggested-by: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
+>> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+>> ---
+>> diff --git a/include/linux/mm.h b/include/linux/mm.h
+>> index 6588d2e02628..db872766480f 100644
+>> --- a/include/linux/mm.h
+>> +++ b/include/linux/mm.h
+>> @@ -1054,6 +1054,8 @@ static inline __must_check bool try_get_page(struc=
+t page *page)
+>>  	return true;
+>>  }
+>> =20
+>> +__must_check bool user_page_ref_inc(struct page *page);
+>> +
+>>  static inline void put_page(struct page *page)
+>>  {
+>>  	page =3D compound_head(page);
+>> @@ -1071,29 +1073,70 @@ static inline void put_page(struct page *page)
+>>  		__put_page(page);
+>>  }
+>> =20
+>> -/**
+>> - * put_user_page() - release a gup-pinned page
+>> - * @page:            pointer to page to be released
+>> +/*
+>> + * GUP_PIN_COUNTING_BIAS, and the associated functions that use it, ove=
+rload
+>> + * the page's refcount so that two separate items are tracked: the orig=
+inal page
+>> + * reference count, and also a new count of how many get_user_pages() c=
+alls were
+> 							^^ pin_user_pages()
+>=20
+>> + * made against the page. ("gup-pinned" is another term for the latter)=
+.
+>> + *
+>> + * With this scheme, get_user_pages() becomes special: such pages are m=
+arked
+> 			^^^ pin_user_pages()
+>=20
+>> + * as distinct from normal pages. As such, the put_user_page() call (an=
+d its
+>> + * variants) must be used in order to release gup-pinned pages.
+>> + *
+>> + * Choice of value:
+>>   *
+>> - * Pages that were pinned via pin_user_pages*() must be released via ei=
+ther
+>> - * put_user_page(), or one of the put_user_pages*() routines. This is s=
+o that
+>> - * eventually such pages can be separately tracked and uniquely handled=
+. In
+>> - * particular, interactions with RDMA and filesystems need special hand=
+ling.
+>> + * By making GUP_PIN_COUNTING_BIAS a power of two, debugging of page re=
+ference
+>> + * counts with respect to get_user_pages() and put_user_page() becomes =
+simpler,
+> 				^^^ pin_user_pages()
+>=20
 
+Yes.
+
+>> + * due to the fact that adding an even power of two to the page refcoun=
+t has
+>> + * the effect of using only the upper N bits, for the code that counts =
+up using
+>> + * the bias value. This means that the lower bits are left for the excl=
+usive
+>> + * use of the original code that increments and decrements by one (or a=
+t least,
+>> + * by much smaller values than the bias value).
+>>   *
+>> - * put_user_page() and put_page() are not interchangeable, despite this=
+ early
+>> - * implementation that makes them look the same. put_user_page() calls =
+must
+>> - * be perfectly matched up with pin*() calls.
+>> + * Of course, once the lower bits overflow into the upper bits (and thi=
+s is
+>> + * OK, because subtraction recovers the original values), then visual i=
+nspection
+>> + * no longer suffices to directly view the separate counts. However, fo=
+r normal
+>> + * applications that don't have huge page reference counts, this won't =
+be an
+>> + * issue.
+>> + *
+>> + * Locking: the lockless algorithm described in page_cache_get_speculat=
+ive()
+>> + * and page_cache_gup_pin_speculative() provides safe operation for
+>> + * get_user_pages and page_mkclean and other calls that race to set up =
+page
+>> + * table entries.
+>>   */
+> ...
+>> @@ -2070,9 +2191,16 @@ static int gup_hugepte(pte_t *ptep, unsigned long=
+ sz, unsigned long addr,
+>>  	page =3D head + ((addr & (sz-1)) >> PAGE_SHIFT);
+>>  	refs =3D __record_subpages(page, addr, end, pages + *nr);
+>> =20
+>> -	head =3D try_get_compound_head(head, refs);
+>> -	if (!head)
+>> -		return 0;
+>> +	if (flags & FOLL_PIN) {
+>> +		head =3D page;
+>> +		if (unlikely(!user_page_ref_inc(head)))
+>> +			return 0;
+>> +		head =3D page;
+>=20
+> Why do you assign 'head' twice? Also the refcounting logic is repeated
+> several times so perhaps you can factor it out in to a helper function or
+> even move it to __record_subpages()?
+
+OK.
+
+>=20
+>> +	} else {
+>> +		head =3D try_get_compound_head(head, refs);
+>> +		if (!head)
+>> +			return 0;
+>> +	}
+>> =20
+>>  	if (unlikely(pte_val(pte) !=3D pte_val(*ptep))) {
+>>  		put_compound_head(head, refs);
+>=20
+> So this will do the wrong thing for FOLL_PIN. We took just one "pin"
+> reference there but here we'll release 'refs' normal references AFAICT.
+> Also the fact that you take just one pin reference for each huge page
+> substantially changes how GUP refcounting works in the huge page case.
+> Currently, FOLL_GET users can be completely agnostic of huge pages. So yo=
+u
+> can e.g. GUP whole 2 MB page, submit it as 2 different bios and then
+> drop page references from each bio completion function. With your new
+> FOLL_PIN behavior you cannot do that and I believe it will be a problem f=
+or
+> some users. So I think you have to maintain the behavior that you increas=
+e
+> the head->_refcount by (refs * GUP_PIN_COUNTING_BIAS) here.
+>=20
+
+Yes, completely agreed, this was a (big) oversight. I went through the same
+reasoning and reached your conclusions, in __gup_device_huge(), but then
+did it wrong in these functions. Will fix.
+
+thanks,
+--=20
+John Hubbard
+NVIDIA
