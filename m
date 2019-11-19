@@ -2,163 +2,149 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B91DC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 08:29:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 560E7C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 08:31:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4061E218BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 08:29:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Vs48QVXH"
+	by mail.kernel.org (Postfix) with ESMTP id 3764C206F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 08:31:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727114AbfKSI3y (ORCPT
+        id S1727202AbfKSIbG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 03:29:54 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:33102 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725815AbfKSI3x (ORCPT
+        Tue, 19 Nov 2019 03:31:06 -0500
+Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:33631 "EHLO
+        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725815AbfKSIbG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 03:29:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574152193;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=H20VJbl/HlqoZLKxB2eEkiVm9bjunStGFexdv/rH5Wg=;
-        b=Vs48QVXHrQflHshwT1DFUeJMdekY7Ate9mEjEj+F9xVqJAYz/lWv+pHyDmWq3dL/NjH3Fp
-        chRgM8Fce3ZL84VFvEzqmTWqPPlA6LQyStAUstFHHwMc/wCzrkKeZhuIdf6D+fN2tpn32T
-        w/W0FSztz7bjhIVhLn5fQJ4VJSybKHI=
-Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
- [209.85.167.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-379-C0aWv3HMOP2V5-v_9qA-hw-1; Tue, 19 Nov 2019 03:29:49 -0500
-Received: by mail-lf1-f71.google.com with SMTP id z16so4961254lfb.23
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 00:29:48 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LdTt3n+0i729FTDReSuLECgSQ4aS+lT8YABUAIgw7M4=;
-        b=l+iBJam32SmRAnnFb9xfKInZZdI7rghQPlHw5+XWvrhkGesfIL7gIQ+0U62IBZaf9n
-         WbMey65S1tK53vobBUL0d7ibHT4BeAW2k7B2g9xPdnU9/bzSMdfhKaS20gnvUNZQh/xb
-         LluCTKjXlOMxf7sES3aSMDNH067G6h+69+WC/P+KwcqPoD2mxYkJvPcHBC5D7/jQXpMx
-         GAio4G+9zIXcD71cr9dxm+tNUxreITRHtDdeyN+7a1ThR/VDfWLBH4q3P3FDBC1Rh/Dl
-         yRZzZFOWj13Ilr0BHP8y8wlwkqRcmOj6Ssn0T9rayB0eSnhlYTLSdouRhRgMBI5tKvoh
-         GcLw==
-X-Gm-Message-State: APjAAAUrP/ba+P26xn/2a9HwVDGetPBwIx0x25JlygNIInm/3Ekc1aIm
-        F0NLKo0XUF2sYMGClJmUGeN0sEGns/5iVehXdB6YUA1T3Nfz9C3QukCsjNVv85yIAy+AFYRqbYM
-        81hFFEqezbvWvqGMcDtHYFol6gzYExl7xqvgYFEkQ
-X-Received: by 2002:a2e:98c6:: with SMTP id s6mr2467910ljj.235.1574152187804;
-        Tue, 19 Nov 2019 00:29:47 -0800 (PST)
-X-Google-Smtp-Source: APXvYqw2IC2bHi8fy/d2SRNiTEi36NRc3i9RixIH7XOkwEMkhAxGronTJF+riz7NT7kg7+QIn9WK1oeS0ClHOZKD/g0=
-X-Received: by 2002:a2e:98c6:: with SMTP id s6mr2467897ljj.235.1574152187559;
- Tue, 19 Nov 2019 00:29:47 -0800 (PST)
+        Tue, 19 Nov 2019 03:31:06 -0500
+Received: from [IPv6:2001:983:e9a7:1:9879:d2e2:f0e2:9c7]
+ ([IPv6:2001:983:e9a7:1:9879:d2e2:f0e2:9c7])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id WyuXiBiMtcs92WyuYixyxi; Tue, 19 Nov 2019 09:31:03 +0100
+Subject: Re: [PATCH v11 00/11] Rockchip ISP Driver
+To:     Ezequiel Garcia <ezequiel@collabora.com>,
+        Helen Koike <helen.koike@collabora.com>,
+        linux-rockchip@lists.infradead.org
+Cc:     mark.rutland@arm.com, devicetree@vger.kernel.org,
+        eddie.cai.linux@gmail.com, mchehab@kernel.org, heiko@sntech.de,
+        linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org,
+        jeffy.chen@rock-chips.com, zyc@rock-chips.com,
+        linux-kernel@vger.kernel.org, tfiga@chromium.org,
+        robh+dt@kernel.org, hans.verkuil@cisco.com,
+        laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com,
+        kernel@collabora.com, linux-media@vger.kernel.org,
+        jacob-chen@iotwrt.com, zhengsq@rock-chips.com
+References: <20191114051242.14651-1-helen.koike@collabora.com>
+ <996a9b6a-0e45-d627-9263-539c22e5f1c0@xs4all.nl>
+ <7fd4bf99fd6316da8acaf0a27b6845bedbf4b25f.camel@collabora.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <eafffc6f-061e-65ab-079b-b2bd613d61cb@xs4all.nl>
+Date:   Tue, 19 Nov 2019 09:30:57 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <1573459282-26989-1-git-send-email-bhsharma@redhat.com>
- <20191113063858.GE22427@linaro.org> <CACi5LpP54d9DKW63G5W6X4euBjAm2NwkHOiM01dB7g8d60s=4w@mail.gmail.com>
- <20191115015959.GI22427@linaro.org> <CAJ2QiJJOSspLKRh+jRB_o0o9nmeAsiFKzxGJ8R0pYPRM4iptmw@mail.gmail.com>
-In-Reply-To: <CAJ2QiJJOSspLKRh+jRB_o0o9nmeAsiFKzxGJ8R0pYPRM4iptmw@mail.gmail.com>
-From:   Bhupesh Sharma <bhsharma@redhat.com>
-Date:   Tue, 19 Nov 2019 13:59:33 +0530
-Message-ID: <CACi5LpO_fvzDiXP9+QLga_B7kozRRnE9ix4Xa=xvNx1Kvci=3Q@mail.gmail.com>
-Subject: Re: [PATCH v4 0/3] Append new variables to vmcoreinfo (TCR_EL1.T1SZ
- for arm64 and MAX_PHYSMEM_BITS for all archs)
-To:     Prabhakar Kushwaha <prabhakar.pkin@gmail.com>
-Cc:     AKASHI Takahiro <takahiro.akashi@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bhupesh SHARMA <bhupesh.linux@gmail.com>,
-        Boris Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        James Morse <james.morse@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Steve Capper <steve.capper@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Dave Anderson <anderson@redhat.com>,
-        Kazuhito Hagio <k-hagio@ab.jp.nec.com>, x86@kernel.org,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        kexec mailing list <kexec@lists.infradead.org>
-X-MC-Unique: C0aWv3HMOP2V5-v_9qA-hw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <7fd4bf99fd6316da8acaf0a27b6845bedbf4b25f.camel@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfMGsN9TkGwtzRSuVMeonrxJLrUw1XmSkg4IsuhBSRsDFrLC11ivzCFX8aJcfdWeCV5jNkPvVEVJSSeMksMMXQZnuPOLV3vA0z47kH28NIXezbzRMwJVm
+ i0kEQCLAGczqiaGYtSeRJesLq8/NrrPpGhMsD5vDBBc/iagU+JIHt8BmMKjF2tn59ibNsHaMuAnmFWra4a3gUMCdRT/gdrQnHJnrgik0lQofZ0esyk/Nu/DX
+ D65EhczIhRRFxGvaB1eAhJi/v0F6Ozd1KE9URen/4s2vGTWfsgIEnqi5DQRRBJ3pKz0y7XeprGFaVM8esUrwKqcOaItP9rvtsxQLOCB1suLvdupJrx6pZYcd
+ iWWSqkh2ooYO5vpz+kAD70HUg1T9njp9gUjPEB1af8RTf1yux/jSVXu9QBMou3ErrndZ/+b7CCQUyjSvRcI54ZJ1qKKEogk7KHzRN5GuJiW4izKHthrhtquJ
+ lJRTd5LRqspOvFC13to5LvBSzTB/A6dc8kERZs3++ygx9drc3Pfswnzxjv4UFLAzJgD55HoGwrTnTGGiqk/0l76+4P1eGQqy+V5z6BSX/MQz/uqOVmkwIQvh
+ WgyLG9k1iJZt7GaX1QAUCU60ghZsWb2U2SbFm4CfNmutP3mOH2/S5S80JOkq+4SDt7GapP1ysMdumPOfxMrNrOWP3GIS/LD3j0ezNW201zm+k+NTVxtsn0Ya
+ HkMF0ziheb1qenYexxUxz7vlP/y+71YSjuoQNMyW3snuPKVVdh+soPSbqcn6vYv63+ZXtP1L1lQMPl2DcMxoJ49vEp/WW69/QbpDfkwNJBrK6Kl2rOoTW8dY
+ NPEIK9sFKpczRAj9HHUjgeBUW0rX4OPH1vKozIZYCDVG7Zps434Nnr/angm3ZTcstyAS+glPSm0Fhg5fLeXjIzwqwsxsE9veXu/iHB5znhQFN0JBAly+qNUa
+ gx9OZhTsTsatruBMqPo8WnJkJQ+8GIKhvtmPx37mkaMGy+AWBhswC+PNn0A7UhKlvALCrAZCqGTq1XPM00wI+N0yrzK9CsIKHTUokmZ2MZc3b8Kf
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 12:03 PM Prabhakar Kushwaha
-<prabhakar.pkin@gmail.com> wrote:
->
-> Hi Akashi,
->
-> On Fri, Nov 15, 2019 at 7:29 AM AKASHI Takahiro
-> <takahiro.akashi@linaro.org> wrote:
-> >
-> > Bhupesh,
-> >
-> > On Fri, Nov 15, 2019 at 01:24:17AM +0530, Bhupesh Sharma wrote:
-> > > Hi Akashi,
-> > >
-> > > On Wed, Nov 13, 2019 at 12:11 PM AKASHI Takahiro
-> > > <takahiro.akashi@linaro.org> wrote:
-> > > >
-> > > > Hi Bhupesh,
-> > > >
-> > > > Do you have a corresponding patch for userspace tools,
-> > > > including crash util and/or makedumpfile?
-> > > > Otherwise, we can't verify that a generated core file is
-> > > > correctly handled.
-> > >
-> > > Sure. I am still working on the crash-utility related changes, but yo=
-u
-> > > can find the makedumpfile changes I posted a couple of days ago here
-> > > (see [0]) and the github link for the makedumpfile changes can be see=
-n
-> > > via [1].
-> > >
-> > > I will post the crash-util changes shortly as well.
-> > > Thanks for having a look at the same.
-> >
-> > Thank you.
-> > I have tested my kdump patch with a hacked version of crash
-> > where VA_BITS_ACTUAL is calculated from tcr_el1_t1sz in vmcoreinfo.
-> >
->
-> I also did hack to calculate VA_BITS_ACTUAL is calculated from
-> tcr_el1_t1sz in vmcoreinfo. Now i am getting error same as mentioned
-> by you in other thread last month.
-> https://www.mail-archive.com/crash-utility@redhat.com/msg07385.html
->
-> how this error was overcome?
->
-> I am using
->  - crashkernel: https://github.com/crash-utility/crash.git  commit:
-> babd7ae62d4e8fd6f93fd30b88040d9376522aa3
-> and
->  - Linux: git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.gi=
-t
-> commit: af42d3466bdc8f39806b26f593604fdc54140bcb
+On 11/18/19 7:52 PM, Ezequiel Garcia wrote:
+> Hi Hans,
+> 
+> Thanks for taking care of this.
+> 
+> On Thu, 2019-11-14 at 09:42 +0100, Hans Verkuil wrote:
+>> On 11/14/19 6:12 AM, Helen Koike wrote:
+>>> Hello,
+>>>
+>>> This series adds the Rockchip Image Signal Processing Unit v1 driver to
+>>> staging.
+>>>
+>>> The main reason to be in staging is that people are already using it from the
+>>> mailing list (including libcamera), and having it in mainline makes the workflow
+>>> easier. Also, it is easier for other people to contribute back (with code
+>>> or testing the driver).
+>>>
+>>> We plan to actively work on this driver to get it our of staging.
+>>>
+>>> This patchset is also available at:
+>>> https://gitlab.collabora.com/koike/linux/tree/rockchip/isp/v11
+>>>
+>>> Libcamera patched to work with this version:
+>>> https://gitlab.collabora.com/koike/libcamera
+>>> (also sent to the mailing list)
+>>>
+>>> The major difference in v11 are:
+>>> - Fixed compiling warnings found with W=1
+>>> - Fixed checkpatch errors
+>>> - Add clock-names values in dt-bindings
+>>
+>> Looking at checkpatch I see a few remaining issues that I believe should be
+>> fixed before merging this:
+>>
+>> CHECK: spinlock_t definition without comment
+>> #575: FILE: drivers/staging/media/rkisp1/isp_stats.h:43:
+>> +       spinlock_t irq_lock;
+>>
+>> CHECK: struct mutex definition without comment
+>> #581: FILE: drivers/staging/media/rkisp1/isp_stats.h:49:
+>> +       struct mutex wq_lock;
+>>
+>> CHECK: spinlock_t definition without comment
+>> #1648: FILE: drivers/staging/media/rkisp1/isp_params.h:25:
+>> +       spinlock_t config_lock;
+>>
+>> CHECK: spinlock_t definition without comment
+>> #2058: FILE: drivers/staging/media/rkisp1/capture.h:145:
+>> +       spinlock_t vbq_lock;
+>>
+> 
+> I'd rather merge this as-is, adding a TODO entry stating
+> we need to revisit locking specifically, because I'd like
+> to take a close look at these spinlocks/mutex,
+> instead of just addding comments for then.
 
-I will post a formal change for crash-utility shortly that fixes the
-same. Right now we are having issues with emails bouncing off
-'crash-utility@redhat.com', so my patches sent to the same are in
-undelivered state at-the-moment.
+Fair enough! Just as long as it is mentioned somewhere.
 
-For easy testing I will share the link to my github tree (off-line)
-[which contains the changes] as well.
+> 
+>> Once this is done together with the Jacob Chen email clarification
+>> it is ready to be merged for v5.6.
+>>
+> 
+> I'll find out more about this.
+
+Thanks!
+
+Remember that we are in the code freeze until v5.5-rc1 is released,
+so you have time to make more adjustments if you want to.
 
 Regards,
-Bhupesh
+
+	Hans
+
+> 
+>> It passes all the sparse/smatch tests, so that's very good.
+>>
+> 
+> Great!
+> 
+> Thanks,
+> Ezequiel
+> 
 
