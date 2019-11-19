@@ -2,98 +2,98 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1303DC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 02:58:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E3EC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 03:01:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8CAD22316
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 02:58:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD53922317
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 03:01:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O5Lrey3y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727334AbfKSC6e (ORCPT
+        id S1727352AbfKSDBW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 21:58:34 -0500
-Received: from mga05.intel.com ([192.55.52.43]:29917 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727014AbfKSC6e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 21:58:34 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Nov 2019 18:58:33 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,322,1569308400"; 
-   d="scan'208";a="204263224"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
-  by fmsmga008.fm.intel.com with ESMTP; 18 Nov 2019 18:58:32 -0800
-Cc:     baolu.lu@linux.intel.com, iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>, Yi Liu <yi.l.liu@intel.com>
-Subject: Re: [PATCH v2 01/10] iommu/vt-d: Introduce native SVM capable flag
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Auger Eric <eric.auger@redhat.com>
-References: <1574106153-45867-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1574106153-45867-2-git-send-email-jacob.jun.pan@linux.intel.com>
- <cb44724d-a396-0291-63c4-0039788fd26b@redhat.com>
- <20191118134809.66b9fda4@jacob-builder>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <efe5a47d-1209-2c09-bc66-b1ebbc671439@linux.intel.com>
-Date:   Tue, 19 Nov 2019 10:55:29 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191118134809.66b9fda4@jacob-builder>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 18 Nov 2019 22:01:22 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:32990 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727014AbfKSDBW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 22:01:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574132481;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=HjCpt2Gr6HzKLw7N1LqL9S4fcdyI/ZI8pHUTAOux55Y=;
+        b=O5Lrey3yLKspW1i2pCdRHVvGDcH3MczyGDBFhJTW3CtcpNkz4Wa/e1hUKaP7LJjMj842O1
+        6xykSyaL8+7dDYFkwEwlcp/na+WD2ZcT2WP+aziZh7RlAaCG80lvxeFfuFprFHIMlUVLHT
+        dz4SoCe6I/yttC4LGZI+gY2Q5eAZAso=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-45-iFMyBrpYOr-mmff9ajVmlw-1; Mon, 18 Nov 2019 22:01:19 -0500
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 76273107ACCC;
+        Tue, 19 Nov 2019 03:01:18 +0000 (UTC)
+Received: from x230.com (ovpn-112-21.phx2.redhat.com [10.3.112.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7EB36610B0;
+        Tue, 19 Nov 2019 03:01:17 +0000 (UTC)
+From:   Rafael Aquini <aquini@redhat.com>
+To:     linux-mm@kvack.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] mm: kconfig: make Transparent Hugepage Support sysfs defaults to match the documentation
+Date:   Mon, 18 Nov 2019 22:01:02 -0500
+Message-Id: <20191119030102.27559-1-aquini@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-MC-Unique: iFMyBrpYOr-mmff9ajVmlw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Documentation/admin-guide/mm/transhuge.rst (originally in Documentation/vm/=
+transhuge.txt)
+states that TRANSPARENT_HUGEPAGE_MADVISE is the default option for THP conf=
+ig:
 
-On 11/19/19 5:48 AM, Jacob Pan wrote:
-> On Mon, 18 Nov 2019 21:33:53 +0100
-> Auger Eric <eric.auger@redhat.com> wrote:
-> 
->> Hi Jacob,
->>
->> On 11/18/19 8:42 PM, Jacob Pan wrote:
->>> Shared Virtual Memory(SVM) is based on a collective set of hardware
->>> features detected at runtime. There are requirements for matching
->>> CPU and IOMMU capabilities.
->>>
->>> This patch introduces a flag which will be used to mark and test the
->>> capability of SVM.
->>>
->>> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
->>> Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
->>> ---
->>>   include/linux/intel-iommu.h | 1 +
->>>   1 file changed, 1 insertion(+)
->>>
->>> diff --git a/include/linux/intel-iommu.h
->>> b/include/linux/intel-iommu.h index ed11ef594378..63118991824c
->>> 100644 --- a/include/linux/intel-iommu.h
->>> +++ b/include/linux/intel-iommu.h
->>> @@ -433,6 +433,7 @@ enum {
->>>   
->>>   #define VTD_FLAG_TRANS_PRE_ENABLED	(1 << 0)
->>>   #define VTD_FLAG_IRQ_REMAP_PRE_ENABLED	(1 << 1)
->>> +#define VTD_FLAG_SVM_CAPABLE		(1 << 2)
->>
->> I think I would rather squash this into the next patch as there is no
->> user here.
->>
-> Sure, I don't have strong preference. Baolu, what is your call?
+"
+madvise
+        will enter direct reclaim like ``always`` but only for regions
+        that are have used madvise(MADV_HUGEPAGE). This is the default
+        behaviour.
+"
 
-It's okay for me.
+This patch changes mm/Kconfig to reflect that fact, accordingly.
+Besides keeping consistency between documentation and the code behavior,
+other reasons to perform this minor adjustment are noted at:
+https://bugzilla.redhat.com/show_bug.cgi?id=3D1772133
 
-Best regards,
-baolu
+Signed-off-by: Rafael Aquini <aquini@redhat.com>
+---
+ mm/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mm/Kconfig b/mm/Kconfig
+index a5dae9a7eb51..c12a559aa1e5 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -385,7 +385,7 @@ config TRANSPARENT_HUGEPAGE
+ choice
+ =09prompt "Transparent Hugepage Support sysfs defaults"
+ =09depends on TRANSPARENT_HUGEPAGE
+-=09default TRANSPARENT_HUGEPAGE_ALWAYS
++=09default TRANSPARENT_HUGEPAGE_MADVISE
+ =09help
+ =09  Selects the sysfs defaults for Transparent Hugepage Support.
+=20
+--=20
+2.17.2
+
