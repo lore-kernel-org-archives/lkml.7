@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A66C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:21:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 169B6C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01ABD22319
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:21:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D47B622319
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:21:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574140873;
-	bh=JMVPXSymgjp8EVzS/aRQ37T9s+CPGvDksnU483LFt64=;
+	s=default; t=1574140877;
+	bh=aR3JSi+XQOy3BMnTxLp5VYFQI9dIsP/fqeH7rS2pf/8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RqaLUq97sdQY3TYWKQjVWMo0SPqWXV9pBW0Jpx7eThnq14LbJ4x2IQ0KanHZLiPUl
-	 XZd0/zHsUhkwjra4sq/iygH3fCJgaSUYbrKs364xlsQLoR/dqJHC8EMKD0PNb96ca3
-	 jAgUM5I/PS60AQnXZU1Rh0Ur502MamWLRWQeQ7/w=
+	b=0ZeX3oB1WqgDyS3kt88MZ1/iNdDBObJBz9NMM/7Naku4foZ6kS0RgKfGdm4kT7dzz
+	 QCHN7loCc1uIefeBUj6tJCHknraeB3i2aFHmFYkRi0Afnz/owKVTIqCiUyLgnW1Dkb
+	 KIkIVLZtexsCHJiTa/3n4PYeoXG3USb81sL16mVY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727226AbfKSFVL (ORCPT
+        id S1727047AbfKSFVQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:21:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35776 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:21:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727184AbfKSFVI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:21:08 -0500
+        id S1727184AbfKSFVM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:21:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59B3C22319;
-        Tue, 19 Nov 2019 05:21:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA6992231C;
+        Tue, 19 Nov 2019 05:21:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574140867;
-        bh=JMVPXSymgjp8EVzS/aRQ37T9s+CPGvDksnU483LFt64=;
+        s=default; t=1574140870;
+        bh=aR3JSi+XQOy3BMnTxLp5VYFQI9dIsP/fqeH7rS2pf/8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JCsGCWIrcSey27RWPV/AiA+Wf+jaxQrk+21a0eO/wsoYdRCmG+/66r9Hh+as9u643
-         UqOE3a8cUYyz2Saq/JklariLy9pzJDAgzdyadGKCew3o6iAHO4D5d+/WxYlb6IGYxb
-         Zmx7y9QCT0+gT75q2zHBnK28j7P1wCZOlhqPcfJ0=
+        b=ClbRrBfruoGOQLf+jYliDJcWFbfVy9AtFQ0HhrX5idQq3hbAzepN7Va5dWnNEQ/x4
+         yaAKrr+wxnUeQjhOO5TiVO1o2mMw/lceLQywTGBHGXIpKL94XoqkXo7VdfCwnP5wzQ
+         mc58QsD075XMcnpeK36FEjmq3Zu9U7GAJFbf5cg4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
-        syzbot+abe1ab7afc62c6bb6377@syzkaller.appspotmail.com
-Subject: [PATCH 5.3 14/48] ALSA: usb-audio: Fix missing error check at mixer resolution test
-Date:   Tue, 19 Nov 2019 06:19:34 +0100
-Message-Id: <20191119051000.715025711@linuxfoundation.org>
+        stable@vger.kernel.org, Henry Lin <henryl@nvidia.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.3 15/48] ALSA: usb-audio: not submit urb for stopped endpoint
+Date:   Tue, 19 Nov 2019 06:19:35 +0100
+Message-Id: <20191119051000.929498579@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119050946.745015350@linuxfoundation.org>
 References: <20191119050946.745015350@linuxfoundation.org>
@@ -59,46 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Henry Lin <henryl@nvidia.com>
 
-commit 167beb1756791e0806365a3f86a0da10d7a327ee upstream.
+commit 528699317dd6dc722dccc11b68800cf945109390 upstream.
 
-A check of the return value from get_cur_mix_raw() is missing at the
-resolution test code in get_min_max_with_quirks(), which may leave the
-variable untouched, leading to a random uninitialized value, as
-detected by syzkaller fuzzer.
+While output urb's snd_complete_urb() is executing, calling
+prepare_outbound_urb() may cause endpoint stopped before
+prepare_outbound_urb() returns and result in next urb submitted
+to stopped endpoint. usb-audio driver cannot re-use it afterwards as
+the urb is still hold by usb stack.
 
-Add the missing return error check for fixing that.
+This change checks EP_FLAG_RUNNING flag after prepare_outbound_urb() again
+to let snd_complete_urb() know the endpoint already stopped and does not
+submit next urb. Below kind of error will be fixed:
 
-Reported-and-tested-by: syzbot+abe1ab7afc62c6bb6377@syzkaller.appspotmail.com
+[  213.153103] usb 1-2: timeout: still 1 active urbs on EP #1
+[  213.164121] usb 1-2: cannot submit urb 0, error -16: unknown error
+
+Signed-off-by: Henry Lin <henryl@nvidia.com>
 Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191109181658.30368-1-tiwai@suse.de
+Link: https://lore.kernel.org/r/20191113021420.13377-1-henryl@nvidia.com
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/mixer.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ sound/usb/endpoint.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/sound/usb/mixer.c
-+++ b/sound/usb/mixer.c
-@@ -1229,7 +1229,8 @@ static int get_min_max_with_quirks(struc
- 		if (cval->min + cval->res < cval->max) {
- 			int last_valid_res = cval->res;
- 			int saved, test, check;
--			get_cur_mix_raw(cval, minchn, &saved);
-+			if (get_cur_mix_raw(cval, minchn, &saved) < 0)
-+				goto no_res_check;
- 			for (;;) {
- 				test = saved;
- 				if (test < cval->max)
-@@ -1249,6 +1250,7 @@ static int get_min_max_with_quirks(struc
- 			snd_usb_set_cur_mix_value(cval, minchn, 0, saved);
+--- a/sound/usb/endpoint.c
++++ b/sound/usb/endpoint.c
+@@ -388,6 +388,9 @@ static void snd_complete_urb(struct urb
  		}
  
-+no_res_check:
- 		cval->initialized = 1;
- 	}
- 
+ 		prepare_outbound_urb(ep, ctx);
++		/* can be stopped during prepare callback */
++		if (unlikely(!test_bit(EP_FLAG_RUNNING, &ep->flags)))
++			goto exit_clear;
+ 	} else {
+ 		retire_inbound_urb(ep, ctx);
+ 		/* can be stopped during retire callback */
 
 
