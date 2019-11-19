@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 657BEC43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:41:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 400F7C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:40:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3333021783
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:41:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0833E208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:40:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142060;
-	bh=k8d5s75KhVKjgm3jmwxPY/yUWZ6JYWL1KLUdROsgTKk=;
+	s=default; t=1574142056;
+	bh=/3FHlrPbUfoEx5bggvBQp3kcC9rdCI47yRWd8XnLZ5s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rDdyBAPZY7FdVG2o/aUjCigaEYZVvAe6d+aNBV5cNR9BdkHZMuUZmxQmBdB9DZoxU
-	 7kBB4wpef6xNCb6a5gEkL6HfNpesXf1q61oX0oAopPSiMojeeBI+jKj4JPx+bAFH9D
-	 58zTJ2JYbEo24NYF5uv5Ma9FdUJu75eo3qwW+FMA=
+	b=OjX63zblJlMjWuAmd8AuoqAeRz17ourGOFHxFjsIoOwAuXmaoGP4SgZ6kKEUNDDoL
+	 3mo6UaWfcxC96z1g3tbVe+agnHLG455iOzFGw9adv6tV0u24cKoBEKUBKsKb5pCF9I
+	 rROiHysEp90+jjGUXgRa78r3pqLywsrU7c5DKGb8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730465AbfKSFk6 (ORCPT
+        id S1730461AbfKSFky (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:40:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35184 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730458AbfKSFky (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 19 Nov 2019 00:40:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35100 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728619AbfKSFkv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:40:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15E3F208C3;
-        Tue, 19 Nov 2019 05:40:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A46F21783;
+        Tue, 19 Nov 2019 05:40:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142053;
-        bh=k8d5s75KhVKjgm3jmwxPY/yUWZ6JYWL1KLUdROsgTKk=;
+        s=default; t=1574142050;
+        bh=/3FHlrPbUfoEx5bggvBQp3kcC9rdCI47yRWd8XnLZ5s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g7AaRCcBxppnbYZ6rkLcA8bgrNDBTANvr4jmVmePF/IYtKFule66w0lCar/iJdCm5
-         /JkXnTcQHiUqT33lSEyYa5nJWUqZGVfyo99nAeffbkvdgZFA0bdvn/CwGkRI+6OEry
-         1Vl1CNTpNISGFKIZ4Rx7puEVjNywWl3DWxKc+1EU=
+        b=MXQZsg/TJsnCvn0PdoljzU/V4KL6qe/WDudwTcFLdxOLa7u6txIxqzhcD5uqzZ4T9
+         iA4Ts38uY3dIHvRmGSrxxUkpp6L3LK+D9go0cGTNNxY31VgNz94J/uXKg/EpuhIAQa
+         PCjWtyG3d14qE6qDea6Rab8ACqtD4HvwBcAp4gRM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Laura Abbott <labbott@redhat.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
+        stable@vger.kernel.org,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Thierry Reding <treding@nvidia.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 355/422] misc: kgdbts: Fix restrict error
-Date:   Tue, 19 Nov 2019 06:19:12 +0100
-Message-Id: <20191119051422.023773594@linuxfoundation.org>
+Subject: [PATCH 4.19 372/422] ARM: tegra: colibri_t30: fix mcp2515 can controller interrupt polarity
+Date:   Tue, 19 Nov 2019 06:19:29 +0100
+Message-Id: <20191119051423.117492613@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -60,70 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laura Abbott <labbott@redhat.com>
+From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 
-[ Upstream commit fa0218ef733e6f247a1a3986e3eb12460064ac77 ]
+[ Upstream commit 503fcd8464fb6cd18073e97dec59b933930655d6 ]
 
-kgdbts current fails when compiled with restrict:
+Fix the MCP2515 SPI CAN controller interrupt polarity which according
+to its datasheet defaults to low-active aka falling edge.
 
-drivers/misc/kgdbts.c: In function ‘configure_kgdbts’:
-drivers/misc/kgdbts.c:1070:2: error: ‘strcpy’ source argument is the same as destination [-Werror=restrict]
-  strcpy(config, opt);
-  ^~~~~~~~~~~~~~~~~~~
-
-As the error says, config is being used in both the source and destination.
-Refactor the code to avoid the extra copy and put the parsing closer to
-the actual location.
-
-Signed-off-by: Laura Abbott <labbott@redhat.com>
-Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/kgdbts.c | 16 ++++++----------
- 1 file changed, 6 insertions(+), 10 deletions(-)
+ arch/arm/boot/dts/tegra30-colibri-eval-v3.dts | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/misc/kgdbts.c b/drivers/misc/kgdbts.c
-index eb4d90b7d99e1..8b01257783dd8 100644
---- a/drivers/misc/kgdbts.c
-+++ b/drivers/misc/kgdbts.c
-@@ -985,6 +985,12 @@ static void kgdbts_run_tests(void)
- 	int nmi_sleep = 0;
- 	int i;
- 
-+	verbose = 0;
-+	if (strstr(config, "V1"))
-+		verbose = 1;
-+	if (strstr(config, "V2"))
-+		verbose = 2;
-+
- 	ptr = strchr(config, 'F');
- 	if (ptr)
- 		fork_test = simple_strtol(ptr + 1, NULL, 10);
-@@ -1068,13 +1074,6 @@ static int kgdbts_option_setup(char *opt)
- 		return -ENOSPC;
- 	}
- 	strcpy(config, opt);
--
--	verbose = 0;
--	if (strstr(config, "V1"))
--		verbose = 1;
--	if (strstr(config, "V2"))
--		verbose = 2;
--
- 	return 0;
- }
- 
-@@ -1086,9 +1085,6 @@ static int configure_kgdbts(void)
- 
- 	if (!strlen(config) || isspace(config[0]))
- 		goto noconfig;
--	err = kgdbts_option_setup(config);
--	if (err)
--		goto noconfig;
- 
- 	final_ack = 0;
- 	run_plant_and_detach_test(1);
+diff --git a/arch/arm/boot/dts/tegra30-colibri-eval-v3.dts b/arch/arm/boot/dts/tegra30-colibri-eval-v3.dts
+index 16e1f387aa6db..a0c550e26738f 100644
+--- a/arch/arm/boot/dts/tegra30-colibri-eval-v3.dts
++++ b/arch/arm/boot/dts/tegra30-colibri-eval-v3.dts
+@@ -79,7 +79,8 @@
+ 			reg = <0>;
+ 			clocks = <&clk16m>;
+ 			interrupt-parent = <&gpio>;
+-			interrupts = <TEGRA_GPIO(S, 0) IRQ_TYPE_EDGE_RISING>;
++			/* CAN_INT */
++			interrupts = <TEGRA_GPIO(S, 0) IRQ_TYPE_EDGE_FALLING>;
+ 			spi-max-frequency = <10000000>;
+ 		};
+ 		spidev0: spi@1 {
 -- 
 2.20.1
 
