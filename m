@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55A8EC43141
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:23:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A556BC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:23:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E38B21939
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:23:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77A822231A
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:23:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141008;
-	bh=ADyp6Rzsx2MfrdWW4FOXRRHYUFvd+5cFilVBnnNmt8I=;
+	s=default; t=1574141011;
+	bh=cQeyOvxs7onENN1fn/gu3+UF9kBXixfGOWhFtaeliFc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OU1zBhEwOZR0xn2J21NKgscWvuTkr7Vuy8ks+h0wbv48JmLqbLuDXrT88ZY9QH5Ug
-	 DAbbevp+6Mackv9/NF57OIyQhWIwmZwHpEaFlXhkUPMubkuR8FlobTIdrHHiFuf915
-	 A4codMMWcpcIEChwb5McDy7NZvHiZmEOuFqxp4MY=
+	b=2fHXk1COYAstGO+w+cUvv88S45EL+z/y6WWhq4Ai1f2NfIVrZLvNM5I/p+i4JC5pB
+	 AA8M8j43j52D2lvBYirOdmQ+RiTPA0SU9pUdhU6KGX0habYMV15glVpJwj6euktvYg
+	 nDssXRX8kve8c7hnV+rMLX+A3j5l1kNM+iF0cyrI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727992AbfKSFX0 (ORCPT
+        id S1728003AbfKSFXa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:23:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39036 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:23:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727983AbfKSFXY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:23:24 -0500
+        id S1727993AbfKSFX1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:23:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84A7B22323;
-        Tue, 19 Nov 2019 05:23:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2981E2235D;
+        Tue, 19 Nov 2019 05:23:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141004;
-        bh=ADyp6Rzsx2MfrdWW4FOXRRHYUFvd+5cFilVBnnNmt8I=;
+        s=default; t=1574141006;
+        bh=cQeyOvxs7onENN1fn/gu3+UF9kBXixfGOWhFtaeliFc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bCYAfDW9d4kLC+kXdbVSqy7oI/l53EOjK1IpR9UFVqMvEeihfro2CwX9nM+tEg7R9
-         bks/pzYPuH5eA/MZku/zAJ44PTwUkH/7yGuVum5FK0MDouwsGIYLPt8Oj8AJEl3nV1
-         79xmifGpu2GiDqkA3l/6/3aRSvMI+hfXDhJVBYMM=
+        b=EhPOevOCA7oXGfd6lBMpoG6qmj5DmcIzYwwQ+geDD7RZC3+kS+l9JPmXQ0+nMjcIR
+         FOB29HqKzAWp5t658aKTEMf3d6/WRfYanEqK5kLYU8jh7mH5NzjfEFyFQOlPl+aYUv
+         5drZ3s1G9CeMIpSR/c9t0UMrryFPygfUvGDr9PFw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+a8d4acdad35e6bbca308@syzkaller.appspotmail.com,
-        Oliver Neukum <oneukum@suse.com>,
+        stable@vger.kernel.org, Guillaume Nault <gnault@redhat.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 004/422] ax88172a: fix information leak on short answers
-Date:   Tue, 19 Nov 2019 06:13:21 +0100
-Message-Id: <20191119051400.509451837@linuxfoundation.org>
+Subject: [PATCH 4.19 005/422] ipmr: Fix skb headroom in ipmr_get_route().
+Date:   Tue, 19 Nov 2019 06:13:22 +0100
+Message-Id: <20191119051400.563955281@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -61,32 +59,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Guillaume Nault <gnault@redhat.com>
 
-[ Upstream commit a9a51bd727d141a67b589f375fe69d0e54c4fe22 ]
+[ Upstream commit 7901cd97963d6cbde88fa25a4a446db3554c16c6 ]
 
-If a malicious device gives a short MAC it can elicit up to
-5 bytes of leaked memory out of the driver. We need to check for
-ETH_ALEN instead.
+In route.c, inet_rtm_getroute_build_skb() creates an skb with no
+headroom. This skb is then used by inet_rtm_getroute() which may pass
+it to rt_fill_info() and, from there, to ipmr_get_route(). The later
+might try to reuse this skb by cloning it and prepending an IPv4
+header. But since the original skb has no headroom, skb_push() triggers
+skb_under_panic():
 
-Reported-by: syzbot+a8d4acdad35e6bbca308@syzkaller.appspotmail.com
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
+skbuff: skb_under_panic: text:00000000ca46ad8a len:80 put:20 head:00000000cd28494e data:000000009366fd6b tail:0x3c end:0xec0 dev:veth0
+------------[ cut here ]------------
+kernel BUG at net/core/skbuff.c:108!
+invalid opcode: 0000 [#1] SMP KASAN PTI
+CPU: 6 PID: 587 Comm: ip Not tainted 5.4.0-rc6+ #1
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-2.fc30 04/01/2014
+RIP: 0010:skb_panic+0xbf/0xd0
+Code: 41 a2 ff 8b 4b 70 4c 8b 4d d0 48 c7 c7 20 76 f5 8b 44 8b 45 bc 48 8b 55 c0 48 8b 75 c8 41 54 41 57 41 56 41 55 e8 75 dc 7a ff <0f> 0b 0f 1f 44 00 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00
+RSP: 0018:ffff888059ddf0b0 EFLAGS: 00010286
+RAX: 0000000000000086 RBX: ffff888060a315c0 RCX: ffffffff8abe4822
+RDX: 0000000000000000 RSI: 0000000000000008 RDI: ffff88806c9a79cc
+RBP: ffff888059ddf118 R08: ffffed100d9361b1 R09: ffffed100d9361b0
+R10: ffff88805c68aee3 R11: ffffed100d9361b1 R12: ffff88805d218000
+R13: ffff88805c689fec R14: 000000000000003c R15: 0000000000000ec0
+FS:  00007f6af184b700(0000) GS:ffff88806c980000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007ffc8204a000 CR3: 0000000057b40006 CR4: 0000000000360ee0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ skb_push+0x7e/0x80
+ ipmr_get_route+0x459/0x6fa
+ rt_fill_info+0x692/0x9f0
+ inet_rtm_getroute+0xd26/0xf20
+ rtnetlink_rcv_msg+0x45d/0x630
+ netlink_rcv_skb+0x1a5/0x220
+ rtnetlink_rcv+0x15/0x20
+ netlink_unicast+0x305/0x3a0
+ netlink_sendmsg+0x575/0x730
+ sock_sendmsg+0xb5/0xc0
+ ___sys_sendmsg+0x497/0x4f0
+ __sys_sendmsg+0xcb/0x150
+ __x64_sys_sendmsg+0x48/0x50
+ do_syscall_64+0xd2/0xac0
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Actually the original skb used to have enough headroom, but the
+reserve_skb() call was lost with the introduction of
+inet_rtm_getroute_build_skb() by commit 404eb77ea766 ("ipv4: support
+sport, dport and ip_proto in RTM_GETROUTE").
+
+We could reserve some headroom again in inet_rtm_getroute_build_skb(),
+but this function shouldn't be responsible for handling the special
+case of ipmr_get_route(). Let's handle that directly in
+ipmr_get_route() by calling skb_realloc_headroom() instead of
+skb_clone().
+
+Fixes: 404eb77ea766 ("ipv4: support sport, dport and ip_proto in RTM_GETROUTE")
+Signed-off-by: Guillaume Nault <gnault@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/usb/ax88172a.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/ipv4/ipmr.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/net/usb/ax88172a.c
-+++ b/drivers/net/usb/ax88172a.c
-@@ -208,7 +208,7 @@ static int ax88172a_bind(struct usbnet *
- 
- 	/* Get the MAC address */
- 	ret = asix_read_cmd(dev, AX_CMD_READ_NODE_ID, 0, 0, ETH_ALEN, buf, 0);
--	if (ret < 0) {
-+	if (ret < ETH_ALEN) {
- 		netdev_err(dev->net, "Failed to read MAC address: %d\n", ret);
- 		goto free;
- 	}
+--- a/net/ipv4/ipmr.c
++++ b/net/ipv4/ipmr.c
+@@ -2278,7 +2278,8 @@ int ipmr_get_route(struct net *net, stru
+ 			rcu_read_unlock();
+ 			return -ENODEV;
+ 		}
+-		skb2 = skb_clone(skb, GFP_ATOMIC);
++
++		skb2 = skb_realloc_headroom(skb, sizeof(struct iphdr));
+ 		if (!skb2) {
+ 			read_unlock(&mrt_lock);
+ 			rcu_read_unlock();
 
 
