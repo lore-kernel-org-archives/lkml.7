@@ -2,284 +2,81 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36195C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 11:59:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B080AC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 11:59:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEAB921850
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 11:59:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PyacJ+fa"
+	by mail.kernel.org (Postfix) with ESMTP id 85707222D1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 11:59:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727801AbfKSL7l (ORCPT
+        id S1727870AbfKSL74 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 06:59:41 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:46939 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727255AbfKSL7l (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 06:59:41 -0500
-Received: by mail-oi1-f195.google.com with SMTP id n14so18601649oie.13;
-        Tue, 19 Nov 2019 03:59:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4O09fLk0awbGhr8W3v8THYqRhAXp4gJYDWRQ9Jk2IYk=;
-        b=PyacJ+fa9IHaecahJcdD6PP2K7i2gbhm07GSuUtekBL8iYc/Mxm6Ooy24zv0bhR5A3
-         vXh5KLuaiMoc63fWrSbMl6tRpjTubLqRXwluoi1AodVvfCe6AROgmlpuwCiE7DcCXyKW
-         WBRmihvKA0oXNDFiFv3dJYpCMuWKtrzmaaeSr9e4hkvTe2IGY7nYA3+FeaC7ykwV7gTh
-         yLBYXNubVzOYfwMhpc+vow0CrUbJEDSwAYb5qwqlrcSPdXMVp1jA0UD6ysTg73NQ/MU+
-         Q47pIUEKagAri/2CXIbp90GheJzmG3lilzVlavzyYNBafuNQI0JvTofGUtYLewwGXTZq
-         QfzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4O09fLk0awbGhr8W3v8THYqRhAXp4gJYDWRQ9Jk2IYk=;
-        b=Iv2EWZyVA2NppQSTKrdHsWaySv/h/Y4QB2lOdoYgKpnx7+hG6P7SxVeENOAZlsihhj
-         Deh3d85akPdHIYogerBbFSkGwhyKMD/rhvxPmFMDkRRQi+6NtECFWqRI7njmmnhulnmN
-         nDG6L0jaKwGsp/C7kgaOyczWc/BxjXRdgWfThhxJ4hHXEYRAbdIFJsCO6T7vbiHgHua8
-         Qmfxvsb0wWw+LYkKBvJ2n8GUiS5O0+U4VsxwGc2ETYeeOcYDcpWBlT+FhEDiueiHTqEb
-         enYD5A78mNZcQbpnTLxziAymfzDhpgn5RlBfWfsL9VfdmP7ctdx6qYFHepxKTxt2EsYg
-         InIA==
-X-Gm-Message-State: APjAAAUGdfTqNV6HCQAJbhkEgzjTkBbbwnM3uftkCTUH1sWRvMzg14l7
-        i2lVRpJ4bn805nyL7jMBQ+zdoEM41Utt4JdAfoo=
-X-Google-Smtp-Source: APXvYqwkhqwvg0MpWSxUNPBbZ1N19daYoLmPvdXd0YR/oXcr1pjNPyXmy8m4gwha+LwwmncSGQ6575DFwRtvgkUQv10=
-X-Received: by 2002:aca:ebd4:: with SMTP id j203mr3627225oih.141.1574164780151;
- Tue, 19 Nov 2019 03:59:40 -0800 (PST)
+        Tue, 19 Nov 2019 06:59:56 -0500
+Received: from mx2.suse.de ([195.135.220.15]:43522 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725798AbfKSL74 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 06:59:56 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 1DB5FBE03;
+        Tue, 19 Nov 2019 11:59:54 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 2A9E11E47E5; Tue, 19 Nov 2019 12:59:53 +0100 (CET)
+Date:   Tue, 19 Nov 2019 12:59:53 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     Sebastian Siewior <bigeasy@linutronix.de>
+Cc:     Jan Kara <jack@suse.cz>, Thomas Gleixner <tglx@linutronix.de>,
+        Matthew Wilcox <willy@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Anna-Maria Gleixner <anna-maria@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Julia Cartwright <julia@ni.com>, Theodore Tso <tytso@mit.edu>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jan Kara <jack@suse.com>, Mark Fasheh <mark@fasheh.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Joel Becker <jlbec@evilplan.org>
+Subject: Re: [PATCH v3] fs/buffer: Make BH_Uptodate_Lock bit_spin_lock a
+ regular spinlock_t
+Message-ID: <20191119115953.GF25605@quack2.suse.cz>
+References: <20190820170818.oldsdoumzashhcgh@linutronix.de>
+ <20190820171721.GA4949@bombadil.infradead.org>
+ <alpine.DEB.2.21.1908201959240.2223@nanos.tec.linutronix.de>
+ <20191011112525.7dksg6ixb5c3hxn5@linutronix.de>
+ <20191115145638.GA5461@quack2.suse.cz>
+ <20191115175420.cotwwz5tmcwvllsq@linutronix.de>
+ <20191118093845.GB17319@quack2.suse.cz>
+ <20191118132824.rclhrbujqh4b4g4d@linutronix.de>
+ <20191119093001.GA25605@quack2.suse.cz>
+ <20191119100022.xjvwxwepa4xqcr7q@linutronix.de>
 MIME-Version: 1.0
-References: <1574145389-12149-1-git-send-email-wanpengli@tencent.com> <87r224gjyt.fsf@vitty.brq.redhat.com>
-In-Reply-To: <87r224gjyt.fsf@vitty.brq.redhat.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Tue, 19 Nov 2019 19:59:32 +0800
-Message-ID: <CANRm+CzcWDvRA0+iaQZ6hd2HGRKyZpRnurghQXdagDCffKaSPg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] KVM: VMX: FIXED+PHYSICAL mode single target IPI fastpath
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191119100022.xjvwxwepa4xqcr7q@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 19 Nov 2019 at 19:54, Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
->
-> Wanpeng Li <kernellwp@gmail.com> writes:
->
-> > From: Wanpeng Li <wanpengli@tencent.com>
-> >
-> > ICR and TSCDEADLINE MSRs write cause the main MSRs write vmexits in
-> > our product observation, multicast IPIs are not as common as unicast
-> > IPI like RESCHEDULE_VECTOR and CALL_FUNCTION_SINGLE_VECTOR etc.
-> >
-> > This patch tries to optimize x2apic physical destination mode, fixed
-> > delivery mode single target IPI by delivering IPI to receiver as soon
-> > as possible after sender writes ICR vmexit to avoid various checks
-> > when possible, especially when running guest w/ --overcommit cpu-pm=on
-> > or guest can keep running, IPI can be injected to target vCPU by
-> > posted-interrupt immediately.
-> >
-> > Testing on Xeon Skylake server:
-> >
-> > The virtual IPI latency from sender send to receiver receive reduces
-> > more than 200+ cpu cycles.
-> >
-> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> > ---
-> > v1 -> v2:
-> >  * add tracepoint
-> >  * Instead of a separate vcpu->fast_vmexit, set exit_reason
-> >    to vmx->exit_reason to -1 if the fast path succeeds.
-> >  * move the "kvm_skip_emulated_instruction(vcpu)" to vmx_handle_exit
-> >  * moving the handling into vmx_handle_exit_irqoff()
-> >
-> >  arch/x86/include/asm/kvm_host.h |  4 ++--
-> >  arch/x86/include/uapi/asm/vmx.h |  1 +
-> >  arch/x86/kvm/svm.c              |  4 ++--
-> >  arch/x86/kvm/vmx/vmx.c          | 40 +++++++++++++++++++++++++++++++++++++---
-> >  arch/x86/kvm/x86.c              |  5 +++--
-> >  5 files changed, 45 insertions(+), 9 deletions(-)
-> >
-> > diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> > index 898ab9e..0daafa9 100644
-> > --- a/arch/x86/include/asm/kvm_host.h
-> > +++ b/arch/x86/include/asm/kvm_host.h
-> > @@ -1084,7 +1084,7 @@ struct kvm_x86_ops {
-> >       void (*tlb_flush_gva)(struct kvm_vcpu *vcpu, gva_t addr);
-> >
-> >       void (*run)(struct kvm_vcpu *vcpu);
-> > -     int (*handle_exit)(struct kvm_vcpu *vcpu);
-> > +     int (*handle_exit)(struct kvm_vcpu *vcpu, u32 *vcpu_exit_reason);
-> >       int (*skip_emulated_instruction)(struct kvm_vcpu *vcpu);
-> >       void (*set_interrupt_shadow)(struct kvm_vcpu *vcpu, int mask);
-> >       u32 (*get_interrupt_shadow)(struct kvm_vcpu *vcpu);
-> > @@ -1134,7 +1134,7 @@ struct kvm_x86_ops {
-> >       int (*check_intercept)(struct kvm_vcpu *vcpu,
-> >                              struct x86_instruction_info *info,
-> >                              enum x86_intercept_stage stage);
-> > -     void (*handle_exit_irqoff)(struct kvm_vcpu *vcpu);
-> > +     void (*handle_exit_irqoff)(struct kvm_vcpu *vcpu, u32 *vcpu_exit_reason);
-> >       bool (*mpx_supported)(void);
-> >       bool (*xsaves_supported)(void);
-> >       bool (*umip_emulated)(void);
-> > diff --git a/arch/x86/include/uapi/asm/vmx.h b/arch/x86/include/uapi/asm/vmx.h
-> > index 3eb8411..b33c6e1 100644
-> > --- a/arch/x86/include/uapi/asm/vmx.h
-> > +++ b/arch/x86/include/uapi/asm/vmx.h
-> > @@ -88,6 +88,7 @@
-> >  #define EXIT_REASON_XRSTORS             64
-> >  #define EXIT_REASON_UMWAIT              67
-> >  #define EXIT_REASON_TPAUSE              68
-> > +#define EXIT_REASON_NEED_SKIP_EMULATED_INSN -1
->
-> Maybe just EXIT_REASON_INSN_SKIP ?
->
-> >
-> >  #define VMX_EXIT_REASONS \
-> >       { EXIT_REASON_EXCEPTION_NMI,         "EXCEPTION_NMI" }, \
-> > diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> > index d02a73a..c8e063a 100644
-> > --- a/arch/x86/kvm/svm.c
-> > +++ b/arch/x86/kvm/svm.c
-> > @@ -4929,7 +4929,7 @@ static void svm_get_exit_info(struct kvm_vcpu *vcpu, u64 *info1, u64 *info2)
-> >       *info2 = control->exit_info_2;
-> >  }
-> >
-> > -static int handle_exit(struct kvm_vcpu *vcpu)
-> > +static int handle_exit(struct kvm_vcpu *vcpu, u32 *vcpu_exit_reason)
-> >  {
-> >       struct vcpu_svm *svm = to_svm(vcpu);
-> >       struct kvm_run *kvm_run = vcpu->run;
-> > @@ -6187,7 +6187,7 @@ static int svm_check_intercept(struct kvm_vcpu *vcpu,
-> >       return ret;
-> >  }
-> >
-> > -static void svm_handle_exit_irqoff(struct kvm_vcpu *vcpu)
-> > +static void svm_handle_exit_irqoff(struct kvm_vcpu *vcpu, u32 *vcpu_exit_reason)
-> >  {
-> >
-> >  }
-> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> > index 621142e5..b98198d 100644
-> > --- a/arch/x86/kvm/vmx/vmx.c
-> > +++ b/arch/x86/kvm/vmx/vmx.c
-> > @@ -5792,7 +5792,7 @@ void dump_vmcs(void)
-> >   * The guest has exited.  See if we can fix it or if we need userspace
-> >   * assistance.
-> >   */
-> > -static int vmx_handle_exit(struct kvm_vcpu *vcpu)
-> > +static int vmx_handle_exit(struct kvm_vcpu *vcpu, u32 *vcpu_exit_reason)
-> >  {
-> >       struct vcpu_vmx *vmx = to_vmx(vcpu);
-> >       u32 exit_reason = vmx->exit_reason;
-> > @@ -5878,7 +5878,10 @@ static int vmx_handle_exit(struct kvm_vcpu *vcpu)
-> >               }
-> >       }
-> >
-> > -     if (exit_reason < kvm_vmx_max_exit_handlers
-> > +     if (*vcpu_exit_reason == EXIT_REASON_NEED_SKIP_EMULATED_INSN) {
-> > +             kvm_skip_emulated_instruction(vcpu);
-> > +             return 1;
-> > +     } else if (exit_reason < kvm_vmx_max_exit_handlers
-> >           && kvm_vmx_exit_handlers[exit_reason]) {
-> >  #ifdef CONFIG_RETPOLINE
-> >               if (exit_reason == EXIT_REASON_MSR_WRITE)
-> > @@ -6223,7 +6226,36 @@ static void handle_external_interrupt_irqoff(struct kvm_vcpu *vcpu)
-> >  }
-> >  STACK_FRAME_NON_STANDARD(handle_external_interrupt_irqoff);
-> >
-> > -static void vmx_handle_exit_irqoff(struct kvm_vcpu *vcpu)
-> > +static u32 handle_ipi_fastpath(struct kvm_vcpu *vcpu)
-> > +{
-> > +     u32 index;
-> > +     u64 data;
-> > +     int ret = 0;
-> > +
-> > +     if (lapic_in_kernel(vcpu) && apic_x2apic_mode(vcpu->arch.apic)) {
-> > +             /*
-> > +              * fastpath to IPI target, FIXED+PHYSICAL which is popular
-> > +              */
-> > +             index = kvm_rcx_read(vcpu);
-> > +             data = kvm_read_edx_eax(vcpu);
-> > +
-> > +             if (((index - APIC_BASE_MSR) << 4 == APIC_ICR) &&
->
-> What if index (RCX) is < APIC_BASE_MSR?
+On Tue 19-11-19 11:00:22, Sebastian Siewior wrote:
+> On 2019-11-19 10:30:01 [+0100], Jan Kara wrote:
+> > OK, how do we push this? Do you plan to push this through tip tree?
+> 
+> Is it reasonable to push this via the ext4 tree?
 
-How about if (index == (APIC_BASE_MSR + 0x300) &&
+I don't know and I don't think it largely matters. That code is rarely
+touched. Lately changes to that code have been flowing through block tree
+(Jens Axboe) or iomap tree (Darrick Wong) because those were the people
+needing the changes in...
 
->
-> > +                     ((data & KVM_APIC_DEST_MASK) == APIC_DEST_PHYSICAL) &&
-> > +                     ((data & APIC_MODE_MASK) == APIC_DM_FIXED)) {
-> > +
-> > +                     trace_kvm_msr_write(index, data);
-> > +                     kvm_lapic_set_reg(vcpu->arch.apic, APIC_ICR2, (u32)(data >> 32));
-> > +                     ret = kvm_lapic_reg_write(vcpu->arch.apic, APIC_ICR, (u32)data);
-> > +
-> > +                     if (ret == 0)
-> > +                             return EXIT_REASON_NEED_SKIP_EMULATED_INSN;
-> > +             }
-> > +     }
-> > +
-> > +     return ret;
-> > +}
-> > +
-> > +static void vmx_handle_exit_irqoff(struct kvm_vcpu *vcpu, u32 *exit_reason)
-> >  {
-> >       struct vcpu_vmx *vmx = to_vmx(vcpu);
-> >
-> > @@ -6231,6 +6263,8 @@ static void vmx_handle_exit_irqoff(struct kvm_vcpu *vcpu)
-> >               handle_external_interrupt_irqoff(vcpu);
-> >       else if (vmx->exit_reason == EXIT_REASON_EXCEPTION_NMI)
-> >               handle_exception_nmi_irqoff(vmx);
-> > +     else if (vmx->exit_reason == EXIT_REASON_MSR_WRITE)
-> > +             *exit_reason = handle_ipi_fastpath(vcpu);
-> >  }
-> >
-> >  static bool vmx_has_emulated_msr(int index)
-> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> > index 991dd01..a53bce3 100644
-> > --- a/arch/x86/kvm/x86.c
-> > +++ b/arch/x86/kvm/x86.c
-> > @@ -7981,6 +7981,7 @@ EXPORT_SYMBOL_GPL(__kvm_request_immediate_exit);
-> >  static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
-> >  {
-> >       int r;
-> > +     u32 exit_reason = 0;
-> >       bool req_int_win =
-> >               dm_request_for_irq_injection(vcpu) &&
-> >               kvm_cpu_accept_dm_intr(vcpu);
-> > @@ -8226,7 +8227,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
-> >       vcpu->mode = OUTSIDE_GUEST_MODE;
-> >       smp_wmb();
-> >
-> > -     kvm_x86_ops->handle_exit_irqoff(vcpu);
-> > +     kvm_x86_ops->handle_exit_irqoff(vcpu, &exit_reason);
-> >
-> >       /*
-> >        * Consume any pending interrupts, including the possible source of
-> > @@ -8270,7 +8271,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
-> >               kvm_lapic_sync_from_vapic(vcpu);
-> >
-> >       vcpu->arch.gpa_available = false;
-> > -     r = kvm_x86_ops->handle_exit(vcpu);
-> > +     r = kvm_x86_ops->handle_exit(vcpu, &exit_reason);
-> >       return r;
-> >
-> >  cancel_injection:
->
-> --
-> Vitaly
->
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
