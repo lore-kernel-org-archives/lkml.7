@@ -2,78 +2,104 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD450C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:25:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BCB5C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:25:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ACBC20730
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:25:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BD5421850
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:25:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574166340;
+	bh=J+SzVvZ2+0zMFsSFLLMumu9PACqhfdbEv9L05QqiNZA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DwmQPDIhqMm74/Y25WPHFia+IemNDiBv98I1sMqOXVOqxZxXamcJ5o6NyHwAZEE0n
+	 SAo88RVzll6SKXoGaKUza4sA7tuP0G0asMusUMC+wFPXEUo+Xo9LN1JNDjoxzVso83
+	 +tsUrNpM5XkvEftimHPLLMlQsrlvpTXUUGqpLK94=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728149AbfKSMZE (ORCPT
+        id S1728153AbfKSMZj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 07:25:04 -0500
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:43746 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727351AbfKSMZE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 07:25:04 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0TiZ7z2i_1574166245;
-Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TiZ7z2i_1574166245)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 19 Nov 2019 20:24:05 +0800
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-To:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org,
-        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
-        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
-        yang.shi@linux.alibaba.com, willy@infradead.org,
-        shakeelb@google.com, hannes@cmpxchg.org
-Cc:     Alex Shi <alex.shi@linux.alibaba.com>
-Subject: [PATCH v4 2/9] mm/huge_memory: fix uninitialized compiler warning
-Date:   Tue, 19 Nov 2019 20:23:16 +0800
-Message-Id: <1574166203-151975-3-git-send-email-alex.shi@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1574166203-151975-1-git-send-email-alex.shi@linux.alibaba.com>
-References: <1574166203-151975-1-git-send-email-alex.shi@linux.alibaba.com>
+        Tue, 19 Nov 2019 07:25:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52460 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726351AbfKSMZj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 07:25:39 -0500
+Received: from localhost (unknown [89.205.136.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93C2B20730;
+        Tue, 19 Nov 2019 12:25:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574166338;
+        bh=J+SzVvZ2+0zMFsSFLLMumu9PACqhfdbEv9L05QqiNZA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mic8M8rEdYATHdtFuUKGJLWkJBKkKF1q2pExTxUM+gSUUkzO9xpjcB3mXky2gtETk
+         S/g+7tz3aTTokDdpT2ASGvkgwvFqh7q9D0kEDKm2FPO9i0comLFGoTAIL0GBND1HLQ
+         C7bbHaiiU84rOXFOyupALwXDyYQDAyyFFpcwSmd8=
+Date:   Tue, 19 Nov 2019 13:25:35 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 4.14 000/239] 4.14.155-stable review
+Message-ID: <20191119122535.GB1913916@kroah.com>
+References: <20191119051255.850204959@linuxfoundation.org>
+ <cc1129c8-797d-7a1d-e59b-16c826270fad@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cc1129c8-797d-7a1d-e59b-16c826270fad@nvidia.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-../mm/huge_memory.c: In function ‘split_huge_page_to_list’:
-../mm/huge_memory.c:2766:9: warning: ‘flags’ may be used uninitialized
-in this function [-Wmaybe-uninitialized]
-  lruvec = lock_page_lruvec_irqsave(head, pgdata, flags);
-  ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+On Tue, Nov 19, 2019 at 09:12:48AM +0000, Jon Hunter wrote:
+> 
+> On 19/11/2019 05:16, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 4.14.155 release.
+> > There are 239 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Thu, 21 Nov 2019 05:02:35 +0000.
+> > Anything received after that time might be too late.
+> > 
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.155-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
+> > and the diffstat can be found below.
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> > 
+> > -------------
+> 
+> ...
+> 
+> > Heiko Stuebner <heiko@sntech.de>
+> >     arm64: dts: rockchip: enable display nodes on rk3328-rock64
+> The above commit is causing the following build error for ARM64 ...
+> 
+> Error: arch/arm64/boot/dts/rockchip/rk3328-rock64.dts:149.1-6 Label or path hdmi not found
+> Error: arch/arm64/boot/dts/rockchip/rk3328-rock64.dts:153.1-9 Label or path hdmiphy not found
+> Error: arch/arm64/boot/dts/rockchip/rk3328-rock64.dts:345.1-5 Label or path vop not found
+> FATAL ERROR: Syntax error parsing input tree
+> scripts/Makefile.lib:317: recipe for target 'arch/arm64/boot/dts/rockchip/rk3328-rock64.dtb' failed
+> make[2]: *** [arch/arm64/boot/dts/rockchip/rk3328-rock64.dtb] Error 1
+> scripts/Makefile.build:585: recipe for target 'arch/arm64/boot/dts/rockchip' failed
+> make[1]: *** [arch/arm64/boot/dts/rockchip] Error 2
+> arch/arm64/Makefile:138: recipe for target 'dtbs' failed
+> make: *** [dtbs] Error 2
 
-Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org
----
- mm/huge_memory.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Will go drop this, thanks.
 
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 13cc93785006..4cdfdbeb6b2b 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -2699,7 +2699,7 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
- 	struct address_space *mapping = NULL;
- 	int count, mapcount, extra_pins, ret;
- 	bool mlocked;
--	unsigned long flags;
-+	unsigned long flags = 0;
- 	pgoff_t end;
- 
- 	VM_BUG_ON_PAGE(is_huge_zero_page(page), page);
--- 
-1.8.3.1
-
+greg k-h
