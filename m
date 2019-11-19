@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24BBDC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:09:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF33FC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:09:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9CDD21850
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:09:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DA9B208CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:09:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574143773;
-	bh=vhKnsVvdS3bhGTQPSXRiTcKVgFkmQF7EkajVkSUKU9w=;
+	s=default; t=1574143777;
+	bh=6RLUYOd+55BxiGAIQcw1vnmloKHU8KBxLRqVQlwftq4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FF1LXqletLhw3es4P9wPsi766d1VSwaYFCjHqENtoXhQh/3nE6rNLRDSLJ50f8REY
-	 u6+JAalBfyowNyBwKqF1Cseibug8DnCO1ZYfLNYS4/eIq0AXzJjs/6mcOs0SAQuTY8
-	 p0DBX3hL3pj+yz7qU1R8eerP5RitztVJRAWub344=
+	b=BB4/43XFyTUbR9acjQrM+b9VIE0RBBfKOpjtElHxIN67SH3qKo1UbyNymqcWVHG7O
+	 mlcw2qsY5eXzD0VLBQFdbVcmHULz8bk9ZxCHib7qOLCgSUadkyLcc/c0bE3eGhoQtP
+	 PMVB1JxqklM8vb0PoHfLOZtk6ojrwzx809b/06Hc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729491AbfKSGJc (ORCPT
+        id S1728280AbfKSF2f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 01:09:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47120 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:28:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727658AbfKSF2k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:28:40 -0500
+        id S1727742AbfKSF22 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:28:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79D6821783;
-        Tue, 19 Nov 2019 05:28:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9695D222A2;
+        Tue, 19 Nov 2019 05:28:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141319;
-        bh=vhKnsVvdS3bhGTQPSXRiTcKVgFkmQF7EkajVkSUKU9w=;
+        s=default; t=1574141307;
+        bh=6RLUYOd+55BxiGAIQcw1vnmloKHU8KBxLRqVQlwftq4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IcvpejCQg29VVM2us7k+jAp77gzZJJemmLqdhesil2FCNj6nkDfwlLuzJeFxsYpnJ
-         lecBqgsKsoUWqqqPRDQgTVvDTtqWLxj/3pcVq/dBKlhfiO+gCDgCIx82kYR3WODzA1
-         Osg9mV3guprtbPrltJwf78lIRQWMAJh8xOSRM864=
+        b=gGsZ6ziA38RsxwXpelPhrd8vfhRnlIF2K/T9azcMpuCEsdfDX2VlheBqUzUBzZWos
+         xd9+raXUL6reKgTvA4x58BmS2XUASbzcOOrAFjV7x6WBsgZXwjdnvdowQUSiIG4E+S
+         l2nYM66yZv4XDf1XVAauzUfhP13veTW9A+qT42lI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
+        stable@vger.kernel.org, Majd Dibbiny <majd@mellanox.com>,
+        Moni Shoua <monis@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 120/422] f2fs: avoid wrong decrypted data from disk
-Date:   Tue, 19 Nov 2019 06:15:17 +0100
-Message-Id: <20191119051406.817606287@linuxfoundation.org>
+Subject: [PATCH 4.19 116/422] IB/mlx5: Change TX affinity assignment in RoCE LAG mode
+Date:   Tue, 19 Nov 2019 06:15:13 +0100
+Message-Id: <20191119051406.602047533@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -60,127 +62,152 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jaegeuk Kim <jaegeuk@kernel.org>
+From: Majd Dibbiny <majd@mellanox.com>
 
-[ Upstream commit 0ded69f632bb717be9aeea3ae74e29050fcb060c ]
+[ Upstream commit c6a21c3864fc7f5febae7d096cd136f397c791f2 ]
 
-1. Create a file in an encrypted directory
-2. Do GC & drop caches
-3. Read stale data before its bio for metapage was not issued yet
+In the current code, the TX affinity is per RoCE device, which can cause
+unfairness between different contexts. e.g. if we open two contexts, and
+each open 10 QPs concurrently, all of the QPs of the first context might
+end up on the first port instead of distributed on the two ports as
+expected
 
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+To overcome this unfairness between processes, we maintain per device TX
+affinity, and per process TX affinity.
+
+The allocation algorithm is as follow:
+
+1. Hold two tx_port_affinity atomic variables, one per RoCE device and one
+   per ucontext. Both initialized to 0.
+
+2. In mlx5_ib_alloc_ucontext do:
+ 2.1. ucontext.tx_port_affinity = device.tx_port_affinity
+ 2.2. device.tx_port_affinity += 1
+
+3. In modify QP INIT2RST:
+ 3.1. qp.tx_port_affinity = ucontext.tx_port_affinity % MLX5_PORT_NUM
+ 3.2. ucontext.tx_port_affinity += 1
+
+Signed-off-by: Majd Dibbiny <majd@mellanox.com>
+Reviewed-by: Moni Shoua <monis@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/data.c    | 18 ++++++++++--------
- fs/f2fs/f2fs.h    |  2 +-
- fs/f2fs/file.c    |  3 +--
- fs/f2fs/segment.c |  6 +++++-
- 4 files changed, 17 insertions(+), 12 deletions(-)
+ drivers/infiniband/hw/mlx5/main.c    |  8 ++++++
+ drivers/infiniband/hw/mlx5/mlx5_ib.h |  4 ++-
+ drivers/infiniband/hw/mlx5/qp.c      | 37 +++++++++++++++++++++++++---
+ 3 files changed, 44 insertions(+), 5 deletions(-)
 
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index 9511466bc7857..c61beaedf0789 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -575,9 +575,6 @@ static struct bio *f2fs_grab_read_bio(struct inode *inode, block_t blkaddr,
- 		ctx->bio = bio;
- 		ctx->enabled_steps = post_read_steps;
- 		bio->bi_private = ctx;
--
--		/* wait the page to be moved by cleaning */
--		f2fs_wait_on_block_writeback(sbi, blkaddr);
- 	}
+diff --git a/drivers/infiniband/hw/mlx5/main.c b/drivers/infiniband/hw/mlx5/main.c
+index c05eae93170eb..f4ffdc588ea07 100644
+--- a/drivers/infiniband/hw/mlx5/main.c
++++ b/drivers/infiniband/hw/mlx5/main.c
+@@ -1823,6 +1823,14 @@ static struct ib_ucontext *mlx5_ib_alloc_ucontext(struct ib_device *ibdev,
+ 	context->lib_caps = req.lib_caps;
+ 	print_lib_caps(dev, context->lib_caps);
  
- 	return bio;
-@@ -592,6 +589,9 @@ static int f2fs_submit_page_read(struct inode *inode, struct page *page,
- 	if (IS_ERR(bio))
- 		return PTR_ERR(bio);
- 
-+	/* wait for GCed page writeback via META_MAPPING */
-+	f2fs_wait_on_block_writeback(inode, blkaddr);
++	if (mlx5_lag_is_active(dev->mdev)) {
++		u8 port = mlx5_core_native_port_num(dev->mdev);
 +
- 	if (bio_add_page(bio, page, PAGE_SIZE, 0) < PAGE_SIZE) {
- 		bio_put(bio);
- 		return -EFAULT;
-@@ -1569,6 +1569,12 @@ submit_and_realloc:
- 			}
- 		}
- 
-+		/*
-+		 * If the page is under writeback, we need to wait for
-+		 * its completion to see the correct decrypted data.
-+		 */
-+		f2fs_wait_on_block_writeback(inode, block_nr);
++		atomic_set(&context->tx_port_affinity,
++			   atomic_add_return(
++				   1, &dev->roce[port].tx_port_affinity));
++	}
 +
- 		if (bio_add_page(bio, page, blocksize, 0) < blocksize)
- 			goto submit_and_realloc;
+ 	return &context->ibucontext;
  
-@@ -1637,7 +1643,7 @@ static int encrypt_one_page(struct f2fs_io_info *fio)
- 		return 0;
+ out_mdev:
+diff --git a/drivers/infiniband/hw/mlx5/mlx5_ib.h b/drivers/infiniband/hw/mlx5/mlx5_ib.h
+index 941d1df54631a..6a060c84598fe 100644
+--- a/drivers/infiniband/hw/mlx5/mlx5_ib.h
++++ b/drivers/infiniband/hw/mlx5/mlx5_ib.h
+@@ -139,6 +139,8 @@ struct mlx5_ib_ucontext {
+ 	u64			lib_caps;
+ 	DECLARE_BITMAP(dm_pages, MLX5_MAX_MEMIC_PAGES);
+ 	u16			devx_uid;
++	/* For RoCE LAG TX affinity */
++	atomic_t		tx_port_affinity;
+ };
  
- 	/* wait for GCed page writeback via META_MAPPING */
--	f2fs_wait_on_block_writeback(fio->sbi, fio->old_blkaddr);
-+	f2fs_wait_on_block_writeback(inode, fio->old_blkaddr);
- 
- retry_encrypt:
- 	fio->encrypted_page = fscrypt_encrypt_page(inode, fio->page,
-@@ -2402,10 +2408,6 @@ repeat:
- 
- 	f2fs_wait_on_page_writeback(page, DATA, false);
- 
--	/* wait for GCed page writeback via META_MAPPING */
--	if (f2fs_post_read_required(inode))
--		f2fs_wait_on_block_writeback(sbi, blkaddr);
--
- 	if (len == PAGE_SIZE || PageUptodate(page))
- 		return 0;
- 
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index fb216488d67a9..6d361c8c61306 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -2973,7 +2973,7 @@ void f2fs_allocate_data_block(struct f2fs_sb_info *sbi, struct page *page,
- 			struct f2fs_io_info *fio, bool add_list);
- void f2fs_wait_on_page_writeback(struct page *page,
- 			enum page_type type, bool ordered);
--void f2fs_wait_on_block_writeback(struct f2fs_sb_info *sbi, block_t blkaddr);
-+void f2fs_wait_on_block_writeback(struct inode *inode, block_t blkaddr);
- void f2fs_write_data_summaries(struct f2fs_sb_info *sbi, block_t start_blk);
- void f2fs_write_node_summaries(struct f2fs_sb_info *sbi, block_t start_blk);
- int f2fs_lookup_journal_in_cursum(struct f2fs_journal *journal, int type,
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index 8d1eb8dec6058..6972c6d7c3893 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -112,8 +112,7 @@ mapped:
- 	f2fs_wait_on_page_writeback(page, DATA, false);
- 
- 	/* wait for GCed page writeback via META_MAPPING */
--	if (f2fs_post_read_required(inode))
--		f2fs_wait_on_block_writeback(sbi, dn.data_blkaddr);
-+	f2fs_wait_on_block_writeback(inode, dn.data_blkaddr);
- 
- out_sem:
- 	up_read(&F2FS_I(inode)->i_mmap_sem);
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index 10d5dcdb34be6..d78009694f3fd 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -3214,10 +3214,14 @@ void f2fs_wait_on_page_writeback(struct page *page,
- 	}
+ static inline struct mlx5_ib_ucontext *to_mucontext(struct ib_ucontext *ibucontext)
+@@ -700,7 +702,7 @@ struct mlx5_roce {
+ 	rwlock_t		netdev_lock;
+ 	struct net_device	*netdev;
+ 	struct notifier_block	nb;
+-	atomic_t		next_port;
++	atomic_t		tx_port_affinity;
+ 	enum ib_port_state last_port_state;
+ 	struct mlx5_ib_dev	*dev;
+ 	u8			native_port_num;
+diff --git a/drivers/infiniband/hw/mlx5/qp.c b/drivers/infiniband/hw/mlx5/qp.c
+index 900f85ce0fb08..2e7230392a498 100644
+--- a/drivers/infiniband/hw/mlx5/qp.c
++++ b/drivers/infiniband/hw/mlx5/qp.c
+@@ -2910,6 +2910,37 @@ static int modify_raw_packet_qp(struct mlx5_ib_dev *dev, struct mlx5_ib_qp *qp,
+ 	return 0;
  }
  
--void f2fs_wait_on_block_writeback(struct f2fs_sb_info *sbi, block_t blkaddr)
-+void f2fs_wait_on_block_writeback(struct inode *inode, block_t blkaddr)
- {
-+	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
- 	struct page *cpage;
- 
-+	if (!f2fs_post_read_required(inode))
-+		return;
++static unsigned int get_tx_affinity(struct mlx5_ib_dev *dev,
++				    struct mlx5_ib_pd *pd,
++				    struct mlx5_ib_qp_base *qp_base,
++				    u8 port_num)
++{
++	struct mlx5_ib_ucontext *ucontext = NULL;
++	unsigned int tx_port_affinity;
 +
- 	if (!is_valid_data_blkaddr(sbi, blkaddr))
- 		return;
++	if (pd && pd->ibpd.uobject && pd->ibpd.uobject->context)
++		ucontext = to_mucontext(pd->ibpd.uobject->context);
++
++	if (ucontext) {
++		tx_port_affinity = (unsigned int)atomic_add_return(
++					   1, &ucontext->tx_port_affinity) %
++					   MLX5_MAX_PORTS +
++				   1;
++		mlx5_ib_dbg(dev, "Set tx affinity 0x%x to qpn 0x%x ucontext %p\n",
++				tx_port_affinity, qp_base->mqp.qpn, ucontext);
++	} else {
++		tx_port_affinity =
++			(unsigned int)atomic_add_return(
++				1, &dev->roce[port_num].tx_port_affinity) %
++				MLX5_MAX_PORTS +
++			1;
++		mlx5_ib_dbg(dev, "Set tx affinity 0x%x to qpn 0x%x\n",
++				tx_port_affinity, qp_base->mqp.qpn);
++	}
++
++	return tx_port_affinity;
++}
++
+ static int __mlx5_ib_modify_qp(struct ib_qp *ibqp,
+ 			       const struct ib_qp_attr *attr, int attr_mask,
+ 			       enum ib_qp_state cur_state, enum ib_qp_state new_state,
+@@ -2975,6 +3006,7 @@ static int __mlx5_ib_modify_qp(struct ib_qp *ibqp,
+ 	if (!context)
+ 		return -ENOMEM;
+ 
++	pd = get_pd(qp);
+ 	context->flags = cpu_to_be32(mlx5_st << 16);
+ 
+ 	if (!(attr_mask & IB_QP_PATH_MIG_STATE)) {
+@@ -3003,9 +3035,7 @@ static int __mlx5_ib_modify_qp(struct ib_qp *ibqp,
+ 		    (ibqp->qp_type == IB_QPT_XRC_TGT)) {
+ 			if (mlx5_lag_is_active(dev->mdev)) {
+ 				u8 p = mlx5_core_native_port_num(dev->mdev);
+-				tx_affinity = (unsigned int)atomic_add_return(1,
+-						&dev->roce[p].next_port) %
+-						MLX5_MAX_PORTS + 1;
++				tx_affinity = get_tx_affinity(dev, pd, base, p);
+ 				context->flags |= cpu_to_be32(tx_affinity << 24);
+ 			}
+ 		}
+@@ -3063,7 +3093,6 @@ static int __mlx5_ib_modify_qp(struct ib_qp *ibqp,
+ 			goto out;
+ 	}
+ 
+-	pd = get_pd(qp);
+ 	get_cqs(qp->ibqp.qp_type, qp->ibqp.send_cq, qp->ibqp.recv_cq,
+ 		&send_cq, &recv_cq);
  
 -- 
 2.20.1
