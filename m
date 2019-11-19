@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF02AC43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 22:20:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DED25C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 22:20:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAC28222DC
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 22:20:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7DF9222DC
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 22:20:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WpPqbyAm"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dKXEsl2e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727791AbfKSWT7 (ORCPT
+        id S1727837AbfKSWUD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 17:19:59 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:34644 "EHLO
+        Tue, 19 Nov 2019 17:20:03 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:34662 "EHLO
         fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727709AbfKSWTz (ORCPT
+        with ESMTP id S1727709AbfKSWUA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 17:19:55 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAJMJneG027239;
-        Tue, 19 Nov 2019 16:19:49 -0600
+        Tue, 19 Nov 2019 17:20:00 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAJMJrFY027255;
+        Tue, 19 Nov 2019 16:19:53 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574201989;
-        bh=ykGDUhIz4RTT4sMHR+7NG3qQiJjOwv9ygF0iullx9Io=;
+        s=ti-com-17Q1; t=1574201993;
+        bh=s4J4IgRw4lvHy5fWciYrXJnDBwlJ+T+Si7BcGvg/okc=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=WpPqbyAm/IU2+m3vxCOahuYA47y9ALfAlhDcLkJgueoxT6ePlDBzlikeR2Xb5FTsR
-         CixiFDugbJwqtUnm9+DuZpuWtZWdkZ+ulrtsEij+UwCUD1Oh1wgYt/w5guNMoVCjWc
-         SeG4EBRwyIk9wPDl6qlUSxjj4/Qj7WZFT3Tuo28s=
+        b=dKXEsl2eATknER54kqlwIELZFHlBmMdvPQZPkZQzxbuKcA891hKiRVWOw1hmXBanI
+         0CSn+gznh0KeFxoKl2lRWMfSlZGVsCXhaAF+z+gsCpos+HiC7+6YLAQm135tyK0LaF
+         q4PVOBqGAAcumtqnqjihIiZMKw/vvqE77Vl++jV0=
 Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAJMJmHB093309
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAJMJrW6044066
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 19 Nov 2019 16:19:49 -0600
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE113.ent.ti.com
+        Tue, 19 Nov 2019 16:19:53 -0600
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE113.ent.ti.com
  (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 19
- Nov 2019 16:19:48 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ Nov 2019 16:19:53 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 19 Nov 2019 16:19:48 -0600
+ Frontend Transport; Tue, 19 Nov 2019 16:19:53 -0600
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAJMJlV3007646;
-        Tue, 19 Nov 2019 16:19:48 -0600
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAJMJqlo007700;
+        Tue, 19 Nov 2019 16:19:52 -0600
 From:   Grygorii Strashko <grygorii.strashko@ti.com>
 To:     <netdev@vger.kernel.org>,
         Ilias Apalodimas <ilias.apalodimas@linaro.org>,
@@ -62,9 +62,9 @@ CC:     Florian Fainelli <f.fainelli@gmail.com>,
         Ivan Vecera <ivecera@redhat.com>,
         Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
         Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH v7 net-next 09/13] phy: ti: phy-gmii-sel: dependency from ti cpsw-switchdev driver
-Date:   Wed, 20 Nov 2019 00:19:21 +0200
-Message-ID: <20191119221925.28426-10-grygorii.strashko@ti.com>
+Subject: [PATCH v7 net-next 12/13] ARM: dts: am571x-idk: enable for new cpsw switch dev driver
+Date:   Wed, 20 Nov 2019 00:19:24 +0200
+Message-ID: <20191119221925.28426-13-grygorii.strashko@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191119221925.28426-1-grygorii.strashko@ti.com>
 References: <20191119221925.28426-1-grygorii.strashko@ti.com>
@@ -76,28 +76,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add dependency from TI_CPSW_SWITCHDEV.
+Add DT nodes for new cpsw switchdev driver for am571x-idk board for now to
+enable testing of the new solution.
 
 Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 ---
- drivers/phy/ti/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/am571x-idk.dts         | 27 ++++++++++++++++++++++++
+ arch/arm/boot/dts/am572x-idk.dts         |  5 +++++
+ arch/arm/boot/dts/am574x-idk.dts         |  5 +++++
+ arch/arm/boot/dts/am57xx-idk-common.dtsi |  5 -----
+ 4 files changed, 37 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/phy/ti/Kconfig b/drivers/phy/ti/Kconfig
-index c3fa1840f8de..174888609779 100644
---- a/drivers/phy/ti/Kconfig
-+++ b/drivers/phy/ti/Kconfig
-@@ -90,8 +90,8 @@ config TWL4030_USB
+diff --git a/arch/arm/boot/dts/am571x-idk.dts b/arch/arm/boot/dts/am571x-idk.dts
+index 0aaacea1d887..820ce3b60bb6 100644
+--- a/arch/arm/boot/dts/am571x-idk.dts
++++ b/arch/arm/boot/dts/am571x-idk.dts
+@@ -186,3 +186,30 @@
+ 	pinctrl-1 = <&mmc2_pins_hs>;
+ 	pinctrl-2 = <&mmc2_pins_ddr_rev20 &mmc2_iodelay_ddr_conf>;
+ };
++
++&mac_sw {
++	pinctrl-names = "default", "sleep";
++	status = "okay";
++};
++
++&cpsw_port1 {
++	phy-handle = <&ethphy0_sw>;
++	phy-mode = "rgmii";
++	ti,dual-emac-pvid = <1>;
++};
++
++&cpsw_port2 {
++	phy-handle = <&ethphy1_sw>;
++	phy-mode = "rgmii";
++	ti,dual-emac-pvid = <2>;
++};
++
++&davinci_mdio_sw {
++	ethphy0_sw: ethernet-phy@0 {
++		reg = <0>;
++	};
++
++	ethphy1_sw: ethernet-phy@1 {
++		reg = <1>;
++	};
++};
+diff --git a/arch/arm/boot/dts/am572x-idk.dts b/arch/arm/boot/dts/am572x-idk.dts
+index ea1c119feaa5..c3d966904d64 100644
+--- a/arch/arm/boot/dts/am572x-idk.dts
++++ b/arch/arm/boot/dts/am572x-idk.dts
+@@ -27,3 +27,8 @@
+ 	pinctrl-1 = <&mmc2_pins_hs>;
+ 	pinctrl-2 = <&mmc2_pins_ddr_rev20>;
+ };
++
++&mac {
++	status = "okay";
++	dual_emac;
++};
+diff --git a/arch/arm/boot/dts/am574x-idk.dts b/arch/arm/boot/dts/am574x-idk.dts
+index 7935d70874ce..fa0088025b2c 100644
+--- a/arch/arm/boot/dts/am574x-idk.dts
++++ b/arch/arm/boot/dts/am574x-idk.dts
+@@ -35,3 +35,8 @@
+ 	pinctrl-1 = <&mmc2_pins_default>;
+ 	pinctrl-2 = <&mmc2_pins_default>;
+ };
++
++&mac {
++	status = "okay";
++	dual_emac;
++};
+diff --git a/arch/arm/boot/dts/am57xx-idk-common.dtsi b/arch/arm/boot/dts/am57xx-idk-common.dtsi
+index 423855a2a2d6..398721c7201c 100644
+--- a/arch/arm/boot/dts/am57xx-idk-common.dtsi
++++ b/arch/arm/boot/dts/am57xx-idk-common.dtsi
+@@ -363,11 +363,6 @@
+ 	ext-clk-src;
+ };
  
- config PHY_TI_GMII_SEL
- 	tristate
--	default y if TI_CPSW=y
--	depends on TI_CPSW || COMPILE_TEST
-+	default y if TI_CPSW=y || TI_CPSW_SWITCHDEV=y
-+	depends on TI_CPSW || TI_CPSW_SWITCHDEV || COMPILE_TEST
- 	select GENERIC_PHY
- 	select REGMAP
- 	default m
+-&mac {
+-	status = "okay";
+-	dual_emac;
+-};
+-
+ &cpsw_emac0 {
+ 	phy-handle = <&ethphy0>;
+ 	phy-mode = "rgmii";
 -- 
 2.17.1
 
