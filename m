@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC880C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:35:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 895F6C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:35:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4F9A21823
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:35:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D203214DE
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:35:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141703;
-	bh=YqZWzUQJTKdmC1hV7IUxf49LhrQKLeopy1rzr6WQcL4=;
+	s=default; t=1574141706;
+	bh=H6WRcRF4jr5TKpnkFhGUjOIpidjg4AoHJXVq/R2DmTI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WTA9gJtlWiqUYhxmC3k09cXJYN08mzvJrnpzGrp+PYSle+3yT6aa+TTLSK2lNHeWI
-	 /R3Gs0h+mQTRPopG/v+RbeQzb3Qwx9sA36AWbx6CU9cMVRv4mvEKqzdkaBy0MM6Mqi
-	 TSRZ3nHpCXMXkYGEMzJw74qFvQCd5lcciVRA5VWE=
+	b=En1CKdGmSFJGJJemF1iJHenXDn63rq7GVml0IJHlc02t75OgZN29I/6ecDF52CFuT
+	 z76VRfX9z804MWIS3hqf3WqGhPd/XSbJtFu7XkWbcrmiuk/gCJjw7zP6EgH4Oih+mr
+	 iv990DdSM9a8ZThNPrsCXdIY9qArCeRT/amxw+Tg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729765AbfKSFfC (ORCPT
+        id S1729768AbfKSFfE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:35:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55794 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:35:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729759AbfKSFe7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:34:59 -0500
+        id S1728825AbfKSFez (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:34:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7709214DE;
-        Tue, 19 Nov 2019 05:34:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A23C208C3;
+        Tue, 19 Nov 2019 05:34:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141698;
-        bh=YqZWzUQJTKdmC1hV7IUxf49LhrQKLeopy1rzr6WQcL4=;
+        s=default; t=1574141695;
+        bh=H6WRcRF4jr5TKpnkFhGUjOIpidjg4AoHJXVq/R2DmTI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E4GcX5FIlZ0vbNmHQX9qSCgCq/PbLqeMtdJpyyNEf0HCsDO/5MMpVKhC220GgaifR
-         wHNHIPTIpmAkQMsE1Yc3MKAoOozLmNGu1NfFcDPA4UBfpG4Sdee/Nee0q9b4MBaJLT
-         O3eM3CfvUCKQte3JD8koKuOK1HenMp3dEhM/7g6Q=
+        b=XZNU0lDlIf23rBGOQWZ88bNMQqAtozIgV7oJNiRTcYpWl+mQNg0SWA9Z2dLh2L5CF
+         MlEF9Pkta3R1W6TLr0ktF9pJbyHZ5mrlNOy1n3XmVzA09XG4TdrMvse0Sd5+uLe8BL
+         0MwqpnI54Cq1A+UXkkSobbWgB6nIq3AGUJaEvVwE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jonas Gorski <jonas.gorski@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Yonghong Song <yhs@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 250/422] spi/bcm63xx-hsspi: keep pll clk enabled
-Date:   Tue, 19 Nov 2019 06:17:27 +0100
-Message-Id: <20191119051415.188519414@linuxfoundation.org>
+Subject: [PATCH 4.19 249/422] samples/bpf: fix a compilation failure
+Date:   Tue, 19 Nov 2019 06:17:26 +0100
+Message-Id: <20191119051415.125922532@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -60,113 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonas Gorski <jonas.gorski@gmail.com>
+From: Yonghong Song <yhs@fb.com>
 
-[ Upstream commit 0fd85869c2a9c8723a98bc1f56a876e8383649f4 ]
+[ Upstream commit 534e0e52bc23de588e81b5a6f75e10c8c4b189fc ]
 
-If the pll clock needs to be enabled to get its rate, it will also need
-to be enabled to provide it. So ensure it is kept enabled through the
-lifetime of the device.
+samples/bpf build failed with the following errors:
 
-Fixes: 0d7412ed1f5dc ("spi/bcm63xx-hspi: Enable the clock before calling clk_get_rate().")
-Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+  $ make samples/bpf/
+  ...
+  HOSTCC  samples/bpf/sockex3_user.o
+  /data/users/yhs/work/net-next/samples/bpf/sockex3_user.c:16:8: error: redefinition of ‘struct bpf_flow_keys’
+   struct bpf_flow_keys {
+          ^
+  In file included from /data/users/yhs/work/net-next/samples/bpf/sockex3_user.c:4:0:
+  ./usr/include/linux/bpf.h:2338:9: note: originally defined here
+    struct bpf_flow_keys *flow_keys;
+           ^
+  make[3]: *** [samples/bpf/sockex3_user.o] Error 1
+
+Commit d58e468b1112d ("flow_dissector: implements flow dissector BPF hook")
+introduced struct bpf_flow_keys in include/uapi/linux/bpf.h and hence
+caused the naming conflict with samples/bpf/sockex3_user.c.
+
+The fix is to rename struct bpf_flow_keys in samples/bpf/sockex3_user.c
+to flow_keys to avoid the conflict.
+
+Signed-off-by: Yonghong Song <yhs@fb.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-bcm63xx-hsspi.c | 20 ++++++++++++++++----
- 1 file changed, 16 insertions(+), 4 deletions(-)
+ samples/bpf/sockex3_user.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/spi/spi-bcm63xx-hsspi.c b/drivers/spi/spi-bcm63xx-hsspi.c
-index c23849f7aa7bc..9a06ffdb73b88 100644
---- a/drivers/spi/spi-bcm63xx-hsspi.c
-+++ b/drivers/spi/spi-bcm63xx-hsspi.c
-@@ -101,6 +101,7 @@ struct bcm63xx_hsspi {
+diff --git a/samples/bpf/sockex3_user.c b/samples/bpf/sockex3_user.c
+index 5ba3ae9d180ba..22f74d0e14934 100644
+--- a/samples/bpf/sockex3_user.c
++++ b/samples/bpf/sockex3_user.c
+@@ -13,7 +13,7 @@
+ #define PARSE_IP_PROG_FD (prog_fd[0])
+ #define PROG_ARRAY_FD (map_fd[0])
  
- 	struct platform_device *pdev;
- 	struct clk *clk;
-+	struct clk *pll_clk;
- 	void __iomem *regs;
- 	u8 __iomem *fifo;
+-struct bpf_flow_keys {
++struct flow_keys {
+ 	__be32 src;
+ 	__be32 dst;
+ 	union {
+@@ -64,7 +64,7 @@ int main(int argc, char **argv)
+ 	(void) f;
  
-@@ -332,7 +333,7 @@ static int bcm63xx_hsspi_probe(struct platform_device *pdev)
- 	struct resource *res_mem;
- 	void __iomem *regs;
- 	struct device *dev = &pdev->dev;
--	struct clk *clk;
-+	struct clk *clk, *pll_clk = NULL;
- 	int irq, ret;
- 	u32 reg, rate, num_cs = HSSPI_SPI_MAX_CS;
+ 	for (i = 0; i < 5; i++) {
+-		struct bpf_flow_keys key = {}, next_key;
++		struct flow_keys key = {}, next_key;
+ 		struct pair value;
  
-@@ -358,7 +359,7 @@ static int bcm63xx_hsspi_probe(struct platform_device *pdev)
- 
- 	rate = clk_get_rate(clk);
- 	if (!rate) {
--		struct clk *pll_clk = devm_clk_get(dev, "pll");
-+		pll_clk = devm_clk_get(dev, "pll");
- 
- 		if (IS_ERR(pll_clk)) {
- 			ret = PTR_ERR(pll_clk);
-@@ -373,19 +374,20 @@ static int bcm63xx_hsspi_probe(struct platform_device *pdev)
- 		clk_disable_unprepare(pll_clk);
- 		if (!rate) {
- 			ret = -EINVAL;
--			goto out_disable_clk;
-+			goto out_disable_pll_clk;
- 		}
- 	}
- 
- 	master = spi_alloc_master(&pdev->dev, sizeof(*bs));
- 	if (!master) {
- 		ret = -ENOMEM;
--		goto out_disable_clk;
-+		goto out_disable_pll_clk;
- 	}
- 
- 	bs = spi_master_get_devdata(master);
- 	bs->pdev = pdev;
- 	bs->clk = clk;
-+	bs->pll_clk = pll_clk;
- 	bs->regs = regs;
- 	bs->speed_hz = rate;
- 	bs->fifo = (u8 __iomem *)(bs->regs + HSSPI_FIFO_REG(0));
-@@ -440,6 +442,8 @@ static int bcm63xx_hsspi_probe(struct platform_device *pdev)
- 
- out_put_master:
- 	spi_master_put(master);
-+out_disable_pll_clk:
-+	clk_disable_unprepare(pll_clk);
- out_disable_clk:
- 	clk_disable_unprepare(clk);
- 	return ret;
-@@ -453,6 +457,7 @@ static int bcm63xx_hsspi_remove(struct platform_device *pdev)
- 
- 	/* reset the hardware and block queue progress */
- 	__raw_writel(0, bs->regs + HSSPI_INT_MASK_REG);
-+	clk_disable_unprepare(bs->pll_clk);
- 	clk_disable_unprepare(bs->clk);
- 
- 	return 0;
-@@ -465,6 +470,7 @@ static int bcm63xx_hsspi_suspend(struct device *dev)
- 	struct bcm63xx_hsspi *bs = spi_master_get_devdata(master);
- 
- 	spi_master_suspend(master);
-+	clk_disable_unprepare(bs->pll_clk);
- 	clk_disable_unprepare(bs->clk);
- 
- 	return 0;
-@@ -480,6 +486,12 @@ static int bcm63xx_hsspi_resume(struct device *dev)
- 	if (ret)
- 		return ret;
- 
-+	if (bs->pll_clk) {
-+		ret = clk_prepare_enable(bs->pll_clk);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	spi_master_resume(master);
- 
- 	return 0;
+ 		sleep(1);
 -- 
 2.20.1
 
