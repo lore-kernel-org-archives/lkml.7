@@ -2,161 +2,228 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5831AC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:35:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDA66C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:35:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3796B223BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:35:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B339223BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:35:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="T4Ten+hD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728363AbfKSOf2 (ORCPT
+        id S1727738AbfKSOfd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 09:35:28 -0500
-Received: from mga04.intel.com ([192.55.52.120]:64767 "EHLO mga04.intel.com"
+        Tue, 19 Nov 2019 09:35:33 -0500
+Received: from cmta16.telus.net ([209.171.16.89]:51805 "EHLO cmta16.telus.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728323AbfKSOfU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 09:35:20 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Nov 2019 06:35:20 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,324,1569308400"; 
-   d="scan'208";a="215552432"
-Received: from labuser-ice-lake-client-platform.jf.intel.com ([10.54.55.50])
-  by fmsmga001.fm.intel.com with ESMTP; 19 Nov 2019 06:35:19 -0800
-From:   kan.liang@linux.intel.com
-To:     peterz@infradead.org, acme@redhat.com, mingo@kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     jolsa@kernel.org, namhyung@kernel.org, vitaly.slobodskoy@intel.com,
-        pavel.gerasimov@intel.com, ak@linux.intel.com, eranian@google.com,
-        mpe@ellerman.id.au, Kan Liang <kan.liang@linux.intel.com>
-Subject: [RFC PATCH V4 13/13] perf hist: Add fast path for duplicate entries check approach
-Date:   Tue, 19 Nov 2019 06:34:11 -0800
-Message-Id: <20191119143411.3482-14-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191119143411.3482-1-kan.liang@linux.intel.com>
-References: <20191119143411.3482-1-kan.liang@linux.intel.com>
+        id S1728364AbfKSOfc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 09:35:32 -0500
+Received: from dougxps ([173.180.45.4])
+        by cmsmtp with SMTP
+        id X4bGiIrObFXoiX4bHild2S; Tue, 19 Nov 2019 07:35:29 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
+        t=1574174129; bh=63LOnJc30pBSREJO4wJYShoRYdLEO0kEt45oadjC+os=;
+        h=From:To:Cc:References:In-Reply-To:Subject:Date;
+        b=T4Ten+hDuivTIJWRrZY7rqjP2VeElc6BzCjlCqBXu2EyHRlZjJ1C1yX8+28Tyjnxw
+         CnaaSdbbn3MpSkswl8qcWvlfX5axjhzlf9f9Qb21eLlHndiYTtdoUFjEiO2Ez8sTDd
+         P2p3vHBN5KP65OSlAVlTcUUVegve2Aw8KkNHbezVLnHMG64rP4gY+zJZbzxIyPV4+h
+         pEqaYmUe8bx0KsyjzRiJ9JbnR/xRdTqHO+WOpnlS8JMHHRqbcZgwamwZFIP8qnTlR+
+         fsmthn7rdRji8aua5AZHzOg97ZEDOZWQT0Qz2os5KQy6bkfxjJKsJ+K3AP+Q1B2iBP
+         pqbpCmXfPaUrA==
+X-Telus-Authed: none
+X-Authority-Analysis: v=2.3 cv=HoEI5HbS c=1 sm=1 tr=0
+ a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
+ a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
+ a=kj9zAlcOel0A:10 a=eoc6EyjFvRJxczR-1ZoA:9 a=CjuIK1q_8ugA:10
+From:   "Doug Smythies" <dsmythies@telus.net>
+To:     "'Rafael J. Wysocki'" <rjw@rjwysocki.net>,
+        "'Linux PM'" <linux-pm@vger.kernel.org>
+Cc:     "'Linux ACPI'" <linux-acpi@vger.kernel.org>,
+        "'LKML'" <linux-kernel@vger.kernel.org>,
+        "'Viresh Kumar'" <viresh.kumar@linaro.org>,
+        "'Sudeep Holla'" <sudeep.holla@arm.com>,
+        "'Dmitry Osipenko'" <digetx@gmail.com>
+References: <2811202.iOFZ6YHztY@kreacher> <4551555.oysnf1Sd0E@kreacher>  <000001d59d61$eb4e6670$c1eb3350$@net>
+In-Reply-To: <000001d59d61$eb4e6670$c1eb3350$@net>
+Subject: RE: [RFT][PATCH 1/3] PM: QoS: Introduce frequency QoS
+Date:   Tue, 19 Nov 2019 06:35:23 -0800
+Message-ID: <000401d59ee6$959e3da0$c0dab8e0$@net>
+MIME-Version: 1.0
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Office Outlook 12.0
+Thread-Index: AdWED0vlByLFQ8J4Rz2jUgcX377w8gZBYsHgABMAilAARNHnkA==
+Content-Language: en-ca
+X-CMAE-Envelope: MS4wfGlZrt8fA0JDBbp+rsXg0s950oIfnn+/5U3Qm7Roij26fEaS19MOqBw4jeWFATeCWVBexqn8CudFMysYBwgIZfgQQY3dT+dVkuEK0GK9dAXNyVvOG1AJ
+ nly4uNkrMp0yuqm0IJMHZhBcRPmkNwi19v/U7bA4KlKXTCKN4RvIfW/H9HUnMJD6wVvhh/E0wfN00I4E88G2GnqKQvUC0d1582yNNJY323aPxQqPnuQzZ5A2
+ lzU0491n5rWctVVvQN6vo2RbwVHE6oQjzIbwr9LYUntar2wuYniBshX88VGQibAb3QnH6AA1Q/jGu0FPp1BI4b++SSB8bMb3XjayolNKfiBJ9ChsiFWIMpom
+ xIJ2RboYQFNYuOq98YrWSnBjRiWgdA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+On 2019.11.17 08:13 Doug Smythies wrote:
+> On 2019.11.16 23:35 Doug Smythies wrote:
 
-Perf checks the duplicate entries in a callchain before adding an entry.
-However the check is very slow especially with deeper call stack.
-Almost ~50% elapsed time of perf report is spent on the check when the
-call stack is always depth of 32.
+>> Hi Rafael,
+>>
+>> Not sure, but I think it is this one that
+>> causes complaining when I try to set the
+>> intel_pstate driver to passive mode.
+>> I started from active mode, powersave governor,
+>> no HWP.
+>>
+>> Kernel: 5.4-rc7
+>>
+>> I did not go back and try previous 5.4 RCs.
 
-The hist_entry__cmp() is used to compare the new entry with the old
-entries. It will go through all the available sorts in the sort_list,
-and call the specific cmp of each sort, which is very slow.
-Actually, for most cases, there are no duplicate entries in callchain.
-The symbols are usually different. It's much faster to do a quick check
-for symbols first. Only do the full cmp when the symbols are exactly the
-same.
-The quick check is only to check symbols, not dso. Export
-_sort__sym_cmp.
+After looking at the git tags for this patch,
+I tried kernel 5.4-rc2, which was the closest
+Kernel I had to before the patch set was added.
+It worked fine, as expected.
 
- $perf record --call-graph lbr ./tchain_edit_64
+>> I did try kernel 5.3-rc8, because I already had
+>> it installed, and it worked fine.
+>>
+>> I use a script (for years), run as sudo:
+>>
+>> doug@s15:~/temp$ cat set_cpu_passive
+>> #! /bin/bash
+>> cat /sys/devices/system/cpu/intel_pstate/status
+>> echo passive > /sys/devices/system/cpu/intel_pstate/status
+>> cat /sys/devices/system/cpu/intel_pstate/status
+>>
+>> And I get this (very small excerpt):
+>>
+>> freq_qos_add_request() called for active request
+>> WARNING: CPU: 1 PID: 2758 at kernel/power/qos.c:763 freq_qos_add_request+0x4c/0xa0
+>> CPU: 1 PID: 2758 Comm: set_cpu_passive Not tainted 5.4.0-rc7-stock #727
+>> Failed to add freq constraint for CPU0 (-22)
+>>
+>> freq_qos_add_request() called for active request
+>> WARNING: CPU: 1 PID: 2758 at kernel/power/qos.c:763 freq_qos_add_request+0x4c/0xa0
+>> CPU: 1 PID: 2758 Comm: set_cpu_passive Tainted: G        W         5.4.0-rc7-stock #727
+>> Failed to add freq constraint for CPU1 (-22)
 
- Without the patch
- $time perf report --stdio
- real    0m21.142s
- user    0m21.110s
- sys     0m0.033s
+Updated summary of previous emails:
+This patch or patch set breaks the after boot
+ability to change CPU frequency scaling drivers.
 
- With the patch
- $time perf report --stdio
- real    0m10.977s
- user    0m10.948s
- sys     0m0.027s
+Using a workaround of booting with
+"intel_pstate=passive" seems to prevent the errors.
 
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/hist.c | 23 +++++++++++++++++++++++
- tools/perf/util/sort.c |  2 +-
- tools/perf/util/sort.h |  2 ++
- 3 files changed, 26 insertions(+), 1 deletion(-)
+Changing between the intel_pstate and intel_cpufreq drivers
+(i.e. between active and passive modes)
+after boot, either way, causes the errors. i.e.
 
-diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index 0a8d72ae93ca..6eb35dde3905 100644
---- a/tools/perf/util/hist.c
-+++ b/tools/perf/util/hist.c
-@@ -1057,6 +1057,20 @@ iter_next_cumulative_entry(struct hist_entry_iter *iter,
- 	return fill_callchain_info(al, node, iter->hide_unresolved);
- }
- 
-+static bool
-+hist_entry__fast__sym_diff(struct hist_entry *left,
-+			   struct hist_entry *right)
-+{
-+	struct symbol *sym_l = left->ms.sym;
-+	struct symbol *sym_r = right->ms.sym;
-+
-+	if (!sym_l && !sym_r)
-+		return left->ip != right->ip;
-+
-+	return !!_sort__sym_cmp(sym_l, sym_r);
-+}
-+
-+
- static int
- iter_add_next_cumulative_entry(struct hist_entry_iter *iter,
- 			       struct addr_location *al)
-@@ -1083,6 +1097,7 @@ iter_add_next_cumulative_entry(struct hist_entry_iter *iter,
- 	};
- 	int i;
- 	struct callchain_cursor cursor;
-+	bool fast = hists__has(he_tmp.hists, sym);
- 
- 	callchain_cursor_snapshot(&cursor, &callchain_cursor);
- 
-@@ -1093,6 +1108,14 @@ iter_add_next_cumulative_entry(struct hist_entry_iter *iter,
- 	 * It's possible that it has cycles or recursive calls.
- 	 */
- 	for (i = 0; i < iter->curr; i++) {
-+		/*
-+		 * For most cases, there are no duplicate entries in callchain.
-+		 * The symbols are usually different. Do a quick check for
-+		 * symbols first.
-+		 */
-+		if (fast && hist_entry__fast__sym_diff(he_cache[i], &he_tmp))
-+			continue;
-+
- 		if (hist_entry__cmp(he_cache[i], &he_tmp) == 0) {
- 			/* to avoid calling callback function */
- 			iter->he = NULL;
-diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index 6b626e6b111e..afa1ac233760 100644
---- a/tools/perf/util/sort.c
-+++ b/tools/perf/util/sort.c
-@@ -234,7 +234,7 @@ static int64_t _sort__addr_cmp(u64 left_ip, u64 right_ip)
- 	return (int64_t)(right_ip - left_ip);
- }
- 
--static int64_t _sort__sym_cmp(struct symbol *sym_l, struct symbol *sym_r)
-+int64_t _sort__sym_cmp(struct symbol *sym_l, struct symbol *sym_r)
+Failed to add freq constraint for CPU7 (-22)
+(2 per CPU per attempt)
+
+This is 100% repeatable.
+
+> I forgot to mention, other than the error messages,
+> things seems to work fine.
+
+Correction: It is actually quite bad. Eventually,
+there will be a "Segmentation fault (core dumped)",
+and then even re-boot gets stuck and the only
+recourse seems to be the reset button.
+
+This is not 100% repeatable.
+
+I did this (kernel 5.4-rc8):
+
+diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
+index 8ab3170..24c7a6b 100644
+--- a/drivers/cpufreq/intel_pstate.c
++++ b/drivers/cpufreq/intel_pstate.c
+@@ -2491,6 +2491,8 @@ static int intel_pstate_register_driver(struct cpufreq_driver *driver)
  {
- 	if (!sym_l || !sym_r)
- 		return cmp_null(sym_l, sym_r);
-diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
-index 5aff9542d9b7..d608b8a28a92 100644
---- a/tools/perf/util/sort.h
-+++ b/tools/perf/util/sort.h
-@@ -307,5 +307,7 @@ int64_t
- sort__daddr_cmp(struct hist_entry *left, struct hist_entry *right);
- int64_t
- sort__dcacheline_cmp(struct hist_entry *left, struct hist_entry *right);
-+int64_t
-+_sort__sym_cmp(struct symbol *sym_l, struct symbol *sym_r);
- char *hist_entry__srcline(struct hist_entry *he);
- #endif	/* __PERF_SORT_H */
--- 
-2.17.1
+        int ret;
+
++       pr_info("Intel P-state register driver .... \n");
++
+        memset(&global, 0, sizeof(global));
+        global.max_perf_pct = 100;
+
+@@ -2508,6 +2510,8 @@ static int intel_pstate_register_driver(struct cpufreq_driver *driver)
+
+ static int intel_pstate_unregister_driver(void)
+ {
++       pr_info("Intel P-state unregister driver .... \n");
++
+        if (hwp_active)
+                return -EBUSY;
+
+And got this (dmesg | grep -i pstate):
+
+[    2.024876] intel_pstate: Intel P-state driver initializing
+[    2.024883] intel_pstate: Intel P-state register driver ....
+
+Attempt to change from the booted passive mode to active mode:
+
+[  175.903031] intel_pstate: Intel P-state unregister driver ....
+[  175.975543] intel_pstate: Intel P-state register driver ....
+[  175.975754]  intel_pstate_register_driver+0x4b/0x90
+[  175.975756]  ? intel_pstate_unregister_driver+0x31/0x40
+[  175.977728]  intel_pstate_register_driver+0x4b/0x90
+[  175.977730]  ? intel_pstate_unregister_driver+0x31/0x40
+[  175.979644]  intel_pstate_register_driver+0x4b/0x90
+[  175.979647]  ? intel_pstate_unregister_driver+0x31/0x40
+[  175.981424]  intel_pstate_register_driver+0x4b/0x90
+[  175.981427]  ? intel_pstate_unregister_driver+0x31/0x40
+[  175.982428]  intel_pstate_register_driver+0x4b/0x90
+[  175.982430]  ? intel_pstate_unregister_driver+0x31/0x40
+[  175.983127]  intel_pstate_register_driver+0x4b/0x90
+[  175.983128]  ? intel_pstate_unregister_driver+0x31/0x40
+[  175.983829]  intel_pstate_register_driver+0x4b/0x90
+[  175.983832]  ? intel_pstate_unregister_driver+0x31/0x40
+[  175.984434]  intel_pstate_register_driver+0x4b/0x90
+[  175.984435]  ? intel_pstate_unregister_driver+0x31/0x40
+[  175.985040]  intel_pstate_register_driver+0x4b/0x90
+[  175.985041]  ? intel_pstate_unregister_driver+0x31/0x40
+[  175.985598]  intel_pstate_register_driver+0x4b/0x90
+[  175.985600]  ? intel_pstate_unregister_driver+0x31/0x40
+[  175.986178]  intel_pstate_register_driver+0x4b/0x90
+[  175.986179]  ? intel_pstate_unregister_driver+0x31/0x40
+[  175.986721]  intel_pstate_register_driver+0x4b/0x90
+[  175.986723]  ? intel_pstate_unregister_driver+0x31/0x40
+[  175.987301]  intel_pstate_register_driver+0x4b/0x90
+[  175.987302]  ? intel_pstate_unregister_driver+0x31/0x40
+[  175.987828]  intel_pstate_register_driver+0x4b/0x90
+[  175.987830]  ? intel_pstate_unregister_driver+0x31/0x40
+[  175.988420]  intel_pstate_register_driver+0x4b/0x90
+[  175.988421]  ? intel_pstate_unregister_driver+0x31/0x40
+[  175.988920]  intel_pstate_register_driver+0x4b/0x90
+[  175.988921]  ? intel_pstate_unregister_driver+0x31/0x40
+
+Sometimes I get this:
+
+grep . /sys/devices/system/cpu/intel_pstate/*
+/sys/devices/system/cpu/intel_pstate/max_perf_pct:100
+/sys/devices/system/cpu/intel_pstate/min_perf_pct:42
+
+Instead of this:
+
+grep . /sys/devices/system/cpu/intel_pstate/*
+/sys/devices/system/cpu/intel_pstate/max_perf_pct:100
+/sys/devices/system/cpu/intel_pstate/min_perf_pct:42
+/sys/devices/system/cpu/intel_pstate/no_turbo:0
+/sys/devices/system/cpu/intel_pstate/num_pstates:23
+/sys/devices/system/cpu/intel_pstate/status:active
+/sys/devices/system/cpu/intel_pstate/turbo_pct:18
+
+But do not yet know the exact way to reliably
+create it.
+
+This is as far as I got so far.
+
+... Doug
+
 
