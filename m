@@ -7,24 +7,24 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B860C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:24:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4579DC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:24:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C8F320730
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:24:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D3DC20730
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:24:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728049AbfKSMYU (ORCPT
+        id S1728009AbfKSMYS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 07:24:20 -0500
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:51831 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727814AbfKSMYQ (ORCPT
+        Tue, 19 Nov 2019 07:24:18 -0500
+Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:45090 "EHLO
+        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727948AbfKSMYQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 19 Nov 2019 07:24:16 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=30;SR=0;TI=SMTPD_---0TiZ7z35_1574166246;
-Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TiZ7z35_1574166246)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04427;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0TiZ64Bq_1574166244;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TiZ64Bq_1574166244)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 19 Nov 2019 20:24:07 +0800
+          Tue, 19 Nov 2019 20:24:05 +0800
 From:   Alex Shi <alex.shi@linux.alibaba.com>
 To:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-mm@kvack.org, akpm@linux-foundation.org,
@@ -32,108 +32,48 @@ To:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
         khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
         yang.shi@linux.alibaba.com, willy@infradead.org,
         shakeelb@google.com, hannes@cmpxchg.org
-Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Roman Gushchin <guro@fb.com>,
-        Chris Down <chris@chrisdown.name>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        swkhack <swkhack@gmail.com>,
-        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Peng Fan <peng.fan@nxp.com>,
-        Nikolay Borisov <nborisov@suse.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Yafang Shao <laoar.shao@gmail.com>
-Subject: [PATCH v4 5/9] mm/swap: only change the lru_lock iff page's lruvec is different
-Date:   Tue, 19 Nov 2019 20:23:19 +0800
-Message-Id: <1574166203-151975-6-git-send-email-alex.shi@linux.alibaba.com>
+Cc:     Alex Shi <alex.shi@linux.alibaba.com>
+Subject: [PATCH v4 1/9] mm/swap: fix uninitialized compiler warning
+Date:   Tue, 19 Nov 2019 20:23:15 +0800
+Message-Id: <1574166203-151975-2-git-send-email-alex.shi@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1574166203-151975-1-git-send-email-alex.shi@linux.alibaba.com>
 References: <1574166203-151975-1-git-send-email-alex.shi@linux.alibaba.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since we introduced relock_page_lruvec, we could use it in more place
-to reduce spin_locks.
+  ../mm/swap.c: In function ‘__page_cache_release’:
+  ../mm/swap.c:67:10: warning: ‘flags’ may be used uninitialized in this
+  function [-Wmaybe-uninitialized]
+       lruvec = lock_page_lruvec_irqsave(page, pgdat, flags);
+       ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Roman Gushchin <guro@fb.com>
-Cc: Shakeel Butt <shakeelb@google.com>
-Cc: Chris Down <chris@chrisdown.name>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: swkhack <swkhack@gmail.com>
-Cc: "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc: Peng Fan <peng.fan@nxp.com>
-Cc: Nikolay Borisov <nborisov@suse.com>
-Cc: Ira Weiny <ira.weiny@intel.com>
-Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
-Cc: Yang Shi <yang.shi@linux.alibaba.com>
-Cc: Yafang Shao <laoar.shao@gmail.com>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc: Hugh Dickins <hughd@google.com>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Cc: cgroups@vger.kernel.org
 Cc: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org
 ---
- mm/swap.c | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+ mm/swap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/mm/swap.c b/mm/swap.c
-index 05fee145e382..a023e6095bd9 100644
+index 5341ae93861f..c36a10244d07 100644
 --- a/mm/swap.c
 +++ b/mm/swap.c
-@@ -197,11 +197,12 @@ static void pagevec_lru_move_fn(struct pagevec *pvec,
- 	for (i = 0; i < pagevec_count(pvec); i++) {
- 		struct page *page = pvec->pages[i];
+@@ -62,7 +62,7 @@ static void __page_cache_release(struct page *page)
+ 	if (PageLRU(page)) {
+ 		pg_data_t *pgdat = page_pgdat(page);
+ 		struct lruvec *lruvec;
+-		unsigned long flags;
++		unsigned long flags = 0;
  
--		lruvec = lock_page_lruvec_irqsave(page, page_pgdat(page), &flags);
-+		lruvec = relock_page_lruvec_irqsave(page, lruvec, &flags);
- 
- 		(*move_fn)(page, lruvec, arg);
--		spin_unlock_irqrestore(&lruvec->lru_lock, flags);
- 	}
-+	if (lruvec)
-+		spin_unlock_irqrestore(&lruvec->lru_lock, flags);
- 
- 	release_pages(pvec->pages, pvec->nr);
- 	pagevec_reinit(pvec);
-@@ -820,15 +821,12 @@ void release_pages(struct page **pages, int nr)
- 		}
- 
- 		if (PageLRU(page)) {
--			struct lruvec *new_lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
-+			struct lruvec *pre_lruvec = lruvec;
- 
--			if (new_lruvec != lruvec) {
--				if (lruvec)
--					spin_unlock_irqrestore(&lruvec->lru_lock, flags);
-+			lruvec = relock_page_lruvec_irqsave(page, lruvec, &flags);
-+			if (pre_lruvec != lruvec)
- 				lock_batch = 0;
--				lruvec = lock_page_lruvec_irqsave(page, page_pgdat(page), &flags);
- 
--			}
- 			VM_BUG_ON_PAGE(!PageLRU(page), page);
- 			__ClearPageLRU(page);
- 			del_page_from_lru_list(page, lruvec, page_off_lru(page));
+ 		spin_lock_irqsave(&pgdat->lru_lock, flags);
+ 		lruvec = mem_cgroup_page_lruvec(page, pgdat);
 -- 
 1.8.3.1
 
