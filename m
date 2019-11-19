@@ -2,81 +2,89 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C5AEC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A69A1C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 197E722318
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:49:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A9E722318
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:49:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727004AbfKSRtu convert rfc822-to-8bit (ORCPT
+        id S1727073AbfKSRt4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 12:49:50 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:39729 "EHLO pegase1.c-s.fr"
+        Tue, 19 Nov 2019 12:49:56 -0500
+Received: from mga02.intel.com ([134.134.136.20]:13584 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726555AbfKSRtt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 12:49:49 -0500
-Received: from localhost (mailhub1-ext [192.168.12.233])
-        by localhost (Postfix) with ESMTP id 47HYHb6zBXz9tyMG;
-        Tue, 19 Nov 2019 18:49:47 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id XqvRI0tj-P3k; Tue, 19 Nov 2019 18:49:47 +0100 (CET)
-Received: from vm-hermes.si.c-s.fr (vm-hermes.si.c-s.fr [192.168.25.253])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47HYHb5ktBz9tyM0;
-        Tue, 19 Nov 2019 18:49:47 +0100 (CET)
-Received: by vm-hermes.si.c-s.fr (Postfix, from userid 33)
-        id AD0F387D; Tue, 19 Nov 2019 18:49:48 +0100 (CET)
-Received: from 37-173-93-145.coucou-networks.fr
- (37-173-93-145.coucou-networks.fr [37.173.93.145]) by messagerie.si.c-s.fr
- (Horde Framework) with HTTP; Tue, 19 Nov 2019 18:49:48 +0100
-Date:   Tue, 19 Nov 2019 18:49:48 +0100
-Message-ID: <20191119184948.Horde.Roz3CrP_eBhY_YnNAgMQ7w1@messagerie.si.c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Paul Mackerras <paulus@samba.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH] powerpc/8xx: Fix permanently mapped IMMR region.
-References: <ad9d45119a48a92bf122781d0c79c9407baa12d7.1566554026.git.christophe.leroy@c-s.fr>
- <87sgmlcu1x.fsf@mpe.ellerman.id.au>
-In-Reply-To: <87sgmlcu1x.fsf@mpe.ellerman.id.au>
-User-Agent: Internet Messaging Program (IMP) H5 (6.2.3)
-Content-Type: text/plain; charset=UTF-8; format=flowed; DelSp=Yes
+        id S1726555AbfKSRtz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 12:49:55 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Nov 2019 09:49:54 -0800
+X-IronPort-AV: E=Sophos;i="5.69,218,1571727600"; 
+   d="scan'208";a="200430864"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Nov 2019 09:49:54 -0800
+Subject: [PATCH] dma/debug: Fix dma vs cow-page collision detection
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     hch@lst.de
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Don Dutile <ddutile@redhat.com>, stable@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Date:   Tue, 19 Nov 2019 09:35:38 -0800
+Message-ID: <157418493888.1639105.6922809760655305210.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-3-g996c
 MIME-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Michael Ellerman <mpe@ellerman.id.au> a écrit :
+The debug_dma_assert_idle() infrastructure was put in place to catch a
+data corruption scenario first identified by the now defunct NET_DMA
+receive offload feature. It caught cases where dma was in flight to a
+stale page because the dma raced the cpu writing the page, and the cpu
+write triggered cow_user_page().
 
-> Christophe Leroy <christophe.leroy@c-s.fr> writes:
->> When not using large TLBs, the IMMR region is still
->> mapped as a whole block in the FIXMAP area.
->>
->> Do not remove pages mapped in the FIXMAP region when
->> initialising paging.
->>
->> Properly report that the IMMR region is block-mapped even
->> when not using large TLBs.
->>
->> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
->> ---
->>  arch/powerpc/mm/mem.c        |  8 --------
->>  arch/powerpc/mm/nohash/8xx.c | 13 +++++++------
->>  2 files changed, 7 insertions(+), 14 deletions(-)
->
-> This blows up pmac32_defconfig + qemu mac99 for me with:
+However, the dma-debug tracking is overeager and also triggers in cases
+where the dma device is reading from a page that is also undergoing
+cow_user_page().
 
-Ok, then there is still something I have not understood about fixmap.  
-I'll look at it next week
+The fix proposed was originally posted in 2016, and Russell reported
+"Yes, that seems to avoid the warning for me from an initial test", and
+now Don is also reporting that this fix is addressing a similar false
+positive report that he is seeing.
 
-Christophe
+Link: https://lore.kernel.org/r/CAPcyv4j8fWqwAaX5oCdg5atc+vmp57HoAGT6AfBFwaCiv0RbAQ@mail.gmail.com
+Reported-by: Russell King <linux@armlinux.org.uk>
+Reported-by: Don Dutile <ddutile@redhat.com>
+Fixes: 0abdd7a81b7e ("dma-debug: introduce debug_dma_assert_idle()")
+Cc: <stable@vger.kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+---
+ kernel/dma/debug.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/dma/debug.c b/kernel/dma/debug.c
+index 099002d84f46..11a6db53d193 100644
+--- a/kernel/dma/debug.c
++++ b/kernel/dma/debug.c
+@@ -587,7 +587,7 @@ void debug_dma_assert_idle(struct page *page)
+ 	}
+ 	spin_unlock_irqrestore(&radix_lock, flags);
+ 
+-	if (!entry)
++	if (!entry || entry->direction != DMA_FROM_DEVICE)
+ 		return;
+ 
+ 	cln = to_cacheline_number(entry);
 
