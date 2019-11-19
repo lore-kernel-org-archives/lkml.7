@@ -7,50 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB8A9C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 11:33:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92CC9C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 11:33:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C12A8219F6
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 11:33:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68368222CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 11:33:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574163226;
-	bh=FYQtsLKQ9PHpxsh44V3TvDh7JOWCy2kZnNZs+2oMZ90=;
+	s=default; t=1574163231;
+	bh=DtgJBBL3afPt6FerAcL6XJr6K7OQqApiq5qmf3jy6w8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e8O4NwU7V1gAxJIGGcWMESqcBzozhgPJhWmyN5cVn6svNvz78DLzeI5f4RoSpht2J
-	 0FVwV5xw7OCQpneQ6MLX+bc2VczvE4rKfq4zo5nBebZVBiVvq5DzhKX8gyEJTV8d/x
-	 cVCVCU4iduE8a+wxmUPCao4PE8ncmAmyTIub1TVY=
+	b=TKcwgyyLsS84hxGhBwbKEQ0MZMgZSJ7GVV/Tx2lWwn/c3eeZm3eEdW7uVlSLmarww
+	 6MXS+mvgzaXByerVL4Dft0iX2/He+GiEx8RWoYXvAtZG6EzRpmnn64DalbDthi6k1Q
+	 Ye8VcHo3R+rZad4OQvgbNOCyO5ZTFTvFgJ27Q08U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728044AbfKSLdp (ORCPT
+        id S1728064AbfKSLdt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 06:33:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47606 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 06:33:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728030AbfKSLdo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 06:33:44 -0500
+        id S1728030AbfKSLdr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 06:33:47 -0500
 Received: from quaco.ghostprotocols.net (179.176.11.138.dynamic.adsl.gvt.net.br [179.176.11.138])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 750AD22302;
-        Tue, 19 Nov 2019 11:33:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB6B92230C;
+        Tue, 19 Nov 2019 11:33:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574163223;
-        bh=FYQtsLKQ9PHpxsh44V3TvDh7JOWCy2kZnNZs+2oMZ90=;
+        s=default; t=1574163227;
+        bh=DtgJBBL3afPt6FerAcL6XJr6K7OQqApiq5qmf3jy6w8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JZkwZ4NkH9exQYsmmlqmjUMoJ3LbvPwyA/H9iDeXxdHZra4OStkU/U8nMazK1RnFe
-         o6sHG9GOHo1L1F5f1eOs0J6+m/MarGv96X9K46cNsOVcJgQT61J6HfU+LGAbrzNUCo
-         oQYkKPFJb/0vcEtCwUHBsHl3tiwvLK1YWwoaw6m4=
+        b=HYRAiPp2fE0mrnbL3y6VvnzIVzJIirfhhfQrSdig9RojjYEaCjA58rj4oopUJPeId
+         /eZGJNpYWzjzCr3diMyzBHFLF52eMJYSqsW58mhFHJC0PbIPe2OXAqSRXjdKFMMSkV
+         /EXbRv8ZwaPt8Ub1lL81hIJsknc+Q3ulsIE4LEI8=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>
-Subject: [PATCH 12/25] perf callchain: Fix segfault in thread__resolve_callchain_sample()
-Date:   Tue, 19 Nov 2019 08:32:32 -0300
-Message-Id: <20191119113245.19593-13-acme@kernel.org>
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 13/25] libtraceevent: Fix parsing of event %o and %X argument types
+Date:   Tue, 19 Nov 2019 08:32:33 -0300
+Message-Id: <20191119113245.19593-14-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191119113245.19593-1-acme@kernel.org>
 References: <20191119113245.19593-1-acme@kernel.org>
@@ -61,37 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-Do not dereference 'chain' when it is NULL.
+Add missing "%o" and "%X". Ext4 events use "%o" for printing i_mode.
 
-  $ perf record -e intel_pt//u -e branch-misses:u uname
-  $ perf report --itrace=l --branch-history
-  perf: Segmentation fault
-
-Fixes: e9024d519d89 ("perf callchain: Honour the ordering of PERF_CONTEXT_{USER,KERNEL,etc}")
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lore.kernel.org/lkml/20191114142538.4097-1-adrian.hunter@intel.com
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Tzvetomir Stoyanov (VMware) <tz.stoyanov@gmail.com>
+Link: http://lore.kernel.org/lkml/157338066113.6548.11461421296091086041.stgit@buzz
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/machine.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/lib/traceevent/event-parse.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 7d2e211e376c..71ee078d30f4 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -2385,7 +2385,7 @@ static int thread__resolve_callchain_sample(struct thread *thread,
- 	}
+diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
+index d948475585ce..beaa8b8c08ff 100644
+--- a/tools/lib/traceevent/event-parse.c
++++ b/tools/lib/traceevent/event-parse.c
+@@ -4395,8 +4395,10 @@ static struct tep_print_arg *make_bprint_args(char *fmt, void *data, int size, s
+ 				/* fall through */
+ 			case 'd':
+ 			case 'u':
+-			case 'x':
+ 			case 'i':
++			case 'x':
++			case 'X':
++			case 'o':
+ 				switch (ls) {
+ 				case 0:
+ 					vsize = 4;
+@@ -5078,10 +5080,11 @@ static void pretty_print(struct trace_seq *s, void *data, int size, struct tep_e
  
- check_calls:
--	if (callchain_param.order != ORDER_CALLEE) {
-+	if (chain && callchain_param.order != ORDER_CALLEE) {
- 		err = find_prev_cpumode(chain, thread, cursor, parent, root_al,
- 					&cpumode, chain->nr - first_call);
- 		if (err)
+ 				/* fall through */
+ 			case 'd':
++			case 'u':
+ 			case 'i':
+ 			case 'x':
+ 			case 'X':
+-			case 'u':
++			case 'o':
+ 				if (!arg) {
+ 					do_warning_event(event, "no argument match");
+ 					event->flags |= TEP_EVENT_FL_FAILED;
 -- 
 2.21.0
 
