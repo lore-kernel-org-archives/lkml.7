@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29EC3C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A48C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:54:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2B06208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:54:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F8BA2084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:54:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142879;
-	bh=sL0SKLEML4Y9k9kz/zU2jbjo+8R+OhLdgvLoi8HegYo=;
+	s=default; t=1574142881;
+	bh=ToBINYNxZf0/G8tKbyJuc5TqDI6FpJiRLAhYijE7A3E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1/XL57Us4rN4ek1n1S9p2JcnStfA3gRFnvrn7APNfLk3zWBdakUxD4hgiOgf8XKry
-	 TYUBP42tD2IlOx6W1knnZby2ZNxvmcekZp330JtCZDeyGOJNf2SHsfthLOmGlIlMUE
-	 ZYFzBX5cdANxLR3Uk8kdNtMG4t1/7Y0NpIzcXRlg=
+	b=N3abCKovHeLOg+PxQanGb6yGh39ufZxnTGaz64tNWSeTXPh+Hi6UBH/GdYpBU4Wjl
+	 vybpwq6v7fwlFusX1CABtbgF68v84ckI8NlKSiNiy44+DjuAK9uKe/ruq83r1opsiz
+	 c75mSA705UHYWMdPEP3O1d6B9Fsm1z8Iz6C98YbI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731304AbfKSFyh (ORCPT
+        id S1732183AbfKSFyk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:54:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52736 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:54:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729381AbfKSFyf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:54:35 -0500
+        id S1729381AbfKSFyi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:54:38 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACCD82084D;
-        Tue, 19 Nov 2019 05:54:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 612652084D;
+        Tue, 19 Nov 2019 05:54:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142875;
-        bh=sL0SKLEML4Y9k9kz/zU2jbjo+8R+OhLdgvLoi8HegYo=;
+        s=default; t=1574142877;
+        bh=ToBINYNxZf0/G8tKbyJuc5TqDI6FpJiRLAhYijE7A3E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HgRbpEY1Pu9tOweH+gbjlnXiExau02KrY7hx4MnHQuQECldxxNehGJiN/4ioYDIro
-         /fHgxj2pLOHZ8Slx7g4+lxmHju/pdWAE1f3UeWOd45IlvyJ5IccN9pGinWq/1FetkW
-         eGirafSmKm2ijnhxcrFH97uy1k/pBtBeqtx8ISC8=
+        b=U6RyDnSBK3V5yBpTFOPWVocySqAdB8Wc4Pb3Kn49TuuCEQDIRB4myDVSipMRSLILa
+         Ylzf4Qmm73KU+yahKP9oHSaJ7iVg1mpCV5Rdxq7gwECXfD3FOM7V1KutLCG96BhMVa
+         MDqpUVPKPzLGq350m8D8W/hnwvYDGQqf+k6eH3Zo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
+        stable@vger.kernel.org, Vladimir Zapolskiy <vz@mleia.com>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 213/239] Bluetooth: L2CAP: Detect if remote is not able to use the whole MPS
-Date:   Tue, 19 Nov 2019 06:20:13 +0100
-Message-Id: <20191119051338.663707707@linuxfoundation.org>
+Subject: [PATCH 4.14 231/239] ARM: dts: lpc32xx: Fix SPI controller node names
+Date:   Tue, 19 Nov 2019 06:20:31 +0100
+Message-Id: <20191119051341.567802594@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -61,42 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+From: Rob Herring <robh@kernel.org>
 
-[ Upstream commit a5c3021bb62b970713550db3f7fd08aa70665d7e ]
+[ Upstream commit 11236ef582b8d66290bb3b3710e03ca1d85d8ad8 ]
 
-If the remote is not able to fully utilize the MPS choosen recalculate
-the credits based on the actual amount it is sending that way it can
-still send packets of MTU size without credits dropping to 0.
+SPI controller nodes should be named 'spi' rather than 'ssp'. Fixing the
+name enables dtc SPI bus checks.
 
-Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Cc: Vladimir Zapolskiy <vz@mleia.com>
+Cc: Sylvain Lemieux <slemieux.tyco@gmail.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bluetooth/l2cap_core.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/arm/boot/dts/lpc32xx.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/bluetooth/l2cap_core.c b/net/bluetooth/l2cap_core.c
-index 0c2219f483d70..f63d9918b15ad 100644
---- a/net/bluetooth/l2cap_core.c
-+++ b/net/bluetooth/l2cap_core.c
-@@ -6819,6 +6819,16 @@ static int l2cap_le_data_rcv(struct l2cap_chan *chan, struct sk_buff *skb)
- 		chan->sdu_len = sdu_len;
- 		chan->sdu_last_frag = skb;
- 
-+		/* Detect if remote is not able to use the selected MPS */
-+		if (skb->len + L2CAP_SDULEN_SIZE < chan->mps) {
-+			u16 mps_len = skb->len + L2CAP_SDULEN_SIZE;
-+
-+			/* Adjust the number of credits */
-+			BT_DBG("chan->mps %u -> %u", chan->mps, mps_len);
-+			chan->mps = mps_len;
-+			l2cap_chan_le_send_credits(chan);
-+		}
-+
- 		return 0;
- 	}
- 
+diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
+index f22a33a018199..d077bd2b9583e 100644
+--- a/arch/arm/boot/dts/lpc32xx.dtsi
++++ b/arch/arm/boot/dts/lpc32xx.dtsi
+@@ -179,7 +179,7 @@
+ 			 * ssp0 and spi1 are shared pins;
+ 			 * enable one in your board dts, as needed.
+ 			 */
+-			ssp0: ssp@20084000 {
++			ssp0: spi@20084000 {
+ 				compatible = "arm,pl022", "arm,primecell";
+ 				reg = <0x20084000 0x1000>;
+ 				interrupts = <20 IRQ_TYPE_LEVEL_HIGH>;
+@@ -199,7 +199,7 @@
+ 			 * ssp1 and spi2 are shared pins;
+ 			 * enable one in your board dts, as needed.
+ 			 */
+-			ssp1: ssp@2008c000 {
++			ssp1: spi@2008c000 {
+ 				compatible = "arm,pl022", "arm,primecell";
+ 				reg = <0x2008c000 0x1000>;
+ 				interrupts = <21 IRQ_TYPE_LEVEL_HIGH>;
 -- 
 2.20.1
 
