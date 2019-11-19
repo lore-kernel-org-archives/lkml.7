@@ -2,116 +2,92 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B4E9C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 04:37:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01FADC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 04:39:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31278222DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 04:37:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE01B22318
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 04:39:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gy4Kg9Hx"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RaG20AKf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727470AbfKSEh4 (ORCPT
+        id S1727517AbfKSEjQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 23:37:56 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:58032 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726647AbfKSEhz (ORCPT
+        Mon, 18 Nov 2019 23:39:16 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:36797 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726836AbfKSEjQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 23:37:55 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAJ4Xfvq083384;
-        Tue, 19 Nov 2019 04:37:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2019-08-05;
- bh=u3YVsD1wkCGiOGWe+S9b9QJmcTwJFEXyOfczc59CBcQ=;
- b=gy4Kg9Hxa8G5FPvXmUfJUReX9MjTRIN7rXb7ez2Xth+xw7Vjw3uI/SB+TRoZ74BW8wnD
- VpJ/N85V8VGDTM5IMNrwSjCI+D2eXacRH0LlP+RxX90kXAR8ZjVcGmOHZ6tDCbSo24VM
- 35l5mGoVfCYV+sSmWpKmil9FGxP0DAx1yf0P/4rkPIKx3vMl82Y4HjqqbgoKraed8h2h
- YZwIpLewn3drNbHCyIa41qz6SfnjCedhhYUuT0pLN7Ln1nkgRL4qeRhacNlSzKPU2JfQ
- zkcjA1Y+wdMlfo6V1S1LAlT9n9CRjLewV5di7MTZFyrKAT+jU9IzySnrKqmXmsS/gHiR DA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2wa92pmbay-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 19 Nov 2019 04:37:04 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAJ4X8ZX117062;
-        Tue, 19 Nov 2019 04:37:04 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2wbxm3m2yx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 19 Nov 2019 04:37:04 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xAJ4b2eP001299;
-        Tue, 19 Nov 2019 04:37:02 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 18 Nov 2019 20:37:01 -0800
-To:     sheebab <sheebab@cadence.com>
-Cc:     <alim.akhtar@samsung.com>, <avri.altman@wdc.com>,
-        <pedrom.sousa@synopsys.com>, <vigneshr@ti.com>,
-        <linux-block@vger.kernel.org>, <jejb@linux.ibm.com>,
-        <martin.petersen@oracle.com>, <stanley.chu@mediatek.com>,
-        <beanhuo@micron.com>, <yuehaibing@huawei.com>,
-        <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <rafalc@cadence.com>, <mparab@cadence.com>
-Subject: Re: [PATCH RESEND 0/2] scsi: ufs: hibern8 fixes
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <1573815645-11886-1-git-send-email-sheebab@cadence.com>
-Date:   Mon, 18 Nov 2019 23:36:58 -0500
-In-Reply-To: <1573815645-11886-1-git-send-email-sheebab@cadence.com>
-        (sheebab@cadence.com's message of "Fri, 15 Nov 2019 16:30:43 +0530")
-Message-ID: <yq1eey4jxcl.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Mon, 18 Nov 2019 23:39:16 -0500
+Received: by mail-pl1-f196.google.com with SMTP id d7so11052310pls.3
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 20:39:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=3Q2xgiO0SCUHCJ01fPdKFNn4jj9dQWkJKPBYAQQCb+M=;
+        b=RaG20AKfRfRSNJs29D/cPmOTrEFYL4nPFHgmG5xo24MqBUzPA9NQEETVpH2uFb7Zrs
+         OJOYq5t88Af765f3ykzYuaFi1qoYb68ULdaVnvAnmJShKgtwU/zLRNuFRaIuLJykgIRp
+         YnzQaZLR17rSR9Aevo+/S+inPEJGDvxiyhlIsrlys7lMUWdBgraaOgjEDCwYnFMF8UGV
+         INxfmosBpUAYqmKnb9zYkLLGa1NdIoy1g3EaVL7KWIMiUnAMM5D+OfMeG5PUdkW9DihT
+         TsphKiY0fY3NdbTAsKjwwi9dhPriE7wXeLEcYv4nqqaM/qCdAk/xxLEhBsE35Tq5PTLL
+         VsEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3Q2xgiO0SCUHCJ01fPdKFNn4jj9dQWkJKPBYAQQCb+M=;
+        b=UDnD4fArvuZf3pPGSQlx35S/Vb0wX+4B2rIqgvYxoSiifmQps4yW8/hAwnT0fJVD0a
+         E+xmSUv3c6gQV1UGRTeZwfifKjb7hHLGVceCS6XM9MqtCx22DJXmr008Y9l6y+x7gIfV
+         K4b9Nx+Dbpib0Z4IQxJb0wJ3lsmIPAVoCeXFoIemsNeHEWtZCM5BdQEUymK5JdGyDC9x
+         NPCCSv0Nwbs/HCDWNc9GEAt01ZRpZUjPTOn9/mW2OqKCedeVwH37imI9wc7aD0UthmzH
+         JBAjcCw1am2QGKbqJFlSC4MdgwzJx79YiwEqN1s2M3rjj5wFP5DocN1+n78Xp3+9nGHb
+         l/TA==
+X-Gm-Message-State: APjAAAUR8vd2BpTIXruC8OByxhHFAKdLgylqrjdYK/bY+RJGJrYLuTcX
+        jrt1h6hJHhC1o8KjYgOxVpwYPRZl8dE=
+X-Google-Smtp-Source: APXvYqzzV3JKKbYmesiphq/qNjx6W36HWDkmcjzcLqVtGtVM9zWe3dc/jdPtzPqDq4dUmntOc38riQ==
+X-Received: by 2002:a17:902:ff14:: with SMTP id f20mr32149430plj.225.1574138355290;
+        Mon, 18 Nov 2019 20:39:15 -0800 (PST)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id j7sm20638171pgl.38.2019.11.18.20.39.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Nov 2019 20:39:14 -0800 (PST)
+Date:   Mon, 18 Nov 2019 20:39:12 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Fabien Dessenne <fabien.dessenne@st.com>
+Cc:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org,
+        Loic Pallardy <loic.pallardy@st.com>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Subject: Re: [PATCH v4] remoteproc: stm32: fix probe error case
+Message-ID: <20191119043912.GT3108315@builder>
+References: <1573812188-19842-1-git-send-email-fabien.dessenne@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1911190040
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1911190040
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1573812188-19842-1-git-send-email-fabien.dessenne@st.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri 15 Nov 02:03 PST 2019, Fabien Dessenne wrote:
+> +
+> +	return 0;
+> +
+> +err_probe:
+> +	for (j = i - 1; j >= 0; j--)
 
-sheebab,
+It's idiomatic to just use 'i' itself here. But I applied this as is,
+with Mathieu's t-b.
 
-> Resending this patch to include 'mailing list' which I missed in first
-> release.
->
-> This patch set contains following patches for Cadence UFS controller
-> driver.
->
-> 1. 0001-scsi-ufs-Enable-hibern8-interrupt-only-during-manual.patch
->    This patch is to fix false interrupt assertion during auto hibernation.
->    In this patch, hibern8 interrupt is Disabled during initialization
->    and later the interrupt is Enabled/Disabled during manual hibern8
->    Entry/Exit.
-> 2. 0002-scsi-ufs-Update-L4-attributes-on-manual-hibern8-exit.patch
->    This patch is to update L4 attributes during manual hibern8 exit.
->    As per JESD220C spec, L4 attributes will be reset to their reset value 
->    during DME_HIBERNATION_EXIT. This patch will take backup of the L4 
->    parameters before DME_HIBERNATION_ENTER and restores the L4 parameters
->    after DME_HIBERNATION_EXIT
-
-Only the cover letter made it to the list. Please make sure patch
-submissions are sent to linux-scsi@vger.kernel.org.
-
-Thanks!
-
--- 
-Martin K. Petersen	Oracle Linux Engineering
+Thanks,
+Bjorn
