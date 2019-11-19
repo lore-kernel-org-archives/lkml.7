@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B54CC43141
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:12:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D070BC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:12:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1111321852
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:12:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B8C920692
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:12:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574143935;
-	bh=XUnieq344ZDIfnPQlfh7GnIeDQluWIN/f0BPsECMKvo=;
+	s=default; t=1574143944;
+	bh=qhjc3em040Ekybk+oPPE0CRElY/YwmptLb2RMbz5b94=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oH9Qttx+hR3MlcFqHxD+i04yiojpkKnLN2c+ysziAVzStcPBmmfdQhIhxCLkK5jgU
-	 knkuSOsY/gv1YHSrP/NHIWdAFxyX85ymLgrsI9htLcGG5Hu84wtWOSahkZR7B/MVjK
-	 /oNTv/B1qMRTg7Wz5wjy+aaNOe7UKFGRBwMtO8aw=
+	b=l7Buz9fXMJzYAw5YgIi4tHc6vGql6zvS0BQrfKLIN/7SftAO433+35AGY2Bz+8a52
+	 PDCoZI1FhF2jzTWyZ0XHouiU/5WJ/SjsbX3DtjW7/hk0lmB0T47xuYICckAjx6LKBO
+	 1Gf2d6Yfk2Jo6GDBKT2Vc2I4tc1HLZRTtoBb9G/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727832AbfKSFWr (ORCPT
+        id S1727752AbfKSFWa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:22:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38092 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:22:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37758 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727801AbfKSFWo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:22:44 -0500
+        id S1727736AbfKSFW0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:22:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4972E22317;
-        Tue, 19 Nov 2019 05:22:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C444121939;
+        Tue, 19 Nov 2019 05:22:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574140963;
-        bh=XUnieq344ZDIfnPQlfh7GnIeDQluWIN/f0BPsECMKvo=;
+        s=default; t=1574140946;
+        bh=qhjc3em040Ekybk+oPPE0CRElY/YwmptLb2RMbz5b94=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p5yV4S7xLJLrOhEOZOBKJZvqPRI30JIFRD2zWy1CuIFXW25BGXCMZX4RaarWD8tm2
-         7UbDf/76p3NYk1AiDpfKGg5CRqsHK6ePAK97dALdFv8hNek49OsC/G01IpAukVAz70
-         Bqbx7kI39fw1FcF45zg8Y1MCcO1EnlFyPDVA1Ud0=
+        b=Vos8Duf10v0ZOXfPiVPqT1uRGRPyyuk1H7S+SrRGTffQ0e7pFJp22M8jHKjOXiC1w
+         nW01Ep+mxA2Kzx0DNfTotBnclHqyNNcM3wPu0EeBUIHK6IAQfU2v0xz3iGIJkyrIeH
+         D9RYE/4AcHqAhiEScz7iJ0zvtdo1YiP9vMecjYIs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Aleksander Morgado <aleksander@aleksander.es>,
-        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 08/48] net: usb: qmi_wwan: add support for Foxconn T77W968 LTE modules
-Date:   Tue, 19 Nov 2019 06:19:28 +0100
-Message-Id: <20191119050954.189924168@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 5.3 39/48] ntp/y2038: Remove incorrect time_t truncation
+Date:   Tue, 19 Nov 2019 06:19:59 +0100
+Message-Id: <20191119051022.161704534@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119050946.745015350@linuxfoundation.org>
 References: <20191119050946.745015350@linuxfoundation.org>
@@ -61,45 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aleksander Morgado <aleksander@aleksander.es>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 802753cb0b141cf5170ab97fe7e79f5ca10d06b0 ]
+commit 2f5841349df281ecf8f81cc82d869b8476f0db0b upstream.
 
-These are the Foxconn-branded variants of the Dell DW5821e modules,
-same USB layout as those.
+A cast to 'time_t' was accidentally left in place during the
+conversion of __do_adjtimex() to 64-bit timestamps, so the
+resulting value is incorrectly truncated.
 
-The QMI interface is exposed in USB configuration #1:
+Remove the cast so the 64-bit time gets propagated correctly.
 
-P:  Vendor=0489 ProdID=e0b4 Rev=03.18
-S:  Manufacturer=FII
-S:  Product=T77W968 LTE
-S:  SerialNumber=0123456789ABCDEF
-C:  #Ifs= 6 Cfg#= 1 Atr=a0 MxPwr=500mA
-I:  If#=0x0 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
-I:  If#=0x1 Alt= 0 #EPs= 1 Cls=03(HID  ) Sub=00 Prot=00 Driver=usbhid
-I:  If#=0x2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#=0x5 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
-
-Signed-off-by: Aleksander Morgado <aleksander@aleksander.es>
-Acked-by: Bjørn Mork <bjorn@mork.no>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: ead25417f82e ("timex: use __kernel_timex internally")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/20191108203435.112759-2-arnd@arndb.de
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/usb/qmi_wwan.c |    2 ++
- 1 file changed, 2 insertions(+)
 
---- a/drivers/net/usb/qmi_wwan.c
-+++ b/drivers/net/usb/qmi_wwan.c
-@@ -1370,6 +1370,8 @@ static const struct usb_device_id produc
- 	{QMI_QUIRK_SET_DTR(0x2c7c, 0x0191, 4)},	/* Quectel EG91 */
- 	{QMI_FIXED_INTF(0x2c7c, 0x0296, 4)},	/* Quectel BG96 */
- 	{QMI_QUIRK_SET_DTR(0x2cb7, 0x0104, 4)},	/* Fibocom NL678 series */
-+	{QMI_FIXED_INTF(0x0489, 0xe0b4, 0)},	/* Foxconn T77W968 LTE */
-+	{QMI_FIXED_INTF(0x0489, 0xe0b5, 0)},	/* Foxconn T77W968 LTE with eSIM support*/
+---
+ kernel/time/ntp.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/kernel/time/ntp.c
++++ b/kernel/time/ntp.c
+@@ -771,7 +771,7 @@ int __do_adjtimex(struct __kernel_timex
+ 	/* fill PPS status fields */
+ 	pps_fill_timex(txc);
  
- 	/* 4. Gobi 1000 devices */
- 	{QMI_GOBI1K_DEVICE(0x05c6, 0x9212)},	/* Acer Gobi Modem Device */
+-	txc->time.tv_sec = (time_t)ts->tv_sec;
++	txc->time.tv_sec = ts->tv_sec;
+ 	txc->time.tv_usec = ts->tv_nsec;
+ 	if (!(time_status & STA_NANO))
+ 		txc->time.tv_usec = ts->tv_nsec / NSEC_PER_USEC;
 
 
