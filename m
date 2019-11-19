@@ -2,135 +2,103 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AB69C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE698C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:42:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F6F820718
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:41:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574185261;
-	bh=CluRblEFMUETyKbYj2Mbw+FlclYGBj6WdguG//F2G7Q=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Q/VR5+24F0KmuvWQkyA+ab1W0I8sLK8Q2zrcY62qf3sg9aiFSNmTa0S8aO3gAFLZf
-	 51h1Iagh8Lm4tM4izebY6hcwHMUKvkYrzZb+40f6gSKyl3neX8YMy40ZgIITIkfcJ8
-	 Q2EJcUTWjFWz5hgx9t6JvIgzi26W4rypiWnwwLPg=
+	by mail.kernel.org (Postfix) with ESMTP id B006A20718
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:42:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728547AbfKSRlA (ORCPT
+        id S1728591AbfKSRmB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 12:41:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44388 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 12:42:01 -0500
+Received: from foss.arm.com ([217.140.110.172]:56044 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728433AbfKSRk6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 12:40:58 -0500
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACEFC22384
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 17:40:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574185256;
-        bh=CluRblEFMUETyKbYj2Mbw+FlclYGBj6WdguG//F2G7Q=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=QNdH6mi5PiBtuEUA+43zu2S/TU+LbiB0e005F3zS94ECiaj4JE+mdeafj73BfHmPV
-         EdXo8E+E08nSEn2/f6U2g/kBww828l/aRDCGIhlCgTGANqLIlsgR91hNi5+zRNetYB
-         qZqmwLE61dEejb4RB62BEBD6Va8/0rIAsEmn4vb4=
-Received: by mail-wm1-f41.google.com with SMTP id u18so4153165wmc.3
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 09:40:56 -0800 (PST)
-X-Gm-Message-State: APjAAAVh6QaWPvnLAF7fUHKlJzWbKPXPT+wVT9M3/5KIYrRahLjeYeAP
-        Vo/FvQc9vtF65wQ3IyywabWl08wtVvmBsVMr2Qu+tg==
-X-Google-Smtp-Source: APXvYqw6UtwVIGhkNwkVtKkd6cSjWvijD04+2DtfuhQRcsA5MlCEw0Y6e7FEa0raVjE8DvKEE5qxMkQ82hVrcQ4PLB0=
-X-Received: by 2002:a1c:f210:: with SMTP id s16mr5247240wmc.76.1574185255074;
- Tue, 19 Nov 2019 09:40:55 -0800 (PST)
-MIME-Version: 1.0
-References: <2476454.l8LQlgn7Hv@positron.chronox.de> <3043322.Kq9igzfA0K@positron.chronox.de>
- <CALCETrVXGuShozaf5RpgmQnwtTpAbmaTVny+E0q8OE4OLuWwAQ@mail.gmail.com> <5323691.yyFvDVlHDV@tauon.chronox.de>
-In-Reply-To: <5323691.yyFvDVlHDV@tauon.chronox.de>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 19 Nov 2019 09:40:43 -0800
-X-Gmail-Original-Message-ID: <CALCETrV9W9_rkdCZ4ZvV0bQWiE0ms8cvAyZqeNy4=kHnFj9BRA@mail.gmail.com>
-Message-ID: <CALCETrV9W9_rkdCZ4ZvV0bQWiE0ms8cvAyZqeNy4=kHnFj9BRA@mail.gmail.com>
-Subject: Re: [PATCH v25 03/12] LRNG - /proc interface
-To:     Stephan Mueller <smueller@chronox.de>
-Cc:     Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        id S1728126AbfKSRmB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 12:42:01 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 71A951FB;
+        Tue, 19 Nov 2019 09:42:00 -0800 (PST)
+Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8D3FC3F703;
+        Tue, 19 Nov 2019 09:41:59 -0800 (PST)
+From:   Robin Murphy <robin.murphy@arm.com>
+Subject: Re: generic DMA bypass flag
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     iommu@lists.linux-foundation.org,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        Nicolai Stange <nstange@suse.de>,
-        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
-        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
-        Roman Drahtmueller <draht@schaltsekun.de>,
-        Neil Horman <nhorman@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <20191113133731.20870-1-hch@lst.de>
+ <d27b7b29-df78-4904-8002-b697da5cb013@arm.com>
+ <20191114074105.GC26546@lst.de>
+ <9c8f4d7b-43e0-a336-5d93-88aef8aae716@arm.com> <20191116062258.GA8913@lst.de>
+Message-ID: <f2335431-8cd4-e1ab-013d-573d163f4067@arm.com>
+Date:   Tue, 19 Nov 2019 17:41:58 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20191116062258.GA8913@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 2:57 AM Stephan Mueller <smueller@chronox.de> wrote=
-:
->
-> Am Dienstag, 19. November 2019, 11:06:02 CET schrieb Andy Lutomirski:
->
-> Hi Andy,
->
-> > On Sun, Nov 17, 2019 at 4:16 AM Stephan M=C3=BCller <smueller@chronox.d=
-e> wrote:
-> > > Am Samstag, 16. November 2019, 17:39:40 CET schrieb Andy Lutomirski:
-> > >
-> > > Hi Andy,
-> > >
-> > > > > On Nov 16, 2019, at 1:40 AM, Stephan M=C3=BCller <smueller@chrono=
-x.de>
-> > > > > wrote:
-> > > > >
-> > > > > =EF=BB=BFThe LRNG /proc interface provides the same files as the =
-legacy
-> > > > > /dev/random. These files behave identically. Yet, all files are
-> > > > > documented at [1].
-> > > >
-> > > > Why?
-> > >
-> > > I am not sure here: are you referring to the documentation? Or the on=
-e
-> > > additional file?
-> > >
-> > > If it is the documentation, do you want me to add it to the patch
-> > > description? I initially did not add it as these files were present a=
-nd
-> > > seemingly known what they provide. But I would add that documentation=
- to
-> > > the patch description if this is desired.
-> >
-> > Sorry, I should have been a lot more explicit.  Why do you want to add
-> > a new interface to read the RNG?  What's wrong with the old one?
->
-> There is nothing wrong at all. I actually want to be 100% API and ABI
-> compliant with the existing random.c. Thus, the list of the sysctls are
-> identical to the existing random.c with the same behavior (hence I skippe=
-d the
-> documentation of these files).
+On 16/11/2019 6:22 am, Christoph Hellwig wrote:
+> On Fri, Nov 15, 2019 at 06:12:48PM +0000, Robin Murphy wrote:
+>> And is that any different from where you would choose to "just" set a
+>> generic bypass flag?
+> 
+> Same spots, as intel-iommu moves from the identify to a dma domain when
+> setting a 32-bit mask.  But that means once a 32-bit mask is set we can't
+> ever go back to the 64-bit one.
 
-Whoops, I misunderstood your commit message.  You said "The LRNG /proc
-interface provides the same files as the legacy
-/dev/random.".  I assumed that meant that you had a file in /proc that
-worked like /dev/random.
+Is that a problem though? It's not safe in general to rewrite the 
+default domain willy-nilly, so if it's a concern that drivers get stuck 
+having to use a translation domain if they do something dumb like:
 
-So never mind.
+	if (!dma_set_mask(DMA_BIT_MASK(32))
+		dma_set_mask(DMA_BIT_MASK(64));
+
+then the simple solution is "don't do that" - note that this doesn't 
+affect overriding of the default 32-bit mask, because we don't use the 
+driver API to initialise those.
+
+>  And we had a couple drivers playing
+> interesting games there.
+
+If the games you're worried about are stuff like:
+
+	dma_set_mask(dev, DMA_BIT_MASK(64));
+	high_buf = dma_alloc_coherent(dev, ...);
+	dma_set_mask(dev, DMA_BIT_MASK(32));
+	low_buf = dma_alloc_coherent(dev, ...);
+
+then iommu_need_mapping() already ensures that will end spectacularly 
+badly. Unless we can somehow log when a mask has been "committed" by a 
+mapping operation, I don't think any kind of opportunistic bypass 
+mechanism is ever not going to blow up that case.
+
+>  FYI, this is the current intel-iommu
+> WIP conversion to the dma bypass flag:
+> 
+> http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/dma-bypass
+
+Having thought a bit more, I guess my idea does end up with one slightly 
+ugly corner wherein dma_direct_supported() has to learn to look for an 
+IOMMU default domain and try iommu_dma_supported() before saying no, 
+even if it's clean everywhere else. The bypass flag is more 'balanced' 
+in terms of being equally invasive everywhere and preserving abstraction 
+a bit better. Plus I think it might let us bring back the default 
+assignment of dma_dummy_ops, which I do like the thought of :D
+
+Either way, making sure that the fundamental bypass decision is correct 
+and robust is still far more important than the implementation details.
+
+Robin.
