@@ -5,52 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21CD2C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:55:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5EDEC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:55:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED8F62230F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:55:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7456420872
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:55:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142909;
-	bh=BIKvivTgbhJmyqsY0AFtQ/h+1Vep9bWqDEIZO2zDLAM=;
+	s=default; t=1574142912;
+	bh=yNy5f3Bw3KkD7wJrL+SQzTMJT5C/90GVEYL0GQQQ3zg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lknqmqmmiz/qjcuSY5UN9mC3PVn0Bt+ZIpqdVTO5K3TmoaUOdgTbin3DXiuzlcfo/
-	 2DXzA41zSsRVYKLq+PH+RHqHT0C4+kqJXK/h65d0j4WzNqFbsX0sF0orfwWSH+6giY
-	 ZdxUcOhdX66tBMgJn1FFMtbUNli+hwqRvtuxafhs=
+	b=we34qXRmKIQFysFhFnnclM66QwMDwZnHE8hYo9Cc+kMUBzre+J2KGjI/OXv57KOpy
+	 6/nVCi72WGi+K8fTfdEB/UIprsRkyisjLAam0bVxwY10A05szVjORPNMc0USgzyTUD
+	 InHWfkWhvSScy6l1EHN1jTwubQKBxxSqeUaWWIY4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731929AbfKSFzH (ORCPT
+        id S1732250AbfKSFzL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:55:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53410 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:55:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732232AbfKSFzG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:55:06 -0500
+        id S1731923AbfKSFzJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:55:09 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20E31218BA;
-        Tue, 19 Nov 2019 05:55:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56081218BA;
+        Tue, 19 Nov 2019 05:55:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142905;
-        bh=BIKvivTgbhJmyqsY0AFtQ/h+1Vep9bWqDEIZO2zDLAM=;
+        s=default; t=1574142908;
+        bh=yNy5f3Bw3KkD7wJrL+SQzTMJT5C/90GVEYL0GQQQ3zg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=POK6MKBbpZ/sdx2dO6do9grqn6AD4sbDzPQXyTu1AaFLP+Pps5s2SVmbrC2mWyU2y
-         GCUTXVzoA0vCmhu8xfVyxdom0cG8dZyqI/H/XKABUAxZ51HnEhouXoswnabC3BTJ6H
-         IXTl5F3CPHvloCrJ8knvZJtkrWPVzV2h1/o7YAOg=
+        b=LfTy4Nym9DwORzED7uuOIHREOeQMUSDuY1lU7sFC0PDeSUXybmiL8EHbYZeGndnEr
+         05WswyEckWBdzjfmcVODurGxqN6yJ1NRrsLEDQNAjWDH5RgDyNfFFCFoWq19tSz5/G
+         KL6Wpx7sMKsY2S6w8XNO2iZ0yvrG5jkDE5QH5h9w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christoph Manszewski <c.manszewski@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kamil Konieczny <k.konieczny@partner.samsung.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 215/239] crypto: s5p-sss: Fix Fix argument list alignment
-Date:   Tue, 19 Nov 2019 06:20:15 +0100
-Message-Id: <20191119051339.100438972@linuxfoundation.org>
+        stable@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>,
+        linux-crypto@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Dan Aloni <dan@kernelim.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 216/239] crypto: fix a memory leak in rsa-kcs1pads encryption mode
+Date:   Tue, 19 Nov 2019 06:20:16 +0100
+Message-Id: <20191119051339.185883486@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -63,43 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Manszewski <c.manszewski@samsung.com>
+From: Dan Aloni <dan@kernelim.com>
 
-[ Upstream commit 6c12b6ba45490eeb820fdceccf5a53f42a26799c ]
+[ Upstream commit 3944f139d5592790b70bc64f197162e643a8512b ]
 
-Fix misalignment of continued argument list.
+The encryption mode of pkcs1pad never uses out_sg and out_buf, so
+there's no need to allocate the buffer, which presently is not even
+being freed.
 
-Signed-off-by: Christoph Manszewski <c.manszewski@samsung.com>
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-Acked-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
+CC: Herbert Xu <herbert@gondor.apana.org.au>
+CC: linux-crypto@vger.kernel.org
+CC: "David S. Miller" <davem@davemloft.net>
+Signed-off-by: Dan Aloni <dan@kernelim.com>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/s5p-sss.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ crypto/rsa-pkcs1pad.c | 9 ---------
+ 1 file changed, 9 deletions(-)
 
-diff --git a/drivers/crypto/s5p-sss.c b/drivers/crypto/s5p-sss.c
-index aec66159566dd..9a5213cbcbe18 100644
---- a/drivers/crypto/s5p-sss.c
-+++ b/drivers/crypto/s5p-sss.c
-@@ -323,7 +323,7 @@ static void s5p_unset_indata(struct s5p_aes_dev *dev)
- }
+diff --git a/crypto/rsa-pkcs1pad.c b/crypto/rsa-pkcs1pad.c
+index 407c64bdcdd9a..3279b457c4ede 100644
+--- a/crypto/rsa-pkcs1pad.c
++++ b/crypto/rsa-pkcs1pad.c
+@@ -261,15 +261,6 @@ static int pkcs1pad_encrypt(struct akcipher_request *req)
+ 	pkcs1pad_sg_set_buf(req_ctx->in_sg, req_ctx->in_buf,
+ 			ctx->key_size - 1 - req->src_len, req->src);
  
- static int s5p_make_sg_cpy(struct s5p_aes_dev *dev, struct scatterlist *src,
--			    struct scatterlist **dst)
-+			   struct scatterlist **dst)
- {
- 	void *pages;
- 	int len;
-@@ -569,7 +569,7 @@ static int s5p_set_indata_start(struct s5p_aes_dev *dev,
- }
- 
- static int s5p_set_outdata_start(struct s5p_aes_dev *dev,
--				struct ablkcipher_request *req)
-+				 struct ablkcipher_request *req)
- {
- 	struct scatterlist *sg;
- 	int err;
+-	req_ctx->out_buf = kmalloc(ctx->key_size, GFP_KERNEL);
+-	if (!req_ctx->out_buf) {
+-		kfree(req_ctx->in_buf);
+-		return -ENOMEM;
+-	}
+-
+-	pkcs1pad_sg_set_buf(req_ctx->out_sg, req_ctx->out_buf,
+-			ctx->key_size, NULL);
+-
+ 	akcipher_request_set_tfm(&req_ctx->child_req, ctx->child);
+ 	akcipher_request_set_callback(&req_ctx->child_req, req->base.flags,
+ 			pkcs1pad_encrypt_sign_complete_cb, req);
 -- 
 2.20.1
 
