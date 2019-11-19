@@ -2,106 +2,106 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52514C43141
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 657A9C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:02:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31BFA208D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:00:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43F6F208D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:02:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728753AbfKSRAZ (ORCPT
+        id S1728580AbfKSRCC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 12:00:25 -0500
-Received: from foss.arm.com ([217.140.110.172]:55510 "EHLO foss.arm.com"
+        Tue, 19 Nov 2019 12:02:02 -0500
+Received: from mga03.intel.com ([134.134.136.65]:23294 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727968AbfKSRAY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 12:00:24 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 876951FB;
-        Tue, 19 Nov 2019 09:00:23 -0800 (PST)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BB02E3F703;
-        Tue, 19 Nov 2019 09:00:22 -0800 (PST)
-Date:   Tue, 19 Nov 2019 17:00:21 +0000
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-rdma@vger.kernel.org, maz@kernel.org, phil@raspberrypi.org,
+        id S1728071AbfKSRCB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 12:02:01 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Nov 2019 09:01:53 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,218,1571727600"; 
+   d="scan'208";a="289664932"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga001.jf.intel.com with ESMTP; 19 Nov 2019 09:01:53 -0800
+Date:   Tue, 19 Nov 2019 09:06:28 -0800
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     Auger Eric <eric.auger@redhat.com>,
         iommu@lists.linux-foundation.org,
-        linux-rockchip@lists.infradead.org, f.fainelli@gmail.com,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-arm-kernel@lists.infradead.org, mbrugger@suse.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jeremy.linton@arm.com, Tom Joseph <tjoseph@cadence.com>,
-        wahrenst@gmx.net, james.quinlan@broadcom.com,
-        Robin Murphy <robin.murphy@arm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Tariq Toukan <tariqt@mellanox.com>
-Subject: Re: [PATCH v2 1/6] linux/log2.h: Add roundup/rounddown_pow_two64()
- family of functions
-Message-ID: <20191119170019.GU43905@e119886-lin.cambridge.arm.com>
-References: <20191112155926.16476-1-nsaenzjulienne@suse.de>
- <20191112155926.16476-2-nsaenzjulienne@suse.de>
- <20191119111320.GP43905@e119886-lin.cambridge.arm.com>
- <052d07fb4eb79b29dd58cab577d59bab6684329a.camel@suse.de>
- <56cbba61d92f9bc7d0a33c1de379bcd5cf411cb8.camel@suse.de>
- <20191119162849.GT43905@e119886-lin.cambridge.arm.com>
- <20191119165502.GB4991@ziepe.ca>
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>, Yi Liu <yi.l.liu@intel.com>,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v2 01/10] iommu/vt-d: Introduce native SVM capable flag
+Message-ID: <20191119090628.7295cd7d@jacob-builder>
+In-Reply-To: <efe5a47d-1209-2c09-bc66-b1ebbc671439@linux.intel.com>
+References: <1574106153-45867-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1574106153-45867-2-git-send-email-jacob.jun.pan@linux.intel.com>
+        <cb44724d-a396-0291-63c4-0039788fd26b@redhat.com>
+        <20191118134809.66b9fda4@jacob-builder>
+        <efe5a47d-1209-2c09-bc66-b1ebbc671439@linux.intel.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191119165502.GB4991@ziepe.ca>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 12:55:02PM -0400, Jason Gunthorpe wrote:
-> On Tue, Nov 19, 2019 at 04:28:50PM +0000, Andrew Murray wrote:
-> > On Tue, Nov 19, 2019 at 01:43:39PM +0100, Nicolas Saenz Julienne wrote:
-> > > On Tue, 2019-11-19 at 12:30 +0100, Nicolas Saenz Julienne wrote:
-> > > > Hi Andrew, thanks for the review.
-> > > > > > +/**
-> > > > > > + * __roundup_pow_of_two64() - round 64bit value up to nearest power of
-> > > > > > two
-> > > > > > + * @n: value to round up
-> > > > > > + */
-> > > > > > +static inline __attribute__((const)) __u64 __roundup_pow_of_two64(__u64
-> > > > > > n)
-> > > > > 
-> > > > > To be consistent with other functions in the same file (__ilog_u64) you may
-> > > > > want to rename this to __roundup_pow_of_two_u64.
-> > > > 
-> > > > Sounds good to me.
-> > > > 
-> > > > > Also do you know why u64 is used in some places and __u64 in others?
-> > > > 
-> > > > That's unwarranted, it should be __u64 everywhere.
-> > > 
-> > > Sorry, now that I look deeper into it, it should be u64.
-> > 
-> > Do you know the reason why? I'd be interested to know.
-> 
-> __u64 must be used in header files that are under uapi - ie it is the
-> name of the symbol in userspace, and u64 does not exist.
-> 
-> u64 should be used in all code that is only inside the kernel, ie .c
-> files, internal headers, etc
-> 
-> I routinely discourage use of __uXX in kernel native code.
+On Tue, 19 Nov 2019 10:55:29 +0800
+Lu Baolu <baolu.lu@linux.intel.com> wrote:
 
-Thanks for this, much appreciated!
-
-Andrew Murray
-
+> Hi,
 > 
-> Jason
+> On 11/19/19 5:48 AM, Jacob Pan wrote:
+> > On Mon, 18 Nov 2019 21:33:53 +0100
+> > Auger Eric <eric.auger@redhat.com> wrote:
+> >   
+> >> Hi Jacob,
+> >>
+> >> On 11/18/19 8:42 PM, Jacob Pan wrote:  
+> >>> Shared Virtual Memory(SVM) is based on a collective set of
+> >>> hardware features detected at runtime. There are requirements for
+> >>> matching CPU and IOMMU capabilities.
+> >>>
+> >>> This patch introduces a flag which will be used to mark and test
+> >>> the capability of SVM.
+> >>>
+> >>> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> >>> Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
+> >>> ---
+> >>>   include/linux/intel-iommu.h | 1 +
+> >>>   1 file changed, 1 insertion(+)
+> >>>
+> >>> diff --git a/include/linux/intel-iommu.h
+> >>> b/include/linux/intel-iommu.h index ed11ef594378..63118991824c
+> >>> 100644 --- a/include/linux/intel-iommu.h
+> >>> +++ b/include/linux/intel-iommu.h
+> >>> @@ -433,6 +433,7 @@ enum {
+> >>>   
+> >>>   #define VTD_FLAG_TRANS_PRE_ENABLED	(1 << 0)
+> >>>   #define VTD_FLAG_IRQ_REMAP_PRE_ENABLED	(1 << 1)
+> >>> +#define VTD_FLAG_SVM_CAPABLE		(1 << 2)  
+> >>
+> >> I think I would rather squash this into the next patch as there is
+> >> no user here.
+> >>  
+> > Sure, I don't have strong preference. Baolu, what is your call?  
+> 
+> It's okay for me.
+> 
+will squash then.
+Thanks!
+> Best regards,
+> baolu
+
+[Jacob Pan]
