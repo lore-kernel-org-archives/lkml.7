@@ -4,55 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78DD2C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:33:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2346FC43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:33:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AC10206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:33:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9C8B2071B
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:33:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141628;
-	bh=o6dh4ufHmInF4oLXS+RpJ8zetcuZ7OaJYzjhG7NToF8=;
+	s=default; t=1574141631;
+	bh=J8Af5rd+geu2PFA2CWpOAT2ClSBICxyzyklJSlfvkZs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hQJlBSkEbeq0r9v+kdn6rlXpAtJ/KRj6zBh8Ct5Wtq4803K0rktIPiDdFRBXifvru
-	 JJL6yoHLNeK+1yrvsvtbPf5Jy4oS+H1sQPFISuOQnJbi36yV8NbfJBjU3HPhzW6BL2
-	 SO0KngPqb9LAPn7rjvKvTyiVtXAxKJTftIPAwnhQ=
+	b=B0+yCyJsWBYqPMTH1s1zu2Hjbo0EKC73WuOnnfOUh7jB8R642Cp6ruR3EKaX+YFdE
+	 eivec2xR3mR7QkANmbOwQmgjirP4CgKEk/u9qATahYCl4iDU7/YHTXpDO11fCLgVAU
+	 TxcXK26YdUxWiFddFkIvFmOud2w76q5SxcWNBajc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729574AbfKSFdr (ORCPT
+        id S1728848AbfKSFdt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:33:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54254 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:33:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729062AbfKSFdj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:33:39 -0500
+        id S1729564AbfKSFdp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:33:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B86121783;
-        Tue, 19 Nov 2019 05:33:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DEC8D21823;
+        Tue, 19 Nov 2019 05:33:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141618;
-        bh=o6dh4ufHmInF4oLXS+RpJ8zetcuZ7OaJYzjhG7NToF8=;
+        s=default; t=1574141624;
+        bh=J8Af5rd+geu2PFA2CWpOAT2ClSBICxyzyklJSlfvkZs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mTqvGrcrQNuDLAPcsLYk+3Em+VvIZ4dPI5HkCUs7Of2P4JZWBx8W5/r3KFsHZvCyX
-         6Alo65XwEcyX8EsDu0pM3cRdWiMxypmMCvOOVYHlQ+UwttbXa/nJr4o45Pv2P9I53v
-         h29zHGMAVcQaBGrGch+/SiGtv93VChF5SUebCjoo=
+        b=Oa3DaiGdPjvnZWS+9PPfG7MHIyn0gNtvmeZcZ/ted+FJt+ce1fQULiNf0/1wrvXDh
+         D6o7HBvIrYeMbnA8jTkPjw4d2F0OOD/Fx43UyzWZ7OP4Gz9kiOGRLzAjAAmYVfgstF
+         UhD1QrQb5C1kH8SY2Pzu6TYLuzp3P4+zpUGfxy+w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Naveen N . Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 185/422] kprobes: Dont call BUG_ON() if there is a kprobe in use on free list
-Date:   Tue, 19 Nov 2019 06:16:22 +0100
-Message-Id: <20191119051410.471648112@linuxfoundation.org>
+        stable@vger.kernel.org, Carlo Caione <carlo@caione.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        linux-amlogic@lists.infradead.org, Rob Herring <robh@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 222/422] arm64: dts: meson: Fix erroneous SPI bus warnings
+Date:   Tue, 19 Nov 2019 06:16:59 +0100
+Message-Id: <20191119051413.017143708@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -65,48 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Rob Herring <robh@kernel.org>
 
-[ Upstream commit cbdd96f5586151e48317d90a403941ec23f12660 ]
+[ Upstream commit 68ecb5c1920c5b98b1e717fd2349fba2ee5d4031 ]
 
-Instead of calling BUG_ON(), if we find a kprobe in use on free kprobe
-list, just remove it from the list and keep it on kprobe hash list
-as same as other in-use kprobes.
+dtc has new checks for SPI buses. The meson dts files have a node named
+spi' which causes false positive warnings. As the node is a pinctrl child
+node, change the node name to be 'spi-pins' to fix the warnings.
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
-Cc: David S . Miller <davem@davemloft.net>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Naveen N . Rao <naveen.n.rao@linux.vnet.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/153666126882.21306.10738207224288507996.stgit@devbox
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dtb: Warning (spi_bus_bridge): /soc/periphs@c8834000/pinctrl@4b0/spi: incorrect #address-cells for SPI bus
+
+Cc: Carlo Caione <carlo@caione.org>
+Cc: Kevin Hilman <khilman@baylibre.com>
+Cc: linux-amlogic@lists.infradead.org
+Signed-off-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/kprobes.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 2 +-
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index b8efca9dc2cbb..aed90788db5c1 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -544,8 +544,14 @@ static void do_free_cleaned_kprobes(void)
- 	struct optimized_kprobe *op, *tmp;
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+index 98cbba6809caa..1ade7e486828c 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+@@ -390,7 +390,7 @@
+ 			};
+ 		};
  
- 	list_for_each_entry_safe(op, tmp, &freeing_list, list) {
--		BUG_ON(!kprobe_unused(&op->kp));
- 		list_del_init(&op->list);
-+		if (WARN_ON_ONCE(!kprobe_unused(&op->kp))) {
-+			/*
-+			 * This must not happen, but if there is a kprobe
-+			 * still in use, keep it on kprobes hash list.
-+			 */
-+			continue;
-+		}
- 		free_aggr_kprobe(&op->kp);
- 	}
- }
+-		spi_pins: spi {
++		spi_pins: spi-pins {
+ 			mux {
+ 				groups = "spi_miso",
+ 					"spi_mosi",
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+index c87a80e9bcc6a..8f0bb3c44bd6d 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+@@ -337,7 +337,7 @@
+ 			};
+ 		};
+ 
+-		spi_pins: spi {
++		spi_pins: spi-pins {
+ 			mux {
+ 				groups = "spi_miso",
+ 					"spi_mosi",
 -- 
 2.20.1
 
