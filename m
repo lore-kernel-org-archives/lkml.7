@@ -2,94 +2,144 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51EB6C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:17:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16109C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:20:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2515D22363
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:17:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7D6E22363
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:20:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="EEDZ6kzK"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="z9ODofZL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728481AbfKSQRE (ORCPT
+        id S1728062AbfKSQUC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 11:17:04 -0500
-Received: from mail-qk1-f175.google.com ([209.85.222.175]:39509 "EHLO
-        mail-qk1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727509AbfKSQRD (ORCPT
+        Tue, 19 Nov 2019 11:20:02 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:38773 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727456AbfKSQUB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 11:17:03 -0500
-Received: by mail-qk1-f175.google.com with SMTP id 15so18300480qkh.6
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 08:17:01 -0800 (PST)
+        Tue, 19 Nov 2019 11:20:01 -0500
+Received: by mail-qk1-f193.google.com with SMTP id e2so18320146qkn.5
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 08:20:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ZqRLNz3QoP7lC3GoX4dGbpM/0X+BMWIWcZVOVY7dcIU=;
-        b=EEDZ6kzKJxHxR0jYrvurpFG7/VtWy3lmas2bKyDXg0ZIHpu7ZvgPRmxgNIdJ5Trl8o
-         2i+mkawUu3GG/1fSr9nzBfLa1IwyzlN5vbaTmoKGke3iU9oK6RwfGr4wkUK2CcZ4XRS4
-         T8m6NFVGWYmHUhSii2nMalguQ49rr8DmBIkT46n//mCXFsljMqZhQqpPqcvsVRXp5ZR8
-         j3Yz/HgyL4AScR2b/nyEyR8AHVMVBqeRo3TLRgbr+kXQezQzjhiWi7JePw3i6rj+I7Kk
-         fXVbFKoYoCJ9W+vXBQuspHHAYavKVmMHwyEXIdioL2V4cpezvpipuNysIJNNSxebF/rO
-         m8VA==
+         :content-disposition:in-reply-to:user-agent;
+        bh=P9Nm0dmtDONqzZOiG8f0kC+bAXI7b+Ydc24QnuYX/wc=;
+        b=z9ODofZLwVJ5kMknpHKRESiJDZBNi3Pyza7Lc9GUeJNHofrQ86wibU3eFnsO2CVIu+
+         IfAgM62vq+764hz0qZ7RurgWgkiidhrvNyqW6ve6XTcrt1pa0T+IBaQFh6GvVNqcIXBF
+         Ufy2rTPODX34yXNizSAi3WtQarGWeLPCoeXXJKP8I0Cb0CRRWpEy9NOqkoaP9VmwY9h1
+         cD8j9AgPTXAvnN73paddQAX1/NUY7TjJhO4MrEwcGMLbJNfqlaFEN76hxgxI1sUPxUoF
+         rpTdJBr0sBkYiM5s7RkzXWL86X/Ms+STXj4E4DantEgdps6LghwvRYO6bCdspBkQ3lot
+         zPnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ZqRLNz3QoP7lC3GoX4dGbpM/0X+BMWIWcZVOVY7dcIU=;
-        b=Zyctblvd5GYZOJkPFcZ/FROjWDpEum6O7klpERK4jORFStnZs+58mT54JxSwQSnoHd
-         YbI7EeIdJKPTeQjIU8ftCaNsrT+IqA4G5gTZOXIeU6tJqzIn1pll4clA5roo5qpfK7Eq
-         czkQF9XHp4MfR3WIl8wOd6/mk0eNwXKD7Jf18pVmtmnohr53RVZgee/G9yB9l0sjglr6
-         huhiZL0dxG7xnQDSuatHNuV3YU4onBi58ODAC1kpPPosB6LC4GVjSIY2icnl9nkVs6F9
-         KIwPsevdZxQswqGZ+fh55wKGEmaUpX6uKy/57QM2t7f0YbjTtQY0kbIZmZvhANIe7yUl
-         SMYQ==
-X-Gm-Message-State: APjAAAXyNR2hoxntycbMQp3ULTKwMTEekhSsc5ynkZuuk1SsiuEcNjY6
-        l7WZn9eXKP0c9H29FAQGvVi9wQ==
-X-Google-Smtp-Source: APXvYqw4sM1JFEaj5qBtyeVFL3GFBIz1nwvBoJWPMV830wZLNSSNqslB0uqWWe1hYNiEkrIrWvyc7Q==
-X-Received: by 2002:a37:a70b:: with SMTP id q11mr30591722qke.350.1574180221163;
-        Tue, 19 Nov 2019 08:17:01 -0800 (PST)
-Received: from localhost ([2620:10d:c091:480::61cf])
-        by smtp.gmail.com with ESMTPSA id b3sm9769407qkl.88.2019.11.19.08.16.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 19 Nov 2019 08:17:00 -0800 (PST)
-Date:   Tue, 19 Nov 2019 11:16:58 -0500
-From:   Josef Bacik <josef@toxicpanda.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Sun Ke <sunke32@huawei.com>, josef@toxicpanda.com,
-        linux-block@vger.kernel.org, nbd@other.debian.org,
-        linux-kernel@vger.kernel.org, Mike Christie <mchristi@redhat.com>
-Subject: Re: [v2] nbd:fix memory leak in nbd_get_socket()
-Message-ID: <20191119161658.mmifoeplc5vsdt64@macbook-pro-91.dhcp.thefacebook.com>
-References: <1574143751-138680-1-git-send-email-sunke32@huawei.com>
- <d68d17be-0c4e-1286-4327-0e3ba6600eca@kernel.dk>
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=P9Nm0dmtDONqzZOiG8f0kC+bAXI7b+Ydc24QnuYX/wc=;
+        b=cPcVmPESdwZWtAszsqv0L9QKddxiXVRRAQ0PpBObbnMs4eCrpU5mwTTKbZIXisUOwB
+         454xM1QMsDZ/wE3gjp//+ADGJo5KW1zyUGLFt+GOAYmzUruN6SRexIS+jJgQxsJ+JyzU
+         foAvPJUKaYUWEJ50eecmooD7shD+61X17z9avWBR0gsU+87TyvQ+QEf8Km9cJ0RWEjHP
+         2P+ddDucOIOsaxMyZPUxXnMLheX/x8UJTWKeEKwkD/zThosoP01xTawdne3IuuM8hPFm
+         gXiMQQphhMpirSFXJYwAq1Cz4aeKhc1CVnZsqmjQBF0mjxk/IZAFAxUkeLZ/oYf5T0iQ
+         72SA==
+X-Gm-Message-State: APjAAAX1y6r44JwVV1bOb6rxQtgO+/yDaxfK9YvBNVrVuGgoIvjcQD7E
+        pn7eHzkyvmjtjoBO6tRFBCiwjA==
+X-Google-Smtp-Source: APXvYqwl+S9iMasVSXI1muFO2L+Fzgo4inTTJLcO5OXE6vDvUnuWsZ5UkRMSK4/30PNMVIetjQqjxw==
+X-Received: by 2002:a05:620a:226:: with SMTP id u6mr29793788qkm.393.1574180400357;
+        Tue, 19 Nov 2019 08:20:00 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::c7ac])
+        by smtp.gmail.com with ESMTPSA id a7sm10253897qka.136.2019.11.19.08.19.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Nov 2019 08:19:59 -0800 (PST)
+Date:   Tue, 19 Nov 2019 11:19:58 -0500
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org,
+        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
+        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
+        yang.shi@linux.alibaba.com, willy@infradead.org,
+        shakeelb@google.com, Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Jann Horn <jannh@google.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        "Tobin C. Harding" <tobin@kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Arun KS <arunks@codeaurora.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Yafang Shao <laoar.shao@gmail.com>
+Subject: Re: [PATCH v4 9/9] mm/lru: revise the comments of lru_lock
+Message-ID: <20191119161958.GE382712@cmpxchg.org>
+References: <1574166203-151975-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1574166203-151975-10-git-send-email-alex.shi@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d68d17be-0c4e-1286-4327-0e3ba6600eca@kernel.dk>
+In-Reply-To: <1574166203-151975-10-git-send-email-alex.shi@linux.alibaba.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 09:13:34AM -0700, Jens Axboe wrote:
-> On 11/18/19 11:09 PM, Sun Ke wrote:
-> > Before return NULL,put the sock first.
-> > 
-> > Cc: stable@vger.kernel.org
-> > Fixes: cf1b2326b734 ("nbd: verify socket is supported during setup")
-> > Signed-off-by: Sun Ke <sunke32@huawei.com>
+On Tue, Nov 19, 2019 at 08:23:23PM +0800, Alex Shi wrote:
+> Since we changed the pgdat->lru_lock to lruvec->lru_lock, it's time to
+> fix the incorrect comments in code. Also fixed some zone->lru_lock comment
+> error from ancient time. etc.
 > 
-> Please always CC the author of the patch you're fixing.
-> 
-> Mike, Josef - we probably need to get this upstream ASAP.
+> Originally-from: Hugh Dickins <hughd@google.com>
 
-Yup sorry got distracted,
+You can resubmit a patch written by somebody else, but you need to
+preserve authorship such that git can attribute it properly:
 
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+	From: Hugh Dickins <hughd@google.com>
 
-Thanks,
+in the patch header, as well as
 
-Josef
+	Signed-off-by: Hugh Dickins <hughd@google.com>
+
+in the changelog tags. It should look something like this:
+
+---
+From: Hugh Dickins <hughd@google.com>
+Subject: [PATCH] mm/memcg: update lru_lock Doc and comments
+
+Update scattered references from "zone_lru_lock" to "lruvec->lru_lock"
+(in low-level descriptions) or "lruvec lock" (where that reads better).
+
+In the course of doing so, update lock ordering comments in mm/rmap.c
+and mm/filemap.c and Documentation/cgroups/memory.txt - slightly, with
+no attempt to be complete (swap_lock, in particular, left out-of-date).
+Remove allusions to set_page_dirty under page_remove_rmap: gone in v3.9.
+
+memcg_test.txt looks quite out-of-date: just give LRU a short paragraph.
+Replaced zone by node throughout unevictable-lru.txt (except for stats).
+Leave Documentation/locking/lockstat.txt untouched this time: it doesn't
+matter if that still refers to zone->lru_lock, along with other history.
+
+I struggled to understand the comment above move_pages_to_lru() (surely
+it never calls page_referenced()), and eventually realized that most of
+it had got separated from shrink_active_list(): move that comment back.
+
+Signed-off-by: Hugh Dickins <hughd@google.com>
+Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+---
