@@ -2,109 +2,116 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94CA2C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 21:00:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D99BFC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 21:02:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C70A2245B
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 21:00:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TVxgZNeJ"
+	by mail.kernel.org (Postfix) with ESMTP id B4A082245B
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 21:02:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727222AbfKSVAn (ORCPT
+        id S1727362AbfKSVCH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 16:00:43 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54754 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726711AbfKSVAm (ORCPT
+        Tue, 19 Nov 2019 16:02:07 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:54580 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727264AbfKSVCH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 16:00:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574197241;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=SfJF//RHUtnN8ZNiGvqInwcMiBwPOPwFchLayKBNSGc=;
-        b=TVxgZNeJuEOgJeifBEsxqo+AMXXDG90IKKM1SYShaYH0u/EVSPvDeg2FTLD4rw3lGqKLne
-        L6IkgI0YtmCUn9r9PqjgLsJY9qTnCGEputjRBphpw1bwfAO47E/9giSJMdHG+pku9huMa7
-        GzrpwYrznWwZo/aoezYjWVAWmBZ+RGw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-232-pV0OOeMxP9Sn97oUKzHXYA-1; Tue, 19 Nov 2019 16:00:40 -0500
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 05D14477;
-        Tue, 19 Nov 2019 21:00:39 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-161.rdu2.redhat.com [10.10.120.161])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A8FB962926;
-        Tue, 19 Nov 2019 21:00:37 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH] afs: Fix missing timeout reset
-From:   David Howells <dhowells@redhat.com>
-To:     torvalds@linux-foundation.org
-Cc:     dhowells@redhat.com, marc.dionne@auristor.com,
-        linux-afs@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+        Tue, 19 Nov 2019 16:02:07 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iXAdI-0003Cs-NZ; Tue, 19 Nov 2019 22:01:56 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 535981C19F2;
+        Tue, 19 Nov 2019 22:01:56 +0100 (CET)
+Date:   Tue, 19 Nov 2019 21:01:56 -0000
+From:   "tip-bot2 for Jan Beulich" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/xen/32: Simplify ring check in xen_iret_crit_fixup()
+Cc:     Jan Beulich <jbeulich@suse.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Juergen Gross <jgross@suse.com>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-Date:   Tue, 19 Nov 2019 21:00:36 +0000
-Message-ID: <157419723680.5784.6298499053943932392.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
+In-Reply-To: <a5986837-01eb-7bf8-bf42-4d3084d6a1f5@suse.com>
+References: <a5986837-01eb-7bf8-bf42-4d3084d6a1f5@suse.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-MC-Unique: pV0OOeMxP9Sn97oUKzHXYA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <157419731617.12247.7937196185823441455.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In afs_wait_for_call_to_complete(), rather than immediately aborting an
-operation if a signal occurs, the code attempts to wait for it to complete,
-using a schedule timeout of 2*RTT (or min 2 jiffies) and a check that we're
-still receiving relevant packets from the server before we consider
-aborting the call.  We may even ping the server to check on the status of
-the call.
+The following commit has been merged into the x86/urgent branch of tip:
 
-However, there's a missing timeout reset in the event that we do actually
-get a packet to process, such that if we then get a couple of short stalls,
-we then time out when progress is actually being made.
+Commit-ID:     922eea2ce5c799228d9ff1be9890e6873ce8fff6
+Gitweb:        https://git.kernel.org/tip/922eea2ce5c799228d9ff1be9890e6873ce8fff6
+Author:        Jan Beulich <jbeulich@suse.com>
+AuthorDate:    Mon, 11 Nov 2019 15:32:59 +01:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Tue, 19 Nov 2019 21:58:28 +01:00
 
-Fix this by resetting the timeout any time we get something to process.  If
-it's the failure of the call then the call state will get changed and we'll
-exit the loop shortly thereafter.
+x86/xen/32: Simplify ring check in xen_iret_crit_fixup()
 
-A symptom of this is data fetches and stores failing with EINTR when they
-really shouldn't.
+This can be had with two instead of six insns, by just checking the high
+CS.RPL bit.
 
-Fixes: bc5e3a546d55 ("rxrpc: Use MSG_WAITALL to tell sendmsg() to temporari=
-ly ignore signals")
-Signed-off-by: David Howells <dhowells@redhat.com>
-Reviewed-by: Marc Dionne <marc.dionne@auristor.com>
+Also adjust the comment - there would be no #GP in the mentioned cases, as
+there's no segment limit violation or alike. Instead there'd be #PF, but
+that one reports the target EIP of said branch, not the address of the
+branch insn itself.
+
+Signed-off-by: Jan Beulich <jbeulich@suse.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Juergen Gross <jgross@suse.com>
+Link: https://lkml.kernel.org/r/a5986837-01eb-7bf8-bf42-4d3084d6a1f5@suse.com
+
 ---
+ arch/x86/xen/xen-asm_32.S | 15 ++++-----------
+ 1 file changed, 4 insertions(+), 11 deletions(-)
 
- fs/afs/rxrpc.c |    1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/fs/afs/rxrpc.c b/fs/afs/rxrpc.c
-index 0e5269374ac1..61498d9f06ef 100644
---- a/fs/afs/rxrpc.c
-+++ b/fs/afs/rxrpc.c
-@@ -637,6 +637,7 @@ long afs_wait_for_call_to_complete(struct afs_call *cal=
-l,
- =09=09=09call->need_attention =3D false;
- =09=09=09__set_current_state(TASK_RUNNING);
- =09=09=09afs_deliver_to_call(call);
-+=09=09=09timeout =3D rtt2;
- =09=09=09continue;
- =09=09}
-=20
-
+diff --git a/arch/x86/xen/xen-asm_32.S b/arch/x86/xen/xen-asm_32.S
+index 392e033..cd17777 100644
+--- a/arch/x86/xen/xen-asm_32.S
++++ b/arch/x86/xen/xen-asm_32.S
+@@ -153,22 +153,15 @@ hyper_iret:
+  * it's still on stack), we need to restore its value here.
+  */
+ ENTRY(xen_iret_crit_fixup)
+-	pushl %ecx
+ 	/*
+ 	 * Paranoia: Make sure we're really coming from kernel space.
+ 	 * One could imagine a case where userspace jumps into the
+ 	 * critical range address, but just before the CPU delivers a
+-	 * GP, it decides to deliver an interrupt instead.  Unlikely?
+-	 * Definitely.  Easy to avoid?  Yes.  The Intel documents
+-	 * explicitly say that the reported EIP for a bad jump is the
+-	 * jump instruction itself, not the destination, but some
+-	 * virtual environments get this wrong.
++	 * PF, it decides to deliver an interrupt instead.  Unlikely?
++	 * Definitely.  Easy to avoid?  Yes.
+ 	 */
+-	movl 3*4(%esp), %ecx		/* nested CS */
+-	andl $SEGMENT_RPL_MASK, %ecx
+-	cmpl $USER_RPL, %ecx
+-	popl %ecx
+-	je 2f
++	testb $2, 2*4(%esp)		/* nested CS */
++	jnz 2f
+ 
+ 	/*
+ 	 * If eip is before iret_restore_end then stack
