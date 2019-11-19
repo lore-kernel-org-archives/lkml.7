@@ -2,217 +2,112 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAB2BC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 03:13:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC04BC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 03:13:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A12122319
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 03:13:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 935162231A
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 03:13:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KtVyMulp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727543AbfKSDNF (ORCPT
+        id S1727745AbfKSDNM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 22:13:05 -0500
-Received: from mga02.intel.com ([134.134.136.20]:21257 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727634AbfKSDM6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 22:12:58 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Nov 2019 19:12:43 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,322,1569308400"; 
-   d="scan'208";a="218105748"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
-  by orsmga002.jf.intel.com with ESMTP; 18 Nov 2019 19:12:42 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org
-Cc:     "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
-        Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, Borislav Petkov <bp@suse.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH v3 16/19] KVM: VMX: Use VMX_FEATURE_* flags to define VMCS control bits
-Date:   Mon, 18 Nov 2019 19:12:37 -0800
-Message-Id: <20191119031240.7779-17-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191119031240.7779-1-sean.j.christopherson@intel.com>
-References: <20191119031240.7779-1-sean.j.christopherson@intel.com>
+        Mon, 18 Nov 2019 22:13:12 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:38176 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727535AbfKSDNK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 22:13:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=w1ly8URM0uOTflt/kZy0TJgrnspB9XQu8w6aCtnLvW8=; b=KtVyMulpSnDq9tntYDC+RCTtm
+        3c6gDhbbLXKTBKKG74KEtprK1lDyXcTafqs2dcpktR3n0+xokaPZNR9T5WyQjEbwEdEds3DhdXZ4d
+        0Ro+8OLmVNDYLs9rZ1FpweXI1r26UTL/od3f2b/k1dap9wL/AKYGlAU9fmVHeSYf8OgCg6OS9baB+
+        Us/Iy6vf8X/rVjc52xbJxiW7osJxNcjlB9jznCRfyQadI2nKpiDMU1fQWMwvqMOxKn5n6uOTzoE0i
+        neVNEEJz7xBHo/L5sPOuSyVX1gF3xDEMd74hnHPXbJjX5qIccAbE088ZoeCm3qSzLSOhtcykJek+c
+        YsXsmBv6A==;
+Received: from [2601:1c0:6280:3f0::5a22]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iWtwt-0000dD-JO; Tue, 19 Nov 2019 03:13:03 +0000
+Subject: Re: [PATCH V13 4/6] mdev: introduce mediated virtio bus
+To:     Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com,
+        gregkh@linuxfoundation.org, jgg@mellanox.com
+Cc:     netdev@vger.kernel.org, cohuck@redhat.com,
+        maxime.coquelin@redhat.com, cunming.liang@intel.com,
+        zhihong.wang@intel.com, rob.miller@broadcom.com,
+        xiao.w.wang@intel.com, haotian.wang@sifive.com,
+        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
+        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
+        farman@linux.ibm.com, pasic@linux.ibm.com, sebott@linux.ibm.com,
+        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
+        gor@linux.ibm.com, borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, eperezma@redhat.com,
+        lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
+        stefanha@redhat.com, hch@infradead.org, aadam@redhat.com,
+        jakub.kicinski@netronome.com, jiri@mellanox.com,
+        jeffrey.t.kirsher@intel.com
+References: <20191118105923.7991-1-jasowang@redhat.com>
+ <20191118105923.7991-5-jasowang@redhat.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <6c5f6e9e-0a4a-f514-2c26-08476b9a09f8@infradead.org>
+Date:   Mon, 18 Nov 2019 19:13:01 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191118105923.7991-5-jasowang@redhat.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Define the VMCS execution control flags (consumed by KVM) using their
-associated VMX_FEATURE_* to provide a strong hint that new VMX features
-are expected to be added to VMX_FEATURE and considered for reporting via
-/proc/cpuinfo.
+Hi,
 
-No functional change intended.
+On 11/18/19 2:59 AM, Jason Wang wrote:
+> diff --git a/drivers/mdev/Kconfig b/drivers/mdev/Kconfig
+> index 4561f2d4178f..cd84d4670552 100644
+> --- a/drivers/mdev/Kconfig
+> +++ b/drivers/mdev/Kconfig
+> @@ -17,3 +17,13 @@ config VFIO_MDEV
+>  	  more details.
+>  
+>  	  If you don't know what do here, say N.
+> +
+> +config MDEV_VIRTIO
+> +       tristate "Mediated VIRTIO bus"
+> +       depends on VIRTIO && MDEV
+> +       default n
+> +       help
+> +	  Proivdes a mediated BUS for virtio. It could be used by
 
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- arch/x86/include/asm/vmx.h | 105 +++++++++++++++++++------------------
- 1 file changed, 55 insertions(+), 50 deletions(-)
+	  Provides
 
-diff --git a/arch/x86/include/asm/vmx.h b/arch/x86/include/asm/vmx.h
-index 1835767aa335..9fbba31be825 100644
---- a/arch/x86/include/asm/vmx.h
-+++ b/arch/x86/include/asm/vmx.h
-@@ -15,67 +15,70 @@
- #include <linux/bitops.h>
- #include <linux/types.h>
- #include <uapi/asm/vmx.h>
-+#include <asm/vmxfeatures.h>
-+
-+#define VMCS_CONTROL_BIT(x)	BIT(VMX_FEATURE_##x & 0x1f)
- 
- /*
-  * Definitions of Primary Processor-Based VM-Execution Controls.
-  */
--#define CPU_BASED_VIRTUAL_INTR_PENDING          0x00000004
--#define CPU_BASED_USE_TSC_OFFSETING             0x00000008
--#define CPU_BASED_HLT_EXITING                   0x00000080
--#define CPU_BASED_INVLPG_EXITING                0x00000200
--#define CPU_BASED_MWAIT_EXITING                 0x00000400
--#define CPU_BASED_RDPMC_EXITING                 0x00000800
--#define CPU_BASED_RDTSC_EXITING                 0x00001000
--#define CPU_BASED_CR3_LOAD_EXITING		0x00008000
--#define CPU_BASED_CR3_STORE_EXITING		0x00010000
--#define CPU_BASED_CR8_LOAD_EXITING              0x00080000
--#define CPU_BASED_CR8_STORE_EXITING             0x00100000
--#define CPU_BASED_TPR_SHADOW                    0x00200000
--#define CPU_BASED_VIRTUAL_NMI_PENDING		0x00400000
--#define CPU_BASED_MOV_DR_EXITING                0x00800000
--#define CPU_BASED_UNCOND_IO_EXITING             0x01000000
--#define CPU_BASED_USE_IO_BITMAPS                0x02000000
--#define CPU_BASED_MONITOR_TRAP_FLAG             0x08000000
--#define CPU_BASED_USE_MSR_BITMAPS               0x10000000
--#define CPU_BASED_MONITOR_EXITING               0x20000000
--#define CPU_BASED_PAUSE_EXITING                 0x40000000
--#define CPU_BASED_ACTIVATE_SECONDARY_CONTROLS   0x80000000
-+#define CPU_BASED_VIRTUAL_INTR_PENDING          VMCS_CONTROL_BIT(VIRTUAL_INTR_PENDING)
-+#define CPU_BASED_USE_TSC_OFFSETING             VMCS_CONTROL_BIT(TSC_OFFSETTING)
-+#define CPU_BASED_HLT_EXITING                   VMCS_CONTROL_BIT(HLT_EXITING)
-+#define CPU_BASED_INVLPG_EXITING                VMCS_CONTROL_BIT(INVLPG_EXITING)
-+#define CPU_BASED_MWAIT_EXITING                 VMCS_CONTROL_BIT(MWAIT_EXITING)
-+#define CPU_BASED_RDPMC_EXITING                 VMCS_CONTROL_BIT(RDPMC_EXITING)
-+#define CPU_BASED_RDTSC_EXITING                 VMCS_CONTROL_BIT(RDTSC_EXITING)
-+#define CPU_BASED_CR3_LOAD_EXITING		VMCS_CONTROL_BIT(CR3_LOAD_EXITING)
-+#define CPU_BASED_CR3_STORE_EXITING		VMCS_CONTROL_BIT(CR3_STORE_EXITING)
-+#define CPU_BASED_CR8_LOAD_EXITING              VMCS_CONTROL_BIT(CR8_LOAD_EXITING)
-+#define CPU_BASED_CR8_STORE_EXITING             VMCS_CONTROL_BIT(CR8_STORE_EXITING)
-+#define CPU_BASED_TPR_SHADOW                    VMCS_CONTROL_BIT(VIRTUAL_TPR)
-+#define CPU_BASED_VIRTUAL_NMI_PENDING		VMCS_CONTROL_BIT(VIRTUAL_NMI_PENDING)
-+#define CPU_BASED_MOV_DR_EXITING                VMCS_CONTROL_BIT(MOV_DR_EXITING)
-+#define CPU_BASED_UNCOND_IO_EXITING             VMCS_CONTROL_BIT(UNCOND_IO_EXITING)
-+#define CPU_BASED_USE_IO_BITMAPS                VMCS_CONTROL_BIT(USE_IO_BITMAPS)
-+#define CPU_BASED_MONITOR_TRAP_FLAG             VMCS_CONTROL_BIT(MONITOR_TRAP_FLAG)
-+#define CPU_BASED_USE_MSR_BITMAPS               VMCS_CONTROL_BIT(USE_MSR_BITMAPS)
-+#define CPU_BASED_MONITOR_EXITING               VMCS_CONTROL_BIT(MONITOR_EXITING)
-+#define CPU_BASED_PAUSE_EXITING                 VMCS_CONTROL_BIT(PAUSE_EXITING)
-+#define CPU_BASED_ACTIVATE_SECONDARY_CONTROLS   VMCS_CONTROL_BIT(SEC_CONTROLS)
- 
- #define CPU_BASED_ALWAYSON_WITHOUT_TRUE_MSR	0x0401e172
- 
- /*
-  * Definitions of Secondary Processor-Based VM-Execution Controls.
-  */
--#define SECONDARY_EXEC_VIRTUALIZE_APIC_ACCESSES 0x00000001
--#define SECONDARY_EXEC_ENABLE_EPT               0x00000002
--#define SECONDARY_EXEC_DESC			0x00000004
--#define SECONDARY_EXEC_RDTSCP			0x00000008
--#define SECONDARY_EXEC_VIRTUALIZE_X2APIC_MODE   0x00000010
--#define SECONDARY_EXEC_ENABLE_VPID              0x00000020
--#define SECONDARY_EXEC_WBINVD_EXITING		0x00000040
--#define SECONDARY_EXEC_UNRESTRICTED_GUEST	0x00000080
--#define SECONDARY_EXEC_APIC_REGISTER_VIRT       0x00000100
--#define SECONDARY_EXEC_VIRTUAL_INTR_DELIVERY    0x00000200
--#define SECONDARY_EXEC_PAUSE_LOOP_EXITING	0x00000400
--#define SECONDARY_EXEC_RDRAND_EXITING		0x00000800
--#define SECONDARY_EXEC_ENABLE_INVPCID		0x00001000
--#define SECONDARY_EXEC_ENABLE_VMFUNC            0x00002000
--#define SECONDARY_EXEC_SHADOW_VMCS              0x00004000
--#define SECONDARY_EXEC_ENCLS_EXITING		0x00008000
--#define SECONDARY_EXEC_RDSEED_EXITING		0x00010000
--#define SECONDARY_EXEC_ENABLE_PML               0x00020000
--#define SECONDARY_EXEC_PT_CONCEAL_VMX		0x00080000
--#define SECONDARY_EXEC_XSAVES			0x00100000
--#define SECONDARY_EXEC_PT_USE_GPA		0x01000000
--#define SECONDARY_EXEC_MODE_BASED_EPT_EXEC	0x00400000
--#define SECONDARY_EXEC_TSC_SCALING              0x02000000
-+#define SECONDARY_EXEC_VIRTUALIZE_APIC_ACCESSES VMCS_CONTROL_BIT(VIRT_APIC_ACCESSES)
-+#define SECONDARY_EXEC_ENABLE_EPT               VMCS_CONTROL_BIT(EPT)
-+#define SECONDARY_EXEC_DESC			VMCS_CONTROL_BIT(DESC_EXITING)
-+#define SECONDARY_EXEC_RDTSCP			VMCS_CONTROL_BIT(RDTSCP)
-+#define SECONDARY_EXEC_VIRTUALIZE_X2APIC_MODE   VMCS_CONTROL_BIT(VIRTUAL_X2APIC)
-+#define SECONDARY_EXEC_ENABLE_VPID              VMCS_CONTROL_BIT(VPID)
-+#define SECONDARY_EXEC_WBINVD_EXITING		VMCS_CONTROL_BIT(WBINVD_EXITING)
-+#define SECONDARY_EXEC_UNRESTRICTED_GUEST	VMCS_CONTROL_BIT(UNRESTRICTED_GUEST)
-+#define SECONDARY_EXEC_APIC_REGISTER_VIRT       VMCS_CONTROL_BIT(APIC_REGISTER_VIRT)
-+#define SECONDARY_EXEC_VIRTUAL_INTR_DELIVERY    VMCS_CONTROL_BIT(VIRT_INTR_DELIVERY)
-+#define SECONDARY_EXEC_PAUSE_LOOP_EXITING	VMCS_CONTROL_BIT(PAUSE_LOOP_EXITING)
-+#define SECONDARY_EXEC_RDRAND_EXITING		VMCS_CONTROL_BIT(RDRAND_EXITING)
-+#define SECONDARY_EXEC_ENABLE_INVPCID		VMCS_CONTROL_BIT(INVPCID)
-+#define SECONDARY_EXEC_ENABLE_VMFUNC            VMCS_CONTROL_BIT(VMFUNC)
-+#define SECONDARY_EXEC_SHADOW_VMCS              VMCS_CONTROL_BIT(SHADOW_VMCS)
-+#define SECONDARY_EXEC_ENCLS_EXITING		VMCS_CONTROL_BIT(ENCLS_EXITING)
-+#define SECONDARY_EXEC_RDSEED_EXITING		VMCS_CONTROL_BIT(RDSEED_EXITING)
-+#define SECONDARY_EXEC_ENABLE_PML               VMCS_CONTROL_BIT(PAGE_MOD_LOGGING)
-+#define SECONDARY_EXEC_PT_CONCEAL_VMX		VMCS_CONTROL_BIT(PT_CONCEAL_VMX)
-+#define SECONDARY_EXEC_XSAVES			VMCS_CONTROL_BIT(XSAVES)
-+#define SECONDARY_EXEC_MODE_BASED_EPT_EXEC	VMCS_CONTROL_BIT(MODE_BASED_EPT_EXEC)
-+#define SECONDARY_EXEC_PT_USE_GPA		VMCS_CONTROL_BIT(PT_USE_GPA)
-+#define SECONDARY_EXEC_TSC_SCALING              VMCS_CONTROL_BIT(TSC_SCALING)
- #define SECONDARY_EXEC_ENABLE_USR_WAIT_PAUSE	0x04000000
- 
--#define PIN_BASED_EXT_INTR_MASK                 0x00000001
--#define PIN_BASED_NMI_EXITING                   0x00000008
--#define PIN_BASED_VIRTUAL_NMIS                  0x00000020
--#define PIN_BASED_VMX_PREEMPTION_TIMER          0x00000040
--#define PIN_BASED_POSTED_INTR                   0x00000080
-+#define PIN_BASED_EXT_INTR_MASK                 VMCS_CONTROL_BIT(INTR_EXITING)
-+#define PIN_BASED_NMI_EXITING                   VMCS_CONTROL_BIT(NMI_EXITING)
-+#define PIN_BASED_VIRTUAL_NMIS                  VMCS_CONTROL_BIT(VIRTUAL_NMIS)
-+#define PIN_BASED_VMX_PREEMPTION_TIMER          VMCS_CONTROL_BIT(PREEMPTION_TIMER)
-+#define PIN_BASED_POSTED_INTR                   VMCS_CONTROL_BIT(POSTED_INTR)
- 
- #define PIN_BASED_ALWAYSON_WITHOUT_TRUE_MSR	0x00000016
- 
-@@ -114,7 +117,9 @@
- #define VMX_MISC_MSR_LIST_MULTIPLIER		512
- 
- /* VMFUNC functions */
--#define VMX_VMFUNC_EPTP_SWITCHING               0x00000001
-+#define VMFUNC_CONTROL_BIT(x)	BIT((VMX_FEATURE_##x & 0x1f) - 28)
-+
-+#define VMX_VMFUNC_EPTP_SWITCHING               VMFUNC_CONTROL_BIT(EPTP_SWITCHING)
- #define VMFUNC_EPTP_ENTRIES  512
- 
- static inline u32 vmx_basic_vmcs_revision_id(u64 vmx_basic)
+> +          either kenrel driver or userspace driver.
+
+	            kernel
+
+> +
+> +	  If you don't know what do here, say N.
+
+All of these lines should be indented with one tab, not spaces.
+
 -- 
-2.24.0
-
+~Randy
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
