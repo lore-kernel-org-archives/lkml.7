@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3BB9C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:24:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1116C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:24:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7452422309
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:24:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8E0C21823
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:24:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141080;
-	bh=MeTFZGRJid8ZbNeiR81q23RkFona0u2IvdbdJMDE4Yo=;
+	s=default; t=1574141087;
+	bh=jWJ5mDAo7L57NSsmegMb4kpVXwktbrG+j01VyzTZwl4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h2iPrlt1BjAAAENGsYRjxWKY28iCT0TWf7/gZYlWwtuV8PvnFhITq/LiSg3wxEEeg
-	 XJHSExx+XJRjlbmXMXD1rzYH+LQIPjt6eDLKuN0xOEbt28z9uS1NOHKU32ZOTedzg1
-	 MiW6NxavHvk+2hdW54ifJtWyW/qRDG+1wgExixag=
+	b=s1aFvWCTEBq9y+QKcjChbYds3OZxMmBXp1J/qO+DCrGYf2wjO8SdrVCAQKYjmLSNi
+	 iJlLtLvrz0P09Loq05NN4RV94Un0vhTU+G4LrbOGjOYzMOjab/XOS2lTu4CrNda8Vp
+	 kB/aDZP47dZC7YptSreHi+voP8obQYIjOklRZdK4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728236AbfKSFYi (ORCPT
+        id S1728269AbfKSFYq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:24:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40854 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:24:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41094 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728221AbfKSFYf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:24:35 -0500
+        id S1728254AbfKSFYo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:24:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 763B221783;
-        Tue, 19 Nov 2019 05:24:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBBBE21783;
+        Tue, 19 Nov 2019 05:24:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141075;
-        bh=MeTFZGRJid8ZbNeiR81q23RkFona0u2IvdbdJMDE4Yo=;
+        s=default; t=1574141083;
+        bh=jWJ5mDAo7L57NSsmegMb4kpVXwktbrG+j01VyzTZwl4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sbKEbXUu70aAQrCKXbDr1OWf1ALo/KNaR3Xn2W6Raiy3ldWds1oM/zRrv3kMNgJO8
-         qmrnuqrC0AhSRGI2GLetqO61/UDgDufG0JVApwdoUhEAQGFDRqqJZAgrItWAUD15JN
-         L0X95wckdsPSa9HO/XkTYpyW4lt8+5jUbexUJr+k=
+        b=Gyrq46x9oVf72301gO/AiDSTBTT53NUB5zIykVXqiiBRlFDkC03WgiEb5zSKo9EfV
+         I1D8ROXPCXZUmx4UuMEyKIFy2ufNI4eAohwd938+9/KqWwI3yF5Pv02+vAsUO/nGJG
+         rsBGSakV8SqI69fbv8hoT7A6tmF9wL6WWmVyW4b8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Marcus Folkesson <marcus.folkesson@gmail.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 036/422] iio: dac: mcp4922: fix error handling in mcp4922_write_raw
-Date:   Tue, 19 Nov 2019 06:13:53 +0100
-Message-Id: <20191119051402.331301983@linuxfoundation.org>
+        stable@vger.kernel.org, Sanyog Kale <sanyog.r.kale@intel.com>,
+        Shreyas NC <shreyas.nc@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 038/422] soundwire: Initialize completion for defer messages
+Date:   Tue, 19 Nov 2019 06:13:55 +0100
+Message-Id: <20191119051402.440815842@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -61,49 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcus Folkesson <marcus.folkesson@gmail.com>
+From: Shreyas NC <shreyas.nc@intel.com>
 
-[ Upstream commit 0833627fc3f757a0dca11e2a9c46c96335a900ee ]
+[ Upstream commit a306a0e4a5326269b6c78d136407f08433ab5ece ]
 
-Do not try to write negative values and make sure that the write goes well.
+Deferred messages are async messages used to synchronize
+transitions mostly while doing a bank switch on multi links.
+On successful transitions these messages are marked complete
+and thereby confirming that all the buses performed bank switch
+successfully.
 
-Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+So, initialize the completion structure for the same.
+
+Signed-off-by: Sanyog Kale <sanyog.r.kale@intel.com>
+Signed-off-by: Shreyas NC <shreyas.nc@intel.com>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iio/dac/mcp4922.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ drivers/soundwire/bus.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/iio/dac/mcp4922.c b/drivers/iio/dac/mcp4922.c
-index bf9aa3fc0534e..b5190d1dae8e3 100644
---- a/drivers/iio/dac/mcp4922.c
-+++ b/drivers/iio/dac/mcp4922.c
-@@ -94,17 +94,22 @@ static int mcp4922_write_raw(struct iio_dev *indio_dev,
- 		long mask)
- {
- 	struct mcp4922_state *state = iio_priv(indio_dev);
-+	int ret;
+diff --git a/drivers/soundwire/bus.c b/drivers/soundwire/bus.c
+index 83576810eee65..df172bf3925f6 100644
+--- a/drivers/soundwire/bus.c
++++ b/drivers/soundwire/bus.c
+@@ -175,6 +175,7 @@ static inline int do_transfer_defer(struct sdw_bus *bus,
  
- 	if (val2 != 0)
- 		return -EINVAL;
+ 	defer->msg = msg;
+ 	defer->length = msg->len;
++	init_completion(&defer->complete);
  
- 	switch (mask) {
- 	case IIO_CHAN_INFO_RAW:
--		if (val > GENMASK(chan->scan_type.realbits-1, 0))
-+		if (val < 0 || val > GENMASK(chan->scan_type.realbits - 1, 0))
- 			return -EINVAL;
- 		val <<= chan->scan_type.shift;
--		state->value[chan->channel] = val;
--		return mcp4922_spi_write(state, chan->channel, val);
-+
-+		ret = mcp4922_spi_write(state, chan->channel, val);
-+		if (!ret)
-+			state->value[chan->channel] = val;
-+		return ret;
-+
- 	default:
- 		return -EINVAL;
- 	}
+ 	for (i = 0; i <= retry; i++) {
+ 		resp = bus->ops->xfer_msg_defer(bus, msg, defer);
 -- 
 2.20.1
 
