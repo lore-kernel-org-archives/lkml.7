@@ -2,100 +2,98 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 505BFC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 07:59:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0832C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 07:59:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28EB82230C
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 07:59:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DQPxQDsP"
+	by mail.kernel.org (Postfix) with ESMTP id 748F12230C
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 07:59:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574150346;
+	bh=Ld566us/253H4UlC/U9J6/5di2INvcC40kur0c0jF1Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xNKrhoZZixcU9PYVvWsyQpHASKyUZF/q/2HK23kqjUZGE9ZG+BvrTlSmPG44cUJvA
+	 S7m3LRLFPt5gsPp5SEGdc1J5S/cTuV9zEAFYzSIJtRxIH0u5AutJ/JdXADP4NM3k2v
+	 eXthpjLoVVB3wdaCshXvpgPQlxA3yOLJ2Ibtn8D0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727470AbfKSH7C (ORCPT
+        id S1727508AbfKSH7F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 02:59:02 -0500
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:36257 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726921AbfKSH7B (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 02:59:01 -0500
-Received: by mail-ua1-f67.google.com with SMTP id z9so6221330uan.3;
-        Mon, 18 Nov 2019 23:59:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PRw07XCFW2nbwWC0OIMMG5Z5kRG46gKFzow6yKd7+cM=;
-        b=DQPxQDsPkoQRnm8IWQ46ldblk9QmcMp9+sn9ByC8jhBb5xfOIATvCq9Yz1sM/4yfVf
-         yBnni68M3IYaZr5gjy4aPi/VyGPczD2kwbXntPj71CfKm6YwSVOMMeY3eDkl6EjzcUj8
-         L+ghd6Ad+NaB+hfqlu+z8f+cQhntWGm+LaCBfWJWQF0dNafqfDyswqspB0joLQ3cPGq9
-         fy6KUZS3/57R42MDchiverlSVM66h/TRs1IYCilQKOdMjde8QypXDkBBynu30djXZ7BR
-         8QOWPrYqGl35ITne1FG3Z+loFaeX0fb5VCeiFu/EPRtRFXf4v66QDI3T60Tf8aBOE3ey
-         V/Xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PRw07XCFW2nbwWC0OIMMG5Z5kRG46gKFzow6yKd7+cM=;
-        b=jbiA6odQOEuLYlH34vgyLiwZjc7lB4VoSYvTzuHHbyomW5/lbps/Xlc+ChEc+t/l/V
-         bux+OKOcKj7x6nA1tO6aKQ4I4h3ql3wxKGCflGRMuORkKNMtiU06O/yrKPrz4w1Uusfq
-         AX3gFK2rUfIIrrsiT/DfEnvAmXA/rSFyCr28OO2IFzyBkavqfB8aT8VyU3etSqFOndoU
-         paVqYu63WaBXm06x+TeB9EpBb34PIEUZ6yiVmtaBFTeqxCaiW11afQtrkDdMx433ssv2
-         t4b66ayFwZvvV1RUCYwLFmd6sCC0vyiFAJjwSqAlIl5WFDXaPDx9dNkf+n5iypebIRio
-         Jk8A==
-X-Gm-Message-State: APjAAAVJdI9fLrFZT6WDOipT6GaiG+5XYnbdYmauGcpYYgpbS0MQ+zDQ
-        EEcL30Scjq7lid97lyAMKH+vX3v6l4J8z//VNtM=
-X-Google-Smtp-Source: APXvYqysC8+XpmOyo7+68+S1jc5tlaMecLlA8Jnp5FRUKcdJ1vdUQU8Xazb6fNRshj5v/ELhOn7AC90iG05upSknKaE=
-X-Received: by 2002:a9f:3772:: with SMTP id a47mr8648367uae.53.1574150340611;
- Mon, 18 Nov 2019 23:59:00 -0800 (PST)
+        Tue, 19 Nov 2019 02:59:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39632 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726921AbfKSH7D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 02:59:03 -0500
+Received: from localhost (unknown [89.205.134.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF19822312;
+        Tue, 19 Nov 2019 07:59:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574150342;
+        bh=Ld566us/253H4UlC/U9J6/5di2INvcC40kur0c0jF1Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=zPYSBYy8xvhgn0yPWzrvPImskm4fnvhCIg585Y5wEaE89cA+XBqwinRXsqZp3kl5z
+         kuZpPqvc0qXjERxs58j0Teu5ZsV1hG8A5bf27Yr4maB3LOIuDnwy8GPVvKk4dSd4uy
+         z2pNo35jmNeuL1zSZSTqMMyL6zeGQLv9dcV4f2qM=
+Date:   Tue, 19 Nov 2019 08:58:59 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     rui_feng@realsil.com.cn
+Cc:     arnd@arndb.de, dan.carpenter@oracle.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] misc: rtsx: Fix impossible condition
+Message-ID: <20191119075859.GC1858193@kroah.com>
+References: <1574148825-2797-1-git-send-email-rui_feng@realsil.com.cn>
 MIME-Version: 1.0
-References: <1574150628-3905-1-git-send-email-yanjun.zhu@oracle.com>
-In-Reply-To: <1574150628-3905-1-git-send-email-yanjun.zhu@oracle.com>
-From:   Rain River <rain.1986.08.12@gmail.com>
-Date:   Tue, 19 Nov 2019 16:06:09 +0800
-Message-ID: <CAJr_XRBBy121cVKhUQohyt-DxTLVWUHpMEURu3gnjr9nHtMxRw@mail.gmail.com>
-Subject: Re: [PATCH 1/1] MAINTAINERS: forcedeth: Change Zhu Yanjun's email address
-To:     Zhu Yanjun <yanjun.zhu@oracle.com>
-Cc:     mchehab+samsung@kernel.org, David Miller <davem@davemloft.net>,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        robh@kernel.org, netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1574148825-2797-1-git-send-email-rui_feng@realsil.com.cn>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 3:54 PM Zhu Yanjun <yanjun.zhu@oracle.com> wrote:
->
-> I prefer to use my personal email address for kernel related work.
->
-> Signed-off-by: Zhu Yanjun <yanjun.zhu@oracle.com>
-
-Thanks
-
-Acked-by: Rain River <rain.1986.08.12@gmail.com>
-
+On Tue, Nov 19, 2019 at 03:33:45PM +0800, rui_feng@realsil.com.cn wrote:
+> From: Rui Feng <rui_feng@realsil.com.cn>
+> 
+> A u8 can only go up to 255, condition n > 396 is
+> impossible, so change u8 to u16.
+> 
+> Signed-off-by: Rui Feng <rui_feng@realsil.com.cn>
 > ---
->  MAINTAINERS | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index e4f170d..8165658 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -643,7 +643,7 @@ F:  drivers/net/ethernet/alacritech/*
->
->  FORCEDETH GIGABIT ETHERNET DRIVER
->  M:     Rain River <rain.1986.08.12@gmail.com>
-> -M:     Zhu Yanjun <yanjun.zhu@oracle.com>
-> +M:     Zhu Yanjun <zyjzyj2000@gmail.com>
->  L:     netdev@vger.kernel.org
->  S:     Maintained
->  F:     drivers/net/ethernet/nvidia/*
-> --
-> 2.7.4
->
+>  drivers/misc/cardreader/rts5261.c | 11 ++++++-----
+>  1 file changed, 6 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/misc/cardreader/rts5261.c b/drivers/misc/cardreader/rts5261.c
+> index 32dcec2..8dba0bf 100644
+> --- a/drivers/misc/cardreader/rts5261.c
+> +++ b/drivers/misc/cardreader/rts5261.c
+> @@ -628,7 +628,8 @@ int rts5261_pci_switch_clock(struct rtsx_pcr *pcr, unsigned int card_clock,
+>  		u8 ssc_depth, bool initial_mode, bool double_clk, bool vpclk)
+>  {
+>  	int err, clk;
+> -	u8 n, clk_divider, mcu_cnt, div;
+> +	u16 n;
+> +	u8 clk_divider, mcu_cnt, div;
+>  	static const u8 depth[] = {
+>  		[RTSX_SSC_DEPTH_4M] = RTS5261_SSC_DEPTH_4M,
+>  		[RTSX_SSC_DEPTH_2M] = RTS5261_SSC_DEPTH_2M,
+> @@ -661,9 +662,9 @@ int rts5261_pci_switch_clock(struct rtsx_pcr *pcr, unsigned int card_clock,
+>  		return 0;
+>  
+>  	if (pcr->ops->conv_clk_and_div_n)
+> -		n = (u8)pcr->ops->conv_clk_and_div_n(clk, CLK_TO_DIV_N);
+> +		n = (u16)pcr->ops->conv_clk_and_div_n(clk, CLK_TO_DIV_N);
+>  	else
+> -		n = (u8)(clk - 4);
+> +		n = (u16)(clk - 4);
+
+Why is the cast now needed?  Same for everywhere else.
+
+thanks,
+
+greg k-h
