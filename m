@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 384E6C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:26:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A72F2C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:26:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E20E222A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:26:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FB0B21823
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:26:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141182;
-	bh=ib4vu3ssWv+BcS446FDJwbNCxuG0zk6e/VuXGHHpq9s=;
+	s=default; t=1574141186;
+	bh=Q4mGNBQr66Q94q9GgnenfCd+MuSvKRlgye09kJ8YuMQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UiRacVqhrXcaklWadg1IUx3TevDh2cGP6mNixq86NK/BcesBI5cpmRgSRFOIsa3iZ
-	 uf3voTzBLo03YCs3qQ/WY/Y9Kax7feKjJBeUQfbp8qd1jH/CdsLpLw/142zWmp2xKi
-	 P5ucLppwn3PoDGKkF19lTHtIQDKm1P4P1E+a4ULk=
+	b=J0lubsOkXuhgLUySytpX/4PwAxSe5kCFC6NT4K22b451g0UNMVMZzqf2RwKNveQEm
+	 s8kr/4OnMPhrtTdwSWKAVg/b8LhRxG+6ovwWGOm7VXlkWk3iUe+Y+ngHG6mKYHsXxu
+	 qBMVM9zB5MSuafzppVjtgG+i0jT+A9YgvRjbB7Ag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728553AbfKSF0U (ORCPT
+        id S1728563AbfKSF0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:26:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44316 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:26:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728539AbfKSF0S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:26:18 -0500
+        id S1727718AbfKSF0V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:26:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9060521823;
-        Tue, 19 Nov 2019 05:26:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C06AA21823;
+        Tue, 19 Nov 2019 05:26:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141178;
-        bh=ib4vu3ssWv+BcS446FDJwbNCxuG0zk6e/VuXGHHpq9s=;
+        s=default; t=1574141181;
+        bh=Q4mGNBQr66Q94q9GgnenfCd+MuSvKRlgye09kJ8YuMQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EPzKG5HaOJFb2etnJ7rvc4w0UDqMaEi9LSkQ9daFJr5+KTJ7bZ9nVkZJxrZrZ4kVv
-         6Gk1wC+qiwMwRL0FyuHHzhHX8EduTHL+vK//85bFEj0lZFUgeXKYauLnqMNTiCrd9S
-         Mt0G690dFPW7b/iYcYsKVl5RCuSN/Kr/uGVpfpNM=
+        b=dV/T2qsZarKvrLUKpGXyBAWvujHUJljr3ipsdGSHw//Hq1lngsy5bbOFeMNcV/WH5
+         lCtCsClo6Zs0sqdrYDbtjdqV/BkuebvVHlnisrF7qI4fnCWvx3jba8yReaDGS7txdf
+         uz5LV2aRMhtYBjDSqdN9bugaWAtLrgDa2SCj1AdY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        stable@vger.kernel.org, Andrzej Hajda <a.hajda@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 054/422] ALSA: seq: Do error checks at creating system ports
-Date:   Tue, 19 Nov 2019 06:14:11 +0100
-Message-Id: <20191119051403.298743508@linuxfoundation.org>
+Subject: [PATCH 4.19 072/422] ARM: dts: exynos: Use i2c-gpio for HDMI-DDC on Arndale
+Date:   Tue, 19 Nov 2019 06:14:29 +0100
+Message-Id: <20191119051404.265698564@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -59,70 +60,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Andrzej Hajda <a.hajda@samsung.com>
 
-[ Upstream commit b8e131542b47b81236ecf6768c923128e1f5db6e ]
+[ Upstream commit 620375c8fdf2f9f5110ed48d6c407cc4b7554f86 ]
 
-snd_seq_system_client_init() doesn't check the errors returned from
-its port creations.  Let's do it properly and handle the error paths.
+HDMI-DDC for unknown reasons doesn't work with Exynos I2C controllers.
+Fortunately i2c-gpio comes to the rescue.
 
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/core/seq/seq_system.c | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/exynos5250-arndale.dts  | 28 ++++++++++++++++-------
+ arch/arm/boot/dts/exynos5250-pinctrl.dtsi |  6 +++++
+ 2 files changed, 26 insertions(+), 8 deletions(-)
 
-diff --git a/sound/core/seq/seq_system.c b/sound/core/seq/seq_system.c
-index 8ce1d0b40dce1..ce1f1e4727ab1 100644
---- a/sound/core/seq/seq_system.c
-+++ b/sound/core/seq/seq_system.c
-@@ -123,6 +123,7 @@ int __init snd_seq_system_client_init(void)
- {
- 	struct snd_seq_port_callback pcallbacks;
- 	struct snd_seq_port_info *port;
-+	int err;
+diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts b/arch/arm/boot/dts/exynos5250-arndale.dts
+index 7a8a5c55701a8..bb3fcd652b5d7 100644
+--- a/arch/arm/boot/dts/exynos5250-arndale.dts
++++ b/arch/arm/boot/dts/exynos5250-arndale.dts
+@@ -150,7 +150,7 @@
  
- 	port = kzalloc(sizeof(*port), GFP_KERNEL);
- 	if (!port)
-@@ -144,7 +145,10 @@ int __init snd_seq_system_client_init(void)
- 	port->flags = SNDRV_SEQ_PORT_FLG_GIVEN_PORT;
- 	port->addr.client = sysclient;
- 	port->addr.port = SNDRV_SEQ_PORT_SYSTEM_TIMER;
--	snd_seq_kernel_client_ctl(sysclient, SNDRV_SEQ_IOCTL_CREATE_PORT, port);
-+	err = snd_seq_kernel_client_ctl(sysclient, SNDRV_SEQ_IOCTL_CREATE_PORT,
-+					port);
-+	if (err < 0)
-+		goto error_port;
+ &hdmi {
+ 	status = "okay";
+-	ddc = <&i2c_2>;
++	ddc = <&i2c_ddc>;
+ 	hpd-gpios = <&gpx3 7 GPIO_ACTIVE_LOW>;
+ 	vdd_osc-supply = <&ldo10_reg>;
+ 	vdd_pll-supply = <&ldo8_reg>;
+@@ -452,13 +452,6 @@
+ 	};
+ };
  
- 	/* register announcement port */
- 	strcpy(port->name, "Announce");
-@@ -154,16 +158,24 @@ int __init snd_seq_system_client_init(void)
- 	port->flags = SNDRV_SEQ_PORT_FLG_GIVEN_PORT;
- 	port->addr.client = sysclient;
- 	port->addr.port = SNDRV_SEQ_PORT_SYSTEM_ANNOUNCE;
--	snd_seq_kernel_client_ctl(sysclient, SNDRV_SEQ_IOCTL_CREATE_PORT, port);
-+	err = snd_seq_kernel_client_ctl(sysclient, SNDRV_SEQ_IOCTL_CREATE_PORT,
-+					port);
-+	if (err < 0)
-+		goto error_port;
- 	announce_port = port->addr.port;
+-&i2c_2 {
+-	status = "okay";
+-	/* used by HDMI DDC */
+-	samsung,i2c-sda-delay = <100>;
+-	samsung,i2c-max-bus-freq = <66000>;
+-};
+-
+ &i2c_3 {
+ 	status = "okay";
  
- 	kfree(port);
- 	return 0;
+@@ -547,3 +540,22 @@
+ 	status = "okay";
+ 	samsung,exynos-sataphy-i2c-phandle = <&sata_phy_i2c>;
+ };
 +
-+ error_port:
-+	snd_seq_system_client_done();
-+	kfree(port);
-+	return err;
- }
++&soc {
++	/*
++	 * For unknown reasons HDMI-DDC does not work with Exynos I2C
++	 * controllers. Lets use software I2C over GPIO pins as a workaround.
++	 */
++	i2c_ddc: i2c-gpio {
++		pinctrl-names = "default";
++		pinctrl-0 = <&i2c2_gpio_bus>;
++		status = "okay";
++		compatible = "i2c-gpio";
++		gpios = <&gpa0 6 0 /* sda */
++			 &gpa0 7 0 /* scl */
++			>;
++		i2c-gpio,delay-us = <2>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
++};
+diff --git a/arch/arm/boot/dts/exynos5250-pinctrl.dtsi b/arch/arm/boot/dts/exynos5250-pinctrl.dtsi
+index 6ff6dea29d449..b25d520393b8b 100644
+--- a/arch/arm/boot/dts/exynos5250-pinctrl.dtsi
++++ b/arch/arm/boot/dts/exynos5250-pinctrl.dtsi
+@@ -225,6 +225,12 @@
+ 		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
+ 	};
  
- 
- /* unregister our internal client */
--void __exit snd_seq_system_client_done(void)
-+void snd_seq_system_client_done(void)
- {
- 	int oldsysclient = sysclient;
- 
++	i2c2_gpio_bus: i2c2-gpio-bus {
++		samsung,pins = "gpa0-6", "gpa0-7";
++		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
++		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
++	};
++
+ 	uart2_data: uart2-data {
+ 		samsung,pins = "gpa1-0", "gpa1-1";
+ 		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
 -- 
 2.20.1
 
