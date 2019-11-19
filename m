@@ -2,90 +2,140 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 374AFC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:17:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CC02C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:18:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3A32222A5
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:17:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EDAC222A5
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:18:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="SiFDBZHx"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="L8sUCCjp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728358AbfKSORz (ORCPT
+        id S1725904AbfKSORV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 09:17:55 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:50034 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728122AbfKSORy (ORCPT
+        Tue, 19 Nov 2019 09:17:21 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:50538 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728104AbfKSORR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 09:17:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1574173065; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=MQ6ngIJWRLOuCG2cCCxYITwp5Aw0SISHe37jQ3RI/Pw=;
-        b=SiFDBZHxjXdT1eI0TcxM94DEsZd4E8+JXQ04hm8SG9wAVuYKPITQfTvTLM/zKWBI7YVXFw
-        dDlgmHlDctrIE2GsVuGcRPlU1x7rAZ3fOEq+H4SSJmfA31tnn/ue9ou5UBw4rxD6rhj4q6
-        ye6BlbGju0I/3eFJunLnjDm2N29zdMA=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     od@zcrc.me, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 2/6] gpu/drm: ingenic: Avoid null pointer deference in plane atomic update
-Date:   Tue, 19 Nov 2019 15:17:32 +0100
-Message-Id: <20191119141736.74607-2-paul@crapouillou.net>
-In-Reply-To: <20191119141736.74607-1-paul@crapouillou.net>
-References: <20191119141736.74607-1-paul@crapouillou.net>
+        Tue, 19 Nov 2019 09:17:17 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAJEHFYj017634;
+        Tue, 19 Nov 2019 08:17:15 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1574173035;
+        bh=AQ0B5jw9HQqxEfttQOLTZY4PnRmM6mThulC0kGIUZ/o=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=L8sUCCjpHI2zs3QNnypYLVzmskKaWo9zFsm4X7jJP/y1eklvM7p5mRstl7rY57/TU
+         +n0vsqJohy/RsU4zS2au5UxzjmlRjyAAlC7Fc7pOFxKYiiF1LHb3/hI/S1QGpF0gVC
+         UFPbrSWpIw9038mz+KX9SYhmOMrzHNx4sgGFee8A=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAJEHF2e100514
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 19 Nov 2019 08:17:15 -0600
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 19
+ Nov 2019 08:17:12 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 19 Nov 2019 08:17:11 -0600
+Received: from sokoban.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAJEGvYx027070;
+        Tue, 19 Nov 2019 08:17:10 -0600
+From:   Tero Kristo <t-kristo@ti.com>
+To:     <bjorn.andersson@linaro.org>, <ohad@wizery.com>,
+        <linux-remoteproc@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <s-anna@ti.com>, Tero Kristo <t-kristo@ti.com>
+Subject: [PATCHv2 06/15] remoteproc/omap: Initialize and assign reserved memory node
+Date:   Tue, 19 Nov 2019 16:16:36 +0200
+Message-ID: <20191119141645.19777-7-t-kristo@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191119141645.19777-1-t-kristo@ti.com>
+References: <20191119141645.19777-1-t-kristo@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is possible that there is no drm_framebuffer associated with a given
-plane state.
+From: Suman Anna <s-anna@ti.com>
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+The reserved memory nodes are not assigned to platform devices by
+default in the driver core to avoid the lookup for every platform
+device and incur a penalty as the real users are expected to be
+only a few devices.
+
+OMAP remoteproc devices fall into the above category and the OMAP
+remoteproc driver _requires_ specific CMA pools to be assigned
+for each device at the moment to align on the location of the
+vrings and vring buffers in the RTOS-side firmware images. So,
+use the of_reserved_mem_device_init/release() API appropriately
+to assign the corresponding reserved memory region to the OMAP
+remoteproc device. Note that only one region per device is
+allowed by the framework.
+
+Signed-off-by: Suman Anna <s-anna@ti.com>
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- drivers/gpu/drm/ingenic/ingenic-drm.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ drivers/remoteproc/omap_remoteproc.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/ingenic/ingenic-drm.c b/drivers/gpu/drm/ingenic/ingenic-drm.c
-index 2e2ed653e9c6..6dc4b06e7e68 100644
---- a/drivers/gpu/drm/ingenic/ingenic-drm.c
-+++ b/drivers/gpu/drm/ingenic/ingenic-drm.c
-@@ -371,14 +371,17 @@ static void ingenic_drm_plane_atomic_update(struct drm_plane *plane,
- 	struct ingenic_drm *priv = drm_plane_get_priv(plane);
- 	struct drm_plane_state *state = plane->state;
- 	unsigned int width, height, cpp;
-+	struct drm_framebuffer *fb = state->fb;
+diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
+index 28f14e24b389..3ad74c4b4071 100644
+--- a/drivers/remoteproc/omap_remoteproc.c
++++ b/drivers/remoteproc/omap_remoteproc.c
+@@ -17,6 +17,7 @@
+ #include <linux/module.h>
+ #include <linux/err.h>
+ #include <linux/of_device.h>
++#include <linux/of_reserved_mem.h>
+ #include <linux/platform_device.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/remoteproc.h>
+@@ -479,14 +480,22 @@ static int omap_rproc_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto free_rproc;
  
--	width = state->crtc->state->adjusted_mode.hdisplay;
--	height = state->crtc->state->adjusted_mode.vdisplay;
--	cpp = state->fb->format->cpp[plane->index];
-+	if (fb) {
-+		width = state->crtc->state->adjusted_mode.hdisplay;
-+		height = state->crtc->state->adjusted_mode.vdisplay;
-+		cpp = fb->format->cpp[plane->index];
- 
--	priv->dma_hwdesc->addr = drm_fb_cma_get_gem_addr(state->fb, state, 0);
--	priv->dma_hwdesc->cmd = width * height * cpp / 4;
--	priv->dma_hwdesc->cmd |= JZ_LCD_CMD_EOF_IRQ;
-+		priv->dma_hwdesc->addr = drm_fb_cma_get_gem_addr(fb, state, 0);
-+		priv->dma_hwdesc->cmd = width * height * cpp / 4;
-+		priv->dma_hwdesc->cmd |= JZ_LCD_CMD_EOF_IRQ;
++	ret = of_reserved_mem_device_init(&pdev->dev);
++	if (ret) {
++		dev_err(&pdev->dev, "device does not have specific CMA pool\n");
++		goto free_rproc;
 +	}
- }
++
+ 	platform_set_drvdata(pdev, rproc);
  
- static void ingenic_drm_encoder_atomic_mode_set(struct drm_encoder *encoder,
+ 	ret = rproc_add(rproc);
+ 	if (ret)
+-		goto free_rproc;
++		goto release_mem;
+ 
+ 	return 0;
+ 
++release_mem:
++	of_reserved_mem_device_release(&pdev->dev);
+ free_rproc:
+ 	rproc_free(rproc);
+ 	return ret;
+@@ -498,6 +507,7 @@ static int omap_rproc_remove(struct platform_device *pdev)
+ 
+ 	rproc_del(rproc);
+ 	rproc_free(rproc);
++	of_reserved_mem_device_release(&pdev->dev);
+ 
+ 	return 0;
+ }
 -- 
-2.24.0
+2.17.1
 
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
