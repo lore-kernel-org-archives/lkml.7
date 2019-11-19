@@ -2,82 +2,62 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97EA1C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 11:50:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC4A1C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 11:52:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 652FC222C7
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 11:50:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBFF4222C7
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 11:52:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xyu5eQX3"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gy1+laFE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727889AbfKSLu4 (ORCPT
+        id S1727786AbfKSLwt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 06:50:56 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:28929 "EHLO
+        Tue, 19 Nov 2019 06:52:49 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:51149 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727857AbfKSLu4 (ORCPT
+        by vger.kernel.org with ESMTP id S1726265AbfKSLwt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 06:50:56 -0500
+        Tue, 19 Nov 2019 06:52:49 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574164253;
+        s=mimecast20190719; t=1574164367;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding;
-        bh=cPDx/uSvia+AQrxrnk91IgNIxhLAnZO1Su6r+uKdtAA=;
-        b=Xyu5eQX3kFBkqlsNcG4jr22IE1GH9UGb2NDZssWJqgI/MHbm0nbx6oMe5u6iIU/+uG0YTP
-        1Vgs2VhbRcapvT+A6R/Hy7JXm7MmBC1dCLSVF+tpAGRaXagUOtjXivN4362+EAux8BKvzW
-        oA534PdevgEVw8sJUnpzicjT09hsOFw=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-202-IGLASsCmNRecEg3JOaX9DQ-1; Tue, 19 Nov 2019 06:50:52 -0500
-Received: by mail-wm1-f71.google.com with SMTP id b10so2119029wmh.6
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 03:50:52 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=J5ig2axvrBBg2yqUEfYVOSTsjkK15L7GgIG4wHTcsyY=;
-        b=jKj+nANKwKXy9Bk7yelJ3BtH1GN5lchPWmsckTuoOC28jiTqWUNVOgrlvoUkVdKGZI
-         bjkTZtJmZaY2VZ7rE4wLDupwf0da2tXDbOTiDIwW66EMaDpIDRT8OFrz7vWxekWr7Nv1
-         s0GA75G/9TmGYcAhIBrtnXqBNUujsmJORhZ9uxxQgqQOgH0GZwXDMY3RZq8Dln6BT/cI
-         sY7F7ieqiS9OqKA2llXbFcgn7GUTIM+GqU3cctRJ01dn+WEJJXZF7nsw0rv2FXSnPO2E
-         5d+gDPhqAffyg1w3O8OogkH74/TIo9df6WDnLfusyzoU5HOobzAeT2rEDSM1dl1TSFo+
-         LjZQ==
-X-Gm-Message-State: APjAAAXcpjzi+ugPye7NF8XaD+/uyZk5eMR7/Jn+bqvxq4bWA7SY/Kyx
-        7AymSXF84FwRwCDDZePZ+9sik/nF+gjBAdP8QIZx+jbKy8gBhjzSqB/6p9ALvPTzL5eTsqVnDTu
-        B3bb4Sr+HgOC6kmWFzwrXlBiv
-X-Received: by 2002:adf:f147:: with SMTP id y7mr29236888wro.236.1574164250928;
-        Tue, 19 Nov 2019 03:50:50 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzfkFrPwr5GBaC8zTsKB6a8VVCsDMt5ztYjz3WxhjO18rrmQI/1tvJ0GngHBzW+BeULOmYiQg==
-X-Received: by 2002:adf:f147:: with SMTP id y7mr29236855wro.236.1574164250675;
-        Tue, 19 Nov 2019 03:50:50 -0800 (PST)
-Received: from minerva.home ([90.168.169.92])
-        by smtp.gmail.com with ESMTPSA id a206sm2909726wmf.15.2019.11.19.03.50.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Nov 2019 03:50:50 -0800 (PST)
-From:   Javier Martinez Canillas <javierm@redhat.com>
+        bh=PsXYX0X2r85QXAS5qwE4s/140V6fNQdbPj8fpf5crLs=;
+        b=Gy1+laFEBP6/872iNGSo68v+BRwgI+u7A07wL/4Cq/CfizcwYOSR43YzjCRYDemLpJQChA
+        a17mJjVqvgXhk/fXWT9HfTfEWZIqciozRvhppGsSSbx8+QbGavr6xNU6ljcDKdAv60l5x3
+        KnnatGympJ8gqjzqJ7OwHdRINfXcOiA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-384-O-vw1vSZNwe-KtEmrgt9FA-1; Tue, 19 Nov 2019 06:52:44 -0500
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E2B591852E20;
+        Tue, 19 Nov 2019 11:52:42 +0000 (UTC)
+Received: from t460s.redhat.com (ovpn-117-126.ams2.redhat.com [10.36.117.126])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 580BD10246F6;
+        Tue, 19 Nov 2019 11:52:38 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Peter Jones <pjones@redhat.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Javier Martinez Canillas <javierm@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jmorris@namei.org>,
-        Josh Boyer <jwboyer@fedoraproject.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        linux-security-module@vger.kernel.org
-Subject: [PATCH v2] efi: Only print errors about failing to get certs if EFI vars are found
-Date:   Tue, 19 Nov 2019 12:50:43 +0100
-Message-Id: <20191119115043.21585-1-javierm@redhat.com>
-X-Mailer: git-send-email 2.23.0
+Cc:     linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>
+Subject: [PATCH v2] mm/memory_hotplug: Don't allow to online/offline memory blocks with holes
+Date:   Tue, 19 Nov 2019 12:52:37 +0100
+Message-Id: <20191119115237.6662-1-david@redhat.com>
 MIME-Version: 1.0
-X-MC-Unique: IGLASsCmNRecEg3JOaX9DQ-1
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: O-vw1vSZNwe-KtEmrgt9FA-1
 X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: quoted-printable
@@ -86,140 +66,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If CONFIG_LOAD_UEFI_KEYS is enabled, the kernel attempts to load the certs
-from the db, dbx and MokListRT EFI variables into the appropriate keyrings.
+Our onlining/offlining code is unnecessarily complicated. Only memory
+blocks added during boot can have holes (a range that is not
+IORESOURCE_SYSTEM_RAM). Hotplugged memory never has holes (e.g., see
+add_memory_resource()). All memory blocks that belong to boot memory are
+already online.
 
-But it just assumes that the variables will be present and prints an error
-if the certs can't be loaded, even when is possible that the variables may
-not exist. For example the MokListRT variable will only be present if shim
-is used.
+Note that boot memory can have holes and the memmap of the holes is marked
+PG_reserved. However, also memory allocated early during boot is
+PG_reserved - basically every page of boot memory that is not given to the
+buddy is PG_reserved.
 
-So only print an error message about failing to get the certs list from an
-EFI variable if this is found. Otherwise these printed errors just pollute
-the kernel ring buffer with confusing messages like the following:
+Therefore, when we stop allowing to offline memory blocks with holes, we
+implicitly no longer have to deal with onlining memory blocks with holes.
+E.g., online_pages() will do a
+walk_system_ram_range(..., online_pages_range), whereby
+online_pages_range() will effectively only free the memory holes not
+falling into a hole to the buddy. The other pages (holes) are kept
+PG_reserved (via move_pfn_range_to_zone()->memmap_init_zone()).
 
-[    5.427251] Couldn't get size: 0x800000000000000e
-[    5.427261] MODSIGN: Couldn't get UEFI db list
-[    5.428012] Couldn't get size: 0x800000000000000e
-[    5.428023] Couldn't get UEFI MokListRT
+This allows to simplify the code. For example, we no longer have to
+worry about marking pages that fall into memory holes PG_reserved when
+onlining memory. We can stop setting pages PG_reserved completely in
+memmap_init_zone().
 
-Reported-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
+Offlining memory blocks added during boot is usually not guaranteed to work
+either way (unmovable data might have easily ended up on that memory during
+boot). So stopping to do that should not really hurt. Also, people are not
+even aware of a setup where onlining/offlining of memory blocks with
+holes used to work reliably (see [1] and [2] especially regarding the
+hotplug path) - I doubt it worked reliably.
+
+For the use case of offlining memory to unplug DIMMs, we should see no
+change. (holes on DIMMs would be weird).
+
+Please note that hardware errors (PG_hwpoison) are not memory holes and
+are not affected by this change when offlining.
+
+[1] https://lkml.org/lkml/2019/10/22/135
+[2] https://lkml.org/lkml/2019/8/14/1365
+
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>
+Signed-off-by: David Hildenbrand <david@redhat.com>
+---
+
+This patch was part of:
+=09[PATCH v1 00/10] mm: Don't mark hotplugged pages PG_reserved
+=09(including ZONE_DEVICE)
+=09-> https://www.spinics.net/lists/linux-driver-devel/msg130042.html
+
+However, before we can perform the PG_reserved changes, we have to fix
+pfn_to_online_page() in special scenarios first (bootmem and devmem falling
+into a single section). Dan is working on that.
+
+I propose to give this patch a churn in -next so we can identify if this
+change would break any existing setup. I will then follow up with cleanups
+and the PG_reserved changes later.
 
 ---
-Hans,
+ mm/memory_hotplug.c | 28 ++++++++++++++++++++++++++--
+ 1 file changed, 26 insertions(+), 2 deletions(-)
 
-I'll really appreciate if you can test this patch. I just built tested it
-because I don't have access to a machine to reproduce the issue right now.
-
-Best regards,
-Javier
-
-Changes in v2:
-- Fix flaws in the logic, that caused the signature list was parsed if
-  the return code was EFI_NOT_FOUND that pointed out Hans de Goede.
-- Print debug messages if the variables are not found.
-
- security/integrity/platform_certs/load_uefi.c | 40 ++++++++++++-------
- 1 file changed, 26 insertions(+), 14 deletions(-)
-
-diff --git a/security/integrity/platform_certs/load_uefi.c b/security/integ=
-rity/platform_certs/load_uefi.c
-index 81b19c52832..020fc7a11ef 100644
---- a/security/integrity/platform_certs/load_uefi.c
-+++ b/security/integrity/platform_certs/load_uefi.c
-@@ -39,16 +39,18 @@ static __init bool uefi_check_ignore_db(void)
-  * Get a certificate list blob from the named EFI variable.
-  */
- static __init void *get_cert_list(efi_char16_t *name, efi_guid_t *guid,
--=09=09=09=09  unsigned long *size)
-+=09=09=09=09  unsigned long *size, efi_status_t *status)
- {
--=09efi_status_t status;
- =09unsigned long lsize =3D 4;
- =09unsigned long tmpdb[4];
- =09void *db;
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index 46b2e056a43f..fc617ad6f035 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -1455,10 +1455,19 @@ static void node_states_clear_node(int node, struct=
+ memory_notify *arg)
+ =09=09node_clear_state(node, N_MEMORY);
+ }
 =20
--=09status =3D efi.get_variable(name, guid, NULL, &lsize, &tmpdb);
--=09if (status !=3D EFI_BUFFER_TOO_SMALL) {
--=09=09pr_err("Couldn't get size: 0x%lx\n", status);
-+=09*status =3D efi.get_variable(name, guid, NULL, &lsize, &tmpdb);
-+=09if (*status =3D=3D EFI_NOT_FOUND)
-+=09=09return NULL;
++static int count_system_ram_pages_cb(unsigned long start_pfn,
++=09=09=09=09     unsigned long nr_pages, void *data)
++{
++=09unsigned long *nr_system_ram_pages =3D data;
 +
-+=09if (*status !=3D EFI_BUFFER_TOO_SMALL) {
-+=09=09pr_err("Couldn't get size: 0x%lx\n", *status);
- =09=09return NULL;
- =09}
++=09*nr_system_ram_pages +=3D nr_pages;
++=09return 0;
++}
++
+ static int __ref __offline_pages(unsigned long start_pfn,
+ =09=09  unsigned long end_pfn)
+ {
+-=09unsigned long pfn, nr_pages;
++=09unsigned long pfn, nr_pages =3D 0;
+ =09unsigned long offlined_pages =3D 0;
+ =09int ret, node, nr_isolate_pageblock;
+ =09unsigned long flags;
+@@ -1469,6 +1478,22 @@ static int __ref __offline_pages(unsigned long start=
+_pfn,
 =20
-@@ -56,10 +58,10 @@ static __init void *get_cert_list(efi_char16_t *name, e=
-fi_guid_t *guid,
- =09if (!db)
- =09=09return NULL;
+ =09mem_hotplug_begin();
 =20
--=09status =3D efi.get_variable(name, guid, NULL, &lsize, db);
--=09if (status !=3D EFI_SUCCESS) {
-+=09*status =3D efi.get_variable(name, guid, NULL, &lsize, db);
-+=09if (*status !=3D EFI_SUCCESS) {
- =09=09kfree(db);
--=09=09pr_err("Error reading db var: 0x%lx\n", status);
-+=09=09pr_err("Error reading db var: 0x%lx\n", *status);
- =09=09return NULL;
- =09}
++=09/*
++=09 * Don't allow to offline memory blocks that contain holes.
++=09 * Consequently, memory blocks with holes can never get onlined
++=09 * via the hotplug path - online_pages() - as hotplugged memory has
++=09 * no holes. This way, we e.g., don't have to worry about marking
++=09 * memory holes PG_reserved, don't need pfn_valid() checks, and can
++=09 * avoid using walk_system_ram_range() later.
++=09 */
++=09walk_system_ram_range(start_pfn, end_pfn - start_pfn, &nr_pages,
++=09=09=09      count_system_ram_pages_cb);
++=09if (nr_pages !=3D end_pfn - start_pfn) {
++=09=09ret =3D -EINVAL;
++=09=09reason =3D "memory holes";
++=09=09goto failed_removal;
++=09}
++
+ =09/* This makes hotplug much easier...and readable.
+ =09   we assume this for now. .*/
+ =09if (!test_pages_in_a_zone(start_pfn, end_pfn, &valid_start,
+@@ -1480,7 +1505,6 @@ static int __ref __offline_pages(unsigned long start_=
+pfn,
 =20
-@@ -144,6 +146,7 @@ static int __init load_uefi_certs(void)
- =09efi_guid_t mok_var =3D EFI_SHIM_LOCK_GUID;
- =09void *db =3D NULL, *dbx =3D NULL, *mok =3D NULL;
- =09unsigned long dbsize =3D 0, dbxsize =3D 0, moksize =3D 0;
-+=09efi_status_t status;
- =09int rc =3D 0;
+ =09zone =3D page_zone(pfn_to_page(valid_start));
+ =09node =3D zone_to_nid(zone);
+-=09nr_pages =3D end_pfn - start_pfn;
 =20
- =09if (!efi.get_variable)
-@@ -153,9 +156,12 @@ static int __init load_uefi_certs(void)
- =09 * an error if we can't get them.
- =09 */
- =09if (!uefi_check_ignore_db()) {
--=09=09db =3D get_cert_list(L"db", &secure_var, &dbsize);
-+=09=09db =3D get_cert_list(L"db", &secure_var, &dbsize, &status);
- =09=09if (!db) {
--=09=09=09pr_err("MODSIGN: Couldn't get UEFI db list\n");
-+=09=09=09if (status =3D=3D EFI_NOT_FOUND)
-+=09=09=09=09pr_debug("MODSIGN: db variable wasn't found\n");
-+=09=09=09else
-+=09=09=09=09pr_err("MODSIGN: Couldn't get UEFI db list\n");
- =09=09} else {
- =09=09=09rc =3D parse_efi_signature_list("UEFI:db",
- =09=09=09=09=09db, dbsize, get_handler_for_db);
-@@ -166,9 +172,12 @@ static int __init load_uefi_certs(void)
- =09=09}
- =09}
-=20
--=09mok =3D get_cert_list(L"MokListRT", &mok_var, &moksize);
-+=09mok =3D get_cert_list(L"MokListRT", &mok_var, &moksize, &status);
- =09if (!mok) {
--=09=09pr_info("Couldn't get UEFI MokListRT\n");
-+=09=09if (status =3D=3D EFI_NOT_FOUND)
-+=09=09=09pr_debug("MokListRT variable wasn't found\n");
-+=09=09else
-+=09=09=09pr_info("Couldn't get UEFI MokListRT\n");
- =09} else {
- =09=09rc =3D parse_efi_signature_list("UEFI:MokListRT",
- =09=09=09=09=09      mok, moksize, get_handler_for_db);
-@@ -177,9 +186,12 @@ static int __init load_uefi_certs(void)
- =09=09kfree(mok);
- =09}
-=20
--=09dbx =3D get_cert_list(L"dbx", &secure_var, &dbxsize);
-+=09dbx =3D get_cert_list(L"dbx", &secure_var, &dbxsize, &status);
- =09if (!dbx) {
--=09=09pr_info("Couldn't get UEFI dbx list\n");
-+=09=09if (status =3D=3D EFI_NOT_FOUND)
-+=09=09=09pr_debug("dbx variable wasn't found\n");
-+=09=09else
-+=09=09=09pr_info("Couldn't get UEFI dbx list\n");
- =09} else {
- =09=09rc =3D parse_efi_signature_list("UEFI:dbx",
- =09=09=09=09=09      dbx, dbxsize,
+ =09/* set above range as isolated */
+ =09ret =3D start_isolate_page_range(start_pfn, end_pfn,
 --=20
-2.23.0
+2.21.0
 
