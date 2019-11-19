@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60B99C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:46:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A60C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:46:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F6FD208CC
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:46:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F5952071B
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:46:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142403;
-	bh=etxpC8JZZJWPy8F/xgvTzSrSpq2DAsTTtvter5MD1QY=;
+	s=default; t=1574142407;
+	bh=ib4vu3ssWv+BcS446FDJwbNCxuG0zk6e/VuXGHHpq9s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UzIuAdM/fp/5PxarwuO0/UR4tA5qHc9YwDhpokxOZdoTjWkvP5o/XkArswI6LzJ7x
-	 5MzKi0UNf1oyGROLFdV8uPj1cpr707BkuiIS4j5qCKZQMctcgdLID/u9kjDxFVybbL
-	 0KaCbuwd+kRWuhDTwEwrtPd5VZyop4S7MZDe02lw=
+	b=a4wAOtQaCriBYVGXBcSy27g1Ob1jaSw3gNQV674Z/YffATKDnJ4XH0CvgNI5ZFJuM
+	 AUEiX7dylmuj0j22SHG74jUXz+JFRcI6iW0BkSI78yIVcidM8Bj92cltneGzaJy4T2
+	 jjnkCJRTPHFF0r2z0NtEbiblrBSXmhf17A/GwKMM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729057AbfKSFqm (ORCPT
+        id S1731140AbfKSFqq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:46:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42762 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:46:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731128AbfKSFqh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:46:37 -0500
+        id S1730839AbfKSFqk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:46:40 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC0DA2071B;
-        Tue, 19 Nov 2019 05:46:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BD6A2071B;
+        Tue, 19 Nov 2019 05:46:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142397;
-        bh=etxpC8JZZJWPy8F/xgvTzSrSpq2DAsTTtvter5MD1QY=;
+        s=default; t=1574142399;
+        bh=ib4vu3ssWv+BcS446FDJwbNCxuG0zk6e/VuXGHHpq9s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pLx1MrZ5t3aTthC8KovmwUFutLGWfS2hA2Rbb9ywkRU13oT8GFHglXVilLbfia0dA
-         QuSKyusy7DRUo9c+CDT4dsmN9KVT3UmZItlgYco3mxIw+vbs+IDutjl2NlEo6FOv7P
-         chrBvGylHf0SCEnW3QNEs+m320mCa2JqEwdSbRL0=
+        b=2IkxXuGSiQ4PicaBuZmEwZoCd8zv5Qi1TL4UyHbAnP3vT2gMXJynurbpff9KWPl7Y
+         WMfjqW/KPM/qEBIyDFt0ZnTkrfT3UYpKZcCKbR/8j6hd/nvzmyrpjaLwEcma1uCYwx
+         T1dfzd4+rG6L8sMOuwopVNVough03EAk/r1jZAxI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 067/239] ASoC: sgtl5000: avoid division by zero if lo_vag is zero
-Date:   Tue, 19 Nov 2019 06:17:47 +0100
-Message-Id: <20191119051312.407793060@linuxfoundation.org>
+Subject: [PATCH 4.14 041/239] ALSA: seq: Do error checks at creating system ports
+Date:   Tue, 19 Nov 2019 06:17:21 +0100
+Message-Id: <20191119051305.553503093@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -60,36 +59,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 9ab708aef61f5620113269a9d1bdb1543d1207d0 ]
+[ Upstream commit b8e131542b47b81236ecf6768c923128e1f5db6e ]
 
-In the case where lo_vag <= SGTL5000_LINE_OUT_GND_BASE, lo_vag
-is set to zero and later vol_quot is computed by dividing by
-lo_vag causing a division by zero error.  Fix this by avoiding
-a zero division and set vol_quot to zero in this specific case
-so that the lowest setting for i is correctly set.
+snd_seq_system_client_init() doesn't check the errors returned from
+its port creations.  Let's do it properly and handle the error paths.
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/sgtl5000.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/core/seq/seq_system.c | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
 
-diff --git a/sound/soc/codecs/sgtl5000.c b/sound/soc/codecs/sgtl5000.c
-index 10764c1e854e2..ca8a70ab22a82 100644
---- a/sound/soc/codecs/sgtl5000.c
-+++ b/sound/soc/codecs/sgtl5000.c
-@@ -1314,7 +1314,7 @@ static int sgtl5000_set_power_regs(struct snd_soc_codec *codec)
- 	 * Searching for a suitable index solving this formula:
- 	 * idx = 40 * log10(vag_val / lo_cagcntrl) + 15
- 	 */
--	vol_quot = (vag * 100) / lo_vag;
-+	vol_quot = lo_vag ? (vag * 100) / lo_vag : 0;
- 	lo_vol = 0;
- 	for (i = 0; i < ARRAY_SIZE(vol_quot_table); i++) {
- 		if (vol_quot >= vol_quot_table[i])
+diff --git a/sound/core/seq/seq_system.c b/sound/core/seq/seq_system.c
+index 8ce1d0b40dce1..ce1f1e4727ab1 100644
+--- a/sound/core/seq/seq_system.c
++++ b/sound/core/seq/seq_system.c
+@@ -123,6 +123,7 @@ int __init snd_seq_system_client_init(void)
+ {
+ 	struct snd_seq_port_callback pcallbacks;
+ 	struct snd_seq_port_info *port;
++	int err;
+ 
+ 	port = kzalloc(sizeof(*port), GFP_KERNEL);
+ 	if (!port)
+@@ -144,7 +145,10 @@ int __init snd_seq_system_client_init(void)
+ 	port->flags = SNDRV_SEQ_PORT_FLG_GIVEN_PORT;
+ 	port->addr.client = sysclient;
+ 	port->addr.port = SNDRV_SEQ_PORT_SYSTEM_TIMER;
+-	snd_seq_kernel_client_ctl(sysclient, SNDRV_SEQ_IOCTL_CREATE_PORT, port);
++	err = snd_seq_kernel_client_ctl(sysclient, SNDRV_SEQ_IOCTL_CREATE_PORT,
++					port);
++	if (err < 0)
++		goto error_port;
+ 
+ 	/* register announcement port */
+ 	strcpy(port->name, "Announce");
+@@ -154,16 +158,24 @@ int __init snd_seq_system_client_init(void)
+ 	port->flags = SNDRV_SEQ_PORT_FLG_GIVEN_PORT;
+ 	port->addr.client = sysclient;
+ 	port->addr.port = SNDRV_SEQ_PORT_SYSTEM_ANNOUNCE;
+-	snd_seq_kernel_client_ctl(sysclient, SNDRV_SEQ_IOCTL_CREATE_PORT, port);
++	err = snd_seq_kernel_client_ctl(sysclient, SNDRV_SEQ_IOCTL_CREATE_PORT,
++					port);
++	if (err < 0)
++		goto error_port;
+ 	announce_port = port->addr.port;
+ 
+ 	kfree(port);
+ 	return 0;
++
++ error_port:
++	snd_seq_system_client_done();
++	kfree(port);
++	return err;
+ }
+ 
+ 
+ /* unregister our internal client */
+-void __exit snd_seq_system_client_done(void)
++void snd_seq_system_client_done(void)
+ {
+ 	int oldsysclient = sysclient;
+ 
 -- 
 2.20.1
 
