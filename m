@@ -7,43 +7,46 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 483C5C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:57:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE59FC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:57:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24B672241E
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:57:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D0762241E
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:57:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728670AbfKSQ5I (ORCPT
+        id S1728698AbfKSQ5L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 11:57:08 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:52839 "EHLO
+        Tue, 19 Nov 2019 11:57:11 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:52880 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728637AbfKSQ5G (ORCPT
+        with ESMTP id S1728641AbfKSQ5J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 11:57:06 -0500
+        Tue, 19 Nov 2019 11:57:09 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iX6oF-0007QG-A8; Tue, 19 Nov 2019 17:56:59 +0100
+        id 1iX6o7-0007Nk-5p; Tue, 19 Nov 2019 17:56:51 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 4E18E1C19CC;
-        Tue, 19 Nov 2019 17:56:49 +0100 (CET)
-Date:   Tue, 19 Nov 2019 16:56:49 -0000
-From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 85F5B1C19CF;
+        Tue, 19 Nov 2019 17:56:48 +0100 (CET)
+Date:   Tue, 19 Nov 2019 16:56:48 -0000
+From:   "tip-bot2 for Masami Hiramatsu" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf map: Use bitmap for booleans
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
+Subject: [tip: perf/core] perf probe: Do not show non representive lines by
+ perf-probe -L
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <tip-g5545pcq4ff0wr17tfb1piqt@git.kernel.org>
-References: <tip-g5545pcq4ff0wr17tfb1piqt@git.kernel.org>
+In-Reply-To: <157406473064.24476.2913278267727587314.stgit@devnote2>
+References: <157406473064.24476.2913278267727587314.stgit@devnote2>
 MIME-Version: 1.0
-Message-ID: <157418260927.12247.7477192419256385944.tip-bot2@tip-bot2>
+Message-ID: <157418260850.12247.4435566464230141839.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -59,83 +62,110 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     dbc984c961667b1ce48a0337b5bcd3b8c9cb2098
-Gitweb:        https://git.kernel.org/tip/dbc984c961667b1ce48a0337b5bcd3b8c9cb2098
-Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate:    Mon, 18 Nov 2019 16:26:29 -03:00
+Commit-ID:     499144c83d3b7e4f9e83916acfc97bbc3af891dc
+Gitweb:        https://git.kernel.org/tip/499144c83d3b7e4f9e83916acfc97bbc3af891dc
+Author:        Masami Hiramatsu <mhiramat@kernel.org>
+AuthorDate:    Mon, 18 Nov 2019 17:12:10 +09:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Mon, 18 Nov 2019 16:29:01 -03:00
+CommitterDate: Mon, 18 Nov 2019 18:59:36 -03:00
 
-perf map: Use bitmap for booleans
+perf probe: Do not show non representive lines by perf-probe -L
 
-The map->priv and map->erange_warned are seldom used, the first only in
-tests/vmlinux-kallsyms.c, the later only when hist_entry__inc_addr_samples()
-returns -ERANGE in 'perf top', which are really rare occasions, so make
-them a bool bitfield.
+Since perf probe -L shows non representive lines, it can be mislead
+users where user can put probes.  This prevents to show such non
+representive lines so that user can understand which lines user can
+probe.
 
-This will open up space for other members on the first cacheline.
+  # perf probe -L kernel_read
+  <kernel_read@/build/linux-pvZVvI/linux-5.0.0/fs/read_write.c:0>
+        0  ssize_t kernel_read(struct file *file, void *buf, size_t count, loff_t *pos)
+           {
+        2         mm_segment_t old_fs;
+                  ssize_t result;
 
-  $ pahole -C map ~/bin/perf
-  struct map {
-  	union {
-  		struct rb_node rb_node __attribute__((__aligned__(8))); /*     0    24 */
-  		struct list_head node;                   /*     0    16 */
-  	} __attribute__((__aligned__(8)));                                               /*     0    24 */
-  	u64                        start;                /*    24     8 */
-  	u64                        end;                  /*    32     8 */
-  	_Bool                      erange_warned:1;      /*    40: 0  1 */
-  	_Bool                      priv:1;               /*    40: 1  1 */
+                  old_fs = get_fs();
+        6         set_fs(get_ds());
+                  /* The cast to a user pointer is valid due to the set_fs() */
+        8         result = vfs_read(file, (void __user *)buf, count, pos);
+        9         set_fs(old_fs);
+       10         return result;
+           }
+           EXPORT_SYMBOL(kernel_read);
 
-  	/* XXX 6 bits hole, try to pack */
-  	/* XXX 3 bytes hole, try to pack */
+Committer testing:
 
-  	u32                        prot;                 /*    44     4 */
-  	u32                        flags;                /*    48     4 */
+Before:
 
-  	/* XXX 4 bytes hole, try to pack */
+  # perf probe -L kernel_read
+  <kernel_read@/usr/src/debug/kernel-5.3.fc30/linux-5.3.8-200.fc30.x86_64/fs/read_write.c:0>
+        0  ssize_t kernel_read(struct file *file, void *buf, size_t count, loff_t *pos)
+        1  {
+        2         mm_segment_t old_fs;
+        3         ssize_t result;
 
-  	u64                        pgoff;                /*    56     8 */
-  	/* --- cacheline 1 boundary (64 bytes) --- */
-  	u64                        reloc;                /*    64     8 */
-  	u32                        maj;                  /*    72     4 */
-  	u32                        min;                  /*    76     4 */
-  	u64                        ino;                  /*    80     8 */
-  	u64                        ino_generation;       /*    88     8 */
-  	u64                        (*map_ip)(struct map *, u64); /*    96     8 */
-  	u64                        (*unmap_ip)(struct map *, u64); /*   104     8 */
-  	struct dso *               dso;                  /*   112     8 */
-  	refcount_t                 refcnt;               /*   120     4 */
+        5         old_fs = get_fs();
+        6         set_fs(KERNEL_DS);
+                  /* The cast to a user pointer is valid due to the set_fs() */
+        8         result = vfs_read(file, (void __user *)buf, count, pos);
+        9         set_fs(old_fs);
+       10         return result;
+           }
+           EXPORT_SYMBOL(kernel_read);
+  #
 
-  	/* size: 128, cachelines: 2, members: 17 */
-  	/* sum members: 116, holes: 2, sum holes: 7 */
-  	/* sum bitfield members: 2 bits, bit holes: 1, sum bit holes: 6 bits */
-  	/* padding: 4 */
-  	/* forced alignments: 1 */
-  } __attribute__((__aligned__(8)));
-  $
+See the 1, 3, 5 lines? They shouldn't be there, after this patch:
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
+  # perf probe -L kernel_read
+  <kernel_read@/usr/src/debug/kernel-5.3.fc30/linux-5.3.8-200.fc30.x86_64/fs/read_write.c:0>
+        0  ssize_t kernel_read(struct file *file, void *buf, size_t count, loff_t *pos)
+           {
+        2         mm_segment_t old_fs;
+                  ssize_t result;
+
+                  old_fs = get_fs();
+        6         set_fs(KERNEL_DS);
+                  /* The cast to a user pointer is valid due to the set_fs() */
+        8         result = vfs_read(file, (void __user *)buf, count, pos);
+        9         set_fs(old_fs);
+       10         return result;
+           }
+           EXPORT_SYMBOL(kernel_read);
+  #
+
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-g5545pcq4ff0wr17tfb1piqt@git.kernel.org
+Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Tom Zanussi <tom.zanussi@linux.intel.com>
+Link: http://lore.kernel.org/lkml/157406473064.24476.2913278267727587314.stgit@devnote2
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/map.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/util/probe-finder.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/tools/perf/util/map.h b/tools/perf/util/map.h
-index a31e809..e2466aa 100644
---- a/tools/perf/util/map.h
-+++ b/tools/perf/util/map.h
-@@ -25,8 +25,8 @@ struct map {
- 	};
- 	u64			start;
- 	u64			end;
--	bool			erange_warned;
--	u32			priv;
-+	bool			erange_warned:1;
-+	bool			priv:1;
- 	u32			prot;
- 	u32			flags;
- 	u64			pgoff;
+diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
+index ef1b320..f12ad50 100644
+--- a/tools/perf/util/probe-finder.c
++++ b/tools/perf/util/probe-finder.c
+@@ -1734,12 +1734,19 @@ static int line_range_walk_cb(const char *fname, int lineno,
+ 			      void *data)
+ {
+ 	struct line_finder *lf = data;
++	const char *__fname;
++	int __lineno;
+ 	int err;
+ 
+ 	if ((strtailcmp(fname, lf->fname) != 0) ||
+ 	    (lf->lno_s > lineno || lf->lno_e < lineno))
+ 		return 0;
+ 
++	/* Make sure this line can be reversable */
++	if (cu_find_lineinfo(&lf->cu_die, addr, &__fname, &__lineno) > 0
++	    && (lineno != __lineno || strcmp(fname, __fname)))
++		return 0;
++
+ 	err = line_range_add_line(fname, lineno, lf->lr);
+ 	if (err < 0 && err != -EEXIST)
+ 		return err;
