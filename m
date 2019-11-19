@@ -2,120 +2,96 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69CC0C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 13:35:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D7CDC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 13:36:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C36622304
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 13:35:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="eM/jA03T"
+	by mail.kernel.org (Postfix) with ESMTP id DCA9D2230B
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 13:36:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbfKSNfy (ORCPT
+        id S1728023AbfKSNf7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 08:35:54 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:62308 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725798AbfKSNfx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 08:35:53 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAJDSoBs024969;
-        Tue, 19 Nov 2019 14:34:38 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=iRVctjJDP4VsySTwcBDAz4gTqwDw4MWcibi48UpEjC8=;
- b=eM/jA03T0mUh0nUcKYMA7qjZdWuCbnQtsSm0RJ08xgdmGPjThBTi6jqfITX0vednD69s
- wcRW5Fx9fQGaOmJ+DuOBa9RBS1+xIU5hSk3jeT9bCSBP335SLzae/FcbCvgkQjFkGpWy
- sr02JbnfMJdQK801CqUaKzy4DjdV33ZAAR/IldJWRLhLon7E0MkDV2N8vZcjm3M+fv50
- tVuf/fQSeAMbc5CQy37AlFRvfA2xhe6E36SEQYqOeTaozgYbGmw2+Niz55VDYf1KDlmQ
- tDCcjUPIp19Ifc/ygTCmrq/sDmN7VMgwhRFb5I5EakJ0Z9VEmK7cQZ8KiSH/+pgUkV4b rg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2wa9uhyj70-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 19 Nov 2019 14:34:38 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 09FB410002A;
-        Tue, 19 Nov 2019 14:34:38 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id ECEE92BC103;
-        Tue, 19 Nov 2019 14:34:37 +0100 (CET)
-Received: from localhost (10.75.127.45) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 19 Nov 2019 14:34:37
- +0100
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-        <sean@poorly.run>, <airlied@linux.ie>, <daniel@ffwll.ch>
-CC:     <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH] drm/rect: remove useless call to clamp_t
-Date:   Tue, 19 Nov 2019 14:34:35 +0100
-Message-ID: <20191119133435.22525-1-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.45]
-X-ClientProxiedBy: SFHDAG5NODE1.st.com (10.75.127.13) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-19_04:2019-11-15,2019-11-19 signatures=0
+        Tue, 19 Nov 2019 08:35:59 -0500
+Received: from mx2.suse.de ([195.135.220.15]:47754 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725798AbfKSNf7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 08:35:59 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 35F11B1D3;
+        Tue, 19 Nov 2019 13:35:57 +0000 (UTC)
+Message-ID: <1574170553.28617.10.camel@suse.com>
+Subject: Re: WARNING in ath6kl_htc_pipe_rx_complete
+From:   Oliver Neukum <oneukum@suse.com>
+To:     syzbot <syzbot+555908813b2ea35dae9a@syzkaller.appspotmail.com>,
+        andreyknvl@google.com, davem@davemloft.net, kvalo@codeaurora.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Date:   Tue, 19 Nov 2019 14:35:53 +0100
+In-Reply-To: <0000000000008123610596c36579@google.com>
+References: <0000000000008123610596c36579@google.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clamping a value between INT_MIN and INT_MAX always return the value itself
-and generate warnings when compiling with W=1.
+Am Donnerstag, den 07.11.2019, 07:34 -0800 schrieb syzbot:
+> Hello,
+> 
+> syzbot found the following crash on:
+> 
+> HEAD commit:    d60bbfea usb: raw: add raw-gadget interface
+> git tree:       https://github.com/google/kasan.git usb-fuzzer
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1029829ae00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=79de80330003b5f7
+> dashboard link: https://syzkaller.appspot.com/bug?extid=555908813b2ea35dae9a
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1388a2aae00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13aa35dce00000
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+555908813b2ea35dae9a@syzkaller.appspotmail.com
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+#syz test: https://github.com/google/kasan.git d60bbfea
+
+From d289a4973b869117a5a7f70297b0cecffceb8289 Mon Sep 17 00:00:00 2001
+From: Oliver Neukum <oneukum@suse.com>
+Date: Mon, 18 Nov 2019 19:23:25 +0100
+Subject: [PATCH] ath6kl: reduce WARN to dev_dbg() in callback
+
+The warn is triggered on a known race condition
+that is correctly handled. Using WARN() hinders automated
+testing. Reducing severity.
+
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
 ---
- drivers/gpu/drm/drm_rect.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/wireless/ath/ath6kl/htc_pipe.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_rect.c b/drivers/gpu/drm/drm_rect.c
-index b8363aaa9032..681f1fd09357 100644
---- a/drivers/gpu/drm/drm_rect.c
-+++ b/drivers/gpu/drm/drm_rect.c
-@@ -89,7 +89,7 @@ bool drm_rect_clip_scaled(struct drm_rect *src, struct drm_rect *dst,
- 		u32 new_src_w = clip_scaled(drm_rect_width(src),
- 					    drm_rect_width(dst), diff);
- 
--		src->x1 = clamp_t(int64_t, src->x2 - new_src_w, INT_MIN, INT_MAX);
-+		src->x1 = src->x2 - new_src_w;
- 		dst->x1 = clip->x1;
+diff --git a/drivers/net/wireless/ath/ath6kl/htc_pipe.c b/drivers/net/wireless/ath/ath6kl/htc_pipe.c
+index c68848819a52..9b88d96bfe96 100644
+--- a/drivers/net/wireless/ath/ath6kl/htc_pipe.c
++++ b/drivers/net/wireless/ath/ath6kl/htc_pipe.c
+@@ -960,8 +960,8 @@ static int ath6kl_htc_pipe_rx_complete(struct ath6kl *ar, struct sk_buff *skb,
+ 	 * Thus the possibility of ar->htc_target being NULL
+ 	 * via ath6kl_recv_complete -> ath6kl_usb_io_comp_work.
+ 	 */
+-	if (WARN_ON_ONCE(!target)) {
+-		ath6kl_err("Target not yet initialized\n");
++	if (!target) {
++		ath6kl_dbg(ATH6KL_DBG_HTC, "Target not yet initialized\n");
+ 		status = -EINVAL;
+ 		goto free_skb;
  	}
- 	diff = clip->y1 - dst->y1;
-@@ -97,7 +97,7 @@ bool drm_rect_clip_scaled(struct drm_rect *src, struct drm_rect *dst,
- 		u32 new_src_h = clip_scaled(drm_rect_height(src),
- 					    drm_rect_height(dst), diff);
- 
--		src->y1 = clamp_t(int64_t, src->y2 - new_src_h, INT_MIN, INT_MAX);
-+		src->y1 = src->y2 - new_src_h;
- 		dst->y1 = clip->y1;
- 	}
- 	diff = dst->x2 - clip->x2;
-@@ -105,7 +105,7 @@ bool drm_rect_clip_scaled(struct drm_rect *src, struct drm_rect *dst,
- 		u32 new_src_w = clip_scaled(drm_rect_width(src),
- 					    drm_rect_width(dst), diff);
- 
--		src->x2 = clamp_t(int64_t, src->x1 + new_src_w, INT_MIN, INT_MAX);
-+		src->x2 = src->x1 + new_src_w;
- 		dst->x2 = clip->x2;
- 	}
- 	diff = dst->y2 - clip->y2;
-@@ -113,7 +113,7 @@ bool drm_rect_clip_scaled(struct drm_rect *src, struct drm_rect *dst,
- 		u32 new_src_h = clip_scaled(drm_rect_height(src),
- 					    drm_rect_height(dst), diff);
- 
--		src->y2 = clamp_t(int64_t, src->y1 + new_src_h, INT_MIN, INT_MAX);
-+		src->y2 = src->y1 + new_src_h;
- 		dst->y2 = clip->y2;
- 	}
- 
 -- 
-2.15.0
+2.16.4
 
