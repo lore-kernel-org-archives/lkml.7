@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC8FFC43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:23:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6FBBC33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:23:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C0C221939
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:23:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A69162231A
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:23:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574140994;
-	bh=O/EPpd3UjBDA6PsEDJfUuRGzIrfTKmGZ1gBPhx9iqmo=;
+	s=default; t=1574140996;
+	bh=ogq/V7fgL+Wy1fEjkaIiL97yI4glx5MX/pCBocC4+ow=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NTR3vtjP6ub90WpJT2tF6KmJJMntmC40353+SpMsr3Kc9rGAVyBZyuqWg8Iav8Rbd
-	 UXQF22S9Ejy9QXsY/ogUxwKZ8uuGDc6CBde84kDiBRY7nv24Ma1OH1NyJz7hK6KFsj
-	 uyZNZq8ubcFXPfGMU9rtsIkTFVtqeKdKwtZ30yR0=
+	b=HuAXS0moMo/hkxhaULjPWnfouac/jZQUuX9JCDpTYHXFydUIIPMAPhP7ifpu5M98D
+	 ZvDkJNWYFt1LzZBIgcCDK0ae0IoxXPZ9qSU6UBKngkTprf8L3uFDwG6jmrPimL0RHJ
+	 n0v8wQb5Eos0uEHRya2k5vxDGHl3G5QdiE2EpL80=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727946AbfKSFXN (ORCPT
+        id S1727956AbfKSFXP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:23:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38694 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:23:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727936AbfKSFXK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:23:10 -0500
+        id S1727944AbfKSFXN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:23:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBE612231A;
-        Tue, 19 Nov 2019 05:23:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3862A2235D;
+        Tue, 19 Nov 2019 05:23:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574140989;
-        bh=O/EPpd3UjBDA6PsEDJfUuRGzIrfTKmGZ1gBPhx9iqmo=;
+        s=default; t=1574140992;
+        bh=ogq/V7fgL+Wy1fEjkaIiL97yI4glx5MX/pCBocC4+ow=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z5JTM0YSAanmUmX3ZMRGL18ZKNBgMjAwlI+77X3LQgfYQYyyYmIJ3mZfYnWhRjMj8
-         uy4x+e0BcdQol6d0W4fcDEaCk36/MQYWlOwU9lJtH76AlXczclDUrXDB2koM77pMiv
-         eyO0oIjIfMAk1MZPL8NWSBciTH2l2aUt5+05tcpo=
+        b=l8RfDdMaWYgpNF56iPvldSz7zYQRhE8O/bbifpNMIuO2UtenLlxLytUGXmMHX6D/E
+         bZsyMoVfohBUsRql0QvQ0oQLtrMrB0DPehch87RamcjYHtyj2Q1gaeWN2A2VALd7km
+         hrs3Yt81KWudWaSYoH/TfkjEHnaRY7wN9b4mdGZI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Eugen Hristev <eugen.hristev@microchip.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.3 48/48] mmc: sdhci-of-at91: fix quirk2 overwrite
-Date:   Tue, 19 Nov 2019 06:20:08 +0100
-Message-Id: <20191119051031.442320103@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Auger <eric.auger@redhat.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH 5.3 41/48] iommu/vt-d: Fix QI_DEV_IOTLB_PFSID and QI_DEV_EIOTLB_PFSID macros
+Date:   Tue, 19 Nov 2019 06:20:01 +0100
+Message-Id: <20191119051024.346816478@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119050946.745015350@linuxfoundation.org>
 References: <20191119050946.745015350@linuxfoundation.org>
@@ -61,35 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugen Hristev <eugen.hristev@microchip.com>
+From: Eric Auger <eric.auger@redhat.com>
 
-commit fed23c5829ecab4ddc712d7b0046e59610ca3ba4 upstream.
+commit 4e7120d79edb31e4ee68e6f8421448e4603be1e9 upstream.
 
-The quirks2 are parsed and set (e.g. from DT) before the quirk for broken
-HS200 is set in the driver.
-The driver needs to enable just this flag, not rewrite the whole quirk set.
+For both PASID-based-Device-TLB Invalidate Descriptor and
+Device-TLB Invalidate Descriptor, the Physical Function Source-ID
+value is split according to this layout:
 
-Fixes: 7871aa60ae00 ("mmc: sdhci-of-at91: add quirk for broken HS200")
-Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+PFSID[3:0] is set at offset 12 and PFSID[15:4] is put at offset 52.
+Fix the part laid out at offset 52.
+
+Fixes: 0f725561e1684 ("iommu/vt-d: Add definitions for PFSID")
+Signed-off-by: Eric Auger <eric.auger@redhat.com>
+Acked-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc: stable@vger.kernel.org # v4.19+
+Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/sdhci-of-at91.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/intel-iommu.h |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/drivers/mmc/host/sdhci-of-at91.c
-+++ b/drivers/mmc/host/sdhci-of-at91.c
-@@ -358,7 +358,7 @@ static int sdhci_at91_probe(struct platf
- 	pm_runtime_use_autosuspend(&pdev->dev);
+--- a/include/linux/intel-iommu.h
++++ b/include/linux/intel-iommu.h
+@@ -334,7 +334,8 @@ enum {
+ #define QI_DEV_IOTLB_SID(sid)	((u64)((sid) & 0xffff) << 32)
+ #define QI_DEV_IOTLB_QDEP(qdep)	(((qdep) & 0x1f) << 16)
+ #define QI_DEV_IOTLB_ADDR(addr)	((u64)(addr) & VTD_PAGE_MASK)
+-#define QI_DEV_IOTLB_PFSID(pfsid) (((u64)(pfsid & 0xf) << 12) | ((u64)(pfsid & 0xfff) << 52))
++#define QI_DEV_IOTLB_PFSID(pfsid) (((u64)(pfsid & 0xf) << 12) | \
++				   ((u64)((pfsid >> 4) & 0xfff) << 52))
+ #define QI_DEV_IOTLB_SIZE	1
+ #define QI_DEV_IOTLB_MAX_INVS	32
  
- 	/* HS200 is broken at this moment */
--	host->quirks2 = SDHCI_QUIRK2_BROKEN_HS200;
-+	host->quirks2 |= SDHCI_QUIRK2_BROKEN_HS200;
+@@ -358,7 +359,8 @@ enum {
+ #define QI_DEV_EIOTLB_PASID(p)	(((u64)p) << 32)
+ #define QI_DEV_EIOTLB_SID(sid)	((u64)((sid) & 0xffff) << 16)
+ #define QI_DEV_EIOTLB_QDEP(qd)	((u64)((qd) & 0x1f) << 4)
+-#define QI_DEV_EIOTLB_PFSID(pfsid) (((u64)(pfsid & 0xf) << 12) | ((u64)(pfsid & 0xfff) << 52))
++#define QI_DEV_EIOTLB_PFSID(pfsid) (((u64)(pfsid & 0xf) << 12) | \
++				    ((u64)((pfsid >> 4) & 0xfff) << 52))
+ #define QI_DEV_EIOTLB_MAX_INVS	32
  
- 	ret = sdhci_add_host(host);
- 	if (ret)
+ /* Page group response descriptor QW0 */
 
 
