@@ -3,122 +3,145 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B114C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 01:19:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C090EC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 01:20:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ED2F222D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 01:19:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 930BA222D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 01:20:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="QDGQW6bh"
+	dkim=pass (2048-bit key) header.d=fredlawl-com.20150623.gappssmtp.com header.i=@fredlawl-com.20150623.gappssmtp.com header.b="1y1afc8j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727174AbfKSBTp (ORCPT
+        id S1727210AbfKSBUM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 20:19:45 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:43443 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726952AbfKSBTo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 20:19:44 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47H7K82zfhz9sPL;
-        Tue, 19 Nov 2019 12:19:40 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1574126382;
-        bh=maX43JYoFqxngt1nHc0oT20YehFVIccTW2ma2xMGkGM=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=QDGQW6bhsISaWKFrbk1hKjd7p5pQ0kdKTiSRd2sA8AYFk1XRjRuVmwYCkTZtHYwBK
-         7wRb2CrSoWyOz2jXyZLwfQ/jjPrGCggeitnii7FWhlJCN5XRcOf2lxjzhH8XIw7P6j
-         Y9+qkRRzgHkGhLKh59mHWsIcv8jWnzd7qS5JwpeS7ZuRiLBU4N2u5BCFN5FOmTkG33
-         ruAWLHjJGjA/LwQ0sYNH5TL0vNFpOfWygeJjZleYhvCHJANuJFgSxJ/I1VsjlGDZxG
-         NdDmPAc4YFtwVL6OE7jh8n/LlqNGBWTnD/CD6F/QOaq8v3YEf8jVwuorkhG7Rs4LdO
-         68ZJBJtybCrgA==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Qais Yousef <qais.yousef@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Qais Yousef <qais.yousef@arm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Enrico Weigelt <info@metux.net>, Ram Pai <linuxram@us.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 03/12] powerpc: Replace cpu_up/down with device_online/offline
-In-Reply-To: <20191030153837.18107-4-qais.yousef@arm.com>
-References: <20191030153837.18107-1-qais.yousef@arm.com> <20191030153837.18107-4-qais.yousef@arm.com>
-Date:   Tue, 19 Nov 2019 12:19:39 +1100
-Message-ID: <87h830d5n8.fsf@mpe.ellerman.id.au>
+        Mon, 18 Nov 2019 20:20:12 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:40154 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726996AbfKSBUL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 20:20:11 -0500
+Received: by mail-ot1-f66.google.com with SMTP id m15so16379755otq.7
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 17:20:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fredlawl-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=LJ59oqnF6x3U59y807aLU5jRRBQycubcL7on9piFroU=;
+        b=1y1afc8jcLyQ32mTCS9uQ0OmofjTL01knVVxeA8Xe/HiQhZhQO5mU5oORMEQZm//6o
+         LXUtf9E66qhXQnnFefONeWehgdyMhyFE+FVMR5tGdF4ehJ6GiE+MZc3d+BtdqtZWOd34
+         7x81LZQqCOP96PjtM80LQrf1ZrHNQvdX6E/Dk4R7zKB4yKSsr47bHptm0j0ppubTSjC6
+         DR7AxMJ1zckCH6saiYbvUPKaeLyoX3+n1Jy1HBeEJZJDoXdXMym8quYqJw6+y6R7j4nS
+         sMvMcgAsxVXU84MqR33Az8sz82QjFgkpQalfeiVNXfOxPaOpAh8qp45fN1PaX3IckWF6
+         HFvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=LJ59oqnF6x3U59y807aLU5jRRBQycubcL7on9piFroU=;
+        b=BhxgSF8sN8e1O983qtPNhRVT0J0MGH18qDGYwxDiMkUDua9qnxQWKBBo3n/LB4Ckx5
+         cxPAT8vWuBkcpFLCgdtsly2EFMl4lj7Gzba9uDz7hCHTg80pzwwIfBn8qbgcWRmND9fR
+         aBd3vUArio2uiFuTv1FGGW6O3VsC9saCtQkH5oXL646FHchlJF+RmlYZaX7for+k5NlE
+         ovNvFrHZKwqKEj51mqiJvhJiJfCVqzQW1Dbpd3KF3ly5ABdIysiH9vdKFx1fNMOzE1l/
+         9D2a4GkkmXfqs6ZGCCNq3tNkSkdmWi/ll6d0vOx+KizGzviZEqy2H4zR9jRg4L1IMu6b
+         5EeQ==
+X-Gm-Message-State: APjAAAUZPCQnHFqOecG/2Y5VVMlnYpo4KhbbjiHCe2WRWTHmOVPR798+
+        AkKSmDVzoOC28sunaDchZ6KYfA==
+X-Google-Smtp-Source: APXvYqxD2Gk7A0ertGhDDXxcSFbmOh/nPpTSezEjzSbKD9572h/SqZBrdpCxVwggFu8wV5X3o/CUvA==
+X-Received: by 2002:a9d:1b70:: with SMTP id l103mr1781270otl.154.1574126409028;
+        Mon, 18 Nov 2019 17:20:09 -0800 (PST)
+Received: from Fredericks-MacBook-Pro.local ([2600:1700:4870:71e0:c8a4:b0da:bc77:d506])
+        by smtp.gmail.com with ESMTPSA id u143sm6730839oia.14.2019.11.18.17.20.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 18 Nov 2019 17:20:08 -0800 (PST)
+Subject: Re: [PATCH v2 1/4] skd: Prefer pcie_capability_read_word()
+To:     Damien Le Moal <Damien.LeMoal@wdc.com>
+Cc:     "axboe@kernel.dk" <axboe@kernel.dk>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "bvanassche@acm.org" <bvanassche@acm.org>
+References: <20191118002057.9596-1-fred@fredlawl.com>
+ <20191118002057.9596-2-fred@fredlawl.com>
+ <BYAPR04MB5816EDC3676A964C2D1D874BE74D0@BYAPR04MB5816.namprd04.prod.outlook.com>
+From:   Frederick Lawler <fred@fredlawl.com>
+Message-ID: <653fa44d-7edc-8440-b778-79c127c0aa3b@fredlawl.com>
+Date:   Mon, 18 Nov 2019 19:20:05 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
+ Gecko/20100101 PostboxApp/6.1.18
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <BYAPR04MB5816EDC3676A964C2D1D874BE74D0@BYAPR04MB5816.namprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Qais Yousef <qais.yousef@arm.com> writes:
-> The core device API performs extra housekeeping bits that are missing
-> from directly calling cpu_up/down.
+Damien Le Moal wrote on 11/17/19 7:45 PM:
+> On 2019/11/18 9:21, Frederick Lawler wrote:
+>> Commit 8c0d3a02c130 ("PCI: Add accessors for PCI Express Capability")
+>> added accessors for the PCI Express Capability so that drivers didn't
+>> need to be aware of differences between v1 and v2 of the PCI
+>> Express Capability.
+>>
+>> Replace pci_read_config_word() and pci_write_config_word() calls with
+>> pcie_capability_read_word() and pcie_capability_write_word().
+>>
+>> Signed-off-by: Frederick Lawler <fred@fredlawl.com>
+>> ---
+>>   drivers/block/skd_main.c | 8 ++------
+>>   1 file changed, 2 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/block/skd_main.c b/drivers/block/skd_main.c
+>> index 51569c199a6c..f25f6ef6b4c7 100644
+>> --- a/drivers/block/skd_main.c
+>> +++ b/drivers/block/skd_main.c
+>> @@ -3134,18 +3134,14 @@ MODULE_DEVICE_TABLE(pci, skd_pci_tbl);
+>>   
+>>   static char *skd_pci_info(struct skd_device *skdev, char *str)
+>>   {
+>> -	int pcie_reg;
+>> -
+>>   	strcpy(str, "PCIe (");
+>> -	pcie_reg = pci_find_capability(skdev->pdev, PCI_CAP_ID_EXP);
+>>   
+>> -	if (pcie_reg) {
+>> +	if (pci_is_pcie(skdev->pdev)) {
+> 
+> Maybe return early here ? The reason is that if pci_is_pcie() is false,
+> then the string "PCIe (" is not terminated with a closing parenthesis.
+> So something like:
+> 
+> 	if (!pci_is_pcie(skdev->pdev)) {
+> 		strcat(str, ")");
+> 		return str;
+> 	}
+> 
+> May be better. Note that the "return str" is also rather pointless since
+> it is not used by the caller of skd_pci_info().
+> 
+
+I agree, but it might be better to include a note that this is not a 
+PCIe device. Reading "PCIe ()" seems weird to me.
+
+>>   
+>>   		char lwstr[6];
+>>   		uint16_t pcie_lstat, lspeed, lwidth;
+>>   
+>> -		pcie_reg += 0x12;
+>> -		pci_read_config_word(skdev->pdev, pcie_reg, &pcie_lstat);
+>> +		pcie_capability_read_word(skdev->pdev, 0x12, &pcie_lstat);
+>>   		lspeed = pcie_lstat & (0xF);
+>>   		lwidth = (pcie_lstat & 0x3F0) >> 4;
+>>   
+>>
+> 
 >
-> See commit a6717c01ddc2 ("powerpc/rtas: use device model APIs and
-> serialization during LPM") for an example description of what might go
-> wrong.
->
-> This also prepares to make cpu_up/down a private interface for anything
-> but the cpu subsystem.
->
-> Signed-off-by: Qais Yousef <qais.yousef@arm.com>
-> CC: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> CC: Paul Mackerras <paulus@samba.org>
-> CC: Michael Ellerman <mpe@ellerman.id.au>
-> CC: Enrico Weigelt <info@metux.net>
-> CC: Ram Pai <linuxram@us.ibm.com>
-> CC: Nicholas Piggin <npiggin@gmail.com>
-> CC: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-> CC: Christophe Leroy <christophe.leroy@c-s.fr>
-> CC: Thomas Gleixner <tglx@linutronix.de>
-> CC: linuxppc-dev@lists.ozlabs.org
-> CC: linux-kernel@vger.kernel.org
-> ---
->  arch/powerpc/kernel/machine_kexec_64.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
 
-My initial though is "what about kdump", but that function is not called
-during kdump, so there should be no issue with the extra locking leading
-to deadlocks in a crash.
+Thanks,
+Frederick Lawler
 
-Acked-by: Michael Ellerman <mpe@ellerman.id.au>
-
-I assume you haven't actually tested it?
-
-cheers
-
-> diff --git a/arch/powerpc/kernel/machine_kexec_64.c b/arch/powerpc/kernel/machine_kexec_64.c
-> index 04a7cba58eff..ebf8cc7acc4d 100644
-> --- a/arch/powerpc/kernel/machine_kexec_64.c
-> +++ b/arch/powerpc/kernel/machine_kexec_64.c
-> @@ -208,13 +208,15 @@ static void wake_offline_cpus(void)
->  {
->  	int cpu = 0;
->  
-> +	lock_device_hotplug();
->  	for_each_present_cpu(cpu) {
->  		if (!cpu_online(cpu)) {
->  			printk(KERN_INFO "kexec: Waking offline cpu %d.\n",
->  			       cpu);
-> -			WARN_ON(cpu_up(cpu));
-> +			WARN_ON(device_online(get_cpu_device(cpu)));
->  		}
->  	}
-> +	unlock_device_hotplug();
->  }
->  
->  static void kexec_prepare_cpus(void)
-> -- 
-> 2.17.1
