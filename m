@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38BE8C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:22:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65861C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:22:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FC8222317
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:22:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A3A222317
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:22:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574140957;
-	bh=e6CICMOupY8NFEmXVT/oiRzp/oDxkEoLf0qYaYMSIQk=;
+	s=default; t=1574140959;
+	bh=6icoMpvlZKEX/tSX+7s6u8Q+/PUACauLc2VxSg+cLuE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w0LuBaELC88qKJVGjjaXS6fu9iRI5C4Ky574m96xgICYLUqTjyOvJMhmZiCZrKMjN
-	 0jFopJ4XB5zcDFJ1grp29gIxcF+LBYS/tQVrFbh1qLLpyWTr/R5FySnM/CVBV/Owhh
-	 dW+5vM/QPwAAmAWajCHARZUnoGrwMh/TZgQZd42w=
+	b=TeoB0Jx5AalAz6lMqzCDU8BJ1/2/I+hAjiMiYUm1qfC6zBMaHppX59CsZyub5LNB4
+	 QvRJEgjv0qrtGlLcgHgXlMkajxB/cllUdehrb6OAq06n63onLBXmHxlZuOqlcVgPsL
+	 sc9MA4CHtJfcZeBfEPWMvL5SfU/fJiHcXYC4+aNI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727781AbfKSFWf (ORCPT
+        id S1727793AbfKSFWh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:22:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37856 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:22:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727744AbfKSFWc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:22:32 -0500
+        id S1727777AbfKSFWf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:22:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A22832231A;
-        Tue, 19 Nov 2019 05:22:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5236B21939;
+        Tue, 19 Nov 2019 05:22:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574140952;
-        bh=e6CICMOupY8NFEmXVT/oiRzp/oDxkEoLf0qYaYMSIQk=;
+        s=default; t=1574140954;
+        bh=6icoMpvlZKEX/tSX+7s6u8Q+/PUACauLc2VxSg+cLuE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NYVCs9G9GVDzlQXAwAS6LlMbavY7+L8AHiFW6Dw2XVk8AvKCDWCP6QYAz5IQBUlIe
-         HCM+Irx796xre6eNpCc+mYimOvvUOGZQGWkN9Jj+NLg/s/I/4AxVfqYuehxvMbhyoE
-         L4Qv46hD6/DpNdOUNKajC/MBhDUcfDaAz9N5FNA4=
+        b=ME+7/0mXu5SrXR1V3NnfZaIasaJ5/6dO2yuHeffF87vTpZLKndkMxkt4Q3vkppqnT
+         qAAa0yMjO+B8j2wv5QllzMamlim4FzZ6BToBtB12Zo23TFBNbhKWR4BjPt/S0Nd86I
+         Ej1f2Bw/ma+aYnV4xYsSeh3rJlVh3PUFqbUo0w3o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Corentin Labbe <clabbe@baylibre.com>,
+        stable@vger.kernel.org, Shalom Toledo <shalomt@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 40/48] net: ethernet: dwmac-sun8i: Use the correct function in exit path
-Date:   Tue, 19 Nov 2019 06:20:00 +0100
-Message-Id: <20191119051022.818468781@linuxfoundation.org>
+Subject: [PATCH 5.3 05/48] mlxsw: core: Enable devlink reload only on probe
+Date:   Tue, 19 Nov 2019 06:19:25 +0100
+Message-Id: <20191119050951.850109484@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119050946.745015350@linuxfoundation.org>
 References: <20191119050946.745015350@linuxfoundation.org>
@@ -59,39 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Corentin Labbe <clabbe@baylibre.com>
+From: Jiri Pirko <jiri@mellanox.com>
 
-commit 40a1dcee2d1846a24619fe9ca45c661ca0db7dda upstream.
+[ Upstream commit 73a533ecf0af5f73ff72dd7c96d1c8598ca93649 ]
 
-When PHY is not powered, the probe function fail and some resource are
-still unallocated.
-Furthermore some BUG happens:
-dwmac-sun8i 5020000.ethernet: EMAC reset timeout
-------------[ cut here ]------------
-kernel BUG at /linux-next/net/core/dev.c:9844!
+Call devlink enable only during probe time and avoid deadlock
+during reload.
 
-So let's use the right function (stmmac_pltfr_remove) in the error path.
-
-Fixes: 9f93ac8d4085 ("net-next: stmmac: Add dwmac-sun8i")
-Cc: <stable@vger.kernel.org> # v4.15+
-Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+Reported-by: Shalom Toledo <shalomt@mellanox.com>
+Fixes: 5a508a254bed ("devlink: disallow reload operation during device cleanup")
+Signed-off-by: Jiri Pirko <jiri@mellanox.com>
+Tested-by: Shalom Toledo <shalomt@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/mellanox/mlxsw/core.c |    5 +++--
+ net/core/devlink.c                         |    2 +-
+ 2 files changed, 4 insertions(+), 3 deletions(-)
 
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-@@ -1225,7 +1225,7 @@ static int sun8i_dwmac_probe(struct plat
- dwmac_mux:
- 	sun8i_dwmac_unset_syscon(gmac);
- dwmac_exit:
--	sun8i_dwmac_exit(pdev, plat_dat->bsp_priv);
-+	stmmac_pltfr_remove(pdev);
- return ret;
- }
+--- a/drivers/net/ethernet/mellanox/mlxsw/core.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/core.c
+@@ -1128,10 +1128,11 @@ __mlxsw_core_bus_device_register(const s
+ 	if (err)
+ 		goto err_thermal_init;
  
+-	if (mlxsw_driver->params_register) {
++	if (mlxsw_driver->params_register)
+ 		devlink_params_publish(devlink);
++
++	if (!reload)
+ 		devlink_reload_enable(devlink);
+-	}
+ 
+ 	return 0;
+ 
+--- a/net/core/devlink.c
++++ b/net/core/devlink.c
+@@ -5559,7 +5559,7 @@ EXPORT_SYMBOL_GPL(devlink_register);
+ void devlink_unregister(struct devlink *devlink)
+ {
+ 	mutex_lock(&devlink_mutex);
+-	WARN_ON(devlink_reload_supported(devlink) &&
++	WARN_ON(devlink->ops->reload &&
+ 		devlink->reload_enabled);
+ 	devlink_notify(devlink, DEVLINK_CMD_DEL);
+ 	list_del(&devlink->list);
 
 
