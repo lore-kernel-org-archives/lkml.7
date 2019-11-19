@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEBC4C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:45:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72689C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:45:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4B3F222ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:45:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 488662084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:45:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142339;
-	bh=Ue3nlCV9pACY7BcNK5tekycybXDU3j44z/a2CvMlZ5o=;
+	s=default; t=1574142347;
+	bh=qvaJckDGdLrK/qEiSj60eF89SiNSLo3wCVU4ci/H+BM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Son8s6lk0U9vvKh2Ll0gIQ30Ko/CEEbQViY8izbRW5wKHHISTtBs/8P7uCCP3d6Er
-	 PGB4XPjo+eDE5dTrtxIeu/h6HUe4ExxoaxpG/9aEQIQJ0/HCXzpeRtxOXSDQvQ/DKA
-	 /TgthT+EcTbZ96H5CjTgGO1i2exTvTVmPRO4mm14=
+	b=jyLATG7lAK7DPfEIFYNRof7qVakKeehwMU/AkJf5vf5ogtskaVRPprqhnyn3OCLtJ
+	 TqGngs2TedQQ4sAwrkAxN4Q6KBC5sOzR4vAnOcTebs24Yik/lU8xHosQAWqHWBaw4a
+	 cmJp4F/v8lmm5GbeL6U6qcfjjpbU1CLGSDjH9jKw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730508AbfKSFph (ORCPT
+        id S1731004AbfKSFpp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:45:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41296 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:45:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730982AbfKSFpf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:45:35 -0500
+        id S1728009AbfKSFpl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:45:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CEDC222A4;
-        Tue, 19 Nov 2019 05:45:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59481222F2;
+        Tue, 19 Nov 2019 05:45:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142335;
-        bh=Ue3nlCV9pACY7BcNK5tekycybXDU3j44z/a2CvMlZ5o=;
+        s=default; t=1574142340;
+        bh=qvaJckDGdLrK/qEiSj60eF89SiNSLo3wCVU4ci/H+BM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yW3bByfFpL7GbN+1LIWpgojB9JriZ0KeAmmAnDmKgXX17uLt1lBP8IqZJoPJmb1JZ
-         TDmYvnbMTYW3fcuVv6m7vebGxHK4T4Ap7hYraOXm4IoYiF0Ndd2qOO1OVBZEP3gap+
-         /RxDNm4FEf1rsShP0nN+d3WL+b6JPp/FCaXvMw4g=
+        b=XSuoBfp5/jHF28NvTismv60+8Xg6jWxuTpLy2roJNBfx+5z4FUqBtbvT8ty0M1ZQF
+         M+dm1RWWRpA+qJHbnk0qotaPcNZc3zxmYujDpcsVLAaw8EobkHINwGfBpiKv3bkYpa
+         dhq96kV16coHbs5NmYoXJBTvGF2NDY+fiCIILbLc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
+        Rick Farrington <ricardo.farrington@cavium.com>,
+        Felix Manlunas <felix.manlunas@cavium.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 039/239] extcon: cht-wc: Return from default case to avoid warnings
-Date:   Tue, 19 Nov 2019 06:17:19 +0100
-Message-Id: <20191119051305.197885561@linuxfoundation.org>
+Subject: [PATCH 4.14 049/239] liquidio: fix race condition in instruction completion processing
+Date:   Tue, 19 Nov 2019 06:17:29 +0100
+Message-Id: <20191119051307.167977685@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -61,47 +62,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Rick Farrington <ricardo.farrington@cavium.com>
 
-[ Upstream commit 962341b54b99965ebec5f70c8d39f1c382eea833 ]
+[ Upstream commit b943f17e06493fd2c7fd00743093ad5dcdb90e7f ]
 
-When we have first case to fall through it's not enough to put
-single comment there to satisfy compiler. Instead of doing that,
-return fall back value directly from default case.
+In lio_enable_irq, the pkt_in_done count register was being cleared to
+zero.  However, there could be some completed instructions which were not
+yet processed due to budget and limit constraints.
+So, only write this register with the number of actual completions
+that were processed.
 
-This to avoid following warnings:
-
-drivers/extcon/extcon-intel-cht-wc.c: In function ‘cht_wc_extcon_get_charger’:
-include/linux/device.h:1420:2: warning: this statement may fall through [-Wimplicit-fallthrough=]
-  _dev_warn(dev, dev_fmt(fmt), ##__VA_ARGS__)
-  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/extcon/extcon-intel-cht-wc.c:148:3: note: in expansion of macro ‘dev_warn’
-   dev_warn(ext->dev,
-   ^~~~~~~~
-drivers/extcon/extcon-intel-cht-wc.c:152:2: note: here
-  case CHT_WC_USBSRC_TYPE_SDP:
-  ^~~~
-
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Rick Farrington <ricardo.farrington@cavium.com>
+Signed-off-by: Felix Manlunas <felix.manlunas@cavium.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/extcon/extcon-intel-cht-wc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/cavium/liquidio/octeon_device.c   | 5 +++--
+ drivers/net/ethernet/cavium/liquidio/octeon_iq.h       | 2 ++
+ drivers/net/ethernet/cavium/liquidio/request_manager.c | 2 ++
+ 3 files changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/extcon/extcon-intel-cht-wc.c b/drivers/extcon/extcon-intel-cht-wc.c
-index 60baaf6931032..c562d9d69ae39 100644
---- a/drivers/extcon/extcon-intel-cht-wc.c
-+++ b/drivers/extcon/extcon-intel-cht-wc.c
-@@ -155,7 +155,7 @@ static int cht_wc_extcon_get_charger(struct cht_wc_extcon_data *ext,
- 		dev_warn(ext->dev,
- 			"Unhandled charger type %d, defaulting to SDP\n",
- 			 ret);
--		/* Fall through, treat as SDP */
-+		return EXTCON_CHG_USB_SDP;
- 	case CHT_WC_USBSRC_TYPE_SDP:
- 	case CHT_WC_USBSRC_TYPE_FLOAT_DP_DN:
- 	case CHT_WC_USBSRC_TYPE_OTHER:
+diff --git a/drivers/net/ethernet/cavium/liquidio/octeon_device.c b/drivers/net/ethernet/cavium/liquidio/octeon_device.c
+index 29d53b1763a72..2a9c925376cc1 100644
+--- a/drivers/net/ethernet/cavium/liquidio/octeon_device.c
++++ b/drivers/net/ethernet/cavium/liquidio/octeon_device.c
+@@ -1444,8 +1444,9 @@ void lio_enable_irq(struct octeon_droq *droq, struct octeon_instr_queue *iq)
+ 	}
+ 	if (iq) {
+ 		spin_lock_bh(&iq->lock);
+-		writel(iq->pkt_in_done, iq->inst_cnt_reg);
+-		iq->pkt_in_done = 0;
++		writel(iq->pkts_processed, iq->inst_cnt_reg);
++		iq->pkt_in_done -= iq->pkts_processed;
++		iq->pkts_processed = 0;
+ 		/* this write needs to be flushed before we release the lock */
+ 		mmiowb();
+ 		spin_unlock_bh(&iq->lock);
+diff --git a/drivers/net/ethernet/cavium/liquidio/octeon_iq.h b/drivers/net/ethernet/cavium/liquidio/octeon_iq.h
+index 5c3c8da976f73..1860603452ee7 100644
+--- a/drivers/net/ethernet/cavium/liquidio/octeon_iq.h
++++ b/drivers/net/ethernet/cavium/liquidio/octeon_iq.h
+@@ -84,6 +84,8 @@ struct octeon_instr_queue {
+ 
+ 	u32 pkt_in_done;
+ 
++	u32 pkts_processed;
++
+ 	/** A spinlock to protect access to the input ring.*/
+ 	spinlock_t iq_flush_running_lock;
+ 
+diff --git a/drivers/net/ethernet/cavium/liquidio/request_manager.c b/drivers/net/ethernet/cavium/liquidio/request_manager.c
+index 55e8731264634..0ea623768783e 100644
+--- a/drivers/net/ethernet/cavium/liquidio/request_manager.c
++++ b/drivers/net/ethernet/cavium/liquidio/request_manager.c
+@@ -122,6 +122,7 @@ int octeon_init_instr_queue(struct octeon_device *oct,
+ 	iq->do_auto_flush = 1;
+ 	iq->db_timeout = (u32)conf->db_timeout;
+ 	atomic_set(&iq->instr_pending, 0);
++	iq->pkts_processed = 0;
+ 
+ 	/* Initialize the spinlock for this instruction queue */
+ 	spin_lock_init(&iq->lock);
+@@ -474,6 +475,7 @@ octeon_flush_iq(struct octeon_device *oct, struct octeon_instr_queue *iq,
+ 				lio_process_iq_request_list(oct, iq, 0);
+ 
+ 		if (inst_processed) {
++			iq->pkts_processed += inst_processed;
+ 			atomic_sub(inst_processed, &iq->instr_pending);
+ 			iq->stats.instr_processed += inst_processed;
+ 		}
 -- 
 2.20.1
 
