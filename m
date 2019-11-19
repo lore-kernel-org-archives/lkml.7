@@ -2,146 +2,77 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D5DDC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 03:27:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B47F1C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 03:27:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCA66214D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 03:27:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94A7B208A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 03:27:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727532AbfKSD1V (ORCPT
+        id S1727460AbfKSD1T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 22:27:21 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:41012 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727018AbfKSD1U (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 22:27:20 -0500
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAJ3RHsY098836
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 22:27:18 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2way6ah2un-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 22:27:17 -0500
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ajd@linux.ibm.com>;
-        Tue, 19 Nov 2019 03:27:07 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 19 Nov 2019 03:27:00 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAJ3Qx2f37617726
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 19 Nov 2019 03:26:59 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A85D452050;
-        Tue, 19 Nov 2019 03:26:59 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 53B995204E;
-        Tue, 19 Nov 2019 03:26:59 +0000 (GMT)
-Received: from [9.81.206.200] (unknown [9.81.206.200])
-        (using TLSv1.2 with cipher AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 4CE4DA012A;
-        Tue, 19 Nov 2019 14:26:53 +1100 (AEDT)
-Subject: Re: [PATCH 08/10] nvdimm: Add driver for OpenCAPI Storage Class
- Memory
-To:     "Alastair D'Silva" <alastair@au1.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Frederic Barrat <fbarrat@linux.ibm.com>
-Cc:     Oscar Salvador <osalvador@suse.com>,
-        Michal Hocko <mhocko@suse.com>,
-        David Hildenbrand <david@redhat.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>, Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>, Qian Cai <cai@lca.pw>,
-        =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Linux MM <linux-mm@kvack.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-References: <20191025044721.16617-1-alastair@au1.ibm.com>
- <20191025044721.16617-9-alastair@au1.ibm.com>
- <8232c1a6-d52a-6c32-6178-de082174a92a@linux.ibm.com>
- <CAPcyv4g9b6PyREurH9NcQf4BO2YcRGJPBZDqGKy-Vz91mBKjew@mail.gmail.com>
- <02374c9a-39fb-5693-3d9c-aa7e7674a6c1@linux.ibm.com>
- <7fd5a4571062a06da8f09f18300794b48ead5dc1.camel@au1.ibm.com>
-From:   Andrew Donnellan <ajd@linux.ibm.com>
-Date:   Tue, 19 Nov 2019 14:26:53 +1100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 18 Nov 2019 22:27:19 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6250 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727018AbfKSD1S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 22:27:18 -0500
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 713B0C8CB653863E022A;
+        Tue, 19 Nov 2019 11:27:16 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
+ 14.3.439.0; Tue, 19 Nov 2019 11:27:05 +0800
+From:   Mao Wenan <maowenan@huawei.com>
+To:     <arnd@arndb.de>, <gregkh@linuxfoundation.org>,
+        <davem@davemloft.net>, <sgarzare@redhat.com>,
+        <kstewart@linuxfoundation.org>, <alexios.zavras@intel.com>,
+        <tglx@linutronix.de>, <maowenan@huawei.com>
+CC:     <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
+        "Hulk Robot" <hulkci@huawei.com>
+Subject: [PATCH -next] vsock/vmci: make vmci_vsock_cb_host_called static
+Date:   Tue, 19 Nov 2019 11:25:34 +0800
+Message-ID: <20191119032534.52090-1-maowenan@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <7fd5a4571062a06da8f09f18300794b48ead5dc1.camel@au1.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-AU
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19111903-0020-0000-0000-0000038A10F5
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19111903-0021-0000-0000-000021E03A94
-Message-Id: <33b6f6b2-5ca1-7c08-01db-6aad73f9a0ec@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-18_08:2019-11-15,2019-11-18 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
- impostorscore=0 priorityscore=1501 clxscore=1015 spamscore=0 adultscore=0
- lowpriorityscore=0 suspectscore=0 mlxlogscore=909 mlxscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
- definitions=main-1911190029
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/11/19 1:48 pm, Alastair D'Silva wrote:
-> On Tue, 2019-11-19 at 10:47 +1100, Andrew Donnellan wrote:
->> On 15/11/19 3:35 am, Dan Williams wrote:
->>>> Have you discussed with the directory owner if it's ok to split
->>>> the
->>>> driver over several files?
->>>
->>> My thought is to establish drivers/opencapi/ and move this and the
->>> existing drivers/misc/ocxl/ bits there.
->>
->> Is there any other justification for this we can think of apart from
->> not
->> wanting to put this driver in the nvdimm directory? OpenCAPI drivers
->> aren't really a category of driver unto themselves.
->>
-> 
-> There is a precedent for bus-based dirs, eg. drivers/(ide|w1|spi) all
-> contain drivers for both controllers & connected devices.
-> 
-> Fred, how do you feel about moving the generic OpenCAPI driver out of
-> drivers/misc?
+When using make C=2 drivers/misc/vmw_vmci/vmci_driver.o
+to compile, below warning can be seen:
+drivers/misc/vmw_vmci/vmci_driver.c:33:6: warning:
+symbol 'vmci_vsock_cb_host_called' was not declared. Should it be static?
 
-Instinctively I don't like the idea of creating a whole opencapi 
-directory, as OpenCAPI is a generic bus which is not tightly coupled to 
-any particular application area, and drivers for other OpenCAPI devices 
-are already spread throughout the tree (e.g. cxlflash in drivers/scsi).
+This patch make symbol vmci_vsock_cb_host_called static.
 
+Fixes: b1bba80a4376 ("vsock/vmci: register vmci_transport only when VMCI guest/host are active")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
+---
+ drivers/misc/vmw_vmci/vmci_driver.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/misc/vmw_vmci/vmci_driver.c b/drivers/misc/vmw_vmci/vmci_driver.c
+index 95fed46..cbb706d 100644
+--- a/drivers/misc/vmw_vmci/vmci_driver.c
++++ b/drivers/misc/vmw_vmci/vmci_driver.c
+@@ -30,7 +30,7 @@ static bool vmci_host_personality_initialized;
+ 
+ static DEFINE_MUTEX(vmci_vsock_mutex); /* protects vmci_vsock_transport_cb */
+ static vmci_vsock_cb vmci_vsock_transport_cb;
+-bool vmci_vsock_cb_host_called;
++static bool vmci_vsock_cb_host_called;
+ 
+ /*
+  * vmci_get_context_id() - Gets the current context ID.
 -- 
-Andrew Donnellan              OzLabs, ADL Canberra
-ajd@linux.ibm.com             IBM Australia Limited
+2.7.4
 
