@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6640C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:32:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AABCDC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:32:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 965DD2245B
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:32:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8795B2245B
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:32:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VSqDPN14"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ajcWQiLf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727714AbfKSTc3 (ORCPT
+        id S1727724AbfKSTch (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 14:32:29 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:43433 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726892AbfKSTc3 (ORCPT
+        Tue, 19 Nov 2019 14:32:37 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:41846 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726792AbfKSTch (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 14:32:29 -0500
-Received: by mail-lf1-f68.google.com with SMTP id l14so11405148lfh.10;
-        Tue, 19 Nov 2019 11:32:26 -0800 (PST)
+        Tue, 19 Nov 2019 14:32:37 -0500
+Received: by mail-lj1-f196.google.com with SMTP id m4so19759377ljj.8;
+        Tue, 19 Nov 2019 11:32:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=f4Ums0924t9zSVHk8HQR4M4Yx48zZgYQim0som1QWS8=;
-        b=VSqDPN14Uxd1TYS6NPANOwoC8V3gSO806r2757G40dkotN35IBvBt2Afxrl1XAZ8nm
-         EYlHXhdL+s4jRTB6Qj8us59XdjQlzdeOi+UicUhgdqUL+J6lvNZEAB7NyJHHTGZrsI6w
-         GBHoyVC/gFnW/QCiRuQ05y6rrSQuhXyfBFXOVNqlj8CsSkkReZXj46VEdcNmYkCRekpM
-         PnO9uDtNO9FtTHfuXPWt6u+wzdv/O0U2MxaQHpmFLmJavbR+Y396XOSKWYtAg5ii9RLN
-         JWH97ctoHItfnClYhDIPNGyGo4C74LyA2bwj4SD4Nk8s2kgTmTqJUUBd6XlwANo9FIA7
-         rihg==
+        bh=gMwxQZ0NGeg1EorIa2meDnvhnfgkvViZuHv3dYidgxs=;
+        b=ajcWQiLfE9po51PPLxd3b53VUtVor9+JUkvzHnoUpI/VO7A7+kEmHi3lAhkrCFes89
+         gG75UUKyfyr0ANCiemd1klNeCbTeYbTvR1yppysjuU2Y1XOpQvGl9WFxDFJR52BQiAfs
+         jr1QH2cTtKQg/56WGCQYtwvXYdXUqYjwcsdCtUwytDllrrrI1PnnjCgRErLuNlnlKDLr
+         ON/x/uOemadHum1FrcF6sVqqkpA/QoW0zaDCdddUCMBqN37PysXCGu9AQNpdXpn33bSg
+         hyz1Tj9Y+7iTxGvJQtEZtc7tSAA/wjPMHax7SAEthptArmk9mQlLL7SCBiltDiNTzwYJ
+         LJVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=f4Ums0924t9zSVHk8HQR4M4Yx48zZgYQim0som1QWS8=;
-        b=dBJdK7gpz+r+R9XXpBmIdNbmfCCelhe7H6SvzSZgk3FvLd/LHrOrmL5IGQ8eIYQ+ab
-         QcSuPTxHxJXYs0t+lM3UEWkPXs61pYhsuoeIzv4G147mpD0D/NiSSJpxeEW2W9S/jWqo
-         OLNwa72ySrY/SldJW8gNlNIyrLJDYzO85zYOuDgTmm0eOUwYf1HagzrkLWrOFEoLSh6+
-         cKDXmuSEqHBNglpbyUB4cGHRRHeEH+7Isnd3m9I3xnfb9Xif5oLkLoxRaGSwrQSnYa2u
-         vgHPfWtnrsviAWEqWwiaeNNfehXAg9mejOXK1Kf/OphV5SzfvZS/d4mTgSQpZFgifKOv
-         dLmQ==
-X-Gm-Message-State: APjAAAWdoA2NJ0LyDAAzZ2GSgbPopl0QG7yH1/UDtz6ylYkt/C4WffOA
-        Qc1rtZ5jVrkKaLiqrHpX1dhTS1tg
-X-Google-Smtp-Source: APXvYqzruQlVqv0rOMPatp/xWj4OyoIqfv4AEDmdIGQAQgWrLKYFBDkWlYXf6LZ5VdpuIXmFRBaI3g==
-X-Received: by 2002:a19:22c4:: with SMTP id i187mr5060364lfi.152.1574191945277;
-        Tue, 19 Nov 2019 11:32:25 -0800 (PST)
+        bh=gMwxQZ0NGeg1EorIa2meDnvhnfgkvViZuHv3dYidgxs=;
+        b=Aco1SRsKlFdV8nPhWUjZpl0jOpjr7wMe1Mp6sDcuVrjEjeA0iictrCI8J37ACU044a
+         1SUjbvUq6H8pBsZD6qBsqrC4c8ckZTt1imSo1dCsFQQ/yniVUhwfkUndv8RGBIJl+JX/
+         /S/5MoPLwxQ75QRMk3/a2bBVAgoWlKQqKoRa3L6LBYc5tEbNEs5n4n2hcUaQcTxf93Uf
+         h1PzoGKUneuJCcUgyi51CIcTcYZiUxzdwoLS5tx0gJwKLxMoCT1iP2+9qcU4DpcmJ5A+
+         3FbFQCtbm8xf649JR63ORvIv4iH31lH/7LiNCT6KvSLw6FeetZinKvSAW9dwlh+upSZr
+         0BGg==
+X-Gm-Message-State: APjAAAXqZjcUzod9d7Ya3DwFc3xFkRl4dCT2ZomCBvRKSoh8phPdPj19
+        vcJ695pjB+3xkNqHat/jN9zbyXWj
+X-Google-Smtp-Source: APXvYqzjiSocR9GOXiFu/zz9ZV7iWYsxUSAp/+7quqQcWEl+zsxBDS1SIEfmOBsvrxDpI1OIeb6tiw==
+X-Received: by 2002:a2e:3009:: with SMTP id w9mr5655871ljw.74.1574191954093;
+        Tue, 19 Nov 2019 11:32:34 -0800 (PST)
 Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id w26sm7078376lfl.37.2019.11.19.11.32.23
+        by smtp.googlemail.com with ESMTPSA id t8sm11062627lfl.51.2019.11.19.11.32.32
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 Nov 2019 11:32:24 -0800 (PST)
-Subject: Re: [PATCH v1 01/17] soc: tegra: pmc: Add helper functions for PLLM
- overrides
+        Tue, 19 Nov 2019 11:32:33 -0800 (PST)
+Subject: Re: [PATCH v1 12/17] arm: tegra: Add clock-cells property to Tegra
+ pmc
 To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
         thierry.reding@gmail.com, jonathanh@nvidia.com,
         mperttunen@nvidia.com, gregkh@linuxfoundation.org,
@@ -74,14 +74,14 @@ Cc:     allison@lohutok.net, pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
         linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
 References: <1574146234-3871-1-git-send-email-skomatineni@nvidia.com>
- <1574146234-3871-2-git-send-email-skomatineni@nvidia.com>
+ <1574146234-3871-13-git-send-email-skomatineni@nvidia.com>
 From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <dec7141c-0761-d38b-890f-5cdd969d1c8c@gmail.com>
-Date:   Tue, 19 Nov 2019 22:32:22 +0300
+Message-ID: <e4cbf86b-07b2-f0a1-141f-facb7340a604@gmail.com>
+Date:   Tue, 19 Nov 2019 22:32:32 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <1574146234-3871-2-git-send-email-skomatineni@nvidia.com>
+In-Reply-To: <1574146234-3871-13-git-send-email-skomatineni@nvidia.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -91,181 +91,98 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 19.11.2019 09:50, Sowjanya Komatineni пишет:
-> Tegra PMC has an option to override the CAR PLLM configuration during
-> the warmboot.
+> Tegra pmc has 3 clocks clk_out_1, clk_out_2, clk_out_3 with mux and gate
+> for each of these clocks as part of pmc and Tegra pmc is the clock provider
+> for these clocks.
 > 
-> PLLM dividers and enable overrides from Tegra PMC are applicable only
-> when PLLM_OVERRIDE bit in PMC_PLLP_WB0_OVERRIDE register is set by Tegra
-> the bootloader. During warmboot based on this override enable, PLLM
-> divider and enable configuration from overrides in PMC or from CAR
-> module are used.
-> 
-> Currently PLLM overrides in Tegra PMC are directly programmed by the Tegra
-> clock driver and with this when PMC is in secure mode, any direct PMC
-> register access from non-secure world will not go through.
-> 
-> This patch adds helper functions for use by the Tegra clock driver to
-> configure these PLLM overrides during PLLM clock rate and state changes.
+> This patch adds #clock-cells property with 1 clock specifier to
+> the Tegra pmc node.
 > 
 > Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 > ---
->  drivers/soc/tegra/pmc.c | 204 +++++++++++++++++++++++++++++++++++++++++++++++-
->  include/soc/tegra/pmc.h |   5 ++
->  2 files changed, 205 insertions(+), 4 deletions(-)
+>  arch/arm/boot/dts/tegra114.dtsi | 4 +++-
+>  arch/arm/boot/dts/tegra124.dtsi | 4 +++-
+>  arch/arm/boot/dts/tegra30.dtsi  | 4 +++-
+>  3 files changed, 9 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
-> index 8db63cfba833..224e7cf8dc00 100644
-> --- a/drivers/soc/tegra/pmc.c
-> +++ b/drivers/soc/tegra/pmc.c
-> @@ -79,6 +79,14 @@
+> diff --git a/arch/arm/boot/dts/tegra114.dtsi b/arch/arm/boot/dts/tegra114.dtsi
+> index 0d7a6327e404..b8f12f24f314 100644
+> --- a/arch/arm/boot/dts/tegra114.dtsi
+> +++ b/arch/arm/boot/dts/tegra114.dtsi
+> @@ -4,6 +4,7 @@
+>  #include <dt-bindings/memory/tegra114-mc.h>
+>  #include <dt-bindings/pinctrl/pinctrl-tegra.h>
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include <dt-bindings/soc/tegra-pmc.h>
 >  
->  #define PMC_PWR_DET			0x48
+>  / {
+>  	compatible = "nvidia,tegra114";
+> @@ -514,11 +515,12 @@
+>  		status = "disabled";
+>  	};
 >  
-> +#define TEGRA186_PMC_PLLP_WB0_OVERRIDE	0x4c
-> +#define PMC_PLLP_WB0_OVERRIDE		0xf8
-> +#define  PMC_PLLP_WB0_OVERRIDE_PLLM_ENABLE BIT(12)
-> +#define  PMC_PLLP_WB0_OVERRIDE_PLLM_OVERRIDE BIT(11)
-> +
-> +#define TEGRA186_PMC_PLLM_WB0_OVERRIDE_FREQ	0x50
-> +#define TEGRA186_PMC_PLLM_WB0_OVERRIDE_2	0x54
-> +
->  #define PMC_SCRATCH0_MODE_RECOVERY	BIT(31)
->  #define PMC_SCRATCH0_MODE_BOOTLOADER	BIT(30)
->  #define PMC_SCRATCH0_MODE_RCM		BIT(1)
-> @@ -122,6 +130,9 @@
->  #define IO_DPD2_STATUS			0x1c4
->  #define SEL_DPD_TIM			0x1c8
+> -	pmc@7000e400 {
+> +	pmc: pmc@7000e400 {
+>  		compatible = "nvidia,tegra114-pmc";
+>  		reg = <0x7000e400 0x400>;
+>  		clocks = <&tegra_car TEGRA114_CLK_PCLK>, <&clk32k_in>;
+>  		clock-names = "pclk", "clk32k_in";
+> +		#clock-cells = <1>;
+>  	};
 >  
-> +#define PMC_PLLM_WB0_OVERRIDE_FREQ	0x1dc
-> +#define PMC_PLLM_WB0_OVERRIDE_2		0x2b0
-> +
->  #define PMC_SCRATCH54			0x258
->  #define  PMC_SCRATCH54_DATA_SHIFT	8
->  #define  PMC_SCRATCH54_ADDR_SHIFT	0
-> @@ -182,6 +193,15 @@ struct tegra_pmc_regs {
->  	unsigned int rst_source_mask;
->  	unsigned int rst_level_shift;
->  	unsigned int rst_level_mask;
-> +	unsigned int pllp_wb0_override;
-> +	unsigned int pllm_wb0_override_freq;
-> +	unsigned int pllm_wb0_override_2;
-> +	unsigned int override_divm_shift;
-> +	unsigned int override_divm_mask;
-> +	unsigned int override_divn_shift;
-> +	unsigned int override_divn_mask;
-> +	unsigned int override_divp_shift;
-> +	unsigned int override_divp_mask;
->  };
+>  	fuse@7000f800 {
+> diff --git a/arch/arm/boot/dts/tegra124.dtsi b/arch/arm/boot/dts/tegra124.dtsi
+> index 413bfb981de8..d0802c4ae3bf 100644
+> --- a/arch/arm/boot/dts/tegra124.dtsi
+> +++ b/arch/arm/boot/dts/tegra124.dtsi
+> @@ -6,6 +6,7 @@
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  #include <dt-bindings/reset/tegra124-car.h>
+>  #include <dt-bindings/thermal/tegra124-soctherm.h>
+> +#include <dt-bindings/soc/tegra-pmc.h>
 >  
->  struct tegra_wake_event {
-> @@ -227,6 +247,7 @@ struct tegra_pmc_soc {
->  	bool needs_mbist_war;
->  	bool has_impl_33v_pwr;
->  	bool maybe_tz_only;
-> +	bool has_pllm_wb0_override;
+>  / {
+>  	compatible = "nvidia,tegra124";
+> @@ -595,11 +596,12 @@
+>  		clocks = <&tegra_car TEGRA124_CLK_RTC>;
+>  	};
 >  
->  	const struct tegra_io_pad_soc *io_pads;
->  	unsigned int num_io_pads;
-> @@ -1156,6 +1177,99 @@ static void tegra_powergate_remove_all(struct device_node *parent)
->  	of_node_put(np);
->  }
+> -	pmc@7000e400 {
+> +	pmc: pmc@7000e400 {
+>  		compatible = "nvidia,tegra124-pmc";
+>  		reg = <0x0 0x7000e400 0x0 0x400>;
+>  		clocks = <&tegra_car TEGRA124_CLK_PCLK>, <&clk32k_in>;
+>  		clock-names = "pclk", "clk32k_in";
+> +		#clock-cells = <1>;
+>  	};
 >  
-> +bool tegra_pmc_is_pllm_wb0_override_enabled(void)
-> +{
-> +	u32 val;
-> +
-> +	if (pmc->soc->has_pllm_wb0_override) {
-> +		val = tegra_pmc_readl(pmc, pmc->soc->regs->pllp_wb0_override);
-> +		return (val & PMC_PLLP_WB0_OVERRIDE_PLLM_OVERRIDE) ? 1 : 0;
-> +	}
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL(tegra_pmc_is_pllm_wb0_override_enabled);
-> +
-> +bool tegra_pmc_is_pllm_wb0_enabled(void)
-> +{
-> +	u32 val;
-> +
-> +	if (pmc->soc->has_pllm_wb0_override) {
-> +		val = tegra_pmc_readl(pmc, pmc->soc->regs->pllp_wb0_override);
-> +		return (val & PMC_PLLP_WB0_OVERRIDE_PLLM_ENABLE) ? 1 : 0;
-> +	}
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL(tegra_pmc_is_pllm_wb0_enabled);
-> +
-> +void tegra_pmc_set_pllm_wb0_enable(bool enable)
-> +{
-> +	u32 val;
-> +
-> +	if (pmc->soc->has_pllm_wb0_override) {
-> +		val = tegra_pmc_readl(pmc, pmc->soc->regs->pllp_wb0_override);
-> +		if (enable)
-> +			val |= PMC_PLLP_WB0_OVERRIDE_PLLM_ENABLE;
-> +		else
-> +			val &= ~PMC_PLLP_WB0_OVERRIDE_PLLM_ENABLE;
-> +		tegra_pmc_writel(pmc, val, pmc->soc->regs->pllp_wb0_override);
-> +	}
-> +}
-> +EXPORT_SYMBOL(tegra_pmc_set_pllm_wb0_enable);
-> +
-> +void tegra_pmc_get_pllm_wb0_mnp_overrides(u32 *divm, u32 *divn, u8 *divp)
-> +{
-> +	u32 val;
-> +	unsigned int divnm_reg, divp_reg;
-> +
-> +	if (pmc->soc->has_pllm_wb0_override) {
-> +		divnm_reg = pmc->soc->regs->pllm_wb0_override_freq;
-> +		divp_reg = pmc->soc->regs->pllm_wb0_override_2;
-> +
-> +		if (tegra_pmc_is_pllm_wb0_override_enabled()) {
-> +			val = tegra_pmc_readl(pmc, divnm_reg);
-> +			*divm = (val >> pmc->soc->regs->override_divm_shift) &
-> +				pmc->soc->regs->override_divm_mask;
-> +			*divn = (val >> pmc->soc->regs->override_divn_shift) &
-> +				pmc->soc->regs->override_divn_mask;
-> +			val = tegra_pmc_readl(pmc, divp_reg);
-> +			*divp = (val >> pmc->soc->regs->override_divp_shift) &
-> +				pmc->soc->regs->override_divp_mask;
-> +		}
-> +	}
-> +}
-> +EXPORT_SYMBOL(tegra_pmc_get_pllm_wb0_mnp_overrides);
-> +
-> +void tegra_pmc_set_pllm_wb0_mnp_overrides(u32 divm, u32 divn, u8 divp)
-> +{
-> +	u32 val;
-> +	unsigned int divnm_reg, divp_reg;
-> +
-> +	if (pmc->soc->has_pllm_wb0_override) {
-> +		divnm_reg = pmc->soc->regs->pllm_wb0_override_freq;
-> +		divp_reg = pmc->soc->regs->pllm_wb0_override_2;
-> +
-> +		if (tegra_pmc_is_pllm_wb0_override_enabled()) {
-> +			val = tegra_pmc_readl(pmc, divp_reg);
-> +			val &= ~(pmc->soc->regs->override_divp_mask <<
-> +				 pmc->soc->regs->override_divp_shift);
-> +			val |= (divp << pmc->soc->regs->override_divp_shift);
-> +			tegra_pmc_writel(pmc, val, divp_reg);
-> +
-> +			val = tegra_pmc_readl(pmc, divnm_reg);
-> +			val &= ~(pmc->soc->regs->override_divm_mask <<
-> +				 pmc->soc->regs->override_divm_shift);
-> +			val |= divm << pmc->soc->regs->override_divm_shift;
-> +			val &= ~(pmc->soc->regs->override_divn_mask <<
-> +				 pmc->soc->regs->override_divn_shift);
-> +			val |= divn << pmc->soc->regs->override_divn_shift;
-> +			tegra_pmc_writel(pmc, val, divnm_reg);
-> +		}
-> +	}
-> +}
-> +EXPORT_SYMBOL(tegra_pmc_set_pllm_wb0_mnp_overrides);
+>  	fuse@7000f800 {
+> diff --git a/arch/arm/boot/dts/tegra30.dtsi b/arch/arm/boot/dts/tegra30.dtsi
+> index 55ae050042ce..4d5e9d0001d3 100644
+> --- a/arch/arm/boot/dts/tegra30.dtsi
+> +++ b/arch/arm/boot/dts/tegra30.dtsi
+> @@ -4,6 +4,7 @@
+>  #include <dt-bindings/memory/tegra30-mc.h>
+>  #include <dt-bindings/pinctrl/pinctrl-tegra.h>
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include <dt-bindings/soc/tegra-pmc.h>
+>  
+>  / {
+>  	compatible = "nvidia,tegra30";
+> @@ -714,11 +715,12 @@
+>  		status = "disabled";
+>  	};
+>  
+> -	pmc@7000e400 {
+> +	pmc: pmc@7000e400 {
+>  		compatible = "nvidia,tegra30-pmc";
+>  		reg = <0x7000e400 0x400>;
+>  		clocks = <&tegra_car TEGRA30_CLK_PCLK>, <&clk32k_in>;
+>  		clock-names = "pclk", "clk32k_in";
+> +		#clock-cells = <1>;
+>  	};
+>  
+>  	mc: memory-controller@7000f000 {
+> 
 
-Hello Sowjanya,
-
-The exporting isn't needed because both PMC and CaR drivers are
-built-in. Same for the other patches.
-
-[snip]
+What about Tegra20?
