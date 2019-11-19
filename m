@@ -2,96 +2,247 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B520C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 09:08:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31B83C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 09:10:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E52E8219F6
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 09:08:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jTgcused"
+	by mail.kernel.org (Postfix) with ESMTP id 00106219F6
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 09:10:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbfKSJIy (ORCPT
+        id S1727118AbfKSJKC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 04:08:54 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:38906 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725306AbfKSJIy (ORCPT
+        Tue, 19 Nov 2019 04:10:02 -0500
+Received: from mail-il1-f197.google.com ([209.85.166.197]:39707 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726840AbfKSJKB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 04:08:54 -0500
-Received: by mail-qk1-f193.google.com with SMTP id e2so17133387qkn.5
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 01:08:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:date:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=Wt+oX9fkrAikGfzu2MKOa2qUy+fReDWIJawgofjTH5s=;
-        b=jTgcused0CeDh9NfglkHNJxwebk9PMHr2U245TK/0iVXUDll8rqWBQlhPv3LwN0zuT
-         AV5ZjJmmcOvJaNG2fJHzYOFkIpN5o2yWIqZlfgXP91ne16eRtokTQqYPsPECIzj6mMl7
-         /55LH/z6j1a1cRU0XcB0yx8SqQ/YzINOjeTlO5oZSVV++irsn5ANtrvWZhVY2+ZhoILe
-         XqnS3ocdsWmuysi6XmnH19fC0mrh1UewWdODzdGHJsN0ihvyn2QxHliXJsm6wB3cck3C
-         52CZenuhtmU9pe4jvxZivlpY7YrG0Ad0sbKy4/hj8lYhw4Of+XgS5aEmKWm8VoTHHLl2
-         LswA==
+        Tue, 19 Nov 2019 04:10:01 -0500
+Received: by mail-il1-f197.google.com with SMTP id t4so18859297iln.6
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 01:10:01 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:date:user-agent
-         :mime-version:content-transfer-encoding;
-        bh=Wt+oX9fkrAikGfzu2MKOa2qUy+fReDWIJawgofjTH5s=;
-        b=NYM8v9wHlyU7U4ciXSSMtITt2NLcKfTMarUyGtNaS2wk0sWEGl7qQdwYU5Fy5psaoM
-         Igu6o/aFUAJdf6H1RJFynjizZyHPow/iuaLWpjKA/zGPSP1ckf/V8jsrHCpGTozUzStz
-         oHjB/Mmq1oXNavSx5wG3UZa1qPqTbKpAY34SHDj5Wq2rIxc06vGKw854qSBmUPiarTHL
-         eGN3qFN7sDvRHPmDrmN19mH+hdg0N3Sn2eJ/e+S78SAyggMabKiirCeA9HqC/0WEAaTh
-         o4Wew5+3YiqW1ZOB/MUVtXfmQ/UUCNsfXTVI0NNW36UQBkdm2o2ZPvfYxo3rtsLDO8aW
-         CTAA==
-X-Gm-Message-State: APjAAAVA8+ZDP1SyAFA61oF9HPtWraoMeKqx04Sakg0mZ3qtbhdAiZsP
-        B4/7UwE6VGUbV+VNiwQIh4U=
-X-Google-Smtp-Source: APXvYqw/11kH/4uK+tZ2e1NapPLZgnNtB8M1EUCLNCTjD73AdoNE1r9bY0qO4Nprqn/U+CWxXUz9gA==
-X-Received: by 2002:a37:ae05:: with SMTP id x5mr28138441qke.243.1574154531933;
-        Tue, 19 Nov 2019 01:08:51 -0800 (PST)
-Received: from dc740-pc ([186.0.171.141])
-        by smtp.gmail.com with ESMTPSA id s75sm10022708qke.14.2019.11.19.01.08.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Nov 2019 01:08:50 -0800 (PST)
-Message-ID: <c759bc50134ea434bfed0a183e0ce72984f5b609.camel@gmail.com>
-Subject: [PATCH 01/01] Add VID to support native DSD reproduction on FiiO
- devices.
-From:   Emilio Moretti <emilio.moretti@gmail.com>
-To:     perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org
-Date:   Tue, 19 Nov 2019 06:08:48 -0300
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.1-2 
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=2U+VP01yGK5GN91C64pS6CJdl5VZIy+xQr07ya4SFr0=;
+        b=N3Eh6WjbdJXiKsJ3hYeUFzXKJg63vyWPiXtE/ewd/n4dq6v3Z0u0/64dMAvc7av9lO
+         OSG+jA11RprZiCj7iW54yh2OVyku8Mvq2EFfEdEDaWkXL8Ghto/KaDV2ETRcR1FTEDRQ
+         WmbCz3hr7Py1DZTaqvidASAMLRG+O/uZsRhYW+b7cskYrBIeERrElNUPZlbDkFLOjYlp
+         6rMX4rHtkzz4nnw3n8yJMBvuwGxAhV0SwRjaJC/1d/y8YNqa8sMWpFZcCkVX408BKrij
+         RZ83LBcZPhuWmK9G4/6Hi3zcns7+G9twK7sOUoct7/9qc6XnrGrQke6tgc7JbOy/38mo
+         RZGw==
+X-Gm-Message-State: APjAAAUdWJoLr1HgeOBYnccIfkDC479U9Qkark66B1qz1deFbHOtdgsW
+        XKTvTD23MDJz2rzcd/IEwUxYkXMkgslpkbP0NhR8N0fgr228
+X-Google-Smtp-Source: APXvYqxU97nEhrgWlk9v1WZFrfuMn9DYF11hBF1h9wehGgJYTQF4dADfx/NUlvTBGUY0G/VcCC10y5OJmXZV/R0EJaJ40x4O3t+l
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a92:4804:: with SMTP id v4mr21196914ila.201.1574154600552;
+ Tue, 19 Nov 2019 01:10:00 -0800 (PST)
+Date:   Tue, 19 Nov 2019 01:10:00 -0800
+In-Reply-To: <1574084670.2698.7.camel@suse.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000c9a4d50597af6d44@google.com>
+Subject: Re: KASAN: use-after-free Read in si470x_int_in_callback (2)
+From:   syzbot <syzbot+9ca7a12fd736d93e0232@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, hverkuil@xs4all.nl,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-usb@vger.kernel.org, mchehab@kernel.org, oneukum@suse.com,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add VID to support native DSD reproduction on FiiO devices.
+Hello,
 
-Signed-off-by: Emilio Moretti <emilio.moretti@gmail.com>
----
- sound/usb/quirks.c | 1 +
- 1 file changed, 1 insertion(+)
+syzbot has tested the proposed patch but the reproducer still triggered  
+crash:
+KASAN: use-after-free Read in si470x_int_in_callback
 
-diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
-index 349e1e52996d..f5fc65aef628 100644
---- a/sound/usb/quirks.c
-+++ b/sound/usb/quirks.c
-@@ -1658,6 +1658,7 @@ u64 snd_usb_interface_dsd_format_quirks(struct snd_usb_audio *chip,
- 	case 0x25ce:  /* Mytek devices */
- 	case 0x278b:  /* Rotel? */
- 	case 0x292b:  /* Gustard/Ess based devices */
-+	case 0x2972:  /* FiiO devices */
- 	case 0x2ab6:  /* T+A devices */
- 	case 0x3842:  /* EVGA */
- 	case 0xc502:  /* HiBy devices */
--- 
-2.20.1
+radio-si470x 4-1:0.0: non-zero urb status (-71)
+==================================================================
+BUG: KASAN: use-after-free in si470x_int_in_callback.cold+0x27/0xbe  
+drivers/media/radio/si470x/radio-si470x-usb.c:378
+Read of size 8 at addr ffff8881d2fceab0 by task kworker/0:2/2107
 
+CPU: 0 PID: 2107 Comm: kworker/0:2 Not tainted 5.4.0-rc3-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+  <IRQ>
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xca/0x13e lib/dump_stack.c:113
+  print_address_description.constprop.0+0x36/0x50 mm/kasan/report.c:374
+  __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:506
+  kasan_report+0xe/0x20 mm/kasan/common.c:634
+  si470x_int_in_callback.cold+0x27/0xbe  
+drivers/media/radio/si470x/radio-si470x-usb.c:378
+  __usb_hcd_giveback_urb+0x1f2/0x470 drivers/usb/core/hcd.c:1654
+  usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1719
+  dummy_timer+0x120f/0x2fa2 drivers/usb/gadget/udc/dummy_hcd.c:1966
+  call_timer_fn+0x179/0x650 kernel/time/timer.c:1404
+  expire_timers kernel/time/timer.c:1449 [inline]
+  __run_timers kernel/time/timer.c:1773 [inline]
+  __run_timers kernel/time/timer.c:1740 [inline]
+  run_timer_softirq+0x5e3/0x1490 kernel/time/timer.c:1786
+  __do_softirq+0x221/0x912 kernel/softirq.c:292
+  invoke_softirq kernel/softirq.c:373 [inline]
+  irq_exit+0x178/0x1a0 kernel/softirq.c:413
+  exiting_irq arch/x86/include/asm/apic.h:536 [inline]
+  smp_apic_timer_interrupt+0x12f/0x500 arch/x86/kernel/apic/apic.c:1137
+  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
+  </IRQ>
+RIP: 0010:arch_local_irq_restore arch/x86/include/asm/irqflags.h:85 [inline]
+RIP: 0010:console_trylock_spinning kernel/printk/printk.c:1751 [inline]
+RIP: 0010:vprintk_emit+0x3cd/0x3e0 kernel/printk/printk.c:1995
+Code: 00 83 fb ff 75 d6 e9 db fc ff ff e8 fd 7a 15 00 e8 78 a7 1a 00 41 56  
+9d e9 b1 fd ff ff e8 eb 7a 15 00 e8 66 a7 1a 00 41 56 9d <e9> 2a ff ff ff  
+0f 1f 40 00 66 2e 0f 1f 84 00 00 00 00 00 55 48 89
+RSP: 0018:ffff8881cb01f238 EFLAGS: 00000293 ORIG_RAX: ffffffffffffff13
+RAX: 0000000000000007 RBX: 0000000000000200 RCX: 0000000000000006
+RDX: 0000000000000000 RSI: ffff8881cbfa08f0 RDI: ffff8881cbfa084c
+RBP: ffff8881cb01f280 R08: ffff8881cbfa0000 R09: fffffbfff11b23ae
+R10: fffffbfff11b23ad R11: ffffffff88d91d6f R12: 0000000000000034
+R13: ffff8881da24e000 R14: 0000000000000293 R15: 0000000000000000
+  vprintk_func+0x75/0x113 kernel/printk/printk_safe.c:386
+  printk+0xba/0xed kernel/printk/printk.c:2056
+  really_probe.cold+0x69/0x1de drivers/base/dd.c:628
+  driver_probe_device+0x104/0x210 drivers/base/dd.c:721
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
+  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
+  __device_attach+0x217/0x360 drivers/base/dd.c:894
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
+  device_add+0xae6/0x16f0 drivers/base/core.c:2201
+  usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
+  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
+  really_probe+0x281/0x6d0 drivers/base/dd.c:548
+  driver_probe_device+0x104/0x210 drivers/base/dd.c:721
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
+  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
+  __device_attach+0x217/0x360 drivers/base/dd.c:894
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
+  device_add+0xae6/0x16f0 drivers/base/core.c:2201
+  usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
+  hub_port_connect drivers/usb/core/hub.c:5183 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5323 [inline]
+  port_event drivers/usb/core/hub.c:5469 [inline]
+  hub_event+0x1dd0/0x37e0 drivers/usb/core/hub.c:5551
+  process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
+  worker_thread+0x96/0xe20 kernel/workqueue.c:2415
+  kthread+0x318/0x420 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+Allocated by task 2107:
+  save_stack+0x1b/0x80 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  __kasan_kmalloc mm/kasan/common.c:510 [inline]
+  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:483
+  kmalloc include/linux/slab.h:556 [inline]
+  kzalloc include/linux/slab.h:690 [inline]
+  si470x_usb_driver_probe+0x51/0xf50  
+drivers/media/radio/si470x/radio-si470x-usb.c:573
+  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
+  really_probe+0x281/0x6d0 drivers/base/dd.c:548
+  driver_probe_device+0x104/0x210 drivers/base/dd.c:721
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
+  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
+  __device_attach+0x217/0x360 drivers/base/dd.c:894
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
+  device_add+0xae6/0x16f0 drivers/base/core.c:2201
+  usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
+  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
+  really_probe+0x281/0x6d0 drivers/base/dd.c:548
+  driver_probe_device+0x104/0x210 drivers/base/dd.c:721
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
+  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
+  __device_attach+0x217/0x360 drivers/base/dd.c:894
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
+  device_add+0xae6/0x16f0 drivers/base/core.c:2201
+  usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
+  hub_port_connect drivers/usb/core/hub.c:5183 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5323 [inline]
+  port_event drivers/usb/core/hub.c:5469 [inline]
+  hub_event+0x1dd0/0x37e0 drivers/usb/core/hub.c:5551
+  process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
+  worker_thread+0x96/0xe20 kernel/workqueue.c:2415
+  kthread+0x318/0x420 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+Freed by task 2107:
+  save_stack+0x1b/0x80 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  kasan_set_free_info mm/kasan/common.c:332 [inline]
+  __kasan_slab_free+0x130/0x180 mm/kasan/common.c:471
+  slab_free_hook mm/slub.c:1424 [inline]
+  slab_free_freelist_hook mm/slub.c:1475 [inline]
+  slab_free mm/slub.c:3018 [inline]
+  kfree+0xe4/0x320 mm/slub.c:3967
+  si470x_usb_driver_probe+0xb27/0xf50  
+drivers/media/radio/si470x/radio-si470x-usb.c:766
+  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
+  really_probe+0x281/0x6d0 drivers/base/dd.c:548
+  driver_probe_device+0x104/0x210 drivers/base/dd.c:721
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
+  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
+  __device_attach+0x217/0x360 drivers/base/dd.c:894
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
+  device_add+0xae6/0x16f0 drivers/base/core.c:2201
+  usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
+  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
+  really_probe+0x281/0x6d0 drivers/base/dd.c:548
+  driver_probe_device+0x104/0x210 drivers/base/dd.c:721
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
+  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
+  __device_attach+0x217/0x360 drivers/base/dd.c:894
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
+  device_add+0xae6/0x16f0 drivers/base/core.c:2201
+  usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
+  hub_port_connect drivers/usb/core/hub.c:5183 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5323 [inline]
+  port_event drivers/usb/core/hub.c:5469 [inline]
+  hub_event+0x1dd0/0x37e0 drivers/usb/core/hub.c:5551
+  process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
+  worker_thread+0x96/0xe20 kernel/workqueue.c:2415
+  kthread+0x318/0x420 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+The buggy address belongs to the object at ffff8881d2fce000
+  which belongs to the cache kmalloc-4k of size 4096
+The buggy address is located 2736 bytes inside of
+  4096-byte region [ffff8881d2fce000, ffff8881d2fcf000)
+The buggy address belongs to the page:
+page:ffffea00074bf200 refcount:1 mapcount:0 mapping:ffff8881da00c280  
+index:0x0 compound_mapcount: 0
+flags: 0x200000000010200(slab|head)
+raw: 0200000000010200 dead000000000100 dead000000000122 ffff8881da00c280
+raw: 0000000000000000 0000000000040004 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff8881d2fce980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff8881d2fcea00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> ffff8881d2fcea80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                      ^
+  ffff8881d2fceb00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff8881d2fceb80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
+Tested on:
+
+commit:         22be26f7 usb-fuzzer: main usb gadget fuzzer driver
+git tree:       https://github.com/google/kasan.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=149ed686e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=387eccb7ac68ec5
+dashboard link: https://syzkaller.appspot.com/bug?extid=9ca7a12fd736d93e0232
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=1508a25ae00000
 
