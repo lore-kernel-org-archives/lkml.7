@@ -2,129 +2,103 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B9E2C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:02:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E14A2C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:03:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E666E2241E
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:02:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA3672240C
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:03:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="sQhEDOK4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zvvx/rJ9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727233AbfKSTCw (ORCPT
+        id S1727436AbfKSTDR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 14:02:52 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:34618 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727234AbfKSTCw (ORCPT
+        Tue, 19 Nov 2019 14:03:17 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:35324 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726792AbfKSTDR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 14:02:52 -0500
-Received: by mail-qk1-f196.google.com with SMTP id 205so18873214qkk.1
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 11:02:51 -0800 (PST)
+        Tue, 19 Nov 2019 14:03:17 -0500
+Received: by mail-oi1-f193.google.com with SMTP id n16so20021748oig.2;
+        Tue, 19 Nov 2019 11:03:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=nOtlx8W5kFFOHYOOqCInicVcS9VMgxzZJDB6vPZYj8Y=;
-        b=sQhEDOK4h+CjNaAZJ9SFqIFRU0lboojWtdHt3nnRoeYgfxiMCtz9gtLqjnu3lw3Rfx
-         qgeYu1QBVnZIytPjZBXhr9qU3GO+4sKhsDZg7xFANVamLGatVP/HrFrh1MKqnZooAnFA
-         hm1/LCDx1vxUMZEbMG3d+Hwj+JIU4g2ie4V6LqnKMULSN1r2g0v2f5e2DL/X3gOxZvgl
-         mXkIk/zjztybwsp0TuSuWidAjNSc7nI7lD5OUOpCASUZ/8uACLWmbFS4otqJCIK21c+i
-         etNf14xwCT/4kJ787XpYK/YYl17I6F4BNO1Z+hK0y33+kQmz8JWW5AfhCBdLVfTA6blx
-         qseA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wXfDYTOYMqxNSpe9ShF/iZIMn4Wb6p7KkNxA2R5RQwU=;
+        b=Zvvx/rJ9MxiVOdMlUkbqBGIIhXOR1HhCmOoGKH39Dg7nS0DPzhnL0gwndhkeuYe5TH
+         9z5boAkb9qe38AMjQWFsuGZsAtgtqwzElNKiHbIL2xSuDtktC9jhmymsLLPQUg04ls0H
+         i4PovOsqRvq6f3M0dApqd3dfiHM/ppwcd2ioLEiWj8iWJ+n6zOx+jFDtwDMSstVVVlWI
+         h3KBs/ztlRvmH07tThqDlPWcxmmZrGx5kdThrFcwqKCzu4x8An4huMSE2SWTDDRtSVm9
+         BLTys7os2z4Sm1ZeMt02D2r0R1RSg9sD41zzY4HfjFMx+jxSaFf5hfBpV4SlB2cVP4hF
+         zJSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=nOtlx8W5kFFOHYOOqCInicVcS9VMgxzZJDB6vPZYj8Y=;
-        b=oOXLMyN6mdGYaPrxg/yIBC/7PUzq7xLiB1aZCUaDMU5lEVhlwgEBvlbEaYAvoz720T
-         NQMq1xOj64xse+hllYaQ/vx9nJFV2Xq7bvFVK+/I/nSWZRat8ReinPlOO2biO8CBjCHA
-         aAeYkuQlc855y1UjYC3ch6e1sS1XggqFJT/n2Dw63jD55wxCDYZco5qtIw2OcEle3Pto
-         TvGzZ/gpuFlq81Pv7yjfuvyqtlhZ256FUTuoNscqy1maJtoVxzub3J2FZ7yTs0GsxpOd
-         E4WAWGTd+apt3nOiug/yAeoi3QKPB0oovFakwMYF5TonQ7cERLOyl6RdiDlrApdVntPA
-         bfwg==
-X-Gm-Message-State: APjAAAW64TmM3dHeom5NlhopiCSsCMo32w6scKBV8gvGRWOkpZoHNHNd
-        xKhyKqdBPMFPBMcDe8yajy5MJw==
-X-Google-Smtp-Source: APXvYqyD2BKIzD//N3zQpcyJ1rmzra5E3wCaew6QFo/eNzHpGF9HocziQ4dVo4GzBFaAv8YiYlh/eA==
-X-Received: by 2002:a37:6643:: with SMTP id a64mr31950602qkc.144.1574190171109;
-        Tue, 19 Nov 2019 11:02:51 -0800 (PST)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id w5sm10384776qkf.43.2019.11.19.11.02.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 19 Nov 2019 11:02:50 -0800 (PST)
-Message-ID: <1574190168.9585.4.camel@lca.pw>
-Subject: Re: linux-next: Tree for Nov 19 (kcsan)
-From:   Qian Cai <cai@lca.pw>
-To:     Marco Elver <elver@google.com>,
-        Randy Dunlap <rdunlap@infradead.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wXfDYTOYMqxNSpe9ShF/iZIMn4Wb6p7KkNxA2R5RQwU=;
+        b=I4etHjq9QBK5zlNUpArwiq34CFb6OUZFsmPwREuqciUPBt+GDI5j/4dyh8nrITDGHz
+         CB5uRfR3t/itnRlNhl83SviSuDv/Cu8rnVadrM0aYYWpyU7l/2JdFRestE9nnr9WU1Ew
+         72HvbAZZlk2eO4vknT1RjtPxMbk2XqjFPdaR9fGDW0Ypk2rwFBBz5v7+v1Z3KRTO3RHh
+         hL+0tRpAGocB9xFjCle0nwb3oeFnDI6Q1HOxewBiqdCugG9Knl36jcD+uEKRLl9OT1NW
+         NYj0ULuCl2MRFXkhs1Kz2dAty0g1JAJ9E+xdUDfZIjpysF22yAcr+HgIcbhe5o/Dbr/C
+         7hGg==
+X-Gm-Message-State: APjAAAVJNcUBhbCyyc5qbLl2AwtD2+yCvC0EH5iDgBCXgAEOrVfRQOJr
+        wAZhNXMKqalgQ4TQfwQKnizRHcdG06eadItrjZU=
+X-Google-Smtp-Source: APXvYqxQpUyGPS20zqAN957YPcUcZIpAqBiiTguvho0DCLnTHPnY/6KGVcgACFdT7eIji8LYFYjh3r3sVU7eNJpn1FA=
+X-Received: by 2002:aca:4c57:: with SMTP id z84mr5335978oia.92.1574190196370;
+ Tue, 19 Nov 2019 11:03:16 -0800 (PST)
+MIME-Version: 1.0
+References: <20191119154611.29625-1-TheSven73@gmail.com> <20191119154611.29625-5-TheSven73@gmail.com>
+ <a37d098e-12ea-af2e-22cd-cb5ec2856b6d@ti.com>
+In-Reply-To: <a37d098e-12ea-af2e-22cd-cb5ec2856b6d@ti.com>
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+Date:   Tue, 19 Nov 2019 14:03:05 -0500
+Message-ID: <CAGngYiU_8Obd6jKO9-fukK4K6hYYhFYVSjzxqVxVwwKeCmUkaw@mail.gmail.com>
+Subject: Re: [PATCH v2 4/4] dt-bindings: mfd: update TI tps6105x chip bindings
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Grigoryev Denis <grigoryev@fastwel.ru>,
+        Axel Lin <axel.lin@ingics.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Date:   Tue, 19 Nov 2019 14:02:48 -0500
-In-Reply-To: <20191119183407.GA68739@google.com>
-References: <20191119194658.39af50d0@canb.auug.org.au>
-         <e75be639-110a-c615-3ec7-a107318b7746@infradead.org>
-         <CANpmjNMpnY54kDdGwOPOD84UDf=Fzqtu62ifTds2vZn4t4YigQ@mail.gmail.com>
-         <fb7e25d8-aba4-3dcf-7761-cb7ecb3ebb71@infradead.org>
-         <20191119183407.GA68739@google.com>
+        linux-leds@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-11-19 at 19:34 +0100, 'Marco Elver' via kasan-dev wrote:
-> On Tue, 19 Nov 2019, Randy Dunlap wrote:
-> 
-> > On 11/19/19 8:12 AM, Marco Elver wrote:
-> > > On Tue, 19 Nov 2019 at 16:11, Randy Dunlap <rdunlap@infradead.org> wrote:
-> > > > 
-> > > > On 11/19/19 12:46 AM, Stephen Rothwell wrote:
-> > > > > Hi all,
-> > > > > 
-> > > > > Changes since 20191118:
-> > > > > 
-> > > > 
-> > > > on x86_64:
-> > > > 
-> > > > It seems that this function can already be known by the compiler as a
-> > > > builtin:
-> > > > 
-> > > > ../kernel/kcsan/core.c:619:6: warning: conflicting types for built-in function ‘__tsan_func_exit’ [-Wbuiltin-declaration-mismatch]
-> > > >  void __tsan_func_exit(void)
-> > > >       ^~~~~~~~~~~~~~~~
-> > > > 
-> > > > 
-> > > > $ gcc --version
-> > > > gcc (SUSE Linux) 7.4.1 20190905 [gcc-7-branch revision 275407]
-> > > 
-> > > Interesting. Could you share the .config? So far I haven't been able
-> > > to reproduce.
-> > 
-> > Sure, it's attached.
-> 
-> Thanks, the config did the trick, even for gcc 9.0.0.
-> 
-> The problem is CONFIG_UBSAN=y. We haven't explicitly disallowed it like
-> with KASAN. In principle there should be nothing wrong with KCSAN+UBSAN.
-> 
-> There are 3 options:
-> 1. Just disable UBSAN for KCSAN, and also disable KCSAN for UBSAN.
-> 2. Restrict the config to not allow combining KCSAN and UBSAN.
-> 3. Leave things as-is.
-> 
-> Option 1 probably makes most sense, and I'll send a patch for that
-> unless there are major objections.
+On Tue, Nov 19, 2019 at 1:37 PM Dan Murphy <dmurphy@ti.com> wrote:
+>
+> > +
+> > +Example (GPIO + led operation):
+> What part of the example is GPIO? Is that the default function?
 
-Both option #1 and #2 sounds quite unfortunate, as UBSAN is quite valuable for
-debugging. Hence, it is desire to make both work at the same time.
+The gpio function is always available by default.
+The mfd driver always adds the gpio mfd_cell.
+But no-one has ever implemented a mfd sub-driver for gpio.
+
+> > +
+> > +i2c0 {
+> > +     tps61052@33 {
+> > +             compatible = "ti,tps61052";
+> > +             reg = <0x33>;
+> > +
+> > +             led {
+> > +                     label = "tps-torch";
+>
+> function and color examples?
+
+No function, no colour. This is a simple led control with 8 intensity
+steps. We use it as a led torch on an industrial device.
