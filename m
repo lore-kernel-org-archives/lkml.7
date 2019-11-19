@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09255C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:27:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A71CC43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:27:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF892222DC
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:27:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D837F222ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:27:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141234;
-	bh=JT53lHzlxTCvHdD2h1AKBQEq+cdCUIcoomU7kVIRX94=;
+	s=default; t=1574141239;
+	bh=quaFVzJRdtGC0pYG6THaiNj51wCyvvfrzByeOymHtEo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cg0Tngz8hK4+IdvzYyXD9zTU6i4w8zbEthco0UjGcHvJPpLi+njRK5i4juxBUzuiW
-	 2H1s5bWB20hE65Q8Cz+aKm0WLTGs8LTZinUF3RO7tdsoZOnidKLBwM5BuoGABHIxz7
-	 rFoVc2f+N9j7BZjgXRfkg/Np5xGwTluX6mbgf3YM=
+	b=IWx/hmVEHUgtfbGP5FPtLKIauCRNUPdo3vMUw8aLFgJrwVldTwy6iG1XlWLdObJLL
+	 G7FLKLtjyLgl2s4Um/47G+eSaiMvRz0jDsXLmPCcrllKnsLinDvaBpvatUkDTejvKD
+	 VHpq4r/fXAt3MMzs0OtBdKPRkpyb8+JNWCUz5+y0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728709AbfKSF1N (ORCPT
+        id S1728716AbfKSF1R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:27:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45400 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:27:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728097AbfKSF1L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:27:11 -0500
+        id S1728097AbfKSF1Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:27:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0C8021823;
-        Tue, 19 Nov 2019 05:27:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BCC8221823;
+        Tue, 19 Nov 2019 05:27:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141231;
-        bh=JT53lHzlxTCvHdD2h1AKBQEq+cdCUIcoomU7kVIRX94=;
+        s=default; t=1574141234;
+        bh=quaFVzJRdtGC0pYG6THaiNj51wCyvvfrzByeOymHtEo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=stQYQ5QIaF7cZbK1fRLIu0up61UZVHe38HI/5EMGOFKS0mQ50KE1h2ALOtmw6RyQG
-         yXPqfBxGRMkk0cDxGQFnw5/A4Bf3QO1T5B/VySt8ZPwjI2o0b8jQWxb++KW5/Z8F0l
-         zqE7YmtHba9d0VTxTU2wk2t/z4uSfxrnqGrzx1KQ=
+        b=HGgCFWqYwP0+eFA8iW+WSuyetmx4LpNJHpimXCrFC9yo6q+5hZ6QYmeKtg0oyJxh+
+         6ao6N08FkBA9wkAsrIjR5an67DHlkhbWIcXWnx5GrOyr5AAD6Qr2YcY/2dk+ivGG25
+         26K2PMQI7hce4m96A8sMneEeljfr6ZcDPpD/0H8A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
+        stable@vger.kernel.org, Sara Sharon <sara.sharon@intel.com>,
         Luca Coelho <luciano.coelho@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 089/422] iwlwifi: dont WARN on trying to dump dead firmware
-Date:   Tue, 19 Nov 2019 06:14:46 +0100
-Message-Id: <20191119051405.165466532@linuxfoundation.org>
+Subject: [PATCH 4.19 090/422] iwlwifi: mvm: avoid sending too many BARs
+Date:   Tue, 19 Nov 2019 06:14:47 +0100
+Message-Id: <20191119051405.216492911@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -60,49 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Sara Sharon <sara.sharon@intel.com>
 
-[ Upstream commit 84f260251ed8153e84c64eb2c5278ab18d3ddef6 ]
+[ Upstream commit 1a19c139be18ed4d6d681049cc48586fae070120 ]
 
-There's no point in warning here, the user will just get an
-error back to the debugfs file write, and warning just makes
-it seem like there's an internal consistency problem when in
-reality the user just happened to hit this at a bad time.
-Remove the warning.
+When we receive TX response, we may release a few packets
+due to a hole that was closed in the transmission window.
 
-Fixes: f45f979dc208 ("iwlwifi: mvm: disable dbg data collect when fw isn't alive")
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+However, if that frame failed, we will mark all the released
+frames as failed and will send multiple BARs.
+
+This affects statistics badly, and cause unnecessary frames
+transmission.
+
+Instead, mark all the following packets as success, with the
+desired result of sending a bar for the failed frame only.
+
+Signed-off-by: Sara Sharon <sara.sharon@intel.com>
 Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/fw/dbg.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/net/wireless/intel/iwlwifi/mvm/tx.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/fw/dbg.c b/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
-index a31a42e673c46..8070b2d4c46fe 100644
---- a/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
-+++ b/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
-@@ -1016,7 +1016,7 @@ int iwl_fw_dbg_collect_desc(struct iwl_fw_runtime *fwrt,
- 	 * If the loading of the FW completed successfully, the next step is to
- 	 * get the SMEM config data. Thus, if fwrt->smem_cfg.num_lmacs is non
- 	 * zero, the FW was already loaded successully. If the state is "NO_FW"
--	 * in such a case - WARN and exit, since FW may be dead. Otherwise, we
-+	 * in such a case - exit, since FW may be dead. Otherwise, we
- 	 * can try to collect the data, since FW might just not be fully
- 	 * loaded (no "ALIVE" yet), and the debug data is accessible.
- 	 *
-@@ -1024,9 +1024,8 @@ int iwl_fw_dbg_collect_desc(struct iwl_fw_runtime *fwrt,
- 	 *	config. In such a case, due to HW access problems, we might
- 	 *	collect garbage.
- 	 */
--	if (WARN((fwrt->trans->state == IWL_TRANS_NO_FW) &&
--		 fwrt->smem_cfg.num_lmacs,
--		 "Can't collect dbg data when FW isn't alive\n"))
-+	if (fwrt->trans->state == IWL_TRANS_NO_FW &&
-+	    fwrt->smem_cfg.num_lmacs)
- 		return -EIO;
+diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/tx.c b/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
+index 5615ce55cef56..cb2e52e7f46c9 100644
+--- a/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
++++ b/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
+@@ -1438,6 +1438,14 @@ static void iwl_mvm_rx_tx_cmd_single(struct iwl_mvm *mvm,
+ 			break;
+ 		}
  
- 	if (test_and_set_bit(IWL_FWRT_STATUS_DUMPING, &fwrt->status))
++		/*
++		 * If we are freeing multiple frames, mark all the frames
++		 * but the first one as acked, since they were acknowledged
++		 * before
++		 * */
++		if (skb_freed > 1)
++			info->flags |= IEEE80211_TX_STAT_ACK;
++
+ 		iwl_mvm_tx_status_check_trigger(mvm, status);
+ 
+ 		info->status.rates[0].count = tx_resp->failure_frame + 1;
 -- 
 2.20.1
 
