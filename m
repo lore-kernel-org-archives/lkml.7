@@ -2,167 +2,139 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8411C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:31:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DDAEC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:33:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC2D4222A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:31:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66ECF222A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:32:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EsrZgw7T"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sifSK6MU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727655AbfKSGbp (ORCPT
+        id S1727669AbfKSGc6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 01:31:45 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:36320 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726023AbfKSGbo (ORCPT
+        Tue, 19 Nov 2019 01:32:58 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:43874 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726023AbfKSGc6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 01:31:44 -0500
-Received: by mail-wm1-f65.google.com with SMTP id c22so2080396wmd.1;
-        Mon, 18 Nov 2019 22:31:42 -0800 (PST)
+        Tue, 19 Nov 2019 01:32:58 -0500
+Received: by mail-io1-f66.google.com with SMTP id r2so16721554iot.10;
+        Mon, 18 Nov 2019 22:32:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=V9ZVAjqEehE9TZd163jDDobRL04jul9RIc/NIRcOnxE=;
-        b=EsrZgw7TQcDPJOYnuV5mNgHP+RRyegJGuk8W/0SspettSC8OxWtTlYR2AnmgusdtZM
-         KNWtAL49JUPYfI+Ain6qom4D8RbxBjzYXWqBIAeEETlhrNdpbQc0EseQPMY2WSiimOR1
-         RJ/zeIH+yMvl+VrPplAgYsCm28RSmTWlZmbimQYLJQeEzfT+80XGNVH6u7GR3+lxcJn2
-         t5euOa2FIuFXKUnQ07xR++3a+R8pYxnDLE19BHAIpyD+6Vai6hTtpiWdIDV+fEAD9HrN
-         SBu+wfbKgYvwlSjbjEOJQ2esyOXkYgNvw7VwJS+IjumqnHEFSNPIfku6yomjUZ9GhRiQ
-         eHDg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=NXaQYQk0g4GZrnX0H+C5/sQj56d3X20l4tE5DHhQOrA=;
+        b=sifSK6MU7G+EcqYvJSuSa2S3hMP9SB6t7e29d7KHAyYYgBX4YqD7x0RtWHSqj7x64T
+         UCnhKrr5Oiz+XULwu7eB1ZzOI6VyeAHiAbd+ovtLWxxuyjZjQERBAwrzjvdoMJrtvL2X
+         OuCAUcEOqMXV21HuTt3LYU4PJ7a9/zwV0cPSFw8iKelRg6k0kRED6h1IpqHOT34kW5Dv
+         V+F06IQt2Mi5Kauqgd6BFTTPOuzVSntsEr/Hz/LVi2r7g9MduWF7OaGr1l12AxH8Pw4y
+         IkHXTj8+xHCrm+IKudRyf5hLWkkP4WKgN+znsqikOz7kNlhe0ebhtZo0RHJwK0BSQojS
+         kitQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=V9ZVAjqEehE9TZd163jDDobRL04jul9RIc/NIRcOnxE=;
-        b=sf4Y+1ZD01tvFIV/1x6Slgb7pdwRWZJ9bkV7/4TB8S0fD65T8RrQbJzawA5p/imDTk
-         HLJnYGt+NJauLBvbI3Nju6hD+bgxMiJ60aLp0CpiPXDaW0b+OqSjbuHMYAcCJWSZ7veg
-         JWEDy3W2F7JJJX1ufCs7M/kUOhbqWCWTbuiem01xLtHCn57gH4qC67B1E5hVXK4ocjaT
-         /6QZq3PznQ+TDDLQESFiZH/lUYQsSvN2eAUvho5WI2aBnD9+ClakQGcqwDwBC259Icy1
-         jrAzIiaKJh6gfNhL1MnD5QDMyBE5PAh30udPgQlNoEPSjh8PjUie/Y+TtX77TRnFm2Vn
-         XAqw==
-X-Gm-Message-State: APjAAAXQtbtKHsmbl5SNck9otrwVME4yE6sIc/pG9GEjWrrw01aKDSpS
-        HAUuNgo8I8GFf+WF8nJe0UTR6b3oMqc=
-X-Google-Smtp-Source: APXvYqxjznwI398nWMJI2jkG1ai5MsjbFQzICGTnmQ/ZVsn7P6W4xO6iF+umFKBNbfwyCgLU1pBogQ==
-X-Received: by 2002:a1c:3b82:: with SMTP id i124mr3264114wma.122.1574145102066;
-        Mon, 18 Nov 2019 22:31:42 -0800 (PST)
-Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
-        by smtp.gmail.com with ESMTPSA id y19sm1976414wmd.29.2019.11.18.22.31.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 22:31:40 -0800 (PST)
-Date:   Tue, 19 Nov 2019 07:31:39 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Mikko Perttunen <mperttunen@nvidia.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-tegra@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v1 12/29] interconnect: Add memory interconnection
- providers for NVIDIA Tegra SoCs
-Message-ID: <20191119063139.GF2462695@ulmo>
-References: <20191118200247.3567-1-digetx@gmail.com>
- <20191118200247.3567-13-digetx@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=NXaQYQk0g4GZrnX0H+C5/sQj56d3X20l4tE5DHhQOrA=;
+        b=a2Un5RahC1mqd2Gs6JgWwjPkS0933A0sIw76uaTYsKRnOMosEW75Doel4hJgZ6SHkc
+         sshPPWg+eycp32JRw7fYxzextrOqk6EEq0P3r/uttb7y8u77BW789T68M8hb3q6AiZyk
+         8ucXosE2mxcZ0OGMys+nurGwWTuGM+T8cK4vOVxuTE9/y63lhBmU/2nNV4SGM1Wq2ydT
+         e89O7FYLSGskLp66CddIOtuw5p682MNbXEVH5AYnn18HORBAKTL1a0KDihQGj34l7ozV
+         Qlspe1RcG4yNGidNBZEIu5dMB1rFjBlefFQVHBu1S6TLwMmwRI/9bdebbEWdnhbWvUAs
+         jPbg==
+X-Gm-Message-State: APjAAAV3ERksv0YFuFjiw8s3TUzaCFY1HqJ4KkmTMqRALqyMESdwgVGi
+        C7EsFls6eHHwf0pdzuSZ3nnPI7kDIniFi5KhhRkryFsZ/56Esw==
+X-Google-Smtp-Source: APXvYqxsiN2r32tu6Vr3FT387ecd9RsbnxXZTJSYF8E4DcxZPX/OBCeKQumlgww/wRDUDEfuWrt3IfZaSkRqJ6CTjKM=
+X-Received: by 2002:a02:b48:: with SMTP id 69mr17013960jad.25.1574145177173;
+ Mon, 18 Nov 2019 22:32:57 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="oPmsXEqKQNHCSXW7"
-Content-Disposition: inline
-In-Reply-To: <20191118200247.3567-13-digetx@gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <1573459282-26989-1-git-send-email-bhsharma@redhat.com>
+ <20191113063858.GE22427@linaro.org> <CACi5LpP54d9DKW63G5W6X4euBjAm2NwkHOiM01dB7g8d60s=4w@mail.gmail.com>
+ <20191115015959.GI22427@linaro.org>
+In-Reply-To: <20191115015959.GI22427@linaro.org>
+From:   Prabhakar Kushwaha <prabhakar.pkin@gmail.com>
+Date:   Tue, 19 Nov 2019 12:02:46 +0530
+Message-ID: <CAJ2QiJJOSspLKRh+jRB_o0o9nmeAsiFKzxGJ8R0pYPRM4iptmw@mail.gmail.com>
+Subject: Re: [PATCH v4 0/3] Append new variables to vmcoreinfo (TCR_EL1.T1SZ
+ for arm64 and MAX_PHYSMEM_BITS for all archs)
+To:     AKASHI Takahiro <takahiro.akashi@linaro.org>,
+        Bhupesh Sharma <bhsharma@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bhupesh SHARMA <bhupesh.linux@gmail.com>,
+        Boris Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        James Morse <james.morse@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Steve Capper <steve.capper@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Dave Anderson <anderson@redhat.com>,
+        Kazuhito Hagio <k-hagio@ab.jp.nec.com>, x86@kernel.org,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        kexec mailing list <kexec@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Akashi,
 
---oPmsXEqKQNHCSXW7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Fri, Nov 15, 2019 at 7:29 AM AKASHI Takahiro
+<takahiro.akashi@linaro.org> wrote:
+>
+> Bhupesh,
+>
+> On Fri, Nov 15, 2019 at 01:24:17AM +0530, Bhupesh Sharma wrote:
+> > Hi Akashi,
+> >
+> > On Wed, Nov 13, 2019 at 12:11 PM AKASHI Takahiro
+> > <takahiro.akashi@linaro.org> wrote:
+> > >
+> > > Hi Bhupesh,
+> > >
+> > > Do you have a corresponding patch for userspace tools,
+> > > including crash util and/or makedumpfile?
+> > > Otherwise, we can't verify that a generated core file is
+> > > correctly handled.
+> >
+> > Sure. I am still working on the crash-utility related changes, but you
+> > can find the makedumpfile changes I posted a couple of days ago here
+> > (see [0]) and the github link for the makedumpfile changes can be seen
+> > via [1].
+> >
+> > I will post the crash-util changes shortly as well.
+> > Thanks for having a look at the same.
+>
+> Thank you.
+> I have tested my kdump patch with a hacked version of crash
+> where VA_BITS_ACTUAL is calculated from tcr_el1_t1sz in vmcoreinfo.
+>
 
-On Mon, Nov 18, 2019 at 11:02:30PM +0300, Dmitry Osipenko wrote:
-[...]
-> diff --git a/include/soc/tegra/mc.h b/include/soc/tegra/mc.h
-> index 1238e35653d1..593954324259 100644
-> --- a/include/soc/tegra/mc.h
-> +++ b/include/soc/tegra/mc.h
-> @@ -141,6 +141,11 @@ struct tegra_mc_reset_ops {
->  			    const struct tegra_mc_reset *rst);
->  };
-> =20
-> +struct tegra_mc_icc_node {
-> +	const char *name;
-> +	unsigned int id;
-> +};
-> +
->  struct tegra_mc_soc {
->  	const struct tegra_mc_client *clients;
->  	unsigned int num_clients;
-> @@ -160,6 +165,9 @@ struct tegra_mc_soc {
->  	const struct tegra_mc_reset_ops *reset_ops;
->  	const struct tegra_mc_reset *resets;
->  	unsigned int num_resets;
-> +
-> +	const struct tegra_mc_icc_node *icc_nodes;
-> +	unsigned int num_icc_nodes;
->  };
-> =20
->  struct tegra_mc {
-> @@ -184,4 +192,22 @@ struct tegra_mc {
->  int tegra_mc_write_emem_configuration(struct tegra_mc *mc, unsigned long=
- rate);
->  unsigned int tegra_mc_get_emem_device_count(struct tegra_mc *mc);
-> =20
-> +#ifdef CONFIG_INTERCONNECT_TEGRA
-> +int tegra_icc_mc_setup_interconnect(struct tegra_mc *mc);
-> +int tegra_icc_emc_setup_interconnect(struct device *emc_dev,
-> +				     unsigned int dram_data_bus_width_bytes);
-> +#else
-> +static inline int tegra_icc_mc_setup_interconnect(struct tegra_mc *mc);
-> +{
-> +	return 0;
-> +}
-> +
-> +static inline int
-> +tegra_icc_emc_setup_interconnect(struct device *emc_dev,
-> +				 unsigned int dram_data_bus_width_bytes)
-> +{
-> +	return 0;
-> +}
-> +#endif
+I also did hack to calculate VA_BITS_ACTUAL is calculated from
+tcr_el1_t1sz in vmcoreinfo. Now i am getting error same as mentioned
+by you in other thread last month.
+https://www.mail-archive.com/crash-utility@redhat.com/msg07385.html
 
-Is there really any reason why we should make this support optional? It
-seems to me like we would always want this enabled once it's tested and
-known to work.
+how this error was overcome?
 
-Thierry
+I am using
+ - crashkernel: https://github.com/crash-utility/crash.git  commit:
+babd7ae62d4e8fd6f93fd30b88040d9376522aa3
+and
+ - Linux: git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+commit: af42d3466bdc8f39806b26f593604fdc54140bcb
 
---oPmsXEqKQNHCSXW7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl3TjEsACgkQ3SOs138+
-s6FtYA/9ES4ueQlrGUANiXpnoYLp+gOvUdGR2Om0k7LXGB1sAbdfCnAXEGv8Nh06
-zMwoIQoF7yOagtouSroSK5930bLbrxrxffMXiYMzEZxzH3KmuRbxwxsN+egCLHUH
-3aAfDm67bO2QmGnQTltM/nyC22xfvjCr7Eb7Lr2uhoPv+j8Gs8nwev15gw3F/TuE
-fD2uAof3D/hlCwQ1eGVJf+PAQQ5c3Et6ivWXj1dLxw/bf2Fho7pxZt+B0XqvLlVR
-eoPTflPJAPdqZfYTrkijN+KmHu1S/pzYT/LcTdQij3sTSn0t/rLDA4n15P78KMPd
-XsKE8mUVQgJH+891UzGQLfAbmoX3UWAoQSiVMrEJ+6hLlHHEa620QWtIni46gZDP
-6bryzTb4s/zkPeNrMbb2+X8iibLCWfI9i+g+aHfaqdSdmyuLj3fwFdcOqLTL1fxr
-Pux+quH9+5M+brNCzkB0xBzvPqG4DSQ/Nu9WKHgf4RXARCrhqgauBYAlrK1UpnhQ
-PYjrooXnMTFULsmm7r9ysaOQfsTgy7v6UDWlgKAwZApfvVv2F86bJ/jvmN0IOtpA
-yiL2iBc27c24lKyzn5s4vLoy1tKEVkVO6D0e2rwP1M+cH7kU8IOXysAFGgNGcc1I
-3fyAlnc9BV2mA6kqh1y6UGctADv/EA+uooJ0l4RkhClzWAlry5E=
-=BBMX
------END PGP SIGNATURE-----
-
---oPmsXEqKQNHCSXW7--
+--pk
