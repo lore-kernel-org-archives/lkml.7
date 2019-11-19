@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0BD2C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:51:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6141BC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:51:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92F6121783
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:51:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F2DC20862
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:51:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142663;
-	bh=M2yOs9afGDUJ0xsdPlqgFgcEldyZBxj7OSIeQV5vXzc=;
+	s=default; t=1574142672;
+	bh=dYIXRbexQq7+/HOd58pSYSn1iRSMJHiiIRGBrEXnUBI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J2i2h5RbEm8Nn6NQ1zmgnRdTFayhFnF9at5AUrVKxWmWiPwH0col71TNvyT7IMte9
-	 XHn+t8b5F7bukSXLFdSuydW/tBfDAp8N72axv8Fr7VQoOTrOmmXFnLkoUwyjh4bIwH
-	 bEffXKUpLT17QqfJ90v2uICPKxkHm3oGmW6EnR50=
+	b=nOwiN/wb94tJywHZtXPiRngWcKwlnanV7x+AAVNKXvPrREalVYpwi4WSxllWDUxYr
+	 g2c5BseEnzQPEwCISBpZbAeYmeRAKFwWGfxdLgz2qFm7I2/QxiFa4FxoztFb1JEN7Z
+	 i6azbpGuhwqM8vwqhgR/IJkGNRjR6w4i+8s2vFPI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731721AbfKSFvC (ORCPT
+        id S1731743AbfKSFvL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:51:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48282 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:51:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731362AbfKSFu7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:50:59 -0500
+        id S1731074AbfKSFvI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:51:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11F6B20862;
-        Tue, 19 Nov 2019 05:50:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4507D20862;
+        Tue, 19 Nov 2019 05:51:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142658;
-        bh=M2yOs9afGDUJ0xsdPlqgFgcEldyZBxj7OSIeQV5vXzc=;
+        s=default; t=1574142667;
+        bh=dYIXRbexQq7+/HOd58pSYSn1iRSMJHiiIRGBrEXnUBI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EjrftUXJ9ruN+Z11DJt1ckeNLnpySrNt3vJG8+uHCd/HKey9cJVO/O4gBpdIjOkcm
-         z8mJ6T0tS9Y6vLn0uRrtgB/H4CgcEZf/ur5wDzPBcpZ9l9lwjL97tHvGdiwZEEX7t3
-         j/hdiEkxP6OJklsksAMi4t3k9sAOOEzZQdvA89Ik=
+        b=gSMS+yIUFcKC8yhUOjav9AaDcQvEI/qVk2C5xz2qnVQp2uo+2JUjwmVvLaFSGREJK
+         hxgZZ54KXGEi/fpu3h9+mtRlmmL+GMYkeq2e3IczmFy/55PJp/1m65n3pYTRAQiAh0
+         fBjwYuD6wOBq9X/kWUrVGayUyTbZZGV9Sdelm5ms=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Dirk van der Merwe <dirk.vandermerwe@netronome.com>,
+        stable@vger.kernel.org, Petr Machata <petrm@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 155/239] nfp: provide a better warning when ring allocation fails
-Date:   Tue, 19 Nov 2019 06:19:15 +0100
-Message-Id: <20191119051332.996563602@linuxfoundation.org>
+Subject: [PATCH 4.14 158/239] mlxsw: spectrum: Init shaper for TCs 8..15
+Date:   Tue, 19 Nov 2019 06:19:18 +0100
+Message-Id: <20191119051333.194190634@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -62,64 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jakub Kicinski <jakub.kicinski@netronome.com>
+From: Petr Machata <petrm@mellanox.com>
 
-[ Upstream commit 23d9f5531c7c28546954b0bf332134a9b8a38c0a ]
+[ Upstream commit a9f36656b519a9a21309793c306941a3cd0eeb8f ]
 
-NFP supports fairly enormous ring sizes (up to 256k descriptors).
-In commit 466271703867 ("nfp: use kvcalloc() to allocate SW buffer
-descriptor arrays") we have started using kvcalloc() functions to
-make sure the allocation of software state arrays doesn't hit
-the MAX_ORDER limit.  Unfortunately, we can't use virtual mappings
-for the DMA region holding HW descriptors.  In case this allocation
-fails instead of the generic (and fairly scary) warning/splat in
-the logs print a helpful message explaining what happened and
-suggesting how to fix it.
+With introduction of MC-aware mode to mlxsw, it became necessary to
+configure TCs above 7 as well. There is now code in mlxsw to disable ETS
+for these higher classes, but disablement of max shaper was neglected.
 
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Reviewed-by: Dirk van der Merwe <dirk.vandermerwe@netronome.com>
+By default, max shaper is currently disabled to begin with, so the
+problem is just cosmetic. However, for symmetry, do like we do for ETS
+configuration, and call mlxsw_sp_port_ets_maxrate_set() for both TC i
+and i + 8.
+
+Signed-off-by: Petr Machata <petrm@mellanox.com>
+Reviewed-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/netronome/nfp/nfp_net_common.c  | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/mellanox/mlxsw/spectrum.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/net/ethernet/netronome/nfp/nfp_net_common.c b/drivers/net/ethernet/netronome/nfp/nfp_net_common.c
-index 6df2c8b2ce6f3..bffa25d6dc294 100644
---- a/drivers/net/ethernet/netronome/nfp/nfp_net_common.c
-+++ b/drivers/net/ethernet/netronome/nfp/nfp_net_common.c
-@@ -2169,9 +2169,13 @@ nfp_net_tx_ring_alloc(struct nfp_net_dp *dp, struct nfp_net_tx_ring *tx_ring)
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
+index a909aa315a92a..226187cba0e81 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
+@@ -2825,6 +2825,13 @@ static int mlxsw_sp_port_ets_init(struct mlxsw_sp_port *mlxsw_sp_port)
+ 						    MLXSW_REG_QEEC_MAS_DIS);
+ 		if (err)
+ 			return err;
++
++		err = mlxsw_sp_port_ets_maxrate_set(mlxsw_sp_port,
++						    MLXSW_REG_QEEC_HIERARCY_TC,
++						    i + 8, i,
++						    MLXSW_REG_QEEC_MAS_DIS);
++		if (err)
++			return err;
+ 	}
  
- 	tx_ring->size = sizeof(*tx_ring->txds) * tx_ring->cnt;
- 	tx_ring->txds = dma_zalloc_coherent(dp->dev, tx_ring->size,
--					    &tx_ring->dma, GFP_KERNEL);
--	if (!tx_ring->txds)
-+					    &tx_ring->dma,
-+					    GFP_KERNEL | __GFP_NOWARN);
-+	if (!tx_ring->txds) {
-+		netdev_warn(dp->netdev, "failed to allocate TX descriptor ring memory, requested descriptor count: %d, consider lowering descriptor count\n",
-+			    tx_ring->cnt);
- 		goto err_alloc;
-+	}
- 
- 	sz = sizeof(*tx_ring->txbufs) * tx_ring->cnt;
- 	tx_ring->txbufs = kzalloc(sz, GFP_KERNEL);
-@@ -2314,9 +2318,13 @@ nfp_net_rx_ring_alloc(struct nfp_net_dp *dp, struct nfp_net_rx_ring *rx_ring)
- 	rx_ring->cnt = dp->rxd_cnt;
- 	rx_ring->size = sizeof(*rx_ring->rxds) * rx_ring->cnt;
- 	rx_ring->rxds = dma_zalloc_coherent(dp->dev, rx_ring->size,
--					    &rx_ring->dma, GFP_KERNEL);
--	if (!rx_ring->rxds)
-+					    &rx_ring->dma,
-+					    GFP_KERNEL | __GFP_NOWARN);
-+	if (!rx_ring->rxds) {
-+		netdev_warn(dp->netdev, "failed to allocate RX descriptor ring memory, requested descriptor count: %d, consider lowering descriptor count\n",
-+			    rx_ring->cnt);
- 		goto err_alloc;
-+	}
- 
- 	sz = sizeof(*rx_ring->rxbufs) * rx_ring->cnt;
- 	rx_ring->rxbufs = kzalloc(sz, GFP_KERNEL);
+ 	/* Map all priorities to traffic class 0. */
 -- 
 2.20.1
 
