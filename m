@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80107C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:40:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE2D1C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:40:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5420921939
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:40:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF69D21783
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:40:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142015;
-	bh=X1BSDj7yVpDkdHnzecGboQR5aPjvRN2RmNz7kfu0+NE=;
+	s=default; t=1574142018;
+	bh=m6fIGk2f8vaLLz+v7jVvYjREXcJWMYr3qzHcOjDW0jg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h0zr7eXrvEC6ka5acA9z4yOR8YDzRoQqLpvv0QLuMgCgRZZP1r/dn5/+VArYhiFEd
-	 o5w3Tn6Gr6KSbBIQsKlXnlTZbR941uUtxWzTY/W/NXvcju6p5swqJ+4AcUt6Oxq+mL
-	 VTp5RB1luipRnhymsZUiGw/1Oww9zFsT7mqRvFeE=
+	b=OHN0o6cB13i+KDhdtbiczrdq+c17KRgjry9PSfebJeBA9s8RyYeeZMP1fULZVaWmS
+	 ErGPDahipzg75ieb3vRBv7Q8fqCO76xObALKHPzHORO/Nmtn/Q8Wi3XthJPrWBDLV8
+	 Kuym5U5AXo8Pcdjy5i8V3SKLfLvVUJNm76X15rtw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729582AbfKSFkO (ORCPT
+        id S1730380AbfKSFkR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:40:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34330 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:40:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730367AbfKSFkM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:40:12 -0500
+        id S1728876AbfKSFkO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:40:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE6BA21783;
-        Tue, 19 Nov 2019 05:40:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8306121783;
+        Tue, 19 Nov 2019 05:40:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142011;
-        bh=X1BSDj7yVpDkdHnzecGboQR5aPjvRN2RmNz7kfu0+NE=;
+        s=default; t=1574142014;
+        bh=m6fIGk2f8vaLLz+v7jVvYjREXcJWMYr3qzHcOjDW0jg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0rCIp0mPhhmc6mnRPeqVpbsXO/teLn4drr3AYx/nfLdL1GiEwOHMkXbxfSio1lioz
-         jKsBZ6EKk9nS5C2BMkMNmWL3AvA/r0I20AhXpeV30+XDS5eJxIK2WrDokkB+3NzxN6
-         Nw+hHjr/EMpYiU+HvK8czSFiggtdfBRPvszwBOaY=
+        b=ShfMl3LjWDykvWfSp550c77BOtrON6WXswxZqcDeFMaKpNfYIdcHLywYroiEw+cPm
+         HyWBtUYEm1OsTQtyV/NLACxjeonfbu/9NFjuJmlkH6mKQuUzV2BchBnfbGKyUntKk+
+         TAkmFcQ3QeON27JXuV3WbCI5Bz2Zr8L4J9MBo/4E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 317/422] net: phy: mdio-bcm-unimac: Allow configuring MDIO clock divider
-Date:   Tue, 19 Nov 2019 06:18:34 +0100
-Message-Id: <20191119051419.535414678@linuxfoundation.org>
+Subject: [PATCH 4.19 318/422] net: micrel: fix return type of ndo_start_xmit function
+Date:   Tue, 19 Nov 2019 06:18:35 +0100
+Message-Id: <20191119051419.599634113@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -60,178 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit b78ac6ecd1b6b46f8767cbafa95a7b0b51b87ad8 ]
+[ Upstream commit 2b49117a5abee8478b0470cba46ac74f93b4a479 ]
 
-Allow the configuration of the MDIO clock divider when the Device Tree
-contains 'clock-frequency' property (similar to I2C and SPI buses).
-Because the hardware may have lost its state during suspend/resume,
-re-apply the MDIO clock divider upon resumption.
+The method ndo_start_xmit() is defined as returning an 'netdev_tx_t',
+which is a typedef for an enum type, so make sure the implementation in
+this driver has returns 'netdev_tx_t' value, and change the function
+return type to netdev_tx_t.
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Found by coccinelle.
+
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../bindings/net/brcm,unimac-mdio.txt         |  3 +
- drivers/net/phy/mdio-bcm-unimac.c             | 83 ++++++++++++++++++-
- 2 files changed, 84 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/micrel/ks8695net.c  | 2 +-
+ drivers/net/ethernet/micrel/ks8851_mll.c | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/brcm,unimac-mdio.txt b/Documentation/devicetree/bindings/net/brcm,unimac-mdio.txt
-index 4648948f7c3b8..e15589f477876 100644
---- a/Documentation/devicetree/bindings/net/brcm,unimac-mdio.txt
-+++ b/Documentation/devicetree/bindings/net/brcm,unimac-mdio.txt
-@@ -19,6 +19,9 @@ Optional properties:
- - interrupt-names: must be "mdio_done_error" when there is a share interrupt fed
-   to this hardware block, or must be "mdio_done" for the first interrupt and
-   "mdio_error" for the second when there are separate interrupts
-+- clocks: A reference to the clock supplying the MDIO bus controller
-+- clock-frequency: the MDIO bus clock that must be output by the MDIO bus
-+  hardware, if absent, the default hardware values are used
- 
- Child nodes of this MDIO bus controller node are standard Ethernet PHY device
- nodes as described in Documentation/devicetree/bindings/net/phy.txt
-diff --git a/drivers/net/phy/mdio-bcm-unimac.c b/drivers/net/phy/mdio-bcm-unimac.c
-index 8d370667fa1b3..80b9583eaa952 100644
---- a/drivers/net/phy/mdio-bcm-unimac.c
-+++ b/drivers/net/phy/mdio-bcm-unimac.c
-@@ -16,6 +16,7 @@
- #include <linux/module.h>
- #include <linux/io.h>
- #include <linux/delay.h>
-+#include <linux/clk.h>
- 
- #include <linux/of.h>
- #include <linux/of_platform.h>
-@@ -45,6 +46,8 @@ struct unimac_mdio_priv {
- 	void __iomem		*base;
- 	int (*wait_func)	(void *wait_func_data);
- 	void			*wait_func_data;
-+	struct clk		*clk;
-+	u32			clk_freq;
- };
- 
- static inline u32 unimac_mdio_readl(struct unimac_mdio_priv *priv, u32 offset)
-@@ -189,6 +192,35 @@ static int unimac_mdio_reset(struct mii_bus *bus)
- 	return 0;
- }
- 
-+static void unimac_mdio_clk_set(struct unimac_mdio_priv *priv)
-+{
-+	unsigned long rate;
-+	u32 reg, div;
-+
-+	/* Keep the hardware default values */
-+	if (!priv->clk_freq)
-+		return;
-+
-+	if (!priv->clk)
-+		rate = 250000000;
-+	else
-+		rate = clk_get_rate(priv->clk);
-+
-+	div = (rate / (2 * priv->clk_freq)) - 1;
-+	if (div & ~MDIO_CLK_DIV_MASK) {
-+		pr_warn("Incorrect MDIO clock frequency, ignoring\n");
-+		return;
-+	}
-+
-+	/* The MDIO clock is the reference clock (typicaly 250Mhz) divided by
-+	 * 2 x (MDIO_CLK_DIV + 1)
-+	 */
-+	reg = unimac_mdio_readl(priv, MDIO_CFG);
-+	reg &= ~(MDIO_CLK_DIV_MASK << MDIO_CLK_DIV_SHIFT);
-+	reg |= div << MDIO_CLK_DIV_SHIFT;
-+	unimac_mdio_writel(priv, reg, MDIO_CFG);
-+}
-+
- static int unimac_mdio_probe(struct platform_device *pdev)
+diff --git a/drivers/net/ethernet/micrel/ks8695net.c b/drivers/net/ethernet/micrel/ks8695net.c
+index bd51e057e9150..b881f5d4a7f9e 100644
+--- a/drivers/net/ethernet/micrel/ks8695net.c
++++ b/drivers/net/ethernet/micrel/ks8695net.c
+@@ -1164,7 +1164,7 @@ ks8695_timeout(struct net_device *ndev)
+  *	sk_buff and adds it to the TX ring. It then kicks the TX DMA
+  *	engine to ensure transmission begins.
+  */
+-static int
++static netdev_tx_t
+ ks8695_start_xmit(struct sk_buff *skb, struct net_device *ndev)
  {
- 	struct unimac_mdio_pdata *pdata = pdev->dev.platform_data;
-@@ -217,9 +249,26 @@ static int unimac_mdio_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 	}
+ 	struct ks8695_priv *ksp = netdev_priv(ndev);
+diff --git a/drivers/net/ethernet/micrel/ks8851_mll.c b/drivers/net/ethernet/micrel/ks8851_mll.c
+index 0e9719fbc6243..35f8c9ef204d9 100644
+--- a/drivers/net/ethernet/micrel/ks8851_mll.c
++++ b/drivers/net/ethernet/micrel/ks8851_mll.c
+@@ -1021,9 +1021,9 @@ static void ks_write_qmu(struct ks_net *ks, u8 *pdata, u16 len)
+  * spin_lock_irqsave is required because tx and rx should be mutual exclusive.
+  * So while tx is in-progress, prevent IRQ interrupt from happenning.
+  */
+-static int ks_start_xmit(struct sk_buff *skb, struct net_device *netdev)
++static netdev_tx_t ks_start_xmit(struct sk_buff *skb, struct net_device *netdev)
+ {
+-	int retv = NETDEV_TX_OK;
++	netdev_tx_t retv = NETDEV_TX_OK;
+ 	struct ks_net *ks = netdev_priv(netdev);
  
-+	priv->clk = devm_clk_get(&pdev->dev, NULL);
-+	if (PTR_ERR(priv->clk) == -EPROBE_DEFER)
-+		return PTR_ERR(priv->clk);
-+	else
-+		priv->clk = NULL;
-+
-+	ret = clk_prepare_enable(priv->clk);
-+	if (ret)
-+		return ret;
-+
-+	if (of_property_read_u32(np, "clock-frequency", &priv->clk_freq))
-+		priv->clk_freq = 0;
-+
-+	unimac_mdio_clk_set(priv);
-+
- 	priv->mii_bus = mdiobus_alloc();
--	if (!priv->mii_bus)
--		return -ENOMEM;
-+	if (!priv->mii_bus) {
-+		ret = -ENOMEM;
-+		goto out_clk_disable;
-+	}
- 
- 	bus = priv->mii_bus;
- 	bus->priv = priv;
-@@ -253,6 +302,8 @@ static int unimac_mdio_probe(struct platform_device *pdev)
- 
- out_mdio_free:
- 	mdiobus_free(bus);
-+out_clk_disable:
-+	clk_disable_unprepare(priv->clk);
- 	return ret;
- }
- 
-@@ -262,10 +313,37 @@ static int unimac_mdio_remove(struct platform_device *pdev)
- 
- 	mdiobus_unregister(priv->mii_bus);
- 	mdiobus_free(priv->mii_bus);
-+	clk_disable_unprepare(priv->clk);
-+
-+	return 0;
-+}
-+
-+static int unimac_mdio_suspend(struct device *d)
-+{
-+	struct unimac_mdio_priv *priv = dev_get_drvdata(d);
-+
-+	clk_disable_unprepare(priv->clk);
-+
-+	return 0;
-+}
-+
-+static int unimac_mdio_resume(struct device *d)
-+{
-+	struct unimac_mdio_priv *priv = dev_get_drvdata(d);
-+	int ret;
-+
-+	ret = clk_prepare_enable(priv->clk);
-+	if (ret)
-+		return ret;
-+
-+	unimac_mdio_clk_set(priv);
- 
- 	return 0;
- }
- 
-+static SIMPLE_DEV_PM_OPS(unimac_mdio_pm_ops,
-+			 unimac_mdio_suspend, unimac_mdio_resume);
-+
- static const struct of_device_id unimac_mdio_ids[] = {
- 	{ .compatible = "brcm,genet-mdio-v5", },
- 	{ .compatible = "brcm,genet-mdio-v4", },
-@@ -281,6 +359,7 @@ static struct platform_driver unimac_mdio_driver = {
- 	.driver = {
- 		.name = UNIMAC_MDIO_DRV_NAME,
- 		.of_match_table = unimac_mdio_ids,
-+		.pm = &unimac_mdio_pm_ops,
- 	},
- 	.probe	= unimac_mdio_probe,
- 	.remove	= unimac_mdio_remove,
+ 	disable_irq(netdev->irq);
 -- 
 2.20.1
 
