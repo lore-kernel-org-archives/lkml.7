@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B0A0C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:48:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E3BAC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:48:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D936D2071B
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:48:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9660214D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:48:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142521;
-	bh=oA0SjtyPdBmFx777on6n0gmKh9e4CxtsuhtGwP5lMsM=;
+	s=default; t=1574142526;
+	bh=dkRw0NLgbZfCKxHUgfLgac8iE4OQLyV4NXNb7ARPpdg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2SZhAC/4FhOSjL6oO7AHIng+mZ/LBwuRTukzvBKKNKdW41hItuZTa+WKiABo6pK2d
-	 ERKAY4w+xsWro8a7INsYcYQV6JaBI3RcrlXVzu7GtjKw503k8oPeoZ5i3Ltvdm1LkX
-	 qaTgTQurui1Bwf4ORb4P9m2+OXFbwIOD867zcYhs=
+	b=LwGHgFG7f97Pp6gBaFPGREtcDCCuhY5u6nAXV6DLxMMIoWXOyXmDYWBQWVC8hpKa3
+	 6x1BW4ELBxKHoE+3HO8INiCXFLKExWT3M/Ub2Xqdg06DZCGODH4GG7lF97024SNMAn
+	 nQA439MbZY00v4JIGlqVFTxIntA8pDabaJNj4Af8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731403AbfKSFsk (ORCPT
+        id S1731409AbfKSFso (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:48:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45230 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:48:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727805AbfKSFsh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:48:37 -0500
+        id S1727805AbfKSFsl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:48:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD69B218BA;
-        Tue, 19 Nov 2019 05:48:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D65562071B;
+        Tue, 19 Nov 2019 05:48:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142517;
-        bh=oA0SjtyPdBmFx777on6n0gmKh9e4CxtsuhtGwP5lMsM=;
+        s=default; t=1574142520;
+        bh=dkRw0NLgbZfCKxHUgfLgac8iE4OQLyV4NXNb7ARPpdg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jf6ZjsgxQJ4b0HZtDjegAsuE1l5L0ae4oYPOYetb/PgJll9GLkghoUhVvnHnSFaX5
-         wc2b1IZNz85KkdM3bVp4BCsM2Vyy4QVFWFo4KSsrPN3SwltLO6+KA12xBgY1y4UCer
-         MWxRtEo2fONuPw41ZrQL+C/83CvBQEJx756AMoGo=
+        b=RJal1LjQErmlwS7lwWTPgtDEOL2TTiiLSx0VZhooTu4JugD8pzLInT9y4VtzFoNSL
+         aAWEapAI1Ltp77NuSfoCjLhkULT6i9YaVtYFWeB0Wg8K9JxceHpMhZRMW1eSqI9Evg
+         pqRdsKKP90wM/OslXWwbuVbe9zo1i00YlahvY2Tc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Da Xue <da@lessconfused.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 108/239] media: dvb: fix compat ioctl translation
-Date:   Tue, 19 Nov 2019 06:18:28 +0100
-Message-Id: <20191119051327.014243236@linuxfoundation.org>
+Subject: [PATCH 4.14 109/239] arm64: dts: meson: libretech: update board model
+Date:   Tue, 19 Nov 2019 06:18:29 +0100
+Message-Id: <20191119051327.375868907@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -60,80 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Jerome Brunet <jbrunet@baylibre.com>
 
-[ Upstream commit 1ccbeeb888ac33627d91f1ccf0b84ef3bcadef24 ]
+[ Upstream commit b7eb0e26cc4a212fde09144cd49d4103170d2b9e ]
 
-The VIDEO_GET_EVENT and VIDEO_STILLPICTURE was added back in 2005 but
-it never worked because the command number is wrong.
+There is actually several different libretech board with the CC suffix
+so the model name is not appropriate here. Update to something more
+specific
 
-Using the right command number means we have a better chance of them
-actually doing the right thing, though clearly nobody has ever tried
-it successfully.
-
-I noticed these while auditing the remaining users of compat_time_t
-for y2038 bugs. This one is fine in that regard, it just never did
-anything.
-
-Fixes: 6e87abd0b8cb ("[DVB]: Add compat ioctl handling.")
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Reported-by: Da Xue <da@lessconfused.com>
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/compat_ioctl.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/compat_ioctl.c b/fs/compat_ioctl.c
-index ea52b98b39fa1..033e8e6aabb77 100644
---- a/fs/compat_ioctl.c
-+++ b/fs/compat_ioctl.c
-@@ -161,6 +161,7 @@ struct compat_video_event {
- 		unsigned int frame_rate;
- 	} u;
- };
-+#define VIDEO_GET_EVENT32 _IOR('o', 28, struct compat_video_event)
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
+index d71cbf596d1f7..0814b6b29b86a 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
+@@ -14,7 +14,7 @@
  
- static int do_video_get_event(struct file *file,
- 		unsigned int cmd, struct compat_video_event __user *up)
-@@ -172,7 +173,7 @@ static int do_video_get_event(struct file *file,
- 	if (kevent == NULL)
- 		return -EFAULT;
+ / {
+ 	compatible = "libretech,cc", "amlogic,s905x", "amlogic,meson-gxl";
+-	model = "Libre Technology CC";
++	model = "Libre Computer Board AML-S905X-CC";
  
--	err = do_ioctl(file, cmd, (unsigned long)kevent);
-+	err = do_ioctl(file, VIDEO_GET_EVENT, (unsigned long)kevent);
- 	if (!err) {
- 		err  = convert_in_user(&kevent->type, &up->type);
- 		err |= convert_in_user(&kevent->timestamp, &up->timestamp);
-@@ -191,6 +192,7 @@ struct compat_video_still_picture {
-         compat_uptr_t iFrame;
-         int32_t size;
- };
-+#define VIDEO_STILLPICTURE32 _IOW('o', 30, struct compat_video_still_picture)
- 
- static int do_video_stillpicture(struct file *file,
- 		unsigned int cmd, struct compat_video_still_picture __user *up)
-@@ -213,7 +215,7 @@ static int do_video_stillpicture(struct file *file,
- 	if (err)
- 		return -EFAULT;
- 
--	err = do_ioctl(file, cmd, (unsigned long) up_native);
-+	err = do_ioctl(file, VIDEO_STILLPICTURE, (unsigned long) up_native);
- 
- 	return err;
- }
-@@ -1476,9 +1478,9 @@ static long do_ioctl_trans(unsigned int cmd,
- 		return rtc_ioctl(file, cmd, argp);
- 
- 	/* dvb */
--	case VIDEO_GET_EVENT:
-+	case VIDEO_GET_EVENT32:
- 		return do_video_get_event(file, cmd, argp);
--	case VIDEO_STILLPICTURE:
-+	case VIDEO_STILLPICTURE32:
- 		return do_video_stillpicture(file, cmd, argp);
- 	case VIDEO_SET_SPU_PALETTE:
- 		return do_video_set_spu_palette(file, cmd, argp);
+ 	aliases {
+ 		serial0 = &uart_AO;
 -- 
 2.20.1
 
