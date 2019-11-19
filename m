@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB71C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:51:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2F0EC43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:51:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C86F921939
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:51:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ADFE208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:51:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142668;
-	bh=HhY6aRuiU+JFIVbArd6TnC9cOXQnnSAEu6elwhYbO2M=;
+	s=default; t=1574142674;
+	bh=q4tBSuVCw5ZqWJJuSnB2wXUj3FJfplMx+MeJUnBneKM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WKl5EqJKD0LBMWNPZv9B7TpdP+NNIqrakqdEIJ7LfZBr/H54AnrE3Wg/nhaAcC8sw
-	 BiVOvrfBzEUQ7tF8hSVINk7LldqONlgrU257pySDdDVyxYmWBByzRVahUsZjKnT5tt
-	 r11kdNgXPxLXSbA6sbJCQQsk1mSdjap3iN2Ur+EA=
+	b=a13U6ukRtio6P3eTMAMqBFWVF+Vencs7/AFDs4bWDIU0y4oO2+XhiHPSPp/fWWPN/
+	 nIGQKyQgBfnCUsKWMeU17IbPsHHXB4oPkxpHPBr0HXUx1uxQM2GIaikySf0YKfMhbt
+	 PF4xgRDKVeJpSgtaq7aQNOpv9wrVVVGGKLzPPVVM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731739AbfKSFvH (ORCPT
+        id S1731752AbfKSFvM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:51:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48428 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:51:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48530 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731725AbfKSFvF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:51:05 -0500
+        id S1731151AbfKSFvL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:51:11 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 147D521939;
-        Tue, 19 Nov 2019 05:51:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DEB18208C3;
+        Tue, 19 Nov 2019 05:51:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142664;
-        bh=HhY6aRuiU+JFIVbArd6TnC9cOXQnnSAEu6elwhYbO2M=;
+        s=default; t=1574142670;
+        bh=q4tBSuVCw5ZqWJJuSnB2wXUj3FJfplMx+MeJUnBneKM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DmS7kFm1SKzwcCBlO4HklHSGFhPZWYS9snLX4gTzsq++eeIQ/X4Kc8w5cWXI8UOsq
-         ligElru7JYGNSHXquLgukgXocCtr8bnQC5pJJPUz6+xTWg2uJ9VukbKq0nX7cGnFp5
-         nbzp73py2jMJiAR4mQc98MstAzn9SIlEd78WarNg=
+        b=QWLCsn2Ow2A03p8zvpZtuJ0z8o/R5O12B4FMI3CDapMdR3qVnhJphg/trM8WOHv0Q
+         MuvqqhWpki/T6jdbX3aunBRPNv7xwMMO7LWTU3DIqBghSMxb3xceKkyZitrBDDrPWE
+         fOyBaYNqKk+B+VO5ixbEbfOAAtd2HUkH8mHwoZmU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Loic Poulain <loic.poulain@linaro.org>,
-        Peter Chen <peter.chen@nxp.com>,
+        stable@vger.kernel.org,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 157/239] usb: chipidea: Fix otg event handler
-Date:   Tue, 19 Nov 2019 06:19:17 +0100
-Message-Id: <20191119051333.133155502@linuxfoundation.org>
+Subject: [PATCH 4.14 159/239] ARM: dts: am335x-evm: fix number of cpsw
+Date:   Tue, 19 Nov 2019 06:19:19 +0100
+Message-Id: <20191119051333.264951714@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -60,46 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Loic Poulain <loic.poulain@linaro.org>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
 
-[ Upstream commit 59739131e0ca06db7560f9073fff2fb83f6bc2a5 ]
+[ Upstream commit dcbf6b18d81bcdc51390ca1b258c17e2e13b7d0c ]
 
-At OTG work running time, it's possible that several events need to be
-addressed (e.g. ID and VBUS events). The current implementation handles
-only one event at a time which leads to ignoring the other one. Fix it.
+am335x-evm has only one CPSW external port physically wired, but DT defines
+2 ext. ports. As result, PHY connection failure reported for the second
+ext. port.
 
-Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
-Signed-off-by: Peter Chen <peter.chen@nxp.com>
+Update DT to reflect am335x-evm board HW configuration, and, while here,
+switch to use phy-handle instead of phy_id.
+
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/chipidea/otg.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/am335x-evm.dts | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/usb/chipidea/otg.c b/drivers/usb/chipidea/otg.c
-index 10236fe715228..8bf4032226ed5 100644
---- a/drivers/usb/chipidea/otg.c
-+++ b/drivers/usb/chipidea/otg.c
-@@ -206,14 +206,17 @@ static void ci_otg_work(struct work_struct *work)
- 	}
+diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
+index 478434ebff92d..27ff3e689e96e 100644
+--- a/arch/arm/boot/dts/am335x-evm.dts
++++ b/arch/arm/boot/dts/am335x-evm.dts
+@@ -724,6 +724,7 @@
+ 	pinctrl-0 = <&cpsw_default>;
+ 	pinctrl-1 = <&cpsw_sleep>;
+ 	status = "okay";
++	slaves = <1>;
+ };
  
- 	pm_runtime_get_sync(ci->dev);
-+
- 	if (ci->id_event) {
- 		ci->id_event = false;
- 		ci_handle_id_switch(ci);
--	} else if (ci->b_sess_valid_event) {
-+	}
-+
-+	if (ci->b_sess_valid_event) {
- 		ci->b_sess_valid_event = false;
- 		ci_handle_vbus_change(ci);
--	} else
--		dev_err(ci->dev, "unexpected event occurs at %s\n", __func__);
-+	}
-+
- 	pm_runtime_put_sync(ci->dev);
+ &davinci_mdio {
+@@ -731,15 +732,14 @@
+ 	pinctrl-0 = <&davinci_mdio_default>;
+ 	pinctrl-1 = <&davinci_mdio_sleep>;
+ 	status = "okay";
+-};
  
- 	enable_irq(ci->irq);
+-&cpsw_emac0 {
+-	phy_id = <&davinci_mdio>, <0>;
+-	phy-mode = "rgmii-txid";
++	ethphy0: ethernet-phy@0 {
++		reg = <0>;
++	};
+ };
+ 
+-&cpsw_emac1 {
+-	phy_id = <&davinci_mdio>, <1>;
++&cpsw_emac0 {
++	phy-handle = <&ethphy0>;
+ 	phy-mode = "rgmii-txid";
+ };
+ 
 -- 
 2.20.1
 
