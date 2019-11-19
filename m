@@ -7,49 +7,43 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A27C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:57:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 483C5C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:57:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24607223BF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:57:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24B672241E
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:57:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728618AbfKSQ5A (ORCPT
+        id S1728670AbfKSQ5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 11:57:00 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:52755 "EHLO
+        Tue, 19 Nov 2019 11:57:08 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:52839 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728601AbfKSQ47 (ORCPT
+        with ESMTP id S1728637AbfKSQ5G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 11:56:59 -0500
+        Tue, 19 Nov 2019 11:57:06 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iX6o3-0007JW-Eq; Tue, 19 Nov 2019 17:56:47 +0100
+        id 1iX6oF-0007QG-A8; Tue, 19 Nov 2019 17:56:59 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 1E1CB1C19CA;
-        Tue, 19 Nov 2019 17:56:47 +0100 (CET)
-Date:   Tue, 19 Nov 2019 16:56:47 -0000
-From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 4E18E1C19CC;
+        Tue, 19 Nov 2019 17:56:49 +0100 (CET)
+Date:   Tue, 19 Nov 2019 16:56:49 -0000
+From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/kprobes] arm/ftrace: Use __patch_text()
-Cc:     Will Deacon <will@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Brian Gerst <brgerst@gmail.com>,
-        Denys Vlasenko <dvlasenk@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        ard.biesheuvel@linaro.org, james.morse@arm.com, rabin@rab.in,
-        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
-In-Reply-To: <20191113092636.GG4131@hirez.programming.kicks-ass.net>
-References: <20191113092636.GG4131@hirez.programming.kicks-ass.net>
+Subject: [tip: perf/core] perf map: Use bitmap for booleans
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <tip-g5545pcq4ff0wr17tfb1piqt@git.kernel.org>
+References: <tip-g5545pcq4ff0wr17tfb1piqt@git.kernel.org>
 MIME-Version: 1.0
-Message-ID: <157418260705.12247.5966626318280850141.tip-bot2@tip-bot2>
+Message-ID: <157418260927.12247.7477192419256385944.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -63,103 +57,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the core/kprobes branch of tip:
+The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     42e51f187f869bf18199837acf2a412d6ca7f33f
-Gitweb:        https://git.kernel.org/tip/42e51f187f869bf18199837acf2a412d6ca7f33f
-Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Tue, 15 Oct 2019 21:07:35 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 19 Nov 2019 13:13:06 +01:00
+Commit-ID:     dbc984c961667b1ce48a0337b5bcd3b8c9cb2098
+Gitweb:        https://git.kernel.org/tip/dbc984c961667b1ce48a0337b5bcd3b8c9cb2098
+Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
+AuthorDate:    Mon, 18 Nov 2019 16:26:29 -03:00
+Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitterDate: Mon, 18 Nov 2019 16:29:01 -03:00
 
-arm/ftrace: Use __patch_text()
+perf map: Use bitmap for booleans
 
-Instead of flipping text protection, use the patch_text infrastructure
-that uses a fixmap alias where required.
+The map->priv and map->erange_warned are seldom used, the first only in
+tests/vmlinux-kallsyms.c, the later only when hist_entry__inc_addr_samples()
+returns -ERANGE in 'perf top', which are really rare occasions, so make
+them a bool bitfield.
 
-This removes the last user of set_all_modules_text_*().
+This will open up space for other members on the first cacheline.
 
-Tested-by: Will Deacon <will@kernel.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Brian Gerst <brgerst@gmail.com>
-Cc: Denys Vlasenko <dvlasenk@redhat.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: ard.biesheuvel@linaro.org
-Cc: james.morse@arm.com
-Cc: rabin@rab.in
-Link: https://lkml.kernel.org/r/20191113092636.GG4131@hirez.programming.kicks-ass.net
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+  $ pahole -C map ~/bin/perf
+  struct map {
+  	union {
+  		struct rb_node rb_node __attribute__((__aligned__(8))); /*     0    24 */
+  		struct list_head node;                   /*     0    16 */
+  	} __attribute__((__aligned__(8)));                                               /*     0    24 */
+  	u64                        start;                /*    24     8 */
+  	u64                        end;                  /*    32     8 */
+  	_Bool                      erange_warned:1;      /*    40: 0  1 */
+  	_Bool                      priv:1;               /*    40: 1  1 */
+
+  	/* XXX 6 bits hole, try to pack */
+  	/* XXX 3 bytes hole, try to pack */
+
+  	u32                        prot;                 /*    44     4 */
+  	u32                        flags;                /*    48     4 */
+
+  	/* XXX 4 bytes hole, try to pack */
+
+  	u64                        pgoff;                /*    56     8 */
+  	/* --- cacheline 1 boundary (64 bytes) --- */
+  	u64                        reloc;                /*    64     8 */
+  	u32                        maj;                  /*    72     4 */
+  	u32                        min;                  /*    76     4 */
+  	u64                        ino;                  /*    80     8 */
+  	u64                        ino_generation;       /*    88     8 */
+  	u64                        (*map_ip)(struct map *, u64); /*    96     8 */
+  	u64                        (*unmap_ip)(struct map *, u64); /*   104     8 */
+  	struct dso *               dso;                  /*   112     8 */
+  	refcount_t                 refcnt;               /*   120     4 */
+
+  	/* size: 128, cachelines: 2, members: 17 */
+  	/* sum members: 116, holes: 2, sum holes: 7 */
+  	/* sum bitfield members: 2 bits, bit holes: 1, sum bit holes: 6 bits */
+  	/* padding: 4 */
+  	/* forced alignments: 1 */
+  } __attribute__((__aligned__(8)));
+  $
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-g5545pcq4ff0wr17tfb1piqt@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- arch/arm/kernel/Makefile |  4 ++--
- arch/arm/kernel/ftrace.c | 10 ++--------
- 2 files changed, 4 insertions(+), 10 deletions(-)
+ tools/perf/util/map.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/kernel/Makefile b/arch/arm/kernel/Makefile
-index 8cad594..a885172 100644
---- a/arch/arm/kernel/Makefile
-+++ b/arch/arm/kernel/Makefile
-@@ -49,8 +49,8 @@ obj-$(CONFIG_HAVE_ARM_SCU)	+= smp_scu.o
- obj-$(CONFIG_HAVE_ARM_TWD)	+= smp_twd.o
- obj-$(CONFIG_ARM_ARCH_TIMER)	+= arch_timer.o
- obj-$(CONFIG_FUNCTION_TRACER)	+= entry-ftrace.o
--obj-$(CONFIG_DYNAMIC_FTRACE)	+= ftrace.o insn.o
--obj-$(CONFIG_FUNCTION_GRAPH_TRACER)	+= ftrace.o insn.o
-+obj-$(CONFIG_DYNAMIC_FTRACE)	+= ftrace.o insn.o patch.o
-+obj-$(CONFIG_FUNCTION_GRAPH_TRACER)	+= ftrace.o insn.o patch.o
- obj-$(CONFIG_JUMP_LABEL)	+= jump_label.o insn.o patch.o
- obj-$(CONFIG_KEXEC)		+= machine_kexec.o relocate_kernel.o
- # Main staffs in KPROBES are in arch/arm/probes/ .
-diff --git a/arch/arm/kernel/ftrace.c b/arch/arm/kernel/ftrace.c
-index bda949f..2a5ff69 100644
---- a/arch/arm/kernel/ftrace.c
-+++ b/arch/arm/kernel/ftrace.c
-@@ -22,6 +22,7 @@
- #include <asm/ftrace.h>
- #include <asm/insn.h>
- #include <asm/set_memory.h>
-+#include <asm/patch.h>
- 
- #ifdef CONFIG_THUMB2_KERNEL
- #define	NOP		0xf85deb04	/* pop.w {lr} */
-@@ -35,9 +36,7 @@ static int __ftrace_modify_code(void *data)
- {
- 	int *command = data;
- 
--	set_kernel_text_rw();
- 	ftrace_modify_all_code(*command);
--	set_kernel_text_ro();
- 
- 	return 0;
- }
-@@ -59,13 +58,11 @@ static unsigned long adjust_address(struct dyn_ftrace *rec, unsigned long addr)
- 
- int ftrace_arch_code_modify_prepare(void)
- {
--	set_all_modules_text_rw();
- 	return 0;
- }
- 
- int ftrace_arch_code_modify_post_process(void)
- {
--	set_all_modules_text_ro();
- 	/* Make sure any TLB misses during machine stop are cleared. */
- 	flush_tlb_all();
- 	return 0;
-@@ -97,10 +94,7 @@ static int ftrace_modify_code(unsigned long pc, unsigned long old,
- 			return -EINVAL;
- 	}
- 
--	if (probe_kernel_write((void *)pc, &new, MCOUNT_INSN_SIZE))
--		return -EPERM;
--
--	flush_icache_range(pc, pc + MCOUNT_INSN_SIZE);
-+	__patch_text((void *)pc, new);
- 
- 	return 0;
- }
+diff --git a/tools/perf/util/map.h b/tools/perf/util/map.h
+index a31e809..e2466aa 100644
+--- a/tools/perf/util/map.h
++++ b/tools/perf/util/map.h
+@@ -25,8 +25,8 @@ struct map {
+ 	};
+ 	u64			start;
+ 	u64			end;
+-	bool			erange_warned;
+-	u32			priv;
++	bool			erange_warned:1;
++	bool			priv:1;
+ 	u32			prot;
+ 	u32			flags;
+ 	u64			pgoff;
