@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3264C43141
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:59:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5998AC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:59:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97806222C7
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:59:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2586F206DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:59:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574143172;
-	bh=66ajkt9iM6MDmOPzzY+y7AnWo/Vg7+hhgie9nPB1eoI=;
+	s=default; t=1574143183;
+	bh=xhf/4H4yFczKL2kdqA8IiqG5aMFJ7x0hqVi3LZjt9Bg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S8Y16JGnrVakmg5GUiR7wg6qtzfwEpVB1sMafT3yLmkfsLLQ1sOlnqgUZpVnv1qh3
-	 q1g3QGRZkZhrtwF87sygz+6miPqwhw1Gzm3wJh5vl9HO6ditWMRRrOPiZ1h/GwmXn7
-	 DbkXFn6KcwCR4nWaiXcebKcv3lG65o/v8p6rNVjE=
+	b=yQGISA+53q9xxP5g0IcnvtLHQ9MKVtKfSdajtW9x1rY/4TbIj16LMoAscGw8uCXxr
+	 W3w0nf/nQ2Gd17lHZni2heSOVcv5uovPVu4JPAfytNQe6HSGLf937t4gI388UBEsnf
+	 7974tVBnobEJQX0zXE86xFi47z6kSQDsNq9bI97E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731242AbfKSFrg (ORCPT
+        id S1731185AbfKSFrB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:47:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43822 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:47:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731239AbfKSFr1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:47:27 -0500
+        id S1730637AbfKSFq6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:46:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18D572071B;
-        Tue, 19 Nov 2019 05:47:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E09522071B;
+        Tue, 19 Nov 2019 05:46:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142446;
-        bh=66ajkt9iM6MDmOPzzY+y7AnWo/Vg7+hhgie9nPB1eoI=;
+        s=default; t=1574142417;
+        bh=xhf/4H4yFczKL2kdqA8IiqG5aMFJ7x0hqVi3LZjt9Bg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZnVIvspbC6btfRKlykhoTLf7MOZgtxoqR7rHNqHWgfSli18EdH1+Byr/qlOZgALqP
-         sUosM5E1arvCbc8M7qkevrbPiiV0mozLfOZa4zhJRTGwvc4l7+Vtuk94/Yri5vVIJE
-         mio6nGPpkU7yNvEJ00kYnTEkpcj5qgI5za1jM0Dw=
+        b=z4RrEoz7qOxw9Lpx+lYmmp9OnBHzu2R5hU2MREMBv0Mc7SIdM6S8ZA8PyalVIqApp
+         ke8cbi/Bqej2Zu3pBjM8IUja4UkGhBNcxfbQrOx3repWKeJu0aZYhg4a8M2vtMhKaC
+         F7HMfd6SDnNfclVUkEpm0K5PfPPHCeFKbnO5CmNU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bob Peterson <rpeterso@redhat.com>,
+        stable@vger.kernel.org,
+        Ding Xiang <dingxiang@cmss.chinamobile.com>,
+        Atsushi Nemoto <anemo@mba.ocn.ne.jp>,
+        Paul Burton <paul.burton@mips.com>, ralf@linux-mips.org,
+        jhogan@kernel.org, linux-mips@linux-mips.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 044/239] gfs2: Dont set GFS2_RDF_UPTODATE when the lvb is updated
-Date:   Tue, 19 Nov 2019 06:17:24 +0100
-Message-Id: <20191119051306.193240094@linuxfoundation.org>
+Subject: [PATCH 4.14 073/239] mips: txx9: fix iounmap related issue
+Date:   Tue, 19 Nov 2019 06:17:53 +0100
+Message-Id: <20191119051313.532172161@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -59,60 +63,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bob Peterson <rpeterso@redhat.com>
+From: Ding Xiang <dingxiang@cmss.chinamobile.com>
 
-[ Upstream commit 4f36cb36c9d14340bb200d2ad9117b03ce992cfe ]
+[ Upstream commit c6e1241a82e6e74d1ae5cc34581dab2ffd6022d0 ]
 
-The GFS2_RDF_UPTODATE flag in the rgrp is used to determine when
-a rgrp buffer is valid. It's cleared when the glock is invalidated,
-signifying that the buffer data is now invalid. But before this
-patch, function update_rgrp_lvb was setting the flag when it
-determined it had a valid lvb. But that's an invalid assumption:
-just because you have a valid lvb doesn't mean you have valid
-buffers. After all, another node may have made the lvb valid,
-and this node just fetched it from the glock via dlm.
+if device_register return error, iounmap should be called, also iounmap
+need to call before put_device.
 
-Consider this scenario:
-1. The file system is mounted with RGRPLVB option.
-2. In gfs2_inplace_reserve it locks the rgrp glock EX, but thanks
-   to GL_SKIP, it skips the gfs2_rgrp_bh_get.
-3. Since loops == 0 and the allocation target (ap->target) is
-   bigger than the largest known chunk of blocks in the rgrp
-   (rs->rs_rbm.rgd->rd_extfail_pt) it skips that rgrp and bypasses
-   the call to gfs2_rgrp_bh_get there as well.
-4. update_rgrp_lvb sees the lvb MAGIC number is valid, so bypasses
-   gfs2_rgrp_bh_get, but it still sets sets GFS2_RDF_UPTODATE due
-   to this invalid assumption.
-5. The next time update_rgrp_lvb is called, it sees the bit is set
-   and just returns 0, assuming both the lvb and rgrp are both
-   uptodate. But since this is a smaller allocation, or space has
-   been freed by another node, thus adjusting the lvb values,
-   it decides to use the rgrp for allocations, with invalid rd_free
-   due to the fact it was never updated.
-
-This patch changes update_rgrp_lvb so it doesn't set the UPTODATE
-flag anymore. That way, it has no choice but to fetch the latest
-values.
-
-Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+Signed-off-by: Ding Xiang <dingxiang@cmss.chinamobile.com>
+Reviewed-by: Atsushi Nemoto <anemo@mba.ocn.ne.jp>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Patchwork: https://patchwork.linux-mips.org/patch/20476/
+Cc: ralf@linux-mips.org
+Cc: jhogan@kernel.org
+Cc: linux-mips@linux-mips.org
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/rgrp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/mips/txx9/generic/setup.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/fs/gfs2/rgrp.c b/fs/gfs2/rgrp.c
-index b0eee90738ff4..0d72baae51509 100644
---- a/fs/gfs2/rgrp.c
-+++ b/fs/gfs2/rgrp.c
-@@ -1201,7 +1201,7 @@ static int update_rgrp_lvb(struct gfs2_rgrpd *rgd)
- 	rl_flags = be32_to_cpu(rgd->rd_rgl->rl_flags);
- 	rl_flags &= ~GFS2_RDF_MASK;
- 	rgd->rd_flags &= GFS2_RDF_MASK;
--	rgd->rd_flags |= (rl_flags | GFS2_RDF_UPTODATE | GFS2_RDF_CHECK);
-+	rgd->rd_flags |= (rl_flags | GFS2_RDF_CHECK);
- 	if (rgd->rd_rgl->rl_unlinked == 0)
- 		rgd->rd_flags &= ~GFS2_RDF_CHECK;
- 	rgd->rd_free = be32_to_cpu(rgd->rd_rgl->rl_free);
+diff --git a/arch/mips/txx9/generic/setup.c b/arch/mips/txx9/generic/setup.c
+index 1791a44ee570a..20aaf77166e85 100644
+--- a/arch/mips/txx9/generic/setup.c
++++ b/arch/mips/txx9/generic/setup.c
+@@ -959,12 +959,11 @@ void __init txx9_sramc_init(struct resource *r)
+ 		goto exit_put;
+ 	err = sysfs_create_bin_file(&dev->dev.kobj, &dev->bindata_attr);
+ 	if (err) {
+-		device_unregister(&dev->dev);
+ 		iounmap(dev->base);
+-		kfree(dev);
++		device_unregister(&dev->dev);
+ 	}
+ 	return;
+ exit_put:
++	iounmap(dev->base);
+ 	put_device(&dev->dev);
+-	return;
+ }
 -- 
 2.20.1
 
