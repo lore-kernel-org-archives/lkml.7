@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58917C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:29:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C5C0C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:29:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2173D2230F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:29:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FA1D222A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:29:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141389;
-	bh=ebQIMzzwp7S1oC4ON3K8TO3u8DuQh6RB9yjA/WfUMZY=;
+	s=default; t=1574141392;
+	bh=at/HoHkmjnY+BK7GL6shu8EYd2ZI3hl/LZhn9cks92k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ITdUh91JlHVzyBS/Z81/2B249qI8dlZEVNuglDCK6CWkk1WuJ1TELVGfR3WwGZCDb
-	 QRbWTdSGDHpa71VsGdHskVkf7pvDDtUlmsGT0toL1w8drY832vxA+oaEiwgg8SNM5L
-	 tFJqlRbGGz3G6bLUYFUb0hpOLBNnNcMgOBhztehE=
+	b=KSihrpZc1ZnirURbLeYxMfjT2xr0ha66YsTjb15e3yeVdxqV3HEQ3Jp6I+/q4OVrx
+	 HUO5Euiz1weOk6xKAs63TdjLxyAAYB3dQnOijF5403o+w9BNdjsL+jn/ZovBhNLeYa
+	 OlSa8yiUuP56HVaB85bn4POxNxflJUVQE/PaNjb4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729036AbfKSF3r (ORCPT
+        id S1729041AbfKSF3u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:29:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48342 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:29:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729029AbfKSF3o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:29:44 -0500
+        id S1728525AbfKSF3r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:29:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA33F222A2;
-        Tue, 19 Nov 2019 05:29:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1535E21939;
+        Tue, 19 Nov 2019 05:29:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141383;
-        bh=ebQIMzzwp7S1oC4ON3K8TO3u8DuQh6RB9yjA/WfUMZY=;
+        s=default; t=1574141386;
+        bh=at/HoHkmjnY+BK7GL6shu8EYd2ZI3hl/LZhn9cks92k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oikY+HNh4t0U7TDh8UBSJ3ZcXNIHtceZ0QIfw00ykoCzb4QfqhxVjh46PxDequWvn
-         Hw+P6xdrBg1xnF6ycd8Q+1zDaDVM+L2iH9gzWpKxw3JDRKwo/DSiNyx6EKM8+NmJGW
-         nqNX/a0z28bOuxHekwO6SQIhXIdhX/x4GyfL6XT8=
+        b=NhTOQCPwDmn1cZ+/jgvCvUPFfk5shex31ANNeUIYoOEogeZsPS88gv2gGNlElSISS
+         Uidk8ye/XzPjex4u2zi8hlNtlKVNoOqYzAjqeTYheN0ZduJtZIOBSFc1+LOZvR0sIK
+         kl7CzciWgq6CpcFuXxXkX0jp+8uj4SXP15PQTQPs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sven Schmitt <sven.schmitt@mixed-mode.de>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
+        stable@vger.kernel.org, Jiada Wang <jiada_wang@mentor.com>,
+        Timo Wischer <twischer@de.adit-jv.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Hiroyuki Yokoyama <hiroyuki.yokoyama.vx@renesas.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 101/422] soc: imx: gpc: fix PDN delay
-Date:   Tue, 19 Nov 2019 06:14:58 +0100
-Message-Id: <20191119051405.781082004@linuxfoundation.org>
+Subject: [PATCH 4.19 102/422] ASoC: rsnd: ssi: Fix issue in dma data address assignment
+Date:   Tue, 19 Nov 2019 06:14:59 +0100
+Message-Id: <20191119051405.834496921@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -61,35 +63,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Schmitt <Sven.Schmitt@mixed-mode.de>
+From: Jiada Wang <jiada_wang@mentor.com>
 
-[ Upstream commit 9f4d61d531e0efc9c3283963ae5ef7e314579191 ]
+[ Upstream commit 0e289012b47a2de1f029a6b61c75998e2f159dd9 ]
 
-imx6_pm_domain_power_off() reads iso and iso2sw from GPC_PGC_PUPSCR_OFFS
-which stores the power up delays.
-So use GPC_PGC_PDNSCR_OFFS for the correct delays.
+Same SSI device may be used in different dai links,
+by only having one dma struct in rsnd_ssi, after the first
+instance's dma config be initilized, the following instances
+can no longer configure dma, this causes issue, when their
+dma data address are different from the first instance.
 
-Signed-off-by: Sven Schmitt <sven.schmitt@mixed-mode.de>
-Reviewed-by: Leonard Crestez <leonard.crestez@nxp.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+Signed-off-by: Timo Wischer <twischer@de.adit-jv.com>
+[Kuninori: tidyup for upstream]
+Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Tested-by: Hiroyuki Yokoyama <hiroyuki.yokoyama.vx@renesas.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/imx/gpc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/sh/rcar/rsnd.h | 1 +
+ sound/soc/sh/rcar/ssi.c  | 4 +---
+ 2 files changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/soc/imx/gpc.c b/drivers/soc/imx/gpc.c
-index b3da635970ea7..d160fc2a7b7a2 100644
---- a/drivers/soc/imx/gpc.c
-+++ b/drivers/soc/imx/gpc.c
-@@ -69,7 +69,7 @@ static int imx6_pm_domain_power_off(struct generic_pm_domain *genpd)
- 	u32 val;
+diff --git a/sound/soc/sh/rcar/rsnd.h b/sound/soc/sh/rcar/rsnd.h
+index 8f7a0abfa751e..f64c7058b258b 100644
+--- a/sound/soc/sh/rcar/rsnd.h
++++ b/sound/soc/sh/rcar/rsnd.h
+@@ -438,6 +438,7 @@ struct rsnd_dai_stream {
+ 	char name[RSND_DAI_NAME_SIZE];
+ 	struct snd_pcm_substream *substream;
+ 	struct rsnd_mod *mod[RSND_MOD_MAX];
++	struct rsnd_mod *dma;
+ 	struct rsnd_dai *rdai;
+ 	struct device *dmac_dev; /* for IPMMU */
+ 	u32 parent_ssi_status;
+diff --git a/sound/soc/sh/rcar/ssi.c b/sound/soc/sh/rcar/ssi.c
+index 9410e0a9b14b7..33dc8d6ad35b2 100644
+--- a/sound/soc/sh/rcar/ssi.c
++++ b/sound/soc/sh/rcar/ssi.c
+@@ -72,7 +72,6 @@
  
- 	/* Read ISO and ISO2SW power down delays */
--	regmap_read(pd->regmap, pd->reg_offs + GPC_PGC_PUPSCR_OFFS, &val);
-+	regmap_read(pd->regmap, pd->reg_offs + GPC_PGC_PDNSCR_OFFS, &val);
- 	iso = val & 0x3f;
- 	iso2sw = (val >> 8) & 0x3f;
+ struct rsnd_ssi {
+ 	struct rsnd_mod mod;
+-	struct rsnd_mod *dma;
  
+ 	u32 flags;
+ 	u32 cr_own;
+@@ -873,7 +872,6 @@ static int rsnd_ssi_dma_probe(struct rsnd_mod *mod,
+ 			      struct rsnd_dai_stream *io,
+ 			      struct rsnd_priv *priv)
+ {
+-	struct rsnd_ssi *ssi = rsnd_mod_to_ssi(mod);
+ 	int ret;
+ 
+ 	/*
+@@ -888,7 +886,7 @@ static int rsnd_ssi_dma_probe(struct rsnd_mod *mod,
+ 		return ret;
+ 
+ 	/* SSI probe might be called many times in MUX multi path */
+-	ret = rsnd_dma_attach(io, mod, &ssi->dma);
++	ret = rsnd_dma_attach(io, mod, &io->dma);
+ 
+ 	return ret;
+ }
 -- 
 2.20.1
 
