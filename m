@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6B3BC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:52:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE98C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:52:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 809EC20862
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:52:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E54E3214D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:52:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142763;
-	bh=OQxAjtgjoRmh71w/KKY3w4GztgCDEsVjgMRHOe26tms=;
+	s=default; t=1574142760;
+	bh=olP18mzLHEq5aeklcBEE1+hOx3ydda638HvyajAvQIc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iUkV41xaB5bN73Vx/QXdVaQA3UVFf7vD4KyauWIPVM1SKbjqVSmiSRLm+hwG+Fqcd
-	 0forZ17IQ8WIsOJgn7l+ulY/Hqm5LMqwYXCBD1EcUrtLqX8MLdK/MHg3UYddV6qN59
-	 WWxA8DPJ30BVBuL8s/VSzhEbotUziegbSdtHLXww=
+	b=avm1LUpEJdvdTa4IXja5BQLKTbyHSEwx75IVIz95pabsmy/bBAzTbMjK0Z39y1Lxh
+	 vhnpkxsFfoFLefKxPVeu01ex3AVlP7CjIBYgtEr923qzIykcL54JeCUI6QepnJtyY0
+	 UKRsHaUXqKu33daorJpyDbRExYg+RCQj7gT0P1Ec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731937AbfKSFwm (ORCPT
+        id S1731927AbfKSFwi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:52:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50442 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:52:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731596AbfKSFwj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:52:39 -0500
+        id S1731596AbfKSFwa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:52:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37DAB20862;
-        Tue, 19 Nov 2019 05:52:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8235621783;
+        Tue, 19 Nov 2019 05:52:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142758;
-        bh=OQxAjtgjoRmh71w/KKY3w4GztgCDEsVjgMRHOe26tms=;
+        s=default; t=1574142750;
+        bh=olP18mzLHEq5aeklcBEE1+hOx3ydda638HvyajAvQIc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=twaL67y8LceUitYMheaLJQU4zJMtDfGQSaT/bIB2H/FwJddSzpQI6eAyGqYRgezhx
-         J9+iFUlUMRHAF1m0tVOcz0xNTvaFUeDGnik3rcN7MxBC7OZWN4PN/b6HO6M2GuCIbN
-         0LvAxjOM8hTz/vfRYUszJbXVRhbfKt3q6jl7f+Ew=
+        b=IJ9y+yEw8B0iQVJ+abhUwU9kuTytHprlXgRj2Ga+KK9T24UjbOUXCETs/7EF4eJOT
+         hEODsEP44n5M2NWhZW1wAiIOcMHb70aLtPbgn01tI3o14K0G7U8f99B+pgdwmLd1WB
+         ZjXLYblG1cMz45vHTzw6CrryTb9Qa7xLmMVK5wLU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Paul Elder <paul.elder@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        stable@vger.kernel.org, Shahed Shaikh <Shahed.Shaikh@cavium.com>,
+        Ariel Elior <ariel.elior@cavium.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 190/239] usb: gadget: uvc: Only halt video streaming endpoint in bulk mode
-Date:   Tue, 19 Nov 2019 06:19:50 +0100
-Message-Id: <20191119051335.493931245@linuxfoundation.org>
+Subject: [PATCH 4.14 170/239] bnx2x: Ignore bandwidth attention in single function mode
+Date:   Tue, 19 Nov 2019 06:19:30 +0100
+Message-Id: <20191119051333.925320107@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -62,42 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+From: Shahed Shaikh <Shahed.Shaikh@cavium.com>
 
-[ Upstream commit 8dbf9c7abefd5c1434a956d5c6b25e11183061a3 ]
+[ Upstream commit 75a110a1783ef8324ffd763b24f4ac268253cbca ]
 
-When USB requests for video data fail to be submitted, the driver
-signals a problem to the host by halting the video streaming endpoint.
-This is only valid in bulk mode, as isochronous transfers have no
-handshake phase and can't thus report a stall. The usb_ep_set_halt()
-call returns an error when using isochronous endpoints, which we happily
-ignore, but some UDCs complain in the kernel log. Fix this by only
-trying to halt the endpoint in bulk mode.
+This is a workaround for FW bug -
+MFW generates bandwidth attention in single function mode, which
+is only expected to be generated in multi function mode.
+This undesired attention in SF mode results in incorrect HW
+configuration and resulting into Tx timeout.
 
-Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Reviewed-by: Paul Elder <paul.elder@ideasonboard.com>
-Tested-by: Paul Elder <paul.elder@ideasonboard.com>
-Reviewed-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
+Signed-off-by: Shahed Shaikh <Shahed.Shaikh@cavium.com>
+Signed-off-by: Ariel Elior <ariel.elior@cavium.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/function/uvc_video.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/usb/gadget/function/uvc_video.c b/drivers/usb/gadget/function/uvc_video.c
-index 540917f54506a..d6bab12b0b47d 100644
---- a/drivers/usb/gadget/function/uvc_video.c
-+++ b/drivers/usb/gadget/function/uvc_video.c
-@@ -136,7 +136,9 @@ static int uvcg_video_ep_queue(struct uvc_video *video, struct usb_request *req)
- 	ret = usb_ep_queue(video->ep, req, GFP_ATOMIC);
- 	if (ret < 0) {
- 		printk(KERN_INFO "Failed to queue request (%d).\n", ret);
--		usb_ep_set_halt(video->ep);
-+		/* Isochronous endpoints can't be halted. */
-+		if (usb_endpoint_xfer_bulk(video->ep->desc))
-+			usb_ep_set_halt(video->ep);
- 	}
- 
- 	return ret;
+diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
+index 8f0c9f6de893d..dbe8feec456c2 100644
+--- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
++++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
+@@ -3540,6 +3540,16 @@ static void bnx2x_drv_info_iscsi_stat(struct bnx2x *bp)
+  */
+ static void bnx2x_config_mf_bw(struct bnx2x *bp)
+ {
++	/* Workaround for MFW bug.
++	 * MFW is not supposed to generate BW attention in
++	 * single function mode.
++	 */
++	if (!IS_MF(bp)) {
++		DP(BNX2X_MSG_MCP,
++		   "Ignoring MF BW config in single function mode\n");
++		return;
++	}
++
+ 	if (bp->link_vars.link_up) {
+ 		bnx2x_cmng_fns_init(bp, true, CMNG_FNS_MINMAX);
+ 		bnx2x_link_sync_notify(bp);
 -- 
 2.20.1
 
