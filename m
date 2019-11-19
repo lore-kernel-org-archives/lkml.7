@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2617CC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:41:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA84C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:41:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB35521783
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:41:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D485D208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:41:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142083;
-	bh=xscJ7EClHwitBaxZMa5jBEldDG3fG8cJaiC13LZuq10=;
+	s=default; t=1574142089;
+	bh=6QOu04gevsHMOBxWy6PWqmiXuBC1YuqReUNHXNe1Ai4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LfAF5bA0zWvedbwWrLZ6dAEC8fgJtfgf2SNYiSj+aLHXmvFQSbIcH0HyerhOSwHGr
-	 VUX6qAw3ZgiNaWCiP5iWbnm2dJKlvUfoky3kGrX4nbmj2Flb+5whQJI7c/8OMExr6T
-	 /CPPWDcT8nhjxYB+U4U6YxXerf080uGQZYd6I0WI=
+	b=A84XqI0Oopa1tYwarAYrzswU4Cn8wZWPNfhicFdJV8G6WVdDyJQduiBOAUusgrTsq
+	 MV5THNUcBzBCL2GwXZ0wUHCXXAR1S80mEMIwvTPhRnn16zuTs1hFl+eXiewSPqGY3M
+	 EgZRkUPcmUo/r67vlrQE9B3dPDLGsSD8KSTuR8D8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730517AbfKSFlV (ORCPT
+        id S1730540AbfKSFl2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:41:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35712 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:41:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729946AbfKSFlR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:41:17 -0500
+        id S1730526AbfKSFl0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:41:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6285821783;
-        Tue, 19 Nov 2019 05:41:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D0FE22319;
+        Tue, 19 Nov 2019 05:41:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142076;
-        bh=xscJ7EClHwitBaxZMa5jBEldDG3fG8cJaiC13LZuq10=;
+        s=default; t=1574142086;
+        bh=6QOu04gevsHMOBxWy6PWqmiXuBC1YuqReUNHXNe1Ai4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XuL6+aSW1++/cMN4rn0S8rVfX9G77aay8qLXKGcnWdqqzh9tv/KMN73zjHxaZuUl8
-         +41qiEzIBd/L49IUvQIx/77B4VLJqC160fhKWi+TmSOYFwmLrUIhADMm0c6RVu7jeG
-         uu2m5ICPoU4bc8hk9LDQwYWWFWzgW1phjuiF+4x4=
+        b=YCEkv8xfM4LGYp0K8FuKBnSag7Q7pnpsF0dkhnDWnUKlDltynnaTyeSoCez1D9jWi
+         1DL5+A9/3peqTjekp6QMvISs4RH28UKx2JT5HnFQzK8wb1Vsj+Nu6eci0zddZc20Ho
+         cUvduOsFN+pfDK9/wRhQa4lb3MRtyoTjDNzOvLgg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, zhong jiang <zhongjiang@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 380/422] RDMA: Fix dependencies for rdma_user_mmap_io
-Date:   Tue, 19 Nov 2019 06:19:37 +0100
-Message-Id: <20191119051423.687303372@linuxfoundation.org>
+Subject: [PATCH 4.19 356/422] misc: genwqe: should return proper error value.
+Date:   Tue, 19 Nov 2019 06:19:13 +0100
+Message-Id: <20191119051422.087695033@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -60,56 +59,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: zhong jiang <zhongjiang@huawei.com>
 
-[ Upstream commit 46bdf777685677c1cc6b3da9220aace9da690731 ]
+[ Upstream commit 02241995b004faa7d9ff628e97f24056190853f8 ]
 
-The mlx4 driver produces a link error when it is configured
-as built-in while CONFIG_INFINIBAND_USER_ACCESS is set to =m:
+The function should return -EFAULT when copy_from_user fails. Even
+though the caller does not distinguish them. but we should keep backward
+compatibility.
 
-drivers/infiniband/hw/mlx4/main.o: In function `mlx4_ib_mmap':
-main.c:(.text+0x1af4): undefined reference to `rdma_user_mmap_io'
-
-The same function is called from mlx5, which already has a
-dependency to ensure we can call it, and from hns, which
-appears to suffer from the same problem.
-
-This adds the same dependency that mlx5 uses to the other two.
-
-Fixes: 6745d356ab39 ("RDMA/hns: Use rdma_user_mmap_io")
-Fixes: c282da4109e4 ("RDMA/mlx4: Use rdma_user_mmap_io")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: zhong jiang <zhongjiang@huawei.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hns/Kconfig  | 1 +
- drivers/infiniband/hw/mlx4/Kconfig | 1 +
- 2 files changed, 2 insertions(+)
+ drivers/misc/genwqe/card_utils.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/infiniband/hw/hns/Kconfig b/drivers/infiniband/hw/hns/Kconfig
-index fddb5fdf92de8..21c2100b2ea98 100644
---- a/drivers/infiniband/hw/hns/Kconfig
-+++ b/drivers/infiniband/hw/hns/Kconfig
-@@ -1,6 +1,7 @@
- config INFINIBAND_HNS
- 	tristate "HNS RoCE Driver"
- 	depends on NET_VENDOR_HISILICON
-+	depends on INFINIBAND_USER_ACCESS || !INFINIBAND_USER_ACCESS
- 	depends on ARM64 || (COMPILE_TEST && 64BIT)
- 	---help---
- 	  This is a RoCE/RDMA driver for the Hisilicon RoCE engine. The engine
-diff --git a/drivers/infiniband/hw/mlx4/Kconfig b/drivers/infiniband/hw/mlx4/Kconfig
-index db4aa13ebae0c..d1de3285fd885 100644
---- a/drivers/infiniband/hw/mlx4/Kconfig
-+++ b/drivers/infiniband/hw/mlx4/Kconfig
-@@ -1,6 +1,7 @@
- config MLX4_INFINIBAND
- 	tristate "Mellanox ConnectX HCA support"
- 	depends on NETDEVICES && ETHERNET && PCI && INET
-+	depends on INFINIBAND_USER_ACCESS || !INFINIBAND_USER_ACCESS
- 	depends on MAY_USE_DEVLINK
- 	select NET_VENDOR_MELLANOX
- 	select MLX4_CORE
+diff --git a/drivers/misc/genwqe/card_utils.c b/drivers/misc/genwqe/card_utils.c
+index f68435df76d48..22301bba8c495 100644
+--- a/drivers/misc/genwqe/card_utils.c
++++ b/drivers/misc/genwqe/card_utils.c
+@@ -298,7 +298,7 @@ static int genwqe_sgl_size(int num_pages)
+ int genwqe_alloc_sync_sgl(struct genwqe_dev *cd, struct genwqe_sgl *sgl,
+ 			  void __user *user_addr, size_t user_size, int write)
+ {
+-	int rc;
++	int ret = -ENOMEM;
+ 	struct pci_dev *pci_dev = cd->pci_dev;
+ 
+ 	sgl->fpage_offs = offset_in_page((unsigned long)user_addr);
+@@ -318,7 +318,7 @@ int genwqe_alloc_sync_sgl(struct genwqe_dev *cd, struct genwqe_sgl *sgl,
+ 	if (get_order(sgl->sgl_size) > MAX_ORDER) {
+ 		dev_err(&pci_dev->dev,
+ 			"[%s] err: too much memory requested!\n", __func__);
+-		return -ENOMEM;
++		return ret;
+ 	}
+ 
+ 	sgl->sgl = __genwqe_alloc_consistent(cd, sgl->sgl_size,
+@@ -326,7 +326,7 @@ int genwqe_alloc_sync_sgl(struct genwqe_dev *cd, struct genwqe_sgl *sgl,
+ 	if (sgl->sgl == NULL) {
+ 		dev_err(&pci_dev->dev,
+ 			"[%s] err: no memory available!\n", __func__);
+-		return -ENOMEM;
++		return ret;
+ 	}
+ 
+ 	/* Only use buffering on incomplete pages */
+@@ -339,7 +339,7 @@ int genwqe_alloc_sync_sgl(struct genwqe_dev *cd, struct genwqe_sgl *sgl,
+ 		/* Sync with user memory */
+ 		if (copy_from_user(sgl->fpage + sgl->fpage_offs,
+ 				   user_addr, sgl->fpage_size)) {
+-			rc = -EFAULT;
++			ret = -EFAULT;
+ 			goto err_out;
+ 		}
+ 	}
+@@ -352,7 +352,7 @@ int genwqe_alloc_sync_sgl(struct genwqe_dev *cd, struct genwqe_sgl *sgl,
+ 		/* Sync with user memory */
+ 		if (copy_from_user(sgl->lpage, user_addr + user_size -
+ 				   sgl->lpage_size, sgl->lpage_size)) {
+-			rc = -EFAULT;
++			ret = -EFAULT;
+ 			goto err_out2;
+ 		}
+ 	}
+@@ -374,7 +374,8 @@ int genwqe_alloc_sync_sgl(struct genwqe_dev *cd, struct genwqe_sgl *sgl,
+ 	sgl->sgl = NULL;
+ 	sgl->sgl_dma_addr = 0;
+ 	sgl->sgl_size = 0;
+-	return -ENOMEM;
++
++	return ret;
+ }
+ 
+ int genwqe_setup_sgl(struct genwqe_dev *cd, struct genwqe_sgl *sgl,
 -- 
 2.20.1
 
