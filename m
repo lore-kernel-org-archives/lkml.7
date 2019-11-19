@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A947C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:03:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6B67C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:03:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E8CA20872
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:03:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98C9F20872
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:03:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574143406;
-	bh=5ZDLL2jzO0bYUJZZV6wHwNTMpEYiGBSQOV5StXzn/1U=;
+	s=default; t=1574143416;
+	bh=Qza8YEvSzdPKwKEaI7fqjuv7psHzH3lMC18tMA5SjGY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rBx8uiK69prLg4sKffOyBiU4fXAcA55aeRaTvjwuhdoPtkVUG7xpe7y8Fp672VCkN
-	 YkE06f9gVY8xJe33gqmTR5Z5XuI5yeeZMaTfdyp6hM4KmyOC0i4eCyOMqdPuVSOPFx
-	 T6kBJRZH4k3lxDKqcojJe2MVExzjau8vBzXOm/oc=
+	b=kcUWy3jewnegkSE6KPU+Ka3BWEHdkltsAwnx+3JpjUOkIL/1VqXYZpyTHEbyucGzx
+	 jKo9EmlZZaUUsGd4KCs9TRxVoEg11Evadeb0bw4/ahl8ZGtfC3QWCsDi5dz7jrN89u
+	 JWrUehAUGm9hiFF1ZPmDXY5KIqULliNUqrFjZKpA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730062AbfKSFkN (ORCPT
+        id S1729600AbfKSFj5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:40:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34288 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:39:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729283AbfKSFkK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:40:10 -0500
+        id S1728655AbfKSFjx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:39:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3728D218BA;
-        Tue, 19 Nov 2019 05:40:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F9272071A;
+        Tue, 19 Nov 2019 05:39:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142008;
-        bh=5ZDLL2jzO0bYUJZZV6wHwNTMpEYiGBSQOV5StXzn/1U=;
+        s=default; t=1574141991;
+        bh=Qza8YEvSzdPKwKEaI7fqjuv7psHzH3lMC18tMA5SjGY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PYc3dQOhRqRT+X42sRY+YQRxg4GeC3lrg3lPPT9HhnZ7Ja5WxGyVl4JVtWZtZ7q9X
-         zfvsCowdOb3KKf+W5Pq6sBFgl1HEU+86XwTvpd/xfu6JBhTFa7ClMnN3YpAno5kKAu
-         K0fFzrNMPi8a6niDnjDgOkJGpob3ws+FFo96FE/k=
+        b=f9hKIEw3lS2cooC2Ow9++jBU510bWJkFZQkl/WQUSvasw44uvxmUbC+309aCdj2DZ
+         P77P+3XCnh9LGCc2bmJme/QuJ48K+gmpa6wwmClVuidFnJjuD26hLuQRGCnvS3+7i2
+         Lv7zu+/xUy18M3rcqCwKrvVrUcNz6xKCc3pRJcMA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Prashant Bhole <bhole_prashant_q7@lab.ntt.co.jp>,
-        Song Liu <songliubraving@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+        Tomasz Nowicki <tnowicki@caviumnetworks.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 316/422] samples/bpf: fix compilation failure
-Date:   Tue, 19 Nov 2019 06:18:33 +0100
-Message-Id: <20191119051419.471438761@linuxfoundation.org>
+Subject: [PATCH 4.19 349/422] coresight: etm4x: Configure EL2 exception level when kernel is running in HYP
+Date:   Tue, 19 Nov 2019 06:19:06 +0100
+Message-Id: <20191119051421.627452325@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -62,145 +61,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Prashant Bhole <bhole_prashant_q7@lab.ntt.co.jp>
+From: Tomasz Nowicki <tnowicki@caviumnetworks.com>
 
-[ Upstream commit 32c009798385ce21080beaa87a9b95faad3acd1e ]
+[ Upstream commit b860801e3237ec4c74cf8de0be4816996757ae5c ]
 
-following commit:
-commit d58e468b1112 ("flow_dissector: implements flow dissector BPF hook")
-added struct bpf_flow_keys which conflicts with the struct with
-same name in sockex2_kern.c and sockex3_kern.c
+For non-VHE systems host kernel runs at EL1 and jumps to EL2 whenever
+hypervisor code should be executed. In this case ETM4x driver must
+restrict configuration to EL1 when it setups kernel tracing.
+However, there is no separate hypervisor privilege level when VHE
+is enabled, the host kernel runs at EL2.
 
-similar to commit:
-commit 534e0e52bc23 ("samples/bpf: fix a compilation failure")
-we tried the rename it "flow_keys" but it also conflicted with struct
-having same name in include/net/flow_dissector.h. Hence renaming the
-struct to "flow_key_record". Also, this commit doesn't fix the
-compilation error completely because the similar struct is present in
-sockex3_kern.c. Hence renaming it in both files sockex3_user.c and
-sockex3_kern.c
+This patch fixes configuration of TRCACATRn register for VHE systems
+so that ETM_EXLEVEL_NS_HYP bit is used instead of ETM_EXLEVEL_NS_OS
+to on/off kernel tracing. At the same time, it moves common code
+to new helper.
 
-Signed-off-by: Prashant Bhole <bhole_prashant_q7@lab.ntt.co.jp>
-Acked-by: Song Liu <songliubraving@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Tomasz Nowicki <tnowicki@caviumnetworks.com>
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- samples/bpf/sockex2_kern.c | 11 ++++++-----
- samples/bpf/sockex3_kern.c |  8 ++++----
- samples/bpf/sockex3_user.c |  4 ++--
- 3 files changed, 12 insertions(+), 11 deletions(-)
+ drivers/hwtracing/coresight/coresight-etm4x.c | 40 +++++++++----------
+ 1 file changed, 20 insertions(+), 20 deletions(-)
 
-diff --git a/samples/bpf/sockex2_kern.c b/samples/bpf/sockex2_kern.c
-index f58acfc925561..f2f9dbc021b0d 100644
---- a/samples/bpf/sockex2_kern.c
-+++ b/samples/bpf/sockex2_kern.c
-@@ -14,7 +14,7 @@ struct vlan_hdr {
- 	__be16 h_vlan_encapsulated_proto;
- };
+diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
+index e45b5ec2f4512..b7bc08cf90c69 100644
+--- a/drivers/hwtracing/coresight/coresight-etm4x.c
++++ b/drivers/hwtracing/coresight/coresight-etm4x.c
+@@ -28,6 +28,7 @@
+ #include <linux/pm_runtime.h>
+ #include <asm/sections.h>
+ #include <asm/local.h>
++#include <asm/virt.h>
  
--struct bpf_flow_keys {
-+struct flow_key_record {
- 	__be32 src;
- 	__be32 dst;
- 	union {
-@@ -59,7 +59,7 @@ static inline __u32 ipv6_addr_hash(struct __sk_buff *ctx, __u64 off)
+ #include "coresight-etm4x.h"
+ #include "coresight-etm-perf.h"
+@@ -616,7 +617,7 @@ static void etm4_set_default_config(struct etmv4_config *config)
+ 	config->vinst_ctrl |= BIT(0);
  }
  
- static inline __u64 parse_ip(struct __sk_buff *skb, __u64 nhoff, __u64 *ip_proto,
--			     struct bpf_flow_keys *flow)
-+			     struct flow_key_record *flow)
+-static u64 etm4_get_access_type(struct etmv4_config *config)
++static u64 etm4_get_ns_access_type(struct etmv4_config *config)
  {
- 	__u64 verlen;
+ 	u64 access_type = 0;
  
-@@ -83,7 +83,7 @@ static inline __u64 parse_ip(struct __sk_buff *skb, __u64 nhoff, __u64 *ip_proto
- }
+@@ -627,17 +628,26 @@ static u64 etm4_get_access_type(struct etmv4_config *config)
+ 	 *   Bit[13] Exception level 1 - OS
+ 	 *   Bit[14] Exception level 2 - Hypervisor
+ 	 *   Bit[15] Never implemented
+-	 *
+-	 * Always stay away from hypervisor mode.
+ 	 */
+-	access_type = ETM_EXLEVEL_NS_HYP;
+-
+-	if (config->mode & ETM_MODE_EXCL_KERN)
+-		access_type |= ETM_EXLEVEL_NS_OS;
++	if (!is_kernel_in_hyp_mode()) {
++		/* Stay away from hypervisor mode for non-VHE */
++		access_type =  ETM_EXLEVEL_NS_HYP;
++		if (config->mode & ETM_MODE_EXCL_KERN)
++			access_type |= ETM_EXLEVEL_NS_OS;
++	} else if (config->mode & ETM_MODE_EXCL_KERN) {
++		access_type = ETM_EXLEVEL_NS_HYP;
++	}
  
- static inline __u64 parse_ipv6(struct __sk_buff *skb, __u64 nhoff, __u64 *ip_proto,
--			       struct bpf_flow_keys *flow)
-+			       struct flow_key_record *flow)
- {
- 	*ip_proto = load_byte(skb,
- 			      nhoff + offsetof(struct ipv6hdr, nexthdr));
-@@ -96,7 +96,8 @@ static inline __u64 parse_ipv6(struct __sk_buff *skb, __u64 nhoff, __u64 *ip_pro
- 	return nhoff;
- }
+ 	if (config->mode & ETM_MODE_EXCL_USER)
+ 		access_type |= ETM_EXLEVEL_NS_APP;
  
--static inline bool flow_dissector(struct __sk_buff *skb, struct bpf_flow_keys *flow)
-+static inline bool flow_dissector(struct __sk_buff *skb,
-+				  struct flow_key_record *flow)
- {
- 	__u64 nhoff = ETH_HLEN;
- 	__u64 ip_proto;
-@@ -198,7 +199,7 @@ struct bpf_map_def SEC("maps") hash_map = {
- SEC("socket2")
- int bpf_prog2(struct __sk_buff *skb)
- {
--	struct bpf_flow_keys flow = {};
-+	struct flow_key_record flow = {};
- 	struct pair *value;
- 	u32 key;
++	return access_type;
++}
++
++static u64 etm4_get_access_type(struct etmv4_config *config)
++{
++	u64 access_type = etm4_get_ns_access_type(config);
++
+ 	/*
+ 	 * EXLEVEL_S, bits[11:8], don't trace anything happening
+ 	 * in secure state.
+@@ -891,20 +901,10 @@ void etm4_config_trace_mode(struct etmv4_config *config)
  
-diff --git a/samples/bpf/sockex3_kern.c b/samples/bpf/sockex3_kern.c
-index 95907f8d2b17d..c527b57d3ec8a 100644
---- a/samples/bpf/sockex3_kern.c
-+++ b/samples/bpf/sockex3_kern.c
-@@ -61,7 +61,7 @@ struct vlan_hdr {
- 	__be16 h_vlan_encapsulated_proto;
- };
+ 	addr_acc = config->addr_acc[ETM_DEFAULT_ADDR_COMP];
+ 	/* clear default config */
+-	addr_acc &= ~(ETM_EXLEVEL_NS_APP | ETM_EXLEVEL_NS_OS);
++	addr_acc &= ~(ETM_EXLEVEL_NS_APP | ETM_EXLEVEL_NS_OS |
++		      ETM_EXLEVEL_NS_HYP);
  
--struct bpf_flow_keys {
-+struct flow_key_record {
- 	__be32 src;
- 	__be32 dst;
- 	union {
-@@ -88,7 +88,7 @@ static inline __u32 ipv6_addr_hash(struct __sk_buff *ctx, __u64 off)
- }
+-	/*
+-	 * EXLEVEL_NS, bits[15:12]
+-	 * The Exception levels are:
+-	 *   Bit[12] Exception level 0 - Application
+-	 *   Bit[13] Exception level 1 - OS
+-	 *   Bit[14] Exception level 2 - Hypervisor
+-	 *   Bit[15] Never implemented
+-	 */
+-	if (mode & ETM_MODE_EXCL_KERN)
+-		addr_acc |= ETM_EXLEVEL_NS_OS;
+-	else
+-		addr_acc |= ETM_EXLEVEL_NS_APP;
++	addr_acc |= etm4_get_ns_access_type(config);
  
- struct globals {
--	struct bpf_flow_keys flow;
-+	struct flow_key_record flow;
- };
- 
- struct bpf_map_def SEC("maps") percpu_map = {
-@@ -114,14 +114,14 @@ struct pair {
- 
- struct bpf_map_def SEC("maps") hash_map = {
- 	.type = BPF_MAP_TYPE_HASH,
--	.key_size = sizeof(struct bpf_flow_keys),
-+	.key_size = sizeof(struct flow_key_record),
- 	.value_size = sizeof(struct pair),
- 	.max_entries = 1024,
- };
- 
- static void update_stats(struct __sk_buff *skb, struct globals *g)
- {
--	struct bpf_flow_keys key = g->flow;
-+	struct flow_key_record key = g->flow;
- 	struct pair *value;
- 
- 	value = bpf_map_lookup_elem(&hash_map, &key);
-diff --git a/samples/bpf/sockex3_user.c b/samples/bpf/sockex3_user.c
-index 22f74d0e14934..9d02e0404719a 100644
---- a/samples/bpf/sockex3_user.c
-+++ b/samples/bpf/sockex3_user.c
-@@ -13,7 +13,7 @@
- #define PARSE_IP_PROG_FD (prog_fd[0])
- #define PROG_ARRAY_FD (map_fd[0])
- 
--struct flow_keys {
-+struct flow_key_record {
- 	__be32 src;
- 	__be32 dst;
- 	union {
-@@ -64,7 +64,7 @@ int main(int argc, char **argv)
- 	(void) f;
- 
- 	for (i = 0; i < 5; i++) {
--		struct flow_keys key = {}, next_key;
-+		struct flow_key_record key = {}, next_key;
- 		struct pair value;
- 
- 		sleep(1);
+ 	config->addr_acc[ETM_DEFAULT_ADDR_COMP] = addr_acc;
+ 	config->addr_acc[ETM_DEFAULT_ADDR_COMP + 1] = addr_acc;
 -- 
 2.20.1
 
