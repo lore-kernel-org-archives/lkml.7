@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E33D7C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:36:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B788C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:36:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5B9621783
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:36:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1F4A2231E
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:36:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141804;
-	bh=A8kyb2hX5fNoWsEQow3qiFHYpIqrMrW8S0UxFL6m/bM=;
+	s=default; t=1574141806;
+	bh=8a5AlZCsb1Xf90Q9T0DttIH8Ll4wN+BtclWVVTiNXeg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EjJbE1LFDlumAYGyYCPxe7Tn/oqfh8Bkuq1O7jd/fxsn7dY2stgOOEetn1Z0Du3WE
-	 fjlCY1HStbh5qpfbUCEeaWVCCKfPQDhypg9ZhUmLL42i5/waN6xpR0zT3JFFI2G+kG
-	 +x4R1yYQbGHVcw8O/dZ8V3V2o8zB0scKrRYJwoMM=
+	b=js+Rk7jVerxgUInIZ89M/wsf66ebZmFtXKgFsGddhMF3/UUJsLmPUw5ji5alt8EME
+	 qxEM2M7w2x88BL9BeAu7CIA/AkYTlu3fYYRegV3Q78FdJaNqH09oekAa2xT4zYbHND
+	 R9bFGDC91w/k+NJUTbujItzoNNEHN7lsTC/hPrFM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729998AbfKSFgn (ORCPT
+        id S1729991AbfKSFgl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:36:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58128 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729989AbfKSFgl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 19 Nov 2019 00:36:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58058 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728472AbfKSFgj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:36:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7150020862;
-        Tue, 19 Nov 2019 05:36:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1C3620862;
+        Tue, 19 Nov 2019 05:36:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141800;
-        bh=A8kyb2hX5fNoWsEQow3qiFHYpIqrMrW8S0UxFL6m/bM=;
+        s=default; t=1574141798;
+        bh=8a5AlZCsb1Xf90Q9T0DttIH8Ll4wN+BtclWVVTiNXeg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EMucfdd7vr8fs7umUCv1WKQp52ljfLHYWDhH6nIFiYntW6jRER0G2jpygulLsd1Qm
-         +7rGJnQ25lb2BakrHKM6N5S9rm2QzrSop/7F2iZRIPO6WhXg+6b8e4yI5yg8SwmGDs
-         auUtmjai+4Xn1KQS/9fdHV8gjEs/Rq9EHnCTFSaY=
+        b=f8mPitmmWhx9omF4fqwtydQL4gObDPPC1amD/GfA1Z4tG2MtzspMHAoT/O46KaxUS
+         roH+Dwgi2U8Wb3SryImh0nyhMsVCuUk3xxslvz7+PUCao0Dvm26CJ9wF6LYy6F5wHf
+         4yfIvsw0neLfqMel+NIpqe3G3Q6+g92K0maUGZNw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nicolas Adell <nicolas.adell@actia.fr>,
-        Peter Chen <peter.chen@nxp.com>,
+        stable@vger.kernel.org,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Dirk van der Merwe <dirk.vandermerwe@netronome.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 286/422] usb: chipidea: imx: enable OTG overcurrent in case USB subsystem is already started
-Date:   Tue, 19 Nov 2019 06:18:03 +0100
-Message-Id: <20191119051417.517873970@linuxfoundation.org>
+Subject: [PATCH 4.19 285/422] nfp: provide a better warning when ring allocation fails
+Date:   Tue, 19 Nov 2019 06:18:02 +0100
+Message-Id: <20191119051417.453469183@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -60,37 +62,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Adell <nicolas.adell@actia.fr>
+From: Jakub Kicinski <jakub.kicinski@netronome.com>
 
-[ Upstream commit 1dedbdf2bbb1ede8d96f35f9845ecae179dc1988 ]
+[ Upstream commit 23d9f5531c7c28546954b0bf332134a9b8a38c0a ]
 
-When initializing the USB subsystem before starting the kernel,
-OTG overcurrent detection is disabled. In case the OTG polarity of
-overcurrent is low active, the overcurrent detection is never enabled
-again and events cannot be reported as expected. Because imx usb
-overcurrent polarity is low active by default, only detection needs
-to be enable in usbmisc init function.
+NFP supports fairly enormous ring sizes (up to 256k descriptors).
+In commit 466271703867 ("nfp: use kvcalloc() to allocate SW buffer
+descriptor arrays") we have started using kvcalloc() functions to
+make sure the allocation of software state arrays doesn't hit
+the MAX_ORDER limit.  Unfortunately, we can't use virtual mappings
+for the DMA region holding HW descriptors.  In case this allocation
+fails instead of the generic (and fairly scary) warning/splat in
+the logs print a helpful message explaining what happened and
+suggesting how to fix it.
 
-Signed-off-by: Nicolas Adell <nicolas.adell@actia.fr>
-Signed-off-by: Peter Chen <peter.chen@nxp.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Reviewed-by: Dirk van der Merwe <dirk.vandermerwe@netronome.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/chipidea/usbmisc_imx.c | 2 ++
- 1 file changed, 2 insertions(+)
+ .../net/ethernet/netronome/nfp/nfp_net_common.c  | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/usb/chipidea/usbmisc_imx.c b/drivers/usb/chipidea/usbmisc_imx.c
-index 34ad5bf8acd8d..424ecb1f003fe 100644
---- a/drivers/usb/chipidea/usbmisc_imx.c
-+++ b/drivers/usb/chipidea/usbmisc_imx.c
-@@ -343,6 +343,8 @@ static int usbmisc_imx6q_init(struct imx_usbmisc_data *data)
- 	} else if (data->oc_polarity == 1) {
- 		/* High active */
- 		reg &= ~(MX6_BM_OVER_CUR_DIS | MX6_BM_OVER_CUR_POLARITY);
-+	} else {
-+		reg &= ~(MX6_BM_OVER_CUR_DIS);
- 	}
- 	writel(reg, usbmisc->base + data->index * 4);
+diff --git a/drivers/net/ethernet/netronome/nfp/nfp_net_common.c b/drivers/net/ethernet/netronome/nfp/nfp_net_common.c
+index c6d29fdbb880f..d288c7eebacd8 100644
+--- a/drivers/net/ethernet/netronome/nfp/nfp_net_common.c
++++ b/drivers/net/ethernet/netronome/nfp/nfp_net_common.c
+@@ -2187,9 +2187,13 @@ nfp_net_tx_ring_alloc(struct nfp_net_dp *dp, struct nfp_net_tx_ring *tx_ring)
  
+ 	tx_ring->size = array_size(tx_ring->cnt, sizeof(*tx_ring->txds));
+ 	tx_ring->txds = dma_zalloc_coherent(dp->dev, tx_ring->size,
+-					    &tx_ring->dma, GFP_KERNEL);
+-	if (!tx_ring->txds)
++					    &tx_ring->dma,
++					    GFP_KERNEL | __GFP_NOWARN);
++	if (!tx_ring->txds) {
++		netdev_warn(dp->netdev, "failed to allocate TX descriptor ring memory, requested descriptor count: %d, consider lowering descriptor count\n",
++			    tx_ring->cnt);
+ 		goto err_alloc;
++	}
+ 
+ 	tx_ring->txbufs = kvcalloc(tx_ring->cnt, sizeof(*tx_ring->txbufs),
+ 				   GFP_KERNEL);
+@@ -2341,9 +2345,13 @@ nfp_net_rx_ring_alloc(struct nfp_net_dp *dp, struct nfp_net_rx_ring *rx_ring)
+ 	rx_ring->cnt = dp->rxd_cnt;
+ 	rx_ring->size = array_size(rx_ring->cnt, sizeof(*rx_ring->rxds));
+ 	rx_ring->rxds = dma_zalloc_coherent(dp->dev, rx_ring->size,
+-					    &rx_ring->dma, GFP_KERNEL);
+-	if (!rx_ring->rxds)
++					    &rx_ring->dma,
++					    GFP_KERNEL | __GFP_NOWARN);
++	if (!rx_ring->rxds) {
++		netdev_warn(dp->netdev, "failed to allocate RX descriptor ring memory, requested descriptor count: %d, consider lowering descriptor count\n",
++			    rx_ring->cnt);
+ 		goto err_alloc;
++	}
+ 
+ 	rx_ring->rxbufs = kvcalloc(rx_ring->cnt, sizeof(*rx_ring->rxbufs),
+ 				   GFP_KERNEL);
 -- 
 2.20.1
 
