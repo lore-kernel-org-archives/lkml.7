@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8784C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:30:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76D85C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:30:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 773BF21783
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:30:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FC2F222A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:30:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141427;
-	bh=9lp8kFKHd1OL9uVPSrrIRYlikpXGmBVr/jOZMSrQJck=;
+	s=default; t=1574141429;
+	bh=e6NTprb3jfTz+2nF7tlFhfvKaDMh0ejXCMzptpLJ9aA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w5YThE40UVEFY3OxKmkrXTnOitwueVd4mKaZQRyeQiNTl8IWSVHiEvZazhOvYWMEr
-	 rZWZPY830fAAIwuwLNgbRNLRE+chE9sFCEMBZKkDqWSmYPKpzbhCsGbh/KtYizirYC
-	 a7u3J7yQIOwfJg05Yo9VXlqRaahyrEaWB2flzfO8=
+	b=KeZit+rS2/xsIvI9wGSG8+1WjIhEw6u1p9R/jQ+G0eTl+W9bCdZGuTgT6T3oaVPC4
+	 uWxhRTysJQosIAa3i3YiPbxnHpenO+uzf1piUci6fNhTTwnDIqb4ikqWZMXRqTwvqG
+	 kyxcyuNAQR/UeD7CxhLz2i3aTEMOlz+EyEJaK/WY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727732AbfKSFa0 (ORCPT
+        id S1728688AbfKSFaY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:30:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49142 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:30:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729109AbfKSFaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:30:22 -0500
+        id S1728011AbfKSFaT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:30:19 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9920121783;
-        Tue, 19 Nov 2019 05:30:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F4F721783;
+        Tue, 19 Nov 2019 05:30:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141422;
-        bh=9lp8kFKHd1OL9uVPSrrIRYlikpXGmBVr/jOZMSrQJck=;
+        s=default; t=1574141418;
+        bh=e6NTprb3jfTz+2nF7tlFhfvKaDMh0ejXCMzptpLJ9aA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ir0ho1jSJ+oZcqKRiO9WgeECal4NAz4uGd+ZW58eQg5L2uAY+cvnNESXUHGrCxlou
-         8GgxIjz5lBHByUlWbZ2zzlocZWBCAXp546JlvAe5DINof9W14W7jeQPdj661D2LeGA
-         D0AKZtMmgAlIPnGPhgZ1cCbLrzag4ndZAmnc7Ymc=
+        b=RofLT1euoN9hEihrUqJZU5n9phdsrl54WwW+FLVYO4EVJUN1i4YagkQR4/mzpq/y7
+         FB0hotGZDveXii4XrRrfXx6cfEImgHrh5xzWgiKLDkAFoZYiuocBXBso6XR2nBeEA+
+         DtGlBwqdEVJwdUD23cmDsAuSN7Jha7C3a5ZivFT4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eddie Huang <eddie.huang@mediatek.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        stable@vger.kernel.org, Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
+        Aristeu Rozanski <aris@redhat.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-edac <linux-edac@vger.kernel.org>,
+        Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@suse.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 156/422] rtc: mt6397: fix possible race condition
-Date:   Tue, 19 Nov 2019 06:15:53 +0100
-Message-Id: <20191119051408.668158774@linuxfoundation.org>
+Subject: [PATCH 4.19 155/422] EDAC, sb_edac: Return early on ADDRV bit and address type test
+Date:   Tue, 19 Nov 2019 06:15:52 +0100
+Message-Id: <20191119051408.616187733@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -60,63 +63,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
 
-[ Upstream commit babab2f86440352d24e76118fdd7d40cab5fd7bf ]
+[ Upstream commit dcc960b225ceb2bd66c45e0845d03e577f7010f9 ]
 
-The IRQ is requested before the struct rtc is allocated and registered, but
-this struct is used in the IRQ handler. This may lead to a NULL pointer
-dereference.
+Users of the mce_register_decode_chain() are called for every logged
+error. EDAC drivers should check:
 
-Switch to devm_rtc_allocate_device/rtc_register_device to allocate the rtc
-before requesting the IRQ.
+1) Is this a memory error? [bit 7 in status register]
+2) Is there a valid address? [bit 58 in status register]
+3) Is the address a system address? [bitfield 8:6 in misc register]
 
-Acked-by: Eddie Huang <eddie.huang@mediatek.com>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+The sb_edac driver performed test "1" twice. Waited far too long to
+perform check "2". Didn't do check "3" at all.
+
+Fix it by moving the test for valid address from
+sbridge_mce_output_error() into sbridge_mce_check_error() and add a test
+for the type immediately after. Delete the redundant check for the type
+of the error from sbridge_mce_output_error().
+
+Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Cc: Aristeu Rozanski <aris@redhat.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Cc: linux-edac <linux-edac@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20180907230828.13901-2-tony.luck@intel.com
+[ Re-word commit message. ]
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-mt6397.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ drivers/edac/sb_edac.c | 68 ++++++++++++++++++++++--------------------
+ 1 file changed, 35 insertions(+), 33 deletions(-)
 
-diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
-index 385f8303bb412..e9a25ec4d434f 100644
---- a/drivers/rtc/rtc-mt6397.c
-+++ b/drivers/rtc/rtc-mt6397.c
-@@ -332,6 +332,10 @@ static int mtk_rtc_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, rtc);
- 
-+	rtc->rtc_dev = devm_rtc_allocate_device(rtc->dev);
-+	if (IS_ERR(rtc->rtc_dev))
-+		return PTR_ERR(rtc->rtc_dev);
-+
- 	ret = request_threaded_irq(rtc->irq, NULL,
- 				   mtk_rtc_irq_handler_thread,
- 				   IRQF_ONESHOT | IRQF_TRIGGER_HIGH,
-@@ -344,11 +348,11 @@ static int mtk_rtc_probe(struct platform_device *pdev)
- 
- 	device_init_wakeup(&pdev->dev, 1);
- 
--	rtc->rtc_dev = rtc_device_register("mt6397-rtc", &pdev->dev,
--					   &mtk_rtc_ops, THIS_MODULE);
--	if (IS_ERR(rtc->rtc_dev)) {
-+	rtc->rtc_dev->ops = &mtk_rtc_ops;
-+
-+	ret = rtc_register_device(rtc->rtc_dev);
-+	if (ret) {
- 		dev_err(&pdev->dev, "register rtc device failed\n");
--		ret = PTR_ERR(rtc->rtc_dev);
- 		goto out_free_irq;
+diff --git a/drivers/edac/sb_edac.c b/drivers/edac/sb_edac.c
+index 72cea3cb86224..7447f1453200d 100644
+--- a/drivers/edac/sb_edac.c
++++ b/drivers/edac/sb_edac.c
+@@ -2912,35 +2912,27 @@ static void sbridge_mce_output_error(struct mem_ctl_info *mci,
+ 	 *	cccc = channel
+ 	 * If the mask doesn't match, report an error to the parsing logic
+ 	 */
+-	if (! ((errcode & 0xef80) == 0x80)) {
+-		optype = "Can't parse: it is not a mem";
+-	} else {
+-		switch (optypenum) {
+-		case 0:
+-			optype = "generic undef request error";
+-			break;
+-		case 1:
+-			optype = "memory read error";
+-			break;
+-		case 2:
+-			optype = "memory write error";
+-			break;
+-		case 3:
+-			optype = "addr/cmd error";
+-			break;
+-		case 4:
+-			optype = "memory scrubbing error";
+-			break;
+-		default:
+-			optype = "reserved";
+-			break;
+-		}
++	switch (optypenum) {
++	case 0:
++		optype = "generic undef request error";
++		break;
++	case 1:
++		optype = "memory read error";
++		break;
++	case 2:
++		optype = "memory write error";
++		break;
++	case 3:
++		optype = "addr/cmd error";
++		break;
++	case 4:
++		optype = "memory scrubbing error";
++		break;
++	default:
++		optype = "reserved";
++		break;
  	}
  
-@@ -365,7 +369,6 @@ static int mtk_rtc_remove(struct platform_device *pdev)
+-	/* Only decode errors with an valid address (ADDRV) */
+-	if (!GET_BITFIELD(m->status, 58, 58))
+-		return;
+-
+ 	if (pvt->info.type == KNIGHTS_LANDING) {
+ 		if (channel == 14) {
+ 			edac_dbg(0, "%s%s err_code:%04x:%04x EDRAM bank %d\n",
+@@ -3046,17 +3038,11 @@ static int sbridge_mce_check_error(struct notifier_block *nb, unsigned long val,
  {
- 	struct mt6397_rtc *rtc = platform_get_drvdata(pdev);
+ 	struct mce *mce = (struct mce *)data;
+ 	struct mem_ctl_info *mci;
+-	struct sbridge_pvt *pvt;
+ 	char *type;
  
--	rtc_device_unregister(rtc->rtc_dev);
- 	free_irq(rtc->irq, rtc->rtc_dev);
- 	irq_dispose_mapping(rtc->irq);
+ 	if (edac_get_report_status() == EDAC_REPORTING_DISABLED)
+ 		return NOTIFY_DONE;
  
+-	mci = get_mci_for_node_id(mce->socketid, IMC0);
+-	if (!mci)
+-		return NOTIFY_DONE;
+-	pvt = mci->pvt_info;
+-
+ 	/*
+ 	 * Just let mcelog handle it if the error is
+ 	 * outside the memory controller. A memory error
+@@ -3066,6 +3052,22 @@ static int sbridge_mce_check_error(struct notifier_block *nb, unsigned long val,
+ 	if ((mce->status & 0xefff) >> 7 != 1)
+ 		return NOTIFY_DONE;
+ 
++	/* Check ADDRV bit in STATUS */
++	if (!GET_BITFIELD(mce->status, 58, 58))
++		return NOTIFY_DONE;
++
++	/* Check MISCV bit in STATUS */
++	if (!GET_BITFIELD(mce->status, 59, 59))
++		return NOTIFY_DONE;
++
++	/* Check address type in MISC (physical address only) */
++	if (GET_BITFIELD(mce->misc, 6, 8) != 2)
++		return NOTIFY_DONE;
++
++	mci = get_mci_for_node_id(mce->socketid, IMC0);
++	if (!mci)
++		return NOTIFY_DONE;
++
+ 	if (mce->mcgstatus & MCG_STATUS_MCIP)
+ 		type = "Exception";
+ 	else
 -- 
 2.20.1
 
