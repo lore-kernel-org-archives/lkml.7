@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5CE9C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:28:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46D0BC43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:28:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8966821823
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:28:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ECFD208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:28:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141334;
-	bh=cE+XnpIA2UlQ3+nHh+xT7kPEuciIqH7gZf5c/sPtmCU=;
+	s=default; t=1574141332;
+	bh=UNQs/91dK9j+/CpReb4++waTjXoKNuAIztVw5SJpU20=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f8xFud79Ez9OJksM2kB9zXhMrm6k5XOxsrAiNgTs6jPVSkYC/+GBJcDkmsjqxReg0
-	 16AtuBy93WtIj7yBZrlfuPgdOei8zqfmAgLFPOcmD0dPWP3lyO6mLOGSuAMljKio8s
-	 iTCMJ00nLOlmFYcOclFpmUXlnwN97Xg1IlaI6EWQ=
+	b=TQfa9FB3radhkGSAxPLZpRHFsAwq0EPnMcVePaHLuAC3SFgrkl7gapRVmQ94cqwFG
+	 +ZAjIjVLGZHK55lllmrAJCxnrE/BMjRQ8GzTuiu/m3zDeP6s4eaL95/H479adijBNW
+	 7GTHmhPWE9x6agkP+D3HIP836dX9JpsBTsS2Pjfs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728924AbfKSF2x (ORCPT
+        id S1728020AbfKSF2v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:28:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47330 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728914AbfKSF2v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 19 Nov 2019 00:28:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47288 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728905AbfKSF2s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:28:48 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C0D6208C3;
-        Tue, 19 Nov 2019 05:28:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 502AC208C3;
+        Tue, 19 Nov 2019 05:28:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141330;
-        bh=cE+XnpIA2UlQ3+nHh+xT7kPEuciIqH7gZf5c/sPtmCU=;
+        s=default; t=1574141327;
+        bh=UNQs/91dK9j+/CpReb4++waTjXoKNuAIztVw5SJpU20=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lRpYnNcHvoa3KK0R9hkS9V0RU1c4s1MlTLq3zD4eZVoGsRRVjtrpoaVL3DRZDldkx
-         XYg8/85VzslNk3vUXSL64fEnG8IiAZVqV5jT9vUJR0GQu6eGxTZ+q/iU3j5sBUBCHa
-         AiNYtrHGK1fOzCa/VVhBSEPbqSv0YO0VVTJdeZXM=
+        b=V++aly+UEkxjPbkuVBz3AEBA61J91WfTSVSwwg95ayXMv+dm4qSZnrNYaOl/5U4LW
+         3mkII8/TD4EvSZuz4Zj8kc+AedwpALEI29F/+NIiIiv/0L1INBvdvwtZFageCdudxS
+         2THXXYq2FUS5lyiT3goqPEK60esH7J+9TBMIh2oc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vidya Dharmaraju <vidyad@marvell.com>,
-        Cathy Luo <cluo@marvell.com>,
-        Ganapathi Bhat <gbhat@marvell.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 097/422] mwifiex: do no submit URB in suspended state
-Date:   Tue, 19 Nov 2019 06:14:54 +0100
-Message-Id: <20191119051405.574997628@linuxfoundation.org>
+Subject: [PATCH 4.19 123/422] ASoC: sgtl5000: avoid division by zero if lo_vag is zero
+Date:   Tue, 19 Nov 2019 06:15:20 +0100
+Message-Id: <20191119051406.971910930@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -62,53 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ganapathi Bhat <gbhat@marvell.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 7bd4628c2f31c51254aa39628ecae521d00d0b90 ]
+[ Upstream commit 9ab708aef61f5620113269a9d1bdb1543d1207d0 ]
 
-There is a possible race between USB suspend and main thread:
+In the case where lo_vag <= SGTL5000_LINE_OUT_GND_BASE, lo_vag
+is set to zero and later vol_quot is computed by dividing by
+lo_vag causing a division by zero error.  Fix this by avoiding
+a zero division and set vol_quot to zero in this specific case
+so that the lowest setting for i is correctly set.
 
-1. After processing the command response, main thread will submit
-rx_cmd URB back so as to process next command response, by
-calling mwifiex_usb_submit_rx_urb.
-
-2. During USB suspend, the suspend handler will check if rx_cmd
-URB is pending(submitted) and if true, kill this URB.
-
-There is a possible race between #1 and #2, where rx_cmd URB will
-be submitted by main thread(#1) after the suspend handler check
-in #2.
-
-To fix this, check if device is already suspended in
-mwifiex_usb_submit_rx_urb, in which case do not submit the URB.
-
-Signed-off-by: Vidya Dharmaraju <vidyad@marvell.com>
-Signed-off-by: Cathy Luo <cluo@marvell.com>
-Signed-off-by: Ganapathi Bhat <gbhat@marvell.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/marvell/mwifiex/usb.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ sound/soc/codecs/sgtl5000.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/usb.c b/drivers/net/wireless/marvell/mwifiex/usb.c
-index 433c6a16870b6..76d80fd545236 100644
---- a/drivers/net/wireless/marvell/mwifiex/usb.c
-+++ b/drivers/net/wireless/marvell/mwifiex/usb.c
-@@ -298,6 +298,13 @@ static int mwifiex_usb_submit_rx_urb(struct urb_context *ctx, int size)
- 	struct mwifiex_adapter *adapter = ctx->adapter;
- 	struct usb_card_rec *card = (struct usb_card_rec *)adapter->card;
- 
-+	if (test_bit(MWIFIEX_IS_SUSPENDED, &adapter->work_flags)) {
-+		mwifiex_dbg(adapter, ERROR,
-+			    "%s: card removed/suspended, EP %d rx_cmd URB submit skipped\n",
-+			    __func__, ctx->ep);
-+		return -1;
-+	}
-+
- 	if (card->rx_cmd_ep != ctx->ep) {
- 		ctx->skb = dev_alloc_skb(size);
- 		if (!ctx->skb) {
+diff --git a/sound/soc/codecs/sgtl5000.c b/sound/soc/codecs/sgtl5000.c
+index 64a52d495b1f5..896412d11a31c 100644
+--- a/sound/soc/codecs/sgtl5000.c
++++ b/sound/soc/codecs/sgtl5000.c
+@@ -1387,7 +1387,7 @@ static int sgtl5000_set_power_regs(struct snd_soc_component *component)
+ 	 * Searching for a suitable index solving this formula:
+ 	 * idx = 40 * log10(vag_val / lo_cagcntrl) + 15
+ 	 */
+-	vol_quot = (vag * 100) / lo_vag;
++	vol_quot = lo_vag ? (vag * 100) / lo_vag : 0;
+ 	lo_vol = 0;
+ 	for (i = 0; i < ARRAY_SIZE(vol_quot_table); i++) {
+ 		if (vol_quot >= vol_quot_table[i])
 -- 
 2.20.1
 
