@@ -2,408 +2,143 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83055C43141
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:09:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10407C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:09:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AC8E2084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:09:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574172569;
-	bh=FM/bjst/yFekG0yKfuQFRL1ctO1Q0YUL6KdL5pMpTpI=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=uevhUbO5n50nINoQ/Bmufh9xrJ1zkdKzHaM9TGEOt1rzGAAxdfzuFkVmiMmzEg8W3
-	 7CQK5Ammox/Tt98buQuY0vI6fqoDZNN2UiuGsYrGf8brh+aYxH3TTBVn6Yl6XVjiG/
-	 bFFqgjVk/9J51S8xA2OSVIzJmpyq5tKvNe3EvYZM=
+	by mail.kernel.org (Postfix) with ESMTP id CACEF20885
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:09:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="HB+1Up9x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728164AbfKSOJ2 (ORCPT
+        id S1728193AbfKSOJh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 09:09:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46540 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727763AbfKSOJ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 09:09:28 -0500
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 270002084D;
-        Tue, 19 Nov 2019 14:09:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574172566;
-        bh=FM/bjst/yFekG0yKfuQFRL1ctO1Q0YUL6KdL5pMpTpI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=QsH29e/KeSXLDnVP8R5/iy0uhn4gbbcZC7WJaJ1mZrV1HTYkJJY4NWDGAIqT3zqBn
-         mHGjDsVXldWNtaEg0hWJiqw9ri/VrO/W0ejbzi+vPOTI7r9hn09PHghBjldivyPEn1
-         yYEH7kKeRXw4OodgEqzBW/UQTsoqj+WAe+PCWSro=
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     linux-pm@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH] PM / QoS: Wrap documentation to fit in 80 columns
-Date:   Tue, 19 Nov 2019 08:09:23 -0600
-Message-Id: <20191119140923.175286-1-helgaas@kernel.org>
-X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
+        Tue, 19 Nov 2019 09:09:37 -0500
+Received: from mail-eopbgr130053.outbound.protection.outlook.com ([40.107.13.53]:24655
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727763AbfKSOJh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 09:09:37 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YffEX7w6turTYLU06UaI2lkWAOfLCWqZs8pxtAktJQ9Tqw3j8fTsN+eA93ek7UQ2dee7ZZtn7hNl4qde6Mt5gE+0RF/0LpJbsn95rukdW/XntlKkxUV1yZBYunzK73aeorW6r6BFUkuTEc8IEd6M2mbZUlCxkQf90sXMD9ghyPd8lobwLEerqFgn00PpXiznZp9xoOtSP3CYMl/votlHIYP2fDy+PbJ4sPMnAYfhxL3hUdTR3euKcSMw5aFkMaxWyKgCmU7yP2YFVuVtNvoQiTAkCgQWmBdJTckDszE1vidqb1OgOCJRJ2I5bAJdU1fA27BIBrsWeWH4L+7jw5AEFw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Zfr4Lbzrl5AIdj1VBAanovp/87Zj4CE934jajYhuYk8=;
+ b=No20EHcQmtWGJZITOopezf2TMGdR+KJfCOfkSNlVQ3cB03HF64KtcjctnCEwgDwlzSLwl5SeAbxIIrTDoIw2ZMz8ueqx5IJZGgOoi2KbSr5qJnlYYCYD8n8lG9G9+VAtiDFZvcQTjyy02JJ4TSxa1z+I01Ps2cYQM1yiNGJaewgbdbXup1yTbY/G+rAY/zRuWUSiEhNFQBJsLAMAP10fFC7VT24j82ftlrN+6vXjOX8RGJZ1jyaUjjk01MGqpXtpq5CY9eh+htp6uwCyDCO7DnTc4M0v6+7/DP4KfiScA1ahC9v70xM1gvsfBU9GRGyBnHwMCL3wAIoZjGTh+2E5dw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Zfr4Lbzrl5AIdj1VBAanovp/87Zj4CE934jajYhuYk8=;
+ b=HB+1Up9x7EqLbFXU+/9OGILTKmRM8MWrvn8iq6yIJ8xY1/X3l+dxAU7JF93ULD1Cwmy1w979S2cCvV6mLeaxVX7DUEAZvEfaqKgkXBMjw91B/nYqRvXli5/U18uz5j31TPYLBKvtyxjl03y6EgWpYjlgw/2MTv4aadD32wudtTk=
+Received: from VI1PR0402MB2800.eurprd04.prod.outlook.com (10.175.24.138) by
+ VI1PR0402MB3677.eurprd04.prod.outlook.com (52.134.19.14) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2451.30; Tue, 19 Nov 2019 14:09:31 +0000
+Received: from VI1PR0402MB2800.eurprd04.prod.outlook.com
+ ([fe80::749b:178a:b8c5:5aaa]) by VI1PR0402MB2800.eurprd04.prod.outlook.com
+ ([fe80::749b:178a:b8c5:5aaa%11]) with mapi id 15.20.2451.031; Tue, 19 Nov
+ 2019 14:09:31 +0000
+From:   Ioana Ciornei <ioana.ciornei@nxp.com>
+To:     Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        David Miller <davem@davemloft.net>
+CC:     "hch@lst.de" <hch@lst.de>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        Ioana Ciocoi Radulescu <ruxandra.radulescu@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        Diana Madalina Craciun <diana.craciun@nxp.com>,
+        Madalin Bucur <madalin.bucur@nxp.com>,
+        Camelia Alexandra Groza <camelia.groza@nxp.com>,
+        Roy Pledge <roy.pledge@nxp.com>
+Subject: RE: [PATCH v3 0/4] dma-mapping: introduce new dma unmap and sync
+ variants
+Thread-Topic: [PATCH v3 0/4] dma-mapping: introduce new dma unmap and sync
+ variants
+Thread-Index: AQHVmh1EAM9HSxnkaEm+5zOWq0YV/qeJiNoAgAD7/oCACAud0A==
+Date:   Tue, 19 Nov 2019 14:09:30 +0000
+Message-ID: <VI1PR0402MB280097A09BC2CF202EF3004EE04C0@VI1PR0402MB2800.eurprd04.prod.outlook.com>
+References: <20191113122407.1171-1-laurentiu.tudor@nxp.com>
+ <20191113.121132.1658930697082028145.davem@davemloft.net>
+ <81b6e75b-a827-32e2-77bd-50220ddd66cc@nxp.com>
+In-Reply-To: <81b6e75b-a827-32e2-77bd-50220ddd66cc@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=ioana.ciornei@nxp.com; 
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: ac3f5fab-a51e-48c0-0246-08d76cfa18ea
+x-ms-traffictypediagnostic: VI1PR0402MB3677:|VI1PR0402MB3677:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR0402MB367759DCB0492337A81A6006E04C0@VI1PR0402MB3677.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 022649CC2C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(366004)(136003)(39860400002)(346002)(199004)(189003)(25786009)(7696005)(76116006)(64756008)(66476007)(6506007)(26005)(66446008)(66556008)(66946007)(4326008)(76176011)(5660300002)(53546011)(52536014)(86362001)(110136005)(54906003)(14444005)(256004)(2906002)(8936002)(102836004)(8676002)(99286004)(74316002)(478600001)(229853002)(446003)(476003)(55016002)(81156014)(33656002)(11346002)(71200400001)(14454004)(71190400001)(7736002)(186003)(81166006)(6436002)(9686003)(6116002)(44832011)(486006)(6246003)(3846002)(316002)(66066001)(305945005);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3677;H:VI1PR0402MB2800.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: puEtLq3ZEuUiZGIccjiKydi5LSDg89/Qapl9qFXliP05zpcZ5WmLoBkAkcBzR0GC21ZVPvHeb/pRo9XVQquaacLErUWKqVK3tSnZEtocxH5UH6jqwrcXhyLpDziI16EvOCTNp5+O13v4adtb1fYXTW5lZDnybqoDTahQ3npMem2EzkbPTiePUx17IJmc8T8Zdc5Og1V2ANbyvhzeflnU+j5sKY/S90Is2TrXCJsYwFFpFRCikE+s6BK20RTuDO4fO78GL8OllTsPh1X27h5ODPq78gaygjb5c3MLmwCMXnJq9pQHOZUbORHWiLvYlWcBMY22/i0B+u6u1cSiTRz3uIg777hByfUaNz7L0TGzPMOa8eTPpIZmMid6ECQ1hU2RjWcWMH/ypS1YPiCQIzpnlRG0W3EA62KN/rj1RN5P5es/jAsHPCSeY7a7CmFdBc1Q
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ac3f5fab-a51e-48c0-0246-08d76cfa18ea
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Nov 2019 14:09:31.1187
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: DyaBOACnGYcnbir31FFj9PHCYr40qDMwxS/IrxIAJ7DGEpOMlL0UpsksMdEc91i+sVIRXycR67wZTc8P4oymvA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3677
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
-
-Wrap to 80 columns.  No textual change except to correct some "it's" that
-should be "its".
-
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
----
- Documentation/power/drivers-testing.rst       |  7 ++--
- Documentation/power/freezing-of-tasks.rst     | 37 ++++++++++---------
- Documentation/power/opp.rst                   | 32 ++++++++--------
- Documentation/power/pci.rst                   | 28 +++++++-------
- Documentation/power/pm_qos_interface.rst      | 26 ++++++-------
- Documentation/power/runtime_pm.rst            |  4 +-
- .../power/suspend-and-cpuhotplug.rst          |  7 ++--
- Documentation/power/swsusp.rst                | 14 ++++---
- 8 files changed, 81 insertions(+), 74 deletions(-)
-
-diff --git a/Documentation/power/drivers-testing.rst b/Documentation/power/drivers-testing.rst
-index e53f1999fc39..d77d2894f9fe 100644
---- a/Documentation/power/drivers-testing.rst
-+++ b/Documentation/power/drivers-testing.rst
-@@ -39,9 +39,10 @@ c) Compile the driver directly into the kernel and try the test modes of
- d) Attempt to hibernate with the driver compiled directly into the kernel
-    in the "reboot", "shutdown" and "platform" modes.
- 
--e) Try the test modes of suspend (see: Documentation/power/basic-pm-debugging.rst,
--   2).  [As far as the STR tests are concerned, it should not matter whether or
--   not the driver is built as a module.]
-+e) Try the test modes of suspend (see:
-+   Documentation/power/basic-pm-debugging.rst, 2).  [As far as the STR tests are
-+   concerned, it should not matter whether or not the driver is built as a
-+   module.]
- 
- f) Attempt to suspend to RAM using the s2ram tool with the driver loaded
-    (see: Documentation/power/basic-pm-debugging.rst, 2).
-diff --git a/Documentation/power/freezing-of-tasks.rst b/Documentation/power/freezing-of-tasks.rst
-index ef110fe55e82..8bd693399834 100644
---- a/Documentation/power/freezing-of-tasks.rst
-+++ b/Documentation/power/freezing-of-tasks.rst
-@@ -215,30 +215,31 @@ VI. Are there any precautions to be taken to prevent freezing failures?
- 
- Yes, there are.
- 
--First of all, grabbing the 'system_transition_mutex' lock to mutually exclude a piece of code
--from system-wide sleep such as suspend/hibernation is not encouraged.
--If possible, that piece of code must instead hook onto the suspend/hibernation
--notifiers to achieve mutual exclusion. Look at the CPU-Hotplug code
--(kernel/cpu.c) for an example.
--
--However, if that is not feasible, and grabbing 'system_transition_mutex' is deemed necessary,
--it is strongly discouraged to directly call mutex_[un]lock(&system_transition_mutex) since
--that could lead to freezing failures, because if the suspend/hibernate code
--successfully acquired the 'system_transition_mutex' lock, and hence that other entity failed
--to acquire the lock, then that task would get blocked in TASK_UNINTERRUPTIBLE
--state. As a consequence, the freezer would not be able to freeze that task,
--leading to freezing failure.
-+First of all, grabbing the 'system_transition_mutex' lock to mutually exclude a
-+piece of code from system-wide sleep such as suspend/hibernation is not
-+encouraged.  If possible, that piece of code must instead hook onto the
-+suspend/hibernation notifiers to achieve mutual exclusion. Look at the
-+CPU-Hotplug code (kernel/cpu.c) for an example.
-+
-+However, if that is not feasible, and grabbing 'system_transition_mutex' is
-+deemed necessary, it is strongly discouraged to directly call
-+mutex_[un]lock(&system_transition_mutex) since that could lead to freezing
-+failures, because if the suspend/hibernate code successfully acquired the
-+'system_transition_mutex' lock, and hence that other entity failed to acquire
-+the lock, then that task would get blocked in TASK_UNINTERRUPTIBLE state. As a
-+consequence, the freezer would not be able to freeze that task, leading to
-+freezing failure.
- 
- However, the [un]lock_system_sleep() APIs are safe to use in this scenario,
- since they ask the freezer to skip freezing this task, since it is anyway
--"frozen enough" as it is blocked on 'system_transition_mutex', which will be released
--only after the entire suspend/hibernation sequence is complete.
--So, to summarize, use [un]lock_system_sleep() instead of directly using
-+"frozen enough" as it is blocked on 'system_transition_mutex', which will be
-+released only after the entire suspend/hibernation sequence is complete.  So, to
-+summarize, use [un]lock_system_sleep() instead of directly using
- mutex_[un]lock(&system_transition_mutex). That would prevent freezing failures.
- 
- V. Miscellaneous
- ================
- 
- /sys/power/pm_freeze_timeout controls how long it will cost at most to freeze
--all user space processes or all freezable kernel threads, in unit of millisecond.
--The default value is 20000, with range of unsigned integer.
-+all user space processes or all freezable kernel threads, in unit of
-+millisecond.  The default value is 20000, with range of unsigned integer.
-diff --git a/Documentation/power/opp.rst b/Documentation/power/opp.rst
-index 209c7613f5a4..e3cc4f349ea8 100644
---- a/Documentation/power/opp.rst
-+++ b/Documentation/power/opp.rst
-@@ -73,19 +73,21 @@ factors. Example usage: Thermal management or other exceptional situations where
- SoC framework might choose to disable a higher frequency OPP to safely continue
- operations until that OPP could be re-enabled if possible.
- 
--OPP library facilitates this concept in it's implementation. The following
-+OPP library facilitates this concept in its implementation. The following
- operational functions operate only on available opps:
--opp_find_freq_{ceil, floor}, dev_pm_opp_get_voltage, dev_pm_opp_get_freq, dev_pm_opp_get_opp_count
-+opp_find_freq_{ceil, floor}, dev_pm_opp_get_voltage, dev_pm_opp_get_freq,
-+dev_pm_opp_get_opp_count
- 
--dev_pm_opp_find_freq_exact is meant to be used to find the opp pointer which can then
--be used for dev_pm_opp_enable/disable functions to make an opp available as required.
-+dev_pm_opp_find_freq_exact is meant to be used to find the opp pointer
-+which can then be used for dev_pm_opp_enable/disable functions to make an
-+opp available as required.
- 
- WARNING: Users of OPP library should refresh their availability count using
--get_opp_count if dev_pm_opp_enable/disable functions are invoked for a device, the
--exact mechanism to trigger these or the notification mechanism to other
--dependent subsystems such as cpufreq are left to the discretion of the SoC
--specific framework which uses the OPP library. Similar care needs to be taken
--care to refresh the cpufreq table in cases of these operations.
-+get_opp_count if dev_pm_opp_enable/disable functions are invoked for a
-+device, the exact mechanism to trigger these or the notification mechanism
-+to other dependent subsystems such as cpufreq are left to the discretion of
-+the SoC specific framework which uses the OPP library. Similar care needs
-+to be taken care to refresh the cpufreq table in cases of these operations.
- 
- 2. Initial OPP List Registration
- ================================
-@@ -99,11 +101,11 @@ OPPs dynamically using the dev_pm_opp_enable / disable functions.
- dev_pm_opp_add
- 	Add a new OPP for a specific domain represented by the device pointer.
- 	The OPP is defined using the frequency and voltage. Once added, the OPP
--	is assumed to be available and control of it's availability can be done
--	with the dev_pm_opp_enable/disable functions. OPP library internally stores
--	and manages this information in the opp struct. This function may be
--	used by SoC framework to define a optimal list as per the demands of
--	SoC usage environment.
-+	is assumed to be available and control of its availability can be done
-+	with the dev_pm_opp_enable/disable functions. OPP library
-+	internally stores and manages this information in the opp struct.
-+	This function may be used by SoC framework to define a optimal list
-+	as per the demands of SoC usage environment.
- 
- 	WARNING:
- 		Do not use this function in interrupt context.
-@@ -354,7 +356,7 @@ struct dev_pm_opp
- 
- struct device
- 	This is used to identify a domain to the OPP layer. The
--	nature of the device and it's implementation is left to the user of
-+	nature of the device and its implementation is left to the user of
- 	OPP library such as the SoC framework.
- 
- Overall, in a simplistic view, the data structure operations is represented as
-diff --git a/Documentation/power/pci.rst b/Documentation/power/pci.rst
-index 0e2ef7429304..51e0a493d284 100644
---- a/Documentation/power/pci.rst
-+++ b/Documentation/power/pci.rst
-@@ -426,12 +426,12 @@ pm->runtime_idle() callback.
- 2.4. System-Wide Power Transitions
- ----------------------------------
- There are a few different types of system-wide power transitions, described in
--Documentation/driver-api/pm/devices.rst.  Each of them requires devices to be handled
--in a specific way and the PM core executes subsystem-level power management
--callbacks for this purpose.  They are executed in phases such that each phase
--involves executing the same subsystem-level callback for every device belonging
--to the given subsystem before the next phase begins.  These phases always run
--after tasks have been frozen.
-+Documentation/driver-api/pm/devices.rst.  Each of them requires devices to be
-+handled in a specific way and the PM core executes subsystem-level power
-+management callbacks for this purpose.  They are executed in phases such that
-+each phase involves executing the same subsystem-level callback for every device
-+belonging to the given subsystem before the next phase begins.  These phases
-+always run after tasks have been frozen.
- 
- 2.4.1. System Suspend
- ^^^^^^^^^^^^^^^^^^^^^
-@@ -636,12 +636,12 @@ System restore requires a hibernation image to be loaded into memory and the
- pre-hibernation memory contents to be restored before the pre-hibernation system
- activity can be resumed.
- 
--As described in Documentation/driver-api/pm/devices.rst, the hibernation image is loaded
--into memory by a fresh instance of the kernel, called the boot kernel, which in
--turn is loaded and run by a boot loader in the usual way.  After the boot kernel
--has loaded the image, it needs to replace its own code and data with the code
--and data of the "hibernated" kernel stored within the image, called the image
--kernel.  For this purpose all devices are frozen just like before creating
-+As described in Documentation/driver-api/pm/devices.rst, the hibernation image
-+is loaded into memory by a fresh instance of the kernel, called the boot kernel,
-+which in turn is loaded and run by a boot loader in the usual way.  After the
-+boot kernel has loaded the image, it needs to replace its own code and data with
-+the code and data of the "hibernated" kernel stored within the image, called the
-+image kernel.  For this purpose all devices are frozen just like before creating
- the image during hibernation, in the
- 
- 	prepare, freeze, freeze_noirq
-@@ -691,8 +691,8 @@ controlling the runtime power management of their devices.
- 
- At the time of this writing there are two ways to define power management
- callbacks for a PCI device driver, the recommended one, based on using a
--dev_pm_ops structure described in Documentation/driver-api/pm/devices.rst, and the
--"legacy" one, in which the .suspend(), .suspend_late(), .resume_early(), and
-+dev_pm_ops structure described in Documentation/driver-api/pm/devices.rst, and
-+the "legacy" one, in which the .suspend(), .suspend_late(), .resume_early(), and
- .resume() callbacks from struct pci_driver are used.  The legacy approach,
- however, doesn't allow one to define runtime power management callbacks and is
- not really suitable for any new drivers.  Therefore it is not covered by this
-diff --git a/Documentation/power/pm_qos_interface.rst b/Documentation/power/pm_qos_interface.rst
-index 3097694fba69..0d62d506caf0 100644
---- a/Documentation/power/pm_qos_interface.rst
-+++ b/Documentation/power/pm_qos_interface.rst
-@@ -8,8 +8,8 @@ one of the parameters.
- 
- Two different PM QoS frameworks are available:
- 1. PM QoS classes for cpu_dma_latency
--2. the per-device PM QoS framework provides the API to manage the per-device latency
--constraints and PM QoS flags.
-+2. The per-device PM QoS framework provides the API to manage the
-+   per-device latency constraints and PM QoS flags.
- 
- Each parameters have defined units:
- 
-@@ -47,14 +47,14 @@ void pm_qos_add_request(handle, param_class, target_value):
-   pm_qos API functions.
- 
- void pm_qos_update_request(handle, new_target_value):
--  Will update the list element pointed to by the handle with the new target value
--  and recompute the new aggregated target, calling the notification tree if the
--  target is changed.
-+  Will update the list element pointed to by the handle with the new target
-+  value and recompute the new aggregated target, calling the notification tree
-+  if the target is changed.
- 
- void pm_qos_remove_request(handle):
--  Will remove the element.  After removal it will update the aggregate target and
--  call the notification tree if the target was changed as a result of removing
--  the request.
-+  Will remove the element.  After removal it will update the aggregate target
-+  and call the notification tree if the target was changed as a result of
-+  removing the request.
- 
- int pm_qos_request(param_class):
-   Returns the aggregated value for a given PM QoS class.
-@@ -167,9 +167,9 @@ int dev_pm_qos_expose_flags(device, value)
-   change the value of the PM_QOS_FLAG_NO_POWER_OFF flag.
- 
- void dev_pm_qos_hide_flags(device)
--  Drop the request added by dev_pm_qos_expose_flags() from the device's PM QoS list
--  of flags and remove sysfs attribute pm_qos_no_power_off from the device's power
--  directory.
-+  Drop the request added by dev_pm_qos_expose_flags() from the device's PM QoS
-+  list of flags and remove sysfs attribute pm_qos_no_power_off from the device's
-+  power directory.
- 
- Notification mechanisms:
- 
-@@ -179,8 +179,8 @@ int dev_pm_qos_add_notifier(device, notifier, type):
-   Adds a notification callback function for the device for a particular request
-   type.
- 
--  The callback is called when the aggregated value of the device constraints list
--  is changed.
-+  The callback is called when the aggregated value of the device constraints
-+  list is changed.
- 
- int dev_pm_qos_remove_notifier(device, notifier, type):
-   Removes the notification callback function for the device.
-diff --git a/Documentation/power/runtime_pm.rst b/Documentation/power/runtime_pm.rst
-index 2c2ec99b5088..ab8406c84254 100644
---- a/Documentation/power/runtime_pm.rst
-+++ b/Documentation/power/runtime_pm.rst
-@@ -268,8 +268,8 @@ defined in include/linux/pm.h:
-   `unsigned int runtime_auto;`
-     - if set, indicates that the user space has allowed the device driver to
-       power manage the device at run time via the /sys/devices/.../power/control
--      `interface;` it may only be modified with the help of the pm_runtime_allow()
--      and pm_runtime_forbid() helper functions
-+      `interface;` it may only be modified with the help of the
-+      pm_runtime_allow() and pm_runtime_forbid() helper functions
- 
-   `unsigned int no_callbacks;`
-     - indicates that the device does not use the runtime PM callbacks (see
-diff --git a/Documentation/power/suspend-and-cpuhotplug.rst b/Documentation/power/suspend-and-cpuhotplug.rst
-index 7ac8e1f549f4..572d968c5375 100644
---- a/Documentation/power/suspend-and-cpuhotplug.rst
-+++ b/Documentation/power/suspend-and-cpuhotplug.rst
-@@ -106,8 +106,8 @@ execution during resume):
- * Release system_transition_mutex lock.
- 
- 
--It is to be noted here that the system_transition_mutex lock is acquired at the very
--beginning, when we are just starting out to suspend, and then released only
-+It is to be noted here that the system_transition_mutex lock is acquired at the
-+very beginning, when we are just starting out to suspend, and then released only
- after the entire cycle is complete (i.e., suspend + resume).
- 
- ::
-@@ -165,7 +165,8 @@ Important files and functions/entry points:
- 
- - kernel/power/process.c : freeze_processes(), thaw_processes()
- - kernel/power/suspend.c : suspend_prepare(), suspend_enter(), suspend_finish()
--- kernel/cpu.c: cpu_[up|down](), _cpu_[up|down](), [disable|enable]_nonboot_cpus()
-+- kernel/cpu.c: cpu_[up|down](), _cpu_[up|down](),
-+  [disable|enable]_nonboot_cpus()
- 
- 
- 
-diff --git a/Documentation/power/swsusp.rst b/Documentation/power/swsusp.rst
-index d000312f6965..8524f079e05c 100644
---- a/Documentation/power/swsusp.rst
-+++ b/Documentation/power/swsusp.rst
-@@ -118,7 +118,8 @@ In a really perfect world::
- 
-   echo 1 > /proc/acpi/sleep       # for standby
-   echo 2 > /proc/acpi/sleep       # for suspend to ram
--  echo 3 > /proc/acpi/sleep       # for suspend to ram, but with more power conservative
-+  echo 3 > /proc/acpi/sleep       # for suspend to ram, but with more power
-+                                  # conservative
-   echo 4 > /proc/acpi/sleep       # for suspend to disk
-   echo 5 > /proc/acpi/sleep       # for shutdown unfriendly the system
- 
-@@ -192,8 +193,8 @@ Q:
- 
- A:
-   The freezing of tasks is a mechanism by which user space processes and some
--  kernel threads are controlled during hibernation or system-wide suspend (on some
--  architectures).  See freezing-of-tasks.txt for details.
-+  kernel threads are controlled during hibernation or system-wide suspend (on
-+  some architectures).  See freezing-of-tasks.txt for details.
- 
- Q:
-   What is the difference between "platform" and "shutdown"?
-@@ -282,7 +283,8 @@ A:
-       suspend(PMSG_FREEZE): devices are frozen so that they don't interfere
-       with state snapshot
- 
--      state snapshot: copy of whole used memory is taken with interrupts disabled
-+      state snapshot: copy of whole used memory is taken with interrupts
-+      disabled
- 
-       resume(): devices are woken up so that we can write image to swap
- 
-@@ -353,8 +355,8 @@ Q:
- 
- A:
-   Generally, yes, you can.  However, it requires you to use the "resume=" and
--  "resume_offset=" kernel command line parameters, so the resume from a swap file
--  cannot be initiated from an initrd or initramfs image.  See
-+  "resume_offset=" kernel command line parameters, so the resume from a swap
-+  file cannot be initiated from an initrd or initramfs image.  See
-   swsusp-and-swap-files.txt for details.
- 
- Q:
--- 
-2.24.0.432.g9d3f5f5b63-goog
-
+PiBTdWJqZWN0OiBSZTogW1BBVENIIHYzIDAvNF0gZG1hLW1hcHBpbmc6IGludHJvZHVjZSBuZXcg
+ZG1hIHVubWFwIGFuZCBzeW5jDQo+IHZhcmlhbnRzDQo+IA0KPiBPbiAxMy4xMS4yMDE5IDIyOjEx
+LCBEYXZpZCBNaWxsZXIgd3JvdGU6DQo+ID4gRnJvbTogTGF1cmVudGl1IFR1ZG9yIDxsYXVyZW50
+aXUudHVkb3JAbnhwLmNvbT4NCj4gPiBEYXRlOiBXZWQsIDEzIE5vdiAyMDE5IDEyOjI0OjE3ICsw
+MDAwDQo+ID4NCj4gPj4gRnJvbTogTGF1cmVudGl1IFR1ZG9yIDxsYXVyZW50aXUudHVkb3JAbnhw
+LmNvbT4NCj4gPj4NCj4gPj4gVGhpcyBzZXJpZXMgaW50cm9kdWNlcyBhIGZldyBuZXcgZG1hIHVu
+bWFwIGFuZCBzeW5jIGFwaSB2YXJpYW50cw0KPiA+PiB0aGF0LCBvbiB0b3Agb2Ygd2hhdCB0aGUg
+b3JpZ2luYWxzIGRvLCByZXR1cm4gdGhlIHZpcnR1YWwgYWRkcmVzcw0KPiA+PiBjb3JyZXNwb25k
+aW5nIHRvIHRoZSBpbnB1dCBkbWEgYWRkcmVzcy4gSW4gb3JkZXIgdG8gZG8gdGhhdCBhIG5ldyBk
+bWENCj4gPj4gbWFwIG9wIGlzIGFkZGVkLCAuZ2V0X3ZpcnRfYWRkciB0aGF0IHRha2VzIHRoZSBp
+bnB1dCBkbWEgYWRkcmVzcyBhbmQNCj4gPj4gcmV0dXJucyB0aGUgdmlydHVhbCBhZGRyZXNzIGJh
+Y2tpbmcgaXQgdXAuDQo+ID4+IFRoZSBzZWNvbmQgcGF0Y2ggYWRkcyBhbiBpbXBsZW1lbnRhdGlv
+biBmb3IgdGhpcyBuZXcgZG1hIG1hcCBvcCBpbg0KPiA+PiB0aGUgZ2VuZXJpYyBpb21tdSBkbWEg
+Z2x1ZSBjb2RlIGFuZCB3aXJlcyBpdCBpbi4NCj4gPj4gVGhlIHRoaXJkIHBhdGNoIHVwZGF0ZXMg
+dGhlIGRwYWEyLWV0aCBkcml2ZXIgdG8gdXNlIHRoZSBuZXcgYXBpcy4NCj4gPg0KPiA+IFRoZSBk
+cml2ZXIgc2hvdWxkIHN0b3JlIHRoZSBtYXBwaW5nIGluIGl0J3MgcHJpdmF0ZSBzb2Z0d2FyZSBz
+dGF0ZSBpZg0KPiA+IGl0IG5lZWRzIHRoaXMga2luZCBvZiBjb252ZXJzaW9uLg0KPiANCj4gT24g
+dGhpcyBoYXJkd2FyZSB0aGVyZSdzIG5vIHdheSBvZiBjb252ZXlpbmcgYWRkaXRpb25hbCBmcmFt
+ZSBpbmZvcm1hdGlvbiwNCj4gc3VjaCBhcyBvcmlnaW5hbCB2YS9wYSBiZWhpbmQgdGhlIGRtYSBh
+ZGRyZXNzLiBXZSBoYXZlIGFsc28gcG9uZGVyZWQgb24gdGhlDQo+IGlkZWEgb2Yga2VlcGluZyB0
+aGlzIGluIHNvbWUga2luZCBvZiBkYXRhIHN0cnVjdHVyZSBidXQgY291bGQgbm90IGZpbmQgYSBs
+b2NrLWxlc3MNCj4gc29sdXRpb24gd2hpY2ggb2J2aW91c2x5IHdvdWxkIGJyaW5nIHBlcmZvcm1h
+bmNlIHRvIHRoZSBncm91bmQuDQo+IEknbGwgbGV0IG15IGNvbGxlYWd1ZXMgbWFpbnRhaW5pbmcg
+dGhlc2UgZXRoZXJuZXQgZHJpdmVycyB0byBnZXQgaW50byBtb3JlIGRldGFpbHMsDQo+IGlmIHJl
+cXVpcmVkLg0KPiANCg0KQXMgTGF1cmVudGl1IHBvaW50ZWQgb3V0IGJlZm9yZSwga2VlcGluZyBh
+IG1hcHBpbmcgaW4gdGhlIGRyaXZlcidzIHByaXZhdGUgZGF0YSBkb2Vzbid0DQpzZWVtIGZlYXNp
+YmxlIHdpdGhvdXQgYSBsb2NraW5nIG1lY2hhbmlzbSB3aGljaCBpbiB0dXJuIHdvdWxkIGJlIGFu
+IGltbWVuc2UgaW1wYWN0DQpwZXJmb3JtYW5jZSB3aXNlLg0KDQpXZSBhbHNvIGZlZWwgdGhhdCBp
+bnN0ZWFkIG9mIGhhY2tpbmcgb3VyIGluZGl2aWR1YWwgZHJpdmVycyB3ZSBzaG91bGQgZXh0ZW5k
+IHRoZQ0KY29yZSBETUEgQVBJIHRvIGFsc28gZml0IHRoaXMgdXNlIGNhc2UsIHdoaWNoIGlzIGV4
+YWN0bHkgd2hhdA0KTGF1cmVudGl1J3MgcGF0Y2ggc2V0IGlzIGRvaW5nLg0KDQpPdXIgaG9wZSBp
+cyB0byBjb21lIHRvIGEgY29tbW9uIHVuZGVyc3RhbmRpbmcgb2YgdGhlIG5leHQgc3RlcHMgc2lu
+Y2UgdGhpcw0Kd291bGQgdW5ibG9jayBzb21lIGFjdGl2aXRpZXMgY3VycmVudGx5IGluIHRoZSBi
+YWNrbG9nLg0KDQpJb2FuYQ0K
