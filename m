@@ -2,281 +2,186 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F34AC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 11:34:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4644C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 11:34:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BC4E20679
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 11:34:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574163280;
-	bh=BjRJ5fJ6TIZX3J6TcyKJf9rnPeqdZbNFbjY18RtCmO8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L9ZKSLMtY97hS34YkBfvdmADhD5pdhaQHKZWnFn3NgXMUwjrXpi4zo0JEZL5g4OdF
-	 sYLUply1HG1Akg2WG2HBqTkyvDq8j7ZYoAiDt0dsDMHvlqMUgobcaGCpUgtHkFBAZR
-	 LwLf2rWRYZNaJaEkYIKL5o8DVNzXDH+IfE3SK2+8=
+	by mail.kernel.org (Postfix) with ESMTP id 7DFEF20679
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 11:34:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728232AbfKSLej (ORCPT
+        id S1728245AbfKSLel (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 06:34:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48690 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728197AbfKSLed (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 06:34:33 -0500
-Received: from quaco.ghostprotocols.net (179.176.11.138.dynamic.adsl.gvt.net.br [179.176.11.138])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0B0E2230B;
-        Tue, 19 Nov 2019 11:34:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574163271;
-        bh=BjRJ5fJ6TIZX3J6TcyKJf9rnPeqdZbNFbjY18RtCmO8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f5bknT6hQSvqHgj7nSXilldetpqQSkfmdxllttkGl8q++GmPKewQ6lVZM88urdCCW
-         8VuknY0Xcvqogwf7/UcfJzlv1zEuEAgqxXUIpQoBWP9P0n8Cr/ReeNOA4z7t9c9alr
-         w5HWWdmXHfHdcC2Uj1Hd/69ETRZvcHb1Yn9HFOB8=
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 24/25] perf probe: Trace a magic number if variable is not found
-Date:   Tue, 19 Nov 2019 08:32:44 -0300
-Message-Id: <20191119113245.19593-25-acme@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191119113245.19593-1-acme@kernel.org>
-References: <20191119113245.19593-1-acme@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 19 Nov 2019 06:34:41 -0500
+Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:64608 "EHLO
+        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727750AbfKSLei (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 06:34:38 -0500
+Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
+  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 19 Nov 2019 17:04:34 +0530
+IronPort-SDR: s0ktwiPeur+v0R36M9RPegpPeaMNal3wer+7aN7bQG3HpbnJU37vBjVYmmmIPnRY/UZxHaPvKG
+ JmbUmTibuIACdxgt4PoJMkNmPnp6abWgJaVvg0wi/LDSk+wfRZQmAIIXok2lDBD4te5fiIaj4g
+ UqsqY9rwY0Yn8bGmMzP0pTe4HgQHXY/vfqZYPB2lnN1eu51pWR6o6/Og9cBy7OacV4zdrqjpNW
+ HzMA5Dgtja9wQs8J7dTQ/MwlgcLGxGcMgt3bGKebKX3mxT6Nvo8a7WXpIYDMv+aagpyYFlTEp/
+ E6H4syfjN4pTLsiGiL//A54i
+Received: from dhar-linux.qualcomm.com ([10.204.66.25])
+  by ironmsg02-blr.qualcomm.com with ESMTP; 19 Nov 2019 17:04:11 +0530
+Received: by dhar-linux.qualcomm.com (Postfix, from userid 2306995)
+        id 088013B26; Tue, 19 Nov 2019 17:04:09 +0530 (IST)
+From:   Shubhashree Dhar <dhar@codeaurora.org>
+To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc:     Shubhashree Dhar <dhar@codeaurora.org>,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        abhinavk@codeaurora.org, jsanka@codeaurora.org,
+        chandanu@codeaurora.org, nganji@codeaurora.org
+Subject: [PATCH v3] msm:disp:dpu1: add support to access hw irqs regs depending on revision
+Date:   Tue, 19 Nov 2019 17:04:07 +0530
+Message-Id: <1574163247-22141-1-git-send-email-dhar@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+Current code assumes that all the irqs registers offsets can be
+accessed in all the hw revisions; this is not the case for some
+targets that should not access some of the irq registers.
+This change adds the support to selectively remove the irqs that
+are not supported in some of the hw revisions.
 
-Trace a magic number as immediate value if the target variable is not
-found at some probe points which is based on one probe event.
+Changes in v1:
+ - Add support to selectively remove the hw irqs that are not
+   not supported.
 
-This feature is good for the case if you trace a source code line with
-some local variables, which is compiled into several instructions and
-some of the variables are optimized out on some instructions.
+Changes in v2:
+ - Remove unrelated changes.
 
-Even if so, with this feature, perf probe trace a magic number instead
-of such disappeared variables and fold those probes on one event.
+Changes in v3:
+ - Remove change-id (Stephen Boyd).
+ - Add colon in variable description to match kernel-doc (Stephen Boyd).
+ - Change macro-y way of variable description (Jordon Crouse).
+ - Remove unnecessary if checks (Jordon Crouse).
+ - Remove extra blank line (Jordon Crouse).
 
-E.g. without this patch:
-
-  # perf probe -D "pud_page_vaddr pud"
-  Failed to find 'pud' in this function.
-  Failed to find 'pud' in this function.
-  Failed to find 'pud' in this function.
-  Failed to find 'pud' in this function.
-  Failed to find 'pud' in this function.
-  Failed to find 'pud' in this function.
-  Failed to find 'pud' in this function.
-  Failed to find 'pud' in this function.
-  Failed to find 'pud' in this function.
-  Failed to find 'pud' in this function.
-  Failed to find 'pud' in this function.
-  Failed to find 'pud' in this function.
-  Failed to find 'pud' in this function.
-  Failed to find 'pud' in this function.
-  Failed to find 'pud' in this function.
-  Failed to find 'pud' in this function.
-  p:probe/pud_page_vaddr _text+23480787 pud=%ax:x64
-  p:probe/pud_page_vaddr _text+23808453 pud=%bp:x64
-  p:probe/pud_page_vaddr _text+23558082 pud=%ax:x64
-  p:probe/pud_page_vaddr _text+328373 pud=%r8:x64
-  p:probe/pud_page_vaddr _text+348448 pud=%bx:x64
-  p:probe/pud_page_vaddr _text+23816818 pud=%bx:x64
-
-With this patch:
-
-  # perf probe -D "pud_page_vaddr pud" | head
-  spurious_kernel_fault is blacklisted function, skip it.
-  vmalloc_fault is blacklisted function, skip it.
-  p:probe/pud_page_vaddr _text+23480787 pud=%ax:x64
-  p:probe/pud_page_vaddr _text+149051 pud=\deade12d:x64
-  p:probe/pud_page_vaddr _text+23808453 pud=%bp:x64
-  p:probe/pud_page_vaddr _text+315926 pud=\deade12d:x64
-  p:probe/pud_page_vaddr _text+23807209 pud=\deade12d:x64
-  p:probe/pud_page_vaddr _text+23557365 pud=%ax:x64
-  p:probe/pud_page_vaddr _text+314097 pud=%di:x64
-  p:probe/pud_page_vaddr _text+314015 pud=\deade12d:x64
-  p:probe/pud_page_vaddr _text+313893 pud=\deade12d:x64
-  p:probe/pud_page_vaddr _text+324083 pud=\deade12d:x64
-
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: Tom Zanussi <tom.zanussi@linux.intel.com>
-Link: http://lore.kernel.org/lkml/157406476931.24476.6261475888681844285.stgit@devnote2
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Shubhashree Dhar <dhar@codeaurora.org>
 ---
- tools/perf/util/probe-event.c  |  2 +-
- tools/perf/util/probe-event.h  |  3 ++
- tools/perf/util/probe-finder.c | 62 +++++++++++++++++++++++++++++++---
- tools/perf/util/probe-finder.h |  1 +
- 4 files changed, 63 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c    |  1 +
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h    |  3 +++
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.c | 22 ++++++++++++++++------
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.h |  1 +
+ 4 files changed, 21 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-index 8f963a193a5d..52b2d165453a 100644
---- a/tools/perf/util/probe-event.c
-+++ b/tools/perf/util/probe-event.c
-@@ -46,7 +46,7 @@
- #define PERFPROBE_GROUP "probe"
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
+index 04c8c44..88f2664 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
+@@ -421,6 +421,7 @@ static void sdm845_cfg_init(struct dpu_mdss_cfg *dpu_cfg)
+ 		.reg_dma_count = 1,
+ 		.dma_cfg = sdm845_regdma,
+ 		.perf = sdm845_perf_data,
++		.mdss_irqs = 0x3ff,
+ 	};
+ }
  
- bool probe_event_dry_run;	/* Dry run flag */
--struct probe_conf probe_conf;
-+struct probe_conf probe_conf = { .magic_num = DEFAULT_PROBE_MAGIC_NUM };
- 
- #define semantic_error(msg ...) pr_err("Semantic error :" msg)
- 
-diff --git a/tools/perf/util/probe-event.h b/tools/perf/util/probe-event.h
-index 96a319cd2378..4f0eb3a20c36 100644
---- a/tools/perf/util/probe-event.h
-+++ b/tools/perf/util/probe-event.h
-@@ -16,10 +16,13 @@ struct probe_conf {
- 	bool	no_inlines;
- 	bool	cache;
- 	int	max_probes;
-+	unsigned long	magic_num;
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
+index ec76b868..0fd3f50 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
+@@ -646,6 +646,7 @@ struct dpu_perf_cfg {
+  * @dma_formats        Supported formats for dma pipe
+  * @cursor_formats     Supported formats for cursor pipe
+  * @vig_formats        Supported formats for vig pipe
++ * @mdss_irqs:         Bitmap with the irqs supported by the target
+  */
+ struct dpu_mdss_cfg {
+ 	u32 hwversion;
+@@ -684,6 +685,8 @@ struct dpu_mdss_cfg {
+ 	struct dpu_format_extended *dma_formats;
+ 	struct dpu_format_extended *cursor_formats;
+ 	struct dpu_format_extended *vig_formats;
++
++	unsigned long mdss_irqs;
  };
- extern struct probe_conf probe_conf;
- extern bool probe_event_dry_run;
  
-+#define DEFAULT_PROBE_MAGIC_NUM	0xdeade12d	/* u32: 3735937325 */
-+
- struct symbol;
+ struct dpu_mdss_hw_cfg_handler {
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.c
+index 8bfa7d0..0f28f27 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.c
+@@ -800,8 +800,8 @@ static void dpu_hw_intr_dispatch_irq(struct dpu_hw_intr *intr,
+ 		start_idx = reg_idx * 32;
+ 		end_idx = start_idx + 32;
  
- /* kprobe-tracer and uprobe-tracer tracing point */
-diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-index 33e90054ad84..38d6cd22779f 100644
---- a/tools/perf/util/probe-finder.c
-+++ b/tools/perf/util/probe-finder.c
-@@ -536,6 +536,14 @@ static int convert_variable_fields(Dwarf_Die *vr_die, const char *varname,
- 		return 0;
- }
+-		if (start_idx >= ARRAY_SIZE(dpu_irq_map) ||
+-				end_idx > ARRAY_SIZE(dpu_irq_map))
++		if (!test_bit(reg_idx, &intr->irq_mask) ||
++			start_idx >= ARRAY_SIZE(dpu_irq_map))
+ 			continue;
  
-+static void print_var_not_found(const char *varname)
-+{
-+	pr_err("Failed to find the location of the '%s' variable at this address.\n"
-+	       " Perhaps it has been optimized out.\n"
-+	       " Use -V with the --range option to show '%s' location range.\n",
-+		varname, varname);
-+}
-+
- /* Show a variables in kprobe event format */
- static int convert_variable(Dwarf_Die *vr_die, struct probe_finder *pf)
- {
-@@ -547,11 +555,11 @@ static int convert_variable(Dwarf_Die *vr_die, struct probe_finder *pf)
+ 		/*
+@@ -955,8 +955,11 @@ static int dpu_hw_intr_clear_irqs(struct dpu_hw_intr *intr)
+ 	if (!intr)
+ 		return -EINVAL;
  
- 	ret = convert_variable_location(vr_die, pf->addr, pf->fb_ops,
- 					&pf->sp_die, pf->machine, pf->tvar);
-+	if (ret == -ENOENT && pf->skip_empty_arg)
-+		/* This can be found in other place. skip it */
-+		return 0;
- 	if (ret == -ENOENT || ret == -EINVAL) {
--		pr_err("Failed to find the location of the '%s' variable at this address.\n"
--		       " Perhaps it has been optimized out.\n"
--		       " Use -V with the --range option to show '%s' location range.\n",
--		       pf->pvar->var, pf->pvar->var);
-+		print_var_not_found(pf->pvar->var);
- 	} else if (ret == -ENOTSUP)
- 		pr_err("Sorry, we don't support this variable location yet.\n");
- 	else if (ret == 0 && pf->pvar->field) {
-@@ -598,6 +606,8 @@ static int find_variable(Dwarf_Die *sc_die, struct probe_finder *pf)
- 		/* Search again in global variables */
- 		if (!die_find_variable_at(&pf->cu_die, pf->pvar->var,
- 						0, &vr_die)) {
-+			if (pf->skip_empty_arg)
-+				return 0;
- 			pr_warning("Failed to find '%s' in this function.\n",
- 				   pf->pvar->var);
- 			ret = -ENOENT;
-@@ -1384,6 +1394,44 @@ static int add_probe_trace_event(Dwarf_Die *sc_die, struct probe_finder *pf)
- 	return ret;
- }
- 
-+static int fill_empty_trace_arg(struct perf_probe_event *pev,
-+				struct probe_trace_event *tevs, int ntevs)
-+{
-+	char **valp;
-+	char *type;
-+	int i, j, ret;
-+
-+	for (i = 0; i < pev->nargs; i++) {
-+		type = NULL;
-+		for (j = 0; j < ntevs; j++) {
-+			if (tevs[j].args[i].value) {
-+				type = tevs[j].args[i].type;
-+				break;
-+			}
-+		}
-+		if (j == ntevs) {
-+			print_var_not_found(pev->args[i].var);
-+			return -ENOENT;
-+		}
-+		for (j = 0; j < ntevs; j++) {
-+			valp = &tevs[j].args[i].value;
-+			if (*valp)
-+				continue;
-+
-+			ret = asprintf(valp, "\\%lx", probe_conf.magic_num);
-+			if (ret < 0)
-+				return -ENOMEM;
-+			/* Note that type can be NULL */
-+			if (type) {
-+				tevs[j].args[i].type = strdup(type);
-+				if (!tevs[j].args[i].type)
-+					return -ENOMEM;
-+			}
-+		}
+-	for (i = 0; i < ARRAY_SIZE(dpu_intr_set); i++)
+-		DPU_REG_WRITE(&intr->hw, dpu_intr_set[i].clr_off, 0xffffffff);
++	for (i = 0; i < ARRAY_SIZE(dpu_intr_set); i++) {
++		if(test_bit(i, &intr->irq_mask))
++			DPU_REG_WRITE(&intr->hw,
++					dpu_intr_set[i].clr_off, 0xffffffff);
 +	}
-+	return 0;
-+}
-+
- /* Find probe_trace_events specified by perf_probe_event from debuginfo */
- int debuginfo__find_trace_events(struct debuginfo *dbg,
- 				 struct perf_probe_event *pev,
-@@ -1402,7 +1450,13 @@ int debuginfo__find_trace_events(struct debuginfo *dbg,
- 	tf.tevs = *tevs;
- 	tf.ntevs = 0;
  
-+	if (pev->nargs != 0 && immediate_value_is_supported())
-+		tf.pf.skip_empty_arg = true;
+ 	/* ensure register writes go through */
+ 	wmb();
+@@ -971,8 +974,11 @@ static int dpu_hw_intr_disable_irqs(struct dpu_hw_intr *intr)
+ 	if (!intr)
+ 		return -EINVAL;
+ 
+-	for (i = 0; i < ARRAY_SIZE(dpu_intr_set); i++)
+-		DPU_REG_WRITE(&intr->hw, dpu_intr_set[i].en_off, 0x00000000);
++	for (i = 0; i < ARRAY_SIZE(dpu_intr_set); i++) {
++		if(test_bit(i, &intr->irq_mask))
++			DPU_REG_WRITE(&intr->hw,
++					dpu_intr_set[i].en_off, 0x00000000);
++	}
+ 
+ 	/* ensure register writes go through */
+ 	wmb();
+@@ -991,6 +997,9 @@ static void dpu_hw_intr_get_interrupt_statuses(struct dpu_hw_intr *intr)
+ 
+ 	spin_lock_irqsave(&intr->irq_lock, irq_flags);
+ 	for (i = 0; i < ARRAY_SIZE(dpu_intr_set); i++) {
++		if(!test_bit(i, &intr->irq_mask))
++			continue;
 +
- 	ret = debuginfo__find_probes(dbg, &tf.pf);
-+	if (ret >= 0 && tf.pf.skip_empty_arg)
-+		ret = fill_empty_trace_arg(pev, tf.tevs, tf.ntevs);
-+
- 	if (ret < 0) {
- 		for (i = 0; i < tf.ntevs; i++)
- 			clear_probe_trace_event(&tf.tevs[i]);
-diff --git a/tools/perf/util/probe-finder.h b/tools/perf/util/probe-finder.h
-index 670c477bf8cf..11be10080613 100644
---- a/tools/perf/util/probe-finder.h
-+++ b/tools/perf/util/probe-finder.h
-@@ -87,6 +87,7 @@ struct probe_finder {
- 	unsigned int		machine;	/* Target machine arch */
- 	struct perf_probe_arg	*pvar;		/* Current target variable */
- 	struct probe_trace_arg	*tvar;		/* Current result variable */
-+	bool			skip_empty_arg;	/* Skip non-exist args */
+ 		/* Read interrupt status */
+ 		intr->save_irq_status[i] = DPU_REG_READ(&intr->hw,
+ 				dpu_intr_set[i].status_off);
+@@ -1115,6 +1124,7 @@ struct dpu_hw_intr *dpu_hw_intr_init(void __iomem *addr,
+ 		return ERR_PTR(-ENOMEM);
+ 	}
+ 
++	intr->irq_mask = m->mdss_irqs;
+ 	spin_lock_init(&intr->irq_lock);
+ 
+ 	return intr;
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.h
+index 4edcf40..fc9c986 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.h
+@@ -187,6 +187,7 @@ struct dpu_hw_intr {
+ 	u32 *save_irq_status;
+ 	u32 irq_idx_tbl_size;
+ 	spinlock_t irq_lock;
++	unsigned long irq_mask;
  };
  
- struct trace_event_finder {
+ /**
 -- 
-2.21.0
+1.9.1
 
