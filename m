@@ -2,53 +2,51 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E9BC43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 264D1C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:11:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3807020692
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:11:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6D3420692
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:11:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574143874;
-	bh=c/ibTNbMklbkWTbukVx7j2j/iB5SSjr6ytTVhUTXei8=;
+	s=default; t=1574143879;
+	bh=XwJSt6JD7kwz1vYS9ZbuPs7cWyskHir9TP0vz4hqv78=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EgzXd91X+CrVs+tXcu8jhODOOPO6sZ9p8JZZ0QrYVXO0nagiwuyORGvCmE+ZkrHVM
-	 jyAyudCCFm/ntQRBtM2reotBFr5UgP1Z4Es/d8asN1nmuVMd2EDSrx2q4AwRv3WZzV
-	 Hs8LUNHFt/hPhdY2ogUYhWwCDWKwdXiW1w58NLcI=
+	b=kwM2beLuigSVwahTUyTQv7lrnfIMocac+S6LtHlLRFNz0/BQ/05tV7SfU/kIfNYMz
+	 BJ279TgYSKqpcrhtvFzR8dKQIJOYYSU72YiYKsvTHDTMLWncwn2EKIrwG5xHYRwGeS
+	 f8u6ESXVdrx2yAWOi0Lavg4io7T7qDBhwkQojZ/c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728295AbfKSFY6 (ORCPT
+        id S1728257AbfKSFYo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:24:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41362 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:24:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41048 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728286AbfKSFYx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:24:53 -0500
+        id S1728243AbfKSFYl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:24:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1254821783;
-        Tue, 19 Nov 2019 05:24:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 563F121783;
+        Tue, 19 Nov 2019 05:24:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141092;
-        bh=c/ibTNbMklbkWTbukVx7j2j/iB5SSjr6ytTVhUTXei8=;
+        s=default; t=1574141080;
+        bh=XwJSt6JD7kwz1vYS9ZbuPs7cWyskHir9TP0vz4hqv78=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nU3CQflYIo9FCyINKOGWkZ3K8qHxjC5EYbQMhLU9g5VPH5QOPyC7WJb+Kk7iGduen
-         qkL1FVIlq+glN1ppQC4TVzUkjM4X+PzYSUjqL8DwDraDueeAMrz0m90mVoZ3R6/vob
-         P1KFwzzk+A4yAhKHoc+4U1u5i1CYNbris0+Py3Kg=
+        b=iNlMkOsIxKlpmzN4qSbgab2udq6xL7R7qnOjMrDnDCJnBht5Hb922gbztHoXLtTcr
+         Ft3d8L69kxttyXnAvUqZNhjW5vplTmRCEYqEZUoML6FIwyPqH5rtD7hD6xrBIRZKkd
+         bGX+GB66UqVGPgbqr0saAANiN7HAG5UeSpWBXiSs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>,
-        Martin Lucina <martin@lucina.net>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 041/422] arm64: dts: allwinner: a64: Olinuxino: fix DRAM voltage
-Date:   Tue, 19 Nov 2019 06:13:58 +0100
-Message-Id: <20191119051402.602701766@linuxfoundation.org>
+        stable@vger.kernel.org, Henry Lin <henryl@nvidia.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 011/422] ALSA: usb-audio: not submit urb for stopped endpoint
+Date:   Tue, 19 Nov 2019 06:13:28 +0100
+Message-Id: <20191119051400.910437992@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -61,51 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andre Przywara <andre.przywara@arm.com>
+From: Henry Lin <henryl@nvidia.com>
 
-[ Upstream commit 93366b49a35f3a190052734b3f32c8fe2535b53f ]
+commit 528699317dd6dc722dccc11b68800cf945109390 upstream.
 
-The Olinuxino board uses DDR3L chips which are supposed to be driven
-with 1.35V. The reset default of the AXP is properly set to 1.36V.
+While output urb's snd_complete_urb() is executing, calling
+prepare_outbound_urb() may cause endpoint stopped before
+prepare_outbound_urb() returns and result in next urb submitted
+to stopped endpoint. usb-audio driver cannot re-use it afterwards as
+the urb is still hold by usb stack.
 
-While technically the chips can also run at 1.5 volts, changing the
-voltage on the fly while booting Linux is asking for trouble. Also
-running at a lower voltage saves power.
+This change checks EP_FLAG_RUNNING flag after prepare_outbound_urb() again
+to let snd_complete_urb() know the endpoint already stopped and does not
+submit next urb. Below kind of error will be fixed:
 
-So fix the DCDC5 value to match the actual board design.
+[  213.153103] usb 1-2: timeout: still 1 active urbs on EP #1
+[  213.164121] usb 1-2: cannot submit urb 0, error -16: unknown error
 
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-Tested-by: Martin Lucina <martin@lucina.net>
-Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Henry Lin <henryl@nvidia.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191113021420.13377-1-henryl@nvidia.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ sound/usb/endpoint.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-index 3f531393eaee9..b3f186434f363 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-olinuxino.dts
-@@ -142,10 +142,14 @@
+--- a/sound/usb/endpoint.c
++++ b/sound/usb/endpoint.c
+@@ -401,6 +401,9 @@ static void snd_complete_urb(struct urb
+ 		}
  
- /* DCDC3 is polyphased with DCDC2 */
- 
-+/*
-+ * The board uses DDR3L DRAM chips. 1.36V is the closest to the nominal
-+ * 1.35V that the PMIC can drive.
-+ */
- &reg_dcdc5 {
- 	regulator-always-on;
--	regulator-min-microvolt = <1500000>;
--	regulator-max-microvolt = <1500000>;
-+	regulator-min-microvolt = <1360000>;
-+	regulator-max-microvolt = <1360000>;
- 	regulator-name = "vcc-ddr3";
- };
- 
--- 
-2.20.1
-
+ 		prepare_outbound_urb(ep, ctx);
++		/* can be stopped during prepare callback */
++		if (unlikely(!test_bit(EP_FLAG_RUNNING, &ep->flags)))
++			goto exit_clear;
+ 	} else {
+ 		retire_inbound_urb(ep, ctx);
+ 		/* can be stopped during retire callback */
 
 
