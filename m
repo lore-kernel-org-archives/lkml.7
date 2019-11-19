@@ -2,129 +2,150 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6098C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:46:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF084C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:46:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCC262230C
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:46:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 824B5222CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:46:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dk9px5cD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JyzAEu/6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728479AbfKSPqb (ORCPT
+        id S1728466AbfKSPq3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 10:46:31 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:33042 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728430AbfKSPq0 (ORCPT
+        Tue, 19 Nov 2019 10:46:29 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:38104 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728420AbfKSPqY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 10:46:26 -0500
-Received: by mail-lj1-f196.google.com with SMTP id t5so23910274ljk.0
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 07:46:24 -0800 (PST)
+        Tue, 19 Nov 2019 10:46:24 -0500
+Received: by mail-qt1-f196.google.com with SMTP id p20so25106188qtq.5;
+        Tue, 19 Nov 2019 07:46:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DWp/HKd8UEdzTcxXP25jTpL5m1vRpEu2EqbwctS2S6I=;
-        b=dk9px5cDIJKORtjtml2SFVPhx29HNXcnTjWw5g4IITK1vBKPnebecnOHG3g9V8AjUw
-         mlK9NvT1b6J7KHm86tfHghnF+aDHWyIlit7kros33Q2zdmPgnl09wM+DFKxzvCcRVhBC
-         ErnWukGq/A+cqaWWM24Ll7wRo65fbmSi+yRPbC2V/q5/EuLGmzOAQJd/dk2tzJLvytmR
-         S5pacexLX9HtHmThejcLL2n0WfhI0pySAzkJT3pGS2ng5eu76U++lGCMV4vdJMoiVLZr
-         929X0NRtCAKxeXFhMjx4ntq/XAFqnuPLO9Gcf8KwVc/KY5TBdSssqwz2sWVt/Rb7+txj
-         Skvw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=M8plwUGqzRu7vrgV7/AsiHy4S0SxA51BEoVHYwcW5lA=;
+        b=JyzAEu/6ws9pxBMKgWcKSYsKAY6v1iDQlhimW0fo3mVWXhlxvJxvDXQo0xctEUWGSE
+         Pt8VVy5rEJGIoAxhEfUPch66BMCN211Z8O6rUnIxw0Ru61N+MLcxuHR20pATQexpV5tB
+         ThZmMlEXQa5whche9/AeeFgvZx8/KQ41RRQV8hkgr6yluEr6jQI+8sNNuO3ZlhONLq/8
+         8C0wh/aiatk86HowX7vOXUxLffdZz5ExA9uPJmCroJnD7UypLzsVDyA0m8JtCx8d1lD8
+         zB73fwsvVtItCnQt4qzBwXO/liKX/Ixq4Vz0ILVKY+14uoEk95UN2b1K6fafL3xmpui2
+         3nTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DWp/HKd8UEdzTcxXP25jTpL5m1vRpEu2EqbwctS2S6I=;
-        b=GBwo6wVoKiuKgFcahGgmC6UxJWQdge8nW01dZoKGveZQor/o1fGdqIM0dtFq4SsEcg
-         uCAW/JwyAbuK0GevhEUN6Y4U0oohE50ZqCpqK+712ncKRbGAPcIh3ihzY+tG7aWf+ASR
-         tkq5ozZmFFcS+MvPY/utafGVqNu9c0gRXAaW+CfyK7JxkusBUUEfGYYyR0Ew3trR17VO
-         +P3WPFAOAr2u7xBHBdI4kNuI/NABH7wU8kozQu8pAQeNYLe9xTA381SVULZhoOsWqB4L
-         uWIXCsXVchkw2s2+bZ8i4hva21xd6qeAzAULcE8JkDTG3qw9FKEnoZpd1gYb5jW/xi+j
-         tjaQ==
-X-Gm-Message-State: APjAAAUO/nCbwEfh/F1K/tzv+mYsHqHQyJ9C9BSc+1vhdjO7KrpwQWf+
-        ceWI9Z3pocO5CWM7K/ortgtgRQ==
-X-Google-Smtp-Source: APXvYqwsRAXzKKHohtayBA+twXWFwp1l6AdR8CirrZJeOWMtDwJ6LiQB/ogskDkybNlY4Mj4S/fPQw==
-X-Received: by 2002:a2e:9156:: with SMTP id q22mr4390127ljg.166.1574178383838;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=M8plwUGqzRu7vrgV7/AsiHy4S0SxA51BEoVHYwcW5lA=;
+        b=tl+KwG+hSGKCdVpoiiOU2oglD0dYzyy2cIlLpYWxi1mHeRmeahsiORMaLsTG8XooTE
+         wBqDkkb7e/3dX25LHtW30WZW1tS/Ts02bzv2DnQCYfX0wkTK/VVBNPhVlsBwoQmtflOg
+         jWKW9JvaL2vWtcr4bd016x13q8cuXdy16NjNxC6/SrBeIHuM4NcOqLjwkY+yZUiOYEtm
+         JmHxNCLzmgWmaYC2/+vEGenz0/NBfHSJ5tV3tpd4/Qjx8aRkvAfYtje1xcSphTLoDY6e
+         U12OtcdSKEwPRiwGc4LUmHDlW/ShyOhddjFOMB5BcaxtQKWHGuVRSkFML0MypDi2IHaO
+         Bu7g==
+X-Gm-Message-State: APjAAAXc3DII/2JKDtQcf1jNM+U3I8yiWgBSrn0p9c/uGDkQwKx8wglh
+        sbdz2/24TzbezDBKcNNixMM=
+X-Google-Smtp-Source: APXvYqzTwS2JcKYsV+NK7gaJatS2f0ktlgeaG5oXB4W8nNqlmdDNWDRG8T4z6FvpvCEDV5SZJQDQBQ==
+X-Received: by 2002:ac8:44c3:: with SMTP id b3mr32324566qto.313.1574178383029;
         Tue, 19 Nov 2019 07:46:23 -0800 (PST)
-Received: from centauri.ideon.se ([85.235.10.227])
-        by smtp.gmail.com with ESMTPSA id v10sm9886281ljc.6.2019.11.19.07.46.22
+Received: from localhost.localdomain ([72.53.229.209])
+        by smtp.gmail.com with ESMTPSA id 50sm12949919qtv.88.2019.11.19.07.46.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Nov 2019 07:46:23 -0800 (PST)
-From:   Niklas Cassel <niklas.cassel@linaro.org>
-To:     linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Cc:     amit.kucheria@linaro.org, sboyd@kernel.org, vireshk@kernel.org,
-        bjorn.andersson@linaro.org, ulf.hansson@linaro.org,
-        Niklas Cassel <niklas.cassel@linaro.org>,
+        Tue, 19 Nov 2019 07:46:22 -0800 (PST)
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
+To:     Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Grigoryev Denis <grigoryev@fastwel.ru>,
+        Axel Lin <axel.lin@ingics.com>, Dan Murphy <dmurphy@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v6 0/5] Add support for QCOM Core Power Reduction
-Date:   Tue, 19 Nov 2019 16:46:15 +0100
-Message-Id: <20191119154621.55341-1-niklas.cassel@linaro.org>
-X-Mailer: git-send-email 2.23.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        linux-leds@vger.kernel.org
+Subject: [PATCH v2 4/4] dt-bindings: mfd: update TI tps6105x chip bindings
+Date:   Tue, 19 Nov 2019 10:46:11 -0500
+Message-Id: <20191119154611.29625-5-TheSven73@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191119154611.29625-1-TheSven73@gmail.com>
+References: <20191119154611.29625-1-TheSven73@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series adds support for Core Power Reduction (CPR), a form of
-Adaptive Voltage Scaling (AVS), found on certain Qualcomm SoCs.
+The driver has been extended to optionally get its operational
+mode, regulator init data and led label from the devicetree.
 
-This series is based on top of the qcs404 cpufreq patch series that
-hasn't landed yet:
-https://patchwork.kernel.org/project/linux-arm-msm/list/?series=173423
-as well as that series' matching device tree changes:
-https://patchwork.kernel.org/project/linux-arm-msm/list/?series=165457
+Tree: next-20191118
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+---
+ .../devicetree/bindings/mfd/tps6105x.txt      | 42 ++++++++++++++++++-
+ 1 file changed, 41 insertions(+), 1 deletion(-)
 
-For testing purposes, this patch series, including the dependencies
-listed above, is available on the following git tag:
-https://git.linaro.org/people/niklas.cassel/kernel.git/log/?h=cpr-v6
-
-CPR is a technology that reduces core power on a CPU or on other device.
-It reads voltage settings from efuses (that have been written in
-production), it uses these voltage settings as initial values, for each
-OPP.
-
-After moving to a certain OPP, CPR monitors dynamic factors such as
-temperature, etc. and adjusts the voltage for that frequency accordingly
-to save power and meet silicon characteristic requirements.
-
-This driver has been developed together with Jorge Ramirez-Ortiz, and
-is based on an RFC by Stephen Boyd[1], which in turn is based on work
-by others on codeaurora.org[2].
-
-[1] https://lkml.org/lkml/2015/9/18/833
-[2] https://source.codeaurora.org/quic/la/kernel/msm-4.14/tree/drivers/regulator/cpr-regulator.c?h=msm-4.14
-
-Changes since v5:
--Removed pm_ops from platform_driver struct.
- (This was embarrassingly not properly removed in previous patch revision.)
-
-Niklas Cassel (5):
-  dt-bindings: power: avs: Add support for CPR (Core Power Reduction)
-  power: avs: Add support for CPR (Core Power Reduction)
-  arm64: dts: qcom: qcs404: Add CPR and populate OPP table
-  arm64: defconfig: enable CONFIG_QCOM_CPR
-  arm64: defconfig: enable CONFIG_ARM_QCOM_CPUFREQ_NVMEM
-
- .../bindings/power/avs/qcom,cpr.txt           |  130 ++
- MAINTAINERS                                   |    8 +
- arch/arm64/boot/dts/qcom/qcs404.dtsi          |  132 +-
- arch/arm64/configs/defconfig                  |    2 +
- drivers/power/avs/Kconfig                     |   15 +
- drivers/power/avs/Makefile                    |    1 +
- drivers/power/avs/qcom-cpr.c                  | 1754 +++++++++++++++++
- 7 files changed, 2034 insertions(+), 8 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/power/avs/qcom,cpr.txt
- create mode 100644 drivers/power/avs/qcom-cpr.c
-
+diff --git a/Documentation/devicetree/bindings/mfd/tps6105x.txt b/Documentation/devicetree/bindings/mfd/tps6105x.txt
+index 93602c7a19c8..ab5d4c52074f 100644
+--- a/Documentation/devicetree/bindings/mfd/tps6105x.txt
++++ b/Documentation/devicetree/bindings/mfd/tps6105x.txt
+@@ -7,11 +7,51 @@ Required properties:
+ - compatible:		"ti,tps61050" or "ti,tps61052"
+ - reg:			Specifies the I2C slave address
+ 
+-Example:
++Optional sub-node:
++
++This subnode selects the chip's operational mode.
++There can be at most one single available subnode.
++
++- regulator: presence of this sub-node puts the chip in regulator mode.
++	see Documentation/devicetree/bindings/regulator/regulator.txt
++
++- led: presence of this sub-node puts the chip in led mode.
++	Optional properties:
++		- label: see Documentation/devicetree/bindings/leds/common.txt
++
++Example (GPIO operation only):
++
++i2c0 {
++	tps61052@33 {
++		compatible = "ti,tps61052";
++		reg = <0x33>;
++	};
++};
++
++Example (GPIO + regulator operation):
+ 
+ i2c0 {
+ 	tps61052@33 {
+ 		compatible = "ti,tps61052";
+ 		reg = <0x33>;
++
++		regulator {
++			regulator-min-microvolt = <5000000>;
++			regulator-max-microvolt = <5000000>;
++			regulator-always-on;
++		};
++	};
++};
++
++Example (GPIO + led operation):
++
++i2c0 {
++	tps61052@33 {
++		compatible = "ti,tps61052";
++		reg = <0x33>;
++
++		led {
++			label = "tps-torch";
++		};
+ 	};
+ };
 -- 
-2.23.0
+2.17.1
 
