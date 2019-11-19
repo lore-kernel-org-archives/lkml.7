@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 067BBC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:29:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35EFCC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:29:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8BFD21939
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:29:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0892B22309
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:29:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141374;
-	bh=ZQk8HUJVVWdkb6PKw7UQGNwXF9TB19ZXHOw1EDZu7as=;
+	s=default; t=1574141381;
+	bh=Bg1NB1Okm9z6Vy/N4uGACFmVAuYujxub6R0M02NRtRQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1nY+9XQPGNu61Gf41p/RLHjc39BliEq4btUmD/+ly8JWkF749rVW+bCnTXg0m4LHZ
-	 thqmk5iPxhJU3zUU6O7XtKfw5qilo4z0Oo9Z93f5LjXt13iciC8S3m+yS+DG8vhKTI
-	 kY9DXZkHhj3AIBwZcPUSM5OrtdcdEY3TrFVIwHyY=
+	b=nZ+2x/PCUoUX5wRxAPZIBBHDOPaCciz9MHj9MqYnSqnY/oceSAqAxwFMDl31ok8Mn
+	 tg5gTZkCvW7TAouRM+kAGnsjXOExzcJz6xNHH6MULmb7nOv8eZNqnpOmmt6AZYLb4R
+	 Nt8OWV1HAkTIqG5NouPld9dunO1s98WlU3wKCTV0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729009AbfKSF3d (ORCPT
+        id S1729022AbfKSF3j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:29:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48076 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:29:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728997AbfKSF33 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:29:29 -0500
+        id S1728997AbfKSF3f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:29:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7738B21823;
-        Tue, 19 Nov 2019 05:29:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7863E21783;
+        Tue, 19 Nov 2019 05:29:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141369;
-        bh=ZQk8HUJVVWdkb6PKw7UQGNwXF9TB19ZXHOw1EDZu7as=;
+        s=default; t=1574141375;
+        bh=Bg1NB1Okm9z6Vy/N4uGACFmVAuYujxub6R0M02NRtRQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e9fcDv7MPJeQoxbuB5qzQM/HhZUOEmmc9sDPcnXD6NDGtw1gWcY94s/x+z3ghnxPr
-         Z5qgByK5Eq/6aaVgeYCPJYHz+izNZdh9biUjBHK+Ttx4GDlS1Q3Dr17kcflPpEU2e4
-         44XFgTNufUbVp6XEWdLy3o7gI4Gao7SAvqkbXV44=
+        b=EIBC02IKkVRpgJEVqpRa16qZ3Yp+A96T1Id/Ha3k3meqpdLDVgCeao2D/lNsRMCBo
+         Pm1F2+povMiL1gWKDTC+1tOIV9Mfaao2nR5HB7/b/CSkIqdg0ldTwtfcM/ROJlVRbi
+         Ihxyvwg71aF+FwEoOz6xKR9r8bKIo89WVYHXP3Q4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yong Zhi <yong.zhi@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.de>, Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Rob Herring <robh@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 135/422] ASoC: Intel: hdac_hdmi: Limit sampling rates at dai creation
-Date:   Tue, 19 Nov 2019 06:15:32 +0100
-Message-Id: <20191119051407.588210779@linuxfoundation.org>
+Subject: [PATCH 4.19 137/422] of: make PowerMac cache node search conditional on CONFIG_PPC_PMAC
+Date:   Tue, 19 Nov 2019 06:15:34 +0100
+Message-Id: <20191119051407.693045459@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -61,44 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yong Zhi <yong.zhi@intel.com>
+From: Rob Herring <robh@kernel.org>
 
-[ Upstream commit 3b857472f34faa7d11001afa5e158833812c98d7 ]
+[ Upstream commit f6707fd6241e483f6fea2caae82d876e422bb11a ]
 
-Playback of 44.1Khz contents with HDMI plugged returns
-"Invalid pipe config" because HDMI paths in the FW
-topology are configured to operate at 48Khz.
+Cache nodes under the cpu node(s) is PowerMac specific according to the
+comment above, so make the code enforce that.
 
-This patch filters out sampling rates not supported
-at hdac_hdmi_create_dais() to let user space SRC
-to do the converting.
-
-Signed-off-by: Yong Zhi <yong.zhi@intel.com>
-Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Reviewed-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/hdac_hdmi.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/of/base.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/hdac_hdmi.c b/sound/soc/codecs/hdac_hdmi.c
-index 098196610542a..be2473166bfaf 100644
---- a/sound/soc/codecs/hdac_hdmi.c
-+++ b/sound/soc/codecs/hdac_hdmi.c
-@@ -1410,6 +1410,12 @@ static int hdac_hdmi_create_dais(struct hdac_device *hdev,
- 		if (ret)
- 			return ret;
- 
-+		/* Filter out 44.1, 88.2 and 176.4Khz */
-+		rates &= ~(SNDRV_PCM_RATE_44100 | SNDRV_PCM_RATE_88200 |
-+			   SNDRV_PCM_RATE_176400);
-+		if (!rates)
-+			return -EINVAL;
-+
- 		sprintf(dai_name, "intel-hdmi-hifi%d", i+1);
- 		hdmi_dais[i].name = devm_kstrdup(&hdev->dev,
- 					dai_name, GFP_KERNEL);
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 3f21ea6a90dcb..f0dbb7ad88cf6 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -2066,7 +2066,7 @@ struct device_node *of_find_next_cache_node(const struct device_node *np)
+ 	/* OF on pmac has nodes instead of properties named "l2-cache"
+ 	 * beneath CPU nodes.
+ 	 */
+-	if (!strcmp(np->type, "cpu"))
++	if (IS_ENABLED(CONFIG_PPC_PMAC) && !strcmp(np->type, "cpu"))
+ 		for_each_child_of_node(np, child)
+ 			if (!strcmp(child->type, "cache"))
+ 				return child;
 -- 
 2.20.1
 
