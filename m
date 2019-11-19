@@ -2,138 +2,192 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F819C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 18:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2DB3C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 18:07:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F41A5222B9
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 18:07:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E23A222EF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 18:07:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Sk+Vv51z"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="H/5HfE1B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727224AbfKSSHl (ORCPT
+        id S1727340AbfKSSHu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 13:07:41 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:35991 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726948AbfKSSHk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 13:07:40 -0500
-Received: by mail-il1-f196.google.com with SMTP id s75so20547175ilc.3
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 10:07:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XSGUSmt8DWCWlW8msIL5ALGPJmoB1fkd0qNlWqLeu8k=;
-        b=Sk+Vv51z9OEF2Nd65IvmzhNBU4TlFhmlNcI/Os6xZbjg4GHq0BoYEEN6u171Z5Agzq
-         3q8XQIlLJ3ZYDM90jSKcuddVt/HMRsClMFg6hrhDNT9TU/AspHhRDQqocDepD5bjwhCq
-         Bx97mOKPEPrq1HElEmHHSSxPcVu2lvpWl4QtTGYqTQ8VMAvMg9oCTLA+Rdqyzd5n92xZ
-         chjeIYoKPFTRugu92/WZNnD554cNHgihEhQTWbtsUEErp9OX7Ijiw/UgGaodEWuAL5tf
-         WAlASgI9/UfmIooC9Ftl54a5FOW+5QdJQeXo1hJAX00BhXZRnO7auMi8xdk8G2638juP
-         PbPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XSGUSmt8DWCWlW8msIL5ALGPJmoB1fkd0qNlWqLeu8k=;
-        b=lDdJR8ZqJkBgLeWpgn8BgoEH6XEhgHBmQv1KO240bOVNlF+UESR+tk2vy40VopLFsA
-         +2WfvNCHQX9q9ckS5AB0G/WttLa4lKmzUP5i4UbJAHTriKkJvU7dfY8unKebaKQK8ka3
-         Qg1j/3BCyaib6GZQVdbzlgEEj/wG9W8Ft/KJER2tPh/GFUpaR1FADpRx8V1hla2mI94s
-         S9aoof5otC4psS8MaZlH0XdTipbADlfR0kv0bI5sCwbnXtFpXiQE995C7SHXfBVHlW1l
-         Nc+JswTa1qhVaBfTLi/7RHlyG3xW4QGAxyVgYrJNW5Zql5e8rPIn+hZzJH0ntNmCm9CW
-         FiNA==
-X-Gm-Message-State: APjAAAXs0fnZ3Fw/aW/QKepLD3xVIgK6A6VZBNckcmqLaUnZUkZ468ON
-        5ZoY4cyIKfuD9V0baEF+ZjByvuiuwS3oP57snVmLRA==
-X-Google-Smtp-Source: APXvYqx9gw2Pd6WfePrc4Gj3pViSbuDuvBNqS6ajS2Oy5htzLNbc/ORkSvCY/OjBI2MG3V2dSxKXistO0VXRWSlyD0A=
-X-Received: by 2002:a92:8c49:: with SMTP id o70mr24067717ild.72.1574186859319;
- Tue, 19 Nov 2019 10:07:39 -0800 (PST)
+        Tue, 19 Nov 2019 13:07:50 -0500
+Received: from mail.z3ntu.xyz ([128.199.32.197]:41242 "EHLO mail.z3ntu.xyz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726948AbfKSSHu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 13:07:50 -0500
+Received: from localhost.localdomain (80-110-127-196.cgn.dynamic.surfer.at [80.110.127.196])
+        by mail.z3ntu.xyz (Postfix) with ESMTPSA id 066B3DE610;
+        Tue, 19 Nov 2019 18:07:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
+        t=1574186867; bh=vX9Z3hazzpYKkIuT58NuZuER7WoMridQbUFkjy2mD+k=;
+        h=From:To:Cc:Subject:Date;
+        b=H/5HfE1BUYslvjr+YCbopGdzzuCGq15m6w4gQFwXAUv5Yw/dz58BUaGAyTFVfPTzJ
+         7lb2lOogpGGeFjM4TJ8N0BOeeoM7ZT/yTzOJWNXEeuf95K596rR1gqGNEn8vaaGBrR
+         yKMnNw2DxxqGiNBuk2wQhg4Uzo9FpJ0zpvJ9VcSA=
+From:   Luca Weiss <luca@z3ntu.xyz>
+To:     linux-input@vger.kernel.org
+Cc:     Luca Weiss <luca@z3ntu.xyz>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Marek Vasut <marex@denx.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] Input: ili210x - add ili2120 support
+Date:   Tue, 19 Nov 2019 19:05:43 +0100
+Message-Id: <20191119180543.120362-1-luca@z3ntu.xyz>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-References: <20191119141645.19777-1-t-kristo@ti.com> <CANLsYkwyLMHzKkm-6X+OgQ+khRYJshMJsxdst7+c7n+hX4nLpQ@mail.gmail.com>
-In-Reply-To: <CANLsYkwyLMHzKkm-6X+OgQ+khRYJshMJsxdst7+c7n+hX4nLpQ@mail.gmail.com>
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-Date:   Tue, 19 Nov 2019 11:07:28 -0700
-Message-ID: <CANLsYkwcWDOPx_rpL5RkzsNLyw+ccPE0bNhar6xv1SZ1=R5xmA@mail.gmail.com>
-Subject: Re: [PATCHv2 00/15] Remoteproc: updates for OMAP remoteproc support
-To:     Tero Kristo <t-kristo@ti.com>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        linux-remoteproc@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-omap@vger.kernel.org, Suman Anna <s-anna@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 19 Nov 2019 at 10:31, Mathieu Poirier
-<mathieu.poirier@linaro.org> wrote:
->
-> On Tue, 19 Nov 2019 at 07:17, Tero Kristo <t-kristo@ti.com> wrote:
-> >
-> > Hi,
-> >
-> > This is v2 of the series [1], addressing comments from Bjorn and Rob.
-> > Bindings patch is funnily v2.5, as I posted v2 already and wanted to
-> > keep this somehow in sync. Individual patches contain comments about the
-> > changes, or Reviewed-by tags provided if there are no changes.
-> >
-> > I also dropped the conversion patch to SPDX licensing until I can
-> > confirm the license we want to use. Lets just keep the existing in place
-> > until that.
-> >
-> > This series still depends on the reset + clock patches posted earlier,
-> > but both of those dependencies are in linux-next now.
->
-> I tried to apply your set to today's linux-next (next-20191119) but it
-> fails at patch 13.
+This adds support for the Ilitek ili2120 touchscreen found in the
+Fairphone 2 smartphone.
 
-Digging further into this patch 12 is causing problem on next-20191119 (not 13):
+Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+---
+From some testing, the touchscreen works fine with this patch but I'm
+not sure it's 100% correct.
+I've uploaded the data the panel produces onto pastebin [1], maybe
+someone who knows more can take a look at the packets.
 
-mpoirier@xps15:~/work/remoteproc/kernel-review$ git apply --reject
-0012-remoteproc-omap-add-support-for-system-suspend-resum.patch
-Checking patch drivers/remoteproc/omap_remoteproc.c...
-Hunk #3 succeeded at 85 (offset -1 lines).
-Hunk #4 succeeded at 99 (offset -1 lines).
-Hunk #5 succeeded at 359 (offset -1 lines).
-Hunk #6 succeeded at 544 (offset -1 lines).
-Hunk #7 succeeded at 952 (offset -1 lines).
-Hunk #8 succeeded at 992 (offset -2 lines).
-Checking patch drivers/remoteproc/omap_remoteproc.h...
-error: while searching for:
-/*
- * Remote processor messaging
- *
- * Copyright (C) 2011 Texas Instruments, Inc.
- * Copyright (C) 2011 Google, Inc.
- * All rights reserved.
- */
+Additionally, I know that the code in the driver for querying the
+firmware version doesn't work on this panel. The downstream driver
+uses some code which I don't really understand, see [2] ; but as the
+version string is only used for a dev_dbg statement, I didn't spend
+more time with that.
 
-error: patch failed: drivers/remoteproc/omap_remoteproc.h:2
-Hunk #2 succeeded at 57 (offset 25 lines).
-Hunk #3 succeeded at 80 (offset 25 lines).
-Applied patch drivers/remoteproc/omap_remoteproc.c cleanly.
-Applying patch drivers/remoteproc/omap_remoteproc.h with 1 reject...
-Rejected hunk #1.
-Hunk #2 applied cleanly.
-Hunk #3 applied cleanly.
+If wanted, I can split out the dt-binding changes to a separate
+commit but looking at the git log, many patches are touching both
+dt-bindings and driver.
 
-Your patch expects the last line of the first hunk to be '*/' but it
-is '*' in linux-next.
+[1] https://pastebin.com/raw/LPeAske5
+[2] https://github.com/FairphoneMirrors/android_kernel_fairphone_msm8974/blob/fp2-m-sibon/drivers/input/touchscreen/ilitek/ilitek_aim.c#L850-L861
 
->
-> Mathieu
->
-> >
-> > -Tero
-> >
-> > [1] https://patchwork.kernel.org/cover/11215421/
-> >
-> >
-> >
-> > --
-> > Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+ .../bindings/input/ilitek,ili2xxx.txt         |  3 +-
+ drivers/input/touchscreen/ili210x.c           | 34 +++++++++++++++++--
+ 2 files changed, 34 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/input/ilitek,ili2xxx.txt b/Documentation/devicetree/bindings/input/ilitek,ili2xxx.txt
+index b2a76301e632..045d1587d17a 100644
+--- a/Documentation/devicetree/bindings/input/ilitek,ili2xxx.txt
++++ b/Documentation/devicetree/bindings/input/ilitek,ili2xxx.txt
+@@ -1,8 +1,9 @@
+-Ilitek ILI210x/ILI251x touchscreen controller
++Ilitek ILI210x/ILI212x/ILI251x touchscreen controller
+ 
+ Required properties:
+ - compatible:
+     ilitek,ili210x for ILI210x
++    ilitek,ili212x for ILI212x
+     ilitek,ili251x for ILI251x
+ 
+ - reg: The I2C address of the device
+diff --git a/drivers/input/touchscreen/ili210x.c b/drivers/input/touchscreen/ili210x.c
+index e9006407c9bc..8331286ac950 100644
+--- a/drivers/input/touchscreen/ili210x.c
++++ b/drivers/input/touchscreen/ili210x.c
+@@ -13,6 +13,7 @@
+ #include <asm/unaligned.h>
+ 
+ #define ILI210X_TOUCHES		2
++#define ILI212X_TOUCHES		10
+ #define ILI251X_TOUCHES		10
+ #define DEFAULT_POLL_PERIOD	20
+ 
+@@ -30,6 +31,7 @@ struct firmware_version {
+ 
+ enum ili2xxx_model {
+ 	MODEL_ILI210X,
++	MODEL_ILI212X,
+ 	MODEL_ILI251X,
+ };
+ 
+@@ -118,6 +120,23 @@ static bool ili210x_touchdata_to_coords(struct ili210x *priv, u8 *touchdata,
+ 	return true;
+ }
+ 
++static bool ili212x_touchdata_to_coords(struct ili210x *priv, u8 *touchdata,
++					unsigned int finger,
++					unsigned int *x, unsigned int *y)
++{
++	if (finger >= ILI212X_TOUCHES)
++		return false;
++
++	*x = get_unaligned_be16(touchdata + 3 + (finger * 5) + 0);
++	if (!(*x & BIT(15)))	/* Touch indication */
++		return false;
++
++	*x &= 0x3fff;
++	*y = get_unaligned_be16(touchdata + 3 + (finger * 5) + 2);
++
++	return true;
++}
++
+ static bool ili251x_touchdata_to_coords(struct ili210x *priv, u8 *touchdata,
+ 					unsigned int finger,
+ 					unsigned int *x, unsigned int *y)
+@@ -146,6 +165,12 @@ static bool ili210x_report_events(struct ili210x *priv, u8 *touchdata)
+ 		if (priv->model == MODEL_ILI210X) {
+ 			touch = ili210x_touchdata_to_coords(priv, touchdata,
+ 							    i, &x, &y);
++		} else if (priv->model == MODEL_ILI212X) {
++			touch = ili212x_touchdata_to_coords(priv, touchdata,
++							    i, &x, &y);
++
++			if (touch)
++				contact = true;
+ 		} else if (priv->model == MODEL_ILI251X) {
+ 			touch = ili251x_touchdata_to_coords(priv, touchdata,
+ 							    i, &x, &y);
+@@ -179,7 +204,8 @@ static void ili210x_work(struct work_struct *work)
+ 	bool touch;
+ 	int error = -EINVAL;
+ 
+-	if (priv->model == MODEL_ILI210X) {
++	if (priv->model == MODEL_ILI210X ||
++	    priv->model == MODEL_ILI212X) {
+ 		error = ili210x_read_reg(client, REG_TOUCHDATA,
+ 					 touchdata, sizeof(touchdata));
+ 	} else if (priv->model == MODEL_ILI251X) {
+@@ -311,7 +337,9 @@ static int ili210x_i2c_probe(struct i2c_client *client,
+ 	priv->model = model;
+ 	if (model == MODEL_ILI210X)
+ 		priv->max_touches = ILI210X_TOUCHES;
+-	if (model == MODEL_ILI251X)
++	else if (model == MODEL_ILI212X)
++		priv->max_touches = ILI212X_TOUCHES;
++	else if (model == MODEL_ILI251X)
+ 		priv->max_touches = ILI251X_TOUCHES;
+ 
+ 	i2c_set_clientdata(client, priv);
+@@ -395,6 +423,7 @@ static SIMPLE_DEV_PM_OPS(ili210x_i2c_pm,
+ 
+ static const struct i2c_device_id ili210x_i2c_id[] = {
+ 	{ "ili210x", MODEL_ILI210X },
++	{ "ili212x", MODEL_ILI212X },
+ 	{ "ili251x", MODEL_ILI251X },
+ 	{ }
+ };
+@@ -402,6 +431,7 @@ MODULE_DEVICE_TABLE(i2c, ili210x_i2c_id);
+ 
+ static const struct of_device_id ili210x_dt_ids[] = {
+ 	{ .compatible = "ilitek,ili210x", .data = (void *)MODEL_ILI210X },
++	{ .compatible = "ilitek,ili212x", .data = (void *)MODEL_ILI212X },
+ 	{ .compatible = "ilitek,ili251x", .data = (void *)MODEL_ILI251X },
+ 	{ },
+ };
+-- 
+2.24.0
+
