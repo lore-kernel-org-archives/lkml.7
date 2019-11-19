@@ -2,131 +2,132 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3ADAC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D08DBC43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:15:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD8B422440
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:12:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ERuGxb56"
+	by mail.kernel.org (Postfix) with ESMTP id B826D22440
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:15:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727082AbfKSTMe (ORCPT
+        id S1727329AbfKSTPL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 14:12:34 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:47660 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726711AbfKSTMe (ORCPT
+        Tue, 19 Nov 2019 14:15:11 -0500
+Received: from xavier.telenet-ops.be ([195.130.132.52]:49614 "EHLO
+        xavier.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726711AbfKSTPK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 14:12:34 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAJJCOlE049841;
-        Tue, 19 Nov 2019 13:12:24 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574190744;
-        bh=OAVQNrmkwx9aXRike52bpwLCdj/ux8+UBWHSi3lRntE=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=ERuGxb56ndQhxCTx24hcknxZk5Gdg4K7tdNvYdbKOlXuXWUiZidk56FWQwoI3Qv2Z
-         IgIxIYmsQyPIJ8ABbCnJzxsr5Jb0/XsYww1SYyYQecxYTjPNqZvbWGCu83ZZ/XlRaA
-         7BDJfh4T+S02C9TFNOLbfzEHOmEHoBvMFskHABOA=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAJJCOga114678
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 19 Nov 2019 13:12:24 -0600
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 19
- Nov 2019 13:12:24 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 19 Nov 2019 13:12:24 -0600
-Received: from [10.250.45.147] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAJJCO7d115048;
-        Tue, 19 Nov 2019 13:12:24 -0600
-Subject: Re: [PATCH] ARM: OMAP: Use ARM SMC Calling Convention when OP-TEE is
- available
-To:     Tony Lindgren <tony@atomide.com>
-CC:     Mark Rutland <mark.rutland@arm.com>, <linux-omap@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <b86e1d66-1566-521c-a445-4f0ae2fd95d6@ti.com>
- <20191118223128.GE35479@atomide.com>
- <29db708e-119e-8a89-7d43-e38e2a10dc07@ti.com>
- <20191119162157.GJ35479@atomide.com>
- <6e009ae3-6aa2-409b-749f-4947303940d8@ti.com>
- <20191119164227.GL35479@atomide.com> <20191119180546.GM35479@atomide.com>
- <9e15c170-c9fa-778c-d998-bd1111a6390d@ti.com>
- <20191119183247.GN35479@atomide.com>
- <a351461a-f6a1-334b-6bdd-a56626914fb3@ti.com>
- <20191119190721.GO35479@atomide.com>
-From:   "Andrew F. Davis" <afd@ti.com>
-Message-ID: <7fa11037-8d33-2274-c8cc-80e9630b38b0@ti.com>
-Date:   Tue, 19 Nov 2019 14:12:18 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191119190721.GO35479@atomide.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Tue, 19 Nov 2019 14:15:10 -0500
+Received: from ramsan ([84.195.182.253])
+        by xavier.telenet-ops.be with bizsmtp
+        id TvF62100k5USYZQ01vF6vt; Tue, 19 Nov 2019 20:15:07 +0100
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1iX8xu-0008N8-CQ; Tue, 19 Nov 2019 20:15:06 +0100
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1iX8xu-0006ae-9O; Tue, 19 Nov 2019 20:15:06 +0100
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Rob Herring <robh@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Andrew Murray <andrew.murray@arm.com>,
+        Srinath Mannam <srinath.mannam@broadcom.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] PCI: of: Restore alignment/indentation in host bridge window table
+Date:   Tue, 19 Nov 2019 20:15:05 +0100
+Message-Id: <20191119191505.25286-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/19/19 2:07 PM, Tony Lindgren wrote:
-> * Andrew F. Davis <afd@ti.com> [191119 18:51]:
->> On 11/19/19 1:32 PM, Tony Lindgren wrote:
->>> It would allow us to completely change over to using
->>> arm_smccc_smc() and forget the custom calls.
->>
->> We would need more than just the r12 quirk to replace all our custom SMC
->> handlers, we would need quirks for omap_smc2 which puts process ID in r1
->> and puts #0xff in r6, and omap_smc3 that uses smc #1. All of our legacy
->> SMC calls also trash r4-r11, that is very non SMCCC complaint as only
->> r4-r7 need be caller saved. I don't see arm_smccc_smc() working with
->> legacy ROM no matter how much we hack at it :(
-> 
-> We would just have omap_smc2() call arm_smccc_smc() and in that
-> case. And omap_smc2() would still deal with saving and restoring
-> the registers.
-> 
+Since the printing of the inbound resources was added, alignment and
+indentation of the host bridge window table is broken because of two
+reasons:
+  1. The "IB MEM" row header is longer than the other headers,
+  2. Inbound ranges typically extend beyond 32-bit address space, and thus
+     don't fit in "#010llx".
 
+Fix this by extending the row header field to 6 characters, and the
+format string to 40-bit addresses.
 
-Then why call arm_smccc_smc()? omap_smc2() is already an assembly
-function, all it needs to do after loading the registers and saving the
-right ones is issue an "smc #0" instruction, why would we want to
-instead call into some other function to re-save registers and issue the
-exact same instruction?
+Use "%6s" to handle field size and right-alignment, instead of manual
+preparation using error-prone snprintf() calls.  Use the exact same
+format string for both cases, to allow sharing.
 
+Impact on kernel boot log on r8a7791/koelsch:
 
-> Certainly the wrapper functions calling arm_smccc_smc() can deal
-> with r12 too if the r12-quirk version and the plain version are
-> never needed the same time on a booted SoC.
-> 
-> Are they ever needed the same time on a booted SoC or not?
-> 
->> I can make OP-TEE also compatible with the r12 quirk, which is what I
->> used to do. That way we didn't need to do any detection. The issue was
->> that non-standard SMC calls should not go through the common SMCCC
->> handler (unless you are QCOM for some reason..).
-> 
-> Sounds like for optee nothing must be done for r12 :)
-> 
+     rcar-pcie fe000000.pcie: host bridge /soc/pcie@fe000000 ranges:
+    -rcar-pcie fe000000.pcie:    IO 0xfe100000..0xfe1fffff -> 0x00000000
+    -rcar-pcie fe000000.pcie:   MEM 0xfe200000..0xfe3fffff -> 0xfe200000
+    -rcar-pcie fe000000.pcie:   MEM 0x30000000..0x37ffffff -> 0x30000000
+    -rcar-pcie fe000000.pcie:   MEM 0x38000000..0x3fffffff -> 0x38000000
+    -rcar-pcie fe000000.pcie: IB MEM 0x40000000..0xbfffffff -> 0x40000000
+    -rcar-pcie fe000000.pcie: IB MEM 0x200000000..0x2ffffffff -> 0x200000000
+    +rcar-pcie fe000000.pcie:       IO 0x00fe100000..0x00fe1fffff -> 0x0000000000
+    +rcar-pcie fe000000.pcie:      MEM 0x00fe200000..0x00fe3fffff -> 0x00fe200000
+    +rcar-pcie fe000000.pcie:      MEM 0x0030000000..0x0037ffffff -> 0x0030000000
+    +rcar-pcie fe000000.pcie:      MEM 0x0038000000..0x003fffffff -> 0x0038000000
+    +rcar-pcie fe000000.pcie:   IB MEM 0x0040000000..0x00bfffffff -> 0x0040000000
+    +rcar-pcie fe000000.pcie:   IB MEM 0x0200000000..0x02ffffffff -> 0x0200000000
 
+Fixes: 52ac576f88f9f701 ("PCI: of: Add inbound resource parsing to helpers")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ drivers/pci/of.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-Unless all our calls use the r12 hack, then we would need to fixup
-OP-TEE to accept that also.
+diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+index e7e12adcff3a3836..81ceeaa6f1d5a2c5 100644
+--- a/drivers/pci/of.c
++++ b/drivers/pci/of.c
+@@ -265,7 +265,7 @@ static int devm_of_pci_get_host_bridge_resources(struct device *dev,
+ 	struct resource *bus_range;
+ 	struct of_pci_range range;
+ 	struct of_pci_range_parser parser;
+-	char range_type[4];
++	const char *range_type;
+ 	int err;
+ 
+ 	if (io_base)
+@@ -299,12 +299,12 @@ static int devm_of_pci_get_host_bridge_resources(struct device *dev,
+ 	for_each_of_pci_range(&parser, &range) {
+ 		/* Read next ranges element */
+ 		if ((range.flags & IORESOURCE_TYPE_BITS) == IORESOURCE_IO)
+-			snprintf(range_type, 4, " IO");
++			range_type = "IO";
+ 		else if ((range.flags & IORESOURCE_TYPE_BITS) == IORESOURCE_MEM)
+-			snprintf(range_type, 4, "MEM");
++			range_type = "MEM";
+ 		else
+-			snprintf(range_type, 4, "err");
+-		dev_info(dev, "  %s %#010llx..%#010llx -> %#010llx\n",
++			range_type = "err";
++		dev_info(dev, "  %6s %#012llx..%#012llx -> %#012llx\n",
+ 			 range_type, range.cpu_addr,
+ 			 range.cpu_addr + range.size - 1, range.pci_addr);
+ 
+@@ -359,8 +359,8 @@ static int devm_of_pci_get_host_bridge_resources(struct device *dev,
+ 		    range.cpu_addr == OF_BAD_ADDR || range.size == 0)
+ 			continue;
+ 
+-		dev_info(dev, "IB MEM %#010llx..%#010llx -> %#010llx\n",
+-			 range.cpu_addr,
++		dev_info(dev, "  %6s %#012llx..%#012llx -> %#012llx\n",
++			 "IB MEM", range.cpu_addr,
+ 			 range.cpu_addr + range.size - 1, range.pci_addr);
+ 
+ 
+-- 
+2.17.1
 
-Andrew
-
-
-> Regards,
-> 
-> Tony
-> 
