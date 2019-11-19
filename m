@@ -2,59 +2,147 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A5BC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 23:13:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE51C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 23:13:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C56222245B
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 23:13:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85C612245B
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 23:13:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="CFH6B8zX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727405AbfKSXNE (ORCPT
+        id S1727437AbfKSXNh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 18:13:04 -0500
-Received: from kvm5.telegraphics.com.au ([98.124.60.144]:34902 "EHLO
-        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726539AbfKSXNE (ORCPT
+        Tue, 19 Nov 2019 18:13:37 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:46095 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726025AbfKSXNh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 18:13:04 -0500
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by kvm5.telegraphics.com.au (Postfix) with ESMTP id 4A77D285D9;
-        Tue, 19 Nov 2019 18:12:58 -0500 (EST)
-Date:   Wed, 20 Nov 2019 10:12:21 +1100 (AEDT)
-From:   Finn Thain <fthain@telegraphics.com.au>
-To:     Kars de Jong <jongk@linux-m68k.org>
-cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] esp_scsi: Clear Transfer Count registers before PIO
- transfers
-In-Reply-To: <alpine.LNX.2.21.1.1911190923120.8@nippy.intranet>
-Message-ID: <alpine.LNX.2.21.1.1911201006520.10@nippy.intranet>
-References: <2bbb6359d542f5882be67c415ecc25ad2d9eeb5e.1573875417.git.fthain@telegraphics.com.au> <CACz-3rjHAyi6kMQ6j9YALLm1ApYrsqKiTnGNPUhxqqEuRJ9TjQ@mail.gmail.com> <alpine.LNX.2.21.1.1911180947020.8@nippy.intranet> <CACz-3rhr_R+_mJpg+Rvgoj=1GC5AO3YKxYxS_0ShAfQ-NiFDtg@mail.gmail.com>
- <alpine.LNX.2.21.1.1911190923120.8@nippy.intranet>
+        Tue, 19 Nov 2019 18:13:37 -0500
+Received: by mail-qk1-f193.google.com with SMTP id h15so19523980qka.13
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 15:13:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=17yvYiAWU0HGRGp9KcOWNDREPdtmfZAOUWmEXa5IV8Q=;
+        b=CFH6B8zXYbvy1pYUJJbcu8xh9P/QVD9z5JiNaOpP03dFNMTRSirDeSciisIuN1TsQA
+         As/ijGNvAx9+OyE4Hnp1DTwaPgjRcoWWq+wiBHbdq7EhD17YdSipISWg1TICLdaMuIXY
+         lM/H1EChksx8g0UiRlsq0Y+KPp0tlPL8gbAsgj2UFVJ6GZ56v1/7ShRrNC83MmE56Mty
+         /F4A+sZS8mMHYRF2AmUmsD/CJquhlsSwT99zGQSlFyFCQj7eYOxXZCzRsxMIwt4BzBwB
+         HTtkNUPosiSiG5VzFAK0aWuUW9tXvIFDKo/43Zb30icp121XVTBDnTlDnBB4yim04UzW
+         KUAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=17yvYiAWU0HGRGp9KcOWNDREPdtmfZAOUWmEXa5IV8Q=;
+        b=Qe0y00YY1W3Ei26ubtA6/ZNsmR15wT0aIxmoOUC+nYNGPZ/rtUyzMek/JxzdwV4VK+
+         LrAomLtFvWcMjUvAKVH+Kxgu+CmBDNpqZc1gx3NHpQLVzhSI/17bPZlFpBZo1nfYSTWs
+         hkgU5g4YH9RXEan1m3jc0SnZH9OW1sCkV7nXx9R+FzcaHc7pRSct7oiVciGKB7AQ1r7E
+         /sSQNfWdMKHhtuc++ahP2e2WRtOLnuf1utcA14YxIDGrDpu4JhRxDqbsS1fgQyQoG4sM
+         uzqb2/0ilakJrOQ02OFr4xNYCkQMfDLZkdq4lMz4U7t7Se4LvNWo8SBsqm6lm5aFdi1i
+         7JoQ==
+X-Gm-Message-State: APjAAAUo27M4Mcr8vtfJQMP9uU9NTwqJx1vI9YJOXouosgg/jYQHy1FY
+        GdHICnPKxsmnvM+Udqm3u7mZ2A==
+X-Google-Smtp-Source: APXvYqxkAxQNe/mh+W9e4zwMrMhZARAyEI1xOqHgisjcDpSWmv77QsRLXTnzw8xWHepRdkYoW9QjIQ==
+X-Received: by 2002:ae9:e702:: with SMTP id m2mr106007qka.269.1574205216019;
+        Tue, 19 Nov 2019 15:13:36 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-162-113-180.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.180])
+        by smtp.gmail.com with ESMTPSA id b4sm297485qka.75.2019.11.19.15.13.35
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 19 Nov 2019 15:13:35 -0800 (PST)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1iXCgh-0004m0-03; Tue, 19 Nov 2019 19:13:35 -0400
+Date:   Tue, 19 Nov 2019 19:13:34 -0400
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Rao Shoaib <rao.shoaib@oracle.com>
+Cc:     monis@mellanox.com, dledford@redhat.com, sean.hefty@intel.com,
+        hal.rosenstock@gmail.com, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] Introduce maximum WQE size to check limits
+Message-ID: <20191119231334.GO4991@ziepe.ca>
+References: <1574106879-19211-1-git-send-email-rao.shoaib@oracle.com>
+ <1574106879-19211-2-git-send-email-rao.shoaib@oracle.com>
+ <20191119203138.GA13145@ziepe.ca>
+ <44d1242a-fc32-9918-dd53-cd27ebf61811@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <44d1242a-fc32-9918-dd53-cd27ebf61811@oracle.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 19 Nov 2019, I wrote:
-
+On Tue, Nov 19, 2019 at 02:38:23PM -0800, Rao Shoaib wrote:
 > 
-> But this is a theoretical problem so far. You may need to use sg_utils 
-> to generate a SCSI command like that.
-> 
-> (For a DMA controller subject to, say, 24-bit boundaries, there are 
-> additional ways to end up with short transfers.)
-> 
+> On 11/19/19 12:31 PM, Jason Gunthorpe wrote:
+> > On Mon, Nov 18, 2019 at 11:54:38AM -0800, rao Shoaib wrote:
+> > > From: Rao Shoaib <rao.shoaib@oracle.com>
+> > > 
+> > > Introduce maximum WQE size to impose limits on max SGE's and inline data
+> > > 
+> > > Signed-off-by: Rao Shoaib <rao.shoaib@oracle.com>
+> > >   drivers/infiniband/sw/rxe/rxe_param.h | 3 ++-
+> > >   drivers/infiniband/sw/rxe/rxe_qp.c    | 7 +++++--
+> > >   2 files changed, 7 insertions(+), 3 deletions(-)
+> > > 
+> > > diff --git a/drivers/infiniband/sw/rxe/rxe_param.h b/drivers/infiniband/sw/rxe/rxe_param.h
+> > > index 1b596fb..31fb5c7 100644
+> > > +++ b/drivers/infiniband/sw/rxe/rxe_param.h
+> > > @@ -68,7 +68,6 @@ enum rxe_device_param {
+> > >   	RXE_HW_VER			= 0,
+> > >   	RXE_MAX_QP			= 0x10000,
+> > >   	RXE_MAX_QP_WR			= 0x4000,
+> > > -	RXE_MAX_INLINE_DATA		= 400,
+> > >   	RXE_DEVICE_CAP_FLAGS		= IB_DEVICE_BAD_PKEY_CNTR
+> > >   					| IB_DEVICE_BAD_QKEY_CNTR
+> > >   					| IB_DEVICE_AUTO_PATH_MIG
+> > > @@ -79,7 +78,9 @@ enum rxe_device_param {
+> > >   					| IB_DEVICE_RC_RNR_NAK_GEN
+> > >   					| IB_DEVICE_SRQ_RESIZE
+> > >   					| IB_DEVICE_MEM_MGT_EXTENSIONS,
+> > > +	RXE_MAX_WQE_SIZE		= 0x2d0, /* For RXE_MAX_SGE */
+> > This shouldn't just be a random constant, I think you are trying to
+> > say:
+> > 
+> >    RXE_MAX_WQE_SIZE = sizeof(struct rxe_send_wqe) + sizeof(struct ib_sge)*RXE_MAX_SGE
 
-On reflection these probably can't happen in practice. I was being 
-over-cautious. So I'll leave this patch out-of-tree until there's a need 
-for it (i.e. some driver that uses both DMA and PIO in data phases).
+> I thought you wanted this value to be independent of RXE_MAX_SGE, else why
+> are defining it.
 
--- 
+Then define 
+
+   RXE_MAX_SGE = (RXE_MAX_WQE_SIZE - sizeof(rxe_send_wqe))/sizeof(rxe_sge)
+
+And drive everything off RXE_MAX_WQE_SIZE, which sounds good
+
+> > Just say that
+> > 
+> > >   	RXE_MAX_SGE			= 32,
+> > > +	RXE_MAX_INLINE_DATA		= RXE_MAX_WQE_SIZE,
+> > This is mixed up now, it should be
+> > 
+> >    RXE_MAX_INLINE_DATA = RXE_MAX_WQE_SIZE - sizeof(rxe_send_wqe)
+> 
+> I agree to what you are suggesting, it will make the current patch better.
+> However, In my previous patch I had
+> 
+> RXE_MAX_INLINE_DATA		= RXE_MAX_SGE * sizeof(struct ib_sge)
+> 
+> IMHO that conveys the intent much better. I do not see the reason for
+> defining RXE_MAX_WQE_SIZE, ib_device_attr does not even have an entry for it
+> and hence the value is not used anywhere by rxe or by any other relevant
+> driver.
+
+Because WQE_SIZE is what you are actually concerned with here, using
+MAX_SGE as a proxy for the max WQE is confusing
+
+Jason
