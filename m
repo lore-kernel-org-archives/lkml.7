@@ -2,173 +2,242 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ACF5C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:49:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DB04C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:50:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A5F922309
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:49:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nLO0j7Gg"
+	by mail.kernel.org (Postfix) with ESMTP id 724DA222D1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:50:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728540AbfKSQts (ORCPT
+        id S1728558AbfKSQuU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 11:49:48 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:40189 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727212AbfKSQtr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 11:49:47 -0500
-Received: by mail-ot1-f65.google.com with SMTP id m15so18466468otq.7
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 08:49:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=xTSI3K4thH+dUGZBU/j6hslBPPzRGNTIfM5lXqXhgmU=;
-        b=nLO0j7Gg0I4t2Cwt7ZY4AmeHh+8e+5HrEz65UbBvjuE5gjjl3g0SEF2i93MCVB5gXA
-         lUjFrjYHHZ7qMKnUMS2tkQoUfe4RU1yx/FVi/vXctllao1EVx0erNqphH2gvvXJ5UpVA
-         /hKrFLc5Xolw/tcSpWvt4E0vbM4C/jjPTyEBxD0otVIUPDDIx0YJqEFYifVydKMdXpCO
-         gRUeqP0Sy82tWw8eQvh3FsOyJCZisrf6vHeAPfBaszfGzxBfr+lRZ7e/jZVslvWlTRzS
-         0QSvsOKyOb9RJ4mxNzlRl/c39ddBbBmkFzZ9JREw7bhXl1xIsXnIx2f1K0nQ8iQIXiad
-         UdcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=xTSI3K4thH+dUGZBU/j6hslBPPzRGNTIfM5lXqXhgmU=;
-        b=AxjeOOOLdO5VH1vXm092VqM7QFXY/FHZ7tM4T5s6bsN/BUxj+McJ8FL1dJIjyR3yeb
-         cVC3A5yjxYC4KHY4xVRWc54TilUawGJ71ak2Gv7n9m22PLMZ3E1tEcSPs4ZacIQbPmqP
-         PlYaFO83zKcv7OZn/VDrZJMa4VQeJeKghs76ccxai7FVWlDoLiUBI+mlivRPVMrcL/wL
-         wTEv+EnEYFksQDeK+JFPehrGKZD/k/t8nsPPwLlFwsrEEVXVlG8esFfTEcbFhYfcotqn
-         f2dL/Jldnz5HUor2MaskJiNe50h8vC3TWFMFXetNGXGPXpy4eN+luVB2EQ3r0GLlhpjo
-         WSIQ==
-X-Gm-Message-State: APjAAAWLWck0pY+V6g+0JpDSp6tMq/fbaMLbMfQy7X1w1oOSG9PpeRsR
-        nbipRN1JdGqvdrzXEtuKrV/zVK6eSY9SdYM5p2mzrg==
-X-Google-Smtp-Source: APXvYqwAE11CUIy9LnUeViWxpKB9m7ISi4+FxiJw+lLBnb3jjNIWkNkBlbwyd+Z1Vsn6B0MkoMl6OcFbHjQiLwALxLU=
-X-Received: by 2002:a9d:66d9:: with SMTP id t25mr4780662otm.30.1574182186119;
- Tue, 19 Nov 2019 08:49:46 -0800 (PST)
+        Tue, 19 Nov 2019 11:50:20 -0500
+Received: from ale.deltatee.com ([207.54.116.67]:37970 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727212AbfKSQuU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 11:50:20 -0500
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1iX6hg-0003AU-Ba; Tue, 19 Nov 2019 09:50:14 -0700
+To:     Jiasen Lin <linjiasen@hygon.cn>, linux-kernel@vger.kernel.org,
+        linux-ntb@googlegroups.com, jdmason@kudzu.us
+Cc:     allenbh@gmail.com, dave.jiang@intel.com
+References: <1574136121-7941-1-git-send-email-linjiasen@hygon.cn>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <c487042e-471b-dd99-37a6-2119b4115283@deltatee.com>
+Date:   Tue, 19 Nov 2019 09:50:08 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <1574166203-151975-1-git-send-email-alex.shi@linux.alibaba.com> <1574166203-151975-4-git-send-email-alex.shi@linux.alibaba.com>
-In-Reply-To: <1574166203-151975-4-git-send-email-alex.shi@linux.alibaba.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Tue, 19 Nov 2019 08:49:34 -0800
-Message-ID: <CALvZod7QDv4UtS9Xi4EPqynfUxe8qP3qJjrwxHEb4EnZO27kfg@mail.gmail.com>
-Subject: Re: [PATCH v4 3/9] mm/lru: replace pgdat lru_lock with lruvec lock
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     Cgroups <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Roman Gushchin <guro@fb.com>,
-        Chris Down <chris@chrisdown.name>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vlastimil Babka <vbabka@suse.cz>, Qian Cai <cai@lca.pw>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        swkhack <swkhack@gmail.com>,
-        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Colin Ian King <colin.king@canonical.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Peng Fan <peng.fan@nxp.com>,
-        Nikolay Borisov <nborisov@suse.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Yafang Shao <laoar.shao@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1574136121-7941-1-git-send-email-linjiasen@hygon.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: dave.jiang@intel.com, allenbh@gmail.com, jdmason@kudzu.us, linux-ntb@googlegroups.com, linux-kernel@vger.kernel.org, linjiasen@hygon.cn
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH v2] NTB: ntb_perf: Fix address err in perf_copy_chunk
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 4:24 AM Alex Shi <alex.shi@linux.alibaba.com> wrote=
-:
->
-> This patchset move lru_lock into lruvec, give a lru_lock for each of
-> lruvec, thus bring a lru_lock for each of memcg per node.
->
-> This is the main patch to replace per node lru_lock with per memcg
-> lruvec lock.
->
-> We introduce function lock_page_lruvec, it's same as vanilla pgdat lock
-> when memory cgroup unset, w/o memcg, the function will keep repin the
-> lruvec's lock to guard from page->mem_cgroup changes in page
-> migrations between memcgs. (Thanks Hugh Dickins and Konstantin
-> Khlebnikov reminder on this. Than the core logical is same as their
-> previous patchs)
->
-> According to Daniel Jordan's suggestion, I run 64 'dd' with on 32
-> containers on my 2s* 8 core * HT box with the modefied case:
->   https://git.kernel.org/pub/scm/linux/kernel/git/wfg/vm-scalability.git/=
-tree/case-lru-file-readtwice
->
-> With this and later patches, the dd performance is 144MB/s, the vanilla
-> kernel performance is 123MB/s. 17% performance increased.
->
-> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Cc: Michal Hocko <mhocko@kernel.org>
-> Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Roman Gushchin <guro@fb.com>
-> Cc: Shakeel Butt <shakeelb@google.com>
-> Cc: Chris Down <chris@chrisdown.name>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Mel Gorman <mgorman@techsingularity.net>
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Cc: Qian Cai <cai@lca.pw>
-> Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-> Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-> Cc: "J=C3=A9r=C3=B4me Glisse" <jglisse@redhat.com>
-> Cc: Andrea Arcangeli <aarcange@redhat.com>
-> Cc: Yang Shi <yang.shi@linux.alibaba.com>
-> Cc: David Rientjes <rientjes@google.com>
-> Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-> Cc: swkhack <swkhack@gmail.com>
-> Cc: "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>
-> Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
-> Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-> Cc: Colin Ian King <colin.king@canonical.com>
-> Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> Cc: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: Peng Fan <peng.fan@nxp.com>
-> Cc: Nikolay Borisov <nborisov@suse.com>
-> Cc: Ira Weiny <ira.weiny@intel.com>
-> Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
-> Cc: Yafang Shao <laoar.shao@gmail.com>
-> Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-> Cc: Hugh Dickins <hughd@google.com>
-> Cc: Tejun Heo <tj@kernel.org>
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-mm@kvack.org
-> Cc: cgroups@vger.kernel.org
 
-This patch (and series) still have unsafe accesses to lruvec.
 
-Alex, I was hoping that you would drop this series in favor of Hugh's
-patches. Anyways I will post Hugh patches for review to be considered
-for 5.6. I will run a couple of performance experiments.
+On 2019-11-18 9:02 p.m., Jiasen Lin wrote:
+> peer->outbuf is a virtual address which is get by ioremap, it can not
+> be converted to a physical address by virt_to_page and page_to_phys.
+> This conversion will result in DMA error, because the destination address
+> which is converted by page_to_phys is invalid.
+> 
+> This patch save the MMIO address of NTB BARx in perf_setup_peer_mw,
+> and map the BAR space to DMA address after we assign the DMA channel.
+> Then fill the destination address of DMA descriptor with this DMA address
+> to guarantee that the address of memory write requests fall into
+> memory window of NBT BARx with IOMMU enabled and disabled.
+> 
+> Changes since v1:
+>   * Map NTB BARx MMIO address to DMA address after assign the DMA channel,
+>     to ensure the destination address in valid. (per suggestion from Logan)
+> 
+> Fixes: 5648e56d03fa ("NTB: ntb_perf: Add full multi-port NTB API support")
+> Signed-off-by: Jiasen Lin <linjiasen@hygon.cn>
 
-Shakeel
+Thanks, looks good to me except for the one nit below.
+
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+
+> ---
+>  drivers/ntb/test/ntb_perf.c | 69 ++++++++++++++++++++++++++++++++++++---------
+>  1 file changed, 56 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/ntb/test/ntb_perf.c b/drivers/ntb/test/ntb_perf.c
+> index e9b7c2d..dfca7e1 100644
+> --- a/drivers/ntb/test/ntb_perf.c
+> +++ b/drivers/ntb/test/ntb_perf.c
+> @@ -149,7 +149,8 @@ struct perf_peer {
+>  	u64 outbuf_xlat;
+>  	resource_size_t outbuf_size;
+>  	void __iomem *outbuf;
+> -
+> +	phys_addr_t out_phys_addr;
+> +	dma_addr_t dma_dst_addr;
+>  	/* Inbound MW params */
+>  	dma_addr_t inbuf_xlat;
+>  	resource_size_t inbuf_size;
+> @@ -776,7 +777,8 @@ static void perf_dma_copy_callback(void *data)
+>  }
+>  
+>  static int perf_copy_chunk(struct perf_thread *pthr,
+> -			   void __iomem *dst, void *src, size_t len)
+> +			   void __iomem *dst, void *src, size_t len,
+> +			   dma_addr_t dst_dma_addr)
+>  {
+>  	struct dma_async_tx_descriptor *tx;
+>  	struct dmaengine_unmap_data *unmap;
+> @@ -807,8 +809,7 @@ static int perf_copy_chunk(struct perf_thread *pthr,
+>  	}
+>  	unmap->to_cnt = 1;
+>  
+> -	unmap->addr[1] = dma_map_page(dma_dev, virt_to_page(dst),
+> -		offset_in_page(dst), len, DMA_FROM_DEVICE);
+> +	unmap->addr[1] = dst_dma_addr;
+>  	if (dma_mapping_error(dma_dev, unmap->addr[1])) {
+>  		ret = -EIO;
+>  		goto err_free_resource;
+> @@ -865,6 +866,7 @@ static int perf_init_test(struct perf_thread *pthr)
+>  {
+>  	struct perf_ctx *perf = pthr->perf;
+>  	dma_cap_mask_t dma_mask;
+> +	struct perf_peer *peer = pthr->perf->test_peer;
+>  
+>  	pthr->src = kmalloc_node(perf->test_peer->outbuf_size, GFP_KERNEL,
+>  				 dev_to_node(&perf->ntb->dev));
+> @@ -882,15 +884,33 @@ static int perf_init_test(struct perf_thread *pthr)
+>  	if (!pthr->dma_chan) {
+>  		dev_err(&perf->ntb->dev, "%d: Failed to get DMA channel\n",
+>  			pthr->tidx);
+> -		atomic_dec(&perf->tsync);
+> -		wake_up(&perf->twait);
+> -		kfree(pthr->src);
+> -		return -ENODEV;
+> +		goto err_free;
+> +	}
+> +	peer->dma_dst_addr =
+> +		dma_map_resource(pthr->dma_chan->device->dev,
+> +				 peer->out_phys_addr, peer->outbuf_size,
+> +				 DMA_FROM_DEVICE, 0);
+> +	if (dma_mapping_error(pthr->dma_chan->device->dev,
+> +			      peer->dma_dst_addr)) {
+> +		dev_err(pthr->dma_chan->device->dev, "%d: Failed to map DMA addr\n",
+> +			pthr->tidx);
+> +		peer->dma_dst_addr = 0;
+> +		dma_release_channel(pthr->dma_chan);
+> +		goto err_free;
+>  	}
+> +	dev_dbg(pthr->dma_chan->device->dev, "%d: Map MMIO %pa to DMA addr %pad\n",
+> +			pthr->tidx,
+> +			&peer->out_phys_addr,
+> +			&peer->dma_dst_addr);
+>  
+>  	atomic_set(&pthr->dma_sync, 0);
+> -
+>  	return 0;
+> +
+> +err_free:
+> +	atomic_dec(&perf->tsync);
+> +	wake_up(&perf->twait);
+> +	kfree(pthr->src);
+> +	return -ENODEV;
+>  }
+>  
+>  static int perf_run_test(struct perf_thread *pthr)
+> @@ -901,6 +921,8 @@ static int perf_run_test(struct perf_thread *pthr)
+>  	u64 total_size, chunk_size;
+>  	void *flt_src;
+>  	int ret = 0;
+> +	dma_addr_t flt_dma_addr;
+> +	dma_addr_t bnd_dma_addr;
+>  
+>  	total_size = 1ULL << total_order;
+>  	chunk_size = 1ULL << chunk_order;
+> @@ -910,11 +932,15 @@ static int perf_run_test(struct perf_thread *pthr)
+>  	bnd_dst = peer->outbuf + peer->outbuf_size;
+>  	flt_dst = peer->outbuf;
+>  
+> +	flt_dma_addr = peer->dma_dst_addr;
+> +	bnd_dma_addr = peer->dma_dst_addr + peer->outbuf_size;
+> +
+>  	pthr->duration = ktime_get();
+>  
+>  	/* Copied field is cleared on test launch stage */
+>  	while (pthr->copied < total_size) {
+> -		ret = perf_copy_chunk(pthr, flt_dst, flt_src, chunk_size);
+> +		ret = perf_copy_chunk(pthr, flt_dst, flt_src, chunk_size,
+> +				flt_dma_addr);
+>  		if (ret) {
+>  			dev_err(&perf->ntb->dev, "%d: Got error %d on test\n",
+>  				pthr->tidx, ret);
+> @@ -925,8 +951,15 @@ static int perf_run_test(struct perf_thread *pthr)
+>  
+>  		flt_dst += chunk_size;
+>  		flt_src += chunk_size;
+> -		if (flt_dst >= bnd_dst || flt_dst < peer->outbuf) {
+> +		flt_dma_addr += chunk_size;
+> +
+> +		if (flt_dst >= bnd_dst ||
+> +		    flt_dst < peer->outbuf ||
+> +		    flt_dma_addr >= bnd_dma_addr ||
+
+Nit: I'm pretty sure the check against bnd_dma_addr is redundant with
+the check on bnd_dst.
+
+> +		    flt_dma_addr < peer->dma_dst_addr) {
+> +
+>  			flt_dst = peer->outbuf;
+> +			flt_dma_addr = peer->dma_dst_addr;
+>  			flt_src = pthr->src;
+>  		}
+>  
+> @@ -978,8 +1011,13 @@ static void perf_clear_test(struct perf_thread *pthr)
+>  	 * We call it anyway just to be sure of the transfers completion.
+>  	 */
+>  	(void)dmaengine_terminate_sync(pthr->dma_chan);
+> -
+> -	dma_release_channel(pthr->dma_chan);
+> +	if (pthr->perf->test_peer->dma_dst_addr)
+> +		dma_unmap_resource(pthr->dma_chan->device->dev,
+> +				   pthr->perf->test_peer->dma_dst_addr,
+> +				   pthr->perf->test_peer->outbuf_size,
+> +				   DMA_FROM_DEVICE, 0);
+> +	if (pthr->dma_chan)
+> +		dma_release_channel(pthr->dma_chan);
+>  
+>  no_dma_notify:
+>  	atomic_dec(&perf->tsync);
+> @@ -1195,6 +1233,9 @@ static ssize_t perf_dbgfs_read_info(struct file *filep, char __user *ubuf,
+>  			"\tOut buffer addr 0x%pK\n", peer->outbuf);
+>  
+>  		pos += scnprintf(buf + pos, buf_size - pos,
+> +			"\tOut buff phys addr %pa[p]\n", &peer->out_phys_addr);
+> +
+> +		pos += scnprintf(buf + pos, buf_size - pos,
+>  			"\tOut buffer size %pa\n", &peer->outbuf_size);
+>  
+>  		pos += scnprintf(buf + pos, buf_size - pos,
+> @@ -1388,6 +1429,8 @@ static int perf_setup_peer_mw(struct perf_peer *peer)
+>  	if (!peer->outbuf)
+>  		return -ENOMEM;
+>  
+> +	peer->out_phys_addr = phys_addr;
+> +
+>  	if (max_mw_size && peer->outbuf_size > max_mw_size) {
+>  		peer->outbuf_size = max_mw_size;
+>  		dev_warn(&peer->perf->ntb->dev,
+> 
