@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE211C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:27:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED4A4C33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:27:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94980222A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:27:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1459222A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:27:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141267;
-	bh=cdrS8Uc5C1CK0pynDXTy5DUwfd0d+1/Gvdh+qg1pCMY=;
+	s=default; t=1574141269;
+	bh=pJS58U8mwZIYJHL/49hU2S6Sd3AeaEcSOOkKJJyeS8U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xOs3Sbd3BjoVK4GLVCGz5tu0wc15GJVNmlvGTFIFks3o0panKRTPTxYILzYYu2fQA
-	 vHAWHvX4T3Wo5xyezLw+eglMTAANnP6CgNnl2JKyY8k5YIevScU/RoYCapPtGUFTam
-	 0SUfy7bXqNJrJBdjzXpMgJ62I8bUT+t3317Khb0I=
+	b=qbSVU540mKUeni+p7Y359VrTwqmsnFYYu0GDcFL+KOhqdygCvzc+YMVKxCWDM92+9
+	 f7uB9VTE5ss/nZdO39N9dv8CQGlIP9Q6Bmsc9Gh4TMouQLQGoiKxj8u5pb0Dtu1kpi
+	 VVrlj9FaVuhWrOcqUlMhG/fjUAz7mDPmEiK+oGkM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727773AbfKSF1q (ORCPT
+        id S1728809AbfKSF1s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:27:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46066 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:27:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726170AbfKSF1o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:27:44 -0500
+        id S1727826AbfKSF1q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:27:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EAAAE21939;
-        Tue, 19 Nov 2019 05:27:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FF8521939;
+        Tue, 19 Nov 2019 05:27:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141263;
-        bh=cdrS8Uc5C1CK0pynDXTy5DUwfd0d+1/Gvdh+qg1pCMY=;
+        s=default; t=1574141266;
+        bh=pJS58U8mwZIYJHL/49hU2S6Sd3AeaEcSOOkKJJyeS8U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XFneYoDQjM/do6KtcVg9yxSiHUbBtuoMXjn2YlhM892qNjGTWZgZO662qm4YTS9nP
-         Ksaci90fZVzySdbjxBarRiYUrewnRwPPTsRIV11isTg5PCkrUxl1JDm4F4YiQ4p5GS
-         G2WS39wUqBu0/dRGif8FsndLi13LClqNn4JhIn8s=
+        b=vbMTz8SXi+uUWIT4g/6DHIHcZDS3EuCytoncJEInNmVMTTusVUA5og0dbz/pZMeDk
+         PRegqrG/la1HvBEtwc5h6YBZbRlwx+Xq7lWdAvduYBQlP/dvj9YBzgpoQZvqUWGvRQ
+         2sw5Bj3YDq6mmLXZL4Cdx/g+rzsciF+L8sU0fbiw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
+        stable@vger.kernel.org, Marcel Ziswiler <marcel@ziswiler.com>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 052/422] extcon: cht-wc: Return from default case to avoid warnings
-Date:   Tue, 19 Nov 2019 06:14:09 +0100
-Message-Id: <20191119051403.191773560@linuxfoundation.org>
+Subject: [PATCH 4.19 095/422] ARM: dts: pxa: fix power i2c base address
+Date:   Tue, 19 Nov 2019 06:14:52 +0100
+Message-Id: <20191119051405.472141339@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -61,47 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Marcel Ziswiler <marcel@ziswiler.com>
 
-[ Upstream commit 962341b54b99965ebec5f70c8d39f1c382eea833 ]
+[ Upstream commit 8a1ecc01a473b75ab97be9b36f623e4551a6e9ae ]
 
-When we have first case to fall through it's not enough to put
-single comment there to satisfy compiler. Instead of doing that,
-return fall back value directly from default case.
+There is one too many zeroes in the Power I2C base address. Fix this.
 
-This to avoid following warnings:
-
-drivers/extcon/extcon-intel-cht-wc.c: In function ‘cht_wc_extcon_get_charger’:
-include/linux/device.h:1420:2: warning: this statement may fall through [-Wimplicit-fallthrough=]
-  _dev_warn(dev, dev_fmt(fmt), ##__VA_ARGS__)
-  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/extcon/extcon-intel-cht-wc.c:148:3: note: in expansion of macro ‘dev_warn’
-   dev_warn(ext->dev,
-   ^~~~~~~~
-drivers/extcon/extcon-intel-cht-wc.c:152:2: note: here
-  case CHT_WC_USBSRC_TYPE_SDP:
-  ^~~~
-
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Marcel Ziswiler <marcel@ziswiler.com>
+Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/extcon/extcon-intel-cht-wc.c | 2 +-
+ arch/arm/boot/dts/pxa27x.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/extcon/extcon-intel-cht-wc.c b/drivers/extcon/extcon-intel-cht-wc.c
-index 5e1dd27722781..bdb67878179ed 100644
---- a/drivers/extcon/extcon-intel-cht-wc.c
-+++ b/drivers/extcon/extcon-intel-cht-wc.c
-@@ -156,7 +156,7 @@ static int cht_wc_extcon_get_charger(struct cht_wc_extcon_data *ext,
- 		dev_warn(ext->dev,
- 			"Unhandled charger type %d, defaulting to SDP\n",
- 			 ret);
--		/* Fall through, treat as SDP */
-+		return EXTCON_CHG_USB_SDP;
- 	case CHT_WC_USBSRC_TYPE_SDP:
- 	case CHT_WC_USBSRC_TYPE_FLOAT_DP_DN:
- 	case CHT_WC_USBSRC_TYPE_OTHER:
+diff --git a/arch/arm/boot/dts/pxa27x.dtsi b/arch/arm/boot/dts/pxa27x.dtsi
+index 2ab6986433c82..3228ad5fb725f 100644
+--- a/arch/arm/boot/dts/pxa27x.dtsi
++++ b/arch/arm/boot/dts/pxa27x.dtsi
+@@ -71,7 +71,7 @@
+ 			clocks = <&clks CLK_PWM1>;
+ 		};
+ 
+-		pwri2c: i2c@40f000180 {
++		pwri2c: i2c@40f00180 {
+ 			compatible = "mrvl,pxa-i2c";
+ 			reg = <0x40f00180 0x24>;
+ 			interrupts = <6>;
 -- 
 2.20.1
 
