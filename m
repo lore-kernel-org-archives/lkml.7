@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E101C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:26:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2469C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:27:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7270C21783
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:26:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAC00222DC
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:27:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141213;
-	bh=FX7PqBezq7lvQhWb99e8xtKPgxkz9s7iKOplU6OafSI=;
+	s=default; t=1574141221;
+	bh=nPImtLa7CiPKcBTHi4tjRJteyGGCkBAYAjme1M75yYE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XBpgxGID3ES0hdoi2tW8ZLmsgVY92/VPyRUkOMFW8Cs47SFRG8nKA8m5SgpxF3jia
-	 3f49UTVRkbsABG+Iiov3QffLGSPAv9N+KwdcwcrWGG0JYU/t7+OEIhsGTidPrx/O0o
-	 n2frUoUltGWYYav3OXLPi02FzHfbsnwYQl1aj1Mk=
+	b=0hcwzlGq006KlEV8gcg9T4WQcrqt9ObQi8Aa1+E6qsAelhvQ21TxItX5W32C2ZBz4
+	 fdj5HvKXBhKg1WC5Y5SdwYopHdWU0HtMNTIWQIfQKN9D6Z732JSN3GHB71Cxv51tw9
+	 9lHM6y2DPWHTkF95wdSEfxldyxp3ZTkK6tl3Xm+E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728637AbfKSF0w (ORCPT
+        id S1728667AbfKSF1A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:26:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44978 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:27:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725873AbfKSF0v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:26:51 -0500
+        id S1728610AbfKSF0z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:26:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DB9621783;
-        Tue, 19 Nov 2019 05:26:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FBF221823;
+        Tue, 19 Nov 2019 05:26:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141209;
-        bh=FX7PqBezq7lvQhWb99e8xtKPgxkz9s7iKOplU6OafSI=;
+        s=default; t=1574141215;
+        bh=nPImtLa7CiPKcBTHi4tjRJteyGGCkBAYAjme1M75yYE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CaeZef4E1wkcvzU6MU98JI6m/cnoRd0711uI8uZ9+lt5F1KQUoytXYGQwi+4YWeT/
-         TagCYYj/MN2dFiKXCXmTDU631nipRdS65e6MFq13vRpHHmtgXJiBt0kA7DncKaAhgP
-         HIk+YhDgvpJZlkYeo/L9efpWV00z8+uW9/io6lNg=
+        b=HXrR/leXgC6UaoMQyAHsyg5UswYa4ZAnEeUPnvDp7y8qSbkt+qYiSOUqZo8JlFzAr
+         /UFgkVDcu54Sy5B99RyJUgqNsHKtTNe/IOjzF1r04Suii1gRIUbuyr8LOoXlG1fIhK
+         LdjhM9vArG/BDYU9bLIkkLeTdVc0mrKccKZe4a78=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rakesh Pillai <pillair@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Patryk=20Ma=C5=82ek?= <patryk.malek@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 055/422] ath10k: skip resetting rx filter for WCN3990
-Date:   Tue, 19 Nov 2019 06:14:12 +0100
-Message-Id: <20191119051403.352761634@linuxfoundation.org>
+Subject: [PATCH 4.19 083/422] i40e: hold the rtnl lock on clearing interrupt scheme
+Date:   Tue, 19 Nov 2019 06:14:40 +0100
+Message-Id: <20191119051404.848472595@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -60,172 +62,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rakesh Pillai <pillair@codeaurora.org>
+From: Patryk Małek <patryk.malek@intel.com>
 
-[ Upstream commit 58da3b42307061b71f2dcce2bd1185d578a3aa53 ]
+[ Upstream commit 5cba17b14182696d6bb0ec83a1d087933f252241 ]
 
-WCN3990 has the MAC_PCU_ADDR1 configured properly
-and hence it will not send spurious ack frames
-during boot up.
+Hold the rtnl lock when we're clearing interrupt scheme
+in i40e_shutdown and in i40e_remove.
 
-Hence the reset_rx_filter workaround is not needed
-for WCN3990. Add a hw_param to indicate if hardware rx
-filter reset is needed and skip the reset_rx_filter for
-WCN3990.
-
-Tested HW: WCN3990
-Tested FW: WLAN.HL.2.0-01188-QCAHLSWMTPLZ-1
-
-Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Patryk Małek <patryk.malek@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/core.c | 17 ++++++++++++++++-
- drivers/net/wireless/ath/ath10k/hw.h   |  5 +++++
- 2 files changed, 21 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/intel/i40e/i40e_main.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/net/wireless/ath/ath10k/core.c b/drivers/net/wireless/ath/ath10k/core.c
-index 2791ef2fd716c..436eac342b622 100644
---- a/drivers/net/wireless/ath/ath10k/core.c
-+++ b/drivers/net/wireless/ath/ath10k/core.c
-@@ -91,6 +91,7 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
- 		.rx_ring_fill_level = HTT_RX_RING_FILL_LEVEL,
- 		.shadow_reg_support = false,
- 		.rri_on_ddr = false,
-+		.hw_filter_reset_required = true,
- 	},
- 	{
- 		.id = QCA988X_HW_2_0_VERSION,
-@@ -124,6 +125,7 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
- 		.per_ce_irq = false,
- 		.shadow_reg_support = false,
- 		.rri_on_ddr = false,
-+		.hw_filter_reset_required = true,
- 	},
- 	{
- 		.id = QCA9887_HW_1_0_VERSION,
-@@ -157,6 +159,7 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
- 		.per_ce_irq = false,
- 		.shadow_reg_support = false,
- 		.rri_on_ddr = false,
-+		.hw_filter_reset_required = true,
- 	},
- 	{
- 		.id = QCA6174_HW_2_1_VERSION,
-@@ -189,6 +192,7 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
- 		.per_ce_irq = false,
- 		.shadow_reg_support = false,
- 		.rri_on_ddr = false,
-+		.hw_filter_reset_required = true,
- 	},
- 	{
- 		.id = QCA6174_HW_2_1_VERSION,
-@@ -221,6 +225,7 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
- 		.per_ce_irq = false,
- 		.shadow_reg_support = false,
- 		.rri_on_ddr = false,
-+		.hw_filter_reset_required = true,
- 	},
- 	{
- 		.id = QCA6174_HW_3_0_VERSION,
-@@ -253,6 +258,7 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
- 		.per_ce_irq = false,
- 		.shadow_reg_support = false,
- 		.rri_on_ddr = false,
-+		.hw_filter_reset_required = true,
- 	},
- 	{
- 		.id = QCA6174_HW_3_2_VERSION,
-@@ -288,6 +294,7 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
- 		.per_ce_irq = false,
- 		.shadow_reg_support = false,
- 		.rri_on_ddr = false,
-+		.hw_filter_reset_required = true,
- 	},
- 	{
- 		.id = QCA99X0_HW_2_0_DEV_VERSION,
-@@ -326,6 +333,7 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
- 		.per_ce_irq = false,
- 		.shadow_reg_support = false,
- 		.rri_on_ddr = false,
-+		.hw_filter_reset_required = true,
- 	},
- 	{
- 		.id = QCA9984_HW_1_0_DEV_VERSION,
-@@ -369,6 +377,7 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
- 		.per_ce_irq = false,
- 		.shadow_reg_support = false,
- 		.rri_on_ddr = false,
-+		.hw_filter_reset_required = true,
- 	},
- 	{
- 		.id = QCA9888_HW_2_0_DEV_VERSION,
-@@ -411,6 +420,7 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
- 		.per_ce_irq = false,
- 		.shadow_reg_support = false,
- 		.rri_on_ddr = false,
-+		.hw_filter_reset_required = true,
- 	},
- 	{
- 		.id = QCA9377_HW_1_0_DEV_VERSION,
-@@ -443,6 +453,7 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
- 		.per_ce_irq = false,
- 		.shadow_reg_support = false,
- 		.rri_on_ddr = false,
-+		.hw_filter_reset_required = true,
- 	},
- 	{
- 		.id = QCA9377_HW_1_1_DEV_VERSION,
-@@ -477,6 +488,7 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
- 		.per_ce_irq = false,
- 		.shadow_reg_support = false,
- 		.rri_on_ddr = false,
-+		.hw_filter_reset_required = true,
- 	},
- 	{
- 		.id = QCA4019_HW_1_0_DEV_VERSION,
-@@ -516,6 +528,7 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
- 		.per_ce_irq = false,
- 		.shadow_reg_support = false,
- 		.rri_on_ddr = false,
-+		.hw_filter_reset_required = true,
- 	},
- 	{
- 		.id = WCN3990_HW_1_0_DEV_VERSION,
-@@ -540,6 +553,7 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
- 		.per_ce_irq = true,
- 		.shadow_reg_support = true,
- 		.rri_on_ddr = true,
-+		.hw_filter_reset_required = false,
- 	},
- };
+diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c b/drivers/net/ethernet/intel/i40e/i40e_main.c
+index 1577dbaab7425..1a66373184d62 100644
+--- a/drivers/net/ethernet/intel/i40e/i40e_main.c
++++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
+@@ -14208,6 +14208,7 @@ static void i40e_remove(struct pci_dev *pdev)
+ 	mutex_destroy(&hw->aq.asq_mutex);
  
-@@ -2406,7 +2420,8 @@ int ath10k_core_start(struct ath10k *ar, enum ath10k_firmware_mode mode,
- 	 * possible to implicitly make it correct by creating a dummy vdev and
- 	 * then deleting it.
- 	 */
--	if (mode == ATH10K_FIRMWARE_MODE_NORMAL) {
-+	if (ar->hw_params.hw_filter_reset_required &&
-+	    mode == ATH10K_FIRMWARE_MODE_NORMAL) {
- 		status = ath10k_core_reset_rx_filter(ar);
- 		if (status) {
- 			ath10k_err(ar,
-diff --git a/drivers/net/wireless/ath/ath10k/hw.h b/drivers/net/wireless/ath/ath10k/hw.h
-index 977f79ebb4fd5..fac58c3c576a2 100644
---- a/drivers/net/wireless/ath/ath10k/hw.h
-+++ b/drivers/net/wireless/ath/ath10k/hw.h
-@@ -589,6 +589,11 @@ struct ath10k_hw_params {
+ 	/* Clear all dynamic memory lists of rings, q_vectors, and VSIs */
++	rtnl_lock();
+ 	i40e_clear_interrupt_scheme(pf);
+ 	for (i = 0; i < pf->num_alloc_vsi; i++) {
+ 		if (pf->vsi[i]) {
+@@ -14216,6 +14217,7 @@ static void i40e_remove(struct pci_dev *pdev)
+ 			pf->vsi[i] = NULL;
+ 		}
+ 	}
++	rtnl_unlock();
  
- 	/* Number of bytes to be the offset for each FFT sample */
- 	int spectral_bin_offset;
-+
-+	/* targets which require hw filter reset during boot up,
-+	 * to avoid it sending spurious acks.
+ 	for (i = 0; i < I40E_MAX_VEB; i++) {
+ 		kfree(pf->veb[i]);
+@@ -14427,7 +14429,13 @@ static void i40e_shutdown(struct pci_dev *pdev)
+ 	wr32(hw, I40E_PFPM_WUFC,
+ 	     (pf->wol_en ? I40E_PFPM_WUFC_MAG_MASK : 0));
+ 
++	/* Since we're going to destroy queues during the
++	 * i40e_clear_interrupt_scheme() we should hold the RTNL lock for this
++	 * whole section
 +	 */
-+	bool hw_filter_reset_required;
- };
++	rtnl_lock();
+ 	i40e_clear_interrupt_scheme(pf);
++	rtnl_unlock();
  
- struct htt_rx_desc;
+ 	if (system_state == SYSTEM_POWER_OFF) {
+ 		pci_wake_from_d3(pdev, pf->wol_en);
 -- 
 2.20.1
 
