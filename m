@@ -2,162 +2,106 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8DD0C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 22:20:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC15BC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 22:21:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A07F0222DC
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 22:20:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BD0C222DC
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 22:21:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hvbAVFnZ"
+	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="NlWa6PMa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727919AbfKSWU4 (ORCPT
+        id S1727929AbfKSWVB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 17:20:56 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:34586 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726290AbfKSWTl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 17:19:41 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAJMJYh2027141;
-        Tue, 19 Nov 2019 16:19:34 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574201974;
-        bh=/4y19dJx1gaflymlDG1b6ajtK/Qq04Ckzb/q/Njpdjc=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=hvbAVFnZGW468r8yJGJEs4Bwl0r7ALuATRQkdxiSas4Lk9qnCCpk7qeHN0p5H9qWR
-         eI2qvpe+54IIxrXwEDhrVbOP6Y3yCBdNQqm9P8pM69P5Er4Twx4kXriY0blX4U02Za
-         sdTYiM/TiyI3CH8Z/31jy9OGO2sgExlXdJCvpRv4=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAJMJYTd034319;
-        Tue, 19 Nov 2019 16:19:34 -0600
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 19
- Nov 2019 16:19:34 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 19 Nov 2019 16:19:34 -0600
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAJMJX0k055022;
-        Tue, 19 Nov 2019 16:19:33 -0600
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     <netdev@vger.kernel.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
-        Jiri Pirko <jiri@resnulli.us>
-CC:     Florian Fainelli <f.fainelli@gmail.com>,
-        Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        Ivan Vecera <ivecera@redhat.com>,
-        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH v7 net-next 04/13] net: ethernet: ti: cpsw: resolve build deps of cpsw drivers
-Date:   Wed, 20 Nov 2019 00:19:16 +0200
-Message-ID: <20191119221925.28426-5-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191119221925.28426-1-grygorii.strashko@ti.com>
-References: <20191119221925.28426-1-grygorii.strashko@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Tue, 19 Nov 2019 17:21:01 -0500
+Received: from mout02.posteo.de ([185.67.36.66]:44643 "EHLO mout02.posteo.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726290AbfKSWU7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 17:20:59 -0500
+Received: from submission (posteo.de [89.146.220.130]) 
+        by mout02.posteo.de (Postfix) with ESMTPS id 2D68D240101
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 23:20:56 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.de; s=2017;
+        t=1574202056; bh=6gnMHWcz1HkD4X2H3XeYl1zHwzltviEq5WfWUQfGnzQ=;
+        h=Subject:From:To:Cc:Date:From;
+        b=NlWa6PMapOkExiBm29qZbcMrKdv3CoEaJ6AuO7MxuFKJQ/DvwmYqbKs0/0UExQ9zj
+         HkDMUOHbZz12r4Nf/3HgwQqBRuG/1EpPNjsmsB6fI6nPV/6SqnNuPpfV5uWtlOY2ss
+         Ex7X4TBvr3lYkEqYDcXMJw3Ia7NPAtwQxZN2US9mfDvK5WxRJMqfRpPRtJU47vSkq+
+         nFllBSEHhUGQUZq6fplPKlcRT6BfnDl0JVOeq67jHaJClCJFpE7mctvB1mTJCXcS94
+         MBXidWg/wrxP9XWk1Y1gcq79lLLw5r7w5Ov093LlAf983029d8sHE/EwA/VrpAGvU1
+         xbJ1pvGfbve8Q==
+Received: from customer (localhost [127.0.0.1])
+        by submission (posteo.de) with ESMTPSA id 47HgJP08t5z9rxK;
+        Tue, 19 Nov 2019 23:20:52 +0100 (CET)
+Message-ID: <1574202052.1931.17.camel@posteo.de>
+Subject: SCHED_DEADLINE with CPU affinity
+From:   Philipp Stanner <stanner@posteo.de>
+To:     linux-kernel@vger.kernel.org
+Cc:     Hagen Pfeifer <hagen@jauu.net>, mingo@redhat.com,
+        peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de
+Date:   Tue, 19 Nov 2019 23:20:52 +0100
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6-1+deb9u2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A following patches introduce new CPSW switchdev driver which uses common
-code with legacy CPSW driver. This will introduce build dependency between
-CPSW switchdev and CPSW legacy drivers related to for_each_slave() and
-cpsw_slave_index() - they can be compiled both, but only one of them will
-be not functional depending in Kconfig settings due to duffrences in Slave
-Ports indexes calculation.
+Hey folks,
+(please put me in CC when answering, I'm not subscribed)
 
-To fix this make for_each_slave() local (it's used now only by legacy CPSW
-driver) and convert cpsw_slave_index() to be a function pointer which is
-assigned in probe. Driver to probe is defined by DT.
+I'm currently working student in the embedded industry. We have a device where
+we need to be able to process network data within a certain deadline. At the
+same time, safety is a primary requirement; that's why we construct everything
+fully redundant. Meaning: We have two network interfaces, each IRQ then bound
+to one CPU core and spawn a container (systemd-nspawn, cgroups based) which in
+turn is bound to the corresponding CPU (CPU affinity masked).
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
----
- drivers/net/ethernet/ti/cpsw.c      | 13 +++++++++++++
- drivers/net/ethernet/ti/cpsw_priv.c |  2 ++
- drivers/net/ethernet/ti/cpsw_priv.h | 10 ++--------
- 3 files changed, 17 insertions(+), 8 deletions(-)
+        Container0       Container1
+   -----------------  -----------------
+   |               |  |               |
+   |    Proc. A    |  |   Proc. A'    |
+   |    Proc. B    |  |   Proc. B'    |
+   |               |  |               |
+   -----------------  -----------------
+          ^                  ^
+          |                  |
+        CPU 0              CPU 1
+          |                  |
+       IRQ eth0           IRQ eth1
 
-diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
-index 15a76d3842c5..225e5351752a 100644
---- a/drivers/net/ethernet/ti/cpsw.c
-+++ b/drivers/net/ethernet/ti/cpsw.c
-@@ -87,6 +87,17 @@ MODULE_PARM_DESC(descs_pool_size, "Number of CPDMA CPPI descriptors in pool");
- #define CPSW_XDP_CONSUMED		1
- #define CPSW_XDP_PASS			0
- 
-+static int cpsw_slave_index_priv(struct cpsw_common *cpsw,
-+				 struct cpsw_priv *priv)
-+{
-+	return cpsw->data.dual_emac ? priv->emac_port : cpsw->data.active_slave;
-+}
-+
-+static int cpsw_get_slave_port(u32 slave_num)
-+{
-+	return slave_num + 1;
-+}
-+
- static int cpsw_ndo_vlan_rx_add_vid(struct net_device *ndev,
- 				    __be16 proto, u16 vid);
- 
-@@ -2774,6 +2785,8 @@ static int cpsw_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	platform_set_drvdata(pdev, cpsw);
-+	cpsw_slave_index = cpsw_slave_index_priv;
-+
- 	cpsw->dev = dev;
- 
- 	mode = devm_gpiod_get_array_optional(dev, "mode", GPIOD_OUT_LOW);
-diff --git a/drivers/net/ethernet/ti/cpsw_priv.c b/drivers/net/ethernet/ti/cpsw_priv.c
-index 476d050a022c..a1c83af64835 100644
---- a/drivers/net/ethernet/ti/cpsw_priv.c
-+++ b/drivers/net/ethernet/ti/cpsw_priv.c
-@@ -19,6 +19,8 @@
- #include "cpsw_sl.h"
- #include "davinci_cpdma.h"
- 
-+int (*cpsw_slave_index)(struct cpsw_common *cpsw, struct cpsw_priv *priv);
-+
- int cpsw_init_common(struct cpsw_common *cpsw, void __iomem *ss_regs,
- 		     int ale_ageout, phys_addr_t desc_mem_phys,
- 		     int descs_pool_size)
-diff --git a/drivers/net/ethernet/ti/cpsw_priv.h b/drivers/net/ethernet/ti/cpsw_priv.h
-index 8bfa761fa552..65f0e410344d 100644
---- a/drivers/net/ethernet/ti/cpsw_priv.h
-+++ b/drivers/net/ethernet/ti/cpsw_priv.h
-@@ -373,14 +373,8 @@ struct cpsw_priv {
- #define ndev_to_cpsw(ndev) (((struct cpsw_priv *)netdev_priv(ndev))->cpsw)
- #define napi_to_cpsw(napi)	container_of(napi, struct cpsw_common, napi)
- 
--#define cpsw_slave_index(cpsw, priv)				\
--		((cpsw->data.dual_emac) ? priv->emac_port :	\
--		cpsw->data.active_slave)
--
--static inline int cpsw_get_slave_port(u32 slave_num)
--{
--	return slave_num + 1;
--}
-+extern int (*cpsw_slave_index)(struct cpsw_common *cpsw,
-+			       struct cpsw_priv *priv);
- 
- struct addr_sync_ctx {
- 	struct net_device *ndev;
--- 
-2.17.1
 
+Within each container several processes are started. Ranging from systemd
+(SCHED_OTHER) till two (soft) real-time critical processes: which we want to
+execute via SCHED_DEADLINE.
+
+Now, I've worked through the manpage describing scheduling policies, and it
+seems that our scenario is forbidden my the kernel.  I've done some tests with
+the syscalls sched_setattr and sched_setaffinity, trying to activate
+SCHED_DEADLINE while also binding to a certain core.  It fails with EINVAL or
+EINBUSY, depending on the order of the syscalls.
+
+I've read that the kernel accomplishes plausibility checks when you ask for a
+new deadline task to be scheduled, and I assume this check is what prevents us
+from implementing our intended architecture.
+
+Now, the questions we're having are:
+
+   1. Why does the kernel do this, what is the problem with scheduling with
+      SCHED_DEADLINE on a certain core? In contrast, how is it handled when
+      you have single core systems etc.? Why this artificial limitation?
+   2. How can we possibly implement this? We don't want to use SCHED_FIFO,
+      because out-of-control tasks would freeze the entire container.
+
+SCHED_RR / SCHED_FIFO will probably be a better policy compared to
+SCHED_OTHER, but SCHED_DEADLINE is exactly what we are looking for.
+
+Cheers,
+Philipp
