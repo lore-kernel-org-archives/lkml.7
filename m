@@ -2,177 +2,219 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09606C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:18:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 514EBC43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:19:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D07EF20692
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:18:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1ED6121852
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:19:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="QTsB8S+n"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KsGKUQ1D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727243AbfKSGSm (ORCPT
+        id S1727405AbfKSGTk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 01:18:42 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:42318 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbfKSGSl (ORCPT
+        Tue, 19 Nov 2019 01:19:40 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:35581 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbfKSGTj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 01:18:41 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAJ69Ewo139154;
-        Tue, 19 Nov 2019 06:18:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2019-08-05;
- bh=Q8GsBGAZzvdz1chlCabBam/puKDb9LftgXJiL6t52J8=;
- b=QTsB8S+nbyz0m+0XgGYTxorwvs6MtnjMB13fZjy59K7bJy7b7QkEKGuUSBuba2soZtwI
- OWM1SPz2bKge4oZCMIoIgdcYaeaq0prTKDeGCNuqNqkkYH+RuN6Nc7i1rw4PjEFLqQpy
- 8WGqNKSbnyALpuNbpUmUq+PhlnntgDS6JssIddswtJkNiRCLmnSa5wmbwmay1k/kjUeR
- xrDY7Pe1Jbs6uLYMIN776uny70X9sXF6sgeSmRLWbGOchEBah9h1fqD8+EZ8fNrMqLs3
- gALVOx0VLtFrmb9UPCljr6B+yuvF/YvDPOKENvHQRWBCqPh+xh4+FVe3FZt65roQoUbq DQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2wa9rqcp7h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 19 Nov 2019 06:18:31 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAJ68uhp105749;
-        Tue, 19 Nov 2019 06:18:30 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2wbxm3qwxq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 19 Nov 2019 06:18:30 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xAJ6ISqr005177;
-        Tue, 19 Nov 2019 06:18:29 GMT
-Received: from kili.mountain (/41.210.141.188)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 18 Nov 2019 22:18:27 -0800
-Date:   Tue, 19 Nov 2019 09:18:19 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: [PATCH] dma-debug: clean up put_hash_bucket()
-Message-ID: <20191119061819.k6754frfv2wj7swd@kili.mountain>
+        Tue, 19 Nov 2019 01:19:39 -0500
+Received: by mail-wm1-f68.google.com with SMTP id 8so2056419wmo.0;
+        Mon, 18 Nov 2019 22:19:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=5Y16BhLULcOtGMPtYQ52r24bj5/HpTJlzyrhWuM90EM=;
+        b=KsGKUQ1D6nqNBYAPEizVeiv/SW0HZoAEC6OwIqwYp09gsfDBJ0hIqe/KvPUuylYDTM
+         pwkUDq0bg8vVn5yc48rKQ6joqBEVT7VCLWlSg4LcL0FjT384Iq6fS08aCwg1+32aSM9b
+         pXkRZzG165p3h4EYRJB1bf0a9vo9v1Jv+bEs5wUKdyv49lMo44Igmc1P5bToRSdcyonN
+         hZSIFIXBAQ+FP6phldI7f0R+g/rrf/azI3SF/F2BwPaeCdPAG5NMh22DCdPvl5VgWBO9
+         zl3wDTbBqCR0fcKreKYqt7rPZ6q4Afzena8tYDahHqVCtbj+GX41HwlOVpYEYVDSeeJy
+         7VVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5Y16BhLULcOtGMPtYQ52r24bj5/HpTJlzyrhWuM90EM=;
+        b=DUI/xVaAjch5X2SP4yUxuNA5iZhB3+lwenkh7oIcG6oQUS/8Hs/6gtdxMekWZW3kPS
+         YhJu09HBuKNL7XeUYo+9TAc4gErY592UbNunuv0YvwhqDI7LSNDxWL0+DZYZI/1dM7nO
+         g2qxnJkpXuTGwuDOhFsMuDc2QdF3tNyBwzR8I2T0ZVEtuaBZTtkMHecRuifdYOMvA2OT
+         zsbcxl7WcmYwRHK4ajJ5e9rZjEnVyrZtQfGKiOM7pItcfad/ItgED338IOcxS38XayuR
+         YkLKVFLogvrrhcRprkRowPIIyDCv4mUhpH6XJ/7PXJtHXmMVwCRCJz+qEIAfAWfpG737
+         jkdw==
+X-Gm-Message-State: APjAAAUG+gMzdNcddYn5YFYYNhZoa6IQ5miptPyl5mlnQgDwSd993M9p
+        nBUAWA3yGaH3B7Wsv9i+Osk=
+X-Google-Smtp-Source: APXvYqx21sXQQ8g4ISoycByGsMvouGWkG4MQt8tz740Kt5vTF2TEAGgm3IY7xMv7p2WNWSjg68ObEg==
+X-Received: by 2002:a1c:9e58:: with SMTP id h85mr3558241wme.77.1574144374251;
+        Mon, 18 Nov 2019 22:19:34 -0800 (PST)
+Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
+        by smtp.gmail.com with ESMTPSA id 62sm29112172wre.38.2019.11.18.22.19.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Nov 2019 22:19:32 -0800 (PST)
+Date:   Tue, 19 Nov 2019 07:19:31 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Mikko Perttunen <mperttunen@nvidia.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-tegra@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v1 00/29] Introduce memory interconnect for NVIDIA Tegra
+ SoCs
+Message-ID: <20191119061931.GA2462695@ulmo>
+References: <20191118200247.3567-1-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="opJtzjQTFsWo+cga"
 Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=856
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1911190057
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=925 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1911190057
+In-Reply-To: <20191118200247.3567-1-digetx@gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The put_hash_bucket() is a bit cleaner if it takes an unsigned long
-directly instead of a pointer to unsigned long.
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
----
-This patch also makes it slightly easier for Smatch to parse the locking.
+--opJtzjQTFsWo+cga
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
- kernel/dma/debug.c | 20 +++++++++-----------
- 1 file changed, 9 insertions(+), 11 deletions(-)
+On Mon, Nov 18, 2019 at 11:02:18PM +0300, Dmitry Osipenko wrote:
+> Hello,
+>=20
 
-diff --git a/kernel/dma/debug.c b/kernel/dma/debug.c
-index cd6f89aa9f9a..2031ed1ad7fa 100644
---- a/kernel/dma/debug.c
-+++ b/kernel/dma/debug.c
-@@ -255,12 +255,10 @@ static struct hash_bucket *get_hash_bucket(struct dma_debug_entry *entry,
-  * Give up exclusive access to the hash bucket
-  */
- static void put_hash_bucket(struct hash_bucket *bucket,
--			    unsigned long *flags)
-+			    unsigned long flags)
- 	__releases(&bucket->lock)
- {
--	unsigned long __flags = *flags;
--
--	spin_unlock_irqrestore(&bucket->lock, __flags);
-+	spin_unlock_irqrestore(&bucket->lock, flags);
- }
- 
- static bool exact_match(struct dma_debug_entry *a, struct dma_debug_entry *b)
-@@ -359,7 +357,7 @@ static struct dma_debug_entry *bucket_find_contain(struct hash_bucket **bucket,
- 		/*
- 		 * Nothing found, go back a hash bucket
- 		 */
--		put_hash_bucket(*bucket, flags);
-+		put_hash_bucket(*bucket, *flags);
- 		range          += (1 << HASH_FN_SHIFT);
- 		index.dev_addr -= (1 << HASH_FN_SHIFT);
- 		*bucket = get_hash_bucket(&index, flags);
-@@ -609,7 +607,7 @@ static void add_dma_entry(struct dma_debug_entry *entry)
- 
- 	bucket = get_hash_bucket(entry, &flags);
- 	hash_bucket_add(bucket, entry);
--	put_hash_bucket(bucket, &flags);
-+	put_hash_bucket(bucket, flags);
- 
- 	rc = active_cacheline_insert(entry);
- 	if (rc == -ENOMEM) {
-@@ -1002,7 +1000,7 @@ static void check_unmap(struct dma_debug_entry *ref)
- 
- 	if (!entry) {
- 		/* must drop lock before calling dma_mapping_error */
--		put_hash_bucket(bucket, &flags);
-+		put_hash_bucket(bucket, flags);
- 
- 		if (dma_mapping_error(ref->dev, ref->dev_addr)) {
- 			err_printk(ref->dev, NULL,
-@@ -1084,7 +1082,7 @@ static void check_unmap(struct dma_debug_entry *ref)
- 	hash_bucket_del(entry);
- 	dma_entry_free(entry);
- 
--	put_hash_bucket(bucket, &flags);
-+	put_hash_bucket(bucket, flags);
- }
- 
- static void check_for_stack(struct device *dev,
-@@ -1204,7 +1202,7 @@ static void check_sync(struct device *dev,
- 	}
- 
- out:
--	put_hash_bucket(bucket, &flags);
-+	put_hash_bucket(bucket, flags);
- }
- 
- static void check_sg_segment(struct device *dev, struct scatterlist *sg)
-@@ -1319,7 +1317,7 @@ void debug_dma_mapping_error(struct device *dev, dma_addr_t dma_addr)
- 		}
- 	}
- 
--	put_hash_bucket(bucket, &flags);
-+	put_hash_bucket(bucket, flags);
- }
- EXPORT_SYMBOL(debug_dma_mapping_error);
- 
-@@ -1392,7 +1390,7 @@ static int get_nr_mapped_entries(struct device *dev,
- 
- 	if (entry)
- 		mapped_ents = entry->sg_mapped_ents;
--	put_hash_bucket(bucket, &flags);
-+	put_hash_bucket(bucket, flags);
- 
- 	return mapped_ents;
- }
--- 
-2.11.0
+I like this, thanks for looking into this.
 
+> This series brings initial support for memory interconnect to Tegra20,
+> Terga30 and Tegra124 SoCs. The interconnect provides are quite generic
+> and should be suitable for all Tegra SoCs, but currently upstream kernel
+> has EMC/MC drivers only for those three generations of Tegra SoCs.
+
+Tegra186 and Tegra194 should support this out of the box because the EMC
+frequency can be scaled via the BPMP. Tegra210 support for EMC scaling
+is in the works, so hopefully we'll be able to extend this in the near
+future.
+
+> For the start only display controllers are getting interconnect API
+> support, others could be supported later on. The display controllers
+> have the biggest demand for interconnect API right now because dynamic
+> memory frequency scaling can't be done safely without taking into account
+> bandwidth requirement from the displays.
+
+Agreed, display controllers are where we most immediately notice when
+there's not enough bandwidth. I think it's fair to start small and
+extend interconnect consumers as we progress.
+
+I've got a couple of comments regarding individual patches, but on the
+whole this looks pretty nice.
+
+Thierry
+
+> Dmitry Osipenko (29):
+>   dt-bindings: memory: tegra20: mc: Document new interconnect property
+>   dt-bindings: memory: tegra20: emc: Document new interconnect property
+>   dt-bindings: memory: tegra30: mc: Document new interconnect property
+>   dt-bindings: memory: tegra30: emc: Document new interconnect property
+>   dt-bindings: memory: tegra124: mc: Document new interconnect property
+>   dt-bindings: memory: tegra124: emc: Document new interconnect property
+>   dt-bindings: host1x: Document new interconnect properties
+>   dt-bindings: interconnect: tegra: Add initial IDs
+>   ARM: tegra: Add interconnect properties to Tegra20 device-tree
+>   ARM: tegra: Add interconnect properties to Tegra30 device-tree
+>   ARM: tegra: Add interconnect properties to Tegra124 device-tree
+>   interconnect: Add memory interconnection providers for NVIDIA Tegra
+>     SoCs
+>   memory: tegra: Register as interconnect provider
+>   memory: tegra: Add interconnect nodes for Terga20 display controllers
+>   memory: tegra: Add interconnect nodes for Terga30 display controllers
+>   memory: tegra: Add interconnect nodes for Terga124 display controllers
+>   memory: tegra20-emc: Use devm_platform_ioremap_resource
+>   memory: tegra20-emc: Continue probing if timings/IRQ are missing in
+>     device-tree
+>   memory: tegra20-emc: Register as interconnect provider
+>   memory: tegra30-emc: Continue probing if timings are missing in
+>     device-tree
+>   memory: tegra30-emc: Register as interconnect provider
+>   memory: tegra124-emc: Use devm_platform_ioremap_resource
+>   memory: tegra124-emc: Register as interconnect provider
+>   drm/tegra: dc: Use devm_platform_ioremap_resource
+>   drm/tegra: dc: Release PM and RGB output when client's registration
+>     fails
+>   drm/tegra: dc: Support memory bandwidth management
+>   ARM: tegra: Enable interconnect API in tegra_defconfig
+>   ARM: multi_v7_defconfig: Enable NVIDIA Tegra interconnect providers
+>   MAINTAINERS: Add maintainers for NVIDIA Tegra interconnect drivers
+>=20
+>  .../display/tegra/nvidia,tegra20-host1x.txt   |  67 +++++
+>  .../nvidia,tegra124-emc.txt                   |   3 +
+>  .../nvidia,tegra124-mc.yaml                   |   5 +
+>  .../memory-controllers/nvidia,tegra20-emc.txt |   4 +
+>  .../memory-controllers/nvidia,tegra20-mc.txt  |   4 +
+>  .../nvidia,tegra30-emc.yaml                   |   6 +
+>  .../memory-controllers/nvidia,tegra30-mc.yaml |   5 +
+>  MAINTAINERS                                   |   9 +
+>  arch/arm/boot/dts/tegra124.dtsi               |  10 +
+>  arch/arm/boot/dts/tegra20.dtsi                |  11 +-
+>  arch/arm/boot/dts/tegra30.dtsi                |  12 +-
+>  arch/arm/configs/multi_v7_defconfig           |   2 +
+>  arch/arm/configs/tegra_defconfig              |   2 +
+>  drivers/gpu/drm/tegra/dc.c                    | 252 +++++++++++++++++-
+>  drivers/gpu/drm/tegra/dc.h                    |   8 +
+>  drivers/gpu/drm/tegra/drm.c                   |  18 ++
+>  drivers/gpu/drm/tegra/plane.c                 |   1 +
+>  drivers/gpu/drm/tegra/plane.h                 |   4 +-
+>  drivers/interconnect/Kconfig                  |   1 +
+>  drivers/interconnect/Makefile                 |   1 +
+>  drivers/interconnect/tegra/Kconfig            |   6 +
+>  drivers/interconnect/tegra/Makefile           |   4 +
+>  drivers/interconnect/tegra/tegra-icc-emc.c    | 138 ++++++++++
+>  drivers/interconnect/tegra/tegra-icc-mc.c     | 130 +++++++++
+>  drivers/memory/tegra/mc.c                     |   4 +
+>  drivers/memory/tegra/tegra124-emc.c           |  28 +-
+>  drivers/memory/tegra/tegra124.c               |  16 ++
+>  drivers/memory/tegra/tegra20-emc.c            |  91 ++++---
+>  drivers/memory/tegra/tegra20.c                |  14 +
+>  drivers/memory/tegra/tegra30-emc.c            |  34 ++-
+>  drivers/memory/tegra/tegra30.c                |  14 +
+>  include/dt-bindings/interconnect/tegra-icc.h  |  11 +
+>  include/soc/tegra/mc.h                        |  26 ++
+>  33 files changed, 883 insertions(+), 58 deletions(-)
+>  create mode 100644 drivers/interconnect/tegra/Kconfig
+>  create mode 100644 drivers/interconnect/tegra/Makefile
+>  create mode 100644 drivers/interconnect/tegra/tegra-icc-emc.c
+>  create mode 100644 drivers/interconnect/tegra/tegra-icc-mc.c
+>  create mode 100644 include/dt-bindings/interconnect/tegra-icc.h
+>=20
+> --=20
+> 2.23.0
+>=20
+
+--opJtzjQTFsWo+cga
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl3TiXAACgkQ3SOs138+
+s6EuaQ/+MUUOndULQxHywop4nsOWK9DRosUwostChC/0Wes+FgxTVYg8Ej8ljQuJ
+PXJOT0fNi4TC2LulaK31tbg5Rip1UjXXuNg83sDnapdhPxQ2hSKBjEz/QhrnFU+C
+CEQbmyDPcUnG9LiuF4wAyrBQ8z/WRw7WG5kG5VaglDpxKuBfjMJ+jJT3awYZe0kv
+Q+2iSWq/vU/T+lDyTvzNrYEAwYG497wCHWt06sREMxZ/udIMg7JNefwm1SxNL0sP
+ew9mcbx6fdgOt+tRD5CkKAf6gsEQ9imNIp1AsawQVeWWMPvhf5+8xNwho6YD932l
+7abgKgITlnuW5PU2GrktfygeYMP+agUlQ3ZoE/324vycZcrxEei5wDCHZuzMEACb
+1LlrLZAFBY0SsHQv/qO/i30IKnEbVGL5+taF0JVGBpx8nnWC46hVqYVQOOd+tFI6
+rAHYk5Bs45S/kS3UmJA06JUOfFUCODLW0AwcRHPuMJ19SP9esgTlkztAPNHRNbtc
+6h/uKv6RwYG29flTEx3hAnfZ/8xH4LMbQApfy/dlEhjkYfN9Sjwl7PhQsV0KYXFt
+1CJTvmhsnm8CexjGlyCZFVY+sD8hiOLeQyyhNucIhcEj4tGRk4Q9A7N0BqTY4MZv
+Dvjrn1VxJH/7K6XgtFmEUH4jAyypcGWgWKjVWgHuPhd+EiFMgEg=
+=XE+S
+-----END PGP SIGNATURE-----
+
+--opJtzjQTFsWo+cga--
