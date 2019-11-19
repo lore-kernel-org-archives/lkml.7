@@ -2,159 +2,114 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF689C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:59:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31B63C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 20:00:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5B742240E
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:59:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A6772240E
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 20:00:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="N/DT8ol2"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="ip7iVblj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727234AbfKST7X (ORCPT
+        id S1727345AbfKSUAB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 14:59:23 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:52716 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726711AbfKST7X (ORCPT
+        Tue, 19 Nov 2019 15:00:01 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:22960 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726792AbfKSUAA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 14:59:23 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAJJxHaf065912;
-        Tue, 19 Nov 2019 13:59:17 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574193557;
-        bh=sFnvX7KanOuyc2mCyRNrw4h36+/QQx87wlOE/O0R8ac=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=N/DT8ol2qbcceUKxraQ3xHSBp+95hJC8bGMPnEZ3ZEtUZsiNoaUU1VTuatrO+FXSk
-         WbXNdXkDdZdoTz90e6P5a/bs4ZvBF8BGkMUppMwj7ozNwOPwG++xD4/Dz+WTYxuDPv
-         R9cDQ6JOCt06PhmtakjOZmn8JFtj40qFLSX/JJio=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAJJxHtP013095
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 19 Nov 2019 13:59:17 -0600
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 19
- Nov 2019 13:59:17 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 19 Nov 2019 13:59:17 -0600
-Received: from [10.250.45.147] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAJJxGQu095040;
-        Tue, 19 Nov 2019 13:59:16 -0600
-Subject: Re: [PATCH] ARM: OMAP: Use ARM SMC Calling Convention when OP-TEE is
- available
-To:     Tony Lindgren <tony@atomide.com>
-CC:     Mark Rutland <mark.rutland@arm.com>, <linux-omap@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <6e009ae3-6aa2-409b-749f-4947303940d8@ti.com>
- <20191119164227.GL35479@atomide.com> <20191119180546.GM35479@atomide.com>
- <9e15c170-c9fa-778c-d998-bd1111a6390d@ti.com>
- <20191119183247.GN35479@atomide.com>
- <a351461a-f6a1-334b-6bdd-a56626914fb3@ti.com>
- <20191119190721.GO35479@atomide.com>
- <7fa11037-8d33-2274-c8cc-80e9630b38b0@ti.com>
- <20191119192029.GP35479@atomide.com>
- <0ad31b32-712e-5bef-5645-0336dfec99cc@ti.com>
- <20191119194425.GQ35479@atomide.com>
-From:   "Andrew F. Davis" <afd@ti.com>
-Message-ID: <f2f53e5e-6c95-e32f-d67a-284bb88e73e0@ti.com>
-Date:   Tue, 19 Nov 2019 14:59:11 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191119194425.GQ35479@atomide.com>
-Content-Type: text/plain; charset="utf-8"
+        Tue, 19 Nov 2019 15:00:00 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAJJgDbS021254;
+        Tue, 19 Nov 2019 20:59:46 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=cVy/bt4cw6kZCF28y2TA2VipfYUSKT4PaUvUMRbKWsA=;
+ b=ip7iVbljgd/rVZRvnC8lU4dcPugz3zv+zCB5LIjUCcequSIdCl1+QkxIIb3I3JzujPQz
+ 9HX2neSSoTno6okF4BASO8TpaEADC0ghzhXOFLAC0HGCFda6GdUqfFE7sT6kbxulBBJ7
+ tVoKmd6F5TJm/j9IbBNHLKsPzPIglqFc8l6qNm6JYiS1SpPKAmPUxdf9sGjfO5NRB2Ln
+ 8Jeh07ivdTmUEbOl+LP/9l7YE766GZewDuv0VyxlrOeumaVDHGFJhMPBVYWXnLNJSM6+
+ 2KSFQ/3LUxdnfEo1z2gdXhmY8W8WjMr3j7J23guujVTgsB05nXPFoNIqlrH7kc8uTu4o +Q== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2wa9up1knu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 19 Nov 2019 20:59:46 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id ED68010002A;
+        Tue, 19 Nov 2019 20:59:45 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A4BFE2B94EE;
+        Tue, 19 Nov 2019 20:59:45 +0100 (CET)
+Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 19 Nov
+ 2019 20:59:45 +0100
+Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
+ SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
+ 15.00.1347.000; Tue, 19 Nov 2019 20:59:45 +0100
+From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
+To:     "Souza, Jose" <jose.souza@intel.com>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "mripard@kernel.org" <mripard@kernel.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "sean@poorly.run" <sean@poorly.run>
+CC:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/crtc-helper: drm_connector_get_single_encoder
+ prototype is missing
+Thread-Topic: [PATCH] drm/crtc-helper: drm_connector_get_single_encoder
+ prototype is missing
+Thread-Index: AQHVntkBzHviK+RvC0uNrMl+exNxkaeSxriAgAASmAA=
+Date:   Tue, 19 Nov 2019 19:59:44 +0000
+Message-ID: <6ad4ff49-240b-a665-d229-20e177fa6b2f@st.com>
+References: <20191119125805.4266-1-benjamin.gaignard@st.com>
+ <f6f32b4d8d8e271953f887c50793f9d64d48e7b3.camel@intel.com>
+In-Reply-To: <f6f32b4d8d8e271953f887c50793f9d64d48e7b3.camel@intel.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.49]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <F2E1B40B3CB9EF47BBF9C0BEAC8264D5@st.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-19_06:2019-11-15,2019-11-19 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/19/19 2:44 PM, Tony Lindgren wrote:
-> * Andrew F. Davis <afd@ti.com> [191119 19:36]:
->> On 11/19/19 2:20 PM, Tony Lindgren wrote:
->>> * Andrew F. Davis <afd@ti.com> [191119 19:13]:
->>>> On 11/19/19 2:07 PM, Tony Lindgren wrote:
->>>>> * Andrew F. Davis <afd@ti.com> [191119 18:51]:
->>>>>> On 11/19/19 1:32 PM, Tony Lindgren wrote:
->>>>>>> It would allow us to completely change over to using
->>>>>>> arm_smccc_smc() and forget the custom calls.
->>>>>>
->>>>>> We would need more than just the r12 quirk to replace all our custom SMC
->>>>>> handlers, we would need quirks for omap_smc2 which puts process ID in r1
->>>>>> and puts #0xff in r6, and omap_smc3 that uses smc #1. All of our legacy
->>>>>> SMC calls also trash r4-r11, that is very non SMCCC complaint as only
->>>>>> r4-r7 need be caller saved. I don't see arm_smccc_smc() working with
->>>>>> legacy ROM no matter how much we hack at it :(
->>>>>
->>>>> We would just have omap_smc2() call arm_smccc_smc() and in that
->>>>> case. And omap_smc2() would still deal with saving and restoring
->>>>> the registers.
->>>>
->>>> Then why call arm_smccc_smc()? omap_smc2() is already an assembly
->>>> function, all it needs to do after loading the registers and saving the
->>>> right ones is issue an "smc #0" instruction, why would we want to
->>>> instead call into some other function to re-save registers and issue the
->>>> exact same instruction?
->>>
->>> To use Linux generic API for smc calls where possible.
->>
->> But we are not using generic API calls, we are using omap_smcx() which
->> cannot call into arm_smccc_smc(). For all the above reasons plus
->> arm_smccc_smc() uses r12 to save the stack pointer, our ROM expects r12
->> to store the function ID.
-> 
-> Saving and restoring r12 could be handled by the arm_smccc_smc() quirk
-> for the non-optee case.
-> 
-> Then we could get rid of omap_smc1() and arm_smccc_smc() should work
-> for the optee case and non-optee case, right.
-> 
-
-
-Yes, we could have both cases working if we could get the quirk in.
-
-
->>>>> Certainly the wrapper functions calling arm_smccc_smc() can deal
->>>>> with r12 too if the r12-quirk version and the plain version are
->>>>> never needed the same time on a booted SoC.
->>>>>
->>>>> Are they ever needed the same time on a booted SoC or not?
-> 
->> They should not be needed at the same time, either OP-TEE is on the
->> secure side or ROM is there.
-> 
-> OK thanks. So we could just modify the code dynamically on boot
-> based on if optee is found or not. The quirk could be done along
-> the lines of the qcom quirk but only for the non-optee case:
-> 
-
-
-We wouldn't have to patch anything if we could get the quirk in. One has
-to state they wish to use the quirk version in a structure passed into
-arm_smccc_smc_quirk(), in which case for all legacy user we just fill
-out this quirk struct. OP-TEE uses the same arm_smccc_smc() but without
-the quirk struct and so it uses the compliant call.
-
-The issue is still the same, I tried adding this, I got NAKd, if you
-want to convince Mark to change his mind and allow us the quirk then we
-can go down this path. Otherwise this will remain a dead end.
-
-Andrew
-
-
-> $ git grep -C10 ARM_SMCCC_QUIRK_QCOM_A6
-> 
-> Regards,
-> 
-> Tony
-> 
+DQpPbiAxMS8xOS8xOSA3OjUzIFBNLCBTb3V6YSwgSm9zZSB3cm90ZToNCj4gT24gVHVlLCAyMDE5
+LTExLTE5IGF0IDEzOjU4ICswMTAwLCBCZW5qYW1pbiBHYWlnbmFyZCB3cm90ZToNCj4+IEluY2x1
+ZGUgZHJtX2NydGNfaGVscGVyX2ludGVybmFsLmggdG8gcHJvdmlkZQ0KPj4gZHJtX2Nvbm5lY3Rv
+cl9nZXRfc2luZ2xlX2VuY29kZXINCj4+IHByb3RvdHlwZS4NCj4+DQo+PiBGaXhlczogYTkyNDYy
+ZDZiZjQ5MyAoImRybS9jb25uZWN0b3I6IFNoYXJlIHdpdGggbm9uLWF0b21pYyBkcml2ZXJzDQo+
+PiB0aGUgZnVuY3Rpb24gdG8gZ2V0IHRoZSBzaW5nbGUgZW5jb2RlciIpDQo+IGRybV9jb25uZWN0
+b3JfZ2V0X3NpbmdsZV9lbmNvZGVyKCkgaXMgaW1wbGVtZW50ZWQgYmVmb3JlIHRoZSB1c2UgaW4N
+Cj4gdGhpcyBmaWxlIHNvIGl0IGlzIG5vdCBicm9rZW4sIG5vIG5lZWQgb2YgYSBmaXhlcyB0YWcu
+DQo+DQo+IFJldmlld2VkLWJ5OiBKb3PDqSBSb2JlcnRvIGRlIFNvdXphIDxqb3NlLnNvdXphQGlu
+dGVsLmNvbT4NCg0KSSB3aWxsIHJlbW92ZSBmaXhlIHRhZyBiZWZvcmUgcHVzaCBpdC4NCg0KVGhh
+bmtzLA0KDQpCZW5qYW1pbg0KDQo+DQo+PiBDYzogSm9zw6kgUm9iZXJ0byBkZSBTb3V6YSA8am9z
+ZS5zb3V6YUBpbnRlbC5jb20+DQo+Pg0KPj4gU2lnbmVkLW9mZi1ieTogQmVuamFtaW4gR2FpZ25h
+cmQgPGJlbmphbWluLmdhaWduYXJkQHN0LmNvbT4NCj4+IC0tLQ0KPj4gICBkcml2ZXJzL2dwdS9k
+cm0vZHJtX2NydGNfaGVscGVyLmMgfCAyICsrDQo+PiAgIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2Vy
+dGlvbnMoKykNCj4+DQo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2RybV9jcnRjX2hl
+bHBlci5jDQo+PiBiL2RyaXZlcnMvZ3B1L2RybS9kcm1fY3J0Y19oZWxwZXIuYw0KPj4gaW5kZXgg
+NDk5YjA1YWFjY2ZjLi45M2E0ZWVjNDI5ZTggMTAwNjQ0DQo+PiAtLS0gYS9kcml2ZXJzL2dwdS9k
+cm0vZHJtX2NydGNfaGVscGVyLmMNCj4+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9kcm1fY3J0Y19o
+ZWxwZXIuYw0KPj4gQEAgLTQ4LDYgKzQ4LDggQEANCj4+ICAgI2luY2x1ZGUgPGRybS9kcm1fcHJp
+bnQuaD4NCj4+ICAgI2luY2x1ZGUgPGRybS9kcm1fdmJsYW5rLmg+DQo+PiAgIA0KPj4gKyNpbmNs
+dWRlICJkcm1fY3J0Y19oZWxwZXJfaW50ZXJuYWwuaCINCj4+ICsNCj4+ICAgLyoqDQo+PiAgICAq
+IERPQzogb3ZlcnZpZXcNCj4+ICAgICo=
