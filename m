@@ -2,391 +2,184 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A500DC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:38:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C3BC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:39:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73E0D21D7B
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:38:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C8B421D7B
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:39:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YluPSUBz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ltSecJN5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727814AbfKSMiw (ORCPT
+        id S1727948AbfKSMjE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 07:38:52 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:38572 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725280AbfKSMiw (ORCPT
+        Tue, 19 Nov 2019 07:39:04 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:42252 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726548AbfKSMjD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 07:38:52 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAJCOETM069076;
-        Tue, 19 Nov 2019 12:36:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=G4C/OBGSQj6Rpmyhw8nXepKxoQaXDaP/8PfpPecSB/0=;
- b=YluPSUBzz9OC6CnxjhKqVI9CaznglJfLy214AKHilJej0LKEOorInwcOdXBG50mlgSMA
- 8dZk0jMVboOGQHaIzmH8aioQLz83CsDjKUuopuM2ANxfL2to4OREl60NMzB9pM8iGDte
- jtZQdyZVSbxhNEe+x4mJPJM84acpop1idbV/uG/boHi+DP48Uh4LxXeO+R0nISQ+U307
- dgOJF4JOKFhmavef6n8nIQVKoJMJjT8s8JQz/SBYLDeLuIrBqW09kRxg2F7F0M8CG5qM
- i5qvwm41vNfl5h7tAnUy0GwDOCJPaW55rn7cZmxyFs2TEGggIwtmfJry2n3POoDX9zdE 2g== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2wa92pph96-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 19 Nov 2019 12:36:05 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAJCS6CG117679;
-        Tue, 19 Nov 2019 12:36:05 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2wc09xapjw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 19 Nov 2019 12:36:04 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xAJCZufY025862;
-        Tue, 19 Nov 2019 12:35:57 GMT
-Received: from kadam (/41.210.141.188)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 19 Nov 2019 04:35:53 -0800
-Date:   Tue, 19 Nov 2019 15:35:31 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Ravulapati Vishnu vardhan rao 
-        <Vishnuvardhanrao.Ravulapati@amd.com>
-Cc:     Alexander.Deucher@amd.com, djkurtz@google.com,
-        Akshu.Agrawal@amd.com, Liam Girdwood <lgirdwood@gmail.com>,
+        Tue, 19 Nov 2019 07:39:03 -0500
+Received: by mail-pl1-f195.google.com with SMTP id j12so11699039plt.9;
+        Tue, 19 Nov 2019 04:39:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qpwNQdLDEKp3mHj6bhdJa/Rq4oFAWkNqox9VT/5kxaE=;
+        b=ltSecJN5dv6Eibo6pRLuD+iAe9yVQaHC4TL5a/T/Hp7KM4+GTbSEzMBUlRBFPT3Lpa
+         6HYEE3iYly2QjLrr/CEW/l0f+qZaxMuhIRvTMR6xK28UW2aWNnS0Bp1Drdj1WMQR5t5T
+         OKMkdRURBZ1z4kOSxCPt8gkW2qo0vnUbLQzLNq8rRdnTgYbprZkfUOOOnm2p2A7EF6wE
+         sHfG/BAOBc1uz9plhJm+pw3/GvLUKfu4zB4N6QB5+TmJKbRicc4psQtOVStnO7KxXFAt
+         nHQUFoj3buSHslm/eRzFaHvhxZVMyZVwFhBhO0tfGl449RToViaFGi1gGPr0v20curZJ
+         yTWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qpwNQdLDEKp3mHj6bhdJa/Rq4oFAWkNqox9VT/5kxaE=;
+        b=alWbt0rzY0dv4gh11HzgUIuf7BlbDlww27faFJN9spvrLNBjHe761N9oyTqH7SPgaJ
+         mlo4BnPImIJKLHfwmlY4BjW2HbLNCKL1Oh2i936AsUKgCGSkRMOsOpgdMn4luxDJGDB0
+         u4TuDz30LV39xw7/hWHuyW2h7zTnOSDigpPDYxB4G61iVi9RV9pdrv/xBNNsNMKNqIb/
+         qUu2D5Bwk3rasghVh43TP5yIqyLJCXxAH42oPj+BmrcOLc5pORv0CefVzFR27kladYAr
+         t3osYsXLd5Bn8MbTEemZl/rBmAdPdhMaPly73BsuJOi2vhkTT3GohKnXm8PaKC3vIycW
+         q7/A==
+X-Gm-Message-State: APjAAAVv6E4kc4CVL2T8YOTThV57KkXdkEe1y55TlcygngtTwX4Ur5ts
+        OUDQx68/I//Q+YG1UxBwF5ns7F6WyaVRAkCY4MU=
+X-Google-Smtp-Source: APXvYqwbCUL/eximB8mpj2VKlrZgFfSMeoldq7a7WGfu5alkQzf/cM2q5535Tqgna1MJCwUak2duJRDsdSgol0JrIKM=
+X-Received: by 2002:a17:90a:c68f:: with SMTP id n15mr6302731pjt.20.1574167142073;
+ Tue, 19 Nov 2019 04:39:02 -0800 (PST)
+MIME-Version: 1.0
+References: <20191119002121.4107-1-sean.j.christopherson@intel.com>
+ <20191119111012.GA109842@gmail.com> <20191119120655.GA31444@gmail.com>
+In-Reply-To: <20191119120655.GA31444@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 19 Nov 2019 14:38:51 +0200
+Message-ID: <CAHp75VeYXonBT9eYhqvS9qyOogdaCu8ERv0XMg12hrVBYt6hnw@mail.gmail.com>
+Subject: Re: [PATCH] x86/platform/intel/quark: Explicitly include linux/io.h
+ for virt_to_phys()
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Nadav Amit <namit@vmware.com>,
+        "VMware, Inc." <pv-drivers@vmware.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
         Mark Brown <broonie@kernel.org>,
         Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [RESEND PATCH v9 6/6] ASoC: amd: Added ACP3x system resume and
- runtime pm
-Message-ID: <20191119123531.GA30789@kadam>
-References: <1574165476-24987-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
- <1574165476-24987-7-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1574165476-24987-7-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1911190116
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1911190116
+        Takashi Iwai <tiwai@suse.com>, linux-ia64@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I can't apply this because I'm not CC'd on patches 2-5.
+On Tue, Nov 19, 2019 at 2:07 PM Ingo Molnar <mingo@kernel.org> wrote:
+>
+>
+> * Ingo Molnar <mingo@kernel.org> wrote:
+>
+> > I've applied them to tip:WIP.core/headers as a work-in-progress tree,
+> > and I'm testing them on randconfigs to make sure there's no broken
+> > dependencies. I'll wait for the ACPI acks.
+>
+> One more fix was needed, for the intel-quark driver that is only built on
+> 32-bit configs:
+>
+> ==================>
+> From: Ingo Molnar <mingo@kernel.org>
+> Date: Tue, 19 Nov 2019 12:51:56 +0100
+> Subject: [PATCH] x86/platform/intel/quark: Explicitly include linux/io.h for virt_to_phys()
+>
+> Similarly to the previous patches by Sean Christopherson:
+>
+>  "Through a labyrinthian sequence of includes, usage of virt_to_phys() is
+>   dependent on the include of asm/io.h in x86's asm/realmode.h, which is
+>   included in x86's asm/acpi.h and thus by linux/acpi.h.  Explicitly
+>   include linux/io.h to break the dependency on realmode.h so that a
+>   future patch can remove the realmode.h include from acpi.h without
+>   breaking the build."
+>
 
-On Tue, Nov 19, 2019 at 05:41:16PM +0530, Ravulapati Vishnu vardhan rao wrote:
-> +static int acp3x_power_on(void __iomem *acp3x_base)
-> +{
-> +	u32 val;
-> +	u32 timeout;
+LGTM,
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+
+> Cc: linux-kernel@vger.kernel.org
+> Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Signed-off-by: Ingo Molnar <mingo@kernel.org>
+> ---
+>  arch/x86/platform/intel-quark/imr.c          | 2 ++
+>  arch/x86/platform/intel-quark/imr_selftest.c | 2 ++
+>  2 files changed, 4 insertions(+)
+>
+> diff --git a/arch/x86/platform/intel-quark/imr.c b/arch/x86/platform/intel-quark/imr.c
+> index 6dd25dc5f027..e9d97d52475e 100644
+> --- a/arch/x86/platform/intel-quark/imr.c
+> +++ b/arch/x86/platform/intel-quark/imr.c
+> @@ -29,6 +29,8 @@
+>  #include <asm/cpu_device_id.h>
+>  #include <asm/imr.h>
+>  #include <asm/iosf_mbi.h>
+> +#include <asm/io.h>
+
+A nit: perhaps put it after imr.h.
+
 > +
-> +	timeout = 0;
-> +	val = rv_readl(acp3x_base + mmACP_PGFSM_STATUS);
+>  #include <linux/debugfs.h>
+>  #include <linux/init.h>
+>  #include <linux/mm.h>
+> diff --git a/arch/x86/platform/intel-quark/imr_selftest.c b/arch/x86/platform/intel-quark/imr_selftest.c
+> index 42f879b75f9b..4307830e1b6f 100644
+> --- a/arch/x86/platform/intel-quark/imr_selftest.c
+> +++ b/arch/x86/platform/intel-quark/imr_selftest.c
+> @@ -14,6 +14,8 @@
+>  #include <asm-generic/sections.h>
+>  #include <asm/cpu_device_id.h>
+>  #include <asm/imr.h>
+> +#include <asm/io.h>
 > +
-> +	if (val == 0)
-> +		return val;
-> +
-> +	if (!((val & ACP_PGFSM_STATUS_MASK) ==
-> +				ACP_POWER_ON_IN_PROGRESS))
-> +		rv_writel(ACP_PGFSM_CNTL_POWER_ON_MASK,
-> +			acp3x_base + mmACP_PGFSM_CONTROL);
-> +	while (++timeout) {
-
-while (++timeout < 500) 
-
-> +		val  = rv_readl(acp3x_base + mmACP_PGFSM_STATUS);
-                   ^^
-Extra space character.
+>  #include <linux/init.h>
+>  #include <linux/mm.h>
+>  #include <linux/types.h>
+>
 
 
-> +		if (!val)
-> +			break;
-
-return 0;
-
-> +		udelay(1);
-> +		if (timeout > 500) {
-> +			pr_err("ACP is Not Powered ON\n");
-> +			return -ETIMEDOUT;
-> +		}
-> +	}
-> +	return 0;
-
-Since we combined the ++timeout and the < 500 this becomes
-"return -ETIMEOUT;" here.
-
-
-> +}
-> +
-> +static int acp3x_power_off(void __iomem *acp3x_base)
-> +{
-> +	u32 val;
-> +	u32 timeout, ret;
-
-Both ret and timeout should just be int.  Please update this throughout.
-
-> +
-> +	timeout = 0;
-
-Move the timeout = 0 next to the loop or put it in the initializer.
-
-> +	rv_writel(ACP_PGFSM_CNTL_POWER_OFF_MASK,
-> +			acp3x_base + mmACP_PGFSM_CONTROL);
-> +	while (++timeout) {
-
-while (++timeout < 500) {
-
-> +		val  = rv_readl(acp3x_base + mmACP_PGFSM_STATUS);
-
-Extra space char.
-
-> +		if ((val & ACP_PGFSM_STATUS_MASK) == ACP_POWERED_OFF) {
-> +			ret = 0;
-> +			break;
-
-return 0;
-
-> +		}
-> +		udelay(1);
-> +		if (timeout > 500) {
-> +			pr_err("ACP is Not Powered OFF\n");
-> +			ret = -ETIMEDOUT;
-> +			break;
-> +		}
-> +	}
-> +	return ret;
-> +}
-> +
-> +static int acp3x_reset(void __iomem *acp3x_base)
-> +{
-> +	u32 val, timeout;
-> +
-> +	rv_writel(1, acp3x_base + mmACP_SOFT_RESET);
-> +	timeout = 0;
-> +	while (++timeout) {
-> +		val = rv_readl(acp3x_base + mmACP_SOFT_RESET);
-> +		if ((val & ACP3x_SOFT_RESET__SoftResetAudDone_MASK) ||
-> +							timeout > 100) {
-
-This timeout > 100 limit was difficult to spot.  Like finding Waldo.
-
-> +			if (val & ACP3x_SOFT_RESET__SoftResetAudDone_MASK)
-> +				break;
-
-This is a duplicate condition.
-
-> +			return -ENODEV;
-> +		}
-> +		cpu_relax();
-> +	}
-> +	rv_writel(0, acp3x_base + mmACP_SOFT_RESET);
-> +	timeout = 0;
-> +	while (++timeout) {
-> +		val = rv_readl(acp3x_base + mmACP_SOFT_RESET);
-> +		if (!val)
-> +			break;
-> +		if (timeout > 100)
-> +			return -ENODEV;
-> +		cpu_relax();
-> +	}
-> +	return 0;
-> +}
-> +
-> +static int acp3x_init(void __iomem *acp3x_base)
-> +{
-> +	int ret;
-> +
-> +	/* power on */
-> +	ret = acp3x_power_on(acp3x_base);
-> +	if (ret) {
-> +		pr_err("ACP3x power on failed\n");
-> +		return ret;
-> +	}
-> +	/* Reset */
-> +	ret = acp3x_reset(acp3x_base);
-> +	if (ret) {
-> +		pr_err("ACP3x reset failed\n");
-> +		return ret;
-> +	}
-> +	return 0;
-> +}
-> +
-> +static int acp3x_deinit(void __iomem *acp3x_base)
-> +{
-> +	int ret;
-> +
-> +	/* Reset */
-> +	ret = acp3x_reset(acp3x_base);
-> +	if (ret) {
-> +		pr_err("ACP3x reset failed\n");
-> +		return ret;
-> +	}
-> +	/* power off */
-> +	ret = acp3x_power_off(acp3x_base);
-> +	if (ret) {
-> +		pr_err("ACP3x power off failed\n");
-> +		return ret;
-> +	}
-> +	return 0;
-> +}
-> +
->  static int snd_acp3x_probe(struct pci_dev *pci,
->  			   const struct pci_device_id *pci_id)
->  {
-> @@ -64,6 +186,9 @@ static int snd_acp3x_probe(struct pci_dev *pci,
->  	}
->  	pci_set_master(pci);
->  	pci_set_drvdata(pci, adata);
-> +	ret = acp3x_init(adata->acp3x_base);
-> +	if (ret)
-> +		goto disable_msi;
->  
->  	val = rv_readl(adata->acp3x_base + mmACP_I2S_PIN_CONFIG);
->  	switch (val) {
-> @@ -73,7 +198,7 @@ static int snd_acp3x_probe(struct pci_dev *pci,
->  					  GFP_KERNEL);
->  		if (!adata->res) {
->  			ret = -ENOMEM;
-> -			goto disable_msi;
-> +			goto de_init;
->  		}
->  
->  		adata->res[0].name = "acp3x_i2s_iomem";
-> @@ -134,12 +259,23 @@ static int snd_acp3x_probe(struct pci_dev *pci,
->  		ret = -ENODEV;
->  		goto disable_msi;
->  	}
-> +	pm_runtime_set_autosuspend_delay(&pci->dev, 5000);
-> +	pm_runtime_use_autosuspend(&pci->dev);
-> +	pm_runtime_set_active(&pci->dev);
-> +	pm_runtime_put_noidle(&pci->dev);
-> +	pm_runtime_enable(&pci->dev);
->  	return 0;
->  
->  unregister_devs:
->  	if (val == I2S_MODE)
->  		for (i = 0 ; i < ACP3x_DEVS ; i++)
->  			platform_device_unregister(adata->pdev[i]);
-> +de_init:
-> +	ret = acp3x_deinit(adata->acp3x_base);
-> +	if (ret)
-> +		dev_err(&pci->dev, "ACP de-init failed\n");
-> +	else
-> +		dev_dbg(&pci->dev, "ACP de-initialized\n");
-
-
-We can't overwrite ret (probe failed even if deinit() succeeded).  I
-dont' know that the debug printk is useful.
-
-de_init:
-	if (acp3x_deinit(adata->acp3x_base))
-		dev_err(&pci->dev, "ACP de-init failed in probe error handling\n");
-
-
->  disable_msi:
->  	pci_disable_msi(pci);
->  release_regions:
-> @@ -150,15 +286,58 @@ static int snd_acp3x_probe(struct pci_dev *pci,
->  	return ret;
->  }
->  
-> +static int  snd_acp3x_suspend(struct device *dev)
-             ^^
-Extra space char
-
-> +{
-> +	int status;
-
-int ret;
-
-> +	struct acp3x_dev_data *adata;
-> +
-> +	adata = dev_get_drvdata(dev);
-> +	status = acp3x_deinit(adata->acp3x_base);
-> +	if (status)
-> +		dev_err(dev, "ACP de-init failed\n");
-> +	else
-> +		dev_dbg(dev, "ACP de-initialized\n");
-> +
-> +	return 0;
-> +}
-> +
-> +static int  snd_acp3x_resume(struct device *dev)
-             ^^
-Extra space
-
-> +{
-> +	int status;
-> +	struct acp3x_dev_data *adata;
-> +
-> +	adata = dev_get_drvdata(dev);
-> +	status = acp3x_init(adata->acp3x_base);
-> +	if (status) {
-> +		dev_err(dev, "ACP init failed\n");
-> +		return status;
-> +	}
-> +	return 0;
-> +}
-> +
-> +static const struct dev_pm_ops acp3x_pm = {
-> +	.runtime_suspend = snd_acp3x_suspend,
-> +	.runtime_resume =  snd_acp3x_resume,
-> +	.resume =       snd_acp3x_resume,
-
-Fix whitespace.
-
-> +};
-> +
->  static void snd_acp3x_remove(struct pci_dev *pci)
->  {
-> -	struct acp3x_dev_data *adata = pci_get_drvdata(pci);
-
-This was fine.  Leave it as-is.
-
-> -	int i;
-> +	struct acp3x_dev_data *adata;
-> +	int i, ret;
->  
-> +	adata = pci_get_drvdata(pci);
->  	if (adata->acp3x_audio_mode == ACP3x_I2S_MODE) {
->  		for (i = 0 ; i <  ACP3x_DEVS ; i++)
-                                ^^
-There is an extra space char here as well.  I guess I missed it when I
-reviewed patch 1.
-
->  			platform_device_unregister(adata->pdev[i]);
->  	}
-> +	ret = acp3x_deinit(adata->acp3x_base);
-> +	if (ret)
-> +		dev_err(&pci->dev, "ACP de-init failed\n");
-> +	else
-> +		dev_dbg(&pci->dev, "ACP de-initialized\n");
-
-Put the printk in acp3x_deinit() itself and remove it from all the
-callers.
-
-regards,
-dan carpenter
-
+-- 
+With Best Regards,
+Andy Shevchenko
