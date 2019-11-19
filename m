@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A1C7C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:35:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E60CC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:35:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1133020672
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:35:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E63A208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:35:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141709;
-	bh=2/j4KmKRBuQKRP03CURvKCeNJQx6DOj4oH59pezYbNs=;
+	s=default; t=1574141714;
+	bh=rOUJTLLDLcIrzkoJgb4s/aQqCIxC8gU62BXczugNZz8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=joeMv0HRhc2MzXIIxBUbGzz68HicuXvSpcTureGRUvQj/TKbEK+tpZzidiRTOkLKB
-	 Pj31bRRA2nf8y8b1TMXEk7dQMGQFWxxOU7BfXLjQg5nILE29mZMgzz3uLqcig+vcCa
-	 nHfUkvzJqKKn0GcmMrcwOBk5mcxKlIF83ru+fQXI=
+	b=Kf313N8vGSXW1ia7U5/BJQdPfP2atsCPPGOSW1vc0WvKLvbnawDqI13QRevWCfwcx
+	 G+zYa9gMXtxc0LzBwFG64Wwkiwbl1maN6Y6d+WiiylRTnzlKDxz5Pzk/AUcQbmGEPx
+	 nAEFtqabsjxdNblOEABs54LtzHrI7BglxG7YqTzs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729782AbfKSFfH (ORCPT
+        id S1729306AbfKSFfN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:35:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55850 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:35:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729280AbfKSFfC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:35:02 -0500
+        id S1729290AbfKSFfH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:35:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EC3621783;
-        Tue, 19 Nov 2019 05:35:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FB48208C3;
+        Tue, 19 Nov 2019 05:35:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141700;
-        bh=2/j4KmKRBuQKRP03CURvKCeNJQx6DOj4oH59pezYbNs=;
+        s=default; t=1574141706;
+        bh=rOUJTLLDLcIrzkoJgb4s/aQqCIxC8gU62BXczugNZz8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MO1tDc/SwQvS8ePG4j7/w9n1VtQVtsHrreC1bN81J5jm3JVvo6SQ6VQhKml8jTuNw
-         vAS+jvdTbnuRH6CJlE2l1PTyYiMLVIamxptsO2jhV75rl3Da2bsJL/JCiruGaYscR1
-         8Wf4jvFAbhl6QGlkGh2iNlZL1FkLHTXf/0cKvJY4=
+        b=qDN/PTmsq+WJFUURyGrEf1BsmYj5P8tLjiFYBqG+agBO6h7T/XGprzlN7F7nttIkM
+         NtdVvrUdw0UlUsIX5i+qBKkW5bWz6hZdUEalh1BDH3uQB0b/lPIIz2bNYgWFiNVIyZ
+         w4auzy2+zlyKVKQa5FJtFYH2XdELSpnuzNXdXEwg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pi-Hsun Shih <pihsun@chromium.org>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Meelis Roos <mroos@linux.ee>,
+        Corey Minyard <cminyard@mvista.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 251/422] spi: mediatek: Dont modify spi_transfer when transfer.
-Date:   Tue, 19 Nov 2019 06:17:28 +0100
-Message-Id: <20191119051415.253065441@linuxfoundation.org>
+Subject: [PATCH 4.19 253/422] ipmi_si_pci: fix NULL device in ipmi_si error message
+Date:   Tue, 19 Nov 2019 06:17:30 +0100
+Message-Id: <20191119051415.383023929@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -60,116 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Shih <pihsun@chromium.org>
+From: Meelis Roos <mroos@linux.ee>
 
-[ Upstream commit 00bca73bfca4fb0ab089b94cad0fc83d8b49c25f ]
+[ Upstream commit 01508d9ebf4fc863f2fc4561c390bf4b7c3301a6 ]
 
-Mediatek SPI driver modifies some fields (tx_buf, rx_buf, len, tx_dma,
-rx_dma) of the spi_transfer* passed in when doing transfer_one and in
-interrupt handler. This is somewhat unexpected, and there are some
-caller (e.g. Cr50 spi driver) that reuse the spi_transfer for multiple
-messages. Add a field to record how many bytes have been transferred,
-and calculate the right len / buffer based on it instead.
+I noticed that 4.17.0 logs the follwing during ipmi_si setup:
 
-Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
+ ipmi_si 0000:01:04.6: probing via PCI
+ (NULL device *): Could not setup I/O space
+ ipmi_si 0000:01:04.6: [mem 0xf5ef0000-0xf5ef00ff] regsize 1 spacing 1 irq 21
 
-Change-Id: I23e218cd964f16c0b2b26127d4a5ca6529867673
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fix the "NULL device *) by moving io.dev assignment before its potential
+use by ipmi_pci_probe_regspacing().
+
+Result:
+ ipmi_si 0000:01:04.6: probing via PCI
+ ipmi_si 0000:01:04.6: Could not setup I/O space
+ ipmi_si 0000:01:04.6: [mem 0xf5ef0000-0xf5ef00ff] regsize 1 spacing 1 irq 21
+
+Signed-off-by: Meelis Roos <mroos@linux.ee>
+Signed-off-by: Corey Minyard <cminyard@mvista.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-mt65xx.c | 37 +++++++++++++++++++++----------------
- 1 file changed, 21 insertions(+), 16 deletions(-)
+ drivers/char/ipmi/ipmi_si_pci.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/spi/spi-mt65xx.c b/drivers/spi/spi-mt65xx.c
-index 86bf45667a040..3dc31627c6558 100644
---- a/drivers/spi/spi-mt65xx.c
-+++ b/drivers/spi/spi-mt65xx.c
-@@ -98,6 +98,7 @@ struct mtk_spi {
- 	struct clk *parent_clk, *sel_clk, *spi_clk;
- 	struct spi_transfer *cur_transfer;
- 	u32 xfer_len;
-+	u32 num_xfered;
- 	struct scatterlist *tx_sgl, *rx_sgl;
- 	u32 tx_sgl_len, rx_sgl_len;
- 	const struct mtk_spi_compatible *dev_comp;
-@@ -385,6 +386,7 @@ static int mtk_spi_fifo_transfer(struct spi_master *master,
+diff --git a/drivers/char/ipmi/ipmi_si_pci.c b/drivers/char/ipmi/ipmi_si_pci.c
+index f54ca6869ed2c..022e03634ce2a 100644
+--- a/drivers/char/ipmi/ipmi_si_pci.c
++++ b/drivers/char/ipmi/ipmi_si_pci.c
+@@ -120,6 +120,8 @@ static int ipmi_pci_probe(struct pci_dev *pdev,
+ 	}
+ 	io.addr_data = pci_resource_start(pdev, 0);
  
- 	mdata->cur_transfer = xfer;
- 	mdata->xfer_len = min(MTK_SPI_MAX_FIFO_SIZE, xfer->len);
-+	mdata->num_xfered = 0;
- 	mtk_spi_prepare_transfer(master, xfer);
- 	mtk_spi_setup_packet(master);
++	io.dev = &pdev->dev;
++
+ 	io.regspacing = ipmi_pci_probe_regspacing(&io);
+ 	io.regsize = DEFAULT_REGSIZE;
+ 	io.regshift = 0;
+@@ -128,8 +130,6 @@ static int ipmi_pci_probe(struct pci_dev *pdev,
+ 	if (io.irq)
+ 		io.irq_setup = ipmi_std_irq_setup;
  
-@@ -415,6 +417,7 @@ static int mtk_spi_dma_transfer(struct spi_master *master,
- 	mdata->tx_sgl_len = 0;
- 	mdata->rx_sgl_len = 0;
- 	mdata->cur_transfer = xfer;
-+	mdata->num_xfered = 0;
- 
- 	mtk_spi_prepare_transfer(master, xfer);
- 
-@@ -482,7 +485,7 @@ static int mtk_spi_setup(struct spi_device *spi)
- 
- static irqreturn_t mtk_spi_interrupt(int irq, void *dev_id)
- {
--	u32 cmd, reg_val, cnt, remainder;
-+	u32 cmd, reg_val, cnt, remainder, len;
- 	struct spi_master *master = dev_id;
- 	struct mtk_spi *mdata = spi_master_get_devdata(master);
- 	struct spi_transfer *trans = mdata->cur_transfer;
-@@ -497,36 +500,38 @@ static irqreturn_t mtk_spi_interrupt(int irq, void *dev_id)
- 		if (trans->rx_buf) {
- 			cnt = mdata->xfer_len / 4;
- 			ioread32_rep(mdata->base + SPI_RX_DATA_REG,
--				     trans->rx_buf, cnt);
-+				     trans->rx_buf + mdata->num_xfered, cnt);
- 			remainder = mdata->xfer_len % 4;
- 			if (remainder > 0) {
- 				reg_val = readl(mdata->base + SPI_RX_DATA_REG);
--				memcpy(trans->rx_buf + (cnt * 4),
--					&reg_val, remainder);
-+				memcpy(trans->rx_buf +
-+					mdata->num_xfered +
-+					(cnt * 4),
-+					&reg_val,
-+					remainder);
- 			}
- 		}
- 
--		trans->len -= mdata->xfer_len;
--		if (!trans->len) {
-+		mdata->num_xfered += mdata->xfer_len;
-+		if (mdata->num_xfered == trans->len) {
- 			spi_finalize_current_transfer(master);
- 			return IRQ_HANDLED;
- 		}
- 
--		if (trans->tx_buf)
--			trans->tx_buf += mdata->xfer_len;
--		if (trans->rx_buf)
--			trans->rx_buf += mdata->xfer_len;
+-	io.dev = &pdev->dev;
 -
--		mdata->xfer_len = min(MTK_SPI_MAX_FIFO_SIZE, trans->len);
-+		len = trans->len - mdata->num_xfered;
-+		mdata->xfer_len = min(MTK_SPI_MAX_FIFO_SIZE, len);
- 		mtk_spi_setup_packet(master);
- 
--		cnt = trans->len / 4;
--		iowrite32_rep(mdata->base + SPI_TX_DATA_REG, trans->tx_buf, cnt);
-+		cnt = len / 4;
-+		iowrite32_rep(mdata->base + SPI_TX_DATA_REG,
-+				trans->tx_buf + mdata->num_xfered, cnt);
- 
--		remainder = trans->len % 4;
-+		remainder = len % 4;
- 		if (remainder > 0) {
- 			reg_val = 0;
--			memcpy(&reg_val, trans->tx_buf + (cnt * 4), remainder);
-+			memcpy(&reg_val,
-+				trans->tx_buf + (cnt * 4) + mdata->num_xfered,
-+				remainder);
- 			writel(reg_val, mdata->base + SPI_TX_DATA_REG);
- 		}
+ 	dev_info(&pdev->dev, "%pR regsize %d spacing %d irq %d\n",
+ 		&pdev->resource[0], io.regsize, io.regspacing, io.irq);
  
 -- 
 2.20.1
