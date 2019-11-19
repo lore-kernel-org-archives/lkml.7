@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8643AC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:33:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30D07C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:34:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 589B02071B
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:33:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBA0E206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:34:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141636;
-	bh=rCJCWlVVGLmwt2uICL+fQP9cUjdE8EIa3YhyInu72zs=;
+	s=default; t=1574141641;
+	bh=tU1uL0kgHbeIfHi2VXruJE3ZdOm5oSbiBE7SyjAQ0hs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LuJj4xxqmlnxpun77mNpxy8rhEw3QMXyCMZBlsmGyIESwIZ00d+nZ0k/qi1uaaV17
-	 fCtRabMdl4WCxH99DsJ1Wnl1a0wFR4JWcEpaPussXnm14wF4pdGnTtSSP+11ZgFbMC
-	 1KS1wL7cJ7FhYfxlgsaflu/Z/9ZRhBm0thcRCBhM=
+	b=mTdCREptHtmSMYXYmuoBSUhag3Pq7GlobZI8gkXBVz+9IA2OqeyaagNwx4RG5acSm
+	 RqU+ScgbG6yp5NbQcGQMa+t/Ndq6Gg+JfxZ2JV5XtEM5TnPeKBhqGcPxjH0W5eTzpa
+	 6lI8RY7tSy/1gJqdfxAZjacRSMeNGFMrJpFAETFE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729585AbfKSFdx (ORCPT
+        id S1729599AbfKSFeA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:33:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54438 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:34:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729575AbfKSFds (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:33:48 -0500
+        id S1728843AbfKSFd4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:33:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C64520672;
-        Tue, 19 Nov 2019 05:33:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A00D1206EC;
+        Tue, 19 Nov 2019 05:33:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141627;
-        bh=rCJCWlVVGLmwt2uICL+fQP9cUjdE8EIa3YhyInu72zs=;
+        s=default; t=1574141636;
+        bh=tU1uL0kgHbeIfHi2VXruJE3ZdOm5oSbiBE7SyjAQ0hs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pYyIpso3vm4JoBLBlabzeyzOpz7AFYM5XWqYp0qg8sGiEmeH7qtlpJuOWU8wtN81T
-         G9wPgsG6jQx6XIUUzttQ8XsWPMx8Wi8OFhL8IkKHUkZwMhcB708mEag75hRDy7D/T/
-         Jj8lecrTs6wWIKShoj1PicY+CgL6zwtZakbEbVaU=
+        b=X7kesEVqZYerwY76senzfHpws9cTcWPJuhLCCKafRKluQGPAGUmDgW5KKVsmcwLRZ
+         5Rbtr4R5LdqNTmjR5ePW/+M8V0Dri/JKB7a839JI+ITN66qKIQ/jPVjjltD155l3KH
+         KlDFoLjFS7ftHjpLQbzHzG3Fj5TSMmnYewYjTH8Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        stable@vger.kernel.org, Niklas Cassel <niklas.cassel@linaro.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 223/422] power: supply: ab8500_fg: silence uninitialized variable warnings
-Date:   Tue, 19 Nov 2019 06:17:00 +0100
-Message-Id: <20191119051413.083539646@linuxfoundation.org>
+Subject: [PATCH 4.19 188/422] nvmem: core: return error code instead of NULL from nvmem_device_get
+Date:   Tue, 19 Nov 2019 06:16:25 +0100
+Message-Id: <20191119051410.688562851@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -60,76 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-[ Upstream commit 54baff8d4e5dce2cef61953b1dc22079cda1ddb1 ]
+[ Upstream commit ca6ac25cecf0e740d7cc8e03e0ebbf8acbeca3df ]
 
-If kstrtoul() fails then we print "charge_full" when it's uninitialized.
-The debug printk doesn't add anything so I deleted it and cleaned these
-two functions up a bit.
+nvmem_device_get() should return ERR_PTR() on error or valid pointer
+on success, but one of the code path seems to return NULL, so fix it.
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Reported-by: Niklas Cassel <niklas.cassel@linaro.org>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/power/supply/ab8500_fg.c | 31 ++++++++++++-------------------
- 1 file changed, 12 insertions(+), 19 deletions(-)
+ drivers/nvmem/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/power/supply/ab8500_fg.c b/drivers/power/supply/ab8500_fg.c
-index 02356f9b5f22a..8bb89c697c1eb 100644
---- a/drivers/power/supply/ab8500_fg.c
-+++ b/drivers/power/supply/ab8500_fg.c
-@@ -2433,17 +2433,14 @@ static ssize_t charge_full_store(struct ab8500_fg *di, const char *buf,
- 				 size_t count)
- {
- 	unsigned long charge_full;
--	ssize_t ret;
-+	int ret;
+diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+index d32eba11c000f..30c040786fde2 100644
+--- a/drivers/nvmem/core.c
++++ b/drivers/nvmem/core.c
+@@ -692,7 +692,7 @@ static struct nvmem_device *nvmem_find(const char *name)
+ 	d = bus_find_device_by_name(&nvmem_bus_type, NULL, name);
  
- 	ret = kstrtoul(buf, 10, &charge_full);
-+	if (ret)
-+		return ret;
+ 	if (!d)
+-		return NULL;
++		return ERR_PTR(-ENOENT);
  
--	dev_dbg(di->dev, "Ret %zd charge_full %lu", ret, charge_full);
--
--	if (!ret) {
--		di->bat_cap.max_mah = (int) charge_full;
--		ret = count;
--	}
--	return ret;
-+	di->bat_cap.max_mah = (int) charge_full;
-+	return count;
+ 	return to_nvmem_device(d);
  }
- 
- static ssize_t charge_now_show(struct ab8500_fg *di, char *buf)
-@@ -2455,20 +2452,16 @@ static ssize_t charge_now_store(struct ab8500_fg *di, const char *buf,
- 				 size_t count)
- {
- 	unsigned long charge_now;
--	ssize_t ret;
-+	int ret;
- 
- 	ret = kstrtoul(buf, 10, &charge_now);
-+	if (ret)
-+		return ret;
- 
--	dev_dbg(di->dev, "Ret %zd charge_now %lu was %d",
--		ret, charge_now, di->bat_cap.prev_mah);
--
--	if (!ret) {
--		di->bat_cap.user_mah = (int) charge_now;
--		di->flags.user_cap = true;
--		ret = count;
--		queue_delayed_work(di->fg_wq, &di->fg_periodic_work, 0);
--	}
--	return ret;
-+	di->bat_cap.user_mah = (int) charge_now;
-+	di->flags.user_cap = true;
-+	queue_delayed_work(di->fg_wq, &di->fg_periodic_work, 0);
-+	return count;
- }
- 
- static struct ab8500_fg_sysfs_entry charge_full_attr =
 -- 
 2.20.1
 
