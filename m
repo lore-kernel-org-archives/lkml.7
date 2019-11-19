@@ -2,100 +2,109 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 326ECC43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:45:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A643DC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:46:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2BD1222AB
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:45:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574178349;
-	bh=2A4V+QTjKVdclRaSKrXFXbwEDtY6OhcEom9OfXnM43U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oAGYi1Ue+xSQwkRw3r0eg4qysuOYvHTy+v62sIJPDzXwIvn0LOIP/PBjoO9ljCC1G
-	 OCgFo33bS+hBlO/5bGnJbxVgUTucIqDtzks3rk9ZpbyMX44G8wI+yaUkDbz3ZQ2Hvp
-	 ADKdJqxG8j6hIv3oRgaUMGfDidRdeGC+m1rdRIx0=
+	by mail.kernel.org (Postfix) with ESMTP id 7CD98222A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:46:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KF2yFhky"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728378AbfKSPps (ORCPT
+        id S1728391AbfKSPqT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 10:45:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51192 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727509AbfKSPpr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 10:45:47 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76C2C222A2;
-        Tue, 19 Nov 2019 15:45:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574178347;
-        bh=2A4V+QTjKVdclRaSKrXFXbwEDtY6OhcEom9OfXnM43U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wTOfx/xGn0eZ0lIx4jRt6aq0sbRfGvHVDC30VdCssHM+oZseXEY/Sjj2rwcdEOcOY
-         tb4aX+5vouN+I6VEL7sE8KI+Z+dnvoWkCk1Z+leGUhnXkmQF8fyWWMGkp0VHTWnIPF
-         jpII+nwVYRwAz4a6zMgCc4jiWIzKlhVrgpU6MeKc=
-Date:   Tue, 19 Nov 2019 16:45:44 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Richard Genoud <richard.genoud@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Radu Pirea <radu_nicolae.pirea@upb.ro>,
-        Sasha Levin <sashal@kernel.org>,
-        "stable # 4 . 4+" <stable@vger.kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 4.19 150/422] tty/serial: atmel: Change the driver to
- work under at91-usart MFD
-Message-ID: <20191119154544.GA1982025@kroah.com>
-References: <20191119051400.261610025@linuxfoundation.org>
- <20191119051408.360814564@linuxfoundation.org>
- <86754813-17ae-46c1-f222-1635c535668e@gmail.com>
- <ee45d6af-82c1-86e6-1abe-d9ac97307eec@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ee45d6af-82c1-86e6-1abe-d9ac97307eec@gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        Tue, 19 Nov 2019 10:46:19 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:40311 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727873AbfKSPqT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 10:46:19 -0500
+Received: by mail-qk1-f194.google.com with SMTP id z16so18206079qkg.7;
+        Tue, 19 Nov 2019 07:46:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=zs0qtVqeQ3xQBYktSESGlP6UO3aKjJ10cQ/av650v4s=;
+        b=KF2yFhky8rbMOiX6sRjOdSvysjr6FPV/LibdqcdGEq+utA4XFoeXwl2RD2JlaxHO0G
+         ZBnOl7dNjKCFcFhrFDiGhHBDAWQ6x+XWEFwoPfjhfLHdOADHYf92lNiTGOkDUCPROs3S
+         Pa8K/6I/tiapKhxcMN2XSJEVze5nkGQNgv8mECTPzFgGogiIQgvCwfC2C+N1hLlEDlPh
+         0jMJkxmsAcMyRuc4TGInXm/Z8jMqhz7xjS0l/Yki3OUJepConoYwo/rogTijnB1xuJWm
+         WXTQ64uvTzzUixxctUz9lVqf7aNGZj+IFqiBy85/AHPceMfbBMpgx0zl4Jr1MckyIviP
+         vgyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=zs0qtVqeQ3xQBYktSESGlP6UO3aKjJ10cQ/av650v4s=;
+        b=Mf2syorBUQ9vuWu+hCeRrL9l5vVRh05G3aXRogeMMLA0bBXjcwUVBoAP6SQ5rI4wmT
+         bpO8aNgZTTGMdejNgQ0sx1hISFmVDrIGB78rFULdqkkqEkYnMuiUZgGnihERI3JG2ZfL
+         CnXpDcEsnXzLjctCwpU2lZNgfZTg+RIqz9HxZRBkZJtG0zcRehEsaLmI/woIvMfxTCur
+         bWrLBUEBQD9cuuz0DIS19FkjMhPMSi7B14KWTLSzpgXD8m/+XRrfLDAT/foY8nQm4O7k
+         o6j4z+v37I56TyLQQgH0Nlevp9ii7W8kON9fm4S3EW0+CAbfJNd8dz8Ta7YWLnVrPJ8t
+         gsVw==
+X-Gm-Message-State: APjAAAWJP0tOgadgJNdyoxRgW6Ky40KGOgjCGsOBGzNIu3IMyeAvbD+A
+        aNxH/fLwdwjDjEIOu78fT32CYOxQ
+X-Google-Smtp-Source: APXvYqwxJYMr9GDkoPi2ya3w2VSEr3Ardp8OON6AY639MSi6FIuRX4W5X1m5nBSS+cZqiE01lOiA8Q==
+X-Received: by 2002:ae9:e201:: with SMTP id c1mr29824966qkc.416.1574178377910;
+        Tue, 19 Nov 2019 07:46:17 -0800 (PST)
+Received: from localhost.localdomain ([72.53.229.209])
+        by smtp.gmail.com with ESMTPSA id 50sm12949919qtv.88.2019.11.19.07.46.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Nov 2019 07:46:17 -0800 (PST)
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
+To:     Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Grigoryev Denis <grigoryev@fastwel.ru>,
+        Axel Lin <axel.lin@ingics.com>, Dan Murphy <dmurphy@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-leds@vger.kernel.org
+Subject: [PATCH v2 0/4] tps6105x add devicetree and leds support
+Date:   Tue, 19 Nov 2019 10:46:07 -0500
+Message-Id: <20191119154611.29625-1-TheSven73@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 02:17:16PM +0100, Richard Genoud wrote:
-> Le 19/11/2019 à 13:01, Richard Genoud a écrit :
-> > Hi all,
-> > 
-> > Le 19/11/2019 à 06:15, Greg Kroah-Hartman a écrit :
-> >> From: Radu Pirea <radu.pirea@microchip.com>
-> >>
-> >> [ Upstream commit c24d25317a7c6bb3053d4c193b3cf57d1e9a3e4b ]
-> >>
-> >> This patch modifies the place where resources and device tree properties
-> >> are searched.
-> > 
-> > Maybe I missed something, but I don't see why this is backported to stable.
-> > I don't think that this patch was send with a Cc: stable (I just came
-> > back from holidays, so I may be wrong :))
-> > 
-> > Moreover, it's part of a series that introduce "config MFD_AT91_USART",
-> > but grepping MFD_AT91_USART on stable-rc/linux-4.19.y only returns:
-> > drivers/tty/serial/Kconfig:     select MFD_AT91_USART
-> > 
-> > So I think this is a mistake (but how it got there ? it is by a bot or
-> > something ?)
-> Replying to myself :)
-> 
-> Mystery solved, it was added by Sasha's bot/AI
-> [PATCH AUTOSEL 4.19 118/205] tty/serial: atmel: Change the driver to work under at91-usart MFD
-> 
-> So Greg, you can safely drop this patch.
+v1 -> v2:
+	Select chip operational mode by looking at subnode name, _not_ its
+	compatible property. Suggested by Mark Brown.
 
-Now dropped, thanks.
+I needed led operation for this mfd chip, so I added a very simple
+driver for this.
 
-greg k-h
+My platform (arm imx6q) is devicetree-based, so I added optional
+devicetree support for this chip and its sub-drivers.
+
+Interestingly, the main mfd driver had a dt 'compatible' binding, but
+could not operate without platform data?
+
+Sven Van Asbroeck (4):
+  tps6105x: add optional devicetree support
+  regulator: tps6105x: add optional devicetree support
+  leds: tps6105x: add driver for mfd chip led mode
+  dt-bindings: mfd: update TI tps6105x chip bindings
+
+ .../devicetree/bindings/mfd/tps6105x.txt      | 42 ++++++++-
+ drivers/leds/Kconfig                          | 10 +++
+ drivers/leds/Makefile                         |  1 +
+ drivers/leds/leds-tps6105x.c                  | 87 +++++++++++++++++++
+ drivers/mfd/tps6105x.c                        | 34 +++++++-
+ drivers/regulator/tps6105x-regulator.c        |  2 +
+ include/linux/mfd/tps6105x.h                  |  1 +
+ 7 files changed, 173 insertions(+), 4 deletions(-)
+ create mode 100644 drivers/leds/leds-tps6105x.c
+
+-- 
+2.17.1
+
