@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E89FC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:43:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C63AC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:43:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32146208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:43:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 318B2222A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:43:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142205;
-	bh=YoOdhLDsccXJu821EOv0qP752hFVRTq/feQk1vt7ELE=;
+	s=default; t=1574142210;
+	bh=h74CyComC6k5V4ED1SOpCza5IBa+Ykwmr9amfdKUrkU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MVLCU84K4ECYj1L6QONDZ1n+TUNhC72CJMoVGHy3hfNJTUeshWrld9tfXgDfBJpr+
-	 cKr1QcFUNpc9j9XnwvhL+IluOwDSj2xQiZZUkBW1k+Zj0F+lyUEa7GcS/9rsjPDvoX
-	 VvpddeTYT/+T55f5JNWZM3h+IC4BWd9B7KRXXyCM=
+	b=bxvfcEPtK9IIOljlV3RuDfpCBpV2yR/z3LE6qFsT0GheLLDXYyv1Xt40yoq2Vwgn9
+	 lYYd84gOYlCWCbLtu497SCaHmZx2KsvSIzYl20xaL80aSCq2pf+LwiTI6wdAYG+lqk
+	 nyndPJ8Z9oyJYSE9KEYAArcoeCEI4bzotH5MCayo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730735AbfKSFnX (ORCPT
+        id S1728331AbfKSFn3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:43:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38104 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:43:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730707AbfKSFnO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:43:14 -0500
+        id S1730740AbfKSFn0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:43:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B759B21783;
-        Tue, 19 Nov 2019 05:43:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3FDC122309;
+        Tue, 19 Nov 2019 05:43:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142194;
-        bh=YoOdhLDsccXJu821EOv0qP752hFVRTq/feQk1vt7ELE=;
+        s=default; t=1574142205;
+        bh=h74CyComC6k5V4ED1SOpCza5IBa+Ykwmr9amfdKUrkU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JLyXBPpp0QSE4BAJQY+Ya+frIKK+qy4JRgaUj4kblayiX1ycykXSLIAy0MiYIukEV
-         uQDucJ7wjHSL4pdjlNrQVNG+FdKqbQ/plEJGtWrN8CkRAGbGxgayaCwT57e2vkjY+D
-         X5fv2OWVrlQlko10baWZw9s2sLol4lo/Otl73L4w=
+        b=B6ogc4w7af8HiCdAyRbm1fVV3gEm0j7AVpVPDxcZWB1VWikTjnwW9WvNXlFC7v7Xv
+         s2jGIhbb4LsDiEiLhoo+TibRBHfSiMwugENgmqG4Mn/9hOo7jRhYXi4GkgyegaA7oK
+         0DeMaAE0rhx//UmeEHIqzzs45KD0klLRjbzPkB6M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Michael Schmitz <schmitzmic@gmail.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 421/422] net: phy: mdio-bcm-unimac: mark PM functions as __maybe_unused
-Date:   Tue, 19 Nov 2019 06:20:18 +0100
-Message-Id: <20191119051426.475173994@linuxfoundation.org>
+Subject: [PATCH 4.19 401/422] scsi: NCR5380: Withhold disconnect privilege for REQUEST SENSE
+Date:   Tue, 19 Nov 2019 06:19:58 +0100
+Message-Id: <20191119051425.132924551@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -60,51 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Finn Thain <fthain@telegraphics.com.au>
 
-[ Upstream commit 9b97123a584f60a5bca5a2663485768a1f6cd0a4 ]
+[ Upstream commit 7c8ed783c2faa1e3f741844ffac41340338ea0f4 ]
 
-The newly added runtime-pm support causes a harmless warning
-when CONFIG_PM is disabled:
+This is mostly needed because an AztecMonster II target has been observed
+disconnecting REQUEST SENSE commands and then failing to reselect properly.
 
-drivers/net/phy/mdio-bcm-unimac.c:330:12: error: 'unimac_mdio_resume' defined but not used [-Werror=unused-function]
- static int unimac_mdio_resume(struct device *d)
-drivers/net/phy/mdio-bcm-unimac.c:321:12: error: 'unimac_mdio_suspend' defined but not used [-Werror=unused-function]
- static int unimac_mdio_suspend(struct device *d)
-
-Marking the functions as __maybe_unused is the easiest workaround
-and avoids adding #ifdef checks.
-
-Fixes: b78ac6ecd1b6 ("net: phy: mdio-bcm-unimac: Allow configuring MDIO clock divider")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Suggested-by: Michael Schmitz <schmitzmic@gmail.com>
+Tested-by: Michael Schmitz <schmitzmic@gmail.com>
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/mdio-bcm-unimac.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/scsi/NCR5380.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/phy/mdio-bcm-unimac.c b/drivers/net/phy/mdio-bcm-unimac.c
-index 80b9583eaa952..df75efa96a7d9 100644
---- a/drivers/net/phy/mdio-bcm-unimac.c
-+++ b/drivers/net/phy/mdio-bcm-unimac.c
-@@ -318,7 +318,7 @@ static int unimac_mdio_remove(struct platform_device *pdev)
- 	return 0;
- }
+diff --git a/drivers/scsi/NCR5380.c b/drivers/scsi/NCR5380.c
+index d600d3e94ba4a..144bb0c2b3064 100644
+--- a/drivers/scsi/NCR5380.c
++++ b/drivers/scsi/NCR5380.c
+@@ -938,6 +938,8 @@ static bool NCR5380_select(struct Scsi_Host *instance, struct scsi_cmnd *cmd)
+ 	int len;
+ 	int err;
+ 	bool ret = true;
++	bool can_disconnect = instance->irq != NO_IRQ &&
++			      cmd->cmnd[0] != REQUEST_SENSE;
  
--static int unimac_mdio_suspend(struct device *d)
-+static int __maybe_unused unimac_mdio_suspend(struct device *d)
- {
- 	struct unimac_mdio_priv *priv = dev_get_drvdata(d);
+ 	NCR5380_dprint(NDEBUG_ARBITRATION, instance);
+ 	dsprintk(NDEBUG_ARBITRATION, instance, "starting arbitration, id = %d\n",
+@@ -1157,7 +1159,7 @@ static bool NCR5380_select(struct Scsi_Host *instance, struct scsi_cmnd *cmd)
  
-@@ -327,7 +327,7 @@ static int unimac_mdio_suspend(struct device *d)
- 	return 0;
- }
+ 	dsprintk(NDEBUG_SELECTION, instance, "target %d selected, going into MESSAGE OUT phase.\n",
+ 	         scmd_id(cmd));
+-	tmp[0] = IDENTIFY(((instance->irq == NO_IRQ) ? 0 : 1), cmd->device->lun);
++	tmp[0] = IDENTIFY(can_disconnect, cmd->device->lun);
  
--static int unimac_mdio_resume(struct device *d)
-+static int __maybe_unused unimac_mdio_resume(struct device *d)
- {
- 	struct unimac_mdio_priv *priv = dev_get_drvdata(d);
- 	int ret;
+ 	len = 1;
+ 	data = tmp;
 -- 
 2.20.1
 
