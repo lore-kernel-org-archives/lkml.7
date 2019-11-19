@@ -2,137 +2,145 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDD43C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:08:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C59DC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:09:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 957B422304
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:08:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7111C222B3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:09:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=mbobrowski-org.20150623.gappssmtp.com header.i=@mbobrowski-org.20150623.gappssmtp.com header.b="v8Q3Ts5n"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kPWwFSfn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727670AbfKSKIc (ORCPT
+        id S1727695AbfKSKJF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 05:08:32 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:45811 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727262AbfKSKIb (ORCPT
+        Tue, 19 Nov 2019 05:09:05 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:32855 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727016AbfKSKJF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 05:08:31 -0500
-Received: by mail-pg1-f193.google.com with SMTP id k1so9811221pgg.12
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 02:08:31 -0800 (PST)
+        Tue, 19 Nov 2019 05:09:05 -0500
+Received: by mail-qk1-f195.google.com with SMTP id 71so17266936qkl.0
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 02:09:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=mbobrowski-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0as+kqGp44tyRx+kW5oQfsxwSoGdl6l76oT22Nl8N74=;
-        b=v8Q3Ts5nxlnauS/2ghDpbPKFgU64xhcUk2q9N0EIKCrEeCO1UZzdvm7IxtaY2XYPox
-         DIHxrwKQ1tzXYSKoZY5C7lLdHvwJ4dTI9PGVyravK4EbkP01DQ9DhAzxQZutRDhxYmDT
-         VTY4TDGDSPgqLRcJYHp71FgLyYf6puBT63wzO3s3OClM8A+6XXuYqJd8iwbtvJia0tgj
-         yzx/SQrS4tR5h4Z4vSBYh3CE+03HV2elpZ/6xxadUkDMlG/70b7shQf2rPHa+BzqcXm+
-         AOeqQ7WXjQUfeoBP1EqMUCsJykbbdHJQHTfVaz4SF0i/z+y/+FeNRd+CCGbvVX78DTwn
-         FZFQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kthzsFDv3BtXMmmJRQd1qCPqKASHhxamk1aLgY0fuLQ=;
+        b=kPWwFSfnlnu9XmSpJkG19s/iNALUrvrShZ1C2Czk8j+q0g1ifRmXzjO7YHXd0Q1dOX
+         Ken9OddoZlUkmrM9m+umBzKw13kRR7mNzFg1wI+oC8dS+YLk616rxc5Sg81P5atJpGYd
+         qSO9RCZZX9iN4OJKVboKydfL/0ODVcP/UVn+Ts03/6e7WHZEzvm/d7lj5rlvE/wBFAAM
+         VyYt0jJPsXOrT4UMMEdVd5dQ6guTn7n0ZMGStIqBOF5PwnXSg/TNiFkg31py0Zypjp5j
+         vrSh7+Qq3R1ZqjtFGdovVZ0OaPYXl/RW7Jox8/Ua90XBVBAgc/coO/Zw1cCQa2J3oKOU
+         Ydhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0as+kqGp44tyRx+kW5oQfsxwSoGdl6l76oT22Nl8N74=;
-        b=uVe1cOAipEYH4Mu2E7ejkfjFHoodjbonlB3fQr0Em/94WYrf41JR8gHBVVbhEGrWP3
-         8q9Uu7vdOtvXC6jxe/BD2xw/mvGBNdI8q5eIKIltU8fTNb/E9JgPo5IwM351rZySUXsf
-         nUjd2kDIFIyqogElDeVs2fLHA/0oz9h+G2DoZBrpX8g7roA47etTXfDr5TETPALOnYQr
-         fXEUCXW9A4AUvK/A0NX5S1zMc7xZZoExrZRM80+NpFwFL8Fkyd3Trq677WrijlXK6T7p
-         kRkSWMnKnJKjJhvmQvXq/z1vHQfUm+QegZwy5FywDK2uk1hsPI5/qrZnvKWMdDdF+Cdr
-         i8yg==
-X-Gm-Message-State: APjAAAVAN5xyiQTxjMeuT1koZfQYimSngWhjPglei9SyUhoQ10GmBUgM
-        zv6Rg6TXqNKaMZM9h0ba0TUM
-X-Google-Smtp-Source: APXvYqxOjci1H8Ei4WdF79tc6UVvv6rGHGtq5HEtKINHp8jaqtc8G29vaDRMXLC+T1Tt4lx/p/J5UQ==
-X-Received: by 2002:a63:5f49:: with SMTP id t70mr4738291pgb.219.1574158110418;
-        Tue, 19 Nov 2019 02:08:30 -0800 (PST)
-Received: from bobrowski ([110.232.114.101])
-        by smtp.gmail.com with ESMTPSA id v128sm6167533pgv.24.2019.11.19.02.08.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Nov 2019 02:08:29 -0800 (PST)
-Date:   Tue, 19 Nov 2019 21:08:22 +1100
-From:   Matthew Bobrowski <mbobrowski@mbobrowski.org>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Jan Kara <jack@suse.cz>,
-        syzbot <syzbot+991400e8eba7e00a26e1@syzkaller.appspotmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        riteshh@linux.ibm.com, syzkaller-bugs@googlegroups.com,
-        tytso@mit.edu, viro@zeniv.linux.org.uk
-Subject: Re: WARNING in iov_iter_pipe
-Message-ID: <20191119100821.GB22484@bobrowski>
-References: <000000000000d60aa50596c63063@google.com>
- <20191108103148.GE20863@quack2.suse.cz>
- <20191111081628.GB14058@bobrowski>
- <20191119031021.GI3147@sol.localdomain>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kthzsFDv3BtXMmmJRQd1qCPqKASHhxamk1aLgY0fuLQ=;
+        b=rBssdqwarEdujCU6mj/B1h8u7wRvxdtYSgdnTCf/jK3+TVz8yeXQoKDfCFvV9/0BNW
+         XjJRundFvd5GzlT7gdMgEjZR9rgvNArRQ4IR+ufIaW4QYWxRnrVC9ytiSdDXlSzKiDxB
+         WrtuhD2G9TA04Z9fNaIEwbM5qIOAJPyQlvZeoeKvDGh73afuLLn7FJkbg9/Mz4ybP5ak
+         Swg8svo0CIzopNRRLQlPHB0ZWKFYR1SDvLQX6MZNseBlnrt9uB6UibPvSbqejta7iafN
+         8ZaoTm3HV2ywjRMO1KYX+F+33AH1yNvNYFqfiysJA3rFNBsce0vj1mhK7lJM0lTIfLbl
+         tBig==
+X-Gm-Message-State: APjAAAXlZV1o3nV1C5WV8z5mbSiXlh2Bmu/sjsVhSln7W27Q1D+30zP/
+        45+g9mVewfvtk0LrfMkiRF+rzhYR7HPTbfmYTmaEOA==
+X-Google-Smtp-Source: APXvYqz3sW+a1UoaZIdKYgIlbIKJ5VYWfPjuUI7mT8jMQMykt/NPr28fXvPHFDM4PpsUCVdsAZOz5StnaJQW1bzfBxo=
+X-Received: by 2002:a37:6156:: with SMTP id v83mr27936505qkb.43.1574158143641;
+ Tue, 19 Nov 2019 02:09:03 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191119031021.GI3147@sol.localdomain>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <0000000000005c08d10597a3a05d@google.com> <a5f73d92-fdf2-2590-c863-39a181dca8e1@hartkopp.net>
+ <deedd609-6f3b-8035-47e1-252ab221faa1@pengutronix.de> <7934bc2b-597f-0bb3-be2d-32f3b07b4de9@hartkopp.net>
+ <7f5c4546-0c1a-86ae-581e-0203b5fca446@pengutronix.de> <1f7d6ea7-152e-ff18-549c-b196d8b5e3a7@hartkopp.net>
+In-Reply-To: <1f7d6ea7-152e-ff18-549c-b196d8b5e3a7@hartkopp.net>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Tue, 19 Nov 2019 11:08:52 +0100
+Message-ID: <CACT4Y+acOwzqwrJ1OSStRkvdxsmM4RY6mz4qDEFAUpMM2P-FiQ@mail.gmail.com>
+Subject: Re: KMSAN: uninit-value in can_receive
+To:     Oliver Hartkopp <socketcan@hartkopp.net>,
+        Alexander Potapenko <glider@google.com>
+Cc:     Marc Kleine-Budde <mkl@pengutronix.de>,
+        syzbot <syzbot+b02ff0707a97e4e79ebb@syzkaller.appspotmail.com>,
+        David Miller <davem@davemloft.net>, linux-can@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 18, 2019 at 07:10:21PM -0800, Eric Biggers wrote:
-> On Mon, Nov 11, 2019 at 07:16:29PM +1100, Matthew Bobrowski wrote:
-> > On Fri, Nov 08, 2019 at 11:31:48AM +0100, Jan Kara wrote:
-> > > On Thu 07-11-19 10:54:10, syzbot wrote:
-> > > > syzbot found the following crash on:
-> > > > 
-> > > > HEAD commit:    c68c5373 Add linux-next specific files for 20191107
-> > > > git tree:       linux-next
-> > > > console output: https://syzkaller.appspot.com/x/log.txt?x=13d6bcfce00000
-> > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=742545dcdea21726
-> > > > dashboard link: https://syzkaller.appspot.com/bug?extid=991400e8eba7e00a26e1
-> > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1529829ae00000
-> > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16a55c0ce00000
-> > > > 
-> > > > The bug was bisected to:
-> > > > 
-> > > > commit b1b4705d54abedfd69dcdf42779c521aa1e0fbd3
-> > > > Author: Matthew Bobrowski <mbobrowski@mbobrowski.org>
-> > > > Date:   Tue Nov 5 12:01:37 2019 +0000
-> > > > 
-> > > >     ext4: introduce direct I/O read using iomap infrastructure
-> > > 
-> > > Hum, interesting and from the first looks the problem looks real.
-> > > Deciphered reproducer is:
-> > > 
-> > > int fd0 = open("./file0", O_RDWR | O_CREAT | O_EXCL | O_DIRECT, 0);
-> > > int fd1 = open("./file0, O_RDONLY);
-> > > write(fd0, "some_data...", 512);
-> > > sendfile(fd0, fd1, NULL, 0x7fffffa7);
-> > >   -> this is interesting as it will result in reading data from 'file0' at
-> > >      offset X with buffered read and writing them with direct write to
-> > >      offset X+512. So this way we'll grow the file up to those ~2GB in
-> > >      512-byte chunks.
-> > > - not sure if we ever get there but the remainder of the reproducer is:
-> > > fd2 = open("./file0", O_RDWR | O_CREAT | O_NOATIME | O_SYNC, 0);
-> > > sendfile(fd2, fd0, NULL, 0xffffffff)
-> > >   -> doesn't seem too interesting as fd0 is at EOF so this shouldn't do
-> > >      anything.
-> > > 
-> > > Matthew, can you have a look?
-> > 
-> > Sorry Jan, I've been crazy busy lately and I'm out at training this
-> > week. Let me take a look at this and see whether I can determine
-> > what's happening here.
-> > 
-> 
-> FYI, syzbot is still seeing this on linux-next.
-> 
-> Also, a new thread was started to discuss this:
-> https://lkml.kernel.org/linux-ext4/20191113180032.GB12013@quack2.suse.cz/T/#u
-> (Mentioning this in case anyone is following this thread only.)
+On Tue, Nov 19, 2019 at 8:36 AM Oliver Hartkopp <socketcan@hartkopp.net> wrote:
+> On 18/11/2019 22.15, Marc Kleine-Budde wrote:
+> > On 11/18/19 9:49 PM, Oliver Hartkopp wrote:
+> >>
+> >>
+> >> On 18/11/2019 21.29, Marc Kleine-Budde wrote:
+> >>> On 11/18/19 9:25 PM, Oliver Hartkopp wrote:
+> >>
+> >>>>> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> >>>>> Reported-by: syzbot+b02ff0707a97e4e79ebb@syzkaller.appspotmail.com
+> >>>>>
+> >>>>> =====================================================
+> >>>>> BUG: KMSAN: uninit-value in can_receive+0x23c/0x5e0 net/can/af_can.c:649
+> >>>>> CPU: 1 PID: 3490 Comm: syz-executor.2 Not tainted 5.4.0-rc5+ #0
+> >>
+> >>>>
+> >>>> In line 649 of 5.4.0-rc5+ we can find a while() statement:
+> >>>>
+> >>>> while (!(can_skb_prv(skb)->skbcnt))
+> >>>>    can_skb_prv(skb)->skbcnt = atomic_inc_return(&skbcounter);
+> >>>>
+> >>>> In linux/include/linux/can/skb.h we see:
+> >>>>
+> >>>> static inline struct can_skb_priv *can_skb_prv(struct sk_buff *skb)
+> >>>> {
+> >>>>    return (struct can_skb_priv *)(skb->head);
+> >>>> }
+> >>>>
+> >>>> IMO accessing can_skb_prv(skb)->skbcnt at this point is a valid
+> >>>> operation which has no uninitialized value.
+> >>>>
+> >>>> Can this probably be a false positive of KMSAN?
+> >>>
+> >>> The packet is injected via the packet socket into the kernel. Where does
+> >>> skb->head point to in this case? When the skb is a proper
+> >>> kernel-generated skb containing a CAN-2.0 or CAN-FD frame skb->head is
+> >>> maybe properly initialized?
+> >>
+> >> The packet is either received via vcan or vxcan which checks via
+> >> can_dropped_invalid_skb() if we have a valid ETH_P_CAN type skb.
+> >
+> > According to the call stack it's injected into the kernel via a packet
+> > socket and not via v(x)can.
+>
+> See ioctl$ifreq https://syzkaller.appspot.com/x/log.txt?x=14563416e00000
+>
+> 23:11:34 executing program 2:
+> r0 = socket(0x200000000000011, 0x3, 0x0)
+> ioctl$ifreq_SIOCGIFINDEX_vcan(r0, 0x8933,
+> &(0x7f0000000040)={'vxcan1\x00', <r1=>0x0})
+> bind$packet(r0, &(0x7f0000000300)={0x11, 0xc, r1}, 0x14)
+> sendmmsg(r0, &(0x7f0000000d00), 0x400004e, 0x0)
+>
+> We only can receive skbs from (v(x))can devices.
+> No matter if someone wrote to them via PF_CAN or PF_PACKET.
+> We check for ETH_P_CAN(FD) type and ARPHRD_CAN dev type at rx time.
+>
+> >> We additionally might think about introducing a check whether we have a
+> >> can_skb_reserve() created skbuff.
+> >>
+> >> But even if someone forged a skbuff without this reserved space the
+> >> access to can_skb_prv(skb)->skbcnt would point into some CAN frame
+> >> content - which is still no access to uninitialized content, right?
+>
+> So this question remains still valid whether we have a false positive
+> from KMSAN here.
 
-Understood. I suppose this issue will get some more traction this
-week.
-
-/M
++Alex, please check re KMSAN false positive.
+Oliver, Marc, where this skbcnt should have been initialized in this case?
