@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80725C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:28:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5CE9C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:28:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 536F7208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:28:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8966821823
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:28:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141326;
-	bh=uRxI4VmbW20DT+z3xkOGVS9S5XwYCJbyurnaAxCjgwo=;
+	s=default; t=1574141334;
+	bh=cE+XnpIA2UlQ3+nHh+xT7kPEuciIqH7gZf5c/sPtmCU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ceVH0YvtZcJrm4xa2v/cwG5bIpFm2u8eDAHjkqACDnBgZsNbBDWOpFHpMM6HKEYJu
-	 /KnGTKPOgWNuVa/1AEoO/fsw0GufG4sQzFzCLHyaPG1g2rTdilMqkAG+WC8YaazhyI
-	 YCSmjNOloIJM4C5A7NAIFhuWQVm7wfpwHKRgOKJ8=
+	b=f8xFud79Ez9OJksM2kB9zXhMrm6k5XOxsrAiNgTs6jPVSkYC/+GBJcDkmsjqxReg0
+	 16AtuBy93WtIj7yBZrlfuPgdOei8zqfmAgLFPOcmD0dPWP3lyO6mLOGSuAMljKio8s
+	 iTCMJ00nLOlmFYcOclFpmUXlnwN97Xg1IlaI6EWQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727144AbfKSF2p (ORCPT
+        id S1728924AbfKSF2x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:28:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47176 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:28:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47330 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728896AbfKSF2m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:28:42 -0500
+        id S1728914AbfKSF2v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:28:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9790C208C3;
-        Tue, 19 Nov 2019 05:28:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C0D6208C3;
+        Tue, 19 Nov 2019 05:28:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141322;
-        bh=uRxI4VmbW20DT+z3xkOGVS9S5XwYCJbyurnaAxCjgwo=;
+        s=default; t=1574141330;
+        bh=cE+XnpIA2UlQ3+nHh+xT7kPEuciIqH7gZf5c/sPtmCU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NEBZuG6MveAlRQCUYFyPFryNHD8QQr2iwcC2272NTkdsR59zdDrpYz27Fbgn/OPj7
-         UAjREi5dYoB17d6SIxBj9AS82tJFLOvSSexSUBUuj0LN7cJ6ZacvifhGX2DtN3GRj/
-         stD4K2dSJbK0qSlijzVGrxCVYUD7L1R+etvKfL5E=
+        b=lRpYnNcHvoa3KK0R9hkS9V0RU1c4s1MlTLq3zD4eZVoGsRRVjtrpoaVL3DRZDldkx
+         XYg8/85VzslNk3vUXSL64fEnG8IiAZVqV5jT9vUJR0GQu6eGxTZ+q/iU3j5sBUBCHa
+         AiNYtrHGK1fOzCa/VVhBSEPbqSv0YO0VVTJdeZXM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>,
-        Raghuram Chary Jallipalli 
-        <raghuramchary.jallipalli@microchip.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Vidya Dharmaraju <vidyad@marvell.com>,
+        Cathy Luo <cluo@marvell.com>,
+        Ganapathi Bhat <gbhat@marvell.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 121/422] net: lan78xx: Bail out if lan78xx_get_endpoints fails
-Date:   Tue, 19 Nov 2019 06:15:18 +0100
-Message-Id: <20191119051406.868997931@linuxfoundation.org>
+Subject: [PATCH 4.19 097/422] mwifiex: do no submit URB in suspended state
+Date:   Tue, 19 Nov 2019 06:14:54 +0100
+Message-Id: <20191119051405.574997628@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -62,38 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Wahren <stefan.wahren@i2se.com>
+From: Ganapathi Bhat <gbhat@marvell.com>
 
-[ Upstream commit fa8cd98c06407b5798b927cd7fd14d30f360ed02 ]
+[ Upstream commit 7bd4628c2f31c51254aa39628ecae521d00d0b90 ]
 
-We need to bail out if lan78xx_get_endpoints() fails, otherwise the
-result is overwritten.
+There is a possible race between USB suspend and main thread:
 
-Fixes: 55d7de9de6c3 ("Microchip's LAN7800 family USB 2/3 to 10/100/1000 Ethernet")
-Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
-Reviewed-by: Raghuram Chary Jallipalli <raghuramchary.jallipalli@microchip.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+1. After processing the command response, main thread will submit
+rx_cmd URB back so as to process next command response, by
+calling mwifiex_usb_submit_rx_urb.
+
+2. During USB suspend, the suspend handler will check if rx_cmd
+URB is pending(submitted) and if true, kill this URB.
+
+There is a possible race between #1 and #2, where rx_cmd URB will
+be submitted by main thread(#1) after the suspend handler check
+in #2.
+
+To fix this, check if device is already suspended in
+mwifiex_usb_submit_rx_urb, in which case do not submit the URB.
+
+Signed-off-by: Vidya Dharmaraju <vidyad@marvell.com>
+Signed-off-by: Cathy Luo <cluo@marvell.com>
+Signed-off-by: Ganapathi Bhat <gbhat@marvell.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/lan78xx.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/net/wireless/marvell/mwifiex/usb.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
-index 3a172fcb06fe0..50bf4b2080d5f 100644
---- a/drivers/net/usb/lan78xx.c
-+++ b/drivers/net/usb/lan78xx.c
-@@ -2950,6 +2950,11 @@ static int lan78xx_bind(struct lan78xx_net *dev, struct usb_interface *intf)
- 	int i;
+diff --git a/drivers/net/wireless/marvell/mwifiex/usb.c b/drivers/net/wireless/marvell/mwifiex/usb.c
+index 433c6a16870b6..76d80fd545236 100644
+--- a/drivers/net/wireless/marvell/mwifiex/usb.c
++++ b/drivers/net/wireless/marvell/mwifiex/usb.c
+@@ -298,6 +298,13 @@ static int mwifiex_usb_submit_rx_urb(struct urb_context *ctx, int size)
+ 	struct mwifiex_adapter *adapter = ctx->adapter;
+ 	struct usb_card_rec *card = (struct usb_card_rec *)adapter->card;
  
- 	ret = lan78xx_get_endpoints(dev, intf);
-+	if (ret) {
-+		netdev_warn(dev->net, "lan78xx_get_endpoints failed: %d\n",
-+			    ret);
-+		return ret;
++	if (test_bit(MWIFIEX_IS_SUSPENDED, &adapter->work_flags)) {
++		mwifiex_dbg(adapter, ERROR,
++			    "%s: card removed/suspended, EP %d rx_cmd URB submit skipped\n",
++			    __func__, ctx->ep);
++		return -1;
 +	}
- 
- 	dev->data[0] = (unsigned long)kzalloc(sizeof(*pdata), GFP_KERNEL);
- 
++
+ 	if (card->rx_cmd_ep != ctx->ep) {
+ 		ctx->skb = dev_alloc_skb(size);
+ 		if (!ctx->skb) {
 -- 
 2.20.1
 
