@@ -2,174 +2,204 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D6FCC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 18:34:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A83AC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 18:35:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18EEB223BD
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 18:34:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F19E223BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 18:35:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LJwr2bvb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YltOPiP+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727336AbfKSSeR (ORCPT
+        id S1727355AbfKSSfK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 13:34:17 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:34183 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726307AbfKSSeQ (ORCPT
+        Tue, 19 Nov 2019 13:35:10 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:38910 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726510AbfKSSfJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 13:34:16 -0500
-Received: by mail-wm1-f67.google.com with SMTP id j18so3154526wmk.1
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 10:34:15 -0800 (PST)
+        Tue, 19 Nov 2019 13:35:09 -0500
+Received: by mail-ed1-f66.google.com with SMTP id s10so17925950edi.5;
+        Tue, 19 Nov 2019 10:35:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=Bn+l2Wf/udyhGlzXiaSqVzyU1KUJVXlbjswoz1SSVPI=;
-        b=LJwr2bvbV/j2pKgFg1ivR/Cl9JD7Nj7DSYfCANE/CkK+qtGi5DLB9WxTt0HXwN90lG
-         9eDo7bbfD5r+Q7K5te8zJUwQ7c/4sLZ4FEMxZxcnC46QN5y/CGbFgDgFYx7YCGBVJEDu
-         QZT4lrUcwgKV6x8Z/Tbrp6M8xTI13Juvyep88lWnnH3lGu5+6DtrQVJSosOGB15JROO2
-         1BW1s4XvC0d3OdxDE2OWKckdxmy9wCxiOXihH5k1vEHf9NGxyq8ZK/OTMdEhvhCp3n9/
-         nT6eoOwHu0zc4nOS6vSyrs1AG4YU2HxZ5z6RXpIaeHaNk4i9kH2sxEFJPeSQhL4caLFm
-         PrCQ==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=NNpBzdNFmhhSd7kNBXtOOm8GfDDoueWx/oNpEAx7AKg=;
+        b=YltOPiP+y8ocen03LqqKSkh4PraaV02MkXioAXWpnhO02i5mNfCeSiT4g4fjY+Mu6Q
+         dRDG9LB9zMdCD6WhKEOUJ0S+u4NSI1+qRR+AIiC26GbYvAbz1ivAxTay+U4HVmCWnIZP
+         NdFEF80+3WT4zudYpb5xNAw3k+C6JLsxmMplRIh0WEM45uRhNzqJ0Di84vluu4sKahfu
+         KrsoOXFJwwspF6qxSobyAHxTsXwMZWzV9UpN62X1yHrHvkkS9e9OTYe8aObqjrYPdopD
+         os41snqAIUg/XUu6n5aqZJqAVJj4qAzZUvaUEyMdVdTinwy99sqB3OTskc0WO6htxuHk
+         e75g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=Bn+l2Wf/udyhGlzXiaSqVzyU1KUJVXlbjswoz1SSVPI=;
-        b=sdhfacT2jBM4CfHe1YeG1oQ9rdlZUqmN3e2ETNjoMcXvCrGu9DyqPnqQH6tG7aC68m
-         4Y/+3fPtKMyodhx1Rk0B+Vj2NGUp+e2K2+k6FZjg80dRVOH/+ET5ts1Td57i7PIZ6dmy
-         KcM6Fep0OI3uEzUm5wYZKeYOXIcrZsXZrUpGMy+efMMgdjUZr1eOceo+tOHddO4bDK+Z
-         3TZ4PaxbCbLbFQy40IfZyziD4CFNgVRYbOvgnb0CiTFVpgDBQdI/pvgc3ISkAg0EiI+h
-         mwR8hltj7YqYSxW4peGCDiuboy8xBG3budOJcWQtJKfcS/nLJzcZ4VOCSmQrpeIjHW6N
-         pq/w==
-X-Gm-Message-State: APjAAAVaGIW5dZ2TBa0iZ6KUTRWDV0xe0UiHagQoazLUm+mu9lnObd3y
-        r0WiomEtEYgNRxrO6n1PkYByw4vLJxMYaQ==
-X-Google-Smtp-Source: APXvYqz8IHkZ+KMun88d98El+sWtlJ2+nFsVuMX3hoNljvu/FT5dVZKPbVu8aRFB2F+eF7342Kfzsw==
-X-Received: by 2002:a05:600c:295:: with SMTP id 21mr7306267wmk.43.1574188453718;
-        Tue, 19 Nov 2019 10:34:13 -0800 (PST)
-Received: from google.com ([100.105.32.75])
-        by smtp.gmail.com with ESMTPSA id l10sm31930113wrg.90.2019.11.19.10.34.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Nov 2019 10:34:12 -0800 (PST)
-Date:   Tue, 19 Nov 2019 19:34:07 +0100
-From:   Marco Elver <elver@google.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Subject: Re: linux-next: Tree for Nov 19 (kcsan)
-Message-ID: <20191119183407.GA68739@google.com>
-References: <20191119194658.39af50d0@canb.auug.org.au>
- <e75be639-110a-c615-3ec7-a107318b7746@infradead.org>
- <CANpmjNMpnY54kDdGwOPOD84UDf=Fzqtu62ifTds2vZn4t4YigQ@mail.gmail.com>
- <fb7e25d8-aba4-3dcf-7761-cb7ecb3ebb71@infradead.org>
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=NNpBzdNFmhhSd7kNBXtOOm8GfDDoueWx/oNpEAx7AKg=;
+        b=qKYQPA32YpHha+e9YGCsUqRZp1sBd3vdTV1U5qJaFRq62qFNc0FpDeSG5LysGNWvTT
+         zxBO/7cx2BZBa1A145z26Yk6UmxVah45GJsRdkvApvbeNdDuQj6rpYr6194taHXkqaSI
+         Tk1+WY63/cdICl/D4UjlElJ8gc3WT1R/MK2OHZ4TO6WvpMNF9hk4CQzWmombkpiW5XIa
+         L4Zk8PGLxNwDVHR1p//3PPwwXFo46tBL13psfmiI7+yXklKZvl7aGFnoLd+4b3suGxoz
+         hfytAPZjcsmVevBUJRY4QrGCGGR+X3xt+UtEFd7MXiXlNhcQLf4NVTIkeYRPjDmxqcvt
+         fzhA==
+X-Gm-Message-State: APjAAAWP5IGvqp8L8KVMfUqOlJPLfu6D96/SDj+m7bRFaEPS/uoPtNYP
+        ZJRgBzsBq8JrT9sOyJN08Jo=
+X-Google-Smtp-Source: APXvYqykTIVTr3uFQI73JbWTPd5Y29MlxGD7+P2U0cVQNdyhAt6FIsUdh7xYiubyb41i6v4eyUgn8w==
+X-Received: by 2002:a17:906:4913:: with SMTP id b19mr36345801ejq.61.1574188505047;
+        Tue, 19 Nov 2019 10:35:05 -0800 (PST)
+Received: from [10.67.50.53] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id e19sm613164eds.71.2019.11.19.10.35.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 19 Nov 2019 10:35:04 -0800 (PST)
+Subject: Re: [PATCH v2 4/6] PCI: brcmstb: add Broadcom STB PCIe host
+ controller driver
+To:     Andrew Murray <andrew.murray@arm.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     maz@kernel.org, linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Eric Anholt <eric@anholt.net>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com,
+        mbrugger@suse.com, phil@raspberrypi.org, jeremy.linton@arm.com,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20191112155926.16476-1-nsaenzjulienne@suse.de>
+ <20191112155926.16476-5-nsaenzjulienne@suse.de>
+ <20191119162502.GS43905@e119886-lin.cambridge.arm.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
+Message-ID: <8b5ea071-d7a1-ea31-c7fe-3b4585d9cc36@gmail.com>
+Date:   Tue, 19 Nov 2019 10:34:59 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <20191119162502.GS43905@e119886-lin.cambridge.arm.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <fb7e25d8-aba4-3dcf-7761-cb7ecb3ebb71@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 19 Nov 2019, Randy Dunlap wrote:
+On 11/19/19 8:25 AM, Andrew Murray wrote:
+> On Tue, Nov 12, 2019 at 04:59:23PM +0100, Nicolas Saenz Julienne wrote:
+>> From: Jim Quinlan <james.quinlan@broadcom.com>
+>>
+>> This commit adds the basic Broadcom STB PCIe controller.  Missing is the
+>> ability to process MSI. This functionality is added in a subsequent
+>> commit.
+>>
+>> The PCIe block contains an MDIO interface.  This is a local interface
+>> only accessible by the PCIe controller.  It cannot be used or shared
+>> by any other HW.  As such, the small amount of code for this
+>> controller is included in this driver as there is little upside to put
+>> it elsewhere.
+> 
+> This commit message hasn't changed, despite earlier feedback.
 
-> On 11/19/19 8:12 AM, Marco Elver wrote:
-> > On Tue, 19 Nov 2019 at 16:11, Randy Dunlap <rdunlap@infradead.org> wrot=
-e:
-> >>
-> >> On 11/19/19 12:46 AM, Stephen Rothwell wrote:
-> >>> Hi all,
-> >>>
-> >>> Changes since 20191118:
-> >>>
-> >>
-> >> on x86_64:
-> >>
-> >> It seems that this function can already be known by the compiler as a
-> >> builtin:
-> >>
-> >> ../kernel/kcsan/core.c:619:6: warning: conflicting types for built-in =
-function =E2=80=98__tsan_func_exit=E2=80=99 [-Wbuiltin-declaration-mismatch]
-> >>  void __tsan_func_exit(void)
-> >>       ^~~~~~~~~~~~~~~~
-> >>
-> >>
-> >> $ gcc --version
-> >> gcc (SUSE Linux) 7.4.1 20190905 [gcc-7-branch revision 275407]
-> >=20
-> > Interesting. Could you share the .config? So far I haven't been able
-> > to reproduce.
->=20
-> Sure, it's attached.
+Please strip out large parts of the original patch that you are not
+quoting for future responses.
 
-Thanks, the config did the trick, even for gcc 9.0.0.
+[snip]
 
-The problem is CONFIG_UBSAN=3Dy. We haven't explicitly disallowed it like
-with KASAN. In principle there should be nothing wrong with KCSAN+UBSAN.
+> 
+> I'd rather see use of the pcie_cfg_data structure removed from this series.
+> 
+> I've seen the comments in the previous thread [1], and I understand that
+> the intention is that this driver will eventually be used for other SOCs.
+> 
+> However this indirection isn't needed *now* and it makes reviewing this
+> patch more difficult. If and when a later series is made to cover other
+> SOCs - then I'd expect that series to find a way to apply this indirection.
 
-There are 3 options:
-1. Just disable UBSAN for KCSAN, and also disable KCSAN for UBSAN.
-2. Restrict the config to not allow combining KCSAN and UBSAN.
-3. Leave things as-is.
+I am not completely sold on the difficulty to review given that the
+indirection is in place for only 3 registers which are used in only 3
+functions:
 
-Option 1 probably makes most sense, and I'll send a patch for that
-unless there are major objections.
+brcm_pcie_bridge_sw_init_set()
+brcm_pcie_perst_set()
+brcm_pcie_map_conf()
 
-> > I can get the warning if I manually add -fsanitize=3Dthread to flags for
-> > kcsan/core.c (but normally disabled via KCSAN_SANITIZE :=3D n). If
-> > possible could you also share the output of `make V=3D1` for
-> > kcsan/core.c?
->=20
-> here:
+but if you think that is a deal breaker, then, okay, let's get rid of it
+and we will add it back for other STB SoCs in the future.
 
->   gcc -Wp,-MD,kernel/kcsan/.core.o.d  -nostdinc -isystem /usr/lib64/gcc/x=
-86_64-suse-linux/7/include -I../arch/x86/include -I./arch/x86/include/gener=
-ated -I../include -I./include -I../arch/x86/include/uapi -I./arch/x86/inclu=
-de/generated/uapi -I../include/uapi -I./include/generated/uapi -include ../=
-include/linux/kconfig.h -include ../include/linux/compiler_types.h -D__KERN=
-EL__ -Wall -Wundef -Werror=3Dstrict-prototypes -Wno-trigraphs -fno-strict-a=
-liasing -fno-common -fshort-wchar -fno-PIE -Werror=3Dimplicit-function-decl=
-aration -Werror=3Dimplicit-int -Wno-format-security -std=3Dgnu89 -mno-sse -=
-mno-mmx -mno-sse2 -mno-3dnow -mno-avx -m64 -falign-jumps=3D1 -falign-loops=
-=3D1 -mno-80387 -mno-fp-ret-in-387 -mpreferred-stack-boundary=3D3 -mskip-ra=
-x-setup -mtune=3Dgeneric -mno-red-zone -mcmodel=3Dkernel -DCONFIG_AS_CFI=3D=
-1 -DCONFIG_AS_CFI_SIGNAL_FRAME=3D1 -DCONFIG_AS_CFI_SECTIONS=3D1 -DCONFIG_AS=
-_SSSE3=3D1 -DCONFIG_AS_AVX=3D1 -DCONFIG_AS_AVX2=3D1 -DCONFIG_AS_AVX512=3D1 =
--DCONFIG_AS_SHA1_NI=3D1 -DCONFIG_AS_SHA256_NI=3D1 -Wno-sign-compare -fno-as=
-ynchronous-unwind-tables -fno-delete-null-pointer-checks -Wno-frame-address=
- -Wno-format-truncation -Wno-format-overflow -O2 --param=3Dallow-store-data=
--races=3D0 -Wframe-larger-than=3D2048 -fno-stack-protector -Wno-unused-but-=
-set-variable -Wimplicit-fallthrough -Wno-unused-const-variable -fno-omit-fr=
-ame-pointer -fno-optimize-sibling-calls -fno-var-tracking-assignments -Wdec=
-laration-after-statement -Wvla -Wno-pointer-sign -fno-strict-overflow -fno-=
-merge-all-constants -fmerge-constants -fno-stack-check -fconserve-stack -We=
-rror=3Ddate-time -Werror=3Dincompatible-pointer-types -Werror=3Ddesignated-=
-init -fno-conserve-stack -fno-stack-protector  -fprofile-arcs -ftest-covera=
-ge -fno-tree-loop-im -Wno-maybe-uninitialized    -fsanitize=3Dshift  -fsani=
-tize=3Dinteger-divide-by-zero  -fsanitize=3Dunreachable  -fsanitize=3Dsigne=
-d-integer-overflow  -fsanitize=3Dbounds  -fsanitize=3Dobject-size  -fsaniti=
-ze=3Dbool  -fsanitize=3Denum  -Wno-maybe-uninitialized   -I ../kernel/kcsan=
- -I ./kernel/kcsan    -DKBUILD_BASENAME=3D'"core"' -DKBUILD_MODNAME=3D'"cor=
-e"' -c -o kernel/kcsan/core.o ../kernel/kcsan/core.c
-> ../kernel/kcsan/core.c:619:6: warning: conflicting types for built-in fun=
-ction =E2=80=98__tsan_func_exit=E2=80=99 [-Wbuiltin-declaration-mismatch]
+> 
+> And if that later series is more difficult to review because of the newly
+> added indirection, then I'd expect an early patch of that series to apply
+> the indirection in a single patch - which would be easy to review.
+> 
+> The other risk of such premature changes like this is that when you come
+> to adding other SOCs, you may then discover that there were shortcomings
+> in the way you've approached it here.
 
-Adding '-fsanitize=3D<anything>' seems to make gcc think that these are
-builtins. So this is partially also a gcc problem, but if we disable all
-sanitizers with the runtime, then this goes away.
-
-Thanks,
--- Marco
+2711 is the latest SoC that has actually been supported by this driver,
+every other ones that this driver will support in the future has been in
+production for years and all the quirks/subtleties are known. This means
+that 2711 was added while fitting in the existing abstraction and
+Nicholas took out every other chip to leave 2711 only.
+-- 
+Florian
