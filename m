@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E8CBC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:27:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9D2CC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:27:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51621222DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:27:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB92B222DC
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:27:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141247;
-	bh=fb+uDVLzQj+oXotwUSncvB4df9zFhWnG3pcDqa1qYLI=;
+	s=default; t=1574141251;
+	bh=DWeebrJx8H6xViZvK61SrP4XsgVD2r/OoVtegmbXWEs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=njLFRXd84e0og6a8IZh8cyD9kWZCOxVhyP/6mMoVRDpiwI1YIqr9V1eXf4wQ78pMc
-	 PxoLFQlx4Q3xvNM+zT8BjBqItnBgQi+eZjBRXuOsGRIAS9Xyo425UQoS/yqZCYr5oS
-	 zYrVT3wE+9QHiZIHDpTKUIu9Vwz5jJiIkKAOdv9c=
+	b=HfePWKi9U12L66qMK2Dp4Nt7Pczabe15dghbzgkhs7v+hjFr/i52kx4h8ecBqi2+0
+	 cfVgOGcRketg1GnljnQk83zWPZOEP94bbxbdarGbYrdiPkq35i47u6gV2XwVPYnfk8
+	 P9+GzWANs6lux0DQ3qQcdQMHPkM7gJuY44haccB0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728746AbfKSF1Z (ORCPT
+        id S1727756AbfKSF1a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:27:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45652 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:27:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728731AbfKSF1Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:27:24 -0500
+        id S1727723AbfKSF13 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:27:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 401BC22309;
-        Tue, 19 Nov 2019 05:27:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0EA7A21783;
+        Tue, 19 Nov 2019 05:27:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141242;
-        bh=fb+uDVLzQj+oXotwUSncvB4df9zFhWnG3pcDqa1qYLI=;
+        s=default; t=1574141248;
+        bh=DWeebrJx8H6xViZvK61SrP4XsgVD2r/OoVtegmbXWEs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UOmd3ElgNEkvFxNfCon0VWde7nIMDFupPJu9wnV9RHW2vUTfiZCZqQ/tKT7XfG2DN
-         8SqlOFJb6GWfxnGc/Wc4kQMxA6IKR8jnUWRem+LXMMP5JSg3tphOgcz75i9zH3ATpg
-         x4UwanTeTccLL34Md9zO5p2gD+4kBdH0jOeEQsAs=
+        b=obbf7Ch7cof48zmWoBy+cBeHiJBsbLZOwmOQVuRq1nZ/5rgUDitMniQYu5/+hy7Ow
+         tvCaC+G1zD8FUObuV+akiqP4GcySZRMtKalq723PYtUk6w9zFkHyNHOg9Ie9zSQT88
+         2C1CDEkHz31ko8FBvXVROM3Zrdh8jD9/g31qAvHI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Dedy Lansky <dlansky@codeaurora.org>,
+        Maya Erez <merez@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 092/422] media: i2c: Fix pm_runtime_get_if_in_use() usage in sensor drivers
-Date:   Tue, 19 Nov 2019 06:14:49 +0100
-Message-Id: <20191119051405.318887799@linuxfoundation.org>
+Subject: [PATCH 4.19 057/422] wil6210: drop Rx multicast packets that are looped-back to STA
+Date:   Tue, 19 Nov 2019 06:14:14 +0100
+Message-Id: <20191119051403.459992899@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -62,100 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
+From: Dedy Lansky <dlansky@codeaurora.org>
 
-[ Upstream commit 4d471563d87b2b83e73b8abffb9273950e6d2e36 ]
+[ Upstream commit 9a65064abdf82934e0ed4744125f9f466f421f57 ]
 
-pm_runtime_get_if_in_use() returns -EINVAL if runtime PM is disabled. This
-should not be considered an error. Generally the driver has enabled
-runtime PM already so getting this error due to runtime PM being disabled
-will not happen.
+Delivering a looped-back multicast packet to network stack can cause
+higher layer protocols to fail like for example IPv6 DAD.
+In STA mode, upon receiving Rx multicast packet, check if the source
+MAC address is equal to our own MAC address and if so drop the packet.
 
-Instead of checking for lesser or equal to zero, check for zero only.
-Address this for drivers where this pattern exists.
-
-This patch has been produced using the following command:
-
-$ git grep -l pm_runtime_get_if_in_use -- drivers/media/i2c/ | \
-  xargs perl -i -pe 's/(pm_runtime_get_if_in_use\(.*\)) \<\= 0/!$1/'
-
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Reviewed-by: Tomasz Figa <tfiga@chromium.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Dedy Lansky <dlansky@codeaurora.org>
+Signed-off-by: Maya Erez <merez@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/ov13858.c | 2 +-
- drivers/media/i2c/ov2685.c  | 2 +-
- drivers/media/i2c/ov5670.c  | 2 +-
- drivers/media/i2c/ov5695.c  | 2 +-
- drivers/media/i2c/ov7740.c  | 2 +-
- 5 files changed, 5 insertions(+), 5 deletions(-)
+ drivers/net/wireless/ath/wil6210/txrx.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/i2c/ov13858.c b/drivers/media/i2c/ov13858.c
-index a66f6201f53c7..0e7a85c4996c7 100644
---- a/drivers/media/i2c/ov13858.c
-+++ b/drivers/media/i2c/ov13858.c
-@@ -1230,7 +1230,7 @@ static int ov13858_set_ctrl(struct v4l2_ctrl *ctrl)
- 	 * Applying V4L2 control value only happens
- 	 * when power is up for streaming
- 	 */
--	if (pm_runtime_get_if_in_use(&client->dev) <= 0)
-+	if (!pm_runtime_get_if_in_use(&client->dev))
- 		return 0;
- 
- 	ret = 0;
-diff --git a/drivers/media/i2c/ov2685.c b/drivers/media/i2c/ov2685.c
-index 385c1886a9470..98a1f2e312b58 100644
---- a/drivers/media/i2c/ov2685.c
-+++ b/drivers/media/i2c/ov2685.c
-@@ -549,7 +549,7 @@ static int ov2685_set_ctrl(struct v4l2_ctrl *ctrl)
- 		break;
+diff --git a/drivers/net/wireless/ath/wil6210/txrx.c b/drivers/net/wireless/ath/wil6210/txrx.c
+index 1b1b58e0129a3..25a65ca424c84 100644
+--- a/drivers/net/wireless/ath/wil6210/txrx.c
++++ b/drivers/net/wireless/ath/wil6210/txrx.c
+@@ -766,7 +766,14 @@ void wil_netif_rx_any(struct sk_buff *skb, struct net_device *ndev)
+ 		return;
  	}
  
--	if (pm_runtime_get_if_in_use(&client->dev) <= 0)
-+	if (!pm_runtime_get_if_in_use(&client->dev))
- 		return 0;
- 
- 	switch (ctrl->id) {
-diff --git a/drivers/media/i2c/ov5670.c b/drivers/media/i2c/ov5670.c
-index 7b7c74d773707..53dd30d96e691 100644
---- a/drivers/media/i2c/ov5670.c
-+++ b/drivers/media/i2c/ov5670.c
-@@ -2016,7 +2016,7 @@ static int ov5670_set_ctrl(struct v4l2_ctrl *ctrl)
- 	}
- 
- 	/* V4L2 controls values will be applied only when power is already up */
--	if (pm_runtime_get_if_in_use(&client->dev) <= 0)
-+	if (!pm_runtime_get_if_in_use(&client->dev))
- 		return 0;
- 
- 	switch (ctrl->id) {
-diff --git a/drivers/media/i2c/ov5695.c b/drivers/media/i2c/ov5695.c
-index 9a80decd93d3c..5d107c53364d6 100644
---- a/drivers/media/i2c/ov5695.c
-+++ b/drivers/media/i2c/ov5695.c
-@@ -1110,7 +1110,7 @@ static int ov5695_set_ctrl(struct v4l2_ctrl *ctrl)
- 		break;
- 	}
- 
--	if (pm_runtime_get_if_in_use(&client->dev) <= 0)
-+	if (!pm_runtime_get_if_in_use(&client->dev))
- 		return 0;
- 
- 	switch (ctrl->id) {
-diff --git a/drivers/media/i2c/ov7740.c b/drivers/media/i2c/ov7740.c
-index 8a6a7a5929aa3..7804013934ab5 100644
---- a/drivers/media/i2c/ov7740.c
-+++ b/drivers/media/i2c/ov7740.c
-@@ -510,7 +510,7 @@ static int ov7740_set_ctrl(struct v4l2_ctrl *ctrl)
- 	int ret;
- 	u8 val = 0;
- 
--	if (pm_runtime_get_if_in_use(&client->dev) <= 0)
-+	if (!pm_runtime_get_if_in_use(&client->dev))
- 		return 0;
- 
- 	switch (ctrl->id) {
+-	if (wdev->iftype == NL80211_IFTYPE_AP && !vif->ap_isolate) {
++	if (wdev->iftype == NL80211_IFTYPE_STATION) {
++		if (mcast && ether_addr_equal(eth->h_source, ndev->dev_addr)) {
++			/* mcast packet looped back to us */
++			rc = GRO_DROP;
++			dev_kfree_skb(skb);
++			goto stats;
++		}
++	} else if (wdev->iftype == NL80211_IFTYPE_AP && !vif->ap_isolate) {
+ 		if (mcast) {
+ 			/* send multicast frames both to higher layers in
+ 			 * local net stack and back to the wireless medium
 -- 
 2.20.1
 
