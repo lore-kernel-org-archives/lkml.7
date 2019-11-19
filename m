@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24EC0C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:09:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17347C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:09:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0E9920692
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:09:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD97D20692
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:09:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574143760;
-	bh=0mGVJ9uX0ARCdCw/vdbCln6Nb+99wd6SXVvf6W+1R9I=;
+	s=default; t=1574143763;
+	bh=NgTsZq5LbL3QYqBe2oz5+VeHyhCREUqx2iZfVrpgkDA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QEkuRaJr/rmrIbyF/22vT7SZwoea/M7Y4jDyht91F977hjiMqeV3Obj1NJ8qQw2RN
-	 4dqA3G2OAz1JefCmBfG3Du5ZlDwthLFNptMvHH2sij1BG/XegjbX5gzO8OJZ+T/2DT
-	 BpTxhmKi7P2OMoRRsqrARcg4CaelC8OSUSHoCU3Q=
+	b=ZmTdtRplszSEUX9moYbzyAnF6jmFyHRRj+5g1/jY6YKFvHoT7cBItgUcx2taLEoZJ
+	 Z6tAcvNN1q6P7ucsiqETr++8pw04R2cTGDV/Nw7j2IGH+McL4R+Iw5iz+3znyrJFBe
+	 W8X+802VwTbBOBPVXWbj1kvw2PEJc09sUKGY0dg4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728935AbfKSF3H (ORCPT
+        id S1728764AbfKSGJW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:29:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47542 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 01:09:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728388AbfKSF3E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:29:04 -0500
+        id S1727908AbfKSF3A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:29:00 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1F39208C3;
-        Tue, 19 Nov 2019 05:29:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2BABB208C3;
+        Tue, 19 Nov 2019 05:28:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141342;
-        bh=0mGVJ9uX0ARCdCw/vdbCln6Nb+99wd6SXVvf6W+1R9I=;
+        s=default; t=1574141339;
+        bh=NgTsZq5LbL3QYqBe2oz5+VeHyhCREUqx2iZfVrpgkDA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0+D3G4RFix6I+VJuhjoyJoNo0mPkGvhD38FSf7uudAMpKiS7kVsZ4WF95UVgUXcdM
-         7MmY96FxQ/L+KeAia8dHfpXaKLupEIUOUnJEY5seth08P9bheFIQj1Fvaq/BCYL2BD
-         xQ0GPyKFI8Abxw0H4Yy+g6tVrnBw7bEUJeLfbc08=
+        b=hAiFeNHvMR07ri0yW3dEH8Tt346gdCoy2bm73BLj/amr/EpmidoOsux22M8EFcAbu
+         aHa02IJpQND5bi6Xi52C2zamzSrCoRdLLysSWwozFUH6i9DQjktwOUHUAOceHVeuKa
+         zWGeh7ad1snGggfj2nQWpOtOz+61rbmCiD6Z+YrQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jun Gao <jun.gao@mediatek.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
+        stable@vger.kernel.org, Erik Stromdahl <erik.stromdahl@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 127/422] i2c: mediatek: Use DMA safe buffers for i2c transactions
-Date:   Tue, 19 Nov 2019 06:15:24 +0100
-Message-Id: <20191119051407.175902069@linuxfoundation.org>
+Subject: [PATCH 4.19 126/422] ath10k: wmi: disable softirqs while calling ieee80211_rx
+Date:   Tue, 19 Nov 2019 06:15:23 +0100
+Message-Id: <20191119051407.125019358@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -60,140 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jun Gao <jun.gao@mediatek.com>
+From: Erik Stromdahl <erik.stromdahl@gmail.com>
 
-[ Upstream commit fc66b39fe36acfd06f716e338de7cd8f9550fad2 ]
+[ Upstream commit 37f62c0d5822f631b786b29a1b1069ab714d1a28 ]
 
-DMA mode will always be used in i2c transactions, try to allocate
-a DMA safe buffer if the buf of struct i2c_msg used is not DMA safe.
+This is done in order not to trig the below warning in
+ieee80211_rx_napi:
 
-Signed-off-by: Jun Gao <jun.gao@mediatek.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+WARN_ON_ONCE(softirq_count() == 0);
+
+ieee80211_rx_napi requires that softirq's are disabled during
+execution.
+
+The High latency bus drivers (SDIO and USB) sometimes call the wmi
+ep_rx_complete callback from non softirq context, resulting in a trigger
+of the above warning.
+
+Calling ieee80211_rx_ni with softirq's already disabled (e.g., from
+softirq context) should be safe as the local_bh_disable and
+local_bh_enable functions (called from ieee80211_rx_ni) are fully
+reentrant.
+
+Signed-off-by: Erik Stromdahl <erik.stromdahl@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-mt65xx.c | 62 +++++++++++++++++++++++++++++----
- 1 file changed, 55 insertions(+), 7 deletions(-)
+ drivers/net/wireless/ath/ath10k/wmi.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/i2c/busses/i2c-mt65xx.c b/drivers/i2c/busses/i2c-mt65xx.c
-index 1e57f58fcb001..a74ef76705e0c 100644
---- a/drivers/i2c/busses/i2c-mt65xx.c
-+++ b/drivers/i2c/busses/i2c-mt65xx.c
-@@ -441,6 +441,8 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
- 	u16 control_reg;
- 	u16 restart_flag = 0;
- 	u32 reg_4g_mode;
-+	u8 *dma_rd_buf = NULL;
-+	u8 *dma_wr_buf = NULL;
- 	dma_addr_t rpaddr = 0;
- 	dma_addr_t wpaddr = 0;
- 	int ret;
-@@ -500,10 +502,18 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
- 	if (i2c->op == I2C_MASTER_RD) {
- 		writel(I2C_DMA_INT_FLAG_NONE, i2c->pdmabase + OFFSET_INT_FLAG);
- 		writel(I2C_DMA_CON_RX, i2c->pdmabase + OFFSET_CON);
--		rpaddr = dma_map_single(i2c->dev, msgs->buf,
-+
-+		dma_rd_buf = i2c_get_dma_safe_msg_buf(msgs, 0);
-+		if (!dma_rd_buf)
-+			return -ENOMEM;
-+
-+		rpaddr = dma_map_single(i2c->dev, dma_rd_buf,
- 					msgs->len, DMA_FROM_DEVICE);
--		if (dma_mapping_error(i2c->dev, rpaddr))
-+		if (dma_mapping_error(i2c->dev, rpaddr)) {
-+			i2c_put_dma_safe_msg_buf(dma_rd_buf, msgs, false);
-+
- 			return -ENOMEM;
-+		}
+diff --git a/drivers/net/wireless/ath/ath10k/wmi.c b/drivers/net/wireless/ath/ath10k/wmi.c
+index 583147f00fa4e..40b36e73bb48c 100644
+--- a/drivers/net/wireless/ath/ath10k/wmi.c
++++ b/drivers/net/wireless/ath/ath10k/wmi.c
+@@ -2487,7 +2487,8 @@ int ath10k_wmi_event_mgmt_rx(struct ath10k *ar, struct sk_buff *skb)
+ 		   status->freq, status->band, status->signal,
+ 		   status->rate_idx);
  
- 		if (i2c->dev_comp->support_33bits) {
- 			reg_4g_mode = mtk_i2c_set_4g_mode(rpaddr);
-@@ -515,10 +525,18 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
- 	} else if (i2c->op == I2C_MASTER_WR) {
- 		writel(I2C_DMA_INT_FLAG_NONE, i2c->pdmabase + OFFSET_INT_FLAG);
- 		writel(I2C_DMA_CON_TX, i2c->pdmabase + OFFSET_CON);
--		wpaddr = dma_map_single(i2c->dev, msgs->buf,
+-	ieee80211_rx(ar->hw, skb);
++	ieee80211_rx_ni(ar->hw, skb);
 +
-+		dma_wr_buf = i2c_get_dma_safe_msg_buf(msgs, 0);
-+		if (!dma_wr_buf)
-+			return -ENOMEM;
-+
-+		wpaddr = dma_map_single(i2c->dev, dma_wr_buf,
- 					msgs->len, DMA_TO_DEVICE);
--		if (dma_mapping_error(i2c->dev, wpaddr))
-+		if (dma_mapping_error(i2c->dev, wpaddr)) {
-+			i2c_put_dma_safe_msg_buf(dma_wr_buf, msgs, false);
-+
- 			return -ENOMEM;
-+		}
+ 	return 0;
+ }
  
- 		if (i2c->dev_comp->support_33bits) {
- 			reg_4g_mode = mtk_i2c_set_4g_mode(wpaddr);
-@@ -530,16 +548,39 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
- 	} else {
- 		writel(I2C_DMA_CLR_FLAG, i2c->pdmabase + OFFSET_INT_FLAG);
- 		writel(I2C_DMA_CLR_FLAG, i2c->pdmabase + OFFSET_CON);
--		wpaddr = dma_map_single(i2c->dev, msgs->buf,
-+
-+		dma_wr_buf = i2c_get_dma_safe_msg_buf(msgs, 0);
-+		if (!dma_wr_buf)
-+			return -ENOMEM;
-+
-+		wpaddr = dma_map_single(i2c->dev, dma_wr_buf,
- 					msgs->len, DMA_TO_DEVICE);
--		if (dma_mapping_error(i2c->dev, wpaddr))
-+		if (dma_mapping_error(i2c->dev, wpaddr)) {
-+			i2c_put_dma_safe_msg_buf(dma_wr_buf, msgs, false);
-+
- 			return -ENOMEM;
--		rpaddr = dma_map_single(i2c->dev, (msgs + 1)->buf,
-+		}
-+
-+		dma_rd_buf = i2c_get_dma_safe_msg_buf((msgs + 1), 0);
-+		if (!dma_rd_buf) {
-+			dma_unmap_single(i2c->dev, wpaddr,
-+					 msgs->len, DMA_TO_DEVICE);
-+
-+			i2c_put_dma_safe_msg_buf(dma_wr_buf, msgs, false);
-+
-+			return -ENOMEM;
-+		}
-+
-+		rpaddr = dma_map_single(i2c->dev, dma_rd_buf,
- 					(msgs + 1)->len,
- 					DMA_FROM_DEVICE);
- 		if (dma_mapping_error(i2c->dev, rpaddr)) {
- 			dma_unmap_single(i2c->dev, wpaddr,
- 					 msgs->len, DMA_TO_DEVICE);
-+
-+			i2c_put_dma_safe_msg_buf(dma_wr_buf, msgs, false);
-+			i2c_put_dma_safe_msg_buf(dma_rd_buf, (msgs + 1), false);
-+
- 			return -ENOMEM;
- 		}
- 
-@@ -578,14 +619,21 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
- 	if (i2c->op == I2C_MASTER_WR) {
- 		dma_unmap_single(i2c->dev, wpaddr,
- 				 msgs->len, DMA_TO_DEVICE);
-+
-+		i2c_put_dma_safe_msg_buf(dma_wr_buf, msgs, true);
- 	} else if (i2c->op == I2C_MASTER_RD) {
- 		dma_unmap_single(i2c->dev, rpaddr,
- 				 msgs->len, DMA_FROM_DEVICE);
-+
-+		i2c_put_dma_safe_msg_buf(dma_rd_buf, msgs, true);
- 	} else {
- 		dma_unmap_single(i2c->dev, wpaddr, msgs->len,
- 				 DMA_TO_DEVICE);
- 		dma_unmap_single(i2c->dev, rpaddr, (msgs + 1)->len,
- 				 DMA_FROM_DEVICE);
-+
-+		i2c_put_dma_safe_msg_buf(dma_wr_buf, msgs, true);
-+		i2c_put_dma_safe_msg_buf(dma_rd_buf, (msgs + 1), true);
- 	}
- 
- 	if (ret == 0) {
 -- 
 2.20.1
 
