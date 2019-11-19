@@ -2,83 +2,106 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C830C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 22:36:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F4031C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 22:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D49D722449
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 22:36:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C144F223CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 22:37:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RtfBjceW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727334AbfKSWg2 (ORCPT
+        id S1727357AbfKSWhk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 17:36:28 -0500
-Received: from foss.arm.com ([217.140.110.172]:59118 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726196AbfKSWg2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 17:36:28 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0B54631B;
-        Tue, 19 Nov 2019 14:36:28 -0800 (PST)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5AF473F52E;
-        Tue, 19 Nov 2019 14:36:26 -0800 (PST)
-Date:   Tue, 19 Nov 2019 22:36:24 +0000
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Jiri Kosina <jkosina@suse.cz>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Eiichi Tsukata <devel@etsukata.com>,
-        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Pavankumar Kondeti <pkondeti@codeaurora.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 12/12] cpu: Hide cpu_up/down
-Message-ID: <20191119223623.y63qalyj6t72saip@e107158-lin.cambridge.arm.com>
-References: <20191030153837.18107-1-qais.yousef@arm.com>
- <20191030153837.18107-13-qais.yousef@arm.com>
- <alpine.DEB.2.21.1911192323310.6731@nanos.tec.linutronix.de>
+        Tue, 19 Nov 2019 17:37:40 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:35955 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725978AbfKSWhk (ORCPT
+        <rfc822;Linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 17:37:40 -0500
+Received: by mail-qk1-f196.google.com with SMTP id d13so19487705qko.3
+        for <Linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 14:37:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ZEOOoFMFSjHOIZGiBUfdMLMJjq1LDc/7KLjrRN/WD68=;
+        b=RtfBjceWARXurVIXkpT5H7OOXLnZqZ3arZOikAYSTaYAhDDnN78Ijj2p/70Qybzc/Z
+         QZ12kTGqs4Mi0KO+vaGvjZICHSHxFkwbjCg9Z5AliTBYcnkWQLXF7ayxjukapGstnGwQ
+         u8xFmeDqQVJiSFUvUMBTvPpkYCsONo2cg0AqE68GA17Lfa2iwI8TpXKylqFLwGMrtTcD
+         us7fxZ76LZTVzItxrNBCCEMdQK+b2blydutm3nzyfhbp1Cc8ghx5NmSnCoZIxz6Y441I
+         7rbIhIK8JXXSTpMmyknTHANc9FCmwe9axGAZO33ULuitxfCCdy76SQFOlw4/sQdNvKI2
+         xcTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZEOOoFMFSjHOIZGiBUfdMLMJjq1LDc/7KLjrRN/WD68=;
+        b=D1PbHYlujsOp26f2X9eLDupmgF8gjxyjzPQ7/+uu7A3uqSuG10e47ZcqSQWWXfGtZm
+         ixQvLklvC+wGWzOn8IaP+211OjsNgV4BP/HH7M4ZM2P+oFbtN6AxONSE64PzlXXdnsfj
+         WeMTLE9JxQ75T1Ku0lC6M2o/E8FZsz38a5/EjdLtru1u/YLo2ERVTpJMc6O/mWaUX7PY
+         AbtWat9j86yEST8Sk2y551NFQkVzoiu0cY11cot9K4hqoTSZhprxh2bsCFCOnksdNLC4
+         yzDpxjqMxYZf5JF1lmG31BZqT47UjguvNDQcpkxSuuomP7sSQR8w5l24b9LfIvnR8YDT
+         YbGA==
+X-Gm-Message-State: APjAAAUa2L//Bkix5o96pykTAR+Hta6dVRMQhVCU0TztZJaIyJDO/ReL
+        kwa0Ph3ldGjNrwLf7ZUqoJU=
+X-Google-Smtp-Source: APXvYqyYdpmBsd80CknCNGxfnoEqjc4+AHvbeXc2pdVwiW/sPzs/a1tHJysMm1MK5E6qivBKIrvMgQ==
+X-Received: by 2002:a05:620a:3dd:: with SMTP id r29mr10377qkm.370.1574203057588;
+        Tue, 19 Nov 2019 14:37:37 -0800 (PST)
+Received: from quaco.ghostprotocols.net ([190.15.121.82])
+        by smtp.gmail.com with ESMTPSA id r126sm10899922qke.98.2019.11.19.14.37.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Nov 2019 14:37:36 -0800 (PST)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 38F4B40D3E; Tue, 19 Nov 2019 19:37:34 -0300 (-03)
+Date:   Tue, 19 Nov 2019 19:37:34 -0300
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Jin Yao <yao.jin@linux.intel.com>, jolsa@kernel.org,
+        peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@linux.intel.com, Linux-kernel@vger.kernel.org,
+        ak@linux.intel.com, kan.liang@intel.com, yao.jin@intel.com
+Subject: Re: [PATCH v2 1/2] perf util: Move block tui function to ui browsers
+Message-ID: <20191119223734.GE24290@kernel.org>
+References: <20191118140849.20714-1-yao.jin@linux.intel.com>
+ <20191119200927.GB7364@krava>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1911192323310.6731@nanos.tec.linutronix.de>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <20191119200927.GB7364@krava>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/19/19 23:25, Thomas Gleixner wrote:
-> On Wed, 30 Oct 2019, Qais Yousef wrote:
-> > -int cpu_down(unsigned int cpu)
-> > +static int cpu_down(unsigned int cpu)
-> >  {
-> >  	return do_cpu_down(cpu, CPUHP_OFFLINE);
-> >  }
-> > -EXPORT_SYMBOL(cpu_down);
+Em Tue, Nov 19, 2019 at 09:09:27PM +0100, Jiri Olsa escreveu:
+> On Mon, Nov 18, 2019 at 10:08:48PM +0800, Jin Yao wrote:
+> > It would be nice if we could jump to the assembler/source view
+> > (like the normal perf report) from total cycles view.
+> > 
+> > This patch moves the block_hists_tui_browse from block-info.c
+> > to ui/browsers/hists.c in order to reuse some browser codes
+> > (i.e do_annotate) for implementing new annotation view.
+> > 
+> >  v2:
+> >  ---
+> >  Fix the 'make NO_SLANG=1' error. (Change 'int block_hists_tui_browse()'
+> >  to 'static inline int block_hists_tui_browse()')
+> > 
+> > Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
 > 
-> The exports should be gone already at this point, right?
-
-Yes. The only in-kernel user was the torture test.
-
-> > +/*
-> > + * This function is meant to be used by device core cpu subsystem.
-> > + *
-> > + * Other subsystems should use device_offline(get_cpu_device(cpu)) instead.
-> > + */
+> for both patches
 > 
-> Can you please use proper kernel-doc function documentation?
+> Acked-by:  Olsa <jolsa@redhat.com>
 
-Will do.
+Thanks, tested and applied.
 
-Thanks
-
---
-Qais Yousef
+- Arnaldo
