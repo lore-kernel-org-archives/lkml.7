@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94924C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:39:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20546C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:39:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66F66208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:39:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1B1321783
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:39:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141982;
-	bh=Rfmjqkau+tjt9cLR5sKx6mt50z1XkyNZEX7X5G4NvvI=;
+	s=default; t=1574141989;
+	bh=isimNGV8EFFjgRGHPfCqxbiGejExCGEYIzUjW3Qx7LU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bxX8baP67VbDv0aem+hcDH7+XxAIWWT9ojgnrSFJpqlScAkMzkTfMw+4tyjzAjbmM
-	 bwIlhGbi335p4+lpuhijcLL8uDvPPr9eSnAj1yZZKlw9fXwicjsLlDWT91JMAr/j/d
-	 n6DW26eOaTDmVZgbVJJpVduC3ojxjSnXbokifDQk=
+	b=r41bkPafdL2DSnUHr/ROcfc3XqFvk9r84xJsviSzDzVLiY991RrQJlev54F7GGOKE
+	 iGpMiKwRoT9VwnndBBmKlZrjrh+NTYyAHrCvIfgfDm1VYNRk5BAh64OfoXmqxd45do
+	 jVAJ70FEuCT6GOga2s3llm6JeKk47YnI6KOe0Zzg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730310AbfKSFjl (ORCPT
+        id S1729552AbfKSFjr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:39:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33738 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:39:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729634AbfKSFji (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:39:38 -0500
+        id S1729934AbfKSFjn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:39:43 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DEB521823;
-        Tue, 19 Nov 2019 05:39:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7292F218BA;
+        Tue, 19 Nov 2019 05:39:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141977;
-        bh=Rfmjqkau+tjt9cLR5sKx6mt50z1XkyNZEX7X5G4NvvI=;
+        s=default; t=1574141983;
+        bh=isimNGV8EFFjgRGHPfCqxbiGejExCGEYIzUjW3Qx7LU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a/x+0mW43pb4lG4OXokW59IeLZZZk6hUzoEMXxWP1XSWC0tKmzqmBqcXdCb4p583z
-         iE0YvbA8+CH9MfReSIMV3UP8VxJ2PHqNwXkKjKPnDLHzQUPIz1W8R03N0sWBF9CjeG
-         W+0w7tA+2FNi/AbhAOWUDqXQ/utqiaDXOiSqCEOM=
+        b=nN2W9AfG2QtYKndHW5+LUO8dWln75PAoY7fH6lX28ylcAZPeS2KAm6UP9ZTJhZ/7y
+         rkkWkaO5lfFspatJV/Jjfeh3uuJyLkFgSnd8D6KTglWQn/6X/NKkBRLcZ7rHI/eNxH
+         mBmfFSFGiMcO6n+JkS2DFdYkukHl9vq7cS+H1WaU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, zhong jiang <zhongjiang@huawei.com>,
+        stable@vger.kernel.org,
         Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 344/422] coresight: Use ERR_CAST instead of ERR_PTR
-Date:   Tue, 19 Nov 2019 06:19:01 +0100
-Message-Id: <20191119051421.305408356@linuxfoundation.org>
+Subject: [PATCH 4.19 346/422] coresight: perf: Fix per cpu path management
+Date:   Tue, 19 Nov 2019 06:19:03 +0100
+Message-Id: <20191119051421.434014178@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -60,34 +61,200 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhong jiang <zhongjiang@huawei.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-[ Upstream commit bbd35ba6fab5419e58e96f35f1431f13bdc14f98 ]
+[ Upstream commit 5ecabe4a76e8cdb61fa3e24862d9ca240a1c4ddf ]
 
-Use ERR_CAT inlined function to replace the ERR_PTR(PTR_ERR). It
-make the code more concise.
+We create a coresight trace path for each online CPU when
+we start the event. We rely on the number of online CPUs
+and then go on to allocate an array matching the "number of
+online CPUs" for holding the path and then uses normal
+CPU id as the index to the array. This is problematic as
+we could have some offline CPUs causing us to access beyond
+the actual array size (e.g, on a dual SMP system, if CPU0 is
+offline, CPU1 could be really accessing beyond the array).
+The solution is to switch to per-cpu array for holding the path.
 
-Signed-off-by: zhong jiang <zhongjiang@huawei.com>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwtracing/coresight/coresight-tmc-etr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../hwtracing/coresight/coresight-etm-perf.c  | 55 ++++++++++++++-----
+ 1 file changed, 40 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
-index 2eda5de304c20..11963647e19ae 100644
---- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
-+++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
-@@ -536,7 +536,7 @@ tmc_init_etr_sg_table(struct device *dev, int node,
- 	sg_table = tmc_alloc_sg_table(dev, node, nr_tpages, nr_dpages, pages);
- 	if (IS_ERR(sg_table)) {
- 		kfree(etr_table);
--		return ERR_PTR(PTR_ERR(sg_table));
-+		return ERR_CAST(sg_table);
+diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
+index 0f5e03e4df22c..4b53d55788a07 100644
+--- a/drivers/hwtracing/coresight/coresight-etm-perf.c
++++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
+@@ -12,6 +12,7 @@
+ #include <linux/mm.h>
+ #include <linux/init.h>
+ #include <linux/perf_event.h>
++#include <linux/percpu-defs.h>
+ #include <linux/slab.h>
+ #include <linux/types.h>
+ #include <linux/workqueue.h>
+@@ -33,7 +34,7 @@ struct etm_event_data {
+ 	struct work_struct work;
+ 	cpumask_t mask;
+ 	void *snk_config;
+-	struct list_head **path;
++	struct list_head * __percpu *path;
+ };
+ 
+ static DEFINE_PER_CPU(struct perf_output_handle, ctx_handle);
+@@ -61,6 +62,18 @@ static const struct attribute_group *etm_pmu_attr_groups[] = {
+ 	NULL,
+ };
+ 
++static inline struct list_head **
++etm_event_cpu_path_ptr(struct etm_event_data *data, int cpu)
++{
++	return per_cpu_ptr(data->path, cpu);
++}
++
++static inline struct list_head *
++etm_event_cpu_path(struct etm_event_data *data, int cpu)
++{
++	return *etm_event_cpu_path_ptr(data, cpu);
++}
++
+ static void etm_event_read(struct perf_event *event) {}
+ 
+ static int etm_addr_filters_alloc(struct perf_event *event)
+@@ -120,23 +133,26 @@ static void free_event_data(struct work_struct *work)
+ 	 */
+ 	if (event_data->snk_config) {
+ 		cpu = cpumask_first(mask);
+-		sink = coresight_get_sink(event_data->path[cpu]);
++		sink = coresight_get_sink(etm_event_cpu_path(event_data, cpu));
+ 		if (sink_ops(sink)->free_buffer)
+ 			sink_ops(sink)->free_buffer(event_data->snk_config);
  	}
  
- 	etr_table->sg_table = sg_table;
+ 	for_each_cpu(cpu, mask) {
+-		if (!(IS_ERR_OR_NULL(event_data->path[cpu])))
+-			coresight_release_path(event_data->path[cpu]);
++		struct list_head **ppath;
++
++		ppath = etm_event_cpu_path_ptr(event_data, cpu);
++		if (!(IS_ERR_OR_NULL(*ppath)))
++			coresight_release_path(*ppath);
++		*ppath = NULL;
+ 	}
+ 
+-	kfree(event_data->path);
++	free_percpu(event_data->path);
+ 	kfree(event_data);
+ }
+ 
+ static void *alloc_event_data(int cpu)
+ {
+-	int size;
+ 	cpumask_t *mask;
+ 	struct etm_event_data *event_data;
+ 
+@@ -147,7 +163,6 @@ static void *alloc_event_data(int cpu)
+ 
+ 	/* Make sure nothing disappears under us */
+ 	get_online_cpus();
+-	size = num_online_cpus();
+ 
+ 	mask = &event_data->mask;
+ 	if (cpu != -1)
+@@ -164,8 +179,8 @@ static void *alloc_event_data(int cpu)
+ 	 * unused memory when dealing with single CPU trace scenarios is small
+ 	 * compared to the cost of searching through an optimized array.
+ 	 */
+-	event_data->path = kcalloc(size,
+-				   sizeof(struct list_head *), GFP_KERNEL);
++	event_data->path = alloc_percpu(struct list_head *);
++
+ 	if (!event_data->path) {
+ 		kfree(event_data);
+ 		return NULL;
+@@ -213,6 +228,7 @@ static void *etm_setup_aux(struct perf_event *event, void **pages,
+ 
+ 	/* Setup the path for each CPU in a trace session */
+ 	for_each_cpu(cpu, mask) {
++		struct list_head *path;
+ 		struct coresight_device *csdev;
+ 
+ 		csdev = per_cpu(csdev_src, cpu);
+@@ -224,9 +240,11 @@ static void *etm_setup_aux(struct perf_event *event, void **pages,
+ 		 * list of devices from source to sink that can be
+ 		 * referenced later when the path is actually needed.
+ 		 */
+-		event_data->path[cpu] = coresight_build_path(csdev, sink);
+-		if (IS_ERR(event_data->path[cpu]))
++		path = coresight_build_path(csdev, sink);
++		if (IS_ERR(path))
+ 			goto err;
++
++		*etm_event_cpu_path_ptr(event_data, cpu) = path;
+ 	}
+ 
+ 	if (!sink_ops(sink)->alloc_buffer)
+@@ -255,6 +273,7 @@ static void etm_event_start(struct perf_event *event, int flags)
+ 	struct etm_event_data *event_data;
+ 	struct perf_output_handle *handle = this_cpu_ptr(&ctx_handle);
+ 	struct coresight_device *sink, *csdev = per_cpu(csdev_src, cpu);
++	struct list_head *path;
+ 
+ 	if (!csdev)
+ 		goto fail;
+@@ -267,8 +286,9 @@ static void etm_event_start(struct perf_event *event, int flags)
+ 	if (!event_data)
+ 		goto fail;
+ 
++	path = etm_event_cpu_path(event_data, cpu);
+ 	/* We need a sink, no need to continue without one */
+-	sink = coresight_get_sink(event_data->path[cpu]);
++	sink = coresight_get_sink(path);
+ 	if (WARN_ON_ONCE(!sink || !sink_ops(sink)->set_buffer))
+ 		goto fail_end_stop;
+ 
+@@ -278,7 +298,7 @@ static void etm_event_start(struct perf_event *event, int flags)
+ 		goto fail_end_stop;
+ 
+ 	/* Nothing will happen without a path */
+-	if (coresight_enable_path(event_data->path[cpu], CS_MODE_PERF))
++	if (coresight_enable_path(path, CS_MODE_PERF))
+ 		goto fail_end_stop;
+ 
+ 	/* Tell the perf core the event is alive */
+@@ -306,6 +326,7 @@ static void etm_event_stop(struct perf_event *event, int mode)
+ 	struct coresight_device *sink, *csdev = per_cpu(csdev_src, cpu);
+ 	struct perf_output_handle *handle = this_cpu_ptr(&ctx_handle);
+ 	struct etm_event_data *event_data = perf_get_aux(handle);
++	struct list_head *path;
+ 
+ 	if (event->hw.state == PERF_HES_STOPPED)
+ 		return;
+@@ -313,7 +334,11 @@ static void etm_event_stop(struct perf_event *event, int mode)
+ 	if (!csdev)
+ 		return;
+ 
+-	sink = coresight_get_sink(event_data->path[cpu]);
++	path = etm_event_cpu_path(event_data, cpu);
++	if (!path)
++		return;
++
++	sink = coresight_get_sink(path);
+ 	if (!sink)
+ 		return;
+ 
+@@ -344,7 +369,7 @@ static void etm_event_stop(struct perf_event *event, int mode)
+ 	}
+ 
+ 	/* Disabling the path make its elements available to other sessions */
+-	coresight_disable_path(event_data->path[cpu]);
++	coresight_disable_path(path);
+ }
+ 
+ static int etm_event_add(struct perf_event *event, int mode)
 -- 
 2.20.1
 
