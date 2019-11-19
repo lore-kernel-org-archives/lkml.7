@@ -2,64 +2,124 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D3A2C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 22:55:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B853C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 22:57:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B43E2245B
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 22:55:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43E792245C
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 22:57:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574204246;
+	bh=MfxbIsx2AwLtCUhkamnT0UAwFBGbj1YyWpFNWLIPhMM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=PyTLYsYukrbwwrOmYrAGapi0q1ByKDPD9n6uJYkEsua1SA2rGpucXee25+c5MK7eF
+	 c2Inu9ROTsZFercquTnt+PfqfLb9teNGniT9z6w49PAIWTXa61wE1QgmSOvx9Rw1QR
+	 lZqozf9V/Owz94Nu8ZqpxN/FxTqlsxR+4lT9owc4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727336AbfKSWzP (ORCPT
+        id S1727378AbfKSW5Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 17:55:15 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:46190 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726196AbfKSWzO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 17:55:14 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 3F1551424DB5B;
-        Tue, 19 Nov 2019 14:55:14 -0800 (PST)
-Date:   Tue, 19 Nov 2019 14:55:13 -0800 (PST)
-Message-Id: <20191119.145513.561465860770576481.davem@davemloft.net>
-To:     hslester96@gmail.com
-Cc:     fugang.duan@nxp.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net v3] net: fec: fix clock count mis-match
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20191118121826.26353-1-hslester96@gmail.com>
-References: <20191118121826.26353-1-hslester96@gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 19 Nov 2019 14:55:14 -0800 (PST)
+        Tue, 19 Nov 2019 17:57:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50628 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726025AbfKSW5Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 17:57:24 -0500
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41B882245B;
+        Tue, 19 Nov 2019 22:57:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574204243;
+        bh=MfxbIsx2AwLtCUhkamnT0UAwFBGbj1YyWpFNWLIPhMM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=E52+6cgLfMfo9ceaHCYZ+iAp4zf56dFMAe0NcguaKJCgzSyAD9J19ZM6oLMsh0R0R
+         JOkfl/XLao+RYszehEsWWTShlZeOhUuIiZOAk7lvjnwKmyQlFn7Vd+w0/9CGSoA0i4
+         Cc2z3+YhUvhSgeBDsRLdaEMY+KWsj10hEhoT7Wz0=
+Date:   Tue, 19 Nov 2019 16:57:21 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Karol Herbst <kherbst@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Lyude Paul <lyude@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Mika Westerberg <mika.westerberg@intel.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        Dave Airlie <airlied@gmail.com>,
+        Daniel Drake <drake@endlessm.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>
+Subject: Re: [PATCH v4] pci: prevent putting nvidia GPUs into lower device
+ states on certain intel bridges
+Message-ID: <20191119225721.GA237491@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACO55tu+8VeyMw1Lb6QvNspaJm9LDgoRbooVhr0s3v9uBt=feg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
-Date: Mon, 18 Nov 2019 20:18:26 +0800
+[+cc Daniel, Vidya, Thierry; thread starts at
+https://lore.kernel.org/r/20191017121901.13699-1-kherbst@redhat.com]
 
-> pm_runtime_put_autosuspend in probe will call suspend to disable clks
-> automatically if CONFIG_PM is defined. (If CONFIG_PM is not defined,
-> its implementation will be empty, then suspend will not be called.)
-> 
-> Therefore, we can call pm_runtime_get_sync to resume it first to enable
-> clks, which matches the suspend. (Only when CONFIG_PM is defined, otherwise
-> pm_runtime_get_sync will also be empty, then resume will not be called.)
-> 
-> Then it is fine to disable clks without causing clock count mis-match.
-> 
-> Fixes: c43eab3eddb4 ("net: fec: add missed clk_disable_unprepare in remove")
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+On Tue, Nov 19, 2019 at 11:26:45PM +0100, Karol Herbst wrote:
+> On Tue, Nov 19, 2019 at 10:50 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > On Thu, Oct 17, 2019 at 02:19:01PM +0200, Karol Herbst wrote:
+> > > Fixes state transitions of Nvidia Pascal GPUs from D3cold into
+> > > higher device states.
+> > > ...
 
-Please fix the commit message typos pointed out by Andy Duan and resubmit,
-thank you.
+> > > + *  - kernel crashes, as all pci reads return -1, which most code
+> > > + *    isn't able to handle well enough.
+> >
+> > More details about these crashes would be useful as we look at
+> > places that *should* be able to handle errors like this.
+> 
+> makes sense, I could ,orthogonal to this, make the code more robust
+> if we hit issues like this in the future. What I am mostly wondering
+> about is, why pci core doesn't give up if the device doesn't come
+> back from D3cold? It sounds like, that the most sane thing to do
+> here is to just give up and fail runtime_resume and report errors
+> back to userspace trying to make use of the devices.
+
+It's possible there's something the core could do here.  It's
+interesting that we have at least three issues in this area in this
+release:
+
+  1) This NVIDIA GPU issue
+  2) Daniel's issue with AMD Ryzen5/7 XHCI power-on
+     (https://lore.kernel.org/r/20191014061355.29072-1-drake@endlessm.com)
+  3) Vidya's issue with Intel 750 NVMe power-on
+     (https://lore.kernel.org/r/20191118172310.21373-1-vidyas@nvidia.com)
+
+Vidya's current patch is the most generic (calling pci_dev_wait() from
+pci_power_up()).  That will print a warning if the device doesn't
+respond, but we still don't go as far as returning errors to
+runtime_resume.
+
+This is definitely something we should consider improving in the
+future.
+
+> > > + *  - sudden shutdowns, as the kernel identified an unrecoverable error after
+> > > + *    userspace tries to access the GPU.
+> >
+> > This doesn't fit with the others and more details might be
+> > informative here as well.
+> 
+> yeah.. I try to get more infos on that. But at least for me (and it
+> might be a distribution thing) if I execute lspci, the system shuts
+> down, or at least tries to and might fail.
+
+The lspci doesn't need to be after the failure occurs.  You can do it
+immediately after boot.
+
+If you can capture any part of the dmesg or console log of these
+sudden shutdowns, that's all I'm interested in at this point.
+
+Bjorn
