@@ -2,101 +2,91 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1539C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 18:40:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E7DDC43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 18:41:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E9E1223E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 18:40:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NUGJDsr2"
+	by mail.kernel.org (Postfix) with ESMTP id 5A8A82240D
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 18:41:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574188865;
+	bh=xA0ajxnB6VzJLOi7+RioMph7fWev++IdvBzPPGwcjBI=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=QQhvAoQ+hAyYUR631kuTvaGRWI9M/wSbyYVL1HKVlWOWhYTuPWYRWgy/++UJJMjNZ
+	 r7arFzCHqIV4NZ4zc3yidJZKBW6y2lGhfQzcUSYCwdoHyVho3rtg+2HhSpzstLsyzi
+	 zJmVks6+/K+tFBNZhjkIJBy8CyzPwoco0QkJpT44=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727407AbfKSSkG (ORCPT
+        id S1727414AbfKSSlE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 13:40:06 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:33047 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727239AbfKSSkG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 13:40:06 -0500
-Received: by mail-pf1-f196.google.com with SMTP id c184so12631529pfb.0
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 10:40:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jYjHSJvr+i9FC2v2zgsP96Au9uEuo58MANuvF+6NBVc=;
-        b=NUGJDsr28kvTJwQuryficrX4gXw/AobGQnRXWancIWkQP7PcSBto66I8D5b42NRltE
-         27La5zT90RZnbEQ1OBhGD2mDBi75K2lvQmz7TupyV1w/HSKYypXFadmxMcx8iG6/mItU
-         eIjyY4kdNTdpg8AoS8qrlGisrWhZycLVtH+lXlcBVO98y//SiozIEiHLej5AJf4BIrxE
-         fIrYsWP9bjs+cHHL8dNOpCiXZUeU1IKeWHqTeuLn494HYaxyDxwvmeUNNFmIP38AH4wa
-         T/W3uTL1hJ10BV115Nic1e2HxRoU+nF+47C4MHytRVz4Pe21r+0CFbQU5p4vmmxfljqt
-         zh/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jYjHSJvr+i9FC2v2zgsP96Au9uEuo58MANuvF+6NBVc=;
-        b=Ea2LPAVZ0rpzFnCyswgahOSqSMk86Gef3XtEY/abIpgLbsE+LMBUILWc2lcqngyOXF
-         xhrhbFMf4is611HBkqib92xGm32k1fIj/n5gXNgzjxzLZWFl8Ug9oh5Qn1km+dSgu4j/
-         y9EPSDvcHDFuwL5/Tln960jyjNvS6xLghnMA235aJ5ANuQcPPUY2QVK/EpBVSTsPC+Wt
-         A/36m1NY/tAzDQm3GE+p0DPw0e5m0pD+H8Q1WTeRJwmcO+ovq7SgfKnvras9Z/k5uTBL
-         atCASC4FiZPf7IX+C5F+zFuVghRbyVib5QCgNgLtr2ANXChCEJJetvdgQ6IXLGl8IGaD
-         PJkA==
-X-Gm-Message-State: APjAAAVJFNsgHSv8arVKGD1kt/aRThMGLyUWDaEoOg0dYIsLLaaQVB6v
-        IkGJoR0J+bOVZKKRhTj/rv0hYzkH9eQs9AHxYNqXZg==
-X-Google-Smtp-Source: APXvYqyYCaJxCJoYIws4UTVjprf7I2OP+MEoJ45u03fPl7RX8dgda4nxwXp+wwGez7023IC2zXDCdaX8JfxDrzbjMrY=
-X-Received: by 2002:a63:712:: with SMTP id 18mr1253250pgh.384.1574188805300;
- Tue, 19 Nov 2019 10:40:05 -0800 (PST)
+        Tue, 19 Nov 2019 13:41:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52776 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726994AbfKSSlE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 13:41:04 -0500
+Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A8FD223E4;
+        Tue, 19 Nov 2019 18:41:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574188863;
+        bh=xA0ajxnB6VzJLOi7+RioMph7fWev++IdvBzPPGwcjBI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=AO993QY7QtiT1Hl0P/Em9VuQAv8EvAoj29/5f2+psplZ/sKQmURkOku2fqsXj71As
+         +F/YLPM/XUAkkgW8hSnv73SueCx+8f6OTTjnkM79j2lB0fnVs/Xe8Sc4EAPMwItZba
+         HZp2KIsfFgu2x2Arta6P0Ed86k2rh98j0/hYHN78=
+From:   Will Deacon <will@kernel.org>
+To:     selinux@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Ondrej Mosnacek <omosnace@redhat.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Jeffrey Vander Stoep <jeffv@google.com>
+Subject: [RFC PATCH 0/2] Avoid blocking in selinux inode callbacks on RCU walk
+Date:   Tue, 19 Nov 2019 18:40:55 +0000
+Message-Id: <20191119184057.14961-1-will@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <1573812972-10529-1-git-send-email-alan.maguire@oracle.com> <1573812972-10529-2-git-send-email-alan.maguire@oracle.com>
-In-Reply-To: <1573812972-10529-2-git-send-email-alan.maguire@oracle.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Tue, 19 Nov 2019 10:39:53 -0800
-Message-ID: <CAFd5g455qerOtZ0nQNGiCKJ9Uqu1=y7y2OfrCKU0HUjY3LDJcg@mail.gmail.com>
-Subject: Re: [PATCH v4 linux-kselftest-test 1/6] kunit: move string-stream.h
- to lib/kunit
-To:     Alan Maguire <alan.maguire@oracle.com>
-Cc:     Shuah Khan <skhan@linuxfoundation.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        catalin.marinas@arm.com, joe.lawrence@redhat.com,
-        penguin-kernel@i-love.sakura.ne.jp, schowdary@nvidia.com,
-        urezki@gmail.com, andriy.shevchenko@linux.intel.com,
-        Jonathan Corbet <corbet@lwn.net>,
-        "Theodore Ts'o" <tytso@mit.edu>, adilger.kernel@dilger.ca,
-        Luis Chamberlain <mcgrof@kernel.org>, changbin.du@intel.com,
-        linux-ext4@vger.kernel.org,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Knut Omang <knut.omang@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 2:17 AM Alan Maguire <alan.maguire@oracle.com> wrote:
->
-> string-stream interfaces are not intended for external use;
-> move them from include/kunit to lib/kunit accordingly.
->
-> Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
-> Signed-off-by: Knut Omang <knut.omang@oracle.com>
+Hi all,
 
-Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
-Tested-by: Brendan Higgins <brendanhiggins@google.com>
+While debugging a KASAN report in the selinux access vector cache hash
+table, I noticed that it looks like we may block in the inode_follow_link()
+and inode_permission() callbacks, even when called from the VFS layer as
+part of an RCU-protected path walk.
 
-Stephen pointed out a couple of nits, but beyond that this looks good to me.
+These two patches attempt to fix that, but since I found this by
+inspection and I'm not familiar with this code, I'm sending as an RFC in
+case I missed something that means this cannot happen.
 
-Thanks for all your hard work!
+Comments very welcome,
+
+Will
+
+Cc: Paul Moore <paul@paul-moore.com>
+Cc: Ondrej Mosnacek <omosnace@redhat.com>
+Cc: Stephen Smalley <sds@tycho.nsa.gov>
+Cc: Jeffrey Vander Stoep <jeffv@google.com>
+
+--->8
+
+Will Deacon (2):
+  selinux: Don't call avc_compute_av() from RCU path walk
+  selinux: Propagate RCU walk status from 'security_inode_follow_link()'
+
+ security/selinux/avc.c         | 21 +++++++++++++--------
+ security/selinux/hooks.c       |  5 +++--
+ security/selinux/include/avc.h | 12 ++++++++----
+ 3 files changed, 24 insertions(+), 14 deletions(-)
+
+-- 
+2.24.0.432.g9d3f5f5b63-goog
+
