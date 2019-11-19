@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D99BFC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 21:02:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E580EC43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 21:02:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4A082245B
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 21:02:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C54222245F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 21:02:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727362AbfKSVCH (ORCPT
+        id S1727465AbfKSVCJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 16:02:07 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:54580 "EHLO
+        Tue, 19 Nov 2019 16:02:09 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:54579 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727264AbfKSVCH (ORCPT
+        with ESMTP id S1726711AbfKSVCH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 19 Nov 2019 16:02:07 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iXAdI-0003Cs-NZ; Tue, 19 Nov 2019 22:01:56 +0100
+        id 1iXAdJ-0003Cv-79; Tue, 19 Nov 2019 22:01:57 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 535981C19F2;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D70E21C19F4;
         Tue, 19 Nov 2019 22:01:56 +0100 (CET)
 Date:   Tue, 19 Nov 2019 21:01:56 -0000
 From:   "tip-bot2 for Jan Beulich" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/xen/32: Simplify ring check in xen_iret_crit_fixup()
+Subject: [tip: x86/urgent] x86/stackframe/32: Repair 32-bit Xen PV
 Cc:     Jan Beulich <jbeulich@suse.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Juergen Gross <jgross@suse.com>,
+        Stable Team <stable@vger.kernel.org>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <a5986837-01eb-7bf8-bf42-4d3084d6a1f5@suse.com>
-References: <a5986837-01eb-7bf8-bf42-4d3084d6a1f5@suse.com>
+In-Reply-To: <0fad341f-b7f5-f859-d55d-f0084ee7087e@suse.com>
+References: <0fad341f-b7f5-f859-d55d-f0084ee7087e@suse.com>
 MIME-Version: 1.0
-Message-ID: <157419731617.12247.7937196185823441455.tip-bot2@tip-bot2>
+Message-ID: <157419731680.12247.14651763970362764251.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -58,60 +58,76 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/urgent branch of tip:
 
-Commit-ID:     922eea2ce5c799228d9ff1be9890e6873ce8fff6
-Gitweb:        https://git.kernel.org/tip/922eea2ce5c799228d9ff1be9890e6873ce8fff6
+Commit-ID:     81ff2c37f9e5d77593928df0536d86443195fd64
+Gitweb:        https://git.kernel.org/tip/81ff2c37f9e5d77593928df0536d86443195fd64
 Author:        Jan Beulich <jbeulich@suse.com>
-AuthorDate:    Mon, 11 Nov 2019 15:32:59 +01:00
+AuthorDate:    Mon, 18 Nov 2019 16:21:12 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
 CommitterDate: Tue, 19 Nov 2019 21:58:28 +01:00
 
-x86/xen/32: Simplify ring check in xen_iret_crit_fixup()
+x86/stackframe/32: Repair 32-bit Xen PV
 
-This can be had with two instead of six insns, by just checking the high
-CS.RPL bit.
+Once again RPL checks have been introduced which don't account for a 32-bit
+kernel living in ring 1 when running in a PV Xen domain. The case in
+FIXUP_FRAME has been preventing boot.
 
-Also adjust the comment - there would be no #GP in the mentioned cases, as
-there's no segment limit violation or alike. Instead there'd be #PF, but
-that one reports the target EIP of said branch, not the address of the
-branch insn itself.
+Adjust BUG_IF_WRONG_CR3 as well to guard against future uses of the macro
+on a code path reachable when running in PV mode under Xen; I have to admit
+that I stopped at a certain point trying to figure out whether there are
+present ones.
 
+Fixes: 3c88c692c287 ("x86/stackframe/32: Provide consistent pt_regs")
 Signed-off-by: Jan Beulich <jbeulich@suse.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Juergen Gross <jgross@suse.com>
-Link: https://lkml.kernel.org/r/a5986837-01eb-7bf8-bf42-4d3084d6a1f5@suse.com
-
+Cc: Stable Team <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/0fad341f-b7f5-f859-d55d-f0084ee7087e@suse.com
 ---
- arch/x86/xen/xen-asm_32.S | 15 ++++-----------
- 1 file changed, 4 insertions(+), 11 deletions(-)
+ arch/x86/entry/entry_32.S      |  4 ++--
+ arch/x86/include/asm/segment.h | 12 ++++++++++++
+ 2 files changed, 14 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/xen/xen-asm_32.S b/arch/x86/xen/xen-asm_32.S
-index 392e033..cd17777 100644
---- a/arch/x86/xen/xen-asm_32.S
-+++ b/arch/x86/xen/xen-asm_32.S
-@@ -153,22 +153,15 @@ hyper_iret:
-  * it's still on stack), we need to restore its value here.
-  */
- ENTRY(xen_iret_crit_fixup)
--	pushl %ecx
- 	/*
- 	 * Paranoia: Make sure we're really coming from kernel space.
- 	 * One could imagine a case where userspace jumps into the
- 	 * critical range address, but just before the CPU delivers a
--	 * GP, it decides to deliver an interrupt instead.  Unlikely?
--	 * Definitely.  Easy to avoid?  Yes.  The Intel documents
--	 * explicitly say that the reported EIP for a bad jump is the
--	 * jump instruction itself, not the destination, but some
--	 * virtual environments get this wrong.
-+	 * PF, it decides to deliver an interrupt instead.  Unlikely?
-+	 * Definitely.  Easy to avoid?  Yes.
- 	 */
--	movl 3*4(%esp), %ecx		/* nested CS */
--	andl $SEGMENT_RPL_MASK, %ecx
--	cmpl $USER_RPL, %ecx
--	popl %ecx
--	je 2f
-+	testb $2, 2*4(%esp)		/* nested CS */
-+	jnz 2f
+diff --git a/arch/x86/entry/entry_32.S b/arch/x86/entry/entry_32.S
+index f83ca5a..3f847d8 100644
+--- a/arch/x86/entry/entry_32.S
++++ b/arch/x86/entry/entry_32.S
+@@ -172,7 +172,7 @@
+ 	ALTERNATIVE "jmp .Lend_\@", "", X86_FEATURE_PTI
+ 	.if \no_user_check == 0
+ 	/* coming from usermode? */
+-	testl	$SEGMENT_RPL_MASK, PT_CS(%esp)
++	testl	$USER_SEGMENT_RPL_MASK, PT_CS(%esp)
+ 	jz	.Lend_\@
+ 	.endif
+ 	/* On user-cr3? */
+@@ -217,7 +217,7 @@
+ 	testl	$X86_EFLAGS_VM, 4*4(%esp)
+ 	jnz	.Lfrom_usermode_no_fixup_\@
+ #endif
+-	testl	$SEGMENT_RPL_MASK, 3*4(%esp)
++	testl	$USER_SEGMENT_RPL_MASK, 3*4(%esp)
+ 	jnz	.Lfrom_usermode_no_fixup_\@
  
- 	/*
- 	 * If eip is before iret_restore_end then stack
+ 	orl	$CS_FROM_KERNEL, 3*4(%esp)
+diff --git a/arch/x86/include/asm/segment.h b/arch/x86/include/asm/segment.h
+index ac38929..6669164 100644
+--- a/arch/x86/include/asm/segment.h
++++ b/arch/x86/include/asm/segment.h
+@@ -31,6 +31,18 @@
+  */
+ #define SEGMENT_RPL_MASK	0x3
+ 
++/*
++ * When running on Xen PV, the actual privilege level of the kernel is 1,
++ * not 0. Testing the Requested Privilege Level in a segment selector to
++ * determine whether the context is user mode or kernel mode with
++ * SEGMENT_RPL_MASK is wrong because the PV kernel's privilege level
++ * matches the 0x3 mask.
++ *
++ * Testing with USER_SEGMENT_RPL_MASK is valid for both native and Xen PV
++ * kernels because privilege level 2 is never used.
++ */
++#define USER_SEGMENT_RPL_MASK	0x2
++
+ /* User mode is privilege level 3: */
+ #define USER_RPL		0x3
+ 
