@@ -2,151 +2,81 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 838B1C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 18:05:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D180FC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 18:05:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41F2221D7F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 18:05:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hjUc7PgP"
+	by mail.kernel.org (Postfix) with ESMTP id A46BA2231A
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 18:05:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574186707;
+	bh=uKTAzFD1mKs+XTRCyqONykLe/ffZgYw8vLohuqeZlGs=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=Hf4Y6r3nN3MeAnHocMGgMOMsIa6QYbC7JKXAYtPsUNrdOEWa5yMyDG74ll27gjkov
+	 2g21fsbNl+EX8oDpo+bBjuQCt/ibkrysdAzV4cyvROHHnf7vhHoEo59TZN/JqeXh7k
+	 MoR4t+vS9+jdZCcNkbpVPYQR9Ob0TR3yesQs87ts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727446AbfKSSFA (ORCPT
+        id S1727481AbfKSSFG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 13:05:00 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:33901 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726836AbfKSSE7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 13:04:59 -0500
-Received: by mail-ed1-f68.google.com with SMTP id b72so17855624edf.1;
-        Tue, 19 Nov 2019 10:04:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=oFtPlM8bp4YZq5tEz5jaE0jJ45ejP47y6jweEOMQsG4=;
-        b=hjUc7PgPburUkFgDclP12pdTqM6mo+i4A6B+QGh90+sQta/7D65iBEIlnDcfOfApWV
-         3tVPti/E5jFj+Sn98EpjUp9MffhZyHJMBZLQZDIWgCAnNP99oLIM5xCJW4egbU5PqoPB
-         TKLh0r5xSQuQsP6cqdcww4feQe8QYOAqB1G/K6NMUQ6lA+UryRZ+wImJ0V6oXwE0ddFl
-         Hvq2/mMsa5g8es1ekJOjx6ieBWMIuOJrtoUXfW4wFwmKiSNrGxD11KIhNBtPO0YRvqTR
-         eRZrFrLub/BR3kBKjw4mK9l71SlWQV64szrSc2jyS0eeOpPV6N8QO9rWVWIIFf7DFhtw
-         m05A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=oFtPlM8bp4YZq5tEz5jaE0jJ45ejP47y6jweEOMQsG4=;
-        b=RKZJWtYwZjfrJYEAgaUuj4nGgcFcY+CGBxNPS3hkowYYQ3Cgm87MyUqn4snGNRL65T
-         u1979JKE/bQMzfjhP7+mczVvzyuFzHfEBsb6lTfBuZLqW4IjL1ZFOyDS1I0LHFqRIODG
-         ZrlMu5O9J1d2qK//gh0Fz0q43pk8M5+ckPQDhi/6oerVjATSXq8iAT35gH7FvrDAwmaP
-         mNo+N2iSsSK8zLnrcXyEQKrbIhLW0YiZmKiDw+OzQOIttYI+dGDL1uLZ8D+ZfcbdLazV
-         zUIxsayDIdQbiqUsMkAwB87xuXbJgmSe37XeiTtwjxAK7moho5DjohfG1Uu/cLJVNJdd
-         CZMA==
-X-Gm-Message-State: APjAAAX5jgSBekkDs3J/1e/Gf1MAKaKPqnm1ML6c/u2x0TcTrvjlP6km
-        1CSJYGhk0UPGjOL/kAlSFSdBCFKP
-X-Google-Smtp-Source: APXvYqzy6PplpTGVNrM8nw2UNZ1kfPaJg3YQXDVkszdKErD2W01beQ8VLsysOgnlgQ+lpY8NL+pmmA==
-X-Received: by 2002:a17:906:9417:: with SMTP id q23mr37020913ejx.37.1574186697091;
-        Tue, 19 Nov 2019 10:04:57 -0800 (PST)
-Received: from [10.67.50.53] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id m11sm405472eds.19.2019.11.19.10.04.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 19 Nov 2019 10:04:56 -0800 (PST)
-Subject: Re: [PATCH] phy: mdio_bus: Check ENOTSUPP instead of ENOSYS in
- mdiobus_register_reset
-To:     Michal Simek <michal.simek@xilinx.com>,
-        linux-kernel@vger.kernel.org, monstr@monstr.eu, git@xilinx.com
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>,
-        Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org
-References: <8712e54912598b3ca6f00d00ff8fbfdd1c53e7e8.1574170028.git.michal.simek@xilinx.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <99a8ea54-9a27-9e0a-9aaa-8aeef7feabe2@gmail.com>
-Date:   Tue, 19 Nov 2019 10:04:53 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 19 Nov 2019 13:05:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33160 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727450AbfKSSFF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 13:05:05 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01B4D21D7F;
+        Tue, 19 Nov 2019 18:05:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574186705;
+        bh=uKTAzFD1mKs+XTRCyqONykLe/ffZgYw8vLohuqeZlGs=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=vDYo9fHI8GWXyEtRT+bkWLWmPmg4iaUjmRHWcwVORt1w0WiCfrut9AApibr277xTa
+         wuloefH0EqdfXZrvEJ4QT22efnCknRxQ8RYEsiITGTpGrq3DEjf8UfihRf7bStwrIL
+         REp4jFDlG6/9TkK40bbiqVBaQLA9ZH1aSnNMJoXI=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <8712e54912598b3ca6f00d00ff8fbfdd1c53e7e8.1574170028.git.michal.simek@xilinx.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1574074063-9222-1-git-send-email-kalyan_t@codeaurora.org>
+References: <1574074063-9222-1-git-send-email-kalyan_t@codeaurora.org>
+Subject: Re: [PATCH v1] msm:disp:dpu1: add support for display for SC7180 target
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Kalyan Thota <kalyan_t@codeaurora.org>,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org, dhar@codeaurora.org,
+        jsanka@codeaurora.org, chandanu@codeaurora.org,
+        travitej@codeaurora.org, nganji@codeaurora.org
+To:     Kalyan Thota <kalyan_t@codeaurora.org>, devicetree@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        linux-arm-msm@vger.kernel.org
+User-Agent: alot/0.8.1
+Date:   Tue, 19 Nov 2019 10:05:03 -0800
+Message-Id: <20191119180505.01B4D21D7F@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/19/19 5:27 AM, Michal Simek wrote:
-> Origin patch was using ENOTSUPP instead of ENOSYS. Silently changing error
-> value ends up in an access to bad area on Microblaze with axi ethernet
-> driver.
-> 
-> Fixes: 1d4639567d97 ("mdio_bus: Fix PTR_ERR applied after initialization to constant")
-> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Quoting Kalyan Thota (2019-11-18 02:47:43)
+> Add display hw catalog changes for SC7180 target.
+>=20
+> Changes in v1:
+>=20
+> 1) Configure register offsets and capabilities for the
+> display hw blocks.
+>=20
+> This patch has dependency on the below series
+>=20
+> https://patchwork.kernel.org/patch/11243111/
+>=20
+> Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
+> Signed-off-by: Shubhashree Dhar <dhar@codeaurora.org>
+> Signed-off-by: Raviteja Tamatam <travitej@codeaurora.org>
 
-This has been fixed in the "net" tree already:
+Your signoff chain looks wrong. Probably should have some
+Co-developed-by tags here, and then your SoB should be last.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/davem/net.git/commit/?id=075e238d12c21c8bde700d21fb48be7a3aa80194
--- 
-Florian
