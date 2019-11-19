@@ -2,261 +2,165 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71F91C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:46:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CF71C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:48:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44A25223B0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:46:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5964223B0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:48:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574192791;
-	bh=FILH7W2gmzNod8PLm5dsRdEMN4M/VDu3jcpc7dosLCM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w5lDxacaHVbP7yWMQlX8LaS/H3KgXdnALRjCM5j3ZL2is5XWTweadEtt9J1KTJJnV
-	 GsJ4kcO9X6NkUWNf3E8CBr8+8V8s6GqvPC52ZuZXDhtpmT+5MdvJt0jdddAWLovd4+
-	 uis1x9oZSI/XoGlm5SwN4WQl7xNM0HmGRNYolNlk=
+	s=default; t=1574192885;
+	bh=cAv2x1VIfRqAvu828nQrCjKw3vsBDLRbeyu1OEbN3/A=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=MP3HqM9qHJeo6asjQxyZBJljGMtdfT1yWPHUWjhZ+Hr7ebCvUUSYJIkO8wyebjuxi
+	 sX1FuZGWHNSMeWJ1Yvao1RoIsh/95e89gCIKrlzDUIt1b8DHIJgUjE0poBrB1afCzj
+	 WvNS7pYsOxqOnGeJRpSM87vd61PaL8bcCJVpo+tw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727340AbfKSTqa (ORCPT
+        id S1727362AbfKSTsF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 14:46:30 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:39133 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726792AbfKSTq1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 14:46:27 -0500
-Received: by mail-oi1-f194.google.com with SMTP id v138so20158673oif.6;
-        Tue, 19 Nov 2019 11:46:27 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=kTnf204e4/6v4ZQSg9LcgMx6NRHz1lPy82NiYqgJ+LM=;
-        b=L0Zj1gSQDzksIPb9KCg3jpSEMDKpN5Qo99yWrvrFBwnPq37g+tqhZos7sLvzvaRqAL
-         NwiOEE4c4c2130aXJSMLkRKJ0/gfYtSD28lGSwpom9aNFPC0FZel05XaIdcCuH2csa6C
-         6u0nSPcjvc1RQdmT/YDH1aVwVPe4hECNwzZU5qyfTzVy6DrzNY0ScQ50jwica9FavYQI
-         pEy5ZKDetXw6hOS3sDrdxeSpCw84uhdI0GYRmnzZaprfvYL8k9PkIaX51AE91191PWVS
-         oLw5OIOd5RsZt7uzSP5kA9fsFLF2Cu32AqnHpcBqfU17xyWyLkYZftVELhpjIEYcDHIr
-         ENUg==
-X-Gm-Message-State: APjAAAWFidWC/p9B/kWsiZmFtAqgki3JBGxcsc2ZDAA6/+zGIRLvg0YE
-        79gMLy/kBmGvTpjQ5YAmq3/0wXg=
-X-Google-Smtp-Source: APXvYqx/M0FGJTvZfwP0CyuXu2Or4obsBckJgfC44jHBbCCJ5abAxV1/gIR8RUQCVwNu3STBG8I0cA==
-X-Received: by 2002:a05:6808:9a2:: with SMTP id e2mr5315728oig.123.1574192786813;
-        Tue, 19 Nov 2019 11:46:26 -0800 (PST)
-Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id j2sm7509614otn.20.2019.11.19.11.46.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Nov 2019 11:46:25 -0800 (PST)
-From:   Rob Herring <robh@kernel.org>
-To:     linux-leds@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH 2/2] dt-bindings: leds: Convert gpio-leds to DT schema
-Date:   Tue, 19 Nov 2019 13:46:23 -0600
-Message-Id: <20191119194623.23854-2-robh@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191119194623.23854-1-robh@kernel.org>
-References: <20191119194623.23854-1-robh@kernel.org>
+        Tue, 19 Nov 2019 14:48:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42816 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726874AbfKSTsE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 14:48:04 -0500
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2C3D22448;
+        Tue, 19 Nov 2019 19:48:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574192883;
+        bh=cAv2x1VIfRqAvu828nQrCjKw3vsBDLRbeyu1OEbN3/A=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=tRWp+Dg41oZAbbhNQeDTc4CtcR54uyH4NDkh5a3EEJxjUgHGaPZQssOYenugljM/b
+         ZcGiapX3Z+gjZCXJCpjL8UPtlsVRSzZtApPIEhjrKAT78saH/xUdHgtm/hFNsy+Y4c
+         7v8cytYcxwa+AQzsGaL0aN52CVbuSzv/ynd5eiAI=
+Date:   Tue, 19 Nov 2019 13:48:00 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Rob Herring <robh@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Srinath Mannam <srinath.mannam@broadcom.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: of: Restore alignment/indentation in host bridge
+ window table
+Message-ID: <20191119194800.GA204901@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191119191505.25286-1-geert+renesas@glider.be>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the gpio-leds binding to DT schema format.
+On Tue, Nov 19, 2019 at 08:15:05PM +0100, Geert Uytterhoeven wrote:
+> Since the printing of the inbound resources was added, alignment and
+> indentation of the host bridge window table is broken because of two
+> reasons:
+>   1. The "IB MEM" row header is longer than the other headers,
+>   2. Inbound ranges typically extend beyond 32-bit address space, and thus
+>      don't fit in "#010llx".
+> 
+> Fix this by extending the row header field to 6 characters, and the
+> format string to 40-bit addresses.
+> 
+> Use "%6s" to handle field size and right-alignment, instead of manual
+> preparation using error-prone snprintf() calls.  Use the exact same
+> format string for both cases, to allow sharing.
+> 
+> Impact on kernel boot log on r8a7791/koelsch:
+> 
+>      rcar-pcie fe000000.pcie: host bridge /soc/pcie@fe000000 ranges:
+>     -rcar-pcie fe000000.pcie:    IO 0xfe100000..0xfe1fffff -> 0x00000000
+>     -rcar-pcie fe000000.pcie:   MEM 0xfe200000..0xfe3fffff -> 0xfe200000
+>     -rcar-pcie fe000000.pcie:   MEM 0x30000000..0x37ffffff -> 0x30000000
+>     -rcar-pcie fe000000.pcie:   MEM 0x38000000..0x3fffffff -> 0x38000000
+>     -rcar-pcie fe000000.pcie: IB MEM 0x40000000..0xbfffffff -> 0x40000000
+>     -rcar-pcie fe000000.pcie: IB MEM 0x200000000..0x2ffffffff -> 0x200000000
+>     +rcar-pcie fe000000.pcie:       IO 0x00fe100000..0x00fe1fffff -> 0x0000000000
+>     +rcar-pcie fe000000.pcie:      MEM 0x00fe200000..0x00fe3fffff -> 0x00fe200000
+>     +rcar-pcie fe000000.pcie:      MEM 0x0030000000..0x0037ffffff -> 0x0030000000
+>     +rcar-pcie fe000000.pcie:      MEM 0x0038000000..0x003fffffff -> 0x0038000000
+>     +rcar-pcie fe000000.pcie:   IB MEM 0x0040000000..0x00bfffffff -> 0x0040000000
+>     +rcar-pcie fe000000.pcie:   IB MEM 0x0200000000..0x02ffffffff -> 0x0200000000
+> 
+> Fixes: 52ac576f88f9f701 ("PCI: of: Add inbound resource parsing to helpers")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Drop the last example as the node name collides when built, and it doesn't
-add much value.
+This is fine with me, and since it applies on top of 52ac576f88f9f701
+(longer than the usual 12-char SHA1, BTW), which is on Lorenzo's
+pci/mmio-dma-ranges branch, I assume Lorenzo will be the one to take
+care of this.
 
-Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Dan Murphy <dmurphy@ti.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/leds/leds-gpio.txt    | 75 ----------------
- .../devicetree/bindings/leds/leds-gpio.yaml   | 86 +++++++++++++++++++
- 2 files changed, 86 insertions(+), 75 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/leds/leds-gpio.txt
- create mode 100644 Documentation/devicetree/bindings/leds/leds-gpio.yaml
+pci_register_host_bridge() prints some of this info like this:
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-gpio.txt b/Documentation/devicetree/bindings/leds/leds-gpio.txt
-deleted file mode 100644
-index d21281b63d38..000000000000
---- a/Documentation/devicetree/bindings/leds/leds-gpio.txt
-+++ /dev/null
-@@ -1,75 +0,0 @@
--LEDs connected to GPIO lines
--
--Required properties:
--- compatible : should be "gpio-leds".
--
--Each LED is represented as a sub-node of the gpio-leds device.  Each
--node's name represents the name of the corresponding LED.
--
--LED sub-node properties:
--- gpios :  Should specify the LED's GPIO, see "gpios property" in
--  Documentation/devicetree/bindings/gpio/gpio.txt.  Active low LEDs should be
--  indicated using flags in the GPIO specifier.
--- function :  (optional)
--  see Documentation/devicetree/bindings/leds/common.txt
--- color :  (optional)
--  see Documentation/devicetree/bindings/leds/common.txt
--- label :  (optional)
--  see Documentation/devicetree/bindings/leds/common.txt (deprecated)
--- linux,default-trigger :  (optional)
--  see Documentation/devicetree/bindings/leds/common.txt
--- default-state:  (optional) The initial state of the LED.
--  see Documentation/devicetree/bindings/leds/common.txt
--- retain-state-suspended: (optional) The suspend state can be retained.Such
--  as charge-led gpio.
--- retain-state-shutdown: (optional) Retain the state of the LED on shutdown.
--  Useful in BMC systems, for example when the BMC is rebooted while the host
--  remains up.
--- panic-indicator : (optional)
--  see Documentation/devicetree/bindings/leds/common.txt
--
--Examples:
--
--#include <dt-bindings/gpio/gpio.h>
--#include <dt-bindings/leds/common.h>
--
--leds {
--	compatible = "gpio-leds";
--	led0 {
--		gpios = <&mcu_pio 0 GPIO_ACTIVE_LOW>;
--		linux,default-trigger = "disk-activity";
--		function = LED_FUNCTION_DISK;
--	};
--
--	led1 {
--		gpios = <&mcu_pio 1 GPIO_ACTIVE_HIGH>;
--		/* Keep LED on if BIOS detected hardware fault */
--		default-state = "keep";
--		function = LED_FUNCTION_FAULT;
--	};
--};
--
--run-control {
--	compatible = "gpio-leds";
--	led0 {
--		gpios = <&mpc8572 6 GPIO_ACTIVE_HIGH>;
--		color = <LED_COLOR_ID_RED>;
--		default-state = "off";
--	};
--	led1 {
--		gpios = <&mpc8572 7 GPIO_ACTIVE_HIGH>;
--		color = <LED_COLOR_ID_GREEN>;
--		default-state = "on";
--	};
--};
--
--leds {
--	compatible = "gpio-leds";
--
--	led0 {
--		gpios = <&gpio1 2 GPIO_ACTIVE_HIGH>;
--		linux,default-trigger = "max8903-charger-charging";
--		retain-state-suspended;
--		function = LED_FUNCTION_CHARGE;
--	};
--};
-diff --git a/Documentation/devicetree/bindings/leds/leds-gpio.yaml b/Documentation/devicetree/bindings/leds/leds-gpio.yaml
-new file mode 100644
-index 000000000000..0e75b185dd19
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/leds-gpio.yaml
-@@ -0,0 +1,86 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/leds/leds-gpio.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: LEDs connected to GPIO lines
-+
-+maintainers:
-+  - Jacek Anaszewski <jacek.anaszewski@gmail.com>
-+  - Pavel Machek <pavel@ucw.cz>
-+
-+description:
-+  Each LED is represented as a sub-node of the gpio-leds device.  Each
-+  node's name represents the name of the corresponding LED.
-+
-+properties:
-+  compatible:
-+    const: gpio-leds
-+
-+patternProperties:
-+  # The first form is preferred, but fall back to just 'led' anywhere in the
-+  # node name to at least catch some child nodes.
-+  "(^led-[0-9a-f]$|led)":
-+    type: object
-+
-+    allOf:
-+      - $ref: common.yaml#
-+
-+    properties:
-+      gpios:
-+        maxItems: 1
-+
-+      retain-state-suspended:
-+        description:
-+          The suspend state can be retained.Such as charge-led gpio.
-+        type: boolean
-+
-+      retain-state-shutdown:
-+        description:
-+          Retain the state of the LED on shutdown. Useful in BMC systems, for
-+          example when the BMC is rebooted while the host remains up.
-+        type: boolean
-+
-+    required:
-+      - gpios
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/leds/common.h>
-+
-+    leds {
-+        compatible = "gpio-leds";
-+        led-0 {
-+            gpios = <&mcu_pio 0 GPIO_ACTIVE_LOW>;
-+            linux,default-trigger = "disk-activity";
-+            function = LED_FUNCTION_DISK;
-+        };
-+
-+        led-1 {
-+            gpios = <&mcu_pio 1 GPIO_ACTIVE_HIGH>;
-+            /* Keep LED on if BIOS detected hardware fault */
-+            default-state = "keep";
-+            function = LED_FUNCTION_FAULT;
-+        };
-+    };
-+
-+    run-control {
-+        compatible = "gpio-leds";
-+        led-0 {
-+            gpios = <&mpc8572 6 GPIO_ACTIVE_HIGH>;
-+            color = <LED_COLOR_ID_RED>;
-+            default-state = "off";
-+        };
-+        led-1 {
-+            gpios = <&mpc8572 7 GPIO_ACTIVE_HIGH>;
-+            color = <LED_COLOR_ID_GREEN>;
-+            default-state = "on";
-+        };
-+    };
-+
-+...
--- 
-2.20.1
+  pci_bus 0000:00: root bus resource [io  0x0000-0x0cf7 window]
+  pci_bus 0000:00: root bus resource [io  0x0d00-0xffff window]
+  pci_bus 0000:00: root bus resource [mem 0x000a0000-0x000bffff window]
+  pci_bus 0000:00: root bus resource [mem 0xdc800000-0xfebfffff window]
 
+Is there any opportunity for consolidating these or at least making
+the format the same?
+
+I assume we're currently printing most of that info twice, once
+in devm_of_pci_get_host_bridge_resources() and again in
+pci_register_host_bridge()?
+
+> ---
+>  drivers/pci/of.c | 14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> index e7e12adcff3a3836..81ceeaa6f1d5a2c5 100644
+> --- a/drivers/pci/of.c
+> +++ b/drivers/pci/of.c
+> @@ -265,7 +265,7 @@ static int devm_of_pci_get_host_bridge_resources(struct device *dev,
+>  	struct resource *bus_range;
+>  	struct of_pci_range range;
+>  	struct of_pci_range_parser parser;
+> -	char range_type[4];
+> +	const char *range_type;
+>  	int err;
+>  
+>  	if (io_base)
+> @@ -299,12 +299,12 @@ static int devm_of_pci_get_host_bridge_resources(struct device *dev,
+>  	for_each_of_pci_range(&parser, &range) {
+>  		/* Read next ranges element */
+>  		if ((range.flags & IORESOURCE_TYPE_BITS) == IORESOURCE_IO)
+> -			snprintf(range_type, 4, " IO");
+> +			range_type = "IO";
+>  		else if ((range.flags & IORESOURCE_TYPE_BITS) == IORESOURCE_MEM)
+> -			snprintf(range_type, 4, "MEM");
+> +			range_type = "MEM";
+>  		else
+> -			snprintf(range_type, 4, "err");
+> -		dev_info(dev, "  %s %#010llx..%#010llx -> %#010llx\n",
+> +			range_type = "err";
+> +		dev_info(dev, "  %6s %#012llx..%#012llx -> %#012llx\n",
+>  			 range_type, range.cpu_addr,
+>  			 range.cpu_addr + range.size - 1, range.pci_addr);
+>  
+> @@ -359,8 +359,8 @@ static int devm_of_pci_get_host_bridge_resources(struct device *dev,
+>  		    range.cpu_addr == OF_BAD_ADDR || range.size == 0)
+>  			continue;
+>  
+> -		dev_info(dev, "IB MEM %#010llx..%#010llx -> %#010llx\n",
+> -			 range.cpu_addr,
+> +		dev_info(dev, "  %6s %#012llx..%#012llx -> %#012llx\n",
+> +			 "IB MEM", range.cpu_addr,
+>  			 range.cpu_addr + range.size - 1, range.pci_addr);
+>  
+>  
+> -- 
+> 2.17.1
+> 
