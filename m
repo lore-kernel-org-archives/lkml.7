@@ -2,48 +2,48 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A7FEC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 11:01:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 757AFC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 11:02:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50C5D21852
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 11:01:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42FED222DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 11:02:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="clPkmOff"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RmHjFvax"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727876AbfKSLB6 (ORCPT
+        id S1727768AbfKSLBk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 06:01:58 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:27308 "EHLO
+        Tue, 19 Nov 2019 06:01:40 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:49745 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727812AbfKSLBo (ORCPT
+        by vger.kernel.org with ESMTP id S1727738AbfKSLBi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 06:01:44 -0500
+        Tue, 19 Nov 2019 06:01:38 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574161303;
+        s=mimecast20190719; t=1574161297;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=k/VeJds5qaMYhPiq90nAYjkDf0ayvTRObqcxf9AwYA8=;
-        b=clPkmOffwDdWZI6uUo9cOdg+jipbQ5iZOD3rkYja97SNf+MXvFyQw18JKUhyifDKpk+dJr
-        aVobFLt8NYogIiuEFUG1J4qljCvFdQCkPFXSxwnFNHlWfMQyQ1SZdj7jgqz7MlxaZ9a0TI
-        9mE53WG1buF3TEEGmhVojxZ5AxuygVo=
+        bh=T66mtYm8lDvmwsPXa8hv/C73lP40srzfZe7JrCqVWC4=;
+        b=RmHjFvaxHvwzWzyOJiBVvsezAIv0r/OB43GPB5pVK4BCvJyJUaHHAZq8Md7iDUP0xkyghN
+        uvCp46v4fbDTJSi0dvUlmxN6kNq/vE7s5AfQ3+XZ3FKnZMkVIfLW+S4iE6c2ftdJCkTann
+        ipNDJ4h+oIZGDo9MzU29hmyM+zDBw9Y=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-103-iIIW8aj3MP-9gpfHsmbf1A-1; Tue, 19 Nov 2019 06:01:40 -0500
+ us-mta-270-eXNRSMGfNiiN3YXcMwWmdQ-1; Tue, 19 Nov 2019 06:01:33 -0500
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DAA3B107ACE8;
-        Tue, 19 Nov 2019 11:01:38 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 216D51005511;
+        Tue, 19 Nov 2019 11:01:32 +0000 (UTC)
 Received: from steredhat.redhat.com (ovpn-117-41.ams2.redhat.com [10.36.117.41])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0764260BE0;
-        Tue, 19 Nov 2019 11:01:36 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3C5AB60BE0;
+        Tue, 19 Nov 2019 11:01:30 +0000 (UTC)
 From:   Stefano Garzarella <sgarzare@redhat.com>
 To:     netdev@vger.kernel.org
 Cc:     virtualization@lists.linux-foundation.org,
@@ -52,14 +52,14 @@ Cc:     virtualization@lists.linux-foundation.org,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         "David S. Miller" <davem@davemloft.net>,
         Jorgen Hansen <jhansen@vmware.com>
-Subject: [PATCH net-next 5/6] vsock: use local transport when it is loaded
-Date:   Tue, 19 Nov 2019 12:01:20 +0100
-Message-Id: <20191119110121.14480-6-sgarzare@redhat.com>
+Subject: [PATCH net-next 2/6] vsock: add VMADDR_CID_LOCAL definition
+Date:   Tue, 19 Nov 2019 12:01:17 +0100
+Message-Id: <20191119110121.14480-3-sgarzare@redhat.com>
 In-Reply-To: <20191119110121.14480-1-sgarzare@redhat.com>
 References: <20191119110121.14480-1-sgarzare@redhat.com>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: iIIW8aj3MP-9gpfHsmbf1A-1
+X-MC-Unique: eXNRSMGfNiiN3YXcMwWmdQ-1
 X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: quoted-printable
@@ -68,92 +68,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that we have a transport that can handle the local communication,
-we can use it when it is loaded.
+The VMADDR_CID_RESERVED (1) was used by VMCI, but now it is not
+used anymore, so we can reuse it for local communication
+(loopback) adding the new well-know CID: VMADDR_CID_LOCAL.
 
-A socket will use the local transport (loopback) when the remote
-CID is:
-- equal to VMADDR_CID_LOCAL
-- or equal to transport_g2h->get_local_cid(), if transport_g2h
-  is loaded (this allows us to keep the same behavior implemented
-  by virtio and vmci transports)
-- or equal to VMADDR_CID_HOST, if transport_g2h is not loaded
-
+Cc: Jorgen Hansen <jhansen@vmware.com>
 Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
 ---
- net/vmw_vsock/af_vsock.c | 32 ++++++++++++++++++++++++++------
- 1 file changed, 26 insertions(+), 6 deletions(-)
+ include/uapi/linux/vm_sockets.h | 8 +++++---
+ net/vmw_vsock/vmci_transport.c  | 2 +-
+ 2 files changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
-index c9e5bad59dc1..40bbb2a17e3d 100644
---- a/net/vmw_vsock/af_vsock.c
-+++ b/net/vmw_vsock/af_vsock.c
-@@ -388,6 +388,21 @@ void vsock_enqueue_accept(struct sock *listener, struc=
-t sock *connected)
- }
- EXPORT_SYMBOL_GPL(vsock_enqueue_accept);
+diff --git a/include/uapi/linux/vm_sockets.h b/include/uapi/linux/vm_socket=
+s.h
+index 68d57c5e99bc..fd0ed7221645 100644
+--- a/include/uapi/linux/vm_sockets.h
++++ b/include/uapi/linux/vm_sockets.h
+@@ -99,11 +99,13 @@
 =20
-+static bool vsock_use_local_transport(unsigned int remote_cid)
-+{
-+=09if (!transport_local)
-+=09=09return false;
-+
-+=09if (remote_cid =3D=3D VMADDR_CID_LOCAL)
-+=09=09return true;
-+
-+=09if (transport_g2h) {
-+=09=09return remote_cid =3D=3D transport_g2h->get_local_cid();
-+=09} else {
-+=09=09return remote_cid =3D=3D VMADDR_CID_HOST;
-+=09}
-+}
-+
- static void vsock_deassign_transport(struct vsock_sock *vsk)
- {
- =09if (!vsk->transport)
-@@ -404,9 +419,10 @@ static void vsock_deassign_transport(struct vsock_sock=
- *vsk)
-  * (e.g. during the connect() or when a connection request on a listener
-  * socket is received).
-  * The vsk->remote_addr is used to decide which transport to use:
-- *  - remote CID <=3D VMADDR_CID_HOST will use guest->host transport;
-- *  - remote CID =3D=3D local_cid (guest->host transport) will use guest->=
-host
-- *    transport for loopback (host->guest transports don't support loopbac=
-k);
-+ *  - remote CID =3D=3D VMADDR_CID_LOCAL or g2h->local_cid or VMADDR_CID_H=
-OST if
-+ *    g2h is not loaded, will use local transport;
-+ *  - remote CID =3D=3D VMADDR_CID_HOST or VMADDR_CID_HYPERVISOR, will use
-+ *    guest->host transport;
-  *  - remote CID > VMADDR_CID_HOST will use host->guest transport;
+ #define VMADDR_CID_HYPERVISOR 0
+=20
+-/* This CID is specific to VMCI and can be considered reserved (even VMCI
+- * doesn't use it anymore, it's a legacy value from an older release).
++/* Use this as the destination CID in an address when referring to the
++ * local communication (loopback).
++ * (This was VMADDR_CID_RESERVED, but even VMCI doesn't use it anymore,
++ * it was a legacy value from an older release).
   */
- int vsock_assign_transport(struct vsock_sock *vsk, struct vsock_sock *psk)
-@@ -420,9 +436,10 @@ int vsock_assign_transport(struct vsock_sock *vsk, str=
-uct vsock_sock *psk)
- =09=09new_transport =3D transport_dgram;
- =09=09break;
- =09case SOCK_STREAM:
--=09=09if (remote_cid <=3D VMADDR_CID_HOST ||
--=09=09    (transport_g2h &&
--=09=09     remote_cid =3D=3D transport_g2h->get_local_cid()))
-+=09=09if (vsock_use_local_transport(remote_cid))
-+=09=09=09new_transport =3D transport_local;
-+=09=09else if (remote_cid =3D=3D VMADDR_CID_HOST ||
-+=09=09=09 remote_cid =3D=3D VMADDR_CID_HYPERVISOR)
- =09=09=09new_transport =3D transport_g2h;
- =09=09else
- =09=09=09new_transport =3D transport_h2g;
-@@ -459,6 +476,9 @@ bool vsock_find_cid(unsigned int cid)
- =09if (transport_h2g && cid =3D=3D VMADDR_CID_HOST)
- =09=09return true;
 =20
-+=09if (transport_local && cid =3D=3D VMADDR_CID_LOCAL)
-+=09=09return true;
-+
- =09return false;
- }
- EXPORT_SYMBOL_GPL(vsock_find_cid);
+-#define VMADDR_CID_RESERVED 1
++#define VMADDR_CID_LOCAL 1
+=20
+ /* Use this as the destination CID in an address when referring to the hos=
+t
+  * (any process other than the hypervisor).  VMCI relies on it being 2, bu=
+t
+diff --git a/net/vmw_vsock/vmci_transport.c b/net/vmw_vsock/vmci_transport.=
+c
+index 644d32e43d23..4b8b1150a738 100644
+--- a/net/vmw_vsock/vmci_transport.c
++++ b/net/vmw_vsock/vmci_transport.c
+@@ -648,7 +648,7 @@ static int vmci_transport_recv_dgram_cb(void *data, str=
+uct vmci_datagram *dg)
+ static bool vmci_transport_stream_allow(u32 cid, u32 port)
+ {
+ =09static const u32 non_socket_contexts[] =3D {
+-=09=09VMADDR_CID_RESERVED,
++=09=09VMADDR_CID_LOCAL,
+ =09};
+ =09int i;
+=20
 --=20
 2.21.0
 
