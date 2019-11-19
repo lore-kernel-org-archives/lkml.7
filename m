@@ -2,167 +2,204 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85503C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:35:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D5B4C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:36:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6635D21783
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:35:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2270A206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:36:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574141760;
+	bh=KIk9cKBAlYSu52MEBaNKdwuUofEr+nQ0flIVxSGQwz0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=0SN129HUz8f0IAXRuPzWblzkoWpcLaApC85iNRkoItP0WAZCpggzq0hlpAnG+s587
+	 VpZo3OBIBeawN47KBbq8m/1yq4YzsxuIKToOyl5vsMT6b8PbcEwurY1/CquWJjdu9k
+	 LUaggxBxWrBFlNw9aoDkeQB7BzLGsIrECh0y8/cQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729873AbfKSFfy convert rfc822-to-8bit (ORCPT
+        id S1729424AbfKSFf6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:35:54 -0500
-Received: from coyote.holtmann.net ([212.227.132.17]:55610 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728962AbfKSFfv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:35:51 -0500
-Received: from marcel-macbook.holtmann.net (p4FF9F0D1.dip0.t-ipconnect.de [79.249.240.209])
-        by mail.holtmann.org (Postfix) with ESMTPSA id 33E83CECED;
-        Tue, 19 Nov 2019 06:44:56 +0100 (CET)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3601.0.10\))
-Subject: Re: [PATCH v6 2/4] Bluetooth: btbcm: Support pcm configuration
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20191118110335.v6.2.I2a9640407d375f20c7c8f4afd1607db143ff0246@changeid>
-Date:   Tue, 19 Nov 2019 06:35:49 +0100
-Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-bluetooth@vger.kernel.org, dianders@chromium.org,
-        linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <989EE002-F3F4-441B-BD9B-B460D8B09708@holtmann.org>
-References: <20191118192123.82430-1-abhishekpandit@chromium.org>
- <20191118110335.v6.2.I2a9640407d375f20c7c8f4afd1607db143ff0246@changeid>
-To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-X-Mailer: Apple Mail (2.3601.0.10)
+        Tue, 19 Nov 2019 00:35:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56930 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729874AbfKSFfz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:35:55 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 638C9214DE;
+        Tue, 19 Nov 2019 05:35:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574141753;
+        bh=KIk9cKBAlYSu52MEBaNKdwuUofEr+nQ0flIVxSGQwz0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=gE9EUP+o69r12C6GwDqJREGwdCd6SwKp9XV1EFcvGWz8uUxPksa380OZNgrlMHDJE
+         QNCFcBSfvg21cD5xxq8L45b5vDKLjTOhSbw+AQoMa6d4VaEkNpE0FLtUN844TiHngQ
+         nJHrJOKd/7Wm6UzylVJhz5h+IFcmZLpaXj//Bd28=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Subhash Jadavani <subhashj@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Evan Green <evgreen@chromium.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 229/422] scsi: ufshcd: Fix NULL pointer dereference for in ufshcd_init
+Date:   Tue, 19 Nov 2019 06:17:06 +0100
+Message-Id: <20191119051413.481349501@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
+References: <20191119051400.261610025@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Abhishek,
+From: Vivek Gautam <vivek.gautam@codeaurora.org>
 
-> Add BCM vendor specific command to configure PCM parameters. The new
-> vendor opcode allows us to set the sco routing, the pcm interface rate,
-> and a few other pcm specific options (frame sync, sync mode, and clock
-> mode). See broadcom-bluetooth.txt in Documentation for more information
-> about valid values for those settings.
-> 
-> Here is an example trace where this opcode was used to configure
-> a BCM4354:
-> 
->        < HCI Command: Vendor (0x3f|0x001c) plen 5
->                01 02 00 01 01
->> HCI Event: Command Complete (0x0e) plen 4
->        Vendor (0x3f|0x001c) ncmd 1
->                Status: Success (0x00)
-> 
-> We can read back the values as well with ocf 0x001d to confirm the
-> values that were set:
->        $ hcitool cmd 0x3f 0x001d
->        < HCI Command: ogf 0x3f, ocf 0x001d, plen 0
->> HCI Event: 0x0e plen 9
->        01 1D FC 00 01 02 00 01 01
-> 
-> Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-> ---
-> 
-> Changes in v6: None
-> Changes in v5: None
-> Changes in v4: None
-> Changes in v3: None
-> Changes in v2: None
-> 
-> drivers/bluetooth/btbcm.c | 47 +++++++++++++++++++++++++++++++++++++++
-> drivers/bluetooth/btbcm.h | 16 +++++++++++++
-> 2 files changed, 63 insertions(+)
-> 
-> diff --git a/drivers/bluetooth/btbcm.c b/drivers/bluetooth/btbcm.c
-> index 2d2e6d862068..df90841d29c5 100644
-> --- a/drivers/bluetooth/btbcm.c
-> +++ b/drivers/bluetooth/btbcm.c
-> @@ -105,6 +105,53 @@ int btbcm_set_bdaddr(struct hci_dev *hdev, const bdaddr_t *bdaddr)
-> }
-> EXPORT_SYMBOL_GPL(btbcm_set_bdaddr);
-> 
-> +int btbcm_read_pcm_int_params(struct hci_dev *hdev,
-> +			      struct bcm_set_pcm_int_params *int_params)
-> +{
+[ Upstream commit eebcc19646489b68399ce7b35d9c38eb9f4ec40f ]
 
-the name should be _param and not _params since if I remember correctly that is how Broadcom specified it. Also just use param as variable name.
+Error paths in ufshcd_init() ufshcd_hba_exit() killed clk_scaling workqueue
+when the workqueue is actually created quite late in ufshcd_init().  So, we
+end up getting NULL pointer dereference in such error paths.  Fix this by
+moving clk_scaling initialization and kill codes to two separate methods, and
+call them at required places.
 
-> +	struct sk_buff *skb;
-> +	int err = 0;
-> +
-> +	skb = __hci_cmd_sync(hdev, 0xfc1d, 5, int_params, HCI_INIT_TIMEOUT);
-> +	if (IS_ERR(skb)) {
-> +		err = PTR_ERR(skb);
-> +		bt_dev_err(hdev, "BCM: Read PCM int params failed (%d)", err);
-> +		return err;
-> +	}
-> +
-> +	if (!skb->data[0] && skb->len == sizeof(*int_params) + 1) {
-> +		memcpy(int_params, &skb->data[1], sizeof(*int_params));
-> +	} else {
-> +		bt_dev_err(hdev,
-> +			   "BCM: Read PCM int params failed (%d), Length (%d)",
-> +			   skb->data[0], skb->len);
-> +		err = -EINVAL;
-> +	}
-> +
-> +	kfree_skb(skb);
+Fixes: 401f1e4490ee ("scsi: ufs: don't suspend clock scaling during clock
+gating")
 
-I find these harder to read actually and it can be still fault at data[0] access.
+Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Subhash Jadavani <subhashj@codeaurora.org>
+Cc: Matthias Kaehlcke <mka@chromium.org>
+Cc: Evan Green <evgreen@chromium.org>
+Cc: Martin K. Petersen <martin.petersen@oracle.com>
+Reviewed-by: Evan Green <evgreen@chromium.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/scsi/ufs/ufshcd.c | 53 +++++++++++++++++++++++++--------------
+ 1 file changed, 34 insertions(+), 19 deletions(-)
 
-	if (skb->len != sizeof(*param) || skb->data[0]) {
-		bt_dev_err(hdev, "BCM: Read SCO PCM int parameter failure");    
-		kfree_skb(skb);                                                  
-		return -EIO;
-	}
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 4aaba3e030554..8bce755e0f5bc 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -1772,6 +1772,34 @@ out:
+ 	return count;
+ }
+ 
++static void ufshcd_init_clk_scaling(struct ufs_hba *hba)
++{
++	char wq_name[sizeof("ufs_clkscaling_00")];
++
++	if (!ufshcd_is_clkscaling_supported(hba))
++		return;
++
++	INIT_WORK(&hba->clk_scaling.suspend_work,
++		  ufshcd_clk_scaling_suspend_work);
++	INIT_WORK(&hba->clk_scaling.resume_work,
++		  ufshcd_clk_scaling_resume_work);
++
++	snprintf(wq_name, sizeof(wq_name), "ufs_clkscaling_%d",
++		 hba->host->host_no);
++	hba->clk_scaling.workq = create_singlethread_workqueue(wq_name);
++
++	ufshcd_clkscaling_init_sysfs(hba);
++}
++
++static void ufshcd_exit_clk_scaling(struct ufs_hba *hba)
++{
++	if (!ufshcd_is_clkscaling_supported(hba))
++		return;
++
++	destroy_workqueue(hba->clk_scaling.workq);
++	ufshcd_devfreq_remove(hba);
++}
++
+ static void ufshcd_init_clk_gating(struct ufs_hba *hba)
+ {
+ 	char wq_name[sizeof("ufs_clk_gating_00")];
+@@ -6676,6 +6704,7 @@ out:
+ 	 */
+ 	if (ret && !ufshcd_eh_in_progress(hba) && !hba->pm_op_in_progress) {
+ 		pm_runtime_put_sync(hba->dev);
++		ufshcd_exit_clk_scaling(hba);
+ 		ufshcd_hba_exit(hba);
+ 	}
+ 
+@@ -7223,12 +7252,9 @@ static void ufshcd_hba_exit(struct ufs_hba *hba)
+ 		ufshcd_variant_hba_exit(hba);
+ 		ufshcd_setup_vreg(hba, false);
+ 		ufshcd_suspend_clkscaling(hba);
+-		if (ufshcd_is_clkscaling_supported(hba)) {
++		if (ufshcd_is_clkscaling_supported(hba))
+ 			if (hba->devfreq)
+ 				ufshcd_suspend_clkscaling(hba);
+-			destroy_workqueue(hba->clk_scaling.workq);
+-			ufshcd_devfreq_remove(hba);
+-		}
+ 		ufshcd_setup_clocks(hba, false);
+ 		ufshcd_setup_hba_vreg(hba, false);
+ 		hba->is_powered = false;
+@@ -7908,6 +7934,7 @@ void ufshcd_remove(struct ufs_hba *hba)
+ 	ufshcd_disable_intr(hba, hba->intr_mask);
+ 	ufshcd_hba_stop(hba, true);
+ 
++	ufshcd_exit_clk_scaling(hba);
+ 	ufshcd_exit_clk_gating(hba);
+ 	if (ufshcd_is_clkscaling_supported(hba))
+ 		device_remove_file(hba->dev, &hba->clk_scaling.enable_attr);
+@@ -8079,6 +8106,8 @@ int ufshcd_init(struct ufs_hba *hba, void __iomem *mmio_base, unsigned int irq)
+ 
+ 	ufshcd_init_clk_gating(hba);
+ 
++	ufshcd_init_clk_scaling(hba);
++
+ 	/*
+ 	 * In order to avoid any spurious interrupt immediately after
+ 	 * registering UFS controller interrupt handler, clear any pending UFS
+@@ -8117,21 +8146,6 @@ int ufshcd_init(struct ufs_hba *hba, void __iomem *mmio_base, unsigned int irq)
+ 		goto out_remove_scsi_host;
+ 	}
+ 
+-	if (ufshcd_is_clkscaling_supported(hba)) {
+-		char wq_name[sizeof("ufs_clkscaling_00")];
+-
+-		INIT_WORK(&hba->clk_scaling.suspend_work,
+-			  ufshcd_clk_scaling_suspend_work);
+-		INIT_WORK(&hba->clk_scaling.resume_work,
+-			  ufshcd_clk_scaling_resume_work);
+-
+-		snprintf(wq_name, sizeof(wq_name), "ufs_clkscaling_%d",
+-			 host->host_no);
+-		hba->clk_scaling.workq = create_singlethread_workqueue(wq_name);
+-
+-		ufshcd_clkscaling_init_sysfs(hba);
+-	}
+-
+ 	/*
+ 	 * Set the default power management level for runtime and system PM.
+ 	 * Default power saving mode is to keep UFS link in Hibern8 state
+@@ -8169,6 +8183,7 @@ int ufshcd_init(struct ufs_hba *hba, void __iomem *mmio_base, unsigned int irq)
+ out_remove_scsi_host:
+ 	scsi_remove_host(hba->host);
+ exit_gating:
++	ufshcd_exit_clk_scaling(hba);
+ 	ufshcd_exit_clk_gating(hba);
+ out_disable:
+ 	hba->is_irq_enabled = false;
+-- 
+2.20.1
 
-	memcpy(param, skb->data + 1, sizeof(*param));
-	kfree_skb(skb);
-	return 0;
-}
-	
-> +
-> +	return err;
-> +}
-> +EXPORT_SYMBOL_GPL(btbcm_read_pcm_int_params);
-> +
-> +int btbcm_write_pcm_int_params(struct hci_dev *hdev,
-> +			       const struct bcm_set_pcm_int_params *int_params)
-> +{
-> +	struct sk_buff *skb;
-> +	int err;
-> +
-> +	/* Vendor ocf 0x001c sets the pcm parameters and 0x001d reads it */
 
-Scrap this comment.
-
-> +	skb = __hci_cmd_sync(hdev, 0xfc1c, 5, int_params, HCI_INIT_TIMEOUT);
-> +	if (IS_ERR(skb)) {
-> +		err = PTR_ERR(skb);
-> +		bt_dev_err(hdev, "BCM: Write PCM int params failed (%d)", err);
-> +		return err;
-> +	}
-> +	kfree_skb(skb);
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(btbcm_write_pcm_int_params);
-> +
-> int btbcm_patchram(struct hci_dev *hdev, const struct firmware *fw)
-> {
-
-Otherwise this looks good.
-
-Regards
-
-Marcel
 
