@@ -2,271 +2,189 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5D0FC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:06:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C3CC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:07:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 906FE20878
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:06:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ecCiMqkY"
+	by mail.kernel.org (Postfix) with ESMTP id 7ED3122303
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:07:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727615AbfKSKGV (ORCPT
+        id S1727618AbfKSKHH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 05:06:21 -0500
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:40548 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726510AbfKSKGU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 05:06:20 -0500
-Received: by mail-qv1-f66.google.com with SMTP id i3so7847837qvv.7
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 02:06:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9pIipJGyehxPVtU1yNhGOSdmuY2kHt1JI6IRlGDlJaE=;
-        b=ecCiMqkYnUDX1s32A6nBDiUy0rD7WzwdFX0VVjiaj02tZuM0iKK9MpzZ6yEuAHLv+h
-         hbruUdlfzwXIdv+E09htN5dIlXLpxDufjQB9KyohHMLv8PZbw6lrjgmAGRQxCp+2O40k
-         QOuWSFdC/EKEufVAMumuxe07GW4Lli/jgx1PEw2EJoK9QsIiwQf26DjH9ILlP9AafrXh
-         IGnIVuEF304bulxYyE679XNn5gR+HKq7yczVkPdOILMWVTSEvd7f+iRnz8UvnOrJOf6t
-         ZGZZIJr75aunD9wA34cch+yA30WJllZXKaIjHOVda22Bhnl3FVcy/oFxJd6yphNwbt6m
-         jtLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9pIipJGyehxPVtU1yNhGOSdmuY2kHt1JI6IRlGDlJaE=;
-        b=gZhJCVrDeQPO03IYz/OG6LR9/Iv/citRgbVsQ2Kk7KaLFT2xe66L/W5uTNgDM/V/oU
-         Pr4i1l3zvBIDXtYYmx3NnRv6VKkG9NAgDye7BsQtyIv0ZImHtBOhmY4TUbXNPkBxNXi5
-         4/A4uEUlaILU7IK42bctR7gQFPEjKDJVOdSgHctoyX3RlppeGSdB49htTr32r6DFeHEk
-         woQTA92jycp2tIpDrLP8gEaxNFhiCsTkc1YoHSD68hlPLg2aVZZ9K8UXnhdmRj7rNI17
-         UTSd5bQk+tvOy41WCnUAi6J14VvfUIGVYadaoTB9IO1bwVkJ4UOKGKbVmQPDbEqhT1mV
-         1LfA==
-X-Gm-Message-State: APjAAAVwCdFqj4Y4zZ29GU965rzeosIwi4pCC+rtKOsy1VKYKuG3XBaQ
-        rfbfgIfRScOgPwMp7il7lOyhNwgzU+kUChBYwd3lUA==
-X-Google-Smtp-Source: APXvYqzSB9nuBsdvzHvYAyCKHLkSY/LMZ0oa5cLYEKr1qu+ndCEo1Tk8bdkZ8LCp/cgFZsWxRwS3sFyRwD4076R29Hk=
-X-Received: by 2002:a0c:b446:: with SMTP id e6mr30264392qvf.159.1574157977791;
- Tue, 19 Nov 2019 02:06:17 -0800 (PST)
+        Tue, 19 Nov 2019 05:07:07 -0500
+Received: from mx2.suse.de ([195.135.220.15]:39546 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726510AbfKSKHH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 05:07:07 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 879F6AFBD;
+        Tue, 19 Nov 2019 10:07:04 +0000 (UTC)
+Message-ID: <e38de8daad5a2c9b03bda1aa2632844e3ed3d11e.camel@suse.de>
+Subject: Re: [PATCH v2 3/3] ARM: dts: bcm2711: Enable HWRNG support
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Stephen Brennan <stephen@brennan.io>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Scott Branden <sbranden@broadcom.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-arm-kernel@lists.infradead.org, Ray Jui <rjui@broadcom.com>,
+        linux-kernel@vger.kernel.org, Eric Anholt <eric@anholt.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Matt Mackall <mpm@selenic.com>, Arnd Bergmann <arnd@arndb.de>,
+        linux-crypto@vger.kernel.org
+Date:   Tue, 19 Nov 2019 11:07:01 +0100
+In-Reply-To: <20191119061407.69911-4-stephen@brennan.io>
+References: <20191119061407.69911-1-stephen@brennan.io>
+         <20191119061407.69911-4-stephen@brennan.io>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-f4TrG9pLSfNSCk5pcMvM"
+User-Agent: Evolution 3.34.1 
 MIME-Version: 1.0
-References: <20191119095731.10116-1-hdanton@sina.com>
-In-Reply-To: <20191119095731.10116-1-hdanton@sina.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Tue, 19 Nov 2019 11:06:06 +0100
-Message-ID: <CACT4Y+aBX-eKqEFk8C4LNDG-bpSQQWhn++jqBmQkWyqqxnDQ1A@mail.gmail.com>
-Subject: Re: KASAN: use-after-free Read in blkcg_print_stat (2)
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     syzbot <syzbot+9bfadf534cf2fd1b5eb8@syzkaller.appspotmail.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Cgroups <cgroups@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Tejun Heo <tj@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 10:57 AM Hillf Danton <hdanton@sina.com> wrote:
->
->
-> On Mon, 18 Nov 2019 23:11:06 -0800
-> >
-> > Hello,
-> >
-> > syzbot found the following crash on:
-> >
-> > HEAD commit:    fe30021c Merge branch 'x86-urgent-for-linus' of git://git...
-> > git tree:       upstream
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=1196cb3ae00000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=1aab6d4187ddf667
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=9bfadf534cf2fd1b5eb8
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> >
-> > Unfortunately, I don't have any reproducer for this crash yet.
-> >
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+9bfadf534cf2fd1b5eb8@syzkaller.appspotmail.com
-> >
-> > ==================================================================
-> > BUG: KASAN: use-after-free in dev_name include/linux/device.h:1342 [inline]
-> > BUG: KASAN: use-after-free in blkg_dev_name block/blk-cgroup.c:498 [inline]
-> > BUG: KASAN: use-after-free in blkcg_print_stat+0xb26/0xc00
-> > block/blk-cgroup.c:942
-> > Read of size 8 at addr ffff8880a01b2050 by task syz-executor.1/16053
-> >
-> > CPU: 0 PID: 16053 Comm: syz-executor.1 Not tainted 5.4.0-rc7+ #0
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > Google 01/01/2011
-> > Call Trace:
-> >   __dump_stack lib/dump_stack.c:77 [inline]
-> >   dump_stack+0x197/0x210 lib/dump_stack.c:118
-> >   print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
-> >   __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
-> >   kasan_report+0x12/0x20 mm/kasan/common.c:634
-> >   __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
-> >   dev_name include/linux/device.h:1342 [inline]
-> >   blkg_dev_name block/blk-cgroup.c:498 [inline]
-> >   blkcg_print_stat+0xb26/0xc00 block/blk-cgroup.c:942
-> >   cgroup_seqfile_show+0x1a8/0x300 kernel/cgroup/cgroup.c:3816
-> >   kernfs_seq_show+0x14f/0x1b0 fs/kernfs/file.c:167
-> >   seq_read+0x4ca/0x1110 fs/seq_file.c:229
-> >   kernfs_fop_read+0xed/0x560 fs/kernfs/file.c:251
-> >   do_loop_readv_writev fs/read_write.c:714 [inline]
-> >   do_loop_readv_writev fs/read_write.c:701 [inline]
-> >   do_iter_read+0x4a4/0x660 fs/read_write.c:935
-> >   vfs_readv+0xf0/0x160 fs/read_write.c:997
-> >   do_readv+0x15b/0x330 fs/read_write.c:1034
-> >   __do_sys_readv fs/read_write.c:1125 [inline]
-> >   __se_sys_readv fs/read_write.c:1122 [inline]
-> >   __x64_sys_readv+0x75/0xb0 fs/read_write.c:1122
-> >   do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
-> >   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> > RIP: 0033:0x45a639
-> > Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7
-> > 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
-> > ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-> > RSP: 002b:00007fd336772c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000013
-> > RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 000000000045a639
-> > RDX: 00000000000001a5 RSI: 00000000200002c0 RDI: 0000000000000004
-> > RBP: 000000000075bfc8 R08: 0000000000000000 R09: 0000000000000000
-> > R10: 0000000000000000 R11: 0000000000000246 R12: 00007fd3367736d4
-> > R13: 00000000004c7ecd R14: 00000000004de160 R15: 00000000ffffffff
-> >
-> > Allocated by task 12327:
-> >   save_stack+0x23/0x90 mm/kasan/common.c:69
-> >   set_track mm/kasan/common.c:77 [inline]
-> >   __kasan_kmalloc mm/kasan/common.c:510 [inline]
-> >   __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:483
-> >   kasan_kmalloc+0x9/0x10 mm/kasan/common.c:524
-> >   kmem_cache_alloc_trace+0x158/0x790 mm/slab.c:3550
-> >   kmalloc include/linux/slab.h:556 [inline]
-> >   kzalloc include/linux/slab.h:690 [inline]
-> >   device_create_groups_vargs+0x8e/0x270 drivers/base/core.c:2828
-> >   device_create_vargs+0x45/0x60 drivers/base/core.c:2886
-> >   bdi_register_va.part.0+0x91/0x940 mm/backing-dev.c:940
-> >   bdi_register_va mm/backing-dev.c:976 [inline]
-> >   bdi_register+0x12a/0x140 mm/backing-dev.c:973
-> >   bdi_register_owner+0x6a/0x110 mm/backing-dev.c:983
-> >   __device_add_disk+0xe09/0x1230 block/genhd.c:739
-> >   device_add_disk+0x2b/0x40 block/genhd.c:763
-> >   add_disk include/linux/genhd.h:429 [inline]
-> >   loop_add+0x635/0x8d0 drivers/block/loop.c:2061
-> >   loop_control_ioctl drivers/block/loop.c:2162 [inline]
-> >   loop_control_ioctl+0x165/0x360 drivers/block/loop.c:2144
-> >   vfs_ioctl fs/ioctl.c:46 [inline]
-> >   file_ioctl fs/ioctl.c:509 [inline]
-> >   do_vfs_ioctl+0xdb6/0x13e0 fs/ioctl.c:696
-> >   ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
-> >   __do_sys_ioctl fs/ioctl.c:720 [inline]
-> >   __se_sys_ioctl fs/ioctl.c:718 [inline]
-> >   __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
-> >   do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
-> >   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> >
-> > Freed by task 16049:
-> >   save_stack+0x23/0x90 mm/kasan/common.c:69
-> >   set_track mm/kasan/common.c:77 [inline]
-> >   kasan_set_free_info mm/kasan/common.c:332 [inline]
-> >   __kasan_slab_free+0x102/0x150 mm/kasan/common.c:471
-> >   kasan_slab_free+0xe/0x10 mm/kasan/common.c:480
-> >   __cache_free mm/slab.c:3425 [inline]
-> >   kfree+0x10a/0x2c0 mm/slab.c:3756
-> >   device_create_release+0x16/0x20 drivers/base/power/wakeup_stats.c:130
-> >   device_release+0x7a/0x210 drivers/base/core.c:1101
-> >   kobject_cleanup lib/kobject.c:693 [inline]
-> >   kobject_release lib/kobject.c:722 [inline]
-> >   kref_put include/linux/kref.h:65 [inline]
-> >   kobject_put.cold+0x289/0x2e6 lib/kobject.c:739
-> >   put_device drivers/base/core.c:2301 [inline]
-> >   device_unregister+0x28/0x40 drivers/base/core.c:2409
-> >   bdi_unregister+0x428/0x610 mm/backing-dev.c:1016
-> >   del_gendisk+0x896/0xb30 block/genhd.c:810
-> >   loop_remove+0x3c/0xd0 drivers/block/loop.c:2079
-> >   loop_control_ioctl drivers/block/loop.c:2178 [inline]
-> >   loop_control_ioctl+0x320/0x360 drivers/block/loop.c:2144
-> >   vfs_ioctl fs/ioctl.c:46 [inline]
-> >   file_ioctl fs/ioctl.c:509 [inline]
-> >   do_vfs_ioctl+0xdb6/0x13e0 fs/ioctl.c:696
-> >   ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
-> >   __do_sys_ioctl fs/ioctl.c:720 [inline]
-> >   __se_sys_ioctl fs/ioctl.c:718 [inline]
-> >   __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
-> >   do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
-> >   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> >
-> > The buggy address belongs to the object at ffff8880a01b2000
-> >   which belongs to the cache kmalloc-2k of size 2048
-> > The buggy address is located 80 bytes inside of
-> >   2048-byte region [ffff8880a01b2000, ffff8880a01b2800)
-> > The buggy address belongs to the page:
-> > page:ffffea0002806c80 refcount:1 mapcount:0 mapping:ffff8880aa400e00
-> > index:0x0
-> > raw: 01fffc0000000200 ffffea0002374088 ffffea0002730148 ffff8880aa400e00
-> > raw: 0000000000000000 ffff8880a01b2000 0000000100000001 0000000000000000
-> > page dumped because: kasan: bad access detected
-> >
-> > Memory state around the buggy address:
-> >   ffff8880a01b1f00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> >   ffff8880a01b1f80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> > > ffff8880a01b2000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> >                                                   ^
-> >   ffff8880a01b2080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> >   ffff8880a01b2100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> > ==================================================================
->
->
-> bdi can be unregistered without queue_lock protection, so the reference
-> of bdi->dev must be informed on resetting it.
->
+
+--=-f4TrG9pLSfNSCk5pcMvM
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Hi Stephen, thanks for the follow-up.
+
+On Mon, 2019-11-18 at 22:14 -0800, Stephen Brennan wrote:
+> BCM2711 features a RNG200 hardware random number generator block, which i=
+s
+> different from the BCM283x from which it inherits. Move the rng block fro=
+m
+> BCM283x into a separate common file, and update the rng declaration of
+> BCM2711.
+>=20
+> Signed-off-by: Stephen Brennan <stephen@brennan.io>
 > ---
->
-> --- a/block/blk-cgroup.c
-> +++ b/block/blk-cgroup.c
-> @@ -494,8 +494,10 @@ static int blkcg_reset_stats(struct cgro
->  const char *blkg_dev_name(struct blkcg_gq *blkg)
->  {
->         /* some drivers (floppy) instantiate a queue w/o disk registered */
-> -       if (blkg->q->backing_dev_info->dev)
-> +       if (blkg->q->backing_dev_info->dev) {
-> +               smp_rmb();
->                 return dev_name(blkg->q->backing_dev_info->dev);
-> +       }
->         return NULL;
->  }
->
-> --- a/mm/backing-dev.c
-> +++ b/mm/backing-dev.c
-> @@ -1015,6 +1015,7 @@ void bdi_unregister(struct backing_dev_i
->                 bdi_debug_unregister(bdi);
->                 device_unregister(bdi->dev);
->                 bdi->dev = NULL;
-> +               smp_wmb();
->         }
->
->         if (bdi->owner) {
+
+It's petty in this case but you should add a list of changes here too.
+
+>  arch/arm/boot/dts/bcm2711.dtsi        |  6 +++---
+>  arch/arm/boot/dts/bcm2835.dtsi        |  1 +
+>  arch/arm/boot/dts/bcm2836.dtsi        |  1 +
+>  arch/arm/boot/dts/bcm2837.dtsi        |  1 +
+>  arch/arm/boot/dts/bcm283x-common.dtsi | 11 +++++++++++
+>  arch/arm/boot/dts/bcm283x.dtsi        |  6 ------
+>  6 files changed, 17 insertions(+), 9 deletions(-)
+>  create mode 100644 arch/arm/boot/dts/bcm283x-common.dtsi
+>=20
+> diff --git a/arch/arm/boot/dts/bcm2711.dtsi b/arch/arm/boot/dts/bcm2711.d=
+tsi
+> index ac83dac2e6ba..4975567e948e 100644
+> --- a/arch/arm/boot/dts/bcm2711.dtsi
+> +++ b/arch/arm/boot/dts/bcm2711.dtsi
+> @@ -92,10 +92,10 @@ pm: watchdog@7e100000 {
+>  		};
+> =20
+>  		rng@7e104000 {
+> +			compatible =3D "brcm,bcm2711-rng200";
+> +			reg =3D <0x7e104000 0x28>;
+>  			interrupts =3D <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>;
+> -
+> -			/* RNG is incompatible with brcm,bcm2835-rng */
+> -			status =3D "disabled";
+> +			status =3D "okay";
+>  		};
+> =20
+>  		uart2: serial@7e201400 {
+> diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.d=
+tsi
+> index 53bf4579cc22..f7b2f46e307d 100644
+> --- a/arch/arm/boot/dts/bcm2835.dtsi
+> +++ b/arch/arm/boot/dts/bcm2835.dtsi
+> @@ -1,5 +1,6 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  #include "bcm283x.dtsi"
+> +#include "bcm283x-common.dtsi"
+>  #include "bcm2835-common.dtsi"
+> =20
+>  / {
+> diff --git a/arch/arm/boot/dts/bcm2836.dtsi b/arch/arm/boot/dts/bcm2836.d=
+tsi
+> index 82d6c4662ae4..a85374195796 100644
+> --- a/arch/arm/boot/dts/bcm2836.dtsi
+> +++ b/arch/arm/boot/dts/bcm2836.dtsi
+> @@ -1,5 +1,6 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  #include "bcm283x.dtsi"
+> +#include "bcm283x-common.dtsi"
+>  #include "bcm2835-common.dtsi"
+> =20
+>  / {
+> diff --git a/arch/arm/boot/dts/bcm2837.dtsi b/arch/arm/boot/dts/bcm2837.d=
+tsi
+> index 9e95fee78e19..045d78ffea08 100644
+> --- a/arch/arm/boot/dts/bcm2837.dtsi
+> +++ b/arch/arm/boot/dts/bcm2837.dtsi
+> @@ -1,4 +1,5 @@
+>  #include "bcm283x.dtsi"
+> +#include "bcm283x-common.dtsi"
+>  #include "bcm2835-common.dtsi"
+> =20
+>  / {
+> diff --git a/arch/arm/boot/dts/bcm283x-common.dtsi
+> b/arch/arm/boot/dts/bcm283x-common.dtsi
+> new file mode 100644
+> index 000000000000..3c8834bee390
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/bcm283x-common.dtsi
+> @@ -0,0 +1,11 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +/ {
+> +	soc {
+> +		rng@7e104000 {
+> +			compatible =3D "brcm,bcm2835-rng";
+> +			reg =3D <0x7e104000 0x10>;
+> +			interrupts =3D <2 29>;
+> +		};
+> +	};
+> +};
+
+I think Stefan wrote bcm283x-common.dtsi by mistake, he really meant
+bcm2835-common.dtsi.
+
+See bcm2835-common.dtsi's header comment:
+
+/* This include file covers the common peripherals and configuration betwee=
+n
+ * bcm2835, bcm2836 and bcm2837 implementations.
+ */
+
+Regards,
+Nicolas
 
 
-This was hit on x86, so I would assume there is a more substantial bug
-than missed memory barriers (though, of course possible due to
-compiler and formal undefined behavior). But still I think there is
-also something like a missed refcount.
+--=-f4TrG9pLSfNSCk5pcMvM
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
-The fix in blkcg_reset_stats() looks suspicious to me on it's own.
-Let's say these functions are racing, even if we read
-blkg->q->backing_dev_info->dev as non-NULL and did smp_rmb()
-afterwards, nothing prevents dev from becoming NULL/freed on the very
-next line. If there is really a race, this type of use would require
-stronger synchronization (locks, refcounts, etc), not a barrier.
+-----BEGIN PGP SIGNATURE-----
 
-But if there is also a data race, then we will get back to this code
-with KCSAN later. Please don't use rmb/wmb, smp_load_acquire/release
-are better primitives. At the very least rmb/wmb must always be used
-with READ/WRITE_ONCE. rmb/wmb cannot possibly prevent a data race on
-dev variable itself.
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3TvsUACgkQlfZmHno8
+x/4BbAf+MpKR4ihlPDuftuddKUI/HC7nve3fsLHoczZfLRf0pj2/FnKvX3qgFytE
+xAYDpOXI1dprqHUPR1OavYQFO/UWFOSS3MRDIducwmDELc9gc5Z8iToD5ijYQiLM
+z6/NO8BxIQJFky/2inBcsx70fEM5VLLJHQOfkSuf5NxfDR/iETwuzE0EMEBLj3tz
+AnB31t86PHWGxFL2akCTFAdsbK8kJLiL0c6zrMb9xYct9S/9LC9ll0mU920HMUc9
+Rwu7je1CKU72Pik+GQOTt1fF5b/TOvVENxprfCoTcelH3QudGfqVIQcXkNJFOMrd
+oOhtvpofrtSfG1Dt9fsKdenSpi2gdg==
+=ikdQ
+-----END PGP SIGNATURE-----
+
+--=-f4TrG9pLSfNSCk5pcMvM--
+
