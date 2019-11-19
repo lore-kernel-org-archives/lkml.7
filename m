@@ -2,112 +2,98 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B647C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 09:55:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15B09C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 09:57:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A0B520857
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 09:55:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD2E220857
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 09:57:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574157431;
+	bh=k5bGyGT1o4D1zTsMlpia3m7XLYtNnR6f9GcevgLTKWw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lLearUpEbmIV+bVcNoiLI4f2qqMBJYPDM7SEXc6mynWMTLrbq9kJ5RHvx5396gNbh
+	 7tzl3YDbEzbzi0BM4sL0B7f9BJHASDNTwrYOzuMiOOPxVkdvHUdlTrMTGweLop7MwQ
+	 PlodGT7GkFXSJyoEABdkCAKVq1Q5mTdhUFjBKzZY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727465AbfKSJze (ORCPT
+        id S1726792AbfKSJ5L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 04:55:34 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:51775 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726170AbfKSJze (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 04:55:34 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iX0E2-0001CQ-5s; Tue, 19 Nov 2019 10:55:10 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C928C1C1900;
-        Tue, 19 Nov 2019 10:55:09 +0100 (CET)
-Date:   Tue, 19 Nov 2019 09:55:09 -0000
-From:   "tip-bot2 for Borislav Petkov" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/kprobes] x86/ftrace: Mark ftrace_modify_code_direct() __ref
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@suse.de>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Tue, 19 Nov 2019 04:57:11 -0500
+Received: from mx2.suse.de ([195.135.220.15]:34734 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725280AbfKSJ5K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 04:57:10 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 06190AC53;
+        Tue, 19 Nov 2019 09:57:08 +0000 (UTC)
+Date:   Tue, 19 Nov 2019 10:57:08 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Bala S <balas2380@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
-In-Reply-To: <20191116204607.GC23231@zn.tnic>
-References: <20191116204607.GC23231@zn.tnic>
+        Kees Cook <keescook@chromium.org>
+Subject: Re: Suggested Patch is not working for 22851 Bugzilla issue
+Message-ID: <20191119095708.GB21113@dhcp22.suse.cz>
+References: <CAJKzgVtzD7ULwCDVRSLMCmGJNaMqvx+jVO619t3xuv2oiEsPMQ@mail.gmail.com>
 MIME-Version: 1.0
-Message-ID: <157415730969.12247.5820840912824556336.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJKzgVtzD7ULwCDVRSLMCmGJNaMqvx+jVO619t3xuv2oiEsPMQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the core/kprobes branch of tip:
+Hi
+let me add Kees Cook and Linus to the cc list. I didn't have much
+time to study the bug report and cannot really comment on the security
+aspect of it. But let me point out that a big part of
+MAP_FIXED_NOREPLACE usage has been removed from the loader code just
+recently because it has caused some regressions
+http://lkml.kernel.org/r/20191005233227.GB25745@shell.armlinux.org.uk
+b212921b13bd ("elf: don't use MAP_FIXED_NOREPLACE for elf executable mappings").
+So you definitely want to look at the current Linus tree for your future
+experiments.
 
-Commit-ID:     994795481ddb8efbeda9e5924aca7d0c275efcd9
-Gitweb:        https://git.kernel.org/tip/994795481ddb8efbeda9e5924aca7d0c275efcd9
-Author:        Borislav Petkov <bp@suse.de>
-AuthorDate:    Mon, 18 Nov 2019 18:20:12 +01:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Tue, 19 Nov 2019 10:50:12 +01:00
+On Tue 19-11-19 10:37:44, Bala S wrote:
+> Hi Mhocko,
+> 
+> https://sourceware.org/bugzilla/show_bug.cgi?id=22851
+> For the above issue, I have found the patch.
+> 
+> Patch link:
+> https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1561935.html
+> 
+> Only change i noticed is 'MAP_FIXED_NOREPLACE' is used instead of
+> 'MAP_FIXED_SAFE'.
+> 
+> I ran test case on the following targets with this patch:
+> 
+> 1. For X86-64, Still i could see the reported issue( 'libevil.so' just
+> runs ‘cat /etc/passwd')
+> 
+> 2. For MIPS-64, i am not seeing the malicious file content as
+> reported. But ‘ldd’ could not found ‘libevil.so’.
+> 
+> root@qemumips64:~/LIN1019-1806# ldd ./main
+>         linux-vdso.so.1 (0x000000fff1f20000)
+>         libevil.so => not found
+>         libc.so.6 => /lib/libc.so.6 (0x0000005e46f70000)
+>         /lib/ld.so.1 (0x000000fff7888000)
+> 
+> I am not clear why this patch is not working for X86-64? But it is
+> working for MIPS-64 with some issue.
+> Please let me know, if anything is pending on this patch for the reported issue.
+> 
+> Thanks,
+> Bala
 
-x86/ftrace: Mark ftrace_modify_code_direct() __ref
-
-... because it calls the .init.text function text_poke_early(). That is
-ok because it does call that function early, during boot.
-
-Fixes: 9706f7c3531f ("x86/ftrace: Use text_poke()")
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20191116204607.GC23231@zn.tnic
----
- arch/x86/kernel/ftrace.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
-index 2a179fb..108ee96 100644
---- a/arch/x86/kernel/ftrace.c
-+++ b/arch/x86/kernel/ftrace.c
-@@ -99,7 +99,12 @@ static int ftrace_verify_code(unsigned long ip, const char *old_code)
- 	return 0;
- }
- 
--static int
-+/*
-+ * Marked __ref because it calls text_poke_early() which is .init.text. That is
-+ * ok because that call will happen early, during boot, when .init sections are
-+ * still present.
-+ */
-+static int __ref
- ftrace_modify_code_direct(unsigned long ip, const char *old_code,
- 			  const char *new_code)
- {
+-- 
+Michal Hocko
+SUSE Labs
