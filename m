@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA66BC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:00:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6774AC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:00:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A27E321850
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:00:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A317206DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:00:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574143245;
-	bh=pJGj7HwNlJeJIRu3mkf03IkdEkARpRHmioOZLUOcwtE=;
+	s=default; t=1574143254;
+	bh=UM+uiVXGrOUFsU4KqPI+fr6gwIOMvJUHAQ2n0jspCrI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EUMwqHNlsn//e2TztMxaUpdWsIq+yG7VSXK5kpcKj9PVHFC8CGslREQyyXZxmMr8b
-	 /Jv1kmP755C69nxAGxXK2Wxitiqx3RjMlMHNf+uVA6bd6LbppLr2NlMKZWYVrGAhqL
-	 GY37X0NO+VXVJhvquVusHBgYhbc3NekfiqvLWUjA=
+	b=v4/kLZTLRAr7QNUWW7zVd5C8ZYN1QWPHqp8w23dVpkdNw/1qyogs25PtRlgi7owls
+	 GrW45HJAI+vqkiz57ZUShwm1/oqqIl0VeFUaZWTdODUaq4c7ILLwRNt2VDUJfOZOq+
+	 jPgl6bSmA4DatSXvdaDT6vPFJlwtw7R4gq+frk9E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728515AbfKSGAo (ORCPT
+        id S1728685AbfKSGAx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 01:00:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40710 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 01:00:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730919AbfKSFpF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:45:05 -0500
+        id S1730654AbfKSFow (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:44:52 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08682218BA;
-        Tue, 19 Nov 2019 05:45:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1F1D218BA;
+        Tue, 19 Nov 2019 05:44:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142305;
-        bh=pJGj7HwNlJeJIRu3mkf03IkdEkARpRHmioOZLUOcwtE=;
+        s=default; t=1574142291;
+        bh=UM+uiVXGrOUFsU4KqPI+fr6gwIOMvJUHAQ2n0jspCrI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KKrhxyXeXvmKQX9LiSjOcUrTmmwx/ZWVRdOn6xM2/OSnh9/Bs61DB3jlwOTvyrpux
-         4tMVnjr9xPEaZNQZ16zKqqym/z8Of0v2jv9x/6YUiS1wqs5aNqRTyebiBNYck+EPoU
-         WBPq37wPi5GcB119+4lJH72W90qpS4HBSocC2Fa4=
+        b=QjFT/f0HAScjmrdCNMTGDRFmxM0A4kqiae2rg7HKKa0iVnbgQkgYe4tf61lYgDWwP
+         q4yuaVkpavNqIsF/bi0z9nuoDxFZv8URLxcdJDnNBn8t4VB6sTWRhZG5+L4K8J2+V+
+         O1bygLLMS8OStd/ZAj53lnx9inMzTgz3IMMdxSeU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aapo Vienamo <avienamo@nvidia.com>,
-        Mikko Perttunen <mperttunen@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
+        stable@vger.kernel.org, Tamizh chelvam <tamizhr@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 035/239] arm64: dts: tegra210-p2180: Correct sdmmc4 vqmmc-supply
-Date:   Tue, 19 Nov 2019 06:17:15 +0100
-Message-Id: <20191119051304.241851770@linuxfoundation.org>
+Subject: [PATCH 4.14 030/239] ath10k: fix kernel panic by moving pci flush after napi_disable
+Date:   Tue, 19 Nov 2019 06:17:10 +0100
+Message-Id: <20191119051303.542103898@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -61,32 +60,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aapo Vienamo <avienamo@nvidia.com>
+From: Tamizh chelvam <tamizhr@codeaurora.org>
 
-[ Upstream commit 6ff7705da8806de45ca1490194f0b4eb07725804 ]
+[ Upstream commit bd1d395070cca4f42a93e520b0597274789274a4 ]
 
-On p2180 sdmmc4 is powered from a fixed 1.8 V regulator.
+When continuously running wifi up/down sequence, the napi poll
+can be scheduled after the CE buffers being freed by ath10k_pci_flush
 
-Signed-off-by: Aapo Vienamo <avienamo@nvidia.com>
-Reviewed-by: Mikko Perttunen <mperttunen@nvidia.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+Steps:
+  In a certain condition, during wifi down below scenario might occur.
+
+ath10k_stop->ath10k_hif_stop->napi_schedule->ath10k_pci_flush->napi_poll(napi_synchronize).
+
+In the above scenario, CE buffer entries will be freed up and become NULL in
+ath10k_pci_flush. And the napi_poll has been invoked after the flush process
+and it will try to get the skb from the CE buffer entry and perform some action on that.
+Since the CE buffer already cleaned by pci flush this action will create NULL
+pointer dereference and trigger below kernel panic.
+
+Unable to handle kernel NULL pointer dereference at virtual address 0000005c
+PC is at ath10k_pci_htt_rx_cb+0x64/0x3ec [ath10k_pci]
+ath10k_pci_htt_rx_cb [ath10k_pci]
+ath10k_ce_per_engine_service+0x74/0xc4 [ath10k_pci]
+ath10k_ce_per_engine_service [ath10k_pci]
+ath10k_ce_per_engine_service_any+0x74/0x80 [ath10k_pci]
+ath10k_ce_per_engine_service_any [ath10k_pci]
+ath10k_pci_napi_poll+0x48/0xec [ath10k_pci]
+ath10k_pci_napi_poll [ath10k_pci]
+net_rx_action+0xac/0x160
+net_rx_action
+__do_softirq+0xdc/0x208
+__do_softirq
+irq_exit+0x84/0xe0
+irq_exit
+__handle_domain_irq+0x80/0xa0
+__handle_domain_irq
+gic_handle_irq+0x38/0x5c
+gic_handle_irq
+__irq_usr+0x44/0x60
+
+Tested on QCA4019 and firmware version 10.4.3.2.1.1-00010
+
+Signed-off-by: Tamizh chelvam <tamizhr@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/wireless/ath/ath10k/ahb.c | 4 ++--
+ drivers/net/wireless/ath/ath10k/pci.c | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi b/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
-index f6e6f1e83ba89..be91873c08782 100644
---- a/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
-@@ -282,6 +282,7 @@
- 		status = "okay";
- 		bus-width = <8>;
- 		non-removable;
-+		vqmmc-supply = <&vdd_1v8>;
- 	};
+diff --git a/drivers/net/wireless/ath/ath10k/ahb.c b/drivers/net/wireless/ath/ath10k/ahb.c
+index ff6815e956848..1404ec9f56be9 100644
+--- a/drivers/net/wireless/ath/ath10k/ahb.c
++++ b/drivers/net/wireless/ath/ath10k/ahb.c
+@@ -663,10 +663,10 @@ static void ath10k_ahb_hif_stop(struct ath10k *ar)
+ 	ath10k_ahb_irq_disable(ar);
+ 	synchronize_irq(ar_ahb->irq);
  
- 	clocks {
+-	ath10k_pci_flush(ar);
+-
+ 	napi_synchronize(&ar->napi);
+ 	napi_disable(&ar->napi);
++
++	ath10k_pci_flush(ar);
+ }
+ 
+ static int ath10k_ahb_hif_power_up(struct ath10k *ar)
+diff --git a/drivers/net/wireless/ath/ath10k/pci.c b/drivers/net/wireless/ath/ath10k/pci.c
+index d790ea20b95d9..27ab3eb47534f 100644
+--- a/drivers/net/wireless/ath/ath10k/pci.c
++++ b/drivers/net/wireless/ath/ath10k/pci.c
+@@ -1787,9 +1787,9 @@ static void ath10k_pci_hif_stop(struct ath10k *ar)
+ 
+ 	ath10k_pci_irq_disable(ar);
+ 	ath10k_pci_irq_sync(ar);
+-	ath10k_pci_flush(ar);
+ 	napi_synchronize(&ar->napi);
+ 	napi_disable(&ar->napi);
++	ath10k_pci_flush(ar);
+ 
+ 	spin_lock_irqsave(&ar_pci->ps_lock, flags);
+ 	WARN_ON(ar_pci->ps_wake_refcount > 0);
 -- 
 2.20.1
 
