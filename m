@@ -5,49 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C26C4C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:55:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B4FC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:55:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E99521850
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:55:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 709CB21850
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:55:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142920;
-	bh=ty4jM+l1o5jHcZfIlJd9naAI9QaKwSjPCQLnsWRdjcU=;
+	s=default; t=1574142926;
+	bh=ElvsYt0MM69cxFu8JeKl5tePwzNqdMnAb3PJ5Cr7Nt8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T0VSAA/MF57XXEbuDCZuHzuiFPTCX+9M7YSdNSkSdbs7zPAkuV9oLKgy8nyKEKgGq
-	 cVCOuT5U8Ntdq0z/MWM4jCmFKtWc24vbUrMiUw6FTUNVzHlLb/5Ip4XZoNybHqYryO
-	 4scgbAoT+c7R0oUngxWKxMOoQFP9YtLI0PdHQb4U=
+	b=gfp0nlOotjB3OETh18QL61Ka6lban7fFCENcwbjTbG72UgboyJNjhB5yfaQwxLzqg
+	 xw+RVLC94gwO1EyNWPeDo0+cVE0UGDwm97BF58zzoWuFztJWBN4Tcyrr++Fq5X+JQ5
+	 zRhnBCuKw/BV8bhJIqpV9u/KlZGHOiAs0/+1IWFc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732265AbfKSFzT (ORCPT
+        id S1732281AbfKSFzY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:55:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53608 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:55:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731694AbfKSFzP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:55:15 -0500
+        id S1732266AbfKSFzU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:55:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC974208C3;
-        Tue, 19 Nov 2019 05:55:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3612A208C3;
+        Tue, 19 Nov 2019 05:55:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142914;
-        bh=ty4jM+l1o5jHcZfIlJd9naAI9QaKwSjPCQLnsWRdjcU=;
+        s=default; t=1574142919;
+        bh=ElvsYt0MM69cxFu8JeKl5tePwzNqdMnAb3PJ5Cr7Nt8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c1w1GuY8RaJN4jc3yMpf46/SvOm0q4kPkS0l+A8onAn2v8dcKb0W8nhvqZnAazl31
-         d0G7vtbU5a7RiGKqfb1iP1k0UWqsEm6NqpcxAZOadOLo8byNhZTWYbhUgy1Xi9ISpE
-         SN8sXcP4QdWDGwo5W+K/NDZmAS8Uh3EFOzV2FgzA=
+        b=yzFVhLFbiyjUlh9GYynrhYW+kFzvNNqk6tSNzEl0umXVYesiCpa1qlylGYj0bbfMt
+         iJLCTPHW2xyR6j7t1P1eo99ZEI9MvXZYl6q/7ssP4Psgsg9AkxQ/YYspeIXCgXFd5b
+         UxzG3eXWdmuWBOLIhKR5xalAXIulwXLsGtON+ZnQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
+        stable@vger.kernel.org, Hannes Reinecke <hare@suse.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Ondrey Zary <linux@rainbow-software.org>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 218/239] iwlwifi: api: annotate compressed BA notif array sizes
-Date:   Tue, 19 Nov 2019 06:20:18 +0100
-Message-Id: <20191119051339.315389232@linuxfoundation.org>
+Subject: [PATCH 4.14 220/239] scsi: NCR5380: Clear all unissued commands on host reset
+Date:   Tue, 19 Nov 2019 06:20:20 +0100
+Message-Id: <20191119051339.430153361@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -60,48 +63,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Hannes Reinecke <hare@suse.com>
 
-[ Upstream commit 6f68cc367ab6578a33cca21b6056804165621f00 ]
+[ Upstream commit 1aeeeed7f03c576f096eede7b0384f99a98f588c ]
 
-Annotate the compressed BA notification array sizes and
-make both of them 0-length since the length of 1 is just
-confusing - it may be different than that and the offset
-to the second one needs to be calculated in the C code
-anyhow.
+When doing a host reset we should be clearing all outstanding commands, not
+just the command triggering the reset.
 
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+[mkp: adjusted Hannes' SoB address]
+
+Signed-off-by: Hannes Reinecke <hare@suse.com>
+Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
+Cc: Ondrey Zary <linux@rainbow-software.org>
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/fw/api/tx.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/scsi/NCR5380.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/fw/api/tx.h b/drivers/net/wireless/intel/iwlwifi/fw/api/tx.h
-index 14ad9fb895f93..a9c8352a76418 100644
---- a/drivers/net/wireless/intel/iwlwifi/fw/api/tx.h
-+++ b/drivers/net/wireless/intel/iwlwifi/fw/api/tx.h
-@@ -722,9 +722,9 @@ enum iwl_mvm_ba_resp_flags {
-  * @tfd_cnt: number of TFD-Q elements
-  * @ra_tid_cnt: number of RATID-Q elements
-  * @tfd: array of TFD queue status updates. See &iwl_mvm_compressed_ba_tfd
-- *	for details.
-+ *	for details. Length in @tfd_cnt.
-  * @ra_tid: array of RA-TID queue status updates. For debug purposes only. See
-- *	&iwl_mvm_compressed_ba_ratid for more details.
-+ *	&iwl_mvm_compressed_ba_ratid for more details. Length in @ra_tid_cnt.
-  */
- struct iwl_mvm_compressed_ba_notif {
- 	__le32 flags;
-@@ -741,7 +741,7 @@ struct iwl_mvm_compressed_ba_notif {
- 	__le32 tx_rate;
- 	__le16 tfd_cnt;
- 	__le16 ra_tid_cnt;
--	struct iwl_mvm_compressed_ba_tfd tfd[1];
-+	struct iwl_mvm_compressed_ba_tfd tfd[0];
- 	struct iwl_mvm_compressed_ba_ratid ra_tid[0];
- } __packed; /* COMPRESSED_BA_RES_API_S_VER_4 */
+diff --git a/drivers/scsi/NCR5380.c b/drivers/scsi/NCR5380.c
+index 8caa51797511e..9131d30b2da75 100644
+--- a/drivers/scsi/NCR5380.c
++++ b/drivers/scsi/NCR5380.c
+@@ -2309,7 +2309,7 @@ static int NCR5380_host_reset(struct scsi_cmnd *cmd)
+ 	spin_lock_irqsave(&hostdata->lock, flags);
  
+ #if (NDEBUG & NDEBUG_ANY)
+-	scmd_printk(KERN_INFO, cmd, __func__);
++	shost_printk(KERN_INFO, instance, __func__);
+ #endif
+ 	NCR5380_dprint(NDEBUG_ANY, instance);
+ 	NCR5380_dprint_phase(NDEBUG_ANY, instance);
+@@ -2327,10 +2327,13 @@ static int NCR5380_host_reset(struct scsi_cmnd *cmd)
+ 	 * commands!
+ 	 */
+ 
+-	if (list_del_cmd(&hostdata->unissued, cmd)) {
++	list_for_each_entry(ncmd, &hostdata->unissued, list) {
++		struct scsi_cmnd *cmd = NCR5380_to_scmd(ncmd);
++
+ 		cmd->result = DID_RESET << 16;
+ 		cmd->scsi_done(cmd);
+ 	}
++	INIT_LIST_HEAD(&hostdata->unissued);
+ 
+ 	if (hostdata->selecting) {
+ 		hostdata->selecting->result = DID_RESET << 16;
 -- 
 2.20.1
 
