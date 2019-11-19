@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D610C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE546C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:08:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06091208CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:08:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C622A208CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:08:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574143735;
-	bh=L5ZKUrc/TBLLpyooRleWyieQNY5ylLKmZ/vovfO3UOc=;
+	s=default; t=1574143738;
+	bh=gCbS15XtXj4oIuSuRwt5i3q+8lCfPki4Urq31VaAOrw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yJiyLpLRB30vkqijoe4HH7odbnHb1WLC4vLOZcJibkWpBCL6NG4BiLNORcJxzr4xk
-	 S+vfwKz664FOTOtBgcf1yiMzMiZmN4Vy8jNWz0ATcNi9FmbVES8tq06/l/lnpXFnnb
-	 /JRAjdl8HfLHpvRmW4yCJ4mHlxKxhdQIW5kUpwLw=
+	b=Xy+XQghx9I869vfR+Shaz+Xx4nOyvFdnNAVEzil8kqDTYvW7LnRIxgnWVMxbCXAAp
+	 aPCJD0P3tF2b7zSsY0jcZ/kTvcry3JRZk0+Ps7XcvNxb931QH8lDS+3AtS5Rd2YhMz
+	 T+a32jXCbS69cZznqiX1ham4kVLnm9YihBXHEyNY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729048AbfKSF3y (ORCPT
+        id S1729014AbfKSF3h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:29:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48450 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:29:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728549AbfKSF3t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:29:49 -0500
+        id S1729001AbfKSF3c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:29:32 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B511E222DF;
-        Tue, 19 Nov 2019 05:29:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2902121939;
+        Tue, 19 Nov 2019 05:29:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141389;
-        bh=L5ZKUrc/TBLLpyooRleWyieQNY5ylLKmZ/vovfO3UOc=;
+        s=default; t=1574141371;
+        bh=gCbS15XtXj4oIuSuRwt5i3q+8lCfPki4Urq31VaAOrw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oQMvbvgEy2wF2X4wtvV5qg/5XqDQQ33YsRaquCU2AKusc1DXwnAEm2cn7NhvvuPOp
-         bAICiL78RV3Yn+mBHQ4vFuoMId9OoWYBQ5kkxhoXv8gYXPBd8j8bBzWFa8mfhloOY0
-         UQ+Oz6E63WNSfll9dbmbVkUOjf/OIO8oIntrSIiU=
+        b=VsLMGc9QxTXcIabn5cUFXAucA/JieAw5lG0cDI81/jfdnktGu4xP5w5+lyVp1nSWi
+         W53fUpp5MAiGuIkeyIH2LvbDu+7x65dJl2ZWpSyYG5BjMaJx+2Phy4t7AB7ZEWFr9M
+         7vuN0yxfNKOARWpvKB2dnyYJHJqsJzJgYSJFdUuM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Huazhong Tan <tanhuazhong@huawei.com>,
-        Peng Li <lipeng321@huawei.com>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 103/422] net: hns3: Fix for multicast failure
-Date:   Tue, 19 Nov 2019 06:15:00 +0100
-Message-Id: <20191119051405.885975982@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Suman Trpathi <stripathi@amperecomputing.com>,
+        Rameshwar Prasad Sahu <rameshwar.sahu@amperecomputing.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 136/422] ata: Disable AHCI ALPM feature for Ampere Computing eMAG SATA
+Date:   Tue, 19 Nov 2019 06:15:33 +0100
+Message-Id: <20191119051407.639411260@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -62,49 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huazhong Tan <tanhuazhong@huawei.com>
+From: Suman Tripathi <stripathi@amperecomputing.com>
 
-[ Upstream commit fd5f9da3f6583046215d614a87792b46e55785e2 ]
+[ Upstream commit 20bdc376b427cb420836f39ee8f281ea85dbaeef ]
 
-When the lower 24 bits of the IPV6 link-local addresses at both
-ends are the same, the multicast MAC address for Neigbour Discovery
-is the same. The multicast for Neigbour Discovery will fail.
+Due to hardware errata, Ampere Computing eMAG SATA can't support
+AHCI ALPM feature. This patch disables the AHCI ALPM feature for
+eMAG SATA.
 
-This patch fixes it by including the bonding uplink port in the
-multicast group.
-
-Fixes: 46a3df9f9718("net: hns3: Add HNS3 Acceleration Engine & Compatibility Layer Support")
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
-Signed-off-by: Salil Mehta <salil.mehta@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Suman Trpathi <stripathi@amperecomputing.com>
+Signed-off-by: Rameshwar Prasad Sahu <rameshwar.sahu@amperecomputing.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/ata/ahci_platform.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index 89ca69fa2b97b..44d0cb3f73a44 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -4374,7 +4374,7 @@ int hclge_add_mc_addr_common(struct hclge_vport *vport,
- 	hnae3_set_bit(req.flags, HCLGE_MAC_VLAN_BIT0_EN_B, 1);
- 	hnae3_set_bit(req.entry_type, HCLGE_MAC_VLAN_BIT0_EN_B, 0);
- 	hnae3_set_bit(req.entry_type, HCLGE_MAC_VLAN_BIT1_EN_B, 1);
--	hnae3_set_bit(req.mc_mac_en, HCLGE_MAC_VLAN_BIT0_EN_B, 0);
-+	hnae3_set_bit(req.mc_mac_en, HCLGE_MAC_VLAN_BIT0_EN_B, 1);
- 	hclge_prepare_mac_addr(&req, addr);
- 	status = hclge_lookup_mac_vlan_tbl(vport, &req, desc, true);
- 	if (!status) {
-@@ -4441,7 +4441,7 @@ int hclge_rm_mc_addr_common(struct hclge_vport *vport,
- 	hnae3_set_bit(req.flags, HCLGE_MAC_VLAN_BIT0_EN_B, 1);
- 	hnae3_set_bit(req.entry_type, HCLGE_MAC_VLAN_BIT0_EN_B, 0);
- 	hnae3_set_bit(req.entry_type, HCLGE_MAC_VLAN_BIT1_EN_B, 1);
--	hnae3_set_bit(req.mc_mac_en, HCLGE_MAC_VLAN_BIT0_EN_B, 0);
-+	hnae3_set_bit(req.mc_mac_en, HCLGE_MAC_VLAN_BIT0_EN_B, 1);
- 	hclge_prepare_mac_addr(&req, addr);
- 	status = hclge_lookup_mac_vlan_tbl(vport, &req, desc, true);
- 	if (!status) {
+diff --git a/drivers/ata/ahci_platform.c b/drivers/ata/ahci_platform.c
+index 46f0bd75eff79..cf1e0e18a7a98 100644
+--- a/drivers/ata/ahci_platform.c
++++ b/drivers/ata/ahci_platform.c
+@@ -33,6 +33,13 @@ static const struct ata_port_info ahci_port_info = {
+ 	.port_ops	= &ahci_platform_ops,
+ };
+ 
++static const struct ata_port_info ahci_port_info_nolpm = {
++	.flags		= AHCI_FLAG_COMMON | ATA_FLAG_NO_LPM,
++	.pio_mask	= ATA_PIO4,
++	.udma_mask	= ATA_UDMA6,
++	.port_ops	= &ahci_platform_ops,
++};
++
+ static struct scsi_host_template ahci_platform_sht = {
+ 	AHCI_SHT(DRV_NAME),
+ };
+@@ -41,6 +48,7 @@ static int ahci_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	struct ahci_host_priv *hpriv;
++	const struct ata_port_info *port;
+ 	int rc;
+ 
+ 	hpriv = ahci_platform_get_resources(pdev,
+@@ -58,7 +66,11 @@ static int ahci_probe(struct platform_device *pdev)
+ 	if (of_device_is_compatible(dev->of_node, "hisilicon,hisi-ahci"))
+ 		hpriv->flags |= AHCI_HFLAG_NO_FBS | AHCI_HFLAG_NO_NCQ;
+ 
+-	rc = ahci_platform_init_host(pdev, hpriv, &ahci_port_info,
++	port = acpi_device_get_match_data(dev);
++	if (!port)
++		port = &ahci_port_info;
++
++	rc = ahci_platform_init_host(pdev, hpriv, port,
+ 				     &ahci_platform_sht);
+ 	if (rc)
+ 		goto disable_resources;
+@@ -85,6 +97,7 @@ static const struct of_device_id ahci_of_match[] = {
+ MODULE_DEVICE_TABLE(of, ahci_of_match);
+ 
+ static const struct acpi_device_id ahci_acpi_match[] = {
++	{ "APMC0D33", (unsigned long)&ahci_port_info_nolpm },
+ 	{ ACPI_DEVICE_CLASS(PCI_CLASS_STORAGE_SATA_AHCI, 0xffffff) },
+ 	{},
+ };
 -- 
 2.20.1
 
