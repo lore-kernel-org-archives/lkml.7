@@ -2,150 +2,145 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53DB9C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:16:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D2FAC43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:17:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2605022440
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:16:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="R9/bgvpO";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="W5iV2Xjl"
+	by mail.kernel.org (Postfix) with ESMTP id 2A85822441
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:17:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574191039;
+	bh=csZmOLvxjI2+OJ2t0MngnlUbh5xOq4tBtMIZxavgdq0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=0pXx37JumrdlNmH6iwjpPIWC0WO6txG9S7Bv4boScluBbGw2QJ0zIqBmr96WKNthj
+	 L1i1E4AfO0n55NlHMwzv70y5szaTOnQGk9it9wh6/cZGSduBtYyRjpSoRJ020bAUGI
+	 t5Q5pLiM6Avsg3YbFXGqlrciiM1FMTRO2mrOQ5Jg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727427AbfKSTQd (ORCPT
+        id S1727468AbfKSTRS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 14:16:33 -0500
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:27114 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727395AbfKSTQc (ORCPT
+        Tue, 19 Nov 2019 14:17:18 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:38462 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727036AbfKSTRS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 14:16:32 -0500
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAJJFYI3011105;
-        Tue, 19 Nov 2019 11:16:24 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=pfpt0818;
- bh=VvUMH457ZL7I90dzY1WA5YNY5ze1zWdCgfdiM9yNAg8=;
- b=R9/bgvpOghLgJ+dHIC1ehGm4BeMN4geRep3s5cMw5kdLKbiWi1/8niu+PRCGuGPEd+KD
- cLtXLHCFJNNs/RG+ZSG7v3wUre0IpaF1b7jicqJKQ/8ripUu3BO1hDVCSxJq/xiH5kq+
- RZopTDRcAtEjaH7uhI6bEFjlJiU7xpsXei3OswAo3Q1c5cEvkGs1my5qf871E+G18Mo8
- PuNGP9GR96mEoOX3Q3oUMbf0HK1a5wFmhOke3JcWRYM6zhfkEI+mKyuAmerLbdzQI/lA
- 0SWyjsaKie2iDk4LkHlf06krBU9U89pNmBISVRGJb3V2Kdi8oX/XgfRfBd+V5RetS8jq 7A== 
-Received: from sc-exch02.marvell.com ([199.233.58.182])
-        by mx0b-0016f401.pphosted.com with ESMTP id 2wc82vkhxj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Tue, 19 Nov 2019 11:16:23 -0800
-Received: from SC-EXCH04.marvell.com (10.93.176.84) by SC-EXCH02.marvell.com
- (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Tue, 19 Nov
- 2019 11:16:22 -0800
-Received: from NAM04-BN3-obe.outbound.protection.outlook.com (104.47.46.59) by
- SC-EXCH04.marvell.com (10.93.176.84) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Tue, 19 Nov 2019 11:16:22 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hUyIhmR2xsOmOLWQ7HrX8YJ57WznXvj8tz+qIhVXJRkmacjuAV+kAjLPA/5AZVZoCUJG1h32Az+fqSh+DBF5ATXrbrq2oHGmNltZINB5jZ1QSZ7L7/kTtWYL+eminIugPpyjpUtvgdDIW5Rbrlv3rnUHW3I2oAP/8LDj18JXHc76k3CmBVMG1I1TMP6yPUzif/VlYF/JtOqHaZFBX++FTloa8STWQuEHq4dxfFTy9J+EcTxxjiwt4a8tial9jJxm4S7GxnRb2CLdk3brktHNFacVwZFvZNdtZLpM+0tpJqNSELlfZ7VvUJTyGjHLxjVJ4P1JQ7te1FLIKbxJC4Nq5w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VvUMH457ZL7I90dzY1WA5YNY5ze1zWdCgfdiM9yNAg8=;
- b=SP6XyxNxC8WaxeUlsASLGxOZsFtUmmsme9UaxTt1M5QCku9QsKLrhOLUEtsDtlNpxGp8TNh5znTq/RrVSxflMu7NhA1r+2UFhRIx8FRB40NuH4iYHngeQYtOyyoW23s3k6W3ZkJS9hzQ1XEzib1TGYDdNesDf0W0WS0q6p4tHqQPXhNeJf47fQu1RvZAt7HchqFmD3cczvr/AY9XK7kLA85646iDuqSQIIxJ1SPFzLVBSQjo2qGT6qfHjFr9zyNNu+K3g8bjUbiazpnoa04+fmnFcpahLKLIaxweEbK45qTssXYwiwk8D2bf3/TlCmYBuPaSdSB7TInfFf+QLhRGCQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VvUMH457ZL7I90dzY1WA5YNY5ze1zWdCgfdiM9yNAg8=;
- b=W5iV2XjlzA0cjAnissOiwUQLq14BI6773DLbNT/HIEvGYWlrgLMX3r08MWcMtLoRdFEkPL+eoF/cGIt7LitR5/Mcc4MlXYq5Ls0EmG+A6UWjfYfeUYBjDS1hT/pm3NdTXDTmAMVP+goAKdPA21kwqA84mnDziBUeFttt4tnWnwk=
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com (10.255.237.10) by
- MN2PR18MB2975.namprd18.prod.outlook.com (20.179.22.212) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2451.28; Tue, 19 Nov 2019 19:16:20 +0000
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::657c:6c81:859d:106]) by MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::657c:6c81:859d:106%7]) with mapi id 15.20.2451.029; Tue, 19 Nov 2019
- 19:16:20 +0000
-From:   Robert Richter <rrichter@marvell.com>
-To:     Arnd Bergmann <arnd@arndb.de>, arm soc <arm@kernel.org>
-CC:     Jan Glauber <jglauber@marvell.com>,
-        Sunil Kovvuri Goutham <sgoutham@marvell.com>,
-        George Cherian <gcherian@marvell.com>,
-        "Ganapatrao Prabhakerrao Kulkarni" <gkulkarni@marvell.com>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "soc@kernel.org" <soc@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] MAINTAINERS: update Cavium ThunderX drivers
-Thread-Topic: [PATCH 1/2] MAINTAINERS: update Cavium ThunderX drivers
-Thread-Index: AQHVnvpGhPZ0pb7yrke8Hp6sbUjcE6eS3acA
-Date:   Tue, 19 Nov 2019 19:16:20 +0000
-Message-ID: <20191119191612.bnyy4agiaoakpizz@rric.localdomain>
-References: <20191119165549.14570-1-rrichter@marvell.com>
- <20191119165549.14570-2-rrichter@marvell.com>
-In-Reply-To: <20191119165549.14570-2-rrichter@marvell.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1PR05CA0228.eurprd05.prod.outlook.com
- (2603:10a6:3:fa::28) To MN2PR18MB3408.namprd18.prod.outlook.com
- (2603:10b6:208:165::10)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [31.208.96.227]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8ace1895-80b6-4d57-3dbc-08d76d24f564
-x-ms-traffictypediagnostic: MN2PR18MB2975:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR18MB29751F87EE50D6845A03DFF8D94C0@MN2PR18MB2975.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 022649CC2C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(39850400004)(366004)(396003)(346002)(376002)(199004)(189003)(5660300002)(4744005)(6246003)(52116002)(4326008)(54906003)(446003)(11346002)(64756008)(110136005)(478600001)(15650500001)(66066001)(229853002)(66476007)(66446008)(14454004)(3846002)(486006)(66946007)(66556008)(2906002)(186003)(476003)(71190400001)(71200400001)(316002)(1076003)(256004)(81166006)(76176011)(99286004)(6116002)(305945005)(8676002)(7736002)(6512007)(9686003)(386003)(53546011)(6506007)(6436002)(86362001)(102836004)(6486002)(8936002)(81156014)(14444005)(26005)(25786009);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB2975;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: marvell.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: mtYjojoVTAZYmVNHK/7C3MQ+8U86BtPibtATeP8woxIE27UK4BWR7dpvnMg5LdOYCp+PHWEPjkcKmxi8TKiaoC9GxIA8HujEE3d2McywesWl+veuPsJNFpP3Yw/enVJetuduH4AtSRtjaRbKMHtSTV7ozwe/umBAUshxw8ltlItmN7E9AbnNt8ZnanLJeRr7rp9xClyPqAAIwBECgDWUimRCkK9jSLB7m+IctqH1q5h4JwpUaj0GcQX4wtBi122AS3hqUGyYuQSXpr0qMjYul3mcPbHML07YV0pgd1ikbY3FcJkKlCdeHqT8yX/364IrM2/bIzxtLWsXK4+FeZ61WLOYoffmeBVLjyj/0Tcr6gPiFJYA8TGEtWITjefoqpM/552U2QI0NQvZVKQwHIGHnS7FPF+NsPlr6X0jNbfvs4dEnxusTtEikSldtPq6MfmU
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <5D0A981A3E226A48B7A3670F71E3B72D@namprd18.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Tue, 19 Nov 2019 14:17:18 -0500
+Received: by mail-oi1-f193.google.com with SMTP id a14so20050278oid.5;
+        Tue, 19 Nov 2019 11:17:17 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wNhSIdXIAMhTZZlTq4fvLUCixY9Z52dvDBqLG8iKTeg=;
+        b=RwYmRCTgVEBKrMJlWvkpWxd/5naacajGqd7cDvNQfe10wT0oEdntJWDUuS7cNHwA5Y
+         Pc3sIynZs9P6WuCaA8VkzLAHA2sa1oNFvHf2M5M8D6iut9pi3R9NAI1LvL66zrlIO1qO
+         r+Y1CDonyZnv8kRpjDVwnZPSNnOuK6VTTqSsqR0x8mzjTFqN/cumHEzq7RzmDWKNGrwf
+         N4lh6JXh0fe8oAEZvyTWO/yFE7AJBkGE7eIrAOmFm0fskx5IVuwuRvyGvm3kow5wG0PN
+         u5N99lSFkWWN6wd9CDh+0STVDUYMwf5wB9il+TNbJmCXb9tz6jf5EvzRS7easWy8HQV/
+         iBKg==
+X-Gm-Message-State: APjAAAUf/z5oP2KnQc/BzZfo1tozVfdtdkwkr68hjlKZBS15ZLlP/Z4S
+        dFLN0Fz+ikGeTUG9oJzHqiEVqWz89/B0B6BAl7o=
+X-Google-Smtp-Source: APXvYqwLfxciI4GS3t+oWbXzFREIpD12GUXpB9UJ5E3BLWwvX0dd5QLcJSKaltQnW2ZhblzctccArehQ8GCNyphjH2U=
+X-Received: by 2002:aca:1101:: with SMTP id 1mr5643630oir.103.1574191036787;
+ Tue, 19 Nov 2019 11:17:16 -0800 (PST)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8ace1895-80b6-4d57-3dbc-08d76d24f564
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Nov 2019 19:16:20.1011
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Z5avICysYgFdmenJN29bzn6pbvzMnT06nwnwxMpMs2wxnowJBORzs7sFt0X2FCu7HaNPoXJvKWHs7u/x97pbMg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2975
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-19_06:2019-11-15,2019-11-19 signatures=0
+References: <2811202.iOFZ6YHztY@kreacher> <4551555.oysnf1Sd0E@kreacher>
+ <000001d59d61$eb4e6670$c1eb3350$@net> <000401d59ee6$959e3da0$c0dab8e0$@net>
+In-Reply-To: <000401d59ee6$959e3da0$c0dab8e0$@net>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 19 Nov 2019 20:17:05 +0100
+Message-ID: <CAJZ5v0i1iAjpWju6FiCjP3RvspKDRfSwz4=b_3qgGhhfz8sSrw@mail.gmail.com>
+Subject: Re: [RFT][PATCH 1/3] PM: QoS: Introduce frequency QoS
+To:     Doug Smythies <dsmythies@telus.net>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Dmitry Osipenko <digetx@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19.11.19 16:56:24, Robert Richter wrote:
-> From: Jan Glauber <jglauber@marvell.com>
->=20
-> Remove my maintainer entries for ThunderX drivers as I'm moving on
-> and won't have access to ThunderX hardware anymore and add Robert.
-> Also remove the obsolete addresses of David Daney and Steven Hill.
->=20
-> Add an entry to .mailmap for my various email addresses.
+On Tue, Nov 19, 2019 at 3:35 PM Doug Smythies <dsmythies@telus.net> wrote:
+>
+> On 2019.11.17 08:13 Doug Smythies wrote:
+> > On 2019.11.16 23:35 Doug Smythies wrote:
+>
+> >> Hi Rafael,
+> >>
+> >> Not sure, but I think it is this one that
+> >> causes complaining when I try to set the
+> >> intel_pstate driver to passive mode.
+> >> I started from active mode, powersave governor,
+> >> no HWP.
+> >>
+> >> Kernel: 5.4-rc7
+> >>
+> >> I did not go back and try previous 5.4 RCs.
+>
+> After looking at the git tags for this patch,
+> I tried kernel 5.4-rc2, which was the closest
+> Kernel I had to before the patch set was added.
+> It worked fine, as expected.
+>
+> >> I did try kernel 5.3-rc8, because I already had
+> >> it installed, and it worked fine.
+> >>
+> >> I use a script (for years), run as sudo:
+> >>
+> >> doug@s15:~/temp$ cat set_cpu_passive
+> >> #! /bin/bash
+> >> cat /sys/devices/system/cpu/intel_pstate/status
+> >> echo passive > /sys/devices/system/cpu/intel_pstate/status
+> >> cat /sys/devices/system/cpu/intel_pstate/status
+> >>
+> >> And I get this (very small excerpt):
+> >>
+> >> freq_qos_add_request() called for active request
+> >> WARNING: CPU: 1 PID: 2758 at kernel/power/qos.c:763 freq_qos_add_request+0x4c/0xa0
+> >> CPU: 1 PID: 2758 Comm: set_cpu_passive Not tainted 5.4.0-rc7-stock #727
+> >> Failed to add freq constraint for CPU0 (-22)
+> >>
+> >> freq_qos_add_request() called for active request
+> >> WARNING: CPU: 1 PID: 2758 at kernel/power/qos.c:763 freq_qos_add_request+0x4c/0xa0
+> >> CPU: 1 PID: 2758 Comm: set_cpu_passive Tainted: G        W         5.4.0-rc7-stock #727
+> >> Failed to add freq constraint for CPU1 (-22)
+>
+> Updated summary of previous emails:
+> This patch or patch set breaks the after boot
+> ability to change CPU frequency scaling drivers.
+>
+> Using a workaround of booting with
+> "intel_pstate=passive" seems to prevent the errors.
+>
+> Changing between the intel_pstate and intel_cpufreq drivers
+> (i.e. between active and passive modes)
+> after boot, either way, causes the errors. i.e.
+>
+> Failed to add freq constraint for CPU7 (-22)
+> (2 per CPU per attempt)
 
-This patch is a leftover and shouldn't have been sent. The actual
-patch has a slightly modified subject:
+These messages come from acpi_processor_ppc_init() and
+acpi_thermal_cpufreq_init(), AFAICS, which are invoked by
+acpi_processor_notifier() and that is invoked by the
+blocking_notifier_call_chain() in cpufreq_online() which tirggers for
+new policies after adding the max freq QoS request to
+policy->constraints.
 
- [PATCH 1/2] MAINTAINERS: Update Cavium ThunderX drivers
+The requests added by them should be removed by
+acpi_processor_ppc_exit() and acpi_thermal_cpufreq_exit(),
+respectively, invoked by the blocking_notifier_call_chain() in
+cpufreq_policy_free(), but it looks like that doesn't happen.
 
-I have sent a v2 already that supersedes this series.
+However, I now also see that freq_qos_remove_request() doesn't clear
+the qos field in req which is should do, so freq_qos_add_request()
+will complain and fail if the object pointed to by req is passed to it
+again.
 
-Thanks,
-
--Robert
+I'll send a patch to test for this later today.
