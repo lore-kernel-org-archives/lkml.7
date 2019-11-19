@@ -2,156 +2,193 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76EDBC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 03:17:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2CA5C33C8C
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 03:17:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DB37219F6
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 03:17:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Y03COGNW";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="a1pxYQM1"
+	by mail.kernel.org (Postfix) with ESMTP id AAC66219F6
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 03:17:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727705AbfKSDRJ (ORCPT
+        id S1727731AbfKSDRN convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 22:17:09 -0500
-Received: from a27-56.smtp-out.us-west-2.amazonses.com ([54.240.27.56]:47188
-        "EHLO a27-56.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727505AbfKSDRI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 22:17:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574133427;
-        h=From:To:Cc:Subject:Date:Message-Id;
-        bh=DSFxMH9kT34z8Vm44Q+35fj1K2btho1KSltCLrspVFc=;
-        b=Y03COGNWcC2E6ORRMjEM65srtvWwA6u/HdJTrLUaioYww+58Z14VNeWzPW+hoRXy
-        a5AzOjVfbpjERHJt/fb0atoCnFd0fsKrp3sKXf5BAk9ls1bOm9yDVlQT2Gf6q7YbzRD
-        Q746TNvQ6+wNOe0/ZyGrpkJr2l79jkNQU8hk4/Pw=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574133427;
-        h=From:To:Cc:Subject:Date:Message-Id:Feedback-ID;
-        bh=DSFxMH9kT34z8Vm44Q+35fj1K2btho1KSltCLrspVFc=;
-        b=a1pxYQM1qoFjc3UNphUru9S9B+jJaIXqSy2nYP6o9IgahlwRfT7dirxdHOYry9YG
-        4ibqg7jPFXJ3ZVJcGTnObS6S3SMW3mh1NNgvi+xpFJMq0l0JDIlSFZzSeK3bEJ1wUxd
-        xOppEDtmJulhxkfa7Fhk4q9Qbud7y7gcdMyagiAQ=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8D066C433A2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=neeraju@codeaurora.org
-From:   Neeraj Upadhyay <neeraju@codeaurora.org>
-To:     paulmck@kernel.org, josh@joshtriplett.org, rostedt@goodmis.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        joel@joelfernandes.org
-Cc:     linux-kernel@vger.kernel.org, gkohli@codeaurora.org,
-        prsood@codeaurora.org, pkondeti@codeaurora.org,
-        rcu@vger.kernel.org, Neeraj Upadhyay <neeraju@codeaurora.org>
-Subject: [PATCH v2] rcu: Fix missed wakeup of exp_wq waiters
-Date:   Tue, 19 Nov 2019 03:17:07 +0000
-Message-ID: <0101016e81a9ecb9-ce4a6425-f21d-4166-96ed-32d3700717f1-000000@us-west-2.amazonses.com>
-X-Mailer: git-send-email 1.9.1
-X-SES-Outgoing: 2019.11.19-54.240.27.56
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+        Mon, 18 Nov 2019 22:17:13 -0500
+Received: from mail-oln040092255077.outbound.protection.outlook.com ([40.92.255.77]:58400
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727539AbfKSDRL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 22:17:11 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KLfklHitGiQ1jDFztwcl4ht6Qg/32KSJkd0cJ0eBL64oP3PEM1wK78Zp50p9d1klninfbRzz422T4+AtpnSSHsFN0J+hPluynvvy800V+7CbuOD544gP5EuytITJslfs17aMPhX3kLdTdeXLLIko3EjPnq74c6AFUZNhxZeeevFkMXlkvLEu4f+0S8w0vk5EYxwZ1ywyeB4YUEWQsgdeoCx0ZlnJS8sZBQJ13yCv2fvPKOcpXqGgCzzCsMcsF9jR2+rqC7/8QyDmOUhbSbeAeoRBhUk2d7KT7WGqMnKXt57SLeiIeXqMQ6pIRPdQV4DKkvFzMvMQx54bqmE4PobvVw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=O4jobBERaTOad8I8KS8AnHQEZKbKVugZJycA2qbqy80=;
+ b=gXllSee4me2RAxCLIPe7PZQy0l787BUD8yuIQ5YYoRZ7df1Z8i8wIGkDHmqomGO+uA0omTnJJ736D4Rbt9RuUfDACL2Yhgh8zktaf9x7s/WJYqOhF32czG3Jpuis2OfOCNTRUUxdETxBhdCzdDoq6+HnoGXcuhzSR7FhAQiYGokdS/wHQqE4AbIXfDlUIhI+Y/e4psTO/gI7R6SFTDfzmDyHnIQYrpP8aWAc0YkF2xKESo608xUiLqCIgh/MJqErKMJKukB/3HPDPugdckfUwxT+bvwB5/wYc+OH0/BUOOesKFwgHeNFw0QrxR4rdA7rsvoGWNMq28dDJFMUdAJxiQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from SG2APC01FT020.eop-APC01.prod.protection.outlook.com
+ (10.152.250.54) by SG2APC01HT035.eop-APC01.prod.protection.outlook.com
+ (10.152.251.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2451.23; Tue, 19 Nov
+ 2019 03:17:05 +0000
+Received: from PS2P216MB0755.KORP216.PROD.OUTLOOK.COM (10.152.250.51) by
+ SG2APC01FT020.mail.protection.outlook.com (10.152.250.219) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2451.23 via Frontend Transport; Tue, 19 Nov 2019 03:17:05 +0000
+Received: from PS2P216MB0755.KORP216.PROD.OUTLOOK.COM
+ ([fe80::44f5:f4bb:1601:2602]) by PS2P216MB0755.KORP216.PROD.OUTLOOK.COM
+ ([fe80::44f5:f4bb:1601:2602%9]) with mapi id 15.20.2451.031; Tue, 19 Nov 2019
+ 03:17:05 +0000
+From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "logang@deltatee.com" <logang@deltatee.com>
+Subject: Re: [PATCH v3 1/1] PCI: Fix bug resulting in double hpmemsize being
+ assigned to MMIO window
+Thread-Topic: [PATCH v3 1/1] PCI: Fix bug resulting in double hpmemsize being
+ assigned to MMIO window
+Thread-Index: AQHVmjaUpBZrOiNs+EaePGmphxD+QaeK5IeAgAXQSwCAAN4DAIAASFMA
+Date:   Tue, 19 Nov 2019 03:17:04 +0000
+Message-ID: <PS2P216MB07556573D454EB9A6D1A5140804C0@PS2P216MB0755.KORP216.PROD.OUTLOOK.COM>
+References: <PS2P216MB0755848993A4445324AC516E804D0@PS2P216MB0755.KORP216.PROD.OUTLOOK.COM>
+ <20191118225802.GA71768@google.com>
+In-Reply-To: <20191118225802.GA71768@google.com>
+Accept-Language: en-AU, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: ME2PR01CA0127.ausprd01.prod.outlook.com
+ (2603:10c6:201:2e::19) To PS2P216MB0755.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:300:1c::13)
+x-incomingtopheadermarker: OriginalChecksum:C7AB357FF30A67422B3CB6EEA17A033E1E646DA22363A06C4C0C7DD9934482B3;UpperCasedChecksum:FEC8761BDD4159481985670F2279C60F60D7E0A1BE3ACE32031C038A15BD12A5;SizeAsReceived:7769;Count:49
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [DAQr26JcakTPYSL6AVtMq8itVcBBGvk2]
+x-microsoft-original-message-id: <20191119031654.GA29050@nicholas-dell-linux>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 49
+x-eopattributedmessage: 0
+x-ms-office365-filtering-correlation-id: 998ac35b-ef86-43c7-82cc-08d76c9ef37f
+x-ms-traffictypediagnostic: SG2APC01HT035:
+x-ms-exchange-purlcount: 2
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: oza0LWMgZGWSkcPzNRU3U6AEcbsZe87gIW3i0ETmbjL74wo4IIhLTunEjw/QO+DjE6frjb24AVvWknTE7g/0WecQSvbOc/NTJm/fMmULC1GxTPvWZLD8E8VZCo/iesAcdp+5OR/QJI2VjUtyH6joDNPgssXJ28t9cZ/1vci99Yxxw7fmt8eAJHJALLludCimsWrrDjL8jc6ysPI9TppXfxxNyUZsRj93W+mRHWDrSV8=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <60100CA5BCE4F64384DEE96D9C81F361@KORP216.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 998ac35b-ef86-43c7-82cc-08d76c9ef37f
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Nov 2019 03:17:04.9843
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2APC01HT035
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For the tasks waiting in exp_wq inside exp_funnel_lock(),
-there is a chance that they might be indefinitely blocked
-in below scenario:
+On Mon, Nov 18, 2019 at 04:58:02PM -0600, Bjorn Helgaas wrote:
+> On Mon, Nov 18, 2019 at 09:43:34AM +0000, Nicholas Johnson wrote:
+> > On Thu, Nov 14, 2019 at 10:56:37AM -0600, Bjorn Helgaas wrote:
+> > > On Wed, Nov 13, 2019 at 03:25:28PM +0000, Nicholas Johnson wrote:
+> > > > Currently, the kernel can sometimes assign the MMIO_PREF window
+> > > > additional size into the MMIO window, resulting in extra MMIO additional
+> > > > size, despite the MMIO_PREF additional size being assigned successfully
+> > > > into the MMIO_PREF window.
+> > > > 
+> > > > This happens if in the first pass, the MMIO_PREF succeeds but the MMIO
+> > > > fails. In the next pass, because MMIO_PREF is already assigned, the
+> > > > attempt to assign MMIO_PREF returns an error code instead of success
+> > > > (nothing more to do, already allocated). Hence, the size which is
+> > > > actually allocated, but thought to have failed, is placed in the MMIO
+> > > > window.
+> > > > 
+> > > > Example of problem (more context can be found in the bug report URL):
+> > > > 
+> > > > Mainline kernel:
+> > > > pci 0000:06:01.0: BAR 14: assigned [mem 0x90100000-0xa00fffff] = 256M
+> > > > pci 0000:06:04.0: BAR 14: assigned [mem 0xa0200000-0xb01fffff] = 256M
+> > > > 
+> > > > Patched kernel:
+> > > > pci 0000:06:01.0: BAR 14: assigned [mem 0x90100000-0x980fffff] = 128M
+> > > > pci 0000:06:04.0: BAR 14: assigned [mem 0x98200000-0xa01fffff] = 128M
+> > > > 
+> > > > This was using pci=realloc,hpmemsize=128M,nocrs - on the same machine
+> > > > with the same configuration, with a Ubuntu mainline kernel and a kernel
+> > > > patched with this patch.
+> > > > 
+> > > > The bug results in the MMIO_PREF being added to the MMIO window, which
+> > > > means doubling if MMIO_PREF size = MMIO size. With a large MMIO_PREF,
+> > > > the MMIO window will likely fail to be assigned altogether due to lack
+> > > > of 32-bit address space.
+> > > > 
+> > > > Change find_free_bus_resource() to do the following:
+> > > > - Return first unassigned resource of the correct type.
+> > > > - If none of the above, return first assigned resource of the correct type.
+> > > > - If none of the above, return NULL.
+> > > > 
+> > > > Returning an assigned resource of the correct type allows the caller to
+> > > > distinguish between already assigned and no resource of the correct type.
+> > > > 
+> > > > Rename find_free_bus_resource to find_bus_resource_of_type().
+> > > > 
+> > > > Add checks in pbus_size_io() and pbus_size_mem() to return success if
+> > > > resource returned from find_free_bus_resource() is already allocated.
+> > > > 
+> > > > This avoids pbus_size_io() and pbus_size_mem() returning error code to
+> > > > __pci_bus_size_bridges() when a resource has been successfully assigned
+> > > > in a previous pass. This fixes the existing behaviour where space for a
+> > > > resource could be reserved multiple times in different parent bridge
+> > > > windows.
+> > > > 
+> > > > Link: https://lore.kernel.org/lkml/20190531171216.20532-2-logang@deltatee.com/T/#u
+> > > > Link: https://bugzilla.kernel.org/show_bug.cgi?id=203243
+> > > > 
+> > > > Reported-by: Kit Chow <kchow@gigaio.com>
+> > > > Reported-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+> > > > Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+> > > > Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > > 
+> > > Applied with reviewed-by from Mika and Logan to pci/resource for v5.5,
+> > > thanks!
+> > 
+> > We have v5.4-rc8, so there is one more week. Please let me know if you 
+> > have any concerns about the other four patches so that I may address 
+> > them ASAP. If you are worried about the first one, I can re-post the 
+> > series with it at the end, so that the others can be taken first.
+> 
+> I assume you're talking about this:
+> 
+>   [PATCH v11 0/4] Patch series to assist Thunderbolt allocation with kernel parameters
+> 
+> I hope to merge those early in the next cycle so we get some time in
+> linux-next for wider testing.  It's later in the v5.5 cycle than I
+> would be comfortable with.
+> 
+> Bjorn
+Fair enough. Thanks for this info. :)
 
-1. There is a task waiting on exp sequence 0b'100' inside
-   exp_funnel_lock(). This task blocks at wq index 1.
+I did just discover linux-next and I built it. Should I be doing this 
+more often to help find regressions?
 
-   synchronize_rcu_expedited()
-     s = 0b'100'
-     exp_funnel_lock()
-       wait_event(rnp->exp_wq[rcu_seq_ctr(s) & 0x3]
+I will now concentrate on fixing the problem where pci=nocrs does not 
+ignore the bus resource. One motherboard I own gives 00-7e or similar, 
+instead of 00-ff. The nocrs does not help, and I had to patch the kernel 
+myself. Only acpi=off fixes the problem, while knocking out SMT (MADT), 
+IOMMU (DMAR) and the ability to suspend without crashing.
 
-2. The expedited grace period (which above task blocks for)
-   completes and task (task1) holding exp_mutex queues
-   worker and schedules out.
+If you disagree that nocrs should override bus resource, then let me 
+know and I will not attempt this.
 
-   synchronize_rcu_expedited()
-     s = 0b'100'
-     queue_work(rcu_gp_wq, &rew.rew_work)
-       wake_up_worker()
-         schedule()
-
-3. kworker A picks up the queued work and completes the exp gp
-   sequence and then blocks on exp_wake_mutex, which is held
-   by another kworker, which is doing wakeups for expedited_sequence
-   0.
-
-   rcu_exp_wait_wake()
-     rcu_exp_wait_wake()
-       rcu_exp_gp_seq_end(rsp) // rsp->expedited_sequence is incremented
-                               // to 0b'100'
-       mutex_lock(&rcu_state.exp_wake_mutex)
-
-4. task1 does not enter wait queue, as sync_exp_work_done() returns true,
-   and releases exp_mutex.
-
-   wait_event(rnp->exp_wq[rcu_seq_ctr(s) & 0x3],
-     sync_exp_work_done(rsp, s));
-   mutex_unlock(&rsp->exp_mutex);
-
-5. Next exp GP completes, and sequence number is incremented:
-
-   rcu_exp_wait_wake()
-     rcu_exp_wait_wake()
-       rcu_exp_gp_seq_end(rsp) // rsp->expedited_sequence = 0b'200'
-
-6. kworker A acquires exp_wake_mutex. As it uses current
-   expedited_sequence, it wakes up workers from wrong wait queue
-   index - it should have worken wait queue corresponding to
-   0b'100' sequence, but wakes up the ones for 0b'200' sequence.
-   This results in task at step 1 indefinitely blocked.
-
-   rcu_exp_wait_wake()
-     wake_up_all(&rnp->exp_wq[rcu_seq_ctr(rsp->expedited_sequence) & 0x3]);
-
-This issue manifested as DPM device timeout during suspend, as scsi
-device was stuck in _synchronize_rcu_expedited().
-
-schedule()
-synchronize_rcu_expedited()
-synchronize_rcu()
-scsi_device_quiesce()
-scsi_bus_suspend()
-dpm_run_callback()
-__device_suspend()
-
-Fix this by using the correct exp sequence number, the one which
-owner of the exp_mutex initiated and passed to kworker,
-to index the wait queue, inside rcu_exp_wait_wake().
-
-Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
----
-
-Changes since v1:
- - Updates the commit log with failure information.
-
- kernel/rcu/tree_exp.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
-index e4b77d3..28979d3 100644
---- a/kernel/rcu/tree_exp.h
-+++ b/kernel/rcu/tree_exp.h
-@@ -557,7 +557,7 @@ static void rcu_exp_wait_wake(unsigned long s)
- 			spin_unlock(&rnp->exp_lock);
- 		}
- 		smp_mb(); /* All above changes before wakeup. */
--		wake_up_all(&rnp->exp_wq[rcu_seq_ctr(rcu_state.expedited_sequence) & 0x3]);
-+		wake_up_all(&rnp->exp_wq[rcu_seq_ctr(s) & 0x3]);
- 	}
- 	trace_rcu_exp_grace_period(rcu_state.name, s, TPS("endwake"));
- 	mutex_unlock(&rcu_state.exp_wake_mutex);
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
-member of the Code Aurora Forum, hosted by The Linux Foundation
-
+Nicholas
