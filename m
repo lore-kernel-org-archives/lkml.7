@@ -2,170 +2,222 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B48E0C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 01:26:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B9ACC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 01:36:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 959BE20692
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 01:26:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C03E1219FA
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 01:36:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="VAAUxtrZ";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="LRZnYRxW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727126AbfKSB0L (ORCPT
+        id S1727092AbfKSBg2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 20:26:11 -0500
-Received: from mga09.intel.com ([134.134.136.24]:25527 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726775AbfKSB0L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 20:26:11 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Nov 2019 17:26:10 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,322,1569308400"; 
-   d="scan'208";a="380852691"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga005.jf.intel.com with ESMTP; 18 Nov 2019 17:26:10 -0800
-Received: from [10.226.38.254] (unknown [10.226.38.254])
-        by linux.intel.com (Postfix) with ESMTP id 9E0795800FE;
-        Mon, 18 Nov 2019 17:26:07 -0800 (PST)
-Subject: Re: [PATCH v7 2/3] dwc: PCI: intel: PCIe RC controller driver
-To:     Jingoo Han <jingoohan1@gmail.com>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "andrew.murray@arm.com" <andrew.murray@arm.com>,
-        "helgaas@kernel.org" <helgaas@kernel.org>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "martin.blumenstingl@googlemail.com" 
-        <martin.blumenstingl@googlemail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "andriy.shevchenko@intel.com" <andriy.shevchenko@intel.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "cheol.yong.kim@intel.com" <cheol.yong.kim@intel.com>,
-        "chuanhua.lei@linux.intel.com" <chuanhua.lei@linux.intel.com>,
-        "qi-ming.wu@intel.com" <qi-ming.wu@intel.com>
-References: <cover.1573784557.git.eswara.kota@linux.intel.com>
- <99a29f5a4ce18df26bd300ac6728433ec025631b.1573784557.git.eswara.kota@linux.intel.com>
- <SL2P216MB01056231B6036941BEF71738AA700@SL2P216MB0105.KORP216.PROD.OUTLOOK.COM>
- <50dabbc6-eae5-5ae5-95a0-f195c1ef7362@linux.intel.com>
- <SL2P216MB010580C028A7F88E8FB72574AA4D0@SL2P216MB0105.KORP216.PROD.OUTLOOK.COM>
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-Message-ID: <5fc0001f-e73c-af1d-4182-d2d2448741fd@linux.intel.com>
-Date:   Tue, 19 Nov 2019 09:26:06 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 18 Nov 2019 20:36:28 -0500
+Received: from a27-187.smtp-out.us-west-2.amazonses.com ([54.240.27.187]:53526
+        "EHLO a27-187.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726761AbfKSBg2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 20:36:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574127387;
+        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
+        bh=gu0VjLFeEaynap/88TiNlWcXPPYqNHDR0ClbwmBdRGY=;
+        b=VAAUxtrZIz+6M1F7k1+jk+qa1T4ZmM1W40ccZ9muxYtXhfR/85SlGZBBMFXRiASA
+        yKOj+XCvq5Mwr4oVw0+w8/T9gT/Jua67g3c+ZXC2R3SKfaS+SNcf+0c5fkGuOIS1qe7
+        /smkQXwesa8x/nAzOyiHSQOsfvtlrERGrcA0LFH0=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574127387;
+        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
+        bh=gu0VjLFeEaynap/88TiNlWcXPPYqNHDR0ClbwmBdRGY=;
+        b=LRZnYRxWv1tToV9a+xDGcOe1bjySH1viP7qAWDYUSjmk3Z2Xb55F43IC3AZqE2L3
+        cf4jGGZzvko8j1KCcsjipHFE6sfGOAYOU8rO9DUXHFp/YU9uIltEupQFjnAlANBvGwf
+        CDBJyIyVcA0tnXzkdi/Dj3xG2y/re4WZErMB9t6Q=
 MIME-Version: 1.0
-In-Reply-To: <SL2P216MB010580C028A7F88E8FB72574AA4D0@SL2P216MB0105.KORP216.PROD.OUTLOOK.COM>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 19 Nov 2019 01:36:27 +0000
+From:   cang@codeaurora.org
+To:     Alim Akhtar <alim.akhtar@gmail.com>
+Cc:     Can Guo <cang@qti.qualcomm.com>, asutoshd@codeaurora.org,
+        nguyenb@codeaurora.org, rnayak@codeaurora.org,
+        linux-scsi@vger.kernel.org, kernel-team@android.com,
+        saravanak@google.com, Mark Salyzyn <salyzyn@google.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 4/4] scsi: ufs: Complete pending requests in host reset
+ and restore path
+In-Reply-To: <CAGOxZ53Z6je9Omuh2k=wVJrGVKZDfsfx6=mUJ-8QiRk-2q3u0g@mail.gmail.com>
+References: <1574049061-11417-1-git-send-email-cang@qti.qualcomm.com>
+ <1574049061-11417-5-git-send-email-cang@qti.qualcomm.com>
+ <CAGOxZ53Z6je9Omuh2k=wVJrGVKZDfsfx6=mUJ-8QiRk-2q3u0g@mail.gmail.com>
+Message-ID: <0101016e814dc1ec-bde59f85-9e2c-48f9-bae3-202b2a3d24bd-000000@us-west-2.amazonses.com>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
+X-SES-Outgoing: 2019.11.19-54.240.27.187
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/19/2019 12:40 AM, Jingoo Han wrote:
->
-> ﻿On 11/18/19, 2:58 AM, Dilip Kota wrote:
->
->> On 11/16/2019 4:40 AM, Jingoo Han wrote:
->>> On 11/14/19, 9:31 PM, Dilip Kota wrote:
->>>
->>>> Add support to PCIe RC controller on Intel Gateway SoCs.
->>>> PCIe controller is based of Synopsys DesignWare PCIe core.
->>>>
->>>> Intel PCIe driver requires Upconfigure support, Fast Training
->>>> Sequence and link speed configurations. So adding the respective
->>>> helper functions in the PCIe DesignWare framework.
->>>> It also programs hardware autonomous speed during speed
->>>> configuration so defining it in pci_regs.h.
->>>>
->>>> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
->>>> Reviewed-by: Andrew Murray <andrew.murray@arm.com>
->>>> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
->>>> ---
->>> [.....]
->>>
->>>>    drivers/pci/controller/dwc/Kconfig           |  10 +
->>>>    drivers/pci/controller/dwc/Makefile          |   1 +
->>>>    drivers/pci/controller/dwc/pcie-designware.c |  57 +++
->>>>    drivers/pci/controller/dwc/pcie-designware.h |  12 +
->>>>    drivers/pci/controller/dwc/pcie-intel-gw.c   | 542 +++++++++++++++++++++++++++
->>>>    include/uapi/linux/pci_regs.h                |   1 +
->>>>    6 files changed, 623 insertions(+)
->>>>    create mode 100644 drivers/pci/controller/dwc/pcie-intel-gw.c
->>>>
->>>> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
->>>> index 0ba988b5b5bc..fb6d474477df 100644
->>>> --- a/drivers/pci/controller/dwc/Kconfig
->>>> +++ b/drivers/pci/controller/dwc/Kconfig
->>>> @@ -82,6 +82,16 @@ config PCIE_DW_PLAT_EP
->>>>    	  order to enable device-specific features PCI_DW_PLAT_EP must be
->>>>    	  selected.
->>>>    
->>>> +config PCIE_INTEL_GW
->>>> +	bool "Intel Gateway PCIe host controller support"
->>>> +	depends on OF && (X86 || COMPILE_TEST)
->>>> +	select PCIE_DW_HOST
->>>> +	help
->>>> +	  Say 'Y' here to enable PCIe Host controller support on Intel
->>>> +	  Gateway SoCs.
->>>> +	  The PCIe controller uses the DesignWare core plus Intel-specific
->>>> +	  hardware wrappers.
->>>> +
->>> Please add this config alphabetical order!
->>> So, this config should be after 'config PCI_IMX6'.
->>> There is no reason to put this config at the first place.
->>>
->>>>    config PCI_EXYNOS
->>>>    	bool "Samsung Exynos PCIe controller"
->>>>    	depends on SOC_EXYNOS5440 || COMPILE_TEST
->>>> diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
->>>> index b30336181d46..99db83cd2f35 100644
->>>> --- a/drivers/pci/controller/dwc/Makefile
->>>> +++ b/drivers/pci/controller/dwc/Makefile
->>>> @@ -3,6 +3,7 @@ obj-$(CONFIG_PCIE_DW) += pcie-designware.o
->>>>    obj-$(CONFIG_PCIE_DW_HOST) += pcie-designware-host.o
->>>>    obj-$(CONFIG_PCIE_DW_EP) += pcie-designware-ep.o
->>>>    obj-$(CONFIG_PCIE_DW_PLAT) += pcie-designware-plat.o
->>>> +obj-$(CONFIG_PCIE_INTEL_GW) += pcie-intel-gw.o
->>> Ditto.
->> PCIE_INTEL_GW wouldnt come after PCI_IMX6, the complete Makefile and
->> Kconfig are not in order,( PCI_* and PCIE_* are not in any order). So i
->> just followed PCIE_DW and placed PCIE_INTEL_GW after PCIE_DW as I is
->> after D (and i see PCI_* immediately after the PCIE_DW*, so i placed
->> PCIE_INTEL_GW after PCIE_DW* and before PCI_*).
-> Hey, although some of them are not in order, you don't have a right to do so.
-> If some people do not follow the law, it does not mean that you can break the law.
-> Anyway, if you don't follow an alphabetical order, my answer is NACK.
-> Also, other people or I will send a patch to fix the order of other drivers.
+On 2019-11-18 21:23, Alim Akhtar wrote:
+> On Mon, Nov 18, 2019 at 9:22 AM Can Guo <cang@qti.qualcomm.com> wrote:
+>> 
+>> From: Can Guo <cang@codeaurora.org>
+>> 
+>> In UFS host reset and restore path, before probe, we stop and start 
+>> the
+>> host controller once. After host controller is stopped, the pending
+>> requests, if any, are cleared from the doorbell, but no completion IRQ
+>> would be raised due to the hba is stopped.
+>> These pending requests shall be completed along with the first NOP_OUT
+>> command(as it is the first command which can raise a transfer 
+>> completion
+>> IRQ) sent during probe.
+>> Since the OCSs of these pending requests are not SUCCESS(because they 
+>> are
+>> not yet literally finished), their UPIUs shall be dumped. When there 
+>> are
+>> multiple pending requests, the UPIU dump can be overwhelming and may 
+>> lead
+>> to stability issues because it is in atomic context.
+>> Therefore, before probe, complete these pending requests right after 
+>> host
+>> controller is stopped and silence the UPIU dump from them.
+>> 
+>> Signed-off-by: Can Guo <cang@codeaurora.org>
+>> ---
+> 
+> Tested-by: Alim Akhtar <alim.akhtar@samsung.com>
+> 
+> Please add all previous Ack/reviewed and tested-by tags so that we are
+> aware what need to be done for this patch.
+> Thanks
+> 
 
-I am not against following the order. I kept PCIE_INTEL_GW after 
-PCIE_DW* by checking the best possible order.
-As per the alphabetical order, i see all CONFIG_PCIE_* comes first and 
-CONFIG_PCI_* follows. So, by following this, i placed PCIE_INTEL_GW 
-after PCIE_DW* (for the same reason PCIE_INTEL_GW cannot be placed after 
-PCI_IMX6).
-Even after re-ordering the Kconfig and Makefile, still PCIE_INTEL_GW 
-comes after PCIE_DW_PLAT( and PCIE_HISI_STB).
+Hi Alim,
 
-Regards,
-Dilip
+Thanks for pointing out it. I updated the patch a little bit so I think 
+the
+prevoius tags are not valid any more.
 
->
->
->> Regards,
->> Dilip
->> Best regards,
->> Jingoo Han
->>
->>>    obj-$(CONFIG_PCI_DRA7XX) += pci-dra7xx.o
->>>    obj-$(CONFIG_PCI_EXYNOS) += pci-exynos.o
->>>    obj-$(CONFIG_PCI_IMX6) += pci-imx6.o
->>> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
->>> index 820488dfeaed..479e250695a0 100644
->> [.....]
+Best Regards,
+Can Guo.
+
+>>  drivers/scsi/ufs/ufshcd.c | 24 ++++++++++--------------
+>>  drivers/scsi/ufs/ufshcd.h |  2 ++
+>>  2 files changed, 12 insertions(+), 14 deletions(-)
+>> 
+>> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+>> index 5950a7c..b92a3f4 100644
+>> --- a/drivers/scsi/ufs/ufshcd.c
+>> +++ b/drivers/scsi/ufs/ufshcd.c
+>> @@ -4845,7 +4845,7 @@ static void ufshcd_slave_destroy(struct 
+>> scsi_device *sdev)
+>>                 break;
+>>         } /* end of switch */
+>> 
+>> -       if (host_byte(result) != DID_OK)
+>> +       if ((host_byte(result) != DID_OK) && !hba->silence_err_logs)
+>>                 ufshcd_print_trs(hba, 1 << lrbp->task_tag, true);
+>>         return result;
+>>  }
+>> @@ -5404,8 +5404,8 @@ static void ufshcd_err_handler(struct 
+>> work_struct *work)
+>> 
+>>         /*
+>>          * if host reset is required then skip clearing the pending
+>> -        * transfers forcefully because they will automatically get
+>> -        * cleared after link startup.
+>> +        * transfers forcefully because they will get cleared during
+>> +        * host reset and restore
+>>          */
+>>         if (needs_reset)
+>>                 goto skip_pending_xfer_clear;
+>> @@ -6333,9 +6333,15 @@ static int ufshcd_host_reset_and_restore(struct 
+>> ufs_hba *hba)
+>>         int err;
+>>         unsigned long flags;
+>> 
+>> -       /* Reset the host controller */
+>> +       /*
+>> +        * Stop the host controller and complete the requests
+>> +        * cleared by h/w
+>> +        */
+>>         spin_lock_irqsave(hba->host->host_lock, flags);
+>>         ufshcd_hba_stop(hba, false);
+>> +       hba->silence_err_logs = true;
+>> +       ufshcd_complete_requests(hba);
+>> +       hba->silence_err_logs = false;
+>>         spin_unlock_irqrestore(hba->host->host_lock, flags);
+>> 
+>>         /* scale up clocks to max frequency before full 
+>> reinitialization */
+>> @@ -6369,7 +6375,6 @@ static int ufshcd_host_reset_and_restore(struct 
+>> ufs_hba *hba)
+>>  static int ufshcd_reset_and_restore(struct ufs_hba *hba)
+>>  {
+>>         int err = 0;
+>> -       unsigned long flags;
+>>         int retries = MAX_HOST_RESET_RETRIES;
+>> 
+>>         do {
+>> @@ -6379,15 +6384,6 @@ static int ufshcd_reset_and_restore(struct 
+>> ufs_hba *hba)
+>>                 err = ufshcd_host_reset_and_restore(hba);
+>>         } while (err && --retries);
+>> 
+>> -       /*
+>> -        * After reset the door-bell might be cleared, complete
+>> -        * outstanding requests in s/w here.
+>> -        */
+>> -       spin_lock_irqsave(hba->host->host_lock, flags);
+>> -       ufshcd_transfer_req_compl(hba);
+>> -       ufshcd_tmc_handler(hba);
+>> -       spin_unlock_irqrestore(hba->host->host_lock, flags);
+>> -
+>>         return err;
+>>  }
+>> 
+>> diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
+>> index e0fe247..1e51034 100644
+>> --- a/drivers/scsi/ufs/ufshcd.h
+>> +++ b/drivers/scsi/ufs/ufshcd.h
+>> @@ -513,6 +513,7 @@ struct ufs_stats {
+>>   * @uic_error: UFS interconnect layer error status
+>>   * @saved_err: sticky error mask
+>>   * @saved_uic_err: sticky UIC error mask
+>> + * @silence_err_logs: flag to silence error logs
+>>   * @dev_cmd: ufs device management command information
+>>   * @last_dme_cmd_tstamp: time stamp of the last completed DME command
+>>   * @auto_bkops_enabled: to track whether bkops is enabled in device
+>> @@ -670,6 +671,7 @@ struct ufs_hba {
+>>         u32 saved_err;
+>>         u32 saved_uic_err;
+>>         struct ufs_stats ufs_stats;
+>> +       bool silence_err_logs;
+>> 
+>>         /* Device management request data */
+>>         struct ufs_dev_cmd dev_cmd;
+>> --
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
+>> Forum,
+>> a Linux Foundation Collaborative Project
+>> 
