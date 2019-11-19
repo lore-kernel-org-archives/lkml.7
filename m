@@ -6,100 +6,102 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9959C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 23:18:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7F0BC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 23:19:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA3942245D
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 23:18:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C05E0222C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 23:19:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727405AbfKSXSY (ORCPT
+        id S1727452AbfKSXTR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 18:18:24 -0500
-Received: from mga12.intel.com ([192.55.52.136]:62268 "EHLO mga12.intel.com"
+        Tue, 19 Nov 2019 18:19:17 -0500
+Received: from foss.arm.com ([217.140.110.172]:59492 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725978AbfKSXSX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 18:18:23 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Nov 2019 15:18:23 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,219,1571727600"; 
-   d="scan'208";a="357256816"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by orsmga004.jf.intel.com with ESMTP; 19 Nov 2019 15:18:22 -0800
-Date:   Tue, 19 Nov 2019 15:18:22 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
+        id S1727333AbfKSXTR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 18:19:17 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 66F811FB;
+        Tue, 19 Nov 2019 15:19:16 -0800 (PST)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 827973F52E;
+        Tue, 19 Nov 2019 15:19:15 -0800 (PST)
+Date:   Tue, 19 Nov 2019 23:19:13 +0000
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Tony Luck <tony.luck@intel.com>,
-        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
-        Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v3 01/19] x86/msr-index: Clean up bit defines for
- IA32_FEATURE_CONTROL MSR
-Message-ID: <20191119231822.GA6855@linux.intel.com>
-References: <20191119031240.7779-1-sean.j.christopherson@intel.com>
- <20191119031240.7779-2-sean.j.christopherson@intel.com>
- <20191119111445.GB27787@zn.tnic>
+        Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 04/12] ia64: Replace cpu_down with freeze_secondary_cpus
+Message-ID: <20191119231912.viwqgcyzttoo5eou@e107158-lin.cambridge.arm.com>
+References: <20191030153837.18107-1-qais.yousef@arm.com>
+ <20191030153837.18107-5-qais.yousef@arm.com>
+ <alpine.DEB.2.21.1911192318400.6731@nanos.tec.linutronix.de>
+ <20191119223234.ov323rcln4slj7br@e107158-lin.cambridge.arm.com>
+ <alpine.DEB.2.21.1911192344110.6731@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191119111445.GB27787@zn.tnic>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <alpine.DEB.2.21.1911192344110.6731@nanos.tec.linutronix.de>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 12:15:08PM +0100, Borislav Petkov wrote:
-> On Mon, Nov 18, 2019 at 07:12:22PM -0800, Sean Christopherson wrote:
-> > As pointed out by Boris, the defines for bits in IA32_FEATURE_CONTROL
-> > are quite a mouthful, especially the VMX bits which must differentiate
-> > between enabling VMX inside and outside SMX (TXT) operation.  Rename the
-> > bit defines to abbreviate FEATURE_CONTROL as FEAT_CTL so that they're a
-> > little friendlier on the eyes.  Keep the full name for the MSR itself to
-> > help even the most obtuse reader decipher the abbreviation, and to match
-> > the name used by the Intel SDM.
+On 11/19/19 23:59, Thomas Gleixner wrote:
+> On Tue, 19 Nov 2019, Qais Yousef wrote:
+> > On 11/19/19 23:21, Thomas Gleixner wrote:
+> > > On Wed, 30 Oct 2019, Qais Yousef wrote:
+> > > >  void machine_shutdown(void)
+> > > >  {
+> > > >  #ifdef CONFIG_HOTPLUG_CPU
+> > > > -	int cpu;
+> > > > -
+> > > > -	for_each_online_cpu(cpu) {
+> > > > -		if (cpu != smp_processor_id())
+> > > > -			cpu_down(cpu);
+> > > > -	}
+> > > > +	/* TODO: Can we use disable_nonboot_cpus()? */
+> > > > +	freeze_secondary_cpus(smp_processor_id());
+> > > 
+> > > freeze_secondary_cpus() is only available for CONFIG_PM_SLEEP_SMP=y and
+> > > disable_nonboot_cpus() is a NOOP for CONFIG_PM_SLEEP_SMP=n :)
 > > 
-> > Opportunistically fix a few other annoyances with the defines:
+> > I thought I replied to this :-(
 > > 
-> >   - Relocate the bit defines so that they immediately follow the MSR
-> >     define, e.g. aren't mistaken as belonging to MISC_FEATURE_CONTROL.
-> >   - Add whitespace around the block of feature control defines to make
-> >     it clear that FEAT_CTL is indeed short for FEATURE_CONTROL.
-> >   - Use BIT() instead of manually encoding the bit shift.
-> >   - Use "VMX" instead of "VMXON" to match the SDM.
-> >   - Append "_ENABLED" to the LMCE bit to be consistent with the verbiage
-> >     used for all other feature control bits.  (LCME is an acronym for
-> >     Local Machine Check Exception, i.e. LMCE_ENABLED is not redundant).
+> > My plan was to simply make freeze_secondary_cpus() available and protected by
+> > CONFIG_SMP only instead.
+> > 
+> > Good plan?
 > 
-> Sure but SDM calls it LMCE_ON. What is our current decision on sticking
-> to SDM bit names? I guess we don't...
+> No. freeze_secondary_cpus() is really for hibernation. Look at the exit
+> conditions there.
+
+Hmm do you mean the pm_wakeup_pending() abort?
+
+In arm64 we machine_shutdown() calls disable_nonboot_cpus(), which in turn
+a wrapper around freeze_secondary_cpus() with 0 passed as an argument.
+
+IIUC this means arm64 could fail to offline all CPUs on machine_shutdown(),
+correct?
+
 > 
-> But above you say "to match the SDM"...
+> So you really want a seperate function which depends on CONFIG_HOTPLUG_CPU
+> and provides an inline stub for the CONFIG_HOTPLUG_CPU=n case.
+> 
+> But I have a hard time to see how that stuff works at all on
+> ia64:
+> 
+>   cpu_down() might sleep, i.e. it must be called from preemptible
+>   context. smp_processor_id() is invalid from preemtible context.
+> 
+> As this is obviously broken and ia64 is in keep compile mode only, it
+> should just go away.
 
-Ugh.  Match the SDM unless it's obviously "wrong"?  :-)  It might literally
-be the only instance of the SDM using "on" instead of "enable(d)" for an
-MSR or CR bit.  The SDM even refers to it as an enable bit, e.g. "platform
-software has not enabled LMCE by setting IA32_FEATURE_CONTROL.LMCE_ON (bit 20)".
+If arm64 is doing the wrong thing, then we need a new function anyway.
 
-Whining aside, I'm ok going with LMCE_ON, I have a feeling "on" was
-deliberately chosen differentiate it from IA32_MCG_EXT_CTL.LMCE_EN.
+Thanks
+
+--
+Qais Yousef
