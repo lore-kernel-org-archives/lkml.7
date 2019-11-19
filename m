@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0405C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:23:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA38C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:23:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A59562231A
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:23:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE3082235D
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:23:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141005;
-	bh=sKIeWLn1mX4A/aVFN2Vpovh/sCUJHX5zLURb9S6+bdk=;
+	s=default; t=1574141002;
+	bh=P3UvzSRpRnTNM+a2JJrkuszswtOIZUdDobM0GCA6KYo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y6Wtg+dFgpHQF4ABK5MOQSsDbtsUiosHRsJLHKHeMiau5dStpwgkAgBYdVMUaNWZ6
-	 WPxdPJGFWzFEtCKtFoZsot0mqt56tYDr8WMDf9Lb2iNPWIiSJTKiLTDk+qMPpSFxWl
-	 PajDWLUhsNoUVVOBeitU2bGxGs3u6LzkOL5+OvPs=
+	b=QOYf+H783Rq1oaOGOF7RW/I9Oo6zF9ldYoDURHFuqLC+qwy5TB6RdKDr0gR5n7Xal
+	 t5Intk30DS0bvaxkkMXqbqgKgg0abTrVR7AhJBBRPd9ekDPyUOwJCjVZJyqZPCvtOc
+	 gTz4HQhR6VtmsC2UBxKn2LW7huXm9knGSEXtWMFA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727982AbfKSFXY (ORCPT
+        id S1727973AbfKSFXU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:23:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38980 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:23:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727963AbfKSFXW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:23:22 -0500
+        id S1727963AbfKSFXT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:23:19 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF7F62231A;
-        Tue, 19 Nov 2019 05:23:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0ECAF21939;
+        Tue, 19 Nov 2019 05:23:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141001;
-        bh=sKIeWLn1mX4A/aVFN2Vpovh/sCUJHX5zLURb9S6+bdk=;
+        s=default; t=1574140998;
+        bh=P3UvzSRpRnTNM+a2JJrkuszswtOIZUdDobM0GCA6KYo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jf46VhDUzVOQEN91L0FoUFkagEH4xMGxTMBrZpjIW3ivoqbrXXfr9b76f55hMJyuo
-         iDtX6RFj4YM3YCcu0zE6SAaWxis8UbL+ATsgdsaKI8mnh+EIxQiiQ49orB1QVpXF8f
-         I93CBkqDmXshhkmeFjLf8DV3f+7CCEZLjNYYJn9k=
+        b=ZTyQbh26klS1D9D1yyOuHwAmGQf2bnKSWTOHR0h0afd4o1ab6sWvydo5sSgNRLk1+
+         +bTwG2yL2R2IToDBbeLR/qsCz4E5iCb3pVty7Pu1PHLTVYd1ugv5D2eufGpw8d27mF
+         DMtnpm7CAhiC9/njY5muGBM9EPwKJH7J5M2IcNGg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Finn Thain <fthain@telegraphics.com.au>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.19 003/422] scsi: core: Handle drivers which set sg_tablesize to zero
-Date:   Tue, 19 Nov 2019 06:13:20 +0100
-Message-Id: <20191119051400.455734877@linuxfoundation.org>
+        stable@vger.kernel.org, Jonas Gorski <jonas.gorski@gmail.com>,
+        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Amit Pundir <amit.pundir@linaro.org>
+Subject: [PATCH 4.19 002/422] MIPS: BCM63XX: fix switch core reset on BCM6368
+Date:   Tue, 19 Nov 2019 06:13:19 +0100
+Message-Id: <20191119051400.401770057@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -60,51 +63,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Schmitz <schmitzmic@gmail.com>
+From: Jonas Gorski <jonas.gorski@gmail.com>
 
-commit 9393c8de628cf0968d81a17cc11841e42191e041 upstream.
+commit 8a38dacf87180738d42b058334c951eba15d2d47 upstream.
 
-In scsi_mq_setup_tags(), cmd_size is calculated based on zero size for the
-scatter-gather list in case the low level driver uses SG_NONE in its host
-template.
+The Ethernet Switch core mask was set to 0, causing the switch core to
+be not reset on BCM6368 on boot. Provide the proper mask so the switch
+core gets reset to a known good state.
 
-cmd_size is passed on to the block layer for calculation of the request
-size, and we've seen NULL pointer dereference errors from the block layer
-in drivers where SG_NONE is used and a mq IO scheduler is active,
-apparently as a consequence of this (see commit 68ab2d76e4be ("scsi:
-cxlflash: Set sg_tablesize to 1 instead of SG_NONE"), and a recent patch by
-Finn Thain converting the three m68k NFR5380 drivers to avoid setting
-SG_NONE).
-
-Try to avoid these errors by accounting for at least one sg list entry when
-calculating cmd_size, regardless of whether the low level driver set a zero
-sg_tablesize.
-
-Tested on 030 m68k with the atari_scsi driver - setting sg_tablesize to
-SG_NONE no longer results in a crash when loading this driver.
-
-CC: Finn Thain <fthain@telegraphics.com.au>
-Link: https://lore.kernel.org/r/1572922150-4358-1-git-send-email-schmitzmic@gmail.com
-Signed-off-by: Michael Schmitz <schmitzmic@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 799faa626c71 ("MIPS: BCM63XX: add core reset helper")
+Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: linux-mips@vger.kernel.org
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Amit Pundir <amit.pundir@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-
 ---
- drivers/scsi/scsi_lib.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/mips/bcm63xx/reset.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/scsi/scsi_lib.c
-+++ b/drivers/scsi/scsi_lib.c
-@@ -2371,7 +2371,8 @@ int scsi_mq_setup_tags(struct Scsi_Host
- {
- 	unsigned int cmd_size, sgl_size;
- 
--	sgl_size = scsi_mq_sgl_size(shost);
-+	sgl_size = max_t(unsigned int, sizeof(struct scatterlist),
-+			scsi_mq_sgl_size(shost));
- 	cmd_size = sizeof(struct scsi_cmnd) + shost->hostt->cmd_size + sgl_size;
- 	if (scsi_host_get_prot(shost))
- 		cmd_size += sizeof(struct scsi_data_buffer) + sgl_size;
+--- a/arch/mips/bcm63xx/reset.c
++++ b/arch/mips/bcm63xx/reset.c
+@@ -120,7 +120,7 @@
+ #define BCM6368_RESET_DSL	0
+ #define BCM6368_RESET_SAR	SOFTRESET_6368_SAR_MASK
+ #define BCM6368_RESET_EPHY	SOFTRESET_6368_EPHY_MASK
+-#define BCM6368_RESET_ENETSW	0
++#define BCM6368_RESET_ENETSW	SOFTRESET_6368_ENETSW_MASK
+ #define BCM6368_RESET_PCM	SOFTRESET_6368_PCM_MASK
+ #define BCM6368_RESET_MPI	SOFTRESET_6368_MPI_MASK
+ #define BCM6368_RESET_PCIE	0
 
 
