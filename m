@@ -4,54 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69271C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:23:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC8FFC43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:23:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 395B721939
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:23:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C0C221939
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:23:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574140991;
-	bh=Rif4rUzkg3AEi75QZe60tBKQXzf7Rk87RG+4EJ8tiU4=;
+	s=default; t=1574140994;
+	bh=O/EPpd3UjBDA6PsEDJfUuRGzIrfTKmGZ1gBPhx9iqmo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eX7cRYjuzMrswEqzIwXSN6aqMUME5t+N5gNIni/ul/u1yj7ZnTdtwKKfuPJlBPSXl
-	 IvR+maY+QGDx7UN/t/AVKdSmNmtj/a85/un+3wxdNFhwXs/xwhZsdqVYSFD1nTiHXZ
-	 1b/Ko6tlYewE1NjKYVvbkt8HgIoR6k+G8KnoQjWU=
+	b=NTR3vtjP6ub90WpJT2tF6KmJJMntmC40353+SpMsr3Kc9rGAVyBZyuqWg8Iav8Rbd
+	 UXQF22S9Ejy9QXsY/ogUxwKZ8uuGDc6CBde84kDiBRY7nv24Ma1OH1NyJz7hK6KFsj
+	 uyZNZq8ubcFXPfGMU9rtsIkTFVtqeKdKwtZ30yR0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727935AbfKSFXJ (ORCPT
+        id S1727946AbfKSFXN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:23:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38658 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:23:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727919AbfKSFXI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:23:08 -0500
+        id S1727936AbfKSFXK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:23:10 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55C4D2231C;
-        Tue, 19 Nov 2019 05:23:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBE612231A;
+        Tue, 19 Nov 2019 05:23:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574140986;
-        bh=Rif4rUzkg3AEi75QZe60tBKQXzf7Rk87RG+4EJ8tiU4=;
+        s=default; t=1574140989;
+        bh=O/EPpd3UjBDA6PsEDJfUuRGzIrfTKmGZ1gBPhx9iqmo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OZ3vO6VJ5gL3ICYB6bhuizq4F7fTopQXrx7iwCYMshOhb+qiGUpqfDpt5PDmh+ELp
-         MudfcTAL4wEiYnoqaiTKmZSenYeG0nOOQZrq6fGQS/L5ve97Zz4sT/1gyu77PG+bxB
-         w/OwC9Mi9/2dDI7AZSvttZKcTyVJPvaQsyKXqmzQ=
+        b=z5JTM0YSAanmUmX3ZMRGL18ZKNBgMjAwlI+77X3LQgfYQYyyYmIJ3mZfYnWhRjMj8
+         uy4x+e0BcdQol6d0W4fcDEaCk36/MQYWlOwU9lJtH76AlXczclDUrXDB2koM77pMiv
+         eyO0oIjIfMAk1MZPL8NWSBciTH2l2aUt5+05tcpo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vinayak Menon <vinmenon@codeaurora.org>,
-        Minchan Kim <minchan@google.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Hugh Dickins <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.3 47/48] mm/page_io.c: do not free shared swap slots
-Date:   Tue, 19 Nov 2019 06:20:07 +0100
-Message-Id: <20191119051030.408461659@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Eugen Hristev <eugen.hristev@microchip.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 5.3 48/48] mmc: sdhci-of-at91: fix quirk2 overwrite
+Date:   Tue, 19 Nov 2019 06:20:08 +0100
+Message-Id: <20191119051031.442320103@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119050946.745015350@linuxfoundation.org>
 References: <20191119050946.745015350@linuxfoundation.org>
@@ -64,75 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vinayak Menon <vinmenon@codeaurora.org>
+From: Eugen Hristev <eugen.hristev@microchip.com>
 
-commit 5df373e95689b9519b8557da7c5bd0db0856d776 upstream.
+commit fed23c5829ecab4ddc712d7b0046e59610ca3ba4 upstream.
 
-The following race is observed due to which a processes faulting on a
-swap entry, finds the page neither in swapcache nor swap.  This causes
-zram to give a zero filled page that gets mapped to the process,
-resulting in a user space crash later.
+The quirks2 are parsed and set (e.g. from DT) before the quirk for broken
+HS200 is set in the driver.
+The driver needs to enable just this flag, not rewrite the whole quirk set.
 
-Consider parent and child processes Pa and Pb sharing the same swap slot
-with swap_count 2.  Swap is on zram with SWP_SYNCHRONOUS_IO set.
-Virtual address 'VA' of Pa and Pb points to the shared swap entry.
-
-Pa                                       Pb
-
-fault on VA                              fault on VA
-do_swap_page                             do_swap_page
-lookup_swap_cache fails                  lookup_swap_cache fails
-                                         Pb scheduled out
-swapin_readahead (deletes zram entry)
-swap_free (makes swap_count 1)
-                                         Pb scheduled in
-                                         swap_readpage (swap_count == 1)
-                                         Takes SWP_SYNCHRONOUS_IO path
-                                         zram enrty absent
-                                         zram gives a zero filled page
-
-Fix this by making sure that swap slot is freed only when swap count
-drops down to one.
-
-Link: http://lkml.kernel.org/r/1571743294-14285-1-git-send-email-vinmenon@codeaurora.org
-Fixes: aa8d22a11da9 ("mm: swap: SWP_SYNCHRONOUS_IO: skip swapcache only if swapped page has no other reference")
-Signed-off-by: Vinayak Menon <vinmenon@codeaurora.org>
-Suggested-by: Minchan Kim <minchan@google.com>
-Acked-by: Minchan Kim <minchan@kernel.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Hugh Dickins <hughd@google.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 7871aa60ae00 ("mmc: sdhci-of-at91: add quirk for broken HS200")
+Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/page_io.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/mmc/host/sdhci-of-at91.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/mm/page_io.c
-+++ b/mm/page_io.c
-@@ -73,6 +73,7 @@ static void swap_slot_free_notify(struct
- {
- 	struct swap_info_struct *sis;
- 	struct gendisk *disk;
-+	swp_entry_t entry;
+--- a/drivers/mmc/host/sdhci-of-at91.c
++++ b/drivers/mmc/host/sdhci-of-at91.c
+@@ -358,7 +358,7 @@ static int sdhci_at91_probe(struct platf
+ 	pm_runtime_use_autosuspend(&pdev->dev);
  
- 	/*
- 	 * There is no guarantee that the page is in swap cache - the software
-@@ -104,11 +105,10 @@ static void swap_slot_free_notify(struct
- 	 * we again wish to reclaim it.
- 	 */
- 	disk = sis->bdev->bd_disk;
--	if (disk->fops->swap_slot_free_notify) {
--		swp_entry_t entry;
-+	entry.val = page_private(page);
-+	if (disk->fops->swap_slot_free_notify && __swap_count(entry) == 1) {
- 		unsigned long offset;
+ 	/* HS200 is broken at this moment */
+-	host->quirks2 = SDHCI_QUIRK2_BROKEN_HS200;
++	host->quirks2 |= SDHCI_QUIRK2_BROKEN_HS200;
  
--		entry.val = page_private(page);
- 		offset = swp_offset(entry);
- 
- 		SetPageDirty(page);
+ 	ret = sdhci_add_host(host);
+ 	if (ret)
 
 
