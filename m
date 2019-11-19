@@ -7,37 +7,40 @@ X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F1C7C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:52:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A4FDC43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:52:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0445220679
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:52:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE0F420679
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:52:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="Ie2YY2ng"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="kEa7yRyF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728171AbfKSPwV (ORCPT
+        id S1728340AbfKSPw2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 10:52:21 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:53068 "EHLO
+        Tue, 19 Nov 2019 10:52:28 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:53204 "EHLO
         crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727509AbfKSPwU (ORCPT
+        with ESMTP id S1728183AbfKSPw1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 10:52:20 -0500
+        Tue, 19 Nov 2019 10:52:27 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1574178738; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1574178740; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:references; bh=4yyjAgapYN0BJjJ6GjuEAWNlDoHraNOFl96+eGkH6pU=;
-        b=Ie2YY2ngQEP2M/tN4vHf6WPjSeB04qQn4FAz/FK6pzMH/8nYU/eJpRLN4peLibcg4gjqaF
-        8Zs+06pLojKMRGQe+hqIHJhLGIOxv0SZc8SQ+RxTtwuLvZA1Tdgh8JY576hQWGXu0QLHcF
-        z0xiYG4ZHwFgr+kcm+Rar3eNIYxj7iA=
+         in-reply-to:in-reply-to:references:references;
+        bh=3FiBXtSRFixC8yyEq7mwTAb3MQ9xzazHpSbebQErgE4=;
+        b=kEa7yRyF5p3u5qgzUTbPdi1RXF1PMPxndZjJ9Mgi2yuAWJjCnv00Nc5uLPz5svAla5DQAJ
+        nwkS7HrasfkxGwMmAVI+mz3QruUQqstX9q1NWIUP1bLqJbZBmmWVYi2TX5SzDbluhfKyfh
+        jKPfxOSlnfibV5uZDp7pl6Q1lvilUG4=
 From:   Paul Cercueil <paul@crapouillou.net>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     od@zcrc.me, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 1/2] pinctrl: ingenic: Handle PIN_CONFIG_OUTPUT config
-Date:   Tue, 19 Nov 2019 16:52:10 +0100
-Message-Id: <20191119155211.102527-1-paul@crapouillou.net>
+Subject: [PATCH 2/2] pinctrl: ingenic: Add OTG VBUS pin for the JZ4770
+Date:   Tue, 19 Nov 2019 16:52:11 +0100
+Message-Id: <20191119155211.102527-2-paul@crapouillou.net>
+In-Reply-To: <20191119155211.102527-1-paul@crapouillou.net>
+References: <20191119155211.102527-1-paul@crapouillou.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -45,74 +48,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This makes the driver support the 'output-low' and 'output-high'
-devicetree properties in gpio-hog sub-nodes.
+Add pin mux configuration for the OTG VBUS pin of the JZ4770.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- drivers/pinctrl/pinctrl-ingenic.c | 23 ++++++++++++++++++++++-
- 1 file changed, 22 insertions(+), 1 deletion(-)
+ drivers/pinctrl/pinctrl-ingenic.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-ingenic.c
-index 6e2683016c1f..dbd907ef7cf0 100644
+index dbd907ef7cf0..44f96a4eb97c 100644
 --- a/drivers/pinctrl/pinctrl-ingenic.c
 +++ b/drivers/pinctrl/pinctrl-ingenic.c
-@@ -1801,19 +1801,30 @@ static void ingenic_set_bias(struct ingenic_pinctrl *jzpc,
- 		ingenic_config_pin(jzpc, pin, JZ4740_GPIO_PULL_DIS, !enabled);
- }
+@@ -686,6 +686,7 @@ static int jz4770_mac_rmii_pins[] = {
+ 	0xa9, 0xab, 0xaa, 0xac, 0xa5, 0xa4, 0xad, 0xae, 0xa6, 0xa8,
+ };
+ static int jz4770_mac_mii_pins[] = { 0xa7, 0xaf, };
++static int jz4770_otg_pins[] = { 0x8a, };
  
-+static void ingenic_set_output_level(struct ingenic_pinctrl *jzpc,
-+				     unsigned int pin, bool high)
-+{
-+	if (jzpc->version >= ID_JZ4770)
-+		ingenic_config_pin(jzpc, pin, JZ4760_GPIO_PAT0, high);
-+	else
-+		ingenic_config_pin(jzpc, pin, JZ4740_GPIO_DATA, high);
-+}
-+
- static int ingenic_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
- 		unsigned long *configs, unsigned int num_configs)
- {
- 	struct ingenic_pinctrl *jzpc = pinctrl_dev_get_drvdata(pctldev);
- 	unsigned int idx = pin % PINS_PER_GPIO_CHIP;
- 	unsigned int offt = pin / PINS_PER_GPIO_CHIP;
--	unsigned int cfg;
-+	unsigned int cfg, arg;
-+	int ret;
+ static int jz4770_uart0_data_funcs[] = { 0, 0, };
+ static int jz4770_uart0_hwflow_funcs[] = { 0, 0, };
+@@ -744,6 +745,7 @@ static int jz4770_pwm_pwm6_funcs[] = { 0, };
+ static int jz4770_pwm_pwm7_funcs[] = { 0, };
+ static int jz4770_mac_rmii_funcs[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, };
+ static int jz4770_mac_mii_funcs[] = { 0, 0, };
++static int jz4770_otg_funcs[] = { 0, };
  
- 	for (cfg = 0; cfg < num_configs; cfg++) {
- 		switch (pinconf_to_config_param(configs[cfg])) {
- 		case PIN_CONFIG_BIAS_DISABLE:
- 		case PIN_CONFIG_BIAS_PULL_UP:
- 		case PIN_CONFIG_BIAS_PULL_DOWN:
-+		case PIN_CONFIG_OUTPUT:
- 			continue;
- 		default:
- 			return -ENOTSUPP;
-@@ -1821,6 +1832,8 @@ static int ingenic_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
- 	}
+ static const struct group_desc jz4770_groups[] = {
+ 	INGENIC_PIN_GROUP("uart0-data", jz4770_uart0_data),
+@@ -799,6 +801,7 @@ static const struct group_desc jz4770_groups[] = {
+ 	INGENIC_PIN_GROUP("pwm7", jz4770_pwm_pwm7),
+ 	INGENIC_PIN_GROUP("mac-rmii", jz4770_mac_rmii),
+ 	INGENIC_PIN_GROUP("mac-mii", jz4770_mac_mii),
++	INGENIC_PIN_GROUP("otg-vbus", jz4770_otg),
+ };
  
- 	for (cfg = 0; cfg < num_configs; cfg++) {
-+		arg = pinconf_to_config_argument(configs[cfg]);
-+
- 		switch (pinconf_to_config_param(configs[cfg])) {
- 		case PIN_CONFIG_BIAS_DISABLE:
- 			dev_dbg(jzpc->dev, "disable pull-over for pin P%c%u\n",
-@@ -1844,6 +1857,14 @@ static int ingenic_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
- 			ingenic_set_bias(jzpc, pin, true);
- 			break;
+ static const char *jz4770_uart0_groups[] = { "uart0-data", "uart0-hwflow", };
+@@ -841,6 +844,7 @@ static const char *jz4770_pwm5_groups[] = { "pwm5", };
+ static const char *jz4770_pwm6_groups[] = { "pwm6", };
+ static const char *jz4770_pwm7_groups[] = { "pwm7", };
+ static const char *jz4770_mac_groups[] = { "mac-rmii", "mac-mii", };
++static const char *jz4770_otg_groups[] = { "otg-vbus", };
  
-+		case PIN_CONFIG_OUTPUT:
-+			ret = pinctrl_gpio_direction_output(pin);
-+			if (ret)
-+				return ret;
-+
-+			ingenic_set_output_level(jzpc, pin, arg);
-+			break;
-+
- 		default:
- 			unreachable();
- 		}
+ static const struct function_desc jz4770_functions[] = {
+ 	{ "uart0", jz4770_uart0_groups, ARRAY_SIZE(jz4770_uart0_groups), },
+@@ -871,6 +875,7 @@ static const struct function_desc jz4770_functions[] = {
+ 	{ "pwm6", jz4770_pwm6_groups, ARRAY_SIZE(jz4770_pwm6_groups), },
+ 	{ "pwm7", jz4770_pwm7_groups, ARRAY_SIZE(jz4770_pwm7_groups), },
+ 	{ "mac", jz4770_mac_groups, ARRAY_SIZE(jz4770_mac_groups), },
++	{ "otg", jz4770_otg_groups, ARRAY_SIZE(jz4770_otg_groups), },
+ };
+ 
+ static const struct ingenic_chip_info jz4770_chip_info = {
 -- 
 2.24.0
 
