@@ -2,163 +2,108 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC992C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 21:09:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30305C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 21:12:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CD92223D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 21:09:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0182F223D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 21:12:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oKGpGWgy"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="B0xCqQUl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727495AbfKSVJT (ORCPT
+        id S1727324AbfKSVMR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 16:09:19 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:44868 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726892AbfKSVJT (ORCPT
+        Tue, 19 Nov 2019 16:12:17 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:55660 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726892AbfKSVMQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 16:09:19 -0500
-Received: by mail-pl1-f195.google.com with SMTP id az9so12524190plb.11;
-        Tue, 19 Nov 2019 13:09:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=540qf/bm5KNNA99hBGUVZOgA79LIDKy75tuXaffYbt4=;
-        b=oKGpGWgynQH9ILYGsyHsX31+GjtrcYbP9aVt91ZRjLLzZhK/UGcnwlnPPwjaTFpY5v
-         DqGFcB8M3yVBV3u19g31aeIoAKp0SiOeibtGsMi7uFN20gMBrrFH32nHDFegSsqPmpHP
-         cnydPu1sG+uq3t7cOUcDFNOC7sr65zdgkGYswFOGN61LUCZOhGUdR/feNrGEWsZGk7qh
-         ZleCpfaEl6dxmb7gwoF/Xgv9aTBg1d5ln/zjA4xLazUGVukTDJjbkokVOMixQMpKi7EO
-         qmLWrxzi0AVT8iUTDeIMaEWR9r5gVU21r2KYcNHHARCAHqHNLQz25bPA2gHu9aSRYpV3
-         dU2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=540qf/bm5KNNA99hBGUVZOgA79LIDKy75tuXaffYbt4=;
-        b=MPvKIBdi1QKCTgSRZOChgghkhECmEFam8rO8mdDjFRAf1Hqz+kCQZcyRHlWaBD4IXD
-         DqY4JnnjY+fwUwW8/Z42Ib74hYr2JaF90B5AJ7lI2QwKMTz+JEhqKYzVYmKkuFk5Fj1E
-         cC2rtnKKECh26WRefdUKawZUE4raUunN4rjMB7uLe6DU9IRdPMITF02vXqax4DyKoHDa
-         EU79GRbMaVNq97msKYzT8hEBWHblUkYLgYo5IAaodOGV/S7V89Fq+cVPgPufOoJfkItZ
-         tov1u/rM5mCB1loqdfCeV9Q8BQ/4GNbOGJ6S0uvFze0Ua5WOc6ApyHtKzzCsuZxmyJUs
-         WUrw==
-X-Gm-Message-State: APjAAAWFfM6kBRQ30Q5sjMGQkiixYsSmcTWsVmLWKX1pfey5Q2jDWQ7x
-        QBYPQNsr/dgMY4ISj/w4YSY=
-X-Google-Smtp-Source: APXvYqzKTah3FltRWuH5uhmLTEFkDzCBgApiVxtKBu7r5/lKFfyo2Piv4hieGubZghGC8/y9Q2LAeQ==
-X-Received: by 2002:a17:90a:3522:: with SMTP id q31mr9154747pjb.18.1574197758251;
-        Tue, 19 Nov 2019 13:09:18 -0800 (PST)
-Received: from ?IPv6:2620:15c:2c1:200:55c7:81e6:c7d8:94b? ([2620:15c:2c1:200:55c7:81e6:c7d8:94b])
-        by smtp.gmail.com with ESMTPSA id y24sm28215358pfr.116.2019.11.19.13.09.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 Nov 2019 13:09:17 -0800 (PST)
-Subject: Re: KMSAN: uninit-value in can_receive
-To:     Oliver Hartkopp <socketcan@hartkopp.net>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        syzbot <syzbot+b02ff0707a97e4e79ebb@syzkaller.appspotmail.com>,
-        davem@davemloft.net, glider@google.com, linux-can@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-References: <0000000000005c08d10597a3a05d@google.com>
- <a5f73d92-fdf2-2590-c863-39a181dca8e1@hartkopp.net>
- <deedd609-6f3b-8035-47e1-252ab221faa1@pengutronix.de>
- <7934bc2b-597f-0bb3-be2d-32f3b07b4de9@hartkopp.net>
- <7f5c4546-0c1a-86ae-581e-0203b5fca446@pengutronix.de>
- <1f7d6ea7-152e-ff18-549c-b196d8b5e3a7@hartkopp.net>
- <9e06266a-67f3-7352-7b87-2b9144c7c9a9@gmail.com>
- <3142c032-e46a-531c-d1b8-d532e5b403a6@hartkopp.net>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <92c04159-b83a-3e33-91da-25a727a692d0@gmail.com>
-Date:   Tue, 19 Nov 2019 13:09:16 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 19 Nov 2019 16:12:16 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAJL9Ipf167749;
+        Tue, 19 Nov 2019 21:12:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to :
+ references : cc : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=6dcH/qkebOqljBdIh3WCweO98b6LCRO0hdF6cgh5iJw=;
+ b=B0xCqQUlSQWlMG1QP3OyX4j97e3xEtUwS7HG+b26JVTYFO9zjZrdInz7b+dlLbyKtKSt
+ xccLYsVLoq+71MBRq+Gl/ctaaqiyZTeeZuUIsLLHUKPSbNDr+z/PFZga14czTGCEVB3Y
+ vHdcvKTMposXGAAMAM+LNwVO/lT4uUaLaA7puUUU6g0uGfHlNKLihV+tD3ozxd7+j4+V
+ kR1gl81NmBiTtvxUYjCID3ee3XwjkrsAUL+2lbVjKdb33HAcPv/hWXuARS+FDwt7NZkg
+ GvZFV8MACA6jEhP9EsoQtsgG3NBAGqnQUE3Bzf9CZHLwPNsnhvtUDNRZadyKXbmynShW HA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2wa8htsr9j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 Nov 2019 21:12:14 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAJL9Hqc159729;
+        Tue, 19 Nov 2019 21:12:13 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2wc0ah209w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 Nov 2019 21:12:13 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xAJLCAax030927;
+        Tue, 19 Nov 2019 21:12:12 GMT
+Received: from Junxiaos-MacBook-Pro.local (/10.11.16.208)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 19 Nov 2019 13:12:10 -0800
+Subject: Re: [PATCH] block-mq: ratelimit the warning log
+To:     Junxiao Bi <junxiao.bi@oracle.com>, linux-kernel@vger.kernel.org
+References: <20191114230233.3582-1-junxiao.bi@oracle.com>
+Cc:     axboe@kernel.dk
+From:   Junxiao Bi <junxiao.bi@oracle.com>
+Message-ID: <00519647-0993-4e7c-0990-283358c1865b@oracle.com>
+Date:   Tue, 19 Nov 2019 13:12:07 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.9.1
 MIME-Version: 1.0
-In-Reply-To: <3142c032-e46a-531c-d1b8-d532e5b403a6@hartkopp.net>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20191114230233.3582-1-junxiao.bi@oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9446 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1911190174
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9446 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1911190174
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Anybody help reviewing this?
 
-
-On 11/19/19 12:24 PM, Oliver Hartkopp wrote:
-> Hi Eric,
-> 
-> On 19/11/2019 17.53, Eric Dumazet wrote:
->>
->>
->> On 11/18/19 11:35 PM, Oliver Hartkopp wrote:
->>>
->>
->>>
->>> See ioctl$ifreq https://syzkaller.appspot.com/x/log.txt?x=14563416e00000
->>>
->>> 23:11:34 executing program 2:
->>> r0 = socket(0x200000000000011, 0x3, 0x0)
->>> ioctl$ifreq_SIOCGIFINDEX_vcan(r0, 0x8933, &(0x7f0000000040)={'vxcan1\x00', <r1=>0x0})
->>> bind$packet(r0, &(0x7f0000000300)={0x11, 0xc, r1}, 0x14)
->>> sendmmsg(r0, &(0x7f0000000d00), 0x400004e, 0x0)
->>>
->>> We only can receive skbs from (v(x))can devices.
->>> No matter if someone wrote to them via PF_CAN or PF_PACKET.
->>> We check for ETH_P_CAN(FD) type and ARPHRD_CAN dev type at rx time.
->>
->> And what entity sets the can_skb_prv(skb)->skbcnt to zero exactly ?
->>
->>>
->>>>> We additionally might think about introducing a check whether we have a
->>>>> can_skb_reserve() created skbuff.
->>>>>
->>>>> But even if someone forged a skbuff without this reserved space the
->>>>> access to can_skb_prv(skb)->skbcnt would point into some CAN frame
->>>>> content - which is still no access to uninitialized content, right?
->>>
->>> So this question remains still valid whether we have a false positive from KMSAN here.
->>
->> I do not believe it is a false positive.
->>
->> It seems CAN relies on some properties of low level drivers using alloc_can_skb() or similar function.
->>
->> Why not simply fix this like that ?
->>
->> diff --git a/net/can/af_can.c b/net/can/af_can.c
->> index 128d37a4c2e0ba5d8db69fcceec8cbd6a79380df..3e71a78d82af84caaacd0ef512b5e894efbf4852 100644
->> --- a/net/can/af_can.c
->> +++ b/net/can/af_can.c
->> @@ -647,8 +647,9 @@ static void can_receive(struct sk_buff *skb, struct net_device *dev)
->>          pkg_stats->rx_frames_delta++;
->>            /* create non-zero unique skb identifier together with *skb */
->> -       while (!(can_skb_prv(skb)->skbcnt))
->> +       do {
->>                  can_skb_prv(skb)->skbcnt = atomic_inc_return(&skbcounter);
->> +       } while (!(can_skb_prv(skb)->skbcnt));
->>            rcu_read_lock();
->>   
-> 
-> Please check commit d3b58c47d330d ("can: replace timestamp as unique skb attribute").
-
-Oh well... This notion of 'unique skb attribute' is interesting...
-
-> 
-> can_skb_prv(skb)->skbcnt is set to 0 at skb creation time when sending CAN frames from local host or receiving CAN frames from a real CAN interface.
-
-We can not enforce this to happen with a virtual interface.
-
-> 
-> When a CAN skb is received by the net layer the *first* time it gets a unique value which we need for a per-cpu filter mechanism in raw_rcv().
-> 
-> So where's the problem to check for (!(can_skb_prv(skb)->skbcnt)) in a while statement? I can't see a chance for an uninitialized value there.
-
-You have to make sure the packet has been properly cooked by a 'real CAN interface' then, and reject them if not.
-
-
+On 11/14/19 3:02 PM, Junxiao Bi wrote:
+> When doing cpu online/offlile, sometimes this warning will be triggered,
+> it's harmless, io will be dispatched. But sometimes it warns too much and
+> even stall the whole system, so ratelimit it.
+>
+> Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
+> ---
+>   block/blk-mq.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/block/blk-mq.c b/block/blk-mq.c
+> index ec791156e9cc..846f5d26c523 100644
+> --- a/block/blk-mq.c
+> +++ b/block/blk-mq.c
+> @@ -1384,7 +1384,7 @@ static void __blk_mq_run_hw_queue(struct blk_mq_hw_ctx *hctx)
+>   	 *   handle dispatched requests to this hctx
+>   	 */
+>   	if (!cpumask_test_cpu(raw_smp_processor_id(), hctx->cpumask) &&
+> -		cpu_online(hctx->next_cpu)) {
+> +		cpu_online(hctx->next_cpu) && printk_ratelimit()) {
+>   		printk(KERN_WARNING "run queue from wrong CPU %d, hctx %s\n",
+>   			raw_smp_processor_id(),
+>   			cpumask_empty(hctx->cpumask) ? "inactive": "active");
