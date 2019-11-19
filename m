@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E1D9C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:53:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9D20C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:53:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E8E3208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:53:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CF20222A4
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:53:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142784;
-	bh=FgAEuwJeq6bU+l6jFE4Y9bLsRENUulQAqRtrvdYS76E=;
+	s=default; t=1574142791;
+	bh=laLOVN9b3e7blkEA0eFOdsXXjtlukZsyKhx2FPSNf5o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oEoxsRfrBnytrk+vChSmdVoqOAIpIbMxO7A9OuSJaIxpYhRy2QT0zazbhBMbMWlDz
-	 0aeWAGDpt7rJxD2Va0Rh9howM2MrIixZhvNapq4gOr0B+Y6BRX+kie6Ka8yg8xJGm6
-	 Vou/9oK+dWT9Cx1xJUP2OJQrWPn6bNXYOXyej4FY=
+	b=i5zAg98AIHfX4veZhyM5fsZH+s4lRRh+dS78efyM/JFo0m4YMU8pwdlcQbQEDsCxy
+	 u1wgCEEwafc1r0oRyFmVPnLHSMZI52YbFg1rGNoGHEhq9cxf15yZN2fDBnCeG71y6u
+	 VQ7WGYx/0ZIhYMfDHG5HjIg1HkJ5uP8T0+lntr+k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731966AbfKSFxC (ORCPT
+        id S1731981AbfKSFxK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:53:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50782 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:53:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731212AbfKSFw5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:52:57 -0500
+        id S1731969AbfKSFxG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:53:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0720A21823;
-        Tue, 19 Nov 2019 05:52:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2AE0F20721;
+        Tue, 19 Nov 2019 05:53:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142776;
-        bh=FgAEuwJeq6bU+l6jFE4Y9bLsRENUulQAqRtrvdYS76E=;
+        s=default; t=1574142785;
+        bh=laLOVN9b3e7blkEA0eFOdsXXjtlukZsyKhx2FPSNf5o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZOOI//ilXn0o+73ApwJUtcVt7KHaKh/GMTDOAU+t9qki9lc8nosX9qr7t9qpU2FyB
-         QGWYn7zfOICDnfSkWw7w+Lk4mkijSy+v9CKg8vc4irzBfJPbRnTT5kNgsgpOOynFn3
-         8XW430wbSLz4Hemf41CIdaMJufc/cJRcoDcVEtHE=
+        b=mbW4xEkB6s/9gghrcvE0grYyGg0v+s2SoZ618RG0kxL3ngTKiXFmzL6Dj8yGkbxxU
+         qe7aKL4vPSA9d564fr/DG94cp2lSoCqQOcJxQcodlnfWOhVjY/lktum+ayH5+dkq3q
+         qGmgOyeRl+JCWKuKfZ9vq3XfsPAFNN2p1POjWdos=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Laura Abbott <labbott@redhat.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
+        stable@vger.kernel.org, Li Qiang <liq3ea@gmail.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 196/239] misc: kgdbts: Fix restrict error
-Date:   Tue, 19 Nov 2019 06:19:56 +0100
-Message-Id: <20191119051336.043866445@linuxfoundation.org>
+Subject: [PATCH 4.14 198/239] vfio/pci: Fix potential memory leak in vfio_msi_cap_len
+Date:   Tue, 19 Nov 2019 06:19:58 +0100
+Message-Id: <20191119051336.178667019@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -60,70 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laura Abbott <labbott@redhat.com>
+From: Li Qiang <liq3ea@gmail.com>
 
-[ Upstream commit fa0218ef733e6f247a1a3986e3eb12460064ac77 ]
+[ Upstream commit 30ea32ab1951c80c6113f300fce2c70cd12659e4 ]
 
-kgdbts current fails when compiled with restrict:
+Free allocated vdev->msi_perm in error path.
 
-drivers/misc/kgdbts.c: In function ‘configure_kgdbts’:
-drivers/misc/kgdbts.c:1070:2: error: ‘strcpy’ source argument is the same as destination [-Werror=restrict]
-  strcpy(config, opt);
-  ^~~~~~~~~~~~~~~~~~~
-
-As the error says, config is being used in both the source and destination.
-Refactor the code to avoid the extra copy and put the parsing closer to
-the actual location.
-
-Signed-off-by: Laura Abbott <labbott@redhat.com>
-Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Li Qiang <liq3ea@gmail.com>
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/kgdbts.c | 16 ++++++----------
- 1 file changed, 6 insertions(+), 10 deletions(-)
+ drivers/vfio/pci/vfio_pci_config.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/misc/kgdbts.c b/drivers/misc/kgdbts.c
-index 94cbc5c98cae6..05824ff6b9168 100644
---- a/drivers/misc/kgdbts.c
-+++ b/drivers/misc/kgdbts.c
-@@ -981,6 +981,12 @@ static void kgdbts_run_tests(void)
- 	int nmi_sleep = 0;
- 	int i;
+diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
+index 115a36f6f4039..62023b4a373b4 100644
+--- a/drivers/vfio/pci/vfio_pci_config.c
++++ b/drivers/vfio/pci/vfio_pci_config.c
+@@ -1180,8 +1180,10 @@ static int vfio_msi_cap_len(struct vfio_pci_device *vdev, u8 pos)
+ 		return -ENOMEM;
  
-+	verbose = 0;
-+	if (strstr(config, "V1"))
-+		verbose = 1;
-+	if (strstr(config, "V2"))
-+		verbose = 2;
-+
- 	ptr = strchr(config, 'F');
- 	if (ptr)
- 		fork_test = simple_strtol(ptr + 1, NULL, 10);
-@@ -1064,13 +1070,6 @@ static int kgdbts_option_setup(char *opt)
- 		return -ENOSPC;
- 	}
- 	strcpy(config, opt);
--
--	verbose = 0;
--	if (strstr(config, "V1"))
--		verbose = 1;
--	if (strstr(config, "V2"))
--		verbose = 2;
--
- 	return 0;
+ 	ret = init_pci_cap_msi_perm(vdev->msi_perm, len, flags);
+-	if (ret)
++	if (ret) {
++		kfree(vdev->msi_perm);
+ 		return ret;
++	}
+ 
+ 	return len;
  }
- 
-@@ -1082,9 +1081,6 @@ static int configure_kgdbts(void)
- 
- 	if (!strlen(config) || isspace(config[0]))
- 		goto noconfig;
--	err = kgdbts_option_setup(config);
--	if (err)
--		goto noconfig;
- 
- 	final_ack = 0;
- 	run_plant_and_detach_test(1);
 -- 
 2.20.1
 
