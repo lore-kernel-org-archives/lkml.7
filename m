@@ -2,101 +2,177 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C15B5C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:32:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A41D2C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:33:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E5A7222A0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:32:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574166730;
-	bh=E7MNg1cA7n12XK5jjW1+WEdcrpRd4dFCZhNv8lav+oE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=D+mqrjawJf4+inlPp1KY0IRgL5enGdS0/2LLuBA3tO0QHjYs3byksXR8RN0w/06Fn
-	 AhUckk7LbvN3Y0wteovkzX24DEG7dfYcszESqQZb2r84YTyVDtreSvM/Gt2wpwg6xz
-	 GqSD7I14c1PLC1/DZz7TpbRA2ZwxJq9mO/acmltI=
+	by mail.kernel.org (Postfix) with ESMTP id 7BA5C222B6
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:33:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JfHJ2oYz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727921AbfKSMcJ (ORCPT
+        id S1727960AbfKSMdX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 07:32:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56042 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725280AbfKSMcJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 07:32:09 -0500
-Received: from localhost (unknown [89.205.136.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B65EE21850;
-        Tue, 19 Nov 2019 12:32:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574166728;
-        bh=E7MNg1cA7n12XK5jjW1+WEdcrpRd4dFCZhNv8lav+oE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KzFA+uLql0pj+PFsJxaYdsxMq8RZv3NzfYVzTBdCRK/ahREbcHIQ+YGTTt6Kx5vQ/
-         c9nVoI0lhcvL8otNVjqy6ddgkvWU3fameFtfNSessGLy3fKAoz05SFhetWnn2jys6i
-         Hn/p6L8SdTYs85A863a+hz9X8k6PZoNa+YBnE/7U=
-Date:   Tue, 19 Nov 2019 13:32:05 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
-        linux-tegra <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH 5.3 00/48] 5.3.12-stable review
-Message-ID: <20191119123205.GA1963992@kroah.com>
-References: <20191119050946.745015350@linuxfoundation.org>
- <a573d737-773b-1f94-d06f-b1d340b416ce@nvidia.com>
+        Tue, 19 Nov 2019 07:33:23 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:41458 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725280AbfKSMdX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 07:33:23 -0500
+Received: by mail-wr1-f68.google.com with SMTP id b18so22183156wrj.8
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 04:33:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HngwhcG+KAeo6DGQH+bLMw2e39IjD09GILs4tcsEDqg=;
+        b=JfHJ2oYzP/jkKhX5GW5kTZtPmbfxMsuJ44mQ/jjOV7p96tO8MLii2xYgvvecU87jbf
+         xDCCdr2WOehZ/M97knEEzzZIB2yWzTBKx3/BANq1IkzomqaCBDwfd8OyFpoFvEHRvHAI
+         /Ih7Ji/6Drt+nGgFcgmZyIelBqpjx/nBFB+jcwv8vpurYruXv+eovEAT9Gvibap3vW8p
+         D1HHGnn6VxZZe42T+R4tUOpu5RCcZqMyr8kvIKAkwt0v9BjdFCoFP5F2ZcjHKeOAXd9x
+         +cBOy+jeecmTLnGU7RL1AEtLZZOvHE7IDnKukkr5C+QGK3yVjWyYDu6FXXjdyP9JsrS5
+         u/jA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HngwhcG+KAeo6DGQH+bLMw2e39IjD09GILs4tcsEDqg=;
+        b=cbSKIxcpI7ZuvRF/6FzWxV5DTfWiwAbrtXNqkem815i2FaWUV2KBUgAh/XtVvGCCgQ
+         HZMhn4d0FjM5dt3uF1lMyP9RI8PToIsYR47f5ds2T6zjxN9g4O42frDjyQ39XyRptiLm
+         tREBaqiL8a+R6wAzsxaRDzeRsQ8/sGztiGBOCax8Y7lrK9nuLQjFb7qemVTkv72qUn4F
+         6RHbi1+0P4ALEbZnK2J4QkGt8y/TtMZwMhwUSvUXmj9ynfe6vfsLn2UMGmKkRY2xA5ms
+         HlDFKu8V4pRKB1ubQ1aw/2eJTBY2FCs4AwfxGSZINsJN8xnLP8vnMdqvpcD/6nU1xtMq
+         toVQ==
+X-Gm-Message-State: APjAAAU1N6HNVEPPv2lpovSyDLvxAkNPzMurao/dauSrzGyAg/jMZXAJ
+        iJ7paWCgc9kdqfyam813Fnb6/R7U7+GxXcnwZhA3bg==
+X-Google-Smtp-Source: APXvYqxrn8CEslDFVxIy0Jl0Mrkp/wAIi6Is+3GFHp4aP52W1APv4nRsysG2XV46LuEQeEZpL+dKjixAXooja/JuLNw=
+X-Received: by 2002:adf:b1cb:: with SMTP id r11mr545384wra.246.1574166800364;
+ Tue, 19 Nov 2019 04:33:20 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a573d737-773b-1f94-d06f-b1d340b416ce@nvidia.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20191119002121.4107-1-sean.j.christopherson@intel.com>
+ <20191119111012.GA109842@gmail.com> <CAKv+Gu9C132peF9_j2rRwRh4s+aWZBY82rgjqmwaE_X=_6y4Zw@mail.gmail.com>
+ <20191119122217.GA24878@gmail.com>
+In-Reply-To: <20191119122217.GA24878@gmail.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Tue, 19 Nov 2019 13:33:09 +0100
+Message-ID: <CAKv+Gu8XY_VCyi0bRqf2E7g_PXyHU83w-e+JvzeCBc+X1Xcrbg@mail.gmail.com>
+Subject: Re: [PATCH 00/12] treewide: break dependencies on x86's RM header
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Nadav Amit <namit@vmware.com>,
+        "VMware, Inc." <pv-drivers@vmware.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, linux-ia64@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pm <linux-pm@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        alsa-devel@alsa-project.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 10:16:46AM +0000, Jon Hunter wrote:
-> 
-> On 19/11/2019 05:19, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.3.12 release.
-> > There are 48 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Thu, 21 Nov 2019 05:02:35 +0000.
-> > Anything received after that time might be too late.
-> > 
-> > The whole patch series can be found in one patch at:
-> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.3.12-rc1.gz
-> > or in the git tree and branch at:
-> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.3.y
-> > and the diffstat can be found below.
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> 
-> All tests are passing for Tegra ...
-> 
-> Test results for stable-v5.3:
->     12 builds:	12 pass, 0 fail
->     22 boots:	22 pass, 0 fail
->     38 tests:	38 pass, 0 fail
-> 
-> Linux version:	5.3.12-rc1-g9ebab9194d83
-> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
->                 tegra194-p2972-0000, tegra20-ventana,
->                 tegra210-p2371-2180, tegra30-cardhu-a04
-> 
+On Tue, 19 Nov 2019 at 13:22, Ingo Molnar <mingo@kernel.org> wrote:
+>
+>
+> * Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
+>
+> > On Tue, 19 Nov 2019 at 12:10, Ingo Molnar <mingo@kernel.org> wrote:
+> > >
+> > >
+> > > * Sean Christopherson <sean.j.christopherson@intel.com> wrote:
+> > >
+> > > > x86's asm/realmode.h, which defines low level structures, variables and
+> > > > helpers used to bring up APs during SMP boot, ends up getting included in
+> > > > practically every nook and cranny of the kernel because the address used
+> > > > by ACPI for resuming from S3 also happens to be stored in the real mode
+> > > > header, and ACPI bleeds the dependency into its widely included headers.
+> > > >
+> > > > As a result, modifying realmode.h for even the most trivial change to the
+> > > > boot code triggers a full kernel rebuild, which is frustrating to say the
+> > > > least as it some of the most difficult code to get exactly right *and* is
+> > > > also some of the most functionally isolated code in the kernel.
+> > > >
+> > > > To break the kernel's widespread dependency on realmode.h, add a wrapper
+> > > > in the aforementioned ACPI S3 code to access the real mode header instead
+> > > > of derefencing the header directly in asm/acpi.h and thereby exposing it
+> > > > to the world via linux/acpi.h.
+> > > >
+> > > > Build tested on x86 with allyesconfig and allmodconfig, so hopefully there
+> > > > aren't more build issues lurking, but at this point it wouldn't surprise
+> > > > me in the least if this somehow manages to break the build.
+> > > >
+> > > > Based on tip/master, commit ceceaf1f12ba ("Merge branch 'WIP.x86/cleanups'").
+> > > >
+> > > > Patch Synopsis:
+> > > >   - Patches 01-09 fix a variety of build errors that arise when patch 12
+> > > >     drops realmode.h from asm/acpi.h.  Most of the errors are quite absurb
+> > > >     as they have no relation whatsoever to x86's RM boot code, but occur
+> > > >     because realmode.h happens to include asm/io.h.
+> > >
+> > > Yeah, these kind of parasitic header dependencies are the main driving
+> > > force behind kernel header spaghetti hell: it's super easy to add a new
+> > > header, but very hard to remove them...
+> > >
+> > > Hence they practically only accumulate.
+> > >
+> > > As a result header removal patches get priority, from me at least. :-)
+> > >
+> > > >   - Patch 10 removes a spurious include of realmode.h from an ACPI header.
+> > > >
+> > > >   - Patches 11 and 12 implement the wrapper and move it out of acpi.h.
+> > >
+> > > So if the ACPI maintainers are fine with -tip carrying patches #11 and #12
+> > > then I'd be glad to route these patches upstream.
+> > >
+> > > I've applied them to tip:WIP.core/headers as a work-in-progress tree, and
+> > > I'm testing them on randconfigs to make sure there's no broken
+> > > dependencies. I'll wait for the ACPI acks.
+> > >
+> > > I edited the title of patch 12 slightly, to:
+> > >
+> > >    c8bceb321209: x86/ACPI/sleep: Move acpi_wakeup_address() definition into sleep.c, remove <asm/realmode.h> from <asm/acpi.h>
+> > >
+> > > to make sure the big header dependency change is obvious at first sight.
+> > >
+> >
+> > I'm fine with the patches but can we drop the fixes headers please?
+> > This doesn't actually fix anything, and touching early boot stuff for
+> > no good reason should be avoided imo.
+>
+> Agreed and done.
+>
 
-Great, I got one right!  :)
-
-thanks for testing,
-
-greg k-h
+Thanks Ingo
