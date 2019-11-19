@@ -2,63 +2,62 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A9BC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:52:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B070EC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:54:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8074E208D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:52:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A07E222DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:54:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="OMvg4l6/"
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="L1aemyzM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727734AbfKSKwZ (ORCPT
+        id S1727435AbfKSKya (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 05:52:25 -0500
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:37048 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726921AbfKSKwZ (ORCPT
+        Tue, 19 Nov 2019 05:54:30 -0500
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:37268 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726000AbfKSKy3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 05:52:25 -0500
-Received: by mail-ua1-f67.google.com with SMTP id l38so6353336uad.4
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 02:52:24 -0800 (PST)
+        Tue, 19 Nov 2019 05:54:29 -0500
+Received: by mail-vs1-f67.google.com with SMTP id u6so13890828vsp.4
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 02:54:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=verdurent-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=dy5ixUlyf68dNjAjwb1L9Qd0I2zb6jWFc6s6RugNUDI=;
-        b=OMvg4l6/1nsKABdXlt6h8gh6Ym39dQDfCvdV1DQvdd7dawW+KxDoRvRZeVw0FkljC4
-         SugleFom8jwSWziUC3QsDJXAJmSNposL+3wlshDhjjcM1JocsT7yofbGIV9Yeni2hvoV
-         x/nNjf0ta5tkSY4qElrafJIYPqaXIK5rPafmlTchKiJQ1ouCffEGvOPxVlHEYAs/X+XO
-         JMmY8rY5sicmIeZF7qIduSnYd6cTmkx1YrCWTbCl1Jvgmy67j8/TXem/BKABWoKd3Xs9
-         P0EpN/0bQZYdL92BxxOVilcKQS/nodBmxum/GCCiTmAcGnGml3KgCPO3ELLusEqVwV63
-         lyLA==
+        bh=jLtkUESkDarsYpGMcY5/LJpQLbfAZdXaCoyZyWBflKA=;
+        b=L1aemyzM1aduLNZwAbSrTDiqpcLqDVmLQ7XFSgddc8EA+l5K2jXQ6ORT6r7115VWVX
+         HiPcECQnLNwTf8AgAVbGAc/i6t1DRLeCHqDF8aUnnwq5YXgQSqijLylFm5O6Viqw7sGA
+         umY24/2n7asnmh0cQllGJf4akM8O6Cm8mCQCgJtPO3zqYfyVx3zTpgeXD6ZmsprgQetG
+         j0S0AU/puPjqxtBYPd7hjJBHzISRmVPBjfO9focyR4OZuN2flk4K+2oD/70HNi0NC/Jz
+         ku7V+SEgTxHDPkTow8ajnSe1pler3XauB+52VpNsCMfF7m6q95iYXMvHvA7Bxzoh/fHW
+         xdXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=dy5ixUlyf68dNjAjwb1L9Qd0I2zb6jWFc6s6RugNUDI=;
-        b=CXFjqL3twG61FGqJoB5uR3NedrYtXU5DKiBfkuiFMDUYEJkp0rbvji4L5AZERbW9xs
-         OsQEErYShfqOI50UePSbJbJyDQyoi73z++7x8zb2dbEe7JkeUTXTJzvb1PiRKZAlBfv6
-         DZXCNdwryYmPXFakOoxdKRPCuEVRmzsCKoEBn5/OCYFQ0xexiQErRQfqGKK6ol/edJkn
-         g0GRX4nPMvYM5wscjqtHCs2dgGvo7QChWQwfgLfcuv42G5w9QlPGZehtWlEd9fR/jAUv
-         MOpoUF2HmRKm4ubBkaagCeRM+Y5mDuR8ZkqQdM/IFeWQkRz62XYnpsM8mtPKAsh60ZIY
-         elnA==
-X-Gm-Message-State: APjAAAXTDhbcGSumPGvYMtYrtP9ZwgoKBF2rzU+kNKwb8BpirszdJWA5
-        RPmuDKzDWYcyaJ4Q/D+4a6cyzJJwoF/giVSQJ8oKaQ==
-X-Google-Smtp-Source: APXvYqyiTLPgd/9WoKz41fj59NRZa7KVA2T30HQdmoPUe+v2zZ73magRTcbaNPRMaFIwtXAIC8bNrK4exghYeEJgQQc=
-X-Received: by 2002:a9f:364c:: with SMTP id s12mr19811993uad.77.1574160743379;
- Tue, 19 Nov 2019 02:52:23 -0800 (PST)
+        bh=jLtkUESkDarsYpGMcY5/LJpQLbfAZdXaCoyZyWBflKA=;
+        b=kcR8kNC1tZZrHC8soRNDeJhJF+wizq3SeCIgiIITcbeDReYGMfC1PU1zMBoamhrFU+
+         GP5szBtSThiCNemUZDMQEs37p9bJko0jXvatg66y8vmIprm3gVO7FlXG5yn/+pWCaxrl
+         KkYCbxHmpfBwQB+ez7hTd7v6PRnynRyYAxvQHAhkTUzQcnyUeAAW2WJ5dRtxybpruKff
+         4d1W6qBGlFli85pvqUwfY07HoDNBrvBdBchKitKC94UmMPxyJf8G9ReMjyOBuzL8LCu9
+         /n/YcIbAMKbvpNvEbj3iM15P/3yRT8+c0hNI9PRfhLSmyXIR3e7OsaqoUAoypWgRGtUH
+         4V7g==
+X-Gm-Message-State: APjAAAUmxrjc4E+QMB4DwVWYs1tMdiIuwsDhVRKMNaoWLiMpLYkjTFOT
+        QHZESTrAfag5uL/SbsHuDvZsXjGqQ8HBhQ3jEmNidg==
+X-Google-Smtp-Source: APXvYqw/jaAhqAUxnB8KffVvYBscfdFeLbX307kwZidhP2VTnhqF+a6zd3OJ6FkoYzjz+UIZHRushldSgGNRpOfmnLw=
+X-Received: by 2002:a67:3217:: with SMTP id y23mr22858901vsy.182.1574160868651;
+ Tue, 19 Nov 2019 02:54:28 -0800 (PST)
 MIME-Version: 1.0
-References: <1572979786-20361-1-git-send-email-thara.gopinath@linaro.org> <1572979786-20361-7-git-send-email-thara.gopinath@linaro.org>
-In-Reply-To: <1572979786-20361-7-git-send-email-thara.gopinath@linaro.org>
+References: <1572979786-20361-1-git-send-email-thara.gopinath@linaro.org>
+In-Reply-To: <1572979786-20361-1-git-send-email-thara.gopinath@linaro.org>
 From:   Amit Kucheria <amit.kucheria@verdurent.com>
-Date:   Tue, 19 Nov 2019 16:22:12 +0530
-Message-ID: <CAHLCerMVRn48x_CPVPrXkvRH+6EzuQ16WfWCJFUchYU=M66hOA@mail.gmail.com>
-Subject: Re: [Patch v5 6/6] sched/fair: Enable tuning of decay period
+Date:   Tue, 19 Nov 2019 16:24:17 +0530
+Message-ID: <CAHLCerNoPW4DSD5-j=CFQ7K9Pn_YzSAz1qKx7n6=_pvCXdzfFg@mail.gmail.com>
+Subject: Re: [Patch v5 0/6] Introduce Thermal Pressure
 To:     Thara Gopinath <thara.gopinath@linaro.org>
 Cc:     Ingo Molnar <mingo@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>, ionela.voinescu@arm.com,
@@ -78,96 +77,57 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 On Wed, Nov 6, 2019 at 12:20 AM Thara Gopinath
 <thara.gopinath@linaro.org> wrote:
 >
-> Thermal pressure follows pelt signas which means the
-> decay period for thermal pressure is the default pelt
-> decay period. Depending on soc charecteristics and thermal
-> activity, it might be beneficial to decay thermal pressure
-> slower, but still in-tune with the pelt signals.
-> One way to achieve this is to provide a command line parameter
-> to set a decay shift parameter to an integer between 0 and 10.
+> Thermal governors can respond to an overheat event of a cpu by
+> capping the cpu's maximum possible frequency. This in turn
+> means that the maximum available compute capacity of the
+> cpu is restricted. But today in the kernel, task scheduler is
+> not notified of capping of maximum frequency of a cpu.
+> In other words, scheduler is unaware of maximum capacity
+> restrictions placed on a cpu due to thermal activity.
+> This patch series attempts to address this issue.
+> The benefits identified are better task placement among available
+> cpus in event of overheating which in turn leads to better
+> performance numbers.
 >
-> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
-> ---
+> The reduction in the maximum possible capacity of a cpu due to a
+> thermal event can be considered as thermal pressure. Instantaneous
+> thermal pressure is hard to record and can sometime be erroneous
+> as there can be mismatch between the actual capping of capacity
+> and scheduler recording it. Thus solution is to have a weighted
+> average per cpu value for thermal pressure over time.
+> The weight reflects the amount of time the cpu has spent at a
+> capped maximum frequency. Since thermal pressure is recorded as
+> an average, it must be decayed periodically. Exisiting algorithm
+> in the kernel scheduler pelt framework is re-used to calculate
+> the weighted average. This patch series also defines a sysctl
+> inerface to allow for a configurable decay period.
 >
-> v4->v5:
->         - Changed _coeff to _shift as per review comments on the list.
->
->  Documentation/admin-guide/kernel-parameters.txt |  5 +++++
->  kernel/sched/fair.c                             | 25 +++++++++++++++++++++++--
->  2 files changed, 28 insertions(+), 2 deletions(-)
->
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index c82f87c..0b8f55e 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -4281,6 +4281,11 @@
->                         incurs a small amount of overhead in the scheduler
->                         but is useful for debugging and performance tuning.
->
-> +       sched_thermal_decay_shift=
-> +                       [KNL, SMP] Set decay shift for thermal pressure signal.
-> +                       Format: integer betweer 0 and 10
-> +                       Default is 0.
-> +
->         skew_tick=      [KNL] Offset the periodic timer tick per cpu to mitigate
->                         xtime_lock contention on larger systems, and/or RCU lock
->                         contention on all systems with CONFIG_MAXSMP set.
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 5f6c371..61a020b 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -91,6 +91,18 @@ const_debug unsigned int sysctl_sched_migration_cost = 500000UL;
->   * and maximum available capacity due to thermal events.
->   */
->  static DEFINE_PER_CPU(unsigned long, thermal_pressure);
-> +/**
-> + * By default the decay is the default pelt decay period.
-> + * The decay shift can change the decay period in
-> + * multiples of 32.
-> + *  Decay shift                Decay period(ms)
-> + *     0                       32
-> + *     1                       64
-> + *     2                       128
-> + *     3                       256
-> + *     4                       512
-> + */
-> +static int sched_thermal_decay_shift;
->
->  static void trigger_thermal_pressure_average(struct rq *rq);
->
-> @@ -10435,6 +10447,15 @@ void update_thermal_pressure(int cpu, unsigned long capped_capacity)
->         delta = arch_scale_cpu_capacity(cpu) - capped_capacity;
->         per_cpu(thermal_pressure, cpu) = delta;
->  }
-> +
-> +static int __init setup_sched_thermal_decay_shift(char *str)
-> +{
-> +       if (kstrtoint(str, 0, &sched_thermal_decay_shift))
-> +               pr_warn("Unable to set scheduler thermal pressure decay shift parameter\n");
+> Regarding testing, basic build, boot and sanity testing have been
+> performed on db845c platform with debian file system.
+> Further, dhrystone and hackbench tests have been
+> run with the thermal pressure algorithm. During testing, due to
+> constraints of step wise governor in dealing with big little systems,
 
-You're reading straight from the cmdline into a kernel variable w/o
-any bounds checking. Perhaps use clamp or clamp_val to make sure it is
-between 0 and 10?
+What contraints?
 
+> trip point 0 temperature was made assymetric between cpus in little
+> cluster and big cluster; the idea being that
+> big core will heat up and cpu cooling device will throttle the
+> frequency of the big cores faster, there by limiting the maximum available
+> capacity and the scheduler will spread out tasks to little cores as well.
 
-> +
-> +       return 1;
-> +}
-> +__setup("sched_thermal_decay_shift=", setup_sched_thermal_decay_shift);
->  #endif
+Can you share the hack to get this behaviour as well so I can try to
+reproduce on 845c?
+
+> Test Results
 >
->  /**
-> @@ -10444,8 +10465,8 @@ void update_thermal_pressure(int cpu, unsigned long capped_capacity)
->  static void trigger_thermal_pressure_average(struct rq *rq)
->  {
->  #ifdef CONFIG_SMP
-> -       update_thermal_load_avg(rq_clock_task(rq), rq,
-> -                               per_cpu(thermal_pressure, cpu_of(rq)));
-> +       update_thermal_load_avg(rq_clock_task(rq) >> sched_thermal_decay_shift,
-> +                               rq, per_cpu(thermal_pressure, cpu_of(rq)));
->  #endif
->  }
->
-> --
-> 2.1.4
+> Hackbench: 1 group , 30000 loops, 10 runs
+>                                                Result         SD
+>                                                (Secs)     (% of mean)
+>  No Thermal Pressure                            14.03       2.69%
+>  Thermal Pressure PELT Algo. Decay : 32 ms      13.29       0.56%
+>  Thermal Pressure PELT Algo. Decay : 64 ms      12.57       1.56%
+>  Thermal Pressure PELT Algo. Decay : 128 ms     12.71       1.04%
+>  Thermal Pressure PELT Algo. Decay : 256 ms     12.29       1.42%
+>  Thermal Pressure PELT Algo. Decay : 512 ms     12.42       1.15%
 >
