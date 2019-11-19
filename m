@@ -2,242 +2,168 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DB04C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:50:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C734DC43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:50:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 724DA222D1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:50:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E55422303
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:50:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nDDU/6xB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728558AbfKSQuU (ORCPT
+        id S1728574AbfKSQu2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 11:50:20 -0500
-Received: from ale.deltatee.com ([207.54.116.67]:37970 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727212AbfKSQuU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 11:50:20 -0500
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtp (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1iX6hg-0003AU-Ba; Tue, 19 Nov 2019 09:50:14 -0700
-To:     Jiasen Lin <linjiasen@hygon.cn>, linux-kernel@vger.kernel.org,
-        linux-ntb@googlegroups.com, jdmason@kudzu.us
-Cc:     allenbh@gmail.com, dave.jiang@intel.com
-References: <1574136121-7941-1-git-send-email-linjiasen@hygon.cn>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <c487042e-471b-dd99-37a6-2119b4115283@deltatee.com>
-Date:   Tue, 19 Nov 2019 09:50:08 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 19 Nov 2019 11:50:28 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:44537 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728563AbfKSQu1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 11:50:27 -0500
+Received: by mail-io1-f66.google.com with SMTP id j20so12934368ioo.11
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 08:50:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gJZxSWnOG8Gs2dy+Q5ughCz+Da0hQ1yJBJ+RDGbHpkw=;
+        b=nDDU/6xBhkkZKiUVL5Ocxj7cHCsYU4c0MefmZkqPYH0eKRB2JYB2UZt217GSyNryga
+         i0HmYl3s5H1A1Q62MU6oqERAk5Fn4PH/oL86+g4t4+AlS+MaRN/h6GJfSTST69GkI0G4
+         W5eu6cHoHNLVEfYFYA4fFqOuBbWxy2p78Vonc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gJZxSWnOG8Gs2dy+Q5ughCz+Da0hQ1yJBJ+RDGbHpkw=;
+        b=CDcNCRfOudyeEJG/JZEmx5Vi88Y9ooVLUdfFqA47A+NsnnzAWCEfJyNactEAS30YlT
+         Kq9WV4zZLhelYM8Nn+BjOsKXI3J2+qChrDLeRCzzNWjSUT0oZJWVbiFRblaYXW3WHBZv
+         U+FJZYmIQfgJCcq2Sp/0SqToh7mn2Y3ZYEceWhmtrJ0NTZTej0Zs2NVH02PEMpRbj5X1
+         F1MirD99qSaMuICmBgKmHCLSFYe8SOrPczA5jgXVNsTt2JIozT2UMx55V50V2oo4UVXM
+         JPkQyT20pAkuS8apF/7NrcNPsReyN/MKJZ7x4RUaWgQ9yGB+2uZN6LHbCFjixhFYVatL
+         XtsQ==
+X-Gm-Message-State: APjAAAUgC04ngYwPY44ZhrNLfx/Y6KcjSQ4tuj1DqlYss+YrIOIcb1HF
+        0Ra6zD+vgDZ8iscg2WbkPQGhSn7OUKk=
+X-Google-Smtp-Source: APXvYqxaS5SBufRZl9nD2rWCtYd3FI0l9TiCp9geFPt+e92aL1NxGp4gf4kNk1U122dBMB8TjxZldw==
+X-Received: by 2002:a5d:8195:: with SMTP id u21mr19166551ion.178.1574182226356;
+        Tue, 19 Nov 2019 08:50:26 -0800 (PST)
+Received: from mail-il1-f178.google.com (mail-il1-f178.google.com. [209.85.166.178])
+        by smtp.gmail.com with ESMTPSA id h16sm1760023iog.27.2019.11.19.08.50.24
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 19 Nov 2019 08:50:25 -0800 (PST)
+Received: by mail-il1-f178.google.com with SMTP id p6so20315766ilp.1
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 08:50:24 -0800 (PST)
+X-Received: by 2002:a92:ca8d:: with SMTP id t13mr21900377ilo.58.1574182224501;
+ Tue, 19 Nov 2019 08:50:24 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1574136121-7941-1-git-send-email-linjiasen@hygon.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: dave.jiang@intel.com, allenbh@gmail.com, jdmason@kudzu.us, linux-ntb@googlegroups.com, linux-kernel@vger.kernel.org, linjiasen@hygon.cn
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH v2] NTB: ntb_perf: Fix address err in perf_copy_chunk
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+References: <20191118192123.82430-1-abhishekpandit@chromium.org>
+ <20191118110335.v6.3.I18b06235e381accea1c73aa2f9db358645d9f201@changeid> <079C85BE-FBC5-4A2B-9EBF-0CEDB6F30C18@holtmann.org>
+In-Reply-To: <079C85BE-FBC5-4A2B-9EBF-0CEDB6F30C18@holtmann.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Tue, 19 Nov 2019 08:50:11 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=U4qOyLWTg3w-AfF3o_0VBTxanpaa6of70viL2v9g3Xgg@mail.gmail.com>
+Message-ID: <CAD=FV=U4qOyLWTg3w-AfF3o_0VBTxanpaa6of70viL2v9g3Xgg@mail.gmail.com>
+Subject: Re: [PATCH v6 3/4] dt-bindings: net: broadcom-bluetooth: Add pcm config
+To:     Marcel Holtmann <marcel@holtmann.org>
+Cc:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-bluetooth@vger.kernel.org,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ondrej Jirman <megous@megous.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
+On Mon, Nov 18, 2019 at 9:39 PM Marcel Holtmann <marcel@holtmann.org> wrote:
+>
+> Hi Abhishek,
+>
+> > Add documentation for pcm parameters.
+> >
+> > Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+> > ---
+> >
+> > Changes in v6: None
+> > Changes in v5: None
+> > Changes in v4: None
+> > Changes in v3: None
+> > Changes in v2: None
+> >
+> > .../bindings/net/broadcom-bluetooth.txt       | 16 ++++++++++
+> > include/dt-bindings/bluetooth/brcm.h          | 32 +++++++++++++++++++
+> > 2 files changed, 48 insertions(+)
+> > create mode 100644 include/dt-bindings/bluetooth/brcm.h
+> >
+> > diff --git a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+> > index c749dc297624..8561e4684378 100644
+> > --- a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+> > +++ b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+> > @@ -29,10 +29,20 @@ Optional properties:
+> >    - "lpo": external low power 32.768 kHz clock
+> >  - vbat-supply: phandle to regulator supply for VBAT
+> >  - vddio-supply: phandle to regulator supply for VDDIO
+> > + - brcm,bt-sco-routing: PCM, Transport, Codec, I2S
+> > + - brcm,bt-pcm-interface-rate: 128KBps, 256KBps, 512KBps, 1024KBps, 2048KBps
+> > + - brcm,bt-pcm-frame-type: short, long
+> > + - brcm,bt-pcm-sync-mode: slave, master
+> > + - brcm,bt-pcm-clock-mode: slave, master
+> >
+> > +See include/dt-bindings/bluetooth/brcm.h for SCO/PCM parameters. The default
+> > +value for all these values are 0 (except for brcm,bt-sco-routing which requires
+> > +a value) if you choose to leave it out.
+> >
+> > Example:
+> >
+> > +#include <dt-bindings/bluetooth/brcm.h>
+> > +
+> > &uart2 {
+> >        pinctrl-names = "default";
+> >        pinctrl-0 = <&uart2_pins>;
+> > @@ -40,5 +50,11 @@ Example:
+> >        bluetooth {
+> >                compatible = "brcm,bcm43438-bt";
+> >                max-speed = <921600>;
+> > +
+> > +               brcm,bt-sco-routing        = <BRCM_SCO_ROUTING_TRANSPORT>;
+>
+> in case you use transport which means HCI, you would not have values below. It is rather PCM here in the example.
+>
+> > +               brcm,bt-pcm-interface-rate = <BRCM_PCM_IF_RATE_512KBPS>;
+> > +               brcm,bt-pcm-frame-type     = <BRCM_PCM_FRAME_TYPE_SHORT>;
+> > +               brcm,bt-pcm-sync-mode      = <BRCM_PCM_SYNC_MODE_MASTER>;
+> > +               brcm,bt-pcm-clock-mode     = <BRCM_PCM_CLOCK_MODE_MASTER>;
+> >        };
+> > };
+>
+> And I am asking this again. Is this adding any value to use an extra include file? Inside the driver we are not really needing these values since they are handed to the hardware.
 
-On 2019-11-18 9:02 p.m., Jiasen Lin wrote:
-> peer->outbuf is a virtual address which is get by ioremap, it can not
-> be converted to a physical address by virt_to_page and page_to_phys.
-> This conversion will result in DMA error, because the destination address
-> which is converted by page_to_phys is invalid.
-> 
-> This patch save the MMIO address of NTB BARx in perf_setup_peer_mw,
-> and map the BAR space to DMA address after we assign the DMA channel.
-> Then fill the destination address of DMA descriptor with this DMA address
-> to guarantee that the address of memory write requests fall into
-> memory window of NBT BARx with IOMMU enabled and disabled.
-> 
-> Changes since v1:
->   * Map NTB BARx MMIO address to DMA address after assign the DMA channel,
->     to ensure the destination address in valid. (per suggestion from Logan)
-> 
-> Fixes: 5648e56d03fa ("NTB: ntb_perf: Add full multi-port NTB API support")
-> Signed-off-by: Jiasen Lin <linjiasen@hygon.cn>
+Personally I find that they add value in that it makes it easier for
+someone tweaking the device tree to know what the expected valid
+values are and what they mean.  I think Matthias also found value in
+them since he suggested them in:
 
-Thanks, looks good to me except for the one nit below.
+https://lore.kernel.org/r/20191114175836.GI27773@google.com
 
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+There, he said:
 
-> ---
->  drivers/ntb/test/ntb_perf.c | 69 ++++++++++++++++++++++++++++++++++++---------
->  1 file changed, 56 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/ntb/test/ntb_perf.c b/drivers/ntb/test/ntb_perf.c
-> index e9b7c2d..dfca7e1 100644
-> --- a/drivers/ntb/test/ntb_perf.c
-> +++ b/drivers/ntb/test/ntb_perf.c
-> @@ -149,7 +149,8 @@ struct perf_peer {
->  	u64 outbuf_xlat;
->  	resource_size_t outbuf_size;
->  	void __iomem *outbuf;
-> -
-> +	phys_addr_t out_phys_addr;
-> +	dma_addr_t dma_dst_addr;
->  	/* Inbound MW params */
->  	dma_addr_t inbuf_xlat;
->  	resource_size_t inbuf_size;
-> @@ -776,7 +777,8 @@ static void perf_dma_copy_callback(void *data)
->  }
->  
->  static int perf_copy_chunk(struct perf_thread *pthr,
-> -			   void __iomem *dst, void *src, size_t len)
-> +			   void __iomem *dst, void *src, size_t len,
-> +			   dma_addr_t dst_dma_addr)
->  {
->  	struct dma_async_tx_descriptor *tx;
->  	struct dmaengine_unmap_data *unmap;
-> @@ -807,8 +809,7 @@ static int perf_copy_chunk(struct perf_thread *pthr,
->  	}
->  	unmap->to_cnt = 1;
->  
-> -	unmap->addr[1] = dma_map_page(dma_dev, virt_to_page(dst),
-> -		offset_in_page(dst), len, DMA_FROM_DEVICE);
-> +	unmap->addr[1] = dst_dma_addr;
->  	if (dma_mapping_error(dma_dev, unmap->addr[1])) {
->  		ret = -EIO;
->  		goto err_free_resource;
-> @@ -865,6 +866,7 @@ static int perf_init_test(struct perf_thread *pthr)
->  {
->  	struct perf_ctx *perf = pthr->perf;
->  	dma_cap_mask_t dma_mask;
-> +	struct perf_peer *peer = pthr->perf->test_peer;
->  
->  	pthr->src = kmalloc_node(perf->test_peer->outbuf_size, GFP_KERNEL,
->  				 dev_to_node(&perf->ntb->dev));
-> @@ -882,15 +884,33 @@ static int perf_init_test(struct perf_thread *pthr)
->  	if (!pthr->dma_chan) {
->  		dev_err(&perf->ntb->dev, "%d: Failed to get DMA channel\n",
->  			pthr->tidx);
-> -		atomic_dec(&perf->tsync);
-> -		wake_up(&perf->twait);
-> -		kfree(pthr->src);
-> -		return -ENODEV;
-> +		goto err_free;
-> +	}
-> +	peer->dma_dst_addr =
-> +		dma_map_resource(pthr->dma_chan->device->dev,
-> +				 peer->out_phys_addr, peer->outbuf_size,
-> +				 DMA_FROM_DEVICE, 0);
-> +	if (dma_mapping_error(pthr->dma_chan->device->dev,
-> +			      peer->dma_dst_addr)) {
-> +		dev_err(pthr->dma_chan->device->dev, "%d: Failed to map DMA addr\n",
-> +			pthr->tidx);
-> +		peer->dma_dst_addr = 0;
-> +		dma_release_channel(pthr->dma_chan);
-> +		goto err_free;
->  	}
-> +	dev_dbg(pthr->dma_chan->device->dev, "%d: Map MMIO %pa to DMA addr %pad\n",
-> +			pthr->tidx,
-> +			&peer->out_phys_addr,
-> +			&peer->dma_dst_addr);
->  
->  	atomic_set(&pthr->dma_sync, 0);
-> -
->  	return 0;
-> +
-> +err_free:
-> +	atomic_dec(&perf->tsync);
-> +	wake_up(&perf->twait);
-> +	kfree(pthr->src);
-> +	return -ENODEV;
->  }
->  
->  static int perf_run_test(struct perf_thread *pthr)
-> @@ -901,6 +921,8 @@ static int perf_run_test(struct perf_thread *pthr)
->  	u64 total_size, chunk_size;
->  	void *flt_src;
->  	int ret = 0;
-> +	dma_addr_t flt_dma_addr;
-> +	dma_addr_t bnd_dma_addr;
->  
->  	total_size = 1ULL << total_order;
->  	chunk_size = 1ULL << chunk_order;
-> @@ -910,11 +932,15 @@ static int perf_run_test(struct perf_thread *pthr)
->  	bnd_dst = peer->outbuf + peer->outbuf_size;
->  	flt_dst = peer->outbuf;
->  
-> +	flt_dma_addr = peer->dma_dst_addr;
-> +	bnd_dma_addr = peer->dma_dst_addr + peer->outbuf_size;
-> +
->  	pthr->duration = ktime_get();
->  
->  	/* Copied field is cleared on test launch stage */
->  	while (pthr->copied < total_size) {
-> -		ret = perf_copy_chunk(pthr, flt_dst, flt_src, chunk_size);
-> +		ret = perf_copy_chunk(pthr, flt_dst, flt_src, chunk_size,
-> +				flt_dma_addr);
->  		if (ret) {
->  			dev_err(&perf->ntb->dev, "%d: Got error %d on test\n",
->  				pthr->tidx, ret);
-> @@ -925,8 +951,15 @@ static int perf_run_test(struct perf_thread *pthr)
->  
->  		flt_dst += chunk_size;
->  		flt_src += chunk_size;
-> -		if (flt_dst >= bnd_dst || flt_dst < peer->outbuf) {
-> +		flt_dma_addr += chunk_size;
-> +
-> +		if (flt_dst >= bnd_dst ||
-> +		    flt_dst < peer->outbuf ||
-> +		    flt_dma_addr >= bnd_dma_addr ||
+> I'd suggest to define constants in include/dt-bindings/bluetooth/brcm.h
+> and use them instead of literals, with this we wouldn't rely on (optional)
+> comments to make the configuration human readable.
 
-Nit: I'm pretty sure the check against bnd_dma_addr is redundant with
-the check on bnd_dst.
+...which seems to make sense to me.
 
-> +		    flt_dma_addr < peer->dma_dst_addr) {
-> +
->  			flt_dst = peer->outbuf;
-> +			flt_dma_addr = peer->dma_dst_addr;
->  			flt_src = pthr->src;
->  		}
->  
-> @@ -978,8 +1011,13 @@ static void perf_clear_test(struct perf_thread *pthr)
->  	 * We call it anyway just to be sure of the transfers completion.
->  	 */
->  	(void)dmaengine_terminate_sync(pthr->dma_chan);
-> -
-> -	dma_release_channel(pthr->dma_chan);
-> +	if (pthr->perf->test_peer->dma_dst_addr)
-> +		dma_unmap_resource(pthr->dma_chan->device->dev,
-> +				   pthr->perf->test_peer->dma_dst_addr,
-> +				   pthr->perf->test_peer->outbuf_size,
-> +				   DMA_FROM_DEVICE, 0);
-> +	if (pthr->dma_chan)
-> +		dma_release_channel(pthr->dma_chan);
->  
->  no_dma_notify:
->  	atomic_dec(&perf->tsync);
-> @@ -1195,6 +1233,9 @@ static ssize_t perf_dbgfs_read_info(struct file *filep, char __user *ubuf,
->  			"\tOut buffer addr 0x%pK\n", peer->outbuf);
->  
->  		pos += scnprintf(buf + pos, buf_size - pos,
-> +			"\tOut buff phys addr %pa[p]\n", &peer->out_phys_addr);
-> +
-> +		pos += scnprintf(buf + pos, buf_size - pos,
->  			"\tOut buffer size %pa\n", &peer->outbuf_size);
->  
->  		pos += scnprintf(buf + pos, buf_size - pos,
-> @@ -1388,6 +1429,8 @@ static int perf_setup_peer_mw(struct perf_peer *peer)
->  	if (!peer->outbuf)
->  		return -ENOMEM;
->  
-> +	peer->out_phys_addr = phys_addr;
-> +
->  	if (max_mw_size && peer->outbuf_size > max_mw_size) {
->  		peer->outbuf_size = max_mw_size;
->  		dev_warn(&peer->perf->ntb->dev,
-> 
+-Doug
