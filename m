@@ -2,135 +2,101 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7009BC43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 22:00:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2130C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 22:00:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41CE822464
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 22:00:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="Jfl/TeAt"
+	by mail.kernel.org (Postfix) with ESMTP id 765C522440
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 22:00:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727357AbfKSWAP (ORCPT
+        id S1727407AbfKSWA5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 17:00:15 -0500
-Received: from mail-eopbgr40108.outbound.protection.outlook.com ([40.107.4.108]:36195
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726911AbfKSWAP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 17:00:15 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UwnfIZ0IClRAR9/LLyJTGV4tUZd/oqZtSmfVgkdJwRgG7w8BqWOtWYa8NfBe7GMfWNECj5mhNqU6oQW5kMHvvbm8DsKFOJFvqN7PKdh8vxdrZZfzKiUOXsAFh/TKoXFg+0bXKVqq6tPi9AVlquP1INIpcfrBdfMI1VulDHNPmsUbn3kQlnJlQqXxW5w05eotj4FmMJigaNqfFjIETky6CaCCDIG45b8Wecb8unohhcTdHvXbkCvRc6uqlWshJlEyfWqdiLhao6sFAQ07cUExCdbs0mK1W+i+zTl5XNfoboNhEKcXTw00qXhz0+AyOHqqco08m/D4qtmy0GNHpL3Wvw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hA6qV8a6x7T8V3xSCAiXKEwEPX+fjqKbkxvgIzXwMZU=;
- b=ULcggpiwNkaMyiqcjUbHde+ve184iKuUHxPjV0kn12TPDMGrLW2uORqDJyf2bBkRQHGLNXlx6ZQBLPzdphrijrNWXsxcmu6f99K2Ym9UaHK3snr1SSIFqdvXee+C9+pjRxnJy+CqlY/c/+NsQRcRnEe3AvUFFb9i0EtF58Mp32EYUGDzq5Yfh0Oh8UDSLca5p1MdUpPgGj5yOMf3lvim4ExGN2VjWbz49VTBgyC1AhsQpNUXWdrqQwfrEZfyOPpEy+93XxklPo4NxVbQCfT8E9DAktYu55gZZ6HOxpPZiq7eScFWERYw/mm9uVQjquwNmj9HVmZqoUaBE+tzQtHB8A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
- dkim=pass header.d=axentia.se; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hA6qV8a6x7T8V3xSCAiXKEwEPX+fjqKbkxvgIzXwMZU=;
- b=Jfl/TeAt9i96iMKSRLHNkfiPk2dlK28FJ+OZXPTnrG1mv2ARPAwcbOMuvsoQviID7odLP4JpZ0Zz++IOKlXrzdk5iCJQF9blfQU7dHLEiIu1vbpd6f9HEi0nZuvvyOeLbDn+NtGMxmuxaxKpCzwPElsqR0ZXXOjpCBRt+t8Gb64=
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com (52.134.66.158) by
- DB3PR0202MB3388.eurprd02.prod.outlook.com (52.134.67.27) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2474.17; Tue, 19 Nov 2019 22:00:08 +0000
-Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::477:9510:3e3:f8ca]) by DB3PR0202MB3434.eurprd02.prod.outlook.com
- ([fe80::477:9510:3e3:f8ca%7]) with mapi id 15.20.2474.015; Tue, 19 Nov 2019
- 22:00:08 +0000
-From:   Peter Rosin <peda@axentia.se>
-To:     Biwen Li <biwen.li@nxp.com>,
-        "leoyang.li@nxp.com" <leoyang.li@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>
-CC:     "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [v5,3/3] arm64: dts: fsl-ls208xa-rdb: fix an errata E-00013
-Thread-Topic: [v5,3/3] arm64: dts: fsl-ls208xa-rdb: fix an errata E-00013
-Thread-Index: AQHViJBmXxYwmZCtrEmu2fIWeaCEraeTOEWA
-Date:   Tue, 19 Nov 2019 22:00:08 +0000
-Message-ID: <e006f622-08b1-3ae4-ee50-b0af7db93a02@axentia.se>
-References: <20191022041152.3663-1-biwen.li@nxp.com>
- <20191022041152.3663-3-biwen.li@nxp.com>
-In-Reply-To: <20191022041152.3663-3-biwen.li@nxp.com>
-Accept-Language: en-US, sv-SE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
-x-originating-ip: [213.112.138.100]
-x-clientproxiedby: AM0PR04CA0014.eurprd04.prod.outlook.com
- (2603:10a6:208:122::27) To DB3PR0202MB3434.eurprd02.prod.outlook.com
- (2603:10a6:8:5::30)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peda@axentia.se; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f9e95f3f-f314-4075-cb1a-08d76d3bd767
-x-ms-traffictypediagnostic: DB3PR0202MB3388:
-x-microsoft-antispam-prvs: <DB3PR0202MB33888213D54A3BF1315261D7BC4C0@DB3PR0202MB3388.eurprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 022649CC2C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(346002)(39830400003)(366004)(376002)(136003)(189003)(199004)(3846002)(6116002)(4001150100001)(305945005)(66946007)(256004)(14444005)(446003)(110136005)(81156014)(6506007)(386003)(53546011)(81166006)(6512007)(36756003)(2906002)(54906003)(58126008)(14454004)(71190400001)(71200400001)(11346002)(6246003)(2501003)(316002)(7736002)(64756008)(66476007)(66446008)(66556008)(486006)(31686004)(476003)(2616005)(31696002)(99286004)(52116002)(26005)(508600001)(186003)(5660300002)(6486002)(86362001)(8936002)(76176011)(25786009)(6436002)(229853002)(4326008)(65806001)(66066001)(65956001)(102836004)(8676002);DIR:OUT;SFP:1102;SCL:1;SRVR:DB3PR0202MB3388;H:DB3PR0202MB3434.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: axentia.se does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 3JYaYkNKZbm0Esnsi6LHD7IBBALCOLNAZv8Fnjf2ZHMhKg0S5i9BIWSqWC3Lb7ZQjnZvIiOUMPqzyAqh1mrx74Z57wKLqbvYhplu894oe9nv0AQeGzmoLE0S+tsrWDGYI4uQL4knHPaClxvBCQ0ZKpJUh6P3oXgxC/Vg6utdL2KeCkZw2QmDiLAPnUZzfio8rLqhO9PxM/kSzZ9qKwv9842elCK5hRZZXVUE/3b8pLgY/NlShs5QNchwC04XP156fM0G5JhloiRGpWqi8V3M1XDgIFhK65p5G4xN4GuIM13c1aaIRQKz4djcJfUBgxnJ5ulbWRvbQq8ThHtPrOPBedgr/XQKNlslQxl90qtolMGEkThhjLrvCAG+eadfY7MXLKL+K3iBQxIy+1KQTaWrKieXensPsjS5iQZMyqlDbDM9qwU0XCjg8MtmDObMhDAH
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <BE011C63B02E48478844162F976A82D6@eurprd02.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 19 Nov 2019 17:00:57 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:35202 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726948AbfKSWA5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 17:00:57 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id AD1AB1C1998; Tue, 19 Nov 2019 23:00:55 +0100 (CET)
+Date:   Tue, 19 Nov 2019 23:00:55 +0100
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [PATCH 4.19 025/422] ecryptfs_lookup_interpose():
+ lower_dentry->d_inode is not stable
+Message-ID: <20191119220055.GC4495@amd>
+References: <20191119051400.261610025@linuxfoundation.org>
+ <20191119051401.707458888@linuxfoundation.org>
 MIME-Version: 1.0
-X-OriginatorOrg: axentia.se
-X-MS-Exchange-CrossTenant-Network-Message-Id: f9e95f3f-f314-4075-cb1a-08d76d3bd767
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Nov 2019 22:00:08.2495
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: PoBD8ZCdxz5vol2H/G1EuqDlxTZ7ciWNX+S6pAe8EFiB3ztaFdFpfp2DATr7Ov/T
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3388
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="pAwQNkOnpTn9IO2O"
+Content-Disposition: inline
+In-Reply-To: <20191119051401.707458888@linuxfoundation.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkhDQoNClRoaXMgcGF0Y2ggbmVlZHMgYW4gYWNrIGZyb20gdGhlIGFybTY0IGR0cyBtYWludGFp
-bmVycy4gSSBjYW5ub3Qgc25lYWsgaXQNCmluICJiZWhpbmQgdGhlaXIgYmFja3MiLiBTbywgaXQg
-d2lsbCBoYXZlIHRvIHdhaXQuIFNvcnJ5IGZvciBub3Qgbm90aWNpbmcNCmVhcmxpZXIuDQoNCkNo
-ZWVycywNClBldGVyDQoNCk9uIDIwMTktMTAtMjIgMDY6MTEsIEJpd2VuIExpIHdyb3RlOg0KPiBT
-cGVjaWZ5IGEgY2hhbm5lbCB6ZXJvIGluIGlkbGUgc3RhdGUgdG8NCj4gYXZvaWQgZW50ZXJyaW5n
-IHRyaS1zdGF0ZWQgc3RhdGUgZm9yIFBDQTk1NDcuDQo+IEFib3V0IEUtMDAwMTM6DQo+IAktIERl
-c2NyaXB0aW9uOiBJMkMxIGFuZCBJMkMzIGJ1c2VzDQo+IAkgIGFyZSBtaXNzaW5nIHB1bGwtdXAu
-DQo+IAktIEltcGFjdDogV2hlbiB0aGUgUENBOTU0eCBkZXZpY2UgaXMgdHJpLXN0YXRlZCwgdGhl
-IEkyQyBidXMNCj4gCSAgd2lsbCBmbG9hdC4gVGhpcyBtYWtlcyB0aGUgSTJDIGJ1cyBhbmQgaXRz
-IGFzc29jaWF0ZWQNCj4gCSAgZG93bnN0cmVhbSBkZXZpY2VzIGluYWNjZXNzaWJsZS4NCj4gCS0g
-SGFyZHdhcmUgZml4OiBQb3B1bGF0ZSByZXNpc3RvcnMgUjE4OSBhbmQgUjE5MCBmb3IgSTJDMQ0K
-PiAJICBhbmQgcmVzaXN0b3JzIFIyMjggYW5kIFIyMjkgZm9yIEkyQzMuDQo+IAktIFNvZnR3YXJl
-IGZpeDogUmVtb3ZlIHRoZSB0cmktc3RhdGUgb3B0aW9uIGZyb20gdGhlIFBDQTk1NHgNCj4gCSAg
-ZHJpdmVyKFBDQTk1NHggYWx3YXlzIG9uIGVuYWJsZSBzdGF0dXMsIHNwZWNpZnkgYQ0KPiAJICBj
-aGFubmVsIHplcm8gaW4gZHRzIHRvIGZpeCB0aGUgZXJyYXRhIEUtMDAwMTMpLg0KPiANCj4gU2ln
-bmVkLW9mZi1ieTogQml3ZW4gTGkgPGJpd2VuLmxpQG54cC5jb20+DQo+IC0tLQ0KPiBDaGFuZ2Ug
-aW4gdjU6DQo+IAktIHNwZWNpZnkgYSBjaGFubmVsIHplcm8gd2hlbiBwY2E5NTQ3IGluIGlkbGUg
-c3RhdGUuDQo+IA0KPiAgYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMjA4eGEt
-cmRiLmR0c2kgfCAxICsNCj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQ0KPiANCj4g
-ZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczIwOHhhLXJk
-Yi5kdHNpIGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMjA4eGEtcmRiLmR0
-c2kNCj4gaW5kZXggNmZkN2Y2MzA4NWM5Li40MTJmMWJjMGRiNWYgMTAwNjQ0DQo+IC0tLSBhL2Fy
-Y2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczIwOHhhLXJkYi5kdHNpDQo+ICsrKyBi
-L2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczIwOHhhLXJkYi5kdHNpDQo+IEBA
-IC00OSw2ICs0OSw3IEBADQo+ICAJCXJlZyA9IDwweDc1PjsNCj4gIAkJI2FkZHJlc3MtY2VsbHMg
-PSA8MT47DQo+ICAJCSNzaXplLWNlbGxzID0gPDA+Ow0KPiArCQlpZGxlLXN0YXRlID0gPDA+Ow0K
-PiAgCQlpMmNAMSB7DQo+ICAJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsNCj4gIAkJCSNzaXplLWNl
-bGxzID0gPDA+Ow0KPiANCg0K
+
+--pAwQNkOnpTn9IO2O
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi!
+
+> From: Al Viro <viro@zeniv.linux.org.uk>
+>=20
+> commit e72b9dd6a5f17d0fb51f16f8685f3004361e83d0 upstream.
+>=20
+> lower_dentry can't go from positive to negative (we have it pinned),
+> but it *can* go from negative to positive.  So fetching ->d_inode
+> into a local variable, doing a blocking allocation, checking that
+> now ->d_inode is non-NULL and feeding the value we'd fetched
+> earlier to a function that won't accept NULL is not a good idea.
+>=20
+> Cc: stable@vger.kernel.org
+> --- a/fs/ecryptfs/inode.c
+> +++ b/fs/ecryptfs/inode.c
+> @@ -345,7 +345,15 @@ static struct dentry *ecryptfs_lookup_in
+>  	dentry_info->lower_path.mnt =3D lower_mnt;
+>  	dentry_info->lower_path.dentry =3D lower_dentry;
+> =20
+> -	if (d_really_is_negative(lower_dentry)) {
+> +	/*
+> +	 * negative dentry can go positive under us here - its parent is not
+> +	 * locked.  That's OK and that could happen just as we return from
+> +	 * ecryptfs_lookup() anyway.  Just need to be careful and fetch
+> +	 * ->d_inode only once - it's not stable here.
+> +	 */
+> +	lower_inode =3D READ_ONCE(lower_dentry->d_inode);
+
+Should this use d_inode_rcu() function, to keep the abstraction
+provided by the header file?
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--pAwQNkOnpTn9IO2O
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl3UZhYACgkQMOfwapXb+vJleQCfUWqbwogZDwonqJGENVIS3Xke
+v5kAoKcgNZ6NYe26I2PVjBwGxl4F+EFK
+=n2Vo
+-----END PGP SIGNATURE-----
+
+--pAwQNkOnpTn9IO2O--
