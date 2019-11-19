@@ -7,49 +7,59 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAB47C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:41:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 262AFC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:41:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FEC8222F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:41:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F181A222DC
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:41:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142101;
-	bh=cOvdCOcKRIUMA17RsSGKk8JBcOVGa9f5VjXMvf73OFc=;
+	s=default; t=1574142107;
+	bh=LlzMNDJ0JCchkYkAHu29SOMVRQeTRHAAwXM9PKy8u+4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TWzcmMf/O1wSXC7YAOfmxV49QjjidjL/Nld+G/7kiUFIidAd8/JDfRt08OuUMCX39
-	 57wxXqPdQyQSLfVLsAQVv1AgiEMf3J5wPKjYluq0nXdVui9DMM7DVKBKHn3vHWfxlQ
-	 PI55YOp1tYzlUe1YKecQs7yKKRyf+MFzKpEdL7VI=
+	b=dZBn57WzAA6w/ZL8frld9w6gPIDRAqLAHVkpAE7cku3CgqbXZFv47CffoClOVaxef
+	 byqe+AYaNb/jbwLRf4rcA5gAFrb3jHlSdSQJ5scFhkw+RR2C/bvLTFfgphQHfktemx
+	 SGUDQnfm1/yThbjopxibp8dQL7b0tmD7T3tGirRg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730232AbfKSFlj (ORCPT
+        id S1730195AbfKSFlp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:41:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36146 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:41:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730559AbfKSFli (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:41:38 -0500
+        id S1729655AbfKSFll (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:41:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40A07208C3;
-        Tue, 19 Nov 2019 05:41:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AFEDD21783;
+        Tue, 19 Nov 2019 05:41:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142097;
-        bh=cOvdCOcKRIUMA17RsSGKk8JBcOVGa9f5VjXMvf73OFc=;
+        s=default; t=1574142100;
+        bh=LlzMNDJ0JCchkYkAHu29SOMVRQeTRHAAwXM9PKy8u+4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VD/DCjIEdUGu9NR42GOli+DChG2UE8JonAzQoXVWg6SisGKUJqDxhVt7IAV8gu9dt
-         S7g1d73TFtQPCmlqrm59tfSsTBaKXntyoEhbCpEjvu54oogfWW5Anb8WRNRCjbNMQx
-         7P9H0f520ZbXY5PIKbFxCvUfapDoJquQn3aDj4uY=
+        b=gmd1X9nnuM2kwiJCcQjM/4dLqZ/njsfobu0HIgEk8p4F5RS+4bJc+Zk4dHW3aPPTH
+         GhGR/YM2PMieMp+HE/fTo6251/PUvGLVaMyhUeuSh1KcdrixK92XpKW4kVd2WMu1bM
+         5c0rPgLZ+3o0m5C0n3sGfTd2Qd/cO187gn6TVhi0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sanjay Kumar Konduri <sanjay.konduri@redpinesignals.com>,
-        Siva Rebbagondla <siva.rebbagondla@redpinesignals.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
+        stable@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "devel@linuxdriverproject.org" <devel@linuxdriverproject.org>,
+        Olaf Aepfle <olaf@aepfle.de>,
+        Andy Whitcroft <apw@canonical.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Marcelo Cerri <marcelo.cerri@canonical.com>,
+        Josh Poulson <jopoulso@microsoft.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 386/422] Bluetooth: btrsi: fix bt tx timeout issue
-Date:   Tue, 19 Nov 2019 06:19:43 +0100
-Message-Id: <20191119051424.093781980@linuxfoundation.org>
+Subject: [PATCH 4.19 387/422] x86/hyperv: Suppress "PCI: Fatal: No config space access function found"
+Date:   Tue, 19 Nov 2019 06:19:44 +0100
+Message-Id: <20191119051424.164699533@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -62,60 +72,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sanjay Kumar Konduri <sanjay.konduri@redpinesignals.com>
+From: Dexuan Cui <decui@microsoft.com>
 
-[ Upstream commit 7cbfd1e2aad410d96fa6162aeb3f9cff1fecfc58 ]
+[ Upstream commit 2f285f46240d67060061d153786740d4df53cd78 ]
 
-observed sometimes data is coming with unaligned address from kernel
-BT stack. If unaligned address is passed, some data in payload is
-stripped when packet is loading to firmware and this results, BT
-connection timeout is happening.
+A Generation-2 Linux VM on Hyper-V doesn't have the legacy PCI bus, and
+users always see the scary warning, which is actually harmless.
 
-sh# hciconfig hci0 up
-Can't init device hci0: hci0 command 0x0c03 tx timeout
+Suppress it.
 
-Fixed this by moving the data to aligned address.
-
-Signed-off-by: Sanjay Kumar Konduri <sanjay.konduri@redpinesignals.com>
-Signed-off-by: Siva Rebbagondla <siva.rebbagondla@redpinesignals.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: KY Srinivasan <kys@microsoft.com>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Stephen Hemminger <sthemmin@microsoft.com>
+Cc: "devel@linuxdriverproject.org" <devel@linuxdriverproject.org>
+Cc: Olaf Aepfle <olaf@aepfle.de>
+Cc: Andy Whitcroft <apw@canonical.com>
+Cc: Jason Wang <jasowang@redhat.com>
+Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc: Marcelo Cerri <marcelo.cerri@canonical.com>
+Cc: Josh Poulson <jopoulso@microsoft.com>
+Link: https://lkml.kernel.org/r/ <KU1P153MB0166D977DC930996C4BF538ABF1D0@KU1P153MB0166.APCP153.PROD.OUTLOOK.COM
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bluetooth/btrsi.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ arch/x86/hyperv/hv_init.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/drivers/bluetooth/btrsi.c b/drivers/bluetooth/btrsi.c
-index 60d1419590bab..3951f7b238404 100644
---- a/drivers/bluetooth/btrsi.c
-+++ b/drivers/bluetooth/btrsi.c
-@@ -21,8 +21,9 @@
- #include <net/rsi_91x.h>
- #include <net/genetlink.h>
+diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+index 3fb8551552862..8a9cff1f129dc 100644
+--- a/arch/x86/hyperv/hv_init.c
++++ b/arch/x86/hyperv/hv_init.c
+@@ -17,6 +17,7 @@
+  *
+  */
  
--#define RSI_HEADROOM_FOR_BT_HAL	16
-+#define RSI_DMA_ALIGN	8
- #define RSI_FRAME_DESC_SIZE	16
-+#define RSI_HEADROOM_FOR_BT_HAL	(RSI_FRAME_DESC_SIZE + RSI_DMA_ALIGN)
++#include <linux/efi.h>
+ #include <linux/types.h>
+ #include <asm/apic.h>
+ #include <asm/desc.h>
+@@ -257,6 +258,22 @@ static int hv_cpu_die(unsigned int cpu)
+ 	return 0;
+ }
  
- struct rsi_hci_adapter {
- 	void *priv;
-@@ -70,6 +71,16 @@ static int rsi_hci_send_pkt(struct hci_dev *hdev, struct sk_buff *skb)
- 		bt_cb(new_skb)->pkt_type = hci_skb_pkt_type(skb);
- 		kfree_skb(skb);
- 		skb = new_skb;
-+		if (!IS_ALIGNED((unsigned long)skb->data, RSI_DMA_ALIGN)) {
-+			u8 *skb_data = skb->data;
-+			int skb_len = skb->len;
++static int __init hv_pci_init(void)
++{
++	int gen2vm = efi_enabled(EFI_BOOT);
 +
-+			skb_push(skb, RSI_DMA_ALIGN);
-+			skb_pull(skb, PTR_ALIGN(skb->data,
-+						RSI_DMA_ALIGN) - skb->data);
-+			memmove(skb->data, skb_data, skb_len);
-+			skb_trim(skb, skb_len);
-+		}
- 	}
++	/*
++	 * For Generation-2 VM, we exit from pci_arch_init() by returning 0.
++	 * The purpose is to suppress the harmless warning:
++	 * "PCI: Fatal: No config space access function found"
++	 */
++	if (gen2vm)
++		return 0;
++
++	/* For Generation-1 VM, we'll proceed in pci_arch_init().  */
++	return 1;
++}
++
+ /*
+  * This function is to be invoked early in the boot sequence after the
+  * hypervisor has been detected.
+@@ -333,6 +350,8 @@ void __init hyperv_init(void)
  
- 	return h_adapter->proto_ops->coex_send_pkt(h_adapter->priv, skb,
+ 	hv_apic_init();
+ 
++	x86_init.pci.arch_init = hv_pci_init;
++
+ 	/*
+ 	 * Register Hyper-V specific clocksource.
+ 	 */
 -- 
 2.20.1
 
