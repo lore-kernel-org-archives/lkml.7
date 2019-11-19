@@ -2,63 +2,113 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53F8BC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 01:24:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C096DC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 01:24:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E0972053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 01:24:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99FDB20692
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 01:24:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Uvv+qMR/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727234AbfKSBX7 (ORCPT
+        id S1727255AbfKSBYr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 20:23:59 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:52242 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726761AbfKSBX6 (ORCPT
+        Mon, 18 Nov 2019 20:24:47 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:38825 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726939AbfKSBYr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 20:23:58 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 64C49150FAE7B;
-        Mon, 18 Nov 2019 17:23:58 -0800 (PST)
-Date:   Mon, 18 Nov 2019 17:23:58 -0800 (PST)
-Message-Id: <20191118.172358.1651088156867288729.davem@davemloft.net>
-To:     colin.king@canonical.com
-Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        dmurphy@ti.com, netdev@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] net: phy: dp83869: fix return of uninitialized
- variable ret
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20191118114835.39494-1-colin.king@canonical.com>
-References: <20191118114835.39494-1-colin.king@canonical.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 18 Nov 2019 17:23:58 -0800 (PST)
+        Mon, 18 Nov 2019 20:24:47 -0500
+Received: by mail-pj1-f65.google.com with SMTP id f7so2040684pjw.5
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 17:24:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=u+EElGaeg7B4NHLzEdMEmecs3hx9HYQQt4MBfsxoGp4=;
+        b=Uvv+qMR/YvSIV89+KOuySyIJSm4e4O8lhyJ4qzs92d2olMqEp9kxbAHwujSp/QcdyY
+         1ikn1NyGEK1bTHUCPN2ReOTEP4BwNPd/W2fYw82oR5zuyyok3HUHSlXiwDRO5DvqNeQK
+         kXUorqKAnxgoZ+vVnQLRK2tiy77SYX6dLHf7WUdBfG1dFN3EYNwGl1MLezFQtxNfWCeO
+         FKCqQjRgAyWT3IhJ50fwUNjk5H2d5C5PrJ2bWdo8gzNdc1s6uMMEHft0PoI8IRCuCumK
+         UzLRPVaBr4MFBZBOpTZguBQJBX6qjjqVFu0HFirRUDHSE9/fpX4v+Yf0mCoEJpa5jZDq
+         F8eQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=u+EElGaeg7B4NHLzEdMEmecs3hx9HYQQt4MBfsxoGp4=;
+        b=qP8mXUwR/DFe9HA68pjfJ3Uo8mlCEhoFHMae1XgM4HeqFJcla0l3y8/zQcIcpYy3ds
+         JBZM5QgGj8hNOxXefWvliu70m5D+t6u8KcKxtW9oCaEJQujlcB9IONL5eonHF6wmT4rJ
+         2jD+3dHpQfVBanW+Sk+0Yp4pYbobcEo51br8/GxooK4hqby8eCJqUZ4UnfR2O7UNcaJe
+         9eCkXkBlemmIB7jODRSwjW8KUfUGNV6gk6eh1BH1+VWaSCNIkL2SYVbCgDApXQVcMWE2
+         oeJj4eHNsAhFAdAvidet/tmd+svj43NXdtuHYItaibYCp00+Z9lF5vvwEVyj/jTFKxY4
+         GItQ==
+X-Gm-Message-State: APjAAAWA3dhyUNKe/ZHl12zIfUmu8p8wU6cfXpLKPQgoVKncbcavgAMb
+        LsR23L2m+EY+XjX/4KWMxdqV5T21b0VisfEfbkllEQ==
+X-Google-Smtp-Source: APXvYqyQ0yIu5BJfhnGVAf7ZY450gOCdnTPdioyEqCBN6cL7YR/zlO5q8oTmMwfOkenfyH5sRhoTBLvV7xDeXBn6IOg=
+X-Received: by 2002:a17:902:be14:: with SMTP id r20mr31102887pls.297.1574126685459;
+ Mon, 18 Nov 2019 17:24:45 -0800 (PST)
+MIME-Version: 1.0
+References: <1573812972-10529-1-git-send-email-alan.maguire@oracle.com>
+ <1573812972-10529-5-git-send-email-alan.maguire@oracle.com> <20191118220958.GS11244@42.do-not-panic.com>
+In-Reply-To: <20191118220958.GS11244@42.do-not-panic.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Mon, 18 Nov 2019 17:24:33 -0800
+Message-ID: <CAFd5g46PQ_kWERgoVC--QAUNOWT6p9AwsJPTV4sM7uv6L+iB2g@mail.gmail.com>
+Subject: Re: [PATCH v4 linux-kselftest-test 4/6] kunit: remove timeout
+ dependence on sysctl_hung_task_timeout_seconds
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Alan Maguire <alan.maguire@oracle.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        catalin.marinas@arm.com, joe.lawrence@redhat.com,
+        penguin-kernel@i-love.sakura.ne.jp, schowdary@nvidia.com,
+        urezki@gmail.com, andriy.shevchenko@linux.intel.com,
+        Jonathan Corbet <corbet@lwn.net>,
+        "Theodore Ts'o" <tytso@mit.edu>, adilger.kernel@dilger.ca,
+        changbin.du@intel.com, linux-ext4@vger.kernel.org,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Knut Omang <knut.omang@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin King <colin.king@canonical.com>
-Date: Mon, 18 Nov 2019 11:48:35 +0000
+On Mon, Nov 18, 2019 at 2:10 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
+>
+> On Fri, Nov 15, 2019 at 10:16:10AM +0000, Alan Maguire wrote:
+> > In discussion of how to handle timeouts, it was noted that if
+> > sysctl_hung_task_timeout_seconds is exceeded for a kunit test,
+> > the test task will be killed and an oops generated.  This should
+> > suffice as a means of debugging such timeout issues for now.
+> >
+> > Hence remove use of sysctl_hung_task_timeout_secs, which has the
+> > added benefit of avoiding the need to export that symbol from
+> > the core kernel.
+> >
+> > Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+> > Signed-off-by: Knut Omang <knut.omang@oracle.com>
+>
+> This seems like a workaround for sysctl_hung_task_timeout_secs not being
+> exported. If true, this can be addressed by creating a symbol namespace
+> (new) and using that namespace on this path.
 
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> In the case where the call to phy_interface_is_rgmii returns zero
-> the variable ret is left uninitialized and this is returned at
-> the end of the function dp83869_configure_rgmii.  Fix this by
-> returning 0 instead of the uninitialized value in ret.
-> 
-> Addresses-Coverity: ("Uninitialized scalar variable")
-> Fixes: 01db923e8377 ("net: phy: dp83869: Add TI dp83869 phy")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+It is; as discussed on in v3[1]. I don't really feel strongly one way
+or the other, I can see arguments for either side. Still, I don't want
+to give Alan the run-around. I think this is the 3rd or 4th time he
+has tried to address this issue.
 
-Applied.
+[1] https://lore.kernel.org/linux-kselftest/CAFd5g44esDP6WFmkjOiH+my_4iBeqMpFoScMCm_hQ0aFwNS9qw@mail.gmail.com/
