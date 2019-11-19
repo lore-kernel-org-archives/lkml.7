@@ -6,34 +6,35 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1BFFC43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 18:04:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6C0DC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 18:04:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C2742231C
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 18:04:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B14C122319
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 18:04:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727337AbfKSSEH (ORCPT
+        id S1727368AbfKSSEJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 13:04:07 -0500
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:4355 "EHLO
+        Tue, 19 Nov 2019 13:04:09 -0500
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:4369 "EHLO
         mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726510AbfKSSEG (ORCPT
+        by vger.kernel.org with ESMTP id S1727222AbfKSSEH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 13:04:06 -0500
+        Tue, 19 Nov 2019 13:04:07 -0500
 X-IronPort-AV: E=Sophos;i="5.69,218,1571695200"; 
-   d="scan'208";a="412559097"
+   d="scan'208";a="412559099"
 Received: from palace.lip6.fr ([132.227.105.202])
   by mail2-relais-roc.national.inria.fr with ESMTP/TLS/AES128-SHA256; 19 Nov 2019 19:04:02 +0100
 From:   Julia Lawall <Julia.Lawall@lip6.fr>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     Julia Lawall <Julia.Lawall@lip6.fr>
 Cc:     kernel-janitors@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
         Gilles Muller <Gilles.Muller@inria.fr>,
         Nicolas Palix <nicolas.palix@imag.fr>,
         Michal Marek <michal.lkml@markovi.net>, cocci@systeme.lip6.fr,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 3/4] coccinelle: platform_get_irq: allow multiple dev_errs
-Date:   Tue, 19 Nov 2019 18:28:19 +0100
-Message-Id: <1574184500-29870-4-git-send-email-Julia.Lawall@lip6.fr>
+Subject: [PATCH 4/4] coccinelle: platform_get_irq: drop unneeded metavariable
+Date:   Tue, 19 Nov 2019 18:28:20 +0100
+Message-Id: <1574184500-29870-5-git-send-email-Julia.Lawall@lip6.fr>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1574184500-29870-1-git-send-email-Julia.Lawall@lip6.fr>
 References: <1574184500-29870-1-git-send-email-Julia.Lawall@lip6.fr>
@@ -42,26 +43,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow multiple calls to dev_err in the if branch under the
-call to the platform_get_irq function.  Remove only the
-first one.
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+
+Having E as a metavariable adds the requirement to verify its type.
+This seems like an unnecessary constraint, so drop it.
+There is currently no impact on the set of results.
 
 Signed-off-by: Julia Lawall <Julia.Lawall@lip6.fr>
 
 ---
- scripts/coccinelle/api/platform_get_irq.cocci |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ scripts/coccinelle/api/platform_get_irq.cocci |   12 ++++--------
+ 1 file changed, 4 insertions(+), 8 deletions(-)
 
 diff --git a/scripts/coccinelle/api/platform_get_irq.cocci b/scripts/coccinelle/api/platform_get_irq.cocci
-index 7ac32ee..e5d04fb 100644
+index e5d04fb..17e5895 100644
 --- a/scripts/coccinelle/api/platform_get_irq.cocci
 +++ b/scripts/coccinelle/api/platform_get_irq.cocci
-@@ -70,7 +70,7 @@ if ( \( ret < 0 \| ret <= 0 \) )
- ...
- -dev_err(...);
- )
--...
-+... when any
- }
+@@ -11,7 +11,6 @@ virtual report
  
+ @depends on context@
+ expression ret;
+-struct platform_device *E;
+ @@
+ 
+ ret =
+@@ -19,7 +18,7 @@ ret =
+ platform_get_irq
+ |
+ platform_get_irq_byname
+-)(E, ...);
++)(...);
+ 
+ if ( \( ret < 0 \| ret <= 0 \) )
+ {
+@@ -30,7 +29,6 @@ if ( \( ret < 0 \| ret <= 0 \) )
+ 
+ @depends on patch@
+ expression ret;
+-struct platform_device *E;
+ statement S;
+ @@
+ 
+@@ -39,7 +37,7 @@ ret =
+ platform_get_irq
+ |
+ platform_get_irq_byname
+-)(E, ...);
++)(...);
+ 
+ if ( \( ret < 0 \| ret <= 0 \) )
+ -{
+@@ -49,7 +47,6 @@ S
+ 
+ @depends on patch@
+ expression ret;
+-struct platform_device *E;
+ @@
+ 
+ ret =
+@@ -57,7 +54,7 @@ ret =
+ platform_get_irq
+ |
+ platform_get_irq_byname
+-)(E, ...);
++)(...);
+ 
+ if ( \( ret < 0 \| ret <= 0 \) )
+ {
+@@ -76,7 +73,6 @@ if ( \( ret < 0 \| ret <= 0 \) )
  @r depends on org || report@
+ position p1;
+ expression ret;
+-struct platform_device *E;
+ @@
+ 
+ ret =
+@@ -84,7 +80,7 @@ ret =
+ platform_get_irq
+ |
+ platform_get_irq_byname
+-)(E, ...);
++)(...);
+ 
+ if ( \( ret < 0 \| ret <= 0 \) )
+ {
