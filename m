@@ -2,155 +2,150 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80585C43141
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:58:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ED80C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:58:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FEE822400
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:58:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CuLivwxb"
+	by mail.kernel.org (Postfix) with ESMTP id 21400223D1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:58:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728894AbfKSQ6G (ORCPT
+        id S1728871AbfKSQ55 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 11:58:06 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:36574 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728769AbfKSQ5x (ORCPT
+        Tue, 19 Nov 2019 11:57:57 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:52940 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728775AbfKSQ5X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 11:57:53 -0500
-Received: by mail-lf1-f68.google.com with SMTP id r14so11036842lff.3;
-        Tue, 19 Nov 2019 08:57:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=j+gYl8HldvGbyx97hnAX9xUoG7AkMiMS7oU+UeQIp7E=;
-        b=CuLivwxbWs7Wcoly7djIIVs9XgobzAL92vYSDeyg8DXLNM9dqJ87GCy2z05epyY/eH
-         k2bniNhos/o7H5rA/XSVuuk7+EmuPuUdUcl7yDpq+goMg3V4cw/kD4sjKcvfqiElIo8j
-         SvpUlWocaA52Oa+7Dw0HHiq6SM+UXZmx4VLf0zqE45psgcevhHkOWm49io2COxxv7dAR
-         +FNtQfbJj+E6WU+zgrMbvYmmoaB5Qiopf4PEFT6BjQGTc/xDXp1br0Lk8o8uLoo+F4RD
-         RZ4JrOOy6YuNJm1HxeO65M8ezAMXMYywgX8F5iEKh07EKN1Bilh1PWDsh8WdnzP5itd0
-         R7XQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=j+gYl8HldvGbyx97hnAX9xUoG7AkMiMS7oU+UeQIp7E=;
-        b=f0lhm8Hy7D3/OTE7CsuK1N3YPqkom5uaCKo8o6IXjHKmaRe3dCaCVvP+VabJYIIl09
-         2gDsxMjjamk3tVk9SCF62WP71kvcmdZaUoWg4AOHWk0ruUi7id1xwwlvDhZfHhTnvwHy
-         b1LRbQ//7Iq/Q/d6QyW33c8SAOvmZ8dpv93S87OBlgAizyDzCemZ36Q/Z21VCM7eFeb4
-         PcxhMQhZqrnS9T0fa2IK0H3tLN/Rqe4tp8v/ER/o9Kkq5o4W/3irS5hhAMyrpxqtYc3L
-         CBGigsy+VFfIx2myrfpgAXT4D5g6mn91PMKlJk2gXo7EpW+6N0lSVZk7CFH3GmhG57kY
-         GN5Q==
-X-Gm-Message-State: APjAAAUae4KjrH3eQauOlrs9Z7NhUW8/WcUH4dUUlUkfzwu7Ghbf1ETB
-        fQQLKV8KaOj/dRoF0x2KY0MLNbjK
-X-Google-Smtp-Source: APXvYqz8vet4QWY5IUi4C6ihSYs+/14tbC3f6wpa0eTLtn7PYqBbI69ydT5j/A2C2hRcVFQx+8A1eQ==
-X-Received: by 2002:ac2:44d4:: with SMTP id d20mr4812970lfm.88.1574182671483;
-        Tue, 19 Nov 2019 08:57:51 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id 3sm10781212lfq.55.2019.11.19.08.57.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 Nov 2019 08:57:51 -0800 (PST)
-Subject: Re: [PATCH v1 23/29] memory: tegra124-emc: Register as interconnect
- provider
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Mikko Perttunen <mperttunen@nvidia.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org
-References: <20191118200247.3567-1-digetx@gmail.com>
- <20191118200247.3567-24-digetx@gmail.com>
-Message-ID: <4ad5dca2-12c9-8e96-c68c-0dcdb9860fd9@gmail.com>
-Date:   Tue, 19 Nov 2019 19:57:50 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Tue, 19 Nov 2019 11:57:23 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iX6o9-0007Jn-EY; Tue, 19 Nov 2019 17:56:53 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 23CA61C19CB;
+        Tue, 19 Nov 2019 17:56:48 +0100 (CET)
+Date:   Tue, 19 Nov 2019 16:56:48 -0000
+From:   "tip-bot2 for Masami Hiramatsu" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: perf/core] perf probe: Support DW_AT_const_value constant value
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <157406476012.24476.16096289871757175775.stgit@devnote2>
+References: <157406476012.24476.16096289871757175775.stgit@devnote2>
 MIME-Version: 1.0
-In-Reply-To: <20191118200247.3567-24-digetx@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Message-ID: <157418260811.12247.2839838800252497811.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-18.11.2019 23:02, Dmitry Osipenko пишет:
-> EMC now provides MC with memory bandwidth using interconnect API.
-> 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/memory/tegra/tegra124-emc.c | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
-> 
-> diff --git a/drivers/memory/tegra/tegra124-emc.c b/drivers/memory/tegra/tegra124-emc.c
-> index 2c73260654ba..c9478dcbeece 100644
-> --- a/drivers/memory/tegra/tegra124-emc.c
-> +++ b/drivers/memory/tegra/tegra124-emc.c
-> @@ -25,6 +25,7 @@
->  #define EMC_FBIO_CFG5				0x104
->  #define	EMC_FBIO_CFG5_DRAM_TYPE_MASK		0x3
->  #define	EMC_FBIO_CFG5_DRAM_TYPE_SHIFT		0
-> +#define EMC_FBIO_CFG5_DRAM_WIDTH_X64		BIT(4)
->  
->  #define EMC_INTSTATUS				0x0
->  #define EMC_INTSTATUS_CLKCHANGE_COMPLETE	BIT(4)
-> @@ -1080,11 +1081,28 @@ static void emc_debugfs_init(struct device *dev, struct tegra_emc *emc)
->  		dev_err(dev, "failed to create debugfs entry\n");
->  }
->  
-> +static unsigned int emc_dram_data_bus_width_bytes(struct tegra_emc *emc)
-> +{
-> +	unsigned int bus_width;
-> +	u32 emc_cfg;
-> +
-> +	emc_cfg = readl_relaxed(emc->regs + EMC_FBIO_CFG5);
-> +	if (emc_cfg & EMC_FBIO_CFG5_DRAM_WIDTH_X64)
-> +		bus_width = 64;
-> +	else
-> +		bus_width = 32;
+The following commit has been merged into the perf/core branch of tip:
 
-Looks like I got a bit confused while was looking at TRMs before, seems
-this width is unrelated to the EMC channel at all. I'll try to revisit
-this again.
+Commit-ID:     66f69b2197167cb99330c77a550da50f1f597abc
+Gitweb:        https://git.kernel.org/tip/66f69b2197167cb99330c77a550da50f1f597abc
+Author:        Masami Hiramatsu <mhiramat@kernel.org>
+AuthorDate:    Mon, 18 Nov 2019 17:12:40 +09:00
+Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitterDate: Mon, 18 Nov 2019 19:08:02 -03:00
 
-> +	dev_info(emc->dev, "DRAM data-bus width: %ubit\n", bus_width);
-> +
-> +	return bus_width / 8;
-> +}
-> +
->  static int tegra_emc_probe(struct platform_device *pdev)
->  {
->  	struct platform_device *mc;
->  	struct device_node *np;
->  	struct tegra_emc *emc;
-> +	unsigned int bus_width;
->  	u32 ram_code;
->  	int err;
->  
-> @@ -1146,6 +1164,12 @@ static int tegra_emc_probe(struct platform_device *pdev)
->  	if (IS_ENABLED(CONFIG_DEBUG_FS))
->  		emc_debugfs_init(&pdev->dev, emc);
->  
-> +	bus_width = emc_dram_data_bus_width_bytes(emc);
-> +
-> +	err = tegra_icc_emc_setup_interconnect(&pdev->dev, bus_width);
-> +	if (err)
-> +		dev_err(&pdev->dev, "failed to initialize ICC: %d\n", err);
-> +
->  	return 0;
->  };
->  
-> 
+perf probe: Support DW_AT_const_value constant value
 
+Support DW_AT_const_value for variable assignment instead of location.
+Note that this requires ftrace supporting immediate value.
+
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Tom Zanussi <tom.zanussi@linux.intel.com>
+Link: http://lore.kernel.org/lkml/157406476012.24476.16096289871757175775.stgit@devnote2
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/probe-file.c   |  7 +++++++
+ tools/perf/util/probe-file.h   |  1 +
+ tools/perf/util/probe-finder.c | 11 +++++++++++
+ 3 files changed, 19 insertions(+)
+
+diff --git a/tools/perf/util/probe-file.c b/tools/perf/util/probe-file.c
+index a63f1a1..5003ba4 100644
+--- a/tools/perf/util/probe-file.c
++++ b/tools/perf/util/probe-file.c
+@@ -1008,6 +1008,7 @@ enum ftrace_readme {
+ 	FTRACE_README_UPROBE_REF_CTR,
+ 	FTRACE_README_USER_ACCESS,
+ 	FTRACE_README_MULTIPROBE_EVENT,
++	FTRACE_README_IMMEDIATE_VALUE,
+ 	FTRACE_README_END,
+ };
+ 
+@@ -1022,6 +1023,7 @@ static struct {
+ 	DEFINE_TYPE(FTRACE_README_UPROBE_REF_CTR, "*ref_ctr_offset*"),
+ 	DEFINE_TYPE(FTRACE_README_USER_ACCESS, "*[u]<offset>*"),
+ 	DEFINE_TYPE(FTRACE_README_MULTIPROBE_EVENT, "*Create/append/*"),
++	DEFINE_TYPE(FTRACE_README_IMMEDIATE_VALUE, "*\\imm-value,*"),
+ };
+ 
+ static bool scan_ftrace_readme(enum ftrace_readme type)
+@@ -1092,3 +1094,8 @@ bool multiprobe_event_is_supported(void)
+ {
+ 	return scan_ftrace_readme(FTRACE_README_MULTIPROBE_EVENT);
+ }
++
++bool immediate_value_is_supported(void)
++{
++	return scan_ftrace_readme(FTRACE_README_IMMEDIATE_VALUE);
++}
+diff --git a/tools/perf/util/probe-file.h b/tools/perf/util/probe-file.h
+index 850d1b5..0dba88c 100644
+--- a/tools/perf/util/probe-file.h
++++ b/tools/perf/util/probe-file.h
+@@ -72,6 +72,7 @@ bool kretprobe_offset_is_supported(void);
+ bool uprobe_ref_ctr_is_supported(void);
+ bool user_access_is_supported(void);
+ bool multiprobe_event_is_supported(void);
++bool immediate_value_is_supported(void);
+ #else	/* ! HAVE_LIBELF_SUPPORT */
+ static inline struct probe_cache *probe_cache__new(const char *tgt __maybe_unused, struct nsinfo *nsi __maybe_unused)
+ {
+diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
+index f12ad50..33e9005 100644
+--- a/tools/perf/util/probe-finder.c
++++ b/tools/perf/util/probe-finder.c
+@@ -177,6 +177,17 @@ static int convert_variable_location(Dwarf_Die *vr_die, Dwarf_Addr addr,
+ 	if (dwarf_attr(vr_die, DW_AT_external, &attr) != NULL)
+ 		goto static_var;
+ 
++	/* Constant value */
++	if (dwarf_attr(vr_die, DW_AT_const_value, &attr) &&
++	    immediate_value_is_supported()) {
++		Dwarf_Sword snum;
++
++		dwarf_formsdata(&attr, &snum);
++		ret = asprintf(&tvar->value, "\\%ld", (long)snum);
++
++		return ret < 0 ? -ENOMEM : 0;
++	}
++
+ 	/* TODO: handle more than 1 exprs */
+ 	if (dwarf_attr(vr_die, DW_AT_location, &attr) == NULL)
+ 		return -EINVAL;	/* Broken DIE ? */
