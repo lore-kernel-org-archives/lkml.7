@@ -2,172 +2,192 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D88BFC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:44:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E1B3C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:44:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADB7B20891
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:44:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B6C4222EF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:44:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o8/7NQNC"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="GcHGz8Vb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728327AbfKSOoE (ORCPT
+        id S1728184AbfKSOoS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 09:44:04 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:37001 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728313AbfKSOoC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 09:44:02 -0500
-Received: by mail-lf1-f66.google.com with SMTP id b20so17294259lfp.4
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 06:44:00 -0800 (PST)
+        Tue, 19 Nov 2019 09:44:18 -0500
+Received: from mail-eopbgr1400117.outbound.protection.outlook.com ([40.107.140.117]:2266
+        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726736AbfKSOoR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 09:44:17 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LM4cpdckePYjpw3QlPctEjQRQjrpJlbZKhmTDmM44+6KBBC6o81ddhdT7wrQzIAFO8Ml43ne6NeBkC4DNCXwF8DxPpQXtyIHygTL6Rv5kYcrkuLwVM4NQWAE1R5wu+hV/vCoMpu5YbfbarjEFZA2ZJpBYP2kgjAyfQTgVWiSTS2gbZ9mgM0EkEk5tmKEBRv/RQrCIwPC+cFr+CsmR1krhO3E2A0zzOQFxz0rx1qAcWYtAz98fA3+XjMEr0CNp0bw+F8rr5iUGvzKq35JetMpyLE778dLT2blUzLIHPSYtuBIakRPExkitNprqqxmI76KKa480qz9XNr6rfoqVuYS4w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+FTq80Y8mYoX1R+ga0fOw33+kMMMtDIKnlE0uNc1+4k=;
+ b=iPUyrCWPVouGJgaplbPKUFgw3ei5sqrgG0GRVP4IiBVxlbenmL7jO1ts9Ff46T+I2wPiT4l8Na5tY3ZkO8AHagHsXjXRM2HvXA6jkmDD9Cw5wbiiaaUMOU2OHphmbhKqO8EHvF1X3hpxsLd26uywA5E8LHhhd87ZpwEr8B2BCL4FRha6OxXsc64Ll1YrAAeIH9ITmNoZo5EtjuLgWynM1CtvM1xAVF1taf1Wg7aLL2VEUcgYM5diIX1VAO24NOAdcc8x9WM3A1jySeyuUZ+F/jeM939cwpQrQqtA39lEYFjKkjYX81ccmFoeEDhUMzALjc8NrfJMETVFUdTDhBePdg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3HGForXYrnzKKwFOiKAr5qSOuuqdU2k4wA1CfbalcbQ=;
-        b=o8/7NQNCdscgcAzoUXE+jNTk/DJagMvuw5Z5JaWY30/Z/muA51WNthzWcG+/MtHPBP
-         ny6dVonMKRnen+it9ngeeXt1nR2rMvm4MxOKRsW5mUt9arjSEhZM4tMEKXJRcjqQx8t8
-         UwAYBSUYodJCrJjJxwSpcnYicu7wJuE+0By/ddHV3P+BQR3Lp7t+G1kjRHchnAx24qMJ
-         SA9vVP9M+gd+aI6o0RnPHJ0b1q0yRooX6UUA86zcAYvWai/ge//6X1NsbP93Bwm+VLIX
-         BqN6l+PH8M5Cw6YFIvmW/Ygb/vNNIT3uU4vu68nKXH9wt785xkMpxaAXLMSC4C3ZTGrO
-         vEUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3HGForXYrnzKKwFOiKAr5qSOuuqdU2k4wA1CfbalcbQ=;
-        b=saekyfG2gv23MXI1A9UN1tuxzeRygEmp1NDrugZQzPDLOAak1gRB7d7JiADdH/R3W8
-         P52VEqM/PYShG19TwJFPo7HpbGzMMK6Yjs0U42oX8FWn4Y9rLQcYNbMCnZ7iLi79R8nG
-         Cnfqsc2nNgoEW14sOp0JcI8sD+ajoVBRsNSfdHFKQcxSIysaEKwwz45LqQ2/q1mZ9YrP
-         /DIprE/PnkN4yPagaJyNznbfR6p1wCoWqOLUyneRlijMnV81DyRzDdxrWrABSxdM+tJQ
-         DL2JGeXyZ8OQTxNOrRi9XXzras41+GQewK1QGCbjPBQSrbXz6Ot5Hirj1sw7fIJQscpu
-         EF3w==
-X-Gm-Message-State: APjAAAWXTDInRF7SqTNd1ccqjjWLkKuysjbAIZ6I4sitzBlHbjep3gOv
-        WyXr2lfNmbjBv4p5V7CPFKRlPC2GfC1f4VhTihh8eA==
-X-Google-Smtp-Source: APXvYqxiJDKtjaMparegwwsvRl+fvmQtXcsqSKBMv1kiOZ+otWv/0CzoTQp+omLTRtPr/aKLvkVblynEb9GKo+vyzx0=
-X-Received: by 2002:a19:651b:: with SMTP id z27mr4166813lfb.117.1574174639988;
- Tue, 19 Nov 2019 06:43:59 -0800 (PST)
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+FTq80Y8mYoX1R+ga0fOw33+kMMMtDIKnlE0uNc1+4k=;
+ b=GcHGz8VbecEnaLPDrI04yd4SR2Wua4cs4uY/lDBSkUOlooUoAMbb1iuQVKNXzUJpsDPzDVxhVevOrPqeSzmGb4EdnC+djRzHl6D1zgFdutcYCWN0ejH3KV/w3+0/7l2uV8g6/gTWmXNrjittlCt1QH4xsWoU0PefD6PJBnLV9BY=
+Received: from TYAPR01MB2285.jpnprd01.prod.outlook.com (52.133.177.145) by
+ TYAPR01MB4317.jpnprd01.prod.outlook.com (20.179.173.82) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2451.23; Tue, 19 Nov 2019 14:44:13 +0000
+Received: from TYAPR01MB2285.jpnprd01.prod.outlook.com
+ ([fe80::5b9:ce3e:e658:5b75]) by TYAPR01MB2285.jpnprd01.prod.outlook.com
+ ([fe80::5b9:ce3e:e658:5b75%7]) with mapi id 15.20.2451.029; Tue, 19 Nov 2019
+ 14:44:13 +0000
+From:   Chris Paterson <Chris.Paterson2@renesas.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "cip-dev@lists.cip-project.org" <cip-dev@lists.cip-project.org>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "linux@roeck-us.net" <linux@roeck-us.net>,
+        "shuah@kernel.org" <shuah@kernel.org>,
+        "patches@kernelci.org" <patches@kernelci.org>,
+        "ben.hutchings@codethink.co.uk" <ben.hutchings@codethink.co.uk>,
+        "lkft-triage@lists.linaro.org" <lkft-triage@lists.linaro.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH 4.19 000/422] 4.19.85-stable review
+Thread-Topic: [PATCH 4.19 000/422] 4.19.85-stable review
+Thread-Index: AQHVnpmkB8jYWSq0hUGT+a8kwF1jMaeSLOoAgAA/xICAABmSgA==
+Date:   Tue, 19 Nov 2019 14:44:12 +0000
+Message-ID: <TYAPR01MB228560FC98FFD1D449FA4EC2B74C0@TYAPR01MB2285.jpnprd01.prod.outlook.com>
+References: <20191119051400.261610025@linuxfoundation.org>
+ <TYAPR01MB22854E4F20C28F3A10DA65E3B74C0@TYAPR01MB2285.jpnprd01.prod.outlook.com>
+ <20191119122909.GC1913916@kroah.com>
+In-Reply-To: <20191119122909.GC1913916@kroah.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Chris.Paterson2@renesas.com; 
+x-originating-ip: [193.141.220.21]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: db3e5c5e-7001-4acd-2e97-08d76cfef1cd
+x-ms-traffictypediagnostic: TYAPR01MB4317:
+x-ms-exchange-purlcount: 3
+x-microsoft-antispam-prvs: <TYAPR01MB4317B8635B2C6A7BDC2039F7B74C0@TYAPR01MB4317.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4714;
+x-forefront-prvs: 022649CC2C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(396003)(136003)(346002)(39860400002)(366004)(189003)(199004)(99286004)(3846002)(6116002)(7736002)(305945005)(76116006)(74316002)(6916009)(71200400001)(66066001)(316002)(54906003)(7416002)(86362001)(52536014)(14454004)(26005)(25786009)(6246003)(478600001)(486006)(966005)(33656002)(256004)(229853002)(4326008)(8936002)(81166006)(66476007)(66556008)(6306002)(66446008)(64756008)(66946007)(71190400001)(81156014)(6436002)(476003)(7696005)(11346002)(5660300002)(8676002)(55016002)(446003)(6506007)(2906002)(186003)(9686003)(102836004)(76176011);DIR:OUT;SFP:1102;SCL:1;SRVR:TYAPR01MB4317;H:TYAPR01MB2285.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 7bPtI2xceE0zLge1jtoMIf7CQ6pJwVL0tWGs2UM1Y8NYjMVK5ZEA9u4tAoqsPV+V9gChyeWrUT0yE0++otYr2dj+rumas6sESfmaPHfRpcdBjIoZ82z4zh3PEHLCXbEKC1Cc+RkRO6XA4x9rzYcvKsXyHkD9Jx1QoOpLQ9ZCCwjiCkb/uANP8TsA/APvvI2Xf/4/FDQS3Gdbih4NpFjlm7ztYZfo5By0XcW2Q+/gnPKCRno/tD7Qp15hQE4T6zQVDCIlPjJpkXh7uBc3wLbndD9ZM3k+T+rhtC/XPDtBzSz8neFaQgtW+KPJuy8K+BAteHTexATXmEeNR763+4/AmtYC3DNJ4AgnIWrm9Gz6QROWe8THZXZ3iuO6GwxA1Uox+clEUM86SVZbUsWB+zII+Adk4gWktp7alkKqziM6MGwdjSP9yIxax3x7ulv4IhvO5sdNCJXHgttcJhknrWm+3n3+vU5IIauzN/iGrHYKvnc=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <cover.1574059625.git.matti.vaittinen@fi.rohmeurope.com> <8dd9dad2765d47fd6c6fec20566326d00e48a696.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
-In-Reply-To: <8dd9dad2765d47fd6c6fec20566326d00e48a696.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 19 Nov 2019 15:43:47 +0100
-Message-ID: <CACRpkdY_2WzAnK01bQdMF69KsDvHHu9TXuyRoBcmiQMziux=eQ@mail.gmail.com>
-Subject: Re: [PATCH v5 10/16] gpio: devres: Add devm_gpiod_get_parent_array
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     Matti Vaittinen <mazziesaccount@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Nicholas Mc Guire <hofrat@osadl.org>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-rtc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: db3e5c5e-7001-4acd-2e97-08d76cfef1cd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Nov 2019 14:44:12.8674
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: W4xYcYD8gBCFFinlmM/Kbf2+6uOk6c7KjXnr6bifL+FUKILTMOW/hLOXVv+oX+XdWOUbXtfj7rN3G++d2e17TOsXD/lV+Jp5Un46157SVhw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB4317
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 18, 2019 at 7:58 AM Matti Vaittinen
-<matti.vaittinen@fi.rohmeurope.com> wrote:
+Hi Greg,
 
-> Bunch of MFD sub-devices which are instantiated by MFD do not have
-> own device-tree nodes but have (for example) the GPIO consumer
-> information in parent device's DT node. Add resource managed
-> devm_gpiod_get_array() for such devices so that they can get the
-> consumer information from parent DT while still binding the GPIO
-> reservation life-time to this sub-device life time.
->
-> If devm_gpiod_get_array is used as such - then unloading and then
-> re-loading the child device fails as the GPIOs reserved during first
-> load are not freed when driver for sub-device is unload (if parent
-> stays there).
->
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-(...)
-> +static struct gpio_descs *__must_check
-> +__devm_gpiod_get_array(struct device *gpiodev,
-> +                      struct device *managed,
-> +                      const char *con_id,
-> +                      enum gpiod_flags flags)
+> From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Sent: 19 November 2019 12:29
+>=20
+> On Tue, Nov 19, 2019 at 08:54:25AM +0000, Chris Paterson wrote:
+> > Hello Greg, all,
+> >
+> > > From: stable-owner@vger.kernel.org <stable-owner@vger.kernel.org> On
+> > > Behalf Of Greg Kroah-Hartman
+> > > Sent: 19 November 2019 05:13
+> > >
+> > > This is the start of the stable review cycle for the 4.19.85 release.
+> > > There are 422 patches in this series, all will be posted as a respons=
+e
+> > > to this one.  If anyone has any issues with these being applied, plea=
+se
+> > > let me know.
+> >
+> > I'm seeing some build issues with module compilation with this release
+> (1b1960cc Linux 4.19.85-rc1), I also saw them with the previous two versi=
+ons of
+> Linux 4.19.85-rc1 (cd21ecdb and 1fd0ac64).
+> >
+> > Full log available on GitLab [0]. Build conf [1].
+> > [0] https://gitlab.com/cip-playground/linux-stable-rc-ci/-/jobs/3545912=
+85
+> > [1] https://gitlab.com/cip-playground/linux-stable-rc-ci/-
+> /jobs/354591285/artifacts/file/output/4.19.85-
+> rc1_1b1960cc7/x86/siemens_iot2000.config/config/.config
+> >
+> > Main error below:
+> >
+> > 3907   CC [M]  drivers/net/ethernet/mellanox/mlx4/main.o
+> > 3908   LD [M]  fs/ntfs/ntfs.o
+> > 3909   CC [M]  drivers/net/ethernet/intel/i40evf/i40e_txrx.o
+> > 3910   CC [M]  drivers/usb/musb/musb_core.o
+> > 3911   CC [M]  drivers/net/ethernet/nvidia/forcedeth.o
+> > 3912   CC [M]  fs/udf/balloc.o
+> > 3913   CC [M]  drivers/net/ethernet/intel/fm10k/fm10k_debugfs.o
+> > 3914   CC [M]  fs/udf/dir.o
+> > 3915   CC [M]  drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.o
+> > 3916   CC [M]  drivers/net/ethernet/intel/i40e/i40e_ptp.o
+> > 3917 drivers/net/ethernet/mellanox/mlx4/main.c: In function 'mlx4_init_=
+one':
+> > 3918 drivers/net/ethernet/mellanox/mlx4/main.c:3985:2: error: implicit
+> declaration of function 'devlink_reload_enable'; did you mean
+> 'devlink_region_create'? [-Werror=3Dimplicit-function-declaration]
+> > 3919   devlink_reload_enable(devlink);
+> > 3920   ^~~~~~~~~~~~~~~~~~~~~
+> > 3921   devlink_region_create
+> > 3922   CC [M]  drivers/net/ethernet/chelsio/cxgb4/cxgb4_cudbg.o
+> > 3923 drivers/net/ethernet/mellanox/mlx4/main.c: In function
+> 'mlx4_remove_one':
+> > 3924 drivers/net/ethernet/mellanox/mlx4/main.c:4097:2: error: implicit
+> declaration of function 'devlink_reload_disable'; did you mean
+> 'devlink_region_destroy'? [-Werror=3Dimplicit-function-declaration]
+> > 3925   devlink_reload_disable(devlink);
+> > 3926   ^~~~~~~~~~~~~~~~~~~~~~
+> > 3927   devlink_region_destroy
+> > 3928   CC [M]  drivers/net/ethernet/packetengines/hamachi.o
+> > 3929   CC [M]  fs/udf/file.o
+> > 3930   LD [M]  drivers/net/ethernet/intel/fm10k/fm10k.o
+> >
+> > I haven't tried to trace the issue further yet, sorry.
+>=20
+> Any chance you can bisect this?  I don't see any obvious reason why this
+> error should be happening, and it isn't showing up here :(
 
-I'm opposed to functions named __underscore_something()
-so find a proper name for this function.
-devm_gpiod_get_array_common() works if nothing else.
+Looking through the commit history, the issue seems to be related to:
+672cf82122be ("devlink: disallow reload operation during device cleanup")
 
-> @@ -292,19 +284,62 @@ struct gpio_descs *__must_check devm_gpiod_get_array(struct device *dev,
->         if (!dr)
->                 return ERR_PTR(-ENOMEM);
->
-> -       descs = gpiod_get_array(dev, con_id, flags);
-> +       descs = gpiod_get_array(gpiodev, con_id, flags);
->         if (IS_ERR(descs)) {
->                 devres_free(dr);
->                 return descs;
->         }
->
->         *dr = descs;
-> -       devres_add(dev, dr);
-> +       if (managed)
-> +               devres_add(managed, dr);
-> +       else
-> +               devres_add(gpiodev, dr);
+I've reverted this commit and Linux 4.19.85-rc2 (af1bb7db before revert) wi=
+ll build with the configuration I'm using [2].
+I haven't looked further yet though, sorry.
 
-So we only get managed resources if the "managed" device is
-passed in.
+[2] https://gitlab.com/cip-project/cip-kernel/cip-kernel-config/raw/master/=
+4.19.y-cip/x86/siemens_iot2000.config
 
-> +/**
-> + * devm_gpiod_get_array - Resource-managed gpiod_get_array()
+Kind regards, Chris
 
-And this function is supposed to be resource managed for sure.
-
-> + * @dev:       GPIO consumer
-> + * @con_id:    function within the GPIO consumer
-> + * @flags:     optional GPIO initialization flags
-> + *
-> + * Managed gpiod_get_array(). GPIO descriptors returned from this function are
-> + * automatically disposed on driver detach. See gpiod_get_array() for detailed
-> + * information about behavior and return values.
-> + */
-> +struct gpio_descs *__must_check devm_gpiod_get_array(struct device *dev,
-> +                                                    const char *con_id,
-> +                                                    enum gpiod_flags flags)
-> +{
-> +       return __devm_gpiod_get_array(dev, NULL, con_id, flags);
-
-So what is this? NULL?
-
-Doesn't that mean you just removed all resource management for this
-call?
-
-Or am I reading it wrong?
-
-Yours,
-Linus Walleij
+>=20
+> thanks,
+>=20
+> greg k-h
