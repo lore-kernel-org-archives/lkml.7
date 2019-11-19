@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98A50C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:46:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60B99C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:46:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E2E12075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:46:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F6FD208CC
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:46:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142400;
-	bh=oeHpWnG6wYyTw+fo0e/fFTR7t5jTwjvQijXwsb60cU0=;
+	s=default; t=1574142403;
+	bh=etxpC8JZZJWPy8F/xgvTzSrSpq2DAsTTtvter5MD1QY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wGttm9+KdUs/v4sEJsW6ZKb3D43J6XFUR4S21uTWjvtU49xeJO9J/Aykjv2+q+JCy
-	 R0dzQJHWV5jxADEAOwcTdoWpmA/J0vHZRg7WNo1r5ziKTkT+JFw1xvZiU/fEb7Cihp
-	 s0BvvP1BkdPYT/x95zzwsh0W11Fe92JKjPJXsbJI=
+	b=UzIuAdM/fp/5PxarwuO0/UR4tA5qHc9YwDhpokxOZdoTjWkvP5o/XkArswI6LzJ7x
+	 5MzKi0UNf1oyGROLFdV8uPj1cpr707BkuiIS4j5qCKZQMctcgdLID/u9kjDxFVybbL
+	 0KaCbuwd+kRWuhDTwEwrtPd5VZyop4S7MZDe02lw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731133AbfKSFqi (ORCPT
+        id S1729057AbfKSFqm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:46:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42706 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:46:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730839AbfKSFqf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:46:35 -0500
+        id S1731128AbfKSFqh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:46:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 779D92075E;
-        Tue, 19 Nov 2019 05:46:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC0DA2071B;
+        Tue, 19 Nov 2019 05:46:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142394;
-        bh=oeHpWnG6wYyTw+fo0e/fFTR7t5jTwjvQijXwsb60cU0=;
+        s=default; t=1574142397;
+        bh=etxpC8JZZJWPy8F/xgvTzSrSpq2DAsTTtvter5MD1QY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aAFLa7SdIIg5tQlDn1jM1nZGdnWfqVJ3n99RMynnm54vSFHpBlDomkKmvKIqsw8da
-         8KbvsdCZKp6/0z9uaPhvCFPujk4NWvDwvpL/IJTnpRoeJpbKX1mtyuq4wSiesleDJK
-         UYDZ7NCOlBA5BXad3CEcQAKWjHQMk2HqHvAPP96A=
+        b=pLx1MrZ5t3aTthC8KovmwUFutLGWfS2hA2Rbb9ywkRU13oT8GFHglXVilLbfia0dA
+         QuSKyusy7DRUo9c+CDT4dsmN9KVT3UmZItlgYco3mxIw+vbs+IDutjl2NlEo6FOv7P
+         chrBvGylHf0SCEnW3QNEs+m320mCa2JqEwdSbRL0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>,
-        Raghuram Chary Jallipalli 
-        <raghuramchary.jallipalli@microchip.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 066/239] net: lan78xx: Bail out if lan78xx_get_endpoints fails
-Date:   Tue, 19 Nov 2019 06:17:46 +0100
-Message-Id: <20191119051312.194413686@linuxfoundation.org>
+Subject: [PATCH 4.14 067/239] ASoC: sgtl5000: avoid division by zero if lo_vag is zero
+Date:   Tue, 19 Nov 2019 06:17:47 +0100
+Message-Id: <20191119051312.407793060@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -62,38 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Wahren <stefan.wahren@i2se.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit fa8cd98c06407b5798b927cd7fd14d30f360ed02 ]
+[ Upstream commit 9ab708aef61f5620113269a9d1bdb1543d1207d0 ]
 
-We need to bail out if lan78xx_get_endpoints() fails, otherwise the
-result is overwritten.
+In the case where lo_vag <= SGTL5000_LINE_OUT_GND_BASE, lo_vag
+is set to zero and later vol_quot is computed by dividing by
+lo_vag causing a division by zero error.  Fix this by avoiding
+a zero division and set vol_quot to zero in this specific case
+so that the lowest setting for i is correctly set.
 
-Fixes: 55d7de9de6c3 ("Microchip's LAN7800 family USB 2/3 to 10/100/1000 Ethernet")
-Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
-Reviewed-by: Raghuram Chary Jallipalli <raghuramchary.jallipalli@microchip.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/lan78xx.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ sound/soc/codecs/sgtl5000.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
-index 78a12d7b96e86..2229284d16f56 100644
---- a/drivers/net/usb/lan78xx.c
-+++ b/drivers/net/usb/lan78xx.c
-@@ -2818,6 +2818,11 @@ static int lan78xx_bind(struct lan78xx_net *dev, struct usb_interface *intf)
- 	int i;
- 
- 	ret = lan78xx_get_endpoints(dev, intf);
-+	if (ret) {
-+		netdev_warn(dev->net, "lan78xx_get_endpoints failed: %d\n",
-+			    ret);
-+		return ret;
-+	}
- 
- 	dev->data[0] = (unsigned long)kzalloc(sizeof(*pdata), GFP_KERNEL);
- 
+diff --git a/sound/soc/codecs/sgtl5000.c b/sound/soc/codecs/sgtl5000.c
+index 10764c1e854e2..ca8a70ab22a82 100644
+--- a/sound/soc/codecs/sgtl5000.c
++++ b/sound/soc/codecs/sgtl5000.c
+@@ -1314,7 +1314,7 @@ static int sgtl5000_set_power_regs(struct snd_soc_codec *codec)
+ 	 * Searching for a suitable index solving this formula:
+ 	 * idx = 40 * log10(vag_val / lo_cagcntrl) + 15
+ 	 */
+-	vol_quot = (vag * 100) / lo_vag;
++	vol_quot = lo_vag ? (vag * 100) / lo_vag : 0;
+ 	lo_vol = 0;
+ 	for (i = 0; i < ARRAY_SIZE(vol_quot_table); i++) {
+ 		if (vol_quot >= vol_quot_table[i])
 -- 
 2.20.1
 
