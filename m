@@ -2,53 +2,52 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 550DFC43141
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:44:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34512C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:44:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27D04208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:44:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02DBC22317
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:44:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142262;
-	bh=yx7LKwTUSFp/Jv9bAC2z1ZvGkfcLgLukF/deIfRG3uU=;
+	s=default; t=1574142268;
+	bh=XOZGKUDKELZbuYuJ99nsyJpYiikG2/sMmY+svnf4Fpw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RiEKWqVkymJPFCVp+t4dy2kg3+MAbFqNcSbNcJt105cgS4MZVjL4kpf8sQEowa3ml
-	 +NHVpN5BBGgB9syvUvTqFN5H0G2pPStsaRbovWhVjuBKQV2FFJ4IZ8STCP2OqCIR7s
-	 z6bXfFt/jmBRK4ZyniM+mwgyAcVli/91rXHDnAe8=
+	b=mvGBO2b9UfXUh4IxwkW1RcmjqLmOsEGLrVbNf+lqNrX8jWX/XZVbHTDrRV8t/a/6d
+	 byoxDHjMlqJpQdKues8GchY6n4nwUywBwo+ZM1IyAbqm8bYRq1MVaDntLhslnobT1U
+	 AM/Bo/d172itznMUlvMEna0rtgtFHcg6HMn8mBR8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730172AbfKSFoV (ORCPT
+        id S1730851AbfKSFo0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:44:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39596 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:44:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728629AbfKSFoR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:44:17 -0500
+        id S1728629AbfKSFoW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:44:22 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D0E52075E;
-        Tue, 19 Nov 2019 05:44:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 488E12075E;
+        Tue, 19 Nov 2019 05:44:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142255;
-        bh=yx7LKwTUSFp/Jv9bAC2z1ZvGkfcLgLukF/deIfRG3uU=;
+        s=default; t=1574142261;
+        bh=XOZGKUDKELZbuYuJ99nsyJpYiikG2/sMmY+svnf4Fpw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ph9b+x6jXAmlNztWNmftKKVdBZxTxGNLjO1/xsUKwlUiYrzALwIKkUAPiGqmP2El3
-         IlNuQahoOBeLyWY9d6msf3xAwEP3gnmIIssF6PerzrhngOH2r/CBiRMeWSTF1Vtr6X
-         0noA+kh5xr+ZyLqTOtVjhUW2qKoCKE5E6rDmL3AU=
+        b=k/DCgbc4MR3OlDLL//+I04HWUz+qG49tP1j6Bl8wlMQkFuGocIkcLHJ9635n135Uu
+         j6i0x+zzn+4EyNOlKOGuI5emvHskfnkBBRG5uG6K8msTpkkKrgsaQAWS3g50EY2X3d
+         g4Xm4FXNiRjbDAlgMMlEPY1FfA7LyAfn4s6Knm58=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 002/239] KVM: x86: introduce is_pae_paging
-Date:   Tue, 19 Nov 2019 06:16:42 +0100
-Message-Id: <20191119051256.559776124@linuxfoundation.org>
+        stable@vger.kernel.org, Feng Tang <feng.tang@intel.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 4.14 021/239] x86/quirks: Disable HPET on Intel Coffe Lake platforms
+Date:   Tue, 19 Nov 2019 06:17:01 +0100
+Message-Id: <20191119051301.677858088@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -61,112 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Bonzini <pbonzini@redhat.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit bf03d4f9334728bf7c8ffc7de787df48abd6340e ]
+commit fc5db58539b49351e76f19817ed1102bf7c712d0 upstream.
 
-Checking for 32-bit PAE is quite common around code that fiddles with
-the PDPTRs.  Add a function to compress all checks into a single
-invocation.
+Some Coffee Lake platforms have a skewed HPET timer once the SoCs entered
+PC10, which in consequence marks TSC as unstable because HPET is used as
+watchdog clocksource for TSC.
 
-Moving to the common helper also fixes a subtle bug in kvm_set_cr3()
-where it fails to check is_long_mode() and results in KVM incorrectly
-attempting to load PDPTRs for a 64-bit guest.
+Harry Pan tried to work around it in the clocksource watchdog code [1]
+thereby creating a circular dependency between HPET and TSC. This also
+ignores the fact, that HPET is not only unsuitable as watchdog clocksource
+on these systems, it becomes unusable in general.
 
-Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-[sean: backport to 4.x; handle vmx.c split in 5.x, call out the bugfix]
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Disable HPET on affected platforms.
+
+Suggested-by: Feng Tang <feng.tang@intel.com>
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203183
+Link: https://lore.kernel.org/lkml/20190516090651.1396-1-harry.pan@intel.com/ [1]
+Link: https://lkml.kernel.org/r/20191016103816.30650-1-kai.heng.feng@canonical.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/x86/kvm/vmx.c | 7 +++----
- arch/x86/kvm/x86.c | 8 ++++----
- arch/x86/kvm/x86.h | 5 +++++
- 3 files changed, 12 insertions(+), 8 deletions(-)
+ arch/x86/kernel/early-quirks.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
-index cd5a8e888eb6b..ab6384efc7916 100644
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -4468,7 +4468,7 @@ static void ept_load_pdptrs(struct kvm_vcpu *vcpu)
- 		      (unsigned long *)&vcpu->arch.regs_dirty))
- 		return;
- 
--	if (is_paging(vcpu) && is_pae(vcpu) && !is_long_mode(vcpu)) {
-+	if (is_pae_paging(vcpu)) {
- 		vmcs_write64(GUEST_PDPTR0, mmu->pdptrs[0]);
- 		vmcs_write64(GUEST_PDPTR1, mmu->pdptrs[1]);
- 		vmcs_write64(GUEST_PDPTR2, mmu->pdptrs[2]);
-@@ -4480,7 +4480,7 @@ static void ept_save_pdptrs(struct kvm_vcpu *vcpu)
- {
- 	struct kvm_mmu *mmu = vcpu->arch.walk_mmu;
- 
--	if (is_paging(vcpu) && is_pae(vcpu) && !is_long_mode(vcpu)) {
-+	if (is_pae_paging(vcpu)) {
- 		mmu->pdptrs[0] = vmcs_read64(GUEST_PDPTR0);
- 		mmu->pdptrs[1] = vmcs_read64(GUEST_PDPTR1);
- 		mmu->pdptrs[2] = vmcs_read64(GUEST_PDPTR2);
-@@ -10906,8 +10906,7 @@ static int nested_vmx_load_cr3(struct kvm_vcpu *vcpu, unsigned long cr3, bool ne
- 		 * If PAE paging and EPT are both on, CR3 is not used by the CPU and
- 		 * must not be dereferenced.
- 		 */
--		if (!is_long_mode(vcpu) && is_pae(vcpu) && is_paging(vcpu) &&
--		    !nested_ept) {
-+		if (is_pae_paging(vcpu) && !nested_ept) {
- 			if (!load_pdptrs(vcpu, vcpu->arch.walk_mmu, cr3)) {
- 				*entry_failure_code = ENTRY_FAIL_PDPTE;
- 				return 1;
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index dc1b6d5bb16d6..1f9360320a82c 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -620,7 +620,7 @@ bool pdptrs_changed(struct kvm_vcpu *vcpu)
- 	gfn_t gfn;
- 	int r;
- 
--	if (is_long_mode(vcpu) || !is_pae(vcpu) || !is_paging(vcpu))
-+	if (!is_pae_paging(vcpu))
- 		return false;
- 
- 	if (!test_bit(VCPU_EXREG_PDPTR,
-@@ -849,8 +849,8 @@ int kvm_set_cr3(struct kvm_vcpu *vcpu, unsigned long cr3)
- 	if (is_long_mode(vcpu) &&
- 	    (cr3 & rsvd_bits(cpuid_maxphyaddr(vcpu), 63)))
- 		return 1;
--	else if (is_pae(vcpu) && is_paging(vcpu) &&
--		   !load_pdptrs(vcpu, vcpu->arch.walk_mmu, cr3))
-+	else if (is_pae_paging(vcpu) &&
-+		 !load_pdptrs(vcpu, vcpu->arch.walk_mmu, cr3))
- 		return 1;
- 
- 	vcpu->arch.cr3 = cr3;
-@@ -7787,7 +7787,7 @@ int kvm_arch_vcpu_ioctl_set_sregs(struct kvm_vcpu *vcpu,
- 		kvm_update_cpuid(vcpu);
- 
- 	idx = srcu_read_lock(&vcpu->kvm->srcu);
--	if (!is_long_mode(vcpu) && is_pae(vcpu) && is_paging(vcpu)) {
-+	if (is_pae_paging(vcpu)) {
- 		load_pdptrs(vcpu, vcpu->arch.walk_mmu, kvm_read_cr3(vcpu));
- 		mmu_reset_needed = 1;
- 	}
-diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
-index c88305d997b0f..68eb0d03e5fc3 100644
---- a/arch/x86/kvm/x86.h
-+++ b/arch/x86/kvm/x86.h
-@@ -94,6 +94,11 @@ static inline int is_paging(struct kvm_vcpu *vcpu)
- 	return likely(kvm_read_cr0_bits(vcpu, X86_CR0_PG));
- }
- 
-+static inline bool is_pae_paging(struct kvm_vcpu *vcpu)
-+{
-+	return !is_long_mode(vcpu) && is_pae(vcpu) && is_paging(vcpu);
-+}
-+
- static inline u32 bit(int bitno)
- {
- 	return 1 << (bitno & 31);
--- 
-2.20.1
-
+--- a/arch/x86/kernel/early-quirks.c
++++ b/arch/x86/kernel/early-quirks.c
+@@ -681,6 +681,8 @@ static struct chipset early_qrk[] __init
+ 	 */
+ 	{ PCI_VENDOR_ID_INTEL, 0x0f00,
+ 		PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
++	{ PCI_VENDOR_ID_INTEL, 0x3ec4,
++		PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
+ 	{ PCI_VENDOR_ID_BROADCOM, 0x4331,
+ 	  PCI_CLASS_NETWORK_OTHER, PCI_ANY_ID, 0, apple_airport_reset},
+ 	{}
 
 
