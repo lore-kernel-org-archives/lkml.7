@@ -2,116 +2,103 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D8AAC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A4F6C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:39:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7683C222A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:39:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F09A4208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:39:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574141967;
+	bh=8GO4XkRygHmVTWKvH9SbwPX3T6ChRn2RDaOvhj0FWc0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=zDti2yOP8/6116um1rYT/DWG5FVKcxOsv+MgL5VxMfKaMsiafcMgvfnE/bNDaQM8L
+	 I2heTUnFQY/lo+u8AZkmciizen2Pe57hkBob2cKarHTibI3VS2gv76+dUSfJ4nfqar
+	 YRFTyErD57sBff51Tnqz6jV4zFSp7Jm1H92KnmQ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730278AbfKSFjV convert rfc822-to-8bit (ORCPT
+        id S1730287AbfKSFjZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:39:21 -0500
-Received: from coyote.holtmann.net ([212.227.132.17]:35537 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730261AbfKSFjS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:39:18 -0500
-Received: from marcel-macbook.holtmann.net (p4FF9F0D1.dip0.t-ipconnect.de [79.249.240.209])
-        by mail.holtmann.org (Postfix) with ESMTPSA id 3950ACECED;
-        Tue, 19 Nov 2019 06:48:23 +0100 (CET)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3601.0.10\))
-Subject: Re: [PATCH v6 3/4] dt-bindings: net: broadcom-bluetooth: Add pcm
- config
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20191118110335.v6.3.I18b06235e381accea1c73aa2f9db358645d9f201@changeid>
-Date:   Tue, 19 Nov 2019 06:39:16 +0100
-Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-bluetooth@vger.kernel.org, dianders@chromium.org,
-        devicetree@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Ondrej Jirman <megous@megous.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <079C85BE-FBC5-4A2B-9EBF-0CEDB6F30C18@holtmann.org>
-References: <20191118192123.82430-1-abhishekpandit@chromium.org>
- <20191118110335.v6.3.I18b06235e381accea1c73aa2f9db358645d9f201@changeid>
-To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-X-Mailer: Apple Mail (2.3601.0.10)
+        Tue, 19 Nov 2019 00:39:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33464 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730261AbfKSFjX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:39:23 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F31A0208C3;
+        Tue, 19 Nov 2019 05:39:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574141962;
+        bh=8GO4XkRygHmVTWKvH9SbwPX3T6ChRn2RDaOvhj0FWc0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=OOG8xJVyYoAq25TWT9qpI5xTIvXIH+JdQRgIrjOpZ0Sm7PK+zZV6EdGIa8PHj1Cjw
+         rY36gSWuKZ6q7pxCIsNRmmMXG84QxSUkYKhfKxsnuxNT7Zu8Oa8cX8m8GcgaKhdUBV
+         0TUUQvVrw0hlZcY7/mp9FdmM0rZ+Jb5nJPmwAvo4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Keith Busch <keith.busch@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sinan Kaya <okaya@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 313/422] PCI/AER: Take reference on error devices
+Date:   Tue, 19 Nov 2019 06:18:30 +0100
+Message-Id: <20191119051419.277615903@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
+References: <20191119051400.261610025@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Abhishek,
+From: Keith Busch <keith.busch@intel.com>
 
-> Add documentation for pcm parameters.
-> 
-> Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-> ---
-> 
-> Changes in v6: None
-> Changes in v5: None
-> Changes in v4: None
-> Changes in v3: None
-> Changes in v2: None
-> 
-> .../bindings/net/broadcom-bluetooth.txt       | 16 ++++++++++
-> include/dt-bindings/bluetooth/brcm.h          | 32 +++++++++++++++++++
-> 2 files changed, 48 insertions(+)
-> create mode 100644 include/dt-bindings/bluetooth/brcm.h
-> 
-> diff --git a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-> index c749dc297624..8561e4684378 100644
-> --- a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-> +++ b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-> @@ -29,10 +29,20 @@ Optional properties:
->    - "lpo": external low power 32.768 kHz clock
->  - vbat-supply: phandle to regulator supply for VBAT
->  - vddio-supply: phandle to regulator supply for VDDIO
-> + - brcm,bt-sco-routing: PCM, Transport, Codec, I2S
-> + - brcm,bt-pcm-interface-rate: 128KBps, 256KBps, 512KBps, 1024KBps, 2048KBps
-> + - brcm,bt-pcm-frame-type: short, long
-> + - brcm,bt-pcm-sync-mode: slave, master
-> + - brcm,bt-pcm-clock-mode: slave, master
-> 
-> +See include/dt-bindings/bluetooth/brcm.h for SCO/PCM parameters. The default
-> +value for all these values are 0 (except for brcm,bt-sco-routing which requires
-> +a value) if you choose to leave it out.
-> 
-> Example:
-> 
-> +#include <dt-bindings/bluetooth/brcm.h>
-> +
-> &uart2 {
->        pinctrl-names = "default";
->        pinctrl-0 = <&uart2_pins>;
-> @@ -40,5 +50,11 @@ Example:
->        bluetooth {
->                compatible = "brcm,bcm43438-bt";
->                max-speed = <921600>;
-> +
-> +               brcm,bt-sco-routing        = <BRCM_SCO_ROUTING_TRANSPORT>;
+[ Upstream commit 60271ab044a53edb9dcbe76bebea2221c4ff04d9 ]
 
-in case you use transport which means HCI, you would not have values below. It is rather PCM here in the example.
+Error handling may be running in parallel with a hot removal.  Reference
+count the device during AER handling so the device can not be freed while
+AER wants to reference it.
 
-> +               brcm,bt-pcm-interface-rate = <BRCM_PCM_IF_RATE_512KBPS>;
-> +               brcm,bt-pcm-frame-type     = <BRCM_PCM_FRAME_TYPE_SHORT>;
-> +               brcm,bt-pcm-sync-mode      = <BRCM_PCM_SYNC_MODE_MASTER>;
-> +               brcm,bt-pcm-clock-mode     = <BRCM_PCM_CLOCK_MODE_MASTER>;
->        };
-> };
+Signed-off-by: Keith Busch <keith.busch@intel.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Sinan Kaya <okaya@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pci/pcie/aer.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-And I am asking this again. Is this adding any value to use an extra include file? Inside the driver we are not really needing these values since they are handed to the hardware.
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index 637d638f73da5..ffbbd759683c5 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -866,7 +866,7 @@ void cper_print_aer(struct pci_dev *dev, int aer_severity,
+ static int add_error_device(struct aer_err_info *e_info, struct pci_dev *dev)
+ {
+ 	if (e_info->error_dev_num < AER_MAX_MULTI_ERR_DEVICES) {
+-		e_info->dev[e_info->error_dev_num] = dev;
++		e_info->dev[e_info->error_dev_num] = pci_dev_get(dev);
+ 		e_info->error_dev_num++;
+ 		return 0;
+ 	}
+@@ -1013,6 +1013,7 @@ static void handle_error_source(struct pci_dev *dev, struct aer_err_info *info)
+ 		pcie_do_nonfatal_recovery(dev);
+ 	else if (info->severity == AER_FATAL)
+ 		pcie_do_fatal_recovery(dev, PCIE_PORT_SERVICE_AER);
++	pci_dev_put(dev);
+ }
+ 
+ #ifdef CONFIG_ACPI_APEI_PCIEAER
+-- 
+2.20.1
 
-Regards
 
-Marcel
 
