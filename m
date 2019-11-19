@@ -2,203 +2,152 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D26F3C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:34:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65D0DC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:35:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A728C2186D
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:34:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E03D2186D
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:35:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ioz2oJK8"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qUWKigK0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727560AbfKSTeS (ORCPT
+        id S1727194AbfKSTfj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 14:34:18 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:43270 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726792AbfKSTeS (ORCPT
+        Tue, 19 Nov 2019 14:35:39 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:36476 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726874AbfKSTfi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 14:34:18 -0500
-Received: by mail-lj1-f194.google.com with SMTP id y23so24695782ljh.10;
-        Tue, 19 Nov 2019 11:34:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=6i22jjuq6psYcmB4Qo1yClbc19oDCC98rypRJiM2kFc=;
-        b=ioz2oJK8zcEUkcjZrufuzn/BktEf/augSq5JnBtM3JNjj4q7ULsnv9Ql3VLReZy9ft
-         kYefzzT6NnQ8qu6er7uKAXYvjKfQD6dZ4Ps1N8rDKs8KePAZ857CEpN2eYpnAjffUrom
-         zKp3B70qfN1rPALkG9dlIPoWb+uQMFjjeyGevuvSSvIDVRJcyU42R10XiCEMy002g+sP
-         8Qb9jg9tGcMjVeWekWP/dVCnIiIwn3aii7xRcYxLaS36Y8vZQ6cFG5w6N236RfzrzOZ2
-         AXRttIB8KTGNhwSu/Yj/kC64KeGloDBe+knfhzhhk+4rohgHNl+jz78GqAIbNPYuf6c0
-         zAgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6i22jjuq6psYcmB4Qo1yClbc19oDCC98rypRJiM2kFc=;
-        b=EE71+3nQ2GTiytGUERBTq0emHTBRaKOD2rj2U6w7rk6oz8f9LYzsrof8fN5UwVsNAg
-         7D+0KqeDV5oE4dLNFXnIvNMnr02oG049nMb0SkBzK9qWlv3dM+i0ZxIyZ4b6JLc4qLzX
-         ncDWaXnnOXFsSboDwg258Z/C2ELyflJ+7wjjo40uHFeXbuS546b1ioRp3pn3BIqv1Kl5
-         9FEpvAzm7u0wasQAVBXfFnpmtEb3fKyHNOorVmxRnEiKvV3uDswn6+sJMMdvcpEOQ0In
-         46hbh5GU8FoADpWU7FAfqNXWmhmvR8at295Ec01JsGaGIRNNDlYkrQQqawSv4fVUks8i
-         GFvQ==
-X-Gm-Message-State: APjAAAU9D0L8sQYIpcUVd2VaAabTZKnXFKAsj5rPxU1Q9ou2Ef8o7aOJ
-        EH2kWXyWxm/z8ib1+OmgG9nyfb3E
-X-Google-Smtp-Source: APXvYqwjp40IzfQbKwCC+OP/Cob50iQyYhXBidVcOfzXPpNsqZTTw4syFIFbqbn4Of7tqJstF6dMwQ==
-X-Received: by 2002:a2e:87cf:: with SMTP id v15mr5309577ljj.79.1574192054580;
-        Tue, 19 Nov 2019 11:34:14 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id p24sm11076087lfc.96.2019.11.19.11.34.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 Nov 2019 11:34:14 -0800 (PST)
-Subject: Re: [PATCH v1 06/17] soc: pmc: Add blink output clock registration to
- Tegra PMC
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com,
-        mperttunen@nvidia.com, gregkh@linuxfoundation.org,
-        sboyd@kernel.org, tglx@linutronix.de, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Cc:     allison@lohutok.net, pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
-        mturquette@baylibre.com, horms+renesas@verge.net.au,
-        Jisheng.Zhang@synaptics.com, krzk@kernel.org, arnd@arndb.de,
-        spujar@nvidia.com, josephl@nvidia.com, vidyas@nvidia.com,
-        daniel.lezcano@linaro.org, mmaddireddy@nvidia.com,
-        markz@nvidia.com, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1574146234-3871-1-git-send-email-skomatineni@nvidia.com>
- <1574146234-3871-7-git-send-email-skomatineni@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <95f3e928-3e08-abbd-5617-d3570a592c06@gmail.com>
-Date:   Tue, 19 Nov 2019 22:34:12 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Tue, 19 Nov 2019 14:35:38 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAJJZVAc002625;
+        Tue, 19 Nov 2019 13:35:31 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1574192132;
+        bh=k7VUJ7xrx8aTdO9PAjjAXV0s8KEMOCX5ocuWvOEy3kQ=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=qUWKigK0UMF3+rWwYbdbEBNKfu/SUf3VNN4qKfMgWICXlhvjJ4lkkIJMEWXBRWGjY
+         CSDjRaGkbh6PZa3Jp9rsDjt7iXFkvSuXQU2F6B4NWtrzsCsbyUyGWi5Q9tsm06rz+D
+         L5WU4fcDp4E+ZHtfTOneEKMzDTec4z8NqABNiz3I=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAJJZVi3062807
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 19 Nov 2019 13:35:31 -0600
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 19
+ Nov 2019 13:35:31 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 19 Nov 2019 13:35:31 -0600
+Received: from [10.250.45.147] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAJJZV3T053631;
+        Tue, 19 Nov 2019 13:35:31 -0600
+Subject: Re: [PATCH] ARM: OMAP: Use ARM SMC Calling Convention when OP-TEE is
+ available
+To:     Tony Lindgren <tony@atomide.com>
+CC:     Mark Rutland <mark.rutland@arm.com>, <linux-omap@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <29db708e-119e-8a89-7d43-e38e2a10dc07@ti.com>
+ <20191119162157.GJ35479@atomide.com>
+ <6e009ae3-6aa2-409b-749f-4947303940d8@ti.com>
+ <20191119164227.GL35479@atomide.com> <20191119180546.GM35479@atomide.com>
+ <9e15c170-c9fa-778c-d998-bd1111a6390d@ti.com>
+ <20191119183247.GN35479@atomide.com>
+ <a351461a-f6a1-334b-6bdd-a56626914fb3@ti.com>
+ <20191119190721.GO35479@atomide.com>
+ <7fa11037-8d33-2274-c8cc-80e9630b38b0@ti.com>
+ <20191119192029.GP35479@atomide.com>
+From:   "Andrew F. Davis" <afd@ti.com>
+Message-ID: <0ad31b32-712e-5bef-5645-0336dfec99cc@ti.com>
+Date:   Tue, 19 Nov 2019 14:35:26 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <1574146234-3871-7-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20191119192029.GP35479@atomide.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-19.11.2019 09:50, Sowjanya Komatineni пишет:
-> Tegra PMC has blink control to output 32 Khz clock out to Tegra
-> blink pin. Blink pad DPD state and enable controls are part of
-> Tegra PMC register space.
+On 11/19/19 2:20 PM, Tony Lindgren wrote:
+> * Andrew F. Davis <afd@ti.com> [191119 19:13]:
+>> On 11/19/19 2:07 PM, Tony Lindgren wrote:
+>>> * Andrew F. Davis <afd@ti.com> [191119 18:51]:
+>>>> On 11/19/19 1:32 PM, Tony Lindgren wrote:
+>>>>> It would allow us to completely change over to using
+>>>>> arm_smccc_smc() and forget the custom calls.
+>>>>
+>>>> We would need more than just the r12 quirk to replace all our custom SMC
+>>>> handlers, we would need quirks for omap_smc2 which puts process ID in r1
+>>>> and puts #0xff in r6, and omap_smc3 that uses smc #1. All of our legacy
+>>>> SMC calls also trash r4-r11, that is very non SMCCC complaint as only
+>>>> r4-r7 need be caller saved. I don't see arm_smccc_smc() working with
+>>>> legacy ROM no matter how much we hack at it :(
+>>>
+>>> We would just have omap_smc2() call arm_smccc_smc() and in that
+>>> case. And omap_smc2() would still deal with saving and restoring
+>>> the registers.
+>>
+>> Then why call arm_smccc_smc()? omap_smc2() is already an assembly
+>> function, all it needs to do after loading the registers and saving the
+>> right ones is issue an "smc #0" instruction, why would we want to
+>> instead call into some other function to re-save registers and issue the
+>> exact same instruction?
 > 
-> Currently Tegra clock driver registers blink control by passing
-> PMC address and register offset to clk_register_gate which performs
-> direct PMC access during clk_ops and with this when PMC is in secure
-> mode, any access from non-secure world does not go through.
+> To use Linux generic API for smc calls where possible.
 > 
-> This patch adds blink control registration to the Tegra PMC driver
-> using PMC specific clock gate operations that use tegra_pmc_readl
-> and tegra_pmc_writel to support both secure mode and non-secure
-> mode PMC register access.
+
+
+But we are not using generic API calls, we are using omap_smcx() which
+cannot call into arm_smccc_smc(). For all the above reasons plus
+arm_smccc_smc() uses r12 to save the stack pointer, our ROM expects r12
+to store the function ID.
+
+
+>>> Certainly the wrapper functions calling arm_smccc_smc() can deal
+>>> with r12 too if the r12-quirk version and the plain version are
+>>> never needed the same time on a booted SoC.
+>>>
+>>> Are they ever needed the same time on a booted SoC or not?
 > 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/soc/tegra/pmc.c | 42 ++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 42 insertions(+)
+>    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 > 
-> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
-> index 790a6619ba32..095e89c7fa3f 100644
-> --- a/drivers/soc/tegra/pmc.c
-> +++ b/drivers/soc/tegra/pmc.c
-> @@ -61,12 +61,15 @@
->  #define  PMC_CNTRL_SYSCLK_OE		BIT(11) /* system clock enable */
->  #define  PMC_CNTRL_SYSCLK_POLARITY	BIT(10) /* sys clk polarity */
->  #define  PMC_CNTRL_PWRREQ_POLARITY	BIT(8)
-> +#define  PMC_CNTRL_BLINK_EN		BIT(7)
->  #define  PMC_CNTRL_MAIN_RST		BIT(4)
->  
->  #define PMC_WAKE_MASK			0x0c
->  #define PMC_WAKE_LEVEL			0x10
->  #define PMC_WAKE_STATUS			0x14
->  #define PMC_SW_WAKE_STATUS		0x18
-> +#define PMC_DPD_PADS_ORIDE		0x1c
-> +#define  PMC_DPD_PADS_ORIDE_BLINK	BIT(20)
->  
->  #define DPD_SAMPLE			0x020
->  #define  DPD_SAMPLE_ENABLE		BIT(0)
-> @@ -79,6 +82,7 @@
->  
->  #define PWRGATE_STATUS			0x38
->  
-> +#define TEGRA210_PMC_BLINK_TIMER	0x40
->  #define PMC_IMPL_E_33V_PWR		0x40
->  
->  #define PMC_PWR_DET			0x48
-> @@ -247,6 +251,9 @@ static struct pmc_clk_init_data tegra_pmc_clks_data[] = {
->  	PMC_CLK(3, 22, 18, 0, 0),
->  };
->  
-> +static struct pmc_clk_gate blink_override;
-> +static struct pmc_clk_gate blink;
-> +
->  struct tegra_powergate {
->  	struct generic_pm_domain genpd;
->  	struct tegra_pmc *pmc;
-> @@ -359,6 +366,7 @@ struct tegra_pmc_soc {
->  
->  	struct pmc_clk_init_data *pmc_clks_data;
->  	unsigned int num_pmc_clks;
-> +	bool has_blink_output;
->  };
->  
->  static const char * const tegra186_reset_sources[] = {
-> @@ -2530,6 +2538,9 @@ static void tegra_pmc_clock_register(struct tegra_pmc *pmc,
->  	/* each pmc clock output has a mux and a gate */
->  	num_clks = pmc->soc->num_pmc_clks * 2;
->  
-> +	if (pmc->soc->has_blink_output)
-> +		num_clks += 1;
-> +
->  	if (!num_clks)
->  		return;
->  
-> @@ -2604,6 +2615,30 @@ static void tegra_pmc_clock_register(struct tegra_pmc *pmc,
->  		}
->  	}
->  
-> +	if (pmc->soc->has_blink_output) {
-> +		tegra_pmc_writel(pmc, 0x0, TEGRA210_PMC_BLINK_TIMER);
-> +		clkgate = tegra_pmc_clk_gate_register("blink_override",
-> +						      "clk_32k",
-> +						      0, &blink_override,
-> +					      PMC_DPD_PADS_ORIDE,
-> +						      PMC_DPD_PADS_ORIDE_BLINK,
-> +						      NULL);
-> +		if (IS_ERR(clkgate))
-> +			goto free_clks;
-> +
-> +		clkgate = tegra_pmc_clk_gate_register("blink",
-> +						      "blink_override",
-> +						      0, &blink,
-> +						      PMC_CNTRL,
-> +						      PMC_CNTRL_BLINK_EN,
-> +						      NULL);
-> +		if (IS_ERR(clkgate))
-> +			goto free_clks;
-> +
-> +		clk_data->clks[TEGRA_PMC_CLK_BLINK] = clkgate;
-> +		clk_register_clkdev(clkgate, "blink", NULL);
 
-Tegra20 has pmc->soc->num_pmc_clks = 0 and thus num_clks = 1, while
-TEGRA_PMC_CLK_BLINK = 6.
 
-BTW, Tegra30 doesn't boot. I'll try again v2.
+They should not be needed at the same time, either OP-TEE is on the
+secure side or ROM is there.
 
-Please fix it all in v2. Compile-test all patches and make at least a
-boot-test where possible.
+Andrew
 
-[snip]
+
+> Sorry but maybe check the font size on your screen. I'm trying to
+> get your attention again for the second time above to answer a
+> question I asked.
+> 
+>>>> I can make OP-TEE also compatible with the r12 quirk, which is what I
+>>>> used to do. That way we didn't need to do any detection. The issue was
+>>>> that non-standard SMC calls should not go through the common SMCCC
+>>>> handler (unless you are QCOM for some reason..).
+>>>
+>>> Sounds like for optee nothing must be done for r12 :)
+> 
+>> Unless all our calls use the r12 hack, then we would need to fixup
+>> OP-TEE to accept that also.
+> 
+> No idea about that that part, but sounds like r12 use is up to
+> the caller in the optee case.
+> 
+> Regards,
+> 
+> Tony
+> 
