@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 444DEC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:54:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49A14C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:54:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 123B42084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:54:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15CA520721
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:54:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142850;
-	bh=fg91nLDGVt3w607YoMYtnBvNOU3I7TSwxUy5GAjZX40=;
+	s=default; t=1574142853;
+	bh=+WbnZZtUjdrNhs68Xqup9ybIDK1452KLAHVBtvaDgSg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cCzZfVnzdgLkM2l78UUvgyIp3AItnUUKSHu8JIgQZiSd7joC4dfUBHlLbdcTxmOfQ
-	 tz8XOrW+h+oW//bqSgJfq5fzzBZX4nLxTfZU1NK1Kfyby5AFTL2LfRLAzyzHIGvns+
-	 fDp0c4xl778K/2ekRzzNxUGLsyp90DWw44dExbOw=
+	b=NYSKjzRwvo0uoczfXOZjGxvJ7xgrp1ciJSRXHG8Q7+IjZscGgtpr3hbCbJGAb9nYM
+	 1bFrs86uLFMBKFly6PqHLNeSkF+0G21oWI512OSsBLtm3gqM3YoQA7+7R5BUATH/S/
+	 liI00GVT1Raq16QtANeJXeSJRMf+2tF8G9phXTKQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731804AbfKSFyJ (ORCPT
+        id S1731835AbfKSFyM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:54:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52152 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:54:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732095AbfKSFyE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:54:04 -0500
+        id S1732099AbfKSFyI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:54:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D53A920721;
-        Tue, 19 Nov 2019 05:54:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78B6822323;
+        Tue, 19 Nov 2019 05:54:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142844;
-        bh=fg91nLDGVt3w607YoMYtnBvNOU3I7TSwxUy5GAjZX40=;
+        s=default; t=1574142847;
+        bh=+WbnZZtUjdrNhs68Xqup9ybIDK1452KLAHVBtvaDgSg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0363rzaXbWMN4P+jOxXSazyZksRlFP7sp8SM9+r+9XJcXmbn1EiQJQhANDsNxKsqI
-         BESaDELK4y0BJq0yDd1AhSmJnmIe3lrTPYnhViHaIACqv8vwFwVjUenQVLd4YsRzaQ
-         FLgwmNtmTd1cLMTZFx+VdT56I9208W4NClTzC3+8=
+        b=eaOyZ36IBFrwDnI+2+bBZVvIzaYHKJ6IIt4sWtyRgGyRIrt+st8sMo8mecOsdVnXv
+         w9+J9N1uSf3hpzl/CsRV4IeVsYs4LOcQpxHygC4PLaXYZ8VTIEBiER1Xgq1vA+3oMh
+         +yNp7UF/ssZ8qsYh23gacspRW90S80hzS2g5wbfA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Balakrishna Godavarthi <bgodavar@codeaurora.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
+        stable@vger.kernel.org, Michael Schmitz <schmitzmic@gmail.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 212/239] Bluetooth: hci_serdev: clear HCI_UART_PROTO_READY to avoid closing proto races
-Date:   Tue, 19 Nov 2019 06:20:12 +0100
-Message-Id: <20191119051338.451348099@linuxfoundation.org>
+Subject: [PATCH 4.14 221/239] scsi: NCR5380: Have NCR5380_select() return a bool
+Date:   Tue, 19 Nov 2019 06:20:21 +0100
+Message-Id: <20191119051339.491690937@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -61,33 +61,173 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+From: Finn Thain <fthain@telegraphics.com.au>
 
-[ Upstream commit 7cf7846d27bfc9731e449857db3eec5e0e9701ba ]
+[ Upstream commit dad8261e643849ea134c7cd5c8e794e31d93b9eb ]
 
-Clearing HCI_UART_PROTO_READY will avoid usage of proto function pointers
-before running the proto close function pointer. There is chance of kernel
-crash, due to usage of non proto close function pointers after proto close.
+The return value is taken to mean "retry" or "don't retry". Change it to bool
+to improve readability. Fix related comments. No functional change.
 
-Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Tested-by: Michael Schmitz <schmitzmic@gmail.com>
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bluetooth/hci_serdev.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/scsi/NCR5380.c | 46 +++++++++++++++++++-----------------------
+ drivers/scsi/NCR5380.h |  2 +-
+ 2 files changed, 22 insertions(+), 26 deletions(-)
 
-diff --git a/drivers/bluetooth/hci_serdev.c b/drivers/bluetooth/hci_serdev.c
-index 52e6d4d1608e3..69c00a3db5382 100644
---- a/drivers/bluetooth/hci_serdev.c
-+++ b/drivers/bluetooth/hci_serdev.c
-@@ -360,6 +360,7 @@ void hci_uart_unregister_device(struct hci_uart *hu)
+diff --git a/drivers/scsi/NCR5380.c b/drivers/scsi/NCR5380.c
+index 9131d30b2da75..60e051c249a6f 100644
+--- a/drivers/scsi/NCR5380.c
++++ b/drivers/scsi/NCR5380.c
+@@ -904,20 +904,16 @@ static irqreturn_t __maybe_unused NCR5380_intr(int irq, void *dev_id)
+ 	return IRQ_RETVAL(handled);
+ }
+ 
+-/*
+- * Function : int NCR5380_select(struct Scsi_Host *instance,
+- * struct scsi_cmnd *cmd)
+- *
+- * Purpose : establishes I_T_L or I_T_L_Q nexus for new or existing command,
+- * including ARBITRATION, SELECTION, and initial message out for
+- * IDENTIFY and queue messages.
++/**
++ * NCR5380_select - attempt arbitration and selection for a given command
++ * @instance: the Scsi_Host instance
++ * @cmd: the scsi_cmnd to execute
+  *
+- * Inputs : instance - instantiation of the 5380 driver on which this
+- * target lives, cmd - SCSI command to execute.
++ * This routine establishes an I_T_L nexus for a SCSI command. This involves
++ * ARBITRATION, SELECTION and MESSAGE OUT phases and an IDENTIFY message.
+  *
+- * Returns cmd if selection failed but should be retried,
+- * NULL if selection failed and should not be retried, or
+- * NULL if selection succeeded (hostdata->connected == cmd).
++ * Returns true if the operation should be retried.
++ * Returns false if it should not be retried.
+  *
+  * Side effects :
+  * If bus busy, arbitration failed, etc, NCR5380_select() will exit
+@@ -925,16 +921,15 @@ static irqreturn_t __maybe_unused NCR5380_intr(int irq, void *dev_id)
+  * SELECT_ENABLE will be set appropriately, the NCR5380
+  * will cease to drive any SCSI bus signals.
+  *
+- * If successful : I_T_L or I_T_L_Q nexus will be established,
+- * instance->connected will be set to cmd.
++ * If successful : the I_T_L nexus will be established, and
++ * hostdata->connected will be set to cmd.
+  * SELECT interrupt will be disabled.
+  *
+  * If failed (no target) : cmd->scsi_done() will be called, and the
+  * cmd->result host byte set to DID_BAD_TARGET.
+  */
+ 
+-static struct scsi_cmnd *NCR5380_select(struct Scsi_Host *instance,
+-                                        struct scsi_cmnd *cmd)
++static bool NCR5380_select(struct Scsi_Host *instance, struct scsi_cmnd *cmd)
+ 	__releases(&hostdata->lock) __acquires(&hostdata->lock)
  {
- 	struct hci_dev *hdev = hu->hdev;
+ 	struct NCR5380_hostdata *hostdata = shost_priv(instance);
+@@ -942,6 +937,7 @@ static struct scsi_cmnd *NCR5380_select(struct Scsi_Host *instance,
+ 	unsigned char *data;
+ 	int len;
+ 	int err;
++	bool ret = true;
  
-+	clear_bit(HCI_UART_PROTO_READY, &hu->flags);
- 	hci_unregister_dev(hdev);
- 	hci_free_dev(hdev);
+ 	NCR5380_dprint(NDEBUG_ARBITRATION, instance);
+ 	dsprintk(NDEBUG_ARBITRATION, instance, "starting arbitration, id = %d\n",
+@@ -950,7 +946,7 @@ static struct scsi_cmnd *NCR5380_select(struct Scsi_Host *instance,
+ 	/*
+ 	 * Arbitration and selection phases are slow and involve dropping the
+ 	 * lock, so we have to watch out for EH. An exception handler may
+-	 * change 'selecting' to NULL. This function will then return NULL
++	 * change 'selecting' to NULL. This function will then return false
+ 	 * so that the caller will forget about 'cmd'. (During information
+ 	 * transfer phases, EH may change 'connected' to NULL.)
+ 	 */
+@@ -986,7 +982,7 @@ static struct scsi_cmnd *NCR5380_select(struct Scsi_Host *instance,
+ 	if (!hostdata->selecting) {
+ 		/* Command was aborted */
+ 		NCR5380_write(MODE_REG, MR_BASE);
+-		return NULL;
++		return false;
+ 	}
+ 	if (err < 0) {
+ 		NCR5380_write(MODE_REG, MR_BASE);
+@@ -1035,7 +1031,7 @@ static struct scsi_cmnd *NCR5380_select(struct Scsi_Host *instance,
+ 	if (!hostdata->selecting) {
+ 		NCR5380_write(MODE_REG, MR_BASE);
+ 		NCR5380_write(INITIATOR_COMMAND_REG, ICR_BASE);
+-		return NULL;
++		return false;
+ 	}
  
+ 	dsprintk(NDEBUG_ARBITRATION, instance, "won arbitration\n");
+@@ -1118,13 +1114,13 @@ static struct scsi_cmnd *NCR5380_select(struct Scsi_Host *instance,
+ 
+ 		/* Can't touch cmd if it has been reclaimed by the scsi ML */
+ 		if (!hostdata->selecting)
+-			return NULL;
++			return false;
+ 
+ 		cmd->result = DID_BAD_TARGET << 16;
+ 		complete_cmd(instance, cmd);
+ 		dsprintk(NDEBUG_SELECTION, instance,
+ 			"target did not respond within 250ms\n");
+-		cmd = NULL;
++		ret = false;
+ 		goto out;
+ 	}
+ 
+@@ -1156,7 +1152,7 @@ static struct scsi_cmnd *NCR5380_select(struct Scsi_Host *instance,
+ 	}
+ 	if (!hostdata->selecting) {
+ 		do_abort(instance);
+-		return NULL;
++		return false;
+ 	}
+ 
+ 	dsprintk(NDEBUG_SELECTION, instance, "target %d selected, going into MESSAGE OUT phase.\n",
+@@ -1172,7 +1168,7 @@ static struct scsi_cmnd *NCR5380_select(struct Scsi_Host *instance,
+ 		cmd->result = DID_ERROR << 16;
+ 		complete_cmd(instance, cmd);
+ 		dsprintk(NDEBUG_SELECTION, instance, "IDENTIFY message transfer failed\n");
+-		cmd = NULL;
++		ret = false;
+ 		goto out;
+ 	}
+ 
+@@ -1187,13 +1183,13 @@ static struct scsi_cmnd *NCR5380_select(struct Scsi_Host *instance,
+ 
+ 	initialize_SCp(cmd);
+ 
+-	cmd = NULL;
++	ret = false;
+ 
+ out:
+ 	if (!hostdata->selecting)
+ 		return NULL;
+ 	hostdata->selecting = NULL;
+-	return cmd;
++	return ret;
+ }
+ 
+ /*
+diff --git a/drivers/scsi/NCR5380.h b/drivers/scsi/NCR5380.h
+index 8a6d002e67894..5935fd6d1a058 100644
+--- a/drivers/scsi/NCR5380.h
++++ b/drivers/scsi/NCR5380.h
+@@ -275,7 +275,7 @@ static irqreturn_t NCR5380_intr(int irq, void *dev_id);
+ static void NCR5380_main(struct work_struct *work);
+ static const char *NCR5380_info(struct Scsi_Host *instance);
+ static void NCR5380_reselect(struct Scsi_Host *instance);
+-static struct scsi_cmnd *NCR5380_select(struct Scsi_Host *, struct scsi_cmnd *);
++static bool NCR5380_select(struct Scsi_Host *, struct scsi_cmnd *);
+ static int NCR5380_transfer_dma(struct Scsi_Host *instance, unsigned char *phase, int *count, unsigned char **data);
+ static int NCR5380_transfer_pio(struct Scsi_Host *instance, unsigned char *phase, int *count, unsigned char **data);
+ static int NCR5380_poll_politely2(struct NCR5380_hostdata *,
 -- 
 2.20.1
 
