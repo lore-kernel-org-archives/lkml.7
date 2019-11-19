@@ -2,110 +2,162 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9333DC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 22:13:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26F4CC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 22:14:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65BB620674
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 22:13:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Tm/ClsWE"
+	by mail.kernel.org (Postfix) with ESMTP id 0882C206D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 22:14:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727336AbfKSWNz (ORCPT
+        id S1727481AbfKSWN7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 17:13:55 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:46462 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725978AbfKSWNy (ORCPT
+        Tue, 19 Nov 2019 17:13:59 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:60596 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725978AbfKSWN5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 17:13:54 -0500
-Received: by mail-pl1-f196.google.com with SMTP id l4so12682698plt.13
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 14:13:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:from:cc:to:user-agent:date;
-        bh=ASznCwZJ9ByLV4yzgLO4lJUGY/U/ukbE4wowdWRBq4E=;
-        b=Tm/ClsWEZ+XTrHRg12YXmBZbEQduJlGoiWcusKF0D+L31Pf83YcmXs1HDdXuH9vJGq
-         YFm24DEbLSuGeqs2xiFuIKVD0V+q64JkWodIP6IN8yricnaEdi5aBgJzRuxmbcyaUQFo
-         Xm95Y3iBb1vovUjRjxwLRGWhFsCdg2VCN1vyI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:from:cc:to
-         :user-agent:date;
-        bh=ASznCwZJ9ByLV4yzgLO4lJUGY/U/ukbE4wowdWRBq4E=;
-        b=r0tA/UdoJp/1hGDqTHcHY5omXIjkvmNPGRAH/jLQ2WUka1eX5VFPpEVr8t5FaQBbSO
-         IZZhvo2nvwuO9/8tL3dmV3KGijyICfOHdqIUBzLQSfmk3PDPhV3vRURQeJNWEU7rKOko
-         3eoRKaNpoTEih0t7vHOIjt+G9Hiv1KiMotQuQKfpIwxQMyvhu6Ba6/SOb6CHBJNg2PNu
-         vuYsaa+9Lods4wuHy8qVkz8FL6EXYj/3r8N8sOUtRqUaGi5mDzs187xUA97kYWqcj8jg
-         XQeQjOd8s5yvXgb3XPeNwz/U/zkLZvXat80FQolASSRwVHUNSgjLTTo0AHW4sjioxwtB
-         wPYQ==
-X-Gm-Message-State: APjAAAVlZRM0h+6RuGPyvr/TgD2x2WlQszWb5Fjhz/1VgD6px27aVtWA
-        BqsYwLzGwWQ3jGKFKVRl1FPprg==
-X-Google-Smtp-Source: APXvYqzjtiAMF6Bis8voqOYzvqiuCuY9dRznuUPn80UHLIO0EIWVeK/Q9L79gsJSx7d4c8hbrNX+Fg==
-X-Received: by 2002:a17:902:8497:: with SMTP id c23mr34136707plo.209.1574201633891;
-        Tue, 19 Nov 2019 14:13:53 -0800 (PST)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id b24sm24260272pgk.93.2019.11.19.14.13.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Nov 2019 14:13:53 -0800 (PST)
-Message-ID: <5dd46921.1c69fb81.aef4b.686e@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Tue, 19 Nov 2019 17:13:57 -0500
+Received: from 79.184.253.244.ipv4.supernova.orange.pl (79.184.253.244) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
+ id 1bb4ebfdd68c6764; Tue, 19 Nov 2019 23:13:54 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Doug Smythies <dsmythies@telus.net>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [RFT][PATCH 1/3] PM: QoS: Introduce frequency QoS
+Date:   Tue, 19 Nov 2019 23:13:53 +0100
+Message-ID: <6710300.onecg0m5mP@kreacher>
+In-Reply-To: <CAJZ5v0i1iAjpWju6FiCjP3RvspKDRfSwz4=b_3qgGhhfz8sSrw@mail.gmail.com>
+References: <2811202.iOFZ6YHztY@kreacher> <000401d59ee6$959e3da0$c0dab8e0$@net> <CAJZ5v0i1iAjpWju6FiCjP3RvspKDRfSwz4=b_3qgGhhfz8sSrw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1573593774-12539-16-git-send-email-eberman@codeaurora.org>
-References: <1573593774-12539-1-git-send-email-eberman@codeaurora.org> <1573593774-12539-16-git-send-email-eberman@codeaurora.org>
-Subject: Re: [PATCH v2 15/18] firmware: qcom_scm-32: Add device argument to atomic calls
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     Elliot Berman <eberman@codeaurora.org>, tsoni@codeaurora.org,
-        sidgup@codeaurora.org, psodagud@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-To:     Elliot Berman <eberman@codeaurora.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, saiprakash.ranjan@codeaurora.org
-User-Agent: alot/0.8.1
-Date:   Tue, 19 Nov 2019 14:13:52 -0800
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Elliot Berman (2019-11-12 13:22:51)
-> Add this unused parameter to reduce merge friction between SMCCC and
-> legacy based conventions.
+On Tuesday, November 19, 2019 8:17:05 PM CET Rafael J. Wysocki wrote:
+> On Tue, Nov 19, 2019 at 3:35 PM Doug Smythies <dsmythies@telus.net> wrote:
+> >
+> > On 2019.11.17 08:13 Doug Smythies wrote:
+> > > On 2019.11.16 23:35 Doug Smythies wrote:
+> >
+> > >> Hi Rafael,
+> > >>
+> > >> Not sure, but I think it is this one that
+> > >> causes complaining when I try to set the
+> > >> intel_pstate driver to passive mode.
+> > >> I started from active mode, powersave governor,
+> > >> no HWP.
+> > >>
+> > >> Kernel: 5.4-rc7
+> > >>
+> > >> I did not go back and try previous 5.4 RCs.
+> >
+> > After looking at the git tags for this patch,
+> > I tried kernel 5.4-rc2, which was the closest
+> > Kernel I had to before the patch set was added.
+> > It worked fine, as expected.
+> >
+> > >> I did try kernel 5.3-rc8, because I already had
+> > >> it installed, and it worked fine.
+> > >>
+> > >> I use a script (for years), run as sudo:
+> > >>
+> > >> doug@s15:~/temp$ cat set_cpu_passive
+> > >> #! /bin/bash
+> > >> cat /sys/devices/system/cpu/intel_pstate/status
+> > >> echo passive > /sys/devices/system/cpu/intel_pstate/status
+> > >> cat /sys/devices/system/cpu/intel_pstate/status
+> > >>
+> > >> And I get this (very small excerpt):
+> > >>
+> > >> freq_qos_add_request() called for active request
+> > >> WARNING: CPU: 1 PID: 2758 at kernel/power/qos.c:763 freq_qos_add_request+0x4c/0xa0
+> > >> CPU: 1 PID: 2758 Comm: set_cpu_passive Not tainted 5.4.0-rc7-stock #727
+> > >> Failed to add freq constraint for CPU0 (-22)
+> > >>
+> > >> freq_qos_add_request() called for active request
+> > >> WARNING: CPU: 1 PID: 2758 at kernel/power/qos.c:763 freq_qos_add_request+0x4c/0xa0
+> > >> CPU: 1 PID: 2758 Comm: set_cpu_passive Tainted: G        W         5.4.0-rc7-stock #727
+> > >> Failed to add freq constraint for CPU1 (-22)
+> >
+> > Updated summary of previous emails:
+> > This patch or patch set breaks the after boot
+> > ability to change CPU frequency scaling drivers.
+> >
+> > Using a workaround of booting with
+> > "intel_pstate=passive" seems to prevent the errors.
+> >
+> > Changing between the intel_pstate and intel_cpufreq drivers
+> > (i.e. between active and passive modes)
+> > after boot, either way, causes the errors. i.e.
+> >
+> > Failed to add freq constraint for CPU7 (-22)
+> > (2 per CPU per attempt)
+> 
+> These messages come from acpi_processor_ppc_init() and
+> acpi_thermal_cpufreq_init(), AFAICS, which are invoked by
+> acpi_processor_notifier() and that is invoked by the
+> blocking_notifier_call_chain() in cpufreq_online() which tirggers for
+> new policies after adding the max freq QoS request to
+> policy->constraints.
+> 
+> The requests added by them should be removed by
+> acpi_processor_ppc_exit() and acpi_thermal_cpufreq_exit(),
+> respectively, invoked by the blocking_notifier_call_chain() in
+> cpufreq_policy_free(), but it looks like that doesn't happen.
+> 
+> However, I now also see that freq_qos_remove_request() doesn't clear
+> the qos field in req which is should do, so freq_qos_add_request()
+> will complain and fail if the object pointed to by req is passed to it
+> again.
+> 
+> I'll send a patch to test for this later today.
+> 
 
-in an upcoming patch.
+The patch is appended.  Please test it (on top of 5.4-rc8) and report back.
 
->=20
-> Signed-off-by: Elliot Berman <eberman@codeaurora.org>
-> ---
->  drivers/firmware/qcom_scm-32.c | 17 +++++++++--------
->  drivers/firmware/qcom_scm-64.c |  5 +++--
->  drivers/firmware/qcom_scm.c    |  5 +++--
->  drivers/firmware/qcom_scm.h    |  5 +++--
->  4 files changed, 18 insertions(+), 14 deletions(-)
->=20
-> diff --git a/drivers/firmware/qcom_scm-32.c b/drivers/firmware/qcom_scm-3=
-2.c
-> index eca18e1..c1c0831 100644
-> --- a/drivers/firmware/qcom_scm-32.c
-> +++ b/drivers/firmware/qcom_scm-32.c
-> @@ -269,7 +269,7 @@ static int qcom_scm_call(struct device *dev, struct q=
-com_scm_desc *desc)
->   * This shall only be used with commands that are guaranteed to be
->   * uninterruptable, atomic and SMP safe.
->   */
-> -static int qcom_scm_call_atomic(struct qcom_scm_desc *desc)
-> +static int qcom_scm_call_atomic(struct device *dev, struct qcom_scm_desc=
- *desc)
 
-If the argument is unused, how about call it 'struct device *unused' so
-we can ignore it?
+---
+ kernel/power/qos.c |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
->  {
->         int context_id;
->         struct arm_smccc_args smc =3D {0};
+Index: linux-pm/kernel/power/qos.c
+===================================================================
+--- linux-pm.orig/kernel/power/qos.c
++++ linux-pm/kernel/power/qos.c
+@@ -814,6 +814,8 @@ EXPORT_SYMBOL_GPL(freq_qos_update_reques
+  */
+ int freq_qos_remove_request(struct freq_qos_request *req)
+ {
++	int ret;
++
+ 	if (!req)
+ 		return -EINVAL;
+ 
+@@ -821,7 +823,11 @@ int freq_qos_remove_request(struct freq_
+ 		 "%s() called for unknown object\n", __func__))
+ 		return -EINVAL;
+ 
+-	return freq_qos_apply(req, PM_QOS_REMOVE_REQ, PM_QOS_DEFAULT_VALUE);
++	ret = freq_qos_apply(req, PM_QOS_REMOVE_REQ, PM_QOS_DEFAULT_VALUE);
++	req->qos = NULL;
++	req->type = 0;
++
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(freq_qos_remove_request);
+ 
+
+
+
