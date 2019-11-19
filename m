@@ -2,389 +2,619 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6477CC43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:13:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F70C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:13:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 224B1222DC
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:13:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4A0D222D1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:13:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="a4lj3B5M"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="jysCkkNN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727826AbfKSMNE (ORCPT
+        id S1728021AbfKSMNP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 07:13:04 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:48912 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727951AbfKSMND (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 07:13:03 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAJC8uKE042522;
-        Tue, 19 Nov 2019 12:11:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2019-08-05; bh=6VslcxNNBVO0SmhupZgqcfLd/Yue4nN9ld+yM7qCaJg=;
- b=a4lj3B5MlEIZ3WvDdRd/G65w3Pq1mYhD2rhMmGsweycbvUuYP3lrl/nR1S1h74sK4quP
- YUVcW1dE2MSw5/qOMMvwSpFVtvOC8mNnwZq4TBBendaEQ/nBFGpwBedRnxJC8tS7taPf
- tIWASL2ilwHFqPnAnMqlA91HdqjRdc1R4TelGbsSQx3bipK2Ynue8YGu+hK1fMV6ywRQ
- n17egAQ9SCjY46niu+lj2eTgUbMaqTjoUlLkdLN5bcc4NIxN5TbsfrsfgOklxiSTSmvM
- vLMiP6KCZv9OfiCC7SM+vcjdMRT6XCroC+sZCFV2u1daN9O7N930FyoQ6EikuElxbyZx TQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2wa9rqeccr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 19 Nov 2019 12:11:49 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAJC95Wb110095;
-        Tue, 19 Nov 2019 12:11:49 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2wc0aga2sh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 19 Nov 2019 12:11:48 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xAJCBkiw016202;
-        Tue, 19 Nov 2019 12:11:47 GMT
-Received: from [192.168.14.112] (/79.181.226.113)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 19 Nov 2019 04:11:46 -0800
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
-Subject: Re: [PATCH v2 1/2] KVM: VMX: FIXED+PHYSICAL mode single target IPI
- fastpath
-From:   Liran Alon <liran.alon@oracle.com>
-In-Reply-To: <1574145389-12149-1-git-send-email-wanpengli@tencent.com>
-Date:   Tue, 19 Nov 2019 14:11:41 +0200
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?utf-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <09CD3BD3-1F5E-48DA-82ED-58E3196DBD83@oracle.com>
-References: <1574145389-12149-1-git-send-email-wanpengli@tencent.com>
-To:     Wanpeng Li <kernellwp@gmail.com>
-X-Mailer: Apple Mail (2.3445.4.7)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=996
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1911190113
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1911190113
+        Tue, 19 Nov 2019 07:13:15 -0500
+Received: from mail-eopbgr690088.outbound.protection.outlook.com ([40.107.69.88]:14201
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725280AbfKSMNP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 07:13:15 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fCiLWIhT9GhcPhieKO9MprFiVVt1SZzmIyY5EDkCKtdWVQen3Ni9pqVOl8GPajyIweJKHja9uh8GWhNSdhQO92opVreIrXx+fjQE0va0t01rJMHw8pVm5kHGmwxncCl+/1MbXrPOFFhHt+F2g7KZqB+BH0S3CzaoilCOFt60bPmcWYgDsQxGfW9/k85wYRXc8d5axkPJH6J6bD/R8kKP+5O83zD2DL92llMpplG9RvTlxFp7tnOKqukACTd+g65YhtGfIMnACpXYsxc6Cb9DHi1Y2NM5Sxrx6VwEpD1rWH9V7sMSGsicTM9mh5HjdHLIVJBywD9mrH64m1sPYrX/Fg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=s4xfK7H6DcXe5obk614H4Il2UAT7wb6Q4rLCiYmm3ig=;
+ b=O08bONqyfZDiJRTApwC+fpn9sdPeutLVE59UxU05kTxUiBGa0Jlx9GiJQIibubTyqroOP25Fta80D0fGRYlSL6lGciUPR99bG+v61rqwKKaVaMag/biQECyxr9Ibd5BcQgMJSvFv9WzgjLllUkQ70D/q0QciFgvG1EEkAMbHeWWbDJsVjNbvblzIuh+49eTHW6LSr022qQPaMHuSUQ+Gy8dyUkf6fWRxhQSYC2xdJvJyD1iiFdbb/uoMaSIoGnwLxekpPFeE+4gTN/r1Km/HB4MiVMTtQpookqFrCJSKVbWOBvsBTmdobvXuOuXqGGSmYFVSRnFTn+z9atpFsi/R0Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com;
+ dmarc=permerror action=none header.from=amd.com; dkim=none (message not
+ signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=s4xfK7H6DcXe5obk614H4Il2UAT7wb6Q4rLCiYmm3ig=;
+ b=jysCkkNN4Qy3H/emlAP8X67RTl7i7s8MJB4GslaSQzgkcyDEPmuw2dw0elMzH/2DZReonHi6UwVLTpsAX28TXGEVl+VhWoppL9cOVF+RK0SRPaVrX7FuT5UVVL4RVHgJSG0ONyWuh/ubCJ+t1klQsuX/EnOBg7j+L/KTJ4u6ZTA=
+Received: from MWHPR1201CA0005.namprd12.prod.outlook.com
+ (2603:10b6:301:4a::15) by MWHPR12MB1471.namprd12.prod.outlook.com
+ (2603:10b6:301:e::20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2451.30; Tue, 19 Nov
+ 2019 12:13:09 +0000
+Received: from BN8NAM11FT060.eop-nam11.prod.protection.outlook.com
+ (2a01:111:f400:7eae::206) by MWHPR1201CA0005.outlook.office365.com
+ (2603:10b6:301:4a::15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2474.16 via Frontend
+ Transport; Tue, 19 Nov 2019 12:13:09 +0000
+Authentication-Results: spf=none (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; google.com; dkim=none (message not signed)
+ header.d=none;google.com; dmarc=permerror action=none header.from=amd.com;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+Received: from SATLEXMB02.amd.com (165.204.84.17) by
+ BN8NAM11FT060.mail.protection.outlook.com (10.13.177.211) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
+ 15.20.2451.23 via Frontend Transport; Tue, 19 Nov 2019 12:13:09 +0000
+Received: from SATLEXMB01.amd.com (10.181.40.142) by SATLEXMB02.amd.com
+ (10.181.40.143) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 19 Nov
+ 2019 06:13:08 -0600
+Received: from vishnu-All-Series.amd.com (10.180.168.240) by
+ SATLEXMB01.amd.com (10.181.40.142) with Microsoft SMTP Server id 15.1.1713.5
+ via Frontend Transport; Tue, 19 Nov 2019 06:13:04 -0600
+From:   Ravulapati Vishnu vardhan rao 
+        <Vishnuvardhanrao.Ravulapati@amd.com>
+CC:     <Alexander.Deucher@amd.com>, <djkurtz@google.com>,
+        <Akshu.Agrawal@amd.com>,
+        Ravulapati Vishnu vardhan rao 
+        <Vishnuvardhanrao.Ravulapati@amd.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        "Takashi Iwai" <tiwai@suse.com>,
+        Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: [RESEND PATCH v9 6/6] ASoC: amd: Added ACP3x system resume and runtime pm
+Date:   Tue, 19 Nov 2019 17:41:16 +0530
+Message-ID: <1574165476-24987-7-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1574165476-24987-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
+References: <1574165476-24987-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:165.204.84.17;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(1496009)(4636009)(396003)(39860400002)(346002)(136003)(376002)(428003)(189003)(199004)(23433003)(109986005)(305945005)(81156014)(336012)(476003)(446003)(2616005)(486006)(11346002)(53416004)(70586007)(126002)(8936002)(186003)(26005)(2906002)(51416003)(86362001)(7696005)(76176011)(70206006)(4326008)(316002)(16586007)(7416002)(54906003)(356004)(6666004)(50226002)(36756003)(8676002)(478600001)(426003)(30864003)(14444005)(81166006)(5660300002)(50466002)(47776003)(1671002)(48376002)(266003)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR12MB1471;H:SATLEXMB02.amd.com;FPR:;SPF:None;LANG:en;PTR:InfoDomainNonexistent;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: ecf3ba2b-46ae-4e47-8e7b-08d76ce9d755
+X-MS-TrafficTypeDiagnostic: MWHPR12MB1471:|MWHPR12MB1471:
+X-Microsoft-Antispam-PRVS: <MWHPR12MB1471E332D5CCF5F27D2B9D30E74C0@MWHPR12MB1471.namprd12.prod.outlook.com>
+X-MS-Exchange-Transport-Forked: True
+X-MS-Oob-TLC-OOBClassifiers: OLM:28;
+X-Forefront-PRVS: 022649CC2C
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: zLQfo/ji2s3YjVxZpOQNAyT6uBZZbe4UamBF22VL3yJLHh0FAvG4RACUOlza94WxFAdIpb3SSd3Se1vO08Ts5ItqQFylCSB0VkXn/HH/RICgvf5Bz+LMeva+6CdTJOTkGF687smI5UXUpGWV841cPihE/2asbVDnWPBgh1YomyAF+QCoryzVPxcIRKRHNGNkUKaFzBt/E0bxzRmP5P2HwsivFazE0pAbUBDBUIwT9R7tKMEA15lZX4Gs9uPn+37Vbz6c4jTmj7GW5A1h4HGyZdH7MuVzX3ZZqVoso0jI28T0lSbiNtjb7pagaIXIuGxScWlxqsiP8gSWCxG1sNYOLUL0w3gkoCAV88xJ05teIGveI+zxNSSSL4eOZY+ya0OwF/mWvGaCaQ/9ArFQJIanHiBmN5qeiUNr56rGX3VHFzwVsL2gtswYfypacOtLBdD5
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Nov 2019 12:13:09.1682
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: ecf3ba2b-46ae-4e47-8e7b-08d76ce9d755
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB02.amd.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR12MB1471
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+When system wide suspend happens, ACP will be powered off
+and when system resumes,for audio usecase to continue,all
+the runtime configuration data needs to be programmed again.
+Added resume pm call back to ACP pm ops and also added runtime
+PM operations for ACP3x PCM platform device.
+Device will enter into D3 state when there is no activity
+on audio I2S lines.
 
+Signed-off-by: Ravulapati Vishnu vardhan rao <Vishnuvardhanrao.Ravulapati@amd.com>
+---
+ sound/soc/amd/raven/acp3x-pcm-dma.c | 144 +--------------------------
+ sound/soc/amd/raven/acp3x.h         |   7 ++
+ sound/soc/amd/raven/pci-acp3x.c     | 188 +++++++++++++++++++++++++++++++++++-
+ 3 files changed, 195 insertions(+), 144 deletions(-)
 
-> On 19 Nov 2019, at 8:36, Wanpeng Li <kernellwp@gmail.com> wrote:
->=20
-> From: Wanpeng Li <wanpengli@tencent.com>
->=20
-> ICR and TSCDEADLINE MSRs write cause the main MSRs write vmexits in=20
-> our product observation, multicast IPIs are not as common as unicast=20=
-
-> IPI like RESCHEDULE_VECTOR and CALL_FUNCTION_SINGLE_VECTOR etc.
->=20
-> This patch tries to optimize x2apic physical destination mode, fixed=20=
-
-> delivery mode single target IPI by delivering IPI to receiver as soon=20=
-
-> as possible after sender writes ICR vmexit to avoid various checks=20
-> when possible, especially when running guest w/ --overcommit cpu-pm=3Don=
-
-> or guest can keep running, IPI can be injected to target vCPU by=20
-> posted-interrupt immediately.
->=20
-> Testing on Xeon Skylake server:
->=20
-> The virtual IPI latency from sender send to receiver receive reduces=20=
-
-> more than 200+ cpu cycles.
->=20
-> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> ---
-> v1 -> v2:
-> * add tracepoint
-> * Instead of a separate vcpu->fast_vmexit, set exit_reason
->   to vmx->exit_reason to -1 if the fast path succeeds.
-> * move the "kvm_skip_emulated_instruction(vcpu)" to vmx_handle_exit
-> * moving the handling into vmx_handle_exit_irqoff()
->=20
-> arch/x86/include/asm/kvm_host.h |  4 ++--
-> arch/x86/include/uapi/asm/vmx.h |  1 +
-> arch/x86/kvm/svm.c              |  4 ++--
-> arch/x86/kvm/vmx/vmx.c          | 40 =
-+++++++++++++++++++++++++++++++++++++---
-> arch/x86/kvm/x86.c              |  5 +++--
-> 5 files changed, 45 insertions(+), 9 deletions(-)
->=20
-> diff --git a/arch/x86/include/asm/kvm_host.h =
-b/arch/x86/include/asm/kvm_host.h
-> index 898ab9e..0daafa9 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -1084,7 +1084,7 @@ struct kvm_x86_ops {
-> 	void (*tlb_flush_gva)(struct kvm_vcpu *vcpu, gva_t addr);
->=20
-> 	void (*run)(struct kvm_vcpu *vcpu);
-> -	int (*handle_exit)(struct kvm_vcpu *vcpu);
-> +	int (*handle_exit)(struct kvm_vcpu *vcpu, u32 =
-*vcpu_exit_reason);
-> 	int (*skip_emulated_instruction)(struct kvm_vcpu *vcpu);
-> 	void (*set_interrupt_shadow)(struct kvm_vcpu *vcpu, int mask);
-> 	u32 (*get_interrupt_shadow)(struct kvm_vcpu *vcpu);
-> @@ -1134,7 +1134,7 @@ struct kvm_x86_ops {
-> 	int (*check_intercept)(struct kvm_vcpu *vcpu,
-> 			       struct x86_instruction_info *info,
-> 			       enum x86_intercept_stage stage);
-> -	void (*handle_exit_irqoff)(struct kvm_vcpu *vcpu);
-> +	void (*handle_exit_irqoff)(struct kvm_vcpu *vcpu, u32 =
-*vcpu_exit_reason);
-> 	bool (*mpx_supported)(void);
-> 	bool (*xsaves_supported)(void);
-> 	bool (*umip_emulated)(void);
-> diff --git a/arch/x86/include/uapi/asm/vmx.h =
-b/arch/x86/include/uapi/asm/vmx.h
-> index 3eb8411..b33c6e1 100644
-> --- a/arch/x86/include/uapi/asm/vmx.h
-> +++ b/arch/x86/include/uapi/asm/vmx.h
-> @@ -88,6 +88,7 @@
-> #define EXIT_REASON_XRSTORS             64
-> #define EXIT_REASON_UMWAIT              67
-> #define EXIT_REASON_TPAUSE              68
-> +#define EXIT_REASON_NEED_SKIP_EMULATED_INSN -1
->=20
-> #define VMX_EXIT_REASONS \
-> 	{ EXIT_REASON_EXCEPTION_NMI,         "EXCEPTION_NMI" }, \
-> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> index d02a73a..c8e063a 100644
-> --- a/arch/x86/kvm/svm.c
-> +++ b/arch/x86/kvm/svm.c
-> @@ -4929,7 +4929,7 @@ static void svm_get_exit_info(struct kvm_vcpu =
-*vcpu, u64 *info1, u64 *info2)
-> 	*info2 =3D control->exit_info_2;
-> }
->=20
-> -static int handle_exit(struct kvm_vcpu *vcpu)
-> +static int handle_exit(struct kvm_vcpu *vcpu, u32 *vcpu_exit_reason)
-> {
-> 	struct vcpu_svm *svm =3D to_svm(vcpu);
-> 	struct kvm_run *kvm_run =3D vcpu->run;
-> @@ -6187,7 +6187,7 @@ static int svm_check_intercept(struct kvm_vcpu =
-*vcpu,
-> 	return ret;
-> }
->=20
-> -static void svm_handle_exit_irqoff(struct kvm_vcpu *vcpu)
-> +static void svm_handle_exit_irqoff(struct kvm_vcpu *vcpu, u32 =
-*vcpu_exit_reason)
-> {
->=20
-> }
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 621142e5..b98198d 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -5792,7 +5792,7 @@ void dump_vmcs(void)
->  * The guest has exited.  See if we can fix it or if we need userspace
->  * assistance.
->  */
-> -static int vmx_handle_exit(struct kvm_vcpu *vcpu)
-> +static int vmx_handle_exit(struct kvm_vcpu *vcpu, u32 =
-*vcpu_exit_reason)
-
-vmx_handle_exit() should get second parameter by value and not by =
-pointer. As it doesn=E2=80=99t need to modify it.
-
-I would also rename parameter to =E2=80=9Caccel_exit_completion=E2=80=9D =
-to indicate this is additional work that needs to happen to complete =
-accelerated-exit handling.
-This parameter should be an enum that currently only have 2 values: =
-ACCEL_EXIT_NONE and ACCEL_EXIT_SKIP_EMUL_INS.
-
-> {
-> 	struct vcpu_vmx *vmx =3D to_vmx(vcpu);
-> 	u32 exit_reason =3D vmx->exit_reason;
-> @@ -5878,7 +5878,10 @@ static int vmx_handle_exit(struct kvm_vcpu =
-*vcpu)
-> 		}
-> 	}
->=20
-> -	if (exit_reason < kvm_vmx_max_exit_handlers
-> +	if (*vcpu_exit_reason =3D=3D =
-EXIT_REASON_NEED_SKIP_EMULATED_INSN) {
-> +		kvm_skip_emulated_instruction(vcpu);
-> +		return 1;
-> +	} else if (exit_reason < kvm_vmx_max_exit_handlers
-> 	    && kvm_vmx_exit_handlers[exit_reason]) {
-> #ifdef CONFIG_RETPOLINE
-> 		if (exit_reason =3D=3D EXIT_REASON_MSR_WRITE)
-> @@ -6223,7 +6226,36 @@ static void =
-handle_external_interrupt_irqoff(struct kvm_vcpu *vcpu)
-> }
-> STACK_FRAME_NON_STANDARD(handle_external_interrupt_irqoff);
->=20
-> -static void vmx_handle_exit_irqoff(struct kvm_vcpu *vcpu)
-> +static u32 handle_ipi_fastpath(struct kvm_vcpu *vcpu)
-> +{
-> +	u32 index;
-> +	u64 data;
-> +	int ret =3D 0;
-> +
-> +	if (lapic_in_kernel(vcpu) && apic_x2apic_mode(vcpu->arch.apic)) =
-{
-> +		/*
-> +		 * fastpath to IPI target, FIXED+PHYSICAL which is =
-popular
-> +		 */
-> +		index =3D kvm_rcx_read(vcpu);
-> +		data =3D kvm_read_edx_eax(vcpu);
-> +
-> +		if (((index - APIC_BASE_MSR) << 4 =3D=3D APIC_ICR) &&
-> +			((data & KVM_APIC_DEST_MASK) =3D=3D =
-APIC_DEST_PHYSICAL) &&
-> +			((data & APIC_MODE_MASK) =3D=3D APIC_DM_FIXED)) =
-{
-> +
-> +			trace_kvm_msr_write(index, data);
-
-On a standard EXIT_REASON_MSR_WRITE VMExit, this trace will be printed =
-only after LAPIC emulation logic happens.
-You should preserve same ordering.
-
-> +			kvm_lapic_set_reg(vcpu->arch.apic, APIC_ICR2, =
-(u32)(data >> 32));
-> +			ret =3D kvm_lapic_reg_write(vcpu->arch.apic, =
-APIC_ICR, (u32)data);
-> +
-> +			if (ret =3D=3D 0)
-> +				return =
-EXIT_REASON_NEED_SKIP_EMULATED_INSN;
-> +		}
-> +	}
-> +
-> +	return ret;
-> +}
-
-Maybe it would be more elegant to modify this function as follows?
-
-static int handle_accel_set_x2apic_icr_irqoff(struct kvm_vcpu *vcpu, u32 =
-msr, u64 data)
-{
-    if (lapic_in_kernel(vcpu) && apic_x2apic_mode(vcpu->arch.apic) &&
-        ((data & KVM_APIC_DEST_MASK) =3D=3D APIC_DEST_PHYSICAL) &&
-        ((data & APIC_MODE_MASK) =3D=3D APIC_DM_FIXED)) {
-
-        kvm_lapic_set_reg(vcpu->arch.apic, APIC_ICR2, (u32)(data >> =
-32));
-        return kvm_lapic_reg_write(vcpu->arch.apic, APIC_ICR, =
-(u32)data);
-    }
-
-    return 1;
-}
-
-static enum accel_exit_completion handle_accel_set_msr_irqoff(struct =
-kvm_vcpu *vcpu)
-{
-    u32 msr =3D kvm_rcx_read(vcpu);
-    u64 data =3D kvm_read_edx_eax(vcpu);
-    int ret =3D 0;
-
-    switch (msr) {
-    case APIC_BASE_MSR + (APIC_ICR >> 4):
-        ret =3D handle_accel_set_x2apic_icr_irqoff(vcpu, msr, data);
-        break;
-    default:
-        return ACCEL_EXIT_NONE;
-    }
-
-    if (!ret) {
-        trace_kvm_msr_write(msr, data);
-        return ACCEL_EXIT_SKIP_EMUL_INS;
-    }
-
-    return ACCEL_EXIT_NONE;
-}
-
-> +
-> +static void vmx_handle_exit_irqoff(struct kvm_vcpu *vcpu, u32 =
-*exit_reason)
-> {
-> 	struct vcpu_vmx *vmx =3D to_vmx(vcpu);
->=20
-> @@ -6231,6 +6263,8 @@ static void vmx_handle_exit_irqoff(struct =
-kvm_vcpu *vcpu)
-> 		handle_external_interrupt_irqoff(vcpu);
-> 	else if (vmx->exit_reason =3D=3D EXIT_REASON_EXCEPTION_NMI)
-> 		handle_exception_nmi_irqoff(vmx);
-> +	else if (vmx->exit_reason =3D=3D EXIT_REASON_MSR_WRITE)
-> +		*exit_reason =3D handle_ipi_fastpath(vcpu);
-
-1) This case requires a comment as the only reason it is called here is =
-an optimisation.
-In contrast to the other cases which must be called before interrupts =
-are enabled on the host.
-
-2) I would rename handler to handle_accel_set_msr_irqoff().
-To signal this handler runs with host interrupts disabled and to make it =
-a general place for accelerating WRMSRs in case we would require more in =
-the future.
-
--Liran
-
-> }
->=20
-> static bool vmx_has_emulated_msr(int index)
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 991dd01..a53bce3 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -7981,6 +7981,7 @@ EXPORT_SYMBOL_GPL(__kvm_request_immediate_exit);
-> static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
-> {
-> 	int r;
-> +	u32 exit_reason =3D 0;
-> 	bool req_int_win =3D
-> 		dm_request_for_irq_injection(vcpu) &&
-> 		kvm_cpu_accept_dm_intr(vcpu);
-> @@ -8226,7 +8227,7 @@ static int vcpu_enter_guest(struct kvm_vcpu =
-*vcpu)
-> 	vcpu->mode =3D OUTSIDE_GUEST_MODE;
-> 	smp_wmb();
->=20
-> -	kvm_x86_ops->handle_exit_irqoff(vcpu);
-> +	kvm_x86_ops->handle_exit_irqoff(vcpu, &exit_reason);
->=20
-> 	/*
-> 	 * Consume any pending interrupts, including the possible source =
-of
-> @@ -8270,7 +8271,7 @@ static int vcpu_enter_guest(struct kvm_vcpu =
-*vcpu)
-> 		kvm_lapic_sync_from_vapic(vcpu);
->=20
-> 	vcpu->arch.gpa_available =3D false;
-> -	r =3D kvm_x86_ops->handle_exit(vcpu);
-> +	r =3D kvm_x86_ops->handle_exit(vcpu, &exit_reason);
-> 	return r;
->=20
-> cancel_injection:
-> --=20
-> 2.7.4
->=20
+diff --git a/sound/soc/amd/raven/acp3x-pcm-dma.c b/sound/soc/amd/raven/acp3x-pcm-dma.c
+index 819ec3a..cae1a0f 100644
+--- a/sound/soc/amd/raven/acp3x-pcm-dma.c
++++ b/sound/soc/amd/raven/acp3x-pcm-dma.c
+@@ -58,106 +58,6 @@ static const struct snd_pcm_hardware acp3x_pcm_hardware_capture = {
+ 	.periods_max = CAPTURE_MAX_NUM_PERIODS,
+ };
+ 
+-static int acp3x_power_on(void __iomem *acp3x_base, bool on)
+-{
+-	u16 val, mask;
+-	u32 timeout;
+-
+-	if (on == true) {
+-		val = 1;
+-		mask = ACP3x_POWER_ON;
+-	} else {
+-		val = 0;
+-		mask = ACP3x_POWER_OFF;
+-	}
+-
+-	rv_writel(val, acp3x_base + mmACP_PGFSM_CONTROL);
+-	timeout = 0;
+-	while (true) {
+-		val = rv_readl(acp3x_base + mmACP_PGFSM_STATUS);
+-		if ((val & ACP3x_POWER_OFF_IN_PROGRESS) == mask)
+-			break;
+-		if (timeout > 100) {
+-			pr_err("ACP3x power state change failure\n");
+-			return -ENODEV;
+-		}
+-		timeout++;
+-		cpu_relax();
+-	}
+-	return 0;
+-}
+-
+-static int acp3x_reset(void __iomem *acp3x_base)
+-{
+-	u32 val, timeout;
+-
+-	rv_writel(1, acp3x_base + mmACP_SOFT_RESET);
+-	timeout = 0;
+-	while (true) {
+-		val = rv_readl(acp3x_base + mmACP_SOFT_RESET);
+-		if ((val & ACP3x_SOFT_RESET__SoftResetAudDone_MASK) ||
+-		     timeout > 100) {
+-			if (val & ACP3x_SOFT_RESET__SoftResetAudDone_MASK)
+-				break;
+-			return -ENODEV;
+-		}
+-		timeout++;
+-		cpu_relax();
+-	}
+-
+-	rv_writel(0, acp3x_base + mmACP_SOFT_RESET);
+-	timeout = 0;
+-	while (true) {
+-		val = rv_readl(acp3x_base + mmACP_SOFT_RESET);
+-		if (!val || timeout > 100) {
+-			if (!val)
+-				break;
+-			return -ENODEV;
+-		}
+-		timeout++;
+-		cpu_relax();
+-	}
+-	return 0;
+-}
+-
+-static int acp3x_init(void __iomem *acp3x_base)
+-{
+-	int ret;
+-
+-	/* power on */
+-	ret = acp3x_power_on(acp3x_base, true);
+-	if (ret) {
+-		pr_err("ACP3x power on failed\n");
+-		return ret;
+-	}
+-	/* Reset */
+-	ret = acp3x_reset(acp3x_base);
+-	if (ret) {
+-		pr_err("ACP3x reset failed\n");
+-		return ret;
+-	}
+-	return 0;
+-}
+-
+-static int acp3x_deinit(void __iomem *acp3x_base)
+-{
+-	int ret;
+-
+-	/* Reset */
+-	ret = acp3x_reset(acp3x_base);
+-	if (ret) {
+-		pr_err("ACP3x reset failed\n");
+-		return ret;
+-	}
+-	/* power off */
+-	ret = acp3x_power_on(acp3x_base, false);
+-	if (ret) {
+-		pr_err("ACP3x power off failed\n");
+-		return ret;
+-	}
+-	return 0;
+-}
+-
+ static irqreturn_t i2s_irq_handler(int irq, void *dev_id)
+ {
+ 	struct i2s_dev_data *rv_i2s_data;
+@@ -535,53 +435,28 @@ static int acp3x_audio_probe(struct platform_device *pdev)
+ 	adata->i2s_irq = res->start;
+ 
+ 	dev_set_drvdata(&pdev->dev, adata);
+-	/* Initialize ACP */
+-	status = acp3x_init(adata->acp3x_base);
+-	if (status)
+-		return -ENODEV;
+-
+ 	status = devm_snd_soc_register_component(&pdev->dev,
+ 						 &acp3x_i2s_component,
+ 						 NULL, 0);
+ 	if (status) {
+ 		dev_err(&pdev->dev, "Fail to register acp i2s component\n");
+-		ret = -ENODEV;
+-		goto dev_err;
++		return -ENODEV;
+ 	}
+ 	status = devm_request_irq(&pdev->dev, adata->i2s_irq, i2s_irq_handler,
+ 				  irqflags, "ACP3x_I2S_IRQ", adata);
+ 	if (status) {
+ 		dev_err(&pdev->dev, "ACP3x I2S IRQ request failed\n");
+-		ret = -ENODEV;
+-		goto dev_err;
++		return -ENODEV;
+ 	}
+ 
+ 	pm_runtime_set_autosuspend_delay(&pdev->dev, 5000);
+ 	pm_runtime_use_autosuspend(&pdev->dev);
+ 	pm_runtime_enable(&pdev->dev);
+ 	return 0;
+-
+-dev_err:
+-	status = acp3x_deinit(adata->acp3x_base);
+-	if (status)
+-		dev_err(&pdev->dev, "ACP de-init failed\n");
+-	else
+-		dev_dbg(&pdev->dev, "ACP de-initialized\n");
+-	return ret;
+ }
+ 
+ static int acp3x_audio_remove(struct platform_device *pdev)
+ {
+-	struct i2s_dev_data *adata;
+-	int ret;
+-
+-	adata = dev_get_drvdata(&pdev->dev);
+-	ret = acp3x_deinit(adata->acp3x_base);
+-	if (ret)
+-		dev_err(&pdev->dev, "ACP de-init failed\n");
+-	else
+-		dev_dbg(&pdev->dev, "ACP de-initialized\n");
+-
+ 	pm_runtime_disable(&pdev->dev);
+ 	return 0;
+ }
+@@ -589,13 +464,9 @@ static int acp3x_audio_remove(struct platform_device *pdev)
+ static int acp3x_resume(struct device *dev)
+ {
+ 	struct i2s_dev_data *adata;
+-	int status;
+ 	u32 val;
+ 
+ 	adata = dev_get_drvdata(dev);
+-	status = acp3x_init(adata->acp3x_base);
+-	if (status)
+-		return -ENODEV;
+ 
+ 	if (adata->play_stream && adata->play_stream->runtime) {
+ 		struct i2s_stream_instance *rtd =
+@@ -642,14 +513,8 @@ static int acp3x_resume(struct device *dev)
+ static int acp3x_pcm_runtime_suspend(struct device *dev)
+ {
+ 	struct i2s_dev_data *adata;
+-	int status;
+ 
+ 	adata = dev_get_drvdata(dev);
+-	status = acp3x_deinit(adata->acp3x_base);
+-	if (status)
+-		dev_err(dev, "ACP de-init failed\n");
+-	else
+-		dev_dbg(dev, "ACP de-initialized\n");
+ 
+ 	rv_writel(0, adata->acp3x_base + mmACP_EXTERNAL_INTR_ENB);
+ 
+@@ -659,12 +524,9 @@ static int acp3x_pcm_runtime_suspend(struct device *dev)
+ static int acp3x_pcm_runtime_resume(struct device *dev)
+ {
+ 	struct i2s_dev_data *adata;
+-	int status;
+ 
+ 	adata = dev_get_drvdata(dev);
+-	status = acp3x_init(adata->acp3x_base);
+-	if (status)
+-		return -ENODEV;
++
+ 	rv_writel(1, adata->acp3x_base + mmACP_EXTERNAL_INTR_ENB);
+ 	return 0;
+ }
+diff --git a/sound/soc/amd/raven/acp3x.h b/sound/soc/amd/raven/acp3x.h
+index 01b283a..cf16ceb 100644
+--- a/sound/soc/amd/raven/acp3x.h
++++ b/sound/soc/amd/raven/acp3x.h
+@@ -65,6 +65,13 @@
+ #define SLOT_WIDTH_16 0x10
+ #define SLOT_WIDTH_24 0x18
+ #define SLOT_WIDTH_32 0x20
++#define ACP_PGFSM_CNTL_POWER_ON_MASK	0x01
++#define ACP_PGFSM_CNTL_POWER_OFF_MASK	0x00
++#define ACP_PGFSM_STATUS_MASK		0x03
++#define ACP_POWERED_ON			0x00
++#define ACP_POWER_ON_IN_PROGRESS	0x01
++#define ACP_POWERED_OFF			0x02
++#define ACP_POWER_OFF_IN_PROGRESS	0x03
+ 
+ struct acp3x_platform_info {
+ 	u16 play_i2s_instance;
+diff --git a/sound/soc/amd/raven/pci-acp3x.c b/sound/soc/amd/raven/pci-acp3x.c
+index 94f5f21..defbc44 100644
+--- a/sound/soc/amd/raven/pci-acp3x.c
++++ b/sound/soc/amd/raven/pci-acp3x.c
+@@ -9,6 +9,9 @@
+ #include <linux/io.h>
+ #include <linux/platform_device.h>
+ #include <linux/interrupt.h>
++#include <linux/pm_runtime.h>
++#include <linux/delay.h>
++#include <sound/pcm.h>
+ 
+ #include "acp3x.h"
+ 
+@@ -19,6 +22,125 @@ struct acp3x_dev_data {
+ 	struct platform_device *pdev[ACP3x_DEVS];
+ };
+ 
++static int acp3x_power_on(void __iomem *acp3x_base)
++{
++	u32 val;
++	u32 timeout;
++
++	timeout = 0;
++	val = rv_readl(acp3x_base + mmACP_PGFSM_STATUS);
++
++	if (val == 0)
++		return val;
++
++	if (!((val & ACP_PGFSM_STATUS_MASK) ==
++				ACP_POWER_ON_IN_PROGRESS))
++		rv_writel(ACP_PGFSM_CNTL_POWER_ON_MASK,
++			acp3x_base + mmACP_PGFSM_CONTROL);
++	while (++timeout) {
++		val  = rv_readl(acp3x_base + mmACP_PGFSM_STATUS);
++		if (!val)
++			break;
++		udelay(1);
++		if (timeout > 500) {
++			pr_err("ACP is Not Powered ON\n");
++			return -ETIMEDOUT;
++		}
++	}
++	return 0;
++}
++
++static int acp3x_power_off(void __iomem *acp3x_base)
++{
++	u32 val;
++	u32 timeout, ret;
++
++	timeout = 0;
++	rv_writel(ACP_PGFSM_CNTL_POWER_OFF_MASK,
++			acp3x_base + mmACP_PGFSM_CONTROL);
++	while (++timeout) {
++		val  = rv_readl(acp3x_base + mmACP_PGFSM_STATUS);
++		if ((val & ACP_PGFSM_STATUS_MASK) == ACP_POWERED_OFF) {
++			ret = 0;
++			break;
++		}
++		udelay(1);
++		if (timeout > 500) {
++			pr_err("ACP is Not Powered OFF\n");
++			ret = -ETIMEDOUT;
++			break;
++		}
++	}
++	return ret;
++}
++
++static int acp3x_reset(void __iomem *acp3x_base)
++{
++	u32 val, timeout;
++
++	rv_writel(1, acp3x_base + mmACP_SOFT_RESET);
++	timeout = 0;
++	while (++timeout) {
++		val = rv_readl(acp3x_base + mmACP_SOFT_RESET);
++		if ((val & ACP3x_SOFT_RESET__SoftResetAudDone_MASK) ||
++							timeout > 100) {
++			if (val & ACP3x_SOFT_RESET__SoftResetAudDone_MASK)
++				break;
++			return -ENODEV;
++		}
++		cpu_relax();
++	}
++	rv_writel(0, acp3x_base + mmACP_SOFT_RESET);
++	timeout = 0;
++	while (++timeout) {
++		val = rv_readl(acp3x_base + mmACP_SOFT_RESET);
++		if (!val)
++			break;
++		if (timeout > 100)
++			return -ENODEV;
++		cpu_relax();
++	}
++	return 0;
++}
++
++static int acp3x_init(void __iomem *acp3x_base)
++{
++	int ret;
++
++	/* power on */
++	ret = acp3x_power_on(acp3x_base);
++	if (ret) {
++		pr_err("ACP3x power on failed\n");
++		return ret;
++	}
++	/* Reset */
++	ret = acp3x_reset(acp3x_base);
++	if (ret) {
++		pr_err("ACP3x reset failed\n");
++		return ret;
++	}
++	return 0;
++}
++
++static int acp3x_deinit(void __iomem *acp3x_base)
++{
++	int ret;
++
++	/* Reset */
++	ret = acp3x_reset(acp3x_base);
++	if (ret) {
++		pr_err("ACP3x reset failed\n");
++		return ret;
++	}
++	/* power off */
++	ret = acp3x_power_off(acp3x_base);
++	if (ret) {
++		pr_err("ACP3x power off failed\n");
++		return ret;
++	}
++	return 0;
++}
++
+ static int snd_acp3x_probe(struct pci_dev *pci,
+ 			   const struct pci_device_id *pci_id)
+ {
+@@ -64,6 +186,9 @@ static int snd_acp3x_probe(struct pci_dev *pci,
+ 	}
+ 	pci_set_master(pci);
+ 	pci_set_drvdata(pci, adata);
++	ret = acp3x_init(adata->acp3x_base);
++	if (ret)
++		goto disable_msi;
+ 
+ 	val = rv_readl(adata->acp3x_base + mmACP_I2S_PIN_CONFIG);
+ 	switch (val) {
+@@ -73,7 +198,7 @@ static int snd_acp3x_probe(struct pci_dev *pci,
+ 					  GFP_KERNEL);
+ 		if (!adata->res) {
+ 			ret = -ENOMEM;
+-			goto disable_msi;
++			goto de_init;
+ 		}
+ 
+ 		adata->res[0].name = "acp3x_i2s_iomem";
+@@ -134,12 +259,23 @@ static int snd_acp3x_probe(struct pci_dev *pci,
+ 		ret = -ENODEV;
+ 		goto disable_msi;
+ 	}
++	pm_runtime_set_autosuspend_delay(&pci->dev, 5000);
++	pm_runtime_use_autosuspend(&pci->dev);
++	pm_runtime_set_active(&pci->dev);
++	pm_runtime_put_noidle(&pci->dev);
++	pm_runtime_enable(&pci->dev);
+ 	return 0;
+ 
+ unregister_devs:
+ 	if (val == I2S_MODE)
+ 		for (i = 0 ; i < ACP3x_DEVS ; i++)
+ 			platform_device_unregister(adata->pdev[i]);
++de_init:
++	ret = acp3x_deinit(adata->acp3x_base);
++	if (ret)
++		dev_err(&pci->dev, "ACP de-init failed\n");
++	else
++		dev_dbg(&pci->dev, "ACP de-initialized\n");
+ disable_msi:
+ 	pci_disable_msi(pci);
+ release_regions:
+@@ -150,15 +286,58 @@ static int snd_acp3x_probe(struct pci_dev *pci,
+ 	return ret;
+ }
+ 
++static int  snd_acp3x_suspend(struct device *dev)
++{
++	int status;
++	struct acp3x_dev_data *adata;
++
++	adata = dev_get_drvdata(dev);
++	status = acp3x_deinit(adata->acp3x_base);
++	if (status)
++		dev_err(dev, "ACP de-init failed\n");
++	else
++		dev_dbg(dev, "ACP de-initialized\n");
++
++	return 0;
++}
++
++static int  snd_acp3x_resume(struct device *dev)
++{
++	int status;
++	struct acp3x_dev_data *adata;
++
++	adata = dev_get_drvdata(dev);
++	status = acp3x_init(adata->acp3x_base);
++	if (status) {
++		dev_err(dev, "ACP init failed\n");
++		return status;
++	}
++	return 0;
++}
++
++static const struct dev_pm_ops acp3x_pm = {
++	.runtime_suspend = snd_acp3x_suspend,
++	.runtime_resume =  snd_acp3x_resume,
++	.resume =       snd_acp3x_resume,
++};
++
+ static void snd_acp3x_remove(struct pci_dev *pci)
+ {
+-	struct acp3x_dev_data *adata = pci_get_drvdata(pci);
+-	int i;
++	struct acp3x_dev_data *adata;
++	int i, ret;
+ 
++	adata = pci_get_drvdata(pci);
+ 	if (adata->acp3x_audio_mode == ACP3x_I2S_MODE) {
+ 		for (i = 0 ; i <  ACP3x_DEVS ; i++)
+ 			platform_device_unregister(adata->pdev[i]);
+ 	}
++	ret = acp3x_deinit(adata->acp3x_base);
++	if (ret)
++		dev_err(&pci->dev, "ACP de-init failed\n");
++	else
++		dev_dbg(&pci->dev, "ACP de-initialized\n");
++	pm_runtime_disable(&pci->dev);
++	pm_runtime_get_noresume(&pci->dev);
+ 	pci_disable_msi(pci);
+ 	pci_release_regions(pci);
+ 	pci_disable_device(pci);
+@@ -177,6 +356,9 @@ static struct pci_driver acp3x_driver  = {
+ 	.id_table = snd_acp3x_ids,
+ 	.probe = snd_acp3x_probe,
+ 	.remove = snd_acp3x_remove,
++	.driver = {
++		.pm = &acp3x_pm,
++	}
+ };
+ 
+ module_pci_driver(acp3x_driver);
+-- 
+2.7.4
 
