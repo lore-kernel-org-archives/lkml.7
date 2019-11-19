@@ -2,91 +2,101 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB0D6C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:15:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69122C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:17:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C26D2084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:15:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 475762084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:17:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728535AbfKSRPC (ORCPT
+        id S1728566AbfKSRRL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 12:15:02 -0500
-Received: from smtprelay0055.hostedemail.com ([216.40.44.55]:42586 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726985AbfKSRPC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 12:15:02 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id B6DE8182CED2A;
-        Tue, 19 Nov 2019 17:15:00 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: hose89_65b5758ac5c31
-X-Filterd-Recvd-Size: 2134
-Received: from XPS-9350.home (unknown [47.151.135.224])
-        (Authenticated sender: joe@perches.com)
-        by omf04.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 19 Nov 2019 17:14:58 +0000 (UTC)
-Message-ID: <64ace55545c028bc39b08370074aafd32e8fc5f5.camel@perches.com>
-Subject: Re: [PATCH 2/2] MAINTAINERS: Switch to Marvell addresses
-From:   Joe Perches <joe@perches.com>
-To:     Robert Richter <rrichter@marvell.com>,
-        Arnd Bergmann <arnd@arndb.de>, arm soc <arm@kernel.org>
-Cc:     Jan Glauber <jglauber@marvell.com>,
-        Sunil Kovvuri Goutham <sgoutham@marvell.com>,
-        George Cherian <gcherian@marvell.com>,
-        Ganapatrao Prabhakerrao Kulkarni <gkulkarni@marvell.com>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "soc@kernel.org" <soc@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Date:   Tue, 19 Nov 2019 09:14:36 -0800
-In-Reply-To: <20191119165549.14570-4-rrichter@marvell.com>
-References: <20191119165549.14570-1-rrichter@marvell.com>
-         <20191119165549.14570-4-rrichter@marvell.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Tue, 19 Nov 2019 12:17:11 -0500
+Received: from foss.arm.com ([217.140.110.172]:55780 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727805AbfKSRRK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 12:17:10 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 841311FB;
+        Tue, 19 Nov 2019 09:17:09 -0800 (PST)
+Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B5FBF3F703;
+        Tue, 19 Nov 2019 09:17:04 -0800 (PST)
+Subject: Re: [PATCH] dma-mapping: treat dev->bus_dma_mask as a DMA limit
+To:     Christoph Hellwig <hch@lst.de>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-ide@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org,
+        phil@raspberrypi.org, linux-acpi@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>,
+        James Hogan <jhogan@kernel.org>, Len Brown <lenb@kernel.org>,
+        devicetree@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-mips@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
+        iommu@lists.linux-foundation.org, linuxppc-dev@lists.ozlabs.org
+References: <20191113161340.27228-1-nsaenzjulienne@suse.de>
+ <dd074ef5c23ba56598e92be19e8e25ae31b75f93.camel@suse.de>
+ <20191119170006.GA19569@lst.de>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <7609007d-52f5-bb10-e8d5-96fadbfab46d@arm.com>
+Date:   Tue, 19 Nov 2019 17:17:03 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <20191119170006.GA19569@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-11-19 at 16:56 +0000, Robert Richter wrote:
-> Switch all addresses from @cavium.com to @marvell.com.
+On 19/11/2019 5:00 pm, Christoph Hellwig wrote:
+> On Tue, Nov 19, 2019 at 01:57:43PM +0100, Nicolas Saenz Julienne wrote:
+>> Hi Rob & Christoph,
+>> do you mind if I append v2 of this into my upcoming v3 RPi4 PCIe support
+>> series, I didn't do it initially as I thought this was going to be a
+>> contentious patch.  But as it turned out better than expected, I think it
+>> should go into the PCIe series. In the end it's the first explicit user of the
+>> bus DMA limit.
+>>
+>> Here's v2 in case you don't know what I'm talking about:
+>> https://www.spinics.net/lists/arm-kernel/msg768459.html
 > 
-> On that occasion, switching also to my Marvell address for all my
-> Cavium/Marvell entries.
-[]
-> diff --git a/MAINTAINERS b/MAINTAINERS
-[]
-> @@ -3727,14 +3727,14 @@ S:	Supported
->  F:	drivers/mmc/host/cavium*
->  
->  CAVIUM OCTEON-TX CRYPTO DRIVER
-> -M:	George Cherian <george.cherian@cavium.com>
-> +M:	George Cherian <gcherian@marvell.com>
->  L:	linux-crypto@vger.kernel.org
->  W:	http://www.cavium.com
+> In principle I wouldn't mind, but I think this is going to conflict
+> quite badly with other changes in the dma-mapping tree (including
+> yours).  So I think we'll need a shared tree or I'll need to pull
+> in the whole series through the dma-mapping tree if there are not
+> other conflicts and the other maintainers are fine with it.
 
-Might want to change these W: links too
+TBH I can't see it being a massive problem even if the DMA patch, driver 
+and DTS patch went entirely separately via the respective DMA, PCI, and 
+arm-soc trees in the same cycle. Bisecting over a merge window is a big 
+enough pain in the bum as it is, and if the worst case is that someone 
+trying to do that on a Pi4 has a wonky PCI controller appear for a 
+couple of commits, they may as well just disable that driver for their 
+bisection, because it wasn't there at the start so can't possibly be the 
+thing they're looking for regressions in ;)
 
-> @@ -17911,7 +17911,7 @@ S:	Supported
->  F:	drivers/char/xillybus/
->  
->  XLP9XX I2C DRIVER
-> -M:	George Cherian <george.cherian@cavium.com>
-> +M:	George Cherian <gcherian@marvell.com>
->  L:	linux-i2c@vger.kernel.org
->  W:	http://www.cavium.com
-
-etc...
-
->  S:	Supported
-
+Robin.
