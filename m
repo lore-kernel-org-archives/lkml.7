@@ -2,138 +2,106 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACDA6C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:57:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26B43C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:58:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F914222DD
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:57:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC421222DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:58:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="PQ3F5gHz"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="GNRcnyYK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727573AbfKSK5W (ORCPT
+        id S1727594AbfKSK6L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 05:57:22 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.80]:30729 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726170AbfKSK5W (ORCPT
+        Tue, 19 Nov 2019 05:58:11 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:33178 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726351AbfKSK6L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 05:57:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1574161039;
-        s=strato-dkim-0002; d=chronox.de;
-        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=WnvWEcD1OrisdQgGt5N9I3ouD0nZvk5Ggwkbt0h9+NM=;
-        b=PQ3F5gHzfWRsdXUMqQBIHETC07qc1jHFDZUSMFCejtlKP7vFn9iMan8Pisuo/mPFhc
-        OhR8tshwaBoyr6673hfVB1NwaPDXA10atBcnSTbTpXqLhndus48Cq2zhAH0HQhE7i+O+
-        nVJViTOYC2RFi2Xgkz0OUno2cuMMBROiowZ9ndUDWN/3Jc6lse/AAxEoPafQUkyO2xH4
-        qisGi9xvAyjXspSeDAY3vSG4pyerXDq/ISl+eFwlZoIw+wITIgCJMDPU1kGd92sUgAuV
-        QVVgjq8aIqVP2ie9tpiZifKBinWPQj3D+y9iyZsf00rXk1gz2bSEEQN8gcXilYjGHOXt
-        qkDw==
-X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9zT8DNpa83PTIPmLqL6mXsiNby0r49Q+bn6Gzw6e9E9jMEY/jj9Sk"
-X-RZG-CLASS-ID: mo00
-Received: from tauon.chronox.de
-        by smtp.strato.de (RZmta 44.29.0 AUTH)
-        with ESMTPSA id N09a57vAJAtTetb
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Tue, 19 Nov 2019 11:55:29 +0100 (CET)
-From:   Stephan Mueller <smueller@chronox.de>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        Nicolai Stange <nstange@suse.de>,
-        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
-        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
-        Roman Drahtmueller <draht@schaltsekun.de>,
-        Neil Horman <nhorman@redhat.com>
-Subject: Re: [PATCH v25 03/12] LRNG - /proc interface
-Date:   Tue, 19 Nov 2019 11:55:23 +0100
-Message-ID: <5323691.yyFvDVlHDV@tauon.chronox.de>
-In-Reply-To: <CALCETrVXGuShozaf5RpgmQnwtTpAbmaTVny+E0q8OE4OLuWwAQ@mail.gmail.com>
-References: <2476454.l8LQlgn7Hv@positron.chronox.de> <3043322.Kq9igzfA0K@positron.chronox.de> <CALCETrVXGuShozaf5RpgmQnwtTpAbmaTVny+E0q8OE4OLuWwAQ@mail.gmail.com>
+        Tue, 19 Nov 2019 05:58:11 -0500
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAJAvCZN016187;
+        Tue, 19 Nov 2019 11:57:59 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=YvffzZ2WCYrAd1ijoI8QfGwR+7dHh9PU6TpCOdbzZ+o=;
+ b=GNRcnyYKd16YMcP14gpYDJUQaUuLsq6OHINHs5OTyyBYczRg+c75sZKQBK1/Oev6Fj+S
+ PTyeKQv/uFxawvWCYgVSEj1aGipjPd+ShsPt9fb6HNtkZKXumnd2yPZiXEFOaspky6GT
+ oQrU0c3AIZls6RkuVlp05RKkaZo5332/4iJ7xz/6jWAukKfuP5tJcpWnQsdDwaXXw65w
+ BT9q476Nbikc/gW6OBr0q0KS1Hboc1/4ZTMBQpgNR3wvYP7hlKjj40JF8az/K4SqSyeE
+ 65Rub0pOsnnMrjKl6UKp2VOYkwOK5V/fF74SgAb3HNcTV23fHvdtv8v3VBJZd6jv6n+1 3Q== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2wa9uv748a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 19 Nov 2019 11:57:59 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id F2B04100038;
+        Tue, 19 Nov 2019 11:57:55 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C0A1E2B41BE;
+        Tue, 19 Nov 2019 11:57:55 +0100 (CET)
+Received: from localhost (10.75.127.44) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 19 Nov 2019 11:57:55
+ +0100
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+        <sean@poorly.run>, <airlied@linux.ie>, <daniel@ffwll.ch>
+CC:     <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH] drm/fb-cma-helpers: Fix include issue
+Date:   Tue, 19 Nov 2019 11:57:53 +0100
+Message-ID: <20191119105753.32363-1-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG2NODE2.st.com (10.75.127.5) To SFHDAG3NODE3.st.com
+ (10.75.127.9)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-19_03:2019-11-15,2019-11-19 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Dienstag, 19. November 2019, 11:06:02 CET schrieb Andy Lutomirski:
+Exported functions prototypes are missing in drm_fb_cma_helper.c
+Include drm_fb_cma_helper to fix that issue.
 
-Hi Andy,
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+---
+ drivers/gpu/drm/drm_fb_cma_helper.c | 1 +
+ include/drm/drm_fb_cma_helper.h     | 2 ++
+ 2 files changed, 3 insertions(+)
 
-> On Sun, Nov 17, 2019 at 4:16 AM Stephan M=C3=BCller <smueller@chronox.de>=
- wrote:
-> > Am Samstag, 16. November 2019, 17:39:40 CET schrieb Andy Lutomirski:
-> >=20
-> > Hi Andy,
-> >=20
-> > > > On Nov 16, 2019, at 1:40 AM, Stephan M=C3=BCller <smueller@chronox.=
-de>
-> > > > wrote:
-> > > >=20
-> > > > =EF=BB=BFThe LRNG /proc interface provides the same files as the le=
-gacy
-> > > > /dev/random. These files behave identically. Yet, all files are
-> > > > documented at [1].
-> > >=20
-> > > Why?
-> >=20
-> > I am not sure here: are you referring to the documentation? Or the one
-> > additional file?
-> >=20
-> > If it is the documentation, do you want me to add it to the patch
-> > description? I initially did not add it as these files were present and
-> > seemingly known what they provide. But I would add that documentation to
-> > the patch description if this is desired.
->=20
-> Sorry, I should have been a lot more explicit.  Why do you want to add
-> a new interface to read the RNG?  What's wrong with the old one?
-
-There is nothing wrong at all. I actually want to be 100% API and ABI=20
-compliant with the existing random.c. Thus, the list of the sysctls are=20
-identical to the existing random.c with the same behavior (hence I skipped =
-the=20
-documentation of these files).
-
-Yet, the wiring up of the interfaces to internal data structures and handle=
-rs=20
-is different than for the existing random.c.
-
-Also, the reason why I created a separate lrng_proc.c (and lrng_interface.c=
-)=20
-is to allow a possible merger of this similar code with the existing random=
-=2Ec.=20
-The only question that needs to be solved is to find a common way to invoke=
-=20
-the random.c internal logic and the LRNG internal logic with these interfac=
-es.
->=20
-> I think your patch description should explain the purpose of the patch.
-
-Ok, I can surely add a description for each file to the patch description.
-
-Ciao
-Stephan
-
+diff --git a/drivers/gpu/drm/drm_fb_cma_helper.c b/drivers/gpu/drm/drm_fb_cma_helper.c
+index c0b0f603af63..9801c0333eca 100644
+--- a/drivers/gpu/drm/drm_fb_cma_helper.c
++++ b/drivers/gpu/drm/drm_fb_cma_helper.c
+@@ -9,6 +9,7 @@
+  *  Copyright (C) 2012 Red Hat
+  */
+ 
++#include <drm/drm_fb_cma_helper.h>
+ #include <drm/drm_fourcc.h>
+ #include <drm/drm_framebuffer.h>
+ #include <drm/drm_gem_cma_helper.h>
+diff --git a/include/drm/drm_fb_cma_helper.h b/include/drm/drm_fb_cma_helper.h
+index 4becb09975a4..795aea1d0a25 100644
+--- a/include/drm/drm_fb_cma_helper.h
++++ b/include/drm/drm_fb_cma_helper.h
+@@ -2,6 +2,8 @@
+ #ifndef __DRM_FB_CMA_HELPER_H__
+ #define __DRM_FB_CMA_HELPER_H__
+ 
++#include <linux/types.h>
++
+ struct drm_framebuffer;
+ struct drm_plane_state;
+ 
+-- 
+2.15.0
 
