@@ -2,100 +2,187 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44DC0C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AEB0C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:22:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22B832230F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:18:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50685222CD
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:22:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574166146;
+	bh=6cJJa/a4IJb5gi2Bz3vUxh+UB5grQqojpGYK83obWsM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AlJuuFj+xbYOfyaF8Rb3jjOoPbxL267tW68n3bPyuQOAoEOlEyhBGasoJ5WsHKuLB
+	 oSnpormEqgzDxcQxMtHxoGkAUW5bUB2ZvmJO1DtZNbXmPgV3mwGr8nq6R+v/Awblum
+	 G3u2Y0tWQfJjLiYFztORtBnfQXOrjHIZ5p0WZOEQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727859AbfKSMSI (ORCPT
+        id S1727820AbfKSMWZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 07:18:08 -0500
-Received: from mga05.intel.com ([192.55.52.43]:64330 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725280AbfKSMSI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 07:18:08 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Nov 2019 04:18:08 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,322,1569308400"; 
-   d="scan'208";a="209179842"
-Received: from unknown (HELO [10.239.13.7]) ([10.239.13.7])
-  by orsmga003.jf.intel.com with ESMTP; 19 Nov 2019 04:18:06 -0800
-Message-ID: <5DD3DF17.9050504@intel.com>
-Date:   Tue, 19 Nov 2019 20:24:55 +0800
-From:   Wei Wang <wei.w.wang@intel.com>
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:31.0) Gecko/20100101 Thunderbird/31.7.0
+        Tue, 19 Nov 2019 07:22:25 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:52697 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725798AbfKSMWY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 07:22:24 -0500
+Received: by mail-wm1-f67.google.com with SMTP id l1so2957356wme.2;
+        Tue, 19 Nov 2019 04:22:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=pCZ+boQU06taG0uRqRU5p4OOluIcsIWA0zaH1C287a4=;
+        b=FM53ORQwVWjNBirpF/b/+wjx/e/Vkp4KItN0WlU1fYzCw4RAjrqFTtnM1/Uby3dVdK
+         FCJ2nKsQJhpo4l/bZk7Mn4z199l/383/1X7afTKdZblq/CJAKCWCvta88xxwyXl3UZci
+         FtloJoF1fjzEmTqusleWmxmV53XzWbjgfOHucCsGFLIiuaTkoC1uNxNy5sBv/8lhagE6
+         qPoSqMrrhpbvXhW6fyDB0xkiv1z9FaKX0j/tQHxrrf3tAq/TC3/EF3T/oJvmKOTtL1V4
+         N712FUpDdceOhaggMDCiLsd2aHyJNLUosvD4PCEhff6lFjUG8qXy5FvJ1ReseK+Bt2hx
+         mF/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=pCZ+boQU06taG0uRqRU5p4OOluIcsIWA0zaH1C287a4=;
+        b=lHeN7EUjL5NLJYDz+114Mv/SSlosmyuf/Pz1LnQQcB1tr9F1klZKEQ9PWtINBVbbFr
+         kT2ZVcfBAUiGs7sQundvmhwcqQ2WAw7R3CsrhQ+52hAsLogadqRsA5784TGy0F+wzA5O
+         ytw6K7ngVSDElLXppU5MADYYUGBgml5nPH6nQVWEgdS04ZSqtugdtIXzmnVqf8bW0laB
+         KyI1Q/XWmouTA/8xyt0DVFkm2v2aYwexh/jP8bOt9qv5oFYBCu7R9i0Agb6W8EdpTCHV
+         MF1AzWy7K54VXSCCdhckfCe2XE+Bx/ukOiyfhnrhYC+TMLwT6c3YBTA/VkgiUhon/S4+
+         M9mQ==
+X-Gm-Message-State: APjAAAWj1drV98LvoEbCWEFuNgfB1kwgp+93LCGbK/5m2tG91Jg8INBX
+        KSYv8rYNdxqn0mgTfE6rjp4=
+X-Google-Smtp-Source: APXvYqx8J0A9Fq4xFkjwZhw6QIza/BfWFpr6MygFUiV3WR/Xgy1tZfffFAp6e+6ePrvxr9A8W8GhgQ==
+X-Received: by 2002:a1c:a556:: with SMTP id o83mr5077222wme.165.1574166141047;
+        Tue, 19 Nov 2019 04:22:21 -0800 (PST)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id o187sm2916196wmo.20.2019.11.19.04.22.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Nov 2019 04:22:20 -0800 (PST)
+Date:   Tue, 19 Nov 2019 13:22:17 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Nadav Amit <namit@vmware.com>,
+        "VMware, Inc." <pv-drivers@vmware.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, linux-ia64@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pm <linux-pm@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        alsa-devel@alsa-project.org
+Subject: Re: [PATCH 00/12] treewide: break dependencies on x86's RM header
+Message-ID: <20191119122217.GA24878@gmail.com>
+References: <20191119002121.4107-1-sean.j.christopherson@intel.com>
+ <20191119111012.GA109842@gmail.com>
+ <CAKv+Gu9C132peF9_j2rRwRh4s+aWZBY82rgjqmwaE_X=_6y4Zw@mail.gmail.com>
 MIME-Version: 1.0
-To:     "Michael S. Tsirkin" <mst@redhat.com>, linux-kernel@vger.kernel.org
-CC:     Khazhismel Kumykov <khazhy@google.com>,
-        Jason Wang <jasowang@redhat.com>,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH 2/2] virtio_balloon: divide/multiply instead of shifts
-References: <20191119102838.39380-1-mst@redhat.com> <20191119102838.39380-2-mst@redhat.com>
-In-Reply-To: <20191119102838.39380-2-mst@redhat.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKv+Gu9C132peF9_j2rRwRh4s+aWZBY82rgjqmwaE_X=_6y4Zw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/19/2019 06:29 PM, Michael S. Tsirkin wrote:
-> We managed to get confused about the shift direction at least once.
-> Let's switch to division/multiplcation instead. Add a number of pages
-> macro for this purpose.  We still keep the order macro around too since
-> this is what alloc/free pages want.
->
-> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> ---
->   drivers/virtio/virtio_balloon.c | 9 +++++----
->   1 file changed, 5 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
-> index b6a95cd28d9f..dc1ebd638e9b 100644
-> --- a/drivers/virtio/virtio_balloon.c
-> +++ b/drivers/virtio/virtio_balloon.c
-> @@ -36,6 +36,7 @@
->   /* The size of a free page block in bytes */
->   #define VIRTIO_BALLOON_HINT_BLOCK_BYTES \
->   	(1 << (VIRTIO_BALLOON_HINT_BLOCK_ORDER + PAGE_SHIFT))
-> +#define VIRTIO_BALLOON_HINT_BLOCK_PAGES (1 << VIRTIO_BALLOON_HINT_BLOCK_ORDER)
->   
->   #ifdef CONFIG_BALLOON_COMPACTION
->   static struct vfsmount *balloon_mnt;
-> @@ -765,11 +766,11 @@ static unsigned long shrink_free_pages(struct virtio_balloon *vb,
->   	unsigned long blocks_to_free, blocks_freed;
->   
->   	pages_to_free = round_up(pages_to_free,
-> -				 1 << VIRTIO_BALLOON_HINT_BLOCK_ORDER);
-> -	blocks_to_free = pages_to_free >> VIRTIO_BALLOON_HINT_BLOCK_ORDER;
-> +				 VIRTIO_BALLOON_HINT_BLOCK_PAGES);
-> +	blocks_to_free = pages_to_free / VIRTIO_BALLOON_HINT_BLOCK_PAGES;
->   	blocks_freed = return_free_pages_to_mm(vb, blocks_to_free);
->   
-> -	return blocks_freed << VIRTIO_BALLOON_HINT_BLOCK_ORDER;
-> +	return blocks_freed * VIRTIO_BALLOON_HINT_BLOCK_PAGES;
->   }
->   
->   static unsigned long leak_balloon_pages(struct virtio_balloon *vb,
-> @@ -825,7 +826,7 @@ static unsigned long virtio_balloon_shrinker_count(struct shrinker *shrinker,
->   	unsigned long count;
->   
->   	count = vb->num_pages / VIRTIO_BALLOON_PAGES_PER_PAGE;
-> -	count += vb->num_free_page_blocks << VIRTIO_BALLOON_HINT_BLOCK_ORDER;
-> +	count += vb->num_free_page_blocks * VIRTIO_BALLOON_HINT_BLOCK_PAGES;
->   
->   	return count;
->   }
 
-Reviewed-by: Wei Wang <wei.w.wang@intel.com>
+* Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
 
-Best,
-Wei
+> On Tue, 19 Nov 2019 at 12:10, Ingo Molnar <mingo@kernel.org> wrote:
+> >
+> >
+> > * Sean Christopherson <sean.j.christopherson@intel.com> wrote:
+> >
+> > > x86's asm/realmode.h, which defines low level structures, variables and
+> > > helpers used to bring up APs during SMP boot, ends up getting included in
+> > > practically every nook and cranny of the kernel because the address used
+> > > by ACPI for resuming from S3 also happens to be stored in the real mode
+> > > header, and ACPI bleeds the dependency into its widely included headers.
+> > >
+> > > As a result, modifying realmode.h for even the most trivial change to the
+> > > boot code triggers a full kernel rebuild, which is frustrating to say the
+> > > least as it some of the most difficult code to get exactly right *and* is
+> > > also some of the most functionally isolated code in the kernel.
+> > >
+> > > To break the kernel's widespread dependency on realmode.h, add a wrapper
+> > > in the aforementioned ACPI S3 code to access the real mode header instead
+> > > of derefencing the header directly in asm/acpi.h and thereby exposing it
+> > > to the world via linux/acpi.h.
+> > >
+> > > Build tested on x86 with allyesconfig and allmodconfig, so hopefully there
+> > > aren't more build issues lurking, but at this point it wouldn't surprise
+> > > me in the least if this somehow manages to break the build.
+> > >
+> > > Based on tip/master, commit ceceaf1f12ba ("Merge branch 'WIP.x86/cleanups'").
+> > >
+> > > Patch Synopsis:
+> > >   - Patches 01-09 fix a variety of build errors that arise when patch 12
+> > >     drops realmode.h from asm/acpi.h.  Most of the errors are quite absurb
+> > >     as they have no relation whatsoever to x86's RM boot code, but occur
+> > >     because realmode.h happens to include asm/io.h.
+> >
+> > Yeah, these kind of parasitic header dependencies are the main driving
+> > force behind kernel header spaghetti hell: it's super easy to add a new
+> > header, but very hard to remove them...
+> >
+> > Hence they practically only accumulate.
+> >
+> > As a result header removal patches get priority, from me at least. :-)
+> >
+> > >   - Patch 10 removes a spurious include of realmode.h from an ACPI header.
+> > >
+> > >   - Patches 11 and 12 implement the wrapper and move it out of acpi.h.
+> >
+> > So if the ACPI maintainers are fine with -tip carrying patches #11 and #12
+> > then I'd be glad to route these patches upstream.
+> >
+> > I've applied them to tip:WIP.core/headers as a work-in-progress tree, and
+> > I'm testing them on randconfigs to make sure there's no broken
+> > dependencies. I'll wait for the ACPI acks.
+> >
+> > I edited the title of patch 12 slightly, to:
+> >
+> >    c8bceb321209: x86/ACPI/sleep: Move acpi_wakeup_address() definition into sleep.c, remove <asm/realmode.h> from <asm/acpi.h>
+> >
+> > to make sure the big header dependency change is obvious at first sight.
+> >
+> 
+> I'm fine with the patches but can we drop the fixes headers please?
+> This doesn't actually fix anything, and touching early boot stuff for
+> no good reason should be avoided imo.
+
+Agreed and done.
+
+Thanks,
+
+	Ingo
