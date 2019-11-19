@@ -2,105 +2,103 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40766C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 07:30:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE528C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 07:34:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 147B12230B
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 07:30:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="JwEJzrv2"
+	by mail.kernel.org (Postfix) with ESMTP id 906862230D
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 07:34:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727014AbfKSHax (ORCPT
+        id S1727239AbfKSHeF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 02:30:53 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:60579 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725536AbfKSHax (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 02:30:53 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47HHYP4yH4z9sSX;
-        Tue, 19 Nov 2019 18:30:49 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1574148650;
-        bh=cMeG2erxW2OyCytKUZEBc389t2yX1MozJUgRCPFOBVs=;
-        h=Date:From:To:Cc:Subject:From;
-        b=JwEJzrv2ObuzNn8f75Rt9mwxB2HWKvmhYq8hFxI7z0wV1nIPHY1vmT9SKwzRWaSXb
-         vNpL2E9lA2DBSIR9ZcZMzRE6Ddn2QmCfIRrtzd1mwoslO7xdKLosOEGcmql292ybd2
-         NKxV+XHjcggbmb0H1Wa4KolzowOMoEN2fMbEAlZSQoXya910cIUkXLtJZsLcYjMzTf
-         0apxDpPfsZTOfwoAlJVMsptSKQ5IMXMGA5Y3yYZ7TtLDaIB5ysREp/b0rw41kdPn/R
-         pfyzLfiFUdHfuee0cpfWALl5QoDUizx7tE4tnoZCLyrTwROhcvAh1hP0d1CK9CtzPy
-         7KQFz3huXKqQA==
-Date:   Tue, 19 Nov 2019 18:30:42 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Marco Elver <elver@google.com>,
-        Changbin Du <changbin.du@gmail.com>
-Subject: linux-next: manual merge of the akpm tree with the rcu tree
-Message-ID: <20191119183042.5839ef00@canb.auug.org.au>
+        Tue, 19 Nov 2019 02:34:05 -0500
+Received: from rtits2.realtek.com ([211.75.126.72]:57583 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725536AbfKSHeF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 02:34:05 -0500
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID xAJ7Xl7w000961, This message is accepted by code: ctloc85258
+Received: from RS-CAS02.realsil.com.cn (ms1.realsil.com.cn[172.29.17.3](maybeforged))
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id xAJ7Xl7w000961
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Tue, 19 Nov 2019 15:33:48 +0800
+Received: from localhost (172.29.40.150) by RS-CAS02.realsil.com.cn
+ (172.29.17.3) with Microsoft SMTP Server id 14.3.439.0; Tue, 19 Nov 2019
+ 15:33:46 +0800
+From:   <rui_feng@realsil.com.cn>
+To:     <arnd@arndb.de>, <gregkh@linuxfoundation.org>,
+        <dan.carpenter@oracle.com>
+CC:     <linux-kernel@vger.kernel.org>, Rui Feng <rui_feng@realsil.com.cn>
+Subject: [PATCH] misc: rtsx: Fix impossible condition
+Date:   Tue, 19 Nov 2019 15:33:45 +0800
+Message-ID: <1574148825-2797-1-git-send-email-rui_feng@realsil.com.cn>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/_hR6Fp7Gfqy9qwEi=8GpZ+4";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain
+X-Originating-IP: [172.29.40.150]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/_hR6Fp7Gfqy9qwEi=8GpZ+4
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: Rui Feng <rui_feng@realsil.com.cn>
 
-Hi all,
+A u8 can only go up to 255, condition n > 396 is
+impossible, so change u8 to u16.
 
-Today's linux-next merge of the akpm tree got a conflict in:
+Signed-off-by: Rui Feng <rui_feng@realsil.com.cn>
+---
+ drivers/misc/cardreader/rts5261.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-  lib/Kconfig.debug
+diff --git a/drivers/misc/cardreader/rts5261.c b/drivers/misc/cardreader/rts5261.c
+index 32dcec2..8dba0bf 100644
+--- a/drivers/misc/cardreader/rts5261.c
++++ b/drivers/misc/cardreader/rts5261.c
+@@ -628,7 +628,8 @@ int rts5261_pci_switch_clock(struct rtsx_pcr *pcr, unsigned int card_clock,
+ 		u8 ssc_depth, bool initial_mode, bool double_clk, bool vpclk)
+ {
+ 	int err, clk;
+-	u8 n, clk_divider, mcu_cnt, div;
++	u16 n;
++	u8 clk_divider, mcu_cnt, div;
+ 	static const u8 depth[] = {
+ 		[RTSX_SSC_DEPTH_4M] = RTS5261_SSC_DEPTH_4M,
+ 		[RTSX_SSC_DEPTH_2M] = RTS5261_SSC_DEPTH_2M,
+@@ -661,9 +662,9 @@ int rts5261_pci_switch_clock(struct rtsx_pcr *pcr, unsigned int card_clock,
+ 		return 0;
+ 
+ 	if (pcr->ops->conv_clk_and_div_n)
+-		n = (u8)pcr->ops->conv_clk_and_div_n(clk, CLK_TO_DIV_N);
++		n = (u16)pcr->ops->conv_clk_and_div_n(clk, CLK_TO_DIV_N);
+ 	else
+-		n = (u8)(clk - 4);
++		n = (u16)(clk - 4);
+ 	if ((clk <= 4) || (n > 396))
+ 		return -EINVAL;
+ 
+@@ -676,7 +677,7 @@ int rts5261_pci_switch_clock(struct rtsx_pcr *pcr, unsigned int card_clock,
+ 		if (pcr->ops->conv_clk_and_div_n) {
+ 			int dbl_clk = pcr->ops->conv_clk_and_div_n(n,
+ 					DIV_N_TO_CLK) * 2;
+-			n = (u8)pcr->ops->conv_clk_and_div_n(dbl_clk,
++			n = (u16)pcr->ops->conv_clk_and_div_n(dbl_clk,
+ 					CLK_TO_DIV_N);
+ 		} else {
+ 			n = (n + 4) * 2 - 4;
+@@ -721,7 +722,7 @@ int rts5261_pci_switch_clock(struct rtsx_pcr *pcr, unsigned int card_clock,
+ 	rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, SSC_CTL1, SSC_RSTB, 0);
+ 	rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, SSC_CTL2,
+ 			SSC_DEPTH_MASK, ssc_depth);
+-	rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, SSC_DIV_N_0, 0xFF, n);
++	rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, SSC_DIV_N_0, 0xFF, (u8)n);
+ 	rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, SSC_CTL1, SSC_RSTB, SSC_RSTB);
+ 	if (vpclk) {
+ 		rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, SD_VPCLK0_CTL,
+-- 
+1.9.1
 
-between commit:
-
-  dfd402a4c4ba ("kcsan: Add Kernel Concurrency Sanitizer infrastructure")
-
-from the rcu tree and commit:
-
-  fa95a0eadaa7 ("kernel-hacking: group sysrq/kgdb/ubsan into 'Generic Kerne=
-l Debugging Instruments'")
-
-from the akpm tree.
-
-I fixed it up (I added kcsan into the above) and can carry the fix as
-necessary. This is now fixed as far as linux-next is concerned, but any
-non trivial conflicts should be mentioned to your upstream maintainer
-when your tree is submitted for merging.  You may also want to consider
-cooperating with the maintainer of the conflicting tree to minimise any
-particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/_hR6Fp7Gfqy9qwEi=8GpZ+4
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3TmiIACgkQAVBC80lX
-0GzPDQgAj7kCqnHJhjTLuBPq21A9KCUChICb9fOfHSHd6eVeDiCrh+n4EscHpr4R
-Ygg6Nqb6ii8Qnd20QHyIGIcl2tfxrAj5vAQtZSxtzemtQTP9Uj2CQQXk6eEOkOIk
-faF3qCFwClrraLKsoncDL7JBMZxHPR9tRbi82deMmKHjGUq1GX2qY0d3FoVnxP6n
-ZbPy1Z6qx4SnzBncKwhxfXBuh7N/LIDrteUlAjnOSlxfHKsdtzU0pQolmgURIFDU
-rTc5nHnL7jfimhkDMeoVbiV4t548PhkJtT2BMeP7P3xlN3q0kloSDOYaPVJfkmdH
-ediptw8lx/N7ESV+W9gaD9aQlOcVgA==
-=ImMS
------END PGP SIGNATURE-----
-
---Sig_/_hR6Fp7Gfqy9qwEi=8GpZ+4--
