@@ -2,49 +2,50 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 533CBC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 07:43:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65E3BC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 07:44:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DBC621739
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 07:43:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A14421850
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 07:44:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727171AbfKSHnv (ORCPT
+        id S1727295AbfKSHov (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 02:43:51 -0500
-Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.164]:25910 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725869AbfKSHnv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 02:43:51 -0500
-X-Greylist: delayed 468 seconds by postgrey-1.27 at vger.kernel.org; Tue, 19 Nov 2019 02:43:50 EST
-X-RZG-AUTH: ":P2MHfkW8eP4Mre39l357AZT/I7AY/7nT2yrDxb8mjG14FZxedJy6qgO1o3PMaViOoLMJVch5l0xf"
-X-RZG-CLASS-ID: mo00
-Received: from [192.168.1.177]
-        by smtp.strato.de (RZmta 44.29.0 DYNA|AUTH)
-        with ESMTPSA id C03a03vAJ7hk2Al
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Tue, 19 Nov 2019 08:43:46 +0100 (CET)
-Subject: Re: [PATCH 5.3 09/48] slip: Fix memory leak in slip_open error path
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     stable@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Jouni Hogander <jouni.hogander@unikie.com>
-References: <20191119050946.745015350@linuxfoundation.org>
- <20191119050955.380296035@linuxfoundation.org>
-From:   Oliver Hartkopp <socketcan@hartkopp.net>
-Message-ID: <eb6fcac2-abdd-cb83-0942-09878b5e4751@hartkopp.net>
-Date:   Tue, 19 Nov 2019 08:43:45 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 19 Nov 2019 02:44:51 -0500
+Received: from mga17.intel.com ([192.55.52.151]:21883 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725869AbfKSHov (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 02:44:51 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Nov 2019 23:44:50 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,322,1569308400"; 
+   d="scan'208";a="289520851"
+Received: from xshen14-mobl.ccr.corp.intel.com (HELO [10.238.129.70]) ([10.238.129.70])
+  by orsmga001.jf.intel.com with ESMTP; 18 Nov 2019 23:44:47 -0800
+Subject: Re: [PATCH] x86/resctrl: Fix potential lockdep warning
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
+        tony.luck@intel.com, fenghua.yu@intel.com,
+        reinette.chatre@intel.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org, pei.p.jia@intel.com,
+        Xiaochen Shen <xiaochen.shen@intel.com>
+References: <1573079796-11713-1-git-send-email-xiaochen.shen@intel.com>
+ <20191113114334.GA1647@zn.tnic>
+ <ec0f21ce-17a8-5038-4e69-565a28ca041d@intel.com>
+ <20191118150240.GF6363@zn.tnic>
+From:   Xiaochen Shen <xiaochen.shen@intel.com>
+Message-ID: <d986fe19-29ab-a6c9-b3c8-96e95a7fba4e@intel.com>
+Date:   Tue, 19 Nov 2019 15:44:46 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.8.0
 MIME-Version: 1.0
-In-Reply-To: <20191119050955.380296035@linuxfoundation.org>
+In-Reply-To: <20191118150240.GF6363@zn.tnic>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -53,71 +54,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Greg,
+On 11/18/2019 23:02, Borislav Petkov wrote:
+> On Sun, Nov 17, 2019 at 12:13:20AM +0800, Xiaochen Shen wrote:
+>> Actually this fix covers all the cases of an audit of the calling paths
+>> of rdt_last_cmd_{clear,puts,printf}(), to make sure we only have the
+>> lockdep_assert_held() in places where we are sure that it must be held.
+> 
+> That's kinda what I suggested, isn't it?
+> 
+> All I meant was, not to have a
+> 
+> 	rdtgroup_kn_lock_live()
+> 
+> call in the code as this function does *not* unconditionally grab the
+> rdtgroup_mutex. And then call a function which unconditionally checks
+> whether the mutex is held.
+> 
 
-thanks for taking care of the slip.c patches.
+Hi Boris,
 
-The original issue was reported by Jouni for "slcan.c" which is also 
-referenced in this commit message. But it was probably overlooked at 
-upstream time that it should go into stable too.
+Thank you for your good suggestion. I will try to follow up if we could 
+improve the code in call sites of rdtgroup_kn_lock_live() in separate patch.
 
-The slcan.c fix is here:
+In my opinion, the potential lockdep issues in all call sites of 
+rdt_last_cmd_{clear,puts,...}() have been fixed in this patch.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=ed50e1600b4483c049ce76e6bd3b665a6a9300ed
+Thank you.
 
+-- 
 Best regards,
-Oliver
-
-On 19/11/2019 06.19, Greg Kroah-Hartman wrote:
-> From: Jouni Hogander <jouni.hogander@unikie.com>
-> 
-> [ Upstream commit 3b5a39979dafea9d0cd69c7ae06088f7a84cdafa ]
-> 
-> Driver/net/can/slcan.c is derived from slip.c. Memory leak was detected
-> by Syzkaller in slcan. Same issue exists in slip.c and this patch is
-> addressing the leak in slip.c.
-> 
-> Here is the slcan memory leak trace reported by Syzkaller:
-> 
-> BUG: memory leak unreferenced object 0xffff888067f65500 (size 4096):
->    comm "syz-executor043", pid 454, jiffies 4294759719 (age 11.930s)
->    hex dump (first 32 bytes):
->      73 6c 63 61 6e 30 00 00 00 00 00 00 00 00 00 00 slcan0..........
->      00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
->    backtrace:
->      [<00000000a06eec0d>] __kmalloc+0x18b/0x2c0
->      [<0000000083306e66>] kvmalloc_node+0x3a/0xc0
->      [<000000006ac27f87>] alloc_netdev_mqs+0x17a/0x1080
->      [<0000000061a996c9>] slcan_open+0x3ae/0x9a0
->      [<000000001226f0f9>] tty_ldisc_open.isra.1+0x76/0xc0
->      [<0000000019289631>] tty_set_ldisc+0x28c/0x5f0
->      [<000000004de5a617>] tty_ioctl+0x48d/0x1590
->      [<00000000daef496f>] do_vfs_ioctl+0x1c7/0x1510
->      [<0000000059068dbc>] ksys_ioctl+0x99/0xb0
->      [<000000009a6eb334>] __x64_sys_ioctl+0x78/0xb0
->      [<0000000053d0332e>] do_syscall_64+0x16f/0x580
->      [<0000000021b83b99>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
->      [<000000008ea75434>] 0xfffffffffffffff
-> 
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Oliver Hartkopp <socketcan@hartkopp.net>
-> Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-> Signed-off-by: Jouni Hogander <jouni.hogander@unikie.com>
-> Signed-off-by: David S. Miller <davem@davemloft.net>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
->   drivers/net/slip/slip.c |    1 +
->   1 file changed, 1 insertion(+)
-> 
-> --- a/drivers/net/slip/slip.c
-> +++ b/drivers/net/slip/slip.c
-> @@ -855,6 +855,7 @@ err_free_chan:
->   	sl->tty = NULL;
->   	tty->disc_data = NULL;
->   	clear_bit(SLF_INUSE, &sl->flags);
-> +	free_netdev(sl->dev);
->   
->   err_exit:
->   	rtnl_unlock();
-> 
-> 
+Xiaochen
