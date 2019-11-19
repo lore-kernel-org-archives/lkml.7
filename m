@@ -2,389 +2,109 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B19B6C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 11:34:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0800C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 11:34:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 767C7222A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 11:34:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574163288;
-	bh=Qd51Ts3huaO2sixg/OR9UC4SrYjzwXlKLaMVTIZl9q4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aCEdXh73RxUtGMyfT/FoOC3KtSa72ZaJRhYTji1Hc2+yp+3kh6NUzUAAdtP5AQ+yW
-	 aFAhBOUzAgD8oDr7Zl25IfBCWdZz1Kp2p5ZSuzGxUKBIuhlt8rIY2JeHGNc5yVQhBH
-	 7bCGlDnxm8CEa/qIWrHfWu58cFz77hLQKQrIiG3k=
+	by mail.kernel.org (Postfix) with ESMTP id C9969219F6
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 11:34:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mork.no header.i=@mork.no header.b="XbtyWj71"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728262AbfKSLer (ORCPT
+        id S1728274AbfKSLey (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 06:34:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48808 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 06:34:54 -0500
+Received: from canardo.mork.no ([148.122.252.1]:48253 "EHLO canardo.mork.no"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728215AbfKSLei (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 06:34:38 -0500
-Received: from quaco.ghostprotocols.net (179.176.11.138.dynamic.adsl.gvt.net.br [179.176.11.138])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A1E52067D;
-        Tue, 19 Nov 2019 11:34:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574163277;
-        bh=Qd51Ts3huaO2sixg/OR9UC4SrYjzwXlKLaMVTIZl9q4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mjHDKQVBc+1qAt5OKZwlPTutitHtofeP7by9alic2aqgX9t7fBCUeFhqlwWuZ0QeT
-         EHpGHapNl8XOnHnPgxQUYR31hwjKO0eFi0pBAqdOHPmG0ZV4n/zZWyjAHnDJeHatNv
-         1H6gJRdwPveGbH4XLXgcL8dO/ExmZBEa8uYh4X+c=
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Ian Rogers <irogers@google.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        Andi Kleen <ak@linux.intel.com>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH 25/25] perf parse: Report initial event parsing error
-Date:   Tue, 19 Nov 2019 08:32:45 -0300
-Message-Id: <20191119113245.19593-26-acme@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191119113245.19593-1-acme@kernel.org>
-References: <20191119113245.19593-1-acme@kernel.org>
+        id S1727638AbfKSLex (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 06:34:53 -0500
+Received: from miraculix.mork.no ([IPv6:2a02:2121:282:91e0:68e2:39ff:fe1c:1a78])
+        (authenticated bits=0)
+        by canardo.mork.no (8.15.2/8.15.2) with ESMTPSA id xAJBYXhW005061
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Tue, 19 Nov 2019 12:34:34 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mork.no; s=b;
+        t=1574163275; bh=3c0RkDqtClK7mnfJEI2VW+D7m35xk5cvEa+CdQvxvlU=;
+        h=From:To:Cc:Subject:References:Date:Message-ID:From;
+        b=XbtyWj71ebSSkaSbHE9p0BYzxA0Bywzz+D5S1xQB7GAJ4yvnk7o1aA4nqCbtyjyNf
+         /1CKdVbUS2uZ7Y+89h38zHb0G4odf9+ZUzM/3ynNujqk2Nk2/LQt0bmpXPrefl8gnI
+         D2IM6E0b39i+uwWNLNCsIKwDPaJdQ+/CRBn8dcMY=
+Received: from bjorn by miraculix.mork.no with local (Exim 4.92)
+        (envelope-from <bjorn@mork.no>)
+        id 1iX1m8-0007Jf-K6; Tue, 19 Nov 2019 12:34:28 +0100
+From:   =?utf-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>
+To:     Oliver Neukum <oneukum@suse.de>
+Cc:     syzbot <syzbot+854768b99f19e89d7f81@syzkaller.appspotmail.com>,
+        andreyknvl@google.com, baijiaju1990@gmail.com,
+        bigeasy@linutronix.de, colin.king@canonical.com,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        yuehaibing@huawei.com
+Subject: Re: INFO: task hung in wdm_flush
+Organization: m
+References: <0000000000003313f0058fea8435@google.com>
+        <8736ek9qir.fsf@miraculix.mork.no> <1574159504.28617.5.camel@suse.de>
+Date:   Tue, 19 Nov 2019 12:34:28 +0100
+In-Reply-To: <1574159504.28617.5.camel@suse.de> (Oliver Neukum's message of
+        "Tue, 19 Nov 2019 11:31:44 +0100")
+Message-ID: <87pnho85h7.fsf@miraculix.mork.no>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Virus-Scanned: clamav-milter 0.101.4 at canardo
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ian Rogers <irogers@google.com>
+Oliver Neukum <oneukum@suse.de> writes:
+> Am Dienstag, den 19.11.2019, 10:14 +0100 schrieb Bj=C3=B8rn Mork:
+>
+>> Anyway, I believe this is not a bug.
+>>=20
+>> wdm_flush will wait forever for the IN_USE flag to be cleared or the
+>
+> Damn. Too obvious. So you think we simply have pending output that does
+> just not complete?
 
-Record the first event parsing error and report. Implementing feedback
-from Jiri Olsa:
+I do miss a lot of stuff so I might be wrong, but I can't see any other
+way this can happen.  The out_callback will unconditionally clear the
+IN_USE flag and wake up the wait_queue.
 
-  https://lkml.org/lkml/2019/10/28/680
+>> DISCONNECTING flag to be set. The only way you can avoid this is by
+>> creating a device that works normally up to a point and then completely
+>> ignores all messages,
+>
+> Devices may crash. I don't think we can ignore that case.
 
-An example error is:
+Sure, but I've never seen that happen without the device falling off the
+bus.  Which is a disconnect.
 
-  $ tools/perf/perf stat -e c/c/
-  WARNING: multiple event parsing errors
-  event syntax error: 'c/c/'
-                         \___ unknown term
+But I am all for handling this *if* someone reproduces it with a real
+device.  I just don't think it's worth the effort if it's only a
+theoretical problem.
 
-  valid terms: event,filter_rem,filter_opc0,edge,filter_isoc,filter_tid,filter_loc,filter_nc,inv,umask,filter_opc1,tid_en,thresh,filter_all_op,filter_not_nm,filter_state,filter_nm,config,config1,config2,name,period,percore
+>>  but without resetting or disconnecting. It is
+>> obviously possible to create such a device. But I think the current
+>> error handling is more than sufficient, unless you show me some way to
+>> abuse this or reproduce the issue with a real device.
+>
+> Malicious devices are real. Potentially at least.
+> But you are right, we need not bend over to handle them well, but we
+> ought to be able to handle them.
 
-Initial error:
+Sure, we need to handle malicious devices.  But only if they can be used
+for real harm.
 
-  event syntax error: 'c/c/'
-                      \___ Cannot find PMU `c'. Missing kernel support?
-  Run 'perf list' for a list of valid events
+This warning requires physical acceess and is only slightly annoying.
+Like a USB device making loud farting sounds.  You'd just disconnect the
+device.  No need for Linux to detect the sound and handle it
+automatically, I think.
 
-   Usage: perf stat [<options>] [<command>]
 
-      -e, --event <event>   event selector. use 'perf list' to list available events
-
-Signed-off-by: Ian Rogers <irogers@google.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Allison Randal <allison@lohutok.net>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Anju T Sudhakar <anju@linux.vnet.ibm.com>
-Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Thomas Richter <tmricht@linux.ibm.com>
-Link: http://lore.kernel.org/lkml/20191116074652.9960-1-irogers@google.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/arch/powerpc/util/kvm-stat.c |  4 +-
- tools/perf/builtin-stat.c               |  2 +
- tools/perf/builtin-trace.c              | 16 +++--
- tools/perf/tests/parse-events.c         |  3 +-
- tools/perf/util/metricgroup.c           |  2 +-
- tools/perf/util/parse-events.c          | 78 ++++++++++++++++++-------
- tools/perf/util/parse-events.h          |  4 ++
- 7 files changed, 80 insertions(+), 29 deletions(-)
-
-diff --git a/tools/perf/arch/powerpc/util/kvm-stat.c b/tools/perf/arch/powerpc/util/kvm-stat.c
-index 9cc1c4a9dec4..16807269317c 100644
---- a/tools/perf/arch/powerpc/util/kvm-stat.c
-+++ b/tools/perf/arch/powerpc/util/kvm-stat.c
-@@ -113,10 +113,10 @@ static int is_tracepoint_available(const char *str, struct evlist *evlist)
- 	struct parse_events_error err;
- 	int ret;
- 
--	err.str = NULL;
-+	bzero(&err, sizeof(err));
- 	ret = parse_events(evlist, str, &err);
- 	if (err.str)
--		pr_err("%s : %s\n", str, err.str);
-+		parse_events_print_error(&err, "tracepoint");
- 	return ret;
- }
- 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 5964e808d73d..0a15253b438c 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -1307,6 +1307,7 @@ static int add_default_attributes(void)
- 	if (stat_config.null_run)
- 		return 0;
- 
-+	bzero(&errinfo, sizeof(errinfo));
- 	if (transaction_run) {
- 		/* Handle -T as -M transaction. Once platform specific metrics
- 		 * support has been added to the json files, all archictures
-@@ -1364,6 +1365,7 @@ static int add_default_attributes(void)
- 			return -1;
- 		}
- 		if (err) {
-+			parse_events_print_error(&errinfo, smi_cost_attrs);
- 			fprintf(stderr, "Cannot set up SMI cost events\n");
- 			return -1;
- 		}
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 43c05eae1768..46a72ecac427 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -3016,11 +3016,18 @@ static bool evlist__add_vfs_getname(struct evlist *evlist)
- {
- 	bool found = false;
- 	struct evsel *evsel, *tmp;
--	struct parse_events_error err = { .idx = 0, };
--	int ret = parse_events(evlist, "probe:vfs_getname*", &err);
-+	struct parse_events_error err;
-+	int ret;
- 
--	if (ret)
-+	bzero(&err, sizeof(err));
-+	ret = parse_events(evlist, "probe:vfs_getname*", &err);
-+	if (ret) {
-+		free(err.str);
-+		free(err.help);
-+		free(err.first_str);
-+		free(err.first_help);
- 		return false;
-+	}
- 
- 	evlist__for_each_entry_safe(evlist, evsel, tmp) {
- 		if (!strstarts(perf_evsel__name(evsel), "probe:vfs_getname"))
-@@ -4832,8 +4839,9 @@ int cmd_trace(int argc, const char **argv)
- 	 * wrong in more detail.
- 	 */
- 	if (trace.perfconfig_events != NULL) {
--		struct parse_events_error parse_err = { .idx = 0, };
-+		struct parse_events_error parse_err;
- 
-+		bzero(&parse_err, sizeof(parse_err));
- 		err = parse_events(trace.evlist, trace.perfconfig_events, &parse_err);
- 		if (err) {
- 			parse_events_print_error(&parse_err, trace.perfconfig_events);
-diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-index 25e0ed2eedfc..091c3aeccc27 100644
---- a/tools/perf/tests/parse-events.c
-+++ b/tools/perf/tests/parse-events.c
-@@ -1768,10 +1768,11 @@ static struct terms_test test__terms[] = {
- 
- static int test_event(struct evlist_test *e)
- {
--	struct parse_events_error err = { .idx = 0, };
-+	struct parse_events_error err;
- 	struct evlist *evlist;
- 	int ret;
- 
-+	bzero(&err, sizeof(err));
- 	if (e->valid && !e->valid()) {
- 		pr_debug("... SKIP");
- 		return 0;
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index a7c0424dbda3..6a4d350d5cdb 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -523,7 +523,7 @@ int metricgroup__parse_groups(const struct option *opt,
- 	if (ret)
- 		return ret;
- 	pr_debug("adding %s\n", extra_events.buf);
--	memset(&parse_error, 0, sizeof(struct parse_events_error));
-+	bzero(&parse_error, sizeof(parse_error));
- 	ret = parse_events(perf_evlist, extra_events.buf, &parse_error);
- 	if (ret) {
- 		parse_events_print_error(&parse_error, extra_events.buf);
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 6d18ff9bce49..6bae9d6edc12 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -189,12 +189,29 @@ void parse_events__handle_error(struct parse_events_error *err, int idx,
- 		free(help);
- 		return;
- 	}
--	WARN_ONCE(err->str, "WARNING: multiple event parsing errors\n");
--	err->idx = idx;
--	free(err->str);
--	err->str = str;
--	free(err->help);
--	err->help = help;
-+	switch (err->num_errors) {
-+	case 0:
-+		err->idx = idx;
-+		err->str = str;
-+		err->help = help;
-+		break;
-+	case 1:
-+		err->first_idx = err->idx;
-+		err->idx = idx;
-+		err->first_str = err->str;
-+		err->str = str;
-+		err->first_help = err->help;
-+		err->help = help;
-+		break;
-+	default:
-+		WARN_ONCE(1, "WARNING: multiple event parsing errors\n");
-+		free(err->str);
-+		err->str = str;
-+		free(err->help);
-+		err->help = help;
-+		break;
-+	}
-+	err->num_errors++;
- }
- 
- struct tracepoint_path *tracepoint_id_to_path(u64 config)
-@@ -1349,7 +1366,7 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
- 		if (asprintf(&err_str,
- 				"Cannot find PMU `%s'. Missing kernel support?",
- 				name) >= 0)
--			parse_events__handle_error(err, -1, err_str, NULL);
-+			parse_events__handle_error(err, 0, err_str, NULL);
- 		return -EINVAL;
- 	}
- 
-@@ -2007,15 +2024,14 @@ static int get_term_width(void)
- 	return ws.ws_col > MAX_WIDTH ? MAX_WIDTH : ws.ws_col;
- }
- 
--void parse_events_print_error(struct parse_events_error *err,
--			      const char *event)
-+static void __parse_events_print_error(int err_idx, const char *err_str,
-+				const char *err_help, const char *event)
- {
- 	const char *str = "invalid or unsupported event: ";
- 	char _buf[MAX_WIDTH];
- 	char *buf = (char *) event;
- 	int idx = 0;
--
--	if (err->str) {
-+	if (err_str) {
- 		/* -2 for extra '' in the final fprintf */
- 		int width       = get_term_width() - 2;
- 		int len_event   = strlen(event);
-@@ -2038,8 +2054,8 @@ void parse_events_print_error(struct parse_events_error *err,
- 		buf = _buf;
- 
- 		/* We're cutting from the beginning. */
--		if (err->idx > max_err_idx)
--			cut = err->idx - max_err_idx;
-+		if (err_idx > max_err_idx)
-+			cut = err_idx - max_err_idx;
- 
- 		strncpy(buf, event + cut, max_len);
- 
-@@ -2052,16 +2068,33 @@ void parse_events_print_error(struct parse_events_error *err,
- 			buf[max_len] = 0;
- 		}
- 
--		idx = len_str + err->idx - cut;
-+		idx = len_str + err_idx - cut;
- 	}
- 
- 	fprintf(stderr, "%s'%s'\n", str, buf);
- 	if (idx) {
--		fprintf(stderr, "%*s\\___ %s\n", idx + 1, "", err->str);
--		if (err->help)
--			fprintf(stderr, "\n%s\n", err->help);
--		zfree(&err->str);
--		zfree(&err->help);
-+		fprintf(stderr, "%*s\\___ %s\n", idx + 1, "", err_str);
-+		if (err_help)
-+			fprintf(stderr, "\n%s\n", err_help);
-+	}
-+}
-+
-+void parse_events_print_error(struct parse_events_error *err,
-+			      const char *event)
-+{
-+	if (!err->num_errors)
-+		return;
-+
-+	__parse_events_print_error(err->idx, err->str, err->help, event);
-+	zfree(&err->str);
-+	zfree(&err->help);
-+
-+	if (err->num_errors > 1) {
-+		fputs("\nInitial error:\n", stderr);
-+		__parse_events_print_error(err->first_idx, err->first_str,
-+					err->first_help, event);
-+		zfree(&err->first_str);
-+		zfree(&err->first_help);
- 	}
- }
- 
-@@ -2071,8 +2104,11 @@ int parse_events_option(const struct option *opt, const char *str,
- 			int unset __maybe_unused)
- {
- 	struct evlist *evlist = *(struct evlist **)opt->value;
--	struct parse_events_error err = { .idx = 0, };
--	int ret = parse_events(evlist, str, &err);
-+	struct parse_events_error err;
-+	int ret;
-+
-+	bzero(&err, sizeof(err));
-+	ret = parse_events(evlist, str, &err);
- 
- 	if (ret) {
- 		parse_events_print_error(&err, str);
-diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
-index 5ee8ac93840c..ff367f248fe8 100644
---- a/tools/perf/util/parse-events.h
-+++ b/tools/perf/util/parse-events.h
-@@ -110,9 +110,13 @@ struct parse_events_term {
- };
- 
- struct parse_events_error {
-+	int   num_errors;       /* number of errors encountered */
- 	int   idx;	/* index in the parsed string */
- 	char *str;      /* string to display at the index */
- 	char *help;	/* optional help string */
-+	int   first_idx;/* as above, but for the first encountered error */
-+	char *first_str;
-+	char *first_help;
- };
- 
- struct parse_events_state {
--- 
-2.21.0
-
+Bj=C3=B8rn
