@@ -2,160 +2,283 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAD_ENC_HEADER,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C21DCC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:09:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C30EC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:10:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97A4F22362
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:09:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EE4C2231A
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:10:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=origamienergy.com header.i=@origamienergy.com header.b="CxnE0PGo";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="B6FUyhgv"
+	dkim=pass (1024-bit key) header.d=brennan.io header.i=stephen@brennan.io header.b="acKD7zvd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728606AbfKSRI5 (ORCPT
+        id S1728631AbfKSRK2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 12:08:57 -0500
-Received: from a6-1.smtp-out.eu-west-1.amazonses.com ([54.240.6.1]:44786 "EHLO
-        a6-1.smtp-out.eu-west-1.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726985AbfKSRIz (ORCPT
+        Tue, 19 Nov 2019 12:10:28 -0500
+Received: from sender4-of-o54.zoho.com ([136.143.188.54]:21459 "EHLO
+        sender4-of-o54.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727212AbfKSRK2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 12:08:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=awgt3ic55kqhwizgro5hhdlz56bi7lbf; d=origamienergy.com;
-        t=1574183333;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-        bh=oQggy2A5pLNP6au2ICTYTrltBjKw3jVSSrNnN429nSc=;
-        b=CxnE0PGoIoa4067XbCcDRMrztdxTrliSmc1jNqXAxamgkkeF1oNMXNjIApec/D0k
-        qeyYrLKDXll367iRBb1E9+y9Qw2DpIRJaVyb+Ks38yuJXYo9dttlQrdwMFHh4saupLk
-        P1Mx7FU0I7R+18QdlF3HQyN+E3vZvYknaYvaQ8gs=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=ihchhvubuqgjsxyuhssfvqohv7z3u4hn; d=amazonses.com; t=1574183333;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Feedback-ID;
-        bh=oQggy2A5pLNP6au2ICTYTrltBjKw3jVSSrNnN429nSc=;
-        b=B6FUyhgvbnkmrQBHB63/ianp2fcgLCg9xMZEas+rk4kGjmNnyv1gvEXv38SeJJHR
-        1V4+mcZL4Xvdz7lOpKSJ6+rk+yoJgB44a4gNz+xorUTaepf9n1e5utX4/rpSGN4WpQD
-        xlNtVx1KlP+66TtX07KymaGl/v8TN7yn+8Jm3zAM=
-From:   James Byrne <james.byrne@origamienergy.com>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     James Byrne <james.byrne@origamienergy.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: [PATCH 1/2] printk: Make continuation flags from /dev/kmsg useful again
-Date:   Tue, 19 Nov 2019 17:08:53 +0000
-Message-ID: <0102016e84a36dea-00d03c3c-75ba-4354-ad1f-4380e7cba235-000000@eu-west-1.amazonses.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191119170632.52119-1-james.byrne@origamienergy.com>
-References: <20191119170632.52119-1-james.byrne@origamienergy.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SES-Outgoing: 2019.11.19-54.240.6.1
-Feedback-ID: 1.eu-west-1.sQ65CuNSNkrvjFrT7j7oeWmhxZgivYoP5c3BHSC7Qc8=:AmazonSES
+        Tue, 19 Nov 2019 12:10:28 -0500
+ARC-Seal: i=1; a=rsa-sha256; t=1574183396; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=XYPUAbgf5LIgblvM/PEfwK5c2qlDOv7KjOrZkDTAJkCpLe3aPNwVcEZxdetHrsCzAxQcE4OrAdVNFamYcvN7vqmzQWLg3Q2dIIRDnbCMqt8nnO+YWK/37ORQWdhFUmO5vYzv9Pt7JZHEx0DlDSg/NiuBdlOCEs6Mu2UWiRdq13U=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1574183396; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:Message-ID:Subject:To; 
+        bh=hhl/eyaWl95DxKVbZbTd0hS6m1pSAzWQWE9upjbQJsc=; 
+        b=U8vHQYhf/pGufVqEy0wjBPDlvZT/bjUMJKvpR7jjmtL+HMJV+iT6iyVa+Q6mIkcD3YZ0oZJIBsbunGZVQ10s7CCE3/yFj1E//jLzCZSa7KDD1EgPUIUdSIp8FPq8MpSYlBO39AygjHddELYkWpVlItb7lZ46WOpZINIoF/bvZGc=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=brennan.io;
+        spf=pass  smtp.mailfrom=stephen@brennan.io;
+        dmarc=pass header.from=<stephen@brennan.io> header.from=<stephen@brennan.io>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1574183396;
+        s=selector01; d=brennan.io; i=stephen@brennan.io;
+        h=Content-Transfer-Encoding:Content-Type:In-Reply-To:Date:To:Cc:Subject:From:Message-Id;
+        l=3868; bh=hhl/eyaWl95DxKVbZbTd0hS6m1pSAzWQWE9upjbQJsc=;
+        b=acKD7zvdIoQFRM/iZ37BOh23jIrYcub3FrIQkmnx3rTjnNLzv6gb0/0Br5oBcqBF
+        ZrjEDGNCe9omOsve4xOgT5Cpds+QjbSOwSV1tOCnyHDWp5scmmpPAKv2YxaRb/j/Hbo
+        QLkxHFQ7oIiE+u7uKXpBB/RsGrHzKnohjnbe4zQU=
+Received: from localhost (195.173.24.136.in-addr.arpa [136.24.173.195]) by mx.zohomail.com
+        with SMTPS id 1574183395000471.61621983311886; Tue, 19 Nov 2019 09:09:55 -0800 (PST)
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Originaldate: Tue Nov 19, 2019 at 11:07 AM
+Originalfrom: "Nicolas Saenz Julienne" <nsaenzjulienne@suse.de>
+Original: =?utf-8?q?Hi_Stephen,_thanks_for_the_follow-up.
+ =0D=0A=0D=0AOn_Mon,_2019-1?=
+ =?utf-8?q?1-18_at_22:14_-0800,_Stephen_Brennan_wrote:=0D=0A>_BCM2711_feat?=
+ =?utf-8?q?ures_a_RNG200_hardware_random_number_generator_block,_which_i?=
+ =?utf-8?q?=3D=0D=0As=0D=0A>_different_from_the_BCM283x_from_which_it_inhe?=
+ =?utf-8?q?rits._Move_the_rng_block_fro=3D=0D=0Am=0D=0A>_BCM283x_into_a_se?=
+ =?utf-8?q?parate_common_file,_and_update_the_rng_declaration_of=0D=0A>_BC?=
+ =?utf-8?q?M2711.=0D=0A>=3D20=0D=0A>_Signed-off-by:_Stephen_Brennan_<steph?=
+ =?utf-8?q?en@brennan.io>=0D=0A>_---=0D=0A=0D=0AIt's_petty_in_this_case_bu?=
+ =?utf-8?q?t_you_should_add_a_list_of_changes_here_too.=0D=0A=0D=0A>__arch?=
+ =?utf-8?q?/arm/boot/dts/bcm2711.dtsi________|__6_+++---=0D=0A>__arch/arm/?=
+ =?utf-8?q?boot/dts/bcm2835.dtsi________|__1_+=0D=0A>__arch/arm/boot/dts/b?=
+ =?utf-8?q?cm2836.dtsi________|__1_+=0D=0A>__arch/arm/boot/dts/bcm2837.dts?=
+ =?utf-8?q?i________|__1_+=0D=0A>__arch/arm/boot/dts/bcm283x-common.dtsi_|?=
+ =?utf-8?q?_11_+++++++++++=0D=0A>__arch/arm/boot/dts/bcm283x.dtsi________|?=
+ =?utf-8?q?__6_------=0D=0A>__6_files_changed,_17_insertions(+),_9_deletio?=
+ =?utf-8?q?ns(-)=0D=0A>__create_mode_100644_arch/arm/boot/dts/bcm283x-comm?=
+ =?utf-8?q?on.dtsi=0D=0A>=3D20=0D=0A>_diff_--git_a/arch/arm/boot/dts/bcm27?=
+ =?utf-8?q?11.dtsi_b/arch/arm/boot/dts/bcm2711.d=3D=0D=0Atsi=0D=0A>_index_?=
+ =?utf-8?q?ac83dac2e6ba..4975567e948e_100644=0D=0A>_---_a/arch/arm/boot/dt?=
+ =?utf-8?q?s/bcm2711.dtsi=0D=0A>_+++_b/arch/arm/boot/dts/bcm2711.dtsi=0D?=
+ =?utf-8?q?=0A>_@@_-92,10_+92,10_@@_pm:_watchdog@7e100000_{=0D=0A>__=09=09?=
+ =?utf-8?q?};=0D=0A>_=3D20=0D=0A>__=09=09rng@7e104000_{=0D=0A>_+=09=09=09c?=
+ =?utf-8?q?ompatible_=3D3D_"brcm,bcm2711-rng200";=0D=0A>_+=09=09=09reg_=3D?=
+ =?utf-8?q?3D_<0x7e104000_0x28>;=0D=0A>__=09=09=09interrupts_=3D3D_<GIC=5F?=
+ =?utf-8?q?SPI_125_IRQ=5FTYPE=5FLEVEL=5FHIGH>;=0D=0A>_-=0D=0A>_-=09=09=09/?=
+ =?utf-8?q?*_RNG_is_incompatible_with_brcm,bcm2835-rng_*/=0D=0A>_-=09=09?=
+ =?utf-8?q?=09status_=3D3D_"disabled";=0D=0A>_+=09=09=09status_=3D3D_"okay?=
+ =?utf-8?q?";=0D=0A>__=09=09};=0D=0A>_=3D20=0D=0A>__=09=09uart2:_serial@7e?=
+ =?utf-8?q?201400_{=0D=0A>_diff_--git_a/arch/arm/boot/dts/bcm2835.dtsi_b/a?=
+ =?utf-8?q?rch/arm/boot/dts/bcm2835.d=3D=0D=0Atsi=0D=0A>_index_53bf4579cc2?=
+ =?utf-8?q?2..f7b2f46e307d_100644=0D=0A>_---_a/arch/arm/boot/dts/bcm2835.d?=
+ =?utf-8?q?tsi=0D=0A>_+++_b/arch/arm/boot/dts/bcm2835.dtsi=0D=0A>_@@_-1,5_?=
+ =?utf-8?q?+1,6_@@=0D=0A>__//_SPDX-License-Identifier:_GPL-2.0=0D=0A>__#in?=
+ =?utf-8?q?clude_"bcm283x.dtsi"=0D=0A>_+#include_"bcm283x-common.dtsi"=0D?=
+ =?utf-8?q?=0A>__#include_"bcm2835-common.dtsi"=0D=0A>_=3D20=0D=0A>__/_{?=
+ =?utf-8?q?=0D=0A>_diff_--git_a/arch/arm/boot/dts/bcm2836.dtsi_b/arch/arm/?=
+ =?utf-8?q?boot/dts/bcm2836.d=3D=0D=0Atsi=0D=0A>_index_82d6c4662ae4..a8537?=
+ =?utf-8?q?4195796_100644=0D=0A>_---_a/arch/arm/boot/dts/bcm2836.dtsi=0D?=
+ =?utf-8?q?=0A>_+++_b/arch/arm/boot/dts/bcm2836.dtsi=0D=0A>_@@_-1,5_+1,6_@?=
+ =?utf-8?q?@=0D=0A>__//_SPDX-License-Identifier:_GPL-2.0=0D=0A>__#include_?=
+ =?utf-8?q?"bcm283x.dtsi"=0D=0A>_+#include_"bcm283x-common.dtsi"=0D=0A>__#?=
+ =?utf-8?q?include_"bcm2835-common.dtsi"=0D=0A>_=3D20=0D=0A>__/_{=0D=0A>_d?=
+ =?utf-8?q?iff_--git_a/arch/arm/boot/dts/bcm2837.dtsi_b/arch/arm/boot/dts/?=
+ =?utf-8?q?bcm2837.d=3D=0D=0Atsi=0D=0A>_index_9e95fee78e19..045d78ffea08_1?=
+ =?utf-8?q?00644=0D=0A>_---_a/arch/arm/boot/dts/bcm2837.dtsi=0D=0A>_+++_b/?=
+ =?utf-8?q?arch/arm/boot/dts/bcm2837.dtsi=0D=0A>_@@_-1,4_+1,5_@@=0D=0A>__#?=
+ =?utf-8?q?include_"bcm283x.dtsi"=0D=0A>_+#include_"bcm283x-common.dtsi"?=
+ =?utf-8?q?=0D=0A>__#include_"bcm2835-common.dtsi"=0D=0A>_=3D20=0D=0A>__/_?=
+ =?utf-8?q?{=0D=0A>_diff_--git_a/arch/arm/boot/dts/bcm283x-common.dtsi=0D?=
+ =?utf-8?q?=0A>_b/arch/arm/boot/dts/bcm283x-common.dtsi=0D=0A>_new_file_mo?=
+ =?utf-8?q?de_100644=0D=0A>_index_000000000000..3c8834bee390=0D=0A>_---_/d?=
+ =?utf-8?q?ev/null=0D=0A>_+++_b/arch/arm/boot/dts/bcm283x-common.dtsi=0D?=
+ =?utf-8?q?=0A>_@@_-0,0_+1,11_@@=0D=0A>_+//_SPDX-License-Identifier:_GPL-2?=
+ =?utf-8?q?.0=0D=0A>_+=0D=0A>_+/_{=0D=0A>_+=09soc_{=0D=0A>_+=09=09rng@7e10?=
+ =?utf-8?q?4000_{=0D=0A>_+=09=09=09compatible_=3D3D_"brcm,bcm2835-rng";=0D?=
+ =?utf-8?q?=0A>_+=09=09=09reg_=3D3D_<0x7e104000_0x10>;=0D=0A>_+=09=09=09in?=
+ =?utf-8?q?terrupts_=3D3D_<2_29>;=0D=0A>_+=09=09};=0D=0A>_+=09};=0D=0A>_+}?=
+ =?utf-8?q?;=0D=0A=0D=0AI_think_Stefan_wrote_bcm283x-common.dtsi_by_mistak?=
+ =?utf-8?q?e,_he_really_meant=0D=0Abcm2835-common.dtsi.=0D=0A=0D=0ASee_bcm?=
+ =?utf-8?q?2835-common.dtsi's_header_comment:=0D=0A=0D=0A/*_This_include_f?=
+ =?utf-8?q?ile_covers_the_common_peripherals_and_configuration_betwee=3D?=
+ =?utf-8?q?=0D=0An=0D=0A_*_bcm2835,_bcm2836_and_bcm2837_implementations.?=
+ =?utf-8?q?=0D=0A_*/=0D=0A=0D=0ARegards,=0D=0ANicolas=0D=0A=0D=0A?=
+In-Reply-To: <e38de8daad5a2c9b03bda1aa2632844e3ed3d11e.camel@suse.de>
+Date:   Tue, 19 Nov 2019 09:09:53 -0800
+To:     "Nicolas Saenz Julienne" <nsaenzjulienne@suse.de>
+Cc:     "Mark Rutland" <mark.rutland@arm.com>,
+        <devicetree@vger.kernel.org>,
+        <linux-rpi-kernel@lists.infradead.org>,
+        "Florian Fainelli" <f.fainelli@gmail.com>,
+        "Herbert Xu" <herbert@gondor.apana.org.au>,
+        "Scott Branden" <sbranden@broadcom.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        "Ray Jui" <rjui@broadcom.com>, <linux-kernel@vger.kernel.org>,
+        "Eric Anholt" <eric@anholt.net>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "Stefan Wahren" <wahrenst@gmx.net>,
+        "Matt Mackall" <mpm@selenic.com>, "Arnd Bergmann" <arnd@arndb.de>,
+        <linux-crypto@vger.kernel.org>
+Subject: Re: [PATCH v2 3/3] ARM: dts: bcm2711: Enable HWRNG support
+From:   "Stephen Brennan" <stephen@brennan.io>
+Message-Id: <BYK1FVFPTH7J.159A75JOGITR1@pride>
+X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 5aa068ea4082 ("printk: remove games with previous record flags")
-abolished the practice of setting the log flag to 'c' for the first
-continuation line and '+' for subsequent lines. Since this change all
-continuation lines are flagged with 'c' and '+' is never used.
+Hi Nicolas,
 
-From the point of view of a consumer of /dev/kmsg, the behaviour now
-is not very useful because you cannot join lines together based on the
-'c' flag since you do not know whether a line starting with 'c' was
-actually a continuation of the previous line or not.
+On Tue Nov 19, 2019 at 11:07 AM, Nicolas Saenz Julienne wrote:
+> Hi Stephen, thanks for the follow-up.
+>
+>=20
+> On Mon, 2019-11-18 at 22:14 -0800, Stephen Brennan wrote:
+> > BCM2711 features a RNG200 hardware random number generator block, which=
+ i=3D
+> s
+> > different from the BCM283x from which it inherits. Move the rng block f=
+ro=3D
+> m
+> > BCM283x into a separate common file, and update the rng declaration of
+> > BCM2711.
+> >=3D20
+> > Signed-off-by: Stephen Brennan <stephen@brennan.io>
+> > ---
+>
+>=20
+> It's petty in this case but you should add a list of changes here too.
 
-This commit changes the flag field emitted in /dev/kmsg to expose the
-log buffer flags in a more useful way:
+To make sure I understand, you mean listing out the changes in each=20
+revision of the patch series?
 
-- If LOG_NEWLINE=1 and LOG_CONT=0 the flag will be '-', meaning this is
-a single self-contained line.
-- If LOG_NEWLINE=0 and LOG_CONT=0 the flag will be 'c', meaning that
-this is potentially the start of a sequence of continuation lines.
-- If LOG_NEWLINE=0 and LOG_CONT=1 the flag will be '+', meaning that
-this is the middle of a sequence of continuation lines.
-- If LOG_NEWLINE=1 and LOG_CONT=1 the flag will be '*', meaning that
-this is the end of a sequence of continuation lines.
+>
+>=20
+> >  arch/arm/boot/dts/bcm2711.dtsi        |  6 +++---
+> >  arch/arm/boot/dts/bcm2835.dtsi        |  1 +
+> >  arch/arm/boot/dts/bcm2836.dtsi        |  1 +
+> >  arch/arm/boot/dts/bcm2837.dtsi        |  1 +
+> >  arch/arm/boot/dts/bcm283x-common.dtsi | 11 +++++++++++
+> >  arch/arm/boot/dts/bcm283x.dtsi        |  6 ------
+> >  6 files changed, 17 insertions(+), 9 deletions(-)
+> >  create mode 100644 arch/arm/boot/dts/bcm283x-common.dtsi
+> >=3D20
+> > diff --git a/arch/arm/boot/dts/bcm2711.dtsi b/arch/arm/boot/dts/bcm2711=
+.d=3D
+> tsi
+> > index ac83dac2e6ba..4975567e948e 100644
+> > --- a/arch/arm/boot/dts/bcm2711.dtsi
+> > +++ b/arch/arm/boot/dts/bcm2711.dtsi
+> > @@ -92,10 +92,10 @@ pm: watchdog@7e100000 {
+> >  		};
+> > =3D20
+> >  		rng@7e104000 {
+> > +			compatible =3D3D "brcm,bcm2711-rng200";
+> > +			reg =3D3D <0x7e104000 0x28>;
+> >  			interrupts =3D3D <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>;
+> > -
+> > -			/* RNG is incompatible with brcm,bcm2835-rng */
+> > -			status =3D3D "disabled";
+> > +			status =3D3D "okay";
+> >  		};
+> > =3D20
+> >  		uart2: serial@7e201400 {
+> > diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835=
+.d=3D
+> tsi
+> > index 53bf4579cc22..f7b2f46e307d 100644
+> > --- a/arch/arm/boot/dts/bcm2835.dtsi
+> > +++ b/arch/arm/boot/dts/bcm2835.dtsi
+> > @@ -1,5 +1,6 @@
+> >  // SPDX-License-Identifier: GPL-2.0
+> >  #include "bcm283x.dtsi"
+> > +#include "bcm283x-common.dtsi"
+> >  #include "bcm2835-common.dtsi"
+> > =3D20
+> >  / {
+> > diff --git a/arch/arm/boot/dts/bcm2836.dtsi b/arch/arm/boot/dts/bcm2836=
+.d=3D
+> tsi
+> > index 82d6c4662ae4..a85374195796 100644
+> > --- a/arch/arm/boot/dts/bcm2836.dtsi
+> > +++ b/arch/arm/boot/dts/bcm2836.dtsi
+> > @@ -1,5 +1,6 @@
+> >  // SPDX-License-Identifier: GPL-2.0
+> >  #include "bcm283x.dtsi"
+> > +#include "bcm283x-common.dtsi"
+> >  #include "bcm2835-common.dtsi"
+> > =3D20
+> >  / {
+> > diff --git a/arch/arm/boot/dts/bcm2837.dtsi b/arch/arm/boot/dts/bcm2837=
+.d=3D
+> tsi
+> > index 9e95fee78e19..045d78ffea08 100644
+> > --- a/arch/arm/boot/dts/bcm2837.dtsi
+> > +++ b/arch/arm/boot/dts/bcm2837.dtsi
+> > @@ -1,4 +1,5 @@
+> >  #include "bcm283x.dtsi"
+> > +#include "bcm283x-common.dtsi"
+> >  #include "bcm2835-common.dtsi"
+> > =3D20
+> >  / {
+> > diff --git a/arch/arm/boot/dts/bcm283x-common.dtsi
+> > b/arch/arm/boot/dts/bcm283x-common.dtsi
+> > new file mode 100644
+> > index 000000000000..3c8834bee390
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/bcm283x-common.dtsi
+> > @@ -0,0 +1,11 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +
+> > +/ {
+> > +	soc {
+> > +		rng@7e104000 {
+> > +			compatible =3D3D "brcm,bcm2835-rng";
+> > +			reg =3D3D <0x7e104000 0x10>;
+> > +			interrupts =3D3D <2 29>;
+> > +		};
+> > +	};
+> > +};
+>
+>=20
+> I think Stefan wrote bcm283x-common.dtsi by mistake, he really meant
+> bcm2835-common.dtsi.
+>
+>=20
+> See bcm2835-common.dtsi's header comment:
+>
+>=20
+> /* This include file covers the common peripherals and configuration
+> betwee=3D
+> n
+> * bcm2835, bcm2836 and bcm2837 implementations.
+> */
+>
 
-This allows a consumer to concatenate continuations in a straightforward
-manner.
+Wow, thank you, that makes a lot more sense!
 
-Signed-off-by: James Byrne <james.byrne@origamienergy.com>
----
+Best,
+Stephen
 
- Documentation/ABI/testing/dev-kmsg | 14 ++++++++------
- kernel/printk/printk.c             | 19 +++++++++++++++++--
- 2 files changed, 25 insertions(+), 8 deletions(-)
+>=20
+> Regards,
+> Nicolas
+>
+>=20
+>
+>=20
+>
+>=20
 
-diff --git a/Documentation/ABI/testing/dev-kmsg b/Documentation/ABI/testing/dev-kmsg
-index f307506eb54c..6326deeaf5e3 100644
---- a/Documentation/ABI/testing/dev-kmsg
-+++ b/Documentation/ABI/testing/dev-kmsg
-@@ -90,12 +90,14 @@ Description:	The /dev/kmsg character device node provides userspace access
- 		  +sound:card0 - subsystem:devname
- 
- 		The flags field carries '-' by default. A 'c' indicates a
--		fragment of a line. Note, that these hints about continuation
--		lines are not necessarily correct, and the stream could be
--		interleaved with unrelated messages, but merging the lines in
--		the output usually produces better human readable results. A
--		similar logic is used internally when messages are printed to
--		the console, /proc/kmsg or the syslog() syscall.
-+		fragment of a line. Following fragments are flagged with '+'
-+		and the final fragment in a sequence is flagged with '*'. Note
-+		that these hints about continuation lines are not necessarily
-+		correct, and the stream could be interleaved with unrelated
-+		messages, but merging the lines in the output usually produces
-+		better human readable results. A similar logic is used
-+		internally when messages are printed to the console, /proc/kmsg
-+		or the syslog() syscall.
- 
- 		By default, kernel tries to avoid fragments by concatenating
- 		when it can and fragments are rare; however, when extended
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index ca65327a6de8..a3db7f5e56d9 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -715,7 +715,7 @@ static ssize_t msg_print_ext_header(char *buf, size_t size,
- 				    struct printk_log *msg, u64 seq)
- {
- 	u64 ts_usec = msg->ts_nsec;
--	char caller[20];
-+	char flag, caller[20];
- #ifdef CONFIG_PRINTK_CALLER
- 	u32 id = msg->caller_id;
- 
-@@ -727,9 +727,24 @@ static ssize_t msg_print_ext_header(char *buf, size_t size,
- 
- 	do_div(ts_usec, 1000);
- 
-+	switch (msg->flags & (LOG_CONT|LOG_NEWLINE)) {
-+	case LOG_CONT|LOG_NEWLINE:
-+		flag = '*';
-+		break;
-+	case LOG_CONT:
-+		flag = '+';
-+		break;
-+	case LOG_NEWLINE:
-+		flag = '-';
-+		break;
-+	default:
-+		flag = 'c';
-+		break;
-+	}
-+
- 	return scnprintf(buf, size, "%u,%llu,%llu,%c%s;",
- 			 (msg->facility << 3) | msg->level, seq, ts_usec,
--			 msg->flags & LOG_CONT ? 'c' : '-', caller);
-+			 flag, caller);
- }
- 
- static ssize_t msg_print_ext_body(char *buf, size_t size,
--- 
-2.24.0
 
