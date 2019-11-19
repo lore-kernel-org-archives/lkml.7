@@ -2,144 +2,224 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B57C2C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:58:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B1C4C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:59:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8782F20679
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:58:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1598520679
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:59:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NIrx3VSp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Al9cWTCE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728366AbfKSP6q (ORCPT
+        id S1728389AbfKSP7n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 10:58:46 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:31551 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727591AbfKSP6q (ORCPT
+        Tue, 19 Nov 2019 10:59:43 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:42393 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727509AbfKSP7m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 10:58:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574179124;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=QYuT05bQRH1TDY+TH4L5voF9XhTBnlMPUL3L+VxlLhk=;
-        b=NIrx3VSpR+2z71347mpCIptJwpfl3U7EgteqeE6rwtodnMuxDivjxxg6d9rO9BysQQtFSw
-        TRW7yX0N1+iZEs2wNaCNm7RJmWUCVncVMeJ22TS5veqlaN+VVgJylGf5fADjCiv9XsVQOt
-        hihd8LWBcPgIrz8h4JsQpqHQYhZUkW4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-298-FPZIHhWjMtCcDYIFUQk-0g-1; Tue, 19 Nov 2019 10:58:40 -0500
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E7C9C8DDCD6;
-        Tue, 19 Nov 2019 15:58:38 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.44])
-        by smtp.corp.redhat.com (Postfix) with SMTP id D528360255;
-        Tue, 19 Nov 2019 15:58:28 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Tue, 19 Nov 2019 16:58:37 +0100 (CET)
-Date:   Tue, 19 Nov 2019 16:58:26 +0100
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>, mingo@kernel.org,
-        will@kernel.org, tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        bigeasy@linutronix.de, juri.lelli@redhat.com, williams@redhat.com,
-        bristot@redhat.com, dave@stgolabs.net, jack@suse.com
-Subject: Re: [PATCH 5/5] locking/percpu-rwsem: Remove the embedded rwsem
-Message-ID: <20191119155826.GA4739@redhat.com>
-References: <20191113102115.116470462@infradead.org>
- <20191113102855.925208237@infradead.org>
- <ee75fc38-c3c8-3f9e-13ba-5c8312d61325@redhat.com>
+        Tue, 19 Nov 2019 10:59:42 -0500
+Received: by mail-qt1-f193.google.com with SMTP id t20so25132591qtn.9;
+        Tue, 19 Nov 2019 07:59:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=m9owisihVoUKEdIZBWaiOa7IHVOtGuTKDH0fF9E2sX4=;
+        b=Al9cWTCEmFGh3dhfC5/fKcqfTRLGohNSOfErqJi+7K5fc2lSuvvijW3iX/vmJK0cWt
+         a7OLToGABHj2RVK4WJXwnBBbElEEJlGKwYwVUlJ52L8p78++2L4n6HtoV8AtcOKD+2C/
+         7vFPhoVONDnEZqcEmMGL5evbFvsW30sXKhrn+TTIFoy7RfZatqKB7gvS/2FwGdnxoHvP
+         6cSgUAhZwQGSbzWeOQtHk55l1Ot1TlKDR7qiEur+j4UukR0Wt0j8STLHQmNwUzVWz+Pp
+         +f69kGr++ExDEWmSOKPLovTztggqQWUOfD7XZKBLZMhXEfWYMXaLHfWF96fxB5xNeMmj
+         Umkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=m9owisihVoUKEdIZBWaiOa7IHVOtGuTKDH0fF9E2sX4=;
+        b=IHfFVgAXWQ/42yz6XIiq5XpI6WbMhfaLu5G74jgtYYUf7lKDsDz8ig/x/V5xiBbjpJ
+         2tDD48Vyah1V79/3GZ6ArpMNCAtXsFDcZkYs9+2LEKbkfu0nBrsoXrH9ad+OhFTWI/EH
+         nsHFYsqR5Fdn0ZnXyxxJa8ZVArlAJl/aKnz3h8oB0LH0k021LnEkkbNQrfQMawrvOw3d
+         LF79nufp7mwE6pGUa0rXC4hhz0/ddze59cgGbGe7p5HHRRhRtGP+U6p++jk65sk64z3r
+         rJk/Nn4nEcOZO+B9dRXwg9i5aMWa9dcPW//SGfY5gB4HnR+Bl8V0fck+MZilfnx+5xQz
+         hFSQ==
+X-Gm-Message-State: APjAAAWwWacJRuV4KQA1XYe5RKoNp57FMqCCr0w1YzpI2FnrEWy4k2wz
+        2qPji2rCcwzDilDHdt5xea0=
+X-Google-Smtp-Source: APXvYqxw/mipy1xv+BDJlBvv52s6KA03uNVaG1x2rooAK6M1x9d1rm+UBPPUswr6Wmfn2RDN9gzhiw==
+X-Received: by 2002:ac8:342b:: with SMTP id u40mr32830412qtb.87.1574179179727;
+        Tue, 19 Nov 2019 07:59:39 -0800 (PST)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id w5sm10141364qkf.43.2019.11.19.07.59.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Nov 2019 07:59:39 -0800 (PST)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id E981D40D3E; Tue, 19 Nov 2019 12:59:36 -0300 (-03)
+Date:   Tue, 19 Nov 2019 12:59:36 -0300
+To:     lqqq341 <liuqi115@hisilicon.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, ak@linux.intel.com,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linuxarm@huawei.com, john.garry@huawei.com,
+        zhangshaokun@hisilicon.com, huangdaode@hisilicon.com,
+        linyunsheng@huawei.com
+Subject: Re: [PATCH] Perf stat: Fix the ratio comments of miss-events
+Message-ID: <20191119155936.GC24290@kernel.org>
+References: <1573890521-56450-1-git-send-email-liuqi115@hisilicon.com>
 MIME-Version: 1.0
-In-Reply-To: <ee75fc38-c3c8-3f9e-13ba-5c8312d61325@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: FPZIHhWjMtCcDYIFUQk-0g-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <1573890521-56450-1-git-send-email-liuqi115@hisilicon.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/19, Waiman Long wrote:
->
-> On 11/13/19 5:21 AM, Peter Zijlstra wrote:
-> > +static int percpu_rwsem_wake_function(struct wait_queue_entry *wq_entr=
-y,
-> > +=09=09=09=09      unsigned int mode, int wake_flags,
-> > +=09=09=09=09      void *key)
-> > +{
-> > +=09struct task_struct *p =3D get_task_struct(wq_entry->private);
-> > +=09bool reader =3D wq_entry->flags & WQ_FLAG_CUSTOM;
-> > +=09struct percpu_rw_semaphore *sem =3D key;
-> > +
-> > +=09/* concurrent against percpu_down_write(), can get stolen */
-> > +=09if (!__percpu_rwsem_trylock(sem, reader))
-> > +=09=09return 1;
-> > +
-> > +=09list_del_init(&wq_entry->entry);
-> > +=09smp_store_release(&wq_entry->private, NULL);
-> > +
-> > +=09wake_up_process(p);
-> > +=09put_task_struct(p);
-> > +
-> > +=09return !reader; /* wake 'all' readers and 1 writer */
-> > +}
-> > +
->
-> If I read the function correctly, you are setting the WQ_FLAG_EXCLUSIVE
-> for both readers and writers and __wake_up() is called with an exclusive
-> count of one. So only one reader or writer is woken up each time.
-
-This depends on what percpu_rwsem_wake_function() returns. If it returns 1,
-__wake_up_common() stops, exactly because all waiters have WQ_FLAG_EXCLUSIV=
-E.
-
-> However, the comment above said we wake 'all' readers and 1 writer. That
-> doesn't match the actual code, IMO.
-
-Well, "'all' readers" probably means "all readers before writer",
-
-> To match the comments, you should
-> have set WQ_FLAG_EXCLUSIVE flag only on writer. In this case, you
-> probably don't need WQ_FLAG_CUSTOM to differentiate between readers and
-> writers.
-
-See above...
-
-note also the
-
-=09if (!__percpu_rwsem_trylock(sem, reader))
-=09=09return 1;
-
-at the start of percpu_rwsem_wake_function(). We want to stop wake_up_commo=
-n()
-as soon as percpu_rwsem_trylock() fails. Because we know that if it fails o=
-nce
-it can't succeed later. Although iiuc this can only happen if another (new)
-writer races with __wake_up(&sem->waiters).
+Em Sat, Nov 16, 2019 at 03:48:41PM +0800, lqqq341 escreveu:
+> From: Qi Liu <liuqi115@hisilicon.com>
+> 
+> Perf stat displays miss ratio of L1-dcache, L1-icache, dTLB cache,
+> iTLB cache and LL-cache. Take L1-dcache for example, its miss ratio
+> is caculated as "L1-dcache-load-misses/L1-dcache-loads". So "of all
+> L1-dcache hits" is unsuitable to describe it, and "of all L1-dcache
+> accesses" seems better. The comments of L1-icache, dTLB cache, iTLB
+> cache and LL-cache are fixed in the same way.
+> 
+> Signed-off-by: Qi Liu <liuqi115@hisilicon.com>
+> ---
+>  tools/perf/util/stat-shadow.c | 30 ++++++++++++++++++++----------
+>  1 file changed, 20 insertions(+), 10 deletions(-)
+> 
+> diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+> index 2c41d47..a3bdf2b 100644
+> --- a/tools/perf/util/stat-shadow.c
+> +++ b/tools/perf/util/stat-shadow.c
+> @@ -506,7 +506,8 @@ static void print_l1_dcache_misses(struct perf_stat_config *config,
+>  
+>  	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
+>  
+> -	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all L1-dcache hits", ratio);
+> +	out->print_metric(config, out->ctx, color, "%7.2f%%",
+> +			  "of all L1-dcache accesses", ratio);
 
 
-I guess WQ_FLAG_CUSTOM can be avoided, percpu_rwsem_wait() could do
+Why have you reflowed all those lines? This patch should have been like:
 
-=09if (read)
-=09=09__add_wait_queue_entry_tail(...);
-=09else {
-=09=09wq_entry.flags |=3D WQ_FLAG_EXCLUSIVE;
-=09=09__add_wait_queue(...);
-=09}
+-	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all L1-dcache hits", ratio);
++	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all L1-dcache accesses", ratio);
 
-but this is "unfair".
+Notice how it is easier to compare the changes, and also to keep the
+flowing like it was before your change,
 
-Oleg.
+Thanks,
 
+- Arnaldo
+
+>  }
+>  
+>  static void print_l1_icache_misses(struct perf_stat_config *config,
+> @@ -527,7 +528,8 @@ static void print_l1_icache_misses(struct perf_stat_config *config,
+>  		ratio = avg / total * 100.0;
+>  
+>  	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
+> -	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all L1-icache hits", ratio);
+> +	out->print_metric(config, out->ctx, color, "%7.2f%%",
+> +			  "of all L1-icache accesses", ratio);
+>  }
+>  
+>  static void print_dtlb_cache_misses(struct perf_stat_config *config,
+> @@ -547,7 +549,8 @@ static void print_dtlb_cache_misses(struct perf_stat_config *config,
+>  		ratio = avg / total * 100.0;
+>  
+>  	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
+> -	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all dTLB cache hits", ratio);
+> +	out->print_metric(config, out->ctx, color, "%7.2f%%",
+> +			  "of all dTLB cache accesses", ratio);
+>  }
+>  
+>  static void print_itlb_cache_misses(struct perf_stat_config *config,
+> @@ -567,7 +570,8 @@ static void print_itlb_cache_misses(struct perf_stat_config *config,
+>  		ratio = avg / total * 100.0;
+>  
+>  	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
+> -	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all iTLB cache hits", ratio);
+> +	out->print_metric(config, out->ctx, color, "%7.2f%%",
+> +			  "of all iTLB cache accesses", ratio);
+>  }
+>  
+>  static void print_ll_cache_misses(struct perf_stat_config *config,
+> @@ -587,7 +591,8 @@ static void print_ll_cache_misses(struct perf_stat_config *config,
+>  		ratio = avg / total * 100.0;
+>  
+>  	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
+> -	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all LL-cache hits", ratio);
+> +	out->print_metric(config, out->ctx, color, "%7.2f%%",
+> +			  "of all LL-cache accesses", ratio);
+>  }
+>  
+>  /*
+> @@ -872,7 +877,8 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+>  		if (runtime_stat_n(st, STAT_L1_DCACHE, ctx, cpu) != 0)
+>  			print_l1_dcache_misses(config, cpu, evsel, avg, out, st);
+>  		else
+> -			print_metric(config, ctxp, NULL, NULL, "of all L1-dcache hits", 0);
+> +			print_metric(config, ctxp, NULL, NULL,
+> +				     "of all L1-dcache accesses", 0);
+>  	} else if (
+>  		evsel->core.attr.type == PERF_TYPE_HW_CACHE &&
+>  		evsel->core.attr.config ==  ( PERF_COUNT_HW_CACHE_L1I |
+> @@ -882,7 +888,8 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+>  		if (runtime_stat_n(st, STAT_L1_ICACHE, ctx, cpu) != 0)
+>  			print_l1_icache_misses(config, cpu, evsel, avg, out, st);
+>  		else
+> -			print_metric(config, ctxp, NULL, NULL, "of all L1-icache hits", 0);
+> +			print_metric(config, ctxp, NULL, NULL,
+> +				     "of all L1-icache accesses", 0);
+>  	} else if (
+>  		evsel->core.attr.type == PERF_TYPE_HW_CACHE &&
+>  		evsel->core.attr.config ==  ( PERF_COUNT_HW_CACHE_DTLB |
+> @@ -892,7 +899,8 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+>  		if (runtime_stat_n(st, STAT_DTLB_CACHE, ctx, cpu) != 0)
+>  			print_dtlb_cache_misses(config, cpu, evsel, avg, out, st);
+>  		else
+> -			print_metric(config, ctxp, NULL, NULL, "of all dTLB cache hits", 0);
+> +			print_metric(config, ctxp, NULL, NULL,
+> +				     "of all dTLB cache accesses", 0);
+>  	} else if (
+>  		evsel->core.attr.type == PERF_TYPE_HW_CACHE &&
+>  		evsel->core.attr.config ==  ( PERF_COUNT_HW_CACHE_ITLB |
+> @@ -902,7 +910,8 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+>  		if (runtime_stat_n(st, STAT_ITLB_CACHE, ctx, cpu) != 0)
+>  			print_itlb_cache_misses(config, cpu, evsel, avg, out, st);
+>  		else
+> -			print_metric(config, ctxp, NULL, NULL, "of all iTLB cache hits", 0);
+> +			print_metric(config, ctxp, NULL, NULL,
+> +				     "of all iTLB cache accesses", 0);
+>  	} else if (
+>  		evsel->core.attr.type == PERF_TYPE_HW_CACHE &&
+>  		evsel->core.attr.config ==  ( PERF_COUNT_HW_CACHE_LL |
+> @@ -912,7 +921,8 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+>  		if (runtime_stat_n(st, STAT_LL_CACHE, ctx, cpu) != 0)
+>  			print_ll_cache_misses(config, cpu, evsel, avg, out, st);
+>  		else
+> -			print_metric(config, ctxp, NULL, NULL, "of all LL-cache hits", 0);
+> +			print_metric(config, ctxp, NULL, NULL,
+> +				     "of all LL-cache accesses", 0);
+>  	} else if (perf_evsel__match(evsel, HARDWARE, HW_CACHE_MISSES)) {
+>  		total = runtime_stat_avg(st, STAT_CACHEREFS, ctx, cpu);
+>  
+> -- 
+> 2.8.1
+
+-- 
+
+- Arnaldo
