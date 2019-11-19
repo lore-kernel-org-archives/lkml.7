@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 919B5C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:40:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 769FEC43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:40:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DE39222A4
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:40:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FBFE218BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:40:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142008;
-	bh=yJZQW5BnUSHbWHbhWh0m2DBiRAjsbY+dArtTZdzFv70=;
+	s=default; t=1574142004;
+	bh=Si7KddTlpBoJb+HqiYLW4wmn16wkQOtypJpyIXeDOJ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QUNO1ROq7Az9ymE4q5UgzB4FGAvkSW/FLq2pO4eZkbZQuFyn5tr2gZsSRtoXd2Fu4
-	 OXwSjoPyJU47awfV/GC07EC3gzhPlm8QfzDSsvYIB0nVzc7P8dCK0G5N/UKKgezNqk
-	 riI1Gj+BMVwzd9eWYQpOWxnEeX9nPcxfJEr9MMNk=
+	b=CSuAR9YCuWlFMcF1pghvgbRO5GiLuJk+BJncssWMhW/cQhVZ99q99Q7BmctqzqJSy
+	 sYsL++sjBnlXpRrnMQbsYjBov69W+lgQCYNkdXouv2pw0VDDHQfVjraHE/WnAYBH9b
+	 epwtC8y7JBJjL1mEasIYTn/C7Y/tskdKinAaJX7A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730359AbfKSFkG (ORCPT
+        id S1729693AbfKSFkC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:40:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34150 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:40:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728541AbfKSFkE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:40:04 -0500
+        id S1728541AbfKSFkB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:40:01 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E336B21783;
-        Tue, 19 Nov 2019 05:40:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9ED2222ED;
+        Tue, 19 Nov 2019 05:39:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142003;
-        bh=yJZQW5BnUSHbWHbhWh0m2DBiRAjsbY+dArtTZdzFv70=;
+        s=default; t=1574142000;
+        bh=Si7KddTlpBoJb+HqiYLW4wmn16wkQOtypJpyIXeDOJ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E6NHtA9EM6Tq1Kd9H3j5dBq9JpDk9F3eBNat9aKJ4CeKTS9pLD7M12RRLQJ3Trp4Q
-         fDOYgaQlkE60wxNOdaxs7WYUhCnmNh8sMTTK+U/72y8gk14R4wAGjzw70LCpdffm5p
-         uWmmJlH5BDahkjCUQg4W8J3mswTjo3HE/tIDcjmw=
+        b=A8d3vyVDXWOU3wrteFjzbTVaBViyTIL86YfsL7bvwXkih9q3h7V3/mmTovaYSFrHt
+         rnDnNlMDrACPmt8s7H4E+RbNnyntxlQ/XGNDvCNAEuSS4PaW9Bb1nTkZ/BddTqX9cd
+         8hXtBI0ANkgxJgzzicBjNSlR0Q6wFbF4OJKNSLv8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 352/422] slimbus: ngd: register ngd driver only once.
-Date:   Tue, 19 Nov 2019 06:19:09 +0100
-Message-Id: <20191119051421.826714842@linuxfoundation.org>
+Subject: [PATCH 4.19 351/422] coresight: dynamic-replicator: Handle multiple connections
+Date:   Tue, 19 Nov 2019 06:19:08 +0100
+Message-Id: <20191119051421.760506688@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -60,39 +61,147 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-[ Upstream commit 1830dad34c070161fda2ff1db77b39ffa78aa380 ]
+[ Upstream commit 30af4fb619e5126cb3152072e687b377fc9398d6 ]
 
-Move ngd platform driver out of loop so that it registers only once.
+When a replicator port is enabled, we block the traffic
+on the other port and route all traffic to the new enabled
+port. If there are two active trace sessions each targeting
+the two different paths from the replicator, the second session
+will disable the first session and route all the data to the
+second path.
+                    ETR
+                 /
+e.g, replicator
+                 \
+                    ETB
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+If CPU0 is operated in sysfs mode to ETR and CPU1 is operated
+in perf mode to ETB, depending on the order in which the
+replicator is enabled one device is blocked.
+
+Ideally we need trace-id for the session to make the
+right choice. That implies we need a trace-id allocation
+logic for the coresight subsystem and use that to route
+the traffic. The short term solution is to only manage
+the "target port" and leave the other port untouched.
+That leaves both the paths unaffected, except that some
+unwanted traffic may be pushed to the paths (if the Trace-IDs
+are not far enough), which is still fine and can be filtered
+out while processing rather than silently blocking the data.
+
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/slimbus/qcom-ngd-ctrl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../coresight/coresight-dynamic-replicator.c  | 64 ++++++++++++++-----
+ 1 file changed, 47 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/slimbus/qcom-ngd-ctrl.c b/drivers/slimbus/qcom-ngd-ctrl.c
-index f63d1b8a09335..a9abde2f4088b 100644
---- a/drivers/slimbus/qcom-ngd-ctrl.c
-+++ b/drivers/slimbus/qcom-ngd-ctrl.c
-@@ -1346,7 +1346,6 @@ static int of_qcom_slim_ngd_register(struct device *parent,
- 		ngd->base = ctrl->base + ngd->id * data->offset +
- 					(ngd->id - 1) * data->size;
- 		ctrl->ngd = ngd;
--		platform_driver_register(&qcom_slim_ngd_driver);
+diff --git a/drivers/hwtracing/coresight/coresight-dynamic-replicator.c b/drivers/hwtracing/coresight/coresight-dynamic-replicator.c
+index f6d0571ab9dd5..d31f1d8758b24 100644
+--- a/drivers/hwtracing/coresight/coresight-dynamic-replicator.c
++++ b/drivers/hwtracing/coresight/coresight-dynamic-replicator.c
+@@ -34,26 +34,42 @@ struct replicator_state {
+ 	struct coresight_device	*csdev;
+ };
  
- 		return 0;
- 	}
-@@ -1445,6 +1444,7 @@ static int qcom_slim_ngd_ctrl_probe(struct platform_device *pdev)
- 	init_completion(&ctrl->reconf);
- 	init_completion(&ctrl->qmi.qmi_comp);
++/*
++ * replicator_reset : Reset the replicator configuration to sane values.
++ */
++static void replicator_reset(struct replicator_state *drvdata)
++{
++	CS_UNLOCK(drvdata->base);
++
++	writel_relaxed(0xff, drvdata->base + REPLICATOR_IDFILTER0);
++	writel_relaxed(0xff, drvdata->base + REPLICATOR_IDFILTER1);
++
++	CS_LOCK(drvdata->base);
++}
++
+ static int replicator_enable(struct coresight_device *csdev, int inport,
+ 			      int outport)
+ {
++	u32 reg;
+ 	struct replicator_state *drvdata = dev_get_drvdata(csdev->dev.parent);
  
-+	platform_driver_register(&qcom_slim_ngd_driver);
- 	return of_qcom_slim_ngd_register(dev, ctrl);
++	switch (outport) {
++	case 0:
++		reg = REPLICATOR_IDFILTER0;
++		break;
++	case 1:
++		reg = REPLICATOR_IDFILTER1;
++		break;
++	default:
++		WARN_ON(1);
++		return -EINVAL;
++	}
++
+ 	CS_UNLOCK(drvdata->base);
+ 
+-	/*
+-	 * Ensure that the other port is disabled
+-	 * 0x00 - passing through the replicator unimpeded
+-	 * 0xff - disable (or impede) the flow of ATB data
+-	 */
+-	if (outport == 0) {
+-		writel_relaxed(0x00, drvdata->base + REPLICATOR_IDFILTER0);
+-		writel_relaxed(0xff, drvdata->base + REPLICATOR_IDFILTER1);
+-	} else {
+-		writel_relaxed(0x00, drvdata->base + REPLICATOR_IDFILTER1);
+-		writel_relaxed(0xff, drvdata->base + REPLICATOR_IDFILTER0);
+-	}
+ 
++	/* Ensure that the outport is enabled. */
++	writel_relaxed(0x00, drvdata->base + reg);
+ 	CS_LOCK(drvdata->base);
+ 
+ 	dev_info(drvdata->dev, "REPLICATOR enabled\n");
+@@ -63,15 +79,25 @@ static int replicator_enable(struct coresight_device *csdev, int inport,
+ static void replicator_disable(struct coresight_device *csdev, int inport,
+ 				int outport)
+ {
++	u32 reg;
+ 	struct replicator_state *drvdata = dev_get_drvdata(csdev->dev.parent);
+ 
++	switch (outport) {
++	case 0:
++		reg = REPLICATOR_IDFILTER0;
++		break;
++	case 1:
++		reg = REPLICATOR_IDFILTER1;
++		break;
++	default:
++		WARN_ON(1);
++		return;
++	}
++
+ 	CS_UNLOCK(drvdata->base);
+ 
+ 	/* disable the flow of ATB data through port */
+-	if (outport == 0)
+-		writel_relaxed(0xff, drvdata->base + REPLICATOR_IDFILTER0);
+-	else
+-		writel_relaxed(0xff, drvdata->base + REPLICATOR_IDFILTER1);
++	writel_relaxed(0xff, drvdata->base + reg);
+ 
+ 	CS_LOCK(drvdata->base);
+ 
+@@ -156,7 +182,11 @@ static int replicator_probe(struct amba_device *adev, const struct amba_id *id)
+ 	desc.groups = replicator_groups;
+ 	drvdata->csdev = coresight_register(&desc);
+ 
+-	return PTR_ERR_OR_ZERO(drvdata->csdev);
++	if (!IS_ERR(drvdata->csdev)) {
++		replicator_reset(drvdata);
++		return 0;
++	}
++	return PTR_ERR(drvdata->csdev);
  }
  
+ #ifdef CONFIG_PM
 -- 
 2.20.1
 
