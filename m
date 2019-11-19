@@ -2,56 +2,54 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FD0BC43141
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:33:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2C5DC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:33:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F16621783
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:33:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B57F21783
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:33:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141586;
-	bh=NflRRV0uqucVxYoCTUuHIRCHF+FW37oV9OaJflefziU=;
+	s=default; t=1574141593;
+	bh=iooMRrUzKpZwG98xHGVPX3V+QQnKKnXvvoq8CkKhwqI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hIZpvefBGtazeOxXxhR3sHSrIxiMs4xTkNTYdPQ6/B77riRy9+Fu9qb1V2SeW50Lg
-	 2rKHr/F5cC72ZTKo40T0snaOPSSFugj6Je1S3HDQO5DC/SYI4cbwZy8bHyIvQSTTMc
-	 zYhAVcZh7euPoR/oW4jeON+bwRBWAWGv2xI3Mxvk=
+	b=NNkhofeVUpIYTwcBNcXqPec8WsJXhXy7lMlDGcR6LJQXg4w5a0emNUNlp+c+zpbH0
+	 ciXHqpkjFVkmV1OcMg78VC5hKM+4DH+lXdGol/ovGUwO3+PzckymaEo4fgbRTswNg3
+	 DqOKqLsbxPqAsoWyVEvggPZUYuY18Vvr35CAjmCs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729486AbfKSFdE (ORCPT
+        id S1727372AbfKSFdM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:33:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53442 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:33:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729471AbfKSFdC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:33:02 -0500
+        id S1728992AbfKSFdH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:33:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5546421783;
-        Tue, 19 Nov 2019 05:33:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 272E7222DC;
+        Tue, 19 Nov 2019 05:33:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141580;
-        bh=NflRRV0uqucVxYoCTUuHIRCHF+FW37oV9OaJflefziU=;
+        s=default; t=1574141586;
+        bh=iooMRrUzKpZwG98xHGVPX3V+QQnKKnXvvoq8CkKhwqI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OjFnvUr/WtrQ99NmsfsmPwbth+Stp83stQ8xVGe8qAc/aJCwHrzdSfzr47Lcvd80C
-         gisOUkCBrJVP5gqLObQwaO7YgrZPeKxO+UULmt2u+BcOhr+FkhN7OccA1NWBRxYZAD
-         HZg79rSlXPPX0E61+Wd6zo0GZgeuxdsbtWQl0UxY=
+        b=dQm6ZP3VSGGqYBRj6jqgTcZJ3yN8EiC3un/lw3edF1OuW4h6mAkSq2R4GflLlCJ1M
+         hE6MFAYhxSV6WSkHTtgnculFMFoP27oZeK6URlRHSKHOQOYENjilLZTxLDOPe5qrrz
+         W9try5hAhzIJpcxbc8/krU1xI1uXoE2o7gifjcMk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Jon Mason <jonmason@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Rob Herring <robh@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
+        stable@vger.kernel.org, Deepak Ukey <deepak.ukey@microchip.com>,
+        Viswas G <Viswas.G@microchip.com>,
+        Jack Wang <jinpu.wang@profitbricks.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 209/422] arm64: dts: broadcom: Fix I2C and SPI bus warnings
-Date:   Tue, 19 Nov 2019 06:16:46 +0100
-Message-Id: <20191119051412.136267401@linuxfoundation.org>
+Subject: [PATCH 4.19 184/422] scsi: pm80xx: Fixed system hang issue during kexec boot
+Date:   Tue, 19 Nov 2019 06:16:21 +0100
+Message-Id: <20191119051410.402709569@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -64,89 +62,213 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Herring <robh@kernel.org>
+From: Deepak Ukey <deepak.ukey@microchip.com>
 
-[ Upstream commit 7cdbe45da1a189e744e6801aebb462ee47235580 ]
+[ Upstream commit 72349b62a571effd6faadd0600b8e657dd87afbf ]
 
-dtc has new checks for I2C and SPI buses. Fix the warnings in node names
-and unit-addresses.
+When the firmware is not responding, execution of kexec boot causes a system
+hang. When firmware assertion happened, driver get notified with interrupt
+vector updated in MPI configuration table. Then, the driver will read
+scratchpad register and set controller_fatal_error flag to true.
 
-arch/arm64/boot/dts/broadcom/stingray/bcm958742k.dtb: Warning (i2c_bus_reg): /hsls/i2c@e0000/pcf8574@20: I2C bus unit address format error, expected "27"
-arch/arm64/boot/dts/broadcom/stingray/bcm958742t.dtb: Warning (i2c_bus_reg): /hsls/i2c@e0000/pcf8574@20: I2C bus unit address format error, expected "27"
-arch/arm64/boot/dts/broadcom/stingray/bcm958742k.dtb: Warning (spi_bus_bridge): /hsls/ssp@180000: node name for SPI buses should be 'spi'
-arch/arm64/boot/dts/broadcom/stingray/bcm958742k.dtb: Warning (spi_bus_bridge): /hsls/ssp@190000: node name for SPI buses should be 'spi'
-
-Cc: Ray Jui <rjui@broadcom.com>
-Cc: Scott Branden <sbranden@broadcom.com>
-Cc: Jon Mason <jonmason@broadcom.com>
-Cc: bcm-kernel-feedback-list@broadcom.com
-Signed-off-by: Rob Herring <robh@kernel.org>
-Acked-by: Scott Branden <sbranden@broadcom.com>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Deepak Ukey <deepak.ukey@microchip.com>
+Signed-off-by: Viswas G <Viswas.G@microchip.com>
+Acked-by: Jack Wang <jinpu.wang@profitbricks.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi          | 4 ++--
- arch/arm64/boot/dts/broadcom/stingray/bcm958742-base.dtsi | 2 +-
- arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi       | 4 ++--
- 3 files changed, 5 insertions(+), 5 deletions(-)
+ drivers/scsi/pm8001/pm8001_hwi.c |  6 +++
+ drivers/scsi/pm8001/pm8001_sas.c |  7 +++
+ drivers/scsi/pm8001/pm8001_sas.h |  1 +
+ drivers/scsi/pm8001/pm80xx_hwi.c | 80 +++++++++++++++++++++++++++++---
+ drivers/scsi/pm8001/pm80xx_hwi.h |  3 ++
+ 5 files changed, 91 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi b/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi
-index 1a406a76c86a2..ea854f689fda8 100644
---- a/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi
-@@ -639,7 +639,7 @@
- 			status = "disabled";
- 		};
+diff --git a/drivers/scsi/pm8001/pm8001_hwi.c b/drivers/scsi/pm8001/pm8001_hwi.c
+index 4dd6cad330e8e..3e814c0469fbd 100644
+--- a/drivers/scsi/pm8001/pm8001_hwi.c
++++ b/drivers/scsi/pm8001/pm8001_hwi.c
+@@ -1479,6 +1479,12 @@ u32 pm8001_mpi_msg_consume(struct pm8001_hba_info *pm8001_ha,
+ 		} else {
+ 			u32 producer_index;
+ 			void *pi_virt = circularQ->pi_virt;
++			/* spurious interrupt during setup if
++			 * kexec-ing and driver doing a doorbell access
++			 * with the pre-kexec oq interrupt setup
++			 */
++			if (!pi_virt)
++				break;
+ 			/* Update the producer index from SPC */
+ 			producer_index = pm8001_read_32(pi_virt);
+ 			circularQ->producer_index = cpu_to_le32(producer_index);
+diff --git a/drivers/scsi/pm8001/pm8001_sas.c b/drivers/scsi/pm8001/pm8001_sas.c
+index 576a0f091933b..59feda261e088 100644
+--- a/drivers/scsi/pm8001/pm8001_sas.c
++++ b/drivers/scsi/pm8001/pm8001_sas.c
+@@ -374,6 +374,13 @@ static int pm8001_task_exec(struct sas_task *task,
+ 		return 0;
+ 	}
+ 	pm8001_ha = pm8001_find_ha_by_dev(task->dev);
++	if (pm8001_ha->controller_fatal_error) {
++		struct task_status_struct *ts = &t->task_status;
++
++		ts->resp = SAS_TASK_UNDELIVERED;
++		t->task_done(t);
++		return 0;
++	}
+ 	PM8001_IO_DBG(pm8001_ha, pm8001_printk("pm8001_task_exec device \n "));
+ 	spin_lock_irqsave(&pm8001_ha->lock, flags);
+ 	do {
+diff --git a/drivers/scsi/pm8001/pm8001_sas.h b/drivers/scsi/pm8001/pm8001_sas.h
+index 80b4dd6df0c25..1816e351071fa 100644
+--- a/drivers/scsi/pm8001/pm8001_sas.h
++++ b/drivers/scsi/pm8001/pm8001_sas.h
+@@ -538,6 +538,7 @@ struct pm8001_hba_info {
+ 	u32			logging_level;
+ 	u32			fw_status;
+ 	u32			smp_exp_mode;
++	bool			controller_fatal_error;
+ 	const struct firmware 	*fw_image;
+ 	struct isr_param irq_vector[PM8001_MAX_MSIX_VEC];
+ 	u32			reset_in_progress;
+diff --git a/drivers/scsi/pm8001/pm80xx_hwi.c b/drivers/scsi/pm8001/pm80xx_hwi.c
+index 42f0405601ad1..5021aed87f33a 100644
+--- a/drivers/scsi/pm8001/pm80xx_hwi.c
++++ b/drivers/scsi/pm8001/pm80xx_hwi.c
+@@ -577,6 +577,9 @@ static void update_main_config_table(struct pm8001_hba_info *pm8001_ha)
+ 		pm8001_ha->main_cfg_tbl.pm80xx_tbl.pcs_event_log_size);
+ 	pm8001_mw32(address, MAIN_PCS_EVENT_LOG_OPTION,
+ 		pm8001_ha->main_cfg_tbl.pm80xx_tbl.pcs_event_log_severity);
++	/* Update Fatal error interrupt vector */
++	pm8001_ha->main_cfg_tbl.pm80xx_tbl.fatal_err_interrupt |=
++					((pm8001_ha->number_of_intr - 1) << 8);
+ 	pm8001_mw32(address, MAIN_FATAL_ERROR_INTERRUPT,
+ 		pm8001_ha->main_cfg_tbl.pm80xx_tbl.fatal_err_interrupt);
+ 	pm8001_mw32(address, MAIN_EVENT_CRC_CHECK,
+@@ -1110,6 +1113,9 @@ static int pm80xx_chip_init(struct pm8001_hba_info *pm8001_ha)
+ 		return -EBUSY;
+ 	}
  
--		ssp0: ssp@66180000 {
-+		ssp0: spi@66180000 {
- 			compatible = "arm,pl022", "arm,primecell";
- 			reg = <0x66180000 0x1000>;
- 			interrupts = <GIC_SPI 404 IRQ_TYPE_LEVEL_HIGH>;
-@@ -650,7 +650,7 @@
- 			status = "disabled";
- 		};
++	/* Initialize the controller fatal error flag */
++	pm8001_ha->controller_fatal_error = false;
++
+ 	/* Initialize pci space address eg: mpi offset */
+ 	init_pci_device_addresses(pm8001_ha);
+ 	init_default_table_values(pm8001_ha);
+@@ -1218,13 +1224,17 @@ pm80xx_chip_soft_rst(struct pm8001_hba_info *pm8001_ha)
+ 	u32 bootloader_state;
+ 	u32 ibutton0, ibutton1;
  
--		ssp1: ssp@66190000 {
-+		ssp1: spi@66190000 {
- 			compatible = "arm,pl022", "arm,primecell";
- 			reg = <0x66190000 0x1000>;
- 			interrupts = <GIC_SPI 405 IRQ_TYPE_LEVEL_HIGH>;
-diff --git a/arch/arm64/boot/dts/broadcom/stingray/bcm958742-base.dtsi b/arch/arm64/boot/dts/broadcom/stingray/bcm958742-base.dtsi
-index bc299c3d90683..a9b92e52d50e8 100644
---- a/arch/arm64/boot/dts/broadcom/stingray/bcm958742-base.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/stingray/bcm958742-base.dtsi
-@@ -138,7 +138,7 @@
- &i2c1 {
- 	status = "okay";
+-	/* Check if MPI is in ready state to reset */
+-	if (mpi_uninit_check(pm8001_ha) != 0) {
+-		PM8001_FAIL_DBG(pm8001_ha,
+-			pm8001_printk("MPI state is not ready\n"));
+-		return -1;
++	/* Process MPI table uninitialization only if FW is ready */
++	if (!pm8001_ha->controller_fatal_error) {
++		/* Check if MPI is in ready state to reset */
++		if (mpi_uninit_check(pm8001_ha) != 0) {
++			regval = pm8001_cr32(pm8001_ha, 0, MSGU_SCRATCH_PAD_1);
++			PM8001_FAIL_DBG(pm8001_ha, pm8001_printk(
++				"MPI state is not ready scratch1 :0x%x\n",
++				regval));
++			return -1;
++		}
+ 	}
+-
+ 	/* checked for reset register normal state; 0x0 */
+ 	regval = pm8001_cr32(pm8001_ha, 0, SPC_REG_SOFT_RESET);
+ 	PM8001_INIT_DBG(pm8001_ha,
+@@ -3752,6 +3762,46 @@ static void process_one_iomb(struct pm8001_hba_info *pm8001_ha, void *piomb)
+ 	}
+ }
  
--	pcf8574: pcf8574@20 {
-+	pcf8574: pcf8574@27 {
- 		compatible = "nxp,pcf8574a";
- 		gpio-controller;
- 		#gpio-cells = <2>;
-diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
-index 84101ea1fd2cb..ff714fcbac68d 100644
---- a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
-@@ -520,7 +520,7 @@
- 			status = "disabled";
- 		};
++static void print_scratchpad_registers(struct pm8001_hba_info *pm8001_ha)
++{
++	PM8001_FAIL_DBG(pm8001_ha,
++		pm8001_printk("MSGU_SCRATCH_PAD_0: 0x%x\n",
++			pm8001_cr32(pm8001_ha, 0, MSGU_SCRATCH_PAD_0)));
++	PM8001_FAIL_DBG(pm8001_ha,
++		pm8001_printk("MSGU_SCRATCH_PAD_1:0x%x\n",
++			pm8001_cr32(pm8001_ha, 0, MSGU_SCRATCH_PAD_1)));
++	PM8001_FAIL_DBG(pm8001_ha,
++		pm8001_printk("MSGU_SCRATCH_PAD_2: 0x%x\n",
++			pm8001_cr32(pm8001_ha, 0, MSGU_SCRATCH_PAD_2)));
++	PM8001_FAIL_DBG(pm8001_ha,
++		pm8001_printk("MSGU_SCRATCH_PAD_3: 0x%x\n",
++			pm8001_cr32(pm8001_ha, 0, MSGU_SCRATCH_PAD_3)));
++	PM8001_FAIL_DBG(pm8001_ha,
++		pm8001_printk("MSGU_HOST_SCRATCH_PAD_0: 0x%x\n",
++			pm8001_cr32(pm8001_ha, 0, MSGU_HOST_SCRATCH_PAD_0)));
++	PM8001_FAIL_DBG(pm8001_ha,
++		pm8001_printk("MSGU_HOST_SCRATCH_PAD_1: 0x%x\n",
++			pm8001_cr32(pm8001_ha, 0, MSGU_HOST_SCRATCH_PAD_1)));
++	PM8001_FAIL_DBG(pm8001_ha,
++		pm8001_printk("MSGU_HOST_SCRATCH_PAD_2: 0x%x\n",
++			pm8001_cr32(pm8001_ha, 0, MSGU_HOST_SCRATCH_PAD_2)));
++	PM8001_FAIL_DBG(pm8001_ha,
++		pm8001_printk("MSGU_HOST_SCRATCH_PAD_3: 0x%x\n",
++			pm8001_cr32(pm8001_ha, 0, MSGU_HOST_SCRATCH_PAD_3)));
++	PM8001_FAIL_DBG(pm8001_ha,
++		pm8001_printk("MSGU_HOST_SCRATCH_PAD_4: 0x%x\n",
++			pm8001_cr32(pm8001_ha, 0, MSGU_HOST_SCRATCH_PAD_4)));
++	PM8001_FAIL_DBG(pm8001_ha,
++		pm8001_printk("MSGU_HOST_SCRATCH_PAD_5: 0x%x\n",
++			pm8001_cr32(pm8001_ha, 0, MSGU_HOST_SCRATCH_PAD_5)));
++	PM8001_FAIL_DBG(pm8001_ha,
++		pm8001_printk("MSGU_RSVD_SCRATCH_PAD_0: 0x%x\n",
++			pm8001_cr32(pm8001_ha, 0, MSGU_HOST_SCRATCH_PAD_6)));
++	PM8001_FAIL_DBG(pm8001_ha,
++		pm8001_printk("MSGU_RSVD_SCRATCH_PAD_1: 0x%x\n",
++			pm8001_cr32(pm8001_ha, 0, MSGU_HOST_SCRATCH_PAD_7)));
++}
++
+ static int process_oq(struct pm8001_hba_info *pm8001_ha, u8 vec)
+ {
+ 	struct outbound_queue_table *circularQ;
+@@ -3759,10 +3809,28 @@ static int process_oq(struct pm8001_hba_info *pm8001_ha, u8 vec)
+ 	u8 uninitialized_var(bc);
+ 	u32 ret = MPI_IO_STATUS_FAIL;
+ 	unsigned long flags;
++	u32 regval;
  
--		ssp0: ssp@180000 {
-+		ssp0: spi@180000 {
- 			compatible = "arm,pl022", "arm,primecell";
- 			reg = <0x00180000 0x1000>;
- 			interrupts = <GIC_SPI 187 IRQ_TYPE_LEVEL_HIGH>;
-@@ -532,7 +532,7 @@
- 			status = "disabled";
- 		};
++	if (vec == (pm8001_ha->number_of_intr - 1)) {
++		regval = pm8001_cr32(pm8001_ha, 0, MSGU_SCRATCH_PAD_1);
++		if ((regval & SCRATCH_PAD_MIPSALL_READY) !=
++					SCRATCH_PAD_MIPSALL_READY) {
++			pm8001_ha->controller_fatal_error = true;
++			PM8001_FAIL_DBG(pm8001_ha, pm8001_printk(
++				"Firmware Fatal error! Regval:0x%x\n", regval));
++			print_scratchpad_registers(pm8001_ha);
++			return ret;
++		}
++	}
+ 	spin_lock_irqsave(&pm8001_ha->lock, flags);
+ 	circularQ = &pm8001_ha->outbnd_q_tbl[vec];
+ 	do {
++		/* spurious interrupt during setup if kexec-ing and
++		 * driver doing a doorbell access w/ the pre-kexec oq
++		 * interrupt setup.
++		 */
++		if (!circularQ->pi_virt)
++			break;
+ 		ret = pm8001_mpi_msg_consume(pm8001_ha, circularQ, &pMsg1, &bc);
+ 		if (MPI_IO_STATUS_SUCCESS == ret) {
+ 			/* process the outbound message */
+diff --git a/drivers/scsi/pm8001/pm80xx_hwi.h b/drivers/scsi/pm8001/pm80xx_hwi.h
+index 889e69ce3689b..7dd2699d0efb5 100644
+--- a/drivers/scsi/pm8001/pm80xx_hwi.h
++++ b/drivers/scsi/pm8001/pm80xx_hwi.h
+@@ -1384,6 +1384,9 @@ typedef struct SASProtocolTimerConfig SASProtocolTimerConfig_t;
+ #define SCRATCH_PAD_BOOT_LOAD_SUCCESS	0x0
+ #define SCRATCH_PAD_IOP0_READY		0xC00
+ #define SCRATCH_PAD_IOP1_READY		0x3000
++#define SCRATCH_PAD_MIPSALL_READY	(SCRATCH_PAD_IOP1_READY | \
++					SCRATCH_PAD_IOP0_READY | \
++					SCRATCH_PAD_RAAE_READY)
  
--		ssp1: ssp@190000 {
-+		ssp1: spi@190000 {
- 			compatible = "arm,pl022", "arm,primecell";
- 			reg = <0x00190000 0x1000>;
- 			interrupts = <GIC_SPI 188 IRQ_TYPE_LEVEL_HIGH>;
+ /* boot loader state */
+ #define SCRATCH_PAD1_BOOTSTATE_MASK		0x70	/* Bit 4-6 */
 -- 
 2.20.1
 
