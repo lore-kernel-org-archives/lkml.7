@@ -2,147 +2,88 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6774AC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:00:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6509BC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:01:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A317206DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:00:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 283F5206DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:01:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574143254;
-	bh=UM+uiVXGrOUFsU4KqPI+fr6gwIOMvJUHAQ2n0jspCrI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v4/kLZTLRAr7QNUWW7zVd5C8ZYN1QWPHqp8w23dVpkdNw/1qyogs25PtRlgi7owls
-	 GrW45HJAI+vqkiz57ZUShwm1/oqqIl0VeFUaZWTdODUaq4c7ILLwRNt2VDUJfOZOq+
-	 jPgl6bSmA4DatSXvdaDT6vPFJlwtw7R4gq+frk9E=
+	s=default; t=1574143265;
+	bh=UwBJZoz9GrgalpPxw28oDcIL0daCumvlEcO2T7STbEs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Y3+w4jPCz9jJObOrtdPepDk9hpftVumPgecFUiA8at3nrPyvGIcjBWudJvLOJNc6y
+	 N0HmsYCPOvHwp8DrNr7J7KdJZ9rLOcq13+V22xAPcMwiTm93T1hHZk96JqnC2OV2uj
+	 nKpWOmpJFq6NdhBkGIPA8lbqiIju08D7pJfyQPXg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728685AbfKSGAx (ORCPT
+        id S1730354AbfKSFob (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 01:00:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40356 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:44:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730654AbfKSFow (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:44:52 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1730000AbfKSFo1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:44:27 -0500
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1F1D218BA;
-        Tue, 19 Nov 2019 05:44:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B201D21939;
+        Tue, 19 Nov 2019 05:44:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142291;
-        bh=UM+uiVXGrOUFsU4KqPI+fr6gwIOMvJUHAQ2n0jspCrI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QjFT/f0HAScjmrdCNMTGDRFmxM0A4kqiae2rg7HKKa0iVnbgQkgYe4tf61lYgDWwP
-         q4yuaVkpavNqIsF/bi0z9nuoDxFZv8URLxcdJDnNBn8t4VB6sTWRhZG5+L4K8J2+V+
-         O1bygLLMS8OStd/ZAj53lnx9inMzTgz3IMMdxSeU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tamizh chelvam <tamizhr@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 030/239] ath10k: fix kernel panic by moving pci flush after napi_disable
-Date:   Tue, 19 Nov 2019 06:17:10 +0100
-Message-Id: <20191119051303.542103898@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
-References: <20191119051255.850204959@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1574142267;
+        bh=UwBJZoz9GrgalpPxw28oDcIL0daCumvlEcO2T7STbEs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0FVUZTd4avgbrAMuNCS1RvWbmrPLVm430fPw6jrJTMwXh7Mhzvx3lFj6EYWkNOFV3
+         EhJTOw1z7fSvtDvvHvlfRIZFvJSX94aTuKrTkuphj/KsKCdi3XXzGHTZe+tZQmrO1l
+         g908XS9+zNWTs1gmM2q+w+zXmTAbmRrFZEjg2DC8=
+Date:   Mon, 18 Nov 2019 21:44:25 -0800
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     syzbot <syzbot+787bcbef9b5fec61944b@syzkaller.appspotmail.com>
+Cc:     alexander.levin@microsoft.com, davem@davemloft.net,
+        devel@driverdev.osuosl.org, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, mchehab+samsung@kernel.org,
+        paulmck@linux.ibm.com, syzkaller-bugs@googlegroups.com,
+        valdis.kletnieks@vt.edu
+Subject: Re: WARNING in bdev_read
+Message-ID: <20191119054425.GO163020@sol.localdomain>
+References: <00000000000073309e05951e2dc1@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <00000000000073309e05951e2dc1@google.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tamizh chelvam <tamizhr@codeaurora.org>
+On Thu, Oct 17, 2019 at 10:02:07AM -0700, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following crash on:
+> 
+> HEAD commit:    bc88f85c kthread: make __kthread_queue_delayed_work static
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=14e25608e00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=e0ac4d9b35046343
+> dashboard link: https://syzkaller.appspot.com/bug?extid=787bcbef9b5fec61944b
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=159fd353600000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17e82173600000
+> 
+> The bug was bisected to:
+> 
+> commit c48c9f7ff32b8b3965a08e40eb6763682d905b5d
+> Author: Valdis Klētnieks <valdis.kletnieks@vt.edu>
+> Date:   Wed Aug 28 16:08:17 2019 +0000
+> 
+>     staging: exfat: add exfat filesystem code to staging
 
-[ Upstream commit bd1d395070cca4f42a93e520b0597274789274a4 ]
+This bisection looks correct.
 
-When continuously running wifi up/down sequence, the napi poll
-can be scheduled after the CE buffers being freed by ath10k_pci_flush
+On a related topic: it seems the exfat filesystem is missing a mailing list.
 
-Steps:
-  In a certain condition, during wifi down below scenario might occur.
-
-ath10k_stop->ath10k_hif_stop->napi_schedule->ath10k_pci_flush->napi_poll(napi_synchronize).
-
-In the above scenario, CE buffer entries will be freed up and become NULL in
-ath10k_pci_flush. And the napi_poll has been invoked after the flush process
-and it will try to get the skb from the CE buffer entry and perform some action on that.
-Since the CE buffer already cleaned by pci flush this action will create NULL
-pointer dereference and trigger below kernel panic.
-
-Unable to handle kernel NULL pointer dereference at virtual address 0000005c
-PC is at ath10k_pci_htt_rx_cb+0x64/0x3ec [ath10k_pci]
-ath10k_pci_htt_rx_cb [ath10k_pci]
-ath10k_ce_per_engine_service+0x74/0xc4 [ath10k_pci]
-ath10k_ce_per_engine_service [ath10k_pci]
-ath10k_ce_per_engine_service_any+0x74/0x80 [ath10k_pci]
-ath10k_ce_per_engine_service_any [ath10k_pci]
-ath10k_pci_napi_poll+0x48/0xec [ath10k_pci]
-ath10k_pci_napi_poll [ath10k_pci]
-net_rx_action+0xac/0x160
-net_rx_action
-__do_softirq+0xdc/0x208
-__do_softirq
-irq_exit+0x84/0xe0
-irq_exit
-__handle_domain_irq+0x80/0xa0
-__handle_domain_irq
-gic_handle_irq+0x38/0x5c
-gic_handle_irq
-__irq_usr+0x44/0x60
-
-Tested on QCA4019 and firmware version 10.4.3.2.1.1-00010
-
-Signed-off-by: Tamizh chelvam <tamizhr@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/wireless/ath/ath10k/ahb.c | 4 ++--
- drivers/net/wireless/ath/ath10k/pci.c | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/net/wireless/ath/ath10k/ahb.c b/drivers/net/wireless/ath/ath10k/ahb.c
-index ff6815e956848..1404ec9f56be9 100644
---- a/drivers/net/wireless/ath/ath10k/ahb.c
-+++ b/drivers/net/wireless/ath/ath10k/ahb.c
-@@ -663,10 +663,10 @@ static void ath10k_ahb_hif_stop(struct ath10k *ar)
- 	ath10k_ahb_irq_disable(ar);
- 	synchronize_irq(ar_ahb->irq);
- 
--	ath10k_pci_flush(ar);
--
- 	napi_synchronize(&ar->napi);
- 	napi_disable(&ar->napi);
-+
-+	ath10k_pci_flush(ar);
- }
- 
- static int ath10k_ahb_hif_power_up(struct ath10k *ar)
-diff --git a/drivers/net/wireless/ath/ath10k/pci.c b/drivers/net/wireless/ath/ath10k/pci.c
-index d790ea20b95d9..27ab3eb47534f 100644
---- a/drivers/net/wireless/ath/ath10k/pci.c
-+++ b/drivers/net/wireless/ath/ath10k/pci.c
-@@ -1787,9 +1787,9 @@ static void ath10k_pci_hif_stop(struct ath10k *ar)
- 
- 	ath10k_pci_irq_disable(ar);
- 	ath10k_pci_irq_sync(ar);
--	ath10k_pci_flush(ar);
- 	napi_synchronize(&ar->napi);
- 	napi_disable(&ar->napi);
-+	ath10k_pci_flush(ar);
- 
- 	spin_lock_irqsave(&ar_pci->ps_lock, flags);
- 	WARN_ON(ar_pci->ps_wake_refcount > 0);
--- 
-2.20.1
-
-
-
+- Eric
