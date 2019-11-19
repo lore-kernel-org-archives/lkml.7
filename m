@@ -7,137 +7,155 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BA3DC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:09:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C21DCC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:09:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CCA7222AB
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:09:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97A4F22362
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:09:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=origamienergy.com header.i=@origamienergy.com header.b="M61AIJnP";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="IyRtKwj5"
+	dkim=pass (1024-bit key) header.d=origamienergy.com header.i=@origamienergy.com header.b="CxnE0PGo";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="B6FUyhgv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728626AbfKSRI7 (ORCPT
+        id S1728606AbfKSRI5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 12:08:59 -0500
-Received: from a6-17.smtp-out.eu-west-1.amazonses.com ([54.240.6.17]:42498
-        "EHLO a6-17.smtp-out.eu-west-1.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728589AbfKSRI4 (ORCPT
+        Tue, 19 Nov 2019 12:08:57 -0500
+Received: from a6-1.smtp-out.eu-west-1.amazonses.com ([54.240.6.1]:44786 "EHLO
+        a6-1.smtp-out.eu-west-1.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726985AbfKSRIz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 12:08:56 -0500
+        Tue, 19 Nov 2019 12:08:55 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
         s=awgt3ic55kqhwizgro5hhdlz56bi7lbf; d=origamienergy.com;
-        t=1574183334;
+        t=1574183333;
         h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding;
-        bh=SU8jScwCz+kC3GRGS/B/NU0X+iFMYaeQW0wTHwg9iFg=;
-        b=M61AIJnPXgSeo7nTFKcq+BjfrKcfVHG4gYPUJxcamfjiRVKn4yQdNXPuGsmpHqrD
-        cRxcgxz4ecERbAOeCh9HoWY8aHXFSqgeKG9SVQ0XYXyk53cX0Rj8u9Oe9OkyDqk2vGh
-        lT5+lj0H1fxcJDqpZGtJ58/X2h2YblmypmKyDHgE=
+        bh=oQggy2A5pLNP6au2ICTYTrltBjKw3jVSSrNnN429nSc=;
+        b=CxnE0PGoIoa4067XbCcDRMrztdxTrliSmc1jNqXAxamgkkeF1oNMXNjIApec/D0k
+        qeyYrLKDXll367iRBb1E9+y9Qw2DpIRJaVyb+Ks38yuJXYo9dttlQrdwMFHh4saupLk
+        P1Mx7FU0I7R+18QdlF3HQyN+E3vZvYknaYvaQ8gs=
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=ihchhvubuqgjsxyuhssfvqohv7z3u4hn; d=amazonses.com; t=1574183334;
+        s=ihchhvubuqgjsxyuhssfvqohv7z3u4hn; d=amazonses.com; t=1574183333;
         h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Feedback-ID;
-        bh=SU8jScwCz+kC3GRGS/B/NU0X+iFMYaeQW0wTHwg9iFg=;
-        b=IyRtKwj5MfeKe09811kXyohcZkg2WnBTTVZgZwjBtPUuM6XaAx52uoiG7QWQkeYu
-        jJrPlTVR+21xTBMoE3hxbM+ApQI398pylzmzUI9jkgib4LjbkxtGROnvCLQaO1WsExq
-        Hb88iW3hKhtLeNqgvcmb8ZPujIC8tn62wLgrFheY=
+        bh=oQggy2A5pLNP6au2ICTYTrltBjKw3jVSSrNnN429nSc=;
+        b=B6FUyhgvbnkmrQBHB63/ianp2fcgLCg9xMZEas+rk4kGjmNnyv1gvEXv38SeJJHR
+        1V4+mcZL4Xvdz7lOpKSJ6+rk+yoJgB44a4gNz+xorUTaepf9n1e5utX4/rpSGN4WpQD
+        xlNtVx1KlP+66TtX07KymaGl/v8TN7yn+8Jm3zAM=
 From:   James Byrne <james.byrne@origamienergy.com>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     James Byrne <james.byrne@origamienergy.com>,
         Petr Mladek <pmladek@suse.com>,
         Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
         Steven Rostedt <rostedt@goodmis.org>
-Subject: [PATCH 2/2] printk: Support message continuation from /dev/kmsg
-Date:   Tue, 19 Nov 2019 17:08:54 +0000
-Message-ID: <0102016e84a372dc-8c0ca643-ba2c-423a-b96e-6b68b4f010a4-000000@eu-west-1.amazonses.com>
+Subject: [PATCH 1/2] printk: Make continuation flags from /dev/kmsg useful again
+Date:   Tue, 19 Nov 2019 17:08:53 +0000
+Message-ID: <0102016e84a36dea-00d03c3c-75ba-4354-ad1f-4380e7cba235-000000@eu-west-1.amazonses.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119170632.52119-1-james.byrne@origamienergy.com>
 References: <20191119170632.52119-1-james.byrne@origamienergy.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SES-Outgoing: 2019.11.19-54.240.6.17
+X-SES-Outgoing: 2019.11.19-54.240.6.1
 Feedback-ID: 1.eu-west-1.sQ65CuNSNkrvjFrT7j7oeWmhxZgivYoP5c3BHSC7Qc8=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit 4bcc595ccd80 ("printk: reinstate KERN_CONT for printing
-continuation lines") the behaviour of messages written into /dev/kmsg
-from user space has changed. Previously if you wrote a message that
-did not end with a newline, followed by one ending with a newline, the
-second message was treated as a continuation of the first. This is no
-longer the case since for a message to be treated as a continuation, an
-explicit KERN_CONT is required at the start, and this cannot be used in
-messages written via /dev/kmsg.
+Commit 5aa068ea4082 ("printk: remove games with previous record flags")
+abolished the practice of setting the log flag to 'c' for the first
+continuation line and '+' for subsequent lines. Since this change all
+continuation lines are flagged with 'c' and '+' is never used.
 
-This commit allows bit 11 of the facility/level number to be used to set
-the continuation flag, so you can write two messages that you want to be
-joined into /dev/kmsg like this:
+From the point of view of a consumer of /dev/kmsg, the behaviour now
+is not very useful because you cannot join lines together based on the
+'c' flag since you do not know whether a line starting with 'c' was
+actually a continuation of the previous line or not.
 
-<13>This is a continu
-<2061>ation message.\n
+This commit changes the flag field emitted in /dev/kmsg to expose the
+log buffer flags in a more useful way:
+
+- If LOG_NEWLINE=1 and LOG_CONT=0 the flag will be '-', meaning this is
+a single self-contained line.
+- If LOG_NEWLINE=0 and LOG_CONT=0 the flag will be 'c', meaning that
+this is potentially the start of a sequence of continuation lines.
+- If LOG_NEWLINE=0 and LOG_CONT=1 the flag will be '+', meaning that
+this is the middle of a sequence of continuation lines.
+- If LOG_NEWLINE=1 and LOG_CONT=1 the flag will be '*', meaning that
+this is the end of a sequence of continuation lines.
+
+This allows a consumer to concatenate continuations in a straightforward
+manner.
 
 Signed-off-by: James Byrne <james.byrne@origamienergy.com>
 ---
 
- Documentation/ABI/testing/dev-kmsg | 6 +++++-
- kernel/printk/printk.c             | 6 ++++++
- 2 files changed, 11 insertions(+), 1 deletion(-)
+ Documentation/ABI/testing/dev-kmsg | 14 ++++++++------
+ kernel/printk/printk.c             | 19 +++++++++++++++++--
+ 2 files changed, 25 insertions(+), 8 deletions(-)
 
 diff --git a/Documentation/ABI/testing/dev-kmsg b/Documentation/ABI/testing/dev-kmsg
-index 6326deeaf5e3..793cf22595fe 100644
+index f307506eb54c..6326deeaf5e3 100644
 --- a/Documentation/ABI/testing/dev-kmsg
 +++ b/Documentation/ABI/testing/dev-kmsg
-@@ -12,7 +12,8 @@ Description:	The /dev/kmsg character device node provides userspace access
- 		The logged line can be prefixed with a <N> syslog prefix, which
- 		carries the syslog priority and facility. The single decimal
- 		prefix number is composed of the 3 lowest bits being the syslog
--		priority and the next 8 bits the syslog facility number.
-+		priority, the next 8 bits the syslog facility number and the
-+		next bit a continuation flag.
+@@ -90,12 +90,14 @@ Description:	The /dev/kmsg character device node provides userspace access
+ 		  +sound:card0 - subsystem:devname
  
- 		If no prefix is given, the priority number is the default kernel
- 		log priority and the facility number is set to LOG_USER (1). It
-@@ -20,6 +21,9 @@ Description:	The /dev/kmsg character device node provides userspace access
- 		facility number LOG_KERN (0), to make sure that the origin of
- 		the messages can always be reliably determined.
+ 		The flags field carries '-' by default. A 'c' indicates a
+-		fragment of a line. Note, that these hints about continuation
+-		lines are not necessarily correct, and the stream could be
+-		interleaved with unrelated messages, but merging the lines in
+-		the output usually produces better human readable results. A
+-		similar logic is used internally when messages are printed to
+-		the console, /proc/kmsg or the syslog() syscall.
++		fragment of a line. Following fragments are flagged with '+'
++		and the final fragment in a sequence is flagged with '*'. Note
++		that these hints about continuation lines are not necessarily
++		correct, and the stream could be interleaved with unrelated
++		messages, but merging the lines in the output usually produces
++		better human readable results. A similar logic is used
++		internally when messages are printed to the console, /proc/kmsg
++		or the syslog() syscall.
  
-+		Setting bit 11 of the prefix number, the continuation flag, is
-+		equivalent to prefixing a kernel printk message with KERN_CONT.
-+
- 		Accessing the buffer:
- 		Every read() from the opened device node receives one record
- 		of the kernel's printk buffer.
+ 		By default, kernel tries to avoid fragments by concatenating
+ 		when it can and fragments are rare; however, when extended
 diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index a3db7f5e56d9..d04353076e92 100644
+index ca65327a6de8..a3db7f5e56d9 100644
 --- a/kernel/printk/printk.c
 +++ b/kernel/printk/printk.c
-@@ -451,6 +451,7 @@ static u32 clear_idx;
+@@ -715,7 +715,7 @@ static ssize_t msg_print_ext_header(char *buf, size_t size,
+ 				    struct printk_log *msg, u64 seq)
+ {
+ 	u64 ts_usec = msg->ts_nsec;
+-	char caller[20];
++	char flag, caller[20];
+ #ifdef CONFIG_PRINTK_CALLER
+ 	u32 id = msg->caller_id;
  
- #define LOG_LEVEL(v)		((v) & 0x07)
- #define LOG_FACILITY(v)		((v) >> 3 & 0xff)
-+#define LOG_CONT_USER(v)	((v) & 0x800)
+@@ -727,9 +727,24 @@ static ssize_t msg_print_ext_header(char *buf, size_t size,
  
- /* record buffer */
- #define LOG_ALIGN __alignof__(struct printk_log)
-@@ -869,6 +870,8 @@ static ssize_t devkmsg_write(struct kiocb *iocb, struct iov_iter *from)
- 			level = LOG_LEVEL(u);
- 			if (LOG_FACILITY(u) != 0)
- 				facility = LOG_FACILITY(u);
-+			if (LOG_CONT_USER(u) != 0)
-+				facility |= 0x100;
- 			endp++;
- 			len -= endp - line;
- 			line = endp;
-@@ -1954,6 +1957,9 @@ int vprintk_store(int facility, int level,
- 			text_len -= 2;
- 			text += 2;
- 		}
-+	} else if (facility & 0x100) {
-+		lflags |= LOG_CONT;
-+		facility &= 0xff;
- 	}
+ 	do_div(ts_usec, 1000);
  
- 	if (level == LOGLEVEL_DEFAULT)
++	switch (msg->flags & (LOG_CONT|LOG_NEWLINE)) {
++	case LOG_CONT|LOG_NEWLINE:
++		flag = '*';
++		break;
++	case LOG_CONT:
++		flag = '+';
++		break;
++	case LOG_NEWLINE:
++		flag = '-';
++		break;
++	default:
++		flag = 'c';
++		break;
++	}
++
+ 	return scnprintf(buf, size, "%u,%llu,%llu,%c%s;",
+ 			 (msg->facility << 3) | msg->level, seq, ts_usec,
+-			 msg->flags & LOG_CONT ? 'c' : '-', caller);
++			 flag, caller);
+ }
+ 
+ static ssize_t msg_print_ext_body(char *buf, size_t size,
 -- 
 2.24.0
 
