@@ -2,320 +2,136 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B638C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:51:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 054B7C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:51:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42C9122318
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:51:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="DLlyXCBF"
+	by mail.kernel.org (Postfix) with ESMTP id DCA4822318
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:51:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727234AbfKSRvG (ORCPT
+        id S1727264AbfKSRvP convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 12:51:06 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39151 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726620AbfKSRvF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 12:51:05 -0500
-Received: by mail-wr1-f68.google.com with SMTP id l7so24928978wrp.6
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 09:51:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from:cc;
-        bh=HGunqTxsSVrmsqxuAQRNx41lItIocTvSzHu9usFa0ec=;
-        b=DLlyXCBFgTcOzP3m56mvDuC1gid0j/57FTNBDJxQaHFBG+Mx73qzutr+HGMESEb3A5
-         vuRsXpJCLZNNzVyQDQO/62U0ux+IrJ9sfX6QLgKQXmNbEb1I0cQlfSpYYRolt+G25giX
-         Pjq4+dxzUkdmtju7EWJwH4ksQG4019NT+UMhBKBR5d1CcSgqV4ddqgCzXyG63G4ZN5yG
-         rfj2+E41/H+NCa7PzXYtFM7QIbkhb4h5MtWnpxD1xAhSzN6+AtKToyw3ft4DGP05KN1v
-         kELG90MeWObEexvWT74khnbgAHVy3/01ovV46ywzRKkbiiGMyhWNATDau6DdmSxCVcaZ
-         5kTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from:cc;
-        bh=HGunqTxsSVrmsqxuAQRNx41lItIocTvSzHu9usFa0ec=;
-        b=rxzS1ey7XiDbyZdOEOGy1ZwD/fbMu9ngtOk0LKRHTUfV8bohkJZeW0sHTdNhuzlDqg
-         VfE6dbhQH2oSYn0bvRBcc3GVlEZS4+dHXr8CYT4CR2e6nWcfSyHAMKxMzVinP1HoRYsD
-         T0n2DlI+iW0Kv7HEOFXiQJ4lu896Gu4XETKM2nOhkRPgooQ54aslWLT4zjJBPce1qXw1
-         4cSRQleqdP6TDySLfDmHl7q4AEwGOPNifYnCI0BjodWUrxRgMO+32bDkLdqFI7plSVrX
-         Xtyp12YR6LvF42/wpgyHt4cQMUs9/iqRYE+fok2xAZbwksgr9+WmdlTRlUP+j34bilgZ
-         oqTw==
-X-Gm-Message-State: APjAAAX/94A92rcpRGpfoChnCfAE4GllaYmRXwrBdJB17CfeAut/eTRW
-        UAgIBTQKCr9d1sx12jAB2xcsDg==
-X-Google-Smtp-Source: APXvYqxvHwtfcRuwAWPYF4jX+cThARsQRa6mXcf9IMifxx+BP/IyrbeuDGKqDEpRqWoAPCya8LiZ0g==
-X-Received: by 2002:adf:e301:: with SMTP id b1mr4336744wrj.280.1574185862662;
-        Tue, 19 Nov 2019 09:51:02 -0800 (PST)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id l13sm3766223wmh.12.2019.11.19.09.51.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Nov 2019 09:51:01 -0800 (PST)
-Message-ID: <5dd42b85.1c69fb81.36825.244a@mx.google.com>
-Date:   Tue, 19 Nov 2019 09:51:01 -0800 (PST)
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Lab-Name: lab-collabora
-X-Kernelci-Branch: master
-X-Kernelci-Tree: next
-X-Kernelci-Report-Type: bisect
-X-Kernelci-Kernel: next-20191119
-Subject: next/master bisection: boot on peach-pi
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        tomeu.vizoso@collabora.com, guillaume.tucker@collabora.com,
-        mgalka@collabora.com, Christoph Hellwig <hch@lst.de>,
-        broonie@kernel.org, matthew.hart@linaro.org, khilman@baylibre.com,
-        enric.balletbo@collabora.com, Michael Ellerman <mpe@ellerman.id.au>
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Paul Burton <paulburton@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        James Hogan <jhogan@kernel.org>,
-        "kernelci.org bot" <bot@kernelci.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        iommu@lists.linux-foundation.org,
+        Tue, 19 Nov 2019 12:51:15 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:10124 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726620AbfKSRvP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 12:51:15 -0500
+Received: from localhost (mailhub1-ext [192.168.12.233])
+        by localhost (Postfix) with ESMTP id 47HYKF0Rqyz9tysr;
+        Tue, 19 Nov 2019 18:51:13 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id GucKk23fozaz; Tue, 19 Nov 2019 18:51:13 +0100 (CET)
+Received: from vm-hermes.si.c-s.fr (vm-hermes.si.c-s.fr [192.168.25.253])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 47HYKD6plKz9ttCN;
+        Tue, 19 Nov 2019 18:51:12 +0100 (CET)
+Received: by vm-hermes.si.c-s.fr (Postfix, from userid 33)
+        id 033208B9; Tue, 19 Nov 2019 18:51:13 +0100 (CET)
+Received: from 37-173-93-145.coucou-networks.fr
+ (37-173-93-145.coucou-networks.fr [37.173.93.145]) by messagerie.si.c-s.fr
+ (Horde Framework) with HTTP; Tue, 19 Nov 2019 18:51:13 +0100
+Date:   Tue, 19 Nov 2019 18:51:13 +0100
+Message-ID: <20191119185113.Horde.6OywM5Gmhq3LRZDTsd-7HA1@messagerie.si.c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
         Paul Mackerras <paulus@samba.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH v4 2/2] powerpc/kexec: move kexec files into a dedicated
+ subdir.
+References: <e235973a1198195763afd3b6baffa548a83f4611.1572351221.git.christophe.leroy@c-s.fr>
+ <afbef97ec6a978574a5cf91a4441000e0a9da42a.1572351221.git.christophe.leroy@c-s.fr>
+ <87pnhpctrn.fsf@mpe.ellerman.id.au>
+In-Reply-To: <87pnhpctrn.fsf@mpe.ellerman.id.au>
+User-Agent: Internet Messaging Program (IMP) H5 (6.2.3)
+Content-Type: text/plain; charset=UTF-8; format=flowed; DelSp=Yes
+MIME-Version: 1.0
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-* This automated bisection report was sent to you on the basis  *
-* that you may be involved with the breaking commit it has      *
-* found.  No manual investigation has been done to verify it,   *
-* and the root cause of the problem may be somewhere else.      *
-*                                                               *
-* If you do send a fix, please include this trailer:            *
-*   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
-*                                                               *
-* Hope this helps!                                              *
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+Michael Ellerman <mpe@ellerman.id.au> a écrit :
 
-next/master bisection: boot on peach-pi
+> Christophe Leroy <christophe.leroy@c-s.fr> writes:
+>> arch/powerpc/kernel/ contains 8 files dedicated to kexec.
+>>
+>> Move them into a dedicated subdirectory.
+>>
+>> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+>>
+>> ---
+>> v2: moved crash.c as well as it's part of kexec suite.
+>> v3: renamed files to remove 'kexec' keyword from names.
+>> v4: removed a ifdef in kexec/Makefile
+>> ---
+>>  arch/powerpc/kernel/Makefile                       | 19 +---------------
+>>  arch/powerpc/kernel/kexec/Makefile                 | 25  
+>> ++++++++++++++++++++++
+>>  arch/powerpc/kernel/{ => kexec}/crash.c            |  0
+>>  .../kernel/{kexec_elf_64.c => kexec/elf_64.c}      |  0
+>>  arch/powerpc/kernel/{ima_kexec.c => kexec/ima.c}   |  0
+>>  .../kernel/{machine_kexec.c => kexec/machine.c}    |  0
+>>  .../{machine_kexec_32.c => kexec/machine_32.c}     |  0
+>>  .../{machine_kexec_64.c => kexec/machine_64.c}     |  0
+>>  .../machine_file_64.c}                             |  0
+>>  .../{kexec_relocate_32.S => kexec/relocate_32.S}   |  2 +-
+>>  10 files changed, 27 insertions(+), 19 deletions(-)
+>>  create mode 100644 arch/powerpc/kernel/kexec/Makefile
+>>  rename arch/powerpc/kernel/{ => kexec}/crash.c (100%)
+>>  rename arch/powerpc/kernel/{kexec_elf_64.c => kexec/elf_64.c} (100%)
+>>  rename arch/powerpc/kernel/{ima_kexec.c => kexec/ima.c} (100%)
+>>  rename arch/powerpc/kernel/{machine_kexec.c => kexec/machine.c} (100%)
+>>  rename arch/powerpc/kernel/{machine_kexec_32.c =>  
+>> kexec/machine_32.c} (100%)
+>>  rename arch/powerpc/kernel/{machine_kexec_64.c =>  
+>> kexec/machine_64.c} (100%)
+>>  rename arch/powerpc/kernel/{machine_kexec_file_64.c =>  
+>> kexec/machine_file_64.c} (100%)
+>>  rename arch/powerpc/kernel/{kexec_relocate_32.S =>  
+>> kexec/relocate_32.S} (99%)
+>
+> I'm inclined to move the directory out of kernel, ie. up a level with mm
+> and so on.
+>
+> And I also don't think the "machine" naming is useful anymore. It comes
+> from the naming of the arch functions, eg. machine_kexec(), which was
+> named to be analogous to machine_restart().
+>
+> So how about:
+>
+>   arch/powerpc/{kernel/machine_kexec.c => kexec/core.c}
+>   arch/powerpc/{kernel/machine_kexec_32.c => kexec/core_32.c}
+>   arch/powerpc/{kernel/machine_kexec_64.c => kexec/core_64.c}
+>   arch/powerpc/{kernel => kexec}/crash.c
+>   arch/powerpc/{kernel/kexec_elf_64.c => kexec/elf_64.c}
+>   arch/powerpc/{kernel/machine_kexec_file_64.c => kexec/file_load.c}
+>   arch/powerpc/{kernel/ima_kexec.c => kexec/ima.c}
+>   arch/powerpc/{kernel/kexec_relocate_32.S => kexec/relocate_32.S}
+>
+> And we end up with:
+>
+>   $ find arch/powerpc/kexec
+>   arch/powerpc/kexec/
+>   arch/powerpc/kexec/file_load.c
+>   arch/powerpc/kexec/relocate_32.S
+>   arch/powerpc/kexec/core_64.c
+>   arch/powerpc/kexec/ima.c
+>   arch/powerpc/kexec/core.c
+>   arch/powerpc/kexec/core_32.c
+>   arch/powerpc/kexec/Makefile
+>   arch/powerpc/kexec/crash.c
+>   arch/powerpc/kexec/elf_64.c
 
-Summary:
-  Start:      5d1131b4d61e Add linux-next specific files for 20191119
-  Details:    https://kernelci.org/boot/id/5dd3cc9559b5147f05cf54d1
-  Plain log:  https://storage.kernelci.org//next/master/next-20191119/arm/e=
-xynos_defconfig/gcc-8/lab-collabora/boot-exynos5800-peach-pi.txt
-  HTML log:   https://storage.kernelci.org//next/master/next-20191119/arm/e=
-xynos_defconfig/gcc-8/lab-collabora/boot-exynos5800-peach-pi.html
-  Result:     b037b220e71d dma-direct: unify the dma_capable definitions
+That looks good
 
-Checks:
-  revert:     PASS
-  verify:     PASS
-
-Parameters:
-  Tree:       next
-  URL:        git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next=
-.git
-  Branch:     master
-  Target:     peach-pi
-  CPU arch:   arm
-  Lab:        lab-collabora
-  Compiler:   gcc-8
-  Config:     exynos_defconfig
-  Test suite: boot
-
-Breaking commit found:
-
----------------------------------------------------------------------------=
-----
-commit b037b220e71dcbb34cb710e00ffad2ec025b9163
-Author: Christoph Hellwig <hch@lst.de>
-Date:   Tue Nov 12 17:06:04 2019 +0100
-
-    dma-direct: unify the dma_capable definitions
-    =
-
-    Currently each architectures that wants to override dma_to_phys and
-    phys_to_dma also has to provide dma_capable.  But there isn't really
-    any good reason for that.  powerpc and mips just have copies of the
-    generic one minus the latests fix, and the arm one was the inspiration
-    for said fix, but misses the bus_dma_mask handling.
-    Make all architectures use the generic version instead.
-    =
-
-    Signed-off-by: Christoph Hellwig <hch@lst.de>
-    Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
-    Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-
-diff --git a/arch/arm/include/asm/dma-direct.h b/arch/arm/include/asm/dma-d=
-irect.h
-index b67e5fc1fe43..7c3001a6a775 100644
---- a/arch/arm/include/asm/dma-direct.h
-+++ b/arch/arm/include/asm/dma-direct.h
-@@ -14,23 +14,4 @@ static inline phys_addr_t __dma_to_phys(struct device *d=
-ev, dma_addr_t dev_addr)
- 	return __pfn_to_phys(dma_to_pfn(dev, dev_addr)) + offset;
- }
- =
-
--static inline bool dma_capable(struct device *dev, dma_addr_t addr, size_t=
- size)
--{
--	u64 limit, mask;
--
--	if (!dev->dma_mask)
--		return 0;
--
--	mask =3D *dev->dma_mask;
--
--	limit =3D (mask + 1) & ~mask;
--	if (limit && size > limit)
--		return 0;
--
--	if ((addr | (addr + size - 1)) & ~mask)
--		return 0;
--
--	return 1;
--}
--
- #endif /* ASM_ARM_DMA_DIRECT_H */
-diff --git a/arch/mips/include/asm/dma-direct.h b/arch/mips/include/asm/dma=
--direct.h
-index b5c240806e1b..14e352651ce9 100644
---- a/arch/mips/include/asm/dma-direct.h
-+++ b/arch/mips/include/asm/dma-direct.h
-@@ -2,14 +2,6 @@
- #ifndef _MIPS_DMA_DIRECT_H
- #define _MIPS_DMA_DIRECT_H 1
- =
-
--static inline bool dma_capable(struct device *dev, dma_addr_t addr, size_t=
- size)
--{
--	if (!dev->dma_mask)
--		return false;
--
--	return addr + size - 1 <=3D *dev->dma_mask;
--}
--
- dma_addr_t __phys_to_dma(struct device *dev, phys_addr_t paddr);
- phys_addr_t __dma_to_phys(struct device *dev, dma_addr_t daddr);
- =
-
-diff --git a/arch/powerpc/include/asm/dma-direct.h b/arch/powerpc/include/a=
-sm/dma-direct.h
-index a2912b47102c..e29e8a236b8d 100644
---- a/arch/powerpc/include/asm/dma-direct.h
-+++ b/arch/powerpc/include/asm/dma-direct.h
-@@ -2,15 +2,6 @@
- #ifndef ASM_POWERPC_DMA_DIRECT_H
- #define ASM_POWERPC_DMA_DIRECT_H 1
- =
-
--static inline bool dma_capable(struct device *dev, dma_addr_t addr, size_t=
- size)
--{
--	if (!dev->dma_mask)
--		return false;
--
--	return addr + size - 1 <=3D
--		min_not_zero(*dev->dma_mask, dev->bus_dma_mask);
--}
--
- static inline dma_addr_t __phys_to_dma(struct device *dev, phys_addr_t pad=
-dr)
- {
- 	if (!dev)
-diff --git a/include/linux/dma-direct.h b/include/linux/dma-direct.h
-index 6db863c3eb93..991f8aa2676e 100644
---- a/include/linux/dma-direct.h
-+++ b/include/linux/dma-direct.h
-@@ -24,6 +24,7 @@ static inline phys_addr_t __dma_to_phys(struct device *de=
-v, dma_addr_t dev_addr)
- =
-
- 	return paddr + ((phys_addr_t)dev->dma_pfn_offset << PAGE_SHIFT);
- }
-+#endif /* !CONFIG_ARCH_HAS_PHYS_TO_DMA */
- =
-
- static inline bool dma_capable(struct device *dev, dma_addr_t addr, size_t=
- size)
- {
-@@ -38,7 +39,6 @@ static inline bool dma_capable(struct device *dev, dma_ad=
-dr_t addr, size_t size)
- =
-
- 	return end <=3D min_not_zero(*dev->dma_mask, dev->bus_dma_mask);
- }
--#endif /* !CONFIG_ARCH_HAS_PHYS_TO_DMA */
- =
-
- #ifdef CONFIG_ARCH_HAS_FORCE_DMA_UNENCRYPTED
- bool force_dma_unencrypted(struct device *dev);
----------------------------------------------------------------------------=
-----
+Christophe
 
 
-Git bisection log:
 
----------------------------------------------------------------------------=
-----
-git bisect start
-# good: [af42d3466bdc8f39806b26f593604fdc54140bcb] Linux 5.4-rc8
-git bisect good af42d3466bdc8f39806b26f593604fdc54140bcb
-# bad: [5d1131b4d61e52e5702e0fa4bcbec81ac7d6ef52] Add linux-next specific f=
-iles for 20191119
-git bisect bad 5d1131b4d61e52e5702e0fa4bcbec81ac7d6ef52
-# bad: [c5e9a8e6d8139cfdabb7774c9a39c5589b8d45d0] Merge remote-tracking bra=
-nch 'crypto/master'
-git bisect bad c5e9a8e6d8139cfdabb7774c9a39c5589b8d45d0
-# bad: [cefecf6f6be345ac0e5c4f878e4d29787918adfb] Merge remote-tracking bra=
-nch 'pstore/for-next/pstore'
-git bisect bad cefecf6f6be345ac0e5c4f878e4d29787918adfb
-# bad: [7b46e62e776e6a55199625b511d42518e4b98d8f] Merge remote-tracking bra=
-nch 'reset/reset/next'
-git bisect bad 7b46e62e776e6a55199625b511d42518e4b98d8f
-# good: [5f1f15283419ded3e16617ac0b79abc6f2b73bba] Merge tag 'omap-for-v5.5=
-/dt-late-signed' of git://git.kernel.org/pub/scm/linux/kernel/git/tmlind/li=
-nux-omap into arm/dt
-git bisect good 5f1f15283419ded3e16617ac0b79abc6f2b73bba
-# good: [e1351090dd4a172fb26317ae6fa846ab13c50199] ARM: Document merges
-git bisect good e1351090dd4a172fb26317ae6fa846ab13c50199
-# bad: [9050eefca89eb3853d600a61e249fc9fdd8ba332] Merge remote-tracking bra=
-nch 'arm/for-next'
-git bisect bad 9050eefca89eb3853d600a61e249fc9fdd8ba332
-# good: [0632e899eb046db54d3b1c993811e0b1b7b90b04] Merge remote-tracking br=
-anch 'spdx/spdx-linus'
-git bisect good 0632e899eb046db54d3b1c993811e0b1b7b90b04
-# bad: [13fb7b3bb3e314cadfe6dec3132aac31d06950b5] Merge remote-tracking bra=
-nch 'dma-mapping/for-next'
-git bisect bad 13fb7b3bb3e314cadfe6dec3132aac31d06950b5
-# good: [0241ea8cae19b49fc1b1459f7bbe9a77f4f9cc89] modpost: free ns_deps_bu=
-f.p after writing ns_deps files
-git bisect good 0241ea8cae19b49fc1b1459f7bbe9a77f4f9cc89
-# good: [e380a0394c36a3a878c858418d5dd7f5f195b6fc] x86/PCI: sta2x11: use de=
-fault DMA address translation
-git bisect good e380a0394c36a3a878c858418d5dd7f5f195b6fc
-# good: [fcbb8461fd2376ba3782b5b8bd440c929b8e4980] kbuild: remove header co=
-mpile test
-git bisect good fcbb8461fd2376ba3782b5b8bd440c929b8e4980
-# bad: [e4d2bda544c7df90abed8aaa099b5daf1870bcf8] dma-direct: avoid a forwa=
-rd declaration for phys_to_dma
-git bisect bad e4d2bda544c7df90abed8aaa099b5daf1870bcf8
-# bad: [b037b220e71dcbb34cb710e00ffad2ec025b9163] dma-direct: unify the dma=
-_capable definitions
-git bisect bad b037b220e71dcbb34cb710e00ffad2ec025b9163
-# good: [9f0e56e96c7b2039edb4bda64410216c6e9fe93f] dma-mapping: drop the de=
-v argument to arch_sync_dma_for_*
-git bisect good 9f0e56e96c7b2039edb4bda64410216c6e9fe93f
-# first bad commit: [b037b220e71dcbb34cb710e00ffad2ec025b9163] dma-direct: =
-unify the dma_capable definitions
----------------------------------------------------------------------------=
-----
