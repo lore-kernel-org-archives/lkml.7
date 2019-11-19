@@ -2,118 +2,116 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B778C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 09:12:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 595F1C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 09:12:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05780219F6
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 09:12:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3115F219F6
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 09:12:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="jTtaFx64"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727480AbfKSJMP (ORCPT
+        id S1727491AbfKSJMx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 04:12:15 -0500
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:42746 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726555AbfKSJMO (ORCPT
+        Tue, 19 Nov 2019 04:12:53 -0500
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:3810 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726170AbfKSJMx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 04:12:14 -0500
-X-AuditID: c0a8fbf4-199ff70000001fa6-33-5dd3b1ebf61b
-Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id A1.7C.08102.BE1B3DD5; Tue, 19 Nov 2019 10:12:11 +0100 (CET)
-Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
- WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
- 14.03.0439.000; Tue, 19 Nov 2019 10:12:06 +0100
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "broonie@kernel.org" <broonie@kernel.org>
-CC:     "corbet@lwn.net" <corbet@lwn.net>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "jeffrey.t.kirsher@intel.com" <jeffrey.t.kirsher@intel.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "hofrat@osadl.org" <hofrat@osadl.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>
-Subject: Re: [PATCH v5 09/16] regulator: bd71828: Basic support for ROHM
- bd71828 PMIC regulators
-Thread-Topic: [PATCH v5 09/16] regulator: bd71828: Basic support for ROHM
- bd71828 PMIC regulators
-Thread-Index: AQHVnd2DWIMPtP3SE0CbN3AnPrzvvaeRC7QAgAEapIA=
-Date:   Tue, 19 Nov 2019 09:12:06 +0000
-Message-ID: <bd5499bcb2cceb163ab7829eced05360c725f6e3.camel@fi.rohmeurope.com>
-References: <cover.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
-         <ffd3ea4858f820e565aba88ccac395ce5b661538.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
-         <20191118162032.GI9761@sirena.org.uk>
-In-Reply-To: <20191118162032.GI9761@sirena.org.uk>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.255.186.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <EDAFFAA195E63A428FBFB188D7C56A34@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        Tue, 19 Nov 2019 04:12:53 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dd3b2110000>; Tue, 19 Nov 2019 01:12:49 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 19 Nov 2019 01:12:52 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 19 Nov 2019 01:12:52 -0800
+Received: from [10.21.133.51] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 19 Nov
+ 2019 09:12:50 +0000
+Subject: Re: [PATCH 4.14 000/239] 4.14.155-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>
+References: <20191119051255.850204959@linuxfoundation.org>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <cc1129c8-797d-7a1d-e59b-16c826270fad@nvidia.com>
+Date:   Tue, 19 Nov 2019 09:12:48 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA02TfUwTZxzH89w7lVuOCvKASrJbFt+iDOaSZ4txukw9t8w598+yhMAhJyVC
-        y65lwowTJp22MiaxZthIeWeGt46i21RqTC0OqnarWMaiDKqMDHSSOQRRg7vbTeGv+93z/X6+
-        3+eP38Pg+mY6kckxWiTZKObylI64cPKxZ/Wdjr60V4buJ6CGUJhGB+810WiyKkCgY5ERCo1c
-        OAhQtT9IosOXT5GobqKSRDbbIRLdOP0dgXo6hwAaetAN0NT1QxhyPPkWQ3+X/U6i2i8bCNRZ
-        /QSgvrMnKHT6bjtAl1quU6jNP0ijxl9DGDrR2EOgifs2DIUCm9BgoJtCB0IDOLJ6/TSa7e8g
-        UHlwy4YkodXVCoSJASstuFr3Cmecg7RQ3zWGCZ5mGyXc7O+ihPryo6TwZ9lFQpi6UkEI5aea
-        gTBa6yaEnwZ+wIRvXDOYcLJlmhb+8SRt5z5esC5TtHz6YU62MXl9xgJDZa0V5LfrCmccI3gx
-        KNPZQRQDubVwvP4hbgc6Rs+FAXQ0fU1rPz0AtvlLSTtgGIpbB+2/0SoQy62Gxx7VU6oH545H
-        w/PBc5gqLOQyYfhMCFf9sdxOePNOjOZ/Aw7UdOPqTHAvw6amWVKdWW4bvBopBVrXFQAfeEsw
-        lY3iUuHQ5U9UD+CWQlvxvf/icS4eekanSe3SHGzo+hnX5jg4dnv2/3MeemcihBqDcyug+2yy
-        hm6AT689xLX5Reg4HKG1K8TA3uMjxBGwyDmvwTlHO+fRznm0cx5dA8hmAPPEnNxs0SKlrJGl
-        gjWyyZCnfHaa8jxA273JH8FT31YfwBjgAwkMxsexw4V9afoXMk1ZRQbRbEiXC3Ilsw9ABudj
-        2W23fknTs1li0WeSbHomLWYIPp5dFqlI03Nq125JypfkZ+oShuEh62hXQmNkKVsq3JWTa5mT
-        MSZKDdclxpolY5YkiwUWQ7q6HulmZT9UKVrpveRWcNacL+YppxoaAKuYI2NVdTjjr2qsw/WE
-        0WSUEuPZIoNi5VSrocD4vGgcxDOAX8j2q0HRygN8njOuVGBKRUfbNbXCIs5JicVguzWsi1qe
-        khoX3DS151bfcG/GylJfCbWLf/TSvvF9r7+t37P2o6+qF/csWX4xfWPcm5tXDe8veTUl8n1G
-        hUW34+jV8JS7dvcH74tbv/C6kt9qWfr4xt3U9amhGqu7k7/tGu39q4s1V27OTPLaE/bCdz/n
-        /3hn0eR0oWWLK2APrqje/95rPGE2iCkrcdks/gubXQWTPQQAAA==
+In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1574154769; bh=s336aHF0+WqEMqrUMHOwLSxFHgeFvtDdFyFoqd/Q6ME=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=jTtaFx64yGUlpyQpLppU3nyXz+ABWUiOTIy4IPrEGGnMvStAQBGGVZk+aR9UFPR+D
+         VHPu4XlFzAp1NogyoguJPIw6DObWpSWCScI2IvBlwnPvdHpCOXphnYXHZ61990s7az
+         r7UtkR8XklXyrmdyityeV7YzLhohtY5lFdAemTMDfGO3FCSmsld+RPTFjGeV3ixYLs
+         VYUfZ8UCR7lpZsAYKfvr5YioAHJclQl4WfNXw1aV/L2NzZG0+ybkb8gQl7VEhS4BHX
+         VLnqUzp41a+Y4Yk6w7FfqPg0JXG8gp8O5nzCblwu9UWPlbNJtfziRViumuSVeTmN0o
+         3kl7lbpb2It/A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhhbmtzIE1hcmssDQoNCk9uIE1vbiwgMjAxOS0xMS0xOCBhdCAxNjoyMCArMDAwMCwgTWFyayBC
-cm93biB3cm90ZToNCj4gT24gTW9uLCBOb3YgMTgsIDIwMTkgYXQgMDg6NTc6NTdBTSArMDIwMCwg
-TWF0dGkgVmFpdHRpbmVuIHdyb3RlOg0KPiANCj4gPiArc3RhdGljIGludCByYW1wX2RlbGF5X3N1
-cHBvcnRlZChzdHJ1Y3QgcmVndWxhdG9yX2RldiAqcmRldikNCj4gPiArew0KPiA+ICsJc3dpdGNo
-IChyZGV2LT5kZXNjLT5pZCkgew0KPiA+ICsJY2FzZSBCRDcxODI4X0JVQ0sxOg0KPiA+ICsJY2Fz
-ZSBCRDcxODI4X0JVQ0syOg0KPiA+ICsJY2FzZSBCRDcxODI4X0JVQ0s2Og0KPiA+ICsJY2FzZSBC
-RDcxODI4X0JVQ0s3Og0KPiA+ICsJCXJldHVybiAxOw0KPiA+ICsJZGVmYXVsdDoNCj4gPiArCQli
-cmVhazsNCj4gPiArCX0NCj4gPiArCXJldHVybiAwOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICtzdGF0
-aWMgaW50IGJkNzE4Mjhfc2V0X3JhbXBfZGVsYXkoc3RydWN0IHJlZ3VsYXRvcl9kZXYgKnJkZXYs
-IGludA0KPiA+IHJhbXBfZGVsYXkpDQo+ID4gK3sNCj4gPiArCXVuc2lnbmVkIGludCB2YWw7DQo+
-ID4gKw0KPiA+ICsJaWYgKCFyYW1wX2RlbGF5X3N1cHBvcnRlZChyZGV2KSkgew0KPiA+ICsJCWRl
-dl9lcnIoJnJkZXYtPmRldiwgIiVzOiBjYW4ndCBzZXQgcmFtcC1kZWxheVxuIiwNCj4gPiArCQkJ
-cmRldi0+ZGVzYy0+bmFtZSk7DQo+ID4gKwkJcmV0dXJuIC1FSU5WQUw7DQo+IA0KPiBSYXRoZXIg
-dGhhbiBkb2luZyB0aGlzIGl0J3MgYmV0dGVyIHRvIGp1c3Qgbm90IHByb3ZpZGUgdGhlIG9wZXJh
-dGlvbg0KPiBmb3INCj4gZGV2aWNlcyB0aGF0IGRvbid0IHN1cHBvcnQgaXQsIHRoYXQgbWFrZXMg
-dGhlIGhhbmRsaW5nIGluIHRoZSBjb3JlDQo+IGVhc2llci4NCg0KTWFrZXMgc2Vuc2UuIEknbGwg
-Y2hhbmdlIHRoaXMgaW4gbmV4dCB2ZXJzaW9uLg0KDQpCciwNCglNYXR0aSBWYWl0dGluZW4NCg0K
+
+On 19/11/2019 05:16, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.14.155 release.
+> There are 239 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Thu, 21 Nov 2019 05:02:35 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.155-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
+> -------------
+
+...
+
+> Heiko Stuebner <heiko@sntech.de>
+>     arm64: dts: rockchip: enable display nodes on rk3328-rock64
+The above commit is causing the following build error for ARM64 ...
+
+Error: arch/arm64/boot/dts/rockchip/rk3328-rock64.dts:149.1-6 Label or path hdmi not found
+Error: arch/arm64/boot/dts/rockchip/rk3328-rock64.dts:153.1-9 Label or path hdmiphy not found
+Error: arch/arm64/boot/dts/rockchip/rk3328-rock64.dts:345.1-5 Label or path vop not found
+FATAL ERROR: Syntax error parsing input tree
+scripts/Makefile.lib:317: recipe for target 'arch/arm64/boot/dts/rockchip/rk3328-rock64.dtb' failed
+make[2]: *** [arch/arm64/boot/dts/rockchip/rk3328-rock64.dtb] Error 1
+scripts/Makefile.build:585: recipe for target 'arch/arm64/boot/dts/rockchip' failed
+make[1]: *** [arch/arm64/boot/dts/rockchip] Error 2
+arch/arm64/Makefile:138: recipe for target 'dtbs' failed
+make: *** [dtbs] Error 2
+
+Cheers
+Jon
+
+-- 
+nvpublic
