@@ -5,50 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44058C43141
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:25:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3452DC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:25:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 113DA21783
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:25:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A8AB22317
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:25:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141109;
-	bh=di6FP3t2dGpX6xM3L7mS/22x0dtDKEQ8IHSmiLUVGBQ=;
+	s=default; t=1574141113;
+	bh=VKcieq0ARls4eteR5hLrrJ5YCzzxNlWyVtNRCKYMwmA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bUy0Hoqk9T1Q6vZR3FH0FOafFqG+TfP2PT3qKXP63O8C/1FdTK0CDMBK8X9vBxLWB
-	 IZlVQkFP7vPD0GRlJLBxMGnN/jnmUKQc1l1f3wY8ebahl76p5BW6vbQCcepygHVE8k
-	 oyFAZAROvZ/bgJs8sxJ7yCUxlPYhwX5fJ49FAe6o=
+	b=mYScPvJJ6KpF5MfXwTtcgwpmi4EqnTSiZLfCVqdn7jgyCo/Q460RiwJOmvbJtCXu3
+	 YW1crxdR7DUaGTpUtM1rdM3mYKC0OfszzybSayQbRDi88YyLnNT+kHx6PVahcxq3jH
+	 YpJSvvUVtaTbZdzXTqOnMBJihMLfB6H05j5CQTU0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728333AbfKSFZI (ORCPT
+        id S1728337AbfKSFZL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:25:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41806 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:25:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728323AbfKSFZE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:25:04 -0500
+        id S1728326AbfKSFZH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:25:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD56F21783;
-        Tue, 19 Nov 2019 05:25:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65DB121823;
+        Tue, 19 Nov 2019 05:25:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141104;
-        bh=di6FP3t2dGpX6xM3L7mS/22x0dtDKEQ8IHSmiLUVGBQ=;
+        s=default; t=1574141106;
+        bh=VKcieq0ARls4eteR5hLrrJ5YCzzxNlWyVtNRCKYMwmA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hMFykn0Y9S0gdyNSgvwpmcxHzpqwSZfMSqzYKsrYcb+ZPjX/oeOG1nXvVzqmWn4jI
-         RIOXtBsFQSmOHvrWGjJwwSB0Hbi/j9D/leTIYH4P/DCFtcsJkh147fve1Dw0tSqFHb
-         qUZ7tZz78/qj8s58BaRzTEVVeNpbSpEx2Do16pGI=
+        b=O3PCyqyAYX0wtqn2aEIUXXt+zuATKxXWjzJxDHtcL+8iKSqEqzz0jZL72sOkMNr1U
+         eLiG8gi4YOP63FIInccB2hUWcNq+5EnriekFIZnq50NHBTRQxCk5sOtMMo/GxMa6AB
+         HhKfvFPHjaFASm7+A6HUuM3TxCI4PbDu8HLh6gJA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aapo Vienamo <avienamo@nvidia.com>,
-        Mikko Perttunen <mperttunen@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 045/422] arm64: dts: tegra210-p2180: Correct sdmmc4 vqmmc-supply
-Date:   Tue, 19 Nov 2019 06:14:02 +0100
-Message-Id: <20191119051402.817575453@linuxfoundation.org>
+Subject: [PATCH 4.19 046/422] y2038: make do_gettimeofday() and get_seconds() inline
+Date:   Tue, 19 Nov 2019 06:14:03 +0100
+Message-Id: <20191119051402.870151067@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -61,32 +59,127 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aapo Vienamo <avienamo@nvidia.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 6ff7705da8806de45ca1490194f0b4eb07725804 ]
+[ Upstream commit 33e26418193f58d1895f2f968e1953b1caf8deb7 ]
 
-On p2180 sdmmc4 is powered from a fixed 1.8 V regulator.
+get_seconds() and do_gettimeofday() are only used by a few modules now any
+more (waiting for the respective patches to get accepted), and they are
+among the last holdouts of code that is not y2038 safe in the core kernel.
 
-Signed-off-by: Aapo Vienamo <avienamo@nvidia.com>
-Reviewed-by: Mikko Perttunen <mperttunen@nvidia.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+Move the implementation into the timekeeping32.h header to clean up
+the core kernel and isolate the old interfaces further.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ include/linux/timekeeping32.h | 15 +++++++++++++--
+ kernel/time/time.c            | 15 +++++++++------
+ kernel/time/timekeeping.c     | 24 ------------------------
+ 3 files changed, 22 insertions(+), 32 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi b/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
-index 7398ae8856dc0..ccaa555180dc0 100644
---- a/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi
-@@ -282,6 +282,7 @@
- 		status = "okay";
- 		bus-width = <8>;
- 		non-removable;
-+		vqmmc-supply = <&vdd_1v8>;
- 	};
+diff --git a/include/linux/timekeeping32.h b/include/linux/timekeeping32.h
+index 8762c2f45f8bf..479da36be8c82 100644
+--- a/include/linux/timekeeping32.h
++++ b/include/linux/timekeeping32.h
+@@ -6,8 +6,19 @@
+  * over time so we can remove the file here.
+  */
  
- 	clocks {
+-extern void do_gettimeofday(struct timeval *tv);
+-unsigned long get_seconds(void);
++static inline void do_gettimeofday(struct timeval *tv)
++{
++	struct timespec64 now;
++
++	ktime_get_real_ts64(&now);
++	tv->tv_sec = now.tv_sec;
++	tv->tv_usec = now.tv_nsec/1000;
++}
++
++static inline unsigned long get_seconds(void)
++{
++	return ktime_get_real_seconds();
++}
+ 
+ static inline struct timespec current_kernel_time(void)
+ {
+diff --git a/kernel/time/time.c b/kernel/time/time.c
+index be057d6579f13..f7d4fa5ddb9e2 100644
+--- a/kernel/time/time.c
++++ b/kernel/time/time.c
+@@ -144,9 +144,11 @@ SYSCALL_DEFINE2(gettimeofday, struct timeval __user *, tv,
+ 		struct timezone __user *, tz)
+ {
+ 	if (likely(tv != NULL)) {
+-		struct timeval ktv;
+-		do_gettimeofday(&ktv);
+-		if (copy_to_user(tv, &ktv, sizeof(ktv)))
++		struct timespec64 ts;
++
++		ktime_get_real_ts64(&ts);
++		if (put_user(ts.tv_sec, &tv->tv_sec) ||
++		    put_user(ts.tv_nsec / 1000, &tv->tv_usec))
+ 			return -EFAULT;
+ 	}
+ 	if (unlikely(tz != NULL)) {
+@@ -227,10 +229,11 @@ COMPAT_SYSCALL_DEFINE2(gettimeofday, struct compat_timeval __user *, tv,
+ 		       struct timezone __user *, tz)
+ {
+ 	if (tv) {
+-		struct timeval ktv;
++		struct timespec64 ts;
+ 
+-		do_gettimeofday(&ktv);
+-		if (compat_put_timeval(&ktv, tv))
++		ktime_get_real_ts64(&ts);
++		if (put_user(ts.tv_sec, &tv->tv_sec) ||
++		    put_user(ts.tv_nsec / 1000, &tv->tv_usec))
+ 			return -EFAULT;
+ 	}
+ 	if (tz) {
+diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
+index c2708e1f0c69f..81ee5b83c9200 100644
+--- a/kernel/time/timekeeping.c
++++ b/kernel/time/timekeeping.c
+@@ -1214,22 +1214,6 @@ int get_device_system_crosststamp(int (*get_time_fn)
+ }
+ EXPORT_SYMBOL_GPL(get_device_system_crosststamp);
+ 
+-/**
+- * do_gettimeofday - Returns the time of day in a timeval
+- * @tv:		pointer to the timeval to be set
+- *
+- * NOTE: Users should be converted to using getnstimeofday()
+- */
+-void do_gettimeofday(struct timeval *tv)
+-{
+-	struct timespec64 now;
+-
+-	getnstimeofday64(&now);
+-	tv->tv_sec = now.tv_sec;
+-	tv->tv_usec = now.tv_nsec/1000;
+-}
+-EXPORT_SYMBOL(do_gettimeofday);
+-
+ /**
+  * do_settimeofday64 - Sets the time of day.
+  * @ts:     pointer to the timespec64 variable containing the new time
+@@ -2177,14 +2161,6 @@ void getboottime64(struct timespec64 *ts)
+ }
+ EXPORT_SYMBOL_GPL(getboottime64);
+ 
+-unsigned long get_seconds(void)
+-{
+-	struct timekeeper *tk = &tk_core.timekeeper;
+-
+-	return tk->xtime_sec;
+-}
+-EXPORT_SYMBOL(get_seconds);
+-
+ void ktime_get_coarse_real_ts64(struct timespec64 *ts)
+ {
+ 	struct timekeeper *tk = &tk_core.timekeeper;
 -- 
 2.20.1
 
