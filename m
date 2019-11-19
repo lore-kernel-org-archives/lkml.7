@@ -2,122 +2,193 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14D8BC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 09:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1C29C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 09:40:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFE3822304
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 09:40:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96CE122304
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 09:40:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="KsGQYLH3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727403AbfKSJkX (ORCPT
+        id S1727506AbfKSJk0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 04:40:23 -0500
-Received: from mout.kundenserver.de ([217.72.192.75]:52469 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726590AbfKSJkX (ORCPT
+        Tue, 19 Nov 2019 04:40:26 -0500
+Received: from mailout4.samsung.com ([203.254.224.34]:13992 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726510AbfKSJkZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 04:40:23 -0500
-Received: from mail-qk1-f172.google.com ([209.85.222.172]) by
- mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1N1gac-1hr5cz1Eym-01231h; Tue, 19 Nov 2019 10:40:21 +0100
-Received: by mail-qk1-f172.google.com with SMTP id d13so17189309qko.3;
-        Tue, 19 Nov 2019 01:40:21 -0800 (PST)
-X-Gm-Message-State: APjAAAUlIrFuF8q2cjVatN51ImQ6bBfnGRcqYMHIPpmECBAXDLW5g7cM
-        GI2lNt5xakJphktqtf7JPHkelkq8i8YrPYAG3f8=
-X-Google-Smtp-Source: APXvYqzpXo37eIlD5IP7Hk0pcYvx8hP1F+kNLhyoYoR1Do87qKPCr5W/ZWz5L7OkA4dZDC/iCb3rnrXQgJt5QRJtGjk=
-X-Received: by 2002:a37:4f13:: with SMTP id d19mr24499410qkb.138.1574156420062;
- Tue, 19 Nov 2019 01:40:20 -0800 (PST)
-MIME-Version: 1.0
-References: <20191118220432.1611-1-labbott@redhat.com> <29e94219-22ca-c873-7209-64d1c357fe5c@roeck-us.net>
-In-Reply-To: <29e94219-22ca-c873-7209-64d1c357fe5c@roeck-us.net>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 19 Nov 2019 10:40:04 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a0=3J3WHTKU7sPvd37VEwg3wOuZ5S2-xXtNYEcSQhWyHw@mail.gmail.com>
-Message-ID: <CAK8P3a0=3J3WHTKU7sPvd37VEwg3wOuZ5S2-xXtNYEcSQhWyHw@mail.gmail.com>
-Subject: Re: [PATCH] watchdog: Remove iop_wdt
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Laura Abbott <labbott@redhat.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Lennert Buytenhek <kernel@wantstofly.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:JCq97WPGR6TwJH63qeF1QLhXslOsZv3p4wX9t2Q2rMjpOxv43Pg
- 4mXhIh8BM7FSmkl+l/3ssNG62UOz7WekfaNCVYI5xgxH0Uj6/kDfKKlCf6cFweJfKKfxAVW
- 3L4VI+HWkjKKgBMtlo+KTT0lWyr/UAUAx8sq70qGr97XQ13k3otOL/6NGBWp/Hb9amVTDKG
- C5GmvFfW+s+hTkdV81Cfw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:sNJFmyp9qA8=:gEYXJeyNAgl2qJ5FtAlXxS
- AJgfFwJHuNka43LIQt5Vvb+N1VW6r/fsHoPlSHrN7VdH7Ticg7hDn/FLdEvlyf1oaGlBMHzL2
- M6pHswbskI+FdUzxydnSYO6BdSIB7Suduz5M0UlqWh0sLU7gmL1GAX9NUbwwFEff2scKd0zxs
- UFR+J9jmDIMKFB4+GzY3qnzbF+UZLlJiBM4TyErgLmSsxtWMBB3B2qM0TgLpPsm5hdyPo8kJ4
- CIcE0P0lVDdsdey5X7nrDum7gYFhxnOcPL4l7+awSZYZ2L0G7reKw9XtKAgtJUc76e8Wtk+Ez
- CIo6keVl3A28ikL/m5HB1rKOL36r6heOA4b9DhSb0m2q07E5DSnLh0eqENd3Zl6y1Ycpub8ph
- IrDe5PzPPrkHUvjUck0Rj4ZVEvXssbroUIx1XA9T7JSmr95Csn9UKBwqNhZ86npxa6WRlaVfr
- uOCfQ+dgRHSOQmOVErEdB3+gQQi4wF1qeWT0WEleM0q3I2TIUx6+V4KFc4nmZpWoOoj4KdTG9
- 8EQbvMlxEEZh9bvNXf7zvNTTjxXFL10mTud/OFCj82tqMfOTX8+37MAzaTUmsJQJQ6+fAEb7Q
- pQCX1+sm/KXqBOmbnve5lQUzMc/oRl/ajge068JN3QFy07MvmdEk8eUsSy/6pS2CuUBRyaMg4
- fvQ7YG3Id7Mj6AJLmcBdrAOfOK3SJ+EaPtoyCdJtHw0wJHdGs6OM+v6MNbKRasjYExjAryYXc
- yE7LYjH6utfgwUdbwlwquK/2dzcmXaEHNXZ5+Fbs5N69ZMnfcjA8H8G5MHbMiyI4Cbi0BZUJ3
- PwuTcdZ4eViOZK8m7lYhr/BQaj82YGrUWnhPVRYUbfKFVxh5GSlJkdah5wHqpveUqWPkrnpc2
- XciPZ9xD2ywCbGLdD7Zg==
+        Tue, 19 Nov 2019 04:40:25 -0500
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20191119094021epoutp04f8d363e5b8b39ac3c00c238c5cc2fd59~YhuzMmSrh0888908889epoutp04K
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 09:40:21 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20191119094021epoutp04f8d363e5b8b39ac3c00c238c5cc2fd59~YhuzMmSrh0888908889epoutp04K
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1574156421;
+        bh=0cnGpOYdbueaEG9G7RvSonxcZR4iIM1JXB3qpiDbXKw=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=KsGQYLH3s+OEqNF1kRJxMyEh5Zwfd6mJ3BPYF5duU013zWCQNbyoV+VvA917LC9is
+         QKqTwxEntN6Cv2kyj0zO8zvkp5T41G1yBSxHUpIcsDSv9SHi7ffa3McFyrVCd2g8Xl
+         WadudvTHXVRg6akeGlV+ifJuxtTF/c/b7EVnURoc=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20191119094020epcas1p2af0faa4f3d40e6cc4e09f497723ea198~Yhuyxqe2i1035810358epcas1p2B;
+        Tue, 19 Nov 2019 09:40:20 +0000 (GMT)
+Received: from epsmges1p1.samsung.com (unknown [182.195.40.162]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 47HLQq6KbhzMqYkj; Tue, 19 Nov
+        2019 09:40:19 +0000 (GMT)
+Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
+        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        CC.23.04072.388B3DD5; Tue, 19 Nov 2019 18:40:19 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20191119094019epcas1p298d14fcf6e7a24bee431238279961c5b~YhuxRBzuU0594305943epcas1p2o;
+        Tue, 19 Nov 2019 09:40:19 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20191119094019epsmtrp171a3abb8cff6b649f86aa3032aef726f~YhuxQRvi40080100801epsmtrp1j;
+        Tue, 19 Nov 2019 09:40:19 +0000 (GMT)
+X-AuditID: b6c32a35-9bdff70000000fe8-3e-5dd3b8835584
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        31.12.03654.388B3DD5; Tue, 19 Nov 2019 18:40:19 +0900 (KST)
+Received: from localhost.localdomain (unknown [10.88.103.87]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20191119094019epsmtip2dc65f256c4d727080a692a07c1eba043~YhuxCsjnY0597405974epsmtip2a;
+        Tue, 19 Nov 2019 09:40:19 +0000 (GMT)
+From:   Namjae Jeon <namjae.jeon@samsung.com>
+To:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Cc:     gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu, hch@lst.de,
+        linkinjeon@gmail.com, Markus.Elfring@web.de,
+        sj1557.seo@samsung.com, dwagner@suse.de,
+        Namjae Jeon <namjae.jeon@samsung.com>
+Subject: [PATCH v3 00/13] add the latest exfat driver
+Date:   Tue, 19 Nov 2019 04:37:05 -0500
+Message-Id: <20191119093718.3501-1-namjae.jeon@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SZ0wTYRjm4zoOYsmlrE+MWC42BmT0KMUTwQEEL4hAYjSKafBCLy3alV5x
+        8YMioRBCGGqiogxXDMOwKjKFFI1RjApEDSp/ILJcuFEM2vZw/Hve933Gm/f7UES8wA9As/Vm
+        xqSntbjAk9cxGBwRVtA5qpR9L1SQg5MnhWTB5WYBWd94x518Nv4cIXv77vHI0e4LAvJX1TSf
+        XDiTR9qWbvPJkffzvK2eVFfVuJDqr24SUj1jFgFVZmsAVPtQLvWpLZCy33wjoF5MdfDS0Qxt
+        rIahVYxJwuizDKpsvToO37ErMyFTES0jwoiN5AZcoqd1TByemJIelpStdayISw7T2hxHK51m
+        WTxic6zJkGNmJBoDa47DGaNKayRkxnCW1rE5enV4lkEXQ8hkkQoH84BWM/S0FBhf+h/9Xjgu
+        tIABcQnwQCEWBSfqK4QlwBMVY50ATlyqAFzxEcC2c1eWi68AWqZPCf5IJhvOItygD8CpZjvy
+        VzJVms8vASgqwNbDnzZfp8AH2wLbzw/wnBwEuw3gzGdnIIp6Ywp4a4RwcniYFLacWEScWIRt
+        gtbhAh4XtgY2tgy4/CHWIoDneqYBN0iEreUjCIe94dxdm5DDAXC23Oryh1gu/NC/TCl25H6L
+        47AcjjW3uNZEsGDY3B3BtYNg12K1yx3BvOC7L6V8zkUEi63L15LCspFBdw6vgiVF88uhFKy+
+        eN/VF2NKWPutXVgBVlf9C6gDoAH4MUZWp2ZYwkj8/0ZtwPXrQhSd4PTDFDvAUICvEEnWjSrF
+        fPowe0xnBxBFcB9R6sRjpVikoo8dZ0yGTFOOlmHtQOG4XSUS4JtlcPxhvTmTUETK5XIyKnpD
+        tEKO+4vQhWGlGFPTZuYQwxgZ0x+dO+oRYAHXkz2ast1mNS/9gyLeSwt6Z/oHbdvWSnY+mWRi
+        VfXWyvzwsuDATuOD7QeO1ASGf4i1AJDWfe2Vd2r/ypooaWhMVVPTQJrodcpVzeu9s3R3bVKx
+        1BoZmle370b924wxv195IW4x8RPIo+GDXruX5n7sV7cG7ynMWFGUkPw0Pn6pMh/nsRqaCEFM
+        LP0bVwqQuIsDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrGLMWRmVeSWpSXmKPExsWy7bCSvG7zjsuxBqdOcFocfjyJ3aJ58Xo2
+        i5WrjzJZXL97i9liz96TLBaXd81hs/g/6zmrxY/p9RZb/h1htbj0/gOLA5fHzll32T32z13D
+        7rH7ZgObR9+WVYwem09Xe3zeJOdxaPsbNo/bz7axBHBEcdmkpOZklqUW6dslcGWcvtbDWHBH
+        vOJn6132BsYDQl2MnBwSAiYSj1fNYO5i5OIQEtjNKDGrYx4jREJa4tiJM0AJDiBbWOLw4WKI
+        mg+MElNbfjKBxNkEtCX+bBEFKRcRcJTo3XWYBaSGWeAco8TOZ8sYQWqEBUwl9l0yBKlhEVCV
+        2ND0mxnE5hWwlmi72MwCsUpeYvWGA8wTGHkWMDKsYpRMLSjOTc8tNiwwzEst1ytOzC0uzUvX
+        S87P3cQIDj0tzR2Ml5fEH2IU4GBU4uE9oXI5Vog1say4MvcQowQHs5IIr9+jC7FCvCmJlVWp
+        RfnxRaU5qcWHGKU5WJTEeZ/mHYsUEkhPLEnNTk0tSC2CyTJxcEo1MLZNWVTWNy1LX9hgx88N
+        nPy/XqpMUPPzjt2pc3hLvbiZu/bi6X1nYowz8hdzPI9InzBvs7Lt39o14kJyjvv5LZlzivkr
+        D5evjzAyPnku5IqRH/vR6Hl9c21jDPRXyHyzW7bg0jaxQ+syPxlvvOlWGRalenrnrgN2x4Iu
+        vjCSLo4/XMHgyPzspxJLcUaioRZzUXEiAI8c7mI5AgAA
+X-CMS-MailID: 20191119094019epcas1p298d14fcf6e7a24bee431238279961c5b
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20191119094019epcas1p298d14fcf6e7a24bee431238279961c5b
+References: <CGME20191119094019epcas1p298d14fcf6e7a24bee431238279961c5b@epcas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 3:08 AM Guenter Roeck <linux@roeck-us.net> wrote:
->
-> On 11/18/19 2:04 PM, Laura Abbott wrote:
-> >
-> > Commit 59d3ae9a5bf6 ("ARM: remove Intel iop33x and iop13xx support")
-> > removed support for some old platforms. Given this driver depends on
-> > a now removed platform, just remove the driver.
-> >
-> > Signed-off-by: Laura Abbott <labbott@redhat.com>
-> > ---
-> > Found this while reviewing config options. Not sure if this was kept
-> > around for other reasons or just missed.
-> > ---
-> >   drivers/watchdog/Kconfig   |  16 ---
-> >   drivers/watchdog/Makefile  |   1 -
-> >   drivers/watchdog/iop_wdt.c | 249 -------------------------------------
-> >   3 files changed, 266 deletions(-)
-> >   delete mode 100644 drivers/watchdog/iop_wdt.c
-> >
-> > diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> > index 58e7c100b6ad..fef9078a44b6 100644
-> > --- a/drivers/watchdog/Kconfig
-> > +++ b/drivers/watchdog/Kconfig
-> > @@ -554,22 +554,6 @@ config PNX4008_WATCHDOG
-> >
-> >         Say N if you are unsure.
-> >
-> > -config IOP_WATCHDOG
-> > -     tristate "IOP Watchdog"
-> > -     depends on ARCH_IOP13XX
-> > -     select WATCHDOG_NOWAYOUT if (ARCH_IOP32X || ARCH_IOP33X)
->
-> This is a bit confusing, but it suggests that the watchdog may also work
-> with ARCH_IOP32X, which is still supported. I don't know anything about
-> those architectures, but I hesitate to have the driver removed unless
-> we have confirmation that it won't work with ARCH_IOP32X.
-> Maybe the dependency needs to be updated instead ?
+This adds the latest Samsung exfat driver to fs/exfat. This is an
+implementation of the Microsoft exFAT specification. Previous versions
+of this shipped with millions of Android phones, an a random previous
+snaphot has been merged in drivers/staging/.
 
-See commit ec2e32ca661e ("watchdog: iop_wdt only builds for
-mach-iop13xx") from 2014: the watdog hardware exists on iop32x
-but the driver only successfully built on iop13xx, which is now gone.
+Compared to the sdfat driver shipped on the phones the following changes
+have been made:
 
-Adding Russell (who said he still uses iop32x hardware) and Lennert
-(who is still listed in the MAINTAINERS file, but previously said he
-does not use it any more) to Cc. If neither of them see a reason to
-keep the driver, I'd say we can remove it.
+ - the support for vfat has been removed as that is already supported
+   by fs/fat
+ - driver has been renamed to exfat
+ - the code has been refactored and clean up to fully integrate into
+   the upstream Linux version and follow the Linux coding style
+ - metadata operations like create, lookup and readdir have been further
+   optimized
+ - various major and minor bugs have been fixed
 
-It seems unlikely that anyone wants to revive the driver if they have
-not done it yet, and if they want to do it later, it is barely harder to revert
-the removal than to fix the compile-time problem.
+We plan to treat this version as the future upstream for the code base
+once merged, and all new features and bug fixes will go upstream first.
 
-        Arnd
+v3:
+ - fix wrong sbi->s_dirt set.
+
+v2:
+ - Check the bitmap count up to the total clusters.
+ - Rename proper goto labels in seveal place.
+ - Change time mode type with enumeration.
+ - Directly return error instead of goto at first error check.
+ - Combine seq_printfs calls into a single one.
+
+Namjae Jeon (13):
+  exfat: add in-memory and on-disk structures and headers
+  exfat: add super block operations
+  exfat: add inode operations
+  exfat: add directory operations
+  exfat: add file operations
+  exfat: add exfat entry operations
+  exfat: add bitmap operations
+  exfat: add exfat cache
+  exfat: add misc operations
+  exfat: add nls operations
+  exfat: add Kconfig and Makefile
+  exfat: add exfat in fs/Kconfig and fs/Makefile
+  MAINTAINERS: add exfat filesystem
+
+ MAINTAINERS          |    7 +
+ fs/Kconfig           |    3 +-
+ fs/Makefile          |    1 +
+ fs/exfat/Kconfig     |   21 +
+ fs/exfat/Makefile    |    8 +
+ fs/exfat/balloc.c    |  271 ++++++++
+ fs/exfat/cache.c     |  325 +++++++++
+ fs/exfat/dir.c       | 1338 +++++++++++++++++++++++++++++++++++++
+ fs/exfat/exfat_fs.h  |  534 +++++++++++++++
+ fs/exfat/exfat_raw.h |  190 ++++++
+ fs/exfat/fatent.c    |  475 ++++++++++++++
+ fs/exfat/file.c      |  346 ++++++++++
+ fs/exfat/inode.c     |  691 +++++++++++++++++++
+ fs/exfat/misc.c      |  247 +++++++
+ fs/exfat/namei.c     | 1492 ++++++++++++++++++++++++++++++++++++++++++
+ fs/exfat/nls.c       |  817 +++++++++++++++++++++++
+ fs/exfat/super.c     |  752 +++++++++++++++++++++
+ 17 files changed, 7517 insertions(+), 1 deletion(-)
+ create mode 100644 fs/exfat/Kconfig
+ create mode 100644 fs/exfat/Makefile
+ create mode 100644 fs/exfat/balloc.c
+ create mode 100644 fs/exfat/cache.c
+ create mode 100644 fs/exfat/dir.c
+ create mode 100644 fs/exfat/exfat_fs.h
+ create mode 100644 fs/exfat/exfat_raw.h
+ create mode 100644 fs/exfat/fatent.c
+ create mode 100644 fs/exfat/file.c
+ create mode 100644 fs/exfat/inode.c
+ create mode 100644 fs/exfat/misc.c
+ create mode 100644 fs/exfat/namei.c
+ create mode 100644 fs/exfat/nls.c
+ create mode 100644 fs/exfat/super.c
+
+-- 
+2.17.1
+
