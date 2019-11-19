@@ -2,127 +2,104 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EF3EC43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6937AC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 105BA208CC
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:57:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4294E222AB
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:58:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728033AbfKSM5w (ORCPT
+        id S1728087AbfKSM6Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 07:57:52 -0500
-Received: from mx2.suse.de ([195.135.220.15]:53112 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727255AbfKSM5v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 07:57:51 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 9B69FB1A0;
-        Tue, 19 Nov 2019 12:57:47 +0000 (UTC)
-Message-ID: <dd074ef5c23ba56598e92be19e8e25ae31b75f93.camel@suse.de>
-Subject: Re: [PATCH] dma-mapping: treat dev->bus_dma_mask as a DMA limit
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-ide@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org,
-        phil@raspberrypi.org, linux-acpi@vger.kernel.org,
-        Ingo Molnar <mingo@redhat.com>,
-        James Hogan <jhogan@kernel.org>, Len Brown <lenb@kernel.org>,
-        devicetree@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-mips@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
-        iommu@lists.linux-foundation.org, linuxppc-dev@lists.ozlabs.org
-Date:   Tue, 19 Nov 2019 13:57:43 +0100
-In-Reply-To: <20191113161340.27228-1-nsaenzjulienne@suse.de>
-References: <20191113161340.27228-1-nsaenzjulienne@suse.de>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-KZ1OEZ2plCMDP0ydmpq5"
-User-Agent: Evolution 3.34.1 
+        Tue, 19 Nov 2019 07:58:25 -0500
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:43765 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727702AbfKSM6Z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 07:58:25 -0500
+Received: by mail-yb1-f194.google.com with SMTP id r201so8696886ybc.10;
+        Tue, 19 Nov 2019 04:58:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iGUreshl/jUKAV7h3ePAhyfmas1/gCvv6uy3G++925w=;
+        b=XlpXoafkmE7SY7C/5S3OE1/qgzqiFQaJQVKtYoKnU65JQYXwyXiVY6h9XulsLfZUV6
+         B0lDQ6KvPfEkYzUF12R9JY0pQSrwibQA5oSpZ+dKuQ01+EGDaqG1UuNV9BSSv2bZ9Q/r
+         NB9YOtFRcwqLQBiaDyvgMHY/5tqCqXP5JGdLtDIElrS8kMR0XrKYf1fURGX4QMpRZluN
+         bhgap1sWXqBIlViDK3vpCzFruisl5Uoxp/seRGsc6DJmFH6yH3RR+cyk1mnI13kb+wTh
+         X5y2evAZuKfS9j0aF7K2MceJdAolNPA4zMrJM8OJ9uJzFuUuI/KTheyo0G1fS/z75cO/
+         BS+g==
+X-Gm-Message-State: APjAAAUWNq+zEXKpIaGBMGc8dRPEOxeN6Agy1yiMnnmwXVVigbwK4TR3
+        jKMmpstTj/InPK68cN4TUFFTL4x1rW0gUlz+SbQ=
+X-Google-Smtp-Source: APXvYqxQ2NP8UE+oe01b4UUlC7hZnTSSxNpqCcNRNJakRNjLijISk7RWnwspQrGrEpJONJTektvmRaXS1kTYu7iJUgg=
+X-Received: by 2002:a25:a0d3:: with SMTP id i19mr27854070ybm.14.1574168303987;
+ Tue, 19 Nov 2019 04:58:23 -0800 (PST)
 MIME-Version: 1.0
+References: <20191111071347.21712-1-yuehaibing@huawei.com>
+In-Reply-To: <20191111071347.21712-1-yuehaibing@huawei.com>
+From:   Harini Katakam <harinik@xilinx.com>
+Date:   Tue, 19 Nov 2019 18:28:12 +0530
+Message-ID: <CAFcVECJQH15y78YPurq_m2bDigQ6EzSCZHZMROHRFe-rJKw88g@mail.gmail.com>
+Subject: Re: [PATCH] mdio_bus: Fix PTR_ERR applied after initialization to constant
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        David Miller <davem@davemloft.net>, mail@david-bauer.net,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Michal Simek <michal.simek@xilinx.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Nov 11, 2019 at 12:53 PM YueHaibing <yuehaibing@huawei.com> wrote:
+>
+> Fix coccinelle warning:
+>
+> ./drivers/net/phy/mdio_bus.c:67:5-12: ERROR: PTR_ERR applied after initialization to constant on line 62
+> ./drivers/net/phy/mdio_bus.c:68:5-12: ERROR: PTR_ERR applied after initialization to constant on line 62
+>
+> Fix this by using IS_ERR before PTR_ERR
+>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Fixes: 71dd6c0dff51 ("net: phy: add support for reset-controller")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  drivers/net/phy/mdio_bus.c | 11 ++++++-----
+>  1 file changed, 6 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/net/phy/mdio_bus.c b/drivers/net/phy/mdio_bus.c
+> index 2e29ab8..3587656 100644
+> --- a/drivers/net/phy/mdio_bus.c
+> +++ b/drivers/net/phy/mdio_bus.c
+> @@ -64,11 +64,12 @@ static int mdiobus_register_reset(struct mdio_device *mdiodev)
+>         if (mdiodev->dev.of_node)
+>                 reset = devm_reset_control_get_exclusive(&mdiodev->dev,
+>                                                          "phy");
+> -       if (PTR_ERR(reset) == -ENOENT ||
+> -           PTR_ERR(reset) == -ENOTSUPP)
+> -               reset = NULL;
+> -       else if (IS_ERR(reset))
+> -               return PTR_ERR(reset);
+> +       if (IS_ERR(reset)) {
+> +               if (PTR_ERR(reset) == -ENOENT || PTR_ERR(reset) == -ENOSYS)
+> +                       reset = NULL;
+> +               else
+> +                       return PTR_ERR(reset);
+> +       }
+>
+>         mdiodev->reset_ctrl = reset;
+>
 
---=-KZ1OEZ2plCMDP0ydmpq5
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Adding Michal Simek to add some test comments.
 
-On Wed, 2019-11-13 at 17:13 +0100, Nicolas Saenz Julienne wrote:
-> Using a mask to represent bus DMA constraints has a set of limitations.
-> The biggest one being it can only hold a power of two (minus one). The
-> DMA mapping code is already aware of this and treats dev->bus_dma_mask
-> as a limit. This quirk is already used by some architectures although
-> still rare.
->=20
-> With the introduction of the Raspberry Pi 4 we've found a new contender
-> for the use of bus DMA limits, as its PCIe bus can only address the
-> lower 3GB of memory (of a total of 4GB). This is impossible to represent
-> with a mask. To make things worse the device-tree code rounds non power
-> of two bus DMA limits to the next power of two, which is unacceptable in
-> this case.
->=20
-> In the light of this, rename dev->bus_dma_mask to dev->bus_dma_limit all
-> over the tree and treat it as such. Note that dev->bus_dma_limit is
-> meant to contain the higher accesible DMA address.
->=20
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
->=20
-
-Hi Rob & Christoph,
-do you mind if I append v2 of this into my upcoming v3 RPi4 PCIe support
-series, I didn't do it initially as I thought this was going to be a
-contentious patch.  But as it turned out better than expected, I think it
-should go into the PCIe series. In the end it's the first explicit user of =
-the
-bus DMA limit.
-
-Here's v2 in case you don't know what I'm talking about:
-https://www.spinics.net/lists/arm-kernel/msg768459.html
-
-Regards,
-Nicolas
-
-
---=-KZ1OEZ2plCMDP0ydmpq5
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3T5scACgkQlfZmHno8
-x/7FNgf/TPvrVamDNHipGFKFiSr22YaNYJU4aGZyFuJab0Z9dF35ZbNQqx3sXA83
-gyltGXByQ4c747nqq+LWQTaXLvI4NEMDu/ueQ6T4Vgs0ijtKvI9hVjrjlKU7UVsR
-/v+6HHolAP4q5zxgJbL3PRMlFeJlLs9xRbikBEmGDbc4INP8nBSUiQmk4lrgCAwH
-xV11EcSTA5eKJPS1jpsEP/vKwfu7LQ9ASExtpK5Oud7ZBD8zq1qKQBSVMGXQ1m9L
-l0ok+gqBZtMgwKtigs9mAr0Y09evU1GOVS0ttcncZ854J6/+hr9nuK8eXyhLEm0J
-l/jpo2vtZH0gMy68b+P8LkDtGJisYg==
-=9wOf
------END PGP SIGNATURE-----
-
---=-KZ1OEZ2plCMDP0ydmpq5--
-
+> --
+> 2.7.4
+>
+>
