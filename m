@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C5C0C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:29:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A7A9C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:29:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FA1D222A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:29:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C469208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:29:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141392;
-	bh=at/HoHkmjnY+BK7GL6shu8EYd2ZI3hl/LZhn9cks92k=;
+	s=default; t=1574141397;
+	bh=wV0PEgMTP2ewp/zK9SfyPeKGCygghrXr9NicZlG2qNU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KSihrpZc1ZnirURbLeYxMfjT2xr0ha66YsTjb15e3yeVdxqV3HEQ3Jp6I+/q4OVrx
-	 HUO5Euiz1weOk6xKAs63TdjLxyAAYB3dQnOijF5403o+w9BNdjsL+jn/ZovBhNLeYa
-	 OlSa8yiUuP56HVaB85bn4POxNxflJUVQE/PaNjb4=
+	b=AHPw7fAo+nAhDFCkCWa1Tj1rND2Jv+qLIync5hHo2p1WvINzIOWeoTWPpZgzzjJcL
+	 R5NCUkWEsZRdt8nF/quM1dDcQuXqttJHB1oz+Fq5nPzw+15BQk2F4J2p64GvSaNNr9
+	 RM/WbtZyXm0TVHBVp6+Yg59DX+52lSG2cS8bVFAk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729041AbfKSF3u (ORCPT
+        id S1729058AbfKSF34 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:29:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48422 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:29:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728525AbfKSF3r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:29:47 -0500
+        id S1728543AbfKSF3w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:29:52 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1535E21939;
-        Tue, 19 Nov 2019 05:29:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7F2B208C3;
+        Tue, 19 Nov 2019 05:29:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141386;
-        bh=at/HoHkmjnY+BK7GL6shu8EYd2ZI3hl/LZhn9cks92k=;
+        s=default; t=1574141392;
+        bh=wV0PEgMTP2ewp/zK9SfyPeKGCygghrXr9NicZlG2qNU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NhTOQCPwDmn1cZ+/jgvCvUPFfk5shex31ANNeUIYoOEogeZsPS88gv2gGNlElSISS
-         Uidk8ye/XzPjex4u2zi8hlNtlKVNoOqYzAjqeTYheN0ZduJtZIOBSFc1+LOZvR0sIK
-         kl7CzciWgq6CpcFuXxXkX0jp+8uj4SXP15PQTQPs=
+        b=d15IJHamlZujr0akS8RdAYNNUljM1Qnlwi7G2YxXkpgbcuN8UqshNF0iz+fVr5Zd8
+         286jfHgVrUDpClz39YZSipD5CHDLE75doo9VDrG+3lyJB2Dha0DBBdL3MJrUBk11al
+         AFNwMICS3zHZktxAk37qrM0NpSvp5hbtazVy9GJs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiada Wang <jiada_wang@mentor.com>,
-        Timo Wischer <twischer@de.adit-jv.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Hiroyuki Yokoyama <hiroyuki.yokoyama.vx@renesas.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Robert Jarzmik <robert.jarzmik@free.fr>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 102/422] ASoC: rsnd: ssi: Fix issue in dma data address assignment
-Date:   Tue, 19 Nov 2019 06:14:59 +0100
-Message-Id: <20191119051405.834496921@linuxfoundation.org>
+Subject: [PATCH 4.19 094/422] ARM: dts: pxa: fix the rtc controller
+Date:   Tue, 19 Nov 2019 06:14:51 +0100
+Message-Id: <20191119051405.420868711@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -63,69 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiada Wang <jiada_wang@mentor.com>
+From: Robert Jarzmik <robert.jarzmik@free.fr>
 
-[ Upstream commit 0e289012b47a2de1f029a6b61c75998e2f159dd9 ]
+[ Upstream commit 24a610eba32a80ed778ea79680b600c3fe73d7de ]
 
-Same SSI device may be used in different dai links,
-by only having one dma struct in rsnd_ssi, after the first
-instance's dma config be initilized, the following instances
-can no longer configure dma, this causes issue, when their
-dma data address are different from the first instance.
+The RTC controller is fed by an external fixed 32kHz clock. Yet the
+driver wants to acquire this clock, even though it doesn't make any use
+of it, ie. doesn't get the rate to make calculation.
 
-Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
-Signed-off-by: Timo Wischer <twischer@de.adit-jv.com>
-[Kuninori: tidyup for upstream]
-Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Tested-by: Hiroyuki Yokoyama <hiroyuki.yokoyama.vx@renesas.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Therefore, use the exported 32.768kHz clock in the PXA clock tree to
+make the driver happy and working.
+
+Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/sh/rcar/rsnd.h | 1 +
- sound/soc/sh/rcar/ssi.c  | 4 +---
- 2 files changed, 2 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/pxa25x.dtsi | 4 ++++
+ arch/arm/boot/dts/pxa27x.dtsi | 4 ++++
+ 2 files changed, 8 insertions(+)
 
-diff --git a/sound/soc/sh/rcar/rsnd.h b/sound/soc/sh/rcar/rsnd.h
-index 8f7a0abfa751e..f64c7058b258b 100644
---- a/sound/soc/sh/rcar/rsnd.h
-+++ b/sound/soc/sh/rcar/rsnd.h
-@@ -438,6 +438,7 @@ struct rsnd_dai_stream {
- 	char name[RSND_DAI_NAME_SIZE];
- 	struct snd_pcm_substream *substream;
- 	struct rsnd_mod *mod[RSND_MOD_MAX];
-+	struct rsnd_mod *dma;
- 	struct rsnd_dai *rdai;
- 	struct device *dmac_dev; /* for IPMMU */
- 	u32 parent_ssi_status;
-diff --git a/sound/soc/sh/rcar/ssi.c b/sound/soc/sh/rcar/ssi.c
-index 9410e0a9b14b7..33dc8d6ad35b2 100644
---- a/sound/soc/sh/rcar/ssi.c
-+++ b/sound/soc/sh/rcar/ssi.c
-@@ -72,7 +72,6 @@
+diff --git a/arch/arm/boot/dts/pxa25x.dtsi b/arch/arm/boot/dts/pxa25x.dtsi
+index 95d59be97213e..8494b57871709 100644
+--- a/arch/arm/boot/dts/pxa25x.dtsi
++++ b/arch/arm/boot/dts/pxa25x.dtsi
+@@ -80,6 +80,10 @@
+ 			#pwm-cells = <1>;
+ 			clocks = <&clks CLK_PWM1>;
+ 		};
++
++		rtc@40900000 {
++			clocks = <&clks CLK_OSC32k768>;
++		};
+ 	};
  
- struct rsnd_ssi {
- 	struct rsnd_mod mod;
--	struct rsnd_mod *dma;
+ 	timer@40a00000 {
+diff --git a/arch/arm/boot/dts/pxa27x.dtsi b/arch/arm/boot/dts/pxa27x.dtsi
+index 747f750f675d9..2ab6986433c82 100644
+--- a/arch/arm/boot/dts/pxa27x.dtsi
++++ b/arch/arm/boot/dts/pxa27x.dtsi
+@@ -113,6 +113,10 @@
  
- 	u32 flags;
- 	u32 cr_own;
-@@ -873,7 +872,6 @@ static int rsnd_ssi_dma_probe(struct rsnd_mod *mod,
- 			      struct rsnd_dai_stream *io,
- 			      struct rsnd_priv *priv)
- {
--	struct rsnd_ssi *ssi = rsnd_mod_to_ssi(mod);
- 	int ret;
+ 			status = "disabled";
+ 		};
++
++		rtc@40900000 {
++			clocks = <&clks CLK_OSC32k768>;
++		};
+ 	};
  
- 	/*
-@@ -888,7 +886,7 @@ static int rsnd_ssi_dma_probe(struct rsnd_mod *mod,
- 		return ret;
- 
- 	/* SSI probe might be called many times in MUX multi path */
--	ret = rsnd_dma_attach(io, mod, &ssi->dma);
-+	ret = rsnd_dma_attach(io, mod, &io->dma);
- 
- 	return ret;
- }
+ 	clocks {
 -- 
 2.20.1
 
