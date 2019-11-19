@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E99A1C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:32:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C93B1C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:32:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFC3B208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:32:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B59021783
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:32:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141541;
-	bh=O+hpQNM8vSWD7A1+s0aJwWD0EvD+GBBQijCDJuTiYxc=;
+	s=default; t=1574141546;
+	bh=ycY+drilEGsuAc0TqZW982ftVP8L7XHLLduCT27lNnk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2mBJpFYoNqjBCc7qXkOi3p33fRv81ReADyiGqP3BdmQopekfQhd2DtJOCUpssGopE
-	 s+YuNBXwrcJI7UuMPa4L7biwMkrkSZLNbr8+T/J6dMG6z6Raya3NyUDE82ZRMLHwGo
-	 JGNPuxA9OkS0JEfHh9RaFygMvgvgMi/69z3xDedE=
+	b=sAk+zTgcFJ7f2KdytdMF7M3zY9avVsIlgNcouA3UeV7gBCEC+Chd9HrGEYOOIpP6F
+	 FsTQRZHOrJenDDndpzfRAv/ia/B10rart138KeovvJvTIylYQobp1bYNp+gVQcEzpE
+	 Lthpetx7CHpC2FUR8tKoPbBg6XWEmasGDyqv/lpU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727934AbfKSFcU (ORCPT
+        id S1729390AbfKSFcZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:32:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52518 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:32:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728595AbfKSFcQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:32:16 -0500
+        id S1728824AbfKSFcW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:32:22 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C56C8208C3;
-        Tue, 19 Nov 2019 05:32:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D052021783;
+        Tue, 19 Nov 2019 05:32:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141536;
-        bh=O+hpQNM8vSWD7A1+s0aJwWD0EvD+GBBQijCDJuTiYxc=;
+        s=default; t=1574141542;
+        bh=ycY+drilEGsuAc0TqZW982ftVP8L7XHLLduCT27lNnk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fjDb3CF4ZS4nJHc3QHtF53YLOQ0z+c12rmBBiYcGOr+AVKTLchQI5OUODO9RsHWNh
-         OAVxSWpmv0tJOZPsO+eFjbJdYtfJ61yso1rvqscRYZtQuX77OxlwEoFJocYtukDTpJ
-         UJULb8woBAxz50dDNED0ID08by05xbIsYEPxzkR8=
+        b=nZkgGTPXxbgAHTjI8ucspH8+qFqZ0Y0D6iJoFMysIjP3EYOtaAOs8PBeV9iiQybEE
+         k937aJ0P/yDatvmA1FZlx4uRjet7mW0Keoqpw+hPXff/M7ut/M3n4o8jUijAauda4F
+         oZXya5QSv3K3tXxsNpbptg+fQL831iKroZAAaGf4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Kevin Hilman <khilman@baylibre.com>,
+        stable@vger.kernel.org,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Simon Horman <horms+renesas@verge.net.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 195/422] arm64: dts: meson-axg: use the proper compatible for ethmac
-Date:   Tue, 19 Nov 2019 06:16:32 +0100
-Message-Id: <20191119051411.192443800@linuxfoundation.org>
+Subject: [PATCH 4.19 197/422] arm64: dts: renesas: salvator-common: adv748x: Override secondary addresses
+Date:   Tue, 19 Nov 2019 06:16:34 +0100
+Message-Id: <20191119051411.337601402@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -61,33 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Neil Armstrong <narmstrong@baylibre.com>
+From: Kieran Bingham <kieran.bingham@ideasonboard.com>
 
-[ Upstream commit eaf8f57c0bf5451132932616ab62f9481adefb55 ]
+[ Upstream commit e3da41a6c28f9b61ea03df987f1c9ffffc8b8e60 ]
 
-Use the correct compatible for the AXG ethernet mac node.
+Ensure that the ADV748x device addresses do not conflict, and group them
+together (visually in i2cdetect)
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+Signed-off-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/renesas/salvator-common.dtsi | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-index c518130e5ce73..3c34f14fa5086 100644
---- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-@@ -458,7 +458,7 @@
- 		};
+diff --git a/arch/arm64/boot/dts/renesas/salvator-common.dtsi b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
+index 7d3d866a00635..3b90f816dfefc 100644
+--- a/arch/arm64/boot/dts/renesas/salvator-common.dtsi
++++ b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
+@@ -420,7 +420,10 @@
  
- 		ethmac: ethernet@ff3f0000 {
--			compatible = "amlogic,meson-gxbb-dwmac", "snps,dwmac";
-+			compatible = "amlogic,meson-axg-dwmac", "snps,dwmac";
- 			reg = <0x0 0xff3f0000 0x0 0x10000
- 				0x0 0xff634540 0x0 0x8>;
- 			interrupts = <GIC_SPI 8 IRQ_TYPE_EDGE_RISING>;
+ 	video-receiver@70 {
+ 		compatible = "adi,adv7482";
+-		reg = <0x70>;
++		reg = <0x70 0x71 0x72 0x73 0x74 0x75
++		       0x60 0x61 0x62 0x63 0x64 0x65>;
++		reg-names = "main", "dpll", "cp", "hdmi", "edid", "repeater",
++			    "infoframe", "cbus", "cec", "sdp", "txa", "txb" ;
+ 
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
 -- 
 2.20.1
 
