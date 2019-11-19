@@ -2,140 +2,141 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD284C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:08:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33281C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:08:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F4C42068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:08:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CFE0222AB
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 17:08:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574183333;
+	bh=pkHzWxOjTd25A2p/Z4roNeK2bk1cL7yvjXxVjNqNAOk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OWnnpOpFXa7H1QqZoGjvsYO95wpoaHyr7T/TQuv9SipracFetAYWfXlZs/YDDZzbD
+	 11/DpgXPJr4LT2iBxod3VcmWUYwRWe9/XM8rZoCp+/WO1PPDdvEc25Hrgb6iAVbN1F
+	 TVuETv5QHeos6UPAXTB7CCOl0nIefs49LXB7FKbg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728516AbfKSRIX convert rfc822-to-8bit (ORCPT
+        id S1728560AbfKSRIw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 12:08:23 -0500
-Received: from mga11.intel.com ([192.55.52.93]:46152 "EHLO mga11.intel.com"
+        Tue, 19 Nov 2019 12:08:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726985AbfKSRIX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 12:08:23 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Nov 2019 09:08:06 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,218,1571727600"; 
-   d="scan'208";a="407819557"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by fmsmga006.fm.intel.com with ESMTP; 19 Nov 2019 09:08:06 -0800
-Date:   Tue, 19 Nov 2019 09:12:41 -0800
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Auger Eric <eric.auger@redhat.com>
-Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
-        iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>, Yi Liu <yi.l.liu@intel.com>,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v2 04/10] iommu/vt-d: Match CPU and IOMMU paging mode
-Message-ID: <20191119091241.37c478c9@jacob-builder>
-In-Reply-To: <a6a6884e-7209-e906-905b-818858b97482@redhat.com>
-References: <1574106153-45867-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <1574106153-45867-5-git-send-email-jacob.jun.pan@linux.intel.com>
-        <601ca9c3-9f83-3d95-8d26-d4f46eee82ba@redhat.com>
-        <20191118135238.49f5d957@jacob-builder>
-        <ad3c3d58-dd1a-4b83-8b30-31e5be9e9c39@linux.intel.com>
-        <a6a6884e-7209-e906-905b-818858b97482@redhat.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        id S1726985AbfKSRIv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 12:08:51 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 505612068F;
+        Tue, 19 Nov 2019 17:08:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574183330;
+        bh=pkHzWxOjTd25A2p/Z4roNeK2bk1cL7yvjXxVjNqNAOk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=I2vySoLYOfHFSJs6/Pffc65rhNu5VNIoLgB+HvWAHLpO/s1594hfxgww1dbA36GA0
+         ZtXQCT30Zm6wcYjG9yGg86j7ZbBznUcUUwFfo97hOWrFf44iHhww/tW27IO6ZNrNvc
+         Q1muEoHzy6/90uL3DYyCw5Y5E9FP9yLJz+KK7pcc=
+Date:   Tue, 19 Nov 2019 18:08:48 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Chris Paterson <Chris.Paterson2@renesas.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "cip-dev@lists.cip-project.org" <cip-dev@lists.cip-project.org>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "shuah@kernel.org" <shuah@kernel.org>,
+        "patches@kernelci.org" <patches@kernelci.org>,
+        "ben.hutchings@codethink.co.uk" <ben.hutchings@codethink.co.uk>,
+        "lkft-triage@lists.linaro.org" <lkft-triage@lists.linaro.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH 4.19 000/422] 4.19.85-stable review
+Message-ID: <20191119170848.GA2197253@kroah.com>
+References: <20191119051400.261610025@linuxfoundation.org>
+ <TYAPR01MB22854E4F20C28F3A10DA65E3B74C0@TYAPR01MB2285.jpnprd01.prod.outlook.com>
+ <20191119122909.GC1913916@kroah.com>
+ <20191119164626.GA5739@roeck-us.net>
+ <20191119170246.GA2139063@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191119170246.GA2139063@kroah.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 19 Nov 2019 09:04:10 +0100
-Auger Eric <eric.auger@redhat.com> wrote:
-
-> Hi Lu, Jacob,
-> 
-> On 11/19/19 4:06 AM, Lu Baolu wrote:
-> > Hi Eric and Jacob,
+On Tue, Nov 19, 2019 at 06:02:46PM +0100, Greg Kroah-Hartman wrote:
+> On Tue, Nov 19, 2019 at 08:46:26AM -0800, Guenter Roeck wrote:
+> > On Tue, Nov 19, 2019 at 01:29:09PM +0100, Greg Kroah-Hartman wrote:
+> > > On Tue, Nov 19, 2019 at 08:54:25AM +0000, Chris Paterson wrote:
+> > > > Hello Greg, all,
+> > > > 
+> > > > > From: stable-owner@vger.kernel.org <stable-owner@vger.kernel.org> On
+> > > > > Behalf Of Greg Kroah-Hartman
+> > > > > Sent: 19 November 2019 05:13
+> > > > > 
+> > > > > This is the start of the stable review cycle for the 4.19.85 release.
+> > > > > There are 422 patches in this series, all will be posted as a response
+> > > > > to this one.  If anyone has any issues with these being applied, please
+> > > > > let me know.
+> > > > 
+> > > > I'm seeing some build issues with module compilation with this release (1b1960cc Linux 4.19.85-rc1), I also saw them with the previous two versions of Linux 4.19.85-rc1 (cd21ecdb and 1fd0ac64).
+> > > > 
+> > > > Full log available on GitLab [0]. Build conf [1].
+> > > > [0] https://gitlab.com/cip-playground/linux-stable-rc-ci/-/jobs/354591285
+> > > > [1] https://gitlab.com/cip-playground/linux-stable-rc-ci/-/jobs/354591285/artifacts/file/output/4.19.85-rc1_1b1960cc7/x86/siemens_iot2000.config/config/.config
+> > > > 
+> > > > Main error below:
+> > > > 
+> > > > 3907   CC [M]  drivers/net/ethernet/mellanox/mlx4/main.o
+> > > > 3908   LD [M]  fs/ntfs/ntfs.o
+> > > > 3909   CC [M]  drivers/net/ethernet/intel/i40evf/i40e_txrx.o
+> > > > 3910   CC [M]  drivers/usb/musb/musb_core.o
+> > > > 3911   CC [M]  drivers/net/ethernet/nvidia/forcedeth.o
+> > > > 3912   CC [M]  fs/udf/balloc.o
+> > > > 3913   CC [M]  drivers/net/ethernet/intel/fm10k/fm10k_debugfs.o
+> > > > 3914   CC [M]  fs/udf/dir.o
+> > > > 3915   CC [M]  drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.o
+> > > > 3916   CC [M]  drivers/net/ethernet/intel/i40e/i40e_ptp.o
+> > > > 3917 drivers/net/ethernet/mellanox/mlx4/main.c: In function 'mlx4_init_one':
+> > > > 3918 drivers/net/ethernet/mellanox/mlx4/main.c:3985:2: error: implicit declaration of function 'devlink_reload_enable'; did you mean 'devlink_region_create'? [-Werror=implicit-function-declaration]
+> > > > 3919   devlink_reload_enable(devlink);
+> > > > 3920   ^~~~~~~~~~~~~~~~~~~~~
+> > > > 3921   devlink_region_create
+> > > > 3922   CC [M]  drivers/net/ethernet/chelsio/cxgb4/cxgb4_cudbg.o
+> > > > 3923 drivers/net/ethernet/mellanox/mlx4/main.c: In function 'mlx4_remove_one':
+> > > > 3924 drivers/net/ethernet/mellanox/mlx4/main.c:4097:2: error: implicit declaration of function 'devlink_reload_disable'; did you mean 'devlink_region_destroy'? [-Werror=implicit-function-declaration]
+> > > > 3925   devlink_reload_disable(devlink);
+> > > > 3926   ^~~~~~~~~~~~~~~~~~~~~~
+> > > > 3927   devlink_region_destroy
+> > > > 3928   CC [M]  drivers/net/ethernet/packetengines/hamachi.o
+> > > > 3929   CC [M]  fs/udf/file.o
+> > > > 3930   LD [M]  drivers/net/ethernet/intel/fm10k/fm10k.o
+> > > > 
+> > > > I haven't tried to trace the issue further yet, sorry.
+> > > 
+> > > Any chance you can bisect this?  I don't see any obvious reason why this
+> > > error should be happening, and it isn't showing up here :(
+> > > 
+> > I see the problem as well, with powerpc:defconfig.
 > > 
-> > On 11/19/19 5:52 AM, Jacob Pan wrote:  
-> >> On Mon, 18 Nov 2019 21:55:03 +0100
-> >> Auger Eric <eric.auger@redhat.com> wrote:
-> >>  
-> >>> Hi Jacob,
-> >>>
-> >>> On 11/18/19 8:42 PM, Jacob Pan wrote:  
-> >>>> When setting up first level page tables for sharing with CPU, we
-> >>>> need to ensure IOMMU can support no less than the levels
-> >>>> supported by the CPU.
-> >>>> It is not adequate, as in the current code, to set up 5-level
-> >>>> paging in PASID entry First Level Paging Mode(FLPM) solely based
-> >>>> on CPU.
-> >>>>
-> >>>> Fixes: 437f35e1cd4c8 ("iommu/vt-d: Add first level page table
-> >>>> interface")
-> >>>> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> >>>> Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
-> >>>> ---
-> >>>>   drivers/iommu/intel-pasid.c | 12 ++++++++++--
-> >>>>   1 file changed, 10 insertions(+), 2 deletions(-)
-> >>>>
-> >>>> diff --git a/drivers/iommu/intel-pasid.c
-> >>>> b/drivers/iommu/intel-pasid.c index 040a445be300..e7cb0b8a7332
-> >>>> 100644 --- a/drivers/iommu/intel-pasid.c
-> >>>> +++ b/drivers/iommu/intel-pasid.c
-> >>>> @@ -499,8 +499,16 @@ int intel_pasid_setup_first_level(struct
-> >>>> intel_iommu *iommu, }
-> >>>>     #ifdef CONFIG_X86
-> >>>> -    if (cpu_feature_enabled(X86_FEATURE_LA57))
-> >>>> -        pasid_set_flpm(pte, 1);
-> >>>> +    /* Both CPU and IOMMU paging mode need to match */
-> >>>> +    if (cpu_feature_enabled(X86_FEATURE_LA57)) {
-> >>>> +        if (cap_5lp_support(iommu->cap)) {
-> >>>> +            pasid_set_flpm(pte, 1);
-> >>>> +        } else {
-> >>>> +            pr_err("VT-d has no 5-level paging support
-> >>>> for CPU\n");
-> >>>> +            pasid_clear_entry(pte);
-> >>>> +            return -EINVAL;  
-> >>> Can it happen? If I am not wrong intel_pasid_setup_first_level()
-> >>> only seems to be called from intel_svm_bind_mm which now checks
-> >>> the SVM_CAPABLE flag.
-> >>>  
-> >> You are right, this check is not needed any more. I will drop the
-> >> patch.  
-> >>> Thanks  
-> > 
-> > I'd suggest to keep this. This helper is not only for svm, although
-> > currently svm is the only caller. For first level pasid setup, let's
-> > set an assumption that hardware should never report mismatching
-> > paging modes, this is helpful especially when running vIOMMU in VM
-> > guests.  
+> > Underlying issue is that devlink_reload_disable() is only declared in the
+> > include file if CONFIG_NET_DEVLINK is enabled. There is no dummy otherwise.
+> > The dummy declarations which still exist in 4.19 were removed with commit
+> > f6b19b354d50c ("net: devlink: select NET_DEVLINK from drivers") in the
+> > upstream kernel.
 > 
-> OK. So maybe just add the rationale in the commit message?
-> 
-OK. will do. I thought about Baolu's point as well then I thought the
-other use of first level map for replacing today's VFIO second level
-map in the guest, but that will have a different helper. Anyway, I will
-keep this one then.
+> Ok, let me take part of that patch and backport it.  I'll push out a
+> -rc3 now to hopefully resolve this issue.
 
-Thanks you both!
+Ok, that failed horribly :(
 
-> Thanks
-> 
-> Eric
-> > 
-> > Best regards,
-> > baolu
-> >   
-> 
+Let me work on this after dinner...
 
-[Jacob Pan]
+thanks,
+
+greg k-h
