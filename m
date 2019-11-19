@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF083C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:59:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08535C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9A5C222C7
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:59:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5D2221D7B
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:59:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574143160;
-	bh=ZD0xjZxf+rBGGbulxvdMIUcuFcIPAo9Xn7A7JcL8GCg=;
+	s=default; t=1574143164;
+	bh=ZoolEWxOabJwcBM2BzPFOQu5UR4QVvivvteOKpm4ogs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O3M00OODBj1ooC2i0YioewFh7h+arFAC2VZeIVVRamVuqC9lLQqRof4hSFBPuYJl7
-	 ceFHDl+WaENOODWSYHTTW8u/FygwbJraBdUo3ORo+ueX+4h4JNT7ejCp4Rn1NnssfU
-	 RaWuM85csfzm989hJndEjZaNhAjytALMb4I1UGEY=
+	b=H+SUB3QjbS0plZITIMdiXEUysM5V4IN2wRBec1SN2WN76nQSYCtuArrg+3KXseABP
+	 EO71pmi+Ag5wkzPVU142uisx4ANh+U3HYFvhC3WIjM2XmcVA30KQ/rgIBOFRdoczNP
+	 42PY2AQXRF0xOgb646V02uMp7gxGz6paeOAmiOIM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731289AbfKSFrx (ORCPT
+        id S1727481AbfKSF7X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:47:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44120 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:59:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730978AbfKSFrp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:47:45 -0500
+        id S1731278AbfKSFru (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:47:50 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFF4F208C3;
-        Tue, 19 Nov 2019 05:47:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BEB232071B;
+        Tue, 19 Nov 2019 05:47:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142464;
-        bh=ZD0xjZxf+rBGGbulxvdMIUcuFcIPAo9Xn7A7JcL8GCg=;
+        s=default; t=1574142470;
+        bh=ZoolEWxOabJwcBM2BzPFOQu5UR4QVvivvteOKpm4ogs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mVDylcLy2MzlnRY+QXIbCv4efRawyixXg8KmhEYae5/or1hgNoPRcGIHX4ecqplNs
-         msxKv9VuSaNDRlR1Obdprx0NCJAISRi/jNK9Jtz2FChY166dfrDiTaJxAlai4YPiNS
-         QxGWuKqraTAMUGNEe4R6iFykEiVjAFJRi+IDy+eM=
+        b=whIEUmAJSPP+2MW9dKy/GT1pKdnqsTLNBvIQ2tAws8uH9wqTr0zF4aHY1psDgoIFT
+         ko6unE6SVTha7SnkqZqudr0JdOF7Am5m5jyyZ5Gq58MinmKPZGL96s/NWXUnvZ+XTj
+         t9Xw1X+4d+98SWIWUWFbGzVLNGNJoclJ+kO8foS0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
         "Eric W. Biederman" <ebiederm@xmission.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 091/239] signal: Always ignore SIGKILL and SIGSTOP sent to the global init
-Date:   Tue, 19 Nov 2019 06:18:11 +0100
-Message-Id: <20191119051319.779339966@linuxfoundation.org>
+Subject: [PATCH 4.14 093/239] signal: Properly deliver SIGSEGV from x86 uprobes
+Date:   Tue, 19 Nov 2019 06:18:13 +0100
+Message-Id: <20191119051321.234871754@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -62,40 +62,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eric W. Biederman <ebiederm@xmission.com>
 
-[ Upstream commit 86989c41b5ea08776c450cb759592532314a4ed6 ]
+[ Upstream commit 4a63c1ffd384ebdce40aac9c997dab68379137be ]
 
-If the first process started (aka /sbin/init) receives a SIGKILL it
-will panic the system if it is delivered.  Making the system unusable
-and undebugable.  It isn't much better if the first process started
-receives SIGSTOP.
+For userspace to tell the difference between an random signal
+and an exception, the exception must include siginfo information.
 
-So always ignore SIGSTOP and SIGKILL sent to init.
+Using SEND_SIG_FORCED for SIGSEGV is thus wrong, and it will result in
+userspace seeing si_code == SI_USER (like a random signal) instead of
+si_code == SI_KERNEL or a more specific si_code as all exceptions
+deliver.
 
-This is done in a separate clause in sig_task_ignored as force_sig_info
-can clear SIG_UNKILLABLE and this protection should work even then.
+Therefore replace force_sig_info(SIGSEGV, SEND_SIG_FORCE, current)
+with force_sig(SIG_SEGV, current) which gets this right and is shorter
+and easier to type.
 
+Fixes: 791eca10107f ("uretprobes/x86: Hijack return address")
 Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/signal.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/x86/kernel/uprobes.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/signal.c b/kernel/signal.c
-index bb801156628ee..c9b203875001e 100644
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -77,6 +77,10 @@ static int sig_task_ignored(struct task_struct *t, int sig, bool force)
+diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
+index 7a87ef1f5b5e6..73391c1bd2a9a 100644
+--- a/arch/x86/kernel/uprobes.c
++++ b/arch/x86/kernel/uprobes.c
+@@ -987,7 +987,7 @@ arch_uretprobe_hijack_return_addr(unsigned long trampoline_vaddr, struct pt_regs
+ 		pr_err("uprobe: return address clobbered: pid=%d, %%sp=%#lx, "
+ 			"%%ip=%#lx\n", current->pid, regs->sp, regs->ip);
  
- 	handler = sig_handler(t, sig);
+-		force_sig_info(SIGSEGV, SEND_SIG_FORCED, current);
++		force_sig(SIGSEGV, current);
+ 	}
  
-+	/* SIGKILL and SIGSTOP may not be sent to the global init */
-+	if (unlikely(is_global_init(t) && sig_kernel_only(sig)))
-+		return true;
-+
- 	if (unlikely(t->signal->flags & SIGNAL_UNKILLABLE) &&
- 	    handler == SIG_DFL && !(force && sig_kernel_only(sig)))
- 		return 1;
+ 	return -1;
 -- 
 2.20.1
 
