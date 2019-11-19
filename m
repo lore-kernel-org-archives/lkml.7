@@ -2,91 +2,125 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3221C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:42:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16000C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:43:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AC5322362
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:42:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="us8sMchD"
+	by mail.kernel.org (Postfix) with ESMTP id EAF1D21D7F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:43:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728316AbfKSPmW (ORCPT
+        id S1728360AbfKSPnQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 10:42:22 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:34362 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727682AbfKSPmW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 10:42:22 -0500
-Received: by mail-qk1-f194.google.com with SMTP id 205so18218228qkk.1
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 07:42:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=nWs/1bjDvNuzUJtmMQammwiguABeAIM4rx8Ev82Odj4=;
-        b=us8sMchDRqbzZLY+8PM7/pe8WsLDZaohdyGl7R3EeSoWSvgvizJcLMF0BSaCEqsdy4
-         NSYDM17Ete2jESTbIDna9vtA0dUXsmg6bBXQOCH48RDKNzLBxQ6mlp7dlkil/PAQ5hl4
-         kxrZ3bqxv5B9F8bKvIHUq5QUdUopVtt0xgGF3OfR4oa410peA1MSURbcEDbJvRagtXXW
-         +SqQC2r8fKOXJEA7CxMEGgKlIO7ejUpU40J+VxnUNJ6vEHK8//vMrnAp2qoHjQxavaiI
-         vz7OWx7ODCOY89S+kEdO/+LJrWWnNLTcSyv0Maq4YAOgtfhCfquKCCUXG3oySb+mCvBb
-         38tQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=nWs/1bjDvNuzUJtmMQammwiguABeAIM4rx8Ev82Odj4=;
-        b=MkmElEoeV/r2P6toq5wCa+7090xixOyfg63d6ybpuYuDjrrzjwS5RdFmtCUseXH1wC
-         DxRHiRIDbNYbjZvP08yGGtqX81aB/2eyLIlm0LOwtpnvwNZM0oA/hsDmJeDzRTx9VRuJ
-         D1/x5alC6Xm43xYB/vY/s+0ut6uzdsAkA0ee/rl7t3pia7Wpvo+396HGeYfPrzR1tlOm
-         MGzTfoFItBTL1SqZKCdlLQRpFUp40rEVkI2XhiY3bRQJvu+jOqlTRSAOg5R1v6fO2B7J
-         Auy4Of2FL6jtMmdFQziCUzfsdNDb9l+PzKbOC7tKw0dsFXGALwmXsiVgArSKcMBNaGB6
-         SV/g==
-X-Gm-Message-State: APjAAAXtvsppph2f/73ttl4FrejJisEy3wy0Ava37cOgsPFeXF9jygu/
-        orZKeI52HbZUjpBLt3A1FlLwRA==
-X-Google-Smtp-Source: APXvYqw/NhSrzyPWPQbLnED7yGzQyzSTdlwC0odTzaM2yCGhnhMYRRPM2hqTvbDK1lg4A0bgszuNRw==
-X-Received: by 2002:a05:620a:13c4:: with SMTP id g4mr30230662qkl.391.1574178139850;
-        Tue, 19 Nov 2019 07:42:19 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::c7ac])
-        by smtp.gmail.com with ESMTPSA id i17sm7188612qtm.53.2019.11.19.07.42.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Nov 2019 07:42:19 -0800 (PST)
-Date:   Tue, 19 Nov 2019 10:42:17 -0500
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org,
-        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
-        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
-        yang.shi@linux.alibaba.com, willy@infradead.org,
-        shakeelb@google.com
-Subject: Re: [PATCH v4 2/9] mm/huge_memory: fix uninitialized compiler warning
-Message-ID: <20191119154217.GC382712@cmpxchg.org>
-References: <1574166203-151975-1-git-send-email-alex.shi@linux.alibaba.com>
- <1574166203-151975-3-git-send-email-alex.shi@linux.alibaba.com>
+        Tue, 19 Nov 2019 10:43:16 -0500
+Received: from mga17.intel.com ([192.55.52.151]:55414 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727682AbfKSPnP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 10:43:15 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Nov 2019 07:43:15 -0800
+X-IronPort-AV: E=Sophos;i="5.68,324,1569308400"; 
+   d="scan'208";a="200388766"
+Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.161])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Nov 2019 07:43:09 -0800
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Lee Jones <lee.jones@linaro.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-acpi@vger.kernel.org,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] drm/i915 / LPSS / mfd: Select correct PWM controller to use based on VBT
+In-Reply-To: <20191119151818.67531-1-hdegoede@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20191119151818.67531-1-hdegoede@redhat.com>
+Date:   Tue, 19 Nov 2019 17:43:07 +0200
+Message-ID: <87pnhnyir8.fsf@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1574166203-151975-3-git-send-email-alex.shi@linux.alibaba.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 08:23:16PM +0800, Alex Shi wrote:
-> ../mm/huge_memory.c: In function ‘split_huge_page_to_list’:
-> ../mm/huge_memory.c:2766:9: warning: ‘flags’ may be used uninitialized
-> in this function [-Wmaybe-uninitialized]
->   lruvec = lock_page_lruvec_irqsave(head, pgdata, flags);
->   ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+On Tue, 19 Nov 2019, Hans de Goede <hdegoede@redhat.com> wrote:
+> Hi All,
+>
+> This series needs to be merged through a single tree, to keep things
+> bisectable. I have even considered just squashing all 3 patches into 1,
+> but having separate commits seems better, but that does lead to an
+> intermediate state where the backlight sysfs interface will be broken
+> (and fixed 2 commits later). See below for some background info.
+>
+> The changes to drivers/acpi/acpi_lpss.c and drivers/mfd/intel_soc_pmic_core.c
+> are quite small and should not lead to any conflicts, so I believe that
+> it would be best to merge this entire series through the drm-intel tree.
+>
+> Lee, may I have your Acked-by for merging the mfd change through the
+> drm-intel tree?
+>
+> Rafael, may I have your Acked-by for merging the acpi_lpss change through the
+> drm-intel tree?
+>
+> Regards,
+>
+> Hans
+>
+> p.s.
+>
+> The promised background info:
+>
+> We have this long standing issue where instead of looking in the i915
+> VBT (Video BIOS Table) to see if we should use the PWM block of the SoC
+> or of the PMIC to control the backlight of a DSI panel, we rely on
+> drivers/acpi/acpi_lpss.c and/or drivers/mfd/intel_soc_pmic_core.c
+> registering a pwm with the generic name of "pwm_backlight" and then the
+> i915 panel code does a pwm_get(dev, "pwm_backlight").
+>
+> We have some heuristics in drivers/acpi/acpi_lpss.c to not register the
+> lookup if a Crystal Cove PMIC is presend and the mfd/intel_soc_pmic_core.c
+> code simply assumes that since there is a PMIC the PMIC PWM block will
+> be used. Basically we are winging it.
+>
+> Recently I've learned about 2 different BYT devices:
+> Point of View MOBII TAB-P800W
+> Acer Switch 10 SW5-012
+>
+> Which use a Crystal Cove PMIC, yet the LCD is connected to the SoC/LPSS
+> PWM controller (and the VBT correctly indicates this), so here our old
+> heuristics fail.
+>
+> This series renams the PWM lookups registered by the LPSS /
+> intel_soc_pmic_core.c code from "pwm_backlight" to "pwm_soc_backlight" resp.
+> "pwm_pmic_backlight" and in the LPSS case also dropping the heuristics when
+> to register the lookup. This combined with teaching the i915 panel to call
+> pwm_get for the right lookup-name depending on the VBT bits resolves this.
 
-Like with the previous patch, there is no lock_page_lruvec_irqsave()
-at this point in the series.
+Hans, thanks for your continued efforts in digging into the bottom of
+this!
+
+I'm sure there are a number of related bugs still open at fdo bugzilla.
+
+It all makes sense,
+
+Acked-by: Jani Nikula <jani.nikula@intel.com>
+
+for merging through whichever tree.
+
+
+Thanks,
+Jani.
+
+
+-- 
+Jani Nikula, Intel Open Source Graphics Center
