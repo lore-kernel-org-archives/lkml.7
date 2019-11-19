@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FFF5C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:41:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4160C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:42:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A457208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:41:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80C16208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:42:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142117;
-	bh=ENwu7Bk/AGxxd6bkRW4LmZu93geDO4izsdATKSHOnRw=;
+	s=default; t=1574142120;
+	bh=YUdWJefQqbJCfgysInUFfykhGjVrzLCnQMM6zBJYnkE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HywtEUGsP/A18byWvu8o02ydhzHe/QE+6NkvZ3p75gCy2f1B81vXJTJRyRyDqeBqa
-	 VaVzKfSwqN9PE3/aypdWrvzIoCGu+RNWpuWEtXPiI76DynoJfnIuwqd7J79ges0/8s
-	 DroChceDX+SJ1lFubMwmYT265YQ42gAzlzbJuiWE=
+	b=xWbJqWHDVNcG45v8M5mHF+5+ky7Wv0bO+4dExnPY4YJask2rmavwF/4QE4pYLkG0N
+	 tsCaxWxRecb6HTP20fmAqHAodtDMM+cWcUbtKvfNqcFabBYM2kSElz+sO7qZ1+jREL
+	 TryOHbLg3agXlo7S/HXEBxIOUCS63hUDV5Q6Z/QM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729978AbfKSFlz (ORCPT
+        id S1730582AbfKSFl7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:41:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36452 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:41:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728636AbfKSFlw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:41:52 -0500
+        id S1728636AbfKSFl4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:41:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B80A121783;
-        Tue, 19 Nov 2019 05:41:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E053721783;
+        Tue, 19 Nov 2019 05:41:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142112;
-        bh=ENwu7Bk/AGxxd6bkRW4LmZu93geDO4izsdATKSHOnRw=;
+        s=default; t=1574142115;
+        bh=YUdWJefQqbJCfgysInUFfykhGjVrzLCnQMM6zBJYnkE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XYPszns+ZJOPxF3Thj18+mS6WAFVw2+W8hPmWz9FtYRBCN0X5lVG3T+a8Bk9w3TsC
-         vJZo6MT8Bwn+/gxXMz2di/GF9cOJZbIG8SmnJiLYW/MP5kHZZDaQrqPy1JEXP9VWnn
-         JZJYcD5egIuN00Ejrh9n15r11vn3iTOIfcs8fV/4=
+        b=fKmCmknxHI5CIxwLRzvEKT0EAaeylf4SkDwnxUjOu0bEiG73Ws4iGO5Eg5m9fXFU1
+         TAjYdM3aFTBB55lWQhye0QVFJBBnKovZm12s0kSlxz1JrMQvqtU+qN8Gp5absjRHMs
+         waufriWpp6ULxTfQf4GOMQfW2ekUnK/d0+yp7hbw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        stable@vger.kernel.org, Erel Geron <erelx.geron@intel.com>,
         Luca Coelho <luciano.coelho@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 391/422] iwlwifi: dbg: dont crash if the firmware crashes in the middle of a debug dump
-Date:   Tue, 19 Nov 2019 06:19:48 +0100
-Message-Id: <20191119051424.455274854@linuxfoundation.org>
+Subject: [PATCH 4.19 392/422] iwlwifi: fix non_shared_ant for 22000 devices
+Date:   Tue, 19 Nov 2019 06:19:49 +0100
+Message-Id: <20191119051424.524869753@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -61,56 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
+From: Erel Geron <erelx.geron@intel.com>
 
-[ Upstream commit 79f25b10c9da3dbc953e47033d0494e51580ac3b ]
+[ Upstream commit a40287727d9b737e183959fd31a4e0c55f312853 ]
 
-We can dump data from the firmware either when it crashes,
-or when the firmware is alive.
-Not all the data is available if the firmware is running
-(like the Tx / Rx FIFOs which are available only when the
-firmware is halted), so we first check that the firmware
-is alive to compute the required size for the dump and then
-fill the buffer with the data.
+The non-shared antenna was wrong for 22000 device series.
+Fix it to ANT_B for correct antenna preference by coex in MVM driver.
 
-When we allocate the buffer, we test the STATUS_FW_ERROR
-bit to check if the firmware is alive or not. This bit
-can be changed during the course of the dump since it is
-modified in the interrupt handler.
-
-We hit a case where we allocate the buffer while the
-firmware is sill working, and while we start to fill the
-buffer, the firmware crashes. Then we test STATUS_FW_ERROR
-again and decide to fill the buffer with data like the
-FIFOs even if no room was allocated for this data in the
-buffer. This means that we overflow the buffer that was
-allocated leading to memory corruption.
-
-To fix this, test the STATUS_FW_ERROR bit only once and
-rely on local variables to check if we should dump fifos
-or other firmware components.
-
-Fixes: 04fd2c28226f ("iwlwifi: mvm: add rxf and txf to dump data")
-Signed-off-by: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
+Fixes: e34d975e40ff ("iwlwifi: Add a000 HW family support")
+Signed-off-by: Erel Geron <erelx.geron@intel.com>
 Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/fw/dbg.c | 2 +-
+ drivers/net/wireless/intel/iwlwifi/cfg/22000.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/fw/dbg.c b/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
-index 8070b2d4c46fe..3443cbdbab4ae 100644
---- a/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
-+++ b/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
-@@ -824,7 +824,7 @@ void iwl_fw_error_dump(struct iwl_fw_runtime *fwrt)
- 	}
- 
- 	/* We only dump the FIFOs if the FW is in error state */
--	if (test_bit(STATUS_FW_ERROR, &fwrt->trans->status)) {
-+	if (fifo_data_len) {
- 		iwl_fw_dump_fifos(fwrt, &dump_data);
- 		if (radio_len)
- 			iwl_read_radio_regs(fwrt, &dump_data);
+diff --git a/drivers/net/wireless/intel/iwlwifi/cfg/22000.c b/drivers/net/wireless/intel/iwlwifi/cfg/22000.c
+index b4347806a59ed..a0de61aa0feff 100644
+--- a/drivers/net/wireless/intel/iwlwifi/cfg/22000.c
++++ b/drivers/net/wireless/intel/iwlwifi/cfg/22000.c
+@@ -143,7 +143,7 @@ static const struct iwl_ht_params iwl_22000_ht_params = {
+ 	.ucode_api_min = IWL_22000_UCODE_API_MIN,			\
+ 	.led_mode = IWL_LED_RF_STATE,					\
+ 	.nvm_hw_section_num = NVM_HW_SECTION_NUM_FAMILY_22000,		\
+-	.non_shared_ant = ANT_A,					\
++	.non_shared_ant = ANT_B,					\
+ 	.dccm_offset = IWL_22000_DCCM_OFFSET,				\
+ 	.dccm_len = IWL_22000_DCCM_LEN,					\
+ 	.dccm2_offset = IWL_22000_DCCM2_OFFSET,				\
 -- 
 2.20.1
 
