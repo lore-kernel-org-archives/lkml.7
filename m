@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86741C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:58:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B75C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:58:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52ACB2084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:58:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AFAD2084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:58:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574143106;
-	bh=n2Kq4bKS+TGDHgmOJCQsdltB/pApKesDKfkqxEbgnqE=;
+	s=default; t=1574143109;
+	bh=UfxJx9uniduwgP9FegUeu7x2UFPsH3p8h2KakbrthM8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wdke670z4FA495J14oXdtA9PGi0I7CHlwUHQaR/5Ur6sKv9uhvk7/N/NQyl7nmNHd
-	 DhbIfyX6UYmwrkqBtBaDiUd53pblZ5vF89E4tQy2lB8D3dhpGITPBIPyEUErQ7yPsL
-	 tCafMkcuVTT4PzBYP00cKrpg1TngdUg3mMamk1ZM=
+	b=fU3nm6N1gsVFiLSo8mFxK9gg5lOHKx6ITKBtwobh6hcoN2A45ooqNAaUvZYtU8lIU
+	 yJmJbWMc8SmdlP8OksDJCaBwW5dbSJlKFbZ5zngQ78m422GPBPq/ccDRlOSh7AXnrP
+	 XdgNP4TztdEHIv23REGAciCfbrDSc3FgeaADVlNM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731485AbfKSFt1 (ORCPT
+        id S1731642AbfKSF62 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:49:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46078 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:58:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730930AbfKSFtW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:49:22 -0500
+        id S1730917AbfKSFtb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:49:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E70F21850;
-        Tue, 19 Nov 2019 05:49:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A31C020721;
+        Tue, 19 Nov 2019 05:49:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142561;
-        bh=n2Kq4bKS+TGDHgmOJCQsdltB/pApKesDKfkqxEbgnqE=;
+        s=default; t=1574142570;
+        bh=UfxJx9uniduwgP9FegUeu7x2UFPsH3p8h2KakbrthM8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1SozG51dJwdMDrVISK1/M/anlbzDkQlCOdemQgCwsg1hOQ5c0qk4FzMNFwXVB3Kpr
-         dYiGHIodjNusoVlbtz+RM92fvY1FPOoEB9rN6fly+e/XdhAYZbXDvcL+AO8X4OUevu
-         0sJsC/qULlA8BJwgh/tQyvCH7vwhNWYIdkhgJuos=
+        b=fWvOkmQzjKpa4lQ9EWRrgw3PnH4m4YUzNL6tC0IiaIGyIMQVQgJj7347nZTvjt5c4
+         G7/aBC9jQV6KRWfcYQBsmotslRQ7J6jeVJZiorZ0xSZx1h4rQJpq3WFkC0LaRpEqxV
+         Wk4GJz8aONnjFBw3oHBtA3RKzwwevVOMbg/vX0qg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        stable@vger.kernel.org, Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
+        Aristeu Rozanski <aris@redhat.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-edac <linux-edac@vger.kernel.org>,
+        Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@suse.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 121/239] power: supply: ab8500_fg: silence uninitialized variable warnings
-Date:   Tue, 19 Nov 2019 06:18:41 +0100
-Message-Id: <20191119051329.839072393@linuxfoundation.org>
+Subject: [PATCH 4.14 086/239] EDAC, sb_edac: Return early on ADDRV bit and address type test
+Date:   Tue, 19 Nov 2019 06:18:06 +0100
+Message-Id: <20191119051318.011363831@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -60,76 +63,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
 
-[ Upstream commit 54baff8d4e5dce2cef61953b1dc22079cda1ddb1 ]
+[ Upstream commit dcc960b225ceb2bd66c45e0845d03e577f7010f9 ]
 
-If kstrtoul() fails then we print "charge_full" when it's uninitialized.
-The debug printk doesn't add anything so I deleted it and cleaned these
-two functions up a bit.
+Users of the mce_register_decode_chain() are called for every logged
+error. EDAC drivers should check:
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+1) Is this a memory error? [bit 7 in status register]
+2) Is there a valid address? [bit 58 in status register]
+3) Is the address a system address? [bitfield 8:6 in misc register]
+
+The sb_edac driver performed test "1" twice. Waited far too long to
+perform check "2". Didn't do check "3" at all.
+
+Fix it by moving the test for valid address from
+sbridge_mce_output_error() into sbridge_mce_check_error() and add a test
+for the type immediately after. Delete the redundant check for the type
+of the error from sbridge_mce_output_error().
+
+Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Cc: Aristeu Rozanski <aris@redhat.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Cc: linux-edac <linux-edac@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20180907230828.13901-2-tony.luck@intel.com
+[ Re-word commit message. ]
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/power/supply/ab8500_fg.c | 31 ++++++++++++-------------------
- 1 file changed, 12 insertions(+), 19 deletions(-)
+ drivers/edac/sb_edac.c | 68 ++++++++++++++++++++++--------------------
+ 1 file changed, 35 insertions(+), 33 deletions(-)
 
-diff --git a/drivers/power/supply/ab8500_fg.c b/drivers/power/supply/ab8500_fg.c
-index c569f82a00718..b87768238b702 100644
---- a/drivers/power/supply/ab8500_fg.c
-+++ b/drivers/power/supply/ab8500_fg.c
-@@ -2437,17 +2437,14 @@ static ssize_t charge_full_store(struct ab8500_fg *di, const char *buf,
- 				 size_t count)
- {
- 	unsigned long charge_full;
--	ssize_t ret;
-+	int ret;
+diff --git a/drivers/edac/sb_edac.c b/drivers/edac/sb_edac.c
+index b0b390a1da154..ddd5990211f8a 100644
+--- a/drivers/edac/sb_edac.c
++++ b/drivers/edac/sb_edac.c
+@@ -2915,35 +2915,27 @@ static void sbridge_mce_output_error(struct mem_ctl_info *mci,
+ 	 *	cccc = channel
+ 	 * If the mask doesn't match, report an error to the parsing logic
+ 	 */
+-	if (! ((errcode & 0xef80) == 0x80)) {
+-		optype = "Can't parse: it is not a mem";
+-	} else {
+-		switch (optypenum) {
+-		case 0:
+-			optype = "generic undef request error";
+-			break;
+-		case 1:
+-			optype = "memory read error";
+-			break;
+-		case 2:
+-			optype = "memory write error";
+-			break;
+-		case 3:
+-			optype = "addr/cmd error";
+-			break;
+-		case 4:
+-			optype = "memory scrubbing error";
+-			break;
+-		default:
+-			optype = "reserved";
+-			break;
+-		}
++	switch (optypenum) {
++	case 0:
++		optype = "generic undef request error";
++		break;
++	case 1:
++		optype = "memory read error";
++		break;
++	case 2:
++		optype = "memory write error";
++		break;
++	case 3:
++		optype = "addr/cmd error";
++		break;
++	case 4:
++		optype = "memory scrubbing error";
++		break;
++	default:
++		optype = "reserved";
++		break;
+ 	}
  
- 	ret = kstrtoul(buf, 10, &charge_full);
-+	if (ret)
-+		return ret;
- 
--	dev_dbg(di->dev, "Ret %zd charge_full %lu", ret, charge_full);
+-	/* Only decode errors with an valid address (ADDRV) */
+-	if (!GET_BITFIELD(m->status, 58, 58))
+-		return;
 -
--	if (!ret) {
--		di->bat_cap.max_mah = (int) charge_full;
--		ret = count;
--	}
--	return ret;
-+	di->bat_cap.max_mah = (int) charge_full;
-+	return count;
- }
- 
- static ssize_t charge_now_show(struct ab8500_fg *di, char *buf)
-@@ -2459,20 +2456,16 @@ static ssize_t charge_now_store(struct ab8500_fg *di, const char *buf,
- 				 size_t count)
+ 	if (pvt->info.type == KNIGHTS_LANDING) {
+ 		if (channel == 14) {
+ 			edac_dbg(0, "%s%s err_code:%04x:%04x EDRAM bank %d\n",
+@@ -3049,17 +3041,11 @@ static int sbridge_mce_check_error(struct notifier_block *nb, unsigned long val,
  {
- 	unsigned long charge_now;
--	ssize_t ret;
-+	int ret;
+ 	struct mce *mce = (struct mce *)data;
+ 	struct mem_ctl_info *mci;
+-	struct sbridge_pvt *pvt;
+ 	char *type;
  
- 	ret = kstrtoul(buf, 10, &charge_now);
-+	if (ret)
-+		return ret;
+ 	if (edac_get_report_status() == EDAC_REPORTING_DISABLED)
+ 		return NOTIFY_DONE;
  
--	dev_dbg(di->dev, "Ret %zd charge_now %lu was %d",
--		ret, charge_now, di->bat_cap.prev_mah);
+-	mci = get_mci_for_node_id(mce->socketid, IMC0);
+-	if (!mci)
+-		return NOTIFY_DONE;
+-	pvt = mci->pvt_info;
 -
--	if (!ret) {
--		di->bat_cap.user_mah = (int) charge_now;
--		di->flags.user_cap = true;
--		ret = count;
--		queue_delayed_work(di->fg_wq, &di->fg_periodic_work, 0);
--	}
--	return ret;
-+	di->bat_cap.user_mah = (int) charge_now;
-+	di->flags.user_cap = true;
-+	queue_delayed_work(di->fg_wq, &di->fg_periodic_work, 0);
-+	return count;
- }
+ 	/*
+ 	 * Just let mcelog handle it if the error is
+ 	 * outside the memory controller. A memory error
+@@ -3069,6 +3055,22 @@ static int sbridge_mce_check_error(struct notifier_block *nb, unsigned long val,
+ 	if ((mce->status & 0xefff) >> 7 != 1)
+ 		return NOTIFY_DONE;
  
- static struct ab8500_fg_sysfs_entry charge_full_attr =
++	/* Check ADDRV bit in STATUS */
++	if (!GET_BITFIELD(mce->status, 58, 58))
++		return NOTIFY_DONE;
++
++	/* Check MISCV bit in STATUS */
++	if (!GET_BITFIELD(mce->status, 59, 59))
++		return NOTIFY_DONE;
++
++	/* Check address type in MISC (physical address only) */
++	if (GET_BITFIELD(mce->misc, 6, 8) != 2)
++		return NOTIFY_DONE;
++
++	mci = get_mci_for_node_id(mce->socketid, IMC0);
++	if (!mci)
++		return NOTIFY_DONE;
++
+ 	if (mce->mcgstatus & MCG_STATUS_MCIP)
+ 		type = "Exception";
+ 	else
 -- 
 2.20.1
 
