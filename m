@@ -2,184 +2,116 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C3BC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:39:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7569EC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:41:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C8B421D7B
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:39:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C94821D7B
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:41:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ltSecJN5"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="mLOdS0dX";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="LBrMfl4h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727948AbfKSMjE (ORCPT
+        id S1727874AbfKSMk7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 07:39:04 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:42252 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726548AbfKSMjD (ORCPT
+        Tue, 19 Nov 2019 07:40:59 -0500
+Received: from a27-55.smtp-out.us-west-2.amazonses.com ([54.240.27.55]:36250
+        "EHLO a27-55.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725280AbfKSMk7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 07:39:03 -0500
-Received: by mail-pl1-f195.google.com with SMTP id j12so11699039plt.9;
-        Tue, 19 Nov 2019 04:39:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qpwNQdLDEKp3mHj6bhdJa/Rq4oFAWkNqox9VT/5kxaE=;
-        b=ltSecJN5dv6Eibo6pRLuD+iAe9yVQaHC4TL5a/T/Hp7KM4+GTbSEzMBUlRBFPT3Lpa
-         6HYEE3iYly2QjLrr/CEW/l0f+qZaxMuhIRvTMR6xK28UW2aWNnS0Bp1Drdj1WMQR5t5T
-         OKMkdRURBZ1z4kOSxCPt8gkW2qo0vnUbLQzLNq8rRdnTgYbprZkfUOOOnm2p2A7EF6wE
-         sHfG/BAOBc1uz9plhJm+pw3/GvLUKfu4zB4N6QB5+TmJKbRicc4psQtOVStnO7KxXFAt
-         nHQUFoj3buSHslm/eRzFaHvhxZVMyZVwFhBhO0tfGl449RToViaFGi1gGPr0v20curZJ
-         yTWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qpwNQdLDEKp3mHj6bhdJa/Rq4oFAWkNqox9VT/5kxaE=;
-        b=alWbt0rzY0dv4gh11HzgUIuf7BlbDlww27faFJN9spvrLNBjHe761N9oyTqH7SPgaJ
-         mlo4BnPImIJKLHfwmlY4BjW2HbLNCKL1Oh2i936AsUKgCGSkRMOsOpgdMn4luxDJGDB0
-         u4TuDz30LV39xw7/hWHuyW2h7zTnOSDigpPDYxB4G61iVi9RV9pdrv/xBNNsNMKNqIb/
-         qUu2D5Bwk3rasghVh43TP5yIqyLJCXxAH42oPj+BmrcOLc5pORv0CefVzFR27kladYAr
-         t3osYsXLd5Bn8MbTEemZl/rBmAdPdhMaPly73BsuJOi2vhkTT3GohKnXm8PaKC3vIycW
-         q7/A==
-X-Gm-Message-State: APjAAAVv6E4kc4CVL2T8YOTThV57KkXdkEe1y55TlcygngtTwX4Ur5ts
-        OUDQx68/I//Q+YG1UxBwF5ns7F6WyaVRAkCY4MU=
-X-Google-Smtp-Source: APXvYqwbCUL/eximB8mpj2VKlrZgFfSMeoldq7a7WGfu5alkQzf/cM2q5535Tqgna1MJCwUak2duJRDsdSgol0JrIKM=
-X-Received: by 2002:a17:90a:c68f:: with SMTP id n15mr6302731pjt.20.1574167142073;
- Tue, 19 Nov 2019 04:39:02 -0800 (PST)
+        Tue, 19 Nov 2019 07:40:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574167257;
+        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
+        bh=CEhdhlN+M1OpAxIH/yMj19nrltuBHW5P13jllfaEM2s=;
+        b=mLOdS0dXbzUa+uX0R/zereNz9q7MmiC6XbuSA4SDhW8YZfJ6tYJ5OB+o3xIvzskf
+        9jOOQ0mrBuZ83orFXlon1SuZ3ERwQQ8TZe3xN2KEKLs63O4M0DEjq4+2uAFJd7dUXVb
+        XPO+D71/lymMwfaUYGdlk4oLTUDHv9I8rbdQ/db8=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574167257;
+        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
+        bh=CEhdhlN+M1OpAxIH/yMj19nrltuBHW5P13jllfaEM2s=;
+        b=LBrMfl4hZtt/1kyZzzfdG/56L+NfPWasqDltYDL6JXxHCD4wEvq5KtVlqkdVz2XC
+        JDyV6ObB0Z+migTZEg4UC+PgLWxnqgR14k/+nZbtfgTI1ixIu+50Y8HK8u3H8E0sxnQ
+        qKEj4GJz4fo+4sLsNf9zZKl97v4kYzg4AVjujMDI=
 MIME-Version: 1.0
-References: <20191119002121.4107-1-sean.j.christopherson@intel.com>
- <20191119111012.GA109842@gmail.com> <20191119120655.GA31444@gmail.com>
-In-Reply-To: <20191119120655.GA31444@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 19 Nov 2019 14:38:51 +0200
-Message-ID: <CAHp75VeYXonBT9eYhqvS9qyOogdaCu8ERv0XMg12hrVBYt6hnw@mail.gmail.com>
-Subject: Re: [PATCH] x86/platform/intel/quark: Explicitly include linux/io.h
- for virt_to_phys()
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Nadav Amit <namit@vmware.com>,
-        "VMware, Inc." <pv-drivers@vmware.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, linux-ia64@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 19 Nov 2019 12:40:57 +0000
+From:   dhar@codeaurora.org
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        abhinavk@codeaurora.org, jsanka@codeaurora.org,
+        chandanu@codeaurora.org, nganji@codeaurora.org
+Subject: Re: [v2] msm: disp: dpu1: add support to access hw irqs regs
+ depending on revision
+In-Reply-To: <5dcd8f05.1c69fb81.bdd4.2b0a@mx.google.com>
+References: <1573710976-27551-1-git-send-email-dhar@codeaurora.org>
+ <5dcd8f05.1c69fb81.bdd4.2b0a@mx.google.com>
+Message-ID: <0101016e83ae22b5-7a05918b-c1c4-40f1-ae17-5dd36a003c36-000000@us-west-2.amazonses.com>
+X-Sender: dhar@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
+X-SES-Outgoing: 2019.11.19-54.240.27.55
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 2:07 PM Ingo Molnar <mingo@kernel.org> wrote:
->
->
-> * Ingo Molnar <mingo@kernel.org> wrote:
->
-> > I've applied them to tip:WIP.core/headers as a work-in-progress tree,
-> > and I'm testing them on randconfigs to make sure there's no broken
-> > dependencies. I'll wait for the ACPI acks.
->
-> One more fix was needed, for the intel-quark driver that is only built on
-> 32-bit configs:
->
-> ==================>
-> From: Ingo Molnar <mingo@kernel.org>
-> Date: Tue, 19 Nov 2019 12:51:56 +0100
-> Subject: [PATCH] x86/platform/intel/quark: Explicitly include linux/io.h for virt_to_phys()
->
-> Similarly to the previous patches by Sean Christopherson:
->
->  "Through a labyrinthian sequence of includes, usage of virt_to_phys() is
->   dependent on the include of asm/io.h in x86's asm/realmode.h, which is
->   included in x86's asm/acpi.h and thus by linux/acpi.h.  Explicitly
->   include linux/io.h to break the dependency on realmode.h so that a
->   future patch can remove the realmode.h include from acpi.h without
->   breaking the build."
->
+On 2019-11-14 22:59, Stephen Boyd wrote:
+> Quoting Shubhashree Dhar (2019-11-13 21:56:16)
+>> Current code assumes that all the irqs registers offsets can be
+>> accessed in all the hw revisions; this is not the case for some
+>> targets that should not access some of the irq registers.
+> 
+> What happens if we read the irq registers that we "should not access"?
+> Does the system reset? It would be easier to make those registers 
+> return
+> 0 when read indicating no interrupt and ignore writes so that 
+> everything
+> keeps working without having to skip registers.
+> 
+In some of the hw revisions, the whole hw block is absent and trying to 
+access those
+registers causes system panic(bus noc error).
 
-LGTM,
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
-> Cc: linux-kernel@vger.kernel.org
-> Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Signed-off-by: Ingo Molnar <mingo@kernel.org>
-> ---
->  arch/x86/platform/intel-quark/imr.c          | 2 ++
->  arch/x86/platform/intel-quark/imr_selftest.c | 2 ++
->  2 files changed, 4 insertions(+)
->
-> diff --git a/arch/x86/platform/intel-quark/imr.c b/arch/x86/platform/intel-quark/imr.c
-> index 6dd25dc5f027..e9d97d52475e 100644
-> --- a/arch/x86/platform/intel-quark/imr.c
-> +++ b/arch/x86/platform/intel-quark/imr.c
-> @@ -29,6 +29,8 @@
->  #include <asm/cpu_device_id.h>
->  #include <asm/imr.h>
->  #include <asm/iosf_mbi.h>
-> +#include <asm/io.h>
-
-A nit: perhaps put it after imr.h.
-
-> +
->  #include <linux/debugfs.h>
->  #include <linux/init.h>
->  #include <linux/mm.h>
-> diff --git a/arch/x86/platform/intel-quark/imr_selftest.c b/arch/x86/platform/intel-quark/imr_selftest.c
-> index 42f879b75f9b..4307830e1b6f 100644
-> --- a/arch/x86/platform/intel-quark/imr_selftest.c
-> +++ b/arch/x86/platform/intel-quark/imr_selftest.c
-> @@ -14,6 +14,8 @@
->  #include <asm-generic/sections.h>
->  #include <asm/cpu_device_id.h>
->  #include <asm/imr.h>
-> +#include <asm/io.h>
-> +
->  #include <linux/init.h>
->  #include <linux/mm.h>
->  #include <linux/types.h>
->
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+>> This change adds the support to selectively remove the irqs that
+>> are not supported in some of the hw revisions.
+>> 
+>> Change-Id: I6052b8237b703a1a9edd53893e04f7bd72223da1
+> 
+> Please remove these before sending upstream.
+> 
+>> Signed-off-by: Shubhashree Dhar <dhar@codeaurora.org>
+>> ---
+>>  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c    |  1 +
+>>  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h    |  3 +++
+>>  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.c | 22 
+>> +++++++++++++++++-----
+>>  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.h |  1 +
+>>  4 files changed, 22 insertions(+), 5 deletions(-)
+>> 
+>> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h 
+>> b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
+>> index ec76b868..def8a3f 100644
+>> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
+>> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
+>> @@ -646,6 +646,7 @@ struct dpu_perf_cfg {
+>>   * @dma_formats        Supported formats for dma pipe
+>>   * @cursor_formats     Supported formats for cursor pipe
+>>   * @vig_formats        Supported formats for vig pipe
+>> + * @mdss_irqs          Bitmap with the irqs supported by the target
+> 
+> Hmm pretty sure there needs to be a colon so that kernel-doc can match
+> this but maybe I'm wrong.
+> 
+>>   */
+>>  struct dpu_mdss_cfg {
+>>         u32 hwversion;
