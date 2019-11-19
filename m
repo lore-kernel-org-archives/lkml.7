@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B57DC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:47:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4C17C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:47:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E685D21823
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:47:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 994A9208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:47:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142437;
-	bh=fnOLfxFlHzYCp5VPklcq0rHg+03gyg7GdwnsSyAYVBc=;
+	s=default; t=1574142440;
+	bh=q47U1yyRvfeVLS8tsHYam/bfDws6jt2fl3LuDqdgwpY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tKs7dXXfpIThdMDNI/P/pbk3KZJe1bvTHS7HcU64fpND+YmHRZVUHBOxzt8ovroHw
-	 yUkTwY814hbieV4qlwDcTF7XbJOoFTBnwT9D1ZsXTb8dX4X8qmG0Gg6OZBPowct/nP
-	 /wp9272QhqzD5XqNMKfpp/07GF4VAvxfEnMmMMQI=
+	b=IbxQfsEr7M/MNUMwbPtwvy/m/B+zjj+dv3HHnqUIa9EkMU9neJ3tqFwOUJZ+ziMIG
+	 wN2Kx79Nce6xlnJqgppRv1rGb/eVu1UgXlFBSuRa8e9T7rhccS5M1Va/tyUMLc2c5Y
+	 l87f1ZdOEYGUhi/vHIbxWTDJgWel7Ue4qbU/VC+4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731221AbfKSFrP (ORCPT
+        id S1731225AbfKSFrT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:47:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43508 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:47:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731218AbfKSFrN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:47:13 -0500
+        id S1730677AbfKSFrP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:47:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1BA32071B;
-        Tue, 19 Nov 2019 05:47:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 720A42071B;
+        Tue, 19 Nov 2019 05:47:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142432;
-        bh=fnOLfxFlHzYCp5VPklcq0rHg+03gyg7GdwnsSyAYVBc=;
+        s=default; t=1574142435;
+        bh=q47U1yyRvfeVLS8tsHYam/bfDws6jt2fl3LuDqdgwpY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SVRSwZfRwHEotQQyEXoHSdpe1JATak6gc3GJg8VML4WYnEwIzHN5M6ws/A1YueYNH
-         N5+zsnXuGhkycrvA7yDBBaitXPkowwTibEUQmZfH+eGgj+6jm0X6oIlL1JWtaq2hfD
-         WxfSvTaPdwMUVMvX9/uqMXJmsjWHeu/4GjO/RcmQ=
+        b=WuAaWsu7N1M6iSclylDskL8INdfGkFhbY9tfYo7WbIBGcqyVLz5N6vY4Z2wC9p06s
+         nJI0zu2OBFKU2fG4LQs/y9zQT9+093TquVS89UIRd/bKgzb74doQkwkgVRDXNbkk9r
+         egvwqtGQQyB8lrO/o1fXYw/0nKkvozvn836df3Ao=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Felix Fietkau <nbd@nbd.name>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Tony Lindgren <tony@atomide.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 042/239] ath9k: fix tx99 with monitor mode interface
-Date:   Tue, 19 Nov 2019 06:17:22 +0100
-Message-Id: <20191119051305.721161688@linuxfoundation.org>
+Subject: [PATCH 4.14 078/239] ARM: dts: omap3-gta04: tvout: enable as display1 alias
+Date:   Tue, 19 Nov 2019 06:17:58 +0100
+Message-Id: <20191119051314.555845333@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -60,114 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Felix Fietkau <nbd@nbd.name>
+From: H. Nikolaus Schaller <hns@goldelico.com>
 
-[ Upstream commit d9c52fd17cb483bd8a470398afcb79f86c1b77c8 ]
+[ Upstream commit 8905592b6e50cec905e6c6035bbd36201a3bfac1 ]
 
-Tx99 is typically configured via a monitor mode interface, which does
-not get added to the driver as a vif. Since the code currently expects
-a configured virtual interface for tx99, enabling tx99 via debugfs fails.
-Since the vif is not needed anyway, remove all checks for it.
+The omap dss susbystem takes the display aliases to find
+out which displays exist. To enable tv-out we must define
+an alias.
 
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
-[kvalo@codeaurora.org: s/CPTCFG/CONFIG/]
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath9k/ath9k.h |  1 -
- drivers/net/wireless/ath/ath9k/main.c  | 12 +++---------
- drivers/net/wireless/ath/ath9k/tx99.c  |  9 ---------
- drivers/net/wireless/ath/ath9k/xmit.c  |  2 +-
- 4 files changed, 4 insertions(+), 20 deletions(-)
+ arch/arm/boot/dts/omap3-gta04.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/wireless/ath/ath9k/ath9k.h b/drivers/net/wireless/ath/ath9k/ath9k.h
-index f9339b5c3624b..db2b119199d7b 100644
---- a/drivers/net/wireless/ath/ath9k/ath9k.h
-+++ b/drivers/net/wireless/ath/ath9k/ath9k.h
-@@ -1074,7 +1074,6 @@ struct ath_softc {
+diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
+index 5f62b2f3c6e93..7e9d6c4cdbfb6 100644
+--- a/arch/arm/boot/dts/omap3-gta04.dtsi
++++ b/arch/arm/boot/dts/omap3-gta04.dtsi
+@@ -28,6 +28,7 @@
  
- 	struct ath_spec_scan_priv spec_priv;
+ 	aliases {
+ 		display0 = &lcd;
++		display1 = &tv0;
+ 	};
  
--	struct ieee80211_vif *tx99_vif;
- 	struct sk_buff *tx99_skb;
- 	bool tx99_state;
- 	s16 tx99_power;
-diff --git a/drivers/net/wireless/ath/ath9k/main.c b/drivers/net/wireless/ath/ath9k/main.c
-index 8b4ac7f0a09b7..055f869516804 100644
---- a/drivers/net/wireless/ath/ath9k/main.c
-+++ b/drivers/net/wireless/ath/ath9k/main.c
-@@ -1250,15 +1250,10 @@ static int ath9k_add_interface(struct ieee80211_hw *hw,
- 	struct ath_vif *avp = (void *)vif->drv_priv;
- 	struct ath_node *an = &avp->mcast_node;
- 
--	mutex_lock(&sc->mutex);
-+	if (IS_ENABLED(CONFIG_ATH9K_TX99))
-+		return -EOPNOTSUPP;
- 
--	if (IS_ENABLED(CONFIG_ATH9K_TX99)) {
--		if (sc->cur_chan->nvifs >= 1) {
--			mutex_unlock(&sc->mutex);
--			return -EOPNOTSUPP;
--		}
--		sc->tx99_vif = vif;
--	}
-+	mutex_lock(&sc->mutex);
- 
- 	ath_dbg(common, CONFIG, "Attach a VIF of type: %d\n", vif->type);
- 	sc->cur_chan->nvifs++;
-@@ -1341,7 +1336,6 @@ static void ath9k_remove_interface(struct ieee80211_hw *hw,
- 	ath9k_p2p_remove_vif(sc, vif);
- 
- 	sc->cur_chan->nvifs--;
--	sc->tx99_vif = NULL;
- 	if (!ath9k_is_chanctx_enabled())
- 		list_del(&avp->list);
- 
-diff --git a/drivers/net/wireless/ath/ath9k/tx99.c b/drivers/net/wireless/ath/ath9k/tx99.c
-index fe3a8263b2241..311547f532bc3 100644
---- a/drivers/net/wireless/ath/ath9k/tx99.c
-+++ b/drivers/net/wireless/ath/ath9k/tx99.c
-@@ -54,12 +54,6 @@ static struct sk_buff *ath9k_build_tx99_skb(struct ath_softc *sc)
- 	struct ieee80211_hdr *hdr;
- 	struct ieee80211_tx_info *tx_info;
- 	struct sk_buff *skb;
--	struct ath_vif *avp;
--
--	if (!sc->tx99_vif)
--		return NULL;
--
--	avp = (struct ath_vif *)sc->tx99_vif->drv_priv;
- 
- 	skb = alloc_skb(len, GFP_KERNEL);
- 	if (!skb)
-@@ -77,14 +71,11 @@ static struct sk_buff *ath9k_build_tx99_skb(struct ath_softc *sc)
- 	memcpy(hdr->addr2, hw->wiphy->perm_addr, ETH_ALEN);
- 	memcpy(hdr->addr3, hw->wiphy->perm_addr, ETH_ALEN);
- 
--	hdr->seq_ctrl |= cpu_to_le16(avp->seq_no);
--
- 	tx_info = IEEE80211_SKB_CB(skb);
- 	memset(tx_info, 0, sizeof(*tx_info));
- 	rate = &tx_info->control.rates[0];
- 	tx_info->band = sc->cur_chan->chandef.chan->band;
- 	tx_info->flags = IEEE80211_TX_CTL_NO_ACK;
--	tx_info->control.vif = sc->tx99_vif;
- 	rate->count = 1;
- 	if (ah->curchan && IS_CHAN_HT(ah->curchan)) {
- 		rate->flags |= IEEE80211_TX_RC_MCS;
-diff --git a/drivers/net/wireless/ath/ath9k/xmit.c b/drivers/net/wireless/ath/ath9k/xmit.c
-index 458c4f53ba5d1..a743e3535d0a8 100644
---- a/drivers/net/wireless/ath/ath9k/xmit.c
-+++ b/drivers/net/wireless/ath/ath9k/xmit.c
-@@ -2952,7 +2952,7 @@ int ath9k_tx99_send(struct ath_softc *sc, struct sk_buff *skb,
- 		return -EINVAL;
- 	}
- 
--	ath_set_rates(sc->tx99_vif, NULL, bf);
-+	ath_set_rates(NULL, NULL, bf);
- 
- 	ath9k_hw_set_desc_link(sc->sc_ah, bf->bf_desc, bf->bf_daddr);
- 	ath9k_hw_tx99_start(sc->sc_ah, txctl->txq->axq_qnum);
+ 	gpio-keys {
 -- 
 2.20.1
 
