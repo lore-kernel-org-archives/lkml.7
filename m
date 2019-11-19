@@ -2,108 +2,105 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C51F5C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:04:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87E4CC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:07:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86159222D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:04:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 502E7222DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:07:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="YP6vYJCf"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="Wr9FxwD6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727897AbfKSOEc (ORCPT
+        id S1727626AbfKSOHi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 09:04:32 -0500
-Received: from mail-eopbgr720067.outbound.protection.outlook.com ([40.107.72.67]:44202
-        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
+        Tue, 19 Nov 2019 09:07:38 -0500
+Received: from mail-eopbgr740089.outbound.protection.outlook.com ([40.107.74.89]:53601
+        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726378AbfKSOEc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 09:04:32 -0500
+        id S1725904AbfKSOHi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 09:07:38 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MDGPsztHHG5e5+uWfYoVmnXytrS7nK+/2v+9v7HYoxOIFGECKYId4gfrivbgSlj2ppLtBXCTS43V6bO9Z3IzaZvf1jpn5IY03IWqguyf6x4C7eUxmKvxjCGg+gJLrBuXp6iQViaCLwrXdozq4qA2XxsALLCs8/1es7ikHg/AZ/MZblleufNWh5btENMRIajxEaNRW9SencKwGg0Ib7buPwam/zTRr7UtJgbyJxRttplomfGNIAmWGujoNxLT7JfHZsz53ck2oEMZi3C/VUnrpZz2FTbF7yMusUAtbWNK2E8MLnwcNA8Pujin0h+kV6wEl+f6W96uz8pK5oC64h158g==
+ b=R6pdZ2cAbGOzUeTVtdyVCRjVRpqUYVahjpdwY7tBtgbogcgzRMwRV2SGCaLee8i2ZxOKZIrkA5f/PdwGBv98n5bvBLH1iA8ffEIl/1G15HFRQEsrCuzi95t99wSSKC06z9a0k7ksjuFvugFuqo9ukGMX4X9g9X7/ubO2Ed+jwM/U+Ek+LBLJOivagKGs0h2KovHcXUuO1LciSsDtsHjXk3udiXtK07mWGjK4nhXr45fZH6QKTOeDIIgjR9pCMkvSOtzrnu4h9v3zoeeoc2UiOHRaVWh/pTo4Cl0OWAjWOS2HoTnDWZogvbnS3xzYwWGrV+CyHWADuvNCuFMUeGX5rw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fTv4PfCiuPOLkulRAfJSxPVE7d3Bu4RRkM41LmjZFCk=;
- b=OI3gWJ/ViLvEdXcm6tZh0yoqnTHX/e4MX0eBZHsJ/rk7d8jJ6d4p4FzIahZ6Tx0cuCxnf/1zON4082csWRlgkoEuLkvYiIPxC5Ss404oSwDSb+xOXkleBQo9480Rw4lGU8ASwyeWx7jhGe4RWeJJjOoeVCqm30pWqk8NxDAnjHDAyplr9vrcuPmNY3tTYVOVQUxC1CBh+4hK4IvIuPUBlgK16ilnxlhG0z+XPrToCEfyr/89Y3oRDyB3aEl7uAmzOCuoz/qmt777DtWGUFzLuEIF/+dYFqZUqtEPtmUWJriMproozLrVDgb6Nsg19TWpYX5C4uogXgw6hFqlezccyA==
+ bh=JZEdJXCrGvHDtdw/ckeNFvXFe9dK+0pFHHThOMFHD9M=;
+ b=c5Pd7hmPbUxo6+ggZmwFPirBJUccbRgYNc3QYdvDjfOj7SMsnE4FAEttDfNUTv8O5jSiv88Xj2gwXZKpzhzyGZ46clb2qnGSOIPX4ZTgnfz4lUQ2ybivOYHs2HM50Cn0PkNLGlsDfu19+DXzRdvZszj9pmTV7yOcvW6dVRf7JlXfyztVu4m6W2pbBiYr098L+IPljCKCsi6xb89VJoiHuSMnzqVGJC0I7V/aHVuUsVPfu3mQ/R0dzpttdaOBMWTNYXvlO9KqMNqyYv0L9pZD7GNYYmcpVxnSN/cBP2mu5uBff07GfoW8RjGUsAhUS3F1YFu4CQPFJeNPT4hWDAHGyA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fTv4PfCiuPOLkulRAfJSxPVE7d3Bu4RRkM41LmjZFCk=;
- b=YP6vYJCfJBp6Cn20N8w54n0Dq8C6ek8SJN1feGMfQuzFoKT3sFwWbnaotVTsPxoDOE7NYfet5b2e5frHqKB7RZsXqVqzAEzG9hB+ngHOpL7Kn8IDwIuzfkhum/Xkqt3jYTylfj8Rnvw7Y1fLmnckcwmf+Y83IkT/I/bDvgVfE04=
+ bh=JZEdJXCrGvHDtdw/ckeNFvXFe9dK+0pFHHThOMFHD9M=;
+ b=Wr9FxwD6opdt1UmEQTYouGRAoD7EawUr3Ch0q1HwP6CHjbfYbXsRAFcKeFRODR+M0BEfdhSH1XF/JYQZYvRhSDHZADWsBjuZhIiXryOgAoRLJc+hijuBLMXJ+3sVQmcbQOT9wNb2kBdKzajP8ujwf4z8nwQy+ZRm/MUgl/+kYN4=
 Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Vishnuvardhanrao.Ravulapati@amd.com; 
-Received: from CH2PR12MB3862.namprd12.prod.outlook.com (52.132.231.219) by
- CH2PR12MB3990.namprd12.prod.outlook.com (52.132.245.82) with Microsoft SMTP
+ smtp.mailfrom=brijesh.singh@amd.com; 
+Received: from DM6PR12MB2682.namprd12.prod.outlook.com (20.176.118.13) by
+ DM6PR12MB4267.namprd12.prod.outlook.com (10.141.187.144) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2474.16; Tue, 19 Nov 2019 14:04:25 +0000
-Received: from CH2PR12MB3862.namprd12.prod.outlook.com
- ([fe80::3d47:8737:20c4:1834]) by CH2PR12MB3862.namprd12.prod.outlook.com
- ([fe80::3d47:8737:20c4:1834%7]) with mapi id 15.20.2451.029; Tue, 19 Nov 2019
- 14:04:25 +0000
-Subject: Re: [RESEND PATCH v9 6/6] ASoC: amd: Added ACP3x system resume and
- runtime pm
-From:   vishnu <vravulap@amd.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Ravulapati Vishnu vardhan rao 
-        <Vishnuvardhanrao.Ravulapati@amd.com>
-Cc:     Alexander.Deucher@amd.com, djkurtz@google.com,
-        Akshu.Agrawal@amd.com, Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <1574165476-24987-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
- <1574165476-24987-7-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
- <20191119123531.GA30789@kadam> <3321478e-de8f-2eb6-6e6f-6eb621b8434b@amd.com>
-Message-ID: <f7f14463-2249-4414-fc53-3fee0c99862c@amd.com>
-Date:   Tue, 19 Nov 2019 19:33:08 +0530
+ 15.20.2451.28; Tue, 19 Nov 2019 14:06:54 +0000
+Received: from DM6PR12MB2682.namprd12.prod.outlook.com
+ ([fe80::edfa:96b9:b6fd:fbf9]) by DM6PR12MB2682.namprd12.prod.outlook.com
+ ([fe80::edfa:96b9:b6fd:fbf9%7]) with mapi id 15.20.2451.029; Tue, 19 Nov 2019
+ 14:06:54 +0000
+Cc:     brijesh.singh@amd.com, "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>, Borislav Petkov <bp@suse.de>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 01/11] KVM: SVM: Add KVM_SEV SEND_START command
+To:     Peter Gonda <pgonda@google.com>
+References: <20190710201244.25195-1-brijesh.singh@amd.com>
+ <20190710201244.25195-2-brijesh.singh@amd.com>
+ <CAMkAt6pzXrZw1TZgcX-G0wDNZBjf=1bQdErAJTxfzYQ2MJDZvw@mail.gmail.com>
+ <4f509f43-a576-144d-efd4-ab0362f1d667@amd.com>
+ <CAMkAt6qfPyqGuNv9gKirote=zj6Vha=9Vu1HSFkxx334s-GV1g@mail.gmail.com>
+From:   Brijesh Singh <brijesh.singh@amd.com>
+Message-ID: <a1c99bbc-b30f-53b0-6598-545d05b18e1c@amd.com>
+Date:   Tue, 19 Nov 2019 08:06:51 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
-In-Reply-To: <3321478e-de8f-2eb6-6e6f-6eb621b8434b@amd.com>
+ Thunderbird/60.9.0
+In-Reply-To: <CAMkAt6qfPyqGuNv9gKirote=zj6Vha=9Vu1HSFkxx334s-GV1g@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: PN1PR01CA0071.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c00:1::11) To CH2PR12MB3862.namprd12.prod.outlook.com
- (2603:10b6:610:21::27)
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN4PR0501CA0130.namprd05.prod.outlook.com
+ (2603:10b6:803:42::47) To DM6PR12MB2682.namprd12.prod.outlook.com
+ (2603:10b6:5:42::13)
 MIME-Version: 1.0
-X-Originating-IP: [165.204.159.251]
+X-Originating-IP: [165.204.77.1]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: d099d246-4023-46dc-a210-08d76cf9627e
-X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:|CH2PR12MB3990:
+X-MS-Office365-Filtering-Correlation-Id: 095c8699-32f1-4129-7ad7-08d76cf9bb1e
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4267:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <CH2PR12MB3990DF013321EB1BC138E725E74C0@CH2PR12MB3990.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
+X-Microsoft-Antispam-PRVS: <DM6PR12MB4267BC5A1B7728252422BBBEE54C0@DM6PR12MB4267.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
 X-Forefront-PRVS: 022649CC2C
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(396003)(376002)(366004)(346002)(23433003)(199004)(189003)(186003)(58126008)(305945005)(110136005)(26005)(3846002)(11346002)(6506007)(386003)(6486002)(53546011)(446003)(23676004)(7736002)(36756003)(31696002)(316002)(6666004)(6436002)(52116002)(81156014)(5660300002)(6116002)(2486003)(2906002)(76176011)(66556008)(50466002)(66476007)(54906003)(66946007)(7416002)(229853002)(14444005)(4326008)(8936002)(47776003)(6512007)(14454004)(6246003)(65956001)(66066001)(81166006)(486006)(99286004)(2616005)(476003)(8676002)(65806001)(478600001)(6636002)(2870700001)(25786009)(31686004)(43062003)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR12MB3990;H:CH2PR12MB3862.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(396003)(39860400002)(366004)(136003)(346002)(199004)(189003)(31696002)(31686004)(229853002)(50466002)(2906002)(4326008)(86362001)(58126008)(44832011)(6246003)(6486002)(54906003)(230700001)(305945005)(6116002)(3846002)(7736002)(476003)(6436002)(14444005)(6512007)(65956001)(65806001)(486006)(66066001)(47776003)(2616005)(5660300002)(36756003)(53546011)(6666004)(316002)(99286004)(26005)(478600001)(6506007)(7416002)(8936002)(386003)(186003)(14454004)(6916009)(76176011)(52116002)(2486003)(23676004)(11346002)(81156014)(81166006)(66946007)(8676002)(66556008)(66476007)(446003)(25786009);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB4267;H:DM6PR12MB2682.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 Received-SPF: None (protection.outlook.com: amd.com does not designate
  permitted sender hosts)
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: jgm92UTAKoFU+hjbmYadDb01XfZv7ApTIh4MiQ49Pr7HIDh7VzWD0nUD7kka84puNdJXz+vebooRF9QrXmuoEKAftRYEXZofH+5c+RUkf9ZaKlQAzfn9den3QS0VLjn4TkaTTSt8cBTtaraaO57iCbCssSkm8m9kB5VLivsaQUnUy8A1ST4dY1wsYEHjMwqL+gaPYUyd8N9WQXwXIXaZQLG0/lS477jvg64uRZA601Rf77A1yJBikQFxweDX7o/X8h8fJ9+WSObqCF9FGWUgmMKB4wJcj/229Ua3w6wBboiEYMI1KGQVUkJoNK9XKlm+jqCM7+pKKvNUUWNBwA7bGDdBdii1V6eUDNXYch9QCkfwlVPyZM94JABM3B2rHS6UTJbbPyurfOi9Wxico807A6yC7zBVBUkXscFzhfvQlu5JwLAUoKPIUGgAsoAtFi+h
+X-Microsoft-Antispam-Message-Info: pz3qwgrjvmjTX9u5XZk3jZSrfshiYCA/q8RaVLbacdGErq18wPiyGpuxBkF0kSR7yLu7AlYZVOgwaYsC5f/6c+zfn7BpcRUDWY3BZEmu58cHuwG5Hx8KucRBRnLgYQeHFeLxhxbpyggF+wGAuynuJQGMhM87L25ZkJCB3gSnXeFk7Ld3r5UgzuQaeqleuc76cC6w3MJ1uQGxwERDcc+YmNQ5iuaf+zCED54swwEhiE5V+csuR1QUGLEUTQFHRecJEQ2iOhu5ozT4buq71WqPf4pEmC5QW8rUVN16RhhLW5BDJyEQNmuyENYb3IqVf9SOXEH5S/tdQhsOc+ymT10PnryTo1GdI/OgkXw4wejWoV/Mx+qYyHzRso8uie8xilfzwfhd5i0UhXguwN39Rnh10uS1qRct9vOlt5ovjKuFasw41VCKbS0/KG1nlrTWqVTx
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d099d246-4023-46dc-a210-08d76cf9627e
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Nov 2019 14:04:25.3316
+X-MS-Exchange-CrossTenant-Network-Message-Id: 095c8699-32f1-4129-7ad7-08d76cf9bb1e
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Nov 2019 14:06:54.4933
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: TwLHRIR7abvSHGE40n2Ym8/LWvjSMuNjaYcyJtToVXFNXWNVIzTmZT/mf+V0TlTn1g7DvtGtwrNgHp39qdH2gg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB3990
+X-MS-Exchange-CrossTenant-UserPrincipalName: sg4YdveydHjJ54uEDLK+mXdQlBo86x1KbVqo3CfFbfNOeOBfjK4xSx4GoQMBGPJbANGVlWzZyV3vh93jKRM5cw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4267
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -111,309 +108,57 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 19/11/19 6:26 PM, vishnu wrote:
+On 11/14/19 1:27 PM, Peter Gonda wrote:
+> On Tue, Nov 12, 2019 at 2:27 PM Brijesh Singh <brijesh.singh@amd.com> wrote:
+>>
+>>
+>> On 11/12/19 12:35 PM, Peter Gonda wrote:
+>>> On Wed, Jul 10, 2019 at 1:13 PM Singh, Brijesh <brijesh.singh@amd.com> wrote:
+>>>> +static int sev_send_start(struct kvm *kvm, struct kvm_sev_cmd *argp)
+>>>> +{
+>>>> +       struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
+>>>> +       void *amd_cert = NULL, *session_data = NULL;
+>>>> +       void *pdh_cert = NULL, *plat_cert = NULL;
+>>>> +       struct sev_data_send_start *data = NULL;
+>>>> +       struct kvm_sev_send_start params;
+>>>> +       int ret;
+>>>> +
+>>>> +       if (!sev_guest(kvm))
+>>>> +               return -ENOTTY;
+>>>> +
+>>>> +       if (copy_from_user(&params, (void __user *)(uintptr_t)argp->data,
+>>>> +                               sizeof(struct kvm_sev_send_start)))
+>>>> +               return -EFAULT;
+>>>> +
+>>>> +       data = kzalloc(sizeof(*data), GFP_KERNEL);
+>>>> +       if (!data)
+>>>> +               return -ENOMEM;
+>>>> +
+>>>> +       /* userspace wants to query the session length */
+>>>> +       if (!params.session_len)
+>>>> +               goto cmd;
+>>>> +
+>>>> +       if (!params.pdh_cert_uaddr || !params.pdh_cert_len ||
+>>>> +           !params.session_uaddr)
+>>>> +               return -EINVAL;
+>>> I think pdh_cert is only required if the guest policy SEV bit is set.
+>>> Can pdh_cert be optional?
+>>
+>>
+>> We don't cache the policy information in kernel, having said so we can
+>> try caching it during the LAUNCH_START to optimize this case. I have to
+>> check with FW folks but I believe all those fields are required. IIRC,
+>> When I passed NULL then SEND_START failed for me. But I double check it
+>> and update you on this.
 > 
 > 
-> On 19/11/19 6:05 PM, Dan Carpenter wrote:
->> I can't apply this because I'm not CC'd on patches 2-5.
->>
->> On Tue, Nov 19, 2019 at 05:41:16PM +0530, Ravulapati Vishnu vardhan 
->> rao wrote:
->>> +static int acp3x_power_on(void __iomem *acp3x_base)
->>> +{
->>> +    u32 val;
->>> +    u32 timeout;
->>> +
->>> +    timeout = 0;
->>> +    val = rv_readl(acp3x_base + mmACP_PGFSM_STATUS);
->>> +
->>> +    if (val == 0)
->>> +        return val;
->>> +
->>> +    if (!((val & ACP_PGFSM_STATUS_MASK) ==
->>> +                ACP_POWER_ON_IN_PROGRESS))
->>> +        rv_writel(ACP_PGFSM_CNTL_POWER_ON_MASK,
->>> +            acp3x_base + mmACP_PGFSM_CONTROL);
->>> +    while (++timeout) {
->>
->> while (++timeout < 500)
->>
+> I must have misinterpreted the this line of the spec:
+> "If GCTX.POLICY.SEV is 1, the PDH, PEK, CEK, ASK, and ARK certificates
+> are validated."
+> I thought that since they were not validated they were not needed.
 > 
-> If I check with timeout<500 and in next condition i have
-> if(timeout >500) this never happens.
-> 
-> Our intention is to wait for time out and exit.
-> 
->>> +        val  = rv_readl(acp3x_base + mmACP_PGFSM_STATUS);
->>                     ^^
->> Extra space character.
->>
->>
->>> +        if (!val)
->>> +            break;
->>
->> return 0;
->>
->>> +        udelay(1);
->>> +        if (timeout > 500) {
->>> +            pr_err("ACP is Not Powered ON\n");
->>> +            return -ETIMEDOUT;
->>> +        }
->>> +    }
->>> +    return 0;
->>
->> Since we combined the ++timeout and the < 500 this becomes
->> "return -ETIMEOUT;" here.
->>
->>> +}
->>> +
->>> +static int acp3x_power_off(void __iomem *acp3x_base)
->>> +{
->>> +    u32 val;
->>> +    u32 timeout, ret;
->>
->> Both ret and timeout should just be int.  Please update this throughout.
->>
->>> +
->>> +    timeout = 0;
->>
->> Move the timeout = 0 next to the loop or put it in the initializer.
->>
->>> +    rv_writel(ACP_PGFSM_CNTL_POWER_OFF_MASK,
->>> +            acp3x_base + mmACP_PGFSM_CONTROL);
->>> +    while (++timeout) {
->>
->> while (++timeout < 500) {
->>
->>> +        val  = rv_readl(acp3x_base + mmACP_PGFSM_STATUS);
->>
->> Extra space char.
->>
->>> +        if ((val & ACP_PGFSM_STATUS_MASK) == ACP_POWERED_OFF) {
->>> +            ret = 0;
->>> +            break;
->>
->> return 0;
->>
->>> +        }
->>> +        udelay(1);
->>> +        if (timeout > 500) {
->>> +            pr_err("ACP is Not Powered OFF\n");
->>> +            ret = -ETIMEDOUT;
->>> +            break;
->>> +        }
->>> +    }
->>> +    return ret;
->>> +}
->>> +
->>> +static int acp3x_reset(void __iomem *acp3x_base)
->>> +{
->>> +    u32 val, timeout;
->>> +
->>> +    rv_writel(1, acp3x_base + mmACP_SOFT_RESET);
->>> +    timeout = 0;
->>> +    while (++timeout) {
->>> +        val = rv_readl(acp3x_base + mmACP_SOFT_RESET);
->>> +        if ((val & ACP3x_SOFT_RESET__SoftResetAudDone_MASK) ||
->>> +                            timeout > 100) {
->>
->> This timeout > 100 limit was difficult to spot.  Like finding Waldo.
->>
->>> +            if (val & ACP3x_SOFT_RESET__SoftResetAudDone_MASK)
->>> +                break;
->>
->> This is a duplicate condition.
->>
->>> +            return -ENODEV;
->>> +        }
->>> +        cpu_relax();
->>> +    }
->>> +    rv_writel(0, acp3x_base + mmACP_SOFT_RESET);
->>> +    timeout = 0;
->>> +    while (++timeout) {
->>> +        val = rv_readl(acp3x_base + mmACP_SOFT_RESET);
->>> +        if (!val)
->>> +            break;
->>> +        if (timeout > 100)
->>> +            return -ENODEV;
->>> +        cpu_relax();
->>> +    }
->>> +    return 0;
->>> +}
->>> +
->>> +static int acp3x_init(void __iomem *acp3x_base)
->>> +{
->>> +    int ret;
->>> +
->>> +    /* power on */
->>> +    ret = acp3x_power_on(acp3x_base);
->>> +    if (ret) {
->>> +        pr_err("ACP3x power on failed\n");
->>> +        return ret;
->>> +    }
->>> +    /* Reset */
->>> +    ret = acp3x_reset(acp3x_base);
->>> +    if (ret) {
->>> +        pr_err("ACP3x reset failed\n");
->>> +        return ret;
->>> +    }
->>> +    return 0;
->>> +}
->>> +
->>> +static int acp3x_deinit(void __iomem *acp3x_base)
->>> +{
->>> +    int ret;
->>> +
->>> +    /* Reset */
->>> +    ret = acp3x_reset(acp3x_base);
->>> +    if (ret) {
->>> +        pr_err("ACP3x reset failed\n");
->>> +        return ret;
->>> +    }
->>> +    /* power off */
->>> +    ret = acp3x_power_off(acp3x_base);
->>> +    if (ret) {
->>> +        pr_err("ACP3x power off failed\n");
->>> +        return ret;
->>> +    }
->>> +    return 0;
->>> +}
->>> +
->>>   static int snd_acp3x_probe(struct pci_dev *pci,
->>>                  const struct pci_device_id *pci_id)
->>>   {
->>> @@ -64,6 +186,9 @@ static int snd_acp3x_probe(struct pci_dev *pci,
->>>       }
->>>       pci_set_master(pci);
->>>       pci_set_drvdata(pci, adata);
->>> +    ret = acp3x_init(adata->acp3x_base);
->>> +    if (ret)
->>> +        goto disable_msi;
->>>       val = rv_readl(adata->acp3x_base + mmACP_I2S_PIN_CONFIG);
->>>       switch (val) {
->>> @@ -73,7 +198,7 @@ static int snd_acp3x_probe(struct pci_dev *pci,
->>>                         GFP_KERNEL);
->>>           if (!adata->res) {
->>>               ret = -ENOMEM;
->>> -            goto disable_msi;
->>> +            goto de_init;
->>>           }
->>>           adata->res[0].name = "acp3x_i2s_iomem";
->>> @@ -134,12 +259,23 @@ static int snd_acp3x_probe(struct pci_dev *pci,
->>>           ret = -ENODEV;
->>>           goto disable_msi;
->>>       }
->>> +    pm_runtime_set_autosuspend_delay(&pci->dev, 5000);
->>> +    pm_runtime_use_autosuspend(&pci->dev);
->>> +    pm_runtime_set_active(&pci->dev);
->>> +    pm_runtime_put_noidle(&pci->dev);
->>> +    pm_runtime_enable(&pci->dev);
->>>       return 0;
->>>   unregister_devs:
->>>       if (val == I2S_MODE)
->>>           for (i = 0 ; i < ACP3x_DEVS ; i++)
->>>               platform_device_unregister(adata->pdev[i]);
->>> +de_init:
->>> +    ret = acp3x_deinit(adata->acp3x_base);
->>> +    if (ret)
->>> +        dev_err(&pci->dev, "ACP de-init failed\n");
->>> +    else
->>> +        dev_dbg(&pci->dev, "ACP de-initialized\n");
->>
->>
->> We can't overwrite ret (probe failed even if deinit() succeeded).  I
->> dont' know that the debug printk is useful.
->>
->> de_init:
->>     if (acp3x_deinit(adata->acp3x_base))
->>         dev_err(&pci->dev, "ACP de-init failed in probe error 
->> handling\n");
->>
->>
->>>   disable_msi:
->>>       pci_disable_msi(pci);
->>>   release_regions:
->>> @@ -150,15 +286,58 @@ static int snd_acp3x_probe(struct pci_dev *pci,
->>>       return ret;
->>>   }
->>> +static int  snd_acp3x_suspend(struct device *dev)
->>               ^^
->> Extra space char
->>
->>> +{
->>> +    int status;
->>
->> int ret;
->>
->>> +    struct acp3x_dev_data *adata;
->>> +
->>> +    adata = dev_get_drvdata(dev);
->>> +    status = acp3x_deinit(adata->acp3x_base);
->>> +    if (status)
->>> +        dev_err(dev, "ACP de-init failed\n");
->>> +    else
->>> +        dev_dbg(dev, "ACP de-initialized\n");
->>> +
->>> +    return 0;
->>> +}
->>> +
->>> +static int  snd_acp3x_resume(struct device *dev)
->>               ^^
->> Extra space
->>
->>> +{
->>> +    int status;
->>> +    struct acp3x_dev_data *adata;
->>> +
->>> +    adata = dev_get_drvdata(dev);
->>> +    status = acp3x_init(adata->acp3x_base);
->>> +    if (status) {
->>> +        dev_err(dev, "ACP init failed\n");
->>> +        return status;
->>> +    }
->>> +    return 0;
->>> +}
->>> +
->>> +static const struct dev_pm_ops acp3x_pm = {
->>> +    .runtime_suspend = snd_acp3x_suspend,
->>> +    .runtime_resume =  snd_acp3x_resume,
->>> +    .resume =       snd_acp3x_resume,
->>
->> Fix whitespace.
->>
->>> +};
->>> +
->>>   static void snd_acp3x_remove(struct pci_dev *pci)
->>>   {
->>> -    struct acp3x_dev_data *adata = pci_get_drvdata(pci);
->>
->> This was fine.  Leave it as-is.
->>
 
-Actually I  was reported by kbuild robot tool about ISO mixed forbids of 
-initialization so I did this.
-
->>> -    int i;
->>> +    struct acp3x_dev_data *adata;
->>> +    int i, ret;
->>> +    adata = pci_get_drvdata(pci);
->>>       if (adata->acp3x_audio_mode == ACP3x_I2S_MODE) {
->>>           for (i = 0 ; i <  ACP3x_DEVS ; i++)
->>                                  ^^
->> There is an extra space char here as well.  I guess I missed it when I
->> reviewed patch 1.
->>
->>>               platform_device_unregister(adata->pdev[i]);
->>>       }
->>> +    ret = acp3x_deinit(adata->acp3x_base);
->>> +    if (ret)
->>> +        dev_err(&pci->dev, "ACP de-init failed\n");
->>> +    else
->>> +        dev_dbg(&pci->dev, "ACP de-initialized\n");
->>
->> Put the printk in acp3x_deinit() itself and remove it from all the
->> callers.
->>
->> regards,
->> dan carpenter
->>
+I have confirmed that these fields are required by the SEND_START
+even when GCTX.POLICY.SEV=0. The FW needs us to pass certificate
+chain, if POLICY.SEV=1 then FW will validating the chain otherwise
+ignore it.
