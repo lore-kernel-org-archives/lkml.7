@@ -2,126 +2,137 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B8F0C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:06:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1750C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:06:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EF57206DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:06:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574143599;
-	bh=AoDNuKQXbiefCOInJ5AY2FFn7JlFLLag6G8EitqjtWA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tsV49fEPB8vajei7SpJVcB3dRfPcJKVsQlXOsgV0ZDtlwOZZveG3uXoaQhLlqiSvM
-	 0rci9i/5v1LajHMwz6iH0yUbEeq39ngqcj9w4idi4QixZDfRKXbNCRrZya4BlFW7n/
-	 sjtxFN9tpcXri9nQK7jAdE2RM3eYIu6+Ucc6S2qQ=
+	by mail.kernel.org (Postfix) with ESMTP id 92875206DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:06:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729671AbfKSFe3 (ORCPT
+        id S1729197AbfKSFe1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:34:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55176 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729187AbfKSFeZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:34:25 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C13020672;
-        Tue, 19 Nov 2019 05:34:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141664;
-        bh=AoDNuKQXbiefCOInJ5AY2FFn7JlFLLag6G8EitqjtWA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IlczYe6Ia8RLDPLBiR06A9Ljr1LmCBXQv2AN+h/gCxFsswEJCkfDze4kT/RFYyDqQ
-         W8fE2Qfajl3Uh3S54pmQkrScKa7BJMxDWTV1HTyC3gtcXtcxxeZkPaZzt3i/nqH4cW
-         2kED4+9LA3Cw6UAaNsbf+M/0yXDa9AX99ltuT56M=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Javier Martinez Canillas <javierm@redhat.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 239/422] media: ov2680: dont register the v4l2 subdevice before checking chip ID
-Date:   Tue, 19 Nov 2019 06:17:16 +0100
-Message-Id: <20191119051414.531599519@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
-References: <20191119051400.261610025@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Tue, 19 Nov 2019 00:34:27 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:52534 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729643AbfKSFeY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:34:24 -0500
+Received: from mail-pg1-f198.google.com ([209.85.215.198])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1iWw9e-00070O-Cz
+        for linux-kernel@vger.kernel.org; Tue, 19 Nov 2019 05:34:22 +0000
+Received: by mail-pg1-f198.google.com with SMTP id x22so11321918pgh.19
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 21:34:22 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=jusLe6eRW9S01oAaldUJb/F5NSqPDxkFugLOtbNZF6k=;
+        b=VqBIvRcIeJSbdLqezQc6l/Nyv9pkD3T0Xp6ZdHyOor1M/hkK6pnoByRAXyY6bqwKqm
+         88U1Fl+Cg4ftwfvWbccSm/KmbawZlbEP1sHYJu06rNCk/mov3HE6VgzaTAVX7T83nUMn
+         zaObCMsb59kkFGnk5P0tlQBdu0Jshl0ZpPrZSO87Q5PPAymy1Yr0vV7E96FQCoRXhdzo
+         R/hVJErhZa4aCSeF/nQn4KvoZKe9+gUk3X2fH0UGYgQvYlbKIHSNkOmjC4uE3oGJehY/
+         Mm72SO7We+Poos5+0Qg8O5w9lIVRqzzTG7Z6lstNZup0eOrqSEWbfjqkzequJdDxCjEs
+         3AGA==
+X-Gm-Message-State: APjAAAUvmOiaJ6tKfsAKX6vHC2LhIeUIqWgugKLqsGT3szYEqnGZ611k
+        /Jfg/9PaOMIsxy6UbgIzI5GrHwcuvjNOS+lOZTrWdvhaNQS0DZWFW03atfBnI/ZduXvT8Odj5Bu
+        hlJ655hpwDjlC+eC2keQfjrAbb6NTRffE5AD5ptkLpg==
+X-Received: by 2002:a17:90a:6505:: with SMTP id i5mr3838069pjj.36.1574141660900;
+        Mon, 18 Nov 2019 21:34:20 -0800 (PST)
+X-Google-Smtp-Source: APXvYqx3WmZjeKQxzxHHa/AxPTyXq45+6LekFE+w8NKygfXAW2Bw76jJ/WXvbY4tY2IwvbPVF3uyww==
+X-Received: by 2002:a17:90a:6505:: with SMTP id i5mr3838043pjj.36.1574141660626;
+        Mon, 18 Nov 2019 21:34:20 -0800 (PST)
+Received: from 2001-b011-380f-3c42-d02c-da56-2d00-ce2a.dynamic-ip6.hinet.net (2001-b011-380f-3c42-d02c-da56-2d00-ce2a.dynamic-ip6.hinet.net. [2001:b011:380f:3c42:d02c:da56:2d00:ce2a])
+        by smtp.gmail.com with ESMTPSA id e8sm22516084pga.17.2019.11.18.21.34.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 18 Nov 2019 21:34:20 -0800 (PST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3601.0.10\))
+Subject: Re: [PATCH 1/2] Input: synaptics-rmi4 - clear irqs before set irqs
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <189fc7c3-d0f7-a25e-9d4d-446b095e853f@canonical.com>
+Date:   Tue, 19 Nov 2019 13:34:14 +0800
+Cc:     Aaron Ma <aaron.ma@canonical.com>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        Kernel development list <linux-kernel@vger.kernel.org>,
+        Cheiny@synaptics.com, aduggan@synaptics.com,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <E08F41E2-8708-49AE-813D-6079561F876F@canonical.com>
+References: <20190220164200.31044-1-aaron.ma@canonical.com>
+ <20190609165551.GB90002@dtor-ws>
+ <7da443d0-f433-c5a5-5194-707362eb2ee5@canonical.com>
+ <20190611173545.GE143729@dtor-ws>
+ <189fc7c3-d0f7-a25e-9d4d-446b095e853f@canonical.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+X-Mailer: Apple Mail (2.3601.0.10)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Javier Martinez Canillas <javierm@redhat.com>
+Hi Dmitry,
 
-[ Upstream commit b7a417628abf49dae98cb80a272dc133b0e4d1a3 ]
+> On Jun 14, 2019, at 12:26, Aaron Ma <aaron.ma@canonical.com> wrote:
+> 
+> On 6/12/19 1:35 AM, Dmitry Torokhov wrote:
+>> On Tue, Jun 11, 2019 at 12:55:58AM +0800, Aaron Ma wrote:
+>>> On 6/10/19 12:55 AM, Dmitry Torokhov wrote:
+>>>> Hi Aaron,
+>>>> 
+>>>> On Wed, Feb 20, 2019 at 05:41:59PM +0100, Aaron Ma wrote:
+>>>>> rmi4 got spam data after S3 resume on some ThinkPads.
+>>>>> Then TrackPoint lost when be detected by psmouse.
+>>>>> Clear irqs status before set irqs will make TrackPoint back.
+>>>> Could you please give me an idea as to what this spam data is?
+>>>> 
+>>> It should be some data 0 during suspend/resume.
+>>> Actually I don't know how these data 0 is produced.
+>>> Not all synaptics touchpads have this issue.
+>>> 
+>>>> In F03 probe we clear all pending data before enabling the function,
+>>> Yes we did, but not after resume.
+>> Yes, I understand that. The question I was asking: if we add code
+>> consuming all pending data to f03->suspend(), similarly to what we are
+>> doing at probe time, will it fix the issue with trackstick losing
+>> synchronization and attempting disconnect?
+>> 
+> 
+> I just do some test via adding code in suspend or resume.
+> But they didn't work out.
+> 
+>>>> maybe the same needs to be done on resume, instead of changing the way
+>>>> we handle IRQ bits?
+>>> This patch is supposed to clear irq status like it in fn probe. Not
+>>> changing IRQ bits.
+>> What I meant is changing how we enable IRQ bits. I would really prefer
+>> we did not lose IRQ state for other functions when we enable interrupts
+>> for given function.
+>> 
+> 
+> Not only F03 with problem, F12 too which is touchpad .
+> User verified this patch fixes problem of F12 too.
+> Clear IRQ status before enable IRQ should be safe.
+> 
+> Or we can add code before enable IRQ in F03/F12.
 
-The driver registers the v4l2 subdevice before attempting to power on the
-chip and checking its ID. This means that a media device driver that it's
-waiting for this subdevice to be bound, will prematurely expose its media
-device node to userspace because if something goes wrong the media entity
-will be cleaned up again on the ov2680 probe function.
+Users reported that  patch [1/2] alone can solve the issue.
 
-This also simplifies the probe function error path since no initialization
-is made before attempting to enable the resources or checking the chip ID.
+Do we need more information before making this fix merged?
 
-Fixes: 3ee47cad3e69 ("media: ov2680: Add Omnivision OV2680 sensor driver")
+Kai-Heng
 
-Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/media/i2c/ov2680.c | 14 ++++----------
- 1 file changed, 4 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/media/i2c/ov2680.c b/drivers/media/i2c/ov2680.c
-index f753a1c333ef9..3ccd584568fb5 100644
---- a/drivers/media/i2c/ov2680.c
-+++ b/drivers/media/i2c/ov2680.c
-@@ -1088,26 +1088,20 @@ static int ov2680_probe(struct i2c_client *client)
- 
- 	mutex_init(&sensor->lock);
- 
--	ret = ov2680_v4l2_init(sensor);
-+	ret = ov2680_check_id(sensor);
- 	if (ret < 0)
- 		goto lock_destroy;
- 
--	ret = ov2680_check_id(sensor);
-+	ret = ov2680_v4l2_init(sensor);
- 	if (ret < 0)
--		goto error_cleanup;
-+		goto lock_destroy;
- 
- 	dev_info(dev, "ov2680 init correctly\n");
- 
- 	return 0;
- 
--error_cleanup:
--	dev_err(dev, "ov2680 init fail: %d\n", ret);
--
--	media_entity_cleanup(&sensor->sd.entity);
--	v4l2_async_unregister_subdev(&sensor->sd);
--	v4l2_ctrl_handler_free(&sensor->ctrls.handler);
--
- lock_destroy:
-+	dev_err(dev, "ov2680 init fail: %d\n", ret);
- 	mutex_destroy(&sensor->lock);
- 
- 	return ret;
--- 
-2.20.1
-
-
+> 
+> Thanks,
+> Aaron
+> 
+>> Thanks.
+>> 
+>> -- Dmitry
 
