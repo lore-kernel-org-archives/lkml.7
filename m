@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7F53C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:11:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 225D8C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:11:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E1BD20692
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:11:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAB2321850
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:11:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574143892;
-	bh=ynaErUTl8+VKC74rImywBO6Po3jc/xm37V2gxxiQ00c=;
+	s=default; t=1574143906;
+	bh=HMJKuEBSSrGyP06AAdXX08X+kMCPToYcKTmElvu7oZw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=st8Agp6NWcBi6OXCxrJnSUBLtpmv1sugXQGCDrknAs+TPDup7y/HIHr+duS2LM7/X
-	 PiNgi4uZ0rYxCoMtLNf0YNXZ+WHz4n2pKaZbIGCtpuTAU3SCcTfu97VWRCXq9zO4fH
-	 hC4UR+AjJaC+8BDj/2vs0CKVWdg5qCjwGf8faq8g=
+	b=Ih3a+WME4I4uWmIQ74yhMzz/g6yXXYXy8pKAVcVU0ktC5OXgXL7ttSx3X5bt+4awD
+	 PP2kPERLxuwFYvVwbGTZGCsVuJfiQ5RiHszdS1G9J+krWUiKIan9FRdyjJ4NkBKjT1
+	 nT4H1E20BOrHIjTzumqSAcCLRwFUsgPVt99fLJT4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727899AbfKSGLb (ORCPT
+        id S1727254AbfKSFXt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 01:11:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40444 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:23:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728181AbfKSFYU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:24:20 -0500
+        id S1728055AbfKSFXp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:23:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D25522318;
-        Tue, 19 Nov 2019 05:24:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02383208C3;
+        Tue, 19 Nov 2019 05:23:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141060;
-        bh=ynaErUTl8+VKC74rImywBO6Po3jc/xm37V2gxxiQ00c=;
+        s=default; t=1574141025;
+        bh=HMJKuEBSSrGyP06AAdXX08X+kMCPToYcKTmElvu7oZw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c7NG8jDMUfcFilWuwD27mIvzu7/ZlwKAog9sq6p+/4OzcY8yqALa2RDR/ZJQ3t66j
-         qrhY7ZqSaMn+8Wme4quk5n/3LNt/Il0f8icbb6tZv5KZKm0LB2Qyg21jMwApDGerN8
-         3eOA8yMZVdNR3rt0568KQzKno/wh+YXy31JNl0Lc=
+        b=rvrXA925v0s8l6vsnmRiHW7V9Lue6mf9d7O5E7ioAxAD9lDc6jlDiUrkYiREanr6k
+         zMN2QBIovZtHkpO1MoYOzHNn9vwZ/2J6krLCMEb92oo2H9maH9VC9/KRg7ZY288ocN
+         DSZXVEGASyPZxu7RlWkTYGTOuW4NKQnPvkQlxHs0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tejun Heo <tj@kernel.org>, Shakeel Butt <shakeelb@google.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 031/422] mm: hugetlb: switch to css_tryget() in hugetlb_cgroup_charge_cgroup()
-Date:   Tue, 19 Nov 2019 06:13:48 +0100
-Message-Id: <20191119051402.050380003@linuxfoundation.org>
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 4.19 020/422] Input: synaptics-rmi4 - destroy F54 poller workqueue when removing
+Date:   Tue, 19 Nov 2019 06:13:37 +0100
+Message-Id: <20191119051401.407394866@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -63,49 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roman Gushchin <guro@fb.com>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-commit 0362f326d86c645b5e96b7dbc3ee515986ed019d upstream.
+commit ba60cf9f78f0d7c8e73c7390608f7f818ee68aa0 upstream.
 
-An exiting task might belong to an offline cgroup.  In this case an
-attempt to grab a cgroup reference from the task can end up with an
-infinite loop in hugetlb_cgroup_charge_cgroup(), because neither the
-cgroup will become online, neither the task will be migrated to a live
-cgroup.
+The driver forgets to destroy workqueue in remove() similarly to what is
+done when probe() fails. Add a call to destroy_workqueue() to fix it.
 
-Fix this by switching over to css_tryget().  As css_tryget_online()
-can't guarantee that the cgroup won't go offline, in most cases the
-check doesn't make sense.  In this particular case users of
-hugetlb_cgroup_charge_cgroup() are not affected by this change.
+Since unregistration will wait for the work to finish, we do not need to
+cancel/flush the work instance in remove().
 
-A similar problem is described by commit 18fa84a2db0e ("cgroup: Use
-css_tryget() instead of css_tryget_online() in task_get_css()").
-
-Link: http://lkml.kernel.org/r/20191106225131.3543616-2-guro@fb.com
-Signed-off-by: Roman Gushchin <guro@fb.com>
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
-Acked-by: Tejun Heo <tj@kernel.org>
-Reviewed-by: Shakeel Butt <shakeelb@google.com>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20191114023405.31477-1-hslester96@gmail.com
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/hugetlb_cgroup.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/input/rmi4/rmi_f54.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/mm/hugetlb_cgroup.c
-+++ b/mm/hugetlb_cgroup.c
-@@ -196,7 +196,7 @@ int hugetlb_cgroup_charge_cgroup(int idx
- again:
- 	rcu_read_lock();
- 	h_cg = hugetlb_cgroup_from_task(current);
--	if (!css_tryget_online(&h_cg->css)) {
-+	if (!css_tryget(&h_cg->css)) {
- 		rcu_read_unlock();
- 		goto again;
- 	}
+--- a/drivers/input/rmi4/rmi_f54.c
++++ b/drivers/input/rmi4/rmi_f54.c
+@@ -742,6 +742,7 @@ static void rmi_f54_remove(struct rmi_fu
+ 
+ 	video_unregister_device(&f54->vdev);
+ 	v4l2_device_unregister(&f54->v4l2);
++	destroy_workqueue(f54->workqueue);
+ }
+ 
+ struct rmi_function_handler rmi_f54_handler = {
 
 
