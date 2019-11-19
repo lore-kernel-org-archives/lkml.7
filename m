@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A16BFC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:38:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF65DC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:38:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7579A206EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:38:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 984D0214DE
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:38:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141889;
-	bh=6rLXOOpyhENEwIWRMZg72JBdXNe4tH+Hrc/ZYftRZBI=;
+	s=default; t=1574141892;
+	bh=0o0S7Wo9i1/gjx7t8f6sdM3bNtyEYb15PcbUreEvHys=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BV6kGCjQXioJpevuGmM0O2rlFQr/OiyF0HiYONIa1K1JIonA8Ic2SFUGaRu3oAvyu
-	 C4Uz5P0qIMHLLc3T85Rd/tKXUPT5nTjmaYDyH7oBHv/NBrSWwrXwgttQ8My+grGddi
-	 yG4ZDykS9geAooG+COnZAz6eeZPWBrM7kXJ3Lpzk=
+	b=ELY4kAYjxLWcsq1yhcqEjQsTLmoOgJlxXdtQ7bopBWT3YkkMJ3/kmNjVfKe7Njx90
+	 hOkZ7T7lWbazXSxJV+blQX3+z7B0Uil3DuJ6dxjwurPGBtBuGxX3kftDTEYhv0Dlz9
+	 RZrNkuLmGgYt/ohBxpMJefhp7TpWDm5Ajkt5RfnY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729568AbfKSFiI (ORCPT
+        id S1729416AbfKSFiL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:38:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59892 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:38:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727176AbfKSFiB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:38:01 -0500
+        id S1729728AbfKSFiE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:38:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA5AB208C3;
-        Tue, 19 Nov 2019 05:37:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E061206EC;
+        Tue, 19 Nov 2019 05:38:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141880;
-        bh=6rLXOOpyhENEwIWRMZg72JBdXNe4tH+Hrc/ZYftRZBI=;
+        s=default; t=1574141883;
+        bh=0o0S7Wo9i1/gjx7t8f6sdM3bNtyEYb15PcbUreEvHys=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n5i99zOZdl9J2wN1/SV4ArQ3qBlj2ZIo6XVpk2Kkx4+kTfcxdc7FTG/abcmDP+wvT
-         j03svwM94m3Y3fA36aoP7lICn89IPAUtzrt7ih1pVsKCX3BBZLXAqJNP1oyTgPTwTI
-         8febHINGRY8XB6XKlseq3U5yUUt5vDJ9ZsKnP6Xg=
+        b=1b6zr3rVAzTz5I9d1IUVnZXmksAo+Gy0cAu4tP0wy4py/T9wxdl3JhXDL0soOfz9/
+         VXSYxuS3rp1zC5uYGXYxRfl3ycFF1ygZejgnuo2qsVQDxvLjLsn0Vv2VorAqnR3eEu
+         TAItEj5Ebqe38ZR5K0v5CYVbl4WaPTC6Q5yWoUvs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Kemnade <andreas@kemnade.info>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        stable@vger.kernel.org,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 272/422] power: supply: twl4030_charger: disable eoc interrupt on linear charge
-Date:   Tue, 19 Nov 2019 06:17:49 +0100
-Message-Id: <20191119051416.614384894@linuxfoundation.org>
+Subject: [PATCH 4.19 273/422] net: mvpp2: fix the number of queues per cpu for PPv2.2
+Date:   Tue, 19 Nov 2019 06:17:50 +0100
+Message-Id: <20191119051416.680349163@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -60,73 +61,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Kemnade <andreas@kemnade.info>
+From: Antoine Tenart <antoine.tenart@bootlin.com>
 
-[ Upstream commit 079cdff3d0a09c5da10ae1be35def7a116776328 ]
+[ Upstream commit 70afb58e9856a70ff9e45760af2d0ebeb7c46ac2 ]
 
-This avoids getting woken up from suspend after power interruptions
-when the bci wrongly thinks the battery is full just because
-of input current going low because of low input power
+The Marvell PPv2.2 engine only has 8 Rx queues per CPU, while PPv2.1 has
+16 of them. This patch updates the code so that the Rx queues mask width
+is selected given the version of the network controller used.
 
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/power/supply/twl4030_charger.c | 27 +++++++++++++++++++++++++-
- 1 file changed, 26 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/marvell/mvpp2/mvpp2.h      | 3 ++-
+ drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c | 7 ++++---
+ 2 files changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/power/supply/twl4030_charger.c b/drivers/power/supply/twl4030_charger.c
-index adcaa0a10a6f4..0e202d4273fb6 100644
---- a/drivers/power/supply/twl4030_charger.c
-+++ b/drivers/power/supply/twl4030_charger.c
-@@ -440,6 +440,7 @@ static void twl4030_current_worker(struct work_struct *data)
- static int twl4030_charger_enable_usb(struct twl4030_bci *bci, bool enable)
- {
- 	int ret;
-+	u32 reg;
+diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2.h b/drivers/net/ethernet/marvell/mvpp2/mvpp2.h
+index 67b9e81b7c024..46911b67b0398 100644
+--- a/drivers/net/ethernet/marvell/mvpp2/mvpp2.h
++++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2.h
+@@ -253,7 +253,8 @@
+ #define     MVPP2_ISR_ENABLE_INTERRUPT(mask)	((mask) & 0xffff)
+ #define     MVPP2_ISR_DISABLE_INTERRUPT(mask)	(((mask) << 16) & 0xffff0000)
+ #define MVPP2_ISR_RX_TX_CAUSE_REG(port)		(0x5480 + 4 * (port))
+-#define     MVPP2_CAUSE_RXQ_OCCUP_DESC_ALL_MASK	0xffff
++#define     MVPP2_CAUSE_RXQ_OCCUP_DESC_ALL_MASK(version) \
++					((version) == MVPP21 ? 0xffff : 0xff)
+ #define     MVPP2_CAUSE_TXQ_OCCUP_DESC_ALL_MASK	0xff0000
+ #define     MVPP2_CAUSE_TXQ_OCCUP_DESC_ALL_OFFSET	16
+ #define     MVPP2_CAUSE_RX_FIFO_OVERRUN_MASK	BIT(24)
+diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+index 9b608d23ff7ee..29f1260535325 100644
+--- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
++++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+@@ -908,7 +908,7 @@ static void mvpp2_interrupts_unmask(void *arg)
+ 	u32 val;
  
- 	if (bci->usb_mode == CHARGE_OFF)
- 		enable = false;
-@@ -453,14 +454,38 @@ static int twl4030_charger_enable_usb(struct twl4030_bci *bci, bool enable)
- 			bci->usb_enabled = 1;
- 		}
+ 	val = MVPP2_CAUSE_MISC_SUM_MASK |
+-		MVPP2_CAUSE_RXQ_OCCUP_DESC_ALL_MASK;
++		MVPP2_CAUSE_RXQ_OCCUP_DESC_ALL_MASK(port->priv->hw_version);
+ 	if (port->has_tx_irqs)
+ 		val |= MVPP2_CAUSE_TXQ_OCCUP_DESC_ALL_MASK;
  
--		if (bci->usb_mode == CHARGE_AUTO)
-+		if (bci->usb_mode == CHARGE_AUTO) {
-+			/* Enable interrupts now. */
-+			reg = ~(u32)(TWL4030_ICHGLOW | TWL4030_ICHGEOC |
-+					TWL4030_TBATOR2 | TWL4030_TBATOR1 |
-+					TWL4030_BATSTS);
-+			ret = twl_i2c_write_u8(TWL4030_MODULE_INTERRUPTS, reg,
-+				       TWL4030_INTERRUPTS_BCIIMR1A);
-+			if (ret < 0) {
-+				dev_err(bci->dev,
-+					"failed to unmask interrupts: %d\n",
-+					ret);
-+				return ret;
-+			}
- 			/* forcing the field BCIAUTOUSB (BOOT_BCI[1]) to 1 */
- 			ret = twl4030_clear_set_boot_bci(0, TWL4030_BCIAUTOUSB);
-+		}
+@@ -928,7 +928,7 @@ mvpp2_shared_interrupt_mask_unmask(struct mvpp2_port *port, bool mask)
+ 	if (mask)
+ 		val = 0;
+ 	else
+-		val = MVPP2_CAUSE_RXQ_OCCUP_DESC_ALL_MASK;
++		val = MVPP2_CAUSE_RXQ_OCCUP_DESC_ALL_MASK(MVPP22);
  
- 		/* forcing USBFASTMCHG(BCIMFSTS4[2]) to 1 */
- 		ret = twl4030_clear_set(TWL_MODULE_MAIN_CHARGE, 0,
- 			TWL4030_USBFASTMCHG, TWL4030_BCIMFSTS4);
- 		if (bci->usb_mode == CHARGE_LINEAR) {
-+			/* Enable interrupts now. */
-+			reg = ~(u32)(TWL4030_ICHGLOW | TWL4030_TBATOR2 |
-+					TWL4030_TBATOR1 | TWL4030_BATSTS);
-+			ret = twl_i2c_write_u8(TWL4030_MODULE_INTERRUPTS, reg,
-+				       TWL4030_INTERRUPTS_BCIIMR1A);
-+			if (ret < 0) {
-+				dev_err(bci->dev,
-+					"failed to unmask interrupts: %d\n",
-+					ret);
-+				return ret;
-+			}
- 			twl4030_clear_set_boot_bci(TWL4030_BCIAUTOAC|TWL4030_CVENAC, 0);
- 			/* Watch dog key: WOVF acknowledge */
- 			ret = twl_i2c_write_u8(TWL_MODULE_MAIN_CHARGE, 0x33,
+ 	for (i = 0; i < port->nqvecs; i++) {
+ 		struct mvpp2_queue_vector *v = port->qvecs + i;
+@@ -3059,7 +3059,8 @@ static int mvpp2_poll(struct napi_struct *napi, int budget)
+ 	}
+ 
+ 	/* Process RX packets */
+-	cause_rx = cause_rx_tx & MVPP2_CAUSE_RXQ_OCCUP_DESC_ALL_MASK;
++	cause_rx = cause_rx_tx &
++		   MVPP2_CAUSE_RXQ_OCCUP_DESC_ALL_MASK(port->priv->hw_version);
+ 	cause_rx <<= qv->first_rxq;
+ 	cause_rx |= qv->pending_cause_rx;
+ 	while (cause_rx && budget > 0) {
 -- 
 2.20.1
 
