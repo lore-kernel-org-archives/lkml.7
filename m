@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44F49C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:43:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E89FC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:43:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 176B421939
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:43:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32146208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:43:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142202;
-	bh=8cx90xcuJ2/7+XJQJkGSC6D0S1sN5k36Nt1id3Is/8Q=;
+	s=default; t=1574142205;
+	bh=YoOdhLDsccXJu821EOv0qP752hFVRTq/feQk1vt7ELE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sXX5MWubOEq1+wDS59fnZ7YeTQ0hPz5MzkJTrsRER6dWcRwGQyJ168JVzBVSH9z7m
-	 kZTEmndl7FaoYHKHnumqc3Uth6JaMw9FSHeKri4UJzOsRL5Kl7MRjbTEhXK2xS9j+Y
-	 7xBeuPbNiIWS9S4V1mi4d8Aatfl2x24jhIkgakks=
+	b=MVLCU84K4ECYj1L6QONDZ1n+TUNhC72CJMoVGHy3hfNJTUeshWrld9tfXgDfBJpr+
+	 cKr1QcFUNpc9j9XnwvhL+IluOwDSj2xQiZZUkBW1k+Zj0F+lyUEa7GcS/9rsjPDvoX
+	 VvpddeTYT/+T55f5JNWZM3h+IC4BWd9B7KRXXyCM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730725AbfKSFnV (ORCPT
+        id S1730735AbfKSFnX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:43:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38012 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:43:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730186AbfKSFnM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:43:12 -0500
+        id S1730707AbfKSFnO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:43:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 178FE218BA;
-        Tue, 19 Nov 2019 05:43:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B759B21783;
+        Tue, 19 Nov 2019 05:43:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142191;
-        bh=8cx90xcuJ2/7+XJQJkGSC6D0S1sN5k36Nt1id3Is/8Q=;
+        s=default; t=1574142194;
+        bh=YoOdhLDsccXJu821EOv0qP752hFVRTq/feQk1vt7ELE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e5QTPll3NbfGjbghRJRB8gz4uy+zG+gzPU0HY7xlAqxP1h4+J8aQzFsFu+xez0YCO
-         Y9Tts9P51J3O2YgLGaJHGN33K7Oko0hldrD+utK1ILbPLKxys6IDtv4F9xrA9pEaMd
-         y+FiYf9H9l0TNm6W2eMRpplxjb2Zj6QC/PcmNasc=
+        b=JLyXBPpp0QSE4BAJQY+Ya+frIKK+qy4JRgaUj4kblayiX1ycykXSLIAy0MiYIukEV
+         uQDucJ7wjHSL4pdjlNrQVNG+FdKqbQ/plEJGtWrN8CkRAGbGxgayaCwT57e2vkjY+D
+         X5fv2OWVrlQlko10baWZw9s2sLol4lo/Otl73L4w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Liebler <stli@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 420/422] s390/vdso: correct vdso mapping for compat tasks
-Date:   Tue, 19 Nov 2019 06:20:17 +0100
-Message-Id: <20191119051426.410191997@linuxfoundation.org>
+Subject: [PATCH 4.19 421/422] net: phy: mdio-bcm-unimac: mark PM functions as __maybe_unused
+Date:   Tue, 19 Nov 2019 06:20:18 +0100
+Message-Id: <20191119051426.475173994@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -62,61 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Gorbik <gor@linux.ibm.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 190f056fba230abee80712eb810939ef9a8c462f ]
+[ Upstream commit 9b97123a584f60a5bca5a2663485768a1f6cd0a4 ]
 
-While "s390/vdso: avoid 64-bit vdso mapping for compat tasks" fixed
-64-bit vdso mapping for compat tasks under gdb it introduced another
-problem. "compat_mm" flag is not inherited during fork and when
-31-bit process forks a child (but does not perform exec) it ends up
-with 64-bit vdso. To address that, init_new_context (which is called
-during fork and exec) now initialize compat_mm based on thread TIF_31BIT
-flag. Later compat_mm is adjusted in arch_setup_additional_pages, which
-is called during exec.
+The newly added runtime-pm support causes a harmless warning
+when CONFIG_PM is disabled:
 
-Fixes: d1befa65823e ("s390/vdso: avoid 64-bit vdso mapping for compat tasks")
-Reported-by: Stefan Liebler <stli@linux.ibm.com>
-Reviewed-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: <stable@vger.kernel.org> # v4.20+
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+drivers/net/phy/mdio-bcm-unimac.c:330:12: error: 'unimac_mdio_resume' defined but not used [-Werror=unused-function]
+ static int unimac_mdio_resume(struct device *d)
+drivers/net/phy/mdio-bcm-unimac.c:321:12: error: 'unimac_mdio_suspend' defined but not used [-Werror=unused-function]
+ static int unimac_mdio_suspend(struct device *d)
+
+Marking the functions as __maybe_unused is the easiest workaround
+and avoids adding #ifdef checks.
+
+Fixes: b78ac6ecd1b6 ("net: phy: mdio-bcm-unimac: Allow configuring MDIO clock divider")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/include/asm/mmu_context.h | 2 +-
- arch/s390/kernel/vdso.c             | 5 ++---
- 2 files changed, 3 insertions(+), 4 deletions(-)
+ drivers/net/phy/mdio-bcm-unimac.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/s390/include/asm/mmu_context.h b/arch/s390/include/asm/mmu_context.h
-index e4462202200d7..8d04e6f3f7964 100644
---- a/arch/s390/include/asm/mmu_context.h
-+++ b/arch/s390/include/asm/mmu_context.h
-@@ -25,7 +25,7 @@ static inline int init_new_context(struct task_struct *tsk,
- 	atomic_set(&mm->context.flush_count, 0);
- 	mm->context.gmap_asce = 0;
- 	mm->context.flush_mm = 0;
--	mm->context.compat_mm = 0;
-+	mm->context.compat_mm = test_thread_flag(TIF_31BIT);
- #ifdef CONFIG_PGSTE
- 	mm->context.alloc_pgste = page_table_allocate_pgste ||
- 		test_thread_flag(TIF_PGSTE) ||
-diff --git a/arch/s390/kernel/vdso.c b/arch/s390/kernel/vdso.c
-index ec31b48a42a52..7ab7d256d1eb7 100644
---- a/arch/s390/kernel/vdso.c
-+++ b/arch/s390/kernel/vdso.c
-@@ -224,10 +224,9 @@ int arch_setup_additional_pages(struct linux_binprm *bprm, int uses_interp)
+diff --git a/drivers/net/phy/mdio-bcm-unimac.c b/drivers/net/phy/mdio-bcm-unimac.c
+index 80b9583eaa952..df75efa96a7d9 100644
+--- a/drivers/net/phy/mdio-bcm-unimac.c
++++ b/drivers/net/phy/mdio-bcm-unimac.c
+@@ -318,7 +318,7 @@ static int unimac_mdio_remove(struct platform_device *pdev)
+ 	return 0;
+ }
  
- 	vdso_pages = vdso64_pages;
- #ifdef CONFIG_COMPAT
--	if (is_compat_task()) {
-+	mm->context.compat_mm = is_compat_task();
-+	if (mm->context.compat_mm)
- 		vdso_pages = vdso32_pages;
--		mm->context.compat_mm = 1;
--	}
- #endif
- 	/*
- 	 * vDSO has a problem and was disabled, just don't "enable" it for
+-static int unimac_mdio_suspend(struct device *d)
++static int __maybe_unused unimac_mdio_suspend(struct device *d)
+ {
+ 	struct unimac_mdio_priv *priv = dev_get_drvdata(d);
+ 
+@@ -327,7 +327,7 @@ static int unimac_mdio_suspend(struct device *d)
+ 	return 0;
+ }
+ 
+-static int unimac_mdio_resume(struct device *d)
++static int __maybe_unused unimac_mdio_resume(struct device *d)
+ {
+ 	struct unimac_mdio_priv *priv = dev_get_drvdata(d);
+ 	int ret;
 -- 
 2.20.1
 
