@@ -2,100 +2,96 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46DEEC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:07:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A116DC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:08:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F2A522317
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:07:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74A5822317
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:08:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VYJbCCRX"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="bq4CSO+Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726637AbfKSFHz (ORCPT
+        id S1726825AbfKSFI2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:07:55 -0500
-Received: from mail-pl1-f173.google.com ([209.85.214.173]:46697 "EHLO
-        mail-pl1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725536AbfKSFHz (ORCPT
+        Tue, 19 Nov 2019 00:08:28 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:51170 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726351AbfKSFI1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:07:55 -0500
-Received: by mail-pl1-f173.google.com with SMTP id l4so11074055plt.13;
-        Mon, 18 Nov 2019 21:07:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc
-         :content-transfer-encoding;
-        bh=feilDUjQ5x/59LFnxlxvW8WwQKzwk+wbXzAfXtSise0=;
-        b=VYJbCCRXBL9vm9AuHqkXrEa9kVoSz+5rrJpTVyktE6DIHKNZNFmUF2RuEvqsoK1K+O
-         X/0BlBUAgkg8j8qVtACyb176L/4yDY0JPoafHJWo3i1wNkHuTiZnRVJzl17SumxyXm7Y
-         nRArW3adCtHAiN7bgsL8EBsEp4MV2VpvLLBrd8BL3GsIo7JwhpIvNKKRAvutZaFxCJnB
-         P52VZy7Uy3c3hIs+mUN20tTlTau3zH8MnOu0SJp2WOUP9/J0y+Z5gj+YDQuS4c58Owy5
-         FmxilFWia0Y+F6/0xJ5RiLRZp48O6UqeIH/veMn71cxq1UYoLQqBoExqBaGubAv8STyt
-         t1JA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
-         :content-transfer-encoding;
-        bh=feilDUjQ5x/59LFnxlxvW8WwQKzwk+wbXzAfXtSise0=;
-        b=Cb9F/m0r9i+HbaKMLvX4k+HlmPOr91+Nv1X3zrHKI56EifwHIBBS6dJgJ4/C4/UGXf
-         8iY6JMzV2rZ0pAy8sETnlSIBNii8WS7GAIyQpTLnBvGcFai8pVPNIO/WU7RkOcwOEJpn
-         7MiHerFpl6FEBeKuoXr2AilZhNwEQrxe4cBPwcQtxaixVEM4qPEKxKkr6ahRscW7rCxG
-         zIgyZJNUtY6r2OzOV0JrrDxzTe3omfVufUnfnTa2pCvCV77N4aZ1MAEYW0QrBS6ArIeL
-         DfvVJGHRBZnCof05dE80G9fAoXhowV7rhaD1fv4SQKj+v/BswSOU6yHqlRmsHwY0yRao
-         E1qg==
-X-Gm-Message-State: APjAAAU2G6CK6B7WonWXIJneVwgaavlBtlfI2n4NaPjeXQ2Rvy4A3wtz
-        KaAeozgTzxkrNkmOgTv9LRW9CxB921wCAqJR9UkvntXT
-X-Google-Smtp-Source: APXvYqyZGR0NZQ8bv6c3yoRKpCaYYkLhmwJdhA1EWsd+QoiFfP0AuklbkWnmoMCBC/UXHcJJwGfVwZdRYzrqUElTLIU=
-X-Received: by 2002:a17:90a:2551:: with SMTP id j75mr3705887pje.122.1574140074250;
- Mon, 18 Nov 2019 21:07:54 -0800 (PST)
+        Tue, 19 Nov 2019 00:08:27 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAJ54Cvm118063;
+        Tue, 19 Nov 2019 05:08:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2019-08-05;
+ bh=IH0WjlNL7rKxLG37GwdnWXVekjBu4cR117TZnEVESOY=;
+ b=bq4CSO+QzTp/yU0F2UgoWF6PMjmW64+fDY/J7NURHv3FRC2cEotQIzViTM/4dsnf5Pg6
+ an0P565hi6kHGs5PTqbq7EgS4w3uD/l6CoEwNLQDOnQNcSlf/6QQj789+rBK1z2nMwwr
+ Q09NExSoMhGVaTDIuMqbKWg8+OIq7DQ/pJe4gdrshf//Kwz7lRe5qazEECnQ6fCy5kUC
+ 0J/7l9R2fvyP9oq9F2ACX+Vd3yIijiYNXUdHoR11eIBvhPkMCFvKC37k0NsRSXrMtVfr
+ sqpF0zgUT9oF55Q/CSLjwtRlzSY1RAWIlvPW0GVoRnIoBo7iKocBzJBapPr8FoEeXbcd eg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2wa8htmh6e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 Nov 2019 05:08:18 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAJ4wHXQ076076;
+        Tue, 19 Nov 2019 05:06:18 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2wc0afqwut-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 Nov 2019 05:06:18 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xAJ56FUk001985;
+        Tue, 19 Nov 2019 05:06:17 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 18 Nov 2019 21:06:15 -0800
+To:     Pan Bian <bianpan2016@163.com>
+Cc:     QLogic-Storage-Upstream@qlogic.com,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] scsi: bnx2i: fix potential use after free
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <1573043541-19126-1-git-send-email-bianpan2016@163.com>
+Date:   Tue, 19 Nov 2019 00:06:13 -0500
+In-Reply-To: <1573043541-19126-1-git-send-email-bianpan2016@163.com> (Pan
+        Bian's message of "Wed, 6 Nov 2019 20:32:21 +0800")
+Message-ID: <yq1k17wihfe.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-From:   Bala S <balas2380@gmail.com>
-Date:   Tue, 19 Nov 2019 10:37:44 +0530
-Message-ID: <CAJKzgVtzD7ULwCDVRSLMCmGJNaMqvx+jVO619t3xuv2oiEsPMQ@mail.gmail.com>
-Subject: Suggested Patch is not working for 22851 Bugzilla issue
-To:     mhocko@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=542
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1911190045
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=627 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1911190046
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mhocko,
 
-https://sourceware.org/bugzilla/show_bug.cgi?id=3D22851
-For the above issue, I have found the patch.
+Pan,
 
-Patch link:
-https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1561935.html
+> The membe hba->pcidev may be used after its reference is dropped. Move
+> the put function to where it is never used to avoid potential use
+> after free issues.
 
-Only change i noticed is 'MAP_FIXED_NOREPLACE' is used instead of
-'MAP_FIXED_SAFE'.
+Applied to 5.5/scsi-queue, thanks!
 
-I ran test case on the following targets with this patch:
-
-1. For X86-64, Still i could see the reported issue( 'libevil.so' just
-runs =E2=80=98cat /etc/passwd')
-
-2. For MIPS-64, i am not seeing the malicious file content as
-reported. But =E2=80=98ldd=E2=80=99 could not found =E2=80=98libevil.so=E2=
-=80=99.
-
-root@qemumips64:~/LIN1019-1806# ldd ./main
-        linux-vdso.so.1 (0x000000fff1f20000)
-        libevil.so =3D> not found
-        libc.so.6 =3D> /lib/libc.so.6 (0x0000005e46f70000)
-        /lib/ld.so.1 (0x000000fff7888000)
-
-I am not clear why this patch is not working for X86-64? But it is
-working for MIPS-64 with some issue.
-Please let me know, if anything is pending on this patch for the reported i=
-ssue.
-
-Thanks,
-Bala
+-- 
+Martin K. Petersen	Oracle Linux Engineering
