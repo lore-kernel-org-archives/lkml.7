@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D41EFC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:38:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E719AC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:38:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACC2C208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:38:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C05862071A
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:38:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141920;
-	bh=mqvBaRS3/XvdE/EXUSAI4HXS+rf47CWP4/rCL03UFfA=;
+	s=default; t=1574141924;
+	bh=tlbUosy2fq8Q/oWAJId8gRxFvS+jxOmsLcfyNhEtnSc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IUP4xOdGMqqk8lrxBrgMyYd59uqdtE/QvjKFag78jNvzOwuRSxsTXePK0BrD8XsPx
-	 6cC2nNzsMKoH5lR9TNPjxaJrnEs2SVvl8357vKh2IflNvfB9BWA2Ioy9V4paSMw0pe
-	 JVe9dH+8HGUsby4/1WfoJAsilJg8xHjOdSHXEeXU=
+	b=KwSKxWpOr4DqQOggbVNOBCDKULxmqKEKMTTdbk4o6/fXFLPdJy56oLLA3mV/1OHyT
+	 zS2PloUxFLsm0ccUPj5As0tCSBHZG8b6uaGHv1YdT6lSq6w8bekwARiyhLwItj9XTb
+	 Mh1N0jEWOkBd4knp7TmL7xQ+Gdx6CFWhuXz3tT7s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729500AbfKSFij (ORCPT
+        id S1728114AbfKSFin (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:38:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60580 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:38:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729621AbfKSFie (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:38:34 -0500
+        id S1729621AbfKSFik (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:38:40 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7E2F208C3;
-        Tue, 19 Nov 2019 05:38:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA180208C3;
+        Tue, 19 Nov 2019 05:38:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141912;
-        bh=mqvBaRS3/XvdE/EXUSAI4HXS+rf47CWP4/rCL03UFfA=;
+        s=default; t=1574141918;
+        bh=tlbUosy2fq8Q/oWAJId8gRxFvS+jxOmsLcfyNhEtnSc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=At6auEWwt1wMBSNr9GX9u39VWCTF/tWWowQL/fx3v6NMnzThH7RNbioQnQyR1Wdpd
-         B7u16w9bun5BtnPgsqKFE6+VkIMWk3bEgHwpQxvkTkcpIhuiU9WOp9MmxtrOVZRDXf
-         vRBFUqMR02iTV2Azxg0JPwhxaK8/7VGRZbpxkMuk=
+        b=xHX+StIMKIHms4csQztj0Qg2r4e2YpE5gBm3GLTGhr3Zqi2y2c03gZ+KqCKKooOak
+         6bZDE9TICfIpgrmOZO1YBRx1TQEksb7lx5q/okCs8ycwnB/TsfhPEV8+jnah1cmUEx
+         73NMCJtpOc7noWWATai6OFjMnEa3j8aSitvdizVQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vicente Bergas <vicencb@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 324/422] arm64: dts: rockchip: Fix microSD in rk3399 sapphire board
-Date:   Tue, 19 Nov 2019 06:18:41 +0100
-Message-Id: <20191119051420.009592353@linuxfoundation.org>
+Subject: [PATCH 4.19 326/422] media: imx: work around false-positive warning, again
+Date:   Tue, 19 Nov 2019 06:18:43 +0100
+Message-Id: <20191119051420.140254143@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -60,94 +61,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vicente Bergas <vicencb@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 88a20edf76091ee7f1bb459b89d714d53f0f8940 ]
+[ Upstream commit 8d1a4817cce1b15b4909f0e324a4f5af5952da67 ]
 
-The microSD card slot in the Sapphire board is not working because of
-several issues:
- 1.- The vmmc power supply is missing in the DTS. It is capable of 3.0V
- and has a GPIO-based enable control.
- 2.- The vqmmc power supply can provide up to 3.3V, but it is capped in
- the DTS to just 3.0V because of the vmmc capability. This results in a
- conflict from the mmc driver requesting an unsupportable voltage range
- from 3.3V to 3.0V (min > max) as reported in dmesg. So, extend the
- range up to 3.3V. The hw should be able to stand this 0.3V tolerance.
- See mmc_regulator_set_vqmmc in drivers/mmc/core/core.c.
- 3.- The card detect signal is non-working. There is a known conflict
- with jtag, but the workaround in drivers/soc/rockchip/grf.c does not
- work. Adding the broken-cd attribute to the DTS fixes the issue.
+A warning that I thought to be solved by a previous patch of mine
+has resurfaced with gcc-8:
 
-Signed-off-by: Vicente Bergas <vicencb@gmail.com>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+media/imx/imx-media-csi.c: In function 'csi_link_validate':
+media/imx/imx-media-csi.c:1025:20: error: 'upstream_ep' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+media/imx/imx-media-csi.c:1026:24: error: 'upstream_ep.bus_type' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+media/imx/imx-media-csi.c:127:19: error: 'upstream_ep.bus.parallel.bus_width' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+media/imx/imx-media-csi.c: In function 'csi_enum_mbus_code':
+media/imx/imx-media-csi.c:132:9: error: '*((void *)&upstream_ep+12)' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+media/imx/imx-media-csi.c:132:48: error: 'upstream_ep.bus.parallel.bus_width' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+
+I spent some more time digging in this time, and think I have a better
+fix, bailing out of the function that either initializes or errors
+out here, which simplifies the code enough for gcc to figure out
+what is going on. The earlier partial workaround can be removed now,
+as the new workaround is better.
+
+Fixes: 890f27693f2a ("media: imx: work around false-positive warning")
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../boot/dts/rockchip/rk3399-sapphire.dtsi    | 24 ++++++++++++++++++-
- 1 file changed, 23 insertions(+), 1 deletion(-)
+ drivers/staging/media/imx/imx-media-csi.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi
-index 8b33ef3306820..6062cc8250b11 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi
-@@ -93,6 +93,19 @@
- 		vin-supply = <&vcc_1v8>;
- 	};
+diff --git a/drivers/staging/media/imx/imx-media-csi.c b/drivers/staging/media/imx/imx-media-csi.c
+index d17ce1fb4ef51..0f8fdc347091b 100644
+--- a/drivers/staging/media/imx/imx-media-csi.c
++++ b/drivers/staging/media/imx/imx-media-csi.c
+@@ -166,6 +166,9 @@ static int csi_get_upstream_endpoint(struct csi_priv *priv,
+ 	struct v4l2_subdev *sd;
+ 	struct media_pad *pad;
  
-+	vcc3v0_sd: vcc3v0-sd {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpio0 RK_PA1 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&sdmmc0_pwr_h>;
-+		regulator-always-on;
-+		regulator-max-microvolt = <3000000>;
-+		regulator-min-microvolt = <3000000>;
-+		regulator-name = "vcc3v0_sd";
-+		vin-supply = <&vcc3v3_sys>;
-+	};
++	if (!IS_ENABLED(CONFIG_OF))
++		return -ENXIO;
 +
- 	vcc3v3_sys: vcc3v3-sys {
- 		compatible = "regulator-fixed";
- 		regulator-name = "vcc3v3_sys";
-@@ -310,7 +323,7 @@
- 				regulator-always-on;
- 				regulator-boot-on;
- 				regulator-min-microvolt = <1800000>;
--				regulator-max-microvolt = <3000000>;
-+				regulator-max-microvolt = <3300000>;
- 				regulator-state-mem {
- 					regulator-on-in-suspend;
- 					regulator-suspend-microvolt = <3000000>;
-@@ -469,6 +482,13 @@
- 		};
- 	};
+ 	if (!priv->src_sd)
+ 		return -EPIPE;
  
-+	sd {
-+		sdmmc0_pwr_h: sdmmc0-pwr-h {
-+			rockchip,pins =
-+				<RK_GPIO0 RK_PA1 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
- 	usb2 {
- 		vcc5v0_host_en: vcc5v0-host-en {
- 			rockchip,pins =
-@@ -499,6 +519,7 @@
- };
+@@ -1072,7 +1075,7 @@ static int csi_link_validate(struct v4l2_subdev *sd,
+ 			     struct v4l2_subdev_format *sink_fmt)
+ {
+ 	struct csi_priv *priv = v4l2_get_subdevdata(sd);
+-	struct v4l2_fwnode_endpoint upstream_ep = {};
++	struct v4l2_fwnode_endpoint upstream_ep;
+ 	bool is_csi2;
+ 	int ret;
  
- &sdmmc {
-+	broken-cd;
- 	bus-width = <4>;
- 	cap-mmc-highspeed;
- 	cap-sd-highspeed;
-@@ -507,6 +528,7 @@
- 	max-frequency = <150000000>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_cd &sdmmc_bus4>;
-+	vmmc-supply = <&vcc3v0_sd>;
- 	vqmmc-supply = <&vcc_sdio>;
- 	status = "okay";
- };
 -- 
 2.20.1
 
