@@ -2,63 +2,62 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67790C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3221C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:42:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B91522362
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:41:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AC5322362
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 15:42:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="yB8b7itb"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="us8sMchD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728305AbfKSPll (ORCPT
+        id S1728316AbfKSPmW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 10:41:41 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:36004 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728203AbfKSPll (ORCPT
+        Tue, 19 Nov 2019 10:42:22 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:34362 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727682AbfKSPmW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 10:41:41 -0500
-Received: by mail-qk1-f196.google.com with SMTP id d13so18189540qko.3
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 07:41:40 -0800 (PST)
+        Tue, 19 Nov 2019 10:42:22 -0500
+Received: by mail-qk1-f194.google.com with SMTP id 205so18218228qkk.1
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 07:42:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=s1bq7+cOv9v3qwlU6gAe5f/6wD81CFSArjCOgnPV2zo=;
-        b=yB8b7itby2xJJEdH7wfhMdISJn7yj0OPf6+/xk6WSX8SqbJPJt+sq4eFvNicdyug6m
-         TM2uLIeizmWzrpI6V0peXhVjzQEJuS8YApUE1CENkFwRuBJjQfmghRJveMDzA/KqqV1L
-         P1/MOVjxZ9JOA9tuCi5XyR9gWzEaP8OmU+0WyIkppFH5fM088hQekVTHL7Rm7mPJUbiK
-         IsmlHQ2g1cao+y/FNhK3v+EXNkCUxjFCO2U00x37INvJX7zK6gyEONARrOtFM0zOdtiS
-         eo9EVWFsFYBMjaIrTgVGRonvwE3m8ZRtTTSF+eKPMtPX1yRk+Zwak6B3Ms5MBtmMvqX3
-         Fn6g==
+        bh=nWs/1bjDvNuzUJtmMQammwiguABeAIM4rx8Ev82Odj4=;
+        b=us8sMchDRqbzZLY+8PM7/pe8WsLDZaohdyGl7R3EeSoWSvgvizJcLMF0BSaCEqsdy4
+         NSYDM17Ete2jESTbIDna9vtA0dUXsmg6bBXQOCH48RDKNzLBxQ6mlp7dlkil/PAQ5hl4
+         kxrZ3bqxv5B9F8bKvIHUq5QUdUopVtt0xgGF3OfR4oa410peA1MSURbcEDbJvRagtXXW
+         +SqQC2r8fKOXJEA7CxMEGgKlIO7ejUpU40J+VxnUNJ6vEHK8//vMrnAp2qoHjQxavaiI
+         vz7OWx7ODCOY89S+kEdO/+LJrWWnNLTcSyv0Maq4YAOgtfhCfquKCCUXG3oySb+mCvBb
+         38tQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=s1bq7+cOv9v3qwlU6gAe5f/6wD81CFSArjCOgnPV2zo=;
-        b=eqltum1SymRsHdL+ak2xAXFmq8otcFULUrJhjs0DCV6jFwDk0TrJXFlZ1nmyMDlI4d
-         iMzJ64V7enKVEt8mjfWEO+KAefyhicTkbb32HxzinLhgPk5aOc8z9dAZ1naFN5Duq4RH
-         GVGqwV+Z3tAaWEHKoJQaMf7jvXE2pOlnRYDzGnjvYv0L1R6lqUHLBXRVJRS4t9oTS1cw
-         zHDBXUBMsNAokMXgv05+kLlAKY9SVImrXD7GY77oOVyTDyi7CPLSXhSj42dZBh04VyJ5
-         19GjRbN7VwjpMW7ZA0vc10rSQ8Yho+BTaJm8PJTKWq6BX9khTxnQ7o/AlTunvzItHHFY
-         lF2A==
-X-Gm-Message-State: APjAAAV63b1yylHzTeiIi2Blwo9RjLVGlLSZ5Aec3YDFnaKIGRDgsRyt
-        FiFq3J9FkeBIPXJFfPy/2PffQA==
-X-Google-Smtp-Source: APXvYqwMzPNv93VY69VMBP223fZwyRZfzHLPwfj61+hK5jVyx6O0vjaMFg7nJsTeal375kEVpuotaw==
-X-Received: by 2002:a37:a010:: with SMTP id j16mr17267203qke.84.1574178100040;
-        Tue, 19 Nov 2019 07:41:40 -0800 (PST)
+        bh=nWs/1bjDvNuzUJtmMQammwiguABeAIM4rx8Ev82Odj4=;
+        b=MkmElEoeV/r2P6toq5wCa+7090xixOyfg63d6ybpuYuDjrrzjwS5RdFmtCUseXH1wC
+         DxRHiRIDbNYbjZvP08yGGtqX81aB/2eyLIlm0LOwtpnvwNZM0oA/hsDmJeDzRTx9VRuJ
+         D1/x5alC6Xm43xYB/vY/s+0ut6uzdsAkA0ee/rl7t3pia7Wpvo+396HGeYfPrzR1tlOm
+         MGzTfoFItBTL1SqZKCdlLQRpFUp40rEVkI2XhiY3bRQJvu+jOqlTRSAOg5R1v6fO2B7J
+         Auy4Of2FL6jtMmdFQziCUzfsdNDb9l+PzKbOC7tKw0dsFXGALwmXsiVgArSKcMBNaGB6
+         SV/g==
+X-Gm-Message-State: APjAAAXtvsppph2f/73ttl4FrejJisEy3wy0Ava37cOgsPFeXF9jygu/
+        orZKeI52HbZUjpBLt3A1FlLwRA==
+X-Google-Smtp-Source: APXvYqw/NhSrzyPWPQbLnED7yGzQyzSTdlwC0odTzaM2yCGhnhMYRRPM2hqTvbDK1lg4A0bgszuNRw==
+X-Received: by 2002:a05:620a:13c4:: with SMTP id g4mr30230662qkl.391.1574178139850;
+        Tue, 19 Nov 2019 07:42:19 -0800 (PST)
 Received: from localhost ([2620:10d:c091:500::c7ac])
-        by smtp.gmail.com with ESMTPSA id 7sm10611517qkf.67.2019.11.19.07.41.39
+        by smtp.gmail.com with ESMTPSA id i17sm7188612qtm.53.2019.11.19.07.42.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Nov 2019 07:41:39 -0800 (PST)
-Date:   Tue, 19 Nov 2019 10:41:38 -0500
+        Tue, 19 Nov 2019 07:42:19 -0800 (PST)
+Date:   Tue, 19 Nov 2019 10:42:17 -0500
 From:   Johannes Weiner <hannes@cmpxchg.org>
 To:     Alex Shi <alex.shi@linux.alibaba.com>
 Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -67,49 +66,27 @@ Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
         khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
         yang.shi@linux.alibaba.com, willy@infradead.org,
         shakeelb@google.com
-Subject: Re: [PATCH v4 1/9] mm/swap: fix uninitialized compiler warning
-Message-ID: <20191119154138.GB382712@cmpxchg.org>
+Subject: Re: [PATCH v4 2/9] mm/huge_memory: fix uninitialized compiler warning
+Message-ID: <20191119154217.GC382712@cmpxchg.org>
 References: <1574166203-151975-1-git-send-email-alex.shi@linux.alibaba.com>
- <1574166203-151975-2-git-send-email-alex.shi@linux.alibaba.com>
+ <1574166203-151975-3-git-send-email-alex.shi@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1574166203-151975-2-git-send-email-alex.shi@linux.alibaba.com>
+In-Reply-To: <1574166203-151975-3-git-send-email-alex.shi@linux.alibaba.com>
 User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 08:23:15PM +0800, Alex Shi wrote:
->   ../mm/swap.c: In function ‘__page_cache_release’:
->   ../mm/swap.c:67:10: warning: ‘flags’ may be used uninitialized in this
->   function [-Wmaybe-uninitialized]
->        lruvec = lock_page_lruvec_irqsave(page, pgdat, flags);
->        ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+On Tue, Nov 19, 2019 at 08:23:16PM +0800, Alex Shi wrote:
+> ../mm/huge_memory.c: In function ‘split_huge_page_to_list’:
+> ../mm/huge_memory.c:2766:9: warning: ‘flags’ may be used uninitialized
+> in this function [-Wmaybe-uninitialized]
+>   lruvec = lock_page_lruvec_irqsave(head, pgdata, flags);
+>   ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-At this point in the series, there is no lock_page_lruvec_irqsave()
-yet, so this patch is out of order. Please don't do that. It's very
-hard to review patches that depend on later changes to make sense.
-
-> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: linux-mm@kvack.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  mm/swap.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/swap.c b/mm/swap.c
-> index 5341ae93861f..c36a10244d07 100644
-> --- a/mm/swap.c
-> +++ b/mm/swap.c
-> @@ -62,7 +62,7 @@ static void __page_cache_release(struct page *page)
->  	if (PageLRU(page)) {
->  		pg_data_t *pgdat = page_pgdat(page);
->  		struct lruvec *lruvec;
-> -		unsigned long flags;
-> +		unsigned long flags = 0;
-
-Use unintialized_var() for these cases to make the intent clear.
+Like with the previous patch, there is no lock_page_lruvec_irqsave()
+at this point in the series.
