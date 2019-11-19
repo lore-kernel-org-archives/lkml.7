@@ -2,145 +2,105 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D2FAC43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:17:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F4D5C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:20:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A85822441
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:17:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574191039;
-	bh=csZmOLvxjI2+OJ2t0MngnlUbh5xOq4tBtMIZxavgdq0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=0pXx37JumrdlNmH6iwjpPIWC0WO6txG9S7Bv4boScluBbGw2QJ0zIqBmr96WKNthj
-	 L1i1E4AfO0n55NlHMwzv70y5szaTOnQGk9it9wh6/cZGSduBtYyRjpSoRJ020bAUGI
-	 t5Q5pLiM6Avsg3YbFXGqlrciiM1FMTRO2mrOQ5Jg=
+	by mail.kernel.org (Postfix) with ESMTP id 1E24322440
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 19:20:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727468AbfKSTRS (ORCPT
+        id S1727031AbfKSTUe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 14:17:18 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:38462 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727036AbfKSTRS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 14:17:18 -0500
-Received: by mail-oi1-f193.google.com with SMTP id a14so20050278oid.5;
-        Tue, 19 Nov 2019 11:17:17 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wNhSIdXIAMhTZZlTq4fvLUCixY9Z52dvDBqLG8iKTeg=;
-        b=RwYmRCTgVEBKrMJlWvkpWxd/5naacajGqd7cDvNQfe10wT0oEdntJWDUuS7cNHwA5Y
-         Pc3sIynZs9P6WuCaA8VkzLAHA2sa1oNFvHf2M5M8D6iut9pi3R9NAI1LvL66zrlIO1qO
-         r+Y1CDonyZnv8kRpjDVwnZPSNnOuK6VTTqSsqR0x8mzjTFqN/cumHEzq7RzmDWKNGrwf
-         N4lh6JXh0fe8oAEZvyTWO/yFE7AJBkGE7eIrAOmFm0fskx5IVuwuRvyGvm3kow5wG0PN
-         u5N99lSFkWWN6wd9CDh+0STVDUYMwf5wB9il+TNbJmCXb9tz6jf5EvzRS7easWy8HQV/
-         iBKg==
-X-Gm-Message-State: APjAAAUf/z5oP2KnQc/BzZfo1tozVfdtdkwkr68hjlKZBS15ZLlP/Z4S
-        dFLN0Fz+ikGeTUG9oJzHqiEVqWz89/B0B6BAl7o=
-X-Google-Smtp-Source: APXvYqwLfxciI4GS3t+oWbXzFREIpD12GUXpB9UJ5E3BLWwvX0dd5QLcJSKaltQnW2ZhblzctccArehQ8GCNyphjH2U=
-X-Received: by 2002:aca:1101:: with SMTP id 1mr5643630oir.103.1574191036787;
- Tue, 19 Nov 2019 11:17:16 -0800 (PST)
+        Tue, 19 Nov 2019 14:20:34 -0500
+Received: from muru.com ([72.249.23.125]:42964 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726555AbfKSTUd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 14:20:33 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id CE0E0809B;
+        Tue, 19 Nov 2019 19:21:09 +0000 (UTC)
+Date:   Tue, 19 Nov 2019 11:20:29 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     "Andrew F. Davis" <afd@ti.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: OMAP: Use ARM SMC Calling Convention when OP-TEE is
+ available
+Message-ID: <20191119192029.GP35479@atomide.com>
+References: <29db708e-119e-8a89-7d43-e38e2a10dc07@ti.com>
+ <20191119162157.GJ35479@atomide.com>
+ <6e009ae3-6aa2-409b-749f-4947303940d8@ti.com>
+ <20191119164227.GL35479@atomide.com>
+ <20191119180546.GM35479@atomide.com>
+ <9e15c170-c9fa-778c-d998-bd1111a6390d@ti.com>
+ <20191119183247.GN35479@atomide.com>
+ <a351461a-f6a1-334b-6bdd-a56626914fb3@ti.com>
+ <20191119190721.GO35479@atomide.com>
+ <7fa11037-8d33-2274-c8cc-80e9630b38b0@ti.com>
 MIME-Version: 1.0
-References: <2811202.iOFZ6YHztY@kreacher> <4551555.oysnf1Sd0E@kreacher>
- <000001d59d61$eb4e6670$c1eb3350$@net> <000401d59ee6$959e3da0$c0dab8e0$@net>
-In-Reply-To: <000401d59ee6$959e3da0$c0dab8e0$@net>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 19 Nov 2019 20:17:05 +0100
-Message-ID: <CAJZ5v0i1iAjpWju6FiCjP3RvspKDRfSwz4=b_3qgGhhfz8sSrw@mail.gmail.com>
-Subject: Re: [RFT][PATCH 1/3] PM: QoS: Introduce frequency QoS
-To:     Doug Smythies <dsmythies@telus.net>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Dmitry Osipenko <digetx@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7fa11037-8d33-2274-c8cc-80e9630b38b0@ti.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 3:35 PM Doug Smythies <dsmythies@telus.net> wrote:
->
-> On 2019.11.17 08:13 Doug Smythies wrote:
-> > On 2019.11.16 23:35 Doug Smythies wrote:
->
-> >> Hi Rafael,
+* Andrew F. Davis <afd@ti.com> [191119 19:13]:
+> On 11/19/19 2:07 PM, Tony Lindgren wrote:
+> > * Andrew F. Davis <afd@ti.com> [191119 18:51]:
+> >> On 11/19/19 1:32 PM, Tony Lindgren wrote:
+> >>> It would allow us to completely change over to using
+> >>> arm_smccc_smc() and forget the custom calls.
 > >>
-> >> Not sure, but I think it is this one that
-> >> causes complaining when I try to set the
-> >> intel_pstate driver to passive mode.
-> >> I started from active mode, powersave governor,
-> >> no HWP.
-> >>
-> >> Kernel: 5.4-rc7
-> >>
-> >> I did not go back and try previous 5.4 RCs.
->
-> After looking at the git tags for this patch,
-> I tried kernel 5.4-rc2, which was the closest
-> Kernel I had to before the patch set was added.
-> It worked fine, as expected.
->
-> >> I did try kernel 5.3-rc8, because I already had
-> >> it installed, and it worked fine.
-> >>
-> >> I use a script (for years), run as sudo:
-> >>
-> >> doug@s15:~/temp$ cat set_cpu_passive
-> >> #! /bin/bash
-> >> cat /sys/devices/system/cpu/intel_pstate/status
-> >> echo passive > /sys/devices/system/cpu/intel_pstate/status
-> >> cat /sys/devices/system/cpu/intel_pstate/status
-> >>
-> >> And I get this (very small excerpt):
-> >>
-> >> freq_qos_add_request() called for active request
-> >> WARNING: CPU: 1 PID: 2758 at kernel/power/qos.c:763 freq_qos_add_request+0x4c/0xa0
-> >> CPU: 1 PID: 2758 Comm: set_cpu_passive Not tainted 5.4.0-rc7-stock #727
-> >> Failed to add freq constraint for CPU0 (-22)
-> >>
-> >> freq_qos_add_request() called for active request
-> >> WARNING: CPU: 1 PID: 2758 at kernel/power/qos.c:763 freq_qos_add_request+0x4c/0xa0
-> >> CPU: 1 PID: 2758 Comm: set_cpu_passive Tainted: G        W         5.4.0-rc7-stock #727
-> >> Failed to add freq constraint for CPU1 (-22)
->
-> Updated summary of previous emails:
-> This patch or patch set breaks the after boot
-> ability to change CPU frequency scaling drivers.
->
-> Using a workaround of booting with
-> "intel_pstate=passive" seems to prevent the errors.
->
-> Changing between the intel_pstate and intel_cpufreq drivers
-> (i.e. between active and passive modes)
-> after boot, either way, causes the errors. i.e.
->
-> Failed to add freq constraint for CPU7 (-22)
-> (2 per CPU per attempt)
+> >> We would need more than just the r12 quirk to replace all our custom SMC
+> >> handlers, we would need quirks for omap_smc2 which puts process ID in r1
+> >> and puts #0xff in r6, and omap_smc3 that uses smc #1. All of our legacy
+> >> SMC calls also trash r4-r11, that is very non SMCCC complaint as only
+> >> r4-r7 need be caller saved. I don't see arm_smccc_smc() working with
+> >> legacy ROM no matter how much we hack at it :(
+> > 
+> > We would just have omap_smc2() call arm_smccc_smc() and in that
+> > case. And omap_smc2() would still deal with saving and restoring
+> > the registers.
+> 
+> Then why call arm_smccc_smc()? omap_smc2() is already an assembly
+> function, all it needs to do after loading the registers and saving the
+> right ones is issue an "smc #0" instruction, why would we want to
+> instead call into some other function to re-save registers and issue the
+> exact same instruction?
 
-These messages come from acpi_processor_ppc_init() and
-acpi_thermal_cpufreq_init(), AFAICS, which are invoked by
-acpi_processor_notifier() and that is invoked by the
-blocking_notifier_call_chain() in cpufreq_online() which tirggers for
-new policies after adding the max freq QoS request to
-policy->constraints.
+To use Linux generic API for smc calls where possible.
 
-The requests added by them should be removed by
-acpi_processor_ppc_exit() and acpi_thermal_cpufreq_exit(),
-respectively, invoked by the blocking_notifier_call_chain() in
-cpufreq_policy_free(), but it looks like that doesn't happen.
+> > Certainly the wrapper functions calling arm_smccc_smc() can deal
+> > with r12 too if the r12-quirk version and the plain version are
+> > never needed the same time on a booted SoC.
+> > 
+> > Are they ever needed the same time on a booted SoC or not?
 
-However, I now also see that freq_qos_remove_request() doesn't clear
-the qos field in req which is should do, so freq_qos_add_request()
-will complain and fail if the object pointed to by req is passed to it
-again.
+   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-I'll send a patch to test for this later today.
+Sorry but maybe check the font size on your screen. I'm trying to
+get your attention again for the second time above to answer a
+question I asked.
+
+> >> I can make OP-TEE also compatible with the r12 quirk, which is what I
+> >> used to do. That way we didn't need to do any detection. The issue was
+> >> that non-standard SMC calls should not go through the common SMCCC
+> >> handler (unless you are QCOM for some reason..).
+> > 
+> > Sounds like for optee nothing must be done for r12 :)
+
+> Unless all our calls use the r12 hack, then we would need to fixup
+> OP-TEE to accept that also.
+
+No idea about that that part, but sounds like r12 use is up to
+the caller in the optee case.
+
+Regards,
+
+Tony
