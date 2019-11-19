@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4390CC43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:21:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45968C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:21:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11B432235D
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:21:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 108872231A
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:21:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574140886;
-	bh=VuFC/eywt7h/O4gNzTZEFXUuvrmosZ8nF36EuyKYbEg=;
+	s=default; t=1574140891;
+	bh=JLP7szQGWaL0GZjB1YwtzSnQAmxx0vSHSdJiTVwIWl4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XOsCugAmKb/UxZ+mdA3Ok5Q4/OY+8YLfKRhUGN63PJEF+P5OzmSrJ+1yjIG/ZzjlM
-	 GzViq7b0pzAtJv0T1JkkPwckiuTm+jsUWqqP97G4BZvsX2vwdJYtOQ33yi2nRH/4dI
-	 cRf+GyiO0VElQpMPrcFuegIS0GhjurEzifE8XkVs=
+	b=q7u2YbOYh6TNr+0QKggJbqYwJ769eTM9Qqv6yaCjnIDNIXNdHOBZj54ojZCBSSQZb
+	 RzMq5abHD81JEbxFaMg1ViD6ZvZEntk/3xguzEx/qtyBrEtqWE+Yg9v4CfNIBf6eHq
+	 megwcRv3rgdGHSgrFhjaVfvmKgrPs3kINHJRVJag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727363AbfKSFVZ (ORCPT
+        id S1727390AbfKSFVa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:21:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36254 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:21:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727243AbfKSFVX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:21:23 -0500
+        id S1727352AbfKSFVY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:21:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 442A52235D;
-        Tue, 19 Nov 2019 05:21:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E550B22319;
+        Tue, 19 Nov 2019 05:21:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574140881;
-        bh=VuFC/eywt7h/O4gNzTZEFXUuvrmosZ8nF36EuyKYbEg=;
+        s=default; t=1574140884;
+        bh=JLP7szQGWaL0GZjB1YwtzSnQAmxx0vSHSdJiTVwIWl4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AYWvtxXhCaaJZawBt+IkFHsSO/Q5ZO6DciMK+11YJr4fbmXVRaz8bdmR8KcrsoWBt
-         v6mYAS674g5j1UHZoGR92Vtt79r0uBmT9RAaL0+xI+Vpk9eIf/02hD8cC0bbrjxFOS
-         0rR7DYsmij4cmf3SdilBKEwokQ9hcP410GGGYu1Y=
+        b=iX24WFgdlqZC3n3bQuJvO6B2cWHs2BMsGQ5rBGZBPZi9fGsRa3aUvK5R4TI/MIipd
+         FlB1PGxteX5npZ1TP0hf3frinP8hXSvL+7dtuChUYO4yRHdFOGy9jizHY85+s4IjZz
+         uPIN5sQx/lI/un09yaSzqrEiYN+nOUVnynDu8LT0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>,
-        Roman Gushchin <guro@fb.com>, Tejun Heo <tj@kernel.org>,
-        Bruce Ashfield <bruce.ashfield@gmail.com>
-Subject: [PATCH 5.3 19/48] cgroup: freezer: call cgroup_enter_frozen() with preemption disabled in ptrace_stop()
-Date:   Tue, 19 Nov 2019 06:19:39 +0100
-Message-Id: <20191119051003.108253979@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+a8d4acdad35e6bbca308@syzkaller.appspotmail.com,
+        Oliver Neukum <oneukum@suse.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.3 02/48] ax88172a: fix information leak on short answers
+Date:   Tue, 19 Nov 2019 06:19:22 +0100
+Message-Id: <20191119050948.189229977@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119050946.745015350@linuxfoundation.org>
 References: <20191119050946.745015350@linuxfoundation.org>
@@ -60,37 +61,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleg Nesterov <oleg@redhat.com>
+From: Oliver Neukum <oneukum@suse.com>
 
-commit 937c6b27c73e02cd4114f95f5c37ba2c29fadba1 upstream.
+[ Upstream commit a9a51bd727d141a67b589f375fe69d0e54c4fe22 ]
 
-ptrace_stop() does preempt_enable_no_resched() to avoid the preemption,
-but after that cgroup_enter_frozen() does spin_lock/unlock and this adds
-another preemption point.
+If a malicious device gives a short MAC it can elicit up to
+5 bytes of leaked memory out of the driver. We need to check for
+ETH_ALEN instead.
 
-Reported-and-tested-by: Bruce Ashfield <bruce.ashfield@gmail.com>
-Fixes: 76f969e8948d ("cgroup: cgroup v2 freezer")
-Cc: stable@vger.kernel.org # v5.2+
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
-Acked-by: Roman Gushchin <guro@fb.com>
-Signed-off-by: Tejun Heo <tj@kernel.org>
+Reported-by: syzbot+a8d4acdad35e6bbca308@syzkaller.appspotmail.com
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- kernel/signal.c |    2 +-
+ drivers/net/usb/ax88172a.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -2205,8 +2205,8 @@ static void ptrace_stop(int exit_code, i
- 		 */
- 		preempt_disable();
- 		read_unlock(&tasklist_lock);
--		preempt_enable_no_resched();
- 		cgroup_enter_frozen();
-+		preempt_enable_no_resched();
- 		freezable_schedule();
- 		cgroup_leave_frozen(true);
- 	} else {
+--- a/drivers/net/usb/ax88172a.c
++++ b/drivers/net/usb/ax88172a.c
+@@ -196,7 +196,7 @@ static int ax88172a_bind(struct usbnet *
+ 
+ 	/* Get the MAC address */
+ 	ret = asix_read_cmd(dev, AX_CMD_READ_NODE_ID, 0, 0, ETH_ALEN, buf, 0);
+-	if (ret < 0) {
++	if (ret < ETH_ALEN) {
+ 		netdev_err(dev->net, "Failed to read MAC address: %d\n", ret);
+ 		goto free;
+ 	}
 
 
