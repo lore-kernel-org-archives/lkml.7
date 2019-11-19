@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3026BC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:03:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29BD6C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:03:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F32E320872
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:03:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5D2A206DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:03:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574143398;
-	bh=xOH+ix3LhRxkW9EZ3qVwZJdXRhikzraxle2sk20ZrZA=;
+	s=default; t=1574143394;
+	bh=m+Inve5hgRyZpw7gj6KahVQEpcPLzayG8F7xJuq27rc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iQr34hPMu2tk29G0uEUK6vqfKGttdrSvpd7sOaru7fJO76aUELs+XFkNYnkLQj0mV
-	 6K+PjoujCrgRVPgQDPzDgl24B9fwWfSmYz0wERKIEtTMJk0b36l1N1gSqQBwTiP+d9
-	 iPc6+fQ2DVqVVNWdo76UV12/xdMYrT8NspLDOmic=
+	b=SnoYBQP5DPYdSOtCuDp6zAqgHiIsPuoaFPcWPmFvs5gJRI/SaGlBNVW9w22Uld0qY
+	 cM76Gw8H7WnVZ/jbRU/pbHqTGGJO607ickp0AA/Jo4iGxTp78rjM0jKcr2XVGR7yIx
+	 j5q0HPkL5TsiRg/iqLp7qfJqYpl6+bCnX//ZgMLg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730412AbfKSFk2 (ORCPT
+        id S1730436AbfKSFko (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:40:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34596 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:40:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730396AbfKSFkZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:40:25 -0500
+        id S1727942AbfKSFkk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:40:40 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27C6921783;
-        Tue, 19 Nov 2019 05:40:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CF6E21823;
+        Tue, 19 Nov 2019 05:40:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142024;
-        bh=xOH+ix3LhRxkW9EZ3qVwZJdXRhikzraxle2sk20ZrZA=;
+        s=default; t=1574142039;
+        bh=m+Inve5hgRyZpw7gj6KahVQEpcPLzayG8F7xJuq27rc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f4/sahUQh1cYIIy5Gyd5rl/KnzqLLTOME9723y83ScRNSrkEI1H06JtnCLVwzFXg5
-         UejOvl62ArptLlJbTpgIIxBa6fHLefP7bwKfqKLETfqGmbjJv7Q/YDdohI1fUbzGAc
-         WU60vqIFzjBzMVvSNQPEEwf8FCs6A45NGOlAjEeA=
+        b=IGBoJkApkapNZR3Kqh3chV9DHWkN5inaPmfRulA9AIG83jNiCyv3Yr9BOCkvQzJDd
+         5acmYqgYgty+zSbAOPikoPSc20HwVe2tKsyopQtySQLJQ21PwtE4rN9oB0y2YowE2L
+         Suhg9Pd9y14DgBgHlqMW1mUtavc/E6tYUB2qJA7A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hauke Mehrtens <hauke@hauke-m.de>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
+        stable@vger.kernel.org,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Thierry Reding <treding@nvidia.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 363/422] phy: lantiq: Fix compile warning
-Date:   Tue, 19 Nov 2019 06:19:20 +0100
-Message-Id: <20191119051422.538015251@linuxfoundation.org>
+Subject: [PATCH 4.19 368/422] ARM: dts: tegra30: fix xcvr-setup-use-fuses
+Date:   Tue, 19 Nov 2019 06:19:25 +0100
+Message-Id: <20191119051422.860062893@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -60,32 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hauke Mehrtens <hauke@hauke-m.de>
+From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 
-[ Upstream commit 3a00dae006623d799266d85f28b5f76ef07d6b6c ]
+[ Upstream commit 564706f65cda3de52b09e51feb423a43940fe661 ]
 
-This local variable is unused, remove it.
+There was a dot instead of a comma. Fix this.
 
-Fixes: dea54fbad332 ("phy: Add an USB PHY driver for the Lantiq SoCs using the RCU module")
-Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/phy/lantiq/phy-lantiq-rcu-usb2.c | 1 -
- 1 file changed, 1 deletion(-)
+ arch/arm/boot/dts/tegra30.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/phy/lantiq/phy-lantiq-rcu-usb2.c b/drivers/phy/lantiq/phy-lantiq-rcu-usb2.c
-index 986224fca9e91..5a180f71d8d4d 100644
---- a/drivers/phy/lantiq/phy-lantiq-rcu-usb2.c
-+++ b/drivers/phy/lantiq/phy-lantiq-rcu-usb2.c
-@@ -156,7 +156,6 @@ static int ltq_rcu_usb2_of_parse(struct ltq_rcu_usb2_priv *priv,
- {
- 	struct device *dev = priv->dev;
- 	const __be32 *offset;
--	int ret;
- 
- 	priv->reg_bits = of_device_get_match_data(dev);
- 
+diff --git a/arch/arm/boot/dts/tegra30.dtsi b/arch/arm/boot/dts/tegra30.dtsi
+index a6781f6533105..5a04ddefb71f6 100644
+--- a/arch/arm/boot/dts/tegra30.dtsi
++++ b/arch/arm/boot/dts/tegra30.dtsi
+@@ -896,7 +896,7 @@
+ 		nvidia,elastic-limit = <16>;
+ 		nvidia,term-range-adj = <6>;
+ 		nvidia,xcvr-setup = <51>;
+-		nvidia.xcvr-setup-use-fuses;
++		nvidia,xcvr-setup-use-fuses;
+ 		nvidia,xcvr-lsfslew = <1>;
+ 		nvidia,xcvr-lsrslew = <1>;
+ 		nvidia,xcvr-hsslew = <32>;
+@@ -933,7 +933,7 @@
+ 		nvidia,elastic-limit = <16>;
+ 		nvidia,term-range-adj = <6>;
+ 		nvidia,xcvr-setup = <51>;
+-		nvidia.xcvr-setup-use-fuses;
++		nvidia,xcvr-setup-use-fuses;
+ 		nvidia,xcvr-lsfslew = <2>;
+ 		nvidia,xcvr-lsrslew = <2>;
+ 		nvidia,xcvr-hsslew = <32>;
+@@ -969,7 +969,7 @@
+ 		nvidia,elastic-limit = <16>;
+ 		nvidia,term-range-adj = <6>;
+ 		nvidia,xcvr-setup = <51>;
+-		nvidia.xcvr-setup-use-fuses;
++		nvidia,xcvr-setup-use-fuses;
+ 		nvidia,xcvr-lsfslew = <2>;
+ 		nvidia,xcvr-lsrslew = <2>;
+ 		nvidia,xcvr-hsslew = <32>;
 -- 
 2.20.1
 
