@@ -2,124 +2,220 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E894BC43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:56:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA16C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:56:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1CFA223AB
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:56:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD930223BF
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 16:56:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rmUv4RO8"
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="JbrWIpA2";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="VYvACJM+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728570AbfKSQ4N (ORCPT
+        id S1728572AbfKSQ4m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 11:56:13 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:37318 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728320AbfKSQ4N (ORCPT
+        Tue, 19 Nov 2019 11:56:42 -0500
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:62032 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727805AbfKSQ4l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 11:56:13 -0500
-Received: by mail-lf1-f65.google.com with SMTP id b20so17691489lfp.4;
-        Tue, 19 Nov 2019 08:56:11 -0800 (PST)
+        Tue, 19 Nov 2019 11:56:41 -0500
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAJGtpWs000375;
+        Tue, 19 Nov 2019 08:56:29 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pfpt0818;
+ bh=5psJY5oRd+BdV8GGSj8SFj9lpONmcHRW3/jk1UbNueg=;
+ b=JbrWIpA2ZdsNFxHXjc36JxjZgzvv6+li81MNucoF7atNP3BNqid+zC8zjCIHO4+2XCQ+
+ F7IsiuyeCBCdyx2Rzo6FY9tpDG+W0XZq26vAZ4ewvxSXDLNpUW/mxm20O5lEHA7zeAeD
+ vDT1NifGia7OjDgoET2CYTOrjDb+WsGu6kcGhtT+4XLzuP57R1ooPQBr51o8XUBDcv2A
+ yuWpJFkRiwSrCKw5aow3aXAYZRPPAQObWBXXC3iHsUDF9GrFQXPY3idGSGkkr3Ryu4O6
+ DzyHDOf+Kzn6Zq6H57BE0ZHHD1jmWqb3wds5EcKwIhisaLT6mmc8XCTc+g6r8w81Jk+A Qg== 
+Received: from sc-exch01.marvell.com ([199.233.58.181])
+        by mx0a-0016f401.pphosted.com with ESMTP id 2wc8422y5c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Tue, 19 Nov 2019 08:56:29 -0800
+Received: from SC-EXCH04.marvell.com (10.93.176.84) by SC-EXCH01.marvell.com
+ (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Tue, 19 Nov
+ 2019 08:56:27 -0800
+Received: from NAM01-SN1-obe.outbound.protection.outlook.com (104.47.32.51) by
+ SC-EXCH04.marvell.com (10.93.176.84) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Tue, 19 Nov 2019 08:56:27 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VMvZix9vSHpqu1+VjzkkPE+74nKI6ZNQ9gKkNMLanbS1CoBZJ46ildm5FrjsxvhPCnq6Cm3WKzAfnF/n/34+8cLFqvmCmq3megcjUSS13fQU2H3J46oQ+liLhq63wyKlUQ2Oh4dbBWuDyVtYcm8uJopwdmbMhB6WGHv29JUxMRhPyEhMfqTFr5TBXTLhBf6jCU+HKlycHcKVZwbo5LiuVFzE5nF2LpolOUjHUKy6TbK6ha7ffjIWYJpEyij2dAP1UznCdzG9Wes3xcCcABU3UZWmWNsqi9fG5U4vCMC/P00AwMtJUU2Tvsh5j0NhtnYbfCGxAPBemuUFmvl0fLUKBQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5psJY5oRd+BdV8GGSj8SFj9lpONmcHRW3/jk1UbNueg=;
+ b=ebB/76Z03E0Em0CDd5CgyvlocWsVMZ2dtY0vggJVLWXyV7MmtMOph/tUXWNhHMFITsYfnZ9ZjupVkF5oZsGoOczs0qYwC9QrEvtmPfHhw+QSI9/eSphRairXZDepPDI2+xVZiJZxKO9RO3oPZ69YeLT/zaecOYvFIJ7lMM2ECaOquq89+8+GpVL/FbjvoJRiT7l3KuT4+PXQij/PhOi3KGNwIqad4hbjnr/7Y/xr4UZ3mjJIGsIGYZnZo9/mtrIkhB5aItLpsK/N21GGVkpuBwuWlRSGZC7QRDMhWFBappQfjntdGTB8rXvbG/YlOyFNwOMZBnOY6rpU+td49KNPPQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
+ dkim=pass header.d=marvell.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=giMwmMYCTfwG4t/m7GcZ9wpvpN8uV7OEh8vHMV0l5S0=;
-        b=rmUv4RO88MDLOtSHN6/ZZBmKiLjFBYSKFwhCyvhX3/1sXT3xESgFLG8mDpW2oWH9Fl
-         /MfigHIV5FK4dGGKcQlfHlByQhnj00/6hvQcYo1wWB7dBUD8eHQMeEwxOEoWmnnVKGSc
-         nQJSsYZDKVtWGVfuvbXM6B+41ei9mpONcrBi+fugiqwLgu1MUPi8oAKsectEI8YLv/dI
-         kAW37irsEiTAX/lnlI1WTqe4rYtLERlsK4V7V4XtpddzJUX+adAdAvABrH3WAwMjq+6k
-         hYJw8Ib3vdKZeQ0RAnz05RAoR7kawTZB6A7zVCgmKR+MzDnAxlanLh+6Q//2fwcmgLZ9
-         djdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=giMwmMYCTfwG4t/m7GcZ9wpvpN8uV7OEh8vHMV0l5S0=;
-        b=jol/VHYGBFkRRoojYyTzz3/VhRXRO5Ot73HB0yCrhL4CQY9vDJWoK3tx8JLp72BCg+
-         xB/0PZ51r3k/5zdPNl93LTRY01g3r2QQ/bEzXU4Qi27Mmm99KOzdN1TNBC7Rx3j21soV
-         OUYfjdfCsZ9+uHbwv0mNl/NTRQ8RcDv93PzLn+HfnviX2uB6Ah+dJF/Zw43H5fDfLK44
-         nbGWRUgKtZrLeRO7feYc1Y4MgEkyakrl0j/DokErMJZrik73E26XEs1HZ8YqxavJuD5j
-         Fr52ykj85IqUfeyF64UgjBPsbNS7TjnPb1crVRV8dBVwW/xLzWRzUpMBgUwVWIYsJglk
-         FPrw==
-X-Gm-Message-State: APjAAAXCJS3BwVwbv9/vUBGfWv2hYK46JB4TLaBBkT1S9pjEeU6elJSn
-        YyQZc0z+ZxHAzKySpbVr+88w4anL
-X-Google-Smtp-Source: APXvYqzthkVZ1hMtk0VsW3K9xsqiauD6RdH04NOkFmKx3D6tdSccWVopfg3OX5PNStxfi+4MYkk1mw==
-X-Received: by 2002:ac2:5967:: with SMTP id h7mr4671524lfp.119.1574182570172;
-        Tue, 19 Nov 2019 08:56:10 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id y5sm10749907lfg.5.2019.11.19.08.56.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 Nov 2019 08:56:09 -0800 (PST)
-Subject: Re: [PATCH v1 08/29] dt-bindings: interconnect: tegra: Add initial
- IDs
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Mikko Perttunen <mperttunen@nvidia.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-tegra@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-References: <20191118200247.3567-1-digetx@gmail.com>
- <20191118200247.3567-9-digetx@gmail.com> <20191119062535.GC2462695@ulmo>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <8cff3af3-42c7-3312-5f98-cd5eb98b7b7a@gmail.com>
-Date:   Tue, 19 Nov 2019 19:56:08 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
-MIME-Version: 1.0
-In-Reply-To: <20191119062535.GC2462695@ulmo>
-Content-Type: text/plain; charset=utf-8
+ d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5psJY5oRd+BdV8GGSj8SFj9lpONmcHRW3/jk1UbNueg=;
+ b=VYvACJM+UXTrQ7NjNE96EiXoNO8g8uXjqGtwtTowZn9HmmtETc0aVlO4j/aJol2CDHDcL35KaUiY3exS0sPnhCU2nRe7WaKHEfMMty38PpNX3qbbNefEPj9FjcEMs6hjMXr5J8xNWCKOnyFaCV52q9/eAovzoerZRFU8CdzexHU=
+Received: from MN2PR18MB3408.namprd18.prod.outlook.com (10.255.237.10) by
+ MN2PR18MB2846.namprd18.prod.outlook.com (20.179.21.147) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2451.29; Tue, 19 Nov 2019 16:56:26 +0000
+Received: from MN2PR18MB3408.namprd18.prod.outlook.com
+ ([fe80::657c:6c81:859d:106]) by MN2PR18MB3408.namprd18.prod.outlook.com
+ ([fe80::657c:6c81:859d:106%7]) with mapi id 15.20.2451.029; Tue, 19 Nov 2019
+ 16:56:26 +0000
+From:   Robert Richter <rrichter@marvell.com>
+To:     Arnd Bergmann <arnd@arndb.de>, arm soc <arm@kernel.org>
+CC:     Jan Glauber <jglauber@marvell.com>,
+        Sunil Kovvuri Goutham <sgoutham@marvell.com>,
+        George Cherian <gcherian@marvell.com>,
+        "Ganapatrao Prabhakerrao Kulkarni" <gkulkarni@marvell.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "soc@kernel.org" <soc@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Robert Richter <rrichter@marvell.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH 1/2] MAINTAINERS: Update Cavium ThunderX drivers
+Thread-Topic: [PATCH 1/2] MAINTAINERS: Update Cavium ThunderX drivers
+Thread-Index: AQHVnvpIKK4hXzo/9E+xV52+I9ZKJA==
+Date:   Tue, 19 Nov 2019 16:56:26 +0000
+Message-ID: <20191119165549.14570-3-rrichter@marvell.com>
+References: <20191119165549.14570-1-rrichter@marvell.com>
+In-Reply-To: <20191119165549.14570-1-rrichter@marvell.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HE1P192CA0020.EURP192.PROD.OUTLOOK.COM (2603:10a6:3:fe::30)
+ To MN2PR18MB3408.namprd18.prod.outlook.com (2603:10b6:208:165::10)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.20.1
+x-originating-ip: [31.208.96.227]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: fa644830-4a68-41d8-8053-08d76d116a7a
+x-ms-traffictypediagnostic: MN2PR18MB2846:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR18MB2846D2CEC9481E5E890732CFD94C0@MN2PR18MB2846.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4941;
+x-forefront-prvs: 022649CC2C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(346002)(366004)(39860400002)(136003)(376002)(199004)(189003)(186003)(6506007)(64756008)(478600001)(66446008)(386003)(6486002)(66946007)(476003)(486006)(2616005)(8676002)(6116002)(3846002)(14444005)(110136005)(54906003)(86362001)(316002)(36756003)(11346002)(99286004)(256004)(14454004)(7736002)(4326008)(305945005)(66066001)(25786009)(2906002)(81156014)(66556008)(66476007)(6436002)(102836004)(26005)(5660300002)(76176011)(52116002)(446003)(6306002)(6512007)(71200400001)(71190400001)(1076003)(50226002)(81166006)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB2846;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: marvell.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: IqUSUsDkxvAfrMax04RDtLDeML2lWkPZGzwLmSUz3iqxq5+0pjjjvg7QqcmGTYwmWlWh5faSrG+bBlwaXeHlT2R3zHkUiXucKRLFQRDeTlP4/2ILyTnHY2y9QqUkDqV/6K6HwPU5xqDYfe7iigjdzpsu3EcmyT9y54YT9S/cnMsoT04wrx2aFGmQifjCwIISIbJMIbA+kTurVVC3lEXzW6yynuHZpEnjaiX04zivc0spL5ez5A7ODxIQZNw3NDEwdka0n5f/sr39YaBf5lGyC+UoAo/RX8oneQarVVYEd8rZoWo6vr8FtYYICkNe2M0QKxrvorMqrEeRoQlQ6SWZGPAi7urH5zBJffQBKQisTqqO//b9cGdjMm9QzC3v7uuwuCRDgl4O1nXcj8Jm4eazyI4YW5rPeCPHNKt6b3Vy17bLetjFKNqCKXtklepdmUqc
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: fa644830-4a68-41d8-8053-08d76d116a7a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Nov 2019 16:56:26.6518
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: dek3DRatfVu2jctZsi0uFclgHNrmvXvkC4t19DUsOWlQ+ME/o9Vd0+5G/Wow3zO31XeYvWpTjE9Ms/1BEMUuzA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2846
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-19_05:2019-11-15,2019-11-19 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-19.11.2019 09:25, Thierry Reding пишет:
-> On Mon, Nov 18, 2019 at 11:02:26PM +0300, Dmitry Osipenko wrote:
->> Define interconnect IDs for memory controller (MC), external memory
->> controller (EMC), external memory (EMEM) and memory clients of display
->> controllers (DC).
->>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> ---
->>  include/dt-bindings/interconnect/tegra-icc.h | 11 +++++++++++
->>  1 file changed, 11 insertions(+)
->>  create mode 100644 include/dt-bindings/interconnect/tegra-icc.h
+From: Jan Glauber <jglauber@marvell.com>
 
+Remove my maintainer entries for ThunderX drivers as I'm moving on
+and won't have access to ThunderX hardware anymore and add Robert.
+Also remove the obsolete addresses of David Daney and Steven Hill.
 
-Hello Thierry,
+Add an entry to .mailmap for my various email addresses.
 
-> There was a bit of discussion regarding this for a recent patch that I
-> was working on, see:
-> 
-> 	http://patchwork.ozlabs.org/project/linux-tegra/list/?series=140318
+Cc: Ganapatrao Prabhakerrao Kulkarni <gkulkarni@marvell.com>
+Cc: soc@kernel.org
+Signed-off-by: Jan Glauber <jglauber@marvell.com>
+Signed-off-by: Robert Richter <rrichter@marvell.com>
+---
+ MAINTAINERS | 17 ++++++-----------
+ 1 file changed, 6 insertions(+), 11 deletions(-)
 
-Thank you very much for the link.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index eb19fad370d7..2bef41729946 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3705,8 +3705,7 @@ S:	Maintained
+ F:	drivers/net/wireless/ath/carl9170/
+=20
+ CAVIUM I2C DRIVER
+-M:	Jan Glauber <jglauber@cavium.com>
+-M:	David Daney <david.daney@cavium.com>
++M:	Robert Richter <rrichter@marvell.com>
+ W:	http://www.cavium.com
+ S:	Supported
+ F:	drivers/i2c/busses/i2c-octeon*
+@@ -3722,9 +3721,7 @@ S:	Supported
+ F:	drivers/net/ethernet/cavium/liquidio/
+=20
+ CAVIUM MMC DRIVER
+-M:	Jan Glauber <jglauber@cavium.com>
+-M:	David Daney <david.daney@cavium.com>
+-M:	Steven J. Hill <Steven.Hill@cavium.com>
++M:	Robert Richter <rrichter@marvell.com>
+ W:	http://www.cavium.com
+ S:	Supported
+ F:	drivers/mmc/host/cavium*
+@@ -5834,15 +5831,14 @@ F:	drivers/edac/highbank*
+=20
+ EDAC-CAVIUM OCTEON
+ M:	Ralf Baechle <ralf@linux-mips.org>
+-M:	David Daney <david.daney@cavium.com>
++M:	Robert Richter <rrichter@marvell.com>
+ L:	linux-edac@vger.kernel.org
+ L:	linux-mips@vger.kernel.org
+ S:	Supported
+ F:	drivers/edac/octeon_edac*
+=20
+ EDAC-CAVIUM THUNDERX
+-M:	David Daney <david.daney@cavium.com>
+-M:	Jan Glauber <jglauber@cavium.com>
++M:	Robert Richter <rrichter@marvell.com>
+ L:	linux-edac@vger.kernel.org
+ S:	Supported
+ F:	drivers/edac/thunderx_edac*
+@@ -12629,7 +12625,7 @@ F:	Documentation/devicetree/bindings/pci/axis,artpe=
+c*
+ F:	drivers/pci/controller/dwc/*artpec*
+=20
+ PCIE DRIVER FOR CAVIUM THUNDERX
+-M:	David Daney <david.daney@cavium.com>
++M:	Robert Richter <rrichter@marvell.com>
+ L:	linux-pci@vger.kernel.org
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+ S:	Supported
+@@ -16137,7 +16133,7 @@ S:	Maintained
+ F:	drivers/net/thunderbolt.c
+=20
+ THUNDERX GPIO DRIVER
+-M:	David Daney <david.daney@cavium.com>
++M:	Robert Richter <rrichter@marvell.com>
+ S:	Maintained
+ F:	drivers/gpio/gpio-thunderx.c
+=20
+@@ -17916,7 +17912,6 @@ F:	drivers/char/xillybus/
+=20
+ XLP9XX I2C DRIVER
+ M:	George Cherian <george.cherian@cavium.com>
+-M:	Jan Glauber <jglauber@cavium.com>
+ L:	linux-i2c@vger.kernel.org
+ W:	http://www.cavium.com
+ S:	Supported
+--=20
+2.20.1
 
-> I'd rather not use an additional set of definitions for this. The memory
-> controller already has a set of native IDs for memory clients that I
-> think we can reuse for this.
-
-I missed that it's fine to have multiple ICC connections defined
-per-path, at quick glance looks like indeed it should be fine to re-use
-MC IDs.
-
-> I've only added these client IDs for Tegra194 because that's where we
-> need it to actually describe a specific hardware quirk, but I can come
-> up with the equivalent for older chips as well.
-
-Older Tegra SoCs have hardware units connected to MC through AHB bus,
-like USB for example. These units do not have MC client IDs and there is
-no MC ID defined for the AHB bus either, but probably it won't be a
-problem to define IDs for them if will be necessary.
