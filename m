@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 681A5C33C9D
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:59:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAB37C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:59:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39746206DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:59:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9175D2084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:59:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574143143;
-	bh=hmx5Rpbn7yfuwK7i95I3Vro9XyTui2okvZWKHzrJrQY=;
+	s=default; t=1574143147;
+	bh=nHTNft2ct8Swzv59J+uQWEJCYKeLMnBCYuaPYwe5Hmo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jhZnOW95xG/0vhquWud9dO6xlz4Zeh3tcVWX49QSfKX8nPRU8trf69QG1LiYCMTZe
-	 c0Qfx+MT/jX+bDloMTCOyOklYfJC9z46Ct470E2s7Ys91K6wgm+6aV5Y43H6o1BS9X
-	 8PtzOBy+b8fyZc/6ziUPZRJOSxwZ2r261xyAZJtU=
+	b=CMoIw8Zlypz58O+/SycHc+iY9yU1yCh0AAN0RfIIF9ySoEXARHFWxDnIgos6R9O66
+	 PFxQ91pzayQBsn/lD6XRuyXedCMPQvBOlHdJDI2j/JRbQ/vYF18mUNQzNViX4CF17G
+	 PxjCnnIQru2u4LhRmf58DzCrN/OXQkJHa137Ily0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731368AbfKSFsb (ORCPT
+        id S1731350AbfKSFsX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:48:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44996 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:48:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730809AbfKSFsZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:48:25 -0500
+        id S1731340AbfKSFsR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:48:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B78052075E;
-        Tue, 19 Nov 2019 05:48:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DF7E2071B;
+        Tue, 19 Nov 2019 05:48:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142505;
-        bh=hmx5Rpbn7yfuwK7i95I3Vro9XyTui2okvZWKHzrJrQY=;
+        s=default; t=1574142496;
+        bh=nHTNft2ct8Swzv59J+uQWEJCYKeLMnBCYuaPYwe5Hmo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MXSWj9Juywn5LtPsZAxCflpIwWd5K0R1BW9O2AdCFCoW3Dqh5H+Eg5+uU5yhSB3JZ
-         rErcg9kKCNJ8QLT3ER6AEFs5jg3QndsbWz3qmfKlg4LCDjWAflzMklSfhybXchtwnH
-         78CCFcs0iIS/0xa1Ik2ayrBpabzoTXZoUWhF+lxo=
+        b=GXhT/2wZCcWOuaKAy4eJyd58BNGLuO1EOOSxVbPUYcx2NaxPV8KA7hv2ySDfFVQAp
+         G1LHVKUgsdpRWEm/fSwQVB5hEBrQgL2wwbsDpcC4qsJTypzQAFKpmynw9Ti2/4nKLm
+         5vYTRF8RJxyZHlj85I9FjXTtrLdYrxHa2iFDmt5k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Kelley <mikelley@microsoft.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
+        stable@vger.kernel.org, Deepak Ukey <deepak.ukey@microchip.com>,
+        Viswas G <Viswas.G@microchip.com>,
+        Jack Wang <jinpu.wang@profitbricks.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 104/239] Drivers: hv: vmbus: Fix synic per-cpu context initialization
-Date:   Tue, 19 Nov 2019 06:18:24 +0100
-Message-Id: <20191119051325.796790982@linuxfoundation.org>
+Subject: [PATCH 4.14 101/239] scsi: pm80xx: Corrected dma_unmap_sg() parameter
+Date:   Tue, 19 Nov 2019 06:18:21 +0100
+Message-Id: <20191119051324.684685846@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -61,60 +62,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Kelley <mikelley@microsoft.com>
+From: Deepak Ukey <deepak.ukey@microchip.com>
 
-[ Upstream commit f25a7ece08bdb1f2b3c4bbeae942682fc3a99dde ]
+[ Upstream commit 76cb25b058034d37244be6aca97a2ad52a5fbcad ]
 
-If hv_synic_alloc() errors out, the state of the per-cpu context
-for some CPUs is unknown since the zero'ing is done as each
-CPU is iterated over.  In such case, hv_synic_cleanup() may try to
-free memory based on uninitialized values.  Fix this by zero'ing
-the per-cpu context for all CPUs before doing any memory
-allocations that might fail.
+For the function dma_unmap_sg(), the <nents> parameter should be number of
+elements in the scatter list prior to the mapping, not after the mapping.
 
-Signed-off-by: Michael Kelley <mikelley@microsoft.com>
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: K. Y. Srinivasan <kys@microsoft.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Deepak Ukey <deepak.ukey@microchip.com>
+Signed-off-by: Viswas G <Viswas.G@microchip.com>
+Acked-by: Jack Wang <jinpu.wang@profitbricks.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hv/hv.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ drivers/scsi/pm8001/pm8001_sas.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
-index fe041f22521da..23f312b4c6aa2 100644
---- a/drivers/hv/hv.c
-+++ b/drivers/hv/hv.c
-@@ -148,6 +148,17 @@ static void hv_init_clockevent_device(struct clock_event_device *dev, int cpu)
- int hv_synic_alloc(void)
- {
- 	int cpu;
-+	struct hv_per_cpu_context *hv_cpu;
-+
-+	/*
-+	 * First, zero all per-cpu memory areas so hv_synic_free() can
-+	 * detect what memory has been allocated and cleanup properly
-+	 * after any failures.
-+	 */
-+	for_each_present_cpu(cpu) {
-+		hv_cpu = per_cpu_ptr(hv_context.cpu_context, cpu);
-+		memset(hv_cpu, 0, sizeof(*hv_cpu));
-+	}
- 
- 	hv_context.hv_numa_map = kzalloc(sizeof(struct cpumask) * nr_node_ids,
- 					 GFP_ATOMIC);
-@@ -157,10 +168,8 @@ int hv_synic_alloc(void)
- 	}
- 
- 	for_each_present_cpu(cpu) {
--		struct hv_per_cpu_context *hv_cpu
--			= per_cpu_ptr(hv_context.cpu_context, cpu);
-+		hv_cpu = per_cpu_ptr(hv_context.cpu_context, cpu);
- 
--		memset(hv_cpu, 0, sizeof(*hv_cpu));
- 		tasklet_init(&hv_cpu->msg_dpc,
- 			     vmbus_on_msg_dpc, (unsigned long) hv_cpu);
- 
+diff --git a/drivers/scsi/pm8001/pm8001_sas.c b/drivers/scsi/pm8001/pm8001_sas.c
+index ce584c31d36e5..d1fcd21f7f7dd 100644
+--- a/drivers/scsi/pm8001/pm8001_sas.c
++++ b/drivers/scsi/pm8001/pm8001_sas.c
+@@ -466,7 +466,7 @@ err_out:
+ 	dev_printk(KERN_ERR, pm8001_ha->dev, "pm8001 exec failed[%d]!\n", rc);
+ 	if (!sas_protocol_ata(t->task_proto))
+ 		if (n_elem)
+-			dma_unmap_sg(pm8001_ha->dev, t->scatter, n_elem,
++			dma_unmap_sg(pm8001_ha->dev, t->scatter, t->num_scatter,
+ 				t->data_dir);
+ out_done:
+ 	spin_unlock_irqrestore(&pm8001_ha->lock, flags);
 -- 
 2.20.1
 
