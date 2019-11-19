@@ -4,51 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F0CDC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78DD2C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:33:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C88C2068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:33:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AC10206EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:33:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141625;
-	bh=n5yr41YAv3AwtUDx9GH1S0juy9nxJL2b9z1AYymp6yU=;
+	s=default; t=1574141628;
+	bh=o6dh4ufHmInF4oLXS+RpJ8zetcuZ7OaJYzjhG7NToF8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E/TIvt+iP4sWc8pQTOSZiUvrf3yzJ0w4NtJ6C/kHQygzvoEeH6k3fbhOI5O0p2ODh
-	 Bb/pdi2/k1IFtxuLWV4IbN0zJIP/8MW2HKpI5a1wHlmOOz5TaSv1ryzSN4mVb7X/g8
-	 cVZDJjJ5ncxucMGPhAuc4LUw1y/+nrSevIHZ8wXI=
+	b=hQJlBSkEbeq0r9v+kdn6rlXpAtJ/KRj6zBh8Ct5Wtq4803K0rktIPiDdFRBXifvru
+	 JJL6yoHLNeK+1yrvsvtbPf5Jy4oS+H1sQPFISuOQnJbi36yV8NbfJBjU3HPhzW6BL2
+	 SO0KngPqb9LAPn7rjvKvTyiVtXAxKJTftIPAwnhQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729556AbfKSFdn (ORCPT
+        id S1729574AbfKSFdr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:33:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54132 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:33:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728306AbfKSFdd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:33:33 -0500
+        id S1729062AbfKSFdj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:33:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33B2121783;
-        Tue, 19 Nov 2019 05:33:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B86121783;
+        Tue, 19 Nov 2019 05:33:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141612;
-        bh=n5yr41YAv3AwtUDx9GH1S0juy9nxJL2b9z1AYymp6yU=;
+        s=default; t=1574141618;
+        bh=o6dh4ufHmInF4oLXS+RpJ8zetcuZ7OaJYzjhG7NToF8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FxPu9gAdWpIICQeiDn6nRUAynhfTd9F4KpwaN8Yb4Zdgu0bPOoTLNiOkQ4DkiiQBk
-         9r2t6vjatBGR0UXjnG2NuLnULIi23eryTSZsMVmQz98MhaNGJvf9921/41NCxTFG42
-         OMFjogfHDk0YJY7Zk2O3x8FcVU2Gpbb+k6vdzPEw=
+        b=mTqvGrcrQNuDLAPcsLYk+3Em+VvIZ4dPI5HkCUs7Of2P4JZWBx8W5/r3KFsHZvCyX
+         6Alo65XwEcyX8EsDu0pM3cRdWiMxypmMCvOOVYHlQ+UwttbXa/nJr4o45Pv2P9I53v
+         h29zHGMAVcQaBGrGch+/SiGtv93VChF5SUebCjoo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hari Vyas <hari.vyas@broadcom.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 219/422] arm64: fix for bad_mode() handler to always result in panic
-Date:   Tue, 19 Nov 2019 06:16:56 +0100
-Message-Id: <20191119051412.815727853@linuxfoundation.org>
+        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Naveen N . Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 185/422] kprobes: Dont call BUG_ON() if there is a kprobe in use on free list
+Date:   Tue, 19 Nov 2019 06:16:22 +0100
+Message-Id: <20191119051410.471648112@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -61,38 +65,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hari Vyas <hari.vyas@broadcom.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit e4ba15debcfd27f60d43da940a58108783bff2a6 ]
+[ Upstream commit cbdd96f5586151e48317d90a403941ec23f12660 ]
 
-The bad_mode() handler is called if we encounter an uunknown exception,
-with the expectation that the subsequent call to panic() will halt the
-system. Unfortunately, if the exception calling bad_mode() is taken from
-EL0, then the call to die() can end up killing the current user task and
-calling schedule() instead of falling through to panic().
+Instead of calling BUG_ON(), if we find a kprobe in use on free kprobe
+list, just remove it from the list and keep it on kprobe hash list
+as same as other in-use kprobes.
 
-Remove the die() call altogether, since we really want to bring down the
-machine in this "impossible" case.
-
-Signed-off-by: Hari Vyas <hari.vyas@broadcom.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
+Cc: David S . Miller <davem@davemloft.net>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Naveen N . Rao <naveen.n.rao@linux.vnet.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lkml.kernel.org/r/153666126882.21306.10738207224288507996.stgit@devbox
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/traps.c | 1 -
- 1 file changed, 1 deletion(-)
+ kernel/kprobes.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
-index a0099be4311ae..c8dc3a3640e7e 100644
---- a/arch/arm64/kernel/traps.c
-+++ b/arch/arm64/kernel/traps.c
-@@ -611,7 +611,6 @@ asmlinkage void bad_mode(struct pt_regs *regs, int reason, unsigned int esr)
- 		handler[reason], smp_processor_id(), esr,
- 		esr_get_class_string(esr));
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index b8efca9dc2cbb..aed90788db5c1 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -544,8 +544,14 @@ static void do_free_cleaned_kprobes(void)
+ 	struct optimized_kprobe *op, *tmp;
  
--	die("Oops - bad mode", regs, 0);
- 	local_daif_mask();
- 	panic("bad mode");
+ 	list_for_each_entry_safe(op, tmp, &freeing_list, list) {
+-		BUG_ON(!kprobe_unused(&op->kp));
+ 		list_del_init(&op->list);
++		if (WARN_ON_ONCE(!kprobe_unused(&op->kp))) {
++			/*
++			 * This must not happen, but if there is a kprobe
++			 * still in use, keep it on kprobes hash list.
++			 */
++			continue;
++		}
+ 		free_aggr_kprobe(&op->kp);
+ 	}
  }
 -- 
 2.20.1
