@@ -2,156 +2,110 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26467C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:07:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2558C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:08:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1FFF2230F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:07:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574158076;
-	bh=raQvysGezMOTdzZhLbXQVgeelzwMcf+XsBZN45+Jnr4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=BxlaSKWpdnsJ1RnAWvbLggrX6Tkm3GnZJ9KW/U+rEZOMb9DJxu/6sOQBBWZsyznuY
-	 teLjXvYcTnOYuAY1MhLrFay3dmnfyJfw5yyBOMeAaRYd9fnA4uNlVdvd2Vkyd/VoOL
-	 jRoTPf5ZEddKjxBF6zbd4yY1X5ZxYqemrDnCD+Kg=
+	by mail.kernel.org (Postfix) with ESMTP id CB2A42230B
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:08:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="gwzlq8t0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727472AbfKSKHz (ORCPT
+        id S1727629AbfKSKID (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 05:07:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41622 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 05:08:03 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:40012 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725280AbfKSKHy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 05:07:54 -0500
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726510AbfKSKIC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 05:08:02 -0500
+Received: from zn.tnic (p200300EC2F0EDC005592EDCF9C877480.dip0.t-ipconnect.de [IPv6:2003:ec:2f0e:dc00:5592:edcf:9c87:7480])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F43A2230C
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 10:07:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574158073;
-        bh=raQvysGezMOTdzZhLbXQVgeelzwMcf+XsBZN45+Jnr4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=RjQMR4rU1In9lM+kAb4soSF9t2AJfvrcdffTs2mzM8uL6Cad3vzhxR46A+cnPjzxn
-         IbVrdWOO3lWPGCxxz4HG/NKbdQqe5Ky2v0SIN7DghQNfbG7hDIRteoctcksF2NfgXM
-         RG9O1yHUUaXaQFTAOb31qHoXc7t73yJh86cTH7t8=
-Received: by mail-wr1-f53.google.com with SMTP id e6so23109623wrw.1
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 02:07:53 -0800 (PST)
-X-Gm-Message-State: APjAAAXV++htogJqemXvoZQCaqct9LQpWISwhQImqn2iiLGjRb/qfMSI
-        lFdlaur9zyGBfBM7cb+5H4T9btnM6S5+aBO0uO4oBg==
-X-Google-Smtp-Source: APXvYqzIDjHYabEFDKNGNz1GeBkQRlFBAp+pdbYkngDyg4rogH0rFpf7wiaTn8LWmx1If1ARFOOJ5Qjs8JwSWm8TNDM=
-X-Received: by 2002:a5d:490b:: with SMTP id x11mr34652314wrq.111.1574158071890;
- Tue, 19 Nov 2019 02:07:51 -0800 (PST)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4458B1EC0C98;
+        Tue, 19 Nov 2019 11:07:57 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1574158077;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=Ila9OqBBhoMf/cQ8rlDHnWD68xbWOecYwqrJXXsjQ2M=;
+        b=gwzlq8t0TWpH0T/KA2xwbyDcLJZXKjADYgqwQIpAjccXpbSy21Gi2zlq+1pxhdvbD2NhsH
+        CEU8lUpFW2uttEinixMhFShVoiHlUDm71dp1VC7wuCF1wKwjera9eyi+5gwTfaTb8tn7gV
+        Ng/9s/5NOjfwIbrTQJxCr/4aYK/T4Mo=
+Date:   Tue, 19 Nov 2019 11:07:53 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Zhang Xiaoxu <zhangxiaoxu5@huawei.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        tyhicks@canonical.com, colin.king@canonical.com,
+        linux-security-module@vger.kernel.org,
+        Matthew Garrett <mjg59@google.com>
+Subject: Re: [PATCH] x86/mtrr: Require CAP_SYS_ADMIN for all access
+Message-ID: <20191119100753.GA27787@zn.tnic>
+References: <201911181308.63F06502A1@keescook>
 MIME-Version: 1.0
-References: <5390778.VeFRgus4bQ@positron.chronox.de> <DDB907EA-3FCC-40C7-B55B-A84BC77FD7A1@amacapital.net>
- <3159012.PsEOTp9LqO@positron.chronox.de>
-In-Reply-To: <3159012.PsEOTp9LqO@positron.chronox.de>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 19 Nov 2019 02:07:40 -0800
-X-Gmail-Original-Message-ID: <CALCETrUKDO1LSMnHNcPiAFQh2ri6saRiRBi9b5e699cm1_Mgsw@mail.gmail.com>
-Message-ID: <CALCETrUKDO1LSMnHNcPiAFQh2ri6saRiRBi9b5e699cm1_Mgsw@mail.gmail.com>
-Subject: Re: [PATCH v25 10/12] LRNG - add TRNG support
-To:     =?UTF-8?Q?Stephan_M=C3=BCller?= <smueller@chronox.de>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        Nicolai Stange <nstange@suse.de>,
-        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
-        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
-        Roman Drahtmueller <draht@schaltsekun.de>,
-        Neil Horman <nhorman@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <201911181308.63F06502A1@keescook>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Nov 17, 2019 at 3:11 AM Stephan M=C3=BCller <smueller@chronox.de> w=
-rote:
->
-> Am Samstag, 16. November 2019, 17:09:09 CET schrieb Andy Lutomirski:
->
-> Hi Andy,
->
-> > > On Nov 16, 2019, at 1:40 AM, Stephan M=C3=BCller <smueller@chronox.de=
-> wrote:
-> > >
-> > > =EF=BB=BFThe True Random Number Generator (TRNG) provides a random nu=
-mber
-> > > generator with prediction resistance (SP800-90A terminology) or an NT=
-G.1
-> > > (AIS 31 terminology).
-> >
-> > ...
-> >
-> > > The secondary DRNGs seed from the TRNG if it is present. In addition,
-> > > the /dev/random device accesses the TRNG.
-> > >
-> > > If the TRNG is disabled, the secondary DRNGs seed from the entropy po=
-ol
-> > > and /dev/random behaves like getrandom(2).
-> >
-> > As mentioned before, I don=E2=80=99t like this API.  An application tha=
-t, for some
-> > reason, needs a TRNG, should have an API by which it either gets a TRNG=
- or
-> > an error. Similarly, an application that wants cryptographically secure
-> > random numbers efficiently should have an API that does that.  With you=
-r
-> > design, /dev/random tries to cater to both use cases, but one of the us=
-e
-> > cases fails depending on kernel config.
-> >
-> > I think /dev/random should wait for enough entropy to initialize the sy=
-stem
-> > but should not block after that. A TRNG should have an entirely new API
-> > that is better than /dev/random.
->
-> I apologize for the misunderstanding. I assumed we would introduce such /=
-dev/
-> true_random at a later stage.
->
-> If you agree, I can certainly add /dev/true_random right now that links w=
-ith
-> the TRNG and make /dev/random behave as discussed, i.e. behave exactly li=
-ke
-> getrandom(..., 0);
+On Mon, Nov 18, 2019 at 01:09:21PM -0800, Kees Cook wrote:
+> Zhang Xiaoxu noted that physical address locations for MTRR were
+> visible to non-root users, which could be considered an information
+> leak. In discussing[1] the options for solving this, it sounded like
+> just moving the capable check into open() was the first step. If this
+> breaks userspace, then we will have a test case for the more conservative
+> approaches discussed in the thread. In summary:
+> 
+> - MTRR should check capabilities at open time (or retain the
+>   checks on the opener's permissions for later checks).
+> 
+> - changing the DAC permissions might break something that expects to
+>   open mtrr when not uid 0.
+> 
+> - if we leave the DAC permissions alone and just move the capable check
+>   to the opener, we should get the desired protection. (i.e. check
+>   against CAP_SYS_ADMIN not just the wider uid 0.)
+> 
+> - if that still breaks things, as in userspace expects to be able to
+>   read other parts of the file as non-uid-0 and non-CAP_SYS_ADMIN, then
+>   we need to censor the contents using the opener's permissions. For
+>   example, as done in other /proc cases, like commit 51d7b120418e
+>   ("/proc/iomem: only expose physical resource addresses to privileged
+>   users").
+> 
+> [1] https://lore.kernel.org/lkml/201911110934.AC5BA313@keescook/
+> 
+> Reported-by: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  arch/x86/kernel/cpu/mtrr/if.c | 21 ++-------------------
+>  1 file changed, 2 insertions(+), 19 deletions(-)
 
-Given that your series is already a decently large ABI change, I think
-it would be polite to users to make all the anticipated changes all at
-once to reduce the amount of churn everyone needs to deal with.
+Yap, LGTM, thanks!
 
->
-> As this would introduce a new device file now, is there a special process=
- that
-> I need to follow or do I need to copy? Which major/minor number should I =
-use?
->
-> Looking into static const struct memdev devlist[] I see
->
->          [8] =3D { "random", 0666, &random_fops, 0 },
->          [9] =3D { "urandom", 0666, &urandom_fops, 0 },
->
-> Shall a true_random be added here with [10]?
+Reviewed-by: Borislav Petkov <bp@suse.de>
 
-I am not at all an expert on chardevs, but this sounds generally
-reasonable.  gregkh is probably the real authority here.
+However, as it has a user-visible impact and it is not an urgent thing
+to have in the tree, I'd not queue this now but after the merge window
+is done so that we have a maximum time of exposure in linux-next and we
+can have ample time to addres fallout.
+
+/me puts it on the list for after the merge window.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
