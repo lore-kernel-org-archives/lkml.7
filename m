@@ -2,109 +2,110 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59C4EC43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:16:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 846B0C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:16:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3998F222D1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:16:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5917D222D1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:16:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lIwcWgxc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728048AbfKSMQC (ORCPT
+        id S1728066AbfKSMQ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 07:16:02 -0500
-Received: from foss.arm.com ([217.140.110.172]:51704 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726548AbfKSMQC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 07:16:02 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 934E11FB;
-        Tue, 19 Nov 2019 04:16:01 -0800 (PST)
-Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 70F813F703;
-        Tue, 19 Nov 2019 04:16:01 -0800 (PST)
-Received: by e110455-lin.cambridge.arm.com (Postfix, from userid 1000)
-        id 15D23682956; Tue, 19 Nov 2019 12:16:00 +0000 (GMT)
-Date:   Tue, 19 Nov 2019 12:16:00 +0000
-From:   Liviu Dudau <liviu.dudau@arm.com>
-To:     Andre Przywara <andre.przywara@arm.com>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: dts: arm: juno: Fix UART frequency
-Message-ID: <20191119121559.7grzoz2yoxhg23nf@e110455-lin.cambridge.arm.com>
-References: <20191119120331.28243-1-andre.przywara@arm.com>
+        Tue, 19 Nov 2019 07:16:29 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:52390 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727511AbfKSMQ3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 07:16:29 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAJCDipR046976;
+        Tue, 19 Nov 2019 12:14:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=AQk/7h5Ym3BmVg5rKLn1o6XSiLk0PA1eheI7FYE0AlQ=;
+ b=lIwcWgxcanEFOhZnrPX3xQIzaeHK/r0O6DmcEzxFg2pJ2CJfTazxqxqFjCzwfpG0w0GW
+ BfjQho3yNSAI22nKxSmxUEb/9qXzpqZGSnaRi6IJtYpaDIskKPkCt3e2ah8u4BanjTzc
+ 8kLOJH2oP4NiYoxDhjrrgxsGm177jcSBr9fT6mVmIjER4wwh0vdolna7rHUZ2S0ms2jx
+ 3xGfUt9f8XYwhvdOjzAygkGrHw6WJEnZEp8LxaCNkFeTLxaD/PYsQxppeT5U3UIF5HLL
+ 4coQQN1fNTntJnD2Uy5sqiiZ2QZCKw3miA1olQu+k7hke7yJFGThvfwPDchyeKbPEJr5 Sg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2wa9rqecux-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 Nov 2019 12:14:50 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAJCDw1w180011;
+        Tue, 19 Nov 2019 12:14:49 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2wbxm46ft1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 Nov 2019 12:14:49 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xAJCEiJ4014217;
+        Tue, 19 Nov 2019 12:14:44 GMT
+Received: from kadam (/41.210.141.188)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 19 Nov 2019 04:14:43 -0800
+Date:   Tue, 19 Nov 2019 15:14:26 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Mao Wenan <maowenan@huawei.com>, pbonzini@redhat.com,
+        rkrcmar@redhat.com, sean.j.christopherson@intel.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH -next] KVM: x86: remove set but not used variable 'called'
+Message-ID: <20191119121423.GB5604@kadam>
+References: <20191119030640.25097-1-maowenan@huawei.com>
+ <87o8x8gjr5.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191119120331.28243-1-andre.przywara@arm.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <87o8x8gjr5.fsf@vitty.brq.redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=957
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1911190114
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9445 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1911190114
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 12:03:31PM +0000, Andre Przywara wrote:
-> Older versions of the Juno *SoC* TRM [1] recommended that the UART clock
-> source should be 7.2738 MHz, whereas the *system* TRM [2] stated a more
-> correct value of 7.3728 MHz. Somehow the wrong value managed to end up in
-> our DT.
-> Doing a prime factorisation, a modulo divide by 115200 and trying
-> to buy a 7.2738 MHz crystal at your favourite electronics dealer suggest
-> that the old value was actually a typo. The actual UART clock is driven
-> by a PLL, configured via a parameter in some board.txt file in the
-> firmware, which reads 7.37 MHz (sic!).
+On Tue, Nov 19, 2019 at 12:58:54PM +0100, Vitaly Kuznetsov wrote:
+> Mao Wenan <maowenan@huawei.com> writes:
 > 
-> Fix this to correct the baud rate divisor calculation on the Juno board.
+> > Fixes gcc '-Wunused-but-set-variable' warning:
+> >
+> > arch/x86/kvm/x86.c: In function kvm_make_scan_ioapic_request_mask:
+> > arch/x86/kvm/x86.c:7911:7: warning: variable called set but not
+> > used [-Wunused-but-set-variable]
+> >
+> > It is not used since commit 7ee30bc132c6 ("KVM: x86: deliver KVM
+> > IOAPIC scan request to target vCPUs")
 > 
-> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+> Better expressed as 
 > 
-> [1] http://infocenter.arm.com/help/topic/com.arm.doc.ddi0515b.b/DDI0515B_b_juno_arm_development_platform_soc_trm.pdf
-> [2] http://infocenter.arm.com/help/topic/com.arm.doc.100113_0000_07_en/arm_versatile_express_juno_development_platform_(v2m_juno)_technical_reference_manual_100113_0000_07_en.pdf
-
-Acked-by: Liviu Dudau <liviu.dudau@arm.com>
-
-Best regards,
-Liviu
-
-> ---
->  arch/arm64/boot/dts/arm/juno-clocks.dtsi | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/arm/juno-clocks.dtsi b/arch/arm64/boot/dts/arm/juno-clocks.dtsi
-> index e5e265dfa902..2870b5eeb198 100644
-> --- a/arch/arm64/boot/dts/arm/juno-clocks.dtsi
-> +++ b/arch/arm64/boot/dts/arm/juno-clocks.dtsi
-> @@ -8,10 +8,10 @@
->   */
->  / {
->  	/* SoC fixed clocks */
-> -	soc_uartclk: refclk7273800hz {
-> +	soc_uartclk: refclk7372800hz {
->  		compatible = "fixed-clock";
->  		#clock-cells = <0>;
-> -		clock-frequency = <7273800>;
-> +		clock-frequency = <7372800>;
->  		clock-output-names = "juno:uartclk";
->  	};
->  
-> -- 
-> 2.17.1
+> Fixes: 7ee30bc132c6 ("KVM: x86: deliver KVM IOAPIC scan request to target vCPUs")
 > 
 
--- 
-====================
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    ¯\_(ツ)_/¯
+There is sort of a debate about this whether the Fixes tag should be
+used if it's only a cleanup.
+
+regards,
+dan carpenter
+
