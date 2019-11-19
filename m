@@ -5,56 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34D55C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:02:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69A59C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:02:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0790120872
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:02:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41EF720872
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:02:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574143348;
-	bh=ul0/bGo88jsuhWbKBfwSPapUDoW1WVyc6cHpoRR2Asw=;
+	s=default; t=1574143355;
+	bh=fNH4Qq25MAwaTI4SdJfjPmd7MjSxfVKnMDG2gOHHYAQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wVXw7v9ZfBvNua42w9YrwcKxSSsiTUH2jtR5qUTL/ZeZYVK9Yxw4zSPC4/hIC09gp
-	 Ffz7W7gLbLLUi0HdOA/oOsj2HAnIZ1fCmsxV+hVGCToalGYeEEnD7nDDJNRsGSTjqQ
-	 9PMGN1KSszvBMy2NqswFujhtqx1d1vfYm0+gyy2w=
+	b=QsHIHETHEB0Z4ZjgxceKKR62bvWuk2ur7HVqFwMQXpfxKrOZ0TMfd2/gS763BJNIh
+	 IkG9HBLpKLHH6tfnrEpZ9K1D1Oq+D6CmAZ5KJqbJUnoe/Awhbmb0I8VXhOlUNzKcyw
+	 R2SaipXXloNnE3h2u+wxVrWLf9UveYStpy4JoLxw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730621AbfKSFmX (ORCPT
+        id S1730584AbfKSFmC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:42:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37026 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:42:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730614AbfKSFmT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:42:19 -0500
+        id S1730294AbfKSFl7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:41:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02C1D222F2;
-        Tue, 19 Nov 2019 05:42:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DDF3208C3;
+        Tue, 19 Nov 2019 05:41:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142138;
-        bh=ul0/bGo88jsuhWbKBfwSPapUDoW1WVyc6cHpoRR2Asw=;
+        s=default; t=1574142118;
+        bh=fNH4Qq25MAwaTI4SdJfjPmd7MjSxfVKnMDG2gOHHYAQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DgKcEZUp+OV3jUEegQwuffMER/iP77TsjQo3uxBmyB/pDOd2R0/8vkxiKeOl01n90
-         B0xq8LWBmaxpu7lF56JvVUYUi/yD0e12gHTdlPWgEYgLpZdHaAuYd0VtMgRwx//sjp
-         kFz3+49NWDJNhaDpyInJ4/jVX7MSrzsLx5dhVNnM=
+        b=pRwLsxcZ7wi3E1qme7l95xt+m2NkkBieyPDaG+kLEI4/LY/88xpmJdYcAjvCrh/V2
+         hstrX+THJAmgkhwb9fT2SQjRktIyEqZBpAGb41b/AdAx/C6q3MRgvyZw4ly8+csLm2
+         mfpybepsrzk02mk0t5xaIrNfh7rt1f/NR1U5H6dc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Yan <yanaijie@huawei.com>,
-        chenxiang <chenxiang66@hisilicon.com>,
-        John Garry <john.garry@huawei.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Ewan Milne <emilne@redhat.com>, Christoph Hellwig <hch@lst.de>,
-        Tomas Henzl <thenzl@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Hannes Reinecke <hare@suse.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Stephen Hemminger <sthemmin@microsoft.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 361/422] scsi: libsas: always unregister the old device if going to discover new
-Date:   Tue, 19 Nov 2019 06:19:18 +0100
-Message-Id: <20191119051422.407996701@linuxfoundation.org>
+Subject: [PATCH 4.19 357/422] vmbus: keep pointer to ring buffer page
+Date:   Tue, 19 Nov 2019 06:19:14 +0100
+Message-Id: <20191119051422.151656832@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -67,58 +59,127 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Yan <yanaijie@huawei.com>
+From: Stephen Hemminger <stephen@networkplumber.org>
 
-[ Upstream commit 32c850bf587f993b2620b91e5af8a64a7813f504 ]
+[ Upstream commit 52a42c2a90226dc61c99bbd0cb096deeb52c334b ]
 
-If we went into sas_rediscover_dev() the attached_sas_addr was already insured
-not to be zero. So it's unnecessary to check if the attached_sas_addr is zero.
+Avoid going from struct page to virt address (and back) by just
+keeping pointer to the allocated pages instead of virt address.
 
-And although if the sas address is not changed, we always have to unregister
-the old device when we are going to register a new one. We cannot just leave
-the device there and bring up the new.
-
-Signed-off-by: Jason Yan <yanaijie@huawei.com>
-CC: chenxiang <chenxiang66@hisilicon.com>
-CC: John Garry <john.garry@huawei.com>
-CC: Johannes Thumshirn <jthumshirn@suse.de>
-CC: Ewan Milne <emilne@redhat.com>
-CC: Christoph Hellwig <hch@lst.de>
-CC: Tomas Henzl <thenzl@redhat.com>
-CC: Dan Williams <dan.j.williams@intel.com>
-CC: Hannes Reinecke <hare@suse.com>
-Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
-Reviewed-by: Hannes Reinecke <hare@suse.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Stephen Hemminger <sthemmin@microsoft.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/libsas/sas_expander.c | 13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
+ drivers/hv/channel.c         | 20 +++++++++-----------
+ drivers/uio/uio_hv_generic.c |  5 +++--
+ include/linux/hyperv.h       |  2 +-
+ 3 files changed, 13 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/scsi/libsas/sas_expander.c b/drivers/scsi/libsas/sas_expander.c
-index b141d1061f38e..2ee9c4ec7a541 100644
---- a/drivers/scsi/libsas/sas_expander.c
-+++ b/drivers/scsi/libsas/sas_expander.c
-@@ -2062,14 +2062,11 @@ static int sas_rediscover_dev(struct domain_device *dev, int phy_id, bool last)
- 		return res;
+diff --git a/drivers/hv/channel.c b/drivers/hv/channel.c
+index fdb0f832fadef..5e515533e9cdb 100644
+--- a/drivers/hv/channel.c
++++ b/drivers/hv/channel.c
+@@ -91,11 +91,14 @@ int vmbus_open(struct vmbus_channel *newchannel, u32 send_ringbuffer_size,
+ 	unsigned long flags;
+ 	int ret, err = 0;
+ 	struct page *page;
++	unsigned int order;
+ 
+ 	if (send_ringbuffer_size % PAGE_SIZE ||
+ 	    recv_ringbuffer_size % PAGE_SIZE)
+ 		return -EINVAL;
+ 
++	order = get_order(send_ringbuffer_size + recv_ringbuffer_size);
++
+ 	spin_lock_irqsave(&newchannel->lock, flags);
+ 	if (newchannel->state == CHANNEL_OPEN_STATE) {
+ 		newchannel->state = CHANNEL_OPENING_STATE;
+@@ -110,21 +113,17 @@ int vmbus_open(struct vmbus_channel *newchannel, u32 send_ringbuffer_size,
+ 
+ 	/* Allocate the ring buffer */
+ 	page = alloc_pages_node(cpu_to_node(newchannel->target_cpu),
+-				GFP_KERNEL|__GFP_ZERO,
+-				get_order(send_ringbuffer_size +
+-				recv_ringbuffer_size));
++				GFP_KERNEL|__GFP_ZERO, order);
+ 
+ 	if (!page)
+-		page = alloc_pages(GFP_KERNEL|__GFP_ZERO,
+-				   get_order(send_ringbuffer_size +
+-					     recv_ringbuffer_size));
++		page = alloc_pages(GFP_KERNEL|__GFP_ZERO, order);
+ 
+ 	if (!page) {
+ 		err = -ENOMEM;
+ 		goto error_set_chnstate;
  	}
  
--	/* delete the old link */
--	if (SAS_ADDR(phy->attached_sas_addr) &&
--	    SAS_ADDR(sas_addr) != SAS_ADDR(phy->attached_sas_addr)) {
--		SAS_DPRINTK("ex %016llx phy 0x%x replace %016llx\n",
--			    SAS_ADDR(dev->sas_addr), phy_id,
--			    SAS_ADDR(phy->attached_sas_addr));
--		sas_unregister_devs_sas_addr(dev, phy_id, last);
--	}
-+	/* we always have to delete the old device when we went here */
-+	SAS_DPRINTK("ex %016llx phy 0x%x replace %016llx\n",
-+		    SAS_ADDR(dev->sas_addr), phy_id,
-+		    SAS_ADDR(phy->attached_sas_addr));
-+	sas_unregister_devs_sas_addr(dev, phy_id, last);
+-	newchannel->ringbuffer_pages = page_address(page);
++	newchannel->ringbuffer_page = page;
+ 	newchannel->ringbuffer_pagecount = (send_ringbuffer_size +
+ 					   recv_ringbuffer_size) >> PAGE_SHIFT;
  
- 	return sas_discover_new(dev, phy_id);
+@@ -239,8 +238,7 @@ error_free_gpadl:
+ error_free_pages:
+ 	hv_ringbuffer_cleanup(&newchannel->outbound);
+ 	hv_ringbuffer_cleanup(&newchannel->inbound);
+-	__free_pages(page,
+-		     get_order(send_ringbuffer_size + recv_ringbuffer_size));
++	__free_pages(page, order);
+ error_set_chnstate:
+ 	newchannel->state = CHANNEL_OPEN_STATE;
+ 	return err;
+@@ -666,8 +664,8 @@ static int vmbus_close_internal(struct vmbus_channel *channel)
+ 	hv_ringbuffer_cleanup(&channel->outbound);
+ 	hv_ringbuffer_cleanup(&channel->inbound);
+ 
+-	free_pages((unsigned long)channel->ringbuffer_pages,
+-		get_order(channel->ringbuffer_pagecount * PAGE_SIZE));
++	__free_pages(channel->ringbuffer_page,
++		     get_order(channel->ringbuffer_pagecount << PAGE_SHIFT));
+ 
+ out:
+ 	return ret;
+diff --git a/drivers/uio/uio_hv_generic.c b/drivers/uio/uio_hv_generic.c
+index e401be8321ab5..170fa1f8f00e0 100644
+--- a/drivers/uio/uio_hv_generic.c
++++ b/drivers/uio/uio_hv_generic.c
+@@ -131,11 +131,12 @@ static int hv_uio_ring_mmap(struct file *filp, struct kobject *kobj,
+ 		= container_of(kobj, struct vmbus_channel, kobj);
+ 	struct hv_device *dev = channel->primary_channel->device_obj;
+ 	u16 q_idx = channel->offermsg.offer.sub_channel_index;
++	void *ring_buffer = page_address(channel->ringbuffer_page);
+ 
+ 	dev_dbg(&dev->device, "mmap channel %u pages %#lx at %#lx\n",
+ 		q_idx, vma_pages(vma), vma->vm_pgoff);
+ 
+-	return vm_iomap_memory(vma, virt_to_phys(channel->ringbuffer_pages),
++	return vm_iomap_memory(vma, virt_to_phys(ring_buffer),
+ 			       channel->ringbuffer_pagecount << PAGE_SHIFT);
  }
+ 
+@@ -224,7 +225,7 @@ hv_uio_probe(struct hv_device *dev,
+ 	/* mem resources */
+ 	pdata->info.mem[TXRX_RING_MAP].name = "txrx_rings";
+ 	pdata->info.mem[TXRX_RING_MAP].addr
+-		= (uintptr_t)dev->channel->ringbuffer_pages;
++		= (uintptr_t)page_address(dev->channel->ringbuffer_page);
+ 	pdata->info.mem[TXRX_RING_MAP].size
+ 		= dev->channel->ringbuffer_pagecount << PAGE_SHIFT;
+ 	pdata->info.mem[TXRX_RING_MAP].memtype = UIO_MEM_LOGICAL;
+diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
+index bbde887ed3931..c43e694fef7dd 100644
+--- a/include/linux/hyperv.h
++++ b/include/linux/hyperv.h
+@@ -739,7 +739,7 @@ struct vmbus_channel {
+ 	u32 ringbuffer_gpadlhandle;
+ 
+ 	/* Allocated memory for ring buffer */
+-	void *ringbuffer_pages;
++	struct page *ringbuffer_page;
+ 	u32 ringbuffer_pagecount;
+ 	struct hv_ring_buffer_info outbound;	/* send to parent */
+ 	struct hv_ring_buffer_info inbound;	/* receive from parent */
 -- 
 2.20.1
 
