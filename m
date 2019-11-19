@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D848C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:09:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63C9DC43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:09:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F71E208CE
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:09:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FD61208CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:09:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574143741;
-	bh=ZPSKGSZEulSokc6OQ6g3QxfBYvIV5a0XHwF8ROZCzws=;
+	s=default; t=1574143745;
+	bh=Ek+tRWptDmvc/XOB2PFxRi0EZJosnbs0W+8St8JxikU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NsAn3MQT0HuiqFfCjsWhDS7Rba1oEK1Z3pOQQBgwLFTxRmHqSj62mmKABGeJOSKUC
-	 Wer+Wf3GtDkjiuRt1UiHToX9tdjbFADzcsfY4r5Y6iNptCF1LCgrfPSkzYDX4OtJzH
-	 c3OlcuK2VEjokHxk3b4EusD2f0CROKQwLb5kAnx8=
+	b=FweTpW/aaAC+nEt60twOnIiUycmhuWv8lapuwSL/7TXrAbfL9gFKRH7dWnjz+Gy0+
+	 F6+D0eU4xG0lQdpRe91nIP35cmTS3PFdkuEi/kBuFrgBydXT7H0HyXA3QDn8PV9f+m
+	 g4Nfxtm61xlIIx8EkUcztdZ+QfUIlaPkUfkBPQhM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729204AbfKSGI7 (ORCPT
+        id S1727357AbfKSF3X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 01:08:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48264 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:29:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727333AbfKSF3l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:29:41 -0500
+        id S1728968AbfKSF3S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:29:18 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DC5E21783;
-        Tue, 19 Nov 2019 05:29:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B03FE222A2;
+        Tue, 19 Nov 2019 05:29:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141380;
-        bh=ZPSKGSZEulSokc6OQ6g3QxfBYvIV5a0XHwF8ROZCzws=;
+        s=default; t=1574141357;
+        bh=Ek+tRWptDmvc/XOB2PFxRi0EZJosnbs0W+8St8JxikU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ufbx80CNWEHclkgKtqQRJGfFj23gdHOBXD5h5YIl05rMsRRHEBuPzVPqWflK+UtFd
-         ru5kzRwrsGoUyiB25JSNHcOBVj1hLsc2Qan6vN5V+RywAFcAdOo2RLZWcuSJs4KeAR
-         KaaHNFFT3qIMP6fmJT+0+mFsZDO8JJVW8VWLwAiA=
+        b=rKZaHhsUoF1bQnyNH1bXPbQg1NrV70AfFhnFfeUGXtoJVkvn3uRfYZ3ijQYzjF+dm
+         rc3B/0O4u76CLVOQPeM4SPdVfuGFBIwxyGx781CU5labh5OYqKDdaIo2P7KI9b1rkP
+         qy5LoQo5OPlIdZ4mTfXxqwbB+lVsY4j46GuGESgU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org,
+        Ding Xiang <dingxiang@cmss.chinamobile.com>,
+        Atsushi Nemoto <anemo@mba.ocn.ne.jp>,
+        Paul Burton <paul.burton@mips.com>, ralf@linux-mips.org,
+        jhogan@kernel.org, linux-mips@linux-mips.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 100/422] mt76: Fix comparisons with invalid hardware key index
-Date:   Tue, 19 Nov 2019 06:14:57 +0100
-Message-Id: <20191119051405.729889312@linuxfoundation.org>
+Subject: [PATCH 4.19 132/422] mips: txx9: fix iounmap related issue
+Date:   Tue, 19 Nov 2019 06:15:29 +0100
+Message-Id: <20191119051407.434383835@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -60,57 +63,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert@linux-m68k.org>
+From: Ding Xiang <dingxiang@cmss.chinamobile.com>
 
-[ Upstream commit 81c8eccc2404d06082025b773f1d90e8c861bc6a ]
+[ Upstream commit c6e1241a82e6e74d1ae5cc34581dab2ffd6022d0 ]
 
-With gcc 4.1.2:
+if device_register return error, iounmap should be called, also iounmap
+need to call before put_device.
 
-    drivers/net/wireless/mediatek/mt76/mt76x0/tx.c: In function ‘mt76x0_tx’:
-    drivers/net/wireless/mediatek/mt76/mt76x0/tx.c:169: warning: comparison is always true due to limited range of data type
-    drivers/net/wireless/mediatek/mt76/mt76x2_tx_common.c: In function ‘mt76x2_tx’:
-    drivers/net/wireless/mediatek/mt76/mt76x2_tx_common.c:35: warning: comparison is always true due to limited range of data type
-
-While assigning -1 to a u8 works fine, comparing with -1 does not work
-as expected.
-
-Fix this by comparing with 0xff, like is already done in some other
-places.
-
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Ding Xiang <dingxiang@cmss.chinamobile.com>
+Reviewed-by: Atsushi Nemoto <anemo@mba.ocn.ne.jp>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Patchwork: https://patchwork.linux-mips.org/patch/20476/
+Cc: ralf@linux-mips.org
+Cc: jhogan@kernel.org
+Cc: linux-mips@linux-mips.org
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/mediatek/mt76/mt76x0/tx.c        | 2 +-
- drivers/net/wireless/mediatek/mt76/mt76x2_tx_common.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/mips/txx9/generic/setup.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt76x0/tx.c b/drivers/net/wireless/mediatek/mt76/mt76x0/tx.c
-index 751b49c28ae53..c45d05d5aab1d 100644
---- a/drivers/net/wireless/mediatek/mt76/mt76x0/tx.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt76x0/tx.c
-@@ -166,7 +166,7 @@ void mt76x0_tx(struct ieee80211_hw *hw, struct ieee80211_tx_control *control,
- 	if (sta) {
- 		msta = (struct mt76_sta *) sta->drv_priv;
- 		wcid = &msta->wcid;
--	} else if (vif && (!info->control.hw_key && wcid->hw_key_idx != -1)) {
-+	} else if (vif && (!info->control.hw_key && wcid->hw_key_idx != 0xff)) {
- 		struct mt76_vif *mvif = (struct mt76_vif *)vif->drv_priv;
- 
- 		wcid = &mvif->group_wcid;
-diff --git a/drivers/net/wireless/mediatek/mt76/mt76x2_tx_common.c b/drivers/net/wireless/mediatek/mt76/mt76x2_tx_common.c
-index 36afb166fa3ff..c0ca0df84ed8b 100644
---- a/drivers/net/wireless/mediatek/mt76/mt76x2_tx_common.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt76x2_tx_common.c
-@@ -32,7 +32,7 @@ void mt76x2_tx(struct ieee80211_hw *hw, struct ieee80211_tx_control *control,
- 		msta = (struct mt76x2_sta *)control->sta->drv_priv;
- 		wcid = &msta->wcid;
- 		/* sw encrypted frames */
--		if (!info->control.hw_key && wcid->hw_key_idx != -1)
-+		if (!info->control.hw_key && wcid->hw_key_idx != 0xff)
- 			control->sta = NULL;
+diff --git a/arch/mips/txx9/generic/setup.c b/arch/mips/txx9/generic/setup.c
+index f6d9182ef82a9..70a1ab66d252c 100644
+--- a/arch/mips/txx9/generic/setup.c
++++ b/arch/mips/txx9/generic/setup.c
+@@ -960,12 +960,11 @@ void __init txx9_sramc_init(struct resource *r)
+ 		goto exit_put;
+ 	err = sysfs_create_bin_file(&dev->dev.kobj, &dev->bindata_attr);
+ 	if (err) {
+-		device_unregister(&dev->dev);
+ 		iounmap(dev->base);
+-		kfree(dev);
++		device_unregister(&dev->dev);
  	}
- 
+ 	return;
+ exit_put:
++	iounmap(dev->base);
+ 	put_device(&dev->dev);
+-	return;
+ }
 -- 
 2.20.1
 
