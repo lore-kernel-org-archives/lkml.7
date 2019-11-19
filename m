@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 591D7C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:49:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1BDBC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:49:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2960E20721
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:49:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 904B720862
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:49:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142574;
-	bh=W1/lV2XXwhI/fw03aQUefAxM/mttitnn52A6z2VdHYI=;
+	s=default; t=1574142579;
+	bh=DgnMDlLLXfeQeKctRy7xaYZdYGgwE1jsdDjdNnqBmGA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ChHwdIlHRXPGJKIY099pmrjzn2rmwmD7f+TZWtW+KeCQMMg1yKxakwAzXBJIdR1no
-	 afXURvYGmga6jWBPhIiPURf6DFjE6FnzV5MVoPsaS9NnWP26RdszcuW13/XwLBEb2D
-	 POWxCPMBQZYADVLb43xAPmdG5XyBeBI8hwMP1SFA=
+	b=cd+QeniaJjpekznDrZxz6OjaeCkedWc95omsqImjMKh0kk23WlR+1DbOkSVk1kadE
+	 DkNCgmYYm1RbmGErVVuuoGVOer/tSMtrvlbq4Bl/F30wNEP9NbsfqPr+gFvzfa5GYI
+	 +M3t+vlSYymUjHf0NXkh3QkuGjw2LS4LYkhK7bIk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731500AbfKSFtc (ORCPT
+        id S1731519AbfKSFti (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:49:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46220 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:49:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731486AbfKSFt1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:49:27 -0500
+        id S1731486AbfKSFtg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:49:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB0CF20721;
-        Tue, 19 Nov 2019 05:49:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B65820721;
+        Tue, 19 Nov 2019 05:49:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142567;
-        bh=W1/lV2XXwhI/fw03aQUefAxM/mttitnn52A6z2VdHYI=;
+        s=default; t=1574142576;
+        bh=DgnMDlLLXfeQeKctRy7xaYZdYGgwE1jsdDjdNnqBmGA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fp7woUxtYZTbc8EPw53G3qohOMwL6/6dgAPXY9V1qFnhLeiipn99Z5R/eesBPFX6C
-         DhV0gt7C5POZ5a2PvihStDMQ058WPKWIA5jSKu+bHbecXBJpLVmm2MqOSC4+09lyGd
-         7p8RUkUm3jo97VhE6xfvUrOb40BZQ5B66g4dgziA=
+        b=CjuqBj+lpMPdvbbEaLVcPnbiuP2rf1gEM3g2kxqnKNV0KFAWXvgZAwAmE7VJdKnI0
+         QoDit+l+0CRAyLUkv/FNWztkwahgj9TUttt9HDRYfyetxUDqMBBRUPvdBo7/NZlTcL
+         exCje0AeX7wyswwWOiVim2S5N97ANBtx1c38f2Ug=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tomasz Figa <tomasz.figa@gmail.com>,
-        =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        stable@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 123/239] power: supply: max8998-charger: Fix platform data retrieval
-Date:   Tue, 19 Nov 2019 06:18:43 +0100
-Message-Id: <20191119051330.126745410@linuxfoundation.org>
+Subject: [PATCH 4.14 088/239] rtc: pl030: fix possible race condition
+Date:   Tue, 19 Nov 2019 06:18:08 +0100
+Message-Id: <20191119051318.980849038@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -61,36 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomasz Figa <tomasz.figa@gmail.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-[ Upstream commit cb90a2c6f77fe9b43d1e3f759bb2f13fe7fa1811 ]
+[ Upstream commit c778ec85825dc895936940072aea9fe9037db684 ]
 
-Since the max8998 MFD driver supports instantiation by DT, platform data
-retrieval is handled in MFD probe and cell drivers should get use
-the pdata field of max8998_dev struct to obtain them.
+The IRQ is requested before the struct rtc is allocated and registered, but
+this struct is used in the IRQ handler. This may lead to a NULL pointer
+dereference.
 
-Fixes: ee999fb3f17f ("mfd: max8998: Add support for Device Tree")
-Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
-Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Switch to devm_rtc_allocate_device/rtc_register_device to allocate the rtc
+before requesting the IRQ.
+
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/power/supply/max8998_charger.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/rtc/rtc-pl030.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/power/supply/max8998_charger.c b/drivers/power/supply/max8998_charger.c
-index b64cf0f141425..66438029bdd0c 100644
---- a/drivers/power/supply/max8998_charger.c
-+++ b/drivers/power/supply/max8998_charger.c
-@@ -85,7 +85,7 @@ static const struct power_supply_desc max8998_battery_desc = {
- static int max8998_battery_probe(struct platform_device *pdev)
- {
- 	struct max8998_dev *iodev = dev_get_drvdata(pdev->dev.parent);
--	struct max8998_platform_data *pdata = dev_get_platdata(iodev->dev);
-+	struct max8998_platform_data *pdata = iodev->pdata;
- 	struct power_supply_config psy_cfg = {};
- 	struct max8998_battery_data *max8998;
- 	struct i2c_client *i2c;
+diff --git a/drivers/rtc/rtc-pl030.c b/drivers/rtc/rtc-pl030.c
+index f85a1a93e669f..343bb6ed17839 100644
+--- a/drivers/rtc/rtc-pl030.c
++++ b/drivers/rtc/rtc-pl030.c
+@@ -112,6 +112,13 @@ static int pl030_probe(struct amba_device *dev, const struct amba_id *id)
+ 		goto err_rtc;
+ 	}
+ 
++	rtc->rtc = devm_rtc_allocate_device(&dev->dev);
++	if (IS_ERR(rtc->rtc)) {
++		ret = PTR_ERR(rtc->rtc);
++		goto err_rtc;
++	}
++
++	rtc->rtc->ops = &pl030_ops;
+ 	rtc->base = ioremap(dev->res.start, resource_size(&dev->res));
+ 	if (!rtc->base) {
+ 		ret = -ENOMEM;
+@@ -128,12 +135,9 @@ static int pl030_probe(struct amba_device *dev, const struct amba_id *id)
+ 	if (ret)
+ 		goto err_irq;
+ 
+-	rtc->rtc = rtc_device_register("pl030", &dev->dev, &pl030_ops,
+-				       THIS_MODULE);
+-	if (IS_ERR(rtc->rtc)) {
+-		ret = PTR_ERR(rtc->rtc);
++	ret = rtc_register_device(rtc->rtc);
++	if (ret)
+ 		goto err_reg;
+-	}
+ 
+ 	return 0;
+ 
+@@ -154,7 +158,6 @@ static int pl030_remove(struct amba_device *dev)
+ 	writel(0, rtc->base + RTC_CR);
+ 
+ 	free_irq(dev->irq[0], rtc);
+-	rtc_device_unregister(rtc->rtc);
+ 	iounmap(rtc->base);
+ 	amba_release_regions(dev);
+ 
 -- 
 2.20.1
 
