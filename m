@@ -5,48 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DFB0C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:50:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5CC8C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:50:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BA3D20721
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:50:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 840AB21823
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:50:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574142608;
-	bh=5x+LmrqeEnbeK59deb9In/L3b8XEmOiclhXJ0kY79ls=;
+	s=default; t=1574142610;
+	bh=pcXpAcOVE3NvxebTUdEuPJe/gAbBCH1+DZ41goKBY2Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h8YhMGseLFRHnYPYEjkxe0sS7Wa5Afi8wpo1LTsz0CUkLxw5ATsoVfk6jKR5bTl6m
-	 xdBuw/9gdLfHShc/4CiZPzGTPraAm/7AYEnEsNLDaSO/1CwueaVNqzOOKL6oEyQUKh
-	 V4MlT6S6qbbmW1YvOgG3tNtzWbdI0oczcjx8zfuo=
+	b=KnnlwzTU5L30IFu/ITsYBnNJoOdDBk07MSXWjnysmnfeYehy+AGpojIOx7LHlLzzl
+	 NssjdXQG2nk4CuSfbADSeU/+aEfFHuis60d6XP+irsjrOhyHcasFgHq61MYFE5ZrQA
+	 kFI+3LzI5N9eWBMJEuXvW9RCLHrzUYujVU4FVjZM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731584AbfKSFuH (ORCPT
+        id S1731577AbfKSFuF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:50:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46920 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:50:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729360AbfKSFuA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:50:00 -0500
+        id S1730200AbfKSFuE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:50:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4220420721;
-        Tue, 19 Nov 2019 05:49:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89CAF20721;
+        Tue, 19 Nov 2019 05:50:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574142599;
-        bh=5x+LmrqeEnbeK59deb9In/L3b8XEmOiclhXJ0kY79ls=;
+        s=default; t=1574142603;
+        bh=pcXpAcOVE3NvxebTUdEuPJe/gAbBCH1+DZ41goKBY2Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HixryGg8TxajsG49XKkL9Wft2bdVBCLKY8A1Pwulw4fx3htUm5gylmj6tQGJ1+Fov
-         wRO+jNJYrZ84BUHxlCbOIriDAZY0E9fRM1u1OLlgN3Y6AmTsNO4ZFI/plllyl5twAP
-         HJ5EajW5pxEBimVg84M7Cx4nRf0cLnmiXgsoc++E=
+        b=U7YVKSYnpuAkjXL8uC7hfs4ZWoGoGjTL4XHsgPBDJdoizRkQ2Bco25R5PoCUu4sDJ
+         i0CmXl00epYZBnfQOwQT3vch6SI/mEtLtRe0YUDpWwlwcRgMSvhmi1+ZRvRtI+9g0O
+         lTtEWskVs34pOK3DTsM39gWx0bpXXohj1M69vrF4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Corey Minyard <cminyard@mvista.com>,
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 137/239] ipmi:dmi: Ignore IPMI SMBIOS entries with a zero base address
-Date:   Tue, 19 Nov 2019 06:18:57 +0100
-Message-Id: <20191119051331.291215311@linuxfoundation.org>
+Subject: [PATCH 4.14 138/239] net: hns3: fix return type of ndo_start_xmit function
+Date:   Tue, 19 Nov 2019 06:18:58 +0100
+Message-Id: <20191119051331.386693914@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051255.850204959@linuxfoundation.org>
 References: <20191119051255.850204959@linuxfoundation.org>
@@ -59,37 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Corey Minyard <cminyard@mvista.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 1574608f5f4204440d6d9f52b971aba967664764 ]
+[ Upstream commit c9c3941186c5637caed131c4f4064411d6882299 ]
 
-Looking at logs from systems all over the place, it looks like tons
-of broken systems exist that set the base address to zero.  I can
-only guess that is some sort of non-standard idea to mark the
-interface as not being present.  It can't be zero, anyway, so just
-complain and ignore it.
+The method ndo_start_xmit() is defined as returning an 'netdev_tx_t',
+which is a typedef for an enum type, also the implementation in this
+driver has returns 'netdev_tx_t' value, so just change the function
+return type to netdev_tx_t.
 
-Signed-off-by: Corey Minyard <cminyard@mvista.com>
+Found by coccinelle.
+
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/ipmi/ipmi_dmi.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/ethernet/hisilicon/hip04_eth.c    | 3 ++-
+ drivers/net/ethernet/hisilicon/hix5hd2_gmac.c | 2 +-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/char/ipmi/ipmi_dmi.c b/drivers/char/ipmi/ipmi_dmi.c
-index c3a23ec3e76f7..a37d9794170cc 100644
---- a/drivers/char/ipmi/ipmi_dmi.c
-+++ b/drivers/char/ipmi/ipmi_dmi.c
-@@ -197,6 +197,10 @@ static void __init dmi_decode_ipmi(const struct dmi_header *dm)
- 	slave_addr = data[DMI_IPMI_SLAVEADDR];
+diff --git a/drivers/net/ethernet/hisilicon/hip04_eth.c b/drivers/net/ethernet/hisilicon/hip04_eth.c
+index ebc056b9a0fd2..84c0f22ac2db0 100644
+--- a/drivers/net/ethernet/hisilicon/hip04_eth.c
++++ b/drivers/net/ethernet/hisilicon/hip04_eth.c
+@@ -424,7 +424,8 @@ static void hip04_start_tx_timer(struct hip04_priv *priv)
+ 			       ns, HRTIMER_MODE_REL);
+ }
  
- 	memcpy(&base_addr, data + DMI_IPMI_ADDR, sizeof(unsigned long));
-+	if (!base_addr) {
-+		pr_err("Base address is zero, assuming no IPMI interface\n");
-+		return;
-+	}
- 	if (len >= DMI_IPMI_VER2_LENGTH) {
- 		if (type == IPMI_DMI_TYPE_SSIF) {
- 			offset = 0;
+-static int hip04_mac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
++static netdev_tx_t
++hip04_mac_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ {
+ 	struct hip04_priv *priv = netdev_priv(ndev);
+ 	struct net_device_stats *stats = &ndev->stats;
+diff --git a/drivers/net/ethernet/hisilicon/hix5hd2_gmac.c b/drivers/net/ethernet/hisilicon/hix5hd2_gmac.c
+index 25a6c8722ecac..aab6fb10af94a 100644
+--- a/drivers/net/ethernet/hisilicon/hix5hd2_gmac.c
++++ b/drivers/net/ethernet/hisilicon/hix5hd2_gmac.c
+@@ -736,7 +736,7 @@ static int hix5hd2_fill_sg_desc(struct hix5hd2_priv *priv,
+ 	return 0;
+ }
+ 
+-static int hix5hd2_net_xmit(struct sk_buff *skb, struct net_device *dev)
++static netdev_tx_t hix5hd2_net_xmit(struct sk_buff *skb, struct net_device *dev)
+ {
+ 	struct hix5hd2_priv *priv = netdev_priv(dev);
+ 	struct hix5hd2_desc *desc;
 -- 
 2.20.1
 
