@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 264D1C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:11:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 237A2C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:11:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6D3420692
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:11:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E91DE21850
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:11:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574143879;
-	bh=XwJSt6JD7kwz1vYS9ZbuPs7cWyskHir9TP0vz4hqv78=;
+	s=default; t=1574143896;
+	bh=f+toa8wVgoCAPRfmzzx06OSsXHaopY9uoicYeTzdy30=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kwM2beLuigSVwahTUyTQv7lrnfIMocac+S6LtHlLRFNz0/BQ/05tV7SfU/kIfNYMz
-	 BJ279TgYSKqpcrhtvFzR8dKQIJOYYSU72YiYKsvTHDTMLWncwn2EKIrwG5xHYRwGeS
-	 f8u6ESXVdrx2yAWOi0Lavg4io7T7qDBhwkQojZ/c=
+	b=vtT/gXT3mXQUUZO8R3hpUJ42aHi6H+t1WKv30KyLri+O4ksP+pANz7BjtDlQlsb0p
+	 2A2QKmCq65Y8u0w3nhUMc9NMuobJCYyN2dtNgsrlggnvsri7UbeT2a6l2dQiOdpVGr
+	 klpDUuuP6t/P2ljMyN3sSmBDDBEF/ebeExobFEIY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728257AbfKSFYo (ORCPT
+        id S1728142AbfKSFYG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:24:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41048 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:24:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728243AbfKSFYl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:24:41 -0500
+        id S1728119AbfKSFYD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:24:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 563F121783;
-        Tue, 19 Nov 2019 05:24:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0C6F2173B;
+        Tue, 19 Nov 2019 05:24:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141080;
-        bh=XwJSt6JD7kwz1vYS9ZbuPs7cWyskHir9TP0vz4hqv78=;
+        s=default; t=1574141042;
+        bh=f+toa8wVgoCAPRfmzzx06OSsXHaopY9uoicYeTzdy30=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iNlMkOsIxKlpmzN4qSbgab2udq6xL7R7qnOjMrDnDCJnBht5Hb922gbztHoXLtTcr
-         Ft3d8L69kxttyXnAvUqZNhjW5vplTmRCEYqEZUoML6FIwyPqH5rtD7hD6xrBIRZKkd
-         bGX+GB66UqVGPgbqr0saAANiN7HAG5UeSpWBXiSs=
+        b=gDkJG/yzpe7qjXNdCqbyrI0uBz0cRuBZHH02v8cTFdUDP2QIT2UsIDMQ8YmGiclln
+         n1v5618jKC69RUJXynCEpIyB8NDBtOnCkufXRtIgL0To8w8vKwk8Bsfbr1+pIxYDE/
+         DO8C/Xex+sTGXIPWuW6Q28HCzuUjKMRcTpKI8M1o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Henry Lin <henryl@nvidia.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.19 011/422] ALSA: usb-audio: not submit urb for stopped endpoint
-Date:   Tue, 19 Nov 2019 06:13:28 +0100
-Message-Id: <20191119051400.910437992@linuxfoundation.org>
+        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>
+Subject: [PATCH 4.19 026/422] ecryptfs_lookup_interpose(): lower_dentry->d_parent is not stable either
+Date:   Tue, 19 Nov 2019 06:13:43 +0100
+Message-Id: <20191119051401.764900465@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -59,44 +58,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Henry Lin <henryl@nvidia.com>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-commit 528699317dd6dc722dccc11b68800cf945109390 upstream.
+commit 762c69685ff7ad5ad7fee0656671e20a0c9c864d upstream.
 
-While output urb's snd_complete_urb() is executing, calling
-prepare_outbound_urb() may cause endpoint stopped before
-prepare_outbound_urb() returns and result in next urb submitted
-to stopped endpoint. usb-audio driver cannot re-use it afterwards as
-the urb is still hold by usb stack.
+We need to get the underlying dentry of parent; sure, absent the races
+it is the parent of underlying dentry, but there's nothing to prevent
+losing a timeslice to preemtion in the middle of evaluation of
+lower_dentry->d_parent->d_inode, having another process move lower_dentry
+around and have its (ex)parent not pinned anymore and freed on memory
+pressure.  Then we regain CPU and try to fetch ->d_inode from memory
+that is freed by that point.
 
-This change checks EP_FLAG_RUNNING flag after prepare_outbound_urb() again
-to let snd_complete_urb() know the endpoint already stopped and does not
-submit next urb. Below kind of error will be fixed:
+dentry->d_parent *is* stable here - it's an argument of ->lookup() and
+we are guaranteed that it won't be moved anywhere until we feed it
+to d_add/d_splice_alias.  So we safely go that way to get to its
+underlying dentry.
 
-[  213.153103] usb 1-2: timeout: still 1 active urbs on EP #1
-[  213.164121] usb 1-2: cannot submit urb 0, error -16: unknown error
-
-Signed-off-by: Henry Lin <henryl@nvidia.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191113021420.13377-1-henryl@nvidia.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Cc: stable@vger.kernel.org # since 2009 or so
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/endpoint.c |    3 +++
- 1 file changed, 3 insertions(+)
+ fs/ecryptfs/inode.c |    7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
---- a/sound/usb/endpoint.c
-+++ b/sound/usb/endpoint.c
-@@ -401,6 +401,9 @@ static void snd_complete_urb(struct urb
- 		}
+--- a/fs/ecryptfs/inode.c
++++ b/fs/ecryptfs/inode.c
+@@ -325,9 +325,9 @@ static int ecryptfs_i_size_read(struct d
+ static struct dentry *ecryptfs_lookup_interpose(struct dentry *dentry,
+ 				     struct dentry *lower_dentry)
+ {
++	struct path *path = ecryptfs_dentry_to_lower_path(dentry->d_parent);
+ 	struct inode *inode, *lower_inode;
+ 	struct ecryptfs_dentry_info *dentry_info;
+-	struct vfsmount *lower_mnt;
+ 	int rc = 0;
  
- 		prepare_outbound_urb(ep, ctx);
-+		/* can be stopped during prepare callback */
-+		if (unlikely(!test_bit(EP_FLAG_RUNNING, &ep->flags)))
-+			goto exit_clear;
- 	} else {
- 		retire_inbound_urb(ep, ctx);
- 		/* can be stopped during retire callback */
+ 	dentry_info = kmem_cache_alloc(ecryptfs_dentry_info_cache, GFP_KERNEL);
+@@ -336,13 +336,12 @@ static struct dentry *ecryptfs_lookup_in
+ 		return ERR_PTR(-ENOMEM);
+ 	}
+ 
+-	lower_mnt = mntget(ecryptfs_dentry_to_lower_mnt(dentry->d_parent));
+ 	fsstack_copy_attr_atime(d_inode(dentry->d_parent),
+-				d_inode(lower_dentry->d_parent));
++				d_inode(path->dentry));
+ 	BUG_ON(!d_count(lower_dentry));
+ 
+ 	ecryptfs_set_dentry_private(dentry, dentry_info);
+-	dentry_info->lower_path.mnt = lower_mnt;
++	dentry_info->lower_path.mnt = mntget(path->mnt);
+ 	dentry_info->lower_path.dentry = lower_dentry;
+ 
+ 	/*
 
 
