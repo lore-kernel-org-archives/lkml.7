@@ -2,111 +2,219 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A58C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:56:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D3BBC432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:58:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4ABF222DC
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:56:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3ABEC222A0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:58:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Zw7y4m7G"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QJI7Ro6i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728191AbfKSO4j (ORCPT
+        id S1727852AbfKSO6H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 09:56:39 -0500
-Received: from mail-eopbgr150050.outbound.protection.outlook.com ([40.107.15.50]:21479
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728071AbfKSO4i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 09:56:38 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nUUVmIT0y1/EjFRSsaJOqxLFrkQN5lnEZXwmi+O/bZg0YBFfg/v76gS2VJgACcjJeCrv+b6lbxs9HKswBrNBHJyJq6U5C/y71m34y3M/ESqW8fOVXh0ZT745VQytzFxyNPP0Z7X/2na100MAiYNSkeXOfVvJwE1ZwDhGcJk57duAnv6ocldmKmZq3Ma+EkDlZmY+Wup6vaFtAnDj8BmAL15AP7mEFK+fLgRKRq+RIOF8MUgtVM+r2nSpd1/jO3KJAzyN9Ac68gw2VA9SfOHzp35rE7yDgoYtuYlrq1EKTLSfDr1rU4DhyIk4F9Ox1iN2t7L/2e1CD93in0WQZTe+Bw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NKbjRLRfqWT6CnXo3MhHeHtqb1u69HA/nddLCOhk2K0=;
- b=Eyzw79qm248LH5myne2Aa/JJ4p6isoQ0cM3SpnNM4Wg4RFYXw0VWCt9ib+rL55eDHrikufOlQQYFWEsvXEnQFUlkYUu7/m27tn7XwNnhDjmtPI8qFMlc6EeHyjYFhqKJJa4bPiyDf6DTL7LnfH0ZorTgcduoGPQAXo2izLWQeVBQoAtzb6YJ5ytNu+7CMqCQ8Z6upKhEqbe501FnH+Sy17SRVDLWDnxjuhLS/H25R9KCN0mQA540iqnC+EFDsXkeq97sibGlCv020VAMWJ3YcosQHgKFVQ6FChhxfSSBscPT89qEfccwKS0QB4P5G5OWism+kBHZ6qxsHOZp3ejABQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NKbjRLRfqWT6CnXo3MhHeHtqb1u69HA/nddLCOhk2K0=;
- b=Zw7y4m7Gtb5bSH0tKAkylDhvpUucFfxFbpRHfu05wfa4iF+2ritUSX0ut+lylIkWs31lGSPKE3NHCs2MKP8SLR6P6b0wHEk/Cf8QojFcDXCPwlDDP6U+9dYA82OW53o357Bxf0ePGUy4OyxT2KVQryQW1cUb6D6G68ET41rZUac=
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
- VI1PR0402MB3536.eurprd04.prod.outlook.com (52.134.1.12) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2451.23; Tue, 19 Nov 2019 14:56:30 +0000
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::89e1:552e:a24d:e72]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::89e1:552e:a24d:e72%3]) with mapi id 15.20.2474.015; Tue, 19 Nov 2019
- 14:56:30 +0000
-From:   Horia Geanta <horia.geanta@nxp.com>
-To:     Iuliana Prodan <iuliana.prodan@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>
-CC:     "David S. Miller" <davem@davemloft.net>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Gary Hook <gary.hook@amd.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH 03/12] crypto: caam - refactor ahash_done callbacks
-Thread-Topic: [PATCH 03/12] crypto: caam - refactor ahash_done callbacks
-Thread-Index: AQHVnZayXIBTED7Av0G5EEEbA3XwdA==
-Date:   Tue, 19 Nov 2019 14:56:30 +0000
-Message-ID: <VI1PR0402MB3485B14652A134EC5317B828984C0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-References: <1574029845-22796-1-git-send-email-iuliana.prodan@nxp.com>
- <1574029845-22796-4-git-send-email-iuliana.prodan@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=horia.geanta@nxp.com; 
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: be2aa05e-28ee-431c-4cdf-08d76d00a99c
-x-ms-traffictypediagnostic: VI1PR0402MB3536:|VI1PR0402MB3536:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0402MB353677F6176400072C37C05A984C0@VI1PR0402MB3536.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2512;
-x-forefront-prvs: 022649CC2C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(39860400002)(366004)(396003)(136003)(189003)(199004)(71190400001)(3846002)(52536014)(6636002)(66476007)(66446008)(9686003)(81166006)(81156014)(64756008)(66556008)(7696005)(186003)(86362001)(5660300002)(26005)(229853002)(7736002)(6246003)(14454004)(305945005)(6506007)(102836004)(76116006)(53546011)(25786009)(8936002)(91956017)(71200400001)(8676002)(446003)(66946007)(6116002)(4326008)(558084003)(478600001)(256004)(99286004)(66066001)(2906002)(54906003)(44832011)(74316002)(6436002)(316002)(76176011)(110136005)(486006)(33656002)(55016002)(476003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3536;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: DEbq5pV6bV3dEXIKV07VSioDU0GDb0kVY5kyQ/xsREoUVQKpkI9NMUveelrw1ta0jm5nCl6+t3Y9M9zmdeAAqoo7CrGLjzvEYQCYxO7sxHnIBSfTmb5dzqNHaSbLBxtN9F2nF4SInQjnC52rltFBSOjaif0eUI6O4Sn+Q11pK88DPhqVvdnUzdDoLhGBQEaCVM/FB17+vnWMrDAfx+qnr3ockQBelmHtP+HiUn2HZZxFi057GumUZYBGbamnymGVE9OySC26pK9O68sBjKp43mZsrQuclZ879xqZJmzFCdCqh31c/gp52UlisyFGPkIxcD3QAll7PAHwZy9xuKe55BCQuKYPcfmPtDwtkaXRY31A2kcTtj4pbafa/m9SR8K+GjIzQA3DMH4AkNjjloc8R/cJ3aSGAAKhxZqgSVyuBmLRalWuprhqDaToR5RlPu0q
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 19 Nov 2019 09:58:07 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:35165 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727351AbfKSO6G (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 09:58:06 -0500
+Received: by mail-pf1-f193.google.com with SMTP id q13so12302836pff.2
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 06:58:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8Iv0SYeCQzXPVK6d6zw+PhVxLjr+hZq6IoPt4clytvA=;
+        b=QJI7Ro6ixcBU7Jip0bWx374Gd/SB4poGcYiSqt2Gx2/rkilbfFufDakZ/feLGSwgYi
+         vy4yE/vie2CtWMoAkGeO+ReKrCXHXC/eLLFfGUwOx/VgUrxTrFezlUEGe6yp8JniHAIU
+         EuqQZ2Af2WOTkhCurjTM3uhV+dLSDOwRclzdwsdHOMCA2CJnWlbUZOQPsJgYOWQtM3mN
+         mNEZ53ujqcHhDFp2eU6zWzkIXDeHYtNhi+BkngUAo2v8SMiS6/5JH0BiMCf/QEZ6GhbB
+         3PyEqs3B6oP+VaZDBWnu6IEXoPvnU/6350LgC7B3o8bP+e9gYC286fN5QBbhT8TA/jq8
+         hraA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8Iv0SYeCQzXPVK6d6zw+PhVxLjr+hZq6IoPt4clytvA=;
+        b=qf7KGesADSL0ZaMbuE9Z4V/SUIts1tzpYLMBD0+zMsDLNj6MU3bDjSp3FC6NlPM0gS
+         4GqFZ9j8dO7igGSSsENQbMALgT2yGxn/x+R0do0BAYl0NoD1CVjGa7jp3YMHYB+g7dyz
+         la5rAO3q2R871tSzleGsn5+sW5bz4HiMniZhncTGjruAaARcVcfa3Wns9L3+pH316Gys
+         WuKmC/HWhh9+7iX0PucFFFzcllm8kcCmDFvKfkdLgRKrGxn7F0fdedaxuddwa619kbBB
+         C0XDnb+vdam7lfPbOBubURsFW5QEXRzXZRiIyv0EbV1bETp0TpZKAxzjesAyMbOt6i+m
+         TWJA==
+X-Gm-Message-State: APjAAAWDlPWhPzW7Th/JCMpFlF0zNL67LEKhNVn7PoxvBnAho2ImhXsH
+        orRFRJJLjkfyX3/N6m4Z0yLQeRaE7BK2YAfVPmyUtg==
+X-Google-Smtp-Source: APXvYqw4I7Q9HHJB9PXYlOP8WNTMSs7SVqsTbqHP7cbcCSjaPg653l1nVQWe72vDXXM1eKQRxz//Dq13dUy6nyJhLkA=
+X-Received: by 2002:a65:5648:: with SMTP id m8mr954974pgs.286.1574175484917;
+ Tue, 19 Nov 2019 06:58:04 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: be2aa05e-28ee-431c-4cdf-08d76d00a99c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Nov 2019 14:56:30.7395
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: OM5PWasHNwicf2lLlD+sJWneueIst8z00pxpDnSrdqYLR2m0yNlu9EHro7mu1VhwAcdWsRC5iFyaZCTILT/kdg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3536
+References: <00000000000090564a0590796d2f@google.com>
+In-Reply-To: <00000000000090564a0590796d2f@google.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Tue, 19 Nov 2019 15:57:52 +0100
+Message-ID: <CAAeHK+wfca0d0qgCw96LbRutymzeV4tk34TkLUvO51hCRAp8cg@mail.gmail.com>
+Subject: Re: KASAN: use-after-free Read in iowarrior_disconnect
+To:     syzbot <syzbot+cfe6d93e0abab9a0de05@syzkaller.appspotmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        Oliver Neukum <oneukum@suse.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/18/2019 12:31 AM, Iuliana Prodan wrote:=0A=
-> Create two common ahash_done_* functions with the dma=0A=
-> direction as parameter. Then, these 2 are called with=0A=
-> the proper direction for unmap.=0A=
-> =0A=
-> Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>=0A=
-Reviewed-by: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
-=0A=
-Thanks,=0A=
-Horia=0A=
+On Mon, Aug 19, 2019 at 4:48 PM syzbot
+<syzbot+cfe6d93e0abab9a0de05@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following crash on:
+>
+> HEAD commit:    d0847550 usb-fuzzer: main usb gadget fuzzer driver
+> git tree:       https://github.com/google/kasan.git usb-fuzzer
+> console output: https://syzkaller.appspot.com/x/log.txt?x=139be302600000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=dbc9c80cc095da19
+> dashboard link: https://syzkaller.appspot.com/bug?extid=cfe6d93e0abab9a0de05
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12fe6b02600000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1548189c600000
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+cfe6d93e0abab9a0de05@syzkaller.appspotmail.com
+>
+> ==================================================================
+> BUG: KASAN: use-after-free in __mutex_lock_common
+> kernel/locking/mutex.c:912 [inline]
+> BUG: KASAN: use-after-free in __mutex_lock+0xf23/0x1360
+> kernel/locking/mutex.c:1077
+> Read of size 8 at addr ffff8881cc866f58 by task kworker/1:5/1755
+>
+> CPU: 1 PID: 1755 Comm: kworker/1:5 Not tainted 5.3.0-rc4+ #26
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> Google 01/01/2011
+> Workqueue: usb_hub_wq hub_event
+> Call Trace:
+>   __dump_stack lib/dump_stack.c:77 [inline]
+>   dump_stack+0xca/0x13e lib/dump_stack.c:113
+>   print_address_description+0x6a/0x32c mm/kasan/report.c:351
+>   __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:482
+>   kasan_report+0xe/0x12 mm/kasan/common.c:612
+>   __mutex_lock_common kernel/locking/mutex.c:912 [inline]
+>   __mutex_lock+0xf23/0x1360 kernel/locking/mutex.c:1077
+>   iowarrior_disconnect+0xf0/0x2c0 drivers/usb/misc/iowarrior.c:878
+>   usb_unbind_interface+0x1bd/0x8a0 drivers/usb/core/driver.c:423
+>   __device_release_driver drivers/base/dd.c:1134 [inline]
+>   device_release_driver_internal+0x42f/0x500 drivers/base/dd.c:1165
+>   bus_remove_device+0x2dc/0x4a0 drivers/base/bus.c:556
+>   device_del+0x420/0xb10 drivers/base/core.c:2339
+>   usb_disable_device+0x211/0x690 drivers/usb/core/message.c:1237
+>   usb_disconnect+0x284/0x8d0 drivers/usb/core/hub.c:2199
+>   hub_port_connect drivers/usb/core/hub.c:4949 [inline]
+>   hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
+>   port_event drivers/usb/core/hub.c:5359 [inline]
+>   hub_event+0x1454/0x3640 drivers/usb/core/hub.c:5441
+>   process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
+>   worker_thread+0x96/0xe20 kernel/workqueue.c:2415
+>   kthread+0x318/0x420 kernel/kthread.c:255
+>   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+>
+> Allocated by task 1755:
+>   save_stack+0x1b/0x80 mm/kasan/common.c:69
+>   set_track mm/kasan/common.c:77 [inline]
+>   __kasan_kmalloc mm/kasan/common.c:487 [inline]
+>   __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:460
+>   kmalloc include/linux/slab.h:552 [inline]
+>   kzalloc include/linux/slab.h:748 [inline]
+>   iowarrior_probe+0x7a/0x10b2 drivers/usb/misc/iowarrior.c:753
+>   usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
+>   really_probe+0x281/0x6d0 drivers/base/dd.c:548
+>   driver_probe_device+0x101/0x1b0 drivers/base/dd.c:721
+>   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
+>   bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:454
+>   __device_attach+0x217/0x360 drivers/base/dd.c:894
+>   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+>   device_add+0xae6/0x16f0 drivers/base/core.c:2165
+>   usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
+>   generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+>   usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
+>   really_probe+0x281/0x6d0 drivers/base/dd.c:548
+>   driver_probe_device+0x101/0x1b0 drivers/base/dd.c:721
+>   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
+>   bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:454
+>   __device_attach+0x217/0x360 drivers/base/dd.c:894
+>   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+>   device_add+0xae6/0x16f0 drivers/base/core.c:2165
+>   usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
+>   hub_port_connect drivers/usb/core/hub.c:5098 [inline]
+>   hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
+>   port_event drivers/usb/core/hub.c:5359 [inline]
+>   hub_event+0x1b5c/0x3640 drivers/usb/core/hub.c:5441
+>   process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
+>   worker_thread+0x96/0xe20 kernel/workqueue.c:2415
+>   kthread+0x318/0x420 kernel/kthread.c:255
+>   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+>
+> Freed by task 1857:
+>   save_stack+0x1b/0x80 mm/kasan/common.c:69
+>   set_track mm/kasan/common.c:77 [inline]
+>   __kasan_slab_free+0x130/0x180 mm/kasan/common.c:449
+>   slab_free_hook mm/slub.c:1423 [inline]
+>   slab_free_freelist_hook mm/slub.c:1474 [inline]
+>   slab_free mm/slub.c:3016 [inline]
+>   kfree+0xe4/0x2f0 mm/slub.c:3957
+>   iowarrior_delete drivers/usb/misc/iowarrior.c:246 [inline]
+>   iowarrior_release+0x187/0x280 drivers/usb/misc/iowarrior.c:670
+>   __fput+0x2d7/0x840 fs/file_table.c:280
+>   task_work_run+0x13f/0x1c0 kernel/task_work.c:113
+>   exit_task_work include/linux/task_work.h:22 [inline]
+>   do_exit+0x8ef/0x2c00 kernel/exit.c:879
+>   do_group_exit+0x125/0x340 kernel/exit.c:983
+>   __do_sys_exit_group kernel/exit.c:994 [inline]
+>   __se_sys_exit_group kernel/exit.c:992 [inline]
+>   __x64_sys_exit_group+0x3a/0x50 kernel/exit.c:992
+>   do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
+>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+>
+> The buggy address belongs to the object at ffff8881cc866f00
+>   which belongs to the cache kmalloc-512 of size 512
+> The buggy address is located 88 bytes inside of
+>   512-byte region [ffff8881cc866f00, ffff8881cc867100)
+> The buggy address belongs to the page:
+> page:ffffea0007321980 refcount:1 mapcount:0 mapping:ffff8881da002500
+> index:0x0 compound_mapcount: 0
+> flags: 0x200000000010200(slab|head)
+> raw: 0200000000010200 ffffea000733fc80 0000000200000002 ffff8881da002500
+> raw: 0000000000000000 00000000000c000c 00000001ffffffff 0000000000000000
+> page dumped because: kasan: bad access detected
+>
+> Memory state around the buggy address:
+>   ffff8881cc866e00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>   ffff8881cc866e80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+> > ffff8881cc866f00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>                                                      ^
+>   ffff8881cc866f80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>   ffff8881cc867000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> ==================================================================
+>
+>
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> syzbot can test patches for this bug, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
+
+#syz fix: USB: iowarrior: fix use-after-free on disconnect
