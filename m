@@ -2,100 +2,137 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6164C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:08:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDD43C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:08:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B88A622303
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:08:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 957B422304
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:08:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=mbobrowski-org.20150623.gappssmtp.com header.i=@mbobrowski-org.20150623.gappssmtp.com header.b="v8Q3Ts5n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727662AbfKSKIQ (ORCPT
+        id S1727670AbfKSKIc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 05:08:16 -0500
-Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:57831 "EHLO
-        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726510AbfKSKIQ (ORCPT
+        Tue, 19 Nov 2019 05:08:32 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45811 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727262AbfKSKIb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 05:08:16 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R481e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=38;SR=0;TI=SMTPD_---0TiYQdSY_1574158084;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TiYQdSY_1574158084)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 19 Nov 2019 18:08:05 +0800
-Subject: Re: [PATCH v3 3/7] mm/lru: replace pgdat lru_lock with lruvec lock
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Shakeel Butt <shakeelb@google.com>,
-        Cgroups <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Tejun Heo <tj@kernel.org>, Hugh Dickins <hughd@google.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Roman Gushchin <guro@fb.com>,
-        Chris Down <chris@chrisdown.name>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vlastimil Babka <vbabka@suse.cz>, Qian Cai <cai@lca.pw>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        swkhack <swkhack@gmail.com>,
-        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Colin Ian King <colin.king@canonical.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Peng Fan <peng.fan@nxp.com>,
-        Nikolay Borisov <nborisov@suse.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Yafang Shao <laoar.shao@gmail.com>
-References: <1573874106-23802-1-git-send-email-alex.shi@linux.alibaba.com>
- <1573874106-23802-4-git-send-email-alex.shi@linux.alibaba.com>
- <CALvZod7oUmUCk96ATrRwYvrROFNqL1gPGt7fy949M8TMwCQrWA@mail.gmail.com>
- <3f179d84-85e2-bace-2dbc-e77f73883c71@linux.alibaba.com>
- <20191118123138.GL20752@bombadil.infradead.org>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <fc4716ae-a49e-68f0-98da-9318ff1f4138@linux.alibaba.com>
-Date:   Tue, 19 Nov 2019 18:08:04 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.1
+        Tue, 19 Nov 2019 05:08:31 -0500
+Received: by mail-pg1-f193.google.com with SMTP id k1so9811221pgg.12
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 02:08:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=mbobrowski-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=0as+kqGp44tyRx+kW5oQfsxwSoGdl6l76oT22Nl8N74=;
+        b=v8Q3Ts5nxlnauS/2ghDpbPKFgU64xhcUk2q9N0EIKCrEeCO1UZzdvm7IxtaY2XYPox
+         DIHxrwKQ1tzXYSKoZY5C7lLdHvwJ4dTI9PGVyravK4EbkP01DQ9DhAzxQZutRDhxYmDT
+         VTY4TDGDSPgqLRcJYHp71FgLyYf6puBT63wzO3s3OClM8A+6XXuYqJd8iwbtvJia0tgj
+         yzx/SQrS4tR5h4Z4vSBYh3CE+03HV2elpZ/6xxadUkDMlG/70b7shQf2rPHa+BzqcXm+
+         AOeqQ7WXjQUfeoBP1EqMUCsJykbbdHJQHTfVaz4SF0i/z+y/+FeNRd+CCGbvVX78DTwn
+         FZFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0as+kqGp44tyRx+kW5oQfsxwSoGdl6l76oT22Nl8N74=;
+        b=uVe1cOAipEYH4Mu2E7ejkfjFHoodjbonlB3fQr0Em/94WYrf41JR8gHBVVbhEGrWP3
+         8q9Uu7vdOtvXC6jxe/BD2xw/mvGBNdI8q5eIKIltU8fTNb/E9JgPo5IwM351rZySUXsf
+         nUjd2kDIFIyqogElDeVs2fLHA/0oz9h+G2DoZBrpX8g7roA47etTXfDr5TETPALOnYQr
+         fXEUCXW9A4AUvK/A0NX5S1zMc7xZZoExrZRM80+NpFwFL8Fkyd3Trq677WrijlXK6T7p
+         kRkSWMnKnJKjJhvmQvXq/z1vHQfUm+QegZwy5FywDK2uk1hsPI5/qrZnvKWMdDdF+Cdr
+         i8yg==
+X-Gm-Message-State: APjAAAVAN5xyiQTxjMeuT1koZfQYimSngWhjPglei9SyUhoQ10GmBUgM
+        zv6Rg6TXqNKaMZM9h0ba0TUM
+X-Google-Smtp-Source: APXvYqxOjci1H8Ei4WdF79tc6UVvv6rGHGtq5HEtKINHp8jaqtc8G29vaDRMXLC+T1Tt4lx/p/J5UQ==
+X-Received: by 2002:a63:5f49:: with SMTP id t70mr4738291pgb.219.1574158110418;
+        Tue, 19 Nov 2019 02:08:30 -0800 (PST)
+Received: from bobrowski ([110.232.114.101])
+        by smtp.gmail.com with ESMTPSA id v128sm6167533pgv.24.2019.11.19.02.08.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Nov 2019 02:08:29 -0800 (PST)
+Date:   Tue, 19 Nov 2019 21:08:22 +1100
+From:   Matthew Bobrowski <mbobrowski@mbobrowski.org>
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     Jan Kara <jack@suse.cz>,
+        syzbot <syzbot+991400e8eba7e00a26e1@syzkaller.appspotmail.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        riteshh@linux.ibm.com, syzkaller-bugs@googlegroups.com,
+        tytso@mit.edu, viro@zeniv.linux.org.uk
+Subject: Re: WARNING in iov_iter_pipe
+Message-ID: <20191119100821.GB22484@bobrowski>
+References: <000000000000d60aa50596c63063@google.com>
+ <20191108103148.GE20863@quack2.suse.cz>
+ <20191111081628.GB14058@bobrowski>
+ <20191119031021.GI3147@sol.localdomain>
 MIME-Version: 1.0
-In-Reply-To: <20191118123138.GL20752@bombadil.infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191119031021.GI3147@sol.localdomain>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-在 2019/11/18 下午8:31, Matthew Wilcox 写道:
->> Thanks for comments, Shakeel.
->>
->> lruvec lifetime is same as memcg, which allocted in mem_cgroup_alloc()->alloc_mem_cgroup_per_node_info()
->> I have read Hugh's patchset, even not every lines. But what's point of you here?
-> I believe Shakeel's point is that here:
+On Mon, Nov 18, 2019 at 07:10:21PM -0800, Eric Biggers wrote:
+> On Mon, Nov 11, 2019 at 07:16:29PM +1100, Matthew Bobrowski wrote:
+> > On Fri, Nov 08, 2019 at 11:31:48AM +0100, Jan Kara wrote:
+> > > On Thu 07-11-19 10:54:10, syzbot wrote:
+> > > > syzbot found the following crash on:
+> > > > 
+> > > > HEAD commit:    c68c5373 Add linux-next specific files for 20191107
+> > > > git tree:       linux-next
+> > > > console output: https://syzkaller.appspot.com/x/log.txt?x=13d6bcfce00000
+> > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=742545dcdea21726
+> > > > dashboard link: https://syzkaller.appspot.com/bug?extid=991400e8eba7e00a26e1
+> > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1529829ae00000
+> > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16a55c0ce00000
+> > > > 
+> > > > The bug was bisected to:
+> > > > 
+> > > > commit b1b4705d54abedfd69dcdf42779c521aa1e0fbd3
+> > > > Author: Matthew Bobrowski <mbobrowski@mbobrowski.org>
+> > > > Date:   Tue Nov 5 12:01:37 2019 +0000
+> > > > 
+> > > >     ext4: introduce direct I/O read using iomap infrastructure
+> > > 
+> > > Hum, interesting and from the first looks the problem looks real.
+> > > Deciphered reproducer is:
+> > > 
+> > > int fd0 = open("./file0", O_RDWR | O_CREAT | O_EXCL | O_DIRECT, 0);
+> > > int fd1 = open("./file0, O_RDONLY);
+> > > write(fd0, "some_data...", 512);
+> > > sendfile(fd0, fd1, NULL, 0x7fffffa7);
+> > >   -> this is interesting as it will result in reading data from 'file0' at
+> > >      offset X with buffered read and writing them with direct write to
+> > >      offset X+512. So this way we'll grow the file up to those ~2GB in
+> > >      512-byte chunks.
+> > > - not sure if we ever get there but the remainder of the reproducer is:
+> > > fd2 = open("./file0", O_RDWR | O_CREAT | O_NOATIME | O_SYNC, 0);
+> > > sendfile(fd2, fd0, NULL, 0xffffffff)
+> > >   -> doesn't seem too interesting as fd0 is at EOF so this shouldn't do
+> > >      anything.
+> > > 
+> > > Matthew, can you have a look?
+> > 
+> > Sorry Jan, I've been crazy busy lately and I'm out at training this
+> > week. Let me take a look at this and see whether I can determine
+> > what's happening here.
+> > 
 > 
-> struct lruvec *mem_cgroup_page_lruvec(struct page *page, struct pglist_data *pgdat)
-> {
-> ...
->         memcg = page->mem_cgroup;
+> FYI, syzbot is still seeing this on linux-next.
 > 
-> there is nothing pinning the memcg, and it could be freed before
-> dereferencing memcg->nodeinfo in mem_cgroup_page_nodeinfo().
+> Also, a new thread was started to discuss this:
+> https://lkml.kernel.org/linux-ext4/20191113180032.GB12013@quack2.suse.cz/T/#u
+> (Mentioning this in case anyone is following this thread only.)
 
-That's right! I will send the fix patches for review. 
-Thanks a lot!
+Understood. I suppose this issue will get some more traction this
+week.
+
+/M
