@@ -2,276 +2,118 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC179C43215
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 21:46:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEDAAC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 21:47:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B78E2240D
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 21:46:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83722222D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 21:47:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dDh5zWmw"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BaCMkMwB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727697AbfKSVq5 (ORCPT
+        id S1727714AbfKSVrL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 16:46:57 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:45464 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727621AbfKSVq4 (ORCPT
+        Tue, 19 Nov 2019 16:47:11 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:39522 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727674AbfKSVrK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 16:46:56 -0500
-Received: by mail-pf1-f195.google.com with SMTP id z4so12979507pfn.12;
-        Tue, 19 Nov 2019 13:46:55 -0800 (PST)
+        Tue, 19 Nov 2019 16:47:10 -0500
+Received: by mail-pj1-f67.google.com with SMTP id t103so3201208pjb.6
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 13:47:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:date:message-id:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=Kl7ZJlmi7sBAeFCxqsbtJTyoIeGJbf1TWCrAFqF4sF0=;
-        b=dDh5zWmw89XUR6rt+NuvA0RzAyanbPwC0pFjKj6QivU5iom7LKXqS7X5AV1LoTMkw7
-         k90kIDzDrR6Ld0SRZARp8jp8AjYWI6buJ0IukVCGaclJVhwC8csIMYNuYKwjZwnOUbu+
-         AQi93jPEPyzsr+wdNRnoltIoBFtq+iNCFiJqi5yOkG6BYAK2DY62SoE2gvCSNs/Nqkvz
-         Du/ruvnP7Jcldq16LMh2xQL/W0OZ3mmPqkTdpeAS5xQ8aoJmhuwoLfyeqTB5/IhImv+j
-         /Jk0gUpP9ae9ojzzePg7I5k/1tApsgjT7Yd/S/Z2QD/RzQZCroo+6QXN3djn85ABMuGO
-         gf3Q==
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:from:cc:to:user-agent:date;
+        bh=z0/O1Vpuw+xwM/4jaTJh2/ARW1/nXxwQlkmSxUL0re0=;
+        b=BaCMkMwBvnUDcFn2Afgbc832ylHb3Li4n3kiBHbNDNumcoZCz28vAMJbW9E0ee0vie
+         gSUwrOjPqwiC8bWK7cnfgMYXiHMRHknJYIUvuXa/h5fR2taBOM0UNkJ9m2/t/mqot34I
+         rvM8AecLG/bdb1/PuULA0s5swchRu1MwkrVhk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:date:message-id:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=Kl7ZJlmi7sBAeFCxqsbtJTyoIeGJbf1TWCrAFqF4sF0=;
-        b=obuTAIgeunbCNxgNWPJBt9Qk1PrzM14JovWsS/AHutneijUnIDR62Qi1oBOjGI0EOw
-         zSPczgqnnnXrYi3PM7/ZkMfH5uFsV7P8+6p8g+m7qgFMTzYGhVDuu/VzOM2uk+yNGSdz
-         C5DjqaC+pW4k5IO8zT8yPDs8/QHduTMGOHg6ALrtBDjuF3EdzpddaBYK/d1i75xAenxG
-         ZCmiaFqBCiBCU2Ac6vomgSFjrK3WCCFoModh3mGUozHXCu4BQUHaSOvgh4IvgZQLUjHN
-         T7uGlFyYL6vEITv/mgRMQ2BNACZdpDwtJJuOyznpgWHMiQGqZyBJAnsQlzuXvINspt57
-         L/8A==
-X-Gm-Message-State: APjAAAW0oizwD7oAgdhARaVyPnPzFanfaGUx+LVqDRRx9fBiA6MV91sZ
-        B1EuBkYMCZRC9nt3iZNWyao=
-X-Google-Smtp-Source: APXvYqyA/cKB0w3sWtf/5xsd9cV6ZDGpzcUeIxAjzkBlNKmEvLxp/2NK95GJfyTb7oFfdNUHkstGqg==
-X-Received: by 2002:a63:3f4e:: with SMTP id m75mr7867766pga.392.1574200015079;
-        Tue, 19 Nov 2019 13:46:55 -0800 (PST)
-Received: from localhost.localdomain ([2001:470:b:9c3:9e5c:8eff:fe4f:f2d0])
-        by smtp.gmail.com with ESMTPSA id o15sm23710284pgn.49.2019.11.19.13.46.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 19 Nov 2019 13:46:54 -0800 (PST)
-Subject: [PATCH v14 6/6] virtio-balloon: Add support for providing unused
- page reports to host
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-To:     kvm@vger.kernel.org, mst@redhat.com, linux-kernel@vger.kernel.org,
-        willy@infradead.org, mhocko@kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, mgorman@techsingularity.net,
-        vbabka@suse.cz
-Cc:     yang.zhang.wz@gmail.com, nitesh@redhat.com, konrad.wilk@oracle.com,
-        david@redhat.com, pagupta@redhat.com, riel@surriel.com,
-        lcapitulino@redhat.com, dave.hansen@intel.com,
-        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
-        dan.j.williams@intel.com, alexander.h.duyck@linux.intel.com,
-        osalvador@suse.de
-Date:   Tue, 19 Nov 2019 13:46:53 -0800
-Message-ID: <20191119214653.24996.90695.stgit@localhost.localdomain>
-In-Reply-To: <20191119214454.24996.66289.stgit@localhost.localdomain>
-References: <20191119214454.24996.66289.stgit@localhost.localdomain>
-User-Agent: StGit/0.17.1-dirty
-MIME-Version: 1.0
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:from:cc:to
+         :user-agent:date;
+        bh=z0/O1Vpuw+xwM/4jaTJh2/ARW1/nXxwQlkmSxUL0re0=;
+        b=HVYJDvwfEAz56al5QJLD80JMLy2MN81GOr0xxYe4RWg/7ltzKSgpTPYE6MoRZZdAVJ
+         HJM6cMmLLvCKMYmfiMvpaosKAMx96oau59QzUXvyUwcjQwD+jxwAPQr4z6Aoqeh21G1I
+         8gP6JTDaiqWNeHCcbd8IWOOgWQgTF0AeC2SEBc/4MUCpD2bQBA4FUCvt0BNu/21iF0aJ
+         Di3VjEe9sEnYykeIQXo0FbiqHRsAWE+rEeuUzDalbC5mMXO9t3ysGYNt/9sJcLPsQzkL
+         28GZmon1gyQT3Bg9uiNgwTkuThwhTMbiaRfCp7ofsXmwcu1N7EfMAiSLOptaF5hv+1Oq
+         10pQ==
+X-Gm-Message-State: APjAAAUq5JRbDA39cQySF3ZRVrzEf0OSAy5MxNiX7LphDyTBj/w/FPxd
+        Y1qsYPU0u3hW3CrEQdVumbUpOw==
+X-Google-Smtp-Source: APXvYqxLEe3KL2Zldw+TrHLk4DNNJbwDIIiCfEsGQS+VUTgBS6MuEFSHCE9qrdN1ThzKlXUAaqFniA==
+X-Received: by 2002:a17:90a:4803:: with SMTP id a3mr9371388pjh.101.1574200029396;
+        Tue, 19 Nov 2019 13:47:09 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id y8sm25901244pfl.8.2019.11.19.13.47.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Nov 2019 13:47:08 -0800 (PST)
+Message-ID: <5dd462dc.1c69fb81.b84c3.e950@mx.google.com>
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <4b63daf69f7b49ce8304b5cd85e39b22@codeaurora.org>
+References: <1573593774-12539-1-git-send-email-eberman@codeaurora.org> <1573593774-12539-2-git-send-email-eberman@codeaurora.org> <5dcf345b.1c69fb81.df1ea.f7f6@mx.google.com> <4b63daf69f7b49ce8304b5cd85e39b22@codeaurora.org>
+Subject: Re: [PATCH v2 01/18] firmware: qcom_scm: Rename macros and structures
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        saiprakash.ranjan@codeaurora.org, tsoni@codeaurora.org,
+        sidgup@codeaurora.org, psodagud@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     eberman@codeaurora.org
+User-Agent: alot/0.8.1
+Date:   Tue, 19 Nov 2019 13:47:07 -0800
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Quoting eberman@codeaurora.org (2019-11-15 17:19:13)
+> On 2019-11-15 15:27, Stephen Boyd wrote:
+> > ... to here I don't understand why any of it needs to change. It looks
+> > like a bunch of churn and it conflates qcom SCM calls with SMCCC which
+> > is not desirable. Those two concepts are different.
+>=20
+> I can see the confusion. The goal with this patch is to make it more=20
+> clear which
+> macros and structures are for SCM interface from those which deal with=20
+> the
+> implementation of how an SCM call is implemented with the smc=20
+> instruction. It's
+> not presently clear that struct qcom_scm_response (for instance) is only
+> relevant in the context of legacy convention.
+>=20
+> I choose the name "legacy" since only older firmwares use it and having
+> "scm_buffer_get_command_buffer" seems even more confusing to me! "SMCCC" =
 
-Add support for the page reporting feature provided by virtio-balloon.
-Reporting differs from the regular balloon functionality in that is is
-much less durable than a standard memory balloon. Instead of creating a
-list of pages that cannot be accessed the pages are only inaccessible
-while they are being indicated to the virtio interface. Once the
-interface has acknowledged them they are placed back into their respective
-free lists and are once again accessible by the guest system.
+> was
+> chosen for lack of a better name.
+>=20
+> Additionally, the concern with having qcom_scm_ prefix on these=20
+> functions
+> (especially legacy_get_*_buffer()) is you get long function names which=20
+> didn't
+> seem desirable. If the long names are preferable, I can update series=20
+> with the
+> longer form of the names.
+>=20
 
-Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
----
- drivers/virtio/Kconfig              |    1 +
- drivers/virtio/virtio_balloon.c     |   65 +++++++++++++++++++++++++++++++++++
- include/uapi/linux/virtio_balloon.h |    1 +
- 3 files changed, 67 insertions(+)
+This is the hardest problem in computer science. Figuring out a name.
+;-)
 
-diff --git a/drivers/virtio/Kconfig b/drivers/virtio/Kconfig
-index 078615cf2afc..4b2dd8259ff5 100644
---- a/drivers/virtio/Kconfig
-+++ b/drivers/virtio/Kconfig
-@@ -58,6 +58,7 @@ config VIRTIO_BALLOON
- 	tristate "Virtio balloon driver"
- 	depends on VIRTIO
- 	select MEMORY_BALLOON
-+	select PAGE_REPORTING
- 	---help---
- 	 This driver supports increasing and decreasing the amount
- 	 of memory within a KVM guest.
-diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
-index 92099298bc16..6f5c6555765a 100644
---- a/drivers/virtio/virtio_balloon.c
-+++ b/drivers/virtio/virtio_balloon.c
-@@ -19,6 +19,7 @@
- #include <linux/mount.h>
- #include <linux/magic.h>
- #include <linux/pseudo_fs.h>
-+#include <linux/page_reporting.h>
- 
- /*
-  * Balloon device works in 4K page units.  So each page is pointed to by
-@@ -37,6 +38,9 @@
- #define VIRTIO_BALLOON_FREE_PAGE_SIZE \
- 	(1 << (VIRTIO_BALLOON_FREE_PAGE_ORDER + PAGE_SHIFT))
- 
-+/*  limit on the number of pages that can be on the reporting vq */
-+#define VIRTIO_BALLOON_VRING_HINTS_MAX	16
-+
- #ifdef CONFIG_BALLOON_COMPACTION
- static struct vfsmount *balloon_mnt;
- #endif
-@@ -46,6 +50,7 @@ enum virtio_balloon_vq {
- 	VIRTIO_BALLOON_VQ_DEFLATE,
- 	VIRTIO_BALLOON_VQ_STATS,
- 	VIRTIO_BALLOON_VQ_FREE_PAGE,
-+	VIRTIO_BALLOON_VQ_REPORTING,
- 	VIRTIO_BALLOON_VQ_MAX
- };
- 
-@@ -113,6 +118,10 @@ struct virtio_balloon {
- 
- 	/* To register a shrinker to shrink memory upon memory pressure */
- 	struct shrinker shrinker;
-+
-+	/* Unused page reporting device */
-+	struct virtqueue *reporting_vq;
-+	struct page_reporting_dev_info pr_dev_info;
- };
- 
- static struct virtio_device_id id_table[] = {
-@@ -152,6 +161,32 @@ static void tell_host(struct virtio_balloon *vb, struct virtqueue *vq)
- 
- }
- 
-+void virtballoon_unused_page_report(struct page_reporting_dev_info *pr_dev_info,
-+				    unsigned int nents)
-+{
-+	struct virtio_balloon *vb =
-+		container_of(pr_dev_info, struct virtio_balloon, pr_dev_info);
-+	struct virtqueue *vq = vb->reporting_vq;
-+	unsigned int unused, err;
-+
-+	/* We should always be able to add these buffers to an empty queue. */
-+	err = virtqueue_add_inbuf(vq, pr_dev_info->sg, nents, vb,
-+				  GFP_NOWAIT | __GFP_NOWARN);
-+
-+	/*
-+	 * In the extremely unlikely case that something has changed and we
-+	 * are able to trigger an error we will simply display a warning
-+	 * and exit without actually processing the pages.
-+	 */
-+	if (WARN_ON(err))
-+		return;
-+
-+	virtqueue_kick(vq);
-+
-+	/* When host has read buffer, this completes via balloon_ack */
-+	wait_event(vb->acked, virtqueue_get_buf(vq, &unused));
-+}
-+
- static void set_page_pfns(struct virtio_balloon *vb,
- 			  __virtio32 pfns[], struct page *page)
- {
-@@ -476,6 +511,7 @@ static int init_vqs(struct virtio_balloon *vb)
- 	names[VIRTIO_BALLOON_VQ_DEFLATE] = "deflate";
- 	names[VIRTIO_BALLOON_VQ_STATS] = NULL;
- 	names[VIRTIO_BALLOON_VQ_FREE_PAGE] = NULL;
-+	names[VIRTIO_BALLOON_VQ_REPORTING] = NULL;
- 
- 	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_STATS_VQ)) {
- 		names[VIRTIO_BALLOON_VQ_STATS] = "stats";
-@@ -487,11 +523,19 @@ static int init_vqs(struct virtio_balloon *vb)
- 		callbacks[VIRTIO_BALLOON_VQ_FREE_PAGE] = NULL;
- 	}
- 
-+	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_REPORTING)) {
-+		names[VIRTIO_BALLOON_VQ_REPORTING] = "reporting_vq";
-+		callbacks[VIRTIO_BALLOON_VQ_REPORTING] = balloon_ack;
-+	}
-+
- 	err = vb->vdev->config->find_vqs(vb->vdev, VIRTIO_BALLOON_VQ_MAX,
- 					 vqs, callbacks, names, NULL, NULL);
- 	if (err)
- 		return err;
- 
-+	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_REPORTING))
-+		vb->reporting_vq = vqs[VIRTIO_BALLOON_VQ_REPORTING];
-+
- 	vb->inflate_vq = vqs[VIRTIO_BALLOON_VQ_INFLATE];
- 	vb->deflate_vq = vqs[VIRTIO_BALLOON_VQ_DEFLATE];
- 	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_STATS_VQ)) {
-@@ -932,12 +976,30 @@ static int virtballoon_probe(struct virtio_device *vdev)
- 		if (err)
- 			goto out_del_balloon_wq;
- 	}
-+
-+	vb->pr_dev_info.report = virtballoon_unused_page_report;
-+	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_REPORTING)) {
-+		unsigned int capacity;
-+
-+		capacity = min_t(unsigned int,
-+				 virtqueue_get_vring_size(vb->reporting_vq),
-+				 VIRTIO_BALLOON_VRING_HINTS_MAX);
-+		vb->pr_dev_info.capacity = capacity;
-+
-+		err = page_reporting_register(&vb->pr_dev_info);
-+		if (err)
-+			goto out_unregister_shrinker;
-+	}
-+
- 	virtio_device_ready(vdev);
- 
- 	if (towards_target(vb))
- 		virtballoon_changed(vdev);
- 	return 0;
- 
-+out_unregister_shrinker:
-+	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_DEFLATE_ON_OOM))
-+		virtio_balloon_unregister_shrinker(vb);
- out_del_balloon_wq:
- 	if (virtio_has_feature(vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT))
- 		destroy_workqueue(vb->balloon_wq);
-@@ -966,6 +1028,8 @@ static void virtballoon_remove(struct virtio_device *vdev)
- {
- 	struct virtio_balloon *vb = vdev->priv;
- 
-+	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_REPORTING))
-+		page_reporting_unregister(&vb->pr_dev_info);
- 	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_DEFLATE_ON_OOM))
- 		virtio_balloon_unregister_shrinker(vb);
- 	spin_lock_irq(&vb->stop_update_lock);
-@@ -1038,6 +1102,7 @@ static int virtballoon_validate(struct virtio_device *vdev)
- 	VIRTIO_BALLOON_F_DEFLATE_ON_OOM,
- 	VIRTIO_BALLOON_F_FREE_PAGE_HINT,
- 	VIRTIO_BALLOON_F_PAGE_POISON,
-+	VIRTIO_BALLOON_F_REPORTING,
- };
- 
- static struct virtio_driver virtio_balloon_driver = {
-diff --git a/include/uapi/linux/virtio_balloon.h b/include/uapi/linux/virtio_balloon.h
-index a1966cd7b677..19974392d324 100644
---- a/include/uapi/linux/virtio_balloon.h
-+++ b/include/uapi/linux/virtio_balloon.h
-@@ -36,6 +36,7 @@
- #define VIRTIO_BALLOON_F_DEFLATE_ON_OOM	2 /* Deflate balloon on OOM */
- #define VIRTIO_BALLOON_F_FREE_PAGE_HINT	3 /* VQ to report free pages */
- #define VIRTIO_BALLOON_F_PAGE_POISON	4 /* Guest is using page poisoning */
-+#define VIRTIO_BALLOON_F_REPORTING	5 /* Page reporting virtqueue */
- 
- /* Size of a PFN in the balloon interface. */
- #define VIRTIO_BALLOON_PFN_SHIFT 12
+Maybe call it scm_buffer_*? Because it _is_ scm communication with
+shared buffers? The newer calling convention passes arguments in
+registers, but the original calling convention passed a buffer around
+from non-secure to secure world and then back again and had a embryonic
+register based calling convention. That buffer passing still sort of
+happens with the new style but it isn't done unless the register count
+is larger than 5 or so and the return buffer isn't unbounded in size
+like it was done. It also sort of follows the ARM SMC Calling Convection
+spec now.
 
