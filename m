@@ -4,63 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2DB2C33C9D
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 01:44:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35342C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 01:44:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A30C7222ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 01:44:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F7C522313
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 01:44:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="E4wil7Ix"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XuRXY+Uo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727333AbfKSBoZ (ORCPT
+        id S1727352AbfKSBo2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 20:44:25 -0500
-Received: from mail-pf1-f201.google.com ([209.85.210.201]:35423 "EHLO
-        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727004AbfKSBoW (ORCPT
+        Mon, 18 Nov 2019 20:44:28 -0500
+Received: from mail-yb1-f201.google.com ([209.85.219.201]:50863 "EHLO
+        mail-yb1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727316AbfKSBoY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 20:44:22 -0500
-Received: by mail-pf1-f201.google.com with SMTP id x3so15598684pfr.2
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 17:44:21 -0800 (PST)
+        Mon, 18 Nov 2019 20:44:24 -0500
+Received: by mail-yb1-f201.google.com with SMTP id u10so13668657ybj.17
+        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 17:44:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=+jjji3tSpxwlbDZ3IxnBRsu+dAwMsSkbh2xmNZIHuxI=;
-        b=E4wil7IxwWw+wByGTqO1KHoDDxMkcPzaMl+JQsKi39KSa3FHJgIuYvg5dfj7URC4DC
-         fZ9PlZYUoXaG/cvQI2iSWJsc94df3ZxbuBP/xZ9+jycXRfDzX5mod15XtQaaLXpmXPML
-         vRbJB7Pet6zJ8lzNYIx6yt9Ye3z/Wxr4/xC/Pwt0dBZRrB257mj6eMD9Ggnu4CmwA+AK
-         Bxnc2fKCELfOFrbpXvYNmm+oyzssqQFXPzqLZJHXCCvRBx2Ni0rKdQK2b89bP9qcwyZH
-         ls1rInHVdry4nOFL0uRGi99Pu9pTm16pmfLMdiUlwF0IW81VqNyTxdwRIRYpfejfMG5L
-         boKw==
+        bh=+X4EfDiauElJOC7RvUHMTNrf0yIKJ6Yo/r1JySL4OmE=;
+        b=XuRXY+Uojn4XMwzMfwawiXvnYay5fnux5+uJeb3ziZ3R5w/vbNhsqKzQ/EKcdHNva/
+         bTVABpEbKe34fuMWa+rwVkf9oUB+ETllNbUdUuEV0kMV27/I5J46qEvTfjgr3geFNG+s
+         VuSKrsE9MCPhH2N0/LwdjCjUe+e+7kT1wnb7rWBqjNaQZyzKPXI8ZtCdQjtjJ4NT+QVx
+         GGYs8he60Apg56auefYNhlsWUk/3YYn80LCHN2SQIEPH+cUJtaYM/Gi894vrfxz39I65
+         SfD/FmVf683ut0qb6rCIBdLpkfRwi72MeVlTL7TmwAh1xuxqQFLA90nnUry9c6MB5Zpy
+         j0pQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=+jjji3tSpxwlbDZ3IxnBRsu+dAwMsSkbh2xmNZIHuxI=;
-        b=n9Jdn9URohgaawL49otxgSIcL5JTpO2Yh1gmihbletsC7k42f6XcaGrV95oef9tfbx
-         7iLd9n01kpQbJZDlrMVGsvOcJcgzlplMLf4DsianaBpsvo2YSD95QEyO0XQB3QxbgE6u
-         xo9AHtnPWs2zdTndX2kZC6oKjWehApK6ubx8e+/AofxYOR+Ai/tMRWa5jx+4mIpmjfdX
-         N95HDW1HmzXmdoBGwnBj8fMqYaVJPIUXApeaOcB5LlWS1DKrAKHNsnxSK45hVHDjhOfL
-         TI0R5YlAv5Gcmz8yWqwICSwjFuvH5YVWnYbDFRwozIKaHbCuf7gadKYEsdfk5BJRl532
-         hLmg==
-X-Gm-Message-State: APjAAAV917neC3WUfY1JRRIMxgGE54WyF3d/14yC9xFeF0apNHhHRH0+
-        JzWsQbFT7TveLFZDyJkDsLzNpSAxLsXY
-X-Google-Smtp-Source: APXvYqzaqO5xeEXSVtu9hVPofbPh+gCloCGl7iDrx/zg+fhYwqy9IC0zjfsgFrvc2zr57yqggl9sjX3AYdCL
-X-Received: by 2002:a65:424a:: with SMTP id d10mr2644699pgq.122.1574127861405;
- Mon, 18 Nov 2019 17:44:21 -0800 (PST)
-Date:   Mon, 18 Nov 2019 17:43:51 -0800
+        bh=+X4EfDiauElJOC7RvUHMTNrf0yIKJ6Yo/r1JySL4OmE=;
+        b=KtJvRd4RF5BfsZcUtEVVOozbRis0JE+UQdIhd5DJ62wcDtcrnbVkURqYCaFgMihVxp
+         sHRdFDZUuBpFjdxxejOmN6Q8+X/K3jZ0Jscb39pirxT0DgpEpuVL29+4H0vX8146bVCZ
+         HpiXmPTi9pNjurqSX37nW6jVrr7FlXuVowCS01pTU9YTSRLNIjgS9BqVM+tB+YpexmY0
+         g5jf3LAyA6n3jaQDctFjxGNSFTUAeIrB2MDiO9j2Z6lrsgM1Huhf8Mtp5EZl4R1lPn1l
+         Wyq1femjkQjtTLpeM8zdsziGZDNY+WMmOEE9RVchZY3i/UJ71mcCXzCBWF0V6SC2TAaR
+         ZSQg==
+X-Gm-Message-State: APjAAAXx6J2h4wvkQAFsZrL63lGOvnQfjVNA/YJVQ5Fg//LRywEk2N9N
+        pRr+tSNaMfVxKCXNhdMF5trSXEapWHxi
+X-Google-Smtp-Source: APXvYqyTrKX/xD95yspop64YmtLkkWhLlkti3RyghsE1x1RjvOga6zkHUJod3Kf+PT0x/rL4hhHXbqUl7AWp
+X-Received: by 2002:a81:36c9:: with SMTP id d192mr10218854ywa.304.1574127863941;
+ Mon, 18 Nov 2019 17:44:23 -0800 (PST)
+Date:   Mon, 18 Nov 2019 17:43:52 -0800
 In-Reply-To: <20191119014357.98465-1-brianvv@google.com>
-Message-Id: <20191119014357.98465-4-brianvv@google.com>
+Message-Id: <20191119014357.98465-5-brianvv@google.com>
 Mime-Version: 1.0
 References: <20191119014357.98465-1-brianvv@google.com>
 X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
-Subject: [PATCH bpf-next 3/9] bpf: add generic support for update and delete
- batch ops
+Subject: [PATCH bpf-next 4/9] bpf: add lookup and updated batch ops to arraymap
 From:   Brian Vazquez <brianvv@google.com>
 To:     Brian Vazquez <brianvv.kernel@gmail.com>,
         Alexei Starovoitov <ast@kernel.org>,
@@ -77,220 +75,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit adds generic support for update and delete batch ops that
-can be used for almost all the bpf maps. These commands share the same
-UAPI attr that lookup and lookup_and_delet batch ops used and the
-syscall commands are:
+This adds the generic batch ops functionality to bpf arraymap, note that
+since deletion is not a valid operation for arraymap, only batch and
+lookup are added.
 
-  BPF_MAP_UPDATE_BATCH
-  BPF_MAP_DELETE_BATCH
-
-The main difference between update/delete and lookup/lookup_and_delete
-batch ops is that for update/delete keys/values must be specified for
-userspace and because of that, neither in_batch nor out_batch are used.
-
-Suggested-by: Stanislav Fomichev <sdf@google.com>
 Signed-off-by: Brian Vazquez <brianvv@google.com>
-Signed-off-by: Yonghong Song <yhs@fb.com>
 ---
- include/linux/bpf.h      |  10 ++++
- include/uapi/linux/bpf.h |   2 +
- kernel/bpf/syscall.c     | 126 ++++++++++++++++++++++++++++++++++++++-
- 3 files changed, 137 insertions(+), 1 deletion(-)
+ kernel/bpf/arraymap.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-index 767a823dbac74..96a19e1fd2b5b 100644
---- a/include/linux/bpf.h
-+++ b/include/linux/bpf.h
-@@ -46,6 +46,10 @@ struct bpf_map_ops {
- 	int (*map_lookup_and_delete_batch)(struct bpf_map *map,
- 					   const union bpf_attr *attr,
- 					   union bpf_attr __user *uattr);
-+	int (*map_update_batch)(struct bpf_map *map, const union bpf_attr *attr,
-+				union bpf_attr __user *uattr);
-+	int (*map_delete_batch)(struct bpf_map *map, const union bpf_attr *attr,
-+				union bpf_attr __user *uattr);
- 
- 	/* funcs callable from userspace and from eBPF programs */
- 	void *(*map_lookup_elem)(struct bpf_map *map, void *key);
-@@ -808,6 +812,12 @@ int  generic_map_lookup_batch(struct bpf_map *map,
- int  generic_map_lookup_and_delete_batch(struct bpf_map *map,
- 					 const union bpf_attr *attr,
- 					 union bpf_attr __user *uattr);
-+int  generic_map_update_batch(struct bpf_map *map,
-+			      const union bpf_attr *attr,
-+			      union bpf_attr __user *uattr);
-+int  generic_map_delete_batch(struct bpf_map *map,
-+			      const union bpf_attr *attr,
-+			      union bpf_attr __user *uattr);
- 
- extern int sysctl_unprivileged_bpf_disabled;
- 
-diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
-index e60b7b7cda61a..0f6ff0c4d79dd 100644
---- a/include/uapi/linux/bpf.h
-+++ b/include/uapi/linux/bpf.h
-@@ -109,6 +109,8 @@ enum bpf_cmd {
- 	BPF_BTF_GET_NEXT_ID,
- 	BPF_MAP_LOOKUP_BATCH,
- 	BPF_MAP_LOOKUP_AND_DELETE_BATCH,
-+	BPF_MAP_UPDATE_BATCH,
-+	BPF_MAP_DELETE_BATCH,
+diff --git a/kernel/bpf/arraymap.c b/kernel/bpf/arraymap.c
+index 1c65ce0098a95..680d4e99ef583 100644
+--- a/kernel/bpf/arraymap.c
++++ b/kernel/bpf/arraymap.c
+@@ -457,6 +457,8 @@ const struct bpf_map_ops array_map_ops = {
+ 	.map_direct_value_meta = array_map_direct_value_meta,
+ 	.map_seq_show_elem = array_map_seq_show_elem,
+ 	.map_check_btf = array_map_check_btf,
++	.map_lookup_batch = generic_map_lookup_batch,
++	.map_update_batch = generic_map_update_batch,
  };
  
- enum bpf_map_type {
-diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-index d0d3d0e0eaca4..06e1bcf40fb8d 100644
---- a/kernel/bpf/syscall.c
-+++ b/kernel/bpf/syscall.c
-@@ -1127,6 +1127,120 @@ static int map_get_next_key(union bpf_attr *attr)
- 	return err;
- }
- 
-+int generic_map_delete_batch(struct bpf_map *map,
-+			     const union bpf_attr *attr,
-+			     union bpf_attr __user *uattr)
-+{
-+	void __user *keys = u64_to_user_ptr(attr->batch.keys);
-+	int ufd = attr->map_fd;
-+	u32 cp, max_count;
-+	struct fd f;
-+	void *key;
-+	int err;
-+
-+	f = fdget(ufd);
-+	if (attr->batch.elem_flags & ~BPF_F_LOCK)
-+		return -EINVAL;
-+
-+	if ((attr->batch.elem_flags & BPF_F_LOCK) &&
-+	    !map_value_has_spin_lock(map)) {
-+		err = -EINVAL;
-+		goto err_put;
-+	}
-+
-+	max_count = attr->batch.count;
-+	if (!max_count)
-+		return 0;
-+
-+	err = -ENOMEM;
-+	for (cp = 0; cp < max_count; cp++) {
-+		key = __bpf_copy_key(keys + cp * map->key_size, map->key_size);
-+		if (IS_ERR(key)) {
-+			err = PTR_ERR(key);
-+			break;
-+		}
-+
-+		if (err)
-+			break;
-+		if (bpf_map_is_dev_bound(map)) {
-+			err = bpf_map_offload_delete_elem(map, key);
-+			break;
-+		}
-+
-+		preempt_disable();
-+		__this_cpu_inc(bpf_prog_active);
-+		rcu_read_lock();
-+		err = map->ops->map_delete_elem(map, key);
-+		rcu_read_unlock();
-+		__this_cpu_dec(bpf_prog_active);
-+		preempt_enable();
-+		maybe_wait_bpf_programs(map);
-+		if (err)
-+			break;
-+	}
-+	if (copy_to_user(&uattr->batch.count, &cp, sizeof(cp)))
-+		err = -EFAULT;
-+err_put:
-+	return err;
-+}
-+int generic_map_update_batch(struct bpf_map *map,
-+			     const union bpf_attr *attr,
-+			     union bpf_attr __user *uattr)
-+{
-+	void __user *values = u64_to_user_ptr(attr->batch.values);
-+	void __user *keys = u64_to_user_ptr(attr->batch.keys);
-+	u32 value_size, cp, max_count;
-+	int ufd = attr->map_fd;
-+	void *key, *value;
-+	struct fd f;
-+	int err;
-+
-+	f = fdget(ufd);
-+	if (attr->batch.elem_flags & ~BPF_F_LOCK)
-+		return -EINVAL;
-+
-+	if ((attr->batch.elem_flags & BPF_F_LOCK) &&
-+	    !map_value_has_spin_lock(map)) {
-+		err = -EINVAL;
-+		goto err_put;
-+	}
-+
-+	value_size = bpf_map_value_size(map);
-+
-+	max_count = attr->batch.count;
-+	if (!max_count)
-+		return 0;
-+
-+	err = -ENOMEM;
-+	value = kmalloc(value_size, GFP_USER | __GFP_NOWARN);
-+	if (!value)
-+		goto err_put;
-+
-+	for (cp = 0; cp < max_count; cp++) {
-+		key = __bpf_copy_key(keys + cp * map->key_size, map->key_size);
-+		if (IS_ERR(key)) {
-+			err = PTR_ERR(key);
-+			break;
-+		}
-+		err = -EFAULT;
-+		if (copy_from_user(value, values + cp * value_size, value_size))
-+			break;
-+
-+		err = bpf_map_update_value(map, f, key, value,
-+					   attr->batch.elem_flags);
-+
-+		if (err)
-+			break;
-+	}
-+
-+	if (copy_to_user(&uattr->batch.count, &cp, sizeof(cp)))
-+		err = -EFAULT;
-+
-+	kfree(value);
-+err_put:
-+	return err;
-+}
-+
- static int __generic_map_lookup_batch(struct bpf_map *map,
- 				      const union bpf_attr *attr,
- 				      union bpf_attr __user *uattr,
-@@ -3117,8 +3231,12 @@ static int bpf_map_do_batch(const union bpf_attr *attr,
- 
- 	if (cmd == BPF_MAP_LOOKUP_BATCH)
- 		BPF_DO_BATCH(map->ops->map_lookup_batch);
--	else
-+	else if (cmd == BPF_MAP_LOOKUP_AND_DELETE_BATCH)
- 		BPF_DO_BATCH(map->ops->map_lookup_and_delete_batch);
-+	else if (cmd == BPF_MAP_UPDATE_BATCH)
-+		BPF_DO_BATCH(map->ops->map_update_batch);
-+	else
-+		BPF_DO_BATCH(map->ops->map_delete_batch);
- 
- err_put:
- 	fdput(f);
-@@ -3229,6 +3347,12 @@ SYSCALL_DEFINE3(bpf, int, cmd, union bpf_attr __user *, uattr, unsigned int, siz
- 		err = bpf_map_do_batch(&attr, uattr,
- 				       BPF_MAP_LOOKUP_AND_DELETE_BATCH);
- 		break;
-+	case BPF_MAP_UPDATE_BATCH:
-+		err = bpf_map_do_batch(&attr, uattr, BPF_MAP_UPDATE_BATCH);
-+		break;
-+	case BPF_MAP_DELETE_BATCH:
-+		err = bpf_map_do_batch(&attr, uattr, BPF_MAP_DELETE_BATCH);
-+		break;
- 	default:
- 		err = -EINVAL;
- 		break;
+ const struct bpf_map_ops percpu_array_map_ops = {
 -- 
 2.24.0.432.g9d3f5f5b63-goog
 
