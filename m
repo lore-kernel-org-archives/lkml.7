@@ -2,115 +2,115 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AFFEC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 03:10:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8360C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 03:11:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AD2F22318
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 03:10:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574133025;
-	bh=OvPo829X0NAds8jIa2J1IO7KdmDGATW9k1H4VdHCgZg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ID7ZMH4JMHwTO/Qo6RP9IqGAb5f4A2W17jKrsqD9yhSPX0zrPBvS6zk5Xv8HZP57B
-	 YbFn7GCAx6/ZwivWhU0jjFFvVKg4npcKcbO9u1NXljEE5U/1ZU5QGcl+XeJfUn8lz/
-	 Dg7JPzkXp8uH61ZzprqtqbQfWVaHgFi27Lg6BebQ=
+	by mail.kernel.org (Postfix) with ESMTP id AD7F02070E
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 03:11:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LvxH8Xuq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727557AbfKSDKY (ORCPT
+        id S1727567AbfKSDLh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 22:10:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44296 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727014AbfKSDKX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 22:10:23 -0500
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4CFE2070E;
-        Tue, 19 Nov 2019 03:10:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574133023;
-        bh=OvPo829X0NAds8jIa2J1IO7KdmDGATW9k1H4VdHCgZg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bc79nIT9S2/aFOSzlDK80fUaTc6Zz43X96zMIi1Er/0IDrt1qAxMI389WCzvYks5X
-         mm/a9p3FFANlWHsCGxvGIL7UwmW6F2Hv9IqBR/OCIv7BKHYMtC72zCXTKEVuli/chM
-         Kt17k27cyDap7yAUdDizjzTL4Mafnwy5Gnqgx9Jk=
-Date:   Mon, 18 Nov 2019 19:10:21 -0800
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Matthew Bobrowski <mbobrowski@mbobrowski.org>
-Cc:     Jan Kara <jack@suse.cz>,
-        syzbot <syzbot+991400e8eba7e00a26e1@syzkaller.appspotmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        riteshh@linux.ibm.com, syzkaller-bugs@googlegroups.com,
-        tytso@mit.edu, viro@zeniv.linux.org.uk
-Subject: Re: WARNING in iov_iter_pipe
-Message-ID: <20191119031021.GI3147@sol.localdomain>
-References: <000000000000d60aa50596c63063@google.com>
- <20191108103148.GE20863@quack2.suse.cz>
- <20191111081628.GB14058@bobrowski>
+        Mon, 18 Nov 2019 22:11:37 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:38060 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727112AbfKSDLg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 22:11:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=v9f8BYCrMCJuV+Nhkx2R4CSxZOsMU8pABJUkn54/Xi8=; b=LvxH8Xuq2c0IZyx+D3Ts/Ytrd
+        eZHESIkCIkIb6PpPUCUnXL0/MCj1EuD/F2wi1+J92H3qroHmkbdG0q+t+YwikmEaWgDswZrg6C+lD
+        yRTwjvgyRWFiQksHIPH0NcVHm7+CzkeNIiTWBtOnSIqf/cen/E2GpMvo6dojXO3wQ4/Z93V8XyLeN
+        1J1ksqNT2tpapUuOQY7Hi0yKa7N7Qy9aI0/WKH6r+Fb964rn+81KBAGvBuIF3NnzuEuYmIsAzcaJg
+        gJ1p+xQ/dHPAr6O7bCW/A3ipd7pZ9Hdso3M0+13Cl5VWZh2ZTo7PlYrcePxbrdtrJyy7ioORMNki/
+        3lym4fq7A==;
+Received: from [2601:1c0:6280:3f0::5a22]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iWtvM-0000Up-M6; Tue, 19 Nov 2019 03:11:28 +0000
+Subject: Re: [PATCH V13 3/6] mdev: move to drivers/
+To:     Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com,
+        gregkh@linuxfoundation.org, jgg@mellanox.com
+Cc:     netdev@vger.kernel.org, cohuck@redhat.com,
+        maxime.coquelin@redhat.com, cunming.liang@intel.com,
+        zhihong.wang@intel.com, rob.miller@broadcom.com,
+        xiao.w.wang@intel.com, haotian.wang@sifive.com,
+        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
+        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
+        farman@linux.ibm.com, pasic@linux.ibm.com, sebott@linux.ibm.com,
+        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
+        gor@linux.ibm.com, borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, eperezma@redhat.com,
+        lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
+        stefanha@redhat.com, hch@infradead.org, aadam@redhat.com,
+        jakub.kicinski@netronome.com, jiri@mellanox.com,
+        jeffrey.t.kirsher@intel.com
+References: <20191118105923.7991-1-jasowang@redhat.com>
+ <20191118105923.7991-4-jasowang@redhat.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <195f2686-752c-67f0-0dba-04178a6f5dda@infradead.org>
+Date:   Mon, 18 Nov 2019 19:11:26 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191111081628.GB14058@bobrowski>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191118105923.7991-4-jasowang@redhat.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 07:16:29PM +1100, Matthew Bobrowski wrote:
-> On Fri, Nov 08, 2019 at 11:31:48AM +0100, Jan Kara wrote:
-> > On Thu 07-11-19 10:54:10, syzbot wrote:
-> > > syzbot found the following crash on:
-> > > 
-> > > HEAD commit:    c68c5373 Add linux-next specific files for 20191107
-> > > git tree:       linux-next
-> > > console output: https://syzkaller.appspot.com/x/log.txt?x=13d6bcfce00000
-> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=742545dcdea21726
-> > > dashboard link: https://syzkaller.appspot.com/bug?extid=991400e8eba7e00a26e1
-> > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1529829ae00000
-> > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16a55c0ce00000
-> > > 
-> > > The bug was bisected to:
-> > > 
-> > > commit b1b4705d54abedfd69dcdf42779c521aa1e0fbd3
-> > > Author: Matthew Bobrowski <mbobrowski@mbobrowski.org>
-> > > Date:   Tue Nov 5 12:01:37 2019 +0000
-> > > 
-> > >     ext4: introduce direct I/O read using iomap infrastructure
-> > 
-> > Hum, interesting and from the first looks the problem looks real.
-> > Deciphered reproducer is:
-> > 
-> > int fd0 = open("./file0", O_RDWR | O_CREAT | O_EXCL | O_DIRECT, 0);
-> > int fd1 = open("./file0, O_RDONLY);
-> > write(fd0, "some_data...", 512);
-> > sendfile(fd0, fd1, NULL, 0x7fffffa7);
-> >   -> this is interesting as it will result in reading data from 'file0' at
-> >      offset X with buffered read and writing them with direct write to
-> >      offset X+512. So this way we'll grow the file up to those ~2GB in
-> >      512-byte chunks.
-> > - not sure if we ever get there but the remainder of the reproducer is:
-> > fd2 = open("./file0", O_RDWR | O_CREAT | O_NOATIME | O_SYNC, 0);
-> > sendfile(fd2, fd0, NULL, 0xffffffff)
-> >   -> doesn't seem too interesting as fd0 is at EOF so this shouldn't do
-> >      anything.
-> > 
-> > Matthew, can you have a look?
-> 
-> Sorry Jan, I've been crazy busy lately and I'm out at training this
-> week. Let me take a look at this and see whether I can determine
-> what's happening here.
-> 
+On 11/18/19 2:59 AM, Jason Wang wrote:
+> diff --git a/drivers/mdev/Kconfig b/drivers/mdev/Kconfig
+> new file mode 100644
+> index 000000000000..4561f2d4178f
+> --- /dev/null
+> +++ b/drivers/mdev/Kconfig
+> @@ -0,0 +1,19 @@
+> +
+> +config MDEV
+> +	tristate "Mediated device driver framework"
+> +	default n
+> +	help
+> +	  Provides a framework to virtualize devices.
+> +
+> +	  If you don't know what do here, say N.
+> +
+> +config VFIO_MDEV
+> +	tristate "VFIO Mediated device driver"
+> +        depends on VFIO && MDEV
+> +        default n
 
-FYI, syzbot is still seeing this on linux-next.
+Use tab on the 2 lines above, not spaces.
 
-Also, a new thread was started to discuss this:
-https://lkml.kernel.org/linux-ext4/20191113180032.GB12013@quack2.suse.cz/T/#u
-(Mentioning this in case anyone is following this thread only.)
+> +	help
+> +	  Proivdes a mediated BUS for userspace driver through VFIO
 
-- Eric
+	  Provides
+
+> +	  framework. See Documentation/vfio-mediated-device.txt for
+> +	  more details.
+> +
+> +	  If you don't know what do here, say N.
+
+
+-- 
+~Randy
+
