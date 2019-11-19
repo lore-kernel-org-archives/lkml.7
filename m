@@ -2,87 +2,109 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A34C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 20:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94CA2C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 21:00:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EF6F22445
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 20:56:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C70A2245B
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 21:00:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TVxgZNeJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727173AbfKSU4w (ORCPT
+        id S1727222AbfKSVAn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 15:56:52 -0500
-Received: from mx2.suse.de ([195.135.220.15]:50354 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726711AbfKSU4v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 15:56:51 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 4F97FAC84;
-        Tue, 19 Nov 2019 20:56:50 +0000 (UTC)
-Subject: Re: [PATCH v4 2/8] irqchip: Add Realtek RTD1295 mux driver
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     linux-realtek-soc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Aleix Roca Nonell <kernelrocks@gmail.com>,
-        James Tai <james.tai@realtek.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>
-References: <20191119021917.15917-1-afaerber@suse.de>
- <20191119021917.15917-3-afaerber@suse.de>
- <a34e00cac16899b53d0b6445f0e81f4c@www.loen.fr>
-From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Organization: SUSE Software Solutions Germany GmbH
-Message-ID: <e98364c5-a859-7981-8ccf-f8e5b5069379@suse.de>
-Date:   Tue, 19 Nov 2019 21:56:48 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Tue, 19 Nov 2019 16:00:43 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54754 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726711AbfKSVAm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 16:00:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574197241;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=SfJF//RHUtnN8ZNiGvqInwcMiBwPOPwFchLayKBNSGc=;
+        b=TVxgZNeJuEOgJeifBEsxqo+AMXXDG90IKKM1SYShaYH0u/EVSPvDeg2FTLD4rw3lGqKLne
+        L6IkgI0YtmCUn9r9PqjgLsJY9qTnCGEputjRBphpw1bwfAO47E/9giSJMdHG+pku9huMa7
+        GzrpwYrznWwZo/aoezYjWVAWmBZ+RGw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-232-pV0OOeMxP9Sn97oUKzHXYA-1; Tue, 19 Nov 2019 16:00:40 -0500
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 05D14477;
+        Tue, 19 Nov 2019 21:00:39 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-161.rdu2.redhat.com [10.10.120.161])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A8FB962926;
+        Tue, 19 Nov 2019 21:00:37 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+ Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+ Kingdom.
+ Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH] afs: Fix missing timeout reset
+From:   David Howells <dhowells@redhat.com>
+To:     torvalds@linux-foundation.org
+Cc:     dhowells@redhat.com, marc.dionne@auristor.com,
+        linux-afs@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Tue, 19 Nov 2019 21:00:36 +0000
+Message-ID: <157419723680.5784.6298499053943932392.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-In-Reply-To: <a34e00cac16899b53d0b6445f0e81f4c@www.loen.fr>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-MC-Unique: pV0OOeMxP9Sn97oUKzHXYA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 19.11.19 um 13:01 schrieb Marc Zyngier:
-> On 2019-11-19 02:19, Andreas Färber wrote:
->> +static void rtd1195_mux_enable_irq(struct irq_data *data)
->> +{
->> +    struct rtd1195_irq_mux_data *mux_data =
->> irq_data_get_irq_chip_data(data);
->> +    unsigned long flags;
->> +    u32 mask;
->> +
->> +    mask = mux_data->info->isr_to_int_en_mask[data->hwirq];
->> +    if (!mask)
->> +        return;
-> 
-> How can this happen? You've mapped the interrupt, so it exists.
-> I can't see how you can decide to fail such enable.
+In afs_wait_for_call_to_complete(), rather than immediately aborting an
+operation if a signal occurs, the code attempts to wait for it to complete,
+using a schedule timeout of 2*RTT (or min 2 jiffies) and a check that we're
+still receiving relevant packets from the server before we consider
+aborting the call.  We may even ping the server to check on the status of
+the call.
 
-The [UMSK_]ISR bits and the SCPU_INT_EN bits are not (all) the same.
+However, there's a missing timeout reset in the event that we do actually
+get a packet to process, such that if we then get a couple of short stalls,
+we then time out when progress is actually being made.
 
-My ..._isr_to_scpu_int_en[] arrays have 32 entries for O(1) lookup, but
-are sparsely populated. So there are circumstances such as WDOG_NMI as
-well as reserved bits that we cannot enable. This check should be
-identical to v3; the equivalent mask check inside the interrupt handler
-was extended with "mask &&" to do the same in this v4.
+Fix this by resetting the timeout any time we get something to process.  If
+it's the failure of the call then the call state will get changed and we'll
+exit the loop shortly thereafter.
 
-The other question I'll need to dig into, it's been two years since I
-wrote that code - first very simple guesswork, then more elaborate
-quirks like the above.
+A symptom of this is data fetches and stores failing with EINTR when they
+really shouldn't.
 
-Regards,
-Andreas
+Fixes: bc5e3a546d55 ("rxrpc: Use MSG_WAITALL to tell sendmsg() to temporari=
+ly ignore signals")
+Signed-off-by: David Howells <dhowells@redhat.com>
+Reviewed-by: Marc Dionne <marc.dionne@auristor.com>
+---
 
--- 
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer
-HRB 36809 (AG Nürnberg)
+ fs/afs/rxrpc.c |    1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/fs/afs/rxrpc.c b/fs/afs/rxrpc.c
+index 0e5269374ac1..61498d9f06ef 100644
+--- a/fs/afs/rxrpc.c
++++ b/fs/afs/rxrpc.c
+@@ -637,6 +637,7 @@ long afs_wait_for_call_to_complete(struct afs_call *cal=
+l,
+ =09=09=09call->need_attention =3D false;
+ =09=09=09__set_current_state(TASK_RUNNING);
+ =09=09=09afs_deliver_to_call(call);
++=09=09=09timeout =3D rtt2;
+ =09=09=09continue;
+ =09=09}
+=20
+
