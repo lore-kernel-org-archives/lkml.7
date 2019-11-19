@@ -2,107 +2,113 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6666C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:24:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70113C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:24:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B81920730
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:24:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iwVghIqJ"
+	by mail.kernel.org (Postfix) with ESMTP id 50FE820730
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 12:24:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727783AbfKSMYC (ORCPT
+        id S1727885AbfKSMYM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 07:24:02 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:53134 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725798AbfKSMYC (ORCPT
+        Tue, 19 Nov 2019 07:24:12 -0500
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:42887 "EHLO
+        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725798AbfKSMYM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 07:24:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574166240;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=C6C32uts1Uhc4+2A9laxGruBZKmAzLGPWUERpPutUIA=;
-        b=iwVghIqJ9HGYxxOhlo+BqeC7KQVXwOvBp/5rrXhU5UFiasJBM2dlg9LEUqa8PL1RyxO1P7
-        A9cF1cKXvXWxH+tVuTFX8SK2dkXA5m1opyPMADFTsFJUEcL95ArU7crJy8iUwZbB+lzjsH
-        3FYsqHUW2Qwmp+kd6tAsz9xOMCWYIao=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-308-HfaLaDUnOAK8q8zgiYEWmg-1; Tue, 19 Nov 2019 07:23:57 -0500
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8B883800686;
-        Tue, 19 Nov 2019 12:23:56 +0000 (UTC)
-Received: from [10.36.117.126] (ovpn-117-126.ams2.redhat.com [10.36.117.126])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6F4714DA10;
-        Tue, 19 Nov 2019 12:23:55 +0000 (UTC)
-Subject: Re: [PATCH 1/2] mm/memory-failure.c: PageHuge is handled at the
- beginning of memory_failure
-To:     Wei Yang <richardw.yang@linux.intel.com>,
-        n-horiguchi@ah.jp.nec.com, akpm@linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20191118082003.26240-1-richardw.yang@linux.intel.com>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat GmbH
-Message-ID: <1e61c115-5787-9ef4-a449-2e490c53fca7@redhat.com>
-Date:   Tue, 19 Nov 2019 13:23:54 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Tue, 19 Nov 2019 07:24:12 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R861e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0TiYlW.J_1574166244;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TiYlW.J_1574166244)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 19 Nov 2019 20:24:04 +0800
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+To:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org,
+        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
+        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
+        yang.shi@linux.alibaba.com, willy@infradead.org,
+        shakeelb@google.com, hannes@cmpxchg.org
+Cc:     Alex Shi <alex.shi@linux.alibaba.com>
+Subject: [PATCH v4 0/9] per lruvec lru_lock for memcg
+Date:   Tue, 19 Nov 2019 20:23:14 +0800
+Message-Id: <1574166203-151975-1-git-send-email-alex.shi@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-In-Reply-To: <20191118082003.26240-1-richardw.yang@linux.intel.com>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-MC-Unique: HfaLaDUnOAK8q8zgiYEWmg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18.11.19 09:20, Wei Yang wrote:
-> PageHuge is handled by memory_failure_hugetlb(), so this case could be
-> removed.
->=20
-> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
-> ---
->   mm/memory-failure.c | 5 +----
->   1 file changed, 1 insertion(+), 4 deletions(-)
->=20
-> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-> index 3151c87dff73..392ac277b17d 100644
-> --- a/mm/memory-failure.c
-> +++ b/mm/memory-failure.c
-> @@ -1359,10 +1359,7 @@ int memory_failure(unsigned long pfn, int flags)
->   =09 * page_remove_rmap() in try_to_unmap_one(). So to determine page st=
-atus
->   =09 * correctly, we save a copy of the page flags at this time.
->   =09 */
-> -=09if (PageHuge(p))
-> -=09=09page_flags =3D hpage->flags;
-> -=09else
-> -=09=09page_flags =3D p->flags;
-> +=09page_flags =3D p->flags;
->  =20
->   =09/*
->   =09 * unpoison always clear PG_hwpoison inside page lock
->=20
+Hi all,
 
-I somewhat miss a proper explanation why this is safe to do. We access=20
-page flags here, so why is it safe to refer to the ones of the sub-page?
+This patchset move lru_lock into lruvec, give a lru_lock for each of
+lruvec, thus bring a lru_lock for each of memcg per node.
 
---=20
+According to Daniel Jordan's suggestion, I run 64 'dd' with on 32
+containers on my 2s* 8 core * HT box with the modefied case:
+  https://git.kernel.org/pub/scm/linux/kernel/git/wfg/vm-scalability.git/tree/case-lru-file-readtwice
 
-Thanks,
+With this change above lru_lock censitive testing improved 17% with multiple
+containers scenario. And no performance lose w/o mem_cgroup.
 
-David / dhildenb
+Thanks Hugh Dickins and Konstantin Khlebnikov, they both brought the same idea
+7 years ago. Now I believe considering my testing result, and google internal
+using fact. This feature is clearly benefit multi-container users.
+
+So I'd like to introduce it here.
+
+Thanks all the comments from Hugh Dickins, Konstantin Khlebnikov, Daniel Jordan, 
+Johannes Weiner, Mel Gorman, Shakeel Butt, Rong Chen, Fengguang Wu, Yun Wang etc.
+
+v4: 
+  a, fix the page->mem_cgroup dereferencing issue, thanks Johannes Weiner
+  b, remove the irqsave flags changes, thanks Metthew Wilcox
+  c, merge/split patches for better understanding and bisection purpose
+
+v3: rebase on linux-next, and fold the relock fix patch into introduceing patch
+
+v2: bypass a performance regression bug and fix some function issues
+
+v1: initial version, aim testing show 5% performance increase
+
+
+Alex Shi (9):
+  mm/swap: fix uninitialized compiler warning
+  mm/huge_memory: fix uninitialized compiler warning
+  mm/lru: replace pgdat lru_lock with lruvec lock
+  mm/mlock: only change the lru_lock iff page's lruvec is different
+  mm/swap: only change the lru_lock iff page's lruvec is different
+  mm/vmscan: only change the lru_lock iff page's lruvec is different
+  mm/pgdat: remove pgdat lru_lock
+  mm/lru: likely enhancement
+  mm/lru: revise the comments of lru_lock
+
+ Documentation/admin-guide/cgroup-v1/memcg_test.rst | 15 +----
+ Documentation/admin-guide/cgroup-v1/memory.rst     |  6 +-
+ Documentation/trace/events-kmem.rst                |  2 +-
+ Documentation/vm/unevictable-lru.rst               | 22 +++----
+ include/linux/memcontrol.h                         | 68 ++++++++++++++++++++
+ include/linux/mm_types.h                           |  2 +-
+ include/linux/mmzone.h                             |  5 +-
+ mm/compaction.c                                    | 67 +++++++++++++------
+ mm/filemap.c                                       |  4 +-
+ mm/huge_memory.c                                   | 17 ++---
+ mm/memcontrol.c                                    | 75 +++++++++++++++++-----
+ mm/mlock.c                                         | 27 ++++----
+ mm/mmzone.c                                        |  1 +
+ mm/page_alloc.c                                    |  1 -
+ mm/page_idle.c                                     |  5 +-
+ mm/rmap.c                                          |  2 +-
+ mm/swap.c                                          | 74 +++++++++------------
+ mm/vmscan.c                                        | 74 ++++++++++-----------
+ 18 files changed, 287 insertions(+), 180 deletions(-)
+
+-- 
+1.8.3.1
 
