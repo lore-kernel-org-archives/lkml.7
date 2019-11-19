@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 418CBC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:05:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96243C33CA0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:06:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D5CB2082F
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:05:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A2AC2082F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:06:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574143553;
-	bh=COVWsDCNKbR38Yw+05vHLBxceN6cUCoS+2GIdiYO/IE=;
+	s=default; t=1574143560;
+	bh=LthHNK7NLU//nPk0VbPBWYGPgKRhhbxZ34wx4xWUD1E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qsF8bDoIPtoFr774SUbFVgFFG6WnND7EWCa7JdbJty6+LCt6RioVL4euLOeo/gQJq
-	 UcchYsEjYA34Qz8KhDRSeimXYvJHBOXS/kTFX91kgUrUTD1otKSJh0EeB3DAZqBNPk
-	 1fCUfdhY14EwPCE4wR3DbZNUY2V0EZfhEQjkTluQ=
+	b=G8esKNiKyrfLauGpqjQ6cA+3InQjHIsJmAN/YkRVrdWevEqPHRqsmw+wO2JswNasD
+	 ajJdhSFvObE8cD0Mh2Kvnn3kGNyQghH5LEXpO2WBxI5JNvrQqyOEC6IVdQDUZgpEuq
+	 RKZwE/upLOvBktCvhfsW4ft3e/hSkECX9rh7h9xo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729845AbfKSFfs (ORCPT
+        id S1729825AbfKSFfb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:35:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56742 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:35:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728370AbfKSFfq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:35:46 -0500
+        id S1729802AbfKSFfZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:35:25 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD77B20862;
-        Tue, 19 Nov 2019 05:35:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB549206EC;
+        Tue, 19 Nov 2019 05:35:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141745;
-        bh=COVWsDCNKbR38Yw+05vHLBxceN6cUCoS+2GIdiYO/IE=;
+        s=default; t=1574141724;
+        bh=LthHNK7NLU//nPk0VbPBWYGPgKRhhbxZ34wx4xWUD1E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mCiTWyp0g4/jRW1HfbRpPopYZVaePxioQFuQlh00dkaOmad/K0S9J15hF9UG0D2yC
-         FWJ93OGksyYATiookJyEtHOWbXnA6vMwlKfUJpKB7dl2lplvoQdjDArkkV413VHyD2
-         vp/IQ9oaFo5YheqqKO33sLZmM1l4y1NHPw5SQEK0=
+        b=0n4NjOm022sxhv/99OcsXRP44UujDUMtT5lWhQJ431eUukElHfNcw2gk4z9TgVudB
+         +Q1LOjEJsWR+sZfSorJMTAlJHWvqGUoTHpjmtwoQGsn8HC+hziHuKsN/eybTYad4xP
+         CQDlCas712i12bk77fBnokkpQ1qgkIuK8/QyO1MM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nathan Fontenot <nfont@linux.vnet.ibm.com>,
-        Tyrel Datwyler <tyreld@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 264/422] powerpc/pseries: Disable CPU hotplug across migrations
-Date:   Tue, 19 Nov 2019 06:17:41 +0100
-Message-Id: <20191119051416.098423218@linuxfoundation.org>
+Subject: [PATCH 4.19 258/422] net: cavium: fix return type of ndo_start_xmit function
+Date:   Tue, 19 Nov 2019 06:17:35 +0100
+Message-Id: <20191119051415.705616949@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -61,51 +60,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Fontenot <nfont@linux.vnet.ibm.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 85a88cabad57d26d826dd94ea34d3a785824d802 ]
+[ Upstream commit ac1172dea10b6ba51de9346d3130db688b5196c5 ]
 
-When performing partition migrations all present CPUs must be online
-as all present CPUs must make the H_JOIN call as part of the migration
-process. Once all present CPUs make the H_JOIN call, one CPU is returned
-to make the rtas call to perform the migration to the destination system.
+The method ndo_start_xmit() is defined as returning an 'netdev_tx_t',
+which is a typedef for an enum type, so make sure the implementation in
+this driver has returns 'netdev_tx_t' value, and change the function
+return type to netdev_tx_t.
 
-During testing of migration and changing the SMT state we have found
-instances where CPUs are offlined, as part of the SMT state change,
-before they make the H_JOIN call. This results in a hung system where
-every CPU is either in H_JOIN or offline.
+Found by coccinelle.
 
-To prevent this this patch disables CPU hotplug during the migration
-process.
-
-Signed-off-by: Nathan Fontenot <nfont@linux.vnet.ibm.com>
-Reviewed-by: Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/rtas.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/cavium/liquidio/lio_main.c    | 2 +-
+ drivers/net/ethernet/cavium/liquidio/lio_vf_main.c | 2 +-
+ drivers/net/ethernet/cavium/liquidio/lio_vf_rep.c  | 5 +++--
+ drivers/net/ethernet/cavium/octeon/octeon_mgmt.c   | 5 +++--
+ 4 files changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/arch/powerpc/kernel/rtas.c b/arch/powerpc/kernel/rtas.c
-index 9e41a9de43235..95d1264ba7952 100644
---- a/arch/powerpc/kernel/rtas.c
-+++ b/arch/powerpc/kernel/rtas.c
-@@ -985,6 +985,7 @@ int rtas_ibm_suspend_me(u64 handle)
- 		goto out;
- 	}
+diff --git a/drivers/net/ethernet/cavium/liquidio/lio_main.c b/drivers/net/ethernet/cavium/liquidio/lio_main.c
+index 6fb13fa73b271..304e4b9436276 100644
+--- a/drivers/net/ethernet/cavium/liquidio/lio_main.c
++++ b/drivers/net/ethernet/cavium/liquidio/lio_main.c
+@@ -2324,7 +2324,7 @@ static inline int send_nic_timestamp_pkt(struct octeon_device *oct,
+  * @returns whether the packet was transmitted to the device okay or not
+  *             (NETDEV_TX_OK or NETDEV_TX_BUSY)
+  */
+-static int liquidio_xmit(struct sk_buff *skb, struct net_device *netdev)
++static netdev_tx_t liquidio_xmit(struct sk_buff *skb, struct net_device *netdev)
+ {
+ 	struct lio *lio;
+ 	struct octnet_buf_free_info *finfo;
+diff --git a/drivers/net/ethernet/cavium/liquidio/lio_vf_main.c b/drivers/net/ethernet/cavium/liquidio/lio_vf_main.c
+index b77835724dc84..d83773bc0dd7f 100644
+--- a/drivers/net/ethernet/cavium/liquidio/lio_vf_main.c
++++ b/drivers/net/ethernet/cavium/liquidio/lio_vf_main.c
+@@ -1390,7 +1390,7 @@ static int send_nic_timestamp_pkt(struct octeon_device *oct,
+  * @returns whether the packet was transmitted to the device okay or not
+  *             (NETDEV_TX_OK or NETDEV_TX_BUSY)
+  */
+-static int liquidio_xmit(struct sk_buff *skb, struct net_device *netdev)
++static netdev_tx_t liquidio_xmit(struct sk_buff *skb, struct net_device *netdev)
+ {
+ 	struct octnet_buf_free_info *finfo;
+ 	union octnic_cmd_setup cmdsetup;
+diff --git a/drivers/net/ethernet/cavium/liquidio/lio_vf_rep.c b/drivers/net/ethernet/cavium/liquidio/lio_vf_rep.c
+index c99b59fe4c8fb..a1bda1683ebfc 100644
+--- a/drivers/net/ethernet/cavium/liquidio/lio_vf_rep.c
++++ b/drivers/net/ethernet/cavium/liquidio/lio_vf_rep.c
+@@ -31,7 +31,8 @@
  
-+	cpu_hotplug_disable();
- 	stop_topology_update();
+ static int lio_vf_rep_open(struct net_device *ndev);
+ static int lio_vf_rep_stop(struct net_device *ndev);
+-static int lio_vf_rep_pkt_xmit(struct sk_buff *skb, struct net_device *ndev);
++static netdev_tx_t lio_vf_rep_pkt_xmit(struct sk_buff *skb,
++				       struct net_device *ndev);
+ static void lio_vf_rep_tx_timeout(struct net_device *netdev);
+ static int lio_vf_rep_phys_port_name(struct net_device *dev,
+ 				     char *buf, size_t len);
+@@ -382,7 +383,7 @@ lio_vf_rep_packet_sent_callback(struct octeon_device *oct,
+ 		netif_wake_queue(ndev);
+ }
  
- 	/* Call function on all CPUs.  One of us will make the
-@@ -999,6 +1000,7 @@ int rtas_ibm_suspend_me(u64 handle)
- 		printk(KERN_ERR "Error doing global join\n");
+-static int
++static netdev_tx_t
+ lio_vf_rep_pkt_xmit(struct sk_buff *skb, struct net_device *ndev)
+ {
+ 	struct lio_vf_rep_desc *vf_rep = netdev_priv(ndev);
+diff --git a/drivers/net/ethernet/cavium/octeon/octeon_mgmt.c b/drivers/net/ethernet/cavium/octeon/octeon_mgmt.c
+index 592fb9e847b95..0957e735cdc4d 100644
+--- a/drivers/net/ethernet/cavium/octeon/octeon_mgmt.c
++++ b/drivers/net/ethernet/cavium/octeon/octeon_mgmt.c
+@@ -1268,12 +1268,13 @@ static int octeon_mgmt_stop(struct net_device *netdev)
+ 	return 0;
+ }
  
- 	start_topology_update();
-+	cpu_hotplug_enable();
+-static int octeon_mgmt_xmit(struct sk_buff *skb, struct net_device *netdev)
++static netdev_tx_t
++octeon_mgmt_xmit(struct sk_buff *skb, struct net_device *netdev)
+ {
+ 	struct octeon_mgmt *p = netdev_priv(netdev);
+ 	union mgmt_port_ring_entry re;
+ 	unsigned long flags;
+-	int rv = NETDEV_TX_BUSY;
++	netdev_tx_t rv = NETDEV_TX_BUSY;
  
- 	/* Take down CPUs not online prior to suspend */
- 	cpuret = rtas_offline_cpus_mask(offline_mask);
+ 	re.d64 = 0;
+ 	re.s.tstamp = ((skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) != 0);
 -- 
 2.20.1
 
