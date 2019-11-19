@@ -2,145 +2,85 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C59DC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:09:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68E65C43215
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:10:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7111C222B3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:09:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11EB42230F
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 10:10:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kPWwFSfn"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="Hi6LHHBy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727695AbfKSKJF (ORCPT
+        id S1727474AbfKSKKQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 05:09:05 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:32855 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727016AbfKSKJF (ORCPT
+        Tue, 19 Nov 2019 05:10:16 -0500
+Received: from ssl.serverraum.org ([176.9.125.105]:34793 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725280AbfKSKKQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 05:09:05 -0500
-Received: by mail-qk1-f195.google.com with SMTP id 71so17266936qkl.0
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 02:09:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kthzsFDv3BtXMmmJRQd1qCPqKASHhxamk1aLgY0fuLQ=;
-        b=kPWwFSfnlnu9XmSpJkG19s/iNALUrvrShZ1C2Czk8j+q0g1ifRmXzjO7YHXd0Q1dOX
-         Ken9OddoZlUkmrM9m+umBzKw13kRR7mNzFg1wI+oC8dS+YLk616rxc5Sg81P5atJpGYd
-         qSO9RCZZX9iN4OJKVboKydfL/0ODVcP/UVn+Ts03/6e7WHZEzvm/d7lj5rlvE/wBFAAM
-         VyYt0jJPsXOrT4UMMEdVd5dQ6guTn7n0ZMGStIqBOF5PwnXSg/TNiFkg31py0Zypjp5j
-         vrSh7+Qq3R1ZqjtFGdovVZ0OaPYXl/RW7Jox8/Ua90XBVBAgc/coO/Zw1cCQa2J3oKOU
-         Ydhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kthzsFDv3BtXMmmJRQd1qCPqKASHhxamk1aLgY0fuLQ=;
-        b=rBssdqwarEdujCU6mj/B1h8u7wRvxdtYSgdnTCf/jK3+TVz8yeXQoKDfCFvV9/0BNW
-         XjJRundFvd5GzlT7gdMgEjZR9rgvNArRQ4IR+ufIaW4QYWxRnrVC9ytiSdDXlSzKiDxB
-         WrtuhD2G9TA04Z9fNaIEwbM5qIOAJPyQlvZeoeKvDGh73afuLLn7FJkbg9/Mz4ybP5ak
-         Swg8svo0CIzopNRRLQlPHB0ZWKFYR1SDvLQX6MZNseBlnrt9uB6UibPvSbqejta7iafN
-         8ZaoTm3HV2ywjRMO1KYX+F+33AH1yNvNYFqfiysJA3rFNBsce0vj1mhK7lJM0lTIfLbl
-         tBig==
-X-Gm-Message-State: APjAAAXlZV1o3nV1C5WV8z5mbSiXlh2Bmu/sjsVhSln7W27Q1D+30zP/
-        45+g9mVewfvtk0LrfMkiRF+rzhYR7HPTbfmYTmaEOA==
-X-Google-Smtp-Source: APXvYqz3sW+a1UoaZIdKYgIlbIKJ5VYWfPjuUI7mT8jMQMykt/NPr28fXvPHFDM4PpsUCVdsAZOz5StnaJQW1bzfBxo=
-X-Received: by 2002:a37:6156:: with SMTP id v83mr27936505qkb.43.1574158143641;
- Tue, 19 Nov 2019 02:09:03 -0800 (PST)
+        Tue, 19 Nov 2019 05:10:16 -0500
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 1A1CD23E27;
+        Tue, 19 Nov 2019 11:10:14 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc;
+        s=mail2016061301; t=1574158214;
+        bh=2gjaAluYE5S671JdpVIbeRx1/CVxFO29m3oWfUtycpY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=Hi6LHHBy2qIJem7KFASOPmhSvCuMPqbkuvnU6Pgxg8QcFXTg41roDgM8mMZlONRl/
+         YBdYLvVnSi2u1/zDZW7C/+7i1aF7pN570c/ORCzCIGd4s/GEarTgWVOGr30XVDFlY1
+         O1pH51ETD1qoT4oKCIOoc5vSf647aMU9odpK+1Os=
 MIME-Version: 1.0
-References: <0000000000005c08d10597a3a05d@google.com> <a5f73d92-fdf2-2590-c863-39a181dca8e1@hartkopp.net>
- <deedd609-6f3b-8035-47e1-252ab221faa1@pengutronix.de> <7934bc2b-597f-0bb3-be2d-32f3b07b4de9@hartkopp.net>
- <7f5c4546-0c1a-86ae-581e-0203b5fca446@pengutronix.de> <1f7d6ea7-152e-ff18-549c-b196d8b5e3a7@hartkopp.net>
-In-Reply-To: <1f7d6ea7-152e-ff18-549c-b196d8b5e3a7@hartkopp.net>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Tue, 19 Nov 2019 11:08:52 +0100
-Message-ID: <CACT4Y+acOwzqwrJ1OSStRkvdxsmM4RY6mz4qDEFAUpMM2P-FiQ@mail.gmail.com>
-Subject: Re: KMSAN: uninit-value in can_receive
-To:     Oliver Hartkopp <socketcan@hartkopp.net>,
-        Alexander Potapenko <glider@google.com>
-Cc:     Marc Kleine-Budde <mkl@pengutronix.de>,
-        syzbot <syzbot+b02ff0707a97e4e79ebb@syzkaller.appspotmail.com>,
-        David Miller <davem@davemloft.net>, linux-can@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 19 Nov 2019 11:10:14 +0100
+From:   Michael Walle <michael@walle.cc>
+To:     olteanv@gmail.com
+Cc:     bgolaszewski@baylibre.com, linus.walleij@linaro.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        vladimir.oltean@nxp.com
+Subject: Re: [PATCH] gpio: mpc8xxx: Don't overwrite default irq_set_type
+ callback
+In-Reply-To: <20191115125551.31061-1-olteanv@gmail.com>
+Message-ID: <81c15c43b1d1228a0d015f232ce7ec46@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.8
+X-Virus-Scanned: clamav-milter 0.101.4 at web
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 8:36 AM Oliver Hartkopp <socketcan@hartkopp.net> wrote:
-> On 18/11/2019 22.15, Marc Kleine-Budde wrote:
-> > On 11/18/19 9:49 PM, Oliver Hartkopp wrote:
-> >>
-> >>
-> >> On 18/11/2019 21.29, Marc Kleine-Budde wrote:
-> >>> On 11/18/19 9:25 PM, Oliver Hartkopp wrote:
-> >>
-> >>>>> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> >>>>> Reported-by: syzbot+b02ff0707a97e4e79ebb@syzkaller.appspotmail.com
-> >>>>>
-> >>>>> =====================================================
-> >>>>> BUG: KMSAN: uninit-value in can_receive+0x23c/0x5e0 net/can/af_can.c:649
-> >>>>> CPU: 1 PID: 3490 Comm: syz-executor.2 Not tainted 5.4.0-rc5+ #0
-> >>
-> >>>>
-> >>>> In line 649 of 5.4.0-rc5+ we can find a while() statement:
-> >>>>
-> >>>> while (!(can_skb_prv(skb)->skbcnt))
-> >>>>    can_skb_prv(skb)->skbcnt = atomic_inc_return(&skbcounter);
-> >>>>
-> >>>> In linux/include/linux/can/skb.h we see:
-> >>>>
-> >>>> static inline struct can_skb_priv *can_skb_prv(struct sk_buff *skb)
-> >>>> {
-> >>>>    return (struct can_skb_priv *)(skb->head);
-> >>>> }
-> >>>>
-> >>>> IMO accessing can_skb_prv(skb)->skbcnt at this point is a valid
-> >>>> operation which has no uninitialized value.
-> >>>>
-> >>>> Can this probably be a false positive of KMSAN?
-> >>>
-> >>> The packet is injected via the packet socket into the kernel. Where does
-> >>> skb->head point to in this case? When the skb is a proper
-> >>> kernel-generated skb containing a CAN-2.0 or CAN-FD frame skb->head is
-> >>> maybe properly initialized?
-> >>
-> >> The packet is either received via vcan or vxcan which checks via
-> >> can_dropped_invalid_skb() if we have a valid ETH_P_CAN type skb.
-> >
-> > According to the call stack it's injected into the kernel via a packet
-> > socket and not via v(x)can.
->
-> See ioctl$ifreq https://syzkaller.appspot.com/x/log.txt?x=14563416e00000
->
-> 23:11:34 executing program 2:
-> r0 = socket(0x200000000000011, 0x3, 0x0)
-> ioctl$ifreq_SIOCGIFINDEX_vcan(r0, 0x8933,
-> &(0x7f0000000040)={'vxcan1\x00', <r1=>0x0})
-> bind$packet(r0, &(0x7f0000000300)={0x11, 0xc, r1}, 0x14)
-> sendmmsg(r0, &(0x7f0000000d00), 0x400004e, 0x0)
->
-> We only can receive skbs from (v(x))can devices.
-> No matter if someone wrote to them via PF_CAN or PF_PACKET.
-> We check for ETH_P_CAN(FD) type and ARPHRD_CAN dev type at rx time.
->
-> >> We additionally might think about introducing a check whether we have a
-> >> can_skb_reserve() created skbuff.
-> >>
-> >> But even if someone forged a skbuff without this reserved space the
-> >> access to can_skb_prv(skb)->skbcnt would point into some CAN frame
-> >> content - which is still no access to uninitialized content, right?
->
-> So this question remains still valid whether we have a false positive
-> from KMSAN here.
+> The per-SoC devtype structures can contain their own callbacks that
+> overwrite mpc8xxx_gpio_devtype_default.
+> 
+> The clear intention is that mpc8xxx_irq_set_type is used in case the 
+> SoC
+> does not specify a more specific callback. But what happens is that if
+> the SoC doesn't specify one, its .irq_set_type is de-facto NULL, and
+> this overwrites mpc8xxx_irq_set_type to a no-op. This means that the
+> following SoCs are affected:
+> 
+> - fsl,mpc8572-gpio
+> - fsl,ls1028a-gpio
+> - fsl,ls1088a-gpio
+> 
+> On these boards, the irq_set_type does exactly nothing, and the GPIO
+> controller keeps its GPICR register in the hardware-default state. On
+> the LS1028A, that is ACTIVE_BOTH, which means 2 interrupts are raised
+> even if the IRQ client requests LEVEL_HIGH. Another implication is that
+> the IRQs are not checked (e.g. level-triggered interrupts are not
+> rejected, although they are not supported).
+> 
+> Fixes: 82e39b0d8566 ("gpio: mpc8xxx: handle differences between 
+> incarnations at a single place")
+> Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-+Alex, please check re KMSAN false positive.
-Oliver, Marc, where this skbcnt should have been initialized in this case?
+Tested-by: Michael Walle <michael@walle.cc>
