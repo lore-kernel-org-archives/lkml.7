@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46FFBC432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:31:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27056C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:31:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CE61208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:31:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3CB4222A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:31:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141485;
-	bh=KspOQ7OWR0/rKrKwCBWrNkPIFMC56qooUenNOLlMcYM=;
+	s=default; t=1574141488;
+	bh=ij0fpTMs+VIPq+Mtv/Rltj5I1qlhRyELJ2VMzh8RZxA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=seHDDBLN55LwllE4Kqx0dmznqgaCB6KpfEgOSoH8l6qrBFx+O1kxFGfYfIUhp+CPO
-	 f03toy8/7+uv+PvVRIBsKmJI51rNEEl3JVCNrRVscROPAbaWSTWzwtQ3D1Q9RxfmyA
-	 Nz1uDoMiX4KJQeLxYrOilJRRHsJF7qrKkgilSLlk=
+	b=EqjBNPhYma/fpRWGqY1S1QF7l1IF1wu3ET4ueB8qxX11GxqcZCLhDJrPhJ2cCHn8T
+	 jBk6BDxmGurjK/1y0/HjbHH2uUVg4RoPJWXFF9ZpZ0i370t63XVxOT6iiobHbfh4bo
+	 59GEhCQTjC3vPx7EnopcMyWzNjMgz4uZycd+5DbQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729257AbfKSFbX (ORCPT
+        id S1729268AbfKSFb1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:31:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50298 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:31:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50380 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729245AbfKSFbV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:31:21 -0500
+        id S1729245AbfKSFbY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:31:24 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D9E6208C3;
-        Tue, 19 Nov 2019 05:31:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05B9621939;
+        Tue, 19 Nov 2019 05:31:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141480;
-        bh=KspOQ7OWR0/rKrKwCBWrNkPIFMC56qooUenNOLlMcYM=;
+        s=default; t=1574141483;
+        bh=ij0fpTMs+VIPq+Mtv/Rltj5I1qlhRyELJ2VMzh8RZxA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JiF+NPj4zcwyxztZYleFRA7gcdZCmFtkHQVmw8kicraFm2eL1YEZq3rxbIskhhwpp
-         ZvzVObZY8EMCnSqKRD0dq7inacGkEqzVUlweiklFoRErakVOxxjTiKSmJVIovPigh/
-         u/1iIj2PlM/GDgxuiKVYbNl2yYd0Wohxs1JW5kKw=
+        b=2i6043sMOyRKRtlGQXNfzlk7s/ReVQe4hkFhJ1kGKiUrCErILx4khyBi0NNGUXb99
+         Fufur/poFOOKnvMc+Vb8KY7B4Kymj9FOdI65o/fp2M+50uksBao3MJ3LeHJKMlvZGd
+         Y+KeH5PKSDWoOuRaXUb0lhR/JHGqjc9NsBCEHJV4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sawan Chandak <sawan.chandak@cavium.com>,
+        stable@vger.kernel.org, Quinn Tran <quinn.tran@cavium.com>,
         Himanshu Madhani <himanshu.madhani@cavium.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 174/422] scsi: qla2xxx: Check for Register disconnect
-Date:   Tue, 19 Nov 2019 06:16:11 +0100
-Message-Id: <20191119051409.707280195@linuxfoundation.org>
+Subject: [PATCH 4.19 175/422] scsi: qla2xxx: Fix port speed display on chip reset
+Date:   Tue, 19 Nov 2019 06:16:12 +0100
+Message-Id: <20191119051409.774823299@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -61,33 +61,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sawan Chandak <sawan.chandak@cavium.com>
+From: Quinn Tran <quinn.tran@cavium.com>
 
-[ Upstream commit f99c5d294b3653e6ae563eaac5db5b4138afe31c ]
+[ Upstream commit 5d74c87a20adcc77b19753c315ad9c320b2288be ]
 
-During adapter shutdown process check for register disconnect before
-proceeding to call PCI functions.
+Clear port speed value on chip reset.
 
-Signed-off-by: Sawan Chandak <sawan.chandak@cavium.com>
+Signed-off-by: Quinn Tran <quinn.tran@cavium.com>
 Signed-off-by: Himanshu Madhani <himanshu.madhani@cavium.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_os.c | 1 +
+ drivers/scsi/qla2xxx/qla_init.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
-index d978ea1344625..3e892e013658d 100644
---- a/drivers/scsi/qla2xxx/qla_os.c
-+++ b/drivers/scsi/qla2xxx/qla_os.c
-@@ -1744,6 +1744,7 @@ __qla2x00_abort_all_cmds(struct qla_qpair *qp, int res)
- 				    !ha->flags.eeh_busy &&
- 				    (!test_bit(ABORT_ISP_ACTIVE,
- 					&vha->dpc_flags)) &&
-+				    !qla2x00_isp_reg_stat(ha) &&
- 				    (sp->type == SRB_SCSI_CMD)) {
- 					/*
- 					 * Don't abort commands in
+diff --git a/drivers/scsi/qla2xxx/qla_init.c b/drivers/scsi/qla2xxx/qla_init.c
+index 8f502505aa796..653d535e3052f 100644
+--- a/drivers/scsi/qla2xxx/qla_init.c
++++ b/drivers/scsi/qla2xxx/qla_init.c
+@@ -6502,6 +6502,7 @@ qla2x00_abort_isp_cleanup(scsi_qla_host_t *vha)
+ 	if (!(IS_P3P_TYPE(ha)))
+ 		ha->isp_ops->reset_chip(vha);
+ 
++	ha->link_data_rate = PORT_SPEED_UNKNOWN;
+ 	SAVE_TOPO(ha);
+ 	ha->flags.rida_fmt2 = 0;
+ 	ha->flags.n2n_ae = 0;
 -- 
 2.20.1
 
