@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63554C33C8C
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:08:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 946ACC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:08:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C4BE20672
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:08:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E40020672
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 06:08:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574143711;
-	bh=3mxGYgjOUmLHh+Ma6tUAavgz5Jr5Y9Xm0paYCjzN3B8=;
+	s=default; t=1574143721;
+	bh=OS2+qgrCbkCbhxnpunNNpc1RfxAu+IH0Z3mHb8Di0xg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=meXACX5CQFkr6AEp4/wzbM0kao36636LdyqNEpd9X+ecxZqQYIWaEFqWfBB8/RUXF
-	 xq2myhF9QxV3yaAQGfQrU//6DzvGePr43UYdMJv3aDo1zRAJQGc7Wh99dUiVjOatLJ
-	 32lHt8HPedl2DXvqooVps759fCbp3yDnH+eqNhb8=
+	b=cv8v/+bobUN3R+K/QtD08zZZy0o6qzWeRkcAJSPSOaqqZhmo8ZbQqqUvw8ipzdqgM
+	 mNc4yqJhhIQdLS+cJjb7Y9L7CNZIC5F9KWl9W/Usi3tEPSnkd5AQly+TMw1dGowhcJ
+	 pzxTdPtF3vrLys4jhC/DFB83OX4piAEuzPWpjk2k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729171AbfKSGIa (ORCPT
+        id S1728318AbfKSGIj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 01:08:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49676 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 01:08:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728318AbfKSFas (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:30:48 -0500
+        id S1727250AbfKSFa2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:30:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2D6E21823;
-        Tue, 19 Nov 2019 05:30:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87AB521939;
+        Tue, 19 Nov 2019 05:30:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141448;
-        bh=3mxGYgjOUmLHh+Ma6tUAavgz5Jr5Y9Xm0paYCjzN3B8=;
+        s=default; t=1574141428;
+        bh=OS2+qgrCbkCbhxnpunNNpc1RfxAu+IH0Z3mHb8Di0xg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sLIqpKT9s8CdSjrqg6UD+I/yTsWkZDVgJCW9sPytX7yL/wZZ9KZeRXOEJYnBBOfm+
-         w8lDpgeOeEyIDjxz4NTtZLL3OKzzYamXH/X/YSPL5YOXnAg33auBLVzYqN6vBN7C9t
-         rw2htDaCf4EJXMd12s6cimaXFUjd+g7Vet+RTy48=
+        b=eugRn+N7m9SoppSCHzWqQIlM/Fuk6k3EN6cqglWviVOMeoC5zCNh7zF1nEg5FEDZq
+         MfbtSqiwWjmRo2rejJZMdnVo91ETiiDEayQMCqexou5eV/CbkaSdIQ86qexxGpVawL
+         onFjHrw8jgbjXplx2M4XYHbU7TmyxTy+mGhuOP4I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
+        stable@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Tony Lindgren <tony@atomide.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 164/422] signal: Properly deliver SIGSEGV from x86 uprobes
-Date:   Tue, 19 Nov 2019 06:16:01 +0100
-Message-Id: <20191119051409.089423391@linuxfoundation.org>
+Subject: [PATCH 4.19 140/422] ARM: dts: omap3-gta04: tvout: enable as display1 alias
+Date:   Tue, 19 Nov 2019 06:15:37 +0100
+Message-Id: <20191119051407.848146714@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -60,43 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric W. Biederman <ebiederm@xmission.com>
+From: H. Nikolaus Schaller <hns@goldelico.com>
 
-[ Upstream commit 4a63c1ffd384ebdce40aac9c997dab68379137be ]
+[ Upstream commit 8905592b6e50cec905e6c6035bbd36201a3bfac1 ]
 
-For userspace to tell the difference between an random signal
-and an exception, the exception must include siginfo information.
+The omap dss susbystem takes the display aliases to find
+out which displays exist. To enable tv-out we must define
+an alias.
 
-Using SEND_SIG_FORCED for SIGSEGV is thus wrong, and it will result in
-userspace seeing si_code == SI_USER (like a random signal) instead of
-si_code == SI_KERNEL or a more specific si_code as all exceptions
-deliver.
-
-Therefore replace force_sig_info(SIGSEGV, SEND_SIG_FORCE, current)
-with force_sig(SIG_SEGV, current) which gets this right and is shorter
-and easier to type.
-
-Fixes: 791eca10107f ("uretprobes/x86: Hijack return address")
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/uprobes.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/omap3-gta04.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
-index 9119859ba7871..420aa7d3a2e6b 100644
---- a/arch/x86/kernel/uprobes.c
-+++ b/arch/x86/kernel/uprobes.c
-@@ -1089,7 +1089,7 @@ arch_uretprobe_hijack_return_addr(unsigned long trampoline_vaddr, struct pt_regs
- 		pr_err("return address clobbered: pid=%d, %%sp=%#lx, %%ip=%#lx\n",
- 		       current->pid, regs->sp, regs->ip);
+diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
+index eee5fa0035071..79d708ce3a93f 100644
+--- a/arch/arm/boot/dts/omap3-gta04.dtsi
++++ b/arch/arm/boot/dts/omap3-gta04.dtsi
+@@ -28,6 +28,7 @@
  
--		force_sig_info(SIGSEGV, SEND_SIG_FORCED, current);
-+		force_sig(SIGSEGV, current);
- 	}
+ 	aliases {
+ 		display0 = &lcd;
++		display1 = &tv0;
+ 	};
  
- 	return -1;
+ 	/* fixed 26MHz oscillator */
 -- 
 2.20.1
 
