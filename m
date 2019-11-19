@@ -2,109 +2,134 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6681C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:45:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A35F6C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7DFB222D1
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:45:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 772B2222D1
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 14:45:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kwYmH3N4"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tmFnzR8K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728165AbfKSOpS (ORCPT
+        id S1728201AbfKSOpY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 09:45:18 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:50916 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726736AbfKSOpS (ORCPT
+        Tue, 19 Nov 2019 09:45:24 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:43776 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728114AbfKSOpX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 09:45:18 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAJEitb1007682;
-        Tue, 19 Nov 2019 08:44:55 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574174695;
-        bh=Xb17bFFvyyPqVZH3JQh33Q09iDlqcgXHhX0DKwO4lwQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=kwYmH3N4LCqQEjuhK3qaWi51suMy+3umddzaTsp68YsDKKJpN9AxFnguws3i5Ylik
-         0QP08Mym8xE93voINGsQByrWfLgeOhHk4hGcMMCRFi+VVIgEbCrwxqxBN2MSQ4ZkcY
-         i+Y1p1VfHx69Y1Uen+jVcHTgFxJs+MsO4l6VuPaU=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAJEituH016789
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 19 Nov 2019 08:44:55 -0600
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 19
- Nov 2019 08:44:54 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 19 Nov 2019 08:44:54 -0600
-Received: from [10.250.33.226] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAJEirca010193;
-        Tue, 19 Nov 2019 08:44:54 -0600
-Subject: Re: [PATCH 1/2] can: m_can_platform: set net_device structure as
- driver data
-To:     Pankaj Sharma <pankj.sharma@samsung.com>,
-        <linux-can@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <wg@grandegger.com>, <mkl@pengutronix.de>, <davem@davemloft.net>,
-        <rcsekar@samsung.com>, <pankaj.dubey@samsung.com>,
-        Sriram Dash <sriram.dash@samsung.com>
-References: <1574158838-4616-1-git-send-email-pankj.sharma@samsung.com>
- <CGME20191119102155epcas5p34ca3dfaba9eef8de24d1bc9d64ef5335@epcas5p3.samsung.com>
- <1574158838-4616-2-git-send-email-pankj.sharma@samsung.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <cb975009-2d89-40b9-8c28-e5cf40bf20a2@ti.com>
-Date:   Tue, 19 Nov 2019 08:43:18 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 19 Nov 2019 09:45:23 -0500
+Received: by mail-lj1-f195.google.com with SMTP id y23so23614082ljh.10
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 06:45:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=XQaroAqPBTv3cn0AH8FgZ1yA4zFjMEz2UzMs9ENgnOY=;
+        b=tmFnzR8KAYYT2cz8AM2wpk1wEy0sDjU3EzQf4HEBut+VQLxsepLk3/6/8cpc0VKxLq
+         UfBrdhDT0xWQNkjBUnKRlzyypOt/BY5REJAP9S/LmH6jD8CWEHzFu3yh/QI7rrH9c82e
+         iOt7YT8gMCBns69s891at8X4YmHIMz2VpY9I1lQAe/X3WWXGwq823m2aLhnBu4X3O85I
+         WByjYcsMltQgesQBh6DEP72LIobgzQSZGowIUlSYGAJVCNg2J146FEQgsxz9eta1yCFC
+         CTo26Eu8TPrW1IcY/Qsml+CosSfQYjV/nsh+d789DkAOExNjaGSuq32wAlu8OnexIfOF
+         2V5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XQaroAqPBTv3cn0AH8FgZ1yA4zFjMEz2UzMs9ENgnOY=;
+        b=QxkJlJYPGiKIBtwXjdGgvHhW5igyIpHgG14q1vM6Y8zpVTBcsTjo7pqhSBkVj+g5HN
+         PvWgLKCP5T9q9STRvO5D/mduMiAb5l9TbjEHBzm9TyQ9bcvrvHK0Oqo7KBNQcqujGofH
+         IS6L/1yPc/wH+JSbdbaLDdmrByu92GF3BONIbkrkHX2PkjEWTsnVDUlDpWsuF50CvkVX
+         XwhsZlXlwvoICePkJG8/L3tO0Xq7yQiODiLXxIzoAPZ/a94/L6DnFJ/Xld8J6fIrDg3R
+         47q7qkxbbf8qBD0+tlnO5kQFEJf4sE/+9jAf4ArsuXbBQg3nOGD+Qi1AbgJadDdoqsF3
+         6zkg==
+X-Gm-Message-State: APjAAAV/l+7qFzr0c8a/zNpTbU9X6ZbMg0tVWC1SAm0BlOUzJ/Y8V1Xl
+        x4f8by/ot6n6KMlRMT/7nxKEhw==
+X-Google-Smtp-Source: APXvYqy0eb5ynSNYwUa8gfy7iZEtLluEz02LdKIzvGkrxBilNLqPeX629CLSfKICOpAV0jkH6KffEQ==
+X-Received: by 2002:a2e:974a:: with SMTP id f10mr1615866ljj.25.1574174720904;
+        Tue, 19 Nov 2019 06:45:20 -0800 (PST)
+Received: from centauri.ideon.se ([85.235.10.227])
+        by smtp.gmail.com with ESMTPSA id z20sm11772338ljj.85.2019.11.19.06.45.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Nov 2019 06:45:20 -0800 (PST)
+Date:   Tue, 19 Nov 2019 15:45:18 +0100
+From:   Niklas Cassel <niklas.cassel@linaro.org>
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        amit.kucheria@linaro.org, sboyd@kernel.org, vireshk@kernel.org,
+        bjorn.andersson@linaro.org, ulf.hansson@linaro.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v5 5/5] arm64: defconfig: enable
+ CONFIG_ARM_QCOM_CPUFREQ_NVMEM
+Message-ID: <20191119144518.GA17086@centauri.ideon.se>
+References: <20191115121544.2339036-1-niklas.cassel@linaro.org>
+ <20191115121544.2339036-6-niklas.cassel@linaro.org>
+ <aed0bac0-ca9d-febd-ac57-120e60e99e0d@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <1574158838-4616-2-git-send-email-pankj.sharma@samsung.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aed0bac0-ca9d-febd-ac57-120e60e99e0d@linaro.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pankaj
+On Fri, Nov 15, 2019 at 02:44:03PM +0200, Stanimir Varbanov wrote:
+> Hi Niklas,
+> 
+> On 11/15/19 2:15 PM, Niklas Cassel wrote:
+> > Enable CONFIG_ARM_QCOM_CPUFREQ_NVMEM.
+> 
+> Shouldn't this be selected from qcom-cpr.c Kconfig ?
 
-On 11/19/19 4:20 AM, Pankaj Sharma wrote:
-> A device driver for CAN controller hardware registers itself with the
-> Linux network layer as a network device. So, the driver data for m_can
-> should ideally be of type net_device.
->
-> Fixes: f524f829b75a ("can: m_can: Create a m_can platform framework")
->
-> Signed-off-by: Pankaj Sharma <pankj.sharma@samsung.com>
-> Signed-off-by: Sriram Dash <sriram.dash@samsung.com>
-> ---
->   drivers/net/can/m_can/m_can_platform.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/net/can/m_can/m_can_platform.c b/drivers/net/can/m_can/m_can_platform.c
-> index 6ac4c35..2eaa354 100644
-> --- a/drivers/net/can/m_can/m_can_platform.c
-> +++ b/drivers/net/can/m_can/m_can_platform.c
-> @@ -107,7 +107,7 @@ static int m_can_plat_probe(struct platform_device *pdev)
->   
->   	mcan_class->is_peripheral = false;
->   
-> -	platform_set_drvdata(pdev, mcan_class->dev);
-> +	platform_set_drvdata(pdev, mcan_class->net);
->   
->   	m_can_init_ram(mcan_class);
->   
+Hello Stan,
 
-Thanks for the fix.
+I can see where this is coming from.
 
-Acked-by: Dan Murphy <dmurphy@ti.com>
+If e.g. CONFIG_ARM_QCOM_CPUFREQ_NVMEM is selected but
+CONFIG_QCOM_CPR is not, then the cpufreq driver will
+return -EPROBE_DEFER, and will never probe successfully.
 
+However, I don't really see a difference to any other
+driver using a framework that the user has not enabled.
+The driver will then use that framework's stubs, which
+usually only return -ENODEV or similar.
+
+So even though these both need to be enabled to work as
+intended, they can be compiled/build tested separately.
+
+
+Kind regards,
+Niklas
+
+> 
+> > 
+> > Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+> > ---
+> >  arch/arm64/configs/defconfig | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> > index 4385033c0a34..09aaffd473a0 100644
+> > --- a/arch/arm64/configs/defconfig
+> > +++ b/arch/arm64/configs/defconfig
+> > @@ -88,6 +88,7 @@ CONFIG_ACPI_CPPC_CPUFREQ=m
+> >  CONFIG_ARM_ARMADA_37XX_CPUFREQ=y
+> >  CONFIG_ARM_SCPI_CPUFREQ=y
+> >  CONFIG_ARM_IMX_CPUFREQ_DT=m
+> > +CONFIG_ARM_QCOM_CPUFREQ_NVMEM=y
+> >  CONFIG_ARM_QCOM_CPUFREQ_HW=y
+> >  CONFIG_ARM_RASPBERRYPI_CPUFREQ=m
+> >  CONFIG_ARM_TEGRA186_CPUFREQ=y
+> > 
+> 
+> -- 
+> regards,
+> Stan
