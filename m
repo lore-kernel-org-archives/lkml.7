@@ -2,302 +2,261 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 748C3C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 11:54:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E592C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 11:55:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CF00222C7
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 11:54:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DrdIsyLi"
+	by mail.kernel.org (Postfix) with ESMTP id 5A09D222C7
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 11:55:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbfKSLyZ (ORCPT
+        id S1727875AbfKSLzH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 06:54:25 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:48942 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725280AbfKSLyY (ORCPT
+        Tue, 19 Nov 2019 06:55:07 -0500
+Received: from mail-il1-f197.google.com ([209.85.166.197]:44921 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727770AbfKSLzH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 06:54:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574164462;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=doRSJ76XzgPWyysG7t+THLllYu72qQIDHhX5bZ9eXls=;
-        b=DrdIsyLiuQGRlfpPxd/NdXQVGbxvwq/5/TcJJ8+3k9BdlgwDP9Up68x+mHkr6jNvsivF71
-        9sEUMNii6KebmUvc/LuRCfACfjbOHH6n25rdO6rjFsvOw1LXt8niUXQnBoNIX8XeWmTtwb
-        GsypgWHdTXIFowSK2qvhqQ7HQOEZ5QA=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-200-vKG9IJyzOJ66-W1qT-55Gg-1; Tue, 19 Nov 2019 06:54:21 -0500
-Received: by mail-wm1-f71.google.com with SMTP id b10so2122930wmh.6
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 03:54:20 -0800 (PST)
+        Tue, 19 Nov 2019 06:55:07 -0500
+Received: by mail-il1-f197.google.com with SMTP id b12so19097567iln.11
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 03:55:06 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=mIxdauT8Ocb6jbNjExbQ11Q5FF2m4sH95EG0rjgID/k=;
-        b=qthnlpJHwuYAy3GWKeiWe32+nI/uCw2gtKcUB6wTJbU4GQM40i5DCrC/FdhBSYfeWZ
-         U1IFIFWM+fiZroJtB1YhvJ9hyWCwLOGd61NUaAls0OS1FRoRez3AB7GDHdpsE2FQQJkj
-         qUFpMQAxfBYykml/MzwHfS2Jd+MV3O5iX4tbqUCLFYL9NIC31HkyVQblz4JJHMkjjeh7
-         5KkGOEMzhsCaIVyFMVgK5U1OuizA3SmsHgdppqnjbvm/FSxuiDuuoC5k8JvDsIMoRG3G
-         6bXB8Gdj6gnsoWtmB1WarDqnL7cLjRWlKAez2JBosbDEUgV5QkOsDmDUaCIBjZ0X/d8A
-         rbhA==
-X-Gm-Message-State: APjAAAXZCaMzS9rIpT3RY5/ESN72eaoBFIWcdtK94HhrSf0iAwk5o04X
-        zdY7+TjlW8h2oLrcVHJ9qazg+EslGTLfmkGxkmS9Nxc7BTDVaIfAelueiv7rP9QOAUIsKNEshq7
-        vDet7PufvvD1xvoU6slPHL/JB
-X-Received: by 2002:a7b:c10e:: with SMTP id w14mr5389152wmi.40.1574164459791;
-        Tue, 19 Nov 2019 03:54:19 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwhmhgjZhzw42SfcbimEvxLDolBCEOxRNZmvCYojHg4OqVxZRlMjXOJI5QTi8rnt8F513wRbg==
-X-Received: by 2002:a7b:c10e:: with SMTP id w14mr5389122wmi.40.1574164459468;
-        Tue, 19 Nov 2019 03:54:19 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id z15sm1930299wmi.12.2019.11.19.03.54.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Nov 2019 03:54:18 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Subject: Re: [PATCH v2 1/2] KVM: VMX: FIXED+PHYSICAL mode single target IPI fastpath
-In-Reply-To: <1574145389-12149-1-git-send-email-wanpengli@tencent.com>
-References: <1574145389-12149-1-git-send-email-wanpengli@tencent.com>
-Date:   Tue, 19 Nov 2019 12:54:18 +0100
-Message-ID: <87r224gjyt.fsf@vitty.brq.redhat.com>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=r1iyYZx86LfIf4jbtuaMKzNihWQlbKEsBXxuEuik3S8=;
+        b=IIH37nPeoa3VDu9egC4XHVHoJf+T6FRclXg3o+hdAoJvYqVN0IGwXpup7FHYyRb/Zz
+         Yad3Eo4cMh29uxdtuNYSTDC7D6+YbFic2NETA1DibIbKtdlUNgsDaXm/CH5E8kI7lUNg
+         92/aAZNWz1DKz7Sqc4GvdV4Nq4k6FUWEHHag9/lqexKS3pvOs/0e2A4z93MV1Po5xhLT
+         CVTViR9iRs1Jh8BA7luoIEjsaw2HC71q/ALBrVJfAlundCXbnlhyC8pI0xPp+QuAkscc
+         E71jTEBk1+hBYpFRN7Nxv6OkYX+i2nz1HQQ31JqHYkxm85kDrT9KgNCeHBbOcazgK/I3
+         RT7A==
+X-Gm-Message-State: APjAAAWc5oSBMHViKIZ1TDpUfTjzvZGQDkywcTu0Ta57s5YYvoej20g7
+        tf+qaiQHhbDuN5Q9CHVFtJrbbYKjShOLd6kq10mynyGi6cDU
+X-Google-Smtp-Source: APXvYqwOVjZraiu/bXvxqfcYwS8bHzLHwuk0vgPTgMZ8k/zdZyL5hvymZ/xlheETkg167jAZ/yS82Zt8HP6q+Z20P3/TKRKcZD3z
 MIME-Version: 1.0
-X-MC-Unique: vKG9IJyzOJ66-W1qT-55Gg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+X-Received: by 2002:a6b:18c1:: with SMTP id 184mr18151342ioy.40.1574164505748;
+ Tue, 19 Nov 2019 03:55:05 -0800 (PST)
+Date:   Tue, 19 Nov 2019 03:55:05 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000002ef1120597b1bc92@google.com>
+Subject: possible deadlock in lock_trace (3)
+From:   syzbot <syzbot+985c8a3c7f3668d31a49@syzkaller.appspotmail.com>
+To:     adobriyan@gmail.com, akpm@linux-foundation.org,
+        casey@schaufler-ca.com, christian@brauner.io, guro@fb.com,
+        kent.overstreet@gmail.com, khlebnikov@yandex-team.ru,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mhocko@suse.com, shakeelb@google.com,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Wanpeng Li <kernellwp@gmail.com> writes:
+Hello,
 
-> From: Wanpeng Li <wanpengli@tencent.com>
->
-> ICR and TSCDEADLINE MSRs write cause the main MSRs write vmexits in=20
-> our product observation, multicast IPIs are not as common as unicast=20
-> IPI like RESCHEDULE_VECTOR and CALL_FUNCTION_SINGLE_VECTOR etc.
->
-> This patch tries to optimize x2apic physical destination mode, fixed=20
-> delivery mode single target IPI by delivering IPI to receiver as soon=20
-> as possible after sender writes ICR vmexit to avoid various checks=20
-> when possible, especially when running guest w/ --overcommit cpu-pm=3Don
-> or guest can keep running, IPI can be injected to target vCPU by=20
-> posted-interrupt immediately.
->
-> Testing on Xeon Skylake server:
->
-> The virtual IPI latency from sender send to receiver receive reduces=20
-> more than 200+ cpu cycles.
->
-> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> ---
-> v1 -> v2:
->  * add tracepoint
->  * Instead of a separate vcpu->fast_vmexit, set exit_reason
->    to vmx->exit_reason to -1 if the fast path succeeds.
->  * move the "kvm_skip_emulated_instruction(vcpu)" to vmx_handle_exit
->  * moving the handling into vmx_handle_exit_irqoff()
->
->  arch/x86/include/asm/kvm_host.h |  4 ++--
->  arch/x86/include/uapi/asm/vmx.h |  1 +
->  arch/x86/kvm/svm.c              |  4 ++--
->  arch/x86/kvm/vmx/vmx.c          | 40 +++++++++++++++++++++++++++++++++++=
-++---
->  arch/x86/kvm/x86.c              |  5 +++--
->  5 files changed, 45 insertions(+), 9 deletions(-)
->
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_h=
-ost.h
-> index 898ab9e..0daafa9 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -1084,7 +1084,7 @@ struct kvm_x86_ops {
->  =09void (*tlb_flush_gva)(struct kvm_vcpu *vcpu, gva_t addr);
-> =20
->  =09void (*run)(struct kvm_vcpu *vcpu);
-> -=09int (*handle_exit)(struct kvm_vcpu *vcpu);
-> +=09int (*handle_exit)(struct kvm_vcpu *vcpu, u32 *vcpu_exit_reason);
->  =09int (*skip_emulated_instruction)(struct kvm_vcpu *vcpu);
->  =09void (*set_interrupt_shadow)(struct kvm_vcpu *vcpu, int mask);
->  =09u32 (*get_interrupt_shadow)(struct kvm_vcpu *vcpu);
-> @@ -1134,7 +1134,7 @@ struct kvm_x86_ops {
->  =09int (*check_intercept)(struct kvm_vcpu *vcpu,
->  =09=09=09       struct x86_instruction_info *info,
->  =09=09=09       enum x86_intercept_stage stage);
-> -=09void (*handle_exit_irqoff)(struct kvm_vcpu *vcpu);
-> +=09void (*handle_exit_irqoff)(struct kvm_vcpu *vcpu, u32 *vcpu_exit_reas=
-on);
->  =09bool (*mpx_supported)(void);
->  =09bool (*xsaves_supported)(void);
->  =09bool (*umip_emulated)(void);
-> diff --git a/arch/x86/include/uapi/asm/vmx.h b/arch/x86/include/uapi/asm/=
-vmx.h
-> index 3eb8411..b33c6e1 100644
-> --- a/arch/x86/include/uapi/asm/vmx.h
-> +++ b/arch/x86/include/uapi/asm/vmx.h
-> @@ -88,6 +88,7 @@
->  #define EXIT_REASON_XRSTORS             64
->  #define EXIT_REASON_UMWAIT              67
->  #define EXIT_REASON_TPAUSE              68
-> +#define EXIT_REASON_NEED_SKIP_EMULATED_INSN -1
+syzbot found the following crash on:
 
-Maybe just EXIT_REASON_INSN_SKIP ?
+HEAD commit:    5a6fcbea Add linux-next specific files for 20191115
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=127ba426e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=8eac90e6ae4ab399
+dashboard link: https://syzkaller.appspot.com/bug?extid=985c8a3c7f3668d31a49
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-> =20
->  #define VMX_EXIT_REASONS \
->  =09{ EXIT_REASON_EXCEPTION_NMI,         "EXCEPTION_NMI" }, \
-> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> index d02a73a..c8e063a 100644
-> --- a/arch/x86/kvm/svm.c
-> +++ b/arch/x86/kvm/svm.c
-> @@ -4929,7 +4929,7 @@ static void svm_get_exit_info(struct kvm_vcpu *vcpu=
-, u64 *info1, u64 *info2)
->  =09*info2 =3D control->exit_info_2;
->  }
-> =20
-> -static int handle_exit(struct kvm_vcpu *vcpu)
-> +static int handle_exit(struct kvm_vcpu *vcpu, u32 *vcpu_exit_reason)
->  {
->  =09struct vcpu_svm *svm =3D to_svm(vcpu);
->  =09struct kvm_run *kvm_run =3D vcpu->run;
-> @@ -6187,7 +6187,7 @@ static int svm_check_intercept(struct kvm_vcpu *vcp=
-u,
->  =09return ret;
->  }
-> =20
-> -static void svm_handle_exit_irqoff(struct kvm_vcpu *vcpu)
-> +static void svm_handle_exit_irqoff(struct kvm_vcpu *vcpu, u32 *vcpu_exit=
-_reason)
->  {
-> =20
->  }
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 621142e5..b98198d 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -5792,7 +5792,7 @@ void dump_vmcs(void)
->   * The guest has exited.  See if we can fix it or if we need userspace
->   * assistance.
->   */
-> -static int vmx_handle_exit(struct kvm_vcpu *vcpu)
-> +static int vmx_handle_exit(struct kvm_vcpu *vcpu, u32 *vcpu_exit_reason)
->  {
->  =09struct vcpu_vmx *vmx =3D to_vmx(vcpu);
->  =09u32 exit_reason =3D vmx->exit_reason;
-> @@ -5878,7 +5878,10 @@ static int vmx_handle_exit(struct kvm_vcpu *vcpu)
->  =09=09}
->  =09}
-> =20
-> -=09if (exit_reason < kvm_vmx_max_exit_handlers
-> +=09if (*vcpu_exit_reason =3D=3D EXIT_REASON_NEED_SKIP_EMULATED_INSN) {
-> +=09=09kvm_skip_emulated_instruction(vcpu);
-> +=09=09return 1;
-> +=09} else if (exit_reason < kvm_vmx_max_exit_handlers
->  =09    && kvm_vmx_exit_handlers[exit_reason]) {
->  #ifdef CONFIG_RETPOLINE
->  =09=09if (exit_reason =3D=3D EXIT_REASON_MSR_WRITE)
-> @@ -6223,7 +6226,36 @@ static void handle_external_interrupt_irqoff(struc=
-t kvm_vcpu *vcpu)
->  }
->  STACK_FRAME_NON_STANDARD(handle_external_interrupt_irqoff);
-> =20
-> -static void vmx_handle_exit_irqoff(struct kvm_vcpu *vcpu)
-> +static u32 handle_ipi_fastpath(struct kvm_vcpu *vcpu)
-> +{
-> +=09u32 index;
-> +=09u64 data;
-> +=09int ret =3D 0;
-> +
-> +=09if (lapic_in_kernel(vcpu) && apic_x2apic_mode(vcpu->arch.apic)) {
-> +=09=09/*
-> +=09=09 * fastpath to IPI target, FIXED+PHYSICAL which is popular
-> +=09=09 */
-> +=09=09index =3D kvm_rcx_read(vcpu);
-> +=09=09data =3D kvm_read_edx_eax(vcpu);
-> +
-> +=09=09if (((index - APIC_BASE_MSR) << 4 =3D=3D APIC_ICR) &&
+Unfortunately, I don't have any reproducer for this crash yet.
 
-What if index (RCX) is < APIC_BASE_MSR?
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+985c8a3c7f3668d31a49@syzkaller.appspotmail.com
 
-> +=09=09=09((data & KVM_APIC_DEST_MASK) =3D=3D APIC_DEST_PHYSICAL) &&
-> +=09=09=09((data & APIC_MODE_MASK) =3D=3D APIC_DM_FIXED)) {
-> +
-> +=09=09=09trace_kvm_msr_write(index, data);
-> +=09=09=09kvm_lapic_set_reg(vcpu->arch.apic, APIC_ICR2, (u32)(data >> 32)=
-);
-> +=09=09=09ret =3D kvm_lapic_reg_write(vcpu->arch.apic, APIC_ICR, (u32)dat=
-a);
-> +
-> +=09=09=09if (ret =3D=3D 0)
-> +=09=09=09=09return EXIT_REASON_NEED_SKIP_EMULATED_INSN;
-> +=09=09}
-> +=09}
-> +
-> +=09return ret;
-> +}
-> +
-> +static void vmx_handle_exit_irqoff(struct kvm_vcpu *vcpu, u32 *exit_reas=
-on)
->  {
->  =09struct vcpu_vmx *vmx =3D to_vmx(vcpu);
-> =20
-> @@ -6231,6 +6263,8 @@ static void vmx_handle_exit_irqoff(struct kvm_vcpu =
-*vcpu)
->  =09=09handle_external_interrupt_irqoff(vcpu);
->  =09else if (vmx->exit_reason =3D=3D EXIT_REASON_EXCEPTION_NMI)
->  =09=09handle_exception_nmi_irqoff(vmx);
-> +=09else if (vmx->exit_reason =3D=3D EXIT_REASON_MSR_WRITE)
-> +=09=09*exit_reason =3D handle_ipi_fastpath(vcpu);
->  }
-> =20
->  static bool vmx_has_emulated_msr(int index)
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 991dd01..a53bce3 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -7981,6 +7981,7 @@ EXPORT_SYMBOL_GPL(__kvm_request_immediate_exit);
->  static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
->  {
->  =09int r;
-> +=09u32 exit_reason =3D 0;
->  =09bool req_int_win =3D
->  =09=09dm_request_for_irq_injection(vcpu) &&
->  =09=09kvm_cpu_accept_dm_intr(vcpu);
-> @@ -8226,7 +8227,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
->  =09vcpu->mode =3D OUTSIDE_GUEST_MODE;
->  =09smp_wmb();
-> =20
-> -=09kvm_x86_ops->handle_exit_irqoff(vcpu);
-> +=09kvm_x86_ops->handle_exit_irqoff(vcpu, &exit_reason);
-> =20
->  =09/*
->  =09 * Consume any pending interrupts, including the possible source of
-> @@ -8270,7 +8271,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
->  =09=09kvm_lapic_sync_from_vapic(vcpu);
-> =20
->  =09vcpu->arch.gpa_available =3D false;
-> -=09r =3D kvm_x86_ops->handle_exit(vcpu);
-> +=09r =3D kvm_x86_ops->handle_exit(vcpu, &exit_reason);
->  =09return r;
-> =20
->  cancel_injection:
+======================================================
+WARNING: possible circular locking dependency detected
+5.4.0-rc7-next-20191115 #0 Not tainted
+------------------------------------------------------
+syz-executor.3/3829 is trying to acquire lock:
+ffff888096981810 (&sig->cred_guard_mutex){+.+.}, at: lock_trace+0x4a/0xe0  
+fs/proc/base.c:406
 
---=20
-Vitaly
+but task is already holding lock:
+ffff88809611df40 (&p->lock){+.+.}, at: seq_read+0x71/0x1170  
+fs/seq_file.c:161
 
+which lock already depends on the new lock.
+
+
+the existing dependency chain (in reverse order) is:
+
+-> #4 (&p->lock){+.+.}:
+        __mutex_lock_common kernel/locking/mutex.c:959 [inline]
+        __mutex_lock+0x156/0x13c0 kernel/locking/mutex.c:1106
+        mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1121
+        seq_read+0x71/0x1170 fs/seq_file.c:161
+        do_loop_readv_writev fs/read_write.c:714 [inline]
+        do_loop_readv_writev fs/read_write.c:701 [inline]
+        do_iter_read+0x4a4/0x660 fs/read_write.c:935
+        vfs_readv+0xf0/0x160 fs/read_write.c:997
+        kernel_readv fs/splice.c:359 [inline]
+        default_file_splice_read+0x482/0x8a0 fs/splice.c:414
+        do_splice_to+0x127/0x180 fs/splice.c:877
+        splice_direct_to_actor+0x2d3/0x970 fs/splice.c:955
+        do_splice_direct+0x1da/0x2a0 fs/splice.c:1064
+        do_sendfile+0x597/0xd00 fs/read_write.c:1464
+        __do_sys_sendfile64 fs/read_write.c:1525 [inline]
+        __se_sys_sendfile64 fs/read_write.c:1511 [inline]
+        __x64_sys_sendfile64+0x1dd/0x220 fs/read_write.c:1511
+        do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+-> #3 (sb_writers#3){.+.+}:
+        percpu_down_read include/linux/percpu-rwsem.h:40 [inline]
+        __sb_start_write+0x241/0x460 fs/super.c:1672
+        sb_start_write include/linux/fs.h:1650 [inline]
+        mnt_want_write+0x3f/0xc0 fs/namespace.c:354
+        ovl_want_write+0x76/0xa0 fs/overlayfs/util.c:21
+        ovl_xattr_set+0x53/0x5b0 fs/overlayfs/inode.c:329
+        ovl_posix_acl_xattr_set+0x33a/0x9a0 fs/overlayfs/super.c:910
+        __vfs_setxattr+0x11f/0x180 fs/xattr.c:150
+        __vfs_setxattr_noperm+0x11c/0x410 fs/xattr.c:181
+        vfs_setxattr+0xda/0x100 fs/xattr.c:224
+        setxattr+0x26f/0x380 fs/xattr.c:451
+        path_setxattr+0x197/0x1b0 fs/xattr.c:470
+        __do_sys_setxattr fs/xattr.c:485 [inline]
+        __se_sys_setxattr fs/xattr.c:481 [inline]
+        __x64_sys_setxattr+0xc4/0x150 fs/xattr.c:481
+        do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+-> #2 (&ovl_i_mutex_dir_key[depth]){++++}:
+        down_write_killable+0x96/0x170 kernel/locking/rwsem.c:1545
+        iterate_dir+0x414/0x5e0 fs/readdir.c:57
+        ovl_dir_read fs/overlayfs/readdir.c:309 [inline]
+        ovl_dir_read_merged+0x199/0x500 fs/overlayfs/readdir.c:374
+        ovl_cache_get fs/overlayfs/readdir.c:426 [inline]
+        ovl_iterate+0x750/0xc50 fs/overlayfs/readdir.c:752
+        iterate_dir+0x208/0x5e0 fs/readdir.c:67
+        ksys_getdents64+0x1ce/0x320 fs/readdir.c:372
+        __do_sys_getdents64 fs/readdir.c:391 [inline]
+        __se_sys_getdents64 fs/readdir.c:388 [inline]
+        __x64_sys_getdents64+0x73/0xb0 fs/readdir.c:388
+        do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+-> #1 (&ovl_i_mutex_dir_key[depth]#2){++++}:
+        down_read+0x95/0x430 kernel/locking/rwsem.c:1495
+        inode_lock_shared include/linux/fs.h:801 [inline]
+        lookup_slow+0x4a/0x80 fs/namei.c:1683
+        walk_component+0x747/0x1ff0 fs/namei.c:1804
+        lookup_last fs/namei.c:2267 [inline]
+        path_lookupat.isra.0+0x1f5/0x8d0 fs/namei.c:2312
+        filename_lookup+0x1b0/0x3f0 fs/namei.c:2342
+        kern_path+0x36/0x40 fs/namei.c:2428
+        create_local_trace_uprobe+0x87/0x4a0 kernel/trace/trace_uprobe.c:1542
+        perf_uprobe_init+0x131/0x210 kernel/trace/trace_event_perf.c:323
+        perf_uprobe_event_init+0x106/0x1a0 kernel/events/core.c:9138
+        perf_try_init_event+0x135/0x590 kernel/events/core.c:10438
+        perf_init_event kernel/events/core.c:10490 [inline]
+        perf_event_alloc.part.0+0x14ed/0x3600 kernel/events/core.c:10773
+        perf_event_alloc kernel/events/core.c:11140 [inline]
+        __do_sys_perf_event_open+0x6f8/0x2be0 kernel/events/core.c:11256
+        __se_sys_perf_event_open kernel/events/core.c:11130 [inline]
+        __x64_sys_perf_event_open+0xbe/0x150 kernel/events/core.c:11130
+        do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+-> #0 (&sig->cred_guard_mutex){+.+.}:
+        check_prev_add kernel/locking/lockdep.c:2476 [inline]
+        check_prevs_add kernel/locking/lockdep.c:2581 [inline]
+        validate_chain kernel/locking/lockdep.c:2971 [inline]
+        __lock_acquire+0x2596/0x4a00 kernel/locking/lockdep.c:3955
+        lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4485
+        __mutex_lock_common kernel/locking/mutex.c:959 [inline]
+        __mutex_lock+0x156/0x13c0 kernel/locking/mutex.c:1106
+        mutex_lock_killable_nested+0x16/0x20 kernel/locking/mutex.c:1136
+        lock_trace+0x4a/0xe0 fs/proc/base.c:406
+        proc_pid_syscall+0x8a/0x220 fs/proc/base.c:635
+        proc_single_show+0xf0/0x170 fs/proc/base.c:756
+        seq_read+0x4ca/0x1170 fs/seq_file.c:229
+        do_loop_readv_writev fs/read_write.c:714 [inline]
+        do_loop_readv_writev fs/read_write.c:701 [inline]
+        do_iter_read+0x4a4/0x660 fs/read_write.c:935
+        vfs_readv+0xf0/0x160 fs/read_write.c:997
+        do_preadv+0x1c4/0x280 fs/read_write.c:1089
+        __do_sys_preadv fs/read_write.c:1139 [inline]
+        __se_sys_preadv fs/read_write.c:1134 [inline]
+        __x64_sys_preadv+0x9a/0xf0 fs/read_write.c:1134
+        do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+other info that might help us debug this:
+
+Chain exists of:
+   &sig->cred_guard_mutex --> sb_writers#3 --> &p->lock
+
+  Possible unsafe locking scenario:
+
+        CPU0                    CPU1
+        ----                    ----
+   lock(&p->lock);
+                                lock(sb_writers#3);
+                                lock(&p->lock);
+   lock(&sig->cred_guard_mutex);
+
+  *** DEADLOCK ***
+
+1 lock held by syz-executor.3/3829:
+  #0: ffff88809611df40 (&p->lock){+.+.}, at: seq_read+0x71/0x1170  
+fs/seq_file.c:161
+
+stack backtrace:
+CPU: 0 PID: 3829 Comm: syz-executor.3 Not tainted 5.4.0-rc7-next-20191115 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x197/0x210 lib/dump_stack.c:118
+  print_circular_bug.isra.0.cold+0x163/0x172 kernel/locking/lockdep.c:1685
+  check_noncircular+0x32e/0x3e0 kernel/locking/lockdep.c:1809
+  check_prev_add kernel/locking/lockdep.c:2476 [inline]
+  check_prevs_add kernel/locking/lockdep.c:2581 [inline]
+  validate_chain kernel/locking/lockdep.c:2971 [inline]
+  __lock_acquire+0x2596/0x4a00 kernel/locking/lockdep.c:3955
+  lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4485
+  __mutex_lock_common kernel/locking/mutex.c:959 [inline]
+  __mutex_lock+0x156/0x13c0 kernel/locking/mutex.c:1106
+  mutex_lock_killable_nested+0x16/0x20 kernel/locking/mutex.c:1136
+  lock_trace+0x4a/0xe0 fs/proc/base.c:406
+  proc_pid_syscall+0x8a/0x220 fs/proc/base.c:635
+  proc_single_show+0xf0/0x170 fs/proc/base.c:756
+  seq_read+0x4ca/0x1170 fs/seq_file.c:229
+  do_loop_readv_writev fs/read_write.c:714 [inline]
+  do_loop_readv_writev fs/read_write.c:701 [inline]
+  do_iter_read+0x4a4/0x660 fs/read_write.c:935
+  vfs_readv+0xf0/0x160 fs/read_write.c:997
+  do_preadv+0x1c4/0x280 fs/read_write.c:1089
+  __do_sys_preadv fs/read_write.c:1139 [inline]
+  __se_sys_preadv fs/read_write.c:1134 [inline]
+  __x64_sys_preadv+0x9a/0xf0 fs/read_write.c:1134
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x45a659
+Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f2247981c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000127
+RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 000000000045a659
+RDX: 00000000000001e3 RSI: 00000000200013c0 RDI: 0000000000000004
+RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f22479826d4
+R13: 00000000004c7ec1 R14: 00000000004dde10 R15: 00000000ffffffff
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
