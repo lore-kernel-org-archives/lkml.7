@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB2D6C432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:25:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B998C432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:25:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8328421823
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:25:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC29022309
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 05:25:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574141149;
-	bh=xCW/lSW1U3Vl+AVPWZpivK93tjtE9RmQzvGRaO6XjAw=;
+	s=default; t=1574141153;
+	bh=qJjbPrjFRY495K0HIO7+KLACd1NUusqk87DGaGw81ZA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jhMM/vYTkAxU8A3qbW3edks+Z3eg4lgmfrtr4fQGSkXSHScA99OwiP+6CZwMvfjkz
-	 D7BQGXUgUTQc6XCkEvM0H7NWpfSjqqX7zcLlUTCYFtUmAsDsoFR1Ssy3PEl531Uskt
-	 hIm7IEWKe9I1r9hOV7M7aT+Ycij6Q6r7IsyaMSWM=
+	b=eNa6JGKARpX3Fv6X/bTlYl5HDSuqnkbtEl2hwq/Ac+QL5jxP3+GzMzpRVkDWVHK1A
+	 W50LklFx8NGTKa7rcaXkFAoyj57guYkN1erIQ5j3wdLTkVRu6xRuxEDho/bV46JkXB
+	 iJcnpbcD4lB1/xfGxoS1tm/xb8Al59Vs6mTuD3Kk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728458AbfKSFZr (ORCPT
+        id S1728461AbfKSFZv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 00:25:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43600 "EHLO mail.kernel.org"
+        Tue, 19 Nov 2019 00:25:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728444AbfKSFZq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 00:25:46 -0500
+        id S1728444AbfKSFZs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 00:25:48 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4F7B21823;
-        Tue, 19 Nov 2019 05:25:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F5B021823;
+        Tue, 19 Nov 2019 05:25:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574141145;
-        bh=xCW/lSW1U3Vl+AVPWZpivK93tjtE9RmQzvGRaO6XjAw=;
+        s=default; t=1574141148;
+        bh=qJjbPrjFRY495K0HIO7+KLACd1NUusqk87DGaGw81ZA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X5l74bYHuWmLqgx4+WBLfIY6YMdy4ouju9njjzGlQ7qJgbs8+zyhOd0LYVVnuIEZ5
-         Aj3nfRBES5QPXeLh5qpidetUWmKn3+Zqleal2VS4eJaqev4830afXOt1GjMn8QYbZ1
-         HL1Rwn112hjAHFH5uE8536vk84VQWQKpHvrYoQ2Q=
+        b=imNF/OHtPiLSsARR/8zIyxZxwBYlQQWt3kCVZGKZG6e0F+pzNZxISk/UVrzDmbtE3
+         7yyMFSeZ8MfM3IVMKqqCQCJrlOz/VE200ctsQ3pkxb9OZeb/hjkx2qRB2jvb8RV3dH
+         6aULDeY9i6DcPsSxJigQsE3yktpCYfehCQGtutD0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Rajeev Kumar Sirasanagandla <rsirasan@codeaurora.org>,
-        Johannes Berg <johannes.berg@intel.com>,
+        stable@vger.kernel.org, Dan Nowlin <dan.nowlin@intel.com>,
+        Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>,
+        Tony Brelinski <tonyx.brelinski@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 053/422] cfg80211: Avoid regulatory restore when COUNTRY_IE_IGNORE is set
-Date:   Tue, 19 Nov 2019 06:14:10 +0100
-Message-Id: <20191119051403.245849688@linuxfoundation.org>
+Subject: [PATCH 4.19 062/422] ice: Update request resource command to latest specification
+Date:   Tue, 19 Nov 2019 06:14:19 +0100
+Message-Id: <20191119051403.728963915@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119051400.261610025@linuxfoundation.org>
 References: <20191119051400.261610025@linuxfoundation.org>
@@ -61,93 +62,206 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rajeev Kumar Sirasanagandla <rsirasan@codeaurora.org>
+From: Dan Nowlin <dan.nowlin@intel.com>
 
-[ Upstream commit 7417844b63d4b0dc8ab23f88259bf95de7d09b57 ]
+[ Upstream commit ff2b13213a6a0baca105bc3bc724225f0adde1f8 ]
 
-When REGULATORY_COUNTRY_IE_IGNORE is set,  __reg_process_hint_country_ie()
-ignores the country code change request from __cfg80211_connect_result()
-via regulatory_hint_country_ie().
+Align Request Resource Ownership AQ command (0x0008) to the latest
+specification. This includes:
 
-After Disconnect, similar to above, country code should not be reset to
-world when country IE ignore is set. But this is violated and restore of
-regulatory settings is invoked by cfg80211_disconnect_work via
-regulatory_hint_disconnect().
+- Correcting the resource IDs for the Global Cfg and Change locks.
+- new enum ICE_CHANGE_LOCK_RES_ID
+- new enum ICE_GLOBAL_CFG_LOCK_RES_ID
+- Altering the flow for Global Config Lock to allow only the first PF to
+  download the package.
 
-To address this, avoid regulatory restore from regulatory_hint_disconnect()
-when COUNTRY_IE_IGNORE is set.
-
-Note: Currently, restore_regulatory_settings() takes care of clearing
-beacon hints. But in the proposed change, regulatory restore is avoided.
-Therefore, explicitly clear beacon hints when DISABLE_BEACON_HINTS
-is not set.
-
-Signed-off-by: Rajeev Kumar Sirasanagandla <rsirasan@codeaurora.org>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Dan Nowlin <dan.nowlin@intel.com>
+Signed-off-by: Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>
+Tested-by: Tony Brelinski <tonyx.brelinski@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/wireless/reg.c | 46 ++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
+ drivers/net/ethernet/intel/ice/ice_common.c | 75 ++++++++++++++++-----
+ drivers/net/ethernet/intel/ice/ice_common.h |  2 +-
+ drivers/net/ethernet/intel/ice/ice_nvm.c    |  2 +-
+ drivers/net/ethernet/intel/ice/ice_type.h   |  9 ++-
+ 4 files changed, 67 insertions(+), 21 deletions(-)
 
-diff --git a/net/wireless/reg.c b/net/wireless/reg.c
-index cccbf845079c8..68ae97ef8bf0b 100644
---- a/net/wireless/reg.c
-+++ b/net/wireless/reg.c
-@@ -3225,8 +3225,54 @@ static void restore_regulatory_settings(bool reset_user)
- 	schedule_work(&reg_work);
+diff --git a/drivers/net/ethernet/intel/ice/ice_common.c b/drivers/net/ethernet/intel/ice/ice_common.c
+index 661beea6af795..f8d00263d9019 100644
+--- a/drivers/net/ethernet/intel/ice/ice_common.c
++++ b/drivers/net/ethernet/intel/ice/ice_common.c
+@@ -904,7 +904,22 @@ enum ice_status ice_aq_q_shutdown(struct ice_hw *hw, bool unloading)
+  * @timeout: the maximum time in ms that the driver may hold the resource
+  * @cd: pointer to command details structure or NULL
+  *
+- * requests common resource using the admin queue commands (0x0008)
++ * Requests common resource using the admin queue commands (0x0008).
++ * When attempting to acquire the Global Config Lock, the driver can
++ * learn of three states:
++ *  1) ICE_SUCCESS -        acquired lock, and can perform download package
++ *  2) ICE_ERR_AQ_ERROR -   did not get lock, driver should fail to load
++ *  3) ICE_ERR_AQ_NO_WORK - did not get lock, but another driver has
++ *                          successfully downloaded the package; the driver does
++ *                          not have to download the package and can continue
++ *                          loading
++ *
++ * Note that if the caller is in an acquire lock, perform action, release lock
++ * phase of operation, it is possible that the FW may detect a timeout and issue
++ * a CORER. In this case, the driver will receive a CORER interrupt and will
++ * have to determine its cause. The calling thread that is handling this flow
++ * will likely get an error propagated back to it indicating the Download
++ * Package, Update Package or the Release Resource AQ commands timed out.
+  */
+ static enum ice_status
+ ice_aq_req_res(struct ice_hw *hw, enum ice_aq_res_ids res,
+@@ -922,13 +937,43 @@ ice_aq_req_res(struct ice_hw *hw, enum ice_aq_res_ids res,
+ 	cmd_resp->res_id = cpu_to_le16(res);
+ 	cmd_resp->access_type = cpu_to_le16(access);
+ 	cmd_resp->res_number = cpu_to_le32(sdp_number);
++	cmd_resp->timeout = cpu_to_le32(*timeout);
++	*timeout = 0;
+ 
+ 	status = ice_aq_send_cmd(hw, &desc, NULL, 0, cd);
++
+ 	/* The completion specifies the maximum time in ms that the driver
+ 	 * may hold the resource in the Timeout field.
+-	 * If the resource is held by someone else, the command completes with
+-	 * busy return value and the timeout field indicates the maximum time
+-	 * the current owner of the resource has to free it.
++	 */
++
++	/* Global config lock response utilizes an additional status field.
++	 *
++	 * If the Global config lock resource is held by some other driver, the
++	 * command completes with ICE_AQ_RES_GLBL_IN_PROG in the status field
++	 * and the timeout field indicates the maximum time the current owner
++	 * of the resource has to free it.
++	 */
++	if (res == ICE_GLOBAL_CFG_LOCK_RES_ID) {
++		if (le16_to_cpu(cmd_resp->status) == ICE_AQ_RES_GLBL_SUCCESS) {
++			*timeout = le32_to_cpu(cmd_resp->timeout);
++			return 0;
++		} else if (le16_to_cpu(cmd_resp->status) ==
++			   ICE_AQ_RES_GLBL_IN_PROG) {
++			*timeout = le32_to_cpu(cmd_resp->timeout);
++			return ICE_ERR_AQ_ERROR;
++		} else if (le16_to_cpu(cmd_resp->status) ==
++			   ICE_AQ_RES_GLBL_DONE) {
++			return ICE_ERR_AQ_NO_WORK;
++		}
++
++		/* invalid FW response, force a timeout immediately */
++		*timeout = 0;
++		return ICE_ERR_AQ_ERROR;
++	}
++
++	/* If the resource is held by some other driver, the command completes
++	 * with a busy return value and the timeout field indicates the maximum
++	 * time the current owner of the resource has to free it.
+ 	 */
+ 	if (!status || hw->adminq.sq_last_status == ICE_AQ_RC_EBUSY)
+ 		*timeout = le32_to_cpu(cmd_resp->timeout);
+@@ -967,30 +1012,28 @@ ice_aq_release_res(struct ice_hw *hw, enum ice_aq_res_ids res, u8 sdp_number,
+  * @hw: pointer to the HW structure
+  * @res: resource id
+  * @access: access type (read or write)
++ * @timeout: timeout in milliseconds
+  *
+  * This function will attempt to acquire the ownership of a resource.
+  */
+ enum ice_status
+ ice_acquire_res(struct ice_hw *hw, enum ice_aq_res_ids res,
+-		enum ice_aq_res_access_type access)
++		enum ice_aq_res_access_type access, u32 timeout)
+ {
+ #define ICE_RES_POLLING_DELAY_MS	10
+ 	u32 delay = ICE_RES_POLLING_DELAY_MS;
++	u32 time_left = timeout;
+ 	enum ice_status status;
+-	u32 time_left = 0;
+-	u32 timeout;
+ 
+ 	status = ice_aq_req_res(hw, res, access, 0, &time_left, NULL);
+ 
+-	/* An admin queue return code of ICE_AQ_RC_EEXIST means that another
+-	 * driver has previously acquired the resource and performed any
+-	 * necessary updates; in this case the caller does not obtain the
+-	 * resource and has no further work to do.
++	/* A return code of ICE_ERR_AQ_NO_WORK means that another driver has
++	 * previously acquired the resource and performed any necessary updates;
++	 * in this case the caller does not obtain the resource and has no
++	 * further work to do.
+ 	 */
+-	if (hw->adminq.sq_last_status == ICE_AQ_RC_EEXIST) {
+-		status = ICE_ERR_AQ_NO_WORK;
++	if (status == ICE_ERR_AQ_NO_WORK)
+ 		goto ice_acquire_res_exit;
+-	}
+ 
+ 	if (status)
+ 		ice_debug(hw, ICE_DBG_RES,
+@@ -1003,11 +1046,9 @@ ice_acquire_res(struct ice_hw *hw, enum ice_aq_res_ids res,
+ 		timeout = (timeout > delay) ? timeout - delay : 0;
+ 		status = ice_aq_req_res(hw, res, access, 0, &time_left, NULL);
+ 
+-		if (hw->adminq.sq_last_status == ICE_AQ_RC_EEXIST) {
++		if (status == ICE_ERR_AQ_NO_WORK)
+ 			/* lock free, but no work to do */
+-			status = ICE_ERR_AQ_NO_WORK;
+ 			break;
+-		}
+ 
+ 		if (!status)
+ 			/* lock acquired */
+diff --git a/drivers/net/ethernet/intel/ice/ice_common.h b/drivers/net/ethernet/intel/ice/ice_common.h
+index 9a5519130af13..6455b6952ec8e 100644
+--- a/drivers/net/ethernet/intel/ice/ice_common.h
++++ b/drivers/net/ethernet/intel/ice/ice_common.h
+@@ -23,7 +23,7 @@ enum ice_status
+ ice_get_link_status(struct ice_port_info *pi, bool *link_up);
+ enum ice_status
+ ice_acquire_res(struct ice_hw *hw, enum ice_aq_res_ids res,
+-		enum ice_aq_res_access_type access);
++		enum ice_aq_res_access_type access, u32 timeout);
+ void ice_release_res(struct ice_hw *hw, enum ice_aq_res_ids res);
+ enum ice_status ice_init_nvm(struct ice_hw *hw);
+ enum ice_status
+diff --git a/drivers/net/ethernet/intel/ice/ice_nvm.c b/drivers/net/ethernet/intel/ice/ice_nvm.c
+index 295a8cd87fc16..3274c543283c6 100644
+--- a/drivers/net/ethernet/intel/ice/ice_nvm.c
++++ b/drivers/net/ethernet/intel/ice/ice_nvm.c
+@@ -137,7 +137,7 @@ ice_acquire_nvm(struct ice_hw *hw, enum ice_aq_res_access_type access)
+ 	if (hw->nvm.blank_nvm_mode)
+ 		return 0;
+ 
+-	return ice_acquire_res(hw, ICE_NVM_RES_ID, access);
++	return ice_acquire_res(hw, ICE_NVM_RES_ID, access, ICE_NVM_TIMEOUT);
  }
  
-+static bool is_wiphy_all_set_reg_flag(enum ieee80211_regulatory_flags flag)
-+{
-+	struct cfg80211_registered_device *rdev;
-+	struct wireless_dev *wdev;
+ /**
+diff --git a/drivers/net/ethernet/intel/ice/ice_type.h b/drivers/net/ethernet/intel/ice/ice_type.h
+index ba11b58988331..a509fe5f1e543 100644
+--- a/drivers/net/ethernet/intel/ice/ice_type.h
++++ b/drivers/net/ethernet/intel/ice/ice_type.h
+@@ -34,10 +34,15 @@ static inline bool ice_is_tc_ena(u8 bitmap, u8 tc)
+ enum ice_aq_res_ids {
+ 	ICE_NVM_RES_ID = 1,
+ 	ICE_SPD_RES_ID,
+-	ICE_GLOBAL_CFG_LOCK_RES_ID,
+-	ICE_CHANGE_LOCK_RES_ID
++	ICE_CHANGE_LOCK_RES_ID,
++	ICE_GLOBAL_CFG_LOCK_RES_ID
+ };
+ 
++/* FW update timeout definitions are in milliseconds */
++#define ICE_NVM_TIMEOUT			180000
++#define ICE_CHANGE_LOCK_TIMEOUT		1000
++#define ICE_GLOBAL_CFG_LOCK_TIMEOUT	3000
 +
-+	list_for_each_entry(rdev, &cfg80211_rdev_list, list) {
-+		list_for_each_entry(wdev, &rdev->wiphy.wdev_list, list) {
-+			wdev_lock(wdev);
-+			if (!(wdev->wiphy->regulatory_flags & flag)) {
-+				wdev_unlock(wdev);
-+				return false;
-+			}
-+			wdev_unlock(wdev);
-+		}
-+	}
-+
-+	return true;
-+}
-+
- void regulatory_hint_disconnect(void)
- {
-+	/* Restore of regulatory settings is not required when wiphy(s)
-+	 * ignore IE from connected access point but clearance of beacon hints
-+	 * is required when wiphy(s) supports beacon hints.
-+	 */
-+	if (is_wiphy_all_set_reg_flag(REGULATORY_COUNTRY_IE_IGNORE)) {
-+		struct reg_beacon *reg_beacon, *btmp;
-+
-+		if (is_wiphy_all_set_reg_flag(REGULATORY_DISABLE_BEACON_HINTS))
-+			return;
-+
-+		spin_lock_bh(&reg_pending_beacons_lock);
-+		list_for_each_entry_safe(reg_beacon, btmp,
-+					 &reg_pending_beacons, list) {
-+			list_del(&reg_beacon->list);
-+			kfree(reg_beacon);
-+		}
-+		spin_unlock_bh(&reg_pending_beacons_lock);
-+
-+		list_for_each_entry_safe(reg_beacon, btmp,
-+					 &reg_beacon_list, list) {
-+			list_del(&reg_beacon->list);
-+			kfree(reg_beacon);
-+		}
-+
-+		return;
-+	}
-+
- 	pr_debug("All devices are disconnected, going to restore regulatory settings\n");
- 	restore_regulatory_settings(false);
- }
+ enum ice_aq_res_access_type {
+ 	ICE_RES_READ = 1,
+ 	ICE_RES_WRITE
 -- 
 2.20.1
 
