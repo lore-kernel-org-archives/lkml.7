@@ -2,107 +2,123 @@ Return-Path: <SRS0=UImc=ZL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C70AC432C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 01:18:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B114C432C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 01:19:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43CEA22313
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 01:18:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1ED2F222D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 01:19:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QcPAOz4T"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="QDGQW6bh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727146AbfKSBS2 (ORCPT
+        id S1727174AbfKSBTp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 20:18:28 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:35495 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726775AbfKSBS2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 20:18:28 -0500
-Received: by mail-pl1-f195.google.com with SMTP id s10so10802132plp.2
-        for <linux-kernel@vger.kernel.org>; Mon, 18 Nov 2019 17:18:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hq5TX+U7APVzVaoaAOIejhIYqLJqIfb0addUNvfV3EY=;
-        b=QcPAOz4T+S3x+pR/AFPvhDB6vy0xUDa3hIedvCIdddoG1hKBw/R/jdvu2y1vaQ5NBt
-         F6E7e3jrjAcAA7KKuBlewxII6CBHoHBQfEqhs+ZedoTgRtzbcKwrUeZRsUs+jZvU7LMa
-         +JzdPX07A1xwXRNBMMKUB2P4DQS/xey81RybmRPdchxIF2EbNWi3nfusbJjXvw2t6vgX
-         RE2uYTKJQ+lkQPxvNMpvuNWgoS5VrYZlTLo9BcvInCyXb7gSqYfF4Yuo0LOP93HkaHO0
-         dMYivO/7n1qj8MJln6KZz9yt5yvdowh3pbjlKXkCr26wQtZubCu+eL4Su+UBmlOtREAR
-         A+iA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hq5TX+U7APVzVaoaAOIejhIYqLJqIfb0addUNvfV3EY=;
-        b=k0fMaLVd2+wG0mtSPsWTUSboPAzzCjLcxzMeokxSNhK1eZyXFVVWc8qQd6V3sWHEre
-         3yAkfCDmVTLdh+dpZ2QaAWcKh+1bJlE1boxlPkQIMOF0Wc31qCIlCt4asm8r5RKgWaqg
-         ziem+yPlmMcQi78YvvaIQPr8S/d4S1qFtMwBiuTllzEMrhm/qiU7cqrf5kv7UeSIRIts
-         b7H45QzLFpGCOS46sxZpYtvvQ/3zmoEdf1wzCYsNtzUy+rTlCGdrfVkMK2Dzo5GCPgDB
-         5G23fk0j96D8VY1KQWW0KAWy0LypM6060PhExEqgcH/n/gJkS1kcXGg+k1gzxkXr0elK
-         Gikw==
-X-Gm-Message-State: APjAAAU5dJygjh7Wdm2Jhg46WJiNeBrz2TQtor3ngBIDjKZ2xqpp6eBE
-        8f/0p4fyjQZ3upbBTa5qeau8+Q==
-X-Google-Smtp-Source: APXvYqx2qcau9xuLewpvhhxmVyJe8cNx/r8C6kPKS6U7KeCXUsr34SI0cHzxo4FWWbJtyN5gp8OahA==
-X-Received: by 2002:a17:90a:4d8f:: with SMTP id m15mr2705487pjh.71.1574126307097;
-        Mon, 18 Nov 2019 17:18:27 -0800 (PST)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id x13sm22929055pfc.46.2019.11.18.17.18.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Nov 2019 17:18:26 -0800 (PST)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] arm64: dts: qcom: msm8998-mtp: Add alias for blsp1_uart3
-Date:   Mon, 18 Nov 2019 17:18:23 -0800
-Message-Id: <20191119011823.379100-1-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.23.0
+        Mon, 18 Nov 2019 20:19:45 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:43443 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726952AbfKSBTo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 20:19:44 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47H7K82zfhz9sPL;
+        Tue, 19 Nov 2019 12:19:40 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1574126382;
+        bh=maX43JYoFqxngt1nHc0oT20YehFVIccTW2ma2xMGkGM=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=QDGQW6bhsISaWKFrbk1hKjd7p5pQ0kdKTiSRd2sA8AYFk1XRjRuVmwYCkTZtHYwBK
+         7wRb2CrSoWyOz2jXyZLwfQ/jjPrGCggeitnii7FWhlJCN5XRcOf2lxjzhH8XIw7P6j
+         Y9+qkRRzgHkGhLKh59mHWsIcv8jWnzd7qS5JwpeS7ZuRiLBU4N2u5BCFN5FOmTkG33
+         ruAWLHjJGjA/LwQ0sYNH5TL0vNFpOfWygeJjZleYhvCHJANuJFgSxJ/I1VsjlGDZxG
+         NdDmPAc4YFtwVL6OE7jh8n/LlqNGBWTnD/CD6F/QOaq8v3YEf8jVwuorkhG7Rs4LdO
+         68ZJBJtybCrgA==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Qais Yousef <qais.yousef@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Qais Yousef <qais.yousef@arm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Enrico Weigelt <info@metux.net>, Ram Pai <linuxram@us.ibm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 03/12] powerpc: Replace cpu_up/down with device_online/offline
+In-Reply-To: <20191030153837.18107-4-qais.yousef@arm.com>
+References: <20191030153837.18107-1-qais.yousef@arm.com> <20191030153837.18107-4-qais.yousef@arm.com>
+Date:   Tue, 19 Nov 2019 12:19:39 +1100
+Message-ID: <87h830d5n8.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The msm_serial driver has a predefined set of uart ports defined, which
-is allocated either by reading aliases or if no match is found a simple
-counter, starting at index 0. But there's no logic in place to prevent
-these two allocation mechanism from colliding. As a result either none
-or all of the active msm_serial instances must be listed as aliases.
+Qais Yousef <qais.yousef@arm.com> writes:
+> The core device API performs extra housekeeping bits that are missing
+> from directly calling cpu_up/down.
+>
+> See commit a6717c01ddc2 ("powerpc/rtas: use device model APIs and
+> serialization during LPM") for an example description of what might go
+> wrong.
+>
+> This also prepares to make cpu_up/down a private interface for anything
+> but the cpu subsystem.
+>
+> Signed-off-by: Qais Yousef <qais.yousef@arm.com>
+> CC: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> CC: Paul Mackerras <paulus@samba.org>
+> CC: Michael Ellerman <mpe@ellerman.id.au>
+> CC: Enrico Weigelt <info@metux.net>
+> CC: Ram Pai <linuxram@us.ibm.com>
+> CC: Nicholas Piggin <npiggin@gmail.com>
+> CC: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+> CC: Christophe Leroy <christophe.leroy@c-s.fr>
+> CC: Thomas Gleixner <tglx@linutronix.de>
+> CC: linuxppc-dev@lists.ozlabs.org
+> CC: linux-kernel@vger.kernel.org
+> ---
+>  arch/powerpc/kernel/machine_kexec_64.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 
-Define blsp1_uart3 as "serial1" to mitigate this problem.
+My initial though is "what about kdump", but that function is not called
+during kdump, so there should be no issue with the extra locking leading
+to deadlocks in a crash.
 
-Fixes: 4cffb9f2c700 ("arm64: dts: qcom: msm8998-mtp: Enable bluetooth")
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
+Acked-by: Michael Ellerman <mpe@ellerman.id.au>
 
-Changes since v1:
-- Rewrote commit message
+I assume you haven't actually tested it?
 
- arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+cheers
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
-index 5f101a20a20a..e08fcb426bbf 100644
---- a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
-@@ -9,6 +9,7 @@
- / {
- 	aliases {
- 		serial0 = &blsp2_uart1;
-+		serial1 = &blsp1_uart3;
- 	};
- 
- 	chosen {
--- 
-2.23.0
-
+> diff --git a/arch/powerpc/kernel/machine_kexec_64.c b/arch/powerpc/kernel/machine_kexec_64.c
+> index 04a7cba58eff..ebf8cc7acc4d 100644
+> --- a/arch/powerpc/kernel/machine_kexec_64.c
+> +++ b/arch/powerpc/kernel/machine_kexec_64.c
+> @@ -208,13 +208,15 @@ static void wake_offline_cpus(void)
+>  {
+>  	int cpu = 0;
+>  
+> +	lock_device_hotplug();
+>  	for_each_present_cpu(cpu) {
+>  		if (!cpu_online(cpu)) {
+>  			printk(KERN_INFO "kexec: Waking offline cpu %d.\n",
+>  			       cpu);
+> -			WARN_ON(cpu_up(cpu));
+> +			WARN_ON(device_online(get_cpu_device(cpu)));
+>  		}
+>  	}
+> +	unlock_device_hotplug();
+>  }
+>  
+>  static void kexec_prepare_cpus(void)
+> -- 
+> 2.17.1
