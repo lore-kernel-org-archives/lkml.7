@@ -4,30 +4,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EF44C432C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 00:22:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F14EDC432C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 00:22:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3A8122315
-	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 00:22:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6E4822315
+	for <linux-kernel@archiver.kernel.org>; Tue, 19 Nov 2019 00:22:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727575AbfKSAWV (ORCPT
+        id S1727591AbfKSAWe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 18 Nov 2019 19:22:21 -0500
+        Mon, 18 Nov 2019 19:22:34 -0500
 Received: from mga18.intel.com ([134.134.136.126]:64622 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727316AbfKSAVo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 18 Nov 2019 19:21:44 -0500
+        id S1727146AbfKSAVj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 18 Nov 2019 19:21:39 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Nov 2019 16:21:44 -0800
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Nov 2019 16:21:38 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,321,1569308400"; 
-   d="scan'208";a="215412033"
+   d="scan'208";a="215412016"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.41])
-  by fmsmga001.fm.intel.com with ESMTP; 18 Nov 2019 16:21:42 -0800
+  by fmsmga001.fm.intel.com with ESMTP; 18 Nov 2019 16:21:37 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
@@ -60,9 +61,9 @@ Cc:     Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>,
         linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
         linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
         linux-acpi@vger.kernel.org, alsa-devel@alsa-project.org
-Subject: [PATCH 05/12] perf/x86/intel: Explicitly include asm/io.h to use virt_to_phys()
-Date:   Mon, 18 Nov 2019 16:21:14 -0800
-Message-Id: <20191119002121.4107-6-sean.j.christopherson@intel.com>
+Subject: [PATCH 01/12] x86/efi: Explicitly include realmode.h to handle RM trampoline quirk
+Date:   Mon, 18 Nov 2019 16:21:10 -0800
+Message-Id: <20191119002121.4107-2-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191119002121.4107-1-sean.j.christopherson@intel.com>
 References: <20191119002121.4107-1-sean.j.christopherson@intel.com>
@@ -73,29 +74,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Through a labyrinthian sequence of includes, usage of virt_to_phys() is
-dependent on the include of asm/io.h in asm/realmode.h via asm/acpi.h.
-Explicitly include asm/io.h to break the dependency on realmode.h so
-that a future patch can remove the realmode.h include from acpi.h
-without breaking the build.
+Explicitly include asm/realmode.h, which is needed to handle a real mode
+trampoline quirk in efi_free_boot_services(), instead of picking it up
+by way of linux/acpi.h.  acpi.h will soon stop including realmode.h so
+that changing realmode.h doesn't require a full kernel rebuild.
 
+Fixes: 5bc653b731821 ("x86/efi: Allocate a trampoline if needed in efi_free_boot_services()")
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/events/intel/ds.c | 1 +
+ arch/x86/platform/efi/quirks.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index ce83950036c5..4b94ae4ae369 100644
---- a/arch/x86/events/intel/ds.c
-+++ b/arch/x86/events/intel/ds.c
-@@ -7,6 +7,7 @@
- #include <asm/perf_event.h>
- #include <asm/tlbflush.h>
- #include <asm/insn.h>
-+#include <asm/io.h>
+diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
+index 3b9fd679cea9..f9ef5c5346ca 100644
+--- a/arch/x86/platform/efi/quirks.c
++++ b/arch/x86/platform/efi/quirks.c
+@@ -16,6 +16,7 @@
+ #include <asm/efi.h>
+ #include <asm/uv/uv.h>
+ #include <asm/cpu_device_id.h>
++#include <asm/realmode.h>
+ #include <asm/reboot.h>
  
- #include "../perf_event.h"
- 
+ #define EFI_MIN_RESERVE 5120
 -- 
 2.24.0
 
