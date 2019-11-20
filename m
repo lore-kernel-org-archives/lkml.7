@@ -2,126 +2,82 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D7DBC43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:50:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E757DC43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:52:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68CD52068F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:50:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE99020726
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:52:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727662AbfKTTuT (ORCPT
+        id S1727465AbfKTTwC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 14:50:19 -0500
-Received: from mx2.suse.de ([195.135.220.15]:33916 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727374AbfKTTuT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 14:50:19 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 29ACDB14A;
-        Wed, 20 Nov 2019 19:50:16 +0000 (UTC)
-Message-ID: <6aaa37d2cbe91c177b7be2d7f8aa3846efe3dc34.camel@suse.de>
-Subject: Re: [PATCH v3 0/4] Raspberry Pi 4 HWRNG Support
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Stefan Wahren <wahrenst@gmx.net>,
-        Stephen Brennan <stephen@brennan.io>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Scott Branden <sbranden@broadcom.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Matt Mackall <mpm@selenic.com>, linux-kernel@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>, linux-crypto@vger.kernel.org,
-        Eric Anholt <eric@anholt.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org, Ray Jui <rjui@broadcom.com>,
-        linux-arm-kernel@lists.infradead.org
-Date:   Wed, 20 Nov 2019 20:50:14 +0100
-In-Reply-To: <99554159-6abb-6ea5-aebb-57a148a59b78@gmx.net>
-References: <20191120031622.88949-1-stephen@brennan.io>
-         <99554159-6abb-6ea5-aebb-57a148a59b78@gmx.net>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-iQqSDeLkAUWuKqj/9yXJ"
-User-Agent: Evolution 3.34.1 
+        Wed, 20 Nov 2019 14:52:02 -0500
+Received: from mail-il1-f200.google.com ([209.85.166.200]:38054 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726440AbfKTTwC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 14:52:02 -0500
+Received: by mail-il1-f200.google.com with SMTP id f6so663568ilg.5
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 11:52:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=XhBRlgTYSsBApDath+tcXSTGDYeEdj9JFcoeoXzALkc=;
+        b=EXmTvFHNJE04aPfusMmUJcejrce5xu/RHaObr5Gg2ZWbcAwdX0MootCfj6u2KCXKcX
+         2puMw3BTEyY+fymyKeciLedfvppIMVPZHNZFA3EnrDNzDaIDiKfHDtlbBzPKIeu41eBi
+         hsSxU3kxm3Nvue8lgLhALAwm+0guK8mIgPJ4fcpIuJZcmUDIuJsM3Y56WCoBdCR+y6ce
+         B98lxxlcENknn1POJZE/KKnprcuI9eh0eAu2u+hwnrgfknOGDCKHrFsl8EgXBs86Z6X5
+         JQpD85eHTkWLKNvXIGg1QwyqjcLFRgqAUW+rk3eiEqtI1g+toUchQfMkmoIC/MEm35bB
+         7+hQ==
+X-Gm-Message-State: APjAAAXzFF4hoYXKoAdM1AALkAYEKCLsfLUEGwdTgNs2lUb0EO4GEARc
+        5WEnTsMlk5n31dPkkDG2IDsX3j2VSVDrlTzyQ9GkGbFsnX8H
+X-Google-Smtp-Source: APXvYqw3+A+07brQWjAPceJpRxuwfPPco+IwB2wmSin7utykaTY7p8Bz5xO7eX7AKCM3IovDSsUHEzwIE7wdHi9CUYsqWNMP16eD
 MIME-Version: 1.0
+X-Received: by 2002:a92:3b9a:: with SMTP id n26mr5774182ilh.82.1574279521405;
+ Wed, 20 Nov 2019 11:52:01 -0800 (PST)
+Date:   Wed, 20 Nov 2019 11:52:01 -0800
+In-Reply-To: <0000000000006e31980579315914@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a6993c0597cc8375@google.com>
+Subject: Re: INFO: task hung in __do_page_fault (2)
+From:   syzbot <syzbot+6b074f741adbd93d2df5@syzkaller.appspotmail.com>
+To:     acme@kernel.org, akpm@linux-foundation.org, arnd@arndb.de,
+        corbet@lwn.net, ebiederm@xmission.com, keescook@chromium.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux@dominikbrodowski.net, luto@kernel.org,
+        mcgrof@kernel.org, mingo@redhat.com, peterz@infradead.org,
+        sudipm.mukherjee@gmail.com, syzkaller-bugs@googlegroups.com,
+        torvalds@linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+syzbot has bisected this bug to:
 
---=-iQqSDeLkAUWuKqj/9yXJ
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+commit 0161028b7c8aebef64194d3d73e43bc3b53b5c66
+Author: Andy Lutomirski <luto@kernel.org>
+Date:   Mon May 9 22:48:51 2016 +0000
 
-On Wed, 2019-11-20 at 17:16 +0100, Stefan Wahren wrote:
-> Hi Stephen,
->=20
-> Am 20.11.19 um 04:16 schrieb Stephen Brennan:
-> > This patch series enables support for the HWRNG included on the Raspber=
-ry
-> > Pi 4.  It is simply a rebase of Stefan's branch [1]. I went ahead and
-> > tested this out on a Pi 4.  Prior to this patch series, attempting to u=
-se
-> > the hwrng gives:
-> >=20
-> >     $ head -c 2 /dev/hwrng
-> >     head: /dev/hwrng: Input/output error
-> >=20
-> > After this series, the same command gives two random bytes.
->=20
-> just a note: a more expressive test would be running rngtest (package
-> rng-tools) on this device.
+     perf/core: Change the default paranoia level to 2
 
-Just had a go at it,
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15910e86e00000
+start commit:   18d0eae3 Merge tag 'char-misc-4.20-rc1' of git://git.kerne..
+git tree:       upstream
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=17910e86e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=13910e86e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=342f43de913c81b9
+dashboard link: https://syzkaller.appspot.com/bug?extid=6b074f741adbd93d2df5
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12482713400000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=158fd4a3400000
 
-root@rpi4:~# rngtest -c 1000 < /dev/hwrng
-rngtest 2-unofficial-mt.14
-Copyright (c) 2004 by Henrique de Moraes Holschuh
-This is free software; see the source for copying conditions.  There is NO
-warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+Reported-by: syzbot+6b074f741adbd93d2df5@syzkaller.appspotmail.com
+Fixes: 0161028b7c8a ("perf/core: Change the default paranoia level to 2")
 
-rngtest: starting FIPS tests...
-rngtest: bits received from input: 20000032
-rngtest: FIPS 140-2 successes: 998
-rngtest: FIPS 140-2 failures: 2
-rngtest: FIPS 140-2(2001-10-10) Monobit: 0
-rngtest: FIPS 140-2(2001-10-10) Poker: 1
-rngtest: FIPS 140-2(2001-10-10) Runs: 0
-rngtest: FIPS 140-2(2001-10-10) Long run: 1
-rngtest: FIPS 140-2(2001-10-10) Continuous run: 0
-rngtest: input channel speed: (min=3D1.284; avg=3D113.786; max=3D126.213)Ki=
-bits/s
-rngtest: FIPS tests speed: (min=3D17.122; avg=3D28.268; max=3D28.812)Mibits=
-/s
-rngtest: Program run time: 172323761 microseconds
-
-AFAIR (Arch wiki) some small failures are acceptable.
-
-Regards,
-Nicolas
-
-
---=-iQqSDeLkAUWuKqj/9yXJ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3VmPYACgkQlfZmHno8
-x/747ggAscLDM0fF7tOoTWdcO+lp+zKBM4o38uVkOwes/laW6msQMiAvB0qW7j4V
-8FRmDLDFt34e1Ta9NKZW3GloAUkVkrS/iPX9msSCy7qlodRjRYdkgF5rbSH4YSIK
-K/9p8MXknOsXsJ9kQCiexooNiiKspt2XLl1lwtLuhHVdtNEVVw1phdlPhfU37BAW
-tV1n45JjdagGkNS8JrjvXNPbCRkSk8SStb/IjldltTO1Rvp//I5Whj0CWXnNzM0t
-HDhXrZiO7+5NB30WU9gP+o3NU8b0KiyAdoe5RgRzTCqlnZsK2rdhJ4eDQKzVpvWR
-/Ra8OIJmgCp4aezFVms92D0KO2dB6w==
-=VuSq
------END PGP SIGNATURE-----
-
---=-iQqSDeLkAUWuKqj/9yXJ--
-
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
