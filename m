@@ -2,108 +2,83 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68621C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 12:09:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F7DCC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 12:09:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 402C222495
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 12:09:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="gy7dqQLD";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="GKvpsFbF"
+	by mail.kernel.org (Postfix) with ESMTP id ED1F2224A0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 12:09:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729476AbfKTMJG (ORCPT
+        id S1729527AbfKTMJT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 07:09:06 -0500
-Received: from a27-18.smtp-out.us-west-2.amazonses.com ([54.240.27.18]:55476
-        "EHLO a27-18.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726689AbfKTMJG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 07:09:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574251745;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
-        bh=ArlHCTjYVpepdX8Kk9BWfKCjMlr56v7NwDSZ7PNNbMg=;
-        b=gy7dqQLDh6LE3dbDLeO3j/lBDS7plZZNjrY26D8pkP/HlacU7SEJKYbKOhOJP1Ri
-        5s8Ie6yAWlESAHfRbdsYLoFtOVEUUKfNulpGac+69SnYO9u41VPs1yu27MT7olrx12Z
-        NV6RG8mpI1UXN3gfg19jsrspTvOO3U/Qh3qHbHiA=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574251745;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
-        bh=ArlHCTjYVpepdX8Kk9BWfKCjMlr56v7NwDSZ7PNNbMg=;
-        b=GKvpsFbF7ZRVIY7rkpNOgWnRZn10nbPg1CgRxQbkIfu94qohuZ9buIjQ8TRpDjbt
-        t8MJbuUg36L3OuYmhVr9ujhml30XwZvjfrv9/CTeqQDcWdiS/xCagwdzb7E6cKdl5bu
-        5kycjM8G9pKTGBddgOEL33oa/R9eFnJ6EhNBMwvI=
+        Wed, 20 Nov 2019 07:09:19 -0500
+Received: from mga05.intel.com ([192.55.52.43]:54678 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726689AbfKTMJS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 07:09:18 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Nov 2019 04:09:17 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,221,1571727600"; 
+   d="scan'208";a="215777847"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 20 Nov 2019 04:09:14 -0800
+Received: by lahna (sSMTP sendmail emulation); Wed, 20 Nov 2019 14:09:13 +0200
+Date:   Wed, 20 Nov 2019 14:09:13 +0200
+From:   Mika Westerberg <mika.westerberg@intel.com>
+To:     Karol Herbst <kherbst@redhat.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lyude Paul <lyude@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        Dave Airlie <airlied@gmail.com>,
+        Mario Limonciello <Mario.Limonciello@dell.com>
+Subject: Re: [PATCH v4] pci: prevent putting nvidia GPUs into lower device
+ states on certain intel bridges
+Message-ID: <20191120120913.GE11621@lahna.fi.intel.com>
+References: <20191017121901.13699-1-kherbst@redhat.com>
+ <20191119214955.GA223696@google.com>
+ <CACO55tu+8VeyMw1Lb6QvNspaJm9LDgoRbooVhr0s3v9uBt=feg@mail.gmail.com>
+ <20191120101816.GX11621@lahna.fi.intel.com>
+ <CAJZ5v0g4vp1C+zHU5nOVnkGsOjBvLaphK1kK=qAT6b=mK8kpsA@mail.gmail.com>
+ <20191120112212.GA11621@lahna.fi.intel.com>
+ <20191120115127.GD11621@lahna.fi.intel.com>
+ <CACO55tsfNOdtu5SZ-4HzO4Ji6gQtafvZ7Rm19nkPcJAgwUBFMw@mail.gmail.com>
+ <CACO55tscD_96jUVts+MTAUsCt-fZx4O5kyhRKoo4mKoC84io8A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 20 Nov 2019 12:09:05 +0000
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     bjorn.andersson@linaro.org, rnayak@codeaurora.org,
-        robh+dt@kernel.org, ulf.hansson@linaro.org, agross@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, mark.rutland@arm.com,
-        dianders@chromium.org
-Subject: Re: [PATCH 5/6] soc: qcom: rpmhpd: Add SC7180 RPMH power-domains
-In-Reply-To: <5dd439e0.1c69fb81.f690a.e152@mx.google.com>
-References: <20191118173944.27043-1-sibis@codeaurora.org>
- <0101016e7f99df8a-05504a3e-9962-4255-94e0-706e8186cd0a-000000@us-west-2.amazonses.com>
- <5dd439e0.1c69fb81.f690a.e152@mx.google.com>
-Message-ID: <0101016e88b74f94-72f29396-8ee7-471d-bbf7-8e3bb1066b86-000000@us-west-2.amazonses.com>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
-X-SES-Outgoing: 2019.11.20-54.240.27.18
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACO55tscD_96jUVts+MTAUsCt-fZx4O5kyhRKoo4mKoC84io8A@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-11-20 00:22, Stephen Boyd wrote:
-> Quoting Sibi Sankar (2019-11-18 09:40:21)
->> Add support for cx/mx/gfx/lcx/lmx/mss power-domains found
->> on SC7180 SoCs.
->> 
->> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
->> ---
-> 
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-> 
->>  drivers/soc/qcom/rpmhpd.c | 19 +++++++++++++++++++
->>  1 file changed, 19 insertions(+)
->> 
->> diff --git a/drivers/soc/qcom/rpmhpd.c b/drivers/soc/qcom/rpmhpd.c
->> index 3b109ee67a4d2..599208722650d 100644
->> --- a/drivers/soc/qcom/rpmhpd.c
->> +++ b/drivers/soc/qcom/rpmhpd.c
->> @@ -166,7 +166,26 @@ static const struct rpmhpd_desc sm8150_desc = {
->>         .num_pds = ARRAY_SIZE(sm8150_rpmhpds),
->>  };
->> 
->> +/* SC7180 RPMH powerdomains */
->> +
-> 
-> Nitpick: Remove the extra newline
+On Wed, Nov 20, 2019 at 12:58:00PM +0100, Karol Herbst wrote:
+> overall, what I really want to know is, _why_ does it work on windows?
 
-okay
+So do I ;-)
 
-> 
->> +static struct rpmhpd *sc7180_rpmhpds[] = {
->> +       [SC7180_CX] = &sdm845_cx,
->> +       [SC7180_CX_AO] = &sdm845_cx_ao,
->> +       [SC7180_GFX] = &sdm845_gfx,
->> +       [SC7180_MX] = &sdm845_mx,
->> +       [SC7180_MX_AO] = &sdm845_mx_ao,
->> +       [SC7180_LMX] = &sdm845_lmx,
->> +       [SC7180_LCX] = &sdm845_lcx,
->> +       [SC7180_MSS] = &sdm845_mss,
->> +};
+> Or what are we doing differently on Linux so that it doesn't work? If
+> anybody has any idea on how we could dig into this and figure it out
+> on this level, this would probably allow us to get closer to the root
+> cause? no?
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+Have you tried to use the acpi_rev_override parameter in your system and
+does it have any effect?
+
+Also did you try to trace the ACPI _ON/_OFF() methods? I think that
+should hopefully reveal something.
