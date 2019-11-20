@@ -2,101 +2,179 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0CDCC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 01:42:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 041DAC43141
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 01:43:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBCF6222B0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 01:42:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5A5A222DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 01:43:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="L/6bUTZx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727357AbfKTBmm (ORCPT
+        id S1727407AbfKTBnP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 20:42:42 -0500
-Received: from rtits2.realtek.com ([211.75.126.72]:53632 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727082AbfKTBmm (ORCPT
+        Tue, 19 Nov 2019 20:43:15 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:59428 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726874AbfKTBnP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 20:42:42 -0500
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID xAK1gKWO013363, This message is accepted by code: ctloc85258
-Received: from RS-CAS02.realsil.com.cn (ms1.realsil.com.cn[172.29.17.3](maybeforged))
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id xAK1gKWO013363
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 20 Nov 2019 09:42:22 +0800
-Received: from localhost (172.29.40.150) by RS-CAS02.realsil.com.cn
- (172.29.17.3) with Microsoft SMTP Server id 14.3.439.0; Wed, 20 Nov 2019
- 09:40:07 +0800
-From:   <rui_feng@realsil.com.cn>
-To:     <arnd@arndb.de>, <gregkh@linuxfoundation.org>,
-        <dan.carpenter@oracle.com>
-CC:     <linux-kernel@vger.kernel.org>, Rui Feng <rui_feng@realsil.com.cn>
-Subject: [PATCH v3] misc: rtsx: Fix impossible condition
-Date:   Wed, 20 Nov 2019 09:40:06 +0800
-Message-ID: <1574214006-13540-1-git-send-email-rui_feng@realsil.com.cn>
-X-Mailer: git-send-email 1.9.1
+        Tue, 19 Nov 2019 20:43:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=UTiuO7gn/Df76JiaANzCArrDiduen89Wrcnv7dJpIJ4=; b=L/6bUTZx6MGWE8OKAug9kKP4V
+        6NNQYm+dW4RCA29AM3DoQqBodyKhF611k+sc7FFV8n7TG6cH/mv4rHVW6L+uc34c/SKwvcN1hgEQU
+        uxnTiq1SLNJc+yQiFCnKPWXkXUFyRonMtzafpm7k3OGmIxBcOTwDpxcK2R8lxTZDw/t7MeE74gqpT
+        qAMEuSqWp0FzuDP+lpusXSQQEi2v+c+dTT1nk0t4aGGQYsSlFQlzwRXTsW+owkskdem4SOkzfrQyT
+        27ZM7ZSnOCYRGeP5jxvGA6Wb8fZ6SFrLUXWhMtAjnxw0T0pa0WMZl8aYZlSgDBGINxHWsSBbyyOgH
+        OW0K06EGw==;
+Received: from [2601:1c0:6280:3f0::5a22]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iXF1V-0007C7-No; Wed, 20 Nov 2019 01:43:13 +0000
+Subject: Re: [PATCH linux-kselftest/test v4] Documentation: kunit: add
+ documentation for kunit_tool
+To:     Brendan Higgins <brendanhiggins@google.com>, shuah@kernel.org,
+        davidgow@google.com
+Cc:     kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org,
+        corbet@lwn.net, tytso@mit.edu
+References: <20191120011700.227543-1-brendanhiggins@google.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <5151cb8f-c98f-9185-b575-83d70351a54d@infradead.org>
+Date:   Tue, 19 Nov 2019 17:43:11 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.29.40.150]
+In-Reply-To: <20191120011700.227543-1-brendanhiggins@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rui Feng <rui_feng@realsil.com.cn>
+On 11/19/19 5:17 PM, Brendan Higgins wrote:
+> Add documentation for the Python script used to build, run, and collect
+> results from the kernel known as kunit_tool. kunit_tool
+> (tools/testing/kunit/kunit.py) was already added in previous commits.
+> 
+> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> Reviewed-by: David Gow <davidgow@google.com>
+> Cc: Randy Dunlap <rdunlap@infradead.org>
 
-A u8 can only go up to 255, condition n > 396 is
-impossible, so change u8 to u16.
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
 
-Signed-off-by: Rui Feng <rui_feng@realsil.com.cn>
----
-v3:remove useless cast.
+Thanks.
 
- drivers/misc/cardreader/rts5261.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+> ---
+>  Documentation/dev-tools/kunit/index.rst      |  1 +
+>  Documentation/dev-tools/kunit/kunit-tool.rst | 57 ++++++++++++++++++++
+>  Documentation/dev-tools/kunit/start.rst      |  5 +-
+>  3 files changed, 62 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/dev-tools/kunit/kunit-tool.rst
+> 
+> diff --git a/Documentation/dev-tools/kunit/index.rst b/Documentation/dev-tools/kunit/index.rst
+> index 26ffb46bdf99d..c60d760a0eed1 100644
+> --- a/Documentation/dev-tools/kunit/index.rst
+> +++ b/Documentation/dev-tools/kunit/index.rst
+> @@ -9,6 +9,7 @@ KUnit - Unit Testing for the Linux Kernel
+>  
+>  	start
+>  	usage
+> +	kunit-tool
+>  	api/index
+>  	faq
+>  
+> diff --git a/Documentation/dev-tools/kunit/kunit-tool.rst b/Documentation/dev-tools/kunit/kunit-tool.rst
+> new file mode 100644
+> index 0000000000000..50d46394e97e3
+> --- /dev/null
+> +++ b/Documentation/dev-tools/kunit/kunit-tool.rst
+> @@ -0,0 +1,57 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +=================
+> +kunit_tool How-To
+> +=================
+> +
+> +What is kunit_tool?
+> +===================
+> +
+> +kunit_tool is a script (``tools/testing/kunit/kunit.py``) that aids in building
+> +the Linux kernel as UML (`User Mode Linux
+> +<http://user-mode-linux.sourceforge.net/>`_), running KUnit tests, parsing
+> +the test results and displaying them in a user friendly manner.
+> +
+> +What is a kunitconfig?
+> +======================
+> +
+> +It's just a defconfig that kunit_tool looks for in the base directory.
+> +kunit_tool uses it to generate a .config as you might expect. In addition, it
+> +verifies that the generated .config contains the CONFIG options in the
+> +kunitconfig; the reason it does this is so that it is easy to be sure that a
+> +CONFIG that enables a test actually ends up in the .config.
+> +
+> +How do I use kunit_tool?
+> +========================
+> +
+> +If a kunitconfig is present at the root directory, all you have to do is:
+> +
+> +.. code-block:: bash
+> +
+> +	./tools/testing/kunit/kunit.py run
+> +
+> +However, you most likely want to use it with the following options:
+> +
+> +.. code-block:: bash
+> +
+> +	./tools/testing/kunit/kunit.py run --timeout=30 --jobs=`nproc --all`
+> +
+> +- ``--timeout`` sets a maximum amount of time to allow tests to run.
+> +- ``--jobs`` sets the number of threads to use to build the kernel.
+> +
+> +If you just want to use the defconfig that ships with the kernel, you can
+> +append the ``--defconfig`` flag as well:
+> +
+> +.. code-block:: bash
+> +
+> +	./tools/testing/kunit/kunit.py run --timeout=30 --jobs=`nproc --all` --defconfig
+> +
+> +.. note::
+> +	This command is particularly helpful for getting started because it
+> +	just works. No kunitconfig needs to be present.
+> +
+> +For a list of all the flags supported by kunit_tool, you can run:
+> +
+> +.. code-block:: bash
+> +
+> +	./tools/testing/kunit/kunit.py run --help
+> diff --git a/Documentation/dev-tools/kunit/start.rst b/Documentation/dev-tools/kunit/start.rst
+> index aeeddfafeea20..f4d9a4fa914f8 100644
+> --- a/Documentation/dev-tools/kunit/start.rst
+> +++ b/Documentation/dev-tools/kunit/start.rst
+> @@ -19,7 +19,10 @@ The wrapper can be run with:
+>  
+>  .. code-block:: bash
+>  
+> -   ./tools/testing/kunit/kunit.py run
+> +	./tools/testing/kunit/kunit.py run --defconfig
+> +
+> +For more information on this wrapper (also called kunit_tool) checkout the
+> +:doc:`kunit-tool` page.
+>  
+>  Creating a kunitconfig
+>  ======================
+> 
 
-diff --git a/drivers/misc/cardreader/rts5261.c b/drivers/misc/cardreader/rts5261.c
-index 32dcec2..bc4967a 100644
---- a/drivers/misc/cardreader/rts5261.c
-+++ b/drivers/misc/cardreader/rts5261.c
-@@ -628,7 +628,8 @@ int rts5261_pci_switch_clock(struct rtsx_pcr *pcr, unsigned int card_clock,
- 		u8 ssc_depth, bool initial_mode, bool double_clk, bool vpclk)
- {
- 	int err, clk;
--	u8 n, clk_divider, mcu_cnt, div;
-+	u16 n;
-+	u8 clk_divider, mcu_cnt, div;
- 	static const u8 depth[] = {
- 		[RTSX_SSC_DEPTH_4M] = RTS5261_SSC_DEPTH_4M,
- 		[RTSX_SSC_DEPTH_2M] = RTS5261_SSC_DEPTH_2M,
-@@ -661,13 +662,13 @@ int rts5261_pci_switch_clock(struct rtsx_pcr *pcr, unsigned int card_clock,
- 		return 0;
- 
- 	if (pcr->ops->conv_clk_and_div_n)
--		n = (u8)pcr->ops->conv_clk_and_div_n(clk, CLK_TO_DIV_N);
-+		n = pcr->ops->conv_clk_and_div_n(clk, CLK_TO_DIV_N);
- 	else
--		n = (u8)(clk - 4);
-+		n = clk - 4;
- 	if ((clk <= 4) || (n > 396))
- 		return -EINVAL;
- 
--	mcu_cnt = (u8)(125/clk + 3);
-+	mcu_cnt = 125/clk + 3;
- 	if (mcu_cnt > 15)
- 		mcu_cnt = 15;
- 
-@@ -676,7 +677,7 @@ int rts5261_pci_switch_clock(struct rtsx_pcr *pcr, unsigned int card_clock,
- 		if (pcr->ops->conv_clk_and_div_n) {
- 			int dbl_clk = pcr->ops->conv_clk_and_div_n(n,
- 					DIV_N_TO_CLK) * 2;
--			n = (u8)pcr->ops->conv_clk_and_div_n(dbl_clk,
-+			n = pcr->ops->conv_clk_and_div_n(dbl_clk,
- 					CLK_TO_DIV_N);
- 		} else {
- 			n = (n + 4) * 2 - 4;
+
 -- 
-1.9.1
-
+~Randy
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
