@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4346CC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:40:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA2EEC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:40:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2282D2080F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:40:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8877D20714
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:40:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731950AbfKTPkd (ORCPT
+        id S1731978AbfKTPkj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 10:40:33 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:52522 "EHLO
+        Wed, 20 Nov 2019 10:40:39 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:52904 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729466AbfKTPkP (ORCPT
+        by vger.kernel.org with ESMTP id S1731698AbfKTPkU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 10:40:15 -0500
+        Wed, 20 Nov 2019 10:40:20 -0500
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iXS5T-0004aV-VF; Wed, 20 Nov 2019 15:40:12 +0000
+        id 1iXS5X-0004d3-Fk; Wed, 20 Nov 2019 15:40:15 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iXS5T-0004Gr-6h; Wed, 20 Nov 2019 15:40:11 +0000
+        id 1iXS5V-0004OF-Is; Wed, 20 Nov 2019 15:40:13 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Nikolay Aleksandrov" <nikolay@cumulusnetworks.com>
-Date:   Wed, 20 Nov 2019 15:37:28 +0000
-Message-ID: <lsq.1574264230.440959526@decadent.org.uk>
+        "Ronnie Sahlberg" <lsahlber@redhat.com>,
+        "Steve French" <stfrench@microsoft.com>,
+        "Pavel Shilovsky" <pshilov@microsoft.com>
+Date:   Wed, 20 Nov 2019 15:38:29 +0000
+Message-ID: <lsq.1574264230.70362151@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 18/83] net: bridge: mcast: don't delete permanent
- entries when fast leave is enabled
+Subject: [PATCH 3.16 79/83] CIFS: Fix use after free of file info structures
 In-Reply-To: <lsq.1574264230.280218497@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,59 +56,62 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+From: Pavel Shilovsky <pshilov@microsoft.com>
 
-commit 5c725b6b65067909548ac9ca9bc777098ec9883d upstream.
+commit 1a67c415965752879e2e9fad407bc44fc7f25f23 upstream.
 
-When permanent entries were introduced by the commit below, they were
-exempt from timing out and thus igmp leave wouldn't affect them unless
-fast leave was enabled on the port which was added before permanent
-entries existed. It shouldn't matter if fast leave is enabled or not
-if the user added a permanent entry it shouldn't be deleted on igmp
-leave.
+Currently the code assumes that if a file info entry belongs
+to lists of open file handles of an inode and a tcon then
+it has non-zero reference. The recent changes broke that
+assumption when putting the last reference of the file info.
+There may be a situation when a file is being deleted but
+nothing prevents another thread to reference it again
+and start using it. This happens because we do not hold
+the inode list lock while checking the number of references
+of the file info structure. Fix this by doing the proper
+locking when doing the check.
 
-Before:
-$ echo 1 > /sys/class/net/eth4/brport/multicast_fast_leave
-$ bridge mdb add dev br0 port eth4 grp 229.1.1.1 permanent
-$ bridge mdb show
-dev br0 port eth4 grp 229.1.1.1 permanent
-
-< join and leave 229.1.1.1 on eth4 >
-
-$ bridge mdb show
-$
-
-After:
-$ echo 1 > /sys/class/net/eth4/brport/multicast_fast_leave
-$ bridge mdb add dev br0 port eth4 grp 229.1.1.1 permanent
-$ bridge mdb show
-dev br0 port eth4 grp 229.1.1.1 permanent
-
-< join and leave 229.1.1.1 on eth4 >
-
-$ bridge mdb show
-dev br0 port eth4 grp 229.1.1.1 permanent
-
-Fixes: ccb1c31a7a87 ("bridge: add flags to distinguish permanent mdb entires")
-Signed-off-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-[bwh: Backported to 3.16: Check PERMANENT flag in net_bridge_port_group::state,
- not net_bridge_port_group::flags.]
+Fixes: 487317c99477d ("cifs: add spinlock for the openFileList to cifsInodeInfo")
+Fixes: cb248819d209d ("cifs: use cifsInodeInfo->open_file_lock while iterating to avoid a panic")
+Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- net/bridge/br_multicast.c | 3 +++
- 1 file changed, 3 insertions(+)
+ fs/cifs/file.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/net/bridge/br_multicast.c
-+++ b/net/bridge/br_multicast.c
-@@ -1471,6 +1471,9 @@ br_multicast_leave_group(struct net_brid
- 			if (p->port != port)
- 				continue;
+--- a/fs/cifs/file.c
++++ b/fs/cifs/file.c
+@@ -398,10 +398,11 @@ void _cifsFileInfo_put(struct cifsFileIn
+ 	bool oplock_break_cancelled;
  
-+			if (p->state & MDB_PERMANENT)
-+				break;
-+
- 			rcu_assign_pointer(*pp, p->next);
- 			hlist_del_init(&p->mglist);
- 			del_timer(&p->timer);
+ 	spin_lock(&tcon->open_file_lock);
+-
++	spin_lock(&cifsi->open_file_lock);
+ 	spin_lock(&cifs_file->file_info_lock);
+ 	if (--cifs_file->count > 0) {
+ 		spin_unlock(&cifs_file->file_info_lock);
++		spin_unlock(&cifsi->open_file_lock);
+ 		spin_unlock(&tcon->open_file_lock);
+ 		return;
+ 	}
+@@ -414,9 +415,7 @@ void _cifsFileInfo_put(struct cifsFileIn
+ 	cifs_add_pending_open_locked(&fid, cifs_file->tlink, &open);
+ 
+ 	/* remove it from the lists */
+-	spin_lock(&cifsi->open_file_lock);
+ 	list_del(&cifs_file->flist);
+-	spin_unlock(&cifsi->open_file_lock);
+ 	list_del(&cifs_file->tlist);
+ 
+ 	if (list_empty(&cifsi->openFileList)) {
+@@ -432,6 +431,7 @@ void _cifsFileInfo_put(struct cifsFileIn
+ 		cifs_set_oplock_level(cifsi, 0);
+ 	}
+ 
++	spin_unlock(&cifsi->open_file_lock);
+ 	spin_unlock(&tcon->open_file_lock);
+ 
+ 	oplock_break_cancelled = wait_oplock_handler ?
 
