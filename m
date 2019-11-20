@@ -2,132 +2,109 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93692C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:07:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 906E5C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:07:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C8A2206DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:07:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TJdXnIF8"
+	by mail.kernel.org (Postfix) with ESMTP id 6885B20721
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:07:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574276866;
+	bh=V866TiQ37Bv8SX4Pfw1bZoTHjOd22HYTmKl3zs2nlG4=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=NeI224AKmf9OAsP77En6BK9pY6DvuYAcTUh+WaR24tiXv5C9jq/aMPhrhcwkeUBUi
+	 HCU6JwGBzL/TucDiJjHVjT6m2wpOgXNj0BqkW1gaZOBMK+t1NXZr2ZogylO0v3T8GD
+	 HKm7X7AL8qKJ1kXINIKuXSKER9vfSUAsY62Ss3SI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727305AbfKTTHY (ORCPT
+        id S1727545AbfKTTHp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 14:07:24 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:34455 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726685AbfKTTHY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 14:07:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574276843;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=8iPj+5VCfBepZUEX3ZDa/r5aYnpsBf0P0ryt2784Syk=;
-        b=TJdXnIF8k73mY5gYQtcr4gvuyqSl/Odr2Go4xWbHMsZgIzvlu6rVC2gSWXlUQkvGVDneKg
-        zq9z17/X1A4LjBw82JN0ZsaedtQOOegkuEJAbimc0/QasqFt07w3OB0UH8UwP7KZ1w6VA9
-        OPl4pItNw3oO5BM0ZLwh1tvVKl12XAY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-37-fDZBxbvGOHKoGDUqgwZ0HQ-1; Wed, 20 Nov 2019 14:07:21 -0500
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 20 Nov 2019 14:07:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52154 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727303AbfKTTHp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 14:07:45 -0500
+Received: from paulmck-ThinkPad-P72.home (unknown [199.201.64.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 53B2018C35A0;
-        Wed, 20 Nov 2019 19:07:18 +0000 (UTC)
-Received: from x1.home (ovpn-116-56.phx2.redhat.com [10.3.116.56])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A384251B9C;
-        Wed, 20 Nov 2019 19:07:16 +0000 (UTC)
-Date:   Wed, 20 Nov 2019 12:07:15 -0700
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Stephen Hemminger <stephen@networkplumber.org>
-Cc:     <lantianyu1986@gmail.com>, <cohuck@redhat.com>,
-        "KY Srinivasan" <kys@microsoft.com>,
-        "Haiyang Zhang" <haiyangz@microsoft.com>,
-        "Stephen Hemminger" <sthemmin@microsoft.com>, <sashal@kernel.org>,
-        <mchehab+samsung@kernel.org>, <davem@davemloft.net>,
-        <gregkh@linuxfoundation.org>, <robh@kernel.org>,
-        <Jonathan.Cameron@huawei.com>, <paulmck@linux.ibm.com>,
-        "Michael Kelley" <mikelley@microsoft.com>,
-        "Tianyu Lan" <Tianyu.Lan@microsoft.com>,
-        <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
-        <linux-hyperv@vger.kernel.org>, "vkuznets" <vkuznets@redhat.com>
-Subject: Re: [PATCH] VFIO/VMBUS: Add VFIO VMBUS driver support
-Message-ID: <20191120120715.0cecf5ea@x1.home>
-In-Reply-To: <20191120103503.5f7bd7c4@hermes.lan>
-References: <20191111084507.9286-1-Tianyu.Lan@microsoft.com>
-        <20191119165620.0f42e5ba@x1.home>
-        <20191120103503.5f7bd7c4@hermes.lan>
-Organization: Red Hat
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F543206DA;
+        Wed, 20 Nov 2019 19:07:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574276864;
+        bh=V866TiQ37Bv8SX4Pfw1bZoTHjOd22HYTmKl3zs2nlG4=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=rHZOXTXH5wLAn+QSFKaIKlS8vq+e8k0YE/rwrXjSrgbTR/M4M9mEM0weUQY/69F0s
+         f/IMew6TtidFI5uYXUuhENO5a5dxKH9wIUbNxhCAKgDp6vEurV8qpSYvpV/3IH3Zof
+         910xaBPzepO5TwqnB9Z0CBl2ANOXdt32fm8+89HE=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 0A109352286C; Wed, 20 Nov 2019 11:07:43 -0800 (PST)
+Date:   Wed, 20 Nov 2019 11:07:43 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Stephen Smalley <sds@tycho.nsa.gov>
+Cc:     Will Deacon <will@kernel.org>, selinux@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        linuxfs <linux-fsdevel@vger.kernel.org>, rcu@vger.kernel.org
+Subject: Re: [RFC PATCH 1/2] selinux: Don't call avc_compute_av() from RCU
+ path walk
+Message-ID: <20191120190743.GT2889@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20191119184057.14961-1-will@kernel.org>
+ <20191119184057.14961-2-will@kernel.org>
+ <5e51f9a5-ba76-a42d-fc2b-9255f8544859@tycho.nsa.gov>
+ <20191120131229.GA21500@willie-the-truck>
+ <d8dbd290-0ffa-271f-0268-5e9148e7ee9b@tycho.nsa.gov>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-MC-Unique: fDZBxbvGOHKoGDUqgwZ0HQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d8dbd290-0ffa-271f-0268-5e9148e7ee9b@tycho.nsa.gov>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 20 Nov 2019 10:35:03 -0800
-Stephen Hemminger <stephen@networkplumber.org> wrote:
+On Wed, Nov 20, 2019 at 10:28:31AM -0500, Stephen Smalley wrote:
+> On 11/20/19 8:12 AM, Will Deacon wrote:
+> > Hi Stephen,
+> > 
+> > Thanks for the quick reply.
+> > 
+> > On Tue, Nov 19, 2019 at 01:59:40PM -0500, Stephen Smalley wrote:
+> > > On 11/19/19 1:40 PM, Will Deacon wrote:
+> > > > 'avc_compute_av()' can block, so we carefully exit the RCU read-side
+> > > > critical section before calling it in 'avc_has_perm_noaudit()'.
+> > > > Unfortunately, if we're calling from the VFS layer on the RCU path walk
+> > > > via 'selinux_inode_permission()' then we're still actually in an RCU
+> > > > read-side critical section and must not block.
+> > > 
+> > > avc_compute_av() should never block AFAIK. The blocking concern was with
+> > > slow_avc_audit(), and even that appears dubious to me. That seems to be more
+> > > about misuse of d_find_alias in dump_common_audit_data() than anything.
+> > 
+> > Apologies, I lost track of GFP_ATOMIC when I reading the code and didn't
+> > think it was propagated down to all of the potential allocations and
+> > string functions. Having looked at it again, I can't see where it blocks.
+> > 
+> > Might be worth a comment in avc_compute_av(), because the temporary
+> > dropping of rcu_read_lock() looks really dodgy when we could be running
+> > on the RCU path walk path anyway.
+> 
+> I don't think that's a problem but I'll defer to the fsdevel and rcu folks.
+> The use of RCU within the SELinux AVC long predates the introduction of RCU
+> path walk, and the rcu_read_lock()/unlock() pairs inside the AVC are not
+> related in any way to RCU path walk.  Hopefully they don't break it.  The
+> SELinux security server (i.e. security_compute_av() and the rest of
+> security/selinux/ss/*) internally has its own locking for its data
+> structures, primarily the policy rwlock.  There was also a patch long ago to
+> convert use of that policy rwlock to RCU but it didn't seem justified at the
+> time.  We are interested in revisiting that however.  That would introduce
+> its own set of rcu_read_lock/unlock pairs inside of security_compute_av() as
+> well.
 
-> On Tue, 19 Nov 2019 15:56:20 -0800
-> "Alex Williamson" <alex.williamson@redhat.com> wrote:
->=20
-> > On Mon, 11 Nov 2019 16:45:07 +0800
-> > lantianyu1986@gmail.com wrote:
-> >  =20
-> > > From: Tianyu Lan <Tianyu.Lan@microsoft.com>
-> > >=20
-> > > This patch is to add VFIO VMBUS driver support in order to expose
-> > > VMBUS devices to user space drivers(Reference Hyper-V UIO driver).
-> > > DPDK now has netvsc PMD driver support and it may get VMBUS resources
-> > > via VFIO interface with new driver support.
-> > >=20
-> > > So far, Hyper-V doesn't provide virtual IOMMU support and so this
-> > > driver needs to be used with VFIO noiommu mode.   =20
-> >=20
-> > Let's be clear here, vfio no-iommu mode taints the kernel and was a
-> > compromise that we can re-use vfio-pci in its entirety, so it had a
-> > high code reuse value for minimal code and maintenance investment.  It
-> > was certainly not intended to provoke new drivers that rely on this mod=
-e
-> > of operation.  In fact, no-iommu should be discouraged as it provides
-> > absolutely no isolation.  I'd therefore ask, why should this be in the
-> > kernel versus any other unsupportable out of tree driver?  It appears
-> > almost entirely self contained.  Thanks,
-> >=20
-> > Alex =20
->=20
-> The current VMBUS access from userspace is from uio_hv_generic
-> there is (and will not be) any out of tree driver for this.
+RCU readers nest, so it should be fine.  (Famous last words...)
 
-I'm talking about the driver proposed here.  It can only be used in a
-mode that taints the kernel that its running on, so why would we sign
-up to support 400 lines of code that has no safe way to use it?
-=20
-> The new driver from Tianyu is to make VMBUS behave like PCI.
-> This simplifies the code for DPDK and other usermode device drivers
-> because it can use the same API's for VMBus as is done for PCI.
-
-But this doesn't re-use the vfio-pci API at all, it explicitly defines
-a new vfio-vmbus API over the vfio interfaces.  So a user mode driver
-might be able to reuse some vfio support, but I don't see how this has
-anything to do with PCI.
-
-> Unfortunately, since Hyper-V does not support virtual IOMMU yet,
-> the only usage modle is with no-iommu taint.
-
-Which is what makes it unsupportable and prompts the question why it
-should be included in the mainline kernel as it introduces a
-maintenance burden and normalizes a usage model that's unsafe.  Thanks,
-
-Alex
-
+							Thanx, Paul
