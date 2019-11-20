@@ -2,152 +2,121 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD43C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:45:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A5CC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2E982243F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:45:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7987C22304
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:48:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="s6sWRKAI"
+	dkim=pass (2048-bit key) header.d=flowbird.group header.i=@flowbird.group header.b="L0I5X4rm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728496AbfKTLpr (ORCPT
+        id S1728615AbfKTLr7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 06:45:47 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:39940 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727645AbfKTLpr (ORCPT
+        Wed, 20 Nov 2019 06:47:59 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35645 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727584AbfKTLr7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 06:45:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1574250345; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=uqbLnehMf46+5kt404rXN6aG71fiFr33xXgRiSLdiUw=;
-        b=s6sWRKAI+ZAEKhAXcJpbghRVYToKsOH1GQhv5Zmj4Q6uOFz6H83nKpLGGX9ZbMy552gRlc
-        pk4m/beFfFUD/9rGFdAkAnPHalKJ3k82TSCHHkopF1hb6kLQIucyk0UqeRFj5jMRVUlPex
-        YM+yKcWJg6v1ljXAko1jb6FIaEvdvd8=
-Date:   Wed, 20 Nov 2019 12:45:38 +0100
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 2/2 v3] MIPS: Ingenic: Disable abandoned HPTLB function.
-To:     Zhou Yanjie <zhouyanjie@zoho.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ralf@linux-mips.org, paulburton@kernel.org, jhogan@kernel.org,
-        jiaxun.yang@flygoat.com, gregkh@linuxfoundation.org,
-        malat@debian.org, tglx@linutronix.de, chenhc@lemote.com
-Message-Id: <1574250338.3.3@crapouillou.net>
-In-Reply-To: <1574173727-123321-3-git-send-email-zhouyanjie@zoho.com>
-References: <1571909341-10108-1-git-send-email-zhouyanjie@zoho.com>
-        <1574173727-123321-1-git-send-email-zhouyanjie@zoho.com>
-        <1574173727-123321-3-git-send-email-zhouyanjie@zoho.com>
+        Wed, 20 Nov 2019 06:47:59 -0500
+Received: by mail-wr1-f68.google.com with SMTP id s5so27801730wrw.2
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 03:47:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=flowbird.group; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=4/bttUSD50/OpRThxoCWFJkuJ+71MHXEy9HmrbnEDso=;
+        b=L0I5X4rm1qeU0PdOmqB4UlnESbgPAzScef+wfVtFwALWKkDarLKBikM6gomHD9Iu8r
+         E18thZ/EEnxlOTcyMRbph/zTD55zYPRluf3Wt4zQKbli3/8JGugm16LASisTd5Tj+uOg
+         GR+8QK9yVGMx4AWebT+7gCebXVmYIHvcTk9pSdwLDIy5coZOZ3EMBHKPMHH93r3d+PvL
+         hIGH+s7jUnbopg5ccKw4nvwzs+2Rqx2u7DPOJ2SDqY4Yh91u9dNLpwxoJBbAZTODtBHm
+         NQ6b7gTmkS4o3rM2ve0UkZoH097gvMrIl5U2Bn2Fg/BsHTS6AeNv596B9HrFRXVeFWrf
+         5UXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=4/bttUSD50/OpRThxoCWFJkuJ+71MHXEy9HmrbnEDso=;
+        b=EiM0Zgehm5cCdVE9UGaGta7WkPi7HQ0Waih6/OgQA3uj612hLO6Y8ZN4ATphuHMllq
+         F0t/Uy/ZNInGgeyA0PuazenhRjjKaKsDUnfKPSUfmR0B+hO0S6YZpQ9WHnn0dl1Y0gIK
+         v4PkVuBNRX3BYA+NjOVNaDWCHnuwjCKCUivDMBmuMvyzgjEvgendWZMAmqy2z4ZlJQab
+         tUKfxf7p7KUxiVBN1/nb9h2sr8SJja0EbwOrePoD5m9X/NkrzqGopjspnqCAGcmm2Lgy
+         raAipb8EVUoJXqBPpx2LsyB86j1iT8YGognsmsjumJcceT4WLN3OJmYydOTl8XjrdIPF
+         4umA==
+X-Gm-Message-State: APjAAAVaxEkD3kzCeqiuE3ozcZCDocQ+XvV+c6rHrISjYd+RAlv+LSkp
+        6xcqU8N9Bu3+e6E9HdD4a3yKIA==
+X-Google-Smtp-Source: APXvYqzNPrXpTeHh7WeB0sYJYjz8IaD4nRr3NDbSHWZvDVgOnUS9XRcG8kJ+2eU5PNou9WPCk0dPrA==
+X-Received: by 2002:adf:82cc:: with SMTP id 70mr791601wrc.231.1574250476673;
+        Wed, 20 Nov 2019 03:47:56 -0800 (PST)
+Received: from [10.32.50.232] ([185.149.63.251])
+        by smtp.gmail.com with ESMTPSA id j3sm30133417wrs.70.2019.11.20.03.47.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 20 Nov 2019 03:47:55 -0800 (PST)
+Subject: Re: Re: [PATCHv1 2/2] Input: EXC3000: Add support to query model and
+ fw_version
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc:     Ahmet Inan <inan@distec.de>, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@collabora.com
+References: <20191107181010.17211-1-sebastian.reichel@collabora.com>
+ <20191107181010.17211-2-sebastian.reichel@collabora.com>
+ <20191113002339.GJ13374@dtor-ws>
+From:   Martin Fuzzey <martin.fuzzey@flowbird.group>
+Message-ID: <eb7f29f9-673d-6e37-0846-226e21b95766@flowbird.group>
+Date:   Wed, 20 Nov 2019 12:47:55 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191113002339.GJ13374@dtor-ws>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: fr
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Zhou,
+Hi Dmitry,
+
+On 13/11/2019 01:23, Dmitry Torokhov wrote:
+> Do we really need to re-fetch model (and firmware ID) on each access?
+> Can we query it as probe time and cache? This I think would simplify the
+> driver, as you probably would not need to hook it into the ISR. Can you
+> just post a read/write transaction to fetch it without waiting for
+> interrupt? Or, if single transaction does not work and you need to wait
+> for certain time for response - just add msleep() and maybe mark driver
+> for async probe...
 
 
-Le mar., nov. 19, 2019 at 22:28, Zhou Yanjie <zhouyanjie@zoho.com> a=20
-=E9crit :
-> JZ4760/JZ4770/JZ4775/X1000/X1500 has an abandoned huge page tlb,
-> this mode is not compatible with the MIPS standard, it will cause
-> tlbmiss and into an infinite loop (line 21 in the tlb-funcs.S)
-> when starting the init process. write 0xa9000000 to cp0 register 5
-> sel 4 to disable this function to prevent getting stuck. Confirmed
-> by Ingenic, this operation will not adversely affect processors
-> without HPTLB function.
->=20
-> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
-
-Acked-by: Paul Cercueil <paul@crapouillou.net>
-
-> ---
->  arch/mips/include/asm/mipsregs.h |  6 ++++++
->  arch/mips/kernel/cpu-probe.c     | 21 +++++++++++++++++++--
->  2 files changed, 25 insertions(+), 2 deletions(-)
-
-Still no changelog here :)
+Having the sysfs access actually read the data from the device can be 
+useful to check that the I2C link is still working (in a test scenario).
 
 
-> diff --git a/arch/mips/include/asm/mipsregs.h=20
-> b/arch/mips/include/asm/mipsregs.h
-> index bdbdc19..0d5a309 100644
-> --- a/arch/mips/include/asm/mipsregs.h
-> +++ b/arch/mips/include/asm/mipsregs.h
-> @@ -689,6 +689,9 @@
->  #define MIPS_CONF7_IAR		(_ULCAST_(1) << 10)
->  #define MIPS_CONF7_AR		(_ULCAST_(1) << 16)
->=20
-> +/* Ingenic HPTLB off bits */
-> +#define XBURST_PAGECTRL_HPTLB_DIS 0xa9000000
-> +
->  /* Ingenic Config7 bits */
->  #define MIPS_CONF7_BTB_LOOP_EN	(_ULCAST_(1) << 4)
->=20
-> @@ -1971,6 +1974,9 @@ do {									\
->  #define read_c0_brcm_sleepcount()	__read_32bit_c0_register($22, 7)
->  #define write_c0_brcm_sleepcount(val)	__write_32bit_c0_register($22,=20
-> 7, val)
->=20
-> +/* Ingenic page ctrl register */
-> +#define write_c0_page_ctrl(val)	__write_32bit_c0_register($5, 4, val)
-> +
->  /*
->   * Macros to access the guest system control coprocessor
->   */
-> diff --git a/arch/mips/kernel/cpu-probe.c=20
-> b/arch/mips/kernel/cpu-probe.c
-> index 7a0e33c..3b5f4fb 100644
-> --- a/arch/mips/kernel/cpu-probe.c
-> +++ b/arch/mips/kernel/cpu-probe.c
-> @@ -1965,13 +1965,30 @@ static inline void cpu_probe_ingenic(struct=20
-> cpuinfo_mips *c, unsigned int cpu)
->  		break;
->  	}
->=20
-> +	switch (c->processor_id & PRID_COMP_MASK) {
-> +	/*
-> +	 * The config0 register in the XBurst CPUs with a processor ID of
-> +	 * PRID_COMP_INGENIC_D1 has an abandoned huge page tlb mode, this
-> +	 * mode is not compatible with the MIPS standard, it will cause
-> +	 * tlbmiss and into an infinite loop (line 21 in the tlb-funcs.S)
-> +	 * when starting the init process. After chip reset, the default
-> +	 * is HPTLB mode, Write 0xa9000000 to cp0 register 5 sel 4 to
-> +	 * switch back to VTLB mode to prevent getting stuck.
-> +	 */
-> +	case PRID_COMP_INGENIC_D1:
-> +		write_c0_page_ctrl(XBURST_PAGECTRL_HPTLB_DIS);
-> +		break;
->  	/*
-> -	 * The config0 register in the Xburst CPUs with a processor ID of
-> +	 * The config0 register in the XBurst CPUs with a processor ID of
->  	 * PRID_COMP_INGENIC_D0 report themselves as MIPS32r2 compatible,
->  	 * but they don't actually support this ISA.
->  	 */
-> -	if ((c->processor_id & PRID_COMP_MASK) =3D=3D PRID_COMP_INGENIC_D0)
-> +	case PRID_COMP_INGENIC_D0:
->  		c->isa_level &=3D ~MIPS_CPU_ISA_M32R2;
-> +		break;
-> +	default:
-> +		break;
-> +	}
->  }
->=20
->  static inline void cpu_probe_netlogic(struct cpuinfo_mips *c, int=20
-> cpu)
-> --
-> 2.7.4
->=20
->=20
+The documentation does say that one should wait for an interrupt after 
+issuing the commands.
 
-=
+The msleep() could work but the value would have to be empirical and 
+could be fragile.
+
+Furthermore what happens if a touch event occurs just after sending the 
+query request?
+
+Having the interrupt handler be the single read() point and dispatching 
+solves that problem, even if it does complicate the driver to some extent.
+
+
+One further thing is that there are other commands that may be added in 
+the future that cannot be cached (commands to do tests or fimware 
+updates for example).
+
+
+Regards,
+
+
+Martin
+
 
