@@ -2,106 +2,153 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27A26C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 08:47:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F426C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 08:49:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE85E223D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 08:47:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574239673;
-	bh=HT77a05SGzBXzjNW3SSpNiDG5j5REw2H7dE6GC1vlqw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EWpObNg7GdE6ofxWJIVfSgR47pD/uisxIiq0cAkPWowxwr1gXao+HLu4RHMGLDWxx
-	 uqkCF49yJcLk2DmELTzJt3HKEvYbwODul3JGaD67ZDPW1KexCpFk8ljvh6e4XBRvft
-	 YXln6ks2tI9fAC+9QnfvuWy83iwmM6N8FijmB3lE=
+	by mail.kernel.org (Postfix) with ESMTP id E7381222DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 08:49:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728001AbfKTIrv (ORCPT
+        id S1728025AbfKTIt0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 03:47:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52702 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726687AbfKTIrv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 03:47:51 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5348B2235D;
-        Wed, 20 Nov 2019 08:47:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574239670;
-        bh=HT77a05SGzBXzjNW3SSpNiDG5j5REw2H7dE6GC1vlqw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ttwn80sr1LeO/JKisG3eqvjFBlcAPyy3jeFEd5ZKd5rahRFdeqK8H0MWc75ptXkd4
-         eGoAmSpbSK8i3/9CA52Wj/QgozmiPb3I0s/D8vS3t8HWxsAVgIi2E+bduTOZNwqYep
-         IRUywIci9tg+K9eZ82tVjNNcVNlXOwgDCMz10lFI=
-Date:   Wed, 20 Nov 2019 08:47:44 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Hanjun Guo <guohanjun@huawei.com>,
-        Zhenyu Ye <yezhenyu2@huawei.com>, catalin.marinas@arm.com,
-        suzuki.poulose@arm.com, mark.rutland@arm.com,
-        tangnianyao@huawei.com, xiexiangyou@huawei.com,
-        linux-kernel@vger.kernel.org, arm@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linuxarm <linuxarm@huawei.com>,
-        Shaokun Zhang <zhangshaokun@hisilicon.com>,
-        wanghuiqiang <wanghuiqiang@huawei.com>
-Subject: Re: [RFC PATCH v2] arm64: cpufeatures: add support for tlbi range
- instructions
-Message-ID: <20191120084743.GA20119@willie-the-truck>
-References: <5DC960EB.9050503@huawei.com>
- <20191111132716.GA9394@willie-the-truck>
- <5DC96660.8040505@huawei.com>
- <d4542758f83b3df3ab391341499fecfb@www.loen.fr>
- <c9dfb341-9d14-1a62-0c34-6ec8bd9b4c55@huawei.com>
- <e6d2ad1c5392c2c3503ed8bb7560e04f@www.loen.fr>
+        Wed, 20 Nov 2019 03:49:26 -0500
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:40299 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727909AbfKTItZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 03:49:25 -0500
+Received: by mail-qv1-f68.google.com with SMTP id i3so9389344qvv.7;
+        Wed, 20 Nov 2019 00:49:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=U7zfNdmgpyMiboihJa1xiLHQ3jUJYyUMIT0Y6QJ7Ulc=;
+        b=udUUlmrHK2QtoQJAgkKU87gIQ7Eg5+tahrXLo561bkxmkafJzlipih929OidOYiXoC
+         4uMQXYvTGCLLYS2214W/Pgi2kUy4FUJG27fy5Z7JMJJdl1VYRZasBxjuHGnoHRrktls7
+         Dy2ngDpV8ppTIyTICERN141djmmga6BQLoGFgjulrHa4n2vL0PchonNXvJPiv9yvb/Zm
+         2srZZRhcRF6XNsee6ghb0Bvzb8/U7FxqvnWvfQ3TR0qnwxg2ivtI7x+ttC8RQjKrW4NL
+         XKBwr5QwJTEvVArrB6t2WqzdFkCedqNthDR5VKkK4EZzJcWjT6Y7aj/yhsIyp/o71eVD
+         hLxA==
+X-Gm-Message-State: APjAAAWmwMoe2tyKezHgE4gUlC29DvUpOjJ0OLMSPaU5EuvGhjnwbM5w
+        s7zLJ0BSx7sNCDamaTfouY5lP5uwgxBcvB9SgZA=
+X-Google-Smtp-Source: APXvYqzoC89VsyKqH8kM+v4dtaa6bLp+LA8RW0cstsBLyISicvDtIlO4aN1V8hZ2omsd9l0HY5hQ+UHjdp9Z6QCWhbg=
+X-Received: by 2002:a0c:e90b:: with SMTP id a11mr1449888qvo.229.1574239763803;
+ Wed, 20 Nov 2019 00:49:23 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e6d2ad1c5392c2c3503ed8bb7560e04f@www.loen.fr>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191119191505.25286-1-geert+renesas@glider.be> <20191119194800.GA204901@google.com>
+In-Reply-To: <20191119194800.GA204901@google.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 20 Nov 2019 09:49:12 +0100
+Message-ID: <CAMuHMdULQ6-tSy79XRo8d3ujrxXfCcHDzduX2fnVZku80ofLFg@mail.gmail.com>
+Subject: Re: [PATCH] PCI: of: Restore alignment/indentation in host bridge
+ window table
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Rob Herring <robh@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Srinath Mannam <srinath.mannam@broadcom.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 10:03:34AM +0000, Marc Zyngier wrote:
-> On 2019-11-19 01:13, Hanjun Guo wrote:
-> > I'm thinking of how to add a firmware description for it, how about
-> > this:
-> > 
-> > Adding a system level flag to indicate the supporting of TIBi by range,
-> > which means adding a binding name for example "tlbi-by-range" at system
-> > level in the dts file, or a tlbi by range flag in ACPI FADT table, then
-> > we use the ID register per-cpu and the system level flag as
-> > 
-> > if (cpus_have_const_cap(ARM64_HAS_TLBI_BY_RANGE) &&
-> > system_level_tlbi_by_range)
-> > 	flush_tlb_by_range()
-> > else
-> > 	flush_tlb_range()
-> > 
-> > And this seems work for heterogeneous system (olny parts of the CPU
-> > support
-> > TLBi by range) as well, correct me if anything wrong.
-> 
-> It could work, but it needs to come with the strongest guarantees that
-> all the DVM agents in the system understand this type of invalidation,
-> specially as we move into the SVM territory. It may also need to cope
-> with non-compliant agents being hot-plugged, or at least discovered late.
-> 
-> I also wonder if the ARMv8.4-TTL extension (which I have patches for in
-> the nested virt series) requires the same kind of treatment (after all,
-> it has an implicit range based on the base granule size and level).
+Hi Bjorn,
 
-It would be good to get confirmation from Arm about this, since the TTL
-extension doesn't have the dangerous 'Note' that the range ops do and it
-wouldn't be difficult to ignore those bits in hardware where the system
-doesn't support the hint for all agents (in comparison to upgrading range
-ops to ALL, which may be unpalatable).
+On Tue, Nov 19, 2019 at 8:48 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> On Tue, Nov 19, 2019 at 08:15:05PM +0100, Geert Uytterhoeven wrote:
+> > Since the printing of the inbound resources was added, alignment and
+> > indentation of the host bridge window table is broken because of two
+> > reasons:
+> >   1. The "IB MEM" row header is longer than the other headers,
+> >   2. Inbound ranges typically extend beyond 32-bit address space, and thus
+> >      don't fit in "#010llx".
+> >
+> > Fix this by extending the row header field to 6 characters, and the
+> > format string to 40-bit addresses.
+> >
+> > Use "%6s" to handle field size and right-alignment, instead of manual
+> > preparation using error-prone snprintf() calls.  Use the exact same
+> > format string for both cases, to allow sharing.
+> >
+> > Impact on kernel boot log on r8a7791/koelsch:
+> >
+> >      rcar-pcie fe000000.pcie: host bridge /soc/pcie@fe000000 ranges:
+> >     -rcar-pcie fe000000.pcie:    IO 0xfe100000..0xfe1fffff -> 0x00000000
+> >     -rcar-pcie fe000000.pcie:   MEM 0xfe200000..0xfe3fffff -> 0xfe200000
+> >     -rcar-pcie fe000000.pcie:   MEM 0x30000000..0x37ffffff -> 0x30000000
+> >     -rcar-pcie fe000000.pcie:   MEM 0x38000000..0x3fffffff -> 0x38000000
+> >     -rcar-pcie fe000000.pcie: IB MEM 0x40000000..0xbfffffff -> 0x40000000
+> >     -rcar-pcie fe000000.pcie: IB MEM 0x200000000..0x2ffffffff -> 0x200000000
+> >     +rcar-pcie fe000000.pcie:       IO 0x00fe100000..0x00fe1fffff -> 0x0000000000
+> >     +rcar-pcie fe000000.pcie:      MEM 0x00fe200000..0x00fe3fffff -> 0x00fe200000
+> >     +rcar-pcie fe000000.pcie:      MEM 0x0030000000..0x0037ffffff -> 0x0030000000
+> >     +rcar-pcie fe000000.pcie:      MEM 0x0038000000..0x003fffffff -> 0x0038000000
+> >     +rcar-pcie fe000000.pcie:   IB MEM 0x0040000000..0x00bfffffff -> 0x0040000000
+> >     +rcar-pcie fe000000.pcie:   IB MEM 0x0200000000..0x02ffffffff -> 0x0200000000
+> >
+> > Fixes: 52ac576f88f9f701 ("PCI: of: Add inbound resource parsing to helpers")
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>
+> This is fine with me, and since it applies on top of 52ac576f88f9f701
+> (longer than the usual 12-char SHA1, BTW), which is on Lorenzo's
+> pci/mmio-dma-ranges branch, I assume Lorenzo will be the one to take
+> care of this.
+>
+> pci_register_host_bridge() prints some of this info like this:
+>
+>   pci_bus 0000:00: root bus resource [io  0x0000-0x0cf7 window]
+>   pci_bus 0000:00: root bus resource [io  0x0d00-0xffff window]
+>   pci_bus 0000:00: root bus resource [mem 0x000a0000-0x000bffff window]
+>   pci_bus 0000:00: root bus resource [mem 0xdc800000-0xfebfffff window]
+>
+> Is there any opportunity for consolidating these or at least making
+> the format the same?
+>
+> I assume we're currently printing most of that info twice, once
+> in devm_of_pci_get_host_bridge_resources() and again in
+> pci_register_host_bridge()?
 
-Will
+(after ignoring PCIe link down, as I don't have a spare PCIe card to plug in)
+
+  rcar-pcie fe000000.pcie: host bridge /soc/pcie@fe000000 ranges:
+  rcar-pcie fe000000.pcie:       IO 0x00fe100000..0x00fe1fffff -> 0x0000000000
+  rcar-pcie fe000000.pcie:      MEM 0x00fe200000..0x00fe3fffff -> 0x00fe200000
+  rcar-pcie fe000000.pcie:      MEM 0x0030000000..0x0037ffffff -> 0x0030000000
+  rcar-pcie fe000000.pcie:      MEM 0x0038000000..0x003fffffff -> 0x0038000000
+  rcar-pcie fe000000.pcie:   IB MEM 0x0040000000..0x00bfffffff -> 0x0040000000
+  rcar-pcie fe000000.pcie:   IB MEM 0x0200000000..0x02ffffffff -> 0x0200000000
+  rcar-pcie fe000000.pcie: PCIe link down (ignored)
+  rcar-pcie fe000000.pcie: PCIe x4: link up
+  rcar-pcie fe000000.pcie: PCI host bridge to bus 0002:00
+  pci_bus 0002:00: root bus resource [bus 00-ff]
+  pci_bus 0002:00: root bus resource [io  0x0000-0xfffff]
+  pci_bus 0002:00: root bus resource [mem 0xfe200000-0xfe3fffff]
+  pci_bus 0002:00: root bus resource [mem 0x30000000-0x37ffffff]
+  pci_bus 0002:00: root bus resource [mem 0x38000000-0x3fffffff pref]
+  pci 0002:00:00.0: [1912:001f] type 01 class 0x060400
+  pci 0002:00:00.0: enabling Extended Tags
+  pci 0002:00:00.0: PME# supported from D0 D3hot D3cold
+  PCI: bus0: Fast back to back transfers disabled
+
+So some, but not all, info is indeed duplicated.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
