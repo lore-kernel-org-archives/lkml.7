@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 020C4C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 09:38:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A80A7C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 09:38:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAAC42243F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 09:38:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AA652243F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 09:38:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728383AbfKTJie (ORCPT
+        id S1728414AbfKTJih (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 04:38:34 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:55858 "EHLO
+        Wed, 20 Nov 2019 04:38:37 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:55868 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728342AbfKTJic (ORCPT
+        with ESMTP id S1728370AbfKTJie (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 04:38:32 -0500
+        Wed, 20 Nov 2019 04:38:34 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iXMRP-0003zw-5h; Wed, 20 Nov 2019 10:38:27 +0100
+        id 1iXMRN-0003xj-Sv; Wed, 20 Nov 2019 10:38:26 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A103C1C1A00;
-        Wed, 20 Nov 2019 10:38:26 +0100 (CET)
-Date:   Wed, 20 Nov 2019 09:38:26 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 7873E1C1998;
+        Wed, 20 Nov 2019 10:38:25 +0100 (CET)
+Date:   Wed, 20 Nov 2019 09:38:25 -0000
 From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/core] futex: Move futex exit handling into futex code
+Subject: [tip: locking/core] futex: Provide state handling for exec() as well
 Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@kernel.org>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
-In-Reply-To: <20191106224556.049705556@linutronix.de>
-References: <20191106224556.049705556@linutronix.de>
+In-Reply-To: <20191106224556.753355618@linutronix.de>
+References: <20191106224556.753355618@linutronix.de>
 MIME-Version: 1.0
-Message-ID: <157424270659.12247.7040310917937860904.tip-bot2@tip-bot2>
+Message-ID: <157424270537.12247.7677943386661355830.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -57,228 +57,103 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the locking/core branch of tip:
 
-Commit-ID:     ba31c1a48538992316cc71ce94fa9cd3e7b427c0
-Gitweb:        https://git.kernel.org/tip/ba31c1a48538992316cc71ce94fa9cd3e7b427c0
+Commit-ID:     af8cbda2cfcaa5515d61ec500498d46e9a8247e2
+Gitweb:        https://git.kernel.org/tip/af8cbda2cfcaa5515d61ec500498d46e9a8247e2
 Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Wed, 06 Nov 2019 22:55:36 +01:00
+AuthorDate:    Wed, 06 Nov 2019 22:55:43 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Wed, 20 Nov 2019 09:40:07 +01:00
+CommitterDate: Wed, 20 Nov 2019 09:40:09 +01:00
 
-futex: Move futex exit handling into futex code
+futex: Provide state handling for exec() as well
 
-The futex exit handling is #ifdeffed into mm_release() which is not pretty
-to begin with. But upcoming changes to address futex exit races need to add
-more functionality to this exit code.
+exec() attempts to handle potentially held futexes gracefully by running
+the futex exit handling code like exit() does.
 
-Split it out into a function, move it into futex code and make the various
-futex exit functions static.
+The current implementation has no protection against concurrent incoming
+waiters. The reason is that the futex state cannot be set to
+FUTEX_STATE_DEAD after the cleanup because the task struct is still active
+and just about to execute the new binary.
 
-Preparatory only and no functional change.
-
-Folded build fix from Borislav.
+While its arguably buggy when a task holds a futex over exec(), for
+consistency sake the state handling can at least cover the actual futex
+exit cleanup section. This provides state consistency protection accross
+the cleanup. As the futex state of the task becomes FUTEX_STATE_OK after the
+cleanup has been finished, this cannot prevent subsequent attempts to
+attach to the task in case that the cleanup was not successfull in mopping
+up all leftovers.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Reviewed-by: Ingo Molnar <mingo@kernel.org>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20191106224556.049705556@linutronix.de
+Link: https://lkml.kernel.org/r/20191106224556.753355618@linutronix.de
 
 
 ---
- include/linux/compat.h |  2 --
- include/linux/futex.h  | 29 ++++++++++++++++-------------
- kernel/fork.c          | 25 +++----------------------
- kernel/futex.c         | 33 +++++++++++++++++++++++++++++----
- 4 files changed, 48 insertions(+), 41 deletions(-)
+ kernel/futex.c | 38 ++++++++++++++++++++++++++++++++++----
+ 1 file changed, 34 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/compat.h b/include/linux/compat.h
-index 16dafd9..c4c389c 100644
---- a/include/linux/compat.h
-+++ b/include/linux/compat.h
-@@ -410,8 +410,6 @@ struct compat_kexec_segment;
- struct compat_mq_attr;
- struct compat_msgbuf;
- 
--extern void compat_exit_robust_list(struct task_struct *curr);
--
- #define BITS_PER_COMPAT_LONG    (8*sizeof(compat_long_t))
- 
- #define BITS_TO_COMPAT_LONGS(bits) DIV_ROUND_UP(bits, BITS_PER_COMPAT_LONG)
-diff --git a/include/linux/futex.h b/include/linux/futex.h
-index ccaef00..d6ed11c 100644
---- a/include/linux/futex.h
-+++ b/include/linux/futex.h
-@@ -2,7 +2,9 @@
- #ifndef _LINUX_FUTEX_H
- #define _LINUX_FUTEX_H
- 
-+#include <linux/sched.h>
- #include <linux/ktime.h>
-+
- #include <uapi/linux/futex.h>
- 
- struct inode;
-@@ -48,15 +50,24 @@ union futex_key {
- #define FUTEX_KEY_INIT (union futex_key) { .both = { .ptr = NULL } }
- 
- #ifdef CONFIG_FUTEX
--extern void exit_robust_list(struct task_struct *curr);
- 
--long do_futex(u32 __user *uaddr, int op, u32 val, ktime_t *timeout,
--	      u32 __user *uaddr2, u32 val2, u32 val3);
--#else
--static inline void exit_robust_list(struct task_struct *curr)
-+static inline void futex_init_task(struct task_struct *tsk)
- {
-+	tsk->robust_list = NULL;
-+#ifdef CONFIG_COMPAT
-+	tsk->compat_robust_list = NULL;
-+#endif
-+	INIT_LIST_HEAD(&tsk->pi_state_list);
-+	tsk->pi_state_cache = NULL;
- }
- 
-+void futex_mm_release(struct task_struct *tsk);
-+
-+long do_futex(u32 __user *uaddr, int op, u32 val, ktime_t *timeout,
-+	      u32 __user *uaddr2, u32 val2, u32 val3);
-+#else
-+static inline void futex_init_task(struct task_struct *tsk) { }
-+static inline void futex_mm_release(struct task_struct *tsk) { }
- static inline long do_futex(u32 __user *uaddr, int op, u32 val,
- 			    ktime_t *timeout, u32 __user *uaddr2,
- 			    u32 val2, u32 val3)
-@@ -65,12 +76,4 @@ static inline long do_futex(u32 __user *uaddr, int op, u32 val,
- }
- #endif
- 
--#ifdef CONFIG_FUTEX_PI
--extern void exit_pi_state_list(struct task_struct *curr);
--#else
--static inline void exit_pi_state_list(struct task_struct *curr)
--{
--}
--#endif
--
- #endif
-diff --git a/kernel/fork.c b/kernel/fork.c
-index bcdf531..bd7c218 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -1286,20 +1286,7 @@ static int wait_for_vfork_done(struct task_struct *child,
- void mm_release(struct task_struct *tsk, struct mm_struct *mm)
- {
- 	/* Get rid of any futexes when releasing the mm */
--#ifdef CONFIG_FUTEX
--	if (unlikely(tsk->robust_list)) {
--		exit_robust_list(tsk);
--		tsk->robust_list = NULL;
--	}
--#ifdef CONFIG_COMPAT
--	if (unlikely(tsk->compat_robust_list)) {
--		compat_exit_robust_list(tsk);
--		tsk->compat_robust_list = NULL;
--	}
--#endif
--	if (unlikely(!list_empty(&tsk->pi_state_list)))
--		exit_pi_state_list(tsk);
--#endif
-+	futex_mm_release(tsk);
- 
- 	uprobe_free_utask(tsk);
- 
-@@ -2062,14 +2049,8 @@ static __latent_entropy struct task_struct *copy_process(
- #ifdef CONFIG_BLOCK
- 	p->plug = NULL;
- #endif
--#ifdef CONFIG_FUTEX
--	p->robust_list = NULL;
--#ifdef CONFIG_COMPAT
--	p->compat_robust_list = NULL;
--#endif
--	INIT_LIST_HEAD(&p->pi_state_list);
--	p->pi_state_cache = NULL;
--#endif
-+	futex_init_task(p);
-+
- 	/*
- 	 * sigaltstack should be cleared when sharing the same VM
- 	 */
 diff --git a/kernel/futex.c b/kernel/futex.c
-index 49eaf5b..f8f00d4 100644
+index f618562..0c9850a 100644
 --- a/kernel/futex.c
 +++ b/kernel/futex.c
-@@ -325,6 +325,12 @@ static inline bool should_fail_futex(bool fshared)
- }
- #endif /* CONFIG_FAIL_FUTEX */
- 
-+#ifdef CONFIG_COMPAT
-+static void compat_exit_robust_list(struct task_struct *curr);
-+#else
-+static inline void compat_exit_robust_list(struct task_struct *curr) { }
-+#endif
-+
- static inline void futex_get_mm(union futex_key *key)
- {
- 	mmgrab(key->private.mm);
-@@ -890,7 +896,7 @@ static void put_pi_state(struct futex_pi_state *pi_state)
-  * Kernel cleans up PI-state, but userspace is likely hosed.
-  * (Robust-futex cleanup is separate and might save the day for userspace.)
-  */
--void exit_pi_state_list(struct task_struct *curr)
-+static void exit_pi_state_list(struct task_struct *curr)
- {
- 	struct list_head *next, *head = &curr->pi_state_list;
- 	struct futex_pi_state *pi_state;
-@@ -960,7 +966,8 @@ void exit_pi_state_list(struct task_struct *curr)
- 	}
- 	raw_spin_unlock_irq(&curr->pi_lock);
- }
--
-+#else
-+static inline void exit_pi_state_list(struct task_struct *curr) { }
- #endif
- 
- /*
-@@ -3588,7 +3595,7 @@ static inline int fetch_robust_entry(struct robust_list __user **entry,
-  *
-  * We silently return on any sign of list-walking problem.
-  */
--void exit_robust_list(struct task_struct *curr)
-+static void exit_robust_list(struct task_struct *curr)
- {
- 	struct robust_list_head __user *head = curr->robust_list;
- 	struct robust_list __user *entry, *next_entry, *pending;
-@@ -3653,6 +3660,24 @@ void exit_robust_list(struct task_struct *curr)
+@@ -3661,7 +3661,7 @@ static void exit_robust_list(struct task_struct *curr)
  	}
  }
  
-+void futex_mm_release(struct task_struct *tsk)
+-void futex_exec_release(struct task_struct *tsk)
++static void futex_cleanup(struct task_struct *tsk)
+ {
+ 	if (unlikely(tsk->robust_list)) {
+ 		exit_robust_list(tsk);
+@@ -3701,7 +3701,7 @@ void futex_exit_recursive(struct task_struct *tsk)
+ 	tsk->futex_state = FUTEX_STATE_DEAD;
+ }
+ 
+-void futex_exit_release(struct task_struct *tsk)
++static void futex_cleanup_begin(struct task_struct *tsk)
+ {
+ 	/*
+ 	 * Switch the state to FUTEX_STATE_EXITING under tsk->pi_lock.
+@@ -3717,10 +3717,40 @@ void futex_exit_release(struct task_struct *tsk)
+ 	raw_spin_lock_irq(&tsk->pi_lock);
+ 	tsk->futex_state = FUTEX_STATE_EXITING;
+ 	raw_spin_unlock_irq(&tsk->pi_lock);
++}
+ 
+-	futex_exec_release(tsk);
++static void futex_cleanup_end(struct task_struct *tsk, int state)
 +{
-+	if (unlikely(tsk->robust_list)) {
-+		exit_robust_list(tsk);
-+		tsk->robust_list = NULL;
-+	}
-+
-+#ifdef CONFIG_COMPAT
-+	if (unlikely(tsk->compat_robust_list)) {
-+		compat_exit_robust_list(tsk);
-+		tsk->compat_robust_list = NULL;
-+	}
-+#endif
-+
-+	if (unlikely(!list_empty(&tsk->pi_state_list)))
-+		exit_pi_state_list(tsk);
++	/*
++	 * Lockless store. The only side effect is that an observer might
++	 * take another loop until it becomes visible.
++	 */
++	tsk->futex_state = state;
++}
+ 
+-	tsk->futex_state = FUTEX_STATE_DEAD;
++void futex_exec_release(struct task_struct *tsk)
++{
++	/*
++	 * The state handling is done for consistency, but in the case of
++	 * exec() there is no way to prevent futher damage as the PID stays
++	 * the same. But for the unlikely and arguably buggy case that a
++	 * futex is held on exec(), this provides at least as much state
++	 * consistency protection which is possible.
++	 */
++	futex_cleanup_begin(tsk);
++	futex_cleanup(tsk);
++	/*
++	 * Reset the state to FUTEX_STATE_OK. The task is alive and about
++	 * exec a new binary.
++	 */
++	futex_cleanup_end(tsk, FUTEX_STATE_OK);
 +}
 +
++void futex_exit_release(struct task_struct *tsk)
++{
++	futex_cleanup_begin(tsk);
++	futex_cleanup(tsk);
++	futex_cleanup_end(tsk, FUTEX_STATE_DEAD);
+ }
+ 
  long do_futex(u32 __user *uaddr, int op, u32 val, ktime_t *timeout,
- 		u32 __user *uaddr2, u32 val2, u32 val3)
- {
-@@ -3780,7 +3805,7 @@ static void __user *futex_uaddr(struct robust_list __user *entry,
-  *
-  * We silently return on any sign of list-walking problem.
-  */
--void compat_exit_robust_list(struct task_struct *curr)
-+static void compat_exit_robust_list(struct task_struct *curr)
- {
- 	struct compat_robust_list_head __user *head = curr->compat_robust_list;
- 	struct robust_list __user *entry, *next_entry, *pending;
