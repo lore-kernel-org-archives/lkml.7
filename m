@@ -2,107 +2,109 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11928C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:21:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C1C8C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:23:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA8A12243F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:21:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C8E42243E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:23:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728624AbfKTKVH (ORCPT
+        id S1728631AbfKTKXH convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 05:21:07 -0500
-Received: from mga01.intel.com ([192.55.52.88]:65360 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727659AbfKTKVH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 05:21:07 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Nov 2019 02:21:06 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,221,1571727600"; 
-   d="scan'208";a="215747961"
-Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
-  by fmsmga001.fm.intel.com with SMTP; 20 Nov 2019 02:21:03 -0800
-Received: by stinkbox (sSMTP sendmail emulation); Wed, 20 Nov 2019 12:21:03 +0200
-Date:   Wed, 20 Nov 2019 12:21:03 +0200
-From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org, Sean Paul <sean@poorly.run>
-Subject: Re: [PATCH] drm/crc-debugfs: fix crtc_crc_poll()'s return type
-Message-ID: <20191120102103.GD1208@intel.com>
-References: <20191120000754.30710-1-luc.vanoostenryck@gmail.com>
+        Wed, 20 Nov 2019 05:23:07 -0500
+Received: from cnshjsmin03.app.nokia-sbell.com ([116.246.26.71]:16257 "EHLO
+        cnshjsmin03.nokia-sbell.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726757AbfKTKXG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 05:23:06 -0500
+X-Greylist: delayed 901 seconds by postgrey-1.27 at vger.kernel.org; Wed, 20 Nov 2019 05:23:05 EST
+X-AuditID: ac189297-c7bff7000000115a-f7-5dd5107e795c
+Received: from CNSHPPEXCH1607.nsn-intra.net (Unknown_Domain [135.251.51.107])
+        (using TLS with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client did not present a certificate)
+        by cnshjsmin03.nokia-sbell.com (Symantec Messaging Gateway) with SMTP id 78.F8.04442.E7015DD5; Wed, 20 Nov 2019 18:07:58 +0800 (HKT)
+Received: from CNSHPPEXCH1601.nsn-intra.net (135.251.51.101) by
+ CNSHPPEXCH1607.nsn-intra.net (135.251.51.107) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 20 Nov 2019 18:07:57 +0800
+Received: from CNSHPPEXCH1601.nsn-intra.net ([135.251.51.101]) by
+ CNSHPPEXCH1601.nsn-intra.net ([135.251.51.101]) with mapi id 15.01.1713.007;
+ Wed, 20 Nov 2019 18:07:57 +0800
+From:   "Wang, Peng 1. (NSB - CN/Hangzhou)" <peng.1.wang@nokia-sbell.com>
+To:     "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
+        "linux@roeck-us.net" <linux@roeck-us.net>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH] watchdog: make DesignWare watchdog allow users to set bigger
+ timeout value
+Thread-Topic: [PATCH] watchdog: make DesignWare watchdog allow users to set
+ bigger timeout value
+Thread-Index: AdWfimD0awmuxWORQi2dTd1MQDV31A==
+Date:   Wed, 20 Nov 2019 10:07:57 +0000
+Message-ID: <13477f08400047c1b32030b2680a4241@nokia-sbell.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [135.251.51.115]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191120000754.30710-1-luc.vanoostenryck@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrOLMWRmVeSWpSXmKPExsXS/ts4W7dO4GqswfOnTBaXd81hs7ixbh+7
+        xZOFZ5gsHr/8x+zA4rFyzRpWj53fG9g9Pm+SC2CO4rJJSc3JLEst0rdL4Mp4vtu24BFXxaUW
+        jQbGhxxdjJwcEgImEmeenGUBsYUEDjFJPD5X28XIBWT/ZZQ4dPMeM4SziVFi65ZHrCBVbALu
+        Ek2b1rGBJEQEXjBKNM7fzA6SEBaIlfi69wsziC0ikCRx4+F/FghbT2LO9h9gzSwCqhIXVm0B
+        s3kF7CR+P2oA62UUkJWY9ug+E4jNLCAucevJfCaI8wQkluw5zwxhi0q8fPwPqJcDyFaS6NsA
+        Va4jsWD3JzYIW1ti2cLXzBDjBSVOznzCMoFReBaSqbOQtMxC0jILScsCRpZVjNLJecUZWcW5
+        mXkGxnp5+dmZibrFSak5OXrJ+bmbGIHRsUZi0vQdjMcOeB9iFOBgVOLhtbh0OVaINbGsuDL3
+        EKMEB7OSCO+e61dihXhTEiurUovy44tKc1KLDzFKc7AoifO2TF4YKySQnliSmp2aWpBaBJNl
+        4uCUamDMCOdprnDhLngz5Yg3b8b5TXHrjJwkE+Qd1fTfh5qumjOH2czzyfbradwP0uoKNxjc
+        j9JlecJzwPXjYum0459Llv+dttGmx8v1pU/hIXOFT5ZGXe2svxTevUhePH/9oeP9hh2qR0U0
+        TV30lZevL0ll6Ana0GBzJERD0cSuNFWwIkXHtFp2nhJLcUaioRZzUXEiAOg1oIuKAgAA
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 01:07:54AM +0100, Luc Van Oostenryck wrote:
-> crtc_crc_poll() is defined as returning 'unsigned int' but the
-> .poll method is declared as returning '__poll_t', a bitwise type.
-> 
-> Fix this by using the proper return type and using the EPOLL
-> constants instead of the POLL ones, as required for __poll_t.
+From 1d051b7c081083751dc0bab97d3ab9efbba0f4a7 Mon Sep 17 00:00:00 2001
+From: Peng Wang <peng.1.wang@nokia-sbell.com>
+Date: Wed, 20 Nov 2019 15:12:59 +0800
+Subject: [PATCH] watchdog: make DesignWare watchdog allow users to set bigger
+ timeout value
 
-Already fixed. 1ab2a99edb37 ("drm: Fix return type of crc .poll()")
+watchdog_dev.c provides means to allow users to set bigger timeout value
+than HW can support, make DesignWare watchdog align with this.
 
-> 
-> CC: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> CC: Maxime Ripard <mripard@kernel.org>
-> CC: Sean Paul <sean@poorly.run>
-> CC: David Airlie <airlied@linux.ie>
-> CC: Daniel Vetter <daniel@ffwll.ch>
-> CC: dri-devel@lists.freedesktop.org
-> Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-> ---
->  drivers/gpu/drm/drm_debugfs_crc.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/drm_debugfs_crc.c b/drivers/gpu/drm/drm_debugfs_crc.c
-> index be1b7ba92ffe..0bb0aa0ebbca 100644
-> --- a/drivers/gpu/drm/drm_debugfs_crc.c
-> +++ b/drivers/gpu/drm/drm_debugfs_crc.c
-> @@ -334,17 +334,17 @@ static ssize_t crtc_crc_read(struct file *filep, char __user *user_buf,
->  	return LINE_LEN(crc->values_cnt);
->  }
->  
-> -static unsigned int crtc_crc_poll(struct file *file, poll_table *wait)
-> +static __poll_t crtc_crc_poll(struct file *file, poll_table *wait)
->  {
->  	struct drm_crtc *crtc = file->f_inode->i_private;
->  	struct drm_crtc_crc *crc = &crtc->crc;
-> -	unsigned ret;
-> +	__poll_t ret;
->  
->  	poll_wait(file, &crc->wq, wait);
->  
->  	spin_lock_irq(&crc->lock);
->  	if (crc->source && crtc_crc_data_count(crc))
-> -		ret = POLLIN | POLLRDNORM;
-> +		ret = EPOLLIN | EPOLLRDNORM;
->  	else
->  		ret = 0;
->  	spin_unlock_irq(&crc->lock);
-> -- 
-> 2.24.0
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Signed-off-by: Peng Wang <peng.1.wang@nokia-sbell.com>
+---
+ drivers/watchdog/dw_wdt.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c
+index fef7c61..8911e5e 100644
+--- a/drivers/watchdog/dw_wdt.c
++++ b/drivers/watchdog/dw_wdt.c
+@@ -113,8 +113,15 @@ static int dw_wdt_set_timeout(struct watchdog_device *wdd, unsigned int top_s)
+ 	 */
+ 	writel(top_val | top_val << WDOG_TIMEOUT_RANGE_TOPINIT_SHIFT,
+ 	       dw_wdt->regs + WDOG_TIMEOUT_RANGE_REG_OFFSET);
+-
+-	wdd->timeout = dw_wdt_top_in_seconds(dw_wdt, top_val);
++    
++    /*
++     * In case users set bigger timeout value than HW can support,
++     * kernel(watchdog_dev.c) helps to feed watchdog before 
++     * wdd->timeout
++     */
++    if ( wdd->timeout * 1000 <= wdd->max_hw_heartbeat_ms ) {
++	    wdd->timeout = dw_wdt_top_in_seconds(dw_wdt, top_val);
++    }
+ 
+ 	return 0;
+ }
 -- 
-Ville Syrjälä
-Intel
+1.8.3.1
+
