@@ -2,122 +2,94 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D9FC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 01:27:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13FDFC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 01:28:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 368772245B
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 01:27:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574213229;
-	bh=D7abHCeD4TPvV2CC5GlYUE+dpzX7mKsMT4oa0/yvIRw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=nsBVOBRSpee37t+E4P/b16ZHKnhM9oAsi+pCalrV476m9cAmg7OAE28xVNYj/41Gb
-	 a6BeDk2wcA2aepfoEUMIqCShkjqGNfblRgTdfweyBCwxUZOkDURQsAC6QBr8/JvmoT
-	 o6mtp15dSFuHqhVWif2BOQME2ZORNB73QqhJQDuc=
+	by mail.kernel.org (Postfix) with ESMTP id DAA0E2245B
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 01:28:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727605AbfKTB1I (ORCPT
+        id S1727627AbfKTB2T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 20:27:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46464 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727262AbfKTB1H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 20:27:07 -0500
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52C1E22461;
-        Wed, 20 Nov 2019 01:27:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574213225;
-        bh=D7abHCeD4TPvV2CC5GlYUE+dpzX7mKsMT4oa0/yvIRw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=eOnkCcpi3XzYZrccf26EVRVyjaGrzkJM2FuzIDz2a6nLVVzbAKGJvodiPcmIUpL3n
-         gvLbf/JklQkvF0ImVVa7jx4efmK2auYAzjeEnnvBU1Q65nizUJ4S0UKbhUJEeKDjdz
-         rdCWWF+ApEM0lz17r/TTjMw7fMaTerpB/fD8csH0=
-Received: by mail-lf1-f53.google.com with SMTP id d6so18745704lfc.0;
-        Tue, 19 Nov 2019 17:27:05 -0800 (PST)
-X-Gm-Message-State: APjAAAUKRq3XKE8QT0x5qE0h/21pDFj44fuQ8cctQ3kEraAAenqEU+lf
-        Qkkok+3kqgbXLelxZfNoQpnxYjfrZaZRWbKP1bY=
-X-Google-Smtp-Source: APXvYqwRCZuOLwwW4yV+7MFk/VIFl8MVP82eHlcf4qaQKdX30EKfsryD1YdVJwUyn/6jRxu7hGaF3j94H2BVMIxjCZE=
-X-Received: by 2002:a19:da1a:: with SMTP id r26mr450883lfg.60.1574213223486;
- Tue, 19 Nov 2019 17:27:03 -0800 (PST)
+        Tue, 19 Nov 2019 20:28:19 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:50442 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727262AbfKTB2S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 20:28:18 -0500
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id C48BDC9B78963A98D675;
+        Wed, 20 Nov 2019 09:28:01 +0800 (CST)
+Received: from [127.0.0.1] (10.177.96.96) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Wed, 20 Nov 2019
+ 09:27:59 +0800
+Subject: Re: [PATCH net] net: dsa: ocelot: add dependency for
+ NET_DSA_MSCC_FELIX
+To:     David Miller <davem@davemloft.net>
+CC:     <vladimir.oltean@nxp.com>, <claudiu.manoil@nxp.com>,
+        <andrew@lunn.ch>, <vivien.didelot@gmail.com>,
+        <f.fainelli@gmail.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
+References: <20191119025128.7393-1-maowenan@huawei.com>
+ <20191119.154125.1492881397881625788.davem@davemloft.net>
+From:   maowenan <maowenan@huawei.com>
+Message-ID: <b541e6bb-020f-c2c4-8921-9f4d140f3bcb@huawei.com>
+Date:   Wed, 20 Nov 2019 09:27:32 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-References: <20191119144315.11261-1-krzk@kernel.org> <CAL_Jsq+1hHneSW5DzLNxU00AqQJ49chTyULJ0S3JR-CqfOfTgA@mail.gmail.com>
-In-Reply-To: <CAL_Jsq+1hHneSW5DzLNxU00AqQJ49chTyULJ0S3JR-CqfOfTgA@mail.gmail.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Wed, 20 Nov 2019 09:26:51 +0800
-X-Gmail-Original-Message-ID: <CAJKOXPep1ftnw0gGEtzmSZaZBaAiyDhCsVygRfNAQ4egiJK1tA@mail.gmail.com>
-Message-ID: <CAJKOXPep1ftnw0gGEtzmSZaZBaAiyDhCsVygRfNAQ4egiJK1tA@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: power: Fix path to power-domain.txt bindings
-To:     Rob Herring <robh@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        etnaviv@lists.freedesktop.org,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        linux-tegra@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191119.154125.1492881397881625788.davem@davemloft.net>
+Content-Type: text/plain; charset="gbk"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.177.96.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 20 Nov 2019 at 01:02, Rob Herring <robh@kernel.org> wrote:
->
-> On Tue, Nov 19, 2019 at 8:43 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> >
-> > With split of power domain controller bindings to power-domain.yaml, the
-> > consumer part was renamed to power-domain.txt.  Update the references in
-> > other bindings.
-> >
-> > Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> > Fixes: abb4805e343a ("dt-bindings: power: Convert Samsung Exynos Power Domain bindings to json-schema")
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > ---
-> >  Documentation/devicetree/bindings/clock/clk-exynos-audss.txt  | 2 +-
-> >  Documentation/devicetree/bindings/clock/exynos5433-clock.txt  | 2 +-
-> >  .../devicetree/bindings/clock/renesas,r8a7778-cpg-clocks.txt  | 2 +-
-> >  .../devicetree/bindings/clock/renesas,r8a7779-cpg-clocks.txt  | 2 +-
-> >  .../bindings/clock/renesas,rcar-gen2-cpg-clocks.txt           | 2 +-
-> >  .../devicetree/bindings/clock/renesas,rz-cpg-clocks.txt       | 2 +-
-> >  .../devicetree/bindings/display/etnaviv/etnaviv-drm.txt       | 2 +-
-> >  Documentation/devicetree/bindings/display/msm/dpu.txt         | 2 +-
-> >  Documentation/devicetree/bindings/display/msm/mdp5.txt        | 2 +-
-> >  Documentation/devicetree/bindings/dsp/fsl,dsp.yaml            | 2 +-
-> >  Documentation/devicetree/bindings/media/imx7-mipi-csi2.txt    | 2 +-
-> >  .../devicetree/bindings/media/mediatek-jpeg-decoder.txt       | 2 +-
-> >  Documentation/devicetree/bindings/media/mediatek-mdp.txt      | 2 +-
-> >  Documentation/devicetree/bindings/opp/qcom-nvmem-cpufreq.txt  | 2 +-
-> >  Documentation/devicetree/bindings/pci/pci-keystone.txt        | 2 +-
-> >  Documentation/devicetree/bindings/phy/ti,phy-am654-serdes.txt | 2 +-
-> >  Documentation/devicetree/bindings/power/qcom,rpmpd.txt        | 2 +-
-> >  Documentation/devicetree/bindings/power/renesas,rcar-sysc.txt | 2 +-
-> >  .../devicetree/bindings/usb/nvidia,tegra124-xusb.txt          | 4 ++--
-> >  19 files changed, 20 insertions(+), 20 deletions(-)
->
-> Please no. Can you just undo the renaming back to power_domain.txt
 
-The renaming was done to make it consistent with yaml and other
-bindings but indeed it creates some churn... I'll send rename-undo
-then.
 
-Best regards,
-Krzysztof
+ÔÚ 2019/11/20 7:41, David Miller Ð´µÀ:
+> From: Mao Wenan <maowenan@huawei.com>
+> Date: Tue, 19 Nov 2019 10:51:28 +0800
+> 
+>> If CONFIG_NET_DSA_MSCC_FELIX=y, and CONFIG_NET_VENDOR_MICROSEMI=n,
+>> below errors can be found:
+>> drivers/net/dsa/ocelot/felix.o: In function `felix_vlan_del':
+>> felix.c:(.text+0x26e): undefined reference to `ocelot_vlan_del'
+>> drivers/net/dsa/ocelot/felix.o: In function `felix_vlan_add':
+>> felix.c:(.text+0x352): undefined reference to `ocelot_vlan_add'
+>>
+>> and warning as below:
+>> WARNING: unmet direct dependencies detected for MSCC_OCELOT_SWITCH
+>> Depends on [n]: NETDEVICES [=y] && ETHERNET [=y] &&
+>> NET_VENDOR_MICROSEMI [=n] && NET_SWITCHDEV [=y] && HAS_IOMEM [=y]
+>> Selected by [y]:
+>> NET_DSA_MSCC_FELIX [=y] && NETDEVICES [=y] && HAVE_NET_DSA [=y]
+>> && NET_DSA [=y] && PCI [=y]
+>>
+>> This patch add dependency NET_VENDOR_MICROSEMI for NET_DSA_MSCC_FELIX.
+>>
+>> Fixes: 56051948773e ("net: dsa: ocelot: add driver for Felix switch family")
+>> Signed-off-by: Mao Wenan <maowenan@huawei.com>
+> 
+> This seems more like a "select" situation, why in the world should the
+> user be required to know about NET_VENDOR_MISCROSEMI at all for this
+> driver?
+thanks.
+I will change to 'select' it and send v2.
+> 
+> And NET_VENDOR_MICROSEMI does _NOT_ enable any code at all, you have
+> to enable the individual drivers guarded by NET_VENDOR_MICROSEMI in order
+> to resolve the symbols necessary for ocelot.
+> 
+> I'm not applying this, it isn't correct.
+> 
+> Thank you.
+> 
+> .
+> 
+
