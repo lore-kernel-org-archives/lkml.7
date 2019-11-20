@@ -2,145 +2,126 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 199F9C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 09:07:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01D84C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 09:09:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B816D22445
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 09:07:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="MZi5cqw4"
+	by mail.kernel.org (Postfix) with ESMTP id CBF9E20731
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 09:09:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574240944;
+	bh=MUIgVFDwkUr1ntkeGVGC9cGKbm8MC5EhUUlhuOr1nLg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=pDJhhvkrPx20Kv/l5dlBk6anwxid3UB2Hg/gWkMFA6/Kxkc9ccNQFEm7Z0zogBGxn
+	 LsniHqtedwLEQf5GeTjmkR1pQ2JmFYt8UwnT1CeMsXepvyTCUsQ2qheYJWJFAW2MMH
+	 Pk8yH0gEGSZ1SCptWkLSLqrbjqRGww65iyw863Sg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728060AbfKTJHw (ORCPT
+        id S1728090AbfKTJJE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 04:07:52 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:37242 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727814AbfKTJHw (ORCPT
+        Wed, 20 Nov 2019 04:09:04 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:47095 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727816AbfKTJJD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 04:07:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=DSCUinPNKai22HW1JHW+/dL4VKgNpCZryvn5/wZYgtE=; b=MZi5cqw4EjoPe1UaPXozRB3n9
-        Gd5YhBXNyzUKki7Bu+X07b00jfUws///Oewg7+7tM0/fTcGtTeZs4zITQXs/+6Cy2/fkmto/LDFTX
-        UBDbvUm/IrV+Q81Zb1URl6mgMvcgjesfD5TACLxHZ0hq40UXhdZbVKOp9Llz8YflxqxtaeQVkBWn9
-        qrohdiEcF9bUVOVeWsnieqwU3H+VgLaGyP+A9IqgkHow+T12ieVRibjE/l6csKbMsX7sfFLxnY+YT
-        7yAGuRtit6niemo7/lzOmw3LNZPKdvxja6XLt90Vam6X9pLahnGxZOQTlz7oaQ5znVS2x3A/CrdYI
-        yf3JYjxuA==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:58688)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1iXLxj-0007KX-6m; Wed, 20 Nov 2019 09:07:47 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1iXLxh-0001ac-3A; Wed, 20 Nov 2019 09:07:45 +0000
-Date:   Wed, 20 Nov 2019 09:07:45 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Enrico Weigelt <info@metux.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] ARM: don't export unused return_address()
-Message-ID: <20191120090744.GH25745@shell.armlinux.org.uk>
-References: <20190906154706.2449696-1-arnd@arndb.de>
- <CAMuHMdUMgDBo1gkvQ_Bd8mjMiPjdWWY=9AU6K1S7NcJy5jhvGQ@mail.gmail.com>
- <CAK7LNASNp4jPYHmh3e4QYwenYbVrK69tvB_LLyK_ew1eqBNrEw@mail.gmail.com>
- <20191113114517.GO25745@shell.armlinux.org.uk>
- <CAMuHMdXk9sWBpYWC-X6V3rp2e0+f5ebdRFFXn8Heuy0qkLq0GQ@mail.gmail.com>
- <20191113170058.GP25745@shell.armlinux.org.uk>
- <CAK7LNARiQnc+A0j4ORC-M8ZcbtDYdRF7tU1Zv8Lbst-g8dqmVQ@mail.gmail.com>
+        Wed, 20 Nov 2019 04:09:03 -0500
+Received: by mail-oi1-f194.google.com with SMTP id n14so21800353oie.13;
+        Wed, 20 Nov 2019 01:09:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fxjAZZwG5hIfrc3YBFvEHX0U8tqNbosfqpgXVFQpjTc=;
+        b=dmCR20i9ljycuzcdpQ/+b/WzPGniZOP3/6mDPi8Lf2AIOn/ZMrlKNLkRzOyYvLfEbF
+         k7RcT/zJpksB6x3YX4q6Pzry8vL61YqQ8mLEk9wjOY14zfyDHls6QQeB+IVrhh+Qaess
+         5wAaaEGr3TNr2+1Np2IJlt+hp3Pg7JqHFcqv5svCoDEV7cWk/QbFDr9aSIQ0s4iQed3B
+         m6Sh5WPOXyEo2VbsXThlgB55DAi/bUtCombh8WjA4zHLys/gPUhlqqO/rqz0EK0YksJP
+         +HOSy2Kb3NFYa+EXH9awcsVtbc3cU9S7TNG9pbKKq8F9KwlbPO75LOh1+giw/ugacKTB
+         nGUQ==
+X-Gm-Message-State: APjAAAWYSGq45lA3bd6E63YBkYTvAJsx0lX5T/JZ+SxTmmAflbftLDS/
+        bISBT2pmRrIemUy1Ss0PrK0dfsjyZANcPLL3AO0=
+X-Google-Smtp-Source: APXvYqxQjCBlQqe/f/mECD0vZZyqUXnBDslf+mcXcDjZNftUBzoDIa8ouyVTVLVhR1a+rSsJzXW2qceRI7vfoJ5tp48=
+X-Received: by 2002:a05:6808:901:: with SMTP id w1mr1897534oih.57.1574240942620;
+ Wed, 20 Nov 2019 01:09:02 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK7LNARiQnc+A0j4ORC-M8ZcbtDYdRF7tU1Zv8Lbst-g8dqmVQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <2811202.iOFZ6YHztY@kreacher> <000401d59ee6$959e3da0$c0dab8e0$@net>
+ <CAJZ5v0i1iAjpWju6FiCjP3RvspKDRfSwz4=b_3qgGhhfz8sSrw@mail.gmail.com>
+ <6710300.onecg0m5mP@kreacher> <002a01d59f6f$7f609540$7e21bfc0$@net>
+In-Reply-To: <002a01d59f6f$7f609540$7e21bfc0$@net>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 20 Nov 2019 10:08:50 +0100
+Message-ID: <CAJZ5v0i1UqdQBvXm1cozOQeQ8YRdTxOAQPP9=RyZHHnsmuGHTw@mail.gmail.com>
+Subject: Re: [RFT][PATCH 1/3] PM: QoS: Introduce frequency QoS
+To:     Doug Smythies <dsmythies@telus.net>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Dmitry Osipenko <digetx@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 06:02:13PM +0900, Masahiro Yamada wrote:
-> Hi Arnd,
-> 
-> 
-> 
-> On Thu, Nov 14, 2019 at 2:01 AM Russell King - ARM Linux admin
-> <linux@armlinux.org.uk> wrote:
+On Wed, Nov 20, 2019 at 7:55 AM Doug Smythies <dsmythies@telus.net> wrote:
+>
+> On 2019.11.19 14:14 Rafael J. Wysocki wrote:
+> > On Tuesday, November 19, 2019 8:17:05 PM CET Rafael J. Wysocki wrote:
+>
+> ...
+>
+> >> However, I now also see that freq_qos_remove_request() doesn't clear
+> >> the qos field in req which is should do, so freq_qos_add_request()
+> >> will complain and fail if the object pointed to by req is passed to it
+> >> again.
+> >>
+> >> I'll send a patch to test for this later today.
+> >>
 > >
-> > On Wed, Nov 13, 2019 at 02:15:00PM +0100, Geert Uytterhoeven wrote:
-> > > Hi Russell,
-> > >
-> > > On Wed, Nov 13, 2019 at 12:45 PM Russell King - ARM Linux admin
-> > > <linux@armlinux.org.uk> wrote:
-> > > > On Wed, Nov 13, 2019 at 08:40:39PM +0900, Masahiro Yamada wrote:
-> > > > > On Tue, Oct 1, 2019 at 11:31 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > > > > On Fri, Sep 6, 2019 at 5:47 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> > > > > > > Without the frame pointer enabled, return_address() is an inline
-> > > > > > > function and does not need to be exported, as shown by this warning:
-> > > > > > >
-> > > > > > > WARNING: "return_address" [vmlinux] is a static EXPORT_SYMBOL_GPL
-> > > > > > >
-> > > > > > > Move the EXPORT_SYMBOL_GPL() into the #ifdef as well.
-> > > > > > >
-> > > > > > > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> > > > > >
-> > > > > > Thanks for your patch!
-> > > > > >
-> > > > > > Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > > > > >
-> > > > > > > --- a/arch/arm/kernel/return_address.c
-> > > > > > > +++ b/arch/arm/kernel/return_address.c
-> > > > > > > @@ -53,6 +53,7 @@ void *return_address(unsigned int level)
-> > > > > > >                 return NULL;
-> > > > > > >  }
-> > > > > > >
-> > > > > >
-> > > > > > Checkpatch doesn't like the empty line above:
-> > > > > >
-> > > > > > WARNING: EXPORT_SYMBOL(foo); should immediately follow its function/variable
-> > > > > >
-> > > > > > > +EXPORT_SYMBOL_GPL(return_address);
-> > > > > > > +
-> > > > > > >  #endif /* if defined(CONFIG_FRAME_POINTER) && !defined(CONFIG_ARM_UNWIND) */
-> > > > > > >
-> > > > > > > -EXPORT_SYMBOL_GPL(return_address);
-> > >
-> > > > > What has happened to this patch?
-> > > > >
-> > > > > I still see this warning.
-> > > >
-> > > > Simple - it got merged, it caused build regressions, it got dropped.
-> > > > A new version is pending me doing another round of patch merging.
-> > >
-> > > I believe that was not Arnd's patch, but Ben Dooks' alternative solution[*]?
+> > The patch is appended.  Please test it (on top of 5.4-rc8) and report back.
 > >
-> > I don't keep track of who did what, sorry.
-> 
-> 
-> Arnd,
-> 
-> I believe this patch is the correct fix.
-> Could you please put it into Russell's patch tracker?
-> (patches@arm.linux.org.uk)
+> > ---
+> > kernel/power/qos.c |    8 +++++++-
+> > 1 file changed, 7 insertions(+), 1 deletion(-)
+> >
+> > Index: linux-pm/kernel/power/qos.c
+> > ===================================================================
+> > --- linux-pm.orig/kernel/power/qos.c
+> > +++ linux-pm/kernel/power/qos.c
+> > @@ -814,6 +814,8 @@ EXPORT_SYMBOL_GPL(freq_qos_update_reques
+> >  */
+> > int freq_qos_remove_request(struct freq_qos_request *req)
+> > {
+> > +     int ret;
+> > +
+> >       if (!req)
+> >               return -EINVAL;
+> >
+> > @@ -821,7 +823,11 @@ int freq_qos_remove_request(struct freq_
+> >                "%s() called for unknown object\n", __func__))
+> >               return -EINVAL;
+> >
+> > -     return freq_qos_apply(req, PM_QOS_REMOVE_REQ, PM_QOS_DEFAULT_VALUE);
+> > +     ret = freq_qos_apply(req, PM_QOS_REMOVE_REQ, PM_QOS_DEFAULT_VALUE);
+> > +     req->qos = NULL;
+> > +     req->type = 0;
+> > +
+> > +     return ret;
+> >  }
+> >  EXPORT_SYMBOL_GPL(freq_qos_remove_request);
+>
+> Yes the patch fixes the problem. Thanks.
+>
+> I tested several hundred times switching between
+> passive and active modes with the intel_pstate driver,
+> including with various CPUs disabled and re-enabled.
 
-Is there something wrong with:
+Thanks a lot!
 
-fb033c95c94c ARM: 8918/2: only build return_address() if needed
-
-I haven't seen any build issues with that.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+Let me resend the patch with a changelog and tags.
