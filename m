@@ -2,121 +2,164 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A5CC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:48:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A283FC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:48:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7987C22304
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:48:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=flowbird.group header.i=@flowbird.group header.b="L0I5X4rm"
+	by mail.kernel.org (Postfix) with ESMTP id 7B0D222310
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:48:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574250531;
+	bh=jOFQ0+ZS/CgcTqVAqaeETTqHblMWDKuC9EddsaoUZYI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=qOCv/OdYK5WHHC1TnJjWpmt9CL0rxru6EClYkB4dH3Z9IcWTHIi69trKITxxCE5Tt
+	 XunatGbzzQcYjE/+P2fRSZa9JtCWnPg7c9DypWAjK1VAWGaslJb8dC6PaPqPNwyJrM
+	 WoBd3DsFNJSnOAoO0/hT3TKV55BcqgR6IiQZCzq4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728615AbfKTLr7 (ORCPT
+        id S1728692AbfKTLsu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 06:47:59 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:35645 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727584AbfKTLr7 (ORCPT
+        Wed, 20 Nov 2019 06:48:50 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:45590 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727619AbfKTLsu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 06:47:59 -0500
-Received: by mail-wr1-f68.google.com with SMTP id s5so27801730wrw.2
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 03:47:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=flowbird.group; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=4/bttUSD50/OpRThxoCWFJkuJ+71MHXEy9HmrbnEDso=;
-        b=L0I5X4rm1qeU0PdOmqB4UlnESbgPAzScef+wfVtFwALWKkDarLKBikM6gomHD9Iu8r
-         E18thZ/EEnxlOTcyMRbph/zTD55zYPRluf3Wt4zQKbli3/8JGugm16LASisTd5Tj+uOg
-         GR+8QK9yVGMx4AWebT+7gCebXVmYIHvcTk9pSdwLDIy5coZOZ3EMBHKPMHH93r3d+PvL
-         hIGH+s7jUnbopg5ccKw4nvwzs+2Rqx2u7DPOJ2SDqY4Yh91u9dNLpwxoJBbAZTODtBHm
-         NQ6b7gTmkS4o3rM2ve0UkZoH097gvMrIl5U2Bn2Fg/BsHTS6AeNv596B9HrFRXVeFWrf
-         5UXg==
+        Wed, 20 Nov 2019 06:48:50 -0500
+Received: by mail-ot1-f65.google.com with SMTP id r24so20906743otk.12;
+        Wed, 20 Nov 2019 03:48:47 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=4/bttUSD50/OpRThxoCWFJkuJ+71MHXEy9HmrbnEDso=;
-        b=EiM0Zgehm5cCdVE9UGaGta7WkPi7HQ0Waih6/OgQA3uj612hLO6Y8ZN4ATphuHMllq
-         F0t/Uy/ZNInGgeyA0PuazenhRjjKaKsDUnfKPSUfmR0B+hO0S6YZpQ9WHnn0dl1Y0gIK
-         v4PkVuBNRX3BYA+NjOVNaDWCHnuwjCKCUivDMBmuMvyzgjEvgendWZMAmqy2z4ZlJQab
-         tUKfxf7p7KUxiVBN1/nb9h2sr8SJja0EbwOrePoD5m9X/NkrzqGopjspnqCAGcmm2Lgy
-         raAipb8EVUoJXqBPpx2LsyB86j1iT8YGognsmsjumJcceT4WLN3OJmYydOTl8XjrdIPF
-         4umA==
-X-Gm-Message-State: APjAAAVaxEkD3kzCeqiuE3ozcZCDocQ+XvV+c6rHrISjYd+RAlv+LSkp
-        6xcqU8N9Bu3+e6E9HdD4a3yKIA==
-X-Google-Smtp-Source: APXvYqzNPrXpTeHh7WeB0sYJYjz8IaD4nRr3NDbSHWZvDVgOnUS9XRcG8kJ+2eU5PNou9WPCk0dPrA==
-X-Received: by 2002:adf:82cc:: with SMTP id 70mr791601wrc.231.1574250476673;
-        Wed, 20 Nov 2019 03:47:56 -0800 (PST)
-Received: from [10.32.50.232] ([185.149.63.251])
-        by smtp.gmail.com with ESMTPSA id j3sm30133417wrs.70.2019.11.20.03.47.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 20 Nov 2019 03:47:55 -0800 (PST)
-Subject: Re: Re: [PATCHv1 2/2] Input: EXC3000: Add support to query model and
- fw_version
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     Ahmet Inan <inan@distec.de>, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@collabora.com
-References: <20191107181010.17211-1-sebastian.reichel@collabora.com>
- <20191107181010.17211-2-sebastian.reichel@collabora.com>
- <20191113002339.GJ13374@dtor-ws>
-From:   Martin Fuzzey <martin.fuzzey@flowbird.group>
-Message-ID: <eb7f29f9-673d-6e37-0846-226e21b95766@flowbird.group>
-Date:   Wed, 20 Nov 2019 12:47:55 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8MBiO+KFBZB/AcMqbFFJ7k8IDkkWb2NJMLEEew3adx4=;
+        b=j/vmUeO7bwfrJtBz9CAXZn794ThwP78FcXP2FCW1CuyTpi/prX5KOrhTWEWlXB116W
+         lAC4CDYtd50ZiWXAAcZXKcWpZRm7EAuembQAJC4b9x6+r1OBFTfDTZZm4LlLvUtrWDLD
+         okAV92r18cIz2E1HwcvpUeyIVUeHvALJ9tBIxxSf37E0OTZ9Gdbq4hDO+vi6rcxw5XUj
+         fbhNdANPAOa4LOKn3QJttmwW9FCUzP0Vf5uGwXv4ZAOOQviPMDCHJRyu4oLN/5cuTJUh
+         9zQe6RjotgIJCf5rV4dqCvGDlIfeB/8OpQliP8jdPNrcBomAwCSbXaifobtBVxgLg81T
+         Z/dg==
+X-Gm-Message-State: APjAAAXpur1RS3O5UiBzW+Dh1+VKiq0CbXG0xpQyLWLMXNuMoADu/1gs
+        Ew3BPQP4qUMW9yvQS6JHBWl7bDWWR4HLO6sAbAk=
+X-Google-Smtp-Source: APXvYqyzxG4SVTXB145c7Dh1NWcMTP2K36+6cukj2XkQmM4Og2QoAxYzwzeUb6AkFoNZ2YoI06hgPaa9Byig0su7cZ0=
+X-Received: by 2002:a9d:7d01:: with SMTP id v1mr1591355otn.167.1574250527002;
+ Wed, 20 Nov 2019 03:48:47 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191113002339.GJ13374@dtor-ws>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: fr
+References: <20191017121901.13699-1-kherbst@redhat.com> <20191119214955.GA223696@google.com>
+ <CACO55tu+8VeyMw1Lb6QvNspaJm9LDgoRbooVhr0s3v9uBt=feg@mail.gmail.com>
+ <20191120101816.GX11621@lahna.fi.intel.com> <CAJZ5v0g4vp1C+zHU5nOVnkGsOjBvLaphK1kK=qAT6b=mK8kpsA@mail.gmail.com>
+ <20191120112212.GA11621@lahna.fi.intel.com>
+In-Reply-To: <20191120112212.GA11621@lahna.fi.intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 20 Nov 2019 12:48:35 +0100
+Message-ID: <CAJZ5v0in4VSULsfLshHxhNLf+NZxVQM0xx=hzdNa2X3FW=V7DA@mail.gmail.com>
+Subject: Re: [PATCH v4] pci: prevent putting nvidia GPUs into lower device
+ states on certain intel bridges
+To:     Mika Westerberg <mika.westerberg@intel.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Karol Herbst <kherbst@redhat.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lyude Paul <lyude@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        Dave Airlie <airlied@gmail.com>,
+        Mario Limonciello <Mario.Limonciello@dell.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry,
+On Wed, Nov 20, 2019 at 12:22 PM Mika Westerberg
+<mika.westerberg@intel.com> wrote:
+>
+> On Wed, Nov 20, 2019 at 11:52:22AM +0100, Rafael J. Wysocki wrote:
+> > On Wed, Nov 20, 2019 at 11:18 AM Mika Westerberg
+> > <mika.westerberg@intel.com> wrote:
+> > >
+> > > Hi Karol,
+> > >
+> > > On Tue, Nov 19, 2019 at 11:26:45PM +0100, Karol Herbst wrote:
+> > > > On Tue, Nov 19, 2019 at 10:50 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > >
+> > > > > [+cc Dave]
+> > > > >
+> > > > > On Thu, Oct 17, 2019 at 02:19:01PM +0200, Karol Herbst wrote:
+> > > > > > Fixes state transitions of Nvidia Pascal GPUs from D3cold into higher device
+> > > > > > states.
+> > > > > >
+> > > > > > v2: convert to pci_dev quirk
+> > > > > >     put a proper technical explanation of the issue as a in-code comment
+> > > > > > v3: disable it only for certain combinations of intel and nvidia hardware
+> > > > > > v4: simplify quirk by setting flag on the GPU itself
+> > > > >
+> > > > > I have zero confidence that we understand the real problem, but we do
+> > > > > need to do something with this.  I'll merge it for v5.5 if we get the
+> > > > > minor procedural stuff below straightened out.
+> > > > >
+> > > >
+> > > > Thanks, and I agree with your statement, but at this point I think
+> > > > only Intel can help out digging deeper as I see no way to debug this
+> > > > further.
+> > >
+> > > I don't have anything against this patch, as long as the quirk stays
+> > > limited to the particular root port leading to the NVIDIA GPU. The
+> > > reason why I think it should to be limited is that I'm pretty certain
+> > > the problem is not in the root port itself. I have here a KBL based
+> > > Thinkpad X1 Carbon 6th gen that can put the TBT controller into D3cold
+> > > (it is connected to PCH root port) and it wakes up there just fine, so
+> > > don't want to break that.
+> > >
+> > > Now, PCIe devices cannot go into D3cold all by themselves. They always
+> > > need help from the platform side which is ACPI in this case. This is
+> > > done by having the device to have _PR3 method that returns one or more
+> > > power resources that the OS is supposed to turn off when the device is
+> > > put into D3cold. All of that is implemented as form of ACPI methods that
+> > > pretty much do the hardware specific things that are outside of PCIe
+> > > spec to get the device into D3cold. At high level the _OFF() method
+> > > causes the root port to broadcast PME_Turn_Off message that results the
+> > > link to enter L2/3 ready, it then asserts PERST, configures WAKE (both
+> > > can be GPIOs) and finally removes power (if the link goes into L3,
+> > > otherwise it goes into L2).
+> > >
+> > > I think this is where the problem actually lies - the ASL methods that
+> > > are used to put the device into D3cold and back. We know that in Windows
+> > > this all works fine so unless Windows quirks the root port the same way
+> > > there is another reason behind this.
+> > >
+> > > In case of Dell XPS 9560 (IIRC that's the machine you have) the
+> > > corresponding power resource is called \_SB.PCI0.PEG0.PG00 and its
+> > > _ON/_OFF methods end up calling PGON()/PGOF() accordingly. The methods
+> > > itself do lots of things and it is hard to follow the dissassembled
+> > > ASL which does not have any comments but there are couple of things that
+> > > stand out where we may go into a different path. One of them is this in
+> > > the PGOF() method:
+> > >
+> > >    If (((OSYS <= 0x07D9) || ((OSYS == 0x07DF) && (_REV == 0x05))))
+> > >
+> > > The ((OSYS == 0x07DF) && (_REV == 0x05)) checks specifically for Linux
+> > > (see [1] and 18d78b64fddc ("ACPI / init: Make it possible to override
+> > > _REV")) so it might be that Dell people tested this at some point in
+> > > Linux as well. Added Mario in case he has any ideas.
+> > >
+> > > Previously I suggested you to try the ACPI method tracing to see what
+> > > happens inside PGOF(). Did you have time to try it? It may provide more
+> > > information about that is happening inside those methods and hopefully
+> > > point us to the root cause.
+> > >
+> > > Also if you haven't tried already passing acpi_rev_override in the
+> > > command line makes the _REV to return 5 so it should go into the "Linux"
+> > > path in PGOF().
+> >
+> > Oh, so does it look like we are trying to work around AML that tried
+> > to work around some problematic behavior in Linux at one point?
+>
+> Yes, it looks like so if I read the ASL right.
 
-On 13/11/2019 01:23, Dmitry Torokhov wrote:
-> Do we really need to re-fetch model (and firmware ID) on each access?
-> Can we query it as probe time and cache? This I think would simplify the
-> driver, as you probably would not need to hook it into the ISR. Can you
-> just post a read/write transaction to fetch it without waiting for
-> interrupt? Or, if single transaction does not work and you need to wait
-> for certain time for response - just add msleep() and maybe mark driver
-> for async probe...
-
-
-Having the sysfs access actually read the data from the device can be 
-useful to check that the I2C link is still working (in a test scenario).
-
-
-The documentation does say that one should wait for an interrupt after 
-issuing the commands.
-
-The msleep() could work but the value would have to be empirical and 
-could be fragile.
-
-Furthermore what happens if a touch event occurs just after sending the 
-query request?
-
-Having the interrupt handler be the single read() point and dispatching 
-solves that problem, even if it does complicate the driver to some extent.
-
-
-One further thing is that there are other commands that may be added in 
-the future that cannot be cached (commands to do tests or fimware 
-updates for example).
-
-
-Regards,
-
-
-Martin
-
-
+OK, so that would call for a DMI-based quirk as the real cause for the
+issue seems to be the AML in question, which means a firmware problem.
