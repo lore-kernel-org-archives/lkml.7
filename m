@@ -2,91 +2,182 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B66C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 21:39:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B232C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 21:40:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC14B2075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 21:39:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 010C12075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 21:40:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="eQZ1qfsY"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WcbdPyrx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726757AbfKTVju (ORCPT
+        id S1726725AbfKTVkr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 16:39:50 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:40762 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725819AbfKTVju (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 16:39:50 -0500
-Received: from zn.tnic (p200300EC2F0D8C00A5DC709D5356F6BE.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:8c00:a5dc:709d:5356:f6be])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 869311EC0CDA;
-        Wed, 20 Nov 2019 22:39:48 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1574285988;
+        Wed, 20 Nov 2019 16:40:47 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:48162 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725819AbfKTVkq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 16:40:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574286044;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=unydtxWRxd2NXuJKHq//1qdDSsPdWBzWdKiJb7+o+yo=;
-        b=eQZ1qfsYz5vdnz3FnLDXzBZ9hGj/lYe9nfD0OuZUE2ambFjZwbvPK4feb+/mromV77RWTG
-        0AIjOrExhpUD5TmIngXAfiKjVHAqdnOT9YCuM5reQiIl9n4Uh/tJ1ZdWPp5rUe0z/oKcxl
-        jIfdaz94vVBNi9ca0I7NOr/jJEym3Tg=
-Date:   Wed, 20 Nov 2019 22:39:36 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Jann Horn <jannh@google.com>, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCH v4 2/4] x86/traps: Print non-canonical address on #GP
-Message-ID: <20191120213936.GM2634@zn.tnic>
-References: <20191120170208.211997-1-jannh@google.com>
- <20191120170208.211997-2-jannh@google.com>
- <20191120202516.GD32572@linux.intel.com>
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=m0UeIrv+uB8K82TvFxL5crQCuye0zjRqSJxGE7ek3js=;
+        b=WcbdPyrx/D5ok+l/4KnzfttBumDDIK5+HalwlWrgcZKvgjPOAVkvTTMAQ3y+K/UqCYDDDP
+        969bWBKKcjYbnaoEcq6qKHNCy+ibLA4KaTLp/NcRpVBBpUGHsBxxijU+LaAKIWEQGdDaj4
+        HHnTUE2SvEW7Fket0Sf2lnitUOQnFYM=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-374-hVOGqSXXM7y8WelDO5NLkA-1; Wed, 20 Nov 2019 16:40:43 -0500
+Received: by mail-qk1-f198.google.com with SMTP id d18so624990qkl.5
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 13:40:43 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EU4N8GpbC4c7LlzThQCdmuVdlky1o8wM503FH5Pe0D4=;
+        b=GnQ7/ldZM4gjtOHsjEpMzy2cESrluwUtrSNH3PIiXhlNKDpC7nHZcxPoF3ZshFwpgQ
+         cqSdx4IYFR6MA31LBnEbwIgH9gCEOoRhx0Ak33Ba8aPDT1A3ImtFG/pNz72LHqXCkTAq
+         /+CjZsVkDhEdHDViDJ+zUzibTPiZbY9Fy6vdgbT7TTuMDqobOiM2V9KsZkRi4HrCG5lw
+         gOv2pzXy5qdU8Qam0e+y3ufjO+d15VYj9/r0lI3T8xDJhArZoa/ZMl9XIgvB2LUmJekQ
+         m2Dt2FPfJd6z2kfMK1RgKcroZJLQe48Tko7mXd7NH0kw0DCIc6xIrUDkjcuzPdlnKs+U
+         YpYw==
+X-Gm-Message-State: APjAAAVBlGBTYMvLaExjtUBI2nCJ65MMFaZ2pJIpuamgonB0xoI1R16e
+        KMQ1IqaFyYsXdmJL4qgNQCPA3oI8P3yqmUeV25GuUB3M9N3NEDQp8GgrY0+28ikl875c2fM5n1K
+        YWe4HnUddIbqLV2YYEBexfgbHDjZELDRaAggy2cJq
+X-Received: by 2002:ac8:5557:: with SMTP id o23mr5052352qtr.378.1574286043269;
+        Wed, 20 Nov 2019 13:40:43 -0800 (PST)
+X-Google-Smtp-Source: APXvYqw5XTIwl9ODy32VuneMOt1E61xccRRZ15L75RSP9d7Zx2Qa1IB4KTIGuXzijkXHVfuff9mnLwrRh/jCuBCSby4=
+X-Received: by 2002:ac8:5557:: with SMTP id o23mr5052335qtr.378.1574286043027;
+ Wed, 20 Nov 2019 13:40:43 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191120202516.GD32572@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191120101816.GX11621@lahna.fi.intel.com> <CAJZ5v0g4vp1C+zHU5nOVnkGsOjBvLaphK1kK=qAT6b=mK8kpsA@mail.gmail.com>
+ <20191120112212.GA11621@lahna.fi.intel.com> <20191120115127.GD11621@lahna.fi.intel.com>
+ <CACO55tsfNOdtu5SZ-4HzO4Ji6gQtafvZ7Rm19nkPcJAgwUBFMw@mail.gmail.com>
+ <CACO55tscD_96jUVts+MTAUsCt-fZx4O5kyhRKoo4mKoC84io8A@mail.gmail.com>
+ <20191120120913.GE11621@lahna.fi.intel.com> <CACO55tsHy6yZQZ8PkdW8iPA7+uc5rdcEwRJwYEQ3iqu85F8Sqg@mail.gmail.com>
+ <20191120151542.GH11621@lahna.fi.intel.com> <CACO55tvo3rbPtYJcioEgXCEQqVXcVAm-iowr9Nim=bgTdMjgLw@mail.gmail.com>
+ <20191120155301.GL11621@lahna.fi.intel.com> <CAJZ5v0hkT-fHFOQKzp2qYPyR+NUa4c-G-uGLPZuQxqsG454PiQ@mail.gmail.com>
+In-Reply-To: <CAJZ5v0hkT-fHFOQKzp2qYPyR+NUa4c-G-uGLPZuQxqsG454PiQ@mail.gmail.com>
+From:   Karol Herbst <kherbst@redhat.com>
+Date:   Wed, 20 Nov 2019 22:40:31 +0100
+Message-ID: <CACO55ttTPi2XpRRM_NYJU5c5=OvG0=-YngFy1BiR8WpHkavwXw@mail.gmail.com>
+Subject: Re: [PATCH v4] pci: prevent putting nvidia GPUs into lower device
+ states on certain intel bridges
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Mika Westerberg <mika.westerberg@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lyude Paul <lyude@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        Dave Airlie <airlied@gmail.com>,
+        Mario Limonciello <Mario.Limonciello@dell.com>
+X-MC-Unique: hVOGqSXXM7y8WelDO5NLkA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 12:25:16PM -0800, Sean Christopherson wrote:
-> I get that adding a print just for the straddle case is probably overkill,
+On Wed, Nov 20, 2019 at 10:37 PM Rafael J. Wysocki <rafael@kernel.org> wrot=
+e:
+>
+> On Wed, Nov 20, 2019 at 4:53 PM Mika Westerberg
+> <mika.westerberg@intel.com> wrote:
+> >
+> > On Wed, Nov 20, 2019 at 04:37:14PM +0100, Karol Herbst wrote:
+> > > On Wed, Nov 20, 2019 at 4:15 PM Mika Westerberg
+> > > <mika.westerberg@intel.com> wrote:
+> > > >
+> > > > On Wed, Nov 20, 2019 at 01:11:52PM +0100, Karol Herbst wrote:
+> > > > > On Wed, Nov 20, 2019 at 1:09 PM Mika Westerberg
+> > > > > <mika.westerberg@intel.com> wrote:
+> > > > > >
+> > > > > > On Wed, Nov 20, 2019 at 12:58:00PM +0100, Karol Herbst wrote:
+> > > > > > > overall, what I really want to know is, _why_ does it work on=
+ windows?
+> > > > > >
+> > > > > > So do I ;-)
+> > > > > >
+> > > > > > > Or what are we doing differently on Linux so that it doesn't =
+work? If
+> > > > > > > anybody has any idea on how we could dig into this and figure=
+ it out
+> > > > > > > on this level, this would probably allow us to get closer to =
+the root
+> > > > > > > cause? no?
+> > > > > >
+> > > > > > Have you tried to use the acpi_rev_override parameter in your s=
+ystem and
+> > > > > > does it have any effect?
+> > > > > >
+> > > > > > Also did you try to trace the ACPI _ON/_OFF() methods? I think =
+that
+> > > > > > should hopefully reveal something.
+> > > > > >
+> > > > >
+> > > > > I think I did in the past and it seemed to have worked, there is =
+just
+> > > > > one big issue with this: it's a Dell specific workaround afaik, a=
+nd
+> > > > > this issue plagues not just Dell, but we've seen it on HP and Len=
+ovo
+> > > > > laptops as well, and I've heard about users having the same issue=
+s on
+> > > > > Asus and MSI laptops as well.
+> > > >
+> > > > Maybe it is not a workaround at all but instead it simply determine=
+s
+> > > > whether the system supports RTD3 or something like that (IIRC Windo=
+ws 8
+> > > > started supporting it). Maybe Dell added check for Linux because at=
+ that
+> > > > time Linux did not support it.
+> > > >
+> > >
+> > > the point is, it's not checking it by default, so by default you stil=
+l
+> > > run into the windows 8 codepath.
+> >
+> > Well you can add the quirk to acpi_rev_dmi_table[] so it goes to that
+> > path by default. There are a bunch of similar entries for Dell machines=
+.
+>
+> OK, so the "Linux path" works and the other doesn't.
+>
+> I thought that this was the other way around, sorry for the confusion.
+>
+> > Of course this does not help the non-Dell users so we would still need
+> > to figure out the root cause.
+>
+> Right.
+>
+> Whatever it is, though, AML appears to be involved in it and AFAICS
+> there's no evidence that it affects any root ports that are not
+> populated with NVidia GPUs.
+>
 
-Yes, frankly I am not too crazy about adding all that code just for the
-straddle case.
+last week or so I found systems where the GPU was under the "PCI
+Express Root Port" (name from lspci) and on those systems all of that
+seems to work. So I am wondering if it's indeed just the 0x1901 one,
+which also explains Mikas case that Thunderbolt stuff works as devices
+never get populated under this particular bridge controller, but under
+those "Root Port"s
 
-Also, the straddle case is kinda clear - it is always the
+> Now, one thing is still not clear to me from the discussion so far: is
+> the _PR3 method you mentioned defined under the GPU device object or
+> under the port device object?
+>
 
-  0x7ffffffffXX.. + size - 1
-
-address and we could simply dump that address instead of dumping a
-range. So we can simplify this to:
-
-	("general protection fault, non-canonical address 0x%lx: 0000 [#1] SMP\n", addr + size - 1)
-
-It all depends on how the access is done by the hardware but we can't
-always be absolutely sure which of the non-canonical bytes was accessed
-first. Depends also on the access width and yadda yadda... But I don't
-think we can know for sure always without the hw telling us, thus the
-"possibly" formulation.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
