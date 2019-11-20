@@ -2,185 +2,111 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29D1DC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 08:50:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 091F9C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 08:54:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1FFA222DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 08:50:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1117223D1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 08:54:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Un1BLBTM"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dqT08KsS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728035AbfKTIuf (ORCPT
+        id S1728053AbfKTIyF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 03:50:35 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:20575 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727950AbfKTIuf (ORCPT
+        Wed, 20 Nov 2019 03:54:05 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:46538 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727950AbfKTIyF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 03:50:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574239833;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=pyGUSb3iPoT2jrlA3M0XHrhRYzJ4C1SALQy+tY3R52w=;
-        b=Un1BLBTM9mqGun6rYQ33piPvGeyFsyhb3O9tUDisbfuvcnuMMv3uRz8GLgpFkDIswMKSIN
-        DW+1rJMko3fziKB9Hvm94kAiTS0QDqmBG0FPtIG/Sf40YmablWmoOguHgobc52ZVGKyxX5
-        epweqVteGRosqWl8FnnRFden6E1QTE4=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-272-rvLNioMeN4Wzx5fPDTu4ag-1; Wed, 20 Nov 2019 03:50:30 -0500
-Received: by mail-wm1-f70.google.com with SMTP id f191so4757849wme.1
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 00:50:29 -0800 (PST)
+        Wed, 20 Nov 2019 03:54:05 -0500
+Received: by mail-qt1-f193.google.com with SMTP id r20so28047017qtp.13
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 00:54:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iVr27vX4o2E5/GQrHJJ9cVmU51kjWygjKwdOBs2whhY=;
+        b=dqT08KsSqfx1MfqUFTqObFohRzV73HC5YU7JEzmzR95uf8vWx63TNX4X29donu9M5b
+         oPGzbD0EBKelh+8oExj7oAMOE1kxWO90t6FYcJZeejepwszwvC9WH6xsUjumhoAT863/
+         hlsgZr2AjOgsWL3X+N5IYISSYMWgTvj7paetMBqESNiiLLdKOdb3lGtxchSaB6FCN2wH
+         /QhRg5dsmmZOvXbEmSB2KpUxL5sPtVp8rP2+Wkc6dxhugLaMpCbZXYa3GinCqov+fVRy
+         YuYdGROVPQZ/CYbBTNIAb+5YIv9smOXteeF8LFHi/lXNBZ+HaWbgGSOyBsfrG6jIN8yf
+         5/8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=LJg4PoKwLNjAV6c7RLZlItrhlkdFabPZta3ShMZA+rk=;
-        b=X4bjPtz6bVZMZH3YUzNUEkCA6d0bp5q6mNkaq4zEpnSHilUtqxNCjSfDz2pxDrsw7J
-         zuIrlPFlBQPDDnNFgt18F9fpfmn4Ga8L/9lF7Xn92cAAy6O7IQFOSOOeWpuLB7heHNuB
-         HCixYTkGr9cj9T3fq3KqbFGSt52ov4HbyyTpsmLIwK0+3L8BYbPWI7J6pQNl6JQnPZBk
-         50XlVE5tshZ7DnFn2Nsy7Xx9gwUlQkNyAggrk/AMkhCvy7y0gsRH+4KBIuowBMvn1qN1
-         FqVifBgkYEs2NulaaG3TdgMOe+RoohpUJgpk4rpMuPyNEq9366rzgMj5Z7f8hvr8fdTR
-         WlhA==
-X-Gm-Message-State: APjAAAVi5i45Lnw8/5uIKeXbqg7/lIK7yeZ9fbQHp+Wk/C9kS4+/MdVx
-        BP+d9CP9+F+p1fsHP60SqcNEEKpGfPDbCDsEVk6SgMGB6028aNm2KXgRxFZREK4pIJQXo6RKP6G
-        MZYpnmzGGPNPC+uD+nvgCLU+e
-X-Received: by 2002:adf:e312:: with SMTP id b18mr1848089wrj.203.1574239828710;
-        Wed, 20 Nov 2019 00:50:28 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzCm59GNSjfFbKMdn+jFdB5tLiEBu8+2MBZEClPJ4MnrB7QvpyiYmBdZTkB4UgluMk/SKlDeA==
-X-Received: by 2002:adf:e312:: with SMTP id b18mr1848046wrj.203.1574239828336;
-        Wed, 20 Nov 2019 00:50:28 -0800 (PST)
-Received: from localhost.localdomain ([151.29.177.194])
-        by smtp.gmail.com with ESMTPSA id d18sm31281112wrm.85.2019.11.20.00.50.26
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 20 Nov 2019 00:50:27 -0800 (PST)
-Date:   Wed, 20 Nov 2019 09:50:24 +0100
-From:   Juri Lelli <juri.lelli@redhat.com>
-To:     Philipp Stanner <stanner@posteo.de>
-Cc:     linux-kernel@vger.kernel.org, Hagen Pfeifer <hagen@jauu.net>,
-        mingo@redhat.com, peterz@infradead.org, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de
-Subject: Re: SCHED_DEADLINE with CPU affinity
-Message-ID: <20191120085024.GB23227@localhost.localdomain>
-References: <1574202052.1931.17.camel@posteo.de>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iVr27vX4o2E5/GQrHJJ9cVmU51kjWygjKwdOBs2whhY=;
+        b=ikp+SuALNjaIHSt78fhjdcpp1WWBeo/ozg00ZBJfiydlI8dUcp2teJaE4Xwx85dGu1
+         5zBRXoEm11736IO2Mb49+N2Xl5lJtcHdZE+h04fAHt1Y2C/jEF0M4FoxNnIr12mVOD+m
+         4n+zyjexzDCz2XKDaix41BCucWA3mSN/HO6rCpmPiBXot1j4v+V9/7bE7dcJZ9mL0ryK
+         mcqj8CfiV/FwuxPasU3MRHOqQgyiMCPYw76o2A5T4rZcy8jt4iU3wrtjEZCo7FhGYB/B
+         I4RwU7VOoXDcDtTcfqEbGAGLs5ZU7ot/jG6I41eaaYjhCeWoP0JNrZsKs81nZBnJFX6J
+         e5Pw==
+X-Gm-Message-State: APjAAAUcAjJjKRZoFS06ZwPX9gkp7G+AyA089mF2nZiOwIlA/5gFD3Xd
+        sWavOBzRB6m3iYpAEJd0XZ5ttSJr5iuiwDrxX8RCaFVmLY0=
+X-Google-Smtp-Source: APXvYqw04brF+3wMJNjaYdZj0/tu7RiJMeNLlKl8WC2x/YHNi3/vk8xC7jhYgwPtsc0O44Y3KofT/jLPDvgBCi4vp1o=
+X-Received: by 2002:ac8:4157:: with SMTP id e23mr1527362qtm.158.1574240042336;
+ Wed, 20 Nov 2019 00:54:02 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1574202052.1931.17.camel@posteo.de>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-MC-Unique: rvLNioMeN4Wzx5fPDTu4ag-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+References: <000000000000f921ae05757f567c@google.com> <0000000000001da6b60597c2ce91@google.com>
+ <20191120082958.GB2862348@kroah.com>
+In-Reply-To: <20191120082958.GB2862348@kroah.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Wed, 20 Nov 2019 09:53:51 +0100
+Message-ID: <CACT4Y+amS4Dj99FE1h-e+5dV=q74_ueWiL-vX70RjMMhR5GLdw@mail.gmail.com>
+Subject: Re: WARNING in kernfs_get
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     syzbot <syzbot+3dcb532381f98c86aeb1@syzkaller.appspotmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        rafael@kernel.org,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Tejun Heo <tj@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Philipp,
+On Wed, Nov 20, 2019 at 9:30 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> On Wed, Nov 20, 2019 at 12:17:01AM -0800, syzbot wrote:
+> > syzbot has bisected this bug to:
+> >
+> > commit 726e41097920a73e4c7c33385dcc0debb1281e18
+> > Author: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> > Date:   Tue Jul 10 00:29:10 2018 +0000
+> >
+> >     drivers: core: Remove glue dirs from sysfs earlier
+> >
+> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17a101cee00000
+> > start commit:   9a568276 Merge branch 'x86-urgent-for-linus' of git://git...
+> > git tree:       upstream
+> > final crash:    https://syzkaller.appspot.com/x/report.txt?x=146101cee00000
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=106101cee00000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=8f59875069d721b6
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=3dcb532381f98c86aeb1
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12657f0a400000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=117728ae400000
+> >
+> > Reported-by: syzbot+3dcb532381f98c86aeb1@syzkaller.appspotmail.com
+> > Fixes: 726e41097920 ("drivers: core: Remove glue dirs from sysfs earlier")
+> >
+> > For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+>
+> Again, I think this should be resolved with ac43432cb1f5 ("driver core:
+> Fix use-after-free and double free on glue directory")
+>
+> Is there any way to run the reproducer on a newer tree?
 
-On 19/11/19 23:20, Philipp Stanner wrote:
-> Hey folks,
-> (please put me in CC when answering, I'm not subscribed)
->=20
-> I'm currently working student in the embedded industry. We have a device =
-where
-> we need to be able to process network data within a certain deadline. At =
-the
-> same time, safety is a primary requirement; that's why we construct every=
-thing
-> fully redundant. Meaning: We have two network interfaces, each IRQ then b=
-ound
-> to one CPU core and spawn a container (systemd-nspawn, cgroups based) whi=
-ch in
-> turn is bound to the corresponding CPU (CPU affinity masked).
->=20
-> =A0=A0=A0=A0=A0=A0=A0=A0Container0=A0=A0=A0=A0=A0=A0=A0Container1
-> =A0=A0=A0-----------------=A0=A0-----------------
-> =A0=A0=A0|=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0|=A0=A0|=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0|
-> =A0=A0=A0|=A0=A0=A0=A0Proc. A=A0=A0=A0=A0|=A0=A0|=A0=A0=A0Proc. A'=A0=A0=
-=A0=A0|
-> =A0=A0=A0|=A0=A0=A0=A0Proc. B=A0=A0=A0=A0|=A0=A0|=A0=A0=A0Proc. B'=A0=A0=
-=A0=A0|
-> =A0=A0=A0|=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0|=A0=A0|=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0|
-> =A0=A0=A0-----------------=A0=A0-----------------
-> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0^=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0^
-> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0|=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0|
-> =A0=A0=A0=A0=A0=A0=A0=A0CPU 0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0CP=
-U 1
-> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0|=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0|
-> =A0=A0=A0=A0=A0=A0=A0IRQ eth0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0IRQ eth1
->=20
->=20
-> Within each container several processes are started. Ranging from systemd
-> (SCHED_OTHER) till two (soft) real-time critical processes: which we want=
- to
-> execute via SCHED_DEADLINE.
->=20
-> Now, I've worked through the manpage describing scheduling policies, and =
-it
-> seems that our scenario is forbidden my the kernel.=A0=A0I've done some t=
-ests with
-> the syscalls sched_setattr and sched_setaffinity, trying to activate
-> SCHED_DEADLINE while also binding to a certain core.=A0=A0It fails with E=
-INVAL or
-> EINBUSY, depending on the order of the syscalls.
->=20
-> I've read that the kernel accomplishes plausibility checks when you ask f=
-or a
-
-Yeah, admission control.
-
-> new deadline task to be scheduled, and I assume this check is what preven=
-ts us
-> from implementing our intended architecture.
->=20
-> Now, the questions we're having are:
->=20
-> =A0=A0=A01. Why does the kernel do this, what is the problem with schedul=
-ing with
-> =A0=A0=A0=A0=A0=A0SCHED_DEADLINE on a certain core? In contrast, how is i=
-t handled when
-> =A0=A0=A0=A0=A0=A0you have single core systems etc.? Why this artificial =
-limitation?
-
-Please have also a look (you only mentioned manpage so, in case you
-missed it) at
-
-https://elixir.bootlin.com/linux/latest/source/Documentation/scheduler/sche=
-d-deadline.rst#L667
-
-and the document in general should hopefully give you the answer about
-why we need admission control and current limitations regarding
-affinities.
-
-> =A0=A0=A02. How can we possibly implement this? We don't want to use SCHE=
-D_FIFO,
-> =A0=A0=A0=A0=A0=A0because out-of-control tasks would freeze the entire co=
-ntainer.
-
-I experimented myself a bit with this kind of setup in the past and I
-think I made it work by pre-configuring exclusive cpusets (similarly as
-what detailed in the doc above) and then starting containers inside such
-exclusive sets with podman run --cgroup-parent option.
-
-I don't have proper instructions yet for how to do this (plan to put
-them together soon-ish), but please see if you can make it work with
-this hint.
-
-Best,
-
-Juri
-
+The generic fix testing instruction should work:
+https://github.com/google/syzkaller/blob/master/docs/syzbot.md#testing-patches
+Note: you don't need to attach any patch, just pointing to a
+tree/branch works too.
