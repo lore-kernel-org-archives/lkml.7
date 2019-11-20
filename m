@@ -2,112 +2,88 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7470AC43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 07:47:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C87DEC43141
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 07:51:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54CD8219FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 07:47:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACE3C208A1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 07:51:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727994AbfKTHrw (ORCPT
+        id S1727415AbfKTHvd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 02:47:52 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:46474 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726647AbfKTHrw (ORCPT
+        Wed, 20 Nov 2019 02:51:33 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:38374 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727067AbfKTHvd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 02:47:52 -0500
-Received: by mail-oi1-f195.google.com with SMTP id n14so21619697oie.13;
-        Tue, 19 Nov 2019 23:47:50 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ffMHHkKuM7aK5/Oq1kFH9EAsHvJDvPT92qTXM1nw77g=;
-        b=tmv0VYaQ1Qk72wZHwuguvlm9BrxthyeLsJMqlGFMB0UhcrF5nKQ4XWvaOZg6niX5yf
-         fgesfYkibb/Gu8IGgDOR6eGakyVr73u2GNBDVP+cTrxJ4iPipQXmkI1hqjdd++nNarQz
-         /EgNioobM+qWF2JI+hnKMlf+pt2i/ni2RX54YBLDaMLwXaLM+Hoc9bsiMUZIAfPJq6Jf
-         vdX8SaCdq4Tr4H052XSTMLuSAMDu/47HSyog/49KoIhJjfqCO5YtstBidK+r4H1IUX6z
-         QvJoVZSTmBNr+hnLFCEJFn5wRpkZbKhA6r2auHNtri/2lof5YzPneoztlYPV332hPFNq
-         7Vyg==
-X-Gm-Message-State: APjAAAXWr28c0eFVJnPPy+I/SNBBJafnPqFfBJ2WK3CptvJC6sM5cCHQ
-        GQxJVHpwGu73+ND65zGu+DmHvaPV0qPr3GwntJS7Ww==
-X-Google-Smtp-Source: APXvYqzvF/0pYU1dCjuj4xbH2SazKwF0GZd4EOxeh2E7Y2CIjsuhNguE7QjizVM0W7bNc0dzXv4gUPkbpCILXWIXeH4=
-X-Received: by 2002:aca:3a86:: with SMTP id h128mr1488187oia.131.1574236069584;
- Tue, 19 Nov 2019 23:47:49 -0800 (PST)
-MIME-Version: 1.0
-References: <1574213719-20766-1-git-send-email-krzk@kernel.org>
- <CAMuHMdWe3vBzO9Nw6PX+kn9RDO+3q4zYSiFDF=4rsqnSux-caw@mail.gmail.com> <CAJKOXPe+Qmj57sUMOJdzin30CAKqBBEH93UuRCBnhybMGjOJYg@mail.gmail.com>
-In-Reply-To: <CAJKOXPe+Qmj57sUMOJdzin30CAKqBBEH93UuRCBnhybMGjOJYg@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 20 Nov 2019 08:47:38 +0100
-Message-ID: <CAMuHMdVcHQikSLFFZVUUbbWg8UWg+FX24i3sRACW4Kc9Zo3PtQ@mail.gmail.com>
-Subject: Re: [PATCH v2] dt-bindings: power: Rename back power_domain.txt
- bindings to fix references
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        Wed, 20 Nov 2019 02:51:33 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: aratiu)
+        with ESMTPSA id 4C0C72813B8
+From:   Adrian Ratiu <adrian.ratiu@collabora.com>
+To:     Fabio Estevam <festevam@gmail.com>,
+        Adrian Ratiu <adrian.ratiu@collabora.com>
+Cc:     "open list\:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Martyn Welch <martyn.welch@collabora.com>,
+        Sjoerd Simons <sjoerd.simons@collabora.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        DRI mailing list <dri-devel@lists.freedesktop.org>,
+        linux-rockchip@lists.infradead.org,
+        NXP Linux Team <linux-imx@nxp.com>, kernel@collabora.com,
+        linux-stm32@st-md-mailman.stormreply.com,
+        "moderated list\:ARM\/FREESCALE IMX \/ MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Emil Velikov <emil.velikov@collabora.com>
+Subject: Re: [PATCH v3 3/4] drm: imx: Add i.MX 6 MIPI DSI host driver
+In-Reply-To: <CAOMZO5C5gpW6KF9d-79wd=-7ZGAbXQLAXw3kLi+_5DBW_DYrTw@mail.gmail.com>
+References: <20191118152518.3374263-1-adrian.ratiu@collabora.com>
+ <20191118152518.3374263-4-adrian.ratiu@collabora.com>
+ <CAOMZO5C5gpW6KF9d-79wd=-7ZGAbXQLAXw3kLi+_5DBW_DYrTw@mail.gmail.com>
+Date:   Wed, 20 Nov 2019 09:51:56 +0200
+Message-ID: <87o8x7dlyb.fsf@iwork.i-did-not-set--mail-host-address--so-tickle-me>
+MIME-Version: 1.0
+Content-Type: text/plain; format=flowed
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Krzysztof,
+On Tue, 19 Nov 2019, Fabio Estevam <festevam@gmail.com> wrote:
+> Hi Adrian, 
 
-On Wed, Nov 20, 2019 at 8:26 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> On Wed, 20 Nov 2019 at 15:21, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > On Wed, Nov 20, 2019 at 2:35 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> > > With split of power domain controller bindings to power-domain.yaml,
-> > > the consumer part was renamed to power-domain.txt breaking the
-> > > references.  Undo the renaming.
-> > >
-> > > Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> > > Fixes: ea312b90857d ("dt-bindings: power: Convert Generic Power Domain bindings to json-schema")
-> > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> >
-> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> >
-> > One suggestion below...
-> >
-> > > --- a/MAINTAINERS
-> > > +++ b/MAINTAINERS
-> > > @@ -6953,7 +6953,8 @@ L:        linux-pm@vger.kernel.org
-> > >  S:     Supported
-> > >  F:     drivers/base/power/domain*.c
-> > >  F:     include/linux/pm_domain.h
-> > > -F:     Documentation/devicetree/bindings/power/power-domain*
-> > > +F:     Documentation/devicetree/bindings/power/power_domain.txt
-> > > +F:     Documentation/devicetree/bindings/power/power-domain.yaml
-> >
-> > Looks like scripts/get_maintainer.pl does handle the "?" wildcard, so
-> >
-> > +F:     Documentation/devicetree/bindings/power/power?domain*
-> >
+Hi Fabio,
+
+> 
+> On Mon, Nov 18, 2019 at 12:25 PM Adrian Ratiu 
+> <adrian.ratiu@collabora.com> wrote: 
+> 
+> Some nitpicks: 
+> 
+>> + +config DRM_IMX_MIPI_DSI +       tristate "Freescale i.MX DRM 
+>> MIPI DSI" 
+> 
+> This text seems too generic as there are i.MX SoCs that use 
+> different MIPI DSI IP. 
+> 
+> Maybe "Freescale i.MX6 DRM MIPI DSI" instead? 
+
+Yes, this is a good idea, will update in a newer version to make 
+it more specific. I'll let this version sit a little more on 
+review so others also have time to review.
+
+Thank you!
+
+> 
+>> +module_platform_driver(imx_mipi_dsi_driver); + 
+>> +MODULE_DESCRIPTION("i.MX MIPI DSI host controller driver"); 
+> 
+> i.MX6 MIPI DSI, please.
 >
-> Thanks! I'll send a v3. Shall I use @glider.be for your reported-by
-> email as well?
-
-Yes please. That makes things consistent.
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
