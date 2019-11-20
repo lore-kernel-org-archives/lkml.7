@@ -2,150 +2,73 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8809C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 20:38:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E344BC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 20:40:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A941820726
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 20:38:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Gz165cn0"
+	by mail.kernel.org (Postfix) with ESMTP id ADCA92075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 20:40:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726346AbfKTUih (ORCPT
+        id S1726563AbfKTUkN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 15:38:37 -0500
-Received: from mout.web.de ([212.227.15.14]:56757 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725306AbfKTUih (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 15:38:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1574282287;
-        bh=jVJpUYc3KtrWtxsU/1ucwpUjI/A3bmL7gzYAtLISS/0=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=Gz165cn02WeCW3uJ14OjWmEiI45BFKfSMLInWVPIZIHvD8Vt5wLwMNS4RAgZtpWtm
-         3nxbYxHxIGAKf8PXlOw7yxcHCufRrHmAEhypWzXIHzlPtTI7FWjv9/uO/VY6jWgNgS
-         Zx0IQtA4GnkUgSZsrU9af+9ZwXbWtgWACqqz1uKg=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.3] ([93.132.176.80]) by smtp.web.de (mrweb003
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0M2uXO-1hg6u12CuM-00sfiX; Wed, 20
- Nov 2019 21:38:07 +0100
-Subject: Re: [PATCH v3 07/13] exfat: add bitmap operations
-To:     Namjae Jeon <namjae.jeon@samsung.com>,
-        linux-fsdevel@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>,
-        Daniel Wagner <dwagner@suse.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sungjong Seo <sj1557.seo@samsung.com>,
-        =?UTF-8?Q?Valdis_Kl=c4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        linkinjeon@gmail.com
-References: <20191119093718.3501-1-namjae.jeon@samsung.com>
- <CGME20191119094024epcas1p3991c5d94c2cf40388d64c0bd9c30092d@epcas1p3.samsung.com>
- <20191119093718.3501-8-namjae.jeon@samsung.com>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <7436291c-4e74-adcb-b421-56d49c90fa5e@web.de>
-Date:   Wed, 20 Nov 2019 21:38:05 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <20191119093718.3501-8-namjae.jeon@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:0EIsmeXrWV/Og76lhBZU5E7iNcdSXdAyWKuhJoyLktIayvnrRXz
- GyKsQRUbY/cSoZ/kfp8oHzwzMC9ouuw8cFXdei8cPpFAvD+ywyAQvXUfkl0UKoaYw4I56xq
- OAzr8yw2DQtKGrF8owAXW5IdsE0mMc5nh9Zprn1tlwLcS/XydyqQ1x58Q2lH9Pb/sR8s4ZA
- wyPlu94ZphUQ+TQd2h7uA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:lowWC1BOzJw=:4yv8zIn9OVCW343q8db9EC
- E0frXqC3AY53zwDFvaU4GCo/AChOSovt5Hmmac7m45jnqvmUQ+cO5ikvigKHDMFOSaLZ6zDBe
- 09MlH95zR/2OT9E56H8Ea8vuOzNLmbyOchxxhJeGjDzJArzIHugFh+9RJRMwkYmw63gNk5MWB
- LV86iOkrWIhDQvvH9knk/W9lpDZqc0pJF11oY0guEa6MMvtarvh7eYXdJ7JfGAIHbUjBjiveg
- PpssG20hrjwPcOBUJvrnkgktsb58l9BKQB88kS4M2JBdKfox8A68i+aPn7GH0fc57jFcDC7lm
- XyC0wQgIGqU6j9v7QvkL4dJDMTw8zublsrZ7TxV/avAMOj42V3UAtDprA1D4/y6nM949HApHZ
- AuR5YYoA4WUOLQyMa9c+8o/UdMZkvAWNISVlZAlq1Xl2m6KtujS3V9vUM69DEbOVnLU01RrQc
- YzOJbSZCUL5Em1ZrOLgG60ONFwue4OxpNeViaVqZgBEqVDA3OBmXdEyVuGM3vCyc+SlyltyKX
- BiA6LY6sKktpiDcFT4RuVYwMn4UvV8styXeFWqOsKP5JhAZy4hxrFp9qlBsJR9W8tctDDNH5D
- wo9FykKqs5E+zlCfxsFA2W1RK7bV207n72XQHLj7UD67KuJ/KpgPxD+mZcC34eBxar8+xsKAg
- ZYgUmZbrV0xF0AirIBkgZsSoSjWfjt5APAbEG4KgU5RTmVU10WI3SPeSzzRXNB9EdJ7chM6h0
- LI+4lux+E3AobHtpi60vXn77hLLW6vbGzgYTxr8bNMUKbohplq7lYA6EWdebn+zVZwjGtcAHB
- wsc5OvLAAgREvb18YxP3eXTAaaXSeCiikXMW2x2rX5WriEQw9gYH9af5ZSweq7+zIrL2hV3kd
- zT8jLOziCnJAru0legXF5h1LVSztqBH1DhLA48qm92QETAioXUan3lYSssaVW19cJ44ZiRsYz
- Hvma4WeruWK54wVMw3XndMuRpTtj2R2dITQaAFrPzcfvnAyJA6+J4E0WIh10PXuSACUm2qp94
- BX4gx1R26ouM57uN/OkHzVURfO9PtzHQ6+9hPoj9URHk1Dez1SDQP86x+Ki9h7RwaD7uxNa6L
- qcfyLle37BS6P9eMcrIGhP8ok9WFY6tB+kvyJotJlBjLlrZHdvQFFr7QIDG26WEW8XDf/NSX4
- Wlh4ETW0n5QfrtlC07rVxBvtUpqB+g2kZAZkCpvrtMsj6jUQ+ESqedF/CJpSmnu8u3AnlS3Pk
- 1ZV8LJZctb4d4+nW+mjqFWl09JCA3EZS6SuVzpaAxtUczTbBPss7w1NQfW2s=
+        Wed, 20 Nov 2019 15:40:13 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:59812 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725306AbfKTUkN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 15:40:13 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 7186214C24B32;
+        Wed, 20 Nov 2019 12:40:12 -0800 (PST)
+Date:   Wed, 20 Nov 2019 12:40:11 -0800 (PST)
+Message-Id: <20191120.124011.1174279012914659296.davem@davemloft.net>
+To:     sgarzare@redhat.com
+Cc:     netdev@vger.kernel.org, arnd@arndb.de, maowenan@huawei.com,
+        jhansen@vmware.com, linux-kernel@vger.kernel.org,
+        gregkh@linuxfoundation.org
+Subject: Re: [PATCH net-next] vsock/vmci: make vmci_vsock_cb_host_called
+ static
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20191120155634.43936-1-sgarzare@redhat.com>
+References: <20191120155634.43936-1-sgarzare@redhat.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 20 Nov 2019 12:40:12 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=E2=80=A6
-> +++ b/fs/exfat/balloc.c
-=E2=80=A6
-> +int exfat_load_bitmap(struct super_block *sb)
-> +{
-=E2=80=A6
-> +	struct exfat_dentry *ep =3D NULL;
-=E2=80=A6
-> +	while (clu.dir !=3D EOF_CLUSTER) {
-> +		for (i =3D 0; i < sbi->dentries_per_clu; i++) {
-> +			ep =3D exfat_get_dentry(sb, &clu, i, &bh, NULL);
-> +			if (!ep)
-> +				return -EIO;
-=E2=80=A6
+From: Stefano Garzarella <sgarzare@redhat.com>
+Date: Wed, 20 Nov 2019 16:56:34 +0100
 
-How do you think about to move the definition for the variable =E2=80=9Cep=
-=E2=80=9D
-to the beginning of the for loop so that the extra pointer initialisation
-can be omitted?
+> From: Mao Wenan <maowenan@huawei.com>
+> 
+> When using make C=2 drivers/misc/vmw_vmci/vmci_driver.o
+> to compile, below warning can be seen:
+> drivers/misc/vmw_vmci/vmci_driver.c:33:6: warning:
+> symbol 'vmci_vsock_cb_host_called' was not declared. Should it be static?
+> 
+> This patch make symbol vmci_vsock_cb_host_called static.
+> 
+> Fixes: b1bba80a4376 ("vsock/vmci: register vmci_transport only when VMCI guest/host are active")
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Mao Wenan <maowenan@huawei.com>
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+> ---
+> Hi Dave,
+> do you think it could go through net-next since it solves a problem
+> introduced by "vsock: add multi-transports support" series?
+> 
+> Adding R-b from "kbuild test robot" that found the same issue.
 
-Regards,
-Markus
+Applied to net-next.
