@@ -2,284 +2,216 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0967EC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 16:59:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ABDCC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 17:02:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9D062071F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 16:59:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 550B12071F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 17:02:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="JWQOya2U"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Flx4RBYn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730121AbfKTQ6v (ORCPT
+        id S1730201AbfKTRCW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 11:58:51 -0500
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:44389 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728580AbfKTQ6u (ORCPT
+        Wed, 20 Nov 2019 12:02:22 -0500
+Received: from mail-wm1-f73.google.com ([209.85.128.73]:36984 "EHLO
+        mail-wm1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728120AbfKTRCW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 11:58:50 -0500
-Received: by mail-qv1-f66.google.com with SMTP id d3so167999qvs.11
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 08:58:49 -0800 (PST)
+        Wed, 20 Nov 2019 12:02:22 -0500
+Received: by mail-wm1-f73.google.com with SMTP id f16so5000241wmb.2
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 09:02:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hpIA+rvc+Ub15DwARGwCPsLQo64idg/OwWT6O3mpE6w=;
-        b=JWQOya2UTVmtO3YTI3J++veMgOo/VuDvIh5JkQNpTTc5CoZly1XR0w+K3s2/9nah4Z
-         Lf4udbLEoNM5yRNDtigxpPqCVFNUr3ddOdXT3J4WRH326Cl1KZVwMCvo/0or/mAXbbJc
-         7ndDVIb5LaaBTvFcVp9tiGBhnT8zG4zAG+GDR4hka42LtEM9yjtvplacvk12jKQlfcTr
-         riLsiA8iJtP9ZK6LbWmV8IYv+4jyuxHurD+NKQDg9aC7WjCIe4eFpDGjxUL/Kiqzgtwy
-         p9zgdkh9CrE3imotLw33zZnAacTznJz8BMsbPk67PT4MqDz8fy+XGUqTzA4f3LkSg68T
-         nVAA==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=Tx4RYm+Tzd28YlMwIK1Ooy6fDDS4M3Vck8MQ8QkiYJs=;
+        b=Flx4RBYnk7Rhh3x4aoB9UvPTpXAcBZ0g+UsOKHh7Nq1DzbdlxAwbbjXkWOik1lYIei
+         zRBCRmIaHdfZn5otddR6MwiebYZ3RYGcOUR/oF3WPkOqkKJ4UeD7Rx7obWQGwn6jwVUx
+         ZIRUdiF99MhAYN7K2Vd+S4/+fnL3UrAQBJfj9ocrEyUDeDi3O02eu5G4BPocbq8RT0td
+         5Yhd/r5Ukhw1sGFMBjiGUZ3DfuqyLsTj2dCNINftbx+4mORKTP8YDnWf81WFOL808xQF
+         y8ufxPfNJ0oayhKLzOPmjTp0N+wHZ1wH2XopE6I/enk/dNxneA4ymIWEOkGiyW+A9Ru6
+         8GnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hpIA+rvc+Ub15DwARGwCPsLQo64idg/OwWT6O3mpE6w=;
-        b=CIiAEmJ2WtjdKxqPP/C6plh49+M225BFKpfEtKxb8IXcoM1Gi6+uvSX+V2Dy2ZL/2u
-         N4Jvx5wDtKQqm/A2GjVyovvBDD2qO6NCFYht5WM5Swg9qql6/hictv+XnZy0N5Al8QJ5
-         46yg9XWmui8md/UFrR1Q1rnbHXXzeqXgNIDnhTEtxVJNTTpO+p9w0YJtF3diAQ1Dp2EU
-         d0uQ0pmhDzr7Gg5CKqXEJDVlN078fql4AbLLxqN7l1wXV5TsbuEjDjntA9ScS/neJ7H9
-         fCowougnwvf4RUqIz5ff40TQ49/qFMmxbRPZt/A+QBQ/wmqO8/Jy3GFFKLMtcZS7GZrK
-         /OdA==
-X-Gm-Message-State: APjAAAX3yM7JYgfJwL1Inghq2H0pgAcropWeLYBFLCDpxmaN63vQO1C7
-        XyY10VXS+hDtQM0yyo5722mkag==
-X-Google-Smtp-Source: APXvYqxiTcyvcwZS6OaUR2diyQ9VgWPR8HMJDoANnPSA/6WdaWdJUN91QROYr7TbLLupkBa34MsurQ==
-X-Received: by 2002:a0c:d4ba:: with SMTP id u55mr3539945qvh.40.1574269128605;
-        Wed, 20 Nov 2019 08:58:48 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::6900])
-        by smtp.gmail.com with ESMTPSA id 11sm12082528qkv.131.2019.11.20.08.58.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Nov 2019 08:58:47 -0800 (PST)
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Hugh Dickins <hughd@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: [PATCH] mm: fix unsafe page -> lruvec lookups with cgroup charge migration
-Date:   Wed, 20 Nov 2019 11:58:47 -0500
-Message-Id: <20191120165847.423540-1-hannes@cmpxchg.org>
-X-Mailer: git-send-email 2.24.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=Tx4RYm+Tzd28YlMwIK1Ooy6fDDS4M3Vck8MQ8QkiYJs=;
+        b=hWBGchHq8DkfChkE6wLLRMgZzNea5J1duYUU1Qcgc4CCyYw4nP5AXIW2RaoBF3+bBL
+         wLIy6miD6W4tyPSHxQa7qGxGWgT4/d3eGJNkcGsqUGPj4hp3DZnjSitdXfyl/zvqPYwO
+         iEnVf1hDbL9md+2stgwHZ2BctbwOU+rVMU2X1OAyPKJtpgajZ5lGOzUUMTC47+nSzJXW
+         btTSU4WHg7N/qqaQiPRLZFP/HINPM6i6Cn/ScDJzTGnRwkz6Uo9XtEslSlK8MwCtTGIm
+         zRD79PwMUu1ydTzHWNw2JD5AQwXw/6vtZP4C/XRbEarWmJ0VGy1BwhP71gNQcen5Rp44
+         1qag==
+X-Gm-Message-State: APjAAAW4i/DO/r8bSPuBDtIT49ruHBdTozOF9hidPaaHXu8aMHg+ZumM
+        V8nO5JUS2POHFz2Akk2J+xFlhe7S6Q==
+X-Google-Smtp-Source: APXvYqwtGpIebMt1gNSN6evunIvMTPXivu+aeqao1OJuY2/FXuywT+UVHWpHOr7pYNXVISBKMGizVsyFPw==
+X-Received: by 2002:a5d:4584:: with SMTP id p4mr4839096wrq.345.1574269338797;
+ Wed, 20 Nov 2019 09:02:18 -0800 (PST)
+Date:   Wed, 20 Nov 2019 18:02:05 +0100
+Message-Id: <20191120170208.211997-1-jannh@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
+Subject: [PATCH v4 1/4] x86/insn-eval: Add support for 64-bit kernel mode
+From:   Jann Horn <jannh@google.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
+        jannh@google.com
+Cc:     linux-kernel@vger.kernel.org,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While reviewing the "per lruvec lru_lock for memcg" series, Hugh and I
-noticed two places in the existing code where the page -> memcg ->
-lruvec lookup can result in a use-after-free bug. This affects cgroup1
-setups that have charge migration enabled.
+To support evaluating 64-bit kernel mode instructions:
 
-To pin page->mem_cgroup, callers need to either have the page locked,
-an exclusive refcount (0), or hold the lru_lock and "own" PageLRU
-(either ensure it's set, or be the one to hold the page in isolation)
-to make cgroup migration fail the isolation step. Failure to follow
-this can result in the page moving out of the memcg and freeing it,
-along with its lruvecs, while the observer is dereferencing them.
+Replace existing checks for user_64bit_mode() with a new helper that
+checks whether code is being executed in either 64-bit kernel mode or
+64-bit user mode.
 
-1. isolate_lru_page() calls mem_cgroup_page_lruvec() with the lru_lock
-held but before testing PageLRU. It doesn't dereference the returned
-lruvec before testing PageLRU, giving the impression that it might
-just be safe ordering after all - but mem_cgroup_page_lruvec() itself
-touches the lruvec to lazily initialize the pgdat back pointer. This
-one is easy to fix, just move the lookup into the PageLRU branch.
+Select the GS base depending on whether the instruction is being
+evaluated in kernel mode.
 
-2. pagevec_lru_move_fn() conveniently looks up the lruvec for all the
-callbacks it might get invoked on. Unfortunately, it's the callbacks
-that first check PageLRU under the lru_lock, which makes this order
-equally unsafe as isolate_lru_page(). Remove the lruvec argument from
-the move callbacks and let them do it inside their PageLRU branches.
-
-Reported-by: Hugh Dickins <hughd@google.com>
-Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+Signed-off-by: Jann Horn <jannh@google.com>
 ---
- mm/swap.c   | 48 +++++++++++++++++++++++++++++-------------------
- mm/vmscan.c |  8 ++++----
- 2 files changed, 33 insertions(+), 23 deletions(-)
 
-diff --git a/mm/swap.c b/mm/swap.c
-index 5341ae93861f..6b015e9532fb 100644
---- a/mm/swap.c
-+++ b/mm/swap.c
-@@ -188,12 +188,11 @@ int get_kernel_page(unsigned long start, int write, struct page **pages)
- EXPORT_SYMBOL_GPL(get_kernel_page);
- 
- static void pagevec_lru_move_fn(struct pagevec *pvec,
--	void (*move_fn)(struct page *page, struct lruvec *lruvec, void *arg),
-+	void (*move_fn)(struct page *page, void *arg),
- 	void *arg)
- {
- 	int i;
- 	struct pglist_data *pgdat = NULL;
--	struct lruvec *lruvec;
- 	unsigned long flags = 0;
- 
- 	for (i = 0; i < pagevec_count(pvec); i++) {
-@@ -207,8 +206,7 @@ static void pagevec_lru_move_fn(struct pagevec *pvec,
- 			spin_lock_irqsave(&pgdat->lru_lock, flags);
- 		}
- 
--		lruvec = mem_cgroup_page_lruvec(page, pgdat);
--		(*move_fn)(page, lruvec, arg);
-+		(*move_fn)(page, arg);
- 	}
- 	if (pgdat)
- 		spin_unlock_irqrestore(&pgdat->lru_lock, flags);
-@@ -216,12 +214,14 @@ static void pagevec_lru_move_fn(struct pagevec *pvec,
- 	pagevec_reinit(pvec);
- }
- 
--static void pagevec_move_tail_fn(struct page *page, struct lruvec *lruvec,
--				 void *arg)
-+static void pagevec_move_tail_fn(struct page *page, void *arg)
- {
- 	int *pgmoved = arg;
- 
- 	if (PageLRU(page) && !PageUnevictable(page)) {
-+		struct lruvec *lruvec;
-+
-+		lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
- 		del_page_from_lru_list(page, lruvec, page_lru(page));
- 		ClearPageActive(page);
- 		add_page_to_lru_list_tail(page, lruvec, page_lru(page));
-@@ -272,12 +272,14 @@ static void update_page_reclaim_stat(struct lruvec *lruvec,
- 		reclaim_stat->recent_rotated[file]++;
- }
- 
--static void __activate_page(struct page *page, struct lruvec *lruvec,
--			    void *arg)
-+static void __activate_page(struct page *page, void *arg)
- {
- 	if (PageLRU(page) && !PageActive(page) && !PageUnevictable(page)) {
- 		int file = page_is_file_cache(page);
- 		int lru = page_lru_base_type(page);
-+		struct lruvec *lruvec;
-+
-+		lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
- 
- 		del_page_from_lru_list(page, lruvec, lru);
- 		SetPageActive(page);
-@@ -328,7 +330,7 @@ void activate_page(struct page *page)
- 
- 	page = compound_head(page);
- 	spin_lock_irq(&pgdat->lru_lock);
--	__activate_page(page, mem_cgroup_page_lruvec(page, pgdat), NULL);
-+	__activate_page(page, NULL);
- 	spin_unlock_irq(&pgdat->lru_lock);
- }
+Notes:
+    v2:
+      no changes
+    v3:
+      no changes
+    v4:
+      no changes
+
+ arch/x86/include/asm/ptrace.h | 13 +++++++++++++
+ arch/x86/lib/insn-eval.c      | 26 +++++++++++++++-----------
+ 2 files changed, 28 insertions(+), 11 deletions(-)
+
+diff --git a/arch/x86/include/asm/ptrace.h b/arch/x86/include/asm/ptrace.h
+index 5057a8ed100b..ac45b06941a5 100644
+--- a/arch/x86/include/asm/ptrace.h
++++ b/arch/x86/include/asm/ptrace.h
+@@ -159,6 +159,19 @@ static inline bool user_64bit_mode(struct pt_regs *regs)
  #endif
-@@ -498,9 +500,9 @@ void lru_cache_add_active_or_unevictable(struct page *page,
-  * be write it out by flusher threads as this is much more effective
-  * than the single-page writeout from reclaim.
+ }
+ 
++/*
++ * Determine whether the register set came from any context that is running in
++ * 64-bit mode.
++ */
++static inline bool any_64bit_mode(struct pt_regs *regs)
++{
++#ifdef CONFIG_X86_64
++	return !user_mode(regs) || user_64bit_mode(regs);
++#else
++	return false;
++#endif
++}
++
+ #ifdef CONFIG_X86_64
+ #define current_user_stack_pointer()	current_pt_regs()->sp
+ #define compat_user_stack_pointer()	current_pt_regs()->sp
+diff --git a/arch/x86/lib/insn-eval.c b/arch/x86/lib/insn-eval.c
+index 306c3a0902ba..31600d851fd8 100644
+--- a/arch/x86/lib/insn-eval.c
++++ b/arch/x86/lib/insn-eval.c
+@@ -155,7 +155,7 @@ static bool check_seg_overrides(struct insn *insn, int regoff)
   */
--static void lru_deactivate_file_fn(struct page *page, struct lruvec *lruvec,
--			      void *arg)
-+static void lru_deactivate_file_fn(struct page *page, void *arg)
+ static int resolve_default_seg(struct insn *insn, struct pt_regs *regs, int off)
  {
-+	struct lruvec *lruvec;
- 	int lru, file;
- 	bool active;
- 
-@@ -518,6 +520,8 @@ static void lru_deactivate_file_fn(struct page *page, struct lruvec *lruvec,
- 	file = page_is_file_cache(page);
- 	lru = page_lru_base_type(page);
- 
-+	lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
-+
- 	del_page_from_lru_list(page, lruvec, lru + active);
- 	ClearPageActive(page);
- 	ClearPageReferenced(page);
-@@ -544,12 +548,14 @@ static void lru_deactivate_file_fn(struct page *page, struct lruvec *lruvec,
- 	update_page_reclaim_stat(lruvec, file, 0);
- }
- 
--static void lru_deactivate_fn(struct page *page, struct lruvec *lruvec,
--			    void *arg)
-+static void lru_deactivate_fn(struct page *page, void *arg)
- {
- 	if (PageLRU(page) && PageActive(page) && !PageUnevictable(page)) {
- 		int file = page_is_file_cache(page);
- 		int lru = page_lru_base_type(page);
-+		struct lruvec *lruvec;
-+
-+		lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
- 
- 		del_page_from_lru_list(page, lruvec, lru + LRU_ACTIVE);
- 		ClearPageActive(page);
-@@ -561,12 +567,14 @@ static void lru_deactivate_fn(struct page *page, struct lruvec *lruvec,
- 	}
- }
- 
--static void lru_lazyfree_fn(struct page *page, struct lruvec *lruvec,
--			    void *arg)
-+static void lru_lazyfree_fn(struct page *page, void *arg)
- {
- 	if (PageLRU(page) && PageAnon(page) && PageSwapBacked(page) &&
- 	    !PageSwapCache(page) && !PageUnevictable(page)) {
- 		bool active = PageActive(page);
-+		struct lruvec *lruvec;
-+
-+		lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
- 
- 		del_page_from_lru_list(page, lruvec,
- 				       LRU_INACTIVE_ANON + active);
-@@ -921,15 +929,17 @@ void lru_add_page_tail(struct page *page, struct page *page_tail,
- }
- #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
- 
--static void __pagevec_lru_add_fn(struct page *page, struct lruvec *lruvec,
--				 void *arg)
-+static void __pagevec_lru_add_fn(struct page *page, void *arg)
- {
--	enum lru_list lru;
- 	int was_unevictable = TestClearPageUnevictable(page);
-+	struct lruvec *lruvec;
-+	enum lru_list lru;
- 
- 	VM_BUG_ON_PAGE(PageLRU(page), page);
--
- 	SetPageLRU(page);
-+
-+	lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
-+
+-	if (user_64bit_mode(regs))
++	if (any_64bit_mode(regs))
+ 		return INAT_SEG_REG_IGNORE;
  	/*
- 	 * Page becomes evictable in two ways:
- 	 * 1) Within LRU lock [munlock_vma_page() and __munlock_pagevec()].
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index df859b1d583c..3c8b81990146 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -1767,15 +1767,15 @@ int isolate_lru_page(struct page *page)
+ 	 * Resolve the default segment register as described in Section 3.7.4
+@@ -266,7 +266,7 @@ static int resolve_seg_reg(struct insn *insn, struct pt_regs *regs, int regoff)
+ 	 * which may be invalid at this point.
+ 	 */
+ 	if (regoff == offsetof(struct pt_regs, ip)) {
+-		if (user_64bit_mode(regs))
++		if (any_64bit_mode(regs))
+ 			return INAT_SEG_REG_IGNORE;
+ 		else
+ 			return INAT_SEG_REG_CS;
+@@ -289,7 +289,7 @@ static int resolve_seg_reg(struct insn *insn, struct pt_regs *regs, int regoff)
+ 	 * In long mode, segment override prefixes are ignored, except for
+ 	 * overrides for FS and GS.
+ 	 */
+-	if (user_64bit_mode(regs)) {
++	if (any_64bit_mode(regs)) {
+ 		if (idx != INAT_SEG_REG_FS &&
+ 		    idx != INAT_SEG_REG_GS)
+ 			idx = INAT_SEG_REG_IGNORE;
+@@ -646,23 +646,27 @@ unsigned long insn_get_seg_base(struct pt_regs *regs, int seg_reg_idx)
+ 		 */
+ 		return (unsigned long)(sel << 4);
  
- 	if (PageLRU(page)) {
- 		pg_data_t *pgdat = page_pgdat(page);
--		struct lruvec *lruvec;
+-	if (user_64bit_mode(regs)) {
++	if (any_64bit_mode(regs)) {
+ 		/*
+ 		 * Only FS or GS will have a base address, the rest of
+ 		 * the segments' bases are forced to 0.
+ 		 */
+ 		unsigned long base;
  
- 		spin_lock_irq(&pgdat->lru_lock);
--		lruvec = mem_cgroup_page_lruvec(page, pgdat);
- 		if (PageLRU(page)) {
--			int lru = page_lru(page);
-+			struct lruvec *lruvec;
-+
-+			lruvec = mem_cgroup_page_lruvec(page, pgdat);
- 			get_page(page);
- 			ClearPageLRU(page);
--			del_page_from_lru_list(page, lruvec, lru);
-+			del_page_from_lru_list(page, lruvec, page_lru(page));
- 			ret = 0;
- 		}
- 		spin_unlock_irq(&pgdat->lru_lock);
+-		if (seg_reg_idx == INAT_SEG_REG_FS)
++		if (seg_reg_idx == INAT_SEG_REG_FS) {
+ 			rdmsrl(MSR_FS_BASE, base);
+-		else if (seg_reg_idx == INAT_SEG_REG_GS)
++		} else if (seg_reg_idx == INAT_SEG_REG_GS) {
+ 			/*
+ 			 * swapgs was called at the kernel entry point. Thus,
+ 			 * MSR_KERNEL_GS_BASE will have the user-space GS base.
+ 			 */
+-			rdmsrl(MSR_KERNEL_GS_BASE, base);
+-		else
++			if (user_mode(regs))
++				rdmsrl(MSR_KERNEL_GS_BASE, base);
++			else
++				rdmsrl(MSR_GS_BASE, base);
++		} else {
+ 			base = 0;
++		}
+ 		return base;
+ 	}
+ 
+@@ -703,7 +707,7 @@ static unsigned long get_seg_limit(struct pt_regs *regs, int seg_reg_idx)
+ 	if (sel < 0)
+ 		return 0;
+ 
+-	if (user_64bit_mode(regs) || v8086_mode(regs))
++	if (any_64bit_mode(regs) || v8086_mode(regs))
+ 		return -1L;
+ 
+ 	if (!sel)
+@@ -948,7 +952,7 @@ static int get_eff_addr_modrm(struct insn *insn, struct pt_regs *regs,
+ 	 * following instruction.
+ 	 */
+ 	if (*regoff == -EDOM) {
+-		if (user_64bit_mode(regs))
++		if (any_64bit_mode(regs))
+ 			tmp = regs->ip + insn->length;
+ 		else
+ 			tmp = 0;
+@@ -1250,7 +1254,7 @@ static void __user *get_addr_ref_32(struct insn *insn, struct pt_regs *regs)
+ 	 * After computed, the effective address is treated as an unsigned
+ 	 * quantity.
+ 	 */
+-	if (!user_64bit_mode(regs) && ((unsigned int)eff_addr > seg_limit))
++	if (!any_64bit_mode(regs) && ((unsigned int)eff_addr > seg_limit))
+ 		goto out;
+ 
+ 	/*
 -- 
-2.24.0
+2.24.0.432.g9d3f5f5b63-goog
 
