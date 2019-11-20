@@ -2,97 +2,148 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B72E3C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 17:48:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8051C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 17:48:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 928762080F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 17:48:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F8D02068E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 17:48:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="ddWR/VPt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o4N3n5Pd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727972AbfKTRsU (ORCPT
+        id S1728020AbfKTRsz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 12:48:20 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:35402 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727671AbfKTRsT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 12:48:19 -0500
-Received: from zn.tnic (p200300EC2F0D8C00F553B94F3FB99B80.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:8c00:f553:b94f:3fb9:9b80])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4B7D41EC0C0A;
-        Wed, 20 Nov 2019 18:48:17 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1574272097;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=sRGk1TFOicxI4LhR8Ex8diUi+6oCm1GfPkLIX+2fv3k=;
-        b=ddWR/VPtrKLvTOJFzaHVDWgpMgbnK9t9PGNQfhYFWQXJDrF/b/wgn4TGqzrtqDphOUfvY9
-        S9/TKirB/KIQWRegfs5f8xqqEspKeinJ7gj3veo+LbHfNO/22QCW/xAe4av/1pQJKREgFD
-        tSdQHBcSqiKfr3ZQdsucmfmj3+xUGag=
-Date:   Wed, 20 Nov 2019 18:48:10 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
-        Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v3 01/19] x86/msr-index: Clean up bit defines for
- IA32_FEATURE_CONTROL MSR
-Message-ID: <20191120174810.GI2634@zn.tnic>
-References: <20191119031240.7779-1-sean.j.christopherson@intel.com>
- <20191119031240.7779-2-sean.j.christopherson@intel.com>
- <20191119111445.GB27787@zn.tnic>
- <20191119231822.GA6855@linux.intel.com>
+        Wed, 20 Nov 2019 12:48:55 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:40791 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727442AbfKTRsz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 12:48:55 -0500
+Received: by mail-wm1-f68.google.com with SMTP id y5so575318wmi.5;
+        Wed, 20 Nov 2019 09:48:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Gb5aW3R/KOwRkVEvqWdyeVDOFlNOArlGLF6/Wf4S7KY=;
+        b=o4N3n5Pd7xMvM3x6YL9p7RkLA0EaB/gwGYDulzXpofsMxMfBVWzMxAYm+VAQafUko9
+         uGE+Mm3kQsnpCU/PRAcHHpEmsCyW4quf2NcgU0OC0k5Z9kL3e2ONCUQGTdvWSu57Ir37
+         Nl/GXiX+9oEFJuUY2QxToBjBCh0hDTWFm4pxxnapc6gndzXSMPM16dh8jnmN+jo9YxMm
+         Rp8zhNM4Luchw1G2R5zZoACrL2AlIC1gRWVOCMgKJLEvqj0qluAao6YLldT8MG1zscDL
+         qMnU9qGaOTo61E38pKd7uxcDP6NIigQAyxy8dge1PUq/84Vr6srhVZIb2Gt4bUzVPe/2
+         kdnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Gb5aW3R/KOwRkVEvqWdyeVDOFlNOArlGLF6/Wf4S7KY=;
+        b=ktAPCe9wJqpiB9oGvexJ1rxo1oC3cMnJtYweqXmDKDv1yQ1Ywj53AYXGBRawtq7TE8
+         bennNIann5zRegPMFSSLlh5iQpjhWfENTBFMlZhUDjAkRt5yem1ffxx9+T0ju1XP3CAc
+         IRzb0J8kE5ubcFotaeM5JKki4vsHVYEGQclC/PGB+0QWGClLvoRxC6aUcy9WLgwwhErZ
+         AbDb67C4zcCy/QxwiI7BI5PBS/6CVUdWmZx89QSAvsKt0dLOhP6uFoOq323K5ygUb7SZ
+         PrNU6yW542SWwfXEG9bVheNISektxMOCdcq0XVhgtQXGCGnBf+TaMBODY+wjERw/KfT7
+         5pGg==
+X-Gm-Message-State: APjAAAX7INy2mX41TPYWcLkAZNSYEXDLn9nFME5tRp9mkpHXuhH82skN
+        UADaKMfjEzB6d4WfWU2K9Sfh/JUwuW4=
+X-Google-Smtp-Source: APXvYqwXdDQUtrOZSro2T2/CaWB+MPqo3m0UdZTaIiLCvG0M8O7HDp8aMnaddseMLcQwky08IkX0ag==
+X-Received: by 2002:a05:600c:210b:: with SMTP id u11mr4849653wml.170.1574272132571;
+        Wed, 20 Nov 2019 09:48:52 -0800 (PST)
+Received: from [10.83.36.153] ([217.173.96.166])
+        by smtp.gmail.com with ESMTPSA id t14sm31266663wrw.87.2019.11.20.09.48.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 20 Nov 2019 09:48:51 -0800 (PST)
+Subject: Re: [PATCH] Ensure pci transactions coming from PLX NTB are handled
+ when IOMMU is turned on
+To:     James Sewart <jamessewart@arista.com>,
+        iommu@lists.linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, Dmitry Safonov <dima@arista.com>,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Logan Gunthorpe <logang@deltatee.com>
+References: <A3FA9DE1-2EEF-41D8-9AC2-B1F760E7F5D5@arista.com>
+ <0B8FAD0D-B598-4CEA-A614-67F4C7C5B9CA@arista.com>
+From:   Dmitry Safonov <0x7f454c46@gmail.com>
+Message-ID: <5c3b56dd-7088-e544-6628-01506f7b84e8@gmail.com>
+Date:   Wed, 20 Nov 2019 17:48:45 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
+In-Reply-To: <0B8FAD0D-B598-4CEA-A614-67F4C7C5B9CA@arista.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191119231822.GA6855@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 03:18:22PM -0800, Sean Christopherson wrote:
-> Ugh.  Match the SDM unless it's obviously "wrong"?  :-)  It might literally
-> be the only instance of the SDM using "on" instead of "enable(d)" for an
-> MSR or CR bit.  The SDM even refers to it as an enable bit, e.g. "platform
-> software has not enabled LMCE by setting IA32_FEATURE_CONTROL.LMCE_ON (bit 20)".
++Cc: linux-pci@vger.kernel.org
++Cc: Bjorn Helgaas <bhelgaas@google.com>
++Cc: Logan Gunthorpe <logang@deltatee.com>
+
+On 11/5/19 12:17 PM, James Sewart wrote:
+> Any comments on this?
 > 
-> Whining aside, I'm ok going with LMCE_ON, I have a feeling "on" was
-> deliberately chosen differentiate it from IA32_MCG_EXT_CTL.LMCE_EN.
+> Cheers,
+> James.
+> 
+>> On 24 Oct 2019, at 13:52, James Sewart <jamessewart@arista.com> wrote:
+>>
+>> The PLX PEX NTB forwards DMA transactions using Requester ID's that don't exist as
+>> PCI devices. The devfn for a transaction is used as an index into a lookup table
+>> storing the origin of a transaction on the other side of the bridge.
+>>
+>> This patch aliases all possible devfn's to the NTB device so that any transaction
+>> coming in is governed by the mappings for the NTB.
+>>
+>> Signed-Off-By: James Sewart <jamessewart@arista.com>
+>> ---
+>> drivers/pci/quirks.c | 22 ++++++++++++++++++++++
+>> 1 file changed, 22 insertions(+)
+>>
+>> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+>> index 320255e5e8f8..647f546e427f 100644
+>> --- a/drivers/pci/quirks.c
+>> +++ b/drivers/pci/quirks.c
+>> @@ -5315,6 +5315,28 @@ SWITCHTEC_QUIRK(0x8574);  /* PFXI 64XG3 */
+>> SWITCHTEC_QUIRK(0x8575);  /* PFXI 80XG3 */
+>> SWITCHTEC_QUIRK(0x8576);  /* PFXI 96XG3 */
+>>
+>> +/*
+>> + * PLX NTB uses devfn proxy IDs to move TLPs between NT endpoints. These IDs
+>> + * are used to forward responses to the originator on the other side of the
+>> + * NTB. Alias all possible IDs to the NTB to permit access when the IOMMU is
+>> + * turned on.
+>> + */
+>> +static void quirk_PLX_NTB_dma_alias(struct pci_dev *pdev)
+>> +{
+>> +	if (!pdev->dma_alias_mask)
+>> +		pdev->dma_alias_mask = kcalloc(BITS_TO_LONGS(U8_MAX),
+>> +					      sizeof(long), GFP_KERNEL);
+>> +	if (!pdev->dma_alias_mask) {
+>> +		dev_warn(&pdev->dev, "Unable to allocate DMA alias mask\n");
+>> +		return;
+>> +	}
+>> +
+>> +	// PLX NTB may use all 256 devfns
+>> +	memset(pdev->dma_alias_mask, U8_MAX, (U8_MAX+1)/BITS_PER_BYTE);
+>> +}
+>> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_PLX, 0x87b0, quirk_PLX_NTB_dma_alias);
+>> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_PLX, 0x87b1, quirk_PLX_NTB_dma_alias);
+>> +
+>> /*
+>>  * On Lenovo Thinkpad P50 SKUs with a Nvidia Quadro M1000M, the BIOS does
+>>  * not always reset the secondary Nvidia GPU between reboots if the system
+>> -- 
+>> 2.19.1
+>>
+>>
+> 
 
-Nah, ok, let's leave this as a one-off case where the SDM is simply
-wrong but otherwise the bit names are correct and we keep them the same
-as in the SDM to avoid obvious confusion.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Thanks,
+          Dmitry
