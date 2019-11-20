@@ -3,106 +3,179 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10A3CC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:50:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0857BC43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:51:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3D9222310
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:50:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFC1622444
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:51:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728804AbfKTLuo (ORCPT
+        id S1729359AbfKTLvc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 06:50:44 -0500
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:45292 "EHLO
-        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727619AbfKTLun (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 06:50:43 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R391e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=38;SR=0;TI=SMTPD_---0Tie.JMf_1574250633;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0Tie.JMf_1574250633)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 20 Nov 2019 19:50:35 +0800
-Subject: Re: [PATCH v4 3/9] mm/lru: replace pgdat lru_lock with lruvec lock
-To:     Johannes Weiner <hannes@cmpxchg.org>,
-        Matthew Wilcox <willy@infradead.org>
-Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org,
-        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
-        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
-        yang.shi@linux.alibaba.com, shakeelb@google.com,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Roman Gushchin <guro@fb.com>,
-        Chris Down <chris@chrisdown.name>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vlastimil Babka <vbabka@suse.cz>, Qian Cai <cai@lca.pw>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        swkhack <swkhack@gmail.com>,
-        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Colin Ian King <colin.king@canonical.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Peng Fan <peng.fan@nxp.com>,
-        Nikolay Borisov <nborisov@suse.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Yafang Shao <laoar.shao@gmail.com>
-References: <1574166203-151975-1-git-send-email-alex.shi@linux.alibaba.com>
- <1574166203-151975-4-git-send-email-alex.shi@linux.alibaba.com>
- <20191119155704.GP20752@bombadil.infradead.org>
- <20191119164448.GA396644@cmpxchg.org>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <ae58bcc4-cb47-7c66-d190-531299fb7b42@linux.alibaba.com>
-Date:   Wed, 20 Nov 2019 19:50:33 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.1
+        Wed, 20 Nov 2019 06:51:32 -0500
+Received: from mga05.intel.com ([192.55.52.43]:53499 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728753AbfKTLvb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 06:51:31 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Nov 2019 03:51:31 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,221,1571727600"; 
+   d="scan'208";a="215772771"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 20 Nov 2019 03:51:27 -0800
+Received: by lahna (sSMTP sendmail emulation); Wed, 20 Nov 2019 13:51:27 +0200
+Date:   Wed, 20 Nov 2019 13:51:27 +0200
+From:   Mika Westerberg <mika.westerberg@intel.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Karol Herbst <kherbst@redhat.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lyude Paul <lyude@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        Dave Airlie <airlied@gmail.com>,
+        Mario Limonciello <Mario.Limonciello@dell.com>
+Subject: Re: [PATCH v4] pci: prevent putting nvidia GPUs into lower device
+ states on certain intel bridges
+Message-ID: <20191120115127.GD11621@lahna.fi.intel.com>
+References: <20191017121901.13699-1-kherbst@redhat.com>
+ <20191119214955.GA223696@google.com>
+ <CACO55tu+8VeyMw1Lb6QvNspaJm9LDgoRbooVhr0s3v9uBt=feg@mail.gmail.com>
+ <20191120101816.GX11621@lahna.fi.intel.com>
+ <CAJZ5v0g4vp1C+zHU5nOVnkGsOjBvLaphK1kK=qAT6b=mK8kpsA@mail.gmail.com>
+ <20191120112212.GA11621@lahna.fi.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20191119164448.GA396644@cmpxchg.org>
-Content-Type: text/plain; charset=gbk
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191120112212.GA11621@lahna.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Nov 20, 2019 at 01:22:16PM +0200, Mika Westerberg wrote:
+>             If (((OSYS <= 0x07D9) || ((OSYS == 0x07DF) && (_REV == 
+>                 0x05))))
+>             {
 
+The OSYS comes from this (in DSDT):
 
-ÔÚ 2019/11/20 ÉÏÎç12:44, Johannes Weiner Ð´µÀ:
-> On Tue, Nov 19, 2019 at 07:57:04AM -0800, Matthew Wilcox wrote:
->> On Tue, Nov 19, 2019 at 08:23:17PM +0800, Alex Shi wrote:
->>> +static inline struct lruvec *lock_page_lruvec_irqsave(struct page *page,
->>> +				struct pglist_data *pgdat, unsigned long *flags)
->>> +{
->>> +	struct lruvec *lruvec = mem_cgroup_page_lruvec(page, pgdat);
->>> +
->>> +	spin_lock_irqsave(&lruvec->lru_lock, *flags);
->>> +
->>> +	return lruvec;
->>> +}
->>
->> This should be a macro, not a function.  You basically can't do this;
->> spin_lock_irqsave needs to write to a variable which can then be passed
->> to spin_unlock_irqrestore().  What you're doing here will dereference the
->> pointer in _this_ function, but won't propagate the modified value back to
->> the caller.  I suppose you could do something like this ...
-> 
-> This works because spin_lock_irqsave and local_irq_save() are
-> macros. It boils down to '*flags = arch_local_irq_save()' in this
-> function, and therefor does the right thing.
-> 
-> We exploit that in quite a few places:
-> 
-> $ git grep 'spin_lock_irqsave(.*\*flags' | wc -l
-> 39
-> 
+                If (_OSI ("Windows 2009"))
+                {
+                    OSYS = 0x07D9
+                }
 
-Yes, thank you all for point this!
+                If (_OSI ("Windows 2012"))
+                {
+                    OSYS = 0x07DC
+                }
+
+                If (_OSI ("Windows 2013"))
+                {
+                    OSYS = 0x07DD
+                }
+
+                If (_OSI ("Windows 2015"))
+                {
+                    OSYS = 0x07DF
+                }
+
+So I guess this particular check tries to identify Windows 7 and older,
+and Linux.
+
+>                 If ((PIOF == Zero))
+>                 {
+>                     P0LD = One
+>                     TCNT = Zero
+>                     While ((TCNT < LDLY))
+>                     {
+>                         If ((P0LT == 0x08))
+>                         {
+>                             Break
+>                         }
+> 
+>                         Sleep (0x10)
+>                         TCNT += 0x10
+>                     }
+> 
+>                     P0RM = One
+>                     P0AP = 0x03
+>                 }
+>                 ElseIf ((PIOF == One))
+>                 {
+>                     P1LD = One
+>                     TCNT = Zero
+>                     While ((TCNT < LDLY))
+>                     {
+>                         If ((P1LT == 0x08))
+>                         {
+>                             Break
+>                         }
+> 
+>                         Sleep (0x10)
+>                         TCNT += 0x10
+>                     }
+> 
+>                     P1RM = One
+>                     P1AP = 0x03
+>                 }
+>                 ElseIf ((PIOF == 0x02))
+>                 {
+>                     P2LD = One
+>                     TCNT = Zero
+>                     While ((TCNT < LDLY))
+>                     {
+>                         If ((P2LT == 0x08))
+>                         {
+>                             Break
+>                         }
+> 
+>                         Sleep (0x10)
+>                         TCNT += 0x10
+>                     }
+> 
+>                     P2RM = One
+>                     P2AP = 0x03
+>                 }
+> 
+>                 If ((PBGE != Zero))
+>                 {
+>                     If (SBDL (PIOF))
+>                     {
+>                         MBDL = GMXB (PIOF)
+>                         PDUB (PIOF, MBDL)
+>                     }
+>                 }
+>             }
+>             Else
+>             {
+>                 LKDS (PIOF)
+>             }
+> 
+>             If ((DerefOf (SCLK [Zero]) != Zero))
+>             {
+>                 PCRO (0xDC, 0x100C, DerefOf (SCLK [One]))
+>                 Sleep (0x10)
+>             }
+> 
+>             GPPR (PIOF, Zero)
+>             If ((OSYS != 0x07D9))
+>             {
+>                 DIWK (PIOF)
+>             }
+> 
+>             \_SB.SGOV (0x01010004, Zero)
+>             Sleep (0x14)
+>             Return (Zero)
+>         }
