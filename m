@@ -2,107 +2,155 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C1D3C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:05:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDEE9C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:09:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05D6C2245D
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:05:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="hdscKC8k"
+	by mail.kernel.org (Postfix) with ESMTP id BD44022365
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:09:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728990AbfKTLFe (ORCPT
+        id S1728994AbfKTLJX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 06:05:34 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:38698 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728980AbfKTLFe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 06:05:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:Content-Type:MIME-Version:
-        Message-ID:Subject:To:From:Date:Reply-To:Cc:Content-Transfer-Encoding:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=oppy+F+0JaaCkFHzOboj6zfi/ynUAor3Lsm2TZQUzXo=; b=hdscKC8k4aCUGOpSCrLWZ0qr7
-        J3RITMqSzQHKbgTmpQsSBFX1bIQUH6+KL37wWns3CXS1iYD6XGYBQRZCxdVnw1y6prKiHgAPR/Lgi
-        tW+Mvjn5VMx/yBULUzsl248AqbMZSpQ0al1oAhBti++euAuhib3JGExA8PQZw+Uw3aikPijHrNwTa
-        Q5ByKuGU7eGQyNuFOeoLimStdQnTF8gNm6Y70p4dH7YKdJ7W5Rp/htWbOyL136AGQFYKJYLu6sNgA
-        vyJLqM17lOGXj4ljaMmC0EEnCnkT7msXUMmml5BbIH4BwoTpnNEIFaCg8x88meQyu3G6FjMz2qKSJ
-        pjEf6GeGA==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:58734)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1iXNnf-0007tE-8F; Wed, 20 Nov 2019 11:05:31 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1iXNne-0001gL-Jr; Wed, 20 Nov 2019 11:05:30 +0000
-Date:   Wed, 20 Nov 2019 11:05:30 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] Remove Joern Engel's address in MAINTAINERS
-Message-ID: <20191120110530.GO25745@shell.armlinux.org.uk>
+        Wed, 20 Nov 2019 06:09:23 -0500
+Received: from foss.arm.com ([217.140.110.172]:37422 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727052AbfKTLJX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 06:09:23 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4AEDE31B;
+        Wed, 20 Nov 2019 03:09:22 -0800 (PST)
+Received: from bogus (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2F7273F6C4;
+        Wed, 20 Nov 2019 03:09:21 -0800 (PST)
+Date:   Wed, 20 Nov 2019 11:09:11 +0000
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc:     Atish Patra <atish.patra@wdc.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Lukasz Luba <lukasz.luba@arm.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH] arm: Fix topology setup in case of CPU hotplug for
+ CONFIG_SCHED_MC
+Message-ID: <20191120110911.GA31600@bogus>
+References: <20191120104212.14791-1-dietmar.eggemann@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191120104212.14791-1-dietmar.eggemann@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Joern's email address seems to be non-functional for 22 days, failing
-with "No route to host".  So, it's pointless having the entry in
-MAINTAINERS.  Remove the address and mark the items as orphans.
+Hi Dietmar, Lukasz,
 
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
----
-Tracerouting the IP (213.229.74.203) gives:
+Thanks for digging this bug and fixing it.
 
- 8  kvm10uk.cheapvps.co.uk (213.229.125.119)  23.298 ms  18.688 ms 19.051 ms
- 9  kvm10uk.cheapvps.co.uk (213.229.125.119)  2384.829 ms !H  2384.941 ms !H  2385.424 ms !H
+On Wed, Nov 20, 2019 at 10:42:12AM +0000, Dietmar Eggemann wrote:
+> Commit ca74b316df96 ("arm: Use common cpu_topology structure and
+> functions.") changed cpu_coregroup_mask() from the ARM32 specific
+> implementation in arch/arm/include/asm/topology.h to the one shared
+> with ARM64 and RISCV in drivers/base/arch_topology.c.
+>
+> Currently on Arm32 (TC2 w/ CONFIG_SCHED_MC) the task scheduler setup
+> code (w/ CONFIG_SCHED_DEBUG) shows this during CPU hotplug:
+>
+>   ERROR: groups don't span domain->span
+>
+> It happens to CPUs of the cluster of the CPU which gets hot-plugged
+> out on scheduler domain MC.
+>
+> Turns out that the shared cpu_coregroup_mask() requires that the
+> hot-plugged CPU is removed from the core_sibling mask via
+> remove_cpu_topology(). Otherwise the 'is core_sibling subset of
+> cpumask_of_node()' doesn't work. In this case the task scheduler has to
+> deal with cpumask_of_node instead of core_sibling which is wrong on
+> scheduler domain MC.
+>
+> e.g. CPU3 hot-plugged out on TC2 [cluster0: 0,3-4 cluster1: 1-2]:
+>
+>   cpu_coregroup_mask(): CPU3 cpumask_of_node=0-2,4 core_sibling=0,3-4
+>                                                                   ^
+> should be:
+>
+>   cpu_coregroup_mask(): CPU3 cpumask_of_node=0-2,4 core_sibling=0,4
+>
+> Add remove_cpu_topology() to __cpu_disable() to remove the CPU from the
+> topology masks in case of a CPU hotplug out operation.
+>
+> At the same time tweak store_cpu_topology() slightly so it will call
+> update_siblings_masks() in case of CPU hotplug in operation via
+> secondary_start_kernel()->smp_store_cpu_info().
+>
+> This aligns the Arm32 implementation with the Arm64 one.
+>
+> Fixes: ca74b316df96 ("arm: Use common cpu_topology structure and functions")
 
-The domain is due to expire in two days, so will be interesting to
-see what happens.
+Apart from the minor nit below,
 
-If anyone has an updated address, please correct maintainers!
+Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
 
- MAINTAINERS | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+> Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+> ---
+>  arch/arm/kernel/smp.c      |  2 ++
+>  arch/arm/kernel/topology.c | 15 +++++++--------
+>  2 files changed, 9 insertions(+), 8 deletions(-)
+>
+> diff --git a/arch/arm/kernel/smp.c b/arch/arm/kernel/smp.c
+> index 4b0bab2607e4..139c0d98fa29 100644
+> --- a/arch/arm/kernel/smp.c
+> +++ b/arch/arm/kernel/smp.c
+> @@ -240,6 +240,8 @@ int __cpu_disable(void)
+>  	if (ret)
+>  		return ret;
+>
+> +	remove_cpu_topology(cpu);
+> +
+>  	/*
+>  	 * Take this CPU offline.  Once we clear this, we can't return,
+>  	 * and we must not schedule until we're ready to give up the cpu.
+> diff --git a/arch/arm/kernel/topology.c b/arch/arm/kernel/topology.c
+> index 5b9faba03afb..b37b0a340991 100644
+> --- a/arch/arm/kernel/topology.c
+> +++ b/arch/arm/kernel/topology.c
+> @@ -196,9 +196,8 @@ void store_cpu_topology(unsigned int cpuid)
+>  	struct cpu_topology *cpuid_topo = &cpu_topology[cpuid];
+>  	unsigned int mpidr;
+>
+> -	/* If the cpu topology has been already set, just return */
+> -	if (cpuid_topo->core_id != -1)
+> -		return;
+> +	if (cpuid_topo->package_id != -1)
+> +		goto topology_populated;
+>
+>  	mpidr = read_cpuid_mpidr();
+>
+> @@ -231,14 +230,14 @@ void store_cpu_topology(unsigned int cpuid)
+>  		cpuid_topo->package_id = -1;
+>  	}
+>
+> -	update_siblings_masks(cpuid);
+> -
+>  	update_cpu_capacity(cpuid);
+>
+>  	pr_info("CPU%u: thread %d, cpu %d, socket %d, mpidr %x\n",
+> -		cpuid, cpu_topology[cpuid].thread_id,
+> -		cpu_topology[cpuid].core_id,
+> -		cpu_topology[cpuid].package_id, mpidr);
+> +		cpuid, cpuid_topo->thread_id, cpuid_topo->core_id,
+> +		cpuid_topo->package_id, mpidr);
+> +
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index bc39f7f5dc34..5950cd457b24 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2998,9 +2998,8 @@ F:	kernel/trace/blktrace.c
- F:	lib/sbitmap.c
- 
- BLOCK2MTD DRIVER
--M:	Joern Engel <joern@lazybastard.org>
- L:	linux-mtd@lists.infradead.org
--S:	Maintained
-+S:	Orphan
- F:	drivers/mtd/devices/block2mtd.c
- 
- BLUETOOTH DRIVERS
-@@ -12671,9 +12670,8 @@ F:	include/uapi/linux/phonet.h
- F:	net/phonet/
- 
- PHRAM MTD DRIVER
--M:	Joern Engel <joern@lazybastard.org>
- L:	linux-mtd@lists.infradead.org
--S:	Maintained
-+S:	Orphan
- F:	drivers/mtd/devices/phram.c
- 
- PICOLCD HID DRIVER
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+[nit] The above is a clearly cosmetic cleanup and shouldn't be part of
+this fix as they will be backported automatically. So I prefer to drop
+this or make it separate patch if required.
+
+--
+Regards,
+Sudeep
