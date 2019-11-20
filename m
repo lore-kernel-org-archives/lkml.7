@@ -2,168 +2,92 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24257C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:50:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45CA3C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:50:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F016C22506
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:50:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BzRe+u7s"
+	by mail.kernel.org (Postfix) with ESMTP id 141E722506
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:50:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574257820;
+	bh=Xp5zx1M+QO2/lL5tqivNrE0v2U8OJdY+Y4YNXCQGaHU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lh3W0wurLG1p2yjYRGfhhXX2envb6vbSteiNg9wvflyzE4TwKAccnO6PEXkbxBpCi
+	 n/axXfhAtHBz3P6jFW+gXb3M65EXlMKGpKXV4l31sbv4Y+Y6h9bio31deAIdSqZ/ft
+	 hM69poPnHhZM45DjNIY8yID29cUWUf5SZwjsHfZQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730073AbfKTNuH (ORCPT
+        id S1730852AbfKTNuS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 08:50:07 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:37242 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729591AbfKTNuG (ORCPT
+        Wed, 20 Nov 2019 08:50:18 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:41712 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729591AbfKTNuS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 08:50:06 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAKDntNk044995;
-        Wed, 20 Nov 2019 07:49:55 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574257795;
-        bh=igM4FKkHdrSc7hws60TYIUKdxK6fHbvh4VrbAU0B0qg=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=BzRe+u7s+vnkppJrguEj85EG3WqE4wAKog+ctPf92slMETrjH8ejv45M7RgYClLnm
-         7+/Rkl5lJ+HUltj2xwbh3Ab+rpZjsbgtw8449hJwH5uxI85vrAmog7ky2FCKxWw9UC
-         ylaQ2L3yk5qERQhTz/l0oCKpl5MADxkRn5VJ5Q6c=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAKDntBN009270
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 20 Nov 2019 07:49:55 -0600
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 20
- Nov 2019 07:49:54 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 20 Nov 2019 07:49:54 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAKDnpEt093218;
-        Wed, 20 Nov 2019 07:49:52 -0600
-Subject: Re: [RFC 0/2] gpiolib: Initial, basic support for shared GPIO lines
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <linus.walleij@linaro.org>, <bgolaszewski@baylibre.com>,
-        <robh+dt@kernel.org>
-CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <m.szyprowski@samsung.com>, <broonie@kernel.org>,
-        <mripard@kernel.org>, <p.zabel@pengutronix.de>,
-        <devicetree@vger.kernel.org>
-References: <20191120133409.9217-1-peter.ujfalusi@ti.com>
-Message-ID: <4c7eeb1c-12b6-9073-3755-8ce1ffc803e4@ti.com>
-Date:   Wed, 20 Nov 2019 15:49:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 20 Nov 2019 08:50:18 -0500
+Received: by mail-pf1-f193.google.com with SMTP id p26so14247467pfq.8;
+        Wed, 20 Nov 2019 05:50:18 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=OyieLJ1Q4b4TjminHrLGIRlIaNN2ozqzVE5QUxBBtOE=;
+        b=KnULF7DmF9ciBAge9J8scdRDdJd+xwDN/6X2ElSQeQu1App8iy3ZwHb2Iqoqzby+Il
+         BXlihsAVi3TY5UzViMlQg5m8x9tcBa3VJjff0ubCS5P6C8IDXRmMvCRzCHEy+qLHbIJQ
+         R3ojapZtOFx8j7gIWnS5gPRKUVmPIeHtzpVv3UuUdtgc03NT4Sh8n4gehCcJ2npjbOQf
+         J/1ICKSPMi2ucKWncBNEcofC4frr9Kg1IOvoSk9mmNv5+kVWluAjywVJZ3qvPZE98/KW
+         G5lzTk/by0iTLqVBe0xK0HhT8hS0NBp8CEUl2BOQ0F4DVqoj6j3t71I/B/Et3J1OvBF5
+         yOHg==
+X-Gm-Message-State: APjAAAVER8rY9KFaGu/rxhX4kz+mQb4FHq9BLwHLiOS2FLORGBVDLl4P
+        tE17W8gn9+fOdGflC1Gao4Y=
+X-Google-Smtp-Source: APXvYqznbb6ml/3cJWeJZ7kaQBiiMHytQFDrl8Oth2mMRG8vaWWS54IdG4w6Y8FENZKLCLRDmQ6vbg==
+X-Received: by 2002:a63:1360:: with SMTP id 32mr3294515pgt.3.1574257817641;
+        Wed, 20 Nov 2019 05:50:17 -0800 (PST)
+Received: from kozik-lap ([118.189.143.39])
+        by smtp.googlemail.com with ESMTPSA id j7sm26942590pgl.38.2019.11.20.05.50.14
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 20 Nov 2019 05:50:16 -0800 (PST)
+Date:   Wed, 20 Nov 2019 21:50:12 +0800
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
+Subject: Re: [PATCH] video: Fix Kconfig indentation
+Message-ID: <20191120135012.GA17348@kozik-lap>
+References: <20191120133838.13132-1-krzk@kernel.org>
+ <20191120134546.GA2654@pine>
 MIME-Version: 1.0
-In-Reply-To: <20191120133409.9217-1-peter.ujfalusi@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191120134546.GA2654@pine>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 20/11/2019 15.34, Peter Ujfalusi wrote:
-> Hi,
+On Wed, Nov 20, 2019 at 08:45:46AM -0500, Daniel Thompson wrote:
+> On Wed, Nov 20, 2019 at 09:38:38PM +0800, Krzysztof Kozlowski wrote:
+> > Adjust indentation from spaces to tab (+optional two spaces) as in
+> > coding style with command like:
+> > 	$ sed -e 's/^        /\t/' -i */Kconfig
+> > 
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 > 
-> The initial support can replace all use of GPIOD_FLAGS_BIT_NONEXCLUSIVE if the
-> shared GPIO is configured to follow pass through 'strategy' for the shared GPIO
-> pin.
-> 
-> I have only implemented DT support.
-> 
-> With the shared gpio support one can choose between three different strategy for
-> managing the shared gpio:
-> refcounted low: Keep the line low as long as there is at least one low
-> 		request is registered
-> refcounted high: Keep the line high as long as there is at least one high
-> 		request is registered
-> pass through: all requests are allowed to go through without refcounting.
-> 
-> Few shortcomings as of now:
-> - can not handle different GPIO_ACTIVE_ on the user side, both the root GPIO
->   (which is shared) and clients must have the same GPIO_ACTIVE_ mode.
->   We are using common gpio_desc.
->   Like with GPIOD_FLAGS_BIT_NONEXCLUSIVE
-> - refcounting counts _all_ 1/0 requests coming from the users of the shared
->   GPIO. This could cause issues if clients are using the gpiod API in unbalanced
->   way.
->   We would need to have separate tracking for each of the clients and agregate
->   the level they are asking for at any moment. Basically a new gpio-chip on top
->   of the real gpio pin can solve this.
+> No particular objections but I wonder if this would be better sent to
+> trivial@kernel.org .
 
-I forgot to add an example for DT.
+Thanks for feedback.
 
-I have this for two pcm3168a codec, their RST pin is connected to
-tca6416's p0 pin.
-The codec's RST line is low active, so the gpio-shared is configured to
-refcounted high to make sure that a codec is not placed in reset when it
-does not want it.
+I sent to trivial and kernel-janitors my previous version of this
+patchset which was not split per-subsystem and there was no feedback.
+Few other patches already came through maintainers. If there will be no
+reply, I'll send next version through trivial.
 
-&main_i2c3 {
-	#address-cells = <1>;
-	#size-cells = <0>;
+Best regards,
+Krzysztof
 
-	audio_exp: gpio@21 {
-		compatible = "ti,tca6416";
-		reg = <0x21>;
-		gpio-controller;
-		#gpio-cells = <2>;
-
-		p00 {
-			gpio-shared;
-			gpios = <0 GPIO_ACTIVE_LOW>;
-			output-high;
-			refcounted-high;
-			line-name = "CODEC RESET";
-		};
-	};
-
-	pcm3168a_a: audio-codec@47 {
-		compatible = "ti,pcm3168a";
-		reg = <0x47>;
-		#sound-dai-cells = <1>;
-
-		reset-gpios = <&audio_exp 0 GPIO_ACTIVE_LOW>;
-	};
-
-	pcm3168a_b: audio-codec@46 {
-		compatible = "ti,pcm3168a";
-		reg = <0x46>;
-		#sound-dai-cells = <1>;
-
-		reset-gpios = <&audio_exp 0 GPIO_ACTIVE_LOW>;
-	};
-};
-
-
-> 
-> Regards,
-> Peter
-> ---
-> Peter Ujfalusi (2):
->   dt-bindings: gpio: Document shared GPIO line usage
->   gpiolib: Support for (output only) shared GPIO line
-> 
->  .../devicetree/bindings/gpio/gpio.txt         |  66 +++++++++
->  drivers/gpio/gpiolib-of.c                     |  28 +++-
->  drivers/gpio/gpiolib.c                        | 132 ++++++++++++++++--
->  drivers/gpio/gpiolib.h                        |  10 ++
->  4 files changed, 223 insertions(+), 13 deletions(-)
-> 
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
