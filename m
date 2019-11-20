@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A5BC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 14:44:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35A17C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 14:44:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDCB6217F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 14:44:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C2A621826
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 14:44:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nmUQ8YW7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Py3Czakg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731831AbfKTOoP (ORCPT
+        id S1731843AbfKTOoT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 09:44:15 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:36897 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731819AbfKTOoM (ORCPT
+        Wed, 20 Nov 2019 09:44:19 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:36894 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731735AbfKTOoJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 09:44:12 -0500
-Received: by mail-qk1-f195.google.com with SMTP id e187so21441986qkf.4;
-        Wed, 20 Nov 2019 06:44:11 -0800 (PST)
+        Wed, 20 Nov 2019 09:44:09 -0500
+Received: by mail-qk1-f196.google.com with SMTP id e187so21441877qkf.4;
+        Wed, 20 Nov 2019 06:44:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=KPpJi866i3uNcB2ACYim+cpMzjJaUfLGqtxxSp9RiCI=;
-        b=nmUQ8YW7n15KG07sjlo5cFZLcUYw4jq5NeaEoh9HFpHYre1u07gsysoyKExNjRqBbe
-         /oTY64IBXvrtxPyJ4qJlgk2BkBkR9Xmw6BELkrXN0bA9lkYxKufbELbr5ZRCIjWWpQ1o
-         nyh6NVwu2yd4FEOimUCYfLehcr+/0Il3kp/3mNQm7XVRocCmFdv5/j/sKTt2i+xICvd+
-         5DuuyxFZ3TmmL+ufEV7+YYZaaOacaMo6mYNy6DMHU9XnfRhP535Bk8U3tTVtLG5uqVq+
-         fT2nNabVQsVmBzQZL6gbKjwf50RVh1NRDBQTyknB3Gl+QR1Fw3GDsWk6pDaKPSihG4yn
-         mnZQ==
+        bh=2zddixLIG407nblq8qKNkbMRSz9Vj+er4J47xlaoa6s=;
+        b=Py3Czakg14gAO6zBRImaKEwmRkF3AiNWIsMu+LPZtITTbzPpJL355Mh7QNVjnzRoPz
+         PztoBX4p2XlCX/O03UL0/s5cicb4RclvClWblUuXKHL8E+gK/Y0cC7CQhmvrAhHWAbM8
+         XW9lOQvd9Q2W8xMdY4cYeHo6O64RAcf5fYwb2BRYmuG+1/nv0g14j7ArP37FC6fe5D5n
+         Z3Z3Pjf3l+xGDi55RrdceHrbXl0lIg2RqOr6663ll+qVkdSXfzOJI158t2mDkgWLDb3U
+         UfueECg7mYzdXZGHVwb5kHXBImwi/vJiaqbOfBkbi++7DiSlBwwZIj7jjSQh3XnxDglO
+         7zCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=KPpJi866i3uNcB2ACYim+cpMzjJaUfLGqtxxSp9RiCI=;
-        b=kabFnbGOQHyEybNTzUGeM0hA7+psvzJg/rl4fghVF8X4KO7YJnqDxmiDPPBQ2BAHZw
-         7DNoS2Gt4KEzDVuWKpW8UMgjUntifa2w8Gp+wIZtoMMi/P/82SC7GaMhphdxA4by1Lag
-         XH1roVYxAuyC2nk5hluhoyx24zdHviH6KlheiMlNMmSojsjZFaSapkvS0K2Z+KtUVH4/
-         ox7xkGWdeY38qhQWF0vHUuoVbqvsqwxrEUbKa+gSvTTSUSv24fJWTTVY/p0f2cGogj5c
-         BUBBw01PK6UqRJ4Ls5z9csMfSxY+cE6s+6nZXZLEUI2hclFLzq1gZMtdIr9r5FWb6Eiu
-         80HA==
-X-Gm-Message-State: APjAAAVZ6zgRXy4lm2PQ2FQJv0BWkRjHqncWpJWR5GGt8AeIBlFRkIu+
-        HXHYlJLLXIHt1LHp4Otd108=
-X-Google-Smtp-Source: APXvYqw2g5H55XC6Ml6YKAqhnn64wmG1phbNYCvc+vRp7TW6bbsqoolhOMedX4yr84ZcTPA9GPnloQ==
-X-Received: by 2002:a37:6517:: with SMTP id z23mr2752665qkb.434.1574261050644;
-        Wed, 20 Nov 2019 06:44:10 -0800 (PST)
+        bh=2zddixLIG407nblq8qKNkbMRSz9Vj+er4J47xlaoa6s=;
+        b=nCI8U1+9W3vzP4bDYUVHpVtKEwPvWvVHPxfW+etCfCTSAIyOU9Lx1oDnmwF9YjDhNR
+         EYxZtNXjrj8CRaqyxdz/CON/oe0ChR7oYSTsnHWuwC8Ro0t2gj4BpRZNegAaZacb+Jeb
+         PfVq2255rB1U+0iEVnq7EMafW7PTzB+lcwMluSr4n4Ga8MzJgFXayocVq0DQ21xIlBVN
+         p/ubZXpvHXPpOynL/W7rZuLYloCl+XuL5lYnpX5ahsyd9WMIg6tswv6Od775khde8TTn
+         7WMe+CcPO/b3Jep0xSXEIasCpVlzaiNjnHoOzAl1VlfQmu7JwlHAYMQiWvy5uFGDCVYh
+         jIHg==
+X-Gm-Message-State: APjAAAXWqyVDzSopl134PzpHBHdJizOVdpEfgRTRHgVPP5R31B1+gZUv
+        onFU53fa6ScvmO7IjdDYz5o=
+X-Google-Smtp-Source: APXvYqzF0ePZZnsNnPj+3UpvP978JvhIYNlTfHXjTIIhcnJue8H6QLBKqmiS3zt+03fgTh4nElz8Tw==
+X-Received: by 2002:a37:9145:: with SMTP id t66mr2707826qkd.332.1574261048122;
+        Wed, 20 Nov 2019 06:44:08 -0800 (PST)
 Received: from localhost.localdomain ([72.53.229.209])
-        by smtp.gmail.com with ESMTPSA id 62sm953069qkk.102.2019.11.20.06.44.09
+        by smtp.gmail.com with ESMTPSA id 62sm953069qkk.102.2019.11.20.06.44.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Nov 2019 06:44:10 -0800 (PST)
+        Wed, 20 Nov 2019 06:44:07 -0800 (PST)
 From:   Sven Van Asbroeck <thesven73@gmail.com>
 X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
 To:     Lee Jones <lee.jones@linaro.org>,
@@ -67,9 +67,9 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-leds@vger.kernel.org
-Subject: [PATCH v3 3/3] dt-bindings: mfd: update TI tps6105x chip bindings
-Date:   Wed, 20 Nov 2019 09:44:01 -0500
-Message-Id: <20191120144401.30452-4-TheSven73@gmail.com>
+Subject: [PATCH v3 1/3] tps6105x: add optional devicetree support
+Date:   Wed, 20 Nov 2019 09:43:59 -0500
+Message-Id: <20191120144401.30452-2-TheSven73@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191120144401.30452-1-TheSven73@gmail.com>
 References: <20191120144401.30452-1-TheSven73@gmail.com>
@@ -78,69 +78,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver has been extended to optionally get its operational
-mode, regulator init data and led label from the devicetree.
+This driver currently requires platform data to specify the
+operational mode and regulator init data (in case of regulator
+mode).
 
-Tree: next-20191118
+Optionally specify the operational mode by looking at the name
+of the devicetree child node.
+
+Example: put chip in regulator mode:
+
+i2c0 {
+	tps61052@33 {
+		compatible = "ti,tps61052";
+		reg = <0x33>;
+
+		regulator {
+                            regulator-min-microvolt = <5000000>;
+                            regulator-max-microvolt = <5000000>;
+                            regulator-always-on;
+		};
+	};
+};
+
+Tree: linux-next
 Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
 ---
- .../devicetree/bindings/mfd/tps6105x.txt      | 39 ++++++++++++++++++-
- 1 file changed, 38 insertions(+), 1 deletion(-)
+ drivers/mfd/tps6105x.c | 34 +++++++++++++++++++++++++++++++---
+ 1 file changed, 31 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mfd/tps6105x.txt b/Documentation/devicetree/bindings/mfd/tps6105x.txt
-index 93602c7a19c8..1fa8fc35e0bc 100644
---- a/Documentation/devicetree/bindings/mfd/tps6105x.txt
-+++ b/Documentation/devicetree/bindings/mfd/tps6105x.txt
-@@ -7,11 +7,48 @@ Required properties:
- - compatible:		"ti,tps61050" or "ti,tps61052"
- - reg:			Specifies the I2C slave address
+diff --git a/drivers/mfd/tps6105x.c b/drivers/mfd/tps6105x.c
+index 6ac3607a79c2..c906324d293e 100644
+--- a/drivers/mfd/tps6105x.c
++++ b/drivers/mfd/tps6105x.c
+@@ -91,6 +91,32 @@ static int tps6105x_add_device(struct tps6105x *tps6105x,
+ 			       PLATFORM_DEVID_AUTO, cell, 1, NULL, 0, NULL);
+ }
  
--Example:
-+Optional sub-node:
++static struct tps6105x_platform_data *tps6105x_parse_dt(struct device *dev)
++{
++	struct device_node *np = dev->of_node;
++	struct tps6105x_platform_data *pdata;
++	struct device_node *child;
 +
-+This subnode selects the chip's operational mode.
-+There can be at most one single available subnode.
++	if (!np)
++		return ERR_PTR(-EINVAL);
++	if (of_get_available_child_count(np) > 1) {
++		dev_err(dev, "cannot support multiple operational modes");
++		return ERR_PTR(-EINVAL);
++	}
++	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
++	if (!pdata)
++		return ERR_PTR(-ENOMEM);
++	pdata->mode = TPS6105X_MODE_SHUTDOWN;
++	for_each_available_child_of_node(np, child) {
++		if (child->name && !of_node_cmp(child->name, "regulator"))
++			pdata->mode = TPS6105X_MODE_VOLTAGE;
++		else if (child->name && !of_node_cmp(child->name, "led"))
++			pdata->mode = TPS6105X_MODE_TORCH;
++	}
 +
-+- regulator: presence of this sub-node puts the chip in regulator mode.
-+	see Documentation/devicetree/bindings/regulator/regulator.txt
++	return pdata;
++}
 +
-+- led: presence of this sub-node puts the chip in led mode.
-+
-+Example (GPIO operation only):
-+
-+i2c0 {
-+	tps61052@33 {
-+		compatible = "ti,tps61052";
-+		reg = <0x33>;
-+	};
-+};
-+
-+Example (GPIO + regulator operation):
+ static int tps6105x_probe(struct i2c_client *client,
+ 			const struct i2c_device_id *id)
+ {
+@@ -99,9 +125,11 @@ static int tps6105x_probe(struct i2c_client *client,
+ 	int ret;
  
- i2c0 {
- 	tps61052@33 {
- 		compatible = "ti,tps61052";
- 		reg = <0x33>;
-+
-+		regulator {
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+			regulator-always-on;
-+		};
-+	};
-+};
-+
-+Example (GPIO + led operation):
-+
-+i2c0 {
-+	tps61052@33 {
-+		compatible = "ti,tps61052";
-+		reg = <0x33>;
-+
-+		led {
-+		};
- 	};
- };
+ 	pdata = dev_get_platdata(&client->dev);
+-	if (!pdata) {
+-		dev_err(&client->dev, "missing platform data\n");
+-		return -ENODEV;
++	if (!pdata)
++		pdata = tps6105x_parse_dt(&client->dev);
++	if (IS_ERR(pdata)) {
++		dev_err(&client->dev, "No platform data or DT found");
++		return PTR_ERR(pdata);
+ 	}
+ 
+ 	tps6105x = devm_kmalloc(&client->dev, sizeof(*tps6105x), GFP_KERNEL);
 -- 
 2.17.1
 
