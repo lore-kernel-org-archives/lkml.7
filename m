@@ -7,40 +7,41 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE50C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:21:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30325C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:22:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A1722251F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:21:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D8442251F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:22:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730396AbfKTNV4 (ORCPT
+        id S1730299AbfKTNV1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 08:21:56 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:56837 "EHLO
+        Wed, 20 Nov 2019 08:21:27 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:56758 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730216AbfKTNV3 (ORCPT
+        with ESMTP id S1730216AbfKTNVS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 08:21:29 -0500
+        Wed, 20 Nov 2019 08:21:18 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iXPv8-0007H3-Pr; Wed, 20 Nov 2019 14:21:22 +0100
+        id 1iXPut-00075R-16; Wed, 20 Nov 2019 14:21:07 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 1EDC61C1A23;
-        Wed, 20 Nov 2019 14:21:07 +0100 (CET)
-Date:   Wed, 20 Nov 2019 13:21:07 -0000
-From:   "tip-bot2 for Daode Huang" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id ABECC1C1998;
+        Wed, 20 Nov 2019 14:21:01 +0100 (CET)
+Date:   Wed, 20 Nov 2019 13:21:01 -0000
+From:   "tip-bot2 for Lina Iyer" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/core] irqchip: Remove redundant semicolon after while
-Cc:     Daode Huang <huangdaode@hisilicon.com>,
+Subject: [tip: irq/core] irqdomain: Add bus token DOMAIN_BUS_WAKEUP
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Lina Iyer <ilina@codeaurora.org>,
         Marc Zyngier <maz@kernel.org>, Ingo Molnar <mingo@kernel.org>,
         Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
-In-Reply-To: <1571300729-38822-1-git-send-email-huangdaode@hisilicon.com>
-References: <1571300729-38822-1-git-send-email-huangdaode@hisilicon.com>
+In-Reply-To: <1573855915-9841-2-git-send-email-ilina@codeaurora.org>
+References: <1573855915-9841-2-git-send-email-ilina@codeaurora.org>
 MIME-Version: 1.0
-Message-ID: <157425606706.12247.9462338694860117345.tip-bot2@tip-bot2>
+Message-ID: <157425606157.12247.11399374334124634860.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -56,62 +57,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the irq/core branch of tip:
 
-Commit-ID:     2c542426128a4e3d247939f868d19279ad48cb1f
-Gitweb:        https://git.kernel.org/tip/2c542426128a4e3d247939f868d19279ad48cb1f
-Author:        Daode Huang <huangdaode@hisilicon.com>
-AuthorDate:    Thu, 17 Oct 2019 16:25:29 +08:00
+Commit-ID:     d46bca2b5d06cbb5f3e66945080f275bcfab7181
+Gitweb:        https://git.kernel.org/tip/d46bca2b5d06cbb5f3e66945080f275bcfab7181
+Author:        Lina Iyer <ilina@codeaurora.org>
+AuthorDate:    Fri, 15 Nov 2019 15:11:44 -07:00
 Committer:     Marc Zyngier <maz@kernel.org>
-CommitterDate: Sun, 10 Nov 2019 18:47:44 
+CommitterDate: Sat, 16 Nov 2019 10:18:52 
 
-irqchip: Remove redundant semicolon after while
+irqdomain: Add bus token DOMAIN_BUS_WAKEUP
 
-check drivers/irqchip with "make coccicheck M=drivers/irqchip/",
-it will report unneeded semicolon like below, just remove them.
+A single controller can handle normal interrupts and wake-up interrupts
+independently, with a different numbering space. It is thus crucial to
+allow the driver for such a controller discriminate between the two.
 
-drivers/irqchip/irq-zevio.c:54:2-3: Unneeded semicolon
-drivers/irqchip/irq-gic-v3.c:177:2-3: Unneeded semicolon
-drivers/irqchip/irq-gic-v3.c:234:2-3: Unneeded semicolon
+A simple way to do so is to tag the wake-up irqdomain with a "bus token"
+that indicates the wake-up domain. This slightly abuses the notion of
+bus, but also radically simplifies the design of such a driver. Between
+two evils, we choose the least damaging.
 
-Signed-off-by: Daode Huang <huangdaode@hisilicon.com>
+Suggested-by: Stephen Boyd <swboyd@chromium.org>
+Signed-off-by: Lina Iyer <ilina@codeaurora.org>
 Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/1571300729-38822-1-git-send-email-huangdaode@hisilicon.com
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Link: https://lore.kernel.org/r/1573855915-9841-2-git-send-email-ilina@codeaurora.org
 ---
- drivers/irqchip/irq-gic-v3.c | 4 ++--
- drivers/irqchip/irq-zevio.c  | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ include/linux/irqdomain.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-index 1edc993..9e35155 100644
---- a/drivers/irqchip/irq-gic-v3.c
-+++ b/drivers/irqchip/irq-gic-v3.c
-@@ -174,7 +174,7 @@ static void gic_do_wait_for_rwp(void __iomem *base)
- 		}
- 		cpu_relax();
- 		udelay(1);
--	};
-+	}
- }
+diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
+index 583e7ab..3c340db 100644
+--- a/include/linux/irqdomain.h
++++ b/include/linux/irqdomain.h
+@@ -83,6 +83,7 @@ enum irq_domain_bus_token {
+ 	DOMAIN_BUS_IPI,
+ 	DOMAIN_BUS_FSL_MC_MSI,
+ 	DOMAIN_BUS_TI_SCI_INTA_MSI,
++	DOMAIN_BUS_WAKEUP,
+ };
  
- /* Wait for completion of a distributor change */
-@@ -231,7 +231,7 @@ static void gic_enable_redist(bool enable)
- 			break;
- 		cpu_relax();
- 		udelay(1);
--	};
-+	}
- 	if (!count)
- 		pr_err_ratelimited("redistributor failed to %s...\n",
- 				   enable ? "wakeup" : "sleep");
-diff --git a/drivers/irqchip/irq-zevio.c b/drivers/irqchip/irq-zevio.c
-index 5a7efeb..84163f1 100644
---- a/drivers/irqchip/irq-zevio.c
-+++ b/drivers/irqchip/irq-zevio.c
-@@ -51,7 +51,7 @@ static void __exception_irq_entry zevio_handle_irq(struct pt_regs *regs)
- 	while (readl(zevio_irq_io + IO_STATUS)) {
- 		irqnr = readl(zevio_irq_io + IO_CURRENT);
- 		handle_domain_irq(zevio_irq_domain, irqnr, regs);
--	};
-+	}
- }
- 
- static void __init zevio_init_irq_base(void __iomem *base)
+ /**
