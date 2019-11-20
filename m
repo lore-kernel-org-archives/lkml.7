@@ -2,291 +2,192 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DF2CC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 20:31:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89150C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 20:31:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EC6020872
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 20:31:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5311F2088F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 20:31:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ndx+KB7Z"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SwUQouyf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbfKTUbT (ORCPT
+        id S1726803AbfKTUb4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 15:31:19 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:34677 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726747AbfKTUbS (ORCPT
+        Wed, 20 Nov 2019 15:31:56 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:41586 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725854AbfKTUbz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 15:31:18 -0500
-Received: by mail-ot1-f66.google.com with SMTP id w11so845717ote.1
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 12:31:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=X0OJlrE1+QWweEuUz4AgcmM1aRkJ3jzARcx8RAKzako=;
-        b=Ndx+KB7ZegK50h/NfgU1MvvbeXvK+rBt7ZlcjI7yrX0ZtgUI4xMUEz0g28oiBqwKz4
-         bMHCJt/GNyOtwHLvcbCcjg5n9CjED1vPicfZUApcTkh1khkj3/Z5Acg9/bWhguiI120y
-         AZ6ZHSf37WjRPFpchCpjweiHxvM5Axo4BKZkxRc0XOyd6hFVwOHXZspQkH24AQeFB0XM
-         oMhKEr9VUNDJ0KgPnhKGJ3sjlFM/6ap+Be2GvdR2SS6k5BIXlInEdgZ1zqPswFVpzKNP
-         HsL66tyP4lnnXcDbfExxp0xAdFK7wI2htk8CoNyPPs4SCJAxp5xU453xMu2Wst8UxANm
-         8IOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=X0OJlrE1+QWweEuUz4AgcmM1aRkJ3jzARcx8RAKzako=;
-        b=IhB2bve5tXeXAYdhXQBQFQb4szcweeJw574kWjCpuATfnNsWkPNqldT276rsbfavUt
-         ojIbXj+/fZa7xC11g1hhBfZqlSRRho4uFnbBnZCQy1HigYhLDQZqHfUObjnnr5xOOL2R
-         QSAwa+BpFJ+c4coE8TVtvLBDKT6saWGyfLwoe2x+6Hgsb0lted1aUIOEAHuttYHEcBr7
-         lRbdXBgd2tf5AR3essh7XdcX2AIfGZuz0SICknKOr1RnhprOIByaZJFlJPBYPWTIHN+9
-         Fvk3jwJ/7XqLKnnM+IxvDibS03LVJWWgIing+Dt4dK5SZGIBKWCimiNliJOO9aGsoeYU
-         +1KA==
-X-Gm-Message-State: APjAAAWMmWpbVk+Sb7+hJwajXlZ9X7v0/MDpICPl50MNTGcQywJdWeQd
-        mlR5lgYxkiTBedRIcq3meh9+77DgtONkkhEUKqNvDcTStaU=
-X-Google-Smtp-Source: APXvYqwiYKOOSWpVVXytuqOsyQflF6bdTH/D0YvMbj51WkAyl1Fpk/U5BuI9+35sSwou2eNGm6DbA2vGsnSdYHlnK/M=
-X-Received: by 2002:a9d:66d9:: with SMTP id t25mr3790472otm.30.1574281876983;
- Wed, 20 Nov 2019 12:31:16 -0800 (PST)
+        Wed, 20 Nov 2019 15:31:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574281913;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=HHSSmYMXHPsKCs1Q6EW/xg8P7KSA2E1ZxvHaD/SQD+8=;
+        b=SwUQouyf1A/r16fwwuFjfa+yEiGYH4fGav3pBjARnDVING6MsUvJtokAWtIcTaSVEZ+RdI
+        r/NEqlhnnHM8+QfgyEFz5LjtrgQWJ6Lx8Pz+Q48z1YXZpYsyF5k7jmkPMrtSkhmDXpU3aB
+        LpLqEOzdr5/RL6QggYDhx/tPRbPpD44=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-412-qq6Z3ilNNdOJ2rDQE6ng1Q-1; Wed, 20 Nov 2019 15:31:52 -0500
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 75AC88018A3;
+        Wed, 20 Nov 2019 20:31:49 +0000 (UTC)
+Received: from x1.home (ovpn-116-56.phx2.redhat.com [10.3.116.56])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 214EF6E3E7;
+        Wed, 20 Nov 2019 20:31:48 +0000 (UTC)
+Date:   Wed, 20 Nov 2019 13:31:47 -0700
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Stephen Hemminger <stephen@networkplumber.org>
+Cc:     <lantianyu1986@gmail.com>, <cohuck@redhat.com>,
+        "KY Srinivasan" <kys@microsoft.com>,
+        "Haiyang Zhang" <haiyangz@microsoft.com>,
+        "Stephen Hemminger" <sthemmin@microsoft.com>, <sashal@kernel.org>,
+        <mchehab+samsung@kernel.org>, <davem@davemloft.net>,
+        <gregkh@linuxfoundation.org>, <robh@kernel.org>,
+        <Jonathan.Cameron@huawei.com>, <paulmck@linux.ibm.com>,
+        "Michael Kelley" <mikelley@microsoft.com>,
+        "Tianyu Lan" <Tianyu.Lan@microsoft.com>,
+        <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
+        <linux-hyperv@vger.kernel.org>, "vkuznets" <vkuznets@redhat.com>
+Subject: Re: [PATCH] VFIO/VMBUS: Add VFIO VMBUS driver support
+Message-ID: <20191120133147.1d627348@x1.home>
+In-Reply-To: <20191120114611.4721a7e9@hermes.lan>
+References: <20191111084507.9286-1-Tianyu.Lan@microsoft.com>
+        <20191119165620.0f42e5ba@x1.home>
+        <20191120103503.5f7bd7c4@hermes.lan>
+        <20191120120715.0cecf5ea@x1.home>
+        <20191120114611.4721a7e9@hermes.lan>
+Organization: Red Hat
 MIME-Version: 1.0
-References: <20191120165847.423540-1-hannes@cmpxchg.org>
-In-Reply-To: <20191120165847.423540-1-hannes@cmpxchg.org>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Wed, 20 Nov 2019 12:31:06 -0800
-Message-ID: <CALvZod50AanTCNkTVSptU+Hg--69j6OuKdc04UPs4Vf64DkGiw@mail.gmail.com>
-Subject: Re: [PATCH] mm: fix unsafe page -> lruvec lookups with cgroup charge migration
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Hugh Dickins <hughd@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Roman Gushchin <guro@fb.com>, Linux MM <linux-mm@kvack.org>,
-        Cgroups <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kernel Team <kernel-team@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MC-Unique: qq6Z3ilNNdOJ2rDQE6ng1Q-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 8:58 AM Johannes Weiner <hannes@cmpxchg.org> wrote:
->
-> While reviewing the "per lruvec lru_lock for memcg" series, Hugh and I
-> noticed two places in the existing code where the page -> memcg ->
-> lruvec lookup can result in a use-after-free bug. This affects cgroup1
-> setups that have charge migration enabled.
->
-> To pin page->mem_cgroup, callers need to either have the page locked,
-> an exclusive refcount (0), or hold the lru_lock and "own" PageLRU
-> (either ensure it's set, or be the one to hold the page in isolation)
-> to make cgroup migration fail the isolation step.
+On Wed, 20 Nov 2019 11:46:11 -0800
+Stephen Hemminger <stephen@networkplumber.org> wrote:
 
-I think we should add the above para in the comments for better visibility.
+> On Wed, 20 Nov 2019 12:07:15 -0700
+> Alex Williamson <alex.williamson@redhat.com> wrote:
+>=20
+> > On Wed, 20 Nov 2019 10:35:03 -0800
+> > Stephen Hemminger <stephen@networkplumber.org> wrote:
+> >  =20
+> > > On Tue, 19 Nov 2019 15:56:20 -0800
+> > > "Alex Williamson" <alex.williamson@redhat.com> wrote:
+> > >    =20
+> > > > On Mon, 11 Nov 2019 16:45:07 +0800
+> > > > lantianyu1986@gmail.com wrote:
+> > > >      =20
+> > > > > From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+> > > > >=20
+> > > > > This patch is to add VFIO VMBUS driver support in order to expose
+> > > > > VMBUS devices to user space drivers(Reference Hyper-V UIO driver)=
+.
+> > > > > DPDK now has netvsc PMD driver support and it may get VMBUS resou=
+rces
+> > > > > via VFIO interface with new driver support.
+> > > > >=20
+> > > > > So far, Hyper-V doesn't provide virtual IOMMU support and so this
+> > > > > driver needs to be used with VFIO noiommu mode.       =20
+> > > >=20
+> > > > Let's be clear here, vfio no-iommu mode taints the kernel and was a
+> > > > compromise that we can re-use vfio-pci in its entirety, so it had a
+> > > > high code reuse value for minimal code and maintenance investment. =
+ It
+> > > > was certainly not intended to provoke new drivers that rely on this=
+ mode
+> > > > of operation.  In fact, no-iommu should be discouraged as it provid=
+es
+> > > > absolutely no isolation.  I'd therefore ask, why should this be in =
+the
+> > > > kernel versus any other unsupportable out of tree driver?  It appea=
+rs
+> > > > almost entirely self contained.  Thanks,
+> > > >=20
+> > > > Alex     =20
+> > >=20
+> > > The current VMBUS access from userspace is from uio_hv_generic
+> > > there is (and will not be) any out of tree driver for this.   =20
+> >=20
+> > I'm talking about the driver proposed here.  It can only be used in a
+> > mode that taints the kernel that its running on, so why would we sign
+> > up to support 400 lines of code that has no safe way to use it?
+> >   =20
+> > > The new driver from Tianyu is to make VMBUS behave like PCI.
+> > > This simplifies the code for DPDK and other usermode device drivers
+> > > because it can use the same API's for VMBus as is done for PCI.   =20
+> >=20
+> > But this doesn't re-use the vfio-pci API at all, it explicitly defines
+> > a new vfio-vmbus API over the vfio interfaces.  So a user mode driver
+> > might be able to reuse some vfio support, but I don't see how this has
+> > anything to do with PCI.
+> >  =20
+> > > Unfortunately, since Hyper-V does not support virtual IOMMU yet,
+> > > the only usage modle is with no-iommu taint.   =20
+> >=20
+> > Which is what makes it unsupportable and prompts the question why it
+> > should be included in the mainline kernel as it introduces a
+> > maintenance burden and normalizes a usage model that's unsafe.  Thanks,=
+ =20
+>=20
+> Many existing userspace drivers are unsafe:
+>   - out of tree DPDK igb_uio is unsafe.
 
-> Failure to follow
-> this can result in the page moving out of the memcg and freeing it,
-> along with its lruvecs, while the observer is dereferencing them.
->
-> 1. isolate_lru_page() calls mem_cgroup_page_lruvec() with the lru_lock
-> held but before testing PageLRU. It doesn't dereference the returned
-> lruvec before testing PageLRU, giving the impression that it might
-> just be safe ordering after all - but mem_cgroup_page_lruvec() itself
-> touches the lruvec to lazily initialize the pgdat back pointer. This
-> one is easy to fix, just move the lookup into the PageLRU branch.
->
-> 2. pagevec_lru_move_fn() conveniently looks up the lruvec for all the
-> callbacks it might get invoked on. Unfortunately, it's the callbacks
-> that first check PageLRU under the lru_lock, which makes this order
-> equally unsafe as isolate_lru_page(). Remove the lruvec argument from
-> the move callbacks and let them do it inside their PageLRU branches.
->
-> Reported-by: Hugh Dickins <hughd@google.com>
-> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+Why is it out of tree?
 
-Reviewed-by: Shakeel Butt <shakeelb@google.com>
+>   - VFIO with noiommu is unsafe.
 
-> ---
->  mm/swap.c   | 48 +++++++++++++++++++++++++++++-------------------
->  mm/vmscan.c |  8 ++++----
->  2 files changed, 33 insertions(+), 23 deletions(-)
->
-> diff --git a/mm/swap.c b/mm/swap.c
-> index 5341ae93861f..6b015e9532fb 100644
-> --- a/mm/swap.c
-> +++ b/mm/swap.c
-> @@ -188,12 +188,11 @@ int get_kernel_page(unsigned long start, int write, struct page **pages)
->  EXPORT_SYMBOL_GPL(get_kernel_page);
->
->  static void pagevec_lru_move_fn(struct pagevec *pvec,
-> -       void (*move_fn)(struct page *page, struct lruvec *lruvec, void *arg),
-> +       void (*move_fn)(struct page *page, void *arg),
->         void *arg)
->  {
->         int i;
->         struct pglist_data *pgdat = NULL;
-> -       struct lruvec *lruvec;
->         unsigned long flags = 0;
->
->         for (i = 0; i < pagevec_count(pvec); i++) {
-> @@ -207,8 +206,7 @@ static void pagevec_lru_move_fn(struct pagevec *pvec,
->                         spin_lock_irqsave(&pgdat->lru_lock, flags);
->                 }
->
-> -               lruvec = mem_cgroup_page_lruvec(page, pgdat);
-> -               (*move_fn)(page, lruvec, arg);
-> +               (*move_fn)(page, arg);
->         }
->         if (pgdat)
->                 spin_unlock_irqrestore(&pgdat->lru_lock, flags);
-> @@ -216,12 +214,14 @@ static void pagevec_lru_move_fn(struct pagevec *pvec,
->         pagevec_reinit(pvec);
->  }
->
-> -static void pagevec_move_tail_fn(struct page *page, struct lruvec *lruvec,
-> -                                void *arg)
-> +static void pagevec_move_tail_fn(struct page *page, void *arg)
->  {
->         int *pgmoved = arg;
->
->         if (PageLRU(page) && !PageUnevictable(page)) {
-> +               struct lruvec *lruvec;
-> +
-> +               lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
->                 del_page_from_lru_list(page, lruvec, page_lru(page));
->                 ClearPageActive(page);
->                 add_page_to_lru_list_tail(page, lruvec, page_lru(page));
-> @@ -272,12 +272,14 @@ static void update_page_reclaim_stat(struct lruvec *lruvec,
->                 reclaim_stat->recent_rotated[file]++;
->  }
->
-> -static void __activate_page(struct page *page, struct lruvec *lruvec,
-> -                           void *arg)
-> +static void __activate_page(struct page *page, void *arg)
->  {
->         if (PageLRU(page) && !PageActive(page) && !PageUnevictable(page)) {
->                 int file = page_is_file_cache(page);
->                 int lru = page_lru_base_type(page);
-> +               struct lruvec *lruvec;
-> +
-> +               lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
->
->                 del_page_from_lru_list(page, lruvec, lru);
->                 SetPageActive(page);
-> @@ -328,7 +330,7 @@ void activate_page(struct page *page)
->
->         page = compound_head(page);
->         spin_lock_irq(&pgdat->lru_lock);
-> -       __activate_page(page, mem_cgroup_page_lruvec(page, pgdat), NULL);
-> +       __activate_page(page, NULL);
->         spin_unlock_irq(&pgdat->lru_lock);
->  }
->  #endif
-> @@ -498,9 +500,9 @@ void lru_cache_add_active_or_unevictable(struct page *page,
->   * be write it out by flusher threads as this is much more effective
->   * than the single-page writeout from reclaim.
->   */
-> -static void lru_deactivate_file_fn(struct page *page, struct lruvec *lruvec,
-> -                             void *arg)
-> +static void lru_deactivate_file_fn(struct page *page, void *arg)
->  {
-> +       struct lruvec *lruvec;
->         int lru, file;
->         bool active;
->
-> @@ -518,6 +520,8 @@ static void lru_deactivate_file_fn(struct page *page, struct lruvec *lruvec,
->         file = page_is_file_cache(page);
->         lru = page_lru_base_type(page);
->
-> +       lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
-> +
->         del_page_from_lru_list(page, lruvec, lru + active);
->         ClearPageActive(page);
->         ClearPageReferenced(page);
-> @@ -544,12 +548,14 @@ static void lru_deactivate_file_fn(struct page *page, struct lruvec *lruvec,
->         update_page_reclaim_stat(lruvec, file, 0);
->  }
->
-> -static void lru_deactivate_fn(struct page *page, struct lruvec *lruvec,
-> -                           void *arg)
-> +static void lru_deactivate_fn(struct page *page, void *arg)
->  {
->         if (PageLRU(page) && PageActive(page) && !PageUnevictable(page)) {
->                 int file = page_is_file_cache(page);
->                 int lru = page_lru_base_type(page);
-> +               struct lruvec *lruvec;
-> +
-> +               lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
->
->                 del_page_from_lru_list(page, lruvec, lru + LRU_ACTIVE);
->                 ClearPageActive(page);
-> @@ -561,12 +567,14 @@ static void lru_deactivate_fn(struct page *page, struct lruvec *lruvec,
->         }
->  }
->
-> -static void lru_lazyfree_fn(struct page *page, struct lruvec *lruvec,
-> -                           void *arg)
-> +static void lru_lazyfree_fn(struct page *page, void *arg)
->  {
->         if (PageLRU(page) && PageAnon(page) && PageSwapBacked(page) &&
->             !PageSwapCache(page) && !PageUnevictable(page)) {
->                 bool active = PageActive(page);
-> +               struct lruvec *lruvec;
-> +
-> +               lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
->
->                 del_page_from_lru_list(page, lruvec,
->                                        LRU_INACTIVE_ANON + active);
-> @@ -921,15 +929,17 @@ void lru_add_page_tail(struct page *page, struct page *page_tail,
->  }
->  #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
->
-> -static void __pagevec_lru_add_fn(struct page *page, struct lruvec *lruvec,
-> -                                void *arg)
-> +static void __pagevec_lru_add_fn(struct page *page, void *arg)
->  {
-> -       enum lru_list lru;
->         int was_unevictable = TestClearPageUnevictable(page);
-> +       struct lruvec *lruvec;
-> +       enum lru_list lru;
->
->         VM_BUG_ON_PAGE(PageLRU(page), page);
-> -
->         SetPageLRU(page);
-> +
-> +       lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
-> +
->         /*
->          * Page becomes evictable in two ways:
->          * 1) Within LRU lock [munlock_vma_page() and __munlock_pagevec()].
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index df859b1d583c..3c8b81990146 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -1767,15 +1767,15 @@ int isolate_lru_page(struct page *page)
->
->         if (PageLRU(page)) {
->                 pg_data_t *pgdat = page_pgdat(page);
-> -               struct lruvec *lruvec;
->
->                 spin_lock_irq(&pgdat->lru_lock);
-> -               lruvec = mem_cgroup_page_lruvec(page, pgdat);
->                 if (PageLRU(page)) {
-> -                       int lru = page_lru(page);
-> +                       struct lruvec *lruvec;
-> +
-> +                       lruvec = mem_cgroup_page_lruvec(page, pgdat);
->                         get_page(page);
->                         ClearPageLRU(page);
-> -                       del_page_from_lru_list(page, lruvec, lru);
-> +                       del_page_from_lru_list(page, lruvec, page_lru(page));
->                         ret = 0;
->                 }
->                 spin_unlock_irq(&pgdat->lru_lock);
-> --
-> 2.24.0
->
+Which taints the kernel and requires raw I/O user privs.
+
+>   - hv_uio_generic is unsafe.
+
+Gosh, it's pretty coy about this, no kernel tainting, no user
+capability tests, no scary dmesg or Kconfig warnings.  Do users know
+it's unsafe?
+
+> This new driver is not any better or worse. This sounds like a complete
+> repeat of the discussion that occurred before introducing VFIO noiommu mo=
+de.
+>=20
+> Shouldn't vmbus vfio taint the kernel in the same way as vfio noiommu doe=
+s?
+
+Yes, the no-iommu interaction happens at the vfio-core level.  I can't
+speak for any of the uio interfaces you mention, but I know that
+uio_pci_generic is explicitly intended for non-DMA use cases and in
+fact the efforts to enable MSI/X support in that driver and the
+objections raised for breaking that usage model by the maintainer, is
+what triggered no-iommu support for vfio.  IIRC, the rationale was
+largely for code reuse both at the kernel and userspace driver level,
+while imposing a minimal burden in vfio-core for this dummy iommu
+driver.  vfio explicitly does not provide a DMA mapping solution for
+no-iommu use cases because I'm not willing to maintain any more lines
+of code to support this usage model.  The tainting imposed by this model
+and incomplete API was intended to be a big warning to discourage its
+use and as features like vIOMMU become more prevalent and bare metal
+platforms without physical IOMMUs hopefully become less prevalent,
+maybe no-iommu could be phased out or removed.
+
+You might consider this a re-hashing of those previous discussions, but
+to me it seems like taking advantage of and promoting an interface that
+should have plenty of warning signs that this is not a safe way to use
+the device from userspace.  Without some way to take advantage of the
+code in a safe way, this just seems to be normalizing an unsupportable
+usage model.  Thanks,
+
+Alex
+
