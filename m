@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D5EDC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:43:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F069C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:43:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C0D120714
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:43:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3ED0E20714
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:43:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732258AbfKTPnX (ORCPT
+        id S1730556AbfKTPnZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 10:43:23 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:52836 "EHLO
+        Wed, 20 Nov 2019 10:43:25 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:52830 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730064AbfKTPkT (ORCPT
+        by vger.kernel.org with ESMTP id S1730048AbfKTPkT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 Nov 2019 10:40:19 -0500
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iXS5V-0004b5-BU; Wed, 20 Nov 2019 15:40:13 +0000
+        id 1iXS5U-0004b5-PJ; Wed, 20 Nov 2019 15:40:12 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iXS5V-0004M9-3V; Wed, 20 Nov 2019 15:40:13 +0000
+        id 1iXS5U-0004J3-4q; Wed, 20 Nov 2019 15:40:12 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,17 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Eric Dumazet" <edumazet@google.com>,
-        "Soheil Hassas Yeganeh" <soheil@google.com>,
-        "Neal Cardwell" <ncardwell@google.com>,
-        "Yuchung Cheng" <ycheng@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Date:   Wed, 20 Nov 2019 15:38:19 +0000
-Message-ID: <lsq.1574264230.162320205@decadent.org.uk>
+        "Zhang Tao" <kontais@zoho.com>,
+        "Mike Snitzer" <snitzer@redhat.com>,
+        "Mikulas Patocka" <mpatocka@redhat.com>
+Date:   Wed, 20 Nov 2019 15:37:55 +0000
+Message-ID: <lsq.1574264230.403316458@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 69/83] tcp: fix tcp_ecn_withdraw_cwr() to clear
- TCP_ECN_QUEUE_CWR
+Subject: [PATCH 3.16 45/83] dm table: fix invalid memory accesses with too
+ high sector number
 In-Reply-To: <lsq.1574264230.280218497@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -59,58 +57,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Neal Cardwell <ncardwell@google.com>
+From: Mikulas Patocka <mpatocka@redhat.com>
 
-commit af38d07ed391b21f7405fa1f936ca9686787d6d2 upstream.
+commit 1cfd5d3399e87167b7f9157ef99daa0e959f395d upstream.
 
-Fix tcp_ecn_withdraw_cwr() to clear the correct bit:
-TCP_ECN_QUEUE_CWR.
+If the sector number is too high, dm_table_find_target() should return a
+pointer to a zeroed dm_target structure (the caller should test it with
+dm_target_is_valid).
 
-Rationale: basically, TCP_ECN_DEMAND_CWR is a bit that is purely about
-the behavior of data receivers, and deciding whether to reflect
-incoming IP ECN CE marks as outgoing TCP th->ece marks. The
-TCP_ECN_QUEUE_CWR bit is purely about the behavior of data senders,
-and deciding whether to send CWR. The tcp_ecn_withdraw_cwr() function
-is only called from tcp_undo_cwnd_reduction() by data senders during
-an undo, so it should zero the sender-side state,
-TCP_ECN_QUEUE_CWR. It does not make sense to stop the reflection of
-incoming CE bits on incoming data packets just because outgoing
-packets were spuriously retransmitted.
+However, for some table sizes, the code in dm_table_find_target() that
+performs btree lookup will access out of bound memory structures.
 
-The bug has been reproduced with packetdrill to manifest in a scenario
-with RFC3168 ECN, with an incoming data packet with CE bit set and
-carrying a TCP timestamp value that causes cwnd undo. Before this fix,
-the IP CE bit was ignored and not reflected in the TCP ECE header bit,
-and sender sent a TCP CWR ('W') bit on the next outgoing data packet,
-even though the cwnd reduction had been undone.  After this fix, the
-sender properly reflects the CE bit and does not set the W bit.
+Fix this bug by testing the sector number at the beginning of
+dm_table_find_target(). Also, add an "inline" keyword to the function
+dm_table_get_size() because this is a hot path.
 
-Note: the bug actually predates 2005 git history; this Fixes footer is
-chosen to be the oldest SHA1 I have tested (from Sep 2007) for which
-the patch applies cleanly (since before this commit the code was in a
-.h file).
-
-Fixes: bdf1ee5d3bd3 ("[TCP]: Move code from tcp_ecn.h to tcp*.c and tcp.h & remove it")
-Signed-off-by: Neal Cardwell <ncardwell@google.com>
-Acked-by: Yuchung Cheng <ycheng@google.com>
-Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
-Cc: Eric Dumazet <edumazet@google.com>
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 512875bd9661 ("dm: table detect io beyond device")
+Reported-by: Zhang Tao <kontais@zoho.com>
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- net/ipv4/tcp_input.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/md/dm-table.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/net/ipv4/tcp_input.c
-+++ b/net/ipv4/tcp_input.c
-@@ -214,7 +214,7 @@ static inline void TCP_ECN_accept_cwr(st
- 
- static inline void TCP_ECN_withdraw_cwr(struct tcp_sock *tp)
- {
--	tp->ecn_flags &= ~TCP_ECN_DEMAND_CWR;
-+	tp->ecn_flags &= ~TCP_ECN_QUEUE_CWR;
+--- a/drivers/md/dm-table.c
++++ b/drivers/md/dm-table.c
+@@ -1158,7 +1158,7 @@ void dm_table_event(struct dm_table *t)
  }
+ EXPORT_SYMBOL(dm_table_event);
  
- static inline void TCP_ECN_check_ce(struct tcp_sock *tp, const struct sk_buff *skb)
+-sector_t dm_table_get_size(struct dm_table *t)
++inline sector_t dm_table_get_size(struct dm_table *t)
+ {
+ 	return t->num_targets ? (t->highs[t->num_targets - 1] + 1) : 0;
+ }
+@@ -1183,6 +1183,9 @@ struct dm_target *dm_table_find_target(s
+ 	unsigned int l, n = 0, k = 0;
+ 	sector_t *node;
+ 
++	if (unlikely(sector >= dm_table_get_size(t)))
++		return &t->targets[t->num_targets];
++
+ 	for (l = 0; l < t->depth; l++) {
+ 		n = get_child(n, k);
+ 		node = get_node(t, l, n);
 
