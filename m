@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE07AC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:44:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C321C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:44:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0A9120674
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:44:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CCBD20674
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:44:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731008AbfKTPnz (ORCPT
+        id S1732318AbfKTPoJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 10:43:55 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:52882 "EHLO
+        Wed, 20 Nov 2019 10:44:09 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:52844 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730967AbfKTPkT (ORCPT
+        by vger.kernel.org with ESMTP id S1730070AbfKTPkT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 Nov 2019 10:40:19 -0500
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iXS5V-0004bK-HM; Wed, 20 Nov 2019 15:40:13 +0000
+        id 1iXS5V-0004bS-KB; Wed, 20 Nov 2019 15:40:13 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iXS5U-0004KH-Kw; Wed, 20 Nov 2019 15:40:12 +0000
+        id 1iXS5V-0004NQ-EN; Wed, 20 Nov 2019 15:40:13 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Oliver Neukum" <oneukum@suse.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        syzbot+d232cca6ec42c2edb3fc@syzkaller.appspotmail.com
-Date:   Wed, 20 Nov 2019 15:38:07 +0000
-Message-ID: <lsq.1574264230.384888053@decadent.org.uk>
+        "Vidya Sagar" <vidyas@nvidia.com>,
+        "Thierry Reding" <treding@nvidia.com>,
+        "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>
+Date:   Wed, 20 Nov 2019 15:38:26 +0000
+Message-ID: <lsq.1574264230.322653058@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 57/83] USB: cdc-wdm: fix race between write and
- disconnect due to flag abuse
+Subject: [PATCH 3.16 76/83] PCI: tegra: Enable Relaxed Ordering only for
+ Tegra20 & Tegra30
 In-Reply-To: <lsq.1574264230.280218497@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,62 +57,64 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Vidya Sagar <vidyas@nvidia.com>
 
-commit 1426bd2c9f7e3126e2678e7469dca9fd9fc6dd3e upstream.
+commit 7be142caabc4780b13a522c485abc806de5c4114 upstream.
 
-In case of a disconnect an ongoing flush() has to be made fail.
-Nevertheless we cannot be sure that any pending URB has already
-finished, so although they will never succeed, they still must
-not be touched.
-The clean solution for this is to check for WDM_IN_USE
-and WDM_DISCONNECTED in flush(). There is no point in ever
-clearing WDM_IN_USE, as no further writes make sense.
+The PCI Tegra controller conversion to a device tree configurable
+driver in commit d1523b52bff3 ("PCI: tegra: Move PCIe driver
+to drivers/pci/host") implied that code for the driver can be
+compiled in for a kernel supporting multiple platforms.
 
-The issue is as old as the driver.
+Unfortunately, a blind move of the code did not check that some of the
+quirks that were applied in arch/arm (eg enabling Relaxed Ordering on
+all PCI devices - since the quirk hook erroneously matches PCI_ANY_ID
+for both Vendor-ID and Device-ID) are now applied in all kernels that
+compile the PCI Tegra controlled driver, DT and ACPI alike.
 
-Fixes: afba937e540c9 ("USB: CDC WDM driver")
-Reported-by: syzbot+d232cca6ec42c2edb3fc@syzkaller.appspotmail.com
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Link: https://lore.kernel.org/r/20190827103436.21143-1-oneukum@suse.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This is completely wrong, in that enablement of Relaxed Ordering is only
+required by default in Tegra20 platforms as described in the Tegra20
+Technical Reference Manual (available at
+https://developer.nvidia.com/embedded/downloads#?search=tegra%202 in
+Section 34.1, where it is mentioned that Relaxed Ordering bit needs to
+be enabled in its root ports to avoid deadlock in hardware) and in the
+Tegra30 platforms for the same reasons (unfortunately not documented
+in the TRM).
+
+There is no other strict requirement on PCI devices Relaxed Ordering
+enablement on any other Tegra platforms or PCI host bridge driver.
+
+Fix this quite upsetting situation by limiting the vendor and device IDs
+to which the Relaxed Ordering quirk applies to the root ports in
+question, reported above.
+
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+[lorenzo.pieralisi@arm.com: completely rewrote the commit log/fixes tag]
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/usb/class/cdc-wdm.c | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+ drivers/pci/host/pci-tegra.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
---- a/drivers/usb/class/cdc-wdm.c
-+++ b/drivers/usb/class/cdc-wdm.c
-@@ -576,10 +576,20 @@ static int wdm_flush(struct file *file,
+--- a/drivers/pci/host/pci-tegra.c
++++ b/drivers/pci/host/pci-tegra.c
+@@ -615,12 +615,15 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NV
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0e1c, tegra_pcie_fixup_class);
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_NVIDIA, 0x0e1d, tegra_pcie_fixup_class);
+ 
+-/* Tegra PCIE requires relaxed ordering */
++/* Tegra20 and Tegra30 PCIE requires relaxed ordering */
+ static void tegra_pcie_relax_enable(struct pci_dev *dev)
  {
- 	struct wdm_device *desc = file->private_data;
+ 	pcie_capability_set_word(dev, PCI_EXP_DEVCTL, PCI_EXP_DEVCTL_RELAX_EN);
+ }
+-DECLARE_PCI_FIXUP_FINAL(PCI_ANY_ID, PCI_ANY_ID, tegra_pcie_relax_enable);
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0bf0, tegra_pcie_relax_enable);
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0bf1, tegra_pcie_relax_enable);
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0e1c, tegra_pcie_relax_enable);
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0e1d, tegra_pcie_relax_enable);
  
--	wait_event(desc->wait, !test_bit(WDM_IN_USE, &desc->flags));
-+	wait_event(desc->wait,
-+			/*
-+			 * needs both flags. We cannot do with one
-+			 * because resetting it would cause a race
-+			 * with write() yet we need to signal
-+			 * a disconnect
-+			 */
-+			!test_bit(WDM_IN_USE, &desc->flags) ||
-+			test_bit(WDM_DISCONNECTING, &desc->flags));
- 
- 	/* cannot dereference desc->intf if WDM_DISCONNECTING */
--	if (desc->werr < 0 && !test_bit(WDM_DISCONNECTING, &desc->flags))
-+	if (test_bit(WDM_DISCONNECTING, &desc->flags))
-+		return -ENODEV;
-+	if (desc->werr < 0)
- 		dev_err(&desc->intf->dev, "Error in flush path: %d\n",
- 			desc->werr);
- 
-@@ -967,8 +977,6 @@ static void wdm_disconnect(struct usb_in
- 	spin_lock_irqsave(&desc->iuspin, flags);
- 	set_bit(WDM_DISCONNECTING, &desc->flags);
- 	set_bit(WDM_READ, &desc->flags);
--	/* to terminate pending flushes */
--	clear_bit(WDM_IN_USE, &desc->flags);
- 	spin_unlock_irqrestore(&desc->iuspin, flags);
- 	wake_up_all(&desc->wait);
- 	mutex_lock(&desc->rlock);
+ static int tegra_pcie_setup(int nr, struct pci_sys_data *sys)
+ {
 
