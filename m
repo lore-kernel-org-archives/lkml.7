@@ -2,77 +2,155 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92A3BC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:15:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0C87C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:15:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D38920885
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:15:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EA16217D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:15:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728345AbfKTPPL (ORCPT
+        id S1728520AbfKTPPt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 10:15:11 -0500
-Received: from mail-ot1-f51.google.com ([209.85.210.51]:39024 "EHLO
-        mail-ot1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726771AbfKTPPK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 10:15:10 -0500
-Received: by mail-ot1-f51.google.com with SMTP id w24so21023714otk.6
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 07:15:10 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=mWNRwQmWLmAZvnpZuQkggOMIUTp3+MxTnTap7iRQstg=;
-        b=DR53V1F9anLMe0LXo2Q7heIOJNSkD0s0wkZWnXEk6vAiI+uPqn15tmxqmRmb2bwz/s
-         b2/H6oQ46mlauHjfd84qVnwZq08EtLfVTVJQ/CM3HiOmUXUxp+bb/e2Mc+RuT4vUkas9
-         kh4zwxOGrxrQhbl0Lz+JFOhJZ6UWlM1JmvlpuRSG7v6JPlX/pBzCXlrO9F8jNm7twBDU
-         4gcTJVrfrQPDMUXj85o+ZamVYlD4SIKf2iqkl1DlwNnWm5CzGccHEM1DrTKfUPQYwGNr
-         AkqgwvkIfhi809XqQWkL+SyxIrgT2kOSBCObLjeo9qX+f8tTYW1/lIftbdUiYZt+DGPh
-         BBmQ==
-X-Gm-Message-State: APjAAAVeqBoP2TsBfAfgTbcdNMmqOLDEvd1P1ha8AtNsKX5BlQ1Zp0hv
-        wWUYJcmXPXQCaCBH6uURAm1oZ34YXaPm3miBNvNMQnLr
-X-Google-Smtp-Source: APXvYqzPSRIlrOzN9FRvFNs7rEpql6C5YLguOaXqefLCtBS/AXVBEFraL4u+CjXMCmOhP5V/IGARBFcXg/nqA+Hf49U=
-X-Received: by 2002:a9d:7642:: with SMTP id o2mr2271579otl.177.1574262910006;
- Wed, 20 Nov 2019 07:15:10 -0800 (PST)
+        Wed, 20 Nov 2019 10:15:49 -0500
+Received: from mga07.intel.com ([134.134.136.100]:50323 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726771AbfKTPPt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 10:15:49 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Nov 2019 07:15:47 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,222,1571727600"; 
+   d="scan'208";a="215831473"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 20 Nov 2019 07:15:43 -0800
+Received: by lahna (sSMTP sendmail emulation); Wed, 20 Nov 2019 17:15:42 +0200
+Date:   Wed, 20 Nov 2019 17:15:42 +0200
+From:   Mika Westerberg <mika.westerberg@intel.com>
+To:     Karol Herbst <kherbst@redhat.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lyude Paul <lyude@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        Dave Airlie <airlied@gmail.com>,
+        Mario Limonciello <Mario.Limonciello@dell.com>
+Subject: Re: [PATCH v4] pci: prevent putting nvidia GPUs into lower device
+ states on certain intel bridges
+Message-ID: <20191120151542.GH11621@lahna.fi.intel.com>
+References: <20191119214955.GA223696@google.com>
+ <CACO55tu+8VeyMw1Lb6QvNspaJm9LDgoRbooVhr0s3v9uBt=feg@mail.gmail.com>
+ <20191120101816.GX11621@lahna.fi.intel.com>
+ <CAJZ5v0g4vp1C+zHU5nOVnkGsOjBvLaphK1kK=qAT6b=mK8kpsA@mail.gmail.com>
+ <20191120112212.GA11621@lahna.fi.intel.com>
+ <20191120115127.GD11621@lahna.fi.intel.com>
+ <CACO55tsfNOdtu5SZ-4HzO4Ji6gQtafvZ7Rm19nkPcJAgwUBFMw@mail.gmail.com>
+ <CACO55tscD_96jUVts+MTAUsCt-fZx4O5kyhRKoo4mKoC84io8A@mail.gmail.com>
+ <20191120120913.GE11621@lahna.fi.intel.com>
+ <CACO55tsHy6yZQZ8PkdW8iPA7+uc5rdcEwRJwYEQ3iqu85F8Sqg@mail.gmail.com>
 MIME-Version: 1.0
-From:   Alan Bartlett <ajb@elrepo.org>
-Date:   Wed, 20 Nov 2019 15:14:58 +0000
-Message-ID: <CA+_WhHxudcxs2zN-ykUx9jaRUbHBSpyxmu-p8NRMHHBD2GUv8A@mail.gmail.com>
-Subject: Build of 5.4-rc8 - Objtool: Unreachable Instruction Warnings
-To:     linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACO55tsHy6yZQZ8PkdW8iPA7+uc5rdcEwRJwYEQ3iqu85F8Sqg@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[Please CC me, as I am not subscribed to the list.]
+On Wed, Nov 20, 2019 at 01:11:52PM +0100, Karol Herbst wrote:
+> On Wed, Nov 20, 2019 at 1:09 PM Mika Westerberg
+> <mika.westerberg@intel.com> wrote:
+> >
+> > On Wed, Nov 20, 2019 at 12:58:00PM +0100, Karol Herbst wrote:
+> > > overall, what I really want to know is, _why_ does it work on windows?
+> >
+> > So do I ;-)
+> >
+> > > Or what are we doing differently on Linux so that it doesn't work? If
+> > > anybody has any idea on how we could dig into this and figure it out
+> > > on this level, this would probably allow us to get closer to the root
+> > > cause? no?
+> >
+> > Have you tried to use the acpi_rev_override parameter in your system and
+> > does it have any effect?
+> >
+> > Also did you try to trace the ACPI _ON/_OFF() methods? I think that
+> > should hopefully reveal something.
+> >
+> 
+> I think I did in the past and it seemed to have worked, there is just
+> one big issue with this: it's a Dell specific workaround afaik, and
+> this issue plagues not just Dell, but we've seen it on HP and Lenovo
+> laptops as well, and I've heard about users having the same issues on
+> Asus and MSI laptops as well.
 
-A build of linux-5.4-rc8 (on RHEL8.1, using gcc (GCC) 8.3.1 20190507
-(Red Hat 8.3.1-4)) shows a number of objtool unreachable instruction
-warnings.
+Maybe it is not a workaround at all but instead it simply determines
+whether the system supports RTD3 or something like that (IIRC Windows 8
+started supporting it). Maybe Dell added check for Linux because at that
+time Linux did not support it.
 
-arch/x86/kernel/cpu/mce/core.o: warning: objtool: mce_panic()+0x10f:
-unreachable instruction
-net/core/skbuff.o: warning: objtool: skb_push.cold.95()+0x14:
-unreachable instruction
-kernel/exit.o: warning: objtool: __x64_sys_exit_group()+0x14:
-unreachable instruction
-fs/btrfs/extent_io.o: warning: objtool:
-__set_extent_bit.cold.61()+0xd: unreachable instruction
-fs/btrfs/relocation.o: warning: objtool:
-add_tree_block.isra.43.cold.54()+0xc: unreachable instruction
-drivers/message/fusion/mptbase.o: warning: objtool:
-mpt_HardResetHandler()+0x1ec: unreachable instruction
-drivers/gpu/drm/ttm/ttm_bo.o: warning: objtool:
-ttm_bo_del_from_lru()+0xe8: unreachable instruction
-drivers/scsi/aic7xxx/aic79xx_core.o: warning: objtool:
-ahd_handle_seqint.isra.49()+0x6ea: unreachable instruction
+In case RTD3 is supported it invokes LKDS() which probably does the L2
+or L3 entry and this is for some reason does not work the same way in
+Linux than it does with Windows 8+.
 
-I am currently unable to perform a bisection but can provide a little
-more context around those warnings, if it would be of help.
+I don't remember if this happens only with nouveau or with the
+proprietary driver as well but looking at the nouveau runtime PM suspend
+hook (assuming I'm looking at the correct code):
 
-Alan.
+static int
+nouveau_pmops_runtime_suspend(struct device *dev)
+{       
+        struct pci_dev *pdev = to_pci_dev(dev);
+        struct drm_device *drm_dev = pci_get_drvdata(pdev);
+        int ret;
+
+        if (!nouveau_pmops_runtime()) {
+                pm_runtime_forbid(dev);
+                return -EBUSY;
+        }
+
+        nouveau_switcheroo_optimus_dsm();
+        ret = nouveau_do_suspend(drm_dev, true);
+        pci_save_state(pdev);
+        pci_disable_device(pdev);
+        pci_ignore_hotplug(pdev);
+        pci_set_power_state(pdev, PCI_D3cold);
+        drm_dev->switch_power_state = DRM_SWITCH_POWER_DYNAMIC_OFF;
+        return ret;
+}
+
+Normally PCI drivers leave the PCI bus PM things to PCI core but here
+the driver does these. So I wonder if it makes any difference if we let
+the core handle all that:
+
+static int
+nouveau_pmops_runtime_suspend(struct device *dev)
+{       
+        struct pci_dev *pdev = to_pci_dev(dev);
+        struct drm_device *drm_dev = pci_get_drvdata(pdev);
+        int ret;
+
+        if (!nouveau_pmops_runtime()) {
+                pm_runtime_forbid(dev);
+                return -EBUSY;
+        }
+
+        nouveau_switcheroo_optimus_dsm();
+        ret = nouveau_do_suspend(drm_dev, true);
+        pci_ignore_hotplug(pdev);
+        drm_dev->switch_power_state = DRM_SWITCH_POWER_DYNAMIC_OFF;
+        return ret;
+}
+
+and similar for the nouveau_pmops_runtime_resume().
