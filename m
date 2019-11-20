@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C97A6C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD53AC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:41:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A119922419
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:41:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEFDF22419
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:41:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="br9zeWUD"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="ZqDzjSyu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729311AbfKTLlK (ORCPT
+        id S1729321AbfKTLlP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 06:41:10 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:44341 "EHLO
+        Wed, 20 Nov 2019 06:41:15 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:42046 "EHLO
         mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729289AbfKTLlJ (ORCPT
+        with ESMTP id S1728291AbfKTLlO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 06:41:09 -0500
-Received: by mail-pj1-f65.google.com with SMTP id w8so3999334pjh.11
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 03:41:08 -0800 (PST)
+        Wed, 20 Nov 2019 06:41:14 -0500
+Received: by mail-pj1-f65.google.com with SMTP id y21so4006731pjn.9
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 03:41:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=amarulasolutions.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=xa375NGyNLSVnAvUIhiexdZMHOh3jJr15Iilt7lsROI=;
-        b=br9zeWUDYiYk6Bp4Q3ti8c8xmEnL2VphTTq3kUzwTmCugAMDslZGGCegVcP/lF5cS4
-         Mj3jiArvXS0+ppM7ifUaogwgsY2W1Y2/AHlZaZGkr32mY1I6foTkauKWjQGT1F+Bu53t
-         5Vh3BZgvvrWEkI4HzzZdpZ5AIVvx73SIUXMVk=
+        bh=LVPX3M80KZd4Q7MyVkxEYzA1D5QxK+GgoYXRS5JRiWY=;
+        b=ZqDzjSyu/fJt3pgq1ysJiWYhXrLyTzhXDBrZ5o4XvAGgFy+WV2rmWSXsYxD8QUEJ4V
+         bMdu4rEg/t/AiDp//7xaPwe5NjRNz14aO2qUAQtJIB3nUvAZ4iqXm40CwYWN37Gde2+b
+         OrcCSVDSB5DHAKYBmCSe89OkQu0/k0kqQoSbM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=xa375NGyNLSVnAvUIhiexdZMHOh3jJr15Iilt7lsROI=;
-        b=kUsUU9VTnIfKsJ3jI6bNg9kZGykERWKzH4RNLnkGn58NcLugbX7SOVMSVz7ybjDDPa
-         glxODefWtKnES+ZodErDcidWebFn6O+oqYE/y+BnW1kmy8Kj5UT4HkwyhINcotzJWdqZ
-         CxBxIl9tf681afHsojvUTDeIuyVQk45rv1Rbc1dTw4ySFBmQKMG03U7W9rAVisp60C30
-         h2X0u+sH42UO9I6G488eteVkNSevcOlpgbf9+0p0koM9SnEuhWAOj9Tz1UI3/+O3stu6
-         G/IGDCp79qYV9FfXMLY8W2f4/ZbJ1houaiSJSNQrV32h47xIlEPu3Jfb36DvncUUL9J5
-         k8Tg==
-X-Gm-Message-State: APjAAAVjV/aeo5woHwkVY/zu9ZX+PXXoZMIF1L1i13De94V94d47Hy/9
-        JhkJ0H6QhBgILtZRmrPM4FGe/w==
-X-Google-Smtp-Source: APXvYqx7Lv1/ePIi9JWMgF5xDVKBWDF1PPS99Tf2BlcWR98xDepPj+Num/8WUU4ze3qL6xGCcEZiSw==
-X-Received: by 2002:a17:902:6807:: with SMTP id h7mr2384938plk.230.1574250068020;
-        Wed, 20 Nov 2019 03:41:08 -0800 (PST)
+        bh=LVPX3M80KZd4Q7MyVkxEYzA1D5QxK+GgoYXRS5JRiWY=;
+        b=rKMAANBpd9Qfy/oqPJQIrmFfC4dWMl/0xw6fwWVCGtmHpmJfPtgcHGByI6Ga8swm71
+         w75Inn/Mya9Zp/2B8SFH+l9BvdnfcmDYx914/HPAZKoK7iYReuzZ8CeJfaNNeA5Nf8zd
+         f2yq86r0JW0xCRId2SsAA26nk76xsbiZHRXS5Wg5BEShQcR1aUsZq/Qf4WY3wQmiWxeU
+         /WEjMh+s8OfqACLosHjXhbSs5TM5pxev/jrelWlCzMyduqyaVOv29eCNiQZDAbNPpj3d
+         +D/GibW5ciKTt73UU4b/CeYU02yp9eCVoKNSU/kbJQ5D7qcMupb/GPneaG6cjvcGq0tD
+         XAPA==
+X-Gm-Message-State: APjAAAW07/ha7AJ+PFRhHOIy/v518zfFILXEZ/tMy0Xdn2p5AhRS6rMy
+        gNFoNi6ezcmTX/cL+uafnxqFfQ==
+X-Google-Smtp-Source: APXvYqwqL32dNuB7yaQ+9XBJponJe+hREoVt+opsUP7F+TjCrG3qhm4CRk19jTvicZ+iQ7HWGEShhA==
+X-Received: by 2002:a17:902:d901:: with SMTP id c1mr2461318plz.93.1574250073423;
+        Wed, 20 Nov 2019 03:41:13 -0800 (PST)
 Received: from localhost.localdomain ([115.97.180.31])
-        by smtp.gmail.com with ESMTPSA id h185sm13492850pgc.87.2019.11.20.03.41.03
+        by smtp.gmail.com with ESMTPSA id h185sm13492850pgc.87.2019.11.20.03.41.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Nov 2019 03:41:07 -0800 (PST)
+        Wed, 20 Nov 2019 03:41:12 -0800 (PST)
 From:   Jagan Teki <jagan@amarulasolutions.com>
 To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>
@@ -62,9 +62,9 @@ Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
         linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-amarula@amarulasolutions.com,
         Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH 3/5] dt-bindings: arm: rockchip: Add Rock Pi N10 binding
-Date:   Wed, 20 Nov 2019 17:09:21 +0530
-Message-Id: <20191120113923.11685-4-jagan@amarulasolutions.com>
+Subject: [PATCH 4/5] ARM: dts: rockchip: Add Radxa Carrier board
+Date:   Wed, 20 Nov 2019 17:09:22 +0530
+Message-Id: <20191120113923.11685-5-jagan@amarulasolutions.com>
 X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
 In-Reply-To: <20191120113923.11685-1-jagan@amarulasolutions.com>
 References: <20191120113923.11685-1-jagan@amarulasolutions.com>
@@ -75,36 +75,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rock Pi N10 is a Rockchip RK3399Pro based SBC, which has
-- VMARC RK3399Pro SOM (as per SMARC standard) from Vamrs.
-- Compatible carrier board from Radxa.
+Carrier board often referred as baseboard. For making
+complete SBC, the associated SOM will mount on top of
+this carrier board.
 
-VMARC RK3399Pro SOM need to mount on top of carrier board
-for making Rock PI N10 SBC.
+Radxa has a carrier board which supports on board
+peripherals, ports like USB-2.0, USB-3.0, HDMI, MIPI DSI/CSI,
+eDP, Ethernet, PCIe, USB-C, 40-Pin GPIO header and etc.
 
-Add dt-bindings for it.
+Currently this carrier board can be used together with
+VMARC RK3399Por SOM for making Rock PI N10 SBC.
+
+So add this carrier board dtsi as a separate file in
+ARM directory, so-that the same can reuse it in both
+arm32 and arm64 variants of Rockchip SOMs.
 
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
- Documentation/devicetree/bindings/arm/rockchip.yaml | 5 +++++
- 1 file changed, 5 insertions(+)
+ .../boot/dts/rockchip-radxa-carrierboard.dtsi | 81 +++++++++++++++++++
+ 1 file changed, 81 insertions(+)
+ create mode 100644 arch/arm/boot/dts/rockchip-radxa-carrierboard.dtsi
 
-diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
-index 51aa458833a9..63d34520c72f 100644
---- a/Documentation/devicetree/bindings/arm/rockchip.yaml
-+++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
-@@ -423,6 +423,11 @@ properties:
-           - const: radxa,rockpi4
-           - const: rockchip,rk3399
- 
-+      - description: Radxa Rock Pi N10
-+        items:
-+          - const: radxa,rockpi-n10
-+          - const: rockchip,rk3399pro
+diff --git a/arch/arm/boot/dts/rockchip-radxa-carrierboard.dtsi b/arch/arm/boot/dts/rockchip-radxa-carrierboard.dtsi
+new file mode 100644
+index 000000000000..df3712aedf8a
+--- /dev/null
++++ b/arch/arm/boot/dts/rockchip-radxa-carrierboard.dtsi
+@@ -0,0 +1,81 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (c) 2019 Fuzhou Rockchip Electronics Co., Ltd
++ * Copyright (c) 2019 Radxa Limited
++ * Copyright (c) 2019 Amarula Solutions(India)
++ */
 +
-       - description: Radxa Rock2 Square
-         items:
-           - const: radxa,rock2-square
++#include <dt-bindings/pwm/pwm.h>
++
++/ {
++	chosen {
++		stdout-path = "serial2:1500000n8";
++	};
++};
++
++&gmac {
++	status = "okay";
++};
++
++&i2c1 {
++	status = "okay";
++	i2c-scl-rising-time-ns = <140>;
++	i2c-scl-falling-time-ns = <30>;
++};
++
++&i2c2 {
++	status = "okay";
++	clock-frequency = <400000>;
++
++	hym8563: hym8563@51 {
++		compatible = "haoyu,hym8563";
++		reg = <0x51>;
++		#clock-cells = <0>;
++		clock-frequency = <32768>;
++		clock-output-names = "hym8563";
++		pinctrl-names = "default";
++		pinctrl-0 = <&hym8563_int>;
++		interrupt-parent = <&gpio4>;
++		interrupts = <30 IRQ_TYPE_LEVEL_LOW>;
++	};
++};
++
++&pwm0 {
++	status = "okay";
++};
++
++&pwm2 {
++	status = "okay";
++};
++
++&sdmmc {
++	bus-width = <4>;
++	cap-mmc-highspeed;
++	cap-sd-highspeed;
++	cd-gpios = <&gpio0 RK_PA7 GPIO_ACTIVE_LOW>;
++	disable-wp;
++	vqmmc-supply = <&vccio_sd>;
++	max-frequency = <150000000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_cd &sdmmc_bus4>;
++	status = "okay";
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_xfer &uart0_cts>;
++	status = "okay";
++};
++
++&uart2 {
++	status = "okay";
++};
++
++&pinctrl {
++	hym8563 {
++		hym8563_int: hym8563-int {
++			rockchip,pins =
++				<4 RK_PD6 0 &pcfg_pull_up>;
++		};
++	};
++};
 -- 
 2.18.0.321.gffc6fa0e3
 
