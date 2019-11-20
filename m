@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF5CEC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D703CC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:41:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFD8820730
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:41:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B60782071F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:41:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732113AbfKTPll (ORCPT
+        id S1732119AbfKTPln (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 10:41:41 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:52988 "EHLO
+        Wed, 20 Nov 2019 10:41:43 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:52876 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731821AbfKTPkU (ORCPT
+        by vger.kernel.org with ESMTP id S1730626AbfKTPkU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 Nov 2019 10:40:20 -0500
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iXS5V-0004bO-Kz; Wed, 20 Nov 2019 15:40:13 +0000
+        id 1iXS5V-0004bR-KO; Wed, 20 Nov 2019 15:40:13 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iXS5U-0004LJ-Qx; Wed, 20 Nov 2019 15:40:12 +0000
+        id 1iXS5V-0004NA-DN; Wed, 20 Nov 2019 15:40:13 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Ulf Hansson" <ulf.hansson@linaro.org>,
-        "Manuel Presnitz" <mail@mpy.de>,
-        "Philip Langdale" <philipl@overt.org>
-Date:   Wed, 20 Nov 2019 15:38:11 +0000
-Message-ID: <lsq.1574264230.169441306@decadent.org.uk>
+        "Fuqian Huang" <huangfq.daxian@gmail.com>,
+        "Paolo Bonzini" <pbonzini@redhat.com>
+Date:   Wed, 20 Nov 2019 15:38:25 +0000
+Message-ID: <lsq.1574264230.229364259@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 61/83] mmc: core: Fix init of SD cards reporting an
- invalid VDD range
+Subject: [PATCH 3.16 75/83] KVM: x86: work around leak of uninitialized
+ stack contents
 In-Reply-To: <lsq.1574264230.280218497@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,45 +56,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Ulf Hansson <ulf.hansson@linaro.org>
+From: Fuqian Huang <huangfq.daxian@gmail.com>
 
-commit 72741084d903e65e121c27bd29494d941729d4a1 upstream.
+commit 541ab2aeb28251bf7135c7961f3a6080eebcc705 upstream.
 
-The OCR register defines the supported range of VDD voltages for SD cards.
-However, it has turned out that some SD cards reports an invalid voltage
-range, for example having bit7 set.
+Emulation of VMPTRST can incorrectly inject a page fault
+when passed an operand that points to an MMIO address.
+The page fault will use uninitialized kernel stack memory
+as the CR2 and error code.
 
-When a host supports MMC_CAP2_FULL_PWR_CYCLE and some of the voltages from
-the invalid VDD range, this triggers the core to run a power cycle of the
-card to try to initialize it at the lowest common supported voltage.
-Obviously this fails, since the card can't support it.
+The right behavior would be to abort the VM with a KVM_EXIT_INTERNAL_ERROR
+exit to userspace; however, it is not an easy fix, so for now just ensure
+that the error code and CR2 are zero.
 
-Let's fix this problem, by clearing invalid bits from the read OCR register
-for SD cards, before proceeding with the VDD voltage negotiation.
-
-Reported-by: Philip Langdale <philipl@overt.org>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Reviewed-by: Philip Langdale <philipl@overt.org>
-Tested-by: Philip Langdale <philipl@overt.org>
-Tested-by: Manuel Presnitz <mail@mpy.de>
+Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
+[add comment]
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/mmc/core/sd.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/x86/kvm/x86.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/drivers/mmc/core/sd.c
-+++ b/drivers/mmc/core/sd.c
-@@ -1242,6 +1242,12 @@ int mmc_attach_sd(struct mmc_host *host)
- 			goto err;
- 	}
- 
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -4329,6 +4329,13 @@ static int emulator_write_std(struct x86
+ int kvm_write_guest_virt_system(struct kvm_vcpu *vcpu, gva_t addr, void *val,
+ 				unsigned int bytes, struct x86_exception *exception)
+ {
 +	/*
-+	 * Some SD cards claims an out of spec VDD voltage range. Let's treat
-+	 * these bits as being in-valid and especially also bit7.
++	 * FIXME: this should call handle_emulation_failure if X86EMUL_IO_NEEDED
++	 * is returned, but our callers are not ready for that and they blindly
++	 * call kvm_inject_page_fault.  Ensure that they at least do not leak
++	 * uninitialized kernel stack memory into cr2 and error code.
 +	 */
-+	ocr &= ~0x7FFF;
-+
- 	rocr = mmc_select_voltage(host, ocr);
- 
- 	/*
++	memset(exception, 0, sizeof(*exception));
+ 	return kvm_write_guest_virt_helper(addr, val, bytes, vcpu,
+ 					   PFERR_WRITE_MASK, exception);
+ }
 
