@@ -2,210 +2,122 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6101BC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 07:09:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78BD3C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 07:09:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BA422245D
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 07:09:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5123B22317
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 07:09:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="IlcCUEX7"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="i/jnrMew"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727646AbfKTHJ0 (ORCPT
+        id S1727698AbfKTHJi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 02:09:26 -0500
-Received: from mail-eopbgr770104.outbound.protection.outlook.com ([40.107.77.104]:34030
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        Wed, 20 Nov 2019 02:09:38 -0500
+Received: from mail-eopbgr70042.outbound.protection.outlook.com ([40.107.7.42]:13113
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725268AbfKTHJ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 02:09:26 -0500
+        id S1727127AbfKTHJi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 02:09:38 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=R4mya0Wa0F+qQRQs9iH6dmtBRup6AwM5PJE8iO1RYW+nGUb54AuQym2TJihA3jwdlH674w+bGShJ5RQdsfwbf4LSju7bXE1bwyBdq5tc0KtjPWTO0scQz7JbR0k8zCsTbLUUPf4Olm0TB1xnZWHeU+pJtx2Xy8dTyjJs3mo66U8jnvjMae5/cJFsJiZ5sNM30sKFI0jww+JfE3KwSC4Hj1QKIUCv/AVAg44FZMcdYXLsVQ2RudC/T6RzpUdhsjnvBQof18nWp3IHoZEqchX/vW676LGImCV+6Iujn30SKzDwPaYIkJo9v7K5ZLmiI6xldzhgAhbzrDdb3O7A7M53YQ==
+ b=CUNoUUiNTseQopihvVegypJrIEN6pexmwJvkr5Ig4ufg8nSKfRw7a9rFohvxwxJrgUV8/lFQ7HcuikM8VRhVEw9CjaRCsQu0TzQrFbVP4n+n86jTUfSMy6mYPabrvdIB79aXuSeEsjSQTJMg3qNKxXU643w7Joe8UGAGrmDFyDNwWpbsVuY0Zpt0c0NGnELiWn/vCOw6NRZGnacoSXdNuGjmXJ+pFjo8TV3ENTsZ/OEt5du47iuwSO4hki1ilHNRNGqs3twacXNKXTC3Dn3PeSaSayGhLd5e+gy7W3Tayvy4fOfAg+9l8wTjh4ttmzEHPtPBe0FuV7AoFcL8ETi8nQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3rWXqaA9BDeb4W0MowjqtCEy8/0QhOpnWQvxEmyDiXU=;
- b=CJp5n3t4ILVuArWs5kkaRx3NJXy73vi1Hfr4Vc/yP+75P0MLY/tpgOA/v/gD372f/+hgZ9FqX05Z22LlQWs62B2raYbGbyf4CPXJEPbiKzSIW2w1yDs4r2wQ57gA7KNd7xHumQ9wgD0WlJ/MR1GzV6+Ry5SQKU4sKwFLJldpykytrU0Z/Aq3LqiB6DA28HYrGDLt5VXjBNPyGXCztg4poqmhfcPQO77Eiyjman23zeU8oPOeibBxGzJmIRNz2gBTJsU7vmNvDynqF2KkE53ncRQqp8+9HBT+5+vkjuS0jEmM6fKTrkbGiyVCsNjoy7z3hGK7rnxIx21WQH9FyXWHOA==
+ bh=/0hvPUbI9y5USJUyl6DYQaKF0hJiF4WPFRb8dN370+Q=;
+ b=eS9uedB8yfPbFElT2zK5LBOB4NqpEQPgCLTRT/cM/K19GQRnrrvFhiwxtzo8BuNwwz+J2du3CcyhgDrXLM8RPIlrcLymswmTr/6d65gqutdbXfmQY5XHFfgXr7sLsUkUHy5CoVlGwvqE5y1xpnO3pfjVj+bYgcBUPBIz5qwRqxTAt7UnaeV87KG2jD/5CkuGC8ZNxL9kC6fujiizjofHIINsZ4LtdQrGVQSFPNSJVG3HHdzXawfdVmydxrtftpcT06UhXloqowoBI7wjGY5K32XAWcD9lnoQM53dv9jUGxZrV6pprUQPSx+W6iNq+pvgqkhGNyJiJ0BQwuVIpCTvtw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3rWXqaA9BDeb4W0MowjqtCEy8/0QhOpnWQvxEmyDiXU=;
- b=IlcCUEX7n5ARigZhdkYHWeKTsOk951yT/RoNsQwcioTsoN9Vn9xtZhxjLtioL/Brf+cJ6V7NMTMuLTn1WbiOWxxyrHxTvcQ29hT3YcOCo8oKoonQzimXDTm3zUrMG3fJDRYZAyJGSjphYkToPrs5Tt+IbhZ/bPi5DNYYbepAC8M=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-Received: from BN8PR21MB1137.namprd21.prod.outlook.com (20.179.72.96) by
- BN8PR21MB1186.namprd21.prod.outlook.com (20.179.73.78) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2495.3; Wed, 20 Nov 2019 07:09:23 +0000
-Received: from BN8PR21MB1137.namprd21.prod.outlook.com
- ([fe80::c596:ecf5:7a6:734d]) by BN8PR21MB1137.namprd21.prod.outlook.com
- ([fe80::c596:ecf5:7a6:734d%2]) with mapi id 15.20.2495.006; Wed, 20 Nov 2019
- 07:09:23 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     arnd@arndb.de, bp@alien8.de, daniel.lezcano@linaro.org,
-        haiyangz@microsoft.com, hpa@zytor.com, kys@microsoft.com,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mingo@redhat.com, sashal@kernel.org, sthemmin@microsoft.com,
-        tglx@linutronix.de, x86@kernel.org, mikelley@microsoft.com,
-        Alexander.Levin@microsoft.com, vkuznets@redhat.com
-Cc:     linux-arch@vger.kernel.org, Dexuan Cui <decui@microsoft.com>
-Subject: [PATCH v6] x86/hyperv: Suspend/resume the hypercall page for hibernation
-Date:   Tue, 19 Nov 2019 23:09:02 -0800
-Message-Id: <1574233742-47794-1-git-send-email-decui@microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-Reply-To: decui@microsoft.com
-Content-Type: text/plain
-X-ClientProxiedBy: MWHPR2001CA0015.namprd20.prod.outlook.com
- (2603:10b6:301:15::25) To BN8PR21MB1137.namprd21.prod.outlook.com
- (2603:10b6:408:71::32)
-MIME-Version: 1.0
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (13.77.154.182) by MWHPR2001CA0015.namprd20.prod.outlook.com (2603:10b6:301:15::25) with Microsoft SMTP Server (version=TLS1_2, cipher=) via Frontend Transport; Wed, 20 Nov 2019 07:09:21 +0000
-X-Mailer: git-send-email 1.8.3.1
-X-Originating-IP: [13.77.154.182]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: a3b54bf7-ddcc-4aed-90db-08d76d8891e2
-X-MS-TrafficTypeDiagnostic: BN8PR21MB1186:|BN8PR21MB1186:|BN8PR21MB1186:
-X-MS-Exchange-Transport-Forked: True
-X-LD-Processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-X-Microsoft-Antispam-PRVS: <BN8PR21MB1186CE61A2CCC1676C1EFEF1BF4F0@BN8PR21MB1186.namprd21.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-Forefront-PRVS: 02272225C5
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(376002)(136003)(366004)(39860400002)(396003)(346002)(189003)(199004)(6506007)(478600001)(386003)(316002)(43066004)(48376002)(3450700001)(5660300002)(16586007)(66066001)(15650500001)(8676002)(50466002)(966005)(8936002)(25786009)(22452003)(1511001)(7736002)(6486002)(66556008)(66476007)(2906002)(66946007)(51416003)(52116002)(14444005)(107886003)(476003)(2616005)(186003)(47776003)(956004)(36756003)(6436002)(6666004)(3846002)(10290500003)(305945005)(10090500001)(86362001)(26005)(81156014)(81166006)(4720700003)(6116002)(50226002)(486006)(4326008)(7416002)(6306002)(16526019)(6512007)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR21MB1186;H:BN8PR21MB1137.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: microsoft.com does not designate
+ bh=/0hvPUbI9y5USJUyl6DYQaKF0hJiF4WPFRb8dN370+Q=;
+ b=i/jnrMewoodMEZux3s/FtsUl+8aNqz1vI3sa/X19FhF/p4hIyhI0r0aD2SMXMB+s3iSawko5a1+KaokFatZE+rjE8tq564gA7KLeIR6N6MQzq2ZVjGYqNaRYJz0B4xPKTZMuvRHZ1NfTWKi9Yq7uCWWtOwxPjNzMZ8mIZPe/BtA=
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
+ VI1PR0402MB2766.eurprd04.prod.outlook.com (10.172.255.138) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2451.27; Wed, 20 Nov 2019 07:09:34 +0000
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::89e1:552e:a24d:e72]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::89e1:552e:a24d:e72%3]) with mapi id 15.20.2474.015; Wed, 20 Nov 2019
+ 07:09:34 +0000
+From:   Horia Geanta <horia.geanta@nxp.com>
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
+CC:     Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/5] crypto: caam - introduce caam_jr_cbk
+Thread-Topic: [PATCH 2/5] crypto: caam - introduce caam_jr_cbk
+Thread-Index: AQHVk+uzb+AyX2c07UmzzrqWyCz1BA==
+Date:   Wed, 20 Nov 2019 07:09:34 +0000
+Message-ID: <VI1PR0402MB3485DDD50A84CD8441D8FCCA984F0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+References: <20191105151353.6522-1-andrew.smirnov@gmail.com>
+ <20191105151353.6522-3-andrew.smirnov@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=horia.geanta@nxp.com; 
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 1cf32126-d7d0-42b1-c582-08d76d8898c4
+x-ms-traffictypediagnostic: VI1PR0402MB2766:|VI1PR0402MB2766:
+x-ms-exchange-purlcount: 1
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR0402MB2766305D4480B72300DB5651984F0@VI1PR0402MB2766.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3276;
+x-forefront-prvs: 02272225C5
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(396003)(346002)(39860400002)(376002)(189003)(199004)(476003)(86362001)(102836004)(44832011)(6436002)(76116006)(7736002)(74316002)(305945005)(91956017)(256004)(966005)(478600001)(2906002)(316002)(3846002)(99286004)(486006)(14454004)(25786009)(110136005)(54906003)(186003)(4326008)(6116002)(5660300002)(8676002)(33656002)(81166006)(81156014)(2501003)(6246003)(52536014)(229853002)(53546011)(6506007)(55016002)(446003)(4744005)(9686003)(6306002)(71200400001)(71190400001)(7696005)(76176011)(26005)(64756008)(8936002)(66556008)(66476007)(66946007)(66066001)(66446008);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB2766;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: E2m6bIUZX8AJUSW65mL5xWqLvKmaE8unFMbiwBgKreglSV1Ol0n7WETT7r4LWuiPbB34wn0VG5YEoO/LGqD6bTesuxC3vVQmgANGNhyN7/D+/FPtfQMAh3JdS1ZNQ5xQRCIJwT0qMA4gqSP7qcDikI35d4xr8qKJC4qehMvM31NjV0+/ePDODTtRohu5Db1ofPhIacAY5joZjo89K6383asDsaZGYafREVlpi88m8WUOaynODxadoMia+PC2AERTu+cEl/jkMGjPXvvt83hBe3dVJZOR7reOGO4y7cWsGryhiSFIM/KNP0evej0m48QQG091cCHMtWt8bcKUIbDkH5XCJzEeJEpoN2niLXkkdTsw8OXX9S+YInAsFTGezroN/aqoQzeJUipbtVZ3tGdWE5UaS8LmWfL+wv6DDNN2Yk0Rppu8dDbwh6zS0xIVX0LNk0UCPx+noLHPsEhkiNua6wKKH8TGN2wciyGNb9lq/eE=
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a3b54bf7-ddcc-4aed-90db-08d76d8891e2
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Nov 2019 07:09:23.0881
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: bXzDRv9k1c2AtMfZF67wzcBx+kWXDlGDRxvccT3SCI2pjR25HXjxbZyp+r9K7Yx/kys64zCIfBs4hA1cmWUworrlxslnt+X4cJwE7O0526PLzKmkY9OavJUD2LmelLVPVzHDHRxymkUBor92uTP62duC146Ud6/hitv5ZHTaUjJTEKoX1RwmpJeZxZbkh1Axy0AErozNk+eYHMm8teo6nkE5npMLEgtyIG3wajlTImgSjPveGAwWtL6KJHCIdbvACLpoR4VJHlYFjgEGPx06gawtT9g9IayJ1ZDV6S113tvgM1P/841geRhUm1lyY7I9y56YSqGemkArkni5/RNsT4uhbD9maM1MkJVdfxsMEHMkWU2y37jrF3HrN1qdWQNndV3Ojbb/o3SGggly/HMgQ2tjTPk89oCcVawqHKoRC/PKDWghwz9s7mWO8muZI5QE4U42DvyBRhTzPS2hQHk94c+lecosDJH1WHohuI/fo4c=
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1cf32126-d7d0-42b1-c582-08d76d8898c4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Nov 2019 07:09:34.1387
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ZlGLT1oyoCDP6WFEbJhLDq4AI4fpVv6C48gfBiVNyzNpCcFhIBDo3uYUpjbR5z0BHMKFKdNIaiD+MEj/7Vd5LQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR21MB1186
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 9VE/AYCZfN84sLZtP4j0HZjRiF5DOHP188KuyLvNTe+V0kroBJhzavnFDdA2vkhtG5R/ONcjQMjErgK6jua3ag==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB2766
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is needed for hibernation, e.g. when we resume the old kernel, we need
-to disable the "current" kernel's hypercall page and then resume the old
-kernel's.
-
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
----
-
-This patch is part of the v5 patchset:
-  https://lkml.org/lkml/2019/9/5/1158
-  https://lkml.org/lkml/2019/9/5/1159 
-
-  The change is: I set 'hv_hypercall_pg' to NULL in hv_suspend(), and
-restore it in hv_resume(). This is suggested by Vitaly Kuznetsov.
-
-  There is no other change, compared to v1 (v2~v5 were posted with the other
-patches).
-
-  Please pick up this patch onto the tip.git tree's branch x86/hyperv.
-
- arch/x86/hyperv/hv_init.c | 48 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 48 insertions(+)
-
-diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-index 426dc8b78193..c170653da589 100644
---- a/arch/x86/hyperv/hv_init.c
-+++ b/arch/x86/hyperv/hv_init.c
-@@ -20,11 +20,15 @@
- #include <linux/hyperv.h>
- #include <linux/slab.h>
- #include <linux/cpuhotplug.h>
-+#include <linux/syscore_ops.h>
- #include <clocksource/hyperv_timer.h>
- 
- void *hv_hypercall_pg;
- EXPORT_SYMBOL_GPL(hv_hypercall_pg);
- 
-+/* Save the hypercall page temporarily for hibernation */
-+static void *hv_hypercall_pg_saved;
-+
- u32 *hv_vp_index;
- EXPORT_SYMBOL_GPL(hv_vp_index);
- 
-@@ -245,6 +249,46 @@ static int __init hv_pci_init(void)
- 	return 1;
- }
- 
-+static int hv_suspend(void)
-+{
-+	union hv_x64_msr_hypercall_contents hypercall_msr;
-+
-+	/*
-+	 * Reset hypercall page reference before reset the page,
-+	 * let hypercall operations fail safely rather than
-+	 * panic the kernel for using invalid hypercall page
-+	 */
-+	hv_hypercall_pg_saved = hv_hypercall_pg;
-+	hv_hypercall_pg = NULL;
-+
-+	/* Reset the hypercall page */
-+	rdmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
-+	hypercall_msr.enable = 0;
-+	wrmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
-+
-+	return 0;
-+}
-+
-+static void hv_resume(void)
-+{
-+	union hv_x64_msr_hypercall_contents hypercall_msr;
-+
-+	/* Re-enable the hypercall page */
-+	rdmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
-+	hypercall_msr.enable = 1;
-+	hypercall_msr.guest_physical_address =
-+		vmalloc_to_pfn(hv_hypercall_pg_saved);
-+	wrmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
-+
-+	hv_hypercall_pg = hv_hypercall_pg_saved;
-+	hv_hypercall_pg_saved = NULL;
-+}
-+
-+static struct syscore_ops hv_syscore_ops = {
-+	.suspend = hv_suspend,
-+	.resume = hv_resume,
-+};
-+
- /*
-  * This function is to be invoked early in the boot sequence after the
-  * hypervisor has been detected.
-@@ -329,6 +373,8 @@ void __init hyperv_init(void)
- 
- 	x86_init.pci.arch_init = hv_pci_init;
- 
-+	register_syscore_ops(&hv_syscore_ops);
-+
- 	return;
- 
- remove_cpuhp_state:
-@@ -348,6 +394,8 @@ void hyperv_cleanup(void)
- {
- 	union hv_x64_msr_hypercall_contents hypercall_msr;
- 
-+	unregister_syscore_ops(&hv_syscore_ops);
-+
- 	/* Reset our OS id */
- 	wrmsrl(HV_X64_MSR_GUEST_OS_ID, 0);
- 
--- 
-2.19.1
-
+On 11/5/2019 5:14 PM, Andrey Smirnov wrote:=0A=
+> Coalesce multiple ad-hoc definitions of the same function pointer into=0A=
+> a dedicated type to avoid repetition.=0A=
+> =0A=
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>=0A=
+> Cc: Chris Healy <cphealy@gmail.com>=0A=
+> Cc: Lucas Stach <l.stach@pengutronix.de>=0A=
+> Cc: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
+> Cc: Herbert Xu <herbert@gondor.apana.org.au>=0A=
+> Cc: Iuliana Prodan <iuliana.prodan@nxp.com>=0A=
+> Cc: linux-imx@nxp.com=0A=
+> Cc: linux-crypto@vger.kernel.org=0A=
+> Cc: linux-kernel@vger.kernel.org=0A=
+Reviewed-by: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
+=0A=
+Note that there will be a conflict with the patch set adding=0A=
+backlogging support:=0A=
+https://lore.kernel.org/linux-crypto/1574029845-22796-1-git-send-email-iuli=
+ana.prodan@nxp.com/=0A=
+=0A=
+Thanks,=0A=
+Horia=0A=
