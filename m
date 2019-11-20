@@ -6,73 +6,77 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CE34C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:48:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C995C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:49:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB33822429
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:48:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AB0822429
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:49:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728853AbfKTKsk (ORCPT
+        id S1728862AbfKTKti (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 05:48:40 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:56270 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728760AbfKTKsj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 05:48:39 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iXNXC-000515-1D; Wed, 20 Nov 2019 11:48:30 +0100
-Date:   Wed, 20 Nov 2019 11:48:28 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Marc Zyngier <maz@kernel.org>
-cc:     Yash Shah <yash.shah@sifive.com>, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, palmer@dabbelt.com,
-        "Paul Walmsley ( Sifive)" <paul.walmsley@sifive.com>,
-        aou@eecs.berkeley.edu, jason@lakedaemon.net, bmeng.cn@gmail.com,
-        atish.patra@wdc.com, Sagar Kadam <sagar.kadam@sifive.com>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Sachin Ghadi <sachin.ghadi@sifive.com>
-Subject: Re: [PATCH v2 1/5] genirq: introduce irq_domain_translate_onecell
-In-Reply-To: <31ed00455bd8374b26ea6b649c14e288@www.loen.fr>
-Message-ID: <alpine.DEB.2.21.1911201147440.6731@nanos.tec.linutronix.de>
-References: <1574233128-28114-1-git-send-email-yash.shah@sifive.com> <1574233128-28114-2-git-send-email-yash.shah@sifive.com> <alpine.DEB.2.21.1911201034240.6731@nanos.tec.linutronix.de> <31ed00455bd8374b26ea6b649c14e288@www.loen.fr>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 20 Nov 2019 05:49:38 -0500
+Received: from foss.arm.com ([217.140.110.172]:37176 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728760AbfKTKti (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 05:49:38 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7FBDA1FB;
+        Wed, 20 Nov 2019 02:49:37 -0800 (PST)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9B6D73F6C4;
+        Wed, 20 Nov 2019 02:49:36 -0800 (PST)
+Date:   Wed, 20 Nov 2019 10:49:34 +0000
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 04/12] ia64: Replace cpu_down with freeze_secondary_cpus
+Message-ID: <20191120104933.e6gkdjwkzulm6uak@e107158-lin.cambridge.arm.com>
+References: <20191030153837.18107-1-qais.yousef@arm.com>
+ <20191030153837.18107-5-qais.yousef@arm.com>
+ <alpine.DEB.2.21.1911192318400.6731@nanos.tec.linutronix.de>
+ <20191119223234.ov323rcln4slj7br@e107158-lin.cambridge.arm.com>
+ <alpine.DEB.2.21.1911192344110.6731@nanos.tec.linutronix.de>
+ <20191119231912.viwqgcyzttoo5eou@e107158-lin.cambridge.arm.com>
+ <alpine.DEB.2.21.1911200944590.6731@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1911200944590.6731@nanos.tec.linutronix.de>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 20 Nov 2019, Marc Zyngier wrote:
-
-> On 2019-11-20 09:34, Thomas Gleixner wrote:
-> > On Wed, 20 Nov 2019, Yash Shah wrote:
+On 11/20/19 09:46, Thomas Gleixner wrote:
+> On Tue, 19 Nov 2019, Qais Yousef wrote:
+> > On 11/19/19 23:59, Thomas Gleixner wrote:
+> > > On Tue, 19 Nov 2019, Qais Yousef wrote:
+> > > > My plan was to simply make freeze_secondary_cpus() available and protected by
+> > > > CONFIG_SMP only instead.
+> > > > 
+> > > > Good plan?
+> > > 
+> > > No. freeze_secondary_cpus() is really for hibernation. Look at the exit
+> > > conditions there.
 > > 
-> > > Add a new function irq_domain_translate_onecell() that is to be used as
-> > > the translate function in struct irq_domain_ops for the v2 IRQ API.
+> > Hmm do you mean the pm_wakeup_pending() abort?
 > > 
-> > What is the V2 IRQ API?
+> > In arm64 we machine_shutdown() calls disable_nonboot_cpus(), which in turn
+> > a wrapper around freeze_secondary_cpus() with 0 passed as an argument.
+> > 
+> > IIUC this means arm64 could fail to offline all CPUs on machine_shutdown(),
+> > correct?
 > 
-> I believe that's a reference to a rather misleading comment in irqdomain.h:
-> 
-> #ifdef	CONFIG_IRQ_DOMAIN_HIERARCHY
-> 	/* extended V2 interfaces to support hierarchy irq_domains */
-> 
-> which we could drop, as everything refers to hierarchical domain
-> support.
+> Looks like.
 
-Yes, which reminds me that we also need to update the horribly stale
-documentation of all this mess.
+Okay I'll double check and introduce a new function to be called from
+machine_down() for arm64 and ia64 if necessary.
 
-Thanks,
+Thanks
 
-	tglx
+--
+Qais Yousef
