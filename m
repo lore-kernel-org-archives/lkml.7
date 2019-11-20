@@ -2,220 +2,172 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF277C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:51:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E92DDC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:51:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BED34223D0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:51:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E5ww/s7b"
+	by mail.kernel.org (Postfix) with ESMTP id B9894223D0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:51:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574250708;
+	bh=fJL6xJRgZK2J6azQu5Bbs7i6OL7gxtv3W+Ya7In/6Og=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0WWmbaCKX93pqYIrI62748ecELfQa/6mxewAMTS2DF/AvJw3gm6mSt+12JsI8B4w7
+	 LUbSdILXj6hnHaKW/6qV2KCftY2dHwJjkI4JPTrRFdKw7yYysPRFdURk1Za25j1Z7t
+	 CmI+npH+qrnRFP1aQt9eJxF9Vi/eRnYEqG/0pnxQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729369AbfKTLve (ORCPT
+        id S1729379AbfKTLvr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 06:51:34 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:50674 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728665AbfKTLvd (ORCPT
+        Wed, 20 Nov 2019 06:51:47 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43891 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728753AbfKTLvr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 06:51:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574250691;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=iPxRqpnj1VRvKWjlC4bBmohXIj2CvgKB/Q/qWInRYCM=;
-        b=E5ww/s7b1kmsqwtcRi69ArP/ZnmY+xQxR5qZ7AaAwl8hp0wDrEjUwSO1vN7gJj8Jnrm7xh
-        b6L3FmkkX/502LMTbafW0IdG5ATObOgQekWayBZZfMOvbKHUD9qtJ351s2ZWLwU2h3g4zu
-        Ts1rGqrZU7ppGpWmEv4//zxez2RxU3A=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-101-xUOtt8sEOt6z4AwScdE2jA-1; Wed, 20 Nov 2019 06:51:30 -0500
-Received: by mail-qk1-f197.google.com with SMTP id s144so15639684qke.20
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 03:51:30 -0800 (PST)
+        Wed, 20 Nov 2019 06:51:47 -0500
+Received: by mail-wr1-f65.google.com with SMTP id n1so27758498wra.10
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 03:51:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=tI6OKEwlVvSFWzzP0j2qRSoJbuopPUtmq4V1NmM4b4c=;
+        b=SgdQoJPPepQK44LRX3SjvfpT3nspCWZKw+YmFBIb88MWhysL2JFk6j2A3ZvERYWNp+
+         GXIpsFAV9siIjtA3t7UdDMZuBe0bi5+5X178WIBKaGjQQGRawqKzuaRQVKV4pVc1LY+D
+         PRneOoJFokWHh+WKl4uy8r3arkmhojWveQXtOiil7y3tWyw0ehYZfQ87uwD+rvQEV75a
+         bw7eB3ApLir1z6mS74e1XkfEE86KGBq9qh45H+RQkVnRtq/kqHsd4LbuamSbLQ2mgniD
+         B44DQFAo4aksAJCyM1aUjOS0R6S3bHSx9E4aWv6Px5HTcQjlG5dcU47n3zsnYtELSc2F
+         PTAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CFyc/FUMDYyl2BocV0QKj5FHf/d/2FxPovJ0RWOX7+w=;
-        b=lbQ4ls9S/twveHJf5PR1i/OALvj85wfue9N6lrqlgs6H9IxqpZm9CiicDeBKEcQlLk
-         wUnuVzQIG++ASqBG1hmnvA5nnZ6Sl9AgLe8Ns6wtTMKePZGoAV8n/UhaZQ4geR/h8kqn
-         sVPQ0CgfwgmBqzLxH4uA+Pyc2+W6lcl6rY0IVQkqjxOrK3yN7FkJMDnEzI5hH0UJT396
-         ////+qupul3vtsS6WeNU+dlCnYbfyljB7jd9ylFiBiWSA3eSp+XjRVaEQo7YggN5yYOL
-         o6b2ma7zfUeSIbVyvXRQC3jF+kEgoKNkZU2cZy1K1W5LUqrf7W92ZW7QkRW8K2DqC6sm
-         8gaQ==
-X-Gm-Message-State: APjAAAX1wgxVC7ILbuB1AxeBg8ed2NQ/0nIV1t/mkDbLlx96D5AeiYAs
-        4s05KTjmWThFHg6C709XuIhfFYsR7qQzvle0ro0MXpl0HISnPVoPwvOZkWTm45cSJ7O8nPNbbbb
-        jLpB4K20aLGSGbcnCtYRpAhpVPlsBzFO6QvHn/p4/
-X-Received: by 2002:a05:6214:14f0:: with SMTP id k16mr2065699qvw.113.1574250689379;
-        Wed, 20 Nov 2019 03:51:29 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxmoVHi1aepvACHCY2OtChU4LEM17did3RPg+o9gU8lcAL0EutXabIB172KzXiQD117jaDtm40U40hXQku32kA=
-X-Received: by 2002:a05:6214:14f0:: with SMTP id k16mr2065670qvw.113.1574250689023;
- Wed, 20 Nov 2019 03:51:29 -0800 (PST)
-MIME-Version: 1.0
-References: <20191017121901.13699-1-kherbst@redhat.com> <20191119214955.GA223696@google.com>
- <CACO55tu+8VeyMw1Lb6QvNspaJm9LDgoRbooVhr0s3v9uBt=feg@mail.gmail.com>
- <20191120101816.GX11621@lahna.fi.intel.com> <CAJZ5v0g4vp1C+zHU5nOVnkGsOjBvLaphK1kK=qAT6b=mK8kpsA@mail.gmail.com>
- <20191120112212.GA11621@lahna.fi.intel.com> <CAJZ5v0in4VSULsfLshHxhNLf+NZxVQM0xx=hzdNa2X3FW=V7DA@mail.gmail.com>
-In-Reply-To: <CAJZ5v0in4VSULsfLshHxhNLf+NZxVQM0xx=hzdNa2X3FW=V7DA@mail.gmail.com>
-From:   Karol Herbst <kherbst@redhat.com>
-Date:   Wed, 20 Nov 2019 12:51:17 +0100
-Message-ID: <CACO55tsjj+xkDjubz1J=fsPecW4H_J8AaBTeaMm+NYjp8Kiq8g@mail.gmail.com>
-Subject: Re: [PATCH v4] pci: prevent putting nvidia GPUs into lower device
- states on certain intel bridges
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Mika Westerberg <mika.westerberg@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tI6OKEwlVvSFWzzP0j2qRSoJbuopPUtmq4V1NmM4b4c=;
+        b=WgsMza6lDQInAh31f17CItAKHZz2EUVjAw+YfBe705otrsExVIw+O7PgelAC4afk8V
+         hk8LY51AW57zAs81cS1mNT6HWM8IsqK6KVTtoMEy9w7a2JjzYtocqLcl7UdFdFnl+g0a
+         r5E8OBdqpkEuPzGTsuBBYplL5u02axP9//nOQLhFy4b2ZmY7n8qDI8s5DGRE3xz0auem
+         GMZvRhRX8ROj8kOm3qqmif5AKeodnrtpt/m50NyAJielZcMtrLjdtSoifyoZR+IKh/um
+         0bAUa0xiTuzFJCFwjDditSE/kYOh2FGSprW2Ny4/JjD58CE4piRJaBVVwSXg2riznEXr
+         nUzg==
+X-Gm-Message-State: APjAAAWt9dMB3+pDPJ4EU+jmtLZapOO2Q1yyZqyQsibJ/KtNus88KcDv
+        XPblw+TMGkDUMXs1BzdXVWQ=
+X-Google-Smtp-Source: APXvYqxIL2PtdFUess86i3VJ8hEapF4hXx7K/NYiOLuP5EkAOtpnTIF7JMYESjtU88fL+KJTIzSwqA==
+X-Received: by 2002:adf:df0e:: with SMTP id y14mr2117531wrl.377.1574250705104;
+        Wed, 20 Nov 2019 03:51:45 -0800 (PST)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id 11sm6358795wmi.8.2019.11.20.03.51.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Nov 2019 03:51:44 -0800 (PST)
+Date:   Wed, 20 Nov 2019 12:51:42 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Frederic Weisbecker <frederic@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Lyude Paul <lyude@redhat.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
         "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        Dave Airlie <airlied@gmail.com>,
-        Mario Limonciello <Mario.Limonciello@dell.com>
-X-MC-Unique: xUOtt8sEOt6z4AwScdE2jA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Rik van Riel <riel@surriel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Yauheni Kaliuta <yauheni.kaliuta@redhat.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH 1/6] sched/cputime: Support other fields on
+ kcpustat_field()
+Message-ID: <20191120115142.GA89662@gmail.com>
+References: <20191119232218.4206-1-frederic@kernel.org>
+ <20191119232218.4206-2-frederic@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191119232218.4206-2-frederic@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 12:48 PM Rafael J. Wysocki <rafael@kernel.org> wrot=
-e:
->
-> On Wed, Nov 20, 2019 at 12:22 PM Mika Westerberg
-> <mika.westerberg@intel.com> wrote:
-> >
-> > On Wed, Nov 20, 2019 at 11:52:22AM +0100, Rafael J. Wysocki wrote:
-> > > On Wed, Nov 20, 2019 at 11:18 AM Mika Westerberg
-> > > <mika.westerberg@intel.com> wrote:
-> > > >
-> > > > Hi Karol,
-> > > >
-> > > > On Tue, Nov 19, 2019 at 11:26:45PM +0100, Karol Herbst wrote:
-> > > > > On Tue, Nov 19, 2019 at 10:50 PM Bjorn Helgaas <helgaas@kernel.or=
-g> wrote:
-> > > > > >
-> > > > > > [+cc Dave]
-> > > > > >
-> > > > > > On Thu, Oct 17, 2019 at 02:19:01PM +0200, Karol Herbst wrote:
-> > > > > > > Fixes state transitions of Nvidia Pascal GPUs from D3cold int=
-o higher device
-> > > > > > > states.
-> > > > > > >
-> > > > > > > v2: convert to pci_dev quirk
-> > > > > > >     put a proper technical explanation of the issue as a in-c=
-ode comment
-> > > > > > > v3: disable it only for certain combinations of intel and nvi=
-dia hardware
-> > > > > > > v4: simplify quirk by setting flag on the GPU itself
-> > > > > >
-> > > > > > I have zero confidence that we understand the real problem, but=
- we do
-> > > > > > need to do something with this.  I'll merge it for v5.5 if we g=
-et the
-> > > > > > minor procedural stuff below straightened out.
-> > > > > >
-> > > > >
-> > > > > Thanks, and I agree with your statement, but at this point I thin=
-k
-> > > > > only Intel can help out digging deeper as I see no way to debug t=
-his
-> > > > > further.
-> > > >
-> > > > I don't have anything against this patch, as long as the quirk stay=
-s
-> > > > limited to the particular root port leading to the NVIDIA GPU. The
-> > > > reason why I think it should to be limited is that I'm pretty certa=
-in
-> > > > the problem is not in the root port itself. I have here a KBL based
-> > > > Thinkpad X1 Carbon 6th gen that can put the TBT controller into D3c=
-old
-> > > > (it is connected to PCH root port) and it wakes up there just fine,=
- so
-> > > > don't want to break that.
-> > > >
-> > > > Now, PCIe devices cannot go into D3cold all by themselves. They alw=
-ays
-> > > > need help from the platform side which is ACPI in this case. This i=
-s
-> > > > done by having the device to have _PR3 method that returns one or m=
-ore
-> > > > power resources that the OS is supposed to turn off when the device=
- is
-> > > > put into D3cold. All of that is implemented as form of ACPI methods=
- that
-> > > > pretty much do the hardware specific things that are outside of PCI=
-e
-> > > > spec to get the device into D3cold. At high level the _OFF() method
-> > > > causes the root port to broadcast PME_Turn_Off message that results=
- the
-> > > > link to enter L2/3 ready, it then asserts PERST, configures WAKE (b=
-oth
-> > > > can be GPIOs) and finally removes power (if the link goes into L3,
-> > > > otherwise it goes into L2).
-> > > >
-> > > > I think this is where the problem actually lies - the ASL methods t=
-hat
-> > > > are used to put the device into D3cold and back. We know that in Wi=
-ndows
-> > > > this all works fine so unless Windows quirks the root port the same=
- way
-> > > > there is another reason behind this.
-> > > >
-> > > > In case of Dell XPS 9560 (IIRC that's the machine you have) the
-> > > > corresponding power resource is called \_SB.PCI0.PEG0.PG00 and its
-> > > > _ON/_OFF methods end up calling PGON()/PGOF() accordingly. The meth=
-ods
-> > > > itself do lots of things and it is hard to follow the dissassembled
-> > > > ASL which does not have any comments but there are couple of things=
- that
-> > > > stand out where we may go into a different path. One of them is thi=
-s in
-> > > > the PGOF() method:
-> > > >
-> > > >    If (((OSYS <=3D 0x07D9) || ((OSYS =3D=3D 0x07DF) && (_REV =3D=3D=
- 0x05))))
-> > > >
-> > > > The ((OSYS =3D=3D 0x07DF) && (_REV =3D=3D 0x05)) checks specificall=
-y for Linux
-> > > > (see [1] and 18d78b64fddc ("ACPI / init: Make it possible to overri=
-de
-> > > > _REV")) so it might be that Dell people tested this at some point i=
-n
-> > > > Linux as well. Added Mario in case he has any ideas.
-> > > >
-> > > > Previously I suggested you to try the ACPI method tracing to see wh=
-at
-> > > > happens inside PGOF(). Did you have time to try it? It may provide =
-more
-> > > > information about that is happening inside those methods and hopefu=
-lly
-> > > > point us to the root cause.
-> > > >
-> > > > Also if you haven't tried already passing acpi_rev_override in the
-> > > > command line makes the _REV to return 5 so it should go into the "L=
-inux"
-> > > > path in PGOF().
-> > >
-> > > Oh, so does it look like we are trying to work around AML that tried
-> > > to work around some problematic behavior in Linux at one point?
-> >
-> > Yes, it looks like so if I read the ASL right.
->
-> OK, so that would call for a DMI-based quirk as the real cause for the
-> issue seems to be the AML in question, which means a firmware problem.
->
 
-And I disagree as this is a linux specific workaround and windows goes
-that path and succeeds. This firmware based workaround was added,
-because it broke on Linux.
+* Frederic Weisbecker <frederic@kernel.org> wrote:
 
+> Provide support for user, nice, guest and guest_nice fields through
+> kcpustat_field().
+> 
+> Whether we account the delta to a nice or not nice field is decided on
+> top of the nice value snapshot taken at the time we call kcpustat_field().
+> If the nice value of the task has been changed since the last vtime
+> update, we may have inacurrate distribution of the nice VS unnice
+> cputime.
+> 
+> However this is considered as a minor issue compared to the proper fix
+> that would involve interrupting the target on nice updates, which is
+> undesired on nohz_full CPUs.
+> 
+> Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+> Cc: Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Rik van Riel <riel@surriel.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Wanpeng Li <wanpengli@tencent.com>
+> Cc: Ingo Molnar <mingo@kernel.org>
+> ---
+>  kernel/sched/cputime.c | 53 +++++++++++++++++++++++++++++++++---------
+>  1 file changed, 42 insertions(+), 11 deletions(-)
+> 
+> diff --git a/kernel/sched/cputime.c b/kernel/sched/cputime.c
+> index e0cd20693ef5..b2cf544e2109 100644
+> --- a/kernel/sched/cputime.c
+> +++ b/kernel/sched/cputime.c
+> @@ -912,11 +912,21 @@ void task_cputime(struct task_struct *t, u64 *utime, u64 *stime)
+>  	} while (read_seqcount_retry(&vtime->seqcount, seq));
+>  }
+>  
+> +static u64 kcpustat_user_vtime(struct vtime *vtime)
+> +{
+> +	if (vtime->state == VTIME_USER)
+> +		return vtime->utime + vtime_delta(vtime);
+> +	else if (vtime->state == VTIME_GUEST)
+> +		return vtime->gtime + vtime_delta(vtime);
+> +	return 0;
+> +}
+> +
+>  static int kcpustat_field_vtime(u64 *cpustat,
+> -				struct vtime *vtime,
+> +				struct task_struct *tsk,
+>  				enum cpu_usage_stat usage,
+>  				int cpu, u64 *val)
+>  {
+> +	struct vtime *vtime = &tsk->vtime;
+>  	unsigned int seq;
+>  	int err;
+>  
+> @@ -946,9 +956,36 @@ static int kcpustat_field_vtime(u64 *cpustat,
+>  
+>  		*val = cpustat[usage];
+>  
+> -		if (vtime->state == VTIME_SYS)
+> -			*val += vtime->stime + vtime_delta(vtime);
+> -
+> +		/*
+> +		 * Nice VS unnice cputime accounting may be inaccurate if
+> +		 * the nice value has changed since the last vtime update.
+> +		 * But proper fix would involve interrupting target on nice
+> +		 * updates which is a no go on nohz_full.
+
+Well, we actually already interrupt the target in both sys_nice() and 
+sys_setpriority() etc. syscall variants: we call set_user_nice() which 
+calls resched_curr() and the task is sent an IPI and runs through a 
+reschedule.
+
+But ... I do agree that this kind of granularity of nice/non-nice 
+accounting doesn't really matter in practice: the changing of nice values 
+is a relatively low frequency operation on most systems.
+
+But nevertheless the comment should probably be updated to reflect this.
+
+Thanks,
+
+	Ingo
