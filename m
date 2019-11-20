@@ -2,215 +2,114 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D76E6C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 12:04:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 721C4C43141
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 12:06:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3C0C223D1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 12:04:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A78422311
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 12:06:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574251496;
-	bh=6dGWB4xvEdJyCYEeTQJzkZ9l0FigWvBJfhutzJxqCDA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YImG4cSMa1RgPoAt1kSs2GyOCB19JNozVF/2Sb5uB4/vmL1OeV/glV/GYQhqC9XK8
-	 do10CIvprdfNKSNTG6jkpJiiIBv4sN0GSMAR5DLC/zjzGBjK1IKIRh4ia9gIA58hdb
-	 P9t1h7evmikMDRxCoOzvEHzOAXEEHlurtcIDi14k=
+	s=default; t=1574251600;
+	bh=JcM4V7QiTMGd/hQNkQtYNyLH0bkfKtNQ0eTkMJQT6qU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=sPL7TqZvXz+WnNt+++KCeVj1xQ2JkhWz81QaM2I2TqT1Ucwq+fa2Vz0tZD73hc01V
+	 pN6BFc+JDdwzNStPC28M6XOTqZJQHmjYvV3nmWmYeouC0apOWNlEdp8CErJZUA0DuE
+	 p7xSEydoa5sYs/R0D6O6Ixnan0B5iG8f8Iibgu0w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729515AbfKTMEz (ORCPT
+        id S1729159AbfKTMGj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 07:04:55 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46154 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726689AbfKTMEz (ORCPT
+        Wed, 20 Nov 2019 07:06:39 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:34344 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726689AbfKTMGj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 07:04:55 -0500
-Received: by mail-wr1-f68.google.com with SMTP id b3so27836609wrs.13
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 04:04:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Q4VLJjVAb59aTdw6yj5OaPsr8v0tuOEHw/RKF7/OFl0=;
-        b=as7VlJ10/EVIXlHjWlpNebZmejIlclfNEgtMwra7/2dm5AgLoa+PJjKoSFDNQNrjBj
-         f4FjTjobJoHNPllnsX0k6DreDQ62ZI8sd0djbtQOkOuUIDTE+m5/Gs0oCc887Q/0axBf
-         rGp9h7/FwpTM9Zv8aZHTV+6xKgbJjGlNFSGwE+pzE7r1EIDxshjK2YHOQon4uwkG1a0F
-         6tUtoMF/PMd6cZh3c5aaCCBIziaHnYn7m3ZFdw1kHcHsWEpW6JiQOW4i+kDV9TXLq/yp
-         MXdUdzRoKLh22lzJttByIz7NFyXzdygtaMObJc1n2GSOTVTH0/EIG1UyhBaNjNPWvtCZ
-         dq0g==
+        Wed, 20 Nov 2019 07:06:39 -0500
+Received: by mail-oi1-f196.google.com with SMTP id l202so22292064oig.1;
+        Wed, 20 Nov 2019 04:06:38 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Q4VLJjVAb59aTdw6yj5OaPsr8v0tuOEHw/RKF7/OFl0=;
-        b=hqrUaUTWy5+jzmGrk7ahFh/MoPphwIKhmU6DuVi5gmgWloKp5D9SAEaxL5jHgc/lql
-         F+Mjk1cKGelDy22l6Wrk7M/tkSOnH4cA5X3HuAU+mdm4mZ03vrCDsnxIETtcynYakNv/
-         OICBC5u1EYsZp596bmSs5O3VG5NmcMbcazL24ODwWwEAauPfGVxOIzR9B/hq1R4mj/W7
-         lYbRAnMUTZph26L0VQVkvmDtlf9utr4jmkM/nLEmKomQvoDwOcZlrLwyej6gn/nixJZ6
-         fC6LNaGsMkEUPBKCjiFw6hopDRONRrYIgZErkqzPi7S1vwsvb3+KOTfZxdJyS/uDvd3r
-         f+uQ==
-X-Gm-Message-State: APjAAAUV3PcJMR2DR+VjIR+T9+aasKrvzmxFCqDNWkSRdPyYO1Hu3Vat
-        AOl532DscB0hnNVRnDyeHuk=
-X-Google-Smtp-Source: APXvYqwnAZgW4v0hBpoaQFd0aQzOBvzcUxmTh13c5BFpZdfj1jcCvSh5SCngiigROa7TWZwpBiBz+w==
-X-Received: by 2002:adf:fd85:: with SMTP id d5mr2911872wrr.101.1574251492368;
-        Wed, 20 Nov 2019 04:04:52 -0800 (PST)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id y16sm30915322wro.25.2019.11.20.04.04.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Nov 2019 04:04:51 -0800 (PST)
-Date:   Wed, 20 Nov 2019 13:04:49 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Frederic Weisbecker <frederic@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Rik van Riel <riel@surriel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Yauheni Kaliuta <yauheni.kaliuta@redhat.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH 2/6] sched/vtime: Bring all-in-one kcpustat accessor for
- vtime fields
-Message-ID: <20191120120449.GB89662@gmail.com>
-References: <20191119232218.4206-1-frederic@kernel.org>
- <20191119232218.4206-3-frederic@kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ElT7EJNqtwpJJU4QjMYGJbxkB5AWzSyGEgl7I/cinCY=;
+        b=hr58LFCDCSzTnyNwpoB7s6lVEQK1tD0HPWHIS2n6GAB5ej72KyYoWxDVPuG6sNHjvs
+         +i4tXFgQDVRylOpu3hf2FssZKNbIqbCsa+E3BEmzYRP7vTR0cSph3tIUaYZykugeOW7P
+         t90QAVn3U8koe1EJuWLYgSdBZuN4mMCyj80HpBMtqiBu84H0j+QJ2IBZwEhnD8rQIrck
+         HV9KWTgi7j6l0PYBDAA74o09F2kZquV3ek0kCoNwOj4Fqfsxc0Pvc0mZoWxsux38nqHW
+         HC3GbzvFznH8A1mjyj8cu9E5jHkPsW4KnCfqyBuEE+DyDbe5pENwkX16vE9xfYgW75Ue
+         HiuQ==
+X-Gm-Message-State: APjAAAVuz/wWxvyOS57hTEz4oFSryCNSqyIZ23j8fGWrhg4ZHQnRPkbS
+        T4KZbAWVlIqDB/GGVyH3dtzEMreRSc4rHPhnuwE=
+X-Google-Smtp-Source: APXvYqxheneYqbQjWsEAfSkE2ZQbClubvVZBCaL5vjr7E9PZ5SxHyJLeCYrf4NpLC+8pv/qSSK7clExZOkJduiPveC8=
+X-Received: by 2002:aca:c753:: with SMTP id x80mr2352248oif.115.1574251597887;
+ Wed, 20 Nov 2019 04:06:37 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191119232218.4206-3-frederic@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191017121901.13699-1-kherbst@redhat.com> <20191119214955.GA223696@google.com>
+ <CACO55tu+8VeyMw1Lb6QvNspaJm9LDgoRbooVhr0s3v9uBt=feg@mail.gmail.com>
+ <20191120101816.GX11621@lahna.fi.intel.com> <CAJZ5v0g4vp1C+zHU5nOVnkGsOjBvLaphK1kK=qAT6b=mK8kpsA@mail.gmail.com>
+ <20191120112212.GA11621@lahna.fi.intel.com> <CAJZ5v0in4VSULsfLshHxhNLf+NZxVQM0xx=hzdNa2X3FW=V7DA@mail.gmail.com>
+ <CACO55tsjj+xkDjubz1J=fsPecW4H_J8AaBTeaMm+NYjp8Kiq8g@mail.gmail.com>
+In-Reply-To: <CACO55tsjj+xkDjubz1J=fsPecW4H_J8AaBTeaMm+NYjp8Kiq8g@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 20 Nov 2019 13:06:26 +0100
+Message-ID: <CAJZ5v0ithxMPK2YxfTUx_Ygpze2FMDJ6LwKwJb2vx89dfgHX_A@mail.gmail.com>
+Subject: Re: [PATCH v4] pci: prevent putting nvidia GPUs into lower device
+ states on certain intel bridges
+To:     Karol Herbst <kherbst@redhat.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Mika Westerberg <mika.westerberg@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lyude Paul <lyude@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        Dave Airlie <airlied@gmail.com>,
+        Mario Limonciello <Mario.Limonciello@dell.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Nov 20, 2019 at 12:51 PM Karol Herbst <kherbst@redhat.com> wrote:
+>
+> On Wed, Nov 20, 2019 at 12:48 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> >
+> > On Wed, Nov 20, 2019 at 12:22 PM Mika Westerberg
+> > <mika.westerberg@intel.com> wrote:
+> > >
+> > > On Wed, Nov 20, 2019 at 11:52:22AM +0100, Rafael J. Wysocki wrote:
+> > > > On Wed, Nov 20, 2019 at 11:18 AM Mika Westerberg
+> > > > <mika.westerberg@intel.com> wrote:
+> > > > >
 
-* Frederic Weisbecker <frederic@kernel.org> wrote:
+[cut]
 
-> Many callsites want to fetch the values of system, user, user_nice, guest
-> or guest_nice kcpustat fields altogether or at least a pair of these.
-> 
-> In that case calling kcpustat_field() for each requested field brings
-> unecessary overhead when we could fetch all of them in a row.
-> 
-> So provide kcpustat_cputime() that fetches all vtime sensitive fields
-> under the same RCU and seqcount block.
-> 
-> Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-> Cc: Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Rik van Riel <riel@surriel.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Wanpeng Li <wanpengli@tencent.com>
-> Cc: Ingo Molnar <mingo@kernel.org>
-> ---
->  include/linux/kernel_stat.h |  23 ++++++
->  kernel/sched/cputime.c      | 139 ++++++++++++++++++++++++++++++------
->  2 files changed, 142 insertions(+), 20 deletions(-)
-> 
-> diff --git a/include/linux/kernel_stat.h b/include/linux/kernel_stat.h
-> index 79781196eb25..6bd70e464c61 100644
-> --- a/include/linux/kernel_stat.h
-> +++ b/include/linux/kernel_stat.h
-> @@ -78,15 +78,38 @@ static inline unsigned int kstat_cpu_irqs_sum(unsigned int cpu)
->  	return kstat_cpu(cpu).irqs_sum;
->  }
->  
-> +
-> +static inline void kcpustat_cputime_raw(u64 *cpustat, u64 *user, u64 *nice,
-> +					u64 *system, u64 *guest, u64 *guest_nice)
-> +{
-> +	*user = cpustat[CPUTIME_USER];
-> +	*nice = cpustat[CPUTIME_NICE];
-> +	*system = cpustat[CPUTIME_SYSTEM];
-> +	*guest = cpustat[CPUTIME_GUEST];
-> +	*guest_nice = cpustat[CPUTIME_GUEST_NICE];
+> > > >
+> > > > Oh, so does it look like we are trying to work around AML that tried
+> > > > to work around some problematic behavior in Linux at one point?
+> > >
+> > > Yes, it looks like so if I read the ASL right.
+> >
+> > OK, so that would call for a DMI-based quirk as the real cause for the
+> > issue seems to be the AML in question, which means a firmware problem.
+> >
+>
+> And I disagree as this is a linux specific workaround and windows goes
+> that path and succeeds. This firmware based workaround was added,
+> because it broke on Linux.
 
-Could the 'cpustat' pointer be constified?
+Apparently so at the time it was added, but would it still break after
+the kernel changes made since then?
 
-Also, please:
+Moreover, has it not become harmful now?  IOW, wouldn't it work after
+removing the "Linux workaround" from the AML?
 
-> +	*user	    = cpustat[CPUTIME_USER];
-> +	*nice	    = cpustat[CPUTIME_NICE];
-> +	*system	    = cpustat[CPUTIME_SYSTEM];
-> +	*guest	    = cpustat[CPUTIME_GUEST];
-> +	*guest_nice = cpustat[CPUTIME_GUEST_NICE];
-
-More pleasing to look at and easier to verify as well.
-
-> +static int vtime_state_check(struct vtime *vtime, int cpu)
-> +{
-> +	/*
-> +	 * We raced against context switch, fetch the
-> +	 * kcpustat task again.
-> +	 */
-
-s/against context switch
- /against a context switch
-
-> +void kcpustat_cputime(struct kernel_cpustat *kcpustat, int cpu,
-> +		      u64 *user, u64 *nice, u64 *system,
-> +		      u64 *guest, u64 *guest_nice)
-> +{
-> +	u64 *cpustat = kcpustat->cpustat;
-> +	struct rq *rq;
-> +	int err;
-> +
-> +	if (!vtime_accounting_enabled_cpu(cpu)) {
-> +		kcpustat_cputime_raw(cpustat, user, nice,
-> +				     system, guest, guest_nice);
-> +		return;
-> +	}
-> +
-> +	rq = cpu_rq(cpu);
-> +
-> +	for (;;) {
-> +		struct task_struct *curr;
-> +
-> +		rcu_read_lock();
-> +		curr = rcu_dereference(rq->curr);
-> +		if (WARN_ON_ONCE(!curr)) {
-> +			rcu_read_unlock();
-> +			kcpustat_cputime_raw(cpustat, user, nice,
-> +					     system, guest, guest_nice);
-> +			return;
-> +		}
-> +
-> +		err = kcpustat_cputime_vtime(cpustat, curr, cpu, user,
-> +					     nice, system, guest, guest_nice);
-> +		rcu_read_unlock();
-> +
-> +		if (!err)
-> +			return;
-> +
-> +		cpu_relax();
-> +	}
-> +}
-> +EXPORT_SYMBOL_GPL(kcpustat_cputime);
-
-I'm wondering whether it's worth introducing a helper structure for this 
-train of parameters: user, nice, system, guest, guest_nice?
-
-We also have similar constructs in other places:
-
-+               u64 cpu_user, cpu_nice, cpu_sys, cpu_guest, cpu_guest_nice;
-
-But more broadly, what do we gain by passing along a quartet of pointers, 
-while we could also just use a 'struct kernel_cpustat' and store the 
-values there naturally?
-
-Yes, it's larger, because it also has 5 other fields - but we lose much 
-of the space savings due to always passing along the 4 pointers already.
-
-So I really think the parameter passing should be organized better here. 
-This probably affects similar cpustat functions as well.
-
-Thanks,
-
-	Ingo
+The only way to verify that I can see would be to run the system with
+custom ACPI tables without the "Linux workaround" in the AML in
+question.
