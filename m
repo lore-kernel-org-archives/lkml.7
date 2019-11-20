@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38A49C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:43:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D299BC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:43:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DAA722529
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:43:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7E3622528
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:43:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574257384;
-	bh=tj7aREoePo3wiGev6ErJcVFF7svKLaNJ+I5fiiWs4hw=;
+	s=default; t=1574257388;
+	bh=PWiMiIEwJf/JzLtDh41p7WDHax5VfsbHhUXiIDTL3Sw=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=deHrH59szGQjbf1hz6l1pR0tllJoSPbwS71aJxUF4VWMbju0wlYRT4eLQVol4VJ5y
-	 Ekx6A7DYnUK3Qu7I+pVF9YpPZ+89SQJ0YGB6+KZhS4/v4VxmJ0L4UfItEmoPOG8wSE
-	 jKVCD+KHX0Ga7sECGhtmHy6IWGUHZIkjUPT0kAtI=
+	b=bJs0I+QdJNR04dSMplRhOC6NdfziMPacZ8Bem/NI6QVHBPbiTriRT5+DjVf6szqAr
+	 4hWLAN1n2vqq3LeZLweMTAKeNKKYZFzhVU3qFeOP11yMhLXAS9HJZ9riu39xD1j6bJ
+	 xhQiyFBdBAhyDW/kv84JO/UcfCTRftgAOFrm710g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731463AbfKTNnD (ORCPT
+        id S1731470AbfKTNnH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 08:43:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50912 "EHLO mail.kernel.org"
+        Wed, 20 Nov 2019 08:43:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730428AbfKTNnB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 08:43:01 -0500
+        id S1730467AbfKTNnF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 08:43:05 -0500
 Received: from localhost.localdomain (unknown [118.189.143.39])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF33922528;
-        Wed, 20 Nov 2019 13:42:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4264B22529;
+        Wed, 20 Nov 2019 13:43:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574257381;
-        bh=tj7aREoePo3wiGev6ErJcVFF7svKLaNJ+I5fiiWs4hw=;
+        s=default; t=1574257385;
+        bh=PWiMiIEwJf/JzLtDh41p7WDHax5VfsbHhUXiIDTL3Sw=;
         h=From:To:Cc:Subject:Date:From;
-        b=Bw64QoYr/t/QLbOTA7PZ3pCGnTvQ3DdsC3H5ObrDHvZvhYisTdrGoZ1I1TAc2caBT
-         LHfnurBG8UTCmucj4UYBVBRfAEyvg1pVA347lcqn3EMu6sQeSWfEhnu7fo7RhydS+h
-         TEIWXlc6cvJlRBxtuc2vHQ3FkBii1tRvFB5kq1JI=
+        b=cOkS0uhSL/YfZabJXDSnCXHedQOsy+ae07FbIwVzgQD8qTVF+Vh9eRQELn9fspmEA
+         l4JGtnbHpKUQTZJmiDC9Pg1yAwqgE2ULYEKFnGLXgWZRjP4wkJTlS1Ll0fqFzR2I4N
+         DQ4xEqx33uMxDOeRkA969RsTMplg3r9c1BYonU/g=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: [PATCH] drivers: base: Fix Kconfig indentation
-Date:   Wed, 20 Nov 2019 21:42:56 +0800
-Message-Id: <20191120134256.16186-1-krzk@kernel.org>
+        Miguel Ojeda Sandonis <miguel.ojeda.sandonis@gmail.com>
+Subject: [PATCH] auxdisplay: Fix Kconfig indentation
+Date:   Wed, 20 Nov 2019 21:43:01 +0800
+Message-Id: <20191120134301.16244-1-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -60,22 +58,73 @@ coding style with command like:
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/base/firmware_loader/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/auxdisplay/Kconfig | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/base/firmware_loader/Kconfig b/drivers/base/firmware_loader/Kconfig
-index 33e6552ddbb6..5b24f3959255 100644
---- a/drivers/base/firmware_loader/Kconfig
-+++ b/drivers/base/firmware_loader/Kconfig
-@@ -148,7 +148,7 @@ config FW_LOADER_USER_HELPER_FALLBACK
- 	  to be used for all firmware requests which explicitly do not disable a
- 	  a fallback mechanism. Firmware calls which do prohibit a fallback
- 	  mechanism is request_firmware_direct(). This option is kept for
--          backward compatibility purposes given this precise mechanism can also
-+	  backward compatibility purposes given this precise mechanism can also
- 	  be enabled by setting the proc sysctl value to true:
+diff --git a/drivers/auxdisplay/Kconfig b/drivers/auxdisplay/Kconfig
+index b8313a04422d..a92be39825f6 100644
+--- a/drivers/auxdisplay/Kconfig
++++ b/drivers/auxdisplay/Kconfig
+@@ -329,7 +329,7 @@ config PANEL_LCD_PROTO
  
- 	       /proc/sys/kernel/firmware_config/force_sysfs_fallback
+ config PANEL_LCD_PIN_E
+ 	depends on PANEL_PROFILE="0" && PANEL_LCD="1" && PANEL_LCD_PROTO="0"
+-        int "Parallel port pin number & polarity connected to the LCD E signal (-17...17) "
++	int "Parallel port pin number & polarity connected to the LCD E signal (-17...17) "
+ 	range -17 17
+ 	default 14
+ 	---help---
+@@ -344,7 +344,7 @@ config PANEL_LCD_PIN_E
+ 
+ config PANEL_LCD_PIN_RS
+ 	depends on PANEL_PROFILE="0" && PANEL_LCD="1" && PANEL_LCD_PROTO="0"
+-        int "Parallel port pin number & polarity connected to the LCD RS signal (-17...17) "
++	int "Parallel port pin number & polarity connected to the LCD RS signal (-17...17) "
+ 	range -17 17
+ 	default 17
+ 	---help---
+@@ -359,7 +359,7 @@ config PANEL_LCD_PIN_RS
+ 
+ config PANEL_LCD_PIN_RW
+ 	depends on PANEL_PROFILE="0" && PANEL_LCD="1" && PANEL_LCD_PROTO="0"
+-        int "Parallel port pin number & polarity connected to the LCD RW signal (-17...17) "
++	int "Parallel port pin number & polarity connected to the LCD RW signal (-17...17) "
+ 	range -17 17
+ 	default 16
+ 	---help---
+@@ -374,7 +374,7 @@ config PANEL_LCD_PIN_RW
+ 
+ config PANEL_LCD_PIN_SCL
+ 	depends on PANEL_PROFILE="0" && PANEL_LCD="1" && PANEL_LCD_PROTO!="0"
+-        int "Parallel port pin number & polarity connected to the LCD SCL signal (-17...17) "
++	int "Parallel port pin number & polarity connected to the LCD SCL signal (-17...17) "
+ 	range -17 17
+ 	default 1
+ 	---help---
+@@ -389,7 +389,7 @@ config PANEL_LCD_PIN_SCL
+ 
+ config PANEL_LCD_PIN_SDA
+ 	depends on PANEL_PROFILE="0" && PANEL_LCD="1" && PANEL_LCD_PROTO!="0"
+-        int "Parallel port pin number & polarity connected to the LCD SDA signal (-17...17) "
++	int "Parallel port pin number & polarity connected to the LCD SDA signal (-17...17) "
+ 	range -17 17
+ 	default 2
+ 	---help---
+@@ -404,12 +404,12 @@ config PANEL_LCD_PIN_SDA
+ 
+ config PANEL_LCD_PIN_BL
+ 	depends on PANEL_PROFILE="0" && PANEL_LCD="1"
+-        int "Parallel port pin number & polarity connected to the LCD backlight signal (-17...17) "
++	int "Parallel port pin number & polarity connected to the LCD backlight signal (-17...17) "
+ 	range -17 17
+ 	default 0
+ 	---help---
+ 	  This describes the number of the parallel port pin to which the LCD 'BL' signal
+-          has been connected. It can be :
++	  has been connected. It can be :
+ 
+ 	          0 : no connection (eg: connected to ground)
+ 	      1..17 : directly connected to any of these pins on the DB25 plug
 -- 
 2.17.1
 
