@@ -2,32 +2,32 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_SBL,URIBL_SBL_A
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E733C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFAF2C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:41:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B4D520709
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:41:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C55B020709
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:41:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732101AbfKTPld (ORCPT
+        id S1731862AbfKTPkU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 10:41:33 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:53020 "EHLO
+        Wed, 20 Nov 2019 10:40:20 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:52510 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731851AbfKTPkV (ORCPT
+        by vger.kernel.org with ESMTP id S1729402AbfKTPkO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 10:40:21 -0500
+        Wed, 20 Nov 2019 10:40:14 -0500
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iXS5V-0004ay-Bv; Wed, 20 Nov 2019 15:40:13 +0000
+        id 1iXS5T-0004a2-ND; Wed, 20 Nov 2019 15:40:11 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iXS5V-0004M4-2e; Wed, 20 Nov 2019 15:40:13 +0000
+        id 1iXS5T-0004GU-19; Wed, 20 Nov 2019 15:40:11 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,20 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        syzbot+55be5f513bed37fc4367@syzkaller.appspotmail.com,
-        "David S. Miller" <davem@davemloft.net>,
-        "Terry Lam" <vtlam@google.com>,
-        "Cong Wang" <xiyou.wangcong@gmail.com>,
-        syzbot+041483004a7f45f1f20a@syzkaller.appspotmail.com,
-        "Jiri Pirko" <jiri@resnulli.us>,
-        syzbot+bc6297c11f19ee807dc2@syzkaller.appspotmail.com,
-        "Jamal Hadi Salim" <jhs@mojatatu.com>
-Date:   Wed, 20 Nov 2019 15:38:18 +0000
-Message-ID: <lsq.1574264230.375715895@decadent.org.uk>
+        "Will Deacon" <will@kernel.org>
+Date:   Wed, 20 Nov 2019 15:37:23 +0000
+Message-ID: <lsq.1574264230.929701417@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 68/83] sch_hhf: ensure quantum and hhf_non_hh_weight
- are non-zero
+Subject: [PATCH 3.16 13/83] arm64: compat: Allow single-byte watchpoints
+ on all addresses
 In-Reply-To: <lsq.1574264230.280218497@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -62,39 +55,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Will Deacon <will@kernel.org>
 
-commit d4d6ec6dac07f263f06d847d6f732d6855522845 upstream.
+commit 849adec41203ac5837c40c2d7e08490ffdef3c2c upstream.
 
-In case of TCA_HHF_NON_HH_WEIGHT or TCA_HHF_QUANTUM is zero,
-it would make no progress inside the loop in hhf_dequeue() thus
-kernel would get stuck.
+Commit d968d2b801d8 ("ARM: 7497/1: hw_breakpoint: allow single-byte
+watchpoints on all addresses") changed the validation requirements for
+hardware watchpoints on arch/arm/. Update our compat layer to implement
+the same relaxation.
 
-Fix this by checking this corner case in hhf_change().
-
-Fixes: 10239edf86f1 ("net-qdisc-hhf: Heavy-Hitter Filter (HHF) qdisc")
-Reported-by: syzbot+bc6297c11f19ee807dc2@syzkaller.appspotmail.com
-Reported-by: syzbot+041483004a7f45f1f20a@syzkaller.appspotmail.com
-Reported-by: syzbot+55be5f513bed37fc4367@syzkaller.appspotmail.com
-Cc: Jamal Hadi Salim <jhs@mojatatu.com>
-Cc: Jiri Pirko <jiri@resnulli.us>
-Cc: Terry Lam <vtlam@google.com>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Will Deacon <will@kernel.org>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- net/sched/sch_hhf.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/kernel/hw_breakpoint.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/net/sched/sch_hhf.c
-+++ b/net/sched/sch_hhf.c
-@@ -560,7 +560,7 @@ static int hhf_change(struct Qdisc *sch,
- 		new_hhf_non_hh_weight = nla_get_u32(tb[TCA_HHF_NON_HH_WEIGHT]);
- 
- 	non_hh_quantum = (u64)new_quantum * new_hhf_non_hh_weight;
--	if (non_hh_quantum > INT_MAX)
-+	if (non_hh_quantum == 0 || non_hh_quantum > INT_MAX)
- 		return -EINVAL;
- 
- 	sch_tree_lock(sch);
+--- a/arch/arm64/kernel/hw_breakpoint.c
++++ b/arch/arm64/kernel/hw_breakpoint.c
+@@ -501,13 +501,14 @@ int arch_validate_hwbkpt_settings(struct
+ 			/* Aligned */
+ 			break;
+ 		case 1:
+-			/* Allow single byte watchpoint. */
+-			if (info->ctrl.len == ARM_BREAKPOINT_LEN_1)
+-				break;
+ 		case 2:
+ 			/* Allow halfword watchpoints and breakpoints. */
+ 			if (info->ctrl.len == ARM_BREAKPOINT_LEN_2)
+ 				break;
++		case 3:
++			/* Allow single byte watchpoint. */
++			if (info->ctrl.len == ARM_BREAKPOINT_LEN_1)
++				break;
+ 		default:
+ 			return -EINVAL;
+ 		}
 
