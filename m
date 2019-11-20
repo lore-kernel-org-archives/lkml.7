@@ -2,238 +2,189 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3126C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 08:34:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B26FFC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 08:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F46E22360
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 08:34:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="tIc0hGv8"
+	by mail.kernel.org (Postfix) with ESMTP id 86E44223B0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 08:41:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727941AbfKTIev (ORCPT
+        id S1727952AbfKTIlk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 03:34:51 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:47151 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726687AbfKTIev (ORCPT
+        Wed, 20 Nov 2019 03:41:40 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:7996 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726687AbfKTIlk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 03:34:51 -0500
-X-UUID: 011dff86c9a24e339ba061cd43622e34-20191120
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=M2UT7PsbBttLm3d7KtnkpApkgoUAHdiQRcC9lfgSQY4=;
-        b=tIc0hGv85d75/m3EVc4EHLT28WAsA0Eog+cs2ueT1CAJTs8wD7TkAgFIFQSqwrJe9Zix2dxzDEjzqFDkB45mfr9ITFApSCeQ5S58uTx7PHSPwgG7wHw8Tr9UAOHA1Q7c1Q6yYUtGfSVxLehaJkBqoW4/MYcQNdvB+kija5AIHGY=;
-X-UUID: 011dff86c9a24e339ba061cd43622e34-20191120
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
-        (envelope-from <walter-zh.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1433983432; Wed, 20 Nov 2019 16:34:43 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 20 Nov 2019 16:34:37 +0800
-Received: from [172.21.84.99] (172.21.84.99) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 20 Nov 2019 16:34:48 +0800
-Message-ID: <1574238882.20045.2.camel@mtksdccf07>
-Subject: Re: [PATCH v4 1/2] kasan: detect negative size in memory operation
- function
-From:   Walter Wu <walter-zh.wu@mediatek.com>
-To:     Andrey Ryabinin <aryabinin@virtuozzo.com>
-CC:     Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <kasan-dev@googlegroups.com>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        <linux-mediatek@lists.infradead.org>
-Date:   Wed, 20 Nov 2019 16:34:42 +0800
-In-Reply-To: <20191112065302.7015-1-walter-zh.wu@mediatek.com>
-References: <20191112065302.7015-1-walter-zh.wu@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Wed, 20 Nov 2019 03:41:40 -0500
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAK8WRwj147694
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 03:41:39 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wact81wvd-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 03:41:38 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <kjain@linux.ibm.com>;
+        Wed, 20 Nov 2019 08:41:34 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 20 Nov 2019 08:41:30 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAK8fTeS54919314
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 20 Nov 2019 08:41:29 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E5AB0A4062;
+        Wed, 20 Nov 2019 08:41:28 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BF583A4054;
+        Wed, 20 Nov 2019 08:41:26 +0000 (GMT)
+Received: from localhost.in.ibm.com (unknown [9.124.35.61])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 20 Nov 2019 08:41:26 +0000 (GMT)
+From:   Kajol Jain <kjain@linux.ibm.com>
+To:     acme@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        kjain@linux.ibm.com,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Subject: [PATCH] tools/perf/metricgroup: Fix printing event names of metric group with multiple events
+Date:   Wed, 20 Nov 2019 14:10:59 +0530
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19112008-0020-0000-0000-0000038C3927
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19112008-0021-0000-0000-000021E2698F
+Message-Id: <20191120084059.24458-1-kjain@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-20_02:2019-11-15,2019-11-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ priorityscore=1501 phishscore=0 mlxlogscore=999 suspectscore=1
+ adultscore=0 mlxscore=0 bulkscore=0 clxscore=1011 spamscore=0
+ malwarescore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-1910280000 definitions=main-1911200079
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDE5LTExLTEyIGF0IDE0OjUzICswODAwLCBXYWx0ZXIgV3Ugd3JvdGU6DQo+IEtB
-U0FOIG1pc3NlZCBkZXRlY3Rpbmcgc2l6ZSBpcyBhIG5lZ2F0aXZlIG51bWJlciBpbiBtZW1zZXQo
-KSwgbWVtY3B5KCksDQo+IGFuZCBtZW1tb3ZlKCksIGl0IHdpbGwgY2F1c2Ugb3V0LW9mLWJvdW5k
-cyBidWcuIFNvIG5lZWRzIHRvIGJlIGRldGVjdGVkDQo+IGJ5IEtBU0FOLg0KPiANCj4gSWYgc2l6
-ZSBpcyBhIG5lZ2F0aXZlIG51bWJlciwgdGhlbiBpdCBoYXMgYSByZWFzb24gdG8gYmUgZGVmaW5l
-ZCBhcw0KPiBvdXQtb2YtYm91bmRzIGJ1ZyB0eXBlLg0KPiBDYXN0aW5nIG5lZ2F0aXZlIG51bWJl
-cnMgdG8gc2l6ZV90IHdvdWxkIGluZGVlZCB0dXJuIHVwIGFzDQo+IGEgbGFyZ2Ugc2l6ZV90IGFu
-ZCBpdHMgdmFsdWUgd2lsbCBiZSBsYXJnZXIgdGhhbiBVTE9OR19NQVgvMiwNCj4gc28gdGhhdCB0
-aGlzIGNhbiBxdWFsaWZ5IGFzIG91dC1vZi1ib3VuZHMuDQo+IA0KPiBLQVNBTiByZXBvcnQgaXMg
-c2hvd24gYmVsb3c6DQo+IA0KPiAgQlVHOiBLQVNBTjogb3V0LW9mLWJvdW5kcyBpbiBrbWFsbG9j
-X21lbW1vdmVfaW52YWxpZF9zaXplKzB4NzAvMHhhMA0KPiAgUmVhZCBvZiBzaXplIDE4NDQ2NzQ0
-MDczNzA5NTUxNjA4IGF0IGFkZHIgZmZmZmZmODA2OTY2MDkwNCBieSB0YXNrIGNhdC83Mg0KPiAN
-Cj4gIENQVTogMiBQSUQ6IDcyIENvbW06IGNhdCBOb3QgdGFpbnRlZCA1LjQuMC1yYzEtbmV4dC0y
-MDE5MTAwNGFqYi0wMDAwMS1nZGI4YWYyZjM3MmIyLWRpcnR5ICMxDQo+ICBIYXJkd2FyZSBuYW1l
-OiBsaW51eCxkdW1teS12aXJ0IChEVCkNCj4gIENhbGwgdHJhY2U6DQo+ICAgZHVtcF9iYWNrdHJh
-Y2UrMHgwLzB4Mjg4DQo+ICAgc2hvd19zdGFjaysweDE0LzB4MjANCj4gICBkdW1wX3N0YWNrKzB4
-MTBjLzB4MTY0DQo+ICAgcHJpbnRfYWRkcmVzc19kZXNjcmlwdGlvbi5pc3JhLjkrMHg2OC8weDM3
-OA0KPiAgIF9fa2FzYW5fcmVwb3J0KzB4MTY0LzB4MWEwDQo+ICAga2FzYW5fcmVwb3J0KzB4Yy8w
-eDE4DQo+ICAgY2hlY2tfbWVtb3J5X3JlZ2lvbisweDE3NC8weDFkMA0KPiAgIG1lbW1vdmUrMHgz
-NC8weDg4DQo+ICAga21hbGxvY19tZW1tb3ZlX2ludmFsaWRfc2l6ZSsweDcwLzB4YTANCj4gDQo+
-IFsxXSBodHRwczovL2J1Z3ppbGxhLmtlcm5lbC5vcmcvc2hvd19idWcuY2dpP2lkPTE5OTM0MQ0K
-PiANCj4gU2lnbmVkLW9mZi1ieTogV2FsdGVyIFd1IDx3YWx0ZXItemgud3VAbWVkaWF0ZWsuY29t
-Pg0KPiBSZXBvcnRlZC1ieTogRG1pdHJ5IFZ5dWtvdiA8ZHZ5dWtvdkBnb29nbGUuY29tPg0KPiBT
-dWdnZXN0ZWQtYnk6IERtaXRyeSBWeXVrb3YgPGR2eXVrb3ZAZ29vZ2xlLmNvbT4NCj4gUmV2aWV3
-ZWQtYnk6IERtaXRyeSBWeXVrb3YgPGR2eXVrb3ZAZ29vZ2xlLmNvbT4NCj4gQ2M6IEFuZHJleSBS
-eWFiaW5pbiA8YXJ5YWJpbmluQHZpcnR1b3p6by5jb20+DQo+IENjOiBBbGV4YW5kZXIgUG90YXBl
-bmtvIDxnbGlkZXJAZ29vZ2xlLmNvbT4NCj4gUmVwb3J0ZWQtYnk6IGtlcm5lbCB0ZXN0IHJvYm90
-IDxsa3BAaW50ZWwuY29tPg0KPiAtLS0NCj4gIGluY2x1ZGUvbGludXgva2FzYW4uaCAgICAgfCAg
-MiArLQ0KPiAgbW0va2FzYW4vY29tbW9uLmMgICAgICAgICB8IDI1ICsrKysrKysrKysrKysrKysr
-Ky0tLS0tLS0NCj4gIG1tL2thc2FuL2dlbmVyaWMuYyAgICAgICAgfCAgOSArKysrKy0tLS0NCj4g
-IG1tL2thc2FuL2dlbmVyaWNfcmVwb3J0LmMgfCAxMSArKysrKysrKysrKw0KPiAgbW0va2FzYW4v
-a2FzYW4uaCAgICAgICAgICB8ICAyICstDQo+ICBtbS9rYXNhbi9yZXBvcnQuYyAgICAgICAgIHwg
-IDUgKy0tLS0NCj4gIG1tL2thc2FuL3RhZ3MuYyAgICAgICAgICAgfCAgOSArKysrKy0tLS0NCj4g
-IG1tL2thc2FuL3RhZ3NfcmVwb3J0LmMgICAgfCAxMSArKysrKysrKysrKw0KPiAgOCBmaWxlcyBj
-aGFuZ2VkLCA1MyBpbnNlcnRpb25zKCspLCAyMSBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1n
-aXQgYS9pbmNsdWRlL2xpbnV4L2thc2FuLmggYi9pbmNsdWRlL2xpbnV4L2thc2FuLmgNCj4gaW5k
-ZXggY2M4YTAzY2M5Njc0Li4yZWY2YjhmYzYzZWYgMTAwNjQ0DQo+IC0tLSBhL2luY2x1ZGUvbGlu
-dXgva2FzYW4uaA0KPiArKysgYi9pbmNsdWRlL2xpbnV4L2thc2FuLmgNCj4gQEAgLTE4MCw3ICsx
-ODAsNyBAQCB2b2lkIGthc2FuX2luaXRfdGFncyh2b2lkKTsNCj4gIA0KPiAgdm9pZCAqa2FzYW5f
-cmVzZXRfdGFnKGNvbnN0IHZvaWQgKmFkZHIpOw0KPiAgDQo+IC12b2lkIGthc2FuX3JlcG9ydCh1
-bnNpZ25lZCBsb25nIGFkZHIsIHNpemVfdCBzaXplLA0KPiArYm9vbCBrYXNhbl9yZXBvcnQodW5z
-aWduZWQgbG9uZyBhZGRyLCBzaXplX3Qgc2l6ZSwNCj4gIAkJYm9vbCBpc193cml0ZSwgdW5zaWdu
-ZWQgbG9uZyBpcCk7DQo+ICANCj4gICNlbHNlIC8qIENPTkZJR19LQVNBTl9TV19UQUdTICovDQo+
-IGRpZmYgLS1naXQgYS9tbS9rYXNhbi9jb21tb24uYyBiL21tL2thc2FuL2NvbW1vbi5jDQo+IGlu
-ZGV4IDY4MTRkNmQ2YTAyMy4uNGJmY2UwYWY4ODFmIDEwMDY0NA0KPiAtLS0gYS9tbS9rYXNhbi9j
-b21tb24uYw0KPiArKysgYi9tbS9rYXNhbi9jb21tb24uYw0KPiBAQCAtMTAyLDcgKzEwMiw4IEBA
-IEVYUE9SVF9TWU1CT0woX19rYXNhbl9jaGVja193cml0ZSk7DQo+ICAjdW5kZWYgbWVtc2V0DQo+
-ICB2b2lkICptZW1zZXQodm9pZCAqYWRkciwgaW50IGMsIHNpemVfdCBsZW4pDQo+ICB7DQo+IC0J
-Y2hlY2tfbWVtb3J5X3JlZ2lvbigodW5zaWduZWQgbG9uZylhZGRyLCBsZW4sIHRydWUsIF9SRVRf
-SVBfKTsNCj4gKwlpZiAoIWNoZWNrX21lbW9yeV9yZWdpb24oKHVuc2lnbmVkIGxvbmcpYWRkciwg
-bGVuLCB0cnVlLCBfUkVUX0lQXykpDQo+ICsJCXJldHVybiBOVUxMOw0KPiAgDQo+ICAJcmV0dXJu
-IF9fbWVtc2V0KGFkZHIsIGMsIGxlbik7DQo+ICB9DQo+IEBAIC0xMTAsOCArMTExLDkgQEAgdm9p
-ZCAqbWVtc2V0KHZvaWQgKmFkZHIsIGludCBjLCBzaXplX3QgbGVuKQ0KPiAgI3VuZGVmIG1lbW1v
-dmUNCj4gIHZvaWQgKm1lbW1vdmUodm9pZCAqZGVzdCwgY29uc3Qgdm9pZCAqc3JjLCBzaXplX3Qg
-bGVuKQ0KPiAgew0KPiAtCWNoZWNrX21lbW9yeV9yZWdpb24oKHVuc2lnbmVkIGxvbmcpc3JjLCBs
-ZW4sIGZhbHNlLCBfUkVUX0lQXyk7DQo+IC0JY2hlY2tfbWVtb3J5X3JlZ2lvbigodW5zaWduZWQg
-bG9uZylkZXN0LCBsZW4sIHRydWUsIF9SRVRfSVBfKTsNCj4gKwlpZiAoIWNoZWNrX21lbW9yeV9y
-ZWdpb24oKHVuc2lnbmVkIGxvbmcpc3JjLCBsZW4sIGZhbHNlLCBfUkVUX0lQXykgfHwNCj4gKwkg
-ICAgIWNoZWNrX21lbW9yeV9yZWdpb24oKHVuc2lnbmVkIGxvbmcpZGVzdCwgbGVuLCB0cnVlLCBf
-UkVUX0lQXykpDQo+ICsJCXJldHVybiBOVUxMOw0KPiAgDQo+ICAJcmV0dXJuIF9fbWVtbW92ZShk
-ZXN0LCBzcmMsIGxlbik7DQo+ICB9DQo+IEBAIC0xMTksOCArMTIxLDkgQEAgdm9pZCAqbWVtbW92
-ZSh2b2lkICpkZXN0LCBjb25zdCB2b2lkICpzcmMsIHNpemVfdCBsZW4pDQo+ICAjdW5kZWYgbWVt
-Y3B5DQo+ICB2b2lkICptZW1jcHkodm9pZCAqZGVzdCwgY29uc3Qgdm9pZCAqc3JjLCBzaXplX3Qg
-bGVuKQ0KPiAgew0KPiAtCWNoZWNrX21lbW9yeV9yZWdpb24oKHVuc2lnbmVkIGxvbmcpc3JjLCBs
-ZW4sIGZhbHNlLCBfUkVUX0lQXyk7DQo+IC0JY2hlY2tfbWVtb3J5X3JlZ2lvbigodW5zaWduZWQg
-bG9uZylkZXN0LCBsZW4sIHRydWUsIF9SRVRfSVBfKTsNCj4gKwlpZiAoIWNoZWNrX21lbW9yeV9y
-ZWdpb24oKHVuc2lnbmVkIGxvbmcpc3JjLCBsZW4sIGZhbHNlLCBfUkVUX0lQXykgfHwNCj4gKwkg
-ICAgIWNoZWNrX21lbW9yeV9yZWdpb24oKHVuc2lnbmVkIGxvbmcpZGVzdCwgbGVuLCB0cnVlLCBf
-UkVUX0lQXykpDQo+ICsJCXJldHVybiBOVUxMOw0KPiAgDQo+ICAJcmV0dXJuIF9fbWVtY3B5KGRl
-c3QsIHNyYywgbGVuKTsNCj4gIH0NCj4gQEAgLTYyNywxMiArNjMwLDIwIEBAIHZvaWQga2FzYW5f
-ZnJlZV9zaGFkb3coY29uc3Qgc3RydWN0IHZtX3N0cnVjdCAqdm0pDQo+ICB9DQo+ICANCj4gIGV4
-dGVybiB2b2lkIF9fa2FzYW5fcmVwb3J0KHVuc2lnbmVkIGxvbmcgYWRkciwgc2l6ZV90IHNpemUs
-IGJvb2wgaXNfd3JpdGUsIHVuc2lnbmVkIGxvbmcgaXApOw0KPiArZXh0ZXJuIGJvb2wgcmVwb3J0
-X2VuYWJsZWQodm9pZCk7DQo+ICANCj4gLXZvaWQga2FzYW5fcmVwb3J0KHVuc2lnbmVkIGxvbmcg
-YWRkciwgc2l6ZV90IHNpemUsIGJvb2wgaXNfd3JpdGUsIHVuc2lnbmVkIGxvbmcgaXApDQo+ICti
-b29sIGthc2FuX3JlcG9ydCh1bnNpZ25lZCBsb25nIGFkZHIsIHNpemVfdCBzaXplLCBib29sIGlz
-X3dyaXRlLCB1bnNpZ25lZCBsb25nIGlwKQ0KPiAgew0KPiAtCXVuc2lnbmVkIGxvbmcgZmxhZ3Mg
-PSB1c2VyX2FjY2Vzc19zYXZlKCk7DQo+ICsJdW5zaWduZWQgbG9uZyBmbGFnczsNCj4gKw0KPiAr
-CWlmIChsaWtlbHkoIXJlcG9ydF9lbmFibGVkKCkpKQ0KPiArCQlyZXR1cm4gZmFsc2U7DQo+ICsN
-Cj4gKwlmbGFncyA9IHVzZXJfYWNjZXNzX3NhdmUoKTsNCj4gIAlfX2thc2FuX3JlcG9ydChhZGRy
-LCBzaXplLCBpc193cml0ZSwgaXApOw0KPiAgCXVzZXJfYWNjZXNzX3Jlc3RvcmUoZmxhZ3MpOw0K
-PiArDQo+ICsJcmV0dXJuIHRydWU7DQo+ICB9DQo+ICANCj4gICNpZmRlZiBDT05GSUdfTUVNT1JZ
-X0hPVFBMVUcNCj4gZGlmZiAtLWdpdCBhL21tL2thc2FuL2dlbmVyaWMuYyBiL21tL2thc2FuL2dl
-bmVyaWMuYw0KPiBpbmRleCA2MTZmOWRkODJkMTIuLjU2ZmY4ODg1ZmUyZSAxMDA2NDQNCj4gLS0t
-IGEvbW0va2FzYW4vZ2VuZXJpYy5jDQo+ICsrKyBiL21tL2thc2FuL2dlbmVyaWMuYw0KPiBAQCAt
-MTczLDE3ICsxNzMsMTggQEAgc3RhdGljIF9fYWx3YXlzX2lubGluZSBib29sIGNoZWNrX21lbW9y
-eV9yZWdpb25faW5saW5lKHVuc2lnbmVkIGxvbmcgYWRkciwNCj4gIAlpZiAodW5saWtlbHkoc2l6
-ZSA9PSAwKSkNCj4gIAkJcmV0dXJuIHRydWU7DQo+ICANCj4gKwlpZiAodW5saWtlbHkoYWRkciAr
-IHNpemUgPCBhZGRyKSkNCj4gKwkJcmV0dXJuICFrYXNhbl9yZXBvcnQoYWRkciwgc2l6ZSwgd3Jp
-dGUsIHJldF9pcCk7DQo+ICsNCj4gIAlpZiAodW5saWtlbHkoKHZvaWQgKilhZGRyIDwNCj4gIAkJ
-a2FzYW5fc2hhZG93X3RvX21lbSgodm9pZCAqKUtBU0FOX1NIQURPV19TVEFSVCkpKSB7DQo+IC0J
-CWthc2FuX3JlcG9ydChhZGRyLCBzaXplLCB3cml0ZSwgcmV0X2lwKTsNCj4gLQkJcmV0dXJuIGZh
-bHNlOw0KPiArCQlyZXR1cm4gIWthc2FuX3JlcG9ydChhZGRyLCBzaXplLCB3cml0ZSwgcmV0X2lw
-KTsNCj4gIAl9DQo+ICANCj4gIAlpZiAobGlrZWx5KCFtZW1vcnlfaXNfcG9pc29uZWQoYWRkciwg
-c2l6ZSkpKQ0KPiAgCQlyZXR1cm4gdHJ1ZTsNCj4gIA0KPiAtCWthc2FuX3JlcG9ydChhZGRyLCBz
-aXplLCB3cml0ZSwgcmV0X2lwKTsNCj4gLQlyZXR1cm4gZmFsc2U7DQo+ICsJcmV0dXJuICFrYXNh
-bl9yZXBvcnQoYWRkciwgc2l6ZSwgd3JpdGUsIHJldF9pcCk7DQo+ICB9DQo+ICANCj4gIGJvb2wg
-Y2hlY2tfbWVtb3J5X3JlZ2lvbih1bnNpZ25lZCBsb25nIGFkZHIsIHNpemVfdCBzaXplLCBib29s
-IHdyaXRlLA0KPiBkaWZmIC0tZ2l0IGEvbW0va2FzYW4vZ2VuZXJpY19yZXBvcnQuYyBiL21tL2th
-c2FuL2dlbmVyaWNfcmVwb3J0LmMNCj4gaW5kZXggMzZjNjQ1OTM5YmM5Li5jODJiYzNmNTJjOWEg
-MTAwNjQ0DQo+IC0tLSBhL21tL2thc2FuL2dlbmVyaWNfcmVwb3J0LmMNCj4gKysrIGIvbW0va2Fz
-YW4vZ2VuZXJpY19yZXBvcnQuYw0KPiBAQCAtMTA3LDYgKzEwNywxNyBAQCBzdGF0aWMgY29uc3Qg
-Y2hhciAqZ2V0X3dpbGRfYnVnX3R5cGUoc3RydWN0IGthc2FuX2FjY2Vzc19pbmZvICppbmZvKQ0K
-PiAgDQo+ICBjb25zdCBjaGFyICpnZXRfYnVnX3R5cGUoc3RydWN0IGthc2FuX2FjY2Vzc19pbmZv
-ICppbmZvKQ0KPiAgew0KPiArCS8qDQo+ICsJICogSWYgYWNjZXNzX3NpemUgaXMgYSBuZWdhdGl2
-ZSBudW1iZXIsIHRoZW4gaXQgaGFzIHJlYXNvbiB0byBiZQ0KPiArCSAqIGRlZmluZWQgYXMgb3V0
-LW9mLWJvdW5kcyBidWcgdHlwZS4NCj4gKwkgKg0KPiArCSAqIENhc3RpbmcgbmVnYXRpdmUgbnVt
-YmVycyB0byBzaXplX3Qgd291bGQgaW5kZWVkIHR1cm4gdXAgYXMNCj4gKwkgKiBhIGxhcmdlIHNp
-emVfdCBhbmQgaXRzIHZhbHVlIHdpbGwgYmUgbGFyZ2VyIHRoYW4gVUxPTkdfTUFYLzIsDQo+ICsJ
-ICogc28gdGhhdCB0aGlzIGNhbiBxdWFsaWZ5IGFzIG91dC1vZi1ib3VuZHMuDQo+ICsJICovDQo+
-ICsJaWYgKGluZm8tPmFjY2Vzc19hZGRyICsgaW5mby0+YWNjZXNzX3NpemUgPCBpbmZvLT5hY2Nl
-c3NfYWRkcikNCj4gKwkJcmV0dXJuICJvdXQtb2YtYm91bmRzIjsNCj4gKw0KPiAgCWlmIChhZGRy
-X2hhc19zaGFkb3coaW5mby0+YWNjZXNzX2FkZHIpKQ0KPiAgCQlyZXR1cm4gZ2V0X3NoYWRvd19i
-dWdfdHlwZShpbmZvKTsNCj4gIAlyZXR1cm4gZ2V0X3dpbGRfYnVnX3R5cGUoaW5mbyk7DQo+IGRp
-ZmYgLS1naXQgYS9tbS9rYXNhbi9rYXNhbi5oIGIvbW0va2FzYW4va2FzYW4uaA0KPiBpbmRleCAz
-NWNmZjZiYmI3MTYuLmFmYWRhMmNlMTRiZiAxMDA2NDQNCj4gLS0tIGEvbW0va2FzYW4va2FzYW4u
-aA0KPiArKysgYi9tbS9rYXNhbi9rYXNhbi5oDQo+IEBAIC0xNTIsNyArMTUyLDcgQEAgYm9vbCBj
-aGVja19tZW1vcnlfcmVnaW9uKHVuc2lnbmVkIGxvbmcgYWRkciwgc2l6ZV90IHNpemUsIGJvb2wg
-d3JpdGUsDQo+ICB2b2lkICpmaW5kX2ZpcnN0X2JhZF9hZGRyKHZvaWQgKmFkZHIsIHNpemVfdCBz
-aXplKTsNCj4gIGNvbnN0IGNoYXIgKmdldF9idWdfdHlwZShzdHJ1Y3Qga2FzYW5fYWNjZXNzX2lu
-Zm8gKmluZm8pOw0KPiAgDQo+IC12b2lkIGthc2FuX3JlcG9ydCh1bnNpZ25lZCBsb25nIGFkZHIs
-IHNpemVfdCBzaXplLA0KPiArYm9vbCBrYXNhbl9yZXBvcnQodW5zaWduZWQgbG9uZyBhZGRyLCBz
-aXplX3Qgc2l6ZSwNCj4gIAkJYm9vbCBpc193cml0ZSwgdW5zaWduZWQgbG9uZyBpcCk7DQo+ICB2
-b2lkIGthc2FuX3JlcG9ydF9pbnZhbGlkX2ZyZWUodm9pZCAqb2JqZWN0LCB1bnNpZ25lZCBsb25n
-IGlwKTsNCj4gIA0KPiBkaWZmIC0tZ2l0IGEvbW0va2FzYW4vcmVwb3J0LmMgYi9tbS9rYXNhbi9y
-ZXBvcnQuYw0KPiBpbmRleCA2MjE3ODIxMDBlYWEuLmM5NGY4ZTljNzhkNCAxMDA2NDQNCj4gLS0t
-IGEvbW0va2FzYW4vcmVwb3J0LmMNCj4gKysrIGIvbW0va2FzYW4vcmVwb3J0LmMNCj4gQEAgLTQ0
-Niw3ICs0NDYsNyBAQCBzdGF0aWMgdm9pZCBwcmludF9zaGFkb3dfZm9yX2FkZHJlc3MoY29uc3Qg
-dm9pZCAqYWRkcikNCj4gIAl9DQo+ICB9DQo+ICANCj4gLXN0YXRpYyBib29sIHJlcG9ydF9lbmFi
-bGVkKHZvaWQpDQo+ICtib29sIHJlcG9ydF9lbmFibGVkKHZvaWQpDQo+ICB7DQo+ICAJaWYgKGN1
-cnJlbnQtPmthc2FuX2RlcHRoKQ0KPiAgCQlyZXR1cm4gZmFsc2U7DQo+IEBAIC00NzgsOSArNDc4
-LDYgQEAgdm9pZCBfX2thc2FuX3JlcG9ydCh1bnNpZ25lZCBsb25nIGFkZHIsIHNpemVfdCBzaXpl
-LCBib29sIGlzX3dyaXRlLCB1bnNpZ25lZCBsb24NCj4gIAl2b2lkICp1bnRhZ2dlZF9hZGRyOw0K
-PiAgCXVuc2lnbmVkIGxvbmcgZmxhZ3M7DQo+ICANCj4gLQlpZiAobGlrZWx5KCFyZXBvcnRfZW5h
-YmxlZCgpKSkNCj4gLQkJcmV0dXJuOw0KPiAtDQo+ICAJZGlzYWJsZV90cmFjZV9vbl93YXJuaW5n
-KCk7DQo+ICANCj4gIAl0YWdnZWRfYWRkciA9ICh2b2lkICopYWRkcjsNCj4gZGlmZiAtLWdpdCBh
-L21tL2thc2FuL3RhZ3MuYyBiL21tL2thc2FuL3RhZ3MuYw0KPiBpbmRleCAwZTk4N2M5Y2EwNTIu
-LjI1Yjc3MzRlNzAxMyAxMDA2NDQNCj4gLS0tIGEvbW0va2FzYW4vdGFncy5jDQo+ICsrKyBiL21t
-L2thc2FuL3RhZ3MuYw0KPiBAQCAtODYsNiArODYsOSBAQCBib29sIGNoZWNrX21lbW9yeV9yZWdp
-b24odW5zaWduZWQgbG9uZyBhZGRyLCBzaXplX3Qgc2l6ZSwgYm9vbCB3cml0ZSwNCj4gIAlpZiAo
-dW5saWtlbHkoc2l6ZSA9PSAwKSkNCj4gIAkJcmV0dXJuIHRydWU7DQo+ICANCj4gKwlpZiAodW5s
-aWtlbHkoYWRkciArIHNpemUgPCBhZGRyKSkNCj4gKwkJcmV0dXJuICFrYXNhbl9yZXBvcnQoYWRk
-ciwgc2l6ZSwgd3JpdGUsIHJldF9pcCk7DQo+ICsNCj4gIAl0YWcgPSBnZXRfdGFnKChjb25zdCB2
-b2lkICopYWRkcik7DQo+ICANCj4gIAkvKg0KPiBAQCAtMTExLDE1ICsxMTQsMTMgQEAgYm9vbCBj
-aGVja19tZW1vcnlfcmVnaW9uKHVuc2lnbmVkIGxvbmcgYWRkciwgc2l6ZV90IHNpemUsIGJvb2wg
-d3JpdGUsDQo+ICAJdW50YWdnZWRfYWRkciA9IHJlc2V0X3RhZygoY29uc3Qgdm9pZCAqKWFkZHIp
-Ow0KPiAgCWlmICh1bmxpa2VseSh1bnRhZ2dlZF9hZGRyIDwNCj4gIAkJCWthc2FuX3NoYWRvd190
-b19tZW0oKHZvaWQgKilLQVNBTl9TSEFET1dfU1RBUlQpKSkgew0KPiAtCQlrYXNhbl9yZXBvcnQo
-YWRkciwgc2l6ZSwgd3JpdGUsIHJldF9pcCk7DQo+IC0JCXJldHVybiBmYWxzZTsNCj4gKwkJcmV0
-dXJuICFrYXNhbl9yZXBvcnQoYWRkciwgc2l6ZSwgd3JpdGUsIHJldF9pcCk7DQo+ICAJfQ0KPiAg
-CXNoYWRvd19maXJzdCA9IGthc2FuX21lbV90b19zaGFkb3codW50YWdnZWRfYWRkcik7DQo+ICAJ
-c2hhZG93X2xhc3QgPSBrYXNhbl9tZW1fdG9fc2hhZG93KHVudGFnZ2VkX2FkZHIgKyBzaXplIC0g
-MSk7DQo+ICAJZm9yIChzaGFkb3cgPSBzaGFkb3dfZmlyc3Q7IHNoYWRvdyA8PSBzaGFkb3dfbGFz
-dDsgc2hhZG93KyspIHsNCj4gIAkJaWYgKCpzaGFkb3cgIT0gdGFnKSB7DQo+IC0JCQlrYXNhbl9y
-ZXBvcnQoYWRkciwgc2l6ZSwgd3JpdGUsIHJldF9pcCk7DQo+IC0JCQlyZXR1cm4gZmFsc2U7DQo+
-ICsJCQlyZXR1cm4gIWthc2FuX3JlcG9ydChhZGRyLCBzaXplLCB3cml0ZSwgcmV0X2lwKTsNCj4g
-IAkJfQ0KPiAgCX0NCj4gIA0KPiBkaWZmIC0tZ2l0IGEvbW0va2FzYW4vdGFnc19yZXBvcnQuYyBi
-L21tL2thc2FuL3RhZ3NfcmVwb3J0LmMNCj4gaW5kZXggOTY5YWUwOGY1OWQ3Li4xZDQxMjc2MDU1
-MWEgMTAwNjQ0DQo+IC0tLSBhL21tL2thc2FuL3RhZ3NfcmVwb3J0LmMNCj4gKysrIGIvbW0va2Fz
-YW4vdGFnc19yZXBvcnQuYw0KPiBAQCAtMzYsNiArMzYsMTcgQEANCj4gIA0KPiAgY29uc3QgY2hh
-ciAqZ2V0X2J1Z190eXBlKHN0cnVjdCBrYXNhbl9hY2Nlc3NfaW5mbyAqaW5mbykNCj4gIHsNCj4g
-KwkvKg0KPiArCSAqIElmIGFjY2Vzc19zaXplIGlzIGEgbmVnYXRpdmUgbnVtYmVyLCB0aGVuIGl0
-IGhhcyByZWFzb24gdG8gYmUNCj4gKwkgKiBkZWZpbmVkIGFzIG91dC1vZi1ib3VuZHMgYnVnIHR5
-cGUuDQo+ICsJICoNCj4gKwkgKiBDYXN0aW5nIG5lZ2F0aXZlIG51bWJlcnMgdG8gc2l6ZV90IHdv
-dWxkIGluZGVlZCB0dXJuIHVwIGFzDQo+ICsJICogYSBsYXJnZSBzaXplX3QgYW5kIGl0cyB2YWx1
-ZSB3aWxsIGJlIGxhcmdlciB0aGFuIFVMT05HX01BWC8yLA0KPiArCSAqIHNvIHRoYXQgdGhpcyBj
-YW4gcXVhbGlmeSBhcyBvdXQtb2YtYm91bmRzLg0KPiArCSAqLw0KPiArCWlmIChpbmZvLT5hY2Nl
-c3NfYWRkciArIGluZm8tPmFjY2Vzc19zaXplIDwgaW5mby0+YWNjZXNzX2FkZHIpDQo+ICsJCXJl
-dHVybiAib3V0LW9mLWJvdW5kcyI7DQo+ICsNCj4gICNpZmRlZiBDT05GSUdfS0FTQU5fU1dfVEFH
-U19JREVOVElGWQ0KPiAgCXN0cnVjdCBrYXNhbl9hbGxvY19tZXRhICphbGxvY19tZXRhOw0KPiAg
-CXN0cnVjdCBrbWVtX2NhY2hlICpjYWNoZTsNCg0KSGkgQW5kcmV5LA0KDQpXb3VsZCB5b3UgaGF2
-ZSBhbnkgY29uY2VybnM/DQpUaGFua3MuDQoNCldhbHRlcg0K
+Commit f01642e4912b ("perf metricgroup: Support multiple
+events for metricgroup") introduced support for multiple events
+in a metric group. But with the current upstream, metric events
+names are not printed properly
+
+In power9 platform:
+command:# ./perf stat --metric-only -M translation -C 0 -I 1000 sleep 2
+     1.000208486
+     2.000368863
+     2.001400558
+
+Similarly in skylake platform:
+command:./perf stat --metric-only -M Power -I 1000
+     1.000579994
+     2.002189493
+
+With current upstream version, issue is with event name comparison
+logic in find_evsel_group(). Current logic is to compare events
+belonging to a metric group to the events in perf_evlist.
+Since the break statement is missing in the loop used for comparison
+between metric group and perf_evlist events, the loop continues to
+execute even after getting a pattern match, and end up in discarding
+the matches.
+Incase of single metric event belongs to metric group, its working fine,
+because in case of single event once it compare all events it reaches to
+end of perf_evlist.
+
+Example for single metric event in power9 platform
+command:# ./perf stat --metric-only  -M branches_per_inst -I 1000 sleep 1
+     1.000094653                  0.2
+     1.001337059                  0.0
+
+Patch fixes the issue by making sure once we found all events
+belongs to that metric event matched in find_evsel_group(), we
+successfully break from that loop by adding corresponding condition.
+
+With this patch:
+In power9 platform:
+
+command:# ./perf stat --metric-only -M translation -C 0 -I 1000 sleep 2
+result:#           time derat_4k_miss_rate_percent  derat_4k_miss_ratio
+     derat_miss_ratio derat_64k_miss_rate_percent derat_64k_miss_ratio
+         dslb_miss_rate_percent islb_miss_rate_percent
+     1.000135672                         0.0                  0.3
+                  1.0                          0.0                  0.2
+                 0.0                     0.0
+     2.000380617                         0.0                  0.0
+                                              0.0                  0.0
+                0.0                     0.0
+
+command:# ./perf stat --metric-only -M Power -I 1000
+
+Similarly in skylake platform:
+result:#           time    Turbo_Utilization    C3_Core_Residency
+            C6_Core_Residency    C7_Core_Residency     C2_Pkg_Residency
+             C3_Pkg_Residency     C6_Pkg_Residency     C7_Pkg_Residency
+     1.000563580                  0.3                  0.0
+                  2.6                44.2                 21.9
+                  0.0                  0.0                  0.0
+     2.002235027                  0.4                  0.0
+                  2.7           43.0                 20.7
+                  0.0                  0.0               0.0
+
+Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Jin Yao <yao.jin@linux.intel.com>
+Cc: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
+Cc: Anju T Sudhakar <anju@linux.vnet.ibm.com>
+Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+---
+ tools/perf/util/metricgroup.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index a7c0424dbda3..940a6e7a6854 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -103,8 +103,11 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
+ 		if (!strcmp(ev->name, ids[i])) {
+ 			if (!metric_events[i])
+ 				metric_events[i] = ev;
++			i++;
++			if (i == idnum)
++				break;
+ 		} else {
+-			if (++i == idnum) {
++			if (i + 1 == idnum) {
+ 				/* Discard the whole match and start again */
+ 				i = 0;
+ 				memset(metric_events, 0,
+@@ -124,7 +127,7 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
+ 		}
+ 	}
+ 
+-	if (i != idnum - 1) {
++	if (i != idnum) {
+ 		/* Not whole match */
+ 		return NULL;
+ 	}
+-- 
+2.21.0
 
