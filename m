@@ -2,197 +2,152 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ED3CC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:14:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 188C8C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:16:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 733EF2245D
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:14:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Ou+zNIN6"
+	by mail.kernel.org (Postfix) with ESMTP id EBE86223D0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:16:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729074AbfKTLOy (ORCPT
+        id S1729075AbfKTLQg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 06:14:54 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:40307 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729011AbfKTLOi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 06:14:38 -0500
-Received: by mail-wr1-f68.google.com with SMTP id q15so14842246wrw.7
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 03:14:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=IgYzZaU8uJ/7u1V0pMNs5thFQ1I8pzKQqgnk0/fTTTU=;
-        b=Ou+zNIN690Ag9QQblICw/jCubbbAUkdAZu4zi5csFYcgIzOr0UdxwZYNwvDy4iQKP6
-         wpJt7kAMC2CA9+62qEdpWN+ajRDqLHgvA86XyZ93x+s/6vKEuhn40UKHdB0jvsjwrbmU
-         /oE+gP2ofZhvjDUG5xMoy718G74QG1FuG89JY5xtsPzWwukglpGipgbg9l02E0rBLnRy
-         EkUJt6fokb0PMFFnUmyedjEqF89wnZ8wVIZKJtSklBr3WG9dLNTaZpNMPZx6o9XCwINf
-         5CZQ6gB748clHEwp5HEHWHva/rcknNqHuHZNHEZY2EC0qYqpcdzUDRvbmH5bBLwglWjH
-         f3Ow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=IgYzZaU8uJ/7u1V0pMNs5thFQ1I8pzKQqgnk0/fTTTU=;
-        b=NVInOLv9FWjS3L4kQ/R1zETdnhviRWyN/aQSOX2s0/GEO9WxXCZWLNznbMtXF7ypG/
-         GD1y18nSpmsY5Y22SDOOEJI3QRcC9q34SGTw/UGsTl+we4qcVFthihq2aMXmMKkjTP7u
-         T7aTPSKIlQl+n3ttGQ+NG1ip3g2JfUWVuKze0Oz6nPlp/ICIY+3r1x+iBaepzVKgutDh
-         bwvCMqjZeBPRorR0jsGJk5AlHyi8ergItXtYxkq5DCVCWxXRh57xBxzTJWZEoLsjWHRP
-         z8dcWSZrY69s01NvWdVY/dFFj3MIOWj4B1MZzn7keGT3D3SDxR09WdrMDsF1FTtR6rUH
-         UpXA==
-X-Gm-Message-State: APjAAAX2xtKytG+blg2mrIos2rYEj7SSl38R9XFNdPBUhAH3E+15H44z
-        7HURGf104MDP7vQ2FA8+Mv4BXA==
-X-Google-Smtp-Source: APXvYqxKueLdTe2n6x4adgsjWVndca2Jih8lVmAqNV6a9rCzGzaDxDT74+lKTTmxqGu1uX2S7Fn8gw==
-X-Received: by 2002:a5d:6a4c:: with SMTP id t12mr2693976wrw.141.1574248473858;
-        Wed, 20 Nov 2019 03:14:33 -0800 (PST)
-Received: from bender.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id u1sm6061748wmc.3.2019.11.20.03.14.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Nov 2019 03:14:33 -0800 (PST)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     mjourdan@baylibre.com
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 0/4] media: meson: vdec: add g12a platform
-Date:   Wed, 20 Nov 2019 12:14:26 +0100
-Message-Id: <20191120111430.29552-1-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.22.0
+        Wed, 20 Nov 2019 06:16:36 -0500
+Received: from foss.arm.com ([217.140.110.172]:37582 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728049AbfKTLQf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 06:16:35 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A3BB431B;
+        Wed, 20 Nov 2019 03:16:34 -0800 (PST)
+Received: from [10.1.28.170] (e123648.cambridge.arm.com [10.1.28.170])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1C2023F6C4;
+        Wed, 20 Nov 2019 03:16:32 -0800 (PST)
+Subject: Re: [PATCH] arm: Fix topology setup in case of CPU hotplug for
+ CONFIG_SCHED_MC
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Atish Patra <atish.patra@wdc.com>,
+        Russell King <linux@armlinux.org.uk>
+Cc:     Sudeep Holla <sudeep.holla@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20191120104212.14791-1-dietmar.eggemann@arm.com>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <e912ce24-6941-ea3b-f84f-a5cf3881ba98@arm.com>
+Date:   Wed, 20 Nov 2019 11:16:31 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191120104212.14791-1-dietmar.eggemann@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset adds support for the current Amlogic Video Decoder
-driver for the Amlogic G12A & compatible SoCs.
+Hi Dietmar,
 
-The bindings are converted to YAML and dt-schemes to ease validation
-of the bindings and the Amlogic DT.
+On 11/20/19 10:42 AM, Dietmar Eggemann wrote:
+> Commit ca74b316df96 ("arm: Use common cpu_topology structure and
+> functions.") changed cpu_coregroup_mask() from the ARM32 specific
+> implementation in arch/arm/include/asm/topology.h to the one shared
+> with ARM64 and RISCV in drivers/base/arch_topology.c.
+> 
+> Currently on Arm32 (TC2 w/ CONFIG_SCHED_MC) the task scheduler setup
+> code (w/ CONFIG_SCHED_DEBUG) shows this during CPU hotplug:
+> 
+>    ERROR: groups don't span domain->span
+> 
+> It happens to CPUs of the cluster of the CPU which gets hot-plugged
+> out on scheduler domain MC.
+> 
+> Turns out that the shared cpu_coregroup_mask() requires that the
+> hot-plugged CPU is removed from the core_sibling mask via
+> remove_cpu_topology(). Otherwise the 'is core_sibling subset of
+> cpumask_of_node()' doesn't work. In this case the task scheduler has to
+> deal with cpumask_of_node instead of core_sibling which is wrong on
+> scheduler domain MC.
+> 
+> e.g. CPU3 hot-plugged out on TC2 [cluster0: 0,3-4 cluster1: 1-2]:
+> 
+>    cpu_coregroup_mask(): CPU3 cpumask_of_node=0-2,4 core_sibling=0,3-4
+>                                                                    ^
+> should be:
+> 
+>    cpu_coregroup_mask(): CPU3 cpumask_of_node=0-2,4 core_sibling=0,4
+> 
+> Add remove_cpu_topology() to __cpu_disable() to remove the CPU from the
+> topology masks in case of a CPU hotplug out operation.
+> 
+> At the same time tweak store_cpu_topology() slightly so it will call
+> update_siblings_masks() in case of CPU hotplug in operation via
+> secondary_start_kernel()->smp_store_cpu_info().
+> 
+> This aligns the Arm32 implementation with the Arm64 one.
 
-Then support is added for the currently supported MPEG1 & MPEG2 decoders
-and additional clock for upcoming HEVC/VP9 decoder support.
+Looks good to me.
 
-M2M Decoder compliance is handled in a separate patchset at [1].
+Tested-and-Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
 
-# v4l2-compliance
-v4l2-compliance SHA: 7ead0e1856b89f2e19369af452bb03fd0cd16793, 64 bits
-
-Compliance test for meson-vdec device /dev/video0:
-
-Driver Info:
-	Driver name      : meson-vdec
-	Card type        : Amlogic Video Decoder
-	Bus info         : platform:meson-vdec
-	Driver version   : 5.4.0
-	Capabilities     : 0x84204000
-		Video Memory-to-Memory Multiplanar
-		Streaming
-		Extended Pix Format
-		Device Capabilities
-	Device Caps      : 0x04204000
-		Video Memory-to-Memory Multiplanar
-		Streaming
-		Extended Pix Format
-	Detected Stateful Decoder
-
-Required ioctls:
-	test VIDIOC_QUERYCAP: OK
-
-Allow for multiple opens:
-	test second /dev/video0 open: OK
-	test VIDIOC_QUERYCAP: OK
-	test VIDIOC_G/S_PRIORITY: OK
-	test for unlimited opens: OK
-
-Debug ioctls:
-	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
-	test VIDIOC_LOG_STATUS: OK (Not Supported)
-
-Input ioctls:
-	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-	test VIDIOC_ENUMAUDIO: OK (Not Supported)
-	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
-	test VIDIOC_G/S_AUDIO: OK (Not Supported)
-	Inputs: 0 Audio Inputs: 0 Tuners: 0
-
-Output ioctls:
-	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-	Outputs: 0 Audio Outputs: 0 Modulators: 0
-
-Input/Output configuration ioctls:
-	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-	test VIDIOC_G/S_EDID: OK (Not Supported)
-
-Control ioctls:
-	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
-	test VIDIOC_QUERYCTRL: OK
-	test VIDIOC_G/S_CTRL: OK
-	test VIDIOC_G/S/TRY_EXT_CTRLS: OK
-	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
-	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-	Standard Controls: 2 Private Controls: 0
-
-Format ioctls:
-	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
-	test VIDIOC_G/S_PARM: OK (Not Supported)
-	test VIDIOC_G_FBUF: OK (Not Supported)
-	test VIDIOC_G_FMT: OK
-	test VIDIOC_TRY_FMT: OK
-	test VIDIOC_S_FMT: OK
-	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-	test Cropping: OK (Not Supported)
-	test Composing: OK (Not Supported)
-	test Scaling: OK (Not Supported)
-
-Codec ioctls:
-	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-	test VIDIOC_(TRY_)DECODER_CMD: OK
-
-Buffer ioctls:
-	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
-	test VIDIOC_EXPBUF: OK
-	test Requests: OK (Not Supported)
-
-Total for meson-vdec device /dev/video0: 44, Succeeded: 44, Failed: 0, Warnings: 0
-
-[1] 20191007145909.29979-1-mjourdan@baylibre.com
-
-Maxime Jourdan (1):
-  media: meson: vdec: add g12a platform
-
-Neil Armstrong (3):
-  dt-bindings: media: amlogic,vdec: convert to yaml
-  dt-bindings: media: amlogic,gx-vdec: add bindings for G12A family
-  arm64: dts: meson-g12-common: add video decoder node
-
- .../bindings/media/amlogic,gx-vdec.yaml       | 142 ++++++++++++++++++
- .../bindings/media/amlogic,vdec.txt           |  72 ---------
- .../boot/dts/amlogic/meson-g12-common.dtsi    |  23 +++
- drivers/staging/media/meson/vdec/vdec.c       |  13 +-
- drivers/staging/media/meson/vdec/vdec.h       |   1 +
- .../staging/media/meson/vdec/vdec_platform.c  |  30 ++++
- .../staging/media/meson/vdec/vdec_platform.h  |   2 +
- 7 files changed, 209 insertions(+), 74 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/media/amlogic,gx-vdec.yaml
- delete mode 100644 Documentation/devicetree/bindings/media/amlogic,vdec.txt
-
--- 
-2.22.0
-
+> 
+> Fixes: ca74b316df96 ("arm: Use common cpu_topology structure and functions")
+> Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+> ---
+>   arch/arm/kernel/smp.c      |  2 ++
+>   arch/arm/kernel/topology.c | 15 +++++++--------
+>   2 files changed, 9 insertions(+), 8 deletions(-)
+> 
+> diff --git a/arch/arm/kernel/smp.c b/arch/arm/kernel/smp.c
+> index 4b0bab2607e4..139c0d98fa29 100644
+> --- a/arch/arm/kernel/smp.c
+> +++ b/arch/arm/kernel/smp.c
+> @@ -240,6 +240,8 @@ int __cpu_disable(void)
+>   	if (ret)
+>   		return ret;
+>   
+> +	remove_cpu_topology(cpu);
+> +
+>   	/*
+>   	 * Take this CPU offline.  Once we clear this, we can't return,
+>   	 * and we must not schedule until we're ready to give up the cpu.
+> diff --git a/arch/arm/kernel/topology.c b/arch/arm/kernel/topology.c
+> index 5b9faba03afb..b37b0a340991 100644
+> --- a/arch/arm/kernel/topology.c
+> +++ b/arch/arm/kernel/topology.c
+> @@ -196,9 +196,8 @@ void store_cpu_topology(unsigned int cpuid)
+>   	struct cpu_topology *cpuid_topo = &cpu_topology[cpuid];
+>   	unsigned int mpidr;
+>   
+> -	/* If the cpu topology has been already set, just return */
+> -	if (cpuid_topo->core_id != -1)
+> -		return;
+> +	if (cpuid_topo->package_id != -1)
+> +		goto topology_populated;
+>   
+>   	mpidr = read_cpuid_mpidr();
+>   
+> @@ -231,14 +230,14 @@ void store_cpu_topology(unsigned int cpuid)
+>   		cpuid_topo->package_id = -1;
+>   	}
+>   
+> -	update_siblings_masks(cpuid);
+> -
+>   	update_cpu_capacity(cpuid);
+>   
+>   	pr_info("CPU%u: thread %d, cpu %d, socket %d, mpidr %x\n",
+> -		cpuid, cpu_topology[cpuid].thread_id,
+> -		cpu_topology[cpuid].core_id,
+> -		cpu_topology[cpuid].package_id, mpidr);
+> +		cpuid, cpuid_topo->thread_id, cpuid_topo->core_id,
+> +		cpuid_topo->package_id, mpidr);
+> +
+> +topology_populated:
+> +	update_siblings_masks(cpuid);
+>   }
+>   
+>   static inline int cpu_corepower_flags(void)
+> 
