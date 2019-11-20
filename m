@@ -2,69 +2,154 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C417C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:52:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C46B3C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:52:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4EDC22440
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:52:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F0BA2230F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:52:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574247156;
+	bh=kubGIqV9Y4iCFJw+UH/UWNym35dCxzpI5DFXs6j3zMg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=xbXUxKx4pRSmkcQ6EMm2sDi2dIrH9vOs/dIkXKHlFtn3h2gF5YgCiKP83JKsVRMp/
+	 /b60OfNZ1EHr0UH24V+2VPfFc7C5Q4GY1RMFV9kfoVc7UTQYt5xuDKLEhldLrP8N6E
+	 DOzp/XIz9CbbNCK7RX2HURz3bTcHygLOXgf6qhxk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728901AbfKTKwc (ORCPT
+        id S1728914AbfKTKwf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 05:52:32 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:37550 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727514AbfKTKwb (ORCPT
+        Wed, 20 Nov 2019 05:52:35 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:37693 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727514AbfKTKwf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 05:52:31 -0500
-Received: from [79.140.122.151] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iXNb3-0004ZQ-Vn; Wed, 20 Nov 2019 10:52:30 +0000
-Date:   Wed, 20 Nov 2019 11:52:29 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Christian Brauner <christian@brauner.io>
-Subject: Re: [PATCH v2] fork: fix pidfd_poll()'s return type
-Message-ID: <20191120105227.uln6z5d67ita3edj@wittgenstein>
-References: <20191120002145.skgtkx2f5dxagx4f@wittgenstein>
- <20191120003320.31138-1-luc.vanoostenryck@gmail.com>
+        Wed, 20 Nov 2019 05:52:35 -0500
+Received: by mail-oi1-f194.google.com with SMTP id y194so22109110oie.4;
+        Wed, 20 Nov 2019 02:52:34 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0XJsWOiRBHmD2kFFkY9kcnlnvFi6tJbcT90YhvqGyXk=;
+        b=qiGWd+XbXurL8W+kG/70kg6t3cxg2w0LjapF3GhgCZNcDcHalKboqxJ0Fvs+eIOAzE
+         fDdibhF/wgWQalEtF5slXGtJmpi3XOJj6WA+bGKn3iDW0MD8UbAhHuG8ypBiPBIFue6m
+         0dHn+APRs+rzhK9R3taZtHFwvEdEPJKqyLc/1QNIUaCweGcwap/rT2X4KxT40b9SGY6x
+         EuLePsBcXK1xTBk3mDdZHvWdUfvinBjdLYy7phPe49hvknb7bqrjSgWz7wCQkcRdDsgo
+         tqoqE53kWeZkrlfZzb+RQ0G2gPjid8yEmlYzrJPawkLbMVnOtEX5mYovjYoRoiP6Vt5U
+         7jLw==
+X-Gm-Message-State: APjAAAU3yshwBNb3skcMSWhhFZ874UEJhrDI6eiXes119Szf9o3VMQf1
+        SnXtsHeENXgJTzm+odM6sJwRb75oM/Y9+GMJy3g=
+X-Google-Smtp-Source: APXvYqwjeK8wGKLpVWDbUsiy3/KlqoGVkGuPGsBhhnC19t6bK2aUnaLaipUiMNwoRc1MrCUzVHSwZIqPrINSdEqrGGc=
+X-Received: by 2002:aca:530c:: with SMTP id h12mr2293868oib.110.1574247153834;
+ Wed, 20 Nov 2019 02:52:33 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191120003320.31138-1-luc.vanoostenryck@gmail.com>
-User-Agent: NeoMutt/20180716
+References: <20191017121901.13699-1-kherbst@redhat.com> <20191119214955.GA223696@google.com>
+ <CACO55tu+8VeyMw1Lb6QvNspaJm9LDgoRbooVhr0s3v9uBt=feg@mail.gmail.com> <20191120101816.GX11621@lahna.fi.intel.com>
+In-Reply-To: <20191120101816.GX11621@lahna.fi.intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 20 Nov 2019 11:52:22 +0100
+Message-ID: <CAJZ5v0g4vp1C+zHU5nOVnkGsOjBvLaphK1kK=qAT6b=mK8kpsA@mail.gmail.com>
+Subject: Re: [PATCH v4] pci: prevent putting nvidia GPUs into lower device
+ states on certain intel bridges
+To:     Mika Westerberg <mika.westerberg@intel.com>
+Cc:     Karol Herbst <kherbst@redhat.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lyude Paul <lyude@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        Dave Airlie <airlied@gmail.com>,
+        Mario Limonciello <Mario.Limonciello@dell.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 01:33:20AM +0100, Luc Van Oostenryck wrote:
-> pidfd_poll() is defined as returning 'unsigned int' but the
-> .poll method is declared as returning '__poll_t', a bitwise type.
-> 
-> Fix this by using the proper return type and using the EPOLL
-> constants instead of the POLL ones, as required for __poll_t.
-> 
-> Fixes: b53b0b9d9a61 ("pidfd: add polling support")
-> Cc: Joel Fernandes (Google) <joel@joelfernandes.org>
-> Cc: Christian Brauner <christian@brauner.io>
-> Cc: stable@vger.kernel.org # 5.3
-> Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-> Reviewed-by: Christian Brauner <christian.brauner@ubuntu.com>
+On Wed, Nov 20, 2019 at 11:18 AM Mika Westerberg
+<mika.westerberg@intel.com> wrote:
+>
+> Hi Karol,
+>
+> On Tue, Nov 19, 2019 at 11:26:45PM +0100, Karol Herbst wrote:
+> > On Tue, Nov 19, 2019 at 10:50 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > >
+> > > [+cc Dave]
+> > >
+> > > On Thu, Oct 17, 2019 at 02:19:01PM +0200, Karol Herbst wrote:
+> > > > Fixes state transitions of Nvidia Pascal GPUs from D3cold into higher device
+> > > > states.
+> > > >
+> > > > v2: convert to pci_dev quirk
+> > > >     put a proper technical explanation of the issue as a in-code comment
+> > > > v3: disable it only for certain combinations of intel and nvidia hardware
+> > > > v4: simplify quirk by setting flag on the GPU itself
+> > >
+> > > I have zero confidence that we understand the real problem, but we do
+> > > need to do something with this.  I'll merge it for v5.5 if we get the
+> > > minor procedural stuff below straightened out.
+> > >
+> >
+> > Thanks, and I agree with your statement, but at this point I think
+> > only Intel can help out digging deeper as I see no way to debug this
+> > further.
+>
+> I don't have anything against this patch, as long as the quirk stays
+> limited to the particular root port leading to the NVIDIA GPU. The
+> reason why I think it should to be limited is that I'm pretty certain
+> the problem is not in the root port itself. I have here a KBL based
+> Thinkpad X1 Carbon 6th gen that can put the TBT controller into D3cold
+> (it is connected to PCH root port) and it wakes up there just fine, so
+> don't want to break that.
+>
+> Now, PCIe devices cannot go into D3cold all by themselves. They always
+> need help from the platform side which is ACPI in this case. This is
+> done by having the device to have _PR3 method that returns one or more
+> power resources that the OS is supposed to turn off when the device is
+> put into D3cold. All of that is implemented as form of ACPI methods that
+> pretty much do the hardware specific things that are outside of PCIe
+> spec to get the device into D3cold. At high level the _OFF() method
+> causes the root port to broadcast PME_Turn_Off message that results the
+> link to enter L2/3 ready, it then asserts PERST, configures WAKE (both
+> can be GPIOs) and finally removes power (if the link goes into L3,
+> otherwise it goes into L2).
+>
+> I think this is where the problem actually lies - the ASL methods that
+> are used to put the device into D3cold and back. We know that in Windows
+> this all works fine so unless Windows quirks the root port the same way
+> there is another reason behind this.
+>
+> In case of Dell XPS 9560 (IIRC that's the machine you have) the
+> corresponding power resource is called \_SB.PCI0.PEG0.PG00 and its
+> _ON/_OFF methods end up calling PGON()/PGOF() accordingly. The methods
+> itself do lots of things and it is hard to follow the dissassembled
+> ASL which does not have any comments but there are couple of things that
+> stand out where we may go into a different path. One of them is this in
+> the PGOF() method:
+>
+>    If (((OSYS <= 0x07D9) || ((OSYS == 0x07DF) && (_REV == 0x05))))
+>
+> The ((OSYS == 0x07DF) && (_REV == 0x05)) checks specifically for Linux
+> (see [1] and 18d78b64fddc ("ACPI / init: Make it possible to override
+> _REV")) so it might be that Dell people tested this at some point in
+> Linux as well. Added Mario in case he has any ideas.
+>
+> Previously I suggested you to try the ACPI method tracing to see what
+> happens inside PGOF(). Did you have time to try it? It may provide more
+> information about that is happening inside those methods and hopefully
+> point us to the root cause.
+>
+> Also if you haven't tried already passing acpi_rev_override in the
+> command line makes the _REV to return 5 so it should go into the "Linux"
+> path in PGOF().
 
-Applied to
-https://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux.git/log/?h=fixes
+Oh, so does it look like we are trying to work around AML that tried
+to work around some problematic behavior in Linux at one point?
 
-Will likely send this as a fix for v5.4 still so stable only has to
-backport this to 5.3 and not 5.4 too.
-
-Thanks!
-Christian
+> [1] https://www.kernel.org/doc/html/latest/firmware-guide/acpi/osi.html#do-not-use-rev
