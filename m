@@ -2,192 +2,150 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89150C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 20:31:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EBE4C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 20:32:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5311F2088F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 20:31:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SwUQouyf"
+	by mail.kernel.org (Postfix) with ESMTP id 50F172088F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 20:32:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574281957;
+	bh=rgz7tSc56R6AlFhUwHCm3gukAfl1sHXelnLXuoyn9n8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mqbJWuyqYThKkphjr6u9MC3ataWjkkWDeET4q46m/rT+DE4izT7he3MFV0AkxKmaG
+	 4/67eGXTC4PLEEztUEHhWiA6lj6UuCcBu+W04GYHNEmTIxDqJHZG2FihkZou3a/Tm0
+	 swpEK85AhM4N+4emmg/+VkLiDM+aleIxAcrJCZ9A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726803AbfKTUb4 (ORCPT
+        id S1726875AbfKTUcg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 15:31:56 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:41586 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725854AbfKTUbz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 15:31:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574281913;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=HHSSmYMXHPsKCs1Q6EW/xg8P7KSA2E1ZxvHaD/SQD+8=;
-        b=SwUQouyf1A/r16fwwuFjfa+yEiGYH4fGav3pBjARnDVING6MsUvJtokAWtIcTaSVEZ+RdI
-        r/NEqlhnnHM8+QfgyEFz5LjtrgQWJ6Lx8Pz+Q48z1YXZpYsyF5k7jmkPMrtSkhmDXpU3aB
-        LpLqEOzdr5/RL6QggYDhx/tPRbPpD44=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-412-qq6Z3ilNNdOJ2rDQE6ng1Q-1; Wed, 20 Nov 2019 15:31:52 -0500
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 20 Nov 2019 15:32:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53430 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726038AbfKTUcg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 15:32:36 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 75AC88018A3;
-        Wed, 20 Nov 2019 20:31:49 +0000 (UTC)
-Received: from x1.home (ovpn-116-56.phx2.redhat.com [10.3.116.56])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 214EF6E3E7;
-        Wed, 20 Nov 2019 20:31:48 +0000 (UTC)
-Date:   Wed, 20 Nov 2019 13:31:47 -0700
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Stephen Hemminger <stephen@networkplumber.org>
-Cc:     <lantianyu1986@gmail.com>, <cohuck@redhat.com>,
-        "KY Srinivasan" <kys@microsoft.com>,
-        "Haiyang Zhang" <haiyangz@microsoft.com>,
-        "Stephen Hemminger" <sthemmin@microsoft.com>, <sashal@kernel.org>,
-        <mchehab+samsung@kernel.org>, <davem@davemloft.net>,
-        <gregkh@linuxfoundation.org>, <robh@kernel.org>,
-        <Jonathan.Cameron@huawei.com>, <paulmck@linux.ibm.com>,
-        "Michael Kelley" <mikelley@microsoft.com>,
-        "Tianyu Lan" <Tianyu.Lan@microsoft.com>,
-        <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
-        <linux-hyperv@vger.kernel.org>, "vkuznets" <vkuznets@redhat.com>
-Subject: Re: [PATCH] VFIO/VMBUS: Add VFIO VMBUS driver support
-Message-ID: <20191120133147.1d627348@x1.home>
-In-Reply-To: <20191120114611.4721a7e9@hermes.lan>
-References: <20191111084507.9286-1-Tianyu.Lan@microsoft.com>
-        <20191119165620.0f42e5ba@x1.home>
-        <20191120103503.5f7bd7c4@hermes.lan>
-        <20191120120715.0cecf5ea@x1.home>
-        <20191120114611.4721a7e9@hermes.lan>
-Organization: Red Hat
+        by mail.kernel.org (Postfix) with ESMTPSA id E33AC20872;
+        Wed, 20 Nov 2019 20:32:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574281955;
+        bh=rgz7tSc56R6AlFhUwHCm3gukAfl1sHXelnLXuoyn9n8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YxytrLSujkMi+YhB60vQ4R5qA6bi7jIjXFJCPx0aj6ZCR2dKlKjWHI649X9tToNSd
+         5u+a+9w4YBtS9AcvywmrIMwG5XV6XwGzKwtDkp4YuWzFG2LES9dsOJYsGMthUe/NhI
+         a2QS8rjcGaeNUNn8GJwOHx5qfXXsS8WeLJrXdWKE=
+Date:   Wed, 20 Nov 2019 21:32:32 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Stephan =?iso-8859-1?Q?M=FCller?= <smueller@chronox.de>
+Cc:     Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        zhangjs <zachary@baishancloud.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        Nicolai Stange <nstange@suse.de>,
+        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
+        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
+        Roman Drahtmueller <draht@schaltsekun.de>,
+        Neil Horman <nhorman@redhat.com>
+Subject: Re: [PATCH v25 10/12] LRNG - add TRNG support
+Message-ID: <20191120203232.GB3109949@kroah.com>
+References: <5390778.VeFRgus4bQ@positron.chronox.de>
+ <19681012.svDddlc5pN@positron.chronox.de>
+ <20191120132918.GA2892197@kroah.com>
+ <1695782.oZ5Vf4nH9s@positron.chronox.de>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-MC-Unique: qq6Z3ilNNdOJ2rDQE6ng1Q-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1695782.oZ5Vf4nH9s@positron.chronox.de>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 20 Nov 2019 11:46:11 -0800
-Stephen Hemminger <stephen@networkplumber.org> wrote:
+On Wed, Nov 20, 2019 at 08:51:11PM +0100, Stephan Müller wrote:
+> Am Mittwoch, 20. November 2019, 14:29:18 CET schrieb Greg Kroah-Hartman:
+> 
+> Hi Greg,
+> 
+> > On Wed, Nov 20, 2019 at 09:58:35AM +0100, Stephan Müller wrote:
+> > > Am Dienstag, 19. November 2019, 13:41:50 CET schrieb Greg Kroah-Hartman:
+> > > 
+> > > Hi Greg,
+> > > 
+> > > > On Tue, Nov 19, 2019 at 02:07:40AM -0800, Andy Lutomirski wrote:
+> > > > > > As this would introduce a new device file now, is there a special
+> > > > > > process that I need to follow or do I need to copy? Which
+> > > > > > major/minor
+> > > > > > number should I use?
+> > > > > > 
+> > > > > > Looking into static const struct memdev devlist[] I see
+> > > > > > 
+> > > > > >          [8] = { "random", 0666, &random_fops, 0 },
+> > > > > >          [9] = { "urandom", 0666, &urandom_fops, 0 },
+> > > > > > 
+> > > > > > Shall a true_random be added here with [10]?
+> > > > > 
+> > > > > I am not at all an expert on chardevs, but this sounds generally
+> > > > > reasonable.  gregkh is probably the real authority here.
+> > > > 
+> > > > [10] is the aio char device node, so you better not try to overlap it or
+> > > > bad things will happen :(
+> > > 
+> > > Thanks for your insights.
+> > > 
+> > > Which device minor number could we use?
+> > 
+> > Get your own dynamic one by using a misc device if you _REALLY_ want to
+> > add yet-another-char-node-for-random-data.
+> > 
+> > But I would have thought that we all realize that this is not the way to
+> > do things.  Let's not have "random", "urandom", and "true_random" be
+> > something we want to totally confuse userspace with, that way is insane.
+> > 
+> > Please just make the existing userspace api "just work", don't add to
+> > the mess.
+> 
+> Thank you, I think we should follow that advise.
+> 
+> With that and considering Alexander's rightful remark we have a challenge. So, 
+> changing the syscall may not be the right way unless we find a way to restrict 
+> the permissions somehow (capability? LSM? None of that seems to be a good 
+> fit).
+> 
+> What about providing a /sys file? I.e. adding a file that:
+> 
+> a) has permissions 440 per default and maybe the ownership of root:root
+> 
+> b) allow user space to perform a chown/chgrp
+> 
+> c) only supports reading of data from user space
+> 
+> But then, how could we provide a common interface for the existing random.c 
+> and the LRNG?
+> 
+> Or should we use a proc file for that? If yes, I guess it should not be a 
+> sysctl, but a "regular" proc file that should allow a chown(2) operation. On 
+> the other hand, is proc the right place to provide a user space interface for 
+> exporting data to user?
 
-> On Wed, 20 Nov 2019 12:07:15 -0700
-> Alex Williamson <alex.williamson@redhat.com> wrote:
->=20
-> > On Wed, 20 Nov 2019 10:35:03 -0800
-> > Stephen Hemminger <stephen@networkplumber.org> wrote:
-> >  =20
-> > > On Tue, 19 Nov 2019 15:56:20 -0800
-> > > "Alex Williamson" <alex.williamson@redhat.com> wrote:
-> > >    =20
-> > > > On Mon, 11 Nov 2019 16:45:07 +0800
-> > > > lantianyu1986@gmail.com wrote:
-> > > >      =20
-> > > > > From: Tianyu Lan <Tianyu.Lan@microsoft.com>
-> > > > >=20
-> > > > > This patch is to add VFIO VMBUS driver support in order to expose
-> > > > > VMBUS devices to user space drivers(Reference Hyper-V UIO driver)=
-.
-> > > > > DPDK now has netvsc PMD driver support and it may get VMBUS resou=
-rces
-> > > > > via VFIO interface with new driver support.
-> > > > >=20
-> > > > > So far, Hyper-V doesn't provide virtual IOMMU support and so this
-> > > > > driver needs to be used with VFIO noiommu mode.       =20
-> > > >=20
-> > > > Let's be clear here, vfio no-iommu mode taints the kernel and was a
-> > > > compromise that we can re-use vfio-pci in its entirety, so it had a
-> > > > high code reuse value for minimal code and maintenance investment. =
- It
-> > > > was certainly not intended to provoke new drivers that rely on this=
- mode
-> > > > of operation.  In fact, no-iommu should be discouraged as it provid=
-es
-> > > > absolutely no isolation.  I'd therefore ask, why should this be in =
-the
-> > > > kernel versus any other unsupportable out of tree driver?  It appea=
-rs
-> > > > almost entirely self contained.  Thanks,
-> > > >=20
-> > > > Alex     =20
-> > >=20
-> > > The current VMBUS access from userspace is from uio_hv_generic
-> > > there is (and will not be) any out of tree driver for this.   =20
-> >=20
-> > I'm talking about the driver proposed here.  It can only be used in a
-> > mode that taints the kernel that its running on, so why would we sign
-> > up to support 400 lines of code that has no safe way to use it?
-> >   =20
-> > > The new driver from Tianyu is to make VMBUS behave like PCI.
-> > > This simplifies the code for DPDK and other usermode device drivers
-> > > because it can use the same API's for VMBus as is done for PCI.   =20
-> >=20
-> > But this doesn't re-use the vfio-pci API at all, it explicitly defines
-> > a new vfio-vmbus API over the vfio interfaces.  So a user mode driver
-> > might be able to reuse some vfio support, but I don't see how this has
-> > anything to do with PCI.
-> >  =20
-> > > Unfortunately, since Hyper-V does not support virtual IOMMU yet,
-> > > the only usage modle is with no-iommu taint.   =20
-> >=20
-> > Which is what makes it unsupportable and prompts the question why it
-> > should be included in the mainline kernel as it introduces a
-> > maintenance burden and normalizes a usage model that's unsafe.  Thanks,=
- =20
->=20
-> Many existing userspace drivers are unsafe:
->   - out of tree DPDK igb_uio is unsafe.
+No, do not abuse sysfs or procfs for something like this.  Use a real
+syscall please if you really need it.
 
-Why is it out of tree?
-
->   - VFIO with noiommu is unsafe.
-
-Which taints the kernel and requires raw I/O user privs.
-
->   - hv_uio_generic is unsafe.
-
-Gosh, it's pretty coy about this, no kernel tainting, no user
-capability tests, no scary dmesg or Kconfig warnings.  Do users know
-it's unsafe?
-
-> This new driver is not any better or worse. This sounds like a complete
-> repeat of the discussion that occurred before introducing VFIO noiommu mo=
-de.
->=20
-> Shouldn't vmbus vfio taint the kernel in the same way as vfio noiommu doe=
-s?
-
-Yes, the no-iommu interaction happens at the vfio-core level.  I can't
-speak for any of the uio interfaces you mention, but I know that
-uio_pci_generic is explicitly intended for non-DMA use cases and in
-fact the efforts to enable MSI/X support in that driver and the
-objections raised for breaking that usage model by the maintainer, is
-what triggered no-iommu support for vfio.  IIRC, the rationale was
-largely for code reuse both at the kernel and userspace driver level,
-while imposing a minimal burden in vfio-core for this dummy iommu
-driver.  vfio explicitly does not provide a DMA mapping solution for
-no-iommu use cases because I'm not willing to maintain any more lines
-of code to support this usage model.  The tainting imposed by this model
-and incomplete API was intended to be a big warning to discourage its
-use and as features like vIOMMU become more prevalent and bare metal
-platforms without physical IOMMUs hopefully become less prevalent,
-maybe no-iommu could be phased out or removed.
-
-You might consider this a re-hashing of those previous discussions, but
-to me it seems like taking advantage of and promoting an interface that
-should have plenty of warning signs that this is not a safe way to use
-the device from userspace.  Without some way to take advantage of the
-code in a safe way, this just seems to be normalizing an unsupportable
-usage model.  Thanks,
-
-Alex
-
+greg k-h
