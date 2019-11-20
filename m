@@ -2,100 +2,66 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB38CC43141
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 16:14:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DF3BC43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 16:15:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C300D20715
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 16:14:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EC62206F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 16:15:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732714AbfKTQOb (ORCPT
+        id S1729378AbfKTQPc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 11:14:31 -0500
-Received: from lnfm1.sai.msu.ru ([93.180.26.255]:47874 "EHLO lnfm1.sai.msu.ru"
+        Wed, 20 Nov 2019 11:15:32 -0500
+Received: from mga05.intel.com ([192.55.52.43]:8039 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729292AbfKTQOa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 11:14:30 -0500
-Received: from dragon.sai.msu.ru (dragon.sai.msu.ru [93.180.26.172])
-        by lnfm1.sai.msu.ru (8.14.1/8.12.8) with ESMTP id xAKGDCJ3002142;
-        Wed, 20 Nov 2019 19:13:17 +0300
-Received: from oak.local (unknown [92.243.181.209])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client did not present a certificate)
-        by dragon.sai.msu.ru (Postfix) with ESMTPSA id 293C67A53;
-        Wed, 20 Nov 2019 19:13:13 +0300 (MSK)
-From:   "Matwey V. Kornilov" <matwey@sai.msu.ru>
-To:     tom@radxa.com, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Akash Gajjar <akash@openedev.com>,
-        "Matwey V. Kornilov" <matwey@sai.msu.ru>,
-        Pragnesh Patel <Pragnesh_Patel@mentor.com>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS),
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Rockchip SoC
-        support),
-        linux-rockchip@lists.infradead.org (open list:ARM/Rockchip SoC support),
-        linux-kernel@vger.kernel.org (open list)
-Cc:     matwey.kornilov@gmail.com,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS),
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Rockchip SoC
-        support),
-        linux-rockchip@lists.infradead.org (open list:ARM/Rockchip SoC support),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] arm64: dts: rockchip: Add regulators for PCIe for Radxa Rock Pi 4 board
-Date:   Wed, 20 Nov 2019 19:12:54 +0300
-Message-Id: <20191120161302.5157-1-matwey@sai.msu.ru>
-X-Mailer: git-send-email 2.16.4
-In-Reply-To: <CAFjve-AT6c-yweF0mOPea-caG3n43nZzVPcwef-qp+n35JN9ig@mail.gmail.com>
-References: <CAFjve-AT6c-yweF0mOPea-caG3n43nZzVPcwef-qp+n35JN9ig@mail.gmail.com>
+        id S1728305AbfKTQPc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 11:15:32 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Nov 2019 08:15:27 -0800
+X-IronPort-AV: E=Sophos;i="5.69,222,1571727600"; 
+   d="scan'208";a="209788059"
+Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.161])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Nov 2019 08:15:11 -0800
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     intel-gfx <intel-gfx@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Chris Wilson <chris@chris-wilson.co.uk>
+Subject: Re: [Intel-gfx] linux-next: Tree for Nov 19 (i915)
+In-Reply-To: <1d30acd4-9947-d228-967f-c4e76ebca832@infradead.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20191119194658.39af50d0@canb.auug.org.au> <1d30acd4-9947-d228-967f-c4e76ebca832@infradead.org>
+Date:   Wed, 20 Nov 2019 18:15:08 +0200
+Message-ID: <87k17uwmlv.fsf@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add 0.9V and 1.8V voltage regulators for Radxa Rock Pi 4 board PCIe.
+On Tue, 19 Nov 2019, Randy Dunlap <rdunlap@infradead.org> wrote:
+> On 11/19/19 12:46 AM, Stephen Rothwell wrote:
+>> Hi all,
+>> 
+>> Changes since 20191118:
+>
+>
+> on x86_64:
+>
+> ERROR: "pm_suspend_target_state" [drivers/gpu/drm/i915/i915.ko] undefined!
+>
+> # CONFIG_SUSPEND is not set
 
-Signed-off-by: Matwey V. Kornilov <matwey@sai.msu.ru>
----
- arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+a70a9e998e8e ("drm/i915: Defer rc6 shutdown to suspend_late")
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts b/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts
-index 01f8effd8206..215fb02b6bd0 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts
-@@ -53,6 +53,16 @@
- 		vin-supply = <&vcc12v_dcin>;
- 	};
- 
-+	vcc_0v9: vcc-0v9 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc_0v9";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <900000>;
-+		regulator-max-microvolt = <900000>;
-+		vin-supply = <&vcc3v3_sys>;
-+	};
-+
- 	vcc3v3_pcie: vcc3v3-pcie-regulator {
- 		compatible = "regulator-fixed";
- 		enable-active-high;
-@@ -475,6 +485,8 @@
- 	num-lanes = <4>;
- 	pinctrl-0 = <&pcie_clkreqnb_cpm>;
- 	pinctrl-names = "default";
-+	vpcie0v9-supply = <&vcc_0v9>;
-+	vpcie1v8-supply = <&vcc_1v8>;
- 	vpcie3v3-supply = <&vcc3v3_pcie>;
- };
- 
 -- 
-2.16.4
-
+Jani Nikula, Intel Open Source Graphics Center
