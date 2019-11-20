@@ -2,211 +2,149 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8246AC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 12:42:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E58CC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 12:42:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BE7322520
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 12:42:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2399322520
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 12:42:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="izQ0z1Is"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="EBZkrwVU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729869AbfKTMm3 (ORCPT
+        id S1729883AbfKTMmm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 07:42:29 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:59415 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726872AbfKTMm2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 07:42:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574253747;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=IjiqMwk1Fsou6tGghqOXQu73ReEj37ZIEa08rkPnnp0=;
-        b=izQ0z1IsBOtsVLvYkFvFVo+mD2r1BD6kgxoFFmU/MUTV4fJT+PV+nc1saMsBQYLhrdX0jE
-        Ms+Af4O2ej9yQQFizDZbYtyT0NwwLbdvY0lP/H6Ol0pGNAsy35VlmXABkYDP1nurk4Y6G6
-        mtG/OpfTP7YNLKG99ZJJV0L51QgGkE0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-21-nGJD-KGsPyyqy-xPYYGZlA-1; Wed, 20 Nov 2019 07:42:26 -0500
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 20 Nov 2019 07:42:42 -0500
+Received: from ozlabs.org ([203.11.71.1]:46331 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729871AbfKTMml (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 07:42:41 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E2EBA1005513;
-        Wed, 20 Nov 2019 12:42:24 +0000 (UTC)
-Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4286D67275;
-        Wed, 20 Nov 2019 12:42:24 +0000 (UTC)
-Date:   Wed, 20 Nov 2019 07:42:24 -0500
-From:   Brian Foster <bfoster@redhat.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 28/28] xfs: rework unreferenced inode lookups
-Message-ID: <20191120124224.GA15542@bfoster>
-References: <20191031234618.15403-1-david@fromorbit.com>
- <20191031234618.15403-29-david@fromorbit.com>
- <20191106221846.GE37080@bfoster>
- <20191114221602.GJ4614@dread.disaster.area>
- <20191115172600.GC55854@bfoster>
- <20191118010047.GS4614@dread.disaster.area>
- <20191119151344.GD10763@bfoster>
- <20191119211834.GA4614@dread.disaster.area>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47J2Qk27HHz9sPV;
+        Wed, 20 Nov 2019 23:42:37 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1574253758;
+        bh=kcB8hU0HApS87lVWCCHWC6nJNpbOngygsjnom0C++ZU=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=EBZkrwVUi4jpHNMaaKB8rHY2iUV/HY5vFnwmddANH5qGJr+iDp4mmSf3jNen0ONcb
+         Y7Zqxv6GkQ+rUYNPL8HncFyFXXL7uVK8L32v3crpLLGVuU27dUBO+LMy0Z1BveYSYN
+         6+vDpq63rLf8oqAHDm93S9nP9Li3v46hcXzwgtnJyXgN2hHbVO6CNiEHO2gn4ZsaYL
+         znYEep/9PWGWGdbsLAyfsG+R6RWT/Uy6jkUchpi4ZGVUG0dXqHBcm8XaJ4L/9Yc2vG
+         kLj0L8HZWpxaYtg9dE4ga8N0KWfO874d24txUZD/fio9LMJmIevrFcGAocW76EyjW5
+         GWk86pF754YOA==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v3 2/8] powerpc/vdso32: Add support for CLOCK_{REALTIME/MONOTONIC}_COARSE
+In-Reply-To: <4644ccc9b4da78639ae9424db878c48711abf05a.1572342582.git.christophe.leroy@c-s.fr>
+References: <cover.1572342582.git.christophe.leroy@c-s.fr> <4644ccc9b4da78639ae9424db878c48711abf05a.1572342582.git.christophe.leroy@c-s.fr>
+Date:   Wed, 20 Nov 2019 23:42:33 +1100
+Message-ID: <87eey2btxi.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-In-Reply-To: <20191119211834.GA4614@dread.disaster.area>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-MC-Unique: nGJD-KGsPyyqy-xPYYGZlA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 08:18:34AM +1100, Dave Chinner wrote:
-> On Tue, Nov 19, 2019 at 10:13:44AM -0500, Brian Foster wrote:
-> > On Mon, Nov 18, 2019 at 12:00:47PM +1100, Dave Chinner wrote:
-> > > On Fri, Nov 15, 2019 at 12:26:00PM -0500, Brian Foster wrote:
-> > > > On Fri, Nov 15, 2019 at 09:16:02AM +1100, Dave Chinner wrote:
-> > > > > On Wed, Nov 06, 2019 at 05:18:46PM -0500, Brian Foster wrote:
-> > > > > If so, most of this patch will go away....
-> > > > >=20
-> > > > > > > +=09 * attached to the buffer so we don't need to do anything=
- more here.
-> > > > > > >  =09 */
-> > > > > > > -=09if (ip !=3D free_ip) {
-> > > > > > > -=09=09if (!xfs_ilock_nowait(ip, XFS_ILOCK_EXCL)) {
-> > > > > > > -=09=09=09rcu_read_unlock();
-> > > > > > > -=09=09=09delay(1);
-> > > > > > > -=09=09=09goto retry;
-> > > > > > > -=09=09}
-> > > > > > > -
-> > > > > > > -=09=09/*
-> > > > > > > -=09=09 * Check the inode number again in case we're racing w=
-ith
-> > > > > > > -=09=09 * freeing in xfs_reclaim_inode().  See the comments i=
-n that
-> > > > > > > -=09=09 * function for more information as to why the initial=
- check is
-> > > > > > > -=09=09 * not sufficient.
-> > > > > > > -=09=09 */
-> > > > > > > -=09=09if (ip->i_ino !=3D inum) {
-> > > > > > > +=09if (__xfs_iflags_test(ip, XFS_ISTALE)) {
-> > > > > >=20
-> > > > > > Is there a correctness reason for why we move the stale check t=
-o under
-> > > > > > ilock (in both iflush/ifree)?
-> > > > >=20
-> > > > > It's under the i_flags_lock, and so I moved it up under the looku=
-p
-> > > > > hold of the i_flags_lock so we don't need to cycle it again.
-> > > > >=20
-> > > >=20
-> > > > Yeah, but in both cases it looks like it moved to under the ilock a=
-s
-> > > > well, which comes after i_flags_lock. IOW, why grab ilock for stale
-> > > > inodes when we're just going to skip them?
-> > >=20
-> > > Because I was worrying about serialising against reclaim before
-> > > changing the state of the inode. i.e. if the inode has already been
-> > > isolated by not yet disposed of, we shouldn't touch the inode state
-> > > at all. Serialisation against reclaim in this patch is via the
-> > > ILOCK, hence we need to do that before setting ISTALE....
-> > >=20
-> >=20
-> > Yeah, I think my question still isn't clear... I'm not talking about
-> > setting ISTALE. The code I referenced above is where we test for it and
-> > skip the inode if it is already set. For example, the code referenced
-> > above in xfs_ifree_get_one_inode() currently does the following with
-> > respect to i_flags_lock, ILOCK and XFS_ISTALE:
-> >=20
-> > =09...
-> > =09spin_lock(i_flags_lock)
-> > =09xfs_ilock_nowait(XFS_ILOCK_EXCL)
-> > =09if !XFS_ISTALE
-> > =09=09skip
-> > =09set XFS_ISTALE
-> > =09...
->=20
-> There is another place in xfs_ifree_cluster that sets ISTALE without
-> the ILOCK held, so the ILOCK is being used here for a different
-> purpose...
->=20
-> > The reclaim isolate code does this, however:
-> >=20
-> > =09spin_trylock(i_flags_lock)
-> > =09if !XFS_ISTALE
-> > =09=09skip
-> > =09xfs_ilock(XFS_ILOCK_EXCL)
-> > =09...=09
->=20
-> Which is fine, because we're not trying to avoid racing with reclaim
-> here. :) i.e. all we need is the i_flags lock to check the ISTALE
-> flag safely.
->=20
-> > So my question is why not do something like the following in the
-> > _get_one_inode() case?
-> >=20
-> > =09...
-> > =09spin_lock(i_flags_lock)
-> > =09if !XFS_ISTALE
-> > =09=09skip
-> > =09xfs_ilock_nowait(XFS_ILOCK_EXCL)
-> > =09set XFS_ISTALE
-> > =09...
->=20
-> Because, like I said, I focussed on the lookup racing with reclaim
-> first. The above code could be used, but it puts object internal
-> state checks before we really know whether the object is safe to
-> access and whether we can trust it.
->=20
-> I'm just following a basic RCU/lockless lookup principle here:
-> don't try to use object state before you've fully validated that the
-> object is live and guaranteed that it can be safely referenced.
->=20
-> > IOW, what is the need, if any, to acquire ilock in the iflush/ifree
-> > paths before testing for XFS_ISTALE? Is there some specific intermediat=
-e
-> > state I'm missing or is this just unintentional?
->=20
-> It's entirely intentional - validate and claim the object we've
-> found in the lockless lookup, then run the code that checks/changes
-> the object state. Smashing state checks and lockless lookup
-> validation together is a nasty landmine to leave behind...
->=20
+Christophe Leroy <christophe.leroy@c-s.fr> writes:
+> This is copied and adapted from commit 5c929885f1bb ("powerpc/vdso64:
+> Add support for CLOCK_{REALTIME/MONOTONIC}_COARSE")
+> from Santosh Sivaraj <santosh@fossix.org>
+>
+> Benchmark from vdsotest-all:
+> clock-gettime-realtime: syscall: 3601 nsec/call
+> clock-gettime-realtime:    libc: 1072 nsec/call
+> clock-gettime-realtime:    vdso: 931 nsec/call
+> clock-gettime-monotonic: syscall: 4034 nsec/call
+> clock-gettime-monotonic:    libc: 1213 nsec/call
+> clock-gettime-monotonic:    vdso: 1076 nsec/call
+> clock-gettime-realtime-coarse: syscall: 2722 nsec/call
+> clock-gettime-realtime-coarse:    libc: 805 nsec/call
+> clock-gettime-realtime-coarse:    vdso: 668 nsec/call
+> clock-gettime-monotonic-coarse: syscall: 2949 nsec/call
+> clock-gettime-monotonic-coarse:    libc: 882 nsec/call
+> clock-gettime-monotonic-coarse:    vdso: 745 nsec/call
+>
+> Additional test passed with:
+> 	vdsotest -d 30 clock-gettime-monotonic-coarse verify
 
-Ok, so this is intentional, but the purpose is simplification vs.
-technically being part of the lookup dance. I'm not sure I see the
-advantage given that IMO this trades off one landmine for another, but
-I'm not worried that much about it as long as the code is correct.
+This broke on 64-bit big endian, which uses the 32-bit VDSO, with errors
+like:
 
-I guess we'll see how things change after reevaluation of the whole
-holding ilock across contexts behavior, but if we do end up with a
-similar pattern in the iflush/ifree paths please document that
-explicitly in the comments. Otherwise in a patch that swizzles this code
-around and explicitly plays games with ilock, the intent of this
-particular change is not clear to somebody reading the code IMO. In
-fact, I think it might be interesting to see if we could define a couple
-helpers (located closer to the reclaim code) to perform an unreferenced
-lookup/release of an inode, but that is secondary to nailing down the
-fundamental rules.
+  clock-gettime-monotonic-coarse/verify: 10 failures/inconsistencies encountered
+  timestamp obtained from libc/vDSO not normalized:
+  	[-1574202155, 1061008673]
+  timestamp obtained from libc/vDSO predates timestamp
+  previously obtained from kernel:
+  	[74, 261310747] (kernel)
+  	[-1574202155, 1061008673] (vDSO)
+  timestamp obtained from libc/vDSO not normalized:
+  	[-1574202155, 1061008673]
+  timestamp obtained from libc/vDSO predates timestamp
+  previously obtained from kernel:
+  	[74, 261310747] (kernel)
+  	[-1574202155, 1061008673] (vDSO)
+  timestamp obtained from libc/vDSO not normalized:
+  	[-1574202155, 1061008673]
+  timestamp obtained from libc/vDSO predates timestamp
+  previously obtained from kernel:
+  	[74, 261310747] (kernel)
+  	[-1574202155, 1061008673] (vDSO)
+  timestamp obtained from libc/vDSO not normalized:
+  	[-1574202155, 1061008673]
+  timestamp obtained from libc/vDSO predates timestamp
+  previously obtained from kernel:
+  	[74, 261310747] (kernel)
+  	[-1574202155, 1061008673] (vDSO)
+  timestamp obtained from libc/vDSO not normalized:
+  	[-1574202155, 1061008673]
+  timestamp obtained from libc/vDSO predates timestamp
+  previously obtained from kernel:
+  	[74, 261310747] (kernel)
+  	[-1574202155, 1061008673] (vDSO)
+  Failure threshold (10) reached; stopping test.
 
-Brian
 
-> Cheers,
->=20
-> Dave.
-> --=20
-> Dave Chinner
-> david@fromorbit.com
->=20
+The diff below seems to fix it, but I'm not sure it's correct. ie. we
+just ignore the top part of the values, how does that work?
+
+cheers
+
+
+diff --git a/arch/powerpc/kernel/vdso32/gettimeofday.S b/arch/powerpc/kernel/vdso32/gettimeofday.S
+index decd263c16e0..58f7e1124d92 100644
+--- a/arch/powerpc/kernel/vdso32/gettimeofday.S
++++ b/arch/powerpc/kernel/vdso32/gettimeofday.S
+@@ -16,9 +16,11 @@
+ #ifdef CONFIG_PPC64
+ #define LOPART 4
+ #define TSPEC_TV_SEC   TSPC64_TV_SEC+LOPART
++#define TSPEC_TV_NSEC  TSPC64_TV_NSEC+LOPART
+ #else
+ #define LOPART 0
+ #define TSPEC_TV_SEC   TSPC32_TV_SEC
++#define TSPEC_TV_NSEC  TSPC32_TV_NSEC
+ #endif
+ 
+        .text
+@@ -131,8 +133,8 @@ V_FUNCTION_BEGIN(__kernel_clock_gettime)
+         * CLOCK_REALTIME_COARSE, below values are needed for MONOTONIC_COARSE
+         * too
+         */
+-       lwz     r3,STAMP_XTIME+TSPC32_TV_SEC(r9)
+-       lwz     r4,STAMP_XTIME+TSPC32_TV_NSEC(r9)
++       lwz     r3,STAMP_XTIME+TSPEC_TV_SEC(r9)
++       lwz     r4,STAMP_XTIME+TSPEC_TV_NSEC(r9)
+        bne     cr6,1f
+ 
+        /* CLOCK_MONOTONIC_COARSE */
+
 
