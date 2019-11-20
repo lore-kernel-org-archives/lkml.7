@@ -7,52 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B6FC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:36:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 961DBC43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:36:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB34F2251E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:36:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70BE922526
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:36:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574257001;
-	bh=KQHLvaPBIFjocC8JrZjfJUy2MvGrWCgUpnuB0PzKb8Q=;
+	s=default; t=1574257007;
+	bh=3HKCIB7YMRDHJrkZ/3F75UmwARzPFjHhq0piLV9ZpMs=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=hdcq8OzqUt36qEqYSILXI4DWTGNXVhLNMPjs2iTOkqTu8ubiq/UcaGvQ8kfEQlb6E
-	 CtqcxnXRSFkboXOA7crqHsFNv0DlBKmdL7s2UB6n5oUY6DdZRPonjpNPrNCCrFjFTt
-	 tah07JhZekKy8P1zQvonbDKOXKw2aIlRfe4jAaJI=
+	b=eSPu8Xv7QDETvUCbQDRhl2N4YOOARgJkBr6jluJyk+LYG8raQOtZrvbyF68rYLvvz
+	 vG3tyc/ZV05safVEgr7DSeFNwEEVV/aU+3oAIJPsuj0wZdJ/rfSwm9EDEqqvynv/SK
+	 8h3GCDZd2FMpUMaHf9GJ7IM5TZJqkxnJqkZbNgRU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729619AbfKTNgk (ORCPT
+        id S1730828AbfKTNgq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 08:36:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43160 "EHLO mail.kernel.org"
+        Wed, 20 Nov 2019 08:36:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43296 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729766AbfKTNgj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 08:36:39 -0500
+        id S1729766AbfKTNgp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 08:36:45 -0500
 Received: from localhost.localdomain (unknown [118.189.143.39])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 479B521939;
-        Wed, 20 Nov 2019 13:36:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A041F21939;
+        Wed, 20 Nov 2019 13:36:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574256999;
-        bh=KQHLvaPBIFjocC8JrZjfJUy2MvGrWCgUpnuB0PzKb8Q=;
+        s=default; t=1574257004;
+        bh=3HKCIB7YMRDHJrkZ/3F75UmwARzPFjHhq0piLV9ZpMs=;
         h=From:To:Cc:Subject:Date:From;
-        b=xXjWHhibAsMZrP90j1ZQgMWY7T+2rmkTlBUNnofBO6Lrr/k7ndoDndJUWLXuaGOx6
-         KA2uFOCS+rpCB8G1rfLvwucMYJ8BKEg5tsHESurVVfPp3EhgkOGEwQog4T/n+H7dp+
-         5IVNgd7weM+11CwRUwwJQ0XkT5cxOMuOta1NaUi4=
+        b=1w50fEh8eOSMvUdbaWMAfpUvpGBnzIKA3XQ1mcR42pvTu25jyIo48QZktSflRIiPG
+         B4R8EZlWJuG7OwKGnOOI89r01bxKVQnoZFiFPaB/GK/Fb6UdQysZ4fDkAPToIZMId3
+         JIgsPHWUjusRhrtl2v7HMZm3BcQwITt4SJeZV9sc=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        David Airlie <airlied@linux.ie>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH] drm/bridge: Fix Kconfig indentation
-Date:   Wed, 20 Nov 2019 21:36:34 +0800
-Message-Id: <20191120133634.11601-1-krzk@kernel.org>
+Subject: [PATCH] drm: Fix Kconfig indentation
+Date:   Wed, 20 Nov 2019 21:36:40 +0800
+Message-Id: <20191120133640.11659-1-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -65,28 +62,64 @@ coding style with command like:
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/gpu/drm/bridge/Kconfig | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/Kconfig | 30 +++++++++++++++---------------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
-index 34362976cd6f..176efa18e32c 100644
---- a/drivers/gpu/drm/bridge/Kconfig
-+++ b/drivers/gpu/drm/bridge/Kconfig
-@@ -60,10 +60,10 @@ config DRM_MEGACHIPS_STDPXXXX_GE_B850V3_FW
- 	select DRM_KMS_HELPER
- 	select DRM_PANEL
- 	---help---
--          This is a driver for the display bridges of
--          GE B850v3 that convert dual channel LVDS
--          to DP++. This is used with the i.MX6 imx-ldb
--          driver. You are likely to say N here.
-+	  This is a driver for the display bridges of
-+	  GE B850v3 that convert dual channel LVDS
-+	  to DP++. This is used with the i.MX6 imx-ldb
-+	  driver. You are likely to say N here.
+diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
+index 1168351267fd..ad1b6ecd2e08 100644
+--- a/drivers/gpu/drm/Kconfig
++++ b/drivers/gpu/drm/Kconfig
+@@ -94,18 +94,18 @@ config DRM_KMS_FB_HELPER
+ 	  FBDEV helpers for KMS drivers.
  
- config DRM_NXP_PTN3460
- 	tristate "NXP PTN3460 DP/LVDS bridge"
+ config DRM_DEBUG_DP_MST_TOPOLOGY_REFS
+-        bool "Enable refcount backtrace history in the DP MST helpers"
+-        select STACKDEPOT
+-        depends on DRM_KMS_HELPER
+-        depends on DEBUG_KERNEL
+-        depends on EXPERT
+-        help
+-          Enables debug tracing for topology refs in DRM's DP MST helpers. A
+-          history of each topology reference/dereference will be printed to the
+-          kernel log once a port or branch device's topology refcount reaches 0.
+-
+-          This has the potential to use a lot of memory and print some very
+-          large kernel messages. If in doubt, say "N".
++	bool "Enable refcount backtrace history in the DP MST helpers"
++	select STACKDEPOT
++	depends on DRM_KMS_HELPER
++	depends on DEBUG_KERNEL
++	depends on EXPERT
++	help
++	  Enables debug tracing for topology refs in DRM's DP MST helpers. A
++	  history of each topology reference/dereference will be printed to the
++	  kernel log once a port or branch device's topology refcount reaches 0.
++
++	  This has the potential to use a lot of memory and print some very
++	  large kernel messages. If in doubt, say "N".
+ 
+ config DRM_FBDEV_EMULATION
+ 	bool "Enable legacy fbdev support for your modesetting driver"
+@@ -234,8 +234,8 @@ config DRM_RADEON
+ 	tristate "ATI Radeon"
+ 	depends on DRM && PCI && MMU
+ 	select FW_LOADER
+-        select DRM_KMS_HELPER
+-        select DRM_TTM
++	select DRM_KMS_HELPER
++	select DRM_TTM
+ 	select POWER_SUPPLY
+ 	select HWMON
+ 	select BACKLIGHT_CLASS_DEVICE
+@@ -294,7 +294,7 @@ config DRM_VKMS
+ 	  If M is selected the module will be called vkms.
+ 
+ config DRM_ATI_PCIGART
+-        bool
++	bool
+ 
+ source "drivers/gpu/drm/exynos/Kconfig"
+ 
 -- 
 2.17.1
 
