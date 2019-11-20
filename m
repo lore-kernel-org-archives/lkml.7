@@ -2,111 +2,105 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D319C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:28:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C28EEC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:28:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 345C320730
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:28:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97D742080F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:28:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DCSy8DbM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QnBKM8lF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729404AbfKTP2e (ORCPT
+        id S1731199AbfKTP2m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 10:28:34 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:44216 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730503AbfKTP2D (ORCPT
+        Wed, 20 Nov 2019 10:28:42 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:45355 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728933AbfKTP2k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 10:28:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574263682;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=3/6jgcHdEdKgS4+aAeKKo6S0l6xP5rAtWK4XeM9Bqug=;
-        b=DCSy8DbMtwom1gYme+a7tsyWUOMMil9glBqOf/SI6h1AZtqQOTCUS2tVaCTFiRmA3R9dVj
-        2/6vWOh+No8XCUJH94VTXh75aB7hF3jRsmmSOffPBkt47GjmGdfzfcwCImgqYj6jVsyFWN
-        0VpFD16pw0aqlYCxCZMiLJ0KIQJFBWk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-13-sf8VdU13Nlunt_LKR_vcBA-1; Wed, 20 Nov 2019 10:27:59 -0500
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4AF3018B5F6B;
-        Wed, 20 Nov 2019 15:27:57 +0000 (UTC)
-Received: from coeurl.usersys.redhat.com (ovpn-123-90.rdu2.redhat.com [10.10.123.90])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2849F2AA8A;
-        Wed, 20 Nov 2019 15:27:57 +0000 (UTC)
-Received: by coeurl.usersys.redhat.com (Postfix, from userid 1000)
-        id 7AEA920A01; Wed, 20 Nov 2019 10:27:50 -0500 (EST)
-From:   Scott Mayhew <smayhew@redhat.com>
-To:     anna.schumaker@netapp.com, trond.myklebust@hammerspace.com
-Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk,
-        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v5 17/27] NFS: Constify mount argument match tables
-Date:   Wed, 20 Nov 2019 10:27:40 -0500
-Message-Id: <20191120152750.6880-18-smayhew@redhat.com>
-In-Reply-To: <20191120152750.6880-1-smayhew@redhat.com>
-References: <20191120152750.6880-1-smayhew@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: sf8VdU13Nlunt_LKR_vcBA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+        Wed, 20 Nov 2019 10:28:40 -0500
+Received: by mail-wr1-f65.google.com with SMTP id z10so224442wrs.12;
+        Wed, 20 Nov 2019 07:28:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=mQbJHJ0ZZ045TuFFH0OpDkzJ7tdcb7RCVuOKVisaGsk=;
+        b=QnBKM8lFYAgiDp8LfIkxVzinvXpIuyW56oFqGpbPPZxnkZU6XH+vxyVCg4qx0klXcJ
+         CYSM3C86zWGfP4zpnLTSfEEKpOJq5/aJG9FThkC1/W3Zd4ehndtC/i/Jq567GL1owuFb
+         6vucVz9yPAmXMzHNkZjRm0smO3K0bqeB2Y2ezetgaHphWqV969ZVtaf9L4SvENjkFfDz
+         GLV7NMZSBi9CCjHgp0sz9NVftykvrK176B40j3lMgu22suhpXX1cjyGfVNw3Pb4xwgre
+         UxM3g3jlZw7YWWFIF9AwhQEugdOL8xdWy+no+wLv4X2T6uXx5Nw5L1WUstUN9iBZ5Au+
+         LLgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=mQbJHJ0ZZ045TuFFH0OpDkzJ7tdcb7RCVuOKVisaGsk=;
+        b=JnHEPZkVhS0xFKrmxIzYh/KBtVi/v3RtGl/GwG4w19J2+LmY0zpqljVhlr6k13oTYm
+         BuH4+6HUhCnDjY5o9mpo5fwdFhcl/MZq5r0svKX18w5j5cjY9Hu/GhwSvwimoEGXASnv
+         K7BevgNSkFief3OMZxCeo1ObjcUSpGQwx3tlyiOg7gAnDrxS05YYjH9zY0PHQyREzbks
+         zwqmDoIszwVgbh5D0NAJzS2zrT+bhjQvLfUf+JOsUIThTnCg2S+lXC/m4CB5AAJOMF01
+         8ZkJlpSqxPx7Nsmz5+OhV2ovmT5PiQXcli+FMgqQx1VdDHzRtl/BVExxyM/U7m4DLJUr
+         jftQ==
+X-Gm-Message-State: APjAAAU/rx1qAiaBbnmb5e4tSV7I6LcROjeBxwoU37I0xfMcMZoCwh8p
+        sJo9+vzi7cJMeoxebyz3aJY=
+X-Google-Smtp-Source: APXvYqxh3eO87gK5Jlc/kSuzcfY8YgxD33Qo+k4FW0XQA3xxsWgsLM/AlJuIgFsEP2rpMDutlyvygw==
+X-Received: by 2002:a5d:6706:: with SMTP id o6mr4098747wru.54.1574263718682;
+        Wed, 20 Nov 2019 07:28:38 -0800 (PST)
+Received: from Red.localdomain ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
+        by smtp.googlemail.com with ESMTPSA id w4sm31797881wrs.1.2019.11.20.07.28.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Nov 2019 07:28:38 -0800 (PST)
+From:   Corentin Labbe <clabbe.montjoie@gmail.com>
+To:     davem@davemloft.net, herbert@gondor.apana.org.au,
+        mark.rutland@arm.com, mripard@kernel.org, robh+dt@kernel.org,
+        wens@csie.org
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com,
+        Corentin Labbe <clabbe.montjoie@gmail.com>
+Subject: [PATCH v2 1/3] dt-bindings: crypto: add new compatible for A33 SS
+Date:   Wed, 20 Nov 2019 16:28:31 +0100
+Message-Id: <20191120152833.20443-2-clabbe.montjoie@gmail.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191120152833.20443-1-clabbe.montjoie@gmail.com>
+References: <20191120152833.20443-1-clabbe.montjoie@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+The A33 SS has a difference with all other SS, it give SHA1 digest
+directly in BE.
+This difference need to be handlded by the driver and so need a new
+compatible.
 
-The mount argument match tables should never be altered so constify them.
-
-Signed-off-by: David Howells <dhowells@redhat.com>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
 ---
- fs/nfs/fs_context.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ .../devicetree/bindings/crypto/allwinner,sun4i-a10-crypto.yaml  | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
-index 3a34c8437917..de852177eca4 100644
---- a/fs/nfs/fs_context.c
-+++ b/fs/nfs/fs_context.c
-@@ -199,7 +199,7 @@ enum {
- =09Opt_lookupcache_err
- };
-=20
--static match_table_t nfs_lookupcache_tokens =3D {
-+static const match_table_t nfs_lookupcache_tokens =3D {
- =09{ Opt_lookupcache_all, "all" },
- =09{ Opt_lookupcache_positive, "pos" },
- =09{ Opt_lookupcache_positive, "positive" },
-@@ -215,7 +215,7 @@ enum {
- =09Opt_local_lock_err
- };
-=20
--static match_table_t nfs_local_lock_tokens =3D {
-+static const match_table_t nfs_local_lock_tokens =3D {
- =09{ Opt_local_lock_all, "all" },
- =09{ Opt_local_lock_flock, "flock" },
- =09{ Opt_local_lock_posix, "posix" },
-@@ -231,7 +231,7 @@ enum {
- =09Opt_vers_err
- };
-=20
--static match_table_t nfs_vers_tokens =3D {
-+static const match_table_t nfs_vers_tokens =3D {
- =09{ Opt_vers_2, "2" },
- =09{ Opt_vers_3, "3" },
- =09{ Opt_vers_4, "4" },
---=20
-2.17.2
+diff --git a/Documentation/devicetree/bindings/crypto/allwinner,sun4i-a10-crypto.yaml b/Documentation/devicetree/bindings/crypto/allwinner,sun4i-a10-crypto.yaml
+index 80b3e7350a73..5fc88fb3a91b 100644
+--- a/Documentation/devicetree/bindings/crypto/allwinner,sun4i-a10-crypto.yaml
++++ b/Documentation/devicetree/bindings/crypto/allwinner,sun4i-a10-crypto.yaml
+@@ -23,6 +23,8 @@ properties:
+       - items:
+         - const: allwinner,sun7i-a20-crypto
+         - const: allwinner,sun4i-a10-crypto
++      - items:
++        - const: allwinner,sun8i-a33-crypto
+ 
+   reg:
+     maxItems: 1
+-- 
+2.23.0
 
