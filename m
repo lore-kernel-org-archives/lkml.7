@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 955FDC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:47:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AFB9C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:47:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AF9720692
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:47:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24A6620709
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:47:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732653AbfKTPrT (ORCPT
+        id S1732664AbfKTPrX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 10:47:19 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:52532 "EHLO
+        Wed, 20 Nov 2019 10:47:23 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:52526 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729489AbfKTPkP (ORCPT
+        by vger.kernel.org with ESMTP id S1729474AbfKTPkP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 Nov 2019 10:40:15 -0500
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iXS5T-0004Zl-HK; Wed, 20 Nov 2019 15:40:11 +0000
+        id 1iXS5T-0004YM-6L; Wed, 20 Nov 2019 15:40:11 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iXS5S-0004GO-V1; Wed, 20 Nov 2019 15:40:10 +0000
+        id 1iXS5S-0004Fk-ID; Wed, 20 Nov 2019 15:40:10 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Manish Chopra" <manishc@marvell.com>,
-        "Sudarsana Reddy Kalluru" <skalluru@marvell.com>,
-        "David S. Miller" <davem@davemloft.net>
-Date:   Wed, 20 Nov 2019 15:37:22 +0000
-Message-ID: <lsq.1574264230.411080300@decadent.org.uk>
+        "Charles Keepax" <ckeepax@opensource.cirrus.com>,
+        "Takashi Iwai" <tiwai@suse.de>, "Vinod Koul" <vkoul@kernel.org>
+Date:   Wed, 20 Nov 2019 15:37:14 +0000
+Message-ID: <lsq.1574264230.742171975@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 12/83] bnx2x: Disable multi-cos feature.
+Subject: [PATCH 3.16 04/83] ALSA: compress: Fix regression on compressed
+ capture streams
 In-Reply-To: <lsq.1574264230.280218497@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,32 +56,76 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Sudarsana Reddy Kalluru <skalluru@marvell.com>
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
 
-commit d1f0b5dce8fda09a7f5f04c1878f181d548e42f5 upstream.
+commit 4475f8c4ab7b248991a60d9c02808dbb813d6be8 upstream.
 
-Commit 3968d38917eb ("bnx2x: Fix Multi-Cos.") which enabled multi-cos
-feature after prolonged time in driver added some regression causing
-numerous issues (sudden reboots, tx timeout etc.) reported by customers.
-We plan to backout this commit and submit proper fix once we have root
-cause of issues reported with this feature enabled.
+A previous fix to the stop handling on compressed capture streams causes
+some knock on issues. The previous fix updated snd_compr_drain_notify to
+set the state back to PREPARED for capture streams. This causes some
+issues however as the handling for snd_compr_poll differs between the
+two states and some user-space applications were relying on the poll
+failing after the stream had been stopped.
 
-Fixes: 3968d38917eb ("bnx2x: Fix Multi-Cos.")
-Signed-off-by: Sudarsana Reddy Kalluru <skalluru@marvell.com>
-Signed-off-by: Manish Chopra <manishc@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-[bwh: Backported to 3.16: adjust context]
+To correct this regression whilst still fixing the original problem the
+patch was addressing, update the capture handling to skip the PREPARED
+state rather than skipping the SETUP state as it has done until now.
+
+Fixes: 4f2ab5e1d13d ("ALSA: compress: Fix stop handling on compressed capture streams")
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Acked-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
-@@ -1914,7 +1914,7 @@ u16 bnx2x_select_queue(struct net_device
- 	}
+ include/sound/compress_driver.h |  5 +----
+ sound/core/compress_offload.c   | 16 +++++++++++-----
+ 2 files changed, 12 insertions(+), 9 deletions(-)
+
+--- a/include/sound/compress_driver.h
++++ b/include/sound/compress_driver.h
+@@ -176,10 +176,7 @@ static inline void snd_compr_drain_notif
+ 	if (snd_BUG_ON(!stream))
+ 		return;
  
- 	/* select a non-FCoE queue */
--	return fallback(dev, skb) % (BNX2X_NUM_ETH_QUEUES(bp) * bp->max_cos);
-+	return fallback(dev, skb) % (BNX2X_NUM_ETH_QUEUES(bp));
+-	if (stream->direction == SND_COMPRESS_PLAYBACK)
+-		stream->runtime->state = SNDRV_PCM_STATE_SETUP;
+-	else
+-		stream->runtime->state = SNDRV_PCM_STATE_PREPARED;
++	stream->runtime->state = SNDRV_PCM_STATE_SETUP;
+ 
+ 	wake_up(&stream->runtime->sleep);
  }
+--- a/sound/core/compress_offload.c
++++ b/sound/core/compress_offload.c
+@@ -549,10 +549,7 @@ snd_compr_set_params(struct snd_compr_st
+ 		stream->metadata_set = false;
+ 		stream->next_track = false;
  
- void bnx2x_set_num_queues(struct bnx2x *bp)
+-		if (stream->direction == SND_COMPRESS_PLAYBACK)
+-			stream->runtime->state = SNDRV_PCM_STATE_SETUP;
+-		else
+-			stream->runtime->state = SNDRV_PCM_STATE_PREPARED;
++		stream->runtime->state = SNDRV_PCM_STATE_SETUP;
+ 	} else {
+ 		return -EPERM;
+ 	}
+@@ -668,8 +665,17 @@ static int snd_compr_start(struct snd_co
+ {
+ 	int retval;
+ 
+-	if (stream->runtime->state != SNDRV_PCM_STATE_PREPARED)
++	switch (stream->runtime->state) {
++	case SNDRV_PCM_STATE_SETUP:
++		if (stream->direction != SND_COMPRESS_CAPTURE)
++			return -EPERM;
++		break;
++	case SNDRV_PCM_STATE_PREPARED:
++		break;
++	default:
+ 		return -EPERM;
++	}
++
+ 	retval = stream->ops->trigger(stream, SNDRV_PCM_TRIGGER_START);
+ 	if (!retval)
+ 		stream->runtime->state = SNDRV_PCM_STATE_RUNNING;
 
