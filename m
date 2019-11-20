@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62B11C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A58C43141
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:41:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4139D20709
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:41:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CF2A20709
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:41:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732043AbfKTPlJ (ORCPT
+        id S1732052AbfKTPlL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 10:41:09 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:53398 "EHLO
+        Wed, 20 Nov 2019 10:41:11 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:53384 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731915AbfKTPkZ (ORCPT
+        by vger.kernel.org with ESMTP id S1731912AbfKTPkZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 Nov 2019 10:40:25 -0500
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iXS5U-0004ay-Oe; Wed, 20 Nov 2019 15:40:12 +0000
+        id 1iXS5V-0004Z1-IO; Wed, 20 Nov 2019 15:40:13 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iXS5U-0004JM-Bl; Wed, 20 Nov 2019 15:40:12 +0000
+        id 1iXS5U-0004LX-Sh; Wed, 20 Nov 2019 15:40:12 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,40 +35,20 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Thomas Garnier" <thgarnie@google.com>,
-        "Dmitry Vyukov" <dvyukov@google.com>,
-        "Paul Gortmaker" <paul.gortmaker@windriver.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        "Chen Yucong" <slaoub@gmail.com>,
-        "Masami Hiramatsu" <mhiramat@kernel.org>,
-        "Jonathan Corbet" <corbet@lwn.net>,
-        "Shuah Khan" <shuah@kernel.org>,
-        "Chris Metcalf" <cmetcalf@mellanox.com>,
-        "Ricardo Neri" <ricardo.neri-calderon@linux.intel.com>,
-        "Arnaldo Carvalho de Melo" <acme@redhat.com>,
-        ricardo.neri@intel.com, "Kees Cook" <keescook@chromium.org>,
-        "Adam Buchbinder" <adam.buchbinder@gmail.com>,
-        "Colin Ian King" <colin.king@canonical.com>,
-        "Vlastimil Babka" <vbabka@suse.cz>,
-        "Dave Hansen" <dave.hansen@linux.intel.com>,
-        "Paolo Bonzini" <pbonzini@redhat.com>,
-        "Peter Zijlstra" <peterz@infradead.org>,
-        "Qiaowei Ren" <qiaowei.ren@intel.com>,
-        "Brian Gerst" <brgerst@gmail.com>,
-        "Andy Lutomirski" <luto@kernel.org>,
-        "Huang Rui" <ray.huang@amd.com>,
-        "Lorenzo Stoakes" <lstoakes@gmail.com>,
+        xlpang@linux.alibaba.com, shanpeic@linux.alibaba.com,
+        "Ben Segall" <bsegall@google.com>,
         "Thomas Gleixner" <tglx@linutronix.de>,
-        "Borislav Petkov" <bp@suse.de>,
-        "Adrian Hunter" <adrian.hunter@intel.com>,
-        "Jiri Slaby" <jslaby@suse.cz>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>
-Date:   Wed, 20 Nov 2019 15:37:59 +0000
-Message-ID: <lsq.1574264230.800450209@decadent.org.uk>
+        "Valentin Schneider" <valentin.schneider@arm.com>,
+        "Ingo Molnar" <mingo@kernel.org>,
+        "Liangyan" <liangyan.peng@linux.alibaba.com>,
+        "Linus Torvalds" <torvalds@linux-foundation.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Date:   Wed, 20 Nov 2019 15:38:13 +0000
+Message-ID: <lsq.1574264230.760113588@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 49/83] ptrace,x86: Make user_64bit_mode() available
- to 32-bit builds
+Subject: [PATCH 3.16 63/83] sched/fair: Don't assign runtime for throttled
+ cfs_rq
 In-Reply-To: <lsq.1574264230.280218497@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -82,83 +62,70 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+From: Liangyan <liangyan.peng@linux.alibaba.com>
 
-commit e27c310af5c05cf876d9cad006928076c27f54d4 upstream.
+commit 5e2d2cc2588bd3307ce3937acbc2ed03c830a861 upstream.
 
-In its current form, user_64bit_mode() can only be used when CONFIG_X86_64
-is selected. This implies that code built with CONFIG_X86_64=n cannot use
-it. If a piece of code needs to be built for both CONFIG_X86_64=y and
-CONFIG_X86_64=n and wants to use this function, it needs to wrap it in
-an #ifdef/#endif; potentially, in multiple places.
+do_sched_cfs_period_timer() will refill cfs_b runtime and call
+distribute_cfs_runtime to unthrottle cfs_rq, sometimes cfs_b->runtime
+will allocate all quota to one cfs_rq incorrectly, then other cfs_rqs
+attached to this cfs_b can't get runtime and will be throttled.
 
-This can be easily avoided with a single #ifdef/#endif pair within
-user_64bit_mode() itself.
+We find that one throttled cfs_rq has non-negative
+cfs_rq->runtime_remaining and cause an unexpetced cast from s64 to u64
+in snippet:
 
-Suggested-by: Borislav Petkov <bp@suse.de>
-Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Borislav Petkov <bp@suse.de>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>
+  distribute_cfs_runtime() {
+    runtime = -cfs_rq->runtime_remaining + 1;
+  }
+
+The runtime here will change to a large number and consume all
+cfs_b->runtime in this cfs_b period.
+
+According to Ben Segall, the throttled cfs_rq can have
+account_cfs_rq_runtime called on it because it is throttled before
+idle_balance, and the idle_balance calls update_rq_clock to add time
+that is accounted to the task.
+
+This commit prevents cfs_rq to be assgined new runtime if it has been
+throttled until that distribute_cfs_runtime is called.
+
+Signed-off-by: Liangyan <liangyan.peng@linux.alibaba.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+Reviewed-by: Ben Segall <bsegall@google.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: ricardo.neri@intel.com
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Paul Gortmaker <paul.gortmaker@windriver.com>
-Cc: Huang Rui <ray.huang@amd.com>
-Cc: Qiaowei Ren <qiaowei.ren@intel.com>
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Jiri Slaby <jslaby@suse.cz>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: "Ravi V. Shankar" <ravi.v.shankar@intel.com>
-Cc: Chris Metcalf <cmetcalf@mellanox.com>
-Cc: Brian Gerst <brgerst@gmail.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Colin Ian King <colin.king@canonical.com>
-Cc: Chen Yucong <slaoub@gmail.com>
-Cc: Adam Buchbinder <adam.buchbinder@gmail.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Lorenzo Stoakes <lstoakes@gmail.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Thomas Garnier <thgarnie@google.com>
-Link: https://lkml.kernel.org/r/1509135945-13762-4-git-send-email-ricardo.neri-calderon@linux.intel.com
-[bwh: Backported to 3.16 as dependency of "uprobes/x86: Fix detection of
- 32-bit user mode":
- - Adjust context]
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: shanpeic@linux.alibaba.com
+Cc: xlpang@linux.alibaba.com
+Fixes: d3d9dc330236 ("sched: Throttle entities exceeding their allowed bandwidth")
+Link: https://lkml.kernel.org/r/20190826121633.6538-1-liangyan.peng@linux.alibaba.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+[bwh: Backported to 3.16: Open-code SCHED_WARN_ON().]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/x86/include/asm/ptrace.h | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
---- a/arch/x86/include/asm/ptrace.h
-+++ b/arch/x86/include/asm/ptrace.h
-@@ -118,9 +118,9 @@ static inline int v8086_mode(struct pt_r
- #endif
- }
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -3271,6 +3271,8 @@ static void __account_cfs_rq_runtime(str
+ 	if (likely(cfs_rq->runtime_remaining > 0))
+ 		return;
  
--#ifdef CONFIG_X86_64
- static inline bool user_64bit_mode(struct pt_regs *regs)
- {
-+#ifdef CONFIG_X86_64
- #ifndef CONFIG_PARAVIRT
++	if (cfs_rq->throttled)
++		return;
  	/*
- 	 * On non-paravirt systems, this is the only long mode CPL 3
-@@ -131,8 +131,12 @@ static inline bool user_64bit_mode(struc
- 	/* Headers are too twisted for this to go in paravirt.h. */
- 	return regs->cs == __USER_CS || regs->cs == pv_info.extra_user_64bit_cs;
- #endif
-+#else /* !CONFIG_X86_64 */
-+	return false;
-+#endif
- }
+ 	 * if we're unable to extend our runtime we resched so that the active
+ 	 * hierarchy can be throttled
+@@ -3450,6 +3452,11 @@ static u64 distribute_cfs_runtime(struct
+ 		if (!cfs_rq_throttled(cfs_rq))
+ 			goto next;
  
-+#ifdef CONFIG_X86_64
- #define current_user_stack_pointer()	this_cpu_read(old_rsp)
- /* ia32 vs. x32 difference */
- #define compat_user_stack_pointer()	\
++		/* By the above check, this should never be true */
++#ifdef CONFIG_SCHED_DEBUG
++		WARN_ON_ONCE(cfs_rq->runtime_remaining > 0);
++#endif
++
+ 		runtime = -cfs_rq->runtime_remaining + 1;
+ 		if (runtime > remaining)
+ 			runtime = remaining;
 
