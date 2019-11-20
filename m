@@ -2,125 +2,138 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FORGED_MUA_MOZILLA,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47198C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 04:00:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A516BC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 04:02:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AC5A2245C
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 04:00:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C77722461
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 04:02:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m7uCB6fK"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Ymi3QDEd";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="FcxB0IRo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727621AbfKTEAx (ORCPT
+        id S1727626AbfKTECZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 23:00:53 -0500
-Received: from mail-pg1-f201.google.com ([209.85.215.201]:46346 "EHLO
-        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727140AbfKTEAw (ORCPT
+        Tue, 19 Nov 2019 23:02:25 -0500
+Received: from a27-55.smtp-out.us-west-2.amazonses.com ([54.240.27.55]:38566
+        "EHLO a27-55.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727383AbfKTECZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 23:00:52 -0500
-Received: by mail-pg1-f201.google.com with SMTP id l5so17097420pgu.13
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 20:00:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=A9SfB3u5DRzR9VvNYS3sJfx8KGuaRQunQS/2L5xIff8=;
-        b=m7uCB6fKLgvWJlZTvId99mrDEWFo74IPG1IrhJnxsK4JVba7jegBh/VcOKvAfijHhX
-         mmON50cv8d2l0QFvd0vuXuqUcvv0O5HAjsfcEaZvzC4LfnP0XEdFV7qTWEMyOe42Sw7P
-         YommhwaMrRaBQ9ep6QMo4BWw7Nvyjxcez5ImrtHHNx3zWzb/dOm7dClGZo7VpRKYOH2D
-         dZuNlbF4mtw6ZB5xygi89qnQusZnmbMXhRWQqXvs0JlNyOtV9/F3Nq9iy7AhnyRpwd/m
-         XFISw7o+LcDo8unUAKs3qn95wKX+5qQqyJqjQtWJbbIHYqk6esijQHPmWoFoS4SNy/pd
-         q53g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=A9SfB3u5DRzR9VvNYS3sJfx8KGuaRQunQS/2L5xIff8=;
-        b=HE/zAkZKgaFQFbbJ/y4cOezBj4VI3Ib7rR8WySxgFMkOja6gIvdsTvanIEoL45X/fH
-         LBYC/MX07Yr28VKTbIz7rD7+131GLpsFeZfS/si/kzIhUQ7ZZtDblOhbv1iEG2TAWxBO
-         4fbID+L02PB8QiYpo5dq9xw7K9BMWzrI6J2agef1hIpOLpK48Pi8TUw9jFZuaCKTpGQI
-         IiuOuT3KzXb+9pqRzO09jFGbvf2ijqnBa4jZPhespzVNmrU5je0txv/QWkmNwcR2SeAH
-         /ONoNguxxqVGvkKZhjrODKIlz7Y0sAcC4sGIWpoTLylu8fYozvkkQbJmgCdKyFEHV74E
-         N6Qg==
-X-Gm-Message-State: APjAAAWPXh3zI5KW7uElUrZaQ/en+umq0L25R59OV8SIRaYJt3AFz1+p
-        GlhcKFn8z5KUU99iYT5A2NO0Z9WDmh8xajA=
-X-Google-Smtp-Source: APXvYqxsUvVNxqH5VyyRNcQBRC8b8WlZl3yStph+gE6eQAgX+YO3RyQ8wNSeG7sfJOmGM4QFXqYVrcWDbNPdO0A=
-X-Received: by 2002:a65:4506:: with SMTP id n6mr753853pgq.105.1574222449984;
- Tue, 19 Nov 2019 20:00:49 -0800 (PST)
-Date:   Tue, 19 Nov 2019 20:00:45 -0800
-Message-Id: <20191120040045.81115-1-saravanak@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
-Subject: [PATCH] of: Reduce log level of of_phandle_iterator_next()
-From:   Saravana Kannan <saravanak@google.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     Saravana Kannan <saravanak@google.com>, kernel-team@android.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 19 Nov 2019 23:02:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574222544;
+        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+        bh=KFLCdUP2GtEjV4/R27pNOGYY+5fUM2fxkMqYx2EmUhA=;
+        b=Ymi3QDEd7lI+lFPsPdwKmVo4JbPHLuot+/sEllhokIFVJHc8T1x4p8Pp/Uxjzytg
+        DfaeSOUjAwRsYhZWq7IYFC7jUpYHbLfTHb1LrbqF1NN8XrrIeKxQPZKsai1oupGLTIL
+        7A548nWDMYvWYGBzhjuOfoUoLf780PvedCk3RWLI=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574222544;
+        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID;
+        bh=KFLCdUP2GtEjV4/R27pNOGYY+5fUM2fxkMqYx2EmUhA=;
+        b=FcxB0IRoxs/5hONWQjTwqvQeOtJcYuzNjA/tEVNB3LcKazTJ2p7s5Cjm/mRhtfo/
+        Pz2tX+l2EiJhW94roEuulS6fwEiCFOPVCtcbLLOfz5TXwysqWkPTNVJuz6PxG4z9p5I
+        Yv6BzieTD59pBsaDuOGzjKgjorgqmQMCIkTJx3hM=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DFF89C33F83
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH 3/6] soc: qcom: rpmhpd: Add SM8150 RPMH power-domains
+To:     Sibi Sankar <sibis@codeaurora.org>, bjorn.andersson@linaro.org,
+        robh+dt@kernel.org, ulf.hansson@linaro.org
+Cc:     agross@kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        mark.rutland@arm.com, swboyd@chromium.org, dianders@chromium.org
+References: <20191118173944.27043-1-sibis@codeaurora.org>
+ <0101016e7f99b99a-e1a501f1-823e-4ede-86ad-f517323c5014-000000@us-west-2.amazonses.com>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <0101016e86f9bca2-086cdad4-cc56-4a39-b1f0-93b30d026ca8-000000@us-west-2.amazonses.com>
+Date:   Wed, 20 Nov 2019 04:02:24 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
+MIME-Version: 1.0
+In-Reply-To: <0101016e7f99b99a-e1a501f1-823e-4ede-86ad-f517323c5014-000000@us-west-2.amazonses.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SES-Outgoing: 2019.11.20-54.240.27.55
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These error messages are mostly useful for debugging malformed device
-tree data. So change these messages from error to debug messages to
-avoid spamming the end user. Any error messages that might actually be
-useful to the user is probably going to come from the caller of these
-APIs. So leave it to them to decide if they need to print any error
-messages.
 
-Signed-off-by: Saravana Kannan <saravanak@google.com>
----
- drivers/of/base.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 1d667eb730e1..4762e826f13e 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -1335,8 +1335,8 @@ int of_phandle_iterator_next(struct of_phandle_iterator *it)
- 
- 		if (it->cells_name) {
- 			if (!it->node) {
--				pr_err("%pOF: could not find phandle\n",
--				       it->parent);
-+				pr_debug("%pOF: could not find phandle\n",
-+					 it->parent);
- 				goto err;
- 			}
- 
-@@ -1350,10 +1350,10 @@ int of_phandle_iterator_next(struct of_phandle_iterator *it)
- 				if (it->cell_count >= 0) {
- 					count = it->cell_count;
- 				} else {
--					pr_err("%pOF: could not get %s for %pOF\n",
--					       it->parent,
--					       it->cells_name,
--					       it->node);
-+					pr_debug("%pOF: could not get %s for %pOF\n",
-+						 it->parent,
-+						 it->cells_name,
-+						 it->node);
- 					goto err;
- 				}
- 			}
-@@ -1366,9 +1366,9 @@ int of_phandle_iterator_next(struct of_phandle_iterator *it)
- 		 * property data length
- 		 */
- 		if (it->cur + count > it->list_end) {
--			pr_err("%pOF: %s = %d found %d\n",
--			       it->parent, it->cells_name,
--			       count, it->cell_count);
-+			pr_debug("%pOF: %s = %d found %d\n",
-+				 it->parent, it->cells_name,
-+				 count, it->cell_count);
- 			goto err;
- 		}
- 	}
+On 11/18/2019 11:10 PM, Sibi Sankar wrote:
+> Add support for cx/mx/gfx/mss/ebi/mmcx power-domains found on
+> SM8150 SoCs.
+
+lmx/lcx also?
+
+> 
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> ---
+
+Reviewed-by: Rajendra Nayak <rnayak@codeaurora.org>
+
+>   drivers/soc/qcom/rpmhpd.c | 36 ++++++++++++++++++++++++++++++++++++
+>   1 file changed, 36 insertions(+)
+> 
+> diff --git a/drivers/soc/qcom/rpmhpd.c b/drivers/soc/qcom/rpmhpd.c
+> index 51850cc68b701..3b109ee67a4d2 100644
+> --- a/drivers/soc/qcom/rpmhpd.c
+> +++ b/drivers/soc/qcom/rpmhpd.c
+> @@ -131,8 +131,44 @@ static const struct rpmhpd_desc sdm845_desc = {
+>   	.num_pds = ARRAY_SIZE(sdm845_rpmhpds),
+>   };
+>   
+> +/* SM8150 RPMH powerdomains */
+> +
+> +static struct rpmhpd sm8150_mmcx_ao;
+> +static struct rpmhpd sm8150_mmcx = {
+> +	.pd = { .name = "mmcx", },
+> +	.peer = &sm8150_mmcx_ao,
+> +	.res_name = "mmcx.lvl",
+> +};
+> +
+> +static struct rpmhpd sm8150_mmcx_ao = {
+> +	.pd = { .name = "mmcx_ao", },
+> +	.active_only = true,
+> +	.peer = &sm8150_mmcx,
+> +	.res_name = "mmcx.lvl",
+> +};
+> +
+> +static struct rpmhpd *sm8150_rpmhpds[] = {
+> +	[SM8150_MSS] = &sdm845_mss,
+> +	[SM8150_EBI] = &sdm845_ebi,
+> +	[SM8150_LMX] = &sdm845_lmx,
+> +	[SM8150_LCX] = &sdm845_lcx,
+> +	[SM8150_GFX] = &sdm845_gfx,
+> +	[SM8150_MX] = &sdm845_mx,
+> +	[SM8150_MX_AO] = &sdm845_mx_ao,
+> +	[SM8150_CX] = &sdm845_cx,
+> +	[SM8150_CX_AO] = &sdm845_cx_ao,
+> +	[SM8150_MMCX] = &sm8150_mmcx,
+> +	[SM8150_MMCX_AO] = &sm8150_mmcx_ao,
+> +};
+> +
+> +static const struct rpmhpd_desc sm8150_desc = {
+> +	.rpmhpds = sm8150_rpmhpds,
+> +	.num_pds = ARRAY_SIZE(sm8150_rpmhpds),
+> +};
+> +
+>   static const struct of_device_id rpmhpd_match_table[] = {
+>   	{ .compatible = "qcom,sdm845-rpmhpd", .data = &sdm845_desc },
+> +	{ .compatible = "qcom,sm8150-rpmhpd", .data = &sm8150_desc },
+>   	{ }
+>   };
+>   
+> 
+
 -- 
-2.24.0.432.g9d3f5f5b63-goog
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
