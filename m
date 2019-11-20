@@ -6,70 +6,64 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 214CCC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 02:53:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB700C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 02:59:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA51022409
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 02:53:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB6F022449
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 02:59:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727491AbfKTCxY (ORCPT
+        id S1727428AbfKTC7s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 21:53:24 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:48948 "EHLO
+        Tue, 19 Nov 2019 21:59:48 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:49014 "EHLO
         shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727140AbfKTCxY (ORCPT
+        with ESMTP id S1727243AbfKTC7s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 21:53:24 -0500
+        Tue, 19 Nov 2019 21:59:48 -0500
 Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::3d5])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 8F804146D043A;
-        Tue, 19 Nov 2019 18:53:23 -0800 (PST)
-Date:   Tue, 19 Nov 2019 18:53:23 -0800 (PST)
-Message-Id: <20191119.185323.1049045586606004090.davem@davemloft.net>
-To:     maowenan@huawei.com
-Cc:     vladimir.oltean@nxp.com, claudiu.manoil@nxp.com, andrew@lunn.ch,
-        vivien.didelot@gmail.com, f.fainelli@gmail.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH net v2] net: dsa: ocelot: add dependency for
- NET_DSA_MSCC_FELIX
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id BE8F8146D0E9B;
+        Tue, 19 Nov 2019 18:59:47 -0800 (PST)
+Date:   Tue, 19 Nov 2019 18:59:47 -0800 (PST)
+Message-Id: <20191119.185947.333064433426268053.davem@davemloft.net>
+To:     hslester96@gmail.com
+Cc:     fugang.duan@nxp.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net v4] net: fec: fix clock count mis-match
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20191120014722.8075-1-maowenan@huawei.com>
-References: <20191119.154125.1492881397881625788.davem@davemloft.net>
-        <20191120014722.8075-1-maowenan@huawei.com>
+In-Reply-To: <20191120012513.11161-1-hslester96@gmail.com>
+References: <20191120012513.11161-1-hslester96@gmail.com>
 X-Mailer: Mew version 6.8 on Emacs 26.1
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 19 Nov 2019 18:53:23 -0800 (PST)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 19 Nov 2019 18:59:47 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mao Wenan <maowenan@huawei.com>
-Date: Wed, 20 Nov 2019 09:47:22 +0800
+From: Chuhong Yuan <hslester96@gmail.com>
+Date: Wed, 20 Nov 2019 09:25:13 +0800
 
-> If CONFIG_NET_DSA_MSCC_FELIX=y, and CONFIG_NET_VENDOR_MICROSEMI=n,
-> below errors can be found:
-> drivers/net/dsa/ocelot/felix.o: In function `felix_vlan_del':
-> felix.c:(.text+0x26e): undefined reference to `ocelot_vlan_del'
-> drivers/net/dsa/ocelot/felix.o: In function `felix_vlan_add':
-> felix.c:(.text+0x352): undefined reference to `ocelot_vlan_add'
+> pm_runtime_put_autosuspend in probe will call runtime suspend to
+> disable clks automatically if CONFIG_PM is defined. (If CONFIG_PM
+> is not defined, its implementation will be empty, then runtime
+> suspend will not be called.)
 > 
-> and warning as below:
-> WARNING: unmet direct dependencies detected for MSCC_OCELOT_SWITCH
-> Depends on [n]: NETDEVICES [=y] && ETHERNET [=y] &&
-> NET_VENDOR_MICROSEMI [=n] && NET_SWITCHDEV [=y] && HAS_IOMEM [=y]
-> Selected by [y]:
-> NET_DSA_MSCC_FELIX [=y] && NETDEVICES [=y] && HAVE_NET_DSA [=y]
-> && NET_DSA [=y] && PCI [=y]
+> Therefore, we can call pm_runtime_get_sync to runtime resume it
+> first to enable clks, which matches the runtime suspend. (Only when
+> CONFIG_PM is defined, otherwise pm_runtime_get_sync will also be
+> empty, then runtime resume will not be called.)
 > 
-> This patch is to select NET_VENDOR_MICROSEMI for NET_DSA_MSCC_FELIX.
+> Then it is fine to disable clks without causing clock count mis-match.
 > 
-> Fixes: 56051948773e ("net: dsa: ocelot: add driver for Felix switch family")
-> Signed-off-by: Mao Wenan <maowenan@huawei.com>
+> Fixes: c43eab3eddb4 ("net: fec: add missed clk_disable_unprepare in remove")
+> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+> ---
+> Changes in v4:
+>   - Fix some typos.
 
-You did not read my feedback, read it again please.
+Applied, thanks.
