@@ -2,95 +2,150 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAA29C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78C40C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:46:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B437520679
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:46:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574279182;
-	bh=tZQSoUnx2LoVHeYv7nqGaX2nxJr97Y1u3Rtx9/9nYNM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=YLRjOBkpYlrwJVwu9bGBiNxeMyh1hStzC/RtqKY/PceglpQOn/X0ckCJHa5UFc2NG
-	 tykVidNGeaktQKoSkjIPAVim1rWTslNuev1XS4J0T83wAQbd0E4G8fU9w/ZdPF+KZC
-	 X9nDuQkyQNHIG2W7P0IAPOvH2AkW3DCnnyahYwd4=
+	by mail.kernel.org (Postfix) with ESMTP id 45F4720679
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:46:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="TTS7k6dF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727698AbfKTTqV (ORCPT
+        id S1727733AbfKTTqY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 14:46:21 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:46035 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727165AbfKTTqT (ORCPT
+        Wed, 20 Nov 2019 14:46:24 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:40908 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727702AbfKTTqX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 14:46:19 -0500
-Received: by mail-lf1-f68.google.com with SMTP id 203so492846lfa.12
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 11:46:17 -0800 (PST)
+        Wed, 20 Nov 2019 14:46:23 -0500
+Received: by mail-pl1-f195.google.com with SMTP id f9so263039plr.7
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 11:46:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=E4GCAZq/uEGcflB5X2TUEKapPXWlMYkV/UtTnBsKpco=;
-        b=RxrnU9Zdl4qfrpzjYpyaAwAzY3XG/Ry8sSMBDTALfDbrJKNq6lonVJs86WghdReGSb
-         q45rbMINZQcSQBcg70Nq9j+IAHEwqOnSBqakByyWfvUAPcN9Z19YUXtPjvRykksd/JQX
-         uKQsqv/rx+Vm2XY+DmpAjU7u8YtknBJEgq1hA=
+        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=JWQRhlesp4rx0iZXH5RDESHA9Y4raAckzn7wyOlg0PU=;
+        b=TTS7k6dF12So4K2AiukGmARNAC4VPjnprfAYa19cmr3RY5ZetQcSPvqI9EJNJ3RSyC
+         /BYijGBylA+7sWQwS/uv1yxPc02Jotnzc8QQYb8jpfRI3R12JElsHUFRiIy/S09TI3G2
+         5wwjzNXqVumFvmybfxosuM3JdjpquE4qzekkvPGqF3Rq9+TmPBcgquR2cbv85e0XtKRv
+         Df4+IvP+gfZzRbxsVk6VRDoQvI5gucc6jdm7p0gVYn9BAkNQmx84fxdFnmo7+njK9L1F
+         1mmzZSHKcHZLq9iuG4fWT3TOdCM8a+e48EgWESaYYOen18+Z810kNGxk0FOi0TfIS4FN
+         0WSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=E4GCAZq/uEGcflB5X2TUEKapPXWlMYkV/UtTnBsKpco=;
-        b=dhV2wPcxY1X3didyb0P5SgjYaYHVM8cVLkDPHf7TlWo0oN0JETGRTsUZ9Gu+maOHim
-         9PBGax9vu/+n0PfMdN/r4uNwRUUR/xIuE8pyV4J0mPgFBGhh+UAprGGLXdY2eKMAiP+h
-         +6xXryMtM9kw/ioROov8CQ73/wCuzXUDEBHHaPow6/QmaQQ9zIG2Ia8rwLEipuASrkZd
-         iwnd9QqII4wwIEAsnuD5xFJ7YxqeRRDN7H2vRiVFTsEZiJrXeP1490sSrconos7JymT1
-         aZZaNVvWGN4nh1URVFYuuCPsSNuk9oRWxw9cZ1C79dJiMOaLjHKuXwkCmcQQuQDJJ0Lg
-         uF7g==
-X-Gm-Message-State: APjAAAUQoSPFU4f7QdaR1wOKXc7ZuqVtbUP9P3sODe+rj6aRnLcGTMOD
-        SqNpqbX3NGSd4W6WVgeMCj3m5jMET84=
-X-Google-Smtp-Source: APXvYqyV41oziTLd2/JhApZkipoS7Mx/Uzi11QsHJsiZ2nChLAC0xjN5l6LVAVWz3fIXnHLkLL2fwg==
-X-Received: by 2002:a19:f811:: with SMTP id a17mr4334491lff.132.1574279176168;
-        Wed, 20 Nov 2019 11:46:16 -0800 (PST)
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com. [209.85.167.43])
-        by smtp.gmail.com with ESMTPSA id 30sm68551ljw.29.2019.11.20.11.46.15
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 Nov 2019 11:46:15 -0800 (PST)
-Received: by mail-lf1-f43.google.com with SMTP id y19so509158lfl.9
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 11:46:15 -0800 (PST)
-X-Received: by 2002:a19:4949:: with SMTP id l9mr4313293lfj.52.1574279174744;
- Wed, 20 Nov 2019 11:46:14 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=JWQRhlesp4rx0iZXH5RDESHA9Y4raAckzn7wyOlg0PU=;
+        b=TkYdzoP2RF1IgRtcSvASBOXT/gCxFaWY2zEKez1kiXw91h3Pjz91YFHIhrcJqzr+zv
+         t82zD+aPa2yU6vYinIzqFcbDjqUn4iJP09PzPW8RsikVJabsgJB9b33EjuRsVPybYark
+         /veq+ZgeXM9NJnSFyRbwsBHSjdGDWbTZvL9SXmHL4zeGp6iUKRvGr0PKV0CH4+thrGw+
+         b3ZYOqhry3PPb9ZNz+7OUdEDCem+oVKi4JRjQp+s3BzbRxiSkG+9opyTSvVdUuvYy9ed
+         aaISSz4j029+BzkBhUGHUbC0KYcWMKR12lwCIMA7s7TEDXkE2k3SMi91Ck1D0o7g4tHK
+         BaZQ==
+X-Gm-Message-State: APjAAAVqZ1ze75JkG6Owf4OBTRk9OuumAW8VXsoWd++VSqi8RRFv5QqN
+        MvbS2F6jjUNVHBz0aXDYueHvcw==
+X-Google-Smtp-Source: APXvYqxjXMFyy7LYekLsZkeE/2v6Xsp1AbcHHzWQImsf2JBx6DvYlprINlJDduyr4x5PddsPUWGG6Q==
+X-Received: by 2002:a17:90a:98d:: with SMTP id 13mr6167964pjo.98.1574279182414;
+        Wed, 20 Nov 2019 11:46:22 -0800 (PST)
+Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
+        by smtp.gmail.com with ESMTPSA id o23sm26553pgj.90.2019.11.20.11.46.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Nov 2019 11:46:22 -0800 (PST)
+Date:   Wed, 20 Nov 2019 11:46:11 -0800
+From:   Stephen Hemminger <stephen@networkplumber.org>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     <lantianyu1986@gmail.com>, <cohuck@redhat.com>,
+        "KY Srinivasan" <kys@microsoft.com>,
+        "Haiyang Zhang" <haiyangz@microsoft.com>,
+        "Stephen Hemminger" <sthemmin@microsoft.com>, <sashal@kernel.org>,
+        <mchehab+samsung@kernel.org>, <davem@davemloft.net>,
+        <gregkh@linuxfoundation.org>, <robh@kernel.org>,
+        <Jonathan.Cameron@huawei.com>, <paulmck@linux.ibm.com>,
+        "Michael Kelley" <mikelley@microsoft.com>,
+        "Tianyu Lan" <Tianyu.Lan@microsoft.com>,
+        <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
+        <linux-hyperv@vger.kernel.org>, "vkuznets" <vkuznets@redhat.com>
+Subject: Re: [PATCH] VFIO/VMBUS: Add VFIO VMBUS driver support
+Message-ID: <20191120114611.4721a7e9@hermes.lan>
+In-Reply-To: <20191120120715.0cecf5ea@x1.home>
+References: <20191111084507.9286-1-Tianyu.Lan@microsoft.com>
+        <20191119165620.0f42e5ba@x1.home>
+        <20191120103503.5f7bd7c4@hermes.lan>
+        <20191120120715.0cecf5ea@x1.home>
 MIME-Version: 1.0
-References: <CAJKzgVtzD7ULwCDVRSLMCmGJNaMqvx+jVO619t3xuv2oiEsPMQ@mail.gmail.com>
- <20191119095708.GB21113@dhcp22.suse.cz> <201911201032.67566C6BF@keescook>
-In-Reply-To: <201911201032.67566C6BF@keescook>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 20 Nov 2019 11:45:58 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wjw=fg5WznKfA+NQP78h8qDkF=t3CzH96fACAfULza_hQ@mail.gmail.com>
-Message-ID: <CAHk-=wjw=fg5WznKfA+NQP78h8qDkF=t3CzH96fACAfULza_hQ@mail.gmail.com>
-Subject: Re: Suggested Patch is not working for 22851 Bugzilla issue
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Michal Hocko <mhocko@kernel.org>, Bala S <balas2380@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 10:39 AM Kees Cook <keescook@chromium.org> wrote:
-> Yes, as Michal mentions, there were legitimate binaries that expected to
-> overlap mappings
+On Wed, 20 Nov 2019 12:07:15 -0700
+Alex Williamson <alex.williamson@redhat.com> wrote:
 
-I'm not sure they were really overlapping as much as "the ELF sections
-were in a bad order and we don't do the whole "optimize loading"
-thing.
+> On Wed, 20 Nov 2019 10:35:03 -0800
+> Stephen Hemminger <stephen@networkplumber.org> wrote:
+> 
+> > On Tue, 19 Nov 2019 15:56:20 -0800
+> > "Alex Williamson" <alex.williamson@redhat.com> wrote:
+> >   
+> > > On Mon, 11 Nov 2019 16:45:07 +0800
+> > > lantianyu1986@gmail.com wrote:
+> > >     
+> > > > From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+> > > > 
+> > > > This patch is to add VFIO VMBUS driver support in order to expose
+> > > > VMBUS devices to user space drivers(Reference Hyper-V UIO driver).
+> > > > DPDK now has netvsc PMD driver support and it may get VMBUS resources
+> > > > via VFIO interface with new driver support.
+> > > > 
+> > > > So far, Hyper-V doesn't provide virtual IOMMU support and so this
+> > > > driver needs to be used with VFIO noiommu mode.      
+> > > 
+> > > Let's be clear here, vfio no-iommu mode taints the kernel and was a
+> > > compromise that we can re-use vfio-pci in its entirety, so it had a
+> > > high code reuse value for minimal code and maintenance investment.  It
+> > > was certainly not intended to provoke new drivers that rely on this mode
+> > > of operation.  In fact, no-iommu should be discouraged as it provides
+> > > absolutely no isolation.  I'd therefore ask, why should this be in the
+> > > kernel versus any other unsupportable out of tree driver?  It appears
+> > > almost entirely self contained.  Thanks,
+> > > 
+> > > Alex    
+> > 
+> > The current VMBUS access from userspace is from uio_hv_generic
+> > there is (and will not be) any out of tree driver for this.  
+> 
+> I'm talking about the driver proposed here.  It can only be used in a
+> mode that taints the kernel that its running on, so why would we sign
+> up to support 400 lines of code that has no safe way to use it?
+>  
+> > The new driver from Tianyu is to make VMBUS behave like PCI.
+> > This simplifies the code for DPDK and other usermode device drivers
+> > because it can use the same API's for VMBus as is done for PCI.  
+> 
+> But this doesn't re-use the vfio-pci API at all, it explicitly defines
+> a new vfio-vmbus API over the vfio interfaces.  So a user mode driver
+> might be able to reuse some vfio support, but I don't see how this has
+> anything to do with PCI.
+> 
+> > Unfortunately, since Hyper-V does not support virtual IOMMU yet,
+> > the only usage modle is with no-iommu taint.  
+> 
+> Which is what makes it unsupportable and prompts the question why it
+> should be included in the mainline kernel as it introduces a
+> maintenance burden and normalizes a usage model that's unsafe.  Thanks,
 
-It's one of those things that *might* be fixed by first creating a
-"simplified/combined map of the ELF sections", and them using mmap()
-on that simplified one. But that code is nasty and hairy.
+Many existing userspace drivers are unsafe:
+  - out of tree DPDK igb_uio is unsafe.
+  - VFIO with noiommu is unsafe.
+  - hv_uio_generic is unsafe.
 
-             Linus
+This new driver is not any better or worse. This sounds like a complete
+repeat of the discussion that occurred before introducing VFIO noiommu mode.
+
+Shouldn't vmbus vfio taint the kernel in the same way as vfio noiommu does?
