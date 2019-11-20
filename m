@@ -2,53 +2,82 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3B3EC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 23:18:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E621C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 23:18:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BF7E20878
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 23:18:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E98BA20679
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 23:18:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="p2G0T3jg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbfKTXPU (ORCPT
+        id S1726614AbfKTXSk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 18:15:20 -0500
-Received: from mga09.intel.com ([134.134.136.24]:4527 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725820AbfKTXPU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 18:15:20 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Nov 2019 15:15:10 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,223,1571727600"; 
-   d="scan'208";a="209709357"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga003.jf.intel.com with ESMTP; 20 Nov 2019 15:15:10 -0800
-Date:   Wed, 20 Nov 2019 15:19:46 -0800
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Auger Eric <eric.auger@redhat.com>
-Cc:     iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>, Yi Liu <yi.l.liu@intel.com>,
-        "Mehta, Sohil" <sohil.mehta@intel.com>,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v3 6/8] iommu/vt-d: Replace Intel specific PASID
- allocator with IOASID
-Message-ID: <20191120151946.2a94c1ee@jacob-builder>
-In-Reply-To: <5ead3e84-d6b6-8f97-c83b-236bbe53be86@redhat.com>
-References: <1574186193-30457-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <1574186193-30457-7-git-send-email-jacob.jun.pan@linux.intel.com>
-        <5ead3e84-d6b6-8f97-c83b-236bbe53be86@redhat.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Wed, 20 Nov 2019 18:18:40 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:36224 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725936AbfKTXSj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 18:18:39 -0500
+Received: by mail-pj1-f67.google.com with SMTP id cq11so526875pjb.3
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 15:18:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=wmtUR/eihp0PUvrLKsh7wVU4zqxo6xGU5zxiqoarIqE=;
+        b=p2G0T3jgz6bXlwZjpvll8ad4xuXJX1PCwdWxV8mTLvBJNPr+A4y10oHp5zDr6t54Gf
+         OfkS1NHrAugnkuzwclxNLuUBWLWtzXNz8Wc3MIeSzZnkIq5iaOtYYyUgbVgQD+FuTE3n
+         vAb8kgLCoKm88R10sL9ltWOieO97SxL3GSvsUulumE7DsE3/qlgX2r42bt/j++O0CMZI
+         bsHmNccOcon35TsSaHwNyZqRaB9sJz0mQ/8GERZLG/AXV0DHuNK629sQI5t9pDTiMolD
+         q+y18tonjpHPNI6wvnGPATDieKBUb9XPD946HsDG+h8w8xcSRjjCoiuNnfKMwS0X1xMk
+         ItCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=wmtUR/eihp0PUvrLKsh7wVU4zqxo6xGU5zxiqoarIqE=;
+        b=HBolzcr7SlkgbM5G7uU/soetyr2lmqfO89LZmp+8/R8NzGDnu/2xLMGctEcuYa6SJv
+         i0X3uDOnYl3m8xygkOaVxUcwXivSbQNuD7MBHbNMKxWi05eva1IM+tIhfGH7YgTZQ+rL
+         5FxEAyH7AR23ahtgIgpnt+jraGRYgpqM3M6SNo0zjhIsRPYRnJt80NYt9LtgD3PLzp2C
+         a+ep4lRceMezHewoVh4svxv66F0eko3cmrjvhSPU9I3JZYPYRSkZOJsTekVO9BFxp0tj
+         QqZX2fqAo0ltmq0MSJk2PZpG80vKlxpOliZMni1PYU8MFeaTaalhiGuNT/31De1Dutiq
+         hnYQ==
+X-Gm-Message-State: APjAAAUnexG8C4Mene9w0dhZ7I3DCc0sP3VEK2T7C6tr2/ujrRKTihPY
+        I1aPyb/jy60CUcuPEFM3kgPU/Q==
+X-Google-Smtp-Source: APXvYqw0TaIkfAiYDhUvl10ZLxlCJpmLGUmkEzRbDKn+3bQbVgvytLloXmk3XGGDCqVdvnqHnR4G1A==
+X-Received: by 2002:a17:90a:9286:: with SMTP id n6mr6979262pjo.84.1574291917274;
+        Wed, 20 Nov 2019 15:18:37 -0800 (PST)
+Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
+        by smtp.gmail.com with ESMTPSA id j21sm485855pfa.58.2019.11.20.15.18.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Nov 2019 15:18:37 -0800 (PST)
+Date:   Wed, 20 Nov 2019 15:18:28 -0800
+From:   Stephen Hemminger <stephen@networkplumber.org>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     <lantianyu1986@gmail.com>, <cohuck@redhat.com>,
+        "KY Srinivasan" <kys@microsoft.com>,
+        "Haiyang Zhang" <haiyangz@microsoft.com>,
+        "Stephen Hemminger" <sthemmin@microsoft.com>, <sashal@kernel.org>,
+        <mchehab+samsung@kernel.org>, <davem@davemloft.net>,
+        <gregkh@linuxfoundation.org>, <robh@kernel.org>,
+        <Jonathan.Cameron@huawei.com>, <paulmck@linux.ibm.com>,
+        "Michael Kelley" <mikelley@microsoft.com>,
+        "Tianyu Lan" <Tianyu.Lan@microsoft.com>,
+        <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
+        <linux-hyperv@vger.kernel.org>, "vkuznets" <vkuznets@redhat.com>
+Subject: Re: [PATCH] VFIO/VMBUS: Add VFIO VMBUS driver support
+Message-ID: <20191120151828.2d593b81@hermes.lan>
+In-Reply-To: <20191120133147.1d627348@x1.home>
+References: <20191111084507.9286-1-Tianyu.Lan@microsoft.com>
+        <20191119165620.0f42e5ba@x1.home>
+        <20191120103503.5f7bd7c4@hermes.lan>
+        <20191120120715.0cecf5ea@x1.home>
+        <20191120114611.4721a7e9@hermes.lan>
+        <20191120133147.1d627348@x1.home>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
@@ -57,29 +86,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 20 Nov 2019 22:06:24 +0100
-Auger Eric <eric.auger@redhat.com> wrote:
+On Wed, 20 Nov 2019 13:31:47 -0700
+Alex Williamson <alex.williamson@redhat.com> wrote:
 
-> Hi Jacob,
+> On Wed, 20 Nov 2019 11:46:11 -0800
+> Stephen Hemminger <stephen@networkplumber.org> wrote:
 > 
-> On 11/19/19 6:56 PM, Jacob Pan wrote:
-> > Make use of generic IOASID code to manage PASID allocation,
-> > free, and lookup. Replace Intel specific code.
-> > IOASID allocator is inclusive for both start and end of the
-> > allocation range. The current code is based on IDR, which is
-> > exclusive for the end of the allocation range. This patch fixes the
-> > off-by-one error in intel_svm_bind_mm, where pasid_max - 1 is used
-> > for the end of allocation range.  
-> no more as this is handled in 5/8
-oops, forgot that. will remove this comment.
-Thanks!
->  [...]  
-> Besides
-> Reviewed-by: Eric Auger <eric.auger@redhat.com>
-> 
-> Thanks
-> 
-> Eric
-> 
+> > On Wed, 20 Nov 2019 12:07:15 -0700
+> > Alex Williamson <alex.williamson@redhat.com> wrote:
+> >   
+> > > On Wed, 20 Nov 2019 10:35:03 -0800
+> > > Stephen Hemminger <stephen@networkplumber.org> wrote:
+> > >     
+> > > > On Tue, 19 Nov 2019 15:56:20 -0800
+> > > > "Alex Williamson" <alex.williamson@redhat.com> wrote:
+> > > >       
+> > > > > On Mon, 11 Nov 2019 16:45:07 +0800
+> > > > > lantianyu1986@gmail.com wrote:
+> > > > >         
+> > > > > > From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+> > > > > > 
+> > > > > > This patch is to add VFIO VMBUS driver support in order to expose
+> > > > > > VMBUS devices to user space drivers(Reference Hyper-V UIO driver).
+> > > > > > DPDK now has netvsc PMD driver support and it may get VMBUS resources
+> > > > > > via VFIO interface with new driver support.
+> > > > > > 
+> > > > > > So far, Hyper-V doesn't provide virtual IOMMU support and so this
+> > > > > > driver needs to be used with VFIO noiommu mode.          
+> > > > > 
+> > > > > Let's be clear here, vfio no-iommu mode taints the kernel and was a
+> > > > > compromise that we can re-use vfio-pci in its entirety, so it had a
+> > > > > high code reuse value for minimal code and maintenance investment.  It
+> > > > > was certainly not intended to provoke new drivers that rely on this mode
+> > > > > of operation.  In fact, no-iommu should be discouraged as it provides
+> > > > > absolutely no isolation.  I'd therefore ask, why should this be in the
+> > > > > kernel versus any other unsupportable out of tree driver?  It appears
+> > > > > almost entirely self contained.  Thanks,
+> > > > > 
+> > > > > Alex        
+> > > > 
+> > > > The current VMBUS access from userspace is from uio_hv_generic
+> > > > there is (and will not be) any out of tree driver for this.      
+> > > 
+> > > I'm talking about the driver proposed here.  It can only be used in a
+> > > mode that taints the kernel that its running on, so why would we sign
+> > > up to support 400 lines of code that has no safe way to use it?
+> > >      
+> > > > The new driver from Tianyu is to make VMBUS behave like PCI.
+> > > > This simplifies the code for DPDK and other usermode device drivers
+> > > > because it can use the same API's for VMBus as is done for PCI.      
+> > > 
+> > > But this doesn't re-use the vfio-pci API at all, it explicitly defines
+> > > a new vfio-vmbus API over the vfio interfaces.  So a user mode driver
+> > > might be able to reuse some vfio support, but I don't see how this has
+> > > anything to do with PCI.
+> > >     
+> > > > Unfortunately, since Hyper-V does not support virtual IOMMU yet,
+> > > > the only usage modle is with no-iommu taint.      
+> > > 
+> > > Which is what makes it unsupportable and prompts the question why it
+> > > should be included in the mainline kernel as it introduces a
+> > > maintenance burden and normalizes a usage model that's unsafe.  Thanks,    
+> > 
+> > Many existing userspace drivers are unsafe:
+> >   - out of tree DPDK igb_uio is unsafe.
 
-[Jacob Pan]
+> Why is it out of tree?
+
+Agree, it really shouldn't be. The original developers hoped that
+VFIO and VFIO-noiommu would replace it. But since DPDK has to run
+on ancient distro's and other non VFIO hardware it still lives.
+
+Because it is not suitable for merging for many reasons.
+Mostly because it allows MSI and other don't want that.
+ 
+> 
+> 
+> >   - VFIO with noiommu is unsafe.  
+> 
+> Which taints the kernel and requires raw I/O user privs.
+> 
+> >   - hv_uio_generic is unsafe.  
+> 
+> Gosh, it's pretty coy about this, no kernel tainting, no user
+> capability tests, no scary dmesg or Kconfig warnings.  Do users know
+> it's unsafe?
+
+It should taint in same way as VFIO with noiommu.
+Yes it is documented as unsafe (but not in kernel source).
+It really has same unsafeness as uio_pci_generic, and there is not warnings
+around that.
+
+> 
+> > This new driver is not any better or worse. This sounds like a complete
+> > repeat of the discussion that occurred before introducing VFIO noiommu mode.
+> > 
+> > Shouldn't vmbus vfio taint the kernel in the same way as vfio noiommu does?  
+> 
+> Yes, the no-iommu interaction happens at the vfio-core level.  I can't
+> speak for any of the uio interfaces you mention, but I know that
+> uio_pci_generic is explicitly intended for non-DMA use cases and in
+> fact the efforts to enable MSI/X support in that driver and the
+> objections raised for breaking that usage model by the maintainer, is
+> what triggered no-iommu support for vfio.  IIRC, the rationale was
+> largely for code reuse both at the kernel and userspace driver level,
+> while imposing a minimal burden in vfio-core for this dummy iommu
+> driver.  vfio explicitly does not provide a DMA mapping solution for
+> no-iommu use cases because I'm not willing to maintain any more lines
+> of code to support this usage model.  The tainting imposed by this model
+> and incomplete API was intended to be a big warning to discourage its
+> use and as features like vIOMMU become more prevalent and bare metal
+> platforms without physical IOMMUs hopefully become less prevalent,
+> maybe no-iommu could be phased out or removed.
+
+Doing vIOMMU at scale with a non-Linux host, take a a long time.
+Tainting doesn't make it happen any sooner. It just makes users
+live harder. Sorry blaming the user and giving a bad experience doesn't help anyone.
+
+> You might consider this a re-hashing of those previous discussions, but
+> to me it seems like taking advantage of and promoting an interface that
+> should have plenty of warning signs that this is not a safe way to use
+> the device from userspace.  Without some way to take advantage of the
+> code in a safe way, this just seems to be normalizing an unsupportable
+> usage model.  Thanks,
+
+
+The use case for all this stuff has been dedicated infrastructure.
+It would be good if security was more baked in but it isn't.
+Most users cover it over by either being dedicated applicances
+or use LSM to protect UIO.
