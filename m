@@ -2,140 +2,102 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31079C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 16:13:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA6FFC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 16:13:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0241620674
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 16:13:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EleOqQer"
+	by mail.kernel.org (Postfix) with ESMTP id A7C79206EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 16:13:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732219AbfKTQNW (ORCPT
+        id S1732702AbfKTQNm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 11:13:22 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:45902 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729412AbfKTQNV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 11:13:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=0Q9ax8V5NJIBE8fllSDxKWvhzHEQC3WHKUgKprHNDZ0=; b=EleOqQerl3cmHBTwh34R5KoNe
-        ypSz0iu+XVeCVjfkg5vRUZsTNtBJxjqlfConKUCXZZjaFcXHCpKr5TEqXQJ7tR/jPmUo+P1JVEPre
-        LvYVwVl/u1K9E0nU5mS7bccDJ9s7ND5SbPaFkm39oqzHqfEBbWpYKlVTVAawFhIKubwHGi/k+cFbc
-        7MvNw9dsT27pmRNBm1M4p/xL0vc1GevyhC1KpCfJ7ol/oq+xk7PwQQOxVtb53jQ1jV3KiPM4krhuh
-        i/eUmGYSVTMi1sl2+ZsyeoSQICWlZKmrBX6Uszo742NDuesGNrMO7d42rxVJz/8HeRmpOrcnyzAPZ
-        KlTMuxVhQ==;
-Received: from [2601:1c0:6280:3f0::5a22]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iXSbY-0006sL-6N; Wed, 20 Nov 2019 16:13:20 +0000
-Subject: Re: [PATCH] arch/sh/: fix NUMA build errors
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>
-References: <20d33517-6df0-9104-fc0a-7f621f87192e@infradead.org>
- <CAMuHMdU0Vx1E9V+h8XYTyAJitPT42NdGvgzLAfG-=1BVZd-rbA@mail.gmail.com>
- <802dc73e-080d-05aa-76fe-165bb4817959@infradead.org>
- <CAMuHMdUyN5FE21C3Bu6S4wrwTxe0xB2ZpPAgryvx_6EX+YkhFw@mail.gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <736e66f5-85b6-6bbc-f902-9e72d8bc1a4a@infradead.org>
-Date:   Wed, 20 Nov 2019 08:13:18 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Wed, 20 Nov 2019 11:13:42 -0500
+Received: from mx2.suse.de ([195.135.220.15]:45344 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729412AbfKTQNm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 11:13:42 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 290CBB2F16;
+        Wed, 20 Nov 2019 16:13:35 +0000 (UTC)
+Date:   Wed, 20 Nov 2019 17:13:34 +0100
+From:   Petr Mladek <pmladek@suse.com>
+To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Qian Cai <cai@lca.pw>, Steven Rostedt <rostedt@goodmis.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Eric Dumazet <eric.dumazet@gmail.com>, davem@davemloft.net,
+        netdev@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net/skbuff: silence warnings under memory pressure
+Message-ID: <20191120161334.p63723g4jyk6k7p3@pathway.suse.cz>
+References: <20190904074312.GA25744@jagdpanzerIV>
+ <1567599263.5576.72.camel@lca.pw>
+ <20190904144850.GA8296@tigerII.localdomain>
+ <1567629737.5576.87.camel@lca.pw>
+ <20190905113208.GA521@jagdpanzerIV>
+ <1573751570.5937.122.camel@lca.pw>
+ <20191118152738.az364dczadskgimc@pathway.suse.cz>
+ <20191119004119.GC208047@google.com>
+ <20191119094134.6hzbjc7l5ite6bpg@pathway.suse.cz>
+ <20191120013005.GA3191@tigerII.localdomain>
 MIME-Version: 1.0
-In-Reply-To: <CAMuHMdUyN5FE21C3Bu6S4wrwTxe0xB2ZpPAgryvx_6EX+YkhFw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191120013005.GA3191@tigerII.localdomain>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/20/19 12:30 AM, Geert Uytterhoeven wrote:
-> Hi Randy,
+On Wed 2019-11-20 10:30:05, Sergey Senozhatsky wrote:
+> On (19/11/19 10:41), Petr Mladek wrote:
+> [..]
+> > > > I do not like this. As a result, normal printk() will always deadlock
+> > > > in the scheduler code, including WARN() calls. The chance of the
+> > > > deadlock is small now. It happens only when there is another
+> > > > process waiting for console_sem.
+> > > 
+> > > Why would it *always* deadlock? If this is the case, why we don't *always*
+> > > deadlock doing the very same wake_up_process() from console_unlock()?
+> > 
+> > I speak about _normal_ printk() and not about printk_deferred().
+> > 
+> > wake_up_process() is called in console_unlock() only when
+> > sem->wait_list is not empty, see up() in kernel/locking/semaphore.c.
+> > printk() itself uses console_trylock() and does not wait.
 > 
-> On Wed, Nov 20, 2019 at 5:28 AM Randy Dunlap <rdunlap@infradead.org> wrote:
->> On 11/18/19 11:38 PM, Geert Uytterhoeven wrote:
->>> On Tue, Nov 19, 2019 at 1:55 AM Randy Dunlap <rdunlap@infradead.org> wrote:
->>>> From: Randy Dunlap <rdunlap@infradead.org>
->>>> Fix SUPERH builds that select SYS_SUPPORTS_NUMA but do not select
->>>> SYS_SUPPORTS_SMP and SMP.
->>>>
->>>> kernel/sched/topology.c is only built for CONFIG_SMP and then the NUMA
->>>> code + data inside topology.c is only built when CONFIG_NUMA is
->>>> set/enabled, so these arch/sh/ configs need to select SMP and
->>>> SYS_SUPPORTS_SMP to build the NUMA support.
->>>>
->>>> Fixes this build error in 3 different SUPERH configs:
->>>>
->>>> mm/page_alloc.o: In function `get_page_from_freelist':
->>>> page_alloc.c:(.text+0x2ca8): undefined reference to `node_reclaim_distance'
->>>>
->>>> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
->>>> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
->>>> Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
->>>> Cc: Rich Felker <dalias@libc.org>
->>>> Cc: linux-sh@vger.kernel.org
->>>> ---
->>>> or maybe these should be fixed in the defconfig files?
->>>>
->>>> or alternatively, does it make any sense to support NUMA without SMP?
->>>
->>> I think it does.  From arch/sh/mm/Kconfig config NUMA help:
->>>
->>>         Some SH systems have many various memories scattered around
->>>         the address space, each with varying latencies. This enables
->>>         support for these blocks by binding them to nodes and allowing
->>>         memory policies to be used for prioritizing and controlling
->>>         allocation behaviour.
->>
->> Note that this help text is under:
->> config NUMA
->>         bool "Non-Uniform Memory Access (NUMA) Support"
->>         depends on MMU && SYS_SUPPORTS_NUMA
->>         select ARCH_WANT_NUMA_VARIABLE_LOCALITY
->>
->> but ARCH_WANT_NUMA_VARIABLE_LOCALITY seems to be unimplemented anywhere in
->> the kernel source tree.  I.e., the Kconfig symbol exists in init/Kconfig,
->> but there is no code to support its use.
+> > I believe that this is the rason why printk_sched() was added
+> > so late in 2012.
 > 
-> It does control (prevent) another option:
+> Right. I also think scheduler people do pretty nice work avoiding printk
+> calls under ->rq lock.
 > 
-> # For architectures that (ab)use NUMA to represent different memory regions
-> # all cpu-local but of different latencies, such as SuperH.
-> #
-> config ARCH_WANT_NUMA_VARIABLE_LOCALITY
->         bool
-> 
-> config NUMA_BALANCING
->         bool "Memory placement aware NUMA scheduler"
->         depends on ARCH_SUPPORTS_NUMA_BALANCING
->         depends on !ARCH_WANT_NUMA_VARIABLE_LOCALITY
->         depends on SMP && NUMA && MIGRATION
->         help
->           This option adds support for automatic NUMA aware
-> memory/task placement.
->           The mechanism is quite primitive and is based on migrating memory when
->           it has references to the node the task is running on.
-> 
->           This system will be inactive on UMA systems.
-> 
-> The symbol was set by arch/metag, too (which was removed).
+> What I tried to say - it's really not that hard to have a non-empty
+> console_sem ->wait_list, any "wrong" printk() call from scheduler
+> will deadlock us, because we have something to wake_up().
 
-I see.  thanks.
+I am sorry but I do not take this as an argument that it would be
+acceptable to replace irq_work_queue() with wake_up_interruptible().
 
--- 
-~Randy
+It is the first time that I hear about problem caused by the
+irq_work(). But we deal with deadlocks caused by wake_up() for years.
+It would be like replacing a lightly dripping tap with a heavily
+dripping one.
 
+I see reports with WARN() from scheduler code from time to time.
+I would get reports about silent death instead.
+
+RT guys are going to make printk() fully lockless. It would be
+really great achievement. irq_work is lockless. While wake_up()
+is not.
+
+There must be a better way how to break the infinite loop caused
+by the irq_work.
+
+Best Regards,
+Petr
