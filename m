@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE653C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C242CC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:36:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A292E224EB
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:36:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ACF1224EB
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:36:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574256988;
-	bh=6BvqkSk8AIwBhUKqtp6RBtg7rVitYauvILovxIcQx8s=;
+	s=default; t=1574256991;
+	bh=tdDe4FJ44sifbvlkacqGnDR4fXNE5uA2pA1WmEudtB8=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=rXR1nVQASNJqZKDUN+Mtwd/Fe11G2oi5L2zh+4kX6f+BUHLEmWFzUlBt1rU866fz+
-	 iSY01LOZpjufm9TxVaTwjeqjNcseKuCBrjtDrUJaXHLaIIxDQLoaLi6RArPGCtoFkp
-	 dVV/itLbesfhEuG5lZcy0iluXpJsszXm9dC+EBIs=
+	b=uPt0PRFomreYahD0cgkfx+vDxXhfFR/H3G7Ca7B55F953wQd3mR4ZtmkfiM86lnq9
+	 BRFsia4pa9pbtP6fIGLXGrVq650A7pe194BYD3MCe/wsI//QZTMh7E+WWupqBFaJ1N
+	 Rd0bk8e2ZiRn0p/N7LYFg3TnzrCrzMWzGF+qR7I4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730795AbfKTNg1 (ORCPT
+        id S1730805AbfKTNga (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 08:36:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42760 "EHLO mail.kernel.org"
+        Wed, 20 Nov 2019 08:36:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728030AbfKTNgY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 08:36:24 -0500
+        id S1728030AbfKTNg3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 08:36:29 -0500
 Received: from localhost.localdomain (unknown [118.189.143.39])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2249F21939;
-        Wed, 20 Nov 2019 13:36:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72CB221939;
+        Wed, 20 Nov 2019 13:36:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574256983;
-        bh=6BvqkSk8AIwBhUKqtp6RBtg7rVitYauvILovxIcQx8s=;
+        s=default; t=1574256989;
+        bh=tdDe4FJ44sifbvlkacqGnDR4fXNE5uA2pA1WmEudtB8=;
         h=From:To:Cc:Subject:Date:From;
-        b=J+gKNBmppFpbzaC+DLXN2imnQ+Ix9vzshMFKKzSe67vJOqQ/+gO08NYC1qKJmwVHL
-         WeqhAvh22Hh64EAiEfSU94lqEH3XB6QHNVRBa0qkn6f32SxElT5XUhBG/+809q3At6
-         IfGHsNeXZbNT6/dQY0BpWsgWVLg3mRCmz/39XzwM=
+        b=vo6IomQVGpPauYHWJ90F0M/5NY3rABfWNIK8ejuC3lGCyiwHNPYSYwJpQq2JQwPfM
+         7d3SHjlrqYO70+1BUoXDYvO6c6KIO1S6vbaPoGzPjX56YQ7Zgn6KTSPuLcTxiINh23
+         b2TmUtb92BKSHbXEfOoWU0ZYmYsm1m2xWBrINrV0=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Ben Skeggs <bskeggs@redhat.com>,
+        Dave Airlie <airlied@redhat.com>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
-Subject: [PATCH] drm/nouveau: Fix Kconfig indentation
-Date:   Wed, 20 Nov 2019 21:36:19 +0800
-Message-Id: <20191120133619.11415-1-krzk@kernel.org>
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH] drm/mgag200: Fix Kconfig indentation
+Date:   Wed, 20 Nov 2019 21:36:24 +0800
+Message-Id: <20191120133625.11478-1-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -61,22 +61,26 @@ coding style with command like:
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/gpu/drm/nouveau/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/mgag200/Kconfig | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/Kconfig b/drivers/gpu/drm/nouveau/Kconfig
-index 3558df043592..9c990266e876 100644
---- a/drivers/gpu/drm/nouveau/Kconfig
-+++ b/drivers/gpu/drm/nouveau/Kconfig
-@@ -2,7 +2,7 @@
- config DRM_NOUVEAU
- 	tristate "Nouveau (NVIDIA) cards"
- 	depends on DRM && PCI && MMU
--        select FW_LOADER
-+	select FW_LOADER
- 	select DRM_KMS_HELPER
- 	select DRM_TTM
- 	select BACKLIGHT_CLASS_DEVICE if DRM_NOUVEAU_BACKLIGHT
+diff --git a/drivers/gpu/drm/mgag200/Kconfig b/drivers/gpu/drm/mgag200/Kconfig
+index aed11f4f4c55..d60aa4b9ccd4 100644
+--- a/drivers/gpu/drm/mgag200/Kconfig
++++ b/drivers/gpu/drm/mgag200/Kconfig
+@@ -8,8 +8,8 @@ config DRM_MGAG200
+ 	select DRM_TTM_HELPER
+ 	help
+ 	 This is a KMS driver for the MGA G200 server chips, it
+-         does not support the original MGA G200 or any of the desktop
+-         chips. It requires 0.3.0 of the modesetting userspace driver,
+-         and a version of mga driver that will fail on KMS enabled
+-         devices.
++	 does not support the original MGA G200 or any of the desktop
++	 chips. It requires 0.3.0 of the modesetting userspace driver,
++	 and a version of mga driver that will fail on KMS enabled
++	 devices.
+ 
 -- 
 2.17.1
 
