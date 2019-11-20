@@ -2,178 +2,151 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF2D4C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:27:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E81C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:28:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8935C224F3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:27:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="bdDiyV5a"
+	by mail.kernel.org (Postfix) with ESMTP id 6B7EA2251F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:28:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574256517;
+	bh=VGLoPcKOlcVRq/LbrOEtcpJklEyOFZtKgXKjiHCb7t4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eOiatFlqyNOJLkKkQi0SuTZ3h1fLc0kTKhwKocIZK/h5gdlMdupW6J9J7o6LNg6Wd
+	 MeErOusq9dU87PpSoL4fzGg6ifESxUR2SLAG617TsD4+E9NA602o30L44d40ILIZX0
+	 gJs7gcpZlOWyQQWjKqOawMuhMEZAEtYTNFM0r09w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730582AbfKTN1D (ORCPT
+        id S1729482AbfKTN2g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 08:27:03 -0500
-Received: from mailout1.samsung.com ([203.254.224.24]:47732 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728080AbfKTN1C (ORCPT
+        Wed, 20 Nov 2019 08:28:36 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:53888 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729365AbfKTN2g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 08:27:02 -0500
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20191120132659epoutp01b7963067ad051a9a617a75386f7a34b8~Y4d9otqNQ1742317423epoutp01J
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 13:26:59 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20191120132659epoutp01b7963067ad051a9a617a75386f7a34b8~Y4d9otqNQ1742317423epoutp01J
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1574256419;
-        bh=FkQW2/gVwlv8TBWB7Gl7mfLPp4FHKc20kVE7ZZRny3c=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bdDiyV5aMjsYLArhYtqIZVJ2KysP7W3sVnPWW92gmUGIgCD8zAe7XLNByVzHdtc/6
-         wndd1f0loMWTpZcJXvQDrEQ4i4MJZJxfthMXJwJ/Y5tOymDrLk9TuL7BW67/kEwDt0
-         5i+sQoBQVoexWljLaSOwuidxHzOloikJrjquwUFk=
-Received: from epsmges5p3new.samsung.com (unknown [182.195.42.75]) by
-        epcas5p1.samsung.com (KnoxPortal) with ESMTP id
-        20191120132658epcas5p1732a15c7f2fd3e762b8dfc81c4fe474c~Y4d8yxWtW2044820448epcas5p1B;
-        Wed, 20 Nov 2019 13:26:58 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        11.14.04074.22F35DD5; Wed, 20 Nov 2019 22:26:58 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-        20191120132657epcas5p418542be130de4e02901825eeac7edcdb~Y4d8BJagV2494424944epcas5p4r;
-        Wed, 20 Nov 2019 13:26:57 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20191120132657epsmtrp11ea69c5a37e8987f37f614310cac4a0c~Y4d8AWTdl1339613396epsmtrp1Z;
-        Wed, 20 Nov 2019 13:26:57 +0000 (GMT)
-X-AuditID: b6c32a4b-2e1ff70000000fea-b9-5dd53f221ac9
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        79.AC.03814.12F35DD5; Wed, 20 Nov 2019 22:26:57 +0900 (KST)
-Received: from ubuntu.sa.corp.samsungelectronics.net (unknown
-        [107.108.83.125]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20191120132655epsmtip23470c213326649db3c9a7e424a81f4da~Y4d6byOAV2341723417epsmtip2Q;
-        Wed, 20 Nov 2019 13:26:55 +0000 (GMT)
-From:   Anvesh Salveru <anvesh.s@samsung.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        pankaj.dubey@samsung.com, lorenzo.pieralisi@arm.com,
-        andrew.murray@arm.com, bhelgaas@google.com, kishon@ti.com,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        Anvesh Salveru <anvesh.s@samsung.com>
-Subject: [PATCH v3 2/2] PCI: dwc: add support to handle ZRX-DC Compliant
- PHYs
-Date:   Wed, 20 Nov 2019 18:56:11 +0530
-Message-Id: <1574256371-617-3-git-send-email-anvesh.s@samsung.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1574256371-617-1-git-send-email-anvesh.s@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmplleLIzCtJLcpLzFFi42LZdlhTU1fJ/mqswcm9EhbN/7ezWpzdtZDV
-        YklThsWuux3sFiu+zGS3uPC0h83i8q45bBZvfr9gt1h6/SKTxaKtX9gtWvceYXfg9lgzbw2j
-        x85Zd9k9Fmwq9di0qpPNo2/LKkaPLfs/M3ocv7GdyePzJrkAjigum5TUnMyy1CJ9uwSujI9T
-        XjIWPBCuWNX2naWB8b5AFyMHh4SAicT1JYpdjFwcQgK7GSUermtnhnA+MUrMWDyVBcL5xijx
-        vGE7O0xHx2deiPheRolX++ZAFbUwScxaOZWpi5GTg01AW+Ln0b3sILaIgILE5t5nrCBFzAL/
-        GCWufpnHCJIQFvCX+NdwgBnEZhFQlXi5u40VxOYVcJKYvmMiG4gtISAncfNcJ1gNp4CzxLzt
-        zWwggyQELrNJ/Py5kBmiyEVi847ZLBC2sMSr41vYIWwpiZf9bVB2vkTv3aVQdo3ElLsdjBC2
-        vcSBKyAvcABdpymxfpc+SJhZgE+i9/cTJoiPeSU62oQgTCWJtpnVEI0SEovn34Q6wENi54WL
-        rJBwmMYosfDDefYJjLKzEIYuYGRcxSiZWlCcm55abFpgnJdarlecmFtcmpeul5yfu4kRnDi0
-        vHcwbjrnc4hRgINRiYc3Q+NqrBBrYllxZe4hRgkOZiUR3j3Xr8QK8aYkVlalFuXHF5XmpBYf
-        YpTmYFES553EejVGSCA9sSQ1OzW1ILUIJsvEwSnVwOgjcz7FYVXZ/YyOB3uf/7vxSGvB2fDb
-        s3OOvIzO0TYIm3k6frVYwBouO6+Oq+pdi5XvFnAaPPl86pvT0ean+9w2vdg6mUeJl+Widv3s
-        x1EnOnU5nvRsKruV7zxp3eVjZp/fa1wU2P042lNa5m+MXZxC065c5rrnL69sNAs8v9fd/kjZ
-        PCHJb1xKLMUZiYZazEXFiQBu/6QkGAMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrCLMWRmVeSWpSXmKPExsWy7bCSvK6i/dVYg+2rFC2a/29ntTi7ayGr
-        xZKmDItddzvYLVZ8mcluceFpD5vF5V1z2Cze/H7BbrH0+kUmi0Vbv7BbtO49wu7A7bFm3hpG
-        j52z7rJ7LNhU6rFpVSebR9+WVYweW/Z/ZvQ4fmM7k8fnTXIBHFFcNimpOZllqUX6dglcGR+n
-        vGQseCBcsartO0sD432BLkYODgkBE4mOz7xdjFwcQgK7GSU6Pl5j62LkBIpLSHzZ+xXKFpZY
-        +e85O0RRE5PE966/jCAJNgFtiZ9H97KD2CICChKbe5+xghQxC3QxSaw9vQUsISzgK7Hk4HkW
-        EJtFQFXi5e42VhCbV8BJYvqOiVAb5CRunutkBrE5BZwl5m1vZgO5TgioZs1r6wmMfAsYGVYx
-        SqYWFOem5xYbFhjlpZbrFSfmFpfmpesl5+duYgSHrZbWDsYTJ+IPMQpwMCrx8GZoXI0VYk0s
-        K67MPcQowcGsJMK75/qVWCHelMTKqtSi/Pii0pzU4kOM0hwsSuK88vnHIoUE0hNLUrNTUwtS
-        i2CyTBycUg2MSdcFDeq2H55rNuvYk7utRY7tvHmn90jVF65WkVG9xT67rvlKgScL1/F8ifRM
-        t2/JHXxSGR+Frb/uLqxT66kXZZC5/rU39J6NvvFT5iPyLNcPrL109fd6sZDPGfcsZ/WuE4/e
-        K/FCyIHxwJa6b39MwkUeuazRvvKl5LGlTl1Jp42a0fuj6plKLMUZiYZazEXFiQCnFRlbVwIA
-        AA==
-X-CMS-MailID: 20191120132657epcas5p418542be130de4e02901825eeac7edcdb
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20191120132657epcas5p418542be130de4e02901825eeac7edcdb
-References: <1574256371-617-1-git-send-email-anvesh.s@samsung.com>
-        <CGME20191120132657epcas5p418542be130de4e02901825eeac7edcdb@epcas5p4.samsung.com>
+        Wed, 20 Nov 2019 08:28:36 -0500
+Received: by mail-wm1-f65.google.com with SMTP id u18so6986122wmc.3
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 05:28:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=f11bqYRLU8GEHJXNeBAMacLrDj3b4Fc6rBnmQVewYXs=;
+        b=TynL67zsnb3dlePBwaPt6y18949VU/64q6GUujLld7eUoJVZXTgTrf7dueb6TNT8yK
+         fK64R0MGvbEsCxYedDclltsAl8wwekTy43w1ACsTQJafhZYJ7GVGsL9vrqWXQBJLoCzz
+         F8f4CZ1PaMyNL9GdZQOtTC8QqSeFVkaBVajBfUj8PRMtM2GYtvcVtQZRxWRblIr8/UZT
+         Cbl+MuMfI+yGDvOKjg75Pgbi7ifcEbY+noLDHoWfQROefstmc08NOyeEQo1lRY8GYAMT
+         EkGr1ESrPfu8s3Bdp418kNH1C1IJ6sUm5K2dX/77GrC3pijg+S95JCWnKgL+rAaftAJ7
+         Gn3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=f11bqYRLU8GEHJXNeBAMacLrDj3b4Fc6rBnmQVewYXs=;
+        b=ShndYAzgqjtGtKkkncGc/k0+cF+wP5HGwrp7E4thT9/+50SWDFlWUN2tuRZEWl9vBp
+         rdkmfcSILtkGh1i5ie281yMXnNY3aXwZKHD6VbuybkfQIs+chbzc3ojDZNi9D5K66Jz8
+         uvf5Niw2kGRfuQc8roD9rMVzsthqe69OZ6HU+S6mFg8SlPgnlMfnwjfhlL9+rSPdrGFm
+         duYaKYYETBpqQUX1vK420omF5HzPfwp/kqrmj4e4zvKbfh97Ha+Ykme8t8PydEhJlIJQ
+         +iYpOXV5Y9KAuQHc4wRLYFNBq4/fXXTlIFE7evNMN9t69V9QHolr7Ad6PE4WuNB1hFW9
+         O8ww==
+X-Gm-Message-State: APjAAAXB97lKFo/Fw/HXmVzoYPNn1ApvgzI0l5+qjdd/k3ENYcsCmlw/
+        WfDdU4UmC2FQ1okGmre7uK8=
+X-Google-Smtp-Source: APXvYqxo7AeaIXtlfWun1U8ri3KLtGtuy/9Cw9fnh02S6IZlWcCK+uYtNmteBxXb4S+YqUY/dC0o1A==
+X-Received: by 2002:a1c:7d47:: with SMTP id y68mr3186364wmc.157.1574256513123;
+        Wed, 20 Nov 2019 05:28:33 -0800 (PST)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id d20sm34607640wra.4.2019.11.20.05.28.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Nov 2019 05:28:32 -0800 (PST)
+Date:   Wed, 20 Nov 2019 14:28:30 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Jann Horn <jannh@google.com>, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH v3 2/4] x86/traps: Print non-canonical address on #GP
+Message-ID: <20191120132830.GB54414@gmail.com>
+References: <20191120103613.63563-1-jannh@google.com>
+ <20191120103613.63563-2-jannh@google.com>
+ <20191120111859.GA115930@gmail.com>
+ <CAG48ez0Frp4-+xHZ=UhbHh0hC_h-1VtJfwHw=kDo6NahyMv1ig@mail.gmail.com>
+ <20191120123058.GA17296@gmail.com>
+ <20191120123926.GE2634@zn.tnic>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191120123926.GE2634@zn.tnic>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Many platforms use DesignWare controller but the PHY can be different in
-different platforms. If the PHY is compliant is to ZRX-DC specification
-it helps in low power consumption during power states.
 
-If current data rate is 8.0 GT/s or higher and PHY is not compliant to
-ZRX-DC specification, then after every 100ms link should transition to
-recovery state during the low power states.
+* Borislav Petkov <bp@alien8.de> wrote:
 
-DesignWare controller provides GEN3_ZRXDC_NONCOMPL field in
-GEN3_RELATED_OFF to specify about ZRX-DC compliant PHY.
+> On Wed, Nov 20, 2019 at 01:30:58PM +0100, Ingo Molnar wrote:
+> > 
+> > * Jann Horn <jannh@google.com> wrote:
+> > 
+> > > You mean something like this?
+> > > 
+> > > ========================
+> > > diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+> > > index 9b23c4bda243..16a6bdaccb51 100644
+> > > --- a/arch/x86/kernel/traps.c
+> > > +++ b/arch/x86/kernel/traps.c
+> > > @@ -516,32 +516,36 @@ dotraplinkage void do_bounds(struct pt_regs
+> > > *regs, long error_code)
+> > >   * On 64-bit, if an uncaught #GP occurs while dereferencing a non-canonical
+> > >   * address, return that address.
+> > >   */
+> > > -static unsigned long get_kernel_gp_address(struct pt_regs *regs)
+> > > +static bool get_kernel_gp_address(struct pt_regs *regs, unsigned long *addr,
+> > > +                                          bool *non_canonical)
+> > 
+> > Yeah, that's pretty much the perfect end result!
+> 
+> Why do we need the bool thing? Can't we rely on the assumption that an
+> address of 0 is the error case and use that to determine whether the
+> resolving succeeded or not?
 
-Platforms with ZRX-DC compliant PHY can set phy_zrxdc_compliant variable
-to specify this property to the controller.
+I'd rather we not trust the decoder and the execution environment so much 
+that it never produces a 0 linear address in a #GP:
 
-Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
-Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
----
-Patchset v2 can be found at:
- - 1/2: https://lkml.org/lkml/2019/11/11/672
- - 2/2: https://lkml.org/lkml/2019/10/28/285
+in get_addr_ref_32() we could get zero:
 
-Changes w.r.t v2:
- - Addressed review comments
- - Rebased on latest linus/master
+	linear_addr = (unsigned long)(eff_addr & 0xffffffff) + seg_base;
 
- drivers/pci/controller/dwc/pcie-designware.c | 6 ++++++
- drivers/pci/controller/dwc/pcie-designware.h | 4 ++++
- 2 files changed, 10 insertions(+)
+in get_addr_ref_16() we could get zero too:
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index 820488d..36a01b7 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -556,4 +556,10 @@ void dw_pcie_setup(struct dw_pcie *pci)
- 		       PCIE_PL_CHK_REG_CHK_REG_START;
- 		dw_pcie_writel_dbi(pci, PCIE_PL_CHK_REG_CONTROL_STATUS, val);
- 	}
-+
-+	if (pci->phy_zrxdc_compliant) {
-+		val = dw_pcie_readl_dbi(pci, PCIE_PORT_GEN3_RELATED);
-+		val &= ~PORT_LOGIC_GEN3_ZRXDC_NONCOMPL;
-+		dw_pcie_writel_dbi(pci, PCIE_PORT_GEN3_RELATED, val);
-+	}
- }
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index 5a18e94..f43f986 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -60,6 +60,9 @@
- #define PCIE_MSI_INTR0_MASK		0x82C
- #define PCIE_MSI_INTR0_STATUS		0x830
- 
-+#define PCIE_PORT_GEN3_RELATED		0x890
-+#define PORT_LOGIC_GEN3_ZRXDC_NONCOMPL	BIT(0)
-+
- #define PCIE_ATU_VIEWPORT		0x900
- #define PCIE_ATU_REGION_INBOUND		BIT(31)
- #define PCIE_ATU_REGION_OUTBOUND	0
-@@ -249,6 +252,7 @@ struct dw_pcie {
- 	void __iomem		*atu_base;
- 	u32			num_viewport;
- 	u8			iatu_unroll_enabled;
-+	bool			phy_zrxdc_compliant;
- 	struct pcie_port	pp;
- 	struct dw_pcie_ep	ep;
- 	const struct dw_pcie_ops *ops;
--- 
-2.7.4
+	linear_addr = (unsigned long)(eff_addr & 0xffff) + seg_base;
 
+Or in particularly exotic crashes we could get zero in get_addr_ref_64() 
+as well:
+
+        linear_addr = (unsigned long)eff_addr + seg_base;
+
+although it's unlikely I suspect.
+
+But the 32-bit case should be plausible enough?
+
+It's also the simplest, most straightforward printout of the decoder 
+state: we either see an error, or an (address,canonical) pair of values.
+
+Thanks,
+
+	Ingo
