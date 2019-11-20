@@ -7,49 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70EE8C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33070C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:41:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4699822529
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:41:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A10422528
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:41:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574257312;
-	bh=Ji/d8zDpNXz2ULxuAqJq6wiOMM2wmyReCHpUzZYzkwE=;
+	s=default; t=1574257317;
+	bh=p82dBoBEojEnZartlAxiV4JLOKDykjVTELMhzhYJy1g=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Myu801463G7TmZevFRVbpdFEwGAnrptzI97qb1ITZ0RoiMSPIQvyqkJqb/GpP8KEY
-	 +09+MMf1qoy9ROU4pZRILIKq1/v+9cVTWr0z4H1//JTQnFj2oQ2GQx25Oy64hl2jHz
-	 1oZdd8/VpzMQ6w/QwpeZPrpTRQUJNDXVSueLeSMU=
+	b=JtZd0NJv1sKf64bTmFhRRGNrIRfdlI1H85UN27w0fQdYx3lzXavwy+4HEeryMrYz5
+	 6C5pTtzasIagzq8MTdyVkA3xkuKHcnNKsd+dYb+oZjjePeY1ggJ+UJOPqW7lvG08cu
+	 L+CTgRbdGax4rI82XCpIlFKr7cWNI1g+MGbI1RRE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731318AbfKTNlu (ORCPT
+        id S1731321AbfKTNlz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 08:41:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49564 "EHLO mail.kernel.org"
+        Wed, 20 Nov 2019 08:41:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730431AbfKTNls (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 08:41:48 -0500
+        id S1730129AbfKTNlx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 08:41:53 -0500
 Received: from localhost.localdomain (unknown [118.189.143.39])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83DBD224D0;
-        Wed, 20 Nov 2019 13:41:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A18BD2251E;
+        Wed, 20 Nov 2019 13:41:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574257308;
-        bh=Ji/d8zDpNXz2ULxuAqJq6wiOMM2wmyReCHpUzZYzkwE=;
+        s=default; t=1574257312;
+        bh=p82dBoBEojEnZartlAxiV4JLOKDykjVTELMhzhYJy1g=;
         h=From:To:Cc:Subject:Date:From;
-        b=jXmBgxsGumokE0ef/plIwRMyCW3R5sn20F46tnew2Lgywni198kqmqX0o/68RImGE
-         cmuPSMNhEHRvbLowInK2gtMG0oI96ehyGTBipluDD2Vu9ilj1VFfDOPYnqvsUdPHjM
-         CUOZIF+pPru9ibdBHv8uVrk+RVWzpKwCApXEajYQ=
+        b=sXJZMl0DZ1XPNzikD9oAzbO44QoY2xqaogFzibxNZZhQVPoJYlZSGiaW+Yvl5ypkb
+         w7H3mCgRPhFTLpDv7mrBQe/IEti97gdJekYU3t4fWXlq9fB1MXiyeZuLTfKeOGo74R
+         EL80VeAN33+Zf0Y4CbsHwMc0Tem3kem/r+zICANo=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org
-Subject: [PATCH] iio: Fix Kconfig indentation
-Date:   Wed, 20 Nov 2019 21:41:44 +0800
-Message-Id: <20191120134144.15302-1-krzk@kernel.org>
+        Peter Rosin <peda@axentia.se>, linux-i2c@vger.kernel.org
+Subject: [PATCH] i2c: Fix Kconfig indentation
+Date:   Wed, 20 Nov 2019 21:41:49 +0800
+Message-Id: <20191120134149.15360-1-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -62,29 +58,80 @@ coding style with command like:
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/iio/gyro/Kconfig | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/i2c/busses/Kconfig | 16 ++++++++--------
+ drivers/i2c/muxes/Kconfig  | 18 +++++++++---------
+ 2 files changed, 17 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/iio/gyro/Kconfig b/drivers/iio/gyro/Kconfig
-index 95e6f96d4529..f91af3b8e4da 100644
---- a/drivers/iio/gyro/Kconfig
-+++ b/drivers/iio/gyro/Kconfig
-@@ -82,11 +82,11 @@ config FXAS21002C
-        select FXAS21002C_SPI if (SPI)
-        depends on (I2C || SPI_MASTER)
-        help
--         Say yes here to build support for NXP FXAS21002C Tri-axis Gyro
--         Sensor driver connected via I2C or SPI.
-+	 Say yes here to build support for NXP FXAS21002C Tri-axis Gyro
-+	 Sensor driver connected via I2C or SPI.
+diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
+index 45ca099e7315..6ed89856e519 100644
+--- a/drivers/i2c/busses/Kconfig
++++ b/drivers/i2c/busses/Kconfig
+@@ -293,7 +293,7 @@ config I2C_VIA
+ 	select I2C_ALGOBIT
+ 	help
+ 	  If you say yes to this option, support will be included for the VIA
+-          82C586B I2C interface
++	  82C586B I2C interface
  
--         This driver can also be built as a module.  If so, the module
--         will be called fxas21002c_i2c or fxas21002c_spi.
-+	 This driver can also be built as a module.  If so, the module
-+	 will be called fxas21002c_i2c or fxas21002c_spi.
+ 	  This driver can also be built as a module.  If so, the module
+ 	  will be called i2c-via.
+@@ -678,11 +678,11 @@ config I2C_IMX_LPI2C
+ 	tristate "IMX Low Power I2C interface"
+ 	depends on ARCH_MXC || COMPILE_TEST
+ 	help
+-          Say Y here if you want to use the Low Power IIC bus controller
+-          on the Freescale i.MX processors.
++	  Say Y here if you want to use the Low Power IIC bus controller
++	  on the Freescale i.MX processors.
  
- config FXAS21002C_I2C
-        tristate
+-          This driver can also be built as a module. If so, the module
+-          will be called i2c-imx-lpi2c.
++	  This driver can also be built as a module. If so, the module
++	  will be called i2c-imx-lpi2c.
+ 
+ config I2C_IOP3XX
+ 	tristate "Intel IOPx3xx and IXP4xx on-chip I2C interface"
+@@ -1285,9 +1285,9 @@ config I2C_VIPERBOARD
+ 	help
+ 	  Say yes here to access the I2C part of the Nano River
+ 	  Technologies Viperboard as I2C master.
+-          See viperboard API specification and Nano
+-          River Tech's viperboard.h for detailed meaning
+-          of the module parameters.
++	  See viperboard API specification and Nano
++	  River Tech's viperboard.h for detailed meaning
++	  of the module parameters.
+ 
+ comment "Other I2C/SMBus bus drivers"
+ 
+diff --git a/drivers/i2c/muxes/Kconfig b/drivers/i2c/muxes/Kconfig
+index c6040aa839ac..1708b1a82da2 100644
+--- a/drivers/i2c/muxes/Kconfig
++++ b/drivers/i2c/muxes/Kconfig
+@@ -109,14 +109,14 @@ config I2C_DEMUX_PINCTRL
+ 	  want to change the I2C master at run-time depending on features.
+ 
+ config I2C_MUX_MLXCPLD
+-        tristate "Mellanox CPLD based I2C multiplexer"
+-        help
+-          If you say yes to this option, support will be included for a
+-          CPLD based I2C multiplexer. This driver provides access to
+-          I2C busses connected through a MUX, which is controlled
+-          by a CPLD register.
+-
+-          This driver can also be built as a module.  If so, the module
+-          will be called i2c-mux-mlxcpld.
++	tristate "Mellanox CPLD based I2C multiplexer"
++	help
++	  If you say yes to this option, support will be included for a
++	  CPLD based I2C multiplexer. This driver provides access to
++	  I2C busses connected through a MUX, which is controlled
++	  by a CPLD register.
++
++	  This driver can also be built as a module.  If so, the module
++	  will be called i2c-mux-mlxcpld.
+ 
+ endmenu
 -- 
 2.17.1
 
