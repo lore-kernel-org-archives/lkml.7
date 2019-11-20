@@ -2,144 +2,111 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 225D4C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 20:24:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CEF1C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 20:24:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D99A220855
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 20:24:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="QOu54pjO"
+	by mail.kernel.org (Postfix) with ESMTP id 2444020872
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 20:24:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbfKTUY3 (ORCPT
+        id S1726725AbfKTUYv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 15:24:29 -0500
-Received: from mout.web.de ([212.227.15.4]:52167 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725956AbfKTUY3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 15:24:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1574281284;
-        bh=YldMlQYtvURKq5OvbfriqKmy+salNat+YCBh07nFwRI=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=QOu54pjOra0yalxiceexthtvoPUvdVhEcaFI7FqIAH5YAW70N0vGHAyieCeYRX3vX
-         BbR3/OmK7vaW+Pk1adnfaw4CYMbjJL0isJM1BMLiMj7qokKZyakYhpR6sfg1vN3eUM
-         jYndeschg03sgIFI1uN6+TUpk82j1I7+9sXeZTB4=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.3] ([93.132.176.80]) by smtp.web.de (mrweb003
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0MEEdU-1ie78G014y-00FRSZ; Wed, 20
- Nov 2019 21:21:24 +0100
-Subject: Re: [PATCH v3 01/13] exfat: add in-memory and on-disk structures and
- headers
-To:     Namjae Jeon <namjae.jeon@samsung.com>,
-        linux-fsdevel@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>,
-        Daniel Wagner <dwagner@suse.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nikolay Borisov <nborisov@suse.com>,
-        Sungjong Seo <sj1557.seo@samsung.com>,
-        =?UTF-8?Q?Valdis_Kl=c4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        linkinjeon@gmail.com
-References: <20191119093718.3501-1-namjae.jeon@samsung.com>
- <CGME20191119094020epcas1p26de9d7e4e2ab8ad5d6ecaf23e2dfdca8@epcas1p2.samsung.com>
- <20191119093718.3501-2-namjae.jeon@samsung.com>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <30222888-e62e-494e-269e-cb1a0746a01f@web.de>
-Date:   Wed, 20 Nov 2019 21:21:13 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 20 Nov 2019 15:24:51 -0500
+Received: from mx2.suse.de ([195.135.220.15]:47262 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726080AbfKTUYu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 15:24:50 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id F0DC4B206;
+        Wed, 20 Nov 2019 20:24:48 +0000 (UTC)
+Message-ID: <681665dee34a47f26f7832d2c3e0e68a85b69e3f.camel@suse.de>
+Subject: Re: [PATCH v2 4/6] PCI: brcmstb: add Broadcom STB PCIe host
+ controller driver
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Jeremy Linton <jeremy.linton@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>
+Cc:     maz@kernel.org, linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Eric Anholt <eric@anholt.net>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com,
+        mbrugger@suse.com, phil@raspberrypi.org,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Date:   Wed, 20 Nov 2019 21:24:47 +0100
+In-Reply-To: <f2202c4d-c2b4-c06a-8864-432380d0181f@arm.com>
+References: <20191112155926.16476-1-nsaenzjulienne@suse.de>
+         <20191112155926.16476-5-nsaenzjulienne@suse.de>
+         <20191119162502.GS43905@e119886-lin.cambridge.arm.com>
+         <f2202c4d-c2b4-c06a-8864-432380d0181f@arm.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-OoRtF6MuxmmZ/WkBbsKp"
+User-Agent: Evolution 3.34.1 
 MIME-Version: 1.0
-In-Reply-To: <20191119093718.3501-2-namjae.jeon@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:TPFMwv/LIzMI7d1BZMW+ORUEGJoSLAxTt1lFcrfKflOLL+j2dNd
- SZN/bsnt24XMuT3Kf7hWRCViJsi+yzJl8AWNO0g4TmwCJIUoCziM5Dv12xu3bbhR2aNkkdP
- VESwj4rQO4l7lXn3IxaXOhU4GQLdHokelbEjAsQEWhdtDFivbH9f8+aIk8rmCT2e5thBoRl
- ff5w8kezk3rzZUH4IvDXQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:pO5NPiQ3Cr8=:r2fhtc33Ht//mIXKUczz81
- gL9qXQimmuPBhWNYAKc3hlowMguYsyBJwoGJeNlXcEVkQs0RNyBskEslDeM6SnpBX49L9KxMT
- HTgTzqgUAJjr3vxRj8rcMK7lddvneOjqRc+TkFW1FPdJgSlyK3wS3ixyr4mFs/MLOdbwwXZry
- aeYYa8GF1m/MQ8kJQVAKrdJ6GwohqKyc8DwWXyQxGvNvgX9Zrs5hqRWzID/YxZBYXoBpOYaO4
- Jgp0dTqV9SrpZALBGqw9W4eHtuh5/W6DpE/ICiP88RHfsvcxi7jeqV2yM5d/q+6PCvPdeHZTg
- e2w/za+e7Pxlz5GibeVJ13ZNnIwc11Qi0rwE/G+wBzS8yK1lPVu5aYAkmOmaIAUxfrQEv0uxc
- PHLfccBCjt0EyIGieiIEApMuWL/Kg+a4W3mrP0oTJuLCe3AsLPR6RDvsPb44kn9M6e2SRu1UG
- g9Ck3Ud4Kvg7hhd2Kfwhp6we9fWVoW7fKneSydBI2KC7nQQYxPJsLh/66sdrwtxxOjVld++2M
- 7RyrnYvQtMPntPe3/pYCQhhN9UjdDXQa9Q6cQZnT7hAETxnirCHna+Zti0ZrFWyzx/pWVhQ+9
- kXgeZbw9BkpB8UkvMFUtfcVh5/k60H55j99uGjaar0PGuFYtGaey1VtaIF/XZUxjSv4zwR5Hb
- F63ij6VtO5nLghl/p92BfbKhbiPgb2uSffZjzlhAGdEVLLm6gkR0y0ILz4FkouubwpZpmSMNY
- LCTJoMtSCM6u/R3IqbsZ2603sI/v+r+Xh4oQSEYt8exYg3GpaGzIMCYQcgDDFo0Rnb6nVv84g
- EiaY3p3zLvGJSBGOqtVtfjdZZ/oSb/6bxwk55wBVsfdN25pS6vGdL3xhNzmvb51uJpj1scU/8
- JqYF8vQs1YIDzd38w3WJIf7OvDSIHgrws8gFeoiOp383Ijb55NIPVkVqGaXtKfPelH0TJlld4
- HqlD4jU7LezQ/pUJ6oW4D/nM4GW92ezUz0GLFLT+3i4pJMteYz216mIL0rmyiR47Gg+xxWRBS
- zJaIlB24Noe0oV0d3EHsVcd+BqFS6Spdi9rbXvQj22OmPMgv04N95GCIuthNM+6sUSpTLW8ni
- ANFQaInLYHeCI7u8B9d8T9RgYfMsdY+/J28+MvCiar0MpzzPfYPcDOeRy3gyQZTVJEuzEX2RW
- VtWJbVeiDtZNqd9tV8hYPgZ04wPD961uL1OTQF1dUs9xgtGTZZR3FAJfV9YH3nkaZeha1aAUV
- 7q4NOIaEZvF4JqERVRmRT9sE6csAsl17D5j3n1szKT3nAHuNn+k/d9eLD7y0=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=E2=80=A6
-> +++ b/fs/exfat/exfat_fs.h
-=E2=80=A6
-> +/* balloc.c */
-> +int exfat_load_bitmap(struct super_block *sb);
-=E2=80=A6
 
-Such function declarations were grouped according to the mentioned
-source file.
-How do you think about to include them from separate header files
-for the desired programming interface?
+--=-OoRtF6MuxmmZ/WkBbsKp
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Hi Jeremy,
+
+On Tue, 2019-11-19 at 12:20 -0600, Jeremy Linton wrote:
+> Hi,
+>=20
+> On 11/19/19 10:25 AM, Andrew Murray wrote:
+> > On Tue, Nov 12, 2019 at 04:59:23PM +0100, Nicolas Saenz Julienne wrote:
+> > > From: Jim Quinlan <james.quinlan@broadcom.com>
+> > >=20
+> > > This commit adds the basic Broadcom STB PCIe controller.  Missing is =
+the
+> > > ability to process MSI. This functionality is added in a subsequent
+> > > commit.
+> > >=20
+> > > The PCIe block contains an MDIO interface.  This is a local interface
+> > > only accessible by the PCIe controller.  It cannot be used or shared
+> > > by any other HW.  As such, the small amount of code for this
+> > > controller is included in this driver as there is little upside to pu=
+t
+> > > it elsewhere.
+> >=20
+> > This commit message hasn't changed, despite earlier feedback.
+> >=20
+>=20
+> Also, unless i'm mistaken this controller isn't I/O coherent on the rpi.
+
+I'm not sure I get what you mean by I/O coherent.
 
 Regards,
-Markus
+Nicolas
+
+
+--=-OoRtF6MuxmmZ/WkBbsKp
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3VoQ8ACgkQlfZmHno8
+x/7CIQf+N1s97C0orm13r3hHzluqTXyvjXEFM7l6iozSh3owLfyySyUqoQMk4GuU
+c9lMxac+7u+lhG6r4TuAQnolTAgLA1Ufzjk1ZpZZ5lBI+meoPyouMUxMh85wxALx
+JObhQOg/NLBFb/pLdfZeWrUgSxicDkJlkU9Wm63FItku5yaQjW0jfCNmAm6WpTXK
+91SvkHzg10I5r4jHMyQw7Rqcet+KuMn8vyCgxLX9VkputmAPdl1yzLoXjvdZBPpO
+8PHcZNiomyFwTEz1AFjKxDbuNzlWkAC/zSMGZl/skIC4FJPpNx3SqVC1UDAonI7+
+0i4lMZKzCutFxwH1yIXE93bHPpQnAw==
+=Z4RA
+-----END PGP SIGNATURE-----
+
+--=-OoRtF6MuxmmZ/WkBbsKp--
+
