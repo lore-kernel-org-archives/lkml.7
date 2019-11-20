@@ -2,97 +2,115 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93034C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:33:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F217C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:34:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FB782230F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:33:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574256836;
-	bh=I2ItxMWjRTEwYmAhHosn5S3+pzi92xqBKTYGklWPoUI=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Q1OoOmIVxdn53tlAMnZPxVGkzzp7nBlCQw/tFuTDmivVgjOpd0UHTyybJsRXGYHKi
-	 7gBDl7CQM3js5S/NYjXrcFEFNySy9NWt2qKF8RMoIV4LdLGnuWzqiOy6ALTDZeWx7M
-	 5aKanVlTFg6zBDfwvkXwkSuODz8RBHT1N4KJ3tdU=
+	by mail.kernel.org (Postfix) with ESMTP id 75BBF21939
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:34:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="zG3d5rF9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730736AbfKTNdz (ORCPT
+        id S1730747AbfKTNeZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 08:33:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41340 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730719AbfKTNdy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 08:33:54 -0500
-Received: from localhost.localdomain (unknown [118.189.143.39])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87976219FA;
-        Wed, 20 Nov 2019 13:33:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574256833;
-        bh=I2ItxMWjRTEwYmAhHosn5S3+pzi92xqBKTYGklWPoUI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=DXLsXb1V6t+zEdcUm0IV+EcRRH5mN6kgkgu5xpppSYvdEfjEDweqKnvvNe2Jq1PgL
-         UyiNDWj3EFBVqrvpPkA5X0jWyW2Zc8pS0qkrN+NMx7QBl5WukUMYSnzLE2Q9kSWchf
-         3sk5RnjK+QqRXtVk5CA8HYUnBzW9Z8m4aAOz0tQ4=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Sandy Huang <hjc@rock-chips.com>,
-        =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH] drm/rockchip: Fix Kconfig indentation
-Date:   Wed, 20 Nov 2019 21:33:48 +0800
-Message-Id: <20191120133348.6640-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        Wed, 20 Nov 2019 08:34:25 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:48994 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728770AbfKTNeZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 08:34:25 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAKDYFTI098277;
+        Wed, 20 Nov 2019 07:34:15 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1574256855;
+        bh=BHgE80y+QiXClHuEFFAfxoULNZYosGfeXTB4VtPq3hA=;
+        h=From:To:CC:Subject:Date;
+        b=zG3d5rF9H2YIb7o2LtdlgG74qNNaeG9fYuAVKTUBx2+qzVF2RZL+Yd+5sBNb0AOtA
+         LKCe0W9aHqCZh/Ab24IBXc4PJ8rGNlVDyDH6Ik+BQmq+4XV1uEVt9Rie1s6rodwnZG
+         QFn1aeoRPp01Fn/7cuQ7qb2DSetotq8YfmKycamQ=
+Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAKDYFVg099411;
+        Wed, 20 Nov 2019 07:34:15 -0600
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 20
+ Nov 2019 07:34:12 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 20 Nov 2019 07:34:12 -0600
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAKDY9Ei096098;
+        Wed, 20 Nov 2019 07:34:10 -0600
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <linus.walleij@linaro.org>, <bgolaszewski@baylibre.com>,
+        <robh+dt@kernel.org>
+CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <m.szyprowski@samsung.com>, <broonie@kernel.org>,
+        <mripard@kernel.org>, <p.zabel@pengutronix.de>,
+        <devicetree@vger.kernel.org>
+Subject: [RFC 0/2] gpiolib: Initial, basic support for shared GPIO lines
+Date:   Wed, 20 Nov 2019 15:34:07 +0200
+Message-ID: <20191120133409.9217-1-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.24.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adjust indentation from spaces to tab (+optional two spaces) as in
-coding style with command like:
-	$ sed -e 's/^        /\t/' -i */Kconfig
+Hi,
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+The initial support can replace all use of GPIOD_FLAGS_BIT_NONEXCLUSIVE if the
+shared GPIO is configured to follow pass through 'strategy' for the shared GPIO
+pin.
+
+I have only implemented DT support.
+
+With the shared gpio support one can choose between three different strategy for
+managing the shared gpio:
+refcounted low: Keep the line low as long as there is at least one low
+		request is registered
+refcounted high: Keep the line high as long as there is at least one high
+		request is registered
+pass through: all requests are allowed to go through without refcounting.
+
+Few shortcomings as of now:
+- can not handle different GPIO_ACTIVE_ on the user side, both the root GPIO
+  (which is shared) and clients must have the same GPIO_ACTIVE_ mode.
+  We are using common gpio_desc.
+  Like with GPIOD_FLAGS_BIT_NONEXCLUSIVE
+- refcounting counts _all_ 1/0 requests coming from the users of the shared
+  GPIO. This could cause issues if clients are using the gpiod API in unbalanced
+  way.
+  We would need to have separate tracking for each of the clients and agregate
+  the level they are asking for at any moment. Basically a new gpio-chip on top
+  of the real gpio pin can solve this.
+
+Regards,
+Peter
 ---
- drivers/gpu/drm/rockchip/Kconfig | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Peter Ujfalusi (2):
+  dt-bindings: gpio: Document shared GPIO line usage
+  gpiolib: Support for (output only) shared GPIO line
 
-diff --git a/drivers/gpu/drm/rockchip/Kconfig b/drivers/gpu/drm/rockchip/Kconfig
-index 6f4222f8beeb..1670a5cae3c7 100644
---- a/drivers/gpu/drm/rockchip/Kconfig
-+++ b/drivers/gpu/drm/rockchip/Kconfig
-@@ -28,17 +28,17 @@ config ROCKCHIP_ANALOGIX_DP
- 	  on RK3288 or RK3399 based SoC, you should select this option.
- 
- config ROCKCHIP_CDN_DP
--        bool "Rockchip cdn DP"
-+	bool "Rockchip cdn DP"
- 	depends on EXTCON=y || (EXTCON=m && DRM_ROCKCHIP=m)
--        help
-+	help
- 	  This selects support for Rockchip SoC specific extensions
- 	  for the cdn DP driver. If you want to enable Dp on
- 	  RK3399 based SoC, you should select this
- 	  option.
- 
- config ROCKCHIP_DW_HDMI
--        bool "Rockchip specific extensions for Synopsys DW HDMI"
--        help
-+	bool "Rockchip specific extensions for Synopsys DW HDMI"
-+	help
- 	  This selects support for Rockchip SoC specific extensions
- 	  for the Synopsys DesignWare HDMI driver. If you want to
- 	  enable HDMI on RK3288 or RK3399 based SoC, you should select
+ .../devicetree/bindings/gpio/gpio.txt         |  66 +++++++++
+ drivers/gpio/gpiolib-of.c                     |  28 +++-
+ drivers/gpio/gpiolib.c                        | 132 ++++++++++++++++--
+ drivers/gpio/gpiolib.h                        |  10 ++
+ 4 files changed, 223 insertions(+), 13 deletions(-)
+
 -- 
-2.17.1
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
