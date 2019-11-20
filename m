@@ -2,170 +2,171 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC0C6C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:30:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F86C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:32:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2E3F20637
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:30:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Jo/WE6nl"
+	by mail.kernel.org (Postfix) with ESMTP id 7FE2520637
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:32:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728412AbfKTPaj (ORCPT
+        id S1728118AbfKTPcZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 10:30:39 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:42445 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729156AbfKTP15 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 10:27:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574263676;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=bimceprUZXtgJwJ3r+uNah68s5oKbHDn9kJlulQ0RL0=;
-        b=Jo/WE6nlzM694NvvdlswpADBOveVI5fxqZyyUkcmmkt0ocH5kimQkbuZr5oBArR6faHkMc
-        595UNuf7SacWev7/8ggsCsF4OeUCTgDN/kowrY99cbmPTJCOWxsexlRbU8AIpw/HWCdd3X
-        y6IDsjSMZM6OBMy2p9D5WDArAh+vhls=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-215-0lhVNJB-Na6Zu_SXt0PRAQ-1; Wed, 20 Nov 2019 10:27:52 -0500
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 15515DBAA;
-        Wed, 20 Nov 2019 15:27:51 +0000 (UTC)
-Received: from coeurl.usersys.redhat.com (ovpn-123-90.rdu2.redhat.com [10.10.123.90])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A4E425E271;
-        Wed, 20 Nov 2019 15:27:50 +0000 (UTC)
-Received: by coeurl.usersys.redhat.com (Postfix, from userid 1000)
-        id 343142093D; Wed, 20 Nov 2019 10:27:50 -0500 (EST)
-From:   Scott Mayhew <smayhew@redhat.com>
-To:     anna.schumaker@netapp.com, trond.myklebust@hammerspace.com
-Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk,
-        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v5 04/27] nfs: fold nfs4_remote_fs_type and nfs4_remote_referral_fs_type
-Date:   Wed, 20 Nov 2019 10:27:27 -0500
-Message-Id: <20191120152750.6880-5-smayhew@redhat.com>
-In-Reply-To: <20191120152750.6880-1-smayhew@redhat.com>
-References: <20191120152750.6880-1-smayhew@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-MC-Unique: 0lhVNJB-Na6Zu_SXt0PRAQ-1
-X-Mimecast-Spam-Score: 0
+        Wed, 20 Nov 2019 10:32:25 -0500
+Received: from mx2.suse.de ([195.135.220.15]:50372 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726329AbfKTPcZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 10:32:25 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id E9167B28E;
+        Wed, 20 Nov 2019 15:32:22 +0000 (UTC)
+Date:   Wed, 20 Nov 2019 16:32:22 +0100
+Message-ID: <s5h5zje8sxl.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Andrew Gabbasov <andrew_gabbasov@mentor.com>
+Cc:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Timo Wischer <twischer@de.adit-jv.com>
+Subject: Re: [PATCH v4 6/7] ALSA: aloop: Support selection of snd_timer instead of jiffies
+In-Reply-To: <000001d59fb6$4ca36aa0$e5ea3fe0$@mentor.com>
+References: <20191120115856.4125-1-andrew_gabbasov@mentor.com>
+        <20191120115856.4125-2-andrew_gabbasov@mentor.com>
+        <20191120115856.4125-3-andrew_gabbasov@mentor.com>
+        <20191120115856.4125-4-andrew_gabbasov@mentor.com>
+        <20191120115856.4125-5-andrew_gabbasov@mentor.com>
+        <20191120115856.4125-6-andrew_gabbasov@mentor.com>
+        <20191120115856.4125-7-andrew_gabbasov@mentor.com>
+        <s5hh82y8vn5.wl-tiwai@suse.de>
+        <000001d59fb6$4ca36aa0$e5ea3fe0$@mentor.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+On Wed, 20 Nov 2019 16:21:36 +0100,
+Andrew Gabbasov wrote:
+> 
+> Hello Takashi,
+> 
+> > -----Original Message-----
+> > From: Takashi Iwai [mailto:tiwai@suse.de]
+> > Sent: Wednesday, November 20, 2019 5:34 PM
+> > To: Gabbasov, Andrew
+> > Cc: alsa-devel@alsa-project.org; linux-kernel@vger.kernel.org; Jaroslav
+> > Kysela; Takashi Iwai; Timo Wischer
+> > Subject: Re: [PATCH v4 6/7] ALSA: aloop: Support selection of snd_timer
+> > instead of jiffies
+> > 
+> > On Wed, 20 Nov 2019 12:58:55 +0100,
+> > Andrew Gabbasov wrote:
+> > > +/* call in loopback->cable_lock */
+> > > +static int loopback_snd_timer_open(struct loopback_pcm *dpcm)
+> > > +{
+> > > +	int err = 0;
+> > > +	struct snd_timer_id tid = {
+> > > +		.dev_class = SNDRV_TIMER_CLASS_PCM,
+> > > +		.dev_sclass = SNDRV_TIMER_SCLASS_APPLICATION,
+> > > +	};
+> > > +	struct snd_timer_instance *timeri;
+> > > +	struct loopback_cable *cable = dpcm->cable;
+> > > +
+> > > +	spin_lock_irq(&cable->lock);
+> > > +
+> > > +	/* check if timer was already opened. It is only opened once
+> > > +	 * per playback and capture subdevice (aka cable).
+> > > +	 */
+> > > +	if (cable->snd_timer.instance)
+> > > +		goto unlock;
+> > > +
+> > > +	err = loopback_parse_timer_id(dpcm->loopback->timer_source, &tid);
+> > > +	if (err < 0) {
+> > > +		pcm_err(dpcm->substream->pcm,
+> > > +			"Parsing timer source \'%s\' failed with %d",
+> > > +			dpcm->loopback->timer_source, err);
+> > > +		goto unlock;
+> > > +	}
+> > > +
+> > > +	cable->snd_timer.stream = dpcm->substream->stream;
+> > > +	cable->snd_timer.id = tid;
+> > > +
+> > > +	timeri = snd_timer_instance_new(dpcm->loopback->card->id);
+> > > +	if (!timeri) {
+> > > +		err = -ENOMEM;
+> > > +		goto unlock;
+> > > +	}
+> > > +	/* The callback has to be called from another tasklet. If
+> > > +	 * SNDRV_TIMER_IFLG_FAST is specified it will be called from the
+> > > +	 * snd_pcm_period_elapsed() call of the selected sound card.
+> > > +	 * snd_pcm_period_elapsed() helds snd_pcm_stream_lock_irqsave().
+> > > +	 * Due to our callback loopback_snd_timer_function() also calls
+> > > +	 * snd_pcm_period_elapsed() which calls
+> > snd_pcm_stream_lock_irqsave().
+> > > +	 * This would end up in a dead lock.
+> > > +	 */
+> > > +	timeri->flags |= SNDRV_TIMER_IFLG_AUTO;
+> > > +	timeri->callback = loopback_snd_timer_function;
+> > > +	timeri->callback_data = (void *)cable;
+> > > +	timeri->ccallback = loopback_snd_timer_event;
+> > > +
+> > > +	/* snd_timer_close() and snd_timer_open() should not be called with
+> > > +	 * locked spinlock because both functions can block on a mutex. The
+> > > +	 * mutex loopback->cable_lock is kept locked. Therefore
+> > snd_timer_open()
+> > > +	 * cannot be called a second time by the other device of the same
+> > cable.
+> > > +	 * Therefore the following issue cannot happen:
+> > > +	 * [proc1] Call loopback_timer_open() ->
+> > > +	 *	   Unlock cable->lock for snd_timer_close/open() call
+> > > +	 * [proc2] Call loopback_timer_open() -> snd_timer_open(),
+> > > +	 *	   snd_timer_start()
+> > > +	 * [proc1] Call snd_timer_open() and overwrite running timer
+> > > +	 *	   instance
+> > > +	 */
+> > > +	spin_unlock_irq(&cable->lock);
+> > > +	err = snd_timer_open(timeri, &cable->snd_timer.id, current->pid);
+> > > +	if (err < 0) {
+> > > +		pcm_err(dpcm->substream->pcm,
+> > > +			"snd_timer_open (%d,%d,%d) failed with %d",
+> > > +			cable->snd_timer.id.card,
+> > > +			cable->snd_timer.id.device,
+> > > +			cable->snd_timer.id.subdevice,
+> > > +			err);
+> > > +		snd_timer_instance_free(timeri);
+> > > +		return err;
+> > > +	}
+> > > +	spin_lock_irq(&cable->lock);
+> > > +
+> > > +	cable->snd_timer.instance = timeri;
+> > > +
+> > > +	/* initialise a tasklet used for draining */
+> > > +	tasklet_init(&cable->snd_timer.event_tasklet,
+> > > +		     loopback_snd_timer_tasklet, (unsigned long)timeri);
+> > 
+> > This has to be set before snd_timer_open().  The callback might be
+> > called immediately after snd_timer_open().
+> 
+> This tasklet is used/scheduled only in ccallback (not regular tick
+> callback),
+> and only for SNDRV_TIMER_EVENT_MSTOP event. Can this event really happen
+> immediately after snd_timer_open()?
 
-They are identical now.
+Why not?  The master timer can be stopped at any time, even between
+these two lines.
 
-Reviewed-by: David Howells <dhowells@redhat.com>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
----
- fs/nfs/nfs4super.c | 26 ++++----------------------
- 1 file changed, 4 insertions(+), 22 deletions(-)
+Beware that there are fuzzer programs that can trigger such racy
+things, and you're adding the code to the target that is actively
+slapped by them :)
 
-diff --git a/fs/nfs/nfs4super.c b/fs/nfs/nfs4super.c
-index 773c347df3ab..d0237d8ffa2b 100644
---- a/fs/nfs/nfs4super.c
-+++ b/fs/nfs/nfs4super.c
-@@ -22,8 +22,6 @@ static struct dentry *nfs4_remote_mount(struct file_syste=
-m_type *fs_type,
- =09int flags, const char *dev_name, void *raw_data);
- static struct dentry *nfs4_referral_mount(struct file_system_type *fs_type=
-,
- =09int flags, const char *dev_name, void *raw_data);
--static struct dentry *nfs4_remote_referral_mount(struct file_system_type *=
-fs_type,
--=09int flags, const char *dev_name, void *raw_data);
-=20
- static struct file_system_type nfs4_remote_fs_type =3D {
- =09.owner=09=09=3D THIS_MODULE,
-@@ -33,14 +31,6 @@ static struct file_system_type nfs4_remote_fs_type =3D {
- =09.fs_flags=09=3D FS_RENAME_DOES_D_MOVE|FS_BINARY_MOUNTDATA,
- };
-=20
--static struct file_system_type nfs4_remote_referral_fs_type =3D {
--=09.owner=09=09=3D THIS_MODULE,
--=09.name=09=09=3D "nfs4",
--=09.mount=09=09=3D nfs4_remote_referral_mount,
--=09.kill_sb=09=3D nfs_kill_super,
--=09.fs_flags=09=3D FS_RENAME_DOES_D_MOVE|FS_BINARY_MOUNTDATA,
--};
--
- struct file_system_type nfs4_referral_fs_type =3D {
- =09.owner=09=09=3D THIS_MODULE,
- =09.name=09=09=3D "nfs4",
-@@ -111,8 +101,7 @@ nfs4_remote_mount(struct file_system_type *fs_type, int=
- flags,
- =09return nfs_fs_mount_common(flags, dev_name, info, &nfs_v4);
- }
-=20
--static struct vfsmount *nfs_do_root_mount(struct file_system_type *fs_type=
-,
--=09=09=09=09=09  struct nfs_server *server, int flags,
-+static struct vfsmount *nfs_do_root_mount(struct nfs_server *server, int f=
-lags,
- =09=09=09=09=09  struct nfs_mount_info *info,
- =09=09=09=09=09  const char *hostname)
- {
-@@ -135,7 +124,7 @@ static struct vfsmount *nfs_do_root_mount(struct file_s=
-ystem_type *fs_type,
- =09else
- =09=09snprintf(root_devname, len, "%s:/", hostname);
- =09info->server =3D server;
--=09root_mnt =3D vfs_kern_mount(fs_type, flags, root_devname, info);
-+=09root_mnt =3D vfs_kern_mount(&nfs4_remote_fs_type, flags, root_devname, =
-info);
- =09if (info->server)
- =09=09nfs_free_server(info->server);
- =09info->server =3D NULL;
-@@ -245,7 +234,7 @@ struct dentry *nfs4_try_mount(int flags, const char *de=
-v_name,
-=20
- =09export_path =3D data->nfs_server.export_path;
- =09data->nfs_server.export_path =3D "/";
--=09root_mnt =3D nfs_do_root_mount(&nfs4_remote_fs_type,
-+=09root_mnt =3D nfs_do_root_mount(
- =09=09=09nfs4_create_server(mount_info, &nfs_v4),
- =09=09=09flags, mount_info,
- =09=09=09data->nfs_server.hostname);
-@@ -259,13 +248,6 @@ struct dentry *nfs4_try_mount(int flags, const char *d=
-ev_name,
- =09return res;
- }
-=20
--static struct dentry *
--nfs4_remote_referral_mount(struct file_system_type *fs_type, int flags,
--=09=09=09   const char *dev_name, void *raw_data)
--{
--=09return nfs_fs_mount_common(flags, dev_name, raw_data, &nfs_v4);
--}
--
- /*
-  * Create an NFS4 server record on referral traversal
-  */
-@@ -290,7 +272,7 @@ static struct dentry *nfs4_referral_mount(struct file_s=
-ystem_type *fs_type,
-=20
- =09export_path =3D data->mnt_path;
- =09data->mnt_path =3D "/";
--=09root_mnt =3D nfs_do_root_mount(&nfs4_remote_referral_fs_type,
-+=09root_mnt =3D nfs_do_root_mount(
- =09=09=09nfs4_create_referral_server(mount_info.cloned,
- =09=09=09=09=09=09    mount_info.mntfh),
- =09=09=09flags, &mount_info, data->hostname);
---=20
-2.17.2
 
+thanks,
+
+Takashi
