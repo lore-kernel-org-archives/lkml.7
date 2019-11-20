@@ -2,89 +2,142 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8C04C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:38:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1AF1C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:39:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E8A222429
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:38:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="rRRCPct7"
+	by mail.kernel.org (Postfix) with ESMTP id 7C2822243F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:39:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574246349;
+	bh=BSDOj43SEYbDyUSUSjA2IR8NwRrZQF67FoMribeMRkk=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=MrneS5f0nu44CtRuy5+Yb2jHajGN2gtWxWDGVnCENeQq7Io6pzHgHaStp9XU4KXc1
+	 iW5cT62VLRFcioO55usp0ZtCEjdwz3k2BQbuoTKFMGxNSAuAMHIyzS00j/QpaDu0Zj
+	 Ktg7r22sc2SinJBvZid9ae/17UA1LIXC+Pwz4NVU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728772AbfKTKiC (ORCPT
+        id S1728775AbfKTKjI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 05:38:02 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:58827 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728616AbfKTKiC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 05:38:02 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47Hzfp2kJlz9sPc;
-        Wed, 20 Nov 2019 21:37:54 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1574246278;
-        bh=3p1/+Y2XGImhWJp2Nfr1Vtn9hbxxW6xCuiO/qlCWHs8=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=rRRCPct7qxNjUoAWjW+qjiY8Kr3Tw3xNCLARmyKqEVyL++OKOBFQIJamuKslc0nbo
-         ZbfwIM3mtOBt0P5b1BPx1hd8ea3qB7nXXlIUjCBwq55BHhkEsiYXW0SXEUy1hSxZRG
-         kzq9gZZOYdY5PQQpTmZVSW8UKRV/ENRAOwNibjCo7M4XgZrbk6oHYO1hCmftgt5el4
-         hgIkt5tj1sDdv2h4MRNYO4VF0OR5fRbpkWD9HaxhR81lLDChjbUl4D3IQ+l2cbl5d/
-         bwmb8hjNZt/PcpvEcjt0VG1nBWGFp8wr9tyiJiT0/YN4zp/7RinHLSE7+CkjcEIhlN
-         fgIV931xHcIGw==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org
-Cc:     Will Deacon <will@kernel.org>, Yunjae Lee <lyj7694@gmail.com>,
-        SeongJae Park <sj38.park@gmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Matt Turner <mattst88@gmail.com>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Richard Henderson <rth@twiddle.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>, Joe Perches <joe@perches.com>,
-        Boqun Feng <boqun.feng@gmail.com>, linux-alpha@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH 11/13] powerpc: Remove comment about read_barrier_depends()
-In-Reply-To: <20191108170120.22331-12-will@kernel.org>
-References: <20191108170120.22331-1-will@kernel.org> <20191108170120.22331-12-will@kernel.org>
-Date:   Wed, 20 Nov 2019 21:37:52 +1100
-Message-ID: <87imnebzpb.fsf@mpe.ellerman.id.au>
+        Wed, 20 Nov 2019 05:39:08 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:39717 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728497AbfKTKjI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 05:39:08 -0500
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iXNNz-0001Zl-U1; Wed, 20 Nov 2019 11:38:59 +0100
+To:     Yash Shah <yash.shah@sifive.com>
+Subject: Re: [PATCH v2 1/5] genirq: introduce =?UTF-8?Q?irq=5Fdomain=5Ftra?=  =?UTF-8?Q?nslate=5Fonecell?=
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 20 Nov 2019 10:38:59 +0000
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     <linus.walleij@linaro.org>, <bgolaszewski@baylibre.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>, <palmer@dabbelt.com>,
+        "Paul Walmsley ( Sifive)" <paul.walmsley@sifive.com>,
+        <aou@eecs.berkeley.edu>, <tglx@linutronix.de>,
+        <jason@lakedaemon.net>, <bmeng.cn@gmail.com>,
+        <atish.patra@wdc.com>, Sagar Kadam <sagar.kadam@sifive.com>,
+        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        Sachin Ghadi <sachin.ghadi@sifive.com>
+In-Reply-To: <1574233128-28114-2-git-send-email-yash.shah@sifive.com>
+References: <1574233128-28114-1-git-send-email-yash.shah@sifive.com>
+ <1574233128-28114-2-git-send-email-yash.shah@sifive.com>
+Message-ID: <5ec51559d8b4cd3b8e80943788b52926@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: yash.shah@sifive.com, linus.walleij@linaro.org, bgolaszewski@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, palmer@dabbelt.com, paul.walmsley@sifive.com, aou@eecs.berkeley.edu, tglx@linutronix.de, jason@lakedaemon.net, bmeng.cn@gmail.com, atish.patra@wdc.com, sagar.kadam@sifive.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, sachin.ghadi@sifive.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Will Deacon <will@kernel.org> writes:
-> 'read_barrier_depends()' doesn't exist anymore so stop talking about it.
+On 2019-11-20 06:59, Yash Shah wrote:
+> Add a new function irq_domain_translate_onecell() that is to be used 
+> as
+> the translate function in struct irq_domain_ops for the v2 IRQ API.
 >
-> Signed-off-by: Will Deacon <will@kernel.org>
+> Signed-off-by: Yash Shah <yash.shah@sifive.com>
 > ---
->  arch/powerpc/include/asm/barrier.h | 2 --
->  1 file changed, 2 deletions(-)
+>  include/linux/irqdomain.h |  5 +++++
+>  kernel/irq/irqdomain.c    | 20 ++++++++++++++++++++
+>  2 files changed, 25 insertions(+)
 >
-> diff --git a/arch/powerpc/include/asm/barrier.h b/arch/powerpc/include/asm/barrier.h
-> index fbe8df433019..123adcefd40f 100644
-> --- a/arch/powerpc/include/asm/barrier.h
-> +++ b/arch/powerpc/include/asm/barrier.h
-> @@ -18,8 +18,6 @@
->   * mb() prevents loads and stores being reordered across this point.
->   * rmb() prevents loads being reordered across this point.
->   * wmb() prevents stores being reordered across this point.
-> - * read_barrier_depends() prevents data-dependent loads being reordered
-> - *	across this point (nop on PPC).
+> diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
+> index 583e7ab..cad9eb8 100644
+> --- a/include/linux/irqdomain.h
+> +++ b/include/linux/irqdomain.h
+> @@ -426,6 +426,11 @@ int irq_domain_translate_twocell(struct 
+> irq_domain *d,
+>  				 unsigned long *out_hwirq,
+>  				 unsigned int *out_type);
+>
+> +int irq_domain_translate_onecell(struct irq_domain *d,
+> +				 struct irq_fwspec *fwspec,
+> +				 unsigned long *out_hwirq,
+> +				 unsigned int *out_type);
+> +
+>  /* IPI functions */
+>  int irq_reserve_ipi(struct irq_domain *domain, const struct cpumask 
+> *dest);
+>  int irq_destroy_ipi(unsigned int irq, const struct cpumask *dest);
+> diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+> index 132672b..6972a48 100644
+> --- a/kernel/irq/irqdomain.c
+> +++ b/kernel/irq/irqdomain.c
+> @@ -987,6 +987,26 @@ const struct irq_domain_ops 
+> irq_domain_simple_ops = {
+>  EXPORT_SYMBOL_GPL(irq_domain_simple_ops);
+>
+>  /**
+> + * irq_domain_translate_onecell() - Generic translate for direct one 
+> cell
+> + * bindings
+> + *
+> + * Device Tree IRQ specifier translation function which works with 
+> one cell
 
-Acked-by: Michael Ellerman <mpe@ellerman.id.au>
+nit: the whole point of the 'new' translate function is that they are
+firmware-agnostic. Just drop the DT reference here.
 
-cheers
+> + * bindings where the cell values map directly to the hwirq number.
+> + */
+> +int irq_domain_translate_onecell(struct irq_domain *d,
+> +				 struct irq_fwspec *fwspec,
+> +				 unsigned long *out_hwirq,
+> +				 unsigned int *out_type)
+> +{
+> +	if (WARN_ON(fwspec->param_count < 1))
+> +		return -EINVAL;
+> +	*out_hwirq = fwspec->param[0];
+> +	*out_type = IRQ_TYPE_NONE;
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(irq_domain_translate_onecell);
+> +
+> +/**
+>   * irq_domain_translate_twocell() - Generic translate for direct two 
+> cell
+>   * bindings
+>   *
+
+Can you please also update (potentially in a separate patch) the 
+potential
+users of this? I mentioned the nvic driver last time...
+
+Thanks,
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
