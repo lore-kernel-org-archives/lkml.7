@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA2EEC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:40:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F253C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:40:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8877D20714
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:40:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 204A320714
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:40:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731978AbfKTPkj (ORCPT
+        id S1731987AbfKTPkl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 10:40:39 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:52904 "EHLO
+        Wed, 20 Nov 2019 10:40:41 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:52924 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731698AbfKTPkU (ORCPT
+        by vger.kernel.org with ESMTP id S1731711AbfKTPkU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 Nov 2019 10:40:20 -0500
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iXS5X-0004d3-Fk; Wed, 20 Nov 2019 15:40:15 +0000
+        id 1iXS5U-0004ak-PR; Wed, 20 Nov 2019 15:40:12 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iXS5V-0004OF-Is; Wed, 20 Nov 2019 15:40:13 +0000
+        id 1iXS5U-0004Jg-FB; Wed, 20 Nov 2019 15:40:12 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Ronnie Sahlberg" <lsahlber@redhat.com>,
-        "Steve French" <stfrench@microsoft.com>,
-        "Pavel Shilovsky" <pshilov@microsoft.com>
-Date:   Wed, 20 Nov 2019 15:38:29 +0000
-Message-ID: <lsq.1574264230.70362151@decadent.org.uk>
+        ebiederm@xmission.com, andy.shevchenko@gmail.com,
+        "Dou Liyang" <douly.fnst@cn.fujitsu.com>,
+        "Thomas Gleixner" <tglx@linutronix.de>, bhe@redhat.com
+Date:   Wed, 20 Nov 2019 15:38:02 +0000
+Message-ID: <lsq.1574264230.401530484@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 79/83] CIFS: Fix use after free of file info structures
+Subject: [PATCH 3.16 52/83] x86/apic: Drop logical_smp_processor_id() inline
 In-Reply-To: <lsq.1574264230.280218497@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,62 +56,70 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Pavel Shilovsky <pshilov@microsoft.com>
+From: Dou Liyang <douly.fnst@cn.fujitsu.com>
 
-commit 1a67c415965752879e2e9fad407bc44fc7f25f23 upstream.
+commit 8f1561680f42a5491b371b513f1ab8197f31fd62 upstream.
 
-Currently the code assumes that if a file info entry belongs
-to lists of open file handles of an inode and a tcon then
-it has non-zero reference. The recent changes broke that
-assumption when putting the last reference of the file info.
-There may be a situation when a file is being deleted but
-nothing prevents another thread to reference it again
-and start using it. This happens because we do not hold
-the inode list lock while checking the number of references
-of the file info structure. Fix this by doing the proper
-locking when doing the check.
+The logical_smp_processor_id() inline which is only called in
+setup_local_APIC() on x86_32 systems has no real value.
 
-Fixes: 487317c99477d ("cifs: add spinlock for the openFileList to cifsInodeInfo")
-Fixes: cb248819d209d ("cifs: use cifsInodeInfo->open_file_lock while iterating to avoid a panic")
-Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Signed-off-by: Pavel Shilovsky <pshilov@microsoft.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Drop it and directly use GET_APIC_LOGICAL_ID() at the call site and use a
+more suitable variable name for readability
+
+Signed-off-by: Dou Liyang <douly.fnst@cn.fujitsu.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: andy.shevchenko@gmail.com
+Cc: bhe@redhat.com
+Cc: ebiederm@xmission.com
+Link: https://lkml.kernel.org/r/20180301055930.2396-4-douly.fnst@cn.fujitsu.com
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- fs/cifs/file.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
---- a/fs/cifs/file.c
-+++ b/fs/cifs/file.c
-@@ -398,10 +398,11 @@ void _cifsFileInfo_put(struct cifsFileIn
- 	bool oplock_break_cancelled;
+--- a/arch/x86/include/asm/smp.h
++++ b/arch/x86/include/asm/smp.h
+@@ -203,16 +203,6 @@ extern int safe_smp_processor_id(void);
+ #endif
  
- 	spin_lock(&tcon->open_file_lock);
+ #ifdef CONFIG_X86_LOCAL_APIC
 -
-+	spin_lock(&cifsi->open_file_lock);
- 	spin_lock(&cifs_file->file_info_lock);
- 	if (--cifs_file->count > 0) {
- 		spin_unlock(&cifs_file->file_info_lock);
-+		spin_unlock(&cifsi->open_file_lock);
- 		spin_unlock(&tcon->open_file_lock);
- 		return;
- 	}
-@@ -414,9 +415,7 @@ void _cifsFileInfo_put(struct cifsFileIn
- 	cifs_add_pending_open_locked(&fid, cifs_file->tlink, &open);
+-#ifndef CONFIG_X86_64
+-static inline int logical_smp_processor_id(void)
+-{
+-	/* we don't want to mark this access volatile - bad code generation */
+-	return GET_APIC_LOGICAL_ID(apic_read(APIC_LDR));
+-}
+-
+-#endif
+-
+ extern int hard_smp_processor_id(void);
  
- 	/* remove it from the lists */
--	spin_lock(&cifsi->open_file_lock);
- 	list_del(&cifs_file->flist);
--	spin_unlock(&cifsi->open_file_lock);
- 	list_del(&cifs_file->tlist);
+ #else /* CONFIG_X86_LOCAL_APIC */
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -1305,6 +1305,9 @@ void setup_local_APIC(void)
+ 	int i, j, acked = 0;
+ 	unsigned long long tsc = 0, ntsc;
+ 	long long max_loops = cpu_khz ? cpu_khz : 1000000;
++#ifdef CONFIG_X86_32
++	int logical_apicid, ldr_apicid;
++#endif
  
- 	if (list_empty(&cifsi->openFileList)) {
-@@ -432,6 +431,7 @@ void _cifsFileInfo_put(struct cifsFileIn
- 		cifs_set_oplock_level(cifsi, 0);
- 	}
+ 	if (cpu_has_tsc)
+ 		rdtscll(tsc);
+@@ -1344,11 +1347,11 @@ void setup_local_APIC(void)
+ 	 * initialized during get_smp_config(), make sure it matches the
+ 	 * actual value.
+ 	 */
+-	i = early_per_cpu(x86_cpu_to_logical_apicid, cpu);
+-	WARN_ON(i != BAD_APICID && i != logical_smp_processor_id());
++	logical_apicid = early_per_cpu(x86_cpu_to_logical_apicid, cpu);
++	ldr_apicid = GET_APIC_LOGICAL_ID(apic_read(APIC_LDR));
++	WARN_ON(logical_apicid != BAD_APICID && logical_apicid != ldr_apicid);
+ 	/* always use the value from LDR */
+-	early_per_cpu(x86_cpu_to_logical_apicid, cpu) =
+-		logical_smp_processor_id();
++	early_per_cpu(x86_cpu_to_logical_apicid, cpu) = ldr_apicid;
  
-+	spin_unlock(&cifsi->open_file_lock);
- 	spin_unlock(&tcon->open_file_lock);
- 
- 	oplock_break_cancelled = wait_oplock_handler ?
+ 	/*
+ 	 * Some NUMA implementations (NUMAQ) don't initialize apicid to
 
