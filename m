@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D73BCC43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25E87C43141
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:40:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB53920709
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:40:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1C0D20709
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:40:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729659AbfKTPkP (ORCPT
+        id S1729852AbfKTPkR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 10:40:15 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:52506 "EHLO
+        Wed, 20 Nov 2019 10:40:17 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:52500 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729401AbfKTPkO (ORCPT
+        by vger.kernel.org with ESMTP id S1729338AbfKTPkO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 Nov 2019 10:40:14 -0500
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iXS5T-0004Yy-9V; Wed, 20 Nov 2019 15:40:11 +0000
+        id 1iXS5T-0004YH-79; Wed, 20 Nov 2019 15:40:11 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iXS5S-0004G4-NF; Wed, 20 Nov 2019 15:40:10 +0000
+        id 1iXS5S-0004FW-Ex; Wed, 20 Nov 2019 15:40:10 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Zhenzhong Duan" <zhenzhong.duan@oracle.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>
-Date:   Wed, 20 Nov 2019 15:37:18 +0000
-Message-ID: <lsq.1574264230.199206701@decadent.org.uk>
+        "Guenter Roeck" <linux@roeck-us.net>,
+        "=?UTF-8?q?Bj=C3=B6rn=20Gerhart?=" <gerhart@posteo.de>
+Date:   Wed, 20 Nov 2019 15:37:11 +0000
+Message-ID: <lsq.1574264230.911490844@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 08/83] x86/speculation/mds: Apply more accurate check
- on hypervisor platform
+Subject: [PATCH 3.16 01/83] hwmon: (nct6775) Fix register address and
+ added missed tolerance for nct6106
 In-Reply-To: <lsq.1574264230.280218497@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,42 +56,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+From: Björn Gerhart <gerhart@posteo.de>
 
-commit 517c3ba00916383af6411aec99442c307c23f684 upstream.
+commit f3d43e2e45fd9d44ba52d20debd12cd4ee9c89bf upstream.
 
-X86_HYPER_NATIVE isn't accurate for checking if running on native platform,
-e.g. CONFIG_HYPERVISOR_GUEST isn't set or "nopv" is enabled.
+Fixed address of third NCT6106_REG_WEIGHT_DUTY_STEP, and
+added missed NCT6106_REG_TOLERANCE_H.
 
-Checking the CPU feature bit X86_FEATURE_HYPERVISOR to determine if it's
-running on native platform is more accurate.
-
-This still doesn't cover the platforms on which X86_FEATURE_HYPERVISOR is
-unsupported, e.g. VMware, but there is nothing which can be done about this
-scenario.
-
-Fixes: 8a4b06d391b0 ("x86/speculation/mds: Add sysfs reporting for MDS")
-Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/1564022349-17338-1-git-send-email-zhenzhong.duan@oracle.com
-[bwh: Backported to 3.16: The old hypervisor check looked a bit different
- here.]
+Fixes: 6c009501ff200 ("hwmon: (nct6775) Add support for NCT6102D/6106D")
+Signed-off-by: Bjoern Gerhart <gerhart@posteo.de>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -1349,12 +1349,10 @@ static ssize_t itlb_multihit_show_state(
+ drivers/hwmon/nct6775.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+--- a/drivers/hwmon/nct6775.c
++++ b/drivers/hwmon/nct6775.c
+@@ -598,7 +598,7 @@ static const u16 NCT6106_REG_TARGET[] =
+ static const u16 NCT6106_REG_WEIGHT_TEMP_SEL[] = { 0x168, 0x178, 0x188 };
+ static const u16 NCT6106_REG_WEIGHT_TEMP_STEP[] = { 0x169, 0x179, 0x189 };
+ static const u16 NCT6106_REG_WEIGHT_TEMP_STEP_TOL[] = { 0x16a, 0x17a, 0x18a };
+-static const u16 NCT6106_REG_WEIGHT_DUTY_STEP[] = { 0x16b, 0x17b, 0x17c };
++static const u16 NCT6106_REG_WEIGHT_DUTY_STEP[] = { 0x16b, 0x17b, 0x18b };
+ static const u16 NCT6106_REG_WEIGHT_TEMP_BASE[] = { 0x16c, 0x17c, 0x18c };
+ static const u16 NCT6106_REG_WEIGHT_DUTY_BASE[] = { 0x16d, 0x17d, 0x18d };
  
- static ssize_t mds_show_state(char *buf)
- {
--#ifdef CONFIG_HYPERVISOR_GUEST
--	if (x86_hyper) {
-+	if (boot_cpu_has(X86_FEATURE_HYPERVISOR)) {
- 		return sprintf(buf, "%s; SMT Host state unknown\n",
- 			       mds_strings[mds_mitigation]);
- 	}
--#endif
- 
- 	if (boot_cpu_has(X86_BUG_MSBDS_ONLY)) {
- 		return sprintf(buf, "%s; SMT %s\n", mds_strings[mds_mitigation],
+@@ -3339,6 +3339,7 @@ static int nct6775_probe(struct platform
+ 		data->REG_FAN_TIME[0] = NCT6106_REG_FAN_STOP_TIME;
+ 		data->REG_FAN_TIME[1] = NCT6106_REG_FAN_STEP_UP_TIME;
+ 		data->REG_FAN_TIME[2] = NCT6106_REG_FAN_STEP_DOWN_TIME;
++		data->REG_TOLERANCE_H = NCT6106_REG_TOLERANCE_H;
+ 		data->REG_PWM[0] = NCT6106_REG_PWM;
+ 		data->REG_PWM[1] = NCT6106_REG_FAN_START_OUTPUT;
+ 		data->REG_PWM[2] = NCT6106_REG_FAN_STOP_OUTPUT;
 
