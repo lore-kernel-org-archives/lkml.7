@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C989EC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41C28C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:40:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BBAB2251E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:40:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 159C122529
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:40:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574257216;
-	bh=mDSqcvomL2gb4VEyadcdfVadEksYJhKaDzb+RgGpEqw=;
+	s=default; t=1574257222;
+	bh=wXg8C2p5ZI4K1Pp6ciyZlXd/EdYx1fcD1vR7WxWeDwE=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Cy8xyWCTsyPGOWsKlv5QOHKTQebLtkQ7lcN+6tjL4PxdPyUZcXJgkgFPi4uVwgFc3
-	 mVNm/03qeCx7OTzEe57+N4nUd/AnSvRlwwZn7T7CESXA1sgNY+INZIsrZBPgHwPysi
-	 gEVJ0SDaNCPxYxaT2KpKZU5H+Mns5JJQh16GIuV8=
+	b=wiexBNS27JxgKUjNGw3K5Q9qUD1LcSqCf1mh5t1MMadJehJDHmnaa5Kf5s+UqkWAq
+	 fI3fKc9Q2bbimLHMfZdZJEUTXnRe75iwgxzRd3HO6hWDB3HwvUJBdguII2Wm+n722l
+	 6TBXCmVi0+0dDn0RPqe5WUNh8cBYh4tQ5/tjLgSw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731187AbfKTNkP (ORCPT
+        id S1731197AbfKTNkV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 08:40:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48042 "EHLO mail.kernel.org"
+        Wed, 20 Nov 2019 08:40:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728795AbfKTNkO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 08:40:14 -0500
+        id S1728847AbfKTNkT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 08:40:19 -0500
 Received: from localhost.localdomain (unknown [118.189.143.39])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB1E022506;
-        Wed, 20 Nov 2019 13:40:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8071D2251E;
+        Wed, 20 Nov 2019 13:40:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574257213;
-        bh=mDSqcvomL2gb4VEyadcdfVadEksYJhKaDzb+RgGpEqw=;
+        s=default; t=1574257218;
+        bh=wXg8C2p5ZI4K1Pp6ciyZlXd/EdYx1fcD1vR7WxWeDwE=;
         h=From:To:Cc:Subject:Date:From;
-        b=Ysj+KYqAPrP3OArO/4E02LlWFMG5pIk+Fw/D9HnzOIYrMSCdNUkDwSOtUbhQzkTpQ
-         FDQZyQrlyphn74dd6dJ1Xy1TELSWuXMTX+chFMs6Iw+9G5xIShvuUeGQAlqATy0RK/
-         A2AByklkG+0pLMnGSV3srfYSaypaL4lnaPoGS9Oc=
+        b=y/qxOIgSvVxvD5nIYnb0lioI/bb9aztEYEPSVrT3G2R7DQgTxde6kdbNNBqTRR7TI
+         x7tgMFVxPXKq08pZaa8+yhiaDlxFC2PcsROqa7ZrJtmek0chl0duueuZAoIUulBJgf
+         W8NRQr1unM+9+Lnz3F/bdZhaeGC5HXVPG1XL9dyU=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Vadim Pasternak <vadimp@mellanox.com>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH] platform/mellanox: Fix Kconfig indentation
-Date:   Wed, 20 Nov 2019 21:40:09 +0800
-Message-Id: <20191120134009.14222-1-krzk@kernel.org>
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Subject: [PATCH] platform/chrome: Fix Kconfig indentation
+Date:   Wed, 20 Nov 2019 21:40:13 +0800
+Message-Id: <20191120134014.14277-1-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -61,41 +59,26 @@ coding style with command like:
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/platform/mellanox/Kconfig | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ drivers/platform/chrome/Kconfig | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/platform/mellanox/Kconfig b/drivers/platform/mellanox/Kconfig
-index 386336d1e48b..56e037623b29 100644
---- a/drivers/platform/mellanox/Kconfig
-+++ b/drivers/platform/mellanox/Kconfig
-@@ -41,19 +41,19 @@ config MLXBF_TMFIFO
- 	depends on VIRTIO_CONSOLE && VIRTIO_NET
- 	help
- 	  Say y here to enable TmFifo support. The TmFifo driver provides
--          platform driver support for the TmFifo which supports console
--          and networking based on the virtio framework.
-+	  platform driver support for the TmFifo which supports console
-+	  and networking based on the virtio framework.
+diff --git a/drivers/platform/chrome/Kconfig b/drivers/platform/chrome/Kconfig
+index ee5f08ea57b6..b66cc7182287 100644
+--- a/drivers/platform/chrome/Kconfig
++++ b/drivers/platform/chrome/Kconfig
+@@ -132,9 +132,9 @@ config CROS_EC_LPC
+ 	  module will be called cros_ec_lpcs.
  
- config MLXBF_BOOTCTL
- 	tristate "Mellanox BlueField Firmware Boot Control driver"
- 	depends on ARM64
- 	depends on ACPI
- 	help
--          The Mellanox BlueField firmware implements functionality to
--          request swapping the primary and alternate eMMC boot partition,
--          and to set up a watchdog that can undo that swap if the system
--          does not boot up correctly. This driver provides sysfs access
--          to the userspace tools, to be used in conjunction with the eMMC
--          device driver to do necessary initial swap of the boot partition.
-+	  The Mellanox BlueField firmware implements functionality to
-+	  request swapping the primary and alternate eMMC boot partition,
-+	  and to set up a watchdog that can undo that swap if the system
-+	  does not boot up correctly. This driver provides sysfs access
-+	  to the userspace tools, to be used in conjunction with the eMMC
-+	  device driver to do necessary initial swap of the boot partition.
+ config CROS_EC_PROTO
+-        bool
+-        help
+-          ChromeOS EC communication protocol helpers.
++	bool
++	help
++	  ChromeOS EC communication protocol helpers.
  
- endif # MELLANOX_PLATFORM
+ config CROS_KBD_LED_BACKLIGHT
+ 	tristate "Backlight LED support for Chrome OS keyboards"
 -- 
 2.17.1
 
