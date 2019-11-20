@@ -2,115 +2,125 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC481C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 17:12:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26917C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 17:15:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 922D1208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 17:12:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1EFC208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 17:15:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W31OjeQI"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="diKGlggZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730328AbfKTRMl (ORCPT
+        id S1728825AbfKTRPQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 12:12:41 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:59579 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729119AbfKTRMl (ORCPT
+        Wed, 20 Nov 2019 12:15:16 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:36027 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727754AbfKTRPP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 12:12:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574269960;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=muEDxGsq3Waz+P8qcWcdXwG2KGs2kkylLGjOIkRBOxY=;
-        b=W31OjeQI+CFWQuxcWzvnCjfIOOYiCXcE35vuFM4OaBWKMUlmas6L4f82Szrhxq5d9myr32
-        VkDAWJviaD9XphQWkhI0vqtK26NGWXpFKZ6KBnS3kHpmQNDp+NjaIxY97Ob+quj8AreFfF
-        SvGDC803VOHgKTEedXezWBO+xWiL5dk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-213-WNi31rFYNkSnbaUHU89kgg-1; Wed, 20 Nov 2019 12:12:39 -0500
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 92936802689;
-        Wed, 20 Nov 2019 17:12:36 +0000 (UTC)
-Received: from suzdal.zaitcev.lan (ovpn-117-3.phx2.redhat.com [10.3.117.3])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A183FA7F0;
-        Wed, 20 Nov 2019 17:12:35 +0000 (UTC)
-Date:   Wed, 20 Nov 2019 11:12:35 -0600
-From:   Pete Zaitcev <zaitcev@redhat.com>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     syzbot <syzbot+56f9673bb4cdcbeb0e92@syzkaller.appspotmail.com>,
-        arnd@arndb.de, <gregkh@linuxfoundation.org>,
-        <jrdr.linux@gmail.com>, <keescook@chromium.org>,
-        <kstewart@linuxfoundation.org>,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        <syzkaller-bugs@googlegroups.com>, <tglx@linutronix.de>,
-        <viro@zeniv.linux.org.uk>, zaitcev@redhat.com
-Subject: Re: possible deadlock in mon_bin_vma_fault
-Message-ID: <20191120111235.7d306f23@suzdal.zaitcev.lan>
-In-Reply-To: <Pine.LNX.4.44L0.1911201109500.1498-100000@iolanthe.rowland.org>
-References: <0000000000002da08e0597c5efbd@google.com>
-        <Pine.LNX.4.44L0.1911201109500.1498-100000@iolanthe.rowland.org>
-Organization: Red Hat, Inc.
+        Wed, 20 Nov 2019 12:15:15 -0500
+Received: by mail-pf1-f193.google.com with SMTP id b19so46951pfd.3;
+        Wed, 20 Nov 2019 09:15:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=lq42ZizosFkbH9g1Rr07jdIDqzA1gE/ZC1lOYQz/biM=;
+        b=diKGlggZJDKsPlLr50LlIeJobu1j5qlTIPd+wy2fkgwibmd4c4EF8QsTtCKI5YDa+P
+         rEQQkIsYjrmHB3T6hA3Tz4WpxPhU6ycjJzP2xGk5BD7EazLXpQayif86GINl+xWE+nJL
+         u8s/NvkH6ia2fPzDEhUpDQKNAVoISZQW5EZ5hVs2Pja4UwAAYstQda5wr7APS4P61kLe
+         bd7yZEJjwneS8LQlPvYj7wKy2VX0NVC2YQ1oTFPYdNnj7GjssmqSacCIov8K94VHMKue
+         9Vr3MYYUEDodfZUaC7ilO91sPP2u0/GqbFvdwer3ga1rNTISJquABE4r94HSkN9Ku/Ba
+         p5rg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=lq42ZizosFkbH9g1Rr07jdIDqzA1gE/ZC1lOYQz/biM=;
+        b=difG6HiR1poZDlogARhR85oe2CdT4YULC6F7+K4gaN+PZzDSReynNL0hv52Lqhh2sy
+         hQEtBBlBcDIu7RXw7vmMN15Oavoe1LKN/pFebpSZCss+Uf+AIPBnqvvOss/mY0COWxRV
+         swMdxj1eUWCfrxErVszYBnzZAwaNgjGqMRZ65z79pGi1Ugn0aKRHpPNOiQCD0fnOiIS0
+         MVSaj2TOED5nyGasSayiU28FT7ebr+RVmcaIgbani5Px4IqghRNoheOx/azYeBw9KvNI
+         tsQ+tA/YVGvg2+dIjHJLQMLy2ytJ9V2tJGQN7f+BWrmrpuQmUUN6I1vkSqUmVMYC5exx
+         CX6A==
+X-Gm-Message-State: APjAAAVFrKVmevk7uDkuJU55I3909C3ZRUnEXYxovVI/qvvdEmaEJzNV
+        oi+VwlDFPY+vbOTtr7mV0jvPNPnn
+X-Google-Smtp-Source: APXvYqzqZgo33feZu9MWoEbJBu0NKZiD7xomzt88q5WNOveVMDbKGm9Y7HVIGwS3AWK636g06NPZKw==
+X-Received: by 2002:a63:a34d:: with SMTP id v13mr4482571pgn.343.1574270114888;
+        Wed, 20 Nov 2019 09:15:14 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id a34sm29504785pgl.56.2019.11.20.09.15.13
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 20 Nov 2019 09:15:14 -0800 (PST)
+Date:   Wed, 20 Nov 2019 09:15:12 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     "Wang, Peng 1. (NSB - CN/Hangzhou)" <peng.1.wang@nokia-sbell.com>
+Cc:     "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] watchdog: make DesignWare watchdog allow users to set
+ bigger timeout value
+Message-ID: <20191120171512.GA28255@roeck-us.net>
+References: <13477f08400047c1b32030b2680a4241@nokia-sbell.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: WNi31rFYNkSnbaUHU89kgg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <13477f08400047c1b32030b2680a4241@nokia-sbell.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 20 Nov 2019 11:14:05 -0500 (EST)
-Alan Stern <stern@rowland.harvard.edu> wrote:
+On Wed, Nov 20, 2019 at 10:07:57AM +0000, Wang, Peng 1. (NSB - CN/Hangzhou) wrote:
+> From 1d051b7c081083751dc0bab97d3ab9efbba0f4a7 Mon Sep 17 00:00:00 2001
+> From: Peng Wang <peng.1.wang@nokia-sbell.com>
+> Date: Wed, 20 Nov 2019 15:12:59 +0800
+> Subject: [PATCH] watchdog: make DesignWare watchdog allow users to set bigger
+>  timeout value
+> 
+> watchdog_dev.c provides means to allow users to set bigger timeout value
+> than HW can support, make DesignWare watchdog align with this.
+> 
+> Signed-off-by: Peng Wang <peng.1.wang@nokia-sbell.com>
+> ---
+>  drivers/watchdog/dw_wdt.c | 11 +++++++++--
+>  1 file changed, 9 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c
+> index fef7c61..8911e5e 100644
+> --- a/drivers/watchdog/dw_wdt.c
+> +++ b/drivers/watchdog/dw_wdt.c
+> @@ -113,8 +113,15 @@ static int dw_wdt_set_timeout(struct watchdog_device *wdd, unsigned int top_s)
+>  	 */
+>  	writel(top_val | top_val << WDOG_TIMEOUT_RANGE_TOPINIT_SHIFT,
+>  	       dw_wdt->regs + WDOG_TIMEOUT_RANGE_REG_OFFSET);
+> -
+> -	wdd->timeout = dw_wdt_top_in_seconds(dw_wdt, top_val);
+> +    
+> +    /*
+> +     * In case users set bigger timeout value than HW can support,
+> +     * kernel(watchdog_dev.c) helps to feed watchdog before 
+> +     * wdd->timeout
+> +     */
+> +    if ( wdd->timeout * 1000 <= wdd->max_hw_heartbeat_ms ) {
+> +	    wdd->timeout = dw_wdt_top_in_seconds(dw_wdt, top_val);
+> +    }
 
-> As it happens, I spent a little time investigating this bug report just
-> yesterday.  It seems to me that the easiest fix would be to disallow
-> resizing the buffer while it is mapped by any users.  (Besides,
-> allowing that seems like a bad idea in any case.)
->=20
-> Pete, does that seem reasonable to you?
+{ } is unnecessary here. Also, the above code compares the _old_
+timeout againt the maximum supported timeout, which doesn't look
+correct.
 
-Yes, it does seem reasonable.
+Thanks,
+Guenter
 
-I think I understand it now. My fallacy was thinking that since everything
-is nailed down as long as fetch_lock is held, it was okay to grab whatever
-page from our pagemap. What happens later is an attempt to get pages of the
-new buffer while looking at them through the old VMA, in mon_bin_vma_fault.
-
-It seems to me that the use counter, mmap_active, is correct and sufficient
-to check in the ioctl.
-
--- Pete
-
-P.S. One thing that vaguely bothers me on this is that the bot
-bisected to the commit that clearly fixed worse issues.
-
-P.P.S. Like this?
-
-diff --git a/drivers/usb/mon/mon_bin.c b/drivers/usb/mon/mon_bin.c
-index ac2b4fcc265f..e27d99606adb 100644
---- a/drivers/usb/mon/mon_bin.c
-+++ b/drivers/usb/mon/mon_bin.c
-@@ -1020,6 +1020,9 @@ static long mon_bin_ioctl(struct file *file, unsigned=
- int cmd, unsigned long arg
-                int size;
-                struct mon_pgmap *vec;
-=20
-+               if (rp->mmap_active)
-+                       return -EBUSY;
-+
-                if (arg < BUFF_MIN || arg > BUFF_MAX)
-                        return -EINVAL;
-=20
-
+>  
+>  	return 0;
+>  }
+> -- 
+> 1.8.3.1
+> 
