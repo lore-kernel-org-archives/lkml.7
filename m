@@ -2,372 +2,149 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D56C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 06:10:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26259C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 06:11:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2A7E2240A
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 06:10:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E87962240A
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 06:11:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="qj3btTHX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727533AbfKTGKf (ORCPT
+        id S1727582AbfKTGLM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 01:10:35 -0500
-Received: from mga01.intel.com ([192.55.52.88]:47034 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726220AbfKTGKe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 01:10:34 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Nov 2019 22:10:34 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,220,1571727600"; 
-   d="scan'208";a="204728618"
-Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
-  by fmsmga007.fm.intel.com with ESMTP; 19 Nov 2019 22:10:32 -0800
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-To:     p.zabel@pengutronix.de, martin.blumenstingl@googlemail.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com, Dilip Kota <eswara.kota@linux.intel.com>
-Subject: [PATCH v3 2/2] reset: intel: Add system reset controller driver
-Date:   Wed, 20 Nov 2019 14:10:24 +0800
-Message-Id: <b5843cc4de7af9a03176e97dea6bd7998faebf8e.1574153939.git.eswara.kota@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <0c53fd1100e357f6793f792c1de218f7de013393.1574153939.git.eswara.kota@linux.intel.com>
-References: <0c53fd1100e357f6793f792c1de218f7de013393.1574153939.git.eswara.kota@linux.intel.com>
-In-Reply-To: <0c53fd1100e357f6793f792c1de218f7de013393.1574153939.git.eswara.kota@linux.intel.com>
-References: <0c53fd1100e357f6793f792c1de218f7de013393.1574153939.git.eswara.kota@linux.intel.com>
+        Wed, 20 Nov 2019 01:11:12 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:60470 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726044AbfKTGLM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 01:11:12 -0500
+X-UUID: 000745fbbeec487f846fe50eecdea0c7-20191120
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=cnXVYOCT6jAm+zO5eJXzFKhez0AEBAzRzE76qZr3S+w=;
+        b=qj3btTHXvPS7xMlbX8vTRXC2GUqS6ADJZ2nrdKrs77bWaH13Rub+7BApAHsewfc+P/PBhnZvbDSF0FjA8RCBwQjdzpV6FH/l0jP6lQLTcF5Abu5CHdAPUYr4kWWcFaz2EimB6GVl6mKOjYzDYV9N4RLZhipFZZ59kHYreDA6MN4=;
+X-UUID: 000745fbbeec487f846fe50eecdea0c7-20191120
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <bibby.hsieh@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1934782815; Wed, 20 Nov 2019 14:11:07 +0800
+Received: from mtkmbs05dr.mediatek.inc (172.21.101.97) by
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 20 Nov 2019 14:10:51 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs05dr.mediatek.inc (172.21.101.97) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 20 Nov 2019 14:10:53 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 20 Nov 2019 14:10:48 +0800
+Message-ID: <1574230265.14846.1.camel@mtksdaap41>
+Subject: Re: [PATCH] arm64: dts: mt8173: Add gce setting in mmsys and
+ display node
+From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
+To:     Hsin-Yi Wang <hsinyi@chromium.org>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Date:   Wed, 20 Nov 2019 14:11:05 +0800
+In-Reply-To: <20191118104252.228406-1-hsinyi@chromium.org>
+References: <20191118104252.228406-1-hsinyi@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add driver for the reset controller present on Intel
-Gateway SoCs for performing reset management of the
-devices present on the SoC. Driver also registers a
-reset handler to peform the entire device reset.
-
-Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
----
-Changes on v3:
-	Address review comments:
-		Remove intel_reset_device() as not supported
-	reset-intel-syscon.c renamed to reset-intel-gw.c
-	Remove syscon and add regmap logic
-	Add support to legacy xrx200 SoC
-	Use bitfield helper functions for bit operations.
-	Change config RESET_INTEL_SYSCON-> RESET_INTEL_GW
-
- drivers/reset/Kconfig          |   9 ++
- drivers/reset/Makefile         |   1 +
- drivers/reset/reset-intel-gw.c | 262 +++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 272 insertions(+)
- create mode 100644 drivers/reset/reset-intel-gw.c
-
-diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-index 6d5d76db55b0..6f263883eb92 100644
---- a/drivers/reset/Kconfig
-+++ b/drivers/reset/Kconfig
-@@ -64,6 +64,15 @@ config RESET_IMX7
- 	help
- 	  This enables the reset controller driver for i.MX7 SoCs.
- 
-+config RESET_INTEL_GW
-+	bool "Intel Reset Controller Driver"
-+	depends on OF
-+	select REGMAP_MMIO
-+	help
-+	  This enables the reset controller driver for Intel Gateway SoCs.
-+	  Say Y to control the reset signals provided by reset controller.
-+	  Otherwise, say N.
-+
- config RESET_LANTIQ
- 	bool "Lantiq XWAY Reset Driver" if COMPILE_TEST
- 	default SOC_TYPE_XWAY
-diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-index 61456b8f659c..474f89ee5fd8 100644
---- a/drivers/reset/Makefile
-+++ b/drivers/reset/Makefile
-@@ -10,6 +10,7 @@ obj-$(CONFIG_RESET_BERLIN) += reset-berlin.o
- obj-$(CONFIG_RESET_BRCMSTB) += reset-brcmstb.o
- obj-$(CONFIG_RESET_HSDK) += reset-hsdk.o
- obj-$(CONFIG_RESET_IMX7) += reset-imx7.o
-+obj-$(CONFIG_RESET_INTEL_GW) += reset-intel-gw.o
- obj-$(CONFIG_RESET_LANTIQ) += reset-lantiq.o
- obj-$(CONFIG_RESET_LPC18XX) += reset-lpc18xx.o
- obj-$(CONFIG_RESET_MESON) += reset-meson.o
-diff --git a/drivers/reset/reset-intel-gw.c b/drivers/reset/reset-intel-gw.c
-new file mode 100644
-index 000000000000..da285833cd22
---- /dev/null
-+++ b/drivers/reset/reset-intel-gw.c
-@@ -0,0 +1,262 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2019 Intel Corporation.
-+ * Lei Chuanhua <Chuanhua.lei@intel.com>
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/init.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/reboot.h>
-+#include <linux/regmap.h>
-+#include <linux/reset-controller.h>
-+
-+#define RCU_RST_STAT	0x0024
-+#define RCU_RST_REQ	0x0048
-+
-+#define REG_OFFSET	GENMASK(31, 16)
-+#define BIT_OFFSET	GENMASK(15, 8)
-+#define STAT_BIT_OFFSET	GENMASK(7, 0)
-+
-+#define to_reset_data(x)	container_of(x, struct intel_reset_data, rcdev)
-+
-+struct intel_reset_soc {
-+	bool legacy;
-+	u32 reset_cell_count;
-+};
-+
-+struct intel_reset_data {
-+	struct reset_controller_dev rcdev;
-+	struct notifier_block restart_nb;
-+	const struct intel_reset_soc *soc_data;
-+	struct regmap *regmap;
-+	struct device *dev;
-+	u32 reboot_id;
-+};
-+
-+static const struct regmap_config intel_rcu_regmap_config = {
-+	.name =		"intel-reset",
-+	.reg_bits =	32,
-+	.reg_stride =	4,
-+	.val_bits =	32,
-+	.fast_io =	true,
-+};
-+
-+/*
-+ * Reset status register offset relative to
-+ * the reset control register(X) is X + 4
-+ */
-+static u32 id_to_reg_and_bit_offsets(struct intel_reset_data *data,
-+				     unsigned long id, u32 *rst_req,
-+				     u32 *req_bit, u32 *stat_bit)
-+{
-+	*rst_req = FIELD_GET(REG_OFFSET, id);
-+	*req_bit = FIELD_GET(BIT_OFFSET, id);
-+
-+	if (data->soc_data->legacy)
-+		*stat_bit = FIELD_GET(STAT_BIT_OFFSET, id);
-+	else
-+		*stat_bit = *req_bit;
-+
-+	if (data->soc_data->legacy && *rst_req == RCU_RST_REQ)
-+		return RCU_RST_STAT;
-+	else
-+		return *rst_req + 0x4;
-+}
-+
-+static int intel_set_clr_bits(struct intel_reset_data *data,
-+			      unsigned long id, bool set, u64 timeout)
-+{
-+	u32 rst_req, req_bit, rst_stat, stat_bit, val;
-+	int ret;
-+
-+	rst_stat = id_to_reg_and_bit_offsets(data, id, &rst_req,
-+					     &req_bit, &stat_bit);
-+
-+	val = set ? BIT(req_bit) : 0;
-+	ret = regmap_update_bits(data->regmap, rst_req,  BIT(req_bit), val);
-+	if (ret)
-+		return ret;
-+
-+	return regmap_read_poll_timeout(data->regmap, rst_stat, val,
-+					set == !!(val & BIT(stat_bit)),
-+					20, timeout);
-+}
-+
-+static int intel_assert_device(struct reset_controller_dev *rcdev,
-+			       unsigned long id)
-+{
-+	struct intel_reset_data *data = to_reset_data(rcdev);
-+	int ret;
-+
-+	ret = intel_set_clr_bits(data, id, true, 200);
-+	if (ret)
-+		dev_err(data->dev, "Reset assert failed %d\n", ret);
-+
-+	return ret;
-+}
-+
-+static int intel_deassert_device(struct reset_controller_dev *rcdev,
-+				 unsigned long id)
-+{
-+	struct intel_reset_data *data = to_reset_data(rcdev);
-+	int ret;
-+
-+	ret = intel_set_clr_bits(data, id, false, 200);
-+	if (ret)
-+		dev_err(data->dev, "Reset deassert failed %d\n", ret);
-+
-+	return ret;
-+}
-+
-+static int intel_reset_status(struct reset_controller_dev *rcdev,
-+			      unsigned long id)
-+{
-+	struct intel_reset_data *data = to_reset_data(rcdev);
-+	u32 rst_req, req_bit, rst_stat, stat_bit, val;
-+	int ret;
-+
-+	rst_stat = id_to_reg_and_bit_offsets(data, id, &rst_req,
-+					     &req_bit, &stat_bit);
-+	ret = regmap_read(data->regmap, rst_stat, &val);
-+	if (ret)
-+		return ret;
-+
-+	return !!(val & BIT(stat_bit));
-+}
-+
-+static const struct reset_control_ops intel_reset_ops = {
-+	.assert =	intel_assert_device,
-+	.deassert =	intel_deassert_device,
-+	.status	=	intel_reset_status,
-+};
-+
-+static int intel_reset_xlate(struct reset_controller_dev *rcdev,
-+			     const struct of_phandle_args *spec)
-+{
-+	struct intel_reset_data *data = to_reset_data(rcdev);
-+	u32 id;
-+
-+	if (spec->args[1] > 31)
-+		return -EINVAL;
-+
-+	id = FIELD_PREP(REG_OFFSET, spec->args[0]);
-+	id |= FIELD_PREP(BIT_OFFSET, spec->args[1]);
-+
-+	if (data->soc_data->legacy) {
-+		if (spec->args[2] > 31)
-+			return -EINVAL;
-+
-+		id |= FIELD_PREP(STAT_BIT_OFFSET, spec->args[2]);
-+	}
-+
-+	return id;
-+}
-+
-+static int intel_reset_restart_handler(struct notifier_block *nb,
-+				       unsigned long action, void *data)
-+{
-+	struct intel_reset_data *reset_data;
-+
-+	reset_data = container_of(nb, struct intel_reset_data, restart_nb);
-+	intel_assert_device(&reset_data->rcdev, reset_data->reboot_id);
-+
-+	return NOTIFY_DONE;
-+}
-+
-+static int intel_reset_probe(struct platform_device *pdev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	struct device *dev = &pdev->dev;
-+	struct intel_reset_data *data;
-+	void __iomem *base;
-+	u32 rb_id[3];
-+	int ret;
-+
-+	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	data->soc_data = of_device_get_match_data(dev);
-+	if (!data->soc_data)
-+		return -ENODEV;
-+
-+	base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(base))
-+		return PTR_ERR(base);
-+
-+	data->regmap = devm_regmap_init_mmio(dev, base,
-+					     &intel_rcu_regmap_config);
-+	if (IS_ERR(data->regmap)) {
-+		dev_err(dev, "regmap initialization failed\n");
-+		return PTR_ERR(data->regmap);
-+	}
-+
-+	ret = device_property_read_u32_array(dev, "intel,global-reset", rb_id,
-+					     data->soc_data->reset_cell_count);
-+	if (ret) {
-+		dev_err(dev, "Failed to get global reset offset!\n");
-+		return ret;
-+	}
-+
-+	data->dev =			dev;
-+	data->rcdev.of_node =		np;
-+	data->rcdev.owner =		dev->driver->owner;
-+	data->rcdev.ops	=		&intel_reset_ops;
-+	data->rcdev.of_xlate =		intel_reset_xlate;
-+	data->rcdev.of_reset_n_cells =	data->soc_data->reset_cell_count;
-+	ret = devm_reset_controller_register(&pdev->dev, &data->rcdev);
-+	if (ret)
-+		return ret;
-+
-+	data->reboot_id = FIELD_PREP(REG_OFFSET, rb_id[0]);
-+	data->reboot_id |= FIELD_PREP(BIT_OFFSET, rb_id[1]);
-+
-+	if (data->soc_data->legacy)
-+		data->reboot_id |= FIELD_PREP(STAT_BIT_OFFSET, rb_id[2]);
-+
-+	data->restart_nb.notifier_call	= intel_reset_restart_handler;
-+	data->restart_nb.priority	= 128;
-+	register_restart_handler(&data->restart_nb);
-+
-+	return 0;
-+}
-+
-+struct intel_reset_soc xrx200_data = {
-+	.legacy =		true,
-+	.reset_cell_count =	3,
-+};
-+
-+struct intel_reset_soc lgm_data = {
-+	.legacy =		false,
-+	.reset_cell_count =	2,
-+};
-+
-+static const struct of_device_id intel_reset_match[] = {
-+	{ .compatible = "intel,rcu-lgm", .data = &lgm_data },
-+	{ .compatible = "intel,rcu-xrx200", .data = &xrx200_data },
-+	{}
-+};
-+
-+static struct platform_driver intel_reset_driver = {
-+	.probe = intel_reset_probe,
-+	.driver = {
-+		.name = "intel-reset",
-+		.of_match_table = intel_reset_match,
-+	},
-+};
-+
-+static int __init intel_reset_init(void)
-+{
-+	return platform_driver_register(&intel_reset_driver);
-+}
-+
-+/*
-+ * RCU is system core entity which is in Always On Domain whose clocks
-+ * or resource initialization happens in system core initialization.
-+ * Also, it is required for most of the platform or architecture
-+ * specific devices to perform reset operation as part of initialization.
-+ * So perform RCU as post core initialization.
-+ */
-+postcore_initcall(intel_reset_init);
--- 
-2.11.0
+T24gTW9uLCAyMDE5LTExLTE4IGF0IDE4OjQyICswODAwLCBIc2luLVlpIFdhbmcgd3JvdGU6DQo+
+IEluIG9yZGVyIHRvIHVzZSBHQ0UgZnVuY3Rpb24sIHdlIG5lZWQgYWRkIHNvbWUgaW5mb3JtYXRp
+b25zDQo+IGludG8gZGlzcGxheSBub2RlIChtYm94ZXMsIG1lZGlhdGVrLGdjZS1jbGllbnQtcmVn
+LCBtZWRpYXRlayxnY2UtZXZlbnRzKS4NCg0KVGhhbmtzIGZvciB0aGUgcGF0Y2guDQoNClJldmll
+d2VkLWJ5OiBCaWJieSBIc2llaCA8YmliYnkuaHNpZWhAbWVkaWF0ZWsuY29tPg0KDQo+IA0KPiBT
+aWduZWQtb2ZmLWJ5OiBIc2luLVlpIFdhbmcgPGhzaW55aUBjaHJvbWl1bS5vcmc+DQo+IC0tLQ0K
+PiAtIFRoaXMgaXMgYmFzZWQgb24gc2VyaWVzICJzdXBwb3J0IGdjZSBvbiBtdDgxODMgcGxhdGZv
+cm0iDQo+ICAgaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9jb3Zlci8xMTIwODMwOS8NCj4g
+LSBnY2Ugc2V0dGluZyBpbiA4MTgzOg0KPiAgIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcv
+cGF0Y2gvMTExMjcxMDUvDQo+IC0tLQ0KPiAgYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9t
+dDgxNzMuZHRzaSB8IDE2ICsrKysrKysrKysrKysrKysNCj4gIDEgZmlsZSBjaGFuZ2VkLCAxNiBp
+bnNlcnRpb25zKCspDQo+IA0KPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9tZWRp
+YXRlay9tdDgxNzMuZHRzaSBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ4MTczLmR0
+c2kNCj4gaW5kZXggMTVmMTg0MmY2ZGYzLi5lODRlYzNmOTVkODEgMTAwNjQ0DQo+IC0tLSBhL2Fy
+Y2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ4MTczLmR0c2kNCj4gKysrIGIvYXJjaC9hcm02
+NC9ib290L2R0cy9tZWRpYXRlay9tdDgxNzMuZHRzaQ0KPiBAQCAtOTExLDYgKzkxMSwxMSBAQCBt
+bXN5czogY2xvY2stY29udHJvbGxlckAxNDAwMDAwMCB7DQo+ICAJCQlhc3NpZ25lZC1jbG9ja3Mg
+PSA8JnRvcGNrZ2VuIENMS19UT1BfTU1fU0VMPjsNCj4gIAkJCWFzc2lnbmVkLWNsb2NrLXJhdGVz
+ID0gPDQwMDAwMDAwMD47DQo+ICAJCQkjY2xvY2stY2VsbHMgPSA8MT47DQo+ICsJCQltYm94ZXMg
+PSA8JmdjZSAwIENNRFFfVEhSX1BSSU9fSElHSEVTVCAxPiwNCj4gKwkJCQkgPCZnY2UgMSBDTURR
+X1RIUl9QUklPX0hJR0hFU1QgMT47DQo+ICsJCQltZWRpYXRlayxnY2UtY2xpZW50LXJlZyA9IDwm
+Z2NlIFNVQlNZU18xNDAwWFhYWCAwIDB4MTAwMD47DQo+ICsJCQltZWRpYXRlayxnY2UtZXZlbnRz
+ID0gPENNRFFfRVZFTlRfTVVURVgwX1NUUkVBTV9FT0Y+LA0KPiArCQkJCQkgICAgICA8Q01EUV9F
+VkVOVF9NVVRFWDFfU1RSRUFNX0VPRj47DQo+ICAJCX07DQo+ICANCj4gIAkJbWRwX3JkbWEwOiBy
+ZG1hQDE0MDAxMDAwIHsNCj4gQEAgLTk5MSw2ICs5OTYsNyBAQCBvdmwwOiBvdmxAMTQwMGMwMDAg
+ew0KPiAgCQkJY2xvY2tzID0gPCZtbXN5cyBDTEtfTU1fRElTUF9PVkwwPjsNCj4gIAkJCWlvbW11
+cyA9IDwmaW9tbXUgTTRVX1BPUlRfRElTUF9PVkwwPjsNCj4gIAkJCW1lZGlhdGVrLGxhcmIgPSA8
+JmxhcmIwPjsNCj4gKwkJCW1lZGlhdGVrLGdjZS1jbGllbnQtcmVnID0gPCZnY2UgU1VCU1lTXzE0
+MDBYWFhYIDB4YzAwMCAweDEwMDA+Ow0KPiAgCQl9Ow0KPiAgDQo+ICAJCW92bDE6IG92bEAxNDAw
+ZDAwMCB7DQo+IEBAIC0xMDAxLDYgKzEwMDcsNyBAQCBvdmwxOiBvdmxAMTQwMGQwMDAgew0KPiAg
+CQkJY2xvY2tzID0gPCZtbXN5cyBDTEtfTU1fRElTUF9PVkwxPjsNCj4gIAkJCWlvbW11cyA9IDwm
+aW9tbXUgTTRVX1BPUlRfRElTUF9PVkwxPjsNCj4gIAkJCW1lZGlhdGVrLGxhcmIgPSA8JmxhcmI0
+PjsNCj4gKwkJCW1lZGlhdGVrLGdjZS1jbGllbnQtcmVnID0gPCZnY2UgU1VCU1lTXzE0MDBYWFhY
+IDB4ZDAwMCAweDEwMDA+Ow0KPiAgCQl9Ow0KPiAgDQo+ICAJCXJkbWEwOiByZG1hQDE0MDBlMDAw
+IHsNCj4gQEAgLTEwMTEsNiArMTAxOCw3IEBAIHJkbWEwOiByZG1hQDE0MDBlMDAwIHsNCj4gIAkJ
+CWNsb2NrcyA9IDwmbW1zeXMgQ0xLX01NX0RJU1BfUkRNQTA+Ow0KPiAgCQkJaW9tbXVzID0gPCZp
+b21tdSBNNFVfUE9SVF9ESVNQX1JETUEwPjsNCj4gIAkJCW1lZGlhdGVrLGxhcmIgPSA8JmxhcmIw
+PjsNCj4gKwkJCW1lZGlhdGVrLGdjZS1jbGllbnQtcmVnID0gPCZnY2UgU1VCU1lTXzE0MDBYWFhY
+IDB4ZTAwMCAweDEwMDA+Ow0KPiAgCQl9Ow0KPiAgDQo+ICAJCXJkbWExOiByZG1hQDE0MDBmMDAw
+IHsNCj4gQEAgLTEwMjEsNiArMTAyOSw3IEBAIHJkbWExOiByZG1hQDE0MDBmMDAwIHsNCj4gIAkJ
+CWNsb2NrcyA9IDwmbW1zeXMgQ0xLX01NX0RJU1BfUkRNQTE+Ow0KPiAgCQkJaW9tbXVzID0gPCZp
+b21tdSBNNFVfUE9SVF9ESVNQX1JETUExPjsNCj4gIAkJCW1lZGlhdGVrLGxhcmIgPSA8JmxhcmI0
+PjsNCj4gKwkJCW1lZGlhdGVrLGdjZS1jbGllbnQtcmVnID0gPCZnY2UgU1VCU1lTXzE0MDBYWFhY
+IDB4ZjAwMCAweDEwMDA+Ow0KPiAgCQl9Ow0KPiAgDQo+ICAJCXJkbWEyOiByZG1hQDE0MDEwMDAw
+IHsNCj4gQEAgLTEwMzEsNiArMTA0MCw3IEBAIHJkbWEyOiByZG1hQDE0MDEwMDAwIHsNCj4gIAkJ
+CWNsb2NrcyA9IDwmbW1zeXMgQ0xLX01NX0RJU1BfUkRNQTI+Ow0KPiAgCQkJaW9tbXVzID0gPCZp
+b21tdSBNNFVfUE9SVF9ESVNQX1JETUEyPjsNCj4gIAkJCW1lZGlhdGVrLGxhcmIgPSA8JmxhcmI0
+PjsNCj4gKwkJCW1lZGlhdGVrLGdjZS1jbGllbnQtcmVnID0gPCZnY2UgU1VCU1lTXzE0MDFYWFhY
+IDAgMHgxMDAwPjsNCj4gIAkJfTsNCj4gIA0KPiAgCQl3ZG1hMDogd2RtYUAxNDAxMTAwMCB7DQo+
+IEBAIC0xMDQxLDYgKzEwNTEsNyBAQCB3ZG1hMDogd2RtYUAxNDAxMTAwMCB7DQo+ICAJCQljbG9j
+a3MgPSA8Jm1tc3lzIENMS19NTV9ESVNQX1dETUEwPjsNCj4gIAkJCWlvbW11cyA9IDwmaW9tbXUg
+TTRVX1BPUlRfRElTUF9XRE1BMD47DQo+ICAJCQltZWRpYXRlayxsYXJiID0gPCZsYXJiMD47DQo+
+ICsJCQltZWRpYXRlayxnY2UtY2xpZW50LXJlZyA9IDwmZ2NlIFNVQlNZU18xNDAxWFhYWCAweDEw
+MDAgMHgxMDAwPjsNCj4gIAkJfTsNCj4gIA0KPiAgCQl3ZG1hMTogd2RtYUAxNDAxMjAwMCB7DQo+
+IEBAIC0xMDUxLDYgKzEwNjIsNyBAQCB3ZG1hMTogd2RtYUAxNDAxMjAwMCB7DQo+ICAJCQljbG9j
+a3MgPSA8Jm1tc3lzIENMS19NTV9ESVNQX1dETUExPjsNCj4gIAkJCWlvbW11cyA9IDwmaW9tbXUg
+TTRVX1BPUlRfRElTUF9XRE1BMT47DQo+ICAJCQltZWRpYXRlayxsYXJiID0gPCZsYXJiND47DQo+
+ICsJCQltZWRpYXRlayxnY2UtY2xpZW50LXJlZyA9IDwmZ2NlIFNVQlNZU18xNDAxWFhYWCAweDIw
+MDAgMHgxMDAwPjsNCj4gIAkJfTsNCj4gIA0KPiAgCQljb2xvcjA6IGNvbG9yQDE0MDEzMDAwIHsN
+Cj4gQEAgLTEwNTksNiArMTA3MSw3IEBAIGNvbG9yMDogY29sb3JAMTQwMTMwMDAgew0KPiAgCQkJ
+aW50ZXJydXB0cyA9IDxHSUNfU1BJIDE4NyBJUlFfVFlQRV9MRVZFTF9MT1c+Ow0KPiAgCQkJcG93
+ZXItZG9tYWlucyA9IDwmc2Nwc3lzIE1UODE3M19QT1dFUl9ET01BSU5fTU0+Ow0KPiAgCQkJY2xv
+Y2tzID0gPCZtbXN5cyBDTEtfTU1fRElTUF9DT0xPUjA+Ow0KPiArCQkJbWVkaWF0ZWssZ2NlLWNs
+aWVudC1yZWcgPSA8JmdjZSBTVUJTWVNfMTQwMVhYWFggMHgzMDAwIDB4MTAwMD47DQo+ICAJCX07
+DQo+ICANCj4gIAkJY29sb3IxOiBjb2xvckAxNDAxNDAwMCB7DQo+IEBAIC0xMDY3LDYgKzEwODAs
+NyBAQCBjb2xvcjE6IGNvbG9yQDE0MDE0MDAwIHsNCj4gIAkJCWludGVycnVwdHMgPSA8R0lDX1NQ
+SSAxODggSVJRX1RZUEVfTEVWRUxfTE9XPjsNCj4gIAkJCXBvd2VyLWRvbWFpbnMgPSA8JnNjcHN5
+cyBNVDgxNzNfUE9XRVJfRE9NQUlOX01NPjsNCj4gIAkJCWNsb2NrcyA9IDwmbW1zeXMgQ0xLX01N
+X0RJU1BfQ09MT1IxPjsNCj4gKwkJCW1lZGlhdGVrLGdjZS1jbGllbnQtcmVnID0gPCZnY2UgU1VC
+U1lTXzE0MDFYWFhYIDB4NDAwMCAweDEwMDA+Ow0KPiAgCQl9Ow0KPiAgDQo+ICAJCWFhbEAxNDAx
+NTAwMCB7DQo+IEBAIC0xMDc1LDYgKzEwODksNyBAQCBhYWxAMTQwMTUwMDAgew0KPiAgCQkJaW50
+ZXJydXB0cyA9IDxHSUNfU1BJIDE4OSBJUlFfVFlQRV9MRVZFTF9MT1c+Ow0KPiAgCQkJcG93ZXIt
+ZG9tYWlucyA9IDwmc2Nwc3lzIE1UODE3M19QT1dFUl9ET01BSU5fTU0+Ow0KPiAgCQkJY2xvY2tz
+ID0gPCZtbXN5cyBDTEtfTU1fRElTUF9BQUw+Ow0KPiArCQkJbWVkaWF0ZWssZ2NlLWNsaWVudC1y
+ZWcgPSA8JmdjZSBTVUJTWVNfMTQwMVhYWFggMHg1MDAwIDB4MTAwMD47DQo+ICAJCX07DQo+ICAN
+Cj4gIAkJZ2FtbWFAMTQwMTYwMDAgew0KPiBAQCAtMTA4Myw2ICsxMDk4LDcgQEAgZ2FtbWFAMTQw
+MTYwMDAgew0KPiAgCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDE5MCBJUlFfVFlQRV9MRVZFTF9M
+T1c+Ow0KPiAgCQkJcG93ZXItZG9tYWlucyA9IDwmc2Nwc3lzIE1UODE3M19QT1dFUl9ET01BSU5f
+TU0+Ow0KPiAgCQkJY2xvY2tzID0gPCZtbXN5cyBDTEtfTU1fRElTUF9HQU1NQT47DQo+ICsJCQlt
+ZWRpYXRlayxnY2UtY2xpZW50LXJlZyA9IDwmZ2NlIFNVQlNZU18xNDAxWFhYWCAweDYwMDAgMHgx
+MDAwPjsNCj4gIAkJfTsNCj4gIA0KPiAgCQltZXJnZUAxNDAxNzAwMCB7DQoNCg==
 
