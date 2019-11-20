@@ -2,138 +2,164 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89494C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 12:15:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5347BC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 12:16:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61DBA224E9
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 12:15:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="WsfGGTl+";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="PqFg4S1A"
+	by mail.kernel.org (Postfix) with ESMTP id 34FCA224F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 12:16:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729630AbfKTMP3 (ORCPT
+        id S1729663AbfKTMQP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 07:15:29 -0500
-Received: from a27-10.smtp-out.us-west-2.amazonses.com ([54.240.27.10]:56696
-        "EHLO a27-10.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728251AbfKTMP2 (ORCPT
+        Wed, 20 Nov 2019 07:16:15 -0500
+Received: from esa3.mentor.iphmx.com ([68.232.137.180]:44219 "EHLO
+        esa3.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728251AbfKTMQO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 07:15:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574252127;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
-        bh=NDEjL4/TPABq9RymuBjDG4wAM9FaiIayYYuZaqd9RkU=;
-        b=WsfGGTl+lYETGyzXW2+DCnxJ3SqFfA0U8NlSXgpdqo4j/TxdQFzgfQWhSUMhf7t9
-        S9GIxbObz746F0xND2HOBd4KPH98W/dUNTyKC2x7Tnhsqai6z8J8z1QHlGN5jQXDkYp
-        loTlwEGNJBHSHfb1e6ClKgDfRa8N4pxFNiErpVE0=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574252127;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
-        bh=NDEjL4/TPABq9RymuBjDG4wAM9FaiIayYYuZaqd9RkU=;
-        b=PqFg4S1Aei8A0lH1P4cTn2HowwkuJZSUgJNgaAT6X/Nfq+ykc5Cev/JmsNHuyw0L
-        ukTBkW0ahUrW0FQvjS4N922Wa24+/BEAHJ24/NgRkNdFjTWUVqT/b1HLN2ayUaOJ1Uf
-        I0UjA577d6Yg2adjQJiMqDKtlVrsqpRjEGS0mUg0=
+        Wed, 20 Nov 2019 07:16:14 -0500
+IronPort-SDR: Vmuk84dVRqlMwN2RIF+Ga23pD2ZiIh0jqX7eUJhZrRpDlhLO6eEgT7FFIXzMr+FEMZdHcNn8Oc
+ fYq9ctRpYBYOmU5PfvUf56DmEhXojYNY4QwLmimG7OxoBZcbOhA11YXrr9e+taWOwPugFNNte6
+ wpHh2RqkI38hRQiCToicY5pOBIac+CRyCTpGs72DNeRxbF/cdIt17e0UEHNfpPUu9KuzF8gulq
+ Mo3ykh/xjTQ5QGIr7QWlCYTSVxJJn3zaKntHG3XYe9ws6kTtpP1eZoKRNgsvv0FZUnP7xiX/mm
+ US0=
+X-IronPort-AV: E=Sophos;i="5.69,221,1571731200"; 
+   d="scan'208";a="43350275"
+Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
+  by esa3.mentor.iphmx.com with ESMTP; 20 Nov 2019 04:16:13 -0800
+IronPort-SDR: 1moC0hKuD1NbbRb8xhHVukNosiGHF7TfOPI+xQXvyxq6dFFmxwEFbXMKVHWLO7Ngof2/zD/f/T
+ Yiw3oyFAlYr/ZSgM6PaBw733VapuF3Fnh4vF7wx/xFMlVsS3u3JbFuly0mwoMxjBIhcZ0YXm9I
+ 7HX0LquA6ARFkPd4y1PdA/D2BF39bT8s9CE6hUvczUH83jp/kS/F2R7X7+QMJgkBK1h4TmbUvS
+ hobFOkTmEC9lLZcutQWJJZP60MEV3Z3fR48ZF4B6ybonmFwdgYYSSSJNV6oAzEQsG0ZnDjA9eK
+ B+k=
+From:   Andrew Gabbasov <andrew_gabbasov@mentor.com>
+To:     'Takashi Iwai' <tiwai@suse.de>
+CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Timo Wischer <twischer@de.adit-jv.com>
+References: <20191111110846.18223-1-andrew_gabbasov@mentor.com> <s5h36eql6xq.wl-tiwai@suse.de>
+In-Reply-To: <s5h36eql6xq.wl-tiwai@suse.de>
+Subject: RE: [PATCH v3 0/7] ALSA: aloop: Support sound timer as clock source instead of jiffies
+Date:   Wed, 20 Nov 2019 15:15:08 +0300
+Organization: Mentor Graphics Corporation
+Message-ID: <000001d59f9c$321e51a0$965af4e0$@mentor.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Date:   Wed, 20 Nov 2019 12:15:27 +0000
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        ulf.hansson@linaro.org, agross@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, mark.rutland@arm.com,
-        swboyd@chromium.org, dianders@chromium.org
-Subject: Re: [PATCH 2/6] dt-bindings: power: Add rpmh power-domain bindings
- for SM8150
-In-Reply-To: <9eb5e99f-836b-01a6-8b5c-d1fffd1a482b@codeaurora.org>
-References: <20191118173944.27043-1-sibis@codeaurora.org>
- <0101016e7f99a91d-6632f420-b2f2-4b71-9c97-a3974fcb8fa9-000000@us-west-2.amazonses.com>
- <9eb5e99f-836b-01a6-8b5c-d1fffd1a482b@codeaurora.org>
-Message-ID: <0101016e88bd2571-928d6d73-00f0-433d-8baf-b288f27520a9-000000@us-west-2.amazonses.com>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
-X-SES-Outgoing: 2019.11.20-54.240.27.10
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+X-Mailer: Microsoft Outlook 14.0
+Thread-Index: AQHVmIB51MVDpXn7r0e76hY1DU59ZaeK6/SAgAkagNA=
+Content-Language: en-us
+X-Originating-IP: [137.202.0.90]
+X-ClientProxiedBy: svr-ies-mbx-01.mgc.mentorg.com (139.181.222.1) To
+ svr-ies-mbx-02.mgc.mentorg.com (139.181.222.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-11-20 09:27, Rajendra Nayak wrote:
-> On 11/18/2019 11:10 PM, Sibi Sankar wrote:
->> Add RPMH power-domain bindings for the SM8150 family of SoCs.
->> 
->> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
->> ---
->>   .../devicetree/bindings/power/qcom,rpmpd.txt       |  1 +
->>   include/dt-bindings/power/qcom-rpmpd.h             | 14 
->> ++++++++++++++
->>   2 files changed, 15 insertions(+)
->> 
->> diff --git a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt 
->> b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
->> index bc75bf49cdaea..f3bbaa4aef297 100644
->> --- a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
->> +++ b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
->> @@ -10,6 +10,7 @@ Required Properties:
->>   	* qcom,msm8998-rpmpd: RPM Power domain for the msm8998 family of 
->> SoC
->>   	* qcom,qcs404-rpmpd: RPM Power domain for the qcs404 family of SoC
->>   	* qcom,sdm845-rpmhpd: RPMh Power domain for the sdm845 family of 
->> SoC
->> +	* qcom,sm8150-rpmhpd: RPMh Power domain for the sm8150 family of SoC
->>    - #power-domain-cells: number of cells in Power domain specifier
->>   	must be 1.
->>    - operating-points-v2: Phandle to the OPP table for the Power 
->> domain.
->> diff --git a/include/dt-bindings/power/qcom-rpmpd.h 
->> b/include/dt-bindings/power/qcom-rpmpd.h
->> index f05f8b1808ec9..7d43bafc0026b 100644
->> --- a/include/dt-bindings/power/qcom-rpmpd.h
->> +++ b/include/dt-bindings/power/qcom-rpmpd.h
->> @@ -15,12 +15,26 @@
->>   #define SDM845_GFX	7
->>   #define SDM845_MSS	8
->>   +/* SM8150 Power Domain Indexes */
->> +#define SM8150_MSS	0
->> +#define SM8150_EBI	1
->> +#define SM8150_LMX	2
->> +#define SM8150_LCX	3
->> +#define SM8150_GFX	4
->> +#define SM8150_MX	5
->> +#define SM8150_MX_AO	6
->> +#define SM8150_CX	7
->> +#define SM8150_CX_AO	8
->> +#define SM8150_MMCX	9
->> +#define SM8150_MMCX_AO	10
->> +
->>   /* SDM845 Power Domain performance levels */
-> 
-> You could perhaps remove this comment, or remove the
-> SDM845 from it.
+Hello Takashi,
 
-yes will remove it
-
+> -----Original Message-----
+> From: Takashi Iwai [mailto:tiwai@suse.de]
+> Sent: Thursday, November 14, 2019 8:11 PM
+> To: Gabbasov, Andrew
+> Cc: alsa-devel@alsa-project.org; linux-kernel@vger.kernel.org; Jaroslav
+> Kysela; Takashi Iwai; Timo Wischer
+> Subject: Re: [PATCH v3 0/7] ALSA: aloop: Support sound timer as clock
+> source instead of jiffies
 > 
-> Reviewed-by: Rajendra Nayak <rnayak@codeaurora.org>
+> On Mon, 11 Nov 2019 12:08:39 +0100,
+> Andrew Gabbasov wrote:
+> >
+> > This patch set is an updated version of patches by Timo Wischer:
+> > https://mailman.alsa-project.org/pipermail/alsa-devel/2019-
+> March/146871.html
+> >
+> > This patch set is required for forwarding audio data between a HW sound
+> > card and an aloop device without the usage of an asynchronous sample
+rate
+> > converter.
+> >
+> > Most of sound and timers related code is kept the same as in previous
+> set.
+> > The code, related to snd_pcm_link() functionality and its using for
+> > timer source setting, is removed (as rejected earlier). The changes in
+> this
+> > update are mainly related to the parameters handling and some cleanup.
+> >
+> > The timer source can be initially selected by "timer_source" kernel
+> module
+> > parameter. It is supposed to have the following format:
+> >     [<pref>:](<card name>|<card idx>)[{.,}<dev idx>[{.,}<subdev idx>]]
+> > For example: "hw:I82801AAICH.1.0", or "1.1", or just "I82801AAICH".
+> > (Prefix is ignored, just allowed here to be able to use the strings,
+> > the user got used to).
+> > Although the parsing function recognizes both '.' and ',' as a
+separator,
+> > module parameters handling routines use ',' to separate parameters for
+> > different module instances (array elements), so we have to use '.'
+> > to separate device and subdevice numbers from the card name or number
+> > in module parameters.
+> > Empty string indicates using jiffies as a timer source.
+> >
+> > Besides "static" selection of timer source at module load time,
+> > it is possible to dynamically change it via sound "info" interface
+> > (using "/proc/asound/<card>/timer_source" file in read-write mode.
+> > The contents of this file is used as a timer source string for
+> > a particular loopback card, e.g. "hw:0,0,0" (and here ',' can be used
+> > as a separator).
+> >
+> > The timer source string value can be changed at any time, but it is
+> > latched by PCM substream open callback "loopback_open()" (the first
+> > one for a particular cable). At this point it is actually used,
+> > that is the string is parsed, and the timer is looked up and opened.
+> > This seems to be a good trade-off between flexibility of updates and
+> > synchronizations or racing complexity.
+> >
+> > The timer source is set for a loopback card (the same as initial setting
+> > by module parameter), but every cable uses the value, current at the
+> moment
+> > of opening. Theoretically, it's possible to set the timer source for
+each
+> > cable independently (via separate files), but it would be inconsistent
+> > with the initial setting via module parameters on a per-card basis.
+> >
+> > v2:
+> > https://mailman.alsa-project.org/pipermail/alsa-devel/2019-
+> November/157961.html
+> >
+> > v3:
+> > - Change sound card lookup to use snd_card_ref() and avoid direct access
+> >   to sound cards array
+> > - Squash commits on returning error codes for timer start and stop
+> > - Some locking related fixes
+> > - Some code cleanup
 > 
->>   #define RPMH_REGULATOR_LEVEL_RETENTION	16
->>   #define RPMH_REGULATOR_LEVEL_MIN_SVS	48
->>   #define RPMH_REGULATOR_LEVEL_LOW_SVS	64
->>   #define RPMH_REGULATOR_LEVEL_SVS	128
->>   #define RPMH_REGULATOR_LEVEL_SVS_L1	192
->> +#define RPMH_REGULATOR_LEVEL_SVS_L2	224
->>   #define RPMH_REGULATOR_LEVEL_NOM	256
->>   #define RPMH_REGULATOR_LEVEL_NOM_L1	320
->>   #define RPMH_REGULATOR_LEVEL_NOM_L2	336
->> 
+> The patch won't work with the latest ALSA timer code found in my
+> for-next branch due to the API changes.  Essentially you need to
+> rewrite as:
+> 	timeri = snd_timer_instance_new(...);
+> 	if (!timeri)
+> 		no_memory_error;
+> 	timeri->flags |= ...;
+> 	timeri->ccallback = ...;
+> 	....
+> 	err = snd_timer_open(timeri, ....);
+> 	if (err < 0)
+> 		error;
+> 
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+The updated patch set version 4 was sent to mailing list:
+https://mailman.alsa-project.org/pipermail/alsa-devel/2019-November/158896.h
+tml
+
+It is based on the linux-next repo master branch as of Nov 19, 2019.
+
+Thanks!
+
+Best regards,
+Andrew
+
