@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2771FC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97FB8C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:41:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E64C7224D0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:41:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CEB8224FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:41:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574257296;
-	bh=5/qBU4WAlBhwNFmtfGSZNUkNgRIO1tzY+4rNWZNXFlU=;
+	s=default; t=1574257299;
+	bh=TvtozhjDwpRJVBxBUpOs1PtrdTlKyZb+b/pl/mmK7Gw=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=HucWR2YjpVvJz8yDV8tAtMHWf4G9GxXbzPT+Q40JSvliW+zeONDKnrxjndAvCcDDa
-	 MQB07Q1CsJFrO06qvU0aAcvEgp1d7cDZIeLUYQxDNKzKxlJVobxrDDqgswJOi/3fOf
-	 +9M71SbWqSWugvHufj3m87cOpdf/RA7hlPlw29cg=
+	b=avvFx+MILmBpkFb3jDULZOKxUgbQFhQZEIJZ2aISut4F0Dl+CeRDQ2dVrAY6wG74t
+	 lRZii0d/GOAM7QtnRN+j9uknbtnKk7q5m4YL72SloW+74j1lIZsW4wfo9U1XN/EMQd
+	 Rxxqwh66BvuPJBZQv7v6EepR2JEJqTt7LU4BEzmE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731270AbfKTNle (ORCPT
+        id S1731293AbfKTNli (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 08:41:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49298 "EHLO mail.kernel.org"
+        Wed, 20 Nov 2019 08:41:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49350 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728954AbfKTNl3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 08:41:29 -0500
+        id S1730042AbfKTNle (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 08:41:34 -0500
 Received: from localhost.localdomain (unknown [118.189.143.39])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D98CB224FC;
-        Wed, 20 Nov 2019 13:41:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7269122506;
+        Wed, 20 Nov 2019 13:41:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574257289;
-        bh=5/qBU4WAlBhwNFmtfGSZNUkNgRIO1tzY+4rNWZNXFlU=;
+        s=default; t=1574257293;
+        bh=TvtozhjDwpRJVBxBUpOs1PtrdTlKyZb+b/pl/mmK7Gw=;
         h=From:To:Cc:Subject:Date:From;
-        b=A66G7h0CXBbVl9BumkM7+5rdfL/P6XUu7cciYW2IXc7EZTnQdXS3P5CLAKgzy7gDN
-         TLKZn5lmMsTSTpNgXtPVL2pwFs3fYyCMDyW4qlurRd0WIhYnwrXNR6UvtZBYxGQ4WR
-         4uu1+6Yjwlxp6RXV+/tTZF6nc+KY+smWR+88tJ7o=
+        b=xRJh+D9pNTRuVw3WMzYMIYhpW4ZML2atQq58RKQr71b3tCW9yRqvIjcWf5kG4NiFB
+         gGv8G2tQKimzfcKTigUp81rkuVSRm5gFjkXdhPA8c3Bsu25c9CyvKvvs8AYuXeAuEy
+         pkYgao6q913MCVtLpf3dY8rYdvFGqjKI41SCMXb8=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>
-Subject: [PATCH] irqchip: Fix Kconfig indentation
-Date:   Wed, 20 Nov 2019 21:41:25 +0800
-Message-Id: <20191120134125.15069-1-krzk@kernel.org>
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH] iommu: Fix Kconfig indentation
+Date:   Wed, 20 Nov 2019 21:41:30 +0800
+Message-Id: <20191120134130.15127-1-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -60,50 +59,22 @@ coding style with command like:
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/irqchip/Kconfig | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/iommu/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index 697e6a8ccaae..98042637e8ad 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -328,7 +328,7 @@ config INGENIC_TCU_IRQ
- 	  If unsure, say N.
- 
- config RENESAS_H8300H_INTC
--        bool
-+	bool
- 	select IRQ_DOMAIN
- 
- config RENESAS_H8S_INTC
-@@ -368,7 +368,7 @@ config MVEBU_PIC
- 	bool
- 
- config MVEBU_SEI
--        bool
-+	bool
- 
- config LS_EXTIRQ
- 	def_bool y if SOC_LS1021A || ARCH_LAYERSCAPE
-@@ -414,15 +414,15 @@ config MESON_IRQ_GPIO
-        depends on ARCH_MESON
-        select IRQ_DOMAIN_HIERARCHY
-        help
--         Support Meson SoC Family GPIO Interrupt Multiplexer
-+	 Support Meson SoC Family GPIO Interrupt Multiplexer
- 
- config GOLDFISH_PIC
-        bool "Goldfish programmable interrupt controller"
-        depends on MIPS && (GOLDFISH || COMPILE_TEST)
-        select IRQ_DOMAIN
-        help
--         Say yes here to enable Goldfish interrupt controller driver used
--         for Goldfish based virtual platforms.
-+	 Say yes here to enable Goldfish interrupt controller driver used
-+	 for Goldfish based virtual platforms.
- 
- config QCOM_PDC
- 	bool "QCOM PDC"
+diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
+index 0b9d78a0f3ac..510aca6c50bd 100644
+--- a/drivers/iommu/Kconfig
++++ b/drivers/iommu/Kconfig
+@@ -82,7 +82,7 @@ config IOMMU_DEBUGFS
+ config IOMMU_DEFAULT_PASSTHROUGH
+ 	bool "IOMMU passthrough by default"
+ 	depends on IOMMU_API
+-        help
++	help
+ 	  Enable passthrough by default, removing the need to pass in
+ 	  iommu.passthrough=on or iommu=pt through command line. If this
+ 	  is enabled, you can still disable with iommu.passthrough=off
 -- 
 2.17.1
 
