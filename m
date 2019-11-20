@@ -2,109 +2,145 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2879DC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 17:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A649C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 17:43:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0D4320715
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 17:43:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60FF32080F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 17:43:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Pa2Xxbmg"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AsOKc7FR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728176AbfKTRnO (ORCPT
+        id S1728015AbfKTRnf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 12:43:14 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:22180 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728030AbfKTRnN (ORCPT
+        Wed, 20 Nov 2019 12:43:35 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:41676 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727784AbfKTRnf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 12:43:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574271792;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
-        bh=ei2j9pcZbx3d1j0CtKByFB03xBBGoihrjw0BBTcm0X4=;
-        b=Pa2XxbmgfOlEloIjhGagAjaijVVhaxDPr07EU4iNZnoyYCL4M2vDtbtfqNzCwYgJLyEeOM
-        Blkb+tsBIPrQ8pTyKL6cyjWdQV6RWm8wKAflAygLj53UmTn4/9ETNU40mLWJFjNm3T6FUl
-        9yNFl/jC02CnMQtK79RN6qRcyejx4Ao=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-314-LpkkxECtP6qcmbngeSJWqQ-1; Wed, 20 Nov 2019 12:43:09 -0500
-Received: by mail-wm1-f70.google.com with SMTP id y133so22339wmd.8
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 09:43:09 -0800 (PST)
+        Wed, 20 Nov 2019 12:43:35 -0500
+Received: by mail-lj1-f195.google.com with SMTP id m4so65052ljj.8
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 09:43:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lVJJ3Wtms7wt1kRD/tsgNBo46B7g+nxnT9NHvY/myOA=;
+        b=AsOKc7FRgqYYdZG3UCHIdi9dpI1enb3DOhAgisRCJz9nJglMTxZD5vbrIxI6SG6AX8
+         BV4NCcydbmypYT5maJXmaZxI18rTR9YxU6/P7KDKdPkDXw4mCJ+Ect0AIlq4h/nYSB2B
+         9G8CqgtQER0uiYVPonrYCc3IF+4TpWz3bMhmhc4wwY5pXM/nCYXn/b8CfVpSk6OlwSRZ
+         sArQxdprfF1vLsyyUOlNADxsn0G/WhQXFVhz5eCvfsJXgldFjPknPK1NFb5Yc2BBHEwJ
+         sMG2hL4tZPpOeWJT7uMzvFqxLSzTqZoygiwZ10Rr0wrDrsNqZAbyo0Dt9E32tUH3vAEs
+         h2KQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=nLIxPj7yq9atMLNEK/9ztrIlmkBLqwoJhmt0Png8OD4=;
-        b=Po/iZCTCQDPQJVCWg7IDNSv9nkXj+sF+sOJggyQx7CvKotnvgR56YSirzMaWupMong
-         ZGMI21wYjWAl5U4q2KN9T4u2W9rR6IXOYZNvPRrFBqHnMlKvDJD2M3z0s6Ofx85EEDsU
-         V8FU0q8+zDHGj4em6WgYdxwycXAk462TWt1wh2sArS7qm8+EDx2WqYfyC/fkyHJ8CEFL
-         yW+Xv81AYASppjtimo31NK2WGpMnGUdQgNBdlM6RuIhpC5tvMigKmkfItfcms8c5oq8/
-         JlqzoQnTTjR7yncLPaNIHVhpc5lRRd2vezbE6YDWJjs2yVhRm/v5qVqq+b1bzDro2p9T
-         llzg==
-X-Gm-Message-State: APjAAAU4z4JAJBl2g4MlgJcFQkLjbAjoDfOqvwaFOV8FexYn/LV1OdGL
-        fRQsfJ79mbcBRgaeu+rJMSOSKiHs08vKQA7HOD+MnOypI8sdwgE9jGlMAyb6OJX8C3egyMYqqJo
-        ekA55GUbSqQsOQDexriV3N9Ii
-X-Received: by 2002:a1c:9e10:: with SMTP id h16mr4667614wme.91.1574271787990;
-        Wed, 20 Nov 2019 09:43:07 -0800 (PST)
-X-Google-Smtp-Source: APXvYqypL94NSqM7vsTdufH8pYYlerT4XH52xDr/GZ9SjjnraF3oQSDmxm/dAI68MX0mc/nT8wmsdA==
-X-Received: by 2002:a1c:9e10:: with SMTP id h16mr4667586wme.91.1574271787710;
-        Wed, 20 Nov 2019 09:43:07 -0800 (PST)
-Received: from [192.168.178.40] ([151.48.115.61])
-        by smtp.gmail.com with ESMTPSA id t185sm8025318wmf.45.2019.11.20.09.43.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 Nov 2019 09:43:07 -0800 (PST)
-Subject: Re: [PATCH v2 1/2] KVM: VMX: FIXED+PHYSICAL mode single target IPI
- fastpath
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <kernellwp@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-References: <1574145389-12149-1-git-send-email-wanpengli@tencent.com>
- <87r224gjyt.fsf@vitty.brq.redhat.com>
- <CANRm+CzcWDvRA0+iaQZ6hd2HGRKyZpRnurghQXdagDCffKaSPg@mail.gmail.com>
- <87lfscgigk.fsf@vitty.brq.redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <f13b9873-5187-1558-2599-453041beed4a@redhat.com>
-Date:   Wed, 20 Nov 2019 18:43:05 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lVJJ3Wtms7wt1kRD/tsgNBo46B7g+nxnT9NHvY/myOA=;
+        b=tgby2tkUvNuyVv/7mNiK4auNOlgXDME2OuYy5qNPPtsh1HNeUB+PSuoPXxFMRSxoSV
+         WZtu5xmYPLtHsuOEnA03ku1CMSeEnefaZXmYY4j3p84wzYAg2fjdzH1KG/Fv4FSmEIb4
+         QUmcf7Iv4qZltg1E/8jnghHcOgBuMiJBaLfoIGmJp6RtZpca2s0l5gWUM6LmU9sbnQQ9
+         9V5dEA82pqhIfub7Q8mTbLo+fAiqrTnUGUBwqsHXJs4hU+19cnP8r06TFbj5d/BvCjjs
+         NlwwfxAaMCCP/L4/db32LGqyNP7OGtl1vWr/JNoYOg8kg4vlwyiaaMEVOGDruGB00joN
+         Q28Q==
+X-Gm-Message-State: APjAAAXAi/qInTEoIplhbcw+1tFdA9kjOpnOHivtlUt/3/4lr3G9ChXu
+        E8kHsDaj55exQCVOn2z6VrDIU48jPymRCCyOhXyamQ==
+X-Google-Smtp-Source: APXvYqz+/RP03swN2/qR9wFoKpFQw21xD39RwYlVow1Mo/8fGTfqGSptcLekpXxnN7Ev2gPdPRr6Eba/JHb1/RBP9QI=
+X-Received: by 2002:a2e:9695:: with SMTP id q21mr3767152lji.206.1574271811618;
+ Wed, 20 Nov 2019 09:43:31 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <87lfscgigk.fsf@vitty.brq.redhat.com>
-Content-Language: en-US
-X-MC-Unique: LpkkxECtP6qcmbngeSJWqQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+References: <1571405198-27570-1-git-send-email-vincent.guittot@linaro.org>
+ <1571405198-27570-12-git-send-email-vincent.guittot@linaro.org>
+ <20191120115844.scli3gprgd5vvlt4@e107158-lin.cambridge.arm.com>
+ <CAKfTPtDh7HAv2Krx9cRKcA+Zy=erYkykyZZj4=nkRoTEdY=oFw@mail.gmail.com>
+ <CAKfTPtCFP3_U_YxwR8+Gs+HYJPmqSWJg6B6nBdgccNru8Gh5QA@mail.gmail.com> <20191120173431.b7e4jbq44mjletfe@e107158-lin.cambridge.arm.com>
+In-Reply-To: <20191120173431.b7e4jbq44mjletfe@e107158-lin.cambridge.arm.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Wed, 20 Nov 2019 18:43:20 +0100
+Message-ID: <CAKfTPtCSc+ym8FTFtSeF4foUqTbsDSr1fJ1j_+j+Zmo=XOUcLA@mail.gmail.com>
+Subject: Re: [PATCH v4 11/11] sched/fair: rework find_idlest_group
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Phil Auld <pauld@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <Morten.Rasmussen@arm.com>,
+        Hillf Danton <hdanton@sina.com>,
+        Parth Shah <parth@linux.ibm.com>,
+        Rik van Riel <riel@surriel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/11/19 13:26, Vitaly Kuznetsov wrote:
-> What about ' << 4', don't we still need it? :-) And better APIC_ICR
-> instead of 0x300...
->=20
-> Personally, I'd write something like
->=20
-> if (index > APIC_BASE_MSR && (index - APIC_BASE_MSR) =3D=3D APIC_ICR >> 4=
-)
->=20
-> and let compiler optimize this, I bet it's going to be equally good.
+On Wed, 20 Nov 2019 at 18:34, Qais Yousef <qais.yousef@arm.com> wrote:
+>
+> On 11/20/19 17:53, Vincent Guittot wrote:
+> > On Wed, 20 Nov 2019 at 14:21, Vincent Guittot
+> > <vincent.guittot@linaro.org> wrote:
+> > >
+> > > Hi Qais,
+> > >
+> > > On Wed, 20 Nov 2019 at 12:58, Qais Yousef <qais.yousef@arm.com> wrote:
+> > > >
+> > > > Hi Vincent
+> > > >
+> > > > On 10/18/19 15:26, Vincent Guittot wrote:
+> > > > > The slow wake up path computes per sched_group statisics to select the
+> > > > > idlest group, which is quite similar to what load_balance() is doing
+> > > > > for selecting busiest group. Rework find_idlest_group() to classify the
+> > > > > sched_group and select the idlest one following the same steps as
+> > > > > load_balance().
+> > > > >
+> > > > > Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> > > > > ---
+> > > >
+> > > > LTP test has caught a regression in perf_event_open02 test on linux-next and I
+> > > > bisected it to this patch.
+> > > >
+> > > > That is checking out next-20191119 tag and reverting this patch on top the test
+> > > > passes. Without the revert the test fails.
+> >
+> > I haven't tried linux-next yet but LTP test is passed with
+> > tip/sched/core, which includes this patch, on hikey960 which is arm64
+> > too.
+> >
+> > Have you tried tip/sched/core on your juno ? this could help to
+> > understand if it's only for juno or if this patch interact with
+> > another branch merged in linux next
+>
+> Okay will give it a go. But out of curiosity, what is the output of your run?
+>
+> While bisecting on linux-next I noticed that at some point the test was
+> passing but all the read values were 0. At some point I started seeing
+> none-zero values.
 
-Or "index =3D=3D APIC_BASE_MSR + (APIC_ICR >> 4)".
+for tip/sched/core
+linaro@linaro-developer:~/ltp/testcases/kernel/syscalls/perf_event_open$
+sudo ./perf_event_open02
+perf_event_open02    0  TINFO  :  overall task clock: 63724479
+perf_event_open02    0  TINFO  :  hw sum: 1800900992, task clock sum: 382170311
+perf_event_open02    0  TINFO  :  ratio: 5.997229
+perf_event_open02    1  TPASS  :  test passed
 
-Paolo
+for next-2019119
+~/ltp/testcases/kernel/syscalls/perf_event_open$ sudo ./perf_event_open02 -v
+at iteration:0 value:0 time_enabled:69795312 time_running:0
+perf_event_open02    0  TINFO  :  overall task clock: 63582292
+perf_event_open02    0  TINFO  :  hw sum: 0, task clock sum: 0
+hw counters: 0 0 0 0
+task clock counters: 0 0 0 0
+perf_event_open02    0  TINFO  :  ratio: 0.000000
+perf_event_open02    1  TPASS  :  test passed
 
+>
+> --
+> Qais Yousef
