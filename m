@@ -2,160 +2,75 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B069BC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 04:14:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E95FC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 04:25:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 811742245C
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 04:14:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Qo8vScqx";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="InwQXLwh"
+	by mail.kernel.org (Postfix) with ESMTP id 26B482240D
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 04:25:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727630AbfKTEOo (ORCPT
+        id S1727468AbfKTEZe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 23:14:44 -0500
-Received: from a27-56.smtp-out.us-west-2.amazonses.com ([54.240.27.56]:39036
-        "EHLO a27-56.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727343AbfKTEOo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 23:14:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574223283;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
-        bh=sQkNXuDVsJ0tsz0h+83RhRvsNtFDcFeY7de5XccyV/E=;
-        b=Qo8vScqxfHA9Q4ooy0gAv3ctisVHtZ/bvCgBemcoAta+TlCQyGQtN9gV6gxWw01E
-        BYbgqiimoIEi+HNkEx6WUGEdHD1YLlMUhQjomvxtBuUsnpJ4o1i1iV3mTbi0mFpS1qc
-        qqBqzgivaUP0pMGs/GhNO2wkIh4hMu3RjrOzi0js=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574223283;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
-        bh=sQkNXuDVsJ0tsz0h+83RhRvsNtFDcFeY7de5XccyV/E=;
-        b=InwQXLwhSUoSQHOniuON/CDxljrEZ51RI60W5t3yDU1H0uZW+HNcrnRWJXc6V4gz
-        WKA/YRHpZnjxhTE43up5r8H4UA/prqfqxM8BgWUrnxneNSeUJPTIyomc/pDndpcnbJk
-        y7Tx1EzXS7PIy/IhfvJ5Tu7HPJkuAXRxBRQGYB1k=
+        Tue, 19 Nov 2019 23:25:34 -0500
+Received: from mga14.intel.com ([192.55.52.115]:58654 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727264AbfKTEZe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 23:25:34 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Nov 2019 20:25:33 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,220,1571727600"; 
+   d="scan'208";a="209625675"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
+  by orsmga006.jf.intel.com with ESMTP; 19 Nov 2019 20:25:33 -0800
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id 440B330084E; Tue, 19 Nov 2019 20:25:33 -0800 (PST)
+From:   Andi Kleen <ak@linux.intel.com>
+To:     Jann Horn <jannh@google.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: Re: [PATCH v2 2/3] x86/traps: Print non-canonical address on #GP
+References: <20191115191728.87338-1-jannh@google.com>
+        <20191115191728.87338-2-jannh@google.com>
+Date:   Tue, 19 Nov 2019 20:25:33 -0800
+In-Reply-To: <20191115191728.87338-2-jannh@google.com> (Jann Horn's message of
+        "Fri, 15 Nov 2019 20:17:27 +0100")
+Message-ID: <87lfsbfa2q.fsf@linux.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 20 Nov 2019 04:14:43 +0000
-From:   cang@codeaurora.org
-To:     Avri Altman <Avri.Altman@wdc.com>
-Cc:     Can Guo <cang@qti.qualcomm.com>, asutoshd@codeaurora.org,
-        nguyenb@codeaurora.org, rnayak@codeaurora.org,
-        linux-scsi@vger.kernel.org, kernel-team@android.com,
-        saravanak@google.com, salyzyn@google.com,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/4] scsi: ufs: Update VCCQ2 and VCCQ min/max voltage
- hard codes
-In-Reply-To: <MN2PR04MB699170FFA7B2DD59014374D5FC4C0@MN2PR04MB6991.namprd04.prod.outlook.com>
-References: <1574049061-11417-1-git-send-email-cang@qti.qualcomm.com>
- <1574049061-11417-3-git-send-email-cang@qti.qualcomm.com>
- <MN2PR04MB6991121D72EA8E6DF7F6258AFC4D0@MN2PR04MB6991.namprd04.prod.outlook.com>
- <0101016e8163937a-d539c90e-6df8-454a-969a-9e33e9ef35b6-000000@us-west-2.amazonses.com>
- <MN2PR04MB699170FFA7B2DD59014374D5FC4C0@MN2PR04MB6991.namprd04.prod.outlook.com>
-Message-ID: <0101016e870503bb-b0e9294a-c6ea-46de-a8f3-19e11329410c-000000@us-west-2.amazonses.com>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
-X-SES-Outgoing: 2019.11.20-54.240.27.56
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-11-19 20:41, Avri Altman wrote:
->> 
->> On 2019-11-18 15:15, Avri Altman wrote:
->> >>
->> >> From: Can Guo <cang@codeaurora.org>
->> >>
->> >> Per UFS 3.0 JEDEC standard, the VCCQ2 min voltage is 1.7v and the
->> >> VCCQ voltage range is 1.14v ~ 1.26v. Update their hard codes
->> >> accordingly to make sure they work in a safe range compliant for ver
->> >> 1.0/2.0/2.1/3.0 UFS devices.
->> > So to keep it safe, we need to use largest range:
->> > min_uV = min over all spec ranges, and max_uV = max over all spec
->> > ranges.
->> > Meaning leave it as it is if we want to be backward compatible with
->> > UFS1.0.
->> >
->> > Thanks,
->> > Avri
->> >
->> 
->> Hi Avri,
->> 
->> Sorry I don't quite follow you here.
->> Leaving it as it is means for UFS2.1 devices, when boot up, if we call
->> regulator_set_voltage(1.65, 1.95) to setup its VCCQ2,
->> regulator_set_voltage() will
->> give you 1.65v on VCCQ2 if the voltage level of this regulator is 
->> wider, say (1.60,
->> 1.95).
->> Meaning you will finally set 1.65v to VCCQ2. But 1.65v is out of spec 
->> for UFS
->> v2.1 as it requires min voltage to be 1.7v on VCCQ2. So, the smallest 
->> range is
->> safe.
->> Of course, in real board design, the regulator's voltage level is 
->> limited/designed
->> by power team to be in a safe range, say (1.8, 1.92), so that calling
->> regulator_set_voltage(1.65, 1.95) still gives you 1.8v. But it does 
->> not mean the
->> current hard codes are compliant for all UFS devices.
-> You are correct - the narrowest the range the better - as long as you
-> don't cross the limits of previous spec.
-> So changing 1.1 -> 1.14  and 1.65 -> 1.7 is fine.
-> While at it, Vccq max in UFS3.0 is 1.26, why not change 1.3 -> 1.26,
-> like you indicated in your commit log?
-> 
-> Thanks,
-> Avri
-> 
+Jann Horn <jannh@google.com> writes:
 
-Thank you Avri, sorry I missed the change to max voltage of VCCQ, I
-will update it in the next version.
+> +
+> +		if (error_code)
+> +			pr_alert("GPF is segment-related (see error code)\n");
+> +		else
+> +			print_kernel_gp_address(regs);
 
-Best Regards,
-Can Guo.
+Is this really correct? There are a lot of instructions that can do #GP
+(it's the CPU's equivalent of EINVAL) and I'm pretty sure many of them
+don't set an error code, and many don't have operands either.
 
->> 
->> Best Regards,
->> Can Guo.
->> 
->> >>
->> >> Signed-off-by: Can Guo <cang@codeaurora.org>
->> >> ---
->> >>  drivers/scsi/ufs/ufs.h | 4 ++--
->> >>  1 file changed, 2 insertions(+), 2 deletions(-)
->> >>
->> >> diff --git a/drivers/scsi/ufs/ufs.h b/drivers/scsi/ufs/ufs.h index
->> >> 385bac8..9df4f4d
->> >> 100644
->> >> --- a/drivers/scsi/ufs/ufs.h
->> >> +++ b/drivers/scsi/ufs/ufs.h
->> >> @@ -500,9 +500,9 @@ struct ufs_query_res {
->> >>  #define UFS_VREG_VCC_MAX_UV       3600000 /* uV */
->> >>  #define UFS_VREG_VCC_1P8_MIN_UV    1700000 /* uV */
->> >>  #define UFS_VREG_VCC_1P8_MAX_UV    1950000 /* uV */
->> >> -#define UFS_VREG_VCCQ_MIN_UV      1100000 /* uV */
->> >> +#define UFS_VREG_VCCQ_MIN_UV      1140000 /* uV */
->> >>  #define UFS_VREG_VCCQ_MAX_UV      1300000 /* uV */
->> >> -#define UFS_VREG_VCCQ2_MIN_UV     1650000 /* uV */
->> >> +#define UFS_VREG_VCCQ2_MIN_UV     1700000 /* uV */
->> >>  #define UFS_VREG_VCCQ2_MAX_UV     1950000 /* uV */
->> >>
->> >>  /*
->> >> --
->> >> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
->> >> Forum, a Linux Foundation Collaborative Project
+You would need to make sure the instruction decoder handles these
+cases correctly, and ideally that you detect it instead of printing
+a bogus address.
+
+-Andi
