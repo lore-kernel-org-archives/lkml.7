@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAE6AC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBFC1C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:43:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B877920674
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:43:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9191D20674
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:43:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732271AbfKTPnh (ORCPT
+        id S1732305AbfKTPn6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 10:43:37 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:52870 "EHLO
+        Wed, 20 Nov 2019 10:43:58 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:52888 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730105AbfKTPkT (ORCPT
+        by vger.kernel.org with ESMTP id S1731238AbfKTPkT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 Nov 2019 10:40:19 -0500
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iXS5V-0004ak-NU; Wed, 20 Nov 2019 15:40:13 +0000
+        id 1iXS5V-0004bD-H3; Wed, 20 Nov 2019 15:40:13 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iXS5U-0004Ir-3L; Wed, 20 Nov 2019 15:40:12 +0000
+        id 1iXS5V-0004Mq-BE; Wed, 20 Nov 2019 15:40:13 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Mike Snitzer" <snitzer@redhat.com>,
-        "ZhangXiaoxu" <zhangxiaoxu5@huawei.com>
-Date:   Wed, 20 Nov 2019 15:37:53 +0000
-Message-ID: <lsq.1574264230.960316735@decadent.org.uk>
+        "David S. Miller" <davem@davemloft.net>,
+        "Christophe JAILLET" <christophe.jaillet@wanadoo.fr>,
+        "Marcelo Ricardo Leitner" <marcelo.leitner@gmail.com>
+Date:   Wed, 20 Nov 2019 15:38:23 +0000
+Message-ID: <lsq.1574264230.825444385@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 43/83] dm btree: fix order of block initialization in
- btree_split_beneath
+Subject: [PATCH 3.16 73/83] sctp: Fix the link time qualifier of
+ 'sctp_ctrlsock_exit()'
 In-Reply-To: <lsq.1574264230.280218497@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,85 +57,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-commit e4f9d6013820d1eba1432d51dd1c5795759aa77f upstream.
+commit b456d72412ca8797234449c25815e82f4e1426c0 upstream.
 
-When btree_split_beneath() splits a node to two new children, it will
-allocate two blocks: left and right.  If right block's allocation
-failed, the left block will be unlocked and marked dirty.  If this
-happened, the left block'ss content is zero, because it wasn't
-initialized with the btree struct before the attempot to allocate the
-right block.  Upon return, when flushing the left block to disk, the
-validator will fail when check this block.  Then a BUG_ON is raised.
+The '.exit' functions from 'pernet_operations' structure should be marked
+as __net_exit, not __net_init.
 
-Fix this by completely initializing the left block before allocating and
-initializing the right block.
-
-Fixes: 4dcb8b57df359 ("dm btree: fix leak of bufio-backed block in btree_split_beneath error path")
-Signed-off-by: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Fixes: 8e2d61e0aed2 ("sctp: fix race on protocol/netns initialization")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/md/persistent-data/dm-btree.c | 31 ++++++++++++++-------------
- 1 file changed, 16 insertions(+), 15 deletions(-)
+ net/sctp/protocol.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/md/persistent-data/dm-btree.c
-+++ b/drivers/md/persistent-data/dm-btree.c
-@@ -533,39 +533,40 @@ static int btree_split_beneath(struct sh
+--- a/net/sctp/protocol.c
++++ b/net/sctp/protocol.c
+@@ -1314,7 +1314,7 @@ static int __net_init sctp_ctrlsock_init
+ 	return status;
+ }
  
- 	new_parent = shadow_current(s);
- 
-+	pn = dm_block_data(new_parent);
-+	size = le32_to_cpu(pn->header.flags) & INTERNAL_NODE ?
-+		sizeof(__le64) : s->info->value_type.size;
-+
-+	/* create & init the left block */
- 	r = new_block(s->info, &left);
- 	if (r < 0)
- 		return r;
- 
-+	ln = dm_block_data(left);
-+	nr_left = le32_to_cpu(pn->header.nr_entries) / 2;
-+
-+	ln->header.flags = pn->header.flags;
-+	ln->header.nr_entries = cpu_to_le32(nr_left);
-+	ln->header.max_entries = pn->header.max_entries;
-+	ln->header.value_size = pn->header.value_size;
-+	memcpy(ln->keys, pn->keys, nr_left * sizeof(pn->keys[0]));
-+	memcpy(value_ptr(ln, 0), value_ptr(pn, 0), nr_left * size);
-+
-+	/* create & init the right block */
- 	r = new_block(s->info, &right);
- 	if (r < 0) {
- 		unlock_block(s->info, left);
- 		return r;
- 	}
- 
--	pn = dm_block_data(new_parent);
--	ln = dm_block_data(left);
- 	rn = dm_block_data(right);
--
--	nr_left = le32_to_cpu(pn->header.nr_entries) / 2;
- 	nr_right = le32_to_cpu(pn->header.nr_entries) - nr_left;
- 
--	ln->header.flags = pn->header.flags;
--	ln->header.nr_entries = cpu_to_le32(nr_left);
--	ln->header.max_entries = pn->header.max_entries;
--	ln->header.value_size = pn->header.value_size;
--
- 	rn->header.flags = pn->header.flags;
- 	rn->header.nr_entries = cpu_to_le32(nr_right);
- 	rn->header.max_entries = pn->header.max_entries;
- 	rn->header.value_size = pn->header.value_size;
--
--	memcpy(ln->keys, pn->keys, nr_left * sizeof(pn->keys[0]));
- 	memcpy(rn->keys, pn->keys + nr_left, nr_right * sizeof(pn->keys[0]));
--
--	size = le32_to_cpu(pn->header.flags) & INTERNAL_NODE ?
--		sizeof(__le64) : s->info->value_type.size;
--	memcpy(value_ptr(ln, 0), value_ptr(pn, 0), nr_left * size);
- 	memcpy(value_ptr(rn, 0), value_ptr(pn, nr_left),
- 	       nr_right * size);
- 
+-static void __net_init sctp_ctrlsock_exit(struct net *net)
++static void __net_exit sctp_ctrlsock_exit(struct net *net)
+ {
+ 	/* Free the control endpoint.  */
+ 	inet_ctl_sock_destroy(net->sctp.ctl_sock);
 
