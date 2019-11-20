@@ -2,164 +2,182 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CA66C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 16:52:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 378D2C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 16:54:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE4782071F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 16:52:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F399A2071F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 16:54:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="OB6J+IPb"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jplvAx07"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732864AbfKTQwC (ORCPT
+        id S1731463AbfKTQyC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 11:52:02 -0500
-Received: from mail-eopbgr730058.outbound.protection.outlook.com ([40.107.73.58]:60672
-        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728314AbfKTQwB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 11:52:01 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VPPw4Z6hEKYGPq6k76IM4X2BfARJky8FJ4d5SbX1udcU9kzkMLkAlxwkOYvahg+JyO2Q2jvaXRicqBpXz6MyGuu96UPe4t+nOMnbom+nIxv52NmdZzieyYvC+p4czhIOmLtYxSEy6Y5OghqWIPs89UH/EG6+p+MgWKtFTaAVK9Kbea0Uwzbscw3HT022C2JZpdchycAWVX9pS6Gsn1dJJlF9vpIEd/MQ5e5diCr2VHH+40BktU9xgMHjfVXSIWquqVz3s1uAo2gHKqoJUax7KG0GbvWUCCn49LykgaBaXPx2Qw+iKZLjKc+0i4XaD9Wy/ysnVXL5SlWr/upeDNRrdw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=thFrq2uC425RbwQApO4noTMRO3cIYXGjW1vhMIrLfdE=;
- b=QCpuPt3Cxuu/kMWvBfI9P6SYGQKpW7LTruHkK75v+lkT1VSdqc4gBW2jBC7TszVjvJCDsc13n2j+VAehhpxWYZZQnUQWmA5WwhZWBhJZTfPPnhCcyilQmNVMwzyA/IRw05NdGPf2pkXrw2eV1ELMv8BaAalYW2JlLjJiVr6pgYbcyduvKLWAXfXaVKfdCc00MK0Nu41jFbSKJcd5zHP9emMP5ouLsYWPf7w7WusG8Wfprxf0Dq6gapOwEPAwF+8Um8O/uuQ8K3bGg63i7OmBFggZBryCVYnSfXoeTMxGjukHcRjiRskm9bGF1acesp5wbCfHlC6SYuJ6TtBpi+20Sw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
+        Wed, 20 Nov 2019 11:54:02 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:40562 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727626AbfKTQyB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 11:54:01 -0500
+Received: by mail-lf1-f65.google.com with SMTP id v24so98724lfi.7
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 08:53:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=thFrq2uC425RbwQApO4noTMRO3cIYXGjW1vhMIrLfdE=;
- b=OB6J+IPbkhVwjzoAAC2Ob9zcDp3rYF4Txv2pixAMoXHLhGmOBxoahYVSBRQAdP4P5KKKj888dNqJ3n+Q/gcRd6gSGP2fCMD3fEiXi2yJBko651O5MVvpWwMkgqdQYWkx5eG+JozkzNi5R+VLE3s5YUYHJ6un4/o3ItFfD4ZXd9E=
-Received: from CH2PR02MB6359.namprd02.prod.outlook.com (52.132.230.25) by
- CH2PR02MB7045.namprd02.prod.outlook.com (20.180.11.86) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2474.16; Wed, 20 Nov 2019 16:51:59 +0000
-Received: from CH2PR02MB6359.namprd02.prod.outlook.com
- ([fe80::e81d:489c:2bd7:918a]) by CH2PR02MB6359.namprd02.prod.outlook.com
- ([fe80::e81d:489c:2bd7:918a%7]) with mapi id 15.20.2451.031; Wed, 20 Nov 2019
- 16:51:59 +0000
-From:   Dragan Cvetic <draganc@xilinx.com>
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Derek Kiernan <dkiernan@xilinx.com>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: RE: [PATCH] misc: Fix Kconfig indentation
-Thread-Topic: [PATCH] misc: Fix Kconfig indentation
-Thread-Index: AQHVn6gmBH3T0s6ZdkikOAV1Uu5hCqeURYTw
-Date:   Wed, 20 Nov 2019 16:51:59 +0000
-Message-ID: <CH2PR02MB63595AD1DC283AB0E09B72BECB4F0@CH2PR02MB6359.namprd02.prod.outlook.com>
-References: <20191120134056.14677-1-krzk@kernel.org>
-In-Reply-To: <20191120134056.14677-1-krzk@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=draganc@xilinx.com; 
-x-originating-ip: [149.199.80.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 41b8b598-3764-4e80-ff6d-08d76dd9f59c
-x-ms-traffictypediagnostic: CH2PR02MB7045:|CH2PR02MB7045:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CH2PR02MB70451AAFACF52F38102EED61CB4F0@CH2PR02MB7045.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5516;
-x-forefront-prvs: 02272225C5
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(366004)(39860400002)(396003)(136003)(13464003)(199004)(189003)(54906003)(26005)(186003)(256004)(446003)(53546011)(6506007)(102836004)(11346002)(4326008)(66066001)(2501003)(76176011)(6246003)(76116006)(486006)(55016002)(6436002)(229853002)(7696005)(81156014)(81166006)(3846002)(6116002)(52536014)(71190400001)(71200400001)(74316002)(5660300002)(476003)(478600001)(8676002)(14454004)(8936002)(7736002)(9686003)(305945005)(33656002)(2906002)(66556008)(25786009)(110136005)(316002)(99286004)(66446008)(66476007)(66946007)(86362001)(64756008);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR02MB7045;H:CH2PR02MB6359.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: xilinx.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: +smWHWwY+bSplQ8KMHOMNvyK7mgAPCuqMwpFNsVtrrpfpXryUHYDUD66XcO8nGSiBvgfcjwnqnsuyuO1l0tbpxfSlghTCo9L5Ad8FsXEMJXJrxSCSUvha7qHfX3TmWAFZbNZfaHqDK+wGEOIseDdda5qCr/jLkZd4V4PPHUeOSsgb5U/Ez2aPdiIfG3LTDMLCdsasF8Pe3SUX5SDHREsVDJv+j05YUJp9Vku+8yPCK3M96VN8/8iDfxSGyNMWLtisGqX4NrQKZZQ5/rWzY4Ctr8SWLjXUhr5cZNjvONz4MWEGmKq9V7wy8butlhPHBvsCO43gN8YNxOTawIDXtlKido8WpMCJfDwJYaDupLJkjsKnh9hnZacssuPkvzFuhOZZKCN4fKSbsnGElfJ6nlEfxtGUtACMhS5QeNof5bLkeFfjWT9YSKndW+gLwy1qE/x
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mmxoKRlfz2v80f3frMVCWYM1gyGu+Z2WwvZIYgtVIoI=;
+        b=jplvAx07sUcExIn5oBYjehAW0OYM0OxdG2H6tPWu5Ch6/L4cQH542Q7fe25YpDKe/Q
+         L8rpRClHakoCaqECV5aCukFyZjGv7nNd/pGYBdtHqK4lE0os1jLRIFFRvnII4BT6wKIt
+         q3vCDV7qRrhFC1Rlsl3RmSIcu9Kr3Ile48/7NaCXYynLwrn1l18I2KSzbpJSFOUSvZmJ
+         ZAcxWPpz3sB1GYsBIZztociXFAeZHfmXQ/QvS9s/o0c76EiV71wPCbhIy11NQ+uv/Z2Q
+         R5QUfGs6mtzBqbn5j7mxbMvDIEYqFe+hh3eGmblXEKvmr0i+JI+AsfCtafhURMYclk2U
+         iSIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mmxoKRlfz2v80f3frMVCWYM1gyGu+Z2WwvZIYgtVIoI=;
+        b=pXFZ4pz9cBrlerDS36/6OiQ6j/PViO4H/6JTrMqTimWZdkLnPnr8OD2c5ardTxpoEV
+         MGGM4xDXMeMeP3/1ScHC1tQiZuRySlktwHDJRQCDMHgdyU1SwnkyZC2DxUC9trGHrFmW
+         zTMmFgBseRpUaF1q8pW88ykM3cBELz8ixQxiHhBeZY15T+7u5ZS1ekGMYUa8EF0V7SB4
+         XCV9CIEvzobMJ+Nbu7JN33PJQkM8cbkZqoeG1Iu0U8yJmd9tNo3khcgMMCXHOLruf7pP
+         sq+Neu32lQfsmAa1dD+e36jvjrxAy8zqJPyqNcK7uYIU+NazI3YXpPomEbExVSxWzD8b
+         n9lw==
+X-Gm-Message-State: APjAAAVId/sj+xVuNhwXYFcgWDXHiQulcQjro7+2/rMHWtKHupRg9IMS
+        KSmlMhWMKxbV9Jhh2E103kQ6ZepkI61Fj9mszL1IwQ==
+X-Google-Smtp-Source: APXvYqwIlFPA5r/XyFwNkRejDEhOIqJuhgMqBbBhCYpiYKa3Ye54qSmDCqWRteFGQJTsZRljLMur26q1Et1oWfmpcnk=
+X-Received: by 2002:a19:c144:: with SMTP id r65mr3711651lff.133.1574268838815;
+ Wed, 20 Nov 2019 08:53:58 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 41b8b598-3764-4e80-ff6d-08d76dd9f59c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Nov 2019 16:51:59.1052
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 9vz8TSE78qhtDx9MHg0VwQrdxOU0CdPlXClKTxR2LOhcPvrB847xzvfPpDvC08MH/Ae7ThqAfvGPMISmRzbSDA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB7045
+References: <1571405198-27570-1-git-send-email-vincent.guittot@linaro.org>
+ <1571405198-27570-12-git-send-email-vincent.guittot@linaro.org>
+ <20191120115844.scli3gprgd5vvlt4@e107158-lin.cambridge.arm.com> <CAKfTPtDh7HAv2Krx9cRKcA+Zy=erYkykyZZj4=nkRoTEdY=oFw@mail.gmail.com>
+In-Reply-To: <CAKfTPtDh7HAv2Krx9cRKcA+Zy=erYkykyZZj4=nkRoTEdY=oFw@mail.gmail.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Wed, 20 Nov 2019 17:53:46 +0100
+Message-ID: <CAKfTPtCFP3_U_YxwR8+Gs+HYJPmqSWJg6B6nBdgccNru8Gh5QA@mail.gmail.com>
+Subject: Re: [PATCH v4 11/11] sched/fair: rework find_idlest_group
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Phil Auld <pauld@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <Morten.Rasmussen@arm.com>,
+        Hillf Danton <hdanton@sina.com>,
+        Parth Shah <parth@linux.ibm.com>,
+        Rik van Riel <riel@surriel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Krzysztof,
+On Wed, 20 Nov 2019 at 14:21, Vincent Guittot
+<vincent.guittot@linaro.org> wrote:
+>
+> Hi Qais,
+>
+> On Wed, 20 Nov 2019 at 12:58, Qais Yousef <qais.yousef@arm.com> wrote:
+> >
+> > Hi Vincent
+> >
+> > On 10/18/19 15:26, Vincent Guittot wrote:
+> > > The slow wake up path computes per sched_group statisics to select the
+> > > idlest group, which is quite similar to what load_balance() is doing
+> > > for selecting busiest group. Rework find_idlest_group() to classify the
+> > > sched_group and select the idlest one following the same steps as
+> > > load_balance().
+> > >
+> > > Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> > > ---
+> >
+> > LTP test has caught a regression in perf_event_open02 test on linux-next and I
+> > bisected it to this patch.
+> >
+> > That is checking out next-20191119 tag and reverting this patch on top the test
+> > passes. Without the revert the test fails.
 
-This patch is not for SDFEC driver.
+I haven't tried linux-next yet but LTP test is passed with
+tip/sched/core, which includes this patch, on hikey960 which is arm64
+too.
 
-Regards
-Dragan
+Have you tried tip/sched/core on your juno ? this could help to
+understand if it's only for juno or if this patch interact with
+another branch merged in linux next
 
+Thanks
+Vincent
 
-> -----Original Message-----
-> From: Krzysztof Kozlowski [mailto:krzk@kernel.org]
-> Sent: Wednesday 20 November 2019 13:41
-> To: linux-kernel@vger.kernel.org
-> Cc: Krzysztof Kozlowski <krzk@kernel.org>; Derek Kiernan <dkiernan@xilinx=
-.com>; Dragan Cvetic <draganc@xilinx.com>; Arnd
-> Bergmann <arnd@arndb.de>; Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Subject: [PATCH] misc: Fix Kconfig indentation
->=20
-> Adjust indentation from spaces to tab (+optional two spaces) as in
-> coding style with command like:
-> 	$ sed -e 's/^        /\t/' -i */Kconfig
->=20
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  drivers/misc/Kconfig | 16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
->=20
-> diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-> index 94b14abb5404..b93757efb058 100644
-> --- a/drivers/misc/Kconfig
-> +++ b/drivers/misc/Kconfig
-> @@ -338,14 +338,14 @@ config SENSORS_TSL2550
->  	  will be called tsl2550.
->=20
->  config SENSORS_BH1770
-> -         tristate "BH1770GLC / SFH7770 combined ALS - Proximity sensor"
-> -         depends on I2C
-> -         ---help---
-> -           Say Y here if you want to build a driver for BH1770GLC (ROHM)=
- or
-> +	 tristate "BH1770GLC / SFH7770 combined ALS - Proximity sensor"
-> +	 depends on I2C
-> +	 ---help---
-> +	   Say Y here if you want to build a driver for BH1770GLC (ROHM) or
->  	   SFH7770 (Osram) combined ambient light and proximity sensor chip.
->=20
-> -           To compile this driver as a module, choose M here: the
-> -           module will be called bh1770glc. If unsure, say N here.
-> +	   To compile this driver as a module, choose M here: the
-> +	   module will be called bh1770glc. If unsure, say N here.
->=20
->  config SENSORS_APDS990X
->  	 tristate "APDS990X combined als and proximity sensors"
-> @@ -450,8 +450,8 @@ config PCI_ENDPOINT_TEST
->  	select CRC32
->  	tristate "PCI Endpoint Test driver"
->  	---help---
-> -           Enable this configuration option to enable the host side test=
- driver
-> -           for PCI Endpoint.
-> +	   Enable this configuration option to enable the host side test driver
-> +	   for PCI Endpoint.
->=20
->  config XILINX_SDFEC
->  	tristate "Xilinx SDFEC 16"
-> --
-> 2.17.1
-
+> >
+> > I think this patch disturbs this part of the test:
+> >
+> >         https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/syscalls/perf_event_open/perf_event_open02.c#L209
+> >
+> > When I revert this patch count_hardware_counters() returns a non zero value.
+> > But with it applied it returns 0 which indicates that the condition terminates
+> > earlier than what the test expects.
+>
+> Thanks for the report and starting analysing it
+>
+> >
+> > I'm failing to see the connection yet, but since I spent enough time bisecting
+> > it I thought I'll throw this out before I continue to bottom it out in hope it
+> > rings a bell for you or someone else.
+>
+> I will try to reproduce the problem and understand why it's failing
+> because i don't have any clue of the relation between both for now
+>
+> >
+> > The problem was consistently reproducible on Juno-r2.
+> >
+> > LTP was compiled from 20190930 tag using
+> >
+> >         ./configure --host=aarch64-linux-gnu --prefix=~/arm64-ltp/
+> >         make && make install
+> >
+> >
+> >
+> > *** Output of the test when it fails ***
+> >
+> >         # ./perf_event_open02 -v
+> >         at iteration:0 value:254410384 time_enabled:195570320 time_running:156044100
+> >         perf_event_open02    0  TINFO  :  overall task clock: 166935520
+> >         perf_event_open02    0  TINFO  :  hw sum: 1200812256, task clock sum: 667703360
+> >         hw counters: 300202518 300202881 300203246 300203611
+> >         task clock counters: 166927400 166926780 166925660 166923520
+> >         perf_event_open02    0  TINFO  :  ratio: 3.999768
+> >         perf_event_open02    0  TINFO  :  nhw: 0.000100     /* I added this extra line for debug */
+> >         perf_event_open02    1  TFAIL  :  perf_event_open02.c:370: test failed (ratio was greater than )
+> >
+> >
+> >
+> > *** Output of the test when it passes (this patch reverted) ***
+> >
+> >         # ./perf_event_open02 -v
+> >         at iteration:0 value:300271482 time_enabled:177756080 time_running:177756080
+> >         at iteration:1 value:300252655 time_enabled:166939100 time_running:166939100
+> >         at iteration:2 value:300252877 time_enabled:166924920 time_running:166924920
+> >         at iteration:3 value:300242545 time_enabled:166909620 time_running:166909620
+> >         at iteration:4 value:300250779 time_enabled:166918540 time_running:166918540
+> >         at iteration:5 value:300250660 time_enabled:166922180 time_running:166922180
+> >         at iteration:6 value:258369655 time_enabled:167388920 time_running:143996600
+> >         perf_event_open02    0  TINFO  :  overall task clock: 167540640
+> >         perf_event_open02    0  TINFO  :  hw sum: 1801473873, task clock sum: 1005046160
+> >         hw counters: 177971955 185132938 185488818 185488199 185480943 185477118 179657001 172499668 172137672 172139561
+> >         task clock counters: 99299900 103293440 103503840 103502040 103499020 103496160 100224320 96227620 95999400 96000420
+> >         perf_event_open02    0  TINFO  :  ratio: 5.998820
+> >         perf_event_open02    0  TINFO  :  nhw: 6.000100     /* I added this extra line for debug */
+> >         perf_event_open02    1  TPASS  :  test passed
+> >
+> > Thanks
+> >
+> > --
+> > Qais Yousef
