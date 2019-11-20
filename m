@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B033C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F5D1C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:37:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EFBD224EB
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:37:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73467224EB
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:37:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574257039;
-	bh=AxbKwjFQI/6s3clvhOzB6xU8y6OAygNZ4nXJUqw7RRo=;
+	s=default; t=1574257045;
+	bh=96uViNmOJ3sAbZzXst6e75EPddNChDMy7dw1ZPU6UAs=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=NAo7TluhupIUAMoIN1xCpowD702GqdGHuUvQsYBBudtpwfyYJtyoJm0duBFUvVrVx
-	 5UwTKc+BbtqTkAfXkUrqQu5DnW5RzJGy6bD2QaoxAv4e3iMwfs7Sjax69y/tyViGf5
-	 DshqqEZbx7kJ6uo8oEPnmYEP7DzyENk1DCcHL2Sw=
+	b=2crEMzWmPnhV4y8qP2+MvsJpr1D+GR19uylzRa6394tPx3pgt9LLbxNtuIv5jyRYl
+	 7RyxA4oJ7VukbFdomUmfBTlIUrkA5lgGOAJ2PsVlIqDY+FKfhsOTMsXr3Hx+9la9bi
+	 gvsR/lNZChb9jjAoLZj/RgCl7MGTH17MykMi9Ql0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729708AbfKTNhS (ORCPT
+        id S1729874AbfKTNhY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 08:37:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44124 "EHLO mail.kernel.org"
+        Wed, 20 Nov 2019 08:37:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729679AbfKTNhQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 08:37:16 -0500
+        id S1729649AbfKTNhV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 08:37:21 -0500
 Received: from localhost.localdomain (unknown [118.189.143.39])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C14FC22529;
-        Wed, 20 Nov 2019 13:37:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DA2221939;
+        Wed, 20 Nov 2019 13:37:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574257036;
-        bh=AxbKwjFQI/6s3clvhOzB6xU8y6OAygNZ4nXJUqw7RRo=;
+        s=default; t=1574257040;
+        bh=96uViNmOJ3sAbZzXst6e75EPddNChDMy7dw1ZPU6UAs=;
         h=From:To:Cc:Subject:Date:From;
-        b=Js3JvDf7ylCsJgpXt/BSwr6AY2Cb666FOKlqzvXYJ5mEX1kuPtKY9ymdK04WMw/i8
-         PI+c40zB2U+KsbiJhCoYEht7jx8Ga8j51MKiNxe8Sz2NphwiCNRwJuCWkXYX9S4Qwb
-         xFrvUtER9blvO8LQsqBFdYLN0M3nIDrDy2z65ACk=
+        b=XqBiDAse8stSBE+yGAFsDr/QN6z5op5BshFjjw+jXMA1FKTSH9OnljlmRLt4R5IYy
+         zZhD7RpQuIsg16XW+oHKvB5FzIJAIjxdd7BuUBSAdpPC1djtfNcGh9V1jp2IvymXvm
+         SpcBFQ3tRECueF8UeYMdKfw7hETx3Ksf+Fl3IlOU=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Jonas Bonn <jonas@southpole.se>,
-        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-        Stafford Horne <shorne@gmail.com>,
-        openrisc@lists.librecores.org
-Subject: [PATCH] openrisc: Fix Kconfig indentation
-Date:   Wed, 20 Nov 2019 21:37:12 +0800
-Message-Id: <20191120133712.12066-1-krzk@kernel.org>
+        Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>
+Subject: [PATCH] nds32: Fix Kconfig indentation
+Date:   Wed, 20 Nov 2019 21:37:16 +0800
+Message-Id: <20191120133717.12122-1-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -61,78 +59,59 @@ coding style with command like:
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- arch/openrisc/Kconfig | 26 +++++++++++++-------------
- 1 file changed, 13 insertions(+), 13 deletions(-)
+ arch/nds32/Kconfig.cpu | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/arch/openrisc/Kconfig b/arch/openrisc/Kconfig
-index bf326f0edd2f..1928e061ff96 100644
---- a/arch/openrisc/Kconfig
-+++ b/arch/openrisc/Kconfig
-@@ -13,7 +13,7 @@ config OPENRISC
- 	select IRQ_DOMAIN
- 	select HANDLE_DOMAIN_IRQ
- 	select GPIOLIB
--        select HAVE_ARCH_TRACEHOOK
-+	select HAVE_ARCH_TRACEHOOK
- 	select SPARSE_IRQ
- 	select GENERIC_IRQ_CHIP
- 	select GENERIC_IRQ_PROBE
-@@ -51,12 +51,12 @@ config NO_IOPORT_MAP
- 	def_bool y
- 
- config TRACE_IRQFLAGS_SUPPORT
--        def_bool y
-+	def_bool y
- 
- # For now, use generic checksum functions
- #These can be reimplemented in assembly later if so inclined
- config GENERIC_CSUM
--        def_bool y
-+	def_bool y
- 
- config STACKTRACE_SUPPORT
- 	def_bool y
-@@ -89,8 +89,8 @@ config DCACHE_WRITETHROUGH
- 	  If unsure say N here
- 
- config OPENRISC_BUILTIN_DTB
--        string "Builtin DTB"
--        default ""
-+	string "Builtin DTB"
-+	default ""
- 
- menu "Class II Instructions"
- 
-@@ -161,13 +161,13 @@ config OPENRISC_HAVE_SHADOW_GPRS
- 	  On a unicore system it's safe to say N here if you are unsure.
- 
- config CMDLINE
--        string "Default kernel command string"
--        default ""
--        help
--          On some architectures there is currently no way for the boot loader
--          to pass arguments to the kernel. For these architectures, you should
--          supply some command-line options at build time by entering them
--          here.
-+	string "Default kernel command string"
-+	default ""
-+	help
-+	  On some architectures there is currently no way for the boot loader
-+	  to pass arguments to the kernel. For these architectures, you should
-+	  supply some command-line options at build time by entering them
-+	  here.
- 
- menu "Debugging options"
- 
-@@ -185,7 +185,7 @@ config OPENRISC_ESR_EXCEPTION_BUG_CHECK
+diff --git a/arch/nds32/Kconfig.cpu b/arch/nds32/Kconfig.cpu
+index f80a4ab63da2..2216cd789b29 100644
+--- a/arch/nds32/Kconfig.cpu
++++ b/arch/nds32/Kconfig.cpu
+@@ -13,8 +13,8 @@ config FPU
  	default n
  	help
- 	  This option enables some checks that might expose some problems
--          in kernel.
-+	  in kernel.
+ 	  If FPU ISA is used in user space, this configuration shall be Y to
+-          enable required support in kerenl such as fpu context switch and
+-          fpu exception handler.
++	  enable required support in kerenl such as fpu context switch and
++	  fpu exception handler.
  
- 	  Say N if you are unsure.
+ 	  If no FPU ISA is used in user space, say N.
  
+@@ -24,7 +24,7 @@ config LAZY_FPU
+ 	default y
+ 	help
+ 	  Say Y here to enable the lazy FPU scheme. The lazy FPU scheme can
+-          enhance system performance by reducing the context switch
++	  enhance system performance by reducing the context switch
+ 	  frequency of the FPU register.
+ 
+ 	  For nomal case, say Y.
+@@ -75,11 +75,11 @@ choice
+ 	  if its cache way size is larger than page size. You can specify the
+ 	  CPU type direcly or choose CPU_V3 if unsure.
+ 
+-          A kernel built for N10 is able to run on N15, D15, N13, N10 or D10.
+-          A kernel built for N15 is able to run on N15 or D15.
+-          A kernel built for D10 is able to run on D10 or D15.
+-          A kernel built for D15 is able to run on D15.
+-          A kernel built for N13 is able to run on N15, N13 or D15.
++	  A kernel built for N10 is able to run on N15, D15, N13, N10 or D10.
++	  A kernel built for N15 is able to run on N15 or D15.
++	  A kernel built for D10 is able to run on D10 or D15.
++	  A kernel built for D15 is able to run on D15.
++	  A kernel built for N13 is able to run on N15, N13 or D15.
+ 
+ config CPU_N15
+ 	bool "AndesCore N15"
+@@ -173,7 +173,7 @@ config HIGHMEM
+ 
+ config CACHE_L2
+ 	bool "Support L2 cache"
+-        default y
++	default y
+ 	help
+ 	  Say Y here to enable L2 cache if your SoC are integrated with L2CC.
+ 	  If unsure, say N.
 -- 
 2.17.1
 
