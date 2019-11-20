@@ -2,174 +2,189 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C6D5C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 07:17:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD045C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 07:17:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B8FB2243E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 07:17:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A59F72243E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 07:17:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="JtWbtlEv"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="cgfFkxVc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727928AbfKTHRc (ORCPT
+        id S1727959AbfKTHRg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 02:17:32 -0500
-Received: from mail-eopbgr720133.outbound.protection.outlook.com ([40.107.72.133]:51631
-        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727670AbfKTHR0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 02:17:26 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GmDVQiFH8lBmcq9rVdmSRlglTrGgI3IQf7rfK9RArJjXRhBgCp53lspqH1SlcQGTsPI7cScS/Vy5+j/cIKufzw0xzG/N0Xrto0j4nwn81P55ydiHGkkT5wrURyqcmdydHi+SCpZdW4OZn0geR26gUm7ZlwHy5bl0OgvyjUUaxSI7GkWxd6AKfP3Q+ssshFETBCr+Q14R5Pt4qpm8GeoVAcrYKCWm5Ri3+1IwJq1EiucMixcc4ciQnVKjBF7K7RNT2Of1iHuSbwRDBDicMqTSBQxNRY/2b5ea6W4dayyxsNGew8GXHanz8BEdDFpOu/maP68G+zaLl8/FJkUzt1Z25g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=a11YkNayM24x6XpnzvUOyD0iIziEh/6Kr4UhFQAGMaQ=;
- b=OuNyvJpqJSMunhTp4Z+xwCNCQ7LtqsH+z+AsDF9tZOPfe9nntBESPAaP9wShXbkEJayOZkQr2Ce98kJ8tFh85VT1Pig/Qs/7G0nPHkLJ7hVyPWAV7ALteIMdGrr0RpiVLyvbS8cvCR2E5wpDpjIRcojK5+lO+yLHlV2UT9d6AUgl6zETwmfLt7QmtX64WZxdqilhICx40UAGBJpMJPpyTWSDSXEWLa+LNNVn99rDtwrcANGmJtOcG5z6dYPbFaRphy6ljJQLGFAsEIW/2SUL7v1Of4+k/vAsl4Y2GORjV9W0DYWTWpzFupzdZRyKqsiVzgfZ8Ncc5TOOP6uNlywkVQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=a11YkNayM24x6XpnzvUOyD0iIziEh/6Kr4UhFQAGMaQ=;
- b=JtWbtlEv0H4XIj7YzrXNxlcRdZ4Uc0R4TCPN8SgVRA0AR9N39mODWd5JZ6TT6GhD69P/RmPoEFPd+7lSz2/6VDgzhRqTxsb6iewsGAzz+bFy5dPGyfMe1Wo8URUyo81GyaBXMNumkw/yaJRuqH0XrujXMDeEEiYkL7pH2UxUte4=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-Received: from BN8PR21MB1137.namprd21.prod.outlook.com (20.179.72.96) by
- BN8PR21MB1251.namprd21.prod.outlook.com (20.179.74.28) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2495.3; Wed, 20 Nov 2019 07:17:21 +0000
-Received: from BN8PR21MB1137.namprd21.prod.outlook.com
- ([fe80::c596:ecf5:7a6:734d]) by BN8PR21MB1137.namprd21.prod.outlook.com
- ([fe80::c596:ecf5:7a6:734d%2]) with mapi id 15.20.2495.006; Wed, 20 Nov 2019
- 07:17:21 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        sashal@kernel.org, lorenzo.pieralisi@arm.com, bhelgaas@google.com,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
-        Alexander.Levin@microsoft.com
-Cc:     Dexuan Cui <decui@microsoft.com>
-Subject: [PATCH v2 4/4] PCI: hv: kmemleak: Track the page allocations for struct hv_pcibus_device
-Date:   Tue, 19 Nov 2019 23:16:58 -0800
-Message-Id: <1574234218-49195-5-git-send-email-decui@microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1574234218-49195-1-git-send-email-decui@microsoft.com>
-References: <1574234218-49195-1-git-send-email-decui@microsoft.com>
-Reply-To: decui@microsoft.com
-Content-Type: text/plain
-X-ClientProxiedBy: MWHPR2001CA0022.namprd20.prod.outlook.com
- (2603:10b6:301:15::32) To BN8PR21MB1137.namprd21.prod.outlook.com
- (2603:10b6:408:71::32)
+        Wed, 20 Nov 2019 02:17:36 -0500
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:19872 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727888AbfKTHRX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 02:17:23 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dd4e87e0000>; Tue, 19 Nov 2019 23:17:18 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 19 Nov 2019 23:17:17 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 19 Nov 2019 23:17:17 -0800
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 20 Nov
+ 2019 07:17:16 +0000
+Subject: Re: [PATCH v6 17/24] mm/gup: track FOLL_PIN pages
+To:     Jan Kara <jack@suse.cz>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
+References: <20191119081643.1866232-1-jhubbard@nvidia.com>
+ <20191119081643.1866232-18-jhubbard@nvidia.com>
+ <20191119113746.GD25605@quack2.suse.cz>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <92d0385a-90be-e900-e5ec-1eeafd24ff81@nvidia.com>
+Date:   Tue, 19 Nov 2019 23:17:16 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (13.77.154.182) by MWHPR2001CA0022.namprd20.prod.outlook.com (2603:10b6:301:15::32) with Microsoft SMTP Server (version=TLS1_2, cipher=) via Frontend Transport; Wed, 20 Nov 2019 07:17:20 +0000
-X-Mailer: git-send-email 1.8.3.1
-X-Originating-IP: [13.77.154.182]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: b0164f2a-1ed1-4430-5a85-08d76d89af2e
-X-MS-TrafficTypeDiagnostic: BN8PR21MB1251:|BN8PR21MB1251:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BN8PR21MB12516A73BEE4B9D5222D7957BF4F0@BN8PR21MB1251.namprd21.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-Forefront-PRVS: 02272225C5
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(376002)(346002)(396003)(136003)(39860400002)(366004)(199004)(189003)(10090500001)(36756003)(8936002)(50226002)(81166006)(81156014)(8676002)(14444005)(6436002)(6486002)(1511001)(86362001)(7736002)(2906002)(5660300002)(478600001)(10290500003)(4720700003)(6636002)(3846002)(6116002)(25786009)(3450700001)(66946007)(66556008)(66476007)(305945005)(316002)(386003)(6666004)(4326008)(6506007)(22452003)(26005)(16586007)(186003)(16526019)(107886003)(76176011)(51416003)(52116002)(66066001)(48376002)(47776003)(50466002)(446003)(11346002)(43066004)(956004)(2616005)(476003)(486006)(6512007)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR21MB1251;H:BN8PR21MB1137.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 1FZnyVBcMO4HC6UtvXGX3yDrXung2km9PPa+K9QeXtv2gpU5GbjMHWk8SSPx31nDdyuC6UyQLnWKheDh3eNk2Ev8qjg1NtuX68/ArjszxwXx2wLlpVJs9qK54Gq2fVZLcUmezq6yzlCVbQO8bgvQHDn/ckoMvHrA7OrJZD6wvH23uIB0IeGfqaG4iPwdihWu721J0JQiz9f5XXD59xSQ1oMclVWEL8eWkKLWyJ7kYOtNR2mZO2mMjHEKjAc4H7Ji8cYUAYNqW+DOQW5fQPjSxx2ssy6FRgLQBm/vEkvjLQVzoXJn/xmOYpDHPntnlSCeUenM36S2vpSQ6OSt19xBC30DiEBxFEIOa8i8plHdL9YYob7/4WbDppEpiw9QQs8OZTB91eqXbkAXRqlwd2soUwZS+O6bZ4gt2TfiXCIGPsD5drRENP41Uk2Xz1W6PhDT
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b0164f2a-1ed1-4430-5a85-08d76d89af2e
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Nov 2019 07:17:21.6174
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 0hWydk/5vj+nKRMdpzMgrCu3E0xDLrMUz5Sr62lB0m1WnEEjoVt4zTwBTUWgbId0HT+NBqW6MNldcw6Quv6Qwg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR21MB1251
+In-Reply-To: <20191119113746.GD25605@quack2.suse.cz>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1574234238; bh=XS1elsnwWY0rNKRca94CapnxJDsibdDqnD818d/G+io=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=cgfFkxVckFKph83JpaLozX1BPV67pcDvc4zYdLq9ggt/6dUFhjSjEUfkPlJ6YS85y
+         Tzbfkd2Ssh+1cnbHZVu22ZxAYWyCv1b8X10VXVS5hS2byaCvY0Vg9ipA7x3Fo3odW9
+         mJ8QOlZhdrlbORb/tooq8lEuT6AxTt5cVxDPZE9pOLHClbe3whACaJnf15veA5FbxQ
+         N7Z3c9PH3VSrAZwjy0whi7ko1Q5RU1C8PJUljAOR0JzSWQ7k8UX3NdOtoVh+QLcZ15
+         DmGFCQcpIJbV8FkJKisaDhzEEJcucwABlIhBeXVZln5jK7XEYXo5n/Z8Yardu3zdea
+         jFCxWfbFbwpdA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The page allocated for struct hv_pcibus_device contains pointers to other
-slab allocations in new_pcichild_device(). Since kmemleak does not track
-and scan page allocations, the slab objects will be reported as leaks
-(false positives). Use the kmemleak APIs to allow tracking of such pages.
+On 11/19/19 3:37 AM, Jan Kara wrote:
+> On Tue 19-11-19 00:16:36, John Hubbard wrote:
+>> @@ -2025,6 +2149,20 @@ static int __record_subpages(struct page *page, unsigned long addr,
+>>  	return nr;
+>>  }
+>>  
+>> +static bool __pin_compound_head(struct page *head, int refs, unsigned int flags)
+>> +{
+> 
+> I don't quite like the proliferation of names starting with __. I don't
+> think there's a good reason for that, particularly in this case. Also 'pin'
+> here is somewhat misleading as we already use term "pin" for the particular
+> way of pinning the page. We could have grab_compound_head() or maybe
+> nail_compound_head() :), but you're native speaker so you may come up with
+> better word.
 
-Reported-by: Lili Deng <v-lide@microsoft.com>
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
----
 
-This is actually v1. I use "v2" in the Subject just to be consistent with
-the other patches in the patchset.
+Yes, it is ugly naming, I'll change these as follows:
 
-Without the patch, we can see the below warning in dmesg, if kmemleak is
-enabled: 
+    __pin_compound_head() --> grab_compound_head()    
+    __record_subpages()   --> record_subpages()
 
-kmemleak: 1 new suspected memory leaks (see /sys/kernel/debug/kmemleak)
+I loved the "nail_compound_head()" suggestion, it just seems very vivid, but
+in the end, I figured I'd better keep it relatively drab and colorless. :)
 
-and "cat /sys/kernel/debug/kmemleak" shows:
+> 
+>> +	if (flags & FOLL_PIN) {
+>> +		if (unlikely(!try_pin_compound_head(head, refs)))
+>> +			return false;
+>> +	} else {
+>> +		head = try_get_compound_head(head, refs);
+>> +		if (!head)
+>> +			return false;
+>> +	}
+>> +
+>> +	return true;
+>> +}
+>> +
+>>  static void put_compound_head(struct page *page, int refs)
+>>  {
+>>  	/* Do a get_page() first, in case refs == page->_refcount */
+> 
+> put_compound_head() needs similar treatment as undo_dev_pagemap(), doesn't
+> it?
+> 
 
-unreferenced object 0xffff9217d1f2bec0 (size 192):
-  comm "kworker/u256:7", pid 100821, jiffies 4501481057 (age 61409.997s)
-  hex dump (first 32 bytes):
-    a8 60 b1 63 17 92 ff ff a8 60 b1 63 17 92 ff ff  .`.c.....`.c....
-    02 00 00 00 00 00 00 00 80 92 cd 61 17 92 ff ff  ...........a....
-  backtrace:
-    [<0000000006f7ae93>] pci_devices_present_work+0x326/0x5e0 [pci_hyperv]
-    [<00000000278eb88a>] process_one_work+0x15f/0x360
-    [<00000000c59501e6>] worker_thread+0x49/0x3c0
-    [<000000000a0a7a94>] kthread+0xf8/0x130
-[<000000007075c2e7>] ret_from_fork+0x35/0x40
+Yes, will fix that up.
 
- drivers/pci/controller/pci-hyperv.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
 
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index d7e05d436b5e..cc73f49c9e03 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -46,6 +46,7 @@
- #include <asm/irqdomain.h>
- #include <asm/apic.h>
- #include <linux/irq.h>
-+#include <linux/kmemleak.h>
- #include <linux/msi.h>
- #include <linux/hyperv.h>
- #include <linux/refcount.h>
-@@ -2907,6 +2908,16 @@ static int hv_pci_probe(struct hv_device *hdev,
- 	hbus = (struct hv_pcibus_device *)get_zeroed_page(GFP_KERNEL);
- 	if (!hbus)
- 		return -ENOMEM;
-+
-+	/*
-+	 * kmemleak doesn't track page allocations as they are not commonly
-+	 * used for kernel data structures, but here hbus->children indeed
-+	 * contains pointers to hv_pci_dev structs, which are dynamically
-+	 * created in new_pcichild_device(). Allow kmemleak to scan the page
-+	 * so we don't get a false warning of memory leak.
-+	 */
-+	kmemleak_alloc(hbus, PAGE_SIZE, 1, GFP_KERNEL);
-+
- 	hbus->state = hv_pcibus_init;
- 
- 	/*
-@@ -3133,6 +3144,8 @@ static int hv_pci_remove(struct hv_device *hdev)
- 
- 	hv_put_dom_num(hbus->sysdata.domain);
- 
-+	/* Remove kmemleak object previously allocated in hv_pci_probe() */
-+	kmemleak_free(hbus);
- 	free_page((unsigned long)hbus);
- 	return ret;
- }
+>> @@ -968,7 +973,18 @@ struct page *follow_devmap_pmd(struct vm_area_struct *vma, unsigned long addr,
+>>  	if (!*pgmap)
+>>  		return ERR_PTR(-EFAULT);
+>>  	page = pfn_to_page(pfn);
+>> -	get_page(page);
+>> +
+>> +	if (flags & FOLL_GET)
+>> +		get_page(page);
+>> +	else if (flags & FOLL_PIN) {
+>> +		/*
+>> +		 * try_pin_page() is not actually expected to fail here because
+>> +		 * we hold the pmd lock so no one can unmap the pmd and free the
+>> +		 * page that it points to.
+>> +		 */
+>> +		if (unlikely(!try_pin_page(page)))
+>> +			page = ERR_PTR(-EFAULT);
+>> +	}
+> 
+> This pattern is rather common. So maybe I'd add a helper grab_page(page,
+> flags) doing
+> 
+> 	if (flags & FOLL_GET)
+> 		get_page(page);
+> 	else if (flags & FOLL_PIN)
+> 		return try_pin_page(page);
+> 	return true;
+> 
+
+OK.
+
+> Otherwise the patch looks good to me now.
+> 
+> 								Honza
+
+Great! I thought I'd have a v7 out today, but fate decided to have me repair
+my test machine instead. So, soon. ha. :)
+
+thanks,
 -- 
-2.19.1
-
+John Hubbard
+NVIDIA
