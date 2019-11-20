@@ -2,163 +2,95 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B0C4C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 16:08:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB434C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 16:08:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28D8520674
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 16:08:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90A1C20674
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 16:08:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="V5xF6i7r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732595AbfKTQIM (ORCPT
+        id S1732605AbfKTQIP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 11:08:12 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:48148 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729187AbfKTQIL (ORCPT
+        Wed, 20 Nov 2019 11:08:15 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:44348 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729187AbfKTQIN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 11:08:11 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id C918728B52B
-Subject: Re: [PATCH] mfd / platform: cros_ec: Query EC protocol version if EC
- transitions between RO/RW
-To:     Yicheng Li <yichengli@chromium.org>, linux-kernel@vger.kernel.org
-Cc:     bleung@chromium.org, gwendal@chromium.org,
-        =?UTF-8?Q?Fabien_Lahoud=c3=a8re?= <fabien.lahoudere@collabora.com>
-References: <20191118200000.35484-1-yichengli@chromium.org>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <64265e5d-abd6-313e-0022-dac3719d7201@collabora.com>
-Date:   Wed, 20 Nov 2019 17:08:06 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 20 Nov 2019 11:08:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Wl1O4ZSZrpVG0P8VIwY3iEyKaXlo821ZggeTRbWUELA=; b=V5xF6i7roVMaqz3GF/iZucket
+        36rH3ujx1EHYAjW0OxxAfKrQRkWaX4gp9393H/qNSVzo9ZnM6IB2YiDz1whmREcsaTMhoqmICDQ0j
+        5sVkO+EgBj0704WH4qn5gKzw4A5qC51rgzoZUYLZs3tfqaNVRUZJTS3bLg5VnqnhO+UDsH626xJeT
+        JRMO1b6r9b7F1tL+UqFtMuU1KxabMChYIQHyz/cARUK02dv44v6OxMBWNfCfbXa8aXvZqeT/wuxui
+        zGOqq+5+BMXVnY6ziHK253eCoukMRbhBTdVvGZ9qFkB76JJpxdu/Al1JGKuw+B23OFS/EfPyQPHOp
+        TrNdCYgOw==;
+Received: from [2601:1c0:6280:3f0::5a22]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iXSWa-0004k0-Ra; Wed, 20 Nov 2019 16:08:12 +0000
+Subject: Re: [PATCH linux-kselftest/test v3] Documentation: kunit: add
+ documentation for kunit_tool
+To:     Jonathan Corbet <corbet@lwn.net>,
+        Brendan Higgins <brendanhiggins@google.com>
+Cc:     shuah <shuah@kernel.org>, David Gow <davidgow@google.com>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>
+References: <20191119003120.154041-1-brendanhiggins@google.com>
+ <4a3aada5-fe8f-9c82-dfd4-0494acf59334@infradead.org>
+ <CAFd5g47+3TN4pOdeM0YmJpMP2uKnpJYUY_OXmqmZEn8OcVz6ow@mail.gmail.com>
+ <20191120063219.1ad15b68@lwn.net>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <2ba78e72-22e8-1c5e-103e-78eb892fb2cd@infradead.org>
+Date:   Wed, 20 Nov 2019 08:08:11 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <20191118200000.35484-1-yichengli@chromium.org>
+In-Reply-To: <20191120063219.1ad15b68@lwn.net>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yicheng,
-
-Many thanks for sending the patch upstream.
-
-On 18/11/19 21:00, Yicheng Li wrote:
-> RO and RW of EC may have different EC protocol version. If EC transitions
-> between RO and RW, but AP does not reboot (this is true for fingerprint
-> microcontroller / cros_fp, but not true for main ec / cros_ec), the AP
-> still uses the protocol version queried before transition, which can
-> cause problems. In the case of fingerprint microcontroller, this causes
-> AP to send the wrong version of EC_CMD_GET_NEXT_EVENT to RO in the
-> interrupt handler, which in turn prevents RO to clear the interrupt
-> line to AP, in an infinite loop.
+On 11/20/19 5:32 AM, Jonathan Corbet wrote:
+> On Tue, 19 Nov 2019 17:14:20 -0800
+> Brendan Higgins <brendanhiggins@google.com> wrote:
 > 
-
-cc'ing: Fabien.
-
-I am wondering if we should be able to reproduce this from userspace, i.e by
-setting firmware to RO and issuing a EC_CMD_REBOOT.
-
-What's the actual issue, if the firmware hangs switches to RO and reboots? Is
-this happening in products or is something that you detected while playing with
-the firmware?
-
-> Once an EC_HOST_EVENT_INTERFACE_READY is received, we know that there
-> might have been a transition between RO and RW, so re-query the protocol.
+>> On Tue, Nov 19, 2019 at 4:27 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+>>>
+>>> On 11/18/19 4:31 PM, Brendan Higgins wrote:  
+>>>> +How do I use kunit_tool?
+>>>> +=================================  
+>>>
+>>> Hi,
+>>> I haven't tested this, but Sphinx (or some doc tool) usually complains if the
+>>> underline length is not the same as the header text length.  (I.e., use fewer
+>>> = signs above.)  
+>>
+>> Hmmm...Sphinx and checkpatch didn't complain. I wonder if it is a
+>> different script, or maybe I have to use a particular option with
+>> Sphinx.
 > 
-> Signed-off-by: Yicheng Li <yichengli@chromium.org>
-> 
-> Change-Id: Ib58032ff4a8e113bdbd07212e8aff42807afff38
-> Series-to: LKML <linux-kernel@vger.kernel.org>
-> Series-cc: Benson Leung <bleung@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Gwendal Grignou <gwendal@chromium.org>
+> Sphinx wants the underline to be at least as long as the subheading text
+> above; it's entirely happy if it's longer, though.
 
-You should get rid of the three above lines, did you use patman correctly to
-send this patch?
+oh. thanks for the info.
 
-> ---
->  drivers/platform/chrome/cros_ec.c           | 24 +++++++++++++++++++++
->  include/linux/platform_data/cros_ec_proto.h |  1 +
->  2 files changed, 25 insertions(+)
-> 
-> diff --git a/drivers/platform/chrome/cros_ec.c b/drivers/platform/chrome/cros_ec.c
-> index 9b2d07422e17..0c910846d99d 100644
-> --- a/drivers/platform/chrome/cros_ec.c
-> +++ b/drivers/platform/chrome/cros_ec.c
-> @@ -104,6 +104,23 @@ static int cros_ec_sleep_event(struct cros_ec_device *ec_dev, u8 sleep_event)
->  	return ret;
->  }
->  
-> +static int cros_ec_ready_event(struct notifier_block *nb,
-> +	unsigned long queued_during_suspend, void *_notify)
-> +{
-> +	struct cros_ec_device *ec_dev = container_of(nb, struct cros_ec_device,
-> +						     notifier_ready);
-> +	u32 host_event = cros_ec_get_host_event(ec_dev);
-> +
-> +	if (host_event & EC_HOST_EVENT_MASK(EC_HOST_EVENT_INTERFACE_READY)) {
-> +		mutex_lock(&ec_dev->lock);
-> +		cros_ec_query_all(ec_dev);
-> +		mutex_unlock(&ec_dev->lock);
-> +		return NOTIFY_OK;
-> +	} else {
-> +		return NOTIFY_DONE;
-> +	}
+-- 
+~Randy
 
-no else, just
-
-        return NOTIFY_DONE;
-
-> +}
-> +
->  /**
->   * cros_ec_register() - Register a new ChromeOS EC, using the provided info.
->   * @ec_dev: Device to register.
-> @@ -201,6 +218,13 @@ int cros_ec_register(struct cros_ec_device *ec_dev)
->  		dev_dbg(ec_dev->dev, "Error %d clearing sleep event to ec",
->  			err);
->  
-> +	/* Register the notifier for EC_HOST_EVENT_INTERFACE_READY event. */
-> +	ec_dev->notifier_ready.notifier_call = cros_ec_ready_event;
-> +	err = blocking_notifier_chain_register(&ec_dev->event_notifier,
-> +					       &ec_dev->notifier_ready);
-> +	if (err < 0)
-> +		dev_warn(ec_dev->dev, "Failed to register notifier\n");
-> +
-
-Is that only a warning and should be ignored if it fails?
-
-BTW, blocking_notfier_chain_register _always_ returns 0. So I'd say that better
-do in case at some point starts to returning something different.
-
-if (err)
-   return err;
-
-
->  	dev_info(dev, "Chrome EC device registered\n");
->  
->  	return 0;
-> diff --git a/include/linux/platform_data/cros_ec_proto.h b/include/linux/platform_data/cros_ec_proto.h
-> index 0d4e4aaed37a..9840408c0b01 100644
-> --- a/include/linux/platform_data/cros_ec_proto.h
-> +++ b/include/linux/platform_data/cros_ec_proto.h
-> @@ -161,6 +161,7 @@ struct cros_ec_device {
->  	int event_size;
->  	u32 host_event_wake_mask;
->  	u32 last_resume_result;
-> +	struct notifier_block notifier_ready;
-
-You should add documentations for this new entry.
-
->  
->  	/* The platform devices used by the mfd driver */
->  	struct platform_device *ec;
-> 
-
-Thanks,
- Enric
