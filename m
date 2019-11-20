@@ -2,104 +2,145 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9894C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 09:01:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D02A1C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 09:02:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 944D222445
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 09:01:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E8612243F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 09:02:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F/ilQoZV"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="bVTwoeiS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728087AbfKTJAS (ORCPT
+        id S1728104AbfKTJCQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 04:00:18 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:40710 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728062AbfKTJAR (ORCPT
+        Wed, 20 Nov 2019 04:02:16 -0500
+Received: from mailout1.samsung.com ([203.254.224.24]:15402 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728092AbfKTJCP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 04:00:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574240416;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=df2jZGkaKYIX8XGP45379iKP8na141nKrPLZMKk0bUg=;
-        b=F/ilQoZVp+JWRDAwyJOnKsgprtNC1zi9PeKxiiwDW7+ahJBAH9SiwgvR6zRTk/b24bURKU
-        EIo9/rLP158Pmffr01kYW6heo9LgfHLtX6BnMSvwg1/jG3ikkq2seY/5Vd7LgiL3E97oKI
-        c13ebqfGIg0ShmAfXB6ZB4uGW+RVRRY=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-108-eR3fDIFtNJibupG0o-ICCQ-1; Wed, 20 Nov 2019 04:00:13 -0500
-Received: by mail-wm1-f72.google.com with SMTP id h191so4772032wme.5
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 01:00:13 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=z+y/mrfI8ftCAoV6iK00SrByVRSNZiEo0o81DOjJrmQ=;
-        b=mzZxKp8wibrqfVovd+WgSvh5OlNA6m4yNkgRTHFv4jSJ+mdDkVTe0DhNch9xa37mSv
-         gaJQslqVybQRxUJVpAp8OTnxinKF/1NVOOiOMAmQPdyEtpZrnt1BA9sJ2hQ6JVvvfu7g
-         OxD8Jy55a3h+kC9fwboAcR90E7VPi1XkzHGvctDlgDvCJpH4DXtqkmik+eoyo9njUBI7
-         i2FR/qGj4q+x6/QHfRXuLNyNrA1KqhdRw+eC+RSKE6lS+LNWL5WofNYHYiuZSORd2Ypk
-         XHqHulqfBItmvEZOg/bYN2/yfYhgJzdnhAWmysQ1G3KLpCWmJ4qV68wE0/xeTOXK5/91
-         h+7g==
-X-Gm-Message-State: APjAAAVOZcwxXCOaPEktU55jUkWYoSW79v3jXfsM1OrReS3G5Da7BUCn
-        2nb6vw0CSdYTPe5mirbo3aFRgbCL4N4lRKJfmXgLggE8wSZptdt9dj+x2jbi9cdyubex4S/+a9x
-        iUu5+XMq055+55pAnlUYGeQMW
-X-Received: by 2002:a5d:640b:: with SMTP id z11mr1744248wru.195.1574240412214;
-        Wed, 20 Nov 2019 01:00:12 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzH0Kdjailo9KhJjoLt6nJgWn1k9d4qaEv02JFRBV4exDlOdZ6AoQZwxtxq6bSHolNraKXzJA==
-X-Received: by 2002:a5d:640b:: with SMTP id z11mr1744217wru.195.1574240411959;
-        Wed, 20 Nov 2019 01:00:11 -0800 (PST)
-Received: from steredhat (a-nu5-32.tin.it. [212.216.181.31])
-        by smtp.gmail.com with ESMTPSA id m16sm5646172wml.47.2019.11.20.01.00.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Nov 2019 01:00:11 -0800 (PST)
-Date:   Wed, 20 Nov 2019 10:00:08 +0100
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     David Miller <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        decui@microsoft.com, stefanha@redhat.com,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        jhansen@vmware.com
-Subject: Re: [PATCH net-next 4/6] vsock: add vsock_loopback transport
-Message-ID: <20191120090008.qlfc3lnzwl6yudsf@steredhat>
-References: <20191119110121.14480-1-sgarzare@redhat.com>
- <20191119110121.14480-5-sgarzare@redhat.com>
- <20191119.171501.666690660172999834.davem@davemloft.net>
+        Wed, 20 Nov 2019 04:02:15 -0500
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20191120090213epoutp01faaf4eff15c67dfa7a9a04e607cef53a~Y02yRxwMQ0933209332epoutp01K
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 09:02:13 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20191120090213epoutp01faaf4eff15c67dfa7a9a04e607cef53a~Y02yRxwMQ0933209332epoutp01K
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1574240533;
+        bh=dfMXCj9n8r6qNtIvUmluN1atQMpnLaKyM+8HLByEO3I=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=bVTwoeiS/BbOxoUOpTAwpLOZ5ioT87+QZ5MHnWVdd+yOcKkVn8NagXq+lkTEhAAsO
+         8yB8gv8eykLnmPpBMKG9jRaumGWF7iIZ29DKS9qd+Q3ST8lWllngNhZROa5xDwVW6E
+         U0CSnAaH1sFZCSSAGxCHYWuKrvmCuRsDKVO+2/g4=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
+        20191120090212epcas1p340b21382da1d3b4cabfcbb2215b4fb62~Y02xpLbnt0972109721epcas1p3F;
+        Wed, 20 Nov 2019 09:02:12 +0000 (GMT)
+Received: from epsmges1p5.samsung.com (unknown [182.195.40.165]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 47HxXM2qtYzMqYkV; Wed, 20 Nov
+        2019 09:02:11 +0000 (GMT)
+Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
+        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
+        0D.8D.04237.31105DD5; Wed, 20 Nov 2019 18:02:11 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
+        20191120090210epcas1p4d0f2fd524052392f5046495f4851809c~Y02wWQDD62759327593epcas1p4I;
+        Wed, 20 Nov 2019 09:02:10 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20191120090210epsmtrp2ce5f70798920b9d801f8ec9fa69ad4f9~Y02wVhflp0720607206epsmtrp2k;
+        Wed, 20 Nov 2019 09:02:10 +0000 (GMT)
+X-AuditID: b6c32a39-913ff7000000108d-64-5dd501135724
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        2C.DC.03814.21105DD5; Wed, 20 Nov 2019 18:02:10 +0900 (KST)
+Received: from DONAMJAEJEO06 (unknown [10.88.104.63]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20191120090210epsmtip15237292a741392c1dc5b598a195a08db~Y02wL_zj52993029930epsmtip1D;
+        Wed, 20 Nov 2019 09:02:10 +0000 (GMT)
+From:   "Namjae Jeon" <namjae.jeon@samsung.com>
+To:     "'Markus Elfring'" <Markus.Elfring@web.de>
+Cc:     <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
+        "'Christoph Hellwig'" <hch@lst.de>,
+        "'Daniel Wagner'" <dwagner@suse.de>,
+        "'Greg Kroah-Hartman'" <gregkh@linuxfoundation.org>,
+        "'Sungjong Seo'" <sj1557.seo@samsung.com>,
+        =?UTF-8?Q?'Valdis_Kl=C4=93tnieks'?= <valdis.kletnieks@vt.edu>,
+        <linkinjeon@gmail.com>, <linux-fsdevel@vger.kernel.org>
+In-Reply-To: <705cb02b-7707-af52-c2b5-70660debc619@web.de>
+Subject: RE: [PATCH v3 10/13] exfat: add nls operations
+Date:   Wed, 20 Nov 2019 18:02:10 +0900
+Message-ID: <00b701d59f81$319c1d90$94d458b0$@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <20191119.171501.666690660172999834.davem@davemloft.net>
-X-MC-Unique: eR3fDIFtNJibupG0o-ICCQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+X-Mailer: Microsoft Outlook 14.0
+Content-Language: ko
+Thread-Index: AQKGiVEIZXutAv+r8fum7Kkxtbdn/QHzs3lyAdI0Re0CJVjUg6YCisKg
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Te0hTcRTut3t379Vc3KbVyajWLYkSdXNOr6IRJXUjISH6I2vYxV3U2qvd
+        GT3J6D1Kyv6IrhnWIMhFhplptaytrBVFqT20J2o5VEyLXhTV5l3kf9/5znfO+c7vQWHqW0Q8
+        VWp1Cg4rb2aIaLzRPy8lKRY9NWp/dKhZf08lye521xHsOc8dBXu5axr7/HUXxl73BnC2/epJ
+        gv0j9SnZht+3lWzbx2F8YTTXLL0muZbq8yR3rbOc4CoaahF36cE27nP9DM53ZZDgXn5oxPOp
+        AnN2icCbBIdGsBbZTKXW4hxm+crCxYWGdK0uSZfJZjAaK28RcpjcvPykJaXmkEVGs4k3l4Wo
+        fF4UmZQF2Q5bmVPQlNhEZw4j2E1mu05rTxZ5i1hmLU4uslmydFptqiGkXGcu8fSdI+3umM01
+        nj68HH0f70JRFNBpcMb7DXOhaEpNNyGobB5AcvAJQWPrW0IOviKoedSt/FcyUnURlxNeBDdq
+        n0VK+hG43wdGVQSdBL9/tRBhHEcnQ+WgXxkWYfSwAlrdARRORNFZ4Hl1KYQpKpbOgBPS4jCN
+        0wlQ3vlCEcYqOhMe3qwkZTwRAid68TDG6EQ4e3oAkx1poOnhAJL5OKg6uA+T5y4Bz+3W0blA
+        HyPh04ceUi7IhftnayPrxEL/3YYIHw+fh7xE2A/Q22CkJdL/AILgtxwZ66Gz7qIyLMHoeVB3
+        NUWmZ0Hzz+qIhQkw9OWQUu6iggP71LIkASra/AoZTwPX/mHyCGKkMYtJYxaTxiwj/R9Wg/Ba
+        NFmwi5ZiQdTZDWMvux6NPt/5mU2o9VGeD9EUYmJURzrajWolv0ncYvEhoDAmTnX9eYdRrTLx
+        W7YKDluho8wsiD5kCJ37USx+UpEt9BmszkKdIVWv17Np6RnpBj0zRUV9f2JU08W8U9ggCHbB
+        8a9OQUXFl6M5O3e+7M87NdT1NZH6kRgz25+1jjt2V3PZp20YGY7p28uu3x7lxptuVNSvXjHS
+        Fly1qJQ+tcPV3T6dkx48Tj0ZvJAwbsrjqjcbgj3McRP17n3aVHPjigVS9i6jodfVnRuNvwve
+        W7N25sIJ+UsLAmkFGu/gsrneZRs3Hr65tpd0i3sYXCzhdfMxh8j/Bd3Mn63UAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrDIsWRmVeSWpSXmKPExsWy7bCSnK4Q49VYg5lLTC0OP57EbtG8eD2b
+        xcrVR5kstt6Strh+9xazxZ69J1ksLu+aw2bxf9ZzVost/46wWlx6/4HFgctj56y77B77565h
+        99h9s4HNo2/LKkaPzaerPT5vkvM4tP0Nm8ftZ9tYAjiiuGxSUnMyy1KL9O0SuDKWbHzNXDCT
+        s+Jd3yWmBsZb7F2MnBwSAiYSH2dvYOli5OIQEtjNKLHm+wVmiIS0xLETZ4BsDiBbWOLw4WKI
+        mheMEq+XNDKB1LAJ6Er8+7OfDcQWEdCTmPTmMCtIEbPANyaJ25/PsEN0vGGUmHvxHlgHp4CV
+        xOo7mxlBpgoLmEvMnOUMEmYRUJVouHkDrIRXwFLi7IFJ7BC2oMTJmU9YQGxmAW2J3oetjDD2
+        soWvoQ5VkNhx9jVUXERidmcbM8RBbhKrjxxjncAoPAvJqFlIRs1CMmoWkvYFjCyrGCVTC4pz
+        03OLDQuM8lLL9YoTc4tL89L1kvNzNzGC41BLawfjiRPxhxgFOBiVeHgnXLkcK8SaWFZcmXuI
+        UYKDWUmEd8/1K7FCvCmJlVWpRfnxRaU5qcWHGKU5WJTEeeXzj0UKCaQnlqRmp6YWpBbBZJk4
+        OKUaGAUmzg+UNT5puy/zGueKN1kXS28L50vo+vstf9J58brWfaUvF09dZVus+iFwwocCXUHb
+        cn/bt6uOPljZ92G+5SqTkv9PmNOfvssTPKjEIqugy6P8t/+0oJx59HW941+Dl8iwZOm2diY8
+        b3Z2evb+f46AZ0Xs5gDxRPtVPR27k49eu+43ecO5zUosxRmJhlrMRcWJAF/Xf42/AgAA
+X-CMS-MailID: 20191120090210epcas1p4d0f2fd524052392f5046495f4851809c
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20191119094026epcas1p3eea5c655f3b89383e02c0097c491f0bc
+References: <20191119093718.3501-1-namjae.jeon@samsung.com>
+        <CGME20191119094026epcas1p3eea5c655f3b89383e02c0097c491f0bc@epcas1p3.samsung.com>
+        <20191119093718.3501-11-namjae.jeon@samsung.com>
+        <705cb02b-7707-af52-c2b5-70660debc619@web.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 05:15:01PM -0800, David Miller wrote:
-> From: Stefano Garzarella <sgarzare@redhat.com>
-> Date: Tue, 19 Nov 2019 12:01:19 +0100
->=20
-> > +static int vsock_loopback_cancel_pkt(struct vsock_sock *vsk)
-> > +{
-> > +=09struct vsock_loopback *vsock;
-> > +=09struct virtio_vsock_pkt *pkt, *n;
-> > +=09int ret;
-> > +=09LIST_HEAD(freeme);
->=20
-> Reverse christmas tree ordering of local variables here please.
->=20
-
-Sure, I'll fix in the v2.
-
-Thanks,
-Stefano
-
+> =E2=80=A6=0D=0A>=20>=20+++=20b/fs/exfat/nls.c=0D=0A>=20=E2=80=A6=0D=0A>=
+=20>=20+static=20int=20exfat_load_upcase_table(struct=20super_block=20*sb,=
+=0D=0A>=20>=20+=09=09sector_t=20sector,=20unsigned=20long=20long=20num_sect=
+ors,=0D=0A>=20>=20+=09=09unsigned=20int=20utbl_checksum)=0D=0A>=20>=20+=7B=
+=0D=0A>=20=E2=80=A6=0D=0A>=20>=20+error:=0D=0A>=20>=20+=09if=20(bh)=0D=0A>=
+=20>=20+=09=09brelse(bh);=0D=0A>=20=0D=0A>=20I=20am=20informed=20in=20the=
+=20way=20that=20this=20function=20tolerates=20the=20passing=0D=0A>=20of=20n=
+ull=20pointers.=0D=0A>=20https://protect2.fireeye.com/url?k=3D58476862-0589=
+69b1-5846e32d-000babff317b-=0D=0A>=202bdcc1db1dc57528&u=3Dhttps://git.kerne=
+l.org/pub/scm/linux/kernel/git/torvalds/=0D=0A>=20linux.git/tree/include/li=
+nux/buffer_head.h?id=3Daf42d3466bdc8f39806b26f593604f=0D=0A>=20dc54140bcb=
+=23n292=0D=0A>=20https://protect2.fireeye.com/url?k=3D625424d5-3f9a2506-625=
+5af9a-000babff317b-=0D=0A>=20a544a35424b18c18&u=3Dhttps://elixir.bootlin.co=
+m/linux/v5.4-=0D=0A>=20rc8/source/include/linux/buffer_head.h=23L292=0D=0A>=
+=20=0D=0A>=20Thus=20I=20suggest=20to=20omit=20the=20extra=20pointer=20check=
+=20also=20at=20similar=20places.=0D=0A>=20=0D=0A>=20Can=20the=20label=20=E2=
+=80=9Crelease_bh=E2=80=9D=20be=20more=20helpful?=0D=0AHi=20Markus,=0D=0A=0D=
+=0AI=20checked=20not=20only=20review=20point=20but=20also=20your=20review=
+=20points=20in=0D=0Aother=20patches,=20I=20will=20fix=20them=20on=20v4.=0D=
+=0A=0D=0AThanks=20for=20your=20review=21=0D=0A>=20=0D=0A>=20Regards,=0D=0A>=
+=20Markus=0D=0A=0D=0A
