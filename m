@@ -2,112 +2,442 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76103C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:52:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29122C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:54:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49E34223D0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:52:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5D9F223D0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:54:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="BNR/zhrD"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kWDe/OR+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729382AbfKTLwn (ORCPT
+        id S1729384AbfKTLyf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 06:52:43 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:36256 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728601AbfKTLwn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 06:52:43 -0500
-Received: from zn.tnic (p200300EC2F0D8C008093FCEEEFCF892F.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:8c00:8093:fcee:efcf:892f])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id CA7C21EC0BEC;
-        Wed, 20 Nov 2019 12:52:37 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1574250757;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=RLkoxGNHE0MpSItY0sfwHmmrOz4TIxYH/DdJiVvVqKA=;
-        b=BNR/zhrDGWjNt4n3V2KbYZOAFqq3A4mS4xDnAwzLkBeKSgv7CGOo4ymDnWc4K67KYxdE8p
-        aEH2xhwsWqNg/rG/pv/bqg2IfBb5bWofCN/4CW9OdJt9ZG0d6IxCJQbdBBRTJhp2+0dsxF
-        +Shl9/boxqkDFVBCw6tzSD9swpaEF8c=
-Date:   Wed, 20 Nov 2019 12:52:31 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Dmitry Vyukov <dvyukov@google.com>, Jann Horn <jannh@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v2 2/3] x86/traps: Print non-canonical address on #GP
-Message-ID: <20191120115231.GD2634@zn.tnic>
-References: <20191115191728.87338-1-jannh@google.com>
- <20191115191728.87338-2-jannh@google.com>
- <20191118142144.GC6363@zn.tnic>
- <CACT4Y+bCOr=du1QEg8TtiZ-X6U+8ZPR4N07rJOeSCsd5h+zO3w@mail.gmail.com>
- <CAG48ez1AWW7FkvU31ahy=0ZiaAreSMz=FFA0u8-XkXT9hNdWKA@mail.gmail.com>
- <CACT4Y+bfF86YY_zEGWO1sK0NwuYgr8Cx0wFewRDq0WL_GBgO0Q@mail.gmail.com>
- <20191118164407.GH6363@zn.tnic>
- <20191120114031.GA83574@gmail.com>
+        Wed, 20 Nov 2019 06:54:35 -0500
+Received: from mail-vk1-f195.google.com ([209.85.221.195]:36464 "EHLO
+        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728746AbfKTLyf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 06:54:35 -0500
+Received: by mail-vk1-f195.google.com with SMTP id d10so5951427vke.3
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 03:54:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Hd8BHJelmiH7/pGl0JXnpAERmqT/asDnXzYH4tiA08o=;
+        b=kWDe/OR+xrpFY2ZWZ9QgnDbLI1qbez2/Q4j2h+SwBS60b1kq4rhVMwEj/2IxDaEtt4
+         ROhTWAMMhyvCVRNbcr1OYKhZEisV3KAWH6Het0Sfycb+1hxvWaUpDx2S9s4yrwF2addz
+         qlKHFOb3n3gPlKLWSWQRCjTP2DunaJvFBaS5tra4Uoz9tq+b5cU7Ezoh3svqiwJMS4/o
+         sgSpBN6bgH80u6Td0pFU8KgDhg766SKwDZ2wo8CfuMhOzBDgLTfZF9TtXaTgBRd9pAeG
+         AQoF7EbcS76adSKv5KB13os1g9jJJJYhfQV9PIx9Um+DQg0ZoAYYgwNo3z08SLVfVzsv
+         xQXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Hd8BHJelmiH7/pGl0JXnpAERmqT/asDnXzYH4tiA08o=;
+        b=p147Nv9bnI5LfdyhLlDJtlmij5dmbPsATtZ7NLD70/lEff/WlY25172SRscaJ61LaN
+         Mu19U9bTvyJdokXSkEwupWOuejcgFMFxM/AL/lDbRBY8/GtImF7mW3KNrRGP2FIq25lN
+         j76FY0FcwiANDEfiUR8PJb6oroOcG6CTbIV4iAPbYiBNY/q4ZM/4APAABKlc34Ed/oP2
+         dXMPCE9xW86vn2x63r2tDK5wrC8gZ9v4Facb51IKneILRArxSajySczNvW1wbyBEwIfX
+         xANcTky4yE0DAOZR5VXmYIdJZ0KQpuUdzBqJYZWfoLJk2tzu+jwsEWJwEEh+gQUpcO6d
+         SFpw==
+X-Gm-Message-State: APjAAAUG2g7gd8tzOuyBRlXPblkkcDn022q9WUJh3rA1lPJPHfHyUGdj
+        lGK8f25T4r/8y+boSsGyFko+59aybWzNzT8Kdcn3Bg==
+X-Google-Smtp-Source: APXvYqz3p+vyZepa81xazUV+vueqO73U5XJVYPTPNT7iJK44D3pSLUvhOGS3+vbJ6+HmQ5Kk99Ux8bgyg3mPWtHjIec=
+X-Received: by 2002:a1f:fe0a:: with SMTP id l10mr1230084vki.59.1574250873647;
+ Wed, 20 Nov 2019 03:54:33 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191120114031.GA83574@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191119154621.55341-1-niklas.cassel@linaro.org> <20191119154621.55341-3-niklas.cassel@linaro.org>
+In-Reply-To: <20191119154621.55341-3-niklas.cassel@linaro.org>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 20 Nov 2019 12:53:57 +0100
+Message-ID: <CAPDyKFrLJ253Uzn3jLWwcOUtB5dfdzEtoUMgWR_=V0xGd1NaJQ@mail.gmail.com>
+Subject: Re: [PATCH v6 2/5] power: avs: Add support for CPR (Core Power Reduction)
+To:     Niklas Cassel <niklas.cassel@linaro.org>
+Cc:     Kevin Hilman <khilman@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 12:40:31PM +0100, Ingo Molnar wrote:
-> Well, this would break various pieces of tooling I'm sure.
+On Tue, 19 Nov 2019 at 16:46, Niklas Cassel <niklas.cassel@linaro.org> wrote:
+>
+> CPR (Core Power Reduction) is a technology that reduces core power on a
+> CPU or other device. It reads voltage settings in efuse from product
+> test process as initial settings.
+> Each OPP corresponds to a "corner" that has a range of valid voltages
+> for a particular frequency. While the device is running at a particular
+> frequency, CPR monitors dynamic factors such as temperature, etc. and
+> adjusts the voltage for that frequency accordingly to save power
+> and meet silicon characteristic requirements.
+>
+> This driver is based on an RFC by Stephen Boyd[1], which in turn is
+> based on work by others on codeaurora.org[2].
+>
+> [1] https://lkml.org/lkml/2015/9/18/833
+> [2] https://www.codeaurora.org/cgit/quic/la/kernel/msm-3.10/tree/drivers/regulator/cpr-regulator.c?h=msm-3.10
+>
+> Co-developed-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
 
-Well, if at all, this will break them one last time. Ironically, the
-intent here is to have a markup which doesn't break them anymore, once
-that markup is agreed upon by all parties.
+I have had a look at the genpd provider specific parts. So here are
+few comments.
 
-Because each time we touch those printk formats, tools people complain
-about us breaking their tools. So we should get the best of both worlds
-by marking those splats in a way that tools can grep for and we won't
-touch the markers anymore, once established.
+[...]
 
-Also, "[]" was only an example. It can be anything we want, as in "<>"
-or "!" or whatever is a short prefix that prepends those lines.
+> +
+> +struct cpr_drv {
+> +       unsigned int            num_corners;
+> +
+> +       unsigned int            ref_clk_khz;
+> +       unsigned int            performance_state;
 
-> Maybe it would be nicer to tooling to embedd the splat-counter in the 
-> timestamp in a way:
+Without looking into the details of how this is being used, I assume
+this reflects the performance state of the genpd provider, which is
+also tracked by genpd, of course.
 
-Or that. Whatever we agree, as long as it is a unique marker for splats.
-And it should say which splat it is, as that is also very useful
-information to have it in each line.
+Could you perhaps make use of an API that gives you the current
+performance state of the genpd, rather than having to duplicate this?
 
-> > [    2.542218-#1] general protection fault while derefing a non-canonical address 0xdfff000000000001: 0000 [#1] PREEMPT SMP
-> > [    2.543343-#1] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.4.0-rc8+ #8
-> > [    2.544138-#1] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.11.1-1 04/01/2014
-> > [    2.545120-#1] RIP: 0010:kernel_init+0x58/0x107
-> > [    2.546055-#1] Code: 48 c7 c7 e0 5c e7 81 e8 eb d2 90 ff c7 05 77 d6 95 00 02 00 00 00 e8 4e 1d a2 ff e8 69 b7 91 ff 48 b8 01 00 00 00 00 00 ff df <ff> e0 48 8b 3d fe 54 d7 00 48 85 ff 74 22 e8 76 93 84 ff 85 c0 89
-> 
-> That way we'd not only know that it's the first splat, but we'd know it 
-> from all the *other* splats as well where they are in the splat-rank ;-)
+There is patch, reviewed, but not queued yet.
+https://lore.kernel.org/patchwork/patch/1140368/
 
-That's exactly why I'd want the number in there.
+> +
+> +       struct generic_pm_domain pd;
+> +       struct device           *dev;
+> +       struct mutex            lock;
+> +       void __iomem            *base;
+> +       struct corner           *corner;
+> +       struct regulator        *vdd_apc;
+> +       struct clk              *cpu_clk;
+> +       struct regmap           *tcsr;
+> +       bool                    loop_disabled;
+> +       u32                     gcnt;
+> +       unsigned long           flags;
+> +
+> +       struct fuse_corner      *fuse_corners;
+> +       struct corner           *corners;
+> +
+> +       const struct cpr_desc *desc;
+> +       const struct acc_desc *acc_desc;
+> +       const struct cpr_fuse *cpr_fuses;
+> +
+> +       struct dentry *debugfs;
+> +};
+> +
 
-Thx.
+[...]
 
--- 
-Regards/Gruss,
-    Boris.
+> +
+> +static int cpr_find_initial_corner(struct cpr_drv *drv)
+> +{
+> +       unsigned long rate;
+> +       const struct corner *end;
+> +       struct corner *iter;
+> +       int i = 0;
+> +
+> +       if (!drv->cpu_clk) {
+> +               dev_err(drv->dev, "cannot get rate from NULL clk\n");
+> +               return -EINVAL;
+> +       }
+> +
+> +       end = &drv->corners[drv->num_corners - 1];
+> +       rate = clk_get_rate(drv->cpu_clk);
+> +
+> +       for (iter = drv->corners; iter <= end; iter++) {
+> +               if (iter->freq > rate)
+> +                       break;
+> +               i++;
+> +               if (iter->freq == rate) {
+> +                       drv->corner = iter;
+> +                       drv->performance_state = i;
+> +                       break;
+> +               }
+> +               if (iter->freq < rate) {
+> +                       drv->corner = iter;
+> +                       drv->performance_state = i;
+> +               }
+> +       }
+> +
+> +       if (!drv->corner) {
+> +               dev_err(drv->dev, "boot up corner not found\n");
+> +               return -EINVAL;
+> +       }
+> +
+> +       dev_dbg(drv->dev, "boot up perf state: %d\n", i);
+> +
+> +       return 0;
+> +}
 
-https://people.kernel.org/tglx/notes-about-netiquette
+[...]
+
+> +
+> +static int cpr_pd_attach_dev(struct generic_pm_domain *domain,
+> +                            struct device *dev)
+> +{
+> +       struct cpr_drv *drv = container_of(domain, struct cpr_drv, pd);
+> +       const struct acc_desc *acc_desc = drv->acc_desc;
+> +       int ret;
+> +
+> +       dev_dbg(drv->dev, "attach callback for: %s\n", dev_name(dev));
+> +
+> +       if (drv->cpu_clk)
+> +               return 0;
+> +
+> +       drv->cpu_clk = devm_clk_get(dev, NULL);
+> +       if (IS_ERR(drv->cpu_clk)) {
+> +               ret = PTR_ERR(drv->cpu_clk);
+> +               if (ret != -EPROBE_DEFER)
+> +                       dev_err(drv->dev, "could not get cpu clk: %d\n", ret);
+> +               return ret;
+> +       }
+
+I have several thoughts around this..
+
+I understand that you don't want to run the below code more than once
+per instance of the genpd provider, which seems fine to me. Just to
+make that clear.
+
+However, the above code fetches and stores the clock found from the
+attached device's OF node, in the cpr driver instance. But, only for
+the device that is being attached first.
+
+I assume this is intentional, but it looks a bit odd. Why isn't the
+other devices that becomes attached, interesting to fecth/store the
+clock for?
+
+In regards to the clock consumer DT binding, I couldn't find it, but
+maybe I am not looking at the correct place.
+
+Moreover, genpd may run this code in parallel, as the genpd lock isn't
+being held while invoking the ->attach_dev() callback. This is
+probably safe anyway, because you don't run
+dev_pm_domain_attach_by_name(), while attaching the CPU devices,
+asynchronously. On the other hand, you already have a mutex for the
+cpr drv, so we might as well use that for protecting against this,
+don't you think?
+
+> +
+> +       dev_dbg(drv->dev, "using cpu clk from: %s\n", dev_name(dev));
+> +
+> +       /*
+> +        * Everything related to (virtual) corners has to be initialized
+> +        * here, when attaching to the power domain, since it depends on
+> +        * the power domain's OPP table, which isn't available earlier.
+> +        */
+> +       drv->num_corners = dev_pm_opp_get_opp_count(&drv->pd.dev);
+> +       if (drv->num_corners < 0)
+> +               return drv->num_corners;
+> +       if (drv->num_corners < 2) {
+> +               dev_err(drv->dev, "need at least 2 OPPs to use CPR\n");
+> +               return -EINVAL;
+> +       }
+> +
+> +       dev_dbg(drv->dev, "number of OPPs: %d\n", drv->num_corners);
+> +
+> +       drv->corners = devm_kcalloc(dev, drv->num_corners,
+> +                                   sizeof(*drv->corners),
+> +                                   GFP_KERNEL);
+> +       if (!drv->corners)
+> +               return -ENOMEM;
+> +
+> +       ret = cpr_corner_init(drv);
+> +       if (ret)
+> +               return ret;
+> +
+> +       cpr_set_loop_allowed(drv);
+> +
+> +       ret = cpr_init_parameters(drv);
+> +       if (ret)
+> +               return ret;
+> +
+> +       /* Configure CPR HW but keep it disabled */
+> +       ret = cpr_config(drv);
+> +       if (ret)
+> +               return ret;
+> +
+> +       ret = cpr_find_initial_corner(drv);
+> +       if (ret)
+> +               return ret;
+> +
+> +       if (acc_desc->config)
+> +               regmap_multi_reg_write(drv->tcsr, acc_desc->config,
+> +                                      acc_desc->num_regs_per_fuse);
+> +
+> +       /* Enable ACC if required */
+> +       if (acc_desc->enable_mask)
+> +               regmap_update_bits(drv->tcsr, acc_desc->enable_reg,
+> +                                  acc_desc->enable_mask,
+> +                                  acc_desc->enable_mask);
+> +
+> +       return 0;
+> +}
+
+[...]
+
+> +
+> +static int cpr_probe(struct platform_device *pdev)
+> +{
+> +       struct resource *res;
+> +       struct device *dev = &pdev->dev;
+> +       struct cpr_drv *drv;
+> +       int irq, ret;
+> +       const struct cpr_acc_desc *data;
+> +       struct device_node *np;
+> +       u32 cpr_rev = FUSE_REVISION_UNKNOWN;
+> +
+> +       data = of_device_get_match_data(dev);
+> +       if (!data || !data->cpr_desc || !data->acc_desc)
+> +               return -EINVAL;
+> +
+> +       drv = devm_kzalloc(dev, sizeof(*drv), GFP_KERNEL);
+> +       if (!drv)
+> +               return -ENOMEM;
+> +       drv->dev = dev;
+> +       drv->desc = data->cpr_desc;
+> +       drv->acc_desc = data->acc_desc;
+> +
+> +       drv->fuse_corners = devm_kcalloc(dev, drv->desc->num_fuse_corners,
+> +                                        sizeof(*drv->fuse_corners),
+> +                                        GFP_KERNEL);
+> +       if (!drv->fuse_corners)
+> +               return -ENOMEM;
+> +
+> +       np = of_parse_phandle(dev->of_node, "acc-syscon", 0);
+> +       if (!np)
+> +               return -ENODEV;
+> +
+> +       drv->tcsr = syscon_node_to_regmap(np);
+> +       of_node_put(np);
+> +       if (IS_ERR(drv->tcsr))
+> +               return PTR_ERR(drv->tcsr);
+> +
+> +       mutex_init(&drv->lock);
+
+Nitpick, you might as well move this a few lines below, as you may
+bail out while fetching some of the resources below.
+
+> +
+> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +       drv->base = devm_ioremap_resource(dev, res);
+> +       if (IS_ERR(drv->base))
+> +               return PTR_ERR(drv->base);
+> +
+> +       irq = platform_get_irq(pdev, 0);
+> +       if (irq < 0)
+> +               return -EINVAL;
+> +
+> +       drv->vdd_apc = devm_regulator_get(dev, "vdd-apc");
+> +       if (IS_ERR(drv->vdd_apc))
+> +               return PTR_ERR(drv->vdd_apc);
+> +
+> +       /*
+> +        * Initialize fuse corners, since it simply depends
+> +        * on data in efuses.
+> +        * Everything related to (virtual) corners has to be
+> +        * initialized after attaching to the power domain,
+> +        * since is depends on the OPP table.
+> +        */
+> +       ret = cpr_read_efuse(dev, "cpr_fuse_revision", &cpr_rev);
+> +       if (ret)
+> +               return ret;
+> +
+> +       drv->cpr_fuses = cpr_get_fuses(drv);
+> +       if (IS_ERR(drv->cpr_fuses))
+> +               return PTR_ERR(drv->cpr_fuses);
+> +
+> +       ret = cpr_populate_ring_osc_idx(drv);
+> +       if (ret)
+> +               return ret;
+> +
+> +       ret = cpr_fuse_corner_init(drv);
+> +       if (ret)
+> +               return ret;
+> +
+> +       ret = devm_request_threaded_irq(dev, irq, NULL,
+> +                                       cpr_irq_handler,
+> +                                       IRQF_ONESHOT | IRQF_TRIGGER_RISING,
+> +                                       "cpr", drv);
+> +       if (ret)
+> +               return ret;
+> +
+> +       drv->pd.name = devm_kstrdup_const(dev, dev->of_node->full_name,
+> +                                         GFP_KERNEL);
+> +       if (!drv->pd.name)
+> +               return -EINVAL;
+> +
+> +       drv->pd.power_off = cpr_power_off;
+> +       drv->pd.power_on = cpr_power_on;
+> +       drv->pd.set_performance_state = cpr_set_performance;
+> +       drv->pd.opp_to_performance_state = cpr_get_performance;
+> +       drv->pd.attach_dev = cpr_pd_attach_dev;
+> +
+> +       ret = pm_genpd_init(&drv->pd, NULL, true);
+> +       if (ret)
+> +               return ret;
+> +
+> +       ret = of_genpd_add_provider_simple(dev->of_node, &drv->pd);
+> +       if (ret)
+> +               return ret;
+> +
+> +       platform_set_drvdata(pdev, drv);
+> +       cpr_debugfs_init(drv);
+> +
+> +       return 0;
+> +}
+> +
+> +static int cpr_remove(struct platform_device *pdev)
+> +{
+> +       struct cpr_drv *drv = platform_get_drvdata(pdev);
+> +
+> +       if (cpr_is_allowed(drv)) {
+> +               cpr_ctl_disable(drv);
+> +               cpr_irq_set(drv, 0);
+> +       }
+> +
+> +       of_genpd_del_provider(pdev->dev.of_node);
+> +       pm_genpd_remove(&drv->pd);
+> +
+> +       debugfs_remove_recursive(drv->debugfs);
+> +
+> +       return 0;
+> +}
+> +
+> +static const struct of_device_id cpr_match_table[] = {
+> +       { .compatible = "qcom,qcs404-cpr", .data = &qcs404_cpr_acc_desc },
+> +       { }
+> +};
+> +MODULE_DEVICE_TABLE(of, cpr_match_table);
+> +
+> +static struct platform_driver cpr_driver = {
+> +       .probe          = cpr_probe,
+> +       .remove         = cpr_remove,
+> +       .driver         = {
+> +               .name   = "qcom-cpr",
+> +               .of_match_table = cpr_match_table,
+> +       },
+> +};
+> +module_platform_driver(cpr_driver);
+> +
+> +MODULE_DESCRIPTION("Core Power Reduction (CPR) driver");
+> +MODULE_LICENSE("GPL v2");
+
+Otherwise this looks good to me.
+
+Kind regards
+Uffe
