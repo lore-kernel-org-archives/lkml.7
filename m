@@ -2,119 +2,92 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EDF4C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:13:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69381C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:15:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0563422440
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:13:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tum3HFhY"
+	by mail.kernel.org (Postfix) with ESMTP id 4C06A22311
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:15:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728515AbfKTKNu (ORCPT
+        id S1728592AbfKTKPV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 05:13:50 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:38746 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728406AbfKTKNt (ORCPT
+        Wed, 20 Nov 2019 05:15:21 -0500
+Received: from mout.kundenserver.de ([212.227.126.135]:55453 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728464AbfKTKPU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 05:13:49 -0500
-Received: by mail-oi1-f195.google.com with SMTP id a14so21993015oid.5;
-        Wed, 20 Nov 2019 02:13:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lde2KhjY7wfAoIiWkWWnbWFwuvtD6AW2ng2O9SrZAQI=;
-        b=tum3HFhYbfwE2ky4iNe0IhOcN4+nZNb/DMn8iw2S81C99M+x5e2EpQ8Kac8CGk22dR
-         SgZdMXeUc7J3ZIhOyA5CkcJtybYPj7wt4WMrvym3C5fkFUU6DtSkbg9gpizwYk7xNNTm
-         pyFyJsPwCpU+rSp2zDiF49sl68Fl0syhG0ar6BTMKk+n0C7Xdp/Ba6qJ62Ldu+e/Vq4S
-         IUWuV5f55JU4oe0yXJObBkBRBhvEHzpfhvr3gOvVP6Ji4F48VB90D0ljh8mW/5BGPYvD
-         j9J76EzK4ABxmgE7DW3/pCIxDs0qJX/Wa9k+JCjFJOQd7Qsyy8xlwKh7Paz66kocFjg9
-         seRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lde2KhjY7wfAoIiWkWWnbWFwuvtD6AW2ng2O9SrZAQI=;
-        b=dp2Asg+LT2tjCaHgCNShZ0aqsQkE+kxWcfc+Hw30zjZc8E18O5c9Ja7XSv2qgXKLUl
-         WGfjhHJg0R5bU/y4zMJcTFZyE1nZu39ea6meH1nKHkp6FLSJdBrW57mq8adK0nPQlNGn
-         4wM+LqA1Mvw2Z1p6YIMrtDbmueuSDOuD/0LzlHRjRVQZBjyLUgcfO8Ix5Jha9+tPg4F5
-         uNpwEcemHjbtTCV6iTHih3ZMZace2SV0aqHp/u7W0ELpz3RCAikZmCFxv3Uj7ZkZi0px
-         +yQXLlYpFUzJDEFX97jNgj2PXQqZhpJZZ0TnJC1BN6wePCrlSTLBw1aZ2Dlaz80PfF1U
-         eUWg==
-X-Gm-Message-State: APjAAAUEFKoluQjdy5gPM2cQyofsUydNXEzRuTMO2jLrjSBAr7T2oPII
-        LsP8SA2AOYg9ogIZsMw4HRjte/xtN11J4SNaMCU=
-X-Google-Smtp-Source: APXvYqxZSfWMxyflhcnT9tM5lOwDlMuKYqjC59kb27nMC0uIT+CCiDvQijJ51b9M9rmiGv4h+QUrJ21pTECzguY3nOA=
-X-Received: by 2002:aca:4a84:: with SMTP id x126mr1978871oia.47.1574244828632;
- Wed, 20 Nov 2019 02:13:48 -0800 (PST)
+        Wed, 20 Nov 2019 05:15:20 -0500
+Received: from mail-qt1-f182.google.com ([209.85.160.182]) by
+ mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MacjC-1i14Ci1YKo-00cDdJ; Wed, 20 Nov 2019 11:15:18 +0100
+Received: by mail-qt1-f182.google.com with SMTP id o11so28288916qtr.11;
+        Wed, 20 Nov 2019 02:15:18 -0800 (PST)
+X-Gm-Message-State: APjAAAVxT1c/O7bKpchVwoNWfSfFn+OMY5MDaE8ghsZKMnXzxK3mrGtb
+        PGVMYb1SGsx0xaj54kXvRozQP99wp7A0Vyw1+Yk=
+X-Google-Smtp-Source: APXvYqw6C3tBzPE2Z4jsnt8or7u+FAAhXdUtkTFEH8dLlbdNTJXhM8rIPrjIVo0FG7CqLhoPNVfpKipak3Fc02kORhI=
+X-Received: by 2002:ac8:2e57:: with SMTP id s23mr1752509qta.204.1574244917255;
+ Wed, 20 Nov 2019 02:15:17 -0800 (PST)
 MIME-Version: 1.0
-References: <20191105161737.21395-1-vkuznets@redhat.com> <20191105200218.GF3079@worktop.programming.kicks-ass.net>
- <20191105232528.GF23297@linux.intel.com> <20191106083235.GP4131@hirez.programming.kicks-ass.net>
-In-Reply-To: <20191106083235.GP4131@hirez.programming.kicks-ass.net>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Wed, 20 Nov 2019 18:13:41 +0800
-Message-ID: <CANRm+CxtE-jMCGbhfL5QSU9JDCFcytsF=KQD6QGzT22-5_ZS8A@mail.gmail.com>
-Subject: Re: [PATCH RFC] KVM: x86: tell guests if the exposed SMT topology is trustworthy
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        kvm <kvm@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Jim Mattson <jmattson@google.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>
+References: <20191118220432.1611-1-labbott@redhat.com> <29e94219-22ca-c873-7209-64d1c357fe5c@roeck-us.net>
+ <CAK8P3a0=3J3WHTKU7sPvd37VEwg3wOuZ5S2-xXtNYEcSQhWyHw@mail.gmail.com>
+ <4f283ab6-0f3c-60e9-cfd1-29d10d978986@roeck-us.net> <20191120100341.GK25745@shell.armlinux.org.uk>
+In-Reply-To: <20191120100341.GK25745@shell.armlinux.org.uk>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 20 Nov 2019 11:15:01 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a2N+aDgFz75dFJy3Me9FPdyDSyPaa29FngLjfXX3MzfvA@mail.gmail.com>
+Message-ID: <CAK8P3a2N+aDgFz75dFJy3Me9FPdyDSyPaa29FngLjfXX3MzfvA@mail.gmail.com>
+Subject: Re: [PATCH] watchdog: Remove iop_wdt
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Laura Abbott <labbott@redhat.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
+        Lennert Buytenhek <kernel@wantstofly.org>
 Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:+HYBNu9AXubRAgtHomlzpL/0RxnWuvcsqy7HCCjN6V/hH0PTM+n
+ cnpsuE2Xux1EzNdIaq4azcpSEqM/sNbFFkw0q9n+dyvF36tIQhoegEZwCOwgvNFL0gKvt0k
+ RXHzFhBRCDUljvRlReHGiCWSqLI64YydquFNhef+8Ord8KDkPb1fEB4ZsOGWypAPkHIPUDT
+ Krfhbq2eYdMoPeKYSgMcg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:AfI0Dkc+1Zs=:3K51mm1Z5xAfQuIKUqI5G+
+ mIAbXuwslzs3BYCjXVwzvt/vsFbY3F66Y2wEvnWtPErkIs4rsqpG7g398ozafv/8uzJyu6d6I
+ wmAKbK+esvH/oSg+18OqsDt5YI8a7R6Un/0OKcShNF+z5K8S63tk4NrxcS1rziCGyUAdX3OdG
+ a9oT4fjpoDLjR/BwQfE0euB6KHj7Pu/gqvMGznNPDTwMVIj5QlKN78aQ+Z5sXz48hc2FJ1qH9
+ yR1YG7F3wRIbohH4lvkIoqS/SI8oDmWyjszZGkCjWNNgCynqKA7CJCMA3VDnCVXdUr9FHbDEN
+ aF4/3nU6p+Ci42JUIBa0MwSZZgNt8PhlHg6rcbYy2pAUZ8D+/rJvz/Yxv0EiRNCheuXnZozmL
+ YzIAofLOMMtzyMbktXF3OxfbkGyYgcVF3AN/N0R8JuSSto9uooyENorAmam60H62lKGVxyF6d
+ VesXuTuYiRQsoMT5YIwiNY7qCAirQUT8ss7XMByaWfV8087KP5sqcWow/jY+xmyQdj22wXKCr
+ QRJbTU/SIfWN5sQ1+0zZ+uozEUG5mn1aMBvPm9gpvteq3fE3sxxzJbbOsXZLOtDD4wJJIw3g8
+ egV0DdiDfaVEDrfnFGzu+S+OHrkKTwPa94UvL7YHZbhQeH6hxxfPHCJL+32nfl7XQMeEGMM7e
+ SU1nBQNEO+RRlrlr1/tJZsMTl+IuSGKjMiVa1ui3y1cU1bcPYkfa5ufe/fJ3NniAXfW9YH+de
+ 1+jiBrkCgXBR8adUAo4/V7NqyM1LYQLDr+lDQtIYnAKjnSqJfJz+S46GqW0cBLdXSgRG2qZKa
+ N1u0AxQD0V1SSlpE0AATTs5GwkNToamoz/hD4MBbz5F/xC5z4EwpSO8evzgSeJNRoj/mEsqcS
+ cqQulfjB+rHfFYK6IrGw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paolo,
-On Wed, 6 Nov 2019 at 16:34, Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Tue, Nov 05, 2019 at 03:25:28PM -0800, Sean Christopherson wrote:
-> > On Tue, Nov 05, 2019 at 09:02:18PM +0100, Peter Zijlstra wrote:
-> > > On Tue, Nov 05, 2019 at 05:17:37PM +0100, Vitaly Kuznetsov wrote:
-> > > > Virtualized guests may pick a different strategy to mitigate hardware
-> > > > vulnerabilities when it comes to hyper-threading: disable SMT completely,
-> > > > use core scheduling, or, for example, opt in for STIBP. Making the
-> > > > decision, however, requires an extra bit of information which is currently
-> > > > missing: does the topology the guest see match hardware or if it is 'fake'
-> > > > and two vCPUs which look like different cores from guest's perspective can
-> > > > actually be scheduled on the same physical core. Disabling SMT or doing
-> > > > core scheduling only makes sense when the topology is trustworthy.
-> > > >
-> > > > Add two feature bits to KVM: KVM_FEATURE_TRUSTWORTHY_SMT with the meaning
-> > > > that KVM_HINTS_TRUSTWORTHY_SMT bit answers the question if the exposed SMT
-> > > > topology is actually trustworthy. It would, of course, be possible to get
-> > > > away with a single bit (e.g. 'KVM_FEATURE_FAKE_SMT') and not lose backwards
-> > > > compatibility but the current approach looks more straightforward.
-> > >
-> > > The only way virt topology can make any sense what so ever is if the
-> > > vcpus are pinned to physical CPUs.
-> > >
-> > > And I was under the impression we already had a bit for that (isn't it
-> > > used to disable paravirt spinlocks and the like?). But I cannot seem to
-> > > find it in a hurry.
+On Wed, Nov 20, 2019 at 11:03 AM Russell King - ARM Linux admin
+<linux@armlinux.org.uk> wrote:
+> On Tue, Nov 19, 2019 at 06:29:09AM -0800, Guenter Roeck wrote:
+> > On 11/19/19 1:40 AM, Arnd Bergmann wrote:
+> > > On Tue, Nov 19, 2019 at 3:08 AM Guenter Roeck <linux@roeck-us.net> wrote:
+> > > > On 11/18/19 2:04 PM, Laura Abbott wrote:
 > >
-> > Yep, KVM_HINTS_REALTIME does what you describe.
+> > Good point, especially since apparently no one cared for five years.
 >
-> *sigh*, that's a pretty shit name for it :/
+> Doesn't mean that there aren't interested parties.  I still have
+> IOP32x hardware running here in the form of a N2100 (my firewall)
+> and it seems that I never noticed this option disappearing until
+> now...
 
-My original commit name this to KVM_HINTS_DEDICATED, commit a4429e53c
-(KVM: Introduce paravirtualization hints and KVM_HINTS_DEDICATED),
-could we revert the KVM_HINTS_REALTIME renaming? A lot of guys
-confused by this renaming now, Peterz, Marcelo ("The previous
-definition was much better IMO: HINTS_DEDICATED".
-https://lkml.org/lkml/2019/8/26/855).
+It's not that it was ever there for IOP32x: the driver was introduced in 2007
+and was available for IOP32x but failed to compile for it until 2014 when
+I sent the patch to disable the driver in all configurations that
+failed to build.
 
-    Wanpeng
+       Arnd
