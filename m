@@ -2,136 +2,147 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89485C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 14:59:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E1EC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:00:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6714521852
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 14:59:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78E0720748
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:00:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574262022;
+	bh=lWoyQqVoV6v/Nh5wWjW0nmXWL6cUgxI8xFAbLloTv3w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=c3a8DNFDBZXd/eGvFSDdclX+yIpRIc2zTCKQz6ymNsnUdtVxNwzGRXtrQ/IDRF/8X
+	 MJv9MJvP+U5MJjYebxVbKORZ3TbphtGzYz/Ld4YUmqFx4JhrZxKBk8rxEC7ewjsLHl
+	 elXE3MI/ldm3XyXzqs7fzO8ounjInaZGYgFuqwX4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731886AbfKTO7g (ORCPT
+        id S1731888AbfKTPAV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 09:59:36 -0500
-Received: from albert.telenet-ops.be ([195.130.137.90]:46402 "EHLO
-        albert.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731836AbfKTO7b (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 09:59:31 -0500
-Received: from ramsan ([84.195.182.253])
-        by albert.telenet-ops.be with bizsmtp
-        id UEzU2100c5USYZQ06EzUK4; Wed, 20 Nov 2019 15:59:30 +0100
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1iXRS4-0002Im-K9; Wed, 20 Nov 2019 15:59:28 +0100
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1iXRS4-0002EJ-IZ; Wed, 20 Nov 2019 15:59:28 +0100
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 2/2] reset: Align logic and flow in managed helpers
-Date:   Wed, 20 Nov 2019 15:59:27 +0100
-Message-Id: <20191120145927.8523-3-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191120145927.8523-1-geert+renesas@glider.be>
-References: <20191120145927.8523-1-geert+renesas@glider.be>
+        Wed, 20 Nov 2019 10:00:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50480 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729355AbfKTPAV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 10:00:21 -0500
+Received: from localhost (lfbn-ncy-1-150-155.w83-194.abo.wanadoo.fr [83.194.232.155])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A122620731;
+        Wed, 20 Nov 2019 15:00:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574262020;
+        bh=lWoyQqVoV6v/Nh5wWjW0nmXWL6cUgxI8xFAbLloTv3w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RZ0jOxx8gP7BTTdM+RFW7UGSXm+Eq6hgxGanKA2cRQPT9lk0sjUe21KGWQgiXxxrQ
+         Q2Z1im+B6uE5JbpVAa1bvPreJCkF8DQ3F6yfN1jOAsUYa2BWGem2oy/YP/ugWnuH5Y
+         ub/j+ZCWFx3G6ADYf3dBp0Ayy9m5WYxKb2LMsRIs=
+Date:   Wed, 20 Nov 2019 16:00:17 +0100
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Rik van Riel <riel@surriel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Yauheni Kaliuta <yauheni.kaliuta@redhat.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH 2/6] sched/vtime: Bring all-in-one kcpustat accessor for
+ vtime fields
+Message-ID: <20191120150016.GA3383@lenoir>
+References: <20191119232218.4206-1-frederic@kernel.org>
+ <20191119232218.4206-3-frederic@kernel.org>
+ <20191120120449.GB89662@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191120120449.GB89662@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-__devm_reset_control_get() and devm_reset_control_array_get() are very
-similar, but they do not look similar, due to inverted logic.
-Make them more similar, following the "bail out early" paradigm.
+On Wed, Nov 20, 2019 at 01:04:49PM +0100, Ingo Molnar wrote:
+> > +static int vtime_state_check(struct vtime *vtime, int cpu)
+> > +{
+> > +	/*
+> > +	 * We raced against context switch, fetch the
+> > +	 * kcpustat task again.
+> > +	 */
+> 
+> s/against context switch
+>  /against a context switch
 
-Adjust the logic and flow in devm_reset_controller_register() to match
-the two other functions.
+Ok.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-v2:
-  - Use IS_ERR_OR_NULL().
----
- drivers/reset/core.c | 33 +++++++++++++++++----------------
- 1 file changed, 17 insertions(+), 16 deletions(-)
+> 
+> > +void kcpustat_cputime(struct kernel_cpustat *kcpustat, int cpu,
+> > +		      u64 *user, u64 *nice, u64 *system,
+> > +		      u64 *guest, u64 *guest_nice)
+> > +{
+> > +	u64 *cpustat = kcpustat->cpustat;
+> > +	struct rq *rq;
+> > +	int err;
+> > +
+> > +	if (!vtime_accounting_enabled_cpu(cpu)) {
+> > +		kcpustat_cputime_raw(cpustat, user, nice,
+> > +				     system, guest, guest_nice);
+> > +		return;
+> > +	}
+> > +
+> > +	rq = cpu_rq(cpu);
+> > +
+> > +	for (;;) {
+> > +		struct task_struct *curr;
+> > +
+> > +		rcu_read_lock();
+> > +		curr = rcu_dereference(rq->curr);
+> > +		if (WARN_ON_ONCE(!curr)) {
+> > +			rcu_read_unlock();
+> > +			kcpustat_cputime_raw(cpustat, user, nice,
+> > +					     system, guest, guest_nice);
+> > +			return;
+> > +		}
+> > +
+> > +		err = kcpustat_cputime_vtime(cpustat, curr, cpu, user,
+> > +					     nice, system, guest, guest_nice);
+> > +		rcu_read_unlock();
+> > +
+> > +		if (!err)
+> > +			return;
+> > +
+> > +		cpu_relax();
+> > +	}
+> > +}
+> > +EXPORT_SYMBOL_GPL(kcpustat_cputime);
+> 
+> I'm wondering whether it's worth introducing a helper structure for this 
+> train of parameters: user, nice, system, guest, guest_nice?
+> 
+> We also have similar constructs in other places:
+> 
+> +               u64 cpu_user, cpu_nice, cpu_sys, cpu_guest, cpu_guest_nice;
+> 
+> But more broadly, what do we gain by passing along a quartet of pointers, 
+> while we could also just use a 'struct kernel_cpustat' and store the 
+> values there naturally?
+> 
+> Yes, it's larger, because it also has 5 other fields - but we lose much 
+> of the space savings due to always passing along the 4 pointers already.
+> 
+> So I really think the parameter passing should be organized better here.
 
-diff --git a/drivers/reset/core.c b/drivers/reset/core.c
-index 7597c70e04d5b42b..01c0c7aa835cbfe2 100644
---- a/drivers/reset/core.c
-+++ b/drivers/reset/core.c
-@@ -150,13 +150,14 @@ int devm_reset_controller_register(struct device *dev,
- 		return -ENOMEM;
- 
- 	ret = reset_controller_register(rcdev);
--	if (!ret) {
--		*rcdevp = rcdev;
--		devres_add(dev, rcdevp);
--	} else {
-+	if (ret) {
- 		devres_free(rcdevp);
-+		return ret;
- 	}
- 
-+	*rcdevp = rcdev;
-+	devres_add(dev, rcdevp);
-+
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(devm_reset_controller_register);
-@@ -787,13 +788,14 @@ struct reset_control *__devm_reset_control_get(struct device *dev,
- 		return ERR_PTR(-ENOMEM);
- 
- 	rstc = __reset_control_get(dev, id, index, shared, optional, acquired);
--	if (!IS_ERR_OR_NULL(rstc)) {
--		*ptr = rstc;
--		devres_add(dev, ptr);
--	} else {
-+	if (IS_ERR_OR_NULL(rstc)) {
- 		devres_free(ptr);
-+		return rstc;
- 	}
- 
-+	*ptr = rstc;
-+	devres_add(dev, ptr);
-+
- 	return rstc;
- }
- EXPORT_SYMBOL_GPL(__devm_reset_control_get);
-@@ -919,22 +921,21 @@ EXPORT_SYMBOL_GPL(of_reset_control_array_get);
- struct reset_control *
- devm_reset_control_array_get(struct device *dev, bool shared, bool optional)
- {
--	struct reset_control **devres;
--	struct reset_control *rstc;
-+	struct reset_control **ptr, *rstc;
- 
--	devres = devres_alloc(devm_reset_control_release, sizeof(*devres),
--			      GFP_KERNEL);
--	if (!devres)
-+	ptr = devres_alloc(devm_reset_control_release, sizeof(*ptr),
-+			   GFP_KERNEL);
-+	if (!ptr)
- 		return ERR_PTR(-ENOMEM);
- 
- 	rstc = of_reset_control_array_get(dev->of_node, shared, optional, true);
- 	if (IS_ERR_OR_NULL(rstc)) {
--		devres_free(devres);
-+		devres_free(ptr);
- 		return rstc;
- 	}
- 
--	*devres = rstc;
--	devres_add(dev, devres);
-+	*ptr = rstc;
-+	devres_add(dev, ptr);
- 
- 	return rstc;
- }
--- 
-2.17.1
+Yeah I've been thinking about that too but I was worried about the stack use.
+It's probably not a big worry eventually. I'll do that for the next series.
 
+> This probably affects similar cpustat functions as well.
+
+Only this one fortunately :-)
+
+Thanks.
