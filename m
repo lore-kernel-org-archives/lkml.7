@@ -2,125 +2,129 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68750C43141
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 12:14:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFC68C43141
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 12:15:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40FF2224E9
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 12:14:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Cx2VVyif";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="Ll5WaAjJ"
+	by mail.kernel.org (Postfix) with ESMTP id B3034224EB
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 12:15:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574252105;
+	bh=4QJHgQHDvaoWeAyvjizKeoiE+mIxdxqSM3J97N1o3N0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ju8hPASpCl5Q3eAzIqFD79qgKGuT4UYQjzZx5hiqrF7QyzY4RbKGu7lM10IeqT/ZF
+	 z7xCab47Qzl3C5d3kp059oHUv/+I4xrFY3ZyRfz7ThZagpIzA7d0nawGXnQ7Z8NEwY
+	 SqHRPKYEdZGuv9asTSmyu1WjEZVcSBy6UEeyCJvo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729273AbfKTMOd (ORCPT
+        id S1729320AbfKTMPE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 07:14:33 -0500
-Received: from a27-185.smtp-out.us-west-2.amazonses.com ([54.240.27.185]:54348
-        "EHLO a27-185.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728251AbfKTMOd (ORCPT
+        Wed, 20 Nov 2019 07:15:04 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:43537 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728476AbfKTMPE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 07:14:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574252072;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
-        bh=c3N+UHrBK1arDVU4vjMLuhdjzywq5jiY1zOpV3AvfGA=;
-        b=Cx2VVyiffg7YmwKBsWRgiv2dEGqRVXGjHboUKUMWVRZdiRDK4toF+JWkrTJqYuxh
-        inm6+MCe3FUse5lSWFXxrDtMdrooUzp+24BeOozN7wwoVd9UHYnpPSb9Q4cXIA0nhY1
-        A18D928DiB2Qsdpg9qq6djfrj7HBGiq2I+NbDe2o=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574252072;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
-        bh=c3N+UHrBK1arDVU4vjMLuhdjzywq5jiY1zOpV3AvfGA=;
-        b=Ll5WaAjJzEj4GmQCtxPp9+RawK5sp7b/Pu0XFeEhwnd+kdvezsckAKVZ21cXubGw
-        KGEh0Ng8g5uw0921UmJWa1RHgZqyq1wrv4XcjDqWI7yif0JHlutft66PxtE0AliWkOQ
-        wJQXFjS8P8G7Q6KB4ZPZON0Cl4V7yP8mRuEZfQtQ=
+        Wed, 20 Nov 2019 07:15:04 -0500
+Received: by mail-oi1-f194.google.com with SMTP id l20so22253045oie.10;
+        Wed, 20 Nov 2019 04:15:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=esEo2BOJu3uyThpaIy1S5JuOd1hwwX4sFEOY2HfR0sY=;
+        b=BNz1llbE9omfbgmbPx7tSN42wVtd2RA8WeNPt2O/mCkIlocvjU1agInHeZTSdr8md0
+         G5iAo3JdjtYd3aSgKffbTaLaljWCMNzHXQ+LZaXEtQyTDX6ehRHQTlsgHXt/Gco94uHs
+         KjtPGJ9am0HvWcgMy18WTWp+km8NdPFV6Clska6KPsmv2kLjbaHAYZCIbdiTPq1j6NeG
+         jv3+017q7i0PEa6gUjJKmuDcLnLn5TcuLWY9qpYafgQjHz+on1R9V8oawJyEoiKS+Pwk
+         E+v/f6iHHge046FsYRZmzeF2bMyEZ7jXBEo3NLoVXa2gRYJO8irdYt0EOVMennd86+hj
+         hsbw==
+X-Gm-Message-State: APjAAAWlSMF5/62BrCucYo/10fYQOqmeJv5/4+BG30D0lEYR5V37+90B
+        pInW2CqLkwbuUVoPTkDQSO9l4QDQresXIJV9YKk=
+X-Google-Smtp-Source: APXvYqzm1rGGZ89lrgIDdkz3K9d/ltWTXiE3VIQlWxc9OTBjh+eklJP/fHtUrR92Ig1jPf966ZhegrG39d2NMig/rp0=
+X-Received: by 2002:aca:530c:: with SMTP id h12mr2615449oib.110.1574252103376;
+ Wed, 20 Nov 2019 04:15:03 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 20 Nov 2019 12:14:31 +0000
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     robh+dt@kernel.org, ulf.hansson@linaro.org, rnayak@codeaurora.org,
-        agross@kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        mark.rutland@arm.com, swboyd@chromium.org, dianders@chromium.org
-Subject: Re: [PATCH 1/6] soc: qcom: rpmhpd: Set 'active_only' for active only
- power domains
-In-Reply-To: <20191120023908.GP18024@yoga>
-References: <20191118173944.27043-1-sibis@codeaurora.org>
- <0101016e7f9998d8-877e9166-8b6a-4530-ab66-3c88002e1db4-000000@us-west-2.amazonses.com>
- <20191120023908.GP18024@yoga>
-Message-ID: <0101016e88bc4bf1-b1818c02-87cc-4ae8-9538-a426ce3c77ab-000000@us-west-2.amazonses.com>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
-X-SES-Outgoing: 2019.11.20-54.240.27.185
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+References: <20191017121901.13699-1-kherbst@redhat.com> <20191119214955.GA223696@google.com>
+ <CACO55tu+8VeyMw1Lb6QvNspaJm9LDgoRbooVhr0s3v9uBt=feg@mail.gmail.com>
+ <20191120101816.GX11621@lahna.fi.intel.com> <CAJZ5v0g4vp1C+zHU5nOVnkGsOjBvLaphK1kK=qAT6b=mK8kpsA@mail.gmail.com>
+ <20191120112212.GA11621@lahna.fi.intel.com> <CAJZ5v0in4VSULsfLshHxhNLf+NZxVQM0xx=hzdNa2X3FW=V7DA@mail.gmail.com>
+ <CACO55tsjj+xkDjubz1J=fsPecW4H_J8AaBTeaMm+NYjp8Kiq8g@mail.gmail.com>
+ <CAJZ5v0ithxMPK2YxfTUx_Ygpze2FMDJ6LwKwJb2vx89dfgHX_A@mail.gmail.com> <CACO55tupFbq0T1DcR+C+YxtPR=csPBQhwVXz_SHWT5F8bRK8JA@mail.gmail.com>
+In-Reply-To: <CACO55tupFbq0T1DcR+C+YxtPR=csPBQhwVXz_SHWT5F8bRK8JA@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 20 Nov 2019 13:14:51 +0100
+Message-ID: <CAJZ5v0h_ymqsoOVm9s2h5X0ejYdM4x03H7xPQ38uiO009OVgpQ@mail.gmail.com>
+Subject: Re: [PATCH v4] pci: prevent putting nvidia GPUs into lower device
+ states on certain intel bridges
+To:     Karol Herbst <kherbst@redhat.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Mika Westerberg <mika.westerberg@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lyude Paul <lyude@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        Dave Airlie <airlied@gmail.com>,
+        Mario Limonciello <Mario.Limonciello@dell.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-11-20 08:09, Bjorn Andersson wrote:
-> On Mon 18 Nov 09:40 PST 2019, Sibi Sankar wrote:
-> 
->> From: Douglas Anderson <dianders@chromium.org>
->> 
->> The 'active_only' attribute was accidentally never set to true for any
->> power domains meaning that all the code handling this attribute was
->> dead.
->> 
->> NOTE that the RPM power domain code (as opposed to the RPMh one) gets
->> this right.
->> 
->> Fixes: 279b7e8a62cc ("soc: qcom: rpmhpd: Add RPMh power domain 
->> driver")
->> Signed-off-by: Douglas Anderson <dianders@chromium.org>
->> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
->> Acked-by: Rajendra Nayak <rnayak@codeaurora.org>
-> 
-> You should have added your S-o-b here to certify its origin.
-> But I picked up this patch earlier today.
+On Wed, Nov 20, 2019 at 1:10 PM Karol Herbst <kherbst@redhat.com> wrote:
+>
+> On Wed, Nov 20, 2019 at 1:06 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> >
+> > On Wed, Nov 20, 2019 at 12:51 PM Karol Herbst <kherbst@redhat.com> wrote:
+> > >
+> > > On Wed, Nov 20, 2019 at 12:48 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> > > >
+> > > > On Wed, Nov 20, 2019 at 12:22 PM Mika Westerberg
+> > > > <mika.westerberg@intel.com> wrote:
+> > > > >
+> > > > > On Wed, Nov 20, 2019 at 11:52:22AM +0100, Rafael J. Wysocki wrote:
+> > > > > > On Wed, Nov 20, 2019 at 11:18 AM Mika Westerberg
+> > > > > > <mika.westerberg@intel.com> wrote:
+> > > > > > >
+> >
+> > [cut]
+> >
+> > > > > >
+> > > > > > Oh, so does it look like we are trying to work around AML that tried
+> > > > > > to work around some problematic behavior in Linux at one point?
+> > > > >
+> > > > > Yes, it looks like so if I read the ASL right.
+> > > >
+> > > > OK, so that would call for a DMI-based quirk as the real cause for the
+> > > > issue seems to be the AML in question, which means a firmware problem.
+> > > >
+> > >
+> > > And I disagree as this is a linux specific workaround and windows goes
+> > > that path and succeeds. This firmware based workaround was added,
+> > > because it broke on Linux.
+> >
+> > Apparently so at the time it was added, but would it still break after
+> > the kernel changes made since then?
+> >
+> > Moreover, has it not become harmful now?  IOW, wouldn't it work after
+> > removing the "Linux workaround" from the AML?
+> >
+> > The only way to verify that I can see would be to run the system with
+> > custom ACPI tables without the "Linux workaround" in the AML in
+> > question.
+> >
+>
+> the workaround is not enabled by default, because it has to be
+> explicitly enabled by the user.
 
-sry missed it
+I'm not sure what you are talking about.
 
-> 
-> Thanks,
-> Bjorn
-> 
->> ---
->>  drivers/soc/qcom/rpmhpd.c | 2 ++
->>  1 file changed, 2 insertions(+)
->> 
->> diff --git a/drivers/soc/qcom/rpmhpd.c b/drivers/soc/qcom/rpmhpd.c
->> index 5741ec3fa814c..51850cc68b701 100644
->> --- a/drivers/soc/qcom/rpmhpd.c
->> +++ b/drivers/soc/qcom/rpmhpd.c
->> @@ -93,6 +93,7 @@ static struct rpmhpd sdm845_mx = {
->> 
->>  static struct rpmhpd sdm845_mx_ao = {
->>  	.pd = { .name = "mx_ao", },
->> +	.active_only = true,
->>  	.peer = &sdm845_mx,
->>  	.res_name = "mx.lvl",
->>  };
->> @@ -107,6 +108,7 @@ static struct rpmhpd sdm845_cx = {
->> 
->>  static struct rpmhpd sdm845_cx_ao = {
->>  	.pd = { .name = "cx_ao", },
->> +	.active_only = true,
->>  	.peer = &sdm845_cx,
->>  	.parent = &sdm845_mx_ao.pd,
->>  	.res_name = "cx.lvl",
->> --
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
->> Forum,
->> a Linux Foundation Collaborative Project
->> 
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+I'm taking specifically about the ((OSYS == 0x07DF) && (_REV == 0x05))
+check mentioned by Mika which doesn't seem to depend on user input in
+any way.
