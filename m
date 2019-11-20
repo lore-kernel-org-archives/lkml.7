@@ -2,75 +2,126 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02995C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 23:00:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B925C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 23:05:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0DD1206D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 23:00:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2ADC206D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 23:05:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="azQfCFww"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726573AbfKTXAB (ORCPT
+        id S1726380AbfKTXFX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 18:00:01 -0500
-Received: from mail-il1-f197.google.com ([209.85.166.197]:38421 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725878AbfKTXAB (ORCPT
+        Wed, 20 Nov 2019 18:05:23 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:33516 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725842AbfKTXFW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 18:00:01 -0500
-Received: by mail-il1-f197.google.com with SMTP id f6so1128446ilg.5
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 15:00:00 -0800 (PST)
+        Wed, 20 Nov 2019 18:05:22 -0500
+Received: by mail-pg1-f194.google.com with SMTP id h27so519637pgn.0;
+        Wed, 20 Nov 2019 15:05:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=fEgMaaNTaJm+nq3mUM5KWnkaiG88YnYcMDwaJlNqGkg=;
+        b=azQfCFwwF8GVZ9jpeCJY3J1noNcX3dGd0/oZlG5/VXBUkcoDXl6Du5SbDlLEYrdhKt
+         EIkzPFhkJzWH/2owPB3EhKHz5gGJwfUIQnQ2KjfK8h4+6VEGQu5K/pzgWZT5FfYmV96A
+         oHiWDyV5MqLC7Uxzp51YH75V4psRVwmN7FXz/j5wjlhyV8p8T60MfwjlavUwY0FHPFaS
+         cKbWR8eQ/jBThc/uYlVHRgDOsIKcGgDhafCgg6wkZfsoSe1+wor4ZfRgw6IXbP5KU1Vy
+         AiQh1VIu9ImzSrPM257+VuWBrDbTCHRaAJymuBTd/snulCHyOLGlKmFyDB+GL/jJQSWo
+         2h9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=ypoFC5Ro1whWyZkoNTFbjCm62awQmvPA/XY3KWGTpeY=;
-        b=jhhh+8l6X6jE/8QKD/8nK9bXzfyZ2qAz91eT5v4c8yEHUygWM5qpWqvXRGXom9Hgs2
-         nZMX2+AZEPDwLhSVyY/xU//F91vsGwXrnPsk/z+03ucg2xsRZa6tCcqr6F5+NicNw1h+
-         WPHnTZukowdbiqw07QFnYmrXMVOvi4p/4PqJ+THasIxLSBtkhqBtFD6bYS5VBHluhudY
-         aGcEfZwdB1ZojVXRzsrZbbUvqc1eXASPVp+/xQeIAQrg00CeJq+0bIrXWqyyIBfB02lt
-         9VrkSsHgMWVLBSIapMWm0LRNjfwqKYUg5+dqHC1T+3GgwMQXw2VsEpInrR7Uv5oN05VA
-         caXQ==
-X-Gm-Message-State: APjAAAWi6IIcwqQXpsgQ0YGHx+nexikDKN6W6vJMuGK1FpWAM5TDZvlM
-        2l46O3sAO5IkfabYkPVrPFscOy3xQcRVJC2cw/ekND/BLBGl
-X-Google-Smtp-Source: APXvYqyofe8WhECLKlKXZgBJZBsZrYVm/t+Y8eRSVSR0U/8UgoTSuC2z2cvX43ZBQGe1osg94jcabQYUuLJ1jeNst5ogvlPqNJZy
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fEgMaaNTaJm+nq3mUM5KWnkaiG88YnYcMDwaJlNqGkg=;
+        b=hlpSg21BKo1was/ra2+aELQuhzDer2UMcs6mkYjQLcXtutMKWUIgDBATDXS7ieNB9p
+         B53Tn9jJX7ZFa8PWoNWmLD3BzVH9x+DkPqt42dhyXdU8IxrBLr10TaIirmcwu+3h3ipa
+         /VQFzN9g+OKrwo8H4mzl7r8hbPKbn8U/DZjaPYwMcMlhKhNzd4HClB0Qa7jsszcMjavd
+         5DZaKL+9eMD3YXN9HDYXZkck0b7puc3aCe7+YwDrmZgM89y4kISEikqdtynBovjieuya
+         DDa7BXckxlOZUjRoPfokrnWy+SGawHTftgYGfKIUr/LWtCQAZ603Q/t7G9Ak4EvEkjgx
+         dGXA==
+X-Gm-Message-State: APjAAAVYYon65iPSPkyxFT6MiQwX+SV9AjhjRwxbHLFpK4qtZnNfuuIL
+        BDh7JJlexxA/n1nXZkbqdTWVzfjz
+X-Google-Smtp-Source: APXvYqyeatjOE8ZdhjhAL3RTT2QES7GZMa28Dzq4gMY+w98XHvox0r2Nx00d0c3Yn3oC3AM0xnhCTw==
+X-Received: by 2002:a65:67c1:: with SMTP id b1mr5985171pgs.149.1574291121185;
+        Wed, 20 Nov 2019 15:05:21 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id f7sm452075pfa.150.2019.11.20.15.05.19
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 20 Nov 2019 15:05:20 -0800 (PST)
+Date:   Wed, 20 Nov 2019 15:05:18 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Laura Abbott <labbott@redhat.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
+        Lennert Buytenhek <kernel@wantstofly.org>
+Subject: Re: [PATCH] watchdog: Remove iop_wdt
+Message-ID: <20191120230518.GA28840@roeck-us.net>
+References: <20191118220432.1611-1-labbott@redhat.com>
+ <29e94219-22ca-c873-7209-64d1c357fe5c@roeck-us.net>
+ <CAK8P3a0=3J3WHTKU7sPvd37VEwg3wOuZ5S2-xXtNYEcSQhWyHw@mail.gmail.com>
+ <4f283ab6-0f3c-60e9-cfd1-29d10d978986@roeck-us.net>
+ <20191120100341.GK25745@shell.armlinux.org.uk>
+ <CAK8P3a2N+aDgFz75dFJy3Me9FPdyDSyPaa29FngLjfXX3MzfvA@mail.gmail.com>
+ <20191120103054.GM25745@shell.armlinux.org.uk>
 MIME-Version: 1.0
-X-Received: by 2002:a92:1705:: with SMTP id u5mr6454619ill.151.1574290800348;
- Wed, 20 Nov 2019 15:00:00 -0800 (PST)
-Date:   Wed, 20 Nov 2019 15:00:00 -0800
-In-Reply-To: <1574170553.28617.10.camel@suse.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000ed95090597cf2395@google.com>
-Subject: Re: WARNING in ath6kl_htc_pipe_rx_complete
-From:   syzbot <syzbot+555908813b2ea35dae9a@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, davem@davemloft.net, kvalo@codeaurora.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        oneukum@suse.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191120103054.GM25745@shell.armlinux.org.uk>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, Nov 20, 2019 at 10:30:54AM +0000, Russell King - ARM Linux admin wrote:
+> On Wed, Nov 20, 2019 at 11:15:01AM +0100, Arnd Bergmann wrote:
+> > On Wed, Nov 20, 2019 at 11:03 AM Russell King - ARM Linux admin
+> > <linux@armlinux.org.uk> wrote:
+> > > On Tue, Nov 19, 2019 at 06:29:09AM -0800, Guenter Roeck wrote:
+> > > > On 11/19/19 1:40 AM, Arnd Bergmann wrote:
+> > > > > On Tue, Nov 19, 2019 at 3:08 AM Guenter Roeck <linux@roeck-us.net> wrote:
+> > > > > > On 11/18/19 2:04 PM, Laura Abbott wrote:
+> > > >
+> > > > Good point, especially since apparently no one cared for five years.
+> > >
+> > > Doesn't mean that there aren't interested parties.  I still have
+> > > IOP32x hardware running here in the form of a N2100 (my firewall)
+> > > and it seems that I never noticed this option disappearing until
+> > > now...
+> > 
+> > It's not that it was ever there for IOP32x: the driver was introduced in 2007
+> > and was available for IOP32x but failed to compile for it until 2014 when
+> > I sent the patch to disable the driver in all configurations that
+> > failed to build.
+> 
+> Well:
+> 
+> systems/n2100/boot/config-3.11.5+:CONFIG_IOP_WATCHDOG=m
+> systems/n2100/boot/config-3.12.6+:CONFIG_IOP_WATCHDOG=m
+> systems/n2100/boot/config-3.9.5+:CONFIG_IOP_WATCHDOG=m
+> 
+> -rw-rw-r-- 1 rmk rmk 5284 Dec 30  2013 systems/n2100/lib/modules/3.12.6+/kernel/drivers/watchdog/iop_wdt.ko
+> -rw-rw-r-- 1 rmk rmk 5276 Dec 20  2013 systems/n2100/lib/modules/3.9.5+/kernel/drivers/watchdog/iop_wdt.ko
+> 
+> It seems I've been carrying a patch to comment out the troublesome code:
+> 
+> -       write_wdtsr(IOP13XX_WDTCR_IB_RESET);
+> +//     write_wdtsr(IOP13XX_WDTCR_IB_RESET);
+> 
+> in my stable tree since 2015.
 
-syzbot has tested the proposed patch and the reproducer did not trigger  
-crash:
+Do you have plans to update that kernel to mainline ?
+If yes, a patch to make the driver (and I guess everything else that broke
+since 3.12) work would be helpful.
 
-Reported-and-tested-by:  
-syzbot+555908813b2ea35dae9a@syzkaller.appspotmail.com
-
-Tested on:
-
-commit:         d60bbfea usb: raw: add raw-gadget interface
-git tree:       https://github.com/google/kasan.git
-kernel config:  https://syzkaller.appspot.com/x/.config?x=79de80330003b5f7
-dashboard link: https://syzkaller.appspot.com/bug?extid=555908813b2ea35dae9a
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=125c855ae00000
-
-Note: testing is done by a robot and is best-effort only.
+Thanks,
+Guenter
