@@ -2,86 +2,70 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95AA7C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 20:21:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DD51C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 20:22:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 633612068F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 20:21:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E234C2068F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 20:22:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bg6mfY2z"
+	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="sQ2dFGQf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727008AbfKTUVW (ORCPT
+        id S1727050AbfKTUWP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 15:21:22 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:41421 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbfKTUVW (ORCPT
+        Wed, 20 Nov 2019 15:22:15 -0500
+Received: from forward501o.mail.yandex.net ([37.140.190.203]:45162 "EHLO
+        forward501o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726080AbfKTUWP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 15:21:22 -0500
-Received: by mail-lf1-f65.google.com with SMTP id j14so598882lfb.8
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 12:21:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=caC3q0Im5rpn3jVBjSdb9pB4f6Xutg4Ojk0RRX7E3Ok=;
-        b=bg6mfY2zpiL/RfVmwZqFbQHz/Rgt3PXS6DXi0qCBphUJaLHDGQBguI6vIaNzt+9DYu
-         ZokEIAxWE+lQr57hhnp1G4Fri2750tAnxHK3aabWXBWU8SM7ElfI+A0k3RnQznb8w/df
-         Vs0JPiDxhlI2my6BeVn3xwVwCG9xA2mOXFTG/ZRgl4lHMEN6Eh5RSs9QT1fzfoavs1ln
-         665fDynlhkzVgTRCkgiR6aG/gT/vKDN0fj/Rkt9WGkNeQILCVxIXt8mv9eAlR8/WXvSZ
-         CmCMqO67FAB3U++aoY3tQQH5jRzVk1fSVjhuKIGlmyY9nFk2kHJIABK9VSwfeSvnsYCN
-         bz5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=caC3q0Im5rpn3jVBjSdb9pB4f6Xutg4Ojk0RRX7E3Ok=;
-        b=dMbnI6C5b6Y1Z88ZkY25+EjuOB3bjDILorw6CyAxUCMwoS3BqTg5WVJNZilONU5URl
-         YZyrZ4W7LphTcaiuQdbESypkqzRtzDpQi7sCbP5ccjqTcWqFSAN3pp1Z3ADobgtiufQC
-         K4nyD6R6qmIfW9XVA4txWdbWJA04YZMaX4h0+bsT4mVXXlXghmYlkz/XtNfzU4mPMj3s
-         ggjXQdQDGRJTKpskRwFBKI0mW0DFQism5lslUxdqV3KBP6XDpv5pT0l1hd6QvCn3/2vF
-         TGgSo9GDfAoeogw17FyZcU6DbmUKELo3V/0mmH4sQ71MgDuk0XZURROD2gWpnp/TzSKw
-         QIWA==
-X-Gm-Message-State: APjAAAWbnm+5G/PB0tZ4GW2UV76J19J99Jxx7cqrihXfCxdA5amItRha
-        gTEZxpKfNBl4aH25pPFGpxO0frDmnEh9ziSJ7/AQ8g==
-X-Google-Smtp-Source: APXvYqxBuwInWxqkVn5H7A2OVGPx7wX8ODFx7j//AFHuRlDKHd1fd0fTnmOJMAEpYK3rqOamjhcnY7Nauq736y5nZOM=
-X-Received: by 2002:ac2:5b86:: with SMTP id o6mr4491477lfn.44.1574281279989;
- Wed, 20 Nov 2019 12:21:19 -0800 (PST)
+        Wed, 20 Nov 2019 15:22:15 -0500
+X-Greylist: delayed 342 seconds by postgrey-1.27 at vger.kernel.org; Wed, 20 Nov 2019 15:22:14 EST
+Received: from mxback17g.mail.yandex.net (mxback17g.mail.yandex.net [IPv6:2a02:6b8:0:1472:2741:0:8b7:317])
+        by forward501o.mail.yandex.net (Yandex) with ESMTP id 695911E80278;
+        Wed, 20 Nov 2019 23:16:30 +0300 (MSK)
+Received: from localhost (localhost [::1])
+        by mxback17g.mail.yandex.net (mxback/Yandex) with ESMTP id jcvVD9lzvY-GTvWJpkQ;
+        Wed, 20 Nov 2019 23:16:29 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail; t=1574280989;
+        bh=9S7fCJni22zH4j8Nnc3/KM8VfE4W3KxpaUC2ZqQtD34=;
+        h=Message-Id:Cc:Subject:In-Reply-To:Date:References:To:From;
+        b=sQ2dFGQfTvHOlponnv58auiy2IrlGRkalqqItkex8tARD7zrGfkpzZTEnYr3PTqeE
+         TRn576+OwkNjEYkJxNiv/e7iuDpem5Ak1hcKOv6oCswc8UaLqNUa5byhAJ6gdw9cPY
+         686MTYmnjQeCoaIcAky4Rj2ZCON9fe0gyNzTQZAE=
+Authentication-Results: mxback17g.mail.yandex.net; dkim=pass header.i=@yandex.ru
+Received: by sas2-7fadb031fd9b.qloud-c.yandex.net with HTTP;
+        Wed, 20 Nov 2019 23:16:29 +0300
+From:   Evgeniy Polyakov <zbr@ioremap.net>
+Envelope-From: drustafa@yandex.ru
+To:     Angelo Dureghello <angelo.dureghello@timesys.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+In-Reply-To: <20191019204015.61474-1-angelo.dureghello@timesys.com>
+References: <20191019204015.61474-1-angelo.dureghello@timesys.com>
+Subject: Re: [PATCH v2] w1: new driver. DS2430 chip
 MIME-Version: 1.0
-References: <20191120181857.97174-1-stephan@gerhold.net> <20191120181857.97174-3-stephan@gerhold.net>
-In-Reply-To: <20191120181857.97174-3-stephan@gerhold.net>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 20 Nov 2019 21:21:08 +0100
-Message-ID: <CACRpkdZSwX6jdtE-e3v3BWb5-jicL=9uXnvNJVchjKHzStWg3w@mail.gmail.com>
-Subject: Re: [PATCH v2 3/4] dt-bindings: vendor-prefixes: Add "calaosystems"
- for CALAO Systems SAS
-To:     Stephan Gerhold <stephan@gerhold.net>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Yamail [ http://yandex.ru ] 5.0
+Date:   Wed, 20 Nov 2019 23:16:29 +0300
+Message-Id: <49814061574280989@sas2-7fadb031fd9b.qloud-c.yandex.net>
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 7:19 PM Stephan Gerhold <stephan@gerhold.net> wrote:
+Hi Angelo, Greg
 
-> The Snowball SBC supported by arch/arm/boot/dts/ste-snowball.dts
-> was made by CALAO Systems and uses the "calaosystems,snowball-a9500"
-> compatible. Prepare for documenting the compatible by adding
-> "calaosystems" to the list of vendor prefixes.
+19.10.2019, 23:38, "Angelo Dureghello" <angelo.dureghello@timesys.com>:
+> add support for ds2430, 1 page, 256bit (32bytes) eeprom
+> (family 0x14).
 >
-> Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+> Signed-off-by: Angelo Dureghello <angelo.dureghello@timesys.com>
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Looks good to me.
+Greg, please pull it into your tree.
 
-Yours,
-Linus Walleij
+Acked-by: Evgeniy Polyakov <zbr@ioremap.net>
