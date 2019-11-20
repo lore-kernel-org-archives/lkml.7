@@ -2,167 +2,98 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE87C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 02:35:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB59BC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 02:36:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 564D22240D
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 02:35:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C51222240D
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 02:36:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XNMurbf0"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="mTnA4pH5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727480AbfKTCfd (ORCPT
+        id S1727556AbfKTCgQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 21:35:33 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:46034 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727343AbfKTCfd (ORCPT
+        Tue, 19 Nov 2019 21:36:16 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:38132 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727336AbfKTCgP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 21:35:33 -0500
-Received: by mail-pg1-f196.google.com with SMTP id k1so11234857pgg.12
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 18:35:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=demOKi0KmBJXgMXKUxgMCHYSTMZ41kb+ilF6SbHTJuQ=;
-        b=XNMurbf0t4fehDU7BCwNIN75pA9gnfvEnIOOhcJ5UqJIhzvwZeakrQZ1XXip+zT4at
-         GBT+W4v1j3sDr3tJPcTiS1/hLFnUpZ50rfrQXwxJkffTxT/gQ9wLnM22zpocxJK/hKsX
-         TYTK3QWC3EpoJOOnuW4ql0gnrFj9cQDJKc3Rso9azUgcz9fMwxklo7lgvu0i18cIyrLY
-         k7RzKIxb5Dc5giyHIk9H1qcWzu8WRZ6gfdRN+DravYT2B34tI3MUTdWeWLzUZsIr7TvU
-         YbqlqId3Hsle8dVB9bkf4Rlie3WpHHxskTFmEGDbJyRkATTPSkzemXaKyKTU+cWardh7
-         7hBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=demOKi0KmBJXgMXKUxgMCHYSTMZ41kb+ilF6SbHTJuQ=;
-        b=iJ8xVmY4t6CseMaWoc3U0UOTd9tZneVz/sDWK4hp0rF5+/rg3tu2EbeCkYGoM/cgmy
-         uGntoLUFwYg0JF4+j8sjoJ39iO0AnMSGbiMNLGWAl8UaMMwb0Z5xPGWGq6+GtGXs/3Ck
-         lmh2ddLYlKbSxMB4dqBc8J9K3XI7cV4xN6fpdeI4ThwXaCpFbUwc5fEdOQKWf0LhsjrI
-         d4et1X+AVH6ROm3Pv5tNSilQ2BhG5dB9N38coQYVwGvL+LfV0oJltpiws4hOoe6oQD+Y
-         UJqia3lDwh1pTJxd40R2fo/8V+5E2xxcmnuaTwkSbG1T7RsnGxmmTh6GJ1L6ZwaZx0JI
-         5OSg==
-X-Gm-Message-State: APjAAAWWtFI+dAhm1xAu614RD4Hv2UmbJSHSSmE2b7sXEHtJWpG1RtkB
-        FtyYTX7us9kQWmF0nfn6HkBD5g==
-X-Google-Smtp-Source: APXvYqzplDwcuPhXEeFBVafJ6hd/Ct5IVvHGuZjFEf55wyIRINqbwLDg4aZ7LcJedX3pxFtStlJYNA==
-X-Received: by 2002:a65:47c1:: with SMTP id f1mr376719pgs.393.1574217330662;
-        Tue, 19 Nov 2019 18:35:30 -0800 (PST)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id d6sm26533702pfn.32.2019.11.19.18.35.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Nov 2019 18:35:30 -0800 (PST)
-Date:   Tue, 19 Nov 2019 18:35:27 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     robh+dt@kernel.org, ulf.hansson@linaro.org, rnayak@codeaurora.org,
-        agross@kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        mark.rutland@arm.com, swboyd@chromium.org, dianders@chromium.org
-Subject: Re: [PATCH 6/6] arm64: dts: sm8150: Add rpmh power-domain node
-Message-ID: <20191120023527.GO18024@yoga>
-References: <20191118173944.27043-1-sibis@codeaurora.org>
- <0101016e7f99efe5-cee866e3-7031-4ecf-a8a6-4b247e9e69ff-000000@us-west-2.amazonses.com>
+        Tue, 19 Nov 2019 21:36:15 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAK2Y7Lt188176;
+        Wed, 20 Nov 2019 02:35:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2019-08-05;
+ bh=kMNB9Wd/qp0aU9VNTHv9rqi4duD2FBTzYcT8m9eYRzI=;
+ b=mTnA4pH5LqzhXRNF3MV5F7ec5DKZAX7H+IrBqao+On56wvgkfBZ5jpFjWWpmF34v+gAi
+ JBt0Cgv4Vn4emHWQes/GSybOMnmxgFAfSLDoYMJlKg5KA3DXw26XocouVIW2W3ATI5BR
+ HvVbQXYS7jDR9Dol6VZVmWQQtpb41d8k3Seze1lE27vc+26mOIxJWaFQ989GZZ152c8B
+ K0bEh5oNOs2M/00+7NZFgyp3fw7WOHoMRo9X1dJpFf3MGSFtI2sLIXQThu5cFymIGfdR
+ 1HvMixRu+Dri2f65L/LwEMatVo5+nDAzj0NfjJ2I5GxV7LtJ3KFTeE1KTiUQhMjMb/8q yg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2wa92ptqaa-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 20 Nov 2019 02:35:57 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAK2XSRC122759;
+        Wed, 20 Nov 2019 02:35:57 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 2wcemcsqm2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 20 Nov 2019 02:35:56 +0000
+Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xAK2Zstw024365;
+        Wed, 20 Nov 2019 02:35:54 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 19 Nov 2019 18:35:54 -0800
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Pan Bian <bianpan2016@163.com>
+Subject: Re: linux-next: Fixes tag needs some work in the scsi-mkp tree
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20191119202821.2283a14c@canb.auug.org.au>
+Date:   Tue, 19 Nov 2019 21:35:51 -0500
+In-Reply-To: <20191119202821.2283a14c@canb.auug.org.au> (Stephen Rothwell's
+        message of "Tue, 19 Nov 2019 20:28:21 +1100")
+Message-ID: <yq1tv6zff5k.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0101016e7f99efe5-cee866e3-7031-4ecf-a8a6-4b247e9e69ff-000000@us-west-2.amazonses.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9446 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=986
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1911200022
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9446 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1911200022
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 18 Nov 09:40 PST 2019, Sibi Sankar wrote:
 
-> Add the DT node for the rpmhpd power controller.
-> 
+Stephen,
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+>   Fixes: 2a49a78ed3c ("[SCSI] qla4xxx: added IPv6 support.")
+>
+> has these problem(s):
+>
+>   - SHA1 should be at least 12 digits long
 
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> ---
->  arch/arm64/boot/dts/qcom/sm8150.dtsi | 55 ++++++++++++++++++++++++++++
->  1 file changed, 55 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-> index 8f23fcadecb89..0ac257637c2af 100644
-> --- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-> @@ -5,6 +5,7 @@
->   */
->  
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/power/qcom-rpmpd.h>
->  #include <dt-bindings/soc/qcom,rpmh-rsc.h>
->  #include <dt-bindings/clock/qcom,rpmh.h>
->  
-> @@ -469,6 +470,60 @@
->  				clock-names = "xo";
->  				clocks = <&xo_board>;
->  			};
-> +
-> +			rpmhpd: power-controller {
-> +				compatible = "qcom,sm8150-rpmhpd";
-> +				#power-domain-cells = <1>;
-> +				operating-points-v2 = <&rpmhpd_opp_table>;
-> +
-> +				rpmhpd_opp_table: opp-table {
-> +					compatible = "operating-points-v2";
-> +
-> +					rpmhpd_opp_ret: opp1 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_RETENTION>;
-> +					};
-> +
-> +					rpmhpd_opp_min_svs: opp2 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_MIN_SVS>;
-> +					};
-> +
-> +					rpmhpd_opp_low_svs: opp3 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
-> +					};
-> +
-> +					rpmhpd_opp_svs: opp4 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_SVS>;
-> +					};
-> +
-> +					rpmhpd_opp_svs_l1: opp5 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_SVS_L1>;
-> +					};
-> +
-> +					rpmhpd_opp_svs_l2: opp6 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_SVS_L2>;
-> +					};
-> +
-> +					rpmhpd_opp_nom: opp7 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_NOM>;
-> +					};
-> +
-> +					rpmhpd_opp_nom_l1: opp8 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_NOM_L1>;
-> +					};
-> +
-> +					rpmhpd_opp_nom_l2: opp9 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_NOM_L2>;
-> +					};
-> +
-> +					rpmhpd_opp_turbo: opp10 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_TURBO>;
-> +					};
-> +
-> +					rpmhpd_opp_turbo_l1: opp11 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_TURBO_L1>;
-> +					};
-> +				};
-> +			};
->  		};
->  	};
->  
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> 
+Fixed, thanks!
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
