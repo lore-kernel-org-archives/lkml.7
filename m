@@ -2,258 +2,104 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86B73C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 20:08:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDFB9C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 20:10:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F8D220721
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 20:08:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A0772075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 20:10:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="OV1iKzLt"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=hartkopp.net header.i=@hartkopp.net header.b="V/QaMcJ0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727545AbfKTUIX (ORCPT
+        id S1727695AbfKTUKn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 15:08:23 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.83]:12399 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbfKTUIX (ORCPT
+        Wed, 20 Nov 2019 15:10:43 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.51]:29651 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726623AbfKTUKm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 15:08:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1574280499;
-        s=strato-dkim-0002; d=chronox.de;
-        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+        Wed, 20 Nov 2019 15:10:42 -0500
+X-Greylist: delayed 85531 seconds by postgrey-1.27 at vger.kernel.org; Wed, 20 Nov 2019 15:10:41 EST
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1574280640;
+        s=strato-dkim-0002; d=hartkopp.net;
+        h=In-Reply-To:Date:Message-ID:From:References:To:Subject:
         X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=A/JJtjiw5CgSnKOSzJJcy5f+8wH4gqBQ2bA1uDiXBQ4=;
-        b=OV1iKzLtFiKtQXzQUuoKZu5b9ufiVcmxOLYGisEImwrUfnNLbEbaws53J8+R+Qih1I
-        JaXlPyizXTHxZUsXsbUE3FN9Fa27VGg1+1TfVJCcjOIRv3U0WDYte+wfDy/OSYlhhGHT
-        VpYNWF8YPEFfzYA329+GW7XRrPi5q6X2AAryu+4JFyMGOWTX+MLN2XU2vbuFCeZzSs0w
-        soFN+mRxLpxaEvTyd+aLHMJ12UX7GBvZLqCnYWQfLf2c2Cyawz8M3PEOw7X+UlEWhuXQ
-        kCCj914KIHpJU4imHJyQFQPFM6/tCciGkG99ZmthVbAr9pv3tFkK3Glki36+8vN3bYHR
-        Utfw==
-X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzHHXDbL/ScbtM="
+        bh=NahboDlRlc3eCYDpxjFEpMFnFTZfVr97Z4fujsnDEvU=;
+        b=V/QaMcJ0e3pHNTjC8XSPZ4Rh8VElr3rPI6ylXELwCbxkjJY1XRLnBhhhN6xcMIvbl4
+        wDMgTHvFY/9h7vCOlNUhcF1LVCT6P7GFgZZkrABX4NVGXjMYjsQf9qrxyqnU69IQhnWc
+        SRzEgij6Bj4xWrJW9+BpBkz11c9N4XSuRB8HDJp1AubQmm3xnLE49iAPSUv+ineUoj81
+        +NMR3oo2VWNvSucUJGaG1yh9FYA7mC2MfKqVZN8o/2mEijE3U/QpwndHvQsu4X5O4nlq
+        xmoZJrGtBs6B7z0F7WGupbaX2APiDo1vqZNm3Jc42istlTfuOkB9moTbixodUjdJMhpX
+        Zveg==
+X-RZG-AUTH: ":P2MHfkW8eP4Mre39l357AZT/I7AY/7nT2yrDxb8mjG14FZxedJy6qgO1o3PMaViOoLMGUch5lU37"
 X-RZG-CLASS-ID: mo00
-Received: from positron.chronox.de
+Received: from [192.168.1.177]
         by smtp.strato.de (RZmta 44.29.0 DYNA|AUTH)
-        with ESMTPSA id N09a57vAKK7EmzS
+        with ESMTPSA id C03a03vAKKAT9y9
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
         (Client did not present a certificate);
-        Wed, 20 Nov 2019 21:07:14 +0100 (CET)
-From:   Stephan =?ISO-8859-1?Q?M=FCller?= <smueller@chronox.de>
-To:     Neil Horman <nhorman@redhat.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-api@vger.kernel.org,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        Nicolai Stange <nstange@suse.de>,
-        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
-        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
-        Roman Drahtmueller <draht@schaltsekun.de>
-Subject: Re: [PATCH v25 09/12] LRNG - add Jitter RNG fast noise source
-Date:   Wed, 20 Nov 2019 21:07:13 +0100
-Message-ID: <1844272.AK0ElEJLVa@positron.chronox.de>
-In-Reply-To: <20191120133303.GA28341@hmswarspite.think-freely.org>
-References: <6157374.ptSnyUpaCn@positron.chronox.de> <2377947.mlgTlHak1g@positron.chronox.de> <20191120133303.GA28341@hmswarspite.think-freely.org>
+        Wed, 20 Nov 2019 21:10:29 +0100 (CET)
+Subject: Re: KMSAN: uninit-value in can_receive
+To:     Eric Dumazet <eric.dumazet@gmail.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        syzbot <syzbot+b02ff0707a97e4e79ebb@syzkaller.appspotmail.com>,
+        davem@davemloft.net, glider@google.com, linux-can@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+References: <0000000000005c08d10597a3a05d@google.com>
+ <a5f73d92-fdf2-2590-c863-39a181dca8e1@hartkopp.net>
+ <deedd609-6f3b-8035-47e1-252ab221faa1@pengutronix.de>
+ <7934bc2b-597f-0bb3-be2d-32f3b07b4de9@hartkopp.net>
+ <7f5c4546-0c1a-86ae-581e-0203b5fca446@pengutronix.de>
+ <1f7d6ea7-152e-ff18-549c-b196d8b5e3a7@hartkopp.net>
+ <9e06266a-67f3-7352-7b87-2b9144c7c9a9@gmail.com>
+ <3142c032-e46a-531c-d1b8-d532e5b403a6@hartkopp.net>
+ <92c04159-b83a-3e33-91da-25a727a692d0@gmail.com>
+From:   Oliver Hartkopp <socketcan@hartkopp.net>
+Message-ID: <c1f80bac-bb75-e671-ba32-05cfae86569c@hartkopp.net>
+Date:   Wed, 20 Nov 2019 21:10:24 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+In-Reply-To: <92c04159-b83a-3e33-91da-25a727a692d0@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Mittwoch, 20. November 2019, 14:33:03 CET schrieb Neil Horman:
+On 19/11/2019 22.09, Eric Dumazet wrote:
+> On 11/19/19 12:24 PM, Oliver Hartkopp wrote:
+>> Please check commit d3b58c47d330d ("can: replace timestamp as unique skb attribute").
+> 
+> Oh well... This notion of 'unique skb attribute' is interesting...
 
-Hi Neil,
+Yes. The problem is that the joined filter needs to detect the identical 
+skb which is delivered several times to raw_rcv() to process filters 
+that are logical ANDed.
 
-> On Sat, Nov 16, 2019 at 10:36:52AM +0100, Stephan M=FCller wrote:
-> > The Jitter RNG fast noise source implemented as part of the kernel
-> > crypto API is queried for 256 bits of entropy at the time the seed
-> > buffer managed by the LRNG is about to be filled.
-> >=20
-> > CC: "Eric W. Biederman" <ebiederm@xmission.com>
-> > CC: "Alexander E. Patrakov" <patrakov@gmail.com>
-> > CC: "Ahmed S. Darwish" <darwish.07@gmail.com>
-> > CC: "Theodore Y. Ts'o" <tytso@mit.edu>
-> > CC: Willy Tarreau <w@1wt.eu>
-> > CC: Matthew Garrett <mjg59@srcf.ucam.org>
-> > CC: Vito Caputo <vcaputo@pengaru.com>
-> > CC: Andreas Dilger <adilger.kernel@dilger.ca>
-> > CC: Jan Kara <jack@suse.cz>
-> > CC: Ray Strode <rstrode@redhat.com>
-> > CC: William Jon McCann <mccann@jhu.edu>
-> > CC: zhangjs <zachary@baishancloud.com>
-> > CC: Andy Lutomirski <luto@kernel.org>
-> > CC: Florian Weimer <fweimer@redhat.com>
-> > CC: Lennart Poettering <mzxreary@0pointer.de>
-> > CC: Nicolai Stange <nstange@suse.de>
-> > Reviewed-by: Marcelo Henrique Cerri <marcelo.cerri@canonical.com>
-> > Reviewed-by: Roman Drahtmueller <draht@schaltsekun.de>
-> > Tested-by: Roman Drahtm=FCller <draht@schaltsekun.de>
-> > Tested-by: Marcelo Henrique Cerri <marcelo.cerri@canonical.com>
-> > Tested-by: Neil Horman <nhorman@redhat.com>
-> > Signed-off-by: Stephan Mueller <smueller@chronox.de>
-> > ---
-> >=20
-> >  drivers/char/lrng/Kconfig     | 11 +++++
-> >  drivers/char/lrng/Makefile    |  1 +
-> >  drivers/char/lrng/lrng_jent.c | 88 +++++++++++++++++++++++++++++++++++
-> >  3 files changed, 100 insertions(+)
-> >  create mode 100644 drivers/char/lrng/lrng_jent.c
-> >=20
-> > diff --git a/drivers/char/lrng/Kconfig b/drivers/char/lrng/Kconfig
-> > index 03e6e2ec356b..80fc723c67d2 100644
-> > --- a/drivers/char/lrng/Kconfig
-> > +++ b/drivers/char/lrng/Kconfig
-> > @@ -80,4 +80,15 @@ config LRNG_KCAPI
-> >=20
-> >  	  provided by the selected kernel crypto API RNG.
-> > =20
-> >  endif # LRNG_DRNG_SWITCH
-> >=20
-> > +config LRNG_JENT
-> > +	bool "Enable Jitter RNG as LRNG Seed Source"
-> > +	select CRYPTO_JITTERENTROPY
-> > +	help
-> > +	  The Linux RNG may use the Jitter RNG as noise source. Enabling
-> > +	  this option enables the use of the Jitter RNG. Its default
-> > +	  entropy level is 16 bits of entropy per 256 data bits delivered
-> > +	  by the Jitter RNG. This entropy level can be changed at boot
-> > +	  time or at runtime with the lrng_base.jitterrng configuration
-> > +	  variable.
-> > +
-> >=20
-> >  endif # LRNG
-> >=20
-> > diff --git a/drivers/char/lrng/Makefile b/drivers/char/lrng/Makefile
-> > index 027b6ea51c20..a87d800c9aae 100644
-> > --- a/drivers/char/lrng/Makefile
-> > +++ b/drivers/char/lrng/Makefile
-> > @@ -13,3 +13,4 @@ obj-$(CONFIG_SYSCTL)		+=3D lrng_proc.o
-> >=20
-> >  obj-$(CONFIG_LRNG_DRNG_SWITCH)	+=3D lrng_switch.o
-> >  obj-$(CONFIG_LRNG_DRBG)		+=3D lrng_drbg.o
-> >  obj-$(CONFIG_LRNG_KCAPI)	+=3D lrng_kcapi.o
-> >=20
-> > +obj-$(CONFIG_LRNG_JENT)		+=3D lrng_jent.o
-> > diff --git a/drivers/char/lrng/lrng_jent.c b/drivers/char/lrng/lrng_jen=
-t.c
-> > new file mode 100644
-> > index 000000000000..43114a44b8f5
-> > --- /dev/null
-> > +++ b/drivers/char/lrng/lrng_jent.c
-> > @@ -0,0 +1,88 @@
-> > +// SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
-> > +/*
-> > + * LRNG Fast Noise Source: Jitter RNG
-> > + *
-> > + * Copyright (C) 2016 - 2019, Stephan Mueller <smueller@chronox.de>
-> > + */
-> > +
-> > +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> > +
-> > +#include "lrng_internal.h"
-> > +
-> > +/*
-> > + * Estimated entropy of data is a 16th of
-> > LRNG_DRNG_SECURITY_STRENGTH_BITS. + * Albeit a full entropy assessment =
-is
-> > provided for the noise source indicating + * that it provides high
-> > entropy rates and considering that it deactivates + * when it detects
-> > insufficient hardware, the chosen under estimation of + * entropy is
-> > considered to be acceptable to all reviewers.
-> > + */
-> > +static u32 jitterrng =3D LRNG_DRNG_SECURITY_STRENGTH_BITS>>4;
-> > +module_param(jitterrng, uint, 0644);
-> > +MODULE_PARM_DESC(jitterrng, "Entropy in bits of 256 data bits from Jit=
-ter
-> > " +			    "RNG noise source");
-> > +
-> > +/**
-> > + * Get Jitter RNG entropy
-> > + *
-> > + * @outbuf buffer to store entropy
-> > + * @outbuflen length of buffer
-> > + * @return > 0 on success where value provides the added entropy in bi=
-ts
-> > + *	   0 if no fast source was available
-> > + */
-> > +struct rand_data;
-> > +struct rand_data *jent_lrng_entropy_collector(void);
-> > +int jent_read_entropy(struct rand_data *ec, unsigned char *data,
-> > +		      unsigned int len);
-> > +static struct rand_data *lrng_jent_state;
-> > +
-> > +u32 lrng_get_jent(u8 *outbuf, unsigned int outbuflen)
-> > +{
-> > +	int ret;
-> > +	u32 ent_bits =3D jitterrng;
-> > +	unsigned long flags;
-> > +	static DEFINE_SPINLOCK(lrng_jent_lock);
-> > +	static int lrng_jent_initialized =3D 0;
-> > +
-> > +	spin_lock_irqsave(&lrng_jent_lock, flags);
-> > +
-> > +	if (!ent_bits || (lrng_jent_initialized =3D=3D -1)) {
-> > +		spin_unlock_irqrestore(&lrng_jent_lock, flags);
-> > +		return 0;
-> > +	}
-> > +
->=20
-> this works, but I think you can avoid the use of the spin lock on the read
-> calls here.  If you assign a global pointer to the value of
-> &lrng_jent_state on init, you can just take the spinlock on assignment, a=
-nd
-> assume its stable after that (which it should be given that its only ever
-> going to point to a static data structure).
+>> can_skb_prv(skb)->skbcnt is set to 0 at skb creation time when sending CAN frames from local host or receiving CAN frames from a real CAN interface.
+> 
+> We can not enforce this to happen with a virtual interface.
 
-It is correct that the lock protects the assignment of the data structure.
+You are right. I just discovered that I'm not able to send CAN frames 
+via PF_PACKET sockets anymore.
 
-But the Jitter RNG itself is not multi-threaded. So, a form of serializatio=
-n=20
-is needed to also "read" data from the Jitter RNG using one and the same=20
-state.
+Receiving with a simple test program and Wireshark is fine - but sending 
+does not work. PF_PACKET is not creating the same kind of skbs as e.g. 
+the CAN_RAW socket does.
 
-Granted, there is a serialization in the current code as the=20
-lrng_pool_trylock() is taken before the Jitter RNG is called by=20
-lrng_fill_seed_buffer which effectively serializes all requests to also the=
-=20
-Jitter RNG. But this is coincidence in this case. I would think, however, t=
-hat=20
-this coincidence could easily lead to programming errors further down the r=
-oad=20
-when the spinlock is not present and that trylock() is moved to some place=
-=20
-else considering that this trylock() is meant to protect reading the entrop=
-y=20
-pool and not the Jitter RNG.
+So the KMSAN detection was right at the end :-(
 
-As the reading of the Jitter RNG is always performed in process context, I=
-=20
-think having this additional spin lock against possible programming errors=
-=20
-should not lead to performance regressions.
+I'll take a closer look to enable PF_PACKET to send CAN frames again 
+which will fix up the entire  problem.
 
-What do you think?
+Thanks for your feedback!
 
-Thank you for your review!
-
-Ciao
-Stephan
-
-
+Best,
+Oliver
