@@ -2,195 +2,114 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74F31C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 16:39:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FAD0C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 16:39:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CCB620679
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 16:39:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DCA520679
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 16:39:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="VkAzDB4h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732810AbfKTQi7 convert rfc822-to-8bit (ORCPT
+        id S1732820AbfKTQjF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 11:38:59 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60666 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728632AbfKTQi7 (ORCPT
+        Wed, 20 Nov 2019 11:39:05 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:36074 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728632AbfKTQjE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 11:38:59 -0500
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAKGcIs8053547;
-        Wed, 20 Nov 2019 11:38:46 -0500
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2wd3fkwmjc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 20 Nov 2019 11:38:45 -0500
-Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id xAKGcdmh055570;
-        Wed, 20 Nov 2019 11:38:45 -0500
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2wd3fkwmht-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 20 Nov 2019 11:38:45 -0500
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xAKGGD3g026193;
-        Wed, 20 Nov 2019 16:38:44 GMT
-Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
-        by ppma02wdc.us.ibm.com with ESMTP id 2wa8r6paem-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 20 Nov 2019 16:38:44 +0000
-Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAKGciAm30146936
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 20 Nov 2019 16:38:44 GMT
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4008F112064;
-        Wed, 20 Nov 2019 16:38:44 +0000 (GMT)
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 40BB1112062;
-        Wed, 20 Nov 2019 16:38:43 +0000 (GMT)
-Received: from [9.160.73.73] (unknown [9.160.73.73])
-        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTPS;
-        Wed, 20 Nov 2019 16:38:43 +0000 (GMT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3601.0.10\))
-Subject: Re: [PATCH v2 1/2] KVM: PPC: Book3S HV: XIVE: Free previous EQ page
- when setting up a new one
-From:   Lijun Pan <ljp@linux.vnet.ibm.com>
-In-Reply-To: <157366357346.1026356.14522564753643067538.stgit@bahia.lan>
-Date:   Wed, 20 Nov 2019 10:38:42 -0600
-Cc:     Paul Mackerras <paulus@ozlabs.org>,
-        Laurent Vivier <lvivier@redhat.com>,
-        linux-kernel@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
-        =?utf-8?Q?C=C3=A9dric_Le_Goater?= <clg@kaod.org>,
-        Lijun Pan <ljp@linux.ibm.com>, stable@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org,
-        David Gibson <david@gibson.dropbear.id.au>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <6C7372DE-CF54-4EA0-90B1-724C77A81E9F@linux.vnet.ibm.com>
-References: <157366357346.1026356.14522564753643067538.stgit@bahia.lan>
-To:     Greg Kurz <groug@kaod.org>
-X-Mailer: Apple Mail (2.3601.0.10)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-20_04:2019-11-20,2019-11-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
- phishscore=0 spamscore=0 priorityscore=1501 malwarescore=0 mlxlogscore=999
- lowpriorityscore=0 clxscore=1015 adultscore=0 bulkscore=0 suspectscore=2
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
- definitions=main-1911200143
+        Wed, 20 Nov 2019 11:39:04 -0500
+Received: by mail-wr1-f66.google.com with SMTP id z3so607087wru.3
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 08:39:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/OHSU0fY9M2wF7Dch2vz0TnbVEHM5EwSW33Sj289Ves=;
+        b=VkAzDB4ht07A3g+rZWhLc3RvpxR3tanWxlh0EvxiYekr8nCSPHmUlZ/BUMxKCU6BIR
+         9nh+QUHzT2vPnAIxSCHtGSFt+oUe6g7QT00ypWhXOjhdXfvmeBgEVseJPixTskmTqIIY
+         sfVoKDB/u0Wor54YoTcwiD3ksN/S9/tvZcGZQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=/OHSU0fY9M2wF7Dch2vz0TnbVEHM5EwSW33Sj289Ves=;
+        b=qJex7IssGn6dz4L+DB7R/3PoMLNPphtgoUtiWFOwJcxJuoFb9piB4TEfGbsE4G9NLh
+         JsJ6B/oIifDGS1EW5sjzy5gKSMcb4WWwgV08HvKkGe73On5pZuHY5uHceKcfT3BZXgJ3
+         ID4Yq/1gSCE9UlNDhMWShnjWuXPySuSKaRw3Pdz2adny2lBEkkhaFqkaLRvhpe0kQ2L+
+         cAXRnwte29zGCsNAHMPKKCXlY7feGpLWfRkCVgnfpkrwRf61Zb3zDBTX4qMCQCfEi7kN
+         vFf5y3+pfMJqJUorDOSkevpPC8JSBo7mzam0LKopANAIvj5L+gJq3ZV8xoj3108eU3WC
+         tkyQ==
+X-Gm-Message-State: APjAAAVCBA6wt6FFcPJhW9EmkgMWAI8Ycy0nzjzg9emKneTaakDfS8kP
+        04xCxbvNzeLV9UJiHClTkzrrTw==
+X-Google-Smtp-Source: APXvYqxVoHzP5vhF6LkCRi1Hwy3MgV40SQo6RqYoQ3S2Jy5cY6Mt6b3tlm1v83jfAcRsfCuT8TB8DQ==
+X-Received: by 2002:adf:fd91:: with SMTP id d17mr4449297wrr.214.1574267942842;
+        Wed, 20 Nov 2019 08:39:02 -0800 (PST)
+Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
+        by smtp.gmail.com with ESMTPSA id x205sm7917798wmb.5.2019.11.20.08.39.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Nov 2019 08:39:01 -0800 (PST)
+Date:   Wed, 20 Nov 2019 17:39:00 +0100
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Ben Skeggs <bskeggs@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
+Subject: Re: [PATCH] drm/nouveau: Fix Kconfig indentation
+Message-ID: <20191120163900.GP30416@phenom.ffwll.local>
+Mail-Followup-To: Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-kernel@vger.kernel.org, Ben Skeggs <bskeggs@redhat.com>,
+        David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org,
+        nouveau@lists.freedesktop.org
+References: <20191120133619.11415-1-krzk@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191120133619.11415-1-krzk@kernel.org>
+X-Operating-System: Linux phenom 5.2.0-3-amd64 
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Nov 20, 2019 at 09:36:19PM +0800, Krzysztof Kozlowski wrote:
+> Adjust indentation from spaces to tab (+optional two spaces) as in
+> coding style with command like:
+> 	$ sed -e 's/^        /\t/' -i */Kconfig
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-
-> On Nov 13, 2019, at 10:46 AM, Greg Kurz <groug@kaod.org> wrote:
-> 
-> The EQ page is allocated by the guest and then passed to the hypervisor
-> with the H_INT_SET_QUEUE_CONFIG hcall. A reference is taken on the page
-> before handing it over to the HW. This reference is dropped either when
-> the guest issues the H_INT_RESET hcall or when the KVM device is released.
-> But, the guest can legitimately call H_INT_SET_QUEUE_CONFIG several times,
-> either to reset the EQ (vCPU hot unplug) or to set a new EQ (guest reboot).
-> In both cases the existing EQ page reference is leaked because we simply
-> overwrite it in the XIVE queue structure without calling put_page().
-> 
-> This is especially visible when the guest memory is backed with huge pages:
-> start a VM up to the guest userspace, either reboot it or unplug a vCPU,
-> quit QEMU. The leak is observed by comparing the value of HugePages_Free in
-> /proc/meminfo before and after the VM is run.
-> 
-> Ideally we'd want the XIVE code to handle the EQ page de-allocation at the
-> platform level. This isn't the case right now because the various XIVE
-> drivers have different allocation needs. It could maybe worth introducing
-> hooks for this purpose instead of exposing XIVE internals to the drivers,
-> but this is certainly a huge work to be done later.
-> 
-> In the meantime, for easier backport, fix both vCPU unplug and guest reboot
-> leaks by introducing a wrapper around xive_native_configure_queue() that
-> does the necessary cleanup.
-> 
-> Reported-by: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
-> Cc: stable@vger.kernel.org # v5.2
-> Fixes: 13ce3297c576 ("KVM: PPC: Book3S HV: XIVE: Add controls for the EQ configuration")
-> Signed-off-by: Cédric Le Goater <clg@kaod.org>
-> Signed-off-by: Greg Kurz <groug@kaod.org>
-
-Tested-by: Lijun Pan <ljp@linux.ibm.com>
-
+Queued for 5.6 in drm-misc, thanks for your patch.
+-Daniel
 > ---
-> v2: use wrapper as suggested by Cedric
-> ---
-> arch/powerpc/kvm/book3s_xive_native.c |   31 ++++++++++++++++++++++---------
-> 1 file changed, 22 insertions(+), 9 deletions(-)
+>  drivers/gpu/drm/nouveau/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/arch/powerpc/kvm/book3s_xive_native.c b/arch/powerpc/kvm/book3s_xive_native.c
-> index 34bd123fa024..0e1fc5a16729 100644
-> --- a/arch/powerpc/kvm/book3s_xive_native.c
-> +++ b/arch/powerpc/kvm/book3s_xive_native.c
-> @@ -50,6 +50,24 @@ static void kvmppc_xive_native_cleanup_queue(struct kvm_vcpu *vcpu, int prio)
-> 	}
-> }
-> 
-> +static int kvmppc_xive_native_configure_queue(u32 vp_id, struct xive_q *q,
-> +					      u8 prio, __be32 *qpage,
-> +					      u32 order, bool can_escalate)
-> +{
-> +	int rc;
-> +	__be32 *qpage_prev = q->qpage;
-> +
-> +	rc = xive_native_configure_queue(vp_id, q, prio, qpage, order,
-> +					 can_escalate);
-> +	if (rc)
-> +		return rc;
-> +
-> +	if (qpage_prev)
-> +		put_page(virt_to_page(qpage_prev));
-> +
-> +	return rc;
-> +}
-> +
-> void kvmppc_xive_native_cleanup_vcpu(struct kvm_vcpu *vcpu)
-> {
-> 	struct kvmppc_xive_vcpu *xc = vcpu->arch.xive_vcpu;
-> @@ -575,19 +593,14 @@ static int kvmppc_xive_native_set_queue_config(struct kvmppc_xive *xive,
-> 		q->guest_qaddr  = 0;
-> 		q->guest_qshift = 0;
-> 
-> -		rc = xive_native_configure_queue(xc->vp_id, q, priority,
-> -						 NULL, 0, true);
-> +		rc = kvmppc_xive_native_configure_queue(xc->vp_id, q, priority,
-> +							NULL, 0, true);
-> 		if (rc) {
-> 			pr_err("Failed to reset queue %d for VCPU %d: %d\n",
-> 			       priority, xc->server_num, rc);
-> 			return rc;
-> 		}
-> 
-> -		if (q->qpage) {
-> -			put_page(virt_to_page(q->qpage));
-> -			q->qpage = NULL;
-> -		}
-> -
-> 		return 0;
-> 	}
-> 
-> @@ -646,8 +659,8 @@ static int kvmppc_xive_native_set_queue_config(struct kvmppc_xive *xive,
-> 	  * OPAL level because the use of END ESBs is not supported by
-> 	  * Linux.
-> 	  */
-> -	rc = xive_native_configure_queue(xc->vp_id, q, priority,
-> -					 (__be32 *) qaddr, kvm_eq.qshift, true);
-> +	rc = kvmppc_xive_native_configure_queue(xc->vp_id, q, priority,
-> +					(__be32 *) qaddr, kvm_eq.qshift, true);
-> 	if (rc) {
-> 		pr_err("Failed to configure queue %d for VCPU %d: %d\n",
-> 		       priority, xc->server_num, rc);
+> diff --git a/drivers/gpu/drm/nouveau/Kconfig b/drivers/gpu/drm/nouveau/Kconfig
+> index 3558df043592..9c990266e876 100644
+> --- a/drivers/gpu/drm/nouveau/Kconfig
+> +++ b/drivers/gpu/drm/nouveau/Kconfig
+> @@ -2,7 +2,7 @@
+>  config DRM_NOUVEAU
+>  	tristate "Nouveau (NVIDIA) cards"
+>  	depends on DRM && PCI && MMU
+> -        select FW_LOADER
+> +	select FW_LOADER
+>  	select DRM_KMS_HELPER
+>  	select DRM_TTM
+>  	select BACKLIGHT_CLASS_DEVICE if DRM_NOUVEAU_BACKLIGHT
+> -- 
+> 2.17.1
 > 
 
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
