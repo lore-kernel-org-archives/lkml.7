@@ -2,179 +2,133 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22901C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 06:48:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A225C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 06:48:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5B6B2245D
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 06:48:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61AA2206F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 06:48:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="Pnxi1hMS"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="DuBfJgC0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727783AbfKTGse (ORCPT
+        id S1727809AbfKTGsu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 01:48:34 -0500
-Received: from mail-eopbgr790072.outbound.protection.outlook.com ([40.107.79.72]:64416
-        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
+        Wed, 20 Nov 2019 01:48:50 -0500
+Received: from mail-eopbgr30064.outbound.protection.outlook.com ([40.107.3.64]:37892
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727090AbfKTGsc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 01:48:32 -0500
+        id S1726880AbfKTGsu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 01:48:50 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XKzlk3ccR/peHoLz6gW2gfC7yqBErm/lp5jZh0BM27AWq72weAyiuOAp1yajbYLGct+hqzeDuAzZt+j5T0n6beUo+tbM05trYcb69r7fFWZI4DN3oVzaIt+NMFhmnubms3HoAeGXC7MEr80oOUfb3LPsxzsQatPoLPy3cC053Un1QX6PBjH8fmgV+PFXJNnjlPdc31R6HTjDVWy5yv2bFRJvAkxpLm0VaCYb5QgYrF5iI083g43ua238uTiD5MyY+7gNldKCDsccOHj/WACJMCyj1b6eFs/lTuB+kZ8J2aNEQwA1Z5xLXQbYnDDAhRx9XNJVZuSYSMseYH+vucQysw==
+ b=MywdcaNfUoXwboFXnTWWiz9pQ0rfEvQy10bHKUSQ3EoNckbUm0fEIA5RNXAfD7QQaLAH6ihI9RZ0SECm+97pZUzTmgp09GO6C+p3Y2hZZQH3j4TFtdXQkQWvju3WGfIv04XT+fXk+8p4HZZAmu2lj6zzHSb9sLKevVsMdE/HW1SFNEff0YBbtFnwlY7AknOW92aC/EN7mIe1xAIGAvXjdysXcrTkn1xdqQsqpAG7qRFO4CNf9gy9UAA+hsP1Pl1mqfMISx70nFuGblqoZLoVUmArMaPMkELp2cLZeJ7g7pFxdUjhjlUwmcx4FDnf9wk5EhSne7i+js5bfa+OxCU/mQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GDLegMrhDggUgyFbZeHP6TBfYFHxtOMb3XgoN+5eRL0=;
- b=HTRGdQELXnJm+kbuhQcfOGsKRP+0kObuOy/jDzTLH4LcwbHkY3mlaQBQXlZ3x+VpIVhUWRg2VF/0Bk54IWVeVRpMfB/GkshX4nXR2o6hjcF4QMOzMdOxmv9/+S9l5To+rMhCHPN6pLE8myAmD48JViL5LB0v3WLKmATKSNL8RBpS7Ov1q5kcx4f6EI6+dgrHRLdzIZtho2XoVylCMHHGgGLzdEd+MNdTkb7n9jXAbIJp0jkydhw5SqGq3lLp8oxOM0Q7K48D0ous6sKiFGnEfY87DGTdOC2ZeZcYTl1iIaVdXHVgFqaRHZeNYaEcdNxvTFhuxDtaE2o95sKd7PWfHg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ bh=OE4wwLvuXgSjPKi+br6ukVBWvo8q9PudQXLCtsLbgAo=;
+ b=R+XtPtOeMGX7Ngk1O1hz3Fw1hWzKBsgHFuZJre17NPKkS7iQO88t0W1L3yZ/5IdhpkCibDCEWrl4AjXoMqXRLUclg2Wsy25HlD/yUYkxXfZD6g+0UpiSW1iuuM7422np/3nGj6BZrBdHViJO18Pbapo/skAdki8pXcFnZZSWa2ELh0bRCvJg6apKy2gUcf5hpAzu6u9Pj7g459nmw0kJFLnESqVgsYm53U22KUWLhBjQ8fx2D/45bQ8Xea4UTjr81Cet1BCN7ZfqeUmhz1gA6aMJqzFhCpa3vayxvCgeeUYuh53J98ruvNSoAeO6Ha9DplsWezHPrbmJulIdUm5u1g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GDLegMrhDggUgyFbZeHP6TBfYFHxtOMb3XgoN+5eRL0=;
- b=Pnxi1hMSvCajZoYlWzgS2Xa0lLkSOA3qy9b0Pi2xQDKvK/BdKr00HKCHrQFnPNCTvkMt8NjQao6mA5rk5cS/hH/sWJFK+/NoNwr/6huFmcObVrkzGf8z5IXa/SU/E1grHayUGRLR9GIJi2/3pP9hF6NOMX+Gj23N9K7ofxGG3N8=
-Received: from BL0PR02CA0074.namprd02.prod.outlook.com (2603:10b6:208:51::15)
- by BN6PR02MB2802.namprd02.prod.outlook.com (2603:10b6:404:fd::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2451.28; Wed, 20 Nov
- 2019 06:47:48 +0000
-Received: from CY1NAM02FT028.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e45::205) by BL0PR02CA0074.outlook.office365.com
- (2603:10b6:208:51::15) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2474.16 via Frontend
- Transport; Wed, 20 Nov 2019 06:47:48 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- CY1NAM02FT028.mail.protection.outlook.com (10.152.75.132) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2474.17
- via Frontend Transport; Wed, 20 Nov 2019 06:47:48 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <manish.narani@xilinx.com>)
-        id 1iXJmF-000619-Lb; Tue, 19 Nov 2019 22:47:47 -0800
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <manish.narani@xilinx.com>)
-        id 1iXJmA-00049o-I9; Tue, 19 Nov 2019 22:47:42 -0800
-Received: from xsj-pvapsmtp01 (smtp.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id xAK6lbBg001807;
-        Tue, 19 Nov 2019 22:47:38 -0800
-Received: from [172.23.64.106] (helo=xhdvnc125.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <mnarani@xilinx.com>)
-        id 1iXJm5-00049G-Mr; Tue, 19 Nov 2019 22:47:37 -0800
-Received: by xhdvnc125.xilinx.com (Postfix, from userid 16987)
-        id 0170D12139A; Wed, 20 Nov 2019 12:17:35 +0530 (IST)
-From:   Manish Narani <manish.narani@xilinx.com>
-To:     ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        adrian.hunter@intel.com, michal.simek@xilinx.com,
-        jolly.shah@xilinx.com, rajan.vaja@xilinx.com,
-        nava.manne@xilinx.com, mdf@kernel.org, manish.narani@xilinx.com
-Cc:     linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        git@xilinx.com
-Subject: [PATCH v6 7/8] dt-bindings: mmc: arasan: Document 'xlnx,zynqmp-8.9a' controller
-Date:   Wed, 20 Nov 2019 12:17:28 +0530
-Message-Id: <1574232449-13570-8-git-send-email-manish.narani@xilinx.com>
-X-Mailer: git-send-email 2.1.1
-In-Reply-To: <1574232449-13570-1-git-send-email-manish.narani@xilinx.com>
-References: <1574232449-13570-1-git-send-email-manish.narani@xilinx.com>
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(376002)(39860400002)(136003)(346002)(396003)(189003)(199004)(36386004)(48376002)(47776003)(476003)(50466002)(6266002)(107886003)(2616005)(6666004)(356004)(446003)(426003)(11346002)(336012)(106002)(70206006)(26005)(8676002)(50226002)(186003)(70586007)(51416003)(81156014)(81166006)(76176011)(8936002)(2906002)(478600001)(305945005)(5660300002)(126002)(316002)(4326008)(44832011)(486006)(16586007)(103686004)(36756003)(42186006)(921003)(142933001)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:BN6PR02MB2802;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
+ bh=OE4wwLvuXgSjPKi+br6ukVBWvo8q9PudQXLCtsLbgAo=;
+ b=DuBfJgC0DP5gTJDrHEeU9DG7kPhs4fb3kceRcUBBk6q4yXUPI876yBYWgaPhzDSmnXeH5jJP6Ut/oo6agA52NBm6FnYRXIqwTYE04YtSVSMlJmGlBsq4Xh7TfWfYZ2Wcwlz3BYKlUXnLkq8Y+oCWMYi3B4HANLTD7VxcUug3Gcs=
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
+ VI1PR0402MB2718.eurprd04.prod.outlook.com (10.175.21.143) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2451.28; Wed, 20 Nov 2019 06:48:46 +0000
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::89e1:552e:a24d:e72]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::89e1:552e:a24d:e72%3]) with mapi id 15.20.2474.015; Wed, 20 Nov 2019
+ 06:48:46 +0000
+From:   Horia Geanta <horia.geanta@nxp.com>
+To:     Iuliana Prodan <iuliana.prodan@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>
+CC:     "David S. Miller" <davem@davemloft.net>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Gary Hook <gary.hook@amd.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH 07/12] crypto: caam - refactor caam_jr_enqueue
+Thread-Topic: [PATCH 07/12] crypto: caam - refactor caam_jr_enqueue
+Thread-Index: AQHVnZa0sS6CFfezokOAnr5a2apfuA==
+Date:   Wed, 20 Nov 2019 06:48:46 +0000
+Message-ID: <VI1PR0402MB3485EAC0D46F50CCF68AC891984F0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+References: <1574029845-22796-1-git-send-email-iuliana.prodan@nxp.com>
+ <1574029845-22796-8-git-send-email-iuliana.prodan@nxp.com>
+ <VI1PR0402MB34853893505F95195F4C125B984C0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+ <VI1PR04MB44452654BA9716CA43992AA68C4C0@VI1PR04MB4445.eurprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=horia.geanta@nxp.com; 
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: bfa70ebc-be06-48c9-9fc4-08d76d85b133
+x-ms-traffictypediagnostic: VI1PR0402MB2718:|VI1PR0402MB2718:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR0402MB27182128A95F30A76F895AB7984F0@VI1PR0402MB2718.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2512;
+x-forefront-prvs: 02272225C5
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(366004)(396003)(136003)(39860400002)(189003)(199004)(8676002)(6246003)(316002)(4326008)(81166006)(7696005)(81156014)(71190400001)(33656002)(91956017)(25786009)(44832011)(476003)(5660300002)(55016002)(8936002)(76116006)(229853002)(9686003)(186003)(486006)(66066001)(99286004)(6506007)(53546011)(6436002)(86362001)(66946007)(110136005)(446003)(76176011)(6636002)(478600001)(14454004)(74316002)(66446008)(26005)(6116002)(102836004)(64756008)(66556008)(14444005)(52536014)(2906002)(71200400001)(7736002)(3846002)(54906003)(66476007)(305945005)(256004);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB2718;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: TvLU7SuwCILgPL1mB+GxJsBTgPJ8YmI78KlhUJvMvSu/M87Qs72GciU1CeBy9tqY2w09aFt7kAiqPs0awnIQ4LP35sjPvREvIQtqaAJvRZAMHX3Kh+9gsc4iP1EOx6fru7qDonEayGnZC87x/TQIGSuY62Kc6dY9u7LSV7z1PkOsrM83abZGNDuBBcsBycfoMPWWPHdVWxaSQJlT+kIBHp5Vj1Mv4uFdTpqFT82YP2/VsKvAt3vTQLC8IHl/9k/KjB5qYZ7gL/pnPGEWy+rukfbJAh60+Y9wV7Q4HnBL1ZwmdsfVSSb057kMM5E+JejVXQDbrsUOGDv8xYPumoeG8fCm/dCHoT4NnAu0mpKsFzWhfvmnjUOw6AJ2SdtfgBki65CJm7ifh2oQXWM6AjYyJ5LgaXcu9AYiXJgoHGC+/1fZ4VP+zBdez3+/on+aY8Jq
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 9224fe54-a85d-4d7e-6444-08d76d858e5f
-X-MS-TrafficTypeDiagnostic: BN6PR02MB2802:
-X-Microsoft-Antispam-PRVS: <BN6PR02MB2802FF75FD5C7CCC5221987CC14F0@BN6PR02MB2802.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
-X-Forefront-PRVS: 02272225C5
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: jSESfp3vp4nwXOBXS4w1zRkWtsJFVUGmEV67VioL8BnowVufoRP/8/KmuH2TG2bS6n10pCGJP2KopHVNLUXfIlQOzWz9RSvXL+g6PJVNV+WlgIgaBBh04RitdVworiLC0rHstwaT6yS88hU1ip4Y8czxVlsVPe4b870CZN3SdMkfOJREThuEscKZ640rJmn7oIw2kGZg0b+O7LLeVknD0DfpRqUABXYWR82B7KVifzDmPfOKLzscz8feaYqDOBfNuDjBX/bkcciQFJnjBrcdJoGl2BbbG7j2cwfI3l9YjP5g42TrkEvV3UweDVSleQfQdsFqfGE9l2Ipwwg1ThLo7eHDz6P68FFxQYdUi0zVZNPUCW6gvhx9nFBesXsEpq6So16hvEHUH3l7YQJf8UkguRFFsQjGl7vTuTNrkg2JHMoxPDb5haCDM4cO+Ep1hgcz
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Nov 2019 06:47:48.1617
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bfa70ebc-be06-48c9-9fc4-08d76d85b133
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Nov 2019 06:48:46.6013
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9224fe54-a85d-4d7e-6444-08d76d858e5f
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR02MB2802
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Smik4Jj11py1morsMbIkxmcmB5uqTCz0HZbXIjiJVblh31ekj6S1aH20CRdzlUAUeK+yo7cV98ZaHFqQvsJW7g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB2718
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add documentation for 'xlnx,zynqmp-8.9a' SDHCI controller and optional
-properties followed by example.
-
-Signed-off-by: Manish Narani <manish.narani@xilinx.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/mmc/arasan,sdhci.txt  | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-index b51e40b2e0c5..5ad804a870e4 100644
---- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-+++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-@@ -15,6 +15,9 @@ Required Properties:
-     - "arasan,sdhci-5.1": generic Arasan SDHCI 5.1 PHY
-     - "rockchip,rk3399-sdhci-5.1", "arasan,sdhci-5.1": rk3399 eMMC PHY
-       For this device it is strongly suggested to include arasan,soc-ctl-syscon.
-+    - "xlnx,zynqmp-8.9a": ZynqMP SDHCI 8.9a PHY
-+      For this device it is strongly suggested to include clock-output-names and
-+      #clock-cells.
-     - "ti,am654-sdhci-5.1", "arasan,sdhci-5.1": TI AM654 MMC PHY
- 	Note: This binding has been deprecated and moved to [5].
-     - "intel,lgm-sdhci-5.1-emmc", "arasan,sdhci-5.1": Intel LGM eMMC PHY
-@@ -47,6 +50,10 @@ Optional Properties:
-   - xlnx,int-clock-stable-broken: when present, the controller always reports
-     that the internal clock is stable even when it is not.
- 
-+  - xlnx,mio-bank: When specified, this will indicate the MIO bank number in
-+    which the command and data lines are configured. If not specified, driver
-+    will assume this as 0.
-+
- Example:
- 	sdhci@e0100000 {
- 		compatible = "arasan,sdhci-8.9a";
-@@ -83,6 +90,18 @@ Example:
- 		#clock-cells = <0>;
- 	};
- 
-+	sdhci: mmc@ff160000 {
-+		compatible = "xlnx,zynqmp-8.9a", "arasan,sdhci-8.9a";
-+		interrupt-parent = <&gic>;
-+		interrupts = <0 48 4>;
-+		reg = <0x0 0xff160000 0x0 0x1000>;
-+		clocks = <&clk200>, <&clk200>;
-+		clock-names = "clk_xin", "clk_ahb";
-+		clock-output-names = "clk_out_sd0", "clk_in_sd0";
-+		#clock-cells = <1>;
-+		clk-phase-sd-hs = <63>, <72>;
-+	};
-+
- 	emmc: sdhci@ec700000 {
- 		compatible = "intel,lgm-sdhci-5.1-emmc", "arasan,sdhci-5.1";
- 		reg = <0xec700000 0x300>;
--- 
-2.17.1
-
+On 11/20/2019 12:49 AM, Iuliana Prodan wrote:=0A=
+> On 11/19/2019 7:55 PM, Horia Geanta wrote:=0A=
+>> On 11/18/2019 12:31 AM, Iuliana Prodan wrote:=0A=
+>>> diff --git a/drivers/crypto/caam/caamhash.c b/drivers/crypto/caam/caamh=
+ash.c=0A=
+>>> index baf4ab1..d9de3dc 100644=0A=
+>>> --- a/drivers/crypto/caam/caamhash.c=0A=
+>>> +++ b/drivers/crypto/caam/caamhash.c=0A=
+>> [...]=0A=
+>>> @@ -933,11 +943,13 @@ static int ahash_final_ctx(struct ahash_request *=
+req)=0A=
+>>>   			     DUMP_PREFIX_ADDRESS, 16, 4, desc, desc_bytes(desc),=0A=
+>>>   			     1);=0A=
+>>>   =0A=
+>>> -	ret =3D caam_jr_enqueue(jrdev, desc, ahash_done_ctx_src, req);=0A=
+>>> +	jrentry =3D &edesc->jrentry;=0A=
+>>> +=0A=
+>>> +	ret =3D caam_jr_enqueue(jrdev, desc, ahash_done_ctx_src, jrentry);=0A=
+>>>   	if (ret =3D=3D -EINPROGRESS)=0A=
+>>>   		return ret;=0A=
+>>>   =0A=
+>>> - unmap_ctx:=0A=
+>>> +unmap_ctx:=0A=
+>> That's correct, however whitespace fixing should be done separately.=0A=
+>>=0A=
+> Should I make a separate patch for these two whitespaces?=0A=
+> =0A=
+Whitespace fixes should be moved out of this patch set.=0A=
+In general, patches handling this go through the whole file / driver.=0A=
+=0A=
+Horia=0A=
