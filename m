@@ -2,147 +2,133 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C53AEC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:32:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8246DC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:33:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96565224D2
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:32:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="FNqN9ioq";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ppDu1SJ8"
+	by mail.kernel.org (Postfix) with ESMTP id 4DF2822521
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:33:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574256788;
+	bh=H4SPYi/qnMyM0TSI7oix10uwgtqFdYpU3wzOTxKrDdg=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Gv+Oa3WMgKxFDxzPI/xREnegOFXqqqu9v2bs8EGC3a/7MRBfZs5XHspOcJDO+ThWe
+	 VSErUeKhMze5PSxPEFbFLTBJmj+5v1juadVPRry6s01AHkCpNFUNF5NWC834GbPjmB
+	 +e2UBj4xB0skOSmSMZOKPGfmYK2YOiM2XTTh8RpA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730642AbfKTNc4 (ORCPT
+        id S1730649AbfKTNdH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 08:32:56 -0500
-Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:42771 "EHLO
-        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727442AbfKTNc4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 08:32:56 -0500
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.west.internal (Postfix) with ESMTP id F1B6D4DA;
-        Wed, 20 Nov 2019 08:32:54 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Wed, 20 Nov 2019 08:32:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:content-transfer-encoding:in-reply-to; s=fm2; bh=n
-        G1qI7q/zWCkIrCeM/rIvDmve2KkiC1w2QXe0U9BI50=; b=FNqN9ioqSBRcubf7n
-        lS2HJ1gZfSpxcjwAM55efIt+ODEDXmHd+Aof3D3VmTNZx56cebnoHwnwyNofOEa1
-        nRWOPEqzNmcy7e21GGrekFYfM0v46jlGzeRgjNRHSJ5/awg7NYL4rx17eM3ML6Fg
-        CDeIztHDBIz6t8lbhEgeLPIV5gM/6c3ndxv1a27DGJjkf2tSxB4YB0cEOZqryxNd
-        kz7GfRt+s/VcQ8ChLsIpHYbtO53pN9n4JL1Z20MDTuWGb/+fVhKtKtgs0cg3m/4g
-        Um+lbu6OmnnWVBaohKs2GfgF5NafdfB9ISm3ZwQso74p14qf2re1cIbOWn5pu4vc
-        CexPA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm1; bh=nG1qI7q/zWCkIrCeM/rIvDmve2KkiC1w2QXe0U9BI
-        50=; b=ppDu1SJ8RhS6IVG734CpMBXZVIBgZsqABm0mbVPkPAgXUlAn9GETfuFHa
-        vQjARsF2spyyNcX//DikOxiEN5eFb10zyFRTkjpGQCpCE8qc2sNOg9PVWgIIHo2I
-        1Ep2qySmV9zirn1EhjSekipfMEX/G6QnsB54w8QfmrWcGIMor2SxiPuXQlfhCdWY
-        BzXCvKO/BsZcw0FERIebC0LqahhCAhjbHEFrSlhDhJiBQiiBTz0kiY3Mm7T/sPY3
-        4qGDG1ecUYCBO1oDZqFYfg2t3T7juafs/xDcyX14z/pI6hoglRQ6PLB49q3suuP0
-        lcuU45sbhzQ+ci82iodIZhCAOCEiA==
-X-ME-Sender: <xms:hkDVXbHl44XDamYubUp8PoHnidFzCNAOOo1d2Ug02kxmxWDNtYADmA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudehtddghedvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    goufhushhpvggtthffohhmrghinhculdegledmnecujfgurhepfffhvffukfhfgggtugfg
-    jggfsehtqhertddtreejnecuhfhrohhmpefirhgvghcumffjuceoghhrvghgsehkrhhorg
-    hhrdgtohhmqeenucffohhmrghinhepghhithhhuhgsrdgtohhmpdgrphhpshhpohhtrdgt
-    ohhmnecukfhppeekfedrkeeirdekledruddtjeenucfrrghrrghmpehmrghilhhfrhhomh
-    epghhrvghgsehkrhhorghhrdgtohhmnecuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:hkDVXcCMMJZMK9W2yG0tJS-UQUP--vox2byeirKIEsHmFvSR6izcGQ>
-    <xmx:hkDVXYN7cshqPyj9sV4ms0tadCQJu0MttEKy00n2Flk_1XCtoD9tWg>
-    <xmx:hkDVXWgo82VMeIqHom5W66EvjjLmXTWdRNVCeewd7uqCjX4BE7uZtA>
-    <xmx:hkDVXXyC3-PoqGHg5g7TQaL3EU07bYXnJt9fZ7oUiCQUv9_DPIxTYA>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id E01D73060062;
-        Wed, 20 Nov 2019 08:32:53 -0500 (EST)
-Date:   Wed, 20 Nov 2019 14:32:52 +0100
-From:   Greg KH <greg@kroah.com>
-To:     Oliver Neukum <oneukum@suse.com>
-Cc:     syzbot <syzbot+d934a9036346e0215d8f@syzkaller.appspotmail.com>,
-        andreyknvl@google.com, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Re: BUG: bad host security descriptor; not enough data (4 vs 5 left)
-Message-ID: <20191120133252.GC2892197@kroah.com>
-References: <000000000000d9a391059713dc1f@google.com>
- <20191111160950.GA870254@kroah.com>
- <1574248737.14298.33.camel@suse.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1574248737.14298.33.camel@suse.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        Wed, 20 Nov 2019 08:33:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40436 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727442AbfKTNdH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 08:33:07 -0500
+Received: from localhost.localdomain (unknown [118.189.143.39])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DCF2224DF;
+        Wed, 20 Nov 2019 13:33:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574256786;
+        bh=H4SPYi/qnMyM0TSI7oix10uwgtqFdYpU3wzOTxKrDdg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=YI7eNcNbmuAVTG9ALhT1vj8CqcdPHKS2ySybd90+5YYClkayN0WLU+siMilqB91qA
+         bfIf6dVkj1fhxNwHW+T8eb0aD3DBedz7Emlh0vOiXSjjo5uZupRV84N4gnFuFdNd+a
+         5+Z3KD7e8iPmv678msMuLLRr5xNwoQqDbEWIOhyk=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org
+Subject: [PATCH] ASoC: Fix Kconfig indentation
+Date:   Wed, 20 Nov 2019 21:32:52 +0800
+Message-Id: <20191120133252.6365-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 12:18:57PM +0100, Oliver Neukum wrote:
-> Am Montag, den 11.11.2019, 17:09 +0100 schrieb Greg KH:
-> > On Mon, Nov 11, 2019 at 07:34:08AM -0800, syzbot wrote:
-> > > Hello,
-> > >=20
-> > > syzbot found the following crash on:
-> > >=20
-> > > HEAD commit:    3183c037 usb: gadget: add raw-gadget interface
-> > > git tree:       https://github.com/google/kasan.git usb-fuzzer
-> > > console output: https://syzkaller.appspot.com/x/log.txt?x=3D12525dc6e=
-00000
-> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=3D79de80330=
-003b5f7
-> > > dashboard link: https://syzkaller.appspot.com/bug?extid=3Dd934a903634=
-6e0215d8f
-> > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D14ac740=
-6e00000
-> > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D13eea39ae=
-00000
-> > >=20
-> > > IMPORTANT: if you fix the bug, please add the following tag to the co=
-mmit:
-> > > Reported-by: syzbot+d934a9036346e0215d8f@syzkaller.appspotmail.com
-> > >=20
-> > > usb 1-1: config 0 interface 0 altsetting 0 has 3 endpoint descriptors,
-> > > different from the interface descriptor's value: 4
-> > > usb 1-1: New USB device found, idVendor=3D13dc, idProduct=3D5611,
-> > > bcdDevice=3D2f.15
-> > > usb 1-1: New USB device strings: Mfr=3D0, Product=3D0, SerialNumber=
-=3D0
-> > > usb 1-1: config 0 descriptor??
-> > > hwa-hc 1-1:0.0: Wire Adapter v106.52 newer than groked v1.0
-> > > hwa-hc 1-1:0.0: FIXME: USB_MAXCHILDREN too low for WUSB adapter (194 =
-ports)
-> > > usb 1-1: BUG: bad host security descriptor; not enough data (4 vs 5 l=
-eft)
-> > > usb 1-1: supported encryption types: =EF=BF=BDS=03=D0=81=EF=BF=BD=EF=
-=BF=BD=EF=BF=BD|c=03=D0=81=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BDc=03=D0=81=EF=
-=BF=BD=EF=BF=BD=EF=BF=BD
-> > > usb 1-1: E: host doesn't support CCM-1 crypto
-> > > hwa-hc 1-1:0.0: Wireless USB HWA host controller
-> > > hwa-hc 1-1:0.0: new USB bus registered, assigned bus number 11
-> >=20
-> > wusb code, hah.  It's about to be deleted from the kernel because no one
-> > uses it and there is no hardware out there.  I wouldn't spend a ton of
-> > time fuzzing it.
-> >=20
-> > One more good reason to just delete it soon...
->=20
-> Unfortunately that is not an option for the stable trees.
+Adjust indentation from spaces to tab (+optional two spaces) as in
+coding style with command like:
+	$ sed -e 's/^        /\t/' -i */Kconfig
 
-Well, we can just mark the thing as BROKEN.  I strongly doubt anyone is
-using it as there is no hardware out there.
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ sound/soc/intel/boards/Kconfig | 24 ++++++++++++------------
+ sound/soc/sof/intel/Kconfig    | 10 +++++-----
+ 2 files changed, 17 insertions(+), 17 deletions(-)
 
-thanks,
+diff --git a/sound/soc/intel/boards/Kconfig b/sound/soc/intel/boards/Kconfig
+index 2702aefee775..ef20316e83d1 100644
+--- a/sound/soc/intel/boards/Kconfig
++++ b/sound/soc/intel/boards/Kconfig
+@@ -441,18 +441,18 @@ config SND_SOC_INTEL_CML_LP_DA7219_MAX98357A_MACH
+ 	   If unsure select "N".
+ 
+ config SND_SOC_INTEL_SOF_CML_RT1011_RT5682_MACH
+-        tristate "CML with RT1011 and RT5682 in I2S Mode"
+-        depends on I2C && ACPI
+-        depends on MFD_INTEL_LPSS || COMPILE_TEST
+-        select SND_SOC_RT1011
+-        select SND_SOC_RT5682
+-        select SND_SOC_DMIC
+-        select SND_SOC_HDAC_HDMI
+-        help
+-          This adds support for ASoC machine driver for SOF platform with
+-          RT1011 + RT5682 I2S codec.
+-          Say Y if you have such a device.
+-          If unsure select "N".
++	tristate "CML with RT1011 and RT5682 in I2S Mode"
++	depends on I2C && ACPI
++	depends on MFD_INTEL_LPSS || COMPILE_TEST
++	select SND_SOC_RT1011
++	select SND_SOC_RT5682
++	select SND_SOC_DMIC
++	select SND_SOC_HDAC_HDMI
++	help
++	  This adds support for ASoC machine driver for SOF platform with
++	  RT1011 + RT5682 I2S codec.
++	  Say Y if you have such a device.
++	  If unsure select "N".
+ 
+ endif ## SND_SOC_SOF_COMETLAKE_LP && SND_SOC_SOF_HDA_LINK
+ 
+diff --git a/sound/soc/sof/intel/Kconfig b/sound/soc/sof/intel/Kconfig
+index b27fd3fdf335..cc09bb606f7d 100644
+--- a/sound/soc/sof/intel/Kconfig
++++ b/sound/soc/sof/intel/Kconfig
+@@ -264,16 +264,16 @@ config SND_SOC_SOF_ELKHARTLAKE
+ config SND_SOC_SOF_JASPERLAKE_SUPPORT
+ 	bool "SOF support for JasperLake"
+ 	help
+-          This adds support for Sound Open Firmware for Intel(R) platforms
+-          using the JasperLake processors.
+-          Say Y if you have such a device.
+-          If unsure select "N".
++	  This adds support for Sound Open Firmware for Intel(R) platforms
++	  using the JasperLake processors.
++	  Say Y if you have such a device.
++	  If unsure select "N".
+ 
+ config SND_SOC_SOF_JASPERLAKE
+ 	tristate
+ 	select SND_SOC_SOF_HDA_COMMON
+ 	help
+-          This option is not user-selectable but automagically handled by
++	  This option is not user-selectable but automagically handled by
+ 	  'select' statements at a higher level
+ 
+ config SND_SOC_SOF_HDA_COMMON
+-- 
+2.17.1
 
-greg k-h
