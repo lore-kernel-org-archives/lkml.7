@@ -7,41 +7,40 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37177C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 17:18:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BE71C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 17:18:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CBF320B7C
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 17:18:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14FF92088F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 17:18:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574270322;
-	bh=cLwOiZNPg9QRVXDbKnC5HICsFr0ox1tnervlnka2ea4=;
+	s=default; t=1574270329;
+	bh=8bej6lv9Kxl1TI/QbROpg82CwWltC4MaUmoFrInWIhQ=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=awc8bcA/vd6TxmV+SlRnLIWr5UZZ/ujgtq+GH+XWVYyPKx0suoLeZpqvD0IXDoET1
-	 b1ENSvHSn+LH+1++krqglkYVKGufdPtrS5xpBIRhNvAbsiCsbVIf/qCFPfjrhpaQ8H
-	 iF7B9giMZ7bNQVw+kqcopHgD29FFzSBUL6RSSxnk=
+	b=tCv4ngv6Y+7HHRCnQDuCMGTuaMPq8zdrlFA2fTTo97iqGJdO3F0vEzKi9ZGI150ep
+	 lHkyo3xCIJftyxUtSsIRWnwMdY6ykIvXcPPnCosiP6jvJRpYRl6BGDyF5ZgDMwCbLc
+	 g3fuGR9VxPzO3UPMs27JcUKngdOy0tG+QLKhu60g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730777AbfKTRSk (ORCPT
+        id S1730818AbfKTRSs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 12:18:40 -0500
-Received: from foss.arm.com ([217.140.110.172]:43434 "EHLO foss.arm.com"
+        Wed, 20 Nov 2019 12:18:48 -0500
+Received: from foss.arm.com ([217.140.110.172]:43450 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728183AbfKTRSi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 12:18:38 -0500
+        id S1728183AbfKTRSq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 12:18:46 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5DAE21045;
-        Wed, 20 Nov 2019 09:18:37 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8C3D81045;
+        Wed, 20 Nov 2019 09:18:45 -0800 (PST)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CFD913F703;
-        Wed, 20 Nov 2019 09:18:36 -0800 (PST)
-Date:   Wed, 20 Nov 2019 17:18:35 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 09FC83F703;
+        Wed, 20 Nov 2019 09:18:44 -0800 (PST)
+Date:   Wed, 20 Nov 2019 17:18:43 +0000
 From:   Mark Brown <broonie@kernel.org>
-To:     Andreas Kemnade <andreas@kemnade.info>
-Cc:     b.galvani@gmail.com, broonie@kernel.org, lgirdwood@gmail.com,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        phh@phh.me, stefan@agner.ch
-Subject: Applied "regulator: rn5t618: fix rc5t619 ldo10 enable" to the regulator tree
-In-Reply-To: <20191113182643.23885-1-andreas@kemnade.info>
-Message-Id: <applied-20191113182643.23885-1-andreas@kemnade.info>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>
+Subject: Applied "spi: Fix Kconfig indentation" to the spi tree
+In-Reply-To: <20191120133916.13595-1-krzk@kernel.org>
+Message-Id: <applied-20191120133916.13595-1-krzk@kernel.org>
 X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -50,11 +49,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: rn5t618: fix rc5t619 ldo10 enable
+   spi: Fix Kconfig indentation
 
-has been applied to the regulator tree at
+has been applied to the spi tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.4
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.5
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -75,41 +74,66 @@ to this mail.
 Thanks,
 Mark
 
-From 3f1a9e630b6e124c387cc57f6fea517cec68b44f Mon Sep 17 00:00:00 2001
-From: Andreas Kemnade <andreas@kemnade.info>
-Date: Wed, 13 Nov 2019 19:26:43 +0100
-Subject: [PATCH] regulator: rn5t618: fix rc5t619 ldo10 enable
+From 554bbe726ce0ef692cd95fedd5730c69c1189138 Mon Sep 17 00:00:00 2001
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Date: Wed, 20 Nov 2019 21:39:16 +0800
+Subject: [PATCH] spi: Fix Kconfig indentation
 
-LDO9 and LDO10 were listed with the same enable bits.
-That looks insane and there are no provisions in the code for handling such
-a special case. Also other out-of-tree drivers use a separate bit to
-enable it.
-Example:
-https://github.com/brunotl/kernel-kobo-mx6sl-ntx/blob/master/drivers/regulator/ricoh619-regulator.c
-So it seems to be clearly a bug.
-I cannot fully check it on my board without schematics and just discovered
-this during code analysis for another problem.
+Adjust indentation from spaces to tab (+optional two spaces) as in
+coding style with command like:
+	$ sed -e 's/^        /\t/' -i */Kconfig
 
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-Link: https://lore.kernel.org/r/20191113182643.23885-1-andreas@kemnade.info
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Link: https://lore.kernel.org/r/20191120133916.13595-1-krzk@kernel.org
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/rn5t618-regulator.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/spi/Kconfig | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/regulator/rn5t618-regulator.c b/drivers/regulator/rn5t618-regulator.c
-index eb807a059479..4a91be0ad5ae 100644
---- a/drivers/regulator/rn5t618-regulator.c
-+++ b/drivers/regulator/rn5t618-regulator.c
-@@ -90,7 +90,7 @@ static const struct regulator_desc rc5t619_regulators[] = {
- 	REG(LDO7, LDOEN1, BIT(6), LDO7DAC, 0x7f, 900000, 3500000, 25000),
- 	REG(LDO8, LDOEN1, BIT(7), LDO8DAC, 0x7f, 900000, 3500000, 25000),
- 	REG(LDO9, LDOEN2, BIT(0), LDO9DAC, 0x7f, 900000, 3500000, 25000),
--	REG(LDO10, LDOEN2, BIT(0), LDO10DAC, 0x7f, 900000, 3500000, 25000),
-+	REG(LDO10, LDOEN2, BIT(1), LDO10DAC, 0x7f, 900000, 3500000, 25000),
- 	/* LDO RTC */
- 	REG(LDORTC1, LDOEN2, BIT(4), LDORTCDAC, 0x7f, 1700000, 3500000, 25000),
- 	REG(LDORTC2, LDOEN2, BIT(5), LDORTC2DAC, 0x7f, 900000, 3500000, 25000),
+diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
+index 6c0c1f55bd71..870f7797b56b 100644
+--- a/drivers/spi/Kconfig
++++ b/drivers/spi/Kconfig
+@@ -144,7 +144,7 @@ config SPI_BCM63XX
+ 	tristate "Broadcom BCM63xx SPI controller"
+ 	depends on BCM63XX || COMPILE_TEST
+ 	help
+-          Enable support for the SPI controller on the Broadcom BCM63xx SoCs.
++	  Enable support for the SPI controller on the Broadcom BCM63xx SoCs.
+ 
+ config SPI_BCM63XX_HSSPI
+ 	tristate "Broadcom BCM63XX HS SPI controller driver"
+@@ -235,11 +235,11 @@ config SPI_DLN2
+        tristate "Diolan DLN-2 USB SPI adapter"
+        depends on MFD_DLN2
+        help
+-         If you say yes to this option, support will be included for Diolan
+-         DLN2, a USB to SPI interface.
++	 If you say yes to this option, support will be included for Diolan
++	 DLN2, a USB to SPI interface.
+ 
+-         This driver can also be built as a module.  If so, the module
+-         will be called spi-dln2.
++	 This driver can also be built as a module.  If so, the module
++	 will be called spi-dln2.
+ 
+ config SPI_EFM32
+ 	tristate "EFM32 SPI controller"
+@@ -748,10 +748,10 @@ config SPI_SYNQUACER
+ 	  It also supports the new dual-bit and quad-bit SPI protocol.
+ 
+ config SPI_MXIC
+-        tristate "Macronix MX25F0A SPI controller"
+-        depends on SPI_MASTER
+-        help
+-          This selects the Macronix MX25F0A SPI controller driver.
++	tristate "Macronix MX25F0A SPI controller"
++	depends on SPI_MASTER
++	help
++	  This selects the Macronix MX25F0A SPI controller driver.
+ 
+ config SPI_MXS
+ 	tristate "Freescale MXS SPI controller"
 -- 
 2.20.1
 
