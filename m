@@ -2,89 +2,230 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2609BC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:35:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DC96C43141
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:45:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05366208CC
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:35:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E74AD20721
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:45:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="X8k7SKga"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727637AbfKTTf1 (ORCPT
+        id S1727374AbfKTTpJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 14:35:27 -0500
-Received: from mout.kundenserver.de ([212.227.126.135]:58741 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726440AbfKTTf0 (ORCPT
+        Wed, 20 Nov 2019 14:45:09 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:4268 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726440AbfKTTpJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 14:35:26 -0500
-Received: from mail-qv1-f51.google.com ([209.85.219.51]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MnWx3-1i5d7I1UTl-00jW2R for <linux-kernel@vger.kernel.org>; Wed, 20 Nov
- 2019 20:35:25 +0100
-Received: by mail-qv1-f51.google.com with SMTP id d3so381132qvs.11
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 11:35:25 -0800 (PST)
-X-Gm-Message-State: APjAAAUU/mdAWK+CL9gIMtlS9tLJs1yEuv0r4MXIfevNECJmuV8VOrQq
-        +4sP7tyzSteSURGB5GKoTseoa4Gjf4RhC1dfQMw=
-X-Google-Smtp-Source: APXvYqwHVWU2Zw8xn9+Bv1356Zmszxab3TK1Pmn6hsvPWLI2rMNceeRYyQBX3HSMLK8D/gT8L6zA69sS3PvhoK8Z6J0=
-X-Received: by 2002:ad4:50a4:: with SMTP id d4mr4074792qvq.211.1574278524246;
- Wed, 20 Nov 2019 11:35:24 -0800 (PST)
+        Wed, 20 Nov 2019 14:45:09 -0500
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAKJh0ha016754;
+        Wed, 20 Nov 2019 20:44:51 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=o+X8AS60Eijt7vdoaqRux4/FQnWUKnnAr6CTV+AlGXM=;
+ b=X8k7SKgaUjmjxDgXAXQdxnmhpNMsaptUcPY7z1F3uJXc/0NuOMiuz0Cv6hyVhWeaLFFg
+ vtTGtUo8g/PMQnWFX+qmqoDmqrmqo7NkcOKiGxWxejqdOIegNYdGI7t6R2tR0ZHeUQXe
+ 49TnW9w6lDujkIAgLIlEUu9KpM0Ww8gL5LugaZ8faDWv62/K2CoJSSnBQEfmbrKWWhVO
+ 9ILx6W7KzVtj2TiWF+anxVimp5nDmZKwD1xXawdN5V6ZcXG8F39GSZv9+g2zHv8zdU0E
+ +o4dbF4qiweG9vYlJJgHcxw3HXeJ+x539KRTXOGxvFHDtwEEPHx7UD5XzQhCpqisIs1e uw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2wa9usfca3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 20 Nov 2019 20:44:51 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 88E39100034;
+        Wed, 20 Nov 2019 20:44:46 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 6CD952C6151;
+        Wed, 20 Nov 2019 20:44:46 +0100 (CET)
+Received: from localhost (10.75.127.48) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 20 Nov 2019 20:44:45
+ +0100
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <broonie@kernel.org>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <alexandre.torgue@st.com>
+CC:     <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH v2] dt-bindings: spi: Convert stm32 QSPI bindings to json-schema
+Date:   Wed, 20 Nov 2019 20:44:44 +0100
+Message-ID: <20191120194444.10540-1-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
 MIME-Version: 1.0
-References: <20191108203435.112759-1-arnd@arndb.de> <20191108203435.112759-4-arnd@arndb.de>
- <fdcb510863c801f1f64448e558ee0f8ed20db418.camel@codethink.co.uk>
-In-Reply-To: <fdcb510863c801f1f64448e558ee0f8ed20db418.camel@codethink.co.uk>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 20 Nov 2019 20:35:07 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a3BPhX_NRFj66WyRLQUOCV-FGRjmPCgB7gqxMoK8hfywg@mail.gmail.com>
-Message-ID: <CAK8P3a3BPhX_NRFj66WyRLQUOCV-FGRjmPCgB7gqxMoK8hfywg@mail.gmail.com>
-Subject: Re: [Y2038] [PATCH 3/8] powerpc: fix vdso32 for ppc64le
-To:     Ben Hutchings <ben.hutchings@codethink.co.uk>
-Cc:     y2038 Mailman List <y2038@lists.linaro.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:30KBopqabv3uotMIxEYqngrzt0Ck4jrEYYgPvK5NG/ZoYx7gIbm
- 1yRmeMez6nymaFuiyoRXS2/nORduF5p6vPUkjtLa54rxqymNQyxKTZQvss/xKBoTiymK+MA
- B1b0urpCMKSHqIspfTQ/K8R4Bc3nsgBU437QyJaDgku4kSGbEhEKCicwjNyguFOd1indno+
- 0HiDzSlHQoqqmD2pnRXhw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:9TUk0p3FXR4=:QvFvxbMS9Z+vkxL0gTUH/W
- eXIYdwwROxb/U7yaq4VdO5b6DHbzIzpcSek8VVi3R0GwD6jo+nwOv0AIABrj/rW2GL7sRHfXx
- Lkdr4WyhGPq/hG0TLaxS4Qt0xAaY98oEAulpcGuoHhMPLE//ADk+D4CCHlVYFwe9ypi/7KfDB
- c3XbqXAPIH8x4uIawQb6hENUXxMZO3uX8b00CsULTZykkw3ixfnvB20LYjKUHup4LGmovL/8Q
- u54nZHXZ1spcCbPrunKcN4rxlPbvtLxLQjnqOTW4thvdo4dcd1cD3YNigBFShAk1KHOv9tuah
- 1875sT8yTJ/z33uPMd+Vr7agzSPUCaiKsfHi1U9FvXLykOfuxxo2/xYcx9lz6S34UU55Z4ka8
- BBdfr7Q8L5IkA39vKekyHEnIZUxckZupFvUpdu5BZDYMusPPtuJi74LB+Wch8HormUTABt514
- S7TKfF2p8Z6SU2+zTTpmtSBlQPR82lRhJveCWpVvUBaRL64/zlVAFU6qPFnNqknnTewxPsCWs
- owps2tVp+LSAq8dFzdA0kNTsPKgK3CrIuyJpqs8epWuepYsvnvtBaNTW8Njq4Mwglf523A/NP
- usoYMRZsQ5VJSNziP6BeZp6M38kP62otHppLSLr7Mj8pxjlDD3jX8HvAmRolX758qNpyPch0j
- MuZ5HZrPdULeCACTzIXmIrSdgaMHfo5tBKbQ3zhb17AbkqxBQqgsmX3UIzv7cAzwx7WzN2oJx
- jIgsH2PLLwZi62Etsb8uA1mjkzX7WblrzRLqWbD4S5UB4SZhxjIZfmA55lLZfk+9ulrJV+kVY
- ujts0YrcJInYcvU0gDUSzxAUWgx+L1NQk0uCmmR3fCgHvsGAD/glSWRgqGCmwGX04IFoRO9RM
- 2KxZ9VBOVB/ZwfWj+koQ==
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.48]
+X-ClientProxiedBy: SFHDAG2NODE1.st.com (10.75.127.4) To SFHDAG3NODE3.st.com
+ (10.75.127.9)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-20_06:2019-11-20,2019-11-20 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 8:13 PM Ben Hutchings
-<ben.hutchings@codethink.co.uk> wrote:
->
-> On Fri, 2019-11-08 at 21:34 +0100, Arnd Bergmann wrote:
-> > On little-endian 32-bit application running on 64-bit kernels,
-> > the current vdso would read the wrong half of the xtime seconds
-> > field. Change it to return the lower half like it does on
-> > big-endian.
->
-> ppc64le doesn't have 32-bit compat so this is only theoretical.
+Convert the STM32 QSPI binding to DT schema format using json-schema
 
-That is probably true. I only looked at the kernel, which today still
-supports compat mode for ppc64le, but I saw the patches to disable
-it, and I don't think anyone has even attempted building user space
-for it.
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+---
+changes in version 2:
+- fix subject
+- remove useless minItems and maxItems
+ .../devicetree/bindings/spi/spi-stm32-qspi.txt     | 47 ------------
+ .../devicetree/bindings/spi/st,stm32-qspi.yaml     | 83 ++++++++++++++++++++++
+ 2 files changed, 83 insertions(+), 47 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/spi/spi-stm32-qspi.txt
+ create mode 100644 Documentation/devicetree/bindings/spi/st,stm32-qspi.yaml
 
-       Arnd
+diff --git a/Documentation/devicetree/bindings/spi/spi-stm32-qspi.txt b/Documentation/devicetree/bindings/spi/spi-stm32-qspi.txt
+deleted file mode 100644
+index bfc038b9478d..000000000000
+--- a/Documentation/devicetree/bindings/spi/spi-stm32-qspi.txt
++++ /dev/null
+@@ -1,47 +0,0 @@
+-* STMicroelectronics Quad Serial Peripheral Interface(QSPI)
+-
+-Required properties:
+-- compatible: should be "st,stm32f469-qspi"
+-- reg: the first contains the register location and length.
+-       the second contains the memory mapping address and length
+-- reg-names: should contain the reg names "qspi" "qspi_mm"
+-- interrupts: should contain the interrupt for the device
+-- clocks: the phandle of the clock needed by the QSPI controller
+-- A pinctrl must be defined to set pins in mode of operation for QSPI transfer
+-
+-Optional properties:
+-- resets: must contain the phandle to the reset controller.
+-
+-A spi flash (NOR/NAND) must be a child of spi node and could have some
+-properties. Also see jedec,spi-nor.txt.
+-
+-Required properties:
+-- reg: chip-Select number (QSPI controller may connect 2 flashes)
+-- spi-max-frequency: max frequency of spi bus
+-
+-Optional properties:
+-- spi-rx-bus-width: see ./spi-bus.txt for the description
+-- dmas: DMA specifiers for tx and rx dma. See the DMA client binding,
+-Documentation/devicetree/bindings/dma/dma.txt.
+-- dma-names: DMA request names should include "tx" and "rx" if present.
+-
+-Example:
+-
+-qspi: spi@a0001000 {
+-	compatible = "st,stm32f469-qspi";
+-	reg = <0xa0001000 0x1000>, <0x90000000 0x10000000>;
+-	reg-names = "qspi", "qspi_mm";
+-	interrupts = <91>;
+-	resets = <&rcc STM32F4_AHB3_RESET(QSPI)>;
+-	clocks = <&rcc 0 STM32F4_AHB3_CLOCK(QSPI)>;
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&pinctrl_qspi0>;
+-
+-	flash@0 {
+-		compatible = "jedec,spi-nor";
+-		reg = <0>;
+-		spi-rx-bus-width = <4>;
+-		spi-max-frequency = <108000000>;
+-		...
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/spi/st,stm32-qspi.yaml b/Documentation/devicetree/bindings/spi/st,stm32-qspi.yaml
+new file mode 100644
+index 000000000000..3665a5fe6b7f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/st,stm32-qspi.yaml
+@@ -0,0 +1,83 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/spi/st,stm32-qspi.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: STMicroelectronics STM32 Quad Serial Peripheral Interface (QSPI) bindings
++
++maintainers:
++  - Christophe Kerello <christophe.kerello@st.com>
++  - Patrice Chotard <patrice.chotard@st.com>
++
++allOf:
++  - $ref: "spi-controller.yaml#"
++
++properties:
++  compatible:
++    const: st,stm32f469-qspi
++
++  reg:
++    items:
++      - description: registers
++      - description: memory mapping
++
++  reg-names:
++    items:
++     - const: qspi
++     - const: qspi_mm
++
++  clocks:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  resets:
++    maxItems: 1
++
++  dmas:
++    items:
++      - description: tx DMA channel
++      - description: rx DMA channel
++
++  dma-names:
++    items:
++      - const: tx
++      - const: rx
++
++required:
++  - compatible
++  - reg
++  - reg-names
++  - clocks
++  - interrupts
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/clock/stm32mp1-clks.h>
++    #include <dt-bindings/reset/stm32mp1-resets.h>
++    spi@58003000 {
++      compatible = "st,stm32f469-qspi";
++      reg = <0x58003000 0x1000>, <0x70000000 0x10000000>;
++      reg-names = "qspi", "qspi_mm";
++      interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>;
++      dmas = <&mdma1 22 0x10 0x100002 0x0 0x0>,
++             <&mdma1 22 0x10 0x100008 0x0 0x0>;
++      dma-names = "tx", "rx";
++      clocks = <&rcc QSPI_K>;
++      resets = <&rcc QSPI_R>;
++
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      flash@0 {
++        compatible = "jedec,spi-nor";
++        reg = <0>;
++        spi-rx-bus-width = <4>;
++        spi-max-frequency = <108000000>;
++      };
++    };
++
++...
+-- 
+2.15.0
+
