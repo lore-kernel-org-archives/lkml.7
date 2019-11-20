@@ -2,331 +2,518 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FORGED_MUA_MOZILLA,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB5C1C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 04:58:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB5A6C43141
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 05:08:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C05E2244A
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 04:58:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="RuRpb3gE";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="VTEFr85d"
+	by mail.kernel.org (Postfix) with ESMTP id 928282240D
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 05:08:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727556AbfKTE6s (ORCPT
+        id S1726574AbfKTFIK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 23:58:48 -0500
-Received: from a27-21.smtp-out.us-west-2.amazonses.com ([54.240.27.21]:46570
-        "EHLO a27-21.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727395AbfKTE6r (ORCPT
+        Wed, 20 Nov 2019 00:08:10 -0500
+Received: from mout-p-201.mailbox.org ([80.241.56.171]:42230 "EHLO
+        mout-p-201.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726220AbfKTFIJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 23:58:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574225926;
-        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-        bh=d39WleQKXK6tcao+CuIx2kbRmAROSeJKz7+sdrybO7g=;
-        b=RuRpb3gEGS8EMcIscWr4vbL1hiQCgkinKXqlGCiHpxuJbSXDSbtqu1/mkf7wqD9E
-        783b8igt46guibWu9Wo+/gaZxp8FsGd4Ah+GUrc52xMhrr3ez8o9R88DYZfLC7z82pq
-        /GcudiIgZtDj8P4zmnXo3QOJRhAL/qcbtA+yozgQ=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574225926;
-        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID;
-        bh=d39WleQKXK6tcao+CuIx2kbRmAROSeJKz7+sdrybO7g=;
-        b=VTEFr85dLhdGnfrxyhv9RQvrsdl3GtqW/QNzpOl//7tOv2ApTOlZQCBwCDjoVCS+
-        7IDkg5zinB3o6KjKsov0qWicR3xWtgLr4a0HHqv3epRnBhD3qFUzBKC37ZFcNMqwFtZ
-        fwVck50ZZfKcjC50pECRt8S74qP7ZvIglsSt4tKA=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DDA73C433A2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=neeraju@codeaurora.org
-Subject: Re: [PATCH v2] rcu: Fix missed wakeup of exp_wq waiters
-To:     paulmck@kernel.org
-Cc:     josh@joshtriplett.org, rostedt@goodmis.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        joel@joelfernandes.org, linux-kernel@vger.kernel.org,
-        gkohli@codeaurora.org, prsood@codeaurora.org,
-        pkondeti@codeaurora.org, rcu@vger.kernel.org
-References: <0101016e81a9ecb9-ce4a6425-f21d-4166-96ed-32d3700717f1-000000@us-west-2.amazonses.com>
- <20191119193827.GB2889@paulmck-ThinkPad-P72>
-From:   Neeraj Upadhyay <neeraju@codeaurora.org>
-Message-ID: <0101016e872d57f5-196e5b96-3cd0-41db-b7a2-fd8ea3e87d41-000000@us-west-2.amazonses.com>
-Date:   Wed, 20 Nov 2019 04:58:46 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 20 Nov 2019 00:08:09 -0500
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [80.241.60.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mout-p-201.mailbox.org (Postfix) with ESMTPS id 47HrL91l9qzQlBB;
+        Wed, 20 Nov 2019 06:08:01 +0100 (CET)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp2.mailbox.org ([80.241.60.241])
+        by spamfilter06.heinlein-hosting.de (spamfilter06.heinlein-hosting.de [80.241.56.125]) (amavisd-new, port 10030)
+        with ESMTP id hkfQcG-poP8O; Wed, 20 Nov 2019 06:07:51 +0100 (CET)
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     Aleksa Sarai <cyphar@cyphar.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
+        David Drysdale <drysdale@google.com>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Christian Brauner <christian@brauner.io>,
+        Aleksa Sarai <asarai@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        dev@opencontainers.org, containers@lists.linux-foundation.org,
+        bpf@vger.kernel.org, netdev@vger.kernel.org,
+        linux-alpha@vger.kernel.org, linux-api@vger.kernel.org,
+        libc-alpha@sourceware.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
+Subject: [PATCH RESEND v17 00/13] open: introduce openat2(2) syscall
+Date:   Wed, 20 Nov 2019 16:06:18 +1100
+Message-Id: <20191120050631.12816-1-cyphar@cyphar.com>
 MIME-Version: 1.0
-In-Reply-To: <20191119193827.GB2889@paulmck-ThinkPad-P72>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-SES-Outgoing: 2019.11.20-54.240.27.21
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patchset is being developed here:
+  <https://github.com/cyphar/linux/tree/openat2/master>
 
-On 11/20/2019 1:08 AM, Paul E. McKenney wrote:
-> On Tue, Nov 19, 2019 at 03:17:07AM +0000, Neeraj Upadhyay wrote:
->> For the tasks waiting in exp_wq inside exp_funnel_lock(),
->> there is a chance that they might be indefinitely blocked
->> in below scenario:
->>
->> 1. There is a task waiting on exp sequence 0b'100' inside
->>     exp_funnel_lock(). This task blocks at wq index 1.
->>
->>     synchronize_rcu_expedited()
->>       s = 0b'100'
->>       exp_funnel_lock()
->>         wait_event(rnp->exp_wq[rcu_seq_ctr(s) & 0x3]
->>
->> 2. The expedited grace period (which above task blocks for)
->>     completes and task (task1) holding exp_mutex queues
->>     worker and schedules out.
->>
->>     synchronize_rcu_expedited()
->>       s = 0b'100'
->>       queue_work(rcu_gp_wq, &rew.rew_work)
->>         wake_up_worker()
->>           schedule()
->>
->> 3. kworker A picks up the queued work and completes the exp gp
->>     sequence and then blocks on exp_wake_mutex, which is held
->>     by another kworker, which is doing wakeups for expedited_sequence
->>     0.
->>
->>     rcu_exp_wait_wake()
->>       rcu_exp_wait_wake()
->>         rcu_exp_gp_seq_end(rsp) // rsp->expedited_sequence is incremented
->>                                 // to 0b'100'
->>         mutex_lock(&rcu_state.exp_wake_mutex)
->>
->> 4. task1 does not enter wait queue, as sync_exp_work_done() returns true,
->>     and releases exp_mutex.
->>
->>     wait_event(rnp->exp_wq[rcu_seq_ctr(s) & 0x3],
->>       sync_exp_work_done(rsp, s));
->>     mutex_unlock(&rsp->exp_mutex);
->>
->> 5. Next exp GP completes, and sequence number is incremented:
->>
->>     rcu_exp_wait_wake()
->>       rcu_exp_wait_wake()
->>         rcu_exp_gp_seq_end(rsp) // rsp->expedited_sequence = 0b'200'
->>
->> 6. kworker A acquires exp_wake_mutex. As it uses current
->>     expedited_sequence, it wakes up workers from wrong wait queue
->>     index - it should have worken wait queue corresponding to
->>     0b'100' sequence, but wakes up the ones for 0b'200' sequence.
->>     This results in task at step 1 indefinitely blocked.
->>
->>     rcu_exp_wait_wake()
->>       wake_up_all(&rnp->exp_wq[rcu_seq_ctr(rsp->expedited_sequence) & 0x3]);
->>
->> This issue manifested as DPM device timeout during suspend, as scsi
->> device was stuck in _synchronize_rcu_expedited().
->>
->> schedule()
->> synchronize_rcu_expedited()
->> synchronize_rcu()
->> scsi_device_quiesce()
->> scsi_bus_suspend()
->> dpm_run_callback()
->> __device_suspend()
->>
->> Fix this by using the correct exp sequence number, the one which
->> owner of the exp_mutex initiated and passed to kworker,
->> to index the wait queue, inside rcu_exp_wait_wake().
->>
->> Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
-> 
-> Queued, thank you!
-> 
-> I reworked the commit message to make it easier to follow the sequence
-> of events.  Please see below and let me know if I messed anything up.
-> 
-> 							Thanx, Paul
-> 
-> ------------------------------------------------------------------------
-> 
-> commit d887fd2a66861f51ed93b5dde894b9646a5569dd
-> Author: Neeraj Upadhyay <neeraju@codeaurora.org>
-> Date:   Tue Nov 19 03:17:07 2019 +0000
-> 
->      rcu: Fix missed wakeup of exp_wq waiters
->      
->      Tasks waiting within exp_funnel_lock() for an expedited grace period to
->      elapse can be starved due to the following sequence of events:
->      
->      1.      Tasks A and B both attempt to start an expedited grace
->              period at about the same time.  This grace period will have
->              completed when the lower four bits of the rcu_state structure's
->              ->expedited_sequence field are 0b'0100', for example, when the
->              initial value of this counter is zero.  Task A wins, and thus
->              does the actual work of starting the grace period, including
->              acquiring the rcu_state structure's .exp_mutex and sets the
->              counter to 0b'0001'.
->      
->      2.      Because task B lost the race to start the grace period, it
->              waits on ->expedited_sequence to reach 0b'0100' inside of
->              exp_funnel_lock(). This task therefore blocks on the rcu_node
->              structure's ->exp_wq[1] field, keeping in mind that the
->              end-of-grace-period value of ->expedited_sequence (0b'0100')
->              is shifted down two bits before indexing the ->exp_wq[] field.
->      
->      3.      Task C attempts to start another expedited grace period,
->              but blocks on ->exp_mutex, which is still held by Task A.
->      
->      4.      The aforementioned expedited grace period completes, so that
->              ->expedited_sequence now has the value 0b'0100'.  A kworker task
->              therefore acquires the rcu_state structure's ->exp_wake_mutex
->              and starts awakening any tasks waiting for this grace period.
->      
->      5.      One of the first tasks awakened happens to be Task A.  Task A
->              therefore releases the rcu_state structure's ->exp_mutex,
->              which allows Task C to start the next expedited grace period,
->              which causes the lower four bits of the rcu_state structure's
->              ->expedited_sequence field to become 0b'0101'.
->      
->      6.      Task C's expedited grace period completes, so that the lower four
->              bits of the rcu_state structure's ->expedited_sequence field now
->              become 0b'1000'.
->      
->      7.      The kworker task from step 4 above continues its wakeups.
->              Unfortunately, the wake_up_all() refetches the rcu_state
->              structure's .expedited_sequence field:
+This is a re-send of
+  <https://lore.kernel.org/lkml/20191117011713.13032-1-cyphar@cyphar.com/>
+but rebased on top of 5.4-rc8 (also my mails got duplicated the first
+time I sent v17 -- hopefully that doesn't happen this time).
 
-This might not be true. I think wake_up_all(), which internally calls 
-__wake_up(), will use a single wq_head for doing all wakeups. So, a 
-single .expedited_sequence value would be used to get wq_head.
+Patch changelog:
+ v17:
+  * Add a path_is_under() check for LOOKUP_IS_SCOPED in complete_walk(), as a
+    last line of defence to ensure that namei bugs will not break the contract
+    of LOOKUP_BENEATH or LOOKUP_IN_ROOT.
+  * Update based on feedback by Al Viro:
+    * Make nd_jump_link() free the passed path on error, so that callers don't
+      need to worry about it in the error path.
+    * Remove needless m_retry and r_retry variables in handle_dots().
+    * Always return -ECHILD from follow_dotdot_rcu().
+ v16: <https://lore.kernel.org/lkml/20191116002802.6663-1-cyphar@cyphar.com/>
+ v15: <https://lore.kernel.org/lkml/20191105090553.6350-1-cyphar@cyphar.com/>
+ v14: <https://lore.kernel.org/lkml/20191010054140.8483-1-cyphar@cyphar.com/>
+      <https://lore.kernel.org/lkml/20191026185700.10708-1-cyphar@cyphar.com>
+ v13: <https://lore.kernel.org/lkml/20190930183316.10190-1-cyphar@cyphar.com/>
+ v12: <https://lore.kernel.org/lkml/20190904201933.10736-1-cyphar@cyphar.com/>
+ v11: <https://lore.kernel.org/lkml/20190820033406.29796-1-cyphar@cyphar.com/>
+      <https://lore.kernel.org/lkml/20190728010207.9781-1-cyphar@cyphar.com/>
+ v10: <https://lore.kernel.org/lkml/20190719164225.27083-1-cyphar@cyphar.com/>
+ v09: <https://lore.kernel.org/lkml/20190706145737.5299-1-cyphar@cyphar.com/>
+ v08: <https://lore.kernel.org/lkml/20190520133305.11925-1-cyphar@cyphar.com/>
+ v07: <https://lore.kernel.org/lkml/20190507164317.13562-1-cyphar@cyphar.com/>
+ v06: <https://lore.kernel.org/lkml/20190506165439.9155-1-cyphar@cyphar.com/>
+ v05: <https://lore.kernel.org/lkml/20190320143717.2523-1-cyphar@cyphar.com/>
+ v04: <https://lore.kernel.org/lkml/20181112142654.341-1-cyphar@cyphar.com/>
+ v03: <https://lore.kernel.org/lkml/20181009070230.12884-1-cyphar@cyphar.com/>
+ v02: <https://lore.kernel.org/lkml/20181009065300.11053-1-cyphar@cyphar.com/>
+ v01: <https://lore.kernel.org/lkml/20180929103453.12025-1-cyphar@cyphar.com/>
 
-void __wake_up(struct wait_queue_head *wq_head, ...)
+For a very long time, extending openat(2) with new features has been
+incredibly frustrating. This stems from the fact that openat(2) is
+possibly the most famous counter-example to the mantra "don't silently
+accept garbage from userspace" -- it doesn't check whether unknown flags
+are present[1].
 
-However, below sequence of events would result in problem:
+This means that (generally) the addition of new flags to openat(2) has
+been fraught with backwards-compatibility issues (O_TMPFILE has to be
+defined as __O_TMPFILE|O_DIRECTORY|[O_RDWR or O_WRONLY] to ensure old
+kernels gave errors, since it's insecure to silently ignore the
+flag[2]). All new security-related flags therefore have a tough road to
+being added to openat(2).
 
-1.      Tasks A starts an expedited grace period at about the same time.
-         This grace period will have completed when the lower four bits
-		of the rcu_state structure's ->expedited_sequence field are 0b'0100',
-		for example, when the initial value of this counter is zero.
-		Task A wins, acquires the rcu_state structure's .exp_mutex and
-		sets the counter to 0b'0001'.
+Furthermore, the need for some sort of control over VFS's path resolution (to
+avoid malicious paths resulting in inadvertent breakouts) has been a very
+long-standing desire of many userspace applications. This patchset is a revival
+of Al Viro's old AT_NO_JUMPS[3] patchset (which was a variant of David
+Drysdale's O_BENEATH patchset[4] which was a spin-off of the Capsicum
+project[5]) with a few additions and changes made based on the previous
+discussion within [6] as well as others I felt were useful.
 
-2.      The aforementioned expedited grace period completes, so that
-         ->expedited_sequence now has the value 0b'0100'.  A kworker task
-         therefore acquires the rcu_state structure's ->exp_wake_mutex
-         and starts awakening any tasks waiting for this grace period.
-         This kworker gets preempted while unlocking wq_head lock
+In line with the conclusions of the original discussion of AT_NO_JUMPS, the
+flag has been split up into separate flags. However, instead of being an
+openat(2) flag it is provided through a new syscall openat2(2) which provides
+several other improvements to the openat(2) interface (see the patch
+description for more details). The following new LOOKUP_* flags are added:
 
-         wake_up_all()
-           __wake_up()
-             __wake_up_common_lock()
-               spin_unlock_irqrestore()
-                 __raw_spin_unlock_irqrestore()
-                   preempt_enable()
-                     __preempt_schedule()
+  * LOOKUP_NO_XDEV blocks all mountpoint crossings (upwards, downwards,
+    or through absolute links). Absolute pathnames alone in openat(2) do not
+    trigger this. Magic-link traversal which implies a vfsmount jump is also
+    blocked (though magic-link jumps on the same vfsmount are permitted).
 
-3.      One of the first tasks awakened happens to be Task A.  Task A
-         therefore releases the rcu_state structure's ->exp_mutex,
+  * LOOKUP_NO_MAGICLINKS blocks resolution through /proc/$pid/fd-style
+    links. This is done by blocking the usage of nd_jump_link() during
+    resolution in a filesystem. The term "magic-links" is used to match
+    with the only reference to these links in Documentation/, but I'm
+    happy to change the name.
 
-4.      Tasks B and C both attempt to start an expedited grace
-         period at about the same time.  This grace period will have
-         completed when the lower four bits of the rcu_state structure's
-         ->expedited_sequence field are 0b'1000'. Task B wins, and thus
-         does the actual work of starting the grace period, including
-         acquiring the rcu_state structure's .exp_mutex and sets the
-         counter to 0b'0101'.
+    It should be noted that this is different to the scope of
+    ~LOOKUP_FOLLOW in that it applies to all path components. However,
+    you can do openat2(NO_FOLLOW|NO_MAGICLINKS) on a magic-link and it
+    will *not* fail (assuming that no parent component was a
+    magic-link), and you will have an fd for the magic-link.
 
-5.      Because task C lost the race to start the grace period, it
-         waits on ->expedited_sequence to reach 0b'1000' inside of
-         exp_funnel_lock(). This task therefore blocks on the rcu_node
-         structure's ->exp_wq[2] field, keeping in mind that the
-         end-of-grace-period value of ->expedited_sequence (0b'1000')
-         is shifted down two bits before indexing the ->exp_wq[] field.
+    In order to correctly detect magic-links, the introduction of a new
+    LOOKUP_MAGICLINK_JUMPED state flag was required.
 
-6.      Task B queues work to complete expedited grace period. This
-         task is preempted just before wait_event call. Kworker task picks
-		up the work queued by task B and and completes grace period, so
-		that the lower four bits of the rcu_state structure's
-		->expedited_sequence field now become 0b'1000'. This kworker starts
-		waiting on the exp_wake_mutex, which is owned by kworker doing
-		wakeups for expedited sequence initiated by task A.
+  * LOOKUP_BENEATH disallows escapes to outside the starting dirfd's
+    tree, using techniques such as ".." or absolute links. Absolute
+    paths in openat(2) are also disallowed. Conceptually this flag is to
+    ensure you "stay below" a certain point in the filesystem tree --
+    but this requires some additional to protect against various races
+    that would allow escape using "..".
 
-7.      Task B schedules in and finds its expedited sequence snapshot has
-         completed; so, it does not enter waitq and releases exp_mutex. This
-		allows Task D to start the next expedited grace period,
-         which causes the lower four bits of the rcu_state structure's
-         ->expedited_sequence field to become 0b'1001'.
+    Currently LOOKUP_BENEATH implies LOOKUP_NO_MAGICLINKS, because it
+    can trivially beam you around the filesystem (breaking the
+    protection). In future, there might be similar safety checks done as
+    in LOOKUP_IN_ROOT, but that requires more discussion.
 
-8.      Task D's expedited grace period completes, so that the lower four
-         bits of the rcu_state structure's ->expedited_sequence field now
-         become 0b'1100'.
+In addition, two new flags are added that expand on the above ideas:
 
-9.      kworker from step 2 is scheduled in and releases exp_wake_mutex;
-         kworker correspnding to Task B's expedited grace period acquires
-		exp_wake_mutex and starts wakeups. Unfortunately, it used the
-		rcu_state structure's .expedited_sequence field for determining
-		the waitq index.
+  * LOOKUP_NO_SYMLINKS does what it says on the tin. No symlink
+    resolution is allowed at all, including magic-links. Just as with
+    LOOKUP_NO_MAGICLINKS this can still be used with NOFOLLOW to open an
+    fd for the symlink as long as no parent path had a symlink
+    component.
 
- 
-wake_up_all(&rnp->exp_wq[rcu_seq_ctr(rcu_state.expedited_sequence) & 0x3]);
+  * LOOKUP_IN_ROOT is an extension of LOOKUP_BENEATH that, rather than
+    blocking attempts to move past the root, forces all such movements
+    to be scoped to the starting point. This provides chroot(2)-like
+    protection but without the cost of a chroot(2) for each filesystem
+    operation, as well as being safe against race attacks that chroot(2)
+    is not.
 
-         This results in the wakeup being applied to the rcu_node
-         structure's ->exp_wq[3] field, which is unfortunate given that
-         Task C is instead waiting on ->exp_wq[2].
+    If a race is detected (as with LOOKUP_BENEATH) then an error is
+    generated, and similar to LOOKUP_BENEATH it is not permitted to cross
+    magic-links with LOOKUP_IN_ROOT.
+
+    The primary need for this is from container runtimes, which
+    currently need to do symlink scoping in userspace[7] when opening
+    paths in a potentially malicious container. There is a long list of
+    CVEs that could have bene mitigated by having RESOLVE_THIS_ROOT
+    (such as CVE-2017-1002101, CVE-2017-1002102, CVE-2018-15664, and
+    CVE-2019-5736, just to name a few).
+
+In order to make all of the above more usable, I'm working on
+libpathrs[8] which is a C-friendly library for safe path resolution. It
+features a userspace-emulated backend if the kernel doesn't support
+openat2(2). Hopefully we can get userspace to switch to using it, and
+thus get openat2(2) support for free once it's ready.
+
+Future work would include implementing things like RESOLVE_NO_AUTOMOUNT and
+possibly a RESOLVE_NO_REMOTE (to allow programs to be sure they don't hit DoSes
+though stale NFS handles).
+
+[1]: https://lwn.net/Articles/588444/
+[2]: https://lore.kernel.org/lkml/CA+55aFyyxJL1LyXZeBsf2ypriraj5ut1XkNDsunRBqgVjZU_6Q@mail.gmail.com
+[3]: https://lore.kernel.org/lkml/20170429220414.GT29622@ZenIV.linux.org.uk
+[4]: https://lore.kernel.org/lkml/1415094884-18349-1-git-send-email-drysdale@google.com
+[5]: https://lore.kernel.org/lkml/1404124096-21445-1-git-send-email-drysdale@google.com
+[6]: https://lwn.net/Articles/723057/
+[7]: https://github.com/cyphar/filepath-securejoin
+[8]: https://github.com/openSUSE/libpathrs
+
+The current draft of the openat2(2) man-page is included below.
+
+--8<---------------------------------------------------------------------------
+OPENAT2(2)                          Linux Programmer's Manual                          OPENAT2(2)
+
+NAME
+       openat2 - open and possibly create a file (extended)
+
+SYNOPSIS
+       #include <sys/types.h>
+       #include <sys/stat.h>
+       #include <fcntl.h>
+
+       int openat2(int dirfd, const char *pathname, struct open_how *how, size_t size);
+
+       Note: There is no glibc wrapper for this system call; see NOTES.
+
+DESCRIPTION
+       The  openat2()  system  call  opens the file specified by pathname.  If the specified file
+       does not exist, it may optionally (if O_CREAT is specified in  how.flags)  be  created  by
+       openat2().
+
+       As  with openat(2), if pathname is relative, then it is interpreted relative to the direc-
+       tory referred to by the file descriptor dirfd (or the current  working  directory  of  the
+       calling  process,  if dirfd is the special value AT_FDCWD.)  If pathname is absolute, then
+       dirfd is ignored (unless how.resolve contains RESOLVE_IN_ROOT, in which case  pathname  is
+       resolved relative to dirfd.)
+
+       The  openat2()  system  call  is  an extension of openat(2) and provides a superset of its
+       functionality.  Rather than taking a single flag argument, an extensible  structure  (how)
+       is  passed  instead  to  allow  for  future extensions.  size must be set to sizeof(struct
+       open_how), to facilitate future extensions (see the "Extensibility" section of  the  NOTES
+       for more detail on how extensions are handled.)
+
+   The open_how structure
+       The following structure indicates how pathname should be opened, and acts as a superset of
+       the flag and mode arguments to openat(2).
+
+           struct open_how {
+               __aligned_u64 flags;         /* O_* flags. */
+               __u16         mode;          /* Mode for O_{CREAT,TMPFILE}. */
+               __u16         __padding[3];  /* Must be zeroed. */
+               __aligned_u64 resolve;       /* RESOLVE_* flags. */
+           };
+
+       Any future extensions to openat2() will be implemented as new fields appended to the above
+       structure (or through reuse of pre-existing padding space), with the zero value of the new
+       fields acting as though the extension were not present.
+
+       The meaning of each field is as follows:
+
+              flags
+                     The file creation and status flags to use for this operation.   All  of  the
+                     O_* flags defined for openat(2) are valid openat2() flag values.
+
+                     Unlike openat(2), it is an error to provide openat2() unknown or conflicting
+                     flags in flags.
+
+              mode
+                     File mode for the new file, with identical semantics to the mode argument to
+                     openat(2).   However,  unlike openat(2), it is an error to provide openat2()
+                     with a mode which contains bits other than 0777.
+
+                     It is an error to provide openat2() a non-zero mode if flags does  not  con-
+                     tain O_CREAT or O_TMPFILE.
+
+              resolve
+                     Change  how  the  components  of pathname will be resolved (see path_resolu-
+                     tion(7) for background information.)  The primary use case for  these  flags
+                     is  to  allow trusted programs to restrict how untrusted paths (or paths in-
+                     side untrusted directories) are resolved.  The full list of resolve flags is
+                     given below.
+
+                     RESOLVE_NO_XDEV
+                            Disallow  traversal of mount points during path resolution (including
+                            all bind mounts).
+
+                            Users of this flag are encouraged to make its use  configurable  (un-
+                            less  it is used for a specific security purpose), as bind mounts are
+                            very widely used by end-users.  Setting this flag indiscrimnately for
+                            all  uses  of  openat2() may result in spurious errors on previously-
+                            functional systems.
+
+                     RESOLVE_NO_SYMLINKS
+                            Disallow resolution of symbolic links during path  resolution.   This
+                            option implies RESOLVE_NO_MAGICLINKS.
+
+                            If the trailing component is a symbolic link, and flags contains both
+                            O_PATH and O_NOFOLLOW, then an O_PATH file descriptor referencing the
+                            symbolic link will be returned.
+
+                            Users  of  this flag are encouraged to make its use configurable (un-
+                            less it is used for a specific security purpose), as  symbolic  links
+                            are very widely used by end-users.  Setting this flag indiscrimnately
+                            for all uses of openat2() may result in  spurious  errors  on  previ-
+                            ously-functional systems.
+
+                     RESOLVE_NO_MAGICLINKS
+                            Disallow all magic link resolution during path resolution.
+
+                            If  the  trailing  component is a magic link, and flags contains both
+                            O_PATH and O_NOFOLLOW, then an O_PATH file descriptor referencing the
+                            magic link will be returned.
+
+                            Magic-links  are  symbolic  link-like  objects  that are most notably
+                            found   in   proc(5)   (examples    include    /proc/[pid]/exe    and
+                            /proc/[pid]/fd/*.)   Due to the potential danger of unknowingly open-
+                            ing these magic links, it may be  preferable  for  users  to  disable
+                            their resolution entirely (see symboliclink(7) for more details.)
+
+                     RESOLVE_BENEATH
+                            Do  not permit the path resolution to succeed if any component of the
+                            resolution is not a descendant of the directory indicated  by  dirfd.
+                            This results in absolute symbolic links (and absolute values of path-
+                            name) to be rejected.
+
+                            Currently, this flag also disables magic link  resolution.   However,
+                            this  may change in the future.  The caller should explicitly specify
+                            RESOLVE_NO_MAGICLINKS to ensure that magic links are not resolved.
+
+                     RESOLVE_IN_ROOT
+                            Treat dirfd as the root directory while resolving pathname (as though
+                            the user called chroot(2) with dirfd as the argument.)  Absolute sym-
+                            bolic links and ".." path components will be  scoped  to  dirfd.   If
+                            pathname is an absolute path, it is also treated relative to dirfd.
+
+                            However,  unlike  chroot(2) (which changes the filesystem root perma-
+                            nently for a process), RESOLVE_IN_ROOT  allows  a  program  to  effi-
+                            ciently  restrict  path  resolution  for only certain operations.  It
+                            also has several hardening features (such detecting  escape  attempts
+                            during ..  resolution) which chroot(2) does not.
+
+                            Currently,  this  flag also disables magic link resolution.  However,
+                            this may change in the future.  The caller should explicitly  specify
+                            RESOLVE_NO_MAGICLINKS to ensure that magic links are not resolved.
+
+                     It is an error to provide openat2() unknown flags in resolve.
+
+RETURN VALUE
+       On success, a new file descriptor is returned.  On error, -1 is returned, and errno is set
+       appropriately.
+
+ERRORS
+       The set of errors returned by openat2() includes all of the errors returned by  openat(2),
+       as well as the following additional errors:
+
+       EINVAL An unknown flag or invalid value was specified in how.
+
+       EINVAL mode is non-zero, but flags does not contain O_CREAT or O_TMPFILE.
+
+       EINVAL size was smaller than any known version of struct open_how.
+
+       E2BIG  An  extension  was specified in how, which the current kernel does not support (see
+              the "Extensibility" section of the NOTES for more detail on how extensions are han-
+              dled.)
+
+       EAGAIN resolve  contains  either  RESOLVE_IN_ROOT or RESOLVE_BENEATH, and the kernel could
+              not ensure that a ".." component didn't escape (due to a race condition  or  poten-
+              tial attack.)  Callers may choose to retry the openat2() call.
+
+       EXDEV  resolve  contains either RESOLVE_IN_ROOT or RESOLVE_BENEATH, and an escape from the
+              root during path resolution was detected.
+
+       EXDEV  resolve contains RESOLVE_NO_XDEV, and a path component attempted to cross  a  mount
+              point.
+
+       ELOOP  resolve contains RESOLVE_NO_SYMLINKS, and one of the path components was a symbolic
+              link (or magic link).
+
+       ELOOP  resolve contains RESOLVE_NO_MAGICLINKS, and one of the path components was a  magic
+              link.
+
+VERSIONS
+       openat2() was added to Linux in kernel 5.FOO.
+
+CONFORMING TO
+       This system call is Linux-specific.
+
+       The semantics of RESOLVE_BENEATH were modelled after FreeBSD's O_BENEATH.
+
+NOTES
+       Glibc does not provide a wrapper for this system call; call it using systemcall(2).
+
+   Extensibility
+       In order to allow for struct open_how to be extended in future kernel revisions, openat2()
+       requires userspace to specify the size of struct open_how structure they are passing.   By
+       providing  this  information,  it  is possible for openat2() to provide both forwards- and
+       backwards-compatibility — with size acting as an implicit version number (because new  ex-
+       tension  fields will always be appended, the size will always increase.)  This extensibil-
+       ity  design  is  very  similar  to   other   system   calls   such   as   perf_setattr(2),
+       perf_event_open(2), and clone(3).
+
+       If  we let usize be the size of the structure according to userspace and ksize be the size
+       of the structure which the kernel supports, then there are only three cases to consider:
+
+              *  If ksize equals usize, then there is no version mismatch and  how  can  be  used
+                 verbatim.
+
+              *  If  ksize  is  larger than usize, then there are some extensions the kernel sup-
+                 ports which the userspace program is unaware of.  Because  all  extensions  must
+                 have their zero values be a no-op, the kernel treats all of the extension fields
+                 not set by userspace to have zero values.  This  provides  backwards-compatibil-
+                 ity.
+
+              *  If  ksize  is  smaller  than  usize,  then  there  are some extensions which the
+                 userspace program is aware of but the kernel does not support.  Because all  ex-
+                 tensions  must  have  their zero values be a no-op, the kernel can safely ignore
+                 the unsupported extension fields if they are all-zero.  If any  unsupported  ex-
+                 tension  fields  are  non-zero,  then  -1 is returned and errno is set to E2BIG.
+                 This provides forwards-compatibility.
+
+       Therefore, most userspace programs will not need to have any special  handling  of  exten-
+       sions.   However,  if  a userspace program wishes to determine what extensions the running
+       kernel supports, they may conduct a binary search on size (to find the largest value which
+       doesn't produce an error of E2BIG.)
+
+SEE ALSO
+       openat(2), path_resolution(7), symlink(7)
+
+Linux                                       2019-11-05                                 OPENAT2(2)
+--8<---------------------------------------------------------------------------
+
+Aleksa Sarai (13):
+  namei: only return -ECHILD from follow_dotdot_rcu()
+  nsfs: clean-up ns_get_path() signature to return int
+  namei: allow nd_jump_link() to produce errors
+  namei: allow set_root() to produce errors
+  namei: LOOKUP_NO_SYMLINKS: block symlink resolution
+  namei: LOOKUP_NO_MAGICLINKS: block magic-link resolution
+  namei: LOOKUP_NO_XDEV: block mountpoint crossing
+  namei: LOOKUP_BENEATH: O_BENEATH-like scoped resolution
+  namei: LOOKUP_IN_ROOT: chroot-like scoped resolution
+  namei: LOOKUP_{IN_ROOT,BENEATH}: permit limited ".." resolution
+  open: introduce openat2(2) syscall
+  selftests: add openat2(2) selftests
+  Documentation: path-lookup: include new LOOKUP flags
+
+ CREDITS                                       |   4 +-
+ Documentation/filesystems/path-lookup.rst     |  68 ++-
+ arch/alpha/kernel/syscalls/syscall.tbl        |   1 +
+ arch/arm/tools/syscall.tbl                    |   1 +
+ arch/arm64/include/asm/unistd.h               |   2 +-
+ arch/arm64/include/asm/unistd32.h             |   2 +
+ arch/ia64/kernel/syscalls/syscall.tbl         |   1 +
+ arch/m68k/kernel/syscalls/syscall.tbl         |   1 +
+ arch/microblaze/kernel/syscalls/syscall.tbl   |   1 +
+ arch/mips/kernel/syscalls/syscall_n32.tbl     |   1 +
+ arch/mips/kernel/syscalls/syscall_n64.tbl     |   1 +
+ arch/mips/kernel/syscalls/syscall_o32.tbl     |   1 +
+ arch/parisc/kernel/syscalls/syscall.tbl       |   1 +
+ arch/powerpc/kernel/syscalls/syscall.tbl      |   1 +
+ arch/s390/kernel/syscalls/syscall.tbl         |   1 +
+ arch/sh/kernel/syscalls/syscall.tbl           |   1 +
+ arch/sparc/kernel/syscalls/syscall.tbl        |   1 +
+ arch/x86/entry/syscalls/syscall_32.tbl        |   1 +
+ arch/x86/entry/syscalls/syscall_64.tbl        |   1 +
+ arch/xtensa/kernel/syscalls/syscall.tbl       |   1 +
+ fs/namei.c                                    | 185 +++++--
+ fs/nsfs.c                                     |  29 +-
+ fs/open.c                                     | 149 +++--
+ fs/proc/base.c                                |   3 +-
+ fs/proc/namespaces.c                          |  20 +-
+ include/linux/fcntl.h                         |  12 +-
+ include/linux/namei.h                         |  12 +-
+ include/linux/proc_ns.h                       |   4 +-
+ include/linux/syscalls.h                      |   3 +
+ include/uapi/asm-generic/unistd.h             |   5 +-
+ include/uapi/linux/fcntl.h                    |  40 ++
+ kernel/bpf/offload.c                          |  12 +-
+ kernel/events/core.c                          |   2 +-
+ security/apparmor/apparmorfs.c                |   6 +-
+ tools/testing/selftests/Makefile              |   1 +
+ tools/testing/selftests/openat2/.gitignore    |   1 +
+ tools/testing/selftests/openat2/Makefile      |   8 +
+ tools/testing/selftests/openat2/helpers.c     | 109 ++++
+ tools/testing/selftests/openat2/helpers.h     | 107 ++++
+ .../testing/selftests/openat2/openat2_test.c  | 316 +++++++++++
+ .../selftests/openat2/rename_attack_test.c    | 160 ++++++
+ .../testing/selftests/openat2/resolve_test.c  | 523 ++++++++++++++++++
+ 42 files changed, 1686 insertions(+), 113 deletions(-)
+ create mode 100644 tools/testing/selftests/openat2/.gitignore
+ create mode 100644 tools/testing/selftests/openat2/Makefile
+ create mode 100644 tools/testing/selftests/openat2/helpers.c
+ create mode 100644 tools/testing/selftests/openat2/helpers.h
+ create mode 100644 tools/testing/selftests/openat2/openat2_test.c
+ create mode 100644 tools/testing/selftests/openat2/rename_attack_test.c
+ create mode 100644 tools/testing/selftests/openat2/resolve_test.c
 
 
->      
->              wake_up_all(&rnp->exp_wq[rcu_seq_ctr(rcu_state.expedited_sequence) & 0x3]);
->      
->              This results in the wakeup being applied to the rcu_node
->              structure's ->exp_wq[2] field, which is unfortunate given that
->              Task B is instead waiting on ->exp_wq[1].
->      
->      On a busy system, no harm is done (or at least no permanent harm is done).
->      Some later expedited grace period will redo the wakeup.  But on a quiet
->      system, such as many embedded systems, it might be a good long time before
->      there was another expedited grace period.  On such embedded systems,
->      this situation could therefore result in a system hang.
->      
->      This issue manifested as DPM device timeout during suspend (which
->      usually qualifies as a quiet time) due to a SCSI device being stuck in
->      _synchronize_rcu_expedited(), with the following stack trace:
->      
->              schedule()
->              synchronize_rcu_expedited()
->              synchronize_rcu()
->              scsi_device_quiesce()
->              scsi_bus_suspend()
->              dpm_run_callback()
->              __device_suspend()
->      
->      This commit therefore prevents such delays, timeouts, and hangs by
->      making rcu_exp_wait_wake() use its "s" argument consistently instead of
->      refetching from rcu_state.expedited_sequence.
->      
-
-Do we need a "fixes" tag here?
-
->      Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
->      Signed-off-by: Paul E. McKenney <paulmck@kernel.org
-> 
-> diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
-> index 6ce598d..4433d00a 100644
-> --- a/kernel/rcu/tree_exp.h
-> +++ b/kernel/rcu/tree_exp.h
-> @@ -557,7 +557,7 @@ static void rcu_exp_wait_wake(unsigned long s)
->   			spin_unlock(&rnp->exp_lock);
->   		}
->   		smp_mb(); /* All above changes before wakeup. */
-> -		wake_up_all(&rnp->exp_wq[rcu_seq_ctr(rcu_state.expedited_sequence) & 0x3]);
-> +		wake_up_all(&rnp->exp_wq[rcu_seq_ctr(s) & 0x3]);
->   	}
->   	trace_rcu_exp_grace_period(rcu_state.name, s, TPS("endwake"));
->   	mutex_unlock(&rcu_state.exp_wake_mutex);
-> 
-
+base-commit: af42d3466bdc8f39806b26f593604fdc54140bcb
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member of the Code Aurora Forum, hosted by The Linux Foundation
+2.24.0
+
