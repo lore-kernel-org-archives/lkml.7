@@ -2,121 +2,71 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32578C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 23:57:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 573BFC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 23:58:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0947F2075A
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 23:57:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D0B02070C
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 23:58:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="UGPy71TX"
+	dkim=pass (2048-bit key) header.d=mikemestnik-net.20150623.gappssmtp.com header.i=@mikemestnik-net.20150623.gappssmtp.com header.b="jz7FdW3B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726704AbfKTX5I (ORCPT
+        id S1726725AbfKTX6I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 18:57:08 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:47792 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725878AbfKTX5H (ORCPT
+        Wed, 20 Nov 2019 18:58:08 -0500
+Received: from mail-lj1-f174.google.com ([209.85.208.174]:46834 "EHLO
+        mail-lj1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725878AbfKTX6I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 18:57:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=rVrcm+vGryDzHFHQYS1sIVHlCESdbJWeaU7PTAJmwO8=; b=UGPy71TXhXTr9R8IhDM9bmS30
-        KAtfZ8J77FM8WXDV5BZqpI/28NwIgO4/F13taLeU88VJWiETWOyvorNyrOIceCpFLhYD6f0w9z9GE
-        ObILdGQKmQQ426rZOG4L5UQVHr02i+HMn+7U7O5x/8k0W3TV2ngM8iX8RWm+oowey6Y+TljwY3cj2
-        KU2ifshPGCnXNP0AFVy1r8nYu2U94xxLVvlTO4p3QHJ+lutZWhXFt97Tp56WOHdsHBFuGFH1eCklU
-        7s6o5flADCC06MTAWE0IvvAVzs3i2g+soYoO6Gb74klmbcYQtLV65p4WBZYIoy5JSLqveQdUANLyK
-        iV0Bl5Z2g==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:42382)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1iXZqC-0002zW-4s; Wed, 20 Nov 2019 23:56:56 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1iXZq8-00029m-Pf; Wed, 20 Nov 2019 23:56:52 +0000
-Date:   Wed, 20 Nov 2019 23:56:52 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Laura Abbott <labbott@redhat.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        Lennert Buytenhek <kernel@wantstofly.org>
-Subject: Re: [PATCH] watchdog: Remove iop_wdt
-Message-ID: <20191120235652.GW25745@shell.armlinux.org.uk>
-References: <20191118220432.1611-1-labbott@redhat.com>
- <29e94219-22ca-c873-7209-64d1c357fe5c@roeck-us.net>
- <CAK8P3a0=3J3WHTKU7sPvd37VEwg3wOuZ5S2-xXtNYEcSQhWyHw@mail.gmail.com>
- <4f283ab6-0f3c-60e9-cfd1-29d10d978986@roeck-us.net>
- <20191120100341.GK25745@shell.armlinux.org.uk>
- <CAK8P3a2N+aDgFz75dFJy3Me9FPdyDSyPaa29FngLjfXX3MzfvA@mail.gmail.com>
- <20191120103054.GM25745@shell.armlinux.org.uk>
- <20191120230518.GA28840@roeck-us.net>
+        Wed, 20 Nov 2019 18:58:08 -0500
+Received: by mail-lj1-f174.google.com with SMTP id e9so1053717ljp.13
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 15:58:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=mikemestnik-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=uf3bBP1zTG40dRn3CaFvDBdOr8iUrpSEhnbpICpCTrI=;
+        b=jz7FdW3BQwMjpxllSiid1nNUzpiNdYM55fHleeccu1EIV/lXYVQ3ERFKUr6K0OD6EN
+         okgbAgNks4YdZFjC2264apc5qTMn/qAAPZQR9TOz2XLB96C5IKf7UB067DWFspNr47yM
+         skDXCedd77S41KCos5sf5efxnt3koq4QJAkU5Xvv3A9mAkd3pj9O7Av1vCC10qE/W1E7
+         qg5T4FHMlN7EI2L4atrPHLnSZBvaMoC9Cd/ifzyPEw9e8KwUIea8Bylm4yMDOqNlxkTC
+         /Au+8kaKb+j5zSahW9BgnUyZdAUYW2ZzvnV4VPbmzHFCsWKwv5cQdegI6ELxbqPb3bvT
+         7RgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=uf3bBP1zTG40dRn3CaFvDBdOr8iUrpSEhnbpICpCTrI=;
+        b=izMFJEOL4PFFwcIkYsnydOweC3QmlUwKtCYoHNRqigu9DO1UOxfgGLYDrUT+2HFHR8
+         6GfOxgqoWb+mKTaGNZjYo9JUDXyUYDPaFcyMbY7UBoD5UyQtggdn/rNY8XLyuH9ozf4p
+         KNgSdge5iufuqPWE/MFzxdbIZV8ZjUuzyoFWbmMAEOSLi2SLtdIfG19HenM+oXUmMtQ4
+         t/Istol57ean6OXv23+CR0cbMz4ENnEqTZ1ubSxV7Ow90sw3hs+plLY9oDnxzA1xM3z4
+         oXfTPF4Wi71JG0NjbTWvQOapg4qj1P6PQef7f3r7dHA7VPOI9hagAdtqBh0mkWYU60V5
+         sMtQ==
+X-Gm-Message-State: APjAAAXSjY+TwyPR1z7m2j8uMToWo3Nr5eLRTaOgYM8hxIAnse3BQwqA
+        BfgIfPW0PBwdZ5GxGb3rbXtQd+L81eikHkTnRELXLsMZ4lI=
+X-Google-Smtp-Source: APXvYqwUaEjkaZiKkkh3P/R/d22CzADms8GUjVzTNGA9gZIwE/F7121oUTRYMmGEIN2+LJ0YcAz0c+4A/1QVJgEsKMw=
+X-Received: by 2002:a2e:7607:: with SMTP id r7mr4968197ljc.37.1574294285469;
+ Wed, 20 Nov 2019 15:58:05 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191120230518.GA28840@roeck-us.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+From:   Mike Mestnik <cheako@mikemestnik.net>
+Date:   Wed, 20 Nov 2019 17:57:54 -0600
+Message-ID: <CAF8px57gwjwLzt1cRvogEzOUV3LyXaD7_xjuZU28D47oWs3cKg@mail.gmail.com>
+Subject: Lenovo E585: Device RTL Bluetooth, O2 sdcard, and rtw88. Broken or issues.
+To:     "debian-kernel@lists.debian.org" <debian-kernel@lists.debian.org>
+Cc:     linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 03:05:18PM -0800, Guenter Roeck wrote:
-> On Wed, Nov 20, 2019 at 10:30:54AM +0000, Russell King - ARM Linux admin wrote:
-> > On Wed, Nov 20, 2019 at 11:15:01AM +0100, Arnd Bergmann wrote:
-> > > On Wed, Nov 20, 2019 at 11:03 AM Russell King - ARM Linux admin
-> > > <linux@armlinux.org.uk> wrote:
-> > > > On Tue, Nov 19, 2019 at 06:29:09AM -0800, Guenter Roeck wrote:
-> > > > > On 11/19/19 1:40 AM, Arnd Bergmann wrote:
-> > > > > > On Tue, Nov 19, 2019 at 3:08 AM Guenter Roeck <linux@roeck-us.net> wrote:
-> > > > > > > On 11/18/19 2:04 PM, Laura Abbott wrote:
-> > > > >
-> > > > > Good point, especially since apparently no one cared for five years.
-> > > >
-> > > > Doesn't mean that there aren't interested parties.  I still have
-> > > > IOP32x hardware running here in the form of a N2100 (my firewall)
-> > > > and it seems that I never noticed this option disappearing until
-> > > > now...
-> > > 
-> > > It's not that it was ever there for IOP32x: the driver was introduced in 2007
-> > > and was available for IOP32x but failed to compile for it until 2014 when
-> > > I sent the patch to disable the driver in all configurations that
-> > > failed to build.
-> > 
-> > Well:
-> > 
-> > systems/n2100/boot/config-3.11.5+:CONFIG_IOP_WATCHDOG=m
-> > systems/n2100/boot/config-3.12.6+:CONFIG_IOP_WATCHDOG=m
-> > systems/n2100/boot/config-3.9.5+:CONFIG_IOP_WATCHDOG=m
-> > 
-> > -rw-rw-r-- 1 rmk rmk 5284 Dec 30  2013 systems/n2100/lib/modules/3.12.6+/kernel/drivers/watchdog/iop_wdt.ko
-> > -rw-rw-r-- 1 rmk rmk 5276 Dec 20  2013 systems/n2100/lib/modules/3.9.5+/kernel/drivers/watchdog/iop_wdt.ko
-> > 
-> > It seems I've been carrying a patch to comment out the troublesome code:
-> > 
-> > -       write_wdtsr(IOP13XX_WDTCR_IB_RESET);
-> > +//     write_wdtsr(IOP13XX_WDTCR_IB_RESET);
-> > 
-> > in my stable tree since 2015.
-> 
-> Do you have plans to update that kernel to mainline ?
-> If yes, a patch to make the driver (and I guess everything else that broke
-> since 3.12) work would be helpful.
+https://www.mail-archive.com/debian-kernel@lists.debian.org/msg116401.html
 
-It's a currently running 4.19.xx stable kernel, but as a result of the
-patch to the Kconfig file, without the watchdog which I hadn't realised
-until I saw this thread.  Is that mainline enough?
+Today I learned that BlueTooth doesn't work either.  I looked at the
+FAQ a bit and I realise this is the worst way to initiate discussions
+regarding broken drivers, but I believe these issues together
+demonstrate a systemic problem that should be addressed.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+I've identified 3 drivers that are completely inoperable on this device!
