@@ -2,78 +2,111 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56053C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 06:13:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD465C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 06:15:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 293A12240A
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 06:13:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B3D822463
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 06:15:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727330AbfKTGN3 (ORCPT
+        id S1727605AbfKTGPs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 01:13:29 -0500
-Received: from mga03.intel.com ([134.134.136.65]:13895 "EHLO mga03.intel.com"
+        Wed, 20 Nov 2019 01:15:48 -0500
+Received: from mga09.intel.com ([134.134.136.24]:33771 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726014AbfKTGN3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 01:13:29 -0500
+        id S1726014AbfKTGPr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 01:15:47 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Nov 2019 22:13:29 -0800
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Nov 2019 22:15:47 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,220,1571727600"; 
-   d="scan'208";a="218501484"
-Received: from allen-box.sh.intel.com ([10.239.159.136])
-  by orsmga002.jf.intel.com with ESMTP; 19 Nov 2019 22:13:27 -0800
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-To:     Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>
-Cc:     ashok.raj@intel.com, jacob.jun.pan@intel.com, kevin.tian@intel.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: [PATCH 1/1] iommu/vt-d: Remove incorrect PSI capability check
-Date:   Wed, 20 Nov 2019 14:10:16 +0800
-Message-Id: <20191120061016.31386-1-baolu.lu@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
+   d="scan'208";a="357337027"
+Received: from jesusale-mobl4.ger.corp.intel.com (HELO btopel-mobl.ger.intel.com) ([10.249.32.22])
+  by orsmga004.jf.intel.com with ESMTP; 19 Nov 2019 22:15:43 -0800
+Subject: Re: [PATCH] xsk: fix xsk_poll()'s return type
+To:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Cc:     Magnus Karlsson <magnus.karlsson@intel.com>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        bpf <bpf@vger.kernel.org>
+References: <20191120001042.30830-1-luc.vanoostenryck@gmail.com>
+From:   =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>
+Message-ID: <103f550e-4a78-e540-4a57-bdecc2f066cf@intel.com>
+Date:   Wed, 20 Nov 2019 07:15:42 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
+MIME-Version: 1.0
+In-Reply-To: <20191120001042.30830-1-luc.vanoostenryck@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The PSI (Page Selective Invalidation) bit in the capability register
-is only valid for second-level translation. Intel IOMMU supporting
-scalable mode must support page/address selective IOTLB invalidation
-for first-level translation. Remove the PSI capability check in SVA
-cache invalidation code.
+On 2019-11-20 01:10, Luc Van Oostenryck wrote:
+> xsk_poll() is defined as returning 'unsigned int' but the
+> .poll method is declared as returning '__poll_t', a bitwise type.
+> 
+> Fix this by using the proper return type and using the EPOLL
+> constants instead of the POLL ones, as required for __poll_t.
+>
 
-Fixes: 8744daf4b0699 ("iommu/vt-d: Remove global page flush support")
-Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
----
- drivers/iommu/intel-svm.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+Thanks for the cleanup!
 
-diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
-index 9b159132405d..dca88f9fdf29 100644
---- a/drivers/iommu/intel-svm.c
-+++ b/drivers/iommu/intel-svm.c
-@@ -104,11 +104,7 @@ static void intel_flush_svm_range_dev (struct intel_svm *svm, struct intel_svm_d
- {
- 	struct qi_desc desc;
- 
--	/*
--	 * Do PASID granu IOTLB invalidation if page selective capability is
--	 * not available.
--	 */
--	if (pages == -1 || !cap_pgsel_inv(svm->iommu->cap)) {
-+	if (pages == -1) {
- 		desc.qw0 = QI_EIOTLB_PASID(svm->pasid) |
- 			QI_EIOTLB_DID(sdev->did) |
- 			QI_EIOTLB_GRAN(QI_GRAN_NONG_PASID) |
--- 
-2.17.1
+Acked-by: Björn Töpel <bjorn.topel@intel.com>
 
+Daniel/Alexei: This should go through bpf-next.
+
+
+Björn
+
+
+
+> CC: Björn Töpel <bjorn.topel@intel.com>
+> CC: Magnus Karlsson <magnus.karlsson@intel.com>
+> CC: Jonathan Lemon <jonathan.lemon@gmail.com>
+> CC: netdev@vger.kernel.org
+> Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+> ---
+>   net/xdp/xsk.c | 8 ++++----
+>   1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
+> index 9044073fbf22..7b59f36eec0d 100644
+> --- a/net/xdp/xsk.c
+> +++ b/net/xdp/xsk.c
+> @@ -418,10 +418,10 @@ static int xsk_sendmsg(struct socket *sock, struct msghdr *m, size_t total_len)
+>   	return __xsk_sendmsg(sk);
+>   }
+>   
+> -static unsigned int xsk_poll(struct file *file, struct socket *sock,
+> +static __poll_t xsk_poll(struct file *file, struct socket *sock,
+>   			     struct poll_table_struct *wait)
+>   {
+> -	unsigned int mask = datagram_poll(file, sock, wait);
+> +	__poll_t mask = datagram_poll(file, sock, wait);
+>   	struct sock *sk = sock->sk;
+>   	struct xdp_sock *xs = xdp_sk(sk);
+>   	struct net_device *dev;
+> @@ -443,9 +443,9 @@ static unsigned int xsk_poll(struct file *file, struct socket *sock,
+>   	}
+>   
+>   	if (xs->rx && !xskq_empty_desc(xs->rx))
+> -		mask |= POLLIN | POLLRDNORM;
+> +		mask |= EPOLLIN | EPOLLRDNORM;
+>   	if (xs->tx && !xskq_full_desc(xs->tx))
+> -		mask |= POLLOUT | POLLWRNORM;
+> +		mask |= EPOLLOUT | EPOLLWRNORM;
+>   
+>   	return mask;
+>   }
+> 
