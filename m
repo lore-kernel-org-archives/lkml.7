@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E96C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B356C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:42:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B42AB20709
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:42:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52F4E20709
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:42:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732175AbfKTPmY (ORCPT
+        id S1732183AbfKTPmc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 10:42:24 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:52938 "EHLO
+        Wed, 20 Nov 2019 10:42:32 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:52914 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731807AbfKTPkU (ORCPT
+        by vger.kernel.org with ESMTP id S1731603AbfKTPkU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 Nov 2019 10:40:20 -0500
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iXS5U-0004bC-QE; Wed, 20 Nov 2019 15:40:12 +0000
+        id 1iXS5V-0004bT-KJ; Wed, 20 Nov 2019 15:40:13 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iXS5T-0004Hv-O0; Wed, 20 Nov 2019 15:40:11 +0000
+        id 1iXS5U-0004Lj-V2; Wed, 20 Nov 2019 15:40:12 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,16 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        "Geert Uytterhoeven" <geert+renesas@glider.be>,
-        "Guenter Roeck" <linux@roeck-us.net>
-Date:   Wed, 20 Nov 2019 15:37:41 +0000
-Message-ID: <lsq.1574264230.370732562@decadent.org.uk>
+        "David S. Miller" <davem@davemloft.net>,
+        "Marcelo Ricardo Leitner" <marcelo.leitner@gmail.com>,
+        "Xin Long" <lucien.xin@gmail.com>,
+        "Neil Horman" <nhorman@tuxdriver.com>
+Date:   Wed, 20 Nov 2019 15:38:15 +0000
+Message-ID: <lsq.1574264230.356937268@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 31/83] sh: kernel: hw_breakpoint: Fix missing break
- in switch statement
+Subject: [PATCH 3.16 65/83] sctp: use transport pf_retrans in
+ sctp_do_8_2_transport_strike
 In-Reply-To: <lsq.1574264230.280218497@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,31 +58,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-commit 1ee1119d184bb06af921b48c3021d921bbd85bac upstream.
+commit 10eb56c582c557c629271f1ee31e15e7a9b2558b upstream.
 
-Add missing break statement in order to prevent the code from falling
-through to case SH_BREAKPOINT_WRITE.
+Transport should use its own pf_retrans to do the error_count
+check, instead of asoc's. Otherwise, it's meaningless to make
+pf_retrans per transport.
 
-Fixes: 09a072947791 ("sh: hw-breakpoints: Add preliminary support for SH-4A UBC.")
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Tested-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Fixes: 5aa93bcf66f4 ("sctp: Implement quick failover draft from tsvwg")
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Acked-by: Neil Horman <nhorman@tuxdriver.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/sh/kernel/hw_breakpoint.c | 1 +
- 1 file changed, 1 insertion(+)
+ net/sctp/sm_sideeffect.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/sh/kernel/hw_breakpoint.c
-+++ b/arch/sh/kernel/hw_breakpoint.c
-@@ -160,6 +160,7 @@ int arch_bp_generic_fields(int sh_len, i
- 	switch (sh_type) {
- 	case SH_BREAKPOINT_READ:
- 		*gen_type = HW_BREAKPOINT_R;
-+		break;
- 	case SH_BREAKPOINT_WRITE:
- 		*gen_type = HW_BREAKPOINT_W;
- 		break;
+--- a/net/sctp/sm_sideeffect.c
++++ b/net/sctp/sm_sideeffect.c
+@@ -505,7 +505,7 @@ static void sctp_do_8_2_transport_strike
+ 	 */
+ 	if ((transport->state == SCTP_ACTIVE) &&
+ 	   (transport->error_count < transport->pathmaxrxt) &&
+-	   (transport->error_count > asoc->pf_retrans)) {
++	   (transport->error_count > transport->pf_retrans)) {
+ 
+ 		sctp_assoc_control_transport(asoc, transport,
+ 					     SCTP_TRANSPORT_PF,
 
