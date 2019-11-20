@@ -2,168 +2,149 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7CB5C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:26:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E85AEC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:26:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 975B82251F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:26:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FE292251F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:26:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="tE00SeRP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730135AbfKTN0k convert rfc822-to-8bit (ORCPT
+        id S1730562AbfKTN0u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 08:26:40 -0500
-Received: from szxga03-in.huawei.com ([45.249.212.189]:2090 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727798AbfKTN0j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 08:26:39 -0500
-Received: from DGGEML404-HUB.china.huawei.com (unknown [172.30.72.53])
-        by Forcepoint Email with ESMTP id 4738F8727DE762286877;
-        Wed, 20 Nov 2019 21:26:28 +0800 (CST)
-Received: from DGGEML505-MBX.china.huawei.com ([169.254.12.31]) by
- DGGEML404-HUB.china.huawei.com ([fe80::b177:a243:7a69:5ab8%31]) with mapi id
- 14.03.0439.000; Wed, 20 Nov 2019 21:26:18 +0800
-From:   "wubo (T)" <wubo40@huawei.com>
-To:     Lee Duncan <LDuncan@suse.com>,
-        "cleech@redhat.com" <cleech@redhat.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "open-iscsi@googlegroups.com" <open-iscsi@googlegroups.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ulrich Windl <Ulrich.Windl@rz.uni-regensburg.de>
-CC:     Mingfangsen <mingfangsen@huawei.com>,
-        "liuzhiqiang (I)" <liuzhiqiang26@huawei.com>
-Subject: [PATCH V4] scsi: avoid potential deadlock in iscsi_if_rx func
-Thread-Topic: [PATCH V4] scsi: avoid potential deadlock in iscsi_if_rx func
-Thread-Index: AdWfpPEqf8P620ByTC6DVQFqYQ7mDQ==
-Date:   Wed, 20 Nov 2019 13:26:17 +0000
-Message-ID: <EDBAAA0BBBA2AC4E9C8B6B81DEEE1D6915E3D4D2@dggeml505-mbx.china.huawei.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.173.221.252]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+        Wed, 20 Nov 2019 08:26:50 -0500
+Received: from mailout3.samsung.com ([203.254.224.33]:55198 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727798AbfKTN0t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 08:26:49 -0500
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191120132646epoutp0306fd6f41c81e3427016c10b061d7ce06~Y4dxsnWe_1524415244epoutp03h
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 13:26:46 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191120132646epoutp0306fd6f41c81e3427016c10b061d7ce06~Y4dxsnWe_1524415244epoutp03h
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1574256406;
+        bh=2nnkY0zONHJBiKeXcYLEH25v+lVrMoEod+rtyzko/ZA=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=tE00SeRPw4zmXehy35iLWCTlbT55Z5dZFBXBMZ5t4oOGAP3iKI5Zm55ZDRrvHtSsN
+         OgUw/KrCt/Ly1tYiasXO2o8VvquMkgz0D4T4m1VY0piNgFFeGBcbLdyFAgO7TqOY2K
+         fjZ8HScN5i0TOvPdEI3GT9Q63L1/rsbwUHwvnO44=
+Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+        20191120132645epcas5p3310045e575780e18ec0f10f15a88b2b4~Y4dxIQAQV0125001250epcas5p30;
+        Wed, 20 Nov 2019 13:26:45 +0000 (GMT)
+Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
+        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        D2.71.04403.51F35DD5; Wed, 20 Nov 2019 22:26:45 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+        20191120132645epcas5p29da16b1881e3da52fac0516a32e277d5~Y4dwirpH00633706337epcas5p2G;
+        Wed, 20 Nov 2019 13:26:45 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20191120132645epsmtrp1de900a5e26290f866382ec67d535c4d0~Y4dwh9gTw1339613396epsmtrp1V;
+        Wed, 20 Nov 2019 13:26:45 +0000 (GMT)
+X-AuditID: b6c32a4a-3b3ff70000001133-a3-5dd53f1579e2
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        EC.2B.03654.51F35DD5; Wed, 20 Nov 2019 22:26:45 +0900 (KST)
+Received: from ubuntu.sa.corp.samsungelectronics.net (unknown
+        [107.108.83.125]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20191120132643epsmtip203d4b9baaaeff6f0ac2f8b8cead9dbd5~Y4du-SPMg2397823978epsmtip2I;
+        Wed, 20 Nov 2019 13:26:43 +0000 (GMT)
+From:   Anvesh Salveru <anvesh.s@samsung.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        pankaj.dubey@samsung.com, lorenzo.pieralisi@arm.com,
+        andrew.murray@arm.com, bhelgaas@google.com, kishon@ti.com,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        Anvesh Salveru <anvesh.s@samsung.com>
+Subject: [PATCH v3 0/2] Add support to handle ZRX-DC Compliant PHYs
+Date:   Wed, 20 Nov 2019 18:56:09 +0530
+Message-Id: <1574256371-617-1-git-send-email-anvesh.s@samsung.com>
+X-Mailer: git-send-email 2.7.4
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrFIsWRmVeSWpSXmKPExsWy7bCmuq6o/dVYg9dLTC2a/29ntTi7ayGr
+        xZKmDItddzvYLVZ8mcluceFpD5vF5V1z2Cze/H7BbrH0+kUmi0Vbv7BbtO49wu7A7bFm3hpG
+        j52z7rJ7LNhU6rFpVSebR9+WVYweW/Z/ZvQ4fmM7k8fnTXIBHFFcNimpOZllqUX6dglcGesb
+        jjAX7OKtOLj2M1MD43OuLkZODgkBE4nfB7cydTFycQgJ7GaU2Pt2EiOE84lRov/JIWYI5xuj
+        xMarK1lgWjZeWcAGkdjLKHHz4yYWCKeFSeJv2zNGkCo2AW2Jn0f3soPYIgIKEpt7n7GCFDEL
+        /GOUuPplHliRsICzxKbt51lBbBYBVYkHDbuZQWxeASeJmz8XsUKsk5O4ea4T7A4JgR1sEi+/
+        7WKHSLhIbFxwhhHCFpZ4dXwLVFxK4mV/G5SdL9F7dymUXSMx5W4HVL29xIErc4DO5gC6SFNi
+        /S59kDCzAJ9E7+8nTCBhCQFeiY42IQhTSaJtZjVEo4TE4vk3mSFsD4nexWvAhgsJxEr8+LqR
+        fQKjzCyEmQsYGVcxSqYWFOempxabFhjlpZbrFSfmFpfmpesl5+duYgSnCC2vHYzLzvkcYhTg
+        YFTi4c3QuBorxJpYVlyZe4hRgoNZSYR3z/UrsUK8KYmVValF+fFFpTmpxYcYpTlYlMR5J7Fe
+        jRESSE8sSc1OTS1ILYLJMnFwSjUw+iftuPiupiFTVIlT5pPKjttTdu7RkPttz/BX5OHNhFwW
+        Ay5DwV1G/w467xCR5nkQ+md5ZOYKPvV3gZkWc1IrF62eZ9DoZhwbnPxD0z15xft7q4/kJpcu
+        3P9ozqwf5f/j05Z/2XbsxswG3tL7CyS+y346cfnpFNHzUgXrDhSncsYZHLeaceHzdiWW4oxE
+        Qy3mouJEAFxQGB0NAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrHLMWRmVeSWpSXmKPExsWy7bCSvK6o/dVYg+Vz+C2a/29ntTi7ayGr
+        xZKmDItddzvYLVZ8mcluceFpD5vF5V1z2Cze/H7BbrH0+kUmi0Vbv7BbtO49wu7A7bFm3hpG
+        j52z7rJ7LNhU6rFpVSebR9+WVYweW/Z/ZvQ4fmM7k8fnTXIBHFFcNimpOZllqUX6dglcGesb
+        jjAX7OKtOLj2M1MD43OuLkZODgkBE4mNVxawdTFycQgJ7GaUmDjxBxNEQkLiy96vbBC2sMTK
+        f8/ZIYqamCQOHj4LVsQmoC3x8+hedhBbREBBYnPvM1aQImaBLiaJtae3gCWEBZwlNm0/zwpi
+        swioSjxo2M0MYvMKOEnc/LmIFWKDnMTNc53MExh5FjAyrGKUTC0ozk3PLTYsMMxLLdcrTswt
+        Ls1L10vOz93ECA5FLc0djJeXxB9iFOBgVOLhzdC4GivEmlhWXJl7iFGCg1lJhHfP9SuxQrwp
+        iZVVqUX58UWlOanFhxilOViUxHmf5h2LFBJITyxJzU5NLUgtgskycXBKNTAWptwV4q6yFzWU
+        fFZ9cmmNdOjFgtzsJukdrI5lMVNf5nh+DSjjjr2V8vWDztZH/ixbDj6PqZlySdPi0BbjaYHy
+        2uG83i+OC2j/vWN9anHyZT0HBf4vJypW5R+/p8N2+HEC54TY93dvFp/cxGdktJjn5bUOQ9aT
+        W60Dvx29VJqc84BbhcueZbISS3FGoqEWc1FxIgDULIFbQQIAAA==
+X-CMS-MailID: 20191120132645epcas5p29da16b1881e3da52fac0516a32e277d5
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20191120132645epcas5p29da16b1881e3da52fac0516a32e277d5
+References: <CGME20191120132645epcas5p29da16b1881e3da52fac0516a32e277d5@epcas5p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In iscsi_if_rx func, after receiving one request through iscsi_if_recv_msg func,
-iscsi_if_send_reply will be called to try to reply the request in do-loop. 
-If the return of iscsi_if_send_reply func return -EAGAIN all the time, one deadlock will occur.
+According the PCI Express base specification when PHY does not meet
+ZRX-DC specification, after every 100ms timeout the link should
+transition to recovery state when the link is in low power states. 
 
-For example, a client only send msg without calling recvmsg func, then it will result in the watchdog soft lockup. 
-The details are given as follows,
+Ports that meet the ZRX-DC specification for 2.5 GT/s while in the
+L1.Idle state and are therefore not required to implement the 100 ms
+timeout and transition to Recovery should avoid implementing it, since
+it will reduce the power savings expected from the L1 state.
 
-Details of the special case which can cause deadlock:
+DesignWare controller provides GEN3_ZRXDC_NONCOMPL field in
+GEN3_RELATED_OFF to specify about ZRX-DC compliant PHY.
 
-sock_fd = socket(AF_NETLINK, SOCK_RAW, NETLINK_ISCSI); 
-retval = bind(sock_fd, (struct sock addr*) & src_addr, sizeof(src_addr);
-while (1) { 
-         state_msg = sendmsg(sock_fd, &msg, 0); 
-         //Note: recvmsg(sock_fd, &msg, 0) is not processed here.
-}        
-close(sock_fd); 
+We need to get the PHY property in controller driver. So, we are
+proposing a new method phy_property_present() in the phy driver.
 
-watchdog: BUG: soft lockup - CPU#7 stuck for 22s! [netlink_test:253305] Sample time: 4000897528 ns(HZ: 250) Sample stat: 
-curr: user: 675503481560, nice: 321724050, sys: 448689506750, idle: 4654054240530, iowait: 40885550700, irq: 14161174020, softirq: 8104324140, st: 0
-deta: user: 0, nice: 0, sys: 3998210100, idle: 0, iowait: 0, irq: 1547170, softirq: 242870, st: 0 Sample softirq:
-         TIMER:        992
-         SCHED:          8
-Sample irqstat:
-         irq    2: delta       1003, curr:    3103802, arch_timer
-CPU: 7 PID: 253305 Comm: netlink_test Kdump: loaded Tainted: G           OE     
-Hardware name: QEMU KVM Virtual Machine, BIOS 0.0.0 02/06/2015
-pstate: 40400005 (nZcv daif +PAN -UAO)
-pc : __alloc_skb+0x104/0x1b0
-lr : __alloc_skb+0x9c/0x1b0
-sp : ffff000033603a30
-x29: ffff000033603a30 x28: 00000000000002dd
-x27: ffff800b34ced810 x26: ffff800ba7569f00
-x25: 00000000ffffffff x24: 0000000000000000
-x23: ffff800f7c43f600 x22: 0000000000480020
-x21: ffff0000091d9000 x20: ffff800b34eff200
-x19: ffff800ba7569f00 x18: 0000000000000000
-x17: 0000000000000000 x16: 0000000000000000
-x15: 0000000000000000 x14: 0001000101000100
-x13: 0000000101010000 x12: 0101000001010100
-x11: 0001010101010001 x10: 00000000000002dd
-x9 : ffff000033603d58 x8 : ffff800b34eff400
-x7 : ffff800ba7569200 x6 : ffff800b34eff400
-x5 : 0000000000000000 x4 : 00000000ffffffff
-x3 : 0000000000000000 x2 : 0000000000000001
-x1 : ffff800b34eff2c0 x0 : 0000000000000300 Call trace:
-__alloc_skb+0x104/0x1b0
-iscsi_if_rx+0x144/0x12bc [scsi_transport_iscsi]
-netlink_unicast+0x1e0/0x258
-netlink_sendmsg+0x310/0x378
-sock_sendmsg+0x4c/0x70
-sock_write_iter+0x90/0xf0
-__vfs_write+0x11c/0x190
-vfs_write+0xac/0x1c0
-ksys_write+0x6c/0xd8
-__arm64_sys_write+0x24/0x30
-el0_svc_common+0x78/0x130
-el0_svc_handler+0x38/0x78
-el0_svc+0x8/0xc
+Platform specific phy drivers should implement the callback for
+property_present which will return true if the property exists in
+the PHY.
 
-Here, we add one limit of retry times in do-loop to avoid the deadlock.
+static bool xxxx_phy_property_present(struct phy *phy, const char *property)
+{
+       struct device *dev = &phy->dev;
 
-V4: 
-	- modify the patch subject, no code change.
+       return of_property_read_bool(dev->of_node, property);
+}
 
-V3:  
-	- replace the error with warning as suggested by Ulrich 
+And controller platform driver should populate the phy_zrxdc_compliant
+flag, which will be used by generic DesignWare driver.
 
-V2:  
-	- add some debug kernel message as suggested by Lee Duncan
+pci->phy_zrxdc_compliant = phy_property_present(xxxx_ctrl->phy, "phy-zrxdc-compliant");
 
-Signed-off-by: Bo Wu <wubo40@huawei.com>
-Reviewed-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Reviewed-by: Lee Duncan <LDuncan@suse.com>
----
-drivers/scsi/scsi_transport_iscsi.c | 7 +++++++
-1 file changed, 7 insertions(+)
+Anvesh Salveru (2):
+  phy: core: add phy_property_present method
+  PCI: dwc: add support to handle ZRX-DC Compliant PHYs
 
-diff --git a/drivers/scsi/scsi_transport_iscsi.c b/drivers/scsi/scsi_transport_iscsi.c
-index 417b868d8735..ed8d9709b9b9 100644
---- a/drivers/scsi/scsi_transport_iscsi.c
-+++ b/drivers/scsi/scsi_transport_iscsi.c
-@@ -24,6 +24,8 @@
+ drivers/pci/controller/dwc/pcie-designware.c |  6 ++++++
+ drivers/pci/controller/dwc/pcie-designware.h |  4 ++++
+ drivers/phy/phy-core.c                       | 26 ++++++++++++++++++++++++++
+ include/linux/phy/phy.h                      |  8 ++++++++
+ 4 files changed, 44 insertions(+)
 
- #define ISCSI_TRANSPORT_VERSION "2.0-870"
-
-+#define ISCSI_SEND_MAX_ALLOWED  10
-+
-#define CREATE_TRACE_POINTS
-#include <trace/events/iscsi.h>
-
-@@ -3682,6 +3684,7 @@ iscsi_if_rx(struct sk_buff *skb)
-                struct nlmsghdr       *nlh;
-                struct iscsi_uevent *ev;
-                uint32_t group;
-+                int retries = ISCSI_SEND_MAX_ALLOWED;
-
-                 nlh = nlmsg_hdr(skb);
-                if (nlh->nlmsg_len < sizeof(*nlh) + sizeof(*ev) ||
-@@ -3712,6 +3715,10 @@ iscsi_if_rx(struct sk_buff *skb)
-                                   break;
-                          err = iscsi_if_send_reply(portid, nlh->nlmsg_type,
-                                                        ev, sizeof(*ev));
-+                          if (err == -EAGAIN && --retries < 0) {
-+                                   printk(KERN_WARNING "Send reply failed, error %d\n", err);
-+                                   break;
-+                          }
-                } while (err < 0 && err != -ECONNREFUSED && err != -ESRCH);
-                skb_pull(skb, rlen);
-       }
---
-1.8.3.1
+-- 
+2.7.4
 
