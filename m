@@ -2,76 +2,136 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA5FC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 14:59:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89485C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 14:59:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E1AF20748
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 14:59:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6714521852
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 14:59:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731881AbfKTO7b (ORCPT
+        id S1731886AbfKTO7g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 09:59:31 -0500
-Received: from laurent.telenet-ops.be ([195.130.137.89]:50570 "EHLO
-        laurent.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731086AbfKTO7b (ORCPT
+        Wed, 20 Nov 2019 09:59:36 -0500
+Received: from albert.telenet-ops.be ([195.130.137.90]:46402 "EHLO
+        albert.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731836AbfKTO7b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 Nov 2019 09:59:31 -0500
 Received: from ramsan ([84.195.182.253])
-        by laurent.telenet-ops.be with bizsmtp
-        id UEzU2100S5USYZQ01EzU6D; Wed, 20 Nov 2019 15:59:28 +0100
+        by albert.telenet-ops.be with bizsmtp
+        id UEzU2100c5USYZQ06EzUK4; Wed, 20 Nov 2019 15:59:30 +0100
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1iXRS4-0002Ii-JA; Wed, 20 Nov 2019 15:59:28 +0100
+        id 1iXRS4-0002Im-K9; Wed, 20 Nov 2019 15:59:28 +0100
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1iXRS4-0002EE-Gd; Wed, 20 Nov 2019 15:59:28 +0100
+        id 1iXRS4-0002EJ-IZ; Wed, 20 Nov 2019 15:59:28 +0100
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
 To:     Philipp Zabel <p.zabel@pengutronix.de>
 Cc:     linux-kernel@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 0/2] reset: Miscellaneous improvements
-Date:   Wed, 20 Nov 2019 15:59:25 +0100
-Message-Id: <20191120145927.8523-1-geert+renesas@glider.be>
+Subject: [PATCH v2 2/2] reset: Align logic and flow in managed helpers
+Date:   Wed, 20 Nov 2019 15:59:27 +0100
+Message-Id: <20191120145927.8523-3-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191120145927.8523-1-geert+renesas@glider.be>
+References: <20191120145927.8523-1-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-	Hi Philipp,
+__devm_reset_control_get() and devm_reset_control_array_get() are very
+similar, but they do not look similar, due to inverted logic.
+Make them more similar, following the "bail out early" paradigm.
 
-This patch series contains a resource optimization for the managed
-helpers, and an enhancement to make the reset controller code more
-uniform.
+Adjust the logic and flow in devm_reset_controller_register() to match
+the two other functions.
 
-Changes compared to v1:
-  - Use IS_ERR_OR_NULL(),
-  - Drop accepted patch.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+v2:
+  - Use IS_ERR_OR_NULL().
+---
+ drivers/reset/core.c | 33 +++++++++++++++++----------------
+ 1 file changed, 17 insertions(+), 16 deletions(-)
 
-Thanks!
-
-Geert Uytterhoeven (2):
-  reset: Do not register resource data for missing resets
-  reset: Align logic and flow in managed helpers
-
- drivers/reset/core.c | 35 ++++++++++++++++++-----------------
- 1 file changed, 18 insertions(+), 17 deletions(-)
-
+diff --git a/drivers/reset/core.c b/drivers/reset/core.c
+index 7597c70e04d5b42b..01c0c7aa835cbfe2 100644
+--- a/drivers/reset/core.c
++++ b/drivers/reset/core.c
+@@ -150,13 +150,14 @@ int devm_reset_controller_register(struct device *dev,
+ 		return -ENOMEM;
+ 
+ 	ret = reset_controller_register(rcdev);
+-	if (!ret) {
+-		*rcdevp = rcdev;
+-		devres_add(dev, rcdevp);
+-	} else {
++	if (ret) {
+ 		devres_free(rcdevp);
++		return ret;
+ 	}
+ 
++	*rcdevp = rcdev;
++	devres_add(dev, rcdevp);
++
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(devm_reset_controller_register);
+@@ -787,13 +788,14 @@ struct reset_control *__devm_reset_control_get(struct device *dev,
+ 		return ERR_PTR(-ENOMEM);
+ 
+ 	rstc = __reset_control_get(dev, id, index, shared, optional, acquired);
+-	if (!IS_ERR_OR_NULL(rstc)) {
+-		*ptr = rstc;
+-		devres_add(dev, ptr);
+-	} else {
++	if (IS_ERR_OR_NULL(rstc)) {
+ 		devres_free(ptr);
++		return rstc;
+ 	}
+ 
++	*ptr = rstc;
++	devres_add(dev, ptr);
++
+ 	return rstc;
+ }
+ EXPORT_SYMBOL_GPL(__devm_reset_control_get);
+@@ -919,22 +921,21 @@ EXPORT_SYMBOL_GPL(of_reset_control_array_get);
+ struct reset_control *
+ devm_reset_control_array_get(struct device *dev, bool shared, bool optional)
+ {
+-	struct reset_control **devres;
+-	struct reset_control *rstc;
++	struct reset_control **ptr, *rstc;
+ 
+-	devres = devres_alloc(devm_reset_control_release, sizeof(*devres),
+-			      GFP_KERNEL);
+-	if (!devres)
++	ptr = devres_alloc(devm_reset_control_release, sizeof(*ptr),
++			   GFP_KERNEL);
++	if (!ptr)
+ 		return ERR_PTR(-ENOMEM);
+ 
+ 	rstc = of_reset_control_array_get(dev->of_node, shared, optional, true);
+ 	if (IS_ERR_OR_NULL(rstc)) {
+-		devres_free(devres);
++		devres_free(ptr);
+ 		return rstc;
+ 	}
+ 
+-	*devres = rstc;
+-	devres_add(dev, devres);
++	*ptr = rstc;
++	devres_add(dev, ptr);
+ 
+ 	return rstc;
+ }
 -- 
 2.17.1
 
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
