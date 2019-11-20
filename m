@@ -2,232 +2,133 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D4DC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 09:39:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B1BEC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 09:39:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71151223D1
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 09:39:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E634223D1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 09:39:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="URpWrUxA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728516AbfKTJjF (ORCPT
+        id S1728527AbfKTJjI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 04:39:05 -0500
-Received: from mga03.intel.com ([134.134.136.65]:28148 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728060AbfKTJjC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 04:39:02 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Nov 2019 01:39:01 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,221,1571727600"; 
-   d="scan'208";a="289891302"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga001.jf.intel.com with ESMTP; 20 Nov 2019 01:39:00 -0800
-Received: from [10.249.33.94] (abudanko-mobl.ccr.corp.intel.com [10.249.33.94])
-        by linux.intel.com (Postfix) with ESMTP id 96F7B5804A0;
-        Wed, 20 Nov 2019 01:38:58 -0800 (PST)
-Subject: [PATCH v1 3/3] perf record: adapt affinity to machines with #CPUs >
- 1K
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <26d1512a-9dea-bf7e-d18e-705846a870c4@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <2561f736-bdb5-a10a-1a5d-590ad499ce49@linux.intel.com>
-Date:   Wed, 20 Nov 2019 12:38:57 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Wed, 20 Nov 2019 04:39:08 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:38359 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728466AbfKTJiw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 04:38:52 -0500
+Received: by mail-pf1-f195.google.com with SMTP id c13so13950189pfp.5
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 01:38:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=JKn/ypHBJEQaLSoXlZSCwq2PzKzgmEP1tdAmz9/2rE8=;
+        b=URpWrUxARABgIbO1nebn1hxneaIAyiBzMBbyjmZPF8gcmlp+hlXB6sT+7CuuYn5uXj
+         9xgpmClXkG6HXoru5zSAj9wUf+nQoEY8D2NBbjfRCJ1ookRgYKsQz5zf2CRX1PQVEvDD
+         BIKsAgdjhgKoOnZHs/eLzHmRbi4WHPIPuygGnoKSF5E0cXFHgXTO1Y7zP8JjMEsFEBIW
+         NMYHMgGknk73rZXI//caJKGrfmVEz3sNL642VCNQJsPOYvxRwU9ojZ3lFGi0n+SNps/I
+         agP0t05TI+OGzJiNcUUnOmMq4OCke9oJ2XCZzAf8y26fy7Ril66S3tbnGV6aGNypi7jd
+         8UoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JKn/ypHBJEQaLSoXlZSCwq2PzKzgmEP1tdAmz9/2rE8=;
+        b=OBk00hJVIXHl5Oiw9P42CprBs/ECCbdTQqYfAJg2PFoL2VeodmpHHWR51dvuZaGesN
+         Pz5v7JhA/QuzYcpfUNtmDfqL7dA9DrSeA2bpHnbMxkwu4uhjBC+rqq2f6Usb1+HPWTRF
+         eeajJE7MqL2Bx4wExPzR4OFlU2Kb6qfBkGKfpgMvnaz6szmVT9p2uTqumfMKzfz6/DXC
+         OpP0DJ8ek7xxm3qaTSeSRs9Nk4Mbv8w1T51+8zb4KuGdeyaYOmqRu+aswzVKzpExh+cb
+         1+Sa8BvbPDpxWk+dAaHO6IXGzE1AHL3E8qAQpGNtV7OypF6xTgP+GP5gRapOZ+Jecw5y
+         CrKQ==
+X-Gm-Message-State: APjAAAUeqZTYbDxIvaBlsO1uaqid/WulFQKbjGuGzoMP8uV4nNJQj5Mz
+        53cOBV5NwsqhBD7SG5fCuS2fcQ==
+X-Google-Smtp-Source: APXvYqwgGngAsrnl1Ni7lgI4C9rbWtfZQ6ZApFqsNSwIF7o7TVFDnSi+fJw+CqR95WKruzfgNboVzA==
+X-Received: by 2002:a65:5542:: with SMTP id t2mr2155255pgr.74.1574242731587;
+        Wed, 20 Nov 2019 01:38:51 -0800 (PST)
+Received: from localhost ([223.226.74.76])
+        by smtp.gmail.com with ESMTPSA id c1sm6858272pjc.23.2019.11.20.01.38.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 20 Nov 2019 01:38:50 -0800 (PST)
+Date:   Wed, 20 Nov 2019 15:08:49 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Doug Smythies <dsmythies@telus.net>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: Re: [PATCH] PM: QoS: Invalidate frequency QoS requests after removal
+Message-ID: <20191120093849.u7gelifptikwv632@vireshk-i7>
+References: <12409907.uLZWGnKmhe@kreacher>
 MIME-Version: 1.0
-In-Reply-To: <26d1512a-9dea-bf7e-d18e-705846a870c4@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <12409907.uLZWGnKmhe@kreacher>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 20-11-19, 10:33, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> Switching cpufreq drivers (or switching operation modes of the
+> intel_pstate driver from "active" to "passive" and vice versa)
+> does not work on some x86 systems with ACPI after commit
+> 3000ce3c52f8 ("cpufreq: Use per-policy frequency QoS"), because
+> the ACPI _PPC and thermal code uses the same frequency QoS request
+> object for a given CPU every time a cpufreq driver is registered
+> and freq_qos_remove_request() does not invalidate the request after
+> removing it from its QoS list, so freq_qos_add_request() complains
+> and fails when that request is passed to it again.
+> 
+> Fix the issue by modifying freq_qos_remove_request() to clear the qos
+> and type fields of the frequency request pointed to by its argument
+> after removing it from its QoS list so as to invalidate it.
+> 
+> Fixes: 3000ce3c52f8 ("cpufreq: Use per-policy frequency QoS")
+> Reported-and-tested-by: Doug Smythies <dsmythies@telus.net>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+>  kernel/power/qos.c |    8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
+> Index: linux-pm/kernel/power/qos.c
+> ===================================================================
+> --- linux-pm.orig/kernel/power/qos.c
+> +++ linux-pm/kernel/power/qos.c
+> @@ -814,6 +814,8 @@ EXPORT_SYMBOL_GPL(freq_qos_update_reques
+>   */
+>  int freq_qos_remove_request(struct freq_qos_request *req)
+>  {
+> +	int ret;
+> +
+>  	if (!req)
+>  		return -EINVAL;
+>  
+> @@ -821,7 +823,11 @@ int freq_qos_remove_request(struct freq_
+>  		 "%s() called for unknown object\n", __func__))
+>  		return -EINVAL;
+>  
+> -	return freq_qos_apply(req, PM_QOS_REMOVE_REQ, PM_QOS_DEFAULT_VALUE);
+> +	ret = freq_qos_apply(req, PM_QOS_REMOVE_REQ, PM_QOS_DEFAULT_VALUE);
+> +	req->qos = NULL;
+> +	req->type = 0;
+> +
+> +	return ret;
+>  }
+>  EXPORT_SYMBOL_GPL(freq_qos_remove_request);
 
-Use struct mmap_cpu_mask type for tool's thread and mmap data
-buffers to overcome current 1024 CPUs mask size limitation of
-cpu_set_t type.
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-Currently glibc cpu_set_t type has internal mask size limit
-of 1024 CPUs. Moving to struct mmap_cpu_mask type allows
-overcoming that limit. tools bitmap API is used to manipulate
-objects of struct mmap_cpu_mask type.
-
-Reported-by: Andi Kleen <ak@linux.intel.com>
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
----
- tools/perf/builtin-record.c | 28 ++++++++++++++++++++++------
- tools/perf/util/mmap.c      | 28 ++++++++++++++++++++++------
- tools/perf/util/mmap.h      |  2 +-
- 3 files changed, 45 insertions(+), 13 deletions(-)
-
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index b95c000c1ed9..238688516bc8 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -62,6 +62,7 @@
- #include <linux/string.h>
- #include <linux/time64.h>
- #include <linux/zalloc.h>
-+#include <linux/bitmap.h>
- 
- struct switch_output {
- 	bool		 enabled;
-@@ -93,7 +94,7 @@ struct record {
- 	bool			timestamp_boundary;
- 	struct switch_output	switch_output;
- 	unsigned long long	samples;
--	cpu_set_t		affinity_mask;
-+	struct mmap_cpu_mask	affinity_mask;
- 	unsigned long		output_max_size;	/* = 0: unlimited */
- };
- 
-@@ -951,13 +952,21 @@ static struct perf_event_header finished_round_event = {
- 	.type = PERF_RECORD_FINISHED_ROUND,
- };
- 
-+#define MASK_SIZE 1023
- static void record__adjust_affinity(struct record *rec, struct mmap *map)
- {
-+	char mask[MASK_SIZE + 1] = {0};
-+
- 	if (rec->opts.affinity != PERF_AFFINITY_SYS &&
--	    !CPU_EQUAL(&rec->affinity_mask, &map->affinity_mask)) {
--		CPU_ZERO(&rec->affinity_mask);
--		CPU_OR(&rec->affinity_mask, &rec->affinity_mask, &map->affinity_mask);
--		sched_setaffinity(0, sizeof(rec->affinity_mask), &rec->affinity_mask);
-+	    !bitmap_equal(rec->affinity_mask.bits, map->affinity_mask.bits,
-+			  rec->affinity_mask.nbits)) {
-+		bitmap_zero(rec->affinity_mask.bits, rec->affinity_mask.nbits);
-+		bitmap_or(rec->affinity_mask.bits, rec->affinity_mask.bits,
-+			  map->affinity_mask.bits, rec->affinity_mask.nbits);
-+		sched_setaffinity(0, mmap_cpu_mask_bytes(&rec->affinity_mask),
-+				  (cpu_set_t *)rec->affinity_mask.bits);
-+		bitmap_scnprintf(rec->affinity_mask.bits, rec->affinity_mask.nbits, mask, MASK_SIZE);
-+		pr_debug("thread mask[%ld]: %s\n", rec->affinity_mask.nbits, mask);
- 	}
- }
- 
-@@ -2389,7 +2398,6 @@ int cmd_record(int argc, const char **argv)
- # undef REASON
- #endif
- 
--	CPU_ZERO(&rec->affinity_mask);
- 	rec->opts.affinity = PERF_AFFINITY_SYS;
- 
- 	rec->evlist = evlist__new();
-@@ -2405,6 +2413,14 @@ int cmd_record(int argc, const char **argv)
- 	if (quiet)
- 		perf_quiet_option();
- 
-+	rec->affinity_mask.nbits = cpu__max_cpu();
-+	rec->affinity_mask.bits = bitmap_alloc(rec->affinity_mask.nbits);
-+	if (!rec->affinity_mask.bits) {
-+		pr_err("Failed to allocate thread mask for %ld cpus\n", rec->affinity_mask.nbits);
-+		return -ENOMEM;
-+	}
-+	pr_debug("thread mask[%ld]: empty\n", rec->affinity_mask.nbits);
-+
- 	/* Make system wide (-a) the default target. */
- 	if (!argc && target__none(&rec->opts.target))
- 		rec->opts.target.system_wide = true;
-diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
-index 063d1b93c53d..070b1873cd45 100644
---- a/tools/perf/util/mmap.c
-+++ b/tools/perf/util/mmap.c
-@@ -23,6 +23,7 @@
- #include "mmap.h"
- #include "../perf.h"
- #include <internal/lib.h> /* page_size */
-+#include <linux/bitmap.h>
- 
- size_t mmap__mmap_len(struct mmap *map)
- {
-@@ -215,7 +216,7 @@ void mmap__munmap(struct mmap *map)
- 	auxtrace_mmap__munmap(&map->auxtrace_mmap);
- }
- 
--static void build_node_mask(int node, cpu_set_t *mask)
-+static void build_node_mask(int node, struct mmap_cpu_mask *mask)
- {
- 	int c, cpu, nr_cpus;
- 	const struct perf_cpu_map *cpu_map = NULL;
-@@ -228,28 +229,43 @@ static void build_node_mask(int node, cpu_set_t *mask)
- 	for (c = 0; c < nr_cpus; c++) {
- 		cpu = cpu_map->map[c]; /* map c index to online cpu index */
- 		if (cpu__get_node(cpu) == node)
--			CPU_SET(cpu, mask);
-+			set_bit(cpu, mask->bits);
- 	}
- }
- 
--static void perf_mmap__setup_affinity_mask(struct mmap *map, struct mmap_params *mp)
-+static int perf_mmap__setup_affinity_mask(struct mmap *map, struct mmap_params *mp)
- {
--	CPU_ZERO(&map->affinity_mask);
-+	map->affinity_mask.nbits = cpu__max_cpu();
-+	map->affinity_mask.bits = bitmap_alloc(map->affinity_mask.nbits);
-+	if (!map->affinity_mask.bits)
-+		return 1;
-+
- 	if (mp->affinity == PERF_AFFINITY_NODE && cpu__max_node() > 1)
- 		build_node_mask(cpu__get_node(map->core.cpu), &map->affinity_mask);
- 	else if (mp->affinity == PERF_AFFINITY_CPU)
--		CPU_SET(map->core.cpu, &map->affinity_mask);
-+		set_bit(map->core.cpu, map->affinity_mask.bits);
-+
-+	return 0;
- }
- 
-+#define MASK_SIZE 1023
- int mmap__mmap(struct mmap *map, struct mmap_params *mp, int fd, int cpu)
- {
-+	char mask[MASK_SIZE + 1] = {0};
-+
- 	if (perf_mmap__mmap(&map->core, &mp->core, fd, cpu)) {
- 		pr_debug2("failed to mmap perf event ring buffer, error %d\n",
- 			  errno);
- 		return -1;
- 	}
- 
--	perf_mmap__setup_affinity_mask(map, mp);
-+	if (perf_mmap__setup_affinity_mask(map, mp)) {
-+		pr_debug2("failed to alloc mmap affinity mask, error %d\n",
-+			  errno);
-+		return -1;
-+	}
-+	bitmap_scnprintf(map->affinity_mask.bits, map->affinity_mask.nbits, mask, MASK_SIZE);
-+	pr_debug("%p: mmap mask[%ld]: %s\n", map, map->affinity_mask.nbits, mask);
- 
- 	map->core.flush = mp->flush;
- 
-diff --git a/tools/perf/util/mmap.h b/tools/perf/util/mmap.h
-index a218a0eb1466..0a644e112ac6 100644
---- a/tools/perf/util/mmap.h
-+++ b/tools/perf/util/mmap.h
-@@ -40,7 +40,7 @@ struct mmap {
- 		int		 nr_cblocks;
- 	} aio;
- #endif
--	cpu_set_t	affinity_mask;
-+	struct mmap_cpu_mask	affinity_mask;
- 	void		*data;
- 	int		comp_level;
- };
 -- 
-2.20.1
-
+viresh
