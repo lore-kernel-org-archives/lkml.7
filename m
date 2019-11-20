@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2182C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D517CC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:42:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4944224FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:42:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC79422529
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:42:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574257340;
-	bh=wYQ8OP8Cb3pyOLHz3cznHXYjmnobWPzjJL4GgNNfLR8=;
+	s=default; t=1574257344;
+	bh=+eCAHDWvaNuOH0t5py/dwIIAgOEWzjEuW1S3XNVtgTo=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=ZyI5vb/cfMmgcnilmSANTDP4FA2SUAaohiYhIhA5Zd21RLjuoOluQWjkQErZi1eO5
-	 wuXG28T4JSrG7QYmvTe6hpRroA0JXgW5mrKx4uqEtaCjrIobJxG0eUgm0UN0el1cwx
-	 7FN5Swd1/Asbbn45vq4Oq6AzsPY6bw1dAQScis2E=
+	b=G3+DaVwDQ4+D4PfgjbyWyXMA9PJqhxVNs3ppRF0Ckrihe8nd2Q3q3yqH9VMTNIgiq
+	 gMsNC4XOH8cJd6NZjOfzhSsU+524e/SPhZQ1kWc0HM+UYk1qq2OB6i+7GVldWXE/29
+	 pzWAiMJLtgrpof03HbG8D90o7J2JfRIXOREXrSVc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731399AbfKTNmT (ORCPT
+        id S1731406AbfKTNmX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 08:42:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50022 "EHLO mail.kernel.org"
+        Wed, 20 Nov 2019 08:42:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50098 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730200AbfKTNmQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 08:42:16 -0500
+        id S1730507AbfKTNmV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 08:42:21 -0500
 Received: from localhost.localdomain (unknown [118.189.143.39])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2180224FA;
-        Wed, 20 Nov 2019 13:42:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B5DE224FA;
+        Wed, 20 Nov 2019 13:42:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574257335;
-        bh=wYQ8OP8Cb3pyOLHz3cznHXYjmnobWPzjJL4GgNNfLR8=;
+        s=default; t=1574257340;
+        bh=+eCAHDWvaNuOH0t5py/dwIIAgOEWzjEuW1S3XNVtgTo=;
         h=From:To:Cc:Subject:Date:From;
-        b=tt76WOQ4A2+a64bQSdG1FIFRonxHjKqi/flSNw+ek+tkgQfpz01PYKrIcqcamRoOg
-         jL7afwgplAQiYwkp0+Wj2o0np87mOEl/15ZCb+YVUXRgxg7xspoaeRqgw+Pm2oXgWS
-         Wi/SDlBGnLxkv9Siq4JdqKbO375AwoEAjK3ZAReo=
+        b=wLfaioBxhp59D+I7bod/1U5No5ftRjkZLfniIM9UVv7TlwYDaQOONXkLXRzMnSrfM
+         42vf4ZjcwgwPnM2iI9xsLqyc0F346XPqH2GY+AqYLl2IJFf1bIDtEZrRr2XdbA9ku5
+         7Ifn5Ycp0T5mrfbaq/4bj61Joi6rfV0LwlP6iGgE=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        dmaengine@vger.kernel.org
-Subject: [PATCH] dma: Fix Kconfig indentation
-Date:   Wed, 20 Nov 2019 21:42:11 +0800
-Message-Id: <20191120134211.15644-1-krzk@kernel.org>
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>, linux-pm@vger.kernel.org
+Subject: [PATCH] devfreq: Fix Kconfig indentation
+Date:   Wed, 20 Nov 2019 21:42:16 +0800
+Message-Id: <20191120134216.15713-1-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -60,78 +60,26 @@ coding style with command like:
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/dma/Kconfig | 46 ++++++++++++++++++++++-----------------------
- 1 file changed, 23 insertions(+), 23 deletions(-)
+ drivers/devfreq/Kconfig | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index 03dfee5c66d9..47d951df2805 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -15,19 +15,19 @@ menuconfig DMADEVICES
- 	  be empty in some cases.
+diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
+index 066e6c4efaa2..59027d7ddf2a 100644
+--- a/drivers/devfreq/Kconfig
++++ b/drivers/devfreq/Kconfig
+@@ -119,9 +119,9 @@ config ARM_RK3399_DMC_DEVFREQ
+ 	select DEVFREQ_GOV_SIMPLE_ONDEMAND
+ 	select PM_DEVFREQ_EVENT
+ 	help
+-          This adds the DEVFREQ driver for the RK3399 DMC(Dynamic Memory Controller).
+-          It sets the frequency for the memory controller and reads the usage counts
+-          from hardware.
++	  This adds the DEVFREQ driver for the RK3399 DMC(Dynamic Memory Controller).
++	  It sets the frequency for the memory controller and reads the usage counts
++	  from hardware.
  
- config DMADEVICES_DEBUG
--        bool "DMA Engine debugging"
--        depends on DMADEVICES != n
--        help
--          This is an option for use by developers; most people should
--          say N here.  This enables DMA engine core and driver debugging.
-+	bool "DMA Engine debugging"
-+	depends on DMADEVICES != n
-+	help
-+	  This is an option for use by developers; most people should
-+	  say N here.  This enables DMA engine core and driver debugging.
+ source "drivers/devfreq/event/Kconfig"
  
- config DMADEVICES_VDEBUG
--        bool "DMA Engine verbose debugging"
--        depends on DMADEVICES_DEBUG != n
--        help
--          This is an option for use by developers; most people should
--          say N here.  This enables deeper (more verbose) debugging of
--          the DMA engine core and drivers.
-+	bool "DMA Engine verbose debugging"
-+	depends on DMADEVICES_DEBUG != n
-+	help
-+	  This is an option for use by developers; most people should
-+	  say N here.  This enables deeper (more verbose) debugging of
-+	  the DMA engine core and drivers.
- 
- 
- if DMADEVICES
-@@ -222,21 +222,21 @@ config FSL_QDMA
-        select DMA_ENGINE_RAID
-        select ASYNC_TX_ENABLE_CHANNEL_SWITCH
-        help
--         Support the NXP Layerscape qDMA engine with command queue and legacy mode.
--         Channel virtualization is supported through enqueuing of DMA jobs to,
--         or dequeuing DMA jobs from, different work queues.
--         This module can be found on NXP Layerscape SoCs.
-+	 Support the NXP Layerscape qDMA engine with command queue and legacy mode.
-+	 Channel virtualization is supported through enqueuing of DMA jobs to,
-+	 or dequeuing DMA jobs from, different work queues.
-+	 This module can be found on NXP Layerscape SoCs.
- 	  The qdma driver only work on  SoCs with a DPAA hardware block.
- 
- config FSL_RAID
--        tristate "Freescale RAID engine Support"
--        depends on FSL_SOC && !ASYNC_TX_ENABLE_CHANNEL_SWITCH
--        select DMA_ENGINE
--        select DMA_ENGINE_RAID
--        ---help---
--          Enable support for Freescale RAID Engine. RAID Engine is
--          available on some QorIQ SoCs (like P5020/P5040). It has
--          the capability to offload memcpy, xor and pq computation
-+	tristate "Freescale RAID engine Support"
-+	depends on FSL_SOC && !ASYNC_TX_ENABLE_CHANNEL_SWITCH
-+	select DMA_ENGINE
-+	select DMA_ENGINE_RAID
-+	---help---
-+	  Enable support for Freescale RAID Engine. RAID Engine is
-+	  available on some QorIQ SoCs (like P5020/P5040). It has
-+	  the capability to offload memcpy, xor and pq computation
- 	  for raid5/6.
- 
- config IMG_MDC_DMA
 -- 
 2.17.1
 
