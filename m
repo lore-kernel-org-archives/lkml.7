@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30F89C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:43:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC5AC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:43:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0599820714
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:43:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAC572071F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:43:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730942AbfKTPne (ORCPT
+        id S1732278AbfKTPni (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 10:43:34 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:52858 "EHLO
+        Wed, 20 Nov 2019 10:43:38 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:52796 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730103AbfKTPkT (ORCPT
+        by vger.kernel.org with ESMTP id S1730019AbfKTPkT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 Nov 2019 10:40:19 -0500
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iXS5V-0004bQ-1Z; Wed, 20 Nov 2019 15:40:13 +0000
+        id 1iXS5U-0004b8-O3; Wed, 20 Nov 2019 15:40:12 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iXS5T-0004IP-Tn; Wed, 20 Nov 2019 15:40:11 +0000
+        id 1iXS5T-0004Hm-M5; Wed, 20 Nov 2019 15:40:11 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Marcelo Ricardo Leitner" <marcelo.leitner@gmail.com>,
-        "Xin Long" <lucien.xin@gmail.com>,
-        "Jakub Kicinski" <jakub.kicinski@netronome.com>
-Date:   Wed, 20 Nov 2019 15:37:47 +0000
-Message-ID: <lsq.1574264230.971583478@decadent.org.uk>
+        "Takashi Sakamoto" <o-takashi@sakamocchi.jp>,
+        "Wenwen Wang" <wenwen@cs.uga.edu>, "Takashi Iwai" <tiwai@suse.de>
+Date:   Wed, 20 Nov 2019 15:37:39 +0000
+Message-ID: <lsq.1574264230.903988427@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 37/83] sctp: fix the transport error_count check
+Subject: [PATCH 3.16 29/83] ALSA: firewire: fix a memory leak bug
 In-Reply-To: <lsq.1574264230.280218497@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,37 +55,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Wenwen Wang <wenwen@cs.uga.edu>
 
-commit a1794de8b92ea6bc2037f445b296814ac826693e upstream.
+commit 1be3c1fae6c1e1f5bb982b255d2034034454527a upstream.
 
-As the annotation says in sctp_do_8_2_transport_strike():
+In iso_packets_buffer_init(), 'b->packets' is allocated through
+kmalloc_array(). Then, the aligned packet size is checked. If it is
+larger than PAGE_SIZE, -EINVAL will be returned to indicate the error.
+However, the allocated 'b->packets' is not deallocated on this path,
+leading to a memory leak.
 
-  "If the transport error count is greater than the pf_retrans
-   threshold, and less than pathmaxrtx ..."
+To fix the above issue, free 'b->packets' before returning the error code.
 
-It should be transport->error_count checked with pathmaxrxt,
-instead of asoc->pf_retrans.
-
-Fixes: 5aa93bcf66f4 ("sctp: Implement quick failover draft from tsvwg")
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-[bwh: Backported to 3.16: adjust context]
+Fixes: 31ef9134eb52 ("ALSA: add LaCie FireWire Speakers/Griffin FireWave Surround driver")
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Reviewed-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- net/sctp/sm_sideeffect.c | 2 +-
+ sound/firewire/packets-buffer.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/sctp/sm_sideeffect.c
-+++ b/net/sctp/sm_sideeffect.c
-@@ -504,7 +504,7 @@ static void sctp_do_8_2_transport_strike
- 	 * see SCTP Quick Failover Draft, section 5.1
- 	 */
- 	if ((transport->state == SCTP_ACTIVE) &&
--	   (asoc->pf_retrans < transport->pathmaxrxt) &&
-+	   (transport->error_count < transport->pathmaxrxt) &&
- 	   (transport->error_count > asoc->pf_retrans)) {
+--- a/sound/firewire/packets-buffer.c
++++ b/sound/firewire/packets-buffer.c
+@@ -37,7 +37,7 @@ int iso_packets_buffer_init(struct iso_p
+ 	packets_per_page = PAGE_SIZE / packet_size;
+ 	if (WARN_ON(!packets_per_page)) {
+ 		err = -EINVAL;
+-		goto error;
++		goto err_packets;
+ 	}
+ 	pages = DIV_ROUND_UP(count, packets_per_page);
  
- 		sctp_assoc_control_transport(asoc, transport,
 
