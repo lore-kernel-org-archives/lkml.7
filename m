@@ -2,128 +2,131 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22CB9C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:41:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E35BC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:41:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDBEB21906
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:41:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="IBafvk3n"
+	by mail.kernel.org (Postfix) with ESMTP id 53AE421906
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:41:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574250105;
+	bh=c54FTPihjJBlYMetR/UyUFcl4cuOdFUsY8+B0OczVlo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Qbsw7iqX9v2r7crgzBLVW2ntMrnn9MpOQC1m4hEQ6KKBoeIo2rRw5pskguVoW/NjD
+	 shPyD5BqrM4kCDTMpNxFtAtb4kRKPgGyQsvlc28zd/8DEJi06a723FSrCWzQE4Zt6f
+	 gBRVDF/Ffrk0deiIs2RKCtf4Y7cA5PUk+s2kpNKs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729333AbfKTLlU (ORCPT
+        id S1729340AbfKTLlo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 06:41:20 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:36941 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729320AbfKTLlT (ORCPT
+        Wed, 20 Nov 2019 06:41:44 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:32814 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728495AbfKTLlo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 06:41:19 -0500
-Received: by mail-pj1-f66.google.com with SMTP id f3so4004998pjg.4
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 03:41:19 -0800 (PST)
+        Wed, 20 Nov 2019 06:41:44 -0500
+Received: by mail-wm1-f67.google.com with SMTP id t26so961787wmi.0
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 03:41:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=XG3FqVuwcEK3cEEdmwlKOUvSjQLzYWodVEQZQZxdgGw=;
-        b=IBafvk3nhhoTcsHRx+LcFptem/D7w/nySgOpIqNTdynBSbozJ6gJW3N4d5echRt1Y6
-         rqZAnABzdwU3cKUigi+mvaFbMw3RMTDMZ1tZAiOkC3tChk9sECnN/o98UDtHYY4APYsH
-         vQfV8IJL3KN8+dWtPnrjWI3WtARRXUaEe6Q8k=
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=x9xVJ7mXWw8oZuqrstfEkI3veCueqnyo7bS5uNfNe1c=;
+        b=eXkRJGZLZ6D4XKijtgh5kgmQXmomYEzldhHOXjpAShGyutxPONvJiJC4EZGctWpzSj
+         5ssGLcJxTVEw9mrmWAB1F//yLDm8n3sOdxC0/Hc7BSCW2BejLTxW2kcak2TBQiisTnrV
+         Mzi2keltM1sJcXNTmSz674CvfJRWRJzTugVBfDfJgcm3/atSKA0j6NyHgzWqIQjmZKa8
+         Ci6i4m/BLT1ZPUFHRKmhfBejleTr8n8W3Mb6O1G4ztzDgy07Gdgs328NOjMm/+d29nCA
+         Df2iPdhnyYCUmYKpY2UXTyclgjNBCqeVu7DgkdGFtkfE7HLwXd9jYPYaegDu6s14q8p0
+         TI9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=XG3FqVuwcEK3cEEdmwlKOUvSjQLzYWodVEQZQZxdgGw=;
-        b=rjze6BBiF9mUxejxr7Bpi/sPazv6MffJiZoB6+wcf/Q1qWV5C+ss1Ft2ONwQuIlcJH
-         vZh1oUt3Caze6D0U2mYmzF+3smdxPFvT0S6p2B4SbMP6d94puFjNCacblJQoBwXP5dQR
-         uuOD+nHphXtdJLTWCwAYK/CtG0rwVR5noYZdVt4I5Suu3wlM/+u2S4MNEfh4+ZUmUnZ+
-         9MjNfHXuGENp0RaE2Tt0RtIvEMUI2X/bk12X0ht7OQVd4HXAULYPwj0WIhvAGLz5P7w/
-         I0TkTA1xIgzDrJ4WtqoJetopVQKRaysJiFAtpiXpOaf8rstS48e3MzmKl00KE+fXjwgR
-         0I+Q==
-X-Gm-Message-State: APjAAAUYHe1i4eiVKdYal/5qfwzBL8iGlVkfTjsLfFUmN6CBGiUZH3Xw
-        UNiD3zJ2Pk6rEsmpx7qvUgYYiQ==
-X-Google-Smtp-Source: APXvYqxKa0jSG5czR1wxW5TZYm5l7Yz1+Q3BK+S6kuzHUAq2+gY5d3tie4YLeCiftc91wuh1LEOH7Q==
-X-Received: by 2002:a17:902:4a:: with SMTP id 68mr2526359pla.8.1574250078726;
-        Wed, 20 Nov 2019 03:41:18 -0800 (PST)
-Received: from localhost.localdomain ([115.97.180.31])
-        by smtp.gmail.com with ESMTPSA id h185sm13492850pgc.87.2019.11.20.03.41.14
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=x9xVJ7mXWw8oZuqrstfEkI3veCueqnyo7bS5uNfNe1c=;
+        b=kY0uLUd5y+Lpvzuz/sEznO/6qZ93oqWnT6zyQFxFf85ELQ6+8QZmX3MuHx1i9v8fFB
+         azFmB0wANn1Y2ehJoHOSkfX+hcc4w69cfd+KCsVtG8TGrJy9CR6bfFmk4UvEL77LnwLd
+         fvOTfejMH978oMd0/lhNXPwQCVySpWeVNrCHkdcxPpORIrVid/RokT1ZhQqX+w1nawPj
+         JP7h3ZArvW3m7J/2j3C4imBpp6LiG/V02VJLxd24X3fy2r+5aXDDZSfHyD89LPfdThRg
+         S5v0/fpoOX7+N2nRvRuUsG0MMXkrKmwxUmQtolqL6hizja6bopnVeU0os8wKaZG3Pqby
+         FQ+g==
+X-Gm-Message-State: APjAAAXTF65x4g3bj3H6VfQ9yTcvJ67rN8e8iUxe+KnXWYJPAWkA4QbP
+        8C5KOtZGAuqCfJ1iBp0CPXo=
+X-Google-Smtp-Source: APXvYqyiZKPwWo7Sl4WENLYinPVTV8jqx8gj6VXdS001xRV97w79Gg/SoSdNfSu7LVSPnKVqLd0cqw==
+X-Received: by 2002:a1c:a512:: with SMTP id o18mr2592588wme.4.1574250101878;
+        Wed, 20 Nov 2019 03:41:41 -0800 (PST)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id v128sm6875441wmb.14.2019.11.20.03.41.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Nov 2019 03:41:18 -0800 (PST)
-From:   Jagan Teki <jagan@amarulasolutions.com>
-To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Akash Gajjar <akash@openedev.com>, Tom Cubie <tom@radxa.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-amarula@amarulasolutions.com,
-        Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH 5/5] arm64: dts: rockchip: Add Radxa Rock Pi N10 initial support
-Date:   Wed, 20 Nov 2019 17:09:23 +0530
-Message-Id: <20191120113923.11685-6-jagan@amarulasolutions.com>
-X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
-In-Reply-To: <20191120113923.11685-1-jagan@amarulasolutions.com>
-References: <20191120113923.11685-1-jagan@amarulasolutions.com>
+        Wed, 20 Nov 2019 03:41:41 -0800 (PST)
+Date:   Wed, 20 Nov 2019 12:41:39 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Dmitry Vyukov <dvyukov@google.com>, Jann Horn <jannh@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: Re: [PATCH v2 2/3] x86/traps: Print non-canonical address on #GP
+Message-ID: <20191120114139.GB83574@gmail.com>
+References: <20191115191728.87338-1-jannh@google.com>
+ <20191115191728.87338-2-jannh@google.com>
+ <20191118142144.GC6363@zn.tnic>
+ <CACT4Y+bCOr=du1QEg8TtiZ-X6U+8ZPR4N07rJOeSCsd5h+zO3w@mail.gmail.com>
+ <CAG48ez1AWW7FkvU31ahy=0ZiaAreSMz=FFA0u8-XkXT9hNdWKA@mail.gmail.com>
+ <CACT4Y+bfF86YY_zEGWO1sK0NwuYgr8Cx0wFewRDq0WL_GBgO0Q@mail.gmail.com>
+ <20191118164407.GH6363@zn.tnic>
+ <20191118173850.GL6363@zn.tnic>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191118173850.GL6363@zn.tnic>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rock Pi N10 is a Rockchip RK3399Pro based SBC, which has
-- VMARC RK3399Pro SOM (as per SMARC standard) from Vamrs.
-- Compatible carrier board from Radxa.
 
-VAMRC RK3399Pro SOM need to mount on top of Radxa carrier
-board for making Rock Pi N10 SBC.
+* Borislav Petkov <bp@alien8.de> wrote:
 
-So, add initial support for Rock Pi N10 by including rk3399,
-rk3399pro vamrc-som and raxda carrier board dtsi files.
+> On Mon, Nov 18, 2019 at 05:44:07PM +0100, Borislav Petkov wrote:
+> > [    2.523708] Write protecting the kernel read-only data: 16384k
+> > [    2.524729] Freeing unused kernel image (text/rodata gap) memory: 2040K
+> > [    2.525594] Freeing unused kernel image (rodata/data gap) memory: 368K
+> > [    2.541414] x86/mm: Checked W+X mappings: passed, no W+X pages found.
+> > 
+> > <--- important first splat starts here:
+> > 
+> > [    2.542218] [*] general protection fault while derefing a non-canonical address 0xdfff000000000001: 0000 [#1] PREEMPT SMP
+> 		  ^
+> 
+> Btw, tglx just suggested on IRC to simply slap the die_counter number here so
+> that you have
+> 
+> [    2.543343] [1] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.4.0-rc8+ #8
+> [    2.544138] [1] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.11.1-1 04/01/2014
+> ...
+> 
+> which also tells you to which splat the line belongs to.
+>
+> Also useful.
 
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
----
- arch/arm64/boot/dts/rockchip/Makefile           |  1 +
- .../boot/dts/rockchip/rk3399pro-rock-pi-n10.dts | 17 +++++++++++++++++
- 2 files changed, 18 insertions(+)
- create mode 100644 arch/arm64/boot/dts/rockchip/rk3399pro-rock-pi-n10.dts
+Yeah - but I think it would be even better to make it part of the 
+timestamp - most tools will already discard the [] bit, so why not merge 
+the two:
 
-diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
-index 48fb631d5451..433033b18170 100644
---- a/arch/arm64/boot/dts/rockchip/Makefile
-+++ b/arch/arm64/boot/dts/rockchip/Makefile
-@@ -36,3 +36,4 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rock960.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rockpro64.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-sapphire.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-sapphire-excavator.dtb
-+dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399pro-rock-pi-n10.dtb
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399pro-rock-pi-n10.dts b/arch/arm64/boot/dts/rockchip/rk3399pro-rock-pi-n10.dts
-new file mode 100644
-index 000000000000..1f7fbaa92c38
---- /dev/null
-+++ b/arch/arm64/boot/dts/rockchip/rk3399pro-rock-pi-n10.dts
-@@ -0,0 +1,17 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2019 Fuzhou Rockchip Electronics Co., Ltd
-+ * Copyright (c) 2019 Radxa Limited
-+ * Copyright (c) 2019 Amarula Solutions(India)
-+ */
-+
-+/dts-v1/;
-+#include "rk3399.dtsi"
-+#include "rk3399-opp.dtsi"
-+#include "rk3399pro-vmarc-som.dtsi"
-+#include <arm/rockchip-radxa-carrierboard.dtsi>
-+
-+/ {
-+	model = "Radxa ROCK Pi N10";
-+	compatible = "radxa,rockpi-n10", "rockchip,rk3399pro";
-+};
--- 
-2.18.0.321.gffc6fa0e3
+> [    2.543343-#1] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.4.0-rc8+ #8
+> [    2.544138-#1] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.11.1-1 04/01/2014
 
+Thanks,
+
+	Ingo
