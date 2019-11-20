@@ -2,153 +2,185 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F426C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 08:49:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29D1DC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 08:50:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7381222DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 08:49:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1FFA222DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 08:50:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Un1BLBTM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728025AbfKTIt0 (ORCPT
+        id S1728035AbfKTIuf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 03:49:26 -0500
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:40299 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727909AbfKTItZ (ORCPT
+        Wed, 20 Nov 2019 03:50:35 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:20575 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727950AbfKTIuf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 03:49:25 -0500
-Received: by mail-qv1-f68.google.com with SMTP id i3so9389344qvv.7;
-        Wed, 20 Nov 2019 00:49:24 -0800 (PST)
+        Wed, 20 Nov 2019 03:50:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574239833;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=pyGUSb3iPoT2jrlA3M0XHrhRYzJ4C1SALQy+tY3R52w=;
+        b=Un1BLBTM9mqGun6rYQ33piPvGeyFsyhb3O9tUDisbfuvcnuMMv3uRz8GLgpFkDIswMKSIN
+        DW+1rJMko3fziKB9Hvm94kAiTS0QDqmBG0FPtIG/Sf40YmablWmoOguHgobc52ZVGKyxX5
+        epweqVteGRosqWl8FnnRFden6E1QTE4=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-272-rvLNioMeN4Wzx5fPDTu4ag-1; Wed, 20 Nov 2019 03:50:30 -0500
+Received: by mail-wm1-f70.google.com with SMTP id f191so4757849wme.1
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 00:50:29 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=U7zfNdmgpyMiboihJa1xiLHQ3jUJYyUMIT0Y6QJ7Ulc=;
-        b=udUUlmrHK2QtoQJAgkKU87gIQ7Eg5+tahrXLo561bkxmkafJzlipih929OidOYiXoC
-         4uMQXYvTGCLLYS2214W/Pgi2kUy4FUJG27fy5Z7JMJJdl1VYRZasBxjuHGnoHRrktls7
-         Dy2ngDpV8ppTIyTICERN141djmmga6BQLoGFgjulrHa4n2vL0PchonNXvJPiv9yvb/Zm
-         2srZZRhcRF6XNsee6ghb0Bvzb8/U7FxqvnWvfQ3TR0qnwxg2ivtI7x+ttC8RQjKrW4NL
-         XKBwr5QwJTEvVArrB6t2WqzdFkCedqNthDR5VKkK4EZzJcWjT6Y7aj/yhsIyp/o71eVD
-         hLxA==
-X-Gm-Message-State: APjAAAWmwMoe2tyKezHgE4gUlC29DvUpOjJ0OLMSPaU5EuvGhjnwbM5w
-        s7zLJ0BSx7sNCDamaTfouY5lP5uwgxBcvB9SgZA=
-X-Google-Smtp-Source: APXvYqzoC89VsyKqH8kM+v4dtaa6bLp+LA8RW0cstsBLyISicvDtIlO4aN1V8hZ2omsd9l0HY5hQ+UHjdp9Z6QCWhbg=
-X-Received: by 2002:a0c:e90b:: with SMTP id a11mr1449888qvo.229.1574239763803;
- Wed, 20 Nov 2019 00:49:23 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=LJg4PoKwLNjAV6c7RLZlItrhlkdFabPZta3ShMZA+rk=;
+        b=X4bjPtz6bVZMZH3YUzNUEkCA6d0bp5q6mNkaq4zEpnSHilUtqxNCjSfDz2pxDrsw7J
+         zuIrlPFlBQPDDnNFgt18F9fpfmn4Ga8L/9lF7Xn92cAAy6O7IQFOSOOeWpuLB7heHNuB
+         HCixYTkGr9cj9T3fq3KqbFGSt52ov4HbyyTpsmLIwK0+3L8BYbPWI7J6pQNl6JQnPZBk
+         50XlVE5tshZ7DnFn2Nsy7Xx9gwUlQkNyAggrk/AMkhCvy7y0gsRH+4KBIuowBMvn1qN1
+         FqVifBgkYEs2NulaaG3TdgMOe+RoohpUJgpk4rpMuPyNEq9366rzgMj5Z7f8hvr8fdTR
+         WlhA==
+X-Gm-Message-State: APjAAAVi5i45Lnw8/5uIKeXbqg7/lIK7yeZ9fbQHp+Wk/C9kS4+/MdVx
+        BP+d9CP9+F+p1fsHP60SqcNEEKpGfPDbCDsEVk6SgMGB6028aNm2KXgRxFZREK4pIJQXo6RKP6G
+        MZYpnmzGGPNPC+uD+nvgCLU+e
+X-Received: by 2002:adf:e312:: with SMTP id b18mr1848089wrj.203.1574239828710;
+        Wed, 20 Nov 2019 00:50:28 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzCm59GNSjfFbKMdn+jFdB5tLiEBu8+2MBZEClPJ4MnrB7QvpyiYmBdZTkB4UgluMk/SKlDeA==
+X-Received: by 2002:adf:e312:: with SMTP id b18mr1848046wrj.203.1574239828336;
+        Wed, 20 Nov 2019 00:50:28 -0800 (PST)
+Received: from localhost.localdomain ([151.29.177.194])
+        by smtp.gmail.com with ESMTPSA id d18sm31281112wrm.85.2019.11.20.00.50.26
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 20 Nov 2019 00:50:27 -0800 (PST)
+Date:   Wed, 20 Nov 2019 09:50:24 +0100
+From:   Juri Lelli <juri.lelli@redhat.com>
+To:     Philipp Stanner <stanner@posteo.de>
+Cc:     linux-kernel@vger.kernel.org, Hagen Pfeifer <hagen@jauu.net>,
+        mingo@redhat.com, peterz@infradead.org, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de
+Subject: Re: SCHED_DEADLINE with CPU affinity
+Message-ID: <20191120085024.GB23227@localhost.localdomain>
+References: <1574202052.1931.17.camel@posteo.de>
 MIME-Version: 1.0
-References: <20191119191505.25286-1-geert+renesas@glider.be> <20191119194800.GA204901@google.com>
-In-Reply-To: <20191119194800.GA204901@google.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 20 Nov 2019 09:49:12 +0100
-Message-ID: <CAMuHMdULQ6-tSy79XRo8d3ujrxXfCcHDzduX2fnVZku80ofLFg@mail.gmail.com>
-Subject: Re: [PATCH] PCI: of: Restore alignment/indentation in host bridge
- window table
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Rob Herring <robh@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Srinath Mannam <srinath.mannam@broadcom.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1574202052.1931.17.camel@posteo.de>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-MC-Unique: rvLNioMeN4Wzx5fPDTu4ag-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
+Hi Philipp,
 
-On Tue, Nov 19, 2019 at 8:48 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> On Tue, Nov 19, 2019 at 08:15:05PM +0100, Geert Uytterhoeven wrote:
-> > Since the printing of the inbound resources was added, alignment and
-> > indentation of the host bridge window table is broken because of two
-> > reasons:
-> >   1. The "IB MEM" row header is longer than the other headers,
-> >   2. Inbound ranges typically extend beyond 32-bit address space, and thus
-> >      don't fit in "#010llx".
-> >
-> > Fix this by extending the row header field to 6 characters, and the
-> > format string to 40-bit addresses.
-> >
-> > Use "%6s" to handle field size and right-alignment, instead of manual
-> > preparation using error-prone snprintf() calls.  Use the exact same
-> > format string for both cases, to allow sharing.
-> >
-> > Impact on kernel boot log on r8a7791/koelsch:
-> >
-> >      rcar-pcie fe000000.pcie: host bridge /soc/pcie@fe000000 ranges:
-> >     -rcar-pcie fe000000.pcie:    IO 0xfe100000..0xfe1fffff -> 0x00000000
-> >     -rcar-pcie fe000000.pcie:   MEM 0xfe200000..0xfe3fffff -> 0xfe200000
-> >     -rcar-pcie fe000000.pcie:   MEM 0x30000000..0x37ffffff -> 0x30000000
-> >     -rcar-pcie fe000000.pcie:   MEM 0x38000000..0x3fffffff -> 0x38000000
-> >     -rcar-pcie fe000000.pcie: IB MEM 0x40000000..0xbfffffff -> 0x40000000
-> >     -rcar-pcie fe000000.pcie: IB MEM 0x200000000..0x2ffffffff -> 0x200000000
-> >     +rcar-pcie fe000000.pcie:       IO 0x00fe100000..0x00fe1fffff -> 0x0000000000
-> >     +rcar-pcie fe000000.pcie:      MEM 0x00fe200000..0x00fe3fffff -> 0x00fe200000
-> >     +rcar-pcie fe000000.pcie:      MEM 0x0030000000..0x0037ffffff -> 0x0030000000
-> >     +rcar-pcie fe000000.pcie:      MEM 0x0038000000..0x003fffffff -> 0x0038000000
-> >     +rcar-pcie fe000000.pcie:   IB MEM 0x0040000000..0x00bfffffff -> 0x0040000000
-> >     +rcar-pcie fe000000.pcie:   IB MEM 0x0200000000..0x02ffffffff -> 0x0200000000
-> >
-> > Fixes: 52ac576f88f9f701 ("PCI: of: Add inbound resource parsing to helpers")
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->
-> This is fine with me, and since it applies on top of 52ac576f88f9f701
-> (longer than the usual 12-char SHA1, BTW), which is on Lorenzo's
-> pci/mmio-dma-ranges branch, I assume Lorenzo will be the one to take
-> care of this.
->
-> pci_register_host_bridge() prints some of this info like this:
->
->   pci_bus 0000:00: root bus resource [io  0x0000-0x0cf7 window]
->   pci_bus 0000:00: root bus resource [io  0x0d00-0xffff window]
->   pci_bus 0000:00: root bus resource [mem 0x000a0000-0x000bffff window]
->   pci_bus 0000:00: root bus resource [mem 0xdc800000-0xfebfffff window]
->
-> Is there any opportunity for consolidating these or at least making
-> the format the same?
->
-> I assume we're currently printing most of that info twice, once
-> in devm_of_pci_get_host_bridge_resources() and again in
-> pci_register_host_bridge()?
+On 19/11/19 23:20, Philipp Stanner wrote:
+> Hey folks,
+> (please put me in CC when answering, I'm not subscribed)
+>=20
+> I'm currently working student in the embedded industry. We have a device =
+where
+> we need to be able to process network data within a certain deadline. At =
+the
+> same time, safety is a primary requirement; that's why we construct every=
+thing
+> fully redundant. Meaning: We have two network interfaces, each IRQ then b=
+ound
+> to one CPU core and spawn a container (systemd-nspawn, cgroups based) whi=
+ch in
+> turn is bound to the corresponding CPU (CPU affinity masked).
+>=20
+> =A0=A0=A0=A0=A0=A0=A0=A0Container0=A0=A0=A0=A0=A0=A0=A0Container1
+> =A0=A0=A0-----------------=A0=A0-----------------
+> =A0=A0=A0|=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0|=A0=A0|=A0=A0=A0=
+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0|
+> =A0=A0=A0|=A0=A0=A0=A0Proc. A=A0=A0=A0=A0|=A0=A0|=A0=A0=A0Proc. A'=A0=A0=
+=A0=A0|
+> =A0=A0=A0|=A0=A0=A0=A0Proc. B=A0=A0=A0=A0|=A0=A0|=A0=A0=A0Proc. B'=A0=A0=
+=A0=A0|
+> =A0=A0=A0|=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0|=A0=A0|=A0=A0=A0=
+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0|
+> =A0=A0=A0-----------------=A0=A0-----------------
+> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0^=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0^
+> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0|=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0|
+> =A0=A0=A0=A0=A0=A0=A0=A0CPU 0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0CP=
+U 1
+> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0|=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0|
+> =A0=A0=A0=A0=A0=A0=A0IRQ eth0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0IRQ eth1
+>=20
+>=20
+> Within each container several processes are started. Ranging from systemd
+> (SCHED_OTHER) till two (soft) real-time critical processes: which we want=
+ to
+> execute via SCHED_DEADLINE.
+>=20
+> Now, I've worked through the manpage describing scheduling policies, and =
+it
+> seems that our scenario is forbidden my the kernel.=A0=A0I've done some t=
+ests with
+> the syscalls sched_setattr and sched_setaffinity, trying to activate
+> SCHED_DEADLINE while also binding to a certain core.=A0=A0It fails with E=
+INVAL or
+> EINBUSY, depending on the order of the syscalls.
+>=20
+> I've read that the kernel accomplishes plausibility checks when you ask f=
+or a
 
-(after ignoring PCIe link down, as I don't have a spare PCIe card to plug in)
+Yeah, admission control.
 
-  rcar-pcie fe000000.pcie: host bridge /soc/pcie@fe000000 ranges:
-  rcar-pcie fe000000.pcie:       IO 0x00fe100000..0x00fe1fffff -> 0x0000000000
-  rcar-pcie fe000000.pcie:      MEM 0x00fe200000..0x00fe3fffff -> 0x00fe200000
-  rcar-pcie fe000000.pcie:      MEM 0x0030000000..0x0037ffffff -> 0x0030000000
-  rcar-pcie fe000000.pcie:      MEM 0x0038000000..0x003fffffff -> 0x0038000000
-  rcar-pcie fe000000.pcie:   IB MEM 0x0040000000..0x00bfffffff -> 0x0040000000
-  rcar-pcie fe000000.pcie:   IB MEM 0x0200000000..0x02ffffffff -> 0x0200000000
-  rcar-pcie fe000000.pcie: PCIe link down (ignored)
-  rcar-pcie fe000000.pcie: PCIe x4: link up
-  rcar-pcie fe000000.pcie: PCI host bridge to bus 0002:00
-  pci_bus 0002:00: root bus resource [bus 00-ff]
-  pci_bus 0002:00: root bus resource [io  0x0000-0xfffff]
-  pci_bus 0002:00: root bus resource [mem 0xfe200000-0xfe3fffff]
-  pci_bus 0002:00: root bus resource [mem 0x30000000-0x37ffffff]
-  pci_bus 0002:00: root bus resource [mem 0x38000000-0x3fffffff pref]
-  pci 0002:00:00.0: [1912:001f] type 01 class 0x060400
-  pci 0002:00:00.0: enabling Extended Tags
-  pci 0002:00:00.0: PME# supported from D0 D3hot D3cold
-  PCI: bus0: Fast back to back transfers disabled
+> new deadline task to be scheduled, and I assume this check is what preven=
+ts us
+> from implementing our intended architecture.
+>=20
+> Now, the questions we're having are:
+>=20
+> =A0=A0=A01. Why does the kernel do this, what is the problem with schedul=
+ing with
+> =A0=A0=A0=A0=A0=A0SCHED_DEADLINE on a certain core? In contrast, how is i=
+t handled when
+> =A0=A0=A0=A0=A0=A0you have single core systems etc.? Why this artificial =
+limitation?
 
-So some, but not all, info is indeed duplicated.
+Please have also a look (you only mentioned manpage so, in case you
+missed it) at
 
-Gr{oetje,eeting}s,
+https://elixir.bootlin.com/linux/latest/source/Documentation/scheduler/sche=
+d-deadline.rst#L667
 
-                        Geert
+and the document in general should hopefully give you the answer about
+why we need admission control and current limitations regarding
+affinities.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> =A0=A0=A02. How can we possibly implement this? We don't want to use SCHE=
+D_FIFO,
+> =A0=A0=A0=A0=A0=A0because out-of-control tasks would freeze the entire co=
+ntainer.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+I experimented myself a bit with this kind of setup in the past and I
+think I made it work by pre-configuring exclusive cpusets (similarly as
+what detailed in the doc above) and then starting containers inside such
+exclusive sets with podman run --cgroup-parent option.
+
+I don't have proper instructions yet for how to do this (plan to put
+them together soon-ish), but please see if you can make it work with
+this hint.
+
+Best,
+
+Juri
+
