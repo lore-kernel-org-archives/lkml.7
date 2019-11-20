@@ -2,132 +2,185 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 568E3C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:46:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE34C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:46:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BD9720709
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:46:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sx33veXR"
+	by mail.kernel.org (Postfix) with ESMTP id C68A420709
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:46:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732564AbfKTPqq (ORCPT
+        id S1732591AbfKTPqu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 10:46:46 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:35096 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730036AbfKTPp2 (ORCPT
+        Wed, 20 Nov 2019 10:46:50 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:52540 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729533AbfKTPkQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 10:45:28 -0500
-Received: by mail-pl1-f196.google.com with SMTP id s10so14013165plp.2
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 07:45:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=p1oQ2/ApuLBZfJjzJxbReeEfweEJSenuiYCAOd26jOY=;
-        b=sx33veXRT/WG71DXlr2LQUN/kHNNUnPt88phqsfsYVlAgZGxBvXbK0fqchczHwjND/
-         1EGPyi7lDPIkCrm+8jV6C6faKYzD2LwCZtawDM48VNil5JrKDFYq/j92RN3POFavam4Q
-         3M+Tutp1fhrWLVf5po3HELVk4FWWjzopaxpiuFaSbEUlC19y3zCMMjRiDRAIjNgB3Vs4
-         BX5kbPUQ3ld73hsLb3GuVJmcROm71Vb4Y1uWFMHNmbnhMSz53nFcT9/CBimpRqCrj33I
-         3/U1bD9M8Kdjx6Vb62TMyRxIX5ab6z88+AMp21kU32iV1Yznt8pQb9jqRWu7JaM6XwcU
-         sQwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=p1oQ2/ApuLBZfJjzJxbReeEfweEJSenuiYCAOd26jOY=;
-        b=lihYOj3p32q09Xf3YpPv3rGEGhuU9Zp4T4kpeV2fPJOn9HgAEvhFzxrlVq9BdfP8HS
-         rjX/tjXEF9ZlFS96KASWO+2GLgaMOkegWc4PcP0uzOWkE3WSjtqmQ5UO6FN0Ekn1P2Rw
-         gPdSSBTK+khz3oS7F1i8O0F7feUBesGodraMmuiLFdqvh4Y9fUl2Cso8ZBZvg+SjSjSC
-         PN5icXFCxgPVOT/S6VHIO4VzU0joAV4YAIQh5b8UcWyLa2HMIt37D63ddCx8J4h+wYHz
-         nglh6tWMCP8StxLJx4YGqA4b+l5AUp/tXI7bR7dWDe2qZHnLOuOuc9/BWNt5xN4VRC7c
-         EIwg==
-X-Gm-Message-State: APjAAAUiZSYHThJZbAk6xe9IAVoLwVFXdn3v9KyPJopyvWRuRjiJJaam
-        xXg45FJLRBnAiYz+y/kuBboetDVvkr35uQ==
-X-Google-Smtp-Source: APXvYqxogLp6gc4NSWr1kl81LqhVaiFMVmTnBYfJTGwLUMofS4/vu9+JzshkluAWJdxeFvOnWyJZAQ==
-X-Received: by 2002:a17:90a:bb82:: with SMTP id v2mr5064560pjr.62.1574264727478;
-        Wed, 20 Nov 2019 07:45:27 -0800 (PST)
-Received: from localhost ([14.96.110.98])
-        by smtp.gmail.com with ESMTPSA id q41sm7643756pja.20.2019.11.20.07.45.25
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 20 Nov 2019 07:45:26 -0800 (PST)
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-To:     linux-kernel@vger.kernel.org, edubezval@gmail.com,
-        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Guillaume La Roque <glaroque@baylibre.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Javi Merino <javi.merino@kernel.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Jun Nie <jun.nie@linaro.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>
-Cc:     linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: [PATCH v2 00/11] thermal: clean up output of make W=1 
-Date:   Wed, 20 Nov 2019 21:15:09 +0530
-Message-Id: <cover.1574242756.git.amit.kucheria@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Wed, 20 Nov 2019 10:40:16 -0500
+Received: from [167.98.27.226] (helo=deadeye)
+        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1iXS5T-0004aJ-Qz; Wed, 20 Nov 2019 15:40:11 +0000
+Received: from ben by deadeye with local (Exim 4.93-RC1)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1iXS5T-0004Gd-2h; Wed, 20 Nov 2019 15:40:11 +0000
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
+        "Jiri Pirko" <jiri@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>
+Date:   Wed, 20 Nov 2019 15:37:25 +0000
+Message-ID: <lsq.1574264230.857404162@decadent.org.uk>
+X-Mailer: LinuxStableQueue (scripts by bwh)
+X-Patchwork-Hint: ignore
+Subject: [PATCH 3.16 15/83] net: fix ifindex collision during namespace
+ removal
+In-Reply-To: <lsq.1574264230.280218497@decadent.org.uk>
+X-SA-Exim-Connect-IP: 167.98.27.226
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cleanup output of make W=1 inside drivers/thermal. This should allow us to
-focus on real issues that tend to get lost in the noise much better.
+3.16.78-rc1 review patch.  If anyone has any objections, please let me know.
 
-There is no functional change. This series was generate on top of
-linux-next from 20191119.
+------------------
 
-Changes since v1:
-- Add review tags
-- Fixed up commit message for devfreq_cooling and samsung changes
+From: Jiri Pirko <jiri@mellanox.com>
 
-Regards,
-Amit
+commit 55b40dbf0e76b4bfb9d8b3a16a0208640a9a45df upstream.
 
+Commit aca51397d014 ("netns: Fix arbitrary net_device-s corruptions
+on net_ns stop.") introduced a possibility to hit a BUG in case device
+is returning back to init_net and two following conditions are met:
+1) dev->ifindex value is used in a name of another "dev%d"
+   device in init_net.
+2) dev->name is used by another device in init_net.
 
-Amit Kucheria (11):
-  thermal: of-thermal: Appease the kernel-doc deity
-  thermal: cpu_cooling: Appease the kernel-doc deity
-  thermal: step_wise: Appease the kernel-doc deity
-  thermal: devfreq_cooling: Appease the kernel-doc deity
-  thermal: max77620: Appease the kernel-doc deity
-  thermal: mediatek: Appease the kernel-doc deity
-  thermal: rockchip: Appease the kernel-doc deity
-  thermal: samsung: Appease the kernel-doc deity
-  thermal: tegra: Appease the kernel-doc deity
-  thermal: amlogic: Appease the kernel-doc deity
-  thermal: zx2967: Appease the kernel-doc deity
+Under real life circumstances this is hard to get. Therefore this has
+been present happily for over 10 years. To reproduce:
 
- drivers/thermal/amlogic_thermal.c    |  6 +++++-
- drivers/thermal/cpu_cooling.c        |  1 +
- drivers/thermal/devfreq_cooling.c    |  3 ++-
- drivers/thermal/fair_share.c         |  4 ++--
- drivers/thermal/gov_bang_bang.c      |  4 ++--
- drivers/thermal/max77620_thermal.c   |  2 +-
- drivers/thermal/mtk_thermal.c        | 12 ++++++------
- drivers/thermal/of-thermal.c         |  2 +-
- drivers/thermal/rockchip_thermal.c   | 22 ++++++++++++++++------
- drivers/thermal/samsung/exynos_tmu.c |  5 ++++-
- drivers/thermal/step_wise.c          |  4 ++--
- drivers/thermal/tegra/soctherm.c     | 15 +++++++++++++--
- drivers/thermal/user_space.c         |  4 ++--
- drivers/thermal/zx2967_thermal.c     |  1 +
- 14 files changed, 58 insertions(+), 27 deletions(-)
+$ ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host
+       valid_lft forever preferred_lft forever
+2: dummy0: <BROADCAST,NOARP> mtu 1500 qdisc noop state DOWN group default qlen 1000
+    link/ether 86:89:3f:86:61:29 brd ff:ff:ff:ff:ff:ff
+3: enp0s2: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000
+    link/ether 52:54:00:12:34:56 brd ff:ff:ff:ff:ff:ff
+$ ip netns add ns1
+$ ip -n ns1 link add dummy1ns1 type dummy
+$ ip -n ns1 link add dummy2ns1 type dummy
+$ ip link set enp0s2 netns ns1
+$ ip -n ns1 link set enp0s2 name dummy0
+[  100.858894] virtio_net virtio0 dummy0: renamed from enp0s2
+$ ip link add dev4 type dummy
+$ ip -n ns1 a
+1: lo: <LOOPBACK> mtu 65536 qdisc noop state DOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: dummy1ns1: <BROADCAST,NOARP> mtu 1500 qdisc noop state DOWN group default qlen 1000
+    link/ether 16:63:4c:38:3e:ff brd ff:ff:ff:ff:ff:ff
+3: dummy2ns1: <BROADCAST,NOARP> mtu 1500 qdisc noop state DOWN group default qlen 1000
+    link/ether aa:9e:86:dd:6b:5d brd ff:ff:ff:ff:ff:ff
+4: dummy0: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000
+    link/ether 52:54:00:12:34:56 brd ff:ff:ff:ff:ff:ff
+$ ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host
+       valid_lft forever preferred_lft forever
+2: dummy0: <BROADCAST,NOARP> mtu 1500 qdisc noop state DOWN group default qlen 1000
+    link/ether 86:89:3f:86:61:29 brd ff:ff:ff:ff:ff:ff
+4: dev4: <BROADCAST,NOARP> mtu 1500 qdisc noop state DOWN group default qlen 1000
+    link/ether 5a:e1:4a:b6:ec:f8 brd ff:ff:ff:ff:ff:ff
+$ ip netns del ns1
+[  158.717795] default_device_exit: failed to move dummy0 to init_net: -17
+[  158.719316] ------------[ cut here ]------------
+[  158.720591] kernel BUG at net/core/dev.c:9824!
+[  158.722260] invalid opcode: 0000 [#1] SMP KASAN PTI
+[  158.723728] CPU: 0 PID: 56 Comm: kworker/u2:1 Not tainted 5.3.0-rc1+ #18
+[  158.725422] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-2.fc30 04/01/2014
+[  158.727508] Workqueue: netns cleanup_net
+[  158.728915] RIP: 0010:default_device_exit.cold+0x1d/0x1f
+[  158.730683] Code: 84 e8 18 c9 3e fe 0f 0b e9 70 90 ff ff e8 36 e4 52 fe 89 d9 4c 89 e2 48 c7 c6 80 d6 25 84 48 c7 c7 20 c0 25 84 e8 f4 c8 3e
+[  158.736854] RSP: 0018:ffff8880347e7b90 EFLAGS: 00010282
+[  158.738752] RAX: 000000000000003b RBX: 00000000ffffffef RCX: 0000000000000000
+[  158.741369] RDX: 0000000000000000 RSI: ffffffff8128013d RDI: ffffed10068fcf64
+[  158.743418] RBP: ffff888033550170 R08: 000000000000003b R09: fffffbfff0b94b9c
+[  158.745626] R10: fffffbfff0b94b9b R11: ffffffff85ca5cdf R12: ffff888032f28000
+[  158.748405] R13: dffffc0000000000 R14: ffff8880335501b8 R15: 1ffff110068fcf72
+[  158.750638] FS:  0000000000000000(0000) GS:ffff888036000000(0000) knlGS:0000000000000000
+[  158.752944] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  158.755245] CR2: 00007fe8b45d21d0 CR3: 00000000340b4005 CR4: 0000000000360ef0
+[  158.757654] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[  158.760012] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[  158.762758] Call Trace:
+[  158.763882]  ? dev_change_net_namespace+0xbb0/0xbb0
+[  158.766148]  ? devlink_nl_cmd_set_doit+0x520/0x520
+[  158.768034]  ? dev_change_net_namespace+0xbb0/0xbb0
+[  158.769870]  ops_exit_list.isra.0+0xa8/0x150
+[  158.771544]  cleanup_net+0x446/0x8f0
+[  158.772945]  ? unregister_pernet_operations+0x4a0/0x4a0
+[  158.775294]  process_one_work+0xa1a/0x1740
+[  158.776896]  ? pwq_dec_nr_in_flight+0x310/0x310
+[  158.779143]  ? do_raw_spin_lock+0x11b/0x280
+[  158.780848]  worker_thread+0x9e/0x1060
+[  158.782500]  ? process_one_work+0x1740/0x1740
+[  158.784454]  kthread+0x31b/0x420
+[  158.786082]  ? __kthread_create_on_node+0x3f0/0x3f0
+[  158.788286]  ret_from_fork+0x3a/0x50
+[  158.789871] ---[ end trace defd6c657c71f936 ]---
+[  158.792273] RIP: 0010:default_device_exit.cold+0x1d/0x1f
+[  158.795478] Code: 84 e8 18 c9 3e fe 0f 0b e9 70 90 ff ff e8 36 e4 52 fe 89 d9 4c 89 e2 48 c7 c6 80 d6 25 84 48 c7 c7 20 c0 25 84 e8 f4 c8 3e
+[  158.804854] RSP: 0018:ffff8880347e7b90 EFLAGS: 00010282
+[  158.807865] RAX: 000000000000003b RBX: 00000000ffffffef RCX: 0000000000000000
+[  158.811794] RDX: 0000000000000000 RSI: ffffffff8128013d RDI: ffffed10068fcf64
+[  158.816652] RBP: ffff888033550170 R08: 000000000000003b R09: fffffbfff0b94b9c
+[  158.820930] R10: fffffbfff0b94b9b R11: ffffffff85ca5cdf R12: ffff888032f28000
+[  158.825113] R13: dffffc0000000000 R14: ffff8880335501b8 R15: 1ffff110068fcf72
+[  158.829899] FS:  0000000000000000(0000) GS:ffff888036000000(0000) knlGS:0000000000000000
+[  158.834923] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  158.838164] CR2: 00007fe8b45d21d0 CR3: 00000000340b4005 CR4: 0000000000360ef0
+[  158.841917] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[  158.845149] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
--- 
-2.20.1
+Fix this by checking if a device with the same name exists in init_net
+and fallback to original code - dev%d to allocate name - in case it does.
+
+This was found using syzkaller.
+
+Fixes: aca51397d014 ("netns: Fix arbitrary net_device-s corruptions on net_ns stop.")
+Signed-off-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+---
+ net/core/dev.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -7207,6 +7207,8 @@ static void __net_exit default_device_ex
+ 
+ 		/* Push remaining network devices to init_net */
+ 		snprintf(fb_name, IFNAMSIZ, "dev%d", dev->ifindex);
++		if (__dev_get_by_name(&init_net, fb_name))
++			snprintf(fb_name, IFNAMSIZ, "dev%%d");
+ 		err = dev_change_net_namespace(dev, &init_net, fb_name);
+ 		if (err) {
+ 			pr_emerg("%s: failed to move %s to init_net: %d\n",
 
