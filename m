@@ -2,130 +2,163 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8015EC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:17:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A48C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:19:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 599CB20885
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:17:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AF9220885
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:19:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729493AbfKTPRm convert rfc822-to-8bit (ORCPT
+        id S1729519AbfKTPTJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 10:17:42 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:12128 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729006AbfKTPRm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 10:17:42 -0500
-Received: from localhost (mailhub1-ext [192.168.12.233])
-        by localhost (Postfix) with ESMTP id 47J5sY6tDmz9v2Xl;
-        Wed, 20 Nov 2019 16:17:37 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id b9WuW4-B4Uio; Wed, 20 Nov 2019 16:17:37 +0100 (CET)
-Received: from vm-hermes.si.c-s.fr (vm-hermes.si.c-s.fr [192.168.25.253])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47J5sY5ysFz9v2Xk;
-        Wed, 20 Nov 2019 16:17:37 +0100 (CET)
-Received: by vm-hermes.si.c-s.fr (Postfix, from userid 33)
-        id 49EB08D6; Wed, 20 Nov 2019 16:17:41 +0100 (CET)
-Received: from 37-172-92-181.coucou-networks.fr
- (37-172-92-181.coucou-networks.fr [37.172.92.181]) by messagerie.si.c-s.fr
- (Horde Framework) with HTTP; Wed, 20 Nov 2019 16:17:41 +0100
-Date:   Wed, 20 Nov 2019 16:17:41 +0100
-Message-ID: <20191120161741.Horde.zNDnbMKk_BJpkUOkWeRMsQ1@messagerie.si.c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Paul Mackerras <paulus@samba.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH v3 2/8] powerpc/vdso32: Add support for
- CLOCK_{REALTIME/MONOTONIC}_COARSE
-References: <cover.1572342582.git.christophe.leroy@c-s.fr>
- <4644ccc9b4da78639ae9424db878c48711abf05a.1572342582.git.christophe.leroy@c-s.fr>
- <87eey2btxi.fsf@mpe.ellerman.id.au>
-In-Reply-To: <87eey2btxi.fsf@mpe.ellerman.id.au>
-User-Agent: Internet Messaging Program (IMP) H5 (6.2.3)
-Content-Type: text/plain; charset=UTF-8; format=flowed; DelSp=Yes
+        Wed, 20 Nov 2019 10:19:09 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6258 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728786AbfKTPTI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 10:19:08 -0500
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id A232C8718C5DB54A2104;
+        Wed, 20 Nov 2019 23:19:06 +0800 (CST)
+Received: from huawei.com (10.67.189.167) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Wed, 20 Nov 2019
+ 23:19:00 +0800
+From:   Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+To:     <gregkh@linuxfoundation.org>, <jslaby@suse.com>,
+        <xiaojiangfeng@huawei.com>
+CC:     <linux-serial@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <leeyou.li@huawei.com>, <nixiaoming@huawei.com>,
+        <zhangwen8@huawei.com>
+Subject: [PATCH] serial: serial_core: Perform NULL checks for break_ctl ops
+Date:   Wed, 20 Nov 2019 23:18:53 +0800
+Message-ID: <1574263133-28259-1-git-send-email-xiaojiangfeng@huawei.com>
+X-Mailer: git-send-email 1.8.5.6
 MIME-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain
+X-Originating-IP: [10.67.189.167]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Michael Ellerman <mpe@ellerman.id.au> a écrit :
+Doing fuzz test on sbsa uart device, causes a kernel crash
+due to NULL pointer dereference:
 
-> Christophe Leroy <christophe.leroy@c-s.fr> writes:
->> This is copied and adapted from commit 5c929885f1bb ("powerpc/vdso64:
->> Add support for CLOCK_{REALTIME/MONOTONIC}_COARSE")
->> from Santosh Sivaraj <santosh@fossix.org>
->>
->> Benchmark from vdsotest-all:
->> clock-gettime-realtime: syscall: 3601 nsec/call
->> clock-gettime-realtime:    libc: 1072 nsec/call
->> clock-gettime-realtime:    vdso: 931 nsec/call
->> clock-gettime-monotonic: syscall: 4034 nsec/call
->> clock-gettime-monotonic:    libc: 1213 nsec/call
->> clock-gettime-monotonic:    vdso: 1076 nsec/call
->> clock-gettime-realtime-coarse: syscall: 2722 nsec/call
->> clock-gettime-realtime-coarse:    libc: 805 nsec/call
->> clock-gettime-realtime-coarse:    vdso: 668 nsec/call
->> clock-gettime-monotonic-coarse: syscall: 2949 nsec/call
->> clock-gettime-monotonic-coarse:    libc: 882 nsec/call
->> clock-gettime-monotonic-coarse:    vdso: 745 nsec/call
->>
->> Additional test passed with:
->> 	vdsotest -d 30 clock-gettime-monotonic-coarse verify
->
-> This broke on 64-bit big endian, which uses the 32-bit VDSO, with errors
-> like:
->
->   clock-gettime-monotonic-coarse/verify: 10 failures/inconsistencies  
-> encountered
->   timestamp obtained from libc/vDSO not normalized:
->   	[-1574202155, 1061008673]
->   timestamp obtained from libc/vDSO predates timestamp
->   previously obtained from kernel:
->   	[74, 261310747] (kernel)
->   	[-1574202155, 1061008673] (vDSO)
->   timestamp obtained from libc/vDSO not normalized:
->   	[-1574202155, 1061008673]
->   timestamp obtained from libc/vDSO predates timestamp
->   previously obtained from kernel:
->   	[74, 261310747] (kernel)
->   	[-1574202155, 1061008673] (vDSO)
->   timestamp obtained from libc/vDSO not normalized:
->   	[-1574202155, 1061008673]
->   timestamp obtained from libc/vDSO predates timestamp
->   previously obtained from kernel:
->   	[74, 261310747] (kernel)
->   	[-1574202155, 1061008673] (vDSO)
->   timestamp obtained from libc/vDSO not normalized:
->   	[-1574202155, 1061008673]
->   timestamp obtained from libc/vDSO predates timestamp
->   previously obtained from kernel:
->   	[74, 261310747] (kernel)
->   	[-1574202155, 1061008673] (vDSO)
->   timestamp obtained from libc/vDSO not normalized:
->   	[-1574202155, 1061008673]
->   timestamp obtained from libc/vDSO predates timestamp
->   previously obtained from kernel:
->   	[74, 261310747] (kernel)
->   	[-1574202155, 1061008673] (vDSO)
->   Failure threshold (10) reached; stopping test.
->
->
-> The diff below seems to fix it, but I'm not sure it's correct. ie. we
-> just ignore the top part of the values, how does that work?
+------------[ cut here ]------------
+Unable to handle kernel paging request at virtual address fffffffffffffffc
+pgd = ffffffe331723000
+[fffffffffffffffc] *pgd=0000002333595003, *pud=0000002333595003, *pmd=00000
+Internal error: Oops: 96000005 [#1] PREEMPT SMP
+Modules linked in: ping(O) jffs2 rtos_snapshot(O) pramdisk(O) hisi_sfc(O)
+Drv_Nandc_K(O) Drv_SysCtl_K(O) Drv_SysClk_K(O) bsp_reg(O) hns3(O)
+hns3_uio_enet(O) hclgevf(O) hclge(O) hnae3(O) mdio_factory(O)
+mdio_registry(O) mdio_dev(O) mdio(O) hns3_info(O) rtos_kbox_panic(O)
+uart_suspend(O) rsm(O) stp llc tunnel4 xt_tcpudp ipt_REJECT nf_reject_ipv4
+iptable_filter ip_tables x_tables sd_mod xhci_plat_hcd xhci_pci xhci_hcd
+usbmon usbhid usb_storage ohci_platform ohci_pci ohci_hcd hid_generic hid
+ehci_platform ehci_pci ehci_hcd vfat fat usbcore usb_common scsi_mod
+yaffs2multi(O) ext4 jbd2 ext2 mbcache ofpart i2c_dev i2c_core uio ubi nand
+nand_ecc nand_ids cfi_cmdset_0002 cfi_cmdset_0001 cfi_probe gen_probe
+cmdlinepart chipreg mtdblock mtd_blkdevs mtd nfsd auth_rpcgss oid_registry
+nfsv3 nfs nfs_acl lockd sunrpc grace autofs4
+CPU: 2 PID: 2385 Comm: tty_fuzz_test Tainted: G           O    4.4.193 #1
+task: ffffffe32b23f110 task.stack: ffffffe32bda4000
+PC is at uart_break_ctl+0x44/0x84
+LR is at uart_break_ctl+0x34/0x84
+pc : [<ffffff8393196098>] lr : [<ffffff8393196088>] pstate: 80000005
+sp : ffffffe32bda7cc0
+x29: ffffffe32bda7cc0 x28: ffffffe32b23f110
+x27: ffffff8393402000 x26: 0000000000000000
+x25: ffffffe32b233f40 x24: ffffffc07a8ec680
+x23: 0000000000005425 x22: 00000000ffffffff
+x21: ffffffe33ed73c98 x20: 0000000000000000
+x19: ffffffe33ed94168 x18: 0000000000000004
+x17: 0000007f92ae9d30 x16: ffffff8392fa6064
+x15: 0000000000000010 x14: 0000000000000000
+x13: 0000000000000000 x12: 0000000000000000
+x11: 0000000000000020 x10: 0000007ffdac1708
+x9 : 0000000000000078 x8 : 000000000000001d
+x7 : 0000000052a64887 x6 : ffffffe32bda7e08
+x5 : ffffffe32b23c000 x4 : 0000005fbc5b0000
+x3 : ffffff83938d5018 x2 : 0000000000000080
+x1 : ffffffe32b23c040 x0 : ffffff83934428f8
+virtual start addr offset is 38ac00000
+module base offset is 2cd4cf1000
+linear region base offset is : 0
+Process tty_fuzz_test (pid: 2385, stack limit = 0xffffffe32bda4000)
+Stack: (0xffffffe32bda7cc0 to 0xffffffe32bda8000)
+7cc0: ffffffe32bda7cf0 ffffff8393177718 ffffffc07a8ec680 ffffff8393196054
+7ce0: 000000001739f2e0 0000007ffdac1978 ffffffe32bda7d20 ffffff8393179a1c
+7d00: 0000000000000000 ffffff8393c0a000 ffffffc07a8ec680 cb88537fdc8ba600
+7d20: ffffffe32bda7df0 ffffff8392fa5a40 ffffff8393c0a000 0000000000005425
+7d40: 0000007ffdac1978 ffffffe32b233f40 ffffff8393178dcc 0000000000000003
+7d60: 000000000000011d 000000000000001d ffffffe32b23f110 000000000000029e
+7d80: ffffffe34fe8d5d0 0000000000000000 ffffffe32bda7e14 cb88537fdc8ba600
+7da0: ffffffe32bda7e30 ffffff8393042cfc ffffff8393c41720 ffffff8393c46410
+7dc0: ffffff839304fa68 ffffffe32b233f40 0000000000005425 0000007ffdac1978
+7de0: 000000000000011d cb88537fdc8ba600 ffffffe32bda7e70 ffffff8392fa60cc
+7e00: 0000000000000000 ffffffe32b233f40 ffffffe32b233f40 0000000000000003
+7e20: 0000000000005425 0000007ffdac1978 ffffffe32bda7e70 ffffff8392fa60b0
+7e40: 0000000000000280 ffffffe32b233f40 ffffffe32b233f40 0000000000000003
+7e60: 0000000000005425 cb88537fdc8ba600 0000000000000000 ffffff8392e02e78
+7e80: 0000000000000280 0000005fbc5b0000 ffffffffffffffff 0000007f92ae9d3c
+7ea0: 0000000060000000 0000000000000015 0000000000000003 0000000000005425
+7ec0: 0000007ffdac1978 0000000000000000 00000000a54c910e 0000007f92b95014
+7ee0: 0000007f92b95090 0000000052a64887 000000000000001d 0000000000000078
+7f00: 0000007ffdac1708 0000000000000020 0000000000000000 0000000000000000
+7f20: 0000000000000000 0000000000000010 000000556acf0090 0000007f92ae9d30
+7f40: 0000000000000004 000000556acdef10 0000000000000000 000000556acdebd0
+7f60: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+7f80: 0000000000000000 0000000000000000 0000000000000000 0000007ffdac1840
+7fa0: 000000556acdedcc 0000007ffdac1840 0000007f92ae9d3c 0000000060000000
+7fc0: 0000000000000000 0000000000000000 0000000000000003 000000000000001d
+7fe0: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+Call trace:
+Exception stack(0xffffffe32bda7ab0 to 0xffffffe32bda7bf0)
+7aa0:                                   0000000000001000 0000007fffffffff
+7ac0: ffffffe32bda7cc0 ffffff8393196098 0000000080000005 0000000000000025
+7ae0: ffffffe32b233f40 ffffff83930d777c ffffffe32bda7b30 ffffff83930d777c
+7b00: ffffffe32bda7be0 ffffff83938d5000 ffffffe32bda7be0 ffffffe32bda7c20
+7b20: ffffffe32bda7b60 ffffff83930d777c ffffffe32bda7c10 ffffff83938d5000
+7b40: ffffffe32bda7c10 ffffffe32bda7c50 ffffff8393c0a000 ffffffe32b23f110
+7b60: ffffffe32bda7b70 ffffff8392e09df4 ffffffe32bda7bb0 cb88537fdc8ba600
+7b80: ffffff83934428f8 ffffffe32b23c040 0000000000000080 ffffff83938d5018
+7ba0: 0000005fbc5b0000 ffffffe32b23c000 ffffffe32bda7e08 0000000052a64887
+7bc0: 000000000000001d 0000000000000078 0000007ffdac1708 0000000000000020
+7be0: 0000000000000000 0000000000000000
+[<ffffff8393196098>] uart_break_ctl+0x44/0x84
+[<ffffff8393177718>] send_break+0xa0/0x114
+[<ffffff8393179a1c>] tty_ioctl+0xc50/0xe84
+[<ffffff8392fa5a40>] do_vfs_ioctl+0xc4/0x6e8
+[<ffffff8392fa60cc>] SyS_ioctl+0x68/0x9c
+[<ffffff8392e02e78>] __sys_trace_return+0x0/0x4
+Code: b9410ea0 34000160 f9408aa0 f9402814 (b85fc280)
+---[ end trace 8606094f1960c5e0 ]---
+Kernel panic - not syncing: Fatal exception
 
-Your change makes sense, it is consistent with other functions using  
-STAMP_XTIME.
+Fix this problem by adding NULL checks prior to calling break_ctl ops.
 
-It works because nanoseconds are max 999999999, it fits 32 bits regs.
+Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+---
+ drivers/tty/serial/serial_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Christophe
+diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
+index c4a414a..b0a6eb1 100644
+--- a/drivers/tty/serial/serial_core.c
++++ b/drivers/tty/serial/serial_core.c
+@@ -1111,7 +1111,7 @@ static int uart_break_ctl(struct tty_struct *tty, int break_state)
+ 	if (!uport)
+ 		goto out;
+ 
+-	if (uport->type != PORT_UNKNOWN)
++	if (uport->type != PORT_UNKNOWN && uport->ops->break_ctl)
+ 		uport->ops->break_ctl(uport, break_state);
+ 	ret = 0;
+ out:
+-- 
+1.8.5.6
 
