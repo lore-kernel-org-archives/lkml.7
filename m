@@ -2,118 +2,166 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57168C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 07:52:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87809C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 07:54:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31189223B0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 07:52:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574236337;
-	bh=Ub9SM4/PD/5Re2yrL92/LT0TlmMSG6imRrqXXC9T7uE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=r9irjWweMsWfKy+xEOgSUfUvTaX7X9k+hz6Fx/sKqLccpD4tcNniMvuoiexv6kNXr
-	 A2q2UbXhrdMzSFLccEo1dH7lz8bJu5Y9RcvsG491pGXUQULPNFVY3mkmOsqaIs+fl/
-	 GT8tkWUYjb1zZIyBCjfOBtMl42ZEdHf/fhMngULc=
+	by mail.kernel.org (Postfix) with ESMTP id 6B79520872
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 07:54:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727883AbfKTHwQ (ORCPT
+        id S1727684AbfKTHy5 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 02:52:16 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:41376 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726529AbfKTHwP (ORCPT
+        Wed, 20 Nov 2019 02:54:57 -0500
+Received: from mail-il1-f196.google.com ([209.85.166.196]:45501 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726529AbfKTHy5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 02:52:15 -0500
-Received: by mail-wr1-f67.google.com with SMTP id b18so25468504wrj.8
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 23:52:12 -0800 (PST)
+        Wed, 20 Nov 2019 02:54:57 -0500
+Received: by mail-il1-f196.google.com with SMTP id o18so22527168ils.12;
+        Tue, 19 Nov 2019 23:54:56 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=SuCP5JTI0E4nMP2UPf/N4wvDe3O4fmtrt4QcYh19UfQ=;
-        b=OEXa5Z+Lwm0xTDaCT/T+TeOZiOjFm4L3T9fV44vWc+I8PXT/sFJw5HYYFp59ivfsGF
-         5krk5fPj4nkdGTkMrsEDckphZdEWylWFDDtKCkp/2fkHNfNgJ6J6YBFEoAKx7wake7NQ
-         LXZBb4cHyEMD3AyzEw250yXGQn+L6/4ViPxWjb3sJ8yvTL8AJHk0b3Bj9NGybFqNpLyC
-         gd0Og1jPFQLyeh3Q97VfE2TvMiVNzm6UFl7DIAXq/ZkDYv9GA9CoA+0uZvaXlBFIhayP
-         3Lwmrz2D9XMPlYyN9vz20u5CLE+D/mvopI5N8q9JLardnSve+s55hRkkDUfoEv/Icy+X
-         ALQg==
-X-Gm-Message-State: APjAAAX+UYnLXlXUJelssdXumnXiNHgcfsKwe/aJNxBJOeVMGO63d2xN
-        LEmt/FItMBC//k0Q6PWFyWP3JNSn
-X-Google-Smtp-Source: APXvYqzsr0Ao8O6jA7Ftffi4GO93OFuiGOoZfd06FdYMGUzZpoZhqWOAQQrfYgcNFd9W0Q4Ox8VHTw==
-X-Received: by 2002:a5d:65c5:: with SMTP id e5mr1407766wrw.311.1574236331639;
-        Tue, 19 Nov 2019 23:52:11 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id h15sm32973798wrb.44.2019.11.19.23.52.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Nov 2019 23:52:10 -0800 (PST)
-Date:   Wed, 20 Nov 2019 08:52:09 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        Oscar Salvador <OSalvador@suse.com>, linux-mm@kvack.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mm, sparse: do not waste pre allocated memmap space
-Message-ID: <20191120075209.GB23213@dhcp22.suse.cz>
-References: <20191119092642.31799-1-mhocko@kernel.org>
- <def84c96-a7d0-1026-a890-a8eca2e6a458@redhat.com>
- <20191119141047.a8e31e95b631e28f84dc0bc9@linux-foundation.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=/rhynhwRr/LK0H9bk9F2uXXSfgIJYeknSevXiyt7NX4=;
+        b=lcCbU7pG3TLdVdSlQQ++Nl7V5GM2JYvIcSZboGQVe1zrSqWIeHfV+W7nLiAYHChwwp
+         NEmu2dHYf9bOGRoyJkWGsCiI1cnT1AZIB2doIunNFZLMqYQNO/yqoKZnC2raK6f5FZq6
+         hVFRgOodcMPv721kXa9yS963Hw2isEkDlhbJimwAUMieqHliTXr4zM5ghFJQ6nQ7Whks
+         zcMKrHGeBk38fUeIIo1rbGkWAUeCZImWyjB/wf13HN2bHwAARhJ+ye/d9HRMg4IaU8ML
+         Q8tkah77t5+kAYC7EggM2i4+P+2qJcStij/av5skHkV+ZFFyub8LJ9zJqpVouLpdsChS
+         Cgww==
+X-Gm-Message-State: APjAAAU6KryR4mzAIiPfhYsPB4wdfAHnqqAPh7M0SJxk2Tk80dW0lW2a
+        /iXSY+BVISCEuRhG1vmpufgR0TZ/XfKiVxFqYHBIfsMmljE=
+X-Google-Smtp-Source: APXvYqwxsKW0FDOOll/pMNBQu+69qDVn4EENJuA0zx7Ay45mCQurqZ+0Hc/2xqMxsoCB485lXNb/GZh02fOLHbLlqj4=
+X-Received: by 2002:a92:6609:: with SMTP id a9mr2167050ilc.131.1574236495648;
+ Tue, 19 Nov 2019 23:54:55 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191119141047.a8e31e95b631e28f84dc0bc9@linux-foundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191031213835.11390-1-andreas@kemnade.info> <20191031213835.11390-3-andreas@kemnade.info>
+In-Reply-To: <20191031213835.11390-3-andreas@kemnade.info>
+From:   Pierre-Hugues Husson <phh@phh.me>
+Date:   Wed, 20 Nov 2019 08:54:44 +0100
+Message-ID: <CAJ-oXjTQMgF+zzTkWz21yG4ZdAszSDKkiAqocBcUjyMNEd0ozQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/5] mfd: rn5t618: add irq support
+To:     Andreas Kemnade <andreas@kemnade.info>
+Cc:     Lee Jones <lee.jones@linaro.org>, a.zummo@towertech.it,
+        alexandre.belloni@bootlin.com,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-rtc@vger.kernel.org, b.galvani@gmail.com, stefan@agner.ch,
+        letux-kernel@openphoenux.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 19-11-19 14:10:47, Andrew Morton wrote:
-> On Tue, 19 Nov 2019 11:03:58 +0100 David Hildenbrand <david@redhat.com> wrote:
-> 
-> > > @@ -482,8 +481,13 @@ static void __init sparse_buffer_init(unsigned long size, int nid)
-> > >   {
-> > >   	phys_addr_t addr = __pa(MAX_DMA_ADDRESS);
-> > >   	WARN_ON(sparsemap_buf);	/* forgot to call sparse_buffer_fini()? */
-> > > +	/*
-> > > +	 * Pre-allocated buffer is mainly used by __populate_section_memmap
-> > > +	 * and we want it to be properly aligned to the section size - this is
-> > > +	 * especially the case for VMEMMAP which maps memmap to PMDs
-> > > +	 */
-> > >   	sparsemap_buf =
-> > > -		memblock_alloc_try_nid_raw(size, PAGE_SIZE,
-> > > +		memblock_alloc_try_nid_raw(size, section_map_size(),
-> > >   						addr,
-> > >   						MEMBLOCK_ALLOC_ACCESSIBLE, nid);
-> > 
-> > Wow, that alignment/layout gives me nightmares  ^
-> > 
-> > None of your business, though :)
-> 
-> We're allowed to change it ;)
-> 
-> --- a/mm/sparse.c~mm-sparse-do-not-waste-pre-allocated-memmap-space-fix
-> +++ a/mm/sparse.c
-> @@ -486,10 +486,8 @@ static void __init sparse_buffer_init(un
->  	 * and we want it to be properly aligned to the section size - this is
->  	 * especially the case for VMEMMAP which maps memmap to PMDs
->  	 */
-> -	sparsemap_buf =
-> -		memblock_alloc_try_nid_raw(size, section_map_size(),
-> -						addr,
-> -						MEMBLOCK_ALLOC_ACCESSIBLE, nid);
-> +	sparsemap_buf = memblock_alloc_try_nid_raw(size, section_map_size(),
-> +					addr, MEMBLOCK_ALLOC_ACCESSIBLE, nid);
->  	sparsemap_buf_end = sparsemap_buf + size;
+Le jeu. 31 oct. 2019 à 22:38, Andreas Kemnade <andreas@kemnade.info> a écrit :
+>
+> This adds support for irq handling in the rc5t619 which is required
+> for properly implementing subdevices like rtc.
+> For now only definitions for the variant rc5t619 are included.
+>
+> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> ---
+> Changes in v2:
+> - no dead code, did some more testing and thinking for that
+> - remove extra empty lines
+>  drivers/mfd/Kconfig         |  1 +
+>  drivers/mfd/Makefile        |  2 +-
+>  drivers/mfd/rn5t618-core.c  | 35 ++++++++++++++-
+>  drivers/mfd/rn5t618-irq.c   | 85 +++++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/rn5t618.h | 16 +++++++
+>  5 files changed, 137 insertions(+), 2 deletions(-)
+>  create mode 100644 drivers/mfd/rn5t618-irq.c
+>
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index ae24d3ea68ea..522e068d0082 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -1057,6 +1057,7 @@ config MFD_RN5T618
+>         depends on OF
+>         select MFD_CORE
+>         select REGMAP_I2C
+> +       select REGMAP_IRQ
+>         help
+>           Say yes here to add support for the Ricoh RN5T567,
+>           RN5T618, RC5T619 PMIC.
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index 110ea700231b..2906d5db67d0 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -217,7 +217,7 @@ obj-$(CONFIG_MFD_VIPERBOARD)    += viperboard.o
+>  obj-$(CONFIG_MFD_RC5T583)      += rc5t583.o rc5t583-irq.o
+>  obj-$(CONFIG_MFD_RK808)                += rk808.o
+>
+> -rn5t618-objs                   := rn5t618-core.o
+> +rn5t618-objs                   := rn5t618-core.o rn5t618-irq.o
+>  obj-$(CONFIG_MFD_RN5T618)      += rn5t618.o
+>  obj-$(CONFIG_MFD_SEC_CORE)     += sec-core.o sec-irq.o
+>  obj-$(CONFIG_MFD_SYSCON)       += syscon.o
+> diff --git a/drivers/mfd/rn5t618-core.c b/drivers/mfd/rn5t618-core.c
+> index da5cd9c92a59..d4ed2865ed8b 100644
+> --- a/drivers/mfd/rn5t618-core.c
+> +++ b/drivers/mfd/rn5t618-core.c
+> @@ -8,6 +8,7 @@
+>
+>  #include <linux/delay.h>
+>  #include <linux/i2c.h>
+> +#include <linux/interrupt.h>
+>  #include <linux/mfd/core.h>
+>  #include <linux/mfd/rn5t618.h>
+>  #include <linux/module.h>
+> @@ -105,7 +106,8 @@ static int rn5t618_i2c_probe(struct i2c_client *i2c,
+>
+>         i2c_set_clientdata(i2c, priv);
+>         priv->variant = (long)of_id->data;
+> -
+> +       priv->chip_irq = i2c->irq;
+> +       priv->dev = &i2c->dev;
+>         priv->regmap = devm_regmap_init_i2c(i2c, &rn5t618_regmap_config);
+>         if (IS_ERR(priv->regmap)) {
+>                 ret = PTR_ERR(priv->regmap);
+> @@ -137,6 +139,11 @@ static int rn5t618_i2c_probe(struct i2c_client *i2c,
+>                 return ret;
+>         }
+>
+> +       if (priv->chip_irq > 0) {
+> +               if (rn5t618_irq_init(priv))
+> +                       priv->chip_irq = 0;
+> +       }
+> +
+>         return 0;
 >  }
+>
+> @@ -154,15 +161,41 @@ static int rn5t618_i2c_remove(struct i2c_client *i2c)
+>         return 0;
+>  }
+>
+> +static int __maybe_unused rn5t618_i2c_suspend(struct device *dev)
+> +{
+> +       struct rn5t618 *priv = dev_get_drvdata(dev);
+> +
+> +       if (priv->chip_irq)
+> +               disable_irq(priv->chip_irq);
+> +
+> +       return 0;
+> +}
+> +
+> +static int __maybe_unused rn5t618_i2c_resume(struct device *dev)
+> +{
+> +       struct rn5t618 *priv = dev_get_drvdata(dev);
+> +
+> +       if (priv->chip_irq)
+> +               enable_irq(priv->chip_irq);
+> +
+> +       return 0;
+> +}
 
-I didn't bother mostly because the creative code layout made the
-intention of the patch more obvious.  But if it saves from nightmares
-then why not.
--- 
-Michal Hocko
-SUSE Labs
+For what it's worth, the boards I have (Archos 101 Oxygen and Pipo P9)
+with rc5t619 use GPIO for power button.
+So IRQ would need to be enabled in suspend for this to work.
+Also, since you actually added alarm support, perhaps you want to
+wake-up from suspend using alarm as well?
