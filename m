@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48F53C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 01:06:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2104BC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 01:06:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2141020708
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 01:06:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E232520708
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 01:06:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="a82EApFV"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GjW65mTR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727544AbfKTBGr (ORCPT
+        id S1727576AbfKTBGu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 20:06:47 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:43505 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727494AbfKTBGo (ORCPT
+        Tue, 19 Nov 2019 20:06:50 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:33119 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727527AbfKTBGq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 20:06:44 -0500
-Received: by mail-pj1-f67.google.com with SMTP id a10so3417178pju.10
+        Tue, 19 Nov 2019 20:06:46 -0500
+Received: by mail-pf1-f196.google.com with SMTP id c184so13330601pfb.0
         for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 17:06:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=0T61AzxnAvwa4rB+CZumfDDidufAJnp+U8GPCQMxTB4=;
-        b=a82EApFVTEe9phvCSrJOP3TlCmeHwEbc7lBntv/Y4A3SIjXWLzIYaza53B34WSAvIO
-         M/p/3ECy6DvVgT1DcT27ZKc9hqk61OMYWbeg8Ie4sWtPigLH57V9lJaYWI9PwzZgGuQN
-         +goyCf8HKTHNdfpJZrJyL8SxxITM+b1kefwFs=
+        bh=cO8TBOltsH4skyCZjRFi1jjLHEcJb6wGQF3Nty2AFlw=;
+        b=GjW65mTRpHcwke1tPpXJc+tEroqq+/c02L1weluBXv2HYDmUvuJroQHtjQB47mZ+Dq
+         XrKKO4SSKAvPWN92dzPW6/GSh6v84X+1ecqKm5cP0W3j1AZS9WEFrXlA9digFiGFRewB
+         KhiECAt/oiWz0Q2+iz92oxoX7RzTYeQrdzJTo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=0T61AzxnAvwa4rB+CZumfDDidufAJnp+U8GPCQMxTB4=;
-        b=kvMEKd5jr04u5IySxAqgxNJw40TGhaFXwyUgTC+CxKAdn1uaauP1g+hmWwrL33U8hN
-         qN9A9l0N3K9sHwsnqxsWqIysoqMO/iTTjioe1V0B/Jrc/7FbLYFWVt9I1MihCeuXA7fP
-         gz5glAVAZlpzqiHw9ws2PH9O2RzO3zFoMIIXbxDep7uqTYutC+PCX7+qI7jcZbUeMSsX
-         cjJZr9GHIOO7ZFGouHWMEyQMcMCQk6/adbafGqqLFt0hiwFRCAAYsFPMrMY2doJslvMD
-         evVduGQb0laz1WjIq9D0w0PF0meUzI4m9BaYjnLfZyfQ9xS+kY++pt0MtfGvsrkBEnO9
-         Ul7g==
-X-Gm-Message-State: APjAAAWJcqRVZHzX2xVjTjtKdVeBRhe0LQ+TgrM4MT7dtXgs4J5IJ8rG
-        6ryOSclWg3NgiXxvSoLzVHMMmg==
-X-Google-Smtp-Source: APXvYqwMjjdQ2rf3CZ9jjyiv4G3ZP7tQU+Lm0RTG8f4dInndtCYLfPklkPViLPE1GjBEoqneZ6KF6w==
-X-Received: by 2002:a17:902:561:: with SMTP id 88mr155318plf.127.1574212003854;
-        Tue, 19 Nov 2019 17:06:43 -0800 (PST)
+        bh=cO8TBOltsH4skyCZjRFi1jjLHEcJb6wGQF3Nty2AFlw=;
+        b=n14iorL6IPGFPJ0fK/t2ek5EYJfGZTRFqsbGs/yjOw3fQ7LcpAtwJl+cONbRgaxFV/
+         4TP+SeeWSGnJid87KwittKTfY5w3cYhr56luhRH8Mz1TICahF4GBhjXi/xEG3BOUc6xy
+         q9TtEGrR7Lzd89YOtXE3jHuXqqDEGyrqsATjkJ39bKqAMQCgxvfi9UtWwKN/Gv9fANFK
+         B/uiaPB0Y215Jah9AJc4NES4RijVf5PfU7ZnfUsfkVIalebcWnqUDddx8dQhvR0Gev8G
+         yLiged9McOBUayfiTf97plDU6zZAhpzf+Rp8RcjS5XL1jZiZLFPJDS/lIpBiKu36BUQS
+         4NfA==
+X-Gm-Message-State: APjAAAVXvgE1YsHJDKDnrfGukkMRrbhNM/RxJ+Aj4lKrH6rUAisnh4Cb
+        6+ZlZTk4XnzNfOmKURdhEQvCKg==
+X-Google-Smtp-Source: APXvYqyASvZYvBQ/e7CI9HnVv6bkAWB/563LT5YKo0qEsvHWgg7DJbmwdBC/nFhsf8xhjPvdZtXPKw==
+X-Received: by 2002:aa7:9f89:: with SMTP id z9mr651850pfr.123.1574212004404;
+        Tue, 19 Nov 2019 17:06:44 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id u24sm24440563pgf.6.2019.11.19.17.06.41
+        by smtp.gmail.com with ESMTPSA id t15sm27916646pgb.0.2019.11.19.17.06.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Tue, 19 Nov 2019 17:06:41 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
@@ -66,9 +66,9 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
         kernel-hardening@lists.openwall.com
-Subject: [PATCH 3/3] lkdtm/bugs: Add arithmetic overflow and array bounds checks
-Date:   Tue, 19 Nov 2019 17:06:36 -0800
-Message-Id: <20191120010636.27368-4-keescook@chromium.org>
+Subject: [PATCH 1/3] ubsan: Add trap instrumentation option
+Date:   Tue, 19 Nov 2019 17:06:34 -0800
+Message-Id: <20191120010636.27368-2-keescook@chromium.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191120010636.27368-1-keescook@chromium.org>
 References: <20191120010636.27368-1-keescook@chromium.org>
@@ -77,137 +77,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adds LKDTM tests for arithmetic overflow (both signed and unsigned),
-as well as array bounds checking.
+The Undefined Behavior Sanitizer can operate in two modes: warning
+reporting mode via lib/ubsan.c handler calls, or trap mode, which uses
+__builtin_trap() as the handler. Using lib/ubsan.c means the kernel
+image is about 5% larger (due to all the debugging text and reporting
+structures to capture details about the warning conditions). Using the
+trap mode, the image size changes are much smaller, though at the loss
+of the "warning only" mode.
 
+In order to give greater flexibility to system builders that want
+minimal changes to image size and are prepared to deal with kernel
+threads being killed, this introduces CONFIG_UBSAN_TRAP. The resulting
+image sizes comparison:
+
+   text    data     bss       dec       hex     filename
+19533663   6183037  18554956  44271656  2a38828 vmlinux.stock
+19991849   7618513  18874448  46484810  2c54d4a vmlinux.ubsan
+19712181   6284181  18366540  44362902  2a4ec96 vmlinux.ubsan-trap
+
+CONFIG_UBSAN=y:      image +4.8% (text +2.3%, data +18.9%)
+CONFIG_UBSAN_TRAP=y: image +0.2% (text +0.9%, data +1.6%)
+
+Suggested-by: Elena Petrova <lenaptr@google.com>
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/misc/lkdtm/bugs.c  | 75 ++++++++++++++++++++++++++++++++++++++
- drivers/misc/lkdtm/core.c  |  3 ++
- drivers/misc/lkdtm/lkdtm.h |  3 ++
- 3 files changed, 81 insertions(+)
+ lib/Kconfig.ubsan      | 15 +++++++++++++--
+ lib/Makefile           |  2 ++
+ scripts/Makefile.ubsan |  9 +++++++--
+ 3 files changed, 22 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/misc/lkdtm/bugs.c b/drivers/misc/lkdtm/bugs.c
-index 7284a22b1a09..8b4ef30f53c6 100644
---- a/drivers/misc/lkdtm/bugs.c
-+++ b/drivers/misc/lkdtm/bugs.c
-@@ -11,6 +11,7 @@
- #include <linux/sched/signal.h>
- #include <linux/sched/task_stack.h>
- #include <linux/uaccess.h>
-+#include <linux/slab.h>
+diff --git a/lib/Kconfig.ubsan b/lib/Kconfig.ubsan
+index 0e04fcb3ab3d..d69e8b21ebae 100644
+--- a/lib/Kconfig.ubsan
++++ b/lib/Kconfig.ubsan
+@@ -5,12 +5,23 @@ config ARCH_HAS_UBSAN_SANITIZE_ALL
+ config UBSAN
+ 	bool "Undefined behaviour sanity checker"
+ 	help
+-	  This option enables undefined behaviour sanity checker
++	  This option enables undefined behaviour sanity checker.
+ 	  Compile-time instrumentation is used to detect various undefined
+-	  behaviours in runtime. Various types of checks may be enabled
++	  behaviours at runtime. Various types of checks may be enabled
+ 	  via boot parameter ubsan_handle
+ 	  (see: Documentation/dev-tools/ubsan.rst).
  
- struct lkdtm_list {
- 	struct list_head node;
-@@ -171,6 +172,80 @@ void lkdtm_HUNG_TASK(void)
- 	schedule();
- }
++config UBSAN_TRAP
++	bool "On Sanitizer warnings, stop the offending kernel thread"
++	depends on UBSAN
++	depends on $(cc-option, -fsanitize-undefined-trap-on-error)
++	help
++	  Building kernels with Sanitizer features enabled tends to grow
++	  the kernel size by over 5%, due to adding all the debugging
++	  text on failure paths. To avoid this, Sanitizer instrumentation
++	  can just issue a trap. This reduces the kernel size overhead but
++	  turns all warnings into full thread-killing exceptions.
++
+ config UBSAN_SANITIZE_ALL
+ 	bool "Enable instrumentation for the entire kernel"
+ 	depends on UBSAN
+diff --git a/lib/Makefile b/lib/Makefile
+index c5892807e06f..bc498bf0f52d 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -272,7 +272,9 @@ quiet_cmd_build_OID_registry = GEN     $@
+ clean-files	+= oid_registry_data.c
  
-+volatile unsigned int huge = INT_MAX - 2;
-+volatile unsigned int ignored;
+ obj-$(CONFIG_UCS2_STRING) += ucs2_string.o
++ifneq ($(CONFIG_UBSAN_TRAP),y)
+ obj-$(CONFIG_UBSAN) += ubsan.o
++endif
+ 
+ UBSAN_SANITIZE_ubsan.o := n
+ KASAN_SANITIZE_ubsan.o := n
+diff --git a/scripts/Makefile.ubsan b/scripts/Makefile.ubsan
+index 019771b845c5..668a91510bfe 100644
+--- a/scripts/Makefile.ubsan
++++ b/scripts/Makefile.ubsan
+@@ -1,5 +1,10 @@
+ # SPDX-License-Identifier: GPL-2.0
+ ifdef CONFIG_UBSAN
 +
-+void lkdtm_OVERFLOW_SIGNED(void)
-+{
-+	int value;
++ifdef CONFIG_UBSAN_ALIGNMENT
++      CFLAGS_UBSAN += $(call cc-option, -fsanitize=alignment)
++endif
 +
-+	value = huge;
-+	pr_info("Normal signed addition ...\n");
-+	value += 1;
-+	ignored = value;
-+
-+	pr_info("Overflowing signed addition ...\n");
-+	value += 4;
-+	ignored = value;
-+}
-+
-+
-+void lkdtm_OVERFLOW_UNSIGNED(void)
-+{
-+	unsigned int value;
-+
-+	value = huge;
-+	pr_info("Normal unsigned addition ...\n");
-+	value += 1;
-+	ignored = value;
-+
-+	pr_info("Overflowing unsigned addition ...\n");
-+	value += 4;
-+	ignored = value;
-+}
-+
-+/* Intentially using old-style flex array definition of 1 byte. */
-+struct array_bounds_flex_array {
-+	int one;
-+	int two;
-+	char data[1];
-+};
-+
-+struct array_bounds {
-+	int one;
-+	int two;
-+	char data[8];
-+	int three;
-+};
-+
-+void lkdtm_ARRAY_BOUNDS(void)
-+{
-+	struct array_bounds_flex_array *not_checked;
-+	struct array_bounds *checked;
-+	int i;
-+
-+	not_checked = kmalloc(sizeof(*not_checked) * 2, GFP_KERNEL);
-+	checked = kmalloc(sizeof(*checked) * 2, GFP_KERNEL);
-+
-+	pr_info("Array access within bounds ...\n");
-+	/* For both, touch all bytes in the actual member size. */
-+	for (i = 0; i < sizeof(checked->data); i++)
-+		checked->data[i] = 'A';
-+	/*
-+	 * For the uninstrumented flex array member, also touch 1 byte
-+	 * beyond to verify it is correctly uninstrumented.
-+	 */
-+	for (i = 0; i < sizeof(not_checked->data) + 1; i++)
-+		not_checked->data[i] = 'A';
-+
-+	pr_info("Array access beyond bounds ...\n");
-+	for (i = 0; i < sizeof(checked->data) + 1; i++)
-+		checked->data[i] = 'B';
-+
-+	kfree(not_checked);
-+	kfree(checked);
-+}
-+
- void lkdtm_CORRUPT_LIST_ADD(void)
- {
- 	/*
-diff --git a/drivers/misc/lkdtm/core.c b/drivers/misc/lkdtm/core.c
-index cbc4c9045a99..25879f7b0768 100644
---- a/drivers/misc/lkdtm/core.c
-+++ b/drivers/misc/lkdtm/core.c
-@@ -129,6 +129,9 @@ static const struct crashtype crashtypes[] = {
- 	CRASHTYPE(HARDLOCKUP),
- 	CRASHTYPE(SPINLOCKUP),
- 	CRASHTYPE(HUNG_TASK),
-+	CRASHTYPE(OVERFLOW_SIGNED),
-+	CRASHTYPE(OVERFLOW_UNSIGNED),
-+	CRASHTYPE(ARRAY_BOUNDS),
- 	CRASHTYPE(EXEC_DATA),
- 	CRASHTYPE(EXEC_STACK),
- 	CRASHTYPE(EXEC_KMALLOC),
-diff --git a/drivers/misc/lkdtm/lkdtm.h b/drivers/misc/lkdtm/lkdtm.h
-index ab446e0bde97..2cd0c5031eea 100644
---- a/drivers/misc/lkdtm/lkdtm.h
-+++ b/drivers/misc/lkdtm/lkdtm.h
-@@ -22,6 +22,9 @@ void lkdtm_SOFTLOCKUP(void);
- void lkdtm_HARDLOCKUP(void);
- void lkdtm_SPINLOCKUP(void);
- void lkdtm_HUNG_TASK(void);
-+void lkdtm_OVERFLOW_SIGNED(void);
-+void lkdtm_OVERFLOW_UNSIGNED(void);
-+void lkdtm_ARRAY_BOUNDS(void);
- void lkdtm_CORRUPT_LIST_ADD(void);
- void lkdtm_CORRUPT_LIST_DEL(void);
- void lkdtm_CORRUPT_USER_DS(void);
+       CFLAGS_UBSAN += $(call cc-option, -fsanitize=shift)
+       CFLAGS_UBSAN += $(call cc-option, -fsanitize=integer-divide-by-zero)
+       CFLAGS_UBSAN += $(call cc-option, -fsanitize=unreachable)
+@@ -9,8 +14,8 @@ ifdef CONFIG_UBSAN
+       CFLAGS_UBSAN += $(call cc-option, -fsanitize=bool)
+       CFLAGS_UBSAN += $(call cc-option, -fsanitize=enum)
+ 
+-ifdef CONFIG_UBSAN_ALIGNMENT
+-      CFLAGS_UBSAN += $(call cc-option, -fsanitize=alignment)
++ifdef CONFIG_UBSAN_TRAP
++      CFLAGS_UBSAN += $(call cc-option, -fsanitize-undefined-trap-on-error)
+ endif
+ 
+       # -fsanitize=* options makes GCC less smart than usual and
 -- 
 2.17.1
 
