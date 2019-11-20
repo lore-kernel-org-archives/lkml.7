@@ -2,135 +2,136 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4B13C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 01:23:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A201C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 01:25:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A86B52071F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 01:23:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AFEC2245B
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 01:25:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="q62/J5T8"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t93ZFRP9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727487AbfKTBXw (ORCPT
+        id S1727575AbfKTBZZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 20:23:52 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:44198 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727395AbfKTBXw (ORCPT
+        Tue, 19 Nov 2019 20:25:25 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:34387 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727500AbfKTBZY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 20:23:52 -0500
-Received: by mail-ot1-f67.google.com with SMTP id c19so19738117otr.11
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 17:23:51 -0800 (PST)
+        Tue, 19 Nov 2019 20:25:24 -0500
+Received: by mail-pf1-f193.google.com with SMTP id n13so13353747pff.1;
+        Tue, 19 Nov 2019 17:25:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Rxay+wCZQrFdqVqPfP8bGnBXwNi7j1uwxGcwoDzHOJg=;
-        b=q62/J5T86M5j3XdVPvMCk5XFfbynZBXOrhy/Ulzi2Ak/SR66QjEV87taVb/sLBA3+A
-         xuow/s/p3ytUdzNvEX9JK6w5BAbChtMtIdWvHxzGvtKRDb0o09QWid6OxNkq5gjnq/G/
-         W9pefG+ABYaSiIFsz4jze3GC6XPZYvzkWIecsf8a7kJXP957iOMBXABs5xZkpQyObfZC
-         20UrcGjV/aangfkzJUabO1neVqCgkWWylv3wBDriJ79L+WaoxIv8wxuG+AQk2JCxY8aL
-         uh0dBa9zCXeFbI5rTF7c4ZKfCW6+uJrZfqCMvG1BobCRObtklhiOA8mUVwHPSQvieGb/
-         JcxQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ldarti2Cil2jWS7BGbU10AooRxN+DMj3yEli61ye9Eg=;
+        b=t93ZFRP9GLj9YVftWBZdfJypyw06kXZPfvo/rvRybO9zmhH6Q70fVzrxUoSNqP+Tfo
+         s9JHJqrVXxK14gHQ1JkImEFe9RhnsDTdkdOFAjhhj6+TT35yyEHnpvgO+ocL5NrYIPdn
+         CF+L7MbbcXPpfvxmdYPzYfDcSsUp19KmyWBqP9wL871edNo6P53oyWElyON/PwSTZKxy
+         SSx3mVbDiwm0eKqd/6UIL9H1spD9Wt+PO409v6NURuI2fjCY81n96aAucal3l7Vy5Zhx
+         L2GzC/oAbsaYZRs0HYlrTzs+DC8u3837hK5aNsiKvEmgkkozfaPLEOvvJE66yGuH92tX
+         wWKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Rxay+wCZQrFdqVqPfP8bGnBXwNi7j1uwxGcwoDzHOJg=;
-        b=sankFHJQTh2wS+ogeNunezjggI34dw6k4N6v1dVaoJBPW78pxCGuIAuqczBLl4Cz24
-         4vTOSOeId4nSfzSmDt+oaqwS1Nw1TLBZ1MBSfw2eN45tr9QrmKAJX0gE3dU3REknnBjr
-         X3nRD1qbHRMcnV0+TauWxWUwWQvWgPszYI12Yfipekz0aAjl3lB+HPVjh3DuWtJH9/7C
-         CSmFqrJjMQS9vAl7fMfRZ9QYteAUthM4Q/KGkfYxPb5TvG2ipHv5ESVtsnRVV8AL5Gse
-         VKQDLiROF2tYYvn4FzpHwhbPIywkaqY9IDz4lDOgZJwZtkEON2FDZq54RogXZSIm0oqn
-         t75A==
-X-Gm-Message-State: APjAAAUFLtWiOriwfmRiqGvdWz8OgHz3qSJejaS4GIlJPYdFTwty7nsS
-        1Tlmmjo7bTTa+JjsTfEQVKTBQwpqBr98JGcmSvrW2g==
-X-Google-Smtp-Source: APXvYqwEGWXq68sgRrJB+WmFLAETfFi7R+3dBcf7IQikGC7DoTtMMrGt4WrK8ENVvUUMQa0NJRByGxVekHep/a33HMQ=
-X-Received: by 2002:a05:6830:1af7:: with SMTP id c23mr5858337otd.247.1574213031135;
- Tue, 19 Nov 2019 17:23:51 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ldarti2Cil2jWS7BGbU10AooRxN+DMj3yEli61ye9Eg=;
+        b=MxkxLerf3EB0f7SER9yKIxwn8mIk2Dp0f5uGhafPGRfOpIm6LmV/tHCx875/2q8aw0
+         u9Db3e+VyLQGX9GpeLnPpDYKV++3PZLs3K1jhDWlbJkAaTp5MXf/HbeopR20RQM6q72G
+         yfxk0cC3kxvKNaaZj7PQhJ7HoiqbFQHi2fCwWOWFJwaPxoMnUNax3UbGTGoD8kzX5FqK
+         /HeA+pDKbQWaIfmQftasYfDjaz34v29iM1zV6dQdpGZTbhOQIQ5w47WlFQ6x072D64Hf
+         EQ5RuywjxajDo/DT6hSjbcVLlIPYD1ENM/Y6LrYnkDDJhMmaEOoSrUvVFyb2NQX4xpEc
+         GDfg==
+X-Gm-Message-State: APjAAAXyAdHgoAelEv37KtV2isFz4mu1+xr+Mefcjkev7rijWQZe/pxe
+        rf7pyLlJd+U/QBAvHo4zScU=
+X-Google-Smtp-Source: APXvYqxc87m0aUMXK0pFGjmTtPGhC6YFyugMuNIMG+6oQIolXsDDDZVVpXlTKl+VTpeNo+sjHBoFDA==
+X-Received: by 2002:a63:a502:: with SMTP id n2mr172176pgf.158.1574213123850;
+        Tue, 19 Nov 2019 17:25:23 -0800 (PST)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
+        by smtp.gmail.com with ESMTPSA id o129sm30343553pfg.75.2019.11.19.17.25.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Nov 2019 17:25:22 -0800 (PST)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Fugang Duan <fugang.duan@nxp.com>,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH net v4] net: fec: fix clock count mis-match
+Date:   Wed, 20 Nov 2019 09:25:13 +0800
+Message-Id: <20191120012513.11161-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-References: <157418493888.1639105.6922809760655305210.stgit@dwillia2-desk3.amr.corp.intel.com>
- <CAKgT0UfGCzfMqM_GdYsfsowAasW7-awYjSp=FBmB99rDuZpc8g@mail.gmail.com>
-In-Reply-To: <CAKgT0UfGCzfMqM_GdYsfsowAasW7-awYjSp=FBmB99rDuZpc8g@mail.gmail.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 19 Nov 2019 17:23:40 -0800
-Message-ID: <CAPcyv4hy_nNe8G0o8sMrz9A8HcdRzAuKgXmvdjKusAAA3Fow4g@mail.gmail.com>
-Subject: Re: [PATCH] dma/debug: Fix dma vs cow-page collision detection
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Don Dutile <ddutile@redhat.com>,
-        stable <stable@vger.kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 4:02 PM Alexander Duyck
-<alexander.duyck@gmail.com> wrote:
->
-> On Tue, Nov 19, 2019 at 9:49 AM Dan Williams <dan.j.williams@intel.com> wrote:
-> >
-> > The debug_dma_assert_idle() infrastructure was put in place to catch a
-> > data corruption scenario first identified by the now defunct NET_DMA
-> > receive offload feature. It caught cases where dma was in flight to a
-> > stale page because the dma raced the cpu writing the page, and the cpu
-> > write triggered cow_user_page().
-> >
-> > However, the dma-debug tracking is overeager and also triggers in cases
-> > where the dma device is reading from a page that is also undergoing
-> > cow_user_page().
-> >
-> > The fix proposed was originally posted in 2016, and Russell reported
-> > "Yes, that seems to avoid the warning for me from an initial test", and
-> > now Don is also reporting that this fix is addressing a similar false
-> > positive report that he is seeing.
-> >
-> > Link: https://lore.kernel.org/r/CAPcyv4j8fWqwAaX5oCdg5atc+vmp57HoAGT6AfBFwaCiv0RbAQ@mail.gmail.com
-> > Reported-by: Russell King <linux@armlinux.org.uk>
-> > Reported-by: Don Dutile <ddutile@redhat.com>
-> > Fixes: 0abdd7a81b7e ("dma-debug: introduce debug_dma_assert_idle()")
-> > Cc: <stable@vger.kernel.org>
-> > Cc: Christoph Hellwig <hch@lst.de>
-> > Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-> > Cc: Robin Murphy <robin.murphy@arm.com>
-> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> > ---
-> >  kernel/dma/debug.c |    2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/kernel/dma/debug.c b/kernel/dma/debug.c
-> > index 099002d84f46..11a6db53d193 100644
-> > --- a/kernel/dma/debug.c
-> > +++ b/kernel/dma/debug.c
-> > @@ -587,7 +587,7 @@ void debug_dma_assert_idle(struct page *page)
-> >         }
-> >         spin_unlock_irqrestore(&radix_lock, flags);
-> >
-> > -       if (!entry)
-> > +       if (!entry || entry->direction != DMA_FROM_DEVICE)
-> >                 return;
-> >
-> >         cln = to_cacheline_number(entry);
->
-> If I am understanding right DMA_TO_DEVICE is fine, but won't  you also
-> need to cover the DMA_BIDIRECTIONAL case since it is possible for a
-> device to also write the memory in that case?
+pm_runtime_put_autosuspend in probe will call runtime suspend to
+disable clks automatically if CONFIG_PM is defined. (If CONFIG_PM
+is not defined, its implementation will be empty, then runtime
+suspend will not be called.)
 
-True, DMA_BIDIRECTIONAL and DMA_TO_DEVICE are being treated equally in
-this case. Given this is the second time this facility needed to be
-taught to be less eager [1], I'd be inclined to let the tie-break /
-BIDIR case be treated like TO. This facility was always meant as a
-"there might be a problem here", but not a definitive checker, and it
-certainly loses value if the reports are ambiguous.
+Therefore, we can call pm_runtime_get_sync to runtime resume it
+first to enable clks, which matches the runtime suspend. (Only when
+CONFIG_PM is defined, otherwise pm_runtime_get_sync will also be
+empty, then runtime resume will not be called.)
 
-[1]: 3b7a6418c749 dma debug: account for cachelines and read-only
-mappings in overlap tracking
+Then it is fine to disable clks without causing clock count mis-match.
+
+Fixes: c43eab3eddb4 ("net: fec: add missed clk_disable_unprepare in remove")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+---
+Changes in v4:
+  - Fix some typos.
+
+ drivers/net/ethernet/freescale/fec_main.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
+index a9c386b63581..4bb30761abfc 100644
+--- a/drivers/net/ethernet/freescale/fec_main.c
++++ b/drivers/net/ethernet/freescale/fec_main.c
+@@ -3636,6 +3636,11 @@ fec_drv_remove(struct platform_device *pdev)
+ 	struct net_device *ndev = platform_get_drvdata(pdev);
+ 	struct fec_enet_private *fep = netdev_priv(ndev);
+ 	struct device_node *np = pdev->dev.of_node;
++	int ret;
++
++	ret = pm_runtime_get_sync(&pdev->dev);
++	if (ret < 0)
++		return ret;
+ 
+ 	cancel_work_sync(&fep->tx_timeout_work);
+ 	fec_ptp_stop(pdev);
+@@ -3643,15 +3648,17 @@ fec_drv_remove(struct platform_device *pdev)
+ 	fec_enet_mii_remove(fep);
+ 	if (fep->reg_phy)
+ 		regulator_disable(fep->reg_phy);
+-	pm_runtime_put(&pdev->dev);
+-	pm_runtime_disable(&pdev->dev);
+-	clk_disable_unprepare(fep->clk_ahb);
+-	clk_disable_unprepare(fep->clk_ipg);
++
+ 	if (of_phy_is_fixed_link(np))
+ 		of_phy_deregister_fixed_link(np);
+ 	of_node_put(fep->phy_node);
+ 	free_netdev(ndev);
+ 
++	clk_disable_unprepare(fep->clk_ahb);
++	clk_disable_unprepare(fep->clk_ipg);
++	pm_runtime_put_noidle(&pdev->dev);
++	pm_runtime_disable(&pdev->dev);
++
+ 	return 0;
+ }
+ 
+-- 
+2.24.0
+
