@@ -2,177 +2,143 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B2F7C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:53:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D75FFC43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:53:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B9B420672
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:53:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3EF320672
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:53:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731131AbfKTPxI (ORCPT
+        id S1731396AbfKTPxa convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 10:53:08 -0500
-Received: from mga17.intel.com ([192.55.52.151]:63174 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728453AbfKTPxI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 10:53:08 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Nov 2019 07:53:07 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,222,1571727600"; 
-   d="scan'208";a="215842721"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 20 Nov 2019 07:53:02 -0800
-Received: by lahna (sSMTP sendmail emulation); Wed, 20 Nov 2019 17:53:02 +0200
-Date:   Wed, 20 Nov 2019 17:53:01 +0200
-From:   Mika Westerberg <mika.westerberg@intel.com>
-To:     Karol Herbst <kherbst@redhat.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lyude Paul <lyude@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        Dave Airlie <airlied@gmail.com>,
-        Mario Limonciello <Mario.Limonciello@dell.com>
-Subject: Re: [PATCH v4] pci: prevent putting nvidia GPUs into lower device
- states on certain intel bridges
-Message-ID: <20191120155301.GL11621@lahna.fi.intel.com>
-References: <20191120101816.GX11621@lahna.fi.intel.com>
- <CAJZ5v0g4vp1C+zHU5nOVnkGsOjBvLaphK1kK=qAT6b=mK8kpsA@mail.gmail.com>
- <20191120112212.GA11621@lahna.fi.intel.com>
- <20191120115127.GD11621@lahna.fi.intel.com>
- <CACO55tsfNOdtu5SZ-4HzO4Ji6gQtafvZ7Rm19nkPcJAgwUBFMw@mail.gmail.com>
- <CACO55tscD_96jUVts+MTAUsCt-fZx4O5kyhRKoo4mKoC84io8A@mail.gmail.com>
- <20191120120913.GE11621@lahna.fi.intel.com>
- <CACO55tsHy6yZQZ8PkdW8iPA7+uc5rdcEwRJwYEQ3iqu85F8Sqg@mail.gmail.com>
- <20191120151542.GH11621@lahna.fi.intel.com>
- <CACO55tvo3rbPtYJcioEgXCEQqVXcVAm-iowr9Nim=bgTdMjgLw@mail.gmail.com>
+        Wed, 20 Nov 2019 10:53:30 -0500
+Received: from mx1.unisoc.com ([222.66.158.135]:32237 "EHLO
+        SHSQR01.spreadtrum.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728453AbfKTPx3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 10:53:29 -0500
+Received: from ig2.spreadtrum.com (bjmbx02.spreadtrum.com [10.0.64.8])
+        by SHSQR01.spreadtrum.com with ESMTPS id xAKFplbr095330
+        (version=TLSv1 cipher=AES256-SHA bits=256 verify=NO);
+        Wed, 20 Nov 2019 23:51:47 +0800 (CST)
+        (envelope-from Orson.Zhai@unisoc.com)
+Received: from spreadtrum.com (10.0.74.112) by BJMBX02.spreadtrum.com
+ (10.0.64.8) with Microsoft SMTP Server (TLS) id 15.0.847.32; Wed, 20 Nov 2019
+ 23:51:36 +0800
+Date:   Wed, 20 Nov 2019 23:49:28 +0800
+From:   Orson Zhai <orson.zhai@spreadtrum.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+CC:     Orson Zhai <orson.zhai@unisoc.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        <kevin.tang@unisoc.com>
+Subject: Re: [PATCH 1/2] dt-bindings: Add syscon-names support
+Message-ID: <20191120154928.GC6039@spreadtrum.com>
+References: <20191114114525.12675-1-orson.zhai@unisoc.com>
+ <20191114114525.12675-2-orson.zhai@unisoc.com>
+ <CAK8P3a23jcNgFErik1PFr=tG6n8kc8Pj9fARw47n=ou8t8iV+Q@mail.gmail.com>
+ <20191118083952.GB6039@spreadtrum.com>
+ <CAK8P3a2d2=BejX=R0jmw0zt64mPF-rjKSi1Eh5Koz1cqku-nRA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
 Content-Disposition: inline
-In-Reply-To: <CACO55tvo3rbPtYJcioEgXCEQqVXcVAm-iowr9Nim=bgTdMjgLw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <CAK8P3a2d2=BejX=R0jmw0zt64mPF-rjKSi1Eh5Koz1cqku-nRA@mail.gmail.com>
+X-Mailer: git-send-email 2.18.0
+X-Originating-IP: [10.0.74.112]
+X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
+ BJMBX02.spreadtrum.com (10.0.64.8)
+Content-Transfer-Encoding: 8BIT
+X-MAIL: SHSQR01.spreadtrum.com xAKFplbr095330
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 04:37:14PM +0100, Karol Herbst wrote:
-> On Wed, Nov 20, 2019 at 4:15 PM Mika Westerberg
-> <mika.westerberg@intel.com> wrote:
+Hi Arnd,
+
+On Tue, Nov 19, 2019 at 03:46:09PM +0100, Arnd Bergmann wrote:
+> On Mon, Nov 18, 2019 at 9:42 AM Orson Zhai <orson.zhai@spreadtrum.com> wrote:
 > >
-> > On Wed, Nov 20, 2019 at 01:11:52PM +0100, Karol Herbst wrote:
-> > > On Wed, Nov 20, 2019 at 1:09 PM Mika Westerberg
-> > > <mika.westerberg@intel.com> wrote:
+> > Hi Arnd,
+> >
+> > On Fri, Nov 15, 2019 at 10:33:30AM +0100, Arnd Bergmann wrote:
+> > > On Thu, Nov 14, 2019 at 12:48 PM Orson Zhai <orson.zhai@unisoc.com> wrote:
 > > > >
-> > > > On Wed, Nov 20, 2019 at 12:58:00PM +0100, Karol Herbst wrote:
-> > > > > overall, what I really want to know is, _why_ does it work on windows?
 > > > >
-> > > > So do I ;-)
+> > > > Make life easier when syscon consumer want to access multiple syscon
+> > > > nodes.
+> > > > Add syscon-names and relative properties to help manage complicated
+> > > > cases when accessing more one syscon node.
 > > > >
-> > > > > Or what are we doing differently on Linux so that it doesn't work? If
-> > > > > anybody has any idea on how we could dig into this and figure it out
-> > > > > on this level, this would probably allow us to get closer to the root
-> > > > > cause? no?
-> > > >
-> > > > Have you tried to use the acpi_rev_override parameter in your system and
-> > > > does it have any effect?
-> > > >
-> > > > Also did you try to trace the ACPI _ON/_OFF() methods? I think that
-> > > > should hopefully reveal something.
-> > > >
+> > > > Signed-off-by: Orson Zhai <orson.zhai@unisoc.com>
 > > >
-> > > I think I did in the past and it seemed to have worked, there is just
-> > > one big issue with this: it's a Dell specific workaround afaik, and
-> > > this issue plagues not just Dell, but we've seen it on HP and Lenovo
-> > > laptops as well, and I've heard about users having the same issues on
-> > > Asus and MSI laptops as well.
+> > > Hi Orson,
+> > >
+> > > Can you explain why the number of cells in this binding is specific
+> > > to the syscon node rather than the node referencing it?
 > >
-> > Maybe it is not a workaround at all but instead it simply determines
-> > whether the system supports RTD3 or something like that (IIRC Windows 8
-> > started supporting it). Maybe Dell added check for Linux because at that
-> > time Linux did not support it.
+> > The story is like this. I found there are too many global registers in
+> > Unisoc(former Spreadtrum) chips. Dozens of offset with dozens of modules
+> > were needed to be specified. So I thought the dts files would seem "horrible"
+> > with a big chunk of syscon-xxx (say more than 20 lines)
 > >
-> 
-> the point is, it's not checking it by default, so by default you still
-> run into the windows 8 codepath.
+> > I learned from reg-names way which might look clean to hold all these mess things.
+> > But to implement this, the users need to konw the cell-size if we add arguments to syscon node.
+> > I thought to add cell-size into every syscon consumer node is a duplicated work and
+> > I wanted to take advantage of of_parse_phandle_with_args.
+> > So the bindings were created then.
+>
+> Ok, that makes sense.
+>
+> > > The way would otherwise handle the example from your binding
+> > > would be with two separate properties in the display node, like
+> > >
+> > > syscon-enable = <&ap_apb_regs 0x4 0xf00>;
+> > > syscon-power = <&aon_regs 0x8>;
+> >
+> > This is an option for consumers all the time.
+> > Acturally my patches are not going to replace this.
+> > I'd like to provide another option to save people like desperate engineers in Spreadtrum :)
+> >
+> > >
+> > > in which case, the syscon driver does not need to know anything
+> >
+> > Whould it be better if I add syscon-cells into consumer's node?
+>
+> As I see it, there is no reason to put the syscon-cells property into any node,
+> as this is implied by the driver binding using the syscon reference.  I would
+> only use the #xyz-cells style property if there are multiple interpretations
+> that all make sense for the same binding.
+>
+> > Then I could read the cell size and use "of_parse_phandle_with_fixed_args()" instead.
+> > This will not involve syscon node itself at all.
+>
+> This sounds better to me, yes. I had not even remembered this function
+> exists, but I think this is a good idea.
+>
+> I can also see a point in favor of adding more infrastructure around this,
+> possibly naming the entries in a syscon-names property as you suggested,
+> combining of_parse_phandle_with_fixed_args() with a name, or
+> combining with syscon_regmap_lookup_by_phandle() for convenience.
+>
+> This should all be possible without adding complexity to the syscon
+> DT binding itself, and it would give more structure to the way it
+> is used by drivers.
 
-Well you can add the quirk to acpi_rev_dmi_table[] so it goes to that
-path by default. There are a bunch of similar entries for Dell machines.
+V2 has been sent out per as you suggested.
 
-Of course this does not help the non-Dell users so we would still need
-to figure out the root cause.
+Free free to review please.
 
-> > In case RTD3 is supported it invokes LKDS() which probably does the L2
-> > or L3 entry and this is for some reason does not work the same way in
-> > Linux than it does with Windows 8+.
-> >
-> > I don't remember if this happens only with nouveau or with the
-> > proprietary driver as well but looking at the nouveau runtime PM suspend
-> > hook (assuming I'm looking at the correct code):
-> >
-> > static int
-> > nouveau_pmops_runtime_suspend(struct device *dev)
-> > {
-> >         struct pci_dev *pdev = to_pci_dev(dev);
-> >         struct drm_device *drm_dev = pci_get_drvdata(pdev);
-> >         int ret;
-> >
-> >         if (!nouveau_pmops_runtime()) {
-> >                 pm_runtime_forbid(dev);
-> >                 return -EBUSY;
-> >         }
-> >
-> >         nouveau_switcheroo_optimus_dsm();
-> >         ret = nouveau_do_suspend(drm_dev, true);
-> >         pci_save_state(pdev);
-> >         pci_disable_device(pdev);
-> >         pci_ignore_hotplug(pdev);
-> >         pci_set_power_state(pdev, PCI_D3cold);
-> >         drm_dev->switch_power_state = DRM_SWITCH_POWER_DYNAMIC_OFF;
-> >         return ret;
-> > }
-> >
-> > Normally PCI drivers leave the PCI bus PM things to PCI core but here
-> > the driver does these. So I wonder if it makes any difference if we let
-> > the core handle all that:
-> >
-> > static int
-> > nouveau_pmops_runtime_suspend(struct device *dev)
-> > {
-> >         struct pci_dev *pdev = to_pci_dev(dev);
-> >         struct drm_device *drm_dev = pci_get_drvdata(pdev);
-> >         int ret;
-> >
-> >         if (!nouveau_pmops_runtime()) {
-> >                 pm_runtime_forbid(dev);
-> >                 return -EBUSY;
-> >         }
-> >
-> >         nouveau_switcheroo_optimus_dsm();
-> >         ret = nouveau_do_suspend(drm_dev, true);
-> >         pci_ignore_hotplug(pdev);
-> >         drm_dev->switch_power_state = DRM_SWITCH_POWER_DYNAMIC_OFF;
-> >         return ret;
-> > }
-> >
-> > and similar for the nouveau_pmops_runtime_resume().
-> >
-> 
-> yeah, I tried that at some point and it didn't help either. The reason
-> we call those from inside Nouveau is to support systems pre _PR where
-> nouveau invokes custom _DSM calls on its own. We could potentially
-> check for that though.
-
-OK.
+Best Regards,
+-Orson
+>
+>        Arnd
+________________________________
+ This email (including its attachments) is intended only for the person or entity to which it is addressed and may contain information that is privileged, confidential or otherwise protected from disclosure. Unauthorized use, dissemination, distribution or copying of this email or the information herein or taking any action in reliance on the contents of this email or the information herein, by anyone other than the intended recipient, or an employee or agent responsible for delivering the message to the intended recipient, is strictly prohibited. If you are not the intended recipient, please do not read, copy, use or disclose any part of this e-mail to others. Please notify the sender immediately and permanently delete this e-mail and any attachments if you received it in error. Internet communications cannot be guaranteed to be timely, secure, error-free or virus-free. The sender does not accept liability for any errors or omissions.
+本邮件及其附件具有保密性质，受法律保护不得泄露，仅发送给本邮件所指特定收件人。严禁非经授权使用、宣传、发布或复制本邮件或其内容。若非该特定收件人，请勿阅读、复制、 使用或披露本邮件的任何内容。若误收本邮件，请从系统中永久性删除本邮件及所有附件，并以回复邮件的方式即刻告知发件人。无法保证互联网通信及时、安全、无误或防毒。发件人对任何错漏均不承担责任。
