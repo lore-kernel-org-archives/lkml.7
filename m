@@ -2,253 +2,222 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6E18C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 02:10:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE1CFC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 02:12:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F94222365
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 02:10:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Z0GrXToO"
+	by mail.kernel.org (Postfix) with ESMTP id 9565122365
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 02:12:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727395AbfKTCK0 (ORCPT
+        id S1727423AbfKTCMQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 21:10:26 -0500
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:10518 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727082AbfKTCK0 (ORCPT
+        Tue, 19 Nov 2019 21:12:16 -0500
+Received: from mo-csw-fb1516.securemx.jp ([210.130.202.172]:43838 "EHLO
+        mo-csw-fb.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727262AbfKTCMQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 21:10:26 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dd4a0930000>; Tue, 19 Nov 2019 18:10:27 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 19 Nov 2019 18:10:24 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 19 Nov 2019 18:10:24 -0800
-Received: from [10.2.175.254] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 20 Nov
- 2019 02:10:22 +0000
-Subject: Re: [PATCH v1 06/17] soc: pmc: Add blink output clock registration to
- Tegra PMC
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <mperttunen@nvidia.com>,
-        <gregkh@linuxfoundation.org>, <sboyd@kernel.org>,
-        <tglx@linutronix.de>, <robh+dt@kernel.org>, <mark.rutland@arm.com>
-CC:     <allison@lohutok.net>, <pdeschrijver@nvidia.com>,
-        <pgaikwad@nvidia.com>, <mturquette@baylibre.com>,
-        <horms+renesas@verge.net.au>, <Jisheng.Zhang@synaptics.com>,
-        <krzk@kernel.org>, <arnd@arndb.de>, <spujar@nvidia.com>,
-        <josephl@nvidia.com>, <vidyas@nvidia.com>,
-        <daniel.lezcano@linaro.org>, <mmaddireddy@nvidia.com>,
-        <markz@nvidia.com>, <devicetree@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1574146234-3871-1-git-send-email-skomatineni@nvidia.com>
- <1574146234-3871-7-git-send-email-skomatineni@nvidia.com>
- <95f3e928-3e08-abbd-5617-d3570a592c06@gmail.com>
- <87dca259-1f3f-6e74-db45-411ed84afba7@nvidia.com>
-Message-ID: <53c70a0a-edf0-b806-1320-215affba4c28@nvidia.com>
-Date:   Tue, 19 Nov 2019 18:09:34 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 19 Nov 2019 21:12:16 -0500
+X-Greylist: delayed 1667 seconds by postgrey-1.27 at vger.kernel.org; Tue, 19 Nov 2019 21:12:15 EST
+Received: by mo-csw-fb.securemx.jp (mx-mo-csw-fb1516) id xAK1iRDR021224; Wed, 20 Nov 2019 10:44:29 +0900
+Received: by mo-csw.securemx.jp (mx-mo-csw1516) id xAK1iDqJ031733; Wed, 20 Nov 2019 10:44:13 +0900
+X-Iguazu-Qid: 34trXMv6oTDFsoBoOZ
+X-Iguazu-QSIG: v=2; s=0; t=1574214253; q=34trXMv6oTDFsoBoOZ; m=zSb2Ql+p4RWbL6ryM4ftbL9TR6ynY+a/LXW4c1SkabI=
+Received: from imx2.toshiba.co.jp (imx2.toshiba.co.jp [106.186.93.51])
+        by relay.securemx.jp (mx-mr1512) id xAK1iCXi035032;
+        Wed, 20 Nov 2019 10:44:12 +0900
+Received: from enc01.localdomain ([106.186.93.100])
+        by imx2.toshiba.co.jp  with ESMTP id xAK1iBXU006614;
+        Wed, 20 Nov 2019 10:44:11 +0900 (JST)
+Received: from hop001.toshiba.co.jp ([133.199.164.63])
+        by enc01.localdomain  with ESMTP id xAK1iBxv026879;
+        Wed, 20 Nov 2019 10:44:11 +0900
+Date:   Wed, 20 Nov 2019 10:44:06 +0900
+From:   Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Jun Gao <jun.gao@mediatek.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 127/422] i2c: mediatek: Use DMA safe buffers for i2c
+ transactions
+X-TSB-HOP: ON
+Message-ID: <20191120014406.nfmrfe5ic5vm6b2l@toshiba.co.jp>
+References: <20191119051400.261610025@linuxfoundation.org>
+ <20191119051407.175902069@linuxfoundation.org>
 MIME-Version: 1.0
-In-Reply-To: <87dca259-1f3f-6e74-db45-411ed84afba7@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1574215827; bh=Hh0GOH7eI+EM4yn3akfErP+WyL6jbWR7To3u3en8SIo=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=Z0GrXToOU+Vy64rqC1jX65K2twoBOnObV/c2SJp14BVJtIyagbX5EME0bks8+k+Jb
-         I9cc+1GKzojlzO9/gspVpYyrpvhXVJ2aQRK6so56D6gK9Ecdr+WKggmDj2rQtrQjoB
-         vQbMZ86064Kl0mv/ztAjsbasmPP67Xd9w5DzrRuXesMrKiqJqvxHGd4BrlCstZonSC
-         X+HV3vucBvB+4KtUuTMXQcBtfUlKsHsrZFFyll74AUAMyHWGZgAwQyEoHSBwRLSQWh
-         Rm1ze6oZkAJCEUJ4CTutvOY+HGmCUrWnT9r+Jgod6QokDYMZTmczmOHOEtCU5drP/a
-         Yct8TTZhr4XcA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191119051407.175902069@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
-On 11/19/19 2:13 PM, Sowjanya Komatineni wrote:
->
-> On 11/19/19 11:34 AM, Dmitry Osipenko wrote:
->> 19.11.2019 09:50, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>> Tegra PMC has blink control to output 32 Khz clock out to Tegra
->>> blink pin. Blink pad DPD state and enable controls are part of
->>> Tegra PMC register space.
->>>
->>> Currently Tegra clock driver registers blink control by passing
->>> PMC address and register offset to clk_register_gate which performs
->>> direct PMC access during clk_ops and with this when PMC is in secure
->>> mode, any access from non-secure world does not go through.
->>>
->>> This patch adds blink control registration to the Tegra PMC driver
->>> using PMC specific clock gate operations that use tegra_pmc_readl
->>> and tegra_pmc_writel to support both secure mode and non-secure
->>> mode PMC register access.
->>>
->>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>> ---
->>> =C2=A0 drivers/soc/tegra/pmc.c | 42=20
->>> ++++++++++++++++++++++++++++++++++++++++++
->>> =C2=A0 1 file changed, 42 insertions(+)
->>>
->>> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
->>> index 790a6619ba32..095e89c7fa3f 100644
->>> --- a/drivers/soc/tegra/pmc.c
->>> +++ b/drivers/soc/tegra/pmc.c
->>> @@ -61,12 +61,15 @@
->>> =C2=A0 #define=C2=A0 PMC_CNTRL_SYSCLK_OE=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 BIT(11) /* system clock enable */
->>> =C2=A0 #define=C2=A0 PMC_CNTRL_SYSCLK_POLARITY=C2=A0=C2=A0=C2=A0 BIT(10=
-) /* sys clk polarity */
->>> =C2=A0 #define=C2=A0 PMC_CNTRL_PWRREQ_POLARITY=C2=A0=C2=A0=C2=A0 BIT(8)
->>> +#define=C2=A0 PMC_CNTRL_BLINK_EN=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 BIT(7)
->>> =C2=A0 #define=C2=A0 PMC_CNTRL_MAIN_RST=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 BIT(4)
->>> =C2=A0 =C2=A0 #define PMC_WAKE_MASK=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x0c
->>> =C2=A0 #define PMC_WAKE_LEVEL=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 0x10
->>> =C2=A0 #define PMC_WAKE_STATUS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x14
->>> =C2=A0 #define PMC_SW_WAKE_STATUS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 0x18
->>> +#define PMC_DPD_PADS_ORIDE=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0=
-x1c
->>> +#define=C2=A0 PMC_DPD_PADS_ORIDE_BLINK=C2=A0=C2=A0=C2=A0 BIT(20)
->>> =C2=A0 =C2=A0 #define DPD_SAMPLE=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x020
->>> =C2=A0 #define=C2=A0 DPD_SAMPLE_ENABLE=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 BIT(0)
->>> @@ -79,6 +82,7 @@
->>> =C2=A0 =C2=A0 #define PWRGATE_STATUS=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x38
->>> =C2=A0 +#define TEGRA210_PMC_BLINK_TIMER=C2=A0=C2=A0=C2=A0 0x40
->>> =C2=A0 #define PMC_IMPL_E_33V_PWR=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 0x40
->>> =C2=A0 =C2=A0 #define PMC_PWR_DET=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x48
->>> @@ -247,6 +251,9 @@ static struct pmc_clk_init_data=20
->>> tegra_pmc_clks_data[] =3D {
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 PMC_CLK(3, 22, 18, 0, 0),
->>> =C2=A0 };
->>> =C2=A0 +static struct pmc_clk_gate blink_override;
->>> +static struct pmc_clk_gate blink;
->>> +
->>> =C2=A0 struct tegra_powergate {
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct generic_pm_domain genpd;
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct tegra_pmc *pmc;
->>> @@ -359,6 +366,7 @@ struct tegra_pmc_soc {
->>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct pmc_clk_init_data *pmc_clk=
-s_data;
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int num_pmc_clks;
->>> +=C2=A0=C2=A0=C2=A0 bool has_blink_output;
->>> =C2=A0 };
->>> =C2=A0 =C2=A0 static const char * const tegra186_reset_sources[] =3D {
->>> @@ -2530,6 +2538,9 @@ static void tegra_pmc_clock_register(struct=20
->>> tegra_pmc *pmc,
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* each pmc clock output has a mux and a=
- gate */
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 num_clks =3D pmc->soc->num_pmc_clks * 2;
->>> =C2=A0 +=C2=A0=C2=A0=C2=A0 if (pmc->soc->has_blink_output)
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 num_clks +=3D 1;
->>> +
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!num_clks)
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return;
->>> =C2=A0 @@ -2604,6 +2615,30 @@ static void tegra_pmc_clock_register(stru=
-ct=20
->>> tegra_pmc *pmc,
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>> =C2=A0 +=C2=A0=C2=A0=C2=A0 if (pmc->soc->has_blink_output) {
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tegra_pmc_writel(pmc, 0x0, =
-TEGRA210_PMC_BLINK_TIMER);
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clkgate =3D tegra_pmc_clk_g=
-ate_register("blink_override",
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "clk_32k",
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0, &blink_override,
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 PMC_DPD_PADS_ORIDE,
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 PMC_DPD_PADS_ORIDE_BLINK,
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 NULL);
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (IS_ERR(clkgate))
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 got=
-o free_clks;
->>> +
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clkgate =3D tegra_pmc_clk_g=
-ate_register("blink",
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "blink_override",
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0, &blink,
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 PMC_CNTRL,
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 PMC_CNTRL_BLINK_EN,
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 NULL);
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (IS_ERR(clkgate))
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 got=
-o free_clks;
->>> +
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clk_data->clks[TEGRA_PMC_CL=
-K_BLINK] =3D clkgate;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clk_register_clkdev(clkgate=
-, "blink", NULL);
->> Tegra20 has pmc->soc->num_pmc_clks =3D 0 and thus num_clks =3D 1, while
->> TEGRA_PMC_CLK_BLINK =3D 6.
->>
->> BTW, Tegra30 doesn't boot. I'll try again v2.
->>
->> Please fix it all in v2. Compile-test all patches and make at least a
->> boot-test where possible.
->>
->> [snip]
->
-> looks like blink output should be enabled during boot for Tegra20 and=20
-> Tegra30 platforms.
->
-> Will add init state for blink output in V2. Will compile for old=20
-> Tegra's as well and will try boot-test.
->
-Hi Thierry,
+On Tue, Nov 19, 2019 at 06:15:24AM +0100, Greg Kroah-Hartman wrote:
+> From: Jun Gao <jun.gao@mediatek.com>
+> 
+> [ Upstream commit fc66b39fe36acfd06f716e338de7cd8f9550fad2 ]
+> 
+> DMA mode will always be used in i2c transactions, try to allocate
+> a DMA safe buffer if the buf of struct i2c_msg used is not DMA safe.
+> 
+> Signed-off-by: Jun Gao <jun.gao@mediatek.com>
+> Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 
-With implementation of PMC helper functions for PLLM overrides and PLLE=20
-IDDQ PMC programming to use in clock driver during registering PLLM,=20
-need tegra_pmc_early_init to happen prior to tegra_clk_init as all=20
-helper functions have to use tegra_pmc_soc for flags and pmc register=20
-offset.
+This patch requires the following additional commit:
 
-Any suggestion?
+commit bc1a7f75c85e226e82f183d30d75c357f92b6029
+Author: Hsin-Yi Wang <hsinyi@chromium.org>
+Date:   Fri Feb 15 17:02:02 2019 +0800
 
+    i2c: mediatek: modify threshold passed to i2c_get_dma_safe_msg_buf()
 
+    DMA with zero-length transfers doesn't make sense and this HW doesn't
+    support them at all, so increase the threshold.
+
+    Fixes: fc66b39fe36a ("i2c: mediatek: Use DMA safe buffers for i2c transactions")
+    Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+    [wsa: reworded commit message]
+    Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+
+Please apply this commit.
+
+Best regards,
+  Nobuhiro
+
+> ---
+>  drivers/i2c/busses/i2c-mt65xx.c | 62 +++++++++++++++++++++++++++++----
+>  1 file changed, 55 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-mt65xx.c b/drivers/i2c/busses/i2c-mt65xx.c
+> index 1e57f58fcb001..a74ef76705e0c 100644
+> --- a/drivers/i2c/busses/i2c-mt65xx.c
+> +++ b/drivers/i2c/busses/i2c-mt65xx.c
+> @@ -441,6 +441,8 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
+>  	u16 control_reg;
+>  	u16 restart_flag = 0;
+>  	u32 reg_4g_mode;
+> +	u8 *dma_rd_buf = NULL;
+> +	u8 *dma_wr_buf = NULL;
+>  	dma_addr_t rpaddr = 0;
+>  	dma_addr_t wpaddr = 0;
+>  	int ret;
+> @@ -500,10 +502,18 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
+>  	if (i2c->op == I2C_MASTER_RD) {
+>  		writel(I2C_DMA_INT_FLAG_NONE, i2c->pdmabase + OFFSET_INT_FLAG);
+>  		writel(I2C_DMA_CON_RX, i2c->pdmabase + OFFSET_CON);
+> -		rpaddr = dma_map_single(i2c->dev, msgs->buf,
+> +
+> +		dma_rd_buf = i2c_get_dma_safe_msg_buf(msgs, 0);
+> +		if (!dma_rd_buf)
+> +			return -ENOMEM;
+> +
+> +		rpaddr = dma_map_single(i2c->dev, dma_rd_buf,
+>  					msgs->len, DMA_FROM_DEVICE);
+> -		if (dma_mapping_error(i2c->dev, rpaddr))
+> +		if (dma_mapping_error(i2c->dev, rpaddr)) {
+> +			i2c_put_dma_safe_msg_buf(dma_rd_buf, msgs, false);
+> +
+>  			return -ENOMEM;
+> +		}
+>  
+>  		if (i2c->dev_comp->support_33bits) {
+>  			reg_4g_mode = mtk_i2c_set_4g_mode(rpaddr);
+> @@ -515,10 +525,18 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
+>  	} else if (i2c->op == I2C_MASTER_WR) {
+>  		writel(I2C_DMA_INT_FLAG_NONE, i2c->pdmabase + OFFSET_INT_FLAG);
+>  		writel(I2C_DMA_CON_TX, i2c->pdmabase + OFFSET_CON);
+> -		wpaddr = dma_map_single(i2c->dev, msgs->buf,
+> +
+> +		dma_wr_buf = i2c_get_dma_safe_msg_buf(msgs, 0);
+> +		if (!dma_wr_buf)
+> +			return -ENOMEM;
+> +
+> +		wpaddr = dma_map_single(i2c->dev, dma_wr_buf,
+>  					msgs->len, DMA_TO_DEVICE);
+> -		if (dma_mapping_error(i2c->dev, wpaddr))
+> +		if (dma_mapping_error(i2c->dev, wpaddr)) {
+> +			i2c_put_dma_safe_msg_buf(dma_wr_buf, msgs, false);
+> +
+>  			return -ENOMEM;
+> +		}
+>  
+>  		if (i2c->dev_comp->support_33bits) {
+>  			reg_4g_mode = mtk_i2c_set_4g_mode(wpaddr);
+> @@ -530,16 +548,39 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
+>  	} else {
+>  		writel(I2C_DMA_CLR_FLAG, i2c->pdmabase + OFFSET_INT_FLAG);
+>  		writel(I2C_DMA_CLR_FLAG, i2c->pdmabase + OFFSET_CON);
+> -		wpaddr = dma_map_single(i2c->dev, msgs->buf,
+> +
+> +		dma_wr_buf = i2c_get_dma_safe_msg_buf(msgs, 0);
+> +		if (!dma_wr_buf)
+> +			return -ENOMEM;
+> +
+> +		wpaddr = dma_map_single(i2c->dev, dma_wr_buf,
+>  					msgs->len, DMA_TO_DEVICE);
+> -		if (dma_mapping_error(i2c->dev, wpaddr))
+> +		if (dma_mapping_error(i2c->dev, wpaddr)) {
+> +			i2c_put_dma_safe_msg_buf(dma_wr_buf, msgs, false);
+> +
+>  			return -ENOMEM;
+> -		rpaddr = dma_map_single(i2c->dev, (msgs + 1)->buf,
+> +		}
+> +
+> +		dma_rd_buf = i2c_get_dma_safe_msg_buf((msgs + 1), 0);
+> +		if (!dma_rd_buf) {
+> +			dma_unmap_single(i2c->dev, wpaddr,
+> +					 msgs->len, DMA_TO_DEVICE);
+> +
+> +			i2c_put_dma_safe_msg_buf(dma_wr_buf, msgs, false);
+> +
+> +			return -ENOMEM;
+> +		}
+> +
+> +		rpaddr = dma_map_single(i2c->dev, dma_rd_buf,
+>  					(msgs + 1)->len,
+>  					DMA_FROM_DEVICE);
+>  		if (dma_mapping_error(i2c->dev, rpaddr)) {
+>  			dma_unmap_single(i2c->dev, wpaddr,
+>  					 msgs->len, DMA_TO_DEVICE);
+> +
+> +			i2c_put_dma_safe_msg_buf(dma_wr_buf, msgs, false);
+> +			i2c_put_dma_safe_msg_buf(dma_rd_buf, (msgs + 1), false);
+> +
+>  			return -ENOMEM;
+>  		}
+>  
+> @@ -578,14 +619,21 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
+>  	if (i2c->op == I2C_MASTER_WR) {
+>  		dma_unmap_single(i2c->dev, wpaddr,
+>  				 msgs->len, DMA_TO_DEVICE);
+> +
+> +		i2c_put_dma_safe_msg_buf(dma_wr_buf, msgs, true);
+>  	} else if (i2c->op == I2C_MASTER_RD) {
+>  		dma_unmap_single(i2c->dev, rpaddr,
+>  				 msgs->len, DMA_FROM_DEVICE);
+> +
+> +		i2c_put_dma_safe_msg_buf(dma_rd_buf, msgs, true);
+>  	} else {
+>  		dma_unmap_single(i2c->dev, wpaddr, msgs->len,
+>  				 DMA_TO_DEVICE);
+>  		dma_unmap_single(i2c->dev, rpaddr, (msgs + 1)->len,
+>  				 DMA_FROM_DEVICE);
+> +
+> +		i2c_put_dma_safe_msg_buf(dma_wr_buf, msgs, true);
+> +		i2c_put_dma_safe_msg_buf(dma_rd_buf, (msgs + 1), true);
+>  	}
+>  
+>  	if (ret == 0) {
+> -- 
+> 2.20.1
+> 
+> 
+> 
+> 
