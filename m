@@ -2,117 +2,93 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B472DC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:16:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16F1AC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:16:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8706920855
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:16:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E27D720898
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:16:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BqmvakRC"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="i8pNQf1Q";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="RMkQ4XWT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727527AbfKTTQn (ORCPT
+        id S1727656AbfKTTQp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 14:16:43 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:44620 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726236AbfKTTQn (ORCPT
+        Wed, 20 Nov 2019 14:16:45 -0500
+Received: from a27-21.smtp-out.us-west-2.amazonses.com ([54.240.27.21]:57398
+        "EHLO a27-21.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726236AbfKTTQo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 14:16:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=+uiX8Y1FAOVx63BgGhdqk6UFOCjK1eb99TNr3TVgrIU=; b=BqmvakRCAIVKzYcDLg/Qch27X
-        35mFslRqqVAYqgbmgTvsmMp3M12VvLOROf5bcDJwZF/FJYUNy8Yk9NmXULSy5g8/pblUsDD2TDfpK
-        BniKwfa3nTylt+8dPT8sl3zfVEBzm0Sl8fe1gz+cvuGMeUX8ufazZqcpvN1pVjjUuPqUHyxXv+7J6
-        sRiuyR6E3hhc1T98sqjCzwFtFe5OXhKGngAlV1NO+c17X7ylg7mqaw2s6RKcSLWq/Xzz+4BUaIOc3
-        +Z7vjEmi3ttpbQKmB6yvBrmSPLbqfCfpJezR9+Ap2Uv2irNXBGTv2NOa/+d+zjFFsGU+S4d10iCDI
-        fTH6oSPeA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iXVSw-0005wN-CY; Wed, 20 Nov 2019 19:16:38 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 9B0D130068E;
-        Wed, 20 Nov 2019 20:15:25 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 200F42B25DAAD; Wed, 20 Nov 2019 20:16:36 +0100 (CET)
-Date:   Wed, 20 Nov 2019 20:16:36 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Ming Lei <ming.lei@redhat.com>, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jeff Moyer <jmoyer@redhat.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Eric Sandeen <sandeen@redhat.com>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Subject: Re: single aio thread is migrated crazily by scheduler
-Message-ID: <20191120191636.GI4097@hirez.programming.kicks-ass.net>
-References: <20191114113153.GB4213@ming.t460p>
- <20191114235415.GL4614@dread.disaster.area>
- <20191115010824.GC4847@ming.t460p>
- <20191115045634.GN4614@dread.disaster.area>
- <20191115070843.GA24246@ming.t460p>
- <20191115234005.GO4614@dread.disaster.area>
- <20191118092121.GV4131@hirez.programming.kicks-ass.net>
- <20191118204054.GV4614@dread.disaster.area>
+        Wed, 20 Nov 2019 14:16:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574277403;
+        h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To;
+        bh=ysEVlFSsz2PUiWOZ41QMYdlfsngVTjcEZPWdndUQq/4=;
+        b=i8pNQf1QaLpBVtZYOcYf3+PYq5YTp4vMVNXKhKyr6NTYWHZ/I2iFs0I6MVhu21O1
+        HzL7UFiyZmO0s2W1Mjjh7GXNQkhD6ly4bjq8yjxgb8G1Qitlpz9RN897o4DemYeKNGd
+        GjTWEN/Pc9Ba4tgZnim5rz9ybfTOX2PDzaJSPxnM=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574277403;
+        h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Feedback-ID;
+        bh=ysEVlFSsz2PUiWOZ41QMYdlfsngVTjcEZPWdndUQq/4=;
+        b=RMkQ4XWTdc8ecSAOpyUf2ofBLnKDq9vcK6JQhirnUG5ZAehs5+XgimWmakKCeZ3P
+        zi+3tfkaHoWr78FkuH1c8ObF7KIYQzfBmFdT1khYcGRf6I2ReovUKZMTD3dHGyjBIhU
+        JrqlW6d/HUHiBKSX3Aqc75nOh73U2hzSAzeIuCqE=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B85EDC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jackp@codeaurora.org
+Date:   Wed, 20 Nov 2019 19:16:43 +0000
+From:   Jack Pham <jackp@codeaurora.org>
+To:     Henry Lin <henryl@nvidia.com>
+Cc:     Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] usb: xhci: only set D3hot for pci device
+Message-ID: <0101016e8a3ed308-9e380a62-79e0-4334-9d23-7c4d59142618-000000@us-west-2.amazonses.com>
+References: <20191113014927.11915-1-henryl@nvidia.com>
+ <20191119081656.8746-1-henryl@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191118204054.GV4614@dread.disaster.area>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191119081656.8746-1-henryl@nvidia.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-SES-Outgoing: 2019.11.20-54.240.27.21
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 07:40:54AM +1100, Dave Chinner wrote:
-> On Mon, Nov 18, 2019 at 10:21:21AM +0100, Peter Zijlstra wrote:
+On Tue, Nov 19, 2019 at 04:16:56PM +0800, Henry Lin wrote:
+> diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
+> index 6c17e3fe181a..e59346488f64 100644
+> --- a/drivers/usb/host/xhci.c
+> +++ b/drivers/usb/host/xhci.c
+> @@ -770,7 +770,7 @@ static void xhci_stop(struct usb_hcd *hcd)
+>   *
+>   * This will only ever be called with the main usb_hcd (the USB3 roothub).
+>   */
+> -static void xhci_shutdown(struct usb_hcd *hcd)
+> +void xhci_shutdown(struct usb_hcd *hcd)
+>  {
+>  	struct xhci_hcd *xhci = hcd_to_xhci(hcd);
+>  
+> @@ -789,10 +789,6 @@ static void xhci_shutdown(struct usb_hcd *hcd)
+>  	xhci_dbg_trace(xhci, trace_xhci_dbg_init,
+>  			"xhci_shutdown completed - status = %x",
+>  			readl(&xhci->op_regs->status));
+> -
+> -	/* Yet another workaround for spurious wakeups at shutdown with HSW */
+> -	if (xhci->quirks & XHCI_SPURIOUS_WAKEUP)
+> -		pci_set_power_state(to_pci_dev(hcd->self.sysdev), PCI_D3hot);
+>  }
 
-> > We typically only fall back to the active balancer when there is
-> > (persistent) imbalance and we fail to migrate anything else (of
-> > substance).
-> > 
-> > The tuning mentioned has the effect of less frequent scheduling, IOW,
-> > leaving (short) tasks on the runqueue longer. This obviously means the
-> > load-balancer will have a bigger chance of seeing them.
-> > 
-> > Now; it's been a while since I looked at the workqueue code but one
-> > possible explanation would be if the kworker that picks up the work item
-> > is pinned. That would make it runnable but not migratable, the exact
-> > situation in which we'll end up shooting the current task with active
-> > balance.
-> 
-> Yes, that's precisely the problem - work is queued, by default, on a
-> specific CPU and it will wait for a kworker that is pinned to that
+Shouldn't this function also now need to be EXPORTed?
 
-I'm thinking the problem is that it doesn't wait. If it went and waited
-for it, active balance wouldn't be needed, that only works on active
-tasks.
-
-> specific CPU to dispatch it. We've already tested that queuing on a
-> different CPU (via queue_work_on()) makes the problem largely go
-> away as the work is not longer queued behind the long running fio
-> task.
-> 
-> This, however, is not at viable solution to the problem. The pattern
-> of a long running process queuing small pieces of individual work
-> for processing in a separate context is pretty common...
-
-Right, but you're putting the scheduler in a bind. By overloading the
-CPU and only allowing the one task to migrate, it pretty much has no
-choice left.
-
-Anyway, I'm still going to have try and reproduce -- I got side-tracked
-into a crashing bug, I'll hopefully get back to this tomorrow. Lastly,
-one other thing to try is -next. Vincent reworked the load-balancer
-quite a bit.
+Jack
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
