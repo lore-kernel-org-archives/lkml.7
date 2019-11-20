@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A2B3C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:42:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1DA2C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:42:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E05D5224D0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:41:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F1682252F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:42:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574257320;
-	bh=xPj3YzRv9jWa1IqK+64ukpSnBw5wrrabNTKuHooPq1I=;
+	s=default; t=1574257322;
+	bh=s0ELTg1bHdr8W5pRC7ta+v8vIihQy7QuM3LKuIglQPI=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=HnPL2C2B5BxwzycCgljvJYTL+RPpFWVnPIXNqGcXYsNVX2V/isTSiLwGfgxNq1l44
-	 2FPBme1SS/+CWIFDtMXze54mH/BJn9h41EVpFwcBryIcWRcJqjGjhBcknqxaGVp47L
-	 1vyb7jnQLlkPYGsj8p18XpLBtAFD/gZKOLQ38++s=
+	b=ImrcIFSJ8imL4gcRAvTDCqhQ8uX1HAz7GbbOKJV/fyl/gMggkOV2aesu8bht3sD2l
+	 k+JEADiCUbZp6sxYGayDIbiA6zk7a/UL874LnGwIxzvS5WcJkoNhyNgC9JyyZ/O2bT
+	 B+k81UCudqwFsjhcsklpS+whi9/xEh2N6qcpIWAY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731355AbfKTNlR (ORCPT
+        id S1731344AbfKTNmB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 08:41:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49000 "EHLO mail.kernel.org"
+        Wed, 20 Nov 2019 08:42:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729146AbfKTNlK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 08:41:10 -0500
+        id S1730129AbfKTNl5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 08:41:57 -0500
 Received: from localhost.localdomain (unknown [118.189.143.39])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8EA5C224FC;
-        Wed, 20 Nov 2019 13:41:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B52D82251E;
+        Wed, 20 Nov 2019 13:41:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574257269;
-        bh=xPj3YzRv9jWa1IqK+64ukpSnBw5wrrabNTKuHooPq1I=;
+        s=default; t=1574257317;
+        bh=s0ELTg1bHdr8W5pRC7ta+v8vIihQy7QuM3LKuIglQPI=;
         h=From:To:Cc:Subject:Date:From;
-        b=bFnUTI6aLpb4O9BQ34HPPPZVqyGRs3VExNMRKIEmRp7TapJ7/OUZOAUvqRjJGVWPo
-         TfPkNgiQOnQLN2+d6drNE6TsjyBcjpgdKpP3TVTWMI3CW2MDZC7/gE4kjSqBRdRjTj
-         FtdwYKOZ84kw2CoKLxP8vxhpQwUrq0f/trXy7T/s=
+        b=TFQuk4Zpjou+M4hhvxNdfl3PQD01W5I0ATs/HPwPtndCDooFFWDpfJRVT3L8XuOC8
+         lNSq576DcKPgLw5t6/fkhWEa8l8tKXrS+9QefeW7oucCaXgzxtNq2nLBxtB/28gXMd
+         HLYqJ2M+uEF8MQbvVWEnfz92hJkK9r4KjexZp6VA=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org
-Subject: [PATCH] media: Fix Kconfig indentation
-Date:   Wed, 20 Nov 2019 21:41:05 +0800
-Message-Id: <20191120134105.14799-1-krzk@kernel.org>
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org
+Subject: [PATCH] hwmon: Fix Kconfig indentation
+Date:   Wed, 20 Nov 2019 21:41:53 +0800
+Message-Id: <20191120134153.15418-1-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -59,41 +59,42 @@ coding style with command like:
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/media/Kconfig              | 6 +++---
- drivers/media/radio/si470x/Kconfig | 4 ++--
- 2 files changed, 5 insertions(+), 5 deletions(-)
+ drivers/hwmon/Kconfig | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/media/Kconfig b/drivers/media/Kconfig
-index b36a41332867..9dfea5c4b6ab 100644
---- a/drivers/media/Kconfig
-+++ b/drivers/media/Kconfig
-@@ -208,9 +208,9 @@ config MEDIA_SUBDRV_AUTOSELECT
- 	  If unsure say Y.
+diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+index 2b73d5fc7966..1dc4f1226496 100644
+--- a/drivers/hwmon/Kconfig
++++ b/drivers/hwmon/Kconfig
+@@ -495,10 +495,10 @@ config SENSORS_F75375S
+ 	  will be called f75375s.
  
- config MEDIA_HIDE_ANCILLARY_SUBDRV
--        bool
--        depends on MEDIA_SUBDRV_AUTOSELECT && !COMPILE_TEST && !EXPERT
--        default y
-+	bool
-+	depends on MEDIA_SUBDRV_AUTOSELECT && !COMPILE_TEST && !EXPERT
-+	default y
+ config SENSORS_MC13783_ADC
+-        tristate "Freescale MC13783/MC13892 ADC"
+-        depends on MFD_MC13XXX
+-        help
+-          Support for the A/D converter on MC13783 and MC13892 PMIC.
++	tristate "Freescale MC13783/MC13892 ADC"
++	depends on MFD_MC13XXX
++	help
++	  Support for the A/D converter on MC13783 and MC13892 PMIC.
  
- config MEDIA_ATTACH
- 	bool
-diff --git a/drivers/media/radio/si470x/Kconfig b/drivers/media/radio/si470x/Kconfig
-index 537f8e1601f3..a1ba8bc54b62 100644
---- a/drivers/media/radio/si470x/Kconfig
-+++ b/drivers/media/radio/si470x/Kconfig
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0-only
- config RADIO_SI470X
--        tristate "Silicon Labs Si470x FM Radio Receiver support"
--        depends on VIDEO_V4L2
-+	tristate "Silicon Labs Si470x FM Radio Receiver support"
-+	depends on VIDEO_V4L2
+ config SENSORS_FSCHMD
+ 	tristate "Fujitsu Siemens Computers sensor chips"
+@@ -1314,10 +1314,10 @@ config SENSORS_NPCM7XX
+ 	imply THERMAL
  	help
- 	  This is a driver for devices with the Silicon Labs SI470x
- 	  chip (either via USB or I2C buses).
+ 	  This driver provides support for Nuvoton NPCM750/730/715/705 PWM
+-          and Fan controllers.
++	  and Fan controllers.
+ 
+-          This driver can also be built as a module. If so, the module
+-          will be called npcm750-pwm-fan.
++	  This driver can also be built as a module. If so, the module
++	  will be called npcm750-pwm-fan.
+ 
+ config SENSORS_NSA320
+ 	tristate "ZyXEL NSA320 and compatible fan speed and temperature sensors"
 -- 
 2.17.1
 
