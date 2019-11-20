@@ -2,113 +2,188 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1259AC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 14:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C66BDC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 14:32:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D31C32070B
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 14:30:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="aULmRl+/"
+	by mail.kernel.org (Postfix) with ESMTP id 9AAD62070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 14:32:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574260368;
+	bh=G31VeWrQF8NZXVZmBlQH2MMEbbjijNrXifJgKOgU4Go=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=QRa8G9zS5z6sf9imNCoFBW78bLX6ue3JF03Ge73LOcXFLfm3tdxXJGUPQeU8EQrCo
+	 IwvON9cUe2JH/T31zXpNEVs4QnDsLuiaEYKNb3YTftn+ZDihDOSfMJfT/1A2XvtDnq
+	 4joluShVUOXrbspZOtoM7cs/ftcmjOBrOSFSJzrQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731000AbfKTOaf (ORCPT
+        id S1731431AbfKTOcr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 09:30:35 -0500
-Received: from mail-eopbgr150085.outbound.protection.outlook.com ([40.107.15.85]:28224
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729157AbfKTOaf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 09:30:35 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BaS/VmU3rKOh0JqdNvxNRuVqkon8pg43W8ta3ONRMLMpR5f9l9nb8kn6t9XkqdBBTv3C4tgVycTWMCQm8iqL5gzrAnVeAfCDAf1aEKCQGWEJesHQch7SHCogQ1AXbna5TiNLRCw7vGInToVbeLe4TP7kjv93jHXsazjd4CcJDc3PHgVvbm668yxxOlFY7rm5aCykmMfeHnPiNjrBnlCloCRD8OYYdOF2S7q2XsyJUtTLziKyvfpawBNZfQ7G9wynEGxNbo0bYlqjENO3xxh8xdH4HfSOhl7KDMYlBji8huGdJCRxm891aZ/9wyxIh+VuH+LGLc+1cELSpzr4AeAXTg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=R6fbpwxcECZPnKh2clpW3kRFVgUf4g0hAqWqBZG2Oz4=;
- b=l0nV7InMv5UyVUjbyWCxuX/AwccFvFNUSZYdouH1WOOoi2fuVdHHj7RKmeg47PbPYzmHe5exhzBg9Rhc1Vb3/zHa/0a8bbRoMAU8ImW8TGV1ussPuiGbe+GWQJWm2LzXoB3TfvMeJsIVIsEgvU9wrDim8Dv0grT2gvhLlUkCOjIOg1H2yBJwgqhPHZCglq3+l8pzV7g6hJjoRKQ74dwA1dBxOalXBPpA4pStkXv/UlbreiKhfttrAcE/B1YU9t99C8QYE0Jl0d4Ke0UFKmZJgGN8/mAM7Z9b3kbHvnMQzPjAh6GZqrPdfnH6bSdFFwWRvtTKbeyPAfwL2bSPzSVvvA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=R6fbpwxcECZPnKh2clpW3kRFVgUf4g0hAqWqBZG2Oz4=;
- b=aULmRl+/uNJyPgxO69XePj3iYwZ9b4WR4wI3YClQgb68JJcnskUFQKyv+nGm0MVa2V/j+os6GccW72vg6X08ylEXRQ6e1ntJVS2J6JvrD2Xocn3hhfy1rzEUvKoY2EsITVK9+bmdLZqRluzN/HMS2n1331GX1CZ2mQRyPbKNyQQ=
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
- VI1PR0402MB3344.eurprd04.prod.outlook.com (52.134.8.16) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2451.22; Wed, 20 Nov 2019 14:30:29 +0000
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::89e1:552e:a24d:e72]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::89e1:552e:a24d:e72%3]) with mapi id 15.20.2474.018; Wed, 20 Nov 2019
- 14:30:29 +0000
-From:   Horia Geanta <horia.geanta@nxp.com>
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        Atul Gupta <atul.gupta@chelsio.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] crypto: Fix Kconfig indentation
-Thread-Topic: [PATCH] crypto: Fix Kconfig indentation
-Thread-Index: AQHVn6haznq8vw1WjUKSyFyRA7fljA==
-Date:   Wed, 20 Nov 2019 14:30:29 +0000
-Message-ID: <VI1PR0402MB3485BE88F8060AF214FE56CD984F0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-References: <20191120134221.15774-1-krzk@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=horia.geanta@nxp.com; 
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 87407e04-47f6-49bd-bf1b-08d76dc6313b
-x-ms-traffictypediagnostic: VI1PR0402MB3344:|VI1PR0402MB3344:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0402MB33443C0EF64296BBEA26CA0F984F0@VI1PR0402MB3344.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2887;
-x-forefront-prvs: 02272225C5
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(366004)(346002)(376002)(39860400002)(199004)(189003)(2906002)(14454004)(476003)(53546011)(8936002)(305945005)(74316002)(7736002)(76176011)(91956017)(66946007)(25786009)(66066001)(6436002)(558084003)(6116002)(54906003)(81166006)(66446008)(64756008)(66556008)(66476007)(110136005)(3846002)(316002)(8676002)(86362001)(81156014)(52536014)(99286004)(7416002)(33656002)(2501003)(76116006)(6506007)(478600001)(7696005)(6246003)(446003)(71190400001)(71200400001)(102836004)(26005)(256004)(186003)(9686003)(55016002)(44832011)(486006)(4326008)(5660300002)(229853002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3344;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: IYJI/cbKZhmJLD2KkzEqUAYtAlCXOdeeT5CfNlKgGgc6ogKalUxg/zmDu3tMw7ZABz3//x9vXdJvJbcD2zOrl5Yqbqas4uIOE3Wbx85XlmYbwXviF39bXygkeqYrWigBMzCL8DkitpNCX00BD0Q+WL5nWUIOJa552T6tctjPQ3R9ZQaHMtLC86sGUm+v2zoWG68d/6kmp43PzPMgCkHTwOO/gXc/SAgiyTi/kvPtXy7u48hIl2wnmbX2pZGDJjS6wOtiTrvCkYUg0LGVo48JoDMWDyNEV62fy63zp7xTq9CgTSFPSnbQ+6P8ScOD0l40g2MaYfKwVhbrCjKzYy8nTELwuuR/OjZf+rBYWJEg0dZwHJloDYuuPCqsmWXha9v3olJOumYmmromytal40CPVxMIO4z9MubUGlOd73N0uHF/6nuxCvSWTC6C0UigEj2x
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 20 Nov 2019 09:32:47 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:44250 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729591AbfKTOcr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 09:32:47 -0500
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iXR2B-0005H9-UN; Wed, 20 Nov 2019 15:32:43 +0100
+To:     =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH v4 2/8] irqchip: Add Realtek RTD1295 mux driver
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 87407e04-47f6-49bd-bf1b-08d76dc6313b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Nov 2019 14:30:29.2026
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pzc5eUsN7Mov9hzlv6L3SQRge0EMpabbM0dpHvc9EAJDRIXypUsAU84YltoHsHTLujRo+apmkDTTgkRhFXaQwg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3344
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Wed, 20 Nov 2019 14:32:43 +0000
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     <linux-realtek-soc@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Aleix Roca Nonell <kernelrocks@gmail.com>,
+        James Tai <james.tai@realtek.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>
+In-Reply-To: <18c09fc4-fe7b-7ba0-7cd3-ae0c650ca4a8@suse.de>
+References: <20191119021917.15917-1-afaerber@suse.de>
+ <20191119021917.15917-3-afaerber@suse.de>
+ <a34e00cac16899b53d0b6445f0e81f4c@www.loen.fr>
+ <e98364c5-a859-7981-8ccf-f8e5b5069379@suse.de> <20191119222956.23665e5d@why>
+ <d7416bdb-e20a-42e1-daff-c61369f359fa@suse.de>
+ <e4d30ff2485c3f9ffd2b934f1f757d19@www.loen.fr>
+ <18c09fc4-fe7b-7ba0-7cd3-ae0c650ca4a8@suse.de>
+Message-ID: <5d834a7c4b6195bb09675ffb96f509de@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: afaerber@suse.de, linux-realtek-soc@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernelrocks@gmail.com, james.tai@realtek.com, tglx@linutronix.de, jason@lakedaemon.net
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/20/2019 3:42 PM, Krzysztof Kozlowski wrote:=0A=
-> Adjust indentation from spaces to tab (+optional two spaces) as in=0A=
-> coding style with command like:=0A=
-> 	$ sed -e 's/^        /\t/' -i */Kconfig=0A=
-> =0A=
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>=0A=
-Reviewed-by: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
-=0A=
-Thanks,=0A=
-Horia=0A=
+On 2019-11-20 13:34, Andreas Färber wrote:
+> Am 20.11.19 um 11:20 schrieb Marc Zyngier:
+>> On 2019-11-19 23:33, Andreas Färber wrote:
+>>> Am 19.11.19 um 23:29 schrieb Marc Zyngier:
+>>>> On Tue, 19 Nov 2019 21:56:48 +0100
+>>>> Andreas Färber <afaerber@suse.de> wrote:
+>>>>> Am 19.11.19 um 13:01 schrieb Marc Zyngier:
+>>>>>> On 2019-11-19 02:19, Andreas Färber wrote:
+>>>>>>> +static void rtd1195_mux_enable_irq(struct irq_data *data)
+>>>>>>> +{
+>>>>>>> +    struct rtd1195_irq_mux_data *mux_data =
+>>>>>>> irq_data_get_irq_chip_data(data);
+>>>>>>> +    unsigned long flags;
+>>>>>>> +    u32 mask;
+>>>>>>> +
+>>>>>>> +    mask = mux_data->info->isr_to_int_en_mask[data->hwirq];
+>>>>>>> +    if (!mask)
+>>>>>>> +        return;
+>>>>>>
+>>>>>> How can this happen? You've mapped the interrupt, so it exists.
+>>>>>> I can't see how you can decide to fail such enable.
+>>>>>
+>>>>> The [UMSK_]ISR bits and the SCPU_INT_EN bits are not (all) the 
+>>>>> same.
+>>>>>
+>>>>> My ..._isr_to_scpu_int_en[] arrays have 32 entries for O(1) 
+>>>>> lookup, but
+>>>>> are sparsely populated. So there are circumstances such as 
+>>>>> WDOG_NMI as
+>>>>> well as reserved bits that we cannot enable.
+>>>>
+>>>> But the you should have failed the map. The moment you allow the
+>>>> mapping to occur, you have accepted the contract that this 
+>>>> interrupt is
+>>>> usable.
+>>>>
+>>>>> This check should be
+>>>>> identical to v3; the equivalent mask check inside the interrupt 
+>>>>> handler
+>>>>> was extended with "mask &&" to do the same in this v4.
+>>>>
+>>>> Spurious interrupts are a different matter. What I'm objecting to 
+>>>> here
+>>>> is a simple question of logic, whether or not you are allowed to 
+>>>> fail
+>>>> enabling an interrupt that you've otherwise allowed to be 
+>>>> populated.
+>>>
+>>> Then what are you suggesting instead? I don't see how my array map
+>>> lookup could fail other than returning a zero value, given its 
+>>> static
+>>> initialization. Check for a zero mask in 
+>>> rtd1195_mux_irq_domain_map()?
+>>> Then we wouldn't be able to use the mentioned WDOG_NMI. Add another
+>>> per-mux info field for which interrupts are valid to map?
+>>
+>> I'm suggesting that you fail the map if you're unable to allow the
+>> interrupt to be enabled.
+>
+> The NMI will always be enabled, it just can't be disabled.
+
+If I really cared, I'd cry. This HW is useless.
+
+> I have added a check to suppress a zero hwirq. Suppressing reserved 
+> IRQ
+> bits will take some more effort to distinguish from NMIs. In 
+> particular
+> if we flag this in the ..._isr_to_scpu_int_en array by some magic 
+> mask
+> value like 0xffffffff then all users need to check for two rather 
+> than
+> one value - but if we reduce the users, it shouldn't matter too much.
+
+1) you can't suppress a level interrupt that cannot be disabled. It 
+will
+fire back at you.
+2) given that you have to demux things using MMIO accesses, performance
+is the least of anybody's worry.
+
+>
+> With contract I assume you're referring to these callbacks having a 
+> void
+> return type, unable to return an error to the caller, and there being 
+> no
+> is_enabled/is_masked callbacks for anyone to discover this.
+>
+> Unfortunately NMI handling appears to be only used in GICv3 and is 
+> not
+> very intuitive for me: Apparently I can only flag the whole irq_chip 
+> as
+> being NMI but not individual IRQs? Would that mean that this driver
+> would need to instantiate a second irq_chip for that one IRQ? How 
+> would
+> that work for mapping from DT? Given that this mux relies on a 
+> maskable
+> GICv2 IRQ, it's not a "true" NMI in the Linux sense anyway, other 
+> than
+> the .irq_mask callback not being applicable. While I don't need that 
+> NMI
+> immediately, I would prefer not to merge a driver that by design 
+> can't
+> cope with it later.
+
+You are missing the point of the pseudo-NMI infrastructure. To be 
+useful,
+it *must* be the root interrupt controller. Otherwise, you cannot 
+distinguish
+it from the other interrupts it is muxed with. Your 'NMI' is absolutely
+unusable, and whoever designed this HW should be actively prevented
+from ever designing another interrupt controller again.
+
+> I'll try to post a v5 with rsv and nmi blocked in map for further
+> discussion tonight.
+
+I don't plan to review any of this until after the merge window, so 
+please
+take as long as you want.
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
