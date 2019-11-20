@@ -2,194 +2,145 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6409C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:08:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A61DC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:08:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B1CF206DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:08:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 502CC206DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:08:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TO3HgwgD"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="gYI0Ha/4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727566AbfKTTIF (ORCPT
+        id S1727621AbfKTTIw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 14:08:05 -0500
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:45840 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726685AbfKTTIF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 14:08:05 -0500
-Received: by mail-qv1-f67.google.com with SMTP id g12so342068qvy.12
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 11:08:04 -0800 (PST)
+        Wed, 20 Nov 2019 14:08:52 -0500
+Received: from mail-eopbgr730054.outbound.protection.outlook.com ([40.107.73.54]:40672
+        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726634AbfKTTIv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 14:08:51 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KTpftedokf5WrcpYfbx7g2QZrq091u9rbj+UEkT1okJOEKwo2dIqjvrC3KY59cPgRlZgwZ0v0F1N/0vx2+OZV+TeZoI3UQxiFTzM19a/Xno2tpFgkgDrzvkGXiqzppJF8MQVBBnKBnPyVDgD2IKqo0MAu7PwJIHtbilmB3X+fJww184WSWIHOZZ6KSXTBCOBTcKu22RprpOfTQxwImKWZJzXiU+2DAN1Jv4x/Ihg7GjELZqYTdS5ibW2MXqO8zi/uz0qF0O5MNL2KtpIY+Fjufy9F++he+4RV2sWwJQzv0Aeb467A8I0WG89WlFZjVU4kliOiMFQuVJ3XAFy3ZnKOg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=prW9p7/6ffhCc0rfTfLLUtbekk/fgldFk/xQBPUuz2g=;
+ b=HA1xfBz7ZQAh/4xO08/ALlxxa9+vmscCqNpYxNdeJOx5kj2dNGjGUozNWTq7GVGtLwyXSJ/ZnVYLprgjxHvMGmm/pH5wUzyHrf3cbJjbPjNRoUIsjKoy4iAARcsr9gvSLdGCmYIqbW8T01aA4dt+QDh1OaMfKoUXKxqp8koK3b5Oj8KDz2CiI9yIZFdfLlxiUUOhwWNiG+sBZGUNgA4ZtsamvYvE2lKNlIHZOiJ01CN1yVNkNeQWX5OHlwshUg4ny4y8u/UUs62dk45GzEe6aIOhtIgd7iSYTgUgfxVcDcSTng5SbARt93ZZtyMkA37Pla3AFtyhQx87hKkhBpdcDA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
+ dkim=pass header.d=xilinx.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cgi8F68eABuSHs763HIYkdDKfpb9pxa/hvIvxCwnpHI=;
-        b=TO3HgwgDfu8JKI49Odl+Ko6MD4844h/W/HC4uBB8nEieHc1oQAvNTWuiXEeoSolR6N
-         Gpoz3SG0kFDmZ5a449apJrboOQqqrZOuJ9CGkYcCZEvQZEFlsQgdfY1eV9QTjt51xGJP
-         tJTVKR6mR21rAYUqGmfEtQ7S7FUa4ys/+66q+Ht+5o0yH8ABK/jdt+Gk3/1Ssw57cqBf
-         aGykA+uWOHGjDY74eff85fgaczoVKPftVBHceEgZiH4nj9ikgWu6UjwVE7/ffWaLa0El
-         EsVSVoa/Z3wfYjqpbF5cXFLSf6KIY8G0cfojIXRa8jueXAdCWBsIvfkBTJaXluZy8w8V
-         Qs8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cgi8F68eABuSHs763HIYkdDKfpb9pxa/hvIvxCwnpHI=;
-        b=G1Z1lVEw6ACezOSKlQw1T0F4SVnG250hI/8Ana+WCHBqWoWwlFsclXw4sPrDQyy6fA
-         9XL0bcbIYmVyriKJ3TBpjrSchiKZFK8NDrL4M1StVRA+VvIWU/9FVQs980QyGYlL72qL
-         ILmsHYS7xLS1bfYT4ACqVICK9984Mr+ejoqSQhAyVJS709vxxwJY58Tw8sL6rq3YULOx
-         /mQH+lYAHqoGxQCPm5wI+1B+ArtpCwsW4pPmHQScWvQPbo3RkDLvdo3cX5bFJpXeJFMc
-         zSTNwwdi7PVw8SczzmBZNDq5BvLJzsNP81UbqJcH6kCh8BVMPPd54TkAXr+7XxUjOni6
-         atuA==
-X-Gm-Message-State: APjAAAXVkNQ1pXoCFWsoXE5DVMg0fGduhpE9y/cbNwsQbwXLl/nxy6Fv
-        VpA/Qg1IJ0HGWDritYbdS7NBn6SU2xYUaQGnKKnozA==
-X-Google-Smtp-Source: APXvYqyEeRkwjeOCeeisVbxYroPE7hnZ2ObyL3FI84qF1nG+v846ZdiTVznL113cgB5ikEmUtEJQ/t3tlfJjrqqqvuM=
-X-Received: by 2002:a05:6214:1052:: with SMTP id l18mr4161219qvr.204.1574276883685;
- Wed, 20 Nov 2019 11:08:03 -0800 (PST)
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=prW9p7/6ffhCc0rfTfLLUtbekk/fgldFk/xQBPUuz2g=;
+ b=gYI0Ha/4PuymkcWMvhl8/R18Qv4nunRLF3/tQAoJRUbjscWmDELL0FE3+b60LI0bzY96XutRUjkRI7axyfUMsxhK1F2aV7y55OMDp3aVZ5z5FQo0bze7V8q0tTySo/XmKwonLbqRZskKez7jpLSs+RhgxkV9cvwYFZ5qhr2w8+k=
+Received: from CH2PR02MB6359.namprd02.prod.outlook.com (52.132.230.25) by
+ CH2PR02MB6150.namprd02.prod.outlook.com (52.132.229.84) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2451.23; Wed, 20 Nov 2019 19:08:49 +0000
+Received: from CH2PR02MB6359.namprd02.prod.outlook.com
+ ([fe80::e81d:489c:2bd7:918a]) by CH2PR02MB6359.namprd02.prod.outlook.com
+ ([fe80::e81d:489c:2bd7:918a%7]) with mapi id 15.20.2451.031; Wed, 20 Nov 2019
+ 19:08:49 +0000
+From:   Dragan Cvetic <draganc@xilinx.com>
+To:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Derek Kiernan <dkiernan@xilinx.com>
+Subject: RE: [PATCH] misc: xilinx_sdfec: fix xsdfec_poll()'s return type
+Thread-Topic: [PATCH] misc: xilinx_sdfec: fix xsdfec_poll()'s return type
+Thread-Index: AQHVnzbvRwd5Ss/ZH0ugJQL96aPqOKeUNshQgAAkIoCAABHVkA==
+Date:   Wed, 20 Nov 2019 19:08:49 +0000
+Message-ID: <CH2PR02MB6359A3A9D842021B15E89E7BCB4F0@CH2PR02MB6359.namprd02.prod.outlook.com>
+References: <20191120001030.30779-1-luc.vanoostenryck@gmail.com>
+ <CH2PR02MB6359CE45D06E908634CDA855CB4F0@CH2PR02MB6359.namprd02.prod.outlook.com>
+ <20191120180229.frd5padrsdxf7hag@ltop.local>
+In-Reply-To: <20191120180229.frd5padrsdxf7hag@ltop.local>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=draganc@xilinx.com; 
+x-originating-ip: [149.199.80.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 0db8a9bc-c31a-4717-1dd0-08d76ded1332
+x-ms-traffictypediagnostic: CH2PR02MB6150:|CH2PR02MB6150:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CH2PR02MB61503E147EBC52079B08C0B5CB4F0@CH2PR02MB6150.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2657;
+x-forefront-prvs: 02272225C5
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(39860400002)(346002)(396003)(366004)(136003)(13464003)(189003)(199004)(51914003)(2906002)(9686003)(55016002)(6436002)(71190400001)(3846002)(6116002)(6246003)(305945005)(33656002)(7736002)(74316002)(99286004)(107886003)(66066001)(486006)(54906003)(316002)(229853002)(66946007)(5660300002)(11346002)(446003)(476003)(4326008)(71200400001)(186003)(64756008)(66556008)(14454004)(256004)(25786009)(66476007)(66446008)(81156014)(76176011)(7696005)(478600001)(102836004)(26005)(6506007)(53546011)(52536014)(86362001)(6916009)(81166006)(76116006)(8936002)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR02MB6150;H:CH2PR02MB6359.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: NkW1MhS43+CXdiBAXPNnbX0JhOZxb6NoL7w/CJb3Qdz8PkHLQGe7zwRbRw5RdNcB34GnLMCxJIzwELePWJmzhmb8I/QT4/iusCbMJQc/1vbV2uTTVTOWgFRq9hc57RKvzgpMCyKuAHgXD3XfI3L63ZN9VSKfXeRqkRw0Vz0qhiS3r0MmHhQqgVQEX3TKCH1XJ+WUDWQLdSvJ3BvmPbRoruANtUeTB4CcUBJN8b9Xt7zRMtJl0wjfynWD6Qnfx+QJkyFZafofKLuhoRcv/NBj7H6sRoeTDtm5/eQpwBt4cQH/xVcWoVqIYcs/AwXjkkOiVhHNAXW1eDAWNb39ru+vZ7LPKoRdIfxQ/JKunJtNb4lbk0BRYCD/E4QvPBGE0kgttCJrjjKUeFwehd8rSbCLxv5BFztKHKiU6Woi5tPApim8T8o4n994iEv02/nSc2pw
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20191120071733.4035-1-mst@redhat.com>
-In-Reply-To: <20191120071733.4035-1-mst@redhat.com>
-From:   Khazhismel Kumykov <khazhy@google.com>
-Date:   Wed, 20 Nov 2019 11:07:52 -0800
-Message-ID: <CACGdZY+7qxQGjK2ZzT+LMacGWQHGSZ=iLhDOwPVKvtdm9_1qZA@mail.gmail.com>
-Subject: Re: [PATCH v2] virtio_balloon: fix shrinker scan number of pages
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Wei Wang <wei.w.wang@intel.com>,
-        Jason Wang <jasowang@redhat.com>,
-        virtualization@lists.linux-foundation.org
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-        boundary="0000000000007aea740597cbe6d7"
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0db8a9bc-c31a-4717-1dd0-08d76ded1332
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Nov 2019 19:08:49.1943
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: r0efDqtYW18IlrKd9zmuYFjJRVJ/Uw52WMKMCmsgnYM196L7OVVpTO4K9JtXxcW44JnKJ5SX/2o+9zYjb4Fndw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6150
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---0000000000007aea740597cbe6d7
-Content-Type: text/plain; charset="UTF-8"
+Hi Luc,
 
-On Tue, Nov 19, 2019 at 11:18 PM Michael S. Tsirkin <mst@redhat.com> wrote:
->
-> virtio_balloon_shrinker_scan should return number of system pages freed,
-> but because it's calling functions that deal with balloon pages, it gets
-> confused and sometimes returns the number of balloon pages.
->
-> It does not matter practically as the exact number isn't
-> used, but it seems better to be consistent in case someone
-> starts using this API.
->
-> Further, if we ever tried to iteratively leak pages as
-> virtio_balloon_shrinker_scan tries to do, we'd run into issues - this is
-> because freed_pages was accumulating total freed pages, but was also
-> subtracted on each iteration from pages_to_free, which can result in
-> either leaking less memory than we were supposed to free, or more if
-> pages_to_free underruns.
->
-> On a system with 4K pages we are lucky that we are never asked to leak
-> more than 128 pages while we can leak up to 256 at a time,
-> but it looks like a real issue for systems with page size != 4K.
->
-> Fixes: 71994620bb25 ("virtio_balloon: replace oom notifier with shrinker")
-> Reported-by: Khazhismel Kumykov <khazhy@google.com>
-> Reviewed-by: Wei Wang <wei.w.wang@intel.com>
-> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Reviewed-by: Khazhismel Kumykov <khazhy@google.com>
+Thanks for the really useful answer.
 
---0000000000007aea740597cbe6d7
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+I promise I'll test this soon.
 
-MIIS5wYJKoZIhvcNAQcCoIIS2DCCEtQCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
-ghBNMIIEXDCCA0SgAwIBAgIOSBtqDm4P/739RPqw/wcwDQYJKoZIhvcNAQELBQAwZDELMAkGA1UE
-BhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExOjA4BgNVBAMTMUdsb2JhbFNpZ24gUGVy
-c29uYWxTaWduIFBhcnRuZXJzIENBIC0gU0hBMjU2IC0gRzIwHhcNMTYwNjE1MDAwMDAwWhcNMjEw
-NjE1MDAwMDAwWjBMMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTEiMCAG
-A1UEAxMZR2xvYmFsU2lnbiBIViBTL01JTUUgQ0EgMTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCC
-AQoCggEBALR23lKtjlZW/17kthzYcMHHKFgywfc4vLIjfq42NmMWbXkNUabIgS8KX4PnIFsTlD6F
-GO2fqnsTygvYPFBSMX4OCFtJXoikP2CQlEvO7WooyE94tqmqD+w0YtyP2IB5j4KvOIeNv1Gbnnes
-BIUWLFxs1ERvYDhmk+OrvW7Vd8ZfpRJj71Rb+QQsUpkyTySaqALXnyztTDp1L5d1bABJN/bJbEU3
-Hf5FLrANmognIu+Npty6GrA6p3yKELzTsilOFmYNWg7L838NS2JbFOndl+ce89gM36CW7vyhszi6
-6LqqzJL8MsmkP53GGhf11YMP9EkmawYouMDP/PwQYhIiUO0CAwEAAaOCASIwggEeMA4GA1UdDwEB
-/wQEAwIBBjAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwEgYDVR0TAQH/BAgwBgEB/wIB
-ADAdBgNVHQ4EFgQUyzgSsMeZwHiSjLMhleb0JmLA4D8wHwYDVR0jBBgwFoAUJiSSix/TRK+xsBtt
-r+500ox4AAMwSwYDVR0fBEQwQjBAoD6gPIY6aHR0cDovL2NybC5nbG9iYWxzaWduLmNvbS9ncy9n
-c3BlcnNvbmFsc2lnbnB0bnJzc2hhMmcyLmNybDBMBgNVHSAERTBDMEEGCSsGAQQBoDIBKDA0MDIG
-CCsGAQUFBwIBFiZodHRwczovL3d3dy5nbG9iYWxzaWduLmNvbS9yZXBvc2l0b3J5LzANBgkqhkiG
-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
-BQUHMAKGNGh0dHA6Ly9zZWN1cmUuZ2xvYmFsc2lnbi5jb20vY2FjZXJ0L2dzaHZzbWltZWNhMS5j
-cnQwHQYDVR0OBBYEFJ2Vb0jiXUWlD5ibz23a558NzWOgMB8GA1UdIwQYMBaAFMs4ErDHmcB4koyz
-IZXm9CZiwOA/MEwGA1UdIARFMEMwQQYJKwYBBAGgMgEoMDQwMgYIKwYBBQUHAgEWJmh0dHBzOi8v
-d3d3Lmdsb2JhbHNpZ24uY29tL3JlcG9zaXRvcnkvMDsGA1UdHwQ0MDIwMKAuoCyGKmh0dHA6Ly9j
-cmwuZ2xvYmFsc2lnbi5jb20vZ3NodnNtaW1lY2ExLmNybDAOBgNVHQ8BAf8EBAMCBaAwHQYDVR0l
-BBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMA0GCSqGSIb3DQEBCwUAA4IBAQCk2Fht/QkHdD9YQlQ/
-/BoVlZzl+wg2oB8mPQEGNN49NfSL/ERAGoituF3/Zv+xv6owWk2Xp+sTA69OuAt2wZ4O0pXm2NNb
-yE0QS1h/jH61IgJY4dU65qPcUYmkEdBDRX3XzR1wmnDc3yelHxlYerMuJFmSM5g4dIjbdpOlHTGh
-jnWrjPPoGaT9nEbPfTxkahJTybnCIMuQbt8nl2QdV64GhBMCQWbIW1xY6Uv0FZcadQhF1vzhd/OH
-qGkK98y1Dz/54GBO4A8jOSeDFuh+l2iygTcH16xKfB0XvhoUGdrru24FTEY7p4VTKkw+eJbUvdod
-PlESVftk7+JISQWxBEYKMYICXjCCAloCAQEwXDBMMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xv
-YmFsU2lnbiBudi1zYTEiMCAGA1UEAxMZR2xvYmFsU2lnbiBIViBTL01JTUUgQ0EgMQIMROfpbOE2
-LmBNcT9PMA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCCeBxS52TvHgh48usq8JfQq
-9p1H/ltATGua/xc1LD5NzDAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEP
-Fw0xOTExMjAxOTA4MDRaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQB
-FjALBglghkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsGCSqGSIb3DQEBBzALBglg
-hkgBZQMEAgEwDQYJKoZIhvcNAQEBBQAEggEAs63ZMkhVrKGcMp1Ac3i1NTDtWzByHEJS8eoJEpbR
-edKeinR9x+oVqaw2yNHJVO3YURgB48mVDHmIgQ0yqoy9aC0lHILBwT94BFljTI4BqDkANTARxSnH
-tLtsiG1Y81Z8849v2mFhE4UzAt6/dnKefxRa8ec0gjItIIRS9a4TzyeFFIMPZ2pHlefV9BNJkPJ/
-aEFW3X6NDDjBkjtESQ7aid2G+DSec8gcytOcdIfawZh0xyKU51ntOip5z0mgAGYypJID4Xf88Dgh
-b7Vit0oEI6Vkft0fcgsVbmYoNO7zqG4fQm8oQ/pCtLdHyYC5l3Q8scTrueuy9GZXlesHOkGb+A==
---0000000000007aea740597cbe6d7--
+Thanks
+Dragan
+
+
+> -----Original Message-----
+> From: Luc Van Oostenryck [mailto:luc.vanoostenryck@gmail.com]
+> Sent: Wednesday 20 November 2019 18:02
+> To: Dragan Cvetic <draganc@xilinx.com>
+> Cc: linux-kernel@vger.kernel.org; Derek Kiernan <dkiernan@xilinx.com>
+> Subject: Re: [PATCH] misc: xilinx_sdfec: fix xsdfec_poll()'s return type
+>=20
+> On Wed, Nov 20, 2019 at 03:59:24PM +0000, Dragan Cvetic wrote:
+> > Hi Luc,
+> >
+> > For the sake of my understanding I'd like to ask you when the .pole met=
+hod is defined
+> > Why I'm asking this? I have a fairly new book (published in 2017) which=
+ suggests what is implemented in SDFEC driver.
+> >
+> > I'll test your suggestions and will come back to you soon.
+>=20
+> Well, yes, it changed in July 2017.
+>=20
+> The current definition can be found in include/linux/fs.h:
+> 	struct file_operations {
+> 		...
+> 		__poll_t (*poll) (struct file *, struct poll_table_struct *);
+> 		...
+>=20
+> The main commit making the change is:
+>     a3f8683bf7d5 ("->poll() methods should return __poll_t")
+>=20
+>=20
+> The result can be verified by compiling the driver with the command
+> 	make C=3D2 path/to/the/driver.o
+> which will use the static analyser 'sparse' to make additional checks
+> where the difference between 'unsigned int' and __poll_t will matter.
+> See Documentation/dev-tools/sparse.rst for more info about it.
+>=20
+> Best regards,
+> -- Luc Van Oostenryck
