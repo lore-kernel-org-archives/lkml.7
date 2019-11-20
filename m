@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46BAFC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:42:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 982ACC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:42:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B1F220714
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:42:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7558B20714
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:42:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732168AbfKTPmE (ORCPT
+        id S1732148AbfKTPlz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 10:42:04 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:52966 "EHLO
+        Wed, 20 Nov 2019 10:41:55 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:52990 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731810AbfKTPkU (ORCPT
+        by vger.kernel.org with ESMTP id S1731831AbfKTPkU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 Nov 2019 10:40:20 -0500
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iXS5X-0004cy-Fe; Wed, 20 Nov 2019 15:40:15 +0000
+        id 1iXS5V-0004ak-Bv; Wed, 20 Nov 2019 15:40:13 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iXS5V-0004Ny-Gm; Wed, 20 Nov 2019 15:40:13 +0000
+        id 1iXS5U-0004KY-Nw; Wed, 20 Nov 2019 15:40:12 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,19 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Dave Wysochanski" <dwysocha@redhat.com>,
-        "Ronnie Sahlberg" <lsahlber@redhat.com>,
-        "Pavel Shilovskiy" <pshilov@microsoft.com>,
-        "Steve French" <stfrench@microsoft.com>
-Date:   Wed, 20 Nov 2019 15:38:28 +0000
-Message-ID: <lsq.1574264230.763208181@decadent.org.uk>
+        "Nadav Amit" <namit@vmware.com>,
+        "Francois Rigault" <rigault.francois@gmail.com>,
+        "Vishnu DASA" <vdasa@vmware.com>,
+        "Alexios Zavras" <alexios.zavras@intel.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Adit Ranadive" <aditr@vmware.com>,
+        "Jorgen Hansen" <jhansen@vmware.com>
+Date:   Wed, 20 Nov 2019 15:38:08 +0000
+Message-ID: <lsq.1574264230.91206156@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 78/83] cifs: use cifsInodeInfo->open_file_lock while
- iterating to avoid a panic
+Subject: [PATCH 3.16 58/83] VMCI: Release resource if the work is already
+ queued
 In-Reply-To: <lsq.1574264230.280218497@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,166 +61,89 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Dave Wysochanski <dwysocha@redhat.com>
+From: Nadav Amit <namit@vmware.com>
 
-commit cb248819d209d113e45fed459773991518e8e80b upstream.
+commit ba03a9bbd17b149c373c0ea44017f35fc2cd0f28 upstream.
 
-Commit 487317c99477 ("cifs: add spinlock for the openFileList to
-cifsInodeInfo") added cifsInodeInfo->open_file_lock spin_lock to protect
-the openFileList, but missed a few places where cifs_inode->openFileList
-was enumerated.  Change these remaining tcon->open_file_lock to
-cifsInodeInfo->open_file_lock to avoid panic in is_size_safe_to_change.
+Francois reported that VMware balloon gets stuck after a balloon reset,
+when the VMCI doorbell is removed. A similar error can occur when the
+balloon driver is removed with the following splat:
 
-[17313.245641] RIP: 0010:is_size_safe_to_change+0x57/0xb0 [cifs]
-[17313.245645] Code: 68 40 48 89 ef e8 19 67 b7 f1 48 8b 43 40 48 8d 4b 40 48 8d 50 f0 48 39 c1 75 0f eb 47 48 8b 42 10 48 8d 50 f0 48 39 c1 74 3a <8b> 80 88 00 00 00 83 c0 01 a8 02 74 e6 48 89 ef c6 07 00 0f 1f 40
-[17313.245649] RSP: 0018:ffff94ae1baefa30 EFLAGS: 00010202
-[17313.245654] RAX: dead000000000100 RBX: ffff88dc72243300 RCX: ffff88dc72243340
-[17313.245657] RDX: dead0000000000f0 RSI: 00000000098f7940 RDI: ffff88dd3102f040
-[17313.245659] RBP: ffff88dd3102f040 R08: 0000000000000000 R09: ffff94ae1baefc40
-[17313.245661] R10: ffffcdc8bb1c4e80 R11: ffffcdc8b50adb08 R12: 00000000098f7940
-[17313.245663] R13: ffff88dc72243300 R14: ffff88dbc8f19600 R15: ffff88dc72243428
-[17313.245667] FS:  00007fb145485700(0000) GS:ffff88dd3e000000(0000) knlGS:0000000000000000
-[17313.245670] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[17313.245672] CR2: 0000026bb46c6000 CR3: 0000004edb110003 CR4: 00000000007606e0
-[17313.245753] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[17313.245756] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[17313.245759] PKRU: 55555554
-[17313.245761] Call Trace:
-[17313.245803]  cifs_fattr_to_inode+0x16b/0x580 [cifs]
-[17313.245838]  cifs_get_inode_info+0x35c/0xa60 [cifs]
-[17313.245852]  ? kmem_cache_alloc_trace+0x151/0x1d0
-[17313.245885]  cifs_open+0x38f/0x990 [cifs]
-[17313.245921]  ? cifs_revalidate_dentry_attr+0x3e/0x350 [cifs]
-[17313.245953]  ? cifsFileInfo_get+0x30/0x30 [cifs]
-[17313.245960]  ? do_dentry_open+0x132/0x330
-[17313.245963]  do_dentry_open+0x132/0x330
-[17313.245969]  path_openat+0x573/0x14d0
-[17313.245974]  do_filp_open+0x93/0x100
-[17313.245979]  ? __check_object_size+0xa3/0x181
-[17313.245986]  ? audit_alloc_name+0x7e/0xd0
-[17313.245992]  do_sys_open+0x184/0x220
-[17313.245999]  do_syscall_64+0x5b/0x1b0
+[ 1088.622000] INFO: task modprobe:3565 blocked for more than 120 seconds.
+[ 1088.622035]       Tainted: G        W         5.2.0 #4
+[ 1088.622087] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+[ 1088.622205] modprobe        D    0  3565   1450 0x00000000
+[ 1088.622210] Call Trace:
+[ 1088.622246]  __schedule+0x2a8/0x690
+[ 1088.622248]  schedule+0x2d/0x90
+[ 1088.622250]  schedule_timeout+0x1d3/0x2f0
+[ 1088.622252]  wait_for_completion+0xba/0x140
+[ 1088.622320]  ? wake_up_q+0x80/0x80
+[ 1088.622370]  vmci_resource_remove+0xb9/0xc0 [vmw_vmci]
+[ 1088.622373]  vmci_doorbell_destroy+0x9e/0xd0 [vmw_vmci]
+[ 1088.622379]  vmballoon_vmci_cleanup+0x6e/0xf0 [vmw_balloon]
+[ 1088.622381]  vmballoon_exit+0x18/0xcc8 [vmw_balloon]
+[ 1088.622394]  __x64_sys_delete_module+0x146/0x280
+[ 1088.622408]  do_syscall_64+0x5a/0x130
+[ 1088.622410]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[ 1088.622415] RIP: 0033:0x7f54f62791b7
+[ 1088.622421] Code: Bad RIP value.
+[ 1088.622421] RSP: 002b:00007fff2a949008 EFLAGS: 00000206 ORIG_RAX: 00000000000000b0
+[ 1088.622426] RAX: ffffffffffffffda RBX: 000055dff8b55d00 RCX: 00007f54f62791b7
+[ 1088.622426] RDX: 0000000000000000 RSI: 0000000000000800 RDI: 000055dff8b55d68
+[ 1088.622427] RBP: 000055dff8b55d00 R08: 00007fff2a947fb1 R09: 0000000000000000
+[ 1088.622427] R10: 00007f54f62f5cc0 R11: 0000000000000206 R12: 000055dff8b55d68
+[ 1088.622428] R13: 0000000000000001 R14: 000055dff8b55d68 R15: 00007fff2a94a3f0
 
-Fixes: 487317c99477 ("cifs: add spinlock for the openFileList to cifsInodeInfo")
+The cause for the bug is that when the "delayed" doorbell is invoked, it
+takes a reference on the doorbell entry and schedules work that is
+supposed to run the appropriate code and drop the doorbell entry
+reference. The code ignores the fact that if the work is already queued,
+it will not be scheduled to run one more time. As a result one of the
+references would not be dropped. When the code waits for the reference
+to get to zero, during balloon reset or module removal, it gets stuck.
 
-Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
-Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-[bwh: Backported to 3.16: adjust context]
+Fix it. Drop the reference if schedule_work() indicates that the work is
+already queued.
+
+Note that this bug got more apparent (or apparent at all) due to
+commit ce664331b248 ("vmw_balloon: VMCI_DOORBELL_SET does not check status").
+
+Fixes: 83e2ec765be03 ("VMCI: doorbell implementation.")
+Reported-by: Francois Rigault <rigault.francois@gmail.com>
+Cc: Jorgen Hansen <jhansen@vmware.com>
+Cc: Adit Ranadive <aditr@vmware.com>
+Cc: Alexios Zavras <alexios.zavras@intel.com>
+Cc: Vishnu DASA <vdasa@vmware.com>
+Signed-off-by: Nadav Amit <namit@vmware.com>
+Reviewed-by: Vishnu Dasa <vdasa@vmware.com>
+Link: https://lore.kernel.org/r/20190820202638.49003-1-namit@vmware.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
-Cc: Pavel Shilovskiy <pshilov@microsoft.com>
 ---
- fs/cifs/file.c | 27 +++++++++++----------------
- 1 file changed, 11 insertions(+), 16 deletions(-)
+ drivers/misc/vmw_vmci/vmci_doorbell.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/fs/cifs/file.c
-+++ b/fs/cifs/file.c
-@@ -1756,13 +1756,12 @@ struct cifsFileInfo *find_readable_file(
- {
- 	struct cifsFileInfo *open_file = NULL;
- 	struct cifs_sb_info *cifs_sb = CIFS_SB(cifs_inode->vfs_inode.i_sb);
--	struct cifs_tcon *tcon = cifs_sb_master_tcon(cifs_sb);
+--- a/drivers/misc/vmw_vmci/vmci_doorbell.c
++++ b/drivers/misc/vmw_vmci/vmci_doorbell.c
+@@ -318,7 +318,8 @@ int vmci_dbell_host_context_notify(u32 s
  
- 	/* only filter by fsuid on multiuser mounts */
- 	if (!(cifs_sb->mnt_cifs_flags & CIFS_MOUNT_MULTIUSER))
- 		fsuid_only = false;
- 
--	spin_lock(&tcon->open_file_lock);
-+	spin_lock(&cifs_inode->open_file_lock);
- 	/* we could simply get the first_list_entry since write-only entries
- 	   are always at the end of the list but since the first entry might
- 	   have a close pending, we go through the whole list */
-@@ -1774,7 +1773,7 @@ struct cifsFileInfo *find_readable_file(
- 				/* found a good file */
- 				/* lock it so it will not be closed on us */
- 				cifsFileInfo_get(open_file);
--				spin_unlock(&tcon->open_file_lock);
-+				spin_unlock(&cifs_inode->open_file_lock);
- 				return open_file;
- 			} /* else might as well continue, and look for
- 			     another, or simply have the caller reopen it
-@@ -1782,7 +1781,7 @@ struct cifsFileInfo *find_readable_file(
- 		} else /* write only file */
- 			break; /* write only files are last so must be done */
- 	}
--	spin_unlock(&tcon->open_file_lock);
-+	spin_unlock(&cifs_inode->open_file_lock);
- 	return NULL;
- }
- 
-@@ -1791,7 +1790,6 @@ struct cifsFileInfo *find_writable_file(
- {
- 	struct cifsFileInfo *open_file, *inv_file = NULL;
- 	struct cifs_sb_info *cifs_sb;
--	struct cifs_tcon *tcon;
- 	bool any_available = false;
- 	int rc;
- 	unsigned int refind = 0;
-@@ -1807,16 +1805,15 @@ struct cifsFileInfo *find_writable_file(
- 	}
- 
- 	cifs_sb = CIFS_SB(cifs_inode->vfs_inode.i_sb);
--	tcon = cifs_sb_master_tcon(cifs_sb);
- 
- 	/* only filter by fsuid on multiuser mounts */
- 	if (!(cifs_sb->mnt_cifs_flags & CIFS_MOUNT_MULTIUSER))
- 		fsuid_only = false;
- 
--	spin_lock(&tcon->open_file_lock);
-+	spin_lock(&cifs_inode->open_file_lock);
- refind_writable:
- 	if (refind > MAX_REOPEN_ATT) {
--		spin_unlock(&tcon->open_file_lock);
-+		spin_unlock(&cifs_inode->open_file_lock);
- 		return NULL;
- 	}
- 	list_for_each_entry(open_file, &cifs_inode->openFileList, flist) {
-@@ -1828,7 +1825,7 @@ refind_writable:
- 			if (!open_file->invalidHandle) {
- 				/* found a good writable file */
- 				cifsFileInfo_get(open_file);
--				spin_unlock(&tcon->open_file_lock);
-+				spin_unlock(&cifs_inode->open_file_lock);
- 				return open_file;
+ 	entry = container_of(resource, struct dbell_entry, resource);
+ 	if (entry->run_delayed) {
+-		schedule_work(&entry->work);
++		if (!schedule_work(&entry->work))
++			vmci_resource_put(resource);
+ 	} else {
+ 		entry->notify_cb(entry->client_data);
+ 		vmci_resource_put(resource);
+@@ -366,7 +367,8 @@ static void dbell_fire_entries(u32 notif
+ 		    atomic_read(&dbell->active) == 1) {
+ 			if (dbell->run_delayed) {
+ 				vmci_resource_get(&dbell->resource);
+-				schedule_work(&dbell->work);
++				if (!schedule_work(&dbell->work))
++					vmci_resource_put(&dbell->resource);
  			} else {
- 				if (!inv_file)
-@@ -1847,7 +1844,7 @@ refind_writable:
- 		cifsFileInfo_get(inv_file);
- 	}
- 
--	spin_unlock(&tcon->open_file_lock);
-+	spin_unlock(&cifs_inode->open_file_lock);
- 
- 	if (inv_file) {
- 		rc = cifs_reopen_file(inv_file, false);
-@@ -1861,7 +1858,7 @@ refind_writable:
- 			cifsFileInfo_put(inv_file);
- 			++refind;
- 			inv_file = NULL;
--			spin_lock(&tcon->open_file_lock);
-+			spin_lock(&cifs_inode->open_file_lock);
- 			goto refind_writable;
- 		}
- 	}
-@@ -3508,17 +3505,15 @@ static int cifs_readpage(struct file *fi
- static int is_inode_writable(struct cifsInodeInfo *cifs_inode)
- {
- 	struct cifsFileInfo *open_file;
--	struct cifs_tcon *tcon =
--		cifs_sb_master_tcon(CIFS_SB(cifs_inode->vfs_inode.i_sb));
- 
--	spin_lock(&tcon->open_file_lock);
-+	spin_lock(&cifs_inode->open_file_lock);
- 	list_for_each_entry(open_file, &cifs_inode->openFileList, flist) {
- 		if (OPEN_FMODE(open_file->f_flags) & FMODE_WRITE) {
--			spin_unlock(&tcon->open_file_lock);
-+			spin_unlock(&cifs_inode->open_file_lock);
- 			return 1;
- 		}
- 	}
--	spin_unlock(&tcon->open_file_lock);
-+	spin_unlock(&cifs_inode->open_file_lock);
- 	return 0;
- }
- 
+ 				dbell->notify_cb(dbell->client_data);
+ 			}
 
