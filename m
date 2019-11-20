@@ -2,95 +2,102 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C084EC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 17:36:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B3A4C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 17:37:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98BF8206CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 17:36:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0449E206CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 17:37:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="gQHFgTgS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728642AbfKTRgp (ORCPT
+        id S1728690AbfKTRha (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 12:36:45 -0500
-Received: from mga17.intel.com ([192.55.52.151]:7732 "EHLO mga17.intel.com"
+        Wed, 20 Nov 2019 12:37:30 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:33888 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727925AbfKTRgp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 12:36:45 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Nov 2019 09:36:32 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,222,1571727600"; 
-   d="scan'208";a="259103050"
-Received: from tthayer-hp-z620.an.intel.com ([10.122.105.146])
-  by FMSMGA003.fm.intel.com with ESMTP; 20 Nov 2019 09:36:32 -0800
-From:   thor.thayer@linux.intel.com
-To:     stable@vger.kernel.org, bp@alien8.de, mchehab@kernel.org
-Cc:     tony.luck@intel.com, james.morse@arm.com, rrichter@marvell.com,
-        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Thor Thayer <thor.thayer@linux.intel.com>,
-        Meng Li <Meng.Li@windriver.com>
-Subject: [PATCH] EDAC/altera: Use fast register IO for S10 IRQs
-Date:   Wed, 20 Nov 2019 11:38:01 -0600
-Message-Id: <1574271481-9310-1-git-send-email-thor.thayer@linux.intel.com>
-X-Mailer: git-send-email 2.7.4
+        id S1727925AbfKTRha (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 12:37:30 -0500
+Received: from zn.tnic (p200300EC2F0D8C00F553B94F3FB99B80.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:8c00:f553:b94f:3fb9:9b80])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4B40D1EC0BEC;
+        Wed, 20 Nov 2019 18:37:29 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1574271449;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=dt0skX+t5TApZIf10QlyBTuMhhHdR5oeyUG697yEIWI=;
+        b=gQHFgTgSinL/5JlBJMWwVcoiC4JiDWLyhR2HQfxHkmcYp0ul2Sgg3mDQ4MzrPq0mUnHo9p
+        CBFeF+pLJRnBLVYX/cxau2SUryK629DxsQFQs2PBbi74QTx1VWyHCLm70oamPWvMxAxmmq
+        bmmviKmuV4aXD3SxnSbZdu5UaYoBbH0=
+Date:   Wed, 20 Nov 2019 18:37:22 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Ingo Molnar <mingo@kernel.org>, Jann Horn <jannh@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH v3 2/4] x86/traps: Print non-canonical address on #GP
+Message-ID: <20191120173722.GH2634@zn.tnic>
+References: <20191120103613.63563-1-jannh@google.com>
+ <20191120103613.63563-2-jannh@google.com>
+ <20191120111859.GA115930@gmail.com>
+ <CAG48ez0Frp4-+xHZ=UhbHh0hC_h-1VtJfwHw=kDo6NahyMv1ig@mail.gmail.com>
+ <20191120123058.GA17296@gmail.com>
+ <20191120123926.GE2634@zn.tnic>
+ <20191120132830.GB54414@gmail.com>
+ <20191120133913.GG2634@zn.tnic>
+ <20191120162143.GB32572@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191120162143.GB32572@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thor Thayer <thor.thayer@linux.intel.com>
+On Wed, Nov 20, 2019 at 08:21:43AM -0800, Sean Christopherson wrote:
+> On Wed, Nov 20, 2019 at 02:39:13PM +0100, Borislav Petkov wrote:
+> > On Wed, Nov 20, 2019 at 02:28:30PM +0100, Ingo Molnar wrote:
+> > > I'd rather we not trust the decoder and the execution environment so much 
+> > > that it never produces a 0 linear address in a #GP:
+> > 
+> > I was just scratching my head whether I could trigger a #GP with address
+> > of 0. But yeah, I agree, let's be really cautious here. I wouldn't want
+> > to debug a #GP with a wrong address reported.
+> 
+> It's definitely possible, there are a handful of non-SIMD instructions that
+> generate #GP(0) it CPL=0 in 64-bit mode *and* have a memory operand.  Some
+> of them might even be legitimately encountered in the wild.
+> 
+>   - CMPXCHG16B if it's not supported by the CPU.
+>   - VMXON if CR4 is misconfigured or VMX isn't enabled in FEATURE_CONTROL.
+>   - MONITOR if ECX has an invalid hint (although MONITOR hardcodes the
+>     address in DS:RAX and so doesn't have a ModR/M byte).
+> 
+> Undoudbtedly there are other instructions with similar sources of #GP.
 
-When an irq occurs in altera edac driver, regmap_xxx() is invoked
-in atomic context. Regmap must indicate register IO is fast so
-that a spinlock is used instead of a mutex to avoid sleeping
-in atomic context.
+Right, we currently put our trust in the insn decoder to handle those
+correctly too.
 
-Fixes mutex-lock error
-   lock_acquire+0xfc/0x288
-   __mutex_lock+0x8c/0x808
-   mutex_lock_nested+0x3c/0x50
-   regmap_lock_mutex+0x24/0x30
-   regmap_write+0x40/0x78
-   a10_eccmgr_irq_unmask+0x34/0x40
-   unmask_irq.part.0+0x30/0x50
-   irq_enable+0x74/0x80
-   __irq_startup+0x80/0xa8
-   irq_startup+0x70/0x150
-   __setup_irq+0x650/0x6d0
-   request_threaded_irq+0xe4/0x180
-   devm_request_threaded_irq+0x7c/0xf0
-   altr_sdram_probe+0x2c4/0x600
-<snip>
-
-Upstream fix pending [1] (common code uses fast mode)
-[1] https://lkml.org/lkml/2019/11/7/1014
-
-Fixes: 3dab6bd52687 ("EDAC, altera: Add support for Stratix10 SDRAM EDAC")
-Cc: stable@vger.kernel.org
-Reported-by: Meng Li <Meng.Li@windriver.com>
-Signed-off-by: Meng Li <Meng.Li@windriver.com>
-Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
----
- drivers/edac/altera_edac.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
-index 59319f0c873b..647b3a5ef095 100644
---- a/drivers/edac/altera_edac.c
-+++ b/drivers/edac/altera_edac.c
-@@ -561,6 +561,7 @@ static const struct regmap_config s10_sdram_regmap_cfg = {
- 	.reg_write = s10_protected_reg_write,
- 	.use_single_read = true,
- 	.use_single_write = true,
-+	.fast_io = true,
- };
- 
- /************** </Stratix10 EDAC Memory Controller Functions> ***********/
 -- 
-2.7.4
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
