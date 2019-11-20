@@ -2,131 +2,115 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A9FDC43141
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 17:12:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC481C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 17:12:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CBA7208A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 17:12:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 922D1208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 17:12:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W31OjeQI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730003AbfKTRMR (ORCPT
+        id S1730328AbfKTRMl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 12:12:17 -0500
-Received: from foss.arm.com ([217.140.110.172]:43184 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727644AbfKTRMR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 12:12:17 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1695F1FB;
-        Wed, 20 Nov 2019 09:12:16 -0800 (PST)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9D6743F703;
-        Wed, 20 Nov 2019 09:12:14 -0800 (PST)
-Date:   Wed, 20 Nov 2019 17:12:12 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        sashal@kernel.org, bhelgaas@google.com,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
-        Alexander.Levin@microsoft.com
-Subject: Re: [PATCH v2 4/4] PCI: hv: kmemleak: Track the page allocations for
- struct hv_pcibus_device
-Message-ID: <20191120171212.GD3279@e121166-lin.cambridge.arm.com>
-References: <1574234218-49195-1-git-send-email-decui@microsoft.com>
- <1574234218-49195-5-git-send-email-decui@microsoft.com>
+        Wed, 20 Nov 2019 12:12:41 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:59579 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729119AbfKTRMl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 12:12:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574269960;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=muEDxGsq3Waz+P8qcWcdXwG2KGs2kkylLGjOIkRBOxY=;
+        b=W31OjeQI+CFWQuxcWzvnCjfIOOYiCXcE35vuFM4OaBWKMUlmas6L4f82Szrhxq5d9myr32
+        VkDAWJviaD9XphQWkhI0vqtK26NGWXpFKZ6KBnS3kHpmQNDp+NjaIxY97Ob+quj8AreFfF
+        SvGDC803VOHgKTEedXezWBO+xWiL5dk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-213-WNi31rFYNkSnbaUHU89kgg-1; Wed, 20 Nov 2019 12:12:39 -0500
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 92936802689;
+        Wed, 20 Nov 2019 17:12:36 +0000 (UTC)
+Received: from suzdal.zaitcev.lan (ovpn-117-3.phx2.redhat.com [10.3.117.3])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A183FA7F0;
+        Wed, 20 Nov 2019 17:12:35 +0000 (UTC)
+Date:   Wed, 20 Nov 2019 11:12:35 -0600
+From:   Pete Zaitcev <zaitcev@redhat.com>
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     syzbot <syzbot+56f9673bb4cdcbeb0e92@syzkaller.appspotmail.com>,
+        arnd@arndb.de, <gregkh@linuxfoundation.org>,
+        <jrdr.linux@gmail.com>, <keescook@chromium.org>,
+        <kstewart@linuxfoundation.org>,
+        Kernel development list <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        <syzkaller-bugs@googlegroups.com>, <tglx@linutronix.de>,
+        <viro@zeniv.linux.org.uk>, zaitcev@redhat.com
+Subject: Re: possible deadlock in mon_bin_vma_fault
+Message-ID: <20191120111235.7d306f23@suzdal.zaitcev.lan>
+In-Reply-To: <Pine.LNX.4.44L0.1911201109500.1498-100000@iolanthe.rowland.org>
+References: <0000000000002da08e0597c5efbd@google.com>
+        <Pine.LNX.4.44L0.1911201109500.1498-100000@iolanthe.rowland.org>
+Organization: Red Hat, Inc.
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1574234218-49195-5-git-send-email-decui@microsoft.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-MC-Unique: WNi31rFYNkSnbaUHU89kgg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 11:16:58PM -0800, Dexuan Cui wrote:
-> The page allocated for struct hv_pcibus_device contains pointers to other
-> slab allocations in new_pcichild_device(). Since kmemleak does not track
-> and scan page allocations, the slab objects will be reported as leaks
-> (false positives). Use the kmemleak APIs to allow tracking of such pages.
-> 
-> Reported-by: Lili Deng <v-lide@microsoft.com>
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> ---
-> 
-> This is actually v1. I use "v2" in the Subject just to be consistent with
-> the other patches in the patchset.
+On Wed, 20 Nov 2019 11:14:05 -0500 (EST)
+Alan Stern <stern@rowland.harvard.edu> wrote:
 
-That's a mistake, you should have posted patches separately. I need
-hyper-V ACKs on this series to get it through.
+> As it happens, I spent a little time investigating this bug report just
+> yesterday.  It seems to me that the easiest fix would be to disallow
+> resizing the buffer while it is mapped by any users.  (Besides,
+> allowing that seems like a bad idea in any case.)
+>=20
+> Pete, does that seem reasonable to you?
 
-Thanks,
-Lorenzo
+Yes, it does seem reasonable.
 
-> Without the patch, we can see the below warning in dmesg, if kmemleak is
-> enabled: 
-> 
-> kmemleak: 1 new suspected memory leaks (see /sys/kernel/debug/kmemleak)
-> 
-> and "cat /sys/kernel/debug/kmemleak" shows:
-> 
-> unreferenced object 0xffff9217d1f2bec0 (size 192):
->   comm "kworker/u256:7", pid 100821, jiffies 4501481057 (age 61409.997s)
->   hex dump (first 32 bytes):
->     a8 60 b1 63 17 92 ff ff a8 60 b1 63 17 92 ff ff  .`.c.....`.c....
->     02 00 00 00 00 00 00 00 80 92 cd 61 17 92 ff ff  ...........a....
->   backtrace:
->     [<0000000006f7ae93>] pci_devices_present_work+0x326/0x5e0 [pci_hyperv]
->     [<00000000278eb88a>] process_one_work+0x15f/0x360
->     [<00000000c59501e6>] worker_thread+0x49/0x3c0
->     [<000000000a0a7a94>] kthread+0xf8/0x130
-> [<000000007075c2e7>] ret_from_fork+0x35/0x40
-> 
->  drivers/pci/controller/pci-hyperv.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index d7e05d436b5e..cc73f49c9e03 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -46,6 +46,7 @@
->  #include <asm/irqdomain.h>
->  #include <asm/apic.h>
->  #include <linux/irq.h>
-> +#include <linux/kmemleak.h>
->  #include <linux/msi.h>
->  #include <linux/hyperv.h>
->  #include <linux/refcount.h>
-> @@ -2907,6 +2908,16 @@ static int hv_pci_probe(struct hv_device *hdev,
->  	hbus = (struct hv_pcibus_device *)get_zeroed_page(GFP_KERNEL);
->  	if (!hbus)
->  		return -ENOMEM;
-> +
-> +	/*
-> +	 * kmemleak doesn't track page allocations as they are not commonly
-> +	 * used for kernel data structures, but here hbus->children indeed
-> +	 * contains pointers to hv_pci_dev structs, which are dynamically
-> +	 * created in new_pcichild_device(). Allow kmemleak to scan the page
-> +	 * so we don't get a false warning of memory leak.
-> +	 */
-> +	kmemleak_alloc(hbus, PAGE_SIZE, 1, GFP_KERNEL);
-> +
->  	hbus->state = hv_pcibus_init;
->  
->  	/*
-> @@ -3133,6 +3144,8 @@ static int hv_pci_remove(struct hv_device *hdev)
->  
->  	hv_put_dom_num(hbus->sysdata.domain);
->  
-> +	/* Remove kmemleak object previously allocated in hv_pci_probe() */
-> +	kmemleak_free(hbus);
->  	free_page((unsigned long)hbus);
->  	return ret;
->  }
-> -- 
-> 2.19.1
-> 
+I think I understand it now. My fallacy was thinking that since everything
+is nailed down as long as fetch_lock is held, it was okay to grab whatever
+page from our pagemap. What happens later is an attempt to get pages of the
+new buffer while looking at them through the old VMA, in mon_bin_vma_fault.
+
+It seems to me that the use counter, mmap_active, is correct and sufficient
+to check in the ioctl.
+
+-- Pete
+
+P.S. One thing that vaguely bothers me on this is that the bot
+bisected to the commit that clearly fixed worse issues.
+
+P.P.S. Like this?
+
+diff --git a/drivers/usb/mon/mon_bin.c b/drivers/usb/mon/mon_bin.c
+index ac2b4fcc265f..e27d99606adb 100644
+--- a/drivers/usb/mon/mon_bin.c
++++ b/drivers/usb/mon/mon_bin.c
+@@ -1020,6 +1020,9 @@ static long mon_bin_ioctl(struct file *file, unsigned=
+ int cmd, unsigned long arg
+                int size;
+                struct mon_pgmap *vec;
+=20
++               if (rp->mmap_active)
++                       return -EBUSY;
++
+                if (arg < BUFF_MIN || arg > BUFF_MAX)
+                        return -EINVAL;
+=20
+
