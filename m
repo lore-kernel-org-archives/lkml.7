@@ -2,118 +2,150 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE88C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 12:11:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 840F5C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 12:11:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4ABC224E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 12:11:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574251909;
-	bh=FmP+P+/FUn2rpLG1fsW9puYEKgN1E7QxPtoNUE1Br94=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=CIC8xuBRfmuBskua+n1u7//ucWYx2YM1FaFCRSQugK7LBvrQx0/WT0E7I4k51ktA5
-	 VwcwhEj6zHaSMRRzOTEQIt38eMjTvOe7PRmdzWFECVFcNrfajWUuZncmyloDaH1EkA
-	 hHqbn+bKJCEIwlGe+OOuuTYZCzrXz6NEs/oFa8WY=
+	by mail.kernel.org (Postfix) with ESMTP id 46989224E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 12:11:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="G8a1i8uQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729552AbfKTMLt (ORCPT
+        id S1729562AbfKTMLu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 07:11:49 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:40115 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729236AbfKTMLs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 07:11:50 -0500
+Received: from mail-eopbgr730077.outbound.protection.outlook.com ([40.107.73.77]:2645
+        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727975AbfKTMLs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 Nov 2019 07:11:48 -0500
-Received: by mail-ot1-f66.google.com with SMTP id m15so20978679otq.7;
-        Wed, 20 Nov 2019 04:11:48 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OeFNReHTu2Z/wmOhc+6rykSX19PAp/KecxFvBbcF5xE=;
-        b=HRXYhe8xWVyZOKnpqhh6cQn0NPCw7hjOT/kpVG+1tq6BiNldAuT/qZyRyFhdx4T/qh
-         SKPc+B7f85cCBJccdQfSD31PU8iGI0X55hS7ucRcDgTQtzclrKI/JUdxJtmtNIBO/IFt
-         AKjTQz8JFqR+2myxJmzcbY26xqLfakNrsjq3vu1NgXt5tjWK4XwB8/gOfYnfDspDyXzb
-         9gPkP2tielZFwLUMGPj9LbNKxVufi2o4azvh8mdpiHYeKQAs8NA2c5fFDlsmKOv4Z1Ay
-         9UUva97FlsCFqgHdBXf6LNY5I20xyUqKzohPUFUfD5Y8vdixh0fmtcCc7oPnVE5TiszY
-         3oIA==
-X-Gm-Message-State: APjAAAW+bGnF0NwosqqSNelUtTigiDCUqK7l01onjt7k7giyrIn0PNVg
-        I9N/ziIaupqann+ug66QAEsAazrKf+1FaGzq7s4=
-X-Google-Smtp-Source: APXvYqyrkRK0kaVt5Z4vrt370dqRdCmzFhxyhg+9v0spLlBL7ZERizh4DCBBV+SYsNe6NGTAKOmu24BP4l9rb4a+3xk=
-X-Received: by 2002:a9d:7d01:: with SMTP id v1mr1670717otn.167.1574251907511;
- Wed, 20 Nov 2019 04:11:47 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aZY3H94tfRxAGwSdb+FQANv9PzC1/PRfxSncUzomqRvc1O3AROD7BbJ3+8so1ulyAJdmG6m7DoRUHL9gOza50vZZbt8QFAxnNOYkuKq4sstS432MNa7nsHrjDUSs2SYTJ6QjutUTSaufweiz8QS3AjYLyT08E0fXv4PhNsq8KMyvikHkapocMleR91wfGBi/Jq+KOprBEtzJ5ahV/Gb1z9gHLxyFnt+Warrmu/3ZH2rOkImTdzNEDy4UtdnKPtgQSh+2kAakiYamJEB6Jv2FgdXj530M1Coa1lang/KiqacekDcjF56AmrUc9aHMHDhEoqzTrkZbGMR3uAXsq8ewTQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jTflLLVt7NRRSD5Auyb4CK2zSwT3eVPAtuFZwsFFYwA=;
+ b=Nnxu/zuC72E4jk2VdaMmOAf4gDuWm963+hvTFBr1SSwIT30RsTjxI1zYN7ojYMZJ/4qs7yJkBCL+FtzgsoHw2Wo+rXDZxiuKDBzZfoVuwESF/tUKv5HoY5C4lie0VPhCaakd0I/jFFADEe3vhmQjv7T7I1wQk4mHGzMyidZzABHQbxKwClVMLQ2MgXCMVEimPjxgnfUHw0EVGYzANaBtMdCvL79OrpMzvodHeeReM8wBH/yYL1hh5zKAVFXz1KhvOkw2elEHL+xylmpnHVPPsXiLqbVGQb9nsuJ4m2Q0XySgPlcUe405rl8QpfNl5MTBteT0robPhyjHwaJQXe6NMg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=grandegger.com smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jTflLLVt7NRRSD5Auyb4CK2zSwT3eVPAtuFZwsFFYwA=;
+ b=G8a1i8uQBt6F/1OaZOKM3FCW5m7SLUKWvFJF5LgSdTCWr7Oaed3ADFERb1veuK5CtO9Hj48pw3tVlGylccpVpw4fBQgvWNVenHFBE5kyaxInjqlfKmuD+8OSYjl662cWeupYGoB09x10yb/lmkCr/yYXuOw4q4QV04FJ6gPttEM=
+Received: from DM6PR02CA0119.namprd02.prod.outlook.com (2603:10b6:5:1b4::21)
+ by SN6PR02MB5038.namprd02.prod.outlook.com (2603:10b6:805:67::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2474.16; Wed, 20 Nov
+ 2019 12:11:45 +0000
+Received: from CY1NAM02FT034.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e45::209) by DM6PR02CA0119.outlook.office365.com
+ (2603:10b6:5:1b4::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2451.27 via Frontend
+ Transport; Wed, 20 Nov 2019 12:11:45 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; grandegger.com; dkim=none (message not signed)
+ header.d=none;grandegger.com; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ CY1NAM02FT034.mail.protection.outlook.com (10.152.75.190) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2474.17
+ via Frontend Transport; Wed, 20 Nov 2019 12:11:44 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <srinivas.neeli@xilinx.com>)
+        id 1iXOpk-0000ga-9i; Wed, 20 Nov 2019 04:11:44 -0800
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <srinivas.neeli@xilinx.com>)
+        id 1iXOpf-0002gB-6O; Wed, 20 Nov 2019 04:11:39 -0800
+Received: from [10.140.6.6] (helo=xhdappanad40.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <srinivas.neeli@xilinx.com>)
+        id 1iXOpb-0002fi-AQ; Wed, 20 Nov 2019 04:11:35 -0800
+From:   Srinivas Neeli <srinivas.neeli@xilinx.com>
+To:     wg@grandegger.com, mkl@pengutronix.de, davem@davemloft.net,
+        michal.simek@xilinx.com, appanad@xilinx.com
+Cc:     linux-can@vger.kernel.org, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        git@xilinx.com, nagasure@xilinx.com,
+        Venkatesh Yadav Abbarapu <venkatesh.abbarapu@xilinx.com>,
+        Srinivas Neeli <srinivas.neeli@xilinx.com>
+Subject: [PATCH 1/2] can: xilinx_can: skip error message on deferred probe
+Date:   Wed, 20 Nov 2019 17:41:04 +0530
+Message-Id: <1574251865-19592-2-git-send-email-srinivas.neeli@xilinx.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1574251865-19592-1-git-send-email-srinivas.neeli@xilinx.com>
+References: <1574251865-19592-1-git-send-email-srinivas.neeli@xilinx.com>
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(376002)(396003)(39860400002)(199004)(189003)(316002)(9786002)(26005)(186003)(5660300002)(47776003)(11346002)(107886003)(81156014)(8676002)(51416003)(7696005)(2616005)(50466002)(4326008)(48376002)(478600001)(14444005)(36756003)(50226002)(6666004)(356004)(16586007)(6636002)(305945005)(15650500001)(2906002)(54906003)(81166006)(446003)(106002)(126002)(476003)(486006)(44832011)(426003)(76176011)(336012)(70586007)(70206006)(36386004)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR02MB5038;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
 MIME-Version: 1.0
-References: <20191017121901.13699-1-kherbst@redhat.com> <20191119214955.GA223696@google.com>
- <CACO55tu+8VeyMw1Lb6QvNspaJm9LDgoRbooVhr0s3v9uBt=feg@mail.gmail.com>
- <20191120101816.GX11621@lahna.fi.intel.com> <CAJZ5v0g4vp1C+zHU5nOVnkGsOjBvLaphK1kK=qAT6b=mK8kpsA@mail.gmail.com>
- <20191120112212.GA11621@lahna.fi.intel.com> <CAJZ5v0in4VSULsfLshHxhNLf+NZxVQM0xx=hzdNa2X3FW=V7DA@mail.gmail.com>
- <CACO55tsjj+xkDjubz1J=fsPecW4H_J8AaBTeaMm+NYjp8Kiq8g@mail.gmail.com> <CAJZ5v0ithxMPK2YxfTUx_Ygpze2FMDJ6LwKwJb2vx89dfgHX_A@mail.gmail.com>
-In-Reply-To: <CAJZ5v0ithxMPK2YxfTUx_Ygpze2FMDJ6LwKwJb2vx89dfgHX_A@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 20 Nov 2019 13:11:36 +0100
-Message-ID: <CAJZ5v0hYLrmFup61kzQL_rUuRy9yb+3L-BdRUGfSKqkGpm-utw@mail.gmail.com>
-Subject: Re: [PATCH v4] pci: prevent putting nvidia GPUs into lower device
- states on certain intel bridges
-To:     Karol Herbst <kherbst@redhat.com>,
-        Mika Westerberg <mika.westerberg@intel.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lyude Paul <lyude@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        Dave Airlie <airlied@gmail.com>,
-        Mario Limonciello <Mario.Limonciello@dell.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 109d125b-3e66-497f-6c05-08d76db2cf7b
+X-MS-TrafficTypeDiagnostic: SN6PR02MB5038:
+X-Microsoft-Antispam-PRVS: <SN6PR02MB50382A642E1FABF5A1AF56AFAF4F0@SN6PR02MB5038.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
+X-Forefront-PRVS: 02272225C5
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: cMJ2x88RAudW8Bvgfxrj8mRnmqcN90L29p3V8kNkxExu/3HezvsEH9sGjSkfUhmFW7VnTKvIevOuNh+UI9L8oMr2PP60Y6ipA2pDc/+443gczspAy1NVZcczQpSJPpZTgiMtlGsgb6/1KBprTcN1ZCpVY0DUtcNMNETWRo768p5ygf3RZi22atXTjFlYlwlY4HHwrQIApc6TuPUCCAx1e4AuL2NoUgfWxc62ziKYNZIJHTRkrGkPrRxOUN7PnUc6hNxea+WIB4EJEl0Ho49Co5aM434/QES/7JlFhKMgb9U7KAKB6pDKwYfk7fqIMxM2SwDyzXIDfL8JTGi/ZGQXfDokojJ6o5aZrT68BIoXvV8lVNlmw2N/biezdyxllDRPYqUVj1Z/Em2lOcTP9VfPuAcCg/YjveJgRy/mkv+dIJ+ImRQmKRxLlpvh5exLmz4L
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Nov 2019 12:11:44.7502
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 109d125b-3e66-497f-6c05-08d76db2cf7b
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR02MB5038
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 1:06 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> On Wed, Nov 20, 2019 at 12:51 PM Karol Herbst <kherbst@redhat.com> wrote:
-> >
-> > On Wed, Nov 20, 2019 at 12:48 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> > >
-> > > On Wed, Nov 20, 2019 at 12:22 PM Mika Westerberg
-> > > <mika.westerberg@intel.com> wrote:
-> > > >
-> > > > On Wed, Nov 20, 2019 at 11:52:22AM +0100, Rafael J. Wysocki wrote:
-> > > > > On Wed, Nov 20, 2019 at 11:18 AM Mika Westerberg
-> > > > > <mika.westerberg@intel.com> wrote:
-> > > > > >
->
-> [cut]
->
-> > > > >
-> > > > > Oh, so does it look like we are trying to work around AML that tried
-> > > > > to work around some problematic behavior in Linux at one point?
-> > > >
-> > > > Yes, it looks like so if I read the ASL right.
-> > >
-> > > OK, so that would call for a DMI-based quirk as the real cause for the
-> > > issue seems to be the AML in question, which means a firmware problem.
-> > >
-> >
-> > And I disagree as this is a linux specific workaround and windows goes
-> > that path and succeeds. This firmware based workaround was added,
-> > because it broke on Linux.
->
-> Apparently so at the time it was added, but would it still break after
-> the kernel changes made since then?
->
-> Moreover, has it not become harmful now?  IOW, wouldn't it work after
-> removing the "Linux workaround" from the AML?
->
-> The only way to verify that I can see would be to run the system with
-> custom ACPI tables without the "Linux workaround" in the AML in
-> question.
+From: Venkatesh Yadav Abbarapu <venkatesh.abbarapu@xilinx.com>
 
-Or running it with acpi_rev_override as suggested by Mika, which
-effectively would be the same thing.
+When can clock is provided from the clock wizard, clock wizard driver
+may not be available when can driver probes resulting to the error
+message "bus clock not found error".
+
+As this error message is not very useful to the end user, skip printing
+in the case of deferred probe.
+
+Signed-off-by: Venkatesh Yadav Abbarapu <venkatesh.abbarapu@xilinx.com>
+Signed-off-by: Srinivas Neeli <srinivas.neeli@xilinx.com>
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+---
+ drivers/net/can/xilinx_can.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/can/xilinx_can.c b/drivers/net/can/xilinx_can.c
+index 4a96e2dd7d77..c5f05b994435 100644
+--- a/drivers/net/can/xilinx_can.c
++++ b/drivers/net/can/xilinx_can.c
+@@ -1772,7 +1772,8 @@ static int xcan_probe(struct platform_device *pdev)
+ 
+ 	priv->bus_clk = devm_clk_get(&pdev->dev, devtype->bus_clk_name);
+ 	if (IS_ERR(priv->bus_clk)) {
+-		dev_err(&pdev->dev, "bus clock not found\n");
++		if (PTR_ERR(priv->bus_clk) != -EPROBE_DEFER)
++			dev_err(&pdev->dev, "bus clock not found\n");
+ 		ret = PTR_ERR(priv->bus_clk);
+ 		goto err_free;
+ 	}
+-- 
+2.7.4
+
