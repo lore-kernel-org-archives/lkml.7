@@ -2,299 +2,144 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C903BC43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:22:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6C70C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:22:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9381122444
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:22:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD1FC2243F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:22:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Xt22LJec"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729128AbfKTLWT (ORCPT
+        id S1729142AbfKTLWo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 06:22:19 -0500
-Received: from mga14.intel.com ([192.55.52.115]:11309 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726689AbfKTLWT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 06:22:19 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Nov 2019 03:22:15 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,221,1571727600"; 
-   d="scan'208";a="215765679"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 20 Nov 2019 03:22:13 -0800
-Received: by lahna (sSMTP sendmail emulation); Wed, 20 Nov 2019 13:22:12 +0200
-Date:   Wed, 20 Nov 2019 13:22:12 +0200
-From:   Mika Westerberg <mika.westerberg@intel.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Karol Herbst <kherbst@redhat.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lyude Paul <lyude@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        Dave Airlie <airlied@gmail.com>,
-        Mario Limonciello <Mario.Limonciello@dell.com>
-Subject: Re: [PATCH v4] pci: prevent putting nvidia GPUs into lower device
- states on certain intel bridges
-Message-ID: <20191120112212.GA11621@lahna.fi.intel.com>
-References: <20191017121901.13699-1-kherbst@redhat.com>
- <20191119214955.GA223696@google.com>
- <CACO55tu+8VeyMw1Lb6QvNspaJm9LDgoRbooVhr0s3v9uBt=feg@mail.gmail.com>
- <20191120101816.GX11621@lahna.fi.intel.com>
- <CAJZ5v0g4vp1C+zHU5nOVnkGsOjBvLaphK1kK=qAT6b=mK8kpsA@mail.gmail.com>
+        Wed, 20 Nov 2019 06:22:44 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:43110 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728376AbfKTLWn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 06:22:43 -0500
+Received: by mail-lj1-f195.google.com with SMTP id y23so27059381ljh.10
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 03:22:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UTkXgjkYRybCH/ZS4RWR8tpgnHj6/1Pw2cuT0ewUYO8=;
+        b=Xt22LJecb0aZixz44RtWTZ5wWdFSf2CFyf9ta6FjFahun+oKUHy7c6hGli6dUFoGKY
+         OhyZQwNIqUpZVWhdcHe8b8hhhlNM9KZN3/6tNwt7ktLmjqqh6pNxhNWhElx/jj+ZgS0b
+         zxzMXq7o/Wa5zT3yxyrdFi0ip1H6bNyE46sC00urjGlxwYV4lx/H/N/PG9zsp6Ayvf6d
+         BIGZL6bId0oK4nnJ6HUmqYOgWf3RvxqA4YoPOAMZ8OIdG+Tksv9fu57thSEI5ClsoZne
+         MrrN7tufYt5azx/hgZocTofRZp4pC1FMkfPWzYcXhCWAjlVAXD4/fAw1v/vsNb4IHU1I
+         hDxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UTkXgjkYRybCH/ZS4RWR8tpgnHj6/1Pw2cuT0ewUYO8=;
+        b=pVD+aT2G4htvBAUZ9ZE3jCnZRyDikcpScyR5aQ14YWnaNuiRWBxVKBVgV8O/kA38E/
+         AyvIB8HpeIyIJJDEupZoB8nxcMrMqutRXwVrkOVtM4JEfQUI0TViBrUAkajBNd3hPp8c
+         LhLE+6DBNZUDyWjPWYAY3nplAJ9GPMwy3tt9+aKuWwNvioTLwsvxEXB9ZdwocQJZ6pc9
+         oZRThufj72zX4DChRYxK6cdH+C/fAArHlE61NYhRZmDt/Rr1JtMndLGA1P7RDGyAEOe3
+         R0MzWtduPiCGcK5yREs5Ei/Ta3Mk70A4a0ROOYDNkNDXJ+ccmrDczmLY925vhssrlURa
+         xw8g==
+X-Gm-Message-State: APjAAAW0qlnVX2+jMM4vvvmzS+2gwevXIAjKfz+lJcUs3s5nHVJU/W4a
+        Jhv042ItmmuPUj5kZ2yKro0sWWnFlZFhl5uAKsSQOg==
+X-Google-Smtp-Source: APXvYqx8/Ld2bcP/DCH7muH6RTT5RJVfqWwIO9KUyYktuYJLrzxNJzvAwt0iX9ypsOo9I33kzcF59aYo5vjIrcGo7to=
+X-Received: by 2002:a2e:b0d3:: with SMTP id g19mr2176648ljl.135.1574248960061;
+ Wed, 20 Nov 2019 03:22:40 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0g4vp1C+zHU5nOVnkGsOjBvLaphK1kK=qAT6b=mK8kpsA@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20191120203434.2a0727b3@canb.auug.org.au>
+In-Reply-To: <20191120203434.2a0727b3@canb.auug.org.au>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Wed, 20 Nov 2019 16:52:28 +0530
+Message-ID: <CA+G9fYufQjPVsDATdyDn+xtxD1FrwnVGKJ+bpVAxvoropJ=7hg@mail.gmail.com>
+Subject: Re: linux-next: Tree for Nov 20
+To:     Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 11:52:22AM +0100, Rafael J. Wysocki wrote:
-> On Wed, Nov 20, 2019 at 11:18 AM Mika Westerberg
-> <mika.westerberg@intel.com> wrote:
-> >
-> > Hi Karol,
-> >
-> > On Tue, Nov 19, 2019 at 11:26:45PM +0100, Karol Herbst wrote:
-> > > On Tue, Nov 19, 2019 at 10:50 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > >
-> > > > [+cc Dave]
-> > > >
-> > > > On Thu, Oct 17, 2019 at 02:19:01PM +0200, Karol Herbst wrote:
-> > > > > Fixes state transitions of Nvidia Pascal GPUs from D3cold into higher device
-> > > > > states.
-> > > > >
-> > > > > v2: convert to pci_dev quirk
-> > > > >     put a proper technical explanation of the issue as a in-code comment
-> > > > > v3: disable it only for certain combinations of intel and nvidia hardware
-> > > > > v4: simplify quirk by setting flag on the GPU itself
-> > > >
-> > > > I have zero confidence that we understand the real problem, but we do
-> > > > need to do something with this.  I'll merge it for v5.5 if we get the
-> > > > minor procedural stuff below straightened out.
-> > > >
-> > >
-> > > Thanks, and I agree with your statement, but at this point I think
-> > > only Intel can help out digging deeper as I see no way to debug this
-> > > further.
-> >
-> > I don't have anything against this patch, as long as the quirk stays
-> > limited to the particular root port leading to the NVIDIA GPU. The
-> > reason why I think it should to be limited is that I'm pretty certain
-> > the problem is not in the root port itself. I have here a KBL based
-> > Thinkpad X1 Carbon 6th gen that can put the TBT controller into D3cold
-> > (it is connected to PCH root port) and it wakes up there just fine, so
-> > don't want to break that.
-> >
-> > Now, PCIe devices cannot go into D3cold all by themselves. They always
-> > need help from the platform side which is ACPI in this case. This is
-> > done by having the device to have _PR3 method that returns one or more
-> > power resources that the OS is supposed to turn off when the device is
-> > put into D3cold. All of that is implemented as form of ACPI methods that
-> > pretty much do the hardware specific things that are outside of PCIe
-> > spec to get the device into D3cold. At high level the _OFF() method
-> > causes the root port to broadcast PME_Turn_Off message that results the
-> > link to enter L2/3 ready, it then asserts PERST, configures WAKE (both
-> > can be GPIOs) and finally removes power (if the link goes into L3,
-> > otherwise it goes into L2).
-> >
-> > I think this is where the problem actually lies - the ASL methods that
-> > are used to put the device into D3cold and back. We know that in Windows
-> > this all works fine so unless Windows quirks the root port the same way
-> > there is another reason behind this.
-> >
-> > In case of Dell XPS 9560 (IIRC that's the machine you have) the
-> > corresponding power resource is called \_SB.PCI0.PEG0.PG00 and its
-> > _ON/_OFF methods end up calling PGON()/PGOF() accordingly. The methods
-> > itself do lots of things and it is hard to follow the dissassembled
-> > ASL which does not have any comments but there are couple of things that
-> > stand out where we may go into a different path. One of them is this in
-> > the PGOF() method:
-> >
-> >    If (((OSYS <= 0x07D9) || ((OSYS == 0x07DF) && (_REV == 0x05))))
-> >
-> > The ((OSYS == 0x07DF) && (_REV == 0x05)) checks specifically for Linux
-> > (see [1] and 18d78b64fddc ("ACPI / init: Make it possible to override
-> > _REV")) so it might be that Dell people tested this at some point in
-> > Linux as well. Added Mario in case he has any ideas.
-> >
-> > Previously I suggested you to try the ACPI method tracing to see what
-> > happens inside PGOF(). Did you have time to try it? It may provide more
-> > information about that is happening inside those methods and hopefully
-> > point us to the root cause.
-> >
-> > Also if you haven't tried already passing acpi_rev_override in the
-> > command line makes the _REV to return 5 so it should go into the "Linux"
-> > path in PGOF().
-> 
-> Oh, so does it look like we are trying to work around AML that tried
-> to work around some problematic behavior in Linux at one point?
+Perf build failed on linux next for i386 and armv7.
 
-Yes, it looks like so if I read the ASL right. The whole method looks
-like below (the full acpidump was shared by Karol in v3 thread) and
-there is similar check in the _ON (PGON) method:
+On Wed, 20 Nov 2019 at 15:04, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi all,
+>
+> Changes since 20191119:
+>
+> The net tree gained a conflict against Linus' tree.
+>
+> Non-merge commits (relative to Linus' tree): 11697
+>  10361 files changed, 506041 insertions(+), 224327 deletions(-)
 
-        Method (PGOF, 1, Serialized)
-        {
-            PIOF = Arg0
-            If ((PIOF == Zero))
-            {
-                If ((SGGP == Zero))
-                {
-                    Return (Zero)
-                }
-            }
-            ElseIf ((PIOF == One))
-            {
-                If ((P1GP == Zero))
-                {
-                    Return (Zero)
-                }
-            }
-            ElseIf ((PIOF == 0x02))
-            {
-                If ((P2GP == Zero))
-                {
-                    Return (Zero)
-                }
-            }
+i386 build failed log,
+---------------------------
+ In file included from libbpf.c:52:0:
+ libbpf.c: In function 'bpf_program__collect_reloc':
+ libbpf_internal.h:59:22: error: format '%lu' expects argument of type
+ 'long unsigned int', but argument 3 has type 'Elf64_Addr {aka long
+long unsigned int}' [-Werror=format=]
+   libbpf_print(level, "libbpf: " fmt, ##__VA_ARGS__); \
+                       ^
+ libbpf_internal.h:62:27: note: in expansion of macro '__pr'
+  #define pr_warn(fmt, ...) __pr(LIBBPF_WARN, fmt, ##__VA_ARGS__)
+                            ^~~~
+ libbpf.c:1874:5: note: in expansion of macro 'pr_warn'
+      pr_warn("bad call relo offset: %lu\n", sym.st_value);
+      ^~~~~~~
+ libbpf.c:1874:38: note: format string is defined here
+      pr_warn("bad call relo offset: %lu\n", sym.st_value);
+                                     ~~^
+                                     %llu
+ Makefile:652: arch/x86/Makefile: No such file or directory
+ cc1: all warnings being treated as errors
 
-            PEBA = \XBAS /* External reference */
-            PDEV = GDEV (PIOF)
-            PFUN = GFUN (PIOF)
-            Name (SCLK, Package (0x03)
-            {
-                One, 
-                0x80, 
-                Zero
-            })
-            If ((CCHK (PIOF, Zero) == Zero))
-            {
-                Return (Zero)
-            }
+ find: unknown predicate `-m32/arch'
 
-            \_SB.PCI0.PEG0.PEGP.LTRE = \_SB.PCI0.PEG0.LREN
-            If ((Arg0 == Zero))
-            {
-                ELC0 = LCT0 /* \_SB_.PCI0.LCT0 */
-                H0VI = S0VI /* \_SB_.PCI0.S0VI */
-                H0DI = S0DI /* \_SB_.PCI0.S0DI */
-                ECP0 = LCP0 /* \_SB_.PCI0.LCP0 */
-            }
-            ElseIf ((Arg0 == One))
-            {
-                ELC1 = LCT1 /* \_SB_.PCI0.LCT1 */
-                H1VI = S1VI /* \_SB_.PCI0.S1VI */
-                H1DI = S1DI /* \_SB_.PCI0.S1DI */
-                ECP1 = LCP1 /* \_SB_.PCI0.LCP1 */
-            }
-            ElseIf ((Arg0 == 0x02))
-            {
-                ELC2 = LCT2 /* \_SB_.PCI0.LCT2 */
-                H2VI = S2VI /* \_SB_.PCI0.S2VI */
-                H2DI = S2DI /* \_SB_.PCI0.S2DI */
-                ECP2 = LCP2 /* \_SB_.PCI0.LCP2 */
-            }
+ Try 'find --help' for more information.
+   CC       perf/1.0-r9/perf-1.0/staticobjs/libbpf_probes.o
+ i686-linaro-linux-gcc: warning: '-x c' after last input file has no effect
+   CC       perf/1.0-r9/perf-1.0/staticobjs/xsk.o
+ i686-linaro-linux-gcc: error: unrecognized command line option
+'-m32/include/uapi/asm-generic/errno.h'
+ i686-linaro-linux-gcc: fatal error: no input files
+ compilation terminated.
 
-            If (((OSYS <= 0x07D9) || ((OSYS == 0x07DF) && (_REV == 
-                0x05))))
-            {
-                If ((PIOF == Zero))
-                {
-                    P0LD = One
-                    TCNT = Zero
-                    While ((TCNT < LDLY))
-                    {
-                        If ((P0LT == 0x08))
-                        {
-                            Break
-                        }
+arm build log:
+------------------
+ Makefile:652: arch/arm/Makefile: No such file or directory
+ In file included from libbpf.c:52:0:
+ libbpf.c: In function 'bpf_program__collect_reloc':
+ libbpf_internal.h:59:22: error: format '%lu' expects argument of type
+ 'long unsigned int', but argument 3 has type 'Elf64_Addr {aka long
+long unsigned int}' [-Werror=format=]
+   libbpf_print(level, "libbpf: " fmt, ##__VA_ARGS__); \
+                       ^
+ libbpf_internal.h:62:27: note: in expansion of macro '__pr'
+  #define pr_warn(fmt, ...) __pr(LIBBPF_WARN, fmt, ##__VA_ARGS__)
+                            ^~~~
+ libbpf.c:1874:5: note: in expansion of macro 'pr_warn'
+      pr_warn("bad call relo offset: %lu\n", sym.st_value);
+      ^~~~~~~
+ libbpf.c:1874:38: note: format string is defined here
+      pr_warn("bad call relo offset: %lu\n", sym.st_value);
+                                     ~~^
+                                     %llu
 
-                        Sleep (0x10)
-                        TCNT += 0x10
-                    }
+ref:
+https://ci.linaro.org/job/openembedded-lkft-linux-next/DISTRO=lkft,MACHINE=intel-core2-32,label=docker-lkft/650/consoleText
+https://ci.linaro.org/job/openembedded-lkft-linux-next/DISTRO=lkft,MACHINE=am57xx-evm,label=docker-lkft/650/consoleText
 
-                    P0RM = One
-                    P0AP = 0x03
-                }
-                ElseIf ((PIOF == One))
-                {
-                    P1LD = One
-                    TCNT = Zero
-                    While ((TCNT < LDLY))
-                    {
-                        If ((P1LT == 0x08))
-                        {
-                            Break
-                        }
-
-                        Sleep (0x10)
-                        TCNT += 0x10
-                    }
-
-                    P1RM = One
-                    P1AP = 0x03
-                }
-                ElseIf ((PIOF == 0x02))
-                {
-                    P2LD = One
-                    TCNT = Zero
-                    While ((TCNT < LDLY))
-                    {
-                        If ((P2LT == 0x08))
-                        {
-                            Break
-                        }
-
-                        Sleep (0x10)
-                        TCNT += 0x10
-                    }
-
-                    P2RM = One
-                    P2AP = 0x03
-                }
-
-                If ((PBGE != Zero))
-                {
-                    If (SBDL (PIOF))
-                    {
-                        MBDL = GMXB (PIOF)
-                        PDUB (PIOF, MBDL)
-                    }
-                }
-            }
-            Else
-            {
-                LKDS (PIOF)
-            }
-
-            If ((DerefOf (SCLK [Zero]) != Zero))
-            {
-                PCRO (0xDC, 0x100C, DerefOf (SCLK [One]))
-                Sleep (0x10)
-            }
-
-            GPPR (PIOF, Zero)
-            If ((OSYS != 0x07D9))
-            {
-                DIWK (PIOF)
-            }
-
-            \_SB.SGOV (0x01010004, Zero)
-            Sleep (0x14)
-            Return (Zero)
-        }
+- Naresh
