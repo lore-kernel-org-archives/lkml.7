@@ -2,124 +2,67 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8302C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 00:10:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D98C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 00:15:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E3DA22440
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 00:10:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n6HD1bl3"
+	by mail.kernel.org (Postfix) with ESMTP id 05ED0222B6
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 00:15:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727579AbfKTAKt (ORCPT
+        id S1727417AbfKTAPZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 19:10:49 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43057 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727390AbfKTAKs (ORCPT
+        Tue, 19 Nov 2019 19:15:25 -0500
+Received: from 216-12-86-13.cv.mvl.ntelos.net ([216.12.86.13]:50208 "EHLO
+        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727226AbfKTAPY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 19:10:48 -0500
-Received: by mail-wr1-f68.google.com with SMTP id n1so25997980wra.10;
-        Tue, 19 Nov 2019 16:10:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=MoB+EnvvzF+TKOzDdDl2FIhJAJ8fgDbMtbJ023hVTI4=;
-        b=n6HD1bl3yqCxiiZi/5cAU7oaqd3YvVeEzm0imWuGoncldGWUBcBJFY+tUYFnUvc6NR
-         ruC3CkPh4rl7UQaou1MLZgqlZ3gbze8sWqx7fvrkYBgjxkDVQkMepCnFoa69p3ufqSus
-         0UzveAt1dil/L3VK6mHkZxeC8Tpo8RuYqm7CgEmHaV/Led8vAg6QXk0ssyyct1K6cubq
-         ByRJ7MYJ//J4apv+UBVkJqaTqEGtlYBCH+NuFPf9wSOMh0e100+aKvmfHEWH5/qz8Quw
-         4QZz3p3h3qxHu15IRDch1dTPst+dBtvqdgxX9PZN+nHq/eBTMYhUyaewgWLIZgXSWwHB
-         MQFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=MoB+EnvvzF+TKOzDdDl2FIhJAJ8fgDbMtbJ023hVTI4=;
-        b=OmgKKv1GwtnrMMa2UQ1Uu6B2VJ7vdkHF6COUOfjJBcyul9nEHqUKXR9jfjq9/QzDNz
-         n2RHfmGMd+KY2EBkirFnBPXXPd/fVNjgCoheK9d0bamkZwrY9+5pKjHVMtItPC5bsMBq
-         DG5B6WPo5sQO3WNpbX4Tw3P7OQbTKq6bEQFVzGR2kE0kzkei+rigBEBNmpj4IPplq9TH
-         FX5Pfe/tpVCAsDBZFuVmnK14jmcnEe8mku0+8T1S/SEGWH7IerH9YXXKoWEOFrpO8uJr
-         ZULIdx6a+cqHtq/2XUAy3mgl2de43+8fL0PKZitRrF62TOKK6e5wwPBMnIRCmOOJMfP3
-         Kqrw==
-X-Gm-Message-State: APjAAAVXK0ZPPEVB2oAi1+pSwLhj7Tsp3K/Z+jvEUtnosAyYzThMpu95
-        AymOr/4Ih1qigqcpdoJrh4poli55
-X-Google-Smtp-Source: APXvYqyhCHFze67C4bKsGwkObAnuEKi1rv6KW1kAORRxBjQtICjr3+zanSk3P0TNEvtjwmazRR28VA==
-X-Received: by 2002:adf:c401:: with SMTP id v1mr90873wrf.375.1574208645317;
-        Tue, 19 Nov 2019 16:10:45 -0800 (PST)
-Received: from localhost.localdomain ([2a02:a03f:40e1:9900:5dce:1599:e3b5:7d61])
-        by smtp.gmail.com with ESMTPSA id r25sm4781457wmh.6.2019.11.19.16.10.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Nov 2019 16:10:44 -0800 (PST)
-From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        netdev@vger.kernel.org
-Subject: [PATCH] xsk: fix xsk_poll()'s return type
-Date:   Wed, 20 Nov 2019 01:10:42 +0100
-Message-Id: <20191120001042.30830-1-luc.vanoostenryck@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        Tue, 19 Nov 2019 19:15:24 -0500
+Received: from dalias by brightrain.aerifal.cx with local (Exim 3.15 #2)
+        id 1iXDeU-0006sP-00; Wed, 20 Nov 2019 00:15:22 +0000
+Date:   Tue, 19 Nov 2019 19:15:22 -0500
+From:   Rich Felker <dalias@libc.org>
+To:     linux-fsdevel@vger.kernel.org
+Cc:     musl@lists.openwall.com, linux-kernel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org
+Subject: getdents64 lost direntries with SMB/NFS and buffer size < unknown
+ threshold
+Message-ID: <20191120001522.GA25139@brightrain.aerifal.cx>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-xsk_poll() is defined as returning 'unsigned int' but the
-.poll method is declared as returning '__poll_t', a bitwise type.
+An issue was reported today on the Alpine Linux tracker at
+https://gitlab.alpinelinux.org/alpine/aports/issues/10960 regarding
+readdir results from SMB/NFS shares with musl libc.
 
-Fix this by using the proper return type and using the EPOLL
-constants instead of the POLL ones, as required for __poll_t.
+After a good deal of analysis, we determined the root cause to be that
+the second and subsequent calls to getdents64 are dropping/skipping
+direntries (that have not yet been deleted) when some entries were
+deleted following the previous call. The issue appears to happen only
+when the buffer size passed to getdents64 is below some threshold
+greater than 2k (the size musl uses) but less than 32k (the size glibc
+uses, with which we were unable to reproduce the issue).
 
-CC: Björn Töpel <bjorn.topel@intel.com>
-CC: Magnus Karlsson <magnus.karlsson@intel.com>
-CC: Jonathan Lemon <jonathan.lemon@gmail.com>
-CC: netdev@vger.kernel.org
-Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
----
- net/xdp/xsk.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+My guess at the mechanism of failure is that the kernel has cached
+some entries which it obtained from the FS server based on whatever
+its preferred transfer size is, but didn't yet pass them to userspace
+due to limited buffer space, and then purged the buffer when resuming
+getdents64 after some entries were deleted for reasons related to the
+changes made way back in 0c0308066ca5 (NFS: Fix spurious readdir
+cookie loop messages). If so, any such purge likely needs to be
+delayed until already-buffered results are read, and there may be
+related buggy interactions with seeking that need to be examined.
 
-diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
-index 9044073fbf22..7b59f36eec0d 100644
---- a/net/xdp/xsk.c
-+++ b/net/xdp/xsk.c
-@@ -418,10 +418,10 @@ static int xsk_sendmsg(struct socket *sock, struct msghdr *m, size_t total_len)
- 	return __xsk_sendmsg(sk);
- }
- 
--static unsigned int xsk_poll(struct file *file, struct socket *sock,
-+static __poll_t xsk_poll(struct file *file, struct socket *sock,
- 			     struct poll_table_struct *wait)
- {
--	unsigned int mask = datagram_poll(file, sock, wait);
-+	__poll_t mask = datagram_poll(file, sock, wait);
- 	struct sock *sk = sock->sk;
- 	struct xdp_sock *xs = xdp_sk(sk);
- 	struct net_device *dev;
-@@ -443,9 +443,9 @@ static unsigned int xsk_poll(struct file *file, struct socket *sock,
- 	}
- 
- 	if (xs->rx && !xskq_empty_desc(xs->rx))
--		mask |= POLLIN | POLLRDNORM;
-+		mask |= EPOLLIN | EPOLLRDNORM;
- 	if (xs->tx && !xskq_full_desc(xs->tx))
--		mask |= POLLOUT | POLLWRNORM;
-+		mask |= EPOLLOUT | EPOLLWRNORM;
- 
- 	return mask;
- }
--- 
-2.24.0
+The to/cc for this message are just my best guesses. Please cc anyone
+I missed who should be included when replying, and keep me on cc since
+I'm not subscribed to any of these lists but the musl one.
 
+Rich
