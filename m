@@ -2,108 +2,173 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51138C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:36:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4A5EC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:36:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24C74219FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:36:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D1BE224D2
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:36:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574257018;
+	bh=sCdWv2rxOPBI3Dgrenje3IUlj7XQd4CfuHm+t4ZgrMQ=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=QTzBCX2dOsvwzFGodF5rE4gWWSANr3fsdEsRF0y08bADzs6Y5KbxcFYglAatHwuna
+	 KB/8Q0fv5yoUiukdzjORpQ9EqxST1SruWQrg9os6QLMLQbMLLH2NAV/Yf2uWPNDrTr
+	 LxAVp6zDtEfntB0xJpCBoUlDi404ed6gStjMCCLM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729785AbfKTNgz (ORCPT
+        id S1730859AbfKTNg5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 08:36:55 -0500
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:54770 "EHLO
-        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729766AbfKTNgv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 08:36:51 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R271e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=wenyang@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0TieLUG2_1574257006;
-Received: from IT-C02W23QPG8WN.local(mailfrom:wenyang@linux.alibaba.com fp:SMTPD_---0TieLUG2_1574257006)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 20 Nov 2019 21:36:46 +0800
-Subject: Re: [GIT PULL 1/3] intel_th: Fix a double put_device() in error path
-To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        stable@vger.kernel.org
-References: <20191120130806.44028-1-alexander.shishkin@linux.intel.com>
- <20191120130806.44028-2-alexander.shishkin@linux.intel.com>
-From:   Wen Yang <wenyang@linux.alibaba.com>
-Message-ID: <2e648871-b7f7-c77e-6a22-3c26ad90633b@linux.alibaba.com>
-Date:   Wed, 20 Nov 2019 21:36:46 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.1.1
-MIME-Version: 1.0
-In-Reply-To: <20191120130806.44028-2-alexander.shishkin@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+        Wed, 20 Nov 2019 08:36:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43600 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730844AbfKTNgy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 08:36:54 -0500
+Received: from localhost.localdomain (unknown [118.189.143.39])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB6D122529;
+        Wed, 20 Nov 2019 13:36:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574257014;
+        bh=sCdWv2rxOPBI3Dgrenje3IUlj7XQd4CfuHm+t4ZgrMQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=HMToc/DowG1VxzXI37EILfC9iWgvvr7k6I4d7zrd0GQtjDTKkO3SN3KIwc+4wuAMz
+         voRTzL7td0RdBo1vRS0IfsJeR96SsCAF0MYiWPjfxwEXwMeJPHM3aRbc3WhIOsDlMA
+         W86AOxm/KIxTQO7UBH6U9M+L90IExo05xSVUBmpQ=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH] platform/x86: Fix Kconfig indentation
+Date:   Wed, 20 Nov 2019 21:36:50 +0800
+Message-Id: <20191120133650.11770-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Adjust indentation from spaces to tab (+optional two spaces) as in
+coding style with command like:
+	$ sed -e 's/^        /\t/' -i */Kconfig
 
-On 2019/11/20 9:08 下午, Alexander Shishkin wrote:
-> Commit a753bfcfdb1f ("intel_th: Make the switch allocate its subdevices")
-> factored out intel_th_subdevice_alloc() from intel_th_populate(), but got
-> the error path wrong, resulting in two instances of a double put_device()
-> on a freshly initialized, but not 'added' device.
->
-> Fix this by only doing one put_device() in the error path.
->
-> Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Fixes: a753bfcfdb1f ("intel_th: Make the switch allocate its subdevices")
-> Reported-by: Wen Yang <wenyang@linux.alibaba.com>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: stable@vger.kernel.org # v4.14+
-> ---
->   drivers/hwtracing/intel_th/core.c | 8 ++------
->   1 file changed, 2 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/hwtracing/intel_th/core.c b/drivers/hwtracing/intel_th/core.c
-> index d5c1821b31c6..0dfd97bbde9e 100644
-> --- a/drivers/hwtracing/intel_th/core.c
-> +++ b/drivers/hwtracing/intel_th/core.c
-> @@ -649,10 +649,8 @@ intel_th_subdevice_alloc(struct intel_th *th,
->   	}
->   
->   	err = intel_th_device_add_resources(thdev, res, subdev->nres);
-> -	if (err) {
-> -		put_device(&thdev->dev);
-> +	if (err)
->   		goto fail_put_device;
-> -	}
->   
->   	if (subdev->type == INTEL_TH_OUTPUT) {
->   		if (subdev->mknode)
-> @@ -667,10 +665,8 @@ intel_th_subdevice_alloc(struct intel_th *th,
->   	}
->   
->   	err = device_add(&thdev->dev);
-> -	if (err) {
-> -		put_device(&thdev->dev);
-> +	if (err)
->   		goto fail_free_res;
-> -	}
->   
->   	/* need switch driver to be loaded to enumerate the rest */
->   	if (subdev->type == INTEL_TH_SWITCH && !req) {
-device_add() has increased the reference count,
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ drivers/platform/x86/Kconfig | 48 ++++++++++++++++++------------------
+ 1 file changed, 24 insertions(+), 24 deletions(-)
 
-so when it returns an error, an additional call to put_device()
-
-is needed here to reduce the reference count.
-
---
-
-Regards,
-
-Wen
-
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 27d5b40fb717..ef49c8258ce6 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -28,7 +28,7 @@ config ACER_WMI
+ 	depends on ACPI_WMI
+ 	select INPUT_SPARSEKMAP
+ 	# Acer WMI depends on ACPI_VIDEO when ACPI is enabled
+-        select ACPI_VIDEO if ACPI
++	select ACPI_VIDEO if ACPI
+ 	---help---
+ 	  This is a driver for newer Acer (and Wistron) laptops. It adds
+ 	  wireless radio and bluetooth control, and on some laptops,
+@@ -38,18 +38,18 @@ config ACER_WMI
+ 	  here.
+ 
+ config ACER_WIRELESS
+-        tristate "Acer Wireless Radio Control Driver"
+-        depends on ACPI
+-        depends on INPUT
+-        ---help---
+-          The Acer Wireless Radio Control handles the airplane mode hotkey
+-          present on new Acer laptops.
++	tristate "Acer Wireless Radio Control Driver"
++	depends on ACPI
++	depends on INPUT
++	---help---
++	  The Acer Wireless Radio Control handles the airplane mode hotkey
++	  present on new Acer laptops.
+ 
+-          Say Y or M here if you have an Acer notebook with an airplane mode
+-          hotkey.
++	  Say Y or M here if you have an Acer notebook with an airplane mode
++	  hotkey.
+ 
+-          If you choose to compile this driver as a module the module will be
+-          called acer-wireless.
++	  If you choose to compile this driver as a module the module will be
++	  called acer-wireless.
+ 
+ config ACERHDF
+ 	tristate "Acer Aspire One temperature and fan driver"
+@@ -285,17 +285,17 @@ config FUJITSU_TABLET
+        depends on ACPI
+        depends on INPUT
+        ---help---
+-         This is a driver for tablets built by Fujitsu:
++	 This is a driver for tablets built by Fujitsu:
+ 
+-           * Lifebook P1510/P1610/P1620/Txxxx
+-           * Stylistic ST5xxx
+-           * Possibly other Fujitsu tablet models
++	   * Lifebook P1510/P1610/P1620/Txxxx
++	   * Stylistic ST5xxx
++	   * Possibly other Fujitsu tablet models
+ 
+-         It adds support for the panel buttons, docking station detection,
+-         tablet/notebook mode detection for convertible and
+-         orientation detection for docked slates.
++	 It adds support for the panel buttons, docking station detection,
++	 tablet/notebook mode detection for convertible and
++	 orientation detection for docked slates.
+ 
+-         If you have a Fujitsu convertible or slate, say Y or M here.
++	 If you have a Fujitsu convertible or slate, say Y or M here.
+ 
+ config AMILO_RFKILL
+ 	tristate "Fujitsu-Siemens Amilo rfkill support"
+@@ -1015,8 +1015,8 @@ config INTEL_MFLD_THERMAL
+        tristate "Thermal driver for Intel Medfield platform"
+        depends on MFD_INTEL_MSIC && THERMAL
+        help
+-         Say Y here to enable thermal driver support for the  Intel Medfield
+-         platform.
++	 Say Y here to enable thermal driver support for the  Intel Medfield
++	 platform.
+ 
+ config INTEL_IPS
+ 	tristate "Intel Intelligent Power Sharing"
+@@ -1123,7 +1123,7 @@ config MXM_WMI
+        tristate "WMI support for MXM Laptop Graphics"
+        depends on ACPI_WMI
+        ---help---
+-          MXM is a standard for laptop graphics cards, the WMI interface
++	  MXM is a standard for laptop graphics cards, the WMI interface
+ 	  is required for switchable nvidia graphics machines
+ 
+ config INTEL_OAKTRAIL
+@@ -1158,7 +1158,7 @@ config APPLE_GMUX
+ 	  control is supported by the driver.
+ 
+ config INTEL_RST
+-        tristate "Intel Rapid Start Technology Driver"
++	tristate "Intel Rapid Start Technology Driver"
+ 	depends on ACPI
+ 	---help---
+ 	  This driver provides support for modifying paramaters on systems
+@@ -1170,7 +1170,7 @@ config INTEL_RST
+ 	  as usual.
+ 
+ config INTEL_SMARTCONNECT
+-        tristate "Intel Smart Connect disabling driver"
++	tristate "Intel Smart Connect disabling driver"
+ 	depends on ACPI
+ 	---help---
+ 	  Intel Smart Connect is a technology intended to permit devices to
+-- 
+2.17.1
 
