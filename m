@@ -2,56 +2,78 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49107C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 14:08:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9861CC43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 14:10:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26E692230F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 14:08:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F3FB224B2
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 14:10:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574259002;
+	bh=WFdws+SnK1zQYzyDACA7oOkYtJ9MqizxzDeS+6lUkxs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YskxfKn5ezCsIYvkqNhBRqWZk/X4Xd6GQoKN2cObMDovZXzxZVzsr3HXG2uwh+nSO
+	 fYekjdugIUJanYsa/VOnMhMQc2AtTb+6yOJDXW98GuKXsOLebrqZ5i8ryMg9VIM+im
+	 M+PNSqbRnKTmLEH/5UGmgZSrgNV7BMI8s8MtctNk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730706AbfKTOIa (ORCPT
+        id S1731130AbfKTOKB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 09:08:30 -0500
-Received: from nautica.notk.org ([91.121.71.147]:41336 "EHLO nautica.notk.org"
+        Wed, 20 Nov 2019 09:10:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728541AbfKTOI3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 09:08:29 -0500
-X-Greylist: delayed 387 seconds by postgrey-1.27 at vger.kernel.org; Wed, 20 Nov 2019 09:08:29 EST
-Received: by nautica.notk.org (Postfix, from userid 1001)
-        id 4ED5BC009; Wed, 20 Nov 2019 15:02:01 +0100 (CET)
-Date:   Wed, 20 Nov 2019 15:01:46 +0100
-From:   Dominique Martinet <asmadeus@codewreck.org>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Eric Van Hensbergen <ericvh@gmail.com>,
-        Latchesar Ionkov <lucho@ionkov.net>,
-        v9fs-developer@lists.sourceforge.net
-Subject: Re: [PATCH] 9p: Fix Kconfig indentation
-Message-ID: <20191120140146.GA21065@nautica>
-References: <20191120134340.16770-1-krzk@kernel.org>
+        id S1727794AbfKTOKB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 09:10:01 -0500
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A54D92230F;
+        Wed, 20 Nov 2019 14:10:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574259000;
+        bh=WFdws+SnK1zQYzyDACA7oOkYtJ9MqizxzDeS+6lUkxs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UxzSKJfOr7rSNFaJ23Xs168qJgB2iTpMNCdi5Pv9DZ6KYltlVlg/H0aqDr1qlk8do
+         9M/3PmakQkyrfhyX0Jd1SBMpm+dZgJHqJHJT1MfoSNlEJal1GucKqUB5/pA3rFrfr6
+         4UF3lAwHg45ENATmDt3MpR3lypBes+i8oVZkCPe4=
+Date:   Wed, 20 Nov 2019 09:09:59 -0500
+From:   Sasha Levin <sashal@kernel.org>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mikelley@microsoft.com, david@redhat.com, arnd@arndb.de,
+        bp@alien8.de, daniel.lezcano@linaro.org, hpa@zytor.com,
+        mingo@redhat.com, tglx@linutronix.de, x86@kernel.org,
+        Alexander.Levin@microsoft.com, vkuznets@redhat.com,
+        linux-arch@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] Implement hv_is_hibernation_supported() and
+ enhance hv_balloon for hibernation
+Message-ID: <20191120140959.GG16867@sasha-vm>
+References: <1574234165-49066-1-git-send-email-decui@microsoft.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20191120134340.16770-1-krzk@kernel.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <1574234165-49066-1-git-send-email-decui@microsoft.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Krzysztof Kozlowski wrote on Wed, Nov 20, 2019:
-> Adjust indentation from spaces to tab (+optional two spaces) as in
-> coding style with command like:
-> 	$ sed -e 's/^        /\t/' -i */Kconfig
+On Tue, Nov 19, 2019 at 11:16:03PM -0800, Dexuan Cui wrote:
+>v2 is actually the same as v1. This is just a resend.
+>
+>I suggest both the patches should go through the Hyper-V tree:
+>https://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git/log/?h=hyperv-next
+>because the first patch is needed by the second one.
+>
+>This first patch doesn't conflict with any patch in the tip.git tree.
 
-I take it janitors weren't interested in these?
-
-Since it's just 9p I can take it, but if this is the only patch I get it
-might take a couple of months to get in.
-Will do depending on your answer.
+Queued for hyperv-next, thanks!
 
 -- 
-Dominique
+Thanks,
+Sasha
