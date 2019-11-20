@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD096C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:44:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7127C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:44:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD68220674
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:44:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B51A720674
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:44:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732346AbfKTPoQ (ORCPT
+        id S1732364AbfKTPoU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 10:44:16 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:52790 "EHLO
+        Wed, 20 Nov 2019 10:44:20 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:52722 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730024AbfKTPkT (ORCPT
+        by vger.kernel.org with ESMTP id S1729972AbfKTPkS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 10:40:19 -0500
+        Wed, 20 Nov 2019 10:40:18 -0500
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iXS5U-0004bK-Tp; Wed, 20 Nov 2019 15:40:13 +0000
+        id 1iXS5U-0004bM-TA; Wed, 20 Nov 2019 15:40:13 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iXS5T-0004I5-PY; Wed, 20 Nov 2019 15:40:11 +0000
+        id 1iXS5T-0004IF-Rv; Wed, 20 Nov 2019 15:40:11 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "David Binderman" <dcb314@hotmail.com>,
-        "Ian Abbott" <abbotti@mev.co.uk>,
+        "Alan Stern" <stern@rowland.harvard.edu>,
         "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-Date:   Wed, 20 Nov 2019 15:37:43 +0000
-Message-ID: <lsq.1574264230.532785984@decadent.org.uk>
+Date:   Wed, 20 Nov 2019 15:37:45 +0000
+Message-ID: <lsq.1574264230.71408678@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 33/83] staging: comedi: dt3000: Fix signed integer
- overflow 'divider * base'
+Subject: [PATCH 3.16 35/83] USB: core: Fix races in character device
+ registration and deregistraion
 In-Reply-To: <lsq.1574264230.280218497@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,48 +56,87 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Ian Abbott <abbotti@mev.co.uk>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-commit b4d98bc3fc93ec3a58459948a2c0e0c9b501cd88 upstream.
+commit 303911cfc5b95d33687d9046133ff184cf5043ff upstream.
 
-In `dt3k_ns_to_timer()` the following lines near the end of the function
-result in a signed integer overflow:
+The syzbot fuzzer has found two (!) races in the USB character device
+registration and deregistration routines.  This patch fixes the races.
 
-	prescale = 15;
-	base = timer_base * (1 << prescale);
-	divider = 65535;
-	*nanosec = divider * base;
+The first race results from the fact that usb_deregister_dev() sets
+usb_minors[intf->minor] to NULL before calling device_destroy() on the
+class device.  This leaves a window during which another thread can
+allocate the same minor number but will encounter a duplicate name
+error when it tries to register its own class device.  A typical error
+message in the system log would look like:
 
-(`divider`, `base` and `prescale` are type `int`, `timer_base` and
-`*nanosec` are type `unsigned int`.  The value of `timer_base` will be
-either 50 or 100.)
+    sysfs: cannot create duplicate filename '/class/usbmisc/ldusb0'
 
-The main reason for the overflow is that the calculation for `base` is
-completely wrong.  It should be:
+The patch fixes this race by destroying the class device first.
 
-	base = timer_base * (prescale + 1);
+The second race is in usb_register_dev().  When that routine runs, it
+first allocates a minor number, then drops minor_rwsem, and then
+creates the class device.  If the device creation fails, the minor
+number is deallocated and the whole routine returns an error.  But
+during the time while minor_rwsem was dropped, there is a window in
+which the minor number is allocated and so another thread can
+successfully open the device file.  Typically this results in
+use-after-free errors or invalid accesses when the other thread closes
+its open file reference, because the kernel then tries to release
+resources that were already deallocated when usb_register_dev()
+failed.  The patch fixes this race by keeping minor_rwsem locked
+throughout the entire routine.
 
-which matches an earlier instance of this calculation in the same
-function.
-
-Reported-by: David Binderman <dcb314@hotmail.com>
-Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
-Link: https://lore.kernel.org/r/20190812111517.26803-1-abbotti@mev.co.uk
+Reported-and-tested-by: syzbot+30cf45ebfe0b0c4847a1@syzkaller.appspotmail.com
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.1908121607590.1659-100000@iolanthe.rowland.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/staging/comedi/drivers/dt3000.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/core/file.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
---- a/drivers/staging/comedi/drivers/dt3000.c
-+++ b/drivers/staging/comedi/drivers/dt3000.c
-@@ -405,7 +405,7 @@ static int dt3k_ns_to_timer(unsigned int
+--- a/drivers/usb/core/file.c
++++ b/drivers/usb/core/file.c
+@@ -191,9 +191,10 @@ int usb_register_dev(struct usb_interfac
+ 		intf->minor = minor;
+ 		break;
  	}
+-	up_write(&minor_rwsem);
+-	if (intf->minor < 0)
++	if (intf->minor < 0) {
++		up_write(&minor_rwsem);
+ 		return -EXFULL;
++	}
  
- 	prescale = 15;
--	base = timer_base * (1 << prescale);
-+	base = timer_base * (prescale + 1);
- 	divider = 65535;
- 	*nanosec = divider * base;
- 	return (prescale << 16) | (divider);
+ 	/* create a usb class device for this usb interface */
+ 	snprintf(name, sizeof(name), class_driver->name, minor - minor_base);
+@@ -206,12 +207,11 @@ int usb_register_dev(struct usb_interfac
+ 				      MKDEV(USB_MAJOR, minor), class_driver,
+ 				      "%s", temp);
+ 	if (IS_ERR(intf->usb_dev)) {
+-		down_write(&minor_rwsem);
+ 		usb_minors[minor] = NULL;
+ 		intf->minor = -1;
+-		up_write(&minor_rwsem);
+ 		retval = PTR_ERR(intf->usb_dev);
+ 	}
++	up_write(&minor_rwsem);
+ 	return retval;
+ }
+ EXPORT_SYMBOL_GPL(usb_register_dev);
+@@ -237,12 +237,12 @@ void usb_deregister_dev(struct usb_inter
+ 		return;
+ 
+ 	dev_dbg(&intf->dev, "removing %d minor\n", intf->minor);
++	device_destroy(usb_class->class, MKDEV(USB_MAJOR, intf->minor));
+ 
+ 	down_write(&minor_rwsem);
+ 	usb_minors[intf->minor] = NULL;
+ 	up_write(&minor_rwsem);
+ 
+-	device_destroy(usb_class->class, MKDEV(USB_MAJOR, intf->minor));
+ 	intf->usb_dev = NULL;
+ 	intf->minor = -1;
+ 	destroy_usb_class();
 
