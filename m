@@ -2,84 +2,77 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61043C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 18:51:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7771EC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 18:54:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 306C220721
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 18:51:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42F3E20643
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 18:54:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BCDJYM3f"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t+0eJWav"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727318AbfKTSvN (ORCPT
+        id S1727003AbfKTSyI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 13:51:13 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:37484 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726023AbfKTSvM (ORCPT
+        Wed, 20 Nov 2019 13:54:08 -0500
+Received: from mail-wr1-f52.google.com ([209.85.221.52]:35176 "EHLO
+        mail-wr1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726236AbfKTSyH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 13:51:12 -0500
-Received: by mail-pl1-f196.google.com with SMTP id bb5so194398plb.4
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 10:51:12 -0800 (PST)
+        Wed, 20 Nov 2019 13:54:07 -0500
+Received: by mail-wr1-f52.google.com with SMTP id s5so1211115wrw.2
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 10:54:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=mn+nCBQ8MjgT+fYEd4BfZVfrpR1Vy2KWBRbsCtWJECg=;
-        b=BCDJYM3fK8xymWgfzI2Qds6ZpSjZqAQlDES//MqsDNY8WXRgBmOUZpFTAH9Md4r542
-         LsmIYpY+/sDVEbSoqoninE1aCmWqcg5LO40xEtapuYot+yixhXxJzhEFSwSWKrzCynOI
-         AVqG7XDEBLzLHS+GJOLPKetMcG0ympwwaM/Z4=
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=JptNQ6so/9L3uvOwNdnkFnNevzjTCJ/2Jz7F6P16UNE=;
+        b=t+0eJWavqPUHbmxDSFHnMGlmo9Q3X+wlZx5uhAfbHsAyeYo0VVf7Y8pTOy++2yUZ4Z
+         phaEFG/Ck1KeN8ThPLqr9Ozs9/ITN4nVY7IRsfQ1ookLfhAwdgnpiaugBiXyhD6FIJjN
+         Lme6gu4ys5MP4bpj8PDqcZph0uoziTKcrOKRIE2eACdLa1ESGUDR81aP3wc6ana1LDST
+         jFRm89AcHzBzsm9juUURKOIduF+D6NoWBKNaUseZRnD7E92hCGrMT99hc7YQbBmrAn7b
+         dYzffqSjtrfyptP5AZJOc8JtkNK8dGjxF8ZaHJvMS9movSDlDjco4eJcWE9lWRaQPeR2
+         kHZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=mn+nCBQ8MjgT+fYEd4BfZVfrpR1Vy2KWBRbsCtWJECg=;
-        b=RdG6SbhRgU7K+r0ntvqTEZAj7L+GLTDvFy/BIQ75dETwEg2Og+clJhK26GI8BKEm1E
-         GVDyw2kLvo0agKcFUBXclyyKsI6RjWZUtbz+2gor2KSC0tBR9AALcsHEAJf45nC3D/jG
-         MRSTT51+KLm8PdswOJWS1UT1+zKGURyFhXyhzJtUymeB7HQWnAXPkW9TcI5WbHxtlwb2
-         vcn6XEWMAT+tt57RGZGMjFR7N/L6hiI++al1jMWKCkkjxqBgVjuJZaMMULjNI3Eql3PS
-         MOxzwLFR9pu9EDFVLQr7atbeSTqGvYwHFIQJaa/34yffanSGt4MHlye4FSgFLzQVMurV
-         nvng==
-X-Gm-Message-State: APjAAAUV77trL9IKgeeQVz7bSaxAX7/jkiWzn3JpRLQ0VkRqe5ErsZaQ
-        /ppWE+JIqqC7ZY7/5vCxUKziMg==
-X-Google-Smtp-Source: APXvYqzFi23pyUkvMFe0Ie/Eu60vm+BM13HMViW37nMsXp1BESp6LP52/K0Kga/co6nHh+jfQ8PYqQ==
-X-Received: by 2002:a17:902:7c04:: with SMTP id x4mr4547952pll.0.1574275872166;
-        Wed, 20 Nov 2019 10:51:12 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id t15sm31526082pgb.0.2019.11.20.10.51.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Nov 2019 10:51:11 -0800 (PST)
-Date:   Wed, 20 Nov 2019 10:51:10 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Jason Yan <yanaijie@huawei.com>
-Cc:     mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org,
-        diana.craciun@nxp.com, christophe.leroy@c-s.fr,
-        benh@kernel.crashing.org, paulus@samba.org, npiggin@gmail.com,
-        kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org,
-        oss@buserror.net
-Subject: Re: [PATCH 0/6] implement KASLR for powerpc/fsl_booke/64
-Message-ID: <201911201050.9182A9DC@keescook>
-References: <20191115093209.26434-1-yanaijie@huawei.com>
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=JptNQ6so/9L3uvOwNdnkFnNevzjTCJ/2Jz7F6P16UNE=;
+        b=SN5pJ/g4tQPHy3uJx7uO6BrE2MQ5m++Fu/KQ25/lqcQ7ybAG5jhkRVi0yDJNnU47vX
+         5Y6nNaHlFIy199bQVw1ePuzr23XwKGxPfT2NquAW8CQEddB/vmhnj3TuKLNMzNWniz1F
+         6cGAqJIR4LSmml82/ryVug630ekKNrOEIaBmydXtMjdA/uYWkjh4tzMPb+3p1yC31VUO
+         FLiK64ANxr7zgZGZkD6igcOomlWL6PMSajvJNx2jr1yo/G124atWlxDGwGkBhwAkUhY1
+         fYZ9aMW1//YizFnpw8M1KzWX13G4BgJLoRo2KbbIQu0kDTc91MwqMXtEKUAXEHqX5RPR
+         oJmw==
+X-Gm-Message-State: APjAAAWB1/Da/HaG2tt4+p3XtWfE+JlReF4b5kHORIrt890ZJYeKqwp4
+        HkvjRDqqUpidOU6RF8eD2p6Bqj8dOemk6RbK4a3JSdio
+X-Google-Smtp-Source: APXvYqxNhMGn8X0oE8DK0vvVrDFrzMq+rVAJfU7ecUReQ78bj7TF5i1/4tWwbSd2uL3jvJ/1wcaMKmciD/uKLsA1DSw=
+X-Received: by 2002:adf:f308:: with SMTP id i8mr5319695wro.319.1574276045747;
+ Wed, 20 Nov 2019 10:54:05 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191115093209.26434-1-yanaijie@huawei.com>
+From:   Pouneh Aghababazadeh <paghababazadeh@gmail.com>
+Date:   Wed, 20 Nov 2019 10:53:54 -0800
+Message-ID: <CAO0y-hsg-CJCgbaJr7JMVKZkmKakVnpZCq_4YPtczhX2f9nsbw@mail.gmail.com>
+Subject: Question about creating EVM keys
+To:     linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 15, 2019 at 05:32:03PM +0800, Jason Yan wrote:
-> This is a try to implement KASLR for Freescale BookE64 which is based on
-> my earlier implementation for Freescale BookE32:
-> https://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=131718
+Hi all,
 
-Whee! :) I've updated https://github.com/KSPP/linux/issues/3 with a link
-to this current series.
+I'm trying to experiment with user keys in EVM per the instructions
+here: https://sourceforge.net/p/linux-ima/wiki/Home/#creating-trusted-and-evm-encrypted-keys
+(the second block, for systems without TPM/don't have TPM ownership).
 
--- 
-Kees Cook
+However, I'm getting the following error. Can you help me with this?
+
+$ su -c 'keyctl pipe `keyctl search @u user kmk-user` > /etc/keys/kmk-user.blob'
+Password:
+keyctl_read_alloc: Permission denied
+
+Thanks,
+Pouneh
