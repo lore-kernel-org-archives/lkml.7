@@ -2,293 +2,213 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EE93C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:32:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A1ABC43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:32:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F18252243F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:32:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0016322444
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:32:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=flowbird.group header.i=@flowbird.group header.b="L7/mperN"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="V24960KM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729215AbfKTLcJ (ORCPT
+        id S1729229AbfKTLcp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 06:32:09 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:54256 "EHLO
+        Wed, 20 Nov 2019 06:32:45 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:40632 "EHLO
         mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727880AbfKTLcJ (ORCPT
+        with ESMTP id S1727900AbfKTLco (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 06:32:09 -0500
-Received: by mail-wm1-f65.google.com with SMTP id u18so6618640wmc.3
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 03:32:06 -0800 (PST)
+        Wed, 20 Nov 2019 06:32:44 -0500
+Received: by mail-wm1-f65.google.com with SMTP id y5so1238358wmi.5
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 03:32:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=flowbird.group; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=Kd7NEUJnheTmaqYs2EA0DnTQEVPwxxrAK+7mAwuEhA4=;
-        b=L7/mperNHBYUfM3NQpwdvitiyyGAIMXGgCGpYfmkIDu9MFUncpNu2GAb5D1vulsrNa
-         jnv/xd3+AK2OOQAWY4H8RCbkIeYKk7RsjwbMcP0fIDc9ox73kwFiOsRwsWTHiUU6n4e1
-         bumcT3sRFdaS18hSGkatImDK3Mz6nusTpc5Xv+YtcGVTEQnokWti57nOGVhObjYEfWuB
-         scr+PqCvA/zSbUqp88gOX1re7qZNE3qBUOi7QXOJDWAE+3V/Gra6KWtgQC+D1Cjr4Qqc
-         Hxfb0/TDI5UEXspIWj8NE1IiHlhgH1eNwMwBw13WDdrIgIL1wAajHqO1imClwzg+WQsi
-         sTbw==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=d0rEwbt6I3jGT2XEPbefDDN5DuEtTTpC75KL6pfZVe0=;
+        b=V24960KMysX4W9cRa4ewwWddkdlQf4vSmM6r7W70lZ/pnXB0pJWUz0SDjqdWO4NN3z
+         zl7OO6VSY3UyszwJxsFqtCDUzs05/YMxQDDubBavKxKXn56snAT8MIv2h+KAfK6FUKGv
+         UAQ2O1BsbCsoTfdh7bH174y5erzrC4zEKV7XEJvAAacQkYlg2ACn/FbHh6DeghD460jo
+         nAZjdCbziWbkrIHZPtw3EQ2TEC6IEn3zeT35c7oXlQqPYraG3ERbfFMrvxyXbrD+0WMz
+         XYsREyJ657E2vPgeakxSulru+aYLGNAid/Ijy6lYOS4dAda4CoXFksuWiPAQjDwu1nAV
+         0ERA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=Kd7NEUJnheTmaqYs2EA0DnTQEVPwxxrAK+7mAwuEhA4=;
-        b=sivbEZdlyFTXbjGq6kL2rgilJEQFhzd8Q2xA92K3OWJNEzDTpbeI+nOupzU9KpYsAZ
-         dXb9l41V2DFq9HYwI7g+0fJxHWr2rbZGl/LAYENIxCeS7R6jX9EApKg1yEdFUSk4PhOG
-         XQA1zdqrRA6s5ELxet7GJ+/k3Hl/i9jrMgaTj23xrSAWtUoP2euBPFhDy6i6oc12DP4g
-         LNUdmdi81B8zFZoQqB+tZgyMlLnIFp9Qx+OCE4gMLixiVurdQnYyaUz9CLljp+fqq6iV
-         HD1ZD8Ut/XK1/PgHNYTHcRDtV2q0soOoGxuUvNAG7IV7NML98r9BvB+Fe8ntpajk0Eqy
-         Yc9Q==
-X-Gm-Message-State: APjAAAWMKhHjFbbXS4q9I2lekCOZvX6adXGEQBEOnPUHfhkmmvelI8S2
-        ceAb1WedNb0pvh1wJYTWDH9xzmi4ff49uw==
-X-Google-Smtp-Source: APXvYqw9WZtL9kXShc4I0L3RougDxsanXsm/guqBMyvT0D7GMngf7C3EbxE3qUlfwNjVkfZR8F8OYA==
-X-Received: by 2002:a1c:650b:: with SMTP id z11mr2584094wmb.149.1574249525940;
-        Wed, 20 Nov 2019 03:32:05 -0800 (PST)
-Received: from [10.32.50.232] ([185.149.63.251])
-        by smtp.gmail.com with ESMTPSA id x7sm35989468wrg.63.2019.11.20.03.32.04
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=d0rEwbt6I3jGT2XEPbefDDN5DuEtTTpC75KL6pfZVe0=;
+        b=ouhoZsGPPTFArhNXsNkmbCwZPZBKJ6rGLZfUqDwx0xIuOdUyHKeSylXBUd6PGyB3zD
+         fTEPiCn0aY1+oKlK9pNuMmPrLKwqay0Bad4U96hESxfwbWjTljb5JRXmifYFvcT9Igo7
+         GM/lZyXKqVuVwBQONaa+EJL7wZs2GSY2BkC7NWsEcyQu1jvwdzar0tA/Whlf2+wb6z+A
+         FC1BlJe+kA1SE5iL57trL3nnlkAeFwFP9nI4gBQ6/xUch7Ilci0T3eC4sTw5K5AJMx+3
+         NU7LIQjkJkU/s+cCYDhCEbQC++XrQNZmECjskKNANjTXf7WrOsagaSOz9uiobaylJ7VV
+         hPcw==
+X-Gm-Message-State: APjAAAWk/chcRERmPrlVvM+a2fWVcPPCGuhLZbnegdPprQqsld7U/t5+
+        8mU0vev3Rk5XTXx60nQX7/BluA==
+X-Google-Smtp-Source: APXvYqwHIUohyitcwBvr9kS1b5/Rn71wKiMCGkwNvh28dXJvo0PB61Wz4xGIvdv0o98UifXHI3gd3Q==
+X-Received: by 2002:a1c:6885:: with SMTP id d127mr2566782wmc.64.1574249559927;
+        Wed, 20 Nov 2019 03:32:39 -0800 (PST)
+Received: from [192.168.8.100] (61.128.22.93.rev.sfr.net. [93.22.128.61])
+        by smtp.googlemail.com with ESMTPSA id x8sm30558346wrm.7.2019.11.20.03.32.38
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 20 Nov 2019 03:32:05 -0800 (PST)
-Subject: Re: [PATCHv1 1/2] Input: EXC3000: add EXC80Hxx support
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Ahmet Inan <inan@distec.de>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@collabora.com
-References: <20191107181010.17211-1-sebastian.reichel@collabora.com>
-From:   Martin Fuzzey <martin.fuzzey@flowbird.group>
-Message-ID: <4e36a8fb-92e2-943e-f778-cf61e79ebbc4@flowbird.group>
-Date:   Wed, 20 Nov 2019 12:32:04 +0100
+        Wed, 20 Nov 2019 03:32:39 -0800 (PST)
+Subject: Re: [PATCH V2 1/2] cpuidle: Replace use_deepest_state flag by
+ forced_idle_latency_limit_ns
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     rafael@kernel.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ulf.hansson@linaro.org
+References: <20191116131613.15733-1-daniel.lezcano@linaro.org>
+ <4032150.Wh8QACBdyO@kreacher>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <02a0be83-942d-934d-dd78-8b1680324863@linaro.org>
+Date:   Wed, 20 Nov 2019 12:32:38 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20191107181010.17211-1-sebastian.reichel@collabora.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <4032150.Wh8QACBdyO@kreacher>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-Content-Language: fr
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sebastien,
+On 20/11/2019 12:05, Rafael J. Wysocki wrote:
+> On Saturday, November 16, 2019 2:16:12 PM CET Daniel Lezcano wrote:
+>> We want to specify a latency constraint when choosing an idle state at
+>> play_idle time. Instead of duplicating the information in the
+>> structure or propagate the latency in the call stack, change the
+>> use_deepest_state by forced_latency_limit_ns to introduce this
+>> constraint. The idea being that when it is set, idle is forced
+>> (i.e. no governors), but there is a latency limit for the state to
+>> use.
+>>
+>> A zero latency constraint means "do not use the deepest idle state
+>> path" as the 'use_deepest_state' boolean was used in the
+>> cpuidle_idle_call.
+>>
+>> In addition add the play_idle_precise() function getting a nanosec
+>> base latency constraint as parameter. The play_idle() function becomes
+>> a wrapper passing an U64_MAX to play_idle_precise().
+>>
+>> Suggested-by: Rafael J. Wysocki <rafael@kernel.org>
+>> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+>> ---
 
-On 07/11/2019 19:10, Sebastian Reichel wrote:
-> This adds support for EXC80Hxx controllers, which uses
-> a different event type id and has two extra bits for the
-> resolution (so the maximum is 16384 instead of 4096).
->
-> The patch has been tested with EXC80H60 and EXC80H84.
+[ ... ]
 
+> Queued up for 5.5 along with the [2/2], but I have made quite a few changes
+> to the patches, so please double check the result in my bleeding-edge branch.
+> 
+> Thanks!
 
-Ah I'm doing the same thing :)
+They look good to me.
 
+Thanks
 
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> ---
->   .../bindings/input/touchscreen/exc3000.txt    |  6 ++--
->   drivers/input/touchscreen/exc3000.c           | 34 ++++++++++++++-----
->   2 files changed, 30 insertions(+), 10 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/input/touchscreen/exc3000.txt b/Documentation/devicetree/bindings/input/touchscreen/exc3000.txt
-> index 68291b94fec2..057b680f0420 100644
-> --- a/Documentation/devicetree/bindings/input/touchscreen/exc3000.txt
-> +++ b/Documentation/devicetree/bindings/input/touchscreen/exc3000.txt
-> @@ -1,7 +1,9 @@
-> -* EETI EXC3000 Multiple Touch Controller
-> +* EETI EXC3000 and EXC80Hxx Multiple Touch Controller
->   
->   Required properties:
-> -- compatible: must be "eeti,exc3000"
-> +- compatible: must be one of
-> + * "eeti,exc3000"
-> + * "eeti,exc80hxx"
->   - reg: i2c slave address
->   - interrupts: touch controller interrupt
->   - touchscreen-size-x: See touchscreen.txt
-> diff --git a/drivers/input/touchscreen/exc3000.c b/drivers/input/touchscreen/exc3000.c
-> index e007e2e8f626..7d695022082c 100644
-> --- a/drivers/input/touchscreen/exc3000.c
-> +++ b/drivers/input/touchscreen/exc3000.c
-> @@ -23,11 +23,20 @@
->   #define EXC3000_SLOTS_PER_FRAME		5
->   #define EXC3000_LEN_FRAME		66
->   #define EXC3000_LEN_POINT		10
-> -#define EXC3000_MT_EVENT		6
-> +
-> +#define EXC3000_MT1_EVENT		0x06
-> +#define EXC3000_MT2_EVENT		0x18
-> +
->   #define EXC3000_TIMEOUT_MS		100
->   
-> +enum exc3000_device_type {
-> +	EETI_EXC3000,
-> +	EETI_EXC80Hxx
-> +};
-> +
->   struct exc3000_data {
->   	struct i2c_client *client;
-> +	enum exc3000_device_type type;
->   	struct input_dev *input;
->   	struct touchscreen_properties prop;
->   	struct timer_list timer;
-> @@ -76,8 +85,10 @@ static int exc3000_read_frame(struct i2c_client *client, u8 *buf)
->   	if (ret != EXC3000_LEN_FRAME)
->   		return -EIO;
->   
-> -	if (get_unaligned_le16(buf) != EXC3000_LEN_FRAME ||
-> -			buf[2] != EXC3000_MT_EVENT)
-> +	if (get_unaligned_le16(buf) != EXC3000_LEN_FRAME)
-> +		return -EINVAL;
-> +
-> +	if (buf[2] != EXC3000_MT1_EVENT && buf[2] != EXC3000_MT2_EVENT)
->   		return -EINVAL;
->   
+  -- Daniel
 
 
-Are we sure the EXC80 will *always* use MT2_EVENT (and that there is not 
-some configuration where it can send MT1_EVENTS).
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-Because, if this happens we will have declared a 14 bit resolution to 
-the input core but  process a 12 bit value.
-
-I think it is better to declare the resolution based on the device type 
-(as you have done) but interpret the data based on the MT1 vs MT2 event 
-code, shifting 2 bits if needed.
-
-
-
-> @@ -168,8 +180,13 @@ static int exc3000_probe(struct i2c_client *client,
->   	input->name = "EETI EXC3000 Touch Screen";
-
-Shouldn't the name change too?
-
-
->   	input->id.bustype = BUS_I2C;
->   
-> -	input_set_abs_params(input, ABS_MT_POSITION_X, 0, 4095, 0, 0);
-> -	input_set_abs_params(input, ABS_MT_POSITION_Y, 0, 4095, 0, 0);
-> +	if (data->type == EETI_EXC80Hxx) {
-> +		input_set_abs_params(input, ABS_MT_POSITION_X, 0, 16383, 0, 0);
-> +		input_set_abs_params(input, ABS_MT_POSITION_Y, 0, 16383, 0, 0);
-> +	} else {
-> +		input_set_abs_params(input, ABS_MT_POSITION_X, 0, 4095, 0, 0);
-> +		input_set_abs_params(input, ABS_MT_POSITION_Y, 0, 4095, 0, 0);
-> +	}
->   	touchscreen_parse_properties(input, true, &data->prop);
->   
->   	error = input_mt_init_slots(input, EXC3000_NUM_SLOTS,
-> @@ -191,14 +208,15 @@ static int exc3000_probe(struct i2c_client *client,
->   }
->   
->   static const struct i2c_device_id exc3000_id[] = {
-> -	{ "exc3000", 0 },
-> -	{ }
-> +	{ "exc3000", EETI_EXC3000 },
-> +	{ "exc80hxx", EETI_EXC80Hxx }
->   };
->   MODULE_DEVICE_TABLE(i2c, exc3000_id);
->   
->   #ifdef CONFIG_OF
->   static const struct of_device_id exc3000_of_match[] = {
-> -	{ .compatible = "eeti,exc3000" },
-> +	{ .compatible = "eeti,exc3000", .data = (const void*) EETI_EXC3000 },
-> +	{ .compatible = "eeti,exc80hxx", .data = (const void*) EETI_EXC80Hxx },
->   	{ }
->   };
->   MODULE_DEVICE_TABLE(of, exc3000_of_match);
-
-If driver_data is defined in the I2C device table and the compatible 
-string, minus the vendor prefix, matches the i2c device id it is not 
-necessary to define the driver_data in the of_match table as well.
-
-
-How about defining a "exc_device_info" structure, containing name, 
-resolution etc and storing a pointer to a constant instance of that in 
-the match tables rather than just a type code.
-
-That way the "if (data->type)" tests could be removed and the info 
-structure accessed directly.
-
-
-Something like:
-
-struct exc_dev_info {
-     const char *name;
-     u16 x_res;
-     u16 y_res;
-};
-
-static int exc3000_probe(struct i2c_client *client,
-              const struct i2c_device_id *id)
-{
-     const struct exc_dev_info *dev_info;
-...
-
-     dev_info = (const struct exc_dev_info *)id->driver_data;
-
-...
-
-     input->name = dev_info->name;
-     input->id.bustype = BUS_I2C;
-
-     input_set_abs_params(input, ABS_MT_POSITION_X, 0,
-                  dev_info->x_res - 1, 0, 0);
-     input_set_abs_params(input, ABS_MT_POSITION_Y, 0,
-                  dev_info->y_res - 1, 0, 0);
-     touchscreen_parse_properties(input, true, &data->prop);
-
-
-static const struct exc_dev_info exc3000_dev_info = {
-     .name = "EETI EXC3000 Touch Screen",
-     .x_res = 4096,
-     .y_res = 4096,
-};
-
-static const struct exc_dev_info exc80_dev_info = {
-     .name = "EETI EXC80 Touch Screen",
-     .x_res = 16384,
-     .y_res = 16384,
-};
-
-static const struct i2c_device_id exc3000_id[] = {
-     { "exc3000",    (kernel_ulong_t)&exc3000_dev_info },
-     { "exc80",    (kernel_ulong_t)&exc80_dev_info },
-     { }
-};
-MODULE_DEVICE_TABLE(i2c, exc3000_id);
-
-
-One other thing I have noticed is that the exc80h does not appear to 
-need the i2c_send before read that is done in exc3000_read_frame()
-
-The vendor "egalax_i2c" driver doesn't do it either and I can't see 
-anything in the "I2C programming guide" mentionning this.
-
-
-Ahmet's original commit introducing the driver says
-
-" To be able to work with the higher 400KHz I2C bus rate, one must
-   successfully send a special package prior _each_ read or the controller
-   will refuse to cooperate."
-
-
-This doesn't seem to be an issue at 400KHz for the 80h at least, though 
-keeping it doesn't seem to hurt either.
-
-Maybe make this device dependant too?
-
-
-Regards,
-
-Martin
-
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
