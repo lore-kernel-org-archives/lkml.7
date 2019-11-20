@@ -2,144 +2,106 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49027C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 04:33:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF4B5C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 04:52:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E262A22460
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 04:33:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="kDBuTaID"
+	by mail.kernel.org (Postfix) with ESMTP id 9275222460
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 04:52:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727538AbfKTEdV (ORCPT
+        id S1727514AbfKTEwv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 23:33:21 -0500
-Received: from mailout2.samsung.com ([203.254.224.25]:39035 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727395AbfKTEdV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 23:33:21 -0500
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20191120043319epoutp02b7801f778999e017013ee6046b2afcc2~YxMAYmZf91666316663epoutp02K
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 04:33:19 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20191120043319epoutp02b7801f778999e017013ee6046b2afcc2~YxMAYmZf91666316663epoutp02K
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1574224399;
-        bh=+WrvUKRWjigTO8zWpKSQfeGnJ6UtPUA5CN1IJiTH4vs=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=kDBuTaIDIWHX1FtJixoZ0lWSKWKhFm3rIGG5VTeDjMObmloujWy+7QP0FeAeE7K/7
-         pC2fPTBAoo4eA5pbHB+YCyHuF6VFaudRrZg5GpJRHSZZh3gNqATaaESbCNVPShyNA3
-         9nIP5JTtErAP/Pqm8ClyY3fdueDI2X0wKB6HYeHw=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20191120043318epcas1p2e23d237b91c282f7c5c093a9613bd272~YxL-9mAQ11649016490epcas1p2w;
-        Wed, 20 Nov 2019 04:33:18 +0000 (GMT)
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.162]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 47HqZ53wWLzMqYkf; Wed, 20 Nov
-        2019 04:33:17 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        05.C0.04235.D02C4DD5; Wed, 20 Nov 2019 13:33:17 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20191120043316epcas1p2ead7f625cfdd1574387fb4d58dc98365~YxL_btG0w3201932019epcas1p2R;
-        Wed, 20 Nov 2019 04:33:16 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191120043316epsmtrp21a6d7e0ee72ba6e30dd1a6d55354a333~YxL_a_RwI2914729147epsmtrp2X;
-        Wed, 20 Nov 2019 04:33:16 +0000 (GMT)
-X-AuditID: b6c32a36-defff7000000108b-8b-5dd4c20d2445
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        5E.54.03654.C02C4DD5; Wed, 20 Nov 2019 13:33:16 +0900 (KST)
-Received: from DONAMJAEJEO06 (unknown [10.88.104.63]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20191120043316epsmtip2409e867c6a92859f2b0bd6e515c223a8~YxL_NZsuU0399303993epsmtip2U;
-        Wed, 20 Nov 2019 04:33:16 +0000 (GMT)
-From:   "Namjae Jeon" <namjae.jeon@samsung.com>
-To:     "'Christoph Hellwig'" <hch@lst.de>
-Cc:     "'Daniel Wagner'" <dwagner@suse.de>,
-        <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <gregkh@linuxfoundation.org>, <valdis.kletnieks@vt.edu>,
-        <linkinjeon@gmail.com>, <Markus.Elfring@web.de>,
-        <sj1557.seo@samsung.com>
-In-Reply-To: <20191119171752.GA20042@lst.de>
-Subject: RE: [PATCH v2 02/13] exfat: add super block operations
-Date:   Wed, 20 Nov 2019 13:33:16 +0900
-Message-ID: <007901d59f5b$a0eb6780$e2c23680$@samsung.com>
+        Tue, 19 Nov 2019 23:52:51 -0500
+Received: from guitar.tcltek.co.il ([192.115.133.116]:39719 "EHLO
+        mx.tkos.co.il" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727450AbfKTEwv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 23:52:51 -0500
+Received: from tarshish (unknown [10.0.8.3])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mx.tkos.co.il (Postfix) with ESMTPS id 0C5144407C6;
+        Wed, 20 Nov 2019 06:52:48 +0200 (IST)
+References: <20191120031622.88949-1-stephen@brennan.io> <20191120031622.88949-3-stephen@brennan.io>
+User-agent: mu4e 1.2.0; emacs 26.1
+From:   Baruch Siach <baruch@tkos.co.il>
+To:     Stephen Brennan <stephen@brennan.io>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     stephen@brennan.io, Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Scott Branden <sbranden@broadcom.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org,
+        Matthias Brugger <mbrugger@suse.com>,
+        Eric Anholt <eric@anholt.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Matt Mackall <mpm@selenic.com>, Arnd Bergmann <arnd@arndb.de>,
+        linux-crypto@vger.kernel.org
+Subject: Re: [PATCH v3 2/4] hwrng: iproc-rng200: Add support for BCM2711
+In-reply-to: <20191120031622.88949-3-stephen@brennan.io>
+Date:   Wed, 20 Nov 2019 06:52:47 +0200
+Message-ID: <87eey3gnds.fsf@tarshish>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 14.0
-Content-Language: ko
-Thread-Index: AQEo1XJlLzywHhHshRBLsQkFEP9+bwICkZlvAboM/rECPrXdMAJVBHmKAkbIIb+omFKvQA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrNJsWRmVeSWpSXmKPExsWy7bCmgS7voSuxBl/OSlscfjyJ3aJ58Xo2
-        i5WrjzJZXL97i9liz96TLBaXd81hs/g/6zmrxZZ/R1gtLr3/wOLA6bFz1l12j/1z17B77L7Z
-        wObRt2UVo8fm09UenzfJeRza/obN4/azbSwBHFE5NhmpiSmpRQqpecn5KZl56bZK3sHxzvGm
-        ZgaGuoaWFuZKCnmJuam2Si4+AbpumTlA5ykplCXmlAKFAhKLi5X07WyK8ktLUhUy8otLbJVS
-        C1JyCgwNCvSKE3OLS/PS9ZLzc60MDQyMTIEqE3Iyfl/nL7jKWrHr9yymBsZNLF2MnBwSAiYS
-        vf/vs3YxcnEICexglPiw5w4jhPOJUWLBpAVsEM43Rokp0x4wwrQcv30dKrGXUeLb93csEM4r
-        RokJ69rYQKrYBHQl/v3ZD2aLCKhJnPnZxg5SxAwy9/7MbqBRHBycAjoSe++Ug9QIC9hLXJy/
-        jwnEZhFQlXj7eiPYNl4BS4mtKzZA2YISJ2c+ATucWUBeYvvbOcwQFylI7Dj7mhEiLiIxu7ON
-        GWS8iECYxIfNQSBrJQT62SW2d+yE+sBF4uLRGdAAEJZ4dXwLO4QtJfH53V42kF4JgWqJj/uh
-        xncwSrz4bgthG0vcXL+BFaSEWUBTYv0ufYiwosTO33OhLuCTePe1hxViCq9ER5sQRImqRN+l
-        w0wQtrREV/sH9gmMSrOQ/DULyV+zkPwyC2HZAkaWVYxiqQXFuempxYYFRshRvYkRnHC1zHYw
-        Ljrnc4hRgINRiYfX4tLlWCHWxLLiytxDjBIczEoivH6PLsQK8aYkVlalFuXHF5XmpBYfYjQF
-        BvtEZinR5HxgNsgriTc0NTI2NrYwMTM3MzVWEufl+HExVkggPbEkNTs1tSC1CKaPiYNTqoGR
-        LUJtS33szykCUTX7H2lO3XStedlr9uViCtt9q56VOSnf6ymIf/f/15T5X/b+n/480VE2PPI5
-        /1sp1mdlynd1OYyuX2i7wLeIt6SHX/2X6vLnzSxLvoamqKe/kTjy917M7ZPXRW65eaSXsk96
-        3Ph/5jdv1bli8Xf5L589lDqt2N7n6JpLufW5SizFGYmGWsxFxYkAN8F2+84DAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrEIsWRmVeSWpSXmKPExsWy7bCSvC7PoSuxBs27TSwOP57EbtG8eD2b
-        xcrVR5ksrt+9xWyxZ+9JFovLu+awWfyf9ZzVYsu/I6wWl95/YHHg9Ng56y67x/65a9g9dt9s
-        YPPo27KK0WPz6WqPz5vkPA5tf8PmcfvZNpYAjigum5TUnMyy1CJ9uwSujN/X+Quuslbs+j2L
-        qYFxE0sXIyeHhICJxPHb19lAbCGB3YwSRw7EQcSlJY6dOMPcxcgBZAtLHD5cDFHyglHi+oMM
-        EJtNQFfi35/9YK0iAmoSZ362sXcxcnEwC/xilDj3vosVxAGaySTR+vM7G8ggTgEdib13ykEa
-        hAXsJS7O38cEYrMIqEq8fb2REcTmFbCU2LpiA5QtKHFy5hMWkFZmAT2JNogSZgF5ie1v5zBD
-        nKkgsePsa6i4iMTszjawk0UEwiQ+bA6awCg8C8mgWQiDZiEZNAtJ8wJGllWMkqkFxbnpucWG
-        BYZ5qeV6xYm5xaV56XrJ+bmbGMExp6W5g/HykvhDjAIcjEo8vBaXLscKsSaWFVfmHmKU4GBW
-        EuH1e3QhVog3JbGyKrUoP76oNCe1+BCjNAeLkjjv07xjkUIC6YklqdmpqQWpRTBZJg5OqQbG
-        SEWVdI05u49mqYff/2zvm1h5I+VmM/9H+RMPfhTd5tN8deTj9nUiOZsd0z00X5hpTYzY++/a
-        k13LS0rq5y3sSTfaWV3O3bYr520Rq+77a2xL2e4rlAoXJGz99Tmp2fCss6RXzYSycwKbDacY
-        tNiejbWJvi954FCdDrdPY+fXliX5UenzhZ2VWIozEg21mIuKEwF1F7VBtQIAAA==
-X-CMS-MailID: 20191120043316epcas1p2ead7f625cfdd1574387fb4d58dc98365
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20191119071403epcas1p3f3d69faad57984fa3d079cf18f0a46dc
-References: <20191119071107.1947-1-namjae.jeon@samsung.com>
-        <CGME20191119071403epcas1p3f3d69faad57984fa3d079cf18f0a46dc@epcas1p3.samsung.com>
-        <20191119071107.1947-3-namjae.jeon@samsung.com>
-        <20191119085639.kr4esp72dix4lvok@beryllium.lan>
-        <00d101d59eba$dcc373c0$964a5b40$@samsung.com>
-        <20191119171752.GA20042@lst.de>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Tue, Nov 19, 2019 at 06:22:28PM +0900, Namjae Jeon wrote:
-> > > No idea what the code does. But I was just skimming over and find the
-> > > above pattern somehow strange. Shouldn't this be something like
-> > Right.
-> >
-> > >
-> > > 	if (!READ_ONCE(sbi->s_dirt)) {
-> > > 		WRITE_ONCE(sbi->s_dirt, true);
-> >
-> > It should be :
-> > 	if (READ_ONCE(sbi->s_dirt)) {
-> >  		WRITE_ONCE(sbi->s_dirt, false);
-> > I will fix it on v3.
-> 
-> The other option would be to an unsigned long flags field and define
-> bits flags on it, then use test_and_set_bit, test_and_clear_bit etc.
-> Which might be closer to the pattern we use elsewhere in the kernel.
-I will replace it with test_and_set/clear_bit().
+Hi Stephen, Stefan,
 
-Thanks!
+On Wed, Nov 20 2019, Stephen Brennan wrote:
+> From: Stefan Wahren <wahrenst@gmx.net>
+>
+> BCM2711 features a RNG200 hardware random number generator block.
+> So make the driver available.
+>
+> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+> Signed-off-by: Stephen Brennan <stephen@brennan.io>
+> Reviewed-by: Matthias Brugger <mbrugger@suse.com>
+> ---
+>  drivers/char/hw_random/Kconfig        | 2 +-
+>  drivers/char/hw_random/iproc-rng200.c | 1 +
+>  2 files changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
+> index 7c7fecfa2fb2..77e848fca531 100644
+> --- a/drivers/char/hw_random/Kconfig
+> +++ b/drivers/char/hw_random/Kconfig
+> @@ -90,7 +90,7 @@ config HW_RANDOM_BCM2835
+>  
+>  config HW_RANDOM_IPROC_RNG200
+>  	tristate "Broadcom iProc/STB RNG200 support"
+> -	depends on ARCH_BCM_IPROC || ARCH_BRCMSTB
+> +	depends on ARCH_BCM_IPROC || ARCH_BCM2835 || ARCH_BRCMSTB
+>  	default HW_RANDOM
+>  	---help---
+>  	  This driver provides kernel-side support for the RNG200
+> diff --git a/drivers/char/hw_random/iproc-rng200.c b/drivers/char/hw_random/iproc-rng200.c
+> index 899ff25f4f28..32d9fe61a225 100644
+> --- a/drivers/char/hw_random/iproc-rng200.c
+> +++ b/drivers/char/hw_random/iproc-rng200.c
+> @@ -213,6 +213,7 @@ static int iproc_rng200_probe(struct platform_device *pdev)
+>  }
+>  
+>  static const struct of_device_id iproc_rng200_of_match[] = {
+> +	{ .compatible = "brcm,bcm2711-rng200", },
+>  	{ .compatible = "brcm,bcm7211-rng200", },
 
+Again, duplicate of commit 1fa6d053b2a5.
+
+>  	{ .compatible = "brcm,bcm7278-rng200", },
+>  	{ .compatible = "brcm,iproc-rng200", },
+
+baruch
+
+-- 
+     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
+=}------------------------------------------------ooO--U--Ooo------------{=
+   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
