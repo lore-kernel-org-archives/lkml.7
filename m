@@ -2,100 +2,152 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25379C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 07:43:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED868C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 07:44:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0827120674
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 07:43:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C01EB20674
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 07:44:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MxFJyVx6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727932AbfKTHnp (ORCPT
+        id S1727954AbfKTHoB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 02:43:45 -0500
-Received: from mga04.intel.com ([192.55.52.120]:58426 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725268AbfKTHno (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 02:43:44 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Nov 2019 23:43:44 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,221,1571727600"; 
-   d="scan'208";a="381275147"
-Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
-  by orsmga005.jf.intel.com with ESMTP; 19 Nov 2019 23:43:40 -0800
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-To:     gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com,
-        andrew.murray@arm.com, helgaas@kernel.org, jingoohan1@gmail.com,
-        robh@kernel.org, martin.blumenstingl@googlemail.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        andriy.shevchenko@intel.com
-Cc:     linux-kernel@vger.kernel.org, cheol.yong.kim@intel.com,
-        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com,
-        Dilip Kota <eswara.kota@linux.intel.com>
-Subject: [PATCH v8 3/3] PCI: artpec6: Configure FTS with dwc helper function
-Date:   Wed, 20 Nov 2019 15:43:02 +0800
-Message-Id: <49581e0bc143da17fd20074b1dec2126306f745f.1574158309.git.eswara.kota@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <cover.1574158309.git.eswara.kota@linux.intel.com>
-References: <cover.1574158309.git.eswara.kota@linux.intel.com>
-In-Reply-To: <cover.1574158309.git.eswara.kota@linux.intel.com>
-References: <cover.1574158309.git.eswara.kota@linux.intel.com>
+        Wed, 20 Nov 2019 02:44:01 -0500
+Received: from mail-il1-f196.google.com ([209.85.166.196]:44699 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725268AbfKTHoB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 02:44:01 -0500
+Received: by mail-il1-f196.google.com with SMTP id i6so1196822ilr.11;
+        Tue, 19 Nov 2019 23:43:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QkQsYkZTBURdSBu7Km88dbeDD4v2tqzLVxlvJwXXnOc=;
+        b=MxFJyVx6PCgpMNt2O04IWjcDOolLOuLR/6AbsAd7e/3bC+tnlNFNdghV28/5eACfYt
+         ZbRyLzYtWFtJdIkz/avVtteHcmN+J3vdRPN/l6OqQZ84zvusS8DyBIRqIt3+XQgxY8+Z
+         Cd9nsmI6batsaWqIF/8luo2xdkJ3L23jacmiEsT5+JZPkwPb8ueAHQpVYQEXo3GzFczC
+         Pl1KNr2sOAIvpvhmIn9GkXTz0mnD1Uh9DJhSRW30FkQZayi3kagKP+0Dgc2qGAnnqSHm
+         8J/JgQ2f0xqLmGTrn6wIsm4Y8MkYF61DHDeh4lNgn25lvTtsbJxR1l9gw2AyjMGMreGQ
+         0L7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QkQsYkZTBURdSBu7Km88dbeDD4v2tqzLVxlvJwXXnOc=;
+        b=HqrtLkMEF34eBKXiJtuDVqI2qmYDfQXnlW8UBvKo+QNFWlNw4D7a5KGrlspRKu47DN
+         lV6ulcVrnc3Ssec0Qh6PPETH/fo/YAoIO8hhXQebsbCK7/CZCczjXBbISk4EODI4PqsQ
+         RWJEfxDGlFGu/p9YTzKtc09utNe4rBGiBB4FvqTth8q+VyHmbGPlThPTE1DmcevYKPQZ
+         g7IdTh+qBlRtDjfaX2EC5ooeH1QdXV7/Pi5HYPFUZrmNwt3ToW2eC/RSAd+njgqzQb1f
+         0vexfssj5nOY3JdGSYiBmZZ9ElgEJO+yW8MK1RhMxNe2zyNYmTCGXSC95ZAmcuOaWPBJ
+         nhBQ==
+X-Gm-Message-State: APjAAAVpoWC0t4kzYUqIgcKyygJCuXFUk/l0k8HxxPHHnKXzinmVFT/1
+        tV9KhkQIu3nLvNoXpMq/4afvWn+wdNf28MfwruM=
+X-Google-Smtp-Source: APXvYqzNksFY5wJfyJHnWvllXmrch0W6oTDjaDq5IVkhokY3fvgAPZkK2jYw6g6gMnJBNSvLZsU/tgMYfVY182IULmk=
+X-Received: by 2002:a92:c8c4:: with SMTP id c4mr2012169ilq.272.1574235839220;
+ Tue, 19 Nov 2019 23:43:59 -0800 (PST)
+MIME-Version: 1.0
+References: <cover.1573788882.git.yu.c.chen@intel.com> <5dcd6580b51342c0803db6bc27866dd569914b0d.1573788882.git.yu.c.chen@intel.com>
+ <20191115092420.GF18929@zn.tnic> <CADjb_WR_DNAR_4jVEJ1C4LO7Xfnc54J2u2AoqyCjZT39+AhrWA@mail.gmail.com>
+ <20191118144807.GE6363@zn.tnic>
+In-Reply-To: <20191118144807.GE6363@zn.tnic>
+From:   Yu Chen <yu.chen.surf@gmail.com>
+Date:   Wed, 20 Nov 2019 15:54:46 +0800
+Message-ID: <CADjb_WQVa0rFb0BXtu4xU7RfywUa36kLDgGLpLmUWifnLB2NAA@mail.gmail.com>
+Subject: Re: [PATCH 2/2][v2] x86/resctrl: Add task resctrl information display
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Chen Yu <yu.c.chen@intel.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        Christian Brauner <christian@brauner.io>,
+        Shakeel Butt <shakeelb@google.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use DesignWare helper functions to configure Fast Training
-Sequence. Drop the respective code in the driver.
+Hi Boris,
 
-Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
----
-Changes on v8:
-	No change
-
-Changes on v7:
-	No change
-
-Changes on v6:
-	Typo fix:s/DesugnWare/DesignWare
-	Update 'Utilize DesignWare' --> 'Use DesignWare'
-	Add Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-
- drivers/pci/controller/dwc/pcie-artpec6.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-artpec6.c b/drivers/pci/controller/dwc/pcie-artpec6.c
-index d00252bd8fae..02d93b8c7942 100644
---- a/drivers/pci/controller/dwc/pcie-artpec6.c
-+++ b/drivers/pci/controller/dwc/pcie-artpec6.c
-@@ -51,9 +51,6 @@ static const struct of_device_id artpec6_pcie_of_match[];
- #define ACK_N_FTS_MASK			GENMASK(15, 8)
- #define ACK_N_FTS(x)			(((x) << 8) & ACK_N_FTS_MASK)
- 
--#define FAST_TRAINING_SEQ_MASK		GENMASK(7, 0)
--#define FAST_TRAINING_SEQ(x)		(((x) << 0) & FAST_TRAINING_SEQ_MASK)
--
- /* ARTPEC-6 specific registers */
- #define PCIECFG				0x18
- #define  PCIECFG_DBG_OEN		BIT(24)
-@@ -313,10 +310,7 @@ static void artpec6_pcie_set_nfts(struct artpec6_pcie *artpec6_pcie)
- 	 * Set the Number of Fast Training Sequences that the core
- 	 * advertises as its N_FTS during Gen2 or Gen3 link training.
- 	 */
--	val = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
--	val &= ~FAST_TRAINING_SEQ_MASK;
--	val |= FAST_TRAINING_SEQ(180);
--	dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
-+	dw_pcie_link_set_n_fts(pci, 180);
- }
- 
- static void artpec6_pcie_assert_core_reset(struct artpec6_pcie *artpec6_pcie)
--- 
-2.11.0
-
+On Mon, Nov 18, 2019 at 10:48 PM Borislav Petkov <bp@alien8.de> wrote:
+>
+> On Sat, Nov 16, 2019 at 11:01:12PM +0800, Ryan Chen wrote:
+> > Right, we can return 'blank' to user and let the user to parse the information.
+>
+> There is nothing to parse - the task doesn't belong to any groups. That's it.
+>
+> > And there is a similar behavior in cgroup that, for kernel thread that
+> > does not belong
+> > to any cgroup, /proc/{pid}/cgroup just show 'blank' without returning an error.
+>
+> By 'blank' I assume you mean the empty string '' ?
+>
+Yes, it is 'empty string'.
+> > Yes, only when PROC_FS is set, /proc/{pid}/resctrl
+> > can be displayed. However, CPU_RESCTRL might not
+> > depend on proc fs, it is possible that the CPU_RESCTRL
+> > is enabled but without PROC_FS set. If I understand correctly,
+> >  CPU_RESCTRL is the 'root' config for X86_CPU_RESCTRL,
+> > after reading this thread:
+> > https://lists.gt.net/linux/kernel/3211659
+>
+> I'm not sure I know what you mean here. There's no CPU_RESCTRL option - you've
+> added it in the previous patch:
+>
+> [ ~/kernel/linux> git grep -E CONFIG_CPU_RESCTRL
+> [ ~/kernel/linux> git grep -E "\WCPU_RESCTRL"
+> [ ~/kernel/linux>
+>
+> And if you want to use that option in proc/, then it needs
+> to depend on PROC_FS, like the the example I gave you with
+> CONFIG_PROC_PID_ARCH_STATUS.
+>
+> Or do you mean something else?
+>
+Previously I was thinking of introducing CONFIG_CPU_RESCTRL
+to the kernel, so that platform-independent resctrl code could be moved under
+this config. The idea was seen in the following commit log:
+commit e6d429313ea5c776d (x86/resctrl: Avoid confusion over the
+new X86_RESCTRL config)
+But since we only touch proc fs in this patch, I think a config named
+CONFIG_PROC_CPU_RESCTRL declared in fs/proc/Kconfig
+might be more appropriate(similar to CONFIG_PROC_PID_ARCH_STATUS).
+> >  If this is the case, shall we add the new file at kernel/resctrl/resctrl.c?
+> > And the generic proc_resctrl_show() could be put into this file. In the future
+> > the generic code for resctrl could be added/moved to kernel/resctrl/resctrl.c
+>
+> Not worth it for a single function. Leave it in
+> arch/x86/kernel/cpu/resctrl/rdtgroup.c where you had it.
+>
+Okay, got it. Let me send the v3 patch out and to see if it is suitable.
+Thanks,
+Chenyu
+> Thx.
+>
+> --
+> Regards/Gruss,
+>     Boris.
+>
+> https://people.kernel.org/tglx/notes-about-netiquette
