@@ -2,184 +2,102 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 012AFC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 09:57:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFC4EC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 09:57:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D024E21D7A
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 09:57:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99D1421D7A
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 09:57:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="bcV3glNL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728452AbfKTJ5R (ORCPT
+        id S1728580AbfKTJ5k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 04:57:17 -0500
-Received: from spam01.hygon.cn ([110.188.70.11]:35137 "EHLO spam2.hygon.cn"
-        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727716AbfKTJ5R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 04:57:17 -0500
-Received: from MK-DB.hygon.cn ([172.23.18.60])
-        by spam2.hygon.cn with ESMTP id xAK9t4Ww044238;
-        Wed, 20 Nov 2019 17:55:04 +0800 (GMT-8)
-        (envelope-from linjiasen@hygon.cn)
-Received: from cncheex01.Hygon.cn ([172.23.18.10])
-        by MK-DB.hygon.cn with ESMTP id xAK9swEk053992;
-        Wed, 20 Nov 2019 17:54:58 +0800 (GMT-8)
-        (envelope-from linjiasen@hygon.cn)
-Received: from [172.20.21.12] (172.23.18.44) by cncheex01.Hygon.cn
- (172.23.18.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1466.3; Wed, 20 Nov
- 2019 17:55:00 +0800
-Subject: Re: [PATCH] NTB: Fix an error in get link status
-From:   Jiasen Lin <linjiasen@hygon.cn>
-To:     Jon Mason <jdmason@kudzu.us>
-CC:     "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-ntb <linux-ntb@googlegroups.com>, <linjiasen007@gmail.com>,
-        Jiasen Lin <linjiasen@hygon.cn>
-References: <1573119336-107732-1-git-send-email-linjiasen@hygon.cn>
- <CAPoiz9wAJz=Hqb6Os=9AHHv_NGpZ8uCaAuOC=aUTkASKdfs9WQ@mail.gmail.com>
- <933f74c7-7249-618c-13dc-9e4e47ad75d7@hygon.cn>
-Message-ID: <11b355a8-0fe0-f256-c510-ddf106017703@hygon.cn>
-Date:   Wed, 20 Nov 2019 17:52:42 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 20 Nov 2019 04:57:40 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:37820 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728567AbfKTJ5k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 04:57:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=el6438nih4sfwVUUpa3K7cGTYMkZUt0pCE/MflmMSiA=; b=bcV3glNLOjIUujMfUEw4s7kT6
+        Z6OGWKZbmD0U635MtVAIlSU1ixudFfoksF22a7LTl1W20n/1fJdNsXuujM3+C1ZTKUoUumNB9aNOs
+        RYd13CFvhF4cDxk/34GB9IhDX+rdOqDeoiGBGD0nrEfxwip7rS0pNaRknuUJkcgFvqxExxT41yxpW
+        8PEtujQ51/SZdZW8JriCE6ikn3f7nsbUxydGpzA2n35/RP5oFpUtcrXMbFBO6AibcBqU+4KuUgB3a
+        35iKgzeq3jZ6/tOsoixKQz1oeB1QCsv6pvCEo3bwd+4bSE4EBX/WpAuLpJTlt+0kXqiV8Vxb8mAU5
+        yKENSjU9w==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:58700)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1iXMju-0007YX-7j; Wed, 20 Nov 2019 09:57:34 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1iXMjp-0001cr-EL; Wed, 20 Nov 2019 09:57:29 +0000
+Date:   Wed, 20 Nov 2019 09:57:29 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
+        Leo Li <leoyang.li@nxp.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>
+Subject: Re: [PATCHv9 00/12] PCI: Recode Mobiveil driver and add PCIe Gen4
+ driver for NXP Layerscape SoCs
+Message-ID: <20191120095729.GJ25745@shell.armlinux.org.uk>
+References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <933f74c7-7249-618c-13dc-9e4e47ad75d7@hygon.cn>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [172.23.18.44]
-X-ClientProxiedBy: cncheex02.Hygon.cn (172.23.18.12) To cncheex01.Hygon.cn
- (172.23.18.10)
-X-MAIL: spam2.hygon.cn xAK9t4Ww044238
-X-DNSRBL: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Nov 20, 2019 at 03:45:17AM +0000, Z.q. Hou wrote:
+> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> 
+> This patch set is to recode the Mobiveil driver and add
+> PCIe support for NXP Layerscape series SoCs integrated
+> Mobiveil's PCIe Gen4 controller.
 
+How many PCIe cards have been tested to work/don't work with this?
 
-On 2019/11/18 18:17, Jiasen Lin wrote:
-> 
-> 
-> On 2019/11/18 7:00, Jon Mason wrote:
->> On Thu, Nov 7, 2019 at 4:37 AM Jiasen Lin <linjiasen@hygon.cn> wrote:
->>>
->>> The offset of PCIe Capability Header for AMD and HYGON NTB is 0x64,
->>> but the macro which named "AMD_LINK_STATUS_OFFSET" is defined as 0x68.
->>> It is offset of Device Capabilities Reg rather than Link Control Reg.
->>>
->>> This code trigger an error in get link statsus:
->>>
->>>          cat /sys/kernel/debug/ntb_hw_amd/0000:43:00.1/info
->>>                  LNK STA -               0x8fa1
->>>                  Link Status -           Up
->>>                  Link Speed -            PCI-E Gen 0
->>>                  Link Width -            x0
->>>
->>> This patch use pcie_capability_read_dword to get link status.
->>> After fix this issue, we can get link status accurately:
->>>
->>>          cat /sys/kernel/debug/ntb_hw_amd/0000:43:00.1/info
->>>                  LNK STA -               0x11030042
->>>                  Link Status -           Up
->>>                  Link Speed -            PCI-E Gen 3
->>>                  Link Width -            x16
->>
->> No response from AMD maintainers, but it looks like you are correct.
->>
->> This needs a "Fixes:" line here.  I took the liberty of adding one to
->> this patch.
->>
-> 
-> Thank you for your suggestions. Yes, this patch fix the commit id: 
-> a1b3695 ("NTB: Add support for AMD PCI-Express Non-Transparent Bridge").
-> 
->>> Signed-off-by: Jiasen Lin <linjiasen@hygon.cn>
->>> ---
->>>   drivers/ntb/hw/amd/ntb_hw_amd.c | 5 +++--
->>>   drivers/ntb/hw/amd/ntb_hw_amd.h | 1 -
->>>   2 files changed, 3 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/drivers/ntb/hw/amd/ntb_hw_amd.c 
->>> b/drivers/ntb/hw/amd/ntb_hw_amd.c
->>> index 156c2a1..ae91105 100644
->>> --- a/drivers/ntb/hw/amd/ntb_hw_amd.c
->>> +++ b/drivers/ntb/hw/amd/ntb_hw_amd.c
->>> @@ -855,8 +855,8 @@ static int amd_poll_link(struct amd_ntb_dev *ndev)
->>>
->>>          ndev->cntl_sta = reg;
->>>
->>> -       rc = pci_read_config_dword(ndev->ntb.pdev,
->>> -                                  AMD_LINK_STATUS_OFFSET, &stat);
->>> +       rc = pcie_capability_read_dword(ndev->ntb.pdev,
->>> +                                  PCI_EXP_LNKCTL, &stat);
->>>          if (rc)
->>>                  return 0;
->>>          ndev->lnk_sta = stat;
->>> @@ -1139,6 +1139,7 @@ static const struct ntb_dev_data dev_data[] = {
->>>   static const struct pci_device_id amd_ntb_pci_tbl[] = {
->>>          { PCI_VDEVICE(AMD, 0x145b), (kernel_ulong_t)&dev_data[0] },
->>>          { PCI_VDEVICE(AMD, 0x148b), (kernel_ulong_t)&dev_data[1] },
->>> +       { PCI_VDEVICE(HYGON, 0x145b), (kernel_ulong_t)&dev_data[0] },
->>
->> This should be a separate patch.  I took the liberty of splitting it
->> off into a unique patch and attributing it to you.  I've pushed them
->> to the ntb-next branch on
->> https://github.com/jonmason/ntb
->>
-> Thank you for your comment. We appreciate the time and effort you have 
-> spent to split it off, I will test it ASAP.
-> 
->> Please verify everything looks acceptable to you (given the changes I
->> did above that are attributed to you).  Also, testing of the latest
->> code is always appreciated.
->>
->> Thanks,
->> Jon
->>
+I need:
 
-I have tested these patches that are pushed to ntb-next branch, they 
-work well on HYGON platforms.
+PCI: mobiveil: ls_pcie_g4: fix SError when accessing config space
+PCI: mobiveil: ls_pcie_g4: add Workaround for A-011451
+PCI: mobiveil: ls_pcie_g4: add Workaround for A-011577
 
-Thanks,
-Jiasen Lin
+to successfully boot with a Mellanox card plugged in with a previous
+revision of these patches.
 
->>
->>>          { 0, }
->>>   };
->>>   MODULE_DEVICE_TABLE(pci, amd_ntb_pci_tbl);
->>> diff --git a/drivers/ntb/hw/amd/ntb_hw_amd.h 
->>> b/drivers/ntb/hw/amd/ntb_hw_amd.h
->>> index 139a307..39e5d18 100644
->>> --- a/drivers/ntb/hw/amd/ntb_hw_amd.h
->>> +++ b/drivers/ntb/hw/amd/ntb_hw_amd.h
->>> @@ -53,7 +53,6 @@
->>>   #include <linux/pci.h>
->>>
->>>   #define AMD_LINK_HB_TIMEOUT    msecs_to_jiffies(1000)
->>> -#define AMD_LINK_STATUS_OFFSET 0x68
->>>   #define NTB_LIN_STA_ACTIVE_BIT 0x00000002
->>>   #define NTB_LNK_STA_SPEED_MASK 0x000F0000
->>>   #define NTB_LNK_STA_WIDTH_MASK 0x03F00000
->>> -- 
->>> 2.7.4
->>>
->>> -- 
->>> You received this message because you are subscribed to the Google 
->>> Groups "linux-ntb" group.
->>> To unsubscribe from this group and stop receiving emails from it, 
->>> send an email to linux-ntb+unsubscribe@googlegroups.com.
->>> To view this discussion on the web visit 
->>> https://groups.google.com/d/msgid/linux-ntb/1573119336-107732-1-git-send-email-linjiasen%40hygon.cn. 
->>>
-> 
-> Thanks,
-> 
-> Jiasen Lin
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
