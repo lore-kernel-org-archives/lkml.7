@@ -2,295 +2,133 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26339C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 18:58:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE00C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 18:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD85B2068E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 18:58:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C48562068D
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 18:59:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YuMXm3au"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jPDatIoy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727630AbfKTS6y (ORCPT
+        id S1727638AbfKTS7Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 13:58:54 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:55926 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726440AbfKTS6x (ORCPT
+        Wed, 20 Nov 2019 13:59:24 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:33791 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726634AbfKTS7Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 13:58:53 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAKIs6Y5015731;
-        Wed, 20 Nov 2019 18:58:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=corp-2019-08-05;
- bh=Mh9tB57Nnn4lghxLTxDkHxWWjco2T6GOaUVCFch00nk=;
- b=YuMXm3auSfkO2dwqcc4qon9Ubxx75dOaDdyiKUpbXZJSia0tJz3f28Eh7RPs1M8o5zDG
- vsx69TEh0PC/a5KaP3y+xgpLcp4KawZNTrtA0M5zZp3Azsgcr9ssMNnvJoGLflKX8Yjz
- Z3aKie4n6vKFsBSyK5C1FJqcXAHwVpuA+/cRs47TFWxxf1M7rYAQwHgtZ2zYNz16Dk2o
- JUePqI91Kjc+qe8Ji1tbQsT2CiiPHpWjNxEj9MUvFxBJHkhs2T4rwyHuYcd67eVEG8Zd
- OGhgyeVs+zESedX66feGrWkTHQNlMzUijcYq0YBQjiJrLcXZ+Nb7m7srd48HG6+r1a50 TA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2wa92pyhbk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 20 Nov 2019 18:58:38 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAKIs4Tf165866;
-        Wed, 20 Nov 2019 18:56:37 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2wda04knm6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 20 Nov 2019 18:56:37 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xAKIuad3014913;
-        Wed, 20 Nov 2019 18:56:36 GMT
-Received: from zissou.us.oracle.com (/10.152.34.58)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 20 Nov 2019 10:56:36 -0800
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>
-Cc:     Eric Biggers <ebiggers@kernel.org>, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
-Subject: [PATCH 4/4] padata: remove cpumask change notifier
-Date:   Wed, 20 Nov 2019 13:54:12 -0500
-Message-Id: <20191120185412.302-5-daniel.m.jordan@oracle.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191120185412.302-1-daniel.m.jordan@oracle.com>
-References: <20191120185412.302-1-daniel.m.jordan@oracle.com>
+        Wed, 20 Nov 2019 13:59:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574276363;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=C35wC9q1jgeXmU7JqR3NZOFZzSw/nsQvCT6e5UF4sJQ=;
+        b=jPDatIoyM4fLCbiALwAJBgde1mhP1gatYxrzfLKRzyGVL+fCV9+TjGmnK7LCb+vp+fFPZB
+        uAHdCRkygTeUJIJevapZ56RwLk7i1Cd0c99jkDWv8H4l6OiOZNTRqBYImYO0TWIaSNMM7f
+        9J35GGMbWrx7XajeSdtdIaBEccgR5FE=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-1-n-w5F-KVPUSQCygg-wZtYw-1; Wed, 20 Nov 2019 13:59:22 -0500
+Received: by mail-qt1-f200.google.com with SMTP id f14so520490qto.2
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 10:59:22 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:organization:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=jjpGzChSbAE/VjBP60NsRZKdsVloFbVJytDXjEcLDt4=;
+        b=Ed68HRqRgGZAk0tjSzcervN2QBYE4GpCGgvCl7KP3O8zf3twE7a0U8mkcaMjMvxxCi
+         K4LgE6XFVM2oww1c+oYXeb8CEwRZKpN2dIeRiJECe+3uK741TsfAukUBJS26ko+143wl
+         k9Y7uBrLK3Cizp4QqWREc7fujf/OdZuBAqRfLQbrAHXP7zO4obg50qkxk6C3nKzx6gOk
+         acazDfg8LJLN5Fi2BMOKNDge5R0SuMS1A42Ysc4sTwoigSx2URw2OM0qXLIrDeSz0KxO
+         SRPwuZxwPC7taE7qY1qCsED0oPez/oLBEAaHQkUsm2X40rnyz0mmNUOWUKhGbhNL+tap
+         BqOg==
+X-Gm-Message-State: APjAAAVqXDy1cFv32NL62KoqJ1hJ2fYprVomhYmu2fOTrGT7AuW5q5wP
+        fuXlwmMrmEkgOh2aFcpdM2d34SEkhS+mZ9jfQK+8DkYNuMcxLMneSO/K08L5Kc7to2TKGFWAc+F
+        ICJME0eoqy5DFccxkQXWYh/yk
+X-Received: by 2002:ac8:7282:: with SMTP id v2mr4163994qto.75.1574276361736;
+        Wed, 20 Nov 2019 10:59:21 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxuGeUbqVAJvgnf+jTL+SyQquhjCPMRcnZFI4gqIIOO+GhNZaN7NJrRHGgM5rw14Qhz3gcGlg==
+X-Received: by 2002:ac8:7282:: with SMTP id v2mr4163971qto.75.1574276361495;
+        Wed, 20 Nov 2019 10:59:21 -0800 (PST)
+Received: from dhcp-10-20-1-46.bss.redhat.com ([144.121.20.162])
+        by smtp.gmail.com with ESMTPSA id x1sm41244qke.125.2019.11.20.10.59.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Nov 2019 10:59:20 -0800 (PST)
+Message-ID: <f6c44c85a63c89e548cafa55d89caccd7e868268.camel@redhat.com>
+Subject: Re: [PATCH][next] drm/dp_mst: fix multiple frees of tx->bytes
+From:   Lyude Paul <lyude@redhat.com>
+To:     Colin King <colin.king@canonical.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        dri-devel@lists.freedesktop.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Wed, 20 Nov 2019 13:59:19 -0500
+In-Reply-To: <20191120173509.347490-1-colin.king@canonical.com>
+References: <20191120173509.347490-1-colin.king@canonical.com>
+Organization: Red Hat
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9447 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1911200156
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9447 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1911200156
+X-MC-Unique: n-w5F-KVPUSQCygg-wZtYw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit 63d3578892dc ("crypto: pcrypt - remove padata cpumask
-notifier") this feature is unused and may deliver unexpected data with
-the introduction of struct padata_shell (a notification mask that
-includes -ENOMEM), so get rid of it.
+Heh, surprised I missed this one!
 
-Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc: Eric Biggers <ebiggers@kernel.org>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Steffen Klassert <steffen.klassert@secunet.com>
-Cc: linux-crypto@vger.kernel.org
-Cc: linux-doc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- Documentation/padata.txt | 24 ------------------
- crypto/pcrypt.c          |  1 -
- include/linux/padata.h   | 10 --------
- kernel/padata.c          | 53 +++-------------------------------------
- 4 files changed, 3 insertions(+), 85 deletions(-)
+Reviewed-by: Lyude Paul <lyude@redhat.com>
 
-diff --git a/Documentation/padata.txt b/Documentation/padata.txt
-index a03afb1588f9..82e42dbaab65 100644
---- a/Documentation/padata.txt
-+++ b/Documentation/padata.txt
-@@ -74,30 +74,6 @@ padata_set_cpumask is used to change just one of the cpumasks. Here cpumask_type
- is one of PADATA_CPU_SERIAL or PADATA_CPU_PARALLEL, and cpumask specifies the
- new cpumask to use.
- 
--If a user is interested in padata cpumask changes, he can register to
--the padata cpumask change notifier::
--
--    int padata_register_cpumask_notifier(struct padata_instance *pinst,
--					 struct notifier_block *nblock);
--
--To unregister from that notifier::
--
--    int padata_unregister_cpumask_notifier(struct padata_instance *pinst,
--					   struct notifier_block *nblock);
--
--The padata cpumask change notifier notifies about changes of the usable
--cpumasks, i.e. the subset of active CPUs in the user supplied cpumask.
--
--Padata calls the notifier chain with::
--
--    blocking_notifier_call_chain(&pinst->cpumask_change_notifier,
--				 notification_mask,
--				 &pd_new->cpumask);
--
--Here cpumask_change_notifier is registered notifier, notification_mask
--is one of PADATA_CPU_SERIAL, PADATA_CPU_PARALLEL and cpumask is a pointer
--to a struct padata_cpumask that contains the new cpumask information.
--
- Actually submitting work to the padata instance requires the creation of a
- padata_priv structure::
- 
-diff --git a/crypto/pcrypt.c b/crypto/pcrypt.c
-index 3e026e7a7e75..af60016d25c4 100644
---- a/crypto/pcrypt.c
-+++ b/crypto/pcrypt.c
-@@ -13,7 +13,6 @@
- #include <linux/init.h>
- #include <linux/module.h>
- #include <linux/slab.h>
--#include <linux/notifier.h>
- #include <linux/kobject.h>
- #include <linux/cpu.h>
- #include <crypto/pcrypt.h>
-diff --git a/include/linux/padata.h b/include/linux/padata.h
-index 9e0be23bd9ff..efdd0b129c53 100644
---- a/include/linux/padata.h
-+++ b/include/linux/padata.h
-@@ -13,7 +13,6 @@
- #include <linux/workqueue.h>
- #include <linux/spinlock.h>
- #include <linux/list.h>
--#include <linux/notifier.h>
- #include <linux/kobject.h>
- 
- #define PADATA_CPU_SERIAL   0x01
-@@ -141,14 +140,10 @@ struct padata_shell {
- /**
-  * struct padata_instance - The overall control structure.
-  *
-- * @cpu_notifier: cpu hotplug notifier.
-  * @parallel_wq: The workqueue used for parallel work.
-  * @serial_wq: The workqueue used for serial work.
-  * @pslist: List of padata_shell objects attached to this instance.
-  * @cpumask: User supplied cpumasks for parallel and serial works.
-- * @cpumask_change_notifier: Notifiers chain for user-defined notify
-- *            callbacks that will be called when either @pcpu or @cbcpu
-- *            or both cpumasks change.
-  * @kobj: padata instance kernel object.
-  * @lock: padata instance lock.
-  * @flags: padata flags.
-@@ -159,7 +154,6 @@ struct padata_instance {
- 	struct workqueue_struct		*serial_wq;
- 	struct list_head		pslist;
- 	struct padata_cpumask		cpumask;
--	struct blocking_notifier_head	 cpumask_change_notifier;
- 	struct kobject                   kobj;
- 	struct mutex			 lock;
- 	u8				 flags;
-@@ -179,8 +173,4 @@ extern int padata_set_cpumask(struct padata_instance *pinst, int cpumask_type,
- 			      cpumask_var_t cpumask);
- extern int padata_start(struct padata_instance *pinst);
- extern void padata_stop(struct padata_instance *pinst);
--extern int padata_register_cpumask_notifier(struct padata_instance *pinst,
--					    struct notifier_block *nblock);
--extern int padata_unregister_cpumask_notifier(struct padata_instance *pinst,
--					      struct notifier_block *nblock);
- #endif
-diff --git a/kernel/padata.c b/kernel/padata.c
-index cd9ae6822460..7305e81b9bee 100644
---- a/kernel/padata.c
-+++ b/kernel/padata.c
-@@ -492,81 +492,35 @@ static void __padata_stop(struct padata_instance *pinst)
- }
- 
- /* Replace the internal control structure with a new one. */
--static int padata_replace_one(struct padata_shell *ps)
-+static void padata_replace_one(struct padata_shell *ps)
- {
- 	struct parallel_data *pd_old = rcu_dereference_protected(ps->pd, 1);
- 	struct parallel_data *pd_new;
--	int notification_mask = 0;
- 
- 	pd_new = padata_alloc_pd(ps);
- 	if (!pd_new)
--		return -ENOMEM;
-+		return;
- 
- 	rcu_assign_pointer(ps->pd, pd_new);
- 
--	if (!cpumask_equal(pd_old->cpumask.pcpu, pd_new->cpumask.pcpu))
--		notification_mask |= PADATA_CPU_PARALLEL;
--	if (!cpumask_equal(pd_old->cpumask.cbcpu, pd_new->cpumask.cbcpu))
--		notification_mask |= PADATA_CPU_SERIAL;
--
- 	if (atomic_dec_and_test(&pd_old->refcnt))
- 		padata_free_pd(pd_old);
--
--	return notification_mask;
- }
- 
- static void padata_replace(struct padata_instance *pinst)
- {
--	int notification_mask = 0;
- 	struct padata_shell *ps;
- 
- 	pinst->flags |= PADATA_RESET;
- 
- 	list_for_each_entry(ps, &pinst->pslist, list)
--		notification_mask |= padata_replace_one(ps);
-+		padata_replace_one(ps);
- 
- 	synchronize_rcu();
- 
--	if (notification_mask)
--		blocking_notifier_call_chain(&pinst->cpumask_change_notifier,
--					     notification_mask,
--					     &pinst->cpumask);
--
- 	pinst->flags &= ~PADATA_RESET;
- }
- 
--/**
-- * padata_register_cpumask_notifier - Registers a notifier that will be called
-- *                             if either pcpu or cbcpu or both cpumasks change.
-- *
-- * @pinst: A poineter to padata instance
-- * @nblock: A pointer to notifier block.
-- */
--int padata_register_cpumask_notifier(struct padata_instance *pinst,
--				     struct notifier_block *nblock)
--{
--	return blocking_notifier_chain_register(&pinst->cpumask_change_notifier,
--						nblock);
--}
--EXPORT_SYMBOL(padata_register_cpumask_notifier);
--
--/**
-- * padata_unregister_cpumask_notifier - Unregisters cpumask notifier
-- *        registered earlier  using padata_register_cpumask_notifier
-- *
-- * @pinst: A pointer to data instance.
-- * @nlock: A pointer to notifier block.
-- */
--int padata_unregister_cpumask_notifier(struct padata_instance *pinst,
--				       struct notifier_block *nblock)
--{
--	return blocking_notifier_chain_unregister(
--		&pinst->cpumask_change_notifier,
--		nblock);
--}
--EXPORT_SYMBOL(padata_unregister_cpumask_notifier);
--
--
- /* If cpumask contains no active cpu, we mark the instance as invalid. */
- static bool padata_validate_cpumask(struct padata_instance *pinst,
- 				    const struct cpumask *cpumask)
-@@ -944,7 +898,6 @@ static struct padata_instance *padata_alloc(const char *name,
- 
- 	pinst->flags = 0;
- 
--	BLOCKING_INIT_NOTIFIER_HEAD(&pinst->cpumask_change_notifier);
- 	kobject_init(&pinst->kobj, &padata_attr_type);
- 	mutex_init(&pinst->lock);
- 
--- 
-2.23.0
+Do you need me to push this to drm-misc, or do you have commit rights alrea=
+dy?
+
+On Wed, 2019-11-20 at 17:35 +0000, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+>=20
+> Currently tx->bytes is being freed r->num_transactions number of
+> times because tx is not being set correctly. Fix this by setting
+> tx to &r->transactions[i] so that the correct objects are being
+> freed on each loop iteration.
+>=20
+> Addresses-Coverity: ("Double free")
+> Fixes: 2f015ec6eab6 ("drm/dp_mst: Add sideband down request tracing +
+> selftests")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/gpu/drm/drm_dp_mst_topology.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c
+> b/drivers/gpu/drm/drm_dp_mst_topology.c
+> index ae5809a1f19a..2754e7e075e7 100644
+> --- a/drivers/gpu/drm/drm_dp_mst_topology.c
+> +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+> @@ -517,8 +517,10 @@ drm_dp_decode_sideband_req(const struct
+> drm_dp_sideband_msg_tx *raw,
+>  =09=09=09}
+> =20
+>  =09=09=09if (failed) {
+> -=09=09=09=09for (i =3D 0; i < r->num_transactions; i++)
+> +=09=09=09=09for (i =3D 0; i < r->num_transactions; i++) {
+> +=09=09=09=09=09tx =3D &r->transactions[i];
+>  =09=09=09=09=09kfree(tx->bytes);
+> +=09=09=09=09}
+>  =09=09=09=09return -ENOMEM;
+>  =09=09=09}
+> =20
+--=20
+Cheers,
+=09Lyude Paul
 
