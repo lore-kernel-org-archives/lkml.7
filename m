@@ -2,353 +2,235 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E6EC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 17:53:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13FBBC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 17:57:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1917D2089F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 17:53:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574272433;
-	bh=vTFgFEUH3J5T3MWJsb0bX1nQeOIGDcdKEZjEQ1JTKJ4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=eODyg2Z+BEN2uVzWOq7bALWHAZn0AEtghTJwvX2hmQswt/7/ecVtCLjLQ+45zdCw6
-	 x2meD7WuQ9zPlV9PmPCs+IrSU1ncwLcl20dLnRp9hhmlMBXIVVAuEK28/Q7M4+DX6j
-	 TXTpEJ6A6MGZsFw5w8/PfTU3YzuSHro6em2HtJ+U=
+	by mail.kernel.org (Postfix) with ESMTP id DE6F320878
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 17:57:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728183AbfKTRxw (ORCPT
+        id S1727911AbfKTR5U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 12:53:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60042 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727468AbfKTRxv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 12:53:51 -0500
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B26A208C0;
-        Wed, 20 Nov 2019 17:53:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574272430;
-        bh=vTFgFEUH3J5T3MWJsb0bX1nQeOIGDcdKEZjEQ1JTKJ4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=aKefBU3YwElaWPdEYRKoG5mj8XV6ocunvLSO86PiG0ppsJTjpPVa2tj+s509uoYGh
-         3hy0NzFXvVkIPsVjqsUDyyo4QvRhrntrqMD0YGVP4e5kUfMZUjXiOhvxnNTvaDZGfH
-         My9HmOD4k9PZgowERQCoRH5wZzYKC8HtAA8DdAug=
-Received: by mail-qt1-f172.google.com with SMTP id t20so441763qtn.9;
-        Wed, 20 Nov 2019 09:53:50 -0800 (PST)
-X-Gm-Message-State: APjAAAXaOdiDp2WoSf4BgfTZmFeVocGhSVedOnU/yos63YqZvHp/aNFo
-        LVNNjgj44sv1gB5xQ+aETFBCU8nalAW59eCYMA==
-X-Google-Smtp-Source: APXvYqxcBnubXdWFTB34ourRkaQWwkriG9fDbuZArgVLqVg6y0PsE/RaWX7IZWekSGnSC2/onL/T+1dVE2YhzWXa2+Y=
-X-Received: by 2002:ac8:7612:: with SMTP id t18mr3903697qtq.143.1574272429281;
- Wed, 20 Nov 2019 09:53:49 -0800 (PST)
+        Wed, 20 Nov 2019 12:57:20 -0500
+Received: from esa2.mentor.iphmx.com ([68.232.141.98]:37982 "EHLO
+        esa2.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726675AbfKTR5U (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 12:57:20 -0500
+IronPort-SDR: 8cj0s1h4R302fAKjpD1OYqkMDvFAyQP8R56v/HlxzJhPuU8HiOPXMocl3sTUOr5N7tRe2WSYhJ
+ Kf1vDflPuU4YXBnhGKzTpdfeiV6ttViRPGp9QIQdw6h0FD5sQlZYJCu2NvwBE37zNT4/9JU2iu
+ Dgv5K1U2IA/2LZKDnOI4GyLVDhpLqQiX1+QWaogXSJmTDcyTsIvbJlCHFAW5azfEQCCjsr1vEz
+ v5rFVpZJXsPi3NXrrbRI84mVwfRXk+78kKTTm4qmAr8Zb9znzCHu13sY8Tm71ZVDhO2XlW1qGh
+ A3Q=
+X-IronPort-AV: E=Sophos;i="5.69,222,1571731200"; 
+   d="scan'208";a="43299666"
+Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
+  by esa2.mentor.iphmx.com with ESMTP; 20 Nov 2019 09:57:19 -0800
+IronPort-SDR: U4ezTC14YwiNdT+RwZz7ugpGkGTNSs7V9ZU80RveK2zNvt5qQ67NJjXD1KEXK8NW7GDBd33Fxx
+ mgV1RvycdnXc2mtPA8bS/wIGhW7Npn2p3DUaFkstaev0YfX75cjVQuncsTZ+H7Yhju3t9xe/PQ
+ SvH/P3+ln8EDX9aJoFzFnDBdCa3Jr5oEFcVAGP9pr04sGZQmRMpY9MermLkt6ZiIUegX/My5OQ
+ ieXitmKSWQoAEEKPuSGUoZZFO0CztTKDMPGcsEvcKKwN40Jv9yQDVDxEhV3ffsYCE48I+xu56a
+ JFc=
+From:   Andrew Gabbasov <andrew_gabbasov@mentor.com>
+To:     'Takashi Iwai' <tiwai@suse.de>
+CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Timo Wischer <twischer@de.adit-jv.com>
+References: <20191120115856.4125-1-andrew_gabbasov@mentor.com>  <20191120115856.4125-2-andrew_gabbasov@mentor.com>      <20191120115856.4125-3-andrew_gabbasov@mentor.com>      <20191120115856.4125-4-andrew_gabbasov@mentor.com>      <20191120115856.4125-5-andrew_gabbasov@mentor.com>      <20191120115856.4125-6-andrew_gabbasov@mentor.com>      <20191120115856.4125-7-andrew_gabbasov@mentor.com>      <s5hh82y8vn5.wl-tiwai@suse.de>  <000001d59fb6$4ca36aa0$e5ea3fe0$@mentor.com>    <s5h5zje8sxl.wl-tiwai@suse.de>  <000101d59fb8$a288a280$e799e780$@mentor.com> <s5h36ei8rph.wl-tiwai@suse.de>
+In-Reply-To: <s5h36ei8rph.wl-tiwai@suse.de>
+Subject: RE: [PATCH v4 6/7] ALSA: aloop: Support selection of snd_timer instead of jiffies
+Date:   Wed, 20 Nov 2019 20:56:31 +0300
+Organization: Mentor Graphics Corporation
+Message-ID: <000201d59fcb$d895a180$89c0e480$@mentor.com>
 MIME-Version: 1.0
-References: <1574257423-26754-1-git-send-email-alain.volmat@st.com>
-In-Reply-To: <1574257423-26754-1-git-send-email-alain.volmat@st.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 20 Nov 2019 11:53:37 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+3GzLW7_hi56VFHT-V_LMv5g_K=x9ExGx0Xf6Hn_HR3Q@mail.gmail.com>
-Message-ID: <CAL_Jsq+3GzLW7_hi56VFHT-V_LMv5g_K=x9ExGx0Xf6Hn_HR3Q@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: i2c: stm32: Migrate i2c-stm32 documentation
- to yaml
-To:     Alain Volmat <alain.volmat@st.com>
-Cc:     Wolfram Sang <wsa@the-dreams.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Pierre-Yves MORDRET <pierre-yves.mordret@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 14.0
+Thread-Index: AQHVn7tmhCAU3Kkkmk2hDkJrcybUyqeUV53A
+Content-Language: en-us
+X-Originating-IP: [137.202.0.90]
+X-ClientProxiedBy: SVR-IES-MBX-08.mgc.mentorg.com (139.181.222.8) To
+ svr-ies-mbx-02.mgc.mentorg.com (139.181.222.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 7:43 AM Alain Volmat <alain.volmat@st.com> wrote:
->
-> The document was migrated to Yaml format and renamed st,stm32-i2c.yaml
->
-> Signed-off-by: Alain Volmat <alain.volmat@st.com>
-> ---
->  .../devicetree/bindings/i2c/i2c-stm32.txt          |  65 ---------
->  .../devicetree/bindings/i2c/st,stm32-i2c.yaml      | 157 +++++++++++++++++++++
->  2 files changed, 157 insertions(+), 65 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-stm32.txt
->  create mode 100644 Documentation/devicetree/bindings/i2c/st,stm32-i2c.yaml
->
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-stm32.txt b/Documentation/devicetree/bindings/i2c/i2c-stm32.txt
-> deleted file mode 100644
-> index ce3df2fff6c8..000000000000
-> --- a/Documentation/devicetree/bindings/i2c/i2c-stm32.txt
-> +++ /dev/null
-> @@ -1,65 +0,0 @@
-> -* I2C controller embedded in STMicroelectronics STM32 I2C platform
-> -
-> -Required properties:
-> -- compatible: Must be one of the following
-> -  - "st,stm32f4-i2c"
-> -  - "st,stm32f7-i2c"
-> -- reg: Offset and length of the register set for the device
-> -- interrupts: Must contain the interrupt id for I2C event and then the
-> -  interrupt id for I2C error.
-> -- resets: Must contain the phandle to the reset controller.
-> -- clocks: Must contain the input clock of the I2C instance.
-> -- A pinctrl state named "default" must be defined to set pins in mode of
-> -  operation for I2C transfer
-> -- #address-cells = <1>;
-> -- #size-cells = <0>;
-> -
-> -Optional properties:
-> -- clock-frequency: Desired I2C bus clock frequency in Hz. If not specified,
-> -  the default 100 kHz frequency will be used.
-> -  For STM32F4 SoC Standard-mode and Fast-mode are supported, possible values are
-> -  100000 and 400000.
-> -  For STM32F7, STM32H7 and STM32MP1 SoCs, Standard-mode, Fast-mode and Fast-mode
-> -  Plus are supported, possible values are 100000, 400000 and 1000000.
-> -- dmas: List of phandles to rx and tx DMA channels. Refer to stm32-dma.txt.
-> -- dma-names: List of dma names. Valid names are: "rx" and "tx".
-> -- i2c-scl-rising-time-ns: I2C SCL Rising time for the board (default: 25)
-> -  For STM32F7, STM32H7 and STM32MP1 only.
-> -- i2c-scl-falling-time-ns: I2C SCL Falling time for the board (default: 10)
-> -  For STM32F7, STM32H7 and STM32MP1 only.
-> -  I2C Timings are derived from these 2 values
-> -- st,syscfg-fmp: Use to set Fast Mode Plus bit within SYSCFG when Fast Mode
-> -  Plus speed is selected by slave.
-> -       1st cell: phandle to syscfg
-> -       2nd cell: register offset within SYSCFG
-> -       3rd cell: register bitmask for FMP bit
-> -  For STM32F7, STM32H7 and STM32MP1 only.
-> -
-> -Example:
-> -
-> -       i2c@40005400 {
-> -               compatible = "st,stm32f4-i2c";
-> -               #address-cells = <1>;
-> -               #size-cells = <0>;
-> -               reg = <0x40005400 0x400>;
-> -               interrupts = <31>,
-> -                            <32>;
-> -               resets = <&rcc 277>;
-> -               clocks = <&rcc 0 149>;
-> -               pinctrl-0 = <&i2c1_sda_pin>, <&i2c1_scl_pin>;
-> -               pinctrl-names = "default";
-> -       };
-> -
-> -       i2c@40005400 {
-> -               compatible = "st,stm32f7-i2c";
-> -               #address-cells = <1>;
-> -               #size-cells = <0>;
-> -               reg = <0x40005400 0x400>;
-> -               interrupts = <31>,
-> -                            <32>;
-> -               resets = <&rcc STM32F7_APB1_RESET(I2C1)>;
-> -               clocks = <&rcc 1 CLK_I2C1>;
-> -               pinctrl-0 = <&i2c1_sda_pin>, <&i2c1_scl_pin>;
-> -               pinctrl-names = "default";
-> -               st,syscfg-fmp = <&syscfg 0x4 0x1>;
-> -       };
-> diff --git a/Documentation/devicetree/bindings/i2c/st,stm32-i2c.yaml b/Documentation/devicetree/bindings/i2c/st,stm32-i2c.yaml
-> new file mode 100644
-> index 000000000000..0f51a6ed0e9b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/i2c/st,stm32-i2c.yaml
-> @@ -0,0 +1,157 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/i2c/st,stm32-i2c.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: I2C controller embedded in STMicroelectronics STM32 I2C platform
-> +
-> +maintainers:
-> +  - Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-> +
-> +allOf:
-> +  - $ref: /schemas/i2c/i2c-controller.yaml#
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - st,stm32f7-i2c
-> +    then:
-> +      properties:
-> +        i2c-scl-rising-time-ns:
-> +          description: I2C SCL Rising time for the board
-> +          $ref: /schemas/types.yaml#/definitions/uint32
-> +          default: 25
-> +
-> +        i2c-scl-falling-time-ns:
-> +          description: I2C SCL Falling time for the board
-> +          $ref: /schemas/types.yaml#/definitions/uint32
+Hello Takashi,
 
-These 2 should be added to i2c-controller.yaml and just the default
-defined here.
+> -----Original Message-----
+> From: Takashi Iwai [mailto:tiwai@suse.de]
+> Sent: Wednesday, November 20, 2019 6:59 PM
+> To: Gabbasov, Andrew
+> Cc: alsa-devel@alsa-project.org; linux-kernel@vger.kernel.org; Jaroslav
+> Kysela; Takashi Iwai; Timo Wischer
+> Subject: Re: [PATCH v4 6/7] ALSA: aloop: Support selection of snd_timer
+> instead of jiffies
+> 
+> On Wed, 20 Nov 2019 16:39:00 +0100,
+> Andrew Gabbasov wrote:
+> >
+> > Hello Takashi,
+> >
+> > > -----Original Message-----
+> > > From: Takashi Iwai [mailto:tiwai@suse.de]
+> > > Sent: Wednesday, November 20, 2019 6:32 PM
+> > > To: Gabbasov, Andrew
+> > > Cc: alsa-devel@alsa-project.org; linux-kernel@vger.kernel.org;
+Jaroslav
+> > > Kysela; Takashi Iwai; Timo Wischer
+> > > Subject: Re: [PATCH v4 6/7] ALSA: aloop: Support selection of
+snd_timer
+> > > instead of jiffies
+> > >
+> > > On Wed, 20 Nov 2019 16:21:36 +0100,
+> > > Andrew Gabbasov wrote:
+> > > >
+> > > > Hello Takashi,
+> > > >
+> > > > > -----Original Message-----
+> > > > > From: Takashi Iwai [mailto:tiwai@suse.de]
+> > > > > Sent: Wednesday, November 20, 2019 5:34 PM
+> > > > > To: Gabbasov, Andrew
+> > > > > Cc: alsa-devel@alsa-project.org; linux-kernel@vger.kernel.org;
+> > Jaroslav
+> > > > > Kysela; Takashi Iwai; Timo Wischer
+> > > > > Subject: Re: [PATCH v4 6/7] ALSA: aloop: Support selection of
+> > snd_timer
+> > > > > instead of jiffies
+> > > > >
+> > > > > On Wed, 20 Nov 2019 12:58:55 +0100,
+> > > > > Andrew Gabbasov wrote:
+> > > > > > +/* call in loopback->cable_lock */
+> > > > > > +static int loopback_snd_timer_open(struct loopback_pcm *dpcm)
+> > > > > > +{
+> > > > > > +	int err = 0;
+> > > > > > +	struct snd_timer_id tid = {
+> > > > > > +		.dev_class = SNDRV_TIMER_CLASS_PCM,
+> > > > > > +		.dev_sclass = SNDRV_TIMER_SCLASS_APPLICATION,
+> > > > > > +	};
+> > > > > > +	struct snd_timer_instance *timeri;
+> > > > > > +	struct loopback_cable *cable = dpcm->cable;
+> > > > > > +
+> > > > > > +	spin_lock_irq(&cable->lock);
+> > > > > > +
+> > > > > > +	/* check if timer was already opened. It is only opened once
+> > > > > > +	 * per playback and capture subdevice (aka cable).
+> > > > > > +	 */
+> > > > > > +	if (cable->snd_timer.instance)
+> > > > > > +		goto unlock;
+> > > > > > +
+> > > > > > +	err = loopback_parse_timer_id(dpcm->loopback->timer_source,
+> > > &tid);
+> > > > > > +	if (err < 0) {
+> > > > > > +		pcm_err(dpcm->substream->pcm,
+> > > > > > +			"Parsing timer source \'%s\' failed with
+> > %d",
+> > > > > > +			dpcm->loopback->timer_source, err);
+> > > > > > +		goto unlock;
+> > > > > > +	}
+> > > > > > +
+> > > > > > +	cable->snd_timer.stream = dpcm->substream->stream;
+> > > > > > +	cable->snd_timer.id = tid;
+> > > > > > +
+> > > > > > +	timeri = snd_timer_instance_new(dpcm->loopback->card->id);
+> > > > > > +	if (!timeri) {
+> > > > > > +		err = -ENOMEM;
+> > > > > > +		goto unlock;
+> > > > > > +	}
+> > > > > > +	/* The callback has to be called from another tasklet. If
+> > > > > > +	 * SNDRV_TIMER_IFLG_FAST is specified it will be called from
+> > > the
+> > > > > > +	 * snd_pcm_period_elapsed() call of the selected sound card.
+> > > > > > +	 * snd_pcm_period_elapsed() helds
+> > > snd_pcm_stream_lock_irqsave().
+> > > > > > +	 * Due to our callback loopback_snd_timer_function() also
+> > > calls
+> > > > > > +	 * snd_pcm_period_elapsed() which calls
+> > > > > snd_pcm_stream_lock_irqsave().
+> > > > > > +	 * This would end up in a dead lock.
+> > > > > > +	 */
+> > > > > > +	timeri->flags |= SNDRV_TIMER_IFLG_AUTO;
+> > > > > > +	timeri->callback = loopback_snd_timer_function;
+> > > > > > +	timeri->callback_data = (void *)cable;
+> > > > > > +	timeri->ccallback = loopback_snd_timer_event;
+> > > > > > +
+> > > > > > +	/* snd_timer_close() and snd_timer_open() should not be
+> > called
+> > > with
+> > > > > > +	 * locked spinlock because both functions can block on a
+> > > mutex. The
+> > > > > > +	 * mutex loopback->cable_lock is kept locked. Therefore
+> > > > > snd_timer_open()
+> > > > > > +	 * cannot be called a second time by the other device of the
+> > > same
+> > > > > cable.
+> > > > > > +	 * Therefore the following issue cannot happen:
+> > > > > > +	 * [proc1] Call loopback_timer_open() ->
+> > > > > > +	 *	   Unlock cable->lock for snd_timer_close/open()
+> > call
+> > > > > > +	 * [proc2] Call loopback_timer_open() -> snd_timer_open(),
+> > > > > > +	 *	   snd_timer_start()
+> > > > > > +	 * [proc1] Call snd_timer_open() and overwrite running timer
+> > > > > > +	 *	   instance
+> > > > > > +	 */
+> > > > > > +	spin_unlock_irq(&cable->lock);
+> > > > > > +	err = snd_timer_open(timeri, &cable->snd_timer.id, current-
+> > > >pid);
+> > > > > > +	if (err < 0) {
+> > > > > > +		pcm_err(dpcm->substream->pcm,
+> > > > > > +			"snd_timer_open (%d,%d,%d) failed with %d",
+> > > > > > +			cable->snd_timer.id.card,
+> > > > > > +			cable->snd_timer.id.device,
+> > > > > > +			cable->snd_timer.id.subdevice,
+> > > > > > +			err);
+> > > > > > +		snd_timer_instance_free(timeri);
+> > > > > > +		return err;
+> > > > > > +	}
+> > > > > > +	spin_lock_irq(&cable->lock);
+> > > > > > +
+> > > > > > +	cable->snd_timer.instance = timeri;
+> > > > > > +
+> > > > > > +	/* initialise a tasklet used for draining */
+> > > > > > +	tasklet_init(&cable->snd_timer.event_tasklet,
+> > > > > > +		     loopback_snd_timer_tasklet, (unsigned
+> > > long)timeri);
+> > > > >
+> > > > > This has to be set before snd_timer_open().  The callback might be
+> > > > > called immediately after snd_timer_open().
+> > > >
+> > > > This tasklet is used/scheduled only in ccallback (not regular tick
+> > > > callback),
+> > > > and only for SNDRV_TIMER_EVENT_MSTOP event. Can this event really
+> happen
+> > > > immediately after snd_timer_open()?
+> > >
+> > > Why not?  The master timer can be stopped at any time, even between
+> > > these two lines.
+> > >
+> > > Beware that there are fuzzer programs that can trigger such racy
+> > > things, and you're adding the code to the target that is actively
+> > > slapped by them :)
+> >
+> > OK, got it.
+> > I'll move this initialization to before snd_timer_open() in the next
+> > update together with the fixes for the other issues you will find
+> > in this version.
+> 
+> I have no other issues, so you can just resubmit only that patch,
+> too.
 
-> +          default: 10
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - st,stm32f4-i2c
-> +    then:
-> +      properties:
-> +        clock-frequency:
-> +          description: Desired I2C bus clock frequency in Hz. If not specified,
-> +                       the default 100 kHz frequency will be used.
-> +                       For STM32F4 SoC Standard-mode and Fast-mode are
-> +                       supported, possible values are 100000 and 400000.
-> +          default: 100000
-> +          enum: [100000, 400000]
-> +    else:
-> +      properties:
-> +        clock-frequency:
-> +          description: Desired I2C bus clock frequency in Hz. If not specified,
-> +                       the default 100 kHz frequency will be used.
-> +                       For STM32F7, STM32H7 and STM32MP1 SoCs, Standard-mode,
-> +                       Fast-mode and Fast-mode Plus are supported, possible
-> +                       values are 100000, 400000 and 1000000.
-> +          default: 100000
-> +          enum: [100000, 400000, 1000000]
+I'm not sure how to correctly format resubmitting of a single patch from
+a patch set, so I'm submitting the next version v5 of the whole patch set:
+https://mailman.alsa-project.org/pipermail/alsa-devel/2019-November/158939.h
+tml
 
-Move this to main 'properties'. Then the one in the 'then' clause just
-needs the enum.
+Thanks!
 
-> +
-> +        st,syscfg-fmp:
-> +          $ref: "/schemas/types.yaml#/definitions/phandle-array"
+Best regards,
+Andrew
 
-Won't work. You have to do:
-
-allOf:
-  - $ref: ...
-
-> +          description: Use to set Fast Mode Plus bit within SYSCFG when
-> +                       Fast Mode Plus speed is selected by slave. Should be
-> +                       phandle/offset/mask
-> +          items:
-> +            - description: phandle to syscfg
-> +            - description: register offset within syscfg
-> +            - description: register bitmask for FMP bit
-
-Wouldn't this make more sense in the first if rather than the 'else' clause?
-
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - st,stm32f4-i2c
-> +      - st,stm32f7-i2c
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 2
-
-Implied by items length.
-
-> +    items:
-> +      - description: interrupt ID for I2C event
-> +      - description: interrupt ID for I2C error
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  dmas:
-> +    items:
-> +      - description: RX DMA Channel phandle
-> +      - description: TX DMA Channel phandle
-> +    minItems: 2
-> +    maxItems: 2
-
-Implied by items length.
-
-> +
-> +  dma-names:
-> +    items:
-> +      - const: rx
-> +      - const: tx
-> +    minItems: 2
-> +    maxItems: 2
-
-Implied by items length.
-
-> +
-> +required:
-> +  - compatible
-
-> +  - '#address-cells'
-> +  - '#size-cells'
-
-Can drop. i2c-controller.yaml makes them required.
-
-> +  - reg
-> +  - interrupts
-> +  - resets
-> +  - clocks
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/mfd/stm32f7-rcc.h>
-> +    #include <dt-bindings/clock/stm32fx-clock.h>
-> +    //Example 1 (with st,stm32f4-i2c compatible)
-> +      i2c@40005400 {
-> +          compatible = "st,stm32f4-i2c";
-> +          #address-cells = <1>;
-> +          #size-cells = <0>;
-> +          reg = <0x40005400 0x400>;
-> +          interrupts = <31>,
-> +                       <32>;
-> +          resets = <&rcc 277>;
-> +          clocks = <&rcc 0 149>;
-> +      };
-> +
-> +    //Example 2 (with st,stm32f7-i2c compatible)
-> +      i2c@40005800 {
-> +          compatible = "st,stm32f7-i2c";
-> +          #address-cells = <1>;
-> +          #size-cells = <0>;
-> +          reg = <0x40005800 0x400>;
-> +          interrupts = <31>,
-> +                       <32>;
-> +          resets = <&rcc STM32F7_APB1_RESET(I2C1)>;
-> +          clocks = <&rcc 1 CLK_I2C1>;
-> +      };
-> +
-> +    //Example 3 (with st,stm32f7-i2c compatible on stm32mp)
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/clock/stm32mp1-clks.h>
-> +    #include <dt-bindings/reset/stm32mp1-resets.h>
-> +      i2c@40013000 {
-> +          compatible = "st,stm32f7-i2c";
-> +          #address-cells = <1>;
-> +          #size-cells = <0>;
-> +          reg = <0x40013000 0x400>;
-> +          interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>,
-> +                       <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
-> +          clocks = <&rcc I2C2_K>;
-> +          resets = <&rcc I2C2_R>;
-> +          i2c-scl-rising-time-ns = <185>;
-> +          i2c-scl-falling-time-ns = <20>;
-> +          st,syscfg-fmp = <&syscfg 0x4 0x2>;
-> +      };
-> +...
-> --
-> 2.7.4
->
