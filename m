@@ -2,140 +2,80 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D378C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 12:00:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE223C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 12:01:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E793922419
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 12:00:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EqVhZA3X"
+	by mail.kernel.org (Postfix) with ESMTP id CC8A522419
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 12:01:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729491AbfKTMAp (ORCPT
+        id S1729503AbfKTMBB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 07:00:45 -0500
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:36300 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728728AbfKTMAo (ORCPT
+        Wed, 20 Nov 2019 07:01:01 -0500
+Received: from mail-il1-f198.google.com ([209.85.166.198]:54314 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729037AbfKTMBB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 07:00:44 -0500
-Received: by mail-ua1-f65.google.com with SMTP id z9so7689545uan.3
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 04:00:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=B0tsxj8KZGAT/o1qcGiW6HKsR+OIwQVXMM2ODuLvIpk=;
-        b=EqVhZA3XS/izMBNsikllPUdPo/A4jO0CJ2WlCc6sonVPI2GnfaVvbdDuNlHdyVmBWs
-         04nfUBbI06D35YPWUGTFpPWM+eHRl7KJqzvMQZ83STlGgvja0fblAtHeSfAFZaJtrKA1
-         zmFiNtK3ttF7B1Fj4bDCbrnfA1x2DjrISFT4bYrf4bnivgaf2hWaN/7r/wMso4uvtHqe
-         shcCcvg8GlTnd3B7NHCeEdi4N+JTWa5XVlWqJoGC8NG0l9O8cxzUQYX3uLaU9pld4Ptn
-         uKq5VO98MpAoB+6hx23bKtwlM4Kx3cxqoTlHoH7OXOjuf6SVEg0kUKz7XdpkTWoKVgaL
-         HNqA==
+        Wed, 20 Nov 2019 07:01:01 -0500
+Received: by mail-il1-f198.google.com with SMTP id t67so22263425ill.21
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 04:01:00 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=B0tsxj8KZGAT/o1qcGiW6HKsR+OIwQVXMM2ODuLvIpk=;
-        b=muSsEst9sZrH++socQL40mtV/ZoYG9sUHgGJ9f3pMvQlBYRDSQuNX2FTca9qVQaXvh
-         jsimm7yPzC4doAAtHE1bLlyvEefEG2GKGyomdFxpTtXchZe9UWgFH9SbhOyGl4AO2w3f
-         KDsaG/NX+cGkerg0Qe4I47KgHQghbgEw3dRj8YkQOikpaxw5mBBCAmgEywGZS/dVmYN8
-         cl4Fy4Ja6COb5RPGodAauWLRS6n8S1Pk21Vs9oHFRPz/wNPSj5nYpBEg/hZ46UVH0UJg
-         vRaFh+lKc/XlOOa+Bva2kXNRlzXkxc4JnwzF57taN35K+XFgk+7B+0eGMZQcegURBo/W
-         OXVQ==
-X-Gm-Message-State: APjAAAV7nr6eLXcDdEOhTbDotTTKVZ6KbFJROGUckzKl5y6824aGgv/J
-        JwDzm7CZ8SrziF12Z4FUN4YuG9UuJrwohIJAS+M/2RLs
-X-Google-Smtp-Source: APXvYqyiLCF3MBQoSmzlqqxli2MvGV261pRD3zdGvysKb7s9Nit3G2b6p/dRiZmGs4K0UtVDM+P1vhy5Y89wBip3NWE=
-X-Received: by 2002:ab0:74cd:: with SMTP id f13mr1351834uaq.104.1574251241748;
- Wed, 20 Nov 2019 04:00:41 -0800 (PST)
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=ukGeEFjZg7Kbee1zzEtl/Q1DuM+LvaagxRP8dEWk9kY=;
+        b=h0iLyz+XuHL1R49EPmXLP0Mvb0O5YERjIkx0m8VnIqxHSxcV5KUvD4D8nY2losPwHE
+         N7p0KcgUI4j5UYXnYkx4YMj2LovWctMcEfgfwensK6aGiaLYCqF2gkl1tNHWHTcWDcuc
+         2xS5WzHxrqY5al1bN8bbSc5oYHiEQPXkaaMJ9PjooFihMUFTN2V23AQHzfc0e6sUKquy
+         jqkgzBSaWpQvgIr8cVuRrymCvP0jjMOnaP4h0C37juXpmeoHjLXgBtQrihDtgXsPEQq3
+         a4dxn4WxgZ81Yy29M4BB6KficwznMBAIvLK97YW8geJDOlpuPl+kwfMQGfKIiqwTaVGc
+         Tu/g==
+X-Gm-Message-State: APjAAAV59bb+evUSIbYbF+W1uOxlmq5/iS0XNEZ6MSkNZqLWBevEqFuS
+        jld0sxu1jCodyt1ws0de8nbxkhxfUdmuSHx59WFhdsIfdmWJ
+X-Google-Smtp-Source: APXvYqzEZF16qz+QeJoyw8OIWF/W+6iZXGY/pQaxuMo4inRh3rtqbw5coAxc5p3e6qtT1rQV7R3VziSrh7PkIvdMKmeoAWxAkumI
 MIME-Version: 1.0
-References: <20191119154621.55341-1-niklas.cassel@linaro.org>
-In-Reply-To: <20191119154621.55341-1-niklas.cassel@linaro.org>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 20 Nov 2019 13:00:05 +0100
-Message-ID: <CAPDyKFqjsJSRW7XvfUe2Ssewqxo5Xjk_3p_EywP_rTsvrdNDYQ@mail.gmail.com>
-Subject: Re: [PATCH v6 0/5] Add support for QCOM Core Power Reduction
-To:     Niklas Cassel <niklas.cassel@linaro.org>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Received: by 2002:a92:dccd:: with SMTP id b13mr2778086ilr.160.1574251260647;
+ Wed, 20 Nov 2019 04:01:00 -0800 (PST)
+Date:   Wed, 20 Nov 2019 04:01:00 -0800
+In-Reply-To: <0000000000006ad6030574fead2e@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000002da08e0597c5efbd@google.com>
+Subject: Re: possible deadlock in mon_bin_vma_fault
+From:   syzbot <syzbot+56f9673bb4cdcbeb0e92@syzkaller.appspotmail.com>
+To:     arnd@arndb.de, gregkh@linuxfoundation.org, jrdr.linux@gmail.com,
+        keescook@chromium.org, kstewart@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
+        viro@zeniv.linux.org.uk, zaitcev@redhat.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 19 Nov 2019 at 16:46, Niklas Cassel <niklas.cassel@linaro.org> wrote:
->
-> This series adds support for Core Power Reduction (CPR), a form of
-> Adaptive Voltage Scaling (AVS), found on certain Qualcomm SoCs.
->
-> This series is based on top of the qcs404 cpufreq patch series that
-> hasn't landed yet:
-> https://patchwork.kernel.org/project/linux-arm-msm/list/?series=173423
-> as well as that series' matching device tree changes:
-> https://patchwork.kernel.org/project/linux-arm-msm/list/?series=165457
->
-> For testing purposes, this patch series, including the dependencies
-> listed above, is available on the following git tag:
-> https://git.linaro.org/people/niklas.cassel/kernel.git/log/?h=cpr-v6
->
-> CPR is a technology that reduces core power on a CPU or on other device.
-> It reads voltage settings from efuses (that have been written in
-> production), it uses these voltage settings as initial values, for each
-> OPP.
->
-> After moving to a certain OPP, CPR monitors dynamic factors such as
-> temperature, etc. and adjusts the voltage for that frequency accordingly
-> to save power and meet silicon characteristic requirements.
->
-> This driver has been developed together with Jorge Ramirez-Ortiz, and
-> is based on an RFC by Stephen Boyd[1], which in turn is based on work
-> by others on codeaurora.org[2].
->
-> [1] https://lkml.org/lkml/2015/9/18/833
-> [2] https://source.codeaurora.org/quic/la/kernel/msm-4.14/tree/drivers/regulator/cpr-regulator.c?h=msm-4.14
->
-> Changes since v5:
-> -Removed pm_ops from platform_driver struct.
->  (This was embarrassingly not properly removed in previous patch revision.)
->
-> Niklas Cassel (5):
->   dt-bindings: power: avs: Add support for CPR (Core Power Reduction)
->   power: avs: Add support for CPR (Core Power Reduction)
->   arm64: dts: qcom: qcs404: Add CPR and populate OPP table
->   arm64: defconfig: enable CONFIG_QCOM_CPR
->   arm64: defconfig: enable CONFIG_ARM_QCOM_CPUFREQ_NVMEM
->
->  .../bindings/power/avs/qcom,cpr.txt           |  130 ++
->  MAINTAINERS                                   |    8 +
->  arch/arm64/boot/dts/qcom/qcs404.dtsi          |  132 +-
->  arch/arm64/configs/defconfig                  |    2 +
->  drivers/power/avs/Kconfig                     |   15 +
->  drivers/power/avs/Makefile                    |    1 +
->  drivers/power/avs/qcom-cpr.c                  | 1754 +++++++++++++++++
->  7 files changed, 2034 insertions(+), 8 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/power/avs/qcom,cpr.txt
->  create mode 100644 drivers/power/avs/qcom-cpr.c
->
-> --
-> 2.23.0
->
+syzbot has bisected this bug to:
 
-For the series (except patch 2 that I provided some comment for), feel
-free to add:
+commit 46eb14a6e1585d99c1b9f58d0e7389082a5f466b
+Author: Pete Zaitcev <zaitcev@redhat.com>
+Date:   Mon Jan 8 21:46:41 2018 +0000
 
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+     USB: fix usbmon BUG trigger
 
-Kind regards
-Uffe
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14deb012e00000
+start commit:   58c3f14f Merge tag 'riscv-for-linus-4.19-rc2' of git://git..
+git tree:       upstream
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=16deb012e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=12deb012e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=531a917630d2a492
+dashboard link: https://syzkaller.appspot.com/bug?extid=56f9673bb4cdcbeb0e92
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13dca13e400000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17cbe492400000
+
+Reported-by: syzbot+56f9673bb4cdcbeb0e92@syzkaller.appspotmail.com
+Fixes: 46eb14a6e158 ("USB: fix usbmon BUG trigger")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
