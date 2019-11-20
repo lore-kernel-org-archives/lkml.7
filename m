@@ -2,151 +2,91 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A51FC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 21:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B66C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 21:39:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 537392075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 21:39:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC14B2075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 21:39:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="HWlZvj1c"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="eQZ1qfsY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbfKTVje (ORCPT
+        id S1726757AbfKTVju (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 16:39:34 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:41087 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbfKTVje (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 16:39:34 -0500
-Received: by mail-qt1-f194.google.com with SMTP id o3so1214079qtj.8
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 13:39:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=F4UOOlylYKA4x5XwS/IcSHBpAnEOvDZz0DmXXFZBpcA=;
-        b=HWlZvj1c8bNqbGRODv0AgUEGYJvuTzXv3y+PxWcWyLnvLfcKURUZIzxXfU266k3473
-         zbm+2dXSBVQG2y2z1Oz1GVrmV3K4GqVzfEG7zivXUO+Tam1zvCqDHyjQpjdWw5WCQwLm
-         lzbmvkCSZzNFsiSddiHgU/kP3GzsDD8kMA6FBzb/GPXKxoZTvK43OXZwWhrLYABsdeLv
-         GZzAl8OT/xf1vbkEt4gyPza/zcf80oiyWvZOoFYYtZA3z2QPhwDT+f6UtVa8Ol7zZ6Xd
-         Z9ETSaZqziR1SUsWpnqyTYIPJuX9pTSwaZV0jCr+JJoXoHoF6WNgYWqzHywVVMTJWeDm
-         6YrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=F4UOOlylYKA4x5XwS/IcSHBpAnEOvDZz0DmXXFZBpcA=;
-        b=eESyPz90dxI5rgg/1zM27yVc9d87YU5MmM/isBTAK4XOHH8PQBfth8NWhynEVKPDjx
-         ko6Y2YrM2/LqDy4gZ1aul7kykKZIU9Qzus25p/5aullXnsibMh0T7SfQCnA36F1Zvzpw
-         WOmqyNwYUys+I1cEXo5Iy6nO7M/nAGdgQK3BktZZQkeDdwCyT+d9iqjwmMgsLXhuAf78
-         b/ilgiXmd8Y6gKP/wgIlSys4Fc/ov/RQTFVadzYvHEHMQ6KXlpzhqFvBOq7wGwqYFm0n
-         8L+FuQLO8VqRU7BKdbS1zIzuPNprvADR2To5qO8RGFppEONJV2opXz90dek4MxAij7Wk
-         8d7w==
-X-Gm-Message-State: APjAAAXu7bTqBwBB6Rw6Y+gwys4DEGioFz9ilCs6pgwOl4xxeg8dO1yz
-        sVWGxB04H8ldO4Rjppv99Q4WuA==
-X-Google-Smtp-Source: APXvYqylwjRzk+9exZgAIoBdfXGoEfLJGEmoJMQ2QoZKaVar53f/0Ed1XtazpN8A8Z6EAMlIaWC4vw==
-X-Received: by 2002:ac8:6697:: with SMTP id d23mr4730012qtp.32.1574285973134;
-        Wed, 20 Nov 2019 13:39:33 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::6900])
-        by smtp.gmail.com with ESMTPSA id l11sm199918qtq.20.2019.11.20.13.39.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Nov 2019 13:39:32 -0800 (PST)
-Date:   Wed, 20 Nov 2019 16:39:31 -0500
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Hugh Dickins <hughd@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Roman Gushchin <guro@fb.com>, Linux MM <linux-mm@kvack.org>,
-        Cgroups <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kernel Team <kernel-team@fb.com>
-Subject: Re: [PATCH] mm: fix unsafe page -> lruvec lookups with cgroup charge
- migration
-Message-ID: <20191120213931.GB428283@cmpxchg.org>
-References: <20191120165847.423540-1-hannes@cmpxchg.org>
- <CALvZod50AanTCNkTVSptU+Hg--69j6OuKdc04UPs4Vf64DkGiw@mail.gmail.com>
+        Wed, 20 Nov 2019 16:39:50 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:40762 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725819AbfKTVju (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 16:39:50 -0500
+Received: from zn.tnic (p200300EC2F0D8C00A5DC709D5356F6BE.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:8c00:a5dc:709d:5356:f6be])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 869311EC0CDA;
+        Wed, 20 Nov 2019 22:39:48 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1574285988;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=unydtxWRxd2NXuJKHq//1qdDSsPdWBzWdKiJb7+o+yo=;
+        b=eQZ1qfsYz5vdnz3FnLDXzBZ9hGj/lYe9nfD0OuZUE2ambFjZwbvPK4feb+/mromV77RWTG
+        0AIjOrExhpUD5TmIngXAfiKjVHAqdnOT9YCuM5reQiIl9n4Uh/tJ1ZdWPp5rUe0z/oKcxl
+        jIfdaz94vVBNi9ca0I7NOr/jJEym3Tg=
+Date:   Wed, 20 Nov 2019 22:39:36 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Jann Horn <jannh@google.com>, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCH v4 2/4] x86/traps: Print non-canonical address on #GP
+Message-ID: <20191120213936.GM2634@zn.tnic>
+References: <20191120170208.211997-1-jannh@google.com>
+ <20191120170208.211997-2-jannh@google.com>
+ <20191120202516.GD32572@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CALvZod50AanTCNkTVSptU+Hg--69j6OuKdc04UPs4Vf64DkGiw@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191120202516.GD32572@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 12:31:06PM -0800, Shakeel Butt wrote:
-> On Wed, Nov 20, 2019 at 8:58 AM Johannes Weiner <hannes@cmpxchg.org> wrote:
-> >
-> > While reviewing the "per lruvec lru_lock for memcg" series, Hugh and I
-> > noticed two places in the existing code where the page -> memcg ->
-> > lruvec lookup can result in a use-after-free bug. This affects cgroup1
-> > setups that have charge migration enabled.
-> >
-> > To pin page->mem_cgroup, callers need to either have the page locked,
-> > an exclusive refcount (0), or hold the lru_lock and "own" PageLRU
-> > (either ensure it's set, or be the one to hold the page in isolation)
-> > to make cgroup migration fail the isolation step.
-> 
-> I think we should add the above para in the comments for better visibility.
+On Wed, Nov 20, 2019 at 12:25:16PM -0800, Sean Christopherson wrote:
+> I get that adding a print just for the straddle case is probably overkill,
 
-Good idea. I'm attaching a delta patch below.
+Yes, frankly I am not too crazy about adding all that code just for the
+straddle case.
 
-> > Reported-by: Hugh Dickins <hughd@google.com>
-> > Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
-> 
-> Reviewed-by: Shakeel Butt <shakeelb@google.com>
+Also, the straddle case is kinda clear - it is always the
 
-Thanks!
+  0x7ffffffffXX.. + size - 1
 
----
-From 73b58ce09009cce668ea97d9e047611c60e95bd6 Mon Sep 17 00:00:00 2001
-From: Johannes Weiner <hannes@cmpxchg.org>
-Date: Wed, 20 Nov 2019 16:36:03 -0500
-Subject: [PATCH] mm: fix unsafe page -> lruvec lookups with cgroup charge
- migration fix
+address and we could simply dump that address instead of dumping a
+range. So we can simplify this to:
 
-Better document the mem_cgroup_page_lruvec() caller requirements.
+	("general protection fault, non-canonical address 0x%lx: 0000 [#1] SMP\n", addr + size - 1)
 
-Suggested-by: Shakeel Butt <shakeelb@google.com>
-Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
----
- mm/memcontrol.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+It all depends on how the access is done by the hardware but we can't
+always be absolutely sure which of the non-canonical bytes was accessed
+first. Depends also on the access width and yadda yadda... But I don't
+think we can know for sure always without the hw telling us, thus the
+"possibly" formulation.
 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 50f5bc55fcec..2d700fa0d7f4 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -1202,9 +1202,18 @@ int mem_cgroup_scan_tasks(struct mem_cgroup *memcg,
-  * @page: the page
-  * @pgdat: pgdat of the page
-  *
-- * This function is only safe when following the LRU page isolation
-- * and putback protocol: the LRU lock must be held, and the page must
-- * either be PageLRU() or the caller must have isolated/allocated it.
-+ * NOTE: The returned lruvec is only stable if the calling context has
-+ * the page->mem_cgroup pinned! This is accomplished by satisfying one
-+ * of the following criteria:
-+ *
-+ *    a) have the @page locked
-+ *    b) have an exclusive reference to @page (e.g. refcount 0)
-+ *    c) hold the lru_lock and "own" the PageLRU (meaning either ensure
-+ *       it's set, or be the one to hold the page in isolation)
-+ *
-+ * Otherwise, the page could be freed or moved out of the memcg,
-+ * thereby releasing its reference on the memcg and potentially
-+ * freeing it and its lruvecs in the process.
-  */
- struct lruvec *mem_cgroup_page_lruvec(struct page *page, struct pglist_data *pgdat)
- {
+Thx.
+
 -- 
-2.24.0
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
