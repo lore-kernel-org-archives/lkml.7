@@ -2,213 +2,112 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FB3EC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 08:00:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6A08C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 08:02:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 071C921852
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 08:00:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE9B921852
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 08:02:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EVoDF4XQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727518AbfKTIAm (ORCPT
+        id S1727626AbfKTICg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 03:00:42 -0500
-Received: from mga14.intel.com ([192.55.52.115]:61377 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726358AbfKTIAl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 03:00:41 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Nov 2019 00:00:41 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,221,1571727600"; 
-   d="scan'208";a="204747685"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.197]) ([10.237.72.197])
-  by fmsmga007.fm.intel.com with ESMTP; 20 Nov 2019 00:00:39 -0800
-Subject: Re: [PATCH v2] mmc: sdhci_am654: Add Support for Command Queuing
- Engine to J721E
-To:     Faiz Abbas <faiz_abbas@ti.com>, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org
-Cc:     ulf.hansson@linaro.org
-References: <20191118073609.22921-1-faiz_abbas@ti.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <ea458eb9-f9a8-ab39-2df9-6284fef02105@intel.com>
-Date:   Wed, 20 Nov 2019 09:59:41 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191118073609.22921-1-faiz_abbas@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 20 Nov 2019 03:02:36 -0500
+Received: from mail-vk1-f201.google.com ([209.85.221.201]:51524 "EHLO
+        mail-vk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727052AbfKTICg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 03:02:36 -0500
+Received: by mail-vk1-f201.google.com with SMTP id v188so10962650vkv.18
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 00:02:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=v9SVguB34yFXQYQCtso1z5KQbnvYcbDvSh9zyizusBA=;
+        b=EVoDF4XQ6IM4O3VY1rlvZJ9NaU03JESeIBp1JhoEPnNAstop8a2Sg/TABnt1lUWUKv
+         uCaXxaaNnMslFUMqNcw4F1ViF8Fr6Dlj63FwShTfOAf9q8fM4xalLDtanLJNwhTgZBbO
+         1nL9suTv3ysFsBKwfJdN0GKAm5LyCiTy1fMhGxmAzU8AEewgUKunXZC/iRbKunERmXs/
+         Q60MA0VhhHWJjHScu2r2frQ6siyZH+xaOBPBZJxHnH/RbZxcqB9QLNjVSE0yHRn1hG2h
+         3ooScZRGKGEY0X7LjfAEoTkaqgeL1Ibl4CQihrBZwwVFc88hW0oGmJ+WYy9VPSV7cRhT
+         ZLBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=v9SVguB34yFXQYQCtso1z5KQbnvYcbDvSh9zyizusBA=;
+        b=TfNq7lIXWi2ZUGxtomu+Md1y6i/Upmz46wTJoknDtHtulv2Qnf54YebMMpG5CxHjvF
+         cQ4AYaK9Ab6VhuTV5ZB6eyn3h8PzNiwSW3X1A4Wsx9UPnvPJ7TJN1y73+/+ZJ4SxZehD
+         d43EbNVo5N5Un0YegPYXM2tpZE9h4VD+eiuDXPs+5l2BeBRaMyexd0rNgCE9vjMxN4Vg
+         R1lP+Y/FAdycvfnksZbKOh5xY3sR1tEK9fxl018eqe467PHdcss/FIyFZgxA0IFZzOig
+         zWprycp2oFWMtzO86O8NTk9pKICttBVMVXC2+EWqB9AXWbb3s0gBVQJ9hpk1vS0D2HQB
+         pIRQ==
+X-Gm-Message-State: APjAAAVdLyyDFEBDz6bYm0g2zyn4YsrXwEq5HO2uxxFT+hO+TRLbY4jP
+        HW5gPW5kKQv6ZxLZVuKWpcZhgZjVn2r6M9A=
+X-Google-Smtp-Source: APXvYqyfpv66UxK7JIjpQqQY+CUFYdhkL+YN9jQN8pNakCS0UrbJZPCsgJyVRHGDqPcEszUbvOAbQRddqE0K8kM=
+X-Received: by 2002:ab0:765a:: with SMTP id s26mr805288uaq.17.1574236955402;
+ Wed, 20 Nov 2019 00:02:35 -0800 (PST)
+Date:   Wed, 20 Nov 2019 00:02:29 -0800
+Message-Id: <20191120080230.16007-1-saravanak@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
+Subject: [PATCH] of: property: Fix the semantics of of_is_ancestor_of()
+From:   Saravana Kannan <saravanak@google.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     Saravana Kannan <saravanak@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        kernel-team@android.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/11/19 9:36 AM, Faiz Abbas wrote:
-> Add Support for CQHCI (Command Queuing Host Controller Interface)
-> for each of the host controllers present in TI's J721E devices.
-> Add cqhci_ops and a .irq() callback to handle cqhci specific interrupts.
-> 
-> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
-> Reported-by: kbuild test robot <lkp@intel.com>
+The of_is_ancestor_of() function was renamed from of_link_is_valid()
+based on review feedback. The rename meant the semantics of the function
+had to be inverted, but this was missed in the earlier patch.
 
-That "Reported-by" should not be there.
+So, fix the semantics of of_is_ancestor_of() and invert the conditional
+expressions where it is used.
 
-Otherwise:
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Saravana Kannan <saravanak@google.com>
+---
+ drivers/of/property.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-
-> ---
-> 
-> v2: Dropped CONFIG_ prefix from select MMC_CQHCI which led to build
-> failures. Successfully built with the .config provided by the kbuild test robot.
-> 
->  drivers/mmc/host/Kconfig       |  1 +
->  drivers/mmc/host/sdhci_am654.c | 71 +++++++++++++++++++++++++++++++++-
->  2 files changed, 71 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-> index 49ea02c467bf..7c1310ed26c6 100644
-> --- a/drivers/mmc/host/Kconfig
-> +++ b/drivers/mmc/host/Kconfig
-> @@ -1011,6 +1011,7 @@ config MMC_SDHCI_AM654
->  	tristate "Support for the SDHCI Controller in TI's AM654 SOCs"
->  	depends on MMC_SDHCI_PLTFM && OF && REGMAP_MMIO
->  	select MMC_SDHCI_IO_ACCESSORS
-> +	select MMC_CQHCI
->  	help
->  	  This selects the Secure Digital Host Controller Interface (SDHCI)
->  	  support present in TI's AM654 SOCs. The controller supports
-> diff --git a/drivers/mmc/host/sdhci_am654.c b/drivers/mmc/host/sdhci_am654.c
-> index bb90757ecace..b8e897e31e2e 100644
-> --- a/drivers/mmc/host/sdhci_am654.c
-> +++ b/drivers/mmc/host/sdhci_am654.c
-> @@ -12,6 +12,7 @@
->  #include <linux/property.h>
->  #include <linux/regmap.h>
->  
-> +#include "cqhci.h"
->  #include "sdhci-pltfm.h"
->  
->  /* CTL_CFG Registers */
-> @@ -68,6 +69,9 @@
->  
->  #define CLOCK_TOO_SLOW_HZ	400000
->  
-> +/* Command Queue Host Controller Interface Base address */
-> +#define SDHCI_AM654_CQE_BASE_ADDR 0x200
-> +
->  static struct regmap_config sdhci_am654_regmap_config = {
->  	.reg_bits = 32,
->  	.val_bits = 32,
-> @@ -259,6 +263,19 @@ static const struct sdhci_am654_driver_data sdhci_am654_drvdata = {
->  	.flags = IOMUX_PRESENT | FREQSEL_2_BIT | STRBSEL_4_BIT | DLL_PRESENT,
->  };
->  
-> +static u32 sdhci_am654_cqhci_irq(struct sdhci_host *host, u32 intmask)
-> +{
-> +	int cmd_error = 0;
-> +	int data_error = 0;
-> +
-> +	if (!sdhci_cqe_irq(host, intmask, &cmd_error, &data_error))
-> +		return intmask;
-> +
-> +	cqhci_irq(host->mmc, intmask, cmd_error, data_error);
-> +
-> +	return 0;
-> +}
-> +
->  static struct sdhci_ops sdhci_j721e_8bit_ops = {
->  	.get_max_clock = sdhci_pltfm_clk_get_max_clock,
->  	.get_timeout_clock = sdhci_pltfm_clk_get_max_clock,
-> @@ -267,6 +284,7 @@ static struct sdhci_ops sdhci_j721e_8bit_ops = {
->  	.set_power = sdhci_am654_set_power,
->  	.set_clock = sdhci_am654_set_clock,
->  	.write_b = sdhci_am654_write_b,
-> +	.irq = sdhci_am654_cqhci_irq,
->  	.reset = sdhci_reset,
->  };
->  
-> @@ -290,6 +308,7 @@ static struct sdhci_ops sdhci_j721e_4bit_ops = {
->  	.set_power = sdhci_am654_set_power,
->  	.set_clock = sdhci_j721e_4bit_set_clock,
->  	.write_b = sdhci_am654_write_b,
-> +	.irq = sdhci_am654_cqhci_irq,
->  	.reset = sdhci_reset,
->  };
->  
-> @@ -304,6 +323,40 @@ static const struct sdhci_am654_driver_data sdhci_j721e_4bit_drvdata = {
->  	.pdata = &sdhci_j721e_4bit_pdata,
->  	.flags = IOMUX_PRESENT,
->  };
-> +
-> +static void sdhci_am654_dumpregs(struct mmc_host *mmc)
-> +{
-> +	sdhci_dumpregs(mmc_priv(mmc));
-> +}
-> +
-> +static const struct cqhci_host_ops sdhci_am654_cqhci_ops = {
-> +	.enable		= sdhci_cqe_enable,
-> +	.disable	= sdhci_cqe_disable,
-> +	.dumpregs	= sdhci_am654_dumpregs,
-> +};
-> +
-> +static int sdhci_am654_cqe_add_host(struct sdhci_host *host)
-> +{
-> +	struct cqhci_host *cq_host;
-> +	int ret;
-> +
-> +	cq_host = devm_kzalloc(host->mmc->parent, sizeof(struct cqhci_host),
-> +			       GFP_KERNEL);
-> +	if (!cq_host)
-> +		return -ENOMEM;
-> +
-> +	cq_host->mmio = host->ioaddr + SDHCI_AM654_CQE_BASE_ADDR;
-> +	cq_host->quirks |= CQHCI_QUIRK_SHORT_TXFR_DESC_SZ;
-> +	cq_host->caps |= CQHCI_TASK_DESC_SZ_128;
-> +	cq_host->ops = &sdhci_am654_cqhci_ops;
-> +
-> +	host->mmc->caps2 |= MMC_CAP2_CQE;
-> +
-> +	ret = cqhci_init(cq_host, host->mmc, 1);
-> +
-> +	return ret;
-> +}
-> +
->  static int sdhci_am654_init(struct sdhci_host *host)
->  {
->  	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> @@ -344,7 +397,23 @@ static int sdhci_am654_init(struct sdhci_host *host)
->  	regmap_update_bits(sdhci_am654->base, CTL_CFG_2, SLOTTYPE_MASK,
->  			   ctl_cfg_2);
->  
-> -	return sdhci_add_host(host);
-> +	ret = sdhci_setup_host(host);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = sdhci_am654_cqe_add_host(host);
-> +	if (ret)
-> +		goto err_cleanup_host;
-> +
-> +	ret = __sdhci_add_host(host);
-> +	if (ret)
-> +		goto err_cleanup_host;
-> +
-> +	return 0;
-> +
-> +err_cleanup_host:
-> +	sdhci_cleanup_host(host);
-> +	return ret;
->  }
->  
->  static int sdhci_am654_get_of_property(struct platform_device *pdev,
-> 
+diff --git a/drivers/of/property.c b/drivers/of/property.c
+index dedbf82da838..0de1e7e69b6e 100644
+--- a/drivers/of/property.c
++++ b/drivers/of/property.c
+@@ -993,11 +993,11 @@ static bool of_is_ancestor_of(struct device_node *test_ancestor,
+ 	while (child) {
+ 		if (child == test_ancestor) {
+ 			of_node_put(child);
+-			return false;
++			return true;
+ 		}
+ 		child = of_get_next_parent(child);
+ 	}
+-	return true;
++	return false;
+ }
+ 
+ /**
+@@ -1043,7 +1043,7 @@ static int of_link_to_phandle(struct device *dev, struct device_node *sup_np,
+ 	 * descendant nodes. By definition, a child node can't be a functional
+ 	 * dependency for the parent node.
+ 	 */
+-	if (!of_is_ancestor_of(dev->of_node, sup_np)) {
++	if (of_is_ancestor_of(dev->of_node, sup_np)) {
+ 		dev_dbg(dev, "Not linking to %pOFP - is descendant\n", sup_np);
+ 		of_node_put(sup_np);
+ 		return -EINVAL;
+-- 
+2.24.0.432.g9d3f5f5b63-goog
 
