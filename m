@@ -2,89 +2,60 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD135C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 01:15:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F76AC43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 01:15:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FC252245F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 01:15:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="TK4FU2ZS"
+	by mail.kernel.org (Postfix) with ESMTP id 3928722460
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 01:15:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727586AbfKTBPC (ORCPT
+        id S1727621AbfKTBPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 19 Nov 2019 20:15:03 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:47970 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727545AbfKTBPC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 19 Nov 2019 20:15:02 -0500
-Received: from ozlabs.org ([203.11.71.1]:48151 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727395AbfKTBPC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 20:15:02 -0500
-Received: by ozlabs.org (Postfix, from userid 1034)
-        id 47Hl9F1zQwz9sPW; Wed, 20 Nov 2019 12:14:57 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1574212497;
-        bh=LsELJmCEH+NKbFlJOW2HIaU1dLS5CTN3LAfLHJrRp2M=;
-        h=From:To:Cc:Subject:Date:From;
-        b=TK4FU2ZS28s8JR8kdTv+V/MJZt0OSyR8/XkbK0R5J1TCOCNnr8lJPdR4YSt48b2qt
-         yd9HSQTeVgwf7vwN4LcDTrPIE3l0jMjaGbi0hYk9yMFXpVvxjH83WjEIwsC+mU/Hsm
-         r9WsuHLCP/BDVy6PpS3dr4XIXc2+TSSuDK48hxwiXBq9ucB+b7FgMGBtMCoP/keChM
-         bh9KTgf/2eYbZLoHnrD0z3MYLYWCdSDEehl+WM1mbdrBCoJpbxUx/FRDMg7sizXqAb
-         v9Dgr5BznEMQ9x0HYraW+Y5Ow2a8Qp1F8R8A5kQp6wgkSdD7d62ivv6Bom14nDRghM
-         2Ek0HwtDxMTAw==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, davem@davemloft.net,
-        edumazet@google.com, sfr@canb.auug.org.au, linuxppc-dev@ozlabs.org
-Subject: [PATCH v2] powerpc: Add const qual to local_read() parameter
-Date:   Wed, 20 Nov 2019 12:14:51 +1100
-Message-Id: <20191120011451.28168-1-mpe@ellerman.id.au>
-X-Mailer: git-send-email 2.21.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id A8B3E1454E871;
+        Tue, 19 Nov 2019 17:15:01 -0800 (PST)
+Date:   Tue, 19 Nov 2019 17:15:01 -0800 (PST)
+Message-Id: <20191119.171501.666690660172999834.davem@davemloft.net>
+To:     sgarzare@redhat.com
+Cc:     netdev@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        decui@microsoft.com, stefanha@redhat.com,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        jhansen@vmware.com
+Subject: Re: [PATCH net-next 4/6] vsock: add vsock_loopback transport
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20191119110121.14480-5-sgarzare@redhat.com>
+References: <20191119110121.14480-1-sgarzare@redhat.com>
+        <20191119110121.14480-5-sgarzare@redhat.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 19 Nov 2019 17:15:02 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Stefano Garzarella <sgarzare@redhat.com>
+Date: Tue, 19 Nov 2019 12:01:19 +0100
 
-A patch in net-next triggered a compile error on powerpc:
+> +static int vsock_loopback_cancel_pkt(struct vsock_sock *vsk)
+> +{
+> +	struct vsock_loopback *vsock;
+> +	struct virtio_vsock_pkt *pkt, *n;
+> +	int ret;
+> +	LIST_HEAD(freeme);
 
-  include/linux/u64_stats_sync.h: In function 'u64_stats_read':
-  include/asm-generic/local64.h:30:37: warning: passing argument 1 of 'local_read' discards 'const' qualifier from pointer target type
-
-This seems reasonable to relax powerpc local_read() requirements.
-
-Fixes: 316580b69d0a ("u64_stats: provide u64_stats_t type")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: kbuild test robot <lkp@intel.com>
-Acked-by: Michael Ellerman <mpe@ellerman.id.au>
----
- arch/powerpc/include/asm/local.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-v2: mpe: Update change log with compiler warning, resend to netdev so it appears
-in the netdev patchwork.
-
-Dave can you take this in the net tree so the window of the breakage is as small
-as possible please?
-
-diff --git a/arch/powerpc/include/asm/local.h b/arch/powerpc/include/asm/local.h
-index fdd00939270b..bc4bd19b7fc2 100644
---- a/arch/powerpc/include/asm/local.h
-+++ b/arch/powerpc/include/asm/local.h
-@@ -17,7 +17,7 @@ typedef struct
- 
- #define LOCAL_INIT(i)	{ (i) }
- 
--static __inline__ long local_read(local_t *l)
-+static __inline__ long local_read(const local_t *l)
- {
- 	return READ_ONCE(l->v);
- }
--- 
-2.21.0
-
+Reverse christmas tree ordering of local variables here please.
