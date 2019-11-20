@@ -2,241 +2,68 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0A7EC43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 02:42:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F9EC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 02:44:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71B182243E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 02:42:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RMhW35CO"
+	by mail.kernel.org (Postfix) with ESMTP id 9C9C22245D
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 02:44:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727486AbfKTCmi (ORCPT
+        id S1727514AbfKTCou (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 21:42:38 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:44711 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727082AbfKTCmi (ORCPT
+        Tue, 19 Nov 2019 21:44:50 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:48850 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727082AbfKTCou (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 21:42:38 -0500
-Received: by mail-pj1-f65.google.com with SMTP id w8so3497352pjh.11
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 18:42:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=mggnajP13wzBYKAf4NRlJn7XcuAgzkajLKaALOK2EHg=;
-        b=RMhW35COKLndMxJnzbK/pB1itPT/g5K3UnnQge1Sb4ac5dPhQoG2Sr8wPZuv6idE9o
-         7UfVzHkxrkD7/b/+7dZ/fhxDHmR3s2cr56tKp309JnEXILFaZtJHwahznh1zfMJpS1Hn
-         n/ZJUBweA0l6aMk2+ElEv6C/PAAlP71vbuV2ABjfGTujE4fH8vWMdVZNXTVIbK6IGIpo
-         UzUhk6Dlvt3WwmrsK04C8QN15hl9mzckFLExXuFDvRjMigqJo9l848EtKuMoAeggCj/8
-         40R7cZS/36PhGIWBMxLahBUTpPk4XQsAkKaqVLZhqQDRYNFfHZ9RAAlWN9OFN63Za8B2
-         mAeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mggnajP13wzBYKAf4NRlJn7XcuAgzkajLKaALOK2EHg=;
-        b=f9bhBK+RnKcdrBT0YCyyojjJGuo47rlgVGhKPKHHdFwDBd3JkZ6J252ZqwN05AWQjn
-         Hwcnze0PCVpERsze4VId1PbzBmsdR2zbknQl8lGSafj9BD2bFXCyrursncrOtzvAWvRB
-         sI2ZCvGvCwqWMICwef6gNmVGLpE2+TSVNgKUDINgDYzEbgEgfdvsPMvngeen/wBz7zRb
-         pXRBBJSeF2FR4v8GJZivZHpBFHGhsj8W0JYxOZvW4I7gEg9a0EEegTP/WClopQRXIQUv
-         y8UH8pUWxWVTN6EfsGNsfuSZighfuNLJB1xclwepR8q661GW6rHIafpDcI9PBqE1NnCP
-         W21g==
-X-Gm-Message-State: APjAAAUJIXuepDreZBpskHUmnzizgwycP703gmQolpEuR5V7EHyLFtKy
-        BkShBM60NsMSrcQfgPtB09nbaQ==
-X-Google-Smtp-Source: APXvYqzh+9xJhLTKFMGQB/YTDSs97B4ZDLhpNLpBLs1QomNcNl4KZ8TCvqacQTG2MWoHKABUH/aUrg==
-X-Received: by 2002:a17:90a:195e:: with SMTP id 30mr1015734pjh.60.1574217756947;
-        Tue, 19 Nov 2019 18:42:36 -0800 (PST)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id f7sm29262566pfa.150.2019.11.19.18.42.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Nov 2019 18:42:36 -0800 (PST)
-Date:   Tue, 19 Nov 2019 18:42:33 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Niklas Cassel <niklas.cassel@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, amit.kucheria@linaro.org,
-        sboyd@kernel.org, vireshk@kernel.org, ulf.hansson@linaro.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 1/5] dt-bindings: power: avs: Add support for CPR
- (Core Power Reduction)
-Message-ID: <20191120024233.GQ18024@yoga>
-References: <20191119154621.55341-1-niklas.cassel@linaro.org>
- <20191119154621.55341-2-niklas.cassel@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191119154621.55341-2-niklas.cassel@linaro.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        Tue, 19 Nov 2019 21:44:50 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 9622A146CFEC3;
+        Tue, 19 Nov 2019 18:44:49 -0800 (PST)
+Date:   Tue, 19 Nov 2019 18:44:46 -0800 (PST)
+Message-Id: <20191119.184446.1007728375771623470.davem@davemloft.net>
+To:     tbogendoerfer@suse.de
+Cc:     corbet@lwn.net, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH net-next] net: ipconfig: Make device wait timeout
+ configurable
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20191119120647.31547-1-tbogendoerfer@suse.de>
+References: <20191119120647.31547-1-tbogendoerfer@suse.de>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 19 Nov 2019 18:44:49 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 19 Nov 07:46 PST 2019, Niklas Cassel wrote:
+From: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+Date: Tue, 19 Nov 2019 13:06:46 +0100
 
-> Add DT bindings to describe the CPR HW found on certain Qualcomm SoCs.
+> If network device drivers are using deferred probing it's possible
+> that waiting for devices to show up in ipconfig is already over,
+> when the device eventually shows up. With the new netdev_max_wait
+> kernel cmdline pataremter it's now possible to extend this time.
 > 
-> Co-developed-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+This is one of those "user's shouldn't have to figure this crap out"
+situations.
 
-Regards,
-Bjorn
+To me, a knob is always a step backwards, and makes Linux harder to
+use.
 
-> ---
-> Changes since v5:
-> -None
-> 
->  .../bindings/power/avs/qcom,cpr.txt           | 130 ++++++++++++++++++
->  1 file changed, 130 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/avs/qcom,cpr.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/power/avs/qcom,cpr.txt b/Documentation/devicetree/bindings/power/avs/qcom,cpr.txt
-> new file mode 100644
-> index 000000000000..ab0d5ebbad4e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/avs/qcom,cpr.txt
-> @@ -0,0 +1,130 @@
-> +QCOM CPR (Core Power Reduction)
-> +
-> +CPR (Core Power Reduction) is a technology to reduce core power on a CPU
-> +or other device. Each OPP of a device corresponds to a "corner" that has
-> +a range of valid voltages for a particular frequency. While the device is
-> +running at a particular frequency, CPR monitors dynamic factors such as
-> +temperature, etc. and suggests adjustments to the voltage to save power
-> +and meet silicon characteristic requirements.
-> +
-> +- compatible:
-> +	Usage: required
-> +	Value type: <string>
-> +	Definition: should be "qcom,qcs404-cpr", "qcom,cpr" for qcs404
-> +
-> +- reg:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition: base address and size of the rbcpr register region
-> +
-> +- interrupts:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition: should specify the CPR interrupt
-> +
-> +- clocks:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition: phandle to the reference clock
-> +
-> +- clock-names:
-> +	Usage: required
-> +	Value type: <stringlist>
-> +	Definition: must be "ref"
-> +
-> +- vdd-apc-supply:
-> +	Usage: required
-> +	Value type: <phandle>
-> +	Definition: phandle to the vdd-apc-supply regulator
-> +
-> +- #power-domain-cells:
-> +	Usage: required
-> +	Value type: <u32>
-> +	Definition: should be 0
-> +
-> +- operating-points-v2:
-> +	Usage: required
-> +	Value type: <phandle>
-> +	Definition: A phandle to the OPP table containing the
-> +		    performance states supported by the CPR
-> +		    power domain
-> +
-> +- acc-syscon:
-> +	Usage: optional
-> +	Value type: <phandle>
-> +	Definition: phandle to syscon for writing ACC settings
-> +
-> +- nvmem-cells:
-> +	Usage: required
-> +	Value type: <phandle>
-> +	Definition: phandle to nvmem cells containing the data
-> +		    that makes up a fuse corner, for each fuse corner.
-> +		    As well as the CPR fuse revision.
-> +
-> +- nvmem-cell-names:
-> +	Usage: required
-> +	Value type: <stringlist>
-> +	Definition: should be "cpr_quotient_offset1", "cpr_quotient_offset2",
-> +		    "cpr_quotient_offset3", "cpr_init_voltage1",
-> +		    "cpr_init_voltage2", "cpr_init_voltage3", "cpr_quotient1",
-> +		    "cpr_quotient2", "cpr_quotient3", "cpr_ring_osc1",
-> +		    "cpr_ring_osc2", "cpr_ring_osc3", "cpr_fuse_revision"
-> +		    for qcs404.
-> +
-> +Example:
-> +
-> +	cpr_opp_table: cpr-opp-table {
-> +		compatible = "operating-points-v2-qcom-level";
-> +
-> +		cpr_opp1: opp1 {
-> +			opp-level = <1>;
-> +			qcom,opp-fuse-level = <1>;
-> +		};
-> +		cpr_opp2: opp2 {
-> +			opp-level = <2>;
-> +			qcom,opp-fuse-level = <2>;
-> +		};
-> +		cpr_opp3: opp3 {
-> +			opp-level = <3>;
-> +			qcom,opp-fuse-level = <3>;
-> +		};
-> +	};
-> +
-> +	power-controller@b018000 {
-> +		compatible = "qcom,qcs404-cpr", "qcom,cpr";
-> +		reg = <0x0b018000 0x1000>;
-> +		interrupts = <0 15 IRQ_TYPE_EDGE_RISING>;
-> +		clocks = <&xo_board>;
-> +		clock-names = "ref";
-> +		vdd-apc-supply = <&pms405_s3>;
-> +		#power-domain-cells = <0>;
-> +		operating-points-v2 = <&cpr_opp_table>;
-> +		acc-syscon = <&tcsr>;
-> +
-> +		nvmem-cells = <&cpr_efuse_quot_offset1>,
-> +			<&cpr_efuse_quot_offset2>,
-> +			<&cpr_efuse_quot_offset3>,
-> +			<&cpr_efuse_init_voltage1>,
-> +			<&cpr_efuse_init_voltage2>,
-> +			<&cpr_efuse_init_voltage3>,
-> +			<&cpr_efuse_quot1>,
-> +			<&cpr_efuse_quot2>,
-> +			<&cpr_efuse_quot3>,
-> +			<&cpr_efuse_ring1>,
-> +			<&cpr_efuse_ring2>,
-> +			<&cpr_efuse_ring3>,
-> +			<&cpr_efuse_revision>;
-> +		nvmem-cell-names = "cpr_quotient_offset1",
-> +			"cpr_quotient_offset2",
-> +			"cpr_quotient_offset3",
-> +			"cpr_init_voltage1",
-> +			"cpr_init_voltage2",
-> +			"cpr_init_voltage3",
-> +			"cpr_quotient1",
-> +			"cpr_quotient2",
-> +			"cpr_quotient3",
-> +			"cpr_ring_osc1",
-> +			"cpr_ring_osc2",
-> +			"cpr_ring_osc3",
-> +			"cpr_fuse_revision";
-> +	};
-> -- 
-> 2.23.0
-> 
+The irony in all of this, is that the kernel knows when this stuff is
+happening.  So the ipconfig code should be taught that drivers are
+still plugging themselves together and probing, instead of setting
+some arbitrary timeout to wait for these things to occur.
