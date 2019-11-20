@@ -6,126 +6,85 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 022E6C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:17:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA822C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:18:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C878720895
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:17:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C0B520898
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:18:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574277478;
-	bh=cHhoLUTYuualM9iS8KvjcZli3VMwjP9r7XxPgVw73TE=;
+	s=default; t=1574277500;
+	bh=7UC1p05lqHNeIwWrK44s+QdCnsy4ZgEBXbsj/3SOi4Q=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vs9V5wTOYAcRLxKwDKJ//myAHW01jV2Ygfv8661LMi1uV3kut1VBsnwbTXOejuo1l
-	 TGZr3znL5xSFpjQ68FmoRs94lLcQw4hLC9rT3lz1ZhayVIpzHizAeaDIX4WejjY+2f
-	 qmkAqiMQAE46Yd5ZFdU3iDt11ZMGgqrhh5PEsYUA=
+	b=CNwR+OGmV6A9AcQTz3uU5EOJhXwxT4PaRUHmFauUZPhuh7MncKDl5+ns/h7+rOYdo
+	 U4RmpQ2ZCMDUNBJiwfWTFlL4BrA7b1nwWSNZWbO5oLQ7U0V2Mng5gEVeIaATPdGRyL
+	 U6TRl4/89OKcHH1xi2GdormPN1fyu5NGzhP2i9U4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727723AbfKTTR6 (ORCPT
+        id S1727737AbfKTTST (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 14:17:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56344 "EHLO mail.kernel.org"
+        Wed, 20 Nov 2019 14:18:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726236AbfKTTR5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 14:17:57 -0500
+        id S1726236AbfKTTST (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 14:18:19 -0500
 Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06C4020855;
-        Wed, 20 Nov 2019 19:17:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA5C420855;
+        Wed, 20 Nov 2019 19:18:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574277477;
-        bh=cHhoLUTYuualM9iS8KvjcZli3VMwjP9r7XxPgVw73TE=;
+        s=default; t=1574277498;
+        bh=7UC1p05lqHNeIwWrK44s+QdCnsy4ZgEBXbsj/3SOi4Q=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uHFApHxsjhLEnQcSIB1iXp0EV1GQ/mZDaIwYlGJZBN6TlRZq7L2tfcZtr0/4ckKuR
-         Op6I8iBEaydcGCbujV1do/EupQYXuGaukuDlTPaEOwc8j59p9y/eBZQLahniai4txa
-         mOWdTKkVobQQAw5SNE4I60B+zrXlxr20+XW/0I7w=
-Date:   Wed, 20 Nov 2019 19:17:52 +0000
+        b=a9kcqFrnoKUkALPWQpNkZnUzLHHed0WfD+0gr4OxoB3q1iaUI7GT/g/h7g0AbYoQJ
+         IUrK+68/Hpw1yEIyq7upZ1+LkOCX11du/YcD1GM2XksuoSYP0yWYOFbjo37YbyBXoI
+         s8xnNCm8dmr+NZqua13pcMtSbgOPzMpoYcpK9lUE=
+Date:   Wed, 20 Nov 2019 19:18:13 +0000
 From:   Will Deacon <will@kernel.org>
-To:     Alexey Dobriyan <adobriyan@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        security@kernel.org, ben.dooks@codethink.co.uk
-Subject: Re: [PATCH] exec: warn if process starts with executable stack
-Message-ID: <20191120191752.GC4799@willie-the-truck>
-References: <20191118145114.GA9228@avx2>
- <20191118125457.778e44dfd4740d24795484c7@linux-foundation.org>
- <20191118215227.GA24536@avx2>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Pavel Labath <labath@google.com>,
+        Pratyush Anand <panand@redhat.com>, mka@chromium.org,
+        kinaba@google.com, Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: hw_breakpoint: Handle inexact watchpoint addresses
+Message-ID: <20191120191813.GD4799@willie-the-truck>
+References: <20191019111216.1.I82eae759ca6dc28a245b043f485ca490e3015321@changeid>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191118215227.GA24536@avx2>
+In-Reply-To: <20191019111216.1.I82eae759ca6dc28a245b043f485ca490e3015321@changeid>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 12:52:27AM +0300, Alexey Dobriyan wrote:
-> There were few episodes of silent downgrade to an executable stack:
+On Sat, Oct 19, 2019 at 11:12:26AM -0700, Douglas Anderson wrote:
+> This is commit fdfeff0f9e3d ("arm64: hw_breakpoint: Handle inexact
+> watchpoint addresses") but ported to arm32, which has the same
+> problem.
 > 
-> 1) linking innocent looking assembly file
+> This problem was found by Android CTS tests, notably the
+> "watchpoint_imprecise" test [1].  I tested locally against a copycat
+> (simplified) version of the test though.
 > 
-> 	$ cat f.S
-> 	.intel_syntax noprefix
-> 	.text
-> 	.globl f
-> 	f:
-> 	        ret
+> [1] https://android.googlesource.com/platform/bionic/+/master/tests/sys_ptrace_test.cpp
 > 
-> 	$ cat main.c
-> 	void f(void);
-> 	int main(void)
-> 	{
-> 	        f();
-> 	        return 0;
-> 	}
-> 
-> 	$ gcc main.c f.S
-> 	$ readelf -l ./a.out
-> 	  GNU_STACK      0x0000000000000000 0x0000000000000000 0x0000000000000000
->                          0x0000000000000000 0x0000000000000000  RWE    0x10
-> 
-> 2) converting C99 nested function into a closure
-> https://nullprogram.com/blog/2019/11/15/
-> 
-> 	void intsort2(int *base, size_t nmemb, _Bool invert)
-> 	{
-> 	    int cmp(const void *a, const void *b)
-> 	    {
-> 	        int r = *(int *)a - *(int *)b;
-> 	        return invert ? -r : r;
-> 	    }
-> 	    qsort(base, nmemb, sizeof(*base), cmp);
-> 	}
-> 
-> will silently require stack trampolines while non-closure version will not.
-> 
-> While without a double this behaviour is documented somewhere, add a warning
-> so that developers and users can at least notice. After so many years of x86_64
-> having proper executable stack support it should not cause too much problems.
-> 
-> If the system is old or CPU is old, then there will be an early warning
-> against init and/or support personnel will write that "uh-oh, our Enterprise
-> Software absolutely requires executable stack" and close tickets and customers
-> will nod heads and life moves on.
-> 
-> Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 > ---
 > 
->  fs/exec.c |    5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> --- a/fs/exec.c
-> +++ b/fs/exec.c
-> @@ -762,6 +762,11 @@ int setup_arg_pages(struct linux_binprm *bprm,
->  		goto out_unlock;
->  	BUG_ON(prev != vma);
->  
-> +	if (vm_flags & VM_EXEC) {
-> +		pr_warn_once("process '%s'/%u started with executable stack\n",
-> +			     current->comm, current->pid);
-> +	}
+>  arch/arm/kernel/hw_breakpoint.c | 96 ++++++++++++++++++++++++---------
+>  1 file changed, 70 insertions(+), 26 deletions(-)
 
-Given that this is triggerable by userspace, is there a concern about PID
-namespaces here?
+Sorry for taking so long to look at this. After wrapping my head around the
+logic again, I think it looks fine, so please put it into the patch system
+with my Ack:
+
+Acked-by: Will Deacon <will@kernel.org>
+
+One interesting difference between the implementation here and the arm64
+code is that I think if you have multiple watchpoints, all of which fire
+with a distance != 0, then arm32 will actually report them all whereas
+you'd only get one on arm64.
 
 Will
