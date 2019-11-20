@@ -2,107 +2,124 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13B8AC43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 00:28:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9682C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 00:33:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E12BF20857
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 00:28:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3FC820857
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 00:33:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u6m+fvbr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kai3gI91"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727508AbfKTA2u (ORCPT
+        id S1727472AbfKTAd0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 19:28:50 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:44997 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727222AbfKTA2t (ORCPT
+        Tue, 19 Nov 2019 19:33:26 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33867 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727394AbfKTAd0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 19:28:49 -0500
-Received: by mail-pl1-f194.google.com with SMTP id az9so12891700plb.11;
-        Tue, 19 Nov 2019 16:28:49 -0800 (PST)
+        Tue, 19 Nov 2019 19:33:26 -0500
+Received: by mail-wr1-f68.google.com with SMTP id e6so26112090wrw.1;
+        Tue, 19 Nov 2019 16:33:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=59m1/eC8riScAm7JjDY1BbKSHZjxRRJlakTsu9UypXk=;
-        b=u6m+fvbrFbkzotXSv+4PIHEhiipKPpH3/vM1YpESWnlFPCVgJilpTlwgPnd+l4t8os
-         RbLOsK7eAbjW5D6UfBkBeuSAaf6h+vPC3zAA6VMNLQ2ekpIeu1EJSu/uc8OYmnzkId04
-         N83RBv6vAB3ymbrk9iy9F9y48Pfo+0wWEwKfGuidCMdHLEhx3OcdfNXTZ6QyTkwdUk0z
-         8YKLFWW6LZH2xMPvKAruN5e7qLJfCHqSafw4mvF+DdqTwbqFa3Ql/C5XHqd4MfUPicsU
-         OfHUUKG2IClRvGmzJTLiYLN6BqznKfVSxPWHjJQ2lBnn9Pvw0hFXzMZTz8TRSF5V2k0q
-         UqsQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=E76BfeULL9Cj6fUQJlzoEE7JObAbPKX1tHKrIvwvWtc=;
+        b=Kai3gI91KW3k6mk/gVuFEww7JRPmlzJx9VDlRh96Kaqt5GDq9QcGBAegy9tNpvRgWd
+         ihR1QBR1/UJ2MCSfrFqmX82N0dUMiNGuEVs6YGBFhrJhpq8LzgnLbx2MxrrRM5jJqCjS
+         Dn3nXjagcSoBnZBzbjN1gb5Y74KKSYVXxtYV0xexRM/5sdnpr6ta7Ub4ME83E/lvPniZ
+         8btvSgFUOC3waF9vt2wNt+kiykYTImEsyHK0t5bWhZkS/sRdEwUP9cQ7b+cM8Ji0dfJ6
+         gUJxfYkEli/fW57aWMABFbHdUjGMChYRBtX0gr5kKUspKCU1t3ebAruL+o1Z7Deue5Lu
+         0bvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=59m1/eC8riScAm7JjDY1BbKSHZjxRRJlakTsu9UypXk=;
-        b=iuRIe7wQiMFTmvVBpwOMaPFUa4F8/vn75OF6vNyLcGEfjrwPfccmchf0aNU43DHOnT
-         //ptjpf7JWxC/fjE8oU9r3GEnLpBacS01sU0qJhueb3GDa9XYyusc37E8bE/2YYIWJuM
-         yj83pwLRUJ0ka3v4Unos9u9Ix/9V8s+IAWCwaTjKLz0Q/RpYSbP42JmqFIm2fSo5yRlJ
-         wpxRF6jyZ3a4Uw129MeUunFb16+m52jqdp/oNYSYBZBrRvW/YY5Xz4FIKf6oV7jNF12K
-         rccXcQ1mAVeiH+5//3RxqEXnbNtWp3bSilY3u3/sp4ZkRcvXz7r/Mi9YFeUUxjy4NufL
-         Ulcw==
-X-Gm-Message-State: APjAAAVcDL7rzos5pmGa+IgeXv4uClwhd49mUlZVgEYQVG8n9B2JFCaD
-        RrsGs/haUmRv6bA9h35HylY=
-X-Google-Smtp-Source: APXvYqwR7pa5QPsLveMk9oWSg5gV6GTebzlLq2pddIcNPZ1ASeWDJj7HhjTX0jV8jEDny143ZyKy9Q==
-X-Received: by 2002:a17:90a:1742:: with SMTP id 2mr385613pjm.93.1574209729243;
-        Tue, 19 Nov 2019 16:28:49 -0800 (PST)
-Received: from localhost ([2401:fa00:8f:203:250d:e71d:5a0a:9afe])
-        by smtp.gmail.com with ESMTPSA id v63sm26454431pfb.181.2019.11.19.16.28.47
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=E76BfeULL9Cj6fUQJlzoEE7JObAbPKX1tHKrIvwvWtc=;
+        b=KllBL1PRY/bPwMa3T4N7KwQboazget3d2ZbYLBwCNA7FbC9CIVuBdXoQASTLYwnNb2
+         g48XrLDEIPE2QurZ1/5LeYOFtLqcIPi+J+d9J/rCVSxG8rq1UsGQYJOddo4p8fF2epyt
+         E2WWGZkNxO6SUUUGRiQiKULD0IZmtxNrc1JdHPHmug7G80m5NXj/pFCzzqPhJhp4nZtc
+         a8DmAvBYILSf+ANzR8M1L4q4Mv+4jFGIysArsRswNDx+jgeiGk2R7pSOpYvwtfhgcRvo
+         hbKNAwkHTlhy2v7991DUfWPrVCl0LADyzZVk4QFHUwxs/wgl0J6w03kzdJ5ETHd3Bymq
+         S8yg==
+X-Gm-Message-State: APjAAAVSDOQvKpvUHiYUM6G6vrp7qvp2OFsoSkwWW93SNmnOiJwhNVP2
+        Yqx+ePAnkuDPhmB+PzHxngZEbcDK
+X-Google-Smtp-Source: APXvYqyRSONgrEN42EpumNWGQlOSyJJv4udxeQzhkD0028iQdWusI7o01LNPMB8SLaXWz6XnGgyVog==
+X-Received: by 2002:adf:f743:: with SMTP id z3mr200071wrp.200.1574210004048;
+        Tue, 19 Nov 2019 16:33:24 -0800 (PST)
+Received: from localhost.localdomain ([2a02:a03f:40e1:9900:5dce:1599:e3b5:7d61])
+        by smtp.gmail.com with ESMTPSA id r25sm4828947wmh.6.2019.11.19.16.33.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Nov 2019 16:28:48 -0800 (PST)
-Date:   Wed, 20 Nov 2019 09:28:46 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Jonathan Richardson <jonathan.richardson@broadcom.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        gregkh@linuxfoundation.org, jslaby@suse.com,
-        sergey.senozhatsky@gmail.com, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Scott Branden <scott.branden@broadcom.com>,
-        Ray Jui <ray.jui@broadcom.com>,
-        Srinath Mannam <srinath.mannam@broadcom.com>
-Subject: Re: console output duplicated when registering additional consoles
-Message-ID: <20191120002846.GA255928@google.com>
-References: <CAHrpVsUHgJA3wjh4fDg43y5OFCCvQb-HSRpyGyhFEKXcWw8WnQ@mail.gmail.com>
- <CAHrpVsW6jRUYK_mu+dLaBvucAAtUPQ0zcH6_NxsUsTrPewiY_w@mail.gmail.com>
- <20191114095737.wl5nvxu3w6p5thfc@pathway.suse.cz>
- <20191115043356.GA220831@google.com>
- <CAHrpVsWu54rKg3bGhY6WVj5d-myYxGSEkxGhOJKTyyc1EH4qOA@mail.gmail.com>
- <20191119113027.74lp3dsg5ftvylp4@pathway.suse.cz>
+        Tue, 19 Nov 2019 16:33:23 -0800 (PST)
+From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     stable@vger.kernel.org,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Christian Brauner <christian@brauner.io>,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: [PATCH v2] fork: fix pidfd_poll()'s return type
+Date:   Wed, 20 Nov 2019 01:33:20 +0100
+Message-Id: <20191120003320.31138-1-luc.vanoostenryck@gmail.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191120002145.skgtkx2f5dxagx4f@wittgenstein>
+References: <20191120002145.skgtkx2f5dxagx4f@wittgenstein>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191119113027.74lp3dsg5ftvylp4@pathway.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (19/11/19 12:30), Petr Mladek wrote:
-> On Mon 2019-11-18 13:38:04, Jonathan Richardson wrote:
-> > On Thu, Nov 14, 2019 at 8:33 PM Sergey Senozhatsky
-> > <sergey.senozhatsky.work@gmail.com> wrote:
-> > >
-> > > Gosh, that part of printk is really complex.
-> > >
-> > > On (19/11/14 10:57), Petr Mladek wrote:
-> > > > For a proper solution we would need to match boot and real
-> > > > consoles that write messages into the physical device.
-> > > > But I am afraid that there is no support for this.
-> > >
-> > > Wouldn't those have same tty driver?
-> 
-> Interesting idea. Well, do early consoles have tty driver?
+pidfd_poll() is defined as returning 'unsigned int' but the
+.poll method is declared as returning '__poll_t', a bitwise type.
 
-Good question! I'm not sure.
-netcon, for instance, doesn't have tty driver, yet still has to find
-a proper net device to write the data to. They have some magic inside.
+Fix this by using the proper return type and using the EPOLL
+constants instead of the POLL ones, as required for __poll_t.
 
-	-ss
+Fixes: b53b0b9d9a61 ("pidfd: add polling support")
+Cc: Joel Fernandes (Google) <joel@joelfernandes.org>
+Cc: Christian Brauner <christian@brauner.io>
+Cc: stable@vger.kernel.org # 5.3
+Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Reviewed-by: Christian Brauner <christian.brauner@ubuntu.com>
+---
+ kernel/fork.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 55af6931c6ec..13b38794efb5 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -1708,11 +1708,11 @@ static void pidfd_show_fdinfo(struct seq_file *m, struct file *f)
+ /*
+  * Poll support for process exit notification.
+  */
+-static unsigned int pidfd_poll(struct file *file, struct poll_table_struct *pts)
++static __poll_t pidfd_poll(struct file *file, struct poll_table_struct *pts)
+ {
+ 	struct task_struct *task;
+ 	struct pid *pid = file->private_data;
+-	int poll_flags = 0;
++	__poll_t poll_flags = 0;
+ 
+ 	poll_wait(file, &pid->wait_pidfd, pts);
+ 
+@@ -1724,7 +1724,7 @@ static unsigned int pidfd_poll(struct file *file, struct poll_table_struct *pts)
+ 	 * group, then poll(2) should block, similar to the wait(2) family.
+ 	 */
+ 	if (!task || (task->exit_state && thread_group_empty(task)))
+-		poll_flags = POLLIN | POLLRDNORM;
++		poll_flags = EPOLLIN | EPOLLRDNORM;
+ 	rcu_read_unlock();
+ 
+ 	return poll_flags;
+-- 
+2.24.0
+
