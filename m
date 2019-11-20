@@ -2,132 +2,120 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FORGED_MUA_MOZILLA,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3DB2C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 04:04:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F93CC43141
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 04:10:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D80B206D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 04:04:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48DB222466
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 04:10:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="fJH82JNj";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="BZMBLxFw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727644AbfKTEEJ (ORCPT
+        id S1727590AbfKTEKU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 23:04:09 -0500
-Received: from gate.crashing.org ([63.228.1.57]:50026 "EHLO gate.crashing.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727508AbfKTEEJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 23:04:09 -0500
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id xAK43hEk022130;
-        Tue, 19 Nov 2019 22:03:44 -0600
-Message-ID: <14e1a22937ce5a54d94dab04a103e159215fb654.camel@kernel.crashing.org>
-Subject: Re: general protection fault in kernfs_add_one
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        syzbot <syzbot+db1637662f412ac0d556@syzkaller.appspotmail.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rafael Wysocki <rafael@kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Tejun Heo <tj@kernel.org>,
-        linux-bluetooth <linux-bluetooth@vger.kernel.org>
-Date:   Wed, 20 Nov 2019 15:03:43 +1100
-In-Reply-To: <CAHk-=wjg0JXgwb6rkFK0q_JvW7YdGpiPtMVWe=YhFK1y_2-F7Q@mail.gmail.com>
-References: <000000000000bf6bd30575fec528@google.com>
-         <000000000000e2ac670597ad2663@google.com>
-         <CAHk-=wjg0JXgwb6rkFK0q_JvW7YdGpiPtMVWe=YhFK1y_2-F7Q@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
+        Tue, 19 Nov 2019 23:10:20 -0500
+Received: from a27-187.smtp-out.us-west-2.amazonses.com ([54.240.27.187]:45404
+        "EHLO a27-187.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727264AbfKTEKU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 23:10:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574223019;
+        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+        bh=1hBvSBPS247BMseE/4jYnIs2R+dBBvuuuU6qqBCAS1o=;
+        b=fJH82JNjBT0dBxyhXfANm7YTcB6ISgfHy0jz7mfjZuyGgKCrNZ7dKUW3pYyu8jvj
+        DBQEE/tIuULag9jW57azNJQSLLNjZTfFTg742BfzZaum7U3Gn3+9jNfC2c2g8feSmqb
+        lLRDp3CbLSo6HuV+y8Sily+ILKQyN2yc4tXNiKJk=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574223019;
+        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID;
+        bh=1hBvSBPS247BMseE/4jYnIs2R+dBBvuuuU6qqBCAS1o=;
+        b=BZMBLxFwW7KLaz/S2oAt1K0MkhE4Z7l/gvylaEwlOAFH5VAzBlT927+UU1pSD2B2
+        YVS9j+Miv1OnwEPjEAu7IZNJkiHEkxyXx32TQrEIZHrKxySolx3qX4kDOnMw5nHcgPC
+        LNXv2ZhxKSJmnc1psQoKWku/6MQY9gFdt3QkCep8=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E5122C447A1
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH 4/6] dt-bindings: power: Add rpmh power-domain bindings
+ for sc7180
+To:     Sibi Sankar <sibis@codeaurora.org>, bjorn.andersson@linaro.org,
+        robh+dt@kernel.org, ulf.hansson@linaro.org
+Cc:     agross@kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        mark.rutland@arm.com, swboyd@chromium.org, dianders@chromium.org
+References: <20191118173944.27043-1-sibis@codeaurora.org>
+ <20191118173944.27043-5-sibis@codeaurora.org>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <0101016e8700fbc6-26e71133-00a4-451c-ab3e-236f2431b3d2-000000@us-west-2.amazonses.com>
+Date:   Wed, 20 Nov 2019 04:10:18 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
+MIME-Version: 1.0
+In-Reply-To: <20191118173944.27043-5-sibis@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-SES-Outgoing: 2019.11.20-54.240.27.187
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-11-19 at 11:00 -0800, Linus Torvalds wrote:
-> So looking at the decode, as usual the noise generated by KASAN isn't
-> being very helpful, but it does look like at least one of the reports
-> (I picked 5.2 because I don't care about 4.19 etc) is because
-> 'kernfs_root(kn) is NULL in kernfs_add_one().
-> 
-> Looking at the reports, every single one seems to have a call chain
-> that comes from vhci_write() -> vhci_get_user() ->
-> vhci_create_device() -> __vhci_create_device() -> hci_register_dev()
-> -> device_add() -> kobject_add().
-> 
-> (In this case, "every single one" is by looking at the last 10
-> reports
-> sorted by date, it wasn't exhaustive).
-> 
-> The way it got into 'write()' can be a bit varied (splice, write,
-> whatever).
-> 
-> That makes me think it's bluetooth that is the problem, but it might
-> be an effect of how syzbot groups the reports too, of course.
-> 
-> Might the device have been added at the same time that the last
-> previous device was removed, so that the parent was deleted as the
-> new
-> device was aded? I dunno. The repro seem to be a repeated "open
-> /dev/vhci, write two random bytes to it"
-> 
-> Or might it be some "it happens after you've added enough devices
-> that
-> something overflows" issue?
-> 
-> Adding bluetooth people to the cc.
 
-Could this be what was fixed by:
 
-ac43432cb1f5c2950408534987e57c2071e24d8f
-("driver core: Fix use-after-free and double free on glue directory")
-
-Which went into 5.3 afaik ?
-
-Cheers,
-Ben.
-
->                   Linus
+On 11/18/2019 11:09 PM, Sibi Sankar wrote:
+> Add RPMH power-domain bindings for the SC7180 family of SoCs.
 > 
-> On Mon, Nov 18, 2019 at 10:27 PM syzbot
-> <syzbot+db1637662f412ac0d556@syzkaller.appspotmail.com> wrote:
-> > 
-> > syzbot has bisected this bug to:
-> > 
-> > commit 726e41097920a73e4c7c33385dcc0debb1281e18
-> > Author: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> > Date:   Tue Jul 10 00:29:10 2018 +0000
-> > 
-> >      drivers: core: Remove glue dirs from sysfs earlier
-> > 
-> > bisection log:  
-> > https://syzkaller.appspot.com/x/bisect.txt?x=168e1012e00000
-> > start commit:   5e335542 Merge branch 'for-linus' of
-> > git://git.kernel.org/..
-> > git tree:       upstream
-> > final crash:    
-> > https://syzkaller.appspot.com/x/report.txt?x=158e1012e00000
-> > console output: 
-> > https://syzkaller.appspot.com/x/log.txt?x=118e1012e00000
-> > kernel config:  
-> > https://syzkaller.appspot.com/x/.config?x=9917ff4b798e1a1e
-> > dashboard link: 
-> > https://syzkaller.appspot.com/bug?extid=db1637662f412ac0d556
-> > syz repro:      
-> > https://syzkaller.appspot.com/x/repro.syz?x=10a66c11400000
-> > C reproducer:   
-> > https://syzkaller.appspot.com/x/repro.c?x=1346c771400000
-> > 
-> > Reported-by: syzbot+db1637662f412ac0d556@syzkaller.appspotmail.com
-> > Fixes: 726e41097920 ("drivers: core: Remove glue dirs from sysfs
-> > earlier")
-> > 
-> > For information about bisection process see: 
-> > https://goo.gl/tpsmEJ#bisection
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> ---
 
+Reviewed-by: Rajendra Nayak <rnayak@codeaurora.org>
+
+>   Documentation/devicetree/bindings/power/qcom,rpmpd.txt |  1 +
+>   include/dt-bindings/power/qcom-rpmpd.h                 | 10 ++++++++++
+>   2 files changed, 11 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
+> index f3bbaa4aef297..6346d00b1b400 100644
+> --- a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
+> +++ b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
+> @@ -9,6 +9,7 @@ Required Properties:
+>   	* qcom,msm8996-rpmpd: RPM Power domain for the msm8996 family of SoC
+>   	* qcom,msm8998-rpmpd: RPM Power domain for the msm8998 family of SoC
+>   	* qcom,qcs404-rpmpd: RPM Power domain for the qcs404 family of SoC
+> +	* qcom,sc7180-rpmhpd: RPMh Power domain for the sc7180 family of SoC
+>   	* qcom,sdm845-rpmhpd: RPMh Power domain for the sdm845 family of SoC
+>   	* qcom,sm8150-rpmhpd: RPMh Power domain for the sm8150 family of SoC
+>    - #power-domain-cells: number of cells in Power domain specifier
+> diff --git a/include/dt-bindings/power/qcom-rpmpd.h b/include/dt-bindings/power/qcom-rpmpd.h
+> index 7d43bafc0026b..3f74096d5a7ca 100644
+> --- a/include/dt-bindings/power/qcom-rpmpd.h
+> +++ b/include/dt-bindings/power/qcom-rpmpd.h
+> @@ -28,6 +28,16 @@
+>   #define SM8150_MMCX	9
+>   #define SM8150_MMCX_AO	10
+>   
+> +/* SC7180 Power Domain Indexes */
+> +#define SC7180_CX	0
+> +#define SC7180_CX_AO	1
+> +#define SC7180_GFX	2
+> +#define SC7180_MX	3
+> +#define SC7180_MX_AO	4
+> +#define SC7180_LMX	5
+> +#define SC7180_LCX	6
+> +#define SC7180_MSS	7
+> +
+>   /* SDM845 Power Domain performance levels */
+>   #define RPMH_REGULATOR_LEVEL_RETENTION	16
+>   #define RPMH_REGULATOR_LEVEL_MIN_SVS	48
+> 
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
