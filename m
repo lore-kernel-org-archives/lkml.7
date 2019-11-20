@@ -7,43 +7,43 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE485C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:23:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4275CC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:23:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD0F5224F3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:23:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23621224F3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:23:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730190AbfKTNXF (ORCPT
+        id S1730173AbfKTNVK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 08:23:05 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:56714 "EHLO
+        Wed, 20 Nov 2019 08:21:10 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:56663 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730146AbfKTNVM (ORCPT
+        with ESMTP id S1727907AbfKTNVJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 08:21:12 -0500
+        Wed, 20 Nov 2019 08:21:09 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iXPuq-000756-NS; Wed, 20 Nov 2019 14:21:04 +0100
+        id 1iXPum-00073W-NM; Wed, 20 Nov 2019 14:21:00 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 6F43F1C1A0B;
-        Wed, 20 Nov 2019 14:21:01 +0100 (CET)
-Date:   Wed, 20 Nov 2019 13:21:01 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 59B431C1A01;
+        Wed, 20 Nov 2019 14:21:00 +0100 (CET)
+Date:   Wed, 20 Nov 2019 13:21:00 -0000
 From:   "tip-bot2 for Maulik Shah" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/core] genirq: Introduce irq_chip_get/set_parent_state calls
+Subject: [tip: irq/core] irqchip/qcom-pdc: Add irqchip set/get state calls
 Cc:     Maulik Shah <mkshah@codeaurora.org>,
         Lina Iyer <ilina@codeaurora.org>,
         Marc Zyngier <maz@kernel.org>,
         Stephen Boyd <swboyd@chromium.org>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <1573855915-9841-7-git-send-email-ilina@codeaurora.org>
-References: <1573855915-9841-7-git-send-email-ilina@codeaurora.org>
+In-Reply-To: <1573855915-9841-8-git-send-email-ilina@codeaurora.org>
+References: <1573855915-9841-8-git-send-email-ilina@codeaurora.org>
 MIME-Version: 1.0
-Message-ID: <157425606136.12247.11166423156373394360.tip-bot2@tip-bot2>
+Message-ID: <157425606029.12247.1129726844288422234.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -59,108 +59,76 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the irq/core branch of tip:
 
-Commit-ID:     4a169a95d885fe5c050bac1a21d43c86ba955bcf
-Gitweb:        https://git.kernel.org/tip/4a169a95d885fe5c050bac1a21d43c86ba955bcf
+Commit-ID:     e71374c07564536d38caed3e80a1ff1c4609161d
+Gitweb:        https://git.kernel.org/tip/e71374c07564536d38caed3e80a1ff1c4609161d
 Author:        Maulik Shah <mkshah@codeaurora.org>
-AuthorDate:    Fri, 15 Nov 2019 15:11:49 -07:00
+AuthorDate:    Fri, 15 Nov 2019 15:11:50 -07:00
 Committer:     Marc Zyngier <maz@kernel.org>
-CommitterDate: Sat, 16 Nov 2019 10:20:02 
+CommitterDate: Sat, 16 Nov 2019 10:22:01 
 
-genirq: Introduce irq_chip_get/set_parent_state calls
+irqchip/qcom-pdc: Add irqchip set/get state calls
 
-On certain QTI chipsets some GPIOs are direct-connect interrupts to the
-GIC to be used as regular interrupt lines. When the GPIOs are not used
-for interrupt generation the interrupt line is disabled. But disabling
-the interrupt at GIC does not prevent the interrupt to be reported as
-pending at GIC_ISPEND. Later, when drivers call enable_irq() on the
-interrupt, an unwanted interrupt occurs.
-
-Introduce get and set methods for irqchip's parent to clear it's pending
-irq state. This then can be invoked by the GPIO interrupt controller on
-the parents in it hierarchy to clear the interrupt before enabling the
-interrupt.
+Add irqchip calls to set/get interrupt state from the parent interrupt
+controller. When GPIOs are renabled as interrupt lines, it is desirable
+to clear the interrupt state at the GIC. This avoids any unwanted
+interrupt as a result of stale pending state recorded when the line was
+used as a GPIO.
 
 Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+[Lina: updated commit text, rearranged code]
 Signed-off-by: Lina Iyer <ilina@codeaurora.org>
 Signed-off-by: Marc Zyngier <maz@kernel.org>
 Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Link: https://lore.kernel.org/r/1573855915-9841-7-git-send-email-ilina@codeaurora.org
-
-[updated commit text and minor code fixes]
+Link: https://lore.kernel.org/r/1573855915-9841-8-git-send-email-ilina@codeaurora.org
 ---
- include/linux/irq.h |  6 ++++++-
- kernel/irq/chip.c   | 44 ++++++++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 50 insertions(+)
+ drivers/irqchip/qcom-pdc.c | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-diff --git a/include/linux/irq.h b/include/linux/irq.h
-index fb301cf..7853eb9 100644
---- a/include/linux/irq.h
-+++ b/include/linux/irq.h
-@@ -610,6 +610,12 @@ extern int irq_chip_pm_put(struct irq_data *data);
- #ifdef	CONFIG_IRQ_DOMAIN_HIERARCHY
- extern void handle_fasteoi_ack_irq(struct irq_desc *desc);
- extern void handle_fasteoi_mask_irq(struct irq_desc *desc);
-+extern int irq_chip_set_parent_state(struct irq_data *data,
-+				     enum irqchip_irq_state which,
-+				     bool val);
-+extern int irq_chip_get_parent_state(struct irq_data *data,
-+				     enum irqchip_irq_state which,
-+				     bool *state);
- extern void irq_chip_enable_parent(struct irq_data *data);
- extern void irq_chip_disable_parent(struct irq_data *data);
- extern void irq_chip_ack_parent(struct irq_data *data);
-diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
-index b76703b..b3fa2d8 100644
---- a/kernel/irq/chip.c
-+++ b/kernel/irq/chip.c
-@@ -1298,6 +1298,50 @@ EXPORT_SYMBOL_GPL(handle_fasteoi_mask_irq);
- #endif /* CONFIG_IRQ_FASTEOI_HIERARCHY_HANDLERS */
+diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
+index 4f2c762..6ae9e1f 100644
+--- a/drivers/irqchip/qcom-pdc.c
++++ b/drivers/irqchip/qcom-pdc.c
+@@ -5,6 +5,7 @@
  
- /**
-+ * irq_chip_set_parent_state - set the state of a parent interrupt.
-+ *
-+ * @data: Pointer to interrupt specific data
-+ * @which: State to be restored (one of IRQCHIP_STATE_*)
-+ * @val: Value corresponding to @which
-+ *
-+ * Conditional success, if the underlying irqchip does not implement it.
-+ */
-+int irq_chip_set_parent_state(struct irq_data *data,
-+			      enum irqchip_irq_state which,
-+			      bool val)
+ #include <linux/err.h>
+ #include <linux/init.h>
++#include <linux/interrupt.h>
+ #include <linux/irq.h>
+ #include <linux/irqchip.h>
+ #include <linux/irqdomain.h>
+@@ -50,6 +51,26 @@ static u32 pdc_reg_read(int reg, u32 i)
+ 	return readl_relaxed(pdc_base + reg + i * sizeof(u32));
+ }
+ 
++static int qcom_pdc_gic_get_irqchip_state(struct irq_data *d,
++					  enum irqchip_irq_state which,
++					  bool *state)
 +{
-+	data = data->parent_data;
-+
-+	if (!data || !data->chip->irq_set_irqchip_state)
++	if (d->hwirq == GPIO_NO_WAKE_IRQ)
 +		return 0;
 +
-+	return data->chip->irq_set_irqchip_state(data, which, val);
++	return irq_chip_get_parent_state(d, which, state);
 +}
-+EXPORT_SYMBOL_GPL(irq_chip_set_parent_state);
 +
-+/**
-+ * irq_chip_get_parent_state - get the state of a parent interrupt.
-+ *
-+ * @data: Pointer to interrupt specific data
-+ * @which: one of IRQCHIP_STATE_* the caller wants to know
-+ * @state: a pointer to a boolean where the state is to be stored
-+ *
-+ * Conditional success, if the underlying irqchip does not implement it.
-+ */
-+int irq_chip_get_parent_state(struct irq_data *data,
-+			      enum irqchip_irq_state which,
-+			      bool *state)
++static int qcom_pdc_gic_set_irqchip_state(struct irq_data *d,
++					  enum irqchip_irq_state which,
++					  bool value)
 +{
-+	data = data->parent_data;
-+
-+	if (!data || !data->chip->irq_get_irqchip_state)
++	if (d->hwirq == GPIO_NO_WAKE_IRQ)
 +		return 0;
 +
-+	return data->chip->irq_get_irqchip_state(data, which, state);
++	return irq_chip_set_parent_state(d, which, value);
 +}
-+EXPORT_SYMBOL_GPL(irq_chip_get_parent_state);
 +
-+/**
-  * irq_chip_enable_parent - Enable the parent interrupt (defaults to unmask if
-  * NULL)
-  * @data:	Pointer to interrupt specific data
+ static void pdc_enable_intr(struct irq_data *d, bool on)
+ {
+ 	int pin_out = d->hwirq;
+@@ -178,6 +199,8 @@ static struct irq_chip qcom_pdc_gic_chip = {
+ 	.irq_unmask		= qcom_pdc_gic_unmask,
+ 	.irq_disable		= qcom_pdc_gic_disable,
+ 	.irq_enable		= qcom_pdc_gic_enable,
++	.irq_get_irqchip_state	= qcom_pdc_gic_get_irqchip_state,
++	.irq_set_irqchip_state	= qcom_pdc_gic_set_irqchip_state,
+ 	.irq_retrigger		= irq_chip_retrigger_hierarchy,
+ 	.irq_set_type		= qcom_pdc_gic_set_type,
+ 	.flags			= IRQCHIP_MASK_ON_SUSPEND |
