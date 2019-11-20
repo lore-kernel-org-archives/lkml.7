@@ -2,75 +2,173 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2EA2C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 16:23:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C96AFC43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 16:23:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 942E220659
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 16:23:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4C5820731
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 16:23:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731396AbfKTQXD (ORCPT
+        id S1732786AbfKTQXN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 11:23:03 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:48386 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727885AbfKTQXD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 11:23:03 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 6715128CFC2
-Subject: Re: [PATCH] platform/chrome: cros_usbpd_logger: add missed
- destroy_workqueue in remove
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     Benson Leung <bleung@chromium.org>, linux-kernel@vger.kernel.org
-References: <20191113063821.8896-1-hslester96@gmail.com>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <0d4c340d-7b4f-6efe-7643-97f848fa1f04@collabora.com>
-Date:   Wed, 20 Nov 2019 17:22:58 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 20 Nov 2019 11:23:13 -0500
+Received: from mga02.intel.com ([134.134.136.20]:35003 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727885AbfKTQXM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 11:23:12 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Nov 2019 08:23:11 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,222,1571727600"; 
+   d="scan'208";a="215851006"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 20 Nov 2019 08:23:07 -0800
+Received: by lahna (sSMTP sendmail emulation); Wed, 20 Nov 2019 18:23:06 +0200
+Date:   Wed, 20 Nov 2019 18:23:06 +0200
+From:   Mika Westerberg <mika.westerberg@intel.com>
+To:     Karol Herbst <kherbst@redhat.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lyude Paul <lyude@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        Dave Airlie <airlied@gmail.com>,
+        Mario Limonciello <Mario.Limonciello@dell.com>
+Subject: Re: [PATCH v4] pci: prevent putting nvidia GPUs into lower device
+ states on certain intel bridges
+Message-ID: <20191120162306.GM11621@lahna.fi.intel.com>
+References: <CAJZ5v0g4vp1C+zHU5nOVnkGsOjBvLaphK1kK=qAT6b=mK8kpsA@mail.gmail.com>
+ <20191120112212.GA11621@lahna.fi.intel.com>
+ <20191120115127.GD11621@lahna.fi.intel.com>
+ <CACO55tsfNOdtu5SZ-4HzO4Ji6gQtafvZ7Rm19nkPcJAgwUBFMw@mail.gmail.com>
+ <CACO55tscD_96jUVts+MTAUsCt-fZx4O5kyhRKoo4mKoC84io8A@mail.gmail.com>
+ <20191120120913.GE11621@lahna.fi.intel.com>
+ <CACO55tsHy6yZQZ8PkdW8iPA7+uc5rdcEwRJwYEQ3iqu85F8Sqg@mail.gmail.com>
+ <20191120151542.GH11621@lahna.fi.intel.com>
+ <CACO55tvo3rbPtYJcioEgXCEQqVXcVAm-iowr9Nim=bgTdMjgLw@mail.gmail.com>
+ <20191120155301.GL11621@lahna.fi.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20191113063821.8896-1-hslester96@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191120155301.GL11621@lahna.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 13/11/19 7:38, Chuhong Yuan wrote:
-> The driver forgets to destroy workqueue in remove.
-> Add the missed call to fix it.
+On Wed, Nov 20, 2019 at 05:53:07PM +0200, Mika Westerberg wrote:
+> On Wed, Nov 20, 2019 at 04:37:14PM +0100, Karol Herbst wrote:
+> > On Wed, Nov 20, 2019 at 4:15 PM Mika Westerberg
+> > <mika.westerberg@intel.com> wrote:
+> > >
+> > > On Wed, Nov 20, 2019 at 01:11:52PM +0100, Karol Herbst wrote:
+> > > > On Wed, Nov 20, 2019 at 1:09 PM Mika Westerberg
+> > > > <mika.westerberg@intel.com> wrote:
+> > > > >
+> > > > > On Wed, Nov 20, 2019 at 12:58:00PM +0100, Karol Herbst wrote:
+> > > > > > overall, what I really want to know is, _why_ does it work on windows?
+> > > > >
+> > > > > So do I ;-)
+> > > > >
+> > > > > > Or what are we doing differently on Linux so that it doesn't work? If
+> > > > > > anybody has any idea on how we could dig into this and figure it out
+> > > > > > on this level, this would probably allow us to get closer to the root
+> > > > > > cause? no?
+> > > > >
+> > > > > Have you tried to use the acpi_rev_override parameter in your system and
+> > > > > does it have any effect?
+> > > > >
+> > > > > Also did you try to trace the ACPI _ON/_OFF() methods? I think that
+> > > > > should hopefully reveal something.
+> > > > >
+> > > >
+> > > > I think I did in the past and it seemed to have worked, there is just
+> > > > one big issue with this: it's a Dell specific workaround afaik, and
+> > > > this issue plagues not just Dell, but we've seen it on HP and Lenovo
+> > > > laptops as well, and I've heard about users having the same issues on
+> > > > Asus and MSI laptops as well.
+> > >
+> > > Maybe it is not a workaround at all but instead it simply determines
+> > > whether the system supports RTD3 or something like that (IIRC Windows 8
+> > > started supporting it). Maybe Dell added check for Linux because at that
+> > > time Linux did not support it.
+> > >
+> > 
+> > the point is, it's not checking it by default, so by default you still
+> > run into the windows 8 codepath.
 > 
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-
-Applied for 5.5
-
-Thanks,
- Enric
-
-> ---
->  drivers/platform/chrome/cros_usbpd_logger.c | 1 +
->  1 file changed, 1 insertion(+)
+> Well you can add the quirk to acpi_rev_dmi_table[] so it goes to that
+> path by default. There are a bunch of similar entries for Dell machines.
 > 
-> diff --git a/drivers/platform/chrome/cros_usbpd_logger.c b/drivers/platform/chrome/cros_usbpd_logger.c
-> index 2430e8b82810..374cdd1e868a 100644
-> --- a/drivers/platform/chrome/cros_usbpd_logger.c
-> +++ b/drivers/platform/chrome/cros_usbpd_logger.c
-> @@ -224,6 +224,7 @@ static int cros_usbpd_logger_remove(struct platform_device *pd)
->  	struct logger_data *logger = platform_get_drvdata(pd);
->  
->  	cancel_delayed_work_sync(&logger->log_work);
-> +	destroy_workqueue(logger->log_workqueue);
->  
->  	return 0;
->  }
-> 
+> Of course this does not help the non-Dell users so we would still need
+> to figure out the root cause.
+
+I think I asked you to test the PCIe delay patch and it did not help but
+I wonder if it helps if we increase the delay. As an experiment could
+you try Bjorn's pci/pm branch. The last two commits are for the delay.
+
+If you could pull that branch and apply the following patch on top and
+give it a try? Then post the dmesg somewhere so we can see whether it
+did the delay at all.
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 1f319b1175da..1ad6f1372ed5 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -4697,12 +4697,7 @@ void pci_bridge_wait_for_secondary_bus(struct pci_dev *dev)
+ 		return;
+ 	}
+ 
+-	/* Take d3cold_delay requirements into account */
+-	delay = pci_bus_max_d3cold_delay(dev->subordinate);
+-	if (!delay) {
+-		up_read(&pci_bus_sem);
+-		return;
+-	}
++	delay = 500;
+ 
+ 	child = list_first_entry(&dev->subordinate->devices, struct pci_dev,
+ 				 bus_list);
+@@ -4715,7 +4710,7 @@ void pci_bridge_wait_for_secondary_bus(struct pci_dev *dev)
+ 	 * management for them (see pci_bridge_d3_possible()).
+ 	 */
+ 	if (!pci_is_pcie(dev)) {
+-		pci_dbg(dev, "waiting %d ms for secondary bus\n", 1000 + delay);
++		pci_info(dev, "waiting %d ms for secondary bus\n", 1000 + delay);
+ 		msleep(1000 + delay);
+ 		return;
+ 	}
+@@ -4741,10 +4736,10 @@ void pci_bridge_wait_for_secondary_bus(struct pci_dev *dev)
+ 		return;
+ 
+ 	if (pcie_get_speed_cap(dev) <= PCIE_SPEED_5_0GT) {
+-		pci_dbg(dev, "waiting %d ms for downstream link\n", delay);
++		pci_info(dev, "waiting %d ms for downstream link\n", delay);
+ 		msleep(delay);
+ 	} else {
+-		pci_dbg(dev, "waiting %d ms for downstream link, after activation\n",
++		pci_info(dev, "waiting %d ms for downstream link, after activation\n",
+ 			delay);
+ 		if (!pcie_wait_for_link_delay(dev, true, delay)) {
+ 			/* Did not train, no need to wait any further */
+@@ -4753,7 +4748,7 @@ void pci_bridge_wait_for_secondary_bus(struct pci_dev *dev)
+ 	}
+ 
+ 	if (!pci_device_is_present(child)) {
+-		pci_dbg(child, "waiting additional %d ms to become accessible\n", delay);
++		pci_info(child, "waiting additional %d ms to become accessible\n", delay);
+ 		msleep(delay);
+ 	}
+ }
