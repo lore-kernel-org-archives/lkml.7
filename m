@@ -2,89 +2,179 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A63C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:46:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B190C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:46:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FF1B20679
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:46:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="WrddtF4R"
+	by mail.kernel.org (Postfix) with ESMTP id 2470C20679
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:46:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727754AbfKTTqt (ORCPT
+        id S1727787AbfKTTqv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 14:46:49 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:44101 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727702AbfKTTqs (ORCPT
+        Wed, 20 Nov 2019 14:46:51 -0500
+Received: from mout.kundenserver.de ([212.227.126.135]:56085 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727378AbfKTTqs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 Nov 2019 14:46:48 -0500
-Received: by mail-ed1-f67.google.com with SMTP id a67so523428edf.11
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 11:46:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oxEM2vdt7/U/FNIfeuvzJ9elmjyMDsJD1vxaJ2fUtOI=;
-        b=WrddtF4R/lFC853GKj7Dd7RzfOT6YpZ1GUF5a9E7wjXuFFN8MKM7RhIB+8Hs5fzeIg
-         PcFZZAIgCLKYAM0nHNUvYyYGxu256OS+sFPtigA6OGKsKMr5JnUQ0TGVU9+fR0XKLGyR
-         mHnkTW7EPOZ4+svqiLOsGNAL4YD33ESdZfLG7Zoi0uVp+z4FZwX8TMrPKP5sIDk3JFd3
-         2SGIgae3CdqOVhDWxCOow+8hwjWUl5Iv6kOjWqWzDPnW3WIWfBE7d3n/ttyKSGN9Yjhs
-         9bbUuW/6/OJp98x5NHd3iNS8ja+u68ErBXiEUwEp7zyjQzP1ODAlP+UwTaiXxZo9lMGe
-         QDiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oxEM2vdt7/U/FNIfeuvzJ9elmjyMDsJD1vxaJ2fUtOI=;
-        b=ubx/EVERS2XjWf8M9tHmeXpQXJreccMf7ONBnHnHxMS6YsWkfdNDX5nKM/UYyZxO1a
-         hE2JXwbpW9D11AWaSkY7iYU1wv/1TjbmovSG5FlZzTjgymxjd/c75et3f63chRTozAjw
-         sAEYOxzwLKcd7jQJTXbqpSqrbMB9eTeLjW+kn2+Z88yB5nf4oSIU4xMEVoBPKdFCH7TM
-         k+8gVoYm63weL70wmP6d6rDDRHZL7Bx3vdbPBhgO6b0HOPUWIxjeH2bVMLHs/tEakrZ4
-         xFZjXcX/neqlSIivbW8n2zznkIBgR+9zG3Dh0IsHgVUdiqt3AniL2Bo7734NZfFD3VZ1
-         B5pA==
-X-Gm-Message-State: APjAAAUDYNrjixfnUvjWwiHWhWGovxM99edgAdKzQjd8zJm+CsfbGQG0
-        +Z/MlW1kyuSQlx5BSTWOz7PkBFxtMU1+M2ADcGNlWA==
-X-Google-Smtp-Source: APXvYqypnvAPJ++PLYZ2U6aQOk5u/YILYozemKYHGTd1uN8FTstQuqto4KVAyP+G64ayeIzD3lKig4KV9XKFgV4HkNM=
-X-Received: by 2002:a17:906:b30c:: with SMTP id n12mr7405055ejz.96.1574279206840;
- Wed, 20 Nov 2019 11:46:46 -0800 (PST)
+Received: from mail-qt1-f181.google.com ([209.85.160.181]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1McpW6-1hyjPo2WXK-00Zvn5; Wed, 20 Nov 2019 20:46:46 +0100
+Received: by mail-qt1-f181.google.com with SMTP id t8so857044qtc.6;
+        Wed, 20 Nov 2019 11:46:46 -0800 (PST)
+X-Gm-Message-State: APjAAAU51hy9Hz0YQS3JNRr2UAbkYPU2asSe5zDLE+Sl/k8UAuBTpy3n
+        BrKrBh9TIJc4gtQGUwu2fon7o/OS5cH/AlBv8Xg=
+X-Google-Smtp-Source: APXvYqxPZzv5p9M0S54RVzyCQ3+IKHoZHHwaet1h8egEPSf91VBYkxihnAwuFZfH1zdk4pgEJL+YwqwpgpxJECT1PWs=
+X-Received: by 2002:ac8:18eb:: with SMTP id o40mr4514073qtk.304.1574279205448;
+ Wed, 20 Nov 2019 11:46:45 -0800 (PST)
 MIME-Version: 1.0
-References: <20191119221006.1021520-1-pasha.tatashin@soleen.com> <20191120191648.GB4799@willie-the-truck>
-In-Reply-To: <20191120191648.GB4799@willie-the-truck>
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-Date:   Wed, 20 Nov 2019 14:46:35 -0500
-Message-ID: <CA+CK2bDeXP8iUYF2GC=9PttTug1E66=z0h4PSGBn3Gr5t3NHzw@mail.gmail.com>
-Subject: Re: [PATCH] arm64: kernel: memory corruptions due non-disabled PAN
-To:     Will Deacon <will@kernel.org>
-Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        steve.capper@arm.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Vladimir Murzin <vladimir.murzin@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
+References: <20191108203435.112759-1-arnd@arndb.de> <20191108203435.112759-7-arnd@arndb.de>
+ <41baf20a190039443cb2b82aea0c2a8ec872cfed.camel@codethink.co.uk>
+In-Reply-To: <41baf20a190039443cb2b82aea0c2a8ec872cfed.camel@codethink.co.uk>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 20 Nov 2019 20:46:29 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a3U0GWCyU9WOnrGQ2tqnHoyAbJ=HdYJGfTHuxVqcww0wg@mail.gmail.com>
+Message-ID: <CAK8P3a3U0GWCyU9WOnrGQ2tqnHoyAbJ=HdYJGfTHuxVqcww0wg@mail.gmail.com>
+Subject: Re: [Y2038] [PATCH 6/8] lp: fix sparc64 LPSETTIMEOUT ioctl
+To:     Ben Hutchings <ben.hutchings@codethink.co.uk>
+Cc:     y2038 Mailman List <y2038@lists.linaro.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        allison@lohutok.net, info@metux.net, alexios.zavras@intel.com
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "# 3.4.x" <stable@vger.kernel.org>,
+        Bamvor Jian Zhang <bamv2005@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:hSbHdgcgUeQgXlEmJ4EKRoKgZD9UulCtypIgHNsbgkKidt/myew
+ 7klpYhHFggiuBVAmwNkcUnfUrJDiRg0U7PzUaiO+MW9RQZi/Wo0ut5pTDc25UCjiCpw1zT5
+ BfmTsRxFk5o/19TXgk4xdXOtFvxSFsl5Kh1yAHBnGEF1B8vAPDBZoaDnOBlE+EAe43yVsRs
+ 8E12ft1ifcWDEEiwYdIHA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:lSDmNxSpplg=:Sdqq8e/aFeeyZsdBAJ274E
+ 4J1Exa+yWf6evZgi9nr3xLR8IDFZFQiGgg1dYkkP5SMvm0/TD1OXf6zJG+HNwQVWz2zz5FdFb
+ 5FiP6nOy/rPmuvyDwm3HpgTIqg9+2gAIudlf/6KdeLkiiP1EddK1Gw9ivZYi715uiyfeWbi/r
+ 4HE44BicCjHI6Uj5/gJFOs1B3s2W6ZpV3wqhDnT/zAd2vz/r45pe53hFHw1m5dENtwTNnkgG1
+ D9A7N5vEpAs0hYXR0jghj2HyGX0/ll94MPyiNdecBcLH/4jQH0H4Tfva4Gg9qpCSr0bu2cscK
+ 2eZJPU6dH++nPU1zFfE49eE8qOyK7cpHkp+nx+jnnvS1ztehVstF5tKn6lXS1ofocgmbDzd+f
+ PGt06QQKyeu/2ZhEXvhXQPDU3f0D3HdRqfgUbjwLUBKVsEx6PoJpC3SRv0vyMA+8wVs3QE0aH
+ GVCHzvK5pxBtuhZ22r0jLUOXfOml4ujKVIZFhqGt+A6I/hHihx+Mntq7lMeN4jRe4rokY1tgv
+ bR8L97XCJHnFAdoy1a16lqQbZwBoAyNf3XTkYlNHbLCYZcg/8hJaJoC2Opn73/F8htenN6ayZ
+ 9E4ikI30aNDAjjLr9s1jR7dMfSZjI9ZLeMEQlI0HqSO9KZXI31kOSypHEqVXo+qUdX86EYCYs
+ NMhBj9cz6DfAnTzruvbmxf4FY2+4femfGsXmkTUXp8Iz0QDj8bLB1WobWHcdd9ylmjvlhKEMd
+ yc1ylLCGDRmkcGxvrRG/5ca6N2CNHHvsxM4L7rBJi+U6lbOvjWaUICuoCaU60rH9crfRXfs9m
+ 9GW6j/ZMKf6hzW6S5qhQ+Mkwz+KKQYy6dDUyGy/GTZRVgu1sIOufWR8ciotz9jSjFlromntYv
+ IicryZ8Unp11GgycQISg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Nov 20, 2019 at 8:27 PM Ben Hutchings
+<ben.hutchings@codethink.co.uk> wrote:
 >
-> Thanks. I've pushed this and your other patch out [1], with some changes
-> to the commit message. I'm annoyed that I didn't spot this during review
-> of the initial PAN patches.
+> On Fri, 2019-11-08 at 21:34 +0100, Arnd Bergmann wrote:
+> > The layout of struct timeval is different on sparc64 from
+> > anything else, and the patch I did long ago failed to take
+> > this into account.
+> >
+> > Change it now to handle sparc64 user space correctly again.
+> >
+> > Quite likely nobody cares about parallel ports on sparc64,
+> > but there is no reason not to fix it.
+> >
+> > Cc: stable@vger.kernel.org
+> > Fixes: 9a450484089d ("lp: support 64-bit time_t user space")
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > ---
+> >  drivers/char/lp.c | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> >
+> > diff --git a/drivers/char/lp.c b/drivers/char/lp.c
+> > index 7c9269e3477a..bd95aba1f9fe 100644
+> > --- a/drivers/char/lp.c
+> > +++ b/drivers/char/lp.c
+> > @@ -713,6 +713,10 @@ static int lp_set_timeout64(unsigned int minor, void __user *arg)
+> >       if (copy_from_user(karg, arg, sizeof(karg)))
+> >               return -EFAULT;
+> >
+> > +     /* sparc64 suseconds_t is 32-bit only */
+> > +     if (IS_ENABLED(CONFIG_SPARC64) && !in_compat_syscall())
+> > +             karg[1] >>= 32;
+> > +
+> >       return lp_set_timeout(minor, karg[0], karg[1]);
+> >  }
+> >
 >
-> Will
+> It seems like it would make way more sense to use __kernel_old_timeval.
 
-Great.
+Right, that would work. I tried to keep the patch small here, changing
+it to __kernel_old_timeval would require make it all more complicated
+since it would still need to check some conditional to tell the difference
+between sparc32 and sparc64.
 
-Thank you,
-Pasha
+I think this patch (relative to the version I posted) would work the same:
+
+diff --git a/drivers/char/lp.c b/drivers/char/lp.c
+index bd95aba1f9fe..86994421ee97 100644
+--- a/drivers/char/lp.c
++++ b/drivers/char/lp.c
+@@ -713,13 +713,19 @@ static int lp_set_timeout64(unsigned int minor,
+void __user *arg)
+        if (copy_from_user(karg, arg, sizeof(karg)))
+                return -EFAULT;
+
+-       /* sparc64 suseconds_t is 32-bit only */
+-       if (IS_ENABLED(CONFIG_SPARC64) && !in_compat_syscall())
+-               karg[1] >>= 32;
+-
+        return lp_set_timeout(minor, karg[0], karg[1]);
+ }
+
++static int lp_set_timeout(unsigned int minor, void __user *arg)
++{
++       __kernel_old_timeval tv;
++
++       if (copy_from_user(tv, arg, sizeof(karg)))
++               return -EFAULT;
++
++       return lp_set_timeout(minor, tv->tv_sec, tv->tv_usec);
++}
++
+ static long lp_ioctl(struct file *file, unsigned int cmd,
+                        unsigned long arg)
+ {
+@@ -730,11 +736,8 @@ static long lp_ioctl(struct file *file, unsigned int cmd,
+        mutex_lock(&lp_mutex);
+        switch (cmd) {
+        case LPSETTIMEOUT_OLD:
+-               if (BITS_PER_LONG == 32) {
+-                       ret = lp_set_timeout32(minor, (void __user *)arg);
+-                       break;
+-               }
+-               /* fall through - for 64-bit */
++               ret = lp_set_timeout(minor, (void __user *)arg);
++               break;
+        case LPSETTIMEOUT_NEW:
+                ret = lp_set_timeout64(minor, (void __user *)arg);
+                break;
+
+Do you like that better? One difference here is the handling of
+LPSETTIMEOUT_NEW on sparc64, which would continue to use
+the 64/64 layout rather than the 64/32/pad layout, but that should
+be ok, since sparc64 user space using ppdev (if any exists)
+would use LPSETTIMEOUT_OLD, not LPSETTIMEOUT_NEW.
+
+> Then you don't have to explicitly handle the sparc64 oddity.
+>
+> As it is, this still over-reads from user-space which might result in a
+> spurious -EFAULT.
+
+I think you got this wrong: sparc64 like most architectures naturally
+aligns 64-bit members, so 'struct timeval' still uses 16 bytes including
+the four padding bytes at the end, it just has the nanoseconds in
+a different position from all other big-endian architectures.
+
+      Arnd
