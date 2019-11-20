@@ -4,76 +4,93 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E2DAC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 17:35:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C084EC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 17:36:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F2C62088F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 17:35:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98BF8206CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 17:36:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728786AbfKTRfR (ORCPT
+        id S1728642AbfKTRgp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 12:35:17 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:49624 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728448AbfKTRfR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 12:35:17 -0500
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1iXTsj-0006qN-T8; Wed, 20 Nov 2019 17:35:09 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Lyude Paul <lyude@redhat.com>, dri-devel@lists.freedesktop.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] drm/dp_mst: fix multiple frees of tx->bytes
-Date:   Wed, 20 Nov 2019 17:35:09 +0000
-Message-Id: <20191120173509.347490-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.24.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+        Wed, 20 Nov 2019 12:36:45 -0500
+Received: from mga17.intel.com ([192.55.52.151]:7732 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727925AbfKTRgp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 12:36:45 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Nov 2019 09:36:32 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,222,1571727600"; 
+   d="scan'208";a="259103050"
+Received: from tthayer-hp-z620.an.intel.com ([10.122.105.146])
+  by FMSMGA003.fm.intel.com with ESMTP; 20 Nov 2019 09:36:32 -0800
+From:   thor.thayer@linux.intel.com
+To:     stable@vger.kernel.org, bp@alien8.de, mchehab@kernel.org
+Cc:     tony.luck@intel.com, james.morse@arm.com, rrichter@marvell.com,
+        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Thor Thayer <thor.thayer@linux.intel.com>,
+        Meng Li <Meng.Li@windriver.com>
+Subject: [PATCH] EDAC/altera: Use fast register IO for S10 IRQs
+Date:   Wed, 20 Nov 2019 11:38:01 -0600
+Message-Id: <1574271481-9310-1-git-send-email-thor.thayer@linux.intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Thor Thayer <thor.thayer@linux.intel.com>
 
-Currently tx->bytes is being freed r->num_transactions number of
-times because tx is not being set correctly. Fix this by setting
-tx to &r->transactions[i] so that the correct objects are being
-freed on each loop iteration.
+When an irq occurs in altera edac driver, regmap_xxx() is invoked
+in atomic context. Regmap must indicate register IO is fast so
+that a spinlock is used instead of a mutex to avoid sleeping
+in atomic context.
 
-Addresses-Coverity: ("Double free")
-Fixes: 2f015ec6eab6 ("drm/dp_mst: Add sideband down request tracing + selftests")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Fixes mutex-lock error
+   lock_acquire+0xfc/0x288
+   __mutex_lock+0x8c/0x808
+   mutex_lock_nested+0x3c/0x50
+   regmap_lock_mutex+0x24/0x30
+   regmap_write+0x40/0x78
+   a10_eccmgr_irq_unmask+0x34/0x40
+   unmask_irq.part.0+0x30/0x50
+   irq_enable+0x74/0x80
+   __irq_startup+0x80/0xa8
+   irq_startup+0x70/0x150
+   __setup_irq+0x650/0x6d0
+   request_threaded_irq+0xe4/0x180
+   devm_request_threaded_irq+0x7c/0xf0
+   altr_sdram_probe+0x2c4/0x600
+<snip>
+
+Upstream fix pending [1] (common code uses fast mode)
+[1] https://lkml.org/lkml/2019/11/7/1014
+
+Fixes: 3dab6bd52687 ("EDAC, altera: Add support for Stratix10 SDRAM EDAC")
+Cc: stable@vger.kernel.org
+Reported-by: Meng Li <Meng.Li@windriver.com>
+Signed-off-by: Meng Li <Meng.Li@windriver.com>
+Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
 ---
- drivers/gpu/drm/drm_dp_mst_topology.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/edac/altera_edac.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
-index ae5809a1f19a..2754e7e075e7 100644
---- a/drivers/gpu/drm/drm_dp_mst_topology.c
-+++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-@@ -517,8 +517,10 @@ drm_dp_decode_sideband_req(const struct drm_dp_sideband_msg_tx *raw,
- 			}
+diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
+index 59319f0c873b..647b3a5ef095 100644
+--- a/drivers/edac/altera_edac.c
++++ b/drivers/edac/altera_edac.c
+@@ -561,6 +561,7 @@ static const struct regmap_config s10_sdram_regmap_cfg = {
+ 	.reg_write = s10_protected_reg_write,
+ 	.use_single_read = true,
+ 	.use_single_write = true,
++	.fast_io = true,
+ };
  
- 			if (failed) {
--				for (i = 0; i < r->num_transactions; i++)
-+				for (i = 0; i < r->num_transactions; i++) {
-+					tx = &r->transactions[i];
- 					kfree(tx->bytes);
-+				}
- 				return -ENOMEM;
- 			}
- 
+ /************** </Stratix10 EDAC Memory Controller Functions> ***********/
 -- 
-2.24.0
+2.7.4
 
