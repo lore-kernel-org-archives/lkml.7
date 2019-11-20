@@ -2,152 +2,153 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D66D4C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:25:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEFBDC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:28:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB3F2206A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:25:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A596F206A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:28:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pCLRaYgg"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TrpoXoSN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729182AbfKTLZF (ORCPT
+        id S1729188AbfKTL2P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 06:25:05 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:43963 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728376AbfKTLZF (ORCPT
+        Wed, 20 Nov 2019 06:28:15 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:49302 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728376AbfKTL2O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 06:25:05 -0500
-Received: by mail-qk1-f196.google.com with SMTP id p14so955576qkm.10
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 03:25:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=rJPYiGKXpEMNQLJlyZqBJR8+8IIXsVVFLlcxm67gekc=;
-        b=pCLRaYgg3Nv9opD/ko9q/x57IFuehCW8B0R9iex/5I6WfuOqky5d77IUALMAELT9w0
-         pJc4AMzQ0WmWwsNoIE+6T0FbGI2vwggfY7Fj/IcDyselUqQfocP6+wGxPE9X+qNog/Uo
-         y9iVORvDU5Qqijr6mVptLft/uRq443mEtBSqOKULLQfrHwRWynJGkiRmAwq9I2OfQuoM
-         MpJCf7VpO9CMLZBey4HByRtgDU5qOi9psxPQH/QFCqrvxG1ioo1uqgzbrXjeOHIC1qzk
-         JRqtHgqj3XWLCarXZ9b+K0i/2lb+8PmmEE6SmMWQ3x5qyqyZMQc5XRSNxwNdSJxHhzjD
-         pVUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=rJPYiGKXpEMNQLJlyZqBJR8+8IIXsVVFLlcxm67gekc=;
-        b=M+jfRQjqAR8xea21iMx0aakkPknMEqoCg8NTcjm6fOgwxJ3JVoIKa0aFfnYCqPpjWW
-         CcURtrolYloKaJjsYBgVZ5YPQ4JiO8jd41ZXnZa4vLSu6+RJWniJ5xR3HD8Kj5YM9sD2
-         ipNHUK4Rotfp4monFvSn2aLOAsoEI49DJ7WUnlj8xixThrEqE6TSA32w1TZTGxcbCU+2
-         KuEk0eCV1d0tcHbMb8Woe0GFpdTx/hdnwdet9LXCMOmPF/9NpE08Wsk/AOMkHzPwMldm
-         F89IO8oH3QpjTwqnPJ1VhgrZzNCDEV3v32A9vlB1o5pJH6tdWsZZoSlrFgRxjkhf5i/C
-         r4Yw==
-X-Gm-Message-State: APjAAAVWbAlmfntZPBoFLnXKyW6yiCoPY1M3y4ZQzvYwLinPes45g4An
-        apDyY4EzesKHCIduL6zY0Gq5WVyjRo0QsobaPrHofg==
-X-Google-Smtp-Source: APXvYqzRemX2gUI2dfzg9EB4iJ4ZW+AQz1OyJ3lVN80mBtOXR9+mvOOYM4TxKoQkM3DSiazNgDrC0xmNwDkyfBYXPzk=
-X-Received: by 2002:a37:6156:: with SMTP id v83mr1789842qkb.43.1574249102312;
- Wed, 20 Nov 2019 03:25:02 -0800 (PST)
+        Wed, 20 Nov 2019 06:28:14 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAKBSCjM127927;
+        Wed, 20 Nov 2019 05:28:12 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1574249292;
+        bh=GUgrQ9YULe91DrXQ+8TwVYgwqoHl60RO9lw93hG44Sg=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=TrpoXoSNzbYxsVLMTv9n/91H5MM22C8L8LNy0Up5WIbCqp4lBSNZEr61qNZaj7E0G
+         r53UsOr6VCKmXjiuu/GigqCbpbnTphnVMaHUGBw7QQUJ3UQd6IhTyRxXv/Lc72jq+j
+         ZgFYxhpJzn6l7xqxAemmuWppnWPTzSHZsTiHhrVM=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAKBSCC8047935;
+        Wed, 20 Nov 2019 05:28:12 -0600
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 20
+ Nov 2019 05:28:08 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 20 Nov 2019 05:28:08 -0600
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAKBS60F040774;
+        Wed, 20 Nov 2019 05:28:07 -0600
+Subject: Re: [PATCHv2 00/15] Remoteproc: updates for OMAP remoteproc support
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+CC:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        <linux-remoteproc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>, Suman Anna <s-anna@ti.com>
+References: <20191119141645.19777-1-t-kristo@ti.com>
+ <CANLsYkwyLMHzKkm-6X+OgQ+khRYJshMJsxdst7+c7n+hX4nLpQ@mail.gmail.com>
+ <CANLsYkwcWDOPx_rpL5RkzsNLyw+ccPE0bNhar6xv1SZ1=R5xmA@mail.gmail.com>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <46a3bfb0-6bf1-b3d9-14a6-d2ed5b91c930@ti.com>
+Date:   Wed, 20 Nov 2019 13:28:06 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <000000000000d9a391059713dc1f@google.com> <20191111160950.GA870254@kroah.com>
- <1574248737.14298.33.camel@suse.com>
-In-Reply-To: <1574248737.14298.33.camel@suse.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Wed, 20 Nov 2019 12:24:50 +0100
-Message-ID: <CACT4Y+ZQK4knKqPxESGspc1gBNA6rMTPW=28j3W-oexcyRRepw@mail.gmail.com>
-Subject: Re: BUG: bad host security descriptor; not enough data (4 vs 5 left)
-To:     Oliver Neukum <oneukum@suse.com>
-Cc:     Greg KH <greg@kroah.com>,
-        syzbot <syzbot+d934a9036346e0215d8f@syzkaller.appspotmail.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CANLsYkwcWDOPx_rpL5RkzsNLyw+ccPE0bNhar6xv1SZ1=R5xmA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 12:19 PM Oliver Neukum <oneukum@suse.com> wrote:
->
-> Am Montag, den 11.11.2019, 17:09 +0100 schrieb Greg KH:
-> > On Mon, Nov 11, 2019 at 07:34:08AM -0800, syzbot wrote:
-> > > Hello,
-> > >
-> > > syzbot found the following crash on:
-> > >
-> > > HEAD commit:    3183c037 usb: gadget: add raw-gadget interface
-> > > git tree:       https://github.com/google/kasan.git usb-fuzzer
-> > > console output: https://syzkaller.appspot.com/x/log.txt?x=3D12525dc6e=
-00000
-> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=3D79de80330=
-003b5f7
-> > > dashboard link: https://syzkaller.appspot.com/bug?extid=3Dd934a903634=
-6e0215d8f
-> > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D14ac740=
-6e00000
-> > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D13eea39ae=
-00000
-> > >
-> > > IMPORTANT: if you fix the bug, please add the following tag to the co=
-mmit:
-> > > Reported-by: syzbot+d934a9036346e0215d8f@syzkaller.appspotmail.com
-> > >
-> > > usb 1-1: config 0 interface 0 altsetting 0 has 3 endpoint descriptors=
-,
-> > > different from the interface descriptor's value: 4
-> > > usb 1-1: New USB device found, idVendor=3D13dc, idProduct=3D5611,
-> > > bcdDevice=3D2f.15
-> > > usb 1-1: New USB device strings: Mfr=3D0, Product=3D0, SerialNumber=
-=3D0
-> > > usb 1-1: config 0 descriptor??
-> > > hwa-hc 1-1:0.0: Wire Adapter v106.52 newer than groked v1.0
-> > > hwa-hc 1-1:0.0: FIXME: USB_MAXCHILDREN too low for WUSB adapter (194 =
-ports)
-> > > usb 1-1: BUG: bad host security descriptor; not enough data (4 vs 5 l=
-eft)
-> > > usb 1-1: supported encryption types: =EF=BF=BDS =D0=81=EF=BF=BD=EF=BF=
-=BD=EF=BF=BD|c =D0=81=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BDc =D0=81=EF=BF=BD=
-=EF=BF=BD=EF=BF=BD
-> > > usb 1-1: E: host doesn't support CCM-1 crypto
-> > > hwa-hc 1-1:0.0: Wireless USB HWA host controller
-> > > hwa-hc 1-1:0.0: new USB bus registered, assigned bus number 11
-> >
-> > wusb code, hah.  It's about to be deleted from the kernel because no on=
-e
-> > uses it and there is no hardware out there.  I wouldn't spend a ton of
-> > time fuzzing it.
-> >
-> > One more good reason to just delete it soon...
->
-> Unfortunately that is not an option for the stable trees. Before I try
-> something quick and dirty here, I have a question for the testing team.
->
-> What exactly crashed? There is nothing in the logs? Did you undergo
-> an absolute freeze of the machine? Or do you tested for the word "BUG"
-> in the logs?
+On 19/11/2019 20:07, Mathieu Poirier wrote:
+> On Tue, 19 Nov 2019 at 10:31, Mathieu Poirier
+> <mathieu.poirier@linaro.org> wrote:
+>>
+>> On Tue, 19 Nov 2019 at 07:17, Tero Kristo <t-kristo@ti.com> wrote:
+>>>
+>>> Hi,
+>>>
+>>> This is v2 of the series [1], addressing comments from Bjorn and Rob.
+>>> Bindings patch is funnily v2.5, as I posted v2 already and wanted to
+>>> keep this somehow in sync. Individual patches contain comments about the
+>>> changes, or Reviewed-by tags provided if there are no changes.
+>>>
+>>> I also dropped the conversion patch to SPDX licensing until I can
+>>> confirm the license we want to use. Lets just keep the existing in place
+>>> until that.
+>>>
+>>> This series still depends on the reset + clock patches posted earlier,
+>>> but both of those dependencies are in linux-next now.
+>>
+>> I tried to apply your set to today's linux-next (next-20191119) but it
+>> fails at patch 13.
+> 
+> Digging further into this patch 12 is causing problem on next-20191119 (not 13):
+> 
+> mpoirier@xps15:~/work/remoteproc/kernel-review$ git apply --reject
+> 0012-remoteproc-omap-add-support-for-system-suspend-resum.patch
+> Checking patch drivers/remoteproc/omap_remoteproc.c...
+> Hunk #3 succeeded at 85 (offset -1 lines).
+> Hunk #4 succeeded at 99 (offset -1 lines).
+> Hunk #5 succeeded at 359 (offset -1 lines).
+> Hunk #6 succeeded at 544 (offset -1 lines).
+> Hunk #7 succeeded at 952 (offset -1 lines).
+> Hunk #8 succeeded at 992 (offset -2 lines).
+> Checking patch drivers/remoteproc/omap_remoteproc.h...
+> error: while searching for:
+> /*
+>   * Remote processor messaging
+>   *
+>   * Copyright (C) 2011 Texas Instruments, Inc.
+>   * Copyright (C) 2011 Google, Inc.
+>   * All rights reserved.
+>   */
+> 
+> error: patch failed: drivers/remoteproc/omap_remoteproc.h:2
+> Hunk #2 succeeded at 57 (offset 25 lines).
+> Hunk #3 succeeded at 80 (offset 25 lines).
+> Applied patch drivers/remoteproc/omap_remoteproc.c cleanly.
+> Applying patch drivers/remoteproc/omap_remoteproc.h with 1 reject...
+> Rejected hunk #1.
+> Hunk #2 applied cleanly.
+> Hunk #3 applied cleanly.
+> 
+> Your patch expects the last line of the first hunk to be '*/' but it
+> is '*' in linux-next.
 
-Hi Oliver,
+Hmm right, this seems my bad. This is caused by me dropping the SPDX 
+license conversion patch from the series, if that is applied, it goes 
+cleanly.
 
-Yes, it's the "BUG:" on the console that's detected as kernel bug
-(what's being produced by BUG_ON).
+Simple rebase of patch 12 is going to fix that though.
 
-There are only 2 special bug types in syzkaller that are detected
-based not on kernel output matching:
-"lost connection to test machine":
-https://syzkaller.appspot.com/bug?id=3Db97ec15bfe317ac1ddccb41f2a913d4f7a31=
-c6d7
-and "no output from test machine":
-https://syzkaller.appspot.com/bug?id=3D0b210638616bb68109e9642158d4c0072770=
-ae1c
-(hopefully self-explanatory from the title).
+-Tero
 
-The rest are based on output matching and what's matched is pretty
-much the bug title/email subject.
+> 
+>>
+>> Mathieu
+>>
+>>>
+>>> -Tero
+>>>
+>>> [1] https://patchwork.kernel.org/cover/11215421/
+>>>
+>>>
+>>>
+>>> --
+
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
