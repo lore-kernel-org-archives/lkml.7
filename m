@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2DF8C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:39:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 113B9C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C98FB22532
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:39:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1F5422506
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:40:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574257197;
-	bh=aLgUTHkU8g2g0Eps8OoJNBBcLk286j9K1y9g5cSZy9Q=;
+	s=default; t=1574257201;
+	bh=48KK0SLAaUeyUff4S3qn2YlPeutE7T2QR9bxIH2re6A=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Ad/UIhqsY7Q2J8zZ1/T96ANECAg+AV7Vg5yMGr5Ij30f1IAL7DzDo+H2q+mUp15JR
-	 FptRdCr7DPf5XD+IWBFi7eMBkUxGY8Hm8uHlWnf3yEd5h45M6N6KX46FOIh1yfxRjJ
-	 LQlZSjdxD6XAclAfdpF61x6T+nnINDkd/7a+Ta1Y=
+	b=L6yIla2/q7MEUcg0QGvcU7zywfIGv+S5Wjw+7yFigHxZ5j8PV0WMgituAZLS8xs5c
+	 7b8nQXpYqSxHCuV/hkjfeGFr4XfpsxPnQP7ZSFU0bK/MHgkNw2ApJVrFugPrWSdyTt
+	 zKs28cW2dydRe7LRAsmBYqZeksahBMSLed2t36BA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731171AbfKTNj4 (ORCPT
+        id S1731177AbfKTNkA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 08:39:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47688 "EHLO mail.kernel.org"
+        Wed, 20 Nov 2019 08:40:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728319AbfKTNjx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 08:39:53 -0500
+        id S1728220AbfKTNj7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 08:39:59 -0500
 Received: from localhost.localdomain (unknown [118.189.143.39])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79CDF2251E;
-        Wed, 20 Nov 2019 13:39:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E13692251E;
+        Wed, 20 Nov 2019 13:39:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574257193;
-        bh=aLgUTHkU8g2g0Eps8OoJNBBcLk286j9K1y9g5cSZy9Q=;
+        s=default; t=1574257199;
+        bh=48KK0SLAaUeyUff4S3qn2YlPeutE7T2QR9bxIH2re6A=;
         h=From:To:Cc:Subject:Date:From;
-        b=nMGOm+bwXprnSTmLAZFgCuyncc5D317Rde6p0TC4nuSVTsw9P/idKuaHkU6EBVXrt
-         zG7UM5TDuabHKoFcqV8L5RajxGvqPAIzTQQ8qi1zWt7WYFnCz4LK6Gd6Ve4cFckWIM
-         qvNTDy+jez3yskOCjlw+P9P5kAarW4hl8+KXQsm0=
+        b=iG2Q3aIcxDbYLfAS1EqiE7K5lJIUu8aW10Dq8IQnRfAULvAUWEz1hDUfz91Xo74iJ
+         kXUgy55vbzgNO6iQTqtZCNKZ4S7MIqScZ4LT1f/LlqYtVwIqkGEhI/MDoL7M74eVag
+         j63sHlOHurBD1S4p51WsCsQ5WykKxjUz9FjSM0YE=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH] regulator: Fix Kconfig indentation
-Date:   Wed, 20 Nov 2019 21:39:49 +0800
-Message-Id: <20191120133949.13996-1-krzk@kernel.org>
+        Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH] power: reset: Fix Kconfig indentation
+Date:   Wed, 20 Nov 2019 21:39:54 +0800
+Message-Id: <20191120133954.14051-1-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -59,28 +58,29 @@ coding style with command like:
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/regulator/Kconfig | 8 ++++----
+ drivers/power/reset/Kconfig | 8 ++++----
  1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-index 3ee63531f6d5..74eb5af7295f 100644
---- a/drivers/regulator/Kconfig
-+++ b/drivers/regulator/Kconfig
-@@ -841,10 +841,10 @@ config REGULATOR_SKY81452
- 	  will be called sky81452-regulator.
+diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
+index c721939767eb..14a1d6d10ca9 100644
+--- a/drivers/power/reset/Kconfig
++++ b/drivers/power/reset/Kconfig
+@@ -144,11 +144,11 @@ config POWER_RESET_MT6323
+        bool "MediaTek MT6323 power-off driver"
+        depends on MFD_MT6397
+        help
+-         The power-off driver is responsible for externally shutdown down
+-         the power of a remote MediaTek SoC MT6323 is connected to through
+-         controlling a tiny circuit BBPU inside MT6323 RTC.
++	 The power-off driver is responsible for externally shutdown down
++	 the power of a remote MediaTek SoC MT6323 is connected to through
++	 controlling a tiny circuit BBPU inside MT6323 RTC.
  
- config REGULATOR_SLG51000
--        tristate "Dialog Semiconductor SLG51000 regulators"
--        depends on I2C
--        select REGMAP_I2C
--        help
-+	tristate "Dialog Semiconductor SLG51000 regulators"
-+	depends on I2C
-+	select REGMAP_I2C
-+	help
- 	  Say y here to support for the Dialog Semiconductor SLG51000.
- 	  The SLG51000 is seven compact and customizable low dropout
- 	  regulators.
+-         Say Y if you have a board where MT6323 could be found.
++	 Say Y if you have a board where MT6323 could be found.
+ 
+ config POWER_RESET_QNAP
+ 	bool "QNAP power-off driver"
 -- 
 2.17.1
 
