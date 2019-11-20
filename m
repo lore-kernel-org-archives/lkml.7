@@ -2,61 +2,61 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E85AEC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:26:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 166B4C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FE292251F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:26:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0C102251F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:26:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="tE00SeRP"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="VgQ+63HH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730562AbfKTN0u (ORCPT
+        id S1730571AbfKTN04 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 08:26:50 -0500
-Received: from mailout3.samsung.com ([203.254.224.33]:55198 "EHLO
+        Wed, 20 Nov 2019 08:26:56 -0500
+Received: from mailout3.samsung.com ([203.254.224.33]:55218 "EHLO
         mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727798AbfKTN0t (ORCPT
+        with ESMTP id S1728080AbfKTN0z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 08:26:49 -0500
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191120132646epoutp0306fd6f41c81e3427016c10b061d7ce06~Y4dxsnWe_1524415244epoutp03h
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 13:26:46 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191120132646epoutp0306fd6f41c81e3427016c10b061d7ce06~Y4dxsnWe_1524415244epoutp03h
+        Wed, 20 Nov 2019 08:26:55 -0500
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191120132653epoutp034fdc9a9e74c0318306e39e7af69e65b4~Y4d3s04Nm1460214602epoutp031
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 13:26:53 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191120132653epoutp034fdc9a9e74c0318306e39e7af69e65b4~Y4d3s04Nm1460214602epoutp031
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1574256406;
-        bh=2nnkY0zONHJBiKeXcYLEH25v+lVrMoEod+rtyzko/ZA=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=tE00SeRPw4zmXehy35iLWCTlbT55Z5dZFBXBMZ5t4oOGAP3iKI5Zm55ZDRrvHtSsN
-         OgUw/KrCt/Ly1tYiasXO2o8VvquMkgz0D4T4m1VY0piNgFFeGBcbLdyFAgO7TqOY2K
-         fjZ8HScN5i0TOvPdEI3GT9Q63L1/rsbwUHwvnO44=
-Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
+        s=mail20170921; t=1574256413;
+        bh=2YYXgjCg4OpFQwaAFuEh8nJn991F2oDFmVnHATA+nac=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=VgQ+63HH2IHiDROrgPvDUv4JKJaNKoBa86BmPkIvG3LXZQm+8huEjFZKTNbYU2i2g
+         RhNNaEruV5YiryyR4Kuec8osLbzMKI13q7LzKrUViHGHW4if4581owO964J3AJEUfS
+         cUln/ZDIpRPJLOh0soI+eQoAKHnZzk6lqghKBKtU=
+Received: from epsmges5p1new.samsung.com (unknown [182.195.42.73]) by
         epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-        20191120132645epcas5p3310045e575780e18ec0f10f15a88b2b4~Y4dxIQAQV0125001250epcas5p30;
-        Wed, 20 Nov 2019 13:26:45 +0000 (GMT)
+        20191120132651epcas5p3c6b19e9d1604491c0d66ecea5ebf6e03~Y4d2mbMQz0361803618epcas5p3z;
+        Wed, 20 Nov 2019 13:26:51 +0000 (GMT)
 Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
-        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        D2.71.04403.51F35DD5; Wed, 20 Nov 2019 22:26:45 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-        20191120132645epcas5p29da16b1881e3da52fac0516a32e277d5~Y4dwirpH00633706337epcas5p2G;
-        Wed, 20 Nov 2019 13:26:45 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20191120132645epsmtrp1de900a5e26290f866382ec67d535c4d0~Y4dwh9gTw1339613396epsmtrp1V;
-        Wed, 20 Nov 2019 13:26:45 +0000 (GMT)
-X-AuditID: b6c32a4a-3b3ff70000001133-a3-5dd53f1579e2
+        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        06.72.04078.B1F35DD5; Wed, 20 Nov 2019 22:26:51 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+        20191120132650epcas5p11fc132ba7084db7b7ad1b6c22b357770~Y4d1YCrMm0920909209epcas5p1u;
+        Wed, 20 Nov 2019 13:26:50 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20191120132650epsmtrp2b19643f5eac0ec4644253e8d9eaa2393~Y4d1XZfmK1949619496epsmtrp20;
+        Wed, 20 Nov 2019 13:26:50 +0000 (GMT)
+X-AuditID: b6c32a49-5edff70000000fee-0e-5dd53f1b909f
 Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        EC.2B.03654.51F35DD5; Wed, 20 Nov 2019 22:26:45 +0900 (KST)
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        F7.AC.03814.A1F35DD5; Wed, 20 Nov 2019 22:26:50 +0900 (KST)
 Received: from ubuntu.sa.corp.samsungelectronics.net (unknown
         [107.108.83.125]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20191120132643epsmtip203d4b9baaaeff6f0ac2f8b8cead9dbd5~Y4du-SPMg2397823978epsmtip2I;
-        Wed, 20 Nov 2019 13:26:43 +0000 (GMT)
+        20191120132648epsmtip28cdd8c7c16f6d215fce3d3b66b3e7e3d~Y4dzz3-qq2641726417epsmtip2M;
+        Wed, 20 Nov 2019 13:26:48 +0000 (GMT)
 From:   Anvesh Salveru <anvesh.s@samsung.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
@@ -64,87 +64,141 @@ Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
         andrew.murray@arm.com, bhelgaas@google.com, kishon@ti.com,
         robh+dt@kernel.org, mark.rutland@arm.com,
         Anvesh Salveru <anvesh.s@samsung.com>
-Subject: [PATCH v3 0/2] Add support to handle ZRX-DC Compliant PHYs
-Date:   Wed, 20 Nov 2019 18:56:09 +0530
-Message-Id: <1574256371-617-1-git-send-email-anvesh.s@samsung.com>
+Subject: [PATCH v3 1/2] phy: core: add phy_property_present method
+Date:   Wed, 20 Nov 2019 18:56:10 +0530
+Message-Id: <1574256371-617-2-git-send-email-anvesh.s@samsung.com>
 X-Mailer: git-send-email 2.7.4
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrFIsWRmVeSWpSXmKPExsWy7bCmuq6o/dVYg9dLTC2a/29ntTi7ayGr
-        xZKmDItddzvYLVZ8mcluceFpD5vF5V1z2Cze/H7BbrH0+kUmi0Vbv7BbtO49wu7A7bFm3hpG
-        j52z7rJ7LNhU6rFpVSebR9+WVYweW/Z/ZvQ4fmM7k8fnTXIBHFFcNimpOZllqUX6dglcGesb
-        jjAX7OKtOLj2M1MD43OuLkZODgkBE4nfB7cydTFycQgJ7GaU2Pt2EiOE84lRov/JIWYI5xuj
-        xMarK1lgWjZeWcAGkdjLKHHz4yYWCKeFSeJv2zNGkCo2AW2Jn0f3soPYIgIKEpt7n7GCFDEL
-        /GOUuPplHliRsICzxKbt51lBbBYBVYkHDbuZQWxeASeJmz8XsUKsk5O4ea4T7A4JgR1sEi+/
-        7WKHSLhIbFxwhhHCFpZ4dXwLVFxK4mV/G5SdL9F7dymUXSMx5W4HVL29xIErc4DO5gC6SFNi
-        /S59kDCzAJ9E7+8nTCBhCQFeiY42IQhTSaJtZjVEo4TE4vk3mSFsD4nexWvAhgsJxEr8+LqR
-        fQKjzCyEmQsYGVcxSqYWFOempxabFhjlpZbrFSfmFpfmpesl5+duYgSnCC2vHYzLzvkcYhTg
-        YFTi4c3QuBorxJpYVlyZe4hRgoNZSYR3z/UrsUK8KYmVValF+fFFpTmpxYcYpTlYlMR5J7Fe
-        jRESSE8sSc1OTS1ILYLJMnFwSjUw+iftuPiupiFTVIlT5pPKjttTdu7RkPttz/BX5OHNhFwW
-        Ay5DwV1G/w467xCR5nkQ+md5ZOYKPvV3gZkWc1IrF62eZ9DoZhwbnPxD0z15xft7q4/kJpcu
-        3P9ozqwf5f/j05Z/2XbsxswG3tL7CyS+y346cfnpFNHzUgXrDhSncsYZHLeaceHzdiWW4oxE
-        Qy3mouJEAFxQGB0NAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrHLMWRmVeSWpSXmKPExsWy7bCSvK6o/dVYg+Vz+C2a/29ntTi7ayGr
-        xZKmDItddzvYLVZ8mcluceFpD5vF5V1z2Cze/H7BbrH0+kUmi0Vbv7BbtO49wu7A7bFm3hpG
-        j52z7rJ7LNhU6rFpVSebR9+WVYweW/Z/ZvQ4fmM7k8fnTXIBHFFcNimpOZllqUX6dglcGesb
-        jjAX7OKtOLj2M1MD43OuLkZODgkBE4mNVxawdTFycQgJ7GaUmDjxBxNEQkLiy96vbBC2sMTK
-        f8/ZIYqamCQOHj4LVsQmoC3x8+hedhBbREBBYnPvM1aQImaBLiaJtae3gCWEBZwlNm0/zwpi
-        swioSjxo2M0MYvMKOEnc/LmIFWKDnMTNc53MExh5FjAyrGKUTC0ozk3PLTYsMMxLLdcrTswt
-        Ls1L10vOz93ECA5FLc0djJeXxB9iFOBgVOLhzdC4GivEmlhWXJl7iFGCg1lJhHfP9SuxQrwp
-        iZVVqUX58UWlOanFhxilOViUxHmf5h2LFBJITyxJzU5NLUgtgskycXBKNTAWptwV4q6yFzWU
-        fFZ9cmmNdOjFgtzsJukdrI5lMVNf5nh+DSjjjr2V8vWDztZH/ixbDj6PqZlySdPi0BbjaYHy
-        2uG83i+OC2j/vWN9anHyZT0HBf4vJypW5R+/p8N2+HEC54TY93dvFp/cxGdktJjn5bUOQ9aT
-        W60Dvx29VJqc84BbhcueZbISS3FGoqEWc1FxIgDULIFbQQIAAA==
-X-CMS-MailID: 20191120132645epcas5p29da16b1881e3da52fac0516a32e277d5
+In-Reply-To: <1574256371-617-1-git-send-email-anvesh.s@samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA0WSXUhTYRjHeXe2s+NycZojnzSlBpbT1JSEI5T2hZygC2+LpA55cNKmsjnL
+        itD83FKzHDOX6fyYyTC0pU6nK5umFWpGLvVi4oVZiBmlBGFpzTPp7vf/P//ng5eXwCRFgiAi
+        IzOHVWcyShku4vcMyQ9GBSe5Uw/rG2Kpwk27gBp3NAqoltsKyuEpE1Jta7VCavJTOU59cNTh
+        1PL6FyFlmX7Po5q614RUsXNYeHwH3V7fjug+k0dIm21a2mbV4XRllxXRXS9WET06Y+fRq7bQ
+        FOK86Ggaq8zIZdUxiZdEis05N8oehmvm+sh8dEeqR34EkEeg1WAR6JGIkJD9CIzOGh4nfiDQ
+        mWv4nPiJYH6hibfdMvC0A+MKTgRNNVU+UcSDr/mGrRRORsKvV06hl6XkPnhWsbi1BCM3ELjX
+        6pEeEUQAeRL6C+Re5JNhUDwf6Y2L/7m26gIhtywUZid0mJf9yFNQby/EvWOAHMPhXbkO50Kn
+        YaP7m++6AFga7fI1B8HqitOXyYIKj8Xn3wSDpwxxnASDU3V87w0YKYcOR4zXxsidULG+wPPa
+        QIqhrETCoQxKam9wjQDNDbMYxzTMLhb6Hs6IYKy/UVCFQkz/h5oRsqI9bLZGlc5q4rNjM9mr
+        0RpGpdFmpkdfzlLZ0NbfiDjTi0wTZ12IJJDMX6wId6dKBEyuJk/lQkBgMql4YHoqVSJOY/Ku
+        s+qsi2qtktW4UDDBlwWK7wvcFyRkOpPDXmHZbFa9XeURfkH5KKyqpdek6Emwr5zTHSDvOpRt
+        GUa+TpQ6JR9JNnR2aIfDmdZd/pa5/djrQ9LntkfjY2j4XvtS88c894PmPo8WRZR2DU3GyRzx
+        Cw+Z3dXWx8rS3zNq17GRDWPc26G9t558Vk1Xrg8uLUsC30S9NJevdv4xhiQndCc2jdm+4ykn
+        ZHyNgomNwNQa5i9c12FgFwMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrELMWRmVeSWpSXmKPExsWy7bCSvK6U/dVYg7Y50hbN/7ezWpzdtZDV
+        YklThsWuux3sFiu+zGS3uPC0h83i8q45bBZvfr9gt1h6/SKTxaKtX9gtWvceYXfg9lgzbw2j
+        x85Zd9k9Fmwq9di0qpPNo2/LKkaPLfs/M3ocv7GdyePzJrkAjigum5TUnMyy1CJ9uwSujP/3
+        rjIWHJGoWDBPu4GxW6SLkZNDQsBEYs/G9cxdjFwcQgK7GSVOLDvFBJGQkPiy9ysbhC0ssfLf
+        c3aIoiYmif9rzzKDJNgEtCV+Ht3LDmKLCChIbO59xgpSxCzQxSSx9vQWoAQHh7CAk8TuRk0Q
+        k0VAVaL1gTZIOS9QdNPkRnaI+XISN891go3kFHCWmLe9mQ2kXAioZs1r6wmMfAsYGVYxSqYW
+        FOem5xYbFhjlpZbrFSfmFpfmpesl5+duYgSHrJbWDsYTJ+IPMQpwMCrx8GZoXI0VYk0sK67M
+        PcQowcGsJMK75/qVWCHelMTKqtSi/Pii0pzU4kOM0hwsSuK88vnHIoUE0hNLUrNTUwtSi2Cy
+        TBycUg2MrvNETc1b37rdfhDNVD8vJ4Kr40xZiq7AwrB9BxZtXdG4wdlieU38UQ8bptMNsX1H
+        OpeqPTnUfL/VJp+712dBqUb2/gsmvem/Jzn+WGg7e8nrQuHT/86qbLV/Mi+hqOjRweysohm7
+        zycavts72Tqc59CD5IIvn+++KV4jap+1WvP299sSKaG+SizFGYmGWsxFxYkAp6RtwVUCAAA=
+X-CMS-MailID: 20191120132650epcas5p11fc132ba7084db7b7ad1b6c22b357770
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 CMS-TYPE: 105P
-X-CMS-RootMailID: 20191120132645epcas5p29da16b1881e3da52fac0516a32e277d5
-References: <CGME20191120132645epcas5p29da16b1881e3da52fac0516a32e277d5@epcas5p2.samsung.com>
+X-CMS-RootMailID: 20191120132650epcas5p11fc132ba7084db7b7ad1b6c22b357770
+References: <1574256371-617-1-git-send-email-anvesh.s@samsung.com>
+        <CGME20191120132650epcas5p11fc132ba7084db7b7ad1b6c22b357770@epcas5p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According the PCI Express base specification when PHY does not meet
-ZRX-DC specification, after every 100ms timeout the link should
-transition to recovery state when the link is in low power states. 
+In some platforms, we need information of phy properties in
+the controller drivers. This patch adds a new phy_property_present()
+method which can be used to check if some property exists in PHY
+or not.
 
-Ports that meet the ZRX-DC specification for 2.5 GT/s while in the
-L1.Idle state and are therefore not required to implement the 100 ms
-timeout and transition to Recovery should avoid implementing it, since
-it will reduce the power savings expected from the L1 state.
+In case of DesignWare PCIe controller, we need to write into controller
+register to specify about ZRX-DC compliance property of the PHY, which
+reduces the power consumption during lower power states.
 
-DesignWare controller provides GEN3_ZRXDC_NONCOMPL field in
-GEN3_RELATED_OFF to specify about ZRX-DC compliant PHY.
+Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
+Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+---
+ drivers/phy/phy-core.c  | 26 ++++++++++++++++++++++++++
+ include/linux/phy/phy.h |  8 ++++++++
+ 2 files changed, 34 insertions(+)
 
-We need to get the PHY property in controller driver. So, we are
-proposing a new method phy_property_present() in the phy driver.
-
-Platform specific phy drivers should implement the callback for
-property_present which will return true if the property exists in
-the PHY.
-
-static bool xxxx_phy_property_present(struct phy *phy, const char *property)
-{
-       struct device *dev = &phy->dev;
-
-       return of_property_read_bool(dev->of_node, property);
-}
-
-And controller platform driver should populate the phy_zrxdc_compliant
-flag, which will be used by generic DesignWare driver.
-
-pci->phy_zrxdc_compliant = phy_property_present(xxxx_ctrl->phy, "phy-zrxdc-compliant");
-
-Anvesh Salveru (2):
-  phy: core: add phy_property_present method
-  PCI: dwc: add support to handle ZRX-DC Compliant PHYs
-
- drivers/pci/controller/dwc/pcie-designware.c |  6 ++++++
- drivers/pci/controller/dwc/pcie-designware.h |  4 ++++
- drivers/phy/phy-core.c                       | 26 ++++++++++++++++++++++++++
- include/linux/phy/phy.h                      |  8 ++++++++
- 4 files changed, 44 insertions(+)
-
+diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
+index b04f4fe..0a62eca 100644
+--- a/drivers/phy/phy-core.c
++++ b/drivers/phy/phy-core.c
+@@ -420,6 +420,32 @@ int phy_calibrate(struct phy *phy)
+ EXPORT_SYMBOL_GPL(phy_calibrate);
+ 
+ /**
++ * phy_property_present() - checks if the property is present in PHY
++ * @phy: the phy returned by phy_get()
++ * @property: name of the property to check
++ *
++ * Used to check if the given property is present in PHY. PHY drivers
++ * can implement this callback function to expose PHY properties to
++ * controller drivers.
++ *
++ * Returns: true if property exists, false otherwise
++ */
++bool phy_property_present(struct phy *phy, const char *property)
++{
++	bool ret;
++
++	if (!phy || !phy->ops->property_present)
++		return false;
++
++	mutex_lock(&phy->mutex);
++	ret = phy->ops->property_present(phy, property);
++	mutex_unlock(&phy->mutex);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(phy_property_present);
++
++/**
+  * phy_configure() - Changes the phy parameters
+  * @phy: the phy returned by phy_get()
+  * @opts: New configuration to apply
+diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
+index 15032f14..3dd8f3c 100644
+--- a/include/linux/phy/phy.h
++++ b/include/linux/phy/phy.h
+@@ -61,6 +61,7 @@ union phy_configure_opts {
+  * @reset: resetting the phy
+  * @calibrate: calibrate the phy
+  * @release: ops to be performed while the consumer relinquishes the PHY
++ * @property_present: check if some property is present in PHY
+  * @owner: the module owner containing the ops
+  */
+ struct phy_ops {
+@@ -103,6 +104,7 @@ struct phy_ops {
+ 	int	(*reset)(struct phy *phy);
+ 	int	(*calibrate)(struct phy *phy);
+ 	void	(*release)(struct phy *phy);
++	bool	(*property_present)(struct phy *phy, const char *property);
+ 	struct module *owner;
+ };
+ 
+@@ -217,6 +219,7 @@ static inline enum phy_mode phy_get_mode(struct phy *phy)
+ }
+ int phy_reset(struct phy *phy);
+ int phy_calibrate(struct phy *phy);
++bool phy_property_present(struct phy *phy, const char *property);
+ static inline int phy_get_bus_width(struct phy *phy)
+ {
+ 	return phy->attrs.bus_width;
+@@ -354,6 +357,11 @@ static inline int phy_calibrate(struct phy *phy)
+ 	return -ENOSYS;
+ }
+ 
++static inline bool phy_property_present(struct phy *phy, const char *property)
++{
++	return false;
++}
++
+ static inline int phy_configure(struct phy *phy,
+ 				union phy_configure_opts *opts)
+ {
 -- 
 2.7.4
 
