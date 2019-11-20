@@ -2,432 +2,265 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15837C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:11:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A71C3C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:11:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAB9F21845
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:11:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D5A221845
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:11:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="WIuQfLWe";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="laVvfxxW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729513AbfKTPL0 convert rfc822-to-8bit (ORCPT
+        id S1729597AbfKTPLm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 10:11:26 -0500
-Received: from mga11.intel.com ([192.55.52.93]:59854 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728804AbfKTPL0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 10:11:26 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Nov 2019 07:11:09 -0800
-X-IronPort-AV: E=Sophos;i="5.69,222,1571727600"; 
-   d="scan'208";a="200747041"
-Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.161])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Nov 2019 07:11:00 -0800
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Rajat Jain <rajatja@google.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Imre Deak <imre.deak@intel.com>,
-        =?utf-8?Q?Jos=C3=A9?= Roberto de Souza <jose.souza@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        intel-gfx@lists.freedesktop.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mat King <mathewk@google.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>, Pavel Machek <pavel@denx.de>,
-        Sean Paul <seanpaul@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Thierry Reding <thierry.reding@gmail.com>
-Cc:     Rajat Jain <rajatxjain@gmail.com>
-Subject: Re: [PATCH v2 3/3] drm/i915: Add support for integrated privacy screens
-In-Reply-To: <CACK8Z6HVDzLRX=yHZQ+eD1PqQBstTXtMxkDp6Ky4L+=7VWdBww@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20191023001206.15741-1-rajatja@google.com> <20191104194147.185642-1-rajatja@google.com> <20191104194147.185642-3-rajatja@google.com> <CACK8Z6HVDzLRX=yHZQ+eD1PqQBstTXtMxkDp6Ky4L+=7VWdBww@mail.gmail.com>
-Date:   Wed, 20 Nov 2019 17:10:57 +0200
-Message-ID: <87o8x6wpku.fsf@intel.com>
+        Wed, 20 Nov 2019 10:11:42 -0500
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:33792 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728196AbfKTPLl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 10:11:41 -0500
+Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 4BE29C2EE2;
+        Wed, 20 Nov 2019 15:11:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1574262699; bh=1ENhUp8lTQ/s1kQGZibLhu5YZ//AFmMiJTIvxy+kJHw=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=WIuQfLWekwKpi00QqEO+nfWofbyQEAjLLtwqy8uTv6Lme/Z3BxVHqo6wybMI3take
+         RoG9HlKF6eKxStax18lJ40vZC8CBQziLMk1GYZHKMMt6WxBJzydg3oDmmrVOSJKiIr
+         +G+Dvv1dIRL0Z7jiQZqPCxGx17zlCUlaA51W1eU+dRoJqaMxE3KRiiVJxodzoIQWUR
+         O7npbBdbO3IF6XPMjLyS4230uzJt565BbtJR9yEBmaN3PyuEelFuC5Sb0XA2g3WPDk
+         FlUgyFMhNzRjcEF76tmtcLXLu0tmLjq2CZyI8S1VXEnzvJRd1JQtyfFPuKNPtuqfXO
+         lRfTLPdDgfUxQ==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 694F5A0066;
+        Wed, 20 Nov 2019 15:11:38 +0000 (UTC)
+Received: from us01hybrid1.internal.synopsys.com (10.13.188.44) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Wed, 20 Nov 2019 07:11:06 -0800
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (10.13.177.249)
+ by mrs.synopsys.com (10.13.188.44) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Wed, 20 Nov 2019 07:11:05 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nYa+YpOhV1JtisG7oDi9mMl7lA4ll2ySbmfzkOZyqjIU+13qsu6AW4oD9wdwbgM1dbmzHxsM1hVeVwUdkKRIrVUddiKqZWDrEISwM5jHo+2g/2gpfOR/r9siWl59u4FuGGnPXCDkGMdnk5pyI2lLxk64IT+J4IbkL9ICGoOXtp/ZiRMvnl/UZ8sWh2ax6WDPQqxzmwM7v24ZmX49lhypo5v5IdbKIK+5qXJ8EWzEMcZdZja24Riek2QmF+ETzlY1Dkhao6lytVVLP+GayyI4shdX86pR8rwxubf2SEc4XXfWwpS6WTGEYcV1coqokv3pK83P4UhbjwmukB1s+rxebw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1ENhUp8lTQ/s1kQGZibLhu5YZ//AFmMiJTIvxy+kJHw=;
+ b=kpVAJsjcnnvtFZF0p6cu2Xos00aS6yOsExAfrfr14mhbEfRPE9Y9KCprTj6/d6KGT5MEF+kCoXRLqQRYY7R3NHVonO75ZwQ0nCIq4KKl7v/ZcHLyi0DWe0+anHXAzeX58RVp7XbDkGAqRD98Ew5DJkiy9qMMEKhC/s3yV1bqwicAWnbGi9++uC9lXiLzblKaEFOkWP0eRCtWGFYeA/QBydFCR5twvBJKAHuYlPpUYBQdEs7r/hat8x+b7tt/HJSkB1zvlB/0JoWlHQFdUNCvFLhdSsmya9Z8mSKJZxsDyxFT1UsZ7lma1NO8xaYFZvuSo0Kmv4WuJdBKEmgoY7JXdg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1ENhUp8lTQ/s1kQGZibLhu5YZ//AFmMiJTIvxy+kJHw=;
+ b=laVvfxxWRDx8z7vNuR0v63gdzFVaqSeIslg6X0sGQUH9BZIvhh7Cx9UnBxTNaUJKbGFe6tNG6KdmGaOqUwhh5VELuNf1MNW6rHhhpD2+C2NXw9RfsdAQkKkd84/k9NYhdxZ3fK/qrB1Vz/da5Q4Tt/p5ur/wdSF4v+0+eKrzQHU=
+Received: from DM6PR12MB4010.namprd12.prod.outlook.com (10.255.175.83) by
+ DM6PR12MB3947.namprd12.prod.outlook.com (10.255.175.222) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2451.30; Wed, 20 Nov 2019 15:11:04 +0000
+Received: from DM6PR12MB4010.namprd12.prod.outlook.com
+ ([fe80::b0c9:8724:cdaf:10b1]) by DM6PR12MB4010.namprd12.prod.outlook.com
+ ([fe80::b0c9:8724:cdaf:10b1%2]) with mapi id 15.20.2474.015; Wed, 20 Nov 2019
+ 15:11:03 +0000
+From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+To:     Anvesh Salveru <anvesh.s@samsung.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "gustavo.pimentel@synopsys.com" <Gustavo.Pimentel@synopsys.com>,
+        "pankaj.dubey@samsung.com" <pankaj.dubey@samsung.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "kishon@ti.com" <kishon@ti.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>
+Subject: RE: [PATCH v3 0/2] Add support to handle ZRX-DC Compliant PHYs
+Thread-Topic: [PATCH v3 0/2] Add support to handle ZRX-DC Compliant PHYs
+Thread-Index: AQHVn6ZHxYrMzBpN+kWkuE+ujwJWYaeUKbsw
+Date:   Wed, 20 Nov 2019 15:11:03 +0000
+Message-ID: <DM6PR12MB40104F3F6D5ACE478F0ACEB3DA4F0@DM6PR12MB4010.namprd12.prod.outlook.com>
+References: <CGME20191120132645epcas5p29da16b1881e3da52fac0516a32e277d5@epcas5p2.samsung.com>
+ <1574256371-617-1-git-send-email-anvesh.s@samsung.com>
+In-Reply-To: <1574256371-617-1-git-send-email-anvesh.s@samsung.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: =?utf-8?B?UEcxbGRHRStQR0YwSUc1dFBTSmliMlI1TG5SNGRDSWdjRDBpWXpwY2RYTmxj?=
+ =?utf-8?B?bk5jWjNWemRHRjJiMXhoY0hCa1lYUmhYSEp2WVcxcGJtZGNNRGxrT0RRNVlq?=
+ =?utf-8?B?WXRNekprTXkwMFlUUXdMVGcxWldVdE5tSTROR0poTWpsbE16VmlYRzF6WjNO?=
+ =?utf-8?B?Y2JYTm5MV1kxWTJSaE9ETTRMVEJpWVRjdE1URmxZUzA1T0RrNUxXWTRPVFJq?=
+ =?utf-8?B?TWpjek9EQTBNbHhoYldVdGRHVnpkRnhtTldOa1lUZ3pZUzB3WW1FM0xURXha?=
+ =?utf-8?B?V0V0T1RnNU9TMW1PRGswWXpJM016Z3dOREppYjJSNUxuUjRkQ0lnYzNvOUlq?=
+ =?utf-8?B?SXdPRFFpSUhROUlqRXpNakU0TnpNMk1qWXdPVGMxTURjM015SWdhRDBpTm14?=
+ =?utf-8?B?RWRrcEtVRzUzYVN0bGVIRTVTMjlwTlhBNFFraDVUVUozUFNJZ2FXUTlJaUln?=
+ =?utf-8?B?WW13OUlqQWlJR0p2UFNJeElpQmphVDBpWTBGQlFVRkZVa2hWTVZKVFVsVkdU?=
+ =?utf-8?B?a05uVlVGQlFsRktRVUZFTVZscFlUUjBTaTlXUVdKcVVVZGFiWFpWUkZORWRV?=
+ =?utf-8?B?NUJXbTFoT1ZGT1NVMVBRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVaEJRVUZCUTJ0RFFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVWQlFWRkJRa0ZCUVVGRlIwbFplbEZCUVVGQlFVRkJRVUZCUVVGQlFVRktO?=
+ =?utf-8?B?RUZCUVVKdFFVZHJRV0puUW1oQlJ6UkJXWGRDYkVGR09FRmpRVUp6UVVkRlFX?=
+ =?utf-8?B?Sm5RblZCUjJ0QlltZENia0ZHT0VGa2QwSm9RVWhSUVZwUlFubEJSekJCV1ZG?=
+ =?utf-8?B?Q2VVRkhjMEZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUlVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?blFVRkJRVUZCYm1kQlFVRkhXVUZpZDBJeFFVYzBRVnBCUW5sQlNHdEJXSGRD?=
+ =?utf-8?B?ZDBGSFJVRmpaMEl3UVVjMFFWcFJRbmxCU0UxQldIZENia0ZIV1VGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFWRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkRRVUZCUVVGQlEyVkJRVUZCV21kQ2RrRklWVUZpWjBKclFV?=
+ =?utf-8?B?aEpRV1ZSUW1aQlNFRkJXVkZDZVVGSVVVRmlaMEpzUVVoSlFXTjNRbVpCU0Ux?=
+ =?utf-8?B?QldWRkNkRUZJVFVGa1VVSjFRVWRqUVZoM1FtcEJSemhCWW1kQ2JVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUpCUVVGQlFVRkJRVUZCU1VGQlFVRkJRVW8wUVVGQlFtMUJSemhC?=
+ =?utf-8?B?WkZGQ2RVRkhVVUZqWjBJMVFVWTRRV05CUW1oQlNFbEJaRUZDZFVGSFZVRmpa?=
+ =?utf-8?B?MEo2UVVZNFFXTjNRbWhCUnpCQlkzZENNVUZITkVGYWQwSm1RVWhKUVZwUlFu?=
+ =?utf-8?B?cEJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGRlFVRkJRVUZCUVVGQlFXZEJRVUZCUVVGdVow?=
+ =?utf-8?B?RkJRVWRaUVdKM1FqRkJSelJCV2tGQ2VVRklhMEZZZDBKM1FVZEZRV05uUWpC?=
+ =?utf-8?B?QlJ6UkJXbEZDZVVGSVRVRllkMEo2UVVjd1FXRlJRbXBCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJVVUZCUVVGQlFVRkJRVU5C?=
+ =?utf-8?B?UVVGQlFVRkRaVUZCUVVGYVowSjJRVWhWUVdKblFtdEJTRWxCWlZGQ1prRklR?=
+ =?utf-8?B?VUZaVVVKNVFVaFJRV0puUW14QlNFbEJZM2RDWmtGSVRVRmtRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUWtGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGSlFVRkJRVUZCU2pSQlFVRkNiVUZIT0VGa1VVSjFRVWRSUVdO?=
+ =?utf-8?B?blFqVkJSamhCWTBGQ2FFRklTVUZrUVVKMVFVZFZRV05uUW5wQlJqaEJaRUZD?=
+ =?utf-8?B?ZWtGSE1FRlpkMEZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVVkJRVUZCUVVGQlFVRkJaMEZCUVVGQlFXNW5RVUZCUjFsQlluZENN?=
+ =?utf-8?B?VUZITkVGYVFVSjVRVWhyUVZoM1FuZEJSMFZCWTJkQ01FRkhORUZhVVVKNVFV?=
+ =?utf-8?B?aE5RVmgzUWpGQlJ6QkJXWGRCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZSUVVGQlFVRkJRVUZCUTBGQlFVRkJRVU5sUVVG?=
+ =?utf-8?B?QlFWcDNRakJCU0UxQldIZENkMEZJU1VGaWQwSnJRVWhWUVZsM1FqQkJSamhC?=
+ =?utf-8?B?WkVGQ2VVRkhSVUZoVVVKMVFVZHJRV0puUW01QlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQ1FVRkJRVUZCUVVGQlFVbEJR?=
+ =?utf-8?B?VUZCUVVGS05FRkJRVUo2UVVkRlFXSkJRbXhCU0UxQldIZENhRUZIVFVGWmQw?=
+ =?utf-8?B?SjJRVWhWUVdKblFqQkJSamhCWTBGQ2MwRkhSVUZpWjBGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJSVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZuUVVGQlFVRkJibWRCUVVGSVRVRlpVVUp6UVVkVlFXTjNRbVpC?=
+ =?utf-8?B?U0VWQlpGRkNka0ZJVVVGYVVVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVZGQlFVRkJRVUZCUVVGRFFVRkJRVUZCUTJWQlFVRkJZM2RDZFVGSVFV?=
+ =?utf-8?B?RmpkMEptUVVkM1FXRlJRbXBCUjFWQlltZENla0ZIVlVGWWQwSXdRVWRWUVdO?=
+ =?utf-8?B?blFuUkJSamhCVFZGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVSkJRVUZCUVVGQlFVRkJTVUZCUVVGQlFVbzBRVUZC?=
+ =?utf-8?B?UW5wQlJ6UkJZMEZDZWtGR09FRmlRVUp3UVVkTlFWcFJRblZCU0UxQldsRkNa?=
+ =?utf-8?B?a0ZJVVVGYVVVSjVRVWN3UVZoM1FucEJTRkZCWkZGQ2EwRkhWVUZpWjBJd1FV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZGUVVGQlFVRkJRVUZCUVdkQlFV?=
+ =?utf-8?B?RkJRVUZ1WjBGQlFVaFpRVnAzUW1aQlIzTkJXbEZDTlVGSVkwRmlkMEo1UVVk?=
+ =?utf-8?B?UlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlVVRkJRVUZC?=
+ =?utf-8?Q?QUFBQUNBQUFBQUFBPSIvPjwvbWV0YT4=3D?=
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=gustavo@synopsys.com; 
+x-originating-ip: [83.174.63.141]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 682fa742-7b31-4ae2-4a8e-08d76dcbdc66
+x-ms-traffictypediagnostic: DM6PR12MB3947:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR12MB3947D3E6B6C8CAE626BB5B78DA4F0@DM6PR12MB3947.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:901;
+x-forefront-prvs: 02272225C5
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(396003)(39860400002)(346002)(136003)(366004)(189003)(199004)(256004)(26005)(305945005)(66066001)(229853002)(2906002)(7416002)(478600001)(54906003)(33656002)(52536014)(110136005)(7736002)(4326008)(14454004)(5660300002)(55016002)(11346002)(446003)(476003)(25786009)(86362001)(7696005)(53546011)(6506007)(71200400001)(71190400001)(9686003)(316002)(6436002)(76176011)(8936002)(99286004)(186003)(3846002)(6116002)(102836004)(66476007)(66556008)(64756008)(66446008)(66946007)(76116006)(74316002)(2501003)(8676002)(81166006)(81156014)(486006)(6246003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR12MB3947;H:DM6PR12MB4010.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Q39PYB+9KAcASPm6M4Mi81vtsq4mvTtePwzb6nTw7IeSqRHXcMCIR3Gbn9m7syEOga93IHLBIVI4Trwk+LWvqbUqge6tRyGAbneH3ChWpgJiOWUMjWqxFKwAm1oGbmvybpceUNtg4OHJmwS24d+QLMORbJScMBVduQZmaUcItVmzEAVlOT4hI1UXu/SH0vvMLiNnNHQJK1QbGxO2cNoEmHD8pQyc7M2isMPZaz73btGv2c98NJV4RdSYg47GBISKdX2Z5W9FoF/3iaiKcgFLJX0iZoywQp8f2hIeY8JI0P+J0Nfp2Z7WMlYFUiraJdHBYwybCwE2r82DwOEKEAjqp8/rzZZ4f7kQmWooeCPj525dpNLJnfd5ffa2JOnxEg43ToiHvO/hkYoPJkOdLZCN7xPGEdjuJoDpZt9y4mHRq+AgUZ3MC+n6qcPbvpd/hBml
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+X-MS-Exchange-CrossTenant-Network-Message-Id: 682fa742-7b31-4ae2-4a8e-08d76dcbdc66
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Nov 2019 15:11:03.7795
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: U31z1jvAT107NffbjfEgVGM7g3YljDEltmQld1P33IctyNv3xintLlhsOhqHtZA/v1zdKIW3TP6YQl0CNmS+og==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3947
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 12 Nov 2019, Rajat Jain <rajatja@google.com> wrote:
-> On Mon, Nov 4, 2019 at 11:41 AM Rajat Jain <rajatja@google.com> wrote:
->>
->> Certain laptops now come with panels that have integrated privacy
->> screens on them. This patch adds support for such panels by adding
->> a privacy-screen property to the intel_connector for the panel, that
->> the userspace can then use to control and check the status.
->>
->> Identifying the presence of privacy screen, and controlling it, is done
->> via ACPI _DSM methods.
->>
->> Currently, this is done only for the Intel display ports. But in future,
->> this can be done for any other ports if the hardware becomes available
->> (e.g. external monitors supporting integrated privacy screens?).
->>
->> Signed-off-by: Rajat Jain <rajatja@google.com>
->> Change-Id: Ic9ff07fc4a50797d2d0dfb919f11aa0821a4b548
->
->
-> Hi Folks,
->
-> I posted a v2 taking care of the comments I received (also split it
-> into 3 patches now, and resused some ACPI code I found in i915
-> driver). . Wondering if any one got a chance to look at this?
-
-For future reference, please post the updated series standalone, *not*
-in reply to long, old threads. Besides myself, it'll also help our CI
-find your patches and crunch a bunch of tests on them.
-
-Also, do you have an open userspace for this? See [1]. I think this
-looks like good stuff to me, but then I'm not responsible for any
-userspace component that would actually use this.
-
-BR,
-Jani.
-
-
-[1] https://www.kernel.org/doc/html/latest/gpu/drm-uapi.html#open-source-userspace-requirements
-
-
-
->
-> Thanks,
->
-> Rajat
->
->> ---
->> v2: Formed by splitting the original patch into multiple patches.
->>     - All code has been moved into i915 now.
->>     - Privacy screen is a i915 property
->>     - Have a local state variable to store the prvacy screen. Don't read
->>       it from hardware.
->>
->>  drivers/gpu/drm/i915/Makefile                 |  3 +-
->>  drivers/gpu/drm/i915/display/intel_atomic.c   | 13 +++-
->>  .../gpu/drm/i915/display/intel_connector.c    | 35 ++++++++++
->>  .../gpu/drm/i915/display/intel_connector.h    |  1 +
->>  .../drm/i915/display/intel_display_types.h    |  4 ++
->>  drivers/gpu/drm/i915/display/intel_dp.c       |  5 ++
->>  .../drm/i915/display/intel_privacy_screen.c   | 70 +++++++++++++++++++
->>  .../drm/i915/display/intel_privacy_screen.h   | 25 +++++++
->>  include/uapi/drm/i915_drm.h                   | 14 ++++
->>  9 files changed, 166 insertions(+), 4 deletions(-)
->>  create mode 100644 drivers/gpu/drm/i915/display/intel_privacy_screen.c
->>  create mode 100644 drivers/gpu/drm/i915/display/intel_privacy_screen.h
->>
->> diff --git a/drivers/gpu/drm/i915/Makefile b/drivers/gpu/drm/i915/Makefile
->> index 2587ea834f06..3589ebcf27bc 100644
->> --- a/drivers/gpu/drm/i915/Makefile
->> +++ b/drivers/gpu/drm/i915/Makefile
->> @@ -185,7 +185,8 @@ i915-y += \
->>         display/intel_tc.o
->>  i915-$(CONFIG_ACPI) += \
->>         display/intel_acpi.o \
->> -       display/intel_opregion.o
->> +       display/intel_opregion.o \
->> +       display/intel_privacy_screen.o
->>  i915-$(CONFIG_DRM_FBDEV_EMULATION) += \
->>         display/intel_fbdev.o
->>
->> diff --git a/drivers/gpu/drm/i915/display/intel_atomic.c b/drivers/gpu/drm/i915/display/intel_atomic.c
->> index d3fb75bb9eb1..378772d3449c 100644
->> --- a/drivers/gpu/drm/i915/display/intel_atomic.c
->> +++ b/drivers/gpu/drm/i915/display/intel_atomic.c
->> @@ -37,6 +37,7 @@
->>  #include "intel_atomic.h"
->>  #include "intel_display_types.h"
->>  #include "intel_hdcp.h"
->> +#include "intel_privacy_screen.h"
->>  #include "intel_sprite.h"
->>
->>  /**
->> @@ -57,11 +58,14 @@ int intel_digital_connector_atomic_get_property(struct drm_connector *connector,
->>         struct drm_i915_private *dev_priv = to_i915(dev);
->>         struct intel_digital_connector_state *intel_conn_state =
->>                 to_intel_digital_connector_state(state);
->> +       struct intel_connector *intel_connector = to_intel_connector(connector);
->>
->>         if (property == dev_priv->force_audio_property)
->>                 *val = intel_conn_state->force_audio;
->>         else if (property == dev_priv->broadcast_rgb_property)
->>                 *val = intel_conn_state->broadcast_rgb;
->> +       else if (property == intel_connector->privacy_screen_property)
->> +               *val = intel_conn_state->privacy_screen_status;
->>         else {
->>                 DRM_DEBUG_ATOMIC("Unknown property [PROP:%d:%s]\n",
->>                                  property->base.id, property->name);
->> @@ -89,15 +93,18 @@ int intel_digital_connector_atomic_set_property(struct drm_connector *connector,
->>         struct drm_i915_private *dev_priv = to_i915(dev);
->>         struct intel_digital_connector_state *intel_conn_state =
->>                 to_intel_digital_connector_state(state);
->> +       struct intel_connector *intel_connector = to_intel_connector(connector);
->>
->>         if (property == dev_priv->force_audio_property) {
->>                 intel_conn_state->force_audio = val;
->>                 return 0;
->> -       }
->> -
->> -       if (property == dev_priv->broadcast_rgb_property) {
->> +       } else if (property == dev_priv->broadcast_rgb_property) {
->>                 intel_conn_state->broadcast_rgb = val;
->>                 return 0;
->> +       } else if (property == intel_connector->privacy_screen_property) {
->> +               intel_privacy_screen_set_val(intel_connector, val);
->> +               intel_conn_state->privacy_screen_status = val;
->> +               return 0;
->>         }
->>
->>         DRM_DEBUG_ATOMIC("Unknown property [PROP:%d:%s]\n",
->> diff --git a/drivers/gpu/drm/i915/display/intel_connector.c b/drivers/gpu/drm/i915/display/intel_connector.c
->> index 308ec63207ee..3ccbf52aedf9 100644
->> --- a/drivers/gpu/drm/i915/display/intel_connector.c
->> +++ b/drivers/gpu/drm/i915/display/intel_connector.c
->> @@ -281,3 +281,38 @@ intel_attach_colorspace_property(struct drm_connector *connector)
->>                 drm_object_attach_property(&connector->base,
->>                                            connector->colorspace_property, 0);
->>  }
->> +
->> +static const struct drm_prop_enum_list privacy_screen_enum[] = {
->> +       { PRIVACY_SCREEN_DISABLED, "Disabled" },
->> +       { PRIVACY_SCREEN_ENABLED, "Enabled" },
->> +};
->> +
->> +/**
->> + * intel_attach_privacy_screen_property -
->> + *     create and attach the connecter's privacy-screen property. *
->> + * @connector: connector for which to init the privacy-screen property
->> + *
->> + * This function creates and attaches the "privacy-screen" property to the
->> + * connector. Initial state of privacy-screen is set to disabled.
->> + */
->> +void
->> +intel_attach_privacy_screen_property(struct drm_connector *connector)
->> +{
->> +       struct intel_connector *intel_connector = to_intel_connector(connector);
->> +       struct drm_property *prop;
->> +
->> +       if (!intel_connector->privacy_screen_property) {
->> +               prop = drm_property_create_enum(connector->dev,
->> +                                               DRM_MODE_PROP_ENUM,
->> +                                               "privacy-screen",
->> +                                               privacy_screen_enum,
->> +                                           ARRAY_SIZE(privacy_screen_enum));
->> +               if (!prop)
->> +                       return;
->> +
->> +               intel_connector->privacy_screen_property = prop;
->> +       }
->> +
->> +       drm_object_attach_property(&connector->base, prop,
->> +                                  PRIVACY_SCREEN_DISABLED);
->> +}
->> diff --git a/drivers/gpu/drm/i915/display/intel_connector.h b/drivers/gpu/drm/i915/display/intel_connector.h
->> index 93a7375c8196..61005f37a338 100644
->> --- a/drivers/gpu/drm/i915/display/intel_connector.h
->> +++ b/drivers/gpu/drm/i915/display/intel_connector.h
->> @@ -31,5 +31,6 @@ void intel_attach_force_audio_property(struct drm_connector *connector);
->>  void intel_attach_broadcast_rgb_property(struct drm_connector *connector);
->>  void intel_attach_aspect_ratio_property(struct drm_connector *connector);
->>  void intel_attach_colorspace_property(struct drm_connector *connector);
->> +void intel_attach_privacy_screen_property(struct drm_connector *connector);
->>
->>  #endif /* __INTEL_CONNECTOR_H__ */
->> diff --git a/drivers/gpu/drm/i915/display/intel_display_types.h b/drivers/gpu/drm/i915/display/intel_display_types.h
->> index c2706afc069b..83b8c98049a7 100644
->> --- a/drivers/gpu/drm/i915/display/intel_display_types.h
->> +++ b/drivers/gpu/drm/i915/display/intel_display_types.h
->> @@ -426,6 +426,9 @@ struct intel_connector {
->>         struct work_struct modeset_retry_work;
->>
->>         struct intel_hdcp hdcp;
->> +
->> +       /* Optional "privacy-screen" property for the connector panel */
->> +       struct drm_property *privacy_screen_property;
->>  };
->>
->>  struct intel_digital_connector_state {
->> @@ -433,6 +436,7 @@ struct intel_digital_connector_state {
->>
->>         enum hdmi_force_audio force_audio;
->>         int broadcast_rgb;
->> +       enum intel_privacy_screen_status privacy_screen_status;
->>  };
->>
->>  #define to_intel_digital_connector_state(x) container_of(x, struct intel_digital_connector_state, base)
->> diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/i915/display/intel_dp.c
->> index 4fac408a4299..1963e92404ba 100644
->> --- a/drivers/gpu/drm/i915/display/intel_dp.c
->> +++ b/drivers/gpu/drm/i915/display/intel_dp.c
->> @@ -62,6 +62,7 @@
->>  #include "intel_lspcon.h"
->>  #include "intel_lvds.h"
->>  #include "intel_panel.h"
->> +#include "intel_privacy_screen.h"
->>  #include "intel_psr.h"
->>  #include "intel_sideband.h"
->>  #include "intel_tc.h"
->> @@ -6358,6 +6359,10 @@ intel_dp_add_properties(struct intel_dp *intel_dp, struct drm_connector *connect
->>
->>                 /* Lookup the ACPI node corresponding to the connector */
->>                 intel_connector_lookup_acpi_node(intel_connector);
->> +
->> +               /* Check for integrated Privacy screen support */
->> +               if (intel_privacy_screen_present(intel_connector))
->> +                       intel_attach_privacy_screen_property(connector);
->>         }
->>  }
->>
->> diff --git a/drivers/gpu/drm/i915/display/intel_privacy_screen.c b/drivers/gpu/drm/i915/display/intel_privacy_screen.c
->> new file mode 100644
->> index 000000000000..4c422e38c51a
->> --- /dev/null
->> +++ b/drivers/gpu/drm/i915/display/intel_privacy_screen.c
->> @@ -0,0 +1,70 @@
->> +// SPDX-License-Identifier: GPL-2.0-or-later
->> +/*
->> + * Intel ACPI privacy screen code
->> + *
->> + * Copyright © 2019 Google Inc.
->> + */
->> +
->> +#include <linux/acpi.h>
->> +
->> +#include "intel_privacy_screen.h"
->> +
->> +#define CONNECTOR_DSM_REVID 1
->> +
->> +#define CONNECTOR_DSM_FN_PRIVACY_ENABLE                2
->> +#define CONNECTOR_DSM_FN_PRIVACY_DISABLE               3
->> +
->> +static const guid_t drm_conn_dsm_guid =
->> +       GUID_INIT(0xC7033113, 0x8720, 0x4CEB,
->> +                 0x90, 0x90, 0x9D, 0x52, 0xB3, 0xE5, 0x2D, 0x73);
->> +
->> +/* Makes _DSM call to set privacy screen status */
->> +static void acpi_privacy_screen_call_dsm(acpi_handle conn_handle, u64 func)
->> +{
->> +       union acpi_object *obj;
->> +
->> +       obj = acpi_evaluate_dsm(conn_handle, &drm_conn_dsm_guid,
->> +                               CONNECTOR_DSM_REVID, func, NULL);
->> +       if (!obj) {
->> +               DRM_DEBUG_DRIVER("failed to evaluate _DSM for fn %llx\n", func);
->> +               return;
->> +       }
->> +
->> +       ACPI_FREE(obj);
->> +}
->> +
->> +void intel_privacy_screen_set_val(struct intel_connector *intel_connector,
->> +                                 enum intel_privacy_screen_status val)
->> +{
->> +       acpi_handle acpi_handle = intel_connector->acpi_handle;
->> +
->> +       if (!acpi_handle)
->> +               return;
->> +
->> +       if (val == PRIVACY_SCREEN_DISABLED)
->> +               acpi_privacy_screen_call_dsm(acpi_handle,
->> +                                            CONNECTOR_DSM_FN_PRIVACY_DISABLE);
->> +       else if (val == PRIVACY_SCREEN_ENABLED)
->> +               acpi_privacy_screen_call_dsm(acpi_handle,
->> +                                            CONNECTOR_DSM_FN_PRIVACY_ENABLE);
->> +}
->> +
->> +bool intel_privacy_screen_present(struct intel_connector *intel_connector)
->> +{
->> +       acpi_handle handle = intel_connector->acpi_handle;
->> +
->> +       if (!handle)
->> +               return false;
->> +
->> +       if (!acpi_check_dsm(handle, &drm_conn_dsm_guid,
->> +                           CONNECTOR_DSM_REVID,
->> +                           1 << CONNECTOR_DSM_FN_PRIVACY_ENABLE |
->> +                           1 << CONNECTOR_DSM_FN_PRIVACY_DISABLE)) {
->> +               DRM_WARN("%s: Odd, connector ACPI node but no privacy scrn?\n",
->> +                        dev_name(intel_connector->base.dev->dev));
->> +               return false;
->> +       }
->> +       DRM_DEV_INFO(intel_connector->base.dev->dev,
->> +                    "supports privacy screen\n");
->> +       return true;
->> +}
->> diff --git a/drivers/gpu/drm/i915/display/intel_privacy_screen.h b/drivers/gpu/drm/i915/display/intel_privacy_screen.h
->> new file mode 100644
->> index 000000000000..212f73349a00
->> --- /dev/null
->> +++ b/drivers/gpu/drm/i915/display/intel_privacy_screen.h
->> @@ -0,0 +1,25 @@
->> +/* SPDX-License-Identifier: GPL-2.0-or-later */
->> +/*
->> + * Copyright © 2019 Google Inc.
->> + */
->> +
->> +#ifndef __DRM_PRIVACY_SCREEN_H__
->> +#define __DRM_PRIVACY_SCREEN_H__
->> +
->> +#include "intel_display_types.h"
->> +
->> +#ifdef CONFIG_ACPI
->> +bool intel_privacy_screen_present(struct intel_connector *intel_connector);
->> +void intel_privacy_screen_set_val(struct intel_connector *intel_connector,
->> +                                 enum intel_privacy_screen_status val);
->> +#else
->> +bool intel_privacy_screen_present(struct intel_connector *intel_connector);
->> +{
->> +       return false;
->> +}
->> +void intel_privacy_screen_set_val(struct intel_connector *intel_connector,
->> +                                 enum intel_privacy_screen_status val)
->> +{ }
->> +#endif /* CONFIG_ACPI */
->> +
->> +#endif /* __DRM_PRIVACY_SCREEN_H__ */
->> diff --git a/include/uapi/drm/i915_drm.h b/include/uapi/drm/i915_drm.h
->> index 469dc512cca3..cf08d5636363 100644
->> --- a/include/uapi/drm/i915_drm.h
->> +++ b/include/uapi/drm/i915_drm.h
->> @@ -2123,6 +2123,20 @@ struct drm_i915_query_engine_info {
->>         struct drm_i915_engine_info engines[];
->>  };
->>
->> +/**
->> + * enum intel_privacy_screen_status - privacy_screen status
->> + *
->> + * This enum is used to track and control the state of the integrated privacy
->> + * screen present on some display panels, via the "privacy-screen" property.
->> + *
->> + * @PRIVACY_SCREEN_DISABLED: The privacy-screen on the panel is disabled
->> + * @PRIVACY_SCREEN_ENABLED:  The privacy-screen on the panel is enabled
->> + **/
->> +enum intel_privacy_screen_status {
->> +       PRIVACY_SCREEN_DISABLED = 0,
->> +       PRIVACY_SCREEN_ENABLED = 1,
->> +};
->> +
->>  #if defined(__cplusplus)
->>  }
->>  #endif
->> --
->> 2.24.0.rc1.363.gb1bccd3e3d-goog
->>
-
--- 
-Jani Nikula, Intel Open Source Graphics Center
+SGksDQoNCllvdSBtaXNzZWQgdG8gc2VuZGluZyB0aGlzIHBhdGNoIHNlcmllcyB0byBsaW51eC1w
+Y2lAdmdlci5rZXJuZWwub3JnLg0KDQpSZWdhcmRzLA0KR3VzdGF2bw0KDQpPbiBXZWQsIE5vdiAy
+MCwgMjAxOSBhdCAxMzoyNjo5LCBBbnZlc2ggU2FsdmVydSA8YW52ZXNoLnNAc2Ftc3VuZy5jb20+
+IA0Kd3JvdGU6DQoNCj4gQWNjb3JkaW5nIHRoZSBQQ0kgRXhwcmVzcyBiYXNlIHNwZWNpZmljYXRp
+b24gd2hlbiBQSFkgZG9lcyBub3QgbWVldA0KPiBaUlgtREMgc3BlY2lmaWNhdGlvbiwgYWZ0ZXIg
+ZXZlcnkgMTAwbXMgdGltZW91dCB0aGUgbGluayBzaG91bGQNCj4gdHJhbnNpdGlvbiB0byByZWNv
+dmVyeSBzdGF0ZSB3aGVuIHRoZSBsaW5rIGlzIGluIGxvdyBwb3dlciBzdGF0ZXMuIA0KPiANCj4g
+UG9ydHMgdGhhdCBtZWV0IHRoZSBaUlgtREMgc3BlY2lmaWNhdGlvbiBmb3IgMi41IEdUL3Mgd2hp
+bGUgaW4gdGhlDQo+IEwxLklkbGUgc3RhdGUgYW5kIGFyZSB0aGVyZWZvcmUgbm90IHJlcXVpcmVk
+IHRvIGltcGxlbWVudCB0aGUgMTAwIG1zDQo+IHRpbWVvdXQgYW5kIHRyYW5zaXRpb24gdG8gUmVj
+b3Zlcnkgc2hvdWxkIGF2b2lkIGltcGxlbWVudGluZyBpdCwgc2luY2UNCj4gaXQgd2lsbCByZWR1
+Y2UgdGhlIHBvd2VyIHNhdmluZ3MgZXhwZWN0ZWQgZnJvbSB0aGUgTDEgc3RhdGUuDQo+IA0KPiBE
+ZXNpZ25XYXJlIGNvbnRyb2xsZXIgcHJvdmlkZXMgR0VOM19aUlhEQ19OT05DT01QTCBmaWVsZCBp
+bg0KPiBHRU4zX1JFTEFURURfT0ZGIHRvIHNwZWNpZnkgYWJvdXQgWlJYLURDIGNvbXBsaWFudCBQ
+SFkuDQo+IA0KPiBXZSBuZWVkIHRvIGdldCB0aGUgUEhZIHByb3BlcnR5IGluIGNvbnRyb2xsZXIg
+ZHJpdmVyLiBTbywgd2UgYXJlDQo+IHByb3Bvc2luZyBhIG5ldyBtZXRob2QgcGh5X3Byb3BlcnR5
+X3ByZXNlbnQoKSBpbiB0aGUgcGh5IGRyaXZlci4NCj4gDQo+IFBsYXRmb3JtIHNwZWNpZmljIHBo
+eSBkcml2ZXJzIHNob3VsZCBpbXBsZW1lbnQgdGhlIGNhbGxiYWNrIGZvcg0KPiBwcm9wZXJ0eV9w
+cmVzZW50IHdoaWNoIHdpbGwgcmV0dXJuIHRydWUgaWYgdGhlIHByb3BlcnR5IGV4aXN0cyBpbg0K
+PiB0aGUgUEhZLg0KPiANCj4gc3RhdGljIGJvb2wgeHh4eF9waHlfcHJvcGVydHlfcHJlc2VudChz
+dHJ1Y3QgcGh5ICpwaHksIGNvbnN0IGNoYXIgKnByb3BlcnR5KQ0KPiB7DQo+ICAgICAgICBzdHJ1
+Y3QgZGV2aWNlICpkZXYgPSAmcGh5LT5kZXY7DQo+IA0KPiAgICAgICAgcmV0dXJuIG9mX3Byb3Bl
+cnR5X3JlYWRfYm9vbChkZXYtPm9mX25vZGUsIHByb3BlcnR5KTsNCj4gfQ0KPiANCj4gQW5kIGNv
+bnRyb2xsZXIgcGxhdGZvcm0gZHJpdmVyIHNob3VsZCBwb3B1bGF0ZSB0aGUgcGh5X3pyeGRjX2Nv
+bXBsaWFudA0KPiBmbGFnLCB3aGljaCB3aWxsIGJlIHVzZWQgYnkgZ2VuZXJpYyBEZXNpZ25XYXJl
+IGRyaXZlci4NCj4gDQo+IHBjaS0+cGh5X3pyeGRjX2NvbXBsaWFudCA9IHBoeV9wcm9wZXJ0eV9w
+cmVzZW50KHh4eHhfY3RybC0+cGh5LCAicGh5LXpyeGRjLWNvbXBsaWFudCIpOw0KPiANCj4gQW52
+ZXNoIFNhbHZlcnUgKDIpOg0KPiAgIHBoeTogY29yZTogYWRkIHBoeV9wcm9wZXJ0eV9wcmVzZW50
+IG1ldGhvZA0KPiAgIFBDSTogZHdjOiBhZGQgc3VwcG9ydCB0byBoYW5kbGUgWlJYLURDIENvbXBs
+aWFudCBQSFlzDQo+IA0KPiAgZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpZS1kZXNpZ253
+YXJlLmMgfCAgNiArKysrKysNCj4gIGRyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaWUtZGVz
+aWdud2FyZS5oIHwgIDQgKysrKw0KPiAgZHJpdmVycy9waHkvcGh5LWNvcmUuYyAgICAgICAgICAg
+ICAgICAgICAgICAgfCAyNiArKysrKysrKysrKysrKysrKysrKysrKysrKw0KPiAgaW5jbHVkZS9s
+aW51eC9waHkvcGh5LmggICAgICAgICAgICAgICAgICAgICAgfCAgOCArKysrKysrKw0KPiAgNCBm
+aWxlcyBjaGFuZ2VkLCA0NCBpbnNlcnRpb25zKCspDQo+IA0KPiAtLSANCj4gMi43LjQNCg0KDQo=
