@@ -2,153 +2,144 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 892FBC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:23:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C025C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:24:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FF43218BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:23:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sPuMl6U2"
+	by mail.kernel.org (Postfix) with ESMTP id 08B7E20714
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:24:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729384AbfKTPXK (ORCPT
+        id S1728874AbfKTPYH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 10:23:10 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:40457 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727711AbfKTPXJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 10:23:09 -0500
-Received: by mail-lj1-f193.google.com with SMTP id q2so27997408ljg.7
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 07:23:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QixIkQoOQSQ7LFqcqXjzuSKbALdm9LSDFACPeBd6EXc=;
-        b=sPuMl6U2vWAMp58080YHiVtXKSPpB2k0OmXi2sz6iOF4t/cdroQZrF51AtOTnbUSYG
-         pYK6hLsSXx+0RFCsG376aH1ZQKf7vFr/XAzd2VvuDrkdjf24hjGgcj1/PRAYsCYniKxm
-         GnO15KtZyhIPLjUAgBj1QeaebzutRyYAPvLOXQz9YYpNaQ/lzYclQRc/pOLBpjQ00uid
-         jfuTNqU/2Q+176VmWMBUwj+pOZxtzTlkjR6bi1saF3ZWl02zo1x9gadO/nUnPAa5UtNu
-         4/XEszWOOOLgYMm6gvicUG+HHxntTEypzokSrsydV0+890/gSuICeWs+abtF8IHeqFL+
-         hwsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QixIkQoOQSQ7LFqcqXjzuSKbALdm9LSDFACPeBd6EXc=;
-        b=PecYpzARCze+TqO20DlrHMHa9qrDEG1RH8kNkN/O5XtAaaEK3ln9ekhCGtsAc2G9Ul
-         DTS+Km9hEZBs/xXssINIKxtc5VxdKyiHdJK7t/dN8eqgohDVDSit34VDZRAnBbxE5Bki
-         OqlQfD3366NHAjmnEvCYE44+TTzVnee6fCgjRWdVSmsksQo7sg15oIgn42UNCVdfitm5
-         AWJ0jmvmAXPS5IX6+uHkjqS3hLX583l9+qBDsTIjkkQ2b+4LfLVeNw+bxc6I0111hOAv
-         fWd3VfQG8OWKRWteSrLUXs4wH++O8QaPxuqAebktrNFsWYmeDo+2UH8rkxjkd4EbdThf
-         U7Ag==
-X-Gm-Message-State: APjAAAUk6WmsWd+/tAE8cXF6bVEmMKEx5eR5AaQlyoTwv5Siby75MOjA
-        s9pS0l0eDDAUVm9uOWl5qjOFYA==
-X-Google-Smtp-Source: APXvYqyGjNXHTonbtNg1dfXimDQe5NKZOl2POKoQN8VAcpEX31hSxy3gtb2+CODvDnzSAD2AFKXjrw==
-X-Received: by 2002:a2e:8188:: with SMTP id e8mr3266242ljg.152.1574263387287;
-        Wed, 20 Nov 2019 07:23:07 -0800 (PST)
-Received: from localhost (c-413e70d5.07-21-73746f28.bbcust.telenor.se. [213.112.62.65])
-        by smtp.gmail.com with ESMTPSA id e11sm5574688lfc.27.2019.11.20.07.23.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Nov 2019 07:23:06 -0800 (PST)
-From:   Anders Roxell <anders.roxell@linaro.org>
-To:     davem@davemloft.net, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org
-Cc:     paulmck@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Anders Roxell <anders.roxell@linaro.org>
-Subject: [PATCH v2] net: ipmr: fix suspicious RCU warning
-Date:   Wed, 20 Nov 2019 16:22:55 +0100
-Message-Id: <20191120152255.18928-1-anders.roxell@linaro.org>
-X-Mailer: git-send-email 2.20.1
+        Wed, 20 Nov 2019 10:24:07 -0500
+Received: from mga06.intel.com ([134.134.136.31]:23795 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727659AbfKTPYG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 10:24:06 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Nov 2019 07:23:56 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,222,1571727600"; 
+   d="scan'208";a="215833737"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 20 Nov 2019 07:23:52 -0800
+Received: by lahna (sSMTP sendmail emulation); Wed, 20 Nov 2019 17:23:51 +0200
+Date:   Wed, 20 Nov 2019 17:23:51 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Mario.Limonciello@dell.com
+Cc:     pmenzel@molgen.mpg.de, andreas.noever@gmail.com,
+        michael.jamet@intel.com, YehezkelShB@gmail.com, ck@xatom.net,
+        linux-kernel@vger.kernel.org, anthony.wong@canonical.com
+Subject: Re: USB devices on Dell TB16 dock stop working after resuming
+Message-ID: <20191120152351.GJ11621@lahna.fi.intel.com>
+References: <5d2b39bc-5952-c2b6-63b3-bce28122ffd5@molgen.mpg.de>
+ <20191104142459.GC2552@lahna.fi.intel.com>
+ <20191104144436.GD2552@lahna.fi.intel.com>
+ <20191104154446.GH2552@lahna.fi.intel.com>
+ <ea829adedf0445c0845e25d6e4b47905@AUSX13MPC105.AMER.DELL.COM>
+ <d8cb6bc6-8145-eaed-5ba4-d7291478bdd7@molgen.mpg.de>
+ <20191104162103.GI2552@lahna.fi.intel.com>
+ <f0257624-920e-eec4-a2ec-7adf8ecbcc9d@molgen.mpg.de>
+ <20191120105048.GY11621@lahna.fi.intel.com>
+ <ccfa5f1a1b5e475aa4ddcbed2297b9c4@AUSX13MPC105.AMER.DELL.COM>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <ccfa5f1a1b5e475aa4ddcbed2297b9c4@AUSX13MPC105.AMER.DELL.COM>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When booting an arm64 allmodconfig kernel on linux-next next-20191115
-The following "suspicious RCU usage" warning shows up.  This bug seems
-to have been introduced by commit f0ad0860d01e ("ipv4: ipmr: support
-multiple tables") in 2010, but the warning was added only in this past
-year by commit 28875945ba98 ("rcu: Add support for consolidated-RCU
-reader checking").
+On Wed, Nov 20, 2019 at 02:15:17PM +0000, Mario.Limonciello@dell.com wrote:
+> > -----Original Message-----
+> > From: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > Sent: Wednesday, November 20, 2019 4:51 AM
+> > To: Paul Menzel
+> > Cc: Limonciello, Mario; Andreas Noever; Michael Jamet; Yehezkel Bernat; Christian
+> > Kellner; linux-kernel@vger.kernel.org; Anthony Wong
+> > Subject: Re: USB devices on Dell TB16 dock stop working after resuming
+> > 
+> > 
+> > [EXTERNAL EMAIL]
+> > 
+> > On Tue, Nov 19, 2019 at 05:55:43PM +0100, Paul Menzel wrote:
+> > > Dear Mika,
+> > >
+> > >
+> > > On 2019-11-04 17:21, Mika Westerberg wrote:
+> > > > On Mon, Nov 04, 2019 at 05:11:10PM +0100, Paul Menzel wrote:
+> > >
+> > > >> On 2019-11-04 16:49, Mario.Limonciello@dell.com wrote:
+> > > >>
+> > > >>>> From: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > > >>>> Sent: Monday, November 4, 2019 9:45 AM
+> > > >>
+> > > >>>> On Mon, Nov 04, 2019 at 04:44:40PM +0200, Mika Westerberg wrote:
+> > > >>>>> On Mon, Nov 04, 2019 at 04:25:03PM +0200, Mika Westerberg wrote:
+> > > >>
+> > > >>>>>> On Mon, Nov 04, 2019 at 02:13:13PM +0100, Paul Menzel wrote:
+> > > >>
+> > > >>>>>>> On the Dell XPS 13 9380 with Debian Sid/unstable with Linux 5.3.7
+> > > >>>>>>> suspending the system, and resuming with Dell’s Thunderbolt TB16
+> > > >>>>>>> dock connected, the USB input devices, keyboard and mouse,
+> > > >>>>>>> connected to the TB16 stop working. They work for a few seconds
+> > > >>>>>>> (mouse cursor can be moved), but then stop working. The laptop
+> > > >>>>>>> keyboard and touchpad still works fine. All firmware is up-to-date
+> > > >>>>>>> according to `fwupdmgr`.
+> > > >>>>>>
+> > > >>>>>> What are the exact steps to reproduce? Just "echo mem >
+> > > >>>>>> /sys/power/state" and then resume by pressing power button?
+> > > >>
+> > > >> GNOME Shell 3.34.1+git20191024-1 is used, and the user just closes the
+> > > >> display. So more than `echo mem > /sys/power/state` is done. What
+> > > >> distribution do you use?
+> > > >
+> > > > I have buildroot based "distro" so there is no UI running.
+> > >
+> > > Hmm, this is quite different from the “normal” use-case of the these devices.
+> > > That way you won’t hit the bugs of the normal users. ;-)
+> > 
+> > Well, I can install some distro to that thing also :) I suppose Debian
+> > 10.2 does have this issue, no?
+> > 
+> > > >>>>> I tried v5.4-rc6 on my 9380 with TB16 dock connected and did a couple of
+> > > >>>>> suspend/resume cycles (to s2idle) but I don't see any issues.
+> > > >>>>>
+> > > >>>>> I may have older/different firmware than you, though.
+> > > >>>>
+> > > >>>> Upgraded BIOS to 1.8.0 and TBT NVM to v44 but still can't reproduce this
+> > > >>>> on my system :/
+> > > >>
+> > > >> The user reported the issue with the previous firmwares 1.x and TBT NVM v40.
+> > > >> Updating to the recent version (I got the logs with) did not fix the issue.
+> > > >
+> > > > I also tried v40 (that was originally on that system) but I was not able
+> > > > to reproduce it.
+> > > >
+> > > > Do you know if the user changed any BIOS settings?
+> > >
+> > > We had to disable the Thunderbolt security settings as otherwise the USB
+> > > devices wouldn’t work at cold boot either.
+> > 
+> > That does not sound right at all. There is the preboot ACL that allows
+> > you to use TBT dock aready on boot. Bolt takes care of this.
+> 
+> Yeah it might be useful to enumerate all the BIOS settings that are selected
+> related to Thunderbolt.  Some of them are a bit confusing.
 
-[   32.496021][    T1] =============================
-[   32.497616][    T1] WARNING: suspicious RCU usage
-[   32.499614][    T1] 5.4.0-rc6-next-20191108-00003-gf74bac957b5c-dirty #2 Not tainted
-[   32.502018][    T1] -----------------------------
-[   32.503976][    T1] net/ipv4/ipmr.c:136 RCU-list traversed in non-reader section!!
-[   32.506746][    T1]
-[   32.506746][    T1] other info that might help us debug this:
-[   32.506746][    T1]
-[   32.509794][    T1]
-[   32.509794][    T1] rcu_scheduler_active = 2, debug_locks = 1
-[   32.512661][    T1] 1 lock held by swapper/0/1:
-[   32.514169][    T1]  #0: ffffa000150dd678 (pernet_ops_rwsem){+.+.}, at: register_pernet_subsys+0x24/0x50
-[   32.517621][    T1]
-[   32.517621][    T1] stack backtrace:
-[   32.519930][    T1] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.4.0-rc6-next-20191108-00003-gf74bac957b5c-dirty #2
-[   32.523063][    T1] Hardware name: linux,dummy-virt (DT)
-[   32.524787][    T1] Call trace:
-[   32.525946][    T1]  dump_backtrace+0x0/0x2d0
-[   32.527433][    T1]  show_stack+0x20/0x30
-[   32.528811][    T1]  dump_stack+0x204/0x2ac
-[   32.530258][    T1]  lockdep_rcu_suspicious+0xf4/0x108
-[   32.531993][    T1]  ipmr_get_table+0xc8/0x170
-[   32.533496][    T1]  ipmr_new_table+0x48/0xa0
-[   32.535002][    T1]  ipmr_net_init+0xe8/0x258
-[   32.536465][    T1]  ops_init+0x280/0x2d8
-[   32.537876][    T1]  register_pernet_operations+0x210/0x420
-[   32.539707][    T1]  register_pernet_subsys+0x30/0x50
-[   32.541372][    T1]  ip_mr_init+0x54/0x180
-[   32.542785][    T1]  inet_init+0x25c/0x3e8
-[   32.544186][    T1]  do_one_initcall+0x4c0/0xad8
-[   32.545757][    T1]  kernel_init_freeable+0x3e0/0x500
-[   32.547443][    T1]  kernel_init+0x14/0x1f0
-[   32.548875][    T1]  ret_from_fork+0x10/0x18
-
-This commit therefore holds RTNL mutex around the problematic code path,
-which is function ipmr_rules_init() in ipmr_net_init().  This commit
-also adds a lockdep_rtnl_is_held() check to the ipmr_for_each_table()
-macro.
-
-Suggested-by: David Miller <davem@davemloft.net>
-Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
-Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
----
- net/ipv4/ipmr.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/net/ipv4/ipmr.c b/net/ipv4/ipmr.c
-index 6e68def66822..53dff9a0e60a 100644
---- a/net/ipv4/ipmr.c
-+++ b/net/ipv4/ipmr.c
-@@ -110,7 +110,8 @@ static void ipmr_expire_process(struct timer_list *t);
- 
- #ifdef CONFIG_IP_MROUTE_MULTIPLE_TABLES
- #define ipmr_for_each_table(mrt, net) \
--	list_for_each_entry_rcu(mrt, &net->ipv4.mr_tables, list)
-+	list_for_each_entry_rcu(mrt, &net->ipv4.mr_tables, list, \
-+				lockdep_rtnl_is_held())
- 
- static struct mr_table *ipmr_mr_table_iter(struct net *net,
- 					   struct mr_table *mrt)
-@@ -3086,7 +3087,9 @@ static int __net_init ipmr_net_init(struct net *net)
- 	if (err)
- 		goto ipmr_notifier_fail;
- 
-+	rtnl_lock();
- 	err = ipmr_rules_init(net);
-+	rtnl_unlock();
- 	if (err < 0)
- 		goto ipmr_rules_fail;
- 
--- 
-2.20.1
-
+BTW, I played a bit with 9380 and it looks like there is no option to
+enable Preboot ACL which means that if you have TBT security enabled
+(user or secure) the Dock PCIe side is not functional during boot, only
+once the OS has booted up. That's fine unless you want to enter BIOS
+menu from the keyboard you have connected to the TB16 dock (probably not
+too common use case anyway).
