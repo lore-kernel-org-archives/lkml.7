@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD393C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:37:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ACB3C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:37:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92C102251E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:37:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3FAD22529
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:37:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574257052;
-	bh=dtoGThLsXdVxMEgNznYU8jvjZIDvrTTVk7uqrklGUg4=;
+	s=default; t=1574257058;
+	bh=KefntvOFfkTYXk9bmaxgyhvHqX8oyAf04yPlNMKx08s=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=yzhtd39PLjp+Lcb9r3HQ9fl782m5jMehAPHpwL66SIQqXL71lz9JPYaXAXhCbKrka
-	 Jz0OKTz9w5nZw6YzVIrGuxcZhAKHsaAc+UlLdk2jHQThr+H8uSu4mX2onEWpZsgj+Y
-	 +yxmcRI7eNl/nbcujAmTBtQAMy8J+fcJWrLgxnOo=
+	b=Htrwjrr4t409BDfHKzxHO9l/Iyuc0vqDsxdFf8HIxhPExdP8D5dxkoQKTSdntP1K5
+	 SyBcc9dtaimZRnltPZLk+bEpMzmHgD+XeuTnqKh82GOa1h+H1Anx+lwLac8LX5NKuT
+	 j7Skjs7m3OUm+V2jETgHHVgZr2bn0RDz/bIFUoB8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730919AbfKTNhb (ORCPT
+        id S1729738AbfKTNhg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 08:37:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44384 "EHLO mail.kernel.org"
+        Wed, 20 Nov 2019 08:37:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729649AbfKTNh3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 08:37:29 -0500
+        id S1729649AbfKTNhe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 08:37:34 -0500
 Received: from localhost.localdomain (unknown [118.189.143.39])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10B3B224EB;
-        Wed, 20 Nov 2019 13:37:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C0BE21939;
+        Wed, 20 Nov 2019 13:37:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574257049;
-        bh=dtoGThLsXdVxMEgNznYU8jvjZIDvrTTVk7uqrklGUg4=;
+        s=default; t=1574257053;
+        bh=KefntvOFfkTYXk9bmaxgyhvHqX8oyAf04yPlNMKx08s=;
         h=From:To:Cc:Subject:Date:From;
-        b=BTmADTdwzoE8aG1Z/gCWS1t7XXI+XxrRey/2RfaezzG7FMM5JmGzEYNDHa8iX/PGF
-         rYvGoJ0qkgxICx4eb5esmk/GSUKNRSaxswXsrLxbkGKjamRQ7onyJpVNmpy83ciqJe
-         gbe+4PPQuJbJwK7fCdTpdI0WQqH7Ojq3mWXSIANY=
+        b=e+ZE8uYEbcLTDXVIFzDbcX2MJVqGDik6NrMyNXKYjUESFkwtuvOWBpKXzqNe3wude
+         7DeRu5X2v5RH0wncHbue9Bl3QRMJnmExtE7Py0dvCcc939znTBXUAnczR3zG/GAT/b
+         M0Im/Ayrb/sHCGPuDvQXdAOCZWRHI2E+4Pz9YFeA=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        uclinux-h8-devel@lists.sourceforge.jp
-Subject: [PATCH] h8300: Fix Kconfig indentation
-Date:   Wed, 20 Nov 2019 21:37:25 +0800
-Message-Id: <20191120133725.12233-1-krzk@kernel.org>
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] arm64: Fix Kconfig indentation
+Date:   Wed, 20 Nov 2019 21:37:29 +0800
+Message-Id: <20191120133730.12288-1-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -59,49 +60,31 @@ coding style with command like:
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- arch/h8300/Kconfig     | 4 ++--
- arch/h8300/Kconfig.cpu | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ arch/arm64/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/h8300/Kconfig b/arch/h8300/Kconfig
-index 14bb45644c0c..7a33141fd0b7 100644
---- a/arch/h8300/Kconfig
-+++ b/arch/h8300/Kconfig
-@@ -1,6 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- config H8300
--        def_bool y
-+	def_bool y
- 	select ARCH_32BIT_OFF_T
- 	select ARCH_HAS_BINFMT_FLAT
- 	select BINFMT_FLAT_ARGVP_ENVP_ON_STACK
-@@ -38,7 +38,7 @@ config NO_IOPORT_MAP
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index c4d6d8d6b6c4..c8b672c46e7e 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -263,7 +263,7 @@ config GENERIC_HWEIGHT
  	def_bool y
  
  config GENERIC_CSUM
 -        def_bool y
 +	def_bool y
  
- config HZ
- 	int
-diff --git a/arch/h8300/Kconfig.cpu b/arch/h8300/Kconfig.cpu
-index b5e14d513e62..59be62d0716b 100644
---- a/arch/h8300/Kconfig.cpu
-+++ b/arch/h8300/Kconfig.cpu
-@@ -90,11 +90,11 @@ config H8S_SIM
- endchoice
+ config GENERIC_CALIBRATE_DELAY
+ 	def_bool y
+@@ -1670,7 +1670,7 @@ config EFI
+ 	help
+ 	  This option provides support for runtime services provided
+ 	  by UEFI firmware (such as non-volatile variables, realtime
+-          clock, and platform reset). A UEFI stub is also provided to
++	  clock, and platform reset). A UEFI stub is also provided to
+ 	  allow the kernel to be booted as an EFI application. This
+ 	  is only useful on systems that have UEFI firmware.
  
- config H8300_BUILTIN_DTB
--        string "Builtin DTB"
-+	string "Builtin DTB"
- 	default ""
- 
- config OFFSET
--        hex "Load offset"
-+	hex "Load offset"
- 	default 0
- 
- endmenu
 -- 
 2.17.1
 
