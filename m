@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3459EC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:47:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D99CC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:47:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0745720709
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:47:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B99F20709
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:47:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732636AbfKTPrF (ORCPT
+        id S1732644AbfKTPrG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 10:47:05 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:52554 "EHLO
+        Wed, 20 Nov 2019 10:47:06 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:52544 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729585AbfKTPkP (ORCPT
+        by vger.kernel.org with ESMTP id S1729566AbfKTPkP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 Nov 2019 10:40:15 -0500
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iXS5T-0004YN-7H; Wed, 20 Nov 2019 15:40:11 +0000
+        id 1iXS5T-0004a7-Nu; Wed, 20 Nov 2019 15:40:11 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iXS5S-0004Fp-JD; Wed, 20 Nov 2019 15:40:10 +0000
+        id 1iXS5T-0004GY-1v; Wed, 20 Nov 2019 15:40:11 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Stephane Grosjean" <s.grosjean@peak-system.com>,
-        "Marc Kleine-Budde" <mkl@pengutronix.de>
-Date:   Wed, 20 Nov 2019 15:37:15 +0000
-Message-ID: <lsq.1574264230.906707029@decadent.org.uk>
+        "Jia-Ju Bai" <baijiaju1990@gmail.com>,
+        "Jiri Pirko" <jiri@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>
+Date:   Wed, 20 Nov 2019 15:37:24 +0000
+Message-ID: <lsq.1574264230.473319350@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 05/83] can: peak_usb: fix potential double kfree_skb()
+Subject: [PATCH 3.16 14/83] net: sched: Fix a possible null-pointer
+ dereference in dequeue_func()
 In-Reply-To: <lsq.1574264230.280218497@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,45 +57,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Stephane Grosjean <s.grosjean@peak-system.com>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-commit fee6a8923ae0d318a7f7950c6c6c28a96cea099b upstream.
+commit 051c7b39be4a91f6b7d8c4548444e4b850f1f56c upstream.
 
-When closing the CAN device while tx skbs are inflight, echo skb could
-be released twice. By calling close_candev() before unlinking all
-pending tx urbs, then the internal echo_skb[] array is fully and
-correctly cleared before the USB write callback and, therefore,
-can_get_echo_skb() are called, for each aborted URB.
+In dequeue_func(), there is an if statement on line 74 to check whether
+skb is NULL:
+    if (skb)
 
-Fixes: bb4785551f64 ("can: usb: PEAK-System Technik USB adapters driver core")
-Signed-off-by: Stephane Grosjean <s.grosjean@peak-system.com>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+When skb is NULL, it is used on line 77:
+    prefetch(&skb->end);
+
+Thus, a possible null-pointer dereference may occur.
+
+To fix this bug, skb->end is used when skb is not NULL.
+
+This bug is found by a static analysis tool STCheck written by us.
+
+Fixes: 76e3cc126bb2 ("codel: Controlled Delay AQM")
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Reviewed-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/net/can/usb/peak_usb/pcan_usb_core.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
---- a/drivers/net/can/usb/peak_usb/pcan_usb_core.c
-+++ b/drivers/net/can/usb/peak_usb/pcan_usb_core.c
-@@ -572,16 +572,16 @@ static int peak_usb_ndo_stop(struct net_
- 	dev->state &= ~PCAN_USB_STATE_STARTED;
- 	netif_stop_queue(netdev);
+--- a/net/sched/sch_codel.c
++++ b/net/sched/sch_codel.c
+@@ -68,7 +68,8 @@ static struct sk_buff *dequeue(struct co
+ {
+ 	struct sk_buff *skb = __skb_dequeue(&sch->q);
  
-+	close_candev(netdev);
-+
-+	dev->can.state = CAN_STATE_STOPPED;
-+
- 	/* unlink all pending urbs and free used memory */
- 	peak_usb_unlink_all_urbs(dev);
+-	prefetch(&skb->end); /* we'll need skb_shinfo() */
++	if (skb)
++		prefetch(&skb->end); /* we'll need skb_shinfo() */
+ 	return skb;
+ }
  
- 	if (dev->adapter->dev_stop)
- 		dev->adapter->dev_stop(dev);
- 
--	close_candev(netdev);
--
--	dev->can.state = CAN_STATE_STOPPED;
--
- 	/* can set bus off now */
- 	if (dev->adapter->dev_set_bus) {
- 		int err = dev->adapter->dev_set_bus(dev, 0);
 
