@@ -2,320 +2,214 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DF9DC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:29:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5EC7C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:29:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 232482071F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:29:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96B9420715
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:29:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="AQ78D3ZR"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R7zqRjHP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727743AbfKTT3M (ORCPT
+        id S1727756AbfKTT3O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 14:29:12 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:39806 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726634AbfKTT3L (ORCPT
+        Wed, 20 Nov 2019 14:29:14 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35876 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726440AbfKTT3N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 14:29:11 -0500
-Received: by mail-wr1-f65.google.com with SMTP id l7so1296767wrp.6
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 11:29:08 -0800 (PST)
+        Wed, 20 Nov 2019 14:29:13 -0500
+Received: by mail-lj1-f194.google.com with SMTP id k15so444715lja.3
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 11:29:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from:cc;
-        bh=QxyFP12MhasoDGEo27BmT72GRY9o/OilHUn1uKLS9HU=;
-        b=AQ78D3ZRNLMahPB9PLYA3e4sE4N9q+5ChyZl2cDRJqXhp63tI2Grew+i0MSG8cZGGc
-         7aL3SQPyLKrfBnwgIX5O3qAM+KVGZeiEBkBZMNG2S7DIS43BIntqeUL4DbMxMALwVaKe
-         KsJFdosov8WB73UXKPrgjOcuYjlJWXlSH+D7cy/umVMZeH28IVr4Xh5889Zfcc5U1x5Q
-         rpZfEXC91hGXxIuoxg/t7ev+HEWGpJ9B6OokDVu/9oLhMu8mZPkockIRNk9ynalB4Smc
-         rIkcLsvhYqEzyxiq87zoPj4+rI1MYetpckzMcFjmOShSZw/XOH5wnSdcw+5lt6DDGlzT
-         X1Ow==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=B8mggtxU1zp4JDBupngVAB3B8vB3qNT6+jtDLAhJwfY=;
+        b=R7zqRjHPN2+U6QPltce6KNHzU2cvypcB1dU0saO7eF1M2zmzXX7bzDZ7uBYN5h71bt
+         GpD0BTJrnBfbQxo0/wG4pLANiM4Qn4/6r0sRCj5Cp3CWg7d15y8ctdEDKDfEkMRqrfgG
+         YBlXvVZd3A9HSjoGPy9HXTRRYNn83GbGlUJUZthoT0p8hHIeu1njWaB8qA/Tt4qGgdXl
+         brKse3KdVXYJvz6i2simx7Y4evr5s1ofIDwGA4FafS1FWoZvX8hWbxtl6l5gvgasFTzQ
+         i6X8LDJvYdq90JHeTB0mrYKXm+sHT2VZ15sYx0z5opEu+IZIXXxvyIcq19kzsGh/+L6q
+         hP7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from:cc;
-        bh=QxyFP12MhasoDGEo27BmT72GRY9o/OilHUn1uKLS9HU=;
-        b=Jmxdo9xZuTwHr5e9LJHDINGXureQMLXlyOwLMXd32Q9keohNJ/vgPmKdwSEG5xqU/Q
-         y6rnZFAMAf7LkWSRMkC6EE5dh71sDDgH7DZzeKbNL8UX7njXUo9lSGg/kxQV0CVIoqoO
-         NdX0UgPBgwLetoM0LIkOmog7dJ5BbH28v9WdX4vj3QhK9qRy7i2gFtlXPi73UIilnBZM
-         Y0yxQhFTpuwgje0HC1W9M27XuTQZTbIy8UtdgiyjusB4ntHwSuBs76DWLm9p4QQF+OpX
-         f1fKUhVK9czRM9891o9xY5klcX4nMf+gGm5p/fbtWtfNo39rk3f7e+jR8jwzjKhm1lLz
-         i66g==
-X-Gm-Message-State: APjAAAWpqa9wMPQCiyHSG2h55w2lYh6NlB0mPV1+StrItz3JUOCBO6or
-        0FOdd11MgDVA7D8UqP+1j32SmazbvWmYRg==
-X-Google-Smtp-Source: APXvYqyeT8rwbaOzoRAJmIsh5JIQd1t8BEuHkQ7D784UqNRl377ltKmHmLhhDrkVy9KD5aHaXflfzw==
-X-Received: by 2002:a5d:678f:: with SMTP id v15mr5464377wru.242.1574278148011;
-        Wed, 20 Nov 2019 11:29:08 -0800 (PST)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id a15sm301710wrx.81.2019.11.20.11.29.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Nov 2019 11:29:07 -0800 (PST)
-Message-ID: <5dd59403.1c69fb81.f6a76.2143@mx.google.com>
-Date:   Wed, 20 Nov 2019 11:29:07 -0800 (PST)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=B8mggtxU1zp4JDBupngVAB3B8vB3qNT6+jtDLAhJwfY=;
+        b=VmR9mdFRcPsrA3V5KqBURMdgeYlGlI5F1+dq9EqteOhYbbb18319WrSJZ3vtjNtgTZ
+         OyOf9DHcvOMatumwHzEWznqHyEBi+2tiPQeryeB0U1R+l/xTzI8MEMheBqVLwozXktU2
+         8sw4KItkuGDBGSMwfkgLcQU/veJHB7VGw1IKwkbX2Aej1CyC7wSARegNvOTHXMIqRFwF
+         Rspd/HK/5E1WYpYX3aLBr90L6w8wcyByrEEYL46mIFq/SV0dy3X3uiTY+rxKuXQUWuw8
+         4LXAUhHCZYAlC1BtsTGRgODmJnkhE/9mdCsv0iPL4E40G/8F3CMf0fRvhjXHTE1APg6V
+         d3Sw==
+X-Gm-Message-State: APjAAAUhbUE1RN1h2vvV5tqbzaBAecse8QammBo7esf4IF/zyewhDRv8
+        1XgHBMmkVLk4RIXmq8nD1SX5wqJAtl48wzoA7ROCgw==
+X-Google-Smtp-Source: APXvYqx2G6y4tjddPf3ANE9ZbeXC93VOkJVataHNoGp2fl4B41RC8K2QNrPppdRg7AWc5+ERDXbTHlws0MCPCU+RNF4=
+X-Received: by 2002:a2e:982:: with SMTP id 124mr4385167ljj.48.1574278149099;
+ Wed, 20 Nov 2019 11:29:09 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Lab-Name: lab-collabora
-X-Kernelci-Branch: master
-X-Kernelci-Tree: next
-X-Kernelci-Report-Type: bisect
-X-Kernelci-Kernel: next-20191120
-Subject: next/master bisection: boot on peach-pi
-To:     tomeu.vizoso@collabora.com, guillaume.tucker@collabora.com,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Christoph Hellwig <hch@lst.de>, broonie@kernel.org,
-        khilman@baylibre.com, mgalka@collabora.com,
-        enric.balletbo@collabora.com, Michael Ellerman <mpe@ellerman.id.au>
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Paul Burton <paulburton@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        James Hogan <jhogan@kernel.org>,
-        "kernelci.org bot" <bot@kernelci.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        iommu@lists.linux-foundation.org,
-        Paul Mackerras <paulus@samba.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org
+References: <1571405198-27570-1-git-send-email-vincent.guittot@linaro.org>
+ <1571405198-27570-12-git-send-email-vincent.guittot@linaro.org>
+ <20191120115844.scli3gprgd5vvlt4@e107158-lin.cambridge.arm.com>
+ <CAKfTPtDh7HAv2Krx9cRKcA+Zy=erYkykyZZj4=nkRoTEdY=oFw@mail.gmail.com>
+ <CAKfTPtCFP3_U_YxwR8+Gs+HYJPmqSWJg6B6nBdgccNru8Gh5QA@mail.gmail.com>
+ <20191120173431.b7e4jbq44mjletfe@e107158-lin.cambridge.arm.com>
+ <CAKfTPtCSc+ym8FTFtSeF4foUqTbsDSr1fJ1j_+j+Zmo=XOUcLA@mail.gmail.com>
+ <20191120181002.lh7vukjm2ifhysbc@e107158-lin.cambridge.arm.com>
+ <CAKfTPtDCv4jWxODGf8FOefmP6qyWRdfi2QVRT=wZqwYgUKg9HA@mail.gmail.com> <20191120182731.z2sh5ju7uir5s3cp@e107158-lin.cambridge.arm.com>
+In-Reply-To: <20191120182731.z2sh5ju7uir5s3cp@e107158-lin.cambridge.arm.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Wed, 20 Nov 2019 20:28:57 +0100
+Message-ID: <CAKfTPtDzVHZpE0XmyPF8AVsmtVMCmKgYERjdW4euj-H6kNu2Rw@mail.gmail.com>
+Subject: Re: [PATCH v4 11/11] sched/fair: rework find_idlest_group
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Phil Auld <pauld@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <Morten.Rasmussen@arm.com>,
+        Hillf Danton <hdanton@sina.com>,
+        Parth Shah <parth@linux.ibm.com>,
+        Rik van Riel <riel@surriel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-* This automated bisection report was sent to you on the basis  *
-* that you may be involved with the breaking commit it has      *
-* found.  No manual investigation has been done to verify it,   *
-* and the root cause of the problem may be somewhere else.      *
-*                                                               *
-* If you do send a fix, please include this trailer:            *
-*   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
-*                                                               *
-* Hope this helps!                                              *
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+On Wed, 20 Nov 2019 at 19:27, Qais Yousef <qais.yousef@arm.com> wrote:
+>
+> On 11/20/19 19:20, Vincent Guittot wrote:
+> > On Wed, 20 Nov 2019 at 19:10, Qais Yousef <qais.yousef@arm.com> wrote:
+> > >
+> > > On 11/20/19 18:43, Vincent Guittot wrote:
+> > > > On Wed, 20 Nov 2019 at 18:34, Qais Yousef <qais.yousef@arm.com> wrote:
+> > > > >
+> > > > > On 11/20/19 17:53, Vincent Guittot wrote:
+> > > > > > On Wed, 20 Nov 2019 at 14:21, Vincent Guittot
+> > > > > > <vincent.guittot@linaro.org> wrote:
+> > > > > > >
+> > > > > > > Hi Qais,
+> > > > > > >
+> > > > > > > On Wed, 20 Nov 2019 at 12:58, Qais Yousef <qais.yousef@arm.com> wrote:
+> > > > > > > >
+> > > > > > > > Hi Vincent
+> > > > > > > >
+> > > > > > > > On 10/18/19 15:26, Vincent Guittot wrote:
+> > > > > > > > > The slow wake up path computes per sched_group statisics to select the
+> > > > > > > > > idlest group, which is quite similar to what load_balance() is doing
+> > > > > > > > > for selecting busiest group. Rework find_idlest_group() to classify the
+> > > > > > > > > sched_group and select the idlest one following the same steps as
+> > > > > > > > > load_balance().
+> > > > > > > > >
+> > > > > > > > > Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> > > > > > > > > ---
+> > > > > > > >
+> > > > > > > > LTP test has caught a regression in perf_event_open02 test on linux-next and I
+> > > > > > > > bisected it to this patch.
+> > > > > > > >
+> > > > > > > > That is checking out next-20191119 tag and reverting this patch on top the test
+> > > > > > > > passes. Without the revert the test fails.
+> > > > > >
+> > > > > > I haven't tried linux-next yet but LTP test is passed with
+> > > > > > tip/sched/core, which includes this patch, on hikey960 which is arm64
+> > > > > > too.
+> > > > > >
+> > > > > > Have you tried tip/sched/core on your juno ? this could help to
+> > > > > > understand if it's only for juno or if this patch interact with
+> > > > > > another branch merged in linux next
+> > > > >
+> > > > > Okay will give it a go. But out of curiosity, what is the output of your run?
+> > > > >
+> > > > > While bisecting on linux-next I noticed that at some point the test was
+> > > > > passing but all the read values were 0. At some point I started seeing
+> > > > > none-zero values.
+> > > >
+> > > > for tip/sched/core
+> > > > linaro@linaro-developer:~/ltp/testcases/kernel/syscalls/perf_event_open$
+> > > > sudo ./perf_event_open02
+> > > > perf_event_open02    0  TINFO  :  overall task clock: 63724479
+> > > > perf_event_open02    0  TINFO  :  hw sum: 1800900992, task clock sum: 382170311
+> > > > perf_event_open02    0  TINFO  :  ratio: 5.997229
+> > > > perf_event_open02    1  TPASS  :  test passed
+> > > >
+> > > > for next-2019119
+> > > > ~/ltp/testcases/kernel/syscalls/perf_event_open$ sudo ./perf_event_open02 -v
+> > > > at iteration:0 value:0 time_enabled:69795312 time_running:0
+> > > > perf_event_open02    0  TINFO  :  overall task clock: 63582292
+> > > > perf_event_open02    0  TINFO  :  hw sum: 0, task clock sum: 0
+> > > > hw counters: 0 0 0 0
+> > > > task clock counters: 0 0 0 0
+> > > > perf_event_open02    0  TINFO  :  ratio: 0.000000
+> > > > perf_event_open02    1  TPASS  :  test passed
+> > >
+> > > Okay that is weird. But ratio, hw sum, task clock sum are all 0 in your
+> > > next-20191119. I'm not sure why the counters return 0 sometimes - is it
+> > > dependent on some option or a bug somewhere.
+> > >
+> > > I just did another run and it failed for me (building with defconfig)
+> > >
+> > > # uname -a
+> > > Linux buildroot 5.4.0-rc8-next-20191119 #72 SMP PREEMPT Wed Nov 20 17:57:48 GMT 2019 aarch64 GNU/Linux
+> > >
+> > > # ./perf_event_open02 -v
+> > > at iteration:0 value:260700250 time_enabled:172739760 time_running:144956600
+> > > perf_event_open02    0  TINFO  :  overall task clock: 166915220
+> > > perf_event_open02    0  TINFO  :  hw sum: 1200718268, task clock sum: 667621320
+> > > hw counters: 300179051 300179395 300179739 300180083
+> > > task clock counters: 166906620 166906200 166905160 166903340
+> > > perf_event_open02    0  TINFO  :  ratio: 3.999763
+> > > perf_event_open02    0  TINFO  :  nhw: 0.000100
+> > > perf_event_open02    1  TFAIL  :  perf_event_open02.c:370: test failed (ratio was greater than )
+> > >
+> > > It is a funny one for sure. I haven't tried tip/sched/core yet.
+> >
+> > I confirm that on next-20191119, hw counters always return 0
+> > but on tip/sched/core which has this patch and v5.4-rc7 which has not,
+> > the hw counters are always different from 0
+>
+> It's the other way around for me. tip/sched/core returns 0 hw counters. I tried
+> enabling coresight; that had no effect. Nor copying the .config that failed
+> from linux-next to tip/sched/core. I'm not sure what's the dependency/breakage
+> :-/
 
-next/master bisection: boot on peach-pi
+I run few more tests and i can get either hw counter with 0 or not.
+The main difference is on which CPU it runs: either big or little
+little return always 0 and big always non-zero value
 
-Summary:
-  Start:      1fef9976397f Add linux-next specific files for 20191120
-  Details:    https://kernelci.org/boot/id/5dd5175059b514af0dcf54d0
-  Plain log:  https://storage.kernelci.org//next/master/next-20191120/arm/e=
-xynos_defconfig/gcc-8/lab-collabora/boot-exynos5800-peach-pi.txt
-  HTML log:   https://storage.kernelci.org//next/master/next-20191120/arm/e=
-xynos_defconfig/gcc-8/lab-collabora/boot-exynos5800-peach-pi.html
-  Result:     b037b220e71d dma-direct: unify the dma_capable definitions
+on v5.4-rc7 and tip/sched/core, cpu0-3 return 0 and other non zeroa
+but on next, it's the opposite cpu0-3 return non zero ratio
 
-Checks:
-  revert:     PASS
-  verify:     PASS
+Could you try to run the test with taskset to run it on big or little ?
 
-Parameters:
-  Tree:       next
-  URL:        git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next=
-.git
-  Branch:     master
-  Target:     peach-pi
-  CPU arch:   arm
-  Lab:        lab-collabora
-  Compiler:   gcc-8
-  Config:     exynos_defconfig
-  Test suite: boot
-
-Breaking commit found:
-
----------------------------------------------------------------------------=
-----
-commit b037b220e71dcbb34cb710e00ffad2ec025b9163
-Author: Christoph Hellwig <hch@lst.de>
-Date:   Tue Nov 12 17:06:04 2019 +0100
-
-    dma-direct: unify the dma_capable definitions
-    =
-
-    Currently each architectures that wants to override dma_to_phys and
-    phys_to_dma also has to provide dma_capable.  But there isn't really
-    any good reason for that.  powerpc and mips just have copies of the
-    generic one minus the latests fix, and the arm one was the inspiration
-    for said fix, but misses the bus_dma_mask handling.
-    Make all architectures use the generic version instead.
-    =
-
-    Signed-off-by: Christoph Hellwig <hch@lst.de>
-    Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
-    Reviewed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-
-diff --git a/arch/arm/include/asm/dma-direct.h b/arch/arm/include/asm/dma-d=
-irect.h
-index b67e5fc1fe43..7c3001a6a775 100644
---- a/arch/arm/include/asm/dma-direct.h
-+++ b/arch/arm/include/asm/dma-direct.h
-@@ -14,23 +14,4 @@ static inline phys_addr_t __dma_to_phys(struct device *d=
-ev, dma_addr_t dev_addr)
- 	return __pfn_to_phys(dma_to_pfn(dev, dev_addr)) + offset;
- }
- =
-
--static inline bool dma_capable(struct device *dev, dma_addr_t addr, size_t=
- size)
--{
--	u64 limit, mask;
--
--	if (!dev->dma_mask)
--		return 0;
--
--	mask =3D *dev->dma_mask;
--
--	limit =3D (mask + 1) & ~mask;
--	if (limit && size > limit)
--		return 0;
--
--	if ((addr | (addr + size - 1)) & ~mask)
--		return 0;
--
--	return 1;
--}
--
- #endif /* ASM_ARM_DMA_DIRECT_H */
-diff --git a/arch/mips/include/asm/dma-direct.h b/arch/mips/include/asm/dma=
--direct.h
-index b5c240806e1b..14e352651ce9 100644
---- a/arch/mips/include/asm/dma-direct.h
-+++ b/arch/mips/include/asm/dma-direct.h
-@@ -2,14 +2,6 @@
- #ifndef _MIPS_DMA_DIRECT_H
- #define _MIPS_DMA_DIRECT_H 1
- =
-
--static inline bool dma_capable(struct device *dev, dma_addr_t addr, size_t=
- size)
--{
--	if (!dev->dma_mask)
--		return false;
--
--	return addr + size - 1 <=3D *dev->dma_mask;
--}
--
- dma_addr_t __phys_to_dma(struct device *dev, phys_addr_t paddr);
- phys_addr_t __dma_to_phys(struct device *dev, dma_addr_t daddr);
- =
-
-diff --git a/arch/powerpc/include/asm/dma-direct.h b/arch/powerpc/include/a=
-sm/dma-direct.h
-index a2912b47102c..e29e8a236b8d 100644
---- a/arch/powerpc/include/asm/dma-direct.h
-+++ b/arch/powerpc/include/asm/dma-direct.h
-@@ -2,15 +2,6 @@
- #ifndef ASM_POWERPC_DMA_DIRECT_H
- #define ASM_POWERPC_DMA_DIRECT_H 1
- =
-
--static inline bool dma_capable(struct device *dev, dma_addr_t addr, size_t=
- size)
--{
--	if (!dev->dma_mask)
--		return false;
--
--	return addr + size - 1 <=3D
--		min_not_zero(*dev->dma_mask, dev->bus_dma_mask);
--}
--
- static inline dma_addr_t __phys_to_dma(struct device *dev, phys_addr_t pad=
-dr)
- {
- 	if (!dev)
-diff --git a/include/linux/dma-direct.h b/include/linux/dma-direct.h
-index 6db863c3eb93..991f8aa2676e 100644
---- a/include/linux/dma-direct.h
-+++ b/include/linux/dma-direct.h
-@@ -24,6 +24,7 @@ static inline phys_addr_t __dma_to_phys(struct device *de=
-v, dma_addr_t dev_addr)
- =
-
- 	return paddr + ((phys_addr_t)dev->dma_pfn_offset << PAGE_SHIFT);
- }
-+#endif /* !CONFIG_ARCH_HAS_PHYS_TO_DMA */
- =
-
- static inline bool dma_capable(struct device *dev, dma_addr_t addr, size_t=
- size)
- {
-@@ -38,7 +39,6 @@ static inline bool dma_capable(struct device *dev, dma_ad=
-dr_t addr, size_t size)
- =
-
- 	return end <=3D min_not_zero(*dev->dma_mask, dev->bus_dma_mask);
- }
--#endif /* !CONFIG_ARCH_HAS_PHYS_TO_DMA */
- =
-
- #ifdef CONFIG_ARCH_HAS_FORCE_DMA_UNENCRYPTED
- bool force_dma_unencrypted(struct device *dev);
----------------------------------------------------------------------------=
-----
-
-
-Git bisection log:
-
----------------------------------------------------------------------------=
-----
-git bisect start
-# good: [fd8f64df95204951c3edd4c4a7817c909d55a100] mdio_bus: Fix init if CO=
-NFIG_RESET_CONTROLLER=3Dn
-git bisect good fd8f64df95204951c3edd4c4a7817c909d55a100
-# bad: [1fef9976397fc9b951ee54467eccd65e0c508785] Add linux-next specific f=
-iles for 20191120
-git bisect bad 1fef9976397fc9b951ee54467eccd65e0c508785
-# bad: [cf8226f5c44196785f624a89d4ecc0d37a497ea5] Merge remote-tracking bra=
-nch 'crypto/master'
-git bisect bad cf8226f5c44196785f624a89d4ecc0d37a497ea5
-# bad: [74f00449ecd89d1239b6d0c0e7b0f2b6f8df7eca] Merge remote-tracking bra=
-nch 'pstore/for-next/pstore'
-git bisect bad 74f00449ecd89d1239b6d0c0e7b0f2b6f8df7eca
-# bad: [56caf45711a6ab3efee14944a25b619241d8a8f1] Merge remote-tracking bra=
-nch 'rockchip/for-next'
-git bisect bad 56caf45711a6ab3efee14944a25b619241d8a8f1
-# good: [ef9980578a06d184b95661a5de904d0d3d5d0c39] Merge branch 'arm/dt' in=
-to for-next
-git bisect good ef9980578a06d184b95661a5de904d0d3d5d0c39
-# good: [e1351090dd4a172fb26317ae6fa846ab13c50199] ARM: Document merges
-git bisect good e1351090dd4a172fb26317ae6fa846ab13c50199
-# bad: [0ab68e0575be44525a043d048863a6078ab6ed0d] Merge remote-tracking bra=
-nch 'arm/for-next'
-git bisect bad 0ab68e0575be44525a043d048863a6078ab6ed0d
-# good: [08504765f773b151ff96f75b36e6a7f1c3308ccf] Merge remote-tracking br=
-anch 'spdx/spdx-linus'
-git bisect good 08504765f773b151ff96f75b36e6a7f1c3308ccf
-# bad: [ce154ead79b9a97e4376785dc7b3fe20b6d9a3ea] Merge remote-tracking bra=
-nch 'dma-mapping/for-next'
-git bisect bad ce154ead79b9a97e4376785dc7b3fe20b6d9a3ea
-# good: [0241ea8cae19b49fc1b1459f7bbe9a77f4f9cc89] modpost: free ns_deps_bu=
-f.p after writing ns_deps files
-git bisect good 0241ea8cae19b49fc1b1459f7bbe9a77f4f9cc89
-# good: [e380a0394c36a3a878c858418d5dd7f5f195b6fc] x86/PCI: sta2x11: use de=
-fault DMA address translation
-git bisect good e380a0394c36a3a878c858418d5dd7f5f195b6fc
-# good: [fcbb8461fd2376ba3782b5b8bd440c929b8e4980] kbuild: remove header co=
-mpile test
-git bisect good fcbb8461fd2376ba3782b5b8bd440c929b8e4980
-# bad: [e4d2bda544c7df90abed8aaa099b5daf1870bcf8] dma-direct: avoid a forwa=
-rd declaration for phys_to_dma
-git bisect bad e4d2bda544c7df90abed8aaa099b5daf1870bcf8
-# bad: [b037b220e71dcbb34cb710e00ffad2ec025b9163] dma-direct: unify the dma=
-_capable definitions
-git bisect bad b037b220e71dcbb34cb710e00ffad2ec025b9163
-# good: [9f0e56e96c7b2039edb4bda64410216c6e9fe93f] dma-mapping: drop the de=
-v argument to arch_sync_dma_for_*
-git bisect good 9f0e56e96c7b2039edb4bda64410216c6e9fe93f
-# first bad commit: [b037b220e71dcbb34cb710e00ffad2ec025b9163] dma-direct: =
-unify the dma_capable definitions
----------------------------------------------------------------------------=
-----
+>
+> --
+> Qais Yousef
+>
+> >
+> > on v5.4-rc7 i have got the same ratio :
+> > linaro@linaro-developer:~/ltp/testcases/kernel/syscalls/perf_event_open$
+> > sudo ./perf_event_open02 -v
+> > at iteration:0 value:300157088 time_enabled:80641145 time_running:80641145
+> > at iteration:1 value:300100129 time_enabled:63572917 time_running:63572917
+> > at iteration:2 value:300100885 time_enabled:63569271 time_running:63569271
+> > at iteration:3 value:300103998 time_enabled:63573437 time_running:63573437
+> > at iteration:4 value:300101477 time_enabled:63571875 time_running:63571875
+> > at iteration:5 value:300100698 time_enabled:63569791 time_running:63569791
+> > at iteration:6 value:245252526 time_enabled:63650520 time_running:52012500
+> > perf_event_open02    0  TINFO  :  overall task clock: 63717187
+> > perf_event_open02    0  TINFO  :  hw sum: 1800857435, task clock sum: 382156248
+> > hw counters: 149326575 150152481 169006047 187845928 206684169
+> > 224693333 206543358 187716226 168865909 150023409
+> > task clock counters: 31694792 31870834 35868749 39866666 43863541
+> > 47685936 43822396 39826042 35828125 31829167
+> > perf_event_open02    0  TINFO  :  ratio: 5.997695
+> > perf_event_open02    1  TPASS  :  test passed
