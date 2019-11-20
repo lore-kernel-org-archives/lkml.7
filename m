@@ -2,73 +2,96 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA24FC43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 06:00:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C404DC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 06:05:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A460D2244A
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 06:00:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574229630;
-	bh=2d2oFiuKLFEOGBdFCBRI/uZU667a1Rtk1tIk3n6mnA0=;
-	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
-	b=gZz8LHtbsCukm6Q/jW7qaGC0gJEtDJLp/6QrRe0X6OS8JD234pYP0TXfHzbQ/FqLK
-	 MPkmtfTS9X+GgHPpm9360EVtytfBEeJSKKf6YmXmUOiMkzOIIg/EaJsuYamhO2cMXX
-	 HNS1aBxrko+QJZbyCkQGG78rO0Yspv3xmQkcbqps=
+	by mail.kernel.org (Postfix) with ESMTP id 9D5502244A
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 06:05:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="i7XKy7y1";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="LJ4yst4A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727399AbfKTGA3 (ORCPT
+        id S1727067AbfKTGFg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 01:00:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45384 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726014AbfKTGA3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 01:00:29 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14DC1205C9;
-        Wed, 20 Nov 2019 06:00:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574229628;
-        bh=2d2oFiuKLFEOGBdFCBRI/uZU667a1Rtk1tIk3n6mnA0=;
-        h=Date:From:To:Subject:References:In-Reply-To:From;
-        b=Ww+AOqAIAnCQ6uE+LJNysbs2r/nNtvVcy4t2Ljs03cQE19q+ieNpM7zefeNyIxmsS
-         5VnuMk8fnQuH7FeXLAy7Jus8i8NteXUQmixBteOhVOGHBv/FzCid5meebpaJHTKTJ1
-         MLjvp5oyLSGl1ZHq1+z0VQmYWEAHs0pYFFdozfzo=
-Date:   Wed, 20 Nov 2019 07:00:25 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 5.3 00/48] 5.3.12-stable review
-Message-ID: <20191120060025.GC2853442@kroah.com>
-References: <20191119050946.745015350@linuxfoundation.org>
- <20191119184524.v7b5mkopvv2zunpc@xps.therub.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191119184524.v7b5mkopvv2zunpc@xps.therub.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        Wed, 20 Nov 2019 01:05:36 -0500
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:46209 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726014AbfKTGFf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 01:05:35 -0500
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 33C6266D1;
+        Wed, 20 Nov 2019 01:05:34 -0500 (EST)
+Received: from imap2 ([10.202.2.52])
+  by compute4.internal (MEProxy); Wed, 20 Nov 2019 01:05:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm1; bh=MqACBpEH9i8p185f/jCjhS3Buz1frYL
+        b77NTyx979Vk=; b=i7XKy7y1PAPvEgYOMCazKDu7BXD8GlpoYO0b/DBDIBevIRN
+        oSsmkXzqiXQhG2Jq+Qd5XDA42EyYTg48eht/Xln+pFFphAE4Wr5BupTMdKWlM3Fw
+        jn2JmooRWq+DeV9QmpImEqvvRg/G9PATHSu8qX6Id4TeTDXir6MfOqFb5mm03mbX
+        XnyTSMzM4Wwzcb1sKe7CAgaRzKPRWUCpYZTRQTTvIt4EYuTxBHfXgO0RA+JrOkZZ
+        zO1+/ONdWl3BYsmF5yWiE3nJdQFQwlQKPBIxT2cz9AtL+FCRZZBKwCREIPzoP8V4
+        myUat4Xt/IJGWXwFQ0iYbWY6hKjn4TuIMPP8ILw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=MqACBp
+        EH9i8p185f/jCjhS3Buz1frYLb77NTyx979Vk=; b=LJ4yst4Apz2MLuo0lKehfh
+        zMqxHdvAShQNWZwqQaXHzMmELTPswvADN1bS/OhbNjs6PJv3KkqqVHb85IVuIOqI
+        KerhvkyjTNmn688uJvc5szdzWrKmoG06NYfXFhTPE3yPvp/mJlA2aUCdro0fT1C8
+        LFnFIIIo9rvQPLtwVUHRxgvKhq/411RQz5zEQzYDgrxnaBTlliA227Vf1O4Z64MX
+        nunTveBc+fvoGSEbpprjVbKiMrLV6eAGKXJqT4Zh6iqYONYU+Byof6x0VjqjsSws
+        YIg9bUJeUjmDz3lC281U3WRxW+PDAEMTrFScfZ+NHCJdXLmJtsK0OyAnsgZ9rpyw
+        ==
+X-ME-Sender: <xms:q9fUXalOHeplB8yX1vzlWHBcSscnF4HNXZBSR9sI3r-PvqyKms2BJg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudegledgleduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreerjeenucfhrhhomhepfdetnhgu
+    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecurfgrrh
+    grmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgv
+    rhfuihiivgeptd
+X-ME-Proxy: <xmx:q9fUXVQwd6XqjXTUXw50wQGrHC2F8Cs31GSA51fL3LNn58J3g-mz4w>
+    <xmx:q9fUXVYlNjqiogexue1MOxuvWRhS75Wbdx0YSdrb4eH9sDbiYxYrMg>
+    <xmx:q9fUXR8XH-IwBjQObAQ_n6vciRRjHt9VPTLSKP0mMGCrZkUTZRPGJg>
+    <xmx:rtfUXf--SERIAc9OW-KEysE8HrVyG9VEO-RmAfdYmXiXxkt6cTDpbQ>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 9A0D9E00AA; Wed, 20 Nov 2019 01:05:31 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.7-578-g826f590-fmstable-20191119v1
+Mime-Version: 1.0
+Message-Id: <b525ea84-aaa0-45b3-95fd-a1b3518511b3@www.fastmail.com>
+In-Reply-To: <20191118104646.3838-4-i.mikhaylov@yadro.com>
+References: <20191118104646.3838-1-i.mikhaylov@yadro.com>
+ <20191118104646.3838-4-i.mikhaylov@yadro.com>
+Date:   Wed, 20 Nov 2019 16:36:55 +1030
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Ivan Mikhaylov" <i.mikhaylov@yadro.com>
+Cc:     "Joel Stanley" <joel@jms.id.au>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        "Adrian Hunter" <adrian.hunter@intel.com>,
+        "Ulf Hansson" <ulf.hansson@linaro.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-mmc <linux-mmc@vger.kernel.org>, openbmc@lists.ozlabs.org
+Subject: =?UTF-8?Q?Re:_[PATCH_v3_3/3]_mmc:_sdhci-of-aspeed:_add_inversion_signal_?=
+ =?UTF-8?Q?presence?=
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 12:45:24PM -0600, Dan Rue wrote:
-> On Tue, Nov 19, 2019 at 06:19:20AM +0100, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.3.12 release.
-> > There are 48 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
+On Mon, 18 Nov 2019, at 21:16, Ivan Mikhaylov wrote:
+> Add read_l callback in sdhci_ops with flipping of SDHCI_CARD_PRESENT
+> bit in case of inverted card detection signal.
 > 
-> Results from Linaro’s test farm.
-> No regressions on arm64, arm, x86_64, and i386.
+> Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
 
-Great, thanks for testing all 3 of these and letting me know.
-
-greg k-h
+Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
