@@ -2,120 +2,201 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BE26C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 22:02:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83B74C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 22:03:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E75220708
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 22:02:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53AEB20672
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 22:03:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DmZUR+Qy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726536AbfKTWCI (ORCPT
+        id S1726634AbfKTWD3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 17:02:08 -0500
-Received: from mga02.intel.com ([134.134.136.20]:58509 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725936AbfKTWCI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 17:02:08 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Nov 2019 14:02:07 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,223,1571727600"; 
-   d="asc'?scan'208";a="218829808"
-Received: from jtkirshe-desk1.jf.intel.com ([134.134.177.74])
-  by orsmga002.jf.intel.com with ESMTP; 20 Nov 2019 14:02:07 -0800
-Message-ID: <b9a58fb8446aa374170d386efff7fe7a16c5021e.camel@intel.com>
-Subject: Re: [PATCH 4.19 065/422] ice: Fix and update driver version string
-From:   Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Reply-To: jeffrey.t.kirsher@intel.com
-To:     Pavel Machek <pavel@denx.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>,
-        Tony Brelinski <tonyx.brelinski@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Date:   Wed, 20 Nov 2019 14:02:06 -0800
-In-Reply-To: <20191120215905.GB23361@duo.ucw.cz>
-References: <20191119051400.261610025@linuxfoundation.org>
-         <20191119051403.893600135@linuxfoundation.org>
-         <20191120215905.GB23361@duo.ucw.cz>
-Organization: Intel
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-MAM+CBUPqDuYkAcevsoM"
-User-Agent: Evolution 3.34.1 (3.34.1-1.fc31) 
+        Wed, 20 Nov 2019 17:03:29 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:30079 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726038AbfKTWD3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 17:03:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574287407;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=f6C29Osq+JMxMyTsFEFeFdTV5O5zf4w1ZtFWoHQvhHQ=;
+        b=DmZUR+QysllpJRKa5v9RQt+0hHAZS694g22Fyq3YITnsYaa7NKQrcq7NmE8E53JVGdGmI+
+        gt/WLnmr7I0s7+wn2N77hLnnV38My6aWkLuIaFJLzylH73QBhxRVWfVmFTU9EXp/dXm+hJ
+        SEssoLyoZ45TKcd9neTk6y9+EgLX+aY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-318-cttqolrQN5ynM6c2_mDL9Q-1; Wed, 20 Nov 2019 17:03:24 -0500
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 56DCE801E5D;
+        Wed, 20 Nov 2019 22:03:22 +0000 (UTC)
+Received: from pauld.bos.csb (dhcp-17-51.bos.redhat.com [10.18.17.51])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 544F853C20;
+        Wed, 20 Nov 2019 22:03:15 +0000 (UTC)
+Date:   Wed, 20 Nov 2019 17:03:13 -0500
+From:   Phil Auld <pauld@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Dave Chinner <david@fromorbit.com>, Ming Lei <ming.lei@redhat.com>,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jeff Moyer <jmoyer@redhat.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        Eric Sandeen <sandeen@redhat.com>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Subject: Re: single aio thread is migrated crazily by scheduler
+Message-ID: <20191120220313.GC18056@pauld.bos.csb>
+References: <20191114113153.GB4213@ming.t460p>
+ <20191114235415.GL4614@dread.disaster.area>
+ <20191115010824.GC4847@ming.t460p>
+ <20191115045634.GN4614@dread.disaster.area>
+ <20191115070843.GA24246@ming.t460p>
+ <20191115234005.GO4614@dread.disaster.area>
+ <20191118092121.GV4131@hirez.programming.kicks-ass.net>
+ <20191118204054.GV4614@dread.disaster.area>
+ <20191120191636.GI4097@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
+In-Reply-To: <20191120191636.GI4097@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MC-Unique: cttqolrQN5ynM6c2_mDL9Q-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Peter,
 
---=-MAM+CBUPqDuYkAcevsoM
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, 2019-11-20 at 22:59 +0100, Pavel Machek wrote:
-> On Tue 2019-11-19 06:14:22, Greg Kroah-Hartman wrote:
-> > From: Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>
-> >=20
-> > [ Upstream commit 9ea47d81a7f17c6b77211ab75fbca2127719ad39 ]
-> >=20
-> > Remove the "ice" prefix for the driver version string and bump
-> > version
-> > to 0.7.1-k.
+On Wed, Nov 20, 2019 at 08:16:36PM +0100 Peter Zijlstra wrote:
+> On Tue, Nov 19, 2019 at 07:40:54AM +1100, Dave Chinner wrote:
+> > On Mon, Nov 18, 2019 at 10:21:21AM +0100, Peter Zijlstra wrote:
 >=20
-> This sounds like a bad idea. 0.7.1 in mainline contains patches that
-> were not backported to stable, so marking this as 0.7.1 version is
-> wrong.
-
-I agree, backporting this change to stable should not happen.
-
-NAK
-
-> 							=09
-> > +++ b/drivers/net/ethernet/intel/ice/ice_main.c
-> > @@ -7,7 +7,7 @@
-> > =20
-> >  #include "ice.h"
-> > =20
-> > -#define DRV_VERSION	"ice-0.7.0-k"
-> > +#define DRV_VERSION	"0.7.1-k"
-> >  #define DRV_SUMMARY	"Intel(R) Ethernet Connection E800
-> > Series Linux Driver"
-> >  const char ice_drv_ver[] =3D DRV_VERSION;
-> >  static const char ice_driver_string[] =3D DRV_SUMMARY;
-> > --=20
-> > 2.20.1
+> > > We typically only fall back to the active balancer when there is
+> > > (persistent) imbalance and we fail to migrate anything else (of
+> > > substance).
+> > >=20
+> > > The tuning mentioned has the effect of less frequent scheduling, IOW,
+> > > leaving (short) tasks on the runqueue longer. This obviously means th=
+e
+> > > load-balancer will have a bigger chance of seeing them.
+> > >=20
+> > > Now; it's been a while since I looked at the workqueue code but one
+> > > possible explanation would be if the kworker that picks up the work i=
+tem
+> > > is pinned. That would make it runnable but not migratable, the exact
+> > > situation in which we'll end up shooting the current task with active
+> > > balance.
 > >=20
+> > Yes, that's precisely the problem - work is queued, by default, on a
+> > specific CPU and it will wait for a kworker that is pinned to that
+>=20
+> I'm thinking the problem is that it doesn't wait. If it went and waited
+> for it, active balance wouldn't be needed, that only works on active
+> tasks.
+
+Since this is AIO I wonder if it should queue_work on a nearby cpu by=20
+default instead of unbound. =20
+
+>=20
+> > specific CPU to dispatch it. We've already tested that queuing on a
+> > different CPU (via queue_work_on()) makes the problem largely go
+> > away as the work is not longer queued behind the long running fio
+> > task.
 > >=20
+> > This, however, is not at viable solution to the problem. The pattern
+> > of a long running process queuing small pieces of individual work
+> > for processing in a separate context is pretty common...
+>=20
+> Right, but you're putting the scheduler in a bind. By overloading the
+> CPU and only allowing the one task to migrate, it pretty much has no
+> choice left.
+>=20
+> Anyway, I'm still going to have try and reproduce -- I got side-tracked
+> into a crashing bug, I'll hopefully get back to this tomorrow. Lastly,
+> one other thing to try is -next. Vincent reworked the load-balancer
+> quite a bit.
+>=20
+
+I've tried it with the lb patch series. I get basically the same results.
+With the high granularity settings I get 3700 migrations for the 30=20
+second run at 4k. Of those about 3200 are active balance on stock 5.4-rc7.
+With the lb patches it's 3500 and 3000, a slight drop.=20
+
+Using the default granularity settings 50 and 22 for stock and 250 and 25.
+So a few more total migrations with the lb patches but about the same activ=
+e.
 
 
---=-MAM+CBUPqDuYkAcevsoM
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+On this system I'm getting 100k migrations using 512 byte blocksize. Almost
+all not active. I haven't looked into that closely yet but it's like 3000
+per second looking like this:
 
------BEGIN PGP SIGNATURE-----
+...
+64.19641 386     386     kworker/15:1    sched_migrate_task fio/2784 cpu 15=
+->19=20
+64.19694 386     386     kworker/15:1    sched_migrate_task fio/2784 cpu 15=
+->19=20
+64.19746 386     386     kworker/15:1    sched_migrate_task fio/2784 cpu 15=
+->19=20
+64.19665 389     389     kworker/19:1    sched_migrate_task fio/2784 cpu 19=
+->15=20
+64.19718 389     389     kworker/19:1    sched_migrate_task fio/2784 cpu 19=
+->15=20
+64.19772 389     389     kworker/19:1    sched_migrate_task fio/2784 cpu 19=
+->15=20
+64.19800 386     386     kworker/15:1    sched_migrate_task fio/2784 cpu 15=
+->19=20
+64.19828 389     389     kworker/19:1    sched_migrate_task fio/2784 cpu 19=
+->15=20
+64.19856 386     386     kworker/15:1    sched_migrate_task fio/2784 cpu 15=
+->19=20
+64.19882 389     389     kworker/19:1    sched_migrate_task fio/2784 cpu 19=
+->15=20
+64.19909 386     386     kworker/15:1    sched_migrate_task fio/2784 cpu 15=
+->19=20
+64.19937 389     389     kworker/19:1    sched_migrate_task fio/2784 cpu 19=
+->15=20
+64.19967 386     386     kworker/15:1    sched_migrate_task fio/2784 cpu 15=
+->19=20
+64.19995 389     389     kworker/19:1    sched_migrate_task fio/2784 cpu 19=
+->15=20
+64.20023 386     386     kworker/15:1    sched_migrate_task fio/2784 cpu 15=
+->19=20
+64.20053 389     389     kworker/19:1    sched_migrate_task fio/2784 cpu 19=
+->15=20
+64.20079 386     386     kworker/15:1    sched_migrate_task fio/2784 cpu 15=
+->19=20
+64.20107 389     389     kworker/19:1    sched_migrate_task fio/2784 cpu 19=
+->15=20
+64.20135 386     386     kworker/15:1    sched_migrate_task fio/2784 cpu 15=
+->19=20
+64.20163 389     389     kworker/19:1    sched_migrate_task fio/2784 cpu 19=
+->15=20
+64.20192 386     386     kworker/15:1    sched_migrate_task fio/2784 cpu 15=
+->19=20
+64.20221 389     389     kworker/19:1    sched_migrate_task fio/2784 cpu 19=
+->15=20
+...
 
-iQIzBAABCAAdFiEEiTyZWz+nnTrOJ1LZ5W/vlVpL7c4FAl3Vt94ACgkQ5W/vlVpL
-7c7ZbA/6AmAtK8igN+6bVC7UvmhyyF5acGmZijZlheMoA2yZlIKg9jIOoCDCx5p2
-btGc4mcmBvXTO5/5G4rKsowsNdolqxNr4M20Pjaj97RALsHmB1OL47ayJ8qQO1lf
-mv93bSXFO76sXTiFb+GuqBkgsAD+jaFs1ToGvfVCJ0eo0i4jlKRp/9KtZB+nvDn9
-ROu5TywUU9n9q+fMgxK+OqRyvH7rTfe1QOMYAkZZuVjZInkSh1eHk2Jz0soLYoyP
-bvG9XLAAlZFbP5o0yMScuo2UOFvsnsJjzGwd3t3o6893xVFF10mRZj4AbYJha3t/
-/9RUfMN/hNqenKYE/uA8LIWAdSvWQDK0JjEpiEO5ep+YfKjojY7zZ7CQwnFsKG6F
-36Y7xrvZYrnUGSync7eRXy3rwUumrCeDofoUoq5pe4/GWjtlW0a7w09EDSvEvdWa
-tiA95Kr8aqNsGpyzlo1KWep40WqkJWEZF57W5k5ucA9+F/yV8lalMQrd/yjcRB+F
-k9gWArhYe7G9mMTY+aJtkw1vnAm5qlYYymyVWb13uTO92mG2CdeWUEKbFir0BM3v
-V0PmRolx7inrbUHauGLrnuhOmMUq52HStOopyoYJBUWBKpgkPB/dj525hANWu+rJ
-Set2ZyxtLuDeGkRdCoC6/gqUrTa9YrCZu752+GjCUlPsmLa0wDg=
-=uDda
------END PGP SIGNATURE-----
+Which is roughly equal to the number if iops it's doing.=20
 
---=-MAM+CBUPqDuYkAcevsoM--
+Cheers,
+Phil
+
+--=20
 
