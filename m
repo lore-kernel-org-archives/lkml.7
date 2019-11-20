@@ -2,96 +2,86 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AED3C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:39:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A2B6C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:39:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02719224FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:39:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574257168;
-	bh=WxqSkloPNvIniE0B1PNU8Et/vKN6RNMG2IiFN6/e2mA=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=aBjukz8CwLV07MAxlLIK3c9E61Ejk9K+0II/t5IFjstnK6lhfaPOJiziVv64Mz5Jn
-	 127ZzDbJiUtsehNng3O+lktijSnf26VBLKLjqTcxx6biI4w/e7M3eqSbXq8yzSPanw
-	 791FPyj6O15g8No6knWAOBQWSeiWP5nSuKhCsQvU=
+	by mail.kernel.org (Postfix) with ESMTP id 538FB2251E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:39:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="HWCY1Uyq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731127AbfKTNj1 (ORCPT
+        id S1731132AbfKTNj2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 08:39:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47048 "EHLO mail.kernel.org"
+        Wed, 20 Nov 2019 08:39:28 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:55078 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728683AbfKTNjZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728541AbfKTNjZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 Nov 2019 08:39:25 -0500
-Received: from localhost.localdomain (unknown [118.189.143.39])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from zn.tnic (p200300EC2F0D8C00B1B17C12861BCCA4.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:8c00:b1b1:7c12:861b:cca4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A342224FA;
-        Wed, 20 Nov 2019 13:39:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574257164;
-        bh=WxqSkloPNvIniE0B1PNU8Et/vKN6RNMG2IiFN6/e2mA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Y7TZ4KjgFZ6iZsKf3fXADVSsXbBnSEvM1WHpXoXZlFnTvrMf9gpXFBft+G+AzBRvj
-         dlKzVqlpbYFZoKDZbcO3SB3UTnEIP2uaLHCvILtjduJXmAMKJJeQIOKe1bAGDMWUSx
-         PFc3TnB2NuCvbQalMLbptes5BnOo1mo7JCevaRYk=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH] soc: rockchip: Fix Kconfig indentation
-Date:   Wed, 20 Nov 2019 21:39:20 +0800
-Message-Id: <20191120133920.13657-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C79B21EC0CC2;
+        Wed, 20 Nov 2019 14:39:19 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1574257159;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=QFI3bxCqn+b0PFcULsjiFv5KvKyUWgIUFkTaCiU0Ovw=;
+        b=HWCY1UyqaOi6dX2884FcCHqa62YZDwgCWCNNyR2vqp5f723r6YuKbqVWQy2htFtpEqw/Nf
+        iCmKHvc23XqOunZjqIdtrsDecwIfTuhA1AOMebnug7AzqEWQgcAEZIJK2oJokk1OeK1Ev5
+        nG2/BQ3b5FK0x94wPRTE/V4WbLap3BM=
+Date:   Wed, 20 Nov 2019 14:39:13 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Jann Horn <jannh@google.com>, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH v3 2/4] x86/traps: Print non-canonical address on #GP
+Message-ID: <20191120133913.GG2634@zn.tnic>
+References: <20191120103613.63563-1-jannh@google.com>
+ <20191120103613.63563-2-jannh@google.com>
+ <20191120111859.GA115930@gmail.com>
+ <CAG48ez0Frp4-+xHZ=UhbHh0hC_h-1VtJfwHw=kDo6NahyMv1ig@mail.gmail.com>
+ <20191120123058.GA17296@gmail.com>
+ <20191120123926.GE2634@zn.tnic>
+ <20191120132830.GB54414@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191120132830.GB54414@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adjust indentation from spaces to tab (+optional two spaces) as in
-coding style with command like:
-	$ sed -e 's/^        /\t/' -i */Kconfig
+On Wed, Nov 20, 2019 at 02:28:30PM +0100, Ingo Molnar wrote:
+> I'd rather we not trust the decoder and the execution environment so much 
+> that it never produces a 0 linear address in a #GP:
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- drivers/soc/rockchip/Kconfig | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+I was just scratching my head whether I could trigger a #GP with address
+of 0. But yeah, I agree, let's be really cautious here. I wouldn't want
+to debug a #GP with a wrong address reported.
 
-diff --git a/drivers/soc/rockchip/Kconfig b/drivers/soc/rockchip/Kconfig
-index b71b73bf5fc5..3e2057f22bbc 100644
---- a/drivers/soc/rockchip/Kconfig
-+++ b/drivers/soc/rockchip/Kconfig
-@@ -15,15 +15,15 @@ config ROCKCHIP_GRF
- 	  to make some of them conform to expectations of the kernel.
- 
- config ROCKCHIP_PM_DOMAINS
--        bool "Rockchip generic power domain"
--        depends on PM
--        select PM_GENERIC_DOMAINS
--        help
--          Say y here to enable power domain support.
--          In order to meet high performance and low power requirements, a power
--          management unit is designed or saving power when RK3288 in low power
--          mode. The RK3288 PMU is dedicated for managing the power of the whole chip.
-+	bool "Rockchip generic power domain"
-+	depends on PM
-+	select PM_GENERIC_DOMAINS
-+	help
-+	  Say y here to enable power domain support.
-+	  In order to meet high performance and low power requirements, a power
-+	  management unit is designed or saving power when RK3288 in low power
-+	  mode. The RK3288 PMU is dedicated for managing the power of the whole chip.
- 
--          If unsure, say N.
-+	  If unsure, say N.
- 
- endif
+Thx.
+
 -- 
-2.17.1
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
