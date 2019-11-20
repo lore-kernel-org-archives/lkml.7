@@ -2,131 +2,154 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F47C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 12:36:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98772C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 12:36:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B44CA22519
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 12:36:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5863F22519
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 12:36:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="DvRJ3p9L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729796AbfKTMgG (ORCPT
+        id S1729811AbfKTMg0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 07:36:06 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:59546 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727876AbfKTMgG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 07:36:06 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id AFACD1C1A4F; Wed, 20 Nov 2019 13:36:04 +0100 (CET)
-Date:   Wed, 20 Nov 2019 13:36:03 +0100
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 353/422] slimbus: ngd: return proper error code
- instead of zero
-Message-ID: <20191120123603.GE4495@amd>
-References: <20191119051400.261610025@linuxfoundation.org>
- <20191119051421.892624663@linuxfoundation.org>
+        Wed, 20 Nov 2019 07:36:26 -0500
+Received: from mout.web.de ([212.227.15.3]:59625 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727876AbfKTMgZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 07:36:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1574253368;
+        bh=MxmyEzfAFTWwBXB89FoFsrUf5ujqlJkBwvTvCCN+JjQ=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=DvRJ3p9LIV7cJZkHg3gvRDUJcdttB3hzIdcOv3tHBpabX2lR/wEsEEyY1hdXPhq4O
+         Dus7YeRY65J0SkDH2FQBP4j+D98XBzBezpL19MOsQQZsLvj/JkpTp+oO18+aVITBwH
+         22mU7xvgK4ICJ4RA59Z/DlwF4aK3zgP0hBVA9+wc=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.3] ([93.132.176.80]) by smtp.web.de (mrweb003
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0LgYRZ-1i1K2U3lfZ-00nyyf; Wed, 20
+ Nov 2019 13:36:08 +0100
+Subject: Re: [PATCH v3 10/13] exfat: add nls operations
+To:     Namjae Jeon <namjae.jeon@samsung.com>,
+        linux-fsdevel@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>,
+        Daniel Wagner <dwagner@suse.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sungjong Seo <sj1557.seo@samsung.com>,
+        =?UTF-8?Q?Valdis_Kl=c4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        linkinjeon@gmail.com
+References: <20191119093718.3501-1-namjae.jeon@samsung.com>
+ <CGME20191119094026epcas1p3eea5c655f3b89383e02c0097c491f0bc@epcas1p3.samsung.com>
+ <20191119093718.3501-11-namjae.jeon@samsung.com>
+ <705cb02b-7707-af52-c2b5-70660debc619@web.de>
+ <00b701d59f81$319c1d90$94d458b0$@samsung.com>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <cb82f263-4374-c483-7093-03de81618399@web.de>
+Date:   Wed, 20 Nov 2019 13:36:05 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="3O1VwFp74L81IIeR"
-Content-Disposition: inline
-In-Reply-To: <20191119051421.892624663@linuxfoundation.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <00b701d59f81$319c1d90$94d458b0$@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:BKqTVjg296nd/3XyCwmU+BOe/V7LAkYtQpdMgcBGbcKjDHmLjVw
+ aWD5lHdOL70ZnnKYbpOs9Ytzh7itr+eozBmaewX0knvWZN95f/7oBgOWVB2+ZoVsvJrLIzm
+ aqjq6Vr14AstWil2S0/Uy4AAwdYH8EJc10HJG5BJ9QFTLIU84KhdAm0nivFyymhWTHQfZuf
+ cpHGseP3PlTjwE3JbgO/w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:aouy91mQMf8=:HAwCSCJTRAWPF0/nU22uoy
+ vHUjaorgke45/23gJ++rgn3L2gzvu6pfSRqcNROdegu24P3vsZIgxqtSjHnh3TjJjuSN1LgZw
+ 6x+qMaAjraWpoL303TaL78su4+T0FoTmJEdO8VPuAYAuhczbLj/u0/LMA8DKCSF0jLuPHGJhE
+ mjIOk4pF20wIGIc6t/06C1KvpBUOrcI4nohNZWxfZvWnwFu1psptIQwa8p78Lm5tf1rzd1nci
+ aAnTdwzWOusTt0vZTBd3nI7XnGl0lexK1yANI6S1fZ7VfQdomaviJ+kXI8xCfKQO33euSdIKo
+ u39+DG/X+emKeHU5351hseB0qGgalKiK9FzicxbGr/Mnlsueyigfgk3ck5Hj6O4Dd865n3nvR
+ mKyC7yowAO8qSWTVudQf9SHLtj1hvYcCbmd3dfT3YLizHIQnL3E0EqDojOAs4HXNxzIGruUvT
+ vhOOxZOzhl8PkQX+8FkZkWmBKNf+nltbv8MZrRnVP6ID6lq3a7JuG+zlQTMNHCqsGIuEH/oJw
+ 3DSaIDyD8r+8DfPnHx35vPFyp9KfGoj2MI445x6wRduo3gj6aPLaPoCts//eeahCnwGCVBTmr
+ O6XIZGkdFU5jE4Pcnc4JCP+xd7QzBcyK7psGvWX7vUfJuSCnnc++XzD421DtR3IHo8YK52g6l
+ qUBKgcNT25DrCTaQyeh7VwCeYeoQ0MnXNbU9KeXRlnyYyXQemBfb3wi6O3cVyxQ8pPSO5dv/3
+ Gh8FTZzl9T/2OnnWrz7N3B3zLRlS+72E9I2TCnMf6TgQa6EqIOoQxcXKPoI3HWFqUZXcRPgkw
+ BsAlCF32znrTNp+BdzLkjB57NkFFCH7UeAENFyZOHvWFakXslvoEywJteWqvrhGgTvlx+chLg
+ 71WRRigjXugofZIs6kNn4ja2hduSJD7NxcK/eZO03GGQZ69NrRqN6V+PoUkCDVCcdD73px8Ac
+ NmGNfpQ3773y+LfoeJdWp7/emOYndVch/BoqQvCFV9mrOHglR8AuvPmrHYWnQO5ZNVdJHhiDa
+ NCZwsCastesc7GD/QgjQ/kyhpN8mKFdZNRQB4AvGVPukLcTP6WdSEqSIebQyCEckjEqsawrL7
+ ISwGDRmHWj/sAMuTdF6nquATF3c6QygeOmR5cLy9kEBO1l6ywKtKOY4lvqb8FWe7rGcvdp+j6
+ uz9HL+7KBA1jvHgs0Q8NMax5KWujQRFs1ln/Dua10s3nDQrSEw5Xx3GWyreRle3juGGxlARZA
+ MxpjpOthezvVoG+o4p7aML+8zjZVCDxEyiSIgyT0bMRJTY8yVXHNDwKL2UgQ=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+>> =E2=80=A6
+>>> +++ b/fs/exfat/nls.c
+>> =E2=80=A6
+>>> +static int exfat_load_upcase_table(struct super_block *sb,
+>>> +		sector_t sector, unsigned long long num_sectors,
+>>> +		unsigned int utbl_checksum)
+>>> +{
+>> =E2=80=A6
+>>> +error:
+>>> +	if (bh)
+>>> +		brelse(bh);
+=E2=80=A6
+>> Can the label =E2=80=9Crelease_bh=E2=80=9D be more helpful?
+=E2=80=A6
+> I checked not only review point but also your review points in
+> other patches, I will fix them on v4.
+=E2=80=A6
 
---3O1VwFp74L81IIeR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Another software design alternative would be to use a jump target
+like =E2=80=9Cfree_table=E2=80=9D instead at this source code place, would=
+n't it?
 
-On Tue 2019-11-19 06:19:10, Greg Kroah-Hartman wrote:
-> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->=20
-> [ Upstream commit 9652e6aa62a1836494ebb8dbd402587c083b568c ]
->=20
-> It looks like there is a typo in probe return. Fix it.
->=20
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  drivers/slimbus/qcom-ngd-ctrl.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/slimbus/qcom-ngd-ctrl.c b/drivers/slimbus/qcom-ngd-c=
-trl.c
-> index a9abde2f4088b..e587be9064e74 100644
-> --- a/drivers/slimbus/qcom-ngd-ctrl.c
-> +++ b/drivers/slimbus/qcom-ngd-ctrl.c
-> @@ -1393,7 +1393,7 @@ wq_err:
->  	if (ctrl->mwq)
->  		destroy_workqueue(ctrl->mwq);
-> =20
-> -	return 0;
-> +	return ret;
->  }
-
-The code makes no sense, even after the fix. Only way to enter wq_err
-is with via if !ctrl->mwq... but it proceeds to test it for zero.
-
-IOW... this.
-
-Signed-off-by: Pavel Machek <pavel@denx.de>
-
-diff --git a/drivers/slimbus/qcom-ngd-ctrl.c b/drivers/slimbus/qcom-ngd-ctr=
-l.c
-index d72f8eed2e8b..5a327d45dc2d 100644
---- a/drivers/slimbus/qcom-ngd-ctrl.c
-+++ b/drivers/slimbus/qcom-ngd-ctrl.c
-@@ -1385,17 +1385,11 @@ static int qcom_slim_ngd_probe(struct platform_devi=
-ce *pdev)
- 	ctrl->mwq =3D create_singlethread_workqueue("ngd_master");
- 	if (!ctrl->mwq) {
- 		dev_err(&pdev->dev, "Failed to start master worker\n");
--		ret =3D -ENOMEM;
--		goto wq_err;
-+		qcom_slim_ngd_qmi_svc_event_deinit(&ctrl->qmi);
-+		return -ENOMEM;
- 	}
-=20
- 	return 0;
--wq_err:
--	qcom_slim_ngd_qmi_svc_event_deinit(&ctrl->qmi);
--	if (ctrl->mwq)
--		destroy_workqueue(ctrl->mwq);
--
--	return ret;
- }
-=20
- static int qcom_slim_ngd_ctrl_probe(struct platform_device *pdev)
-
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---3O1VwFp74L81IIeR
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl3VMzMACgkQMOfwapXb+vJQgwCfSGjdcexIlukpEKCcNJC530hV
-840An2uz4mfrnPH/0rDurYaHg6o2p2TT
-=fapK
------END PGP SIGNATURE-----
-
---3O1VwFp74L81IIeR--
+Regards,
+Markus
