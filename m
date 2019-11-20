@@ -6,215 +6,454 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ABF6C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:52:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 565E2C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:53:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5737C2071F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:52:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F7622071F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:53:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727743AbfKTTww (ORCPT
+        id S1727756AbfKTTxh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 14:52:52 -0500
-Received: from outbound.smtp.vt.edu ([198.82.183.121]:50246 "EHLO
-        omr2.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726440AbfKTTwv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 14:52:51 -0500
-Received: from mr6.cc.vt.edu (mr6.cc.vt.edu [IPv6:2607:b400:92:8500:0:af:2d00:4488])
-        by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id xAKJqnjN006229
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 14:52:49 -0500
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-        by mr6.cc.vt.edu (8.14.7/8.14.7) with ESMTP id xAKJqioG030622
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 14:52:49 -0500
-Received: by mail-qk1-f200.google.com with SMTP id p68so396468qkf.9
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 11:52:49 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:mime-version
-         :content-transfer-encoding:date:message-id;
-        bh=Pcz0vZsBN6EW4lKcg2ho+YDFFW6RUHvYufWFKuIJyxQ=;
-        b=gIdXo0n+zgz4iqDeQKX77sL86qW+ukV+3GzOo90cXQ5U+LmzYgLGF0WttF9qK6RRkf
-         MjNYi+58N9xUWR2JsHqleKWGvt5ZhnGVDHangezo1aswAs95PS0szI/Y2Rrwc9A0mmHa
-         rd8D61pePLPZajaMSkiuck4BJdqlxtYRqGKI6kFxX35hRSEaK9kXGRzjdJWhKHKq6NqZ
-         wF6YhAdUPokAq41YGy1dsyVrNCYwcoQ1qbFdCYH4T6w1DochNJ9wPix6TpMFhQKea7Jd
-         luj+InxnA1/qbovDHun2mktxQ4+KEYSpWWtxBbREgyCKuXNi+1xhL2WP3RiHFGh9ZxQ4
-         TSNg==
-X-Gm-Message-State: APjAAAUrM8yAJju6HrxICWTtX3Z9wfqMF/AzIBadqvnIHOlZw1noeZDf
-        5s5B2pyiKzFwa2BHgSegY0ylG6DiZqd3+cccTyTjfZ6uX1x7nA/faPc/+1FzqdkGm0T+5aedY8+
-        pmhKatQbHozxRg3BwNxHp782j5ZMoJ26m2fU=
-X-Received: by 2002:ac8:3946:: with SMTP id t6mr2269423qtb.278.1574279563639;
-        Wed, 20 Nov 2019 11:52:43 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxe7C1h6tJTtd0SA5Jkuld5APhArQsh7ntYw8a3ee9nAIjC9zXPsti0I9UFb/qDeXbPmYQxtw==
-X-Received: by 2002:ac8:3946:: with SMTP id t6mr2269374qtb.278.1574279562910;
-        Wed, 20 Nov 2019 11:52:42 -0800 (PST)
-Received: from turing-police ([2601:5c0:c001:c9e1::359])
-        by smtp.gmail.com with ESMTPSA id y29sm62197qtc.8.2019.11.20.11.52.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Nov 2019 11:52:41 -0800 (PST)
-From:   "Valdis =?utf-8?Q?Kl=c4=93tnieks?=" <valdis.kletnieks@vt.edu>
-X-Google-Original-From: "Valdis =?utf-8?Q?Kl=c4=93tnieks?=" <Valdis.Kletnieks@vt.edu>
-X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
-To:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>
-Cc:     intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: linux-next - DEBUG_MUTEX=y causes message flood
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="==_Exmh_1574279560_2911P";
-         micalg=pgp-sha1; protocol="application/pgp-signature"
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 20 Nov 2019 14:52:40 -0500
-Message-ID: <65415.1574279560@turing-police>
+        Wed, 20 Nov 2019 14:53:37 -0500
+Received: from mx2.suse.de ([195.135.220.15]:35610 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726440AbfKTTxg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 14:53:36 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id E3B15B1FB;
+        Wed, 20 Nov 2019 19:53:32 +0000 (UTC)
+Message-ID: <7e1be0bdcf303224a3fe225654a3c2391207f9eb.camel@suse.de>
+Subject: Re: [PATCH v2 4/6] PCI: brcmstb: add Broadcom STB PCIe host
+ controller driver
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Andrew Murray <andrew.murray@arm.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>, mbrugger@suse.com,
+        maz@kernel.org, phil@raspberrypi.org, linux-kernel@vger.kernel.org,
+        jeremy.linton@arm.com, Eric Anholt <eric@anholt.net>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Stefan Wahren <wahrenst@gmx.net>, james.quinlan@broadcom.com,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rpi-kernel@lists.infradead.org
+Date:   Wed, 20 Nov 2019 20:53:30 +0100
+In-Reply-To: <20191119162502.GS43905@e119886-lin.cambridge.arm.com>
+References: <20191112155926.16476-1-nsaenzjulienne@suse.de>
+         <20191112155926.16476-5-nsaenzjulienne@suse.de>
+         <20191119162502.GS43905@e119886-lin.cambridge.arm.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-nFShZT18fypEihGGVGq3"
+User-Agent: Evolution 3.34.1 
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---==_Exmh_1574279560_2911P
-Content-Type: text/plain; charset=us-ascii
 
-I haven't narrowed down when this started, other than "sometime between
-10/23 and 11/13".  Looks to me like something in the i915/DRM arena doesn't
-play nice with mutex debugging.
+--=-nFShZT18fypEihGGVGq3
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The system still acts fine, but my /var partition filled up due to gigabytes
-of the following two warning calls repeating over and over.  I'm not sure what
-triggers it, except that I know that it doesn't start when the Gnome login screen
-is displaying, but something after I login starts it complaining.
+Hi Andrew, thanks for the review.
 
-Nov 17 22:13:16 turing-police kernel: [  163.835592] ------------[ cut here ]------------
-Nov 17 22:13:16 turing-police kernel: [  163.835712] WARNING: CPU: 0 PID: 0 at kernel/locking/mutex.c:1419 mutex_trylock+0x13a/0x150
-Nov 17 22:13:16 turing-police kernel: [  163.835717] Modules linked in: fuse nf_log_ipv6 ts_bm nf_log_ipv4 nf_log_common xt_string xt_LOG bpfilter sunrpc algif_hash algif_skcipher af_alg bnep vfat fat ath3k btusb btrtl btbcm btintel bluetooth ecdh_generic ecc uas intel_rapl_msr rtsx_pci_sdmmc ath9k ath9k_common ath9k_hw intel_rapl_common intel_soc_dts_thermal intel_soc_dts_iosf intel_powerclamp crct10dif_pclmul crc32_pclmul crc32c_intel ghash_clmulni_intel cryptd serio_raw snd_hda_codec_realtek snd_hda_codec_hdmi ath rtsx_pci bfq fan toshiba_acpi toshiba_bluetooth mei_txe industrialio pwm_lpss_platform i2c_hid rfkill_gpio pwm_lpss sch_fq_codel
-Nov 17 22:13:16 turing-police kernel: [  163.835795] CPU: 0 PID: 0 Comm: swapper/0 Tainted: G                T 5.4.0-rc7-next-20191113-dirty #701
-Nov 17 22:13:16 turing-police kernel: [  163.835799] Hardware name: TOSHIBA Satellite C55-B/ZBWAA, BIOS 5.00 07/23/2015
-Nov 17 22:13:16 turing-police kernel: [  163.835806] RIP: 0010:mutex_trylock+0x13a/0x150
-Nov 17 22:13:16 turing-police kernel: [  163.835813] Code: 7b 70 45 31 c9 41 b8 01 00 00 00 31 c9 ba 01 00 00 00 31 f6 e8 87 5e 21 ff 58 48 8d 65 e8 b8 01 00 00 00 5b 41 5c 41 5d 5d c3 <0f> 0b e9 f7 fe ff ff 66 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00
-Nov 17 22:13:16 turing-police kernel: [  163.835817] RSP: 0018:ffff989080003d70 EFLAGS: 00010006
-Nov 17 22:13:16 turing-police kernel: [  163.835823] RAX: 0000000080010002 RBX: ffff974932946e08 RCX: 00000000ffffffff
-Nov 17 22:13:16 turing-police kernel: [  163.835828] RDX: ffffffffb4a2b900 RSI: ffff974934107c88 RDI: ffff974932946e08
-Nov 17 22:13:16 turing-police kernel: [  163.835832] RBP: ffff989080003d90 R08: 0000000000000000 R09: 0000000000000000
-Nov 17 22:13:16 turing-police kernel: [  163.835837] R10: 0000000000000000 R11: 0000000000000000 R12: ffff974932946e00
-Nov 17 22:13:16 turing-police kernel: [  163.835841] R13: ffff989080003e18 R14: ffff989080003e08 R15: ffff97493333ae08
-Nov 17 22:13:16 turing-police kernel: [  163.835846] FS:  0000000000000000(0000) GS:ffff974937800000(0000) knlGS:0000000000000000
-Nov 17 22:13:16 turing-police kernel: [  163.835850] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-Nov 17 22:13:16 turing-police kernel: [  163.835855] CR2: 0000560c069bc708 CR3: 0000000088a24000 CR4: 00000000001006f0
-Nov 17 22:13:16 turing-police kernel: [  163.835859] Call Trace:
-Nov 17 22:13:16 turing-police kernel: [  163.835864]  <IRQ>
-Nov 17 22:13:16 turing-police kernel: [  163.835878]  active_retire+0x36/0x70
-Nov 17 22:13:16 turing-police kernel: [  163.835886]  node_retire+0x19/0x20
-Nov 17 22:13:16 turing-police kernel: [  163.835898]  intel_engine_breadcrumbs_irq+0x296/0x410
-Nov 17 22:13:16 turing-police kernel: [  163.835924]  gen6_gt_irq_handler+0x5e/0x130
-Nov 17 22:13:16 turing-police kernel: [  163.835935]  valleyview_irq_handler+0x2a1/0x2e0
-Nov 17 22:13:16 turing-police kernel: [  163.835956]  __handle_irq_event_percpu+0x40/0x2c0
-Nov 17 22:13:16 turing-police kernel: [  163.835962]  ? handle_irq_event+0x2c/0x53
-Nov 17 22:13:16 turing-police kernel: [  163.835977]  handle_irq_event_percpu+0x32/0x90
-Nov 17 22:13:16 turing-police kernel: [  163.835990]  handle_irq_event+0x34/0x53
-Nov 17 22:13:16 turing-police kernel: [  163.836002]  handle_edge_irq+0x95/0x1d0
-Nov 17 22:13:16 turing-police kernel: [  163.836012]  do_IRQ+0x83/0x190
-Nov 17 22:13:16 turing-police kernel: [  163.836023]  common_interrupt+0xf/0xf
-Nov 17 22:13:16 turing-police kernel: [  163.836029]  </IRQ>
-Nov 17 22:13:16 turing-police kernel: [  163.836036] RIP: 0010:cpuidle_enter_state+0xc3/0x610
-Nov 17 22:13:16 turing-police kernel: [  163.836041] Code: 00 00 31 ff e8 3e 0b 65 ff 80 7d c0 00 74 12 9c 58 f6 c4 02 0f 85 6e 03 00 00 31 ff e8 66 ff 6c ff e8 11 93 73 ff fb 45 85 ed <0f> 88 b4 02 00 00 4d 63 f5 49 83 fe 09 0f 87 83 04 00 00 49 6b c6
-Nov 17 22:13:16 turing-police kernel: [  163.836046] RSP: 0018:ffffffffb4a03d80 EFLAGS: 00000206 ORIG_RAX: ffffffffffffffdc
-Nov 17 22:13:16 turing-police kernel: [  163.836052] RAX: ffffffffb4a2b900 RBX: ffffb8907fa10030 RCX: 0000000000000000
-Nov 17 22:13:16 turing-police kernel: [  163.836056] RDX: 0000000000000019 RSI: 0000000000000006 RDI: ffffffffb4a2b900
-Nov 17 22:13:16 turing-police kernel: [  163.836060] RBP: ffffffffb4a03dd0 R08: 000000262554d345 R09: 0000000000000000
-Nov 17 22:13:16 turing-police kernel: [  163.836065] R10: 0000000000000000 R11: 0000000000000000 R12: ffffffffb4b76560
-Nov 17 22:13:16 turing-police kernel: [  163.836069] R13: 0000000000000003 R14: 0000000000000003 R15: 0000000000000003
-Nov 17 22:13:16 turing-police kernel: [  163.836111]  cpuidle_enter+0x29/0x40
-Nov 17 22:13:16 turing-police kernel: [  163.836122]  call_cpuidle+0x36/0x60
-Nov 17 22:13:16 turing-police kernel: [  163.836132]  do_idle+0x1c0/0x210
-Nov 17 22:13:16 turing-police kernel: [  163.836149]  cpu_startup_entry+0x1b/0x1d
-Nov 17 22:13:16 turing-police kernel: [  163.836158]  rest_init+0x1bf/0x2eb
-Nov 17 22:13:16 turing-police kernel: [  163.836170]  arch_call_rest_init+0x11/0x63
-Nov 17 22:13:16 turing-police kernel: [  163.836179]  start_kernel+0x7bf/0x7ef
-Nov 17 22:13:16 turing-police kernel: [  163.836194]  x86_64_start_reservations+0x4f/0x70
-Nov 17 22:13:16 turing-police kernel: [  163.836204]  x86_64_start_kernel+0x7b/0x9e
-Nov 17 22:13:16 turing-police kernel: [  163.836214]  secondary_startup_64+0xa4/0xb0
-Nov 17 22:13:16 turing-police kernel: [  163.836242] irq event stamp: 451082
-Nov 17 22:13:16 turing-police kernel: [  163.836249] hardirqs last  enabled at (451079): [<ffffffffb3b09bff>] cpuidle_enter_state+0xbf/0x610
-Nov 17 22:13:16 turing-police kernel: [  163.836254] hardirqs last disabled at (451080): [<ffffffffb3002e6a>] trace_hardirqs_off_thunk+0x1a/0x1c
-Nov 17 22:13:16 turing-police kernel: [  163.836261] softirqs last  enabled at (451082): [<ffffffffb3116f1c>] _local_bh_enable+0x1c/0x30
-Nov 17 22:13:16 turing-police kernel: [  163.836267] softirqs last disabled at (451081): [<ffffffffb31174f0>] irq_enter+0x50/0x70
-Nov 17 22:13:16 turing-police kernel: [  163.836272] ---[ end trace 2e91f38e14c84d13 ]---
-Nov 17 22:13:16 turing-police kernel: [  163.836341] ------------[ cut here ]------------
-Nov 17 22:13:16 turing-police kernel: [  163.836455] WARNING: CPU: 0 PID: 0 at kernel/locking/mutex.c:737 mutex_unlock+0x27/0x40
-Nov 17 22:13:16 turing-police kernel: [  163.836459] Modules linked in: fuse nf_log_ipv6 ts_bm nf_log_ipv4 nf_log_common xt_string xt_LOG bpfilter sunrpc algif_hash algif_skcipher af_alg bnep vfat fat ath3k btusb btrtl btbcm btintel bluetooth ecdh_generic ecc uas intel_rapl_msr rtsx_pci_sdmmc ath9k ath9k_common ath9k_hw intel_rapl_common intel_soc_dts_thermal intel_soc_dts_iosf intel_powerclamp crct10dif_pclmul crc32_pclmul crc32c_intel ghash_clmulni_intel cryptd serio_raw snd_hda_codec_realtek snd_hda_codec_hdmi ath rtsx_pci bfq fan toshiba_acpi toshiba_bluetooth mei_txe industrialio pwm_lpss_platform i2c_hid rfkill_gpio pwm_lpss sch_fq_codel
-Nov 17 22:13:16 turing-police kernel: [  163.836518] CPU: 0 PID: 0 Comm: swapper/0 Tainted: G        W       T 5.4.0-rc7-next-20191113-dirty #701
-Nov 17 22:13:16 turing-police kernel: [  163.836522] Hardware name: TOSHIBA Satellite C55-B/ZBWAA, BIOS 5.00 07/23/2015
-Nov 17 22:13:16 turing-police kernel: [  163.836528] RIP: 0010:mutex_unlock+0x27/0x40
-Nov 17 22:13:16 turing-police kernel: [  163.836533] Code: 00 00 00 55 48 89 e5 41 54 49 89 fc 65 8b 05 d8 a6 09 4c a9 00 ff 1f 00 75 10 48 8b 75 08 4c 89 e7 e8 fd fc ff ff 41 5c 5d c3 <0f> 0b 48 8b 75 08 4c 89 e7 e8 eb fc ff ff 41 5c 5d c3 0f 1f 80 00
-Nov 17 22:13:16 turing-police kernel: [  163.836538] RSP: 0018:ffff989080003d50 EFLAGS: 00010006
-Nov 17 22:13:16 turing-police kernel: [  163.836543] RAX: 0000000080010002 RBX: ffff974934107c88 RCX: 00000000ffffffff
-Nov 17 22:13:16 turing-police kernel: [  163.836548] RDX: ffffffffb4a2b900 RSI: ffff974932946e78 RDI: ffff974932946e08
-Nov 17 22:13:16 turing-police kernel: [  163.836552] RBP: ffff989080003d58 R08: 0000002625672d76 R09: 0000000000000000
-Nov 17 22:13:16 turing-police kernel: [  163.836557] R10: 0000000000000001 R11: 0000000000000000 R12: ffff974932946e08
-Nov 17 22:13:16 turing-police kernel: [  163.836561] R13: ffff974932946e00 R14: ffff989080003e08 R15: ffff97493333ae08
-Nov 17 22:13:16 turing-police kernel: [  163.836566] FS:  0000000000000000(0000) GS:ffff974937800000(0000) knlGS:0000000000000000
-Nov 17 22:13:16 turing-police kernel: [  163.836571] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-Nov 17 22:13:16 turing-police kernel: [  163.836575] CR2: 0000560c069bc708 CR3: 0000000088a24000 CR4: 00000000001006f0
-Nov 17 22:13:16 turing-police kernel: [  163.836579] Call Trace:
-Nov 17 22:13:16 turing-police kernel: [  163.836583]  <IRQ>
-Nov 17 22:13:16 turing-police kernel: [  163.836593]  __active_retire+0x67/0x140
-Nov 17 22:13:16 turing-police kernel: [  163.836605]  active_retire+0x5f/0x70
-Nov 17 22:13:16 turing-police kernel: [  163.836614]  node_retire+0x19/0x20
-Nov 17 22:13:16 turing-police kernel: [  163.836622]  intel_engine_breadcrumbs_irq+0x296/0x410
-Nov 17 22:13:16 turing-police kernel: [  163.836649]  gen6_gt_irq_handler+0x5e/0x130
-Nov 17 22:13:16 turing-police kernel: [  163.836659]  valleyview_irq_handler+0x2a1/0x2e0
-Nov 17 22:13:16 turing-police kernel: [  163.836679]  __handle_irq_event_percpu+0x40/0x2c0
-Nov 17 22:13:16 turing-police kernel: [  163.836685]  ? handle_irq_event+0x2c/0x53
-Nov 17 22:13:16 turing-police kernel: [  163.836699]  handle_irq_event_percpu+0x32/0x90
-Nov 17 22:13:16 turing-police kernel: [  163.836712]  handle_irq_event+0x34/0x53
-Nov 17 22:13:16 turing-police kernel: [  163.836723]  handle_edge_irq+0x95/0x1d0
-Nov 17 22:13:16 turing-police kernel: [  163.836733]  do_IRQ+0x83/0x190
-Nov 17 22:13:16 turing-police kernel: [  163.836743]  common_interrupt+0xf/0xf
-Nov 17 22:13:16 turing-police kernel: [  163.836749]  </IRQ>
-Nov 17 22:13:16 turing-police kernel: [  163.836756] RIP: 0010:cpuidle_enter_state+0xc3/0x610
-Nov 17 22:13:16 turing-police kernel: [  163.836761] Code: 00 00 31 ff e8 3e 0b 65 ff 80 7d c0 00 74 12 9c 58 f6 c4 02 0f 85 6e 03 00 00 31 ff e8 66 ff 6c ff e8 11 93 73 ff fb 45 85 ed <0f> 88 b4 02 00 00 4d 63 f5 49 83 fe 09 0f 87 83 04 00 00 49 6b c6
-Nov 17 22:13:16 turing-police kernel: [  163.836766] RSP: 0018:ffffffffb4a03d80 EFLAGS: 00000206 ORIG_RAX: ffffffffffffffdc
-Nov 17 22:13:16 turing-police kernel: [  163.836772] RAX: ffffffffb4a2b900 RBX: ffffb8907fa10030 RCX: 0000000000000000
-Nov 17 22:13:16 turing-police kernel: [  163.836776] RDX: 0000000000000019 RSI: 0000000000000006 RDI: ffffffffb4a2b900
-Nov 17 22:13:16 turing-police kernel: [  163.836780] RBP: ffffffffb4a03dd0 R08: 000000262554d345 R09: 0000000000000000
-Nov 17 22:13:16 turing-police kernel: [  163.836785] R10: 0000000000000000 R11: 0000000000000000 R12: ffffffffb4b76560
-Nov 17 22:13:16 turing-police kernel: [  163.836789] R13: 0000000000000003 R14: 0000000000000003 R15: 0000000000000003
-Nov 17 22:13:16 turing-police kernel: [  163.836829]  cpuidle_enter+0x29/0x40
-Nov 17 22:13:16 turing-police kernel: [  163.836840]  call_cpuidle+0x36/0x60
-Nov 17 22:13:16 turing-police kernel: [  163.836850]  do_idle+0x1c0/0x210
-Nov 17 22:13:16 turing-police kernel: [  163.836867]  cpu_startup_entry+0x1b/0x1d
-Nov 17 22:13:16 turing-police kernel: [  163.836875]  rest_init+0x1bf/0x2eb
-Nov 17 22:13:16 turing-police kernel: [  163.836886]  arch_call_rest_init+0x11/0x63
-Nov 17 22:13:16 turing-police kernel: [  163.836895]  start_kernel+0x7bf/0x7ef
-Nov 17 22:13:16 turing-police kernel: [  163.836910]  x86_64_start_reservations+0x4f/0x70
-Nov 17 22:13:16 turing-police kernel: [  163.836920]  x86_64_start_kernel+0x7b/0x9e
-Nov 17 22:13:16 turing-police kernel: [  163.836929]  secondary_startup_64+0xa4/0xb0
-Nov 17 22:13:16 turing-police kernel: [  163.836956] irq event stamp: 451082
-Nov 17 22:13:16 turing-police kernel: [  163.836963] hardirqs last  enabled at (451079): [<ffffffffb3b09bff>] cpuidle_enter_state+0xbf/0x610
-Nov 17 22:13:16 turing-police kernel: [  163.836969] hardirqs last disabled at (451080): [<ffffffffb3002e6a>] trace_hardirqs_off_thunk+0x1a/0x1c
-Nov 17 22:13:16 turing-police kernel: [  163.836974] softirqs last  enabled at (451082): [<ffffffffb3116f1c>] _local_bh_enable+0x1c/0x30
-Nov 17 22:13:16 turing-police kernel: [  163.836980] softirqs last disabled at (451081): [<ffffffffb31174f0>] irq_enter+0x50/0x70
-Nov 17 22:13:16 turing-police kernel: [  163.836984] ---[ end trace 2e91f38e14c84d14 ]---
+On Tue, 2019-11-19 at 16:25 +0000, Andrew Murray wrote:
+> On Tue, Nov 12, 2019 at 04:59:23PM +0100, Nicolas Saenz Julienne wrote:
+> > From: Jim Quinlan <james.quinlan@broadcom.com>
+> >=20
+> > This commit adds the basic Broadcom STB PCIe controller.  Missing is th=
+e
+> > ability to process MSI. This functionality is added in a subsequent
+> > commit.
+> >=20
+> > The PCIe block contains an MDIO interface.  This is a local interface
+> > only accessible by the PCIe controller.  It cannot be used or shared
+> > by any other HW.  As such, the small amount of code for this
+> > controller is included in this driver as there is little upside to put
+> > it elsewhere.
+>=20
+> This commit message hasn't changed, despite earlier feedback.
+
+Sorry, I'll review your previous comment.
+
+[...]
+
+> > +#define bcm_readl(a)		readl(a)
+> > +#define bcm_writel(d, a)	writel(d, a)
+> > +#define bcm_readw(a)		readw(a)
+> > +#define bcm_writew(d, a)	writew(d, a)
+> > +
+> > +/* These macros extract/insert fields to host controller's register se=
+t. */
+> > +#define RD_FLD(base, reg, field) \
+> > +	brcm_pcie_rd_fld((base) + reg, reg##_##field##_MASK, \
+> > +			 reg##_##field##_SHIFT)
+> > +#define WR_FLD(base, reg, field, val) \
+> > +	brcm_pcie_wr_fld((base) + reg, reg##_##field##_MASK, \
+> > +		    reg##_##field##_SHIFT, val)
+> > +#define WR_FLD_RB(base, reg, field, val) \
+> > +	brcm_pcie_wr_fld_rb((base) + reg, reg##_##field##_MASK, \
+> > +		reg##_##field##_SHIFT, val)
+> > +#define WR_FLD_WITH_OFFSET(base, off, reg, field, val) \
+> > +	brcm_pcie_wr_fld((base) + reg + (off), reg##_##field##_MASK, \
+> > +	       reg##_##field##_SHIFT, val)
+> > +#define EXTRACT_FIELD(val, reg, field) \
+> > +	(((val) & reg##_##field##_MASK) >> reg##_##field##_SHIFT)
+> > +#define INSERT_FIELD(val, reg, field, field_val) \
+> > +	(((val) & ~reg##_##field##_MASK) | \
+> > +	 (reg##_##field##_MASK & (field_val << reg##_##field##_SHIFT)))
+>=20
+> Can you use any of the existing macros in linux/bitfield.h
+> (e.g. ...replace_bits...) ?
+
+Yes, It looks like it fits perfectly, I think I can get rid of all the *_SH=
+IFT
+registers and simplify some of the functions below.
+
+> > +
+> > +static u32 brcm_pcie_rd_fld(void __iomem *p, u32 mask, int shift)
+> > +{
+> > +	return (bcm_readl(p) & mask) >> shift;
+> > +}
+> > +
+> > +static void brcm_pcie_wr_fld(void __iomem *p, u32 mask, int shift, u32=
+ val)
+> > +{
+> > +	u32 reg =3D bcm_readl(p);
+> > +
+> > +	reg =3D (reg & ~mask) | ((val << shift) & mask);
+> > +	bcm_writel(reg, p);
+> > +}
+> > +
+> > +static void brcm_pcie_wr_fld_rb(void __iomem *p, u32 mask, int shift, =
+u32
+> > val)
+> > +{
+> > +	brcm_pcie_wr_fld(p, mask, shift, val);
+> > +	(void)bcm_readl(p);
+> > +}
+> > +
+
+[...]
+
+> > +static void brcm_pcie_set_outbound_win(struct brcm_pcie *pcie,
+> > +				       unsigned int win, phys_addr_t cpu_addr,
+> > +				       dma_addr_t  pcie_addr, dma_addr_t size)
+> > +{
+> > +	phys_addr_t cpu_addr_mb, limit_addr_mb;
+> > +	void __iomem *base =3D pcie->base;
+> > +	u32 tmp;
+> > +
+> > +	/* Set the base of the pcie_addr window */
+> > +	bcm_writel(lower_32_bits(pcie_addr) + MMIO_ENDIAN,
+> > +		   base + PCIE_MISC_CPU_2_PCIE_MEM_WIN0_LO + (win * 8));
+> > +	bcm_writel(upper_32_bits(pcie_addr),
+> > +		   base + PCIE_MISC_CPU_2_PCIE_MEM_WIN0_HI + (win * 8));
+> > +
+> > +	cpu_addr_mb =3D cpu_addr >> 20;
+> > +	limit_addr_mb =3D (cpu_addr + size - 1) >> 20;
+> > +
+> > +	/* Write the addr base low register */
+> > +	WR_FLD_WITH_OFFSET(base, (win * 4),
+> > +			   PCIE_MISC_CPU_2_PCIE_MEM_WIN0_BASE_LIMIT,
+> > +			   BASE, cpu_addr_mb);
+> > +	/* Write the addr limit low register */
+> > +	WR_FLD_WITH_OFFSET(base, (win * 4),
+> > +			   PCIE_MISC_CPU_2_PCIE_MEM_WIN0_BASE_LIMIT,
+> > +			   LIMIT, limit_addr_mb);
+> > +
+> > +	/* Write the cpu addr high register */
+> > +	tmp =3D (u32)(cpu_addr_mb >>
+> > +		PCIE_MISC_CPU_2_PCIE_MEM_WIN0_BASE_LIMIT_NUM_MASK_BITS);
+>=20
+> Despite the name _MASK_BITS, this isn't being used as a mask. Is this mak=
+ing
+> some assumption about the value of cpu_addr from the DT?
+
+It should be read _NUM_MASK_BITS. It contains the number of set bits on tha=
+t
+specific mask. I agree it's not ideal. I think I'll be able to do away with=
+ it
+using the bitfield.h macros.
+
+FYI, What's happening here is that we have to save the CPU address range (w=
+hich
+is already shifted right 20 positions) in two parts, the lower 12 bits go i=
+nto
+PCIE_MISC_CPU_2_PCIE_MEM_WIN0_BASE_LIMIT while the higher 8 bits go into
+PCIE_MISC_CPU_2_PCIE_MEM_WIN0_BASE_HI or
+PCIE_MISC_CPU_2_PCIE_MEM_WIN0_LIMIT_HI.
+
+[...]
+
+> > +static inline int brcm_pcie_get_rc_bar2_size_and_offset(struct brcm_pc=
+ie
+> > *pcie,
+> > +							u64 *rc_bar2_size,
+> > +							u64 *rc_bar2_offset)
+> > +{
+> > +	struct pci_host_bridge *bridge =3D pci_host_bridge_from_priv(pcie);
+> > +	struct device *dev =3D pcie->dev;
+> > +	struct resource_entry *entry;
+> > +	u64 total_mem_size =3D 0;
+> > +
+> > +	*rc_bar2_offset =3D -1;
+> > +
+> > +	resource_list_for_each_entry(entry, &bridge->dma_ranges) {
+> > +		/*
+> > +		 * We're promised the RC will provide a contiguous view of
+> > +		 * memory to downstream devices. We can then infer the
+> > +		 * rc_bar2_offset from the lower available dma-range offset.
+> > +		 */
+> > +		if (entry->offset < *rc_bar2_offset)
+> > +			*rc_bar2_offset =3D entry->offset;
+> > +
+> > +		total_mem_size +=3D entry->res->end - entry->res->start + 1;
+>=20
+> This requires that if there are multiple dma-ranges, then there are no ga=
+ps
+> between them right?
+
+Yes, the PCI view of inbound memory will always be gapless. See an example
+here: https://patchwork.kernel.org/patch/10605957/
+
+That said, iterating over the dma-ranges is not strictly necessary for now =
+as
+RPi4 is assured to only need one. If that's bothering you I can always remo=
+ve
+it for now.
+
+[...]
+
+> > +static int brcm_pcie_setup(struct brcm_pcie *pcie)
+> > +{
+> > +	struct pci_host_bridge *bridge =3D pci_host_bridge_from_priv(pcie);
+> > +	u64 rc_bar2_offset, rc_bar2_size;
+> > +	void __iomem *base =3D pcie->base;
+> > +	struct device *dev =3D pcie->dev;
+> > +	struct resource_entry *entry;
+> > +	unsigned int scb_size_val;
+> > +	bool ssc_good =3D false;
+> > +	struct resource *res;
+> > +	int num_out_wins =3D 0;
+> > +	u16 nlw, cls, lnksta;
+> > +	int i, ret;
+> > +	u32 tmp;
+> > +
+> > +	/* Reset the bridge */
+> > +	brcm_pcie_bridge_sw_init_set(pcie, 1);
+> > +
+> > +	usleep_range(100, 200);
+> > +
+> > +	/* Take the bridge out of reset */
+> > +	brcm_pcie_bridge_sw_init_set(pcie, 0);
+> > +
+> > +	WR_FLD_RB(base, PCIE_MISC_HARD_PCIE_HARD_DEBUG, SERDES_IDDQ, 0);
+> > +	/* Wait for SerDes to be stable */
+> > +	usleep_range(100, 200);
+> > +
+> > +	/* Set SCB_MAX_BURST_SIZE, CFG_READ_UR_MODE, SCB_ACCESS_EN */
+> > +	tmp =3D INSERT_FIELD(0, PCIE_MISC_MISC_CTRL, SCB_ACCESS_EN, 1);
+> > +	tmp =3D INSERT_FIELD(tmp, PCIE_MISC_MISC_CTRL, CFG_READ_UR_MODE, 1);
+> > +	tmp =3D INSERT_FIELD(tmp, PCIE_MISC_MISC_CTRL, MAX_BURST_SIZE,
+> > +			   BURST_SIZE_128);
+> > +	bcm_writel(tmp, base + PCIE_MISC_MISC_CTRL);
+> > +
+> > +	ret =3D brcm_pcie_get_rc_bar2_size_and_offset(pcie, &rc_bar2_size,
+> > +						    &rc_bar2_offset);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	tmp =3D lower_32_bits(rc_bar2_offset);
+> > +	tmp =3D INSERT_FIELD(tmp, PCIE_MISC_RC_BAR2_CONFIG_LO, SIZE,
+> > +			   brcm_pcie_encode_ibar_size(rc_bar2_size));
+> > +	bcm_writel(tmp, base + PCIE_MISC_RC_BAR2_CONFIG_LO);
+> > +	bcm_writel(upper_32_bits(rc_bar2_offset),
+> > +		   base + PCIE_MISC_RC_BAR2_CONFIG_HI);
+> > +
+> > +	scb_size_val =3D rc_bar2_size ?
+> > +		       ilog2(rc_bar2_size) - 15 : 0xf; /* 0xf is 1GB */
+> > +	WR_FLD(base, PCIE_MISC_MISC_CTRL, SCB0_SIZE, scb_size_val);
+> > +
+> > +	/* disable the PCIe->GISB memory window (RC_BAR1) */
+> > +	WR_FLD(base, PCIE_MISC_RC_BAR1_CONFIG_LO, SIZE, 0);
+> > +
+> > +	/* disable the PCIe->SCB memory window (RC_BAR3) */
+> > +	WR_FLD(base, PCIE_MISC_RC_BAR3_CONFIG_LO, SIZE, 0);
+> > +
+> > +	/* clear any interrupts we find on boot */
+> > +	bcm_writel(0xffffffff, base + PCIE_INTR2_CPU_BASE + CLR);
+> > +	(void)bcm_readl(base + PCIE_INTR2_CPU_BASE + CLR);
+> > +
+> > +	/* Mask all interrupts since we are not handling any yet */
+> > +	bcm_writel(0xffffffff, base + PCIE_INTR2_CPU_BASE + MASK_SET);
+> > +	(void)bcm_readl(base + PCIE_INTR2_CPU_BASE + MASK_SET);
+>
+> Should you change the order and mask before clearing the interrupts?
+
+Yes, agree.
+
+> > +
+> > +	if (pcie->gen)
+> > +		brcm_pcie_set_gen(base, pcie->gen);
+> > +
+> > +	/* Unassert the fundamental reset */
+> > +	brcm_pcie_perst_set(pcie, 0);
+> > +
+> > +	/*
+> > +	 * Give the RC/EP time to wake up, before trying to configure RC.
+> > +	 * Intermittently check status for link-up, up to a total of 100ms.
+> > +	 */
+> > +	for (i =3D 0; i < 100 && !brcm_pcie_link_up(pcie); i +=3D 5)
+> > +		msleep(5);
+> > +
+> > +	if (!brcm_pcie_link_up(pcie)) {
+> > +		dev_info(dev, "link down\n");
+> > +		return -ENODEV;
+> > +	}
+> > +
+> > +	if (!brcm_pcie_rc_mode(pcie)) {
+> > +		dev_err(dev, "PCIe misconfigured; is in EP mode\n");
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	resource_list_for_each_entry(entry, &bridge->windows) {
+> > +		res =3D entry->res;
+> > +
+> > +		if (resource_type(res) !=3D IORESOURCE_MEM)
+> > +			continue;
+> > +
+> > +		if (num_out_wins >=3D BRCM_NUM_PCIE_OUT_WINS) {
+> > +			dev_err(pcie->dev, "too many outbound wins\n");
+> > +			return -EINVAL;
+> > +		}
+> > +
+> > +		brcm_pcie_set_outbound_win(pcie, num_out_wins, res->start,
+> > +					   res->start - entry->offset,
+> > +					   res->end - res->start + 1);
+> > +		num_out_wins++;
+> > +	}
+> > +
+> > +	/*
+> > +	 * For config space accesses on the RC, show the right class for
+> > +	 * a PCIe-PCIe bridge (the default setting is to be EP mode).
+> > +	 */
+> > +	WR_FLD_RB(base, PCIE_RC_CFG_PRIV1_ID_VAL3, CLASS_CODE, 0x060400);
+>=20
+> Why does this need to be _RB ? I haven't looked at all of the uses of _RB
+> though I think there are others that may not be necessary.
+
+We're reviewing the _RB usage with Jim, I'll come back to you on that topic
+later.
+
+[...]
+
+> > +	__brcm_pcie_remove(pcie);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static const struct of_device_id brcm_pcie_match[] =3D {
+> > +	{ .compatible =3D "brcm,bcm2711-pcie", .data =3D &bcm2711_cfg },
+>=20
+> I'd rather see use of the pcie_cfg_data structure removed from this serie=
+s.
+>=20
+> I've seen the comments in the previous thread [1], and I understand that
+> the intention is that this driver will eventually be used for other SOCs.
+>=20
+> However this indirection isn't needed *now* and it makes reviewing this
+> patch more difficult. If and when a later series is made to cover other
+> SOCs - then I'd expect that series to find a way to apply this indirectio=
+n.
+>=20
+> And if that later series is more difficult to review because of the newly
+> added indirection, then I'd expect an early patch of that series to apply
+> the indirection in a single patch - which would be easy to review.
+>=20
+> The other risk of such premature changes like this is that when you come
+> to adding other SOCs, you may then discover that there were shortcomings
+> in the way you've approached it here.
+>=20
+
+I was about to make a point similar to Florian's. I'll wait for your reply =
+and
+change this accordingly.
+
+> > +	{},
+> > +};
+> > +MODULE_DEVICE_TABLE(of, brcm_pcie_match);
+> > +
+> > +static int brcm_pcie_probe(struct platform_device *pdev)
+> > +{
+> > +	struct device_node *np =3D pdev->dev.of_node;
+> > +	const struct pcie_cfg_data *data;
+> > +	struct pci_host_bridge *bridge;
+> > +	struct brcm_pcie *pcie;
+> > +	struct pci_bus *child;
+> > +	struct resource *res;
+> > +	int ret;
+> > +
+> > +	bridge =3D devm_pci_alloc_host_bridge(&pdev->dev, sizeof(*pcie));
+> > +	if (!bridge)
+> > +		return -ENOMEM;
+> > +
+> > +	pcie =3D pci_host_bridge_priv(bridge);
+>=20
+> Nit: I'd suggest moving the above line so it sits just above the
+> "pcie->reg_offsets =3D data->offsets;" line. It looks nicer.
+
+Ok
+
+> > +
+> > +	data =3D of_device_get_match_data(&pdev->dev);
+> > +	if (!data) {
+> > +		dev_err(&pdev->dev, "failed to look up compatible string\n");
+>=20
+> Nit: If there is a failure here, it's probably because there is no data
+> defined in the brcm_pcie_match structure - seeing as we wouldn't get here
+> if we didn't have a compatible string. I'd suggest rewording the err slig=
+htly
+> or even removing it.
+
+Ok
+
+[...]
+
+> > +	},
+> > +};
+> > +
+> > +module_platform_driver(brcm_pcie_driver);
+> > +
+> > +MODULE_LICENSE("GPL v2");
+>=20
+> This is different to the SPDX at the start of the file (please see
+> earlier review comments).
+
+Ouch, yes, that fix got lost, It seems I even mentioned it on the changelog=
+...
+
+Thanks,
+Nicolas
 
 
---==_Exmh_1574279560_2911P
-Content-Type: application/pgp-signature
+--=-nFShZT18fypEihGGVGq3
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
 -----BEGIN PGP SIGNATURE-----
-Comment: Exmh version 2.9.0 11/07/2018
 
-iQIVAwUBXdWZiAdmEQWDXROgAQI8og/8DpiSVsYLap0idVZopDEkDMnHqkEBdJAA
-FR+qgCTAGAr3toAZZKAO3PKUfb73aALKOusUtv6XXJ6Z4MUgJnbDr/ZKzoA/9/Gq
-MDVei2xiipbUOQDVhhFUVZStJbLXBA+9J4G1nARKuGzTB5o9jCYcJKxCB9OxhF5Q
-QGy4kDJie0F+irFYaFTT4Tbs7L2mUxEtP2Ls6j7sDaC15LI5cbPCMpwd5XdAKAiW
-6ekOoiDb+1p2FWkTpxMDHymu4F0o/xwRzyGJT9nXM4VT+BBtdozLs/iQJvRJs8d4
-Bm/inzDqdCm2njDItytdRWXAvjCPWw9wDocgHPqUyT7hyn8XnP5cwpaBvhhQkWzq
-4VS42+Jnl1dc+udb6TCdSkAkOheqZW3EyqH3wo6iXpD4PB1sFYOpD9T+6ORh1jle
-lSyiAb8arwvOm73ziP+ZdDViFGpC7DFodk2vu4Cow5Ow1ICU1OY/qHTA+9fAYXHt
-NegB9WPiYAnFM73Pws7+fHVYl8CSxStyZz0nI40stWhNkoKaRC7eWpzBpmVQFIwB
-ky9fAxl66tXt7Y4A49p17y5cT2+EWB7olAkZQ94X4qLyvDFVlyrEF8sFbssNmdBZ
-vjbnASo+Bh1niyKSrV+vzlaamv3JcRVpP7Zl/KBPONG8hZfKM2xjJnA482noogUO
-MFEhgb/tNKA=
-=t+5I
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3VmboACgkQlfZmHno8
+x/6aqgf9FjYKTC3jt7N/fKB3n5BrIqdu6aIvT+qFMcAMzudSm3S22yqrapfv5PJR
+zxPVkN3O6rygUBxE1X2wmWFCroyKDKrRB5PbJnUqhJKfdC5nH+L9bu2zyNWQioZo
+T8ajRBq0cXtVpat96W3EfSEr4MId5XcAYWcFXKtATe7aSfFcLxiyX4E5wNUqv+Gz
+gjkMUQPIbXVoCobiaX316MoP+O+zTeJH7xoV6nc05mpTgVggToDy1LSg71EGZ3x/
+ti3d19uu+W33wWnxz30T3ru98+Qd5OW4+hF80/qzaNikXim+2yDkZ9DDSUdBN2l/
+rUp6JgWsYkzaRUx/4KknU0ih5YEaNQ==
+=y0YF
 -----END PGP SIGNATURE-----
 
---==_Exmh_1574279560_2911P--
+--=-nFShZT18fypEihGGVGq3--
+
