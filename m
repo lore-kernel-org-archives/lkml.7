@@ -2,32 +2,32 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC4C4C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:43:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D5EDC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:43:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA62920714
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:43:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C0D120714
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:43:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732062AbfKTPnS (ORCPT
+        id S1732258AbfKTPnX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 10:43:18 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:52784 "EHLO
+        Wed, 20 Nov 2019 10:43:23 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:52836 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730021AbfKTPkT (ORCPT
+        by vger.kernel.org with ESMTP id S1730064AbfKTPkT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 Nov 2019 10:40:19 -0500
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iXS5U-0004aq-P0; Wed, 20 Nov 2019 15:40:12 +0000
+        id 1iXS5V-0004b5-BU; Wed, 20 Nov 2019 15:40:13 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iXS5U-0004Ja-EE; Wed, 20 Nov 2019 15:40:12 +0000
+        id 1iXS5V-0004M9-3V; Wed, 20 Nov 2019 15:40:13 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,17 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Bandan Das" <bsd@redhat.com>
-Date:   Wed, 20 Nov 2019 15:38:01 +0000
-Message-ID: <lsq.1574264230.42299582@decadent.org.uk>
+        "Eric Dumazet" <edumazet@google.com>,
+        "Soheil Hassas Yeganeh" <soheil@google.com>,
+        "Neal Cardwell" <ncardwell@google.com>,
+        "Yuchung Cheng" <ycheng@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Date:   Wed, 20 Nov 2019 15:38:19 +0000
+Message-ID: <lsq.1574264230.162320205@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 51/83] x86/apic: Do not initialize LDR and DFR for bigsmp
+Subject: [PATCH 3.16 69/83] tcp: fix tcp_ecn_withdraw_cwr() to clear
+ TCP_ECN_QUEUE_CWR
 In-Reply-To: <lsq.1574264230.280218497@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,80 +59,58 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Bandan Das <bsd@redhat.com>
+From: Neal Cardwell <ncardwell@google.com>
 
-commit bae3a8d3308ee69a7dbdf145911b18dfda8ade0d upstream.
+commit af38d07ed391b21f7405fa1f936ca9686787d6d2 upstream.
 
-Legacy apic init uses bigsmp for smp systems with 8 and more CPUs. The
-bigsmp APIC implementation uses physical destination mode, but it
-nevertheless initializes LDR and DFR. The LDR even ends up incorrectly with
-multiple bit being set.
+Fix tcp_ecn_withdraw_cwr() to clear the correct bit:
+TCP_ECN_QUEUE_CWR.
 
-This does not cause a functional problem because LDR and DFR are ignored
-when physical destination mode is active, but it triggered a problem on a
-32-bit KVM guest which jumps into a kdump kernel.
+Rationale: basically, TCP_ECN_DEMAND_CWR is a bit that is purely about
+the behavior of data receivers, and deciding whether to reflect
+incoming IP ECN CE marks as outgoing TCP th->ece marks. The
+TCP_ECN_QUEUE_CWR bit is purely about the behavior of data senders,
+and deciding whether to send CWR. The tcp_ecn_withdraw_cwr() function
+is only called from tcp_undo_cwnd_reduction() by data senders during
+an undo, so it should zero the sender-side state,
+TCP_ECN_QUEUE_CWR. It does not make sense to stop the reflection of
+incoming CE bits on incoming data packets just because outgoing
+packets were spuriously retransmitted.
 
-The multiple bits set unearthed a bug in the KVM APIC implementation. The
-code which creates the logical destination map for VCPUs ignores the
-disabled state of the APIC and ends up overwriting an existing valid entry
-and as a result, APIC calibration hangs in the guest during kdump
-initialization.
+The bug has been reproduced with packetdrill to manifest in a scenario
+with RFC3168 ECN, with an incoming data packet with CE bit set and
+carrying a TCP timestamp value that causes cwnd undo. Before this fix,
+the IP CE bit was ignored and not reflected in the TCP ECE header bit,
+and sender sent a TCP CWR ('W') bit on the next outgoing data packet,
+even though the cwnd reduction had been undone.  After this fix, the
+sender properly reflects the CE bit and does not set the W bit.
 
-Remove the bogus LDR/DFR initialization.
+Note: the bug actually predates 2005 git history; this Fixes footer is
+chosen to be the oldest SHA1 I have tested (from Sep 2007) for which
+the patch applies cleanly (since before this commit the code was in a
+.h file).
 
-This is not intended to work around the KVM APIC bug. The LDR/DFR
-ininitalization is wrong on its own.
-
-The issue goes back into the pre git history. The fixes tag is the commit
-in the bitkeeper import which introduced bigsmp support in 2003.
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/tglx/history.git
-
-Fixes: db7b9e9f26b8 ("[PATCH] Clustered APIC setup for >8 CPU systems")
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Bandan Das <bsd@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190826101513.5080-2-bsd@redhat.com
+Fixes: bdf1ee5d3bd3 ("[TCP]: Move code from tcp_ecn.h to tcp*.c and tcp.h & remove it")
+Signed-off-by: Neal Cardwell <ncardwell@google.com>
+Acked-by: Yuchung Cheng <ycheng@google.com>
+Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
+Cc: Eric Dumazet <edumazet@google.com>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/x86/kernel/apic/bigsmp_32.c | 24 ++----------------------
- 1 file changed, 2 insertions(+), 22 deletions(-)
+ net/ipv4/tcp_input.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/kernel/apic/bigsmp_32.c
-+++ b/arch/x86/kernel/apic/bigsmp_32.c
-@@ -42,32 +42,12 @@ static int bigsmp_early_logical_apicid(i
- 	return early_per_cpu(x86_cpu_to_apicid, cpu);
- }
+--- a/net/ipv4/tcp_input.c
++++ b/net/ipv4/tcp_input.c
+@@ -214,7 +214,7 @@ static inline void TCP_ECN_accept_cwr(st
  
--static inline unsigned long calculate_ldr(int cpu)
--{
--	unsigned long val, id;
--
--	val = apic_read(APIC_LDR) & ~APIC_LDR_MASK;
--	id = per_cpu(x86_bios_cpu_apicid, cpu);
--	val |= SET_APIC_LOGICAL_ID(id);
--
--	return val;
--}
--
- /*
-- * Set up the logical destination ID.
-- *
-- * Intel recommends to set DFR, LDR and TPR before enabling
-- * an APIC.  See e.g. "AP-388 82489DX User's Manual" (Intel
-- * document number 292116).  So here it goes...
-+ * bigsmp enables physical destination mode
-+ * and doesn't use LDR and DFR
-  */
- static void bigsmp_init_apic_ldr(void)
+ static inline void TCP_ECN_withdraw_cwr(struct tcp_sock *tp)
  {
--	unsigned long val;
--	int cpu = smp_processor_id();
--
--	apic_write(APIC_DFR, APIC_DFR_FLAT);
--	val = calculate_ldr(cpu);
--	apic_write(APIC_LDR, val);
+-	tp->ecn_flags &= ~TCP_ECN_DEMAND_CWR;
++	tp->ecn_flags &= ~TCP_ECN_QUEUE_CWR;
  }
  
- static void bigsmp_setup_apic_routing(void)
+ static inline void TCP_ECN_check_ce(struct tcp_sock *tp, const struct sk_buff *skb)
 
