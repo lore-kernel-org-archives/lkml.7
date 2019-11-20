@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D159C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:39:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB8BC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:39:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 623C9224FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:39:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D9A3224FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:39:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574257174;
-	bh=YhYeclBfcRAmQRKEfK1UPHgzQsEwwbB0zzIWoJvZqI0=;
+	s=default; t=1574257177;
+	bh=KXX/JKwRu4ohqPW7ejgTiWHaFI0B/xv28AFyZomXDzM=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=OrowAtFRmysTts9aWiipkZqVpNby+tk+2r0UjDLEQqOXr4KZdueI874lj/DSJJfOg
-	 6SDZU1t2q6eHvs1s8Nmuwbc2If2SbvfQA0dUESDOrqOiPKKHQYl9k2dPK/qxB8D0Y/
-	 UC/kHGKfsoa44+N2uK/TcVvcLE9BvM8h3xHy1ihc=
+	b=zPBOz3Bi4WfMHAvzmmgxS0YqZgGKJ8O4oQ2T12QZWh1zzdDKGz37RM8Ik3vOQzqrV
+	 pthi50I+McDdoS0aR4UmCJWU77T6sguYbPzQPYnsqbUtSBwUPKrPuRZDR5XVKqQQeM
+	 9zR+/1TZdwcLcy/os2xXvdQgbX3uNbm2L6xKUZQ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731145AbfKTNjd (ORCPT
+        id S1731155AbfKTNjg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 08:39:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47140 "EHLO mail.kernel.org"
+        Wed, 20 Nov 2019 08:39:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728541AbfKTNj3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 08:39:29 -0500
+        id S1730036AbfKTNje (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 08:39:34 -0500
 Received: from localhost.localdomain (unknown [118.189.143.39])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EED3B224FA;
-        Wed, 20 Nov 2019 13:39:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FFC82251E;
+        Wed, 20 Nov 2019 13:39:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574257169;
-        bh=YhYeclBfcRAmQRKEfK1UPHgzQsEwwbB0zzIWoJvZqI0=;
+        s=default; t=1574257174;
+        bh=KXX/JKwRu4ohqPW7ejgTiWHaFI0B/xv28AFyZomXDzM=;
         h=From:To:Cc:Subject:Date:From;
-        b=wJk2StoOjc+BeWfmw2WdeZn48fkLo9n6eHL1g95WZq0jKf+UHvFMrdwopSulLlcwb
-         /Rm2NvkQHogA71WaWOH2JIwhCMLTdf9LPronRGRKIK0fx6PH3x0Zl6SfY1/sYEaRVz
-         o6h7jtqcjNqgBvYayTOGbO4Y1ci/zC7IlxNrNMok=
+        b=0BU5guxnx+oiScud7GD6GK19b2XNEHWNSjAoRyJl+e0DMqiv+EH9QLC5Cy76/MNPb
+         22ARFRfyjMRARJR5bTuvYbzyqfUiTC36kTncmo/Cs+i/2kj3rEsh/LxxRbcm5Q5YkD
+         NiBe7PdhIytPqpAwMqANHrMYCbNqQK8dE0rB/bZs=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-msm@vger.kernel.org
-Subject: [PATCH] soc: qcom: Fix Kconfig indentation
-Date:   Wed, 20 Nov 2019 21:39:25 +0800
-Message-Id: <20191120133925.13712-1-krzk@kernel.org>
+        Li Yang <leoyang.li@nxp.com>, linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] soc: fsl: Fix Kconfig indentation
+Date:   Wed, 20 Nov 2019 21:39:29 +0800
+Message-Id: <20191120133930.13767-1-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -60,62 +59,28 @@ coding style with command like:
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/soc/qcom/Kconfig | 30 +++++++++++++++---------------
- 1 file changed, 15 insertions(+), 15 deletions(-)
+ drivers/soc/fsl/Kconfig | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
-index 79d826553ac8..d0a73e76d563 100644
---- a/drivers/soc/qcom/Kconfig
-+++ b/drivers/soc/qcom/Kconfig
-@@ -45,13 +45,13 @@ config QCOM_GLINK_SSR
- 	  neighboring subsystems going up or down.
+diff --git a/drivers/soc/fsl/Kconfig b/drivers/soc/fsl/Kconfig
+index 4df32bc4c7a6..8e6f8e57ecd7 100644
+--- a/drivers/soc/fsl/Kconfig
++++ b/drivers/soc/fsl/Kconfig
+@@ -21,10 +21,10 @@ config FSL_GUTS
+ 	  into this driver as well.
  
- config QCOM_GSBI
--        tristate "QCOM General Serial Bus Interface"
--        depends on ARCH_QCOM || COMPILE_TEST
--        select MFD_SYSCON
+ config FSL_MC_DPIO
+-        tristate "QorIQ DPAA2 DPIO driver"
+-        depends on FSL_MC_BUS
+-        select SOC_BUS
 -        help
--          Say y here to enable GSBI support.  The GSBI provides control
--          functions for connecting the underlying serial UART, SPI, and I2C
--          devices to the output pins.
-+	tristate "QCOM General Serial Bus Interface"
-+	depends on ARCH_QCOM || COMPILE_TEST
-+	select MFD_SYSCON
++	tristate "QorIQ DPAA2 DPIO driver"
++	depends on FSL_MC_BUS
++	select SOC_BUS
 +	help
-+	  Say y here to enable GSBI support.  The GSBI provides control
-+	  functions for connecting the underlying serial UART, SPI, and I2C
-+	  devices to the output pins.
- 
- config QCOM_LLCC
- 	tristate "Qualcomm Technologies, Inc. LLCC driver"
-@@ -71,10 +71,10 @@ config QCOM_OCMEM
- 	depends on ARCH_QCOM
- 	select QCOM_SCM
- 	help
--          The On Chip Memory (OCMEM) allocator allows various clients to
--          allocate memory from OCMEM based on performance, latency and power
--          requirements. This is typically used by the GPU, camera/video, and
--          audio components on some Snapdragon SoCs.
-+	  The On Chip Memory (OCMEM) allocator allows various clients to
-+	  allocate memory from OCMEM based on performance, latency and power
-+	  requirements. This is typically used by the GPU, camera/video, and
-+	  audio components on some Snapdragon SoCs.
- 
- config QCOM_PM
- 	bool "Qualcomm Power Management"
-@@ -198,8 +198,8 @@ config QCOM_APR
- 	depends on ARCH_QCOM || COMPILE_TEST
- 	depends on RPMSG
- 	help
--          Enable APR IPC protocol support between
--          application processor and QDSP6. APR is
--          used by audio driver to configure QDSP6
--          ASM, ADM and AFE modules.
-+	  Enable APR IPC protocol support between
-+	  application processor and QDSP6. APR is
-+	  used by audio driver to configure QDSP6
-+	  ASM, ADM and AFE modules.
- endmenu
+ 	  Driver for the DPAA2 DPIO object.  A DPIO provides queue and
+ 	  buffer management facilities for software to interact with
+ 	  other DPAA2 objects. This driver does not expose the DPIO
 -- 
 2.17.1
 
