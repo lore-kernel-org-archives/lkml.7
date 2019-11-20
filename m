@@ -2,59 +2,64 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-22.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB486C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:36:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3348FC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:36:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA78D2244A
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:36:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0073A2243F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:36:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ff1RWopg"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="un18xq5O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728716AbfKTKgm (ORCPT
+        id S1728739AbfKTKgq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 05:36:42 -0500
-Received: from mail-wm1-f74.google.com ([209.85.128.74]:33457 "EHLO
+        Wed, 20 Nov 2019 05:36:46 -0500
+Received: from mail-wm1-f74.google.com ([209.85.128.74]:57926 "EHLO
         mail-wm1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728588AbfKTKgm (ORCPT
+        with ESMTP id S1728588AbfKTKgp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 05:36:42 -0500
-Received: by mail-wm1-f74.google.com with SMTP id g13so2702647wme.0
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 02:36:39 -0800 (PST)
+        Wed, 20 Nov 2019 05:36:45 -0500
+Received: by mail-wm1-f74.google.com with SMTP id m68so4895437wme.7
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 02:36:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=ntSwiwOTp4Ro8rVlXlEHwH+0sIgdpFKmj8FpJOpYIkY=;
-        b=Ff1RWopgfrMlrL9L/qoHmo0ynJS3t+4LU34NwavxWX6k2dVBGBQxF3NBvSZWgKoT5v
-         o2u4prbuLr+ZpelxUBNKTeFS4ltoU2bVXcCaPOhFrT97R3Rht4Sas6NQ/LNvTyw4INXY
-         aDR7VzlGPGjjO/vCmcyUf3RQhFhC/RMZVLzmuOAPkOZj05c263gr8XXofl0oR5pAhWCi
-         0lEEnsxOlawllcatBgmayWD+CookXMWbHOsoSE++sGjtcuumGpT/fPAHDy5+2JCwXrIp
-         rRmhVXELvrOgr7y+hIjo12FKCJlNLsemBaZuSDIKYfqm+OkPCgP1bmTesLpT2OL8oX0A
-         MqHQ==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=DuYnZAR8MB1c63ohOHf4MauzqJEQWPTDR3HCqzl6rd8=;
+        b=un18xq5OrO44FjkPlzOLBsBRDMA4Eryc8koOg3c1qWBZEcD4JEgxwmjpG8A/IzRNxz
+         ySVa+d9nZ5iCCGWQQcaNDJ4L768XcXLbz/h0dp2d6BGjdi3/Cfnp8uBLyN0cZKLtm89V
+         06Z+phOMCS22Yl5SWoe5JTSMq7p7pxJKbDS0bkXdhOO9SyYAiBzgxGBfyJ4bquZX8xLc
+         C8ETCK5FoXb1YpyZ9pV7K0+lWa6Fa4KoNpDbV5qEejfkwf+k9kajONciVc8M0vJnIm06
+         oFVVuBf7RuY7PwVBJT+qS+0qIiF0iSaCUj+jpyf0Hlozg/X9+/hX2/sVBsOL54QrTj/R
+         Cqeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=ntSwiwOTp4Ro8rVlXlEHwH+0sIgdpFKmj8FpJOpYIkY=;
-        b=NmFzdZP7VinBre7xqk1MeTj4mHzlIuGzSKoIjseXQGpAAiSxWyEtkSeJ3vkl9ZTrXS
-         53y4h+m1fFpW9ph7DOdKWh4JdWZ7S1oZEvU1cxfrWflzp1zInfT7GOQT9DaYBQfe7vL6
-         Ur/ALwha7fV2nXKwcUX9/qtR/gWjrNzS0wekv/UA9F8vbP7AGG6BhZKjfaXAMk9mjRHb
-         /iXGdoHqc9Ml2oA+xrBFxmAHZyzcg3SkfixONEnswUOTnyGfAPtnJzuoxLBQlt9TAm24
-         CF4dSqUhMu9wJccN/rQKo1WUWqJJOgMvwdoSxNbg9nqmh+2h4O0Nab4ZTQUPX/9wr7t+
-         DIHg==
-X-Gm-Message-State: APjAAAX1pecASprLcXrNognqqa28xuoZEkrXD8Mg2YqwKU8HenAYL4Gr
-        Z+Eu022Fb60BXPqCe5ZrtJNaGBfX7g==
-X-Google-Smtp-Source: APXvYqwF4UXLnfXYgrhpTAShJC6bkUbF3mO7L/35USY9UeiSsnepnHvjU9/+DILgC5smPmvzRlFOTxeB/A==
-X-Received: by 2002:a5d:6702:: with SMTP id o2mr2259218wru.339.1574246198590;
- Wed, 20 Nov 2019 02:36:38 -0800 (PST)
-Date:   Wed, 20 Nov 2019 11:36:10 +0100
-Message-Id: <20191120103613.63563-1-jannh@google.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=DuYnZAR8MB1c63ohOHf4MauzqJEQWPTDR3HCqzl6rd8=;
+        b=mZesFvJZbOrC415scuBzWJD7dtrO5rF5o96Jdr13+M4Tj7J752kH2l4f/XHs0HDmzB
+         zv3xzijskrDNYxhhsiQuYdffo056aj9n2qle+bpV+tsAhhnGOSnaRitk2cw1+Nv+hoaX
+         uMzthJnfJqHOxXlvESgojPjDT/p8VcRKHxY2ddZhbc24j7sZpo2dz2s/zaUo1UOJYGXK
+         vUHhctdf5H3kVRG8Q9wzH9jHON2TKGDe32PCTL8NLwve57Rltpf4ZL+4FQngxzn5dJxU
+         io+XzgO6/VWPfZ/v/z6YiN8/XkocpyBNv1q7lLfoyvDw0CvcDt6qXDcEMJwcGgKR6/GB
+         4Z4g==
+X-Gm-Message-State: APjAAAXtAx72eVMDsk5xq9SHd3vQw6HOQqLNpQpF5CtjTMfm0dgF5Ke0
+        RxFiPUzp9n7XzZMHOeJ+CwwbWCZjtg==
+X-Google-Smtp-Source: APXvYqyUaAlaUMK3Qn58gOPyNbg3rmUyEkr0/ysvYzfqQz+UcXJ9p+26FlaeKB0Je59IzFOAK8wTXmNW6A==
+X-Received: by 2002:a5d:522e:: with SMTP id i14mr2529588wra.27.1574246201957;
+ Wed, 20 Nov 2019 02:36:41 -0800 (PST)
+Date:   Wed, 20 Nov 2019 11:36:11 +0100
+In-Reply-To: <20191120103613.63563-1-jannh@google.com>
+Message-Id: <20191120103613.63563-2-jannh@google.com>
 Mime-Version: 1.0
+References: <20191120103613.63563-1-jannh@google.com>
 X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
-Subject: [PATCH v3 1/4] x86/insn-eval: Add support for 64-bit kernel mode
+Subject: [PATCH v3 2/4] x86/traps: Print non-canonical address on #GP
 From:   Jann Horn <jannh@google.com>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
@@ -74,143 +79,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To support evaluating 64-bit kernel mode instructions:
+A frequent cause of #GP exceptions are memory accesses to non-canonical
+addresses. Unlike #PF, #GP doesn't come with a fault address in CR2, so
+the kernel doesn't currently print the fault address for #GP.
+Luckily, we already have the necessary infrastructure for decoding X86
+instructions and computing the memory address that is being accessed;
+hook it up to the #GP handler so that we can figure out whether the #GP
+looks like it was caused by a non-canonical address, and if so, print
+that address.
 
-Replace existing checks for user_64bit_mode() with a new helper that
-checks whether code is being executed in either 64-bit kernel mode or
-64-bit user mode.
-
-Select the GS base depending on whether the instruction is being
-evaluated in kernel mode.
+While it is already possible to compute the faulting address manually by
+disassembling the opcode dump and evaluating the instruction against the
+register dump, this should make it slightly easier to identify crashes
+at a glance.
 
 Signed-off-by: Jann Horn <jannh@google.com>
 ---
 
 Notes:
     v2:
-      no changes
+     - print different message for segment-related GP (Borislav)
+     - rewrite check for non-canonical address (Sean)
+     - make it clear we don't know for sure why the GP happened (Andy)
     v3:
-      no changes
+     - change message format to one line (Borislav)
+    
+    I have already sent a patch to syzkaller that relaxes their parsing of GPF
+    messages (https://github.com/google/syzkaller/commit/432c7650) such that
+    changes like the one in this patch don't break it.
+    That patch has already made its way into syzbot's syzkaller instances
+    according to <https://syzkaller.appspot.com/upstream>.
 
- arch/x86/include/asm/ptrace.h | 13 +++++++++++++
- arch/x86/lib/insn-eval.c      | 26 +++++++++++++++-----------
- 2 files changed, 28 insertions(+), 11 deletions(-)
+ arch/x86/kernel/traps.c | 56 ++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 53 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/include/asm/ptrace.h b/arch/x86/include/asm/ptrace.h
-index 5057a8ed100b..ac45b06941a5 100644
---- a/arch/x86/include/asm/ptrace.h
-+++ b/arch/x86/include/asm/ptrace.h
-@@ -159,6 +159,19 @@ static inline bool user_64bit_mode(struct pt_regs *regs)
- #endif
+diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+index c90312146da0..19afedcd6f4e 100644
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -56,6 +56,8 @@
+ #include <asm/mpx.h>
+ #include <asm/vm86.h>
+ #include <asm/umip.h>
++#include <asm/insn.h>
++#include <asm/insn-eval.h>
+ 
+ #ifdef CONFIG_X86_64
+ #include <asm/x86_init.h>
+@@ -509,11 +511,45 @@ dotraplinkage void do_bounds(struct pt_regs *regs, long error_code)
+ 	do_trap(X86_TRAP_BR, SIGSEGV, "bounds", regs, error_code, 0, NULL);
  }
  
 +/*
-+ * Determine whether the register set came from any context that is running in
-+ * 64-bit mode.
++ * On 64-bit, if an uncaught #GP occurs while dereferencing a non-canonical
++ * address, return that address.
 + */
-+static inline bool any_64bit_mode(struct pt_regs *regs)
++static unsigned long get_kernel_gp_address(struct pt_regs *regs)
 +{
 +#ifdef CONFIG_X86_64
-+	return !user_mode(regs) || user_64bit_mode(regs);
++	u8 insn_bytes[MAX_INSN_SIZE];
++	struct insn insn;
++	unsigned long addr_ref;
++
++	if (probe_kernel_read(insn_bytes, (void *)regs->ip, MAX_INSN_SIZE))
++		return 0;
++
++	kernel_insn_init(&insn, insn_bytes, MAX_INSN_SIZE);
++	insn_get_modrm(&insn);
++	insn_get_sib(&insn);
++	addr_ref = (unsigned long)insn_get_addr_ref(&insn, regs);
++
++	/* Bail out if insn_get_addr_ref() failed or we got a kernel address. */
++	if (addr_ref >= ~__VIRTUAL_MASK)
++		return 0;
++
++	/* Bail out if the entire operand is in the canonical user half. */
++	if (addr_ref + insn.opnd_bytes - 1 <= __VIRTUAL_MASK)
++		return 0;
++
++	return addr_ref;
 +#else
-+	return false;
++	return 0;
 +#endif
 +}
 +
- #ifdef CONFIG_X86_64
- #define current_user_stack_pointer()	current_pt_regs()->sp
- #define compat_user_stack_pointer()	current_pt_regs()->sp
-diff --git a/arch/x86/lib/insn-eval.c b/arch/x86/lib/insn-eval.c
-index 306c3a0902ba..31600d851fd8 100644
---- a/arch/x86/lib/insn-eval.c
-+++ b/arch/x86/lib/insn-eval.c
-@@ -155,7 +155,7 @@ static bool check_seg_overrides(struct insn *insn, int regoff)
-  */
- static int resolve_default_seg(struct insn *insn, struct pt_regs *regs, int off)
++#define GPFSTR "general protection fault"
+ dotraplinkage void
+ do_general_protection(struct pt_regs *regs, long error_code)
  {
--	if (user_64bit_mode(regs))
-+	if (any_64bit_mode(regs))
- 		return INAT_SEG_REG_IGNORE;
- 	/*
- 	 * Resolve the default segment register as described in Section 3.7.4
-@@ -266,7 +266,7 @@ static int resolve_seg_reg(struct insn *insn, struct pt_regs *regs, int regoff)
- 	 * which may be invalid at this point.
- 	 */
- 	if (regoff == offsetof(struct pt_regs, ip)) {
--		if (user_64bit_mode(regs))
-+		if (any_64bit_mode(regs))
- 			return INAT_SEG_REG_IGNORE;
- 		else
- 			return INAT_SEG_REG_CS;
-@@ -289,7 +289,7 @@ static int resolve_seg_reg(struct insn *insn, struct pt_regs *regs, int regoff)
- 	 * In long mode, segment override prefixes are ignored, except for
- 	 * overrides for FS and GS.
- 	 */
--	if (user_64bit_mode(regs)) {
-+	if (any_64bit_mode(regs)) {
- 		if (idx != INAT_SEG_REG_FS &&
- 		    idx != INAT_SEG_REG_GS)
- 			idx = INAT_SEG_REG_IGNORE;
-@@ -646,23 +646,27 @@ unsigned long insn_get_seg_base(struct pt_regs *regs, int seg_reg_idx)
- 		 */
- 		return (unsigned long)(sel << 4);
+-	const char *desc = "general protection fault";
+ 	struct task_struct *tsk;
++	char desc[90] = GPFSTR;
  
--	if (user_64bit_mode(regs)) {
-+	if (any_64bit_mode(regs)) {
- 		/*
- 		 * Only FS or GS will have a base address, the rest of
- 		 * the segments' bases are forced to 0.
- 		 */
- 		unsigned long base;
+ 	RCU_LOCKDEP_WARN(!rcu_is_watching(), "entry code didn't wake RCU");
+ 	cond_local_irq_enable(regs);
+@@ -531,6 +567,8 @@ do_general_protection(struct pt_regs *regs, long error_code)
  
--		if (seg_reg_idx == INAT_SEG_REG_FS)
-+		if (seg_reg_idx == INAT_SEG_REG_FS) {
- 			rdmsrl(MSR_FS_BASE, base);
--		else if (seg_reg_idx == INAT_SEG_REG_GS)
-+		} else if (seg_reg_idx == INAT_SEG_REG_GS) {
- 			/*
- 			 * swapgs was called at the kernel entry point. Thus,
- 			 * MSR_KERNEL_GS_BASE will have the user-space GS base.
- 			 */
--			rdmsrl(MSR_KERNEL_GS_BASE, base);
--		else
-+			if (user_mode(regs))
-+				rdmsrl(MSR_KERNEL_GS_BASE, base);
-+			else
-+				rdmsrl(MSR_GS_BASE, base);
-+		} else {
- 			base = 0;
-+		}
- 		return base;
+ 	tsk = current;
+ 	if (!user_mode(regs)) {
++		unsigned long non_canonical_addr = 0;
++
+ 		if (fixup_exception(regs, X86_TRAP_GP, error_code, 0))
+ 			return;
+ 
+@@ -547,8 +585,20 @@ do_general_protection(struct pt_regs *regs, long error_code)
+ 			return;
+ 
+ 		if (notify_die(DIE_GPF, desc, regs, error_code,
+-			       X86_TRAP_GP, SIGSEGV) != NOTIFY_STOP)
+-			die(desc, regs, error_code);
++			       X86_TRAP_GP, SIGSEGV) == NOTIFY_STOP)
++			return;
++
++		if (error_code)
++			snprintf(desc, sizeof(desc), "segment-related " GPFSTR);
++		else
++			non_canonical_addr = get_kernel_gp_address(regs);
++
++		if (non_canonical_addr)
++			snprintf(desc, sizeof(desc),
++			    GPFSTR " probably for non-canonical address 0x%lx",
++			    non_canonical_addr);
++
++		die(desc, regs, error_code);
+ 		return;
  	}
  
-@@ -703,7 +707,7 @@ static unsigned long get_seg_limit(struct pt_regs *regs, int seg_reg_idx)
- 	if (sel < 0)
- 		return 0;
- 
--	if (user_64bit_mode(regs) || v8086_mode(regs))
-+	if (any_64bit_mode(regs) || v8086_mode(regs))
- 		return -1L;
- 
- 	if (!sel)
-@@ -948,7 +952,7 @@ static int get_eff_addr_modrm(struct insn *insn, struct pt_regs *regs,
- 	 * following instruction.
- 	 */
- 	if (*regoff == -EDOM) {
--		if (user_64bit_mode(regs))
-+		if (any_64bit_mode(regs))
- 			tmp = regs->ip + insn->length;
- 		else
- 			tmp = 0;
-@@ -1250,7 +1254,7 @@ static void __user *get_addr_ref_32(struct insn *insn, struct pt_regs *regs)
- 	 * After computed, the effective address is treated as an unsigned
- 	 * quantity.
- 	 */
--	if (!user_64bit_mode(regs) && ((unsigned int)eff_addr > seg_limit))
-+	if (!any_64bit_mode(regs) && ((unsigned int)eff_addr > seg_limit))
- 		goto out;
- 
- 	/*
 -- 
 2.24.0.432.g9d3f5f5b63-goog
 
