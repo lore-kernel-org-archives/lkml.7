@@ -2,107 +2,197 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 203DDC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59141C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:40:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E51D42252C
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:40:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b="YreErlZl"
+	by mail.kernel.org (Postfix) with ESMTP id 3002B2251E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:40:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574257228;
+	bh=TNLZGml8CKecnxF0PNc2xpp8PoCrtU685Fl9tpYxIng=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=E2VqM4vnOYqNwfVrJ6x5YGYadDL+Oey0t6Q8Q9gqE72ajpglX2BaDtMtOCmjGOtPy
+	 nYTlq3UeaB/Pb6Kmipp1SvgZz6IHMQbifzLvfsyVmI/CkeEU9hQRz8ZPTCYoiA4Sw/
+	 rvd0hufKVapdZI/DJMXOrp0HEBt6tMowpDrGqHLQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731191AbfKTNkU (ORCPT
+        id S1728936AbfKTNk1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 08:40:20 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:38770 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728795AbfKTNkS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 08:40:18 -0500
-Received: by mail-wm1-f66.google.com with SMTP id z19so7865861wmk.3
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 05:40:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=9elements.com; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hc+e/4bbkmOsPc7h3n96rW8fCtHfYV+rcvDUEGU80WQ=;
-        b=YreErlZlPJh+ONjf/24/XKR2tp1V0tI82se8RiBRjVqwfZj4r2VHnsbcTRwyLtFtPi
-         m425AUFz9OdzMCNLdOlhtkeuUyYnv+iXxPY4RKjIWaFDirWUu3ohOGHntM71SUY5P3n8
-         WGqM67AN98Jgp2Pr0j7pLNbpkjfICD63OwRzkHJYyKZ7ZGpu/7M1ftpb2BNaWZ3yVemt
-         8vKtB9cgAaVib6G/r53uPmElhvhu1+hbD6VTglES/yMpKxtgcLd2NKANYpFfllEMEnfy
-         TvtqjNtCIzQmG6Lq7PRvxJsTXUIFy2clzU0MBG2bteNdIJ9GvtcckDd5IJKsTYhslg7Z
-         cieA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hc+e/4bbkmOsPc7h3n96rW8fCtHfYV+rcvDUEGU80WQ=;
-        b=lQYPfRpkHpEOpxYzdOpLvcIJbGhMHeU0OLjtzt9rXf4qHuHgULSaUddPSNNwNDpTmV
-         tdueMc1uAZCqWq4IFvHmyWULzamauhVShvyvWQSknXopvUOf8m6U3pISF9zGo1fhsbiM
-         GJYb5sC/0anOG6WeihnIvt7xjN31RCK8m1qxqdkk6nSstfCjjATIm3t5PX/EwirQfoPU
-         U/zbSJHirgzNmpVZn/EMeRKyqKkM0x3So4aJJ1CjHGqKH9xmeHUy6oOzBgn48aHz1Wou
-         gfpXJLuE8AfDewzobYnLiy9n5Wbt5fzXBHYLqfHUARitlFENEgHF59K/mg9WMYnY78KU
-         h/wQ==
-X-Gm-Message-State: APjAAAVLNSzHjdDFfMPzdAAUMs3mqtc25gSX4b0Vihzs3ElH7eSn2JNP
-        +VEjMZzMEcuauBAu8qu7Q0sE8xifhiPt5W3f
-X-Google-Smtp-Source: APXvYqwQpaqJpD3l6llJ7t3FYS4oXmsrEDSYQUr/f+rrl6YFypfpvaXy7hyGHbaIxrecX8QmgxFleg==
-X-Received: by 2002:a7b:cc86:: with SMTP id p6mr3400151wma.116.1574257216438;
-        Wed, 20 Nov 2019 05:40:16 -0800 (PST)
-Received: from rudolphp.9e.network (b2b-78-94-0-50.unitymedia.biz. [78.94.0.50])
-        by smtp.gmail.com with ESMTPSA id t14sm30473434wrw.87.2019.11.20.05.40.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Nov 2019 05:40:15 -0800 (PST)
-From:   patrick.rudolph@9elements.com
+        Wed, 20 Nov 2019 08:40:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48202 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728864AbfKTNkZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 08:40:25 -0500
+Received: from localhost.localdomain (unknown [118.189.143.39])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEE382251E;
+        Wed, 20 Nov 2019 13:40:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574257224;
+        bh=TNLZGml8CKecnxF0PNc2xpp8PoCrtU685Fl9tpYxIng=;
+        h=From:To:Cc:Subject:Date:From;
+        b=SYcuhSqUUWT3+8kdKpV/V1W39uTvAm1oox0iJNJK80w73m9Cqn5oFP4IWxgpcaDb5
+         UshMXRQqp5Dk19a6LEbCptcvaJEOh7sZXhhy85gPfG2P5WKlddCHXuC4pWEGdaL/Wx
+         BoUQa9slmafjIdVkvMEe4C8mGV+0P6mG9pFzAfG8=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     linux-kernel@vger.kernel.org
-Cc:     Patrick Rudolph <patrick.rudolph@9elements.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        Samuel Holland <samuel@sholland.org>,
-        Julius Werner <jwerner@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>
-Subject: [PATCH 0/2] firmware: google: Expose coreboot tables and CBMEM
-Date:   Wed, 20 Nov 2019 14:39:45 +0100
-Message-Id: <20191120133958.13160-1-patrick.rudolph@9elements.com>
-X-Mailer: git-send-email 2.21.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: [PATCH] pinctrl: Fix Kconfig indentation
+Date:   Wed, 20 Nov 2019 21:40:19 +0800
+Message-Id: <20191120134019.14333-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Patrick Rudolph <patrick.rudolph@9elements.com>
+Adjust indentation from spaces to tab (+optional two spaces) as in
+coding style with command like:
+	$ sed -e 's/^        /\t/' -i */Kconfig
 
-As user land tools currently use /dev/mem to access coreboot tables and
-CBMEM, provide a better way by using read-only sysfs attributes.
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ drivers/pinctrl/Kconfig           | 18 ++++++++--------
+ drivers/pinctrl/freescale/Kconfig | 12 +++++------
+ drivers/pinctrl/qcom/Kconfig      | 34 +++++++++++++++----------------
+ 3 files changed, 32 insertions(+), 32 deletions(-)
 
-Unconditionally expose all tables and buffers making future changes in
-coreboot possible without modifying a kernel driver.
-
-Changes in v2:
- - Add ABI documentation
- - Add 0x prefix on hex values
- - Remove wrong ioremap hint as found by CI
-
-Patrick Rudolph (2):
-  firmware: google: Expose CBMEM over sysfs
-  firmware: google: Expose coreboot tables over sysfs
-
- Documentation/ABI/stable/sysfs-bus-coreboot |  73 +++++++++
- drivers/firmware/google/Kconfig             |   9 ++
- drivers/firmware/google/Makefile            |   1 +
- drivers/firmware/google/cbmem-coreboot.c    | 162 ++++++++++++++++++++
- drivers/firmware/google/coreboot_table.c    |  60 ++++++++
- drivers/firmware/google/coreboot_table.h    |  13 ++
- 6 files changed, 318 insertions(+)
- create mode 100644 Documentation/ABI/stable/sysfs-bus-coreboot
- create mode 100644 drivers/firmware/google/cbmem-coreboot.c
-
+diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+index b372419d61f2..25b6c830f2f1 100644
+--- a/drivers/pinctrl/Kconfig
++++ b/drivers/pinctrl/Kconfig
+@@ -32,15 +32,15 @@ config DEBUG_PINCTRL
+ 	  Say Y here to add some extra checks and diagnostics to PINCTRL calls.
+ 
+ config PINCTRL_ARTPEC6
+-        bool "Axis ARTPEC-6 pin controller driver"
+-        depends on MACH_ARTPEC6
+-        select PINMUX
+-        select GENERIC_PINCONF
+-        help
+-          This is the driver for the Axis ARTPEC-6 pin controller. This driver
+-          supports pin function multiplexing as well as pin bias and drive
+-          strength configuration. Device tree integration instructions can be
+-          found in Documentation/devicetree/bindings/pinctrl/axis,artpec6-pinctrl.txt
++	bool "Axis ARTPEC-6 pin controller driver"
++	depends on MACH_ARTPEC6
++	select PINMUX
++	select GENERIC_PINCONF
++	help
++	  This is the driver for the Axis ARTPEC-6 pin controller. This driver
++	  supports pin function multiplexing as well as pin bias and drive
++	  strength configuration. Device tree integration instructions can be
++	  found in Documentation/devicetree/bindings/pinctrl/axis,artpec6-pinctrl.txt
+ 
+ config PINCTRL_AS3722
+ 	tristate "Pinctrl and GPIO driver for ams AS3722 PMIC"
+diff --git a/drivers/pinctrl/freescale/Kconfig b/drivers/pinctrl/freescale/Kconfig
+index 5f4058033ec6..3ea9ce3e0cd9 100644
+--- a/drivers/pinctrl/freescale/Kconfig
++++ b/drivers/pinctrl/freescale/Kconfig
+@@ -39,12 +39,12 @@ config PINCTRL_IMX27
+ 
+ 
+ config PINCTRL_IMX25
+-        bool "IMX25 pinctrl driver"
+-        depends on OF
+-        depends on SOC_IMX25
+-        select PINCTRL_IMX
+-        help
+-          Say Y here to enable the imx25 pinctrl driver
++	bool "IMX25 pinctrl driver"
++	depends on OF
++	depends on SOC_IMX25
++	select PINCTRL_IMX
++	help
++	  Say Y here to enable the imx25 pinctrl driver
+ 
+ config PINCTRL_IMX35
+ 	bool "IMX35 pinctrl driver"
+diff --git a/drivers/pinctrl/qcom/Kconfig b/drivers/pinctrl/qcom/Kconfig
+index 4f5645245b06..dbdf615da94f 100644
+--- a/drivers/pinctrl/qcom/Kconfig
++++ b/drivers/pinctrl/qcom/Kconfig
+@@ -151,10 +151,10 @@ config PINCTRL_QCOM_SPMI_PMIC
+        select GPIOLIB_IRQCHIP
+        select IRQ_DOMAIN_HIERARCHY
+        help
+-         This is the pinctrl, pinmux, pinconf and gpiolib driver for the
+-         Qualcomm GPIO and MPP blocks found in the Qualcomm PMIC's chips,
+-         which are using SPMI for communication with SoC. Example PMIC's
+-         devices are pm8841, pm8941 and pma8084.
++	 This is the pinctrl, pinmux, pinconf and gpiolib driver for the
++	 Qualcomm GPIO and MPP blocks found in the Qualcomm PMIC's chips,
++	 which are using SPMI for communication with SoC. Example PMIC's
++	 devices are pm8841, pm8941 and pma8084.
+ 
+ config PINCTRL_QCOM_SSBI_PMIC
+        tristate "Qualcomm SSBI PMIC pin controller driver"
+@@ -165,10 +165,10 @@ config PINCTRL_QCOM_SSBI_PMIC
+        select GPIOLIB_IRQCHIP
+        select IRQ_DOMAIN_HIERARCHY
+        help
+-         This is the pinctrl, pinmux, pinconf and gpiolib driver for the
+-         Qualcomm GPIO and MPP blocks found in the Qualcomm PMIC's chips,
+-         which are using SSBI for communication with SoC. Example PMIC's
+-         devices are pm8058 and pm8921.
++	 This is the pinctrl, pinmux, pinconf and gpiolib driver for the
++	 Qualcomm GPIO and MPP blocks found in the Qualcomm PMIC's chips,
++	 which are using SSBI for communication with SoC. Example PMIC's
++	 devices are pm8058 and pm8921.
+ 
+ config PINCTRL_SC7180
+ 	tristate "Qualcomm Technologies Inc SC7180 pin controller driver"
+@@ -184,26 +184,26 @@ config PINCTRL_SDM660
+        depends on GPIOLIB && OF
+        select PINCTRL_MSM
+        help
+-         This is the pinctrl, pinmux, pinconf and gpiolib driver for the
+-         Qualcomm Technologies Inc TLMM block found on the Qualcomm
+-         Technologies Inc SDM660 platform.
++	 This is the pinctrl, pinmux, pinconf and gpiolib driver for the
++	 Qualcomm Technologies Inc TLMM block found on the Qualcomm
++	 Technologies Inc SDM660 platform.
+ 
+ config PINCTRL_SDM845
+        tristate "Qualcomm Technologies Inc SDM845 pin controller driver"
+        depends on GPIOLIB && (OF || ACPI)
+        select PINCTRL_MSM
+        help
+-         This is the pinctrl, pinmux, pinconf and gpiolib driver for the
+-         Qualcomm Technologies Inc TLMM block found on the Qualcomm
+-         Technologies Inc SDM845 platform.
++	 This is the pinctrl, pinmux, pinconf and gpiolib driver for the
++	 Qualcomm Technologies Inc TLMM block found on the Qualcomm
++	 Technologies Inc SDM845 platform.
+ 
+ config PINCTRL_SM8150
+        tristate "Qualcomm Technologies Inc SM8150 pin controller driver"
+        depends on GPIOLIB && OF
+        select PINCTRL_MSM
+        help
+-         This is the pinctrl, pinmux, pinconf and gpiolib driver for the
+-         Qualcomm Technologies Inc TLMM block found on the Qualcomm
+-         Technologies Inc SM8150 platform.
++	 This is the pinctrl, pinmux, pinconf and gpiolib driver for the
++	 Qualcomm Technologies Inc TLMM block found on the Qualcomm
++	 Technologies Inc SM8150 platform.
+ 
+ endif
 -- 
-2.21.0
+2.17.1
 
