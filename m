@@ -2,107 +2,106 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB9F4C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 21:53:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BF7DC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 21:54:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FF0520708
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 21:53:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="MI5jPWww"
+	by mail.kernel.org (Postfix) with ESMTP id EC73820672
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 21:54:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726454AbfKTVxq (ORCPT
+        id S1726614AbfKTVyT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 16:53:46 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:42966 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725819AbfKTVxq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 16:53:46 -0500
-Received: from zn.tnic (p200300EC2F0D8C00A5DC709D5356F6BE.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:8c00:a5dc:709d:5356:f6be])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0B16D1EC0CD7;
-        Wed, 20 Nov 2019 22:53:45 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1574286825;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=Hi1ocuIZqlQuBhdEumiMdnWXbr5x8UGqHlC/LzzQczM=;
-        b=MI5jPWwwOMYBOtLTyKpwSu/Ef5JWWM00DRdPg55bPo+misaiWFefs1OpWYkbC60Z9zk4ta
-        EKSOgKy1MDXdTJHSB6RejWRLZlMtLl0DMFZi6CEibY9ZdSnZB5L5nD8sy2b414uuP9CgxV
-        qipE8HaSd2gjP6avM1NHBjcKPT5RCvU=
-Date:   Wed, 20 Nov 2019 22:53:39 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Dave Jiang <dave.jiang@intel.com>
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        vkoul@kernel.org, dan.j.williams@intel.com, tony.luck@intel.com,
-        jing.lin@intel.com, ashok.raj@intel.com, sanjay.k.kumar@intel.com,
-        megha.dey@intel.com, jacob.jun.pan@intel.com, yi.l.liu@intel.com,
-        axboe@kernel.dk, akpm@linux-foundation.org, tglx@linutronix.de,
-        mingo@redhat.com, fenghua.yu@intel.com, hpa@zytor.com
-Subject: Re: [PATCH RFC 01/14] x86/asm: add iosubmit_cmds512() based on
- movdir64b CPU instruction
-Message-ID: <20191120215338.GN2634@zn.tnic>
-References: <157428480574.36836.14057238306923901253.stgit@djiang5-desk3.ch.intel.com>
- <157428502934.36836.8119026517510193201.stgit@djiang5-desk3.ch.intel.com>
+        Wed, 20 Nov 2019 16:54:19 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:55720 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725819AbfKTVyT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 16:54:19 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id A94131C1AB7; Wed, 20 Nov 2019 22:54:17 +0100 (CET)
+Date:   Wed, 20 Nov 2019 22:54:17 +0100
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Sanyog Kale <sanyog.r.kale@intel.com>,
+        Shreyas NC <shreyas.nc@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 038/422] soundwire: Initialize completion for defer
+ messages
+Message-ID: <20191120215417.GA23361@duo.ucw.cz>
+References: <20191119051400.261610025@linuxfoundation.org>
+ <20191119051402.440815842@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="a8Wt8u1KmwUX3Y2C"
 Content-Disposition: inline
-In-Reply-To: <157428502934.36836.8119026517510193201.stgit@djiang5-desk3.ch.intel.com>
+In-Reply-To: <20191119051402.440815842@linuxfoundation.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 02:23:49PM -0700, Dave Jiang wrote:
-> +/**
-> + * iosubmit_cmds512 - copy data to single MMIO location, in 512-bit units
 
-Where is the alignment check on that data before doing the copying?
+--a8Wt8u1KmwUX3Y2C
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> + * @dst: destination, in MMIO space (must be 512-bit aligned)
-> + * @src: source
-> + * @count: number of 512 bits quantities to submit
+On Tue 2019-11-19 06:13:55, Greg Kroah-Hartman wrote:
+> From: Shreyas NC <shreyas.nc@intel.com>
+>=20
+> [ Upstream commit a306a0e4a5326269b6c78d136407f08433ab5ece ]
+>=20
+> Deferred messages are async messages used to synchronize
+> transitions mostly while doing a bank switch on multi links.
+> On successful transitions these messages are marked complete
+> and thereby confirming that all the buses performed bank switch
+> successfully.
+>=20
+> So, initialize the completion structure for the same.
+>=20
+> Signed-off-by: Sanyog Kale <sanyog.r.kale@intel.com>
 
-Where's that check on the data?
+This is only called from sdw_transfer_defer() and that function is
+called in mainline, but is unused in 4.19.X.
 
-> + *
-> + * Submit data from kernel space to MMIO space, in units of 512 bits at a
-> + * time.  Order of access is not guaranteed, nor is a memory barrier
-> + * performed afterwards.
-> + */
-> +static inline void iosubmit_cmds512(void __iomem *dst, const void *src,
-> +				    size_t count)
+So I don't think this is suitable for -stable.
 
-An iosubmit function which returns void and doesn't tell its callers
-whether it succeeded or not? That looks non-optimal to say the least.
+Best regards,
+								Pavel
 
-Why isn't there a fallback function which to call when the CPU doesn't
-support movdir64b?
+> diff --git a/drivers/soundwire/bus.c b/drivers/soundwire/bus.c
+> index 83576810eee65..df172bf3925f6 100644
+> --- a/drivers/soundwire/bus.c
+> +++ b/drivers/soundwire/bus.c
+> @@ -175,6 +175,7 @@ static inline int do_transfer_defer(struct sdw_bus *b=
+us,
+> =20
+>  	defer->msg =3D msg;
+>  	defer->length =3D msg->len;
+> +	init_completion(&defer->complete);
+> =20
+>  	for (i =3D 0; i <=3D retry; i++) {
+>  		resp =3D bus->ops->xfer_msg_defer(bus, msg, defer);
 
-Because then you can use alternative_call() and have the thing work
-regardless of hardware support for MOVDIR*.
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-> +{
-> +	const u8 *from = src;
-> +	const u8 *end = from + count * 64;
-> +
-> +	if (!cpu_has_write512())
+--a8Wt8u1KmwUX3Y2C
+Content-Type: application/pgp-signature; name="signature.asc"
 
-If anything, that thing needs to go and you should use
+-----BEGIN PGP SIGNATURE-----
 
-  static_cpu_has(X86_FEATURE_MOVDIR64B)
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXdW2CQAKCRAw5/Bqldv6
+8tbaAKCiKoBQlQxQhcoxZTgnKYmZSnB/7gCfUFIzLIpunfiVjYK7GBpBIxxhG0g=
+=U6zF
+-----END PGP SIGNATURE-----
 
-as it looks to me like you would care about speed on this fast path?
-Yes, no?
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+--a8Wt8u1KmwUX3Y2C--
