@@ -2,90 +2,151 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB921C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:27:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B86E1C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:27:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 820A92071F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:27:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F14B20714
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:27:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IQLoh5x6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728557AbfKTP1S (ORCPT
+        id S1729166AbfKTP14 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 10:27:18 -0500
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:58032 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727470AbfKTP1S (ORCPT
+        Wed, 20 Nov 2019 10:27:56 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:30912 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728184AbfKTP1z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 10:27:18 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R911e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01422;MF=wenyang@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0TieWGBs_1574263615;
-Received: from localhost(mailfrom:wenyang@linux.alibaba.com fp:SMTPD_---0TieWGBs_1574263615)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 20 Nov 2019 23:27:03 +0800
-From:   Wen Yang <wenyang@linux.alibaba.com>
-To:     alexander.shishkin@linux.intel.com, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.co
-Cc:     zhiche.yy@alibaba-inc.com, xlpang@linux.alibaba.com,
-        Wen Yang <wenyang@linux.alibaba.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] stm class: fix a double free in stm_register_device()
-Date:   Wed, 20 Nov 2019 23:26:32 +0800
-Message-Id: <20191120152632.6110-1-wenyang@linux.alibaba.com>
-X-Mailer: git-send-email 2.23.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 20 Nov 2019 10:27:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574263674;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=nXyRYvfwK/kBenxMc4uS9ozCNJSMrMs8976Ao0xrGbo=;
+        b=IQLoh5x6EokSkx1O5xfzq9jjPEQJuCcjxDgJS+TJQQjLE/1PX2WLLvjic1bV+Q2ax7i9gm
+        LFZ0tExr63hr5BLzuWPo37VdDUr1iMeOKEwKxPlHFhijkvWdrwGr1iJuvJGqJaIJkUQbWU
+        VCOueJN1jmm652+1/dY97XT2LPfwRBk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-182-nf2ln5XfNOymqlXJs0x0iA-1; Wed, 20 Nov 2019 10:27:52 -0500
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 921CA802698;
+        Wed, 20 Nov 2019 15:27:51 +0000 (UTC)
+Received: from coeurl.usersys.redhat.com (ovpn-123-90.rdu2.redhat.com [10.10.123.90])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7276A5C1D4;
+        Wed, 20 Nov 2019 15:27:51 +0000 (UTC)
+Received: by coeurl.usersys.redhat.com (Postfix, from userid 1000)
+        id 4DB3B2099A; Wed, 20 Nov 2019 10:27:50 -0500 (EST)
+From:   Scott Mayhew <smayhew@redhat.com>
+To:     anna.schumaker@netapp.com, trond.myklebust@hammerspace.com
+Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk,
+        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v5 08/27] nfs: stash nfs_subversion reference into nfs_mount_info
+Date:   Wed, 20 Nov 2019 10:27:31 -0500
+Message-Id: <20191120152750.6880-9-smayhew@redhat.com>
+In-Reply-To: <20191120152750.6880-1-smayhew@redhat.com>
+References: <20191120152750.6880-1-smayhew@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MC-Unique: nf2ln5XfNOymqlXJs0x0iA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the error path of stm_register_device(), the kfree is
-unnecessary, as the put_device() before it ends up calling
-stm_device_release() to free stm_device.
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-Fixes: 7bd1d4093c2fa ("stm class: Introduce an abstraction for System Trace Module devices")
-Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: linux-stm32@st-md-mailman.stormreply.com
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
+That will allow to get rid of passing those references around in
+quite a few places.  Moreover, that will allow to merge xdev and
+remote file_system_type.
+
+Reviewed-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- drivers/hwtracing/stm/core.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ fs/nfs/internal.h  | 1 +
+ fs/nfs/namespace.c | 6 +++---
+ fs/nfs/nfs4super.c | 1 +
+ fs/nfs/super.c     | 1 +
+ 4 files changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/hwtracing/stm/core.c b/drivers/hwtracing/stm/core.c
-index 2712e69..55c69d8 100644
---- a/drivers/hwtracing/stm/core.c
-+++ b/drivers/hwtracing/stm/core.c
-@@ -868,8 +868,10 @@ int stm_register_device(struct device *parent, struct stm_data *stm_data,
- 		return -ENOMEM;
- 
- 	stm->major = register_chrdev(0, stm_data->name, &stm_fops);
--	if (stm->major < 0)
--		goto err_free;
-+	if (stm->major < 0) {
-+		vfree(stm);
-+		return err;
-+	}
- 
- 	device_initialize(&stm->dev);
- 	stm->dev.devt = MKDEV(stm->major, 0);
-@@ -915,8 +917,6 @@ int stm_register_device(struct device *parent, struct stm_data *stm_data,
- 
- 	/* matches device_initialize() above */
- 	put_device(&stm->dev);
--err_free:
--	vfree(stm);
- 
- 	return err;
- }
--- 
-1.8.3.1
+diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
+index 8eb79f104a7d..e7fd747d11a2 100644
+--- a/fs/nfs/internal.h
++++ b/fs/nfs/internal.h
+@@ -142,6 +142,7 @@ struct nfs_mount_info {
+ =09struct nfs_clone_mount *cloned;
+ =09struct nfs_server *server;
+ =09struct nfs_fh *mntfh;
++=09struct nfs_subversion *nfs_mod;
+ };
+=20
+ extern int nfs_mount(struct nfs_mount_request *info);
+diff --git a/fs/nfs/namespace.c b/fs/nfs/namespace.c
+index 7c78e6956639..0d0587ed7d94 100644
+--- a/fs/nfs/namespace.c
++++ b/fs/nfs/namespace.c
+@@ -233,8 +233,8 @@ struct vfsmount *nfs_do_submount(struct dentry *dentry,=
+ struct nfs_fh *fh,
+ =09=09.set_security =3D nfs_clone_sb_security,
+ =09=09.cloned =3D &mountdata,
+ =09=09.mntfh =3D fh,
++=09=09.nfs_mod =3D NFS_SB(sb)->nfs_client->cl_nfs_mod,
+ =09};
+-=09struct nfs_subversion *nfs_mod =3D NFS_SB(sb)->nfs_client->cl_nfs_mod;
+ =09struct nfs_server *server;
+ =09struct vfsmount *mnt;
+ =09char *page =3D (char *) __get_free_page(GFP_USER);
+@@ -243,8 +243,8 @@ struct vfsmount *nfs_do_submount(struct dentry *dentry,=
+ struct nfs_fh *fh,
+ =09if (page =3D=3D NULL)
+ =09=09return ERR_PTR(-ENOMEM);
+=20
+-=09server =3D nfs_mod->rpc_ops->clone_server(NFS_SB(sb), fh,
+-=09=09=09=09=09=09fattr, authflavor);
++=09server =3D mount_info.nfs_mod->rpc_ops->clone_server(NFS_SB(sb), fh,
++=09=09=09=09=09=09=09   fattr, authflavor);
+ =09if (IS_ERR(server))
+ =09=09return ERR_CAST(server);
+=20
+diff --git a/fs/nfs/nfs4super.c b/fs/nfs/nfs4super.c
+index 91ba1b6741dc..88d83cab8e9b 100644
+--- a/fs/nfs/nfs4super.c
++++ b/fs/nfs/nfs4super.c
+@@ -248,6 +248,7 @@ static struct dentry *nfs4_referral_mount(struct file_s=
+ystem_type *fs_type,
+ =09=09.fill_super =3D nfs_fill_super,
+ =09=09.set_security =3D nfs_clone_sb_security,
+ =09=09.cloned =3D data,
++=09=09.nfs_mod =3D &nfs_v4,
+ =09};
+ =09struct dentry *res;
+=20
+diff --git a/fs/nfs/super.c b/fs/nfs/super.c
+index 32d2ec237c57..20de67933527 100644
+--- a/fs/nfs/super.c
++++ b/fs/nfs/super.c
+@@ -2761,6 +2761,7 @@ struct dentry *nfs_fs_mount(struct file_system_type *=
+fs_type,
+ =09=09mntroot =3D ERR_CAST(nfs_mod);
+ =09=09goto out;
+ =09}
++=09mount_info.nfs_mod =3D nfs_mod;
+=20
+ =09mntroot =3D nfs_mod->rpc_ops->try_mount(flags, dev_name, &mount_info, n=
+fs_mod);
+=20
+--=20
+2.17.2
 
