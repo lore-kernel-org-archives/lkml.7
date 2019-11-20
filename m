@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADDE9C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:40:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CD9FC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:41:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 774D322529
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:40:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FA6522529
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:41:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574257258;
-	bh=j7hjYLBTiYgP/Olh2gqSk1QwqVMqLpIv7BMtU43hpCQ=;
+	s=default; t=1574257264;
+	bh=7H0hDxFQSuoC/CUw3yrgP4s6eMs211OMo3Zuj/UprCA=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=I0X5EOYp8ml2JRYCDOEKZ8qRmq4Om+YDLUcY6ADYKsQN6oyUECzEAxF/+wKusnW/l
-	 uPKBSW8VqENQioPC9P2lVKitO0ZxPod2A3IDyjCzECY8O+Uk37jjgMVFeqFYvk9vch
-	 Es2hWqwLUrdCDyz8ea8ZwQxwlocgn3843tzsVF58=
+	b=lVb1xxYAjOqaXFN7C8Y+h7J7sGeAyNzmv/4IYGaTF6MkthAxkAava6Q6zjZxqYdZz
+	 3/gbf3QzFq8vmwTJsdhbh9NDsEovLUhZY1+hHmBRABQFldzkxD1S1ZJsoFmleWCfBg
+	 n1nf01CyF4VzgVIPMwnMizvN7m3TAvbh175siIxs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731248AbfKTNk5 (ORCPT
+        id S1731252AbfKTNlD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 08:40:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48788 "EHLO mail.kernel.org"
+        Wed, 20 Nov 2019 08:41:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729146AbfKTNk4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 08:40:56 -0500
+        id S1729146AbfKTNlB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 08:41:01 -0500
 Received: from localhost.localdomain (unknown [118.189.143.39])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81F1A224FC;
-        Wed, 20 Nov 2019 13:40:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07E9F22506;
+        Wed, 20 Nov 2019 13:40:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574257255;
-        bh=j7hjYLBTiYgP/Olh2gqSk1QwqVMqLpIv7BMtU43hpCQ=;
+        s=default; t=1574257260;
+        bh=7H0hDxFQSuoC/CUw3yrgP4s6eMs211OMo3Zuj/UprCA=;
         h=From:To:Cc:Subject:Date:From;
-        b=x+mRt77lQ9fqi8mkNJMT9rElA1N/nukHqksY5peXRRvflwYCUqMufXeXou/wt4puT
-         0MbgdHrpPg0NtHIDNgwdAVhC8m54UYG+kgliMH2d3Q/kT/q1yJPyvzyNgfc3fiI9+d
-         qVljYvCxntZD87SySXaLwdeePCakBnx4k1ftWdnY=
+        b=SVmSepDAoZgeE/3T5OFiUPpPT87P8JG+GrWssLQT2vnYdObTUPshiGcpoWm42Hrh6
+         swIM3HLZ0GATcFkpfVmlkSDkKMnwb/P59r77/4cNJEs6TxTHvOhxUTUSj0b3EUErF7
+         m/2xGJgGXbvacWpWYxBuv4/nZdoHz/FHtp3JnAPg=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-mtd@lists.infradead.org
-Subject: [PATCH] mtd: onenand: Fix Kconfig indentation
-Date:   Wed, 20 Nov 2019 21:40:50 +0800
-Message-Id: <20191120134050.14622-1-krzk@kernel.org>
+        Derek Kiernan <derek.kiernan@xilinx.com>,
+        Dragan Cvetic <dragan.cvetic@xilinx.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH] misc: Fix Kconfig indentation
+Date:   Wed, 20 Nov 2019 21:40:56 +0800
+Message-Id: <20191120134056.14677-1-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -62,32 +61,45 @@ coding style with command like:
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/mtd/nand/onenand/Kconfig | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/misc/Kconfig | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/mtd/nand/onenand/Kconfig b/drivers/mtd/nand/onenand/Kconfig
-index ae0b8fe5b990..ea382fc48432 100644
---- a/drivers/mtd/nand/onenand/Kconfig
-+++ b/drivers/mtd/nand/onenand/Kconfig
-@@ -33,12 +33,12 @@ config MTD_ONENAND_OMAP2
- 	  Enable dmaengine and gpiolib for better performance.
+diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+index 94b14abb5404..b93757efb058 100644
+--- a/drivers/misc/Kconfig
++++ b/drivers/misc/Kconfig
+@@ -338,14 +338,14 @@ config SENSORS_TSL2550
+ 	  will be called tsl2550.
  
- config MTD_ONENAND_SAMSUNG
--        tristate "OneNAND on Samsung SOC controller support"
--        depends on ARCH_S3C64XX || ARCH_S5PV210 || ARCH_EXYNOS4
--        help
--          Support for a OneNAND flash device connected to an Samsung SOC.
--          S3C64XX uses command mapping method.
--          S5PC110/S5PC210 use generic OneNAND method.
-+	tristate "OneNAND on Samsung SOC controller support"
-+	depends on ARCH_S3C64XX || ARCH_S5PV210 || ARCH_EXYNOS4
-+	help
-+	  Support for a OneNAND flash device connected to an Samsung SOC.
-+	  S3C64XX uses command mapping method.
-+	  S5PC110/S5PC210 use generic OneNAND method.
+ config SENSORS_BH1770
+-         tristate "BH1770GLC / SFH7770 combined ALS - Proximity sensor"
+-         depends on I2C
+-         ---help---
+-           Say Y here if you want to build a driver for BH1770GLC (ROHM) or
++	 tristate "BH1770GLC / SFH7770 combined ALS - Proximity sensor"
++	 depends on I2C
++	 ---help---
++	   Say Y here if you want to build a driver for BH1770GLC (ROHM) or
+ 	   SFH7770 (Osram) combined ambient light and proximity sensor chip.
  
- config MTD_ONENAND_OTP
- 	bool "OneNAND OTP Support"
+-           To compile this driver as a module, choose M here: the
+-           module will be called bh1770glc. If unsure, say N here.
++	   To compile this driver as a module, choose M here: the
++	   module will be called bh1770glc. If unsure, say N here.
+ 
+ config SENSORS_APDS990X
+ 	 tristate "APDS990X combined als and proximity sensors"
+@@ -450,8 +450,8 @@ config PCI_ENDPOINT_TEST
+ 	select CRC32
+ 	tristate "PCI Endpoint Test driver"
+ 	---help---
+-           Enable this configuration option to enable the host side test driver
+-           for PCI Endpoint.
++	   Enable this configuration option to enable the host side test driver
++	   for PCI Endpoint.
+ 
+ config XILINX_SDFEC
+ 	tristate "Xilinx SDFEC 16"
 -- 
 2.17.1
 
