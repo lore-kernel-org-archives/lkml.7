@@ -7,121 +7,114 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B243C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:27:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1ABAC43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:30:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74B772243E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:27:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B6782243E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:30:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cDYB8Bd/"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="aLedtDwB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728681AbfKTK1e (ORCPT
+        id S1728562AbfKTKai (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 05:27:34 -0500
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:38992 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728201AbfKTK1e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 05:27:34 -0500
-Received: by mail-ua1-f67.google.com with SMTP id r13so7597937uan.6
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 02:27:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iPPl+dieWmwwl5vclo4eycxw3/3RIJ5/bVbsRxQY9fg=;
-        b=cDYB8Bd/9XV0BpnQ5A/BVa8N7CSLhRXNha/+ozOLuZ0ti/xAJMxWBF/n+373T53553
-         61ARehzgYwuxH8lCICdiBYJDRiCYlQYtg+hh6DIilDevFzomryjjIm+kXsuIvBGNgrgx
-         N6VR3Ui0/jj6DcZzLxG87/9pdgN3Jo+3efXMmqaECPiEW8JY0jHOqosJen1A6JvVkSiS
-         9JNQhOsBG9eCu5lFGgY1SxHNpVxqf6zaTc9rwPWEDaGaPUATNpWw74J88QL6aIy6jcNh
-         tlGKDgD4Fr06GeoS9kWNvD9uv8PTeaMiRkYePDsuQPPPchtb6ufXZP0A9ZyOHLJfWh/M
-         M63g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iPPl+dieWmwwl5vclo4eycxw3/3RIJ5/bVbsRxQY9fg=;
-        b=UPJPDOZmcDXYEQXOHH5C315XK3pZYI75V2B8dzrzTfdFsCgsJSiSLnZEYoS08Y9KCj
-         24UYgyWfUXn99WjFCoryR5+DmdT0XTMOMNBVdp8mw7g+TWCnV30tEL5K14lUegqFzXZ6
-         UikH71uwxIGYSjqoM0mt5Ls5/FWEAmFyfe+h7dfST6GQjCXUsCSzo9cO3Rj0JVu9rEtP
-         9gqjmKUL6QK7YIRMy+OeTLlLcP5BQKMduunZZ85hvpydvIe2pjTFIQ98LtzEf5MinxL8
-         jsgBLS1iPA6WGrLdqgLvbEYDjXjY3oDlqXDaMpdFbbkj58ALZuvTR10J7n009glS1ok4
-         mfbg==
-X-Gm-Message-State: APjAAAXYNg4kEERjHe+wTtW2qKp6CxYcDklF9XBEyi+A5MfLetba5+JZ
-        Hki/T/LhrABa0joFg27P0i0G6sWO3Un77LgQflYGqQ==
-X-Google-Smtp-Source: APXvYqz54Zeg8KbbWUdNshHqcWaCOGq8jgGO9qGY0g5PgtU6Hs76XawRjWx7E0migoK0Q+phAd/zNlaNrZ7pNwlmXcE=
-X-Received: by 2002:ab0:61cc:: with SMTP id m12mr1127845uan.129.1574245652878;
- Wed, 20 Nov 2019 02:27:32 -0800 (PST)
+        Wed, 20 Nov 2019 05:30:38 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:54971 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726001AbfKTKai (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 05:30:38 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47HzVK1tJ2z9sPL;
+        Wed, 20 Nov 2019 21:30:32 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1574245836;
+        bh=NoZPjg+0nioBWvif4gw1spRKoX1kFqqPPof1Rda5KVs=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=aLedtDwBTRHLQE3y5ARLngDZMOd0WLJxz56poFpD5/TLbHjLLMPY+g+/dnvleNZ1A
+         7h8lHBaEoVK5BuzEdb8LYbVma1lry1OivSstDcZFDBbZul9eOwM0dA9N/QpRX7T/4u
+         hOW5bb+0IdgBat24zL5Kn9QMuNuuMX3swigIWYmqNbRv/2tevyK0k6I5Il6ozSK5br
+         5t+ExnZxNVFvl+jeYCvtoCYOaC0AW3HZ/oetU9BtOifc7VpDEBqQVYCfQTAKcRdfFk
+         I7281Q60xL/IDK4jdt7pZVMY3Brx0w6eqjliMF7kmPGMlcUyjtrmQWNBPfzlvPsBxE
+         b04DPEpalr6Yw==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Dan Williams <dan.j.williams@intel.com>, linux-nvdimm@lists.01.org
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        peterz@infradead.org, vishal.l.verma@intel.com,
+        dave.hansen@linux.intel.com, hch@lst.de,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v2 16/18] powerpc/papr_scm: Switch to numa_map_to_online_node()
+In-Reply-To: <157401276263.43284.12616818803654229788.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <157401267421.43284.2135775608523385279.stgit@dwillia2-desk3.amr.corp.intel.com> <157401276263.43284.12616818803654229788.stgit@dwillia2-desk3.amr.corp.intel.com>
+Date:   Wed, 20 Nov 2019 21:30:31 +1100
+Message-ID: <87lfsac01k.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-References: <1574236796-25016-1-git-send-email-krzk@kernel.org>
-In-Reply-To: <1574236796-25016-1-git-send-email-krzk@kernel.org>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 20 Nov 2019 11:26:55 +0100
-Message-ID: <CAPDyKFo-Y8zctjLw0F5RibO9gogQTkf1Xbc-ODLySAJ_9r_jAw@mail.gmail.com>
-Subject: Re: [PATCH v3] dt-bindings: power: Rename back power_domain.txt
- bindings to fix references
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 20 Nov 2019 at 09:00, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+Dan Williams <dan.j.williams@intel.com> writes:
+> Now that the core exports numa_map_to_online_node() switch to that
+> instead of the locally coded duplicate.
 >
-> With split of power domain controller bindings to power-domain.yaml,
-> the consumer part was renamed to power-domain.txt breaking the
-> references.  Undo the renaming.
->
-> Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Fixes: ea312b90857d ("dt-bindings: power: Convert Generic Power Domain bindings to json-schema")
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Cc: Paul Mackerras <paulus@samba.org>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
 
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+Acked-by: Michael Ellerman <mpe@ellerman.id.au>
 
-Kind regards
-Uffe
+cheers
 
->
+> Cc: "Oliver O'Halloran" <oohall@gmail.com>
+> Reported-by: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 > ---
+>  arch/powerpc/platforms/pseries/papr_scm.c |   21 +--------------------
+>  1 file changed, 1 insertion(+), 20 deletions(-)
 >
-> Changes since v2:
-> 1. Simplify pattern in Maintainers as Geert suggested,
-> 2. Add Reviewed-by.
->
-> Changes since v1:
-> 1. Undo the renaming.
-> ---
->  .../devicetree/bindings/power/{power-domain.txt => power_domain.txt}    | 0
->  MAINTAINERS                                                             | 2 +-
->  2 files changed, 1 insertion(+), 1 deletion(-)
->  rename Documentation/devicetree/bindings/power/{power-domain.txt => power_domain.txt} (100%)
->
-> diff --git a/Documentation/devicetree/bindings/power/power-domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
-> similarity index 100%
-> rename from Documentation/devicetree/bindings/power/power-domain.txt
-> rename to Documentation/devicetree/bindings/power/power_domain.txt
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 7126d3e079a4..0aff4bebed78 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -6953,7 +6953,7 @@ L:        linux-pm@vger.kernel.org
->  S:     Supported
->  F:     drivers/base/power/domain*.c
->  F:     include/linux/pm_domain.h
-> -F:     Documentation/devicetree/bindings/power/power-domain*
-> +F:     Documentation/devicetree/bindings/power/power?domain*
->
->  GENERIC RESISTIVE TOUCHSCREEN ADC DRIVER
->  M:     Eugen Hristev <eugen.hristev@microchip.com>
-> --
-> 2.7.4
->
+> diff --git a/arch/powerpc/platforms/pseries/papr_scm.c b/arch/powerpc/platforms/pseries/papr_scm.c
+> index 33aa59e666e5..ef81515f3b6a 100644
+> --- a/arch/powerpc/platforms/pseries/papr_scm.c
+> +++ b/arch/powerpc/platforms/pseries/papr_scm.c
+> @@ -284,25 +284,6 @@ int papr_scm_ndctl(struct nvdimm_bus_descriptor *nd_desc, struct nvdimm *nvdimm,
+>  	return 0;
+>  }
+>  
+> -static inline int papr_scm_node(int node)
+> -{
+> -	int min_dist = INT_MAX, dist;
+> -	int nid, min_node;
+> -
+> -	if ((node == NUMA_NO_NODE) || node_online(node))
+> -		return node;
+> -
+> -	min_node = first_online_node;
+> -	for_each_online_node(nid) {
+> -		dist = node_distance(node, nid);
+> -		if (dist < min_dist) {
+> -			min_dist = dist;
+> -			min_node = nid;
+> -		}
+> -	}
+> -	return min_node;
+> -}
+> -
+>  static int papr_scm_nvdimm_init(struct papr_scm_priv *p)
+>  {
+>  	struct device *dev = &p->pdev->dev;
+> @@ -347,7 +328,7 @@ static int papr_scm_nvdimm_init(struct papr_scm_priv *p)
+>  
+>  	memset(&ndr_desc, 0, sizeof(ndr_desc));
+>  	target_nid = dev_to_node(&p->pdev->dev);
+> -	online_nid = papr_scm_node(target_nid);
+> +	online_nid = numa_map_to_online_node(target_nid);
+>  	ndr_desc.numa_node = online_nid;
+>  	ndr_desc.target_node = target_nid;
+>  	ndr_desc.res = &p->res;
