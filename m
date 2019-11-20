@@ -7,41 +7,40 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A460CC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:21:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC17C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:21:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8494B224F3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:21:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B8CE2254F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:21:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730274AbfKTNVY (ORCPT
+        id S1730289AbfKTNV0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 08:21:24 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:56746 "EHLO
+        Wed, 20 Nov 2019 08:21:26 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:56755 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730207AbfKTNVQ (ORCPT
+        with ESMTP id S1730214AbfKTNVS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 08:21:16 -0500
+        Wed, 20 Nov 2019 08:21:18 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iXPuy-0007AH-1E; Wed, 20 Nov 2019 14:21:12 +0100
+        id 1iXPuy-00078F-Ke; Wed, 20 Nov 2019 14:21:12 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 820E11C1A15;
-        Wed, 20 Nov 2019 14:21:04 +0100 (CET)
-Date:   Wed, 20 Nov 2019 13:21:04 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 6750F1C1A10;
+        Wed, 20 Nov 2019 14:21:03 +0100 (CET)
+Date:   Wed, 20 Nov 2019 13:21:03 -0000
 From:   "tip-bot2 for Marc Zyngier" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/core] irqchip/gic-v3-its: Kill its->ite_size and use TYPER
- copy instead
-Cc:     Marc Zyngier <maz@kernel.org>, Zenghui Yu <yuzenghui@huawei.com>,
+Subject: [tip: irq/core] irqchip/gic-v3-its: Make vlpi_lock a spinlock
+Cc:     Heyi Guo <guoheyi@huawei.com>, Marc Zyngier <maz@kernel.org>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <20191027144234.8395-6-maz@kernel.org>
-References: <20191027144234.8395-6-maz@kernel.org>
+In-Reply-To: <20191108165805.3071-12-maz@kernel.org>
+References: <20191108165805.3071-12-maz@kernel.org>
 MIME-Version: 1.0
-Message-ID: <157425606440.12247.526387246151472820.tip-bot2@tip-bot2>
+Message-ID: <157425606332.12247.1289778849742974310.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -57,86 +56,107 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the irq/core branch of tip:
 
-Commit-ID:     ffedbf0cba153c91a0da5d1280a5e639664c5ab3
-Gitweb:        https://git.kernel.org/tip/ffedbf0cba153c91a0da5d1280a5e639664c5ab3
+Commit-ID:     11635fa26dc7a715f3fc1c351846859e90985ae1
+Gitweb:        https://git.kernel.org/tip/11635fa26dc7a715f3fc1c351846859e90985ae1
 Author:        Marc Zyngier <maz@kernel.org>
-AuthorDate:    Fri, 08 Nov 2019 16:57:59 
+AuthorDate:    Fri, 08 Nov 2019 16:58:05 
 Committer:     Marc Zyngier <maz@kernel.org>
-CommitterDate: Sun, 10 Nov 2019 18:47:52 
+CommitterDate: Sun, 10 Nov 2019 18:48:35 
 
-irqchip/gic-v3-its: Kill its->ite_size and use TYPER copy instead
+irqchip/gic-v3-its: Make vlpi_lock a spinlock
 
-Now that we have a copy of TYPER in the ITS structure, rely on this
-to provide the same service as its->ite_size, which gets axed.
-Errata workarounds are now updating the cached fields instead of
-requiring a separate field in the ITS structure.
+The VLPI map is currently a mutex, and that's a bad idea as
+this lock can be taken in non-preemptible contexts. Convert
+it to a raw spinlock, and turn the memory allocation of the
+VLPI map to be atomic.
 
+Reported-by: Heyi Guo <guoheyi@huawei.com>
 Signed-off-by: Marc Zyngier <maz@kernel.org>
-Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
-Link: https://lore.kernel.org/r/20191027144234.8395-6-maz@kernel.org
-Link: https://lore.kernel.org/r/20191108165805.3071-6-maz@kernel.org
+Link: https://lore.kernel.org/r/20191108165805.3071-12-maz@kernel.org
 ---
- drivers/irqchip/irq-gic-v3-its.c   | 8 ++++----
- include/linux/irqchip/arm-gic-v3.h | 2 +-
- 2 files changed, 5 insertions(+), 5 deletions(-)
+ drivers/irqchip/irq-gic-v3-its.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 5bb3eac..c3a1e47 100644
+index 9c4f35e..e05673b 100644
 --- a/drivers/irqchip/irq-gic-v3-its.c
 +++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -6,6 +6,7 @@
+@@ -132,7 +132,7 @@ struct event_lpi_map {
+ 	u16			*col_map;
+ 	irq_hw_number_t		lpi_base;
+ 	int			nr_lpis;
+-	struct mutex		vlpi_lock;
++	raw_spinlock_t		vlpi_lock;
+ 	struct its_vm		*vm;
+ 	struct its_vlpi_map	*vlpi_maps;
+ 	int			nr_vlpis;
+@@ -1436,13 +1436,13 @@ static int its_vlpi_map(struct irq_data *d, struct its_cmd_info *info)
+ 	if (!info->map)
+ 		return -EINVAL;
  
- #include <linux/acpi.h>
- #include <linux/acpi_iort.h>
-+#include <linux/bitfield.h>
- #include <linux/bitmap.h>
- #include <linux/cpu.h>
- #include <linux/crash_dump.h>
-@@ -108,7 +109,6 @@ struct its_node {
- 	struct list_head	its_device_list;
- 	u64			flags;
- 	unsigned long		list_nr;
--	u32			ite_size;
- 	u32			device_ids;
- 	int			numa_node;
- 	unsigned int		msi_domain_flags;
-@@ -2453,7 +2453,7 @@ static struct its_device *its_create_device(struct its_node *its, u32 dev_id,
- 	 * sized as a power of two (and you need at least one bit...).
- 	 */
- 	nr_ites = max(2, nvecs);
--	sz = nr_ites * its->ite_size;
-+	sz = nr_ites * (FIELD_GET(GITS_TYPER_ITT_ENTRY_SIZE, its->typer) + 1);
- 	sz = max(sz, ITS_ITT_ALIGN) + ITS_ITT_ALIGN - 1;
- 	itt = kzalloc_node(sz, GFP_KERNEL, its->numa_node);
- 	if (alloc_lpis) {
-@@ -3268,7 +3268,8 @@ static bool __maybe_unused its_enable_quirk_qdf2400_e0065(void *data)
- 	struct its_node *its = data;
+-	mutex_lock(&its_dev->event_map.vlpi_lock);
++	raw_spin_lock(&its_dev->event_map.vlpi_lock);
  
- 	/* On QDF2400, the size of the ITE is 16Bytes */
--	its->ite_size = 16;
-+	its->typer &= ~GITS_TYPER_ITT_ENTRY_SIZE;
-+	its->typer |= FIELD_PREP(GITS_TYPER_ITT_ENTRY_SIZE, 16 - 1);
+ 	if (!its_dev->event_map.vm) {
+ 		struct its_vlpi_map *maps;
  
- 	return true;
+ 		maps = kcalloc(its_dev->event_map.nr_lpis, sizeof(*maps),
+-			       GFP_KERNEL);
++			       GFP_ATOMIC);
+ 		if (!maps) {
+ 			ret = -ENOMEM;
+ 			goto out;
+@@ -1485,7 +1485,7 @@ static int its_vlpi_map(struct irq_data *d, struct its_cmd_info *info)
+ 	}
+ 
+ out:
+-	mutex_unlock(&its_dev->event_map.vlpi_lock);
++	raw_spin_unlock(&its_dev->event_map.vlpi_lock);
+ 	return ret;
  }
-@@ -3637,7 +3638,6 @@ static int __init its_probe_one(struct resource *res,
- 	its->typer = typer;
- 	its->base = its_base;
- 	its->phys_base = res->start;
--	its->ite_size = GITS_TYPER_ITT_ENTRY_SIZE(typer);
- 	its->device_ids = GITS_TYPER_DEVBITS(typer);
- 	if (is_v4(its)) {
- 		if (!(typer & GITS_TYPER_VMOVP)) {
-diff --git a/include/linux/irqchip/arm-gic-v3.h b/include/linux/irqchip/arm-gic-v3.h
-index 5cc10cf..4bce7a9 100644
---- a/include/linux/irqchip/arm-gic-v3.h
-+++ b/include/linux/irqchip/arm-gic-v3.h
-@@ -334,7 +334,7 @@
- #define GITS_TYPER_PLPIS		(1UL << 0)
- #define GITS_TYPER_VLPIS		(1UL << 1)
- #define GITS_TYPER_ITT_ENTRY_SIZE_SHIFT	4
--#define GITS_TYPER_ITT_ENTRY_SIZE(r)	((((r) >> GITS_TYPER_ITT_ENTRY_SIZE_SHIFT) & 0xf) + 1)
-+#define GITS_TYPER_ITT_ENTRY_SIZE	GENMASK_ULL(7, 4)
- #define GITS_TYPER_IDBITS_SHIFT		8
- #define GITS_TYPER_DEVBITS_SHIFT	13
- #define GITS_TYPER_DEVBITS(r)		((((r) >> GITS_TYPER_DEVBITS_SHIFT) & 0x1f) + 1)
+ 
+@@ -1495,7 +1495,7 @@ static int its_vlpi_get(struct irq_data *d, struct its_cmd_info *info)
+ 	struct its_vlpi_map *map;
+ 	int ret = 0;
+ 
+-	mutex_lock(&its_dev->event_map.vlpi_lock);
++	raw_spin_lock(&its_dev->event_map.vlpi_lock);
+ 
+ 	map = get_vlpi_map(d);
+ 
+@@ -1508,7 +1508,7 @@ static int its_vlpi_get(struct irq_data *d, struct its_cmd_info *info)
+ 	*info->map = *map;
+ 
+ out:
+-	mutex_unlock(&its_dev->event_map.vlpi_lock);
++	raw_spin_unlock(&its_dev->event_map.vlpi_lock);
+ 	return ret;
+ }
+ 
+@@ -1518,7 +1518,7 @@ static int its_vlpi_unmap(struct irq_data *d)
+ 	u32 event = its_get_event_id(d);
+ 	int ret = 0;
+ 
+-	mutex_lock(&its_dev->event_map.vlpi_lock);
++	raw_spin_lock(&its_dev->event_map.vlpi_lock);
+ 
+ 	if (!its_dev->event_map.vm || !irqd_is_forwarded_to_vcpu(d)) {
+ 		ret = -EINVAL;
+@@ -1548,7 +1548,7 @@ static int its_vlpi_unmap(struct irq_data *d)
+ 	}
+ 
+ out:
+-	mutex_unlock(&its_dev->event_map.vlpi_lock);
++	raw_spin_unlock(&its_dev->event_map.vlpi_lock);
+ 	return ret;
+ }
+ 
+@@ -2608,7 +2608,7 @@ static struct its_device *its_create_device(struct its_node *its, u32 dev_id,
+ 	dev->event_map.col_map = col_map;
+ 	dev->event_map.lpi_base = lpi_base;
+ 	dev->event_map.nr_lpis = nr_lpis;
+-	mutex_init(&dev->event_map.vlpi_lock);
++	raw_spin_lock_init(&dev->event_map.vlpi_lock);
+ 	dev->device_id = dev_id;
+ 	INIT_LIST_HEAD(&dev->entry);
+ 
