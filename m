@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A58C43141
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:41:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC730C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:41:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CF2A20709
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:41:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAA6720709
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:41:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732052AbfKTPlL (ORCPT
+        id S1732074AbfKTPlT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 10:41:11 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:53384 "EHLO
+        Wed, 20 Nov 2019 10:41:19 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:53356 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731912AbfKTPkZ (ORCPT
+        by vger.kernel.org with ESMTP id S1731908AbfKTPkY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 10:40:25 -0500
+        Wed, 20 Nov 2019 10:40:24 -0500
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iXS5V-0004Z1-IO; Wed, 20 Nov 2019 15:40:13 +0000
+        id 1iXS5U-0004az-P4; Wed, 20 Nov 2019 15:40:12 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iXS5U-0004LX-Sh; Wed, 20 Nov 2019 15:40:12 +0000
+        id 1iXS5U-0004J8-5w; Wed, 20 Nov 2019 15:40:12 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,20 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        xlpang@linux.alibaba.com, shanpeic@linux.alibaba.com,
-        "Ben Segall" <bsegall@google.com>,
         "Thomas Gleixner" <tglx@linutronix.de>,
-        "Valentin Schneider" <valentin.schneider@arm.com>,
-        "Ingo Molnar" <mingo@kernel.org>,
-        "Liangyan" <liangyan.peng@linux.alibaba.com>,
-        "Linus Torvalds" <torvalds@linux-foundation.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Date:   Wed, 20 Nov 2019 15:38:13 +0000
-Message-ID: <lsq.1574264230.760113588@decadent.org.uk>
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        "Sean Christopherson" <sean.j.christopherson@intel.com>
+Date:   Wed, 20 Nov 2019 15:37:56 +0000
+Message-ID: <lsq.1574264230.248698305@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 63/83] sched/fair: Don't assign runtime for throttled
- cfs_rq
+Subject: [PATCH 3.16 46/83] x86/retpoline: Don't clobber RFLAGS during
+ CALL_NOSPEC on i386
 In-Reply-To: <lsq.1574264230.280218497@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -62,70 +57,76 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Liangyan <liangyan.peng@linux.alibaba.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit 5e2d2cc2588bd3307ce3937acbc2ed03c830a861 upstream.
+commit b63f20a778c88b6a04458ed6ffc69da953d3a109 upstream.
 
-do_sched_cfs_period_timer() will refill cfs_b runtime and call
-distribute_cfs_runtime to unthrottle cfs_rq, sometimes cfs_b->runtime
-will allocate all quota to one cfs_rq incorrectly, then other cfs_rqs
-attached to this cfs_b can't get runtime and will be throttled.
+Use 'lea' instead of 'add' when adjusting %rsp in CALL_NOSPEC so as to
+avoid clobbering flags.
 
-We find that one throttled cfs_rq has non-negative
-cfs_rq->runtime_remaining and cause an unexpetced cast from s64 to u64
-in snippet:
+KVM's emulator makes indirect calls into a jump table of sorts, where
+the destination of the CALL_NOSPEC is a small blob of code that performs
+fast emulation by executing the target instruction with fixed operands.
 
-  distribute_cfs_runtime() {
-    runtime = -cfs_rq->runtime_remaining + 1;
-  }
+  adcb_al_dl:
+     0x000339f8 <+0>:   adc    %dl,%al
+     0x000339fa <+2>:   ret
 
-The runtime here will change to a large number and consume all
-cfs_b->runtime in this cfs_b period.
+A major motiviation for doing fast emulation is to leverage the CPU to
+handle consumption and manipulation of arithmetic flags, i.e. RFLAGS is
+both an input and output to the target of CALL_NOSPEC.  Clobbering flags
+results in all sorts of incorrect emulation, e.g. Jcc instructions often
+take the wrong path.  Sans the nops...
 
-According to Ben Segall, the throttled cfs_rq can have
-account_cfs_rq_runtime called on it because it is throttled before
-idle_balance, and the idle_balance calls update_rq_clock to add time
-that is accounted to the task.
+  asm("push %[flags]; popf; " CALL_NOSPEC " ; pushf; pop %[flags]\n"
+     0x0003595a <+58>:  mov    0xc0(%ebx),%eax
+     0x00035960 <+64>:  mov    0x60(%ebx),%edx
+     0x00035963 <+67>:  mov    0x90(%ebx),%ecx
+     0x00035969 <+73>:  push   %edi
+     0x0003596a <+74>:  popf
+     0x0003596b <+75>:  call   *%esi
+     0x000359a0 <+128>: pushf
+     0x000359a1 <+129>: pop    %edi
+     0x000359a2 <+130>: mov    %eax,0xc0(%ebx)
+     0x000359b1 <+145>: mov    %edx,0x60(%ebx)
 
-This commit prevents cfs_rq to be assgined new runtime if it has been
-throttled until that distribute_cfs_runtime is called.
+  ctxt->eflags = (ctxt->eflags & ~EFLAGS_MASK) | (flags & EFLAGS_MASK);
+     0x000359a8 <+136>: mov    -0x10(%ebp),%eax
+     0x000359ab <+139>: and    $0x8d5,%edi
+     0x000359b4 <+148>: and    $0xfffff72a,%eax
+     0x000359b9 <+153>: or     %eax,%edi
+     0x000359bd <+157>: mov    %edi,0x4(%ebx)
 
-Signed-off-by: Liangyan <liangyan.peng@linux.alibaba.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
-Reviewed-by: Ben Segall <bsegall@google.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: shanpeic@linux.alibaba.com
-Cc: xlpang@linux.alibaba.com
-Fixes: d3d9dc330236 ("sched: Throttle entities exceeding their allowed bandwidth")
-Link: https://lkml.kernel.org/r/20190826121633.6538-1-liangyan.peng@linux.alibaba.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-[bwh: Backported to 3.16: Open-code SCHED_WARN_ON().]
+For the most part this has gone unnoticed as emulation of guest code
+that can trigger fast emulation is effectively limited to MMIO when
+running on modern hardware, and MMIO is rarely, if ever, accessed by
+instructions that affect or consume flags.
+
+Breakage is almost instantaneous when running with unrestricted guest
+disabled, in which case KVM must emulate all instructions when the guest
+has invalid state, e.g. when the guest is in Big Real Mode during early
+BIOS.
+
+Fixes: 776b043848fd2 ("x86/retpoline: Add initial retpoline support")
+Fixes: 1a29b5b7f347a ("KVM: x86: Make indirect calls in emulator speculation safe")
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20190822211122.27579-1-sean.j.christopherson@intel.com
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -3271,6 +3271,8 @@ static void __account_cfs_rq_runtime(str
- 	if (likely(cfs_rq->runtime_remaining > 0))
- 		return;
- 
-+	if (cfs_rq->throttled)
-+		return;
- 	/*
- 	 * if we're unable to extend our runtime we resched so that the active
- 	 * hierarchy can be throttled
-@@ -3450,6 +3452,11 @@ static u64 distribute_cfs_runtime(struct
- 		if (!cfs_rq_throttled(cfs_rq))
- 			goto next;
- 
-+		/* By the above check, this should never be true */
-+#ifdef CONFIG_SCHED_DEBUG
-+		WARN_ON_ONCE(cfs_rq->runtime_remaining > 0);
-+#endif
-+
- 		runtime = -cfs_rq->runtime_remaining + 1;
- 		if (runtime > remaining)
- 			runtime = remaining;
+ arch/x86/include/asm/nospec-branch.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/arch/x86/include/asm/nospec-branch.h
++++ b/arch/x86/include/asm/nospec-branch.h
+@@ -151,7 +151,7 @@
+ 	"    	lfence;\n"					\
+ 	"       jmp    902b;\n"					\
+ 	"       .align 16\n"					\
+-	"903:	addl   $4, %%esp;\n"				\
++	"903:	lea    4(%%esp), %%esp;\n"			\
+ 	"       pushl  %[thunk_target];\n"			\
+ 	"       ret;\n"						\
+ 	"       .align 16\n"					\
 
