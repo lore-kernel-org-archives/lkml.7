@@ -2,187 +2,370 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E444C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 05:27:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63C74C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 05:31:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D0F22240A
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 05:27:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2519F2245F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 05:31:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="ETA60fcE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KxN/VUF+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727051AbfKTF12 (ORCPT
+        id S1727052AbfKTFbP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 00:27:28 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:43512 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725832AbfKTF11 (ORCPT
+        Wed, 20 Nov 2019 00:31:15 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:35787 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725832AbfKTFbP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 00:27:27 -0500
-Received: by mail-pf1-f194.google.com with SMTP id 3so13612387pfb.10
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 21:27:25 -0800 (PST)
+        Wed, 20 Nov 2019 00:31:15 -0500
+Received: by mail-ot1-f65.google.com with SMTP id c14so13164135oth.2;
+        Tue, 19 Nov 2019 21:31:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=axtens.net; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=keeeAI8Pfb2Kl/duSqjRgQqa9JjQMfYjDPW+Gc6NiSs=;
-        b=ETA60fcELFjS0/dp+tEDXlPTgLHu0VCA+6gi/m26QCLsKVI9NeLreJsiENSgm490K7
-         HenX32cYW4BqKOvK5kA+ikHaaXx+39I9CBeGin2VPl+EbXwqeCpNDEIpIW/ofL5uqOGu
-         cQw8f7NbiEFUkz8iADA8AFhwiHS0850luWSxU=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=6e8SujYjRtrGbDIJN+KGArRXZzU18cG+HqyXm6ajTcU=;
+        b=KxN/VUF+IVhOSAw0qmAjBYYhN8n8i7FleiBBgs+RDzfC5P7ZKHn4/cFur+w/eyi6qh
+         P+KE2oSrvc6MmhBCXBD0U+KiG1Jj2EDl/hr9RXoX/960/3RNbmXE691SdBPIQe6YdCrK
+         iIUwgl5Z30o8ICPFh9ay0xphKnWlGUsGdoq5LibYmKFp/MyiX/YrFiG3aDsa0jbPIsj5
+         6WsV9r+UNYne+uO/ViyEaiHMJ12tIzw2Zi32OlgwG67ZZwuZHvylkIlYUbdfiZyWfVSc
+         ImshTJNR9hzBgS7MVaMM9Aly6qzculUEWdS/djP51kwuWRZV5jgbD02+PAZGPzsfSdvn
+         moGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=keeeAI8Pfb2Kl/duSqjRgQqa9JjQMfYjDPW+Gc6NiSs=;
-        b=UxHXrjjAv9L23EVjTgkFL07r5AQ/gDAQSEbM6DWhbnfZ36RqTXvUHa+dVCQ+9bIbcw
-         7SKH5ELbUv74c7zsZOnMCa8Pqk29mW3MbvO5CmM3U74Du0EO6pMYLYHcduHKQieob6CK
-         xLDe95CFHDOE6WPiATpgyJrmsqU0W4ytHMBJNgM0PS64n5YGjZy5Al2dxJbYUgwElOPH
-         A46VcLeIaH8rJ5oalYSWxY4nOSyTgAOG6h8p0F8g1vIOB2I5ye2xlP6dgrskT+7q1EZE
-         oLv05z54Qj9rgJq4yGa+ARkQZlOYFtgRilyQBn80TMp0zC0nQm0NlV5eZ3hXto7S8oh/
-         8whw==
-X-Gm-Message-State: APjAAAXNisT0eawZLlqixsk/aW0nokGtdPZcIpr19vbE5bVBT5zpqVr3
-        Ew8X9kz2uJEPB36Yl8fPIQOn5Q==
-X-Google-Smtp-Source: APXvYqwcRLpDJrGouMn4i7sCtVLz0VNrB2qc7pZkb01u8+Jad37R3CCkjURA8OcbGckvxot+GTdxzA==
-X-Received: by 2002:a65:67c7:: with SMTP id b7mr1058249pgs.339.1574227644988;
-        Tue, 19 Nov 2019 21:27:24 -0800 (PST)
-Received: from localhost (2001-44b8-1113-6700-9c57-4778-d90c-fd6d.static.ipv6.internode.on.net. [2001:44b8:1113:6700:9c57:4778:d90c:fd6d])
-        by smtp.gmail.com with ESMTPSA id w15sm22333601pfi.168.2019.11.19.21.27.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Nov 2019 21:27:24 -0800 (PST)
-From:   Daniel Axtens <dja@axtens.net>
-To:     kasan-dev@googlegroups.com, linux-mm@kvack.org, x86@kernel.org,
-        aryabinin@virtuozzo.com, glider@google.com, luto@kernel.org,
-        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
-        dvyukov@google.com, christophe.leroy@c-s.fr,
-        akpm@linux-foundation.org, urezki@gmail.com
-Cc:     linuxppc-dev@lists.ozlabs.org, gor@linux.ibm.com, cai@lca.pw,
-        Daniel Axtens <dja@axtens.net>
-Subject: [PATCH] update to "kasan: support backing vmalloc space with real shadow memory"
-Date:   Wed, 20 Nov 2019 16:27:19 +1100
-Message-Id: <20191120052719.7201-1-dja@axtens.net>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191031093909.9228-2-dja@axtens.net>
-References: <20191031093909.9228-2-dja@axtens.net>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=6e8SujYjRtrGbDIJN+KGArRXZzU18cG+HqyXm6ajTcU=;
+        b=Sk/gOfaK4ha0DqlHG/0HNGeT9QPPugcpvfWaOLBgxJiouHGUKjZOVQl2l5u8YOA7Hu
+         LNB2z3qZT1k/B2s2A/MtJLM7ymc5zsRBVGex72g/8U7nj7qqE7A132Ttu53NpCg9GQx/
+         JqU/Ikz6I0lly7hWgT+tvT4I3lvDfWM8hUo7eaBXoStdTM/3uukEs/+FfYs5R/QiYqx8
+         Zr36N8bG9B7spC2hpNdRGAqerFIeEwpuQDLfwsxZrin021pjwaLmd9wCOS7cspSbisJr
+         wJ0O5gcuC+X/vDeL5pU4rnTDIOLm9ZHNflW49/bFcEuWTk+BF+2qgekqpsjk3PuXQGk/
+         f8ug==
+X-Gm-Message-State: APjAAAW2VGWBkDl/JN88rxWcSlmBgmf5fRdIbZXhbMp2b2vqHqMSk58B
+        TNyzqA3XAwhEPNYQUvioWyJXBqOu6BR+ROKprDJuDQ==
+X-Google-Smtp-Source: APXvYqzK772ihafmySm5R2xJSodjlntnYnNQxtXeg20APfjEVUN6lvWidSvhHbcpi6jxXogFOn8AWBEQPxfwxqbrTFg=
+X-Received: by 2002:a05:6830:4ae:: with SMTP id l14mr566844otd.185.1574227873250;
+ Tue, 19 Nov 2019 21:31:13 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1574221329-12370-1-git-send-email-wanpengli@tencent.com>
+In-Reply-To: <1574221329-12370-1-git-send-email-wanpengli@tencent.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Wed, 20 Nov 2019 13:31:05 +0800
+Message-ID: <CANRm+Cx6vVywCY8mDSW6yE653gXdc6gM9zg1ZwRXTPWbs4b1ow@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] KVM: VMX: FIXED+PHYSICAL mode single target IPI fastpath
+To:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Liran Alon <liran.alon@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+On Wed, 20 Nov 2019 at 11:42, Wanpeng Li <kernellwp@gmail.com> wrote:
+>
+> From: Wanpeng Li <wanpengli@tencent.com>
+>
+> ICR and TSCDEADLINE MSRs write cause the main MSRs write vmexits in
+> our product observation, multicast IPIs are not as common as unicast
+> IPI like RESCHEDULE_VECTOR and CALL_FUNCTION_SINGLE_VECTOR etc.
+>
+> This patch tries to optimize x2apic physical destination mode, fixed
+> delivery mode single target IPI. The fast path is invoked at
+> ->handle_exit_irqoff() to emulate only the effect of the ICR write
+> itself, i.e. the sending of IPIs.  Sending IPIs early in the VM-Exit
+> flow reduces the latency of virtual IPIs by avoiding the expensive bits
+> of transitioning from guest to host, e.g. reacquiring KVM's SRCU lock.
+> Especially when running guest w/ KVM_CAP_X86_DISABLE_EXITS capability
+> enabled or guest can keep running, IPI can be injected to target vCPU
+> by posted-interrupt immediately.
+>
+> Testing on Xeon Skylake server:
+>
+> The virtual IPI latency from sender send to receiver receive reduces
+> more than 200+ cpu cycles.
+>
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com>
+> Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+> Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+> Cc: Liran Alon <liran.alon@oracle.com>
+> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> ---
+> v2 -> v3:
+>  * for both VMX and SVM
+>  * vmx_handle_exit() get second parameter by value and not by pointer
+>  * rename parameter to =E2=80=9Caccel_exit_completion=E2=80=9D
+>  * preserve tracepoint ordering
+>  * rename handler to handle_accel_set_msr_irqoff and more generic
+>  * add comments above handle_accel_set_msr_irqoff
+>  * msr index APIC_BASE_MSR + (APIC_ICR >> 4)
+> v1 -> v2:
+>  * add tracepoint
+>  * Instead of a separate vcpu->fast_vmexit, set exit_reason
+>   to vmx->exit_reason to -1 if the fast path succeeds.
+>  * move the "kvm_skip_emulated_instruction(vcpu)" to vmx_handle_exit
+>  * moving the handling into vmx_handle_exit_irqoff()
+>
+>  arch/x86/include/asm/kvm_host.h | 11 ++++++++--
+>  arch/x86/kvm/svm.c              | 14 ++++++++----
+>  arch/x86/kvm/vmx/vmx.c          | 13 ++++++++---
+>  arch/x86/kvm/x86.c              | 48 +++++++++++++++++++++++++++++++++++=
+++++--
+>  arch/x86/kvm/x86.h              |  1 +
+>  5 files changed, 76 insertions(+), 11 deletions(-)
+>
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_h=
+ost.h
+> index 898ab9e..67c7889 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -175,6 +175,11 @@ enum {
+>         VCPU_SREG_LDTR,
+>  };
+>
+> +enum accel_exit_completion {
+> +       ACCEL_EXIT_NONE,
+> +       ACCEL_EXIT_SKIP_EMUL_INS =3D -1,
 
-This is a quick fixup to patch 1 of the "kasan: support backing
-vmalloc space with real shadow memory" series, v11, which you pulled
-in to your mmotm tree.
+Don't need to be -1 any more, I guess maintainer can clean it up if
+this is the last version.
 
-There are 2 changes:
-
- - A fixup to the per-cpu allocator path to avoid allocating memory
-   under a spinlock, thanks Qian Cai.
-
- - Insert flush_cache_vmap() between mapping shadow and poisoning
-   it. This is a no-op on x86 and arm64, but on powerpc it does a
-   ptesync instruction which prevents occasional page faults.
-
-Here are updated benchmark figures for the commit message:
-
-Testing with test_vmalloc.sh on an x86 VM with 2 vCPUs shows that:
-
- - Turning on KASAN, inline instrumentation, without vmalloc, introuduces
-   a 5.7x-6.4x slowdown in vmalloc operations.
-
- - Turning this on introduces the following slowdowns over KASAN:
-     * ~1.82x slower single-threaded (test_vmalloc.sh performance)
-     * ~2.11x slower when both cpus are performing operations
-       simultaneously (test_vmalloc.sh sequential_test_order=1)
-
-This is unfortunate, but given that this is a debug feature only, not
-the end of the world.
-
-The full results are:
-
-Performance
-
-                              No KASAN      KASAN original x baseline  KASAN vmalloc x baseline    x KASAN
-
-fix_size_alloc_test             662004            11404956      17.23       19144610      28.92       1.68
-full_fit_alloc_test             710950            12029752      16.92       13184651      18.55       1.10
-long_busy_list_alloc_test      9431875            43990172       4.66       82970178       8.80       1.89
-random_size_alloc_test         5033626            23061762       4.58       47158834       9.37       2.04
-fix_align_alloc_test           1252514            15276910      12.20       31266116      24.96       2.05
-random_size_align_alloc_te     1648501            14578321       8.84       25560052      15.51       1.75
-align_shift_alloc_test             147                 830       5.65           5692      38.72       6.86
-pcpu_alloc_test                  80732              125520       1.55         140864       1.74       1.12
-Total Cycles              119240774314        763211341128       6.40  1390338696894      11.66       1.82
-
-Sequential, 2 cpus
-
-                              No KASAN      KASAN original x baseline  KASAN vmalloc x baseline    x KASAN
-
-fix_size_alloc_test            1423150            14276550      10.03       27733022      19.49       1.94
-full_fit_alloc_test            1754219            14722640       8.39       15030786       8.57       1.02
-long_busy_list_alloc_test     11451858            52154973       4.55      107016027       9.34       2.05
-random_size_alloc_test         5989020            26735276       4.46       68885923      11.50       2.58
-fix_align_alloc_test           2050976            20166900       9.83       50491675      24.62       2.50
-random_size_align_alloc_te     2858229            17971700       6.29       38730225      13.55       2.16
-align_shift_alloc_test             405                6428      15.87          26253      64.82       4.08
-pcpu_alloc_test                 127183              151464       1.19         216263       1.70       1.43
-Total Cycles               54181269392        308723699764       5.70   650772566394      12.01       2.11
-fix_size_alloc_test            1420404            14289308      10.06       27790035      19.56       1.94
-full_fit_alloc_test            1736145            14806234       8.53       15274301       8.80       1.03
-long_busy_list_alloc_test     11404638            52270785       4.58      107550254       9.43       2.06
-random_size_alloc_test         6017006            26650625       4.43       68696127      11.42       2.58
-fix_align_alloc_test           2045504            20280985       9.91       50414862      24.65       2.49
-random_size_align_alloc_te     2845338            17931018       6.30       38510276      13.53       2.15
-align_shift_alloc_test             472                3760       7.97           9656      20.46       2.57
-pcpu_alloc_test                 118643              132732       1.12         146504       1.23       1.10
-Total Cycles               54040011688        309102805492       5.72   651325675652      12.05       2.11
-
-Cc: Qian Cai <cai@lca.pw>
-Signed-off-by: Daniel Axtens <dja@axtens.net>
----
- mm/kasan/common.c | 2 ++
- mm/vmalloc.c      | 5 ++++-
- 2 files changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/mm/kasan/common.c b/mm/kasan/common.c
-index 6e7bc5d3fa83..df3371d5c572 100644
---- a/mm/kasan/common.c
-+++ b/mm/kasan/common.c
-@@ -794,6 +794,8 @@ int kasan_populate_vmalloc(unsigned long requested_size, struct vm_struct *area)
- 	if (ret)
- 		return ret;
- 
-+	flush_cache_vmap(shadow_start, shadow_end);
-+
- 	kasan_unpoison_shadow(area->addr, requested_size);
- 
- 	area->flags |= VM_KASAN;
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index a4b950a02d0b..bf030516258c 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -3417,11 +3417,14 @@ struct vm_struct **pcpu_get_vm_areas(const unsigned long *offsets,
- 
- 		setup_vmalloc_vm_locked(vms[area], vas[area], VM_ALLOC,
- 				 pcpu_get_vm_areas);
-+	}
-+	spin_unlock(&vmap_area_lock);
- 
-+	/* populate the shadow space outside of the lock */
-+	for (area = 0; area < nr_vms; area++) {
- 		/* assume success here */
- 		kasan_populate_vmalloc(sizes[area], vms[area]);
- 	}
--	spin_unlock(&vmap_area_lock);
- 
- 	kfree(vas);
- 	return vms;
--- 
-2.20.1
-
+> +};
+> +
+>  #include <asm/kvm_emulate.h>
+>
+>  #define KVM_NR_MEM_OBJS 40
+> @@ -1084,7 +1089,8 @@ struct kvm_x86_ops {
+>         void (*tlb_flush_gva)(struct kvm_vcpu *vcpu, gva_t addr);
+>
+>         void (*run)(struct kvm_vcpu *vcpu);
+> -       int (*handle_exit)(struct kvm_vcpu *vcpu);
+> +       int (*handle_exit)(struct kvm_vcpu *vcpu,
+> +               enum accel_exit_completion accel_exit);
+>         int (*skip_emulated_instruction)(struct kvm_vcpu *vcpu);
+>         void (*set_interrupt_shadow)(struct kvm_vcpu *vcpu, int mask);
+>         u32 (*get_interrupt_shadow)(struct kvm_vcpu *vcpu);
+> @@ -1134,7 +1140,8 @@ struct kvm_x86_ops {
+>         int (*check_intercept)(struct kvm_vcpu *vcpu,
+>                                struct x86_instruction_info *info,
+>                                enum x86_intercept_stage stage);
+> -       void (*handle_exit_irqoff)(struct kvm_vcpu *vcpu);
+> +       void (*handle_exit_irqoff)(struct kvm_vcpu *vcpu,
+> +               enum accel_exit_completion *accel_exit);
+>         bool (*mpx_supported)(void);
+>         bool (*xsaves_supported)(void);
+>         bool (*umip_emulated)(void);
+> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> index d02a73a..060b11d 100644
+> --- a/arch/x86/kvm/svm.c
+> +++ b/arch/x86/kvm/svm.c
+> @@ -4929,7 +4929,8 @@ static void svm_get_exit_info(struct kvm_vcpu *vcpu=
+, u64 *info1, u64 *info2)
+>         *info2 =3D control->exit_info_2;
+>  }
+>
+> -static int handle_exit(struct kvm_vcpu *vcpu)
+> +static int handle_exit(struct kvm_vcpu *vcpu,
+> +       enum accel_exit_completion accel_exit)
+>  {
+>         struct vcpu_svm *svm =3D to_svm(vcpu);
+>         struct kvm_run *kvm_run =3D vcpu->run;
+> @@ -4987,7 +4988,10 @@ static int handle_exit(struct kvm_vcpu *vcpu)
+>                        __func__, svm->vmcb->control.exit_int_info,
+>                        exit_code);
+>
+> -       if (exit_code >=3D ARRAY_SIZE(svm_exit_handlers)
+> +       if (accel_exit =3D=3D ACCEL_EXIT_SKIP_EMUL_INS) {
+> +               kvm_skip_emulated_instruction(vcpu);
+> +               return 1;
+> +       } else if (exit_code >=3D ARRAY_SIZE(svm_exit_handlers)
+>             || !svm_exit_handlers[exit_code]) {
+>                 vcpu_unimpl(vcpu, "svm: unexpected exit reason 0x%x\n", e=
+xit_code);
+>                 dump_vmcb(vcpu);
+> @@ -6187,9 +6191,11 @@ static int svm_check_intercept(struct kvm_vcpu *vc=
+pu,
+>         return ret;
+>  }
+>
+> -static void svm_handle_exit_irqoff(struct kvm_vcpu *vcpu)
+> +static void svm_handle_exit_irqoff(struct kvm_vcpu *vcpu,
+> +       enum accel_exit_completion *accel_exit)
+>  {
+> -
+> +       if (to_svm(vcpu)->vmcb->control.exit_code =3D=3D EXIT_REASON_MSR_=
+WRITE)
+> +               *accel_exit =3D handle_accel_set_msr_irqoff(vcpu);
+>  }
+>
+>  static void svm_sched_in(struct kvm_vcpu *vcpu, int cpu)
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 621142e5..86c0a23 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -5792,7 +5792,8 @@ void dump_vmcs(void)
+>   * The guest has exited.  See if we can fix it or if we need userspace
+>   * assistance.
+>   */
+> -static int vmx_handle_exit(struct kvm_vcpu *vcpu)
+> +static int vmx_handle_exit(struct kvm_vcpu *vcpu,
+> +       enum accel_exit_completion accel_exit)
+>  {
+>         struct vcpu_vmx *vmx =3D to_vmx(vcpu);
+>         u32 exit_reason =3D vmx->exit_reason;
+> @@ -5878,7 +5879,10 @@ static int vmx_handle_exit(struct kvm_vcpu *vcpu)
+>                 }
+>         }
+>
+> -       if (exit_reason < kvm_vmx_max_exit_handlers
+> +       if (accel_exit =3D=3D ACCEL_EXIT_SKIP_EMUL_INS) {
+> +               kvm_skip_emulated_instruction(vcpu);
+> +               return 1;
+> +       } else if (exit_reason < kvm_vmx_max_exit_handlers
+>             && kvm_vmx_exit_handlers[exit_reason]) {
+>  #ifdef CONFIG_RETPOLINE
+>                 if (exit_reason =3D=3D EXIT_REASON_MSR_WRITE)
+> @@ -6223,7 +6227,8 @@ static void handle_external_interrupt_irqoff(struct=
+ kvm_vcpu *vcpu)
+>  }
+>  STACK_FRAME_NON_STANDARD(handle_external_interrupt_irqoff);
+>
+> -static void vmx_handle_exit_irqoff(struct kvm_vcpu *vcpu)
+> +static void vmx_handle_exit_irqoff(struct kvm_vcpu *vcpu,
+> +       enum accel_exit_completion *accel_exit)
+>  {
+>         struct vcpu_vmx *vmx =3D to_vmx(vcpu);
+>
+> @@ -6231,6 +6236,8 @@ static void vmx_handle_exit_irqoff(struct kvm_vcpu =
+*vcpu)
+>                 handle_external_interrupt_irqoff(vcpu);
+>         else if (vmx->exit_reason =3D=3D EXIT_REASON_EXCEPTION_NMI)
+>                 handle_exception_nmi_irqoff(vmx);
+> +       else if (vmx->exit_reason =3D=3D EXIT_REASON_MSR_WRITE)
+> +               *accel_exit =3D handle_accel_set_msr_irqoff(vcpu);
+>  }
+>
+>  static bool vmx_has_emulated_msr(int index)
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 991dd01..966c659 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -1509,6 +1509,49 @@ int kvm_emulate_wrmsr(struct kvm_vcpu *vcpu)
+>  }
+>  EXPORT_SYMBOL_GPL(kvm_emulate_wrmsr);
+>
+> +static int handle_accel_set_x2apic_icr_irqoff(struct kvm_vcpu *vcpu, u64=
+ data)
+> +{
+> +       if (lapic_in_kernel(vcpu) && apic_x2apic_mode(vcpu->arch.apic) &&
+> +               ((data & KVM_APIC_DEST_MASK) =3D=3D APIC_DEST_PHYSICAL) &=
+&
+> +               ((data & APIC_MODE_MASK) =3D=3D APIC_DM_FIXED)) {
+> +
+> +               kvm_lapic_set_reg(vcpu->arch.apic, APIC_ICR2, (u32)(data =
+>> 32));
+> +               return kvm_lapic_reg_write(vcpu->arch.apic, APIC_ICR, (u3=
+2)data);
+> +       }
+> +
+> +       return 1;
+> +}
+> +
+> +/*
+> + * The fast path for frequent and performance sensitive wrmsr emulation,
+> + * i.e. the sending of IPI, sending IPI early in the VM-Exit flow reduce=
+s
+> + * the latency of virtual IPI by avoiding the expensive bits of transiti=
+oning
+> + * from guest to host, e.g. reacquiring KVM's SRCU lock. In contrast to =
+the
+> + * other cases which must be called after interrupts are enabled on the =
+host.
+> + */
+> +enum accel_exit_completion handle_accel_set_msr_irqoff(struct kvm_vcpu *=
+vcpu)
+> +{
+> +       u32 msr =3D kvm_rcx_read(vcpu);
+> +       u64 data =3D kvm_read_edx_eax(vcpu);
+> +       int ret =3D 0;
+> +
+> +       switch (msr) {
+> +       case APIC_BASE_MSR + (APIC_ICR >> 4):
+> +               ret =3D handle_accel_set_x2apic_icr_irqoff(vcpu, data);
+> +               break;
+> +       default:
+> +               return ACCEL_EXIT_NONE;
+> +       }
+> +
+> +       if (!ret) {
+> +               trace_kvm_msr_write(msr, data);
+> +               return ACCEL_EXIT_SKIP_EMUL_INS;
+> +       }
+> +
+> +       return ACCEL_EXIT_NONE;
+> +}
+> +EXPORT_SYMBOL_GPL(handle_accel_set_msr_irqoff);
+> +
+>  /*
+>   * Adapt set_msr() to msr_io()'s calling convention
+>   */
+> @@ -7984,6 +8027,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+>         bool req_int_win =3D
+>                 dm_request_for_irq_injection(vcpu) &&
+>                 kvm_cpu_accept_dm_intr(vcpu);
+> +       enum accel_exit_completion accel_exit =3D ACCEL_EXIT_NONE;
+>
+>         bool req_immediate_exit =3D false;
+>
+> @@ -8226,7 +8270,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+>         vcpu->mode =3D OUTSIDE_GUEST_MODE;
+>         smp_wmb();
+>
+> -       kvm_x86_ops->handle_exit_irqoff(vcpu);
+> +       kvm_x86_ops->handle_exit_irqoff(vcpu, &accel_exit);
+>
+>         /*
+>          * Consume any pending interrupts, including the possible source =
+of
+> @@ -8270,7 +8314,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+>                 kvm_lapic_sync_from_vapic(vcpu);
+>
+>         vcpu->arch.gpa_available =3D false;
+> -       r =3D kvm_x86_ops->handle_exit(vcpu);
+> +       r =3D kvm_x86_ops->handle_exit(vcpu, accel_exit);
+>         return r;
+>
+>  cancel_injection:
+> diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+> index 29391af..f14ec14 100644
+> --- a/arch/x86/kvm/x86.h
+> +++ b/arch/x86/kvm/x86.h
+> @@ -291,6 +291,7 @@ bool kvm_mtrr_check_gfn_range_consistency(struct kvm_=
+vcpu *vcpu, gfn_t gfn,
+>  bool kvm_vector_hashing_enabled(void);
+>  int x86_emulate_instruction(struct kvm_vcpu *vcpu, unsigned long cr2,
+>                             int emulation_type, void *insn, int insn_len)=
+;
+> +enum accel_exit_completion handle_accel_set_msr_irqoff(struct kvm_vcpu *=
+vcpu);
+>
+>  #define KVM_SUPPORTED_XCR0     (XFEATURE_MASK_FP | XFEATURE_MASK_SSE \
+>                                 | XFEATURE_MASK_YMM | XFEATURE_MASK_BNDRE=
+GS \
+> --
+> 2.7.4
+>
