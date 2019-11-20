@@ -2,177 +2,209 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97988C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:58:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D4EDC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:58:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EE8620715
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:58:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 358D720714
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:58:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732551AbfKTP6L (ORCPT
+        id S1732572AbfKTP6y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 10:58:11 -0500
-Received: from mail-il1-f198.google.com ([209.85.166.198]:57343 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732074AbfKTP6L (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 10:58:11 -0500
-Received: by mail-il1-f198.google.com with SMTP id e5so22728750ile.23
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 07:58:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=D0siQ5VXLYgnLbarDRDx2gxGicWQej9v5iWxcK9yLGk=;
-        b=Pfbhz0ujyyPYYnKIUyixcEBWqhE+u9eeZBWtSptn7GaP+Rc93QmmMsVtkDY3Ok4Jtv
-         Ms10zors/bXhb+ktw786IOhlti2RcgRDxNLBwQmCl544GVxDEbTWK8VOmQEIov6XPnS7
-         H3ge3cWD4JXHclhVtX0qNDZlbI2dAPV5yK7KHZOmckfv24CSOZsv5IHYAVPGQesrvqtb
-         L/FbW41OyPVjt4RWrTZBmM0B//w+DXEeoHDqFbSlAY7lxwrSJ0n3DLXXT4Cv58Y4mkZJ
-         SfANRN30mYdOl0g6XWmqNklcd3CWHMMdSKNdRK5lVrFz2hUqE2SAD4vda4z7C7GeBFF9
-         rz3A==
-X-Gm-Message-State: APjAAAU5Ahi/NtCdFrXWxErs86n0WuAt+QOec9hHQyECJXhXaKcZrwKv
-        MQGdIsRYJbBMyl/29o1JuwJW5tJ9zZcepsUplJLlEu4VosvV
-X-Google-Smtp-Source: APXvYqx8TtWXlYIgsSif3jENuikx/9gZNwqg/6rX/P2UATgf96UTqCSv9ftqDJznlfzIUvUtrKRLnRUPeqsmE8ZjYTnKykjxr9qu
-MIME-Version: 1.0
-X-Received: by 2002:a92:831d:: with SMTP id f29mr4379730ild.263.1574265488544;
- Wed, 20 Nov 2019 07:58:08 -0800 (PST)
-Date:   Wed, 20 Nov 2019 07:58:08 -0800
-In-Reply-To: <00000000000072cb6c0597635d04@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000003a1f180597c93ffe@google.com>
-Subject: Re: INFO: trying to register non-static key in io_cqring_ev_posted
-From:   syzbot <syzbot+0d818c0d39399188f393@syzkaller.appspotmail.com>
-To:     axboe@kernel.dk, io-uring@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+        Wed, 20 Nov 2019 10:58:54 -0500
+Received: from mx2.suse.de ([195.135.220.15]:39922 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732062AbfKTP6y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 10:58:54 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 315A0B2C0B;
+        Wed, 20 Nov 2019 15:58:51 +0000 (UTC)
+Date:   Wed, 20 Nov 2019 16:58:50 +0100
+Message-ID: <s5h36ei8rph.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Andrew Gabbasov <andrew_gabbasov@mentor.com>
+Cc:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Timo Wischer <twischer@de.adit-jv.com>
+Subject: Re: [PATCH v4 6/7] ALSA: aloop: Support selection of snd_timer instead of jiffies
+In-Reply-To: <000101d59fb8$a288a280$e799e780$@mentor.com>
+References: <20191120115856.4125-1-andrew_gabbasov@mentor.com>
+        <20191120115856.4125-2-andrew_gabbasov@mentor.com>
+        <20191120115856.4125-3-andrew_gabbasov@mentor.com>
+        <20191120115856.4125-4-andrew_gabbasov@mentor.com>
+        <20191120115856.4125-5-andrew_gabbasov@mentor.com>
+        <20191120115856.4125-6-andrew_gabbasov@mentor.com>
+        <20191120115856.4125-7-andrew_gabbasov@mentor.com>
+        <s5hh82y8vn5.wl-tiwai@suse.de>
+        <000001d59fb6$4ca36aa0$e5ea3fe0$@mentor.com>
+        <s5h5zje8sxl.wl-tiwai@suse.de>
+        <000101d59fb8$a288a280$e799e780$@mentor.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+On Wed, 20 Nov 2019 16:39:00 +0100,
+Andrew Gabbasov wrote:
+> 
+> Hello Takashi,
+> 
+> > -----Original Message-----
+> > From: Takashi Iwai [mailto:tiwai@suse.de]
+> > Sent: Wednesday, November 20, 2019 6:32 PM
+> > To: Gabbasov, Andrew
+> > Cc: alsa-devel@alsa-project.org; linux-kernel@vger.kernel.org; Jaroslav
+> > Kysela; Takashi Iwai; Timo Wischer
+> > Subject: Re: [PATCH v4 6/7] ALSA: aloop: Support selection of snd_timer
+> > instead of jiffies
+> > 
+> > On Wed, 20 Nov 2019 16:21:36 +0100,
+> > Andrew Gabbasov wrote:
+> > >
+> > > Hello Takashi,
+> > >
+> > > > -----Original Message-----
+> > > > From: Takashi Iwai [mailto:tiwai@suse.de]
+> > > > Sent: Wednesday, November 20, 2019 5:34 PM
+> > > > To: Gabbasov, Andrew
+> > > > Cc: alsa-devel@alsa-project.org; linux-kernel@vger.kernel.org;
+> Jaroslav
+> > > > Kysela; Takashi Iwai; Timo Wischer
+> > > > Subject: Re: [PATCH v4 6/7] ALSA: aloop: Support selection of
+> snd_timer
+> > > > instead of jiffies
+> > > >
+> > > > On Wed, 20 Nov 2019 12:58:55 +0100,
+> > > > Andrew Gabbasov wrote:
+> > > > > +/* call in loopback->cable_lock */
+> > > > > +static int loopback_snd_timer_open(struct loopback_pcm *dpcm)
+> > > > > +{
+> > > > > +	int err = 0;
+> > > > > +	struct snd_timer_id tid = {
+> > > > > +		.dev_class = SNDRV_TIMER_CLASS_PCM,
+> > > > > +		.dev_sclass = SNDRV_TIMER_SCLASS_APPLICATION,
+> > > > > +	};
+> > > > > +	struct snd_timer_instance *timeri;
+> > > > > +	struct loopback_cable *cable = dpcm->cable;
+> > > > > +
+> > > > > +	spin_lock_irq(&cable->lock);
+> > > > > +
+> > > > > +	/* check if timer was already opened. It is only opened once
+> > > > > +	 * per playback and capture subdevice (aka cable).
+> > > > > +	 */
+> > > > > +	if (cable->snd_timer.instance)
+> > > > > +		goto unlock;
+> > > > > +
+> > > > > +	err = loopback_parse_timer_id(dpcm->loopback->timer_source,
+> > &tid);
+> > > > > +	if (err < 0) {
+> > > > > +		pcm_err(dpcm->substream->pcm,
+> > > > > +			"Parsing timer source \'%s\' failed with
+> %d",
+> > > > > +			dpcm->loopback->timer_source, err);
+> > > > > +		goto unlock;
+> > > > > +	}
+> > > > > +
+> > > > > +	cable->snd_timer.stream = dpcm->substream->stream;
+> > > > > +	cable->snd_timer.id = tid;
+> > > > > +
+> > > > > +	timeri = snd_timer_instance_new(dpcm->loopback->card->id);
+> > > > > +	if (!timeri) {
+> > > > > +		err = -ENOMEM;
+> > > > > +		goto unlock;
+> > > > > +	}
+> > > > > +	/* The callback has to be called from another tasklet. If
+> > > > > +	 * SNDRV_TIMER_IFLG_FAST is specified it will be called from
+> > the
+> > > > > +	 * snd_pcm_period_elapsed() call of the selected sound card.
+> > > > > +	 * snd_pcm_period_elapsed() helds
+> > snd_pcm_stream_lock_irqsave().
+> > > > > +	 * Due to our callback loopback_snd_timer_function() also
+> > calls
+> > > > > +	 * snd_pcm_period_elapsed() which calls
+> > > > snd_pcm_stream_lock_irqsave().
+> > > > > +	 * This would end up in a dead lock.
+> > > > > +	 */
+> > > > > +	timeri->flags |= SNDRV_TIMER_IFLG_AUTO;
+> > > > > +	timeri->callback = loopback_snd_timer_function;
+> > > > > +	timeri->callback_data = (void *)cable;
+> > > > > +	timeri->ccallback = loopback_snd_timer_event;
+> > > > > +
+> > > > > +	/* snd_timer_close() and snd_timer_open() should not be
+> called
+> > with
+> > > > > +	 * locked spinlock because both functions can block on a
+> > mutex. The
+> > > > > +	 * mutex loopback->cable_lock is kept locked. Therefore
+> > > > snd_timer_open()
+> > > > > +	 * cannot be called a second time by the other device of the
+> > same
+> > > > cable.
+> > > > > +	 * Therefore the following issue cannot happen:
+> > > > > +	 * [proc1] Call loopback_timer_open() ->
+> > > > > +	 *	   Unlock cable->lock for snd_timer_close/open()
+> call
+> > > > > +	 * [proc2] Call loopback_timer_open() -> snd_timer_open(),
+> > > > > +	 *	   snd_timer_start()
+> > > > > +	 * [proc1] Call snd_timer_open() and overwrite running timer
+> > > > > +	 *	   instance
+> > > > > +	 */
+> > > > > +	spin_unlock_irq(&cable->lock);
+> > > > > +	err = snd_timer_open(timeri, &cable->snd_timer.id, current-
+> > >pid);
+> > > > > +	if (err < 0) {
+> > > > > +		pcm_err(dpcm->substream->pcm,
+> > > > > +			"snd_timer_open (%d,%d,%d) failed with %d",
+> > > > > +			cable->snd_timer.id.card,
+> > > > > +			cable->snd_timer.id.device,
+> > > > > +			cable->snd_timer.id.subdevice,
+> > > > > +			err);
+> > > > > +		snd_timer_instance_free(timeri);
+> > > > > +		return err;
+> > > > > +	}
+> > > > > +	spin_lock_irq(&cable->lock);
+> > > > > +
+> > > > > +	cable->snd_timer.instance = timeri;
+> > > > > +
+> > > > > +	/* initialise a tasklet used for draining */
+> > > > > +	tasklet_init(&cable->snd_timer.event_tasklet,
+> > > > > +		     loopback_snd_timer_tasklet, (unsigned
+> > long)timeri);
+> > > >
+> > > > This has to be set before snd_timer_open().  The callback might be
+> > > > called immediately after snd_timer_open().
+> > >
+> > > This tasklet is used/scheduled only in ccallback (not regular tick
+> > > callback),
+> > > and only for SNDRV_TIMER_EVENT_MSTOP event. Can this event really happen
+> > > immediately after snd_timer_open()?
+> > 
+> > Why not?  The master timer can be stopped at any time, even between
+> > these two lines.
+> > 
+> > Beware that there are fuzzer programs that can trigger such racy
+> > things, and you're adding the code to the target that is actively
+> > slapped by them :)
+> 
+> OK, got it.
+> I'll move this initialization to before snd_timer_open() in the next
+> update together with the fixes for the other issues you will find
+> in this version.
 
-HEAD commit:    5d1131b4 Add linux-next specific files for 20191119
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=140b0412e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b60c562d89e5a8df
-dashboard link: https://syzkaller.appspot.com/bug?extid=0d818c0d39399188f393
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=169b29d2e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14b3956ae00000
+I have no other issues, so you can just resubmit only that patch,
+too.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+0d818c0d39399188f393@syzkaller.appspotmail.com
 
-RSP: 002b:00007ffddd565408 EFLAGS: 00000246 ORIG_RAX: 00000000000001a9
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00000000004412a9
-RDX: 0000000000000001 RSI: 0000000020000340 RDI: 00000000000002a6
-RBP: 0000000000011c3e R08: 0000000000000001 R09: 00000000004002c8
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000004021f0
-R13: 0000000000402280 R14: 0000000000000000 R15: 0000000000000000
-INFO: trying to register non-static key.
-the code is fine but needs lockdep annotation.
-turning off the locking correctness validator.
-CPU: 1 PID: 8725 Comm: syz-executor376 Not tainted  
-5.4.0-rc8-next-20191119-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x197/0x210 lib/dump_stack.c:118
-  assign_lock_key kernel/locking/lockdep.c:881 [inline]
-  register_lock_class+0x179e/0x1850 kernel/locking/lockdep.c:1190
-  __lock_acquire+0xf4/0x4a00 kernel/locking/lockdep.c:3837
-  lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4485
-  __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:110 [inline]
-  _raw_spin_lock_irqsave+0x95/0xcd kernel/locking/spinlock.c:159
-  __wake_up_common_lock+0xc8/0x150 kernel/sched/wait.c:122
-  __wake_up+0xe/0x10 kernel/sched/wait.c:142
-  io_cqring_ev_posted+0xaa/0x120 fs/io_uring.c:655
-  io_cqring_overflow_flush+0x6d4/0xa90 fs/io_uring.c:702
-  io_ring_ctx_wait_and_kill+0x20a/0x770 fs/io_uring.c:4382
-  io_uring_create fs/io_uring.c:4719 [inline]
-  io_uring_setup+0x123d/0x1ca0 fs/io_uring.c:4745
-  __do_sys_io_uring_setup fs/io_uring.c:4758 [inline]
-  __se_sys_io_uring_setup fs/io_uring.c:4755 [inline]
-  __x64_sys_io_uring_setup+0x54/0x80 fs/io_uring.c:4755
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4412a9
-Code: e8 5c ae 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 bb 0a fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffddd565408 EFLAGS: 00000246 ORIG_RAX: 00000000000001a9
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00000000004412a9
-RDX: 0000000000000001 RSI: 0000000020000340 RDI: 00000000000002a6
-RBP: 0000000000011c3e R08: 0000000000000001 R09: 00000000004002c8
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000004021f0
-R13: 0000000000402280 R14: 0000000000000000 R15: 0000000000000000
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 1 PID: 8725 Comm: syz-executor376 Not tainted  
-5.4.0-rc8-next-20191119-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-RIP: 0010:__wake_up_common+0xdf/0x610 kernel/sched/wait.c:86
-Code: 05 00 00 4c 8b 43 38 49 83 e8 18 49 8d 78 18 48 39 7d d0 0f 84 64 02  
-00 00 48 b8 00 00 00 00 00 fc ff df 48 89 f9 48 c1 e9 03 <80> 3c 01 00 0f  
-85 0d 05 00 00 49 8b 40 18 89 55 b0 31 db 49 bc 00
-RSP: 0018:ffff888089c87b00 EFLAGS: 00010046
-RAX: dffffc0000000000 RBX: ffff8880880c1120 RCX: 0000000000000000
-RDX: 0000000000000001 RSI: 1ffffffff13913ee RDI: 0000000000000000
-RBP: ffff888089c87b58 R08: ffffffffffffffe8 R09: ffff888089c87ba8
-R10: ffffed1011390f59 R11: 0000000000000003 R12: 0000000000000001
-R13: 0000000000000286 R14: 0000000000000000 R15: 0000000000000003
-FS:  00000000025cb880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020000340 CR3: 000000009a26b000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-  __wake_up_common_lock+0xea/0x150 kernel/sched/wait.c:123
-  __wake_up+0xe/0x10 kernel/sched/wait.c:142
-  io_cqring_ev_posted+0xaa/0x120 fs/io_uring.c:655
-  io_cqring_overflow_flush+0x6d4/0xa90 fs/io_uring.c:702
-  io_ring_ctx_wait_and_kill+0x20a/0x770 fs/io_uring.c:4382
-  io_uring_create fs/io_uring.c:4719 [inline]
-  io_uring_setup+0x123d/0x1ca0 fs/io_uring.c:4745
-  __do_sys_io_uring_setup fs/io_uring.c:4758 [inline]
-  __se_sys_io_uring_setup fs/io_uring.c:4755 [inline]
-  __x64_sys_io_uring_setup+0x54/0x80 fs/io_uring.c:4755
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4412a9
-Code: e8 5c ae 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 bb 0a fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffddd565408 EFLAGS: 00000246 ORIG_RAX: 00000000000001a9
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00000000004412a9
-RDX: 0000000000000001 RSI: 0000000020000340 RDI: 00000000000002a6
-RBP: 0000000000011c3e R08: 0000000000000001 R09: 00000000004002c8
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000004021f0
-R13: 0000000000402280 R14: 0000000000000000 R15: 0000000000000000
-Modules linked in:
----[ end trace 8d482760e7208707 ]---
-RIP: 0010:__wake_up_common+0xdf/0x610 kernel/sched/wait.c:86
-Code: 05 00 00 4c 8b 43 38 49 83 e8 18 49 8d 78 18 48 39 7d d0 0f 84 64 02  
-00 00 48 b8 00 00 00 00 00 fc ff df 48 89 f9 48 c1 e9 03 <80> 3c 01 00 0f  
-85 0d 05 00 00 49 8b 40 18 89 55 b0 31 db 49 bc 00
-RSP: 0018:ffff888089c87b00 EFLAGS: 00010046
-RAX: dffffc0000000000 RBX: ffff8880880c1120 RCX: 0000000000000000
-RDX: 0000000000000001 RSI: 1ffffffff13913ee RDI: 0000000000000000
-RBP: ffff888089c87b58 R08: ffffffffffffffe8 R09: ffff888089c87ba8
-R10: ffffed1011390f59 R11: 0000000000000003 R12: 0000000000000001
-R13: 0000000000000286 R14: 0000000000000000 R15: 0000000000000003
-FS:  00000000025cb880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020000340 CR3: 000000009a26b000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+thanks,
 
+Takashi
