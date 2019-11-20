@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4108EC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:59:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C289CC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:59:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18DD622419
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:59:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 933DF22444
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:59:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729431AbfKTL7i (ORCPT
+        id S1729441AbfKTL7m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 06:59:38 -0500
+        Wed, 20 Nov 2019 06:59:42 -0500
 Received: from esa2.mentor.iphmx.com ([68.232.141.98]:53924 "EHLO
         esa2.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728928AbfKTL7h (ORCPT
+        with ESMTP id S1728928AbfKTL7k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 06:59:37 -0500
-IronPort-SDR: a9JcgDzqLp+vNEDVMG/KHiszxNbXpLhZlM69XDaVaYRAVenXNpNTii0RcS0NgmyQyaBMdkezJz
- kCyGnyOkSrVXsXOyzB6RxROcl1t7lxY319Unx87W4aMNYSlLyk/DlSWSnBAUp0ZPMpY/Jsd544
- oPbN8m7qr+BlnD/i9NVZJPV9cUulVr551AHnhYmGqvZ9Cb7yeqgxc7tsFlucid/fujogjr3rqn
- 40P8Ff+O/EC5WePWSqnsEUlb7BCErRmkrnv+XF6g/dINflHDZT789zWZxaV4LwaOTwcijz8tFk
- 7qU=
+        Wed, 20 Nov 2019 06:59:40 -0500
+IronPort-SDR: L1v4elMcgSdghozwzofGtjWAmAmYCMynvv3YEBkXWRbEu4lxDYDF9dz1kzZPU7gwdXt9VbvM8x
+ r00UsbgKMoSAvppfH4gvgVcKLJHNpIcBkChXK9D769jPvu1JsRTCtMM1qRzMgnfYrbXJSJ/45R
+ GPRW9zgvkB2Y2Fymr8DUENXwl0acQT0VFQYh8JaCrB3Ayn4qO3PO6cmsl9CO1XnM4Ezpe4Rg78
+ jZOjmzk8aLzpv67mVAgvvUWvwB0EsXxZtiFungeNN2opIck7pP6ouzANCj2SA0Nmf49wGPIeNZ
+ MhI=
 X-IronPort-AV: E=Sophos;i="5.69,221,1571731200"; 
-   d="scan'208";a="43282928"
+   d="scan'208";a="43282930"
 Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa2.mentor.iphmx.com with ESMTP; 20 Nov 2019 03:59:36 -0800
-IronPort-SDR: XwqksmcSCIE7apZvJfkFswyV8Z1R3oEfxhH8tByp40mAe1oy/Z9hNmSMqFpNirF+hys46sVfJv
- mnAt4EW4drXyH8nh/a5qQtHLFsT/lhT+4I33yvNbJ8NGq5gnvBJuxR1MhJubBHXN5GpZjBSdkp
- 2P4lqAzWKC1dIpUySRL3GFAYi2Fw8+5eRbkW7a2Vv0oN+9zi0h+4yz6m300RwmttvZ9IHRLQka
- /EQx0XzL8aiNQLE6sS4c8NkSsUaiMsDqMD9RQDXZLSRcA7v8uqqd3JJXzaCaitKXX1Zny2h8Vj
- y4c=
+  by esa2.mentor.iphmx.com with ESMTP; 20 Nov 2019 03:59:39 -0800
+IronPort-SDR: Mdf9IwEDzPNNXIuWnuo+++pif6FGgNPUQEVs7wPamekTX6vEgh8BZlQ3jzj/dFqDvvzas0Yym6
+ tVubTn/vmowF6JcDL1iz9nvpEvAKkncvjYTjBNy2lZ4IEPM5ESoekFHTPJpZTJrA6zXMiIPPHq
+ 3r8DsDf4gQQuRu7h8otgVRisPV3JNXHVbuG2v4dGZLnmq1+lPSYGIxtNIFNLPt+AYSgkb/0FEW
+ 9QYDNU7miFY8gqeZBnAqPEW2ZP5cRcPMyVXWSdMtbJJeW7OKwcXgeNd89hs0aoeAgWHeIwFny3
+ QGE=
 From:   Andrew Gabbasov <andrew_gabbasov@mentor.com>
 To:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
         Jaroslav Kysela <perex@perex.cz>,
         Takashi Iwai <tiwai@suse.com>,
         Timo Wischer <twischer@de.adit-jv.com>,
         Andrew Gabbasov <andrew_gabbasov@mentor.com>
-Subject: [PATCH v4 2/7] ALSA: aloop: Support return of error code for timer start and stop
-Date:   Wed, 20 Nov 2019 05:58:51 -0600
-Message-ID: <20191120115856.4125-3-andrew_gabbasov@mentor.com>
+Subject: [PATCH v4 3/7] ALSA: aloop: Use callback functions for timer specific implementations
+Date:   Wed, 20 Nov 2019 05:58:52 -0600
+Message-ID: <20191120115856.4125-4-andrew_gabbasov@mentor.com>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191120115856.4125-2-andrew_gabbasov@mentor.com>
+In-Reply-To: <20191120115856.4125-3-andrew_gabbasov@mentor.com>
 References: <20191120115856.4125-1-andrew_gabbasov@mentor.com>
  <20191120115856.4125-2-andrew_gabbasov@mentor.com>
+ <20191120115856.4125-3-andrew_gabbasov@mentor.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
@@ -61,123 +62,253 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Timo Wischer <twischer@de.adit-jv.com>
 
-This is required for additional timer implementations which could detect
-errors and want to throw them.
+This commit only refactors the implementation. It does not change the
+behaviour.
+It is required to support other timers (e.g sound timer).
 
 Signed-off-by: Timo Wischer <twischer@de.adit-jv.com>
 Signed-off-by: Andrew Gabbasov <andrew_gabbasov@mentor.com>
 ---
- sound/drivers/aloop.c | 30 +++++++++++++++++++-----------
- 1 file changed, 19 insertions(+), 11 deletions(-)
+ sound/drivers/aloop.c | 113 +++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 94 insertions(+), 19 deletions(-)
 
 diff --git a/sound/drivers/aloop.c b/sound/drivers/aloop.c
-index 573b06cf7cf5..7919006f70a5 100644
+index 7919006f70a5..3bfd7c32803c 100644
 --- a/sound/drivers/aloop.c
 +++ b/sound/drivers/aloop.c
-@@ -155,7 +155,7 @@ static inline unsigned int get_rate_shift(struct loopback_pcm *dpcm)
- }
+@@ -55,8 +55,39 @@ MODULE_PARM_DESC(pcm_notify, "Break capture when PCM format/rate/channels change
  
- /* call in cable->lock */
--static void loopback_timer_start(struct loopback_pcm *dpcm)
-+static int loopback_timer_start(struct loopback_pcm *dpcm)
- {
- 	unsigned long tick;
- 	unsigned int rate_shift = get_rate_shift(dpcm);
-@@ -171,18 +171,24 @@ static void loopback_timer_start(struct loopback_pcm *dpcm)
- 	tick = dpcm->period_size_frac - dpcm->irq_pos;
- 	tick = (tick + dpcm->pcm_bps - 1) / dpcm->pcm_bps;
- 	mod_timer(&dpcm->timer, jiffies + tick);
+ #define NO_PITCH 100000
+ 
++struct loopback_cable;
+ struct loopback_pcm;
+ 
++struct loopback_ops {
++	/* optional
++	 * call in loopback->cable_lock
++	 */
++	int (*open)(struct loopback_pcm *dpcm);
++	/* required
++	 * call in cable->lock
++	 */
++	int (*start)(struct loopback_pcm *dpcm);
++	/* required
++	 * call in cable->lock
++	 */
++	int (*stop)(struct loopback_pcm *dpcm);
++	/* optional */
++	int (*stop_sync)(struct loopback_pcm *dpcm);
++	/* optional */
++	int (*close_substream)(struct loopback_pcm *dpcm);
++	/* optional
++	 * call in loopback->cable_lock
++	 */
++	int (*close_cable)(struct loopback_pcm *dpcm);
++	/* optional
++	 * call in cable->lock
++	 */
++	unsigned int (*pos_update)(struct loopback_cable *cable);
++	/* optional */
++	void (*dpcm_info)(struct loopback_pcm *dpcm,
++			  struct snd_info_buffer *buffer);
++};
 +
-+	return 0;
- }
+ struct loopback_cable {
+ 	spinlock_t lock;
+ 	struct loopback_pcm *streams[2];
+@@ -65,6 +96,8 @@ struct loopback_cable {
+ 	unsigned int valid;
+ 	unsigned int running;
+ 	unsigned int pause;
++	/* timer specific */
++	struct loopback_ops *ops;
+ };
  
- /* call in cable->lock */
--static inline void loopback_timer_stop(struct loopback_pcm *dpcm)
-+static inline int loopback_timer_stop(struct loopback_pcm *dpcm)
- {
- 	del_timer(&dpcm->timer);
- 	dpcm->timer.expires = 0;
-+
-+	return 0;
- }
- 
--static inline void loopback_timer_stop_sync(struct loopback_pcm *dpcm)
-+static inline int loopback_timer_stop_sync(struct loopback_pcm *dpcm)
- {
- 	del_timer_sync(&dpcm->timer);
-+
-+	return 0;
- }
- 
- #define CABLE_VALID_PLAYBACK	(1 << SNDRV_PCM_STREAM_PLAYBACK)
-@@ -251,7 +257,7 @@ static int loopback_trigger(struct snd_pcm_substream *substream, int cmd)
- 	struct snd_pcm_runtime *runtime = substream->runtime;
- 	struct loopback_pcm *dpcm = runtime->private_data;
- 	struct loopback_cable *cable = dpcm->cable;
--	int err, stream = 1 << substream->stream;
-+	int err = 0, stream = 1 << substream->stream;
- 
- 	switch (cmd) {
- 	case SNDRV_PCM_TRIGGER_START:
-@@ -264,7 +270,7 @@ static int loopback_trigger(struct snd_pcm_substream *substream, int cmd)
+ struct loopback_setup {
+@@ -270,7 +303,7 @@ static int loopback_trigger(struct snd_pcm_substream *substream, int cmd)
  		spin_lock(&cable->lock);	
  		cable->running |= stream;
  		cable->pause &= ~stream;
--		loopback_timer_start(dpcm);
-+		err = loopback_timer_start(dpcm);
+-		err = loopback_timer_start(dpcm);
++		err = cable->ops->start(dpcm);
  		spin_unlock(&cable->lock);
  		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
  			loopback_active_notify(dpcm);
-@@ -273,7 +279,7 @@ static int loopback_trigger(struct snd_pcm_substream *substream, int cmd)
+@@ -279,7 +312,7 @@ static int loopback_trigger(struct snd_pcm_substream *substream, int cmd)
  		spin_lock(&cable->lock);	
  		cable->running &= ~stream;
  		cable->pause &= ~stream;
--		loopback_timer_stop(dpcm);
-+		err = loopback_timer_stop(dpcm);
+-		err = loopback_timer_stop(dpcm);
++		err = cable->ops->stop(dpcm);
  		spin_unlock(&cable->lock);
  		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
  			loopback_active_notify(dpcm);
-@@ -282,7 +288,7 @@ static int loopback_trigger(struct snd_pcm_substream *substream, int cmd)
+@@ -288,7 +321,7 @@ static int loopback_trigger(struct snd_pcm_substream *substream, int cmd)
  	case SNDRV_PCM_TRIGGER_SUSPEND:
  		spin_lock(&cable->lock);	
  		cable->pause |= stream;
--		loopback_timer_stop(dpcm);
-+		err = loopback_timer_stop(dpcm);
+-		err = loopback_timer_stop(dpcm);
++		err = cable->ops->stop(dpcm);
  		spin_unlock(&cable->lock);
  		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
  			loopback_active_notify(dpcm);
-@@ -292,7 +298,7 @@ static int loopback_trigger(struct snd_pcm_substream *substream, int cmd)
+@@ -298,7 +331,7 @@ static int loopback_trigger(struct snd_pcm_substream *substream, int cmd)
  		spin_lock(&cable->lock);
  		dpcm->last_jiffies = jiffies;
  		cable->pause &= ~stream;
--		loopback_timer_start(dpcm);
-+		err = loopback_timer_start(dpcm);
+-		err = loopback_timer_start(dpcm);
++		err = cable->ops->start(dpcm);
  		spin_unlock(&cable->lock);
  		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
  			loopback_active_notify(dpcm);
-@@ -300,7 +306,7 @@ static int loopback_trigger(struct snd_pcm_substream *substream, int cmd)
- 	default:
- 		return -EINVAL;
+@@ -329,9 +362,11 @@ static int loopback_prepare(struct snd_pcm_substream *substream)
+ 	struct loopback_cable *cable = dpcm->cable;
+ 	int err, bps, salign;
+ 
+-	err = loopback_timer_stop_sync(dpcm);
+-	if (err < 0)
+-		return err;
++	if (cable->ops->stop_sync) {
++		err = cable->ops->stop_sync(dpcm);
++		if (err < 0)
++			return err;
++	}
+ 
+ 	salign = (snd_pcm_format_physical_width(runtime->format) *
+ 						runtime->channels) / 8;
+@@ -539,6 +574,18 @@ static void loopback_timer_function(struct timer_list *t)
+ 	spin_unlock_irqrestore(&dpcm->cable->lock, flags);
+ }
+ 
++static void loopback_jiffies_timer_dpcm_info(struct loopback_pcm *dpcm,
++					     struct snd_info_buffer *buffer)
++{
++	snd_iprintf(buffer, "    update_pending:\t%u\n",
++		    dpcm->period_update_pending);
++	snd_iprintf(buffer, "    irq_pos:\t\t%u\n", dpcm->irq_pos);
++	snd_iprintf(buffer, "    period_frac:\t%u\n", dpcm->period_size_frac);
++	snd_iprintf(buffer, "    last_jiffies:\t%lu (%lu)\n",
++		    dpcm->last_jiffies, jiffies);
++	snd_iprintf(buffer, "    timer_expires:\t%lu\n", dpcm->timer.expires);
++}
++
+ static snd_pcm_uframes_t loopback_pointer(struct snd_pcm_substream *substream)
+ {
+ 	struct snd_pcm_runtime *runtime = substream->runtime;
+@@ -546,7 +593,8 @@ static snd_pcm_uframes_t loopback_pointer(struct snd_pcm_substream *substream)
+ 	snd_pcm_uframes_t pos;
+ 
+ 	spin_lock(&dpcm->cable->lock);
+-	loopback_pos_update(dpcm->cable);
++	if (dpcm->cable->ops->pos_update)
++		dpcm->cable->ops->pos_update(dpcm->cable);
+ 	pos = dpcm->buf_pos;
+ 	spin_unlock(&dpcm->cable->lock);
+ 	return bytes_to_frames(runtime, pos);
+@@ -671,12 +719,33 @@ static void free_cable(struct snd_pcm_substream *substream)
+ 		cable->streams[substream->stream] = NULL;
+ 		spin_unlock_irq(&cable->lock);
+ 	} else {
++		struct loopback_pcm *dpcm = substream->runtime->private_data;
++
++		if (cable->ops && cable->ops->close_cable && dpcm)
++			cable->ops->close_cable(dpcm);
+ 		/* free the cable */
+ 		loopback->cables[substream->number][dev] = NULL;
+ 		kfree(cable);
  	}
+ }
+ 
++static int loopback_jiffies_timer_open(struct loopback_pcm *dpcm)
++{
++	timer_setup(&dpcm->timer, loopback_timer_function, 0);
++
++	return 0;
++}
++
++static struct loopback_ops loopback_jiffies_timer_ops = {
++	.open = loopback_jiffies_timer_open,
++	.start = loopback_timer_start,
++	.stop = loopback_timer_stop,
++	.stop_sync = loopback_timer_stop_sync,
++	.close_substream = loopback_timer_stop_sync,
++	.pos_update = loopback_pos_update,
++	.dpcm_info = loopback_jiffies_timer_dpcm_info,
++};
++
+ static int loopback_open(struct snd_pcm_substream *substream)
+ {
+ 	struct snd_pcm_runtime *runtime = substream->runtime;
+@@ -694,7 +763,6 @@ static int loopback_open(struct snd_pcm_substream *substream)
+ 	}
+ 	dpcm->loopback = loopback;
+ 	dpcm->substream = substream;
+-	timer_setup(&dpcm->timer, loopback_timer_function, 0);
+ 
+ 	cable = loopback->cables[substream->number][dev];
+ 	if (!cable) {
+@@ -705,9 +773,17 @@ static int loopback_open(struct snd_pcm_substream *substream)
+ 		}
+ 		spin_lock_init(&cable->lock);
+ 		cable->hw = loopback_pcm_hardware;
++		cable->ops = &loopback_jiffies_timer_ops;
+ 		loopback->cables[substream->number][dev] = cable;
+ 	}
+ 	dpcm->cable = cable;
++	runtime->private_data = dpcm;
++
++	if (cable->ops->open) {
++		err = cable->ops->open(dpcm);
++		if (err < 0)
++			goto unlock;
++	}
+ 
+ 	snd_pcm_hw_constraint_integer(runtime, SNDRV_PCM_HW_PARAM_PERIODS);
+ 
+@@ -733,7 +809,9 @@ static int loopback_open(struct snd_pcm_substream *substream)
+ 	if (err < 0)
+ 		goto unlock;
+ 
+-	runtime->private_data = dpcm;
++	/* loopback_runtime_free() has not to be called if kfree(dpcm) was
++	 * already called here. Otherwise it will end up with a double free.
++	 */
+ 	runtime->private_free = loopback_runtime_free;
+ 	if (get_notify(dpcm))
+ 		runtime->hw = loopback_pcm_hardware;
+@@ -757,12 +835,14 @@ static int loopback_close(struct snd_pcm_substream *substream)
+ {
+ 	struct loopback *loopback = substream->private_data;
+ 	struct loopback_pcm *dpcm = substream->runtime->private_data;
++	int err = 0;
+ 
+-	loopback_timer_stop_sync(dpcm);
++	if (dpcm->cable->ops->close_substream)
++		err = dpcm->cable->ops->close_substream(dpcm);
+ 	mutex_lock(&loopback->cable_lock);
+ 	free_cable(substream);
+ 	mutex_unlock(&loopback->cable_lock);
 -	return 0;
 +	return err;
  }
  
- static void params_change(struct snd_pcm_substream *substream)
-@@ -321,9 +327,11 @@ static int loopback_prepare(struct snd_pcm_substream *substream)
- 	struct snd_pcm_runtime *runtime = substream->runtime;
- 	struct loopback_pcm *dpcm = runtime->private_data;
- 	struct loopback_cable *cable = dpcm->cable;
--	int bps, salign;
-+	int err, bps, salign;
+ static const struct snd_pcm_ops loopback_pcm_ops = {
+@@ -1086,13 +1166,8 @@ static void print_dpcm_info(struct snd_info_buffer *buffer,
+ 	snd_iprintf(buffer, "    bytes_per_sec:\t%u\n", dpcm->pcm_bps);
+ 	snd_iprintf(buffer, "    sample_align:\t%u\n", dpcm->pcm_salign);
+ 	snd_iprintf(buffer, "    rate_shift:\t\t%u\n", dpcm->pcm_rate_shift);
+-	snd_iprintf(buffer, "    update_pending:\t%u\n",
+-						dpcm->period_update_pending);
+-	snd_iprintf(buffer, "    irq_pos:\t\t%u\n", dpcm->irq_pos);
+-	snd_iprintf(buffer, "    period_frac:\t%u\n", dpcm->period_size_frac);
+-	snd_iprintf(buffer, "    last_jiffies:\t%lu (%lu)\n",
+-					dpcm->last_jiffies, jiffies);
+-	snd_iprintf(buffer, "    timer_expires:\t%lu\n", dpcm->timer.expires);
++	if (dpcm->cable->ops->dpcm_info)
++		dpcm->cable->ops->dpcm_info(dpcm, buffer);
+ }
  
--	loopback_timer_stop_sync(dpcm);
-+	err = loopback_timer_stop_sync(dpcm);
-+	if (err < 0)
-+		return err;
- 
- 	salign = (snd_pcm_format_physical_width(runtime->format) *
- 						runtime->channels) / 8;
+ static void print_substream_info(struct snd_info_buffer *buffer,
 -- 
 2.21.0
 
