@@ -2,134 +2,95 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ACE6C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 09:33:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F111C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 09:33:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E5BA22311
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 09:33:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82B8C22311
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 09:33:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728287AbfKTJdP (ORCPT
+        id S1728295AbfKTJdh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 04:33:15 -0500
-Received: from mga14.intel.com ([192.55.52.115]:4016 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725956AbfKTJdO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 04:33:14 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Nov 2019 01:33:14 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,221,1571727600"; 
-   d="scan'208";a="200656867"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga008.jf.intel.com with ESMTP; 20 Nov 2019 01:33:13 -0800
-Received: from [10.249.33.94] (abudanko-mobl.ccr.corp.intel.com [10.249.33.94])
-        by linux.intel.com (Postfix) with ESMTP id 74AD658049B;
-        Wed, 20 Nov 2019 01:33:11 -0800 (PST)
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: [PATCH v1 0/3] perf record: adapt NUMA awareness to machines with
- #CPUs > 1K
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Organization: Intel Corp.
-Message-ID: <26d1512a-9dea-bf7e-d18e-705846a870c4@linux.intel.com>
-Date:   Wed, 20 Nov 2019 12:33:10 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Wed, 20 Nov 2019 04:33:37 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:59057 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725956AbfKTJdh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 04:33:37 -0500
+Received: from 79.184.253.244.ipv4.supernova.orange.pl (79.184.253.244) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
+ id 4da6d083348937fd; Wed, 20 Nov 2019 10:33:34 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux PM <linux-pm@vger.kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Doug Smythies <dsmythies@telus.net>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH] PM: QoS: Invalidate frequency QoS requests after removal
+Date:   Wed, 20 Nov 2019 10:33:34 +0100
+Message-ID: <12409907.uLZWGnKmhe@kreacher>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Current implementation of cpu_set_t type by glibc has internal cpu
-mask size limitation of no more than 1024 CPUs. This limitation confines
-NUMA awareness of Perf tool in record mode, thru --affinity option,
-to the first 1024 CPUs on machines with larger amount of CPUs.
+Switching cpufreq drivers (or switching operation modes of the
+intel_pstate driver from "active" to "passive" and vice versa)
+does not work on some x86 systems with ACPI after commit
+3000ce3c52f8 ("cpufreq: Use per-policy frequency QoS"), because
+the ACPI _PPC and thermal code uses the same frequency QoS request
+object for a given CPU every time a cpufreq driver is registered
+and freq_qos_remove_request() does not invalidate the request after
+removing it from its QoS list, so freq_qos_add_request() complains
+and fails when that request is passed to it again.
 
-This patch set enables Perf tool to overcome 1024 CPUs limitation by
-using a dedicated struct mmap_cpu_mask type and applying tool's bitmap
-API operations to manipulate affinity masks of the tool's thread and
-the mmaped data buffers.
+Fix the issue by modifying freq_qos_remove_request() to clear the qos
+and type fields of the frequency request pointed to by its argument
+after removing it from its QoS list so as to invalidate it.
 
-tools bitmap API has been extended with bitmap_equal() operation
-and its implementation is derived from the kernel one.
-
+Fixes: 3000ce3c52f8 ("cpufreq: Use per-policy frequency QoS")
+Reported-and-tested-by: Doug Smythies <dsmythies@telus.net>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
-Alexey Budankov (3):
-  tools bitmap: extend bitmap API with bitmap_equal()
-  perf mmap: declare type for cpu mask of arbitrary length
-  perf record: adapt affinity to machines with #CPUs > 1K
+ kernel/power/qos.c |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
- tools/include/linux/bitmap.h | 21 +++++++++++++++++++++
- tools/lib/bitmap.c           | 15 +++++++++++++++
- tools/perf/builtin-record.c  | 28 ++++++++++++++++++++++------
- tools/perf/util/mmap.c       | 28 ++++++++++++++++++++++------
- tools/perf/util/mmap.h       | 11 ++++++++++-
- 5 files changed, 90 insertions(+), 13 deletions(-)
+Index: linux-pm/kernel/power/qos.c
+===================================================================
+--- linux-pm.orig/kernel/power/qos.c
++++ linux-pm/kernel/power/qos.c
+@@ -814,6 +814,8 @@ EXPORT_SYMBOL_GPL(freq_qos_update_reques
+  */
+ int freq_qos_remove_request(struct freq_qos_request *req)
+ {
++	int ret;
++
+ 	if (!req)
+ 		return -EINVAL;
+ 
+@@ -821,7 +823,11 @@ int freq_qos_remove_request(struct freq_
+ 		 "%s() called for unknown object\n", __func__))
+ 		return -EINVAL;
+ 
+-	return freq_qos_apply(req, PM_QOS_REMOVE_REQ, PM_QOS_DEFAULT_VALUE);
++	ret = freq_qos_apply(req, PM_QOS_REMOVE_REQ, PM_QOS_DEFAULT_VALUE);
++	req->qos = NULL;
++	req->type = 0;
++
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(freq_qos_remove_request);
+ 
 
----
-Testing:
 
-  $ tools/perf/perf record -v --affinity=cpu -- ls
-  thread mask[8]: empty
-  Using CPUID GenuineIntel-6-5E-3
-  ...
-  mmap size 528384B
-  0x7f95f8f85010: mmap mask[8]: 0
-  0x7f95f8f950d8: mmap mask[8]: 1
-  0x7f95f8fa51a0: mmap mask[8]: 2
-  0x7f95f8fb5268: mmap mask[8]: 3
-  0x7f95f8fc5330: mmap mask[8]: 4
-  0x7f95f8fd53f8: mmap mask[8]: 5
-  0x7f95f8fe54c0: mmap mask[8]: 6
-  0x7f95f8ff5588: mmap mask[8]: 7
-  ...
-  thread mask[8]: 0
-  thread mask[8]: 1
-  thread mask[8]: 2
-  thread mask[8]: 3
-  arch			      copy     Documentation  init     kernel	 MAINTAINERS	  modules.builtin.modinfo  perf.data	  scripts   System.map	vmlinux
-  block			      COPYING  drivers	      ipc      lbuild	 Makefile	  modules.order		   perf.data.old  security  tools	vmlinux.o
-  certs			      CREDITS  fs	      Kbuild   lib	 mm		  Module.symvers	   README	  sound     usr
-  config-5.2.7-100.fc29.x86_64  crypto   include	      Kconfig  LICENSES  modules.builtin  net			   samples	  stdio     virt
-  thread mask[8]: 4
-  thread mask[8]: 5
-  thread mask[8]: 6
-  thread mask[8]: 7
-  thread mask[8]: 0
-  thread mask[8]: 1
-  thread mask[8]: 2
-  thread mask[8]: 3
-  thread mask[8]: 4
-  thread mask[8]: 5
-  thread mask[8]: 6
-  thread mask[8]: 7
-  [ perf record: Woken up 0 times to write data ]
-  thread mask[8]: 0
-  thread mask[8]: 1
-  thread mask[8]: 2
-  thread mask[8]: 3
-  thread mask[8]: 4
-  thread mask[8]: 5
-  thread mask[8]: 6
-  thread mask[8]: 7
-  ...
-  [ perf record: Captured and wrote 0.014 MB perf.data (11 samples) ]
 
--- 
-2.20.1
