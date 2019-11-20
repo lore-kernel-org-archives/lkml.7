@@ -2,74 +2,156 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B10AEC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:55:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4A12C43141
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:58:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9444122440
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:55:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7D0722445
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:58:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728941AbfKTKz4 (ORCPT
+        id S1728957AbfKTK6g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 05:55:56 -0500
-Received: from mx2.suse.de ([195.135.220.15]:34622 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727230AbfKTKz4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 05:55:56 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E8F146A54D;
-        Wed, 20 Nov 2019 10:55:53 +0000 (UTC)
-Message-ID: <1574247349.14298.30.camel@suse.com>
-Subject: Re: INFO: task hung in chaoskey_disconnect
-From:   Oliver Neukum <oneukum@suse.com>
-To:     Stephen Boyd <swboyd@chromium.org>, alexandre.belloni@bootlin.com,
-        andreyknvl@google.com, arnd@arndb.de, b.zolnierkie@samsung.com,
-        gregkh@linuxfoundation.org, herbert@gondor.apana.org.au,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, lvivier@redhat.com,
-        mchehab+samsung@kernel.org, mpm@selenic.com,
-        syzbot <syzbot+f41c4f7c6d8b0b778780@syzkaller.appspotmail.com>,
-        syzkaller-bugs@googlegroups.com
-Date:   Wed, 20 Nov 2019 11:55:49 +0100
-In-Reply-To: <5dcee59a.1c69fb81.188d.e4b9@mx.google.com>
-References: <000000000000cdaa560596acbc4e@google.com>
-         <5dcee59a.1c69fb81.188d.e4b9@mx.google.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Wed, 20 Nov 2019 05:58:36 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:49359 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728942AbfKTK6f (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 05:58:35 -0500
+Received: from 79.184.253.244.ipv4.supernova.orange.pl (79.184.253.244) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
+ id 469c83978beedbff; Wed, 20 Nov 2019 11:58:32 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, Len Brown <len.brown@intel.com>,
+        Pavel Machek <pavel@ucw.cz>, Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Nadav Amit <namit@vmware.com>,
+        "VMware, Inc." <pv-drivers@vmware.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-acpi@vger.kernel.org, alsa-devel@alsa-project.org
+Subject: Re: [PATCH 11/12] ACPI/sleep: Convert acpi_wakeup_address into a function
+Date:   Wed, 20 Nov 2019 11:58:31 +0100
+Message-ID: <7338293.UcAxln0NAJ@kreacher>
+In-Reply-To: <20191119002121.4107-12-sean.j.christopherson@intel.com>
+References: <20191119002121.4107-1-sean.j.christopherson@intel.com> <20191119002121.4107-12-sean.j.christopherson@intel.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Freitag, den 15.11.2019, 09:51 -0800 schrieb Stephen Boyd:
-> Quoting syzbot (2019-11-06 04:32:09)
-> > Hello,
-> > 
-> > syzbot found the following crash on:
-> > 
-> > HEAD commit:    b1aa9d83 usb: raw: add raw-gadget interface
-> > git tree:       https://github.com/google/kasan.git usb-fuzzer
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=16ae2adce00000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=79de80330003b5f7
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=f41c4f7c6d8b0b778780
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10248158e00000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16afbf7ce00000
-> > 
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+f41c4f7c6d8b0b778780@syzkaller.appspotmail.com
+On Tuesday, November 19, 2019 1:21:20 AM CET Sean Christopherson wrote:
+> Convert acpi_wakeup_address from a raw variable into a function so that
+> x86 can wrap its dereference of the real mode boot header in a function
+> instead of broadcasting it to the world via a #define.  This sets the
+> stage for a future patch to move the definition of acpi_wakeup_address()
+> out of asm/acpi.h and thus break acpi.h's dependency on asm/realmode.h.
 > 
-> I suspect this is because of the kthread getting stuck problem reported
-> by Maciej. Maybe try the commit that Herbert picked up.
+> No functional change intended.
+> 
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 
-Do you have a commit ID so we can test an exported patch?
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-	Regards
-		Oliver
+> ---
+>  arch/ia64/include/asm/acpi.h | 5 ++++-
+>  arch/ia64/kernel/acpi.c      | 2 --
+>  arch/x86/include/asm/acpi.h  | 5 ++++-
+>  drivers/acpi/sleep.c         | 4 ++--
+>  4 files changed, 10 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/ia64/include/asm/acpi.h b/arch/ia64/include/asm/acpi.h
+> index f886d4dc9d55..36d7003eee71 100644
+> --- a/arch/ia64/include/asm/acpi.h
+> +++ b/arch/ia64/include/asm/acpi.h
+> @@ -38,7 +38,10 @@ int acpi_gsi_to_irq (u32 gsi, unsigned int *irq);
+>  /* Low-level suspend routine. */
+>  extern int acpi_suspend_lowlevel(void);
+>  
+> -extern unsigned long acpi_wakeup_address;
+> +static inline unsigned long acpi_wakeup_address(void)
+> +{
+> +	return 0;
+> +}
+>  
+>  /*
+>   * Record the cpei override flag and current logical cpu. This is
+> diff --git a/arch/ia64/kernel/acpi.c b/arch/ia64/kernel/acpi.c
+> index 70d1587ddcd4..a5636524af76 100644
+> --- a/arch/ia64/kernel/acpi.c
+> +++ b/arch/ia64/kernel/acpi.c
+> @@ -42,8 +42,6 @@ int acpi_lapic;
+>  unsigned int acpi_cpei_override;
+>  unsigned int acpi_cpei_phys_cpuid;
+>  
+> -unsigned long acpi_wakeup_address = 0;
+> -
+>  #define ACPI_MAX_PLATFORM_INTERRUPTS	256
+>  
+>  /* Array to record platform interrupt vectors for generic interrupt routing. */
+> diff --git a/arch/x86/include/asm/acpi.h b/arch/x86/include/asm/acpi.h
+> index bc9693c9107e..57788ec6fa82 100644
+> --- a/arch/x86/include/asm/acpi.h
+> +++ b/arch/x86/include/asm/acpi.h
+> @@ -62,7 +62,10 @@ static inline void acpi_disable_pci(void)
+>  extern int (*acpi_suspend_lowlevel)(void);
+>  
+>  /* Physical address to resume after wakeup */
+> -#define acpi_wakeup_address ((unsigned long)(real_mode_header->wakeup_start))
+> +static inline unsigned long acpi_wakeup_address(void)
+> +{
+> +	return ((unsigned long)(real_mode_header->wakeup_start));
+> +}
+>  
+>  /*
+>   * Check if the CPU can handle C2 and deeper
+> diff --git a/drivers/acpi/sleep.c b/drivers/acpi/sleep.c
+> index 2af937a8b1c5..9e66c4109556 100644
+> --- a/drivers/acpi/sleep.c
+> +++ b/drivers/acpi/sleep.c
+> @@ -63,9 +63,9 @@ static int acpi_sleep_prepare(u32 acpi_state)
+>  #ifdef CONFIG_ACPI_SLEEP
+>  	/* do we have a wakeup address for S2 and S3? */
+>  	if (acpi_state == ACPI_STATE_S3) {
+> -		if (!acpi_wakeup_address)
+> +		if (!acpi_wakeup_address())
+>  			return -EFAULT;
+> -		acpi_set_waking_vector(acpi_wakeup_address);
+> +		acpi_set_waking_vector(acpi_wakeup_address());
+>  
+>  	}
+>  	ACPI_FLUSH_CPU_CACHE();
+> 
+
+
+
 
