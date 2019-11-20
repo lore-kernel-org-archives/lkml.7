@@ -2,191 +2,96 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F886C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 00:23:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F2E7C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 00:24:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D4602084D
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 00:23:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4361722445
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 00:24:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JrfhgjV1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N5ceSSCt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727491AbfKTAXn (ORCPT
+        id S1727524AbfKTAY4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 19:23:43 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:52374 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727262AbfKTAXm (ORCPT
+        Tue, 19 Nov 2019 19:24:56 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:33552 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726911AbfKTAYz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 19:23:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=6oX03oqDu3lBQEvd1fjcqRO4c+4GMv4bNPZooq49HMk=; b=JrfhgjV1KytAaQ0mwUo8SmB3z
-        0JuBL6QaXnFpuB80pd0zJfrzuSuJIrd/57NomHB17zeSvsg1lHFVlGccvVaR87L19JohLxe8iPJUA
-        PbTW5YIX28UEAlpfs7NGRVk0jURL9s1U3hoVaOzJcQoXJGsbktq4bbfFdSI/IT06hjO0Qdxcvmne2
-        +dmesdZEH6dFYoW4xweNWUc62GHTZ2cD0oLnBZeLJzNdYOVxRWMEiHzWtBQRNoXUnRrIRHQizrQDp
-        q34YBjTdUAlo0FhFmOBuoYFKP10Lkt8E5MajhbEZrj0ZPPWNtQN5j3UC5zn0DVKOVovEB/apDFSEP
-        lZfvql+cw==;
-Received: from [2603:3004:32:9a00::f45c]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iXDmT-0006zD-Lh; Wed, 20 Nov 2019 00:23:37 +0000
-Subject: Re: [PATCH linux-kselftest/test v2] Documentation: kunit: fix typos
- and gramatical errors
-To:     Brendan Higgins <brendanhiggins@google.com>, shuah@kernel.org,
-        davidgow@google.com
-Cc:     kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org,
-        corbet@lwn.net, heidifahim@google.com, trishalfonso@google.com,
-        Rinat Ibragimov <ibragimovrinat@mail.ru>
-References: <20191119233810.207487-1-brendanhiggins@google.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <b102fef3-3faa-1d84-3d46-967655fee98f@infradead.org>
-Date:   Tue, 19 Nov 2019 16:23:36 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Tue, 19 Nov 2019 19:24:55 -0500
+Received: by mail-oi1-f196.google.com with SMTP id m193so20871418oig.0;
+        Tue, 19 Nov 2019 16:24:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zj3yLRE9mChhE9Y5QGgi6KN2BsNMSKx/IHvPGJJ4ykE=;
+        b=N5ceSSCtzoVYd7iWmBRN1bNulvCxzlk98qJxo5GJC2GT0yGtml/gsqVSXUc/6f2z7B
+         /B2QEx0Xb7YN83EJzchBuA/6w8aSfHAoBNSCRkriEyIaq2uGRtOV669JZUgyea2oG44I
+         LqJKHxpmWlLhfTO3Rje/4Cws36BPCyGziJAjDfjypf1F+5wkEmV8GsWizJ6K0QalJ401
+         n0zDibXvyF8ThW8ZkY31NOL2YM07T6UxAZprDik5ozePdBf+Sw7+KXRBmTZX16Wwm+eU
+         M1SOaiCp3KItHzsk4k57Fnlz+5PqS6ngQcpe9f6FOT0DRXytQRpmtJbuvnmRRu2sLixo
+         1LjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zj3yLRE9mChhE9Y5QGgi6KN2BsNMSKx/IHvPGJJ4ykE=;
+        b=m2kXgQpTH7RR5lGncDu4PlvJUaTUGLPK47yIz7BlGQVfYRd00CnviHtOShG5EyNrOg
+         TePe6iXS7tfBLzNnz+eFmc41M+AehTnTBOZCdDC9auqSC1npSdsATs3xRypyowZt9Gwx
+         l5nIEuQHWOTFrxzTot7EezS2iZtLl1H40SWLiVezuawOB6YnzJFUsHGpyp6wdTBpgfRC
+         e9lNAfv2qqCqfP0ILtCXgxKKgYojHichIYMzQvK1h+xJTDtKvComKalXN4dg5zr5Vukl
+         8i7OI1wyJpRup4Go+feu39gWPtf1k5kQKPcPUohiQ2Gik9tuBEFbqL/gTX5Qqr2Iycye
+         bgbQ==
+X-Gm-Message-State: APjAAAV7cOdoN94eZWIG3QJtAB5IwW+iXYUsAxwiTKdBjY2g3hAiwHox
+        UnKv2JO/YxBK78TNXVkfMdCJxxyolgS2MWmLFc0=
+X-Google-Smtp-Source: APXvYqwYstFBjOE8Vj9Xkx2HuJs1+y/ym1TelXMeCJ9cB3n84l7i0dToEzNfAGh26gB0O2pGZVRK/wLAi2CQrcZLQcA=
+X-Received: by 2002:aca:5015:: with SMTP id e21mr255434oib.174.1574209493397;
+ Tue, 19 Nov 2019 16:24:53 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191119233810.207487-1-brendanhiggins@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1574145389-12149-1-git-send-email-wanpengli@tencent.com> <20191119183658.GC25672@linux.intel.com>
+In-Reply-To: <20191119183658.GC25672@linux.intel.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Wed, 20 Nov 2019 08:24:45 +0800
+Message-ID: <CANRm+Cw6vKHnfq4G0wmKmbs63vXbVGtPBPpxZBzr1JL+HTaYGQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] KVM: VMX: FIXED+PHYSICAL mode single target IPI fastpath
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/19/19 3:38 PM, Brendan Higgins wrote:
-> Fix typos and gramatical errors in the Getting Started and Usage guide
-> for KUnit.
-> 
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Link: https://patchwork.kernel.org/patch/11156481/
-> Reported-by: Rinat Ibragimov <ibragimovrinat@mail.ru>
-> Link: https://github.com/google/kunit-docs/issues/1
-> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> Reviewed-by: David Gow <davidgow@google.com>
+On Wed, 20 Nov 2019 at 02:36, Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
+[...]
+>
+> From 1ea8ff1aa766928c869ef7c1eb437fe4f7b8daf9 Mon Sep 17 00:00:00 2001
+> From: Sean Christopherson <sean.j.christopherson@intel.com>
+> Date: Tue, 19 Nov 2019 09:50:42 -0800
+> Subject: [PATCH] KVM: x86: Add a fast path for sending virtual IPIs in x2APIC
+>  mode
+>
+> Add a fast path to handle writes to the ICR when the local APIC is
+> emulated in the kernel and x2APIC is enabled.  The fast path is invoked
+> at ->handle_exit_irqoff() to emulate only the effect of the ICR write
+> itself, i.e. the sending of IPIs.  Sending IPIs early in the VM-Exit
+> flow reduces the latency of virtual IPIs by avoiding the expensive bits
+> of transitioning from guest to host, e.g. reacquiring KVM's SRCU lock.
+>
+> Suggested-by: Wanpeng Li <wanpengli@tencent.com>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
-
-Thanks.
-
-> ---
->  Documentation/dev-tools/kunit/start.rst |  8 ++++----
->  Documentation/dev-tools/kunit/usage.rst | 24 ++++++++++++------------
->  2 files changed, 16 insertions(+), 16 deletions(-)
-> 
-> diff --git a/Documentation/dev-tools/kunit/start.rst b/Documentation/dev-tools/kunit/start.rst
-> index f4d9a4fa914f8..9d6db892c41c0 100644
-> --- a/Documentation/dev-tools/kunit/start.rst
-> +++ b/Documentation/dev-tools/kunit/start.rst
-> @@ -26,7 +26,7 @@ For more information on this wrapper (also called kunit_tool) checkout the
->  
->  Creating a kunitconfig
->  ======================
-> -The Python script is a thin wrapper around Kbuild as such, it needs to be
-> +The Python script is a thin wrapper around Kbuild. As such, it needs to be
->  configured with a ``kunitconfig`` file. This file essentially contains the
->  regular Kernel config, with the specific test targets as well.
->  
-> @@ -62,8 +62,8 @@ If everything worked correctly, you should see the following:
->  followed by a list of tests that are run. All of them should be passing.
->  
->  .. note::
-> -   Because it is building a lot of sources for the first time, the ``Building
-> -   kunit kernel`` step may take a while.
-> +	Because it is building a lot of sources for the first time, the
-> +	``Building KUnit kernel`` step may take a while.
->  
->  Writing your first test
->  =======================
-> @@ -162,7 +162,7 @@ Now you can run the test:
->  
->  .. code-block:: bash
->  
-> -	./tools/testing/kunit/kunit.py
-> +	./tools/testing/kunit/kunit.py run
->  
->  You should see the following failure:
->  
-> diff --git a/Documentation/dev-tools/kunit/usage.rst b/Documentation/dev-tools/kunit/usage.rst
-> index c6e69634e274b..b9a065ab681ee 100644
-> --- a/Documentation/dev-tools/kunit/usage.rst
-> +++ b/Documentation/dev-tools/kunit/usage.rst
-> @@ -16,7 +16,7 @@ Organization of this document
->  =============================
->  
->  This document is organized into two main sections: Testing and Isolating
-> -Behavior. The first covers what a unit test is and how to use KUnit to write
-> +Behavior. The first covers what unit tests are and how to use KUnit to write
->  them. The second covers how to use KUnit to isolate code and make it possible
->  to unit test code that was otherwise un-unit-testable.
->  
-> @@ -174,13 +174,13 @@ Test Suites
->  ~~~~~~~~~~~
->  
->  Now obviously one unit test isn't very helpful; the power comes from having
-> -many test cases covering all of your behaviors. Consequently it is common to
-> -have many *similar* tests; in order to reduce duplication in these closely
-> -related tests most unit testing frameworks provide the concept of a *test
-> -suite*, in KUnit we call it a *test suite*; all it is is just a collection of
-> -test cases for a unit of code with a set up function that gets invoked before
-> -every test cases and then a tear down function that gets invoked after every
-> -test case completes.
-> +many test cases covering all of a unit's behaviors. Consequently it is common
-> +to have many *similar* tests; in order to reduce duplication in these closely
-> +related tests most unit testing frameworks - including KUnit - provide the
-> +concept of a *test suite*. A *test suite* is just a collection of test cases
-> +for a unit of code with a set up function that gets invoked before every test
-> +case and then a tear down function that gets invoked after every test case
-> +completes.
->  
->  Example:
->  
-> @@ -211,7 +211,7 @@ KUnit test framework.
->  .. note::
->     A test case will only be run if it is associated with a test suite.
->  
-> -For a more information on these types of things see the :doc:`api/test`.
-> +For more information on these types of things see the :doc:`api/test`.
->  
->  Isolating Behavior
->  ==================
-> @@ -338,7 +338,7 @@ We can easily test this code by *faking out* the underlying EEPROM:
->  		return count;
->  	}
->  
-> -	ssize_t fake_eeprom_write(struct eeprom *this, size_t offset, const char *buffer, size_t count)
-> +	ssize_t fake_eeprom_write(struct eeprom *parent, size_t offset, const char *buffer, size_t count)
->  	{
->  		struct fake_eeprom *this = container_of(parent, struct fake_eeprom, parent);
->  
-> @@ -454,7 +454,7 @@ KUnit on non-UML architectures
->  By default KUnit uses UML as a way to provide dependencies for code under test.
->  Under most circumstances KUnit's usage of UML should be treated as an
->  implementation detail of how KUnit works under the hood. Nevertheless, there
-> -are instances where being able to run architecture specific code, or test
-> +are instances where being able to run architecture specific code or test
->  against real hardware is desirable. For these reasons KUnit supports running on
->  other architectures.
->  
-> @@ -557,7 +557,7 @@ run your tests on your hardware setup just by compiling for your architecture.
->  .. important::
->     Always prefer tests that run on UML to tests that only run under a particular
->     architecture, and always prefer tests that run under QEMU or another easy
-> -   (and monitarily free) to obtain software environment to a specific piece of
-> +   (and monetarily free) to obtain software environment to a specific piece of
->     hardware.
->  
->  Nevertheless, there are still valid reasons to write an architecture or hardware
-> 
-
-
--- 
-~Randy
+Hmm, I welcome the idea to improve the original patch, but this is too
+much for me. :(
