@@ -2,102 +2,74 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA6FFC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 16:13:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FA24C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 16:14:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7C79206EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 16:13:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E54B20674
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 16:14:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732702AbfKTQNm (ORCPT
+        id S1732705AbfKTQOH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 11:13:42 -0500
-Received: from mx2.suse.de ([195.135.220.15]:45344 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729412AbfKTQNm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 11:13:42 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 290CBB2F16;
-        Wed, 20 Nov 2019 16:13:35 +0000 (UTC)
-Date:   Wed, 20 Nov 2019 17:13:34 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Qian Cai <cai@lca.pw>, Steven Rostedt <rostedt@goodmis.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Eric Dumazet <eric.dumazet@gmail.com>, davem@davemloft.net,
-        netdev@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net/skbuff: silence warnings under memory pressure
-Message-ID: <20191120161334.p63723g4jyk6k7p3@pathway.suse.cz>
-References: <20190904074312.GA25744@jagdpanzerIV>
- <1567599263.5576.72.camel@lca.pw>
- <20190904144850.GA8296@tigerII.localdomain>
- <1567629737.5576.87.camel@lca.pw>
- <20190905113208.GA521@jagdpanzerIV>
- <1573751570.5937.122.camel@lca.pw>
- <20191118152738.az364dczadskgimc@pathway.suse.cz>
- <20191119004119.GC208047@google.com>
- <20191119094134.6hzbjc7l5ite6bpg@pathway.suse.cz>
- <20191120013005.GA3191@tigerII.localdomain>
+        Wed, 20 Nov 2019 11:14:07 -0500
+Received: from iolanthe.rowland.org ([192.131.102.54]:34456 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1729292AbfKTQOG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 11:14:06 -0500
+Received: (qmail 2044 invoked by uid 2102); 20 Nov 2019 11:14:05 -0500
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 20 Nov 2019 11:14:05 -0500
+Date:   Wed, 20 Nov 2019 11:14:05 -0500 (EST)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Pete Zaitcev <zaitcev@redhat.com>,
+        syzbot <syzbot+56f9673bb4cdcbeb0e92@syzkaller.appspotmail.com>
+cc:     arnd@arndb.de, <gregkh@linuxfoundation.org>,
+        <jrdr.linux@gmail.com>, <keescook@chromium.org>,
+        <kstewart@linuxfoundation.org>,
+        Kernel development list <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        <syzkaller-bugs@googlegroups.com>, <tglx@linutronix.de>,
+        <viro@zeniv.linux.org.uk>
+Subject: Re: possible deadlock in mon_bin_vma_fault
+In-Reply-To: <0000000000002da08e0597c5efbd@google.com>
+Message-ID: <Pine.LNX.4.44L0.1911201109500.1498-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191120013005.GA3191@tigerII.localdomain>
-User-Agent: NeoMutt/20170912 (1.9.0)
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 2019-11-20 10:30:05, Sergey Senozhatsky wrote:
-> On (19/11/19 10:41), Petr Mladek wrote:
-> [..]
-> > > > I do not like this. As a result, normal printk() will always deadlock
-> > > > in the scheduler code, including WARN() calls. The chance of the
-> > > > deadlock is small now. It happens only when there is another
-> > > > process waiting for console_sem.
-> > > 
-> > > Why would it *always* deadlock? If this is the case, why we don't *always*
-> > > deadlock doing the very same wake_up_process() from console_unlock()?
-> > 
-> > I speak about _normal_ printk() and not about printk_deferred().
-> > 
-> > wake_up_process() is called in console_unlock() only when
-> > sem->wait_list is not empty, see up() in kernel/locking/semaphore.c.
-> > printk() itself uses console_trylock() and does not wait.
+On Wed, 20 Nov 2019, syzbot wrote:
+
+> syzbot has bisected this bug to:
 > 
-> > I believe that this is the rason why printk_sched() was added
-> > so late in 2012.
+> commit 46eb14a6e1585d99c1b9f58d0e7389082a5f466b
+> Author: Pete Zaitcev <zaitcev@redhat.com>
+> Date:   Mon Jan 8 21:46:41 2018 +0000
 > 
-> Right. I also think scheduler people do pretty nice work avoiding printk
-> calls under ->rq lock.
-> 
-> What I tried to say - it's really not that hard to have a non-empty
-> console_sem ->wait_list, any "wrong" printk() call from scheduler
-> will deadlock us, because we have something to wake_up().
+>      USB: fix usbmon BUG trigger
 
-I am sorry but I do not take this as an argument that it would be
-acceptable to replace irq_work_queue() with wake_up_interruptible().
+Here's part of the commit description:
 
-It is the first time that I hear about problem caused by the
-irq_work(). But we deal with deadlocks caused by wake_up() for years.
-It would be like replacing a lightly dripping tap with a heavily
-dripping one.
+    USB: fix usbmon BUG trigger
+    
+    Automated tests triggered this by opening usbmon and accessing the
+    mmap while simultaneously resizing the buffers. This bug was with
+    us since 2006, because typically applications only size the buffers
+    once and thus avoid racing. Reported by Kirill A. Shutemov.
 
-I see reports with WARN() from scheduler code from time to time.
-I would get reports about silent death instead.
+As it happens, I spent a little time investigating this bug report just
+yesterday.  It seems to me that the easiest fix would be to disallow
+resizing the buffer while it is mapped by any users.  (Besides,
+allowing that seems like a bad idea in any case.)
 
-RT guys are going to make printk() fully lockless. It would be
-really great achievement. irq_work is lockless. While wake_up()
-is not.
+Pete, does that seem reasonable to you?
 
-There must be a better way how to break the infinite loop caused
-by the irq_work.
+Alan Stern
 
-Best Regards,
-Petr
