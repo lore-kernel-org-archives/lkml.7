@@ -2,142 +2,143 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79DACC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 14:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37658C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 14:24:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51E082230E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 14:21:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B2F52070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 14:24:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="bbGGdIG8"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="k0ZQSWb3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731625AbfKTOV1 (ORCPT
+        id S1730617AbfKTOYq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 09:21:27 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:40389 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730018AbfKTOVU (ORCPT
+        Wed, 20 Nov 2019 09:24:46 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:34599 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727794AbfKTOYq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 09:21:20 -0500
-Received: by mail-wm1-f68.google.com with SMTP id y5so1832699wmi.5
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 06:21:19 -0800 (PST)
+        Wed, 20 Nov 2019 09:24:46 -0500
+Received: by mail-ot1-f67.google.com with SMTP id w11so1365923ote.1
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 06:24:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Hc8hYB3tbZIod+IQ6MbwVcYHzkJ7GhB4LPUoKfpHBhg=;
-        b=bbGGdIG8CJ1VEwyvm3y8H9OEzouxX5YUlVCLvoh6v+C2mp5+I3HC5s5lrDBbxANKk1
-         cW3mLQhthQBpB6dK1G8UH5qpHOayPMkgVbLUim7e2ePY/pq0TNd5Add/viZsjSZQl+si
-         //3W73zDWghkbFXIWkkWUPHTfv4GUJFnmTEdzN9U/9pWsk+dVTAfD0F6wnhVRf36ISDi
-         CZTcdbRZPmQ1EfsMkC1gq3kwLiieQA48/nSscfZhpIgL5hO5bxJKF9O2KIHQRMCfCto4
-         1uRDYDVbbUUvqxjiUkoHfHQe6cKiJGK/6NlZdiR4Q5tdmuFEBN7pqTQp6iC0fEqVH2AW
-         jGtA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yOFfvevSyIuI2uXnhKhqs1DyN3AcbeT8ZG1uPgE2BRM=;
+        b=k0ZQSWb3hHNPjkhWrDg2UG82nir6GbQ/mlgsdzhvvgoMpyhvl+WwEu8779bjiQnu8g
+         8d5a4OB9oudrxxWTA3M+PIQA00bJVw9pxOwDdRafaWH8irq0hvJwWLtTy90novOcWX6v
+         CG9/af+Aq5GNBsYEEFoaDEKOLIR5rG1HUXON1DMCuszitFxtWbIWH1IruF11xMCusAm/
+         MkvvNaQVNSiPZLyCItyHwGJN4fLJTo4NZxDPSdSBRGFV26B9h/LxHq8BmbKlc+ObLAfH
+         7/srbRhE9fSN4novjtVNT5vl07GAt0+CJE1hiUN05VDBx+Nl1cTrDF41FIEdcvMfgtj/
+         ehxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=Hc8hYB3tbZIod+IQ6MbwVcYHzkJ7GhB4LPUoKfpHBhg=;
-        b=o+k4AWh53bbkPH31KmK94+jLFvPdqNrXozwI8Df4etI6Uyudd5+OtMHjeuXTfdq2hi
-         Esi/Tquci0mCMmdwOzSvVpgVdtC4/PivzmxD2SSThFgGrWN7jQ2t9dA3NTqxOudbCR55
-         C20d1nsuKkjhCPWhm+gfpCARxTBa5lqSXC5qVqBizmtwEcWVYUk8+0e/uf6PYz+PW2ny
-         9MNq25q3IIXARKWYEFs55EXm+c06wbkDbtHu5+pDXKUDb74TKP1+chI6DPqOSAU61CDG
-         QcnmbLnTgUlOgZFtQeAa5Z+Ys9z+zdNOx2DwNtim4j0Snk+vXrKPERqx6MH/FtzAWYoC
-         vR6w==
-X-Gm-Message-State: APjAAAUH/5ad5gaA42SgOOC2UnNlBtemOakRad5vmYYMxS4DtMcI/6nR
-        0snzm69pGzfV8nJ77wZg056lcg==
-X-Google-Smtp-Source: APXvYqxwZ6NxHy5lxmuWtOfJ8fr/iWLuyRSEw7VcXF5Wp1+axm988/wxsbwGi9rjW87fA0wtR/au+w==
-X-Received: by 2002:a1c:7d16:: with SMTP id y22mr3453604wmc.106.1574259678325;
-        Wed, 20 Nov 2019 06:21:18 -0800 (PST)
-Received: from khouloud-ThinkPad-T470p.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.googlemail.com with ESMTPSA id a6sm34544352wrh.69.2019.11.20.06.21.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Nov 2019 06:21:17 -0800 (PST)
-From:   Khouloud Touil <ktouil@baylibre.com>
-To:     bgolaszewski@baylibre.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, srinivas.kandagatla@linaro.org,
-        baylibre-upstreaming@groups.io
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linus.walleij@linaro.org,
-        Khouloud Touil <ktouil@baylibre.com>
-Subject: [PATCH 4/4] eeprom: at24: remove the write-protect pin support
-Date:   Wed, 20 Nov 2019 15:20:38 +0100
-Message-Id: <20191120142038.30746-5-ktouil@baylibre.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191120142038.30746-1-ktouil@baylibre.com>
-References: <20191120142038.30746-1-ktouil@baylibre.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yOFfvevSyIuI2uXnhKhqs1DyN3AcbeT8ZG1uPgE2BRM=;
+        b=NKh63KiIL+TJmJbmFIIsoY/mEIVZoJvslULuyO/WR+02Wyhv7GtL2KaYFa9pC2lAIW
+         Z0YzPbNWvE6AE+cl96mRAFV/w8KZsoe9x8fztnDsKGmK9STUJwB5xSkWAQBhFVwl06Sc
+         /C6UDYRNmeUU27qCDkl87bD9eivn1JkOGzG5kTpyPsqZ9TSW0LU8Qpdr3m+rvEdA9Jj0
+         B6F5EZlbMxqmn/ULr4fPSPsFzK6w6uv0HRKZ3W8fouv2yzwwlb4dahWJ89NIJ9/Kjc0h
+         c0W6fNYnA68lH4Lam9YjoZ+SwKTXWyVet7shitZkBqqO52pLQN8aWcDhZTtYf9KBZo46
+         hGzA==
+X-Gm-Message-State: APjAAAVzMarg6tc9lVxtoWh/uLPy/q4vsR8rd2EMfA3MElyJghDMBhch
+        kUNQro6fldDT5sttijQy77y9v03M7v0tdE/OvIEaUw==
+X-Google-Smtp-Source: APXvYqxnA8G81rljm9PRI4kMBgFx5xHF8npsvEDLPsgJihuMyGPwNDoGsLgkc8I5MZdAQ/Tvtt1EXptQF2KV3j41oYA=
+X-Received: by 2002:a9d:328:: with SMTP id 37mr2126736otv.228.1574259884942;
+ Wed, 20 Nov 2019 06:24:44 -0800 (PST)
+MIME-Version: 1.0
+References: <20191115191728.87338-1-jannh@google.com> <20191115191728.87338-2-jannh@google.com>
+ <87lfsbfa2q.fsf@linux.intel.com> <CAG48ez2QFz9zEQ65VTc0uGB=s3uwkegR=nrH6+yoW-j4ymtq7Q@mail.gmail.com>
+ <20191120135607.GA84886@tassilo.jf.intel.com>
+In-Reply-To: <20191120135607.GA84886@tassilo.jf.intel.com>
+From:   Jann Horn <jannh@google.com>
+Date:   Wed, 20 Nov 2019 15:24:17 +0100
+Message-ID: <CAG48ez11aL5OsDCTF=E6h=_DF6ojmunwp1BcWL73EsQLrmsttQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] x86/traps: Print non-canonical address on #GP
+To:     Andi Kleen <ak@linux.intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-NVMEM framework is an interface for the at24 EEPROMs as well as for
-other drivers, instead of passing the wp-gpios over the different
-drivers each time, it would be better to pass it over the NVMEM
-subsystem once and for all.
+On Wed, Nov 20, 2019 at 2:56 PM Andi Kleen <ak@linux.intel.com> wrote:
+> > Is there a specific concern you have about the instruction decoder? As
+> > far as I can tell, all the paths of insn_get_addr_ref() only work if
+> > the instruction has a mod R/M byte according to the instruction
+> > tables, and then figures out the address based on that. While that
+> > means that there's a wide variety of cases in which we won't be able
+> > to figure out the address, I'm not aware of anything specific that is
+> > likely to lead to false positives.
+>
+> First there will be a lot of cases you'll just print 0, even
+> though 0 is canonical if there is no operand.
 
-Removing the support for the write-protect pin after adding it to the
-NVMEM subsystem.
+Why would I print zeroes if there is no operand? The decoder logic
+returns a -1 if it can't find a mod r/m byte, which causes the #GP
+handler to not print any address at all. Or are you talking about some
+weird instruction that takes an operand that is actually ignored, or
+something weird like that?
 
-Signed-off-by: Khouloud Touil <ktouil@baylibre.com>
----
- drivers/misc/eeprom/at24.c | 9 ---------
- 1 file changed, 9 deletions(-)
+> Then it might be that the address is canonical, but triggers
+> #GP anyways (e.g. unaligned SSE)
 
-diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
-index 2cccd82a3106..eec2a34b7051 100644
---- a/drivers/misc/eeprom/at24.c
-+++ b/drivers/misc/eeprom/at24.c
-@@ -22,7 +22,6 @@
- #include <linux/nvmem-provider.h>
- #include <linux/regmap.h>
- #include <linux/pm_runtime.h>
--#include <linux/gpio/consumer.h>
- 
- /* Address pointer is 16 bit. */
- #define AT24_FLAG_ADDR16	BIT(7)
-@@ -89,8 +88,6 @@ struct at24_data {
- 
- 	struct nvmem_device *nvmem;
- 
--	struct gpio_desc *wp_gpio;
--
- 	/*
- 	 * Some chips tie up multiple I2C addresses; dummy devices reserve
- 	 * them for us, and we'll use them with SMBus calls.
-@@ -457,12 +454,10 @@ static int at24_write(void *priv, unsigned int off, void *val, size_t count)
- 	 * from this host, but not from other I2C masters.
- 	 */
- 	mutex_lock(&at24->lock);
--	gpiod_set_value_cansleep(at24->wp_gpio, 0);
- 
- 	while (count) {
- 		ret = at24_regmap_write(at24, buf, off, count);
- 		if (ret < 0) {
--			gpiod_set_value_cansleep(at24->wp_gpio, 1);
- 			mutex_unlock(&at24->lock);
- 			pm_runtime_put(dev);
- 			return ret;
-@@ -472,7 +467,6 @@ static int at24_write(void *priv, unsigned int off, void *val, size_t count)
- 		count -= ret;
- 	}
- 
--	gpiod_set_value_cansleep(at24->wp_gpio, 1);
- 	mutex_unlock(&at24->lock);
- 
- 	pm_runtime_put(dev);
-@@ -662,9 +656,6 @@ static int at24_probe(struct i2c_client *client)
- 	at24->client[0].client = client;
- 	at24->client[0].regmap = regmap;
- 
--	at24->wp_gpio = devm_gpiod_get_optional(dev, "wp", GPIOD_OUT_HIGH);
--	if (IS_ERR(at24->wp_gpio))
--		return PTR_ERR(at24->wp_gpio);
- 
- 	writable = !(flags & AT24_FLAG_READONLY);
- 	if (writable) {
--- 
-2.17.1
+Which is an argument for printing the address even if it is canonical,
+as Ingo suggested, I guess.
 
+> Or it might be the wrong address if there is an operand,
+> there are many complex instructions that reference something
+> in memory, and usually do canonical checking there.
+
+In which case you'd probably usually see a canonical address in the
+instruction's argument, which causes the error message to not appear
+(in patch v2/v3) / to be different (in my current draft for patch v4).
+And as Ingo said over in the other thread, even if the argument is not
+directly the faulting address at all, it might still help with
+figuring out what's going on.
+
+> And some other odd cases. For example when the instruction length
+> exceeds 15 bytes.
+
+But this is the #GP handler. Don't overlong instructions give you #UD instead?
+
+> I know there is fuzzing for the instruction
+> decoder, but it might be worth double checking it handles
+> all of that correctly. I'm not sure how good the fuzzer's coverage
+> is.
+>
+> At a minimum you should probably check if the address is
+> actually non canonical. Maybe that's simple enough and weeds out
+> most cases.
+
+The patch you're commenting on does that already; quoting the patch:
+
++       /* Bail out if insn_get_addr_ref() failed or we got a kernel address. */
++       if (addr_ref >= ~__VIRTUAL_MASK)
++               return;
++
++       /* Bail out if the entire operand is in the canonical user half. */
++       if (addr_ref + insn.opnd_bytes - 1 <= __VIRTUAL_MASK)
++               return;
+
+But at Ingo's request, I'm planning to change that in the v4 patch;
+see <https://lore.kernel.org/lkml/20191120111859.GA115930@gmail.com/>
+and <https://lore.kernel.org/lkml/CAG48ez0Frp4-+xHZ=UhbHh0hC_h-1VtJfwHw=kDo6NahyMv1ig@mail.gmail.com/>.
