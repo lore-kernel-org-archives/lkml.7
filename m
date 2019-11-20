@@ -2,139 +2,102 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EBF1C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 18:09:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82FF8C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 18:09:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02F172088F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 18:09:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FT45OuHH"
+	by mail.kernel.org (Postfix) with ESMTP id 5E084208CE
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 18:09:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574273399;
+	bh=rJu9h82iouaK4ilpkyZWl4D75r/it7DmdM50YOaXa3g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0c0MI6j9P4ra6iyaX+YW3tqVg11/1VHUVA+cCXMkV/redKgcdQVlcjy0NccVsRjIS
+	 yG37ZJQOpIFLfsPfhRyviGc0vCdeRg1hl/hYqiosmsfanfLRVdZHSujYUTqurRftAX
+	 wDFVVdxlySp2BJtsETbdkFeLFkb8/7KQ2z5R37LM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728072AbfKTSJe (ORCPT
+        id S1728184AbfKTSJ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 13:09:34 -0500
-Received: from mail-pj1-f73.google.com ([209.85.216.73]:48471 "EHLO
-        mail-pj1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726999AbfKTSJd (ORCPT
+        Wed, 20 Nov 2019 13:09:58 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:40127 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726999AbfKTSJ6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 13:09:33 -0500
-Received: by mail-pj1-f73.google.com with SMTP id e12so65566pjt.15
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 10:09:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=m+U1zAaIxdg9VzXauR+Zmx1TAKT0+Jtq+g8ufQj/Y54=;
-        b=FT45OuHHnDSdkxKOJP+US9ACDoY9OhGIlZMTSCY5rFOGBKxwkNxJCefmIgoCxs5lTF
-         RCuI2X5faDDjKEgMRVVqvD79NG2sYeObTm2HfwuwPzLrf3I+Sxq/Ogs5Jmjc0Rp5eCOQ
-         eSg4RMZGV12cxy8dfeGCUI8KF+/7o1urCJkb5gWhTlKbzgr3EnCTbUxsQ4KYzw4Ftpca
-         0c3T392+Yx+3RhNZ/1PnzuGUchaKdDd/kDzUolKIrLvDXrs53UnJmvRgHRtMfpLPdHXe
-         IHvjljgLso5kXS1oRpYMVbQfjOFbXgTrs6Iedo+qMZuIlFjn0CXKhbBHd3LnMeKTFohP
-         TMsQ==
+        Wed, 20 Nov 2019 13:09:58 -0500
+Received: by mail-oi1-f196.google.com with SMTP id d22so611161oic.7;
+        Wed, 20 Nov 2019 10:09:57 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=m+U1zAaIxdg9VzXauR+Zmx1TAKT0+Jtq+g8ufQj/Y54=;
-        b=uAjlbUmlNZC20937D5JQ0t/S0wQO6nrJ0xrQd8vYopmpS0wCpv213WEVZ8pyM+8vCN
-         wA78A0GdkPJeaOFFn/EcZKuL41QGCmwGUlEGapZlMJWX9r8iln/VtmJNxtCI4HriTlkp
-         SEIi3CRdAECXeSBmekABQ4dkvSDzmTrmioQYq1qxsja5W/VVsTiiVP8Kf/h70/CnK1nY
-         3ub8phQmCjUwRcYOkeL2H0zYadBuaS0XtjQGC8dz0Ph4QyZXYV4Xc/Jxogs/Q8+n1/J9
-         609oDztabV1BGCZyExy0qZkDHUCVtIbOp+FTkOXmyUWpFlpxLj+vmICSKCj5BpWRhy4D
-         UDGg==
-X-Gm-Message-State: APjAAAX/sK5i0vaqiLsxohZNfkgxqnhmniSaFttWWSuW0GzHkyIMphGK
-        1QTnjnWuqcYuPK+IyBTVuSvHtdWLyXFi
-X-Google-Smtp-Source: APXvYqzZ7I1pJmW6BAE1YfbZD7VB35tQSl0CfOi45J0LagAuyRVxOzLjYSVkfySeJ0cKMS0Yv1kggFOyZ7mz
-X-Received: by 2002:a63:66c1:: with SMTP id a184mr4755320pgc.164.1574273372597;
- Wed, 20 Nov 2019 10:09:32 -0800 (PST)
-Date:   Wed, 20 Nov 2019 10:09:25 -0800
-Message-Id: <20191120180925.21787-1-irogers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
-Subject: [PATCH] perf tools: fix potential memory leak
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YzyZQ4fEqLiui26PMcdzE5fiKafIuHsPZ+HchTRfUPQ=;
+        b=AmRkJnDyfodCdHEBNQxSQnCQVWcy4LzEpZOEBxA7fkkyOeU2vyYRXa8nyJGV4ycrCu
+         673spSZntW7NAOFczUnkLtvLW3z18GLGfZqzITUBcLnjP0HwEOmhBEVbNL7ADURF9ZMX
+         X3GV0gBKOvHdcP9fKTTZ1BPTHndscfQzgQ1N7/m3tooKhKraBbfp6aKEA7CTcSVbXmSi
+         XLTHH6JVQjSYIt6ntPv4vw7t+LK7K9iTGxTVv8Hmix7T5NwwJjNdoKTKzZVGEWTWLX2s
+         rmltvDCSdcmYlZJR7Of5ix/QsoxirM1zSRjzAs5mHtF6Psx9sozPEszTQlMFBm3Q5pXX
+         dZvw==
+X-Gm-Message-State: APjAAAV+KA3cCRjNZMpP7eO2f6oDUJbYM2KT5NHzBnENzNUt/w1UyEtv
+        nNhk7CpJz6u7XVQEpN3vkQ==
+X-Google-Smtp-Source: APXvYqzaDfbYrfeEjWY541EKHP6pgAPEWL5ptEcD1hGCgK+Un3JISnVZs/7iXribLlYOAxWgCIgp5w==
+X-Received: by 2002:aca:cfd8:: with SMTP id f207mr3990174oig.145.1574273397185;
+        Wed, 20 Nov 2019 10:09:57 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id a10sm8305379otf.72.2019.11.20.10.09.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Nov 2019 10:09:56 -0800 (PST)
+Date:   Wed, 20 Nov 2019 12:09:55 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     fabrice.gasnier@st.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        alexandre.torgue@st.com, jic23@kernel.org, knaack.h@gmx.de,
+        lars@metafoo.de, pmeerw@pmeerw.net, lee.jones@linaro.org,
+        thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+        devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: Re: [PATCH v2] dt-bindings: mfd: Convert stm32 low power timers
+ bindings to json-schema
+Message-ID: <20191120180955.GA22823@bogus>
+References: <20191118094842.20171-1-benjamin.gaignard@st.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191118094842.20171-1-benjamin.gaignard@st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-An error may be in place when tracepoint_error is called, use
-parse_events__handle_error to avoid a memory leak and to capture the
-first and last error. Error detected by LLVM's libFuzzer using the
-following event:
+On Mon, 18 Nov 2019 10:48:42 +0100, Benjamin Gaignard wrote:
+> Convert the STM32 low power timers binding to DT schema format using json-schema
+> 
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> ---
+> changes in version 2:
+> - improve counter function description
+> - set reg maximum to 2 instead of 3
+> 
+>  .../bindings/counter/stm32-lptimer-cnt.txt         |  29 -----
+>  .../bindings/iio/timer/stm32-lptimer-trigger.txt   |  23 ----
+>  .../devicetree/bindings/mfd/st,stm32-lptimer.yaml  | 120 +++++++++++++++++++++
+>  .../devicetree/bindings/mfd/stm32-lptimer.txt      |  48 ---------
+>  .../devicetree/bindings/pwm/pwm-stm32-lp.txt       |  30 ------
+>  5 files changed, 120 insertions(+), 130 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/counter/stm32-lptimer-cnt.txt
+>  delete mode 100644 Documentation/devicetree/bindings/iio/timer/stm32-lptimer-trigger.txt
+>  create mode 100644 Documentation/devicetree/bindings/mfd/st,stm32-lptimer.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/mfd/stm32-lptimer.txt
+>  delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-stm32-lp.txt
+> 
 
-$ perf stat -e 'msr/event/,f:e'
-event syntax error: 'msr/event/,f:e'
-                     \___ can't access trace events
+Applied, thanks.
 
-Error:  No permissions to read /sys/kernel/debug/tracing/events/f/e
-Hint:   Try 'sudo mount -o remount,mode=755 /sys/kernel/debug/tracing/'
-
-Initial error:
-event syntax error: 'msr/event/,f:e'
-                                \___ no value assigned for term
-Run 'perf list' for a list of valid events
-
- Usage: perf stat [<options>] [<command>]
-
-    -e, --event <event>   event selector. use 'perf list' to list available events
-
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/parse-events.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
-
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 6bae9d6edc12..ecef5b8037b4 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -511,6 +511,7 @@ int parse_events_add_cache(struct list_head *list, int *idx,
- static void tracepoint_error(struct parse_events_error *e, int err,
- 			     const char *sys, const char *name)
- {
-+	const char *str;
- 	char help[BUFSIZ];
- 
- 	if (!e)
-@@ -524,18 +525,18 @@ static void tracepoint_error(struct parse_events_error *e, int err,
- 
- 	switch (err) {
- 	case EACCES:
--		e->str = strdup("can't access trace events");
-+		str = "can't access trace events";
- 		break;
- 	case ENOENT:
--		e->str = strdup("unknown tracepoint");
-+		str = "unknown tracepoint";
- 		break;
- 	default:
--		e->str = strdup("failed to add tracepoint");
-+		str = "failed to add tracepoint";
- 		break;
- 	}
- 
- 	tracing_path__strerror_open_tp(err, help, sizeof(help), sys, name);
--	e->help = strdup(help);
-+	parse_events__handle_error(e, 0, strdup(str), strdup(help));
- }
- 
- static int add_tracepoint(struct list_head *list, int *idx,
--- 
-2.24.0.432.g9d3f5f5b63-goog
-
+Rob
