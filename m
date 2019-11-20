@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1DB1C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:33:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ECF2C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:33:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 918F722524
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:33:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 061BB224D2
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:33:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574256808;
-	bh=crDJnPjOlOMnMpToasc/QNgCCxnojz7Gt+oJifbABfA=;
+	s=default; t=1574256823;
+	bh=cOotmQubac+hlg5XwFL6eDrG6qS2WHwDNCPh0I8Yv2M=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Q1PPVdV/aORNKD2eiGrDfozSA4+az2JEyK3GsmI9GH6P9ugIwonpp4ONzoZHD9ywV
-	 H1ApuCAgWl4mBkrpw9GGNtes1S2uMOaL2RFbiPV1R7Y+pAjE4KlFLzjx9dXnKPGVWk
-	 MVfWAscvlfKNCUMUGvvDt33fEJzsM21qVoeVjsFU=
+	b=BljLj+kw0PZd74VXJnF0PQIHgu6S5Vvxm9jfB9GsJXwUPl7v9pmvcdNyKMzCH7oi1
+	 36d5fCof3ltiDid0pzbZFSGxFbLYZmnHlAh/N+W+A53B91gOShxK7n+8vlC+Pk2QiP
+	 VdvIfCWtmtBH3ZGRiVG86/gb38Aye8uowsm5aUbY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730684AbfKTNd1 (ORCPT
+        id S1730696AbfKTNdm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 08:33:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40844 "EHLO mail.kernel.org"
+        Wed, 20 Nov 2019 08:33:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41010 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730650AbfKTNd1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 08:33:27 -0500
+        id S1730650AbfKTNdl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 08:33:41 -0500
 Received: from localhost.localdomain (unknown [118.189.143.39])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB73C22521;
-        Wed, 20 Nov 2019 13:33:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35B55224D2;
+        Wed, 20 Nov 2019 13:33:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574256806;
-        bh=crDJnPjOlOMnMpToasc/QNgCCxnojz7Gt+oJifbABfA=;
+        s=default; t=1574256821;
+        bh=cOotmQubac+hlg5XwFL6eDrG6qS2WHwDNCPh0I8Yv2M=;
         h=From:To:Cc:Subject:Date:From;
-        b=IFtJmZwVGAu+M1OiaNeJ8nii6218nM+iENEqrLh3wAGGxJJgDi4onqPhYQP15NAQJ
-         RdSR3FehinLGwknGIHrJ7zgUL20ZJB8KqINs4tX7tlmfkFq/qOs2CyylENRqIInqDS
-         ylBgk5+xHCkbooit8zRWuURusc9DeFUUI4wBNo+g=
+        b=Kwx0VXSwxVuOk9ra6cINVTrWcI4mfqI2arjb5skO8aXw2G6yns3U+1Cgu1Zn1ZnsN
+         veAXE8DxpJZHdubMqxjbhMKFJASzLlfrCKo/iac67EXh2IIR9GQLYS3moyhtOWE0Ot
+         +gVenIYPDbJ9gZWQhE5cu2Tv0/hfxbS/DRoCKTds=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: [PATCH] interconnect: qcom: Fix Kconfig indentation
-Date:   Wed, 20 Nov 2019 21:33:07 +0800
-Message-Id: <20191120133307.6421-1-krzk@kernel.org>
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH] vga: Fix Kconfig indentation
+Date:   Wed, 20 Nov 2019 21:33:27 +0800
+Message-Id: <20191120133327.6519-1-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -61,24 +62,21 @@ coding style with command like:
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/interconnect/qcom/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/vga/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/interconnect/qcom/Kconfig b/drivers/interconnect/qcom/Kconfig
-index c49afbea3458..b6735f11438c 100644
---- a/drivers/interconnect/qcom/Kconfig
-+++ b/drivers/interconnect/qcom/Kconfig
-@@ -11,8 +11,8 @@ config INTERCONNECT_QCOM_MSM8974
-        depends on QCOM_SMD_RPM
-        select INTERCONNECT_QCOM_SMD_RPM
-        help
--         This is a driver for the Qualcomm Network-on-Chip on msm8974-based
--         platforms.
-+	 This is a driver for the Qualcomm Network-on-Chip on msm8974-based
-+	 platforms.
- 
- config INTERCONNECT_QCOM_QCS404
- 	tristate "Qualcomm QCS404 interconnect driver"
+diff --git a/drivers/gpu/vga/Kconfig b/drivers/gpu/vga/Kconfig
+index c8c770b05ed9..1ad4c4ef0b5e 100644
+--- a/drivers/gpu/vga/Kconfig
++++ b/drivers/gpu/vga/Kconfig
+@@ -28,6 +28,6 @@ config VGA_SWITCHEROO
+ 	help
+ 	  Many laptops released in 2008/9/10 have two GPUs with a multiplexer
+ 	  to switch between them. This adds support for dynamic switching when
+-          X isn't running and delayed switching until the next logoff. This
++	  X isn't running and delayed switching until the next logoff. This
+ 	  feature is called hybrid graphics, ATI PowerXpress, and Nvidia
+ 	  HybridPower.
 -- 
 2.17.1
 
