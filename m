@@ -2,131 +2,122 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E35BC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:41:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78269C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:41:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53AE421906
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:41:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574250105;
-	bh=c54FTPihjJBlYMetR/UyUFcl4cuOdFUsY8+B0OczVlo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Qbsw7iqX9v2r7crgzBLVW2ntMrnn9MpOQC1m4hEQ6KKBoeIo2rRw5pskguVoW/NjD
-	 shPyD5BqrM4kCDTMpNxFtAtb4kRKPgGyQsvlc28zd/8DEJi06a723FSrCWzQE4Zt6f
-	 gBRVDF/Ffrk0deiIs2RKCtf4Y7cA5PUk+s2kpNKs=
+	by mail.kernel.org (Postfix) with ESMTP id 5879221906
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:41:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729340AbfKTLlo (ORCPT
+        id S1729351AbfKTLlz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 06:41:44 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:32814 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728495AbfKTLlo (ORCPT
+        Wed, 20 Nov 2019 06:41:55 -0500
+Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:41038 "EHLO
+        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728495AbfKTLlz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 06:41:44 -0500
-Received: by mail-wm1-f67.google.com with SMTP id t26so961787wmi.0
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 03:41:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=x9xVJ7mXWw8oZuqrstfEkI3veCueqnyo7bS5uNfNe1c=;
-        b=eXkRJGZLZ6D4XKijtgh5kgmQXmomYEzldhHOXjpAShGyutxPONvJiJC4EZGctWpzSj
-         5ssGLcJxTVEw9mrmWAB1F//yLDm8n3sOdxC0/Hc7BSCW2BejLTxW2kcak2TBQiisTnrV
-         Mzi2keltM1sJcXNTmSz674CvfJRWRJzTugVBfDfJgcm3/atSKA0j6NyHgzWqIQjmZKa8
-         Ci6i4m/BLT1ZPUFHRKmhfBejleTr8n8W3Mb6O1G4ztzDgy07Gdgs328NOjMm/+d29nCA
-         Df2iPdhnyYCUmYKpY2UXTyclgjNBCqeVu7DgkdGFtkfE7HLwXd9jYPYaegDu6s14q8p0
-         TI9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=x9xVJ7mXWw8oZuqrstfEkI3veCueqnyo7bS5uNfNe1c=;
-        b=kY0uLUd5y+Lpvzuz/sEznO/6qZ93oqWnT6zyQFxFf85ELQ6+8QZmX3MuHx1i9v8fFB
-         azFmB0wANn1Y2ehJoHOSkfX+hcc4w69cfd+KCsVtG8TGrJy9CR6bfFmk4UvEL77LnwLd
-         fvOTfejMH978oMd0/lhNXPwQCVySpWeVNrCHkdcxPpORIrVid/RokT1ZhQqX+w1nawPj
-         JP7h3ZArvW3m7J/2j3C4imBpp6LiG/V02VJLxd24X3fy2r+5aXDDZSfHyD89LPfdThRg
-         S5v0/fpoOX7+N2nRvRuUsG0MMXkrKmwxUmQtolqL6hizja6bopnVeU0os8wKaZG3Pqby
-         FQ+g==
-X-Gm-Message-State: APjAAAXTF65x4g3bj3H6VfQ9yTcvJ67rN8e8iUxe+KnXWYJPAWkA4QbP
-        8C5KOtZGAuqCfJ1iBp0CPXo=
-X-Google-Smtp-Source: APXvYqyiZKPwWo7Sl4WENLYinPVTV8jqx8gj6VXdS001xRV97w79Gg/SoSdNfSu7LVSPnKVqLd0cqw==
-X-Received: by 2002:a1c:a512:: with SMTP id o18mr2592588wme.4.1574250101878;
-        Wed, 20 Nov 2019 03:41:41 -0800 (PST)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id v128sm6875441wmb.14.2019.11.20.03.41.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Nov 2019 03:41:41 -0800 (PST)
-Date:   Wed, 20 Nov 2019 12:41:39 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Dmitry Vyukov <dvyukov@google.com>, Jann Horn <jannh@google.com>,
+        Wed, 20 Nov 2019 06:41:55 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R861e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=38;SR=0;TI=SMTPD_---0TidwO.r_1574250104;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TidwO.r_1574250104)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 20 Nov 2019 19:41:45 +0800
+Subject: Re: [PATCH v4 3/9] mm/lru: replace pgdat lru_lock with lruvec lock
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org,
+        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
+        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
+        yang.shi@linux.alibaba.com, willy@infradead.org,
+        shakeelb@google.com, Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Roman Gushchin <guro@fb.com>,
+        Chris Down <chris@chrisdown.name>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, Qian Cai <cai@lca.pw>,
         Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: Re: [PATCH v2 2/3] x86/traps: Print non-canonical address on #GP
-Message-ID: <20191120114139.GB83574@gmail.com>
-References: <20191115191728.87338-1-jannh@google.com>
- <20191115191728.87338-2-jannh@google.com>
- <20191118142144.GC6363@zn.tnic>
- <CACT4Y+bCOr=du1QEg8TtiZ-X6U+8ZPR4N07rJOeSCsd5h+zO3w@mail.gmail.com>
- <CAG48ez1AWW7FkvU31ahy=0ZiaAreSMz=FFA0u8-XkXT9hNdWKA@mail.gmail.com>
- <CACT4Y+bfF86YY_zEGWO1sK0NwuYgr8Cx0wFewRDq0WL_GBgO0Q@mail.gmail.com>
- <20191118164407.GH6363@zn.tnic>
- <20191118173850.GL6363@zn.tnic>
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        swkhack <swkhack@gmail.com>,
+        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Colin Ian King <colin.king@canonical.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Peng Fan <peng.fan@nxp.com>,
+        Nikolay Borisov <nborisov@suse.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Yafang Shao <laoar.shao@gmail.com>
+References: <1574166203-151975-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1574166203-151975-4-git-send-email-alex.shi@linux.alibaba.com>
+ <20191119160456.GD382712@cmpxchg.org>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <bcf6a952-5b92-50ad-cfc1-f4d9f8f63172@linux.alibaba.com>
+Date:   Wed, 20 Nov 2019 19:41:44 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:60.0)
+ Gecko/20100101 Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191118173850.GL6363@zn.tnic>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191119160456.GD382712@cmpxchg.org>
+Content-Type: text/plain; charset=gbk
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-* Borislav Petkov <bp@alien8.de> wrote:
 
-> On Mon, Nov 18, 2019 at 05:44:07PM +0100, Borislav Petkov wrote:
-> > [    2.523708] Write protecting the kernel read-only data: 16384k
-> > [    2.524729] Freeing unused kernel image (text/rodata gap) memory: 2040K
-> > [    2.525594] Freeing unused kernel image (rodata/data gap) memory: 368K
-> > [    2.541414] x86/mm: Checked W+X mappings: passed, no W+X pages found.
-> > 
-> > <--- important first splat starts here:
-> > 
-> > [    2.542218] [*] general protection fault while derefing a non-canonical address 0xdfff000000000001: 0000 [#1] PREEMPT SMP
-> 		  ^
+ÔÚ 2019/11/20 ÉÏÎç12:04, Johannes Weiner Ð´µÀ:
+>> +
+>> +	return lruvec;
+> While this works in practice, it looks wrong because it doesn't follow
+> the mem_cgroup_page_lruvec() rules.
 > 
-> Btw, tglx just suggested on IRC to simply slap the die_counter number here so
-> that you have
+> Please open-code spin_lock_irq(&pgdat->__lruvec->lru_lock) instead.
 > 
-> [    2.543343] [1] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.4.0-rc8+ #8
-> [    2.544138] [1] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.11.1-1 04/01/2014
-> ...
+
+That's right. Thanks for suggestion!
+
+>> @@ -1246,6 +1245,46 @@ struct lruvec *mem_cgroup_page_lruvec(struct page *page, struct pglist_data *pgd
+>>  	return lruvec;
+>>  }
+>>  
+>> +struct lruvec *lock_page_lruvec_irq(struct page *page,
+>> +					struct pglist_data *pgdat)
+>> +{
+>> +	struct lruvec *lruvec;
+>> +
+>> +again:
+>> +	rcu_read_lock();
+>> +	lruvec = mem_cgroup_page_lruvec(page, pgdat);
+>> +	spin_lock_irq(&lruvec->lru_lock);
+>> +	rcu_read_unlock();
+> The spinlock doesn't prevent the lruvec from being freed
 > 
-> which also tells you to which splat the line belongs to.
->
-> Also useful.
+> You deleted the rules from the mem_cgroup_page_lruvec() documentation,
+> but they still apply: if the page is already !PageLRU() by the time
+> you get here, it could get reclaimed or migrated to another cgroup,
+> and that can free the memcg/lruvec. Merely having the lru_lock held
+> does not prevent this.
 
-Yeah - but I think it would be even better to make it part of the 
-timestamp - most tools will already discard the [] bit, so why not merge 
-the two:
 
-> [    2.543343-#1] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.4.0-rc8+ #8
-> [    2.544138-#1] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.11.1-1 04/01/2014
+Forgive my idiot, I still don't know the details of unsafe lruvec here.
+From my shortsight, the spin_lock_irq(embedded a preempt_disable) could block all rcu syncing thus, keep all memcg alive until the preempt_enabled in unspinlock, is this right?
+If so even the page->mem_cgroup is migrated to others cgroups, the new and old cgroup should still be alive here. 
 
-Thanks,
+> 
+> Either the page needs to be locked, or the page needs to be PageLRU
+> with the lru_lock held to prevent somebody else from isolating
+> it. Otherwise, the lruvec is not safe to use.
 
-	Ingo
+Do you mean that we may get the wrong lruvec->lru_lock if !PageLRU, so, the page may got freed by others? Sorry I got last there.
+
+Thanks
+Alex
