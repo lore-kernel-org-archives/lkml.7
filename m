@@ -2,103 +2,121 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 212F8C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 14:51:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1042AC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 14:51:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01DA920748
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 14:51:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E63FA206DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 14:51:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731861AbfKTOvT (ORCPT
+        id S1731872AbfKTOvv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 09:51:19 -0500
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:49271 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731836AbfKTOvR (ORCPT
+        Wed, 20 Nov 2019 09:51:51 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:33396 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731836AbfKTOvu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 09:51:17 -0500
-X-Originating-IP: 90.76.211.102
-Received: from aptenodytes (lfbn-1-2154-102.w90-76.abo.wanadoo.fr [90.76.211.102])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id ECDB740005;
-        Wed, 20 Nov 2019 14:51:14 +0000 (UTC)
-Date:   Wed, 20 Nov 2019 15:51:14 +0100
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: display: Document the Xylon LogiCVC
- display controller
-Message-ID: <20191120145114.GB4331@aptenodytes>
-References: <20190927100738.1863563-1-paul.kocialkowski@bootlin.com>
- <20190927100738.1863563-2-paul.kocialkowski@bootlin.com>
- <20190927222038.GA22180@bogus>
+        Wed, 20 Nov 2019 09:51:50 -0500
+Received: by mail-ed1-f66.google.com with SMTP id a24so20481644edt.0;
+        Wed, 20 Nov 2019 06:51:49 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LdZZamBZOTXJ+H49jpFbHd4kFB5olOuJEEXYQ+Tq3NY=;
+        b=dgZEIp0JWrBkNmGhY1hotc/HfrYrsv061gkPNzjqZ+nDs5m/8jP2Sv9F3N6Bpp6+o2
+         QFdwjJ1R4/CGyMPpkH7xAVjffMLKBy/CrnCOEHURxLjG7A3otnYfV89ihKbCYRg68kEz
+         4ovkIlw6TBugxwmyl+Bc50gyX3QdXnp4HV/6z0f1a+ytSOdIwH3sok1vvend7wRX4pj5
+         1HKdewXuetw/yj7ektzucVP6VksturXb7yrGa6mjCyROLtltrQRldPA3vnLBXD+iKU8M
+         kChAaryOf5RZ7gqAm04Tijcq01q14HImTxhbnNka3/cW0CFK7lc/52/QvO17hqkk+MLQ
+         GXBQ==
+X-Gm-Message-State: APjAAAUqTbBPGl+flcfDdipMo5HxO0ApCixTUtjB95V1r/if5DSUnvzZ
+        sI/Q7Hfg0bKKdkGAV450nq4=
+X-Google-Smtp-Source: APXvYqx4sL4itCM4mhO7FgVoymcvMnSi2elIRoWRpIrIaTNkF429Yn2Jt/uSeG1Yvnpm1OX14iuOXw==
+X-Received: by 2002:a17:906:f108:: with SMTP id gv8mr6110283ejb.180.1574261508945;
+        Wed, 20 Nov 2019 06:51:48 -0800 (PST)
+Received: from green.intra.ispras.ru (bran.ispras.ru. [83.149.199.196])
+        by smtp.googlemail.com with ESMTPSA id r3sm1457572eds.64.2019.11.20.06.51.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Nov 2019 06:51:48 -0800 (PST)
+From:   Denis Efremov <efremov@linux.com>
+Cc:     Denis Efremov <efremov@linux.com>,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>, stable@vger.kernel.org
+Subject: [PATCH] Smack: check length in smk_set_cipso()
+Date:   Wed, 20 Nov 2019 17:51:18 +0300
+Message-Id: <20191120145118.30402-1-efremov@linux.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="oC1+HKm2/end4ao3"
-Content-Disposition: inline
-In-Reply-To: <20190927222038.GA22180@bogus>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+It's possible to trigger out-of-bounds read in smk_set_cipso().
+For example (from root):
+$ echo "test 1" > /sys/fs/smackfs/cipso2
+BUG: KASAN: slab-out-of-bounds in vsscanf+0x2203/0x2990
+Read of size 1 at addr ffff888061b023c9 by task bash/5578
 
---oC1+HKm2/end4ao3
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The patch adds length checks for SMK_LONG_FMT format.
 
-Hi,
+The bug was found by syzkaller.
 
-On Fri 27 Sep 19, 17:20, Rob Herring wrote:
-> On Fri, Sep 27, 2019 at 12:07:37PM +0200, Paul Kocialkowski wrote:
-> > The Xylon LogiCVC is a display controller implemented as programmable
-> > logic in Xilinx FPGAs.
-> >=20
-> > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> > ---
-> >  .../display/xylon,logicvc-display.yaml        | 313 ++++++++++++++++++
-> >  1 file changed, 313 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/display/xylon,log=
-icvc-display.yaml
->=20
-> Any response to my last mail on v1?
+Cc: Casey Schaufler <casey@schaufler-ca.com>
+Cc: James Morris <jmorris@namei.org>
+Cc: "Serge E. Hallyn" <serge@hallyn.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Denis Efremov <efremov@linux.com>
+---
+ security/smack/smackfs.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-Just answered on that thread, sorry for the delay.
+diff --git a/security/smack/smackfs.c b/security/smack/smackfs.c
+index e3e05c04dbd1..fad50a5a807b 100644
+--- a/security/smack/smackfs.c
++++ b/security/smack/smackfs.c
+@@ -878,6 +878,9 @@ static ssize_t smk_set_cipso(struct file *file, const char __user *buf,
+ 	else
+ 		rule += strlen(skp->smk_known) + 1;
+ 
++	if (rule - data + 2 * SMK_DIGITLEN - 1 >= count)
++		goto out;
++
+ 	ret = sscanf(rule, "%d", &maplevel);
+ 	if (ret != 1 || maplevel > SMACK_CIPSO_MAXLEVEL)
+ 		goto out;
+@@ -887,15 +890,19 @@ static ssize_t smk_set_cipso(struct file *file, const char __user *buf,
+ 	if (ret != 1 || catlen > SMACK_CIPSO_MAXCATNUM)
+ 		goto out;
+ 
+-	if (format == SMK_FIXED24_FMT &&
+-	    count != (SMK_CIPSOMIN + catlen * SMK_DIGITLEN))
++	rule += SMK_DIGITLEN;
++
++	if ((format == SMK_FIXED24_FMT &&
++	     count != (SMK_CIPSOMIN + catlen * SMK_DIGITLEN)) ||
++	    (format == SMK_LONG_FMT &&
++	     count != (rule - data + catlen * SMK_DIGITLEN)))
+ 		goto out;
+ 
+ 	memset(mapcatset, 0, sizeof(mapcatset));
+ 
+ 	for (i = 0; i < catlen; i++) {
+-		rule += SMK_DIGITLEN;
+ 		ret = sscanf(rule, "%u", &cat);
++		rule += SMK_DIGITLEN;
+ 		if (ret != 1 || cat > SMACK_CIPSO_MAXCATNUM)
+ 			goto out;
+ 
+-- 
+2.21.0
 
-Cheers,
-
-Paul
-
---=20
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
-
---oC1+HKm2/end4ao3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl3VUuIACgkQ3cLmz3+f
-v9H6/QgAmZDcI/0gblSW95D8aMF2UP+4tUc1NYzzzlGmCGvAisyVWulup7L5PvSv
-uLxiM+7Kmq6KX9A0AOQ00+/d6noUI/sX9Zi6eY3EgyLQMnTNM87Z0SjSkO7oMkv2
-67GflREHdXIBr/jOI/tQ1Tqd04otcEN0iy7fzziWrK0gf33JTIhYE/v1k/3HKJyw
-jQjAU89SGWCTLrQUnWSXEkW7LyqX1XX/j5uVfeWJOBDdZYrHhpzRLvCRtbYKHqAk
-69VZQSm6NsoPtYGaZmuuTzegqphpJ/wG0BdOa8hIofGmGHsiwI//Ndx28cUELQCi
-rhXxUVq4zMUePbQId7kIskGuQjC3Kg==
-=oRfo
------END PGP SIGNATURE-----
-
---oC1+HKm2/end4ao3--
