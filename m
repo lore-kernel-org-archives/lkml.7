@@ -2,126 +2,83 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01D84C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 09:09:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 092D2C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 09:14:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBF9E20731
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 09:09:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574240944;
-	bh=MUIgVFDwkUr1ntkeGVGC9cGKbm8MC5EhUUlhuOr1nLg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=pDJhhvkrPx20Kv/l5dlBk6anwxid3UB2Hg/gWkMFA6/Kxkc9ccNQFEm7Z0zogBGxn
-	 LsniHqtedwLEQf5GeTjmkR1pQ2JmFYt8UwnT1CeMsXepvyTCUsQ2qheYJWJFAW2MMH
-	 Pk8yH0gEGSZ1SCptWkLSLqrbjqRGww65iyw863Sg=
+	by mail.kernel.org (Postfix) with ESMTP id E1DBC21850
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 09:14:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728090AbfKTJJE (ORCPT
+        id S1728087AbfKTJOE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 04:09:04 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:47095 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727816AbfKTJJD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 04:09:03 -0500
-Received: by mail-oi1-f194.google.com with SMTP id n14so21800353oie.13;
-        Wed, 20 Nov 2019 01:09:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fxjAZZwG5hIfrc3YBFvEHX0U8tqNbosfqpgXVFQpjTc=;
-        b=dmCR20i9ljycuzcdpQ/+b/WzPGniZOP3/6mDPi8Lf2AIOn/ZMrlKNLkRzOyYvLfEbF
-         k7RcT/zJpksB6x3YX4q6Pzry8vL61YqQ8mLEk9wjOY14zfyDHls6QQeB+IVrhh+Qaess
-         5wAaaEGr3TNr2+1Np2IJlt+hp3Pg7JqHFcqv5svCoDEV7cWk/QbFDr9aSIQ0s4iQed3B
-         m6Sh5WPOXyEo2VbsXThlgB55DAi/bUtCombh8WjA4zHLys/gPUhlqqO/rqz0EK0YksJP
-         +HOSy2Kb3NFYa+EXH9awcsVtbc3cU9S7TNG9pbKKq8F9KwlbPO75LOh1+giw/ugacKTB
-         nGUQ==
-X-Gm-Message-State: APjAAAWYSGq45lA3bd6E63YBkYTvAJsx0lX5T/JZ+SxTmmAflbftLDS/
-        bISBT2pmRrIemUy1Ss0PrK0dfsjyZANcPLL3AO0=
-X-Google-Smtp-Source: APXvYqxQjCBlQqe/f/mECD0vZZyqUXnBDslf+mcXcDjZNftUBzoDIa8ouyVTVLVhR1a+rSsJzXW2qceRI7vfoJ5tp48=
-X-Received: by 2002:a05:6808:901:: with SMTP id w1mr1897534oih.57.1574240942620;
- Wed, 20 Nov 2019 01:09:02 -0800 (PST)
+        Wed, 20 Nov 2019 04:14:04 -0500
+Received: from mx2.suse.de ([195.135.220.15]:36086 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727816AbfKTJOE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 04:14:04 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id E22AEAEC2;
+        Wed, 20 Nov 2019 09:14:01 +0000 (UTC)
+From:   Andreas Schwab <schwab@suse.de>
+To:     Yash Shah <yash.shah@sifive.com>
+Cc:     "linus.walleij\@linaro.org" <linus.walleij@linaro.org>,
+        "bgolaszewski\@baylibre.com" <bgolaszewski@baylibre.com>,
+        "robh+dt\@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland\@arm.com" <mark.rutland@arm.com>,
+        "palmer\@dabbelt.com" <palmer@dabbelt.com>,
+        "Paul Walmsley \( Sifive\)" <paul.walmsley@sifive.com>,
+        "devicetree\@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "aou\@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "jason\@lakedaemon.net" <jason@lakedaemon.net>,
+        "linux-gpio\@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "maz\@kernel.org" <maz@kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "atish.patra\@wdc.com" <atish.patra@wdc.com>,
+        Sagar Kadam <sagar.kadam@sifive.com>,
+        "tglx\@linutronix.de" <tglx@linutronix.de>,
+        "bmeng.cn\@gmail.com" <bmeng.cn@gmail.com>,
+        "linux-riscv\@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        Sachin Ghadi <sachin.ghadi@sifive.com>
+Subject: Re: [PATCH v2 5/5] riscv: dts: Add DT support for SiFive FU540 GPIO driver
+References: <1574233128-28114-1-git-send-email-yash.shah@sifive.com>
+        <1574233128-28114-6-git-send-email-yash.shah@sifive.com>
+X-Yow:  It's NO USE..  I've gone to ``CLUB MED''!!
+Date:   Wed, 20 Nov 2019 10:14:00 +0100
+In-Reply-To: <1574233128-28114-6-git-send-email-yash.shah@sifive.com> (Yash
+        Shah's message of "Wed, 20 Nov 2019 06:59:54 +0000")
+Message-ID: <mvmlfsaoqp3.fsf@suse.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-References: <2811202.iOFZ6YHztY@kreacher> <000401d59ee6$959e3da0$c0dab8e0$@net>
- <CAJZ5v0i1iAjpWju6FiCjP3RvspKDRfSwz4=b_3qgGhhfz8sSrw@mail.gmail.com>
- <6710300.onecg0m5mP@kreacher> <002a01d59f6f$7f609540$7e21bfc0$@net>
-In-Reply-To: <002a01d59f6f$7f609540$7e21bfc0$@net>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 20 Nov 2019 10:08:50 +0100
-Message-ID: <CAJZ5v0i1UqdQBvXm1cozOQeQ8YRdTxOAQPP9=RyZHHnsmuGHTw@mail.gmail.com>
-Subject: Re: [RFT][PATCH 1/3] PM: QoS: Introduce frequency QoS
-To:     Doug Smythies <dsmythies@telus.net>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Dmitry Osipenko <digetx@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 7:55 AM Doug Smythies <dsmythies@telus.net> wrote:
->
-> On 2019.11.19 14:14 Rafael J. Wysocki wrote:
-> > On Tuesday, November 19, 2019 8:17:05 PM CET Rafael J. Wysocki wrote:
->
-> ...
->
-> >> However, I now also see that freq_qos_remove_request() doesn't clear
-> >> the qos field in req which is should do, so freq_qos_add_request()
-> >> will complain and fail if the object pointed to by req is passed to it
-> >> again.
-> >>
-> >> I'll send a patch to test for this later today.
-> >>
-> >
-> > The patch is appended.  Please test it (on top of 5.4-rc8) and report back.
-> >
-> > ---
-> > kernel/power/qos.c |    8 +++++++-
-> > 1 file changed, 7 insertions(+), 1 deletion(-)
-> >
-> > Index: linux-pm/kernel/power/qos.c
-> > ===================================================================
-> > --- linux-pm.orig/kernel/power/qos.c
-> > +++ linux-pm/kernel/power/qos.c
-> > @@ -814,6 +814,8 @@ EXPORT_SYMBOL_GPL(freq_qos_update_reques
-> >  */
-> > int freq_qos_remove_request(struct freq_qos_request *req)
-> > {
-> > +     int ret;
-> > +
-> >       if (!req)
-> >               return -EINVAL;
-> >
-> > @@ -821,7 +823,11 @@ int freq_qos_remove_request(struct freq_
-> >                "%s() called for unknown object\n", __func__))
-> >               return -EINVAL;
-> >
-> > -     return freq_qos_apply(req, PM_QOS_REMOVE_REQ, PM_QOS_DEFAULT_VALUE);
-> > +     ret = freq_qos_apply(req, PM_QOS_REMOVE_REQ, PM_QOS_DEFAULT_VALUE);
-> > +     req->qos = NULL;
-> > +     req->type = 0;
-> > +
-> > +     return ret;
-> >  }
-> >  EXPORT_SYMBOL_GPL(freq_qos_remove_request);
->
-> Yes the patch fixes the problem. Thanks.
->
-> I tested several hundred times switching between
-> passive and active modes with the intel_pstate driver,
-> including with various CPUs disabled and re-enabled.
+On Nov 20 2019, Yash Shah wrote:
 
-Thanks a lot!
+> diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+> index 88cfcb9..609198c 100644
+> --- a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+> +++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+> @@ -94,3 +94,7 @@
+>  &pwm1 {
+>  	status = "okay";
+>  };
+> +
+> +&gpio {
+> +	status = "okay";
+> +};
 
-Let me resend the patch with a changelog and tags.
+How about adding a gpio-restart?
+
+Andreas.
+
+-- 
+Andreas Schwab, SUSE Labs, schwab@suse.de
+GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
+"And now for something completely different."
