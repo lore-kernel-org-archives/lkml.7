@@ -2,83 +2,112 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE98C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 23:39:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA3EC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 23:46:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DFF120857
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 23:39:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="GwkKe1t8"
+	by mail.kernel.org (Postfix) with ESMTP id F33BE20715
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 23:46:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726658AbfKTXjx (ORCPT
+        id S1726358AbfKTXq4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 18:39:53 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:52866 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725878AbfKTXjw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 18:39:52 -0500
-Received: from [10.137.112.111] (unknown [131.107.147.111])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 7CE8420B7185;
-        Wed, 20 Nov 2019 15:39:51 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7CE8420B7185
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1574293191;
-        bh=fBnSdarksQEg07LJd/+YN30Ehp+o/3EE9sMPeU4CzwY=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=GwkKe1t8XcQy5/t9J/I76+iHZbWRwe/ShA4SV2K0yqN5TXRt1H+UVkm4E5PIdKP8O
-         OvnLTPQ8wVn1QShs0AtKRHEBDfdzitYVL/sGQkmelkt8xWALdG0fdSi8gvyPbtPEq8
-         8opQIcAbpWNqaLAdJX+U8vjwRek6kpbLHcwZ03aI=
-Subject: Re: [PATCH v8 2/5] IMA: Define an IMA hook to measure keys
-To:     Eric Snowberg <eric.snowberg@oracle.com>
-Cc:     zohar@linux.ibm.com, linux-integrity@vger.kernel.org,
-        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
-References: <20191118223818.3353-1-nramas@linux.microsoft.com>
- <20191118223818.3353-3-nramas@linux.microsoft.com>
- <ED63593E-BE9B-40B7-B7FD-9DE772DC2EB1@oracle.com>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <98eeec95-cc19-2900-b96e-eadaac1b4a68@linux.microsoft.com>
-Date:   Wed, 20 Nov 2019 15:40:14 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 20 Nov 2019 18:46:56 -0500
+Received: from mga07.intel.com ([134.134.136.100]:19050 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725878AbfKTXqz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 18:46:55 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Nov 2019 15:46:55 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,223,1571727600"; 
+   d="scan'208";a="204980377"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by fmsmga007.fm.intel.com with ESMTP; 20 Nov 2019 15:46:53 -0800
+Subject: Re: [PATCH RFC 01/14] x86/asm: add iosubmit_cmds512() based on
+ movdir64b CPU instruction
+To:     "Hansen, Dave" <dave.hansen@intel.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "vkoul@kernel.org" <vkoul@kernel.org>
+Cc:     "Williams, Dan J" <dan.j.williams@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Lin, Jing" <jing.lin@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Dey, Megha" <megha.dey@intel.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        "hpa@zytor.com" <hpa@zytor.com>
+References: <157428480574.36836.14057238306923901253.stgit@djiang5-desk3.ch.intel.com>
+ <157428502934.36836.8119026517510193201.stgit@djiang5-desk3.ch.intel.com>
+ <8f860476-24e4-6e03-752b-10a59aed8901@intel.com>
+From:   Dave Jiang <dave.jiang@intel.com>
+Message-ID: <7d3ba8bb-fbb6-097c-fa5a-6b3ec21f72e3@intel.com>
+Date:   Wed, 20 Nov 2019 16:46:53 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <ED63593E-BE9B-40B7-B7FD-9DE772DC2EB1@oracle.com>
+In-Reply-To: <8f860476-24e4-6e03-752b-10a59aed8901@intel.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/20/2019 3:28 PM, Eric Snowberg wrote:
-Hi Eric,
+
+
+On 11/20/19 2:50 PM, Hansen, Dave wrote:
+> On 11/20/19 1:23 PM, Dave Jiang wrote:
+>> +static inline void __iowrite512(void __iomem *__dst, const void *src)
+>> +{
+>> +	volatile struct { char _[64]; } *dst = __dst;
+> 
+> This _looks_ like gibberish.  I know it's not, but it is subtle enough
+> that it really needs specific comments.
+
+I'll add comments explaining.
 
 > 
-> I’m interested in using this patch series, however I get the following on every boot:
+>> +static inline void iosubmit_cmds512(void __iomem *dst, const void *src,
+>> +				    size_t count)
+>> +{
+>> +	const u8 *from = src;
+>> +	const u8 *end = from + count * 64;
+>> +
+>> +	if (!cpu_has_write512())
+>> +		return;
+>> +
+>> +	while (from < end) {
+>> +		__iowrite512(dst, from);
+>> +		from += 64;
+>> +	}
+>> +}
+> 
+> Won't this silently just drop things if the CPU doesn't have movdir64b
+> support?
+> 
+> It seems like this shouldn't be called at all if
+> !cpu_has_write512(), but wouldn't something like this be mroe appropriate?
+> 
+> 	if (!cpu_has_write512()) {
+> 		WARN_ON_ONCE(1);
+> 		return;
+> 	}
+> 
+> Is the caller just supposed to infer that "dst" was never overwritten?
+> 
 
-> [    1.222749] Call Trace:
-> [    1.223344]  ? crypto_destroy_tfm+0x5f/0xb0
-> [    1.224315]  ima_get_action+0x2c/0x30
-> [    1.225148]  process_buffer_measurement+0x1da/0x230
-> [    1.226306]  ima_post_key_create_or_update+0x3b/0x40
-
-This is happening because IMA is not yet initialized when the IMA hook 
-is called.
-
-I had the following check in process_buffer_measurement() as part of my 
-patch, but removed it since it is being upstreamed separately (by Mimi)
-
-  if (!ima_policy_flag)
-  	return;
-
-Until this change is in, please add the above line locally on entry to 
-process_buffer_measurement() to get around the issue.
-
-thanks,
-  -lakshmi
+Thanks. I'll add the WARN().
