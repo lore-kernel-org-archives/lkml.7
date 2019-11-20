@@ -7,43 +7,43 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4275CC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:23:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C1FC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:23:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23621224F3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:23:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 802BB224F3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:23:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730173AbfKTNVK (ORCPT
+        id S1730503AbfKTNXN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 08:21:10 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:56663 "EHLO
+        Wed, 20 Nov 2019 08:23:13 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:56690 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727907AbfKTNVJ (ORCPT
+        with ESMTP id S1730148AbfKTNVK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 08:21:09 -0500
+        Wed, 20 Nov 2019 08:21:10 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iXPum-00073W-NM; Wed, 20 Nov 2019 14:21:00 +0100
+        id 1iXPuo-00075q-9x; Wed, 20 Nov 2019 14:21:02 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 59B431C1A01;
-        Wed, 20 Nov 2019 14:21:00 +0100 (CET)
-Date:   Wed, 20 Nov 2019 13:21:00 -0000
-From:   "tip-bot2 for Maulik Shah" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E6D2E1C19FE;
+        Wed, 20 Nov 2019 14:21:01 +0100 (CET)
+Date:   Wed, 20 Nov 2019 13:21:01 -0000
+From:   "tip-bot2 for Markus Elfring" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/core] irqchip/qcom-pdc: Add irqchip set/get state calls
-Cc:     Maulik Shah <mkshah@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>,
+Subject: [tip: irq/core] irqchip/ti-sci-inta: Use ERR_CAST inlined function
+ instead of ERR_PTR(PTR_ERR(...))
+Cc:     Markus Elfring <elfring@users.sourceforge.net>,
         Marc Zyngier <maz@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <1573855915-9841-8-git-send-email-ilina@codeaurora.org>
-References: <1573855915-9841-8-git-send-email-ilina@codeaurora.org>
+In-Reply-To: <776b7135-26af-df7d-c3a9-4339f7bf1f15@web.de>
+References: <776b7135-26af-df7d-c3a9-4339f7bf1f15@web.de>
 MIME-Version: 1.0
-Message-ID: <157425606029.12247.1129726844288422234.tip-bot2@tip-bot2>
+Message-ID: <157425606182.12247.5210659654791287522.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -59,76 +59,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the irq/core branch of tip:
 
-Commit-ID:     e71374c07564536d38caed3e80a1ff1c4609161d
-Gitweb:        https://git.kernel.org/tip/e71374c07564536d38caed3e80a1ff1c4609161d
-Author:        Maulik Shah <mkshah@codeaurora.org>
-AuthorDate:    Fri, 15 Nov 2019 15:11:50 -07:00
+Commit-ID:     761becb29183c4e2ad9ff5f63933170c8fffd544
+Gitweb:        https://git.kernel.org/tip/761becb29183c4e2ad9ff5f63933170c8fffd544
+Author:        Markus Elfring <elfring@users.sourceforge.net>
+AuthorDate:    Tue, 05 Nov 2019 12:19:39 +01:00
 Committer:     Marc Zyngier <maz@kernel.org>
-CommitterDate: Sat, 16 Nov 2019 10:22:01 
+CommitterDate: Mon, 11 Nov 2019 10:19:06 
 
-irqchip/qcom-pdc: Add irqchip set/get state calls
+irqchip/ti-sci-inta: Use ERR_CAST inlined function instead of ERR_PTR(PTR_ERR(...))
 
-Add irqchip calls to set/get interrupt state from the parent interrupt
-controller. When GPIOs are renabled as interrupt lines, it is desirable
-to clear the interrupt state at the GIC. This avoids any unwanted
-interrupt as a result of stale pending state recorded when the line was
-used as a GPIO.
+A coccicheck run provided information like the following.
 
-Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-[Lina: updated commit text, rearranged code]
-Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+drivers/irqchip/irq-ti-sci-inta.c:250:9-16: WARNING: ERR_CAST can be used
+with vint_desc.
+
+Generated by: scripts/coccinelle/api/err_cast.cocci
+
+Thus adjust the exception handling in one if branch.
+
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
 Signed-off-by: Marc Zyngier <maz@kernel.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Link: https://lore.kernel.org/r/1573855915-9841-8-git-send-email-ilina@codeaurora.org
+Reviewed-by: Lokesh Vutla <lokeshvutla@ti.com>
+Link: https://lore.kernel.org/r/776b7135-26af-df7d-c3a9-4339f7bf1f15@web.de
 ---
- drivers/irqchip/qcom-pdc.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ drivers/irqchip/irq-ti-sci-inta.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
-index 4f2c762..6ae9e1f 100644
---- a/drivers/irqchip/qcom-pdc.c
-+++ b/drivers/irqchip/qcom-pdc.c
-@@ -5,6 +5,7 @@
+diff --git a/drivers/irqchip/irq-ti-sci-inta.c b/drivers/irqchip/irq-ti-sci-inta.c
+index ef4d625..8f6e6b0 100644
+--- a/drivers/irqchip/irq-ti-sci-inta.c
++++ b/drivers/irqchip/irq-ti-sci-inta.c
+@@ -246,8 +246,8 @@ static struct ti_sci_inta_event_desc *ti_sci_inta_alloc_irq(struct irq_domain *d
+ 	/* No free bits available. Allocate a new vint */
+ 	vint_desc = ti_sci_inta_alloc_parent_irq(domain);
+ 	if (IS_ERR(vint_desc)) {
+-		mutex_unlock(&inta->vint_mutex);
+-		return ERR_PTR(PTR_ERR(vint_desc));
++		event_desc = ERR_CAST(vint_desc);
++		goto unlock;
+ 	}
  
- #include <linux/err.h>
- #include <linux/init.h>
-+#include <linux/interrupt.h>
- #include <linux/irq.h>
- #include <linux/irqchip.h>
- #include <linux/irqdomain.h>
-@@ -50,6 +51,26 @@ static u32 pdc_reg_read(int reg, u32 i)
- 	return readl_relaxed(pdc_base + reg + i * sizeof(u32));
+ 	free_bit = find_first_zero_bit(vint_desc->event_map,
+@@ -259,6 +259,7 @@ alloc_event:
+ 	if (IS_ERR(event_desc))
+ 		clear_bit(free_bit, vint_desc->event_map);
+ 
++unlock:
+ 	mutex_unlock(&inta->vint_mutex);
+ 	return event_desc;
  }
- 
-+static int qcom_pdc_gic_get_irqchip_state(struct irq_data *d,
-+					  enum irqchip_irq_state which,
-+					  bool *state)
-+{
-+	if (d->hwirq == GPIO_NO_WAKE_IRQ)
-+		return 0;
-+
-+	return irq_chip_get_parent_state(d, which, state);
-+}
-+
-+static int qcom_pdc_gic_set_irqchip_state(struct irq_data *d,
-+					  enum irqchip_irq_state which,
-+					  bool value)
-+{
-+	if (d->hwirq == GPIO_NO_WAKE_IRQ)
-+		return 0;
-+
-+	return irq_chip_set_parent_state(d, which, value);
-+}
-+
- static void pdc_enable_intr(struct irq_data *d, bool on)
- {
- 	int pin_out = d->hwirq;
-@@ -178,6 +199,8 @@ static struct irq_chip qcom_pdc_gic_chip = {
- 	.irq_unmask		= qcom_pdc_gic_unmask,
- 	.irq_disable		= qcom_pdc_gic_disable,
- 	.irq_enable		= qcom_pdc_gic_enable,
-+	.irq_get_irqchip_state	= qcom_pdc_gic_get_irqchip_state,
-+	.irq_set_irqchip_state	= qcom_pdc_gic_set_irqchip_state,
- 	.irq_retrigger		= irq_chip_retrigger_hierarchy,
- 	.irq_set_type		= qcom_pdc_gic_set_type,
- 	.flags			= IRQCHIP_MASK_ON_SUSPEND |
