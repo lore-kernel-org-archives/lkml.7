@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A01CDC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:43:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10773C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:43:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A5BE2071F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:43:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D64352071F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:43:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732247AbfKTPnI (ORCPT
+        id S1732234AbfKTPnF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 10:43:08 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:52848 "EHLO
+        Wed, 20 Nov 2019 10:43:05 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:52798 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730074AbfKTPkT (ORCPT
+        by vger.kernel.org with ESMTP id S1729998AbfKTPkT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 Nov 2019 10:40:19 -0500
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iXS5V-0004bQ-K9; Wed, 20 Nov 2019 15:40:13 +0000
+        id 1iXS5U-0004ag-PP; Wed, 20 Nov 2019 15:40:12 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iXS5U-0004Lr-WF; Wed, 20 Nov 2019 15:40:13 +0000
+        id 1iXS5U-0004JR-Cj; Wed, 20 Nov 2019 15:40:12 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,17 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Zhiqiang Liu" <liuzhiqiang26@huawei.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Yunfeng Ye" <yeyunfeng@huawei.com>
-Date:   Wed, 20 Nov 2019 15:38:16 +0000
-Message-ID: <lsq.1574264230.646825149@decadent.org.uk>
+        "Dmitry Safonov" <dsafonov@virtuozzo.com>,
+        "Oleg Nesterov" <oleg@redhat.com>,
+        "Srikar Dronamraju" <srikar@linux.vnet.ibm.com>,
+        "Masami Hiramatsu" <mhiramat@kernel.org>,
+        "Sebastian Mayr" <me@sam.st>,
+        "Thomas Gleixner" <tglx@linutronix.de>
+Date:   Wed, 20 Nov 2019 15:38:00 +0000
+Message-ID: <lsq.1574264230.178025366@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 66/83] genirq: Prevent NULL pointer dereference in
- resend_irqs()
+Subject: [PATCH 3.16 50/83] uprobes/x86: Fix detection of 32-bit user mode
 In-Reply-To: <lsq.1574264230.280218497@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,73 +59,126 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Yunfeng Ye <yeyunfeng@huawei.com>
+From: Sebastian Mayr <me@sam.st>
 
-commit eddf3e9c7c7e4d0707c68d1bb22cc6ec8aef7d4a upstream.
+commit 9212ec7d8357ea630031e89d0d399c761421c83b upstream.
 
-The following crash was observed:
+32-bit processes running on a 64-bit kernel are not always detected
+correctly, causing the process to crash when uretprobes are installed.
 
-  Unable to handle kernel NULL pointer dereference at 0000000000000158
-  Internal error: Oops: 96000004 [#1] SMP
-  pc : resend_irqs+0x68/0xb0
-  lr : resend_irqs+0x64/0xb0
-  ...
-  Call trace:
-   resend_irqs+0x68/0xb0
-   tasklet_action_common.isra.6+0x84/0x138
-   tasklet_action+0x2c/0x38
-   __do_softirq+0x120/0x324
-   run_ksoftirqd+0x44/0x60
-   smpboot_thread_fn+0x1ac/0x1e8
-   kthread+0x134/0x138
-   ret_from_fork+0x10/0x18
+The reason for the crash is that in_ia32_syscall() is used to determine the
+process's mode, which only works correctly when called from a syscall.
 
-The reason for this is that the interrupt resend mechanism happens in soft
-interrupt context, which is a asynchronous mechanism versus other
-operations on interrupts. free_irq() does not take resend handling into
-account. Thus, the irq descriptor might be already freed before the resend
-tasklet is executed. resend_irqs() does not check the return value of the
-interrupt descriptor lookup and derefences the return value
-unconditionally.
+In the case of uretprobes, however, the function is called from a exception
+and always returns 'false' on a 64-bit kernel. In consequence this leads to
+corruption of the process's return address.
 
-  1):
-  __setup_irq
-    irq_startup
-      check_irq_resend  // activate softirq to handle resend irq
-  2):
-  irq_domain_free_irqs
-    irq_free_descs
-      free_desc
-        call_rcu(&desc->rcu, delayed_free_desc)
-  3):
-  __do_softirq
-    tasklet_action
-      resend_irqs
-        desc = irq_to_desc(irq)
-        desc->handle_irq(desc)  // desc is NULL --> Ooops
+Fix this by using user_64bit_mode() instead of in_ia32_syscall(), which
+is correct in any situation.
 
-Fix this by adding a NULL pointer check in resend_irqs() before derefencing
-the irq descriptor.
+[ tglx: Add a comment and the following historical info ]
 
-Fixes: a4633adcdbc1 ("[PATCH] genirq: add genirq sw IRQ-retrigger")
-Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+This should have been detected by the rename which happened in commit
+
+  abfb9498ee13 ("x86/entry: Rename is_{ia32,x32}_task() to in_{ia32,x32}_syscall()")
+
+which states in the changelog:
+
+    The is_ia32_task()/is_x32_task() function names are a big misnomer: they
+    suggests that the compat-ness of a system call is a task property, which
+    is not true, the compatness of a system call purely depends on how it
+    was invoked through the system call layer.
+    .....
+
+and then it went and blindly renamed every call site.
+
+Sadly enough this was already mentioned here:
+
+   8faaed1b9f50 ("uprobes/x86: Introduce sizeof_long(), cleanup adjust_ret_addr() and
+arch_uretprobe_hijack_return_addr()")
+
+where the changelog says:
+
+    TODO: is_ia32_task() is not what we actually want, TS_COMPAT does
+    not necessarily mean 32bit. Fortunately syscall-like insns can't be
+    probed so it actually works, but it would be better to rename and
+    use is_ia32_frame().
+
+and goes all the way back to:
+
+    0326f5a94dde ("uprobes/core: Handle breakpoint and singlestep exceptions")
+
+Oh well. 7+ years until someone actually tried a uretprobe on a 32bit
+process on a 64bit kernel....
+
+Fixes: 0326f5a94dde ("uprobes/core: Handle breakpoint and singlestep exceptions")
+Signed-off-by: Sebastian Mayr <me@sam.st>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Link: https://lkml.kernel.org/r/1630ae13-5c8e-901e-de09-e740b6a426a7@huawei.com
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Dmitry Safonov <dsafonov@virtuozzo.com>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Link: https://lkml.kernel.org/r/20190728152617.7308-1-me@sam.st
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- kernel/irq/resend.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/x86/kernel/uprobes.c | 17 ++++++++++-------
+ 1 file changed, 10 insertions(+), 7 deletions(-)
 
---- a/kernel/irq/resend.c
-+++ b/kernel/irq/resend.c
-@@ -37,6 +37,8 @@ static void resend_irqs(unsigned long ar
- 		irq = find_first_bit(irqs_resend, nr_irqs);
- 		clear_bit(irq, irqs_resend);
- 		desc = irq_to_desc(irq);
-+		if (!desc)
-+			continue;
- 		local_irq_disable();
- 		desc->handle_irq(irq, desc);
- 		local_irq_enable();
+--- a/arch/x86/kernel/uprobes.c
++++ b/arch/x86/kernel/uprobes.c
+@@ -455,9 +455,12 @@ struct uprobe_xol_ops {
+ 	void	(*abort)(struct arch_uprobe *, struct pt_regs *);
+ };
+ 
+-static inline int sizeof_long(void)
++static inline int sizeof_long(struct pt_regs *regs)
+ {
+-	return is_ia32_task() ? 4 : 8;
++	/*
++	 * Check registers for mode as in_xxx_syscall() does not apply here.
++	 */
++	return user_64bit_mode(regs) ? 8 : 4;
+ }
+ 
+ static int default_pre_xol_op(struct arch_uprobe *auprobe, struct pt_regs *regs)
+@@ -468,9 +471,9 @@ static int default_pre_xol_op(struct arc
+ 
+ static int push_ret_address(struct pt_regs *regs, unsigned long ip)
+ {
+-	unsigned long new_sp = regs->sp - sizeof_long();
++	unsigned long new_sp = regs->sp - sizeof_long(regs);
+ 
+-	if (copy_to_user((void __user *)new_sp, &ip, sizeof_long()))
++	if (copy_to_user((void __user *)new_sp, &ip, sizeof_long(regs)))
+ 		return -EFAULT;
+ 
+ 	regs->sp = new_sp;
+@@ -503,7 +506,7 @@ static int default_post_xol_op(struct ar
+ 		long correction = utask->vaddr - utask->xol_vaddr;
+ 		regs->ip += correction;
+ 	} else if (auprobe->defparam.fixups & UPROBE_FIX_CALL) {
+-		regs->sp += sizeof_long(); /* Pop incorrect return address */
++		regs->sp += sizeof_long(regs); /* Pop incorrect return address */
+ 		if (push_ret_address(regs, utask->vaddr + auprobe->defparam.ilen))
+ 			return -ERESTART;
+ 	}
+@@ -612,7 +615,7 @@ static int branch_post_xol_op(struct arc
+ 	 * "call" insn was executed out-of-line. Just restore ->sp and restart.
+ 	 * We could also restore ->ip and try to call branch_emulate_op() again.
+ 	 */
+-	regs->sp += sizeof_long();
++	regs->sp += sizeof_long(regs);
+ 	return -ERESTART;
+ }
+ 
+@@ -903,7 +906,7 @@ bool arch_uprobe_skip_sstep(struct arch_
+ unsigned long
+ arch_uretprobe_hijack_return_addr(unsigned long trampoline_vaddr, struct pt_regs *regs)
+ {
+-	int rasize = sizeof_long(), nleft;
++	int rasize = sizeof_long(regs), nleft;
+ 	unsigned long orig_ret_vaddr = 0; /* clear high bits for 32-bit apps */
+ 
+ 	if (copy_from_user(&orig_ret_vaddr, (void __user *)regs->sp, rasize))
 
