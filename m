@@ -2,171 +2,204 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3933FC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:59:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 575E6C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 16:02:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0325D20714
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:59:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="OLU/cHGA"
+	by mail.kernel.org (Postfix) with ESMTP id 2583720715
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 16:02:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574265749;
+	bh=fkai9iagblxVM80NF9jPjdkCT3Ll2l153n578/rJMQY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=uA8qzIs5qFbuOob94yr64lXvuL9I+NLESJMU3OotbKlD2gTefoR7iuMWirJPxaq99
+	 PeG7iedqo5SfBpGVLpq5MeKGZEz9v9dyZTuauLJnOYwsXE/n3hVL4HcmI8SUtRPx0Y
+	 3F1bij2KcCmoqWwSdtNy1+9ZZ6c2jC+zs7/CH9Cc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732580AbfKTP7a (ORCPT
+        id S1731995AbfKTQC2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 10:59:30 -0500
-Received: from mail-eopbgr730041.outbound.protection.outlook.com ([40.107.73.41]:26275
-        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728032AbfKTP7a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 10:59:30 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SKYaBhx1H1Mc5TzfIMYXCvmUnphvKh95kAwMemdTpMTsrlKi5P226gE9QCPrEaByWlwOoMUx1QhNK/5gzbL1fwFi/mCSernFX8qpIW1ZMudhGBGTTmZgqYgDM5JK3aTEDl2U3e1KR7ESbls0JLNrWfLMK9zxb5kXi0HZruAUQgU/fOyHfgV6AXEnLQkmh44eZqmFShNBbcWhjoKNHdUkC9/Vy2dj566g3aElNNHAvznJHdh98liWCLXZiAxFq8ebZDBFrjR5OOd85qBUtC9GwjTZRGNlN9gmvyXk71Mm9jEDQMAFwpVOAfbqFWwbg8k4ZDwnAUbSMB0MHRjOvYDKaw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TW38+05mTW/8ck7Y8ZaJXJprQ8wF1U8WJTAfoGRqk6g=;
- b=QVpQzqO/plzDk3re9CRRjG0P0qHjo9ciY7mfRkNLOe2Tx2Qt3JIbMbtmX+wPLQMPL4d99qhQo2rM/o+ffgL0+2meF1X2b6+Djaj7gfxbMz4uHtOitjP0c5qeiSBKXqyNUMVBBoyri9dYkY3yKDFUJMoe19Cxat4WCD2+zGI6a5owuPd2FRr4Eg4r7egb11gZT0PPckBao5two0ZJYvb5Pub58aSTPRQfsLug/uDKS+m0zFCe6v9Fe4u1sVcH8iYY0zZEs+NyzW30wiFRyN/l4mnOswjasZsKYoTF9v2Gck+usD8aqH9r4B+4WiKCnKMG1oI+VExMovlkcQrcJWh0sQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TW38+05mTW/8ck7Y8ZaJXJprQ8wF1U8WJTAfoGRqk6g=;
- b=OLU/cHGAnthtSqUwePTBuUvdGlE2qpwCRu+Thb/qhwIn0Q7TRjl9vhpjcDcCYM7rdjujeInhKseqqxlwN168vrsbibnR5qEiyces6fiL2sZvRw/I7kXJIewVtC7t0lPGJGRJqHSePse4apeDoF3QUODdtW/rx3gfsyx0I0bRqZM=
-Received: from CH2PR02MB6359.namprd02.prod.outlook.com (52.132.230.25) by
- CH2PR02MB6456.namprd02.prod.outlook.com (52.132.231.161) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2451.30; Wed, 20 Nov 2019 15:59:25 +0000
-Received: from CH2PR02MB6359.namprd02.prod.outlook.com
- ([fe80::e81d:489c:2bd7:918a]) by CH2PR02MB6359.namprd02.prod.outlook.com
- ([fe80::e81d:489c:2bd7:918a%7]) with mapi id 15.20.2451.031; Wed, 20 Nov 2019
- 15:59:25 +0000
-From:   Dragan Cvetic <draganc@xilinx.com>
-To:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Derek Kiernan <dkiernan@xilinx.com>
-Subject: RE: [PATCH] misc: xilinx_sdfec: fix xsdfec_poll()'s return type
-Thread-Topic: [PATCH] misc: xilinx_sdfec: fix xsdfec_poll()'s return type
-Thread-Index: AQHVnzbvRwd5Ss/ZH0ugJQL96aPqOKeUNshQ
-Date:   Wed, 20 Nov 2019 15:59:24 +0000
-Message-ID: <CH2PR02MB6359CE45D06E908634CDA855CB4F0@CH2PR02MB6359.namprd02.prod.outlook.com>
-References: <20191120001030.30779-1-luc.vanoostenryck@gmail.com>
-In-Reply-To: <20191120001030.30779-1-luc.vanoostenryck@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=draganc@xilinx.com; 
-x-originating-ip: [149.199.80.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: b612d33f-ceb9-4e8f-a66d-08d76dd29da3
-x-ms-traffictypediagnostic: CH2PR02MB6456:|CH2PR02MB6456:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CH2PR02MB64568DC90A782724B291CBAECB4F0@CH2PR02MB6456.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 02272225C5
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(39860400002)(346002)(396003)(376002)(189003)(199004)(13464003)(66446008)(26005)(110136005)(11346002)(476003)(76176011)(229853002)(316002)(305945005)(6116002)(3846002)(33656002)(74316002)(66476007)(8936002)(76116006)(66556008)(71190400001)(66946007)(14444005)(81166006)(81156014)(256004)(64756008)(71200400001)(52536014)(8676002)(7696005)(6506007)(5660300002)(66066001)(446003)(9686003)(486006)(102836004)(2906002)(107886003)(186003)(7736002)(14454004)(4326008)(6436002)(25786009)(99286004)(478600001)(55016002)(86362001)(2501003)(53546011)(6246003);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR02MB6456;H:CH2PR02MB6359.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: xilinx.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Nje14Gx1IbB2EWyMkl6TLk8LUT061L4Pw9ISi7e6f4YYk/cGl54Gby1JdVM/uLrqKv4iBXLJNuivzxlQB0r4yqMGD0/ZYagqyng/gBSBWLvEz1fgdYaJUaNQVp/lDM/+BsSDT2Ln9zVf+dcfcHjy/M7tSuKYlh7zeB3GrtdhXhn3jdVqP5xt1/Iy5N4NXzDY31CYTdX0Fh9Pt2n5we+6BBNyNfp3eMEe5CelVRUCOM8g4UxNO8ODR6wjpUgX4HPd6G+WwoQm/5ng4x3UNflQ5dFH/Fo/OM1ejkxfubKDlXx3sMZYUUtut+YQtCZWnHlUpBXgmPQzi/zWzE6JRMfW7Xxr99+2KGIJPgWwl9VHWMDogkVpqXRcRCDOjdDQdaEaaWKUCY2QcF+YyktjhO39E8Kq9o2x6/e4QamPX6XMNMgM+82FFyobxPRLgXA4Ilnw
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 20 Nov 2019 11:02:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52742 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728520AbfKTQC1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 11:02:27 -0500
+Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DFF6F2071B;
+        Wed, 20 Nov 2019 16:02:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574265747;
+        bh=fkai9iagblxVM80NF9jPjdkCT3Ll2l153n578/rJMQY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=TGkW6V5+gVyijrtS+kBTvCY8m31Mmmyb/h1F1O1OAZerHqSS1odhUATaI66Npwnpu
+         ozQGReuIyKVHiuQZrZOCqeYq+OLSoII+NmsYIBQGdWHFDX2HfxauSg1PW0TYKfcKh6
+         QPXBN8gbv8TKF8D+tQ/jS+U+xo6B8t3DQCqUhBKs=
+Received: by mail-qv1-f50.google.com with SMTP id n4so90495qvq.9;
+        Wed, 20 Nov 2019 08:02:26 -0800 (PST)
+X-Gm-Message-State: APjAAAX0LS+xSxuca0l6YIHgjA8d1aHjsKl/o7Qb2CGrz1Ze1V6h3fbc
+        oCpdtn4tZf1TEvl7CTE3riVoUTPvWl7hVgmzMg==
+X-Google-Smtp-Source: APXvYqwq5SAEBgw062GclbqqxIVUufSCPIi/U3DPvAif0XTbyFTcVbv7pvhxYJt8XQ2f7IL43GVlkAL9OgeMg9B2s0M=
+X-Received: by 2002:ad4:42b4:: with SMTP id e20mr3287388qvr.85.1574265745927;
+ Wed, 20 Nov 2019 08:02:25 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b612d33f-ceb9-4e8f-a66d-08d76dd29da3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Nov 2019 15:59:24.9863
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 76Db1XvxDRT0LD7bpXMibBdwjtv0mIl9yBmZ9oYj9OJeSTCFNJKaoCEg7KD32abpp2J4MEeIJp3Ctqs9RP7r9g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6456
+References: <20190910153409.111901-1-paul.kocialkowski@bootlin.com>
+ <20190910153409.111901-2-paul.kocialkowski@bootlin.com> <20190913143510.GA9504@bogus>
+ <20190913155815.GA1554@aptenodytes> <CAL_Jsq+dzT1xrfBy2QQHLx9MUNukWWq5eXyOecVV8h0z5ziC8g@mail.gmail.com>
+ <20190923153311.GE57525@aptenodytes> <CAL_JsqJLfAb0xhmBoX+GUcv5wsuHBOs8wZ=Hkw3x03kfsPgOqg@mail.gmail.com>
+ <20191120144957.GA167553@aptenodytes>
+In-Reply-To: <20191120144957.GA167553@aptenodytes>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 20 Nov 2019 10:02:14 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+n2HYz3BLm3Nad=Uv6qiJNM2=fQmCxzkXJZx-0=VQTFQ@mail.gmail.com>
+Message-ID: <CAL_Jsq+n2HYz3BLm3Nad=Uv6qiJNM2=fQmCxzkXJZx-0=VQTFQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: display: Add xylon logicvc bindings documentation
+To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Luc,
+On Wed, Nov 20, 2019 at 8:50 AM Paul Kocialkowski
+<paul.kocialkowski@bootlin.com> wrote:
+>
+> Hi,
+>
+> Circling back to this thread now, sorry for the delay.
+>
+> On Tue 24 Sep 19, 09:58, Rob Herring wrote:
+> > On Mon, Sep 23, 2019 at 10:33 AM Paul Kocialkowski
+> > <paul.kocialkowski@bootlin.com> wrote:
+> > >
+> > > Hi,
+> > >
+> > > On Fri 13 Sep 19, 20:16, Rob Herring wrote:
+> > > > On Fri, Sep 13, 2019 at 4:58 PM Paul Kocialkowski
+> > > > <paul.kocialkowski@bootlin.com> wrote:
+> > > > >
+> > > > > Hi Rob and thanks for the review!
+> > > > >
+> > > > > On Fri 13 Sep 19, 15:35, Rob Herring wrote:
+> > > > > > On Tue, Sep 10, 2019 at 05:34:08PM +0200, Paul Kocialkowski wrote:
+> > > > > > > The Xylon LogiCVC is a display controller implemented as programmable
+> > > > > > > logic in Xilinx FPGAs.
+> > > > > > >
+> > > > > > > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> > > > > > > ---
+> > > > > > >  .../bindings/display/xylon,logicvc.txt        | 188 ++++++++++++++++++
+> > > > > > >  1 file changed, 188 insertions(+)
+> > > > > > >  create mode 100644 Documentation/devicetree/bindings/display/xylon,logicvc.txt
+> > > > > >
+> > > > > > Consider converting this to DT schema format. See
+> > > > > > Documentation/devicetree/writing-schema.rst (.md in 5.3).
+> > > > >
+> > > > > Oh right, that would certainly be much more future-proof!
+> > > > >
+> > > > > > > diff --git a/Documentation/devicetree/bindings/display/xylon,logicvc.txt b/Documentation/devicetree/bindings/display/xylon,logicvc.txt
+> > > > > > > new file mode 100644
+> > > > > > > index 000000000000..eb4b1553888a
+> > > > > > > --- /dev/null
+> > > > > > > +++ b/Documentation/devicetree/bindings/display/xylon,logicvc.txt
+> > > > > > > @@ -0,0 +1,188 @@
+> > > > > > > +Xylon LogiCVC display controller
+> > > > > > > +
+> > > > > > > +The Xylon LogiCVC is a display controller that supports multiple layers.
+> > > > > > > +It is usually implemented as programmable logic and was optimized for use
+> > > > > > > +with Xilinx Zynq-7000 SoCs and Xilinx FPGAs.
+> > > > > > > +
+> > > > > > > +Because the controller is intended for use in a FPGA, most of the configuration
+> > > > > > > +of the controller takes place at logic configuration bitstream synthesis time.
+> > > > > > > +As a result, many of the device-tree bindings are meant to reflect the
+> > > > > > > +synthesis configuration. These do not allow configuring the controller
+> > > > > > > +differently than synthesis configuration.
+> > > > > > > +
+> > > > > > > +Layers are declared in the "layers" sub-node and have dedicated configuration.
+> > > > > > > +In version 3 of the controller, each layer has fixed memory offset and address
+> > > > > > > +starting from the video memory base address for its framebuffer. With version 4,
+> > > > > > > +framebuffers are configured with a direct memory address instead.
+> > > > > > > +
+> > > > > > > +Matching synthesis parameters are provided when applicable.
+> > > > > > > +
+> > > > > > > +Required properties:
+> > > > > > > +- compatible: Should be one of:
+> > > > > > > +  "xylon,logicvc-3.02.a-display"
+> > > > > > > +  "xylon,logicvc-4.01.a-display"
+> > > > > > > +- reg: Physical base address and size for the controller registers.
+> > > > > > > +- clocks: List of phandle and clock-specifier pairs, one for each entry
+> > > > > > > +  in 'clock-names'
+> > > > > > > +- clock-names: List of clock names that should at least contain:
+> > > > > > > +  - "vclk": The VCLK video clock input.
+> > > > > > > +- interrupts: The interrupt to use for VBLANK signaling.
+> > > > > > > +- xylon,display-interface: Display interface in use, should be one of:
+> > > > > > > +  - "lvds-4bits": 4-bit LVDS interface (C_DISPLAY_INTERFACE == 4).
+> > > > > > > +- xylon,display-colorspace: Display output colorspace in use, should be one of:
+> > > > > > > +  - "rgb": RGB colorspace (C_DISPLAY_COLOR_SPACE == 0).
+> > > > > > > +- xylon,display-depth: Display output depth in use (C_PIXEL_DATA_WIDTH).
+> > > > > > > +- xylon,row-stride: Fixed number of pixels in a framebuffer row (C_ROW_STRIDE).
+> > > > > > > +- xylon,layers-count: The number of available layers (C_NUM_OF_LAYERS).
+> > > > > >
+> > > > > > Presumably some of this is determined by the display attached. Isn't it
+> > > > > > safe to assume the IP was configured correctly for the intended display
+> > > > > > and you can just get this from the panel?
+> > > > >
+> > > > > Layers are what corresponds to DRM planes, which are not actually indicated
+> > > > > by the panel but are a charasteristic of the display controller. In our case,
+> > > > > this is directly selected at bitstream synthesis time for the controller.
+> > > > >
+> > > > > So I'm afraid there is no way we can auto-detect this from the driver.
+> > > >
+> > > > Sorry, I referring to the set of properties above. In particular,
+> > > > xylon,display-interface and xylon,display-colorspace, though I don't
+> > > > know if the latter is talking in memory format or on the wire format.
+> > >
+> > > Both of these are about the wire format, which is also "hardcoded" at synthesis
+> > > time with no way to be detected afterwards, as far as I know. Memory format is
+> > > described in the layer sub-nodes.
+> >
+> > You have to attach the controller to something at the other end of the
+> > wire. A panel is only going to support 1 or a few wire formats, so you
+> > do likely know because the panel knows. In the case that a panel
+> > supports multiple wire formats, we do have some standard properties
+> > there. See the LVDS panel binding.
+>
+> Looking at the LVDS panel binding, I see that the LVDS types that I have
+> described as lvds-4bits and lvds-3bits are called jeida-24 and jeida-18.
+>
+> Either way, the controller cannot be dynamically configured to use one or
+> another: it is configured to support one at synthesis time and this doesn't
+> change.
 
-For the sake of my understanding I'd like to ask you when the .pole method =
-is defined=20
-Why I'm asking this? I have a fairly new book (published in 2017) which sug=
-gests what is implemented in SDFEC driver.
+Understood, but I was assuming you need to know how it was configured
+for some reason?
 
-I'll test your suggestions and will come back to you soon.
+> I'm not sure exactly what you implied here. Even if we can retreive the
+> wire format from the lvds-panel's data-mapping property, I don't think it shall
+> describe what the display controller was configured to. This information could
+> be used to make sure that both are compatible (in the driver), but that's about
+> it as far as I can see.
 
-Regards
-Dragan
+It's not the kernel's job to validate the DT is correct. Someone could
+just as easily define a panel that doesn't match with the configured
+format as they could having lvds-?bits set incorrectly.
 
+So get the wire format from the panel driver (either implied or by DT
+property) and assume that matches the configuration of the controller.
+Though, I guess if the model is each end of the wire should advertise
+what it supports and the core picks the best format, then that only
+works if you advertise both formats. Or we could allow jeida-{24,18}
+property at both ends of the graph.
 
-> -----Original Message-----
-> From: Luc Van Oostenryck [mailto:luc.vanoostenryck@gmail.com]
-> Sent: Wednesday 20 November 2019 00:11
-> To: linux-kernel@vger.kernel.org
-> Cc: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>; Derek Kiernan <dkie=
-rnan@xilinx.com>; Dragan Cvetic
-> <draganc@xilinx.com>
-> Subject: [PATCH] misc: xilinx_sdfec: fix xsdfec_poll()'s return type
->=20
-> xsdfec_poll() is defined as returning 'unsigned int' but the
-> .poll method is declared as returning '__poll_t', a bitwise type.
->=20
-> Fix this by using the proper return type and using the EPOLL
-> constants instead of the POLL ones, as required for __poll_t.
->=20
-> CC: Derek Kiernan <derek.kiernan@xilinx.com>
-> CC: Dragan Cvetic <dragan.cvetic@xilinx.com>
-> Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-> ---
->  drivers/misc/xilinx_sdfec.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
->=20
-> diff --git a/drivers/misc/xilinx_sdfec.c b/drivers/misc/xilinx_sdfec.c
-> index 11835969e982..48ba7e02bed7 100644
-> --- a/drivers/misc/xilinx_sdfec.c
-> +++ b/drivers/misc/xilinx_sdfec.c
-> @@ -1025,25 +1025,25 @@ static long xsdfec_dev_compat_ioctl(struct file *=
-file, unsigned int cmd,
->  }
->  #endif
->=20
-> -static unsigned int xsdfec_poll(struct file *file, poll_table *wait)
-> +static __poll_t xsdfec_poll(struct file *file, poll_table *wait)
->  {
-> -	unsigned int mask =3D 0;
-> +	__poll_t mask =3D 0;
->  	struct xsdfec_dev *xsdfec;
->=20
->  	xsdfec =3D container_of(file->private_data, struct xsdfec_dev, miscdev)=
-;
->=20
->  	if (!xsdfec)
-> -		return POLLNVAL | POLLHUP;
-> +		return EPOLLNVAL | EPOLLHUP;
->=20
->  	poll_wait(file, &xsdfec->waitq, wait);
->=20
->  	/* XSDFEC ISR detected an error */
->  	spin_lock_irqsave(&xsdfec->error_data_lock, xsdfec->flags);
->  	if (xsdfec->state_updated)
-> -		mask |=3D POLLIN | POLLPRI;
-> +		mask |=3D EPOLLIN | EPOLLPRI;
->=20
->  	if (xsdfec->stats_updated)
-> -		mask |=3D POLLIN | POLLRDNORM;
-> +		mask |=3D EPOLLIN | EPOLLRDNORM;
->  	spin_unlock_irqrestore(&xsdfec->error_data_lock, xsdfec->flags);
->=20
->  	return mask;
-> --
-> 2.24.0
-
+Rob
