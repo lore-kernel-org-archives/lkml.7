@@ -2,82 +2,77 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BECB4C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 22:30:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2126C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 22:31:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8944A20872
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 22:30:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 869D720872
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 22:31:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbfKTWaW (ORCPT
+        id S1726774AbfKTWbC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 17:30:22 -0500
-Received: from imap1.codethink.co.uk ([176.9.8.82]:37120 "EHLO
-        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726080AbfKTWaW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 17:30:22 -0500
-Received: from [167.98.27.226] (helo=xylophone)
-        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
-        id 1iXYUM-00061O-RV; Wed, 20 Nov 2019 22:30:18 +0000
-Message-ID: <a5f530323b66cd8c0055c5e642ef4eb035c53808.camel@codethink.co.uk>
-Subject: Re: [Y2038] [PATCH 02/23] y2038: add __kernel_old_timespec and
- __kernel_old_time_t
-From:   Ben Hutchings <ben.hutchings@codethink.co.uk>
-To:     Arnd Bergmann <arnd@arndb.de>, y2038@lists.linaro.org
-Cc:     Deepa Dinamani <deepa.kernel@gmail.com>,
-        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>
-Date:   Wed, 20 Nov 2019 22:30:18 +0000
-In-Reply-To: <20191108210824.1534248-2-arnd@arndb.de>
-References: <20191108210236.1296047-1-arnd@arndb.de>
-         <20191108210824.1534248-2-arnd@arndb.de>
-Organization: Codethink Ltd.
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Wed, 20 Nov 2019 17:31:02 -0500
+Received: from mga04.intel.com ([192.55.52.120]:58173 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726014AbfKTWbC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 17:31:02 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Nov 2019 14:31:01 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,223,1571727600"; 
+   d="scan'208";a="381524854"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
+  by orsmga005.jf.intel.com with ESMTP; 20 Nov 2019 14:31:01 -0800
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id A3416300B64; Wed, 20 Nov 2019 14:31:01 -0800 (PST)
+Date:   Wed, 20 Nov 2019 14:31:01 -0800
+From:   Andi Kleen <ak@linux.intel.com>
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Andi Kleen <andi@firstfloor.org>, acme@kernel.org,
+        jolsa@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 09/12] perf stat: Use affinity for opening events
+Message-ID: <20191120223101.GB84886@tassilo.jf.intel.com>
+References: <20191116055229.62002-1-andi@firstfloor.org>
+ <20191116055229.62002-10-andi@firstfloor.org>
+ <20191120150732.GE4007@krava>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191120150732.GE4007@krava>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-11-08 at 22:07 +0100, Arnd Bergmann wrote:
-> The 'struct timespec' definition can no longer be part of the uapi headers
-> because it conflicts with a a now incompatible libc definition. Also,
-> we really want to remove it in order to prevent new uses from creeping in.
+> > +		evlist__for_each_cpu (evsel_list, i, cpu) {
+> > +			affinity__set(&affinity, cpu);
+> > +			/* First close errored or weak retry */
+> > +			evlist__for_each_entry(evsel_list, counter) {
+> > +				if (!counter->reset_group && !counter->errored)
+> > +					continue;
+> > +				if (evsel__cpu_iter_skip_no_inc(counter, cpu))
+> > +					continue;
+> > +				perf_evsel__close_cpu(&counter->core, counter->cpu_iter);
+> > +			}
+> > +			/* Now reopen weak */
+> > +			evlist__for_each_entry(evsel_list, counter) {
+> > +				if (!counter->reset_group && !counter->errored)
+> > +					continue;
+> > +				if (evsel__cpu_iter_skip(counter, cpu))
+> > +					continue;
 > 
-> The same namespace conflict exists with time_t, which should also be
-> removed. __kernel_time_t could be used safely, but adding 'old' in the
-> name makes it clearer that this should not be used for new interfaces.
-> 
-> Add a replacement __kernel_old_timespec structure and __kernel_old_time_t
-> along the lines of __kernel_old_timeval.
-[...]
-> --- a/include/uapi/linux/time_types.h
-> +++ b/include/uapi/linux/time_types.h
-> @@ -28,6 +28,11 @@ struct __kernel_old_timeval {
->  };
->  #endif
->  
-> +struct __kernel_old_timespec {
-> +	__kernel_time_t	tv_sec;			/* seconds */
+> why staring at this I wonder why can't we call perf_evsel__close_cpu in
+> here and remove the above loop? together with evsel__cpu_iter_skip_no_inc
+> function
 
-Should this be __kernel_old_time_t for consistency?
+We only want to close events which errored or need a weak entry.
+The others can stay open.  perf_evsel__close_cpu closes all unconditionally.
 
-Ben.
-
-> +	long		tv_nsec;		/* nanoseconds */
-> +};
-> +
->  struct __kernel_sock_timeval {
->  	__s64 tv_sec;
->  	__s64 tv_usec;
--- 
-Ben Hutchings, Software Developer                         Codethink Ltd
-https://www.codethink.co.uk/                 Dale House, 35 Dale Street
-                                     Manchester, M1 2HF, United Kingdom
-
+-Andi
