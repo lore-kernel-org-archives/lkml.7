@@ -7,40 +7,41 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E524C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:23:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D73ACC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:23:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 602AD224F3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:23:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B40E2224F3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:23:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730532AbfKTNXb (ORCPT
+        id S1730548AbfKTNXf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 08:23:31 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:56668 "EHLO
+        Wed, 20 Nov 2019 08:23:35 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:56669 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728338AbfKTNVJ (ORCPT
+        with ESMTP id S1728419AbfKTNVI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 08:21:09 -0500
+        Wed, 20 Nov 2019 08:21:08 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iXPur-00076o-99; Wed, 20 Nov 2019 14:21:05 +0100
+        id 1iXPun-00074R-5t; Wed, 20 Nov 2019 14:21:01 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C86791C1A0D;
-        Wed, 20 Nov 2019 14:21:02 +0100 (CET)
-Date:   Wed, 20 Nov 2019 13:21:02 -0000
-From:   "tip-bot2 for Paul Cercueil" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D2E201C1998;
+        Wed, 20 Nov 2019 14:21:00 +0100 (CET)
+Date:   Wed, 20 Nov 2019 13:21:00 -0000
+From:   "tip-bot2 for Lina Iyer" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/core] irqchip: ingenic: Error out if IRQ domain creation failed
-Cc:     Paul Cercueil <paul@crapouillou.net>,
-        Marc Zyngier <maz@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
-In-Reply-To: <1570015525-27018-3-git-send-email-zhouyanjie@zoho.com>
-References: <1570015525-27018-3-git-send-email-zhouyanjie@zoho.com>
+Subject: [tip: irq/core] irqchip/qcom-pdc: Do not toggle IRQ_ENABLE during mask/unmask
+Cc:     Lina Iyer <ilina@codeaurora.org>, Marc Zyngier <maz@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <1573855915-9841-4-git-send-email-ilina@codeaurora.org>
+References: <1573855915-9841-4-git-send-email-ilina@codeaurora.org>
 MIME-Version: 1.0
-Message-ID: <157425606271.12247.62239776985279233.tip-bot2@tip-bot2>
+Message-ID: <157425606074.12247.1499986640247864555.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -56,58 +57,72 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the irq/core branch of tip:
 
-Commit-ID:     52ecc87642f273a599c9913b29fd179c13de457b
-Gitweb:        https://git.kernel.org/tip/52ecc87642f273a599c9913b29fd179c13de457b
-Author:        Paul Cercueil <paul@crapouillou.net>
-AuthorDate:    Wed, 02 Oct 2019 19:25:22 +08:00
+Commit-ID:     da3f875a4189e643f8eec7f0bffa39c90d3418c6
+Gitweb:        https://git.kernel.org/tip/da3f875a4189e643f8eec7f0bffa39c90d3418c6
+Author:        Lina Iyer <ilina@codeaurora.org>
+AuthorDate:    Fri, 15 Nov 2019 15:11:46 -07:00
 Committer:     Marc Zyngier <maz@kernel.org>
-CommitterDate: Sun, 10 Nov 2019 18:55:30 
+CommitterDate: Sat, 16 Nov 2019 10:20:49 
 
-irqchip: ingenic: Error out if IRQ domain creation failed
+irqchip/qcom-pdc: Do not toggle IRQ_ENABLE during mask/unmask
 
-If we cannot create the IRQ domain, the driver should fail to probe
-instead of succeeding with just a warning message.
+When an interrupt is to be serviced, the convention is to mask the
+interrupt at the chip and unmask after servicing the interrupt. Enabling
+and disabling the interrupt at the PDC irqchip causes an interrupt storm
+due to the way dual edge interrupts are handled in hardware.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Skip configuring the PDC when the IRQ is masked and unmasked, instead
+use the irq_enable/irq_disable callbacks to toggle the IRQ_ENABLE
+register at the PDC. The PDC's IRQ_ENABLE register is only used during
+the monitoring mode when the system is asleep and is not needed for
+active mode detection.
+
+Signed-off-by: Lina Iyer <ilina@codeaurora.org>
 Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/1570015525-27018-3-git-send-email-zhouyanjie@zoho.com
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Link: https://lore.kernel.org/r/1573855915-9841-4-git-send-email-ilina@codeaurora.org
 ---
- drivers/irqchip/irq-ingenic.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ drivers/irqchip/qcom-pdc.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/irqchip/irq-ingenic.c b/drivers/irqchip/irq-ingenic.c
-index 06fa810..d97a3a5 100644
---- a/drivers/irqchip/irq-ingenic.c
-+++ b/drivers/irqchip/irq-ingenic.c
-@@ -87,6 +87,14 @@ static int __init ingenic_intc_of_init(struct device_node *node,
- 		goto out_unmap_irq;
- 	}
+diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
+index 690cf10..527c29e 100644
+--- a/drivers/irqchip/qcom-pdc.c
++++ b/drivers/irqchip/qcom-pdc.c
+@@ -63,15 +63,25 @@ static void pdc_enable_intr(struct irq_data *d, bool on)
+ 	raw_spin_unlock(&pdc_lock);
+ }
  
-+	domain = irq_domain_add_legacy(node, num_chips * 32,
-+				       JZ4740_IRQ_BASE, 0,
-+				       &irq_domain_simple_ops, NULL);
-+	if (!domain) {
-+		err = -ENOMEM;
-+		goto out_unmap_base;
-+	}
+-static void qcom_pdc_gic_mask(struct irq_data *d)
++static void qcom_pdc_gic_disable(struct irq_data *d)
+ {
+ 	pdc_enable_intr(d, false);
++	irq_chip_disable_parent(d);
++}
 +
- 	for (i = 0; i < num_chips; i++) {
- 		/* Mask all irqs */
- 		writel(0xffffffff, intc->base + (i * CHIP_SIZE) +
-@@ -112,14 +120,11 @@ static int __init ingenic_intc_of_init(struct device_node *node,
- 				       IRQ_NOPROBE | IRQ_LEVEL);
- 	}
++static void qcom_pdc_gic_enable(struct irq_data *d)
++{
++	pdc_enable_intr(d, true);
++	irq_chip_enable_parent(d);
++}
++
++static void qcom_pdc_gic_mask(struct irq_data *d)
++{
+ 	irq_chip_mask_parent(d);
+ }
  
--	domain = irq_domain_add_legacy(node, num_chips * 32, JZ4740_IRQ_BASE, 0,
--				       &irq_domain_simple_ops, NULL);
--	if (!domain)
--		pr_warn("unable to register IRQ domain\n");
--
- 	setup_irq(parent_irq, &intc_cascade_action);
- 	return 0;
+ static void qcom_pdc_gic_unmask(struct irq_data *d)
+ {
+-	pdc_enable_intr(d, true);
+ 	irq_chip_unmask_parent(d);
+ }
  
-+out_unmap_base:
-+	iounmap(intc->base);
- out_unmap_irq:
- 	irq_dispose_mapping(parent_irq);
- out_free:
+@@ -148,6 +158,8 @@ static struct irq_chip qcom_pdc_gic_chip = {
+ 	.irq_eoi		= irq_chip_eoi_parent,
+ 	.irq_mask		= qcom_pdc_gic_mask,
+ 	.irq_unmask		= qcom_pdc_gic_unmask,
++	.irq_disable		= qcom_pdc_gic_disable,
++	.irq_enable		= qcom_pdc_gic_enable,
+ 	.irq_retrigger		= irq_chip_retrigger_hierarchy,
+ 	.irq_set_type		= qcom_pdc_gic_set_type,
+ 	.flags			= IRQCHIP_MASK_ON_SUSPEND |
