@@ -2,142 +2,104 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E62FCC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 09:00:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9894C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 09:01:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C01372245F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 09:00:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 944D222445
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 09:01:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="WHD6KRcp"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F/ilQoZV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728060AbfKTJAL (ORCPT
+        id S1728087AbfKTJAS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 04:00:11 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.82]:21320 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728030AbfKTJAK (ORCPT
+        Wed, 20 Nov 2019 04:00:18 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:40710 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728062AbfKTJAR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 04:00:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1574240408;
-        s=strato-dkim-0002; d=chronox.de;
-        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=FO60nC3S+oDIpCbZRvJjF5XfVNeQtlqMONqUWv0+n+4=;
-        b=WHD6KRcpmfGt41cmracVFI7LHG2nA6QOu3C+28vmgLw3T/XxqCT3xmZntU3rx60nqT
-        eP4dyq4w/MyBt3YYmVnpx1TUsq9s6WhTsy96GisjhqF2hzam+YztM3Ac8oVAn63NTuEG
-        lJHd3pajGXUZA6Bp34W5+5dR1q8WzGyiDVix3r6tXNR5DjeXtWWvcflmRfIZy6zqz0Yt
-        uwEsx4pZNUp8Rc5bEdMZVH1YuOY3o9w2kFOHcbtNRpmKECk2afF4RnYvwmxGHONEMjrq
-        Stx3hZqPbAsHp7qG8q8DYWrXB+fETzKzLcP5Fim6wn/dQAAIofSODr4350yaxzv39lTw
-        Nl5g==
-X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzHHXDbL/ScbtM="
-X-RZG-CLASS-ID: mo00
-Received: from positron.chronox.de
-        by smtp.strato.de (RZmta 44.29.0 DYNA|AUTH)
-        with ESMTPSA id N09a57vAK8wajR4
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Wed, 20 Nov 2019 09:58:36 +0100 (CET)
-From:   Stephan =?ISO-8859-1?Q?M=FCller?= <smueller@chronox.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        Nicolai Stange <nstange@suse.de>,
-        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
-        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
-        Roman Drahtmueller <draht@schaltsekun.de>,
-        Neil Horman <nhorman@redhat.com>
-Subject: Re: [PATCH v25 10/12] LRNG - add TRNG support
-Date:   Wed, 20 Nov 2019 09:58:35 +0100
-Message-ID: <19681012.svDddlc5pN@positron.chronox.de>
-In-Reply-To: <20191119124150.GB1975017@kroah.com>
-References: <5390778.VeFRgus4bQ@positron.chronox.de> <CALCETrUKDO1LSMnHNcPiAFQh2ri6saRiRBi9b5e699cm1_Mgsw@mail.gmail.com> <20191119124150.GB1975017@kroah.com>
+        Wed, 20 Nov 2019 04:00:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574240416;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=df2jZGkaKYIX8XGP45379iKP8na141nKrPLZMKk0bUg=;
+        b=F/ilQoZVp+JWRDAwyJOnKsgprtNC1zi9PeKxiiwDW7+ahJBAH9SiwgvR6zRTk/b24bURKU
+        EIo9/rLP158Pmffr01kYW6heo9LgfHLtX6BnMSvwg1/jG3ikkq2seY/5Vd7LgiL3E97oKI
+        c13ebqfGIg0ShmAfXB6ZB4uGW+RVRRY=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-108-eR3fDIFtNJibupG0o-ICCQ-1; Wed, 20 Nov 2019 04:00:13 -0500
+Received: by mail-wm1-f72.google.com with SMTP id h191so4772032wme.5
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 01:00:13 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=z+y/mrfI8ftCAoV6iK00SrByVRSNZiEo0o81DOjJrmQ=;
+        b=mzZxKp8wibrqfVovd+WgSvh5OlNA6m4yNkgRTHFv4jSJ+mdDkVTe0DhNch9xa37mSv
+         gaJQslqVybQRxUJVpAp8OTnxinKF/1NVOOiOMAmQPdyEtpZrnt1BA9sJ2hQ6JVvvfu7g
+         OxD8Jy55a3h+kC9fwboAcR90E7VPi1XkzHGvctDlgDvCJpH4DXtqkmik+eoyo9njUBI7
+         i2FR/qGj4q+x6/QHfRXuLNyNrA1KqhdRw+eC+RSKE6lS+LNWL5WofNYHYiuZSORd2Ypk
+         XHqHulqfBItmvEZOg/bYN2/yfYhgJzdnhAWmysQ1G3KLpCWmJ4qV68wE0/xeTOXK5/91
+         h+7g==
+X-Gm-Message-State: APjAAAVOZcwxXCOaPEktU55jUkWYoSW79v3jXfsM1OrReS3G5Da7BUCn
+        2nb6vw0CSdYTPe5mirbo3aFRgbCL4N4lRKJfmXgLggE8wSZptdt9dj+x2jbi9cdyubex4S/+a9x
+        iUu5+XMq055+55pAnlUYGeQMW
+X-Received: by 2002:a5d:640b:: with SMTP id z11mr1744248wru.195.1574240412214;
+        Wed, 20 Nov 2019 01:00:12 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzH0Kdjailo9KhJjoLt6nJgWn1k9d4qaEv02JFRBV4exDlOdZ6AoQZwxtxq6bSHolNraKXzJA==
+X-Received: by 2002:a5d:640b:: with SMTP id z11mr1744217wru.195.1574240411959;
+        Wed, 20 Nov 2019 01:00:11 -0800 (PST)
+Received: from steredhat (a-nu5-32.tin.it. [212.216.181.31])
+        by smtp.gmail.com with ESMTPSA id m16sm5646172wml.47.2019.11.20.01.00.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Nov 2019 01:00:11 -0800 (PST)
+Date:   Wed, 20 Nov 2019 10:00:08 +0100
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     David Miller <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        decui@microsoft.com, stefanha@redhat.com,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        jhansen@vmware.com
+Subject: Re: [PATCH net-next 4/6] vsock: add vsock_loopback transport
+Message-ID: <20191120090008.qlfc3lnzwl6yudsf@steredhat>
+References: <20191119110121.14480-1-sgarzare@redhat.com>
+ <20191119110121.14480-5-sgarzare@redhat.com>
+ <20191119.171501.666690660172999834.davem@davemloft.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <20191119.171501.666690660172999834.davem@davemloft.net>
+X-MC-Unique: eR3fDIFtNJibupG0o-ICCQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Dienstag, 19. November 2019, 13:41:50 CET schrieb Greg Kroah-Hartman:
+On Tue, Nov 19, 2019 at 05:15:01PM -0800, David Miller wrote:
+> From: Stefano Garzarella <sgarzare@redhat.com>
+> Date: Tue, 19 Nov 2019 12:01:19 +0100
+>=20
+> > +static int vsock_loopback_cancel_pkt(struct vsock_sock *vsk)
+> > +{
+> > +=09struct vsock_loopback *vsock;
+> > +=09struct virtio_vsock_pkt *pkt, *n;
+> > +=09int ret;
+> > +=09LIST_HEAD(freeme);
+>=20
+> Reverse christmas tree ordering of local variables here please.
+>=20
 
-Hi Greg,
+Sure, I'll fix in the v2.
 
-> On Tue, Nov 19, 2019 at 02:07:40AM -0800, Andy Lutomirski wrote:
-> > > As this would introduce a new device file now, is there a special
-> > > process that I need to follow or do I need to copy? Which major/minor
-> > > number should I use?
-> > > 
-> > > Looking into static const struct memdev devlist[] I see
-> > > 
-> > >          [8] = { "random", 0666, &random_fops, 0 },
-> > >          [9] = { "urandom", 0666, &urandom_fops, 0 },
-> > > 
-> > > Shall a true_random be added here with [10]?
-> > 
-> > I am not at all an expert on chardevs, but this sounds generally
-> > reasonable.  gregkh is probably the real authority here.
-> 
-> [10] is the aio char device node, so you better not try to overlap it or
-> bad things will happen :(
-
-Thanks for your insights.
-
-Which device minor number could we use?
-
-Or another idea and apologies if I restart this conversation as there was 
-already a discussion around it: what about extending the getrandom(2) call 
-instead of adding a device file?
-
-What about adding yet another flag to getrandom: GRND_TRUERANDOM and process 
-it as follows:
-
-        if (flags & ~(GRND_NONBLOCK|GRND_RANDOM|GRND_INSECURE|
-GRND_TRUERANDOM))
-                return -EINVAL;
-
-        //From Andy's tree
-        /*
-         * Requesting insecure and blocking randomness at the same time makes
-         * no sense.
-         */
-        if ((flags & (GRND_INSECURE|GRND_RANDOM)) == (GRND_INSECURE|
-GRND_RANDOM))
-                return -EINVAL;
-
-	  /* We only allow GRND_TRUERANDOM by itself or with NONBLOCK */
-	  if (! ((flags & GRND_TRUERANDOM) &&
-               ((flags == GRND_TRUERANDOM) ||
-                (flags == GRND_TRUERANDOM | GRND_NONBLOCK))))
-		return -EINVAL;
-
-	if (flags & GRND_TRUERANDOM) {
-		... do the TRNG processing ...
-		... may return -ENOPNOTSUPP if no TRNG available ...
-	}
-
-Thanks a lot.
-
-
-Ciao
-Stephan
-
+Thanks,
+Stefano
 
