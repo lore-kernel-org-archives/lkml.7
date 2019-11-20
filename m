@@ -2,124 +2,162 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEAF7C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 12:19:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E64C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 12:19:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7DBB224CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 12:19:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA588224FB
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 12:19:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="O9ZWOpUh"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iY+OI6TP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729627AbfKTMTK (ORCPT
+        id S1729650AbfKTMTq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 07:19:10 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.171]:28059 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728611AbfKTMTK (ORCPT
+        Wed, 20 Nov 2019 07:19:46 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:41723 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728611AbfKTMTp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 07:19:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1574252346;
-        s=strato-dkim-0002; d=gerhold.net;
-        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=nRjRjb+1ekixEHhoSS1DNrxvmTlCCbOleOoilsPpvGI=;
-        b=O9ZWOpUhQyM5oxobzlsIhcgbqK9OIzKQwPuwpiZh2JSa2ue6biAQG+fpkG3XH6+fM8
-        TixCZVRa8S3DGQUyeODul8MSTKQN3IJcgKNE7T40Uh7PPkr8b73c7DdgN/1In8RQ2v5a
-        AG5kHnbvRYk2Nx9WL9ypHH8rKU4VW70dFRVS+kufn4iylXV176LIiauQy9+zovVWr5oj
-        idpfnjC65QFhkpTUrCy+WfKqH2T/TOjgJpY6Io4xSMSbbYMynt1bdpCTDNg+hGVI/ath
-        rEfd+YaAWehl2oEVELJ9VG76/0qB+zkgRiuQuVXyG08SYPDLKj/X9853uyPuq6/cJ7ha
-        6FbA==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVORvLd4SsytBXQrEOHTIXs8Lvtn4="
-X-RZG-CLASS-ID: mo00
-Received: from localhost.localdomain
-        by smtp.strato.de (RZmta 44.29.0 AUTH)
-        with ESMTPSA id e07688vAKCIvsCL
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Wed, 20 Nov 2019 13:18:57 +0100 (CET)
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>
-Subject: [PATCH 3/3] dt-bindings: arm: Document compatibles for Ux500 boards
-Date:   Wed, 20 Nov 2019 13:17:20 +0100
-Message-Id: <20191120121720.72845-3-stephan@gerhold.net>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191120121720.72845-1-stephan@gerhold.net>
-References: <20191120121720.72845-1-stephan@gerhold.net>
+        Wed, 20 Nov 2019 07:19:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574252383;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6tQSiatJZXoqislkFRtZVMOCpA4DqNNH30wH7vD5XN4=;
+        b=iY+OI6TPbugU8YrTnWQQan/nA0tydHqH4MYa5t0Ks16kFz5+RDjBezCIDRyLqnpl5PdQBZ
+        SHv/eNwrdJgJRkUU4L2Fl1xJ+ehB5cyJYw9iWBmMVWbX4t5fYTRtgrolCwbXsKzIoRZ5Pm
+        aBzuDxx9Kp6ww54WsJtEUQw4+fILJ0g=
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
+ [209.85.219.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-7-_ispdzZQOnyNvwnHA8MDFA-1; Wed, 20 Nov 2019 07:19:42 -0500
+Received: by mail-qv1-f71.google.com with SMTP id d12so16981278qvj.16
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 04:19:42 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oWs1Gk0ow9/Ugo0hlEi2MnfVfxY0H34jjDGUnWVNnGE=;
+        b=fsGZGWJnDqAvhsustT8MJ9I/moBsR3OSwrm380yRt0k9+/lFXwFXecqjEdZxwg5MX8
+         bUg+OYbSjqWW/gLmIU9d2NyJg1lY2FUUoo0CrGqYcSnN3oWSkqB+52qitJc9oHrORs4M
+         +eJfIqtxz2wskqP01lmf/F29Lefw6T6HAkBraw6XUetNo4GWpDmk7KA/8YoZp+DLv6un
+         DJobQF5vk9OUvzm2KT/IEKgycWHx0uK++4CaxfXWCZomnxa051jc/09BiDx4HaSCamjt
+         zIo3MLPhpfcXgfeTDYiqpo8gb33Owa4bR4zhbTzfMRbAsoHLbqhEwkEEfh1187HU8wUP
+         49fQ==
+X-Gm-Message-State: APjAAAV1bNZUEeQilF++EYR1bMayGXAu8ULyHgBq0qViP4Ohbe5pFnBx
+        Z5QckT+nmJdNPd/GL+7PPC73Py0TUJpEa7aM5IwlGuBbwYI4/mnb02umDHpUsGsRAIRMCdpzrr4
+        yhtgX9TEUbt4fMwuCAN2KTPfwRwxsWgWbF/aGIMcn
+X-Received: by 2002:ae9:f511:: with SMTP id o17mr2053121qkg.157.1574252382239;
+        Wed, 20 Nov 2019 04:19:42 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwYYwY32hdZJpgO9a9F96+AV3XWlzoWfPmJ3+IXJz1kjQ4tZP3raHWzLm6tC4nakFswJXw9vp47sPBOfFGfJkw=
+X-Received: by 2002:ae9:f511:: with SMTP id o17mr2053086qkg.157.1574252381985;
+ Wed, 20 Nov 2019 04:19:41 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191017121901.13699-1-kherbst@redhat.com> <20191119214955.GA223696@google.com>
+ <CACO55tu+8VeyMw1Lb6QvNspaJm9LDgoRbooVhr0s3v9uBt=feg@mail.gmail.com>
+ <20191120101816.GX11621@lahna.fi.intel.com> <CAJZ5v0g4vp1C+zHU5nOVnkGsOjBvLaphK1kK=qAT6b=mK8kpsA@mail.gmail.com>
+ <20191120112212.GA11621@lahna.fi.intel.com> <CAJZ5v0in4VSULsfLshHxhNLf+NZxVQM0xx=hzdNa2X3FW=V7DA@mail.gmail.com>
+ <CACO55tsjj+xkDjubz1J=fsPecW4H_J8AaBTeaMm+NYjp8Kiq8g@mail.gmail.com>
+ <CAJZ5v0ithxMPK2YxfTUx_Ygpze2FMDJ6LwKwJb2vx89dfgHX_A@mail.gmail.com>
+ <CACO55tupFbq0T1DcR+C+YxtPR=csPBQhwVXz_SHWT5F8bRK8JA@mail.gmail.com> <CAJZ5v0h_ymqsoOVm9s2h5X0ejYdM4x03H7xPQ38uiO009OVgpQ@mail.gmail.com>
+In-Reply-To: <CAJZ5v0h_ymqsoOVm9s2h5X0ejYdM4x03H7xPQ38uiO009OVgpQ@mail.gmail.com>
+From:   Karol Herbst <kherbst@redhat.com>
+Date:   Wed, 20 Nov 2019 13:19:30 +0100
+Message-ID: <CACO55tu9PqhgjCEB0psaqnh+-FEOj7Y+sB_So56iHnE2kj9Z+A@mail.gmail.com>
+Subject: Re: [PATCH v4] pci: prevent putting nvidia GPUs into lower device
+ states on certain intel bridges
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Mika Westerberg <mika.westerberg@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lyude Paul <lyude@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        Dave Airlie <airlied@gmail.com>,
+        Mario Limonciello <Mario.Limonciello@dell.com>
+X-MC-Unique: _ispdzZQOnyNvwnHA8MDFA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The device-specific compatible values used by the Ux500 boards
-were not documented so far. Add a new simple schema to document them.
+It depends on the kernel being built with ACPI_REV_OVERRIDE_POSSIBLE=3Dy
+and acpi_rev_override=3D1 being set on the kernel command line
 
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
----
- .../devicetree/bindings/arm/ux500.yaml        | 31 +++++++++++++++++++
- MAINTAINERS                                   |  1 +
- 2 files changed, 32 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/ux500.yaml
-
-diff --git a/Documentation/devicetree/bindings/arm/ux500.yaml b/Documentation/devicetree/bindings/arm/ux500.yaml
-new file mode 100644
-index 000000000000..006cb4a5f331
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/ux500.yaml
-@@ -0,0 +1,31 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/arm/ux500.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Ux500 platforms device tree bindings
-+
-+maintainers:
-+  - Linus Walleij <linus.walleij@linaro.org>
-+
-+properties:
-+  $nodename:
-+    const: '/'
-+  compatible:
-+    oneOf:
-+
-+      - description: ST-Ericsson HREF (pre-v60)
-+        items:
-+          - const: st-ericsson,mop500
-+          - const: st-ericsson,u8500
-+
-+      - description: ST-Ericsson HREF (v60+)
-+        items:
-+          - const: st-ericsson,hrefv60+
-+          - const: st-ericsson,u8500
-+
-+      - description: Calao Systems Snowball
-+        items:
-+          - const: calaosystems,snowball-a9500
-+          - const: st-ericsson,u9500
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e4f170d8bc29..a2fcbfca90de 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2020,6 +2020,7 @@ F:	drivers/rtc/rtc-pl031.c
- F:	drivers/watchdog/coh901327_wdt.c
- F:	Documentation/devicetree/bindings/arm/ste-*
- F:	Documentation/devicetree/bindings/arm/ux500/
-+F:	Documentation/devicetree/bindings/arm/ux500.yaml
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-nomadik.git
- 
- ARM/NUVOTON NPCM ARCHITECTURE
--- 
-2.24.0
+On Wed, Nov 20, 2019 at 1:15 PM Rafael J. Wysocki <rafael@kernel.org> wrote=
+:
+>
+> On Wed, Nov 20, 2019 at 1:10 PM Karol Herbst <kherbst@redhat.com> wrote:
+> >
+> > On Wed, Nov 20, 2019 at 1:06 PM Rafael J. Wysocki <rafael@kernel.org> w=
+rote:
+> > >
+> > > On Wed, Nov 20, 2019 at 12:51 PM Karol Herbst <kherbst@redhat.com> wr=
+ote:
+> > > >
+> > > > On Wed, Nov 20, 2019 at 12:48 PM Rafael J. Wysocki <rafael@kernel.o=
+rg> wrote:
+> > > > >
+> > > > > On Wed, Nov 20, 2019 at 12:22 PM Mika Westerberg
+> > > > > <mika.westerberg@intel.com> wrote:
+> > > > > >
+> > > > > > On Wed, Nov 20, 2019 at 11:52:22AM +0100, Rafael J. Wysocki wro=
+te:
+> > > > > > > On Wed, Nov 20, 2019 at 11:18 AM Mika Westerberg
+> > > > > > > <mika.westerberg@intel.com> wrote:
+> > > > > > > >
+> > >
+> > > [cut]
+> > >
+> > > > > > >
+> > > > > > > Oh, so does it look like we are trying to work around AML tha=
+t tried
+> > > > > > > to work around some problematic behavior in Linux at one poin=
+t?
+> > > > > >
+> > > > > > Yes, it looks like so if I read the ASL right.
+> > > > >
+> > > > > OK, so that would call for a DMI-based quirk as the real cause fo=
+r the
+> > > > > issue seems to be the AML in question, which means a firmware pro=
+blem.
+> > > > >
+> > > >
+> > > > And I disagree as this is a linux specific workaround and windows g=
+oes
+> > > > that path and succeeds. This firmware based workaround was added,
+> > > > because it broke on Linux.
+> > >
+> > > Apparently so at the time it was added, but would it still break afte=
+r
+> > > the kernel changes made since then?
+> > >
+> > > Moreover, has it not become harmful now?  IOW, wouldn't it work after
+> > > removing the "Linux workaround" from the AML?
+> > >
+> > > The only way to verify that I can see would be to run the system with
+> > > custom ACPI tables without the "Linux workaround" in the AML in
+> > > question.
+> > >
+> >
+> > the workaround is not enabled by default, because it has to be
+> > explicitly enabled by the user.
+>
+> I'm not sure what you are talking about.
+>
+> I'm taking specifically about the ((OSYS =3D=3D 0x07DF) && (_REV =3D=3D 0=
+x05))
+> check mentioned by Mika which doesn't seem to depend on user input in
+> any way.
+>
 
