@@ -2,126 +2,154 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B925C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 23:05:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EBF0C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 23:14:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2ADC206D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 23:05:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E96EE20878
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 23:14:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="azQfCFww"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="K9VFPDOU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726380AbfKTXFX (ORCPT
+        id S1726335AbfKTXOY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 18:05:23 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:33516 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725842AbfKTXFW (ORCPT
+        Wed, 20 Nov 2019 18:14:24 -0500
+Received: from mailout4.samsung.com ([203.254.224.34]:26902 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725878AbfKTXOX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 18:05:22 -0500
-Received: by mail-pg1-f194.google.com with SMTP id h27so519637pgn.0;
-        Wed, 20 Nov 2019 15:05:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=fEgMaaNTaJm+nq3mUM5KWnkaiG88YnYcMDwaJlNqGkg=;
-        b=azQfCFwwF8GVZ9jpeCJY3J1noNcX3dGd0/oZlG5/VXBUkcoDXl6Du5SbDlLEYrdhKt
-         EIkzPFhkJzWH/2owPB3EhKHz5gGJwfUIQnQ2KjfK8h4+6VEGQu5K/pzgWZT5FfYmV96A
-         oHiWDyV5MqLC7Uxzp51YH75V4psRVwmN7FXz/j5wjlhyV8p8T60MfwjlavUwY0FHPFaS
-         cKbWR8eQ/jBThc/uYlVHRgDOsIKcGgDhafCgg6wkZfsoSe1+wor4ZfRgw6IXbP5KU1Vy
-         AiQh1VIu9ImzSrPM257+VuWBrDbTCHRaAJymuBTd/snulCHyOLGlKmFyDB+GL/jJQSWo
-         2h9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fEgMaaNTaJm+nq3mUM5KWnkaiG88YnYcMDwaJlNqGkg=;
-        b=hlpSg21BKo1was/ra2+aELQuhzDer2UMcs6mkYjQLcXtutMKWUIgDBATDXS7ieNB9p
-         B53Tn9jJX7ZFa8PWoNWmLD3BzVH9x+DkPqt42dhyXdU8IxrBLr10TaIirmcwu+3h3ipa
-         /VQFzN9g+OKrwo8H4mzl7r8hbPKbn8U/DZjaPYwMcMlhKhNzd4HClB0Qa7jsszcMjavd
-         5DZaKL+9eMD3YXN9HDYXZkck0b7puc3aCe7+YwDrmZgM89y4kISEikqdtynBovjieuya
-         DDa7BXckxlOZUjRoPfokrnWy+SGawHTftgYGfKIUr/LWtCQAZ603Q/t7G9Ak4EvEkjgx
-         dGXA==
-X-Gm-Message-State: APjAAAVYYon65iPSPkyxFT6MiQwX+SV9AjhjRwxbHLFpK4qtZnNfuuIL
-        BDh7JJlexxA/n1nXZkbqdTWVzfjz
-X-Google-Smtp-Source: APXvYqyeatjOE8ZdhjhAL3RTT2QES7GZMa28Dzq4gMY+w98XHvox0r2Nx00d0c3Yn3oC3AM0xnhCTw==
-X-Received: by 2002:a65:67c1:: with SMTP id b1mr5985171pgs.149.1574291121185;
-        Wed, 20 Nov 2019 15:05:21 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id f7sm452075pfa.150.2019.11.20.15.05.19
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 20 Nov 2019 15:05:20 -0800 (PST)
-Date:   Wed, 20 Nov 2019 15:05:18 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Laura Abbott <labbott@redhat.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        Lennert Buytenhek <kernel@wantstofly.org>
-Subject: Re: [PATCH] watchdog: Remove iop_wdt
-Message-ID: <20191120230518.GA28840@roeck-us.net>
-References: <20191118220432.1611-1-labbott@redhat.com>
- <29e94219-22ca-c873-7209-64d1c357fe5c@roeck-us.net>
- <CAK8P3a0=3J3WHTKU7sPvd37VEwg3wOuZ5S2-xXtNYEcSQhWyHw@mail.gmail.com>
- <4f283ab6-0f3c-60e9-cfd1-29d10d978986@roeck-us.net>
- <20191120100341.GK25745@shell.armlinux.org.uk>
- <CAK8P3a2N+aDgFz75dFJy3Me9FPdyDSyPaa29FngLjfXX3MzfvA@mail.gmail.com>
- <20191120103054.GM25745@shell.armlinux.org.uk>
+        Wed, 20 Nov 2019 18:14:23 -0500
+Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20191120231420epoutp042fe178a07750deb12c5d3d9b7f0e2225~ZAeyj0iSE0637006370epoutp04d
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 23:14:20 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20191120231420epoutp042fe178a07750deb12c5d3d9b7f0e2225~ZAeyj0iSE0637006370epoutp04d
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1574291660;
+        bh=YBQcDbX1ksCCjt7aDcfU7ea4Z+qkjtcaHeZWNxa1b44=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=K9VFPDOUN0S2/BNd8yeLD9sUsiELljaQpZ+HVahZxdiwHW1mP+IxiFA5C/aPlu5Us
+         O+QXdvcfk4aVtzJsPaYk3aTpvt5SuRgi69ZNRL/EmFn9GI5CI+V6XfSuS9tJxdkA77
+         eXk3qOKMywBZtnwxGtBh0Ru9zl3lWvGiIwPaaSMs=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
+        20191120231420epcas1p31017155fd41aed4457bba9daa5dbf7f8~ZAeyEm1Ap1498414984epcas1p3B;
+        Wed, 20 Nov 2019 23:14:20 +0000 (GMT)
+Received: from epsmges1p1.samsung.com (unknown [182.195.40.158]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 47JJRY6rhjzMqYm1; Wed, 20 Nov
+        2019 23:14:17 +0000 (GMT)
+Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
+        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        80.47.04072.5C8C5DD5; Thu, 21 Nov 2019 08:14:13 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20191120231413epcas1p2cc8f38e5f5e67679c7169e1bdab59738~ZAeroymiL0427904279epcas1p2g;
+        Wed, 20 Nov 2019 23:14:13 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20191120231413epsmtrp1ca7ed40e69bd491a025cd2d9345d689f~ZAeroKN3v2064720647epsmtrp1L;
+        Wed, 20 Nov 2019 23:14:13 +0000 (GMT)
+X-AuditID: b6c32a35-9a5ff70000000fe8-b5-5dd5c8c5899e
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        4C.4B.03814.5C8C5DD5; Thu, 21 Nov 2019 08:14:13 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20191120231413epsmtip149eb4da734e12f576b60521050a7029e~ZAereSr_d0820808208epsmtip1P;
+        Wed, 20 Nov 2019 23:14:13 +0000 (GMT)
+Subject: Re: [PATCH] devfreq: Fix Kconfig indentation
+To:     Krzysztof Kozlowski <krzk@kernel.org>, linux-kernel@vger.kernel.org
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        linux-pm@vger.kernel.org
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <edbea51d-2d69-1e1e-9eda-d17a2a20d801@samsung.com>
+Date:   Thu, 21 Nov 2019 08:20:01 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191120103054.GM25745@shell.armlinux.org.uk>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191120134216.15713-1-krzk@kernel.org>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupjk+LIzCtJLcpLzFFi42LZdljTQPfoiauxBof2m1qcP7+B3eJs0xt2
+        i8u75rBZfO49wmhxu3EFmwOrx6ZVnWwefVtWMXp83iQXwByVbZORmpiSWqSQmpecn5KZl26r
+        5B0c7xxvamZgqGtoaWGupJCXmJtqq+TiE6DrlpkDtFJJoSwxpxQoFJBYXKykb2dTlF9akqqQ
+        kV9cYquUWpCSU2BZoFecmFtcmpeul5yfa2VoYGBkClSYkJ0xv2Mea8EGzopDO1pZGxjXsHcx
+        cnBICJhI/H0k2sXIySEksINR4uN92y5GLiD7E6PE+YbzrBDON0aJdTNus4BUgTR8fjKXESKx
+        l1Giv2syM4TznlHi07KL7CBVwgKmEp3vNrOB2CIC7hIL/q8Bs5kFiiSa+36CTWIT0JLY/+IG
+        WJxfQFHi6o/HjCAn8QrYSTQtUwMJswioSjx+NhEsLCoQIXH6ayJImFdAUOLkzCdgUziBNn3b
+        +g9qurjErSfzmSBseYntb+eAnSYhcJlN4uLzmVAPuEh8uL2VFcIWlnh1fAs7hC0l8bK/Dcqu
+        llh58ggbRHMHo8SW/RegGowl9i+dzARyELOApsT6XfoQYUWJnb9BgQKymE/i3dceVkjo8kp0
+        tAlBlChLXH5wlwnClpRY3N7JNoFRaRaSd2YheWEWkhdmISxbwMiyilEstaA4Nz212LDAEDmq
+        NzGC06KW6Q7GKed8DjEKcDAq8fBmaFyNFWJNLCuuzD3EKMHBrCTCu+f6lVgh3pTEyqrUovz4
+        otKc1OJDjKbAwJ7ILCWanA9M2Xkl8YamRsbGxhYmhmamhoZK4rwcPy7GCgmkJ5akZqemFqQW
+        wfQxcXBKNTB6VIssEq9zKtpjlycwM/VslAuHUz3fmvC2lBneF3oY9tywfn2u92jx+qNx/AbT
+        Wv8a1+6580apof1Jasyca3vst34wnKrq0nFC4/Vy/cJ72+PvnYzW2qpmeLF9jklbpPSEz78K
+        5To2Fhay96592dnTNPeiV9TvxQ9+vLgmP7l32YYvNw5zlK1WYinOSDTUYi4qTgQAEJwCd6ED
+        AAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrNLMWRmVeSWpSXmKPExsWy7bCSnO7RE1djDd5cYLU4f34Du8XZpjfs
+        Fpd3zWGz+Nx7hNHiduMKNgdWj02rOtk8+rasYvT4vEkugDmKyyYlNSezLLVI3y6BK2N+xzzW
+        gg2cFYd2tLI2MK5h72Lk5JAQMJH4/GQuYxcjF4eQwG5GiWWXOxghEpIS0y4eZe5i5ACyhSUO
+        Hy6GqHnLKLF19UJWkBphAVOJzneb2UBsEQF3iQX/14DZzAJFEle332eCaOhglOifM4sFJMEm
+        oCWx/8UNsCJ+AUWJqz8eM4Is4BWwk2hapgYSZhFQlXj8bCLYDaICERLPt98As3kFBCVOznwC
+        NoYTaO+3rf+gdqlL/Jl3iRnCFpe49WQ+E4QtL7H97RzmCYzCs5C0z0LSMgtJyywkLQsYWVYx
+        SqYWFOem5xYbFhjlpZbrFSfmFpfmpesl5+duYgRHiZbWDsYTJ+IPMQpwMCrx8GZoXI0VYk0s
+        K67MPcQowcGsJMK75/qVWCHelMTKqtSi/Pii0pzU4kOM0hwsSuK88vnHIoUE0hNLUrNTUwtS
+        i2CyTBycUg2MXd1P2RZN5Mj2+nBmb8m2/WnrD1psWPC1RWvdtlMLr315lf6uOuJ1y/pdoh4v
+        Z++Jib1460/nb+nQuBc6/lMubRQpe9j4J19+s96pX4/Uw6fMMw51N96wl6Uunb8mc6n94uBF
+        xk8uHi2TTP753iKKXcf1kJNmXU8Rs/wmx4g7LZqsCtlp1u3PlViKMxINtZiLihMBj1nLNI4C
+        AAA=
+X-CMS-MailID: 20191120231413epcas1p2cc8f38e5f5e67679c7169e1bdab59738
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20191120134228epcas5p2b934651ced36ef9ed34a2a40f85a7704
+References: <CGME20191120134228epcas5p2b934651ced36ef9ed34a2a40f85a7704@epcas5p2.samsung.com>
+        <20191120134216.15713-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 10:30:54AM +0000, Russell King - ARM Linux admin wrote:
-> On Wed, Nov 20, 2019 at 11:15:01AM +0100, Arnd Bergmann wrote:
-> > On Wed, Nov 20, 2019 at 11:03 AM Russell King - ARM Linux admin
-> > <linux@armlinux.org.uk> wrote:
-> > > On Tue, Nov 19, 2019 at 06:29:09AM -0800, Guenter Roeck wrote:
-> > > > On 11/19/19 1:40 AM, Arnd Bergmann wrote:
-> > > > > On Tue, Nov 19, 2019 at 3:08 AM Guenter Roeck <linux@roeck-us.net> wrote:
-> > > > > > On 11/18/19 2:04 PM, Laura Abbott wrote:
-> > > >
-> > > > Good point, especially since apparently no one cared for five years.
-> > >
-> > > Doesn't mean that there aren't interested parties.  I still have
-> > > IOP32x hardware running here in the form of a N2100 (my firewall)
-> > > and it seems that I never noticed this option disappearing until
-> > > now...
-> > 
-> > It's not that it was ever there for IOP32x: the driver was introduced in 2007
-> > and was available for IOP32x but failed to compile for it until 2014 when
-> > I sent the patch to disable the driver in all configurations that
-> > failed to build.
+On 11/20/19 10:42 PM, Krzysztof Kozlowski wrote:
+> Adjust indentation from spaces to tab (+optional two spaces) as in
+> coding style with command like:
+> 	$ sed -e 's/^        /\t/' -i */Kconfig
 > 
-> Well:
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  drivers/devfreq/Kconfig | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
-> systems/n2100/boot/config-3.11.5+:CONFIG_IOP_WATCHDOG=m
-> systems/n2100/boot/config-3.12.6+:CONFIG_IOP_WATCHDOG=m
-> systems/n2100/boot/config-3.9.5+:CONFIG_IOP_WATCHDOG=m
+> diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
+> index 066e6c4efaa2..59027d7ddf2a 100644
+> --- a/drivers/devfreq/Kconfig
+> +++ b/drivers/devfreq/Kconfig
+> @@ -119,9 +119,9 @@ config ARM_RK3399_DMC_DEVFREQ
+>  	select DEVFREQ_GOV_SIMPLE_ONDEMAND
+>  	select PM_DEVFREQ_EVENT
+>  	help
+> -          This adds the DEVFREQ driver for the RK3399 DMC(Dynamic Memory Controller).
+> -          It sets the frequency for the memory controller and reads the usage counts
+> -          from hardware.
+> +	  This adds the DEVFREQ driver for the RK3399 DMC(Dynamic Memory Controller).
+> +	  It sets the frequency for the memory controller and reads the usage counts
+> +	  from hardware.
+>  
+>  source "drivers/devfreq/event/Kconfig"
+>  
 > 
-> -rw-rw-r-- 1 rmk rmk 5284 Dec 30  2013 systems/n2100/lib/modules/3.12.6+/kernel/drivers/watchdog/iop_wdt.ko
-> -rw-rw-r-- 1 rmk rmk 5276 Dec 20  2013 systems/n2100/lib/modules/3.9.5+/kernel/drivers/watchdog/iop_wdt.ko
-> 
-> It seems I've been carrying a patch to comment out the troublesome code:
-> 
-> -       write_wdtsr(IOP13XX_WDTCR_IB_RESET);
-> +//     write_wdtsr(IOP13XX_WDTCR_IB_RESET);
-> 
-> in my stable tree since 2015.
 
-Do you have plans to update that kernel to mainline ?
-If yes, a patch to make the driver (and I guess everything else that broke
-since 3.12) work would be helpful.
+Applied it. Thanks.
 
-Thanks,
-Guenter
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
