@@ -2,165 +2,167 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA33FC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:04:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C8A2C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:05:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB12820885
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:04:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53C6D20885
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:05:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JsT18B4k"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="fXFolFfT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729163AbfKTPEw (ORCPT
+        id S1729229AbfKTPFL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 10:04:52 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:22755 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728864AbfKTPEw (ORCPT
+        Wed, 20 Nov 2019 10:05:11 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:16242 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728030AbfKTPFL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 10:04:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574262291;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=IBz9KyuYNKXB4FibFKzT3JjYfAQ+VtzUD0zVZBCTZ40=;
-        b=JsT18B4kMlTqN4rnBbFt2iHtjsVXJMA5gk08ZZ30Y+BWQFcmg7x0JSISaSEYnC6fEBukTc
-        udIpa7du8NwEe/2HT6aAFQeFBMCX8W7h5RXG5CAg7oJzA88995+C+eT9kbvZY0PrMCCZ+P
-        TBkMnMshJdd7Q5XPL7Gm5NN147TH78c=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-383-lytrAqQxMHW7Fx7hfEbx3g-1; Wed, 20 Nov 2019 10:04:48 -0500
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8DB586EE19;
-        Wed, 20 Nov 2019 15:04:46 +0000 (UTC)
-Received: from [10.36.118.126] (unknown [10.36.118.126])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 224E85ED2D;
-        Wed, 20 Nov 2019 15:04:44 +0000 (UTC)
-Subject: Re: [PATCH 1/2] mm/memory-failure.c: PageHuge is handled at the
- beginning of memory_failure
-To:     Wei Yang <richardw.yang@linux.intel.com>
-Cc:     n-horiguchi@ah.jp.nec.com, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        James Morse <james.morse@arm.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-References: <20191118082003.26240-1-richardw.yang@linux.intel.com>
- <1e61c115-5787-9ef4-a449-2e490c53fca7@redhat.com>
- <20191120004620.GB11061@richard>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat GmbH
-Message-ID: <a85053b7-9298-9dd3-3826-e63cf8c7bd81@redhat.com>
-Date:   Wed, 20 Nov 2019 16:04:44 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Wed, 20 Nov 2019 10:05:11 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAKEv3XH012326;
+        Wed, 20 Nov 2019 16:04:56 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=B4eTGdmy9M6RCxNN9IMGP9gViNyeowzelSDgABH62j0=;
+ b=fXFolFfTBnHvkrJczHAFOGhstYXWmPF1ic+/nyQXCPpTF9LJA4cGSmNYX59jMj1anpz3
+ CVZuhz8WsM0kkVwpl2WaTHGYHQpSMP2ESQjyEaj6DgsPNF6Cc7or/cBrXWO7Ffprpz9X
+ DgGQqHbP6ZWd1hpwzXcVeJwRVKNRCpmqt+NMO6qYsRVZKrj6+n3nx9CagynpAJasjWjg
+ FUPNF7Of05JQ5Hx4zoJNv0OB76YPVKGeNmIeApVkvU/0FNvb89UyR15w4b8g4n0h73vx
+ yind01xOACT4Uugyzo34/OF00K0A6hmSZrfnWeCAr5r9rxh7kk/hy2Gq6uUvCiPpKy6j 4Q== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2wa9up6nbv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 20 Nov 2019 16:04:56 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 2A83510002A;
+        Wed, 20 Nov 2019 16:04:56 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E82D62B4F11;
+        Wed, 20 Nov 2019 16:04:55 +0100 (CET)
+Received: from lmecxl0912.lme.st.com (10.75.127.48) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 20 Nov
+ 2019 16:04:54 +0100
+Subject: Re: [PATCH 0/6] STM32 DT: Updates for SOC diversity
+To:     Maxime Coquelin <mcoquelin.stm32@gmail.com>, <arnd@arndb.de>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-kernel@vger.kernel.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+References: <20191120144109.25321-1-alexandre.torgue@st.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <29723f43-11cb-1e95-80a0-407c99a14208@st.com>
+Date:   Wed, 20 Nov 2019 16:04:54 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191120004620.GB11061@richard>
+In-Reply-To: <20191120144109.25321-1-alexandre.torgue@st.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-MC-Unique: lytrAqQxMHW7Fx7hfEbx3g-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.48]
+X-ClientProxiedBy: SFHDAG7NODE2.st.com (10.75.127.20) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-20_04:2019-11-15,2019-11-20 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20.11.19 01:46, Wei Yang wrote:
-> On Tue, Nov 19, 2019 at 01:23:54PM +0100, David Hildenbrand wrote:
->> On 18.11.19 09:20, Wei Yang wrote:
->>> PageHuge is handled by memory_failure_hugetlb(), so this case could be
->>> removed.
->>>
->>> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
->>> ---
->>>    mm/memory-failure.c | 5 +----
->>>    1 file changed, 1 insertion(+), 4 deletions(-)
->>>
->>> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
->>> index 3151c87dff73..392ac277b17d 100644
->>> --- a/mm/memory-failure.c
->>> +++ b/mm/memory-failure.c
->>> @@ -1359,10 +1359,7 @@ int memory_failure(unsigned long pfn, int flags)
->>>    =09 * page_remove_rmap() in try_to_unmap_one(). So to determine page=
- status
->>>    =09 * correctly, we save a copy of the page flags at this time.
->>>    =09 */
->>> -=09if (PageHuge(p))
->>> -=09=09page_flags =3D hpage->flags;
->>> -=09else
->>> -=09=09page_flags =3D p->flags;
->>> +=09page_flags =3D p->flags;
->>>    =09/*
->>>    =09 * unpoison always clear PG_hwpoison inside page lock
->>>
->>
->> I somewhat miss a proper explanation why this is safe to do. We access p=
-age
->> flags here, so why is it safe to refer to the ones of the sub-page?
->>
->=20
-> Hi, David
->=20
-> I think your comment is on this line:
->=20
-> =09page_flags =3D p->flags;
->=20
-> Maybe we need to use this:
->=20
-> =09page_flags =3D hpage->flags;
->=20
-> And use hpage in the following or even the whole function?
->=20
-> While one thing interesting is not all "compound page" is PageCompound. F=
-or
-> some sub-page, we can't get the correct head. This means we may just chec=
-k on
-> the sub-page.
-
-Oh wait, I think I missed the check right at the beginning of this=20
-function, sorry :/
-
-Sooo, memory_failure_hugetlb() was introduced by
-
-commit 761ad8d7c7b5485bb66fd5bccb58a891fe784544
-Author: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-Date:   Mon Jul 10 15:47:47 2017 -0700
-
-     mm: hwpoison: introduce memory_failure_hugetlb()
-
-and essentially ripped out all PageHuge() checks *except* this check.=20
-This check was introduced in
-
-commit 7258ae5c5a2ce2f5969e8b18b881be40ab55433d
-Author: James Morse <james.morse@arm.com>
-Date:   Fri Jun 16 14:02:29 2017 -0700
-
-     mm/memory-failure.c: use compound_head() flags for huge pages
 
 
-Maybe that was just a merge oddity as both commits are only ~1month=20
-apart. IOW, I think Naoya's patch forgot to rip it out.
+On 11/20/19 3:41 PM, Alexandre Torgue wrote:
+> This series updates stm32mp device tree files in order to handle the STM32MP15
+> part numbers diversity. STM32MP15 part numbers are built in this way:
+> 
+> -STM32MP15X: X = [1, 3, 7] for IPs diversity:
+>   -STM32MP151 = basic part
+>   -STM32MP153 = STM32MP153  + a second CPU A7 + MCAN(x2)
 
+Sorry for typo: -STM32MP153 = STM32MP151  + a second CPU A7 + MCAN(x2)
 
-Can we make this clear in the patch description like "This is dead code=20
-that cannot be reached after commit 761ad8d7c7b5 ("mm: hwpoison:=20
-introduce memory_failure_hugetlb()")"
-
-I assume Andrew can fix up when applying
-
-Reviewed-by: David Hildenbrand <david@redhat.com>
-
---=20
-
-Thanks,
-
-David / dhildenb
-
+>   -STM32MP157 = STM32MP153 + DSI + GPU
+> 
+> -STMM32MP15xY: Y = [a, c] for security diversity:
+>   -STM32MP15xA: basic part.
+>   -STM32MP15xC: adds crypto IP.
+> 
+> -STM32MP15xxZZ: ZZ = [aa, ab, ac, ad] for packages (IO) diversity:
+>   -STM32MP15xxAA: TFBGA448 18x18
+>   -STM32MP15xxAB: LFBGA354 16x16
+>   -STM32MP15xxAC: TFBGA361 12x12
+>   -STM32MP15xxAD: TFBGA257 10x10
+> 
+> New device tree files are created and some existing are renamed to match with
+> this split.
+> 
+> In this way it is easy to assemble (by inclusion) those files to match with the
+> SOC partnumber used on board, and then it's simpler for users to create their
+> own device tree board file using the correct SOC.
+> 
+> For more details:
+> 
+> See STM32MP151 [1], STM32MP153 [2], STM32MP157 [3] reference manuals:
+>   [1] https://www.st.com/resource/en/reference_manual/dm00366349.pdf
+>   [2] https://www.st.com/resource/en/reference_manual/dm00366355.pdf
+>   [3] https://www.st.com/resource/en/reference_manual/dm00327659.pdf
+> 
+> Product family:
+>   https://www.st.com/en/microcontrollers-microprocessors/stm32-arm-cortex-mpus.html#products
+> 
+> regards
+> Alex
+> 
+> Alexandre Torgue (6):
+>    ARM: dts: stm32: Adapt stm32mp157 pinctrl to manage STM32MP15xx SOCs
+>      family
+>    ARM: dts: stm32: Update stm32mp157 pinctrl files
+>    ARM: dts: stm32: Introduce new STM32MP15 SOCs: STM32MP151 and
+>      STM32MP153
+>    ARM: dts: stm32: Manage security diversity for STM32M15x SOCs
+>    ARM: dts: stm32: Adapt STM32MP157 DK boards to stm32 DT diversity
+>    ARM: dts: stm32: Adapt STM32MP157C ED1 board to STM32 DT diversity
+> 
+>   arch/arm/boot/dts/stm32mp15-pinctrl.dtsi      | 1087 +++++++++++++++
+>   .../dts/{stm32mp157c.dtsi => stm32mp151.dtsi} |  218 ++-
+>   arch/arm/boot/dts/stm32mp153.dtsi             |   45 +
+>   arch/arm/boot/dts/stm32mp157-pinctrl.dtsi     | 1240 -----------------
+>   arch/arm/boot/dts/stm32mp157.dtsi             |   31 +
+>   arch/arm/boot/dts/stm32mp157a-avenger96.dts   |    5 +-
+>   arch/arm/boot/dts/stm32mp157a-dk1.dts         |  604 +-------
+>   arch/arm/boot/dts/stm32mp157c-dk2.dts         |    6 +-
+>   arch/arm/boot/dts/stm32mp157c-ed1.dts         |    6 +-
+>   arch/arm/boot/dts/stm32mp157xaa-pinctrl.dtsi  |   90 --
+>   arch/arm/boot/dts/stm32mp157xab-pinctrl.dtsi  |   62 -
+>   arch/arm/boot/dts/stm32mp157xac-pinctrl.dtsi  |   78 --
+>   arch/arm/boot/dts/stm32mp157xad-pinctrl.dtsi  |   62 -
+>   arch/arm/boot/dts/stm32mp15xc.dtsi            |   18 +
+>   arch/arm/boot/dts/stm32mp15xx-dkx.dtsi        |  606 ++++++++
+>   arch/arm/boot/dts/stm32mp15xxaa-pinctrl.dtsi  |   85 ++
+>   arch/arm/boot/dts/stm32mp15xxab-pinctrl.dtsi  |   57 +
+>   arch/arm/boot/dts/stm32mp15xxac-pinctrl.dtsi  |   73 +
+>   arch/arm/boot/dts/stm32mp15xxad-pinctrl.dtsi  |   57 +
+>   19 files changed, 2232 insertions(+), 2198 deletions(-)
+>   create mode 100644 arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
+>   rename arch/arm/boot/dts/{stm32mp157c.dtsi => stm32mp151.dtsi} (91%)
+>   create mode 100644 arch/arm/boot/dts/stm32mp153.dtsi
+>   delete mode 100644 arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+>   create mode 100644 arch/arm/boot/dts/stm32mp157.dtsi
+>   delete mode 100644 arch/arm/boot/dts/stm32mp157xaa-pinctrl.dtsi
+>   delete mode 100644 arch/arm/boot/dts/stm32mp157xab-pinctrl.dtsi
+>   delete mode 100644 arch/arm/boot/dts/stm32mp157xac-pinctrl.dtsi
+>   delete mode 100644 arch/arm/boot/dts/stm32mp157xad-pinctrl.dtsi
+>   create mode 100644 arch/arm/boot/dts/stm32mp15xc.dtsi
+>   create mode 100644 arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
+>   create mode 100644 arch/arm/boot/dts/stm32mp15xxaa-pinctrl.dtsi
+>   create mode 100644 arch/arm/boot/dts/stm32mp15xxab-pinctrl.dtsi
+>   create mode 100644 arch/arm/boot/dts/stm32mp15xxac-pinctrl.dtsi
+>   create mode 100644 arch/arm/boot/dts/stm32mp15xxad-pinctrl.dtsi
+> 
