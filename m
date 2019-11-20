@@ -2,88 +2,152 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A0A2C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:42:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CD43C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:45:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6C3021906
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:42:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2E982243F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:45:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="s6sWRKAI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729353AbfKTLmv (ORCPT
+        id S1728496AbfKTLpr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 06:42:51 -0500
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:56241 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728343AbfKTLmu (ORCPT
+        Wed, 20 Nov 2019 06:45:47 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:39940 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727645AbfKTLpr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 06:42:50 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R811e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04395;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0Tie.HNt_1574250166;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0Tie.HNt_1574250166)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 20 Nov 2019 19:42:47 +0800
-Subject: Re: [PATCH v4 1/9] mm/swap: fix uninitialized compiler warning
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org,
-        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
-        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
-        yang.shi@linux.alibaba.com, willy@infradead.org,
-        shakeelb@google.com
-References: <1574166203-151975-1-git-send-email-alex.shi@linux.alibaba.com>
- <1574166203-151975-2-git-send-email-alex.shi@linux.alibaba.com>
- <20191119154138.GB382712@cmpxchg.org>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <919a5a57-1b7a-b109-491f-2b8b099390fe@linux.alibaba.com>
-Date:   Wed, 20 Nov 2019 19:42:46 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.1
+        Wed, 20 Nov 2019 06:45:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1574250345; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=uqbLnehMf46+5kt404rXN6aG71fiFr33xXgRiSLdiUw=;
+        b=s6sWRKAI+ZAEKhAXcJpbghRVYToKsOH1GQhv5Zmj4Q6uOFz6H83nKpLGGX9ZbMy552gRlc
+        pk4m/beFfFUD/9rGFdAkAnPHalKJ3k82TSCHHkopF1hb6kLQIucyk0UqeRFj5jMRVUlPex
+        YM+yKcWJg6v1ljXAko1jb6FIaEvdvd8=
+Date:   Wed, 20 Nov 2019 12:45:38 +0100
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH 2/2 v3] MIPS: Ingenic: Disable abandoned HPTLB function.
+To:     Zhou Yanjie <zhouyanjie@zoho.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ralf@linux-mips.org, paulburton@kernel.org, jhogan@kernel.org,
+        jiaxun.yang@flygoat.com, gregkh@linuxfoundation.org,
+        malat@debian.org, tglx@linutronix.de, chenhc@lemote.com
+Message-Id: <1574250338.3.3@crapouillou.net>
+In-Reply-To: <1574173727-123321-3-git-send-email-zhouyanjie@zoho.com>
+References: <1571909341-10108-1-git-send-email-zhouyanjie@zoho.com>
+        <1574173727-123321-1-git-send-email-zhouyanjie@zoho.com>
+        <1574173727-123321-3-git-send-email-zhouyanjie@zoho.com>
 MIME-Version: 1.0
-In-Reply-To: <20191119154138.GB382712@cmpxchg.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Zhou,
 
 
-在 2019/11/19 下午11:41, Johannes Weiner 写道:
-> On Tue, Nov 19, 2019 at 08:23:15PM +0800, Alex Shi wrote:
->>   ../mm/swap.c: In function ‘__page_cache_release’:
->>   ../mm/swap.c:67:10: warning: ‘flags’ may be used uninitialized in this
->>   function [-Wmaybe-uninitialized]
->>        lruvec = lock_page_lruvec_irqsave(page, pgdat, flags);
->>        ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> At this point in the series, there is no lock_page_lruvec_irqsave()
-> yet, so this patch is out of order. Please don't do that. It's very
-> hard to review patches that depend on later changes to make sense.
-> 
+Le mar., nov. 19, 2019 at 22:28, Zhou Yanjie <zhouyanjie@zoho.com> a=20
+=E9crit :
+> JZ4760/JZ4770/JZ4775/X1000/X1500 has an abandoned huge page tlb,
+> this mode is not compatible with the MIPS standard, it will cause
+> tlbmiss and into an infinite loop (line 21 in the tlb-funcs.S)
+> when starting the init process. write 0xa9000000 to cp0 register 5
+> sel 4 to disable this function to prevent getting stuck. Confirmed
+> by Ingenic, this operation will not adversely affect processors
+> without HPTLB function.
+>=20
+> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
 
-Sorry, I will be more careful on this.
+Acked-by: Paul Cercueil <paul@crapouillou.net>
 
->> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> Cc: linux-mm@kvack.org
->> Cc: linux-kernel@vger.kernel.org
->> ---
->>  mm/swap.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/mm/swap.c b/mm/swap.c
->> index 5341ae93861f..c36a10244d07 100644
->> --- a/mm/swap.c
->> +++ b/mm/swap.c
->> @@ -62,7 +62,7 @@ static void __page_cache_release(struct page *page)
->>  	if (PageLRU(page)) {
->>  		pg_data_t *pgdat = page_pgdat(page);
->>  		struct lruvec *lruvec;
->> -		unsigned long flags;
->> +		unsigned long flags = 0;
-> Use unintialized_var() for these cases to make the intent clear.
+> ---
+>  arch/mips/include/asm/mipsregs.h |  6 ++++++
+>  arch/mips/kernel/cpu-probe.c     | 21 +++++++++++++++++++--
+>  2 files changed, 25 insertions(+), 2 deletions(-)
 
-Thanks for suggestion!
+Still no changelog here :)
+
+
+> diff --git a/arch/mips/include/asm/mipsregs.h=20
+> b/arch/mips/include/asm/mipsregs.h
+> index bdbdc19..0d5a309 100644
+> --- a/arch/mips/include/asm/mipsregs.h
+> +++ b/arch/mips/include/asm/mipsregs.h
+> @@ -689,6 +689,9 @@
+>  #define MIPS_CONF7_IAR		(_ULCAST_(1) << 10)
+>  #define MIPS_CONF7_AR		(_ULCAST_(1) << 16)
+>=20
+> +/* Ingenic HPTLB off bits */
+> +#define XBURST_PAGECTRL_HPTLB_DIS 0xa9000000
+> +
+>  /* Ingenic Config7 bits */
+>  #define MIPS_CONF7_BTB_LOOP_EN	(_ULCAST_(1) << 4)
+>=20
+> @@ -1971,6 +1974,9 @@ do {									\
+>  #define read_c0_brcm_sleepcount()	__read_32bit_c0_register($22, 7)
+>  #define write_c0_brcm_sleepcount(val)	__write_32bit_c0_register($22,=20
+> 7, val)
+>=20
+> +/* Ingenic page ctrl register */
+> +#define write_c0_page_ctrl(val)	__write_32bit_c0_register($5, 4, val)
+> +
+>  /*
+>   * Macros to access the guest system control coprocessor
+>   */
+> diff --git a/arch/mips/kernel/cpu-probe.c=20
+> b/arch/mips/kernel/cpu-probe.c
+> index 7a0e33c..3b5f4fb 100644
+> --- a/arch/mips/kernel/cpu-probe.c
+> +++ b/arch/mips/kernel/cpu-probe.c
+> @@ -1965,13 +1965,30 @@ static inline void cpu_probe_ingenic(struct=20
+> cpuinfo_mips *c, unsigned int cpu)
+>  		break;
+>  	}
+>=20
+> +	switch (c->processor_id & PRID_COMP_MASK) {
+> +	/*
+> +	 * The config0 register in the XBurst CPUs with a processor ID of
+> +	 * PRID_COMP_INGENIC_D1 has an abandoned huge page tlb mode, this
+> +	 * mode is not compatible with the MIPS standard, it will cause
+> +	 * tlbmiss and into an infinite loop (line 21 in the tlb-funcs.S)
+> +	 * when starting the init process. After chip reset, the default
+> +	 * is HPTLB mode, Write 0xa9000000 to cp0 register 5 sel 4 to
+> +	 * switch back to VTLB mode to prevent getting stuck.
+> +	 */
+> +	case PRID_COMP_INGENIC_D1:
+> +		write_c0_page_ctrl(XBURST_PAGECTRL_HPTLB_DIS);
+> +		break;
+>  	/*
+> -	 * The config0 register in the Xburst CPUs with a processor ID of
+> +	 * The config0 register in the XBurst CPUs with a processor ID of
+>  	 * PRID_COMP_INGENIC_D0 report themselves as MIPS32r2 compatible,
+>  	 * but they don't actually support this ISA.
+>  	 */
+> -	if ((c->processor_id & PRID_COMP_MASK) =3D=3D PRID_COMP_INGENIC_D0)
+> +	case PRID_COMP_INGENIC_D0:
+>  		c->isa_level &=3D ~MIPS_CPU_ISA_M32R2;
+> +		break;
+> +	default:
+> +		break;
+> +	}
+>  }
+>=20
+>  static inline void cpu_probe_netlogic(struct cpuinfo_mips *c, int=20
+> cpu)
+> --
+> 2.7.4
+>=20
+>=20
+
+=
+
