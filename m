@@ -2,156 +2,225 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF426C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 05:47:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14308C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 05:55:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C87472244A
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 05:47:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D604722445
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 05:55:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="DSly446P"
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="nrS5ftCQ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="k0JWxE14"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727008AbfKTFrb (ORCPT
+        id S1727158AbfKTFzZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 00:47:31 -0500
-Received: from mx.aristanetworks.com ([162.210.129.12]:36754 "EHLO
-        smtp.aristanetworks.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725554AbfKTFra (ORCPT
+        Wed, 20 Nov 2019 00:55:25 -0500
+Received: from out4-smtp.messagingengine.com ([66.111.4.28]:55681 "EHLO
+        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726014AbfKTFzZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 00:47:30 -0500
-Received: from us180.sjc.aristanetworks.com (us180.sjc.aristanetworks.com [172.25.230.4])
-        by smtp.aristanetworks.com (Postfix) with ESMTP id 2227D401873;
-        Tue, 19 Nov 2019 21:47:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arista.com;
-        s=Arista-A; t=1574228848;
-        bh=HnAblu8XteAJ3r4y2QIMZ1i5loQSHWwegqcw/ObDqQs=;
-        h=Date:To:Subject:From:From;
-        b=DSly446P+JlKIJZJNcFcN/f+FLbZrABiGSn8rcfarxhAJme1D4ay1JWR5LAgzMoWF
-         DNCEoApbSPWaq8ldEGGJJ7Sef8PyN94IhSZK9ApZ3b5OqadBB52MD/uom875SfNrbW
-         V7lttkKFWevm1306y87HxaUDy7QEBfsAjWV4yBndXCp/mXSg4nabdrSoNLs2uvZ6Qb
-         T8lIXXWUUIgmT8SODVAubKrx7L5QQqGokAg821MtcGMxubjIfA4L7HFT2qUPkGxLq+
-         iVDuuyBk5s8qR+quqQ2Ub1bW2fGFIgKTP4WH6ElBQSdg2Sm7wHU03MZ7HcU0S+Qc6U
-         BG6k984r5vZxA==
-Received: by us180.sjc.aristanetworks.com (Postfix, from userid 10189)
-        id 0979695C0FE4; Tue, 19 Nov 2019 21:47:27 -0800 (PST)
-Date:   Tue, 19 Nov 2019 21:47:27 -0800
-To:     lenb@kernel.org, rjw@rjwysocki.net, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org, fruggeri@arista.com
-Subject: [PATCH] ACPI: only free map once in osl.c
-User-Agent: Heirloom mailx 12.5 7/5/10
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Message-Id: <20191120054728.0979695C0FE4@us180.sjc.aristanetworks.com>
-From:   fruggeri@arista.com (Francesco Ruggeri)
+        Wed, 20 Nov 2019 00:55:25 -0500
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 463E321EBC;
+        Wed, 20 Nov 2019 00:55:24 -0500 (EST)
+Received: from imap2 ([10.202.2.52])
+  by compute4.internal (MEProxy); Wed, 20 Nov 2019 00:55:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm1; bh=f3+K46N0DWX5LuAKDC/fiNXYVVrmkSg
+        hYy+SQPmLsVo=; b=nrS5ftCQfJhb/0SIriK4G4/USapAcazY5+vRGPrXnyUajqo
+        mr0cUrqurVBtgUBulgP/odWXDPhQU7PGQEoa319vP7IYQHHcuej3zbq3x/xaxL/J
+        Abac7EzsOusr1YxoJSj44wgX7c26KRsuf5/mOCUs39a1FE05ma9dwCBN5jRzdUOg
+        zC3IovVzEwZ5l87a67SjHfBRGW3K+8hoDZSYE/NM61EBPEUjvGPGAnTxA1FBlDjx
+        4Poi08XpAR/OCyWf6doXY5ERtZMulMOgFjmLBUMArwUsleUkca8efD5scGT+03Mq
+        BcLGKKD4zsTULYqAja70jDfV+ZwegmAuqAqSnbw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=f3+K46
+        N0DWX5LuAKDC/fiNXYVVrmkSghYy+SQPmLsVo=; b=k0JWxE14P4oWIkMi8r0cec
+        p9Ihj7W1MZ2ZBJ7l+gcvoPC4o2DR7sanbIj1fHNAUmD+Lnpj2Tjsi1/F2a/fj5Xj
+        +4DgYuHeuJdw5HKV2R9zE70EBuAQ6/k3KEsKleTcFtoVKwwzbLJKPpdep++Ik+Mr
+        LmhulH+vUEIbsPuGITgNBgqdU3WKSKtTuwVFYH5cASMiPoGZDXUkQ3V4b70a7Cvx
+        NAC7okXuQfRIFTNzBGhwJNRZoQ6Q0N5dlMcvDA+JVXvXdo82Xz6vNH1LQslqHLHP
+        ePnaU10QZ1pyiSDAgmVdhDeTTR2tLd7WFOYB3GE3rL6lJiYBcs0CkRA27kzlsE+w
+        ==
+X-ME-Sender: <xms:S9XUXSJb3U14OItt0wTjrNZLrg9dG1Fea4rYhQgLJs-wsKt5njRlZg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudegledgkeelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreertdenucfhrhhomhepfdetnhgu
+    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecurfgrrh
+    grmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgv
+    rhfuihiivgeptd
+X-ME-Proxy: <xmx:S9XUXdZR2lOHYxQmHC-_uMAhfesKHzpPbPmi8khFOFVYiUyzaJy9jw>
+    <xmx:S9XUXaP45WKf_5a4zcQwkCo6gf1KdknjpyZ8ZZV8rEaU5_Fs_KEnaA>
+    <xmx:S9XUXVBipktyQxJgGIXnGMUNn3LdYtcmpNTQiEo5xMawg44uKjqfWw>
+    <xmx:TNXUXXHUBuf3suYLL8HFUbDvVpD9VkhWywoUWb_QzzVDgn6FfgcFmw>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 478B9E00A3; Wed, 20 Nov 2019 00:55:23 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.7-578-g826f590-fmstable-20191119v1
+Mime-Version: 1.0
+Message-Id: <b2f503f0-0f13-46bc-a1be-c82a42b85797@www.fastmail.com>
+In-Reply-To: <20191118123707.GA5560@cnn>
+References: <20191118123707.GA5560@cnn>
+Date:   Wed, 20 Nov 2019 16:26:47 +1030
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     manikandan-e <manikandan.hcl.ers.epl@gmail.com>,
+        "Joel Stanley" <joel@jms.id.au>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-aspeed@lists.ozlabs.org, manikandan.e@hcl.com
+Subject: Re: [PATCH] ARM: dts: aspeed: Adding Facebook Yosemite V2 BMC
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-acpi_os_map_cleanup checks map->refcount outside of acpi_ioremap_lock
-before freeing the map. This creates a race condition the can result
-in the map being freed more than once.
-A panic can be caused by running
-
-for ((i=0; i<10; i++))
-do
-        for ((j=0; j<100000; j++))
-        do
-                cat /sys/firmware/acpi/tables/data/BERT >/dev/null
-        done &
-done
-
-This patch makes sure that only the process that drops the reference
-to 0 does the freeing.
-
-Fixes: b7c1fadd6c2e ("ACPI: Do not use krefs under a mutex in osl.c")
-Signed-off-by: Francesco Ruggeri <fruggeri@arista.com>
----
- drivers/acpi/osl.c | 28 +++++++++++++++++-----------
- 1 file changed, 17 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/acpi/osl.c b/drivers/acpi/osl.c
-index a2e844a8e9ed..41168c027a5a 100644
---- a/drivers/acpi/osl.c
-+++ b/drivers/acpi/osl.c
-@@ -374,19 +374,21 @@ void *__ref acpi_os_map_memory(acpi_physical_address phys, acpi_size size)
- }
- EXPORT_SYMBOL_GPL(acpi_os_map_memory);
- 
--static void acpi_os_drop_map_ref(struct acpi_ioremap *map)
-+/* Must be called with mutex_lock(&acpi_ioremap_lock) */
-+static unsigned long acpi_os_drop_map_ref(struct acpi_ioremap *map)
- {
--	if (!--map->refcount)
-+	unsigned long refcount = --map->refcount;
-+
-+	if (!refcount)
- 		list_del_rcu(&map->list);
-+	return refcount;
- }
- 
- static void acpi_os_map_cleanup(struct acpi_ioremap *map)
- {
--	if (!map->refcount) {
--		synchronize_rcu_expedited();
--		acpi_unmap(map->phys, map->virt);
--		kfree(map);
--	}
-+	synchronize_rcu_expedited();
-+	acpi_unmap(map->phys, map->virt);
-+	kfree(map);
- }
- 
- /**
-@@ -406,6 +408,7 @@ static void acpi_os_map_cleanup(struct acpi_ioremap *map)
- void __ref acpi_os_unmap_iomem(void __iomem *virt, acpi_size size)
- {
- 	struct acpi_ioremap *map;
-+	unsigned long refcount;
- 
- 	if (!acpi_permanent_mmap) {
- 		__acpi_unmap_table(virt, size);
-@@ -419,10 +422,11 @@ void __ref acpi_os_unmap_iomem(void __iomem *virt, acpi_size size)
- 		WARN(true, PREFIX "%s: bad address %p\n", __func__, virt);
- 		return;
- 	}
--	acpi_os_drop_map_ref(map);
-+	refcount = acpi_os_drop_map_ref(map);
- 	mutex_unlock(&acpi_ioremap_lock);
- 
--	acpi_os_map_cleanup(map);
-+	if (!refcount)
-+		acpi_os_map_cleanup(map);
- }
- EXPORT_SYMBOL_GPL(acpi_os_unmap_iomem);
- 
-@@ -457,6 +461,7 @@ void acpi_os_unmap_generic_address(struct acpi_generic_address *gas)
- {
- 	u64 addr;
- 	struct acpi_ioremap *map;
-+	unsigned long refcount;
- 
- 	if (gas->space_id != ACPI_ADR_SPACE_SYSTEM_MEMORY)
- 		return;
-@@ -472,10 +477,11 @@ void acpi_os_unmap_generic_address(struct acpi_generic_address *gas)
- 		mutex_unlock(&acpi_ioremap_lock);
- 		return;
- 	}
--	acpi_os_drop_map_ref(map);
-+	refcount = acpi_os_drop_map_ref(map);
- 	mutex_unlock(&acpi_ioremap_lock);
- 
--	acpi_os_map_cleanup(map);
-+	if (!refcount)
-+		acpi_os_map_cleanup(map);
- }
- EXPORT_SYMBOL(acpi_os_unmap_generic_address);
- 
--- 
-2.19.1
 
 
+On Mon, 18 Nov 2019, at 23:07, manikandan-e wrote:
+> The Yosemite V2 is a facebook multi-node server
+> platform that host four OCP server. The BMC
+> in the Yosemite V2 platorm based on AST2500 SoC.
+> 
+> This patch adds linux device tree entry related to
+> Yosemite V2 specific devices connected to BMC SoC.
+> 
+> Signed-off-by: manikandan-e <manikandan.hcl.ers.epl@gmail.com>
+> ---
+>  .../boot/dts/aspeed-bmc-facebook-yosemitev2.dts    | 170 +++++++++++++++++++++
+>  1 file changed, 170 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
+> 
+> diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts 
+> b/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
+> new file mode 100644
+> index 0000000..46a285a
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
+> @@ -0,0 +1,170 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +// Copyright (c) 2018 Facebook Inc.
+> +// Author:
+> +/dts-v1/;
+> +
+> +#include "aspeed-g5.dtsi"
+> +#include <dt-bindings/gpio/aspeed-gpio.h>
+> +
+> +/ {
+> +	model = "Facebook Yosemitev2 BMC";
+> +	compatible = "facebook,yosemitev2-bmc", "aspeed,ast2500";
+> +	aliases {
+> +		serial0 = &uart1;
+> +		serial4 = &uart5;
+> +	};
+> +	chosen {
+> +		stdout-path = &uart5;
+> +		bootargs = "console=ttyS4,115200 earlyprintk";
+> +	};
+> +
+> +	memory@80000000 {
+> +		reg = <0x80000000 0x20000000>;
+> +	};
+> +
+> +	iio-hwmon {
+> +		// VOLATAGE SENSOR
+> +		compatible = "iio-hwmon";
+> +		io-channels = <&adc 0> , <&adc 1> , <&adc 2> ,  <&adc 3> ,
+> +		<&adc 4> , <&adc 5> , <&adc 6> ,  <&adc 7> ,
+> +		<&adc 8> , <&adc 9> , <&adc 10>, <&adc 11> ,
+> +		<&adc 12> , <&adc 13> , <&adc 14> , <&adc 15> ;
+> +	};
+> +};
+> +
+> +&fmc {
+> +	status = "okay";
+> +	flash@0 {
+> +		status = "okay";
+> +		m25p,fast-read;
+> +#include "openbmc-flash-layout.dtsi"
+> +	};
+> +};
+> +
+> +&spi1 {
+> +	status = "okay";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_spi1_default>;
+> +	flash@0 {
+> +		status = "okay";
+> +		m25p,fast-read;
+> +		label = "pnor";
+> +	};
+> +};
+> +
+> +&lpc_snoop {
+> +	status = "okay";
+> +	snoop-ports = <0x80>;
+> +};
+> +
+> +&lpc_ctrl {
+> +	// Enable lpc clock
+> +	status = "okay";
+
+Something I'm intending to fix in the devicetrees using LPC is to hog
+the pins in the pinctrl node. You should consider doing the same here.
+
+> +};
+> +
+> +&vuart {
+> +	// VUART Host Console
+> +	status = "okay";
+> +};
+> +
+> +&uart1 {
+> +	// Host Console
+> +	status = "okay";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_txd1_default
+> +		     &pinctrl_rxd1_default>;
+> +};
+> +
+> +&uart2 {
+> +	// SoL Host Console
+> +	status = "okay";
+
+Also needs pinctrl configuration.
+
+> +};
+> +
+> +&uart3 {
+> +	// SoL BMC Console
+> +	status = "okay";
+
+Again needs pinctrl.
+
+> +};
+> +
+> +&uart5 {
+> +	// BMC Console
+> +	status = "okay";
+> +};
+> +
+> +&mac0 {
+> +	status = "okay";
+> +
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_rmii1_default>;
+> +	use-ncsi;
+> +};
+> +
+> +&adc {
+> +	status = "okay";
+
+Strongly suggest adding the pinctrl properties here to ensure
+exclusive access for the ADC pins.
+
+Otherwise it looks reasonable.
+
+Andrew
