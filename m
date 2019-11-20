@@ -2,180 +2,248 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AF2CC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 22:10:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8415C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 22:21:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B8CD20714
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 22:10:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 858C020709
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 22:21:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CT7FXPA6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726202AbfKTWKv (ORCPT
+        id S1726335AbfKTWV3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 17:10:51 -0500
-Received: from imap1.codethink.co.uk ([176.9.8.82]:36829 "EHLO
-        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725819AbfKTWKv (ORCPT
+        Wed, 20 Nov 2019 17:21:29 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:46614 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725820AbfKTWV3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 17:10:51 -0500
-Received: from [167.98.27.226] (helo=xylophone)
-        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
-        id 1iXYBR-0005dI-GG; Wed, 20 Nov 2019 22:10:45 +0000
-Message-ID: <a187cb75cc15ba8ee4a7b652fae8317cb9b03020.camel@codethink.co.uk>
-Subject: Re: [Y2038] [PATCH 6/8] lp: fix sparc64 LPSETTIMEOUT ioctl
-From:   Ben Hutchings <ben.hutchings@codethink.co.uk>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     y2038 Mailman List <y2038@lists.linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "# 3.4.x" <stable@vger.kernel.org>,
-        Bamvor Jian Zhang <bamv2005@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Date:   Wed, 20 Nov 2019 22:10:44 +0000
-In-Reply-To: <CAK8P3a3U0GWCyU9WOnrGQ2tqnHoyAbJ=HdYJGfTHuxVqcww0wg@mail.gmail.com>
-References: <20191108203435.112759-1-arnd@arndb.de>
-         <20191108203435.112759-7-arnd@arndb.de>
-         <41baf20a190039443cb2b82aea0c2a8ec872cfed.camel@codethink.co.uk>
-         <CAK8P3a3U0GWCyU9WOnrGQ2tqnHoyAbJ=HdYJGfTHuxVqcww0wg@mail.gmail.com>
-Organization: Codethink Ltd.
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Wed, 20 Nov 2019 17:21:29 -0500
+Received: by mail-ot1-f65.google.com with SMTP id n23so1049369otr.13;
+        Wed, 20 Nov 2019 14:21:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=+jfkpzTCAcWe+Xzpcosj3+zIbpQIJQRYhnSQKRU1HHk=;
+        b=CT7FXPA6dGrBdpXP6az91fi46FFaWxjy+WyV23c2+z8jIw+o1Q/57tpiDlpESD6sEj
+         elWQLZMh/1zkxUQhdcgnLDqcvFYvHQl7llX0Dvp6W04S3U/IoQJQAseE/DP4BZyY/7Vs
+         asGyViMiBovEChpRPTSGyrY7IbGP1883uY2kWyxsHes2uyadmWtDuzzaeNn6H1PmfhWF
+         xid6uZWRL51xJGSbML4+1xEs+i2aJLcYIGEPYjGG7667/eStYcUR+qHk3y93fAQOgs3C
+         Fx/C1ZeJGnmDSe741h8WLpmRIV6s4PUIv4HJBxAwhclvVsI9eZutvs3XGS2M0dI+sFag
+         uQtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=+jfkpzTCAcWe+Xzpcosj3+zIbpQIJQRYhnSQKRU1HHk=;
+        b=Hgo+rfe+PeuphJvMMJZKfVfiYFfL0g5jXLWX8SkM4du94q6aJffGLKj9Ye09OchykJ
+         EZbk8zZUFJN4xuegwqKTBFt+NzQSVfK+i9ndrWqggftzxbvC1iNkCJ99v2XY+5mK3w+t
+         o4FBzw7fMfPEXlsbmNNTkhTpej8jjTAUbnzAxzcitigrM9wL7ADWnFhUk9dfPy3efi48
+         Zrrz3yyWP2JDJLj8/HjLFnsqg8/3LE4mTfGeBXvrRjhnSSdlGK1JtI6fYaH/6Bhuefs7
+         G5BRj7t0wKuh1zY43aRGumZzJsO+YfJG/1zr0gSbLr6VtiRCFb0PxiLFhr9RULZRVqBj
+         exWg==
+X-Gm-Message-State: APjAAAWmQZDc19QHoayS0uGcM1t8t9S5N8w3rr6Tdmk9aegwm7TwudUZ
+        yYV0v7W54X5xJAnuG9e3UkM=
+X-Google-Smtp-Source: APXvYqydQveKtHQIMBx1K2zzU//bSgkA0jrEXuIeirQqY6I2ElrrGH6Zdy8fymcu0fH+7x8oFIkI5g==
+X-Received: by 2002:a9d:5c2:: with SMTP id 60mr4066480otd.104.1574288487728;
+        Wed, 20 Nov 2019 14:21:27 -0800 (PST)
+Received: from localhost.localdomain ([143.166.81.254])
+        by smtp.gmail.com with ESMTPSA id k66sm235772oia.40.2019.11.20.14.21.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Nov 2019 14:21:26 -0800 (PST)
+From:   Stuart Hayes <stuart.w.hayes@gmail.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Austin Bolen <austin_bolen@dell.com>, keith.busch@intel.com,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, lukas@wunner.de,
+        Stuart Hayes <stuart.w.hayes@gmail.com>
+Subject: [PATCH v2] PCI: pciehp: Make sure pciehp_isr clears interrupt events
+Date:   Wed, 20 Nov 2019 17:20:43 -0500
+Message-Id: <20191120222043.53432-1-stuart.w.hayes@gmail.com>
+X-Mailer: git-send-email 2.18.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-11-20 at 20:46 +0100, Arnd Bergmann wrote:
-> On Wed, Nov 20, 2019 at 8:27 PM Ben Hutchings
-> <ben.hutchings@codethink.co.uk> wrote:
-> > On Fri, 2019-11-08 at 21:34 +0100, Arnd Bergmann wrote:
-> > > The layout of struct timeval is different on sparc64 from
-> > > anything else, and the patch I did long ago failed to take
-> > > this into account.
-> > > 
-> > > Change it now to handle sparc64 user space correctly again.
-> > > 
-> > > Quite likely nobody cares about parallel ports on sparc64,
-> > > but there is no reason not to fix it.
-> > > 
-> > > Cc: stable@vger.kernel.org
-> > > Fixes: 9a450484089d ("lp: support 64-bit time_t user space")
-> > > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> > > ---
-> > >  drivers/char/lp.c | 4 ++++
-> > >  1 file changed, 4 insertions(+)
-> > > 
-> > > diff --git a/drivers/char/lp.c b/drivers/char/lp.c
-> > > index 7c9269e3477a..bd95aba1f9fe 100644
-> > > --- a/drivers/char/lp.c
-> > > +++ b/drivers/char/lp.c
-> > > @@ -713,6 +713,10 @@ static int lp_set_timeout64(unsigned int minor, void __user *arg)
-> > >       if (copy_from_user(karg, arg, sizeof(karg)))
-> > >               return -EFAULT;
-> > > 
-> > > +     /* sparc64 suseconds_t is 32-bit only */
-> > > +     if (IS_ENABLED(CONFIG_SPARC64) && !in_compat_syscall())
-> > > +             karg[1] >>= 32;
-> > > +
-> > >       return lp_set_timeout(minor, karg[0], karg[1]);
-> > >  }
-> > > 
-> > 
-> > It seems like it would make way more sense to use __kernel_old_timeval.
-> 
-> Right, that would work. I tried to keep the patch small here, changing
-> it to __kernel_old_timeval would require make it all more complicated
-> since it would still need to check some conditional to tell the difference
-> between sparc32 and sparc64.
+Without this patch, a pciehp hotplug port can stop generating interrupts
+on hotplug events, so device adds and removals will not be seen.
 
-Right.
+The pciehp interrupt handler pciehp_isr() will read the slot status
+register and then write back to it to clear the bits that caused the
+interrupt. If a different interrupt event bit gets set between the read and
+the write, pciehp_isr will exit without having cleared all of the interrupt
+event bits. If this happens, and the port is using an MSI interrupt where
+per-vector masking is not supported, we won't get any more hotplug
+interrupts from that device.
 
-> I think this patch (relative to the version I posted) would work the same:
-> 
-> diff --git a/drivers/char/lp.c b/drivers/char/lp.c
-> index bd95aba1f9fe..86994421ee97 100644
-> --- a/drivers/char/lp.c
-> +++ b/drivers/char/lp.c
-> @@ -713,13 +713,19 @@ static int lp_set_timeout64(unsigned int minor,
-> void __user *arg)
->         if (copy_from_user(karg, arg, sizeof(karg)))
->                 return -EFAULT;
-> 
-> -       /* sparc64 suseconds_t is 32-bit only */
-> -       if (IS_ENABLED(CONFIG_SPARC64) && !in_compat_syscall())
-> -               karg[1] >>= 32;
-> -
->         return lp_set_timeout(minor, karg[0], karg[1]);
->  }
-> 
-> +static int lp_set_timeout(unsigned int minor, void __user *arg)
+That is expected behavior, according to the PCI Express Base Specification
+Revision 5.0 Version 1.0, section 6.7.3.4, "Software Notification of Hot-
+Plug Events".
 
-That function name is already used!  Maybe this should be
-lp_set_timeout_old()?
+Because the "presence detect changed" and "data link layer state changed"
+event bits are both getting set at nearly the same time when a device is
+added or removed, this is more likely to happen than it might seem. The
+issue was found (and can be reproduced rather easily) by connecting and
+disconnecting an NVMe storage device on at least one system model.
 
-> +{
-> +       __kernel_old_timeval tv;
-> +
-> +       if (copy_from_user(tv, arg, sizeof(karg)))
-> +               return -EFAULT;
-> +
-> +       return lp_set_timeout(minor, tv->tv_sec, tv->tv_usec);
-> +}
-> +
->  static long lp_ioctl(struct file *file, unsigned int cmd,
->                         unsigned long arg)
->  {
-> @@ -730,11 +736,8 @@ static long lp_ioctl(struct file *file, unsigned int cmd,
->         mutex_lock(&lp_mutex);
->         switch (cmd) {
->         case LPSETTIMEOUT_OLD:
-> -               if (BITS_PER_LONG == 32) {
-> -                       ret = lp_set_timeout32(minor, (void __user *)arg);
-> -                       break;
-> -               }
-> -               /* fall through - for 64-bit */
-> +               ret = lp_set_timeout(minor, (void __user *)arg);
-> +               break;
->         case LPSETTIMEOUT_NEW:
->                 ret = lp_set_timeout64(minor, (void __user *)arg);
->                 break;
-> 
-> Do you like that better?
+This issue was found while adding and removing various NVMe storage devices
+on an AMD PCIe port (PCI device 0x1022/0x1483).
 
-Yes.  Aside from the duplicate function name, it looks correct and
-cleaner than the current version.
+This patch fixes this issue by modifying pciehp_isr() by looping back and
+re-reading the slot status register immediately after writing to it, until
+it sees that all of the event status bits have been cleared.
 
-> One difference here is the handling of
-> LPSETTIMEOUT_NEW on sparc64, which would continue to use
-> the 64/64 layout rather than the 64/32/pad layout, but that should
-> be ok, since sparc64 user space using ppdev (if any exists)
-> would use LPSETTIMEOUT_OLD, not LPSETTIMEOUT_NEW.
+Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
+---
+v2:
+  * fixed ctrl_warn() call
+  * improved comments
+  * added pvm_capable flag and changed pciehp_isr() to loop back only when
+    pvm_capable flag not set (suggested by Lukas Wunner)
+  
+ drivers/pci/hotplug/pciehp.h     |  3 ++
+ drivers/pci/hotplug/pciehp_hpc.c | 50 ++++++++++++++++++++++++++++----
+ 2 files changed, 47 insertions(+), 6 deletions(-)
 
-Right, that's a little weird but appears to be consistent with "new"
-socket timestamps.
-
-> > Then you don't have to explicitly handle the sparc64 oddity.
-> > 
-> > As it is, this still over-reads from user-space which might result in a
-> > spurious -EFAULT.
-> 
-> I think you got this wrong: sparc64 like most architectures naturally
-> aligns 64-bit members, so 'struct timeval' still uses 16 bytes including
-> the four padding bytes at the end, it just has the nanoseconds in
-> a different position from all other big-endian architectures.
-
-Oh of course, yes.
-
-Ben.
-
+diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
+index 654c972b8ea0..1804277ec433 100644
+--- a/drivers/pci/hotplug/pciehp.h
++++ b/drivers/pci/hotplug/pciehp.h
+@@ -47,6 +47,8 @@ extern int pciehp_poll_time;
+  * struct controller - PCIe hotplug controller
+  * @pcie: pointer to the controller's PCIe port service device
+  * @slot_cap: cached copy of the Slot Capabilities register
++ * @pvm_capable: set if per-vector masking is supported (if not set, the ISR
++ *	needs to ensure all event bits cleared)
+  * @slot_ctrl: cached copy of the Slot Control register
+  * @ctrl_lock: serializes writes to the Slot Control register
+  * @cmd_started: jiffies when the Slot Control register was last written;
+@@ -83,6 +85,7 @@ struct controller {
+ 	struct pcie_device *pcie;
+ 
+ 	u32 slot_cap;				/* capabilities and quirks */
++	unsigned int pvm_capable:1;
+ 
+ 	u16 slot_ctrl;				/* control register access */
+ 	struct mutex ctrl_lock;
+diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+index 1a522c1c4177..4ffd489a5413 100644
+--- a/drivers/pci/hotplug/pciehp_hpc.c
++++ b/drivers/pci/hotplug/pciehp_hpc.c
+@@ -487,12 +487,21 @@ void pciehp_power_off_slot(struct controller *ctrl)
+ 		 PCI_EXP_SLTCTL_PWR_OFF);
+ }
+ 
++/*
++ * We should never need to re-read the slot status register this many times,
++ * because there are only six possible events that could generate this
++ * interrupt.  If we still see events after this many reads, there's a stuck
++ * bit.
++ */
++#define MAX_ISR_STATUS_READS 6
++
+ static irqreturn_t pciehp_isr(int irq, void *dev_id)
+ {
+ 	struct controller *ctrl = (struct controller *)dev_id;
+ 	struct pci_dev *pdev = ctrl_dev(ctrl);
+ 	struct device *parent = pdev->dev.parent;
+-	u16 status, events;
++	u16 status, events = 0;
++	int status_reads = 0;
+ 
+ 	/*
+ 	 * Interrupts only occur in D3hot or shallower and only if enabled
+@@ -517,6 +526,7 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
+ 		}
+ 	}
+ 
++read_status:
+ 	pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &status);
+ 	if (status == (u16) ~0) {
+ 		ctrl_info(ctrl, "%s: no response from device\n", __func__);
+@@ -529,24 +539,44 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
+ 	 * Slot Status contains plain status bits as well as event
+ 	 * notification bits; right now we only want the event bits.
+ 	 */
+-	events = status & (PCI_EXP_SLTSTA_ABP | PCI_EXP_SLTSTA_PFD |
+-			   PCI_EXP_SLTSTA_PDC | PCI_EXP_SLTSTA_CC |
+-			   PCI_EXP_SLTSTA_DLLSC);
++	status &= (PCI_EXP_SLTSTA_ABP | PCI_EXP_SLTSTA_PFD |
++		   PCI_EXP_SLTSTA_PDC | PCI_EXP_SLTSTA_CC |
++		   PCI_EXP_SLTSTA_DLLSC);
+ 
+ 	/*
+ 	 * If we've already reported a power fault, don't report it again
+ 	 * until we've done something to handle it.
+ 	 */
+ 	if (ctrl->power_fault_detected)
+-		events &= ~PCI_EXP_SLTSTA_PFD;
++		status &= ~PCI_EXP_SLTSTA_PFD;
+ 
++	events |= status;
+ 	if (!events) {
+ 		if (parent)
+ 			pm_runtime_put(parent);
+ 		return IRQ_NONE;
+ 	}
+ 
+-	pcie_capability_write_word(pdev, PCI_EXP_SLTSTA, events);
++	if (status) {
++		pcie_capability_write_word(pdev, PCI_EXP_SLTSTA, status);
++
++		/*
++		 * If MSI per-vector masking is not supported by the port,
++		 * all of the event bits must be zero before the port will
++		 * send a new interrupt (see PCI Express Base Specification
++		 * Revision 5.0 Version 1.0, section 6.7.3.4, "Software
++		 * Notification of Hot-Plug Events"). So in that case, if
++		 * event bit gets set between the read and the write of
++		 * PCI_EXP_SLTSTA, we need to loop back and try again.
++		 */
++		if (!ctrl->pvm_capable) {
++			if (status_reads++ < MAX_ISR_STATUS_READS)
++				goto read_status;
++			ctrl_warn(ctrl, "Hot plug event bit stuck (%x)\n",
++				  status);
++		}
++	}
++
+ 	ctrl_dbg(ctrl, "pending interrupts %#06x from Slot Status\n", events);
+ 	if (parent)
+ 		pm_runtime_put(parent);
+@@ -812,6 +842,7 @@ struct controller *pcie_init(struct pcie_device *dev)
+ {
+ 	struct controller *ctrl;
+ 	u32 slot_cap, link_cap;
++	u16 msiflags;
+ 	u8 poweron;
+ 	struct pci_dev *pdev = dev->port;
+ 	struct pci_bus *subordinate = pdev->subordinate;
+@@ -881,6 +912,13 @@ struct controller *pcie_init(struct pcie_device *dev)
+ 		}
+ 	}
+ 
++	ctrl->pvm_capable = 1;
++	if (pdev->msi_enabled) {
++		pci_read_config_word(pdev, pdev->msi_cap + PCI_MSI_FLAGS,
++				     &msiflags);
++		ctrl->pvm_capable = !!(msiflags & PCI_MSI_FLAGS_MASKBIT);
++	}
++
+ 	return ctrl;
+ }
+ 
 -- 
-Ben Hutchings, Software Developer                         Codethink Ltd
-https://www.codethink.co.uk/                 Dale House, 35 Dale Street
-                                     Manchester, M1 2HF, United Kingdom
+2.18.1
 
