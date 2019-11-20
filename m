@@ -2,197 +2,126 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D61D3C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:24:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B243C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:27:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A693C2243F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:24:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74B772243E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:27:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="rs6UtqC6"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cDYB8Bd/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728649AbfKTKYT (ORCPT
+        id S1728681AbfKTK1e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 05:24:19 -0500
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:25756 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726757AbfKTKYS (ORCPT
+        Wed, 20 Nov 2019 05:27:34 -0500
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:38992 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728201AbfKTK1e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 05:24:18 -0500
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id xAKAO6Ow017349
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 19:24:06 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com xAKAO6Ow017349
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1574245447;
-        bh=sud4ysXnXZF3asFVBLXhGnpMiB6/B6ueZh7o5lhc5tc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=rs6UtqC6NIuZI8H8e2N6qeO4lK+RoLzEBSnuYrf+m9jFGK/+YnINoGHdLw8+x23s/
-         NFQbiyzU42Wgewplbal5DPGFVBUoiWTLfX0LTEAvmkJTzS2p9Qu+gBNuS/o4HSrpby
-         rR0NfzUTC8zHJM8ndImAYyx43caAYPg3VGmGeBCG9TcQPc+gmiX73zAKnZMjlpKgVN
-         CcWBp0kzrfpoC6REgWzuN1l/cRPYlJucFYokfVUKvekaNFE5Mi/CBjoHyinESKn5St
-         uZxOO+ug6p9rz4Gf/c5HePJogmzHRpoqmEHzs3zqUAUY2GzTzd9JD3olYM4k9m7YS1
-         8HVxCybRMx9MA==
-X-Nifty-SrcIP: [209.85.217.54]
-Received: by mail-vs1-f54.google.com with SMTP id m9so16481088vsq.7
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 02:24:06 -0800 (PST)
-X-Gm-Message-State: APjAAAUkwEGDptCviBxiikUHGbdS4fIfGKNZezoZ2XIR7AMYoOg+kj3W
-        0AmUwzjYTcHJggP61oUGVqItFU2dQ+/oBJisL3I=
-X-Google-Smtp-Source: APXvYqztHD5lJDgQ1BPFn0ixrl2PD1pbikc8gAA5xmMDFjugjhOEebJ8jmWBCxqAtTuHYl48HspSNNtru3VHyCh0d7k=
-X-Received: by 2002:a67:d31b:: with SMTP id a27mr1059750vsj.215.1574245445545;
- Wed, 20 Nov 2019 02:24:05 -0800 (PST)
+        Wed, 20 Nov 2019 05:27:34 -0500
+Received: by mail-ua1-f67.google.com with SMTP id r13so7597937uan.6
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 02:27:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iPPl+dieWmwwl5vclo4eycxw3/3RIJ5/bVbsRxQY9fg=;
+        b=cDYB8Bd/9XV0BpnQ5A/BVa8N7CSLhRXNha/+ozOLuZ0ti/xAJMxWBF/n+373T53553
+         61ARehzgYwuxH8lCICdiBYJDRiCYlQYtg+hh6DIilDevFzomryjjIm+kXsuIvBGNgrgx
+         N6VR3Ui0/jj6DcZzLxG87/9pdgN3Jo+3efXMmqaECPiEW8JY0jHOqosJen1A6JvVkSiS
+         9JNQhOsBG9eCu5lFGgY1SxHNpVxqf6zaTc9rwPWEDaGaPUATNpWw74J88QL6aIy6jcNh
+         tlGKDgD4Fr06GeoS9kWNvD9uv8PTeaMiRkYePDsuQPPPchtb6ufXZP0A9ZyOHLJfWh/M
+         M63g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iPPl+dieWmwwl5vclo4eycxw3/3RIJ5/bVbsRxQY9fg=;
+        b=UPJPDOZmcDXYEQXOHH5C315XK3pZYI75V2B8dzrzTfdFsCgsJSiSLnZEYoS08Y9KCj
+         24UYgyWfUXn99WjFCoryR5+DmdT0XTMOMNBVdp8mw7g+TWCnV30tEL5K14lUegqFzXZ6
+         UikH71uwxIGYSjqoM0mt5Ls5/FWEAmFyfe+h7dfST6GQjCXUsCSzo9cO3Rj0JVu9rEtP
+         9gqjmKUL6QK7YIRMy+OeTLlLcP5BQKMduunZZ85hvpydvIe2pjTFIQ98LtzEf5MinxL8
+         jsgBLS1iPA6WGrLdqgLvbEYDjXjY3oDlqXDaMpdFbbkj58ALZuvTR10J7n009glS1ok4
+         mfbg==
+X-Gm-Message-State: APjAAAXYNg4kEERjHe+wTtW2qKp6CxYcDklF9XBEyi+A5MfLetba5+JZ
+        Hki/T/LhrABa0joFg27P0i0G6sWO3Un77LgQflYGqQ==
+X-Google-Smtp-Source: APXvYqz54Zeg8KbbWUdNshHqcWaCOGq8jgGO9qGY0g5PgtU6Hs76XawRjWx7E0migoK0Q+phAd/zNlaNrZ7pNwlmXcE=
+X-Received: by 2002:ab0:61cc:: with SMTP id m12mr1127845uan.129.1574245652878;
+ Wed, 20 Nov 2019 02:27:32 -0800 (PST)
 MIME-Version: 1.0
-References: <20190906154706.2449696-1-arnd@arndb.de> <CAMuHMdUMgDBo1gkvQ_Bd8mjMiPjdWWY=9AU6K1S7NcJy5jhvGQ@mail.gmail.com>
- <CAK7LNASNp4jPYHmh3e4QYwenYbVrK69tvB_LLyK_ew1eqBNrEw@mail.gmail.com>
- <20191113114517.GO25745@shell.armlinux.org.uk> <CAMuHMdXk9sWBpYWC-X6V3rp2e0+f5ebdRFFXn8Heuy0qkLq0GQ@mail.gmail.com>
- <20191113170058.GP25745@shell.armlinux.org.uk> <CAK7LNARiQnc+A0j4ORC-M8ZcbtDYdRF7tU1Zv8Lbst-g8dqmVQ@mail.gmail.com>
- <20191120090744.GH25745@shell.armlinux.org.uk> <CAK7LNARMjaCe8spDPMAKdViUN+uUycYL9LSCXumcR8DNDNKaPA@mail.gmail.com>
- <20191120095111.GI25745@shell.armlinux.org.uk> <20191120100737.GL25745@shell.armlinux.org.uk>
-In-Reply-To: <20191120100737.GL25745@shell.armlinux.org.uk>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Wed, 20 Nov 2019 19:23:29 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARZ=EAfai2y66pyMnNrCp+Szw51R+M15kxA+m2ToXftow@mail.gmail.com>
-Message-ID: <CAK7LNARZ=EAfai2y66pyMnNrCp+Szw51R+M15kxA+m2ToXftow@mail.gmail.com>
-Subject: Re: [PATCH] ARM: don't export unused return_address()
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
+References: <1574236796-25016-1-git-send-email-krzk@kernel.org>
+In-Reply-To: <1574236796-25016-1-git-send-email-krzk@kernel.org>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 20 Nov 2019 11:26:55 +0100
+Message-ID: <CAPDyKFo-Y8zctjLw0F5RibO9gogQTkf1Xbc-ODLySAJ_9r_jAw@mail.gmail.com>
+Subject: Re: [PATCH v3] dt-bindings: power: Rename back power_domain.txt
+ bindings to fix references
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Enrico Weigelt <info@metux.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
+        Geert Uytterhoeven <geert+renesas@glider.be>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 7:07 PM Russell King - ARM Linux admin
-<linux@armlinux.org.uk> wrote:
+On Wed, 20 Nov 2019 at 09:00, Krzysztof Kozlowski <krzk@kernel.org> wrote:
 >
-> On Wed, Nov 20, 2019 at 09:51:11AM +0000, Russell King - ARM Linux admin wrote:
-> > On Wed, Nov 20, 2019 at 06:42:52PM +0900, Masahiro Yamada wrote:
-> > > Hi Russell,
-> > >
-> > >
-> > > On Wed, Nov 20, 2019 at 6:07 PM Russell King - ARM Linux admin
-> > > <linux@armlinux.org.uk> wrote:
-> > > >
-> > > > On Wed, Nov 20, 2019 at 06:02:13PM +0900, Masahiro Yamada wrote:
-> > > > > Hi Arnd,
-> > > > >
-> > > > >
-> > > > >
-> > > > > On Thu, Nov 14, 2019 at 2:01 AM Russell King - ARM Linux admin
-> > > > > <linux@armlinux.org.uk> wrote:
-> > > > > >
-> > > > > > On Wed, Nov 13, 2019 at 02:15:00PM +0100, Geert Uytterhoeven wrote:
-> > > > > > > Hi Russell,
-> > > > > > >
-> > > > > > > On Wed, Nov 13, 2019 at 12:45 PM Russell King - ARM Linux admin
-> > > > > > > <linux@armlinux.org.uk> wrote:
-> > > > > > > > On Wed, Nov 13, 2019 at 08:40:39PM +0900, Masahiro Yamada wrote:
-> > > > > > > > > On Tue, Oct 1, 2019 at 11:31 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > > > > > > > > On Fri, Sep 6, 2019 at 5:47 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> > > > > > > > > > > Without the frame pointer enabled, return_address() is an inline
-> > > > > > > > > > > function and does not need to be exported, as shown by this warning:
-> > > > > > > > > > >
-> > > > > > > > > > > WARNING: "return_address" [vmlinux] is a static EXPORT_SYMBOL_GPL
-> > > > > > > > > > >
-> > > > > > > > > > > Move the EXPORT_SYMBOL_GPL() into the #ifdef as well.
-> > > > > > > > > > >
-> > > > > > > > > > > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> > > > > > > > > >
-> > > > > > > > > > Thanks for your patch!
-> > > > > > > > > >
-> > > > > > > > > > Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > > > > > > > > >
-> > > > > > > > > > > --- a/arch/arm/kernel/return_address.c
-> > > > > > > > > > > +++ b/arch/arm/kernel/return_address.c
-> > > > > > > > > > > @@ -53,6 +53,7 @@ void *return_address(unsigned int level)
-> > > > > > > > > > >                 return NULL;
-> > > > > > > > > > >  }
-> > > > > > > > > > >
-> > > > > > > > > >
-> > > > > > > > > > Checkpatch doesn't like the empty line above:
-> > > > > > > > > >
-> > > > > > > > > > WARNING: EXPORT_SYMBOL(foo); should immediately follow its function/variable
-> > > > > > > > > >
-> > > > > > > > > > > +EXPORT_SYMBOL_GPL(return_address);
-> > > > > > > > > > > +
-> > > > > > > > > > >  #endif /* if defined(CONFIG_FRAME_POINTER) && !defined(CONFIG_ARM_UNWIND) */
-> > > > > > > > > > >
-> > > > > > > > > > > -EXPORT_SYMBOL_GPL(return_address);
-> > > > > > >
-> > > > > > > > > What has happened to this patch?
-> > > > > > > > >
-> > > > > > > > > I still see this warning.
-> > > > > > > >
-> > > > > > > > Simple - it got merged, it caused build regressions, it got dropped.
-> > > > > > > > A new version is pending me doing another round of patch merging.
-> > > > > > >
-> > > > > > > I believe that was not Arnd's patch, but Ben Dooks' alternative solution[*]?
-> > > > > >
-> > > > > > I don't keep track of who did what, sorry.
-> > > > >
-> > > > >
-> > > > > Arnd,
-> > > > >
-> > > > > I believe this patch is the correct fix.
-> > > > > Could you please put it into Russell's patch tracker?
-> > > > > (patches@arm.linux.org.uk)
-> > > >
-> > > > Is there something wrong with:
-> > > >
-> > > > fb033c95c94c ARM: 8918/2: only build return_address() if needed
-> > > >
-> > > > I haven't seen any build issues with that.
-> > >
-> > >
-> > > Sorry, I had not checked Ben's patch because you said
-> > > "Simple - it got merged, it caused build regressions, it got dropped."
-> >
-> > That was 8918/1.  Ben fixed his patch, and submitted an updated
-> > version.
-> >
-> > > Yup, I've checked it right now,
-> > > and it looks good to me.
-> > >
-> > > But, I do not see that commit in the latest linux-next
-> > > (next-20191120).
-> > >
-> > > Could you really apply it if you have not.
-> >
-> > It was applied last Friday and was pushed out there and then.
-> >
-> > $ git ls-remote zeniv | grep for-next
-> > 022eb8ae8b5ee8c5c813923c69b5ebb1e9612c4c        refs/heads/for-next
-> > $ git lg for-next
-> > 022eb8ae8b5e ARM: 8938/1: kernel: initialize broadcast hrtimer based
-> > clock event device
-> > ...
-> > fb033c95c94c ARM: 8918/2: only build return_address() if needed
-> >
-> > I've no idea why linux-next doesn't have it.
+> With split of power domain controller bindings to power-domain.yaml,
+> the consumer part was renamed to power-domain.txt breaking the
+> references.  Undo the renaming.
 >
-> Okay, apparently linux-next _does_ have it:
+> Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Fixes: ea312b90857d ("dt-bindings: power: Convert Generic Power Domain bindings to json-schema")
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+
+Kind regards
+Uffe
+
 >
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/log/arch/arm/kernel/Makefile
+> ---
 >
-> so I think you're confused.
-
-
-My brain was corrupted.
-
-It was my mis-operation of git. I now see it.
-
-
-
-
---
-Best Regards
-Masahiro Yamada
+> Changes since v2:
+> 1. Simplify pattern in Maintainers as Geert suggested,
+> 2. Add Reviewed-by.
+>
+> Changes since v1:
+> 1. Undo the renaming.
+> ---
+>  .../devicetree/bindings/power/{power-domain.txt => power_domain.txt}    | 0
+>  MAINTAINERS                                                             | 2 +-
+>  2 files changed, 1 insertion(+), 1 deletion(-)
+>  rename Documentation/devicetree/bindings/power/{power-domain.txt => power_domain.txt} (100%)
+>
+> diff --git a/Documentation/devicetree/bindings/power/power-domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/power/power-domain.txt
+> rename to Documentation/devicetree/bindings/power/power_domain.txt
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 7126d3e079a4..0aff4bebed78 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -6953,7 +6953,7 @@ L:        linux-pm@vger.kernel.org
+>  S:     Supported
+>  F:     drivers/base/power/domain*.c
+>  F:     include/linux/pm_domain.h
+> -F:     Documentation/devicetree/bindings/power/power-domain*
+> +F:     Documentation/devicetree/bindings/power/power?domain*
+>
+>  GENERIC RESISTIVE TOUCHSCREEN ADC DRIVER
+>  M:     Eugen Hristev <eugen.hristev@microchip.com>
+> --
+> 2.7.4
+>
