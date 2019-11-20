@@ -2,55 +2,99 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD072C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 21:55:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B0DC43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 21:59:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B727120672
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 21:55:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17BB420708
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 21:59:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbfKTVzE (ORCPT
+        id S1726437AbfKTV7I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 16:55:04 -0500
-Received: from mail.manjaro.org ([176.9.38.148]:47858 "EHLO manjaro.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726132AbfKTVzE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 16:55:04 -0500
-X-Greylist: delayed 1160 seconds by postgrey-1.27 at vger.kernel.org; Wed, 20 Nov 2019 16:55:04 EST
-Received: from localhost (localhost [127.0.0.1])
-        by manjaro.org (Postfix) with ESMTP id 80DBC36CEEA7;
-        Wed, 20 Nov 2019 22:35:42 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at manjaro.org
-Received: from manjaro.org ([127.0.0.1])
-        by localhost (manjaro.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id X2oyrMKWTOPv; Wed, 20 Nov 2019 22:35:40 +0100 (CET)
-From:   Tobias Schramm <t.schramm@manjaro.org>
-To:     dri-devel@lists.freedesktop.org
-Cc:     linux-kernel@vger.kernel.org,
-        Tobias Schramm <t.schramm@manjaro.org>
-Subject: [PATCH 0/1] drm/panel: simple: Add support for BOE NV140FHM-N49 panel to panel-simple
-Date:   Wed, 20 Nov 2019 22:34:39 +0100
-Message-Id: <20191120213440.924563-1-t.schramm@manjaro.org>
+        Wed, 20 Nov 2019 16:59:08 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:57234 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725819AbfKTV7I (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 16:59:08 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 0972C1C1AB8; Wed, 20 Nov 2019 22:59:06 +0100 (CET)
+Date:   Wed, 20 Nov 2019 22:59:05 +0100
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>,
+        Tony Brelinski <tonyx.brelinski@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 065/422] ice: Fix and update driver version string
+Message-ID: <20191120215905.GB23361@duo.ucw.cz>
+References: <20191119051400.261610025@linuxfoundation.org>
+ <20191119051403.893600135@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="v9Ux+11Zm5mwPlX6"
+Content-Disposition: inline
+In-Reply-To: <20191119051403.893600135@linuxfoundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds support for the 14 inch BOE NV140FHM-N49 eDP panel to
-the panel-simple driver. This panel is used by the Pinebook Pro.
 
-Tobias Schramm (1):
-  drm/panel: simple: Add support for BOE NV140FHM-N49 panel to
-    panel-simple
+--v9Ux+11Zm5mwPlX6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
- drivers/gpu/drm/panel/panel-simple.c | 35 ++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+On Tue 2019-11-19 06:14:22, Greg Kroah-Hartman wrote:
+> From: Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>
+>=20
+> [ Upstream commit 9ea47d81a7f17c6b77211ab75fbca2127719ad39 ]
+>=20
+> Remove the "ice" prefix for the driver version string and bump version
+> to 0.7.1-k.
 
--- 
-2.24.0
+This sounds like a bad idea. 0.7.1 in mainline contains patches that
+were not backported to stable, so marking this as 0.7.1 version is
+wrong.
 
+Best regards,
+								Pavel
+							=09
+> +++ b/drivers/net/ethernet/intel/ice/ice_main.c
+> @@ -7,7 +7,7 @@
+> =20
+>  #include "ice.h"
+> =20
+> -#define DRV_VERSION	"ice-0.7.0-k"
+> +#define DRV_VERSION	"0.7.1-k"
+>  #define DRV_SUMMARY	"Intel(R) Ethernet Connection E800 Series Linux Driv=
+er"
+>  const char ice_drv_ver[] =3D DRV_VERSION;
+>  static const char ice_driver_string[] =3D DRV_SUMMARY;
+> --=20
+> 2.20.1
+>=20
+>=20
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--v9Ux+11Zm5mwPlX6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXdW3KQAKCRAw5/Bqldv6
+8qbnAJ95jYlYKQb49gcVOUCqafkEAwA+1QCcCZYdh2nFht8OZK4E+HFamL/WskI=
+=Uf/9
+-----END PGP SIGNATURE-----
+
+--v9Ux+11Zm5mwPlX6--
