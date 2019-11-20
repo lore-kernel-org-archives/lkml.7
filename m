@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78201C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:44:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49153C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:44:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5953C20692
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:44:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26D4020692
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:44:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732356AbfKTPoT (ORCPT
+        id S1732325AbfKTPoL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 10:44:19 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:52702 "EHLO
+        Wed, 20 Nov 2019 10:44:11 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:52772 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729925AbfKTPkS (ORCPT
+        by vger.kernel.org with ESMTP id S1729992AbfKTPkT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 10:40:18 -0500
+        Wed, 20 Nov 2019 10:40:19 -0500
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iXS5U-0004bI-Ou; Wed, 20 Nov 2019 15:40:12 +0000
+        id 1iXS5U-0004bS-WD; Wed, 20 Nov 2019 15:40:13 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iXS5T-0004IA-QX; Wed, 20 Nov 2019 15:40:11 +0000
+        id 1iXS5T-0004IZ-VT; Wed, 20 Nov 2019 15:40:11 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Ian Abbott" <abbotti@mev.co.uk>,
+        "Oliver Neukum" <oneukum@suse.com>,
         "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-Date:   Wed, 20 Nov 2019 15:37:44 +0000
-Message-ID: <lsq.1574264230.244321358@decadent.org.uk>
+Date:   Wed, 20 Nov 2019 15:37:49 +0000
+Message-ID: <lsq.1574264230.495544437@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 34/83] staging: comedi: dt3000: Fix rounding up of
- timer divisor
+Subject: [PATCH 3.16 39/83] usb: cdc-acm: make sure a refcount is taken
+ early enough
 In-Reply-To: <lsq.1574264230.280218497@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,53 +56,62 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Ian Abbott <abbotti@mev.co.uk>
+From: Oliver Neukum <oneukum@suse.com>
 
-commit 8e2a589a3fc36ce858d42e767c3bcd8fc62a512b upstream.
+commit c52873e5a1ef72f845526d9f6a50704433f9c625 upstream.
 
-`dt3k_ns_to_timer()` determines the prescaler and divisor to use to
-produce a desired timing period.  It is influenced by a rounding mode
-and can round the divisor up, down, or to the nearest value.  However,
-the code for rounding up currently does the same as rounding down!  Fix
-ir by using the `DIV_ROUND_UP()` macro to calculate the divisor when
-rounding up.
+destroy() will decrement the refcount on the interface, so that
+it needs to be taken so early that it never undercounts.
 
-Also, change the types of the `divider`, `base` and `prescale` variables
-from `int` to `unsigned int` to avoid mixing signed and unsigned types
-in the calculations.
-
-Also fix a typo in a nearby comment: "improvment" => "improvement".
-
-Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
-Link: https://lore.kernel.org/r/20190812120814.21188-1-abbotti@mev.co.uk
+Fixes: 7fb57a019f94e ("USB: cdc-acm: Fix potential deadlock (lockdep warning)")
+Reported-and-tested-by: syzbot+1b2449b7b5dc240d107a@syzkaller.appspotmail.com
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Link: https://lore.kernel.org/r/20190808142119.7998-1-oneukum@suse.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/staging/comedi/drivers/dt3000.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/usb/class/cdc-acm.c | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
---- a/drivers/staging/comedi/drivers/dt3000.c
-+++ b/drivers/staging/comedi/drivers/dt3000.c
-@@ -379,9 +379,9 @@ static irqreturn_t dt3k_interrupt(int ir
- static int dt3k_ns_to_timer(unsigned int timer_base, unsigned int *nanosec,
- 			    unsigned int round_mode)
- {
--	int divider, base, prescale;
-+	unsigned int divider, base, prescale;
+--- a/drivers/usb/class/cdc-acm.c
++++ b/drivers/usb/class/cdc-acm.c
+@@ -1371,13 +1371,6 @@ made_compressed_probe:
+ 		goto alloc_fail;
+ 	}
  
--	/* This function needs improvment */
-+	/* This function needs improvement */
- 	/* Don't know if divider==0 works. */
+-	minor = acm_alloc_minor(acm);
+-	if (minor == ACM_TTY_MINORS) {
+-		dev_err(&intf->dev, "no more free acm devices\n");
+-		kfree(acm);
+-		return -ENODEV;
+-	}
+-
+ 	ctrlsize = usb_endpoint_maxp(epctrl);
+ 	readsize = usb_endpoint_maxp(epread) *
+ 				(quirks == SINGLE_RX_URB ? 1 : 2);
+@@ -1385,6 +1378,16 @@ made_compressed_probe:
+ 	acm->writesize = usb_endpoint_maxp(epwrite) * 20;
+ 	acm->control = control_interface;
+ 	acm->data = data_interface;
++
++	usb_get_intf(acm->control); /* undone in destruct() */
++
++	minor = acm_alloc_minor(acm);
++	if (minor < 0) {
++		dev_err(&intf->dev, "no more free acm devices\n");
++		kfree(acm);
++		return -ENODEV;
++	}
++
+ 	acm->minor = minor;
+ 	acm->dev = usb_dev;
+ 	acm->ctrl_caps = ac_management_function;
+@@ -1540,7 +1543,6 @@ skip_countries:
+ 	usb_driver_claim_interface(&acm_driver, data_interface, acm);
+ 	usb_set_intfdata(data_interface, acm);
  
- 	for (prescale = 0; prescale < 16; prescale++) {
-@@ -395,7 +395,7 @@ static int dt3k_ns_to_timer(unsigned int
- 			divider = (*nanosec) / base;
- 			break;
- 		case TRIG_ROUND_UP:
--			divider = (*nanosec) / base;
-+			divider = DIV_ROUND_UP(*nanosec, base);
- 			break;
- 		}
- 		if (divider < 65536) {
+-	usb_get_intf(control_interface);
+ 	tty_dev = tty_port_register_device(&acm->port, acm_tty_driver, minor,
+ 			&control_interface->dev);
+ 	if (IS_ERR(tty_dev)) {
 
