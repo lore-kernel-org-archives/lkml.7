@@ -2,129 +2,99 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C6A6C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 02:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBFAAC43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 02:39:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E76E52240D
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 02:39:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C51C622429
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 02:39:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ot6cwcHm"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="kSsgirbY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727468AbfKTCjM (ORCPT
+        id S1727530AbfKTCjV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 21:39:12 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:46933 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726957AbfKTCjM (ORCPT
+        Tue, 19 Nov 2019 21:39:21 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:47644 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726957AbfKTCjU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 21:39:12 -0500
-Received: by mail-pf1-f194.google.com with SMTP id 193so13404246pfc.13
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 18:39:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=rmGQj7/ER384qMpN2QkIRdax3FhW52fXgXuITnbFJUM=;
-        b=Ot6cwcHmPmdUnicAcrV8Q/blliaN/pObgVadHq4j2DW/ptCo8TOiHzfiwbBnzrehsZ
-         KbglRwE3/u5XBpxTaBBKV4947lHmmyJnnDQCxnSsJC2H5WHC+QFseaRh90Ja047iQ+KW
-         XDW6CA+Nx+LPjIEBUJjk+oq7Kwur15vHlUZXwQkH1aqIIp9GvrNSkPuE7ICPER0IUTBg
-         Ubc/Z/WbmniFszz/Vyl/OvmfgyOdZyx+xmVaAhvKu3s3CPtuQN3XDt6m8Yuf3B28TQ9p
-         2fF/RmRR07HjOUFQu5/lM/YNxLngyoKYnp/YXGVEBFLYywZlnTbKE/QQV0a6wxcyhwXH
-         pcBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rmGQj7/ER384qMpN2QkIRdax3FhW52fXgXuITnbFJUM=;
-        b=lFyeglowKA1oMMJqmsE/3ge9YikLn+RZx3TpYn2hDR7aJNS4yGif7qpgSbECidp9hg
-         iSQRxBk8uQcXrpvOe+DZa6W3CwwYzHU97VZvZxD16HS+j2PpNKaZVg3gM8TATBLKxLc4
-         s5DNPwDJNZU5FS9yPG9lcI+uPPu1NaFrilUX851FdIEbkwtVifCzBA92yrVaud0o+Rdi
-         rPy2/Tq0umKk6nUj/UcY4YDV8RDgoG6cFRq8Ptw3i13cg3lnIuO8V/1vYcDKRa1cPBdz
-         w9jbr8RQGPPyGQUfpRaqLuHxeJV+5LUpQORuY+CyZmOKRqoDMYZq8ZmdW4MC2KNkdsAS
-         evpA==
-X-Gm-Message-State: APjAAAXKXDR8VjjWK0bTwKW5S1f8HMs2i2B8wVATV4F+kUD9YO7a1QHa
-        3d74ofckMWyw8YKEEQiO5DQGMQ==
-X-Google-Smtp-Source: APXvYqxfYwc/XGbVrhZLuJG/tKj/6zmKdZQ2C34IbqxNk5A0bePNt2jVUiuUF/4l2wqesERiCPb7iw==
-X-Received: by 2002:a62:7dce:: with SMTP id y197mr1034777pfc.164.1574217551668;
-        Tue, 19 Nov 2019 18:39:11 -0800 (PST)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id h3sm4724627pji.16.2019.11.19.18.39.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Nov 2019 18:39:11 -0800 (PST)
-Date:   Tue, 19 Nov 2019 18:39:08 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     robh+dt@kernel.org, ulf.hansson@linaro.org, rnayak@codeaurora.org,
-        agross@kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        mark.rutland@arm.com, swboyd@chromium.org, dianders@chromium.org
-Subject: Re: [PATCH 1/6] soc: qcom: rpmhpd: Set 'active_only' for active only
- power domains
-Message-ID: <20191120023908.GP18024@yoga>
-References: <20191118173944.27043-1-sibis@codeaurora.org>
- <0101016e7f9998d8-877e9166-8b6a-4530-ab66-3c88002e1db4-000000@us-west-2.amazonses.com>
+        Tue, 19 Nov 2019 21:39:20 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAK2d8TY007296;
+        Wed, 20 Nov 2019 02:39:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2019-08-05;
+ bh=4X/c4NHPnj8g/WpZKl4NI7A40bV5gBFWeebHagXE1ao=;
+ b=kSsgirbYxvhVUJrF4G0gN5OJANOlLUQnofKIpWTYM8czaAeaIA2dwYd63cX9Y1gn0unb
+ ehUGjp1unxMBSM4RFHmSU2EpGM9Il03XVMDNd+HklDLsiqyiyN8t9hQRxdDRLEsn7Hlh
+ ZNswxNJpg+ImHVp20AaJtWlSSGp/x57vK7Xy8VVC3sudEOn4HsCZBBpm/FNfjt52s9+o
+ ewLUAP8WKq3B9V6l+h+tgX4a0FKvvd6/i56ohh1kfOsx08GIi6JDHzhHFxPj6MUJjlbx
+ cP33lJ+L41HH0spjO00v+ABGGO4bNrEbdTFnGaR+IDS6b6HrvFYbE/ulynQDeRTLC/bw gw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2wa8httsp0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 20 Nov 2019 02:39:13 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAK2Y7qM104845;
+        Wed, 20 Nov 2019 02:39:13 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2wc09yerhp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 20 Nov 2019 02:39:13 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xAK2dC1E005447;
+        Wed, 20 Nov 2019 02:39:12 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 19 Nov 2019 18:39:12 -0800
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Can Guo <cang@codeaurora.org>
+Subject: Re: linux-next: Signed-off-by missing for commit in the scsi-mkp tree
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20191119203043.67cc7d32@canb.auug.org.au>
+Date:   Tue, 19 Nov 2019 21:39:10 -0500
+In-Reply-To: <20191119203043.67cc7d32@canb.auug.org.au> (Stephen Rothwell's
+        message of "Tue, 19 Nov 2019 20:30:43 +1100")
+Message-ID: <yq1pnhnff01.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0101016e7f9998d8-877e9166-8b6a-4530-ab66-3c88002e1db4-000000@us-west-2.amazonses.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9446 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1911200022
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9446 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1911200023
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 18 Nov 09:40 PST 2019, Sibi Sankar wrote:
 
-> From: Douglas Anderson <dianders@chromium.org>
-> 
-> The 'active_only' attribute was accidentally never set to true for any
-> power domains meaning that all the code handling this attribute was
-> dead.
-> 
-> NOTE that the RPM power domain code (as opposed to the RPMh one) gets
-> this right.
-> 
-> Fixes: 279b7e8a62cc ("soc: qcom: rpmhpd: Add RPMh power domain driver")
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-> Acked-by: Rajendra Nayak <rnayak@codeaurora.org>
+Stephen,
 
-You should have added your S-o-b here to certify its origin.
-But I picked up this patch earlier today.
+> Commit
+>
+>   379c3789d023 ("scsi: ufs: Fix irq return code")
+>
+> is missing a Signed-off-by from its author.
 
-Thanks,
-Bjorn
+Fixed, thanks!
 
-> ---
->  drivers/soc/qcom/rpmhpd.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/soc/qcom/rpmhpd.c b/drivers/soc/qcom/rpmhpd.c
-> index 5741ec3fa814c..51850cc68b701 100644
-> --- a/drivers/soc/qcom/rpmhpd.c
-> +++ b/drivers/soc/qcom/rpmhpd.c
-> @@ -93,6 +93,7 @@ static struct rpmhpd sdm845_mx = {
->  
->  static struct rpmhpd sdm845_mx_ao = {
->  	.pd = { .name = "mx_ao", },
-> +	.active_only = true,
->  	.peer = &sdm845_mx,
->  	.res_name = "mx.lvl",
->  };
-> @@ -107,6 +108,7 @@ static struct rpmhpd sdm845_cx = {
->  
->  static struct rpmhpd sdm845_cx_ao = {
->  	.pd = { .name = "cx_ao", },
-> +	.active_only = true,
->  	.peer = &sdm845_cx,
->  	.parent = &sdm845_mx_ao.pd,
->  	.res_name = "cx.lvl",
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> 
+-- 
+Martin K. Petersen	Oracle Linux Engineering
