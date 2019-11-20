@@ -2,128 +2,118 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 019CAC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 16:40:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39BF0C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 16:41:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8A4520885
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 16:40:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="FwQxQt24"
+	by mail.kernel.org (Postfix) with ESMTP id 1435E2088F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 16:41:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732827AbfKTQkV (ORCPT
+        id S1732843AbfKTQlm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 11:40:21 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:34547 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728632AbfKTQkV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 11:40:21 -0500
-Received: by mail-wr1-f65.google.com with SMTP id t2so639427wrr.1
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 08:40:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=RB5ZmnOBrz94FKCQLZ2un9z7w5NJ9rHKH0gi3NUYCdU=;
-        b=FwQxQt24Jex/90mCOVXSXgGXgkuL9kqqWTITnZct9eutLKM27hcW/dirO3XvCbvgh9
-         CbXUHLTBJj0Ki+t2u6auH58+YDsOk4+S5XLzwNow31+dDru1ONoyrKgVzoCNPQIDtbyW
-         MHFA96nAIk7st9CwiU5tHzG1hSgfWEwY7SKzk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=RB5ZmnOBrz94FKCQLZ2un9z7w5NJ9rHKH0gi3NUYCdU=;
-        b=ZYmp8IEHKl3YVOgykE3qGuHFR9N3P5511+ErO18leyoSsqntfNA6PMrW7vzig0mrj+
-         W/ImYk4dmO+gHKzE2pAvxBxBKYTZAVjYJwVGh5L93K9LxHMWbQV4yd0jyTNnNHHEf7e+
-         8NWpME8J3nPR06/FEupzYJP5130sSTzHrR94oE4ibygnq2AJ2LgBY2Vd/U/B+MRv0ksY
-         6KmLzxq7F7P5h2d0gBQZjt2UWOtUZy0xlc70IUhcd7JQiQK+MTzB7buaa/zGDEKZk7xF
-         hk8416sUBJZJstYu9a3Q4DR6AZ7QIRharscHtCDy8qXgwASG2IUpQLd55kj+WUwFd42F
-         D6mA==
-X-Gm-Message-State: APjAAAXJVeAa2AaReoeFWDe+DCJUxLXBFXwRrk1vU2yz/K0k5Nucwb0Q
-        bnHa6pmI/lJu92zl48MC7nvuQA==
-X-Google-Smtp-Source: APXvYqzazHWNEpR6TDRVZdLb3zC82BtG8q56aJqXkTBYFpfvyUsFtFrKnrMMtTn/v7y7yNmvYXPxNg==
-X-Received: by 2002:a5d:4142:: with SMTP id c2mr4626118wrq.60.1574268018953;
-        Wed, 20 Nov 2019 08:40:18 -0800 (PST)
-Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
-        by smtp.gmail.com with ESMTPSA id d7sm32334298wrx.11.2019.11.20.08.40.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Nov 2019 08:40:18 -0800 (PST)
-Date:   Wed, 20 Nov 2019 17:40:16 +0100
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH] drm/bridge: Fix Kconfig indentation
-Message-ID: <20191120164016.GQ30416@phenom.ffwll.local>
-Mail-Followup-To: Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-kernel@vger.kernel.org, Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org
-References: <20191120133634.11601-1-krzk@kernel.org>
+        Wed, 20 Nov 2019 11:41:42 -0500
+Received: from protonic.xs4all.nl ([83.163.252.89]:34198 "EHLO protonic.nl"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729448AbfKTQll (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 11:41:41 -0500
+X-Greylist: delayed 538 seconds by postgrey-1.27 at vger.kernel.org; Wed, 20 Nov 2019 11:41:40 EST
+Received: from webmail.promanet.nl (edge2.prtnl [192.168.1.170])
+        by sparta (Postfix) with ESMTP id B38DC44A0065;
+        Wed, 20 Nov 2019 17:34:53 +0100 (CET)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191120133634.11601-1-krzk@kernel.org>
-X-Operating-System: Linux phenom 5.2.0-3-amd64 
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 20 Nov 2019 17:32:38 +0100
+From:   robin <robin@protonic.nl>
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Robin Gong <yibin.gong@nxp.com>,
+        "linux-input @ vger . kernel . org" <linux-input@vger.kernel.org>,
+        "linux-kernel @ vger . kernel . org" <linux-kernel@vger.kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Adam Ford <aford173@gmail.com>,
+        "linux-arm-kernel @ lists . infradead . org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v3] input: keyboard: snvs_pwrkey: Send key events for
+ i.MX6 S, DL and Q
+In-Reply-To: <20191120092749.7rru5fj7eybs4tl6@pengutronix.de>
+References: <20190904062329.97520-1-robin@protonic.nl>
+ <20190912201300.GA636@penguin>
+ <803592d161b9ca75d6ac1c2c54e891a1@protonic.nl>
+ <VE1PR04MB663896B94C68B5EF9AE0BE36898C0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <20190916233701.GH237523@dtor-ws>
+ <20191120092749.7rru5fj7eybs4tl6@pengutronix.de>
+Message-ID: <fb98fa1fde9a367d7ab33d04a5804684@protonic.nl>
+X-Sender: robin@protonic.nl
+User-Agent: Roundcube Webmail/1.3.6
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 09:36:34PM +0800, Krzysztof Kozlowski wrote:
-> Adjust indentation from spaces to tab (+optional two spaces) as in
-> coding style with command like:
-> 	$ sed -e 's/^        /\t/' -i */Kconfig
+On 2019-11-20 10:27, Marco Felsch wrote:
+> Hi Robin,
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-
-lima, mga200g and bridge patches also queued.
--Daniel
-
-> ---
->  drivers/gpu/drm/bridge/Kconfig | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+> On 19-09-16 16:37, Dmitry Torokhov wrote:
+>> On Mon, Sep 16, 2019 at 07:45:37AM +0000, Robin Gong wrote:
+>> > On 2019/9/13 15:31 robin <robin@protonic.nl> wrote:>
+>> > > Hi Dmitry,
+>> > >
+>> > > On 2019-09-12 22:13, Dmitry Torokhov wrote:
+>> > > > Hi Robin,
+>> > > >
+>> > > > On Wed, Sep 04, 2019 at 06:23:29AM +0000, Robin van der Gracht wrote:
+>> > > >> The first generation i.MX6 processors does not send an interrupt when
+>> > > >> the power key is pressed. It sends a power down request interrupt if
+>> > > >> the key is released before a hard shutdown (5 second press). This
+>> > > >> should allow software to bring down the SoC safely.
+>> > > >>
+>> > > >> For this driver to work as a regular power key with the older SoCs,
+>> > > >> we need to send a keypress AND release when we get the power down
+>> > > >> request irq.
+>> > > >>
+>> > > >> Signed-off-by: Robin van der Gracht <robin@protonic.nl>
+>> > > >> ---
+>> > > >> @@ -67,13 +83,17 @@ static irqreturn_t imx_snvs_pwrkey_interrupt(int
+>> > > >> irq, void *dev_id)  {
+>> > > >>  	struct platform_device *pdev = dev_id;
+>> > > >>  	struct pwrkey_drv_data *pdata = platform_get_drvdata(pdev);
+>> > > >> +	unsigned long expire = jiffies;
+>> > > >>  	u32 lp_status;
+>> > > >>
+>> > > >>  	pm_wakeup_event(pdata->input->dev.parent, 0);
+>> > > >>
+>> > > >>  	regmap_read(pdata->snvs, SNVS_LPSR_REG, &lp_status);
+>> > > >> -	if (lp_status & SNVS_LPSR_SPO)
+>> > > >> -		mod_timer(&pdata->check_timer, jiffies +
+>> > > >> msecs_to_jiffies(DEBOUNCE_TIME));
+>> > > >> +	if (lp_status & SNVS_LPSR_SPO) {
+>> > > >> +		if (pdata->minor_rev > 0)
+>> > > >> +			expire = jiffies + msecs_to_jiffies(DEBOUNCE_TIME);
+>> > > >> +		mod_timer(&pdata->check_timer, expire);
+>> > > >
+>> > > > Why do we even need to fire the timer in case of the first generation
+>> > > > hardware? Just send press and release events directly from the ISR.
+>> > That timer looks like a software debounce to prevent unexpected and
+>> > meaningless interrupt/event caused by quick press/release.
+>> 
+>> Right, but in case of the first generation hardware we schedule the
+>> timer immediately (expire == 0) and do not check state of the hardware
+>> in the timer handler, but rather simply emit down/up events, so we do
+>> not really get any benefit from the timer (again, I am talking about
+>> first generation hardware only).
 > 
-> diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
-> index 34362976cd6f..176efa18e32c 100644
-> --- a/drivers/gpu/drm/bridge/Kconfig
-> +++ b/drivers/gpu/drm/bridge/Kconfig
-> @@ -60,10 +60,10 @@ config DRM_MEGACHIPS_STDPXXXX_GE_B850V3_FW
->  	select DRM_KMS_HELPER
->  	select DRM_PANEL
->  	---help---
-> -          This is a driver for the display bridges of
-> -          GE B850v3 that convert dual channel LVDS
-> -          to DP++. This is used with the i.MX6 imx-ldb
-> -          driver. You are likely to say N here.
-> +	  This is a driver for the display bridges of
-> +	  GE B850v3 that convert dual channel LVDS
-> +	  to DP++. This is used with the i.MX6 imx-ldb
-> +	  driver. You are likely to say N here.
->  
->  config DRM_NXP_PTN3460
->  	tristate "NXP PTN3460 DP/LVDS bridge"
-> -- 
-> 2.17.1
-> 
+> Did you prepared a v4? Just ask to avoid a duplicated work :)
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+No I haven't. Not sure what the public wants. Use timer, don't use 
+timer..
+
+v3 has had long term testing though ;)
+
+Regards,
+Robin van der Gracht
