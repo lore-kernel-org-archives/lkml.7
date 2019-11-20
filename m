@@ -2,166 +2,93 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87809C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 07:54:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9790AC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 07:59:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B79520872
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 07:54:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79E4421852
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 07:59:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727684AbfKTHy5 convert rfc822-to-8bit (ORCPT
+        id S1727378AbfKTH7W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 02:54:57 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:45501 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726529AbfKTHy5 (ORCPT
+        Wed, 20 Nov 2019 02:59:22 -0500
+Received: from rtits2.realtek.com ([211.75.126.72]:55214 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726529AbfKTH7V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 02:54:57 -0500
-Received: by mail-il1-f196.google.com with SMTP id o18so22527168ils.12;
-        Tue, 19 Nov 2019 23:54:56 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=/rhynhwRr/LK0H9bk9F2uXXSfgIJYeknSevXiyt7NX4=;
-        b=lcCbU7pG3TLdVdSlQQ++Nl7V5GM2JYvIcSZboGQVe1zrSqWIeHfV+W7nLiAYHChwwp
-         NEmu2dHYf9bOGRoyJkWGsCiI1cnT1AZIB2doIunNFZLMqYQNO/yqoKZnC2raK6f5FZq6
-         hVFRgOodcMPv721kXa9yS963Hw2isEkDlhbJimwAUMieqHliTXr4zM5ghFJQ6nQ7Whks
-         zcMKrHGeBk38fUeIIo1rbGkWAUeCZImWyjB/wf13HN2bHwAARhJ+ye/d9HRMg4IaU8ML
-         Q8tkah77t5+kAYC7EggM2i4+P+2qJcStij/av5skHkV+ZFFyub8LJ9zJqpVouLpdsChS
-         Cgww==
-X-Gm-Message-State: APjAAAU6KryR4mzAIiPfhYsPB4wdfAHnqqAPh7M0SJxk2Tk80dW0lW2a
-        /iXSY+BVISCEuRhG1vmpufgR0TZ/XfKiVxFqYHBIfsMmljE=
-X-Google-Smtp-Source: APXvYqwxsKW0FDOOll/pMNBQu+69qDVn4EENJuA0zx7Ay45mCQurqZ+0Hc/2xqMxsoCB485lXNb/GZh02fOLHbLlqj4=
-X-Received: by 2002:a92:6609:: with SMTP id a9mr2167050ilc.131.1574236495648;
- Tue, 19 Nov 2019 23:54:55 -0800 (PST)
+        Wed, 20 Nov 2019 02:59:21 -0500
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID xAK7wvGv028634, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (RTITCASV01.realtek.com.tw[172.21.6.18])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id xAK7wvGv028634
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Wed, 20 Nov 2019 15:58:57 +0800
+Received: from RTEXMB04.realtek.com.tw (172.21.6.97) by
+ RTITCASV01.realtek.com.tw (172.21.6.18) with Microsoft SMTP Server (TLS) id
+ 14.3.468.0; Wed, 20 Nov 2019 15:58:57 +0800
+Received: from RTEXMB03.realtek.com.tw (172.21.6.96) by
+ RTEXMB04.realtek.com.tw (172.21.6.97) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Wed, 20 Nov 2019 15:58:56 +0800
+Received: from RTEXMB03.realtek.com.tw ([fe80::a4bf:5be3:6e60:69f9]) by
+ RTEXMB03.realtek.com.tw ([fe80::a4bf:5be3:6e60:69f9%8]) with mapi id
+ 15.01.1779.005; Wed, 20 Nov 2019 15:58:56 +0800
+From:   James Tai <james.tai@realtek.com>
+To:     =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        "linux-realtek-soc@lists.infradead.org" 
+        <linux-realtek-soc@lists.infradead.org>,
+        "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: RE: [PATCH] arm64: dts: realtek: Add Realtek rtd1619 and mjolnir
+Thread-Topic: [PATCH] arm64: dts: realtek: Add Realtek rtd1619 and mjolnir
+Thread-Index: AdWTrwRiu8TDC5guRneVMItRk6mPLwAihi8AAIJriSACDOAZgAA+WRqQ
+Date:   Wed, 20 Nov 2019 07:58:56 +0000
+Message-ID: <993d5da60a87443995347ee2a4c74959@realtek.com>
+References: <43B123F21A8CFE44A9641C099E4196FFCF91BEFA@RTITMBSVM04.realtek.com.tw>
+ <25fdd8eb-f1a0-82ae-9c4b-22325b163b0e@suse.de>
+ <43B123F21A8CFE44A9641C099E4196FFCF920024@RTITMBSVM04.realtek.com.tw>
+ <6182b89f-cd7e-ce7c-56f7-e2f500321cde@suse.de>
+In-Reply-To: <6182b89f-cd7e-ce7c-56f7-e2f500321cde@suse.de>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.21.190.187]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20191031213835.11390-1-andreas@kemnade.info> <20191031213835.11390-3-andreas@kemnade.info>
-In-Reply-To: <20191031213835.11390-3-andreas@kemnade.info>
-From:   Pierre-Hugues Husson <phh@phh.me>
-Date:   Wed, 20 Nov 2019 08:54:44 +0100
-Message-ID: <CAJ-oXjTQMgF+zzTkWz21yG4ZdAszSDKkiAqocBcUjyMNEd0ozQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/5] mfd: rn5t618: add irq support
-To:     Andreas Kemnade <andreas@kemnade.info>
-Cc:     Lee Jones <lee.jones@linaro.org>, a.zummo@towertech.it,
-        alexandre.belloni@bootlin.com,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-rtc@vger.kernel.org, b.galvani@gmail.com, stefan@agner.ch,
-        letux-kernel@openphoenux.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le jeu. 31 oct. 2019 à 22:38, Andreas Kemnade <andreas@kemnade.info> a écrit :
->
-> This adds support for irq handling in the rc5t619 which is required
-> for properly implementing subdevices like rtc.
-> For now only definitions for the variant rc5t619 are included.
->
-> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> ---
-> Changes in v2:
-> - no dead code, did some more testing and thinking for that
-> - remove extra empty lines
->  drivers/mfd/Kconfig         |  1 +
->  drivers/mfd/Makefile        |  2 +-
->  drivers/mfd/rn5t618-core.c  | 35 ++++++++++++++-
->  drivers/mfd/rn5t618-irq.c   | 85 +++++++++++++++++++++++++++++++++++++
->  include/linux/mfd/rn5t618.h | 16 +++++++
->  5 files changed, 137 insertions(+), 2 deletions(-)
->  create mode 100644 drivers/mfd/rn5t618-irq.c
->
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index ae24d3ea68ea..522e068d0082 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -1057,6 +1057,7 @@ config MFD_RN5T618
->         depends on OF
->         select MFD_CORE
->         select REGMAP_I2C
-> +       select REGMAP_IRQ
->         help
->           Say yes here to add support for the Ricoh RN5T567,
->           RN5T618, RC5T619 PMIC.
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index 110ea700231b..2906d5db67d0 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -217,7 +217,7 @@ obj-$(CONFIG_MFD_VIPERBOARD)    += viperboard.o
->  obj-$(CONFIG_MFD_RC5T583)      += rc5t583.o rc5t583-irq.o
->  obj-$(CONFIG_MFD_RK808)                += rk808.o
->
-> -rn5t618-objs                   := rn5t618-core.o
-> +rn5t618-objs                   := rn5t618-core.o rn5t618-irq.o
->  obj-$(CONFIG_MFD_RN5T618)      += rn5t618.o
->  obj-$(CONFIG_MFD_SEC_CORE)     += sec-core.o sec-irq.o
->  obj-$(CONFIG_MFD_SYSCON)       += syscon.o
-> diff --git a/drivers/mfd/rn5t618-core.c b/drivers/mfd/rn5t618-core.c
-> index da5cd9c92a59..d4ed2865ed8b 100644
-> --- a/drivers/mfd/rn5t618-core.c
-> +++ b/drivers/mfd/rn5t618-core.c
-> @@ -8,6 +8,7 @@
->
->  #include <linux/delay.h>
->  #include <linux/i2c.h>
-> +#include <linux/interrupt.h>
->  #include <linux/mfd/core.h>
->  #include <linux/mfd/rn5t618.h>
->  #include <linux/module.h>
-> @@ -105,7 +106,8 @@ static int rn5t618_i2c_probe(struct i2c_client *i2c,
->
->         i2c_set_clientdata(i2c, priv);
->         priv->variant = (long)of_id->data;
-> -
-> +       priv->chip_irq = i2c->irq;
-> +       priv->dev = &i2c->dev;
->         priv->regmap = devm_regmap_init_i2c(i2c, &rn5t618_regmap_config);
->         if (IS_ERR(priv->regmap)) {
->                 ret = PTR_ERR(priv->regmap);
-> @@ -137,6 +139,11 @@ static int rn5t618_i2c_probe(struct i2c_client *i2c,
->                 return ret;
->         }
->
-> +       if (priv->chip_irq > 0) {
-> +               if (rn5t618_irq_init(priv))
-> +                       priv->chip_irq = 0;
-> +       }
-> +
->         return 0;
->  }
->
-> @@ -154,15 +161,41 @@ static int rn5t618_i2c_remove(struct i2c_client *i2c)
->         return 0;
->  }
->
-> +static int __maybe_unused rn5t618_i2c_suspend(struct device *dev)
-> +{
-> +       struct rn5t618 *priv = dev_get_drvdata(dev);
-> +
-> +       if (priv->chip_irq)
-> +               disable_irq(priv->chip_irq);
-> +
-> +       return 0;
-> +}
-> +
-> +static int __maybe_unused rn5t618_i2c_resume(struct device *dev)
-> +{
-> +       struct rn5t618 *priv = dev_get_drvdata(dev);
-> +
-> +       if (priv->chip_irq)
-> +               enable_irq(priv->chip_irq);
-> +
-> +       return 0;
-> +}
-
-For what it's worth, the boards I have (Archos 101 Oxygen and Pipo P9)
-with rc5t619 use GPIO for power button.
-So IRQ would need to be enabled in suspend for this to work.
-Also, since you actually added alarm support, perhaps you want to
-wake-up from suspend using alarm as well?
+SGkgQW5kcmVhcywNCg0KPiANCj4gVGhpcyBjb25mbGljdHMgd2l0aCB3aGF0IEkgc2VlIGluIEJT
+UCBpcnEgbXV4IGNvZGUgaGVyZToNCj4gaHR0cHM6Ly9naXRodWIuY29tL0JQSS1TSU5PVk9JUC9C
+UEktTTQtYnNwL2Jsb2IvbWFzdGVyL2xpbnV4LXJ0ay9kcml2ZXJzL2lyDQo+IHFjaGlwL2lycS1y
+dGQxNnh4LmgNCj4gDQo+IFRoYXQgZG9lcyBzaG93IFVSMCBhcyBiaXQgMiBmb3IgdGhlIGlzbyBp
+cnEgbXV4LCBhcyBmb3IgcHJldmlvdXMgU29Dcy4NCj4gSXMgdGhhdCBjb2RlIHdyb25nLCBvciBk
+b2VzIHRoZSBzYW1lIFVBUlQwIElQIGJsb2NrIGhhdmUgdHdvIGFsdGVybmF0aXZlDQo+IGludGVy
+cnVwdHMgZm9yIGJhY2t3YXJkcyBjb21wYXRpYmlsaXR5PyBJIHRoZXJlZm9yZSBoZWxkIGJhY2sg
+UlREMTYxOSBpcnEgbXV4DQo+IHBhdGNoZXMgZnJvbSBteSBpcnFjaGlwIHY0IHNlcmllcyBbMV0u
+DQo+IA0KSXQgaXMgY29kZSB3cm9uZy4gVGhlIFVSMCBzaG91bGQgcmVtb3ZlIGZyb20gImlycS1y
+dGQxNnh4LmgiLg0KDQo+IFRoZSBCU1AgRFQgZG9lcyBhc3NpZ24gbm9uLW11eCBpbnRlcnJ1cHRz
+IHRvIHRoZSBVQVJUIG5vZGUgbGlrZSB5b3UgZGlkOg0KPiBodHRwczovL2dpdGh1Yi5jb20vQlBJ
+LVNJTk9WT0lQL0JQSS1NNC1ic3AvYmxvYi9tYXN0ZXIvbGludXgtcnRrL2FyY2gvYXJtDQo+IDY0
+L2Jvb3QvZHRzL3JlYWx0ZWsvcnRkMTZ4eC9ydGQtMTZ4eC5kdHNpDQo+IEFuZCBJIG9idmlvdXNs
+eSB0cnVzdCB0aGF0IHlvdSB0ZXN0ZWQgeW91ciBEVCB0byBwcm9kdWNlIHNlcmlhbCBvdXRwdXQu
+DQo+IA0KDQo+IEFsc28gbm90ZSBob3cgdGhlcmUgYXJlIFVSMV9UTyBhbmQgVVIyX1RPIChUTyA9
+IHRpbWVvdXQ/KSBpbiBhZGRpdGlvbiB0bw0KPiByZWd1bGFyIFVSMSBhbmQgVVIyIGludGVycnVw
+dHMgaW4gdGhlIG11eCBhYm92ZSwganVzdCBhcyBmb3IgUlREMTI5NSBhbmQNCj4gUlREMTE5NSAo
+VVIxL1VSMV9UTyBvbmx5KS4gRnJvbSBteSBpcnFtdXggdjQgc2VyaWVzIHBvc3RlZCBsYXN0IG5p
+Z2h0IEkgaGFkDQo+IHRvIGRyb3AgdGhvc2UgYWRkaXRpb25hbCBpbnRlcnJ1cHRzIHByb3BlcnR5
+IHZhbHVlcyBmcm9tIHRoZSBEVCBbMl0sIGFzIHRoZXkNCj4gdmlvbGF0ZSBtYWlubGluZSdzIERl
+c2lnbldhcmUgRFQgc2NoZW1hJ3MgbWF4SXRlbXMgMSBhbmQgd291bGQgcmVxdWlyZSBhDQo+IG5l
+dyBjb21wYXRpYmxlIHN0cmluZyAoYW5kIGEgZHJpdmVyIHBhdGNoIHRvIG1ha2UgdXNlIG9mIGl0
+KS4NCj4gDQpZZXMsIFRPIGlzIGludGVycnVwdCB0aW1lb3V0Lg0KDQoNClJlZ2FyZHMsDQpKYW1l
+cw0KDQoNCg==
