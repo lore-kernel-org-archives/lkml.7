@@ -2,88 +2,123 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B504C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 06:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A19CC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 06:55:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53B0C2246A
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 06:54:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F66822466
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 06:55:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="esd44Qf5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727165AbfKTGye (ORCPT
+        id S1727303AbfKTGzc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 01:54:34 -0500
-Received: from rtits2.realtek.com ([211.75.126.72]:51156 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbfKTGye (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 01:54:34 -0500
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID xAK6rwUM004452, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (mapi.realtek.com[172.21.6.95])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id xAK6rwUM004452
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 20 Nov 2019 14:53:58 +0800
-Received: from RTEXMB02.realtek.com.tw (172.21.6.95) by
- RTITCASV02.realtek.com.tw (172.21.6.19) with Microsoft SMTP Server (TLS) id
- 14.3.468.0; Wed, 20 Nov 2019 14:53:58 +0800
-Received: from RTEXMB03.realtek.com.tw (172.21.6.96) by
- RTEXMB02.realtek.com.tw (172.21.6.95) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Wed, 20 Nov 2019 14:53:57 +0800
-Received: from RTEXMB03.realtek.com.tw ([fe80::a4bf:5be3:6e60:69f9]) by
- RTEXMB03.realtek.com.tw ([fe80::a4bf:5be3:6e60:69f9%8]) with mapi id
- 15.01.1779.005; Wed, 20 Nov 2019 14:53:57 +0800
-From:   James Tai <james.tai@realtek.com>
-To:     =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
-CC:     "linux-realtek-soc@lists.infradead.org" 
-        <linux-realtek-soc@lists.infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Subject: RE: [PATCH v3 6/8] ARM: dts: rtd1195: Add reset nodes
-Thread-Topic: [PATCH v3 6/8] ARM: dts: rtd1195: Add reset nodes
-Thread-Index: AQHVnRfWQHpokuCZUUmFW9fO0MELfKeQpIVQgAEDlACAAZ/isA==
-Date:   Wed, 20 Nov 2019 06:53:57 +0000
-Message-ID: <4363fb2d71724974bd7969c93bd9d7a2@realtek.com>
-References: <20191117072109.20402-1-afaerber@suse.de>
- <20191117072109.20402-7-afaerber@suse.de>
- <20b3d0956bed4338a540216df07f16e5@realtek.com>
- <ed7c483d-b518-c74f-f66d-a812d0858f4c@suse.de>
-In-Reply-To: <ed7c483d-b518-c74f-f66d-a812d0858f4c@suse.de>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.21.190.187]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 20 Nov 2019 01:55:32 -0500
+Received: from cmta17.telus.net ([209.171.16.90]:43328 "EHLO cmta17.telus.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726687AbfKTGzc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 01:55:32 -0500
+Received: from dougxps ([173.180.45.4])
+        by cmsmtp with SMTP
+        id XJtfi5luPbg38XJthiUN1z; Tue, 19 Nov 2019 23:55:30 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
+        t=1574232930; bh=OV46rrKK3AlKaVTcH03ImQcbVmcPDyo+Zt4TYgMn/W8=;
+        h=From:To:Cc:References:In-Reply-To:Subject:Date;
+        b=esd44Qf5mAmFtVDsEiIeMnAN8rNfxHKRHHyO2Re3g61TRbsPGramn9IS7oTiy4rCM
+         5fhmeC86ApP5BdP1PuwAuK0M+WU+5GlNMZVYz7VQ8UCVokT0leZCNBf9dJ3VGr9Ru7
+         3KhH90yQlwK7Wylr+gl3zF2m7C/Sv8OK3tVlmwTIh4DyjlfHQ9o2M8xD9MMusQnd0M
+         TL6Ye0bVELI7ch0LnyxhzIcCYTsKlePpIlzQhAdVe3P0hmq/DvbK4Tvs7ibopxcTJV
+         HrNbxvZ4xLrW8EwKvAwra5YH05Da5E78mcHZdwlB91DqxQACoVo+g/vuesZxJPcvdb
+         eX+khVzz3z9yA==
+X-Telus-Authed: none
+X-Authority-Analysis: v=2.3 cv=O/1HQy1W c=1 sm=1 tr=0
+ a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
+ a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
+ a=kj9zAlcOel0A:10 a=IxTs3d6C8iS_ZroR3YwA:9 a=CjuIK1q_8ugA:10
+From:   "Doug Smythies" <dsmythies@telus.net>
+To:     "'Rafael J. Wysocki'" <rjw@rjwysocki.net>
+Cc:     "'Rafael J. Wysocki'" <rafael@kernel.org>,
+        "'Linux PM'" <linux-pm@vger.kernel.org>,
+        "'Linux ACPI'" <linux-acpi@vger.kernel.org>,
+        "'LKML'" <linux-kernel@vger.kernel.org>,
+        "'Viresh Kumar'" <viresh.kumar@linaro.org>,
+        "'Sudeep Holla'" <sudeep.holla@arm.com>,
+        "'Dmitry Osipenko'" <digetx@gmail.com>
+References: <2811202.iOFZ6YHztY@kreacher> <000401d59ee6$959e3da0$c0dab8e0$@net> <CAJZ5v0i1iAjpWju6FiCjP3RvspKDRfSwz4=b_3qgGhhfz8sSrw@mail.gmail.com> <6710300.onecg0m5mP@kreacher>
+In-Reply-To: <6710300.onecg0m5mP@kreacher>
+Subject: RE: [RFT][PATCH 1/3] PM: QoS: Introduce frequency QoS
+Date:   Tue, 19 Nov 2019 22:55:27 -0800
+Message-ID: <002a01d59f6f$7f609540$7e21bfc0$@net>
 MIME-Version: 1.0
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Office Outlook 12.0
+Thread-Index: AdWfJqj8jbmm++hPTPuKf4q4eKkarQAR3rgw
+Content-Language: en-ca
+X-CMAE-Envelope: MS4wfINi3bG7onvJGbLkiWekPy/0UMVcpoCVXzkkiGC76idCbkDTOHxCBaKa3Ndczy5r2fhPufs4gejwSbFtm6YxzKBp+iQZUVDR5fBAb5zeS2azzvg3uId5
+ he0F/REdYKiG5O9BinBjWuvKAZFwfFMrjOKNrRqG/aDd6Z9D1OJ8mFnBLpA1m28mcsmgKFgFh7rkUIoqbzyRtJbyG2VUK3QSZuE1YPFiS7/V1dlwo3eYqeYJ
+ kjK3KCniRNet38jKUM4i8KW6TujOrp+Oc1h1jnvcJoqFCnCjJ/kkS68pt0EHfAVX3G05dblzReNuiLYlqwZBHDamNe0gJ7lCm+VsJqGm0q6JFrJoA8GKNlU/
+ sDc+jq2TTJDYvn06vbXpc3k9OXDVzJiVSOsXbBlE2+IaBf2k+/k=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpIaSBBbmRyZWFzLA0KDQo+ID4NCj4gPiBXZSBkb24ndCB1c2UgdGhlIERlc2lnbldhcmUgSVAg
-Zm9yIHRoZSByZXNldCBjb250cm9sbGVyLg0KPiANCj4gVGhhbmtzIGZvciByZXZpZXdpbmcuDQo+
-IA0KPiBXZSBhbHJlYWR5IG1lcmdlZCB0aGUgZXF1aXZhbGVudCBub2RlcyBmb3IgUlREMTI5eCBp
-bnRvIGFybS1zb2MuZ2l0Lg0KPiBObyBSZWFsdGVrIHJldmlldyB3YXMgcmVjZWl2ZWQgYmFjayB3
-aGVuIGl0IHdhcyBwb3N0ZWQgWzFdLCBzYWRseS4NCj4gDQo+IEhvdyBkb2VzIHlvdXIgcmVzZXQg
-Y29udHJvbGxlciBkaWZmZXIgZnJvbSBEZXNpZ25XYXJlLCBhbmQgaG93IHdvdWxkIHlvdQ0KPiBw
-cmVmZXIgdG8gaGFuZGxlIGl0Pw0KPiANCj4gYSkgRG8geW91IHdhbnQgdG8gc2VuZCBwYXRjaGVz
-IGZvciBhIG5ldyBSZWFsdGVrLXNwZWNpZmljIGR0LWJpbmRpbmcgWzJdIGFuZA0KPiBleHRlbmQg
-cmVzZXQtc2ltcGxlIGRyaXZlciB0byBjb3ZlciBpdCBhcyBhIGNvcHkmcGFzdGUgb2YgdGhlIERl
-c2lnbldhcmUNCj4gb2ZfZGV2aWNlX2lkPw0KPiANCj4gYikgRG8geW91IGJlbGlldmUgeW91IG5l
-ZWQgdG8gc3VibWl0IGEgY29tcGxldGVseSBuZXcgcmVzZXQgZHJpdmVyPw0KPiANCg0KVGhlIFJU
-RDExOTUsIFJURDEyOTUgYW5kIFJURDEzOTUgcmVzZXQgY29udHJvbGxlciBpcyBjb21wYXRpYmxl
-IHdpdGggdGhlIHJlc2V0LXNpbXBsZSBkcml2ZXIuDQpJIHdhbnQgdG8gdXNlIHBsYW4gYSkgZm9y
-IHRoZW0uDQoNCkJlc2lkZXMsIEknbGwgc3VibWl0IGEgY29tcGxldGVseSBuZXcgcmVzZXQgZHJp
-dmVyIGZvciB0aGUgUlREMTYxOSANCmJlY2F1c2UgdGhlIHJlc2V0IGNvbnRyb2xsZXIgbm90IGNv
-bXBhdGlibGUgd2l0aCB0aGUgcmVzZXQtc2ltcGxlIGRyaXZlci4NCg0KUmVnYXJkcywNCkphbWVz
-DQoNCg0K
+On 2019.11.19 14:14 Rafael J. Wysocki wrote:
+> On Tuesday, November 19, 2019 8:17:05 PM CET Rafael J. Wysocki wrote:
+
+...
+ 
+>> However, I now also see that freq_qos_remove_request() doesn't clear
+>> the qos field in req which is should do, so freq_qos_add_request()
+>> will complain and fail if the object pointed to by req is passed to it
+>> again.
+>> 
+>> I'll send a patch to test for this later today.
+>> 
+>
+> The patch is appended.  Please test it (on top of 5.4-rc8) and report back.
+>
+> ---
+> kernel/power/qos.c |    8 +++++++-
+> 1 file changed, 7 insertions(+), 1 deletion(-)
+>
+> Index: linux-pm/kernel/power/qos.c
+> ===================================================================
+> --- linux-pm.orig/kernel/power/qos.c
+> +++ linux-pm/kernel/power/qos.c
+> @@ -814,6 +814,8 @@ EXPORT_SYMBOL_GPL(freq_qos_update_reques
+>  */
+> int freq_qos_remove_request(struct freq_qos_request *req)
+> {
+> +	int ret;
+> +
+> 	if (!req)
+> 		return -EINVAL;
+> 
+> @@ -821,7 +823,11 @@ int freq_qos_remove_request(struct freq_
+> 		 "%s() called for unknown object\n", __func__))
+> 		return -EINVAL;
+> 
+> -	return freq_qos_apply(req, PM_QOS_REMOVE_REQ, PM_QOS_DEFAULT_VALUE);
+> +	ret = freq_qos_apply(req, PM_QOS_REMOVE_REQ, PM_QOS_DEFAULT_VALUE);
+> +	req->qos = NULL;
+> +	req->type = 0;
+> +
+> +	return ret;
+>  }
+>  EXPORT_SYMBOL_GPL(freq_qos_remove_request);
+ 
+Yes the patch fixes the problem. Thanks.
+
+I tested several hundred times switching between
+passive and active modes with the intel_pstate driver,
+including with various CPUs disabled and re-enabled.
+
+... Doug
+
+
