@@ -2,81 +2,63 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C995C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:49:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3070C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:50:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AB0822429
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:49:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 935482243F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:50:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728862AbfKTKti (ORCPT
+        id S1728874AbfKTKup (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 05:49:38 -0500
-Received: from foss.arm.com ([217.140.110.172]:37176 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728760AbfKTKti (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 05:49:38 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7FBDA1FB;
-        Wed, 20 Nov 2019 02:49:37 -0800 (PST)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9B6D73F6C4;
-        Wed, 20 Nov 2019 02:49:36 -0800 (PST)
-Date:   Wed, 20 Nov 2019 10:49:34 +0000
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 04/12] ia64: Replace cpu_down with freeze_secondary_cpus
-Message-ID: <20191120104933.e6gkdjwkzulm6uak@e107158-lin.cambridge.arm.com>
-References: <20191030153837.18107-1-qais.yousef@arm.com>
- <20191030153837.18107-5-qais.yousef@arm.com>
- <alpine.DEB.2.21.1911192318400.6731@nanos.tec.linutronix.de>
- <20191119223234.ov323rcln4slj7br@e107158-lin.cambridge.arm.com>
- <alpine.DEB.2.21.1911192344110.6731@nanos.tec.linutronix.de>
- <20191119231912.viwqgcyzttoo5eou@e107158-lin.cambridge.arm.com>
- <alpine.DEB.2.21.1911200944590.6731@nanos.tec.linutronix.de>
+        Wed, 20 Nov 2019 05:50:45 -0500
+Received: from snd00011.auone-net.jp ([111.86.247.11]:17771 "EHLO
+        dmta0006-f.auone-net.jp" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727514AbfKTKup (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 05:50:45 -0500
+X-Greylist: delayed 412 seconds by postgrey-1.27 at vger.kernel.org; Wed, 20 Nov 2019 05:50:44 EST
+Received: from ppp.dion.ne.jp by dmta0009.auone-net.jp with ESMTP
+          id <20191120104350753.EWCT.12796.ppp.dion.ne.jp@dmta0009.auone-net.jp>;
+          Wed, 20 Nov 2019 19:43:50 +0900
+Date:   Wed, 20 Nov 2019 19:43:50 +0900
+From:   Kusanagi Kouichi <slash@ac.auone-net.jp>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] tracing: Remove unnecessary DEBUG_FS dependency
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1911200944590.6731@nanos.tec.linutronix.de>
-User-Agent: NeoMutt/20171215
+User-Agent: Mutt/1.12.2 (2019-09-21)
+Message-Id: <20191120104350753.EWCT.12796.ppp.dion.ne.jp@dmta0009.auone-net.jp>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/20/19 09:46, Thomas Gleixner wrote:
-> On Tue, 19 Nov 2019, Qais Yousef wrote:
-> > On 11/19/19 23:59, Thomas Gleixner wrote:
-> > > On Tue, 19 Nov 2019, Qais Yousef wrote:
-> > > > My plan was to simply make freeze_secondary_cpus() available and protected by
-> > > > CONFIG_SMP only instead.
-> > > > 
-> > > > Good plan?
-> > > 
-> > > No. freeze_secondary_cpus() is really for hibernation. Look at the exit
-> > > conditions there.
-> > 
-> > Hmm do you mean the pm_wakeup_pending() abort?
-> > 
-> > In arm64 we machine_shutdown() calls disable_nonboot_cpus(), which in turn
-> > a wrapper around freeze_secondary_cpus() with 0 passed as an argument.
-> > 
-> > IIUC this means arm64 could fail to offline all CPUs on machine_shutdown(),
-> > correct?
-> 
-> Looks like.
+Tracing replaced debugfs with tracefs.
 
-Okay I'll double check and introduce a new function to be called from
-machine_down() for arm64 and ia64 if necessary.
+Signed-off-by: Kusanagi Kouichi <slash@ac.auone-net.jp>
+---
+ kernel/trace/Kconfig | 1 -
+ 1 file changed, 1 deletion(-)
 
-Thanks
+diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+index e08527f50d2a..382628b9b759 100644
+--- a/kernel/trace/Kconfig
++++ b/kernel/trace/Kconfig
+@@ -106,7 +106,6 @@ config PREEMPTIRQ_TRACEPOINTS
+ 
+ config TRACING
+ 	bool
+-	select DEBUG_FS
+ 	select RING_BUFFER
+ 	select STACKTRACE if STACKTRACE_SUPPORT
+ 	select TRACEPOINTS
+-- 
+2.24.0
 
---
-Qais Yousef
