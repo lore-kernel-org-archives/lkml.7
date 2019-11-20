@@ -2,123 +2,155 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A19B7C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:52:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06806C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:52:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75FBE2071F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:52:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF60F2071F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:52:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="Ia+IJ1yC"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="ruprINJH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727677AbfKTTwT (ORCPT
+        id S1727721AbfKTTwX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 14:52:19 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:43820 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726440AbfKTTwT (ORCPT
+        Wed, 20 Nov 2019 14:52:23 -0500
+Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.81]:29107 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726440AbfKTTwW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 14:52:19 -0500
-Received: by mail-ed1-f68.google.com with SMTP id w6so545511edx.10
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 11:52:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EiMbJh8v38zaJv5chquKKWl+LfhgsUJpIvrC2X204xU=;
-        b=Ia+IJ1yC/SGCZZT73YW5QN5sOik0SZUaNc5bt6W6XLdtaP9OTSbaXvykZlnoLKCERs
-         9LWJWZs/BDypHB+qnhDLnFKj0PxrZ7ysEn/lDFCFbGY2ph/kCaQyn0XCed5qFd/thhJ2
-         AVmyetS8PbGcfMDzvrJSZ37PuBNAiZOPjzEj8RCG8+nNA+s2fr63DO1Hooja2YsOrhVD
-         TJfh8LhK8mNKTg0NqIaMWSU/SxBW/I37ylNsNmA6kL8zKt/KyfHlsFquoK27DAPftldp
-         IEoKkHEFYwqFBKrH4tMmN5l/CAdkk/FYO4EdCfBO2QhhQ30QSkJlboRW6+YrsD6JXc29
-         zdQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EiMbJh8v38zaJv5chquKKWl+LfhgsUJpIvrC2X204xU=;
-        b=WAPsKg1i+/0cufswsuMfc1SadYDRbOtS4vAmDljJ/qzNW6yv+kTVnpapkdimryKcaq
-         sJBoUmVfs7069TLQuDcEEHfHwmiBqRDC98XEUZ3uyiNdNJersTNIkl8Eink6i8mmN4RF
-         Zie91SZ6bjoJk2dOfU71VgTUM80tkey/1FyVUWCvc9Yije/OhrLeVZPBhyT79bYsDOdq
-         LtwxjobshI1oc5LopYmNrYe+edIwbZG50HjLHJM3rBnCsfxrCFpM0qG+7rLlZJPnxYZ4
-         LcRpnOE/etOBkLZQQX/0thNZ/x5zfs8paKsdNUg40CaqVEUvKas4j5c4EbEQL0MTQ367
-         mKxA==
-X-Gm-Message-State: APjAAAVDWQyidRLMUGCqTm9zsLOkdcdElNzuAjKQm2uL89aDEtLRUYpJ
-        N3LAwyBIVUIrWn5WOAMlEePYCRraji/sZrAtcKgqjg==
-X-Google-Smtp-Source: APXvYqxORrW8OJgoNu0IuYlIZ28DHLYRRWsXEk6WNCu7CI3C804tS+sUUWzYWiHSQMX7c5wXXsnpF3BEROW8rY42lLQ=
-X-Received: by 2002:a17:906:90b:: with SMTP id i11mr7638851ejd.109.1574279537192;
- Wed, 20 Nov 2019 11:52:17 -0800 (PST)
-MIME-Version: 1.0
-References: <20191119221006.1021520-1-pasha.tatashin@soleen.com>
- <20191120164307.GA19681@lakrids.cambridge.arm.com> <CA+CK2bAkb7zg6ne=PzA7UrQF49J2Sa7rmyWM3Bqugfe00-36ng@mail.gmail.com>
- <CA+CK2bCX+QGMPzhjj-UmVNb1jG8Z6WNW=L0GiVsTpGrhyqb9tA@mail.gmail.com>
-In-Reply-To: <CA+CK2bCX+QGMPzhjj-UmVNb1jG8Z6WNW=L0GiVsTpGrhyqb9tA@mail.gmail.com>
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-Date:   Wed, 20 Nov 2019 14:52:06 -0500
-Message-ID: <CA+CK2bDvp=RR7A5J097W3tr2QG_cOZgDMno388EXGAYW6+Q1Mg@mail.gmail.com>
-Subject: Re: [PATCH] arm64: kernel: memory corruptions due non-disabled PAN
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
+        Wed, 20 Nov 2019 14:52:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1574279540;
+        s=strato-dkim-0002; d=chronox.de;
+        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=LeodlJc2E0O1WN5oYZY2L3ih1kyEFugDWGrCoq/S39M=;
+        b=ruprINJH9bhaV2VGvM41XuV/8huZ76KYqhD2WHYIyFx+E9yqRcQ7eOK7AnMgrMQsx5
+        e9qpTE3GHrhs/g4wbHFV5NdpcoBBuyzqRa56Q8EfJUXN2Ywff2Z5J+8wgnwx398AK8xg
+        hav/iGWI6MyayuOet6rCfbZhMAe7VicD+du4i3hKBHt8wL+aiN1NBzSgis0YUE+fMA+6
+        QrzEGLh4YRGJKuCqvufjPvsOWvRj1bbUpXQ4WTpTQFgzVcv1gRr9KMgs+BJ8h5lSY8Sk
+        6uNTnXJEC7DMSpyVoYJs+ciXsmOuMwTE/7FRZWFLEXcDFyC2xglZPF0UidMwrUQ4E3hF
+        g2ow==
+X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzHHXDbL/ScbtM="
+X-RZG-CLASS-ID: mo00
+Received: from positron.chronox.de
+        by smtp.strato.de (RZmta 44.29.0 DYNA|AUTH)
+        with ESMTPSA id N09a57vAKJpBmvw
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Wed, 20 Nov 2019 20:51:11 +0100 (CET)
+From:   Stephan =?ISO-8859-1?Q?M=FCller?= <smueller@chronox.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, steve.capper@arm.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Vladimir Murzin <vladimir.murzin@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        allison@lohutok.net, info@metux.net, alexios.zavras@intel.com
-Content-Type: text/plain; charset="UTF-8"
+        Linux API <linux-api@vger.kernel.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        zhangjs <zachary@baishancloud.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        Nicolai Stange <nstange@suse.de>,
+        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
+        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
+        Roman Drahtmueller <draht@schaltsekun.de>,
+        Neil Horman <nhorman@redhat.com>
+Subject: Re: [PATCH v25 10/12] LRNG - add TRNG support
+Date:   Wed, 20 Nov 2019 20:51:11 +0100
+Message-ID: <1695782.oZ5Vf4nH9s@positron.chronox.de>
+In-Reply-To: <20191120132918.GA2892197@kroah.com>
+References: <5390778.VeFRgus4bQ@positron.chronox.de> <19681012.svDddlc5pN@positron.chronox.de> <20191120132918.GA2892197@kroah.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 2:46 PM Pavel Tatashin
-<pasha.tatashin@soleen.com> wrote:
->
-> > > I see that with CONFIG_ARM64_SW_TTBR0_PAN=y, this means that we may
-> > > leave the stale TTBR0 value installed across a context-switch (and have
-> > > reproduced that locally), but I'm having some difficulty reproducing the
-> > > corruption that you see.
-> >
-> > I will send the full test shortly. Note, I was never able to reproduce
-> > it in QEMU, only on real hardware. Also, for some unknown reason after
-> > kexec I could not reproduce it only during first boot, so it is
-> > somewhat fragile, but I am sure it can be reproduced in other cases as
-> > well, it is just my reproducer is not tunes for that.
-> >
->
-> Attached is the test program that I used to reproduce memory corruption.
-> Test on board with Broadcom's Stingray SoC.
+Am Mittwoch, 20. November 2019, 14:29:18 CET schrieb Greg Kroah-Hartman:
 
-I forgot to remove from repro.c some of the stuff that I used for debugging:
-get_pa() and sched_setaffinity() stuff are not needed.
+Hi Greg,
 
->
-> Without fix:
-> # time /tmp/repro
-> Corruption: pid 1474 map[0] 1488 cpu 3
-> Terminated
->
-> real    0m0.088s
-> user    0m0.004s
-> sys     0m0.071s
->
-> With the fix:
->
-> # time /tmp/repro
-> Test passed, all good
-> Terminated
->
-> real    1m1.286s
-> user    0m0.004s
-> sys     0m0.970s
->
->
->
-> Pasha
+> On Wed, Nov 20, 2019 at 09:58:35AM +0100, Stephan M=FCller wrote:
+> > Am Dienstag, 19. November 2019, 13:41:50 CET schrieb Greg Kroah-Hartman:
+> >=20
+> > Hi Greg,
+> >=20
+> > > On Tue, Nov 19, 2019 at 02:07:40AM -0800, Andy Lutomirski wrote:
+> > > > > As this would introduce a new device file now, is there a special
+> > > > > process that I need to follow or do I need to copy? Which
+> > > > > major/minor
+> > > > > number should I use?
+> > > > >=20
+> > > > > Looking into static const struct memdev devlist[] I see
+> > > > >=20
+> > > > >          [8] =3D { "random", 0666, &random_fops, 0 },
+> > > > >          [9] =3D { "urandom", 0666, &urandom_fops, 0 },
+> > > > >=20
+> > > > > Shall a true_random be added here with [10]?
+> > > >=20
+> > > > I am not at all an expert on chardevs, but this sounds generally
+> > > > reasonable.  gregkh is probably the real authority here.
+> > >=20
+> > > [10] is the aio char device node, so you better not try to overlap it=
+ or
+> > > bad things will happen :(
+> >=20
+> > Thanks for your insights.
+> >=20
+> > Which device minor number could we use?
+>=20
+> Get your own dynamic one by using a misc device if you _REALLY_ want to
+> add yet-another-char-node-for-random-data.
+>=20
+> But I would have thought that we all realize that this is not the way to
+> do things.  Let's not have "random", "urandom", and "true_random" be
+> something we want to totally confuse userspace with, that way is insane.
+>=20
+> Please just make the existing userspace api "just work", don't add to
+> the mess.
+
+Thank you, I think we should follow that advise.
+
+With that and considering Alexander's rightful remark we have a challenge. =
+So,=20
+changing the syscall may not be the right way unless we find a way to restr=
+ict=20
+the permissions somehow (capability? LSM? None of that seems to be a good=20
+fit).
+
+What about providing a /sys file? I.e. adding a file that:
+
+a) has permissions 440 per default and maybe the ownership of root:root
+
+b) allow user space to perform a chown/chgrp
+
+c) only supports reading of data from user space
+
+But then, how could we provide a common interface for the existing random.c=
+=20
+and the LRNG?
+
+Or should we use a proc file for that? If yes, I guess it should not be a=20
+sysctl, but a "regular" proc file that should allow a chown(2) operation. O=
+n=20
+the other hand, is proc the right place to provide a user space interface f=
+or=20
+exporting data to user?
+
+Thanks a lot.
+
+Ciao
+Stephan
+
+
