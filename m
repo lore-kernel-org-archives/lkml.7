@@ -2,77 +2,117 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7771EC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 18:54:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56A6CC43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 18:56:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42F3E20643
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 18:54:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 316D42089F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 18:56:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t+0eJWav"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="O/hAMQTq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727003AbfKTSyI (ORCPT
+        id S1727363AbfKTS4p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 13:54:08 -0500
-Received: from mail-wr1-f52.google.com ([209.85.221.52]:35176 "EHLO
-        mail-wr1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726236AbfKTSyH (ORCPT
+        Wed, 20 Nov 2019 13:56:45 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:53708 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727172AbfKTS4o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 13:54:07 -0500
-Received: by mail-wr1-f52.google.com with SMTP id s5so1211115wrw.2
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 10:54:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=JptNQ6so/9L3uvOwNdnkFnNevzjTCJ/2Jz7F6P16UNE=;
-        b=t+0eJWavqPUHbmxDSFHnMGlmo9Q3X+wlZx5uhAfbHsAyeYo0VVf7Y8pTOy++2yUZ4Z
-         phaEFG/Ck1KeN8ThPLqr9Ozs9/ITN4nVY7IRsfQ1ookLfhAwdgnpiaugBiXyhD6FIJjN
-         Lme6gu4ys5MP4bpj8PDqcZph0uoziTKcrOKRIE2eACdLa1ESGUDR81aP3wc6ana1LDST
-         jFRm89AcHzBzsm9juUURKOIduF+D6NoWBKNaUseZRnD7E92hCGrMT99hc7YQbBmrAn7b
-         dYzffqSjtrfyptP5AZJOc8JtkNK8dGjxF8ZaHJvMS9movSDlDjco4eJcWE9lWRaQPeR2
-         kHZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=JptNQ6so/9L3uvOwNdnkFnNevzjTCJ/2Jz7F6P16UNE=;
-        b=SN5pJ/g4tQPHy3uJx7uO6BrE2MQ5m++Fu/KQ25/lqcQ7ybAG5jhkRVi0yDJNnU47vX
-         5Y6nNaHlFIy199bQVw1ePuzr23XwKGxPfT2NquAW8CQEddB/vmhnj3TuKLNMzNWniz1F
-         6cGAqJIR4LSmml82/ryVug630ekKNrOEIaBmydXtMjdA/uYWkjh4tzMPb+3p1yC31VUO
-         FLiK64ANxr7zgZGZkD6igcOomlWL6PMSajvJNx2jr1yo/G124atWlxDGwGkBhwAkUhY1
-         fYZ9aMW1//YizFnpw8M1KzWX13G4BgJLoRo2KbbIQu0kDTc91MwqMXtEKUAXEHqX5RPR
-         oJmw==
-X-Gm-Message-State: APjAAAWB1/Da/HaG2tt4+p3XtWfE+JlReF4b5kHORIrt890ZJYeKqwp4
-        HkvjRDqqUpidOU6RF8eD2p6Bqj8dOemk6RbK4a3JSdio
-X-Google-Smtp-Source: APXvYqxNhMGn8X0oE8DK0vvVrDFrzMq+rVAJfU7ecUReQ78bj7TF5i1/4tWwbSd2uL3jvJ/1wcaMKmciD/uKLsA1DSw=
-X-Received: by 2002:adf:f308:: with SMTP id i8mr5319695wro.319.1574276045747;
- Wed, 20 Nov 2019 10:54:05 -0800 (PST)
+        Wed, 20 Nov 2019 13:56:44 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAKIs5X8015693;
+        Wed, 20 Nov 2019 18:56:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2019-08-05; bh=61wJRANyMuTZKvHLQag+hVNYJ6+7P82yKFAegw51pcc=;
+ b=O/hAMQTq7aq4XlwUoNFzDQnuoA+gyT7m5p6i5NqKnRnMROV3D8Oni6UTGfYg4hHYn6Vf
+ yLsjsiKuTee9Rsm4JTHwX2UaWap5oF4kfafZ1JCcTYRiz+NMyqZ4vH7tUtOOrOH+8FPD
+ l5n+JeIGkYaEIFmTThKDszGu68vcJYJp2KRIBQUbgeTd7e90GQO/JCPthsB5ezZ04hFo
+ CmXGiFgoYRfUcwzFFc/ivRrAY4xOKLV+YRjLoIpu1PcGm+oG2NipqOpqFGLRaK+0Hpsl
+ Xx+uno6mEZep/HWBQY5HuJaklQ/I4t7/Fqdq4ZTEeWPfVouYIl5vifZjkWOmKPccSa0W Kw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2wa92pyh3a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 20 Nov 2019 18:56:36 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAKIqtts119562;
+        Wed, 20 Nov 2019 18:56:36 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 2wcemhajh3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 20 Nov 2019 18:56:36 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xAKIuYJ6006488;
+        Wed, 20 Nov 2019 18:56:34 GMT
+Received: from zissou.us.oracle.com (/10.152.34.58)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 20 Nov 2019 10:56:34 -0800
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Cc:     Eric Biggers <ebiggers@kernel.org>, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Daniel Jordan <daniel.m.jordan@oracle.com>
+Subject: [PATCH 0/4] padata lockdep, cpumask, and doc fixes
+Date:   Wed, 20 Nov 2019 13:54:08 -0500
+Message-Id: <20191120185412.302-1-daniel.m.jordan@oracle.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-From:   Pouneh Aghababazadeh <paghababazadeh@gmail.com>
-Date:   Wed, 20 Nov 2019 10:53:54 -0800
-Message-ID: <CAO0y-hsg-CJCgbaJr7JMVKZkmKakVnpZCq_4YPtczhX2f9nsbw@mail.gmail.com>
-Subject: Question about creating EVM keys
-To:     linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9447 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=846
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1911200156
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9447 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=908 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1911200156
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+These are on top of v5.4-rc8 plus Herbert's recent padata changes:
 
-I'm trying to experiment with user keys in EVM per the instructions
-here: https://sourceforge.net/p/linux-ima/wiki/Home/#creating-trusted-and-evm-encrypted-keys
-(the second block, for systems without TPM/don't have TPM ownership).
+  [PATCH] padata: Remove broken queue flushing
+  https://lore.kernel.org/linux-crypto/20191119051731.yev6dcsp2znjaagz@gondor.apana.org.au/
 
-However, I'm getting the following error. Can you help me with this?
+  [PATCH] crypto: pcrypt - Fix user-after-free on module unload
+  https://lore.kernel.org/linux-crypto/20191119094131.x7gkxdi5clyxk3zd@gondor.apana.org.au/
 
-$ su -c 'keyctl pipe `keyctl search @u user kmk-user` > /etc/keys/kmk-user.blob'
-Password:
-keyctl_read_alloc: Permission denied
+  [v2 PATCH] crypto: pcrypt - Avoid deadlock by using per-instance padata queues
+  https://lore.kernel.org/linux-crypto/20191119185827.nerskpvddkcsih25@gondor.apana.org.au/
 
-Thanks,
-Pouneh
+  [PATCH] padata: Remove unused padata_remove_cpu
+  https://lore.kernel.org/linux-crypto/20191119223250.jaefneeatsa52nhh@gondor.apana.org.au/
+
+I can rebase to something else if that's easier.  Thanks.
+
+Daniel Jordan (4):
+  padata: update documentation
+  padata: remove reorder_objects
+  padata: always acquire cpu_hotplug_lock before pinst->lock
+  padata: remove cpumask change notifier
+
+ Documentation/padata.txt | 74 ++++++++++++++--------------------------
+ crypto/pcrypt.c          |  1 -
+ include/linux/padata.h   | 12 -------
+ kernel/padata.c          | 60 +++-----------------------------
+ 4 files changed, 31 insertions(+), 116 deletions(-)
+
+
+base-commit: af42d3466bdc8f39806b26f593604fdc54140bcb
+prerequisite-patch-id: e31e7b28eb12a2c7e1e04261f4e890f83a57bd19
+prerequisite-patch-id: 00f7ca687bd9df6281e9ced0925a865b2fa7b297
+prerequisite-patch-id: 0478fe82b9102aeae08f602b170eacc5cf6334de
+prerequisite-patch-id: f575fef550bb0cbf5418d3ccd15724d8b4b30858
+-- 
+2.23.0
+
