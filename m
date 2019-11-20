@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D727BC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:22:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B63FC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:22:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B633F2251F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:22:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33C7C22520
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:22:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730465AbfKTNWk (ORCPT
+        id S1730247AbfKTNVV convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 08:22:40 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:56782 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730237AbfKTNVV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 Nov 2019 08:21:21 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:56715 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730186AbfKTNVN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 08:21:13 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iXPv2-0007BZ-Jt; Wed, 20 Nov 2019 14:21:16 +0100
+        id 1iXPut-00077m-Jf; Wed, 20 Nov 2019 14:21:07 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 22AC71C1A0B;
-        Wed, 20 Nov 2019 14:21:05 +0100 (CET)
-Date:   Wed, 20 Nov 2019 13:21:05 -0000
-From:   "tip-bot2 for Marc Zyngier" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 3609A1C1A0F;
+        Wed, 20 Nov 2019 14:21:03 +0100 (CET)
+Date:   Wed, 20 Nov 2019 13:21:03 -0000
+From:   tip-bot2 for Jonathan =?utf-8?q?Neusch=C3=A4fer?= 
+        <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/core] irqchip/gic-v3-its: Free collection mapping on device
- teardown
-Cc:     Marc Zyngier <maz@kernel.org>, Zenghui Yu <yuzenghui@huawei.com>,
+Subject: [tip: irq/core] irqchip: Place CONFIG_SIFIVE_PLIC into the menu
+Cc:     j.neuschaefer@gmx.net, Marc Zyngier <maz@kernel.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <20191108165805.3071-2-maz@kernel.org>
-References: <20191108165805.3071-2-maz@kernel.org>
+In-Reply-To: <20191002144452.10178-1-j.neuschaefer@gmx.net>
+References: <20191002144452.10178-1-j.neuschaefer@gmx.net>
 MIME-Version: 1.0
-Message-ID: <157425606507.12247.10617023526080442996.tip-bot2@tip-bot2>
+Message-ID: <157425606311.12247.10868789826502631245.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8BIT
 X-Linutronix-Spam-Score: -1.0
 X-Linutronix-Spam-Level: -
 X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
@@ -57,46 +58,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the irq/core branch of tip:
 
-Commit-ID:     898aa5ce6158c5ccfc256bfc17963bc81981eef8
-Gitweb:        https://git.kernel.org/tip/898aa5ce6158c5ccfc256bfc17963bc81981eef8
-Author:        Marc Zyngier <maz@kernel.org>
-AuthorDate:    Fri, 08 Nov 2019 16:57:55 
+Commit-ID:     0149385537e6d36f535fcd83cfcabf83a32f0836
+Gitweb:        https://git.kernel.org/tip/0149385537e6d36f535fcd83cfcabf83a32f0836
+Author:        Jonathan Neuschäfer <j.neuschaefer@gmx.net>
+AuthorDate:    Wed, 02 Oct 2019 16:44:52 +02:00
 Committer:     Marc Zyngier <maz@kernel.org>
-CommitterDate: Sun, 10 Nov 2019 18:47:50 
+CommitterDate: Sun, 10 Nov 2019 18:48:35 
 
-irqchip/gic-v3-its: Free collection mapping on device teardown
+irqchip: Place CONFIG_SIFIVE_PLIC into the menu
 
-We allocate the collection mapping on device creation, but somehow
-free it on the irqdomain free path, which is pretty inconsistent
-and has led to bugs in the past.
+Somehow CONFIG_SIFIVE_PLIC ended up outside of the "IRQ chip support"
+menu.
 
-Move it to the point where we teardown the device, making the
-alloc/free symetric.
-
+Fixes: 8237f8bc4f6e ("irqchip: add a SiFive PLIC driver")
+Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
 Signed-off-by: Marc Zyngier <maz@kernel.org>
-Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
-Link: https://lore.kernel.org/r/20191108165805.3071-2-maz@kernel.org
+Reviewed-by: Palmer Dabbelt <palmer@sifive.com>
+Acked-by: Palmer Dabbelt <palmer@sifive.com>
+Link: https://lore.kernel.org/r/20191002144452.10178-1-j.neuschaefer@gmx.net
 ---
- drivers/irqchip/irq-gic-v3-its.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/irqchip/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 021e0c7..d5d8f8f 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -2474,6 +2474,7 @@ static void its_free_device(struct its_device *its_dev)
- 	raw_spin_lock_irqsave(&its_dev->its->lock, flags);
- 	list_del(&its_dev->entry);
- 	raw_spin_unlock_irqrestore(&its_dev->its->lock, flags);
-+	kfree(its_dev->event_map.col_map);
- 	kfree(its_dev->itt);
- 	kfree(its_dev);
- }
-@@ -2682,7 +2683,6 @@ static void its_irq_domain_free(struct irq_domain *domain, unsigned int virq,
- 		its_lpi_free(its_dev->event_map.lpi_map,
- 			     its_dev->event_map.lpi_base,
- 			     its_dev->event_map.nr_lpis);
--		kfree(its_dev->event_map.col_map);
+diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+index bbb3234..697e6a8 100644
+--- a/drivers/irqchip/Kconfig
++++ b/drivers/irqchip/Kconfig
+@@ -487,8 +487,6 @@ config TI_SCI_INTA_IRQCHIP
+ 	  If you wish to use interrupt aggregator irq resources managed by the
+ 	  TI System Controller, say Y here. Otherwise, say N.
  
- 		/* Unmap device/itt */
- 		its_send_mapd(its_dev, 0);
+-endmenu
+-
+ config SIFIVE_PLIC
+ 	bool "SiFive Platform-Level Interrupt Controller"
+ 	depends on RISCV
+@@ -500,3 +498,5 @@ config SIFIVE_PLIC
+ 	   interrupt sources are subordinate to the PLIC.
+ 
+ 	   If you don't know what to do here, say Y.
++
++endmenu
