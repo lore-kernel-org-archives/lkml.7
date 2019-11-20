@@ -2,232 +2,77 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81DE5C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 17:20:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BA2DC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 17:22:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57C6820898
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 17:20:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03F1A20895
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 17:22:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728263AbfKTRUb (ORCPT
+        id S1728209AbfKTRWr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 12:20:31 -0500
-Received: from foss.arm.com ([217.140.110.172]:43472 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727127AbfKTRUa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 12:20:30 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0600F1045;
-        Wed, 20 Nov 2019 09:20:30 -0800 (PST)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8EE153F703;
-        Wed, 20 Nov 2019 09:20:28 -0800 (PST)
-Date:   Wed, 20 Nov 2019 17:20:26 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        sashal@kernel.org, bhelgaas@google.com,
-        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
-        Alexander.Levin@microsoft.com
-Subject: Re: [PATCH v2 2/4] PCI: hv: Add the support of hibernation
-Message-ID: <20191120172026.GE3279@e121166-lin.cambridge.arm.com>
-References: <1574234218-49195-1-git-send-email-decui@microsoft.com>
- <1574234218-49195-3-git-send-email-decui@microsoft.com>
+        Wed, 20 Nov 2019 12:22:47 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:49352 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727127AbfKTRWq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 12:22:46 -0500
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1iXTgg-00062b-Ag; Wed, 20 Nov 2019 17:22:42 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        David Zhou <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] drm/amd/display: fix double assignment to msg_id field
+Date:   Wed, 20 Nov 2019 17:22:42 +0000
+Message-Id: <20191120172242.347072-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1574234218-49195-3-git-send-email-decui@microsoft.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 11:16:56PM -0800, Dexuan Cui wrote:
-> Implement the suspend/resume callbacks.
-> 
-> We must make sure there is no pending work items before we call
-> vmbus_close().
+From: Colin Ian King <colin.king@canonical.com>
 
-Where ? Why ? Imagine a developer reading this log to try to understand
-why you made this change, do you really think this commit log is
-informative in its current form ?
+The msg_id field is being assigned twice. Fix this by replacing the second
+assignment with an assignment to msg_size.
 
-I am not asking a book but this is a significant feature please make
-an effort to explain it (I can update the log for you but please
-write one and I shall do it).
+Addresses-Coverity: ("Unused value")
+Fixes: 11a00965d261 ("drm/amd/display: Add PSP block to verify HDCP2.2 steps")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/gpu/drm/amd/display/modules/hdcp/hdcp_psp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Lorenzo
+diff --git a/drivers/gpu/drm/amd/display/modules/hdcp/hdcp_psp.c b/drivers/gpu/drm/amd/display/modules/hdcp/hdcp_psp.c
+index 2dd5feec8e6c..6791c5844e43 100644
+--- a/drivers/gpu/drm/amd/display/modules/hdcp/hdcp_psp.c
++++ b/drivers/gpu/drm/amd/display/modules/hdcp/hdcp_psp.c
+@@ -42,7 +42,7 @@ static void hdcp2_message_init(struct mod_hdcp *hdcp,
+ 	in->process.msg2_desc.msg_id = TA_HDCP_HDCP2_MSG_ID__NULL_MESSAGE;
+ 	in->process.msg2_desc.msg_size = 0;
+ 	in->process.msg3_desc.msg_id = TA_HDCP_HDCP2_MSG_ID__NULL_MESSAGE;
+-	in->process.msg3_desc.msg_id = 0;
++	in->process.msg3_desc.msg_size = 0;
+ }
+ enum mod_hdcp_status mod_hdcp_remove_display_topology(struct mod_hdcp *hdcp)
+ {
+-- 
+2.24.0
 
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> ---
-> 
-> Changes in v2: this patch is a simple merge of 2 previous smaller patches,
-> accordign to the suggestion of Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>.
-> 
->  drivers/pci/controller/pci-hyperv.c | 107 +++++++++++++++++++++++++++-
->  1 file changed, 105 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index 65f18f840ce9..e71eb6e0bfdd 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -455,6 +455,7 @@ enum hv_pcibus_state {
->  	hv_pcibus_init = 0,
->  	hv_pcibus_probed,
->  	hv_pcibus_installed,
-> +	hv_pcibus_removing,
->  	hv_pcibus_removed,
->  	hv_pcibus_maximum
->  };
-> @@ -1681,6 +1682,23 @@ static void prepopulate_bars(struct hv_pcibus_device *hbus)
->  
->  	spin_lock_irqsave(&hbus->device_list_lock, flags);
->  
-> +	/*
-> +	 * Clear the memory enable bit, in case it's already set. This occurs
-> +	 * in the suspend path of hibernation, where the device is suspended,
-> +	 * resumed and suspended again: see hibernation_snapshot() and
-> +	 * hibernation_platform_enter().
-> +	 *
-> +	 * If the memory enable bit is already set, Hyper-V sliently ignores
-> +	 * the below BAR updates, and the related PCI device driver can not
-> +	 * work, because reading from the device register(s) always returns
-> +	 * 0xFFFFFFFF.
-> +	 */
-> +	list_for_each_entry(hpdev, &hbus->children, list_entry) {
-> +		_hv_pcifront_read_config(hpdev, PCI_COMMAND, 2, &command);
-> +		command &= ~PCI_COMMAND_MEMORY;
-> +		_hv_pcifront_write_config(hpdev, PCI_COMMAND, 2, command);
-> +	}
-> +
->  	/* Pick addresses for the BARs. */
->  	do {
->  		list_for_each_entry(hpdev, &hbus->children, list_entry) {
-> @@ -2107,6 +2125,12 @@ static void hv_pci_devices_present(struct hv_pcibus_device *hbus,
->  	unsigned long flags;
->  	bool pending_dr;
->  
-> +	if (hbus->state == hv_pcibus_removing) {
-> +		dev_info(&hbus->hdev->device,
-> +			 "PCI VMBus BUS_RELATIONS: ignored\n");
-> +		return;
-> +	}
-> +
->  	dr_wrk = kzalloc(sizeof(*dr_wrk), GFP_NOWAIT);
->  	if (!dr_wrk)
->  		return;
-> @@ -2223,11 +2247,19 @@ static void hv_eject_device_work(struct work_struct *work)
->   */
->  static void hv_pci_eject_device(struct hv_pci_dev *hpdev)
->  {
-> +	struct hv_pcibus_device *hbus = hpdev->hbus;
-> +	struct hv_device *hdev = hbus->hdev;
-> +
-> +	if (hbus->state == hv_pcibus_removing) {
-> +		dev_info(&hdev->device, "PCI VMBus EJECT: ignored\n");
-> +		return;
-> +	}
-> +
->  	hpdev->state = hv_pcichild_ejecting;
->  	get_pcichild(hpdev);
->  	INIT_WORK(&hpdev->wrk, hv_eject_device_work);
-> -	get_hvpcibus(hpdev->hbus);
-> -	queue_work(hpdev->hbus->wq, &hpdev->wrk);
-> +	get_hvpcibus(hbus);
-> +	queue_work(hbus->wq, &hpdev->wrk);
->  }
->  
->  /**
-> @@ -3107,6 +3139,75 @@ static int hv_pci_remove(struct hv_device *hdev)
->  	return ret;
->  }
->  
-> +static int hv_pci_suspend(struct hv_device *hdev)
-> +{
-> +	struct hv_pcibus_device *hbus = hv_get_drvdata(hdev);
-> +	enum hv_pcibus_state old_state;
-> +	int ret;
-> +
-> +	tasklet_disable(&hdev->channel->callback_event);
-> +
-> +	/* Change the hbus state to prevent new work items. */
-> +	old_state = hbus->state;
-> +	if (hbus->state == hv_pcibus_installed)
-> +		hbus->state = hv_pcibus_removing;
-> +
-> +	tasklet_enable(&hdev->channel->callback_event);
-> +
-> +	if (old_state != hv_pcibus_installed)
-> +		return -EINVAL;
-> +
-> +	flush_workqueue(hbus->wq);
-> +
-> +	ret = hv_pci_bus_exit(hdev, true);
-> +	if (ret)
-> +		return ret;
-> +
-> +	vmbus_close(hdev->channel);
-> +
-> +	return 0;
-> +}
-> +
-> +static int hv_pci_resume(struct hv_device *hdev)
-> +{
-> +	struct hv_pcibus_device *hbus = hv_get_drvdata(hdev);
-> +	enum pci_protocol_version_t version[1];
-> +	int ret;
-> +
-> +	hbus->state = hv_pcibus_init;
-> +
-> +	ret = vmbus_open(hdev->channel, pci_ring_size, pci_ring_size, NULL, 0,
-> +			 hv_pci_onchannelcallback, hbus);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Only use the version that was in use before hibernation. */
-> +	version[0] = pci_protocol_version;
-> +	ret = hv_pci_protocol_negotiation(hdev, version, 1);
-> +	if (ret)
-> +		goto out;
-> +
-> +	ret = hv_pci_query_relations(hdev);
-> +	if (ret)
-> +		goto out;
-> +
-> +	ret = hv_pci_enter_d0(hdev);
-> +	if (ret)
-> +		goto out;
-> +
-> +	ret = hv_send_resources_allocated(hdev);
-> +	if (ret)
-> +		goto out;
-> +
-> +	prepopulate_bars(hbus);
-> +
-> +	hbus->state = hv_pcibus_installed;
-> +	return 0;
-> +out:
-> +	vmbus_close(hdev->channel);
-> +	return ret;
-> +}
-> +
->  static const struct hv_vmbus_device_id hv_pci_id_table[] = {
->  	/* PCI Pass-through Class ID */
->  	/* 44C4F61D-4444-4400-9D52-802E27EDE19F */
-> @@ -3121,6 +3222,8 @@ static struct hv_driver hv_pci_drv = {
->  	.id_table	= hv_pci_id_table,
->  	.probe		= hv_pci_probe,
->  	.remove		= hv_pci_remove,
-> +	.suspend	= hv_pci_suspend,
-> +	.resume		= hv_pci_resume,
->  };
->  
->  static void __exit exit_hv_pci_drv(void)
-> -- 
-> 2.19.1
-> 
