@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28EA1C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:41:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51CB6C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:41:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F082920709
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:41:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CEE120709
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:41:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732084AbfKTPl2 (ORCPT
+        id S1732091AbfKTPl3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 10:41:28 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:53090 "EHLO
+        Wed, 20 Nov 2019 10:41:29 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:53136 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731868AbfKTPkV (ORCPT
+        by vger.kernel.org with ESMTP id S1729402AbfKTPkV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 Nov 2019 10:40:21 -0500
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iXS5V-0004bR-4I; Wed, 20 Nov 2019 15:40:13 +0000
+        id 1iXS5V-0004bO-1J; Wed, 20 Nov 2019 15:40:13 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iXS5T-0004IU-UY; Wed, 20 Nov 2019 15:40:11 +0000
+        id 1iXS5T-0004IJ-Sf; Wed, 20 Nov 2019 15:40:11 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,20 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Johan Hovold" <johan@kernel.org>, "Pavel Machek" <pavel@ucw.cz>,
-        "Sebastian Reichel" <sre@kernel.org>,
-        "Michael Scott" <hashcode0f@gmail.com>,
-        "Marcel Partap" <mpartap@gmx.net>,
-        "Merlijn Wajer" <merlijn@wizzup.org>,
-        "=?UTF-8?Q?Bj=C3=B8rn=20?=Mork" <bjorn@mork.no>,
-        "Lars Melin" <larsm17@gmail.com>,
-        "Dan Williams" <dan.j.williams@intel.com>,
-        "Tony Lindgren" <tony@atomide.com>, "NeKit" <nekit1000@gmail.com>
-Date:   Wed, 20 Nov 2019 15:37:48 +0000
-Message-ID: <lsq.1574264230.44724539@decadent.org.uk>
+        "Dirk Morris" <dmorris@metaloft.com>,
+        "Pablo Neira Ayuso" <pablo@netfilter.org>,
+        "Florian Westphal" <fw@strlen.de>
+Date:   Wed, 20 Nov 2019 15:37:46 +0000
+Message-ID: <lsq.1574264230.809936163@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 38/83] USB: serial: option: Add Motorola modem UARTs
+Subject: [PATCH 3.16 36/83] netfilter: conntrack: Use consistent ct id
+ hash calculation
 In-Reply-To: <lsq.1574264230.280218497@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -62,169 +57,63 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Tony Lindgren <tony@atomide.com>
+From: Dirk Morris <dmorris@metaloft.com>
 
-commit 6caf0be40a707689e8ff8824fdb96ef77685b1ba upstream.
+commit 656c8e9cc1badbc18eefe6ba01d33ebbcae61b9a upstream.
 
-On Motorola Mapphone devices such as Droid 4 there are five USB ports
-that do not use the same layout as Gobi 1K/2K/etc devices listed in
-qcserial.c. So we should use qcaux.c or option.c as noted by
-Dan Williams <dan.j.williams@intel.com>.
+Change ct id hash calculation to only use invariants.
 
-As the Motorola USB serial ports have an interrupt endpoint as shown
-with lsusb -v, we should use option.c instead of qcaux.c as pointed out
-by Johan Hovold <johan@kernel.org>.
+Currently the ct id hash calculation is based on some fields that can
+change in the lifetime on a conntrack entry in some corner cases. The
+current hash uses the whole tuple which contains an hlist pointer which
+will change when the conntrack is placed on the dying list resulting in
+a ct id change.
 
-The ff/ff/ff interfaces seem to always be UARTs on Motorola devices.
-For the other interfaces, class 0x0a (CDC Data) should not in general
-be added as they are typically part of a multi-interface function as
-noted earlier by Bjørn Mork <bjorn@mork.no>.
+This patch also removes the reply-side tuple and extension pointer from
+the hash calculation so that the ct id will will not change from
+initialization until confirmation.
 
-However, looking at the Motorola mapphone kernel code, the mdm6600 0x0a
-class is only used for flashing the modem firmware, and there are no
-other interfaces. So I've added that too with more details below as it
-works just fine.
-
-The ttyUSB ports on Droid 4 are:
-
-ttyUSB0 DIAG, CQDM-capable
-ttyUSB1 MUX or NMEA, no response
-ttyUSB2 MUX or NMEA, no response
-ttyUSB3 TCMD
-ttyUSB4 AT-capable
-
-The ttyUSB0 is detected as QCDM capable by ModemManager. I think
-it's only used for debugging with ModemManager --debug for sending
-custom AT commands though. ModemManager already can manage data
-connection using the USB QMI ports that are already handled by the
-qmi_wwan.c driver.
-
-To enable the MUX or NMEA ports, it seems that something needs to be
-done additionally to enable them, maybe via the DIAG or TCMD port.
-It might be just a NVRAM setting somewhere, but I have no idea what
-NVRAM settings may need changing for that.
-
-The TCMD port seems to be a Motorola custom protocol for testing
-the modem and to configure it's NVRAM and seems to work just fine
-based on a quick test with a minimal tcmdrw tool I wrote.
-
-The voice modem AT-capable port seems to provide only partial
-support, and no PM support compared to the TS 27.010 based UART
-wired directly to the modem.
-
-The UARTs added with this change are the same product IDs as the
-Motorola Mapphone Android Linux kernel mdm6600_id_table. I don't
-have any mdm9600 based devices, so I have only tested these on
-mdm6600 based droid 4.
-
-Then for the class 0x0a (CDC Data) mode, the Motorola Mapphone Android
-Linux kernel driver moto_flashqsc.c just seems to change the
-port->bulk_out_size to 8K from the default. And is only used for
-flashing the modem firmware it seems.
-
-I've verified that flashing the modem with signed firmware works just
-fine with the option driver after manually toggling the GPIO pins, so
-I've added droid 4 modem flashing mode to the option driver. I've not
-added the other devices listed in moto_flashqsc.c in case they really
-need different port->bulk_out_size. Those can be added as they get
-tested to work for flashing the modem.
-
-After this patch the output of /sys/kernel/debug/usb/devices has
-the following for normal 22b8:2a70 mode including the related qmi_wwan
-interfaces:
-
-T:  Bus=01 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#=  2 Spd=12   MxCh= 0
-D:  Ver= 2.00 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
-P:  Vendor=22b8 ProdID=2a70 Rev= 0.00
-S:  Manufacturer=Motorola, Incorporated
-S:  Product=Flash MZ600
-C:* #Ifs= 9 Cfg#= 1 Atr=e0 MxPwr=500mA
-I:* If#= 0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
-E:  Ad=81(I) Atr=02(Bulk) MxPS=  64 Ivl=0ms
-E:  Ad=01(O) Atr=02(Bulk) MxPS=  64 Ivl=0ms
-I:* If#= 1 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
-E:  Ad=82(I) Atr=02(Bulk) MxPS=  64 Ivl=0ms
-E:  Ad=02(O) Atr=02(Bulk) MxPS=  64 Ivl=0ms
-I:* If#= 2 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
-E:  Ad=83(I) Atr=02(Bulk) MxPS=  64 Ivl=0ms
-E:  Ad=03(O) Atr=02(Bulk) MxPS=  64 Ivl=0ms
-I:* If#= 3 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
-E:  Ad=84(I) Atr=02(Bulk) MxPS=  64 Ivl=0ms
-E:  Ad=04(O) Atr=02(Bulk) MxPS=  64 Ivl=0ms
-I:* If#= 4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
-E:  Ad=85(I) Atr=03(Int.) MxPS=  64 Ivl=5ms
-E:  Ad=86(I) Atr=02(Bulk) MxPS=  64 Ivl=0ms
-E:  Ad=05(O) Atr=02(Bulk) MxPS=  64 Ivl=0ms
-I:* If#= 5 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=fb Prot=ff Driver=qmi_wwan
-E:  Ad=87(I) Atr=03(Int.) MxPS=  64 Ivl=5ms
-E:  Ad=88(I) Atr=02(Bulk) MxPS=  64 Ivl=0ms
-E:  Ad=06(O) Atr=02(Bulk) MxPS=  64 Ivl=0ms
-I:* If#= 6 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=fb Prot=ff Driver=qmi_wwan
-E:  Ad=89(I) Atr=03(Int.) MxPS=  64 Ivl=5ms
-E:  Ad=8a(I) Atr=02(Bulk) MxPS=  64 Ivl=0ms
-E:  Ad=07(O) Atr=02(Bulk) MxPS=  64 Ivl=0ms
-I:* If#= 7 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=fb Prot=ff Driver=qmi_wwan
-E:  Ad=8b(I) Atr=03(Int.) MxPS=  64 Ivl=5ms
-E:  Ad=8c(I) Atr=02(Bulk) MxPS=  64 Ivl=0ms
-E:  Ad=08(O) Atr=02(Bulk) MxPS=  64 Ivl=0ms
-I:* If#= 8 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=fb Prot=ff Driver=qmi_wwan
-E:  Ad=8d(I) Atr=03(Int.) MxPS=  64 Ivl=5ms
-E:  Ad=8e(I) Atr=02(Bulk) MxPS=  64 Ivl=0ms
-E:  Ad=09(O) Atr=02(Bulk) MxPS=  64 Ivl=0ms
-
-In 22b8:900e "qc_dload" mode the device shows up as:
-
-T:  Bus=01 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#=  2 Spd=12   MxCh= 0
-D:  Ver= 2.00 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
-P:  Vendor=22b8 ProdID=900e Rev= 0.00
-S:  Manufacturer=Motorola, Incorporated
-S:  Product=Flash MZ600
-C:* #Ifs= 1 Cfg#= 1 Atr=e0 MxPwr=500mA
-I:* If#= 0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
-E:  Ad=81(I) Atr=02(Bulk) MxPS=  64 Ivl=0ms
-E:  Ad=01(O) Atr=02(Bulk) MxPS=  64 Ivl=0ms
-
-And in 22b8:4281 "ram_downloader" mode the device shows up as:
-
-T:  Bus=01 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#=  2 Spd=12   MxCh= 0
-D:  Ver= 2.00 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
-P:  Vendor=22b8 ProdID=4281 Rev= 0.00
-S:  Manufacturer=Motorola, Incorporated
-S:  Product=Flash MZ600
-C:* #Ifs= 1 Cfg#= 1 Atr=e0 MxPwr=500mA
-I:* If#= 0 Alt= 0 #EPs= 2 Cls=0a(data ) Sub=00 Prot=fc Driver=option
-E:  Ad=81(I) Atr=02(Bulk) MxPS=  64 Ivl=0ms
-E:  Ad=01(O) Atr=02(Bulk) MxPS=  64 Ivl=0ms
-
-Cc: Bjørn Mork <bjorn@mork.no>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Lars Melin <larsm17@gmail.com>
-Cc: Marcel Partap <mpartap@gmx.net>
-Cc: Merlijn Wajer <merlijn@wizzup.org>
-Cc: Michael Scott <hashcode0f@gmail.com>
-Cc: NeKit <nekit1000@gmail.com>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Sebastian Reichel <sre@kernel.org>
-Tested-by: Pavel Machek <pavel@ucw.cz>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Fixes: 3c79107631db1f7 ("netfilter: ctnetlink: don't use conntrack/expect object addresses as id")
+Signed-off-by: Dirk Morris <dmorris@metaloft.com>
+Acked-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/usb/serial/option.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ net/netfilter/nf_conntrack_core.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
---- a/drivers/usb/serial/option.c
-+++ b/drivers/usb/serial/option.c
-@@ -1109,6 +1109,11 @@ static const struct usb_device_id option
- 	{ USB_VENDOR_AND_INTERFACE_INFO(HUAWEI_VENDOR_ID, 0xff, 0x06, 0x7B) },
- 	{ USB_VENDOR_AND_INTERFACE_INFO(HUAWEI_VENDOR_ID, 0xff, 0x06, 0x7C) },
+--- a/net/netfilter/nf_conntrack_core.c
++++ b/net/netfilter/nf_conntrack_core.c
+@@ -240,13 +240,12 @@ EXPORT_SYMBOL_GPL(nf_ct_invert_tuple);
+  * table location, we assume id gets exposed to userspace.
+  *
+  * Following nf_conn items do not change throughout lifetime
+- * of the nf_conn after it has been committed to main hash table:
++ * of the nf_conn:
+  *
+  * 1. nf_conn address
+- * 2. nf_conn->ext address
+- * 3. nf_conn->master address (normally NULL)
+- * 4. tuple
+- * 5. the associated net namespace
++ * 2. nf_conn->master address (normally NULL)
++ * 3. the associated net namespace
++ * 4. the original direction tuple
+  */
+ u32 nf_ct_get_id(const struct nf_conn *ct)
+ {
+@@ -256,9 +255,10 @@ u32 nf_ct_get_id(const struct nf_conn *c
+ 	net_get_random_once(&ct_id_seed, sizeof(ct_id_seed));
  
-+	/* Motorola devices */
-+	{ USB_DEVICE_AND_INTERFACE_INFO(0x22b8, 0x2a70, 0xff, 0xff, 0xff) },	/* mdm6600 */
-+	{ USB_DEVICE_AND_INTERFACE_INFO(0x22b8, 0x2e0a, 0xff, 0xff, 0xff) },	/* mdm9600 */
-+	{ USB_DEVICE_AND_INTERFACE_INFO(0x22b8, 0x4281, 0x0a, 0x00, 0xfc) },	/* mdm ram dl */
-+	{ USB_DEVICE_AND_INTERFACE_INFO(0x22b8, 0x900e, 0xff, 0xff, 0xff) },	/* mdm qc dl */
- 
- 	{ USB_DEVICE(NOVATELWIRELESS_VENDOR_ID, NOVATELWIRELESS_PRODUCT_V640) },
- 	{ USB_DEVICE(NOVATELWIRELESS_VENDOR_ID, NOVATELWIRELESS_PRODUCT_V620) },
+ 	a = (unsigned long)ct;
+-	b = (unsigned long)ct->master ^ net_hash_mix(nf_ct_net(ct));
+-	c = (unsigned long)ct->ext;
+-	d = (unsigned long)siphash(&ct->tuplehash, sizeof(ct->tuplehash),
++	b = (unsigned long)ct->master;
++	c = (unsigned long)nf_ct_net(ct);
++	d = (unsigned long)siphash(&ct->tuplehash[IP_CT_DIR_ORIGINAL].tuple,
++				   sizeof(ct->tuplehash[IP_CT_DIR_ORIGINAL].tuple),
+ 				   &ct_id_seed);
+ #ifdef CONFIG_64BIT
+ 	return siphash_4u64((u64)a, (u64)b, (u64)c, (u64)d, &ct_id_seed);
 
