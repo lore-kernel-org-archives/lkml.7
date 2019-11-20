@@ -2,67 +2,50 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB569C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:43:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D9AC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:44:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9194122429
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:43:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7777206EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:44:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728794AbfKTKnI (ORCPT
+        id S1728807AbfKTKoA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 05:43:08 -0500
-Received: from www262.sakura.ne.jp ([202.181.97.72]:61043 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728777AbfKTKnI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 05:43:08 -0500
-Received: from fsav403.sakura.ne.jp (fsav403.sakura.ne.jp [133.242.250.102])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id xAKAh5Es046030;
-        Wed, 20 Nov 2019 19:43:05 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav403.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav403.sakura.ne.jp);
- Wed, 20 Nov 2019 19:43:05 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav403.sakura.ne.jp)
-Received: from [192.168.1.9] (softbank126040052248.bbtec.net [126.40.52.248])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id xAKAh4Cc046022
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Wed, 20 Nov 2019 19:43:05 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: WARNING in kernfs_get
-To:     Greg KH <gregkh@linuxfoundation.org>,
-        syzbot <syzbot+3dcb532381f98c86aeb1@syzkaller.appspotmail.com>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linux-kernel@vger.kernel.org, rafael@kernel.org,
-        syzkaller-bugs@googlegroups.com, tj@kernel.org,
-        torvalds@linux-foundation.org
-References: <000000000000f921ae05757f567c@google.com>
- <0000000000001da6b60597c2ce91@google.com>
- <20191120082958.GB2862348@kroah.com>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <72e04f20-ba99-6bca-a4b3-d36703719df0@i-love.sakura.ne.jp>
-Date:   Wed, 20 Nov 2019 19:42:57 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Wed, 20 Nov 2019 05:44:00 -0500
+Received: from verein.lst.de ([213.95.11.211]:39415 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728777AbfKTKn7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 05:43:59 -0500
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 329EE68AFE; Wed, 20 Nov 2019 11:43:57 +0100 (CET)
+Date:   Wed, 20 Nov 2019 11:43:57 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] dma-debug: clean up put_hash_bucket()
+Message-ID: <20191120104357.GA3800@lst.de>
+References: <20191119061819.k6754frfv2wj7swd@kili.mountain>
 MIME-Version: 1.0
-In-Reply-To: <20191120082958.GB2862348@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191119061819.k6754frfv2wj7swd@kili.mountain>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/11/20 17:29, Greg KH wrote:
-> Again, I think this should be resolved with ac43432cb1f5 ("driver core:
-> Fix use-after-free and double free on glue directory")
+On Tue, Nov 19, 2019 at 09:18:19AM +0300, Dan Carpenter wrote:
+> The put_hash_bucket() is a bit cleaner if it takes an unsigned long
+> directly instead of a pointer to unsigned long.
+> 
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-Last occurrence was v5.3-rc3 and that patch went to v5.3-rc4. Should be fixed.
-
-#syz fix: driver core: Fix use-after-free and double free on glue directory
+Looks reasonable to me, I'll apply it to the dma-mapping tree fo 5.5.
