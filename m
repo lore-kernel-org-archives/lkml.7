@@ -2,216 +2,248 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E621C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 23:18:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF558C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 23:19:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E98BA20679
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 23:18:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=networkplumber-org.20150623.gappssmtp.com header.i=@networkplumber-org.20150623.gappssmtp.com header.b="p2G0T3jg"
+	by mail.kernel.org (Postfix) with ESMTP id ACF9D20878
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 23:19:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726614AbfKTXSk (ORCPT
+        id S1726695AbfKTXTZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 18:18:40 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:36224 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725936AbfKTXSj (ORCPT
+        Wed, 20 Nov 2019 18:19:25 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:15892 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726044AbfKTXTZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 18:18:39 -0500
-Received: by mail-pj1-f67.google.com with SMTP id cq11so526875pjb.3
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 15:18:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=networkplumber-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=wmtUR/eihp0PUvrLKsh7wVU4zqxo6xGU5zxiqoarIqE=;
-        b=p2G0T3jgz6bXlwZjpvll8ad4xuXJX1PCwdWxV8mTLvBJNPr+A4y10oHp5zDr6t54Gf
-         OfkS1NHrAugnkuzwclxNLuUBWLWtzXNz8Wc3MIeSzZnkIq5iaOtYYyUgbVgQD+FuTE3n
-         vAb8kgLCoKm88R10sL9ltWOieO97SxL3GSvsUulumE7DsE3/qlgX2r42bt/j++O0CMZI
-         bsHmNccOcon35TsSaHwNyZqRaB9sJz0mQ/8GERZLG/AXV0DHuNK629sQI5t9pDTiMolD
-         q+y18tonjpHPNI6wvnGPATDieKBUb9XPD946HsDG+h8w8xcSRjjCoiuNnfKMwS0X1xMk
-         ItCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=wmtUR/eihp0PUvrLKsh7wVU4zqxo6xGU5zxiqoarIqE=;
-        b=HBolzcr7SlkgbM5G7uU/soetyr2lmqfO89LZmp+8/R8NzGDnu/2xLMGctEcuYa6SJv
-         i0X3uDOnYl3m8xygkOaVxUcwXivSbQNuD7MBHbNMKxWi05eva1IM+tIhfGH7YgTZQ+rL
-         5FxEAyH7AR23ahtgIgpnt+jraGRYgpqM3M6SNo0zjhIsRPYRnJt80NYt9LtgD3PLzp2C
-         a+ep4lRceMezHewoVh4svxv66F0eko3cmrjvhSPU9I3JZYPYRSkZOJsTekVO9BFxp0tj
-         QqZX2fqAo0ltmq0MSJk2PZpG80vKlxpOliZMni1PYU8MFeaTaalhiGuNT/31De1Dutiq
-         hnYQ==
-X-Gm-Message-State: APjAAAUnexG8C4Mene9w0dhZ7I3DCc0sP3VEK2T7C6tr2/ujrRKTihPY
-        I1aPyb/jy60CUcuPEFM3kgPU/Q==
-X-Google-Smtp-Source: APXvYqw0TaIkfAiYDhUvl10ZLxlCJpmLGUmkEzRbDKn+3bQbVgvytLloXmk3XGGDCqVdvnqHnR4G1A==
-X-Received: by 2002:a17:90a:9286:: with SMTP id n6mr6979262pjo.84.1574291917274;
-        Wed, 20 Nov 2019 15:18:37 -0800 (PST)
-Received: from hermes.lan (204-195-22-127.wavecable.com. [204.195.22.127])
-        by smtp.gmail.com with ESMTPSA id j21sm485855pfa.58.2019.11.20.15.18.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Nov 2019 15:18:37 -0800 (PST)
-Date:   Wed, 20 Nov 2019 15:18:28 -0800
-From:   Stephen Hemminger <stephen@networkplumber.org>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     <lantianyu1986@gmail.com>, <cohuck@redhat.com>,
-        "KY Srinivasan" <kys@microsoft.com>,
-        "Haiyang Zhang" <haiyangz@microsoft.com>,
-        "Stephen Hemminger" <sthemmin@microsoft.com>, <sashal@kernel.org>,
-        <mchehab+samsung@kernel.org>, <davem@davemloft.net>,
-        <gregkh@linuxfoundation.org>, <robh@kernel.org>,
-        <Jonathan.Cameron@huawei.com>, <paulmck@linux.ibm.com>,
-        "Michael Kelley" <mikelley@microsoft.com>,
-        "Tianyu Lan" <Tianyu.Lan@microsoft.com>,
-        <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
-        <linux-hyperv@vger.kernel.org>, "vkuznets" <vkuznets@redhat.com>
-Subject: Re: [PATCH] VFIO/VMBUS: Add VFIO VMBUS driver support
-Message-ID: <20191120151828.2d593b81@hermes.lan>
-In-Reply-To: <20191120133147.1d627348@x1.home>
-References: <20191111084507.9286-1-Tianyu.Lan@microsoft.com>
-        <20191119165620.0f42e5ba@x1.home>
-        <20191120103503.5f7bd7c4@hermes.lan>
-        <20191120120715.0cecf5ea@x1.home>
-        <20191120114611.4721a7e9@hermes.lan>
-        <20191120133147.1d627348@x1.home>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Wed, 20 Nov 2019 18:19:25 -0500
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAKNEuOg061924
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 18:19:23 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wcf59ky2y-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 18:19:22 -0500
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Wed, 20 Nov 2019 23:19:21 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 20 Nov 2019 23:19:19 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAKNJI5g40173904
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 20 Nov 2019 23:19:18 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 837254C040;
+        Wed, 20 Nov 2019 23:19:18 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DEFAC4C04E;
+        Wed, 20 Nov 2019 23:19:17 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.233.220])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 20 Nov 2019 23:19:17 +0000 (GMT)
+Subject: Re: [PATCH v8 4/5] IMA: Add support to limit measuring keys
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        linux-integrity@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, keyrings@vger.kernel.org
+Date:   Wed, 20 Nov 2019 18:19:17 -0500
+In-Reply-To: <20191118223818.3353-5-nramas@linux.microsoft.com>
+References: <20191118223818.3353-1-nramas@linux.microsoft.com>
+         <20191118223818.3353-5-nramas@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19112023-0028-0000-0000-000003BD461F
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19112023-0029-0000-0000-000024806BE3
+Message-Id: <1574291957.4793.144.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-20_08:2019-11-20,2019-11-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
+ suspectscore=0 adultscore=0 clxscore=1015 phishscore=0 bulkscore=0
+ lowpriorityscore=0 malwarescore=0 spamscore=0 priorityscore=1501
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1911200196
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 20 Nov 2019 13:31:47 -0700
-Alex Williamson <alex.williamson@redhat.com> wrote:
-
-> On Wed, 20 Nov 2019 11:46:11 -0800
-> Stephen Hemminger <stephen@networkplumber.org> wrote:
+On Mon, 2019-11-18 at 14:38 -0800, Lakshmi Ramasubramanian wrote:
+> Limit measuring keys to those keys being loaded onto a given set of
+> keyrings only.
 > 
-> > On Wed, 20 Nov 2019 12:07:15 -0700
-> > Alex Williamson <alex.williamson@redhat.com> wrote:
-> >   
-> > > On Wed, 20 Nov 2019 10:35:03 -0800
-> > > Stephen Hemminger <stephen@networkplumber.org> wrote:
-> > >     
-> > > > On Tue, 19 Nov 2019 15:56:20 -0800
-> > > > "Alex Williamson" <alex.williamson@redhat.com> wrote:
-> > > >       
-> > > > > On Mon, 11 Nov 2019 16:45:07 +0800
-> > > > > lantianyu1986@gmail.com wrote:
-> > > > >         
-> > > > > > From: Tianyu Lan <Tianyu.Lan@microsoft.com>
-> > > > > > 
-> > > > > > This patch is to add VFIO VMBUS driver support in order to expose
-> > > > > > VMBUS devices to user space drivers(Reference Hyper-V UIO driver).
-> > > > > > DPDK now has netvsc PMD driver support and it may get VMBUS resources
-> > > > > > via VFIO interface with new driver support.
-> > > > > > 
-> > > > > > So far, Hyper-V doesn't provide virtual IOMMU support and so this
-> > > > > > driver needs to be used with VFIO noiommu mode.          
-> > > > > 
-> > > > > Let's be clear here, vfio no-iommu mode taints the kernel and was a
-> > > > > compromise that we can re-use vfio-pci in its entirety, so it had a
-> > > > > high code reuse value for minimal code and maintenance investment.  It
-> > > > > was certainly not intended to provoke new drivers that rely on this mode
-> > > > > of operation.  In fact, no-iommu should be discouraged as it provides
-> > > > > absolutely no isolation.  I'd therefore ask, why should this be in the
-> > > > > kernel versus any other unsupportable out of tree driver?  It appears
-> > > > > almost entirely self contained.  Thanks,
-> > > > > 
-> > > > > Alex        
-> > > > 
-> > > > The current VMBUS access from userspace is from uio_hv_generic
-> > > > there is (and will not be) any out of tree driver for this.      
-> > > 
-> > > I'm talking about the driver proposed here.  It can only be used in a
-> > > mode that taints the kernel that its running on, so why would we sign
-> > > up to support 400 lines of code that has no safe way to use it?
-> > >      
-> > > > The new driver from Tianyu is to make VMBUS behave like PCI.
-> > > > This simplifies the code for DPDK and other usermode device drivers
-> > > > because it can use the same API's for VMBus as is done for PCI.      
-> > > 
-> > > But this doesn't re-use the vfio-pci API at all, it explicitly defines
-> > > a new vfio-vmbus API over the vfio interfaces.  So a user mode driver
-> > > might be able to reuse some vfio support, but I don't see how this has
-> > > anything to do with PCI.
-> > >     
-> > > > Unfortunately, since Hyper-V does not support virtual IOMMU yet,
-> > > > the only usage modle is with no-iommu taint.      
-> > > 
-> > > Which is what makes it unsupportable and prompts the question why it
-> > > should be included in the mainline kernel as it introduces a
-> > > maintenance burden and normalizes a usage model that's unsafe.  Thanks,    
-> > 
-> > Many existing userspace drivers are unsafe:
-> >   - out of tree DPDK igb_uio is unsafe.
-
-> Why is it out of tree?
-
-Agree, it really shouldn't be. The original developers hoped that
-VFIO and VFIO-noiommu would replace it. But since DPDK has to run
-on ancient distro's and other non VFIO hardware it still lives.
-
-Because it is not suitable for merging for many reasons.
-Mostly because it allows MSI and other don't want that.
- 
+> This patch defines a new IMA policy option namely "keyrings=" that
+> can be used to specify a set of keyrings. If this option is specified
+> in the policy for "measure func=KEY_CHECK" then only the keys
+> loaded onto a keyring given in the "keyrings=" option are measured.
 > 
+> Added a new parameter namely "keyring" (name of the keyring) to
+> process_buffer_measurement(). The keyring name is passed to
+> ima_get_action() to determine the required action.
+> ima_match_rules() is updated to check keyring in the policy, if
+> specified, for KEY_CHECK function.
 > 
-> >   - VFIO with noiommu is unsafe.  
+> The following example illustrates how key measurement can be verified.
 > 
-> Which taints the kernel and requires raw I/O user privs.
+> Sample IMA Policy entry to measure keys
+> (Added in the file /etc/ima/ima-policy):
+> measure func=KEY_CHECK keyrings=.ima|.evm|.blacklist template=ima-buf
 > 
-> >   - hv_uio_generic is unsafe.  
+> Build the kernel with this patch set applied and reboot to that kernel.
 > 
-> Gosh, it's pretty coy about this, no kernel tainting, no user
-> capability tests, no scary dmesg or Kconfig warnings.  Do users know
-> it's unsafe?
-
-It should taint in same way as VFIO with noiommu.
-Yes it is documented as unsafe (but not in kernel source).
-It really has same unsafeness as uio_pci_generic, and there is not warnings
-around that.
-
+> Ensure the IMA policy is applied:
 > 
-> > This new driver is not any better or worse. This sounds like a complete
-> > repeat of the discussion that occurred before introducing VFIO noiommu mode.
-> > 
-> > Shouldn't vmbus vfio taint the kernel in the same way as vfio noiommu does?  
+> root@nramas:/home/nramas# cat /sys/kernel/security/ima/policy
+> measure func=KEY_CHECK keyrings=.ima|.evm|.blacklist template=ima-buf
 > 
-> Yes, the no-iommu interaction happens at the vfio-core level.  I can't
-> speak for any of the uio interfaces you mention, but I know that
-> uio_pci_generic is explicitly intended for non-DMA use cases and in
-> fact the efforts to enable MSI/X support in that driver and the
-> objections raised for breaking that usage model by the maintainer, is
-> what triggered no-iommu support for vfio.  IIRC, the rationale was
-> largely for code reuse both at the kernel and userspace driver level,
-> while imposing a minimal burden in vfio-core for this dummy iommu
-> driver.  vfio explicitly does not provide a DMA mapping solution for
-> no-iommu use cases because I'm not willing to maintain any more lines
-> of code to support this usage model.  The tainting imposed by this model
-> and incomplete API was intended to be a big warning to discourage its
-> use and as features like vIOMMU become more prevalent and bare metal
-> platforms without physical IOMMUs hopefully become less prevalent,
-> maybe no-iommu could be phased out or removed.
+> View the initial IMA measurement log:
+> 
+> root@nramas:/home/nramas# cat /sys/kernel/security/ima/ascii_runtime_measurements
+> 10 67ec... ima-ng sha1:b5466c508583f0e633df83aa58fc7c5b67ccf667 boot_aggregate
+> 
+> Now, add a certificate in DER format (for example, x509_ima.der) to
+> the .ima keyring:
+> 
+> root@nramas:/home/nramas# keyctl show %:.ima
+> Keyring
+>  547515640 ---lswrv      0     0  keyring: .ima
+> 
+> root@nramas:/home/nramas# evmctl import x509_ima.der 547515640
+> 
+> root@nramas:/home/nramas# keyctl show %:.ima
+> Keyring
+>  547515640 ---lswrv      0     0  keyring: .ima
+>  809678766 --als--v      0     0   \_ asymmetric: hostname: whoami signing key: 052dd247dc3c36...
+> 
+> View the updated IMA measurement log:
+> 
+> root@nramas:/home/nramas# cat /sys/kernel/security/ima/ascii_runtime_measurements
+> 10 67ec... ima-ng sha1:b5466c508583f0e633df83aa58fc7c5b67ccf667 boot_aggregate
+> 10 3adf... ima-buf sha256:27c915b8ddb9fae7214cf0a8a7043cc3eeeaa7539bcb136f8427067b5f6c3b7b .ima 30818902818100ee96b264072a42888f78a2f9b8198467a3ad97d126f3d1cc1c24d23e7185cc743b04d4a54254ca16e1e11ed4450deb98b1f7bb4288424570fabcfc6d5aa93a2a14fa2b7835ac877cfea761e5ff414c6ee274eff26f8bd6c484312e56619299acf0dbd224b87c3883b66a9393d21af8962458663b0ac1706c63773cd50e8236270203010001
+> root@nramas:/home/nramas#
+> 
+> The public key of x509_ima.der certificate and the key's SHA-256 hash
+> are included in the IMA log.
+> 
+> For example, in the above IMA log entry the public key is the following:
+> 
+> 30818902818100ee96b264072a42888f78a2f9b8198467a3ad97d126f3d1cc1c24d23e7185cc743b04d4a54254ca16e1e11ed4450deb98b1f7bb4288424570fabcfc6d5aa93a2a14fa2b7835ac877cfea761e5ff414c6ee274eff26f8bd6c484312e56619299acf0dbd224b87c3883b66a9393d21af8962458663b0ac1706c63773cd50e8236270203010001
+> 
+> sha256:27c915b8ddb9fae7214cf0a8a7043cc3eeeaa7539bcb136f8427067b5f6c3b7b
+> 
+> root@nramas:/home/nramas# cat /sys/kernel/security/ima/ascii_runtime_measurements |
+>                           grep " .ima" | cut -d' ' -f 6 | xxd -r -p | sha256sum
+> 27c915b8ddb9fae7214cf0a8a7043cc3eeeaa7539bcb136f8427067b5f6c3b7b
+> root@nramas:/home/nramas#
+> 
+> SHA-256 hash in the IMA log and the above output should match.
+> 
+> Now run the following "openssl" command to display
+> various fields of x509_ima.der certificate:
+> 
+> Verify the "Modulus" and the "Exponent" with that
+> in the public key data in the IMA log entry.
+> Note that the "Modulus" in the IMA log entry follows
+> the RSA Header (For example, 308189028181)
+> The "Exponent" is the last 3 hex numbers in the IMA log
+> (For example, 0x01 0x00 0x01)
+> 
+> root@nramas:/home/nramas# openssl x509 -in x509_ima.der -inform der -noout -text
+> Certificate:
+>     Data:
+>         Version: 3 (0x2)
+>         Serial Number:
+>             5b:e0:23:4f:f3:ad:f0:50:34:9b:33:b8:94:65:a6:aa:b6:e3:39:f7
+>         Signature Algorithm: sha256WithRSAEncryption
+>         Issuer: O = hostname, CN = whoami signing key, emailAddress = whoami@hostname
+>         Validity
+>             Not Before: Aug 22 02:29:02 2019 GMT
+>             Not After : Aug 21 02:29:02 2020 GMT
+>         Subject: O = hostname, CN = whoami signing key, emailAddress = whoami@hostname
+>         Subject Public Key Info:
+>             Public Key Algorithm: rsaEncryption
+>                 RSA Public-Key: (1024 bit)
+>                 Modulus:
+>                     00:ee:96:b2:64:07:2a:42:88:8f:78:a2:f9:b8:19:
+>                     84:67:a3:ad:97:d1:26:f3:d1:cc:1c:24:d2:3e:71:
+>                     85:cc:74:3b:04:d4:a5:42:54:ca:16:e1:e1:1e:d4:
+>                     45:0d:eb:98:b1:f7:bb:42:88:42:45:70:fa:bc:fc:
+>                     6d:5a:a9:3a:2a:14:fa:2b:78:35:ac:87:7c:fe:a7:
+>                     61:e5:ff:41:4c:6e:e2:74:ef:f2:6f:8b:d6:c4:84:
+>                     31:2e:56:61:92:99:ac:f0:db:d2:24:b8:7c:38:83:
+>                     b6:6a:93:93:d2:1a:f8:96:24:58:66:3b:0a:c1:70:
+>                     6c:63:77:3c:d5:0e:82:36:27
+>                 Exponent: 65537 (0x10001)
+>         X509v3 extensions:
+>             X509v3 Basic Constraints: critical
+>                 CA:FALSE
+>             X509v3 Key Usage: 
+>                 Digital Signature
+>             X509v3 Subject Key Identifier: 
+>                 05:2D:D2:47:DC:3C:36:D6:D6:06:75:FE:7A:E8:69:79:0B:E5:61:71
+>             X509v3 Authority Key Identifier: 
+>                 keyid:E3:67:10:F0:83:4C:97:3E:D9:4A:18:6F:BC:D2:23:75:B4:5E:24:54
+> 
+>     Signature Algorithm: sha256WithRSAEncryption
+>          b1:2f:ae:ff:1e:0e:39:0c:fd:5e:b7:14:0a:f3:b7:a6:53:cb:
+>          49:c6:ab:0a:23:be:24:c0:35:33:1d:76:00:c8:f7:58:f9:df:
+>          7f:df:c5:ee:b6:fe:c3:58:59:20:3e:ca:0e:4f:01:f9:a7:9a:
+>          58:be:63:09:47:cb:95:9a:52:d3:f2:de:96:f2:10:d4:92:47:
+>          c3:3a:62:26:dc:2a:52:ee:54:10:69:ed:3c:62:1f:87:67:fd:
+>          36:a0:61:e9:a6:1a:db:5d:1d:d3:44:99:d9:9a:1c:e6:ba:a4:
+>          96:b4:f5:e2:26:8b:fc:52:c3:ee:a4:a6:b7:b5:18:1f:08:52:
+>          4a:ee
+> root@nramas:/home/nramas#
+> 
+> An ima-sig entry for a kernel module, say, kheaders.ko
+> from the IMA log entry is given below:
+> 
+> 10 0c98... ima-sig
+> sha256:3bc6ed4f0b4d6e31bc1dbc9ef844605abc7afdc6d81a57d77a1ec9407997c40
+> 2 /usr/lib/modules/5.4.0-rc3+/kernel/kernel/kheaders.ko
+> 03020BE561710100abcde...
+> 
+> In the above 0BE56171 is the Key ID of the key used to verify
+> the IMA signature. This Key ID is the last 4 hex digits of
+> the subject key identifier displayed in openssl output
+> for the certificate x509_ima.der (Which is the IMA certificate
+> used to sign the kernel module).
+> 
+> X509v3 Subject Key Identifier:
+>    05:2D:D2:47:DC:3C:36:D6:D6:06:75:FE:7A:E8:69:79:0B:E5:61:71
+> 
+> The ima-modsig entry for the same kernel module is:
+> 
+> 10 82aa... ima-modsig
+> sha256:3bc6ed4f0b4d6e31bc1dbc9ef844605abc7afdc6d81a57d77a1ec9407997c40
+> 2 /usr/lib/modules/5.4.0rc3+/kernel/kernel/kheaders.ko  
+> sha256:77fa889b35a05338ec52e51591c1b89d4c8d1c99a21251d7c22b1a8642a6bad3
+> 30818902818100ee96b264072a42888f78a2f9b8198467a3ad97d126f3d1cc1c24d23e7185cc743b04d4a54254ca16e1e11ed4450deb98b1f7bb4288424570fabcfc6d5aa93a2a14fa2b7835ac877cfea761e5ff414c6ee274eff26f8bd6c484312e56619299acf0dbd224b87c3883b66a9393d21af8962458663b0ac1706c63773cd50e8236270203010001
+> 
+> If the kernel module was signed by x509_ima.der certificate then
+> the public key entry in the ima-modsig should match the public key
+> for the key measurement for x509_ima.der.
+> 
+> The above can be used to correlate the key measurement IMA entry,
+> ima-sig and ima-modsig entries using the same key.
 
-Doing vIOMMU at scale with a non-Linux host, take a a long time.
-Tainting doesn't make it happen any sooner. It just makes users
-live harder. Sorry blaming the user and giving a bad experience doesn't help anyone.
+True, but associating the public key measurement with the file
+signature requires information from the certificate (e.g. issuer,
+serial number, and/or subject, subject keyid).
 
-> You might consider this a re-hashing of those previous discussions, but
-> to me it seems like taking advantage of and promoting an interface that
-> should have plenty of warning signs that this is not a safe way to use
-> the device from userspace.  Without some way to take advantage of the
-> code in a safe way, this just seems to be normalizing an unsupportable
-> usage model.  Thanks,
+For a regression test, it would be nice if the key measurement,
+itself, contained everything needed in order to validate the file
+signatures in the measurement list.
 
+Mimi
 
-The use case for all this stuff has been dedicated infrastructure.
-It would be good if security was more baked in but it isn't.
-Most users cover it over by either being dedicated applicances
-or use LSM to protect UIO.
