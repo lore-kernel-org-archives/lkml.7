@@ -2,72 +2,102 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B757AC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 09:50:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 049F8C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 09:50:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95EC92243F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 09:50:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9A0921D7A
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 09:50:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="CnG1+tqG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728015AbfKTJuD (ORCPT
+        id S1728227AbfKTJuV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 04:50:03 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:56003 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727826AbfKTJuD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 04:50:03 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iXMcS-0004FR-UU; Wed, 20 Nov 2019 10:49:53 +0100
-Date:   Wed, 20 Nov 2019 10:49:51 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Dexuan Cui <decui@microsoft.com>
-cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        sashal@kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
-        david@redhat.com, arnd@arndb.de, bp@alien8.de,
-        daniel.lezcano@linaro.org, hpa@zytor.com, mingo@redhat.com,
-        x86@kernel.org, Alexander.Levin@microsoft.com, vkuznets@redhat.com,
-        linux-arch@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] x86/hyperv: Implement
- hv_is_hibernation_supported()
-In-Reply-To: <1574234165-49066-2-git-send-email-decui@microsoft.com>
-Message-ID: <alpine.DEB.2.21.1911201049030.6731@nanos.tec.linutronix.de>
-References: <1574234165-49066-1-git-send-email-decui@microsoft.com> <1574234165-49066-2-git-send-email-decui@microsoft.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 20 Nov 2019 04:50:21 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:34365 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727826AbfKTJuU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 04:50:20 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47Hybs2hFjz9sPW;
+        Wed, 20 Nov 2019 20:50:16 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1574243417;
+        bh=jarMthNl+BB7P/L/XYhT8oysem+LhuxZinotaVL4Jmk=;
+        h=Date:From:To:Cc:Subject:From;
+        b=CnG1+tqGXOuruHWjTs93StwM/sz/9Zkg2fkvxs2ODkKaRCWwFUbuQUugrsCZVExMn
+         zSNJG1Olp2ufdDH1lrRG2/R8Jo9n+NmUCXmZ4vuv8ZdkvpAl+QX6Xs+z2IxRpcXvSb
+         P1YlX1BY9l4aEw7wbsHeUx7BwSE+po4UM2ZgD6pmoHluGeeomB3u51Gl7pzKxU5Sdl
+         yMGReQ7sejBnCj3XnQoIEyQ+qf0HHUHCDWuUQ2bnbcG19UwxRSEer6/raYvGaFnHqU
+         9suY/aRniYnUvux6Brs3O3+OVMUIRswCZEQiCJrHnQ5jQA1sI/TMeN2AaBp/XlyAF7
+         CI5dVV182xioQ==
+Date:   Wed, 20 Nov 2019 20:50:09 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Willem de Bruijn <willemb@google.com>
+Subject: linux-next: Fixes tag needs some work in the net tree
+Message-ID: <20191120205009.188c2394@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: multipart/signed; boundary="Sig_/V6756Ingn_QCm6UxIl0GuAW";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 19 Nov 2019, Dexuan Cui wrote:
-> Once all the vmbus and VSC patches for the hibernation feature are
-> accepted, an extra patch will be submitted to forbid hibernation if the
-> virtual ACPI S4 state is absent, i.e. hv_is_hibernation_supported() is
-> false.
-> 
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-> ---
-> 
-> v2 is actually the same as v1. This is just a resend.
-> 
-> I suggest this patch should go through the Hyper-V tree:
-> https://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git/log/?h=hyperv-next
-> because it's needed by
-> [PATCH v2 2/2] hv_balloon: Add the support of hibernation
-> and some upcoming patches.
+--Sig_/V6756Ingn_QCm6UxIl0GuAW
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Acked-by: Thomas Gleixner <tglx@linutronix.de>
+Hi all,
+
+n commit
+
+  d4ffb02dee2f ("net/tls: enable sk_msg redirect to tls socket egress")
+
+Fixes tag
+
+  Fixes: f3de19af0f5b ("Revert \"net/tls: remove unused function tls_sw_sen=
+dpage_locked\"")
+
+has these problem(s):
+
+  - Subject does not match target commit subject
+    Just use
+	git log -1 --format=3D'Fixes: %h ("%s")'
+
+Did you mean:
+
+Fixes: f3de19af0f5b ("net/tls: remove unused function tls_sw_sendpage_locke=
+d")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/V6756Ingn_QCm6UxIl0GuAW
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3VDFEACgkQAVBC80lX
+0GwjrAf8Cr5xgQcepBQx2ubjwqRBw8z7vRH8A13GDkrPMIxNFNCBpBytMSmN+D8y
+u1sPM8gm9rRx5nQku01EHXvNl54HveDUF+1nzG+T7W7z0A570CXzSZ29TEdKbBQn
+jnxKCwXE2TIab74BXU5gWhOioKNO/qWcKXL2WIrWMbZiV4Nnl3TVaCQ/wvAavyrc
+y1UzAC5dngIcVnB8nYIgz+hDeAUzzmlO1Hm7H92l3azrNbY5JP0YMz1AjFXMW0ty
+lfLwJ87s8fT5TL4yyAnh5xZV2yH0r+Snjw60I8rEMwNDAXvEdTxbmryuqKbuGmZ2
+y2JbAUH50d2kNDh7tWCQwXQWRfzd/w==
+=2rr0
+-----END PGP SIGNATURE-----
+
+--Sig_/V6756Ingn_QCm6UxIl0GuAW--
