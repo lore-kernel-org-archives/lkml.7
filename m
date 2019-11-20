@@ -2,98 +2,113 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56D35C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 01:35:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A87C1C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 01:36:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3142522365
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 01:35:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574213732;
-	bh=5CL38VfE+2Sp++BonQRuB8quhy3LjMWlhCoAYkC1/u4=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=NjdZCEViAfTvNk7Yl+5rx9YMNc14QK3NHNZqSVlc+aNZDIvqm0lCtdJoqqztjdUp/
-	 JRfJmKQFEDA+XoDJRUcHMz3hAf1i7SSZfi/P5To+kqZOTDTCK96YeeQyxxKc8BDTma
-	 s/knkgAtpr7fbyA716PjgLughOFKgScxXHhnsWU0=
+	by mail.kernel.org (Postfix) with ESMTP id 7C383222B0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 01:36:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bGxau+nw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727403AbfKTBfb (ORCPT
+        id S1727438AbfKTBgM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 20:35:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49666 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726874AbfKTBfa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 20:35:30 -0500
-Received: from PC-kkoz.proceq.com (unknown [213.160.61.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 047FE222B0;
-        Wed, 20 Nov 2019 01:35:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574213729;
-        bh=5CL38VfE+2Sp++BonQRuB8quhy3LjMWlhCoAYkC1/u4=;
-        h=From:To:Cc:Subject:Date:From;
-        b=sAhwF36AHMyye4vlmBjDxgnI0ipSTckmUdRGF/jUnN8TyffNzcvGP85t4zxMZ+/sB
-         DBaKSyYrVtTG3NoF0Zuibs43DOceCtx891fW+lODPVz40Pf5q+ZEUcpZUal5NUDjIr
-         P4skZQejawI5z/pEw7pyephBD/5GDn1sSzAvYKUE=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH v2] dt-bindings: power: Rename back power_domain.txt bindings to fix references
-Date:   Wed, 20 Nov 2019 02:35:19 +0100
-Message-Id: <1574213719-20766-1-git-send-email-krzk@kernel.org>
-X-Mailer: git-send-email 2.7.4
+        Tue, 19 Nov 2019 20:36:12 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:34367 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726874AbfKTBgM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 20:36:12 -0500
+Received: by mail-pg1-f194.google.com with SMTP id z188so12504368pgb.1
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 17:36:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4o1Jpj7JdvYh/JDDjDtho7RQMCbF4Skfes37Qp34Ipc=;
+        b=bGxau+nwG6uViXQ3fkwZ2B1CawtakorjCNBZo3/adAD9sc1Ah2mZfKWAAruEjkhe4S
+         jD2ejZi8iHTVWbm03S9oePiVJsMHfwNSv2IaIC9/1lbFFaVpDGlLRPV3Ua+Y6H4xlLCe
+         hVe8LlRVLoHFMXpHv1+LIVHn1EagCgUdUFf6Nk+PC2djvBrb0yGteMNtmkxUmebniLCT
+         1bpV0Pj2OOWmVmLUfzPC2bLCCd5u6IkCLzQyIp9W6wEN6E7OT3noDCrp6LTddEOwWrvm
+         X/ydoBt+ucn4gUDd54PRm4UybjM74dMkP62P+Ur4aY1kious4gFhOoxJRmI0eXydSnei
+         gFUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4o1Jpj7JdvYh/JDDjDtho7RQMCbF4Skfes37Qp34Ipc=;
+        b=eZoL8WFL9sBq/IZKOtjCIdF6VWLZnzdPW+5fbPU/RZErgMceIQj9jM+w9ONlNAXWQa
+         s8jnywoVg4NnnhFqtYhss21bNJFDaPIbcSrTAsEG+gLqpGrILXpYtrSj7xM/01F5pF3W
+         Yv+2vDu6PXBdNb5jyM6Y23awgWBTLEbyArtv89SNnV3z5pVRvXzY3FeCeqVNYeYs70qG
+         HitJiTzOMsUzPcjRNig2foBeLME+hR0MvxHXndDZkVMHrB4fpwYqwVRq6JtzxQqUNADl
+         Q5k5CVjye6tTCtd6Zdcwy2AonK/AKOq0cxfC6XVvtWOhNCfUF2o9ACM8g0Apk4bcbApX
+         9KKw==
+X-Gm-Message-State: APjAAAV+zpK7HzsmDzY7DRBqoj0yCcmY3uvdEBBXORO0hvqVQQmq5qIE
+        NTBftk1OxmyOdFJRzh1qLRT0iA==
+X-Google-Smtp-Source: APXvYqwjbM0z46tTQR97VRUX4H0ZF9Pi/YMRqMtHDYKxyZl0UxOv03DKhWvyWVo9zgQlWwACKgAIPA==
+X-Received: by 2002:a62:5e04:: with SMTP id s4mr784841pfb.63.1574213771218;
+        Tue, 19 Nov 2019 17:36:11 -0800 (PST)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id f5sm4662235pjp.1.2019.11.19.17.36.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Nov 2019 17:36:10 -0800 (PST)
+Date:   Tue, 19 Nov 2019 17:36:08 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Andy Gross <andy.gross@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] soc: qcom: rpmhpd: Set 'active_only' for active only
+ power domains
+Message-ID: <20191120013608.GB3143381@builder>
+References: <20190214173633.211000-1-dianders@chromium.org>
+ <CAD=FV=WD4r-GAM6mnTg9qB04aaX7JJzHajhtb+N8Yq9UR1WZAA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=WD4r-GAM6mnTg9qB04aaX7JJzHajhtb+N8Yq9UR1WZAA@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With split of power domain controller bindings to power-domain.yaml,
-the consumer part was renamed to power-domain.txt breaking the
-references.  Undo the renaming.
+On Mon 18 Nov 08:19 PST 2019, Doug Anderson wrote:
 
-Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Fixes: ea312b90857d ("dt-bindings: power: Convert Generic Power Domain bindings to json-schema")
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Bjorn / Andy,
+> 
+> On Thu, Feb 14, 2019 at 9:36 AM Douglas Anderson <dianders@chromium.org> wrote:
+> >
+> > The 'active_only' attribute was accidentally never set to true for any
+> > power domains meaning that all the code handling this attribute was
+> > dead.
+> >
+> > NOTE that the RPM power domain code (as opposed to the RPMh one) gets
+> > this right.
+> >
+> > Fixes: 279b7e8a62cc ("soc: qcom: rpmhpd: Add RPMh power domain driver")
+> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> > ---
+> >
+> >  drivers/soc/qcom/rpmhpd.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> 
+> Somehow this fell through the cracks and was never applied.  Can you
+> pick it up?  Given that it's been a year and nobody has noticed this
+> it seems like 5.5 is fine, but maybe you could add Cc: stable since it
+> seems like something that stable trees would want...
+> 
+> Thanks!
+> 
 
----
+Thanks for noticing, I've picked this up.
 
-Changes since v1:
-1. Undo the renaming.
----
- .../devicetree/bindings/power/{power-domain.txt => power_domain.txt}   | 0
- MAINTAINERS                                                            | 3 ++-
- 2 files changed, 2 insertions(+), 1 deletion(-)
- rename Documentation/devicetree/bindings/power/{power-domain.txt => power_domain.txt} (100%)
-
-diff --git a/Documentation/devicetree/bindings/power/power-domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/power/power-domain.txt
-rename to Documentation/devicetree/bindings/power/power_domain.txt
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 7126d3e079a4..f3513c9bce0f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6953,7 +6953,8 @@ L:	linux-pm@vger.kernel.org
- S:	Supported
- F:	drivers/base/power/domain*.c
- F:	include/linux/pm_domain.h
--F:	Documentation/devicetree/bindings/power/power-domain*
-+F:	Documentation/devicetree/bindings/power/power_domain.txt
-+F:	Documentation/devicetree/bindings/power/power-domain.yaml
- 
- GENERIC RESISTIVE TOUCHSCREEN ADC DRIVER
- M:	Eugen Hristev <eugen.hristev@microchip.com>
--- 
-2.7.4
-
+Regards,
+Bjorn
