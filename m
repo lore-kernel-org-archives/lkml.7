@@ -2,181 +2,331 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22651C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 03:47:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 719A8C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 03:49:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4ED522461
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 03:47:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3714B2245D
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 03:49:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="PDS2lG8b"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KgW+LNrm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727852AbfKTDrA (ORCPT
+        id S1727604AbfKTDtp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 22:47:00 -0500
-Received: from mail-eopbgr70072.outbound.protection.outlook.com ([40.107.7.72]:17604
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727518AbfKTDq6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 22:46:58 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IIwfrMgMEQgRpGK0VeIFiSMzAQDvJ4mv7WVwmoB3iRb3877OrYdUjdN99rv9gI2PPKdJPgA/UGB2WtKQRxGV6Y3OleQWBd7dqoerriMGGoUSCfnu45oyqKFWBv8CekFlmRWtibbQjGP760lpqXkATtAwymOtd9TWaaabf9DmPru+5JbUB5ybZthLTg+vnipkuPb4PAFx6wzkeAesjiX/Q5YsiyzNJffu7stSyOxtn1cH43d0/rtgSyJGS8R1/YodTdrrz2QNSPvLQv1Zm6HQOs6kcCQ7+Y/aEm6v+AvUTJ16e8DLX/A6ZMVMdJAHPU2+qXAfq2amMAHSc1bRO5SbiA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zphJDwe9+zv4TeGT11iRMz4oU4/XEu7IF8op8dkKql4=;
- b=mDHR1QrU6INuG+9++D7DieT+JH3bsSNjEj75VPpZq/nFow7wmToo26/ZwIlWTi9rZMaCt6PnNpOFvFugD32mcZc6cG6WJ8MndBd2dOVqAJLH2qRgQ7mC8Ah1l08y50VfUyVYq1lhjeqsXKIwd9rvJketpY8HW/xE64KJqazNL5vAL11ZkL2/ajn9aUTqH6eVfvephDIkz5Z4lFnPYrOUADoGptTGqbqIzvd8lOWVeGPnJFq9cDWeOgJU7d/qpbpYLzMxUSgeEkqAAj+GGegdzOp8Fr12PtcA2Umz2V5kfCL5D6NgCcyFrlTeeRo6vNEspcD4nmrgieaKmyvpk2efhw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zphJDwe9+zv4TeGT11iRMz4oU4/XEu7IF8op8dkKql4=;
- b=PDS2lG8bhi+SX/2khTaxRUOmJKhS2eg+rHfXsvrhNDNqmBmBdbZS4Bv8fOmLswVvcdOd9vhxY5L8OIB95lYHFIcXQGe0OeXImJNi+gj0RKlLfDdgJOXt5uUaay3YOwU/HL+7ub0Je912HwVKtTUQyvNWCMVNej2XYIay4zYGW0E=
-Received: from DB8PR04MB6747.eurprd04.prod.outlook.com (20.179.250.159) by
- DB8PR04MB5657.eurprd04.prod.outlook.com (20.179.9.138) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2451.23; Wed, 20 Nov 2019 03:46:10 +0000
-Received: from DB8PR04MB6747.eurprd04.prod.outlook.com
- ([fe80::898f:3cd6:c225:7219]) by DB8PR04MB6747.eurprd04.prod.outlook.com
- ([fe80::898f:3cd6:c225:7219%7]) with mapi id 15.20.2451.029; Wed, 20 Nov 2019
- 03:46:10 +0000
-From:   "Z.q. Hou" <zhiqiang.hou@nxp.com>
-To:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
-        Leo Li <leoyang.li@nxp.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "andrew.murray@arm.com" <andrew.murray@arm.com>
-CC:     Mingkai Hu <mingkai.hu@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>,
-        "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: [PATCHv9 08/12] PCI: mobiveil: Add 8-bit and 16-bit CSR register
- accessors
-Thread-Topic: [PATCHv9 08/12] PCI: mobiveil: Add 8-bit and 16-bit CSR register
- accessors
-Thread-Index: AQHVn1UM/CwMe5ZZnEiSNfgmt9Cx/g==
-Date:   Wed, 20 Nov 2019 03:46:10 +0000
-Message-ID: <20191120034451.30102-9-Zhiqiang.Hou@nxp.com>
-References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com>
-In-Reply-To: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HK2PR02CA0199.apcprd02.prod.outlook.com
- (2603:1096:201:20::11) To DB8PR04MB6747.eurprd04.prod.outlook.com
- (2603:10a6:10:10b::31)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=zhiqiang.hou@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 1614a5f6-fe1e-4004-ec94-08d76d6c2e87
-x-ms-traffictypediagnostic: DB8PR04MB5657:|DB8PR04MB5657:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB8PR04MB56577810EBA278E35FC1E4F4844F0@DB8PR04MB5657.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:586;
-x-forefront-prvs: 02272225C5
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(1496009)(4636009)(366004)(346002)(396003)(39860400002)(136003)(376002)(199004)(189003)(2201001)(54906003)(86362001)(36756003)(256004)(7736002)(305945005)(6116002)(66066001)(3846002)(110136005)(316002)(71190400001)(7416002)(1076003)(71200400001)(52116002)(2501003)(4326008)(5660300002)(66476007)(476003)(64756008)(66556008)(11346002)(446003)(76176011)(2616005)(66946007)(6512007)(66446008)(8676002)(386003)(6506007)(2906002)(99286004)(102836004)(6486002)(81166006)(81156014)(8936002)(50226002)(186003)(26005)(478600001)(14454004)(486006)(6436002)(25786009)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB5657;H:DB8PR04MB6747.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: iSeXNm9s2KhTOWf7hIg/nxTjHF/fwje3E8i4wCAFqDASQLq/nYeNiWWBqEfDVOxF6GZZDerXTyxCQO9O+8Hv0Mrrt79Pf+8gBuKMhp3p1ZKXoXTTeSTNjuI9XbCl60x3grDizqgwQLFHnfHa73WPRF2PD80qcFSQnVWVljijsu6DyZU2xw/OUKtNXBafuFCI7i3Q5RGl/TKbl3d4TXuFx2ZnLox4AlreDYFk6yPPS6u5LuPZflXhYVPMyEu3lfjVkPhiL1lOMCGCEJEdFDKItuuXZ1/P5LQipX2ONPjLrLSfKhZ57WvKP1SIksrEbD/nHtzHVqchCMiWlnCFO1HMmTsCduUG044YZaohIgWbV0xtyj2PDjYb/CAPJT+jUhDjWAZzK0srRYCvj6EwaBvuaT4kx66veozUF5gCD4DCtR+l0Qf82QyOkrdtMXT+mFoj
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 19 Nov 2019 22:49:45 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:40304 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727378AbfKTDto (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 22:49:44 -0500
+Received: by mail-ot1-f68.google.com with SMTP id m15so19995207otq.7;
+        Tue, 19 Nov 2019 19:49:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=AL7UwpZpDtrAGO1EXavPbI6HiHuHJD7YVcQ5aKTdQSg=;
+        b=KgW+LNrma27erCDp4ciIxJVOnGkpFA33g/TmcXtqOzr1T5FDcPPv2i4gmoQJox1ej1
+         PRU7014/ltoCn6wuy+O8sLwY0czxMd2hE9s7frbvCr6bbdIHS748oXlBBEssBFkuc24a
+         oarvhLj94m+Xn54KwnPEDmADVa5JaQzFBvHgACL8apctznDsvX/SKPZCJ6xwbn80ioOF
+         ADuhboJVLeqXjK2smvwMv2PAFSSBjmGuc5ePnt3saBSGkivSaUCzeoKLFkiVbL+7CbV9
+         gDrjhTvpx6LPYbnjIBpiL/GHstpDst0Nwx/8iicQcLQ2FSK7p8hoMzN0dYvC4sHWUSx1
+         jPhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=AL7UwpZpDtrAGO1EXavPbI6HiHuHJD7YVcQ5aKTdQSg=;
+        b=Y0bnADVRYmLUgpmr28L61ebBgQkvg6dyoCZDDmmjklIRgcxmw2PFLJ30gjMDnxPWw+
+         uHTNeVps0DJ5pFyaWlwJ2HmGZlsI02itmLRW/roqYj76ecapR3hzVL/qCaap9U4oROjK
+         SHFymmimWkGPCXbf6CDltP/uSmogA8ttOSy+n3sz0c1fxe5dZQQauLWwb43pO7t9X/8W
+         hKTE2Kc7+wMZyk21UaGqPut/bZ6YuaEGSnUJtVuJGaptv8+EToGS43Y/PM4wOvn8gWza
+         igrHyW4H7xM7q0JxTf8P3GxjrbfZXXIIWuhCWxh8rtlTaDOTEWTOg/fEUXzDDP5KAmlB
+         KLFg==
+X-Gm-Message-State: APjAAAXr/YWNMIgBHPguc13/q9vq3YVRb+DFJiJlggKYU7ehCSHa7lM5
+        R/y4Ck4jfdfEYzD5U/sg92vdoWdO8gagnzWAUtE=
+X-Google-Smtp-Source: APXvYqxpOUla8jdXFA9vNA64qE23aq6wGSr/g5HKdgZibrMRGtlZee2Dn0S/kPy81kpjdDcskJX1Yxc8lI3gBFOOMeE=
+X-Received: by 2002:a9d:b83:: with SMTP id 3mr321505oth.56.1574221783615; Tue,
+ 19 Nov 2019 19:49:43 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1614a5f6-fe1e-4004-ec94-08d76d6c2e87
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Nov 2019 03:46:10.4677
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: UomE1xHoP1bhmFwYLtAYl/KiPnvWGuYeiTqCui13vrS4nTegP0H9PzCN+oyQEWYaFUk+3GIlewUwmndRSQM9/Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB5657
+References: <1574145389-12149-1-git-send-email-wanpengli@tencent.com> <09CD3BD3-1F5E-48DA-82ED-58E3196DBD83@oracle.com>
+In-Reply-To: <09CD3BD3-1F5E-48DA-82ED-58E3196DBD83@oracle.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Wed, 20 Nov 2019 11:49:36 +0800
+Message-ID: <CANRm+CxZ5Opj44Aj+LL18nVSuU63hXpt9U9E3jJEQP67Hx6WMg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] KVM: VMX: FIXED+PHYSICAL mode single target IPI fastpath
+To:     Liran Alon <liran.alon@oracle.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-
-There are some 8-bit and 16-bit registers in PCIe configuration
-space, so add these accessors accordingly.
-
-Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
-Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
----
-V9:
- - No change
-
- .../pci/controller/mobiveil/pcie-mobiveil.h   | 23 +++++++++++++++++++
- 1 file changed, 23 insertions(+)
-
-diff --git a/drivers/pci/controller/mobiveil/pcie-mobiveil.h b/drivers/pci/=
-controller/mobiveil/pcie-mobiveil.h
-index 37116c2a19fe..750a7fd95bc1 100644
---- a/drivers/pci/controller/mobiveil/pcie-mobiveil.h
-+++ b/drivers/pci/controller/mobiveil/pcie-mobiveil.h
-@@ -182,10 +182,33 @@ static inline u32 mobiveil_csr_readl(struct mobiveil_=
-pcie *pcie, u32 off)
- 	return mobiveil_csr_read(pcie, off, 0x4);
- }
-=20
-+static inline u32 mobiveil_csr_readw(struct mobiveil_pcie *pcie, u32 off)
-+{
-+	return mobiveil_csr_read(pcie, off, 0x2);
-+}
-+
-+static inline u32 mobiveil_csr_readb(struct mobiveil_pcie *pcie, u32 off)
-+{
-+	return mobiveil_csr_read(pcie, off, 0x1);
-+}
-+
-+
- static inline void mobiveil_csr_writel(struct mobiveil_pcie *pcie, u32 val=
-,
- 				       u32 off)
+On Tue, 19 Nov 2019 at 20:11, Liran Alon <liran.alon@oracle.com> wrote:
+>
+>
+>
+> > On 19 Nov 2019, at 8:36, Wanpeng Li <kernellwp@gmail.com> wrote:
+> >
+> > From: Wanpeng Li <wanpengli@tencent.com>
+> >
+> > ICR and TSCDEADLINE MSRs write cause the main MSRs write vmexits in
+> > our product observation, multicast IPIs are not as common as unicast
+> > IPI like RESCHEDULE_VECTOR and CALL_FUNCTION_SINGLE_VECTOR etc.
+> >
+> > This patch tries to optimize x2apic physical destination mode, fixed
+> > delivery mode single target IPI by delivering IPI to receiver as soon
+> > as possible after sender writes ICR vmexit to avoid various checks
+> > when possible, especially when running guest w/ --overcommit cpu-pm=3Do=
+n
+> > or guest can keep running, IPI can be injected to target vCPU by
+> > posted-interrupt immediately.
+> >
+> > Testing on Xeon Skylake server:
+> >
+> > The virtual IPI latency from sender send to receiver receive reduces
+> > more than 200+ cpu cycles.
+> >
+> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> > ---
+> > v1 -> v2:
+> > * add tracepoint
+> > * Instead of a separate vcpu->fast_vmexit, set exit_reason
+> >   to vmx->exit_reason to -1 if the fast path succeeds.
+> > * move the "kvm_skip_emulated_instruction(vcpu)" to vmx_handle_exit
+> > * moving the handling into vmx_handle_exit_irqoff()
+> >
+> > arch/x86/include/asm/kvm_host.h |  4 ++--
+> > arch/x86/include/uapi/asm/vmx.h |  1 +
+> > arch/x86/kvm/svm.c              |  4 ++--
+> > arch/x86/kvm/vmx/vmx.c          | 40 ++++++++++++++++++++++++++++++++++=
++++---
+> > arch/x86/kvm/x86.c              |  5 +++--
+> > 5 files changed, 45 insertions(+), 9 deletions(-)
+> >
+> > diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm=
+_host.h
+> > index 898ab9e..0daafa9 100644
+> > --- a/arch/x86/include/asm/kvm_host.h
+> > +++ b/arch/x86/include/asm/kvm_host.h
+> > @@ -1084,7 +1084,7 @@ struct kvm_x86_ops {
+> >       void (*tlb_flush_gva)(struct kvm_vcpu *vcpu, gva_t addr);
+> >
+> >       void (*run)(struct kvm_vcpu *vcpu);
+> > -     int (*handle_exit)(struct kvm_vcpu *vcpu);
+> > +     int (*handle_exit)(struct kvm_vcpu *vcpu, u32 *vcpu_exit_reason);
+> >       int (*skip_emulated_instruction)(struct kvm_vcpu *vcpu);
+> >       void (*set_interrupt_shadow)(struct kvm_vcpu *vcpu, int mask);
+> >       u32 (*get_interrupt_shadow)(struct kvm_vcpu *vcpu);
+> > @@ -1134,7 +1134,7 @@ struct kvm_x86_ops {
+> >       int (*check_intercept)(struct kvm_vcpu *vcpu,
+> >                              struct x86_instruction_info *info,
+> >                              enum x86_intercept_stage stage);
+> > -     void (*handle_exit_irqoff)(struct kvm_vcpu *vcpu);
+> > +     void (*handle_exit_irqoff)(struct kvm_vcpu *vcpu, u32 *vcpu_exit_=
+reason);
+> >       bool (*mpx_supported)(void);
+> >       bool (*xsaves_supported)(void);
+> >       bool (*umip_emulated)(void);
+> > diff --git a/arch/x86/include/uapi/asm/vmx.h b/arch/x86/include/uapi/as=
+m/vmx.h
+> > index 3eb8411..b33c6e1 100644
+> > --- a/arch/x86/include/uapi/asm/vmx.h
+> > +++ b/arch/x86/include/uapi/asm/vmx.h
+> > @@ -88,6 +88,7 @@
+> > #define EXIT_REASON_XRSTORS             64
+> > #define EXIT_REASON_UMWAIT              67
+> > #define EXIT_REASON_TPAUSE              68
+> > +#define EXIT_REASON_NEED_SKIP_EMULATED_INSN -1
+> >
+> > #define VMX_EXIT_REASONS \
+> >       { EXIT_REASON_EXCEPTION_NMI,         "EXCEPTION_NMI" }, \
+> > diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+> > index d02a73a..c8e063a 100644
+> > --- a/arch/x86/kvm/svm.c
+> > +++ b/arch/x86/kvm/svm.c
+> > @@ -4929,7 +4929,7 @@ static void svm_get_exit_info(struct kvm_vcpu *vc=
+pu, u64 *info1, u64 *info2)
+> >       *info2 =3D control->exit_info_2;
+> > }
+> >
+> > -static int handle_exit(struct kvm_vcpu *vcpu)
+> > +static int handle_exit(struct kvm_vcpu *vcpu, u32 *vcpu_exit_reason)
+> > {
+> >       struct vcpu_svm *svm =3D to_svm(vcpu);
+> >       struct kvm_run *kvm_run =3D vcpu->run;
+> > @@ -6187,7 +6187,7 @@ static int svm_check_intercept(struct kvm_vcpu *v=
+cpu,
+> >       return ret;
+> > }
+> >
+> > -static void svm_handle_exit_irqoff(struct kvm_vcpu *vcpu)
+> > +static void svm_handle_exit_irqoff(struct kvm_vcpu *vcpu, u32 *vcpu_ex=
+it_reason)
+> > {
+> >
+> > }
+> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> > index 621142e5..b98198d 100644
+> > --- a/arch/x86/kvm/vmx/vmx.c
+> > +++ b/arch/x86/kvm/vmx/vmx.c
+> > @@ -5792,7 +5792,7 @@ void dump_vmcs(void)
+> >  * The guest has exited.  See if we can fix it or if we need userspace
+> >  * assistance.
+> >  */
+> > -static int vmx_handle_exit(struct kvm_vcpu *vcpu)
+> > +static int vmx_handle_exit(struct kvm_vcpu *vcpu, u32 *vcpu_exit_reaso=
+n)
+>
+> vmx_handle_exit() should get second parameter by value and not by pointer=
+. As it doesn=E2=80=99t need to modify it.
+>
+> I would also rename parameter to =E2=80=9Caccel_exit_completion=E2=80=9D =
+to indicate this is additional work that needs to happen to complete accele=
+rated-exit handling.
+> This parameter should be an enum that currently only have 2 values: ACCEL=
+_EXIT_NONE and ACCEL_EXIT_SKIP_EMUL_INS.
+>
+> > {
+> >       struct vcpu_vmx *vmx =3D to_vmx(vcpu);
+> >       u32 exit_reason =3D vmx->exit_reason;
+> > @@ -5878,7 +5878,10 @@ static int vmx_handle_exit(struct kvm_vcpu *vcpu=
+)
+> >               }
+> >       }
+> >
+> > -     if (exit_reason < kvm_vmx_max_exit_handlers
+> > +     if (*vcpu_exit_reason =3D=3D EXIT_REASON_NEED_SKIP_EMULATED_INSN)=
  {
- 	mobiveil_csr_write(pcie, val, off, 0x4);
- }
-=20
-+static inline void mobiveil_csr_writew(struct mobiveil_pcie *pcie, u32 val=
-,
-+				       u32 off)
-+{
-+	mobiveil_csr_write(pcie, val, off, 0x2);
-+}
-+
-+static inline void mobiveil_csr_writeb(struct mobiveil_pcie *pcie, u32 val=
-,
-+				       u32 off)
-+{
-+	mobiveil_csr_write(pcie, val, off, 0x1);
-+}
-+
- #endif /* _PCIE_MOBIVEIL_H */
---=20
-2.17.1
+> > +             kvm_skip_emulated_instruction(vcpu);
+> > +             return 1;
+> > +     } else if (exit_reason < kvm_vmx_max_exit_handlers
+> >           && kvm_vmx_exit_handlers[exit_reason]) {
+> > #ifdef CONFIG_RETPOLINE
+> >               if (exit_reason =3D=3D EXIT_REASON_MSR_WRITE)
+> > @@ -6223,7 +6226,36 @@ static void handle_external_interrupt_irqoff(str=
+uct kvm_vcpu *vcpu)
+> > }
+> > STACK_FRAME_NON_STANDARD(handle_external_interrupt_irqoff);
+> >
+> > -static void vmx_handle_exit_irqoff(struct kvm_vcpu *vcpu)
+> > +static u32 handle_ipi_fastpath(struct kvm_vcpu *vcpu)
+> > +{
+> > +     u32 index;
+> > +     u64 data;
+> > +     int ret =3D 0;
+> > +
+> > +     if (lapic_in_kernel(vcpu) && apic_x2apic_mode(vcpu->arch.apic)) {
+> > +             /*
+> > +              * fastpath to IPI target, FIXED+PHYSICAL which is popula=
+r
+> > +              */
+> > +             index =3D kvm_rcx_read(vcpu);
+> > +             data =3D kvm_read_edx_eax(vcpu);
+> > +
+> > +             if (((index - APIC_BASE_MSR) << 4 =3D=3D APIC_ICR) &&
+> > +                     ((data & KVM_APIC_DEST_MASK) =3D=3D APIC_DEST_PHY=
+SICAL) &&
+> > +                     ((data & APIC_MODE_MASK) =3D=3D APIC_DM_FIXED)) {
+> > +
+> > +                     trace_kvm_msr_write(index, data);
+>
+> On a standard EXIT_REASON_MSR_WRITE VMExit, this trace will be printed on=
+ly after LAPIC emulation logic happens.
+> You should preserve same ordering.
+>
+> > +                     kvm_lapic_set_reg(vcpu->arch.apic, APIC_ICR2, (u3=
+2)(data >> 32));
+> > +                     ret =3D kvm_lapic_reg_write(vcpu->arch.apic, APIC=
+_ICR, (u32)data);
+> > +
+> > +                     if (ret =3D=3D 0)
+> > +                             return EXIT_REASON_NEED_SKIP_EMULATED_INS=
+N;
+> > +             }
+> > +     }
+> > +
+> > +     return ret;
+> > +}
+>
+> Maybe it would be more elegant to modify this function as follows?
+>
+> static int handle_accel_set_x2apic_icr_irqoff(struct kvm_vcpu *vcpu, u32 =
+msr, u64 data)
+> {
+>     if (lapic_in_kernel(vcpu) && apic_x2apic_mode(vcpu->arch.apic) &&
+>         ((data & KVM_APIC_DEST_MASK) =3D=3D APIC_DEST_PHYSICAL) &&
+>         ((data & APIC_MODE_MASK) =3D=3D APIC_DM_FIXED)) {
+>
+>         kvm_lapic_set_reg(vcpu->arch.apic, APIC_ICR2, (u32)(data >> 32));
+>         return kvm_lapic_reg_write(vcpu->arch.apic, APIC_ICR, (u32)data);
+>     }
+>
+>     return 1;
+> }
+>
+> static enum accel_exit_completion handle_accel_set_msr_irqoff(struct kvm_=
+vcpu *vcpu)
+> {
+>     u32 msr =3D kvm_rcx_read(vcpu);
+>     u64 data =3D kvm_read_edx_eax(vcpu);
+>     int ret =3D 0;
+>
+>     switch (msr) {
+>     case APIC_BASE_MSR + (APIC_ICR >> 4):
+>         ret =3D handle_accel_set_x2apic_icr_irqoff(vcpu, msr, data);
+>         break;
+>     default:
+>         return ACCEL_EXIT_NONE;
+>     }
+>
+>     if (!ret) {
+>         trace_kvm_msr_write(msr, data);
+>         return ACCEL_EXIT_SKIP_EMUL_INS;
+>     }
+>
+>     return ACCEL_EXIT_NONE;
+> }
+>
+> > +
+> > +static void vmx_handle_exit_irqoff(struct kvm_vcpu *vcpu, u32 *exit_re=
+ason)
+> > {
+> >       struct vcpu_vmx *vmx =3D to_vmx(vcpu);
+> >
+> > @@ -6231,6 +6263,8 @@ static void vmx_handle_exit_irqoff(struct kvm_vcp=
+u *vcpu)
+> >               handle_external_interrupt_irqoff(vcpu);
+> >       else if (vmx->exit_reason =3D=3D EXIT_REASON_EXCEPTION_NMI)
+> >               handle_exception_nmi_irqoff(vmx);
+> > +     else if (vmx->exit_reason =3D=3D EXIT_REASON_MSR_WRITE)
+> > +             *exit_reason =3D handle_ipi_fastpath(vcpu);
+>
+> 1) This case requires a comment as the only reason it is called here is a=
+n optimisation.
+> In contrast to the other cases which must be called before interrupts are=
+ enabled on the host.
+>
+> 2) I would rename handler to handle_accel_set_msr_irqoff().
+> To signal this handler runs with host interrupts disabled and to make it =
+a general place for accelerating WRMSRs in case we would require more in th=
+e future.
 
+Yes, TSCDEADLINE/VMX PREEMPTION TIMER is in my todo list after this
+merged upstream, handle all the comments in v3, thanks for making this
+nicer further. :)
+
+    Wanpeng
