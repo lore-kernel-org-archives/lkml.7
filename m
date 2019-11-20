@@ -2,228 +2,196 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41A3DC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 12:03:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E56C7C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 12:04:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 078E022419
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 12:03:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC62E223D1
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 12:04:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X0AKAJLh"
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="syEHckz5";
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="syEHckz5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729390AbfKTMDW (ORCPT
+        id S1729513AbfKTMEO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 07:03:22 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:39850 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729003AbfKTMDU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 07:03:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574251398;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=cPLrgLaGuZaJcH9r1bYOExIf6a7HxnQs/VX4R6E/rqg=;
-        b=X0AKAJLhhUPUzNRw17qZyHdXx+nBkpvhpavZvp1GJgErD9+w9ZIXPG1lS6qo8RgBA6nuMh
-        BM4im81B2qPtC2WOT18/Etm4vL4iMGD7HSpj/jJfcxRqs93RBI+6aPCwVYzKUVH11MwAkq
-        Xv6TrmzLjMNk+p/CcCqhum2Pt6jdPPE=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-26-LvVOw_bjN9mNcRKlNVJPdA-1; Wed, 20 Nov 2019 07:03:16 -0500
-Received: by mail-wm1-f70.google.com with SMTP id y133so4400663wmd.8
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 04:03:16 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=FOyJ5t3F1d+Ww8VG/GvZOln/dLXZzdutGh+ZvZUhBto=;
-        b=QoYs8qi+EDHokJ3LrNqzmwED757+d1mCyXuFW6gZ3uY0zUdQL8DcObXtvrUQ9uj/qb
-         4jrzsoVyL28VovjFTIKq7ypa/6zaIrQvzsbNa9+txCL4Gs/1/ba6iC3vHhlMTIkzOccV
-         kFEOCqB4gnRzexcjHVPUZzfg7Ta4cbN0XwtWGUb9hkpR2o2uUC+VW4ylvYXwy+s5fJQS
-         TyhRYFLioj77S+6IdbyXc2lsxZn2iPOgfKlOlQhSUfiqusph0gDOhC0XTCv+04ZWw+8Y
-         NnseeYCPC8vuH7wAkaCoPALP0TVXLkx12YdKhM7hrarMv1SxTgDXUN63Ns+SodeoGqE/
-         N09g==
-X-Gm-Message-State: APjAAAVFMeY4OxdG78k5DmiMClNyTT0agYGSqbwkghNSofSyZpVbfGh2
-        FAE2Ye1g/lpf6LkHyJ2hhlX3d6bvO9axo+RnjoRajTDZhi5Y7y1vvjOiGiQjc7ut4H2uhQJBorq
-        SisddUKQpqPFewNkUsdU+TBFE
-X-Received: by 2002:a5d:570a:: with SMTP id a10mr2756214wrv.107.1574251394216;
-        Wed, 20 Nov 2019 04:03:14 -0800 (PST)
-X-Google-Smtp-Source: APXvYqz33Aj8kvQESisy7rMEIOYNw9KoxhpUBoSDqC6m1YCd6Hc66GXIFyZ9wQ8otMuTjyRfxiTwIg==
-X-Received: by 2002:a5d:570a:: with SMTP id a10mr2756131wrv.107.1574251393545;
-        Wed, 20 Nov 2019 04:03:13 -0800 (PST)
-Received: from steredhat (a-nu5-32.tin.it. [212.216.181.31])
-        by smtp.gmail.com with ESMTPSA id 65sm35828136wrs.9.2019.11.20.04.03.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Nov 2019 04:03:12 -0800 (PST)
-Date:   Wed, 20 Nov 2019 13:03:10 +0100
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     syzbot <syzbot+e2e5c07bf353b2f79daa@syzkaller.appspotmail.com>
-Cc:     ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
-        "David S. Miller" <davem@davemloft.net>, idosch@mellanox.com,
-        jakub.kicinski@netronome.com, jiri@mellanox.com, kafai@fb.com,
-        kvm <kvm@vger.kernel.org>, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, songliubraving@fb.com,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        syzkaller-bugs@googlegroups.com, vadimp@mellanox.com,
-        virtualization@lists.linux-foundation.org, yhs@fb.com
-Subject: Re: general protection fault in virtio_transport_release
-Message-ID: <CAGxU2F7qYQAFJ957bLxKGQrHApxomGQXbaFMDVc7r0bWv_M2Zw@mail.gmail.com>
-References: <0000000000004ce83f0597b24bba@google.com>
-MIME-Version: 1.0
-In-Reply-To: <0000000000004ce83f0597b24bba@google.com>
-X-MC-Unique: LvVOw_bjN9mNcRKlNVJPdA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
+        Wed, 20 Nov 2019 07:04:14 -0500
+Received: from mail-eopbgr50045.outbound.protection.outlook.com ([40.107.5.45]:55574
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726689AbfKTMEO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 07:04:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TWgIEX2PHt+Q5+g5bQHryf+220ZL3KKgfgZbuq/dHBY=;
+ b=syEHckz5/iLfc5y6l69NRckrZWnyy9LoZD1JfjRfx7i/3gf4RDnCfwotYL53/2hJ1fUwiT0uUUsK2cji2gp2aoK3KSYg38WtpOePzeDh81+PQTLgUk20j7v+lckxpmKE9fWcstYdbTY1RUhXQmSEoT9W5L0kWCkNEJfX7PsAVxo=
+Received: from VI1PR08CA0187.eurprd08.prod.outlook.com (2603:10a6:800:d2::17)
+ by AM0PR08MB5155.eurprd08.prod.outlook.com (2603:10a6:208:15f::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2474.16; Wed, 20 Nov
+ 2019 12:04:06 +0000
+Received: from DB5EUR03FT028.eop-EUR03.prod.protection.outlook.com
+ (2a01:111:f400:7e0a::206) by VI1PR08CA0187.outlook.office365.com
+ (2603:10a6:800:d2::17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2474.17 via Frontend
+ Transport; Wed, 20 Nov 2019 12:04:06 +0000
+Authentication-Results: spf=fail (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=none action=none
+ header.from=arm.com;
+Received-SPF: Fail (protection.outlook.com: domain of arm.com does not
+ designate 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
+ client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ DB5EUR03FT028.mail.protection.outlook.com (10.152.20.99) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2474.17 via Frontend Transport; Wed, 20 Nov 2019 12:04:06 +0000
+Received: ("Tessian outbound a8f166c1f585:v33"); Wed, 20 Nov 2019 12:04:03 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: 08fafed8e21ca22e
+X-CR-MTA-TID: 64aa7808
+Received: from 3adacec40614.2 (ip-172-16-0-2.eu-west-1.compute.internal [104.47.10.53])
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id DB86F84F-B9B3-45B9-AFDC-0F98D215173C.1;
+        Wed, 20 Nov 2019 12:03:58 +0000
+Received: from EUR03-DB5-obe.outbound.protection.outlook.com (mail-db5eur03lp2053.outbound.protection.outlook.com [104.47.10.53])
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 3adacec40614.2
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Wed, 20 Nov 2019 12:03:58 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QpCdEg3fP90zhSGuYuHeVTlrOw4DNg+hc+Cid/VbIadPOzJeb1OYaL2SU5h/TBVTCS9oaZLhyRbBwmh1jW26PlYDgSRCdtIbU3deVoFhYD3JA2hoe3UN2dnNewitWkRRbve7D1B2gxDEGpKG0MEsQfklYr+Z1GUZrcg+TeybAWKwf3dAYbYQ280ME6rnzjsevlGkSfLBjCBjncgaPMxjekGYyOlIl7TgS7m4b55/f7BJjmiZrlT1YYwaRXfrdeYDSwB6IvKEBUcBnsE3diSHxMGzllU1/COk2xLI/8Unl155t7vXo7EMMhkE3l9a25h+oBaW+gxu2s01RmLOAXO/2w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TWgIEX2PHt+Q5+g5bQHryf+220ZL3KKgfgZbuq/dHBY=;
+ b=CwvjGdBPPoJe2pLxJfvtIdjwCapcGOq2jb8eoH52jt2saFTyfqRvmL2esk/VwR5IdbSyhdX6qEjLPzxKt8s6c93qLm60KnBBS+g6AIzrraPAy0o6dGJcX5p7oQDM2fbyCpxSpGDiTWSKu8rm4zSljIfO43xdebOB+Vn9aIXJ9nwQ4+vzrzNZDZU/hzcFOKwx1JdaEieqcWXhc7RdcP15gf5PfpPyz7Ia2yMfSetwcYRzoW+wa4DgNV9gUjjM0Od7jt9Sqr8LoVGazotplGdMO05bfQab1UuoVmLrLSCQt+ZQ0iyz4UhKSVZOi7yWDxzZBKWkRnFcqqSmmRXc0J7ByA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TWgIEX2PHt+Q5+g5bQHryf+220ZL3KKgfgZbuq/dHBY=;
+ b=syEHckz5/iLfc5y6l69NRckrZWnyy9LoZD1JfjRfx7i/3gf4RDnCfwotYL53/2hJ1fUwiT0uUUsK2cji2gp2aoK3KSYg38WtpOePzeDh81+PQTLgUk20j7v+lckxpmKE9fWcstYdbTY1RUhXQmSEoT9W5L0kWCkNEJfX7PsAVxo=
+Received: from VI1PR08MB4078.eurprd08.prod.outlook.com (20.178.127.92) by
+ VI1PR08MB3871.eurprd08.prod.outlook.com (20.178.13.209) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2474.17; Wed, 20 Nov 2019 12:03:55 +0000
+Received: from VI1PR08MB4078.eurprd08.prod.outlook.com
+ ([fe80::8191:f0ac:574a:d24d]) by VI1PR08MB4078.eurprd08.prod.outlook.com
+ ([fe80::8191:f0ac:574a:d24d%3]) with mapi id 15.20.2451.031; Wed, 20 Nov 2019
+ 12:03:55 +0000
+From:   Mihail Atanassov <Mihail.Atanassov@arm.com>
+To:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+CC:     Mihail Atanassov <Mihail.Atanassov@arm.com>, nd <nd@arm.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        Liviu Dudau <Liviu.Dudau@arm.com>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH] drm/komeda: Remove unnecessary komeda_wb_connector_detect
+Thread-Topic: [PATCH] drm/komeda: Remove unnecessary
+ komeda_wb_connector_detect
+Thread-Index: AQHVn5qV+pWuZV5Y1kWI3ajbAtzdnA==
+Date:   Wed, 20 Nov 2019 12:03:55 +0000
+Message-ID: <20191120120348.37340-1-mihail.atanassov@arm.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [217.140.106.55]
+x-clientproxiedby: LNXP123CA0024.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:d2::36) To VI1PR08MB4078.eurprd08.prod.outlook.com
+ (2603:10a6:803:e5::28)
+x-mailer: git-send-email 2.23.0
+Authentication-Results-Original: spf=none (sender IP is )
+ smtp.mailfrom=Mihail.Atanassov@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 12843ec0-e9a1-4667-a090-08d76db1be33
+X-MS-TrafficTypeDiagnostic: VI1PR08MB3871:|VI1PR08MB3871:|AM0PR08MB5155:
+x-ms-exchange-transport-forked: True
+X-Microsoft-Antispam-PRVS: <AM0PR08MB51555EE9DC4F62A8D12016488F4F0@AM0PR08MB5155.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+x-ms-oob-tlc-oobclassifiers: OLM:139;OLM:139;
+x-forefront-prvs: 02272225C5
+X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(346002)(39860400002)(376002)(366004)(189003)(199004)(6436002)(6486002)(81166006)(102836004)(6506007)(8936002)(8676002)(81156014)(2351001)(2906002)(186003)(5640700003)(1076003)(14454004)(54906003)(6512007)(2501003)(478600001)(26005)(316002)(386003)(99286004)(2616005)(6916009)(66066001)(486006)(36756003)(66556008)(66446008)(50226002)(476003)(4326008)(25786009)(66476007)(66946007)(64756008)(71200400001)(256004)(14444005)(86362001)(71190400001)(5660300002)(305945005)(7736002)(3846002)(6116002)(44832011)(52116002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR08MB3871;H:VI1PR08MB4078.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: K7syOcYj4MRY06vDicNeTzymqa39FVoGMEPATGD9k5Ytroyz63jSdOt44/maK4Ypbho1A//GmC4dsOridZzPZumjhW+/iNUJOtMkQiD8HRZCLx5tOreru7b0g6R30goU2sWcu8NCwsVBO1k7RNsOtsE+brpquXU9KaNbXARRfUjAeCrWJ3j9Qhhan6yiIQdIeyRtmMMbLGMyiItLR0fLMLIDg3Yl91LzQAaUBovYCSQ8sslFmyiZsohKsuqztJkIq31RuJgcRdDxRYdgCa4RSB6SNM8AnY6O/t/D4zjRUkvMnsfml+gpZzDz3oaGW2YUZydyIMMsIRx299lsS69YMvYQ4pL1GLed2/6+dKGq87WpmJaU6GSzH3Wxh/A+0dSf4/YX9t9I96qqW4uo7Si4F1kH02iRoF/Zfijut5up1UZKrKf9n8ronfa4+l9p6f5F
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+MIME-Version: 1.0
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB3871
+Original-Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Mihail.Atanassov@arm.com; 
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: DB5EUR03FT028.eop-EUR03.prod.protection.outlook.com
+X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(39860400002)(346002)(396003)(1110001)(339900001)(189003)(199004)(81156014)(50226002)(2351001)(6512007)(47776003)(26826003)(14444005)(86362001)(1076003)(105606002)(8746002)(8936002)(126002)(478600001)(476003)(8676002)(4326008)(14454004)(25786009)(66066001)(99286004)(486006)(2616005)(81166006)(6862004)(23756003)(386003)(6506007)(305945005)(6486002)(336012)(76130400001)(5640700003)(186003)(3846002)(102836004)(26005)(54906003)(70586007)(70206006)(356004)(50466002)(2501003)(316002)(22756006)(36756003)(7736002)(6116002)(2906002)(5660300002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR08MB5155;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:Fail;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;MX:1;A:1;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: fcce571c-e4ca-40ae-194d-08d76db1b7b8
+NoDisclaimer: True
+X-Forefront-PRVS: 02272225C5
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: yT6UVlyohHgHW8AjCJB0RGmgYFvYsj4LByKTVqsXAlfO/XESt3Bf76sx7AQYXJhoLQdAEk5nyqTNrjn+dOyaATfb1EKSpoL4KeGR4c4bXQi1Z+BQ2gcdB5NiFdTBfmtCleav6pH05rMdWleARMNh1UMOLUxxuwVuBKqNK725V5QW4oMK62akvsgZLhUN4QLuXpH3D985eIBXfEvfbrXXLLyPOHptx240jCCSRd3rgKpEoPspjHqWlutr4QjNeQP6BY4po68RsmMd4XRmW9fP5fXo7MIiPboR0tRGsVQo/Kt86YMISXvOS/Bhtshan3qHqnlYtDZAvW57DRDtni/UpQumrxPDrF/8g+LlZYGH6vYZZBZN6GGhpn7H1ZYRfICqLAvxX/UCHLUzFO3ApOMZm+/qa9bxAw/A/0dUVw0AT0x+322z3jOb8YBVADKcA0s5
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Nov 2019 12:04:06.3387
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 12843ec0-e9a1-4667-a090-08d76db1be33
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB5155
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 1:35 PM syzbot <syzbot+e2e5c07bf353b2f79daa@syzkall=
-er.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following crash on:
->
-> HEAD commit:    1e8795b1 mscc.c: fix semicolon.cocci warnings
-> git tree:       net-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=3D15d77406e0000=
-0
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=3De855e9c92c947=
-4fe
-> dashboard link: https://syzkaller.appspot.com/bug?extid=3De2e5c07bf353b2f=
-79daa
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D1537f46ae00=
-000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D11359c6ae0000=
-0
->
-> The bug was bisected to:
->
-> commit f366cd2a2e510b155e18b21a2d149332aa08eb61
-> Author: Vadim Pasternak <vadimp@mellanox.com>
-> Date:   Mon Oct 21 10:30:30 2019 +0000
->
->      mlxsw: reg: Add macro for getting QSFP module EEPROM page number
->
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=3D148945aae0=
-0000
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=3D168945aae0=
-0000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=3D128945aae0000=
-0
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit=
-:
-> Reported-by: syzbot+e2e5c07bf353b2f79daa@syzkaller.appspotmail.com
-> Fixes: f366cd2a2e51 ("mlxsw: reg: Add macro for getting QSFP module EEPRO=
-M
-> page number")
+The func is optional and the connector will report as always connected,
+i.e. no change in behaviour.
 
-I'm working on this issue.
+Signed-off-by: Mihail Atanassov <mihail.atanassov@arm.com>
+---
+ drivers/gpu/drm/arm/display/komeda/komeda_wb_connector.c | 7 -------
+ 1 file changed, 7 deletions(-)
 
-I think the problem is related to
-ac03046ece2b "vsock/virtio: free packets during the socket release"
-
-I'll send a patch ASAP.
-
-Thanks,
-Stefano
-
->
-> RDX: 0000000000000010 RSI: 00000000200000c0 RDI: 0000000000000004
-> RBP: 0000000000000005 R08: 0000000000000001 R09: 00007ffd5b250031
-> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401e00
-> R13: 0000000000401e90 R14: 0000000000000000 R15: 0000000000000000
-> kasan: CONFIG_KASAN_INLINE enabled
-> kasan: GPF could be caused by NULL-ptr deref or user memory access
-> general protection fault: 0000 [#1] PREEMPT SMP KASAN
-> CPU: 0 PID: 8862 Comm: syz-executor079 Not tainted 5.4.0-rc6+ #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> RIP: 0010:virtio_transport_release+0x13b/0xcb0
-> net/vmw_vsock/virtio_transport_common.c:826
-> Code: e8 aa e6 2b fa 66 41 83 fd 01 0f 84 34 02 00 00 e8 3a e5 2b fa 48 8=
-b
-> 95 30 ff ff ff 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <80> 3c 02 00 0f
-> 85 22 0a 00 00 48 8b bb 98 00 00 00 48 b8 00 00 00
-> RSP: 0018:ffff888092dbfaf0 EFLAGS: 00010202
-> RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff87474aa0
-> RDX: 0000000000000013 RSI: ffffffff874747d6 RDI: 0000000000000001
-> RBP: ffff888092dbfc00 R08: ffff88809245a380 R09: fffffbfff1555fe1
-> R10: fffffbfff1555fe0 R11: 0000000000000003 R12: ffff888092dbfbd8
-> R13: 0000000000000007 R14: 0000000000000007 R15: 0000000000000000
-> FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000=
-000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00000000200000c4 CR3: 0000000008e6d000 CR4: 00000000001406f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->   __vsock_release+0x80/0x2d0 net/vmw_vsock/af_vsock.c:733
->   vsock_release+0x35/0xa0 net/vmw_vsock/af_vsock.c:806
->   __sock_release+0xce/0x280 net/socket.c:590
->   sock_close+0x1e/0x30 net/socket.c:1268
->   __fput+0x2ff/0x890 fs/file_table.c:280
->   ____fput+0x16/0x20 fs/file_table.c:313
->   task_work_run+0x145/0x1c0 kernel/task_work.c:113
->   exit_task_work include/linux/task_work.h:22 [inline]
->   do_exit+0x904/0x2e60 kernel/exit.c:817
->   do_group_exit+0x135/0x360 kernel/exit.c:921
->   __do_sys_exit_group kernel/exit.c:932 [inline]
->   __se_sys_exit_group kernel/exit.c:930 [inline]
->   __x64_sys_exit_group+0x44/0x50 kernel/exit.c:930
->   do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
->   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> RIP: 0033:0x43f1d8
-> Code: Bad RIP value.
-> RSP: 002b:00007ffd5b25f838 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
-> RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 000000000043f1d8
-> RDX: 0000000000000000 RSI: 000000000000003c RDI: 0000000000000000
-> RBP: 00000000004befa8 R08: 00000000000000e7 R09: ffffffffffffffd0
-> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000001
-> R13: 00000000006d1180 R14: 0000000000000000 R15: 0000000000000000
-> Modules linked in:
-> ---[ end trace 4b9b883ea3ab661f ]---
-> RIP: 0010:virtio_transport_release+0x13b/0xcb0
-> net/vmw_vsock/virtio_transport_common.c:826
-> Code: e8 aa e6 2b fa 66 41 83 fd 01 0f 84 34 02 00 00 e8 3a e5 2b fa 48 8=
-b
-> 95 30 ff ff ff 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <80> 3c 02 00 0f
-> 85 22 0a 00 00 48 8b bb 98 00 00 00 48 b8 00 00 00
-> RSP: 0018:ffff888092dbfaf0 EFLAGS: 00010202
-> RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff87474aa0
-> RDX: 0000000000000013 RSI: ffffffff874747d6 RDI: 0000000000000001
-> RBP: ffff888092dbfc00 R08: ffff88809245a380 R09: fffffbfff1555fe1
-> R10: fffffbfff1555fe0 R11: 0000000000000003 R12: ffff888092dbfbd8
-> R13: 0000000000000007 R14: 0000000000000007 R15: 0000000000000000
-> FS:  00000000009db880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000=
-000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 000000000043f1ae CR3: 0000000008e6d000 CR4: 00000000001406f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->
->
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> For information about bisection process see: https://goo.gl/tpsmEJ#bisect=
-ion
-> syzbot can test patches for this bug, for details see:
-> https://goo.gl/tpsmEJ#testing-patches
->
+diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_wb_connector.c b/dri=
+vers/gpu/drm/arm/display/komeda/komeda_wb_connector.c
+index e465cc4879c9..c89ecdba8c28 100644
+--- a/drivers/gpu/drm/arm/display/komeda/komeda_wb_connector.c
++++ b/drivers/gpu/drm/arm/display/komeda/komeda_wb_connector.c
+@@ -107,12 +107,6 @@ static const struct drm_connector_helper_funcs komeda_=
+wb_conn_helper_funcs =3D {
+ 	.mode_valid	=3D komeda_wb_connector_mode_valid,
+ };
+=20
+-static enum drm_connector_status
+-komeda_wb_connector_detect(struct drm_connector *connector, bool force)
+-{
+-	return connector_status_connected;
+-}
+-
+ static int
+ komeda_wb_connector_fill_modes(struct drm_connector *connector,
+ 			       uint32_t maxX, uint32_t maxY)
+@@ -128,7 +122,6 @@ static void komeda_wb_connector_destroy(struct drm_conn=
+ector *connector)
+=20
+ static const struct drm_connector_funcs komeda_wb_connector_funcs =3D {
+ 	.reset			=3D drm_atomic_helper_connector_reset,
+-	.detect			=3D komeda_wb_connector_detect,
+ 	.fill_modes		=3D komeda_wb_connector_fill_modes,
+ 	.destroy		=3D komeda_wb_connector_destroy,
+ 	.atomic_duplicate_state	=3D drm_atomic_helper_connector_duplicate_state,
+--=20
+2.23.0
 
