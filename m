@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01BB4C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:43:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0030C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:43:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C407F22529
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:43:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 890FB22528
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:43:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574257410;
-	bh=h3AbCresN75AqgZ8h/I3zFonj444oDdMctTI2cTK53E=;
+	s=default; t=1574257414;
+	bh=Py4LIxOYIGUpBCC1UaHD/YjPJ7FIC1KP3vrfomorWQ4=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=ewVi86ovTS0vQ9mO8Zso8Wu6cXOZhg9jPZMl8TZGWm1mEymyswnldyLkoE+77nRbf
-	 74/lXMYK3eLB/LJTJCQ9vHQwCVcAV0KnaZL5s7blhTfgpgYJ/+FviML3zuZMbywnop
-	 dMlT+748L5gfFxdUw5eyOmSneYFcbpiR7wjtr0Lw=
+	b=bhS/wwqR1NzUi238SrqxoNxPQpYCMmveqMnp923+D687wUDYXFaW86h9KM4Wbeej1
+	 u5O4EIk8mxNuHih32nxJzQXPRHKjNZ7E5c89OhzSVg8xZGVIIsti9LYPMBjvN2HAUe
+	 dWPac9HAeca8mdUjYQYVnw7lBOzDW02QOxrrgoT0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731313AbfKTNn3 (ORCPT
+        id S1731331AbfKTNnd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 08:43:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51290 "EHLO mail.kernel.org"
+        Wed, 20 Nov 2019 08:43:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730110AbfKTNn1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 08:43:27 -0500
+        id S1730358AbfKTNnc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 08:43:32 -0500
 Received: from localhost.localdomain (unknown [118.189.143.39])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2401422528;
-        Wed, 20 Nov 2019 13:43:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41C8722528;
+        Wed, 20 Nov 2019 13:43:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574257406;
-        bh=h3AbCresN75AqgZ8h/I3zFonj444oDdMctTI2cTK53E=;
+        s=default; t=1574257411;
+        bh=Py4LIxOYIGUpBCC1UaHD/YjPJ7FIC1KP3vrfomorWQ4=;
         h=From:To:Cc:Subject:Date:From;
-        b=K9EbXWcYVCVzDVTSky2FfHu5DCewjx7V2nsKxO/MRI29oJp+3uDljZcFydiJsFG1H
-         4tddqe6WkXDPdQWdAr/8LWwAQe0aSZfiRaEcxZJ0lFIx+t5vcWOlYCgM9o3ooy1a9g
-         hQ0vvt9n6wiZLiwTBkFObQu+L9T0iYRI2v2Pjq7E=
+        b=uZ2j/2yP5YKrzqRAi0SKT0cOMOxFqg18x8GrUXE2shBcd39pZq47f6yVYUchlQN7R
+         W6U8mF5D+RMEmDyCUMcc1owRjIBf9Lngyq7581b0BauJDM8622I+YY0N/45VRPhQPu
+         M4XO2LNN5T0G/2nJqfbdvExXvpscW2ku5clXgpms=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH] fs: proc: Fix Kconfig indentation
-Date:   Wed, 20 Nov 2019 21:43:22 +0800
-Message-Id: <20191120134322.16525-1-krzk@kernel.org>
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-nfs@vger.kernel.org
+Subject: [PATCH] nfs: Fix Kconfig indentation
+Date:   Wed, 20 Nov 2019 21:43:27 +0800
+Message-Id: <20191120134327.16582-1-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -59,42 +60,27 @@ coding style with command like:
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- fs/proc/Kconfig | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ fs/nfs/Kconfig | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/fs/proc/Kconfig b/fs/proc/Kconfig
-index cb5629bd5fff..af2c0af60269 100644
---- a/fs/proc/Kconfig
-+++ b/fs/proc/Kconfig
-@@ -42,8 +42,8 @@ config PROC_VMCORE
- 	bool "/proc/vmcore support"
- 	depends on PROC_FS && CRASH_DUMP
- 	default y
--        help
--        Exports the dump image of crashed kernel in ELF format.
-+	help
-+	Exports the dump image of crashed kernel in ELF format.
+diff --git a/fs/nfs/Kconfig b/fs/nfs/Kconfig
+index 295a7a21b774..3edf122b8044 100644
+--- a/fs/nfs/Kconfig
++++ b/fs/nfs/Kconfig
+@@ -147,10 +147,10 @@ config NFS_V4_1_MIGRATION
+ 	default n
+ 	help
+ 	  This option makes the NFS client advertise to NFSv4.1 servers that
+-          it can support NFSv4 migration.
++	  it can support NFSv4 migration.
  
- config PROC_VMCORE_DEVICE_DUMP
- 	bool "Device Hardware/Firmware Log Collection"
-@@ -72,7 +72,7 @@ config PROC_SYSCTL
- 	  a recompile of the kernel or reboot of the system.  The primary
- 	  interface is through /proc/sys.  If you say Y here a tree of
- 	  modifiable sysctl entries will be generated beneath the
--          /proc/sys directory. They are explained in the files
-+	  /proc/sys directory. They are explained in the files
- 	  in <file:Documentation/admin-guide/sysctl/>.  Note that enabling this
- 	  option will enlarge the kernel by at least 8 KB.
+-          The NFSv4.1 pieces of the Linux NFSv4 migration implementation are
+-          still experimental.  If you are not an NFSv4 developer, say N here.
++	  The NFSv4.1 pieces of the Linux NFSv4 migration implementation are
++	  still experimental.  If you are not an NFSv4 developer, say N here.
  
-@@ -88,7 +88,7 @@ config PROC_PAGE_MONITOR
- 	  Various /proc files exist to monitor process memory utilization:
- 	  /proc/pid/smaps, /proc/pid/clear_refs, /proc/pid/pagemap,
- 	  /proc/kpagecount, and /proc/kpageflags. Disabling these
--          interfaces will reduce the size of the kernel by approximately 4kb.
-+	  interfaces will reduce the size of the kernel by approximately 4kb.
- 
- config PROC_CHILDREN
- 	bool "Include /proc/<pid>/task/<tid>/children file"
+ config NFS_V4_SECURITY_LABEL
+ 	bool
 -- 
 2.17.1
 
