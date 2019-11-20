@@ -2,147 +2,159 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0BFEC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:18:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3830FC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:19:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96BD522311
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:18:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IZR6PatP"
+	by mail.kernel.org (Postfix) with ESMTP id 0FB1D206F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:19:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574245142;
+	bh=ZcJZgDgu7diR6lvmOj3GTb5WMMoYE4M7b61T8x8eWMc=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=hIYf5M5Tke3R6eluWAb45oo7ZZ0dQA6MnKcB4QJsu9VuYULF6sPjMdFhzvkryM89p
+	 xqUuF3zF5VU1HAFh/1sWz2SDM13aQdnJIR4TWPanvb0rWbEr9NN3TgcoUKCnmeihwX
+	 GA90+7wtQt26uD3tTYgDBcG0qXUwb7ZLI3gEQooU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728608AbfKTKSa (ORCPT
+        id S1728614AbfKTKTB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 05:18:30 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:57972 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728513AbfKTKS3 (ORCPT
+        Wed, 20 Nov 2019 05:19:01 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:48643 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728355AbfKTKTA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 05:18:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574245108;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=xWcoDmmt3hOnbNOgoE5dQlhwSeBPgNfYdupdAnlBkc8=;
-        b=IZR6PatPkFleYIgXw9JCWzyGL3dpl3FVKNScKIxV80feWYoY8PH2Z4KDt6VF88JBQ8rGGz
-        V2+/b5zZbhpBlHtF2UlBjUYUT6bvAjzG2yr/dCrixwiLugev29SzisH+lHEo/M1TJWi6xq
-        Cbs1I4H6MqdKAQYH3jybe4v0W2BdySU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-41-5HWBhLnLMeGUl4cuPBFxxQ-1; Wed, 20 Nov 2019 05:18:25 -0500
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9BA40801E6A;
-        Wed, 20 Nov 2019 10:18:21 +0000 (UTC)
-Received: from [10.36.116.37] (ovpn-116-37.ams2.redhat.com [10.36.116.37])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 694F71968D;
-        Wed, 20 Nov 2019 10:18:14 +0000 (UTC)
-Subject: Re: [PATCH v9 00/11] SMMUv3 Nested Stage Setup (VFIO part)
-To:     Tomasz Nowicki <tnowicki@marvell.com>,
-        "eric.auger.pro@gmail.com" <eric.auger.pro@gmail.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "yi.l.liu@intel.com" <yi.l.liu@intel.com>,
-        "jean-philippe.brucker@arm.com" <jean-philippe.brucker@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>
-Cc:     "kevin.tian@intel.com" <kevin.tian@intel.com>,
-        "ashok.raj@intel.com" <ashok.raj@intel.com>,
-        "marc.zyngier@arm.com" <marc.zyngier@arm.com>,
-        "peter.maydell@linaro.org" <peter.maydell@linaro.org>,
-        "vincent.stehle@arm.com" <vincent.stehle@arm.com>,
-        "zhangfei.gao@gmail.com" <zhangfei.gao@gmail.com>,
-        "tina.zhang@intel.com" <tina.zhang@intel.com>
-References: <20190711135625.20684-1-eric.auger@redhat.com>
- <a35234a6-e386-fc8e-fcc4-5db4601b00d2@marvell.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <3741c034-08f1-9dbb-ab06-434f3a8bd782@redhat.com>
-Date:   Wed, 20 Nov 2019 11:18:12 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Wed, 20 Nov 2019 05:19:00 -0500
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iXN4b-0001G1-Pc; Wed, 20 Nov 2019 11:18:57 +0100
+To:     =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH v4 2/8] irqchip: Add Realtek RTD1295 mux driver
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
-In-Reply-To: <a35234a6-e386-fc8e-fcc4-5db4601b00d2@marvell.com>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: 5HWBhLnLMeGUl4cuPBFxxQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Wed, 20 Nov 2019 10:18:57 +0000
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     <linux-realtek-soc@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Aleix Roca Nonell <kernelrocks@gmail.com>,
+        James Tai <james.tai@realtek.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>
+In-Reply-To: <0bff78c1-a1d0-9631-fbf4-e0d1ef1264ea@suse.de>
+References: <20191119021917.15917-1-afaerber@suse.de>
+ <20191119021917.15917-3-afaerber@suse.de>
+ <a34e00cac16899b53d0b6445f0e81f4c@www.loen.fr>
+ <0bff78c1-a1d0-9631-fbf4-e0d1ef1264ea@suse.de>
+Message-ID: <8137861d0a89dd246b3334ac596da8be@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: afaerber@suse.de, linux-realtek-soc@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernelrocks@gmail.com, james.tai@realtek.com, tglx@linutronix.de, jason@lakedaemon.net
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tomasz,
+On 2019-11-19 23:25, Andreas Färber wrote:
+> Am 19.11.19 um 13:01 schrieb Marc Zyngier:
+>> On 2019-11-19 02:19, Andreas Färber wrote:
+>>> diff --git a/drivers/irqchip/irq-rtd1195-mux.c
+>>> b/drivers/irqchip/irq-rtd1195-mux.c
+>>> new file mode 100644
+>>> index 000000000000..e6b08438b23c
+>>> --- /dev/null
+>>> +++ b/drivers/irqchip/irq-rtd1195-mux.c
+> [...]
+>>> +static void rtd1195_mux_irq_handle(struct irq_desc *desc)
+>>> +{
+>>> +    struct rtd1195_irq_mux_data *data = 
+>>> irq_desc_get_handler_data(desc);
+>>> +    struct irq_chip *chip = irq_desc_get_chip(desc);
+>>> +    u32 isr, mask;
+>>> +    int i;
+>>> +
+>>> +    chained_irq_enter(chip, desc);
+>>> +
+>>> +    isr = readl_relaxed(data->reg_isr);
+>>> +
+>>> +    while (isr) {
+>>> +        i = __ffs(isr);
+>>> +        isr &= ~BIT(i);
+>>> +
+>>> +        mask = data->info->isr_to_int_en_mask[i];
+>>> +        if (mask && !(data->scpu_int_en & mask))
+>>> +            continue;
+>>> +
+>>> +        if (!generic_handle_irq(irq_find_mapping(data->domain, 
+>>> i)))
+>>> +            writel_relaxed(BIT(i), data->reg_isr);
+>>
+>> What does this write do exactly? It is the same thing as a 'mask',
+>> which is pretty odd. So either:
+>>
+>> - this is not doing anything and your 'mask' callback is bogus
+>>   (otherwise you'd never have more than a single interrupt)
+>>
+>> - or this is an ACK operation, and this should be described as
+>>   such (and then fix the mask/unmask/enable/disable mess that
+>>   results from it).
+>
+> This is supposed to be an ACK, i.e. clear-1-bits operation.
 
-On 11/20/19 9:15 AM, Tomasz Nowicki wrote:
-> Hi Eric,
->=20
-> On 11.07.2019 15:56, Eric Auger wrote:
->> This series brings the VFIO part of HW nested paging support
->> in the SMMUv3.
->>
->> The series depends on:
->> [PATCH v9 00/14] SMMUv3 Nested Stage Setup (IOMMU part)
->> (https://www.spinics.net/lists/kernel/msg3187714.html)
->>
->> 3 new IOCTLs are introduced that allow the userspace to
->> 1) pass the guest stage 1 configuration
->> 2) pass stage 1 MSI bindings
->> 3) invalidate stage 1 related caches
->>
->> They map onto the related new IOMMU API functions.
->>
->> We introduce the capability to register specific interrupt
->> indexes (see [1]). A new DMA_FAULT interrupt index allows to register
->> an eventfd to be signaled whenever a stage 1 related fault
->> is detected at physical level. Also a specific region allows
->> to expose the fault records to the user space.
->>
->> Best Regards
->>
->> Eric
->>
->> This series can be found at:
->> https://github.com/eauger/linux/tree/v5.3.0-rc0-2stage-v9
->=20
-> I think you have already tested on ThunderX2, but as a formality, for=20
-> the whole series:
->=20
-> Tested-by: Tomasz Nowicki <tnowicki@marvell.com>
-> qemu: https://github.com/eauger/qemu/tree/v4.1.0-rc0-2stage-rfcv5
-> kernel: https://github.com/eauger/linux/tree/v5.3.0-rc0-2stage-v9 +=20
-> Shameer's fix patch
->=20
-> In my test I assigned Intel 82574L NIC and perform iperf tests.
+If it is an ACK, model it as such, and do not open-code it.
 
-Thank you for your testing efforts.
->=20
-> Other folks from Marvell claimed this to be important feature so I asked=
-=20
-> them to review and speak up on mailing list.
+>
+> The BSP had extended various drivers, such as 8250 UART, to do this 
+> ack
+> in their interrupt handler through an additional DT reg region. I 
+> tried
+> to clean that up by handling it centrally here in the irqchip driver.
+>
+>>
+>> as I can't see how the same register can be used for both purposes.
+>> You should be able to verify this experimentally, even without
+>> documentation.
+>
+> There are three registers here:
+>
+> MIS_UMSK_ISR    - MISC unmasked interrupt status register
+> MIS_ISR         - MISC   masked interrupt status register
+> MIS_SCPU_INT_EN - MISC SCPU interrupt enable register
+>
+> The latter is a regular R/W register; the former two have a 
+> write_data
+> field as BIT(0), with 1 indicating a write vs. 0 indicating clear, 
+> RAZ.
+>
+> By enabling/disabling in _SCPU_INT_EN we mask/unmask them in _ISR but
+> not in _UMSK_ISR.
+>
+> Does that shed any more light?
 
-That's nice to read that!  So it is time for me to rebase both the iommu
-and vfio parts. I will submit something quickly. Then I would encourage
-the review efforts to focus first on the iommu part.
+None whatsoever. Your mask callback doesn't make any sense, since it
+actually acks the interrupt. My gut feeling is that your enable/disable
+should really be mask/unmask.
 
-Thanks
+>
+> So given that we're iterating over reg_isr above, we could probably 
+> drop
+> the mask check here...
+>
+> In addition there are MIS_[UMSK_]ISR_SWC and MIS_SETTING_SWC 
+> registers
+> for Secure World, and MIS_FAST_INT_EN_* and MIS_FAST_ISR as well as
+> various GPIO interrupt registers.
 
-Eric
->=20
-> Thanks,
-> Tomasz
->=20
+This doesn't seem relevant to the discussion here.
 
+         M.
+-- 
+Jazz is not dead. It just smells funny...
