@@ -2,60 +2,151 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD1BC43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:44:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77147C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:45:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B55C22506
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:44:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E6F722506
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:45:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="Qdf+s0c6";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="FiTS/f3b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730681AbfKTNoi (ORCPT
+        id S1730842AbfKTNpU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 08:44:38 -0500
-Received: from mga04.intel.com ([192.55.52.120]:18835 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729025AbfKTNoi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 08:44:38 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Nov 2019 05:44:37 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,222,1571727600"; 
-   d="scan'208";a="196856611"
-Received: from um.fi.intel.com (HELO um) ([10.237.72.57])
-  by orsmga007.jf.intel.com with ESMTP; 20 Nov 2019 05:44:35 -0800
-From:   Alexander Shishkin <alexander.shishkin@linux.intel.com>
-To:     Wen Yang <wenyang@linux.alibaba.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        stable@vger.kernel.org, alexander.shishkin@linux.intel.com
-Subject: Re: [GIT PULL 1/3] intel_th: Fix a double put_device() in error path
-In-Reply-To: <2e648871-b7f7-c77e-6a22-3c26ad90633b@linux.alibaba.com>
-References: <20191120130806.44028-1-alexander.shishkin@linux.intel.com> <20191120130806.44028-2-alexander.shishkin@linux.intel.com> <2e648871-b7f7-c77e-6a22-3c26ad90633b@linux.alibaba.com>
-Date:   Wed, 20 Nov 2019 15:44:34 +0200
-Message-ID: <87sgmid5ml.fsf@ashishki-desk.ger.corp.intel.com>
+        Wed, 20 Nov 2019 08:45:20 -0500
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:56787 "EHLO
+        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728864AbfKTNpU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 08:45:20 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 2D8A26D7E;
+        Wed, 20 Nov 2019 08:45:18 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Wed, 20 Nov 2019 08:45:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=HBx0ATlKQS6ihzQSYv4eFhcuYSS
+        PpHvcXAzdap35ALg=; b=Qdf+s0c6K29kIsyee9j5q260GaF4jDcAo0GQQ6gkp4Q
+        yUVBdzDtMj53LVevwTruYcbrmy/gmHSjoxamS2Tp5821kOl5cic7yYbsyjwAK8jY
+        oixZ+bF0I2GjgirWKoxyWk5ukBbn5wwqXT76jY9p5WLVxfieohaTEkKObHtGzVXa
+        qUHsBUUencFEmB/hEUn8bwnot0SYhl9ls76VBZ04fWtsW+uy+3l5Jj8H643jOY3k
+        U6W7+XTHQEMgXtZyI9tawjOEZWQpJZsBrKGTSuNRgLwcukIAUfERGawLyCNZF67Z
+        89kmJa7rVF7fkUFPhS+sD2Nz6WgolyBZg3321NYFkMg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=HBx0AT
+        lKQS6ihzQSYv4eFhcuYSSPpHvcXAzdap35ALg=; b=FiTS/f3biHcEjumFoNSr83
+        cEkQDdPPF5gXfS6x7bDYXhxjC7Iel8YcpAsQiFuZHX2grHpDBrJSmvWeckJ25Ub1
+        SFsawfjNc42FpLlWF1Jfyl+RUXqY4ns9T3sy4GjkI6pQLXsKX7tGPlJgzOULQQIK
+        7lTSD+3mNDVXGlGYofVfcVPhZvsHgrTtZvcMVCEQzaeURJeFsbRQIqiXBNWJXB+W
+        RBf0VpGkO77+Uf7KkIbX4fwWw+w/o69LvjVe5KuYjd/WfqBu507qKRwAR0gOzw1j
+        cUSfTnhur60lSUOfQwZ1VgB7eQ2oe8MPC6EpOCwVZZGlbjc/vyW2bimnBX7zz1Nw
+        ==
+X-ME-Sender: <xms:bEPVXax4TLeYfctjJJuDqvOblirexd-crZZuxDZ7ItSGmgXPu-KDxg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudehtddgheehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpeffhffvuffkfhggtggujggfsehgtd
+    erredtredvnecuhfhrohhmpeforgigihhmvgcutfhiphgrrhguuceomhgrgihimhgvsegt
+    vghrnhhordhtvggthheqnecukfhppeeltddrkeelrdeikedrjeeinecurfgrrhgrmhepmh
+    grihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghhnecuvehluhhsthgvrhfu
+    ihiivgeptd
+X-ME-Proxy: <xmx:bEPVXZA11E6gv42UuV4XONXEtEWft7RrWUoPPhlSmIt-yJ1RqyGezw>
+    <xmx:bEPVXZPJlgwz6Bj3TaiAVKDmSq9_s6_mggHS53shxelXTzOjzkYORg>
+    <xmx:bEPVXYCW0B-zSjPGJdAMrMBphmir5ONEYd7SKR_bqR5Kflkshb7orQ>
+    <xmx:bkPVXZUt6NOpAuSIaklt96euI_I_Inap8YbJ34VwIg6sqbHJP5kt-A>
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 82DF080059;
+        Wed, 20 Nov 2019 08:45:16 -0500 (EST)
+Date:   Wed, 20 Nov 2019 14:45:14 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc:     Maxime Ripard <mripard@kernel.org>, davem@davemloft.net,
+        herbert@gondor.apana.org.au, mark.rutland@arm.com,
+        robh+dt@kernel.org, wens@csie.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH 2/3] ARM: dts: sun8i: a33: add the new SecuritySystem
+ compatible
+Message-ID: <20191120134514.GA4345@gilmour.lan>
+References: <20191114144812.22747-1-clabbe.montjoie@gmail.com>
+ <20191114144812.22747-3-clabbe.montjoie@gmail.com>
+ <20191118111143.GF4345@gilmour.lan>
+ <20191119073924.GA32060@Red>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="RbXZOS5Wid+xb0VD"
+Content-Disposition: inline
+In-Reply-To: <20191119073924.GA32060@Red>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Wen Yang <wenyang@linux.alibaba.com> writes:
 
-> device_add() has increased the reference count,
+--RbXZOS5Wid+xb0VD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Hi,
+
+On Tue, Nov 19, 2019 at 08:39:24AM +0100, Corentin Labbe wrote:
+> On Mon, Nov 18, 2019 at 12:11:43PM +0100, Maxime Ripard wrote:
+> > Hi,
+> >
+> > On Thu, Nov 14, 2019 at 03:48:11PM +0100, Corentin Labbe wrote:
+> > > Add the new A33 SecuritySystem compatible to the crypto node.
+> > >
+> > > Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+> > > ---
+> > >  arch/arm/boot/dts/sun8i-a33.dtsi | 3 ++-
+> > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/arch/arm/boot/dts/sun8i-a33.dtsi b/arch/arm/boot/dts/sun8i-a33.dtsi
+> > > index 1532a0e59af4..5680fa1de102 100644
+> > > --- a/arch/arm/boot/dts/sun8i-a33.dtsi
+> > > +++ b/arch/arm/boot/dts/sun8i-a33.dtsi
+> > > @@ -215,7 +215,8 @@
+> > >  		};
+> > >
+> > >  		crypto: crypto-engine@1c15000 {
+> > > -			compatible = "allwinner,sun4i-a10-crypto";
+> > > +			compatible = "allwinner,sun8i-a33-crypto",
+> > > +				     "allwinner,sun4i-a10-crypto";
+> >
+> > If some algorithms aren't working properly, we can't really fall back
+> > to it, we should just use the a33 compatible.
 >
-> so when it returns an error, an additional call to put_device()
+> Since crypto selftest detect the problem, the fallback could be used
+> and SS will just be in degraded mode (no sha1).
 >
-> is needed here to reduce the reference count.
+> But since nobody reported this problem since 4 years (when SS was
+> added in a33 dts), the absence of sha1 is clearly not an issue.
 
-No, in case of error it also drops its reference.
+It's not really the point though. There's a bug, it's something that
+was overlooked and it's unfortunate. The bug is still there though,
+and the only option to fix it properly is to simply fix, not claim
+that it's somewhat ok to keep it around since no one really uses it
+anyway.
 
-Regards,
---
-Alex
+Maxime
+
+--RbXZOS5Wid+xb0VD
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXdVDagAKCRDj7w1vZxhR
+xTr+AP9nKc+hE3dn5vXfY2IR4cUybDQj7CLHiRPioS1Ywc9IhAD+LubNk4yjxFc4
+TLXqQL0OKbRm9agqiHxjDu4XR85jMgQ=
+=Xjtr
+-----END PGP SIGNATURE-----
+
+--RbXZOS5Wid+xb0VD--
