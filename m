@@ -2,142 +2,106 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36171C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 16:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FF14C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 16:19:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13A282071C
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 16:19:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 249EA2071F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 16:19:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="C4dx6smJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732744AbfKTQTE (ORCPT
+        id S1732750AbfKTQTs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 11:19:04 -0500
-Received: from iolanthe.rowland.org ([192.131.102.54]:34506 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1728972AbfKTQTD (ORCPT
+        Wed, 20 Nov 2019 11:19:48 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40856 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729581AbfKTQTr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 11:19:03 -0500
-Received: (qmail 2086 invoked by uid 2102); 20 Nov 2019 11:19:03 -0500
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 20 Nov 2019 11:19:03 -0500
-Date:   Wed, 20 Nov 2019 11:19:03 -0500 (EST)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Ikjoon Jang <ikjn@chromium.org>
-cc:     linux-usb@vger.kernel.org, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Suwan Kim <suwan.kim027@gmail.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Johan Hovold <johan@kernel.org>,
-        Nicolas Boitchat <drinkcat@chromium.org>
-Subject: Re: [PATCH 0/2] usb: override hub device bInterval with device node
-In-Reply-To: <CAATdQgB9_qd+u1mr7ExNbeg0NP6AWO150WfXUabvL9AvKZC0dA@mail.gmail.com>
-Message-ID: <Pine.LNX.4.44L0.1911201116590.1498-100000@iolanthe.rowland.org>
+        Wed, 20 Nov 2019 11:19:47 -0500
+Received: by mail-pg1-f194.google.com with SMTP id e17so6189219pgd.7
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 08:19:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hu2jR/6Mmwd09bHtXEWD+IrFeBmmq1D1s96is5WFkyM=;
+        b=C4dx6smJC7FVaMVL53K9ToTHJOjVnVW+3k6p5/wVoZi4VkpJqpUpNeKfEjspLIhf71
+         siCnCNi9Pq0+q118/G9NC2TByQBD0NgrAHbtmSMqLBbCoUK1Jo/UV1GVTxRk/uM+tzls
+         Cl0BmlkLH6dEWrQQDXtwE3JxIHxb5yhJw7CX+at4ozNwb71cH5XGgiU6/bBxCjwC0UCZ
+         is8vsRRK93C1ihpR7uWGdxjtTNV7NMA9fhYk2FhE/JBZ7veqvhRaj0g67lo04rrijzD3
+         PhXat0cjQ2uBWiCMVrcQ+BvTkJDKbs/rfzK924pIOmeWaNRUANNBk2zxYGTEiTs3A0LJ
+         x3Zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hu2jR/6Mmwd09bHtXEWD+IrFeBmmq1D1s96is5WFkyM=;
+        b=NL0mEAcqdX1Tm4I5VWmuwdnGcuILo1HB8raMQ59BKCUjgkVyrhgiTnP+idPifrhu0U
+         +5SgNEvvlFzonVaZu/s16EVj1M0301eO4Qw0AgAkF0hXQBWnbPcKKVaKmLZVlpVMm777
+         rkEI1+XMt0ihLNzytF+FOdqIpNSw8lQkGYkzCoeeF5P3VlldxW3/7H/54n1wRH8uzVd2
+         50iqfM/Ki6sEt9MfJMRxdA46CVGWYb7H/Tu3XQVVBlP7Oa6eOQfWk7gjw44tF3+kA3XV
+         GeWgaJpnbYNjs0vdg8UlKvPD3PKhaZr2odJgr1aRX4KUnrN5Sn78yiCUHX51BXjRlcRG
+         LQUQ==
+X-Gm-Message-State: APjAAAVw57fZfnz+uqWzdzqvy5F5va46yiRMcsosBqMXNFxYZXevB5JB
+        +Hi5vkChFKsG4cCzRlSUTJ7BEEA0sWHyJcqo1NiOVg==
+X-Google-Smtp-Source: APXvYqxFCcYOvyOCvYHJRYXo5Y7pCm2L3aDRnwdFGjxGdni0IKYysa4KhYOihEy20zkzk2bnsTIonVkA23WjphDi3CY=
+X-Received: by 2002:aa7:8edd:: with SMTP id b29mr5018029pfr.23.1574266786126;
+ Wed, 20 Nov 2019 08:19:46 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+References: <20191119003120.154041-1-brendanhiggins@google.com>
+ <4a3aada5-fe8f-9c82-dfd4-0494acf59334@infradead.org> <CAFd5g47+3TN4pOdeM0YmJpMP2uKnpJYUY_OXmqmZEn8OcVz6ow@mail.gmail.com>
+ <20191120063219.1ad15b68@lwn.net> <2ba78e72-22e8-1c5e-103e-78eb892fb2cd@infradead.org>
+In-Reply-To: <2ba78e72-22e8-1c5e-103e-78eb892fb2cd@infradead.org>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Wed, 20 Nov 2019 08:19:33 -0800
+Message-ID: <CAFd5g46JjeoaDTRbNMzUkmtODkK0QX_3tiEbo1GA0KR_f7w9fQ@mail.gmail.com>
+Subject: Re: [PATCH linux-kselftest/test v3] Documentation: kunit: add
+ documentation for kunit_tool
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>, shuah <shuah@kernel.org>,
+        David Gow <davidgow@google.com>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        "Theodore Ts'o" <tytso@mit.edu>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 20 Nov 2019, Ikjoon Jang wrote:
+On Wed, Nov 20, 2019 at 8:08 AM Randy Dunlap <rdunlap@infradead.org> wrote:
+>
+> On 11/20/19 5:32 AM, Jonathan Corbet wrote:
+> > On Tue, 19 Nov 2019 17:14:20 -0800
+> > Brendan Higgins <brendanhiggins@google.com> wrote:
+> >
+> >> On Tue, Nov 19, 2019 at 4:27 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+> >>>
+> >>> On 11/18/19 4:31 PM, Brendan Higgins wrote:
+> >>>> +How do I use kunit_tool?
+> >>>> +=================================
+> >>>
+> >>> Hi,
+> >>> I haven't tested this, but Sphinx (or some doc tool) usually complains if the
+> >>> underline length is not the same as the header text length.  (I.e., use fewer
+> >>> = signs above.)
+> >>
+> >> Hmmm...Sphinx and checkpatch didn't complain. I wonder if it is a
+> >> different script, or maybe I have to use a particular option with
+> >> Sphinx.
+> >
+> > Sphinx wants the underline to be at least as long as the subheading text
+> > above; it's entirely happy if it's longer, though.
+>
+> oh. thanks for the info.
 
-> On Tue, Nov 19, 2019 at 11:14 PM Alan Stern <stern@rowland.harvard.edu> wrote:
-> >
-> > On Tue, 19 Nov 2019, Ikjoon Jang wrote:
-> >
-> > > On Sun, Nov 17, 2019 at 11:46 PM Alan Stern <stern@rowland.harvard.edu> wrote:
-> > > >
-> > > > On Sun, 17 Nov 2019, Ikjoon Jang wrote:
-> > > >
-> > > > > This patchset enables hard wired hub device to use different bInterval
-> > > > > from its descriptor when the hub has a combined device node.
-> > > > >
-> > > > > When we know the specific hard wired hub supports changing its polling
-> > > > > interval, we can adjust hub's interval to reduce the time of waking up
-> > > > > from autosuspend or connect detection of HIDs.
-> > > >
-> > > > In fact, _all_ hubs support changing the polling interval.  The value
-> > > > given in the USB spec is just an upper limit; any smaller value is
-> > > > equally acceptable.
-> > > >
-> > > > So why are you doing this only for hard-wired hubs?  Why not for all
-> > > > hubs?
-> > >
-> > > Because we only want to apply it to a specific device instance under
-> > > our control.
-> >
-> > Why?  What's so special about that device instance?
-> >
-> > For example, why not instead have a poll_interval sysfs attribute for
-> > all hubs that can be written from userspace?  Then people could reduce
-> > the autoresume latency for any device they want.
-> 
-> Changing its INT interval during runtime seems not so easy, there's no device
-> drivers doing this to my knowledge. At least xhci needs to restart
-> endpoint to change
-> the interval. So I think patching ep descriptor at enumeration stage
-> is more convincing.
-
-That's a good point.  It would be necessary to send a Set-Interface 
-request at the very least if you wanted to change the interval 
-on-the-fly.
-
-> > > We apply autosuspend to built-in touchpad device for power savings,
-> > >
-> > > Users can attach external hub devices with same VID:PID that we don't want to
-> > > change the behavior.
-> >
-> > Why don't you want to change the behavior?  Or allow the user to change
-> > the behavior?
-> >
-> 
-> Yes, that's a difficult question here too, when the hub is external device,
-> it can't be fully controlled by here. Even though it's the same
-> VID:PID hub chip,
-> that's not the 100% same device. We don't know how much this will
-> impact to the other
-> external hub devices regarding power consumption and compatibility.
-> 
-> > >  Maybe disabling autosuspend for external HIDs
-> > > can be more reasonable for that case?
-> >
-> > If it makes sense to to save power for your built-in touchpad device,
-> > why doesn't it also make sense to save power for other external HIDs?
-> >
-> > > > And is 250 ms really too long to wait for remote wakeup or connect
-> > > > detection?  What's the real motivation behind this change?
-> > >
-> > > When a user starts to move the cursor while touchpad is in autosuspend state,
-> > > It takes more than >250ms (worst case can be >500ms) to wake up and response.
-> > > That makes the cursor stuck for a while and warp to another location suddenly.
-> >
-> > All right, that's a good reason.  But doesn't it apply just as well to
-> > other devices, not only your built-in touchpad?
-> 
-> Actually the hub is the one to be applied, I don't care much about the
-> rare case that
-> a user connects an additional external hub with same PID and connect
-> external HID
-> under that hub.
-> 
-> We could reduce autosuspend delay for built-in touchpad when we know
-> that's better
-> for power savings only if response time of wake up is good enough. but
-> we don't know
-> the optimal values for external HIDs. So we could use the default long
-> delay for external
-> devices, or just disable autosuspend for all external HIDs,
-> so user might experience much less cursor lags even with that rare case.
-
-All right.  Can you resubmit the patch with this explanation added to
-the Changelog?
-
-Alan Stern
-
+Hmmm...maybe somebody should add this rule to checkpatch? I have
+already made this mistake at least twice. :-)
