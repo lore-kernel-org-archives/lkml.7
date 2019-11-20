@@ -4,48 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF4D5C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:38:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 555CCC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:38:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 873F922529
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:38:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 295D42251E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:38:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574257086;
-	bh=64GkfrnU5/CmFwfArTVS22nUh21+z4REs8qfwPVsKmY=;
+	s=default; t=1574257090;
+	bh=bfeX1RCt/G8UUJqxagx1+I2XTNvZ7HFkaCu5K4RkPQ0=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=bG+iMa+FIQa1DCaOk2EUVfRrbYvwDgYP+6VeSSF61J0WlsD3pRSdsQZ4PVpyyw++s
-	 htdyEBG8gamDzpci2cJTX+76ajMG8kTYH9ns01ezeahPovLc4E4BXwLUVSqPMw7MNB
-	 vTaVHx/KT74dMzSehr+5TxlPCVXnTn1dna7Il6gk=
+	b=UDXrNkSM2mwEnTZrDl+JD5yJ5udf/90ivZPOSv2zTCoOcwK6undTZEIOv1ptnc4Dn
+	 trjyXPylW70StIoPhmkSJ19LZCf/SLRdDHNhku1YI5WW3KyI7m0rDQ1dixB+6wCsO6
+	 lPq/zwXjSmM4P85NK6ExMQnF+yJrUWy0Cm4lPrBg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730974AbfKTNiF (ORCPT
+        id S1730980AbfKTNiJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 08:38:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45158 "EHLO mail.kernel.org"
+        Wed, 20 Nov 2019 08:38:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729908AbfKTNiD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 08:38:03 -0500
+        id S1728276AbfKTNiI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 08:38:08 -0500
 Received: from localhost.localdomain (unknown [118.189.143.39])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1A6922529;
-        Wed, 20 Nov 2019 13:38:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED254224D2;
+        Wed, 20 Nov 2019 13:38:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574257082;
-        bh=64GkfrnU5/CmFwfArTVS22nUh21+z4REs8qfwPVsKmY=;
+        s=default; t=1574257086;
+        bh=bfeX1RCt/G8UUJqxagx1+I2XTNvZ7HFkaCu5K4RkPQ0=;
         h=From:To:Cc:Subject:Date:From;
-        b=Nt3g+6Pze6/31UAWEBSwLNzpCMrlanNFL4/Ks0M5irdkDEfxCQG1IenoZDKG7Ud8W
-         ERs26ifbftvQj1HV8/GVLUrV7DfUxjfiDEmKZRMgdSpMWxQiW+PYiVL4m7TuafupzM
-         AJrZCSCcjN2j1trEOl8I4c5ZlQQRCW6DeOYLDfH8=
+        b=vVe1PFpfQ3JPNFL9kAPjkq9OBxIEB3YJ4g3Lrfks6Lpi7PpDtBmvSVrXW7qIUanAK
+         /BQXufodJ8Zsq5yZJdWANlu9v0a15jLt9j3Y655/qeS2rR+bbSbTYYcQWeFOztfRGR
+         zHNBHrV8Yh/NGGWWGhNh6U7NlAIBc9gv4cbbpITc=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
-Subject: [PATCH] mm: Fix Kconfig indentation
-Date:   Wed, 20 Nov 2019 21:37:59 +0800
-Message-Id: <20191120133759.12629-1-krzk@kernel.org>
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH] lib: Fix Kconfig indentation
+Date:   Wed, 20 Nov 2019 21:38:03 +0800
+Message-Id: <20191120133803.12685-1-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -58,63 +57,139 @@ coding style with command like:
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- mm/Kconfig | 28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+ lib/Kconfig       |  2 +-
+ lib/Kconfig.debug | 36 ++++++++++++++++++------------------
+ lib/Kconfig.kgdb  |  8 ++++----
+ 3 files changed, 23 insertions(+), 23 deletions(-)
 
-diff --git a/mm/Kconfig b/mm/Kconfig
-index e38ff1d5968d..27b7e61e3055 100644
---- a/mm/Kconfig
-+++ b/mm/Kconfig
-@@ -160,9 +160,9 @@ config MEMORY_HOTPLUG_SPARSE
- 	depends on SPARSEMEM && MEMORY_HOTPLUG
+diff --git a/lib/Kconfig b/lib/Kconfig
+index 6d7c5877c9f1..6e790dc55c5b 100644
+--- a/lib/Kconfig
++++ b/lib/Kconfig
+@@ -572,7 +572,7 @@ config OID_REGISTRY
+ 	  Enable fast lookup object identifier registry.
  
- config MEMORY_HOTPLUG_DEFAULT_ONLINE
--        bool "Online the newly added memory blocks by default"
--        depends on MEMORY_HOTPLUG
--        help
-+	bool "Online the newly added memory blocks by default"
-+	depends on MEMORY_HOTPLUG
-+	help
- 	  This option sets the default policy setting for memory hotplug
- 	  onlining policy (/sys/devices/system/memory/auto_online_blocks) which
- 	  determines what happens to newly added memory regions. Policy setting
-@@ -227,14 +227,14 @@ config COMPACTION
- 	select MIGRATION
- 	depends on MMU
- 	help
--          Compaction is the only memory management component to form
--          high order (larger physically contiguous) memory blocks
--          reliably. The page allocator relies on compaction heavily and
--          the lack of the feature can lead to unexpected OOM killer
--          invocations for high order memory requests. You shouldn't
--          disable this option unless there really is a strong reason for
--          it and then we would be really interested to hear about that at
--          linux-mm@kvack.org.
-+	  Compaction is the only memory management component to form
-+	  high order (larger physically contiguous) memory blocks
-+	  reliably. The page allocator relies on compaction heavily and
-+	  the lack of the feature can lead to unexpected OOM killer
-+	  invocations for high order memory requests. You shouldn't
-+	  disable this option unless there really is a strong reason for
-+	  it and then we would be really interested to hear about that at
-+	  linux-mm@kvack.org.
+ config UCS2_STRING
+-        tristate
++	tristate
  
  #
- # support for page migration
-@@ -302,10 +302,10 @@ config KSM
- 	  root has set /sys/kernel/mm/ksm/run to 1 (if CONFIG_SYSFS is set).
+ # generic vdso
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 4217bd26e220..bfc65c6d5fdc 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -128,8 +128,8 @@ config DYNAMIC_DEBUG
+ 	  lineno : line number of the debug statement
+ 	  module : module that contains the debug statement
+ 	  function : function that contains the debug statement
+-          flags : '=p' means the line is turned 'on' for printing
+-          format : the format used for the debug statement
++	  flags : '=p' means the line is turned 'on' for printing
++	  format : the format used for the debug statement
  
- config DEFAULT_MMAP_MIN_ADDR
--        int "Low address space to protect from user allocation"
-+	int "Low address space to protect from user allocation"
- 	depends on MMU
--        default 4096
+ 	  From a live system:
+ 
+@@ -190,7 +190,7 @@ config DEBUG_INFO
+ 	bool "Compile the kernel with debug info"
+ 	depends on DEBUG_KERNEL && !COMPILE_TEST
+ 	help
+-          If you say Y here the resulting kernel image will include
++	  If you say Y here the resulting kernel image will include
+ 	  debugging info resulting in a larger kernel image.
+ 	  This adds debug symbols to the kernel and modules (gcc -g), and
+ 	  is needed if you intend to use kernel crashdump or binary object
+@@ -287,13 +287,13 @@ config STRIP_ASM_SYMS
+ 	  get_wchan() and suchlike.
+ 
+ config READABLE_ASM
+-        bool "Generate readable assembler code"
+-        depends on DEBUG_KERNEL
 -        help
-+	default 4096
+-          Disable some compiler optimizations that tend to generate human unreadable
+-          assembler output. This may make the kernel slightly slower, but it helps
+-          to keep kernel developers who have to stare a lot at assembler listings
+-          sane.
++	bool "Generate readable assembler code"
++	depends on DEBUG_KERNEL
 +	help
- 	  This is the portion of low virtual memory which should be protected
- 	  from userspace allocation.  Keeping a user from writing to low pages
- 	  can help reduce the impact of kernel NULL pointer bugs.
++	  Disable some compiler optimizations that tend to generate human unreadable
++	  assembler output. This may make the kernel slightly slower, but it helps
++	  to keep kernel developers who have to stare a lot at assembler listings
++	  sane.
+ 
+ config HEADERS_INSTALL
+ 	bool "Install uapi headers to usr/include"
+@@ -525,11 +525,11 @@ config DEBUG_OBJECTS_PERCPU_COUNTER
+ 
+ config DEBUG_OBJECTS_ENABLE_DEFAULT
+ 	int "debug_objects bootup default value (0-1)"
+-        range 0 1
+-        default "1"
+-        depends on DEBUG_OBJECTS
+-        help
+-          Debug objects boot parameter default value
++	range 0 1
++	default "1"
++	depends on DEBUG_OBJECTS
++	help
++	  Debug objects boot parameter default value
+ 
+ config DEBUG_SLAB
+ 	bool "Debug slab memory allocations"
+@@ -660,7 +660,7 @@ config DEBUG_VM
+ 	depends on DEBUG_KERNEL
+ 	help
+ 	  Enable this to turn on extended checks in the virtual-memory system
+-          that may impact performance.
++	  that may impact performance.
+ 
+ 	  If unsure, say N.
+ 
+@@ -1400,7 +1400,7 @@ config DEBUG_WQ_FORCE_RR_CPU
+ 	  be impacted.
+ 
+ config DEBUG_BLOCK_EXT_DEVT
+-        bool "Force extended block device numbers and spread them"
++	bool "Force extended block device numbers and spread them"
+ 	depends on DEBUG_KERNEL
+ 	depends on BLOCK
+ 	default n
+@@ -1532,7 +1532,7 @@ config DEBUG_AID_FOR_SYZBOT
+        bool "Additional debug code for syzbot"
+        default n
+        help
+-         This option is intended for testing by syzbot.
++	 This option is intended for testing by syzbot.
+ 
+ menu "$(SRCARCH) Debugging"
+ 
+diff --git a/lib/Kconfig.kgdb b/lib/Kconfig.kgdb
+index bbe397df04a3..933680b59e2d 100644
+--- a/lib/Kconfig.kgdb
++++ b/lib/Kconfig.kgdb
+@@ -64,9 +64,9 @@ config KGDB_LOW_LEVEL_TRAP
+        depends on X86 || MIPS
+        default n
+        help
+-         This will add an extra call back to kgdb for the breakpoint
+-         exception handler which will allow kgdb to step through a
+-         notify handler.
++	 This will add an extra call back to kgdb for the breakpoint
++	 exception handler which will allow kgdb to step through a
++	 notify handler.
+ 
+ config KGDB_KDB
+ 	bool "KGDB_KDB: include kdb frontend for kgdb"
+@@ -96,7 +96,7 @@ config KDB_DEFAULT_ENABLE
+ 
+ 	  The config option merely sets the default at boot time. Both
+ 	  issuing 'echo X > /sys/module/kdb/parameters/cmd_enable' or
+-          setting with kdb.cmd_enable=X kernel command line option will
++	  setting with kdb.cmd_enable=X kernel command line option will
+ 	  override the default settings.
+ 
+ config KDB_KEYBOARD
 -- 
 2.17.1
 
