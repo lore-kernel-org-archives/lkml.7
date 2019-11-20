@@ -2,197 +2,210 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0351C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD74EC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:39:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEE0520709
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:37:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MCM6LDn3"
+	by mail.kernel.org (Postfix) with ESMTP id A1EDF20709
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:39:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729156AbfKTPhe (ORCPT
+        id S1729302AbfKTPjt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 10:37:34 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:39584 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728445AbfKTPhb (ORCPT
+        Wed, 20 Nov 2019 10:39:49 -0500
+Received: from esa1.mentor.iphmx.com ([68.232.129.153]:39565 "EHLO
+        esa1.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728445AbfKTPjs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 10:37:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574264249;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/C9gUt9cyA76AzLuivaEWyzrhcrqWJ0lBzJ30P+LXYs=;
-        b=MCM6LDn32Q4K+NrSFNN2985PKABcP3GJjhJKWil5gIxAFLAKvYmcazSxpXEXlnjG0dls/6
-        bL9SUGO46RRfgREq4+SFLGPd0Y/WeAkqSLPCiz8PbVUTSuY9eOiDNuier06wrNyibzCzD+
-        kjA4RBTohe/Q0fVrQjIITsxRONwfBY4=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-276-iVvNkIJQM3K309Al5z9gbw-1; Wed, 20 Nov 2019 10:37:26 -0500
-Received: by mail-qt1-f200.google.com with SMTP id g5so104442qtc.5
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 07:37:26 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BksgvfivWT5oEKOsVtU2jjsSwTJ8rcltyxFUj+I5xNY=;
-        b=f+J4UjHlEXwHGe8BtE0Cg5uYfP/65j2+h24qfXznAMatOKC9f8Q6ghqTen+J2TmwAp
-         SIINYwQHjZkpRSpvYUM3hueNoAhuVMLYCkZZv8eofQrwcOgzePyGWJqCPjMehdHbt2Bk
-         +7H/3Fc6DLmPvFj/zZOcUzzl00f+x5dOjf0h3hbsUnhbZG9GIQiHI6VJWzhC40JvWnT9
-         tt7YvRh56QEdmaCEMAGdzQ9TdIkI4pHgaeUgW8fO9TUON7Xf7Ua48AqdXr5KoORfjfAz
-         v0l5YUiidjiCFjtNajGOyhs3tK/rinHrCf5moPtyNBjp9wrjHuwQvWSmJFzsXuynGDdE
-         F+mw==
-X-Gm-Message-State: APjAAAXrXTcFfw4Nm5apcD60dfgUgdZV9ro44rqK9syDpD3DBUolILtr
-        1j3+5T/GMC8UhweOVPcsNNmbfwtlPGSlI2VcVywTmNLnyuHTNeWD4wlRXEutmLKt/b2880N9pOt
-        Jresxcthl0WgfGE24PAKhRrpaw6cwgo8JsG7I8qQE
-X-Received: by 2002:a37:6811:: with SMTP id d17mr3082060qkc.102.1574264245968;
-        Wed, 20 Nov 2019 07:37:25 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzt0K/ijAMXYP756+k75llJT5zszZ47OfQZKFovlD4ZwaMaT169d/nRHiPSAwI9CqrdON3hSsUsT8pA85i0bCE=
-X-Received: by 2002:a37:6811:: with SMTP id d17mr3082027qkc.102.1574264245623;
- Wed, 20 Nov 2019 07:37:25 -0800 (PST)
+        Wed, 20 Nov 2019 10:39:48 -0500
+IronPort-SDR: oXXf2jN34jToYRwF3cdrryEJJGaIjc53aq+paWt7Rtj/ZX4xVtxRk/upRe2zy3ZDeM8X2tKDNX
+ StP/piLSNHqyCCb350f2+ngDuSbfmUTmaD81VqcBezwBmvCF+iyORWXhLfmF/D26+pUJerzO3N
+ NetXYsySxjDWQVZl7QM97Dj0xiS7Q4LmvWu5dzrXX71EQYu+OuoM3bgOkgJs+q6bezRuopGgH+
+ fJKF+RdDognFKTfERY8CQGfodjc/iZc/GhrrPZT7iGOsojTEzycLuEftO7xcETWnbL6Z1RsWGD
+ G8k=
+X-IronPort-AV: E=Sophos;i="5.69,222,1571731200"; 
+   d="scan'208";a="45220642"
+Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
+  by esa1.mentor.iphmx.com with ESMTP; 20 Nov 2019 07:39:48 -0800
+IronPort-SDR: NTLHtgw50zu5G6nn7et5/NosI5DsjGCJt4yYmrwXEgSLgwUDcIePX9YhYJ22olLVglU4VJZEES
+ T9EsUAqlxbztKD4g7nINe5fTvRJHxyH0BTrgwYMobdWzTkh4MhQpxPuZyEB6YlfmcUCm3s9aoC
+ QzY4SJGYvG9/MuPuHOhKayDpcPBMMEwZzvYychHTYS67SCgSqzSu8uhARozG7bgOtTVWufLn+W
+ C2tr8stOM/CCeX/iE/5XNVJtDTm6L/bs+o2HQnhfOZiEXXYRehc3PsO5fNPJiw7tYCYPZToqjL
+ sQs=
+From:   Andrew Gabbasov <andrew_gabbasov@mentor.com>
+To:     'Takashi Iwai' <tiwai@suse.de>
+CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Timo Wischer <twischer@de.adit-jv.com>
+References: <20191120115856.4125-1-andrew_gabbasov@mentor.com>  <20191120115856.4125-2-andrew_gabbasov@mentor.com>      <20191120115856.4125-3-andrew_gabbasov@mentor.com>      <20191120115856.4125-4-andrew_gabbasov@mentor.com>      <20191120115856.4125-5-andrew_gabbasov@mentor.com>      <20191120115856.4125-6-andrew_gabbasov@mentor.com>      <20191120115856.4125-7-andrew_gabbasov@mentor.com>      <s5hh82y8vn5.wl-tiwai@suse.de>  <000001d59fb6$4ca36aa0$e5ea3fe0$@mentor.com> <s5h5zje8sxl.wl-tiwai@suse.de>
+In-Reply-To: <s5h5zje8sxl.wl-tiwai@suse.de>
+Subject: RE: [PATCH v4 6/7] ALSA: aloop: Support selection of snd_timer instead of jiffies
+Date:   Wed, 20 Nov 2019 18:39:00 +0300
+Organization: Mentor Graphics Corporation
+Message-ID: <000101d59fb8$a288a280$e799e780$@mentor.com>
 MIME-Version: 1.0
-References: <20191119214955.GA223696@google.com> <CACO55tu+8VeyMw1Lb6QvNspaJm9LDgoRbooVhr0s3v9uBt=feg@mail.gmail.com>
- <20191120101816.GX11621@lahna.fi.intel.com> <CAJZ5v0g4vp1C+zHU5nOVnkGsOjBvLaphK1kK=qAT6b=mK8kpsA@mail.gmail.com>
- <20191120112212.GA11621@lahna.fi.intel.com> <20191120115127.GD11621@lahna.fi.intel.com>
- <CACO55tsfNOdtu5SZ-4HzO4Ji6gQtafvZ7Rm19nkPcJAgwUBFMw@mail.gmail.com>
- <CACO55tscD_96jUVts+MTAUsCt-fZx4O5kyhRKoo4mKoC84io8A@mail.gmail.com>
- <20191120120913.GE11621@lahna.fi.intel.com> <CACO55tsHy6yZQZ8PkdW8iPA7+uc5rdcEwRJwYEQ3iqu85F8Sqg@mail.gmail.com>
- <20191120151542.GH11621@lahna.fi.intel.com>
-In-Reply-To: <20191120151542.GH11621@lahna.fi.intel.com>
-From:   Karol Herbst <kherbst@redhat.com>
-Date:   Wed, 20 Nov 2019 16:37:14 +0100
-Message-ID: <CACO55tvo3rbPtYJcioEgXCEQqVXcVAm-iowr9Nim=bgTdMjgLw@mail.gmail.com>
-Subject: Re: [PATCH v4] pci: prevent putting nvidia GPUs into lower device
- states on certain intel bridges
-To:     Mika Westerberg <mika.westerberg@intel.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lyude Paul <lyude@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        Dave Airlie <airlied@gmail.com>,
-        Mario Limonciello <Mario.Limonciello@dell.com>
-X-MC-Unique: iVvNkIJQM3K309Al5z9gbw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 14.0
+Thread-Index: AQHVn7ezhCAU3Kkkmk2hDkJrcybUyqeUMFOA
+Content-Language: en-us
+X-Originating-IP: [137.202.0.90]
+X-ClientProxiedBy: SVR-IES-MBX-03.mgc.mentorg.com (139.181.222.3) To
+ svr-ies-mbx-02.mgc.mentorg.com (139.181.222.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 4:15 PM Mika Westerberg
-<mika.westerberg@intel.com> wrote:
->
-> On Wed, Nov 20, 2019 at 01:11:52PM +0100, Karol Herbst wrote:
-> > On Wed, Nov 20, 2019 at 1:09 PM Mika Westerberg
-> > <mika.westerberg@intel.com> wrote:
-> > >
-> > > On Wed, Nov 20, 2019 at 12:58:00PM +0100, Karol Herbst wrote:
-> > > > overall, what I really want to know is, _why_ does it work on windo=
-ws?
-> > >
-> > > So do I ;-)
-> > >
-> > > > Or what are we doing differently on Linux so that it doesn't work? =
-If
-> > > > anybody has any idea on how we could dig into this and figure it ou=
-t
-> > > > on this level, this would probably allow us to get closer to the ro=
-ot
-> > > > cause? no?
-> > >
-> > > Have you tried to use the acpi_rev_override parameter in your system =
-and
-> > > does it have any effect?
-> > >
-> > > Also did you try to trace the ACPI _ON/_OFF() methods? I think that
-> > > should hopefully reveal something.
-> > >
+Hello Takashi,
+
+> -----Original Message-----
+> From: Takashi Iwai [mailto:tiwai@suse.de]
+> Sent: Wednesday, November 20, 2019 6:32 PM
+> To: Gabbasov, Andrew
+> Cc: alsa-devel@alsa-project.org; linux-kernel@vger.kernel.org; Jaroslav
+> Kysela; Takashi Iwai; Timo Wischer
+> Subject: Re: [PATCH v4 6/7] ALSA: aloop: Support selection of snd_timer
+> instead of jiffies
+> 
+> On Wed, 20 Nov 2019 16:21:36 +0100,
+> Andrew Gabbasov wrote:
 > >
-> > I think I did in the past and it seemed to have worked, there is just
-> > one big issue with this: it's a Dell specific workaround afaik, and
-> > this issue plagues not just Dell, but we've seen it on HP and Lenovo
-> > laptops as well, and I've heard about users having the same issues on
-> > Asus and MSI laptops as well.
->
-> Maybe it is not a workaround at all but instead it simply determines
-> whether the system supports RTD3 or something like that (IIRC Windows 8
-> started supporting it). Maybe Dell added check for Linux because at that
-> time Linux did not support it.
->
+> > Hello Takashi,
+> >
+> > > -----Original Message-----
+> > > From: Takashi Iwai [mailto:tiwai@suse.de]
+> > > Sent: Wednesday, November 20, 2019 5:34 PM
+> > > To: Gabbasov, Andrew
+> > > Cc: alsa-devel@alsa-project.org; linux-kernel@vger.kernel.org;
+Jaroslav
+> > > Kysela; Takashi Iwai; Timo Wischer
+> > > Subject: Re: [PATCH v4 6/7] ALSA: aloop: Support selection of
+snd_timer
+> > > instead of jiffies
+> > >
+> > > On Wed, 20 Nov 2019 12:58:55 +0100,
+> > > Andrew Gabbasov wrote:
+> > > > +/* call in loopback->cable_lock */
+> > > > +static int loopback_snd_timer_open(struct loopback_pcm *dpcm)
+> > > > +{
+> > > > +	int err = 0;
+> > > > +	struct snd_timer_id tid = {
+> > > > +		.dev_class = SNDRV_TIMER_CLASS_PCM,
+> > > > +		.dev_sclass = SNDRV_TIMER_SCLASS_APPLICATION,
+> > > > +	};
+> > > > +	struct snd_timer_instance *timeri;
+> > > > +	struct loopback_cable *cable = dpcm->cable;
+> > > > +
+> > > > +	spin_lock_irq(&cable->lock);
+> > > > +
+> > > > +	/* check if timer was already opened. It is only opened once
+> > > > +	 * per playback and capture subdevice (aka cable).
+> > > > +	 */
+> > > > +	if (cable->snd_timer.instance)
+> > > > +		goto unlock;
+> > > > +
+> > > > +	err = loopback_parse_timer_id(dpcm->loopback->timer_source,
+> &tid);
+> > > > +	if (err < 0) {
+> > > > +		pcm_err(dpcm->substream->pcm,
+> > > > +			"Parsing timer source \'%s\' failed with
+%d",
+> > > > +			dpcm->loopback->timer_source, err);
+> > > > +		goto unlock;
+> > > > +	}
+> > > > +
+> > > > +	cable->snd_timer.stream = dpcm->substream->stream;
+> > > > +	cable->snd_timer.id = tid;
+> > > > +
+> > > > +	timeri = snd_timer_instance_new(dpcm->loopback->card->id);
+> > > > +	if (!timeri) {
+> > > > +		err = -ENOMEM;
+> > > > +		goto unlock;
+> > > > +	}
+> > > > +	/* The callback has to be called from another tasklet. If
+> > > > +	 * SNDRV_TIMER_IFLG_FAST is specified it will be called from
+> the
+> > > > +	 * snd_pcm_period_elapsed() call of the selected sound card.
+> > > > +	 * snd_pcm_period_elapsed() helds
+> snd_pcm_stream_lock_irqsave().
+> > > > +	 * Due to our callback loopback_snd_timer_function() also
+> calls
+> > > > +	 * snd_pcm_period_elapsed() which calls
+> > > snd_pcm_stream_lock_irqsave().
+> > > > +	 * This would end up in a dead lock.
+> > > > +	 */
+> > > > +	timeri->flags |= SNDRV_TIMER_IFLG_AUTO;
+> > > > +	timeri->callback = loopback_snd_timer_function;
+> > > > +	timeri->callback_data = (void *)cable;
+> > > > +	timeri->ccallback = loopback_snd_timer_event;
+> > > > +
+> > > > +	/* snd_timer_close() and snd_timer_open() should not be
+called
+> with
+> > > > +	 * locked spinlock because both functions can block on a
+> mutex. The
+> > > > +	 * mutex loopback->cable_lock is kept locked. Therefore
+> > > snd_timer_open()
+> > > > +	 * cannot be called a second time by the other device of the
+> same
+> > > cable.
+> > > > +	 * Therefore the following issue cannot happen:
+> > > > +	 * [proc1] Call loopback_timer_open() ->
+> > > > +	 *	   Unlock cable->lock for snd_timer_close/open()
+call
+> > > > +	 * [proc2] Call loopback_timer_open() -> snd_timer_open(),
+> > > > +	 *	   snd_timer_start()
+> > > > +	 * [proc1] Call snd_timer_open() and overwrite running timer
+> > > > +	 *	   instance
+> > > > +	 */
+> > > > +	spin_unlock_irq(&cable->lock);
+> > > > +	err = snd_timer_open(timeri, &cable->snd_timer.id, current-
+> >pid);
+> > > > +	if (err < 0) {
+> > > > +		pcm_err(dpcm->substream->pcm,
+> > > > +			"snd_timer_open (%d,%d,%d) failed with %d",
+> > > > +			cable->snd_timer.id.card,
+> > > > +			cable->snd_timer.id.device,
+> > > > +			cable->snd_timer.id.subdevice,
+> > > > +			err);
+> > > > +		snd_timer_instance_free(timeri);
+> > > > +		return err;
+> > > > +	}
+> > > > +	spin_lock_irq(&cable->lock);
+> > > > +
+> > > > +	cable->snd_timer.instance = timeri;
+> > > > +
+> > > > +	/* initialise a tasklet used for draining */
+> > > > +	tasklet_init(&cable->snd_timer.event_tasklet,
+> > > > +		     loopback_snd_timer_tasklet, (unsigned
+> long)timeri);
+> > >
+> > > This has to be set before snd_timer_open().  The callback might be
+> > > called immediately after snd_timer_open().
+> >
+> > This tasklet is used/scheduled only in ccallback (not regular tick
+> > callback),
+> > and only for SNDRV_TIMER_EVENT_MSTOP event. Can this event really happen
+> > immediately after snd_timer_open()?
+> 
+> Why not?  The master timer can be stopped at any time, even between
+> these two lines.
+> 
+> Beware that there are fuzzer programs that can trigger such racy
+> things, and you're adding the code to the target that is actively
+> slapped by them :)
 
-the point is, it's not checking it by default, so by default you still
-run into the windows 8 codepath.
+OK, got it.
+I'll move this initialization to before snd_timer_open() in the next
+update together with the fixes for the other issues you will find
+in this version.
 
-> In case RTD3 is supported it invokes LKDS() which probably does the L2
-> or L3 entry and this is for some reason does not work the same way in
-> Linux than it does with Windows 8+.
->
-> I don't remember if this happens only with nouveau or with the
-> proprietary driver as well but looking at the nouveau runtime PM suspend
-> hook (assuming I'm looking at the correct code):
->
-> static int
-> nouveau_pmops_runtime_suspend(struct device *dev)
-> {
->         struct pci_dev *pdev =3D to_pci_dev(dev);
->         struct drm_device *drm_dev =3D pci_get_drvdata(pdev);
->         int ret;
->
->         if (!nouveau_pmops_runtime()) {
->                 pm_runtime_forbid(dev);
->                 return -EBUSY;
->         }
->
->         nouveau_switcheroo_optimus_dsm();
->         ret =3D nouveau_do_suspend(drm_dev, true);
->         pci_save_state(pdev);
->         pci_disable_device(pdev);
->         pci_ignore_hotplug(pdev);
->         pci_set_power_state(pdev, PCI_D3cold);
->         drm_dev->switch_power_state =3D DRM_SWITCH_POWER_DYNAMIC_OFF;
->         return ret;
-> }
->
-> Normally PCI drivers leave the PCI bus PM things to PCI core but here
-> the driver does these. So I wonder if it makes any difference if we let
-> the core handle all that:
->
-> static int
-> nouveau_pmops_runtime_suspend(struct device *dev)
-> {
->         struct pci_dev *pdev =3D to_pci_dev(dev);
->         struct drm_device *drm_dev =3D pci_get_drvdata(pdev);
->         int ret;
->
->         if (!nouveau_pmops_runtime()) {
->                 pm_runtime_forbid(dev);
->                 return -EBUSY;
->         }
->
->         nouveau_switcheroo_optimus_dsm();
->         ret =3D nouveau_do_suspend(drm_dev, true);
->         pci_ignore_hotplug(pdev);
->         drm_dev->switch_power_state =3D DRM_SWITCH_POWER_DYNAMIC_OFF;
->         return ret;
-> }
->
-> and similar for the nouveau_pmops_runtime_resume().
->
+Thanks!
 
-yeah, I tried that at some point and it didn't help either. The reason
-we call those from inside Nouveau is to support systems pre _PR where
-nouveau invokes custom _DSM calls on its own. We could potentially
-check for that though.
+Best regards,
+Andrew
 
