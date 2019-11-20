@@ -2,370 +2,873 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63C74C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 05:31:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 166FDC43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 05:31:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2519F2245F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 05:31:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KxN/VUF+"
+	by mail.kernel.org (Postfix) with ESMTP id C96D22240A
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 05:31:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727052AbfKTFbP (ORCPT
+        id S1727259AbfKTFb6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 00:31:15 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:35787 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725832AbfKTFbP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 00:31:15 -0500
-Received: by mail-ot1-f65.google.com with SMTP id c14so13164135oth.2;
-        Tue, 19 Nov 2019 21:31:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=6e8SujYjRtrGbDIJN+KGArRXZzU18cG+HqyXm6ajTcU=;
-        b=KxN/VUF+IVhOSAw0qmAjBYYhN8n8i7FleiBBgs+RDzfC5P7ZKHn4/cFur+w/eyi6qh
-         P+KE2oSrvc6MmhBCXBD0U+KiG1Jj2EDl/hr9RXoX/960/3RNbmXE691SdBPIQe6YdCrK
-         iIUwgl5Z30o8ICPFh9ay0xphKnWlGUsGdoq5LibYmKFp/MyiX/YrFiG3aDsa0jbPIsj5
-         6WsV9r+UNYne+uO/ViyEaiHMJ12tIzw2Zi32OlgwG67ZZwuZHvylkIlYUbdfiZyWfVSc
-         ImshTJNR9hzBgS7MVaMM9Aly6qzculUEWdS/djP51kwuWRZV5jgbD02+PAZGPzsfSdvn
-         moGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=6e8SujYjRtrGbDIJN+KGArRXZzU18cG+HqyXm6ajTcU=;
-        b=Sk/gOfaK4ha0DqlHG/0HNGeT9QPPugcpvfWaOLBgxJiouHGUKjZOVQl2l5u8YOA7Hu
-         LNB2z3qZT1k/B2s2A/MtJLM7ymc5zsRBVGex72g/8U7nj7qqE7A132Ttu53NpCg9GQx/
-         JqU/Ikz6I0lly7hWgT+tvT4I3lvDfWM8hUo7eaBXoStdTM/3uukEs/+FfYs5R/QiYqx8
-         Zr36N8bG9B7spC2hpNdRGAqerFIeEwpuQDLfwsxZrin021pjwaLmd9wCOS7cspSbisJr
-         wJ0O5gcuC+X/vDeL5pU4rnTDIOLm9ZHNflW49/bFcEuWTk+BF+2qgekqpsjk3PuXQGk/
-         f8ug==
-X-Gm-Message-State: APjAAAW2VGWBkDl/JN88rxWcSlmBgmf5fRdIbZXhbMp2b2vqHqMSk58B
-        TNyzqA3XAwhEPNYQUvioWyJXBqOu6BR+ROKprDJuDQ==
-X-Google-Smtp-Source: APXvYqzK772ihafmySm5R2xJSodjlntnYnNQxtXeg20APfjEVUN6lvWidSvhHbcpi6jxXogFOn8AWBEQPxfwxqbrTFg=
-X-Received: by 2002:a05:6830:4ae:: with SMTP id l14mr566844otd.185.1574227873250;
- Tue, 19 Nov 2019 21:31:13 -0800 (PST)
-MIME-Version: 1.0
-References: <1574221329-12370-1-git-send-email-wanpengli@tencent.com>
-In-Reply-To: <1574221329-12370-1-git-send-email-wanpengli@tencent.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Wed, 20 Nov 2019 13:31:05 +0800
-Message-ID: <CANRm+Cx6vVywCY8mDSW6yE653gXdc6gM9zg1ZwRXTPWbs4b1ow@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] KVM: VMX: FIXED+PHYSICAL mode single target IPI fastpath
-To:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Liran Alon <liran.alon@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 20 Nov 2019 00:31:58 -0500
+Received: from foss.arm.com ([217.140.110.172]:34088 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727071AbfKTFb5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 00:31:57 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0CECB1FB;
+        Tue, 19 Nov 2019 21:31:54 -0800 (PST)
+Received: from p8cg001049571a15.arm.com (unknown [10.163.1.188])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 82F6B3F52E;
+        Tue, 19 Nov 2019 21:31:33 -0800 (PST)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-mm@kvack.org
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Ingo Molnar <mingo@kernel.org>,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH V10] mm/debug: Add tests validating architecture page table helpers
+Date:   Wed, 20 Nov 2019 11:01:46 +0530
+Message-Id: <1574227906-20550-1-git-send-email-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 20 Nov 2019 at 11:42, Wanpeng Li <kernellwp@gmail.com> wrote:
->
-> From: Wanpeng Li <wanpengli@tencent.com>
->
-> ICR and TSCDEADLINE MSRs write cause the main MSRs write vmexits in
-> our product observation, multicast IPIs are not as common as unicast
-> IPI like RESCHEDULE_VECTOR and CALL_FUNCTION_SINGLE_VECTOR etc.
->
-> This patch tries to optimize x2apic physical destination mode, fixed
-> delivery mode single target IPI. The fast path is invoked at
-> ->handle_exit_irqoff() to emulate only the effect of the ICR write
-> itself, i.e. the sending of IPIs.  Sending IPIs early in the VM-Exit
-> flow reduces the latency of virtual IPIs by avoiding the expensive bits
-> of transitioning from guest to host, e.g. reacquiring KVM's SRCU lock.
-> Especially when running guest w/ KVM_CAP_X86_DISABLE_EXITS capability
-> enabled or guest can keep running, IPI can be injected to target vCPU
-> by posted-interrupt immediately.
->
-> Testing on Xeon Skylake server:
->
-> The virtual IPI latency from sender send to receiver receive reduces
-> more than 200+ cpu cycles.
->
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com>
-> Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-> Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-> Cc: Liran Alon <liran.alon@oracle.com>
-> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> ---
-> v2 -> v3:
->  * for both VMX and SVM
->  * vmx_handle_exit() get second parameter by value and not by pointer
->  * rename parameter to =E2=80=9Caccel_exit_completion=E2=80=9D
->  * preserve tracepoint ordering
->  * rename handler to handle_accel_set_msr_irqoff and more generic
->  * add comments above handle_accel_set_msr_irqoff
->  * msr index APIC_BASE_MSR + (APIC_ICR >> 4)
-> v1 -> v2:
->  * add tracepoint
->  * Instead of a separate vcpu->fast_vmexit, set exit_reason
->   to vmx->exit_reason to -1 if the fast path succeeds.
->  * move the "kvm_skip_emulated_instruction(vcpu)" to vmx_handle_exit
->  * moving the handling into vmx_handle_exit_irqoff()
->
->  arch/x86/include/asm/kvm_host.h | 11 ++++++++--
->  arch/x86/kvm/svm.c              | 14 ++++++++----
->  arch/x86/kvm/vmx/vmx.c          | 13 ++++++++---
->  arch/x86/kvm/x86.c              | 48 +++++++++++++++++++++++++++++++++++=
-++++--
->  arch/x86/kvm/x86.h              |  1 +
->  5 files changed, 76 insertions(+), 11 deletions(-)
->
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_h=
-ost.h
-> index 898ab9e..67c7889 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -175,6 +175,11 @@ enum {
->         VCPU_SREG_LDTR,
->  };
->
-> +enum accel_exit_completion {
-> +       ACCEL_EXIT_NONE,
-> +       ACCEL_EXIT_SKIP_EMUL_INS =3D -1,
+This adds tests which will validate architecture page table helpers and
+other accessors in their compliance with expected generic MM semantics.
+This will help various architectures in validating changes to existing
+page table helpers or addition of new ones.
 
-Don't need to be -1 any more, I guess maintainer can clean it up if
-this is the last version.
+This test covers basic page table entry transformations including but not
+limited to old, young, dirty, clean, write, write protect etc at various
+level along with populating intermediate entries with next page table page
+and validating them.
 
-> +};
-> +
->  #include <asm/kvm_emulate.h>
->
->  #define KVM_NR_MEM_OBJS 40
-> @@ -1084,7 +1089,8 @@ struct kvm_x86_ops {
->         void (*tlb_flush_gva)(struct kvm_vcpu *vcpu, gva_t addr);
->
->         void (*run)(struct kvm_vcpu *vcpu);
-> -       int (*handle_exit)(struct kvm_vcpu *vcpu);
-> +       int (*handle_exit)(struct kvm_vcpu *vcpu,
-> +               enum accel_exit_completion accel_exit);
->         int (*skip_emulated_instruction)(struct kvm_vcpu *vcpu);
->         void (*set_interrupt_shadow)(struct kvm_vcpu *vcpu, int mask);
->         u32 (*get_interrupt_shadow)(struct kvm_vcpu *vcpu);
-> @@ -1134,7 +1140,8 @@ struct kvm_x86_ops {
->         int (*check_intercept)(struct kvm_vcpu *vcpu,
->                                struct x86_instruction_info *info,
->                                enum x86_intercept_stage stage);
-> -       void (*handle_exit_irqoff)(struct kvm_vcpu *vcpu);
-> +       void (*handle_exit_irqoff)(struct kvm_vcpu *vcpu,
-> +               enum accel_exit_completion *accel_exit);
->         bool (*mpx_supported)(void);
->         bool (*xsaves_supported)(void);
->         bool (*umip_emulated)(void);
-> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> index d02a73a..060b11d 100644
-> --- a/arch/x86/kvm/svm.c
-> +++ b/arch/x86/kvm/svm.c
-> @@ -4929,7 +4929,8 @@ static void svm_get_exit_info(struct kvm_vcpu *vcpu=
-, u64 *info1, u64 *info2)
->         *info2 =3D control->exit_info_2;
->  }
->
-> -static int handle_exit(struct kvm_vcpu *vcpu)
-> +static int handle_exit(struct kvm_vcpu *vcpu,
-> +       enum accel_exit_completion accel_exit)
->  {
->         struct vcpu_svm *svm =3D to_svm(vcpu);
->         struct kvm_run *kvm_run =3D vcpu->run;
-> @@ -4987,7 +4988,10 @@ static int handle_exit(struct kvm_vcpu *vcpu)
->                        __func__, svm->vmcb->control.exit_int_info,
->                        exit_code);
->
-> -       if (exit_code >=3D ARRAY_SIZE(svm_exit_handlers)
-> +       if (accel_exit =3D=3D ACCEL_EXIT_SKIP_EMUL_INS) {
-> +               kvm_skip_emulated_instruction(vcpu);
-> +               return 1;
-> +       } else if (exit_code >=3D ARRAY_SIZE(svm_exit_handlers)
->             || !svm_exit_handlers[exit_code]) {
->                 vcpu_unimpl(vcpu, "svm: unexpected exit reason 0x%x\n", e=
-xit_code);
->                 dump_vmcb(vcpu);
-> @@ -6187,9 +6191,11 @@ static int svm_check_intercept(struct kvm_vcpu *vc=
-pu,
->         return ret;
->  }
->
-> -static void svm_handle_exit_irqoff(struct kvm_vcpu *vcpu)
-> +static void svm_handle_exit_irqoff(struct kvm_vcpu *vcpu,
-> +       enum accel_exit_completion *accel_exit)
->  {
-> -
-> +       if (to_svm(vcpu)->vmcb->control.exit_code =3D=3D EXIT_REASON_MSR_=
-WRITE)
-> +               *accel_exit =3D handle_accel_set_msr_irqoff(vcpu);
->  }
->
->  static void svm_sched_in(struct kvm_vcpu *vcpu, int cpu)
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 621142e5..86c0a23 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -5792,7 +5792,8 @@ void dump_vmcs(void)
->   * The guest has exited.  See if we can fix it or if we need userspace
->   * assistance.
->   */
-> -static int vmx_handle_exit(struct kvm_vcpu *vcpu)
-> +static int vmx_handle_exit(struct kvm_vcpu *vcpu,
-> +       enum accel_exit_completion accel_exit)
->  {
->         struct vcpu_vmx *vmx =3D to_vmx(vcpu);
->         u32 exit_reason =3D vmx->exit_reason;
-> @@ -5878,7 +5879,10 @@ static int vmx_handle_exit(struct kvm_vcpu *vcpu)
->                 }
->         }
->
-> -       if (exit_reason < kvm_vmx_max_exit_handlers
-> +       if (accel_exit =3D=3D ACCEL_EXIT_SKIP_EMUL_INS) {
-> +               kvm_skip_emulated_instruction(vcpu);
-> +               return 1;
-> +       } else if (exit_reason < kvm_vmx_max_exit_handlers
->             && kvm_vmx_exit_handlers[exit_reason]) {
->  #ifdef CONFIG_RETPOLINE
->                 if (exit_reason =3D=3D EXIT_REASON_MSR_WRITE)
-> @@ -6223,7 +6227,8 @@ static void handle_external_interrupt_irqoff(struct=
- kvm_vcpu *vcpu)
->  }
->  STACK_FRAME_NON_STANDARD(handle_external_interrupt_irqoff);
->
-> -static void vmx_handle_exit_irqoff(struct kvm_vcpu *vcpu)
-> +static void vmx_handle_exit_irqoff(struct kvm_vcpu *vcpu,
-> +       enum accel_exit_completion *accel_exit)
->  {
->         struct vcpu_vmx *vmx =3D to_vmx(vcpu);
->
-> @@ -6231,6 +6236,8 @@ static void vmx_handle_exit_irqoff(struct kvm_vcpu =
-*vcpu)
->                 handle_external_interrupt_irqoff(vcpu);
->         else if (vmx->exit_reason =3D=3D EXIT_REASON_EXCEPTION_NMI)
->                 handle_exception_nmi_irqoff(vmx);
-> +       else if (vmx->exit_reason =3D=3D EXIT_REASON_MSR_WRITE)
-> +               *accel_exit =3D handle_accel_set_msr_irqoff(vcpu);
->  }
->
->  static bool vmx_has_emulated_msr(int index)
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 991dd01..966c659 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -1509,6 +1509,49 @@ int kvm_emulate_wrmsr(struct kvm_vcpu *vcpu)
->  }
->  EXPORT_SYMBOL_GPL(kvm_emulate_wrmsr);
->
-> +static int handle_accel_set_x2apic_icr_irqoff(struct kvm_vcpu *vcpu, u64=
- data)
-> +{
-> +       if (lapic_in_kernel(vcpu) && apic_x2apic_mode(vcpu->arch.apic) &&
-> +               ((data & KVM_APIC_DEST_MASK) =3D=3D APIC_DEST_PHYSICAL) &=
-&
-> +               ((data & APIC_MODE_MASK) =3D=3D APIC_DM_FIXED)) {
-> +
-> +               kvm_lapic_set_reg(vcpu->arch.apic, APIC_ICR2, (u32)(data =
->> 32));
-> +               return kvm_lapic_reg_write(vcpu->arch.apic, APIC_ICR, (u3=
-2)data);
-> +       }
-> +
-> +       return 1;
-> +}
-> +
-> +/*
-> + * The fast path for frequent and performance sensitive wrmsr emulation,
-> + * i.e. the sending of IPI, sending IPI early in the VM-Exit flow reduce=
-s
-> + * the latency of virtual IPI by avoiding the expensive bits of transiti=
-oning
-> + * from guest to host, e.g. reacquiring KVM's SRCU lock. In contrast to =
-the
-> + * other cases which must be called after interrupts are enabled on the =
-host.
-> + */
-> +enum accel_exit_completion handle_accel_set_msr_irqoff(struct kvm_vcpu *=
-vcpu)
-> +{
-> +       u32 msr =3D kvm_rcx_read(vcpu);
-> +       u64 data =3D kvm_read_edx_eax(vcpu);
-> +       int ret =3D 0;
-> +
-> +       switch (msr) {
-> +       case APIC_BASE_MSR + (APIC_ICR >> 4):
-> +               ret =3D handle_accel_set_x2apic_icr_irqoff(vcpu, data);
-> +               break;
-> +       default:
-> +               return ACCEL_EXIT_NONE;
-> +       }
-> +
-> +       if (!ret) {
-> +               trace_kvm_msr_write(msr, data);
-> +               return ACCEL_EXIT_SKIP_EMUL_INS;
-> +       }
-> +
-> +       return ACCEL_EXIT_NONE;
-> +}
-> +EXPORT_SYMBOL_GPL(handle_accel_set_msr_irqoff);
-> +
->  /*
->   * Adapt set_msr() to msr_io()'s calling convention
->   */
-> @@ -7984,6 +8027,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
->         bool req_int_win =3D
->                 dm_request_for_irq_injection(vcpu) &&
->                 kvm_cpu_accept_dm_intr(vcpu);
-> +       enum accel_exit_completion accel_exit =3D ACCEL_EXIT_NONE;
->
->         bool req_immediate_exit =3D false;
->
-> @@ -8226,7 +8270,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
->         vcpu->mode =3D OUTSIDE_GUEST_MODE;
->         smp_wmb();
->
-> -       kvm_x86_ops->handle_exit_irqoff(vcpu);
-> +       kvm_x86_ops->handle_exit_irqoff(vcpu, &accel_exit);
->
->         /*
->          * Consume any pending interrupts, including the possible source =
-of
-> @@ -8270,7 +8314,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
->                 kvm_lapic_sync_from_vapic(vcpu);
->
->         vcpu->arch.gpa_available =3D false;
-> -       r =3D kvm_x86_ops->handle_exit(vcpu);
-> +       r =3D kvm_x86_ops->handle_exit(vcpu, accel_exit);
->         return r;
->
->  cancel_injection:
-> diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
-> index 29391af..f14ec14 100644
-> --- a/arch/x86/kvm/x86.h
-> +++ b/arch/x86/kvm/x86.h
-> @@ -291,6 +291,7 @@ bool kvm_mtrr_check_gfn_range_consistency(struct kvm_=
-vcpu *vcpu, gfn_t gfn,
->  bool kvm_vector_hashing_enabled(void);
->  int x86_emulate_instruction(struct kvm_vcpu *vcpu, unsigned long cr2,
->                             int emulation_type, void *insn, int insn_len)=
-;
-> +enum accel_exit_completion handle_accel_set_msr_irqoff(struct kvm_vcpu *=
-vcpu);
->
->  #define KVM_SUPPORTED_XCR0     (XFEATURE_MASK_FP | XFEATURE_MASK_SSE \
->                                 | XFEATURE_MASK_YMM | XFEATURE_MASK_BNDRE=
-GS \
-> --
-> 2.7.4
->
+Test page table pages are allocated from system memory with required size
+and alignments. The mapped pfns at page table levels are derived from a
+real pfn representing a valid kernel text symbol. This test gets called
+right after page_alloc_init_late().
+
+This gets build and run when CONFIG_DEBUG_VM_PGTABLE is selected along with
+CONFIG_VM_DEBUG. Architectures willing to subscribe this test also need to
+select CONFIG_ARCH_HAS_DEBUG_VM_PGTABLE which for now is limited to x86 and
+arm64. Going forward, other architectures too can enable this after fixing
+build or runtime problems (if any) with their page table helpers.
+
+Folks interested in making sure that a given platform's page table helpers
+conform to expected generic MM semantics should enable the above config
+which will just trigger this test during boot. Any non conformity here will
+be reported as an warning which would need to be fixed. This test will help
+catch any changes to the agreed upon semantics expected from generic MM and
+enable platforms to accommodate it thereafter.
+
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Steven Price <Steven.Price@arm.com>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Sri Krishna chowdary <schowdary@nvidia.com>
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Vineet Gupta <vgupta@synopsys.com>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: Paul Burton <paul.burton@mips.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Kirill A. Shutemov <kirill@shutemov.name>
+Cc: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: linux-snps-arc@lists.infradead.org
+Cc: linux-mips@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-ia64@vger.kernel.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-s390@vger.kernel.org
+Cc: linux-sh@vger.kernel.org
+Cc: sparclinux@vger.kernel.org
+Cc: x86@kernel.org
+Cc: linux-kernel@vger.kernel.org
+
+Tested-by: Christophe Leroy <christophe.leroy@c-s.fr>		#PPC32
+Reviewed-by: Ingo Molnar <mingo@kernel.org>
+Suggested-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+---
+This adds a test validation for architecture exported page table helpers.
+Patch adds basic transformation tests at various levels of the page table.
+
+This test was originally suggested by Catalin during arm64 THP migration
+RFC discussion earlier. Going forward it can include more specific tests
+with respect to various generic MM functions like THP, HugeTLB etc and
+platform specific tests.
+
+https://lore.kernel.org/linux-mm/20190628102003.GA56463@arrakis.emea.arm.com/
+
+Needs to be applied on linux-next (next-20191108).
+
+Changes in V10:
+
+- Always enable DEBUG_VM_PGTABLE when DEBUG_VM is enabled per Ingo
+- Added tags from Ingo
+
+Changes in V9: (https://patchwork.kernel.org/project/linux-mm/list/?series=201429)
+
+- Changed feature support enumeration for powerpc platforms per Christophe
+- Changed config wrapper for basic_[pmd|pud]_tests() to enable ARC platform
+- Enabled the test on ARC platform
+
+Changes in V8: (https://patchwork.kernel.org/project/linux-mm/list/?series=194297)
+
+- Enabled ARCH_HAS_DEBUG_VM_PGTABLE on PPC32 platform per Christophe
+- Updated feature documentation as DEBUG_VM_PGTABLE is now enabled on PPC32 platform
+- Moved ARCH_HAS_DEBUG_VM_PGTABLE earlier to indent it with DEBUG_VM per Christophe
+- Added an information message in debug_vm_pgtable() per Christophe
+- Dropped random_vaddr boundary condition checks per Christophe and Qian
+- Replaced virt_addr_valid() check with pfn_valid() check in debug_vm_pgtable()
+- Slightly changed pr_fmt(fmt) information
+
+Changes in V7: (https://patchwork.kernel.org/project/linux-mm/list/?series=193051)
+
+- Memory allocation and free routines for mapped pages have been droped
+- Mapped pfns are derived from standard kernel text symbol per Matthew
+- Moved debug_vm_pgtaable() after page_alloc_init_late() per Michal and Qian 
+- Updated the commit message per Michal
+- Updated W=1 GCC warning problem on x86 per Qian Cai
+- Addition of new alloc_contig_pages() helper has been submitted separately
+
+Changes in V6: (https://patchwork.kernel.org/project/linux-mm/list/?series=187589)
+
+- Moved alloc_gigantic_page_order() into mm/page_alloc.c per Michal
+- Moved alloc_gigantic_page_order() within CONFIG_CONTIG_ALLOC in the test
+- Folded Andrew's include/asm-generic/pgtable.h fix into the test patch 2/2
+
+Changes in V5: (https://patchwork.kernel.org/project/linux-mm/list/?series=185991)
+
+- Redefined and moved X86 mm_p4d_folded() into a different header per Kirill/Ingo
+- Updated the config option comment per Ingo and dropped 'kernel module' reference
+- Updated the commit message and dropped 'kernel module' reference
+- Changed DEBUG_ARCH_PGTABLE_TEST into DEBUG_VM_PGTABLE per Ingo
+- Moved config option from mm/Kconfig.debug into lib/Kconfig.debug
+- Renamed core test function arch_pgtable_tests() as debug_vm_pgtable()
+- Renamed mm/arch_pgtable_test.c as mm/debug_vm_pgtable.c
+- debug_vm_pgtable() gets called from kernel_init_freeable() after init_mm_internals()
+- Added an entry in Documentation/features/debug/ per Ingo
+- Enabled the test on arm64 and x86 platforms for now
+
+Changes in V4: (https://patchwork.kernel.org/project/linux-mm/list/?series=183465)
+
+- Disable DEBUG_ARCH_PGTABLE_TEST for ARM and IA64 platforms
+
+Changes in V3: (https://lore.kernel.org/patchwork/project/lkml/list/?series=411216)
+
+- Changed test trigger from module format into late_initcall()
+- Marked all functions with __init to be freed after completion
+- Changed all __PGTABLE_PXX_FOLDED checks as mm_pxx_folded()
+- Folded in PPC32 fixes from Christophe
+
+Changes in V2:
+
+https://lore.kernel.org/linux-mm/1568268173-31302-1-git-send-email-anshuman.khandual@arm.com/T/#t
+
+- Fixed small typo error in MODULE_DESCRIPTION()
+- Fixed m64k build problems for lvalue concerns in pmd_xxx_tests()
+- Fixed dynamic page table level folding problems on x86 as per Kirril
+- Fixed second pointers during pxx_populate_tests() per Kirill and Gerald
+- Allocate and free pte table with pte_alloc_one/pte_free per Kirill
+- Modified pxx_clear_tests() to accommodate s390 lower 12 bits situation
+- Changed RANDOM_NZVALUE value from 0xbe to 0xff
+- Changed allocation, usage, free sequence for saved_ptep
+- Renamed VMA_FLAGS as VMFLAGS
+- Implemented a new method for random vaddr generation
+- Implemented some other cleanups
+- Dropped extern reference to mm_alloc()
+- Created and exported new alloc_gigantic_page_order()
+- Dropped the custom allocator and used new alloc_gigantic_page_order()
+
+Changes in V1:
+
+https://lore.kernel.org/linux-mm/1567497706-8649-1-git-send-email-anshuman.khandual@arm.com/
+
+- Added fallback mechanism for PMD aligned memory allocation failure
+
+Changes in RFC V2:
+
+https://lore.kernel.org/linux-mm/1565335998-22553-1-git-send-email-anshuman.khandual@arm.com/T/#u
+
+- Moved test module and it's config from lib/ to mm/
+- Renamed config TEST_ARCH_PGTABLE as DEBUG_ARCH_PGTABLE_TEST
+- Renamed file from test_arch_pgtable.c to arch_pgtable_test.c
+- Added relevant MODULE_DESCRIPTION() and MODULE_AUTHOR() details
+- Dropped loadable module config option
+- Basic tests now use memory blocks with required size and alignment
+- PUD aligned memory block gets allocated with alloc_contig_range()
+- If PUD aligned memory could not be allocated it falls back on PMD aligned
+  memory block from page allocator and pud_* tests are skipped
+- Clear and populate tests now operate on real in memory page table entries
+- Dummy mm_struct gets allocated with mm_alloc()
+- Dummy page table entries get allocated with [pud|pmd|pte]_alloc_[map]()
+- Simplified [p4d|pgd]_basic_tests(), now has random values in the entries
+
+Original RFC V1:
+
+https://lore.kernel.org/linux-mm/1564037723-26676-1-git-send-email-anshuman.khandual@arm.com/
+
+ .../debug/debug-vm-pgtable/arch-support.txt   |  35 ++
+ arch/arc/Kconfig                              |   1 +
+ arch/arm64/Kconfig                            |   1 +
+ arch/powerpc/Kconfig                          |   1 +
+ arch/x86/Kconfig                              |   1 +
+ arch/x86/include/asm/pgtable_64.h             |   6 +
+ include/asm-generic/pgtable.h                 |   6 +
+ init/main.c                                   |   1 +
+ lib/Kconfig.debug                             |  22 +
+ mm/Makefile                                   |   1 +
+ mm/debug_vm_pgtable.c                         | 388 ++++++++++++++++++
+ 11 files changed, 463 insertions(+)
+ create mode 100644 Documentation/features/debug/debug-vm-pgtable/arch-support.txt
+ create mode 100644 mm/debug_vm_pgtable.c
+
+diff --git a/Documentation/features/debug/debug-vm-pgtable/arch-support.txt b/Documentation/features/debug/debug-vm-pgtable/arch-support.txt
+new file mode 100644
+index 000000000000..f3f8111edbe3
+--- /dev/null
++++ b/Documentation/features/debug/debug-vm-pgtable/arch-support.txt
+@@ -0,0 +1,35 @@
++#
++# Feature name:          debug-vm-pgtable
++#         Kconfig:       ARCH_HAS_DEBUG_VM_PGTABLE
++#         description:   arch supports pgtable tests for semantics compliance
++#
++    -----------------------
++    |         arch |status|
++    -----------------------
++    |       alpha: | TODO |
++    |         arc: |  ok  |
++    |         arm: | TODO |
++    |       arm64: |  ok  |
++    |         c6x: | TODO |
++    |        csky: | TODO |
++    |       h8300: | TODO |
++    |     hexagon: | TODO |
++    |        ia64: | TODO |
++    |        m68k: | TODO |
++    |  microblaze: | TODO |
++    |        mips: | TODO |
++    |       nds32: | TODO |
++    |       nios2: | TODO |
++    |    openrisc: | TODO |
++    |      parisc: | TODO |
++    |  powerpc/32: |  ok  |
++    |  powerpc/64: | TODO |
++    |       riscv: | TODO |
++    |        s390: | TODO |
++    |          sh: | TODO |
++    |       sparc: | TODO |
++    |          um: | TODO |
++    |   unicore32: | TODO |
++    |         x86: |  ok  |
++    |      xtensa: | TODO |
++    -----------------------
+diff --git a/arch/arc/Kconfig b/arch/arc/Kconfig
+index d266ae60c72a..911e3250ef4e 100644
+--- a/arch/arc/Kconfig
++++ b/arch/arc/Kconfig
+@@ -6,6 +6,7 @@
+ config ARC
+ 	def_bool y
+ 	select ARC_TIMERS
++	select ARCH_HAS_DEBUG_VM_PGTABLE
+ 	select ARCH_HAS_DMA_PREP_COHERENT
+ 	select ARCH_HAS_PTE_SPECIAL
+ 	select ARCH_HAS_SETUP_DMA_OPS
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index c4d6d8d6b6c4..36280430deb8 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -11,6 +11,7 @@ config ARM64
+ 	select ACPI_PPTT if ACPI
+ 	select ARCH_CLOCKSOURCE_DATA
+ 	select ARCH_HAS_DEBUG_VIRTUAL
++	select ARCH_HAS_DEBUG_VM_PGTABLE
+ 	select ARCH_HAS_DEVMEM_IS_ALLOWED
+ 	select ARCH_HAS_DMA_PREP_COHERENT
+ 	select ARCH_HAS_ACPI_TABLE_UPGRADE if ACPI
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index 09dddb849671..2a6b80c30615 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -120,6 +120,7 @@ config PPC
+ 	#
+ 	select ARCH_32BIT_OFF_T if PPC32
+ 	select ARCH_HAS_DEBUG_VIRTUAL
++	select ARCH_HAS_DEBUG_VM_PGTABLE if PPC32
+ 	select ARCH_HAS_DEVMEM_IS_ALLOWED
+ 	select ARCH_HAS_ELF_RANDOMIZE
+ 	select ARCH_HAS_FORTIFY_SOURCE
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 3fc6daff2109..5d8084dadd0c 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -61,6 +61,7 @@ config X86
+ 	select ARCH_CLOCKSOURCE_INIT
+ 	select ARCH_HAS_ACPI_TABLE_UPGRADE	if ACPI
+ 	select ARCH_HAS_DEBUG_VIRTUAL
++	select ARCH_HAS_DEBUG_VM_PGTABLE
+ 	select ARCH_HAS_DEVMEM_IS_ALLOWED
+ 	select ARCH_HAS_ELF_RANDOMIZE
+ 	select ARCH_HAS_FAST_MULTIPLIER
+diff --git a/arch/x86/include/asm/pgtable_64.h b/arch/x86/include/asm/pgtable_64.h
+index 0b6c4042942a..fb0e76d254b3 100644
+--- a/arch/x86/include/asm/pgtable_64.h
++++ b/arch/x86/include/asm/pgtable_64.h
+@@ -53,6 +53,12 @@ static inline void sync_initial_page_table(void) { }
+ 
+ struct mm_struct;
+ 
++#define mm_p4d_folded mm_p4d_folded
++static inline bool mm_p4d_folded(struct mm_struct *mm)
++{
++	return !pgtable_l5_enabled();
++}
++
+ void set_pte_vaddr_p4d(p4d_t *p4d_page, unsigned long vaddr, pte_t new_pte);
+ void set_pte_vaddr_pud(pud_t *pud_page, unsigned long vaddr, pte_t new_pte);
+ 
+diff --git a/include/asm-generic/pgtable.h b/include/asm-generic/pgtable.h
+index e2e2bef07dd2..9886beeb5e1f 100644
+--- a/include/asm-generic/pgtable.h
++++ b/include/asm-generic/pgtable.h
+@@ -1208,6 +1208,12 @@ static inline bool arch_has_pfn_modify_check(void)
+ # define PAGE_KERNEL_EXEC PAGE_KERNEL
+ #endif
+ 
++#ifdef CONFIG_DEBUG_VM_PGTABLE
++extern void debug_vm_pgtable(void);
++#else
++static inline void debug_vm_pgtable(void) { }
++#endif
++
+ #endif /* !__ASSEMBLY__ */
+ 
+ #ifndef io_remap_pfn_range
+diff --git a/init/main.c b/init/main.c
+index 4d814de017ee..8da718bf0b05 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -1187,6 +1187,7 @@ static noinline void __init kernel_init_freeable(void)
+ 	sched_init_smp();
+ 
+ 	page_alloc_init_late();
++	debug_vm_pgtable();
+ 	/* Initialize page ext after all struct pages are initialized. */
+ 	page_ext_init();
+ 
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 4217bd26e220..32913d82bebe 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -655,6 +655,12 @@ config SCHED_STACK_END_CHECK
+ 	  data corruption or a sporadic crash at a later stage once the region
+ 	  is examined. The runtime overhead introduced is minimal.
+ 
++config ARCH_HAS_DEBUG_VM_PGTABLE
++	bool
++	help
++	  An architecture should select this when it can successfully
++	  build and run DEBUG_VM_PGTABLE.
++
+ config DEBUG_VM
+ 	bool "Debug VM"
+ 	depends on DEBUG_KERNEL
+@@ -690,6 +696,22 @@ config DEBUG_VM_PGFLAGS
+ 
+ 	  If unsure, say N.
+ 
++config DEBUG_VM_PGTABLE
++	bool "Debug arch page table for semantics compliance"
++	depends on MMU
++	depends on DEBUG_VM
++	depends on ARCH_HAS_DEBUG_VM_PGTABLE
++	default y
++	help
++	  This option provides a debug method which can be used to test
++	  architecture page table helper functions on various platforms in
++	  verifying if they comply with expected generic MM semantics. This
++	  will help architecture code in making sure that any changes or
++	  new additions of these helpers still conform to expected
++	  semantics of the generic MM.
++
++	  If unsure, say N.
++
+ config ARCH_HAS_DEBUG_VIRTUAL
+ 	bool
+ 
+diff --git a/mm/Makefile b/mm/Makefile
+index a4fa4985c1d7..cbe87a09fc19 100644
+--- a/mm/Makefile
++++ b/mm/Makefile
+@@ -94,6 +94,7 @@ obj-$(CONFIG_HWPOISON_INJECT) += hwpoison-inject.o
+ obj-$(CONFIG_DEBUG_KMEMLEAK) += kmemleak.o
+ obj-$(CONFIG_DEBUG_KMEMLEAK_TEST) += kmemleak-test.o
+ obj-$(CONFIG_DEBUG_RODATA_TEST) += rodata_test.o
++obj-$(CONFIG_DEBUG_VM_PGTABLE) += debug_vm_pgtable.o
+ obj-$(CONFIG_PAGE_OWNER) += page_owner.o
+ obj-$(CONFIG_CLEANCACHE) += cleancache.o
+ obj-$(CONFIG_MEMORY_ISOLATION) += page_isolation.o
+diff --git a/mm/debug_vm_pgtable.c b/mm/debug_vm_pgtable.c
+new file mode 100644
+index 000000000000..99ebc7c2bf63
+--- /dev/null
++++ b/mm/debug_vm_pgtable.c
+@@ -0,0 +1,388 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * This kernel test validates architecture page table helpers and
++ * accessors and helps in verifying their continued compliance with
++ * expected generic MM semantics.
++ *
++ * Copyright (C) 2019 ARM Ltd.
++ *
++ * Author: Anshuman Khandual <anshuman.khandual@arm.com>
++ */
++#define pr_fmt(fmt) "debug_vm_pgtable: %s: " fmt, __func__
++
++#include <linux/gfp.h>
++#include <linux/highmem.h>
++#include <linux/hugetlb.h>
++#include <linux/kernel.h>
++#include <linux/kconfig.h>
++#include <linux/mm.h>
++#include <linux/mman.h>
++#include <linux/mm_types.h>
++#include <linux/module.h>
++#include <linux/pfn_t.h>
++#include <linux/printk.h>
++#include <linux/random.h>
++#include <linux/spinlock.h>
++#include <linux/swap.h>
++#include <linux/swapops.h>
++#include <linux/start_kernel.h>
++#include <linux/sched/mm.h>
++#include <asm/pgalloc.h>
++#include <asm/pgtable.h>
++
++/*
++ * Basic operations
++ *
++ * mkold(entry)			= An old and not a young entry
++ * mkyoung(entry)		= A young and not an old entry
++ * mkdirty(entry)		= A dirty and not a clean entry
++ * mkclean(entry)		= A clean and not a dirty entry
++ * mkwrite(entry)		= A write and not a write protected entry
++ * wrprotect(entry)		= A write protected and not a write entry
++ * pxx_bad(entry)		= A mapped and non-table entry
++ * pxx_same(entry1, entry2)	= Both entries hold the exact same value
++ */
++#define VMFLAGS	(VM_READ|VM_WRITE|VM_EXEC)
++
++/*
++ * On s390 platform, the lower 12 bits are used to identify given page table
++ * entry type and for other arch specific requirements. But these bits might
++ * affect the ability to clear entries with pxx_clear(). So while loading up
++ * the entries skip all lower 12 bits in order to accommodate s390 platform.
++ * It does not have affect any other platform.
++ */
++#define RANDOM_ORVALUE	(0xfffffffffffff000UL)
++#define RANDOM_NZVALUE	(0xff)
++
++static void __init pte_basic_tests(unsigned long pfn, pgprot_t prot)
++{
++	pte_t pte = pfn_pte(pfn, prot);
++
++	WARN_ON(!pte_same(pte, pte));
++	WARN_ON(!pte_young(pte_mkyoung(pte)));
++	WARN_ON(!pte_dirty(pte_mkdirty(pte)));
++	WARN_ON(!pte_write(pte_mkwrite(pte)));
++	WARN_ON(pte_young(pte_mkold(pte)));
++	WARN_ON(pte_dirty(pte_mkclean(pte)));
++	WARN_ON(pte_write(pte_wrprotect(pte)));
++}
++
++#ifdef CONFIG_TRANSPARENT_HUGEPAGE
++static void __init pmd_basic_tests(unsigned long pfn, pgprot_t prot)
++{
++	pmd_t pmd = pfn_pmd(pfn, prot);
++
++	WARN_ON(!pmd_same(pmd, pmd));
++	WARN_ON(!pmd_young(pmd_mkyoung(pmd)));
++	WARN_ON(!pmd_dirty(pmd_mkdirty(pmd)));
++	WARN_ON(!pmd_write(pmd_mkwrite(pmd)));
++	WARN_ON(pmd_young(pmd_mkold(pmd)));
++	WARN_ON(pmd_dirty(pmd_mkclean(pmd)));
++	WARN_ON(pmd_write(pmd_wrprotect(pmd)));
++	/*
++	 * A huge page does not point to next level page table
++	 * entry. Hence this must qualify as pmd_bad().
++	 */
++	WARN_ON(!pmd_bad(pmd_mkhuge(pmd)));
++}
++
++#ifdef CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
++static void __init pud_basic_tests(unsigned long pfn, pgprot_t prot)
++{
++	pud_t pud = pfn_pud(pfn, prot);
++
++	WARN_ON(!pud_same(pud, pud));
++	WARN_ON(!pud_young(pud_mkyoung(pud)));
++	WARN_ON(!pud_write(pud_mkwrite(pud)));
++	WARN_ON(pud_write(pud_wrprotect(pud)));
++	WARN_ON(pud_young(pud_mkold(pud)));
++
++	if (mm_pmd_folded(mm) || __is_defined(ARCH_HAS_4LEVEL_HACK))
++		return;
++
++	/*
++	 * A huge page does not point to next level page table
++	 * entry. Hence this must qualify as pud_bad().
++	 */
++	WARN_ON(!pud_bad(pud_mkhuge(pud)));
++}
++#else
++static void __init pud_basic_tests(unsigned long pfn, pgprot_t prot) { }
++#endif
++#else
++static void __init pmd_basic_tests(unsigned long pfn, pgprot_t prot) { }
++static void __init pud_basic_tests(unsigned long pfn, pgprot_t prot) { }
++#endif
++
++static void __init p4d_basic_tests(unsigned long pfn, pgprot_t prot)
++{
++	p4d_t p4d;
++
++	memset(&p4d, RANDOM_NZVALUE, sizeof(p4d_t));
++	WARN_ON(!p4d_same(p4d, p4d));
++}
++
++static void __init pgd_basic_tests(unsigned long pfn, pgprot_t prot)
++{
++	pgd_t pgd;
++
++	memset(&pgd, RANDOM_NZVALUE, sizeof(pgd_t));
++	WARN_ON(!pgd_same(pgd, pgd));
++}
++
++#ifndef __ARCH_HAS_4LEVEL_HACK
++static void __init pud_clear_tests(struct mm_struct *mm, pud_t *pudp)
++{
++	pud_t pud = READ_ONCE(*pudp);
++
++	if (mm_pmd_folded(mm))
++		return;
++
++	pud = __pud(pud_val(pud) | RANDOM_ORVALUE);
++	WRITE_ONCE(*pudp, pud);
++	pud_clear(pudp);
++	pud = READ_ONCE(*pudp);
++	WARN_ON(!pud_none(pud));
++}
++
++static void __init pud_populate_tests(struct mm_struct *mm, pud_t *pudp,
++				      pmd_t *pmdp)
++{
++	pud_t pud;
++
++	if (mm_pmd_folded(mm))
++		return;
++	/*
++	 * This entry points to next level page table page.
++	 * Hence this must not qualify as pud_bad().
++	 */
++	pmd_clear(pmdp);
++	pud_clear(pudp);
++	pud_populate(mm, pudp, pmdp);
++	pud = READ_ONCE(*pudp);
++	WARN_ON(pud_bad(pud));
++}
++#else
++static void __init pud_clear_tests(struct mm_struct *mm, pud_t *pudp) { }
++static void __init pud_populate_tests(struct mm_struct *mm, pud_t *pudp,
++				      pmd_t *pmdp)
++{
++}
++#endif
++
++#ifndef __ARCH_HAS_5LEVEL_HACK
++static void __init p4d_clear_tests(struct mm_struct *mm, p4d_t *p4dp)
++{
++	p4d_t p4d = READ_ONCE(*p4dp);
++
++	if (mm_pud_folded(mm))
++		return;
++
++	p4d = __p4d(p4d_val(p4d) | RANDOM_ORVALUE);
++	WRITE_ONCE(*p4dp, p4d);
++	p4d_clear(p4dp);
++	p4d = READ_ONCE(*p4dp);
++	WARN_ON(!p4d_none(p4d));
++}
++
++static void __init p4d_populate_tests(struct mm_struct *mm, p4d_t *p4dp,
++				      pud_t *pudp)
++{
++	p4d_t p4d;
++
++	if (mm_pud_folded(mm))
++		return;
++
++	/*
++	 * This entry points to next level page table page.
++	 * Hence this must not qualify as p4d_bad().
++	 */
++	pud_clear(pudp);
++	p4d_clear(p4dp);
++	p4d_populate(mm, p4dp, pudp);
++	p4d = READ_ONCE(*p4dp);
++	WARN_ON(p4d_bad(p4d));
++}
++
++static void __init pgd_clear_tests(struct mm_struct *mm, pgd_t *pgdp)
++{
++	pgd_t pgd = READ_ONCE(*pgdp);
++
++	if (mm_p4d_folded(mm))
++		return;
++
++	pgd = __pgd(pgd_val(pgd) | RANDOM_ORVALUE);
++	WRITE_ONCE(*pgdp, pgd);
++	pgd_clear(pgdp);
++	pgd = READ_ONCE(*pgdp);
++	WARN_ON(!pgd_none(pgd));
++}
++
++static void __init pgd_populate_tests(struct mm_struct *mm, pgd_t *pgdp,
++				      p4d_t *p4dp)
++{
++	pgd_t pgd;
++
++	if (mm_p4d_folded(mm))
++		return;
++
++	/*
++	 * This entry points to next level page table page.
++	 * Hence this must not qualify as pgd_bad().
++	 */
++	p4d_clear(p4dp);
++	pgd_clear(pgdp);
++	pgd_populate(mm, pgdp, p4dp);
++	pgd = READ_ONCE(*pgdp);
++	WARN_ON(pgd_bad(pgd));
++}
++#else
++static void __init p4d_clear_tests(struct mm_struct *mm, p4d_t *p4dp) { }
++static void __init pgd_clear_tests(struct mm_struct *mm, pgd_t *pgdp) { }
++static void __init p4d_populate_tests(struct mm_struct *mm, p4d_t *p4dp,
++				      pud_t *pudp)
++{
++}
++static void __init pgd_populate_tests(struct mm_struct *mm, pgd_t *pgdp,
++				      p4d_t *p4dp)
++{
++}
++#endif
++
++static void __init pte_clear_tests(struct mm_struct *mm, pte_t *ptep)
++{
++	pte_t pte = READ_ONCE(*ptep);
++
++	pte = __pte(pte_val(pte) | RANDOM_ORVALUE);
++	WRITE_ONCE(*ptep, pte);
++	pte_clear(mm, 0, ptep);
++	pte = READ_ONCE(*ptep);
++	WARN_ON(!pte_none(pte));
++}
++
++static void __init pmd_clear_tests(struct mm_struct *mm, pmd_t *pmdp)
++{
++	pmd_t pmd = READ_ONCE(*pmdp);
++
++	pmd = __pmd(pmd_val(pmd) | RANDOM_ORVALUE);
++	WRITE_ONCE(*pmdp, pmd);
++	pmd_clear(pmdp);
++	pmd = READ_ONCE(*pmdp);
++	WARN_ON(!pmd_none(pmd));
++}
++
++static void __init pmd_populate_tests(struct mm_struct *mm, pmd_t *pmdp,
++				      pgtable_t pgtable)
++{
++	pmd_t pmd;
++
++	/*
++	 * This entry points to next level page table page.
++	 * Hence this must not qualify as pmd_bad().
++	 */
++	pmd_clear(pmdp);
++	pmd_populate(mm, pmdp, pgtable);
++	pmd = READ_ONCE(*pmdp);
++	WARN_ON(pmd_bad(pmd));
++}
++
++static unsigned long __init get_random_vaddr(void)
++{
++	unsigned long random_vaddr, random_pages, total_user_pages;
++
++	total_user_pages = (TASK_SIZE - FIRST_USER_ADDRESS) / PAGE_SIZE;
++
++	random_pages = get_random_long() % total_user_pages;
++	random_vaddr = FIRST_USER_ADDRESS + random_pages * PAGE_SIZE;
++
++	return random_vaddr;
++}
++
++void __init debug_vm_pgtable(void)
++{
++	struct mm_struct *mm;
++	pgd_t *pgdp;
++	p4d_t *p4dp, *saved_p4dp;
++	pud_t *pudp, *saved_pudp;
++	pmd_t *pmdp, *saved_pmdp, pmd;
++	pte_t *ptep;
++	pgtable_t saved_ptep;
++	pgprot_t prot;
++	phys_addr_t paddr;
++	unsigned long vaddr, pte_aligned, pmd_aligned;
++	unsigned long pud_aligned, p4d_aligned, pgd_aligned;
++
++	pr_info("Validating architecture page table helpers\n");
++	prot = vm_get_page_prot(VMFLAGS);
++	vaddr = get_random_vaddr();
++	mm = mm_alloc();
++	if (!mm) {
++		pr_err("mm_struct allocation failed\n");
++		return;
++	}
++
++	/*
++	 * PFN for mapping at PTE level is determined from a standard kernel
++	 * text symbol. But pfns for higher page table levels are derived by
++	 * masking lower bits of this real pfn. These derived pfns might not
++	 * exist on the platform but that does not really matter as pfn_pxx()
++	 * helpers will still create appropriate entries for the test. This
++	 * helps avoid large memory block allocations to be used for mapping
++	 * at higher page table levels.
++	 */
++	paddr = __pa(&start_kernel);
++
++	pte_aligned = (paddr & PAGE_MASK) >> PAGE_SHIFT;
++	pmd_aligned = (paddr & PMD_MASK) >> PAGE_SHIFT;
++	pud_aligned = (paddr & PUD_MASK) >> PAGE_SHIFT;
++	p4d_aligned = (paddr & P4D_MASK) >> PAGE_SHIFT;
++	pgd_aligned = (paddr & PGDIR_MASK) >> PAGE_SHIFT;
++	WARN_ON(!pfn_valid(pte_aligned));
++
++	pgdp = pgd_offset(mm, vaddr);
++	p4dp = p4d_alloc(mm, pgdp, vaddr);
++	pudp = pud_alloc(mm, p4dp, vaddr);
++	pmdp = pmd_alloc(mm, pudp, vaddr);
++	ptep = pte_alloc_map(mm, pmdp, vaddr);
++
++	/*
++	 * Save all the page table page addresses as the page table
++	 * entries will be used for testing with random or garbage
++	 * values. These saved addresses will be used for freeing
++	 * page table pages.
++	 */
++	pmd = READ_ONCE(*pmdp);
++	saved_p4dp = p4d_offset(pgdp, 0UL);
++	saved_pudp = pud_offset(p4dp, 0UL);
++	saved_pmdp = pmd_offset(pudp, 0UL);
++	saved_ptep = pmd_pgtable(pmd);
++
++	pte_basic_tests(pte_aligned, prot);
++	pmd_basic_tests(pmd_aligned, prot);
++	pud_basic_tests(pud_aligned, prot);
++	p4d_basic_tests(p4d_aligned, prot);
++	pgd_basic_tests(pgd_aligned, prot);
++
++	pte_clear_tests(mm, ptep);
++	pmd_clear_tests(mm, pmdp);
++	pud_clear_tests(mm, pudp);
++	p4d_clear_tests(mm, p4dp);
++	pgd_clear_tests(mm, pgdp);
++
++	pte_unmap(ptep);
++
++	pmd_populate_tests(mm, pmdp, saved_ptep);
++	pud_populate_tests(mm, pudp, saved_pmdp);
++	p4d_populate_tests(mm, p4dp, saved_pudp);
++	pgd_populate_tests(mm, pgdp, saved_p4dp);
++
++	p4d_free(mm, saved_p4dp);
++	pud_free(mm, saved_pudp);
++	pmd_free(mm, saved_pmdp);
++	pte_free(mm, saved_ptep);
++
++	mm_dec_nr_puds(mm);
++	mm_dec_nr_pmds(mm);
++	mm_dec_nr_ptes(mm);
++	__mmdrop(mm);
++}
+-- 
+2.20.1
+
