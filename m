@@ -2,197 +2,106 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6901AC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:26:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77E6FC43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:26:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E1F320715
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:26:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mPCKWx7D"
+	by mail.kernel.org (Postfix) with ESMTP id 518B920895
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:26:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574278012;
+	bh=888qcNglt2aTTLwRLbfmkuf5RTUPH/vN/mvNViLPEiU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OfWsKf3x3Dwd/V/f0oGrEXLZQDT0iJdAzTrolA2kmHuY8In7UiwnYCiAr6zCLlh5w
+	 ni7L022HNRMZ3Bp1RKxz2H8bb2V/4ACTfmmMJWqU0V/cgp8hcNk3g8qdhWL/XfNW6C
+	 eHTPzKFGUMCQoiNlX6NWMdnmE4sDGj/Q3c1xb8Dw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727669AbfKTT03 (ORCPT
+        id S1727705AbfKTT0v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 14:26:29 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:39125 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727474AbfKTT02 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 14:26:28 -0500
-Received: by mail-lj1-f194.google.com with SMTP id p18so411232ljc.6
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 11:26:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Mw+/fineosuPJvDOnBDBPMogHWUzz9jTmRi29Rw+s8o=;
-        b=mPCKWx7DB8WKiRCILkF/Vp93HtGJYEdHFGc3esVg4bfwz+9ufxMwG7XDtyzMmczsj9
-         onbNWqBPFjCQ12S7lrtRI6fL0ibOD1rJ31/migziZy+08Jx8f3F53jnVZocTReJC6bD8
-         2KZOIOhJBwNhU/+M1IuCWG2kr6yfT4oi5iN10=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Mw+/fineosuPJvDOnBDBPMogHWUzz9jTmRi29Rw+s8o=;
-        b=mEcc72zTDm8IJ0ENky0VafaCtx8L1JB2ZHDO93uxXc/oMrtsGTBuZ6RiX0IxtjhOJD
-         +qmCcZSQJp0Ou4SKWSwwzh4lON+fHnu3x6nE5tfnnkUXdGJqUxlDSJWuBwXcpljIB06c
-         8umrvDVogOtzOPYOF8KXaLWeXSlN6ncNyD1uEDMI3T+HR6LEMWsOP9E7cvO0d4hOlCLB
-         NVgROmSLpT7+JOPgFRLP+mbiJ3ZT3qs5ruhjeQBusJTa90aqi2joiHGJ1C2eeMZse/JH
-         YEanvgD31sIDd0ULOUHGKMSSIJr+bYS4whVWE2zbgvZnlOUGfwLAGh9OVYUIKLzNVBcj
-         af8w==
-X-Gm-Message-State: APjAAAW6uHW2F4We8Gab1uyycNmUszKD309h1yVRezhjbqSNoNLyivYH
-        2cM6RT/ifJwN2zb/KOxAKNA9R7Lkb7w=
-X-Google-Smtp-Source: APXvYqzucntOWV99jiRCCCmm2bPZ+bhI5vVx21R48VfCqETyvSxCoowSpNb7NSJQ2e6qu33cwzPjmA==
-X-Received: by 2002:a2e:8613:: with SMTP id a19mr4192719lji.138.1574277986077;
-        Wed, 20 Nov 2019 11:26:26 -0800 (PST)
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
-        by smtp.gmail.com with ESMTPSA id x1sm16260543lff.90.2019.11.20.11.26.25
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 Nov 2019 11:26:25 -0800 (PST)
-Received: by mail-lj1-f169.google.com with SMTP id p18so411159ljc.6
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 11:26:25 -0800 (PST)
-X-Received: by 2002:a2e:9208:: with SMTP id k8mr4368991ljg.14.1574277984775;
- Wed, 20 Nov 2019 11:26:24 -0800 (PST)
+        Wed, 20 Nov 2019 14:26:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59934 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727582AbfKTT0v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 14:26:51 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF3FC20715;
+        Wed, 20 Nov 2019 19:26:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574278010;
+        bh=888qcNglt2aTTLwRLbfmkuf5RTUPH/vN/mvNViLPEiU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qKUolow49rTYCuaqW/HzuQAs4Vg7WSbifWby4JjUoi0Or7N8DDNZkdmk4g9956COv
+         CpjE0MSqZK+GWUnI7iPlhI2DF+XaKdOsDIGdK7+T1+WcFtaiAaAVF0qi87dhpTvrWg
+         dz9CzAS+fK97+U2w6Gn5+TV720gK0+C77qDyjKqk=
+Date:   Wed, 20 Nov 2019 20:26:48 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Mateusz Holenko <mholenko@antmicro.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org,
+        linux-serial@vger.kernel.org, Stafford Horne <shorne@gmail.com>,
+        Karol Gugala <kgugala@antmicro.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Filip Kokosinski <fkokosinski@internships.antmicro.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/4] litex: add common LiteX header
+Message-ID: <20191120192648.GA3087498@kroah.com>
+References: <20191023114634.13657-0-mholenko@antmicro.com>
+ <20191023114634.13657-2-mholenko@antmicro.com>
 MIME-Version: 1.0
-References: <20191114235008.185111-1-evgreen@chromium.org> <20191114154903.v7.2.I4d476bddbf41a61422ad51502f4361e237d60ad4@changeid>
- <20191120022518.GU6235@magnolia> <CAE=gft4mjKc4QKFKxp2FX9G2rUMuE3_eDuW_3Oq7NqTYBQwEjg@mail.gmail.com>
- <20191120191302.GV6235@magnolia>
-In-Reply-To: <20191120191302.GV6235@magnolia>
-From:   Evan Green <evgreen@chromium.org>
-Date:   Wed, 20 Nov 2019 11:25:48 -0800
-X-Gmail-Original-Message-ID: <CAE=gft6x1TmkkNTj+gktYMkHcysYyuYL50cavYusQ7hd9zChvA@mail.gmail.com>
-Message-ID: <CAE=gft6x1TmkkNTj+gktYMkHcysYyuYL50cavYusQ7hd9zChvA@mail.gmail.com>
-Subject: Re: [PATCH v7 2/2] loop: Better discard support for block devices
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Martin K Petersen <martin.petersen@oracle.com>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Ming Lei <ming.lei@redhat.com>,
-        Alexis Savery <asavery@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        linux-block <linux-block@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191023114634.13657-2-mholenko@antmicro.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 11:13 AM Darrick J. Wong
-<darrick.wong@oracle.com> wrote:
->
-> On Wed, Nov 20, 2019 at 10:56:30AM -0800, Evan Green wrote:
-> > On Tue, Nov 19, 2019 at 6:25 PM Darrick J. Wong <darrick.wong@oracle.com> wrote:
-> > >
-> > > On Thu, Nov 14, 2019 at 03:50:08PM -0800, Evan Green wrote:
-> > > > If the backing device for a loop device is itself a block device,
-> > > > then mirror the "write zeroes" capabilities of the underlying
-> > > > block device into the loop device. Copy this capability into both
-> > > > max_write_zeroes_sectors and max_discard_sectors of the loop device.
-> > > >
-> > > > The reason for this is that REQ_OP_DISCARD on a loop device translates
-> > > > into blkdev_issue_zeroout(), rather than blkdev_issue_discard(). This
-> > > > presents a consistent interface for loop devices (that discarded data
-> > > > is zeroed), regardless of the backing device type of the loop device.
-> > > > There should be no behavior change for loop devices backed by regular
-> > > > files.
+On Wed, Oct 23, 2019 at 11:47:04AM +0200, Mateusz Holenko wrote:
+> +#ifdef __LITTLE_ENDIAN
+> +# define LITEX_READ_REG(addr)                  ioread32(addr)
+> +# define LITEX_READ_REG_OFF(addr, off)         ioread32(addr + off)
+> +# define LITEX_WRITE_REG(val, addr)            iowrite32(val, addr)
+> +# define LITEX_WRITE_REG_OFF(val, addr, off)   iowrite32(val, addr + off)
+> +#else
+> +# define LITEX_READ_REG(addr)                  ioread32be(addr)
+> +# define LITEX_READ_REG_OFF(addr, off)         ioread32be(addr + off)
+> +# define LITEX_WRITE_REG(val, addr)            iowrite32be(val, addr)
+> +# define LITEX_WRITE_REG_OFF(val, addr, off)   iowrite32be(val, addr + off)
+> +#endif
 
-(marking this spot for below)
+I just noticed this.
 
-> > > >
-> > > > This change fixes blktest block/003, and removes an extraneous
-> > > > error print in block/013 when testing on a loop device backed
-> > > > by a block device that does not support discard.
-> > > >
-> > > > Signed-off-by: Evan Green <evgreen@chromium.org>
-> > > > Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
-> > > > Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-> > > > ---
-> > > >
-> > > > Changes in v7:
-> > > > - Rebase on top of Darrick's patch
-> > > > - Tweak opening line of commit description (Darrick)
-> > > >
-> > > > Changes in v6: None
-> > > > Changes in v5:
-> > > > - Don't mirror discard if lo_encrypt_key_size is non-zero (Gwendal)
-> > > >
-> > > > Changes in v4:
-> > > > - Mirror blkdev's write_zeroes into loopdev's discard_sectors.
-> > > >
-> > > > Changes in v3:
-> > > > - Updated commit description
-> > > >
-> > > > Changes in v2: None
-> > > >
-> > > >  drivers/block/loop.c | 40 +++++++++++++++++++++++++++++-----------
-> > > >  1 file changed, 29 insertions(+), 11 deletions(-)
-> > > >
-> > > > diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-> > > > index 6a9fe1f9fe84..e8f23e4b78f7 100644
-> > > > --- a/drivers/block/loop.c
-> > > > +++ b/drivers/block/loop.c
-> > > > @@ -427,11 +427,12 @@ static int lo_fallocate(struct loop_device *lo, struct request *rq, loff_t pos,
-> > > >        * information.
-> > > >        */
-> > > >       struct file *file = lo->lo_backing_file;
-> > > > +     struct request_queue *q = lo->lo_queue;
-> > > >       int ret;
-> > > >
-> > > >       mode |= FALLOC_FL_KEEP_SIZE;
-> > > >
-> > > > -     if ((!file->f_op->fallocate) || lo->lo_encrypt_key_size) {
-> > > > +     if (!blk_queue_discard(q)) {
-> > > >               ret = -EOPNOTSUPP;
-> > > >               goto out;
-> > > >       }
-> > > > @@ -862,6 +863,21 @@ static void loop_config_discard(struct loop_device *lo)
-> > > >       struct file *file = lo->lo_backing_file;
-> > > >       struct inode *inode = file->f_mapping->host;
-> > > >       struct request_queue *q = lo->lo_queue;
-> > > > +     struct request_queue *backingq;
-> > > > +
-> > > > +     /*
-> > > > +      * If the backing device is a block device, mirror its zeroing
-> > > > +      * capability. REQ_OP_DISCARD translates to a zero-out even when backed
-> > > > +      * by block devices to keep consistent behavior with file-backed loop
-> > > > +      * devices.
-> > > > +      */
-> > > > +     if (S_ISBLK(inode->i_mode) && !lo->lo_encrypt_key_size) {
-> > > > +             backingq = bdev_get_queue(inode->i_bdev);
-> > > > +             blk_queue_max_discard_sectors(q,
-> > > > +                     backingq->limits.max_write_zeroes_sectors);
-> > >
-> > > max_discard_sectors?
-> >
-> > I didn't plumb max_discard_sectors because for my scenario it never
-> > ends up hitting the block device that way.
-> >
-> > The loop device either uses FL_ZERO_RANGE or FL_PUNCH_HOLE. When
-> > backed by a block device, that ends up in blkdev_fallocate(), which
-> > always translates both of those into blkdev_issue_zeroout(), not
-> > blkdev_issue_discard(). So it's really the zeroing capabilities of the
-> > block device that matters, even for loop discard operations. It seems
-> > weird, but I think this is the right thing because it presents a
-> > consistent interface to loop device users whether backed by a file
-> > system file, or directly by a block device. That is, a previously
-> > discarded range will read back as zeroes.
->
-> Ah, right.  Could you add this paragraph as a comment explaining why
-> we're setting max_discard_sectors from max_write_zeroes_sectors?
+Ick, this is not good.  You will run into problems in the future with
+this, I can guarantee it.  What about systems where the CPU is one
+endian and the hardware in the other?  It will happen trust us.
 
-Sure. I put an explanation in the commit description (see spot I
-marked above), but I agree a comment is probably also worthwhile.
+Make these real functions (inline is nice) and pass in the pointer to
+the device so you can test for it and call the correct function based on
+the cpu/hardware type.
 
->
-> --D
->
-> > -Evan
+And what about bitfields?  What endian are they for your
+system/hardware?
+
+Almost no kernel code should EVER be testing __LITTLE_ENDIAN, don't add
+to it as it is not a good idea.
+
+thanks,
+
+greg k-h
