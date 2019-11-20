@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC5AC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:43:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0524CC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:43:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAC572071F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:43:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D27B220714
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:43:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732278AbfKTPni (ORCPT
+        id S1732290AbfKTPnm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 10:43:38 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:52796 "EHLO
+        Wed, 20 Nov 2019 10:43:42 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:52800 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730019AbfKTPkT (ORCPT
+        by vger.kernel.org with ESMTP id S1730023AbfKTPkT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 Nov 2019 10:40:19 -0500
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iXS5U-0004b8-O3; Wed, 20 Nov 2019 15:40:12 +0000
+        id 1iXS5V-0004bI-BE; Wed, 20 Nov 2019 15:40:13 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iXS5T-0004Hm-M5; Wed, 20 Nov 2019 15:40:11 +0000
+        id 1iXS5U-0004L0-Pv; Wed, 20 Nov 2019 15:40:12 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Takashi Sakamoto" <o-takashi@sakamocchi.jp>,
-        "Wenwen Wang" <wenwen@cs.uga.edu>, "Takashi Iwai" <tiwai@suse.de>
-Date:   Wed, 20 Nov 2019 15:37:39 +0000
-Message-ID: <lsq.1574264230.903988427@decadent.org.uk>
+        "Takashi Iwai" <tiwai@suse.de>
+Date:   Wed, 20 Nov 2019 15:38:10 +0000
+Message-ID: <lsq.1574264230.370168036@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 29/83] ALSA: firewire: fix a memory leak bug
+Subject: [PATCH 3.16 60/83] ALSA: hda - Fix potential endless loop at
+ applying quirks
 In-Reply-To: <lsq.1574264230.280218497@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,36 +55,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 1be3c1fae6c1e1f5bb982b255d2034034454527a upstream.
+commit 333f31436d3db19f4286f8862a00ea1d8d8420a1 upstream.
 
-In iso_packets_buffer_init(), 'b->packets' is allocated through
-kmalloc_array(). Then, the aligned packet size is checked. If it is
-larger than PAGE_SIZE, -EINVAL will be returned to indicate the error.
-However, the allocated 'b->packets' is not deallocated on this path,
-leading to a memory leak.
+Since the chained quirks via chained_before flag is applied before the
+depth check, it may lead to the endless recursive calls, when the
+chain were set up incorrectly.  Fix it by moving the depth check at
+the beginning of the loop.
 
-To fix the above issue, free 'b->packets' before returning the error code.
-
-Fixes: 31ef9134eb52 ("ALSA: add LaCie FireWire Speakers/Griffin FireWave Surround driver")
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Reviewed-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Fixes: 1f57825077dc ("ALSA: hda - Add chained_before flag to the fixup entry")
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- sound/firewire/packets-buffer.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/pci/hda/hda_auto_parser.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/sound/firewire/packets-buffer.c
-+++ b/sound/firewire/packets-buffer.c
-@@ -37,7 +37,7 @@ int iso_packets_buffer_init(struct iso_p
- 	packets_per_page = PAGE_SIZE / packet_size;
- 	if (WARN_ON(!packets_per_page)) {
- 		err = -EINVAL;
--		goto error;
-+		goto err_packets;
- 	}
- 	pages = DIV_ROUND_UP(count, packets_per_page);
+--- a/sound/pci/hda/hda_auto_parser.c
++++ b/sound/pci/hda/hda_auto_parser.c
+@@ -787,6 +787,8 @@ static void apply_fixup(struct hda_codec
+ 	while (id >= 0) {
+ 		const struct hda_fixup *fix = codec->fixup_list + id;
  
++		if (++depth > 10)
++			break;
+ 		if (fix->chained_before)
+ 			apply_fixup(codec, fix->chain_id, action, depth + 1);
+ 
+@@ -826,8 +828,6 @@ static void apply_fixup(struct hda_codec
+ 		}
+ 		if (!fix->chained || fix->chained_before)
+ 			break;
+-		if (++depth > 10)
+-			break;
+ 		id = fix->chain_id;
+ 	}
+ }
 
