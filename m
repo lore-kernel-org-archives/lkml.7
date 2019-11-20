@@ -2,110 +2,282 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9B84C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:09:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C95AEC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:14:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1C7222365
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:09:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94D10223D8
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:14:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="TwqwRr+z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729008AbfKTLJi (ORCPT
+        id S1729028AbfKTLOi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 06:09:38 -0500
-Received: from foss.arm.com ([217.140.110.172]:37448 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728995AbfKTLJi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 06:09:38 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8BFC131B;
-        Wed, 20 Nov 2019 03:09:37 -0800 (PST)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 720363F6C4;
-        Wed, 20 Nov 2019 03:09:36 -0800 (PST)
-Date:   Wed, 20 Nov 2019 11:09:34 +0000
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>
-Cc:     Richard Fontana <rfontana@redhat.com>,
-        Armijn Hemel <armijn@tjaldur.nl>, linux-parisc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 06/12] parisc: Replace cpu_up/down with
- device_online/offline
-Message-ID: <20191120110933.wjtmpc4pmqmxhmma@e107158-lin.cambridge.arm.com>
-References: <20191030153837.18107-1-qais.yousef@arm.com>
- <20191030153837.18107-7-qais.yousef@arm.com>
+        Wed, 20 Nov 2019 06:14:38 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:33346 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727777AbfKTLOh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 06:14:37 -0500
+Received: by mail-wm1-f67.google.com with SMTP id t26so900497wmi.0
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 03:14:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=7OQW2DHYgmBIlXG6zmK9XIg6mefmFvu2tJV+rZvlPNo=;
+        b=TwqwRr+zepj15txJ0fs0OG/rGXM125OJhoTlBAUsZcKjdlA//X5OCOGSiEn2a3tOYg
+         P53qU9y+dIbTQPLV2Ap0RT8L32wV+8BEfV6W6qOAS5rp2TtWCh/IaUK/xSvwwlACBGar
+         5MPqyxE+fvHUufnpBOILhvWTphexPXwJloG/Ap9UrAo1mQWE3tzsscqzAN6F67eY8lsl
+         WnbsJxx3QEkjFrWEaBRF0ir9+upwfyzX5cpZhIDZHg6bMHz5/FwtzrQezgxG9kEXXfNf
+         qZ6At8e0wTQPEFDiIgDL242/fEW6t58C8QAyfy6gvLs2apd3kR7/AfTwZtIPzm/T/Aco
+         y0GA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=7OQW2DHYgmBIlXG6zmK9XIg6mefmFvu2tJV+rZvlPNo=;
+        b=pgJSnaiaf5QhqibvRJRnZJRMKs8YD3DFHO9sefy/Mbt/oleNkrkN37TKgYneFAlvaK
+         YSKzgBfFiKaVCV4Au4aXw3Y0JrrcC4pgFfJZU3xr3H1RnYnvV4Kc0ysIT5PB+6m6Yrv1
+         3l3SEeHPxmEgZA01FdixLnJFwsM6DKXBob/UyLMJc72/00XutKQ2+/k1J8kaMZA3iCzc
+         xRS33wLC5L0XIaPoMwrNsyWgJRE4lqHkyBKlmisLQd8bvQWLO4CsxF+QhkegTdqB8EYA
+         dNqX/q47SttAFELcJmlBu/7qvTJweg6USx6ca9KeKyBaGocXrJHy7kdWc6ht2jCVclPU
+         ZQMA==
+X-Gm-Message-State: APjAAAUpCVqg37CrHZ3sZfm110WuWgvd2SD9ed7bZcvFXQJY42BDUB+q
+        co7xwK7fEJe2ZUi+DPcaKjbH/Q==
+X-Google-Smtp-Source: APXvYqwFDyPMhX8v9E0rkiIozBRcvsgT5k1HZL0RhzlHO09Ao7gy4hXMq6JF8MlgV+FBDmeJxrHonA==
+X-Received: by 2002:a05:600c:210b:: with SMTP id u11mr2546194wml.170.1574248475131;
+        Wed, 20 Nov 2019 03:14:35 -0800 (PST)
+Received: from bender.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id u1sm6061748wmc.3.2019.11.20.03.14.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Nov 2019 03:14:34 -0800 (PST)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     mjourdan@baylibre.com, devicetree@vger.kernel.org
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/4] dt-bindings: media: amlogic,vdec: convert to yaml
+Date:   Wed, 20 Nov 2019 12:14:27 +0100
+Message-Id: <20191120111430.29552-2-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20191120111430.29552-1-narmstrong@baylibre.com>
+References: <20191120111430.29552-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191030153837.18107-7-qais.yousef@arm.com>
-User-Agent: NeoMutt/20171215
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/30/19 15:38, Qais Yousef wrote:
-> The core device API performs extra housekeeping bits that are missing
-> from directly calling cpu_up/down.
-> 
-> See commit a6717c01ddc2 ("powerpc/rtas: use device model APIs and
-> serialization during LPM") for an example description of what might go
-> wrong.
-> 
-> This also prepares to make cpu_up/down a private interface for anything
-> but the cpu subsystem.
-> 
-> Signed-off-by: Qais Yousef <qais.yousef@arm.com>
-> CC: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
-> CC: Helge Deller <deller@gmx.de>
-> CC: Richard Fontana <rfontana@redhat.com>
-> CC: Armijn Hemel <armijn@tjaldur.nl>
-> CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> CC: Thomas Gleixner <tglx@linutronix.de>
-> CC: linux-parisc@vger.kernel.org
-> CC: linux-kernel@vger.kernel.org
-> ---
-> 
-> Couldn't compile test this one.
-> 
-> I'm not confident that this is a correct patch to be honest. This __init
-> indicates we're booting the secondary cpus and that might be too early in the
-> process to use the core API..?
+Now that we have the DT validation in place, let's convert the device tree
+bindings for the Amlogic Video Controller over to YAML schemas.
 
-Helge, James
+This yaml bindings will then be extended to support new SoCs.
 
-Do you have any comment on this? I have no means to test it and I'd
-appreciate if you can spin it through one of your systems.
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ .../bindings/media/amlogic,gx-vdec.yaml       | 107 ++++++++++++++++++
+ .../bindings/media/amlogic,vdec.txt           |  72 ------------
+ 2 files changed, 107 insertions(+), 72 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/amlogic,gx-vdec.yaml
+ delete mode 100644 Documentation/devicetree/bindings/media/amlogic,vdec.txt
 
-Thanks
+diff --git a/Documentation/devicetree/bindings/media/amlogic,gx-vdec.yaml b/Documentation/devicetree/bindings/media/amlogic,gx-vdec.yaml
+new file mode 100644
+index 000000000000..878944867d6e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/amlogic,gx-vdec.yaml
+@@ -0,0 +1,107 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++# Copyright 2019 BayLibre, SAS
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/media/amlogic,gx-vdec.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: Amlogic Video Decoder
++
++maintainers:
++  - Neil Armstrong <narmstrong@baylibre.com>
++  - Maxime Jourdan <mjourdan@baylibre.com>
++
++description: |
++  The video decoding IP lies within the DOS memory region,
++  except for the hardware bitstream parser that makes use of an undocumented
++  region.
++
++  It makes use of the following blocks:
++  - ESPARSER is a bitstream parser that outputs to a VIFIFO. Further VDEC blocks
++    then feed from this VIFIFO.
++  - VDEC_1 can decode MPEG-1, MPEG-2, MPEG-4 part 2, MJPEG, H.263, H.264, VC-1.
++  - VDEC_HEVC can decode HEVC and VP9.
++
++  Both VDEC_1 and VDEC_HEVC share the "vdec" IRQ and as such cannot run
++  concurrently.
++
++properties:
++  compatible:
++    items:
++      - enum:
++        - amlogic,gxbb-vdec # GXBB (S905)
++        - amlogic,gxl-vdec # GXL (S905X, S905D)
++        - amlogic,gxm-vdec # GXM (S912)
++      - const: amlogic,gx-vdec
++
++  interrupts:
++    minItems: 2
++
++  interrupt-names:
++    items:
++      - const: vdec
++      - const: esparser
++
++  reg:
++    minItems: 2
++
++  reg-names:
++    items:
++      - const: dos
++      - const: esparser
++
++  resets:
++    maxItems: 1
++
++  reset-names:
++    items:
++      - const: esparser
++
++  clocks:
++    minItems: 4
++
++  clock-names:
++    items:
++      - const: dos_parser
++      - const: dos
++      - const: vdec_1
++      - const: vdec_hevc
++
++  amlogic,ao-sysctrl:
++    description: should point to the AOBUS sysctrl node
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/phandle
++
++  amlogic,canvas:
++    description: should point to a canvas provider node
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/phandle
++
++required:
++  - compatible
++  - reg
++  - reg-names
++  - interrupts
++  - interrupt-names
++  - clocks
++  - clock-names
++  - resets
++  - reset-names
++  - amlogic,ao-sysctrl
++  - amlogic,canvas
++
++examples:
++  - |
++    vdec: video-decoder@c8820000 {
++          compatible = "amlogic,gxl-vdec", "amlogic,gx-vdec";
++          reg = <0xc8820000 0x10000>, <0xc110a580 0xe4>;
++          reg-names = "dos", "esparser";
++          interrupts = <44>, <32>;
++          interrupt-names = "vdec", "esparser";
++          clocks = <&clk_dos_parser> ,<&clk_dos>, <&clk_vdec_1>, <&clk_vdec_hevc>;
++          clock-names = "dos_parser", "dos", "vdec_1", "vdec_hevc";
++          resets = <&reset_parser>;
++          reset-names = "esparser";
++          amlogic,ao-sysctrl = <&sysctrl_AO>;
++          amlogic,canvas = <&canvas>;
++    };
+diff --git a/Documentation/devicetree/bindings/media/amlogic,vdec.txt b/Documentation/devicetree/bindings/media/amlogic,vdec.txt
+deleted file mode 100644
+index 9b6aace86ca7..000000000000
+--- a/Documentation/devicetree/bindings/media/amlogic,vdec.txt
++++ /dev/null
+@@ -1,72 +0,0 @@
+-Amlogic Video Decoder
+-================================
+-
+-The video decoding IP lies within the DOS memory region,
+-except for the hardware bitstream parser that makes use of an undocumented
+-region.
+-
+-It makes use of the following blocks:
+-
+-- ESPARSER is a bitstream parser that outputs to a VIFIFO. Further VDEC blocks
+-then feed from this VIFIFO.
+-- VDEC_1 can decode MPEG-1, MPEG-2, MPEG-4 part 2, MJPEG, H.263, H.264, VC-1.
+-- VDEC_HEVC can decode HEVC and VP9.
+-
+-Both VDEC_1 and VDEC_HEVC share the "vdec" IRQ and as such cannot run
+-concurrently.
+-
+-Device Tree Bindings:
+----------------------
+-
+-VDEC: Video Decoder
+---------------------------
+-
+-Required properties:
+-- compatible: value should be different for each SoC family as :
+-	- GXBB (S905) : "amlogic,gxbb-vdec"
+-	- GXL (S905X, S905D) : "amlogic,gxl-vdec"
+-	- GXM (S912) : "amlogic,gxm-vdec"
+-	followed by the common "amlogic,gx-vdec"
+-- reg: base address and size of he following memory-mapped regions :
+-	- dos
+-	- esparser
+-- reg-names: should contain the names of the previous memory regions
+-- interrupts: should contain the following IRQs:
+-	- vdec
+-	- esparser
+-- interrupt-names: should contain the names of the previous interrupts
+-- amlogic,ao-sysctrl: should point to the AOBUS sysctrl node
+-- amlogic,canvas: should point to a canvas provider node
+-- clocks: should contain the following clocks :
+-	- dos_parser
+-	- dos
+-	- vdec_1
+-	- vdec_hevc
+-- clock-names: should contain the names of the previous clocks
+-- resets: should contain the parser reset
+-- reset-names: should be "esparser"
+-
+-Example:
+-
+-vdec: video-codec@c8820000 {
+-	compatible = "amlogic,gxbb-vdec", "amlogic,gx-vdec";
+-	reg = <0x0 0xc8820000 0x0 0x10000>,
+-	      <0x0 0xc110a580 0x0 0xe4>;
+-	reg-names = "dos", "esparser";
+-
+-	interrupts = <GIC_SPI 44 IRQ_TYPE_EDGE_RISING>,
+-		     <GIC_SPI 32 IRQ_TYPE_EDGE_RISING>;
+-	interrupt-names = "vdec", "esparser";
+-
+-	amlogic,ao-sysctrl = <&sysctrl_AO>;
+-	amlogic,canvas = <&canvas>;
+-
+-	clocks = <&clkc CLKID_DOS_PARSER>,
+-		 <&clkc CLKID_DOS>,
+-		 <&clkc CLKID_VDEC_1>,
+-		 <&clkc CLKID_VDEC_HEVC>;
+-	clock-names = "dos_parser", "dos", "vdec_1", "vdec_hevc";
+-
+-	resets = <&reset RESET_PARSER>;
+-	reset-names = "esparser";
+-};
+-- 
+2.22.0
 
---
-Qais Yousef
-
-> 
-> 
->  arch/parisc/kernel/processor.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/parisc/kernel/processor.c b/arch/parisc/kernel/processor.c
-> index 13f771f74ee3..4dde5fe78f0c 100644
-> --- a/arch/parisc/kernel/processor.c
-> +++ b/arch/parisc/kernel/processor.c
-> @@ -212,7 +212,9 @@ static int __init processor_probe(struct parisc_device *dev)
->  #ifdef CONFIG_SMP
->  	if (cpuid) {
->  		set_cpu_present(cpuid, true);
-> -		cpu_up(cpuid);
-> +		lock_device_hotplug();
-> +		device_online(get_cpu_device(cpuid));
-> +		unlock_device_hotplug();
->  	}
->  #endif
->  
-> -- 
-> 2.17.1
-> 
