@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 453EFC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:42:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D996CC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:42:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 195212252A
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:42:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0E6A224FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:42:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574257364;
-	bh=pdipjRi4P49KZP7Yr/wuNV4P+ANuzZPwZuqKI+VchMs=;
+	s=default; t=1574257368;
+	bh=x9PdtJWTi7+JVqhkTZzfttMMYAGgMkp4exsnlD+LpJk=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=ies0Qr4tNzAtlYHgWgVDGRONJV+hYU00a9r6JuDqCPFR/Njhhov+vy8R3jvwJFVoZ
-	 sAUz53w8Xucp6qeN5Dcm6Btivj6B6v9ULxZaDINi2xuqpdwqSuVbA0TSrVZRXnZ9cM
-	 u6gSxnRrdsBiFG0Yerq40sFIWjPB357nFv0xtLfI=
+	b=O0vB4vv7pIyI5CwSFIblnspJqhVnWv843+UtZYmT8evIyDc1M6W/FqUjzW2lZed7S
+	 8027nVr+AMldQCgDqJQ63N6kMoQx9tfl0pvXSm9Ngtd9Vcbci0CCUoIHlccyCrxCkz
+	 i9RH0+wH0VDHZ92eFujKEyeQjgYD0TKbiDzlsj3I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731432AbfKTNmm (ORCPT
+        id S1731439AbfKTNms (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 08:42:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50538 "EHLO mail.kernel.org"
+        Wed, 20 Nov 2019 08:42:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728149AbfKTNml (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 08:42:41 -0500
+        id S1730428AbfKTNmr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 08:42:47 -0500
 Received: from localhost.localdomain (unknown [118.189.143.39])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F99022528;
-        Wed, 20 Nov 2019 13:42:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5D60224FA;
+        Wed, 20 Nov 2019 13:42:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574257360;
-        bh=pdipjRi4P49KZP7Yr/wuNV4P+ANuzZPwZuqKI+VchMs=;
+        s=default; t=1574257366;
+        bh=x9PdtJWTi7+JVqhkTZzfttMMYAGgMkp4exsnlD+LpJk=;
         h=From:To:Cc:Subject:Date:From;
-        b=Zipoz+pigWmup0gqJ1GSCbCD25wEr3eBW4pwvOixhrK9XOmWQ61hVxMXJzRDHEJKL
-         Oy7B2nGM3cA3vLGhnI77v8RrHN6AMxOuOwern3E1wdaAU/46RzjJZmjJlIDNx8bYul
-         3bvTUQYhOe7zNX1BeFm8B5jBOQ4PLdN2hUqVdXCQ=
+        b=vm3m4UtI2mxxRe1lNV4Nb9rg17Od+eqB0XeLpUsBR2J49GBYkjOpmyPHdHBMFZuO+
+         0V/Z73YhSdyi9kUBz7IQqbaPAy06rOukyRdJ1IyrOv4K+yLArQ1Ln9OwzvL2zn4WQZ
+         oFxb5C7K9RRs8mUHKbmkuaaQNXE2+kqMkUkensRY=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH] clocksource: Fix Kconfig indentation
-Date:   Wed, 20 Nov 2019 21:42:36 +0800
-Message-Id: <20191120134236.15959-1-krzk@kernel.org>
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH] clk: Fix Kconfig indentation
+Date:   Wed, 20 Nov 2019 21:42:41 +0800
+Message-Id: <20191120134241.16017-1-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -59,67 +63,78 @@ coding style with command like:
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/clocksource/Kconfig | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ drivers/clk/Kconfig           |  2 +-
+ drivers/clk/mediatek/Kconfig  | 10 +++++-----
+ drivers/clk/versatile/Kconfig |  2 +-
+ 3 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-index 5fdd76cb1768..c981ff64bc13 100644
---- a/drivers/clocksource/Kconfig
-+++ b/drivers/clocksource/Kconfig
-@@ -470,7 +470,7 @@ config OXNAS_RPS_TIMER
- 	  This enables support for the Oxford Semiconductor OXNAS RPS timers.
+diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+index 0530bebfc25a..b8ebf7b93d63 100644
+--- a/drivers/clk/Kconfig
++++ b/drivers/clk/Kconfig
+@@ -27,7 +27,7 @@ config COMMON_CLK_WM831X
+ 	tristate "Clock driver for WM831x/2x PMICs"
+ 	depends on MFD_WM831X
+ 	---help---
+-          Supports the clocking subsystem of the WM831x/2x series of
++	  Supports the clocking subsystem of the WM831x/2x series of
+ 	  PMICs from Wolfson Microelectronics.
  
- config SYS_SUPPORTS_SH_CMT
--        bool
-+	bool
+ source "drivers/clk/versatile/Kconfig"
+diff --git a/drivers/clk/mediatek/Kconfig b/drivers/clk/mediatek/Kconfig
+index 7efc3617bbd5..5ddd813521e7 100644
+--- a/drivers/clk/mediatek/Kconfig
++++ b/drivers/clk/mediatek/Kconfig
+@@ -179,31 +179,31 @@ config COMMON_CLK_MT6797
+        select COMMON_CLK_MEDIATEK
+        default ARCH_MEDIATEK && ARM64
+        ---help---
+-         This driver supports MediaTek MT6797 basic clocks.
++	 This driver supports MediaTek MT6797 basic clocks.
  
- config MTK_TIMER
- 	bool "Mediatek timer driver" if COMPILE_TEST
-@@ -490,13 +490,13 @@ config SPRD_TIMER
- 	  Enables support for the Spreadtrum timer driver.
+ config COMMON_CLK_MT6797_MMSYS
+        bool "Clock driver for MediaTek MT6797 mmsys"
+        depends on COMMON_CLK_MT6797
+        ---help---
+-         This driver supports MediaTek MT6797 mmsys clocks.
++	 This driver supports MediaTek MT6797 mmsys clocks.
  
- config SYS_SUPPORTS_SH_MTU2
--        bool
-+	bool
+ config COMMON_CLK_MT6797_IMGSYS
+        bool "Clock driver for MediaTek MT6797 imgsys"
+        depends on COMMON_CLK_MT6797
+        ---help---
+-         This driver supports MediaTek MT6797 imgsys clocks.
++	 This driver supports MediaTek MT6797 imgsys clocks.
  
- config SYS_SUPPORTS_SH_TMU
--        bool
-+	bool
+ config COMMON_CLK_MT6797_VDECSYS
+        bool "Clock driver for MediaTek MT6797 vdecsys"
+        depends on COMMON_CLK_MT6797
+        ---help---
+-         This driver supports MediaTek MT6797 vdecsys clocks.
++	 This driver supports MediaTek MT6797 vdecsys clocks.
  
- config SYS_SUPPORTS_EM_STI
--        bool
-+	bool
+ config COMMON_CLK_MT6797_VENCSYS
+        bool "Clock driver for MediaTek MT6797 vencsys"
+        depends on COMMON_CLK_MT6797
+        ---help---
+-         This driver supports MediaTek MT6797 vencsys clocks.
++	 This driver supports MediaTek MT6797 vencsys clocks.
  
- config CLKSRC_JCORE_PIT
- 	bool "J-Core PIT timer driver" if COMPILE_TEST
-@@ -591,21 +591,21 @@ config CLKSRC_PXA
- 	  platforms.
- 
- config H8300_TMR8
--        bool "Clockevent timer for the H8300 platform" if COMPILE_TEST
--        depends on HAS_IOMEM
-+	bool "Clockevent timer for the H8300 platform" if COMPILE_TEST
-+	depends on HAS_IOMEM
- 	help
- 	  This enables the 8 bits timer for the H8300 platform.
- 
- config H8300_TMR16
--        bool "Clockevent timer for the H83069 platform" if COMPILE_TEST
--        depends on HAS_IOMEM
-+	bool "Clockevent timer for the H83069 platform" if COMPILE_TEST
-+	depends on HAS_IOMEM
- 	help
- 	  This enables the 16 bits timer for the H8300 platform with the
- 	  H83069 cpu.
- 
- config H8300_TPU
--        bool "Clocksource for the H8300 platform" if COMPILE_TEST
--        depends on HAS_IOMEM
-+	bool "Clocksource for the H8300 platform" if COMPILE_TEST
-+	depends on HAS_IOMEM
- 	help
- 	  This enables the clocksource for the H8300 platform with the
- 	  H8S2678 cpu.
+ config COMMON_CLK_MT7622
+ 	bool "Clock driver for MediaTek MT7622"
+diff --git a/drivers/clk/versatile/Kconfig b/drivers/clk/versatile/Kconfig
+index ac766855ba16..c2618f1477a2 100644
+--- a/drivers/clk/versatile/Kconfig
++++ b/drivers/clk/versatile/Kconfig
+@@ -9,7 +9,7 @@ config COMMON_CLK_VERSATILE
+ 		COMPILE_TEST
+ 	select REGMAP_MMIO
+ 	---help---
+-          Supports clocking on ARM Reference designs:
++	  Supports clocking on ARM Reference designs:
+ 	  - Integrator/AP and Integrator/CP
+ 	  - RealView PB1176, EB, PB11MP and PBX
+ 	  - Versatile Express
 -- 
 2.17.1
 
