@@ -2,58 +2,60 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83347C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 14:44:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57908C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 14:44:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B56C20715
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 14:44:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29D0420708
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 14:44:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fcBBVHwd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mAp2XavW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731807AbfKTOoJ (ORCPT
+        id S1731821AbfKTOoM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 09:44:09 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:39032 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731732AbfKTOoJ (ORCPT
+        Wed, 20 Nov 2019 09:44:12 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:39036 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731732AbfKTOoL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 09:44:09 -0500
-Received: by mail-qk1-f195.google.com with SMTP id o17so1418477qko.6;
-        Wed, 20 Nov 2019 06:44:07 -0800 (PST)
+        Wed, 20 Nov 2019 09:44:11 -0500
+Received: by mail-qk1-f194.google.com with SMTP id o17so1418645qko.6;
+        Wed, 20 Nov 2019 06:44:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=iD5VdmpBbS5ofXM1bEbJ4CdwRf9cLtYwc6n6MEZikZ8=;
-        b=fcBBVHwd8stIuuRz12zTYinYh9Ekei8cksJtUXbByJEMTwCjd6eRT/nRQBZIJKooyT
-         jXiMqzBD4G6kHSuBgXth5rLIYb5TcaKYbOpsnbQWUPj6u6pOGsUNJPPXMhJzaDgKAOx2
-         hbI7IQWFrYvBkbxg1IkKVYyWZSAcXKFJFITpMlAg27bf564HcJtH65tuZx3V9mbuipr/
-         Ylt4/bganmEimAFR19T+oKWbSvD5Xliwqsbr1Fbq2uUeoAcGXuwQD1R1F2xF4++syD0J
-         +nDJsA43jFffW2fGx6yJoPS1kDb4DrOy3RCAVIjoxpUcsyvI21U24KispoP0PShm2K3U
-         AVGA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=I0LcG/O5WZIJaQc1faJtadps2n8ne4BjQxwgK76HPIE=;
+        b=mAp2XavWKaGaAxbFCRmh//e3U5y10CjxJ8KL2D8E1ZKt0/VBPgX+85eiBgZ2Pxb4pz
+         PXyXXhhJjAxPklQFAIKmnY66PQ1rpG6DUYYDZQV+qbkfIsm7oSNr/bzmlbPYPrtDEooa
+         wck443SWup8AQA98RYM/384QLf8D9KLmZn3Kq5djMzJnbL2RsS7D1e6xV7mVY3ffhuW9
+         eUXuYK5Om5xw2G+b4SQmN6ehiijg/rgQLjDNgeLlfMcNm0XI3kFCdbNl5JT6e2yiJwuw
+         U+nRGlkx6JUljXxknBaZURSrgQ/K+zPx6ySxl90wCejgkiiWzFprNDJ7A+aJis5198yg
+         7KQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=iD5VdmpBbS5ofXM1bEbJ4CdwRf9cLtYwc6n6MEZikZ8=;
-        b=YylKUOvYVGDL+7OZS1dLn9ZBp4uh00YJhwJt9k+uHchVNRxi1HzaFY02CiVHauqTp5
-         I//1NXJ5qRlLRKAVceg+0u02+GJtuv4RRDww79Wk9yVCThbZIL4hwhLug8I6tlvXoFxu
-         2MyRlc8kxC8nJZAq6TmzIEo9L5S9qo7Z2L/I609HsJdFLh6XDBAGXAwFrFu0ekU7xuke
-         M2p8cMONgTXl3wLuQEyMLRC5r1ILPgB3uKtJ5zn+RwI1pLfnjiVrREVvQm4TblMMGXeO
-         SWVzDzYA+aeypjwmDnS1tSiMRzhZM6mL3iDbRQuZzK/XBy6aS+K0ffjaRkN+iJNxRipu
-         em2Q==
-X-Gm-Message-State: APjAAAUUUhZAvPCbSZ+CH8uf7e/0b9AVz2VuU8upu1JceQD/caJm9S0j
-        kkGGWUna6Dp2KZGfi0Y6EDM=
-X-Google-Smtp-Source: APXvYqwOmADMwxL92rcPRniRH1Cz/Y9781sRftexfktLdGllzm5r9/vJO6BjLckNrzfIxUjCXFOtFA==
-X-Received: by 2002:a37:610f:: with SMTP id v15mr2566068qkb.98.1574261046446;
-        Wed, 20 Nov 2019 06:44:06 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=I0LcG/O5WZIJaQc1faJtadps2n8ne4BjQxwgK76HPIE=;
+        b=Ot4IrRppoeNaoSMI+IdK9pvUL2ZI3+K/kBojES5ppnLhtcZgLEu38ET363NMpsfy/c
+         pLfTHnmkGAHVll3xxrFt+7iYzLe+t+y3kGXWnQauFAKXgUqkjjVQ0Sa0IK6qWxkQzLta
+         PTRnvAlhbKviHjMvB5ulj4XgUjNCq1YrnfR/RiJfZFs3mlsOa+K8FRlzwdBPL7GodBMa
+         6ecev8W+CYydiGweBDcizQPbXjbyWdnTvx59dc3NqEfYG4rHHxWPwMc/ONlANxbe8LSW
+         TibjD8nPLrti7TzcNiCvsJ6T1nQ2dZ1oKex33/0MyPbGLmp4yX7ALJbTYovJSiInOPe2
+         K6mg==
+X-Gm-Message-State: APjAAAVKVucmjIIF4qCpPAQnWXnUi6bK6yQM0AbEuLviFvrNfNN0Qf9V
+        Y1XbgMD9wxSzOsvR51/uBBQ=
+X-Google-Smtp-Source: APXvYqxZv/1fXhHTHlKWQhJyXm7JUn3oxThMVm/nxDcXL+/U/6+rOs1BZHKjsbal8t3C2541BK5+1g==
+X-Received: by 2002:a37:67c5:: with SMTP id b188mr2579950qkc.199.1574261049302;
+        Wed, 20 Nov 2019 06:44:09 -0800 (PST)
 Received: from localhost.localdomain ([72.53.229.209])
-        by smtp.gmail.com with ESMTPSA id 62sm953069qkk.102.2019.11.20.06.44.04
+        by smtp.gmail.com with ESMTPSA id 62sm953069qkk.102.2019.11.20.06.44.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Nov 2019 06:44:05 -0800 (PST)
+        Wed, 20 Nov 2019 06:44:08 -0800 (PST)
 From:   Sven Van Asbroeck <thesven73@gmail.com>
 X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
 To:     Lee Jones <lee.jones@linaro.org>,
@@ -65,47 +67,147 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-leds@vger.kernel.org
-Subject: [PATCH v3 0/3] tps6105x add devicetree and leds support
-Date:   Wed, 20 Nov 2019 09:43:58 -0500
-Message-Id: <20191120144401.30452-1-TheSven73@gmail.com>
+Subject: [PATCH v3 2/3] leds: tps6105x: add driver for mfd chip led mode
+Date:   Wed, 20 Nov 2019 09:44:00 -0500
+Message-Id: <20191120144401.30452-3-TheSven73@gmail.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191120144401.30452-1-TheSven73@gmail.com>
+References: <20191120144401.30452-1-TheSven73@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-v2 -> v3:
-	Removed tps6105x regulator patch - it was accepted (Mark Brown).
-	
-	Removed devicetree/platdata bindings for tps6105x led naming.
-	I can test only with a 4.19 vendor kernel, which does not have the
-	latest led naming infrastructure (function/color). Drop devicetree/
-	fwnode/pdata led naming in favour of hard-coding to "tps6105x::torch",
-	so the patch can be tested by me, yet remains acceptable to upstream.
+This driver adds support for the led operational mode of the
+tps6105x mfd device.
 
-v1 -> v2:
-	Select chip operational mode by looking at subnode name, _not_ its
-	compatible property. Suggested by Mark Brown.
+Example usage, devicetree:
 
-I needed led operation for this mfd chip, so I added a very simple
-driver for this.
+i2c0 {
+	tps61052@33 {
+		compatible = "ti,tps61052";
+		reg = <0x33>;
 
-My platform (arm imx6q) is devicetree-based, so I added optional
-devicetree support for this chip and its sub-drivers.
+		led {
+		};
+	};
+};
 
-Sven Van Asbroeck (3):
-  tps6105x: add optional devicetree support
-  leds: tps6105x: add driver for mfd chip led mode
-  dt-bindings: mfd: update TI tps6105x chip bindings
-
- .../devicetree/bindings/mfd/tps6105x.txt      | 39 ++++++++++-
- drivers/leds/Kconfig                          | 10 +++
- drivers/leds/Makefile                         |  1 +
- drivers/leds/leds-tps6105x.c                  | 67 +++++++++++++++++++
- drivers/mfd/tps6105x.c                        | 34 +++++++++-
- 5 files changed, 147 insertions(+), 4 deletions(-)
+Tree: next-20191118
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+---
+ drivers/leds/Kconfig         | 10 ++++++
+ drivers/leds/Makefile        |  1 +
+ drivers/leds/leds-tps6105x.c | 67 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 78 insertions(+)
  create mode 100644 drivers/leds/leds-tps6105x.c
 
+diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+index 4b68520ac251..7c7ceaa824a2 100644
+--- a/drivers/leds/Kconfig
++++ b/drivers/leds/Kconfig
+@@ -836,6 +836,16 @@ config LEDS_LM36274
+ 	  Say Y to enable the LM36274 LED driver for TI LMU devices.
+ 	  This supports the LED device LM36274.
+ 
++config LEDS_TPS6105X
++	tristate "LED support for TI TPS6105X"
++	depends on LEDS_CLASS
++	depends on TPS6105X
++	default y if TPS6105X
++	help
++	  This driver supports TPS61050/TPS61052 led chips.
++	  It is a single boost converter primarily for white LEDs and
++	  audio amplifiers.
++
+ comment "LED Triggers"
+ source "drivers/leds/trigger/Kconfig"
+ 
+diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+index 2da39e896ce8..d7e1107753fb 100644
+--- a/drivers/leds/Makefile
++++ b/drivers/leds/Makefile
+@@ -85,6 +85,7 @@ obj-$(CONFIG_LEDS_LM3601X)		+= leds-lm3601x.o
+ obj-$(CONFIG_LEDS_TI_LMU_COMMON)	+= leds-ti-lmu-common.o
+ obj-$(CONFIG_LEDS_LM3697)		+= leds-lm3697.o
+ obj-$(CONFIG_LEDS_LM36274)		+= leds-lm36274.o
++obj-$(CONFIG_LEDS_TPS6105X)		+= leds-tps6105x.o
+ 
+ # LED SPI Drivers
+ obj-$(CONFIG_LEDS_CR0014114)		+= leds-cr0014114.o
+diff --git a/drivers/leds/leds-tps6105x.c b/drivers/leds/leds-tps6105x.c
+new file mode 100644
+index 000000000000..44325251b3d6
+--- /dev/null
++++ b/drivers/leds/leds-tps6105x.c
+@@ -0,0 +1,67 @@
++// SPDX-License-Identifier: GPL-2.0-only
++
++#include <linux/leds.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/mfd/tps6105x.h>
++#include <linux/regmap.h>
++
++struct tps6105x_priv {
++	struct regmap *regmap;
++	struct led_classdev cdev;
++};
++
++static int tps6105x_brightness_set(struct led_classdev *cdev,
++				  enum led_brightness brightness)
++{
++	struct tps6105x_priv *priv = container_of(cdev, struct tps6105x_priv,
++							cdev);
++
++	return regmap_update_bits(priv->regmap, TPS6105X_REG_0,
++		TPS6105X_REG0_TORCHC_MASK,
++		brightness << TPS6105X_REG0_TORCHC_SHIFT);
++}
++
++static int tps6105x_led_probe(struct platform_device *pdev)
++{
++	struct tps6105x *tps6105x = dev_get_platdata(&pdev->dev);
++	struct tps6105x_platform_data *pdata = tps6105x->pdata;
++	struct tps6105x_priv *priv;
++	int ret;
++
++	/* This instance is not set for torch mode so bail out */
++	if (pdata->mode != TPS6105X_MODE_TORCH) {
++		dev_info(&pdev->dev,
++			"chip not in torch mode, exit probe");
++		return -EINVAL;
++	}
++
++	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++	priv->regmap = tps6105x->regmap;
++	priv->cdev.name = "tps6105x::torch";
++	priv->cdev.brightness_set_blocking = tps6105x_brightness_set;
++	priv->cdev.max_brightness = 7;
++
++	ret = regmap_update_bits(tps6105x->regmap, TPS6105X_REG_0,
++		TPS6105X_REG0_MODE_MASK | TPS6105X_REG0_TORCHC_MASK,
++		TPS6105X_REG0_MODE_TORCH << TPS6105X_REG0_MODE_SHIFT);
++	if (ret)
++		return ret;
++
++	return devm_led_classdev_register(&pdev->dev, &priv->cdev);
++}
++
++static struct platform_driver led_driver = {
++	.probe = tps6105x_led_probe,
++	.driver = {
++		.name = "tps6105x-leds",
++	},
++};
++
++module_platform_driver(led_driver);
++
++MODULE_DESCRIPTION("TPS6105x led driver");
++MODULE_AUTHOR("Sven Van Asbroeck <TheSven73@gmail.com>");
++MODULE_LICENSE("GPL v2");
 -- 
 2.17.1
 
