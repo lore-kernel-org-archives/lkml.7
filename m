@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F694C43141
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:28:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D319C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:28:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1759021906
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:28:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 345C320730
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:28:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ThgKhNOY"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DCSy8DbM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730568AbfKTP2D (ORCPT
+        id S1729404AbfKTP2e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 10:28:03 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:32724 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729033AbfKTP14 (ORCPT
+        Wed, 20 Nov 2019 10:28:34 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:44216 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730503AbfKTP2D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 10:27:56 -0500
+        Wed, 20 Nov 2019 10:28:03 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574263675;
+        s=mimecast20190719; t=1574263682;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=bqfdYpPgjwlAgHoNin402Ab2BCj8S4U3NjRO8OWvM4E=;
-        b=ThgKhNOY3uulV+4z16AYX9ne5IE/BKidkVrwKiDLVRWMQQsdbafmkpKTTwpvqbPuLJ/RyF
-        Y4DYYtYaBMy9dK+PBSwNt94eP5I9OcX52V6Z4mcfSdghTJmIaxNTF2qiEwKPKmQP/TSqoL
-        u+7YwUjXbez0+jPglQ15rqHZ9RzI4dg=
+        bh=3/6jgcHdEdKgS4+aAeKKo6S0l6xP5rAtWK4XeM9Bqug=;
+        b=DCSy8DbMtwom1gYme+a7tsyWUOMMil9glBqOf/SI6h1AZtqQOTCUS2tVaCTFiRmA3R9dVj
+        2/6vWOh+No8XCUJH94VTXh75aB7hF3jRsmmSOffPBkt47GjmGdfzfcwCImgqYj6jVsyFWN
+        0VpFD16pw0aqlYCxCZMiLJ0KIQJFBWk=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-162-3Ggo02u1Ody_r0kMzeSAbg-1; Wed, 20 Nov 2019 10:27:52 -0500
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+ us-mta-13-sf8VdU13Nlunt_LKR_vcBA-1; Wed, 20 Nov 2019 10:27:59 -0500
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 037B818B5F72;
-        Wed, 20 Nov 2019 15:27:51 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4AF3018B5F6B;
+        Wed, 20 Nov 2019 15:27:57 +0000 (UTC)
 Received: from coeurl.usersys.redhat.com (ovpn-123-90.rdu2.redhat.com [10.10.123.90])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C3FAE46E76;
-        Wed, 20 Nov 2019 15:27:50 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2849F2AA8A;
+        Wed, 20 Nov 2019 15:27:57 +0000 (UTC)
 Received: by coeurl.usersys.redhat.com (Postfix, from userid 1000)
-        id 223AB20634; Wed, 20 Nov 2019 10:27:50 -0500 (EST)
+        id 7AEA920A01; Wed, 20 Nov 2019 10:27:50 -0500 (EST)
 From:   Scott Mayhew <smayhew@redhat.com>
 To:     anna.schumaker@netapp.com, trond.myklebust@hammerspace.com
 Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk,
         linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v5 01/27] saner calling conventions for nfs_fs_mount_common()
-Date:   Wed, 20 Nov 2019 10:27:24 -0500
-Message-Id: <20191120152750.6880-2-smayhew@redhat.com>
+Subject: [PATCH v5 17/27] NFS: Constify mount argument match tables
+Date:   Wed, 20 Nov 2019 10:27:40 -0500
+Message-Id: <20191120152750.6880-18-smayhew@redhat.com>
 In-Reply-To: <20191120152750.6880-1-smayhew@redhat.com>
 References: <20191120152750.6880-1-smayhew@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-MC-Unique: 3Ggo02u1Ody_r0kMzeSAbg-1
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-MC-Unique: sf8VdU13Nlunt_LKR_vcBA-1
 X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
@@ -66,105 +66,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: David Howells <dhowells@redhat.com>
 
-Allow it to take ERR_PTR() for server and return ERR_CAST() of it in
-such case.  All callers used to open-code that...
+The mount argument match tables should never be altered so constify them.
 
-Reviewed-by: David Howells <dhowells@redhat.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- fs/nfs/nfs4super.c | 16 +---------------
- fs/nfs/super.c     | 11 ++++-------
- 2 files changed, 5 insertions(+), 22 deletions(-)
+ fs/nfs/fs_context.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/fs/nfs/nfs4super.c b/fs/nfs/nfs4super.c
-index 04c57066a11a..baece9857bcf 100644
---- a/fs/nfs/nfs4super.c
-+++ b/fs/nfs/nfs4super.c
-@@ -110,21 +110,12 @@ nfs4_remote_mount(struct file_system_type *fs_type, i=
-nt flags,
- {
- =09struct nfs_mount_info *mount_info =3D info;
- =09struct nfs_server *server;
--=09struct dentry *mntroot =3D ERR_PTR(-ENOMEM);
+diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
+index 3a34c8437917..de852177eca4 100644
+--- a/fs/nfs/fs_context.c
++++ b/fs/nfs/fs_context.c
+@@ -199,7 +199,7 @@ enum {
+ =09Opt_lookupcache_err
+ };
 =20
- =09mount_info->set_security =3D nfs_set_sb_security;
+-static match_table_t nfs_lookupcache_tokens =3D {
++static const match_table_t nfs_lookupcache_tokens =3D {
+ =09{ Opt_lookupcache_all, "all" },
+ =09{ Opt_lookupcache_positive, "pos" },
+ =09{ Opt_lookupcache_positive, "positive" },
+@@ -215,7 +215,7 @@ enum {
+ =09Opt_local_lock_err
+ };
 =20
- =09/* Get a volume representation */
- =09server =3D nfs4_create_server(mount_info, &nfs_v4);
--=09if (IS_ERR(server)) {
--=09=09mntroot =3D ERR_CAST(server);
--=09=09goto out;
--=09}
--
--=09mntroot =3D nfs_fs_mount_common(server, flags, dev_name, mount_info, &n=
-fs_v4);
--
--out:
--=09return mntroot;
-+=09return nfs_fs_mount_common(server, flags, dev_name, mount_info, &nfs_v4=
-);
- }
+-static match_table_t nfs_local_lock_tokens =3D {
++static const match_table_t nfs_local_lock_tokens =3D {
+ =09{ Opt_local_lock_all, "all" },
+ =09{ Opt_local_lock_flock, "flock" },
+ =09{ Opt_local_lock_posix, "posix" },
+@@ -231,7 +231,7 @@ enum {
+ =09Opt_vers_err
+ };
 =20
- static struct vfsmount *nfs_do_root_mount(struct file_system_type *fs_type=
-,
-@@ -280,11 +271,6 @@ nfs4_remote_referral_mount(struct file_system_type *fs=
-_type, int flags,
-=20
- =09/* create a new volume representation */
- =09server =3D nfs4_create_referral_server(mount_info.cloned, mount_info.mn=
-tfh);
--=09if (IS_ERR(server)) {
--=09=09mntroot =3D ERR_CAST(server);
--=09=09goto out;
--=09}
--
- =09mntroot =3D nfs_fs_mount_common(server, flags, dev_name, &mount_info, &=
-nfs_v4);
- out:
- =09nfs_free_fhandle(mount_info.mntfh);
-diff --git a/fs/nfs/super.c b/fs/nfs/super.c
-index a84df7d63403..9d2f1d6a5b9a 100644
---- a/fs/nfs/super.c
-+++ b/fs/nfs/super.c
-@@ -1903,9 +1903,6 @@ struct dentry *nfs_try_mount(int flags, const char *d=
-ev_name,
- =09else
- =09=09server =3D nfs_mod->rpc_ops->create_server(mount_info, nfs_mod);
-=20
--=09if (IS_ERR(server))
--=09=09return ERR_CAST(server);
--
- =09return nfs_fs_mount_common(server, flags, dev_name, mount_info, nfs_mod=
-);
- }
- EXPORT_SYMBOL_GPL(nfs_try_mount);
-@@ -2666,6 +2663,9 @@ struct dentry *nfs_fs_mount_common(struct nfs_server =
-*server,
- =09};
- =09int error;
-=20
-+=09if (IS_ERR(server))
-+=09=09return ERR_CAST(server);
-+
- =09if (server->flags & NFS_MOUNT_UNSHARED)
- =09=09compare_super =3D NULL;
-=20
-@@ -2814,10 +2814,7 @@ nfs_xdev_mount(struct file_system_type *fs_type, int=
- flags,
- =09/* create a new volume representation */
- =09server =3D nfs_mod->rpc_ops->clone_server(NFS_SB(data->sb), data->fh, d=
-ata->fattr, data->authflavor);
-=20
--=09if (IS_ERR(server))
--=09=09mntroot =3D ERR_CAST(server);
--=09else
--=09=09mntroot =3D nfs_fs_mount_common(server, flags,
-+=09mntroot =3D nfs_fs_mount_common(server, flags,
- =09=09=09=09dev_name, &mount_info, nfs_mod);
-=20
- =09dprintk("<-- nfs_xdev_mount() =3D %ld\n",
+-static match_table_t nfs_vers_tokens =3D {
++static const match_table_t nfs_vers_tokens =3D {
+ =09{ Opt_vers_2, "2" },
+ =09{ Opt_vers_3, "3" },
+ =09{ Opt_vers_4, "4" },
 --=20
 2.17.2
 
