@@ -2,158 +2,160 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FORGED_MUA_MOZILLA,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09697C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 04:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B069BC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 04:14:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5EB622466
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 04:12:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 811742245C
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 04:14:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KCyXxH/S";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="a3ATZqip"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Qo8vScqx";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="InwQXLwh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727669AbfKTEMe (ORCPT
+        id S1727630AbfKTEOo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 23:12:34 -0500
-Received: from a27-11.smtp-out.us-west-2.amazonses.com ([54.240.27.11]:45638
-        "EHLO a27-11.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727264AbfKTEMe (ORCPT
+        Tue, 19 Nov 2019 23:14:44 -0500
+Received: from a27-56.smtp-out.us-west-2.amazonses.com ([54.240.27.56]:39036
+        "EHLO a27-56.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727343AbfKTEOo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 23:12:34 -0500
+        Tue, 19 Nov 2019 23:14:44 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574223153;
-        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-        bh=N/2N19eARJ1XCRN9V3ZaMOZYjVMckdZ6fG9koiFT6D0=;
-        b=KCyXxH/S3kFOU782Fg7Q4ZyWM6Zl0iS0umweqZNXuS7NU/MYZCs+VuvQPmDfXblx
-        TbxeYQ5CVQdNJBL6IBN2nmQO8Th4zlxeq9SeJs7ONsxsH1+3Sg4KZMAna1X8dbJAQVK
-        x7zFMcbjOD5Vj+55RSx6v2WQI8uoPOnu3V81ZZdk=
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574223283;
+        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
+        bh=sQkNXuDVsJ0tsz0h+83RhRvsNtFDcFeY7de5XccyV/E=;
+        b=Qo8vScqxfHA9Q4ooy0gAv3ctisVHtZ/bvCgBemcoAta+TlCQyGQtN9gV6gxWw01E
+        BYbgqiimoIEi+HNkEx6WUGEdHD1YLlMUhQjomvxtBuUsnpJ4o1i1iV3mTbi0mFpS1qc
+        qqBqzgivaUP0pMGs/GhNO2wkIh4hMu3RjrOzi0js=
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574223153;
-        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID;
-        bh=N/2N19eARJ1XCRN9V3ZaMOZYjVMckdZ6fG9koiFT6D0=;
-        b=a3ATZqipY5cQADaV6Wdt5kDW3cFTrjs5CdFNzLUeb/oSswIFVc1TqSM2ifxYr/p1
-        QA9X2oH0UyzsO1BGoRuUl2Wa4IJLVfljWIoOObtHi9eoZ1zAtbfqx2kDmZKvfomzy8W
-        H5qjKRQS3mWXlI9mcT75iVhCHU/btugMWo/r5ztA=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 74BD9C447BC
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [PATCH 6/6] arm64: dts: sm8150: Add rpmh power-domain node
-To:     Sibi Sankar <sibis@codeaurora.org>, bjorn.andersson@linaro.org,
-        robh+dt@kernel.org, ulf.hansson@linaro.org
-Cc:     agross@kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        mark.rutland@arm.com, swboyd@chromium.org, dianders@chromium.org
-References: <20191118173944.27043-1-sibis@codeaurora.org>
- <20191118173944.27043-7-sibis@codeaurora.org>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <0101016e8703078e-34fb2437-b406-47c2-846e-913fc38678f6-000000@us-west-2.amazonses.com>
-Date:   Wed, 20 Nov 2019 04:12:33 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574223283;
+        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
+        bh=sQkNXuDVsJ0tsz0h+83RhRvsNtFDcFeY7de5XccyV/E=;
+        b=InwQXLwhSUoSQHOniuON/CDxljrEZ51RI60W5t3yDU1H0uZW+HNcrnRWJXc6V4gz
+        WKA/YRHpZnjxhTE43up5r8H4UA/prqfqxM8BgWUrnxneNSeUJPTIyomc/pDndpcnbJk
+        y7Tx1EzXS7PIy/IhfvJ5Tu7HPJkuAXRxBRQGYB1k=
 MIME-Version: 1.0
-In-Reply-To: <20191118173944.27043-7-sibis@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-X-SES-Outgoing: 2019.11.20-54.240.27.11
+Date:   Wed, 20 Nov 2019 04:14:43 +0000
+From:   cang@codeaurora.org
+To:     Avri Altman <Avri.Altman@wdc.com>
+Cc:     Can Guo <cang@qti.qualcomm.com>, asutoshd@codeaurora.org,
+        nguyenb@codeaurora.org, rnayak@codeaurora.org,
+        linux-scsi@vger.kernel.org, kernel-team@android.com,
+        saravanak@google.com, salyzyn@google.com,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 2/4] scsi: ufs: Update VCCQ2 and VCCQ min/max voltage
+ hard codes
+In-Reply-To: <MN2PR04MB699170FFA7B2DD59014374D5FC4C0@MN2PR04MB6991.namprd04.prod.outlook.com>
+References: <1574049061-11417-1-git-send-email-cang@qti.qualcomm.com>
+ <1574049061-11417-3-git-send-email-cang@qti.qualcomm.com>
+ <MN2PR04MB6991121D72EA8E6DF7F6258AFC4D0@MN2PR04MB6991.namprd04.prod.outlook.com>
+ <0101016e8163937a-d539c90e-6df8-454a-969a-9e33e9ef35b6-000000@us-west-2.amazonses.com>
+ <MN2PR04MB699170FFA7B2DD59014374D5FC4C0@MN2PR04MB6991.namprd04.prod.outlook.com>
+Message-ID: <0101016e870503bb-b0e9294a-c6ea-46de-a8f3-19e11329410c-000000@us-west-2.amazonses.com>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
+X-SES-Outgoing: 2019.11.20-54.240.27.56
 Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 11/18/2019 11:09 PM, Sibi Sankar wrote:
-> Add the DT node for the rpmhpd power controller.
+On 2019-11-19 20:41, Avri Altman wrote:
+>> 
+>> On 2019-11-18 15:15, Avri Altman wrote:
+>> >>
+>> >> From: Can Guo <cang@codeaurora.org>
+>> >>
+>> >> Per UFS 3.0 JEDEC standard, the VCCQ2 min voltage is 1.7v and the
+>> >> VCCQ voltage range is 1.14v ~ 1.26v. Update their hard codes
+>> >> accordingly to make sure they work in a safe range compliant for ver
+>> >> 1.0/2.0/2.1/3.0 UFS devices.
+>> > So to keep it safe, we need to use largest range:
+>> > min_uV = min over all spec ranges, and max_uV = max over all spec
+>> > ranges.
+>> > Meaning leave it as it is if we want to be backward compatible with
+>> > UFS1.0.
+>> >
+>> > Thanks,
+>> > Avri
+>> >
+>> 
+>> Hi Avri,
+>> 
+>> Sorry I don't quite follow you here.
+>> Leaving it as it is means for UFS2.1 devices, when boot up, if we call
+>> regulator_set_voltage(1.65, 1.95) to setup its VCCQ2,
+>> regulator_set_voltage() will
+>> give you 1.65v on VCCQ2 if the voltage level of this regulator is 
+>> wider, say (1.60,
+>> 1.95).
+>> Meaning you will finally set 1.65v to VCCQ2. But 1.65v is out of spec 
+>> for UFS
+>> v2.1 as it requires min voltage to be 1.7v on VCCQ2. So, the smallest 
+>> range is
+>> safe.
+>> Of course, in real board design, the regulator's voltage level is 
+>> limited/designed
+>> by power team to be in a safe range, say (1.8, 1.92), so that calling
+>> regulator_set_voltage(1.65, 1.95) still gives you 1.8v. But it does 
+>> not mean the
+>> current hard codes are compliant for all UFS devices.
+> You are correct - the narrowest the range the better - as long as you
+> don't cross the limits of previous spec.
+> So changing 1.1 -> 1.14  and 1.65 -> 1.7 is fine.
+> While at it, Vccq max in UFS3.0 is 1.26, why not change 1.3 -> 1.26,
+> like you indicated in your commit log?
 > 
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> ---
-
-Reviewed-by: Rajendra Nayak <rnayak@codeaurora.org>
-
->   arch/arm64/boot/dts/qcom/sm8150.dtsi | 55 ++++++++++++++++++++++++++++
->   1 file changed, 55 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-> index 8f23fcadecb89..0ac257637c2af 100644
-> --- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-> @@ -5,6 +5,7 @@
->    */
->   
->   #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/power/qcom-rpmpd.h>
->   #include <dt-bindings/soc/qcom,rpmh-rsc.h>
->   #include <dt-bindings/clock/qcom,rpmh.h>
->   
-> @@ -469,6 +470,60 @@
->   				clock-names = "xo";
->   				clocks = <&xo_board>;
->   			};
-> +
-> +			rpmhpd: power-controller {
-> +				compatible = "qcom,sm8150-rpmhpd";
-> +				#power-domain-cells = <1>;
-> +				operating-points-v2 = <&rpmhpd_opp_table>;
-> +
-> +				rpmhpd_opp_table: opp-table {
-> +					compatible = "operating-points-v2";
-> +
-> +					rpmhpd_opp_ret: opp1 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_RETENTION>;
-> +					};
-> +
-> +					rpmhpd_opp_min_svs: opp2 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_MIN_SVS>;
-> +					};
-> +
-> +					rpmhpd_opp_low_svs: opp3 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
-> +					};
-> +
-> +					rpmhpd_opp_svs: opp4 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_SVS>;
-> +					};
-> +
-> +					rpmhpd_opp_svs_l1: opp5 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_SVS_L1>;
-> +					};
-> +
-> +					rpmhpd_opp_svs_l2: opp6 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_SVS_L2>;
-> +					};
-> +
-> +					rpmhpd_opp_nom: opp7 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_NOM>;
-> +					};
-> +
-> +					rpmhpd_opp_nom_l1: opp8 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_NOM_L1>;
-> +					};
-> +
-> +					rpmhpd_opp_nom_l2: opp9 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_NOM_L2>;
-> +					};
-> +
-> +					rpmhpd_opp_turbo: opp10 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_TURBO>;
-> +					};
-> +
-> +					rpmhpd_opp_turbo_l1: opp11 {
-> +						opp-level = <RPMH_REGULATOR_LEVEL_TURBO_L1>;
-> +					};
-> +				};
-> +			};
->   		};
->   	};
->   
+> Thanks,
+> Avri
 > 
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Thank you Avri, sorry I missed the change to max voltage of VCCQ, I
+will update it in the next version.
+
+Best Regards,
+Can Guo.
+
+>> 
+>> Best Regards,
+>> Can Guo.
+>> 
+>> >>
+>> >> Signed-off-by: Can Guo <cang@codeaurora.org>
+>> >> ---
+>> >>  drivers/scsi/ufs/ufs.h | 4 ++--
+>> >>  1 file changed, 2 insertions(+), 2 deletions(-)
+>> >>
+>> >> diff --git a/drivers/scsi/ufs/ufs.h b/drivers/scsi/ufs/ufs.h index
+>> >> 385bac8..9df4f4d
+>> >> 100644
+>> >> --- a/drivers/scsi/ufs/ufs.h
+>> >> +++ b/drivers/scsi/ufs/ufs.h
+>> >> @@ -500,9 +500,9 @@ struct ufs_query_res {
+>> >>  #define UFS_VREG_VCC_MAX_UV       3600000 /* uV */
+>> >>  #define UFS_VREG_VCC_1P8_MIN_UV    1700000 /* uV */
+>> >>  #define UFS_VREG_VCC_1P8_MAX_UV    1950000 /* uV */
+>> >> -#define UFS_VREG_VCCQ_MIN_UV      1100000 /* uV */
+>> >> +#define UFS_VREG_VCCQ_MIN_UV      1140000 /* uV */
+>> >>  #define UFS_VREG_VCCQ_MAX_UV      1300000 /* uV */
+>> >> -#define UFS_VREG_VCCQ2_MIN_UV     1650000 /* uV */
+>> >> +#define UFS_VREG_VCCQ2_MIN_UV     1700000 /* uV */
+>> >>  #define UFS_VREG_VCCQ2_MAX_UV     1950000 /* uV */
+>> >>
+>> >>  /*
+>> >> --
+>> >> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
+>> >> Forum, a Linux Foundation Collaborative Project
