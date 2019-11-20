@@ -2,76 +2,84 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D29F4C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:08:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D50EAC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:12:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC4A12251D
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:08:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD1862251F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:12:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574255556;
+	bh=Y1YHQvbgqBVBtYfXoF968NFfUCGRtYRaQ43ufvzwMQs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DSeBTLcrVv9yAYgFhrXlSmbPYfhK8FVAWlj5+VkcQN1+WPU5Yk9889wdbDsfH85ps
+	 IzV7XCw30ldtuzxkM/6A5HN8LU21zKwaizvcceI0UaZJcSZ4fskUUcSzCSKJoHWjcu
+	 Omi+WZNF6Z+D7ndbiCOCu2jvIi9Ty2GGTE3vZ5BA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730107AbfKTNIu (ORCPT
+        id S1728722AbfKTNMf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 08:08:50 -0500
-Received: from mga07.intel.com ([134.134.136.100]:42229 "EHLO mga07.intel.com"
+        Wed, 20 Nov 2019 08:12:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728026AbfKTNIr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 08:08:47 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Nov 2019 05:08:47 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,222,1571727600"; 
-   d="scan'208";a="196848307"
-Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
-  by orsmga007.jf.intel.com with ESMTP; 20 Nov 2019 05:08:29 -0800
-From:   Alexander Shishkin <alexander.shishkin@linux.intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        stable@vger.kernel.org
-Subject: [GIT PULL 3/3] intel_th: pci: Add Tiger Lake CPU support
-Date:   Wed, 20 Nov 2019 15:08:06 +0200
-Message-Id: <20191120130806.44028-4-alexander.shishkin@linux.intel.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191120130806.44028-1-alexander.shishkin@linux.intel.com>
-References: <20191120130806.44028-1-alexander.shishkin@linux.intel.com>
+        id S1727958AbfKTNMf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 08:12:35 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DFCFA22519;
+        Wed, 20 Nov 2019 13:12:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574255554;
+        bh=Y1YHQvbgqBVBtYfXoF968NFfUCGRtYRaQ43ufvzwMQs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pdvavX/auzZdjuvYtAjnH7kGUHtTRVMH9RMGBCtfUp/dqm7hOuVcoXzICSr+4KR0X
+         k+nzkC7879TNvYXHP9DvftbfnqeOGzK6+67GMqnl4NTsBdP5WtE5+VpNXlSY/GBk2/
+         z8P65MllnB3+r6jPfIVRXO0FujcJWL/TDXoOsIHI=
+Date:   Wed, 20 Nov 2019 13:12:30 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Stephen Smalley <sds@tycho.nsa.gov>
+Cc:     selinux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 1/2] selinux: Don't call avc_compute_av() from RCU
+ path walk
+Message-ID: <20191120131229.GA21500@willie-the-truck>
+References: <20191119184057.14961-1-will@kernel.org>
+ <20191119184057.14961-2-will@kernel.org>
+ <5e51f9a5-ba76-a42d-fc2b-9255f8544859@tycho.nsa.gov>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5e51f9a5-ba76-a42d-fc2b-9255f8544859@tycho.nsa.gov>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds support for the Trace Hub in Tiger Lake CPU.
+Hi Stephen,
 
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: stable@vger.kernel.org
----
- drivers/hwtracing/intel_th/pci.c | 5 +++++
- 1 file changed, 5 insertions(+)
+Thanks for the quick reply.
 
-diff --git a/drivers/hwtracing/intel_th/pci.c b/drivers/hwtracing/intel_th/pci.c
-index 04a956ece9f7..f777192890d2 100644
---- a/drivers/hwtracing/intel_th/pci.c
-+++ b/drivers/hwtracing/intel_th/pci.c
-@@ -209,6 +209,11 @@ static const struct pci_device_id intel_th_pci_id_table[] = {
- 		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x8a29),
- 		.driver_data = (kernel_ulong_t)&intel_th_2x,
- 	},
-+	{
-+		/* Tiger Lake CPU */
-+		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x9a33),
-+		.driver_data = (kernel_ulong_t)&intel_th_2x,
-+	},
- 	{
- 		/* Tiger Lake PCH */
- 		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0xa0a6),
--- 
-2.24.0
+On Tue, Nov 19, 2019 at 01:59:40PM -0500, Stephen Smalley wrote:
+> On 11/19/19 1:40 PM, Will Deacon wrote:
+> > 'avc_compute_av()' can block, so we carefully exit the RCU read-side
+> > critical section before calling it in 'avc_has_perm_noaudit()'.
+> > Unfortunately, if we're calling from the VFS layer on the RCU path walk
+> > via 'selinux_inode_permission()' then we're still actually in an RCU
+> > read-side critical section and must not block.
+> 
+> avc_compute_av() should never block AFAIK. The blocking concern was with
+> slow_avc_audit(), and even that appears dubious to me. That seems to be more
+> about misuse of d_find_alias in dump_common_audit_data() than anything.
 
+Apologies, I lost track of GFP_ATOMIC when I reading the code and didn't
+think it was propagated down to all of the potential allocations and
+string functions. Having looked at it again, I can't see where it blocks.
+
+Might be worth a comment in avc_compute_av(), because the temporary
+dropping of rcu_read_lock() looks really dodgy when we could be running
+on the RCU path walk path anyway.
+
+Will
