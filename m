@@ -2,183 +2,177 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D583EC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:51:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B2F7C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:53:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACD5920692
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:51:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="DA3GASR2"
+	by mail.kernel.org (Postfix) with ESMTP id 3B9B420672
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:53:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731146AbfKTPvW (ORCPT
+        id S1731131AbfKTPxI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 10:51:22 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:42222 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729091AbfKTPvW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 10:51:22 -0500
-Received: by mail-il1-f194.google.com with SMTP id n18so51618ilt.9
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 07:51:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=V9ocHos4mEPx/cXUTF0dJh2q+Dfua495g56A4DiYMvM=;
-        b=DA3GASR2Yz29peYkU/JxCycyhe0pntz2I8oB4TnZKHaznQQ/3dZagFl7mz/6uQHJW5
-         GrRIPKUtWuu9jAaJ2X5b0MVGuDe5OcswfXx1wbPb8m7uCfMIJmc9IPC5IS0lBPUTGROo
-         mDAdsl7e6tN7R+gpDhb9im2LWKYDM4jMwbQzQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=V9ocHos4mEPx/cXUTF0dJh2q+Dfua495g56A4DiYMvM=;
-        b=mOE6sGmYgM1dyPvAVW+lYAdyjjirBA3+DME//2s8yL8v69bU0VvfBl54hLYrg4a5J/
-         Iv9Gv4hhH8VAubq8gbE7g+tZccp/uI+Wx5EUHMvjxOpr2BoikVtZJWNtQ+YKzJCS7lqD
-         GM+kTnIR1PEEDi9pkvY/+XTFZhrmsZhhaqcrw8tR8SPFQR6jbuEvZABVfYcIeNMT5S81
-         /rk/fd9gQWPu5wfsLYkHdMYiaDfeZvBDVE6ug4cqHPsrVZym6Tf6tSS6GtcQ0T/IbTh/
-         5OrnG4NBs/x9ALRT1aNEtLOs7SWTmaOo3sl3HiatzH1LQKRJzs7s39bMxURDDr4qkBvo
-         RIYg==
-X-Gm-Message-State: APjAAAX+8RXF8+sMYjdm4ApWm2+qvLZxXajOKHsKEE3CTtBt0tKFCME/
-        wbRmZbQQjv+c7qoTrYgWdfwjMaGyUDaPnWIZc47+rg==
-X-Google-Smtp-Source: APXvYqxEiRL48js6ZDjxRjcSKNXQCeEpejajn5en3dkyccGBO7qEMLPuZspPilOntqUDYF2mK0Y10om7k0o+Lm+FniU=
-X-Received: by 2002:a92:5d8f:: with SMTP id e15mr4268209ilg.173.1574265079598;
- Wed, 20 Nov 2019 07:51:19 -0800 (PST)
+        Wed, 20 Nov 2019 10:53:08 -0500
+Received: from mga17.intel.com ([192.55.52.151]:63174 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728453AbfKTPxI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 10:53:08 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Nov 2019 07:53:07 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,222,1571727600"; 
+   d="scan'208";a="215842721"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 20 Nov 2019 07:53:02 -0800
+Received: by lahna (sSMTP sendmail emulation); Wed, 20 Nov 2019 17:53:02 +0200
+Date:   Wed, 20 Nov 2019 17:53:01 +0200
+From:   Mika Westerberg <mika.westerberg@intel.com>
+To:     Karol Herbst <kherbst@redhat.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lyude Paul <lyude@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        Dave Airlie <airlied@gmail.com>,
+        Mario Limonciello <Mario.Limonciello@dell.com>
+Subject: Re: [PATCH v4] pci: prevent putting nvidia GPUs into lower device
+ states on certain intel bridges
+Message-ID: <20191120155301.GL11621@lahna.fi.intel.com>
+References: <20191120101816.GX11621@lahna.fi.intel.com>
+ <CAJZ5v0g4vp1C+zHU5nOVnkGsOjBvLaphK1kK=qAT6b=mK8kpsA@mail.gmail.com>
+ <20191120112212.GA11621@lahna.fi.intel.com>
+ <20191120115127.GD11621@lahna.fi.intel.com>
+ <CACO55tsfNOdtu5SZ-4HzO4Ji6gQtafvZ7Rm19nkPcJAgwUBFMw@mail.gmail.com>
+ <CACO55tscD_96jUVts+MTAUsCt-fZx4O5kyhRKoo4mKoC84io8A@mail.gmail.com>
+ <20191120120913.GE11621@lahna.fi.intel.com>
+ <CACO55tsHy6yZQZ8PkdW8iPA7+uc5rdcEwRJwYEQ3iqu85F8Sqg@mail.gmail.com>
+ <20191120151542.GH11621@lahna.fi.intel.com>
+ <CACO55tvo3rbPtYJcioEgXCEQqVXcVAm-iowr9Nim=bgTdMjgLw@mail.gmail.com>
 MIME-Version: 1.0
-References: <20191120113923.11685-1-jagan@amarulasolutions.com>
- <20191120113923.11685-3-jagan@amarulasolutions.com> <1707486.7nrk6WTBgP@diego>
-In-Reply-To: <1707486.7nrk6WTBgP@diego>
-From:   Jagan Teki <jagan@amarulasolutions.com>
-Date:   Wed, 20 Nov 2019 21:21:08 +0530
-Message-ID: <CAMty3ZC2NzTWq8YPbePRyPdixxMO7mrPZrzagwjrTkhGHGRR=g@mail.gmail.com>
-Subject: Re: [PATCH 2/5] arm64: dts: rockchip: Add VMARC RK3399Pro SOM initial support
-To:     =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Akash Gajjar <akash@openedev.com>, Tom Cubie <tom@radxa.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-amarula <linux-amarula@amarulasolutions.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACO55tvo3rbPtYJcioEgXCEQqVXcVAm-iowr9Nim=bgTdMjgLw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Heiko,
-
-On Wed, Nov 20, 2019 at 6:59 PM Heiko St=C3=BCbner <heiko@sntech.de> wrote:
->
-> Hi Jagan,
->
-> looks good in general, just some small things below:
->
-> Am Mittwoch, 20. November 2019, 12:39:20 CET schrieb Jagan Teki:
-> > VMARC RK3399Pro SOM is a standard SMARC SOM design with
-> > Rockchip RK3399Pro SoC, which is designed by Vamrs.
+On Wed, Nov 20, 2019 at 04:37:14PM +0100, Karol Herbst wrote:
+> On Wed, Nov 20, 2019 at 4:15 PM Mika Westerberg
+> <mika.westerberg@intel.com> wrote:
 > >
-> > Specification:
-> > - Rockchip RK3399Pro
-> > - PMIC: RK809-3
-> > - SD slot, 16GiB eMMC
-> > - 2xUSB-2.0, 1xUSB3.0
-> > - USB-C for power supply
-> > - Ethernet, PCIe
-> > - HDMI, MIPI-DSI/CSI, eDP
+> > On Wed, Nov 20, 2019 at 01:11:52PM +0100, Karol Herbst wrote:
+> > > On Wed, Nov 20, 2019 at 1:09 PM Mika Westerberg
+> > > <mika.westerberg@intel.com> wrote:
+> > > >
+> > > > On Wed, Nov 20, 2019 at 12:58:00PM +0100, Karol Herbst wrote:
+> > > > > overall, what I really want to know is, _why_ does it work on windows?
+> > > >
+> > > > So do I ;-)
+> > > >
+> > > > > Or what are we doing differently on Linux so that it doesn't work? If
+> > > > > anybody has any idea on how we could dig into this and figure it out
+> > > > > on this level, this would probably allow us to get closer to the root
+> > > > > cause? no?
+> > > >
+> > > > Have you tried to use the acpi_rev_override parameter in your system and
+> > > > does it have any effect?
+> > > >
+> > > > Also did you try to trace the ACPI _ON/_OFF() methods? I think that
+> > > > should hopefully reveal something.
+> > > >
+> > >
+> > > I think I did in the past and it seemed to have worked, there is just
+> > > one big issue with this: it's a Dell specific workaround afaik, and
+> > > this issue plagues not just Dell, but we've seen it on HP and Lenovo
+> > > laptops as well, and I've heard about users having the same issues on
+> > > Asus and MSI laptops as well.
 > >
-> > Add initial support for VMARC RK3399Pro SOM, this would use
-> > with associated carrier board.
+> > Maybe it is not a workaround at all but instead it simply determines
+> > whether the system supports RTD3 or something like that (IIRC Windows 8
+> > started supporting it). Maybe Dell added check for Linux because at that
+> > time Linux did not support it.
 > >
-> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> > ---
-> >  .../dts/rockchip/rk3399pro-vmarc-som.dtsi     | 339 ++++++++++++++++++
-> >  1 file changed, 339 insertions(+)
-> >  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dt=
-si
+> 
+> the point is, it's not checking it by default, so by default you still
+> run into the windows 8 codepath.
+
+Well you can add the quirk to acpi_rev_dmi_table[] so it goes to that
+path by default. There are a bunch of similar entries for Dell machines.
+
+Of course this does not help the non-Dell users so we would still need
+to figure out the root cause.
+
+> > In case RTD3 is supported it invokes LKDS() which probably does the L2
+> > or L3 entry and this is for some reason does not work the same way in
+> > Linux than it does with Windows 8+.
 > >
-> > diff --git a/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi b/ar=
-ch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
-> > new file mode 100644
-> > index 000000000000..ddf6ebc9fbe3
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
-> > @@ -0,0 +1,339 @@
-> > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> > +/*
-> > + * Copyright (c) 2019 Fuzhou Rockchip Electronics Co., Ltd
-> > + * Copyright (c) 2019 Vamrs Limited
-> > + * Copyright (c) 2019 Amarula Solutions(India)
-> > + */
-> > +
-> > +#include <dt-bindings/gpio/gpio.h>
-> > +#include <dt-bindings/pinctrl/rockchip.h>
-> > +#include <dt-bindings/pwm/pwm.h>
-> > +
-> > +/ {
-> > +     compatible =3D "vamrs,rk3399pro-vmarc-som", "rockchip,rk3399pro";
-> > +
-> > +     clkin_gmac: external-gmac-clock {
-> > +             compatible =3D "fixed-clock";
-> > +             clock-frequency =3D <125000000>;
-> > +             clock-output-names =3D "clkin_gmac";
-> > +             #clock-cells =3D <0>;
-> > +     };
-> > +
-> > +     vcc5v0_sys: vcc5v0-sys-regulator {
-> > +             compatible =3D "regulator-fixed";
-> > +             regulator-name =3D "vcc5v0_sys";
-> > +             regulator-always-on;
-> > +             regulator-boot-on;
-> > +             regulator-min-microvolt =3D <5000000>;
-> > +             regulator-max-microvolt =3D <5000000>;
->
-> Is vcc5v0_sys really the topmost regulator getting the outside
-> power-supply?
+> > I don't remember if this happens only with nouveau or with the
+> > proprietary driver as well but looking at the nouveau runtime PM suspend
+> > hook (assuming I'm looking at the correct code):
+> >
+> > static int
+> > nouveau_pmops_runtime_suspend(struct device *dev)
+> > {
+> >         struct pci_dev *pdev = to_pci_dev(dev);
+> >         struct drm_device *drm_dev = pci_get_drvdata(pdev);
+> >         int ret;
+> >
+> >         if (!nouveau_pmops_runtime()) {
+> >                 pm_runtime_forbid(dev);
+> >                 return -EBUSY;
+> >         }
+> >
+> >         nouveau_switcheroo_optimus_dsm();
+> >         ret = nouveau_do_suspend(drm_dev, true);
+> >         pci_save_state(pdev);
+> >         pci_disable_device(pdev);
+> >         pci_ignore_hotplug(pdev);
+> >         pci_set_power_state(pdev, PCI_D3cold);
+> >         drm_dev->switch_power_state = DRM_SWITCH_POWER_DYNAMIC_OFF;
+> >         return ret;
+> > }
+> >
+> > Normally PCI drivers leave the PCI bus PM things to PCI core but here
+> > the driver does these. So I wonder if it makes any difference if we let
+> > the core handle all that:
+> >
+> > static int
+> > nouveau_pmops_runtime_suspend(struct device *dev)
+> > {
+> >         struct pci_dev *pdev = to_pci_dev(dev);
+> >         struct drm_device *drm_dev = pci_get_drvdata(pdev);
+> >         int ret;
+> >
+> >         if (!nouveau_pmops_runtime()) {
+> >                 pm_runtime_forbid(dev);
+> >                 return -EBUSY;
+> >         }
+> >
+> >         nouveau_switcheroo_optimus_dsm();
+> >         ret = nouveau_do_suspend(drm_dev, true);
+> >         pci_ignore_hotplug(pdev);
+> >         drm_dev->switch_power_state = DRM_SWITCH_POWER_DYNAMIC_OFF;
+> >         return ret;
+> > }
+> >
+> > and similar for the nouveau_pmops_runtime_resume().
+> >
+> 
+> yeah, I tried that at some point and it didn't help either. The reason
+> we call those from inside Nouveau is to support systems pre _PR where
+> nouveau invokes custom _DSM calls on its own. We could potentially
+> check for that though.
 
-Thanks for pointing this, I forgot to check the vin supply in carrier
-board schematics, yes it is VCC12V_DCIN (with 5V to 24V range) like
-rock-pi-4. Will update the same.
-
->
->
-> > +     };
-> > +
-> > +     vcc_lan: vcc3v3-phy-regulator {
-> > +             compatible =3D "regulator-fixed";
-> > +             regulator-name =3D "vcc_lan";
->
-> vcc_lan / vcc_phy is mostly coming from the vendor bsp in some way
-> and will be named differently in schematics ... also it should be connect=
-ed
-> to the regulator tree.
-
-Infact bsp named this as vcc_phy, I got the vcc_lan from schematics[1]
-page 16. Yes it is using VCCIO_3V3_S0 (SWOUT2 from regulator tree), I
-will mark this regulator.
-
->
-> [...]
->
-> > +&tsadc {
-> > +     status =3D "okay";
-> > +
-> > +     /* tshut mode 0:CRU 1:GPIO */
->
-> I think we can live without the additional comments for properties :-)
-
-True, I have reused it from rock-pi-4 thought that it would compatible
-with old. will remove.
-
-[1] https://dl.radxa.com/rockpin10/docs/hw/VMARC_RK3399Pro_sch_V1.1_2019061=
-9.pdf
-
-Jagan.
+OK.
