@@ -2,67 +2,67 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D98C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 00:15:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C899C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 00:21:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05ED0222B6
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 00:15:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C6F2222B0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 00:21:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727417AbfKTAPZ (ORCPT
+        id S1727437AbfKTAVu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 19:15:25 -0500
-Received: from 216-12-86-13.cv.mvl.ntelos.net ([216.12.86.13]:50208 "EHLO
-        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727226AbfKTAPY (ORCPT
+        Tue, 19 Nov 2019 19:21:50 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:48606 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727202AbfKTAVt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 19:15:24 -0500
-Received: from dalias by brightrain.aerifal.cx with local (Exim 3.15 #2)
-        id 1iXDeU-0006sP-00; Wed, 20 Nov 2019 00:15:22 +0000
-Date:   Tue, 19 Nov 2019 19:15:22 -0500
-From:   Rich Felker <dalias@libc.org>
-To:     linux-fsdevel@vger.kernel.org
-Cc:     musl@lists.openwall.com, linux-kernel@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org
-Subject: getdents64 lost direntries with SMB/NFS and buffer size < unknown
- threshold
-Message-ID: <20191120001522.GA25139@brightrain.aerifal.cx>
+        Tue, 19 Nov 2019 19:21:49 -0500
+Received: from [213.220.153.21] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iXDki-0002tu-38; Wed, 20 Nov 2019 00:21:48 +0000
+Date:   Wed, 20 Nov 2019 01:21:47 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Joel Fernandes <joel@joelfernandes.org>
+Subject: Re: [PATCH] fork: fix pidfd_poll()'s return type
+Message-ID: <20191120002145.skgtkx2f5dxagx4f@wittgenstein>
+References: <20191120000722.30605-1-luc.vanoostenryck@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20191120000722.30605-1-luc.vanoostenryck@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-An issue was reported today on the Alpine Linux tracker at
-https://gitlab.alpinelinux.org/alpine/aports/issues/10960 regarding
-readdir results from SMB/NFS shares with musl libc.
+On Wed, Nov 20, 2019 at 01:07:22AM +0100, Luc Van Oostenryck wrote:
+> pidfd_poll() is defined as returning 'unsigned int' but the
+> .poll method is declared as returning '__poll_t', a bitwise type.
+> 
+> Fix this by using the proper return type and using the EPOLL
+> constants instead of the POLL ones, as required for __poll_t.
+> 
+> CC: Joel Fernandes (Google) <joel@joelfernandes.org>
+> CC: Christian Brauner <christian@brauner.io>
+> Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
 
-After a good deal of analysis, we determined the root cause to be that
-the second and subsequent calls to getdents64 are dropping/skipping
-direntries (that have not yet been deleted) when some entries were
-deleted following the previous call. The issue appears to happen only
-when the buffer size passed to getdents64 is below some threshold
-greater than 2k (the size musl uses) but less than 32k (the size glibc
-uses, with which we were unable to reproduce the issue).
+Yeah, that makes sense. Thanks.
 
-My guess at the mechanism of failure is that the kernel has cached
-some entries which it obtained from the FS server based on whatever
-its preferred transfer size is, but didn't yet pass them to userspace
-due to limited buffer space, and then purged the buffer when resuming
-getdents64 after some entries were deleted for reasons related to the
-changes made way back in 0c0308066ca5 (NFS: Fix spurious readdir
-cookie loop messages). If so, any such purge likely needs to be
-delayed until already-buffered results are read, and there may be
-related buggy interactions with seeking that need to be examined.
+This only misses two tags:
 
-The to/cc for this message are just my best guesses. Please cc anyone
-I missed who should be included when replying, and keep me on cc since
-I'm not subscribed to any of these lists but the musl one.
+Fixes: b53b0b9d9a61 ("pidfd: add polling support")
+Cc: stable@vger.kernel.org # 5.3
 
-Rich
+Can you add these two tags to the commit message for v1 and resend with
+stable@vger.kernel.org Cced, please?
+
+Otherwise:
+Reviewed-by: Christian Brauner <christian.brauner@ubuntu.com>
