@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E76C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:29:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F7C0C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:29:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FE2320637
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:29:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1140F206B6
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:29:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RXzBbTxi"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DRT/r8bQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731717AbfKTP3n (ORCPT
+        id S1731665AbfKTP3m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 10:29:43 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:27775 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730289AbfKTP17 (ORCPT
+        Wed, 20 Nov 2019 10:29:42 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:21312 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730059AbfKTP17 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 Nov 2019 10:27:59 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574263678;
+        s=mimecast20190719; t=1574263677;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=9oxWLwTy47J+tzZaOdCwVQ5LOnRZ91Cpm73P3NJ1un4=;
-        b=RXzBbTxiiXpRcoI0fyYK9J4pA4MWHIRki6dhFgaElXycyPBSbdMvkHHIphaSz64LvGwC+a
-        pLQKnk2vcawHKaBUtXYYpgbatobzP2ZPMGBhT65nhD1J7uhqOcRYeon7+ZTCZij41ETRuO
-        Xdm3Ybe1xnpJlAYj5LzDYX65ZvmwSQY=
+        bh=1umMJVZbLATyePZ1WLrkX83gduygQ8xx6g6UXfwxiqM=;
+        b=DRT/r8bQ3kzKH/j5Losy/5SEjvSR0EsTCmKE0wutM7KtMkE8kxLbZUs+wzBkoUBYdtRptr
+        MpkPKg4i6/165K6cNGl0PjfWjXdtcFI3tXxu7X6C5hiDfT+Bw3nG617hYaDcZD50hE3mFk
+        hvP660Ai8C37AKB56q/fwOLX7JuyH9c=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-103-X9RhepC3PlqBsT6u-NEpEA-1; Wed, 20 Nov 2019 10:27:54 -0500
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+ us-mta-402-8Dp5fUx5Psq2OYTpzAwFHA-1; Wed, 20 Nov 2019 10:27:54 -0500
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3257E800A02;
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0F4391005510;
         Wed, 20 Nov 2019 15:27:53 +0000 (UTC)
 Received: from coeurl.usersys.redhat.com (ovpn-123-90.rdu2.redhat.com [10.10.123.90])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C3C0566836;
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C96596055B;
         Wed, 20 Nov 2019 15:27:52 +0000 (UTC)
 Received: by coeurl.usersys.redhat.com (Postfix, from userid 1000)
-        id 97E3620AAD; Wed, 20 Nov 2019 10:27:50 -0500 (EST)
+        id ADBF120AC9; Wed, 20 Nov 2019 10:27:50 -0500 (EST)
 From:   Scott Mayhew <smayhew@redhat.com>
 To:     anna.schumaker@netapp.com, trond.myklebust@hammerspace.com
 Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk,
         linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v5 23/27] NFS: rename nfs_fs_context pointer arg in a few functions
-Date:   Wed, 20 Nov 2019 10:27:46 -0500
-Message-Id: <20191120152750.6880-24-smayhew@redhat.com>
+Subject: [PATCH v5 27/27] NFS: Attach supplementary error information to fs_context.
+Date:   Wed, 20 Nov 2019 10:27:50 -0500
+Message-Id: <20191120152750.6880-28-smayhew@redhat.com>
 In-Reply-To: <20191120152750.6880-1-smayhew@redhat.com>
 References: <20191120152750.6880-1-smayhew@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-MC-Unique: X9RhepC3PlqBsT6u-NEpEA-1
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: 8Dp5fUx5Psq2OYTpzAwFHA-1
 X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: quoted-printable
@@ -68,249 +68,374 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Split out from commit "NFS: Add fs_context support."
 
-Rename cfg to ctx in nfs_init_server(), nfs_verify_authflavors(),
-and nfs_request_mount().  No functional changes.
+Add wrappers nfs_errorf(), nfs_invalf(), and nfs_warnf() which log error
+information to the fs_context.  Convert some printk's to use these new
+wrappers instead.
 
 Signed-off-by: Scott Mayhew <smayhew@redhat.com>
 ---
- fs/nfs/client.c | 62 ++++++++++++++++++++++++-------------------------
- fs/nfs/super.c  | 54 +++++++++++++++++++++---------------------
- 2 files changed, 58 insertions(+), 58 deletions(-)
+ fs/nfs/fs_context.c | 105 +++++++++++++++-----------------------------
+ fs/nfs/getroot.c    |   3 ++
+ fs/nfs/internal.h   |   4 ++
+ fs/nfs/namespace.c  |   2 +-
+ fs/nfs/nfs4super.c  |   2 +
+ fs/nfs/super.c      |   4 +-
+ 6 files changed, 48 insertions(+), 72 deletions(-)
 
-diff --git a/fs/nfs/client.c b/fs/nfs/client.c
-index 1afd796a3706..511d1d629786 100644
---- a/fs/nfs/client.c
-+++ b/fs/nfs/client.c
-@@ -648,27 +648,27 @@ EXPORT_SYMBOL_GPL(nfs_init_client);
-  * Create a version 2 or 3 client
-  */
- static int nfs_init_server(struct nfs_server *server,
--=09=09=09   const struct nfs_fs_context *cfg,
-+=09=09=09   const struct nfs_fs_context *ctx,
- =09=09=09   struct nfs_subversion *nfs_mod)
- {
- =09struct rpc_timeout timeparms;
- =09struct nfs_client_initdata cl_init =3D {
--=09=09.hostname =3D cfg->nfs_server.hostname,
--=09=09.addr =3D (const struct sockaddr *)&cfg->nfs_server.address,
--=09=09.addrlen =3D cfg->nfs_server.addrlen,
-+=09=09.hostname =3D ctx->nfs_server.hostname,
-+=09=09.addr =3D (const struct sockaddr *)&ctx->nfs_server.address,
-+=09=09.addrlen =3D ctx->nfs_server.addrlen,
- =09=09.nfs_mod =3D nfs_mod,
--=09=09.proto =3D cfg->nfs_server.protocol,
--=09=09.net =3D cfg->net,
-+=09=09.proto =3D ctx->nfs_server.protocol,
-+=09=09.net =3D ctx->net,
- =09=09.timeparms =3D &timeparms,
- =09=09.cred =3D server->cred,
--=09=09.nconnect =3D cfg->nfs_server.nconnect,
-+=09=09.nconnect =3D ctx->nfs_server.nconnect,
- =09};
- =09struct nfs_client *clp;
- =09int error;
-=20
--=09nfs_init_timeout_values(&timeparms, cfg->nfs_server.protocol,
--=09=09=09=09cfg->timeo, cfg->retrans);
--=09if (cfg->flags & NFS_MOUNT_NORESVPORT)
-+=09nfs_init_timeout_values(&timeparms, ctx->nfs_server.protocol,
-+=09=09=09=09ctx->timeo, ctx->retrans);
-+=09if (ctx->flags & NFS_MOUNT_NORESVPORT)
- =09=09set_bit(NFS_CS_NORESVPORT, &cl_init.init_flags);
-=20
- =09/* Allocate or find a client reference we can use */
-@@ -679,46 +679,46 @@ static int nfs_init_server(struct nfs_server *server,
- =09server->nfs_client =3D clp;
-=20
- =09/* Initialise the client representation from the mount data */
--=09server->flags =3D cfg->flags;
--=09server->options =3D cfg->options;
-+=09server->flags =3D ctx->flags;
-+=09server->options =3D ctx->options;
- =09server->caps |=3D NFS_CAP_HARDLINKS|NFS_CAP_SYMLINKS|NFS_CAP_FILEID|
- =09=09NFS_CAP_MODE|NFS_CAP_NLINK|NFS_CAP_OWNER|NFS_CAP_OWNER_GROUP|
- =09=09NFS_CAP_ATIME|NFS_CAP_CTIME|NFS_CAP_MTIME;
-=20
--=09if (cfg->rsize)
--=09=09server->rsize =3D nfs_block_size(cfg->rsize, NULL);
--=09if (cfg->wsize)
--=09=09server->wsize =3D nfs_block_size(cfg->wsize, NULL);
-+=09if (ctx->rsize)
-+=09=09server->rsize =3D nfs_block_size(ctx->rsize, NULL);
-+=09if (ctx->wsize)
-+=09=09server->wsize =3D nfs_block_size(ctx->wsize, NULL);
-=20
--=09server->acregmin =3D cfg->acregmin * HZ;
--=09server->acregmax =3D cfg->acregmax * HZ;
--=09server->acdirmin =3D cfg->acdirmin * HZ;
--=09server->acdirmax =3D cfg->acdirmax * HZ;
-+=09server->acregmin =3D ctx->acregmin * HZ;
-+=09server->acregmax =3D ctx->acregmax * HZ;
-+=09server->acdirmin =3D ctx->acdirmin * HZ;
-+=09server->acdirmax =3D ctx->acdirmax * HZ;
-=20
- =09/* Start lockd here, before we might error out */
- =09error =3D nfs_start_lockd(server);
- =09if (error < 0)
- =09=09goto error;
-=20
--=09server->port =3D cfg->nfs_server.port;
--=09server->auth_info =3D cfg->auth_info;
-+=09server->port =3D ctx->nfs_server.port;
-+=09server->auth_info =3D ctx->auth_info;
-=20
- =09error =3D nfs_init_server_rpcclient(server, &timeparms,
--=09=09=09=09=09  cfg->selected_flavor);
-+=09=09=09=09=09  ctx->selected_flavor);
- =09if (error < 0)
- =09=09goto error;
-=20
- =09/* Preserve the values of mount_server-related mount options */
--=09if (cfg->mount_server.addrlen) {
--=09=09memcpy(&server->mountd_address, &cfg->mount_server.address,
--=09=09=09cfg->mount_server.addrlen);
--=09=09server->mountd_addrlen =3D cfg->mount_server.addrlen;
-+=09if (ctx->mount_server.addrlen) {
-+=09=09memcpy(&server->mountd_address, &ctx->mount_server.address,
-+=09=09=09ctx->mount_server.addrlen);
-+=09=09server->mountd_addrlen =3D ctx->mount_server.addrlen;
+diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
+index e472334b978d..429315c011ae 100644
+--- a/fs/nfs/fs_context.c
++++ b/fs/nfs/fs_context.c
+@@ -318,10 +318,8 @@ static int nfs_auth_info_add(struct fs_context *fc,
+ =09=09=09return 0;
  =09}
--=09server->mountd_version =3D cfg->mount_server.version;
--=09server->mountd_port =3D cfg->mount_server.port;
--=09server->mountd_protocol =3D cfg->mount_server.protocol;
-+=09server->mountd_version =3D ctx->mount_server.version;
-+=09server->mountd_port =3D ctx->mount_server.port;
-+=09server->mountd_protocol =3D ctx->mount_server.protocol;
 =20
--=09server->namelen  =3D cfg->namlen;
-+=09server->namelen  =3D ctx->namlen;
+-=09if (auth_info->flavor_len + 1 >=3D max_flavor_len) {
+-=09=09dfprintk(MOUNT, "NFS: too many sec=3D flavors\n");
+-=09=09return -EINVAL;
+-=09}
++=09if (auth_info->flavor_len + 1 >=3D max_flavor_len)
++=09=09return nfs_invalf(fc, "NFS: too many sec=3D flavors");
+=20
+ =09auth_info->flavors[auth_info->flavor_len++] =3D flavor;
  =09return 0;
+@@ -378,9 +376,7 @@ static int nfs_parse_security_flavors(struct fs_context=
+ *fc,
+ =09=09=09pseudoflavor =3D RPC_AUTH_GSS_SPKMP;
+ =09=09=09break;
+ =09=09default:
+-=09=09=09dfprintk(MOUNT,
+-=09=09=09=09 "NFS: sec=3D option '%s' not recognized\n", p);
+-=09=09=09return -EINVAL;
++=09=09=09return nfs_invalf(fc, "NFS: sec=3D%s option not recognized", p);
+ =09=09}
 =20
- error:
-diff --git a/fs/nfs/super.c b/fs/nfs/super.c
-index 296079b7d439..bb51618df142 100644
---- a/fs/nfs/super.c
-+++ b/fs/nfs/super.c
-@@ -726,11 +726,11 @@ bool nfs_auth_info_match(const struct nfs_auth_info *=
-auth_info,
- EXPORT_SYMBOL_GPL(nfs_auth_info_match);
-=20
- /*
-- * Ensure that a specified authtype in cfg->auth_info is supported by
-- * the server. Returns 0 and sets cfg->selected_flavor if it's ok, and
-+ * Ensure that a specified authtype in ctx->auth_info is supported by
-+ * the server. Returns 0 and sets ctx->selected_flavor if it's ok, and
-  * -EACCES if not.
-  */
--static int nfs_verify_authflavors(struct nfs_fs_context *cfg,
-+static int nfs_verify_authflavors(struct nfs_fs_context *ctx,
- =09=09=09=09  rpc_authflavor_t *server_authlist,
- =09=09=09=09  unsigned int count)
- {
-@@ -753,7 +753,7 @@ static int nfs_verify_authflavors(struct nfs_fs_context=
- *cfg,
- =09for (i =3D 0; i < count; i++) {
- =09=09flavor =3D server_authlist[i];
-=20
--=09=09if (nfs_auth_info_match(&cfg->auth_info, flavor))
-+=09=09if (nfs_auth_info_match(&ctx->auth_info, flavor))
- =09=09=09goto out;
-=20
- =09=09if (flavor =3D=3D RPC_AUTH_NULL)
-@@ -761,7 +761,7 @@ static int nfs_verify_authflavors(struct nfs_fs_context=
- *cfg,
+ =09=09ret =3D nfs_auth_info_add(fc, &ctx->auth_info, pseudoflavor);
+@@ -425,8 +421,7 @@ static int nfs_parse_version_string(struct fs_context *=
+fc,
+ =09=09ctx->minorversion =3D 2;
+ =09=09break;
+ =09default:
+-=09=09dfprintk(MOUNT, "NFS:   Unsupported NFS version\n");
+-=09=09return -EINVAL;
++=09=09return nfs_invalf(fc, "NFS: Unsupported NFS version");
  =09}
-=20
- =09if (found_auth_null) {
--=09=09flavor =3D cfg->auth_info.flavors[0];
-+=09=09flavor =3D ctx->auth_info.flavors[0];
- =09=09goto out;
- =09}
-=20
-@@ -770,8 +770,8 @@ static int nfs_verify_authflavors(struct nfs_fs_context=
- *cfg,
- =09return -EACCES;
-=20
- out:
--=09cfg->selected_flavor =3D flavor;
--=09dfprintk(MOUNT, "NFS: using auth flavor %u\n", cfg->selected_flavor);
-+=09ctx->selected_flavor =3D flavor;
-+=09dfprintk(MOUNT, "NFS: using auth flavor %u\n", ctx->selected_flavor);
  =09return 0;
  }
+@@ -451,10 +446,8 @@ static int nfs_fs_context_parse_param(struct fs_contex=
+t *fc,
 =20
-@@ -779,50 +779,50 @@ static int nfs_verify_authflavors(struct nfs_fs_conte=
-xt *cfg,
-  * Use the remote server's MOUNT service to request the NFS file handle
-  * corresponding to the provided path.
-  */
--static int nfs_request_mount(struct nfs_fs_context *cfg,
-+static int nfs_request_mount(struct nfs_fs_context *ctx,
- =09=09=09     struct nfs_fh *root_fh,
- =09=09=09     rpc_authflavor_t *server_authlist,
- =09=09=09     unsigned int *server_authlist_len)
- {
- =09struct nfs_mount_request request =3D {
- =09=09.sap=09=09=3D (struct sockaddr *)
--=09=09=09=09=09=09&cfg->mount_server.address,
--=09=09.dirpath=09=3D cfg->nfs_server.export_path,
--=09=09.protocol=09=3D cfg->mount_server.protocol,
-+=09=09=09=09=09=09&ctx->mount_server.address,
-+=09=09.dirpath=09=3D ctx->nfs_server.export_path,
-+=09=09.protocol=09=3D ctx->mount_server.protocol,
- =09=09.fh=09=09=3D root_fh,
--=09=09.noresvport=09=3D cfg->flags & NFS_MOUNT_NORESVPORT,
-+=09=09.noresvport=09=3D ctx->flags & NFS_MOUNT_NORESVPORT,
- =09=09.auth_flav_len=09=3D server_authlist_len,
- =09=09.auth_flavs=09=3D server_authlist,
--=09=09.net=09=09=3D cfg->net,
-+=09=09.net=09=09=3D ctx->net,
- =09};
- =09int status;
-=20
--=09if (cfg->mount_server.version =3D=3D 0) {
--=09=09switch (cfg->version) {
-+=09if (ctx->mount_server.version =3D=3D 0) {
-+=09=09switch (ctx->version) {
- =09=09=09default:
--=09=09=09=09cfg->mount_server.version =3D NFS_MNT3_VERSION;
-+=09=09=09=09ctx->mount_server.version =3D NFS_MNT3_VERSION;
- =09=09=09=09break;
- =09=09=09case 2:
--=09=09=09=09cfg->mount_server.version =3D NFS_MNT_VERSION;
-+=09=09=09=09ctx->mount_server.version =3D NFS_MNT_VERSION;
+ =09switch (opt) {
+ =09case Opt_source:
+-=09=09if (fc->source) {
+-=09=09=09dfprintk(MOUNT, "NFS: Multiple sources not supported\n");
+-=09=09=09return -EINVAL;
+-=09=09}
++=09=09if (fc->source)
++=09=09=09return nfs_invalf(fc, "NFS: Multiple sources not supported");
+ =09=09fc->source =3D param->string;
+ =09=09param->string =3D NULL;
+ =09=09break;
+@@ -664,8 +657,7 @@ static int nfs_fs_context_parse_param(struct fs_context=
+ *fc,
+ =09=09=09xprt_load_transport(param->string);
+ =09=09=09break;
+ =09=09default:
+-=09=09=09dfprintk(MOUNT, "NFS:   unrecognized transport protocol\n");
+-=09=09=09return -EINVAL;
++=09=09=09return nfs_invalf(fc, "NFS: Unrecognized transport protocol");
  =09=09}
+=20
+ =09=09ctx->protofamily =3D protofamily;
+@@ -688,8 +680,7 @@ static int nfs_fs_context_parse_param(struct fs_context=
+ *fc,
+ =09=09=09break;
+ =09=09case Opt_xprt_rdma: /* not used for side protocols */
+ =09=09default:
+-=09=09=09dfprintk(MOUNT, "NFS:   unrecognized transport protocol\n");
+-=09=09=09return -EINVAL;
++=09=09=09return nfs_invalf(fc, "NFS: Unrecognized transport protocol");
+ =09=09}
+ =09=09ctx->mountfamily =3D mountfamily;
+ =09=09break;
+@@ -774,13 +765,11 @@ static int nfs_fs_context_parse_param(struct fs_conte=
+xt *fc,
+ =09return 0;
+=20
+ out_invalid_value:
+-=09printk(KERN_INFO "NFS: Bad mount option value specified\n");
+-=09return -EINVAL;
++=09return nfs_invalf(fc, "NFS: Bad mount option value specified");
+ out_invalid_address:
+-=09printk(KERN_INFO "NFS: Bad IP address specified\n");
+-=09return -EINVAL;
++=09return nfs_invalf(fc, "NFS: Bad IP address specified");
+ out_of_bounds:
+-=09printk(KERN_INFO "NFS: Value for '%s' out of range\n", param->key);
++=09nfs_invalf(fc, "NFS: Value for '%s' out of range", param->key);
+ =09return -ERANGE;
+ }
+=20
+@@ -846,19 +835,15 @@ static int nfs_parse_source(struct fs_context *fc,
+ =09return 0;
+=20
+ out_bad_devname:
+-=09dfprintk(MOUNT, "NFS: device name not in host:path format\n");
+-=09return -EINVAL;
+-
++=09return nfs_invalf(fc, "NFS: device name not in host:path format");
+ out_nomem:
+-=09dfprintk(MOUNT, "NFS: not enough memory to parse device name\n");
++=09nfs_errorf(fc, "NFS: not enough memory to parse device name");
+ =09return -ENOMEM;
+-
+ out_hostname:
+-=09dfprintk(MOUNT, "NFS: server hostname too long\n");
++=09nfs_errorf(fc, "NFS: server hostname too long");
+ =09return -ENAMETOOLONG;
+-
+ out_path:
+-=09dfprintk(MOUNT, "NFS: export pathname too long\n");
++=09nfs_errorf(fc, "NFS: export pathname too long");
+ =09return -ENAMETOOLONG;
+ }
+=20
+@@ -1015,29 +1000,23 @@ static int nfs23_parse_monolithic(struct fs_context=
+ *fc,
+ =09=09ctx->skip_reconfig_option_check =3D true;
+ =09=09return 0;
  =09}
--=09request.version =3D cfg->mount_server.version;
-+=09request.version =3D ctx->mount_server.version;
+-=09dfprintk(MOUNT, "NFS: mount program didn't pass any mount data\n");
+-=09return -EINVAL;
++=09return nfs_invalf(fc, "NFS: mount program didn't pass any mount data");
 =20
--=09if (cfg->mount_server.hostname)
--=09=09request.hostname =3D cfg->mount_server.hostname;
-+=09if (ctx->mount_server.hostname)
-+=09=09request.hostname =3D ctx->mount_server.hostname;
- =09else
--=09=09request.hostname =3D cfg->nfs_server.hostname;
-+=09=09request.hostname =3D ctx->nfs_server.hostname;
+ out_no_v3:
+-=09dfprintk(MOUNT, "NFS: nfs_mount_data version %d does not support v3\n",
+-=09=09 data->version);
+-=09return -EINVAL;
++=09return nfs_invalf(fc, "NFS: nfs_mount_data version does not support v3"=
+);
 =20
- =09/*
- =09 * Construct the mount server's address.
- =09 */
--=09if (cfg->mount_server.address.sa_family =3D=3D AF_UNSPEC) {
--=09=09memcpy(request.sap, &cfg->nfs_server.address,
--=09=09       cfg->nfs_server.addrlen);
--=09=09cfg->mount_server.addrlen =3D cfg->nfs_server.addrlen;
-+=09if (ctx->mount_server.address.sa_family =3D=3D AF_UNSPEC) {
-+=09=09memcpy(request.sap, &ctx->nfs_server.address,
-+=09=09       ctx->nfs_server.addrlen);
-+=09=09ctx->mount_server.addrlen =3D ctx->nfs_server.addrlen;
+ out_no_sec:
+-=09dfprintk(MOUNT, "NFS: nfs_mount_data version supports only AUTH_SYS\n")=
+;
+-=09return -EINVAL;
++=09return nfs_invalf(fc, "NFS: nfs_mount_data version supports only AUTH_S=
+YS");
+=20
+ out_nomem:
+-=09dfprintk(MOUNT, "NFS: not enough memory to handle mount options\n");
++=09dfprintk(MOUNT, "NFS: not enough memory to handle mount options");
+ =09return -ENOMEM;
+=20
+ out_no_address:
+-=09dfprintk(MOUNT, "NFS: mount program didn't pass remote address\n");
+-=09return -EINVAL;
++=09return nfs_invalf(fc, "NFS: mount program didn't pass remote address");
+=20
+ out_invalid_fh:
+-=09dfprintk(MOUNT, "NFS: invalid root filehandle\n");
+-=09return -EINVAL;
++=09return nfs_invalf(fc, "NFS: invalid root filehandle");
+ }
+=20
+ #if IS_ENABLED(CONFIG_NFS_V4)
+@@ -1132,21 +1111,17 @@ static int nfs4_parse_monolithic(struct fs_context =
+*fc,
+ =09=09ctx->skip_reconfig_option_check =3D true;
+ =09=09return 0;
  =09}
--=09request.salen =3D cfg->mount_server.addrlen;
--=09nfs_set_port(request.sap, &cfg->mount_server.port, 0);
-+=09request.salen =3D ctx->mount_server.addrlen;
-+=09nfs_set_port(request.sap, &ctx->mount_server.port, 0);
+-=09dfprintk(MOUNT, "NFS4: mount program didn't pass any mount data\n");
+-=09return -EINVAL;
++=09return nfs_invalf(fc, "NFS4: mount program didn't pass any mount data")=
+;
 =20
- =09/*
- =09 * Now ask the mount server to map our export path
+ out_inval_auth:
+-=09dfprintk(MOUNT, "NFS4: Invalid number of RPC auth flavours %d\n",
+-=09=09 data->auth_flavourlen);
+-=09return -EINVAL;
++=09return nfs_invalf(fc, "NFS4: Invalid number of RPC auth flavours %d",
++=09=09      data->auth_flavourlen);
+=20
+ out_no_address:
+-=09dfprintk(MOUNT, "NFS4: mount program didn't pass remote address\n");
+-=09return -EINVAL;
++=09return nfs_invalf(fc, "NFS4: mount program didn't pass remote address")=
+;
+=20
+ out_invalid_transport_udp:
+-=09dfprintk(MOUNT, "NFSv4: Unsupported transport protocol udp\n");
+-=09return -EINVAL;
++=09return nfs_invalf(fc, "NFSv4: Unsupported transport protocol udp");
+ }
+ #endif
+=20
+@@ -1164,8 +1139,7 @@ static int nfs_fs_context_parse_monolithic(struct fs_=
+context *fc,
+ =09=09return nfs4_parse_monolithic(fc, data);
+ #endif
+=20
+-=09dfprintk(MOUNT, "NFS: Unsupported monolithic data version\n");
+-=09return -EINVAL;
++=09return nfs_invalf(fc, "NFS: Unsupported monolithic data version");
+ }
+=20
+ /*
+@@ -1253,32 +1227,25 @@ static int nfs_fs_context_validate(struct fs_contex=
+t *fc)
+ =09return 0;
+=20
+ out_no_device_name:
+-=09dfprintk(MOUNT, "NFS: Device name not specified\n");
+-=09return -EINVAL;
++=09return nfs_invalf(fc, "NFS: Device name not specified");
+ out_v4_not_compiled:
+-=09dfprintk(MOUNT, "NFS: NFSv4 is not compiled into kernel\n");
++=09nfs_errorf(fc, "NFS: NFSv4 is not compiled into kernel");
+ =09return -EPROTONOSUPPORT;
+ out_invalid_transport_udp:
+-=09dfprintk(MOUNT, "NFSv4: Unsupported transport protocol udp\n");
+-=09return -EINVAL;
++=09return nfs_invalf(fc, "NFSv4: Unsupported transport protocol udp");
+ out_no_address:
+-=09dfprintk(MOUNT, "NFS: mount program didn't pass remote address\n");
+-=09return -EINVAL;
++=09return nfs_invalf(fc, "NFS: mount program didn't pass remote address");
+ out_mountproto_mismatch:
+-=09dfprintk(MOUNT, "NFS: Mount server address does not match mountproto=3D=
+ option\n");
+-=09return -EINVAL;
++=09return nfs_invalf(fc, "NFS: Mount server address does not match mountpr=
+oto=3D option");
+ out_proto_mismatch:
+-=09dfprintk(MOUNT, "NFS: Server address does not match proto=3D option\n")=
+;
+-=09return -EINVAL;
++=09return nfs_invalf(fc, "NFS: Server address does not match proto=3D opti=
+on");
+ out_minorversion_mismatch:
+-=09dfprintk(MOUNT, "NFS: Mount option vers=3D%u does not support minorvers=
+ion=3D%u\n",
++=09return nfs_invalf(fc, "NFS: Mount option vers=3D%u does not support min=
+orversion=3D%u",
+ =09=09=09  ctx->version, ctx->minorversion);
+-=09return -EINVAL;
+ out_migration_misuse:
+-=09dfprintk(MOUNT, "NFS: 'Migration' not supported for this NFS version\n"=
+);
+-=09return -EINVAL;
++=09return nfs_invalf(fc, "NFS: 'Migration' not supported for this NFS vers=
+ion");
+ out_version_unavailable:
+-=09dfprintk(MOUNT, "NFS: Version unavailable\n");
++=09nfs_errorf(fc, "NFS: Version unavailable");
+ =09return ret;
+ }
+=20
+diff --git a/fs/nfs/getroot.c b/fs/nfs/getroot.c
+index ab45496d23a6..b012c2668a1f 100644
+--- a/fs/nfs/getroot.c
++++ b/fs/nfs/getroot.c
+@@ -86,6 +86,7 @@ int nfs_get_root(struct super_block *s, struct fs_context=
+ *fc)
+ =09error =3D server->nfs_client->rpc_ops->getroot(server, ctx->mntfh, &fsi=
+nfo);
+ =09if (error < 0) {
+ =09=09dprintk("nfs_get_root: getattr error =3D %d\n", -error);
++=09=09nfs_errorf(fc, "NFS: Couldn't getattr on root");
+ =09=09goto out_fattr;
+ =09}
+=20
+@@ -93,6 +94,7 @@ int nfs_get_root(struct super_block *s, struct fs_context=
+ *fc)
+ =09if (IS_ERR(inode)) {
+ =09=09dprintk("nfs_get_root: get root inode failed\n");
+ =09=09error =3D PTR_ERR(inode);
++=09=09nfs_errorf(fc, "NFS: Couldn't get root inode");
+ =09=09goto out_fattr;
+ =09}
+=20
+@@ -108,6 +110,7 @@ int nfs_get_root(struct super_block *s, struct fs_conte=
+xt *fc)
+ =09if (IS_ERR(root)) {
+ =09=09dprintk("nfs_get_root: get root dentry failed\n");
+ =09=09error =3D PTR_ERR(root);
++=09=09nfs_errorf(fc, "NFS: Couldn't get root dentry");
+ =09=09goto out_fattr;
+ =09}
+=20
+diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
+index 007d058baad1..89a93fd5577a 100644
+--- a/fs/nfs/internal.h
++++ b/fs/nfs/internal.h
+@@ -133,6 +133,10 @@ struct nfs_fs_context {
+ =09} clone_data;
+ };
+=20
++#define nfs_errorf(fc, fmt, ...) errorf(fc, fmt, ## __VA_ARGS__)
++#define nfs_invalf(fc, fmt, ...) invalf(fc, fmt, ## __VA_ARGS__)
++#define nfs_warnf(fc, fmt, ...) warnf(fc, fmt, ## __VA_ARGS__)
++
+ static inline struct nfs_fs_context *nfs_fc2context(const struct fs_contex=
+t *fc)
+ {
+ =09return fc->fs_private;
+diff --git a/fs/nfs/namespace.c b/fs/nfs/namespace.c
+index 3e566a632215..c1824bc6336b 100644
+--- a/fs/nfs/namespace.c
++++ b/fs/nfs/namespace.c
+@@ -278,7 +278,7 @@ int nfs_do_submount(struct fs_context *fc)
+=20
+ =09p =3D nfs_devname(dentry, buffer, 4096);
+ =09if (IS_ERR(p)) {
+-=09=09dprintk("NFS: Couldn't determine submount pathname\n");
++=09=09nfs_errorf(fc, "NFS: Couldn't determine submount pathname");
+ =09=09ret =3D PTR_ERR(p);
+ =09} else {
+ =09=09ret =3D vfs_parse_fs_string(fc, "source", p, buffer + 4096 - p);
+diff --git a/fs/nfs/nfs4super.c b/fs/nfs/nfs4super.c
+index 3b27c5e3d781..54e9c54bd08d 100644
+--- a/fs/nfs/nfs4super.c
++++ b/fs/nfs/nfs4super.c
+@@ -225,6 +225,7 @@ int nfs4_try_get_tree(struct fs_context *fc)
+ =09=09=09   fc, ctx->nfs_server.hostname,
+ =09=09=09   ctx->nfs_server.export_path);
+ =09if (err) {
++=09=09nfs_errorf(fc, "NFS4: Couldn't follow remote path");
+ =09=09dfprintk(MOUNT, "<-- nfs4_try_get_tree() =3D %d [error]\n", err);
+ =09} else {
+ =09=09dfprintk(MOUNT, "<-- nfs4_try_get_tree() =3D 0\n");
+@@ -247,6 +248,7 @@ int nfs4_get_referral_tree(struct fs_context *fc)
+ =09=09=09    fc, ctx->nfs_server.hostname,
+ =09=09=09    ctx->nfs_server.export_path);
+ =09if (err) {
++=09=09nfs_errorf(fc, "NFS4: Couldn't follow remote path");
+ =09=09dfprintk(MOUNT, "<-- nfs4_get_referral_tree() =3D %d [error]\n", err=
+);
+ =09} else {
+ =09=09dfprintk(MOUNT, "<-- nfs4_get_referral_tree() =3D 0\n");
+diff --git a/fs/nfs/super.c b/fs/nfs/super.c
+index ed0290d5ebf3..76e0198adcfa 100644
+--- a/fs/nfs/super.c
++++ b/fs/nfs/super.c
+@@ -1205,7 +1205,7 @@ int nfs_get_tree_common(struct fs_context *fc)
+ =09fc->s_fs_info =3D NULL;
+ =09if (IS_ERR(s)) {
+ =09=09error =3D PTR_ERR(s);
+-=09=09dfprintk(MOUNT, "NFS: Couldn't get superblock\n");
++=09=09nfs_errorf(fc, "NFS: Couldn't get superblock");
+ =09=09goto out_err_nosb;
+ =09}
+=20
+@@ -1234,7 +1234,7 @@ int nfs_get_tree_common(struct fs_context *fc)
+=20
+ =09error =3D nfs_get_root(s, fc);
+ =09if (error < 0) {
+-=09=09dfprintk(MOUNT, "NFS: Couldn't get root dentry\n");
++=09=09nfs_errorf(fc, "NFS: Couldn't get root dentry");
+ =09=09goto error_splat_super;
+ =09}
+=20
 --=20
 2.17.2
 
