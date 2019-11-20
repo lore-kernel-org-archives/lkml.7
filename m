@@ -2,171 +2,62 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F488C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 08:19:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69552C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 08:20:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C7E12230E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 08:19:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 447922245B
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 08:20:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727877AbfKTITT (ORCPT
+        id S1727834AbfKTIUr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 03:19:19 -0500
-Received: from mga14.intel.com ([192.55.52.115]:62914 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726038AbfKTITT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 03:19:19 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Nov 2019 00:19:17 -0800
-X-IronPort-AV: E=Sophos;i="5.69,221,1571727600"; 
-   d="scan'208";a="200638084"
-Received: from cmhaerte-mobl.ger.corp.intel.com (HELO localhost) ([10.252.49.114])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Nov 2019 00:19:14 -0800
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Julia Lawall <Julia.Lawall@lip6.fr>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     kernel-janitors@vger.kernel.org,
-        Gilles Muller <Gilles.Muller@inria.fr>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Michal Marek <michal.lkml@markovi.net>, cocci@systeme.lip6.fr,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Coccinelle: ptr_ret: drop PTR_ERR_OR_ZERO semantic patch
-In-Reply-To: <1574179017-23787-1-git-send-email-Julia.Lawall@lip6.fr>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <1574179017-23787-1-git-send-email-Julia.Lawall@lip6.fr>
-Date:   Wed, 20 Nov 2019 10:19:26 +0200
-Message-ID: <87y2wbgdtd.fsf@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Wed, 20 Nov 2019 03:20:47 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:33078 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726038AbfKTIUq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 03:20:46 -0500
+Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1iXLEA-0003AR-Bz; Wed, 20 Nov 2019 08:20:42 +0000
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     tiwai@suse.com
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [PATCH] ALSA: hda - Add mute led support for HP ProBook 645 G4
+Date:   Wed, 20 Nov 2019 16:20:35 +0800
+Message-Id: <20191120082035.18937-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 19 Nov 2019, Julia Lawall <Julia.Lawall@lip6.fr> wrote:
-> This mostly made changes that made the code harder
-> to read, so drop it.
+Mic mute led does not work on HP ProBook 645 G4.
+We can use CXT_FIXUP_MUTE_LED_GPIO fixup to support it.
 
-FWIW, I welcome this change.
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+ sound/pci/hda/patch_conexant.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Acked-by: Jani Nikula <jani.nikula@intel.com>
-
->
-> Signed-off-by: Julia Lawall <Julia.Lawall@lip6.fr>
->
-> ---
->  scripts/coccinelle/api/ptr_ret.cocci |   97 -----------------------------------
->  1 file changed, 97 deletions(-)
->
-> diff --git a/scripts/coccinelle/api/ptr_ret.cocci b/scripts/coccinelle/api/ptr_ret.cocci
-> deleted file mode 100644
-> index e76cd5d..0000000
-> --- a/scripts/coccinelle/api/ptr_ret.cocci
-> +++ /dev/null
-> @@ -1,97 +0,0 @@
-> -// SPDX-License-Identifier: GPL-2.0-only
-> -///
-> -/// Use PTR_ERR_OR_ZERO rather than if(IS_ERR(...)) + PTR_ERR
-> -///
-> -// Confidence: High
-> -// Copyright: (C) 2012 Julia Lawall, INRIA/LIP6.
-> -// Copyright: (C) 2012 Gilles Muller, INRIA/LiP6.
-> -// URL: http://coccinelle.lip6.fr/
-> -// Options: --no-includes --include-headers
-> -//
-> -// Keywords: ERR_PTR, PTR_ERR, PTR_ERR_OR_ZERO
-> -// Version min: 2.6.39
-> -//
-> -
-> -virtual context
-> -virtual patch
-> -virtual org
-> -virtual report
-> -
-> -@depends on patch@
-> -expression ptr;
-> -@@
-> -
-> -- if (IS_ERR(ptr)) return PTR_ERR(ptr); else return 0;
-> -+ return PTR_ERR_OR_ZERO(ptr);
-> -
-> -@depends on patch@
-> -expression ptr;
-> -@@
-> -
-> -- if (IS_ERR(ptr)) return PTR_ERR(ptr); return 0;
-> -+ return PTR_ERR_OR_ZERO(ptr);
-> -
-> -@depends on patch@
-> -expression ptr;
-> -@@
-> -
-> -- (IS_ERR(ptr) ? PTR_ERR(ptr) : 0)
-> -+ PTR_ERR_OR_ZERO(ptr)
-> -
-> -@r1 depends on !patch@
-> -expression ptr;
-> -position p1;
-> -@@
-> -
-> -* if@p1 (IS_ERR(ptr)) return PTR_ERR(ptr); else return 0;
-> -
-> -@r2 depends on !patch@
-> -expression ptr;
-> -position p2;
-> -@@
-> -
-> -* if@p2 (IS_ERR(ptr)) return PTR_ERR(ptr); return 0;
-> -
-> -@r3 depends on !patch@
-> -expression ptr;
-> -position p3;
-> -@@
-> -
-> -* IS_ERR@p3(ptr) ? PTR_ERR(ptr) : 0
-> -
-> -@script:python depends on org@
-> -p << r1.p1;
-> -@@
-> -
-> -coccilib.org.print_todo(p[0], "WARNING: PTR_ERR_OR_ZERO can be used")
-> -
-> -
-> -@script:python depends on org@
-> -p << r2.p2;
-> -@@
-> -
-> -coccilib.org.print_todo(p[0], "WARNING: PTR_ERR_OR_ZERO can be used")
-> -
-> -@script:python depends on org@
-> -p << r3.p3;
-> -@@
-> -
-> -coccilib.org.print_todo(p[0], "WARNING: PTR_ERR_OR_ZERO can be used")
-> -
-> -@script:python depends on report@
-> -p << r1.p1;
-> -@@
-> -
-> -coccilib.report.print_report(p[0], "WARNING: PTR_ERR_OR_ZERO can be used")
-> -
-> -@script:python depends on report@
-> -p << r2.p2;
-> -@@
-> -
-> -coccilib.report.print_report(p[0], "WARNING: PTR_ERR_OR_ZERO can be used")
-> -
-> -@script:python depends on report@
-> -p << r3.p3;
-> -@@
-> -
-> -coccilib.report.print_report(p[0], "WARNING: PTR_ERR_OR_ZERO can be used")
->
-
+diff --git a/sound/pci/hda/patch_conexant.c b/sound/pci/hda/patch_conexant.c
+index 968d3caab6ac..90aa0f400a57 100644
+--- a/sound/pci/hda/patch_conexant.c
++++ b/sound/pci/hda/patch_conexant.c
+@@ -910,6 +910,7 @@ static const struct snd_pci_quirk cxt5066_fixups[] = {
+ 	SND_PCI_QUIRK(0x103c, 0x837f, "HP ProBook 470 G5", CXT_FIXUP_MUTE_LED_GPIO),
+ 	SND_PCI_QUIRK(0x103c, 0x8299, "HP 800 G3 SFF", CXT_FIXUP_HP_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x103c, 0x829a, "HP 800 G3 DM", CXT_FIXUP_HP_MIC_NO_PRESENCE),
++	SND_PCI_QUIRK(0x103c, 0x8402, "HP ProBook 645 G4", CXT_FIXUP_MUTE_LED_GPIO),
+ 	SND_PCI_QUIRK(0x103c, 0x8455, "HP Z2 G4", CXT_FIXUP_HP_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x103c, 0x8456, "HP Z2 G4 SFF", CXT_FIXUP_HP_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x103c, 0x8457, "HP Z2 G4 mini", CXT_FIXUP_HP_MIC_NO_PRESENCE),
 -- 
-Jani Nikula, Intel Open Source Graphics Center
+2.17.1
+
