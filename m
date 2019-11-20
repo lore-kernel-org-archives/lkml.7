@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0030C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:43:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34794C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:43:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 890FB22528
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:43:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0292F22529
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:43:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574257414;
-	bh=Py4LIxOYIGUpBCC1UaHD/YjPJ7FIC1KP3vrfomorWQ4=;
+	s=default; t=1574257420;
+	bh=VjXyEzf6lsm69woqW0wxohup8cZsSX1WZPFKLuG6ML8=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=bhS/wwqR1NzUi238SrqxoNxPQpYCMmveqMnp923+D687wUDYXFaW86h9KM4Wbeej1
-	 u5O4EIk8mxNuHih32nxJzQXPRHKjNZ7E5c89OhzSVg8xZGVIIsti9LYPMBjvN2HAUe
-	 dWPac9HAeca8mdUjYQYVnw7lBOzDW02QOxrrgoT0=
+	b=mNo6TiBbgdqYxVIykx3eWOJVtVVP7kcoRmcIZe11Kr6D/Kys/Ri8QAc1CMynJ/V1w
+	 ObQXSGrC6oPt5gPIAekUOCHBeYPV/cw5/Pl5U6sUNjLEzulkC3gl0TCNggY/lFsNoO
+	 SMJOwLG3+8D5MDbtJ4VTVILoK184+lZ+KzGd7/PQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731331AbfKTNnd (ORCPT
+        id S1731493AbfKTNni (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 08:43:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51398 "EHLO mail.kernel.org"
+        Wed, 20 Nov 2019 08:43:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730358AbfKTNnc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 08:43:32 -0500
+        id S1730153AbfKTNng (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 08:43:36 -0500
 Received: from localhost.localdomain (unknown [118.189.143.39])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41C8722528;
-        Wed, 20 Nov 2019 13:43:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7C6A22529;
+        Wed, 20 Nov 2019 13:43:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574257411;
-        bh=Py4LIxOYIGUpBCC1UaHD/YjPJ7FIC1KP3vrfomorWQ4=;
+        s=default; t=1574257415;
+        bh=VjXyEzf6lsm69woqW0wxohup8cZsSX1WZPFKLuG6ML8=;
         h=From:To:Cc:Subject:Date:From;
-        b=uZ2j/2yP5YKrzqRAi0SKT0cOMOxFqg18x8GrUXE2shBcd39pZq47f6yVYUchlQN7R
-         W6U8mF5D+RMEmDyCUMcc1owRjIBf9Lngyq7581b0BauJDM8622I+YY0N/45VRPhQPu
-         M4XO2LNN5T0G/2nJqfbdvExXvpscW2ku5clXgpms=
+        b=xjQrrIXa6v2xmhFf5IeJA4RZOAiLpjsYQdxnkTtrIuw5Nb8Bjec84w7zYzXNfurqC
+         Wx3IMp9fXtg1M1fA5ce2iBIAvKrp+ZE7P+GonQMlyYHCyL391K//SQkelDYmGgZmcz
+         Hpuq2o1Qsq3v3pgxk6NEM7fao7fGhT2geLh28qg0=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-nfs@vger.kernel.org
-Subject: [PATCH] nfs: Fix Kconfig indentation
-Date:   Wed, 20 Nov 2019 21:43:27 +0800
-Message-Id: <20191120134327.16582-1-krzk@kernel.org>
+        Miklos Szeredi <miklos@szeredi.hu>,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH] fuse: Fix Kconfig indentation
+Date:   Wed, 20 Nov 2019 21:43:32 +0800
+Message-Id: <20191120134332.16650-1-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -60,27 +59,23 @@ coding style with command like:
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- fs/nfs/Kconfig | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ fs/fuse/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/nfs/Kconfig b/fs/nfs/Kconfig
-index 295a7a21b774..3edf122b8044 100644
---- a/fs/nfs/Kconfig
-+++ b/fs/nfs/Kconfig
-@@ -147,10 +147,10 @@ config NFS_V4_1_MIGRATION
- 	default n
+diff --git a/fs/fuse/Kconfig b/fs/fuse/Kconfig
+index 0635cba19971..eb2a585572dc 100644
+--- a/fs/fuse/Kconfig
++++ b/fs/fuse/Kconfig
+@@ -34,7 +34,7 @@ config VIRTIO_FS
+ 	select VIRTIO
  	help
- 	  This option makes the NFS client advertise to NFSv4.1 servers that
--          it can support NFSv4 migration.
-+	  it can support NFSv4 migration.
+ 	  The Virtio Filesystem allows guests to mount file systems from the
+-          host.
++	  host.
  
--          The NFSv4.1 pieces of the Linux NFSv4 migration implementation are
--          still experimental.  If you are not an NFSv4 developer, say N here.
-+	  The NFSv4.1 pieces of the Linux NFSv4 migration implementation are
-+	  still experimental.  If you are not an NFSv4 developer, say N here.
- 
- config NFS_V4_SECURITY_LABEL
- 	bool
+ 	  If you want to share files between guests or with the host, answer Y
+-          or M.
++	  or M.
 -- 
 2.17.1
 
