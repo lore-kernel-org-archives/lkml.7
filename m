@@ -2,170 +2,95 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65A51C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:46:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAA29C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:46:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F9D820679
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:46:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="enYhKFVD"
+	by mail.kernel.org (Postfix) with ESMTP id B437520679
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:46:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574279182;
+	bh=tZQSoUnx2LoVHeYv7nqGaX2nxJr97Y1u3Rtx9/9nYNM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=YLRjOBkpYlrwJVwu9bGBiNxeMyh1hStzC/RtqKY/PceglpQOn/X0ckCJHa5UFc2NG
+	 tykVidNGeaktQKoSkjIPAVim1rWTslNuev1XS4J0T83wAQbd0E4G8fU9w/ZdPF+KZC
+	 X9nDuQkyQNHIG2W7P0IAPOvH2AkW3DCnnyahYwd4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727671AbfKTTqS (ORCPT
+        id S1727698AbfKTTqV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 14:46:18 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:37110 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726440AbfKTTqR (ORCPT
+        Wed, 20 Nov 2019 14:46:21 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:46035 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727165AbfKTTqT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 14:46:17 -0500
-Received: by mail-ed1-f68.google.com with SMTP id k14so565726eds.4
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 11:46:15 -0800 (PST)
+        Wed, 20 Nov 2019 14:46:19 -0500
+Received: by mail-lf1-f68.google.com with SMTP id 203so492846lfa.12
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 11:46:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
+        d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=719bsazi0dbFes8dSA1CK4DMOVZBwF8jI2z3H6EBZoU=;
-        b=enYhKFVD/qQ/yKh2BY2CWczU4JbompieZuFI33y2NFFVSbXnOSqVl+SEHTkdWN1saQ
-         4mQznt4mf2OphiR/z4qQ35SZgO3lTWW3+l/kFU5g85HINRlUuVCgz5Ua0zPcEjsJO4Y3
-         DeWdV4VW6qrJ7mOVXfa1pSD1gJ3jq5oPFMFyLWWHu61mXxVCNxDkhoRawPsc2sQmkbey
-         MOsyxkmKzNWyjWa4q63IYKfZP3mPtO4C2AkyulH+Umi3o8k1B8TeEltDQDHrEm4jvdwk
-         a1/W+NOAwVZMhooXGi9iJYOICLNsW5IeoD7+UdJhtLXJ7KtGEmas1lYExqYwV8W9rE7w
-         d9bw==
+        bh=E4GCAZq/uEGcflB5X2TUEKapPXWlMYkV/UtTnBsKpco=;
+        b=RxrnU9Zdl4qfrpzjYpyaAwAzY3XG/Ry8sSMBDTALfDbrJKNq6lonVJs86WghdReGSb
+         q45rbMINZQcSQBcg70Nq9j+IAHEwqOnSBqakByyWfvUAPcN9Z19YUXtPjvRykksd/JQX
+         uKQsqv/rx+Vm2XY+DmpAjU7u8YtknBJEgq1hA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=719bsazi0dbFes8dSA1CK4DMOVZBwF8jI2z3H6EBZoU=;
-        b=kDgdCNQ7F5gLfXLwpiZgZax3kLXLVfNVSwGG6d14ZrOM95nrZ+EnqRKLP6z2e+J3yi
-         1MHw354uIsvFBjQ4biIdmdaaDkL4A83JvZEDOKk23I7whH+maCPnajZ6zuiHCk2y6Y9+
-         R/Ow5g6WKcrfTtJrSrRUY+vZNdopCaD71nKfz17SDurec/UBSJbIqARWd2hlLHUc/uP8
-         IoHN+DoBsttP/p0HvgR2JFQoqUSbsTb6tY6YNBQzfeoMFtEVa9wMq+VTPEyK0tNsCMDn
-         CVXIXAA4DcnAduNET9s9bJ1VcB9feHldN8LUxJhYgl6k/YTcxgsd2fKtEuvUaSNuDdti
-         /9Dw==
-X-Gm-Message-State: APjAAAXPAUrtOKWMDvSzmF3oL6WtEf5JrThPIggM0jgVpD4/YszXj9/b
-        zoALPQ1Gl5gXUB3I++2aC6bK8hw0UHzR0gTcEcTBXw==
-X-Google-Smtp-Source: APXvYqyGGB5Ejm+dAfU7oHFOo9IaMoTis9GuQGsrePKYkgnhdxKU0iaPnczimnWR29TkDLsiEwVXYHoZHPzaOMk4388=
-X-Received: by 2002:a17:906:e88:: with SMTP id p8mr7383771ejf.15.1574279175132;
- Wed, 20 Nov 2019 11:46:15 -0800 (PST)
+        bh=E4GCAZq/uEGcflB5X2TUEKapPXWlMYkV/UtTnBsKpco=;
+        b=dhV2wPcxY1X3didyb0P5SgjYaYHVM8cVLkDPHf7TlWo0oN0JETGRTsUZ9Gu+maOHim
+         9PBGax9vu/+n0PfMdN/r4uNwRUUR/xIuE8pyV4J0mPgFBGhh+UAprGGLXdY2eKMAiP+h
+         +6xXryMtM9kw/ioROov8CQ73/wCuzXUDEBHHaPow6/QmaQQ9zIG2Ia8rwLEipuASrkZd
+         iwnd9QqII4wwIEAsnuD5xFJ7YxqeRRDN7H2vRiVFTsEZiJrXeP1490sSrconos7JymT1
+         aZZaNVvWGN4nh1URVFYuuCPsSNuk9oRWxw9cZ1C79dJiMOaLjHKuXwkCmcQQuQDJJ0Lg
+         uF7g==
+X-Gm-Message-State: APjAAAUQoSPFU4f7QdaR1wOKXc7ZuqVtbUP9P3sODe+rj6aRnLcGTMOD
+        SqNpqbX3NGSd4W6WVgeMCj3m5jMET84=
+X-Google-Smtp-Source: APXvYqyV41oziTLd2/JhApZkipoS7Mx/Uzi11QsHJsiZ2nChLAC0xjN5l6LVAVWz3fIXnHLkLL2fwg==
+X-Received: by 2002:a19:f811:: with SMTP id a17mr4334491lff.132.1574279176168;
+        Wed, 20 Nov 2019 11:46:16 -0800 (PST)
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com. [209.85.167.43])
+        by smtp.gmail.com with ESMTPSA id 30sm68551ljw.29.2019.11.20.11.46.15
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 20 Nov 2019 11:46:15 -0800 (PST)
+Received: by mail-lf1-f43.google.com with SMTP id y19so509158lfl.9
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 11:46:15 -0800 (PST)
+X-Received: by 2002:a19:4949:: with SMTP id l9mr4313293lfj.52.1574279174744;
+ Wed, 20 Nov 2019 11:46:14 -0800 (PST)
 MIME-Version: 1.0
-References: <20191119221006.1021520-1-pasha.tatashin@soleen.com>
- <20191120164307.GA19681@lakrids.cambridge.arm.com> <CA+CK2bAkb7zg6ne=PzA7UrQF49J2Sa7rmyWM3Bqugfe00-36ng@mail.gmail.com>
-In-Reply-To: <CA+CK2bAkb7zg6ne=PzA7UrQF49J2Sa7rmyWM3Bqugfe00-36ng@mail.gmail.com>
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-Date:   Wed, 20 Nov 2019 14:46:03 -0500
-Message-ID: <CA+CK2bCX+QGMPzhjj-UmVNb1jG8Z6WNW=L0GiVsTpGrhyqb9tA@mail.gmail.com>
-Subject: Re: [PATCH] arm64: kernel: memory corruptions due non-disabled PAN
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>, will@kernel.org,
-        steve.capper@arm.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Vladimir Murzin <vladimir.murzin@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        allison@lohutok.net, info@metux.net, alexios.zavras@intel.com
-Content-Type: multipart/mixed; boundary="0000000000000326770597cc6f1e"
+References: <CAJKzgVtzD7ULwCDVRSLMCmGJNaMqvx+jVO619t3xuv2oiEsPMQ@mail.gmail.com>
+ <20191119095708.GB21113@dhcp22.suse.cz> <201911201032.67566C6BF@keescook>
+In-Reply-To: <201911201032.67566C6BF@keescook>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 20 Nov 2019 11:45:58 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wjw=fg5WznKfA+NQP78h8qDkF=t3CzH96fACAfULza_hQ@mail.gmail.com>
+Message-ID: <CAHk-=wjw=fg5WznKfA+NQP78h8qDkF=t3CzH96fACAfULza_hQ@mail.gmail.com>
+Subject: Re: Suggested Patch is not working for 22851 Bugzilla issue
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Michal Hocko <mhocko@kernel.org>, Bala S <balas2380@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---0000000000000326770597cc6f1e
-Content-Type: text/plain; charset="UTF-8"
+On Wed, Nov 20, 2019 at 10:39 AM Kees Cook <keescook@chromium.org> wrote:
+> Yes, as Michal mentions, there were legitimate binaries that expected to
+> overlap mappings
 
-> > I see that with CONFIG_ARM64_SW_TTBR0_PAN=y, this means that we may
-> > leave the stale TTBR0 value installed across a context-switch (and have
-> > reproduced that locally), but I'm having some difficulty reproducing the
-> > corruption that you see.
->
-> I will send the full test shortly. Note, I was never able to reproduce
-> it in QEMU, only on real hardware. Also, for some unknown reason after
-> kexec I could not reproduce it only during first boot, so it is
-> somewhat fragile, but I am sure it can be reproduced in other cases as
-> well, it is just my reproducer is not tunes for that.
->
+I'm not sure they were really overlapping as much as "the ELF sections
+were in a bad order and we don't do the whole "optimize loading"
+thing.
 
-Attached is the test program that I used to reproduce memory corruption.
-Test on board with Broadcom's Stingray SoC.
+It's one of those things that *might* be fixed by first creating a
+"simplified/combined map of the ELF sections", and them using mmap()
+on that simplified one. But that code is nasty and hairy.
 
-Without fix:
-# time /tmp/repro
-Corruption: pid 1474 map[0] 1488 cpu 3
-Terminated
-
-real    0m0.088s
-user    0m0.004s
-sys     0m0.071s
-
-With the fix:
-
-# time /tmp/repro
-Test passed, all good
-Terminated
-
-real    1m1.286s
-user    0m0.004s
-sys     0m0.970s
-
-
-
-Pasha
-
---0000000000000326770597cc6f1e
-Content-Type: text/x-csrc; charset="US-ASCII"; name="repro.c"
-Content-Disposition: attachment; filename="repro.c"
-Content-Transfer-Encoding: base64
-Content-ID: <f_k37p5xni0>
-X-Attachment-Id: f_k37p5xni0
-
-I2RlZmluZSBfR05VX1NPVVJDRQojaW5jbHVkZSA8bGludXgvcGVyZl9ldmVudC5oPgojaW5jbHVk
-ZSA8c3lzL21tYW4uaD4KI2luY2x1ZGUgPHN5cy9zeXNpbmZvLmg+CiNpbmNsdWRlIDxzeXMvaW9j
-dGwuaD4KI2luY2x1ZGUgPHN5cy9zeXNjYWxsLmg+CiNpbmNsdWRlIDxzeXMvd2FpdC5oPgojaW5j
-bHVkZSA8c3RyaW5nLmg+CiNpbmNsdWRlIDxzdGRsaWIuaD4KI2luY2x1ZGUgPHNpZ25hbC5oPgoj
-aW5jbHVkZSA8c3RkaW8uaD4KI2luY2x1ZGUgPHNjaGVkLmg+CiNpbmNsdWRlIDx0aW1lLmg+CiNp
-bmNsdWRlIDx1bmlzdGQuaD4KCiNkZWZpbmUgUlVOX1RJTUUJNjAKI2RlZmluZSBTSVpFCQk0MDk2
-CiNkZWZpbmUgTlBST0NTCQk0MDk2CiNkZWZpbmUgTkNQVQkJZ2V0X25wcm9jc19jb25mKCkKI2Rl
-ZmluZSBQQUdFTUFQX0xFTkdUSCA4CnVuc2lnbmVkIGxvbmcgZ2V0X3BhKHZvaWQgKmFkZHIpIHsK
-ICAgRklMRSAqcGFnZW1hcCA9IGZvcGVuKCIvcHJvYy9zZWxmL3BhZ2VtYXAiLCAicmIiKTsKICAg
-dW5zaWduZWQgbG9uZyBvZmZzZXQgPSAodW5zaWduZWQgbG9uZylhZGRyIC8gZ2V0cGFnZXNpemUo
-KSAqIFBBR0VNQVBfTEVOR1RIOwogICB1bnNpZ25lZCBsb25nIHBmbiA9IDA7CgogICBpZihmc2Vl
-ayhwYWdlbWFwLCAodW5zaWduZWQgbG9uZylvZmZzZXQsIFNFRUtfU0VUKSAhPSAwKSB7CiAgICAg
-IGZwcmludGYoc3RkZXJyLCAiRmFpbGVkIHRvIHNlZWsgcGFnZW1hcCB0byBwcm9wZXIgbG9jYXRp
-b25cbiIpOwogICAgICBleGl0KDEpOwogICB9CgogICBmcmVhZCgmcGZuLCAxLCBQQUdFTUFQX0xF
-TkdUSC0xLCBwYWdlbWFwKTsKCiAgIHBmbiAmPSAweDdGRkZGRkZGRkZGRkZGOwoKICAgZmNsb3Nl
-KHBhZ2VtYXApOwoKICAgcmV0dXJuIHBmbiAqIGdldHBhZ2VzaXplKCk7Cn0KCmludApkb193b3Jr
-KCkKewoJaW50ICptYXAsIHBpZDsKCXVuc2lnbmVkIGxvbmcgcGE7CgoJaWYgKGZvcmsoKSkKCQll
-eGl0KDApOwoKCXBpZCA9IGdldHBpZCgpOwoJbWFwID0gbW1hcChOVUxMLCBTSVpFLCBQUk9UX1JF
-QUR8UFJPVF9XUklURSwgTUFQX1NIQVJFRCB8IE1BUF9BTk9OWU1PVVMsCgkJICAgLTEsIDApOwoJ
-bWFwWzBdID0gcGlkOwoJc2NoZWRfeWllbGQoKTsKCWlmIChtYXBbMF0gIT0gcGlkKSB7CgkJZnBy
-aW50ZihzdGRlcnIsICJDb3JydXB0aW9uOiBwaWQgJWQgbWFwWzBdICVkIGNwdSAlZFxuIiwKCQkJ
-cGlkLCBtYXBbMF0sIHNjaGVkX2dldGNwdSgpKTsKCQlraWxsKDAsIFNJR1RFUk0pOwoJCXJldHVy
-biAxOwoJfQoJbXVubWFwKG1hcCwgU0laRSk7CglyZXR1cm4gMDsKfQoKc3RhdGljIHZvaWQgZXZl
-bnRfb3BlbihzdHJ1Y3QgcGVyZl9ldmVudF9hdHRyICpjdHhfZXZlbnRfYXR0ciwgaW50IGNvbmZp
-ZykKewoJaW50IGksIGZkOwoJY3R4X2V2ZW50X2F0dHItPmNvbmZpZyA9IGNvbmZpZzsKCWZvciAo
-aSA9IDA7IGkgPCBOQ1BVOyBpKyspIHsKCQlmZCA9IHN5c2NhbGwoX19OUl9wZXJmX2V2ZW50X29w
-ZW4sIGN0eF9ldmVudF9hdHRyLAoJCQktMSwgaSwgLTEsIDApOwoJCWlvY3RsKGZkLCBQRVJGX0VW
-RU5UX0lPQ19FTkFCTEUsIDApOwoJfQp9CgpzdGF0aWMgdm9pZApwZXJmX2V2ZW50cygpCnsKCXN0
-cnVjdCBwZXJmX2V2ZW50X2F0dHIgY3R4X2V2ZW50X2F0dHI7CgoJbWVtc2V0KCZjdHhfZXZlbnRf
-YXR0ciwgMCwgc2l6ZW9mKHN0cnVjdCBwZXJmX2V2ZW50X2F0dHIpKTsKCWN0eF9ldmVudF9hdHRy
-LnR5cGUgPSBQRVJGX1RZUEVfU09GVFdBUkU7CgljdHhfZXZlbnRfYXR0ci5zaXplID0gc2l6ZW9m
-IChzdHJ1Y3QgcGVyZl9ldmVudF9hdHRyKTsKCWN0eF9ldmVudF9hdHRyLnNhbXBsZV9wZXJpb2Qg
-PSAxOwoJY3R4X2V2ZW50X2F0dHIuc2FtcGxlX3R5cGUgPSBQRVJGX1NBTVBMRV9DQUxMQ0hBSU47
-CgoJZXZlbnRfb3BlbigmY3R4X2V2ZW50X2F0dHIsIFBFUkZfQ09VTlRfU1dfQ1BVX0NMT0NLKTsK
-fQoKaW50Cm1haW4oaW50IGFyZ2MsIGNoYXIgKiphcmd2KQp7CglwaWRfdCBwW05QUk9DU107Cglp
-bnQgaSwgZmQ7CgljcHVfc2V0X3QgIG1hc2s7CgoJQ1BVX1pFUk8oJm1hc2spOwoJZm9yIChpID0g
-MDsgaSA8IE5DUFU7IGkrKykKCQlDUFVfU0VUKGksICZtYXNrKTsKCXNjaGVkX3NldGFmZmluaXR5
-KDAsIHNpemVvZihtYXNrKSwgJm1hc2spOwoKCXBlcmZfZXZlbnRzKCk7Cglmb3IgKGkgPSAwOyBp
-IDwgTlBST0NTOyBpKyspIHsKCQlwW2ldID0gZm9yaygpOwoJCWlmIChwW2ldID09IDApIHsKCQkJ
-Zm9yICg7OykgewoJCQkJaWYgKGRvX3dvcmsoKSkgewoJCQkJCWZwcmludGYoc3RkZXJyLCAiQnVn
-IGlzIGRldGVjdGVkXG4iKTsKCQkJCQlraWxsKDAsIFNJR1RFUk0pOwoJCQkJCWV4aXQoMSk7CgkJ
-CQl9CgkJCX0KCQl9Cgl9CgoJc2xlZXAoUlVOX1RJTUUpOwoJcHJpbnRmKCJUZXN0IHBhc3NlZCwg
-YWxsIGdvb2RcbiIpOwoJa2lsbCgwLCBTSUdURVJNKTsKCXJldHVybiAwOwp9Cg==
---0000000000000326770597cc6f1e--
+             Linus
