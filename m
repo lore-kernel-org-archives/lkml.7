@@ -2,129 +2,116 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1209CC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 07:03:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62ACCC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 07:06:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEE2121D7F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 07:03:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37DED2245B
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 07:06:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="aoAjA12T"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="JRCOnaMp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727691AbfKTHDN (ORCPT
+        id S1727346AbfKTHGQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 02:03:13 -0500
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:11798 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbfKTHDM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 02:03:12 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dd4e52b0000>; Tue, 19 Nov 2019 23:03:07 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 19 Nov 2019 23:03:11 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 19 Nov 2019 23:03:11 -0800
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 20 Nov
- 2019 07:03:10 +0000
-Subject: Re: [PATCH v6 15/24] fs/io_uring: set FOLL_PIN via pin_user_pages()
-To:     Jens Axboe <axboe@kernel.dk>,
-        Andrew Morton <akpm@linux-foundation.org>
-CC:     Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
-        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
-        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
-References: <20191119081643.1866232-1-jhubbard@nvidia.com>
- <20191119081643.1866232-16-jhubbard@nvidia.com>
- <2ae65d1b-a3eb-74ed-afce-c493de5bbfd3@kernel.dk>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <42c80c0a-ad2c-fe74-babd-57680882c7e2@nvidia.com>
-Date:   Tue, 19 Nov 2019 23:03:10 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <2ae65d1b-a3eb-74ed-afce-c493de5bbfd3@kernel.dk>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
+        Wed, 20 Nov 2019 02:06:16 -0500
+Received: from mail-eopbgr40062.outbound.protection.outlook.com ([40.107.4.62]:61158
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725268AbfKTHGP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 02:06:15 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IMFjeYY5YXEq5wUBEBmWQq1+Xf1/cvEcyvSBEgMk78JPy6850XXWrMyrleKFFq3y9O4HF2mBer0oLNGjTfQKEs+LUFn+SKRbGEC+RzzAx/JGvpi2dyIvj0UdyG6IqA8PrCcfONue81taZXYY/XGB4xEEHPhzW3SSqkmWb26Zlu9AMB79Bg3hQH2azRtn2gIjRRMeVeSL8xy/VoL1G5rTbRY9PPkNIVHlzHotfziM+A5cjJroHb18E2Azrc7Th8IAzW8nhw6BsIZMJXA8ZTMXo8u0XBYe4pKKpfw+zBpyqn5Z940M06UOvnliNIB44ZC7wAKmNV+8UfMBHfXMiPMr6g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GR6HH20iOyEobUKXR+uZvsCOLAJEQWDCvThIzSbb8oU=;
+ b=YybgNv96j1t+B0W5gj+vBtyB/Jt2omB6ngmRD2mvmzWLwFMGP/vWaC2GxlvSEVuvS80mLwf3tEcwphyq9OIH11GILnndEYt+EvHPG903CWV1BryCRbDXQdvZK83egVv+5oaSwxenleNRhK4c+ypn+XyP6Pj9nqzfVVvH+w1yR0/5nv5Z3KpraKhCb84BSLSfAbF11r0zbpSjyUDHg25ypgsqqM8dYEOxgjPUm1yr44B43yNbjK2oSaYeyxNq4a920iCRRuojXf1oC1A1hWkbvbfv4ktGBAe/SyyHnyBslqQ6ZklN0IOhkhQap9Ehv8318Cjq62Y4BWxRWg3sYMpuLw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GR6HH20iOyEobUKXR+uZvsCOLAJEQWDCvThIzSbb8oU=;
+ b=JRCOnaMpvkuOLKKycgHeu2a4nfcUwiljoj3bPJHfsE7vRE1CkrroEaYEiOqCxFUND4e4vgSfanxFqZZhflb4LI3Y+a97Nroob2apCFuhBuo+t9mVFYgoM4VFDB5cEMfesY5yf0OTEVWjN4bkGDo1xxRqvI57Y2DPVCK1OpRRNec=
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
+ VI1PR0402MB2846.eurprd04.prod.outlook.com (10.175.25.143) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2451.23; Wed, 20 Nov 2019 07:06:09 +0000
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::89e1:552e:a24d:e72]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::89e1:552e:a24d:e72%3]) with mapi id 15.20.2474.015; Wed, 20 Nov 2019
+ 07:06:09 +0000
+From:   Horia Geanta <horia.geanta@nxp.com>
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
+CC:     Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/5] crypto: caam - use static initialization
+Thread-Topic: [PATCH 1/5] crypto: caam - use static initialization
+Thread-Index: AQHVk+uo5Ig2sdY7ikuWVk1lodRIAQ==
+Date:   Wed, 20 Nov 2019 07:06:09 +0000
+Message-ID: <VI1PR0402MB34852B194D4CB5051732AD41984F0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+References: <20191105151353.6522-1-andrew.smirnov@gmail.com>
+ <20191105151353.6522-2-andrew.smirnov@gmail.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1574233387; bh=ccH+u52vDWCSpx4Mj41DBPFk4Bnr7E1/buLUhbEm50I=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=aoAjA12TDjtYHcqzP6KlOL/T+xFannzF2Ut7WBeMCWKWq7l/9YzjhnMxWFHzZfpR5
-         Iws/71eVjdglCRCFx0borbQjrcWdlbhRBVNYLCTSxJhf+kal1fvOFNYQqlhw4wL9J6
-         MFYFTVnA4OaNermjnVJWu68MlONq0QSjgN/vAiaH7Huv88r7BI/N2hl/4JJ3pl29Td
-         suI6xx3hgozM4FOPwAaNkBjGwwYRC1+cHh6/xlUHPqKTdx1Jisq/17DuqUYf/0K2Yd
-         KJ8+BKNAyQOQiWBn8l76F+wCEq0it7z2sVeN/sAFeVR43NYKvAY4EyGL+PsQeLhyI4
-         eAwjKJTXDphsw==
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=horia.geanta@nxp.com; 
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: a5a7aba7-bc6a-484c-42da-08d76d881efb
+x-ms-traffictypediagnostic: VI1PR0402MB2846:|VI1PR0402MB2846:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR0402MB2846CC650830EF67E6CF152C984F0@VI1PR0402MB2846.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 02272225C5
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(39860400002)(136003)(376002)(396003)(189003)(199004)(91956017)(8936002)(76116006)(476003)(229853002)(86362001)(6246003)(44832011)(186003)(102836004)(4326008)(25786009)(14444005)(256004)(26005)(55016002)(14454004)(316002)(54906003)(66066001)(110136005)(6506007)(4744005)(478600001)(486006)(6436002)(53546011)(9686003)(66946007)(2906002)(33656002)(2501003)(66476007)(66556008)(64756008)(66446008)(74316002)(99286004)(71190400001)(6116002)(305945005)(81156014)(81166006)(3846002)(7736002)(71200400001)(76176011)(7696005)(8676002)(52536014)(5660300002)(446003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB2846;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: /aUCOLC4SVSYr6lWreDcuFKyQ5IK4B+m6yOLhgKvwa6TYVcoLP5OOKYtoe6VKcWH2BloeUA+FVt0PFG+vz+SM2oBwQXzG73aUt6LqOqiqNdxxYYJ3lq9fUCsyVbb0JczyMO972EJM7xzt9Op/vuMQ9jSIQWqsNDtN6G6Wwyi3Bh4rXbIzNo6ooMql6WyfCPHYfmz+JurJMu4TFsPMpofNwQshV8rxWkzHJhyN+XIMn/D/PCsz2ovlHgXXhKg9xe2CW3gYSH6Wt87cywWYFH1aIqOS8bsdODfCI0MW7tdqv9OOdUkFESq60Iax2LyB3JKjWISfz5JYfyEWxXI6zFXG2W5lZI+PEvkGQEUtIZsspPYMlzPpglUr5OparoXIYh6B5Ish5qyVw1VBijzEaZtJs06MeikUe6qHBRQxf/4El1k5zA3Krwtn3qZcBi++jiv
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a5a7aba7-bc6a-484c-42da-08d76d881efb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Nov 2019 07:06:09.7408
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Szydmr9jGULFstq38KMNZshocogd7T3DwOMo7P1mTCCp2tJHEapQ2ItRs73MFsKSdICDyYG2B0x6ocduvX00Rg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB2846
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/19/19 8:10 AM, Jens Axboe wrote:
-> On 11/19/19 1:16 AM, John Hubbard wrote:
->> Convert fs/io_uring to use the new pin_user_pages() call, which sets
->> FOLL_PIN. Setting FOLL_PIN is now required for code that requires
->> tracking of pinned pages, and therefore for any code that calls
->> put_user_page().
->>
->> In partial anticipation of this work, the io_uring code was already
->> calling put_user_page() instead of put_page(). Therefore, in order to
->> convert from the get_user_pages()/put_page() model, to the
->> pin_user_pages()/put_user_page() model, the only change required
->> here is to change get_user_pages() to pin_user_pages().
->>
->> Reviewed-by: Jan Kara <jack@suse.cz>
->> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-> 
-> You dropped my reviewed-by now... Given the file, you'd probably want
-> to keep that.
-
-Hi Jens,
-
-Yes, I was being too conservative I guess. I changed the patch somewhat
-and dropped the reviewed-by because of those changes...I'm adding it
-back for v7 based on this, thanks!
-
-thanks,
--- 
-John Hubbard
-NVIDIA
- 
+On 11/5/2019 5:14 PM, Andrey Smirnov wrote:=0A=
+> @@ -589,8 +592,6 @@ static struct platform_driver caam_jr_driver =3D {=0A=
+>  =0A=
+>  static int __init jr_driver_init(void)=0A=
+>  {=0A=
+> -	spin_lock_init(&driver_data.jr_alloc_lock);=0A=
+> -	INIT_LIST_HEAD(&driver_data.jr_list);=0A=
+>  	return platform_driver_register(&caam_jr_driver);=0A=
+>  }=0A=
+>  =0A=
+And with this change, jr_driver_{init,exit} could be replaced with=0A=
+	module_platform_driver(caam_jr_driver);=0A=
+=0A=
+It's probably worth adding this here even if we later decide=0A=
+that moving away from platform driver for jr is the way to go.=0A=
+=0A=
+Horia=0A=
