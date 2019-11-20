@@ -2,121 +2,169 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 900A4C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C20A6C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:55:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5980420714
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:54:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9306820714
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:55:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="kSPyrNv1"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jtMhRC6P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731547AbfKTPyR (ORCPT
+        id S1731724AbfKTPzA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 10:54:17 -0500
-Received: from mail-eopbgr720089.outbound.protection.outlook.com ([40.107.72.89]:31160
-        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728412AbfKTPyR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 10:54:17 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YqD2cznlrqUV0x49LqzVoMTrx7rh+EkW09iWBuXO3pZXQWunGct5QcNDJfttc0hKPsafhGyJ79OpqUTcOYGQeOopHG90bh8eZUFPIo6AmCC+GB34x04WAIQ6FwXqDQzblcJtjKWNMRFGiLlg6HRn1TyiKAYY/MIuexDY0xSVVFL9mVULmhUYvYz9gz0KYknIZJ7pddFk9BISITZJ7UFlqJSZYipxCss6q++DPi6RUZMvJS/mtYr0108DxZbNVeGw8Lyp96V2N4t+xgHEOkAdb+UgzVagjbRxlUsiGZ9dCr6fpmhRP5/FSF8m4uRmYuzaWD3hcUEudfcMUmjWWzi7wQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Lf7dPVuDhaZUiJRS47A1XJGZv3DlCLTx6vBVOc6mfYI=;
- b=NiXVYW1+se3ZScwSfRtYbZtV1uWYGc7UadbigUyl+YVxNr4MRpCik3AfvSBjEGcHnQLZREmmv69ycl3tzEuxUSBNZCwqNyPM31lBog0pfzrzyc6C3Ve5QuEBfZhtRE5Anb6NnaCDkjxDFNAJYTMQkXJiUOIF9e/+hZZoc/l+EEBzV7H+dhslElpwcRwf6LS366tLtchK6/a7P2xcrmxAVut2XQbZ8RJjQfi/tNUUlzycDHhKTGFJBfmlu8aFh0xvSnSs67bffLnVdcbR+7JN3Rm5Bm0dHwbWpiDwSKiItSqG7/HXZ+vtERvFB64lPQAnuy7MXovWrGO+a0eSeZARCA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
+        Wed, 20 Nov 2019 10:55:00 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:40414 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731558AbfKTPy7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 10:54:59 -0500
+Received: by mail-wm1-f67.google.com with SMTP id y5so111326wmi.5
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 07:54:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Lf7dPVuDhaZUiJRS47A1XJGZv3DlCLTx6vBVOc6mfYI=;
- b=kSPyrNv1GqIENY7Ksk6PFjvrH+O3+ipmonhfweGdrM5oHeNtSjl5j6z04o/T9vqHcW1ysD7SBIAPdYaxbDO9LDaFupooo58esQ5EEYPTBPmp+KjKlHVLchdEgXWzrsVBpo57TsErxrUveyBQyiqrNIeOZumAxWPnOFjL/D/eDLY=
-Received: from MN2PR02MB6400.namprd02.prod.outlook.com (52.132.173.155) by
- MN2PR02MB6815.namprd02.prod.outlook.com (52.135.49.209) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2451.23; Wed, 20 Nov 2019 15:54:11 +0000
-Received: from MN2PR02MB6400.namprd02.prod.outlook.com
- ([fe80::c413:7dde:1e89:f355]) by MN2PR02MB6400.namprd02.prod.outlook.com
- ([fe80::c413:7dde:1e89:f355%7]) with mapi id 15.20.2451.031; Wed, 20 Nov 2019
- 15:54:11 +0000
-From:   Appana Durga Kedareswara Rao <appanad@xilinx.com>
-To:     Marc Kleine-Budde <mkl@pengutronix.de>,
-        Srinivas Neeli <sneeli@xilinx.com>,
-        Michal Simek <michals@xilinx.com>
-CC:     "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        git <git@xilinx.com>,
-        Naga Sureshkumar Relli <nagasure@xilinx.com>
-Subject: RE: [PATCH 0/2] can: xilinx_can: Bug fixes on can driver
-Thread-Topic: [PATCH 0/2] can: xilinx_can: Bug fixes on can driver
-Thread-Index: AQHVn5uyLMKsi4xLzUa9hf24vHCkTKeUAJ6AgAA1G2A=
-Date:   Wed, 20 Nov 2019 15:54:10 +0000
-Message-ID: <MN2PR02MB64002F223821E7BD940B4E54DC4F0@MN2PR02MB6400.namprd02.prod.outlook.com>
-References: <1574251865-19592-1-git-send-email-srinivas.neeli@xilinx.com>
- <e985fd5a-9b0c-f273-d28c-14515dc25e5c@pengutronix.de>
-In-Reply-To: <e985fd5a-9b0c-f273-d28c-14515dc25e5c@pengutronix.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=appanad@xilinx.com; 
-x-originating-ip: [149.199.50.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 8a28c78f-40eb-4754-4f04-08d76dd1e279
-x-ms-traffictypediagnostic: MN2PR02MB6815:|MN2PR02MB6815:
-x-ms-exchange-purlcount: 1
-x-ld-processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR02MB6815BD5AE9D6E3E778648EA3DC4F0@MN2PR02MB6815.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 02272225C5
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(189003)(199004)(498600001)(33656002)(107886003)(66556008)(66446008)(64756008)(66476007)(66946007)(6246003)(4326008)(486006)(3846002)(476003)(81156014)(81166006)(53546011)(6506007)(102836004)(6116002)(7696005)(8676002)(76176011)(8936002)(305945005)(7736002)(5660300002)(26005)(66066001)(52536014)(11346002)(4744005)(446003)(74316002)(110136005)(6636002)(186003)(14454004)(54906003)(966005)(2906002)(25786009)(14444005)(256004)(99286004)(55016002)(229853002)(76116006)(6306002)(71200400001)(71190400001)(9686003)(6436002)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR02MB6815;H:MN2PR02MB6400.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: xilinx.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: XWb0sggiKvI4ccbdtWZt8eqFB/1G6+YTU609bOM8zAZ8Et/mGG2DpfqrqmEBNIh2QOhnd3//RuPuMAqWCnCsrY4w5A0EzG79Umrb55Cg4jyZDLBWdyR7s1wV9oXyUctwC7hKU0ZlYbFU+o3i2uUWcoS2Cg7pnL3mAV3xMrjT5r64dJCKQLOnZqi8HIgHmXJZJjzR00BOIqNx1O/zrw8cILgEgUHntw2Znbn7TkOY1ODq45GyD+FnK4VA2yQIelqattUlQ+wQaYZRJs/UU1nXe1LJkPdOXsP6acDrMqByNC50t8zD+SlRD1z32+Sh8kJICc4dhuipmq27WHggkBrYSFDPoemHulsNNo3PIXEKxbrSL6OXahzO60gex9Dml7ZTQKGmnvpqvMvpEB6Q5l6RGYCWWaeGTK8Q7y+OHLwEsWCY0nwNhMHGwnAVmqz4yjzMggW7C4PSTSaF06IOieObvI2cQzt5rvk4jgjrFigUDzI=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Pc/B5s8Op7DZcUpCkoozM2pKb7wkORn3PJUzQ+3VJls=;
+        b=jtMhRC6Pk0HadowGTjQERXbTA9SrlkgA6uoK4GrRBBSya5IrU9FKwc5sKWuazC7hWY
+         91aODgBraKSoG3+eK4B2Za6Q/SMrQiR5aWNtuyZaBsUjHqSN2Zi+JRcOllkgpeTVuzp8
+         KDT853LwBilN+sUKYomYUcWf/qSSmZVkW+82quasRshDxUIO+1hR/nIVZmRvxQmr68TG
+         JuuUYYKg35fGImgfsm/WZdIhy6TJt7Bd0SxC2TXYB82TjG7g7WhD7Xc4n2MJVs5c58xj
+         OsGpyLKVVbGaZmacdh697dBEAEP6D0PtBat1Xcjiao3BpaFQFCZ1O7xp2tWnSqIW3UyD
+         DLNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Pc/B5s8Op7DZcUpCkoozM2pKb7wkORn3PJUzQ+3VJls=;
+        b=Rnbnj/RcITXPHis2xNz9PlkEoFH4A+msbot0fxY4WXhRgQIWmhNJWwZ2so4UmVBdnW
+         ebUUSotVYsA4n0b/FbvcgELe6Fct1LTSq8dxT7I7dpnxnYM1MA1sqQOtE/Hta89pAL8E
+         hugRwKfFQAcG8iCr4ivXFb/ge2p+0FkmiNnHF8dyIf7XMRXm2EneOZ6zO6Vf5XPGQT51
+         mlNHn2n9jQ+tRcVc6sBYyNAYvb1ftv6+uuuR/p9fJruWfljGEEUArmCJeaAT/bZQcDno
+         LOTfF6XDPDSa5elktXzubqodQ8bh2BPVqMMLHJj9ICP/9rdpDF6OZvzXe7SdrgaRlNaf
+         pk4w==
+X-Gm-Message-State: APjAAAVft1/khecaDi7lfNhDeGme/1+rfIKHhtUdh6EfX5iOo7VvsU3S
+        tDf2ZCp/V7w2H04qOhkhEVJ00w==
+X-Google-Smtp-Source: APXvYqygyv2epnPyQ8ZUCWpvIvDmkk1mlhM7bZ2yAb9gUjZi3pn0UqvfOAVs0g05UGhLYqygkKm6GA==
+X-Received: by 2002:a1c:38c3:: with SMTP id f186mr4147629wma.58.1574265294776;
+        Wed, 20 Nov 2019 07:54:54 -0800 (PST)
+Received: from google.com ([100.105.32.75])
+        by smtp.gmail.com with ESMTPSA id z6sm33020710wro.18.2019.11.20.07.54.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Nov 2019 07:54:53 -0800 (PST)
+Date:   Wed, 20 Nov 2019 16:54:48 +0100
+From:   Marco Elver <elver@google.com>
+To:     Qian Cai <cai@lca.pw>
+Cc:     LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Alexander Potapenko <glider@google.com>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Borislav Petkov <bp@alien8.de>, Daniel Axtens <dja@axtens.net>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        David Howells <dhowells@redhat.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-efi@vger.kernel.org,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        the arch/x86 maintainers <x86@kernel.org>
+Subject: Re: [PATCH v4 00/10] Add Kernel Concurrency Sanitizer (KCSAN)
+Message-ID: <20191120155448.GA21320@google.com>
+References: <20191114180303.66955-1-elver@google.com>
+ <1574194379.9585.10.camel@lca.pw>
+ <CANpmjNPynCwYc8-GKTreJ8HF81k14JAHZXLt0jQJr_d+ukL=6A@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8a28c78f-40eb-4754-4f04-08d76dd1e279
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Nov 2019 15:54:10.8979
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: cJPzW9nzmi2xxiGsK1rhL4WceVYrEUS0/dR+k+h/WIviAkpArOL2R63eWxbqGDEvdxFWfRjw1mW3246FG7N/Zg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR02MB6815
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANpmjNPynCwYc8-GKTreJ8HF81k14JAHZXLt0jQJr_d+ukL=6A@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgTWFyYywNCg0KPiANCj4gT24gMTEvMjAvMTkgMToxMSBQTSwgU3Jpbml2YXMgTmVlbGkgd3Jv
-dGU6DQo+ID4gVGhpcyBwYXRjaCBzZXJpZXMgZG9lcyB0aGUgZm9sbG93aW5nOg0KPiA+IC1za2lw
-IHByaW50aW5nIGVycm9yIG1lc3NhZ2Ugb24gZGVmZXJyZWQgcHJvYmUgLUZpeCB1c2FnZSBvZiBz
-a2INCj4gPiBtZW1vcnkNCj4gDQo+IEJUVzogSSdtIGxvb2tpbmcgZm9yIGFuIG9mZmljaWFsIE1h
-aW50YWluZXIgZm9yIHRoZSB4bGlueF9jYW4gZHJpdmVyLg0KPiANCj4gVGhlIE1haW50YWluZXIg
-d2lsbCBnZXQgYW4gZW50cnkgaW4gdGhlIE1BSU5UQUlORVJTIGZpbGUsIHNob3VsZCB0ZXN0IG5l
-dw0KPiBwYXRjaGVzIGFuZCBnaXZlIFJldmlld2VkLWJ5cy4NCj4gDQo+IElzIHRoZXJlIGEgdm9s
-dW50ZWVyPw0KDQpTdXJlIHdpbGwgdm9sdW50ZWVyIHRoZSBtYWludGFpbmVyc2hpcCwgd2lsbCBz
-ZW5kIHRoZSBtYWludGFpbmVyIGZyYWdtZW50IHBhdGNoLi4uIA0KDQpSZWdhcmRzLA0KS2VkYXIu
-DQo+IA0KPiByZWdhcmRzLA0KPiBNYXJjDQo+IA0KPiAtLQ0KPiBQZW5ndXRyb25peCBlLksuICAg
-ICAgICAgICAgICAgICB8IE1hcmMgS2xlaW5lLUJ1ZGRlICAgICAgICAgICB8DQo+IEVtYmVkZGVk
-IExpbnV4ICAgICAgICAgICAgICAgICAgIHwgaHR0cHM6Ly93d3cucGVuZ3V0cm9uaXguZGUgIHwN
-Cj4gVmVydHJldHVuZyBXZXN0L0RvcnRtdW5kICAgICAgICAgfCBQaG9uZTogKzQ5LTIzMS0yODI2
-LTkyNCAgICAgfA0KPiBBbXRzZ2VyaWNodCBIaWxkZXNoZWltLCBIUkEgMjY4NiB8IEZheDogICAr
-NDktNTEyMS0yMDY5MTctNTU1NSB8DQoNCg==
+On Tue, 19 Nov 2019, Marco Elver wrote:
+
+> On Tue, 19 Nov 2019 at 21:13, Qian Cai <cai@lca.pw> wrote:
+> >
+> > On Thu, 2019-11-14 at 19:02 +0100, 'Marco Elver' via kasan-dev wrote:
+> > > This is the patch-series for the Kernel Concurrency Sanitizer (KCSAN).
+> > > KCSAN is a sampling watchpoint-based *data race detector*. More details
+> > > are included in **Documentation/dev-tools/kcsan.rst**. This patch-series
+> > > only enables KCSAN for x86, but we expect adding support for other
+> > > architectures is relatively straightforward (we are aware of
+> > > experimental ARM64 and POWER support).
+> >
+> > This does not allow the system to boot. Just hang forever at the end.
+> >
+> > https://cailca.github.io/files/dmesg.txt
+> >
+> > the config (dselect KASAN and select KCSAN with default options):
+> >
+> > https://raw.githubusercontent.com/cailca/linux-mm/master/x86.config
+> 
+> Thanks! That config enables lots of other debug code. I could
+> reproduce the hang. It's related to CONFIG_PROVE_LOCKING etc.
+> 
+> The problem is definitely not the fact that kcsan_setup_watchpoint
+> disables interrupts (tested by removing that code). Although lockdep
+> still complains here, and looking at the code in kcsan/core.c, I just
+> can't see how local_irq_restore cannot be called before returning (in
+> the stacktrace you provided, there is no kcsan function), and
+> interrupts should always be re-enabled. (Interrupts are only disabled
+> during delay in kcsan_setup_watchpoint.)
+> 
+> What I also notice is that this happens when the console starts
+> getting spammed with data-race reports (presumably because some extra
+> debug code has lots of data races according to KCSAN).
+> 
+> My guess is that some of the extra debug logic enabled in that config
+> is incompatible with KCSAN. However, so far I cannot tell where
+> exactly the problem is. For now the work-around would be not using
+> KCSAN with these extra debug options.  I will investigate more, but
+> nothing obviously wrong stands out..
+
+It seems that due to spinlock_debug.c containing data races, the console
+gets spammed with reports. However, it's also possible to encounter
+deadlock, e.g.  printk lock -> spinlock_debug -> KCSAN detects data race
+-> kcsan_print_report() -> printk lock -> deadlock.
+
+So the best thing is to fix the data races in spinlock_debug. I will
+send a patch separately for you to test.
+
+The issue that lockdep still reports inconsistency in IRQ flags tracing
+I cannot yet say what the problem is. It seems that lockdep IRQ flags
+tracing may have an issue with KCSAN for numerous reasons: let's say
+lockdep and IRQ flags tracing code is instrumented, which then calls
+into KCSAN, which disables/enables interrupts, but due to tracing calls
+back into lockdep code. In other words, there may be some recursion
+which corrupts hardirqs_enabled.
+
+Thanks,
+-- Marco
