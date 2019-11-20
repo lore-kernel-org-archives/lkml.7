@@ -2,121 +2,117 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F235AC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:46:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09D56C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D440320692
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:46:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2AB320692
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:46:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xUwoi8nv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732527AbfKTPqd convert rfc822-to-8bit (ORCPT
+        id S1732399AbfKTPqj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 10:46:33 -0500
-Received: from mx1.unisoc.com ([222.66.158.135]:21657 "EHLO
-        SHSQR01.spreadtrum.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1732410AbfKTPph (ORCPT
+        Wed, 20 Nov 2019 10:46:39 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:33147 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729879AbfKTPpc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 10:45:37 -0500
-Received: from ig2.spreadtrum.com (bjmbx02.spreadtrum.com [10.0.64.8])
-        by SHSQR01.spreadtrum.com with ESMTPS id xAKFheDl093128
-        (version=TLSv1 cipher=AES256-SHA bits=256 verify=NO);
-        Wed, 20 Nov 2019 23:43:40 +0800 (CST)
-        (envelope-from Orson.Zhai@unisoc.com)
-Received: from localhost (10.0.74.112) by BJMBX02.spreadtrum.com (10.0.64.8)
- with Microsoft SMTP Server (TLS) id 15.0.847.32; Wed, 20 Nov 2019 23:43:47
- +0800
-From:   Orson Zhai <orson.zhai@unisoc.com>
-To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>
-CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kevin.tang@unisoc.com>, <baolin.wang@unisoc.com>,
-        <chunyan.zhang@unisoc.com>, Orson Zhai <orson.zhai@unisoc.com>
-Subject: [PATCH V2 1/2] dt-bindings: syscon: Add syscon-names to refer to syscon easily
-Date:   Wed, 20 Nov 2019 23:41:47 +0800
-Message-ID: <20191120154148.22067-2-orson.zhai@unisoc.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20191120154148.22067-1-orson.zhai@unisoc.com>
-References: <20191120154148.22067-1-orson.zhai@unisoc.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Originating-IP: [10.0.74.112]
-X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
- BJMBX02.spreadtrum.com (10.0.64.8)
-Content-Transfer-Encoding: 8BIT
-X-MAIL: SHSQR01.spreadtrum.com xAKFheDl093128
+        Wed, 20 Nov 2019 10:45:32 -0500
+Received: by mail-pf1-f193.google.com with SMTP id c184so14418632pfb.0
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 07:45:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :in-reply-to:references;
+        bh=UhlgzauEtpF8L0LzttCZ+lpDer0t2cSKin9iOeiQFcw=;
+        b=xUwoi8nvephl72akSmRItCtyuVQZnA8izas8jNZj+rYlyPmcb+9JkRl9ag74UJG+ml
+         a3AmBm12kC24TpIDbEdrgDbeIDEL0YhjYdsNtrjQjlyM081hL+byOlU2NFU5szpTWYtK
+         nfO3e/cnd21wuVHFsY7+BgrknzP5Hem30fzsb/D51u+zIar4n8tLYlXyekC0YXWhkdvA
+         nErhGCt2lCBYiU+tfR/AbEGfmzt6paXzzsmdpMshpDNmQ9cIykUgNZT4dGgKlurhWy/G
+         GSNYEvibA0+XSoA02bj9PeF2pjP186RgMy7enY0pwVH6wDrrHS62DaHoVH8CpcD+Bibe
+         xxsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:in-reply-to:references;
+        bh=UhlgzauEtpF8L0LzttCZ+lpDer0t2cSKin9iOeiQFcw=;
+        b=Yet4SkbvVrSDC08PIYK26njLk4pfytgmeukfyOemepruM0OJA9uh9UMiIItlpzrKH/
+         B2AcGyEldqSRqwFKiph/JiFju85MWWZ/O4vVt8tV8YjAVW9zYWImvTK3zYWoUsGflbYB
+         Lj0U3f+ZrQXvAbVxXmLnTzKAggxs3FxG6RJihzSgP/MJDDqzJmLG8nTXMMLOkZf6/DSS
+         vr3BkLQNktIxec5IPXQ25dc0mXOtsDBmjRQoGIJWBQyt5jl93SmBAo5Z5qHFbEO88VAE
+         qufrK/IgJCi0iEstfzcRdGWltpC5TuJ5VSuSY0ov8pEaFDhobbRSq2s0L5rhOYl6LBgh
+         slMQ==
+X-Gm-Message-State: APjAAAXJZKEJyuNQ8I1tjJ0Y8FO/KusxQieuRkctYk4Bes1dLKAGNArT
+        HSbLwJ2oz52PY5YMY+mPYMYKjpimInUOrg==
+X-Google-Smtp-Source: APXvYqxkcUp9jMDNLha++k3NBN56jJ2v22CFPJkdR1JKEzFx/AObWFImoUDJuhJFCF2aved+yYTp+w==
+X-Received: by 2002:a63:778b:: with SMTP id s133mr4140842pgc.406.1574264731098;
+        Wed, 20 Nov 2019 07:45:31 -0800 (PST)
+Received: from localhost ([14.96.110.98])
+        by smtp.gmail.com with ESMTPSA id y11sm30781168pfq.1.2019.11.20.07.45.30
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 20 Nov 2019 07:45:30 -0800 (PST)
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+To:     linux-kernel@vger.kernel.org, edubezval@gmail.com,
+        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Guillaume La Roque <glaroque@baylibre.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Javi Merino <javi.merino@kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jun Nie <jun.nie@linaro.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>
+Cc:     linux-pm@vger.kernel.org
+Subject: [PATCH v2 01/11] thermal: of-thermal: Appease the kernel-doc deity
+Date:   Wed, 20 Nov 2019 21:15:10 +0530
+Message-Id: <dc742789bf4b3c8207b01c7946f2b401350536a7.1574242756.git.amit.kucheria@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <cover.1574242756.git.amit.kucheria@linaro.org>
+References: <cover.1574242756.git.amit.kucheria@linaro.org>
+In-Reply-To: <cover.1574242756.git.amit.kucheria@linaro.org>
+References: <cover.1574242756.git.amit.kucheria@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make life easier when syscon consumer want to access multiple syscon
-nodes with dozens of items.
-Add syscon-names and relative properties to help to manage different
-cases when accessing more than one syscon node even with arguments.
+Replace a comment starting with /** by simply /* to avoid having
+it interpreted as a kernel-doc comment.
 
-Signed-off-by: Orson Zhai <orson.zhai@unisoc.com>
+Fixes the following warning when compile with make W=1:
+linux.git/drivers/thermal/of-thermal.c:761: warning: cannot understand function prototype: 'const char *trip_types[] = '
+
+Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+Reviewed-by: Viresh Kumar <viresh.kumar@linaro.org>
 ---
- .../devicetree/bindings/mfd/syscon.txt        | 43 +++++++++++++++++++
- 1 file changed, 43 insertions(+)
+ drivers/thermal/of-thermal.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/mfd/syscon.txt b/Documentation/devicetree/bindings/mfd/syscon.txt
-index 25d9e9c2fd53..4c7bdb74bb0a 100644
---- a/Documentation/devicetree/bindings/mfd/syscon.txt
-+++ b/Documentation/devicetree/bindings/mfd/syscon.txt
-@@ -30,3 +30,46 @@ hwlock1: hwspinlock@40500000 {
-        reg = <0x40500000 0x1000>;
-        #hwlock-cells = <1>;
- };
-+
-+
-+
-+==Syscon Name==
-+
-+Syscon name is a helper to be used in consumer nodes who refer to system
-+controller node. It provides a way to refer to syscon node by names with
-+phandle args in syscon consumer node. It will help people who have a lot
-+of syscon references to be managed. It is not a must feature and has no
-+effect to syscon node itself at all.
-+
-+Required properties:
-+- syscons: List of phandles and any number of arguments if needed. Arguments
-+  is specific to differnet vendors and its usage should be described at each
-+  vendor's bindings. For example: In Unisoc SoCs, the 1st arg will be treated
-+  as register address offset and the 2nd is bit mask.
-+
-+- syscon-names:        List of syscon node name strings sorted in the same order as
-+  what it represents in property syscons.
-+
-+Optional property:
-+- #.*-cells: Represents the number of arguments in single phandle in syscons
-+  list. ".*" is vendor specific. If this property is not set, default value
-+  will be 0.
-+
-+Examples:
-+
-+apb_regs: syscon@20008000 {
-+       compatible = "sprd,apb-glb", "syscon";
-+       reg = <0x20008000 0x100>;
-+};
-+
-+aon_regs: syscon@40008000 {
-+       compatible = "sprd,aon-glb", "syscon";
-+       reg = <0x40008000 0x100>;
-+};
-+
-+display@40500000 {
-+       ...
-+       #syscon-disp-cells = <2>;
-+       syscons = <&ap_apb_regs 0x4 0xf00>, <&aon_regs 0x8 0x7>;
-+       syscon-names = "enable", "power";
-+};
---
-2.18.0
+diff --git a/drivers/thermal/of-thermal.c b/drivers/thermal/of-thermal.c
+index dc5093be553e..5235aed2fadd 100644
+--- a/drivers/thermal/of-thermal.c
++++ b/drivers/thermal/of-thermal.c
+@@ -754,7 +754,7 @@ static int thermal_of_populate_bind_params(struct device_node *np,
+ 	return ret;
+ }
+ 
+-/**
++/*
+  * It maps 'enum thermal_trip_type' found in include/linux/thermal.h
+  * into the device tree binding of 'trip', property type.
+  */
+-- 
+2.20.1
 
-________________________________
- This email (including its attachments) is intended only for the person or entity to which it is addressed and may contain information that is privileged, confidential or otherwise protected from disclosure. Unauthorized use, dissemination, distribution or copying of this email or the information herein or taking any action in reliance on the contents of this email or the information herein, by anyone other than the intended recipient, or an employee or agent responsible for delivering the message to the intended recipient, is strictly prohibited. If you are not the intended recipient, please do not read, copy, use or disclose any part of this e-mail to others. Please notify the sender immediately and permanently delete this e-mail and any attachments if you received it in error. Internet communications cannot be guaranteed to be timely, secure, error-free or virus-free. The sender does not accept liability for any errors or omissions.
-本邮件及其附件具有保密性质，受法律保护不得泄露，仅发送给本邮件所指特定收件人。严禁非经授权使用、宣传、发布或复制本邮件或其内容。若非该特定收件人，请勿阅读、复制、 使用或披露本邮件的任何内容。若误收本邮件，请从系统中永久性删除本邮件及所有附件，并以回复邮件的方式即刻告知发件人。无法保证互联网通信及时、安全、无误或防毒。发件人对任何错漏均不承担责任。
