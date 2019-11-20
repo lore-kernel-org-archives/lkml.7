@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC730C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:41:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D78C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:41:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAA6720709
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:41:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24ED320709
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:41:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732074AbfKTPlT (ORCPT
+        id S1732064AbfKTPlT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 20 Nov 2019 10:41:19 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:53356 "EHLO
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:53352 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731908AbfKTPkY (ORCPT
+        by vger.kernel.org with ESMTP id S1731907AbfKTPkY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 Nov 2019 10:40:24 -0500
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iXS5U-0004az-P4; Wed, 20 Nov 2019 15:40:12 +0000
+        id 1iXS5T-0004ZT-Gy; Wed, 20 Nov 2019 15:40:11 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iXS5U-0004J8-5w; Wed, 20 Nov 2019 15:40:12 +0000
+        id 1iXS5S-0004GK-Sc; Wed, 20 Nov 2019 15:40:10 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,17 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Sean Christopherson" <sean.j.christopherson@intel.com>
-Date:   Wed, 20 Nov 2019 15:37:56 +0000
-Message-ID: <lsq.1574264230.248698305@decadent.org.uk>
+        "Peter Zijlstra" <peterz@infradead.org>,
+        "Will Deacon" <will@kernel.org>, "Ingo Molnar" <mingo@kernel.org>,
+        "Peter Hurley" <peter@hurleysoftware.com>,
+        "Linus Torvalds" <torvalds@linux-foundation.org>,
+        "Thomas Gleixner" <tglx@linutronix.de>
+Date:   Wed, 20 Nov 2019 15:37:21 +0000
+Message-ID: <lsq.1574264230.727638244@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 46/83] x86/retpoline: Don't clobber RFLAGS during
- CALL_NOSPEC on i386
+Subject: [PATCH 3.16 11/83] tty/ldsem, locking/rwsem: Add missing ACQUIRE
+ to read_failed sleep loop
 In-Reply-To: <lsq.1574264230.280218497@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,76 +59,70 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Peter Zijlstra <peterz@infradead.org>
 
-commit b63f20a778c88b6a04458ed6ffc69da953d3a109 upstream.
+commit 952041a8639a7a3a73a2b6573cb8aa8518bc39f8 upstream.
 
-Use 'lea' instead of 'add' when adjusting %rsp in CALL_NOSPEC so as to
-avoid clobbering flags.
+While reviewing rwsem down_slowpath, Will noticed ldsem had a copy of
+a bug we just found for rwsem.
 
-KVM's emulator makes indirect calls into a jump table of sorts, where
-the destination of the CALL_NOSPEC is a small blob of code that performs
-fast emulation by executing the target instruction with fixed operands.
+  X = 0;
 
-  adcb_al_dl:
-     0x000339f8 <+0>:   adc    %dl,%al
-     0x000339fa <+2>:   ret
+  CPU0			CPU1
 
-A major motiviation for doing fast emulation is to leverage the CPU to
-handle consumption and manipulation of arithmetic flags, i.e. RFLAGS is
-both an input and output to the target of CALL_NOSPEC.  Clobbering flags
-results in all sorts of incorrect emulation, e.g. Jcc instructions often
-take the wrong path.  Sans the nops...
+  rwsem_down_read()
+    for (;;) {
+      set_current_state(TASK_UNINTERRUPTIBLE);
 
-  asm("push %[flags]; popf; " CALL_NOSPEC " ; pushf; pop %[flags]\n"
-     0x0003595a <+58>:  mov    0xc0(%ebx),%eax
-     0x00035960 <+64>:  mov    0x60(%ebx),%edx
-     0x00035963 <+67>:  mov    0x90(%ebx),%ecx
-     0x00035969 <+73>:  push   %edi
-     0x0003596a <+74>:  popf
-     0x0003596b <+75>:  call   *%esi
-     0x000359a0 <+128>: pushf
-     0x000359a1 <+129>: pop    %edi
-     0x000359a2 <+130>: mov    %eax,0xc0(%ebx)
-     0x000359b1 <+145>: mov    %edx,0x60(%ebx)
+                        X = 1;
+                        rwsem_up_write();
+                          rwsem_mark_wake()
+                            atomic_long_add(adjustment, &sem->count);
+                            smp_store_release(&waiter->task, NULL);
 
-  ctxt->eflags = (ctxt->eflags & ~EFLAGS_MASK) | (flags & EFLAGS_MASK);
-     0x000359a8 <+136>: mov    -0x10(%ebp),%eax
-     0x000359ab <+139>: and    $0x8d5,%edi
-     0x000359b4 <+148>: and    $0xfffff72a,%eax
-     0x000359b9 <+153>: or     %eax,%edi
-     0x000359bd <+157>: mov    %edi,0x4(%ebx)
+      if (!waiter.task)
+        break;
 
-For the most part this has gone unnoticed as emulation of guest code
-that can trigger fast emulation is effectively limited to MMIO when
-running on modern hardware, and MMIO is rarely, if ever, accessed by
-instructions that affect or consume flags.
+      ...
+    }
 
-Breakage is almost instantaneous when running with unrestricted guest
-disabled, in which case KVM must emulate all instructions when the guest
-has invalid state, e.g. when the guest is in Big Real Mode during early
-BIOS.
+  r = X;
 
-Fixes: 776b043848fd2 ("x86/retpoline: Add initial retpoline support")
-Fixes: 1a29b5b7f347a ("KVM: x86: Make indirect calls in emulator speculation safe")
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20190822211122.27579-1-sean.j.christopherson@intel.com
+Allows 'r == 0'.
+
+Reported-by: Will Deacon <will@kernel.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Will Deacon <will@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Hurley <peter@hurleysoftware.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Fixes: 4898e640caf0 ("tty: Add timed, writer-prioritized rw semaphore")
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/x86/include/asm/nospec-branch.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/tty/tty_ldsem.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
---- a/arch/x86/include/asm/nospec-branch.h
-+++ b/arch/x86/include/asm/nospec-branch.h
-@@ -151,7 +151,7 @@
- 	"    	lfence;\n"					\
- 	"       jmp    902b;\n"					\
- 	"       .align 16\n"					\
--	"903:	addl   $4, %%esp;\n"				\
-+	"903:	lea    4(%%esp), %%esp;\n"			\
- 	"       pushl  %[thunk_target];\n"			\
- 	"       ret;\n"						\
- 	"       .align 16\n"					\
+--- a/drivers/tty/tty_ldsem.c
++++ b/drivers/tty/tty_ldsem.c
+@@ -137,8 +137,7 @@ static void __ldsem_wake_readers(struct
+ 
+ 	list_for_each_entry_safe(waiter, next, &sem->read_wait, list) {
+ 		tsk = waiter->task;
+-		smp_mb();
+-		waiter->task = NULL;
++		smp_store_release(&waiter->task, NULL);
+ 		wake_up_process(tsk);
+ 		put_task_struct(tsk);
+ 	}
+@@ -234,7 +233,7 @@ down_read_failed(struct ld_semaphore *se
+ 	for (;;) {
+ 		set_task_state(tsk, TASK_UNINTERRUPTIBLE);
+ 
+-		if (!waiter.task)
++		if (!smp_load_acquire(&waiter.task))
+ 			break;
+ 		if (!timeout)
+ 			break;
 
