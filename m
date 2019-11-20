@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 432A0C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:24:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4E8AC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:24:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 200F62192C
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:24:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95A142071F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:24:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729883AbfKTPYO (ORCPT
+        id S1729997AbfKTPYP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 10:24:14 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:47074 "EHLO
+        Wed, 20 Nov 2019 10:24:15 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:47060 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727659AbfKTPYM (ORCPT
+        with ESMTP id S1729718AbfKTPYN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 10:24:12 -0500
+        Wed, 20 Nov 2019 10:24:13 -0500
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: sre)
-        with ESMTPSA id C56E62910EB
+        with ESMTPSA id C1A382910E9
 Received: by earth.universe (Postfix, from userid 1000)
-        id 290D03C0C79; Wed, 20 Nov 2019 16:24:08 +0100 (CET)
+        id 218143C0C77; Wed, 20 Nov 2019 16:24:08 +0100 (CET)
 From:   Sebastian Reichel <sebastian.reichel@collabora.com>
 To:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
         Support Opensource <support.opensource@diasemi.com>,
@@ -35,9 +35,9 @@ Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
         alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
         kernel@collabora.com,
         Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: [PATCHv2 3/6] ASoC: da7213: Provide selectable option
-Date:   Wed, 20 Nov 2019 16:24:03 +0100
-Message-Id: <20191120152406.2744-4-sebastian.reichel@collabora.com>
+Subject: [PATCHv2 1/6] ASoC: da7213: Add da7212 DT compatible
+Date:   Wed, 20 Nov 2019 16:24:01 +0100
+Message-Id: <20191120152406.2744-2-sebastian.reichel@collabora.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191120152406.2744-1-sebastian.reichel@collabora.com>
 References: <20191120152406.2744-1-sebastian.reichel@collabora.com>
@@ -48,29 +48,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit adds the Dialog DA7213 audio codec as a selectable option
-in the kernel config. Currently the driver can only be selected for
-Intel Baytrail/Cherrytrail devices or if SND_SOC_ALL_CODECS is enabled.
+This adds a compatible for da7212. It's handled exactly the
+same way as DA7213 and follows the ACPI bindings.
 
 Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 ---
- sound/soc/codecs/Kconfig | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/sound/da7213.txt | 4 ++--
+ sound/soc/codecs/da7213.c                          | 1 +
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
-index 229cc89f8c5a..1d44fbc3d407 100644
---- a/sound/soc/codecs/Kconfig
-+++ b/sound/soc/codecs/Kconfig
-@@ -646,7 +646,8 @@ config SND_SOC_DA7210
-         tristate
+diff --git a/Documentation/devicetree/bindings/sound/da7213.txt b/Documentation/devicetree/bindings/sound/da7213.txt
+index 58902802d56c..759bb04e0283 100644
+--- a/Documentation/devicetree/bindings/sound/da7213.txt
++++ b/Documentation/devicetree/bindings/sound/da7213.txt
+@@ -1,9 +1,9 @@
+-Dialog Semiconductor DA7213 Audio Codec bindings
++Dialog Semiconductor DA7212/DA7213 Audio Codec bindings
  
- config SND_SOC_DA7213
--        tristate
-+	tristate "Dialog DA7213 CODEC"
-+	depends on I2C
+ ======
  
- config SND_SOC_DA7218
- 	tristate
+ Required properties:
+-- compatible : Should be "dlg,da7213"
++- compatible : Should be "dlg,da7212" or "dlg,7213"
+ - reg: Specifies the I2C slave address
+ 
+ Optional properties:
+diff --git a/sound/soc/codecs/da7213.c b/sound/soc/codecs/da7213.c
+index 925a03996db4..aff306bb58df 100644
+--- a/sound/soc/codecs/da7213.c
++++ b/sound/soc/codecs/da7213.c
+@@ -1571,6 +1571,7 @@ static int da7213_set_bias_level(struct snd_soc_component *component,
+ #if defined(CONFIG_OF)
+ /* DT */
+ static const struct of_device_id da7213_of_match[] = {
++	{ .compatible = "dlg,da7212", },
+ 	{ .compatible = "dlg,da7213", },
+ 	{ }
+ };
 -- 
 2.24.0
 
