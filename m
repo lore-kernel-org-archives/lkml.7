@@ -2,104 +2,128 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56AD7C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:32:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68AA9C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:35:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 367982243E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:32:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CC9B2243E
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:35:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YxG0AtBW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728733AbfKTKcz (ORCPT
+        id S1728440AbfKTKfs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 05:32:55 -0500
-Received: from mx2.suse.de ([195.135.220.15]:50302 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727934AbfKTKcy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 05:32:54 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B94ECB24A;
-        Wed, 20 Nov 2019 10:32:52 +0000 (UTC)
-Message-ID: <1574245969.14298.29.camel@suse.com>
-Subject: Re: KASAN: use-after-free Read in si470x_int_in_callback (2)
-From:   Oliver Neukum <oneukum@suse.com>
-To:     syzbot <syzbot+9ca7a12fd736d93e0232@syzkaller.appspotmail.com>,
-        andreyknvl@google.com, hverkuil@xs4all.nl,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-usb@vger.kernel.org, mchehab@kernel.org,
-        syzkaller-bugs@googlegroups.com
-Date:   Wed, 20 Nov 2019 11:32:49 +0100
-In-Reply-To: <000000000000f47f0b0595307ddc@google.com>
-References: <000000000000f47f0b0595307ddc@google.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Wed, 20 Nov 2019 05:35:48 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:48738 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727697AbfKTKfr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 05:35:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574246146;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=P/xDM99yDTDLv4Ym8i8Vqr3jGmgK95cfJTK+1ci9q0Y=;
+        b=YxG0AtBW1cKya20byz+qIZX111jy93qPDlm5CffVTOs0/i9mI4YIPm1gU2bCQNT69G4/am
+        /d1VpdqmyKgXL3iW4w40oztGVG5RVXA5qbS1GT3peSwI+x4Iy6wGEFJcbp+VCiKEjSXjhU
+        M9yMqxtqlLKOz3J5vgd7dcciRHQI0mQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-146-2pPJKldfNQapjGbh34vBPQ-1; Wed, 20 Nov 2019 05:35:43 -0500
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 14BCA477;
+        Wed, 20 Nov 2019 10:35:41 +0000 (UTC)
+Received: from [10.36.118.126] (unknown [10.36.118.126])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1B71019EE6;
+        Wed, 20 Nov 2019 10:35:37 +0000 (UTC)
+Subject: Re: [PATCH v1 01/12] powerpc/pseries: CMM: Implement release()
+ function for sysfs device
+To:     Michael Ellerman <patch-notifications@ellerman.id.au>,
+        linux-kernel@vger.kernel.org
+Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-mm@kvack.org, Paul Mackerras <paulus@samba.org>,
+        Allison Randal <allison@lohutok.net>,
+        Arun KS <arunks@codeaurora.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vlastimil Babka <vbabka@suse.cz>
+References: <47DFy90198z9sSZ@ozlabs.org>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat GmbH
+Message-ID: <23fed8a4-d87a-c6f6-e145-715eceea4e64@redhat.com>
+Date:   Wed, 20 Nov 2019 11:35:37 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
+MIME-Version: 1.0
+In-Reply-To: <47DFy90198z9sSZ@ozlabs.org>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: 2pPJKldfNQapjGbh34vBPQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Freitag, den 18.10.2019, 07:53 -0700 schrieb syzbot:
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    22be26f7 usb-fuzzer: main usb gadget fuzzer driver
-> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=102b65cf600000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=387eccb7ac68ec5
-> dashboard link: https://syzkaller.appspot.com/bug?extid=9ca7a12fd736d93e0232
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=143b9060e00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15d3b94b600000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+9ca7a12fd736d93e0232@syzkaller.appspotmail.com
+On 14.11.19 10:08, Michael Ellerman wrote:
+> On Thu, 2019-10-31 at 14:29:22 UTC, David Hildenbrand wrote:
+>> When unloading the module, one gets
+>> [  548.188594] ------------[ cut here ]------------
+>> [  548.188596] Device 'cmm0' does not have a release() function, it is b=
+rok=3D
+>> en and must be fixed. See Documentation/kobject.txt.
+>> [  548.188622] WARNING: CPU: 0 PID: 19308 at drivers/base/core.c:1244 .d=
+evi=3D
+>> ce_release+0xcc/0xf0
+>> ...
+>>
+>> We only have on static fake device. There is nothing to do when
+>> releasing the device (via cmm_exit).
+>>
+>> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+>> Cc: Paul Mackerras <paulus@samba.org>
+>> Cc: Michael Ellerman <mpe@ellerman.id.au>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: Vlastimil Babka <vbabka@suse.cz>
+>> Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+>> Cc: Allison Randal <allison@lohutok.net>
+>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> Cc: Thomas Gleixner <tglx@linutronix.de>
+>> Cc: Arun KS <arunks@codeaurora.org>
+>> Signed-off-by: David Hildenbrand <david@redhat.com>
+>=20
+> Patches 1-10 applied to powerpc next, thanks.
+>=20
+> https://git.kernel.org/powerpc/c/7d8212747435c534c8d564fbef4541a463c976ff
+>=20
+> cheers
+>=20
 
-#syz test: https://github.com/google/kasan.git 22be26f7
+Hi Michael,
 
-From c322de1808b3f43b2248457281634c9d22500840 Mon Sep 17 00:00:00 2001
-From: Oliver Neukum <oneukum@suse.com>
-Date: Mon, 18 Nov 2019 14:41:51 +0100
-Subject: [PATCH] si470x: prevent resubmission
+just to make sure you saw the two MM patches (and the ACKs from Michal)
 
-Starting IO to a device is not necessarily a NOP in every error
-case. So we need to terminate all IO in every case of probe
-failure with absolute certainty.
+https://lkml.org/lkml/2019/11/14/410
 
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
----
- drivers/media/radio/si470x/radio-si470x-usb.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+if you prefer that Andrew picks these up, please let me know.
 
-diff --git a/drivers/media/radio/si470x/radio-si470x-usb.c b/drivers/media/radio/si470x/radio-si470x-usb.c
-index fedff68d8c49..07e9ddbb5937 100644
---- a/drivers/media/radio/si470x/radio-si470x-usb.c
-+++ b/drivers/media/radio/si470x/radio-si470x-usb.c
-@@ -734,7 +734,8 @@ static int si470x_usb_driver_probe(struct usb_interface *intf,
- 	/* start radio */
- 	retval = si470x_start_usb(radio);
- 	if (retval < 0)
--		goto err_buf;
-+		/* the urb may be running even after an error */
-+		goto err_all;
- 
- 	/* set initial frequency */
- 	si470x_set_freq(radio, 87.5 * FREQ_MUL); /* available in all regions */
-@@ -749,7 +750,7 @@ static int si470x_usb_driver_probe(struct usb_interface *intf,
- 
- 	return 0;
- err_all:
--	usb_kill_urb(radio->int_in_urb);
-+	usb_poison_urb(radio->int_in_urb);
- err_buf:
- 	kfree(radio->buffer);
- err_ctrl:
--- 
-2.16.4
+Cheers!
+
+--=20
+
+Thanks,
+
+David / dhildenb
 
