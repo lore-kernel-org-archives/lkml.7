@@ -2,330 +2,232 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D941CC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 14:50:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D37A3C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 14:51:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8DAD206DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 14:50:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAD13206DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 14:51:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731784AbfKTOuC (ORCPT
+        id S1731837AbfKTOvL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 09:50:02 -0500
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:35839 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729932AbfKTOuC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 09:50:02 -0500
-X-Originating-IP: 90.76.211.102
-Received: from aptenodytes (lfbn-1-2154-102.w90-76.abo.wanadoo.fr [90.76.211.102])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 41C8540005;
-        Wed, 20 Nov 2019 14:49:58 +0000 (UTC)
-Date:   Wed, 20 Nov 2019 15:49:57 +0100
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Wed, 20 Nov 2019 09:51:11 -0500
+Received: from mga01.intel.com ([192.55.52.88]:19629 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728049AbfKTOvL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 09:51:11 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Nov 2019 06:50:57 -0800
+X-IronPort-AV: E=Sophos;i="5.69,222,1571727600"; 
+   d="scan'208";a="200739584"
+Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.161])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Nov 2019 06:50:49 -0800
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     Rajat Jain <rajatja@google.com>,
         Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>
-Subject: Re: [PATCH 1/2] dt-bindings: display: Add xylon logicvc bindings
- documentation
-Message-ID: <20191120144957.GA167553@aptenodytes>
-References: <20190910153409.111901-1-paul.kocialkowski@bootlin.com>
- <20190910153409.111901-2-paul.kocialkowski@bootlin.com>
- <20190913143510.GA9504@bogus>
- <20190913155815.GA1554@aptenodytes>
- <CAL_Jsq+dzT1xrfBy2QQHLx9MUNukWWq5eXyOecVV8h0z5ziC8g@mail.gmail.com>
- <20190923153311.GE57525@aptenodytes>
- <CAL_JsqJLfAb0xhmBoX+GUcv5wsuHBOs8wZ=Hkw3x03kfsPgOqg@mail.gmail.com>
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Imre Deak <imre.deak@intel.com>,
+        =?utf-8?Q?Jos=C3=A9?= Roberto de Souza <jose.souza@intel.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org, gregkh@linuxfoundation.org,
+        mathewk@google.com, Daniel Thompson <daniel.thompson@linaro.org>,
+        Jonathan Corbet <corbet@lwn.net>, Pavel Machek <pavel@denx.de>,
+        seanpaul@google.com, Duncan Laurie <dlaurie@google.com>,
+        jsbarnes@google.com, Thierry Reding <thierry.reding@gmail.com>
+Cc:     Rajat Jain <rajatja@google.com>, rajatxjain@gmail.com
+Subject: Re: [PATCH v2 2/3] drm/i915: Lookup and attach ACPI device node for connectors
+In-Reply-To: <20191104194147.185642-2-rajatja@google.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20191023001206.15741-1-rajatja@google.com> <20191104194147.185642-1-rajatja@google.com> <20191104194147.185642-2-rajatja@google.com>
+Date:   Wed, 20 Nov 2019 16:50:46 +0200
+Message-ID: <87tv6ywqih.fsf@intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="bg08WKrSYDhXBjb5"
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqJLfAb0xhmBoX+GUcv5wsuHBOs8wZ=Hkw3x03kfsPgOqg@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 04 Nov 2019, Rajat Jain <rajatja@google.com> wrote:
+> Lookup and attach ACPI nodes for intel connectors. The lookup is done
+> in compliance with ACPI Spec 6.3
+> https://uefi.org/sites/default/files/resources/ACPI_6_3_final_Jan30.pdf
+> (Ref: Pages 1119 - 1123).
+>
+> This can be useful for any connector specific platform properties. (This
+> will be used for privacy screen in next patch).
+>
+> Signed-off-by: Rajat Jain <rajatja@google.com>
+> Change-Id: I798e70714a4402554c8cd2a8e58268353f75814f
+> ---
+> v2: formed by splitting the original patch into ACPI lookup, and privacy
+>     screen property. Also move it into i915 now that I found existing code
+>     in i915 that can be re-used.
+>
+>  drivers/gpu/drm/i915/display/intel_acpi.c     | 50 +++++++++++++++++++
+>  drivers/gpu/drm/i915/display/intel_acpi.h     |  4 +-
+>  .../drm/i915/display/intel_display_types.h    |  3 ++
+>  drivers/gpu/drm/i915/display/intel_dp.c       |  4 ++
+>  4 files changed, 60 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/i915/display/intel_acpi.c b/drivers/gpu/drm/i915/display/intel_acpi.c
+> index 748d9b3125dd..0c10516430b1 100644
+> --- a/drivers/gpu/drm/i915/display/intel_acpi.c
+> +++ b/drivers/gpu/drm/i915/display/intel_acpi.c
+> @@ -243,3 +243,53 @@ void intel_populate_acpi_ids_for_all_connectors(struct drm_device *drm_dev)
+>  	}
+>  	drm_connector_list_iter_end(&conn_iter);
+>  }
+> +
+> +/*
+> + * Ref: ACPI Spec 6.3
+> + * https://uefi.org/sites/default/files/resources/ACPI_6_3_final_Jan30.pdf
+> + * Pages 1119 - 1123 describe, what I believe, a standard way of
+> + * identifying / addressing "display panels" in the ACPI. It provides
+> + * a way for the ACPI to define devices for the display panels attached
+> + * to the system. It thus provides a way for the BIOS to export any panel
+> + * specific properties to the system via ACPI (like device trees).
+> + *
+> + * The following functions looks up the ACPI node for a connector and returns
+> + * it. Technically it is independent from the i915 code, and
+> + * ideally may be called for all connectors. It is generally a good idea to
+> + * be able to attach an ACPI node to describe anything if needed. (This can
+> + * help in future for other panel specific features maybe). However, it
+> + * needs an acpi device ID which is build using an index within a particular
+> + * type of port (Ref to the pages of spec mentioned above, and to code in
+> + * intel_populate_acpi_ids_for_all_connectors()). This device index
+> + * unfortunately is not available in DRM code, so currently its call is
+> + * originated from i915 driver. If in future this is useful for other drivers
+> + * and we can find a generic way of getting a device index, we should move this
+> + * function to drm code, maybe.
+> + */
+> +void intel_connector_lookup_acpi_node(struct intel_connector *intel_connector)
 
---bg08WKrSYDhXBjb5
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Nitpick, I'd expect a "lookup" function to return whatever it is looking
+up, not modify its argument.
 
-Hi,
+> +{
+> +	struct drm_device *drm_dev = intel_connector->base.dev;
+> +	struct device *dev = &drm_dev->pdev->dev;
+> +	struct acpi_device *conn_dev;
+> +	u64 conn_addr;
+> +
+> +	/*
+> +	 * Repopulate ACPI IDs for all connectors is needed because the display
+> +	 * index may have changed as a result of hotplugging and unplugging
+> +	 * connectors
+> +	 */
 
-Circling back to this thread now, sorry for the delay.
+I think that can only be true for DP MST. For everything else, I don't
+think so. Anyway, why are we doing it here then, depending on whether
+someone calls this function or not? If it matters, we should be doing
+this whenever there's a chance they've changed, right?
 
-On Tue 24 Sep 19, 09:58, Rob Herring wrote:
-> On Mon, Sep 23, 2019 at 10:33 AM Paul Kocialkowski
-> <paul.kocialkowski@bootlin.com> wrote:
-> >
-> > Hi,
-> >
-> > On Fri 13 Sep 19, 20:16, Rob Herring wrote:
-> > > On Fri, Sep 13, 2019 at 4:58 PM Paul Kocialkowski
-> > > <paul.kocialkowski@bootlin.com> wrote:
-> > > >
-> > > > Hi Rob and thanks for the review!
-> > > >
-> > > > On Fri 13 Sep 19, 15:35, Rob Herring wrote:
-> > > > > On Tue, Sep 10, 2019 at 05:34:08PM +0200, Paul Kocialkowski wrote:
-> > > > > > The Xylon LogiCVC is a display controller implemented as progra=
-mmable
-> > > > > > logic in Xilinx FPGAs.
-> > > > > >
-> > > > > > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> > > > > > ---
-> > > > > >  .../bindings/display/xylon,logicvc.txt        | 188 ++++++++++=
-++++++++
-> > > > > >  1 file changed, 188 insertions(+)
-> > > > > >  create mode 100644 Documentation/devicetree/bindings/display/x=
-ylon,logicvc.txt
-> > > > >
-> > > > > Consider converting this to DT schema format. See
-> > > > > Documentation/devicetree/writing-schema.rst (.md in 5.3).
-> > > >
-> > > > Oh right, that would certainly be much more future-proof!
-> > > >
-> > > > > > diff --git a/Documentation/devicetree/bindings/display/xylon,lo=
-gicvc.txt b/Documentation/devicetree/bindings/display/xylon,logicvc.txt
-> > > > > > new file mode 100644
-> > > > > > index 000000000000..eb4b1553888a
-> > > > > > --- /dev/null
-> > > > > > +++ b/Documentation/devicetree/bindings/display/xylon,logicvc.t=
-xt
-> > > > > > @@ -0,0 +1,188 @@
-> > > > > > +Xylon LogiCVC display controller
-> > > > > > +
-> > > > > > +The Xylon LogiCVC is a display controller that supports multip=
-le layers.
-> > > > > > +It is usually implemented as programmable logic and was optimi=
-zed for use
-> > > > > > +with Xilinx Zynq-7000 SoCs and Xilinx FPGAs.
-> > > > > > +
-> > > > > > +Because the controller is intended for use in a FPGA, most of =
-the configuration
-> > > > > > +of the controller takes place at logic configuration bitstream=
- synthesis time.
-> > > > > > +As a result, many of the device-tree bindings are meant to ref=
-lect the
-> > > > > > +synthesis configuration. These do not allow configuring the co=
-ntroller
-> > > > > > +differently than synthesis configuration.
-> > > > > > +
-> > > > > > +Layers are declared in the "layers" sub-node and have dedicate=
-d configuration.
-> > > > > > +In version 3 of the controller, each layer has fixed memory of=
-fset and address
-> > > > > > +starting from the video memory base address for its framebuffe=
-r. With version 4,
-> > > > > > +framebuffers are configured with a direct memory address inste=
-ad.
-> > > > > > +
-> > > > > > +Matching synthesis parameters are provided when applicable.
-> > > > > > +
-> > > > > > +Required properties:
-> > > > > > +- compatible: Should be one of:
-> > > > > > +  "xylon,logicvc-3.02.a-display"
-> > > > > > +  "xylon,logicvc-4.01.a-display"
-> > > > > > +- reg: Physical base address and size for the controller regis=
-ters.
-> > > > > > +- clocks: List of phandle and clock-specifier pairs, one for e=
-ach entry
-> > > > > > +  in 'clock-names'
-> > > > > > +- clock-names: List of clock names that should at least contai=
-n:
-> > > > > > +  - "vclk": The VCLK video clock input.
-> > > > > > +- interrupts: The interrupt to use for VBLANK signaling.
-> > > > > > +- xylon,display-interface: Display interface in use, should be=
- one of:
-> > > > > > +  - "lvds-4bits": 4-bit LVDS interface (C_DISPLAY_INTERFACE =
-=3D=3D 4).
-> > > > > > +- xylon,display-colorspace: Display output colorspace in use, =
-should be one of:
-> > > > > > +  - "rgb": RGB colorspace (C_DISPLAY_COLOR_SPACE =3D=3D 0).
-> > > > > > +- xylon,display-depth: Display output depth in use (C_PIXEL_DA=
-TA_WIDTH).
-> > > > > > +- xylon,row-stride: Fixed number of pixels in a framebuffer ro=
-w (C_ROW_STRIDE).
-> > > > > > +- xylon,layers-count: The number of available layers (C_NUM_OF=
-_LAYERS).
-> > > > >
-> > > > > Presumably some of this is determined by the display attached. Is=
-n't it
-> > > > > safe to assume the IP was configured correctly for the intended d=
-isplay
-> > > > > and you can just get this from the panel?
-> > > >
-> > > > Layers are what corresponds to DRM planes, which are not actually i=
-ndicated
-> > > > by the panel but are a charasteristic of the display controller. In=
- our case,
-> > > > this is directly selected at bitstream synthesis time for the contr=
-oller.
-> > > >
-> > > > So I'm afraid there is no way we can auto-detect this from the driv=
-er.
-> > >
-> > > Sorry, I referring to the set of properties above. In particular,
-> > > xylon,display-interface and xylon,display-colorspace, though I don't
-> > > know if the latter is talking in memory format or on the wire format.
-> >
-> > Both of these are about the wire format, which is also "hardcoded" at s=
-ynthesis
-> > time with no way to be detected afterwards, as far as I know. Memory fo=
-rmat is
-> > described in the layer sub-nodes.
->=20
-> You have to attach the controller to something at the other end of the
-> wire. A panel is only going to support 1 or a few wire formats, so you
-> do likely know because the panel knows. In the case that a panel
-> supports multiple wire formats, we do have some standard properties
-> there. See the LVDS panel binding.
+> +	intel_populate_acpi_ids_for_all_connectors(drm_dev);
+> +
+> +	/* Build the _ADR to look for */
+> +	conn_addr = intel_connector->acpi_device_id;
+> +	conn_addr |= ACPI_DEVICE_ID_SCHEME;
+> +	conn_addr |= ACPI_BIOS_CAN_DETECT;
+> +
+> +	DRM_DEV_INFO(dev, "Looking for connector ACPI node at _ADR=%llX\n",
+> +		     conn_addr);
+> +
+> +	/* Look up the connector device, under the PCI device */
+> +	conn_dev = acpi_find_child_device(ACPI_COMPANION(dev), conn_addr,
+> +					  false);
+> +	intel_connector->acpi_handle = conn_dev ? conn_dev->handle : NULL;
 
-Looking at the LVDS panel binding, I see that the LVDS types that I have
-described as lvds-4bits and lvds-3bits are called jeida-24 and jeida-18.
+Why don't we do this as part of
+intel_populate_acpi_ids_for_all_connectors() or whatever it'll be
+called?
 
-Either way, the controller cannot be dynamically configured to use one or
-another: it is configured to support one at synthesis time and this doesn't
-change.
+> +}
+> diff --git a/drivers/gpu/drm/i915/display/intel_acpi.h b/drivers/gpu/drm/i915/display/intel_acpi.h
+> index 8f6d850df6fa..61a4392fac4a 100644
+> --- a/drivers/gpu/drm/i915/display/intel_acpi.h
+> +++ b/drivers/gpu/drm/i915/display/intel_acpi.h
+> @@ -9,14 +9,16 @@
+>  #include "intel_display_types.h"
+>  
+>  #ifdef CONFIG_ACPI
+> +void intel_connector_lookup_acpi_node(struct intel_connector *connector);
+>  void intel_register_dsm_handler(void);
+>  void intel_unregister_dsm_handler(void);
+>  void intel_populate_acpi_ids_for_all_connectors(struct drm_device *drm_dev);
+>  #else
+> +static inline void
+> +intel_connector_lookup_acpi_node(struct intel_connector *connector) { return; }
+>  static inline void intel_register_dsm_handler(void) { return; }
+>  static inline void intel_unregister_dsm_handler(void) { return; }
+>  static inline void
+> -static inline void
 
-I'm not sure exactly what you implied here. Even if we can retreive the
-wire format from the lvds-panel's data-mapping property, I don't think it s=
-hall
-describe what the display controller was configured to. This information co=
-uld
-be used to make sure that both are compatible (in the driver), but that's a=
-bout
-it as far as I can see.
+Whoops.
 
-> >
-> > > Actually for xylon,layers-count, You should just count the child nodes
-> > > of 'layers'.
-> >
-> > Oh that's a good point, thanks!
-> >
-> > > > > > +Optional properties:
-> > > > > > +- memory-region: phandle to a node describing memory, as speci=
-fied in:
-> > > > > > +  Documentation/devicetree/bindings/reserved-memory/reserved-m=
-emory.txt
-> > > > > > +- clock-names: List of clock names that can optionally contain:
-> > > > > > +  - "vclk2": The VCLK2 doubled-rate video clock input.
-> > > > > > +  - "lvdsclk": The LVDS clock.
-> > > > > > +  - "lvdsclkn": The LVDS clock inverted.
-> > > > >
-> > > > > How are these really optional?
-> > > >
-> > > > Well, the controller currently only supports LVDS, but more interfa=
-ces may be
-> > > > added later, so the lvdsclk clock will be optional when another int=
-erface
-> > > > is used instead. Maybe I'm mistaken about how to categorize them th=
-ough.
-> > > >
-> > > > My understanding is that the need for vclk2 and lvdsclkn depend on =
-the target
-> > > > FPGA family. I've developped the driver without the need for them, =
-but the
-> > > > datasheet states that they may be needed (but doesn't provide signi=
-ficant
-> > > > details about their role though).
-> > >
-> > > Not sure what to tell you then. You'll see it becomes a bit messy to
-> > > describe in schema. Ideally we define the exact number, order, and
-> > > values possible (or sets of those).
-> >
-> > I'll try to do my best.
-> >
-> > > > > > +- xylon,syscon: Syscon phandle representing the logicvc instan=
-ce.
-> > > > > > +- xylon,dithering: Dithering module is enabled (C_XCOLOR).
-> > > > > > +- xylon,background-layer: The last layer is used to display a =
-black background
-> > > > > > +  (C_USE_BACKGROUND). It must still be registered.
-> > > > > > +- xylon,layers-configurable: Configuration of layers' size, po=
-sition and offset
-> > > > > > +  is enabled (C_USE_SIZE_POSITION).
-> > > > >
-> > > > > I would think this will effectively have to be enabled to make th=
-is
-> > > > > usable with DRM. I'm not sure if a "standard" userspace would use=
- any of
-> > > > > the layers if all this is fixed.
-> > > >
-> > > > I was going with the same assumption, but drm_atomic_helper_check_p=
-lane_state
-> > > > has a can_position parameter, which will check that the plane cover=
-s the
-> > > > whole CRTC if set to false. So I guess it is somewhat expected that=
- this can
-> > > > be the case and some drivers (e.g. arm/hdlcd_crtc.c) also set this =
-to false.
-> > >
-> > > Certainly atomic can fail on anything not supported. My question is
-> > > more whether userspace has some minimum requirements. A cursor
-> > > couldn't deal with can_position=3Dfalse for example.
-> >
-> > Right, so I suppose that using an overlay plane as cursor wouldn't work
-> > in this situation. Well, I haven't found any formal definition of what =
-minimal
-> > requirements are expected from overlay planes. I would expect userspace=
- that
-> > tries to use an overlay plane as a cursor to have a software fallback a=
-s soon
-> > as something goes wrong. My feeling is that overlay planes are provided=
- on a
-> > "best-effort" basis, though contradiction is welcome here.
->=20
-> For sure, there's always a software fallback. While we shouldn't let a
-> specific OS's requirements dictate DT bindings, I just wonder if some
-> of the configuration ends up always having to be set a certain way.
-> Clearly, you could be writing the whole software stack and do a fixed
-> configuration, but would you still be using DT at that point?
+>  intel_populate_acpi_ids_for_all_connectors(struct drm_device *drm_dev) { }
+>  #endif /* CONFIG_ACPI */
+>  
+> diff --git a/drivers/gpu/drm/i915/display/intel_display_types.h b/drivers/gpu/drm/i915/display/intel_display_types.h
+> index 449abaea619f..c2706afc069b 100644
+> --- a/drivers/gpu/drm/i915/display/intel_display_types.h
+> +++ b/drivers/gpu/drm/i915/display/intel_display_types.h
+> @@ -400,6 +400,9 @@ struct intel_connector {
+>  	/* ACPI device id for ACPI and driver cooperation */
+>  	u32 acpi_device_id;
+>  
+> +	/* ACPI handle corresponding to this connector display, if found */
+> +	void *acpi_handle;
+> +
+>  	/* Reads out the current hw, returning true if the connector is enabled
+>  	 * and active (i.e. dpms ON state). */
+>  	bool (*get_hw_state)(struct intel_connector *);
+> diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/i915/display/intel_dp.c
+> index f865615172a5..4fac408a4299 100644
+> --- a/drivers/gpu/drm/i915/display/intel_dp.c
+> +++ b/drivers/gpu/drm/i915/display/intel_dp.c
+> @@ -45,6 +45,7 @@
+>  #include "i915_debugfs.h"
+>  #include "i915_drv.h"
+>  #include "i915_trace.h"
+> +#include "intel_acpi.h"
+>  #include "intel_atomic.h"
+>  #include "intel_audio.h"
+>  #include "intel_connector.h"
+> @@ -6333,6 +6334,7 @@ intel_dp_add_properties(struct intel_dp *intel_dp, struct drm_connector *connect
+>  {
+>  	struct drm_i915_private *dev_priv = to_i915(connector->dev);
+>  	enum port port = dp_to_dig_port(intel_dp)->base.port;
+> +	struct intel_connector *intel_connector = to_intel_connector(connector);
+>  
+>  	if (!IS_G4X(dev_priv) && port != PORT_A)
+>  		intel_attach_force_audio_property(connector);
+> @@ -6354,6 +6356,8 @@ intel_dp_add_properties(struct intel_dp *intel_dp, struct drm_connector *connect
+>  
+>  		connector->state->scaling_mode = DRM_MODE_SCALE_ASPECT;
+>  
+> +		/* Lookup the ACPI node corresponding to the connector */
+> +		intel_connector_lookup_acpi_node(intel_connector);
 
-=46rom my understanding, all the possible combinations make sense here.
-The ability to position layers is of course quite welcome for a generic
-use case, but it certainly makes sense to reduce the controller's gate coun=
-t by
-removing the feature if the final use case doesn't need it. So I don't think
-some of these properties end having to be set in a specific way to make sen=
-se.
+This is an odd place to do this, isn't it? It's only called once, but
+you say the acpi id may change at hotplug.
 
-Cheers,
+BR,
+Jani.
 
-Paul
+>  	}
+>  }
 
---=20
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
-
---bg08WKrSYDhXBjb5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl3VUpUACgkQ3cLmz3+f
-v9H+PggAh21Ub4YH9twTROpVaY52bId6HiUHJMZL4Q8aC8fCaRoXkpQsWjxoIEZt
-6S480LFhx7wSIFZVGa9mjQ+yNW99fykvqjjiuhfxpcVoB2ihN5AbnPwy/jTRZotc
-8EQ6sHJXeg6HosIlf6B8AF1EwtbVVX9YAy8X82NOyNICQ5rkjUEgCvtoxDbwU9zv
-/azmMNqhGlwvi+UJKORlBRNG4o5AdW98iH9WSDl/pdAvu6Zrpp4D+gLclhdPLa0K
-piHnswOW+IWhbzgLsQ+TyT3oOIFZudp4lAu4FEE1410ASpyXeBNi0d/Dx6Rdx9WB
-dWW2kwmhKx/K+ce2yO4eg14qDEWOvA==
-=oNgS
------END PGP SIGNATURE-----
-
---bg08WKrSYDhXBjb5--
+-- 
+Jani Nikula, Intel Open Source Graphics Center
