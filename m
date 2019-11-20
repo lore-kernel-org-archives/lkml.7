@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0524CC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:43:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F2EC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:43:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D27B220714
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:43:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C867E2070B
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:43:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732290AbfKTPnm (ORCPT
+        id S1732286AbfKTPnj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 10:43:42 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:52800 "EHLO
+        Wed, 20 Nov 2019 10:43:39 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:52806 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730023AbfKTPkT (ORCPT
+        by vger.kernel.org with ESMTP id S1730031AbfKTPkT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 Nov 2019 10:40:19 -0500
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iXS5V-0004bI-BE; Wed, 20 Nov 2019 15:40:13 +0000
+        id 1iXS5V-0004bM-GV; Wed, 20 Nov 2019 15:40:13 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iXS5U-0004L0-Pv; Wed, 20 Nov 2019 15:40:12 +0000
+        id 1iXS5V-0004N5-CW; Wed, 20 Nov 2019 15:40:13 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,12 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Takashi Iwai" <tiwai@suse.de>
-Date:   Wed, 20 Nov 2019 15:38:10 +0000
-Message-ID: <lsq.1574264230.370168036@decadent.org.uk>
+        "Paolo Bonzini" <pbonzini@redhat.com>
+Date:   Wed, 20 Nov 2019 15:38:24 +0000
+Message-ID: <lsq.1574264230.864897753@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 60/83] ALSA: hda - Fix potential endless loop at
- applying quirks
+Subject: [PATCH 3.16 74/83] KVM: nVMX: handle page fault in vmread
 In-Reply-To: <lsq.1574264230.280218497@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,40 +54,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Paolo Bonzini <pbonzini@redhat.com>
 
-commit 333f31436d3db19f4286f8862a00ea1d8d8420a1 upstream.
+commit f7eea636c3d505fe6f1d1066234f1aaf7171b681 upstream.
 
-Since the chained quirks via chained_before flag is applied before the
-depth check, it may lead to the endless recursive calls, when the
-chain were set up incorrectly.  Fix it by moving the depth check at
-the beginning of the loop.
+The implementation of vmread to memory is still incomplete, as it
+lacks the ability to do vmread to I/O memory just like vmptrst.
 
-Fixes: 1f57825077dc ("ALSA: hda - Add chained_before flag to the fixup entry")
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- sound/pci/hda/hda_auto_parser.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/kvm/vmx.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/sound/pci/hda/hda_auto_parser.c
-+++ b/sound/pci/hda/hda_auto_parser.c
-@@ -787,6 +787,8 @@ static void apply_fixup(struct hda_codec
- 	while (id >= 0) {
- 		const struct hda_fixup *fix = codec->fixup_list + id;
+--- a/arch/x86/kvm/vmx.c
++++ b/arch/x86/kvm/vmx.c
+@@ -6426,6 +6426,7 @@ static int handle_vmread(struct kvm_vcpu
+ 	unsigned long exit_qualification = vmcs_readl(EXIT_QUALIFICATION);
+ 	u32 vmx_instruction_info = vmcs_read32(VMX_INSTRUCTION_INFO);
+ 	gva_t gva = 0;
++	struct x86_exception e;
  
-+		if (++depth > 10)
-+			break;
- 		if (fix->chained_before)
- 			apply_fixup(codec, fix->chain_id, action, depth + 1);
- 
-@@ -826,8 +828,6 @@ static void apply_fixup(struct hda_codec
- 		}
- 		if (!fix->chained || fix->chained_before)
- 			break;
--		if (++depth > 10)
--			break;
- 		id = fix->chain_id;
+ 	if (!nested_vmx_check_permission(vcpu) ||
+ 	    !nested_vmx_check_vmcs12(vcpu))
+@@ -6452,8 +6453,10 @@ static int handle_vmread(struct kvm_vcpu
+ 				vmx_instruction_info, &gva))
+ 			return 1;
+ 		/* _system ok, as nested_vmx_check_permission verified cpl=0 */
+-		kvm_write_guest_virt_system(vcpu, gva, &field_value,
+-					    (is_long_mode(vcpu) ? 8 : 4), NULL);
++		if (kvm_write_guest_virt_system(vcpu, gva, &field_value,
++						(is_long_mode(vcpu) ? 8 : 4),
++						&e))
++			kvm_inject_page_fault(vcpu, &e);
  	}
- }
+ 
+ 	nested_vmx_succeed(vcpu);
 
