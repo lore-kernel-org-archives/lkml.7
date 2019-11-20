@@ -2,219 +2,170 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81D94C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:45:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65A51C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:46:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E37220715
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:45:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F9D820679
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:46:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="JVnKJLYE"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="enYhKFVD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727646AbfKTTpZ (ORCPT
+        id S1727671AbfKTTqS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 14:45:25 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:51514 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726440AbfKTTpZ (ORCPT
+        Wed, 20 Nov 2019 14:46:18 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:37110 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726440AbfKTTqR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 14:45:25 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAKJi655056805;
-        Wed, 20 Nov 2019 19:45:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=sEesESEYpLIlatJUbLqzdyEqW5b7T2dYR2CSmmTIChk=;
- b=JVnKJLYEP9tsUjMoNlXpAAtTlFMrRhANCKXk8fUIPxgqdHX/BFyOMg8r45ITyZYJ4Doh
- opj61ydHHGlR0pkPG0+KxWecCxCwGOStf56VKdsxisKN3O3EkTpwESIDLjvnINh1Al87
- 0zRFigvy0Ih2lGsljpdoPU8p41xgrAOqILEuA+DIuXppGFinAnQxCsZTEtZ+g/GOr4wv
- 3ku1YAi5G4YkNu3NErFOSHSIaHtlRxy0Q0lLwGEnYOkAov1n3sk+nsiwoUvgm5ZUAxpM
- LNUTlLvZZ8se+/LWGlBNRc16IMmMmPCfbuOn6JCOusf4aSpgBr3zeA81Os0C6vhMgOJC sg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2wa92pyrus-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 20 Nov 2019 19:45:14 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xAKJh2g7039918;
-        Wed, 20 Nov 2019 19:45:14 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2wcemhhtgx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 20 Nov 2019 19:45:14 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xAKJj9r6023179;
-        Wed, 20 Nov 2019 19:45:09 GMT
-Received: from localhost (/10.159.246.236)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 20 Nov 2019 11:45:09 -0800
-Date:   Wed, 20 Nov 2019 11:45:07 -0800
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Evan Green <evgreen@chromium.org>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Martin K Petersen <martin.petersen@oracle.com>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Ming Lei <ming.lei@redhat.com>,
-        Alexis Savery <asavery@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        linux-block <linux-block@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 2/2] loop: Better discard support for block devices
-Message-ID: <20191120194507.GW6235@magnolia>
-References: <20191114235008.185111-1-evgreen@chromium.org>
- <20191114154903.v7.2.I4d476bddbf41a61422ad51502f4361e237d60ad4@changeid>
- <20191120022518.GU6235@magnolia>
- <CAE=gft4mjKc4QKFKxp2FX9G2rUMuE3_eDuW_3Oq7NqTYBQwEjg@mail.gmail.com>
- <20191120191302.GV6235@magnolia>
- <CAE=gft6x1TmkkNTj+gktYMkHcysYyuYL50cavYusQ7hd9zChvA@mail.gmail.com>
+        Wed, 20 Nov 2019 14:46:17 -0500
+Received: by mail-ed1-f68.google.com with SMTP id k14so565726eds.4
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 11:46:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=719bsazi0dbFes8dSA1CK4DMOVZBwF8jI2z3H6EBZoU=;
+        b=enYhKFVD/qQ/yKh2BY2CWczU4JbompieZuFI33y2NFFVSbXnOSqVl+SEHTkdWN1saQ
+         4mQznt4mf2OphiR/z4qQ35SZgO3lTWW3+l/kFU5g85HINRlUuVCgz5Ua0zPcEjsJO4Y3
+         DeWdV4VW6qrJ7mOVXfa1pSD1gJ3jq5oPFMFyLWWHu61mXxVCNxDkhoRawPsc2sQmkbey
+         MOsyxkmKzNWyjWa4q63IYKfZP3mPtO4C2AkyulH+Umi3o8k1B8TeEltDQDHrEm4jvdwk
+         a1/W+NOAwVZMhooXGi9iJYOICLNsW5IeoD7+UdJhtLXJ7KtGEmas1lYExqYwV8W9rE7w
+         d9bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=719bsazi0dbFes8dSA1CK4DMOVZBwF8jI2z3H6EBZoU=;
+        b=kDgdCNQ7F5gLfXLwpiZgZax3kLXLVfNVSwGG6d14ZrOM95nrZ+EnqRKLP6z2e+J3yi
+         1MHw354uIsvFBjQ4biIdmdaaDkL4A83JvZEDOKk23I7whH+maCPnajZ6zuiHCk2y6Y9+
+         R/Ow5g6WKcrfTtJrSrRUY+vZNdopCaD71nKfz17SDurec/UBSJbIqARWd2hlLHUc/uP8
+         IoHN+DoBsttP/p0HvgR2JFQoqUSbsTb6tY6YNBQzfeoMFtEVa9wMq+VTPEyK0tNsCMDn
+         CVXIXAA4DcnAduNET9s9bJ1VcB9feHldN8LUxJhYgl6k/YTcxgsd2fKtEuvUaSNuDdti
+         /9Dw==
+X-Gm-Message-State: APjAAAXPAUrtOKWMDvSzmF3oL6WtEf5JrThPIggM0jgVpD4/YszXj9/b
+        zoALPQ1Gl5gXUB3I++2aC6bK8hw0UHzR0gTcEcTBXw==
+X-Google-Smtp-Source: APXvYqyGGB5Ejm+dAfU7oHFOo9IaMoTis9GuQGsrePKYkgnhdxKU0iaPnczimnWR29TkDLsiEwVXYHoZHPzaOMk4388=
+X-Received: by 2002:a17:906:e88:: with SMTP id p8mr7383771ejf.15.1574279175132;
+ Wed, 20 Nov 2019 11:46:15 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAE=gft6x1TmkkNTj+gktYMkHcysYyuYL50cavYusQ7hd9zChvA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9447 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1911200162
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9447 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1911200162
+References: <20191119221006.1021520-1-pasha.tatashin@soleen.com>
+ <20191120164307.GA19681@lakrids.cambridge.arm.com> <CA+CK2bAkb7zg6ne=PzA7UrQF49J2Sa7rmyWM3Bqugfe00-36ng@mail.gmail.com>
+In-Reply-To: <CA+CK2bAkb7zg6ne=PzA7UrQF49J2Sa7rmyWM3Bqugfe00-36ng@mail.gmail.com>
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+Date:   Wed, 20 Nov 2019 14:46:03 -0500
+Message-ID: <CA+CK2bCX+QGMPzhjj-UmVNb1jG8Z6WNW=L0GiVsTpGrhyqb9tA@mail.gmail.com>
+Subject: Re: [PATCH] arm64: kernel: memory corruptions due non-disabled PAN
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>, will@kernel.org,
+        steve.capper@arm.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Vladimir Murzin <vladimir.murzin@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        allison@lohutok.net, info@metux.net, alexios.zavras@intel.com
+Content-Type: multipart/mixed; boundary="0000000000000326770597cc6f1e"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 11:25:48AM -0800, Evan Green wrote:
-> On Wed, Nov 20, 2019 at 11:13 AM Darrick J. Wong
-> <darrick.wong@oracle.com> wrote:
-> >
-> > On Wed, Nov 20, 2019 at 10:56:30AM -0800, Evan Green wrote:
-> > > On Tue, Nov 19, 2019 at 6:25 PM Darrick J. Wong <darrick.wong@oracle.com> wrote:
-> > > >
-> > > > On Thu, Nov 14, 2019 at 03:50:08PM -0800, Evan Green wrote:
-> > > > > If the backing device for a loop device is itself a block device,
-> > > > > then mirror the "write zeroes" capabilities of the underlying
-> > > > > block device into the loop device. Copy this capability into both
-> > > > > max_write_zeroes_sectors and max_discard_sectors of the loop device.
-> > > > >
-> > > > > The reason for this is that REQ_OP_DISCARD on a loop device translates
-> > > > > into blkdev_issue_zeroout(), rather than blkdev_issue_discard(). This
-> > > > > presents a consistent interface for loop devices (that discarded data
-> > > > > is zeroed), regardless of the backing device type of the loop device.
-> > > > > There should be no behavior change for loop devices backed by regular
-> > > > > files.
-> 
-> (marking this spot for below)
-> 
-> > > > >
-> > > > > This change fixes blktest block/003, and removes an extraneous
-> > > > > error print in block/013 when testing on a loop device backed
-> > > > > by a block device that does not support discard.
-> > > > >
-> > > > > Signed-off-by: Evan Green <evgreen@chromium.org>
-> > > > > Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
-> > > > > Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-> > > > > ---
-> > > > >
-> > > > > Changes in v7:
-> > > > > - Rebase on top of Darrick's patch
-> > > > > - Tweak opening line of commit description (Darrick)
-> > > > >
-> > > > > Changes in v6: None
-> > > > > Changes in v5:
-> > > > > - Don't mirror discard if lo_encrypt_key_size is non-zero (Gwendal)
-> > > > >
-> > > > > Changes in v4:
-> > > > > - Mirror blkdev's write_zeroes into loopdev's discard_sectors.
-> > > > >
-> > > > > Changes in v3:
-> > > > > - Updated commit description
-> > > > >
-> > > > > Changes in v2: None
-> > > > >
-> > > > >  drivers/block/loop.c | 40 +++++++++++++++++++++++++++++-----------
-> > > > >  1 file changed, 29 insertions(+), 11 deletions(-)
-> > > > >
-> > > > > diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-> > > > > index 6a9fe1f9fe84..e8f23e4b78f7 100644
-> > > > > --- a/drivers/block/loop.c
-> > > > > +++ b/drivers/block/loop.c
-> > > > > @@ -427,11 +427,12 @@ static int lo_fallocate(struct loop_device *lo, struct request *rq, loff_t pos,
-> > > > >        * information.
-> > > > >        */
-> > > > >       struct file *file = lo->lo_backing_file;
-> > > > > +     struct request_queue *q = lo->lo_queue;
-> > > > >       int ret;
-> > > > >
-> > > > >       mode |= FALLOC_FL_KEEP_SIZE;
-> > > > >
-> > > > > -     if ((!file->f_op->fallocate) || lo->lo_encrypt_key_size) {
-> > > > > +     if (!blk_queue_discard(q)) {
-> > > > >               ret = -EOPNOTSUPP;
-> > > > >               goto out;
-> > > > >       }
-> > > > > @@ -862,6 +863,21 @@ static void loop_config_discard(struct loop_device *lo)
-> > > > >       struct file *file = lo->lo_backing_file;
-> > > > >       struct inode *inode = file->f_mapping->host;
-> > > > >       struct request_queue *q = lo->lo_queue;
-> > > > > +     struct request_queue *backingq;
-> > > > > +
-> > > > > +     /*
-> > > > > +      * If the backing device is a block device, mirror its zeroing
-> > > > > +      * capability. REQ_OP_DISCARD translates to a zero-out even when backed
-> > > > > +      * by block devices to keep consistent behavior with file-backed loop
-> > > > > +      * devices.
-> > > > > +      */
-> > > > > +     if (S_ISBLK(inode->i_mode) && !lo->lo_encrypt_key_size) {
-> > > > > +             backingq = bdev_get_queue(inode->i_bdev);
-> > > > > +             blk_queue_max_discard_sectors(q,
-> > > > > +                     backingq->limits.max_write_zeroes_sectors);
-> > > >
-> > > > max_discard_sectors?
-> > >
-> > > I didn't plumb max_discard_sectors because for my scenario it never
-> > > ends up hitting the block device that way.
-> > >
-> > > The loop device either uses FL_ZERO_RANGE or FL_PUNCH_HOLE. When
-> > > backed by a block device, that ends up in blkdev_fallocate(), which
-> > > always translates both of those into blkdev_issue_zeroout(), not
-> > > blkdev_issue_discard(). So it's really the zeroing capabilities of the
-> > > block device that matters, even for loop discard operations. It seems
-> > > weird, but I think this is the right thing because it presents a
-> > > consistent interface to loop device users whether backed by a file
-> > > system file, or directly by a block device. That is, a previously
-> > > discarded range will read back as zeroes.
-> >
-> > Ah, right.  Could you add this paragraph as a comment explaining why
-> > we're setting max_discard_sectors from max_write_zeroes_sectors?
-> 
-> Sure. I put an explanation in the commit description (see spot I
-> marked above), but I agree a comment is probably also worthwhile.
+--0000000000000326770597cc6f1e
+Content-Type: text/plain; charset="UTF-8"
 
-<nod> Sorry about the churn here.
+> > I see that with CONFIG_ARM64_SW_TTBR0_PAN=y, this means that we may
+> > leave the stale TTBR0 value installed across a context-switch (and have
+> > reproduced that locally), but I'm having some difficulty reproducing the
+> > corruption that you see.
+>
+> I will send the full test shortly. Note, I was never able to reproduce
+> it in QEMU, only on real hardware. Also, for some unknown reason after
+> kexec I could not reproduce it only during first boot, so it is
+> somewhat fragile, but I am sure it can be reproduced in other cases as
+> well, it is just my reproducer is not tunes for that.
+>
 
-I have a strong preference towards documenting decisions like these
-directly in the code because (a) I suck at reading patch prologues, (b)
-someone reading the code after this gets committed will see it
-immediately and right next to the relevant code, and (c) spelunking
-through the git history of a file for commit messages is kind of clunky.
+Attached is the test program that I used to reproduce memory corruption.
+Test on board with Broadcom's Stingray SoC.
 
-Dunno if that's just my age showing (mmm, pre-bk linux) or what. :/
+Without fix:
+# time /tmp/repro
+Corruption: pid 1474 map[0] 1488 cpu 3
+Terminated
 
---D
+real    0m0.088s
+user    0m0.004s
+sys     0m0.071s
 
-> >
-> > --D
-> >
-> > > -Evan
+With the fix:
+
+# time /tmp/repro
+Test passed, all good
+Terminated
+
+real    1m1.286s
+user    0m0.004s
+sys     0m0.970s
+
+
+
+Pasha
+
+--0000000000000326770597cc6f1e
+Content-Type: text/x-csrc; charset="US-ASCII"; name="repro.c"
+Content-Disposition: attachment; filename="repro.c"
+Content-Transfer-Encoding: base64
+Content-ID: <f_k37p5xni0>
+X-Attachment-Id: f_k37p5xni0
+
+I2RlZmluZSBfR05VX1NPVVJDRQojaW5jbHVkZSA8bGludXgvcGVyZl9ldmVudC5oPgojaW5jbHVk
+ZSA8c3lzL21tYW4uaD4KI2luY2x1ZGUgPHN5cy9zeXNpbmZvLmg+CiNpbmNsdWRlIDxzeXMvaW9j
+dGwuaD4KI2luY2x1ZGUgPHN5cy9zeXNjYWxsLmg+CiNpbmNsdWRlIDxzeXMvd2FpdC5oPgojaW5j
+bHVkZSA8c3RyaW5nLmg+CiNpbmNsdWRlIDxzdGRsaWIuaD4KI2luY2x1ZGUgPHNpZ25hbC5oPgoj
+aW5jbHVkZSA8c3RkaW8uaD4KI2luY2x1ZGUgPHNjaGVkLmg+CiNpbmNsdWRlIDx0aW1lLmg+CiNp
+bmNsdWRlIDx1bmlzdGQuaD4KCiNkZWZpbmUgUlVOX1RJTUUJNjAKI2RlZmluZSBTSVpFCQk0MDk2
+CiNkZWZpbmUgTlBST0NTCQk0MDk2CiNkZWZpbmUgTkNQVQkJZ2V0X25wcm9jc19jb25mKCkKI2Rl
+ZmluZSBQQUdFTUFQX0xFTkdUSCA4CnVuc2lnbmVkIGxvbmcgZ2V0X3BhKHZvaWQgKmFkZHIpIHsK
+ICAgRklMRSAqcGFnZW1hcCA9IGZvcGVuKCIvcHJvYy9zZWxmL3BhZ2VtYXAiLCAicmIiKTsKICAg
+dW5zaWduZWQgbG9uZyBvZmZzZXQgPSAodW5zaWduZWQgbG9uZylhZGRyIC8gZ2V0cGFnZXNpemUo
+KSAqIFBBR0VNQVBfTEVOR1RIOwogICB1bnNpZ25lZCBsb25nIHBmbiA9IDA7CgogICBpZihmc2Vl
+ayhwYWdlbWFwLCAodW5zaWduZWQgbG9uZylvZmZzZXQsIFNFRUtfU0VUKSAhPSAwKSB7CiAgICAg
+IGZwcmludGYoc3RkZXJyLCAiRmFpbGVkIHRvIHNlZWsgcGFnZW1hcCB0byBwcm9wZXIgbG9jYXRp
+b25cbiIpOwogICAgICBleGl0KDEpOwogICB9CgogICBmcmVhZCgmcGZuLCAxLCBQQUdFTUFQX0xF
+TkdUSC0xLCBwYWdlbWFwKTsKCiAgIHBmbiAmPSAweDdGRkZGRkZGRkZGRkZGOwoKICAgZmNsb3Nl
+KHBhZ2VtYXApOwoKICAgcmV0dXJuIHBmbiAqIGdldHBhZ2VzaXplKCk7Cn0KCmludApkb193b3Jr
+KCkKewoJaW50ICptYXAsIHBpZDsKCXVuc2lnbmVkIGxvbmcgcGE7CgoJaWYgKGZvcmsoKSkKCQll
+eGl0KDApOwoKCXBpZCA9IGdldHBpZCgpOwoJbWFwID0gbW1hcChOVUxMLCBTSVpFLCBQUk9UX1JF
+QUR8UFJPVF9XUklURSwgTUFQX1NIQVJFRCB8IE1BUF9BTk9OWU1PVVMsCgkJICAgLTEsIDApOwoJ
+bWFwWzBdID0gcGlkOwoJc2NoZWRfeWllbGQoKTsKCWlmIChtYXBbMF0gIT0gcGlkKSB7CgkJZnBy
+aW50ZihzdGRlcnIsICJDb3JydXB0aW9uOiBwaWQgJWQgbWFwWzBdICVkIGNwdSAlZFxuIiwKCQkJ
+cGlkLCBtYXBbMF0sIHNjaGVkX2dldGNwdSgpKTsKCQlraWxsKDAsIFNJR1RFUk0pOwoJCXJldHVy
+biAxOwoJfQoJbXVubWFwKG1hcCwgU0laRSk7CglyZXR1cm4gMDsKfQoKc3RhdGljIHZvaWQgZXZl
+bnRfb3BlbihzdHJ1Y3QgcGVyZl9ldmVudF9hdHRyICpjdHhfZXZlbnRfYXR0ciwgaW50IGNvbmZp
+ZykKewoJaW50IGksIGZkOwoJY3R4X2V2ZW50X2F0dHItPmNvbmZpZyA9IGNvbmZpZzsKCWZvciAo
+aSA9IDA7IGkgPCBOQ1BVOyBpKyspIHsKCQlmZCA9IHN5c2NhbGwoX19OUl9wZXJmX2V2ZW50X29w
+ZW4sIGN0eF9ldmVudF9hdHRyLAoJCQktMSwgaSwgLTEsIDApOwoJCWlvY3RsKGZkLCBQRVJGX0VW
+RU5UX0lPQ19FTkFCTEUsIDApOwoJfQp9CgpzdGF0aWMgdm9pZApwZXJmX2V2ZW50cygpCnsKCXN0
+cnVjdCBwZXJmX2V2ZW50X2F0dHIgY3R4X2V2ZW50X2F0dHI7CgoJbWVtc2V0KCZjdHhfZXZlbnRf
+YXR0ciwgMCwgc2l6ZW9mKHN0cnVjdCBwZXJmX2V2ZW50X2F0dHIpKTsKCWN0eF9ldmVudF9hdHRy
+LnR5cGUgPSBQRVJGX1RZUEVfU09GVFdBUkU7CgljdHhfZXZlbnRfYXR0ci5zaXplID0gc2l6ZW9m
+IChzdHJ1Y3QgcGVyZl9ldmVudF9hdHRyKTsKCWN0eF9ldmVudF9hdHRyLnNhbXBsZV9wZXJpb2Qg
+PSAxOwoJY3R4X2V2ZW50X2F0dHIuc2FtcGxlX3R5cGUgPSBQRVJGX1NBTVBMRV9DQUxMQ0hBSU47
+CgoJZXZlbnRfb3BlbigmY3R4X2V2ZW50X2F0dHIsIFBFUkZfQ09VTlRfU1dfQ1BVX0NMT0NLKTsK
+fQoKaW50Cm1haW4oaW50IGFyZ2MsIGNoYXIgKiphcmd2KQp7CglwaWRfdCBwW05QUk9DU107Cglp
+bnQgaSwgZmQ7CgljcHVfc2V0X3QgIG1hc2s7CgoJQ1BVX1pFUk8oJm1hc2spOwoJZm9yIChpID0g
+MDsgaSA8IE5DUFU7IGkrKykKCQlDUFVfU0VUKGksICZtYXNrKTsKCXNjaGVkX3NldGFmZmluaXR5
+KDAsIHNpemVvZihtYXNrKSwgJm1hc2spOwoKCXBlcmZfZXZlbnRzKCk7Cglmb3IgKGkgPSAwOyBp
+IDwgTlBST0NTOyBpKyspIHsKCQlwW2ldID0gZm9yaygpOwoJCWlmIChwW2ldID09IDApIHsKCQkJ
+Zm9yICg7OykgewoJCQkJaWYgKGRvX3dvcmsoKSkgewoJCQkJCWZwcmludGYoc3RkZXJyLCAiQnVn
+IGlzIGRldGVjdGVkXG4iKTsKCQkJCQlraWxsKDAsIFNJR1RFUk0pOwoJCQkJCWV4aXQoMSk7CgkJ
+CQl9CgkJCX0KCQl9Cgl9CgoJc2xlZXAoUlVOX1RJTUUpOwoJcHJpbnRmKCJUZXN0IHBhc3NlZCwg
+YWxsIGdvb2RcbiIpOwoJa2lsbCgwLCBTSUdURVJNKTsKCXJldHVybiAwOwp9Cg==
+--0000000000000326770597cc6f1e--
