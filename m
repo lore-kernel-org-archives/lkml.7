@@ -2,128 +2,140 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC910C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:28:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B59CBC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:29:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F872224CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:28:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 966F8224CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:29:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729641AbfKTN2t (ORCPT
+        id S1730590AbfKTN3B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 08:28:49 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:36772 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729530AbfKTN2s (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 08:28:48 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id A87451C1A58; Wed, 20 Nov 2019 14:28:46 +0100 (CET)
-Date:   Wed, 20 Nov 2019 14:28:46 +0100
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Stuart Hayes <stuart.w.hayes@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 383/422] firmware: dell_rbu: Make payload memory
- uncachable
-Message-ID: <20191120132845.GA32699@duo.ucw.cz>
-References: <20191119051400.261610025@linuxfoundation.org>
- <20191119051423.887664218@linuxfoundation.org>
+        Wed, 20 Nov 2019 08:29:01 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:39182 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729530AbfKTN3B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 08:29:01 -0500
+Received: from ip5f5a6266.dynamic.kabel-deutschland.de ([95.90.98.102] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1iXQ2M-0003QS-LP; Wed, 20 Nov 2019 14:28:50 +0100
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Akash Gajjar <akash@openedev.com>, Tom Cubie <tom@radxa.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-amarula@amarulasolutions.com
+Subject: Re: [PATCH 2/5] arm64: dts: rockchip: Add VMARC RK3399Pro SOM initial support
+Date:   Wed, 20 Nov 2019 14:28:50 +0100
+Message-ID: <1707486.7nrk6WTBgP@diego>
+In-Reply-To: <20191120113923.11685-3-jagan@amarulasolutions.com>
+References: <20191120113923.11685-1-jagan@amarulasolutions.com> <20191120113923.11685-3-jagan@amarulasolutions.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="uAKRQypu60I7Lcqm"
-Content-Disposition: inline
-In-Reply-To: <20191119051423.887664218@linuxfoundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Jagan,
 
---uAKRQypu60I7Lcqm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+looks good in general, just some small things below:
 
-Hi!
-
-> From: Stuart Hayes <stuart.w.hayes@gmail.com>
->=20
-> [ Upstream commit 6aecee6ad41cf97c0270f72da032c10eef025bf0 ]
->=20
-> The dell_rbu driver takes firmware update payloads and puts them in memor=
-y so
-> the system BIOS can find them after a reboot.  This sometimes fails (thou=
-gh
-> rarely), because the memory containing the payload is in the CPU cache but
-> never gets written back to main memory before the system is rebooted (CPU
-> cache contents are lost on reboot).
->=20
-> With this patch, the payload memory will be changed to uncachable to ensu=
-re
-> that the payload is actually in main memory before the system is
-> rebooted.
-
-Flushing the cache sounds like easier way to accomplish same
-goal... and perhaps with better performance too.
-
-Best regards,
-								Pavel
-							=09
-> +++ b/drivers/firmware/dell_rbu.c
-> @@ -45,6 +45,7 @@
->  #include <linux/moduleparam.h>
->  #include <linux/firmware.h>
->  #include <linux/dma-mapping.h>
-> +#include <asm/set_memory.h>
-> =20
->  MODULE_AUTHOR("Abhay Salunke <abhay_salunke@dell.com>");
->  MODULE_DESCRIPTION("Driver for updating BIOS image on DELL systems");
-> @@ -181,6 +182,11 @@ static int create_packet(void *data, size_t length)
->  			packet_data_temp_buf =3D NULL;
->  		}
->  	}
-> +	/*
-> +	 * set to uncachable or it may never get written back before reboot
-> +	 */
-> +	set_memory_uc((unsigned long)packet_data_temp_buf, 1 << ordernum);
+Am Mittwoch, 20. November 2019, 12:39:20 CET schrieb Jagan Teki:
+> VMARC RK3399Pro SOM is a standard SMARC SOM design with
+> Rockchip RK3399Pro SoC, which is designed by Vamrs.
+> 
+> Specification:
+> - Rockchip RK3399Pro
+> - PMIC: RK809-3
+> - SD slot, 16GiB eMMC
+> - 2xUSB-2.0, 1xUSB3.0
+> - USB-C for power supply
+> - Ethernet, PCIe
+> - HDMI, MIPI-DSI/CSI, eDP
+> 
+> Add initial support for VMARC RK3399Pro SOM, this would use
+> with associated carrier board.
+> 
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> ---
+>  .../dts/rockchip/rk3399pro-vmarc-som.dtsi     | 339 ++++++++++++++++++
+>  1 file changed, 339 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi b/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
+> new file mode 100644
+> index 000000000000..ddf6ebc9fbe3
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
+> @@ -0,0 +1,339 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Copyright (c) 2019 Fuzhou Rockchip Electronics Co., Ltd
+> + * Copyright (c) 2019 Vamrs Limited
+> + * Copyright (c) 2019 Amarula Solutions(India)
+> + */
 > +
->  	spin_lock(&rbu_data.lock);
-> =20
->  	newpacket->data =3D packet_data_temp_buf;
-> @@ -349,6 +355,8 @@ static void packet_empty_list(void)
->  		 * to make sure there are no stale RBU packets left in memory
->  		 */
->  		memset(newpacket->data, 0, rbu_data.packetsize);
-> +		set_memory_wb((unsigned long)newpacket->data,
-> +			1 << newpacket->ordernum);
->  		free_pages((unsigned long) newpacket->data,
->  			newpacket->ordernum);
->  		kfree(newpacket);
-> --=20
-> 2.20.1
->=20
->=20
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/pinctrl/rockchip.h>
+> +#include <dt-bindings/pwm/pwm.h>
+> +
+> +/ {
+> +	compatible = "vamrs,rk3399pro-vmarc-som", "rockchip,rk3399pro";
+> +
+> +	clkin_gmac: external-gmac-clock {
+> +		compatible = "fixed-clock";
+> +		clock-frequency = <125000000>;
+> +		clock-output-names = "clkin_gmac";
+> +		#clock-cells = <0>;
+> +	};
+> +
+> +	vcc5v0_sys: vcc5v0-sys-regulator {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc5v0_sys";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
 
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+Is vcc5v0_sys really the topmost regulator getting the outside
+power-supply?
 
---uAKRQypu60I7Lcqm
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
+> +	};
+> +
+> +	vcc_lan: vcc3v3-phy-regulator {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc_lan";
 
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXdU/jQAKCRAw5/Bqldv6
-8i5yAJsE3Yw0kWsaNyR/q/RfczB//zqRSACeMehYMBKXVT8mZk8PSi66SfydNhg=
-=kZtH
------END PGP SIGNATURE-----
+vcc_lan / vcc_phy is mostly coming from the vendor bsp in some way
+and will be named differently in schematics ... also it should be connected
+to the regulator tree.
 
---uAKRQypu60I7Lcqm--
+[...]
+
+> +&tsadc {
+> +	status = "okay";
+> +
+> +	/* tshut mode 0:CRU 1:GPIO */
+
+I think we can live without the additional comments for properties :-)
+
+> +	rockchip,hw-tshut-mode = <1>;
+> +	/* tshut polarity 0:LOW 1:HIGH */
+> +	rockchip,hw-tshut-polarity = <1>;
+> +};
+
+Heiko
+
+
+
