@@ -2,117 +2,75 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 994FDC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 21:48:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A090AC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 21:50:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7980820708
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 21:48:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B4EC20708
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 21:50:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726351AbfKTVsv (ORCPT
+        id S1726568AbfKTVt7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 16:48:51 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:54028 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725820AbfKTVsv (ORCPT
+        Wed, 20 Nov 2019 16:49:59 -0500
+Received: from imap1.codethink.co.uk ([176.9.8.82]:36430 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725819AbfKTVt7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 16:48:51 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id F2BFB1C1AB8; Wed, 20 Nov 2019 22:48:48 +0100 (CET)
-Date:   Wed, 20 Nov 2019 22:48:48 +0100
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>,
-        Tony Brelinski <tonyx.brelinski@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 063/422] ice: Prevent control queue operations
- during reset
-Message-ID: <20191120214848.GA13271@duo.ucw.cz>
-References: <20191119051400.261610025@linuxfoundation.org>
- <20191119051403.783565468@linuxfoundation.org>
+        Wed, 20 Nov 2019 16:49:59 -0500
+Received: from [167.98.27.226] (helo=xylophone)
+        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
+        id 1iXXrA-0005Bw-71; Wed, 20 Nov 2019 21:49:48 +0000
+Message-ID: <d82ef7b94b9c3adc4fbb4e62c17b81a868fb32d8.camel@codethink.co.uk>
+Subject: Re: [Y2038] [PATCH 3/8] powerpc: fix vdso32 for ppc64le
+From:   Ben Hutchings <ben.hutchings@codethink.co.uk>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     y2038 Mailman List <y2038@lists.linaro.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Wed, 20 Nov 2019 21:49:47 +0000
+In-Reply-To: <CAK8P3a3BPhX_NRFj66WyRLQUOCV-FGRjmPCgB7gqxMoK8hfywg@mail.gmail.com>
+References: <20191108203435.112759-1-arnd@arndb.de>
+         <20191108203435.112759-4-arnd@arndb.de>
+         <fdcb510863c801f1f64448e558ee0f8ed20db418.camel@codethink.co.uk>
+         <CAK8P3a3BPhX_NRFj66WyRLQUOCV-FGRjmPCgB7gqxMoK8hfywg@mail.gmail.com>
+Organization: Codethink Ltd.
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="HcAYCG3uE/tztfnV"
-Content-Disposition: inline
-In-Reply-To: <20191119051403.783565468@linuxfoundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 2019-11-20 at 20:35 +0100, Arnd Bergmann wrote:
+> On Wed, Nov 20, 2019 at 8:13 PM Ben Hutchings
+> <ben.hutchings@codethink.co.uk> wrote:
+> > On Fri, 2019-11-08 at 21:34 +0100, Arnd Bergmann wrote:
+> > > On little-endian 32-bit application running on 64-bit kernels,
+> > > the current vdso would read the wrong half of the xtime seconds
+> > > field. Change it to return the lower half like it does on
+> > > big-endian.
+> > 
+> > ppc64le doesn't have 32-bit compat so this is only theoretical.
+> 
+> That is probably true. I only looked at the kernel, which today still
+> supports compat mode for ppc64le, but I saw the patches to disable
+> it, and I don't think anyone has even attempted building user space
+> for it.
 
---HcAYCG3uE/tztfnV
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+COMPAT is still enabled for some reason, but VDSO32 isn't (since 4.2).
 
-Hi!
->=20
-> [ Upstream commit fd2a981777d911b2e94cdec50779c85c58a0dec9 ]
->=20
-> Once reset is issued, the driver loses all control queue interfaces.
-> Exercising control queue operations during reset is incorrect and
-> may result in long timeouts.
->=20
-> This patch introduces a new field 'reset_ongoing' in the hw structure.
-> This is set to 1 by the core driver when it receives a reset interrupt.
-> ice_sq_send_cmd checks reset_ongoing before actually issuing the control
-> queue operation. If a reset is in progress, it returns a soft error code
-> (ICE_ERR_RESET_PENDING) to the caller. The caller may or may not have to
-> take any action based on this return. Once the driver knows that the
-> reset is done, it has to set reset_ongoing back to 0. This will allow
-> control queue operations to be posted to the hardware again.
->=20
-> This "bail out" logic was specifically added to ice_sq_send_cmd (which
-> is pretty low level function) so that we have one solution in one place
-> that applies to all types of control queues.
+Ben.
 
-I don't think this is suitable for stable. Would driver maintainers
-comment?
+-- 
+Ben Hutchings, Software Developer                         Codethink Ltd
+https://www.codethink.co.uk/                 Dale House, 35 Dale Street
+                                     Manchester, M1 2HF, United Kingdom
 
-> +			 *
-> +			 * As this is the start of the reset/rebuild cycle, set
-> +			 * both to indicate that.
-> +			 */
-> +			hw->reset_ongoing =3D true;
->  		}
->  	}
-
-This should be =3D 1, since variable is u8...
-
-Best regards,
-									Pavel     	      =20
-
-> +++ b/drivers/net/ethernet/intel/ice/ice_type.h
-> @@ -293,6 +293,7 @@ struct ice_hw {
->  	u8 sw_entry_point_layer;
-> =20
->  	u8 evb_veb;		/* true for VEB, false for VEPA */
-> +	u8 reset_ongoing;	/* true if hw is in reset, false otherwise */
->  	struct ice_bus_info bus;
->  	struct ice_nvm_info nvm;
->  	struct ice_hw_dev_caps dev_caps;	/* device capabilities */
-> --=20
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---HcAYCG3uE/tztfnV
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXdW0wAAKCRAw5/Bqldv6
-8sxlAKDEha3WJuock0aOY2h8UfYbOW3HEgCcCt+6GiSmCKL4VV2nDuTaeTApljg=
-=AL5j
------END PGP SIGNATURE-----
-
---HcAYCG3uE/tztfnV--
