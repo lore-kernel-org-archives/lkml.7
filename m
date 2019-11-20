@@ -2,218 +2,107 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D84C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:05:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C1D3C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:05:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE5B922365
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:05:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05D6C2245D
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:05:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="hdscKC8k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728978AbfKTLFG (ORCPT
+        id S1728990AbfKTLFe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 06:05:06 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:42083 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727067AbfKTLFG (ORCPT
+        Wed, 20 Nov 2019 06:05:34 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:38698 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728980AbfKTLFe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 06:05:06 -0500
-Received: from 79.184.253.244.ipv4.supernova.orange.pl (79.184.253.244) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
- id 1ba1dd923de36bd4; Wed, 20 Nov 2019 12:05:02 +0100
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     rafael@kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ulf.hansson@linaro.org
-Subject: Re: [PATCH V2 1/2] cpuidle: Replace use_deepest_state flag by forced_idle_latency_limit_ns
-Date:   Wed, 20 Nov 2019 12:05:02 +0100
-Message-ID: <4032150.Wh8QACBdyO@kreacher>
-In-Reply-To: <20191116131613.15733-1-daniel.lezcano@linaro.org>
-References: <20191116131613.15733-1-daniel.lezcano@linaro.org>
+        Wed, 20 Nov 2019 06:05:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:Content-Type:MIME-Version:
+        Message-ID:Subject:To:From:Date:Reply-To:Cc:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=oppy+F+0JaaCkFHzOboj6zfi/ynUAor3Lsm2TZQUzXo=; b=hdscKC8k4aCUGOpSCrLWZ0qr7
+        J3RITMqSzQHKbgTmpQsSBFX1bIQUH6+KL37wWns3CXS1iYD6XGYBQRZCxdVnw1y6prKiHgAPR/Lgi
+        tW+Mvjn5VMx/yBULUzsl248AqbMZSpQ0al1oAhBti++euAuhib3JGExA8PQZw+Uw3aikPijHrNwTa
+        Q5ByKuGU7eGQyNuFOeoLimStdQnTF8gNm6Y70p4dH7YKdJ7W5Rp/htWbOyL136AGQFYKJYLu6sNgA
+        vyJLqM17lOGXj4ljaMmC0EEnCnkT7msXUMmml5BbIH4BwoTpnNEIFaCg8x88meQyu3G6FjMz2qKSJ
+        pjEf6GeGA==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:58734)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1iXNnf-0007tE-8F; Wed, 20 Nov 2019 11:05:31 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1iXNne-0001gL-Jr; Wed, 20 Nov 2019 11:05:30 +0000
+Date:   Wed, 20 Nov 2019 11:05:30 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] Remove Joern Engel's address in MAINTAINERS
+Message-ID: <20191120110530.GO25745@shell.armlinux.org.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Saturday, November 16, 2019 2:16:12 PM CET Daniel Lezcano wrote:
-> We want to specify a latency constraint when choosing an idle state at
-> play_idle time. Instead of duplicating the information in the
-> structure or propagate the latency in the call stack, change the
-> use_deepest_state by forced_latency_limit_ns to introduce this
-> constraint. The idea being that when it is set, idle is forced
-> (i.e. no governors), but there is a latency limit for the state to
-> use.
-> 
-> A zero latency constraint means "do not use the deepest idle state
-> path" as the 'use_deepest_state' boolean was used in the
-> cpuidle_idle_call.
-> 
-> In addition add the play_idle_precise() function getting a nanosec
-> base latency constraint as parameter. The play_idle() function becomes
-> a wrapper passing an U64_MAX to play_idle_precise().
-> 
-> Suggested-by: Rafael J. Wysocki <rafael@kernel.org>
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> ---
->  drivers/cpuidle/cpuidle.c | 10 +++++-----
->  include/linux/cpu.h       |  6 +++++-
->  include/linux/cpuidle.h   |  6 +++---
->  kernel/sched/idle.c       | 14 +++++++-------
->  4 files changed, 20 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/cpuidle/cpuidle.c b/drivers/cpuidle/cpuidle.c
-> index 44ae39f2b47a..62226fadc02d 100644
-> --- a/drivers/cpuidle/cpuidle.c
-> +++ b/drivers/cpuidle/cpuidle.c
-> @@ -100,19 +100,19 @@ static int find_deepest_state(struct cpuidle_driver *drv,
->  
->  /**
->   * cpuidle_use_deepest_state - Set/clear governor override flag.
-> - * @enable: New value of the flag.
-> + * @latency_limit_ns: A latency limit constraint
->   *
-> - * Set/unset the current CPU to use the deepest idle state (override governors
-> - * going forward if set).
-> + * Set/unset the current CPU to use the deepest idle state with the exit
-> + * latency within @latency_limit_ns
->   */
-> -void cpuidle_use_deepest_state(bool enable)
-> +void cpuidle_use_deepest_state(u64 latency_limit_ns)
->  {
->  	struct cpuidle_device *dev;
->  
->  	preempt_disable();
->  	dev = cpuidle_get_device();
->  	if (dev)
-> -		dev->use_deepest_state = enable;
-> +		dev->forced_idle_latency_limit_ns = latency_limit_ns;
->  	preempt_enable();
->  }
->  
-> diff --git a/include/linux/cpu.h b/include/linux/cpu.h
-> index d0633ebdaa9c..4c9694e209a5 100644
-> --- a/include/linux/cpu.h
-> +++ b/include/linux/cpu.h
-> @@ -179,7 +179,11 @@ void arch_cpu_idle_dead(void);
->  int cpu_report_state(int cpu);
->  int cpu_check_up_prepare(int cpu);
->  void cpu_set_state_online(int cpu);
-> -void play_idle(unsigned long duration_us);
-> +void play_idle_precise(u64 duration_ns, u64 latency_ns);
-> +static inline void play_idle(unsigned long duration_us)
-> +{
-> +	play_idle_precise(duration_us * NSEC_PER_USEC, U64_MAX);
-> +}
->  
->  #ifdef CONFIG_HOTPLUG_CPU
->  bool cpu_wait_death(unsigned int cpu, int seconds);
-> diff --git a/include/linux/cpuidle.h b/include/linux/cpuidle.h
-> index d23a3b1ddcf6..1f3f4dd01e48 100644
-> --- a/include/linux/cpuidle.h
-> +++ b/include/linux/cpuidle.h
-> @@ -83,7 +83,6 @@ struct cpuidle_driver_kobj;
->  struct cpuidle_device {
->  	unsigned int		registered:1;
->  	unsigned int		enabled:1;
-> -	unsigned int		use_deepest_state:1;
->  	unsigned int		poll_time_limit:1;
->  	unsigned int		cpu;
->  	ktime_t			next_hrtimer;
-> @@ -91,6 +90,7 @@ struct cpuidle_device {
->  	int			last_state_idx;
->  	int			last_residency;
->  	u64			poll_limit_ns;
-> +	u64			forced_idle_latency_limit_ns;
->  	struct cpuidle_state_usage	states_usage[CPUIDLE_STATE_MAX];
->  	struct cpuidle_state_kobj *kobjs[CPUIDLE_STATE_MAX];
->  	struct cpuidle_driver_kobj *kobj_driver;
-> @@ -210,7 +210,7 @@ extern int cpuidle_find_deepest_state(struct cpuidle_driver *drv,
->  				      struct cpuidle_device *dev);
->  extern int cpuidle_enter_s2idle(struct cpuidle_driver *drv,
->  				struct cpuidle_device *dev);
-> -extern void cpuidle_use_deepest_state(bool enable);
-> +extern void cpuidle_use_deepest_state(u64 latency_limit_ns);
->  #else
->  static inline int cpuidle_find_deepest_state(struct cpuidle_driver *drv,
->  					     struct cpuidle_device *dev)
-> @@ -218,7 +218,7 @@ static inline int cpuidle_find_deepest_state(struct cpuidle_driver *drv,
->  static inline int cpuidle_enter_s2idle(struct cpuidle_driver *drv,
->  				       struct cpuidle_device *dev)
->  {return -ENODEV; }
-> -static inline void cpuidle_use_deepest_state(bool enable)
-> +static inline void cpuidle_use_deepest_state(u64 latency_limit_ns)
->  {
->  }
->  #endif
-> diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
-> index 8dad5aa600ea..0a817e907192 100644
-> --- a/kernel/sched/idle.c
-> +++ b/kernel/sched/idle.c
-> @@ -165,7 +165,7 @@ static void cpuidle_idle_call(void)
->  	 * until a proper wakeup interrupt happens.
->  	 */
->  
-> -	if (idle_should_enter_s2idle() || dev->use_deepest_state) {
-> +	if (idle_should_enter_s2idle() || dev->forced_idle_latency_limit_ns) {
->  		if (idle_should_enter_s2idle()) {
->  			rcu_idle_enter();
->  
-> @@ -311,7 +311,7 @@ static enum hrtimer_restart idle_inject_timer_fn(struct hrtimer *timer)
->  	return HRTIMER_NORESTART;
->  }
->  
-> -void play_idle(unsigned long duration_us)
-> +void play_idle_precise(u64 duration_ns, u64 latency_ns)
->  {
->  	struct idle_timer it;
->  
-> @@ -323,29 +323,29 @@ void play_idle(unsigned long duration_us)
->  	WARN_ON_ONCE(current->nr_cpus_allowed != 1);
->  	WARN_ON_ONCE(!(current->flags & PF_KTHREAD));
->  	WARN_ON_ONCE(!(current->flags & PF_NO_SETAFFINITY));
-> -	WARN_ON_ONCE(!duration_us);
-> +	WARN_ON_ONCE(!duration_ns);
->  
->  	rcu_sleep_check();
->  	preempt_disable();
->  	current->flags |= PF_IDLE;
-> -	cpuidle_use_deepest_state(true);
-> +	cpuidle_use_deepest_state(latency_ns);
->  
->  	it.done = 0;
->  	hrtimer_init_on_stack(&it.timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
->  	it.timer.function = idle_inject_timer_fn;
-> -	hrtimer_start(&it.timer, ns_to_ktime(duration_us * NSEC_PER_USEC),
-> +	hrtimer_start(&it.timer, ns_to_ktime(duration_ns),
->  		      HRTIMER_MODE_REL_PINNED);
->  
->  	while (!READ_ONCE(it.done))
->  		do_idle();
->  
-> -	cpuidle_use_deepest_state(false);
-> +	cpuidle_use_deepest_state(0);
->  	current->flags &= ~PF_IDLE;
->  
->  	preempt_fold_need_resched();
->  	preempt_enable();
->  }
-> -EXPORT_SYMBOL_GPL(play_idle);
-> +EXPORT_SYMBOL_GPL(play_idle_precise);
->  
->  void cpu_startup_entry(enum cpuhp_state state)
->  {
-> 
+Joern's email address seems to be non-functional for 22 days, failing
+with "No route to host".  So, it's pointless having the entry in
+MAINTAINERS.  Remove the address and mark the items as orphans.
 
-Queued up for 5.5 along with the [2/2], but I have made quite a few changes
-to the patches, so please double check the result in my bleeding-edge branch.
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+---
+Tracerouting the IP (213.229.74.203) gives:
 
-Thanks!
+ 8  kvm10uk.cheapvps.co.uk (213.229.125.119)  23.298 ms  18.688 ms 19.051 ms
+ 9  kvm10uk.cheapvps.co.uk (213.229.125.119)  2384.829 ms !H  2384.941 ms !H  2385.424 ms !H
 
+The domain is due to expire in two days, so will be interesting to
+see what happens.
 
+If anyone has an updated address, please correct maintainers!
 
+ MAINTAINERS | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index bc39f7f5dc34..5950cd457b24 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2998,9 +2998,8 @@ F:	kernel/trace/blktrace.c
+ F:	lib/sbitmap.c
+ 
+ BLOCK2MTD DRIVER
+-M:	Joern Engel <joern@lazybastard.org>
+ L:	linux-mtd@lists.infradead.org
+-S:	Maintained
++S:	Orphan
+ F:	drivers/mtd/devices/block2mtd.c
+ 
+ BLUETOOTH DRIVERS
+@@ -12671,9 +12670,8 @@ F:	include/uapi/linux/phonet.h
+ F:	net/phonet/
+ 
+ PHRAM MTD DRIVER
+-M:	Joern Engel <joern@lazybastard.org>
+ L:	linux-mtd@lists.infradead.org
+-S:	Maintained
++S:	Orphan
+ F:	drivers/mtd/devices/phram.c
+ 
+ PICOLCD HID DRIVER
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
