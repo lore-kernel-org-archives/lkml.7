@@ -2,139 +2,220 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACA1CC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 08:30:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA844C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 08:31:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D53222312
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 08:30:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4F0422312
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 08:31:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="mhOwiYOk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728019AbfKTIab (ORCPT
+        id S1728027AbfKTIby (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 03:30:31 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:37145 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726647AbfKTIab (ORCPT
+        Wed, 20 Nov 2019 03:31:54 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:39782 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727518AbfKTIby (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 03:30:31 -0500
-Received: by mail-qt1-f194.google.com with SMTP id g50so28050632qtb.4;
-        Wed, 20 Nov 2019 00:30:30 -0800 (PST)
+        Wed, 20 Nov 2019 03:31:54 -0500
+Received: by mail-wr1-f68.google.com with SMTP id l7so27024431wrp.6
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 00:31:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=38z6RyjMyXCUIeOwwLykSbeDE8sPTFCwnDO3EjCpWOA=;
+        b=mhOwiYOke8BRLMgtIyxZPbnidW28nPO4gCUBE0cIZL3O+K4vUilbkglAPxuXKXEBEL
+         YG/Un3TWx3XrCCO0Rd39GaDIn34GfSfMW9ETB41HKfLLkoYxx3nfGrRUsgvz5wzAkHNb
+         2nkMJWCw4H5LJ/AVLzUqynWYJg89ZbZiRXpcgiuV6nwCguK1oSdL7UVAoL5MV8Ay6GfZ
+         aB3AFGVdZa6L/0pgsnrWUQ/AJohW6fvbkDoFeQVSSqt7y/Jo5BEkIY8qtnrtZbbROg/Y
+         ieH0XYJmbJYGDCtZM+ah9eXHI4Ch1VNkhkX8fxf9biO77ryRMaclLxiPj779CcdH5dWd
+         7Lpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rytSK3v6D5ukw1aPCwUZyXrevrACIVrt8Cqsqzwdlc8=;
-        b=kHWfBu2EBSOPYGwtUhvHSsC4zqxGn+RuKBUTet+0Xe3hp705xFiVGomZ2GU/V8pyid
-         cOivOJsgB5bPwobret5UyKQ3HYTUSVixJQ5ly1+tqUBlSt74w3j4NzWu50OJey+mhhSe
-         tEQEuSksZY0ax+fJJZ+CqFL34wT09iEjjvpg06zwlHt8iuu85Q0sP0yAetqQdm+TUcg+
-         2EQaymiIZBUa5tLJMKnoAKno2mNK7yOVVwWb0p2d50c5cxOPhMLUhTK44HtItqlPAqP2
-         BmY5d2kravKoGpuQwOe/sjUqIKkD1h/gxL8APUobTfIJOk7GT6d4IF7R4Zg8Ec2fJQL6
-         Mr4g==
-X-Gm-Message-State: APjAAAXVqN/76m4qUIKjG5kczhrEyskU/R+K0uZdqjNv5q0mqx5cpIqc
-        T9ouqUV/Ul64TZ+0y7q02NHMzRVai+YztFtFHctyek2s
-X-Google-Smtp-Source: APXvYqzt9977Jz1rHm4q1nzL1okKoUsy1hMgVgphzGxtMK8FnUMP0veAcJ4G9WbR6glS3oU1ESQ4SZ8PXgwAmKfdP+Y=
-X-Received: by 2002:ac8:35c4:: with SMTP id l4mr1437198qtb.151.1574238630355;
- Wed, 20 Nov 2019 00:30:30 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=38z6RyjMyXCUIeOwwLykSbeDE8sPTFCwnDO3EjCpWOA=;
+        b=YkCxhbR9tgIE0g/EphcIkeJWPBZcE5YUGp6fcH1iPPxPD1jNEa4Fr4Gz3C9ei+/QLo
+         X9vuLyejfCHZ5tkuWqegYeQJSU9RtZLNDdspVe7f+TOmWSwj4hwf3X09AV8i5Sm1cqgM
+         CJ3rEh1UmM3O7/MGAYhqUsLxqYhDiDpWnfCkLt9C9qAK5RpsLIcSSM/vxOetEdWdckM1
+         vgLmU2R7ubDauY6dwj4mso/YGPYLmsbCiBzmbxN758JaOhuhRSh8SgDlWzFRPmFnoVru
+         Lmzl2Fh8gwNKzn0oAZ4zDVA3xX4yIkqQ/xKNKhXqaEsN0gKLKI0O9sDV4T8o0NcVfjuM
+         1d7g==
+X-Gm-Message-State: APjAAAWX96dg04txwlL/01we+EqVjxppiEAUXQcPBk/ewYw9ZhViDoyV
+        J+YXlXjmkkxCx9wX2W8Jsfzzuw==
+X-Google-Smtp-Source: APXvYqzkhtlhPBQtXB7GC0rslGbZ3YyeTfH9T+nKnWCBFlSSTNa8sH6AHhqdy9PppQPxS0gPUPoVJA==
+X-Received: by 2002:a5d:5687:: with SMTP id f7mr1682422wrv.384.1574238710636;
+        Wed, 20 Nov 2019 00:31:50 -0800 (PST)
+Received: from [10.1.2.12] (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id x205sm6414418wmb.5.2019.11.20.00.31.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 20 Nov 2019 00:31:49 -0800 (PST)
+Subject: Re: [PATCH v3 4/4] dt-bindings: display: add IMX MIPI DSI host
+ controller doc
+To:     Adrian Ratiu <adrian.ratiu@collabora.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
+Cc:     Martyn Welch <martyn.welch@collabora.com>,
+        Sjoerd Simons <sjoerd.simons@collabora.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-imx@nxp.com, kernel@collabora.com
+References: <20191118152518.3374263-1-adrian.ratiu@collabora.com>
+ <20191118152518.3374263-5-adrian.ratiu@collabora.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ ZaTUOEkgIor5losDrePdPgE=
+Organization: Baylibre
+Message-ID: <e19aca1f-842d-a5b4-6fc1-02f7f6dd136d@baylibre.com>
+Date:   Wed, 20 Nov 2019 09:31:49 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20d33517-6df0-9104-fc0a-7f621f87192e@infradead.org>
- <CAMuHMdU0Vx1E9V+h8XYTyAJitPT42NdGvgzLAfG-=1BVZd-rbA@mail.gmail.com> <802dc73e-080d-05aa-76fe-165bb4817959@infradead.org>
-In-Reply-To: <802dc73e-080d-05aa-76fe-165bb4817959@infradead.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 20 Nov 2019 09:30:18 +0100
-Message-ID: <CAMuHMdUyN5FE21C3Bu6S4wrwTxe0xB2ZpPAgryvx_6EX+YkhFw@mail.gmail.com>
-Subject: Re: [PATCH] arch/sh/: fix NUMA build errors
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191118152518.3374263-5-adrian.ratiu@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Randy,
+Hi,
 
-On Wed, Nov 20, 2019 at 5:28 AM Randy Dunlap <rdunlap@infradead.org> wrote:
-> On 11/18/19 11:38 PM, Geert Uytterhoeven wrote:
-> > On Tue, Nov 19, 2019 at 1:55 AM Randy Dunlap <rdunlap@infradead.org> wrote:
-> >> From: Randy Dunlap <rdunlap@infradead.org>
-> >> Fix SUPERH builds that select SYS_SUPPORTS_NUMA but do not select
-> >> SYS_SUPPORTS_SMP and SMP.
-> >>
-> >> kernel/sched/topology.c is only built for CONFIG_SMP and then the NUMA
-> >> code + data inside topology.c is only built when CONFIG_NUMA is
-> >> set/enabled, so these arch/sh/ configs need to select SMP and
-> >> SYS_SUPPORTS_SMP to build the NUMA support.
-> >>
-> >> Fixes this build error in 3 different SUPERH configs:
-> >>
-> >> mm/page_alloc.o: In function `get_page_from_freelist':
-> >> page_alloc.c:(.text+0x2ca8): undefined reference to `node_reclaim_distance'
-> >>
-> >> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> >> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> >> Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
-> >> Cc: Rich Felker <dalias@libc.org>
-> >> Cc: linux-sh@vger.kernel.org
-> >> ---
-> >> or maybe these should be fixed in the defconfig files?
-> >>
-> >> or alternatively, does it make any sense to support NUMA without SMP?
-> >
-> > I think it does.  From arch/sh/mm/Kconfig config NUMA help:
-> >
-> >         Some SH systems have many various memories scattered around
-> >         the address space, each with varying latencies. This enables
-> >         support for these blocks by binding them to nodes and allowing
-> >         memory policies to be used for prioritizing and controlling
-> >         allocation behaviour.
->
-> Note that this help text is under:
-> config NUMA
->         bool "Non-Uniform Memory Access (NUMA) Support"
->         depends on MMU && SYS_SUPPORTS_NUMA
->         select ARCH_WANT_NUMA_VARIABLE_LOCALITY
->
-> but ARCH_WANT_NUMA_VARIABLE_LOCALITY seems to be unimplemented anywhere in
-> the kernel source tree.  I.e., the Kconfig symbol exists in init/Kconfig,
-> but there is no code to support its use.
+On 18/11/2019 16:25, Adrian Ratiu wrote:
 
-It does control (prevent) another option:
+A small commit log would be welcome here.
 
-# For architectures that (ab)use NUMA to represent different memory regions
-# all cpu-local but of different latencies, such as SuperH.
-#
-config ARCH_WANT_NUMA_VARIABLE_LOCALITY
-        bool
+> Signed-off-by: Sjoerd Simons <sjoerd.simons@collabora.com>
+> Signed-off-by: Martyn Welch <martyn.welch@collabora.com>
+> Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
+> ---
+>  .../bindings/display/imx/mipi-dsi.txt         | 56 +++++++++++++++++++
+>  1 file changed, 56 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/imx/mipi-dsi.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/display/imx/mipi-dsi.txt b/Documentation/devicetree/bindings/display/imx/mipi-dsi.txt
+> new file mode 100644
+> index 000000000000..3f05c32ef963
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/imx/mipi-dsi.txt
 
-config NUMA_BALANCING
-        bool "Memory placement aware NUMA scheduler"
-        depends on ARCH_SUPPORTS_NUMA_BALANCING
-        depends on !ARCH_WANT_NUMA_VARIABLE_LOCALITY
-        depends on SMP && NUMA && MIGRATION
-        help
-          This option adds support for automatic NUMA aware
-memory/task placement.
-          The mechanism is quite primitive and is based on migrating memory when
-          it has references to the node the task is running on.
+New bindings should use the yaml dt-schema format, could you convert it ?
 
-          This system will be inactive on UMA systems.
+Neil
 
-The symbol was set by arch/metag, too (which was removed).
+> @@ -0,0 +1,56 @@
+> +Freescale i.MX6 DW MIPI DSI Host Controller
+> +===========================================
+> +
+> +The DSI host controller is a Synopsys DesignWare MIPI DSI v1.01 IP
+> +with a companion PHY IP.
+> +
+> +These DT bindings follow the Synopsys DW MIPI DSI bindings defined in
+> +Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt with
+> +the following device-specific properties.
+> +
+> +Required properties:
+> +
+> +- #address-cells: Should be <1>.
+> +- #size-cells: Should be <0>.
+> +- compatible: "fsl,imx6q-mipi-dsi", "snps,dw-mipi-dsi".
+> +- reg: See dw_mipi_dsi.txt.
+> +- interrupts: The controller's CPU interrupt.
+> +- clocks, clock-names: Phandles to the controller's pll reference
+> +  clock(ref) and APB clock(pclk), as described in [1].
+> +- ports: a port node with endpoint definitions as defined in [2].
+> +- gpr: Should be <&gpr>.
+> +       Phandle to the iomuxc-gpr region containing the multiplexer
+> +       control register.
+> +
+> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+> +[2] Documentation/devicetree/bindings/media/video-interfaces.txt
+> +
+> +Example:
+> +
+> +	mipi_dsi: mipi@21e0000 {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		compatible = "fsl,imx6q-mipi-dsi", "snps,dw-mipi-dsi";
+> +		reg = <0x021e0000 0x4000>;
+> +		interrupts = <0 102 IRQ_TYPE_LEVEL_HIGH>;
+> +		gpr = <&gpr>;
+> +		clocks = <&clks IMX6QDL_CLK_MIPI_CORE_CFG>,
+> +			 <&clks IMX6QDL_CLK_MIPI_IPG>;
+> +		clock-names = "ref", "pclk";
+> +		status = "okay";
+> +
+> +		ports {
+> +			port@0 {
+> +				reg = <0>;
+> +				mipi_mux_0: endpoint {
+> +					remote-endpoint = <&ipu1_di0_mipi>;
+> +				};
+> +			};
+> +			port@1 {
+> +				reg = <1>;
+> +				mipi_mux_1: endpoint {
+> +					remote-endpoint = <&ipu1_di1_mipi>;
+> +				};
+> +			};
+> +		};
+> +        };
+> 
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
