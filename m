@@ -2,61 +2,60 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E87F0C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:28:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2D97C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:28:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB0D920679
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:28:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79E9420679
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:28:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uPAKdeb/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J+PYXrif"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731297AbfKTP2r (ORCPT
+        id S1731321AbfKTP26 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 10:28:47 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:37838 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730428AbfKTP2m (ORCPT
+        Wed, 20 Nov 2019 10:28:58 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43504 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730487AbfKTP2j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 10:28:42 -0500
-Received: by mail-wr1-f66.google.com with SMTP id t1so295405wrv.4;
-        Wed, 20 Nov 2019 07:28:40 -0800 (PST)
+        Wed, 20 Nov 2019 10:28:39 -0500
+Received: by mail-wr1-f65.google.com with SMTP id n1so243095wra.10;
+        Wed, 20 Nov 2019 07:28:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=tB1mv0iagpasqt+ubXAygnT8VXICt+ouOxxy8t0xYvs=;
-        b=uPAKdeb/DWgZDZtC6f1PbTauQGenxGV5fSTMcND1isct3YzemSRgAdB0N7jA5+V38h
-         FhBHk3Tnhh1VFhkdWaArFcpR/RZrp2LZLBOhqIc1g/lXD+Tk7Coz5alp6WrhjPinO6eW
-         pzCkQBNl8uLpO9zS9oy6XSZPEPhPIlLZPOp4Sy7/kglTXhqpjsDLnyAiny1bQR/2T5LA
-         +/IzB2HPY4qOPar2lXMazEgUOads0pzUss8YpdjjM5sr43uAhV1olQeOBd5GG4md35KA
-         cu6Q0iEhewBs7u+M7oNmof+HM42XkgLLmaZ510VC79sVkXbnoBxi+ALe6DxCqKGlgEtK
-         yjyQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DtyaiQZ8irKf16rmVxB3fmQ2TpmbrTyyFiQO6JUw5+o=;
+        b=J+PYXrifIbFmzJD2YaGWqKDy4QL5/H44uzIhHRoNCHjqbjqh8+KI7fQQcDn0/3ZWXe
+         TQuEkk4zRoznzfRwwFfViPXBbetRmVRz/+29JbND54mJIsTdrngr5SJ5QNNlaodGMcbb
+         JtGzynOWqr3F+mKJ2N3gF/8N4ycKu91eJFb7DKHiKBHn/qrdHoTnl9NUbzhG+S9vaMSC
+         QzoH7so7+Ybb67t/54HeLgepoPTfEiXMHFz/dZNWIWsUMcxQHGOT46jk1fO1EcrCQnxx
+         hCut8hHXAhqcdHlaodE63ousJtSYac17WkrdLxGPQxjDYe2m6BiaQ50FStIokPE2Ggym
+         tYsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=tB1mv0iagpasqt+ubXAygnT8VXICt+ouOxxy8t0xYvs=;
-        b=TYxane9cgFA9kUcCJQ2X5vsS8ngfgZQsRkv8+LQ8vTTeDWUvGnGVGTkAhWFlB6x+TF
-         aQEwee4g0o7V1enoqwXIKLgOtObCxE4SvKq4P41D23L7pz0nQvxEFirMP4+dBrXZp9AR
-         XIYssFuuWXIvgmYXkdKPUGbDe5bGp70iIMH4u0PUOut5Ru+Qpy8sBXYkM96zmks2zmdb
-         qzgg8ayBOVfiH582B+3rgBZgxsCvPtGyic3U7v0BtAwp+0XwKf9aLZoh65Mf/k7IueKo
-         GfphFx8z+cDQRAFCUjwcBGJqNKNShs2oV7h7tEgZCUyn0IFDz+1sMkGEmo66C1DxbPOr
-         jXvQ==
-X-Gm-Message-State: APjAAAVIrUTFJiT91u9pGAEjznWblIANvJM/4YhlSiwGKGMjQ9dRxP5J
-        ManGIeVoIBEQZMGFAcfVEfQ=
-X-Google-Smtp-Source: APXvYqzRCrNiWv3WJ4S0PHDL3ahCsxIQu72pLjaCVPEGuCu8yR5dYNXuP35CTbFHByY0P1rBekgHEg==
-X-Received: by 2002:a5d:6cb0:: with SMTP id a16mr4316101wra.194.1574263719888;
-        Wed, 20 Nov 2019 07:28:39 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DtyaiQZ8irKf16rmVxB3fmQ2TpmbrTyyFiQO6JUw5+o=;
+        b=JSRIo8HWhdx+7KEdIBLjCfRd5lI1Yt5brMdnr67odkcnucCj4nbDUjL+tzxQWFvvFd
+         mq/Uv5HTC5Ox3bfGJav5oyvBUk/66pAVHMStfhQxQZLm9sjD5AdakfUfY1Zxa3ZzlCQe
+         pfZ3ZiUD8uBPTrZRv2gachQI1oxWVabh8vMNMX9zdO0bJY9HHRNk9NRrFPKMbS6UdAbP
+         3YxPudYAC7yTKGPYvq/nyF8cgGxPyMRMVQDQEwFPDcAzJ2nDvo9Lmp8GWIOpY6Qp+ex1
+         CKEWsXvsJBhbiQBQvytJdI2TSIAGr8k0iNkufFURdBIjae95zMBpIhApIq3xa22y+c3Z
+         nYFw==
+X-Gm-Message-State: APjAAAWGI/YGIvPvW/VBJqxHQN4mcbjr2pQvp4LHTZnN5SK4RcFP92E7
+        8qRroZihDggL8CH4AaTsZ+8=
+X-Google-Smtp-Source: APXvYqy8eB9w+wZZJo55+z14tlTOn1lf95zCLE3trwsy02lQ5kbg9t7377ZRZ81/CbuOutHBkGCqTA==
+X-Received: by 2002:adf:a119:: with SMTP id o25mr4361024wro.74.1574263717216;
+        Wed, 20 Nov 2019 07:28:37 -0800 (PST)
 Received: from Red.localdomain ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id w4sm31797881wrs.1.2019.11.20.07.28.38
+        by smtp.googlemail.com with ESMTPSA id w4sm31797881wrs.1.2019.11.20.07.28.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Nov 2019 07:28:39 -0800 (PST)
+        Wed, 20 Nov 2019 07:28:36 -0800 (PST)
 From:   Corentin Labbe <clabbe.montjoie@gmail.com>
 To:     davem@davemloft.net, herbert@gondor.apana.org.au,
         mark.rutland@arm.com, mripard@kernel.org, robh+dt@kernel.org,
@@ -65,12 +64,10 @@ Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-sunxi@googlegroups.com,
         Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: [PATCH v2 2/3] ARM: dts: sun8i: a33: add the new SS compatible
-Date:   Wed, 20 Nov 2019 16:28:32 +0100
-Message-Id: <20191120152833.20443-3-clabbe.montjoie@gmail.com>
+Subject: [PATCH v2 0/3] crypto: sun4i-ss: fix SHA1 on A33 SecuritySystem
+Date:   Wed, 20 Nov 2019 16:28:30 +0100
+Message-Id: <20191120152833.20443-1-clabbe.montjoie@gmail.com>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191120152833.20443-1-clabbe.montjoie@gmail.com>
-References: <20191120152833.20443-1-clabbe.montjoie@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,26 +75,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the new A33 SS compatible to the crypto node.
+Thanks to Igor Pecovnik, I have now in my kernelCI lab, a sun8i-a33-olinuxino.
+Strange behavour, crypto selftests was failling but only for SHA1 on
+this A33 SoC.
 
-Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
----
- arch/arm/boot/dts/sun8i-a33.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This is due to the A33 SS having a difference with all other SS, it give SHA1 digest directly in BE.
+This serie handle this difference.
 
-diff --git a/arch/arm/boot/dts/sun8i-a33.dtsi b/arch/arm/boot/dts/sun8i-a33.dtsi
-index 1532a0e59af4..a2c37adacf77 100644
---- a/arch/arm/boot/dts/sun8i-a33.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a33.dtsi
-@@ -215,7 +215,7 @@
- 		};
- 
- 		crypto: crypto-engine@1c15000 {
--			compatible = "allwinner,sun4i-a10-crypto";
-+			compatible = "allwinner,sun8i-a33-crypto";
- 			reg = <0x01c15000 0x1000>;
- 			interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&ccu CLK_BUS_SS>, <&ccu CLK_SS>;
+Changes since v1:
+- removed compatible fallback
+
+Corentin Labbe (3):
+  dt-bindings: crypto: add new compatible for A33 SS
+  ARM: dts: sun8i: a33: add the new SS compatible
+  crypto: sun4i-ss: add the A33 variant of SS
+
+ .../crypto/allwinner,sun4i-a10-crypto.yaml    |  2 ++
+ arch/arm/boot/dts/sun8i-a33.dtsi              |  2 +-
+ .../crypto/allwinner/sun4i-ss/sun4i-ss-core.c | 22 ++++++++++++++++++-
+ .../crypto/allwinner/sun4i-ss/sun4i-ss-hash.c |  5 ++++-
+ drivers/crypto/allwinner/sun4i-ss/sun4i-ss.h  |  9 ++++++++
+ 5 files changed, 37 insertions(+), 3 deletions(-)
+
 -- 
 2.23.0
 
