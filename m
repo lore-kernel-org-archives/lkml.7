@@ -7,54 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F050C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:42:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27A4BC43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:42:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D09922506
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:42:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3D1C22506
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:42:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574257350;
-	bh=4eCLfgC28qakH7dppaeyPKULnqHRTTytQprs89UT4h0=;
+	s=default; t=1574257355;
+	bh=4mdIlVqSgF5W1fbW6Lu5ti5hA+egq0Vt8toWgDFv8p8=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=0p/WPXPaoj2AhBzHFHhjxHPW+9+uhQ8wwI+atu6y/tmWez1TQioQ39HvtrLqH+BHS
-	 A2VGyMNEz48VM/v2PFH+zavrfY3HNa9QUhlu88my6/KUytJk+vcvnH9RmvjyQmeKS8
-	 QrnWLh6/ULEHz4NXI2gz+a2z3uEuTCjStrs/Begc=
+	b=FZivoSXyiMJZZHp9mf+mlgiS6WZF1avd5mTuhkcQ/Gb+4QUKo7eIBHtdRJiwvuZ39
+	 cN7Yt59vvZXsZ5GMRA7U3ISgQMdl7jvF6DlkJnt8G42BA3euk1ahK/Ob/DhbRb/qgu
+	 snoLRUJPsZe6pdvoq52FAVD/DW+az1LzJLxLCKjg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731408AbfKTNm3 (ORCPT
+        id S1731414AbfKTNmd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 08:42:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50228 "EHLO mail.kernel.org"
+        Wed, 20 Nov 2019 08:42:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728149AbfKTNm2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 08:42:28 -0500
+        id S1728149AbfKTNmc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 08:42:32 -0500
 Received: from localhost.localdomain (unknown [118.189.143.39])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50670224FA;
-        Wed, 20 Nov 2019 13:42:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7986A22506;
+        Wed, 20 Nov 2019 13:42:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574257347;
-        bh=4eCLfgC28qakH7dppaeyPKULnqHRTTytQprs89UT4h0=;
+        s=default; t=1574257351;
+        bh=4mdIlVqSgF5W1fbW6Lu5ti5hA+egq0Vt8toWgDFv8p8=;
         h=From:To:Cc:Subject:Date:From;
-        b=KsiQcMPeCMJBqrz39phld9DGOKriGjNxugptomUEeuNvnK9yqJHb4thPICgnZEPGx
-         Srv4EjljAt5ran4rAWCg982THMZtLtVeTH7o5g3tRgS9RFTBwsqe9ZZ6u5qLWWMklA
-         DBdo9C5icjrQdbNhQg7TdoDz+msSeazcJAodc/ec=
+        b=znZIqKyzvoikMA6PHYEFYl0pYg+VwaWWg5d+LhBI8E7xMnffdz6iseITwUDgeQoqG
+         yiETnrIC/q+8i7yrmiTwdMeh6fQXJW7rDCwqGolywWYIAzOrYuaiA0v/10hoysB4TA
+         mu2h6WRl5nbNLtiONAnLUIN2+BBMhlflS/hkfeV8=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        Atul Gupta <atul.gupta@chelsio.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        linux-crypto@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] crypto: Fix Kconfig indentation
-Date:   Wed, 20 Nov 2019 21:42:21 +0800
-Message-Id: <20191120134221.15774-1-krzk@kernel.org>
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-pm@vger.kernel.org
+Subject: [PATCH] cpuidle: Fix Kconfig indentation
+Date:   Wed, 20 Nov 2019 21:42:28 +0800
+Message-Id: <20191120134228.15838-1-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -67,162 +60,64 @@ coding style with command like:
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/crypto/Kconfig         |  4 ++--
- drivers/crypto/caam/Kconfig    | 14 +++++++-------
- drivers/crypto/chelsio/Kconfig | 30 +++++++++++++++---------------
- drivers/crypto/stm32/Kconfig   |  6 +++---
- drivers/crypto/ux500/Kconfig   | 16 ++++++++--------
- 5 files changed, 35 insertions(+), 35 deletions(-)
+ drivers/cpuidle/Kconfig     |  8 ++++----
+ drivers/cpuidle/Kconfig.arm | 16 ++++++++--------
+ 2 files changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/crypto/Kconfig b/drivers/crypto/Kconfig
-index 581021fab462..a60f1c5a702b 100644
---- a/drivers/crypto/Kconfig
-+++ b/drivers/crypto/Kconfig
-@@ -356,7 +356,7 @@ config CRYPTO_DEV_OMAP
- 	depends on ARCH_OMAP2PLUS
- 	help
- 	  OMAP processors have various crypto HW accelerators. Select this if
--          you want to use the OMAP modules for any of the crypto algorithms.
-+	  you want to use the OMAP modules for any of the crypto algorithms.
+diff --git a/drivers/cpuidle/Kconfig b/drivers/cpuidle/Kconfig
+index 88727b7c0d59..1b8614d1c696 100644
+--- a/drivers/cpuidle/Kconfig
++++ b/drivers/cpuidle/Kconfig
+@@ -16,7 +16,7 @@ config CPU_IDLE
+ if CPU_IDLE
  
- if CRYPTO_DEV_OMAP
+ config CPU_IDLE_MULTIPLE_DRIVERS
+-        bool
++	bool
  
-@@ -638,7 +638,7 @@ config CRYPTO_DEV_QCOM_RNG
- 	  Generator hardware found on Qualcomm SoCs.
+ config CPU_IDLE_GOV_LADDER
+ 	bool "Ladder governor (for periodic timer tick)"
+@@ -67,9 +67,9 @@ config HALTPOLL_CPUIDLE
+        depends on X86 && KVM_GUEST
+        default y
+        help
+-         This option enables halt poll cpuidle driver, which allows to poll
+-         before halting in the guest (more efficient than polling in the
+-         host via halt_poll_ns for some scenarios).
++	 This option enables halt poll cpuidle driver, which allows to poll
++	 before halting in the guest (more efficient than polling in the
++	 host via halt_poll_ns for some scenarios).
  
- 	  To compile this driver as a module, choose M here. The
--          module will be called qcom-rng. If unsure, say N.
-+	  module will be called qcom-rng. If unsure, say N.
+ endif
  
- config CRYPTO_DEV_VMX
- 	bool "Support for VMX cryptographic acceleration instructions"
-diff --git a/drivers/crypto/caam/Kconfig b/drivers/crypto/caam/Kconfig
-index 87053e46c788..fac5b2e26610 100644
---- a/drivers/crypto/caam/Kconfig
-+++ b/drivers/crypto/caam/Kconfig
-@@ -130,13 +130,13 @@ config CRYPTO_DEV_FSL_CAAM_AHASH_API
- 	  scatterlist crypto API to the SEC4 via job ring.
- 
- config CRYPTO_DEV_FSL_CAAM_PKC_API
--        bool "Register public key cryptography implementations with Crypto API"
--        default y
--        select CRYPTO_RSA
+diff --git a/drivers/cpuidle/Kconfig.arm b/drivers/cpuidle/Kconfig.arm
+index d8530475493c..e91ab792d14d 100644
+--- a/drivers/cpuidle/Kconfig.arm
++++ b/drivers/cpuidle/Kconfig.arm
+@@ -3,15 +3,15 @@
+ # ARM CPU Idle drivers
+ #
+ config ARM_CPUIDLE
+-        bool "Generic ARM/ARM64 CPU idle Driver"
+-        select DT_IDLE_STATES
++	bool "Generic ARM/ARM64 CPU idle Driver"
++	select DT_IDLE_STATES
+ 	select CPU_IDLE_MULTIPLE_DRIVERS
 -        help
--          Selecting this will allow SEC Public key support for RSA.
--          Supported cryptographic primitives: encryption, decryption,
--          signature and verification.
-+	bool "Register public key cryptography implementations with Crypto API"
-+	default y
-+	select CRYPTO_RSA
+-          Select this to enable generic cpuidle driver for ARM.
+-          It provides a generic idle driver whose idle states are configured
+-          at run-time through DT nodes. The CPUidle suspend backend is
+-          initialized by calling the CPU operations init idle hook
+-          provided by architecture code.
 +	help
-+	  Selecting this will allow SEC Public key support for RSA.
-+	  Supported cryptographic primitives: encryption, decryption,
-+	  signature and verification.
++	  Select this to enable generic cpuidle driver for ARM.
++	  It provides a generic idle driver whose idle states are configured
++	  at run-time through DT nodes. The CPUidle suspend backend is
++	  initialized by calling the CPU operations init idle hook
++	  provided by architecture code.
  
- config CRYPTO_DEV_FSL_CAAM_RNG_API
- 	bool "Register caam device for hwrng API"
-diff --git a/drivers/crypto/chelsio/Kconfig b/drivers/crypto/chelsio/Kconfig
-index 91e424378217..f078b2686418 100644
---- a/drivers/crypto/chelsio/Kconfig
-+++ b/drivers/crypto/chelsio/Kconfig
-@@ -23,22 +23,22 @@ config CRYPTO_DEV_CHELSIO
- 	  will be called chcr.
- 
- config CHELSIO_IPSEC_INLINE
--        bool "Chelsio IPSec XFRM Tx crypto offload"
--        depends on CHELSIO_T4
-+	bool "Chelsio IPSec XFRM Tx crypto offload"
-+	depends on CHELSIO_T4
- 	depends on CRYPTO_DEV_CHELSIO
--        depends on XFRM_OFFLOAD
--        depends on INET_ESP_OFFLOAD || INET6_ESP_OFFLOAD
--        default n
--        ---help---
--          Enable support for IPSec Tx Inline.
-+	depends on XFRM_OFFLOAD
-+	depends on INET_ESP_OFFLOAD || INET6_ESP_OFFLOAD
-+	default n
-+	---help---
-+	  Enable support for IPSec Tx Inline.
- 
- config CRYPTO_DEV_CHELSIO_TLS
--        tristate "Chelsio Crypto Inline TLS Driver"
--        depends on CHELSIO_T4
--        depends on TLS_TOE
--        select CRYPTO_DEV_CHELSIO
--        ---help---
--          Support Chelsio Inline TLS with Chelsio crypto accelerator.
-+	tristate "Chelsio Crypto Inline TLS Driver"
-+	depends on CHELSIO_T4
-+	depends on TLS_TOE
-+	select CRYPTO_DEV_CHELSIO
-+	---help---
-+	  Support Chelsio Inline TLS with Chelsio crypto accelerator.
- 
--          To compile this driver as a module, choose M here: the module
--          will be called chtls.
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called chtls.
-diff --git a/drivers/crypto/stm32/Kconfig b/drivers/crypto/stm32/Kconfig
-index 1aba9372cd23..4ef3eb11361c 100644
---- a/drivers/crypto/stm32/Kconfig
-+++ b/drivers/crypto/stm32/Kconfig
-@@ -4,7 +4,7 @@ config CRYPTO_DEV_STM32_CRC
- 	depends on ARCH_STM32
- 	select CRYPTO_HASH
- 	help
--          This enables support for the CRC32 hw accelerator which can be found
-+	  This enables support for the CRC32 hw accelerator which can be found
- 	  on STMicroelectronics STM32 SOC.
- 
- config CRYPTO_DEV_STM32_HASH
-@@ -17,7 +17,7 @@ config CRYPTO_DEV_STM32_HASH
- 	select CRYPTO_SHA256
- 	select CRYPTO_ENGINE
- 	help
--          This enables support for the HASH hw accelerator which can be found
-+	  This enables support for the HASH hw accelerator which can be found
- 	  on STMicroelectronics STM32 SOC.
- 
- config CRYPTO_DEV_STM32_CRYP
-@@ -27,5 +27,5 @@ config CRYPTO_DEV_STM32_CRYP
- 	select CRYPTO_ENGINE
- 	select CRYPTO_LIB_DES
- 	help
--          This enables support for the CRYP (AES/DES/TDES) hw accelerator which
-+	  This enables support for the CRYP (AES/DES/TDES) hw accelerator which
- 	  can be found on STMicroelectronics STM32 SOC.
-diff --git a/drivers/crypto/ux500/Kconfig b/drivers/crypto/ux500/Kconfig
-index b731895aa241..f56d65c56ccf 100644
---- a/drivers/crypto/ux500/Kconfig
-+++ b/drivers/crypto/ux500/Kconfig
-@@ -11,18 +11,18 @@ config CRYPTO_DEV_UX500_CRYP
- 	select CRYPTO_SKCIPHER
- 	select CRYPTO_LIB_DES
- 	help
--        This selects the crypto driver for the UX500_CRYP hardware. It supports
--        AES-ECB, CBC and CTR with keys sizes of 128, 192 and 256 bit sizes.
-+	This selects the crypto driver for the UX500_CRYP hardware. It supports
-+	AES-ECB, CBC and CTR with keys sizes of 128, 192 and 256 bit sizes.
- 
- config CRYPTO_DEV_UX500_HASH
--        tristate "UX500 crypto driver for HASH block"
--        depends on CRYPTO_DEV_UX500
--        select CRYPTO_HASH
-+	tristate "UX500 crypto driver for HASH block"
-+	depends on CRYPTO_DEV_UX500
-+	select CRYPTO_HASH
- 	select CRYPTO_SHA1
- 	select CRYPTO_SHA256
--        help
--          This selects the hash driver for the UX500_HASH hardware.
--          Depends on UX500/STM DMA if running in DMA mode.
-+	help
-+	  This selects the hash driver for the UX500_HASH hardware.
-+	  Depends on UX500/STM DMA if running in DMA mode.
- 
- config CRYPTO_DEV_UX500_DEBUG
- 	bool "Activate ux500 platform debug-mode for crypto and hash block"
+ config ARM_PSCI_CPUIDLE
+ 	bool "PSCI CPU idle Driver"
 -- 
 2.17.1
 
