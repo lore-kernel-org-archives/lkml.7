@@ -2,128 +2,145 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B303C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 18:39:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 983E8C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 18:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31D97208C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 18:39:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FA642071C
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 18:39:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MmHV5tnS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727165AbfKTSjl (ORCPT
+        id S1727230AbfKTSjo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 13:39:41 -0500
-Received: from m9a0001g.houston.softwaregrp.com ([15.124.64.66]:53124 "EHLO
-        m9a0001g.houston.softwaregrp.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726685AbfKTSjk (ORCPT
+        Wed, 20 Nov 2019 13:39:44 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:39990 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726685AbfKTSjn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 13:39:40 -0500
-X-Greylist: delayed 3256 seconds by postgrey-1.27 at vger.kernel.org; Wed, 20 Nov 2019 13:39:40 EST
-Received: FROM m9a0001g.houston.softwaregrp.com (15.121.0.191) BY m9a0001g.houston.softwaregrp.com WITH ESMTP;
- Wed, 20 Nov 2019 18:38:58 +0000
-Received: from M9W0067.microfocus.com (2002:f79:be::f79:be) by
- M9W0068.microfocus.com (2002:f79:bf::f79:bf) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Wed, 20 Nov 2019 17:08:57 +0000
-Received: from NAM04-CO1-obe.outbound.protection.outlook.com (15.124.72.10) by
- M9W0067.microfocus.com (15.121.0.190) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10 via Frontend Transport; Wed, 20 Nov 2019 17:08:57 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=axj59p4dn3vpkYfgIY1piwqnWfEK/Zwqsc7I6s5+ZmpRcOmT8sPQZqAw6a4iw7RUCdM7AfQP/gbkiuIuZDKy70xE6rN/gdijQn9Tl0LiVh7Haa+BF1IfgCLLlKbsoeVNMjzKApit0qdQ87bqiifUeH5Wkc54I613qLpSOlxg1f97cQZ/RqSZJHvaQredjlzzp7fMf/wTcmJExwgBFEa+VOUw7RN8j9HS0wl/42W7BO7+OMM6oJTh8/qQkxsR+CMQ1HiP7VHIb8oF8ggghK1k5QS5tL5yXEmsCNKNCzrNaDJ/NAUWVb0jIMuxRpEDFxXjI2i+loN8QEf00onALrpdHw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uc5e35HhsHN2mtNoEsdMucao2SsyP1SPtEo7n1VyFn4=;
- b=NzIIHG1GTsr+tSUJenU6IUuIN8MuMF15Ngh9zWkW0y0QxATgieXi3gHdlKG8A88LkDRalSONwEsBgrVIZGqKTfFmkmyAvAbtjVvhsnxMxnXIyKeYWYiSUpUQvZmM3FZq3KRaOcM0TgF5O0mlPBfNPfLu/Aw3bJc0jBlDbfMYlFuGGh/0TTxFZ2lfn/f7pwbOHrlCG/H+IpjrjJBAsbTvyWsm747Td75hCLrNi730CvmZzXwkmIHy5uLKCZnhqjFwbJuYM2t0MEORIVU8RkSaQbWDG4Q7MoxxuCrp7F1CKmWAnDxZ+RBxXhK/MwztnthgUAypCtzI8NJdyrn7vUJLvA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-Received: from MN2PR18MB3278.namprd18.prod.outlook.com (10.255.237.204) by
- MN2PR18MB2432.namprd18.prod.outlook.com (20.179.84.32) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2451.30; Wed, 20 Nov 2019 17:08:54 +0000
-Received: from MN2PR18MB3278.namprd18.prod.outlook.com
- ([fe80::2914:6699:d7e5:de45]) by MN2PR18MB3278.namprd18.prod.outlook.com
- ([fe80::2914:6699:d7e5:de45%3]) with mapi id 15.20.2451.031; Wed, 20 Nov 2019
- 17:08:53 +0000
-From:   Lee Duncan <LDuncan@suse.com>
-To:     Tom Abraham <TAbraham@suse.com>,
-        Himanshu Madhani <hmadhani@marvell.com>
-CC:     "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Hannes Reinecke <hare@suse.com>
-Subject: Re: [PATCH] scsi: qla2xxx: avoid crash in
- qlt_handle_abts_completion() if mcmd == NULL
-Thread-Topic: [PATCH] scsi: qla2xxx: avoid crash in
- qlt_handle_abts_completion() if mcmd == NULL
-Thread-Index: AQHVk/Mn21+AUdfikUaO7LypaxLA+6eUYm6A
-Date:   Wed, 20 Nov 2019 17:08:53 +0000
-Message-ID: <74bc094b-e534-7170-4cba-e7aa2451dd6c@suse.com>
-References: <20191104181803.5475-1-tabraham@suse.com>
-In-Reply-To: <20191104181803.5475-1-tabraham@suse.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: LO2P123CA0035.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600::23)
- To MN2PR18MB3278.namprd18.prod.outlook.com (2603:10b6:208:168::12)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=LDuncan@suse.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [73.25.22.216]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3d14aa39-264e-4cc4-4d47-08d76ddc522d
-x-ms-traffictypediagnostic: MN2PR18MB2432:|MN2PR18MB2432:
-x-ld-processed: 856b813c-16e5-49a5-85ec-6f081e13b527,ExtFwd,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR18MB24324836993AC05E9F401046DA4F0@MN2PR18MB2432.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:534;
-x-forefront-prvs: 02272225C5
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(136003)(346002)(39860400002)(366004)(396003)(199004)(189003)(11346002)(486006)(2616005)(66946007)(66476007)(8936002)(76176011)(186003)(52116002)(31696002)(102836004)(81166006)(86362001)(26005)(53546011)(6506007)(386003)(5660300002)(80792005)(4744005)(4326008)(25786009)(6436002)(478600001)(6486002)(229853002)(6246003)(107886003)(36756003)(66446008)(6512007)(66556008)(64756008)(14454004)(81156014)(8676002)(476003)(99286004)(31686004)(110136005)(256004)(14444005)(2906002)(316002)(66066001)(6116002)(54906003)(3846002)(71200400001)(446003)(305945005)(7736002)(71190400001);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR18MB2432;H:MN2PR18MB3278.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: suse.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: vo1WNhnzeZ2xsHHXPfoQaw414NDA09g+fxOR7MFKQs6LW8WYmQLllWazCsYJmxW11gB4EJTdkAppiUrH7ucqYTFmST6YAemDeCNq8kSArEnFukoPK1l9iUq+0c9TYNJcxVtqpO6urlckR0z2Wsm3R52mixhUCsImLdebndW8eJ0vPNSjF2U3OUH5uIjbO6zJclNpbvZoNBF54GCZEVM3tJLUf/3Z8et08g9GuzE1uV+RROz6MUmA2rJa+kSIB0ndFp9yylBU0U45V0XDobKEQ8/bDpyqYp/7OyCjGYQ3J2hSnJUlBiB+qOsenT9Sph7KZN1jNm1yPrSUwCzkT0Scw+JdSNc6pEmxksMSrkSYWbQKeV0FzhRr/6ASD55ULZ/7nOgFzaITM+VG4gKOJTQLe00BBe8T6S2eIsNOH4tRiY83tkbQaCsQ91eYVDlaihh4
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <84B75E3A84CB2542B23E8ACF932D259D@namprd18.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 20 Nov 2019 13:39:43 -0500
+Received: by mail-pg1-f195.google.com with SMTP id e17so147388pgd.7
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 10:39:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=ejQvp2mMhcLjLkJFrbwtDbRkBaOa3f2P+DfAVSm5cWM=;
+        b=MmHV5tnSJvM6Xbp4h4iP3aD+pzQonOilRaITchmPt3mXh5oVeLLFFT3gHqcr5a3Sz7
+         DNsJ/BJuc7iVDSt9BJu5x+QFUzD4pB2/BZI3vq7ypwojjWi1ueus8ADVM4QKuBKHjK2w
+         xm5ysjceeOsiEe77puq7vierIEQOqIfdVjfn8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=ejQvp2mMhcLjLkJFrbwtDbRkBaOa3f2P+DfAVSm5cWM=;
+        b=Y8xRZmN1CsCbcZWxC6p4BHojuJu5GuTuhkWAPFFIGKJfNvHhRXDs2tc7DcgcdmWNY/
+         NvYJJk6TSKxLjjqvRyn+Jgmvc3mQIjRdPS5ht2A9fEzZ96BewREt3AjuBXQzyyF2fw/C
+         qsyYWZd8u5TJy1gxH99GHtnokq4vSxavKwJ1rPrZjggdgF4adAdXv52/0r0yo0zTnd04
+         AWCD+69y8GugKyBrSOfNNJ/PKsaccfyRVyAE93XYGAxG1a3nfFJMQa8fIkEglDqenCLN
+         9pzbCRpWJsHrjQiK6KnThAYcixe9e09p7ok3KVp6yJPFF0Yakr86HjdJ5ZobfnD4rOcx
+         jcWw==
+X-Gm-Message-State: APjAAAVzlVu7IDxS15N+rBvanT6YMDGpOVERs7auDjSaJoX1tOpFML9C
+        lJeHtQuae71hB63dti01WkFJIQ==
+X-Google-Smtp-Source: APXvYqwDfSxzXFKk+yeiWvCvoVgPyhysspKSu+YKFuBuBCafawfStM/29GHG+oqBMrlFpxursVWuaA==
+X-Received: by 2002:aa7:9589:: with SMTP id z9mr5855499pfj.184.1574275183016;
+        Wed, 20 Nov 2019 10:39:43 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id r184sm70789pfc.106.2019.11.20.10.39.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Nov 2019 10:39:41 -0800 (PST)
+Date:   Wed, 20 Nov 2019 10:39:40 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Bala S <balas2380@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-api@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: Suggested Patch is not working for 22851 Bugzilla issue
+Message-ID: <201911201032.67566C6BF@keescook>
+References: <CAJKzgVtzD7ULwCDVRSLMCmGJNaMqvx+jVO619t3xuv2oiEsPMQ@mail.gmail.com>
+ <20191119095708.GB21113@dhcp22.suse.cz>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3d14aa39-264e-4cc4-4d47-08d76ddc522d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Nov 2019 17:08:53.8375
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 856b813c-16e5-49a5-85ec-6f081e13b527
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yIphvsVIEMDoK0wsMJiMq1A95JqjORndUhzyH6ZbaGarjmFdxfjTbWSyyb4thX+mH8wFKFfHWJVG3Qx/EwYJ+A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2432
-X-OriginatorOrg: suse.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191119095708.GB21113@dhcp22.suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMTEvNC8xOSAxMDoxOCBBTSwgVGhvbWFzIEFicmFoYW0gd3JvdGU6DQo+IHFsdF9jdGlvX3Rv
-X2NtZCgpIHdpbGwgcmV0dXJuIGEgTlVMTCBtY21kIGlmIGggPT0gUUxBX1RHVF9TS0lQX0hBTkRM
-RS4gSWYNCj4gdGhlIGVycm9yIHN1YmNvZGVzIGRvbid0IG1hdGNoIHRoZSBleGFjdCBjb2RlcyBj
-aGVja2VkIGEgY3Jhc2ggd2lsbCBvY2N1cg0KPiB3aGVuIGNhbGxpbmcgZnJlZV9tY21kIG9uIHRo
-ZSBudWxsIG1jbWQNCj4gDQo+IFNpZ25lZC1vZmYtYnk6IFRob21hcyBBYnJhaGFtIDx0YWJyYWhh
-bUBzdXNlLmNvbT4NCj4gLS0tDQo+ICBkcml2ZXJzL3Njc2kvcWxhMnh4eC9xbGFfdGFyZ2V0LmMg
-fCAzICsrLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigt
-KQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvc2NzaS9xbGEyeHh4L3FsYV90YXJnZXQuYyBi
-L2RyaXZlcnMvc2NzaS9xbGEyeHh4L3FsYV90YXJnZXQuYw0KPiBpbmRleCBhMDZlNTYyMjRhNTUu
-LjYxMWFiMjI0NjYyZiAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9zY3NpL3FsYTJ4eHgvcWxhX3Rh
-cmdldC5jDQo+ICsrKyBiL2RyaXZlcnMvc2NzaS9xbGEyeHh4L3FsYV90YXJnZXQuYw0KPiBAQCAt
-NTczMiw3ICs1NzMyLDggQEAgc3RhdGljIHZvaWQgcWx0X2hhbmRsZV9hYnRzX2NvbXBsZXRpb24o
-c3RydWN0IHNjc2lfcWxhX2hvc3QgKnZoYSwNCj4gIAkJCSAgICB2aGEtPnZwX2lkeCwgZW50cnkt
-PmNvbXBsX3N0YXR1cywNCj4gIAkJCSAgICBlbnRyeS0+ZXJyb3Jfc3ViY29kZTEsDQo+ICAJCQkg
-ICAgZW50cnktPmVycm9yX3N1YmNvZGUyKTsNCj4gLQkJCWhhLT50Z3QudGd0X29wcy0+ZnJlZV9t
-Y21kKG1jbWQpOw0KPiArCQkJaWYgKG1jbWQpDQo+ICsJCQkJaGEtPnRndC50Z3Rfb3BzLT5mcmVl
-X21jbWQobWNtZCk7DQo+ICAJCX0NCj4gIAl9IGVsc2UgaWYgKG1jbWQpIHsNCj4gIAkJaGEtPnRn
-dC50Z3Rfb3BzLT5mcmVlX21jbWQobWNtZCk7DQo+IA0KDQpSZXZpZXdlZC1ieTogTGVlIER1bmNh
-biA8bGR1bmNhbkBzdXNlLmNvbT4NCg==
+On Tue, Nov 19, 2019 at 10:57:08AM +0100, Michal Hocko wrote:
+> let me add Kees Cook and Linus to the cc list. I didn't have much
+> time to study the bug report and cannot really comment on the security
+> aspect of it. But let me point out that a big part of
+> MAP_FIXED_NOREPLACE usage has been removed from the loader code just
+> recently because it has caused some regressions
+> http://lkml.kernel.org/r/20191005233227.GB25745@shell.armlinux.org.uk
+> b212921b13bd ("elf: don't use MAP_FIXED_NOREPLACE for elf executable mappings").
+> So you definitely want to look at the current Linus tree for your future
+> experiments.
+
+Hi!
+
+Yes, as Michal mentions, there were legitimate binaries that expected to
+overlap mappings, so we had to revert the MAP_FIXED_NOREPLACE logic for
+now. At the time I added a TODO item for fixing this up correctly here:
+https://github.com/KSPP/linux/issues/17
+
+Speaking to the ldd issue (not the kernel binfmt_elf.c loader, which
+is very separate), there isn't a security issue here: ldd can in many
+cases _execute_ the binaries it is examining. This is a well known flaw
+(as Florian points out in the bug report).
+
+Is there some other piece of this puzzle you're trying to solve? I'm
+always open to hearing new ideas in this space.
+
+Thanks!
+
+-Kees
+
+> 
+> On Tue 19-11-19 10:37:44, Bala S wrote:
+> > Hi Mhocko,
+> > 
+> > https://sourceware.org/bugzilla/show_bug.cgi?id=22851
+> > For the above issue, I have found the patch.
+> > 
+> > Patch link:
+> > https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1561935.html
+> > 
+> > Only change i noticed is 'MAP_FIXED_NOREPLACE' is used instead of
+> > 'MAP_FIXED_SAFE'.
+> > 
+> > I ran test case on the following targets with this patch:
+> > 
+> > 1. For X86-64, Still i could see the reported issue( 'libevil.so' just
+> > runs ‘cat /etc/passwd')
+> > 
+> > 2. For MIPS-64, i am not seeing the malicious file content as
+> > reported. But ‘ldd’ could not found ‘libevil.so’.
+> > 
+> > root@qemumips64:~/LIN1019-1806# ldd ./main
+> >         linux-vdso.so.1 (0x000000fff1f20000)
+> >         libevil.so => not found
+> >         libc.so.6 => /lib/libc.so.6 (0x0000005e46f70000)
+> >         /lib/ld.so.1 (0x000000fff7888000)
+> > 
+> > I am not clear why this patch is not working for X86-64? But it is
+> > working for MIPS-64 with some issue.
+> > Please let me know, if anything is pending on this patch for the reported issue.
+> > 
+> > Thanks,
+> > Bala
+> 
+> -- 
+> Michal Hocko
+> SUSE Labs
+
+-- 
+Kees Cook
