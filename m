@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76BF1C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:44:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19673C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:44:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 585D42070E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:44:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E50D020709
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:44:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730239AbfKTPov (ORCPT
+        id S1731189AbfKTPoy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 10:44:51 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:52642 "EHLO
+        Wed, 20 Nov 2019 10:44:54 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:52618 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729756AbfKTPkR (ORCPT
+        by vger.kernel.org with ESMTP id S1729732AbfKTPkR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 Nov 2019 10:40:17 -0500
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iXS5U-0004Z1-NO; Wed, 20 Nov 2019 15:40:12 +0000
+        id 1iXS5U-0004b5-Gv; Wed, 20 Nov 2019 15:40:12 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iXS5U-0004Jl-G1; Wed, 20 Nov 2019 15:40:12 +0000
+        id 1iXS5T-0004Hf-Ih; Wed, 20 Nov 2019 15:40:11 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,12 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Jan Beulich" <jbeulich@suse.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>
-Date:   Wed, 20 Nov 2019 15:38:03 +0000
-Message-ID: <lsq.1574264230.517295047@decadent.org.uk>
+        "Takashi Iwai" <tiwai@suse.de>, "Wenwen Wang" <wenwen@cs.uga.edu>
+Date:   Wed, 20 Nov 2019 15:37:38 +0000
+Message-ID: <lsq.1574264230.434409241@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 53/83] x86/apic/32: Avoid bogus LDR warnings
+Subject: [PATCH 3.16 28/83] sound: fix a memory leak bug
 In-Reply-To: <lsq.1574264230.280218497@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,79 +54,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jan Beulich <jbeulich@suse.com>
+From: Wenwen Wang <wenwen@cs.uga.edu>
 
-commit fe6f85ca121e9c74e7490fe66b0c5aae38e332c3 upstream.
+commit c7cd7c748a3250ca33509f9235efab9c803aca09 upstream.
 
-The removal of the LDR initialization in the bigsmp_32 APIC code unearthed
-a problem in setup_local_APIC().
+In sound_insert_unit(), the controlling structure 's' is allocated through
+kmalloc(). Then it is added to the sound driver list by invoking
+__sound_insert_unit(). Later on, if __register_chrdev() fails, 's' is
+removed from the list through __sound_remove_unit(). If 'index' is not less
+than 0, -EBUSY is returned to indicate the error. However, 's' is not
+deallocated on this execution path, leading to a memory leak bug.
 
-The code checks unconditionally for a mismatch of the logical APIC id by
-comparing the early APIC id which was initialized in get_smp_config() with
-the actual LDR value in the APIC.
+To fix the above issue, free 's' before -EBUSY is returned.
 
-Due to the removal of the bogus LDR initialization the check now can
-trigger on bigsmp_32 APIC systems emitting a warning for every booting
-CPU. This is of course a false positive because the APIC is not using
-logical destination mode.
-
-Restrict the check and the possibly resulting fixup to systems which are
-actually using the APIC in logical destination mode.
-
-[ tglx: Massaged changelog and added Cc stable ]
-
-Fixes: bae3a8d3308 ("x86/apic: Do not initialize LDR and DFR for bigsmp")
-Signed-off-by: Jan Beulich <jbeulich@suse.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/666d8f91-b5a8-1afd-7add-821e72a35f03@suse.com
-[bwh: Backported to 3.16: adjust context]
+Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/x86/kernel/apic/apic.c | 28 +++++++++++++++-------------
- 1 file changed, 15 insertions(+), 13 deletions(-)
+ sound/sound_core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/arch/x86/kernel/apic/apic.c
-+++ b/arch/x86/kernel/apic/apic.c
-@@ -1305,9 +1305,6 @@ void setup_local_APIC(void)
- 	int i, j, acked = 0;
- 	unsigned long long tsc = 0, ntsc;
- 	long long max_loops = cpu_khz ? cpu_khz : 1000000;
--#ifdef CONFIG_X86_32
--	int logical_apicid, ldr_apicid;
--#endif
+--- a/sound/sound_core.c
++++ b/sound/sound_core.c
+@@ -287,7 +287,8 @@ retry:
+ 				goto retry;
+ 			}
+ 			spin_unlock(&sound_loader_lock);
+-			return -EBUSY;
++			r = -EBUSY;
++			goto fail;
+ 		}
+ 	}
  
- 	if (cpu_has_tsc)
- 		rdtscll(tsc);
-@@ -1342,16 +1339,21 @@ void setup_local_APIC(void)
- 	apic->init_apic_ldr();
- 
- #ifdef CONFIG_X86_32
--	/*
--	 * APIC LDR is initialized.  If logical_apicid mapping was
--	 * initialized during get_smp_config(), make sure it matches the
--	 * actual value.
--	 */
--	logical_apicid = early_per_cpu(x86_cpu_to_logical_apicid, cpu);
--	ldr_apicid = GET_APIC_LOGICAL_ID(apic_read(APIC_LDR));
--	WARN_ON(logical_apicid != BAD_APICID && logical_apicid != ldr_apicid);
--	/* always use the value from LDR */
--	early_per_cpu(x86_cpu_to_logical_apicid, cpu) = ldr_apicid;
-+	if (apic->dest_logical) {
-+		int logical_apicid, ldr_apicid;
-+
-+		/*
-+		 * APIC LDR is initialized.  If logical_apicid mapping was
-+		 * initialized during get_smp_config(), make sure it matches
-+		 * the actual value.
-+		 */
-+		logical_apicid = early_per_cpu(x86_cpu_to_logical_apicid, cpu);
-+		ldr_apicid = GET_APIC_LOGICAL_ID(apic_read(APIC_LDR));
-+		if (logical_apicid != BAD_APICID)
-+			WARN_ON(logical_apicid != ldr_apicid);
-+		/* Always use the value from LDR. */
-+		early_per_cpu(x86_cpu_to_logical_apicid, cpu) = ldr_apicid;
-+	}
- 
- 	/*
- 	 * Some NUMA implementations (NUMAQ) don't initialize apicid to
 
