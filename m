@@ -2,163 +2,331 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FORGED_MUA_MOZILLA,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26B2FC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 04:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB5C1C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 04:58:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2EF72245F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 04:58:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C05E2244A
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 04:58:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Lz3i/ejE"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="RuRpb3gE";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="VTEFr85d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727474AbfKTE6A (ORCPT
+        id S1727556AbfKTE6s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 23:58:00 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:45792 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727363AbfKTE57 (ORCPT
+        Tue, 19 Nov 2019 23:58:48 -0500
+Received: from a27-21.smtp-out.us-west-2.amazonses.com ([54.240.27.21]:46570
+        "EHLO a27-21.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727395AbfKTE6r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 23:57:59 -0500
-Received: by mail-lj1-f194.google.com with SMTP id n21so25910144ljg.12
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 20:57:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=V4P6DNIYqK1+zdyL8L3/KTOZ5PDDb//FKvPiOoLUHxE=;
-        b=Lz3i/ejEiWrEcI1Zi5wZsppYkhPZdbO0r9kLRC83ROijhaM9GK5coQCdmk2L5x70m4
-         znrYSqimENp9r0JRvdQwYjNlHw1HTzAL5z0QA4eVXUd5F4xC1lyQqkCgNUYEFHU79BzK
-         Jr04nWdl6uZ/67olX02eogqc007IVJa5HDoB/5nnxbDEuRelFyycTvegDa3UuHM2Zgb2
-         k0X7+MXfG+X2JDkw2/SYK2lciJBMtYgWUxDzmMX6Zi/vikAhh1iRMD/PW3UhtLgywUxS
-         UXk5zS9bnrLGXnaHd1MuFDh7F2dUCj8fusp4Ft7fWHgyMWJzPhLWdEYGHvpEiyC1Lrb3
-         9sYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=V4P6DNIYqK1+zdyL8L3/KTOZ5PDDb//FKvPiOoLUHxE=;
-        b=mBnNZ5lR1WtZGzxQ+ippl+Kyml4nWDkw3TNhQuN/zfDEltPSvhhoQzmlNSVJRkTfHP
-         6WwT4wvtBUsEpvGo01BfQUZXv507gesDTnGPkhlBPhaf8vnUGJFY57yIb2VZkDO58gW0
-         nk2pb+9YtO85CV64TkUK5dd92l6izJBOOZO9NutjJukM+goYKLgIKgbYNyR5O8eWAON6
-         e+mgW9sZZ/IlG1nOzWpwKhII9qU3FzpBNuOnhRZ+0SP51UAFS+4QaZoONB6f+rtYoLp4
-         PPOhD1ABtFzR6AaaDeobu8t5sDYfj8l5TRR4y+BjH3yiisX3S3GR31UbWTZogFmiQ8Xy
-         /M2A==
-X-Gm-Message-State: APjAAAVoiP7tfH1u58dJzHx6ZlicxM+9Uk55oXqT0Dysdhoz13qGjad1
-        ZgsaHHf9U3qERKK7fglslI/6tqdygpbA9P+tBJPYI0TKuII=
-X-Google-Smtp-Source: APXvYqy30rcg1k3Zpdtfz5qLUui5bfmpYrwPVQV76TI1iK/QIeJ7jAc4lKImn2ZZ1zJ7dhv0hLm2/tbMSg8eR7ylhXU=
-X-Received: by 2002:a2e:9695:: with SMTP id q21mr805068lji.206.1574225875612;
- Tue, 19 Nov 2019 20:57:55 -0800 (PST)
+        Tue, 19 Nov 2019 23:58:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574225926;
+        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+        bh=d39WleQKXK6tcao+CuIx2kbRmAROSeJKz7+sdrybO7g=;
+        b=RuRpb3gEGS8EMcIscWr4vbL1hiQCgkinKXqlGCiHpxuJbSXDSbtqu1/mkf7wqD9E
+        783b8igt46guibWu9Wo+/gaZxp8FsGd4Ah+GUrc52xMhrr3ez8o9R88DYZfLC7z82pq
+        /GcudiIgZtDj8P4zmnXo3QOJRhAL/qcbtA+yozgQ=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574225926;
+        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID;
+        bh=d39WleQKXK6tcao+CuIx2kbRmAROSeJKz7+sdrybO7g=;
+        b=VTEFr85dLhdGnfrxyhv9RQvrsdl3GtqW/QNzpOl//7tOv2ApTOlZQCBwCDjoVCS+
+        7IDkg5zinB3o6KjKsov0qWicR3xWtgLr4a0HHqv3epRnBhD3qFUzBKC37ZFcNMqwFtZ
+        fwVck50ZZfKcjC50pECRt8S74qP7ZvIglsSt4tKA=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DDA73C433A2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=neeraju@codeaurora.org
+Subject: Re: [PATCH v2] rcu: Fix missed wakeup of exp_wq waiters
+To:     paulmck@kernel.org
+Cc:     josh@joshtriplett.org, rostedt@goodmis.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        joel@joelfernandes.org, linux-kernel@vger.kernel.org,
+        gkohli@codeaurora.org, prsood@codeaurora.org,
+        pkondeti@codeaurora.org, rcu@vger.kernel.org
+References: <0101016e81a9ecb9-ce4a6425-f21d-4166-96ed-32d3700717f1-000000@us-west-2.amazonses.com>
+ <20191119193827.GB2889@paulmck-ThinkPad-P72>
+From:   Neeraj Upadhyay <neeraju@codeaurora.org>
+Message-ID: <0101016e872d57f5-196e5b96-3cd0-41db-b7a2-fd8ea3e87d41-000000@us-west-2.amazonses.com>
+Date:   Wed, 20 Nov 2019 04:58:46 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <20191119051400.261610025@linuxfoundation.org> <TYAPR01MB22854E4F20C28F3A10DA65E3B74C0@TYAPR01MB2285.jpnprd01.prod.outlook.com>
- <20191119122909.GC1913916@kroah.com> <TYAPR01MB228560FC98FFD1D449FA4EC2B74C0@TYAPR01MB2285.jpnprd01.prod.outlook.com>
- <20191119154839.GB1982025@kroah.com> <TYAPR01MB2285698B8E0F38B9EEF47128B74C0@TYAPR01MB2285.jpnprd01.prod.outlook.com>
- <20191119165207.GA2071545@kroah.com> <20191119180002.GA17608@roeck-us.net> <20191119181619.GB2283647@kroah.com>
-In-Reply-To: <20191119181619.GB2283647@kroah.com>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 20 Nov 2019 10:27:44 +0530
-Message-ID: <CA+G9fYufKfsvtHHTmc+yODAeqhE4qego2R3Kd3V=4kr301M9fA@mail.gmail.com>
-Subject: Re: [PATCH 4.19 000/422] 4.19.85-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "cip-dev@lists.cip-project.org" <cip-dev@lists.cip-project.org>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "shuah@kernel.org" <shuah@kernel.org>,
-        "patches@kernelci.org" <patches@kernelci.org>,
-        "ben.hutchings@codethink.co.uk" <ben.hutchings@codethink.co.uk>,
-        "lkft-triage@lists.linaro.org" <lkft-triage@lists.linaro.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191119193827.GB2889@paulmck-ThinkPad-P72>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-SES-Outgoing: 2019.11.20-54.240.27.21
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 19 Nov 2019 at 23:46, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
->
-> Ok, I've now done just that, and pushed out a -rc4.
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+On 11/20/2019 1:08 AM, Paul E. McKenney wrote:
+> On Tue, Nov 19, 2019 at 03:17:07AM +0000, Neeraj Upadhyay wrote:
+>> For the tasks waiting in exp_wq inside exp_funnel_lock(),
+>> there is a chance that they might be indefinitely blocked
+>> in below scenario:
+>>
+>> 1. There is a task waiting on exp sequence 0b'100' inside
+>>     exp_funnel_lock(). This task blocks at wq index 1.
+>>
+>>     synchronize_rcu_expedited()
+>>       s = 0b'100'
+>>       exp_funnel_lock()
+>>         wait_event(rnp->exp_wq[rcu_seq_ctr(s) & 0x3]
+>>
+>> 2. The expedited grace period (which above task blocks for)
+>>     completes and task (task1) holding exp_mutex queues
+>>     worker and schedules out.
+>>
+>>     synchronize_rcu_expedited()
+>>       s = 0b'100'
+>>       queue_work(rcu_gp_wq, &rew.rew_work)
+>>         wake_up_worker()
+>>           schedule()
+>>
+>> 3. kworker A picks up the queued work and completes the exp gp
+>>     sequence and then blocks on exp_wake_mutex, which is held
+>>     by another kworker, which is doing wakeups for expedited_sequence
+>>     0.
+>>
+>>     rcu_exp_wait_wake()
+>>       rcu_exp_wait_wake()
+>>         rcu_exp_gp_seq_end(rsp) // rsp->expedited_sequence is incremented
+>>                                 // to 0b'100'
+>>         mutex_lock(&rcu_state.exp_wake_mutex)
+>>
+>> 4. task1 does not enter wait queue, as sync_exp_work_done() returns true,
+>>     and releases exp_mutex.
+>>
+>>     wait_event(rnp->exp_wq[rcu_seq_ctr(s) & 0x3],
+>>       sync_exp_work_done(rsp, s));
+>>     mutex_unlock(&rsp->exp_mutex);
+>>
+>> 5. Next exp GP completes, and sequence number is incremented:
+>>
+>>     rcu_exp_wait_wake()
+>>       rcu_exp_wait_wake()
+>>         rcu_exp_gp_seq_end(rsp) // rsp->expedited_sequence = 0b'200'
+>>
+>> 6. kworker A acquires exp_wake_mutex. As it uses current
+>>     expedited_sequence, it wakes up workers from wrong wait queue
+>>     index - it should have worken wait queue corresponding to
+>>     0b'100' sequence, but wakes up the ones for 0b'200' sequence.
+>>     This results in task at step 1 indefinitely blocked.
+>>
+>>     rcu_exp_wait_wake()
+>>       wake_up_all(&rnp->exp_wq[rcu_seq_ctr(rsp->expedited_sequence) & 0x3]);
+>>
+>> This issue manifested as DPM device timeout during suspend, as scsi
+>> device was stuck in _synchronize_rcu_expedited().
+>>
+>> schedule()
+>> synchronize_rcu_expedited()
+>> synchronize_rcu()
+>> scsi_device_quiesce()
+>> scsi_bus_suspend()
+>> dpm_run_callback()
+>> __device_suspend()
+>>
+>> Fix this by using the correct exp sequence number, the one which
+>> owner of the exp_mutex initiated and passed to kworker,
+>> to index the wait queue, inside rcu_exp_wait_wake().
+>>
+>> Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
+> 
+> Queued, thank you!
+> 
+> I reworked the commit message to make it easier to follow the sequence
+> of events.  Please see below and let me know if I messed anything up.
+> 
+> 							Thanx, Paul
+> 
+> ------------------------------------------------------------------------
+> 
+> commit d887fd2a66861f51ed93b5dde894b9646a5569dd
+> Author: Neeraj Upadhyay <neeraju@codeaurora.org>
+> Date:   Tue Nov 19 03:17:07 2019 +0000
+> 
+>      rcu: Fix missed wakeup of exp_wq waiters
+>      
+>      Tasks waiting within exp_funnel_lock() for an expedited grace period to
+>      elapse can be starved due to the following sequence of events:
+>      
+>      1.      Tasks A and B both attempt to start an expedited grace
+>              period at about the same time.  This grace period will have
+>              completed when the lower four bits of the rcu_state structure's
+>              ->expedited_sequence field are 0b'0100', for example, when the
+>              initial value of this counter is zero.  Task A wins, and thus
+>              does the actual work of starting the grace period, including
+>              acquiring the rcu_state structure's .exp_mutex and sets the
+>              counter to 0b'0001'.
+>      
+>      2.      Because task B lost the race to start the grace period, it
+>              waits on ->expedited_sequence to reach 0b'0100' inside of
+>              exp_funnel_lock(). This task therefore blocks on the rcu_node
+>              structure's ->exp_wq[1] field, keeping in mind that the
+>              end-of-grace-period value of ->expedited_sequence (0b'0100')
+>              is shifted down two bits before indexing the ->exp_wq[] field.
+>      
+>      3.      Task C attempts to start another expedited grace period,
+>              but blocks on ->exp_mutex, which is still held by Task A.
+>      
+>      4.      The aforementioned expedited grace period completes, so that
+>              ->expedited_sequence now has the value 0b'0100'.  A kworker task
+>              therefore acquires the rcu_state structure's ->exp_wake_mutex
+>              and starts awakening any tasks waiting for this grace period.
+>      
+>      5.      One of the first tasks awakened happens to be Task A.  Task A
+>              therefore releases the rcu_state structure's ->exp_mutex,
+>              which allows Task C to start the next expedited grace period,
+>              which causes the lower four bits of the rcu_state structure's
+>              ->expedited_sequence field to become 0b'0101'.
+>      
+>      6.      Task C's expedited grace period completes, so that the lower four
+>              bits of the rcu_state structure's ->expedited_sequence field now
+>              become 0b'1000'.
+>      
+>      7.      The kworker task from step 4 above continues its wakeups.
+>              Unfortunately, the wake_up_all() refetches the rcu_state
+>              structure's .expedited_sequence field:
 
-Summary
-------------------------------------------------------------------------
+This might not be true. I think wake_up_all(), which internally calls 
+__wake_up(), will use a single wq_head for doing all wakeups. So, a 
+single .expedited_sequence value would be used to get wq_head.
 
-kernel: 4.19.85-rc4
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.19.y
-git commit: d0112da1f7e63d8c9a40263ced73eb673177a053
-git describe: v4.19.84-420-gd0112da1f7e6
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
-ild/v4.19.84-420-gd0112da1f7e6
+void __wake_up(struct wait_queue_head *wq_head, ...)
 
-No regressions (compared to build v4.19.84)
+However, below sequence of events would result in problem:
 
-No fixes (compared to build v4.19.84)
+1.      Tasks A starts an expedited grace period at about the same time.
+         This grace period will have completed when the lower four bits
+		of the rcu_state structure's ->expedited_sequence field are 0b'0100',
+		for example, when the initial value of this counter is zero.
+		Task A wins, acquires the rcu_state structure's .exp_mutex and
+		sets the counter to 0b'0001'.
 
-Ran 23846 total tests in the following environments and test suites.
+2.      The aforementioned expedited grace period completes, so that
+         ->expedited_sequence now has the value 0b'0100'.  A kworker task
+         therefore acquires the rcu_state structure's ->exp_wake_mutex
+         and starts awakening any tasks waiting for this grace period.
+         This kworker gets preempted while unlocking wq_head lock
 
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
+         wake_up_all()
+           __wake_up()
+             __wake_up_common_lock()
+               spin_unlock_irqrestore()
+                 __raw_spin_unlock_irqrestore()
+                   preempt_enable()
+                     __preempt_schedule()
 
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* ltp-fs-tests
-* network-basic-tests
-* ltp-open-posix-tests
-* ssuite
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-* kvm-unit-tests
+3.      One of the first tasks awakened happens to be Task A.  Task A
+         therefore releases the rcu_state structure's ->exp_mutex,
 
---=20
-Linaro LKFT
-https://lkft.linaro.org
+4.      Tasks B and C both attempt to start an expedited grace
+         period at about the same time.  This grace period will have
+         completed when the lower four bits of the rcu_state structure's
+         ->expedited_sequence field are 0b'1000'. Task B wins, and thus
+         does the actual work of starting the grace period, including
+         acquiring the rcu_state structure's .exp_mutex and sets the
+         counter to 0b'0101'.
+
+5.      Because task C lost the race to start the grace period, it
+         waits on ->expedited_sequence to reach 0b'1000' inside of
+         exp_funnel_lock(). This task therefore blocks on the rcu_node
+         structure's ->exp_wq[2] field, keeping in mind that the
+         end-of-grace-period value of ->expedited_sequence (0b'1000')
+         is shifted down two bits before indexing the ->exp_wq[] field.
+
+6.      Task B queues work to complete expedited grace period. This
+         task is preempted just before wait_event call. Kworker task picks
+		up the work queued by task B and and completes grace period, so
+		that the lower four bits of the rcu_state structure's
+		->expedited_sequence field now become 0b'1000'. This kworker starts
+		waiting on the exp_wake_mutex, which is owned by kworker doing
+		wakeups for expedited sequence initiated by task A.
+
+7.      Task B schedules in and finds its expedited sequence snapshot has
+         completed; so, it does not enter waitq and releases exp_mutex. This
+		allows Task D to start the next expedited grace period,
+         which causes the lower four bits of the rcu_state structure's
+         ->expedited_sequence field to become 0b'1001'.
+
+8.      Task D's expedited grace period completes, so that the lower four
+         bits of the rcu_state structure's ->expedited_sequence field now
+         become 0b'1100'.
+
+9.      kworker from step 2 is scheduled in and releases exp_wake_mutex;
+         kworker correspnding to Task B's expedited grace period acquires
+		exp_wake_mutex and starts wakeups. Unfortunately, it used the
+		rcu_state structure's .expedited_sequence field for determining
+		the waitq index.
+
+ 
+wake_up_all(&rnp->exp_wq[rcu_seq_ctr(rcu_state.expedited_sequence) & 0x3]);
+
+         This results in the wakeup being applied to the rcu_node
+         structure's ->exp_wq[3] field, which is unfortunate given that
+         Task C is instead waiting on ->exp_wq[2].
+
+
+>      
+>              wake_up_all(&rnp->exp_wq[rcu_seq_ctr(rcu_state.expedited_sequence) & 0x3]);
+>      
+>              This results in the wakeup being applied to the rcu_node
+>              structure's ->exp_wq[2] field, which is unfortunate given that
+>              Task B is instead waiting on ->exp_wq[1].
+>      
+>      On a busy system, no harm is done (or at least no permanent harm is done).
+>      Some later expedited grace period will redo the wakeup.  But on a quiet
+>      system, such as many embedded systems, it might be a good long time before
+>      there was another expedited grace period.  On such embedded systems,
+>      this situation could therefore result in a system hang.
+>      
+>      This issue manifested as DPM device timeout during suspend (which
+>      usually qualifies as a quiet time) due to a SCSI device being stuck in
+>      _synchronize_rcu_expedited(), with the following stack trace:
+>      
+>              schedule()
+>              synchronize_rcu_expedited()
+>              synchronize_rcu()
+>              scsi_device_quiesce()
+>              scsi_bus_suspend()
+>              dpm_run_callback()
+>              __device_suspend()
+>      
+>      This commit therefore prevents such delays, timeouts, and hangs by
+>      making rcu_exp_wait_wake() use its "s" argument consistently instead of
+>      refetching from rcu_state.expedited_sequence.
+>      
+
+Do we need a "fixes" tag here?
+
+>      Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
+>      Signed-off-by: Paul E. McKenney <paulmck@kernel.org
+> 
+> diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
+> index 6ce598d..4433d00a 100644
+> --- a/kernel/rcu/tree_exp.h
+> +++ b/kernel/rcu/tree_exp.h
+> @@ -557,7 +557,7 @@ static void rcu_exp_wait_wake(unsigned long s)
+>   			spin_unlock(&rnp->exp_lock);
+>   		}
+>   		smp_mb(); /* All above changes before wakeup. */
+> -		wake_up_all(&rnp->exp_wq[rcu_seq_ctr(rcu_state.expedited_sequence) & 0x3]);
+> +		wake_up_all(&rnp->exp_wq[rcu_seq_ctr(s) & 0x3]);
+>   	}
+>   	trace_rcu_exp_grace_period(rcu_state.name, s, TPS("endwake"));
+>   	mutex_unlock(&rcu_state.exp_wake_mutex);
+> 
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member of the Code Aurora Forum, hosted by The Linux Foundation
