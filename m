@@ -8,66 +8,63 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E1FBC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 00:10:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBEDCC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 00:10:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7298522440
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 00:10:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E3AA22440
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 00:10:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dj73GC1F"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rf41bOpo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727491AbfKTAKC (ORCPT
+        id S1727534AbfKTAKf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 19:10:02 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43985 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726911AbfKTAKC (ORCPT
+        Tue, 19 Nov 2019 19:10:35 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:33418 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727395AbfKTAKf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 19:10:02 -0500
-Received: by mail-wr1-f66.google.com with SMTP id n1so25996235wra.10
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 16:09:58 -0800 (PST)
+        Tue, 19 Nov 2019 19:10:35 -0500
+Received: by mail-wr1-f65.google.com with SMTP id w9so26042573wrr.0
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 16:10:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=EH7rOnQ7g6xPGxYOwqh1Gb8uspMXNY2i4VwFx06HJEE=;
-        b=dj73GC1F5Fh5Tf3zQbbpg8WiBBNCBI3GCwlAk7sbVtz/KGpA3Bl/qOtb4j1jlrwe6f
-         WX/qK5P9zKIAHUOmL/24N9pEaD5Lu7JyQtUETJnPgfHYjuctotFxIS4pSJ1F4Fpr6pbL
-         /xbaIUIKf5yul2X/njsqyr9urCeIa+OzqvcJs0F/wiXd54jGeB2IsjJ8OL2A7EDkwaKG
-         Eoh9qYopGQbz6f6g6HgG5Df+9vGNlfxP0ruoOCjh3i46OYkw/YxTk8KJWq8RjMQO8Abk
-         nVra8/gxx1XwTpeRXkdkmTnhu7Jhx8pmPBma7I5mXkYXn9XcGYq5HTvR9OMqTFxF7cQ1
-         23KQ==
+        bh=zP3c/y1zEBIIe+nmdhsLAUuImqjKLhQzbNYXppbBeW8=;
+        b=rf41bOpojEU71gL1F2T4+1ZpIXZqMGkqSjciDJdjNjzI2iA4Gv5PqP6Jx7PcjCWJP1
+         SNvrE7QXcFj/pyB5GdkjDgaOty5MVpw4UdGQWi8XptwLjRxNbTqBOulLNZwKSaXEwihq
+         KnBzPlIsyEPvStVrIESDfBVxGNB4l8ScPuNKHT2drudQyXQsyHC32D4xJi0N2QAXS7dC
+         t0evCbnImj+1iHArhqomssUqAUNmudHjpu3qfjziXBrokBhdfzD2D9ajI75WQGmMZtFA
+         AAruOHxnDJqnDNVCVUy5JEKsK4ICiUiY70/FydhgEiPaZkrIx82HnccjaD9ytGtokBkv
+         P9ew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=EH7rOnQ7g6xPGxYOwqh1Gb8uspMXNY2i4VwFx06HJEE=;
-        b=Cfm7k9FfWzDagdl7JP++nlfpuRQhwagrKI6NMoll1e3QLNrINNhl0q3xDgYuxLoHyF
-         0xnUwwIQSyrgD3yHFom2GNuIu0mXkT9BPivFKjXHjQSrayo5pH242qt1VYrtlrTstwH4
-         W92Uo5fA1QWnCSkb3aa4U3rfLp56BhOD9BRIgoj1VlAnxo3f8AXjIZz37nYOXE59QF12
-         g+J+kwd3l9hHf0g/BEL4on8e4wSnS5Wc9xVIFo+a6zPD6SnZ8voWrcqkuHD8lZ9YZgFl
-         vaS7C91Y63Fq7UqG02kQUqLRSIWtJo1+cnOi8My+ycevFfcYLLon+1FIZtZiC8jveTUC
-         HcUA==
-X-Gm-Message-State: APjAAAWRN3EbrbmowfwDqNxTVq87Px1kTSvC0DyGGKjz3Hm3WKr9ybal
-        VvFa1jRCLdv3O84+oTE3Y8oyHSe8
-X-Google-Smtp-Source: APXvYqx12mAfe3E0Nz/Y65wRQjUhBvnRjTAULFvi/WFX6XDC722MHUUyEcNbvSf+N7QNC50xlpmWBQ==
-X-Received: by 2002:adf:ef51:: with SMTP id c17mr134122wrp.266.1574208598025;
-        Tue, 19 Nov 2019 16:09:58 -0800 (PST)
+        bh=zP3c/y1zEBIIe+nmdhsLAUuImqjKLhQzbNYXppbBeW8=;
+        b=nN+O/1FjRt+QAshhshFnnkykF/gnzPC5pJjKDh0LtmK5UfGL7i9INNzYIZaSHKGmrO
+         8T7pqFcaBI6hro3+Yn+gdyXlenTY9YTQq/aTffYSy99fwvIzXukliPy+RMPigcqYe7xR
+         vFdZqe1OhxlzXx5Tg3H6Uh5p6G34pvB5bwDePHm/OeIdvWn4b08pId1qHaWEiNI+BF9z
+         CrdnQNc+MPa+P/DCO+gHiBNySAT2lP3kBOin1TxmLhPWRSm0JiCJSsSs/wShbCN58OaN
+         Geqn/x6fZLvl6QnI7a1RmuFuqgHAwllRI2KPQQiXjAIMqG0BXYxsVN922Z2dMK3Fddl7
+         CD2w==
+X-Gm-Message-State: APjAAAVlMBZVl70sRoUK1MVrvYwYgpXJlSLgkYKx5/m1jE/IoIZCr0Xc
+        EX1ZoUk9yzLE9m16hcDg/HqFQdi/
+X-Google-Smtp-Source: APXvYqx3piFbrAtObop/LR0fpM8ONtjqvusXVc62KQ/S3z3+tyYkfbat/yc0DdE2vrRtmo1tIXrvZA==
+X-Received: by 2002:adf:ef51:: with SMTP id c17mr136156wrp.266.1574208633072;
+        Tue, 19 Nov 2019 16:10:33 -0800 (PST)
 Received: from localhost.localdomain ([2a02:a03f:40e1:9900:5dce:1599:e3b5:7d61])
-        by smtp.gmail.com with ESMTPSA id n23sm4907947wmc.18.2019.11.19.16.09.57
+        by smtp.gmail.com with ESMTPSA id w18sm28759230wrl.2.2019.11.19.16.10.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Nov 2019 16:09:57 -0800 (PST)
+        Tue, 19 Nov 2019 16:10:32 -0800 (PST)
 From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH] drm/crc-debugfs: fix crtc_crc_poll()'s return type
-Date:   Wed, 20 Nov 2019 01:07:54 +0100
-Message-Id: <20191120000754.30710-1-luc.vanoostenryck@gmail.com>
+        Derek Kiernan <derek.kiernan@xilinx.com>,
+        Dragan Cvetic <dragan.cvetic@xilinx.com>
+Subject: [PATCH] misc: xilinx_sdfec: fix xsdfec_poll()'s return type
+Date:   Wed, 20 Nov 2019 01:10:30 +0100
+Message-Id: <20191120001030.30779-1-luc.vanoostenryck@gmail.com>
 X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -76,48 +73,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-crtc_crc_poll() is defined as returning 'unsigned int' but the
+xsdfec_poll() is defined as returning 'unsigned int' but the
 .poll method is declared as returning '__poll_t', a bitwise type.
 
 Fix this by using the proper return type and using the EPOLL
 constants instead of the POLL ones, as required for __poll_t.
 
-CC: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-CC: Maxime Ripard <mripard@kernel.org>
-CC: Sean Paul <sean@poorly.run>
-CC: David Airlie <airlied@linux.ie>
-CC: Daniel Vetter <daniel@ffwll.ch>
-CC: dri-devel@lists.freedesktop.org
+CC: Derek Kiernan <derek.kiernan@xilinx.com>
+CC: Dragan Cvetic <dragan.cvetic@xilinx.com>
 Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
 ---
- drivers/gpu/drm/drm_debugfs_crc.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/misc/xilinx_sdfec.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_debugfs_crc.c b/drivers/gpu/drm/drm_debugfs_crc.c
-index be1b7ba92ffe..0bb0aa0ebbca 100644
---- a/drivers/gpu/drm/drm_debugfs_crc.c
-+++ b/drivers/gpu/drm/drm_debugfs_crc.c
-@@ -334,17 +334,17 @@ static ssize_t crtc_crc_read(struct file *filep, char __user *user_buf,
- 	return LINE_LEN(crc->values_cnt);
+diff --git a/drivers/misc/xilinx_sdfec.c b/drivers/misc/xilinx_sdfec.c
+index 11835969e982..48ba7e02bed7 100644
+--- a/drivers/misc/xilinx_sdfec.c
++++ b/drivers/misc/xilinx_sdfec.c
+@@ -1025,25 +1025,25 @@ static long xsdfec_dev_compat_ioctl(struct file *file, unsigned int cmd,
  }
+ #endif
  
--static unsigned int crtc_crc_poll(struct file *file, poll_table *wait)
-+static __poll_t crtc_crc_poll(struct file *file, poll_table *wait)
+-static unsigned int xsdfec_poll(struct file *file, poll_table *wait)
++static __poll_t xsdfec_poll(struct file *file, poll_table *wait)
  {
- 	struct drm_crtc *crtc = file->f_inode->i_private;
- 	struct drm_crtc_crc *crc = &crtc->crc;
--	unsigned ret;
-+	__poll_t ret;
+-	unsigned int mask = 0;
++	__poll_t mask = 0;
+ 	struct xsdfec_dev *xsdfec;
  
- 	poll_wait(file, &crc->wq, wait);
+ 	xsdfec = container_of(file->private_data, struct xsdfec_dev, miscdev);
  
- 	spin_lock_irq(&crc->lock);
- 	if (crc->source && crtc_crc_data_count(crc))
--		ret = POLLIN | POLLRDNORM;
-+		ret = EPOLLIN | EPOLLRDNORM;
- 	else
- 		ret = 0;
- 	spin_unlock_irq(&crc->lock);
+ 	if (!xsdfec)
+-		return POLLNVAL | POLLHUP;
++		return EPOLLNVAL | EPOLLHUP;
+ 
+ 	poll_wait(file, &xsdfec->waitq, wait);
+ 
+ 	/* XSDFEC ISR detected an error */
+ 	spin_lock_irqsave(&xsdfec->error_data_lock, xsdfec->flags);
+ 	if (xsdfec->state_updated)
+-		mask |= POLLIN | POLLPRI;
++		mask |= EPOLLIN | EPOLLPRI;
+ 
+ 	if (xsdfec->stats_updated)
+-		mask |= POLLIN | POLLRDNORM;
++		mask |= EPOLLIN | EPOLLRDNORM;
+ 	spin_unlock_irqrestore(&xsdfec->error_data_lock, xsdfec->flags);
+ 
+ 	return mask;
 -- 
 2.24.0
 
