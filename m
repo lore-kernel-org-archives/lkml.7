@@ -2,85 +2,103 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54FDCC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 14:51:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 212F8C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 14:51:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3264A206F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 14:51:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01DA920748
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 14:51:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731851AbfKTOvR (ORCPT
+        id S1731861AbfKTOvT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 09:51:17 -0500
-Received: from ivanoab7.miniserver.com ([37.128.132.42]:58576 "EHLO
-        www.kot-begemot.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728049AbfKTOvQ (ORCPT
+        Wed, 20 Nov 2019 09:51:19 -0500
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:49271 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731836AbfKTOvR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 09:51:16 -0500
-X-Greylist: delayed 1634 seconds by postgrey-1.27 at vger.kernel.org; Wed, 20 Nov 2019 09:51:16 EST
-Received: from tun252.jain.kot-begemot.co.uk ([192.168.18.6] helo=jain.kot-begemot.co.uk)
-        by www.kot-begemot.co.uk with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <anton.ivanov@cambridgegreys.com>)
-        id 1iXQtc-0001X2-6T; Wed, 20 Nov 2019 14:23:52 +0000
-Received: from jain.kot-begemot.co.uk ([192.168.3.3])
-        by jain.kot-begemot.co.uk with esmtp (Exim 4.92)
-        (envelope-from <anton.ivanov@cambridgegreys.com>)
-        id 1iXQtZ-00056K-Uh; Wed, 20 Nov 2019 14:23:51 +0000
-Subject: Re: [PATCH] um: Fix Kconfig indentation
-To:     Krzysztof Kozlowski <krzk@kernel.org>, linux-kernel@vger.kernel.org
-Cc:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
-        linux-um@lists.infradead.org
-References: <20191120133654.11838-1-krzk@kernel.org>
-From:   Anton Ivanov <anton.ivanov@cambridgegreys.com>
-Message-ID: <0c2c2d49-563d-d7bd-bb01-26156ef8f398@cambridgegreys.com>
-Date:   Wed, 20 Nov 2019 14:23:49 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 20 Nov 2019 09:51:17 -0500
+X-Originating-IP: 90.76.211.102
+Received: from aptenodytes (lfbn-1-2154-102.w90-76.abo.wanadoo.fr [90.76.211.102])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id ECDB740005;
+        Wed, 20 Nov 2019 14:51:14 +0000 (UTC)
+Date:   Wed, 20 Nov 2019 15:51:14 +0100
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: display: Document the Xylon LogiCVC
+ display controller
+Message-ID: <20191120145114.GB4331@aptenodytes>
+References: <20190927100738.1863563-1-paul.kocialkowski@bootlin.com>
+ <20190927100738.1863563-2-paul.kocialkowski@bootlin.com>
+ <20190927222038.GA22180@bogus>
 MIME-Version: 1.0
-In-Reply-To: <20191120133654.11838-1-krzk@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Clacks-Overhead: GNU Terry Pratchett
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="oC1+HKm2/end4ao3"
+Content-Disposition: inline
+In-Reply-To: <20190927222038.GA22180@bogus>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--oC1+HKm2/end4ao3
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 20/11/2019 13:36, Krzysztof Kozlowski wrote:
-> Adjust indentation from spaces to tab (+optional two spaces) as in
-> coding style with command like:
-> 	$ sed -e 's/^        /\t/' -i */Kconfig
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->   arch/um/Kconfig | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/um/Kconfig b/arch/um/Kconfig
-> index fec6b4ca2b6e..2a6d04fcb3e9 100644
-> --- a/arch/um/Kconfig
-> +++ b/arch/um/Kconfig
-> @@ -153,7 +153,7 @@ config KERNEL_STACK_ORDER
->   	  It is possible to reduce the stack to 1 for 64BIT and 0 for 32BIT on
->   	  older (pre-2017) CPUs. It is not recommended on newer CPUs due to the
->   	  increase in the size of the state which needs to be saved when handling
-> -          signals.
-> +	  signals.
->   
->   config MMAPPER
->   	tristate "iomem emulation driver"
-> 
+Hi,
 
-Acked-by: Anton Ivanov <anton.ivanov@cambridgegreys.co.uk>
+On Fri 27 Sep 19, 17:20, Rob Herring wrote:
+> On Fri, Sep 27, 2019 at 12:07:37PM +0200, Paul Kocialkowski wrote:
+> > The Xylon LogiCVC is a display controller implemented as programmable
+> > logic in Xilinx FPGAs.
+> >=20
+> > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> > ---
+> >  .../display/xylon,logicvc-display.yaml        | 313 ++++++++++++++++++
+> >  1 file changed, 313 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/display/xylon,log=
+icvc-display.yaml
+>=20
+> Any response to my last mail on v1?
 
--- 
-Anton R. Ivanov
-Cambridgegreys Limited. Registered in England. Company Number 10273661
-https://www.cambridgegreys.com/
+Just answered on that thread, sorry for the delay.
+
+Cheers,
+
+Paul
+
+--=20
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
+
+--oC1+HKm2/end4ao3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl3VUuIACgkQ3cLmz3+f
+v9H6/QgAmZDcI/0gblSW95D8aMF2UP+4tUc1NYzzzlGmCGvAisyVWulup7L5PvSv
+uLxiM+7Kmq6KX9A0AOQ00+/d6noUI/sX9Zi6eY3EgyLQMnTNM87Z0SjSkO7oMkv2
+67GflREHdXIBr/jOI/tQ1Tqd04otcEN0iy7fzziWrK0gf33JTIhYE/v1k/3HKJyw
+jQjAU89SGWCTLrQUnWSXEkW7LyqX1XX/j5uVfeWJOBDdZYrHhpzRLvCRtbYKHqAk
+69VZQSm6NsoPtYGaZmuuTzegqphpJ/wG0BdOa8hIofGmGHsiwI//Ndx28cUELQCi
+rhXxUVq4zMUePbQId7kIskGuQjC3Kg==
+=oRfo
+-----END PGP SIGNATURE-----
+
+--oC1+HKm2/end4ao3--
