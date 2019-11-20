@@ -2,63 +2,64 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-22.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E618C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 17:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBA65C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 17:02:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EA4A2071F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 17:02:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AC932088F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 17:02:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r1azWtR8"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wG3Vrn8j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732992AbfKTRCe (ORCPT
+        id S1730271AbfKTRC2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 12:02:34 -0500
-Received: from mail-vs1-f73.google.com ([209.85.217.73]:35815 "EHLO
-        mail-vs1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732156AbfKTRCc (ORCPT
+        Wed, 20 Nov 2019 12:02:28 -0500
+Received: from mail-wr1-f73.google.com ([209.85.221.73]:48451 "EHLO
+        mail-wr1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728120AbfKTRC1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 12:02:32 -0500
-Received: by mail-vs1-f73.google.com with SMTP id w22so113178vse.2
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 09:02:30 -0800 (PST)
+        Wed, 20 Nov 2019 12:02:27 -0500
+Received: by mail-wr1-f73.google.com with SMTP id j12so1663638wrw.15
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 09:02:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=gxBL3CBm1h/tbDLIWI6DpF6/W5QiOnWrINNtvzXl3CY=;
-        b=r1azWtR8COJZA/ahy8SN4T3KGLZ4gEKjIC1zz3dHUhDegy8SQwDqwrRmzQJ7VdYdLU
-         gX2LiIeaALOtjf3p4Gu2eoOuynsKKm6R4iEMJTF6dgqK3IVXDNqEMU9EuoSEB0dJKClr
-         ICWZ9LOTSMrPz5eCaQkyE5b9IP+fKgcWZxeiYiRIQN2+TI1j++xeYhbA81ZrYcmi8iir
-         PNh2nB2ezqdW+uyxPm+H8jgCXh9jlDugxFTRd/cdV2uP7XwbES+RXOEqE1XECUdKRrn0
-         Z3sysjV8AdyFLKHUWuF2htWfmgBTRg5BS9SjZH7pUPKNgZd5HXhih+BxfvqmU98fuwZh
-         qLzA==
+        bh=N36gCc3j7uExBVgM58L/MEwlkhhJunSvGseUI9gnnGU=;
+        b=wG3Vrn8j8BkwZJtf/61OoECdz7bT963v0NtZ3rBApr0/byc0YTXlMgjIeZwvSJIC1l
+         MumUaupg8Gr8xxNZZEuN7m2hHR7617G5FKJtKjGOqLdSrqMNJzS4XpGCCgdr9xuwa2JB
+         vW9Z1Bhzc9h4Kto6ema0XcshW5HTgpBYPNKDi0W8RRiPVk/Maq+mtZaQuU1qvebkbHG/
+         KMVmLUi29iXqmMogrF/k/pITuoe6HV+NkADOIjmNNkNfg8582PNr2oLZNwMZ84c2lUJ2
+         Tg2kR8Qc9JzfuxlLjQvO7Tj4FkMreW4ODbuqrd50cPGFJQiOKhwz6VS1gDNbhQwFdmJM
+         Pc3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=gxBL3CBm1h/tbDLIWI6DpF6/W5QiOnWrINNtvzXl3CY=;
-        b=VlMGSsQMiae2GYk7oHVSMQhfttluNaehtIlD9Ed2aSO7MzIvltSq+Iwr2uTSGRkSj9
-         iXtXzXQXjqsgSPTekXrdYVIhUUUyKiQgm/nMKxq7rfkiWvFX3kEIL+GcM27u+apcr7d3
-         hJuF+9L+/qkk7adC+fGbGFyW7JaBUcf5bx9mu467hf/J43AwTI0120brHlQT7C0cIz4t
-         v9DL4GdzT5aPYucmyQW/a0vn6BleksTG2Zb1R15yNCbZ8th2t1VoPzokmtFLIdXzBrgE
-         MK3OTE/aEHJeiKfqpQAnXlvjVDAElXyvkB4hyHZN0FDN4PD08mFEyp89EwQnis8pCKIX
-         PR8Q==
-X-Gm-Message-State: APjAAAVVr6baIUZiI3+/Ydp86MIhT63S/n16yq3stZOxROG6lyFle4HH
-        dLQPwQNyUdUkIu9HSbKYYvqbH9ISxg==
-X-Google-Smtp-Source: APXvYqwl4tyqT07ywtZZwAp4OuKRyazEmeceWDnsVuo1uFk5GHo3TY3yTtNZ0shwwbNQBBQ0Sr2G9BbJvA==
-X-Received: by 2002:a1f:944a:: with SMTP id w71mr2219271vkd.60.1574269349528;
- Wed, 20 Nov 2019 09:02:29 -0800 (PST)
-Date:   Wed, 20 Nov 2019 18:02:08 +0100
+        bh=N36gCc3j7uExBVgM58L/MEwlkhhJunSvGseUI9gnnGU=;
+        b=hBbupmC1Y2PsLh/ifSUWZQyJ2yAG9ZfxGdZcfwCTTFiL6sSErl3AW6UQLUnHRUr91C
+         wksPaI4/CdGSLZQr3B7MPOEC7gwU9Q4THRHB2xevfP2dx3+dYJE0L2LvWAqLqT3KbsWL
+         z+J5Q0MmIxZok6nlCk38WdKvq1veaobWYRNFLQeyXjPF/Tt1JHTtiEDVzB6j780EpDby
+         b6+U6dr0jgbDW1et4vicba4jDLYsyLhr9bRLwVRaKvJcIQOytYCMj5zZ8qXSSqbbcFJg
+         yjnOKlndFtliuCWrc32zxgoGlm0dckqejIqhDykH5maLmyWwmy0QP2DzBrgJGX/wyb1V
+         YOFQ==
+X-Gm-Message-State: APjAAAU2p6pnHOnB1OwDN7Q/ZytDUxABx54ZDOWXCX1t+S+7PzEWO7LE
+        8St6jF30OrqkvhOAbfpTxoFjvTJ3Aw==
+X-Google-Smtp-Source: APXvYqyajeoSli404TUYwArpq9llItkXaS9eYhhY/W+OA/LkTQXF9yU31MSPE3TNJMFDjizx0jvtiy4jXA==
+X-Received: by 2002:adf:ea8d:: with SMTP id s13mr4675039wrm.366.1574269342238;
+ Wed, 20 Nov 2019 09:02:22 -0800 (PST)
+Date:   Wed, 20 Nov 2019 18:02:06 +0100
 In-Reply-To: <20191120170208.211997-1-jannh@google.com>
-Message-Id: <20191120170208.211997-4-jannh@google.com>
+Message-Id: <20191120170208.211997-2-jannh@google.com>
 Mime-Version: 1.0
 References: <20191120170208.211997-1-jannh@google.com>
 X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
-Subject: [PATCH v4 4/4] x86/kasan: Print original address on #GP
+Subject: [PATCH v4 2/4] x86/traps: Print non-canonical address on #GP
 From:   Jann Horn <jannh@google.com>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
@@ -77,195 +78,145 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make #GP exceptions caused by out-of-bounds KASAN shadow accesses easier
-to understand by computing the address of the original access and
-printing that. More details are in the comments in the patch.
+A frequent cause of #GP exceptions are memory accesses to non-canonical
+addresses. Unlike #PF, #GP doesn't come with a fault address in CR2, so
+the kernel doesn't currently print the fault address for #GP.
+Luckily, we already have the necessary infrastructure for decoding X86
+instructions and computing the memory address that is being accessed;
+hook it up to the #GP handler so that we can figure out whether the #GP
+looks like it was caused by a non-canonical address, and if so, print
+that address.
 
-This turns an error like this:
-
-    kasan: CONFIG_KASAN_INLINE enabled
-    kasan: GPF could be caused by NULL-ptr deref or user memory access
-    general protection fault probably for non-canonical address
-        0xe017577ddf75b7dd: 0000 [#1] PREEMPT SMP KASAN PTI
-
-into this:
-
-    general protection fault probably for non-canonical address
-        0xe017577ddf75b7dd: 0000 [#1] PREEMPT SMP KASAN PTI
-    KASAN: maybe wild-memory-access in range
-        [0x00badbeefbadbee8-0x00badbeefbadbeef]
-
-The hook is placed in architecture-independent code, but is currently
-only wired up to the X86 exception handler because I'm not sufficiently
-familiar with the address space layout and exception handling mechanisms
-on other architectures.
+While it is already possible to compute the faulting address manually by
+disassembling the opcode dump and evaluating the instruction against the
+register dump, this should make it slightly easier to identify crashes
+at a glance.
 
 Signed-off-by: Jann Horn <jannh@google.com>
 ---
 
 Notes:
     v2:
-     - move to mm/kasan/report.c (Dmitry)
-     - change hook name to be more generic
-     - use TASK_SIZE instead of TASK_SIZE_MAX for compiling on non-x86
-     - don't open-code KASAN_SHADOW_MASK (Dmitry)
-     - add "KASAN: " prefix, but not "BUG: " (Andrey, Dmitry)
-     - use same naming scheme as get_wild_bug_type (Andrey)
-     - this version was "Reviewed-by: Dmitry Vyukov <dvyukov@google.com>"
+     - print different message for segment-related GP (Borislav)
+     - rewrite check for non-canonical address (Sean)
+     - make it clear we don't know for sure why the GP happened (Andy)
     v3:
-     - adjusted example output in commit message based on
-       changes in preceding patch
-     - ensure that KASAN output happens after bust_spinlocks(1)
-     - moved hook in arch/x86/kernel/traps.c such that output
-       appears after the first line of KASAN-independent error report
+     - change message format to one line (Borislav)
     v4:
-     - adjust patch to changes in x86/traps patch
+     - rename insn_bytes to insn_buf (Ingo)
+     - add space after GPFSTR (Ingo)
+     - make sizeof(desc) clearer (Ingo, Borislav)
+     - also print the address (with a different message) if it's canonical (Ingo)
+    
+    I have already sent a patch to syzkaller that relaxes their parsing of GPF
+    messages (https://github.com/google/syzkaller/commit/432c7650) such that
+    changes like the one in this patch don't break it.
+    That patch has already made its way into syzbot's syzkaller instances
+    according to <https://syzkaller.appspot.com/upstream>.
 
- arch/x86/kernel/traps.c     | 11 ++++++++++
- arch/x86/mm/kasan_init_64.c | 21 -------------------
- include/linux/kasan.h       |  6 ++++++
- mm/kasan/report.c           | 40 +++++++++++++++++++++++++++++++++++++
- 4 files changed, 57 insertions(+), 21 deletions(-)
+ arch/x86/kernel/traps.c | 64 +++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 61 insertions(+), 3 deletions(-)
 
 diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-index b90635f29b9f..342cee50bf7b 100644
+index c90312146da0..b90635f29b9f 100644
 --- a/arch/x86/kernel/traps.c
 +++ b/arch/x86/kernel/traps.c
-@@ -37,6 +37,7 @@
- #include <linux/mm.h>
- #include <linux/smp.h>
- #include <linux/io.h>
-+#include <linux/kasan.h>
- #include <asm/stacktrace.h>
- #include <asm/processor.h>
- #include <asm/debugreg.h>
-@@ -574,7 +575,9 @@ do_general_protection(struct pt_regs *regs, long error_code)
- 	if (!user_mode(regs)) {
- 		bool addr_resolved = false;
- 		unsigned long gp_addr;
-+		unsigned long flags;
- 		bool non_canonical;
-+		int sig;
+@@ -56,6 +56,8 @@
+ #include <asm/mpx.h>
+ #include <asm/vm86.h>
+ #include <asm/umip.h>
++#include <asm/insn.h>
++#include <asm/insn-eval.h>
  
+ #ifdef CONFIG_X86_64
+ #include <asm/x86_init.h>
+@@ -509,11 +511,50 @@ dotraplinkage void do_bounds(struct pt_regs *regs, long error_code)
+ 	do_trap(X86_TRAP_BR, SIGSEGV, "bounds", regs, error_code, 0, NULL);
+ }
+ 
++/*
++ * On 64-bit, if an uncaught #GP occurs while dereferencing a non-canonical
++ * address, return that address.
++ */
++static bool get_kernel_gp_address(struct pt_regs *regs, unsigned long *addr,
++					   bool *non_canonical)
++{
++#ifdef CONFIG_X86_64
++	u8 insn_buf[MAX_INSN_SIZE];
++	struct insn insn;
++
++	if (probe_kernel_read(insn_buf, (void *)regs->ip, MAX_INSN_SIZE))
++		return false;
++
++	kernel_insn_init(&insn, insn_buf, MAX_INSN_SIZE);
++	insn_get_modrm(&insn);
++	insn_get_sib(&insn);
++	*addr = (unsigned long)insn_get_addr_ref(&insn, regs);
++
++	if (*addr == (unsigned long)-1L)
++		return false;
++
++	/*
++	 * Check that:
++	 *  - the address is not in the kernel half or -1 (which means the
++	 *    decoder failed to decode it)
++	 *  - the last byte of the address is not in the user canonical half
++	 */
++	*non_canonical = *addr < ~__VIRTUAL_MASK &&
++			 *addr + insn.opnd_bytes - 1 > __VIRTUAL_MASK;
++
++	return true;
++#else
++	return false;
++#endif
++}
++
++#define GPFSTR "general protection fault"
++
+ dotraplinkage void
+ do_general_protection(struct pt_regs *regs, long error_code)
+ {
+-	const char *desc = "general protection fault";
+ 	struct task_struct *tsk;
++	char desc[sizeof(GPFSTR) + 50 + 2*sizeof(unsigned long) + 1] = GPFSTR;
+ 
+ 	RCU_LOCKDEP_WARN(!rcu_is_watching(), "entry code didn't wake RCU");
+ 	cond_local_irq_enable(regs);
+@@ -531,6 +572,10 @@ do_general_protection(struct pt_regs *regs, long error_code)
+ 
+ 	tsk = current;
+ 	if (!user_mode(regs)) {
++		bool addr_resolved = false;
++		unsigned long gp_addr;
++		bool non_canonical;
++
  		if (fixup_exception(regs, X86_TRAP_GP, error_code, 0))
  			return;
-@@ -606,6 +609,14 @@ do_general_protection(struct pt_regs *regs, long error_code)
- 			    GPFSTR " probably for %saddress 0x%lx",
- 			    non_canonical ? "non-canonical " : "", gp_addr);
  
-+		flags = oops_begin();
-+		sig = SIGSEGV;
-+		__die_header(desc, regs, error_code);
-+		if (addr_resolved && non_canonical)
-+			kasan_non_canonical_hook(gp_addr);
-+		if (__die_body(desc, regs, error_code))
-+			sig = 0;
-+		oops_end(flags, regs, sig);
- 		die(desc, regs, error_code);
+@@ -547,8 +592,21 @@ do_general_protection(struct pt_regs *regs, long error_code)
+ 			return;
+ 
+ 		if (notify_die(DIE_GPF, desc, regs, error_code,
+-			       X86_TRAP_GP, SIGSEGV) != NOTIFY_STOP)
+-			die(desc, regs, error_code);
++			       X86_TRAP_GP, SIGSEGV) == NOTIFY_STOP)
++			return;
++
++		if (error_code)
++			snprintf(desc, sizeof(desc), "segment-related " GPFSTR);
++		else
++			addr_resolved = get_kernel_gp_address(regs, &gp_addr,
++							      &non_canonical);
++
++		if (addr_resolved)
++			snprintf(desc, sizeof(desc),
++			    GPFSTR " probably for %saddress 0x%lx",
++			    non_canonical ? "non-canonical " : "", gp_addr);
++
++		die(desc, regs, error_code);
  		return;
  	}
-diff --git a/arch/x86/mm/kasan_init_64.c b/arch/x86/mm/kasan_init_64.c
-index 296da58f3013..69c437fb21cc 100644
---- a/arch/x86/mm/kasan_init_64.c
-+++ b/arch/x86/mm/kasan_init_64.c
-@@ -245,23 +245,6 @@ static void __init kasan_map_early_shadow(pgd_t *pgd)
- 	} while (pgd++, addr = next, addr != end);
- }
  
--#ifdef CONFIG_KASAN_INLINE
--static int kasan_die_handler(struct notifier_block *self,
--			     unsigned long val,
--			     void *data)
--{
--	if (val == DIE_GPF) {
--		pr_emerg("CONFIG_KASAN_INLINE enabled\n");
--		pr_emerg("GPF could be caused by NULL-ptr deref or user memory access\n");
--	}
--	return NOTIFY_OK;
--}
--
--static struct notifier_block kasan_die_notifier = {
--	.notifier_call = kasan_die_handler,
--};
--#endif
--
- void __init kasan_early_init(void)
- {
- 	int i;
-@@ -298,10 +281,6 @@ void __init kasan_init(void)
- 	int i;
- 	void *shadow_cpu_entry_begin, *shadow_cpu_entry_end;
- 
--#ifdef CONFIG_KASAN_INLINE
--	register_die_notifier(&kasan_die_notifier);
--#endif
--
- 	memcpy(early_top_pgt, init_top_pgt, sizeof(early_top_pgt));
- 
- 	/*
-diff --git a/include/linux/kasan.h b/include/linux/kasan.h
-index cc8a03cc9674..7305024b44e3 100644
---- a/include/linux/kasan.h
-+++ b/include/linux/kasan.h
-@@ -194,4 +194,10 @@ static inline void *kasan_reset_tag(const void *addr)
- 
- #endif /* CONFIG_KASAN_SW_TAGS */
- 
-+#ifdef CONFIG_KASAN_INLINE
-+void kasan_non_canonical_hook(unsigned long addr);
-+#else /* CONFIG_KASAN_INLINE */
-+static inline void kasan_non_canonical_hook(unsigned long addr) { }
-+#endif /* CONFIG_KASAN_INLINE */
-+
- #endif /* LINUX_KASAN_H */
-diff --git a/mm/kasan/report.c b/mm/kasan/report.c
-index 621782100eaa..5ef9f24f566b 100644
---- a/mm/kasan/report.c
-+++ b/mm/kasan/report.c
-@@ -512,3 +512,43 @@ void __kasan_report(unsigned long addr, size_t size, bool is_write, unsigned lon
- 
- 	end_report(&flags);
- }
-+
-+#ifdef CONFIG_KASAN_INLINE
-+/*
-+ * With CONFIG_KASAN_INLINE, accesses to bogus pointers (outside the high
-+ * canonical half of the address space) cause out-of-bounds shadow memory reads
-+ * before the actual access. For addresses in the low canonical half of the
-+ * address space, as well as most non-canonical addresses, that out-of-bounds
-+ * shadow memory access lands in the non-canonical part of the address space.
-+ * Help the user figure out what the original bogus pointer was.
-+ */
-+void kasan_non_canonical_hook(unsigned long addr)
-+{
-+	unsigned long orig_addr;
-+	const char *bug_type;
-+
-+	if (addr < KASAN_SHADOW_OFFSET)
-+		return;
-+
-+	orig_addr = (addr - KASAN_SHADOW_OFFSET) << KASAN_SHADOW_SCALE_SHIFT;
-+	/*
-+	 * For faults near the shadow address for NULL, we can be fairly certain
-+	 * that this is a KASAN shadow memory access.
-+	 * For faults that correspond to shadow for low canonical addresses, we
-+	 * can still be pretty sure - that shadow region is a fairly narrow
-+	 * chunk of the non-canonical address space.
-+	 * But faults that look like shadow for non-canonical addresses are a
-+	 * really large chunk of the address space. In that case, we still
-+	 * print the decoded address, but make it clear that this is not
-+	 * necessarily what's actually going on.
-+	 */
-+	if (orig_addr < PAGE_SIZE)
-+		bug_type = "null-ptr-deref";
-+	else if (orig_addr < TASK_SIZE)
-+		bug_type = "probably user-memory-access";
-+	else
-+		bug_type = "maybe wild-memory-access";
-+	pr_alert("KASAN: %s in range [0x%016lx-0x%016lx]\n", bug_type,
-+		 orig_addr, orig_addr + KASAN_SHADOW_MASK);
-+}
-+#endif
 -- 
 2.24.0.432.g9d3f5f5b63-goog
 
