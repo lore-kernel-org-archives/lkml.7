@@ -2,250 +2,182 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E7CBC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:42:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B23C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:42:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59CB120714
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:42:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D750220714
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:42:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574264571;
+	bh=lYA73il6i3J1+F/qks+KtJ7Xy1P07dI3VP4HbWEIyvs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mLld6WWDgnXQSI4bSXzXRpU95Ao2M8D5+b0RLwmqvbaRee6h7O5Qho7Uiwn2NUNcn
+	 0Km9b6WbJ0VJJ6u+JjvFeHBF4PQ0JI2pFNxjuX0+BvdlhqbM9WTGM0aahAH99Z61mV
+	 usTGCuy+yqZR5m1Q0kx8wE2TJkoiwxNvvha15g2s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732228AbfKTPmr (ORCPT
+        id S1728687AbfKTPmt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 10:42:47 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:52838 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730066AbfKTPkT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 10:40:19 -0500
-Received: from [167.98.27.226] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1iXS5V-0004b2-DM; Wed, 20 Nov 2019 15:40:13 +0000
-Received: from ben by deadeye with local (Exim 4.93-RC1)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1iXS5V-0004ME-5a; Wed, 20 Nov 2019 15:40:13 +0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+        Wed, 20 Nov 2019 10:42:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41138 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730106AbfKTPmj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 10:42:39 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8B2820709;
+        Wed, 20 Nov 2019 15:42:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574264557;
+        bh=lYA73il6i3J1+F/qks+KtJ7Xy1P07dI3VP4HbWEIyvs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ka7S4pOc+VaOoxYIgKYlvUAQotGBd1twFQz7recQ59AmLhA3JXhKipNLa9mk8/EWT
+         Jj3fC/FFUVznctd6dnLkLhgw/XVrvOj4xDWcIGeWjealWFCrBF16EawIgzoPmrzHXE
+         g+2++SCwKI6Pml+yrtDKg9fcIjVXaTjqRXSy10xk=
+Date:   Wed, 20 Nov 2019 16:42:35 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+Cc:     jslaby@suse.com, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org, leeyou.li@huawei.com,
+        nixiaoming@huawei.com, zhangwen8@huawei.com
+Subject: Re: [PATCH] serial: serial_core: Perform NULL checks for break_ctl
+ ops
+Message-ID: <20191120154235.GA3004157@kroah.com>
+References: <1574263133-28259-1-git-send-email-xiaojiangfeng@huawei.com>
 MIME-Version: 1.0
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Hulk Robot" <hulkci@huawei.com>,
-        "Jason Wang" <jasowang@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Yang Yingliang" <yangyingliang@huawei.com>
-Date:   Wed, 20 Nov 2019 15:38:20 +0000
-Message-ID: <lsq.1574264230.663866428@decadent.org.uk>
-X-Mailer: LinuxStableQueue (scripts by bwh)
-X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 70/83] tun: fix use-after-free when register netdev
- failed
-In-Reply-To: <lsq.1574264230.280218497@decadent.org.uk>
-X-SA-Exim-Connect-IP: 167.98.27.226
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1574263133-28259-1-git-send-email-xiaojiangfeng@huawei.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-3.16.78-rc1 review patch.  If anyone has any objections, please let me know.
+On Wed, Nov 20, 2019 at 11:18:53PM +0800, Jiangfeng Xiao wrote:
+> Doing fuzz test on sbsa uart device, causes a kernel crash
+> due to NULL pointer dereference:
+> 
+> ------------[ cut here ]------------
+> Unable to handle kernel paging request at virtual address fffffffffffffffc
+> pgd = ffffffe331723000
+> [fffffffffffffffc] *pgd=0000002333595003, *pud=0000002333595003, *pmd=00000
+> Internal error: Oops: 96000005 [#1] PREEMPT SMP
+> Modules linked in: ping(O) jffs2 rtos_snapshot(O) pramdisk(O) hisi_sfc(O)
+> Drv_Nandc_K(O) Drv_SysCtl_K(O) Drv_SysClk_K(O) bsp_reg(O) hns3(O)
+> hns3_uio_enet(O) hclgevf(O) hclge(O) hnae3(O) mdio_factory(O)
+> mdio_registry(O) mdio_dev(O) mdio(O) hns3_info(O) rtos_kbox_panic(O)
+> uart_suspend(O) rsm(O) stp llc tunnel4 xt_tcpudp ipt_REJECT nf_reject_ipv4
+> iptable_filter ip_tables x_tables sd_mod xhci_plat_hcd xhci_pci xhci_hcd
+> usbmon usbhid usb_storage ohci_platform ohci_pci ohci_hcd hid_generic hid
+> ehci_platform ehci_pci ehci_hcd vfat fat usbcore usb_common scsi_mod
+> yaffs2multi(O) ext4 jbd2 ext2 mbcache ofpart i2c_dev i2c_core uio ubi nand
+> nand_ecc nand_ids cfi_cmdset_0002 cfi_cmdset_0001 cfi_probe gen_probe
+> cmdlinepart chipreg mtdblock mtd_blkdevs mtd nfsd auth_rpcgss oid_registry
+> nfsv3 nfs nfs_acl lockd sunrpc grace autofs4
+> CPU: 2 PID: 2385 Comm: tty_fuzz_test Tainted: G           O    4.4.193 #1
+> task: ffffffe32b23f110 task.stack: ffffffe32bda4000
+> PC is at uart_break_ctl+0x44/0x84
+> LR is at uart_break_ctl+0x34/0x84
+> pc : [<ffffff8393196098>] lr : [<ffffff8393196088>] pstate: 80000005
+> sp : ffffffe32bda7cc0
+> x29: ffffffe32bda7cc0 x28: ffffffe32b23f110
+> x27: ffffff8393402000 x26: 0000000000000000
+> x25: ffffffe32b233f40 x24: ffffffc07a8ec680
+> x23: 0000000000005425 x22: 00000000ffffffff
+> x21: ffffffe33ed73c98 x20: 0000000000000000
+> x19: ffffffe33ed94168 x18: 0000000000000004
+> x17: 0000007f92ae9d30 x16: ffffff8392fa6064
+> x15: 0000000000000010 x14: 0000000000000000
+> x13: 0000000000000000 x12: 0000000000000000
+> x11: 0000000000000020 x10: 0000007ffdac1708
+> x9 : 0000000000000078 x8 : 000000000000001d
+> x7 : 0000000052a64887 x6 : ffffffe32bda7e08
+> x5 : ffffffe32b23c000 x4 : 0000005fbc5b0000
+> x3 : ffffff83938d5018 x2 : 0000000000000080
+> x1 : ffffffe32b23c040 x0 : ffffff83934428f8
+> virtual start addr offset is 38ac00000
+> module base offset is 2cd4cf1000
+> linear region base offset is : 0
+> Process tty_fuzz_test (pid: 2385, stack limit = 0xffffffe32bda4000)
+> Stack: (0xffffffe32bda7cc0 to 0xffffffe32bda8000)
+> 7cc0: ffffffe32bda7cf0 ffffff8393177718 ffffffc07a8ec680 ffffff8393196054
+> 7ce0: 000000001739f2e0 0000007ffdac1978 ffffffe32bda7d20 ffffff8393179a1c
+> 7d00: 0000000000000000 ffffff8393c0a000 ffffffc07a8ec680 cb88537fdc8ba600
+> 7d20: ffffffe32bda7df0 ffffff8392fa5a40 ffffff8393c0a000 0000000000005425
+> 7d40: 0000007ffdac1978 ffffffe32b233f40 ffffff8393178dcc 0000000000000003
+> 7d60: 000000000000011d 000000000000001d ffffffe32b23f110 000000000000029e
+> 7d80: ffffffe34fe8d5d0 0000000000000000 ffffffe32bda7e14 cb88537fdc8ba600
+> 7da0: ffffffe32bda7e30 ffffff8393042cfc ffffff8393c41720 ffffff8393c46410
+> 7dc0: ffffff839304fa68 ffffffe32b233f40 0000000000005425 0000007ffdac1978
+> 7de0: 000000000000011d cb88537fdc8ba600 ffffffe32bda7e70 ffffff8392fa60cc
+> 7e00: 0000000000000000 ffffffe32b233f40 ffffffe32b233f40 0000000000000003
+> 7e20: 0000000000005425 0000007ffdac1978 ffffffe32bda7e70 ffffff8392fa60b0
+> 7e40: 0000000000000280 ffffffe32b233f40 ffffffe32b233f40 0000000000000003
+> 7e60: 0000000000005425 cb88537fdc8ba600 0000000000000000 ffffff8392e02e78
+> 7e80: 0000000000000280 0000005fbc5b0000 ffffffffffffffff 0000007f92ae9d3c
+> 7ea0: 0000000060000000 0000000000000015 0000000000000003 0000000000005425
+> 7ec0: 0000007ffdac1978 0000000000000000 00000000a54c910e 0000007f92b95014
+> 7ee0: 0000007f92b95090 0000000052a64887 000000000000001d 0000000000000078
+> 7f00: 0000007ffdac1708 0000000000000020 0000000000000000 0000000000000000
+> 7f20: 0000000000000000 0000000000000010 000000556acf0090 0000007f92ae9d30
+> 7f40: 0000000000000004 000000556acdef10 0000000000000000 000000556acdebd0
+> 7f60: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+> 7f80: 0000000000000000 0000000000000000 0000000000000000 0000007ffdac1840
+> 7fa0: 000000556acdedcc 0000007ffdac1840 0000007f92ae9d3c 0000000060000000
+> 7fc0: 0000000000000000 0000000000000000 0000000000000003 000000000000001d
+> 7fe0: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+> Call trace:
+> Exception stack(0xffffffe32bda7ab0 to 0xffffffe32bda7bf0)
+> 7aa0:                                   0000000000001000 0000007fffffffff
+> 7ac0: ffffffe32bda7cc0 ffffff8393196098 0000000080000005 0000000000000025
+> 7ae0: ffffffe32b233f40 ffffff83930d777c ffffffe32bda7b30 ffffff83930d777c
+> 7b00: ffffffe32bda7be0 ffffff83938d5000 ffffffe32bda7be0 ffffffe32bda7c20
+> 7b20: ffffffe32bda7b60 ffffff83930d777c ffffffe32bda7c10 ffffff83938d5000
+> 7b40: ffffffe32bda7c10 ffffffe32bda7c50 ffffff8393c0a000 ffffffe32b23f110
+> 7b60: ffffffe32bda7b70 ffffff8392e09df4 ffffffe32bda7bb0 cb88537fdc8ba600
+> 7b80: ffffff83934428f8 ffffffe32b23c040 0000000000000080 ffffff83938d5018
+> 7ba0: 0000005fbc5b0000 ffffffe32b23c000 ffffffe32bda7e08 0000000052a64887
+> 7bc0: 000000000000001d 0000000000000078 0000007ffdac1708 0000000000000020
+> 7be0: 0000000000000000 0000000000000000
+> [<ffffff8393196098>] uart_break_ctl+0x44/0x84
+> [<ffffff8393177718>] send_break+0xa0/0x114
+> [<ffffff8393179a1c>] tty_ioctl+0xc50/0xe84
+> [<ffffff8392fa5a40>] do_vfs_ioctl+0xc4/0x6e8
+> [<ffffff8392fa60cc>] SyS_ioctl+0x68/0x9c
+> [<ffffff8392e02e78>] __sys_trace_return+0x0/0x4
+> Code: b9410ea0 34000160 f9408aa0 f9402814 (b85fc280)
+> ---[ end trace 8606094f1960c5e0 ]---
+> Kernel panic - not syncing: Fatal exception
+> 
+> Fix this problem by adding NULL checks prior to calling break_ctl ops.
+> 
+> Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+> ---
+>  drivers/tty/serial/serial_core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
+> index c4a414a..b0a6eb1 100644
+> --- a/drivers/tty/serial/serial_core.c
+> +++ b/drivers/tty/serial/serial_core.c
+> @@ -1111,7 +1111,7 @@ static int uart_break_ctl(struct tty_struct *tty, int break_state)
+>  	if (!uport)
+>  		goto out;
+>  
+> -	if (uport->type != PORT_UNKNOWN)
+> +	if (uport->type != PORT_UNKNOWN && uport->ops->break_ctl)
 
-------------------
+What serial driver does not define break_ctl?
 
-From: Yang Yingliang <yangyingliang@huawei.com>
+You are running with a bunch of "out-of-tree" drivers, perhaps one of
+those needs to be fixed here instead?
 
-commit 77f22f92dff8e7b45c7786a430626d38071d4670 upstream.
+thanks,
 
-I got a UAF repport in tun driver when doing fuzzy test:
-
-[  466.269490] ==================================================================
-[  466.271792] BUG: KASAN: use-after-free in tun_chr_read_iter+0x2ca/0x2d0
-[  466.271806] Read of size 8 at addr ffff888372139250 by task tun-test/2699
-[  466.271810]
-[  466.271824] CPU: 1 PID: 2699 Comm: tun-test Not tainted 5.3.0-rc1-00001-g5a9433db2614-dirty #427
-[  466.271833] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
-[  466.271838] Call Trace:
-[  466.271858]  dump_stack+0xca/0x13e
-[  466.271871]  ? tun_chr_read_iter+0x2ca/0x2d0
-[  466.271890]  print_address_description+0x79/0x440
-[  466.271906]  ? vprintk_func+0x5e/0xf0
-[  466.271920]  ? tun_chr_read_iter+0x2ca/0x2d0
-[  466.271935]  __kasan_report+0x15c/0x1df
-[  466.271958]  ? tun_chr_read_iter+0x2ca/0x2d0
-[  466.271976]  kasan_report+0xe/0x20
-[  466.271987]  tun_chr_read_iter+0x2ca/0x2d0
-[  466.272013]  do_iter_readv_writev+0x4b7/0x740
-[  466.272032]  ? default_llseek+0x2d0/0x2d0
-[  466.272072]  do_iter_read+0x1c5/0x5e0
-[  466.272110]  vfs_readv+0x108/0x180
-[  466.299007]  ? compat_rw_copy_check_uvector+0x440/0x440
-[  466.299020]  ? fsnotify+0x888/0xd50
-[  466.299040]  ? __fsnotify_parent+0xd0/0x350
-[  466.299064]  ? fsnotify_first_mark+0x1e0/0x1e0
-[  466.304548]  ? vfs_write+0x264/0x510
-[  466.304569]  ? ksys_write+0x101/0x210
-[  466.304591]  ? do_preadv+0x116/0x1a0
-[  466.304609]  do_preadv+0x116/0x1a0
-[  466.309829]  do_syscall_64+0xc8/0x600
-[  466.309849]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-[  466.309861] RIP: 0033:0x4560f9
-[  466.309875] Code: 00 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-[  466.309889] RSP: 002b:00007ffffa5166e8 EFLAGS: 00000206 ORIG_RAX: 0000000000000127
-[  466.322992] RAX: ffffffffffffffda RBX: 0000000000400460 RCX: 00000000004560f9
-[  466.322999] RDX: 0000000000000003 RSI: 00000000200008c0 RDI: 0000000000000003
-[  466.323007] RBP: 00007ffffa516700 R08: 0000000000000004 R09: 0000000000000000
-[  466.323014] R10: 0000000000000000 R11: 0000000000000206 R12: 000000000040cb10
-[  466.323021] R13: 0000000000000000 R14: 00000000006d7018 R15: 0000000000000000
-[  466.323057]
-[  466.323064] Allocated by task 2605:
-[  466.335165]  save_stack+0x19/0x80
-[  466.336240]  __kasan_kmalloc.constprop.8+0xa0/0xd0
-[  466.337755]  kmem_cache_alloc+0xe8/0x320
-[  466.339050]  getname_flags+0xca/0x560
-[  466.340229]  user_path_at_empty+0x2c/0x50
-[  466.341508]  vfs_statx+0xe6/0x190
-[  466.342619]  __do_sys_newstat+0x81/0x100
-[  466.343908]  do_syscall_64+0xc8/0x600
-[  466.345303]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-[  466.347034]
-[  466.347517] Freed by task 2605:
-[  466.348471]  save_stack+0x19/0x80
-[  466.349476]  __kasan_slab_free+0x12e/0x180
-[  466.350726]  kmem_cache_free+0xc8/0x430
-[  466.351874]  putname+0xe2/0x120
-[  466.352921]  filename_lookup+0x257/0x3e0
-[  466.354319]  vfs_statx+0xe6/0x190
-[  466.355498]  __do_sys_newstat+0x81/0x100
-[  466.356889]  do_syscall_64+0xc8/0x600
-[  466.358037]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-[  466.359567]
-[  466.360050] The buggy address belongs to the object at ffff888372139100
-[  466.360050]  which belongs to the cache names_cache of size 4096
-[  466.363735] The buggy address is located 336 bytes inside of
-[  466.363735]  4096-byte region [ffff888372139100, ffff88837213a100)
-[  466.367179] The buggy address belongs to the page:
-[  466.368604] page:ffffea000dc84e00 refcount:1 mapcount:0 mapping:ffff8883df1b4f00 index:0x0 compound_mapcount: 0
-[  466.371582] flags: 0x2fffff80010200(slab|head)
-[  466.372910] raw: 002fffff80010200 dead000000000100 dead000000000122 ffff8883df1b4f00
-[  466.375209] raw: 0000000000000000 0000000000070007 00000001ffffffff 0000000000000000
-[  466.377778] page dumped because: kasan: bad access detected
-[  466.379730]
-[  466.380288] Memory state around the buggy address:
-[  466.381844]  ffff888372139100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[  466.384009]  ffff888372139180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[  466.386131] >ffff888372139200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[  466.388257]                                                  ^
-[  466.390234]  ffff888372139280: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[  466.392512]  ffff888372139300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[  466.394667] ==================================================================
-
-tun_chr_read_iter() accessed the memory which freed by free_netdev()
-called by tun_set_iff():
-
-        CPUA                                           CPUB
-  tun_set_iff()
-    alloc_netdev_mqs()
-    tun_attach()
-                                                  tun_chr_read_iter()
-                                                    tun_get()
-                                                    tun_do_read()
-                                                      tun_ring_recv()
-    register_netdevice() <-- inject error
-    goto err_detach
-    tun_detach_all() <-- set RCV_SHUTDOWN
-    free_netdev() <-- called from
-                     err_free_dev path
-      netdev_freemem() <-- free the memory
-                        without check refcount
-      (In this path, the refcount cannot prevent
-       freeing the memory of dev, and the memory
-       will be used by dev_put() called by
-       tun_chr_read_iter() on CPUB.)
-                                                     (Break from tun_ring_recv(),
-                                                     because RCV_SHUTDOWN is set)
-                                                   tun_put()
-                                                     dev_put() <-- use the memory
-                                                                   freed by netdev_freemem()
-
-Put the publishing of tfile->tun after register_netdevice(),
-so tun_get() won't get the tun pointer that freed by
-err_detach path if register_netdevice() failed.
-
-Fixes: eb0fb363f920 ("tuntap: attach queue 0 before registering netdevice")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Suggested-by: Jason Wang <jasowang@redhat.com>
-Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-[bwh: Backported to 3.16: adjust context]
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
----
- drivers/net/tun.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
-
---- a/drivers/net/tun.c
-+++ b/drivers/net/tun.c
-@@ -528,7 +528,8 @@ static void tun_detach_all(struct net_de
- 		module_put(THIS_MODULE);
- }
- 
--static int tun_attach(struct tun_struct *tun, struct file *file, bool skip_filter)
-+static int tun_attach(struct tun_struct *tun, struct file *file,
-+		      bool skip_filter, bool publish_tun)
- {
- 	struct tun_file *tfile = file->private_data;
- 	int err;
-@@ -561,7 +562,8 @@ static int tun_attach(struct tun_struct
- 	}
- 	tfile->queue_index = tun->numqueues;
- 	tfile->socket.sk->sk_shutdown &= ~RCV_SHUTDOWN;
--	rcu_assign_pointer(tfile->tun, tun);
-+	if (publish_tun)
-+		rcu_assign_pointer(tfile->tun, tun);
- 	rcu_assign_pointer(tun->tfiles[tun->numqueues], tfile);
- 	tun->numqueues++;
- 
-@@ -1599,7 +1601,8 @@ static int tun_set_iff(struct net *net,
- 		if (err < 0)
- 			return err;
- 
--		err = tun_attach(tun, file, ifr->ifr_flags & IFF_NOFILTER);
-+		err = tun_attach(tun, file, ifr->ifr_flags & IFF_NOFILTER,
-+				 true);
- 		if (err < 0)
- 			return err;
- 
-@@ -1678,13 +1681,17 @@ static int tun_set_iff(struct net *net,
- 				       NETIF_F_HW_VLAN_STAG_TX);
- 
- 		INIT_LIST_HEAD(&tun->disabled);
--		err = tun_attach(tun, file, false);
-+		err = tun_attach(tun, file, false, false);
- 		if (err < 0)
- 			goto err_free_flow;
- 
- 		err = register_netdevice(tun->dev);
- 		if (err < 0)
- 			goto err_detach;
-+		/* free_netdev() won't check refcnt, to aovid race
-+		 * with dev_put() we need publish tun after registration.
-+		 */
-+		rcu_assign_pointer(tfile->tun, tun);
- 
- 		if (device_create_file(&tun->dev->dev, &dev_attr_tun_flags) ||
- 		    device_create_file(&tun->dev->dev, &dev_attr_owner) ||
-@@ -1848,7 +1855,7 @@ static int tun_set_queue(struct file *fi
- 		ret = security_tun_dev_attach_queue(tun->security);
- 		if (ret < 0)
- 			goto unlock;
--		ret = tun_attach(tun, file, false);
-+		ret = tun_attach(tun, file, false, true);
- 	} else if (ifr->ifr_flags & IFF_DETACH_QUEUE) {
- 		tun = rtnl_dereference(tfile->tun);
- 		if (!tun || !(tun->flags & TUN_TAP_MQ) || tfile->detached)
-
+greg k-h
