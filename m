@@ -2,125 +2,90 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26917C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 17:15:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59FC5C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 17:17:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1EFC208C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 17:15:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DBF3208C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 17:17:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="diKGlggZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QSorraur"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728825AbfKTRPQ (ORCPT
+        id S1729000AbfKTRRT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 12:15:16 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:36027 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727754AbfKTRPP (ORCPT
+        Wed, 20 Nov 2019 12:17:19 -0500
+Received: from mail-lj1-f175.google.com ([209.85.208.175]:33791 "EHLO
+        mail-lj1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727671AbfKTRRT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 12:15:15 -0500
-Received: by mail-pf1-f193.google.com with SMTP id b19so46951pfd.3;
-        Wed, 20 Nov 2019 09:15:15 -0800 (PST)
+        Wed, 20 Nov 2019 12:17:19 -0500
+Received: by mail-lj1-f175.google.com with SMTP id t5so31818ljk.0
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 09:17:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=lq42ZizosFkbH9g1Rr07jdIDqzA1gE/ZC1lOYQz/biM=;
-        b=diKGlggZJDKsPlLr50LlIeJobu1j5qlTIPd+wy2fkgwibmd4c4EF8QsTtCKI5YDa+P
-         rEQQkIsYjrmHB3T6hA3Tz4WpxPhU6ycjJzP2xGk5BD7EazLXpQayif86GINl+xWE+nJL
-         u8s/NvkH6ia2fPzDEhUpDQKNAVoISZQW5EZ5hVs2Pja4UwAAYstQda5wr7APS4P61kLe
-         bd7yZEJjwneS8LQlPvYj7wKy2VX0NVC2YQ1oTFPYdNnj7GjssmqSacCIov8K94VHMKue
-         9Vr3MYYUEDodfZUaC7ilO91sPP2u0/GqbFvdwer3ga1rNTISJquABE4r94HSkN9Ku/Ba
-         p5rg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bSyXlJi6K2335/Bgez7VUxEtGRE+HAza7pceyBB8j1U=;
+        b=QSorraurrun2yAOywBEFGjKY5bMnmpZ80LO0pSraxkXWig5mvLULXIyk3uuI9+BQQv
+         o4FK24D5wDNyBLCVuFjRk2c0iP15f0ChW375TzsYZDejfzdKFH7ONTgLbiIKDks6VOCA
+         e7+wMhSX3C3uGyl/hXxrLALy4lTQ7CQ6IzInlsN0ZvQsknb0T7dsYgbtufolDsnCkNTX
+         HiuNOnwDakvrgXyU9lXQEQ2ECcwAB79O48FBp1fWldGgwmtc6xUXpvX2b7P+LrLfJi8O
+         xRVY2Qmxn7XJzD5gPaI2qmqiGPSQz0fOFiDiTGA0/IBqadXplFMf//c9+qMHl3qC5CTT
+         Ebqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lq42ZizosFkbH9g1Rr07jdIDqzA1gE/ZC1lOYQz/biM=;
-        b=difG6HiR1poZDlogARhR85oe2CdT4YULC6F7+K4gaN+PZzDSReynNL0hv52Lqhh2sy
-         hQEtBBlBcDIu7RXw7vmMN15Oavoe1LKN/pFebpSZCss+Uf+AIPBnqvvOss/mY0COWxRV
-         swMdxj1eUWCfrxErVszYBnzZAwaNgjGqMRZ65z79pGi1Ugn0aKRHpPNOiQCD0fnOiIS0
-         MVSaj2TOED5nyGasSayiU28FT7ebr+RVmcaIgbani5Px4IqghRNoheOx/azYeBw9KvNI
-         tsQ+tA/YVGvg2+dIjHJLQMLy2ytJ9V2tJGQN7f+BWrmrpuQmUUN6I1vkSqUmVMYC5exx
-         CX6A==
-X-Gm-Message-State: APjAAAVFrKVmevk7uDkuJU55I3909C3ZRUnEXYxovVI/qvvdEmaEJzNV
-        oi+VwlDFPY+vbOTtr7mV0jvPNPnn
-X-Google-Smtp-Source: APXvYqzqZgo33feZu9MWoEbJBu0NKZiD7xomzt88q5WNOveVMDbKGm9Y7HVIGwS3AWK636g06NPZKw==
-X-Received: by 2002:a63:a34d:: with SMTP id v13mr4482571pgn.343.1574270114888;
-        Wed, 20 Nov 2019 09:15:14 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id a34sm29504785pgl.56.2019.11.20.09.15.13
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 20 Nov 2019 09:15:14 -0800 (PST)
-Date:   Wed, 20 Nov 2019 09:15:12 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     "Wang, Peng 1. (NSB - CN/Hangzhou)" <peng.1.wang@nokia-sbell.com>
-Cc:     "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] watchdog: make DesignWare watchdog allow users to set
- bigger timeout value
-Message-ID: <20191120171512.GA28255@roeck-us.net>
-References: <13477f08400047c1b32030b2680a4241@nokia-sbell.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bSyXlJi6K2335/Bgez7VUxEtGRE+HAza7pceyBB8j1U=;
+        b=sFkRtCo6pSHw1ulFzGWBR4bfxnSfCV3+OkLgQXeK+ChMFtXaI3rCzMNqXpxxURQXFZ
+         lhcEblwkV9ARwMXBNQd5VYkDQobqMx5DmcuVupMx4hGFz4E54410DRcHrnNQfclUKHhT
+         CbPSM9zBOg6d41XhS1W4DMXqcdJUD7bVVIOi+o8/zhwvfzuVOsMlarpukV9+Kfq9SnzN
+         LUYbwAhKYFxlvmplhG/ZzEAvs4VcpyfFfIO34a20ZjPKkQ+Qj+FoP5JyipD2eYEXcHY5
+         cjFtFD5sRhdeC/z3KGOLqqOcT/25nzANYpDHwz5lsaP5tfoKOuufsLXuMZN/VesyCOoN
+         5T5Q==
+X-Gm-Message-State: APjAAAVE4ARTFXdN9mGV3xaI1fCbccCXzp1YfsymMVH1eOHutihm/MdO
+        vZJ0Jkcl/is4oOLteQbK9yeV3hgUQ2Ywl4rajL8=
+X-Google-Smtp-Source: APXvYqzxHdnld/ZlrUqKdpv4WuKrIK70iueq4D4crj1Nm2Jc6n5N8iRYTSKAZsJW68TD+xFkMjvTYreR/ZFvEBI/BLg=
+X-Received: by 2002:a05:651c:205b:: with SMTP id t27mr3876513ljo.143.1574270235724;
+ Wed, 20 Nov 2019 09:17:15 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <13477f08400047c1b32030b2680a4241@nokia-sbell.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <5d2b39bc-5952-c2b6-63b3-bce28122ffd5@molgen.mpg.de>
+ <20191104142459.GC2552@lahna.fi.intel.com> <20191104144436.GD2552@lahna.fi.intel.com>
+ <20191104154446.GH2552@lahna.fi.intel.com> <ea829adedf0445c0845e25d6e4b47905@AUSX13MPC105.AMER.DELL.COM>
+ <d8cb6bc6-8145-eaed-5ba4-d7291478bdd7@molgen.mpg.de> <20191104162103.GI2552@lahna.fi.intel.com>
+ <f0257624-920e-eec4-a2ec-7adf8ecbcc9d@molgen.mpg.de> <20191120105048.GY11621@lahna.fi.intel.com>
+ <ccfa5f1a1b5e475aa4ddcbed2297b9c4@AUSX13MPC105.AMER.DELL.COM>
+ <20191120152351.GJ11621@lahna.fi.intel.com> <90daf5669f064057b3d0da5fc110b3a4@AUSX13MPC105.AMER.DELL.COM>
+In-Reply-To: <90daf5669f064057b3d0da5fc110b3a4@AUSX13MPC105.AMER.DELL.COM>
+From:   Yehezkel Bernat <yehezkelshb@gmail.com>
+Date:   Wed, 20 Nov 2019 19:16:58 +0200
+Message-ID: <CA+CmpXubOwsradq=ObUF-h6WBpRF3tDx9TqaUO8TeJDqvdeGPg@mail.gmail.com>
+Subject: Re: USB devices on Dell TB16 dock stop working after resuming
+To:     Mario Limonciello <Mario.Limonciello@dell.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        pmenzel@molgen.mpg.de, Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>, ck@xatom.net,
+        LKML <linux-kernel@vger.kernel.org>,
+        Anthony Wong <anthony.wong@canonical.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 10:07:57AM +0000, Wang, Peng 1. (NSB - CN/Hangzhou) wrote:
-> From 1d051b7c081083751dc0bab97d3ab9efbba0f4a7 Mon Sep 17 00:00:00 2001
-> From: Peng Wang <peng.1.wang@nokia-sbell.com>
-> Date: Wed, 20 Nov 2019 15:12:59 +0800
-> Subject: [PATCH] watchdog: make DesignWare watchdog allow users to set bigger
->  timeout value
-> 
-> watchdog_dev.c provides means to allow users to set bigger timeout value
-> than HW can support, make DesignWare watchdog align with this.
-> 
-> Signed-off-by: Peng Wang <peng.1.wang@nokia-sbell.com>
-> ---
->  drivers/watchdog/dw_wdt.c | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c
-> index fef7c61..8911e5e 100644
-> --- a/drivers/watchdog/dw_wdt.c
-> +++ b/drivers/watchdog/dw_wdt.c
-> @@ -113,8 +113,15 @@ static int dw_wdt_set_timeout(struct watchdog_device *wdd, unsigned int top_s)
->  	 */
->  	writel(top_val | top_val << WDOG_TIMEOUT_RANGE_TOPINIT_SHIFT,
->  	       dw_wdt->regs + WDOG_TIMEOUT_RANGE_REG_OFFSET);
-> -
-> -	wdd->timeout = dw_wdt_top_in_seconds(dw_wdt, top_val);
-> +    
-> +    /*
-> +     * In case users set bigger timeout value than HW can support,
-> +     * kernel(watchdog_dev.c) helps to feed watchdog before 
-> +     * wdd->timeout
-> +     */
-> +    if ( wdd->timeout * 1000 <= wdd->max_hw_heartbeat_ms ) {
-> +	    wdd->timeout = dw_wdt_top_in_seconds(dw_wdt, top_val);
-> +    }
+On Wed, Nov 20, 2019 at 7:06 PM <Mario.Limonciello@dell.com> wrote:
+>
+>
+> But I mean this is generally an unsafe (but convenient) option, it means that you
+> throw out security pre-boot, and all someone needs to do is turn off your machine,
+> plug in a malicious device, turn it on and then they have malicious device all the way
+> into OS.
 
-{ } is unnecessary here. Also, the above code compares the _old_
-timeout againt the maximum supported timeout, which doesn't look
-correct.
-
-Thanks,
-Guenter
-
->  
->  	return 0;
->  }
-> -- 
-> 1.8.3.1
-> 
+Only if the attacker found how to forge the device UUID (and knew what UUIDs
+are allowed), isn't it? Unless you take into account things like
+external GPU box,
+where it's pretty easy to replace the card installed inside it.
