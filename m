@@ -2,93 +2,138 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FCCAC43215
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1551C432C3
 	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 08:30:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09F0822312
+	by mail.kernel.org (Postfix) with ESMTP id 9502522312
 	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 08:30:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574238605;
-	bh=JQOmElfXSzHu9Z+PGD9kkgOcTSRKyGXU0jtHg/2wKGo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CEJJzDmcXiDqDLEL0QVKhk0k3Pu6/++EH/iMrWcT3WFwrtEg3spHFJnt2Sb5UD/KI
-	 2XnOlvrTG/ZsoWoUZ9dfQo2GEaXYF2rw5nTFzgxdTKYxfzFol1Ow9vnETeuuzOgR/H
-	 qNjLBiAb7Vnvy6jXyKFHIDZ7cQ3SIB2JqqurQzog=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727963AbfKTIaC (ORCPT
+        id S1727978AbfKTIaE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 03:30:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41512 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726038AbfKTIaC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 03:30:02 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1D9222312;
-        Wed, 20 Nov 2019 08:30:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574238601;
-        bh=JQOmElfXSzHu9Z+PGD9kkgOcTSRKyGXU0jtHg/2wKGo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GtA1+jt399FcL+Wkav+tdOgD7i/XpKJjJpYB6jRyDekk3ghuztLdnTVZTyCXIqlss
-         6QbOU1JZ4RCt2pNmShKR98SjB/RqtkKW4vlxG/gtXLDn1GGWKKCefznlb0lwTdOJml
-         6Px20McEVDUMhPAkLvB9I/AbNAEpuJ050xISifU8=
-Date:   Wed, 20 Nov 2019 09:29:58 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     syzbot <syzbot+3dcb532381f98c86aeb1@syzkaller.appspotmail.com>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linux-kernel@vger.kernel.org, penguin-kernel@i-love.sakura.ne.jp,
-        rafael@kernel.org, syzkaller-bugs@googlegroups.com, tj@kernel.org,
-        torvalds@linux-foundation.org
-Subject: Re: WARNING in kernfs_get
-Message-ID: <20191120082958.GB2862348@kroah.com>
-References: <000000000000f921ae05757f567c@google.com>
- <0000000000001da6b60597c2ce91@google.com>
+        Wed, 20 Nov 2019 03:30:04 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:53265 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727910AbfKTIaE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 03:30:04 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mgr@pengutronix.de>)
+        id 1iXLN6-0004qS-8S; Wed, 20 Nov 2019 09:29:56 +0100
+Received: from mgr by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mgr@pengutronix.de>)
+        id 1iXLN5-0006AT-7N; Wed, 20 Nov 2019 09:29:55 +0100
+Date:   Wed, 20 Nov 2019 09:29:55 +0100
+From:   Michael Grzeschik <mgr@pengutronix.de>
+To:     Uwe =?iso-8859-15?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     shawnguo@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        kernel@pengutronix.de, festevam@gmail.com,
+        devicetree@vger.kernel.org, linux-imx@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] ARM: dts: imx25: fix usbhost1 node
+Message-ID: <20191120082955.3ovsoziurntmv7by@pengutronix.de>
+References: <20191111114655.9583-1-m.grzeschik@pengutronix.de>
+ <20191115083415.28976-1-m.grzeschik@pengutronix.de>
+ <20191115201409.5ztt7vrhf2btpoed@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="m7xzwwcaqk6e4zvj"
 Content-Disposition: inline
-In-Reply-To: <0000000000001da6b60597c2ce91@google.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191115201409.5ztt7vrhf2btpoed@pengutronix.de>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 09:28:09 up 135 days, 14:38, 138 users,  load average: 0.22, 0.21,
+ 0.18
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: mgr@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 12:17:01AM -0800, syzbot wrote:
-> syzbot has bisected this bug to:
-> 
-> commit 726e41097920a73e4c7c33385dcc0debb1281e18
-> Author: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Date:   Tue Jul 10 00:29:10 2018 +0000
-> 
->     drivers: core: Remove glue dirs from sysfs earlier
-> 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17a101cee00000
-> start commit:   9a568276 Merge branch 'x86-urgent-for-linus' of git://git...
-> git tree:       upstream
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=146101cee00000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=106101cee00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=8f59875069d721b6
-> dashboard link: https://syzkaller.appspot.com/bug?extid=3dcb532381f98c86aeb1
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12657f0a400000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=117728ae400000
-> 
-> Reported-by: syzbot+3dcb532381f98c86aeb1@syzkaller.appspotmail.com
-> Fixes: 726e41097920 ("drivers: core: Remove glue dirs from sysfs earlier")
-> 
-> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
 
-Again, I think this should be resolved with ac43432cb1f5 ("driver core:
-Fix use-after-free and double free on glue directory")
+--m7xzwwcaqk6e4zvj
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Is there any way to run the reproducer on a newer tree?
+On Fri, Nov 15, 2019 at 09:14:09PM +0100, Uwe Kleine-K=F6nig wrote:
+> Hello Michael,
+>=20
+> On Fri, Nov 15, 2019 at 09:34:15AM +0100, Michael Grzeschik wrote:
+> > The usb port represented by &usbhost1 uses an USB phy internal to the
+> > SoC. We add the phy_type to the base dtsi so the board dts only have to
+> > overwrite it if they use a different configuration. While at it we also
+> > pin the usbhost port to host mode and limit the speed of the phy to
+> > full-speed only, which it is only capable of.
+>=20
+> The subject line suggests this is a fix but the commit log and the
+> actual change don't support this. Maybe better:
+>=20
+> 	ARM: dts: imx25: consolidate properties of usbhost1 in dtsi file
+>=20
 
-thanks,
+Will send a new series with this suggestion.
 
-greg k-h
+> ?=20
+>=20
+> > diff --git a/arch/arm/boot/dts/imx25.dtsi b/arch/arm/boot/dts/imx25.dtsi
+> > index 9a097ef014af5..40b95a290bd6b 100644
+> > --- a/arch/arm/boot/dts/imx25.dtsi
+> > +++ b/arch/arm/boot/dts/imx25.dtsi
+> > @@ -570,6 +570,9 @@
+> >  				clock-names =3D "ipg", "ahb", "per";
+> >  				fsl,usbmisc =3D <&usbmisc 1>;
+> >  				fsl,usbphy =3D <&usbphy1>;
+> > +				maximum-speed =3D "full-speed";
+> > +				phy_type =3D "serial";
+> > +				dr_mode =3D "host";
+>=20
+> Would it make sense to split this patch in two? One that moves phy_type
+> and dr_mode from the dts files using imx25.dtsi (which has no effects on
+> the resulting dtb files). And another that adds maximum-speed.
+
+And a second patch including the speed limitation change.
+
+Thanks,
+Michael
+
+--=20
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+--m7xzwwcaqk6e4zvj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEElXvEUs6VPX6mDPT8C+njFXoeLGQFAl3U+YMACgkQC+njFXoe
+LGRtixAAlyFKmJgYeg6duQVqKdTinYouh9xcyRKXQ/8qMcGtZm3pad0+qZozdycj
+AjWhY3F8fJdQxMUAZN6lTgpNuGuBpTCJ+scLv9VnU+lYKS85UBCAJ9VXIZ4f0yQ+
+VolO+AkD5oLf5gv6ZU1opnpTMRam2KptGqEyRLfxoniuHGEJf046H3nrdy8hx4n6
+JxRZsgzKe3abM1T205elQSzZFy6fsDDVYZfdVwpVvs+9p/GytwHl3TKucNuWb4Qe
+4JDdIiMAS3B7Rf4RNMKHKVGBr7puibkcGAfL5lUEfG9Ta/utiFMYH7I9Php0d8Bn
+n2ZgaGwRoAoj1x7xqn6RQFgRlCaecR2Glqwko9cLwVfMzUZJGCBafaYTQgVBRTar
+7mq/BAVDSPJssowJrkaQ929NjgkUzdhcbD7avWt3OQA2ije1Syfa5aCp8RPh4RAn
+VUNqIS7i27bTOkSXa8FZaTo6C2/zqDlQIWJ7/2VlSgTqD5zrDEp7RP14Ykbgdj3M
+Au0IoymMMVbo3chEbA+1FH6bbnWY1MY2tBGPXyc3EgzufbXOK4/MiTIz26qNGnpj
++9S42DkuOijLKLV+au22M3VCVyD0sfSfQsj1qZY1QJqIEp2GPQLSo86YcqH1sZIJ
+DnBzv3mYDN5OmhvWZ4qoBLjCIB1+Ws+5EX21NkpNCn7ehQTDMH0=
+=OvER
+-----END PGP SIGNATURE-----
+
+--m7xzwwcaqk6e4zvj--
