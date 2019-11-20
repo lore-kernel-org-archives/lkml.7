@@ -2,94 +2,98 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A75CCC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:55:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B4C6C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:56:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 899B82182A
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:55:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D97321823
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 19:56:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="MZEMAgym"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727802AbfKTTz2 (ORCPT
+        id S1727809AbfKTT4W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 14:55:28 -0500
-Received: from foss.arm.com ([217.140.110.172]:45450 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727702AbfKTTz0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 14:55:26 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2BA541FB;
-        Wed, 20 Nov 2019 11:55:26 -0800 (PST)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 795BB3F6C4;
-        Wed, 20 Nov 2019 11:55:24 -0800 (PST)
-Date:   Wed, 20 Nov 2019 19:55:22 +0000
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Phil Auld <pauld@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <Morten.Rasmussen@arm.com>,
-        Hillf Danton <hdanton@sina.com>,
-        Parth Shah <parth@linux.ibm.com>,
-        Rik van Riel <riel@surriel.com>
-Subject: Re: [PATCH v4 11/11] sched/fair: rework find_idlest_group
-Message-ID: <20191120195521.nvhzvd3x7l7jdxsr@e107158-lin.cambridge.arm.com>
-References: <1571405198-27570-12-git-send-email-vincent.guittot@linaro.org>
- <20191120115844.scli3gprgd5vvlt4@e107158-lin.cambridge.arm.com>
- <CAKfTPtDh7HAv2Krx9cRKcA+Zy=erYkykyZZj4=nkRoTEdY=oFw@mail.gmail.com>
- <CAKfTPtCFP3_U_YxwR8+Gs+HYJPmqSWJg6B6nBdgccNru8Gh5QA@mail.gmail.com>
- <20191120173431.b7e4jbq44mjletfe@e107158-lin.cambridge.arm.com>
- <CAKfTPtCSc+ym8FTFtSeF4foUqTbsDSr1fJ1j_+j+Zmo=XOUcLA@mail.gmail.com>
- <20191120181002.lh7vukjm2ifhysbc@e107158-lin.cambridge.arm.com>
- <CAKfTPtDCv4jWxODGf8FOefmP6qyWRdfi2QVRT=wZqwYgUKg9HA@mail.gmail.com>
- <20191120182731.z2sh5ju7uir5s3cp@e107158-lin.cambridge.arm.com>
- <CAKfTPtDzVHZpE0XmyPF8AVsmtVMCmKgYERjdW4euj-H6kNu2Rw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAKfTPtDzVHZpE0XmyPF8AVsmtVMCmKgYERjdW4euj-H6kNu2Rw@mail.gmail.com>
-User-Agent: NeoMutt/20171215
+        Wed, 20 Nov 2019 14:56:22 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:39027 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727566AbfKTT4V (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 14:56:21 -0500
+Received: by mail-qk1-f196.google.com with SMTP id o17so942479qko.6
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 11:56:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=6PqYdDpGGWCVE8hu3feKwX1cy6I6vx26jAUo36ByRBc=;
+        b=MZEMAgymPpZPMZFpCP0c+tUdsx1npLc9lS3L/V9/tx62cvHYOeIPRnzn7p717XyhAm
+         KHi54PubUolzF062CMNG+QkztdlBCa7wbspw1gLZmLlo3X0wlY5H6n6AEG6FRE0B/H23
+         BwxTLLSFA3mRWpmL4bkoHrYY9LQUFF2xKADYrGrZEeFWj4DsouiRMvYEctSUBmdSDCVp
+         WSC7oPn+3jSUTY+5KCv/PsFm9FRKMSZrcLZ9tTtROPTg0SMHdos/Y4JWidv7RMzCy7C2
+         rY7CtlEh2VfFEDq1ay7a/Dz61hnBUhCGYvgtugs6v4hCrQuw8ClqztIVHOImNSN25+Hs
+         9lcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=6PqYdDpGGWCVE8hu3feKwX1cy6I6vx26jAUo36ByRBc=;
+        b=IxCiKfaGUYAcuFRktdRS1GhGqhlHVrpI+UOzZKWJFHHqqtqFnWp1tsz7f3jUmfoyio
+         861giebafjPz198uxMw8Fstc19FOClp3LdtR4Bay5B0dRo7vBw5EPGFnV/Isu/wzBd8f
+         Gy7XFjmJCw5+9OwAvrPfZK9ygE6f12iX1vHh/TLluq/Bc/TuT+aKzvZA2XI248WPAzIg
+         6WkYjQMtQn9B5k1Gr7b3inY5kWBFlwS9c4CxscxXZS++VWUmzfly+SQXZ/Alsq4nunIf
+         NTp74bGY+4Eo7ek9VZacCfRPmO1biHIsXsHAOK1Gm/re2mZ9d34Isaxqk7G29GJR1JNJ
+         37Bg==
+X-Gm-Message-State: APjAAAXkGXqNXOTGdliRu39MwsqBclH2SP1muouxkJjnnIExSZqANWJa
+        CdJzxHaM9tLbNVbUhIrO1+qDWA==
+X-Google-Smtp-Source: APXvYqxTzh/k0kFIiA5WJFz9zsIz55dG8h+cL5MqwavoO2RPkWMLuNhyp7KDW/Zj2h3ECyUR3vQAKw==
+X-Received: by 2002:a05:620a:648:: with SMTP id a8mr4058641qka.426.1574279780352;
+        Wed, 20 Nov 2019 11:56:20 -0800 (PST)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id t2sm146241qkt.95.2019.11.20.11.56.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 20 Nov 2019 11:56:19 -0800 (PST)
+Message-ID: <1574279778.9585.15.camel@lca.pw>
+Subject: Re: [PATCH -next] writeback: fix -Wformat compilation warnings
+From:   Qian Cai <cai@lca.pw>
+To:     Tejun Heo <tj@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     jack@suse.cz, gregkh@linuxfoundation.org, cgroups@vger.kernel.org,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, linux-s390@vger.kernel.org,
+        axboe@kernel.dk, linux-kernel@vger.kernel.org
+Date:   Wed, 20 Nov 2019 14:56:18 -0500
+In-Reply-To: <20191115145540.GP4163745@devbig004.ftw2.facebook.com>
+References: <20191114192118.GK4163745@devbig004.ftw2.facebook.com>
+         <9D52EBB0-BE48-4C59-9145-857C3247B20D@lca.pw>
+         <20191115145540.GP4163745@devbig004.ftw2.facebook.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/20/19 20:28, Vincent Guittot wrote:
-> I run few more tests and i can get either hw counter with 0 or not.
-> The main difference is on which CPU it runs: either big or little
-> little return always 0 and big always non-zero value
+On Fri, 2019-11-15 at 06:55 -0800, Tejun Heo wrote:
+> On Thu, Nov 14, 2019 at 07:26:21PM -0500, Qian Cai wrote:
+> > 
+> > 
+> > > On Nov 14, 2019, at 2:21 PM, Tejun Heo <tj@kernel.org> wrote:
+> > > 
+> > > Acked-by: Tejun Heo <tj@kernel.org>
+> > 
+> > Tejun, suppose you will take this patch via your tree together with the series or should I Cc Andrew who normally handle this file?
 > 
-> on v5.4-rc7 and tip/sched/core, cpu0-3 return 0 and other non zeroa
-> but on next, it's the opposite cpu0-3 return non zero ratio
-> 
-> Could you try to run the test with taskset to run it on big or little ?
+> Patches in this area usually goes through Jens's block tree.
 
-Nice catch!
+I remember that last time Jens had no interests in picking up trivial patches
+like this one. See the commit d1a445d3b86c ("include/trace/events/writeback.h:
+fix -Wstringop-truncation warnings").
 
-Yes indeed using taskset and forcing it to run on the big cpus it passes even
-on linux-next/next-20191119.
+Andrew, care to pick up this again?
 
-So the relation to your patch is that it just biased where this test is likely
-to run in my case and highlighted the breakage in the counters, probably?
-
-FWIW, if I use taskset to force always big it passes. Always small, the counters
-are always 0 and it passes too. But if I have mixed I see what I pasted before,
-the counters have valid value but nhw is 0.
-
-So the questions are, why little counters aren't working. And whether we should
-run the test with taskset generally as it can't handle the asymmetry correctly.
-
-Let me first try to find out why the little counters aren't working.
-
-Thanks
-
---
-Qais Yousef
+https://lore.kernel.org/lkml/1573751861-10303-1-git-send-email-cai@lca.pw/
