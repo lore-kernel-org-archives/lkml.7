@@ -2,149 +2,116 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2469C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 17:51:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 382FDC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 17:53:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9586E206CC
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 17:51:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 054E3206CC
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 17:53:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728632AbfKTRvk (ORCPT
+        id S1728118AbfKTRxH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 12:51:40 -0500
-Received: from esa3.mentor.iphmx.com ([68.232.137.180]:41430 "EHLO
-        esa3.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727346AbfKTRvk (ORCPT
+        Wed, 20 Nov 2019 12:53:07 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:44136 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727468AbfKTRxG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 12:51:40 -0500
-IronPort-SDR: Wbjc88YuwB9sjhLjE0qODRi50l4gvtksjUBS/ZtR7hWucQePfpVOjJLo82xNyCScxyXwJ3Y7j9
- SkmYDEmKtkAdz2qVZqkUlEIGTaskBOhdeB2Ak1fvF9so+cZIe9qNzHbT+cc+CTQGVVNX2LSW1W
- OC3krEwOLTevOPzmqsREXvPn/WF+domN/cQsxIBsIVwJqMSr8yk5kFqNomcd/yU2OX0EQ6vdxY
- B6tsJzw7xnVGydaE9otGSf3RS9d/Y+MX5UXFgjmKzgU57VXdjU+fCRL+wue+9JE+TOxirjWT/8
- R8Q=
-X-IronPort-AV: E=Sophos;i="5.69,222,1571731200"; 
-   d="scan'208";a="43363013"
-Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
-  by esa3.mentor.iphmx.com with ESMTP; 20 Nov 2019 09:51:39 -0800
-IronPort-SDR: feMpX7Cuy7dYFlszDMfkSaIqzvrwHGbFGGvhlhOdljrVdu0zfrVH9p43ALWMZZQmCGsJJNjDNs
- KFZ2s7RsoBXS1tLaJb6vcwGUeeYCvLLdb1vUPEYMJcuMDb+oivOwM7U9R8UPyIvxglgZE0RQVv
- 5JxJ7PuhpQeveflcilQTxCyZp+ZfvP/S7hIef7TFSiXxbdGqeKIAdqwL1wNgkGhUk1bUFRRPd4
- LUHmcxS4a7/BJhljCao1ASsk0HIdmoR6hep8bj70Rtov4hSjoZC1wMWb3SD+ACcpD+lIQgUZOU
- v+M=
-From:   Andrew Gabbasov <andrew_gabbasov@mentor.com>
-To:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Timo Wischer <twischer@de.adit-jv.com>,
-        Andrew Gabbasov <andrew_gabbasov@mentor.com>
-Subject: [PATCH v5 7/7] ALSA: aloop: Support runtime change of snd_timer via info interface
-Date:   Wed, 20 Nov 2019 11:49:55 -0600
-Message-ID: <20191120174955.6410-8-andrew_gabbasov@mentor.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191120174955.6410-7-andrew_gabbasov@mentor.com>
-References: <20191120174955.6410-1-andrew_gabbasov@mentor.com>
- <20191120174955.6410-2-andrew_gabbasov@mentor.com>
- <20191120174955.6410-3-andrew_gabbasov@mentor.com>
- <20191120174955.6410-4-andrew_gabbasov@mentor.com>
- <20191120174955.6410-5-andrew_gabbasov@mentor.com>
- <20191120174955.6410-6-andrew_gabbasov@mentor.com>
- <20191120174955.6410-7-andrew_gabbasov@mentor.com>
+        Wed, 20 Nov 2019 12:53:06 -0500
+Received: by mail-ot1-f67.google.com with SMTP id c19so324608otr.11;
+        Wed, 20 Nov 2019 09:53:06 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Uwv8oDObgXlOHyppocybq9RAMpKlTk5h/NeR2cnrypw=;
+        b=SLo2M2SrfMO0joR4Vi096PRmD1SA0rKm0JSdxaK4CNATZCVgPHzjySrCsyQt78pljL
+         XlawP6bVlLgkXjKJ1oW/awX+PrBQFlJY2G6R5t/4CIBWn/lAIIK3kDe3y/VvGpsxRerS
+         rtzuPJqpNW9RtKyTFZqJybtXWvt8k6BJBwjBlpLiYwhN63myP91D2KS85DXEsA5pGOIN
+         Ghn1MGLQzURbo41KD0KNmbAnxdTvYY8iLZOmNlRc5LKBR4qIguqUcRFzjD4pzN6nbfrr
+         T7pZ6KkyFjtsAKOtneu+qzFY+TOkcPL30IKwjmh1yT7vRE42LAWZsGO1XaslIgCTjpar
+         vpaA==
+X-Gm-Message-State: APjAAAVdX26L1m8bhAyKJ1adxv3FsEDaYCMyMoWmrBs0DRroxs25iOVd
+        0X08H+rJx0jsX/IzTJwO39gUNpS4
+X-Google-Smtp-Source: APXvYqyYxpO+Yok/l/BmbsETZT/OFjJIE4+Qicr0Tx22dVgGKtoXrmGUpNs3GpfhXq/uvndGbsFHkg==
+X-Received: by 2002:a9d:f45:: with SMTP id 63mr2959739ott.214.1574272385455;
+        Wed, 20 Nov 2019 09:53:05 -0800 (PST)
+Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com. [209.85.210.54])
+        by smtp.gmail.com with ESMTPSA id h39sm8799317oth.9.2019.11.20.09.53.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 20 Nov 2019 09:53:04 -0800 (PST)
+Received: by mail-ot1-f54.google.com with SMTP id c19so324551otr.11;
+        Wed, 20 Nov 2019 09:53:04 -0800 (PST)
+X-Received: by 2002:a9d:7f12:: with SMTP id j18mr2846999otq.221.1574272384642;
+ Wed, 20 Nov 2019 09:53:04 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [137.202.0.90]
-X-ClientProxiedBy: svr-ies-mbx-06.mgc.mentorg.com (139.181.222.6) To
- svr-ies-mbx-02.mgc.mentorg.com (139.181.222.2)
+References: <20191118112324.22725-1-linux@rasmusvillemoes.dk> <20191118112324.22725-46-linux@rasmusvillemoes.dk>
+In-Reply-To: <20191118112324.22725-46-linux@rasmusvillemoes.dk>
+From:   Li Yang <leoyang.li@nxp.com>
+Date:   Wed, 20 Nov 2019 11:52:53 -0600
+X-Gmail-Original-Message-ID: <CADRPPNTgNtFL9Wok_ZNJSoo=4vokdU7c7z9JM-_e-w=pcDfwDg@mail.gmail.com>
+Message-ID: <CADRPPNTgNtFL9Wok_ZNJSoo=4vokdU7c7z9JM-_e-w=pcDfwDg@mail.gmail.com>
+Subject: Re: [PATCH v5 45/48] net/wan/fsl_ucc_hdlc: fix reading of __be16 registers
+To:     David Miller <davem@davemloft.net>
+Cc:     Qiang Zhao <qiang.zhao@nxp.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Scott Wood <oss@buserror.net>, Timur Tabi <timur@kernel.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Netdev <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Show and change sound card timer source with read-write info
-file in proc filesystem. Initial string can still be set as
-module parameter.
+On Mon, Nov 18, 2019 at 5:26 AM Rasmus Villemoes
+<linux@rasmusvillemoes.dk> wrote:
+>
 
-The timer source string value can be changed at any time,
-but it is latched by PCM substream open callback (the first one
-for a particular cable). At this point it is actually used, that
-is the string is parsed, and the timer is looked up and opened.
+Hi David,
 
-The timer source is set for a loopback card (the same as initial
-setting by module parameter), but every cable uses the value,
-current at the moment of open.
+What do you think about the patch 45-47 from the series for net
+related changes?  If it is ok with you, I can merge them with the
+whole series through the soc tree with your ACK.
 
-Setting the value to empty string switches the timer to jiffies.
+Regards,
+Leo
 
-Signed-off-by: Andrew Gabbasov <andrew_gabbasov@mentor.com>
----
- sound/drivers/aloop.c | 37 ++++++++++++++++++++++++++++++++++---
- 1 file changed, 34 insertions(+), 3 deletions(-)
-
-diff --git a/sound/drivers/aloop.c b/sound/drivers/aloop.c
-index e8a85f887222..1408403f727a 100644
---- a/sound/drivers/aloop.c
-+++ b/sound/drivers/aloop.c
-@@ -1666,7 +1666,7 @@ static void print_cable_info(struct snd_info_entry *entry,
- 	mutex_unlock(&loopback->cable_lock);
- }
- 
--static int loopback_proc_new(struct loopback *loopback, int cidx)
-+static int loopback_cable_proc_new(struct loopback *loopback, int cidx)
- {
- 	char name[32];
- 
-@@ -1687,6 +1687,36 @@ static void loopback_set_timer_source(struct loopback *loopback,
- 						      value, GFP_KERNEL);
- }
- 
-+static void print_timer_source_info(struct snd_info_entry *entry,
-+				    struct snd_info_buffer *buffer)
-+{
-+	struct loopback *loopback = entry->private_data;
-+
-+	mutex_lock(&loopback->cable_lock);
-+	snd_iprintf(buffer, "%s\n",
-+		    loopback->timer_source ? loopback->timer_source : "");
-+	mutex_unlock(&loopback->cable_lock);
-+}
-+
-+static void change_timer_source_info(struct snd_info_entry *entry,
-+				     struct snd_info_buffer *buffer)
-+{
-+	struct loopback *loopback = entry->private_data;
-+	char line[64];
-+
-+	mutex_lock(&loopback->cable_lock);
-+	if (!snd_info_get_line(buffer, line, sizeof(line)))
-+		loopback_set_timer_source(loopback, strim(line));
-+	mutex_unlock(&loopback->cable_lock);
-+}
-+
-+static int loopback_timer_source_proc_new(struct loopback *loopback)
-+{
-+	return snd_card_rw_proc_new(loopback->card, "timer_source", loopback,
-+				    print_timer_source_info,
-+				    change_timer_source_info);
-+}
-+
- static int loopback_probe(struct platform_device *devptr)
- {
- 	struct snd_card *card;
-@@ -1719,8 +1749,9 @@ static int loopback_probe(struct platform_device *devptr)
- 	err = loopback_mixer_new(loopback, pcm_notify[dev] ? 1 : 0);
- 	if (err < 0)
- 		goto __nodev;
--	loopback_proc_new(loopback, 0);
--	loopback_proc_new(loopback, 1);
-+	loopback_cable_proc_new(loopback, 0);
-+	loopback_cable_proc_new(loopback, 1);
-+	loopback_timer_source_proc_new(loopback);
- 	strcpy(card->driver, "Loopback");
- 	strcpy(card->shortname, "Loopback");
- 	sprintf(card->longname, "Loopback %i", dev + 1);
--- 
-2.21.0
-
+> When releasing the allocated muram resource, we rely on reading back
+> the offsets from the riptr/tiptr registers. But those registers are
+> __be16 (and we indeed write them using iowrite16be), so we can't just
+> read them back with a normal C dereference.
+>
+> This is not currently a real problem, since for now the driver is
+> PPC32-only. But it will soon be allowed to be used on arm and arm64 as
+> well.
+>
+> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> ---
+>  drivers/net/wan/fsl_ucc_hdlc.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/net/wan/fsl_ucc_hdlc.c b/drivers/net/wan/fsl_ucc_hdlc.c
+> index 405b24a5a60d..8d13586bb774 100644
+> --- a/drivers/net/wan/fsl_ucc_hdlc.c
+> +++ b/drivers/net/wan/fsl_ucc_hdlc.c
+> @@ -732,8 +732,8 @@ static int uhdlc_open(struct net_device *dev)
+>
+>  static void uhdlc_memclean(struct ucc_hdlc_private *priv)
+>  {
+> -       qe_muram_free(priv->ucc_pram->riptr);
+> -       qe_muram_free(priv->ucc_pram->tiptr);
+> +       qe_muram_free(ioread16be(&priv->ucc_pram->riptr));
+> +       qe_muram_free(ioread16be(&priv->ucc_pram->tiptr));
+>
+>         if (priv->rx_bd_base) {
+>                 dma_free_coherent(priv->dev,
+> --
+> 2.23.0
+>
