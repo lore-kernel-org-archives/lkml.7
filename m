@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E0FBC432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:40:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1DB6C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:40:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 317B220714
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:40:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3E43218AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:40:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732031AbfKTPkx (ORCPT
+        id S1732022AbfKTPkw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 10:40:53 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:53346 "EHLO
+        Wed, 20 Nov 2019 10:40:52 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:53230 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731906AbfKTPkZ (ORCPT
+        by vger.kernel.org with ESMTP id S1731891AbfKTPkW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 10:40:25 -0500
+        Wed, 20 Nov 2019 10:40:22 -0500
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iXS5T-0004ZS-H7; Wed, 20 Nov 2019 15:40:11 +0000
+        id 1iXS5V-0004aq-Bg; Wed, 20 Nov 2019 15:40:13 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iXS5S-0004GE-Qv; Wed, 20 Nov 2019 15:40:10 +0000
+        id 1iXS5V-0004Ly-1l; Wed, 20 Nov 2019 15:40:13 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,18 +35,16 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Will Deacon" <will@kernel.org>, "Petr Mladek" <pmladek@suse.com>,
-        "Jann Horn" <jannh@google.com>, "Ingo Molnar" <mingo@kernel.org>,
-        "Sergey Senozhatsky" <sergey.senozhatsky@gmail.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Linus Torvalds" <torvalds@linux-foundation.org>
-Date:   Wed, 20 Nov 2019 15:37:20 +0000
-Message-ID: <lsq.1574264230.654885483@decadent.org.uk>
+        "David Howells" <dhowells@redhat.com>,
+        "Linus Torvalds" <torvalds@linux-foundation.org>,
+        "Hillf Danton" <hdanton@sina.com>,
+        "Sachin Sant" <sachinp@linux.vnet.ibm.com>
+Date:   Wed, 20 Nov 2019 15:38:17 +0000
+Message-ID: <lsq.1574264230.635488352@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 10/83] sched/fair: Don't free p->numa_faults with
- concurrent readers
+Subject: [PATCH 3.16 67/83] keys: Fix missing null pointer check in
+ request_key_auth_describe()
 In-Reply-To: <lsq.1574264230.280218497@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -60,130 +58,68 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jann Horn <jannh@google.com>
+From: Hillf Danton <hdanton@sina.com>
 
-commit 16d51a590a8ce3befb1308e0e7ab77f3b661af33 upstream.
+commit d41a3effbb53b1bcea41e328d16a4d046a508381 upstream.
 
-When going through execve(), zero out the NUMA fault statistics instead of
-freeing them.
+If a request_key authentication token key gets revoked, there's a window in
+which request_key_auth_describe() can see it with a NULL payload - but it
+makes no check for this and something like the following oops may occur:
 
-During execve, the task is reachable through procfs and the scheduler. A
-concurrent /proc/*/sched reader can read data from a freed ->numa_faults
-allocation (confirmed by KASAN) and write it back to userspace.
-I believe that it would also be possible for a use-after-free read to occur
-through a race between a NUMA fault and execve(): task_numa_fault() can
-lead to task_numa_compare(), which invokes task_weight() on the currently
-running task of a different CPU.
+	BUG: Kernel NULL pointer dereference at 0x00000038
+	Faulting instruction address: 0xc0000000004ddf30
+	Oops: Kernel access of bad area, sig: 11 [#1]
+	...
+	NIP [...] request_key_auth_describe+0x90/0xd0
+	LR [...] request_key_auth_describe+0x54/0xd0
+	Call Trace:
+	[...] request_key_auth_describe+0x54/0xd0 (unreliable)
+	[...] proc_keys_show+0x308/0x4c0
+	[...] seq_read+0x3d0/0x540
+	[...] proc_reg_read+0x90/0x110
+	[...] __vfs_read+0x3c/0x70
+	[...] vfs_read+0xb4/0x1b0
+	[...] ksys_read+0x7c/0x130
+	[...] system_call+0x5c/0x70
 
-Another way to fix this would be to make ->numa_faults RCU-managed or add
-extra locking, but it seems easier to wipe the NUMA fault statistics on
-execve.
+Fix this by checking for a NULL pointer when describing such a key.
 
-Signed-off-by: Jann Horn <jannh@google.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Petr Mladek <pmladek@suse.com>
-Cc: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Will Deacon <will@kernel.org>
-Fixes: 82727018b0d3 ("sched/numa: Call task_numa_free() from do_execve()")
-Link: https://lkml.kernel.org/r/20190716152047.14424-1-jannh@google.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-[bwh: Backported to 3.16: adjust filename, context]
+Also make the read routine check for a NULL pointer to be on the safe side.
+
+[DH: Modified to not take already-held rcu lock and modified to also check
+ in the read routine]
+
+Fixes: 04c567d9313e ("[PATCH] Keys: Fix race between two instantiators of a key")
+Reported-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
+Signed-off-by: Hillf Danton <hdanton@sina.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
+Tested-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -1589,7 +1589,7 @@ static int do_execve_common(struct filen
- 	current->fs->in_exec = 0;
- 	current->in_execve = 0;
- 	acct_update_integrals(current);
--	task_numa_free(current);
-+	task_numa_free(current, false);
- 	free_bprm(bprm);
- 	putname(filename);
- 	if (displaced)
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1671,7 +1671,7 @@ struct task_struct {
- extern void task_numa_fault(int last_node, int node, int pages, int flags);
- extern pid_t task_numa_group_id(struct task_struct *p);
- extern void set_numabalancing_state(bool enabled);
--extern void task_numa_free(struct task_struct *p);
-+extern void task_numa_free(struct task_struct *p, bool final);
- extern bool should_numa_migrate_memory(struct task_struct *p, struct page *page,
- 					int src_nid, int dst_cpu);
- #else
-@@ -1686,7 +1686,7 @@ static inline pid_t task_numa_group_id(s
- static inline void set_numabalancing_state(bool enabled)
+ security/keys/request_key_auth.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+--- a/security/keys/request_key_auth.c
++++ b/security/keys/request_key_auth.c
+@@ -58,6 +58,9 @@ static void request_key_auth_describe(co
  {
- }
--static inline void task_numa_free(struct task_struct *p)
-+static inline void task_numa_free(struct task_struct *p, bool final)
- {
- }
- static inline bool should_numa_migrate_memory(struct task_struct *p,
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -242,7 +242,7 @@ void __put_task_struct(struct task_struc
- 	WARN_ON(atomic_read(&tsk->usage));
- 	WARN_ON(tsk == current);
+ 	struct request_key_auth *rka = key->payload.data;
  
--	task_numa_free(tsk);
-+	task_numa_free(tsk, true);
- 	security_task_free(tsk);
- 	exit_creds(tsk);
- 	delayacct_tsk_free(tsk);
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -1747,13 +1747,23 @@ no_join:
- 	return;
- }
- 
--void task_numa_free(struct task_struct *p)
-+/*
-+ * Get rid of NUMA staticstics associated with a task (either current or dead).
-+ * If @final is set, the task is dead and has reached refcount zero, so we can
-+ * safely free all relevant data structures. Otherwise, there might be
-+ * concurrent reads from places like load balancing and procfs, and we should
-+ * reset the data back to default state without freeing ->numa_faults.
-+ */
-+void task_numa_free(struct task_struct *p, bool final)
- {
- 	struct numa_group *grp = p->numa_group;
--	void *numa_faults = p->numa_faults_memory;
-+	unsigned long *numa_faults = p->numa_faults_memory;
- 	unsigned long flags;
- 	int i;
- 
-+	if (!numa_faults)
++	if (!rka)
 +		return;
 +
- 	if (grp) {
- 		spin_lock_irqsave(&grp->lock, flags);
- 		for (i = 0; i < NR_NUMA_HINT_FAULT_STATS * nr_node_ids; i++)
-@@ -1767,11 +1777,17 @@ void task_numa_free(struct task_struct *
- 		put_numa_group(grp);
- 	}
+ 	seq_puts(m, "key:");
+ 	seq_puts(m, key->description);
+ 	if (key_is_instantiated(key))
+@@ -75,6 +78,9 @@ static long request_key_auth_read(const
+ 	size_t datalen;
+ 	long ret;
  
--	p->numa_faults_memory = NULL;
--	p->numa_faults_buffer_memory = NULL;
--	p->numa_faults_cpu= NULL;
--	p->numa_faults_buffer_cpu = NULL;
--	kfree(numa_faults);
-+	if (final) {
-+		p->numa_faults_memory = NULL;
-+		p->numa_faults_buffer_memory = NULL;
-+		p->numa_faults_cpu = NULL;
-+		p->numa_faults_buffer_cpu = NULL;
-+		kfree(numa_faults);
-+	} else {
-+		p->total_numa_faults = 0;
-+		for (i = 0; i < NR_NUMA_HINT_FAULT_STATS * nr_node_ids; i++)
-+			numa_faults[i] = 0;
-+	}
- }
++	if (!rka)
++		return -EKEYREVOKED;
++
+ 	datalen = rka->callout_len;
+ 	ret = datalen;
  
- /*
 
