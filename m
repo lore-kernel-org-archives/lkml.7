@@ -2,114 +2,110 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 721C4C43141
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 12:06:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F653C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 12:08:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A78422311
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 12:06:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574251600;
-	bh=JcM4V7QiTMGd/hQNkQtYNyLH0bkfKtNQ0eTkMJQT6qU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=sPL7TqZvXz+WnNt+++KCeVj1xQ2JkhWz81QaM2I2TqT1Ucwq+fa2Vz0tZD73hc01V
-	 pN6BFc+JDdwzNStPC28M6XOTqZJQHmjYvV3nmWmYeouC0apOWNlEdp8CErJZUA0DuE
-	 p7xSEydoa5sYs/R0D6O6Ixnan0B5iG8f8Iibgu0w=
+	by mail.kernel.org (Postfix) with ESMTP id 38D9222469
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 12:08:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="j5Ie0ICL";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="aqRCJ/tO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729159AbfKTMGj (ORCPT
+        id S1729169AbfKTMIZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 07:06:39 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:34344 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726689AbfKTMGj (ORCPT
+        Wed, 20 Nov 2019 07:08:25 -0500
+Received: from a27-55.smtp-out.us-west-2.amazonses.com ([54.240.27.55]:54140
+        "EHLO a27-55.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726689AbfKTMIZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 07:06:39 -0500
-Received: by mail-oi1-f196.google.com with SMTP id l202so22292064oig.1;
-        Wed, 20 Nov 2019 04:06:38 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ElT7EJNqtwpJJU4QjMYGJbxkB5AWzSyGEgl7I/cinCY=;
-        b=hr58LFCDCSzTnyNwpoB7s6lVEQK1tD0HPWHIS2n6GAB5ej72KyYoWxDVPuG6sNHjvs
-         +i4tXFgQDVRylOpu3hf2FssZKNbIqbCsa+E3BEmzYRP7vTR0cSph3tIUaYZykugeOW7P
-         t90QAVn3U8koe1EJuWLYgSdBZuN4mMCyj80HpBMtqiBu84H0j+QJ2IBZwEhnD8rQIrck
-         HV9KWTgi7j6l0PYBDAA74o09F2kZquV3ek0kCoNwOj4Fqfsxc0Pvc0mZoWxsux38nqHW
-         HC3GbzvFznH8A1mjyj8cu9E5jHkPsW4KnCfqyBuEE+DyDbe5pENwkX16vE9xfYgW75Ue
-         HiuQ==
-X-Gm-Message-State: APjAAAVuz/wWxvyOS57hTEz4oFSryCNSqyIZ23j8fGWrhg4ZHQnRPkbS
-        T4KZbAWVlIqDB/GGVyH3dtzEMreRSc4rHPhnuwE=
-X-Google-Smtp-Source: APXvYqxheneYqbQjWsEAfSkE2ZQbClubvVZBCaL5vjr7E9PZ5SxHyJLeCYrf4NpLC+8pv/qSSK7clExZOkJduiPveC8=
-X-Received: by 2002:aca:c753:: with SMTP id x80mr2352248oif.115.1574251597887;
- Wed, 20 Nov 2019 04:06:37 -0800 (PST)
+        Wed, 20 Nov 2019 07:08:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1574251704;
+        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
+        bh=ZCoBJqI8nQiSfhFad2WwoeMpz/uUodK2E04YZS93oYQ=;
+        b=j5Ie0ICLcXKmpX1E+1i7t2ueE2QCdTmpA8VC4M16oinkdl+VR6MDW1v81jEt8rhs
+        BxQetQ4BDkBBToIRAlFREwNDiGKBgbHVOkugWVAleGJ43+42N0a1s7cVrKCDOLlIIs3
+        haWyg9VZFCqVhLeg0SfDZO4Ll3iOh5SwdyCyVV6M=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=gdwg2y3kokkkj5a55z2ilkup5wp5hhxx; d=amazonses.com; t=1574251704;
+        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
+        bh=ZCoBJqI8nQiSfhFad2WwoeMpz/uUodK2E04YZS93oYQ=;
+        b=aqRCJ/tOXPYl0s3onydVlDPBwKvg8iki64KW7AEdcnrRRqY2vFO7D9aJe4cSNTm5
+        yM9OxV1vMXM4Jf8tEQOE1nQjL6OTt3B6clww4rW9kVHB84LECvyHqvHVLqHYtPiJZiS
+        lr6OBIlJNT8gKuqspLy7Ef7ZqM9BQA6TesCxDjh8=
 MIME-Version: 1.0
-References: <20191017121901.13699-1-kherbst@redhat.com> <20191119214955.GA223696@google.com>
- <CACO55tu+8VeyMw1Lb6QvNspaJm9LDgoRbooVhr0s3v9uBt=feg@mail.gmail.com>
- <20191120101816.GX11621@lahna.fi.intel.com> <CAJZ5v0g4vp1C+zHU5nOVnkGsOjBvLaphK1kK=qAT6b=mK8kpsA@mail.gmail.com>
- <20191120112212.GA11621@lahna.fi.intel.com> <CAJZ5v0in4VSULsfLshHxhNLf+NZxVQM0xx=hzdNa2X3FW=V7DA@mail.gmail.com>
- <CACO55tsjj+xkDjubz1J=fsPecW4H_J8AaBTeaMm+NYjp8Kiq8g@mail.gmail.com>
-In-Reply-To: <CACO55tsjj+xkDjubz1J=fsPecW4H_J8AaBTeaMm+NYjp8Kiq8g@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 20 Nov 2019 13:06:26 +0100
-Message-ID: <CAJZ5v0ithxMPK2YxfTUx_Ygpze2FMDJ6LwKwJb2vx89dfgHX_A@mail.gmail.com>
-Subject: Re: [PATCH v4] pci: prevent putting nvidia GPUs into lower device
- states on certain intel bridges
-To:     Karol Herbst <kherbst@redhat.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Mika Westerberg <mika.westerberg@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lyude Paul <lyude@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        Dave Airlie <airlied@gmail.com>,
-        Mario Limonciello <Mario.Limonciello@dell.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 20 Nov 2019 12:08:24 +0000
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     bjorn.andersson@linaro.org, rnayak@codeaurora.org,
+        robh+dt@kernel.org, ulf.hansson@linaro.org, agross@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, mark.rutland@arm.com,
+        dianders@chromium.org, linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH 2/6] dt-bindings: power: Add rpmh power-domain bindings
+ for SM8150
+In-Reply-To: <5dd4398e.1c69fb81.fb48b.b3bd@mx.google.com>
+References: <20191118173944.27043-1-sibis@codeaurora.org>
+ <0101016e7f99aa17-22b1062e-9922-40e4-ae7e-8b91210bb12c-000000@us-west-2.amazonses.com>
+ <5dd4398e.1c69fb81.fb48b.b3bd@mx.google.com>
+Message-ID: <0101016e88b6afab-0c74d03c-45e5-4419-b1eb-b57c94b74838-000000@us-west-2.amazonses.com>
+X-Sender: sibis@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
+X-SES-Outgoing: 2019.11.20-54.240.27.55
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 12:51 PM Karol Herbst <kherbst@redhat.com> wrote:
->
-> On Wed, Nov 20, 2019 at 12:48 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> >
-> > On Wed, Nov 20, 2019 at 12:22 PM Mika Westerberg
-> > <mika.westerberg@intel.com> wrote:
-> > >
-> > > On Wed, Nov 20, 2019 at 11:52:22AM +0100, Rafael J. Wysocki wrote:
-> > > > On Wed, Nov 20, 2019 at 11:18 AM Mika Westerberg
-> > > > <mika.westerberg@intel.com> wrote:
-> > > > >
+On 2019-11-20 00:20, Stephen Boyd wrote:
+> Quoting Sibi Sankar (2019-11-18 09:40:07)
+>> Add RPMH power-domain bindings for the SM8150 family of SoCs.
+>> 
+>> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+>> ---
+> 
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> 
+>>  .../devicetree/bindings/power/qcom,rpmpd.txt       |  1 +
+>>  include/dt-bindings/power/qcom-rpmpd.h             | 14 
+>> ++++++++++++++
+>>  2 files changed, 15 insertions(+)
+>> 
+>> diff --git a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt 
+>> b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
+>> index bc75bf49cdaea..f3bbaa4aef297 100644
+>> --- a/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
+>> +++ b/Documentation/devicetree/bindings/power/qcom,rpmpd.txt
+>> @@ -10,6 +10,7 @@ Required Properties:
+>>         * qcom,msm8998-rpmpd: RPM Power domain for the msm8998 family 
+>> of SoC
+>>         * qcom,qcs404-rpmpd: RPM Power domain for the qcs404 family of 
+>> SoC
+>>         * qcom,sdm845-rpmhpd: RPMh Power domain for the sdm845 family 
+>> of SoC
+>> +       * qcom,sm8150-rpmhpd: RPMh Power domain for the sm8150 family 
+>> of SoC
+> 
+> Can you convert this binding to YAML? Would help us validate DTS files
+> in the future.
 
-[cut]
+yes will convert it in the next
+re-spin.
 
-> > > >
-> > > > Oh, so does it look like we are trying to work around AML that tried
-> > > > to work around some problematic behavior in Linux at one point?
-> > >
-> > > Yes, it looks like so if I read the ASL right.
-> >
-> > OK, so that would call for a DMI-based quirk as the real cause for the
-> > issue seems to be the AML in question, which means a firmware problem.
-> >
->
-> And I disagree as this is a linux specific workaround and windows goes
-> that path and succeeds. This firmware based workaround was added,
-> because it broke on Linux.
+> 
+>>   - #power-domain-cells: number of cells in Power domain specifier
+>>         must be 1.
+>>   - operating-points-v2: Phandle to the OPP table for the Power 
+>> domain.
 
-Apparently so at the time it was added, but would it still break after
-the kernel changes made since then?
-
-Moreover, has it not become harmful now?  IOW, wouldn't it work after
-removing the "Linux workaround" from the AML?
-
-The only way to verify that I can see would be to run the system with
-custom ACPI tables without the "Linux workaround" in the AML in
-question.
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
