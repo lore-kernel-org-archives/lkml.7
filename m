@@ -2,149 +2,140 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33132C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 12:00:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D378C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 12:00:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 113EA22419
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 12:00:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E793922419
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 12:00:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EqVhZA3X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729477AbfKTMAK (ORCPT
+        id S1729491AbfKTMAp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 07:00:10 -0500
-Received: from esa1.mentor.iphmx.com ([68.232.129.153]:63369 "EHLO
-        esa1.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728728AbfKTMAJ (ORCPT
+        Wed, 20 Nov 2019 07:00:45 -0500
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:36300 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728728AbfKTMAo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 07:00:09 -0500
-IronPort-SDR: J7QohD2MNEFQr6dTEuVEq9Ly1Q7slsRCe3apNzUvPpm2Y9sHNXW6vSEsvofGeqp+Aw+fVrE/4S
- baOizpJRs7nO6IZ5yBLXMEGRPaNUecJsJlYBCXIdLfTlB1moFO27G77Yc4s2yC+B81WAx98c0K
- L+LeIXPmApBKhfXo9kIVLzIy8ZMLWtxeHLt0A46a4pt16NiwEwBZnghNUC/MrIdUIGwiIr9oh2
- JBlrqGevUNTQlHfIxoOe9ywvhGMH6Qj8ulploPM23IpnmfauzyTKtaKnZgX+mLUVj7EdBJtQNO
- 6CM=
-X-IronPort-AV: E=Sophos;i="5.69,221,1571731200"; 
-   d="scan'208";a="45210063"
-Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa1.mentor.iphmx.com with ESMTP; 20 Nov 2019 04:00:08 -0800
-IronPort-SDR: 9BO8PS76rbrX3Nz2edhwu25bV/lNGy5OVzZ82kkpPmuBSUmne1ciXaMMTik1y/dT7hhYCDLAcE
- O3McfE/mi3Zo3TzPIJRNJGS6K4OD5xfw1JmYoMHkEhORHgKo2PUArPGtbNioHRJ0r93y0W+/Jj
- 5AjQ49duS247wxUG1VI5D4G6mjHHvzRaMM70sVk2wYGf/l9KoPARleWoX5g5ykMVmb0+bANGd5
- Cmz1tkEw0uSR+sMbA+KPecpkmyt12hlPJ4xrsvqfizfBoq71OJ9ErnFBfdok0koyaiA0TC/6Rf
- Ync=
-From:   Andrew Gabbasov <andrew_gabbasov@mentor.com>
-To:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Timo Wischer <twischer@de.adit-jv.com>,
-        Andrew Gabbasov <andrew_gabbasov@mentor.com>
-Subject: [PATCH v4 7/7] ALSA: aloop: Support runtime change of snd_timer via info interface
-Date:   Wed, 20 Nov 2019 05:58:56 -0600
-Message-ID: <20191120115856.4125-8-andrew_gabbasov@mentor.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191120115856.4125-7-andrew_gabbasov@mentor.com>
-References: <20191120115856.4125-1-andrew_gabbasov@mentor.com>
- <20191120115856.4125-2-andrew_gabbasov@mentor.com>
- <20191120115856.4125-3-andrew_gabbasov@mentor.com>
- <20191120115856.4125-4-andrew_gabbasov@mentor.com>
- <20191120115856.4125-5-andrew_gabbasov@mentor.com>
- <20191120115856.4125-6-andrew_gabbasov@mentor.com>
- <20191120115856.4125-7-andrew_gabbasov@mentor.com>
+        Wed, 20 Nov 2019 07:00:44 -0500
+Received: by mail-ua1-f65.google.com with SMTP id z9so7689545uan.3
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 04:00:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=B0tsxj8KZGAT/o1qcGiW6HKsR+OIwQVXMM2ODuLvIpk=;
+        b=EqVhZA3XS/izMBNsikllPUdPo/A4jO0CJ2WlCc6sonVPI2GnfaVvbdDuNlHdyVmBWs
+         04nfUBbI06D35YPWUGTFpPWM+eHRl7KJqzvMQZ83STlGgvja0fblAtHeSfAFZaJtrKA1
+         zmFiNtK3ttF7B1Fj4bDCbrnfA1x2DjrISFT4bYrf4bnivgaf2hWaN/7r/wMso4uvtHqe
+         shcCcvg8GlTnd3B7NHCeEdi4N+JTWa5XVlWqJoGC8NG0l9O8cxzUQYX3uLaU9pld4Ptn
+         uKq5VO98MpAoB+6hx23bKtwlM4Kx3cxqoTlHoH7OXOjuf6SVEg0kUKz7XdpkTWoKVgaL
+         HNqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=B0tsxj8KZGAT/o1qcGiW6HKsR+OIwQVXMM2ODuLvIpk=;
+        b=muSsEst9sZrH++socQL40mtV/ZoYG9sUHgGJ9f3pMvQlBYRDSQuNX2FTca9qVQaXvh
+         jsimm7yPzC4doAAtHE1bLlyvEefEG2GKGyomdFxpTtXchZe9UWgFH9SbhOyGl4AO2w3f
+         KDsaG/NX+cGkerg0Qe4I47KgHQghbgEw3dRj8YkQOikpaxw5mBBCAmgEywGZS/dVmYN8
+         cl4Fy4Ja6COb5RPGodAauWLRS6n8S1Pk21Vs9oHFRPz/wNPSj5nYpBEg/hZ46UVH0UJg
+         vRaFh+lKc/XlOOa+Bva2kXNRlzXkxc4JnwzF57taN35K+XFgk+7B+0eGMZQcegURBo/W
+         OXVQ==
+X-Gm-Message-State: APjAAAV7nr6eLXcDdEOhTbDotTTKVZ6KbFJROGUckzKl5y6824aGgv/J
+        JwDzm7CZ8SrziF12Z4FUN4YuG9UuJrwohIJAS+M/2RLs
+X-Google-Smtp-Source: APXvYqyiLCF3MBQoSmzlqqxli2MvGV261pRD3zdGvysKb7s9Nit3G2b6p/dRiZmGs4K0UtVDM+P1vhy5Y89wBip3NWE=
+X-Received: by 2002:ab0:74cd:: with SMTP id f13mr1351834uaq.104.1574251241748;
+ Wed, 20 Nov 2019 04:00:41 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [137.202.0.90]
-X-ClientProxiedBy: svr-ies-mbx-02.mgc.mentorg.com (139.181.222.2) To
- svr-ies-mbx-02.mgc.mentorg.com (139.181.222.2)
+References: <20191119154621.55341-1-niklas.cassel@linaro.org>
+In-Reply-To: <20191119154621.55341-1-niklas.cassel@linaro.org>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 20 Nov 2019 13:00:05 +0100
+Message-ID: <CAPDyKFqjsJSRW7XvfUe2Ssewqxo5Xjk_3p_EywP_rTsvrdNDYQ@mail.gmail.com>
+Subject: Re: [PATCH v6 0/5] Add support for QCOM Core Power Reduction
+To:     Niklas Cassel <niklas.cassel@linaro.org>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Show and change sound card timer source with read-write info
-file in proc filesystem. Initial string can still be set as
-module parameter.
+On Tue, 19 Nov 2019 at 16:46, Niklas Cassel <niklas.cassel@linaro.org> wrote:
+>
+> This series adds support for Core Power Reduction (CPR), a form of
+> Adaptive Voltage Scaling (AVS), found on certain Qualcomm SoCs.
+>
+> This series is based on top of the qcs404 cpufreq patch series that
+> hasn't landed yet:
+> https://patchwork.kernel.org/project/linux-arm-msm/list/?series=173423
+> as well as that series' matching device tree changes:
+> https://patchwork.kernel.org/project/linux-arm-msm/list/?series=165457
+>
+> For testing purposes, this patch series, including the dependencies
+> listed above, is available on the following git tag:
+> https://git.linaro.org/people/niklas.cassel/kernel.git/log/?h=cpr-v6
+>
+> CPR is a technology that reduces core power on a CPU or on other device.
+> It reads voltage settings from efuses (that have been written in
+> production), it uses these voltage settings as initial values, for each
+> OPP.
+>
+> After moving to a certain OPP, CPR monitors dynamic factors such as
+> temperature, etc. and adjusts the voltage for that frequency accordingly
+> to save power and meet silicon characteristic requirements.
+>
+> This driver has been developed together with Jorge Ramirez-Ortiz, and
+> is based on an RFC by Stephen Boyd[1], which in turn is based on work
+> by others on codeaurora.org[2].
+>
+> [1] https://lkml.org/lkml/2015/9/18/833
+> [2] https://source.codeaurora.org/quic/la/kernel/msm-4.14/tree/drivers/regulator/cpr-regulator.c?h=msm-4.14
+>
+> Changes since v5:
+> -Removed pm_ops from platform_driver struct.
+>  (This was embarrassingly not properly removed in previous patch revision.)
+>
+> Niklas Cassel (5):
+>   dt-bindings: power: avs: Add support for CPR (Core Power Reduction)
+>   power: avs: Add support for CPR (Core Power Reduction)
+>   arm64: dts: qcom: qcs404: Add CPR and populate OPP table
+>   arm64: defconfig: enable CONFIG_QCOM_CPR
+>   arm64: defconfig: enable CONFIG_ARM_QCOM_CPUFREQ_NVMEM
+>
+>  .../bindings/power/avs/qcom,cpr.txt           |  130 ++
+>  MAINTAINERS                                   |    8 +
+>  arch/arm64/boot/dts/qcom/qcs404.dtsi          |  132 +-
+>  arch/arm64/configs/defconfig                  |    2 +
+>  drivers/power/avs/Kconfig                     |   15 +
+>  drivers/power/avs/Makefile                    |    1 +
+>  drivers/power/avs/qcom-cpr.c                  | 1754 +++++++++++++++++
+>  7 files changed, 2034 insertions(+), 8 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/power/avs/qcom,cpr.txt
+>  create mode 100644 drivers/power/avs/qcom-cpr.c
+>
+> --
+> 2.23.0
+>
 
-The timer source string value can be changed at any time,
-but it is latched by PCM substream open callback (the first one
-for a particular cable). At this point it is actually used, that
-is the string is parsed, and the timer is looked up and opened.
+For the series (except patch 2 that I provided some comment for), feel
+free to add:
 
-The timer source is set for a loopback card (the same as initial
-setting by module parameter), but every cable uses the value,
-current at the moment of open.
+Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
 
-Setting the value to empty string switches the timer to jiffies.
-
-Signed-off-by: Andrew Gabbasov <andrew_gabbasov@mentor.com>
----
- sound/drivers/aloop.c | 37 ++++++++++++++++++++++++++++++++++---
- 1 file changed, 34 insertions(+), 3 deletions(-)
-
-diff --git a/sound/drivers/aloop.c b/sound/drivers/aloop.c
-index 67ebbd510e1b..626a8b642b63 100644
---- a/sound/drivers/aloop.c
-+++ b/sound/drivers/aloop.c
-@@ -1666,7 +1666,7 @@ static void print_cable_info(struct snd_info_entry *entry,
- 	mutex_unlock(&loopback->cable_lock);
- }
- 
--static int loopback_proc_new(struct loopback *loopback, int cidx)
-+static int loopback_cable_proc_new(struct loopback *loopback, int cidx)
- {
- 	char name[32];
- 
-@@ -1687,6 +1687,36 @@ static void loopback_set_timer_source(struct loopback *loopback,
- 						      value, GFP_KERNEL);
- }
- 
-+static void print_timer_source_info(struct snd_info_entry *entry,
-+				    struct snd_info_buffer *buffer)
-+{
-+	struct loopback *loopback = entry->private_data;
-+
-+	mutex_lock(&loopback->cable_lock);
-+	snd_iprintf(buffer, "%s\n",
-+		    loopback->timer_source ? loopback->timer_source : "");
-+	mutex_unlock(&loopback->cable_lock);
-+}
-+
-+static void change_timer_source_info(struct snd_info_entry *entry,
-+				     struct snd_info_buffer *buffer)
-+{
-+	struct loopback *loopback = entry->private_data;
-+	char line[64];
-+
-+	mutex_lock(&loopback->cable_lock);
-+	if (!snd_info_get_line(buffer, line, sizeof(line)))
-+		loopback_set_timer_source(loopback, strim(line));
-+	mutex_unlock(&loopback->cable_lock);
-+}
-+
-+static int loopback_timer_source_proc_new(struct loopback *loopback)
-+{
-+	return snd_card_rw_proc_new(loopback->card, "timer_source", loopback,
-+				    print_timer_source_info,
-+				    change_timer_source_info);
-+}
-+
- static int loopback_probe(struct platform_device *devptr)
- {
- 	struct snd_card *card;
-@@ -1719,8 +1749,9 @@ static int loopback_probe(struct platform_device *devptr)
- 	err = loopback_mixer_new(loopback, pcm_notify[dev] ? 1 : 0);
- 	if (err < 0)
- 		goto __nodev;
--	loopback_proc_new(loopback, 0);
--	loopback_proc_new(loopback, 1);
-+	loopback_cable_proc_new(loopback, 0);
-+	loopback_cable_proc_new(loopback, 1);
-+	loopback_timer_source_proc_new(loopback);
- 	strcpy(card->driver, "Loopback");
- 	strcpy(card->shortname, "Loopback");
- 	sprintf(card->longname, "Loopback %i", dev + 1);
--- 
-2.21.0
-
+Kind regards
+Uffe
