@@ -2,140 +2,138 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DE68C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 06:18:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11121C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 06:23:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FE322243E
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 06:18:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E74DC2235D
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 06:23:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727269AbfKTGSa (ORCPT
+        id S1727518AbfKTGXi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 01:18:30 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7149 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726014AbfKTGSa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 01:18:30 -0500
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 2070099B356093EE0547;
-        Wed, 20 Nov 2019 14:18:27 +0800 (CST)
-Received: from [127.0.0.1] (10.133.224.57) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Wed, 20 Nov 2019
- 14:18:19 +0800
-Subject: Re: [PATCH v2] pci: lock the pci_cfg_wait queue for the consistency
- of data
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     <willy@infradead.org>, <wangxiongfeng2@huawei.com>,
-        <wanghaibin.wang@huawei.com>, <guoheyi@huawei.com>,
-        <yebiaoxiang@huawei.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <rjw@rjwysocki.net>,
-        <tglx@linutronix.de>, <guohanjun@huawei.com>,
-        <yangyingliang@huawei.com>
-References: <20191119202305.GA214858@google.com>
-From:   Xiang Zheng <zhengxiang9@huawei.com>
-Message-ID: <fea7b513-f01d-c059-cb23-7247eb9d712b@huawei.com>
-Date:   Wed, 20 Nov 2019 14:18:18 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Wed, 20 Nov 2019 01:23:38 -0500
+Received: from mga06.intel.com ([134.134.136.31]:49722 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726044AbfKTGXh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 01:23:37 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Nov 2019 22:23:37 -0800
+X-IronPort-AV: E=Sophos;i="5.69,220,1571727600"; 
+   d="scan'208";a="204625878"
+Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.157])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Nov 2019 22:23:37 -0800
+From:   ira.weiny@intel.com
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Ira Weiny <ira.weiny@intel.com>
+Subject: [PATCH] mm: Clean up filemap_write_and_wait()
+Date:   Tue, 19 Nov 2019 22:23:34 -0800
+Message-Id: <20191120062334.24687-1-ira.weiny@intel.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <20191119202305.GA214858@google.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.224.57]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Ira Weiny <ira.weiny@intel.com>
 
-On 2019/11/20 4:23, Bjorn Helgaas wrote:
-> On Tue, Nov 19, 2019 at 09:15:45AM +0800, Xiang Zheng wrote:
->> Commit "7ea7e98fd8d0" suggests that the "pci_lock" is sufficient,
->> and all the callers of pci_wait_cfg() are wrapped with the "pci_lock".
->>
->> However, since the commit "cdcb33f98244" merged, the accesses to
->> the pci_cfg_wait queue are not safe anymore. A "pci_lock" is
->> insufficient and we need to hold an additional queue lock while
->> read/write the wait queue.
->>
->> So let's use the add_wait_queue()/remove_wait_queue() instead of
->> __add_wait_queue()/__remove_wait_queue(). Also move the wait queue
->> functionality around the "schedule()" function to avoid reintroducing
->> the deadlock addressed by "cdcb33f98244".
-> 
-> Procedural nits:
-> 
->   - Run "git log --oneline drivers/pci/access.c" and follow the
->     convention, e.g., starts with "PCI: " and first subsequent word is
->     capitalized.
-> 
->   - Use conventional commit references, e.g., 7ea7e98fd8d0 ("PCI:
->     Block on access to temporarily unavailable pci device") and
->     cdcb33f98244 ("PCI: Avoid possible deadlock on pci_lock and
->     p->pi_lock")
-> 
->   - IIRC you found that this actually caused a panic; please include
->     the lore.kernel.org URL to that report.
-> 
+At some point filemap_write_and_wait() and
+filemap_write_and_wait_range() got the exact same implementation with
+the exception of the range being specified in *_range()
 
-Got it, I will address these nits.
+Similar to other functions in fs.h which call
+*_range(..., 0, LLONG_MAX), change filemap_write_and_wait() to be a
+static inline which calls filemap_write_and_wait_range()
 
-> You can wait for a while to see if there are more substantive comments
-> to address before posting a v3.
-> 
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+---
+ include/linux/fs.h |  6 +++++-
+ mm/filemap.c       | 34 ++++++----------------------------
+ 2 files changed, 11 insertions(+), 29 deletions(-)
 
-OK.
-
->> Signed-off-by: Xiang Zheng <zhengxiang9@huawei.com>
->> Cc: Heyi Guo <guoheyi@huawei.com>
->> Cc: Biaoxiang Ye <yebiaoxiang@huawei.com>
->> ---
->>
->> v2:
->>  - Move the wait queue functionality around the "schedule()" function to
->>    avoid reintroducing the deadlock addressed by "cdcb33f98244"
->>
->> ---
->>
->>  drivers/pci/access.c | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/pci/access.c b/drivers/pci/access.c
->> index 2fccb5762c76..09342a74e5ea 100644
->> --- a/drivers/pci/access.c
->> +++ b/drivers/pci/access.c
->> @@ -207,14 +207,14 @@ static noinline void pci_wait_cfg(struct pci_dev *dev)
->>  {
->>  	DECLARE_WAITQUEUE(wait, current);
->>  
->> -	__add_wait_queue(&pci_cfg_wait, &wait);
->>  	do {
->>  		set_current_state(TASK_UNINTERRUPTIBLE);
->>  		raw_spin_unlock_irq(&pci_lock);
->> +		add_wait_queue(&pci_cfg_wait, &wait);
->>  		schedule();
->> +		remove_wait_queue(&pci_cfg_wait, &wait);
->>  		raw_spin_lock_irq(&pci_lock);
->>  	} while (dev->block_cfg_access);
->> -	__remove_wait_queue(&pci_cfg_wait, &wait);
->>  }
->>  
->>  /* Returns 0 on success, negative values indicate error. */
->> -- 
->> 2.19.1
->>
->>
-> 
-> .
-> 
-
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 1175815da3df..1007742711e5 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -2745,7 +2745,6 @@ static inline int filemap_fdatawait(struct address_space *mapping)
+ 
+ extern bool filemap_range_has_page(struct address_space *, loff_t lstart,
+ 				  loff_t lend);
+-extern int filemap_write_and_wait(struct address_space *mapping);
+ extern int filemap_write_and_wait_range(struct address_space *mapping,
+ 				        loff_t lstart, loff_t lend);
+ extern int __filemap_fdatawrite_range(struct address_space *mapping,
+@@ -2755,6 +2754,11 @@ extern int filemap_fdatawrite_range(struct address_space *mapping,
+ extern int filemap_check_errors(struct address_space *mapping);
+ extern void __filemap_set_wb_err(struct address_space *mapping, int err);
+ 
++static inline int filemap_write_and_wait(struct address_space *mapping)
++{
++	return filemap_write_and_wait_range(mapping, 0, LLONG_MAX);
++}
++
+ extern int __must_check file_fdatawait_range(struct file *file, loff_t lstart,
+ 						loff_t lend);
+ extern int __must_check file_check_and_advance_wb_err(struct file *file);
+diff --git a/mm/filemap.c b/mm/filemap.c
+index 1f5731768222..f4d1a4fb63a6 100644
+--- a/mm/filemap.c
++++ b/mm/filemap.c
+@@ -632,33 +632,6 @@ static bool mapping_needs_writeback(struct address_space *mapping)
+ 	return mapping->nrpages;
+ }
+ 
+-int filemap_write_and_wait(struct address_space *mapping)
+-{
+-	int err = 0;
+-
+-	if (mapping_needs_writeback(mapping)) {
+-		err = filemap_fdatawrite(mapping);
+-		/*
+-		 * Even if the above returned error, the pages may be
+-		 * written partially (e.g. -ENOSPC), so we wait for it.
+-		 * But the -EIO is special case, it may indicate the worst
+-		 * thing (e.g. bug) happened, so we avoid waiting for it.
+-		 */
+-		if (err != -EIO) {
+-			int err2 = filemap_fdatawait(mapping);
+-			if (!err)
+-				err = err2;
+-		} else {
+-			/* Clear any previously stored errors */
+-			filemap_check_errors(mapping);
+-		}
+-	} else {
+-		err = filemap_check_errors(mapping);
+-	}
+-	return err;
+-}
+-EXPORT_SYMBOL(filemap_write_and_wait);
+-
+ /**
+  * filemap_write_and_wait_range - write out & wait on a file range
+  * @mapping:	the address_space for the pages
+@@ -680,7 +653,12 @@ int filemap_write_and_wait_range(struct address_space *mapping,
+ 	if (mapping_needs_writeback(mapping)) {
+ 		err = __filemap_fdatawrite_range(mapping, lstart, lend,
+ 						 WB_SYNC_ALL);
+-		/* See comment of filemap_write_and_wait() */
++		/*
++		 * Even if the above returned error, the pages may be
++		 * written partially (e.g. -ENOSPC), so we wait for it.
++		 * But the -EIO is special case, it may indicate the worst
++		 * thing (e.g. bug) happened, so we avoid waiting for it.
++		 */
+ 		if (err != -EIO) {
+ 			int err2 = filemap_fdatawait_range(mapping,
+ 						lstart, lend);
 -- 
-
-Thanks,
-Xiang
+2.21.0
 
