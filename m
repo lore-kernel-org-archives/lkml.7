@@ -7,44 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0A49C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:40:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADDE9C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:40:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 722FE22506
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:40:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 774D322529
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:40:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574257252;
-	bh=6nRls0at4U1WUxZ2o/HXmg8n98PkTMsiMPhnQf/J+ms=;
+	s=default; t=1574257258;
+	bh=j7hjYLBTiYgP/Olh2gqSk1QwqVMqLpIv7BMtU43hpCQ=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=pjc0PL1DMP7UfyyWlFXsGMSstoT4OsrFCV4Rkds1mSsyFfcolK6Ie7gJU6Ryj9R+I
-	 YNR+3gHwjxisXxIieNfDp7Qrf4otviLXG2+/D7aOY+EU/RZD7pltiHVaQpkAzYeD88
-	 M00Cuk9MgDXYLyWLhKJ7t5Fb6rUCqWwWRF8Jij/E=
+	b=I0X5EOYp8ml2JRYCDOEKZ8qRmq4Om+YDLUcY6ADYKsQN6oyUECzEAxF/+wKusnW/l
+	 uPKBSW8VqENQioPC9P2lVKitO0ZxPod2A3IDyjCzECY8O+Uk37jjgMVFeqFYvk9vch
+	 Es2hWqwLUrdCDyz8ea8ZwQxwlocgn3843tzsVF58=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728987AbfKTNkv (ORCPT
+        id S1731248AbfKTNk5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 08:40:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48704 "EHLO mail.kernel.org"
+        Wed, 20 Nov 2019 08:40:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730034AbfKTNku (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 08:40:50 -0500
+        id S1729146AbfKTNk4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 08:40:56 -0500
 Received: from localhost.localdomain (unknown [118.189.143.39])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3E66224FC;
-        Wed, 20 Nov 2019 13:40:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81F1A224FC;
+        Wed, 20 Nov 2019 13:40:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574257249;
-        bh=6nRls0at4U1WUxZ2o/HXmg8n98PkTMsiMPhnQf/J+ms=;
+        s=default; t=1574257255;
+        bh=j7hjYLBTiYgP/Olh2gqSk1QwqVMqLpIv7BMtU43hpCQ=;
         h=From:To:Cc:Subject:Date:From;
-        b=hn+NwVAh9OXf13mgOiwkrpmV688mR+Squ0/2A9Af4YNhCzqlFJIcjas94xXQvAmh8
-         u5n/h4OyO3BAaUsmJ+24uF9IFTwHcMCSNOlYoHde0eKPQsnuFSb/RyGaL/lGKug0QK
-         XqVZKMrL6A5r1CYaOExix5dzHdpWFDetaWrvI2JM=
+        b=x+mRt77lQ9fqi8mkNJMT9rElA1N/nukHqksY5peXRRvflwYCUqMufXeXou/wt4puT
+         0MbgdHrpPg0NtHIDNgwdAVhC8m54UYG+kgliMH2d3Q/kT/q1yJPyvzyNgfc3fiI9+d
+         qVljYvCxntZD87SySXaLwdeePCakBnx4k1ftWdnY=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH] nfc: Fix Kconfig indentation
-Date:   Wed, 20 Nov 2019 21:40:44 +0800
-Message-Id: <20191120134044.14558-1-krzk@kernel.org>
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-mtd@lists.infradead.org
+Subject: [PATCH] mtd: onenand: Fix Kconfig indentation
+Date:   Wed, 20 Nov 2019 21:40:50 +0800
+Message-Id: <20191120134050.14622-1-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -57,22 +62,32 @@ coding style with command like:
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/nfc/nfcmrvl/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mtd/nand/onenand/Kconfig | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/nfc/nfcmrvl/Kconfig b/drivers/nfc/nfcmrvl/Kconfig
-index 06f34fb4e0b0..ded0d03c0015 100644
---- a/drivers/nfc/nfcmrvl/Kconfig
-+++ b/drivers/nfc/nfcmrvl/Kconfig
-@@ -15,7 +15,7 @@ config NFC_MRVL_USB
- 	  Marvell NFC-over-USB driver.
+diff --git a/drivers/mtd/nand/onenand/Kconfig b/drivers/mtd/nand/onenand/Kconfig
+index ae0b8fe5b990..ea382fc48432 100644
+--- a/drivers/mtd/nand/onenand/Kconfig
++++ b/drivers/mtd/nand/onenand/Kconfig
+@@ -33,12 +33,12 @@ config MTD_ONENAND_OMAP2
+ 	  Enable dmaengine and gpiolib for better performance.
  
- 	  This driver provides support for Marvell NFC-over-USB devices:
--          8897.
-+	  8897.
+ config MTD_ONENAND_SAMSUNG
+-        tristate "OneNAND on Samsung SOC controller support"
+-        depends on ARCH_S3C64XX || ARCH_S5PV210 || ARCH_EXYNOS4
+-        help
+-          Support for a OneNAND flash device connected to an Samsung SOC.
+-          S3C64XX uses command mapping method.
+-          S5PC110/S5PC210 use generic OneNAND method.
++	tristate "OneNAND on Samsung SOC controller support"
++	depends on ARCH_S3C64XX || ARCH_S5PV210 || ARCH_EXYNOS4
++	help
++	  Support for a OneNAND flash device connected to an Samsung SOC.
++	  S3C64XX uses command mapping method.
++	  S5PC110/S5PC210 use generic OneNAND method.
  
- 	  Say Y here to compile support for Marvell NFC-over-USB driver
- 	  into the kernel or say M to compile it as module.
+ config MTD_ONENAND_OTP
+ 	bool "OneNAND OTP Support"
 -- 
 2.17.1
 
