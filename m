@@ -2,115 +2,144 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1AADC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 07:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC2AC432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 07:14:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89D62223CA
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 07:13:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28CED206EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 07:14:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VPxugwvx"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="HAMmQ+zk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727761AbfKTHNR (ORCPT
+        id S1727787AbfKTHOK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 02:13:17 -0500
-Received: from mail-pf1-f201.google.com ([209.85.210.201]:39547 "EHLO
-        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727645AbfKTHNQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 02:13:16 -0500
-Received: by mail-pf1-f201.google.com with SMTP id z2so17898595pfg.6
-        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 23:13:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=C84JXx6eiD28S+GBkrYpaPubLQ8qnJVJ5/x3i43xZB0=;
-        b=VPxugwvxwAHiOnzTkKNTxlUPbepfKwxGiJ8QCSBPfzo5d+TGN6buFYMRa2lfRykdL4
-         mvCy9rsCszUHgIg+GHOqwpmkazIG+H6RRKDHk9f5jUuABO2Ib+334SJJ3xNUmvZqJNna
-         WyKbTdxTqaqh/D72QRnt9s4HsKxv16nKK/ddK1M/QlGKNGpP7zsutZ4WwL7Ko2xfLDuJ
-         XPCq7Jpc7IkHOtE6ca3Bns4AoQxx57OKN+rxpW00we3pHhi0K00ggRWwFN0CDSdq1RB4
-         tON0m8LqG3WlAId6KcIxbwiXZSpRrbAgD8Ln6FTI5va6IwHL4v5K6R56vfm2pSdFdapH
-         GN4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=C84JXx6eiD28S+GBkrYpaPubLQ8qnJVJ5/x3i43xZB0=;
-        b=epsPZldxzxeOrOsgUaQGKn4S9EFYWBku3Q4jdGl3h3w6LnpE2IKQVN2VFD82VvMa44
-         yYaptlh/HqvwZY/2M15ReQNP2VtNzsF4jt+RhVDOuIP3rSNI6g67E3ouvzrX4nJ10O0O
-         Gn+Zb3N3VBDMtCGChW3FxB8/RhA4Z3zCP28lqlHIJfqFLnSv5PoS7wa7QhrLRL5+XF74
-         IILd3AFb9lo+sNk8ppJyY7BfYPhZnkcG72FCrHmOTaWHOnN9LATJzC/KORECfYaPkmul
-         11Jcna5ukQ6+5ecsivXFVmlMkqLyKD0KfjoIncTLB7POk5b1m9QtEgDcgab3bu72KDRo
-         BUsw==
-X-Gm-Message-State: APjAAAUJ+e5iYSOWhbaQ1xNl/eMwjVWuWAKHYI7Ye0UYeEiYFFSkYUpg
-        DoTUoLO6VajiRj88CmtFCBql76aHst5kaJA=
-X-Google-Smtp-Source: APXvYqy58zvvnUjasx36C47MJ/SoV1H/b/9m3SnQwbO5JHS2q7QDVCp+4vHgJPTHpzJuKaz6Gb0p1WPXtXurK4Y=
-X-Received: by 2002:a63:491d:: with SMTP id w29mr1533673pga.294.1574233993280;
- Tue, 19 Nov 2019 23:13:13 -0800 (PST)
-Date:   Tue, 19 Nov 2019 23:13:01 -0800
-Message-Id: <20191120071302.227777-1-saravanak@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
-Subject: [PATCH] of: property: Add device link support for interrupt-parent,
- dmas and -gpio(s)
-From:   Saravana Kannan <saravanak@google.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     Saravana Kannan <saravanak@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vinod Koul <vkoul@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        kernel-team@android.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 20 Nov 2019 02:14:10 -0500
+Received: from mail-eopbgr720090.outbound.protection.outlook.com ([40.107.72.90]:22720
+        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727287AbfKTHOJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 02:14:09 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Xq13QLAsTgqtDCV/8YuQHmcwah/7lb44JNF4Tzv62X7JaUY7kiQ3IEbTPqBEeatPpRlM8Z2dyjoeaxrt/x7SKtAiCu7ctwEaSQlqvDoc1ZmRy6CEUGhMQ3HhQRpbMda+p+xHW+WqGmxEwNbeTpxhJsQiPxu9u7r/pfwXbsaxEp25gYnpinOwQwz9T0vnNdF8357+VvW34GV0tmgSBK/NW2iF83mgJO8ZY3iS8h6r2c6viqvSh1Tacy3grrPZzg8ASNuzSmbL2O/k9++fAmfmG7nwEKnlx2KEiBrJEuAK9ZmByOW4+WK0R93tVWwA4AUSpZ8aBf8sM6v5DRtyIp4Cjg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zuUHlBhzm7IKhGB4vUjVfMhdQ8MxbsV4EdOKiil7yjI=;
+ b=O/l9MtBSQkB1JOXbB9s+JalEqQC8y7toUd8sMFqxxDGzb4mxSeh7LUoWPsh2YWy42EXYRq6sZ0Y0JeyEBQaYyxNHL9WzTweS/68LQdEv8sFrItEqOUEnpvs1tGA+SEnjV79ddSV4Lbz6j+OK9GOwxK2cMo92UmggPinVUWuufsLfXV/nbq5wM4RMi29PLt7TShwHSgXZ5Mcrzic4sl8HEO5zo8ONhGwVylzx0e2OgYgU3OYEFjYt6Av67BazB3j967F4CZ9CBPhER4rhJmmPjGgTiNMDRhmSCQ0l15S4kyaMtIucrhjaJB/LXTrfrMxXxM6ZDsU9nN3TS2E0kCJFAw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zuUHlBhzm7IKhGB4vUjVfMhdQ8MxbsV4EdOKiil7yjI=;
+ b=HAMmQ+zkD/78U7iP5e3Z5mx0XzofnLbn7Xto9FFzcntaAKI9zVBGaxSyVpYWWWVfuJHtYckEMKsxpsAcs23/0ubphPMz6vcnSvybaNQBDZLx3b0xiF7BGsSFchjXM8So0ai5Njy3Tep9J6nlaFYNMC46LxN6JrVuwuxSOmGB6E8=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+Received: from BN8PR21MB1137.namprd21.prod.outlook.com (20.179.72.96) by
+ BN8PR21MB1251.namprd21.prod.outlook.com (20.179.74.28) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.3; Wed, 20 Nov 2019 07:14:06 +0000
+Received: from BN8PR21MB1137.namprd21.prod.outlook.com
+ ([fe80::c596:ecf5:7a6:734d]) by BN8PR21MB1137.namprd21.prod.outlook.com
+ ([fe80::c596:ecf5:7a6:734d%2]) with mapi id 15.20.2495.006; Wed, 20 Nov 2019
+ 07:14:05 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        sashal@kernel.org, b.zolnierkie@samsung.com,
+        linux-hyperv@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mikelley@microsoft.com, Alexander.Levin@microsoft.com
+Cc:     weh@microsoft.com, Dexuan Cui <decui@microsoft.com>
+Subject: [PATCH] video: hyperv_fb: Fix hibernation for the deferred IO feature
+Date:   Tue, 19 Nov 2019 23:13:48 -0800
+Message-Id: <1574234028-48574-1-git-send-email-decui@microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+Reply-To: decui@microsoft.com
+Content-Type: text/plain
+X-ClientProxiedBy: MWHPR1001CA0019.namprd10.prod.outlook.com
+ (2603:10b6:301:2a::32) To BN8PR21MB1137.namprd21.prod.outlook.com
+ (2603:10b6:408:71::32)
+MIME-Version: 1.0
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (13.77.154.182) by MWHPR1001CA0019.namprd10.prod.outlook.com (2603:10b6:301:2a::32) with Microsoft SMTP Server (version=TLS1_2, cipher=) via Frontend Transport; Wed, 20 Nov 2019 07:14:04 +0000
+X-Mailer: git-send-email 1.8.3.1
+X-Originating-IP: [13.77.154.182]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 451143ff-78f0-4401-d96f-08d76d893a84
+X-MS-TrafficTypeDiagnostic: BN8PR21MB1251:|BN8PR21MB1251:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BN8PR21MB1251749AB264DB134FBC633EBF4F0@BN8PR21MB1251.namprd21.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-Forefront-PRVS: 02272225C5
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(376002)(346002)(396003)(136003)(39860400002)(366004)(199004)(189003)(10090500001)(36756003)(8936002)(50226002)(81166006)(81156014)(8676002)(14444005)(6436002)(6486002)(1511001)(86362001)(7736002)(2906002)(5660300002)(478600001)(10290500003)(966005)(4720700003)(6636002)(3846002)(6116002)(25786009)(3450700001)(66946007)(66556008)(66476007)(305945005)(316002)(386003)(6666004)(4326008)(6506007)(22452003)(26005)(16586007)(186003)(16526019)(107886003)(51416003)(52116002)(66066001)(48376002)(47776003)(50466002)(43066004)(956004)(2616005)(476003)(486006)(6512007)(6306002)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR21MB1251;H:BN8PR21MB1137.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: bhK2dSNKGGYPc6e53IRI99ioTy/zaMDzStkmpjIVmnRE3Ps+SZTe08LZByFbdtGm0/bdp4AXKku1vCxfQTzBpiSFFZxfA7RBdFNVgWqpw2F7hr6K834Xcl79Dddprx+8ksawTlipejcd0j3hfHD5I4wW0w2dBTK+TxiPnnZGM9mtWg9AQ1n2687CuLm5pQYkRciWQoRWRCkkuSlMhYHwKiPV63dRi4BCKSQmEeJv3wlPsiqXLdKjJGDyqYA4d9Dd0aj9DJ0qqU3Jfe7uHdXCU7YVXtKZLgSHx+naznXUXOPHWvzm9ZvKUf8WrXhwyur63hZMUjWjDIWhy4cvMx+MmKicW0yqBXcziM7+OGV6H4RpYoe85KALfkavJzp6kRhcjl5FGMReHNpaK2tqbVsq56s1zJPzJEioJRxnVFQ37DuoKLPTRPOkYAuw5M9wEDkwSOJ6M1ZdE3gnHk2Vch02holbzrUORAnzNDiseNtNVLQ=
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 451143ff-78f0-4401-d96f-08d76d893a84
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Nov 2019 07:14:05.8958
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: cef0C17Jcp7ONq0+MijjLeilYGW4g0sAQ3fdpHiBR3Tfhiw/pJ+d54nH+yTOe5/0CsvYuNkAz/u0bK7cGLBfsw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR21MB1251
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for creating device links out of more DT properties.
+fb_deferred_io_work() can access the vmbus ringbuffer by calling
+fbdefio->deferred_io() -> synthvid_deferred_io() -> synthvid_update().
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vinod Koul <vkoul@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Saravana Kannan <saravanak@google.com>
+Because the vmbus ringbuffer is inaccessible between hvfb_suspend()
+and hvfb_resume(), we must cancel info->deferred_work before calling
+vmbus_close() and then reschedule it after we reopen the channel
+in hvfb_resume().
+
+Fixes: a4ddb11d297e ("video: hyperv: hyperv_fb: Support deferred IO for Hyper-V frame buffer driver")
+Fixes: 824946a8b6fb ("video: hyperv_fb: Add the support of hibernation")
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
 ---
- drivers/of/property.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/of/property.c b/drivers/of/property.c
-index 0fa04692e3cc..dedbf82da838 100644
---- a/drivers/of/property.c
-+++ b/drivers/of/property.c
-@@ -1188,7 +1188,11 @@ DEFINE_SIMPLE_PROP(interconnects, "interconnects", "#interconnect-cells")
- DEFINE_SIMPLE_PROP(iommus, "iommus", "#iommu-cells")
- DEFINE_SIMPLE_PROP(mboxes, "mboxes", "#mbox-cells")
- DEFINE_SIMPLE_PROP(io_channels, "io-channel", "#io-channel-cells")
-+DEFINE_SIMPLE_PROP(interrupt_parent, "interrupt-parent", NULL)
-+DEFINE_SIMPLE_PROP(dmas, "dmas", "#dma-cells")
- DEFINE_SUFFIX_PROP(regulators, "-supply", NULL)
-+DEFINE_SUFFIX_PROP(gpio, "-gpio", "#gpio-cells")
-+DEFINE_SUFFIX_PROP(gpios, "-gpios", "#gpio-cells")
+This patch fixes the 2 aforementioned patches on Sasha Levin's Hyper-V tree's
+hyperv-next branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git/log/?h=hyperv-next
+
+The 2 aforementioned patches have not appeared in the mainline yet, so
+please pick up this patch onto he same hyperv-next branch.
+
+ drivers/video/fbdev/hyperv_fb.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/video/fbdev/hyperv_fb.c b/drivers/video/fbdev/hyperv_fb.c
+index 4cd27e5172a1..08bc0dfb5ce7 100644
+--- a/drivers/video/fbdev/hyperv_fb.c
++++ b/drivers/video/fbdev/hyperv_fb.c
+@@ -1194,6 +1194,7 @@ static int hvfb_suspend(struct hv_device *hdev)
+ 	fb_set_suspend(info, 1);
  
- static const struct supplier_bindings of_supplier_bindings[] = {
- 	{ .parse_prop = parse_clocks, },
-@@ -1196,7 +1200,11 @@ static const struct supplier_bindings of_supplier_bindings[] = {
- 	{ .parse_prop = parse_iommus, },
- 	{ .parse_prop = parse_mboxes, },
- 	{ .parse_prop = parse_io_channels, },
-+	{ .parse_prop = parse_interrupt_parent, },
-+	{ .parse_prop = parse_dmas, },
- 	{ .parse_prop = parse_regulators, },
-+	{ .parse_prop = parse_gpio, },
-+	{ .parse_prop = parse_gpios, },
- 	{}
- };
+ 	cancel_delayed_work_sync(&par->dwork);
++	cancel_delayed_work_sync(&info->deferred_work);
  
+ 	par->update_saved = par->update;
+ 	par->update = false;
+@@ -1227,6 +1228,7 @@ static int hvfb_resume(struct hv_device *hdev)
+ 	par->fb_ready = true;
+ 	par->update = par->update_saved;
+ 
++	schedule_delayed_work(&info->deferred_work, info->fbdefio->delay);
+ 	schedule_delayed_work(&par->dwork, HVFB_UPDATE_DELAY);
+ 
+ 	/* 0 means do resume */
 -- 
-2.24.0.432.g9d3f5f5b63-goog
+2.19.1
 
