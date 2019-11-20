@@ -2,101 +2,88 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE8C9C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:23:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4149C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:24:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA5932243F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:23:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BE222243F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:24:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="VHGB9cNm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729153AbfKTLXF (ORCPT
+        id S1729165AbfKTLYR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 06:23:05 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:56398 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728376AbfKTLXF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 06:23:05 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iXO4N-0005RU-Kd; Wed, 20 Nov 2019 12:22:47 +0100
-Date:   Wed, 20 Nov 2019 12:22:46 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Chen Yu <yu.c.chen@intel.com>
-cc:     x86@kernel.org, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chen Yu <yu.chen.surf@gmail.com>
-Subject: Re: [PATCH][v3] x86/resctrl: Add task resctrl information display
-In-Reply-To: <20191120081628.26701-1-yu.c.chen@intel.com>
-Message-ID: <alpine.DEB.2.21.1911201055260.6731@nanos.tec.linutronix.de>
-References: <20191120081628.26701-1-yu.c.chen@intel.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 20 Nov 2019 06:24:17 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:60142 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728376AbfKTLYR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 06:24:17 -0500
+Received: from zn.tnic (p200300EC2F0D8C008093FCEEEFCF892F.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:8c00:8093:fcee:efcf:892f])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4066A1EC0CDD;
+        Wed, 20 Nov 2019 12:24:15 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1574249055;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=XrrdFhCCBXRxT3LV1xr012UV8zCjBvEuijRbqOYas5I=;
+        b=VHGB9cNmT/6J09kzNEa5Lcf9zfAdImGMXiGS1yaEWBaOLpugcAYB4L3jMu2rj7OAz6BvNx
+        KgSKYLHO2MStMUpABw3wp3MHgUhKJJ98Gye0Nv2dy5hmHyALDxnWcXUUQQB2o73hHqI7Rq
+        +zGlI19Oyq5X+N59aCXrAra6nEzIDvw=
+Date:   Wed, 20 Nov 2019 12:24:08 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Jann Horn <jannh@google.com>, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>, kasan-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH v3 2/4] x86/traps: Print non-canonical address on #GP
+Message-ID: <20191120112408.GC2634@zn.tnic>
+References: <20191120103613.63563-1-jannh@google.com>
+ <20191120103613.63563-2-jannh@google.com>
+ <20191120111859.GA115930@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191120111859.GA115930@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 20 Nov 2019, Chen Yu wrote:
-> Monitoring tools that want to find out which resctrl CTRL
-> and MONITOR groups a task belongs to must currently read
-> the "tasks" file in every group until they locate the process
-> ID.
-> 
-> Add an additional file /proc/{pid}/resctrl to provide this
-> information.
-> 
-> For example:
->  cat /proc/1193/resctrl
-> CTRL_MON:/ctrl_grp0
-> MON:/ctrl_grp0/mon_groups/mon_grp0
+On Wed, Nov 20, 2019 at 12:18:59PM +0100, Ingo Molnar wrote:
+> How was this maximum string length of '90' derived? In what way will
+> that have to change if someone changes the message?
 
-The formatting is quite ugly and I don't see why this needs to be multiple
-lines and have these uppercase prefixes.
+That was me counting the string length in a dirty patch in a previous
+thread. We probably should say why we decided for a certain length and
+maybe have a define for it.
 
-A task can only be part of one control group and of one monitoring group
-which is associated to the control group. So just providing:
+Also, I could use your opinion on this here:
 
- 1)   ""
- 2)   "/"
- 3)   "/mon_groups/mon0"
- 4)   "/group0"
- 5)   "/group0/mon_groups/mon1"
+https://lkml.kernel.org/r/20191118164407.GH6363@zn.tnic
 
-is simple and clear enough, i.e.:
+and the following mail.
 
-#1: Resctrl is not available
+I think that marking the splat with its number would *immensely* help us
+with the question: was this the first splat or wasn't? A question we've
+been asking since I got involved in kernel development. :)
 
-#2: Task is part of the root group, task not associated to any monitoring
-    group
+-- 
+Regards/Gruss,
+    Boris.
 
-#3: Task is part of the root group and monitoring group mon0
-
-#4: Task is part of control group group0, task not associated to any
-    monitoring group
-
-#5: Task is part of control group group0 and monitoring group mon1
-
-Hmm?
-
-Thanks,
-
-	tglx
+https://people.kernel.org/tglx/notes-about-netiquette
