@@ -2,155 +2,110 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C43CC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:30:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE324C43215
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:31:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA37E22440
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:30:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A82FA22445
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 10:31:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="PiUFPV/9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="ViJfASR7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728688AbfKTKa6 (ORCPT
+        id S1728701AbfKTKbF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 05:30:58 -0500
-Received: from mail-eopbgr00059.outbound.protection.outlook.com ([40.107.0.59]:17634
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726001AbfKTKa5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 05:30:57 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UIeXgTOQNem+OBQAgUs63R6yMLhylpV6u061aHdXDd1p6jqaPE8rIGPzczgeF4zFB2bpYfXiz24nYWr1opuRZIyVYi/gQV9kPfR/fhbmbD1YjvRxTUeuwvv+FYkaXulnMGbq00wgIIHSCd2sUfCap41aZiQHRRPWWwDzsfjUJTflKfx7Pf8LM/Wz/9aIMIU6UK/Ttva7LD2tIXAAN/9Iq2TCa3JI5O/KA1dmkNWz+I7CD+WqwCpSVwcMmAzl+H1HQqURRq+p4JB+Kcp4mcHW5DRlKyk7hoKAmfodau7coBigZF7hahIVrkDvl5KUeW7NOqU0zXCeHQktlyXq4vB95w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FNb3nptkLxaCouVWOqqHRhMTjj4gy6DnWYjpMfmy4zU=;
- b=B4RlNxCnBP230H02uXTRRQE2hRFWQxN6LZqtd+0cK/O1HI4q3KfgvUV9Z4QRPlImOZEn0PCLgYmOpXlywIobgo2jtdyIqJeSKY5NMPBKIu46pfaQQojGxed9/NIbIcb1PD6q6/813iorst9UIStdMY9qKoZohdrPFGmqRyzgn//heMKbvp6Bscr3Ep7g7GSAbaqHDo/mDmnRYhxQQ+hz82UA5/uonlk85lMOWC1RoS+J+jKLMr6HskiVstabHvkEPwZmFsxMzi+qo9I216d1Rb/U8vqDpIlDapAVJM91bB5UaSZWumpU64ythgg2lhfYCHKFY9/zwsn5PchmhBD3QQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FNb3nptkLxaCouVWOqqHRhMTjj4gy6DnWYjpMfmy4zU=;
- b=PiUFPV/908XN2U6gpewQhj95STCoNhvzvwlyY6fS8n3sBtpQzG8s53dJHQa6k47D8MDFCgmty+7NssxN1KcdbTMe3GxBJleRR5VDqQoKeZ8EHIkSpBEqsfKQbBrDmeVtdy3hmGk/A/EWGutaLmvZvGUKo6x3P8mL5wYd9pZ75CU=
-Received: from DB8PR04MB6747.eurprd04.prod.outlook.com (20.179.250.159) by
- DB8PR04MB6683.eurprd04.prod.outlook.com (20.179.251.218) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2451.26; Wed, 20 Nov 2019 10:30:51 +0000
-Received: from DB8PR04MB6747.eurprd04.prod.outlook.com
- ([fe80::898f:3cd6:c225:7219]) by DB8PR04MB6747.eurprd04.prod.outlook.com
- ([fe80::898f:3cd6:c225:7219%7]) with mapi id 15.20.2451.031; Wed, 20 Nov 2019
- 10:30:51 +0000
-From:   "Z.q. Hou" <zhiqiang.hou@nxp.com>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Wed, 20 Nov 2019 05:31:05 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:38284 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726001AbfKTKbE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 05:31:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=LsRowSxwyb15GuNAkr+jjh5/r3yRoAAJmRPZPsLbvoY=; b=ViJfASR7OcAf6ixia3VgOPxIk
+        hvySo1WkwlUuT27qm6nFMI6fzxSelUrGXMLjHSrID/GUTluLB3Tv0XPV/3fzgrJKN8rIuCe1GcAH6
+        Cg2SZj8e19kNJjYJ27/ZPyHG9KRZe5jzZZ8s3QRVSU+q73qIGKPzfPHraNdrnlbpp1KcgrLr9yhsV
+        3VFChq6lpJzdf3VMmqwpdZs0ec4ASXEBb8HHopHXid5lm/WxFbfSpCED6rYzQgmiF0KoNxUNcX9S8
+        S20+sPKHhNGl83HXAA47LEMcyFFA+UzqRFi108rKRpUmblZBY38P5sPdi2JvIuBypmDCwMNL9rvRO
+        0epohK0uQ==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:58714)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1iXNGB-0007ii-AN; Wed, 20 Nov 2019 10:30:55 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1iXNGA-0001eI-3c; Wed, 20 Nov 2019 10:30:54 +0000
+Date:   Wed, 20 Nov 2019 10:30:54 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Laura Abbott <labbott@redhat.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
-        Leo Li <leoyang.li@nxp.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "andrew.murray@arm.com" <andrew.murray@arm.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>
-Subject: RE: [PATCHv9 00/12] PCI: Recode Mobiveil driver and add PCIe Gen4
- driver for NXP Layerscape SoCs
-Thread-Topic: [PATCHv9 00/12] PCI: Recode Mobiveil driver and add PCIe Gen4
- driver for NXP Layerscape SoCs
-Thread-Index: AQHVn1Tsfp+9ZVhNFU2th1+s/za9waeT0yyAgAAHlJA=
-Date:   Wed, 20 Nov 2019 10:30:50 +0000
-Message-ID: <DB8PR04MB67476281607788CD20B292D8844F0@DB8PR04MB6747.eurprd04.prod.outlook.com>
-References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com>
- <20191120095729.GJ25745@shell.armlinux.org.uk>
-In-Reply-To: <20191120095729.GJ25745@shell.armlinux.org.uk>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=zhiqiang.hou@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 8bf40b61-2a06-46be-9437-08d76da4b71a
-x-ms-traffictypediagnostic: DB8PR04MB6683:|DB8PR04MB6683:
-x-ms-exchange-purlcount: 1
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB8PR04MB668315F9C1B584C7EE750920844F0@DB8PR04MB6683.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 02272225C5
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(6029001)(4636009)(39860400002)(366004)(346002)(396003)(136003)(376002)(189003)(199004)(13464003)(316002)(99286004)(66066001)(54906003)(7736002)(478600001)(6246003)(305945005)(74316002)(26005)(186003)(55016002)(6306002)(9686003)(486006)(25786009)(476003)(86362001)(81156014)(81166006)(11346002)(446003)(4326008)(45080400002)(33656002)(7416002)(8936002)(8676002)(229853002)(66946007)(2906002)(966005)(52536014)(76116006)(14454004)(3846002)(256004)(6116002)(66476007)(66556008)(66446008)(64756008)(6916009)(5660300002)(6506007)(53546011)(102836004)(6436002)(71200400001)(71190400001)(76176011)(7696005);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB6683;H:DB8PR04MB6747.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: cFRUXBi5vX85b+PdBiKhU9t+EJmHyOR192z4FcjY5YpgwOy1zSsSQZ48lTxUeoB0HAT3MqvpJes5uRj4ZzFdB/QfTRfCXjkRhkniuDhgJcn+6EYsRQ61aPxKEw/PWRmXaLO/oXvX1cwLYCVmIp74ViZXgZRlco8yKzF/V8+8XEedVSb2+WApfMq3OT0sOWECftSlc2YNrSIoxjU6ld6bR7ulejWABhpzWFv52+yIn1WNcRN2/dRGJqvxzGoxZlGU0o1jfU/QcN1ChOqV630SCP9QtgQiPiKMvU8q4nQZgsD3OcBaDcuVSro/2jaVGmEUrvSEmsjIhHD1IWEO01V3EnQCmW5W5nUx6mWCJVpRAzuvcNK0Ly61BpMBM3OuXoFhER+eUW9U9U35XNhZcblgVNe/k97z0B95Pz7VuXCh0hhbnprTRpZloFnz7R2T8V/B
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
+        Lennert Buytenhek <kernel@wantstofly.org>
+Subject: Re: [PATCH] watchdog: Remove iop_wdt
+Message-ID: <20191120103054.GM25745@shell.armlinux.org.uk>
+References: <20191118220432.1611-1-labbott@redhat.com>
+ <29e94219-22ca-c873-7209-64d1c357fe5c@roeck-us.net>
+ <CAK8P3a0=3J3WHTKU7sPvd37VEwg3wOuZ5S2-xXtNYEcSQhWyHw@mail.gmail.com>
+ <4f283ab6-0f3c-60e9-cfd1-29d10d978986@roeck-us.net>
+ <20191120100341.GK25745@shell.armlinux.org.uk>
+ <CAK8P3a2N+aDgFz75dFJy3Me9FPdyDSyPaa29FngLjfXX3MzfvA@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8bf40b61-2a06-46be-9437-08d76da4b71a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Nov 2019 10:30:50.8572
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: KYJlsi7YyT28TZxPHGtatAmjbnZew0l8U2Ycp7pk6Mi/V6OKurCgD8te1VS57BC7W0VsvZpwPBrqNt0qZzeF2Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6683
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a2N+aDgFz75dFJy3Me9FPdyDSyPaa29FngLjfXX3MzfvA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgUnVzc2VsbCwNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBSdXNz
-ZWxsIEtpbmcgLSBBUk0gTGludXggYWRtaW4gPGxpbnV4QGFybWxpbnV4Lm9yZy51az4NCj4gU2Vu
-dDogMjAxOcTqMTHUwjIwyNUgMTc6NTcNCj4gVG86IFoucS4gSG91IDx6aGlxaWFuZy5ob3VAbnhw
-LmNvbT4NCj4gQ2M6IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxA
-bGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4
-LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+IGJoZWxnYWFzQGdvb2dsZS5jb207IHJvYmgrZHRA
-a2VybmVsLm9yZzsgYXJuZEBhcm5kYi5kZTsNCj4gbWFyay5ydXRsYW5kQGFybS5jb207IGwuc3Vi
-cmFobWFueWFAbW9iaXZlaWwuY28uaW47DQo+IHNoYXduZ3VvQGtlcm5lbC5vcmc7IG0ua2FydGhp
-a2V5YW5AbW9iaXZlaWwuY28uaW47IExlbyBMaQ0KPiA8bGVveWFuZy5saUBueHAuY29tPjsgbG9y
-ZW56by5waWVyYWxpc2lAYXJtLmNvbTsNCj4gY2F0YWxpbi5tYXJpbmFzQGFybS5jb207IHdpbGwu
-ZGVhY29uQGFybS5jb207DQo+IGFuZHJldy5tdXJyYXlAYXJtLmNvbTsgTS5oLiBMaWFuIDxtaW5n
-aHVhbi5saWFuQG54cC5jb20+OyBYaWFvd2VpDQo+IEJhbyA8eGlhb3dlaS5iYW9AbnhwLmNvbT47
-IE1pbmdrYWkgSHUgPG1pbmdrYWkuaHVAbnhwLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSHY5
-IDAwLzEyXSBQQ0k6IFJlY29kZSBNb2JpdmVpbCBkcml2ZXIgYW5kIGFkZCBQQ0llIEdlbjQNCj4g
-ZHJpdmVyIGZvciBOWFAgTGF5ZXJzY2FwZSBTb0NzDQo+IA0KPiBPbiBXZWQsIE5vdiAyMCwgMjAx
-OSBhdCAwMzo0NToxN0FNICswMDAwLCBaLnEuIEhvdSB3cm90ZToNCj4gPiBGcm9tOiBIb3UgWmhp
-cWlhbmcgPFpoaXFpYW5nLkhvdUBueHAuY29tPg0KPiA+DQo+ID4gVGhpcyBwYXRjaCBzZXQgaXMg
-dG8gcmVjb2RlIHRoZSBNb2JpdmVpbCBkcml2ZXIgYW5kIGFkZCBQQ0llIHN1cHBvcnQNCj4gPiBm
-b3IgTlhQIExheWVyc2NhcGUgc2VyaWVzIFNvQ3MgaW50ZWdyYXRlZCBNb2JpdmVpbCdzIFBDSWUg
-R2VuNA0KPiA+IGNvbnRyb2xsZXIuDQo+IA0KPiBIb3cgbWFueSBQQ0llIGNhcmRzIGhhdmUgYmVl
-biB0ZXN0ZWQgdG8gd29yay9kb24ndCB3b3JrIHdpdGggdGhpcz8NCj4gDQo+IEkgbmVlZDoNCj4g
-DQo+IFBDSTogbW9iaXZlaWw6IGxzX3BjaWVfZzQ6IGZpeCBTRXJyb3Igd2hlbiBhY2Nlc3Npbmcg
-Y29uZmlnIHNwYWNlDQo+IFBDSTogbW9iaXZlaWw6IGxzX3BjaWVfZzQ6IGFkZCBXb3JrYXJvdW5k
-IGZvciBBLTAxMTQ1MQ0KPiBQQ0k6IG1vYml2ZWlsOiBsc19wY2llX2c0OiBhZGQgV29ya2Fyb3Vu
-ZCBmb3IgQS0wMTE1NzcNCj4gDQo+IHRvIHN1Y2Nlc3NmdWxseSBib290IHdpdGggYSBNZWxsYW5v
-eCBjYXJkIHBsdWdnZWQgaW4gd2l0aCBhIHByZXZpb3VzIHJldmlzaW9uDQo+IG9mIHRoZXNlIHBh
-dGNoZXMuDQo+DQoNClllcywgd2UgbmVlZCB0byBhcHBseSB0aGVzZSBOWFAgaW50ZXJuYWwgbWFp
-bnRhaW5lZCB3b3JrYXJvdW5kcyBvbiB0b3Agb2YNCnRoaXMgc2VyaWVzLiBJIG9ubHkgdGVzdGVk
-IEludGVsIGUxMDAwZSBOSUMgd2l0aCB0aGlzIHBhdGNoIHNldCArIHRoZXNlIDMNCndvcmthcm91
-bmRzLg0KDQpUaGFua3MsDQpaaGlxaWFuZw0KIA0KPiAtLQ0KPiBSTUsncyBQYXRjaCBzeXN0ZW06
-DQo+IGh0dHBzOi8vZXVyMDEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20vP3VybD1o
-dHRwcyUzQSUyRiUyRnd3dw0KPiAuYXJtbGludXgub3JnLnVrJTJGZGV2ZWxvcGVyJTJGcGF0Y2hl
-cyUyRiZhbXA7ZGF0YT0wMiU3QzAxJTdDemhpcQ0KPiBpYW5nLmhvdSU0MG54cC5jb20lN0M2OWY2
-ZmIxZjRmZDQ0ZjNmY2EzODA4ZDc2ZGEwMTQ0MCU3QzY4NmVhMWQNCj4gM2JjMmI0YzZmYTkyY2Q5
-OWM1YzMwMTYzNSU3QzAlN0MwJTdDNjM3MDk4NDA2NjA2NTAzMzYxJmFtcDtzZA0KPiBhdGE9d09M
-V3pLZlpab2lQJTJGWnBUT3c1enI0ZW5wdU5JbXo0NVJNOEh5ODBhVWRJJTNEJmFtcDtyZXMNCj4g
-ZXJ2ZWQ9MA0KPiBGVFRDIGJyb2FkYmFuZCBmb3IgMC44bWlsZSBsaW5lIGluIHN1YnVyYmlhOiBz
-eW5jIGF0IDEyLjFNYnBzIGRvd24gNjIya2Jwcw0KPiB1cCBBY2NvcmRpbmcgdG8gc3BlZWR0ZXN0
-Lm5ldDogMTEuOU1icHMgZG93biA1MDBrYnBzIHVwDQo=
+On Wed, Nov 20, 2019 at 11:15:01AM +0100, Arnd Bergmann wrote:
+> On Wed, Nov 20, 2019 at 11:03 AM Russell King - ARM Linux admin
+> <linux@armlinux.org.uk> wrote:
+> > On Tue, Nov 19, 2019 at 06:29:09AM -0800, Guenter Roeck wrote:
+> > > On 11/19/19 1:40 AM, Arnd Bergmann wrote:
+> > > > On Tue, Nov 19, 2019 at 3:08 AM Guenter Roeck <linux@roeck-us.net> wrote:
+> > > > > On 11/18/19 2:04 PM, Laura Abbott wrote:
+> > >
+> > > Good point, especially since apparently no one cared for five years.
+> >
+> > Doesn't mean that there aren't interested parties.  I still have
+> > IOP32x hardware running here in the form of a N2100 (my firewall)
+> > and it seems that I never noticed this option disappearing until
+> > now...
+> 
+> It's not that it was ever there for IOP32x: the driver was introduced in 2007
+> and was available for IOP32x but failed to compile for it until 2014 when
+> I sent the patch to disable the driver in all configurations that
+> failed to build.
+
+Well:
+
+systems/n2100/boot/config-3.11.5+:CONFIG_IOP_WATCHDOG=m
+systems/n2100/boot/config-3.12.6+:CONFIG_IOP_WATCHDOG=m
+systems/n2100/boot/config-3.9.5+:CONFIG_IOP_WATCHDOG=m
+
+-rw-rw-r-- 1 rmk rmk 5284 Dec 30  2013 systems/n2100/lib/modules/3.12.6+/kernel/drivers/watchdog/iop_wdt.ko
+-rw-rw-r-- 1 rmk rmk 5276 Dec 20  2013 systems/n2100/lib/modules/3.9.5+/kernel/drivers/watchdog/iop_wdt.ko
+
+It seems I've been carrying a patch to comment out the troublesome code:
+
+-       write_wdtsr(IOP13XX_WDTCR_IB_RESET);
++//     write_wdtsr(IOP13XX_WDTCR_IB_RESET);
+
+in my stable tree since 2015.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
