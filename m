@@ -2,118 +2,137 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39BF0C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 16:41:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88EC3C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 16:42:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1435E2088F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 16:41:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E9732088F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 16:42:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="GN0/nFYD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732843AbfKTQlm (ORCPT
+        id S1732857AbfKTQmB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 11:41:42 -0500
-Received: from protonic.xs4all.nl ([83.163.252.89]:34198 "EHLO protonic.nl"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729448AbfKTQll (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 11:41:41 -0500
-X-Greylist: delayed 538 seconds by postgrey-1.27 at vger.kernel.org; Wed, 20 Nov 2019 11:41:40 EST
-Received: from webmail.promanet.nl (edge2.prtnl [192.168.1.170])
-        by sparta (Postfix) with ESMTP id B38DC44A0065;
-        Wed, 20 Nov 2019 17:34:53 +0100 (CET)
+        Wed, 20 Nov 2019 11:42:01 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:38050 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732847AbfKTQmB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 11:42:01 -0500
+Received: by mail-wm1-f68.google.com with SMTP id z19so323224wmk.3
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 08:41:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DoBrdkQjnM2M/sNIIdwf16laThZkuQKlh8PPcfsQfYM=;
+        b=GN0/nFYDPFzOUrHsl9BbUvlxMEQgUTa5wU0hEQG8hzQRTEesfxWZBj4Q/qj3QnsV4K
+         AjN2mkwABi+vsodfnJLOTctxxyuhkQ55UuAtU8xswqrCnp7gxOrM8XDS6g1oeux1y2AZ
+         q8O3Fd5bQRf9OxPkeDbthgLX0cnVMUMd6NecI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=DoBrdkQjnM2M/sNIIdwf16laThZkuQKlh8PPcfsQfYM=;
+        b=dM5dcET5+3/U7tYEh46VKaBKKGk7an1tHijQwG6dSVHojTUl/YOLKMQZ0A1jTHCGE6
+         26eEhtjNUfm+YJxoq5aN2kpboUN/aHL8jdDeIYZD9cmuxWQrM0kQjAkkl+DzvcouDiFP
+         MJp7stIJU1oqLpwvZtEGSuEh7DsGt2l5UW9aIjzjG5Kr+O1cB7+oPnB5e8HF5eVX/ojl
+         MDwqhMhtAUlAp2U7bBmkH6Vaep3OF6+Pf4P9YAtnw2bMl6VBmZmqETG0C/WSCUY/eSzl
+         DZuh+WbRsrbhlZzOnkj0rtA3XhmfSpUctgyqnJuW/+Z48xetS91AyiSEYOnBqwmZONGF
+         qsOg==
+X-Gm-Message-State: APjAAAXtnUUdwZ4+AiXfex9izGomN8fQppxI0SLbDjdC2nhGAXzuudj/
+        aDklIOEfz8CIW9fjy3XEumVjpw==
+X-Google-Smtp-Source: APXvYqxcp61Ouq7qqx6fMqpJbU5o8VCWsZA5gd0+Tv52/4/6QtREkNjADbOEaEE5seygIX0OYcGmYw==
+X-Received: by 2002:a1c:cc01:: with SMTP id h1mr4269171wmb.172.1574268118420;
+        Wed, 20 Nov 2019 08:41:58 -0800 (PST)
+Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
+        by smtp.gmail.com with ESMTPSA id j2sm32071445wrt.61.2019.11.20.08.41.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Nov 2019 08:41:57 -0800 (PST)
+Date:   Wed, 20 Nov 2019 17:41:55 +0100
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH] staging: fbtft: Fix Kconfig indentation
+Message-ID: <20191120164155.GR30416@phenom.ffwll.local>
+Mail-Followup-To: Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org
+References: <20191120133911.13539-1-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 20 Nov 2019 17:32:38 +0100
-From:   robin <robin@protonic.nl>
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Robin Gong <yibin.gong@nxp.com>,
-        "linux-input @ vger . kernel . org" <linux-input@vger.kernel.org>,
-        "linux-kernel @ vger . kernel . org" <linux-kernel@vger.kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Adam Ford <aford173@gmail.com>,
-        "linux-arm-kernel @ lists . infradead . org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v3] input: keyboard: snvs_pwrkey: Send key events for
- i.MX6 S, DL and Q
-In-Reply-To: <20191120092749.7rru5fj7eybs4tl6@pengutronix.de>
-References: <20190904062329.97520-1-robin@protonic.nl>
- <20190912201300.GA636@penguin>
- <803592d161b9ca75d6ac1c2c54e891a1@protonic.nl>
- <VE1PR04MB663896B94C68B5EF9AE0BE36898C0@VE1PR04MB6638.eurprd04.prod.outlook.com>
- <20190916233701.GH237523@dtor-ws>
- <20191120092749.7rru5fj7eybs4tl6@pengutronix.de>
-Message-ID: <fb98fa1fde9a367d7ab33d04a5804684@protonic.nl>
-X-Sender: robin@protonic.nl
-User-Agent: Roundcube Webmail/1.3.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191120133911.13539-1-krzk@kernel.org>
+X-Operating-System: Linux phenom 5.2.0-3-amd64 
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-11-20 10:27, Marco Felsch wrote:
-> Hi Robin,
+On Wed, Nov 20, 2019 at 09:39:11PM +0800, Krzysztof Kozlowski wrote:
+> Adjust indentation from spaces to tab (+optional two spaces) as in
+> coding style with command like:
+> 	$ sed -e 's/^        /\t/' -i */Kconfig
 > 
-> On 19-09-16 16:37, Dmitry Torokhov wrote:
->> On Mon, Sep 16, 2019 at 07:45:37AM +0000, Robin Gong wrote:
->> > On 2019/9/13 15:31 robin <robin@protonic.nl> wrote:>
->> > > Hi Dmitry,
->> > >
->> > > On 2019-09-12 22:13, Dmitry Torokhov wrote:
->> > > > Hi Robin,
->> > > >
->> > > > On Wed, Sep 04, 2019 at 06:23:29AM +0000, Robin van der Gracht wrote:
->> > > >> The first generation i.MX6 processors does not send an interrupt when
->> > > >> the power key is pressed. It sends a power down request interrupt if
->> > > >> the key is released before a hard shutdown (5 second press). This
->> > > >> should allow software to bring down the SoC safely.
->> > > >>
->> > > >> For this driver to work as a regular power key with the older SoCs,
->> > > >> we need to send a keypress AND release when we get the power down
->> > > >> request irq.
->> > > >>
->> > > >> Signed-off-by: Robin van der Gracht <robin@protonic.nl>
->> > > >> ---
->> > > >> @@ -67,13 +83,17 @@ static irqreturn_t imx_snvs_pwrkey_interrupt(int
->> > > >> irq, void *dev_id)  {
->> > > >>  	struct platform_device *pdev = dev_id;
->> > > >>  	struct pwrkey_drv_data *pdata = platform_get_drvdata(pdev);
->> > > >> +	unsigned long expire = jiffies;
->> > > >>  	u32 lp_status;
->> > > >>
->> > > >>  	pm_wakeup_event(pdata->input->dev.parent, 0);
->> > > >>
->> > > >>  	regmap_read(pdata->snvs, SNVS_LPSR_REG, &lp_status);
->> > > >> -	if (lp_status & SNVS_LPSR_SPO)
->> > > >> -		mod_timer(&pdata->check_timer, jiffies +
->> > > >> msecs_to_jiffies(DEBOUNCE_TIME));
->> > > >> +	if (lp_status & SNVS_LPSR_SPO) {
->> > > >> +		if (pdata->minor_rev > 0)
->> > > >> +			expire = jiffies + msecs_to_jiffies(DEBOUNCE_TIME);
->> > > >> +		mod_timer(&pdata->check_timer, expire);
->> > > >
->> > > > Why do we even need to fire the timer in case of the first generation
->> > > > hardware? Just send press and release events directly from the ISR.
->> > That timer looks like a software debounce to prevent unexpected and
->> > meaningless interrupt/event caused by quick press/release.
->> 
->> Right, but in case of the first generation hardware we schedule the
->> timer immediately (expire == 0) and do not check state of the hardware
->> in the timer handler, but rather simply emit down/up events, so we do
->> not really get any benefit from the timer (again, I am talking about
->> first generation hardware only).
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+
+Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+
+I expect Greg will pick this up.
+-Daniel
+
+> ---
+>  drivers/staging/fbtft/Kconfig | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
 > 
-> Did you prepared a v4? Just ask to avoid a duplicated work :)
+> diff --git a/drivers/staging/fbtft/Kconfig b/drivers/staging/fbtft/Kconfig
+> index d994aea84b21..19d9d88e9150 100644
+> --- a/drivers/staging/fbtft/Kconfig
+> +++ b/drivers/staging/fbtft/Kconfig
+> @@ -95,8 +95,8 @@ config FB_TFT_PCD8544
+>  	  Generic Framebuffer support for PCD8544
+>  
+>  config FB_TFT_RA8875
+> -        tristate "FB driver for the RA8875 LCD Controller"
+> -        depends on FB_TFT
+> +	tristate "FB driver for the RA8875 LCD Controller"
+> +	depends on FB_TFT
+>  	help
+>  	  Generic Framebuffer support for RA8875
+>  
+> @@ -132,10 +132,10 @@ config FB_TFT_SSD1289
+>  	  Framebuffer support for SSD1289
+>  
+>  config FB_TFT_SSD1305
+> -        tristate "FB driver for the SSD1305 OLED Controller"
+> -        depends on FB_TFT
+> -        help
+> -          Framebuffer support for SSD1305
+> +	tristate "FB driver for the SSD1305 OLED Controller"
+> +	depends on FB_TFT
+> +	help
+> +	  Framebuffer support for SSD1305
+>  
+>  config FB_TFT_SSD1306
+>  	tristate "FB driver for the SSD1306 OLED Controller"
+> -- 
+> 2.17.1
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
-No I haven't. Not sure what the public wants. Use timer, don't use 
-timer..
-
-v3 has had long term testing though ;)
-
-Regards,
-Robin van der Gracht
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
