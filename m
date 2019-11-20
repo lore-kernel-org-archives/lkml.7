@@ -2,189 +2,88 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02AD5C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:33:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 863ECC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:39:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAFBC21823
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:33:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AE8721906
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 11:39:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="WWmfwRyA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729240AbfKTLdD (ORCPT
+        id S1729262AbfKTLjA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 06:33:03 -0500
-Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:32820 "EHLO
-        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727900AbfKTLdC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 06:33:02 -0500
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 20 Nov 2019 17:03:00 +0530
-IronPort-SDR: H7IAH2QcpxkJu85EOZEfnWXQnzCR4zsjjE7TfiznoPfGGJjHn6qyIoRC+a0h5vQU7B4E6xFlG7
- onMY7tMs9zI0kq/x+CT30kq6UF1kQ3K93c81113BfvZjuPjrunRuX+2+p08Ds54Cv63YFLZ1uD
- GXQmt1l6OJBvs+shM8jIoj/f8/JC67ng9xH5pFNp+3/v1+kO3p5JTz+pIYGaBVuWbl+wHU585q
- s3v3QLmgKtoreObYBJb3IbDnnsgzHxJO8E3Gniq8pNsTwW5nLzO+i/YSs32ixm8Xb6DB0ToEDS
- DRENf4uqL1pzCN2x6pdOM4q2
-Received: from dhar-linux.qualcomm.com ([10.204.66.25])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 20 Nov 2019 17:02:36 +0530
-Received: by dhar-linux.qualcomm.com (Postfix, from userid 2306995)
-        id BA2113B25; Wed, 20 Nov 2019 17:02:34 +0530 (IST)
-From:   Shubhashree Dhar <dhar@codeaurora.org>
-To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc:     Shubhashree Dhar <dhar@codeaurora.org>,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        abhinavk@codeaurora.org, jsanka@codeaurora.org,
-        chandanu@codeaurora.org, nganji@codeaurora.org
-Subject: [PATCH] msm: disp: dpu1: add support to access hw irqs regs depending on revision
-Date:   Wed, 20 Nov 2019 17:02:31 +0530
-Message-Id: <1574249551-13212-1-git-send-email-dhar@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Wed, 20 Nov 2019 06:39:00 -0500
+Received: from mout.gmx.net ([212.227.15.15]:44181 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728184AbfKTLjA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 06:39:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1574249930;
+        bh=lqyqM/sKrmql+PwHb90YqnUSZovmLvHDKIXNfQX0XeU=;
+        h=X-UI-Sender-Class:To:From:Subject:Date;
+        b=WWmfwRyAjcV8ViIpjf/CrABvhxI6lIzVC28U0o3AQh0byXlqRqaouAupHjXf4tDpx
+         FNHnFk2d/kwDVW8Uai5hFSwGfHS27y5awF5KidbFTHo2nqJnMI3/QveXQzp32Ci2OO
+         Yq4roVRyiSLnlofCipjzRSdfhfsSSL/R+jlhG1gM=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.1.176] ([37.4.249.139]) by mail.gmx.com (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mz9Un-1hch4L3AFX-00wDIF; Wed, 20
+ Nov 2019 12:38:50 +0100
+To:     linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org
+From:   Stefan Wahren <wahrenst@gmx.net>
+Subject: BCM2835 maintainership
+Message-ID: <68580738-4ecf-3bb7-5720-6e5b6dafcfeb@gmx.net>
+Date:   Wed, 20 Nov 2019 12:38:50 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Provags-ID: V03:K1:NppHBscTU5hFATj15+QdozwTQz+xRqNmlaXDy40FziLle98rbmP
+ KIFr7e4mAKiQVE7zB4E3NiFBPguRs/7U7ORwGbL6Rr7RBD4CrBcQASbssUkQWFmHu1RuHpO
+ me23qknFZ0BVIRsPMnR0FH3qU1FRHRhTsjYJameCjwBiAJw7MNO/AITyzKcAuzobUyTdpvX
+ Cjls8R8+zM+gJSnZxU78w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:M+omUdPv3xY=:hhPaWjXE4xbat3U20/FSm4
+ iO1khFenmQgYrl/fnqeF5nh2XZcYcFofP/8BXl4uM6J1EUY7HaOXn9VV+rwpJLXAA2Iib52S5
+ eL4qPkKJflGhekCqxtM2gEAd9t8ymwrtL4oF1DWbOvSwQXnVqluR4xT2YU/58WkgmHcLt2Epu
+ xcuyF4BhlXGXy9oq0DGvz08PyT1J9aTHoGpIksNaz50z304/hnUo+FwAIBRxzb/Mn4yveznH3
+ ARkBX10atW1IigzBAOonG/aFJI3RSsnRAYO4/6t3/Gfkik8Fcw8E72z1Qk7slQQz+mYNzcwz3
+ zyeDBEzAI4j0NMq+ypM+4DVpC9864tSfmTxmTIFHqWZ+E2Gl3j4gp7HifBN2lq7tAzFBYf6YW
+ 2JoshHyBjUuYdvrUMcZPSp9FP4+vwlAiyXyrWZgB6GXDyf8rvfEljFEtO6MK8Pt0JccWUdRny
+ cK5+qS1FjW/MPX/lioI+LUdSVLSM/jVW50+PiGY/ilf4OWN5c/Uj2sNnhZR+nzdoqQdiyn5yj
+ MtOT955dvay3oLP6I4yLbbHrYOArf3ZvexeubYjYSBF4InnnYdp9TBceO3TLnbMwO29LJrSHm
+ pmiVid/xo7FYV+0gj+oB9mzVJAHILEf+3RE6iKxZe4NnExzJUzU9MnJ3+VDN/BUWYJKJe8+sK
+ hS+ZEe//98nUp/d77p4X5Z0oGOt5HCpv0MLpfvLj5WpVNdEe+1I62vHTDlqbuAEdHl79mH+uG
+ XICH7hC9V+v/YOXyh6wKwhBJyGR6E1Dx0Q9u/DaaduAUds94RPlL/g3d1jC6P947LFNvflKH1
+ nTPjZFq+axacpM7/+FmhTuA3bS/VdRrb2jsVOvbTL2hL2w+FYYCdIEM1qYyCTv/lyKl0GPRvR
+ 3OsGBGpwYFyHVSt+Cd3NEZC+OO4EWcKGJYlT/lai0jUEGNEgsD8+AzKiE42vDAjPgZj9IvU22
+ D36IaWBstdLM/UKAmRC7Ourif5v7Jwk9TWgemyVNw+z58xMIcXsqbH85Ab+8UOIe3ePgq+b87
+ u0OxX4fKAlg6eVmNfUBiz797VOzlD3Juj1+8hAcoL04aGhBiZbBNuLGVbhfLgqCGuIa6+lToX
+ e7bhApcjV+g/5lpiOJHyEzqRVVpL62jqIEdAmbV9UaA/l3YeMVERXUj7NMotjif1pXsk3Adwf
+ UhTa5vAYxeYu/3n6Lh9Kamb2uPs5+G7zT/FmeQwWedNSeunnt7Uzr5LRWr+Dcdeb7kjpU5Xst
+ nS5PDp/sgEfJp6VJ9mZxXtO5qDzQ7zYgls7GePax4so1pUG0auOKoBByhqzg=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Current code assumes that all the irqs registers offsets can be
-accessed in all the hw revisions; this is not the case for some
-targets that should not access some of the irq registers.
-This change adds the support to selectively remove the irqs that
-are not supported in some of the hw revisions.
+Hello,
 
-Changes in v1:
- - Add support to selectively remove the hw irqs that are not
-   not supported.
+i need to announce that i step back as BCM2835 maintainer with the end
+of this year. Maintainership was a fun ride, but at the end i noticed
+that it needed more time for doing it properly than my available spare time.
 
-Changes in v2:
- - Remove unrelated changes.
+Nicolas Saenz Julienne is pleased be my successor and i wish him all the
+best on his way.
 
-Changes in v3:
- - Remove change-id (Stephen Boyd).
- - Add colon in variable description to match kernel-doc (Stephen Boyd).
- - Change macro-y way of variable description (Jordon Crouse).
- - Remove unnecessary if checks (Jordon Crouse).
- - Remove extra blank line (Jordon Crouse).
+Finally i want to thank all the countless contributors and maintainers
+for helping to integrate the Raspberry Pi into the mainline Kernel.
 
-Changes in v4:
- - Remove checkpatch errors.
-
-Signed-off-by: Shubhashree Dhar <dhar@codeaurora.org>
----
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c    |  1 +
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h    |  3 +++
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.c | 22 ++++++++++++++++------
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.h |  1 +
- 4 files changed, 21 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
-index 04c8c44..88f2664 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
-@@ -421,6 +421,7 @@ static void sdm845_cfg_init(struct dpu_mdss_cfg *dpu_cfg)
- 		.reg_dma_count = 1,
- 		.dma_cfg = sdm845_regdma,
- 		.perf = sdm845_perf_data,
-+		.mdss_irqs = 0x3ff,
- 	};
- }
- 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
-index ec76b868..0fd3f50 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
-@@ -646,6 +646,7 @@ struct dpu_perf_cfg {
-  * @dma_formats        Supported formats for dma pipe
-  * @cursor_formats     Supported formats for cursor pipe
-  * @vig_formats        Supported formats for vig pipe
-+ * @mdss_irqs:         Bitmap with the irqs supported by the target
-  */
- struct dpu_mdss_cfg {
- 	u32 hwversion;
-@@ -684,6 +685,8 @@ struct dpu_mdss_cfg {
- 	struct dpu_format_extended *dma_formats;
- 	struct dpu_format_extended *cursor_formats;
- 	struct dpu_format_extended *vig_formats;
-+
-+	unsigned long mdss_irqs;
- };
- 
- struct dpu_mdss_hw_cfg_handler {
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.c
-index 8bfa7d0..d84a84f 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.c
-@@ -800,8 +800,8 @@ static void dpu_hw_intr_dispatch_irq(struct dpu_hw_intr *intr,
- 		start_idx = reg_idx * 32;
- 		end_idx = start_idx + 32;
- 
--		if (start_idx >= ARRAY_SIZE(dpu_irq_map) ||
--				end_idx > ARRAY_SIZE(dpu_irq_map))
-+		if (!test_bit(reg_idx, &intr->irq_mask) ||
-+			start_idx >= ARRAY_SIZE(dpu_irq_map))
- 			continue;
- 
- 		/*
-@@ -955,8 +955,11 @@ static int dpu_hw_intr_clear_irqs(struct dpu_hw_intr *intr)
- 	if (!intr)
- 		return -EINVAL;
- 
--	for (i = 0; i < ARRAY_SIZE(dpu_intr_set); i++)
--		DPU_REG_WRITE(&intr->hw, dpu_intr_set[i].clr_off, 0xffffffff);
-+	for (i = 0; i < ARRAY_SIZE(dpu_intr_set); i++) {
-+		if (test_bit(i, &intr->irq_mask))
-+			DPU_REG_WRITE(&intr->hw,
-+					dpu_intr_set[i].clr_off, 0xffffffff);
-+	}
- 
- 	/* ensure register writes go through */
- 	wmb();
-@@ -971,8 +974,11 @@ static int dpu_hw_intr_disable_irqs(struct dpu_hw_intr *intr)
- 	if (!intr)
- 		return -EINVAL;
- 
--	for (i = 0; i < ARRAY_SIZE(dpu_intr_set); i++)
--		DPU_REG_WRITE(&intr->hw, dpu_intr_set[i].en_off, 0x00000000);
-+	for (i = 0; i < ARRAY_SIZE(dpu_intr_set); i++) {
-+		if (test_bit(i, &intr->irq_mask))
-+			DPU_REG_WRITE(&intr->hw,
-+					dpu_intr_set[i].en_off, 0x00000000);
-+	}
- 
- 	/* ensure register writes go through */
- 	wmb();
-@@ -991,6 +997,9 @@ static void dpu_hw_intr_get_interrupt_statuses(struct dpu_hw_intr *intr)
- 
- 	spin_lock_irqsave(&intr->irq_lock, irq_flags);
- 	for (i = 0; i < ARRAY_SIZE(dpu_intr_set); i++) {
-+		if (!test_bit(i, &intr->irq_mask))
-+			continue;
-+
- 		/* Read interrupt status */
- 		intr->save_irq_status[i] = DPU_REG_READ(&intr->hw,
- 				dpu_intr_set[i].status_off);
-@@ -1115,6 +1124,7 @@ struct dpu_hw_intr *dpu_hw_intr_init(void __iomem *addr,
- 		return ERR_PTR(-ENOMEM);
- 	}
- 
-+	intr->irq_mask = m->mdss_irqs;
- 	spin_lock_init(&intr->irq_lock);
- 
- 	return intr;
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.h
-index 4edcf40..fc9c986 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_interrupts.h
-@@ -187,6 +187,7 @@ struct dpu_hw_intr {
- 	u32 *save_irq_status;
- 	u32 irq_idx_tbl_size;
- 	spinlock_t irq_lock;
-+	unsigned long irq_mask;
- };
- 
- /**
--- 
-1.9.1
+Regards
+Stefan
 
