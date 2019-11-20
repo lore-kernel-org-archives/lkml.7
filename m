@@ -2,103 +2,99 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38E85C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 01:12:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34E64C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 01:14:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE3BF2245D
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 01:12:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574212340;
-	bh=YVHFJP4Tg+uw9cqmlPx827g2cuX+27hpz2I8QmaOS+E=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=TCK5bmTGDVoP0LeZXO4jDRGJFWbyuvZ0apQvQPmPQyfKvrsJngmbOE35w9uIt0kDC
-	 wTiD0Qa++SnYj23R56MgIA+IQJA3Fdx5IlpKIe4rg/lgkNrw3yc3hqz0sigNucO/oV
-	 F1JVmnossEtK+9yhnIRFP0Q1B9Iw2oa+s0FaOS9U=
+	by mail.kernel.org (Postfix) with ESMTP id 07AD3223CA
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 01:14:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dCsxQGhH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727508AbfKTBMT (ORCPT
+        id S1727538AbfKTBOe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 19 Nov 2019 20:12:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43270 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727262AbfKTBMS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 19 Nov 2019 20:12:18 -0500
-Received: from paulmck-ThinkPad-P72.home (unknown [199.201.64.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CDA892245C;
-        Wed, 20 Nov 2019 01:12:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574212337;
-        bh=YVHFJP4Tg+uw9cqmlPx827g2cuX+27hpz2I8QmaOS+E=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=QmEXo52I896jnaFA1ELwMs8w57Kzti/fIf87OBz7rLXE31Q5zdp+oLYAhOP+HkaBj
-         elfKj6ziCzfzU9TF1DxdlhYnovU1XYAFD93P/XlWopjt6X+VyNybvJeLqz3+O3dQ3u
-         5iyiPL+e4mvcU2WjoXjNLeXIek5fNCgsRUsnXoA8=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 45B9435227AB; Tue, 19 Nov 2019 17:12:17 -0800 (PST)
-Date:   Tue, 19 Nov 2019 17:12:17 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     David Miller <davem@davemloft.net>
-Cc:     anders.roxell@linaro.org, kuznet@ms2.inr.ac.ru,
-        yoshfuji@linux-ipv6.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: ipmr: fix suspicious RCU warning
-Message-ID: <20191120011217.GM2889@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191118090925.2474-1-anders.roxell@linaro.org>
- <20191119.145048.487849503145486152.davem@davemloft.net>
+        Tue, 19 Nov 2019 20:14:34 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:33945 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727334AbfKTBOd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 19 Nov 2019 20:14:33 -0500
+Received: by mail-pg1-f196.google.com with SMTP id z188so12479560pgb.1
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 17:14:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XNg1tjP9INvmM/DeIAYa5hYUQZyQDSSg86vYo3TV7Ho=;
+        b=dCsxQGhHkmzl0ml2pIeI752b4HtkmyA3ByI5TXA2lfq2sPe5YuX64IxdaxlSeJvBuV
+         kJ6EnIRwzhwSfJvpkLNQRsmmQE2fm9FqizwJ4xHIjocMniRI3cXYKdwtD+bRfX5HTGYs
+         De6B8bN45rbuhaRT3sau60ZO+OLcv8t39NXwOOw7DAA4V6iW7QcASdhZfpoSqqOlK+dT
+         3eintlSrtwCHFK81GtH2KY50K6dzw0ZmyjuwdjBfCd0Ha4e0+WR7BvQcFRY7Te+Qx1XJ
+         c1IVDQ5xqvETFTC7+BwVQ68dETVNW/DhzUKHCGLD+tnMkTTd74yNJt35d1tZr6sLaA3w
+         Zoyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XNg1tjP9INvmM/DeIAYa5hYUQZyQDSSg86vYo3TV7Ho=;
+        b=KBlVAefn8vfN9CfLiWK851/3jf1KpqJAYpipvSk60XoNkX5gY/NYfwkqJRslUcWt4G
+         Pdy3qcN+tdLASk25VG8m11rgiHREXTdWAFZPsIhCzgt+G8frkcApTMS1qlcAZdfeNsIX
+         vpBL2tiVECUakIord53pgVNvZknxNLTLA37dQAwlOeaKiko4GyECLjyRNnfoQetTBLkO
+         uK02cuKozl1+7QvWNGaXo5TL0ZbmYAXvMnDDQZI5IJbQqut+fCIUazDF8h7ebLoMxScG
+         yjIcZkRTnR1vkPbaL2wpb17PhSSUdSQ4ooCaowX3I3FLXE67vi8Jx1kssk7ZlrsFHjKx
+         tcJQ==
+X-Gm-Message-State: APjAAAXJcrKJcJlAeHZ06A3DTair/JC2bc+lhjsGfLYiFnMJfGeuXz9c
+        Nfrd/p0CNkHdULy57utrVXBszon9NZb974BmTIRqDQ==
+X-Google-Smtp-Source: APXvYqxAkXh/yc2VcsZRwT1JGfFXlfbvmuoJtajYbRBOUk8rZUaOu5y1Dveu5HQDIG/KqwFiiTzNCFJIVyw3PhzaCGs=
+X-Received: by 2002:a63:5163:: with SMTP id r35mr96501pgl.201.1574212471139;
+ Tue, 19 Nov 2019 17:14:31 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191119.145048.487849503145486152.davem@davemloft.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20191119003120.154041-1-brendanhiggins@google.com> <4a3aada5-fe8f-9c82-dfd4-0494acf59334@infradead.org>
+In-Reply-To: <4a3aada5-fe8f-9c82-dfd4-0494acf59334@infradead.org>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Tue, 19 Nov 2019 17:14:20 -0800
+Message-ID: <CAFd5g47+3TN4pOdeM0YmJpMP2uKnpJYUY_OXmqmZEn8OcVz6ow@mail.gmail.com>
+Subject: Re: [PATCH linux-kselftest/test v3] Documentation: kunit: add
+ documentation for kunit_tool
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     shuah <shuah@kernel.org>, David Gow <davidgow@google.com>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "Theodore Ts'o" <tytso@mit.edu>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 02:50:48PM -0800, David Miller wrote:
-> From: Anders Roxell <anders.roxell@linaro.org>
-> Date: Mon, 18 Nov 2019 10:09:25 +0100
-> 
-> > @@ -108,9 +108,18 @@ static void igmpmsg_netlink_event(struct mr_table *mrt, struct sk_buff *pkt);
-> >  static void mroute_clean_tables(struct mr_table *mrt, int flags);
-> >  static void ipmr_expire_process(struct timer_list *t);
-> >  
-> > +#ifdef CONFIG_PROVE_LOCKING
-> > +int ip_mr_initialized;
-> > +void ip_mr_now_initialized(void) { ip_mr_initialized = 1; }
-> > +#else
-> > +const int ip_mr_initialized = 1;
-> > +void ip_mr_now_initialized(void) { }
-> > +#endif
-> 
-> This seems excessive and a bit not so pretty.
-> 
+On Tue, Nov 19, 2019 at 4:27 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+>
+> On 11/18/19 4:31 PM, Brendan Higgins wrote:
+> > +How do I use kunit_tool?
+> > +=================================
+>
+> Hi,
+> I haven't tested this, but Sphinx (or some doc tool) usually complains if the
+> underline length is not the same as the header text length.  (I.e., use fewer
+> = signs above.)
+
+Hmmm...Sphinx and checkpatch didn't complain. I wonder if it is a
+different script, or maybe I have to use a particular option with
+Sphinx.
+
+In any case, thanks for catching this!
+
 > > +
-> >  #ifdef CONFIG_IP_MROUTE_MULTIPLE_TABLES
-> >  #define ipmr_for_each_table(mrt, net) \
-> > -	list_for_each_entry_rcu(mrt, &net->ipv4.mr_tables, list)
-> > +	list_for_each_entry_rcu(mrt, &net->ipv4.mr_tables, list, \
-> > +			(lockdep_rtnl_is_held() || !ip_mr_initialized))
-> >  
-> >  static struct mr_table *ipmr_mr_table_iter(struct net *net,
-> >  					   struct mr_table *mrt)
-> 
-> The problematic code path is ipmr_rules_init() done during ipmr_net_init().
-> 
-> You can just wrap this call around RCU locking or take the RTNL mutex.
-
-Agreed, that would work quite well.
-
-							Thanx, Paul
-
-> That way you don't need to rediculous ip_mr_initialized knob which frankly
-> doesn't even seem accurate to me.  It's a centralized global variable
-> which is holding state about multiple network namespace objects which makes
-> absolutely no sense at all, it's wrong.
+> > +If a kunitconfig is present at the root directory, all you have to do is:
+> > +
+> > +.. code-block:: bash
+> > +
+> > +     ./tools/testing/kunit/kunit.py run
