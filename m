@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13212C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:21:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA761C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:21:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E671E22523
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:21:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BDBD2251F
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:21:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730342AbfKTNVd (ORCPT
+        id S1730386AbfKTNVu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 08:21:33 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:56816 "EHLO
+        Wed, 20 Nov 2019 08:21:50 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:56841 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730264AbfKTNVY (ORCPT
+        with ESMTP id S1730335AbfKTNVd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 08:21:24 -0500
+        Wed, 20 Nov 2019 08:21:33 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iXPv5-0007Ez-Kl; Wed, 20 Nov 2019 14:21:19 +0100
+        id 1iXPvA-0007GJ-0D; Wed, 20 Nov 2019 14:21:24 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 5C8011C1A1E;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C199B1C1A21;
         Wed, 20 Nov 2019 14:21:06 +0100 (CET)
 Date:   Wed, 20 Nov 2019 13:21:06 -0000
-From:   "tip-bot2 for Florian Fainelli" <tip-bot2@linutronix.de>
+From:   "tip-bot2 for Ben Dooks (Codethink)" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/core] irqchip/irq-bcm7038-l1: Enable parent IRQ if necessary
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+Subject: [tip: irq/core] irqchip/gic-v3: Fix __iomem warning
+Cc:     Ben Dooks <ben.dooks@codethink.co.uk>,
         Marc Zyngier <maz@kernel.org>, Ingo Molnar <mingo@kernel.org>,
         Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
-In-Reply-To: <20191024201415.23454-4-f.fainelli@gmail.com>
-References: <20191024201415.23454-4-f.fainelli@gmail.com>
+In-Reply-To: <20191017113341.13778-1-ben.dooks@codethink.co.uk>
+References: <20191017113341.13778-1-ben.dooks@codethink.co.uk>
 MIME-Version: 1.0
-Message-ID: <157425606627.12247.18304172423061718891.tip-bot2@tip-bot2>
+Message-ID: <157425606673.12247.2619370151942633774.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -56,37 +56,58 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the irq/core branch of tip:
 
-Commit-ID:     27eebb60357ed5aa6659442f92907c0f7368d6ae
-Gitweb:        https://git.kernel.org/tip/27eebb60357ed5aa6659442f92907c0f7368d6ae
-Author:        Florian Fainelli <f.fainelli@gmail.com>
-AuthorDate:    Thu, 24 Oct 2019 13:14:13 -07:00
+Commit-ID:     f8af4519dfb6156045173f38cbd528c043fb25e2
+Gitweb:        https://git.kernel.org/tip/f8af4519dfb6156045173f38cbd528c043fb25e2
+Author:        Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
+AuthorDate:    Thu, 17 Oct 2019 12:33:41 +01:00
 Committer:     Marc Zyngier <maz@kernel.org>
-CommitterDate: Sun, 10 Nov 2019 18:47:47 
+CommitterDate: Sun, 10 Nov 2019 18:47:45 
 
-irqchip/irq-bcm7038-l1: Enable parent IRQ if necessary
+irqchip/gic-v3: Fix __iomem warning
 
-If the 'brcm,irq-can-wake' property is specified, make sure we also
-enable the corresponding parent interrupt we are attached to.
+The __iomem attribute should go before the * in the
+prototype. Move to silence the following sparse
+warnings:
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+./arch/arm/include/asm/arch_gicv3.h:340:15: warning: incorrect type in argument 1 (different address spaces)
+./arch/arm/include/asm/arch_gicv3.h:340:15:    expected void const volatile [noderef] <asn:2> *addr
+./arch/arm/include/asm/arch_gicv3.h:340:15:    got void *
+./arch/arm/include/asm/arch_gicv3.h:343:17: warning: incorrect type in argument 2 (different address spaces)
+./arch/arm/include/asm/arch_gicv3.h:343:17:    expected void volatile [noderef] <asn:2> *addr
+./arch/arm/include/asm/arch_gicv3.h:343:17:    got void *
+./arch/arm/include/asm/arch_gicv3.h:350:37: warning: incorrect type in argument 2 (different address spaces)
+./arch/arm/include/asm/arch_gicv3.h:350:37:    expected void volatile [noderef] <asn:2> *addr
+./arch/arm/include/asm/arch_gicv3.h:350:37:    got void *[noderef] <asn:2> addr
+drivers/irqchip/irq-gic-v3-its.c:2832:46: warning: incorrect type in argument 2 (different address spaces)
+drivers/irqchip/irq-gic-v3-its.c:2832:46:    expected void *[noderef] <asn:2> addr
+drivers/irqchip/irq-gic-v3-its.c:2832:46:    got void [noderef] <asn:2> *
+./arch/arm/include/asm/arch_gicv3.h:340:15: warning: incorrect type in argument 1 (different address spaces)
+./arch/arm/include/asm/arch_gicv3.h:340:15:    expected void const volatile [noderef] <asn:2> *addr
+./arch/arm/include/asm/arch_gicv3.h:340:15:    got void *
+./arch/arm/include/asm/arch_gicv3.h:343:17: warning: incorrect type in argument 2 (different address spaces)
+./arch/arm/include/asm/arch_gicv3.h:343:17:    expected void volatile [noderef] <asn:2> *addr
+./arch/arm/include/asm/arch_gicv3.h:343:17:    got void *
+./arch/arm/include/asm/arch_gicv3.h:350:37: warning: incorrect type in argument 2 (different address spaces)
+./arch/arm/include/asm/arch_gicv3.h:350:37:    expected void volatile [noderef] <asn:2> *addr
+./arch/arm/include/asm/arch_gicv3.h:350:37:    got void *[noderef] <asn:2> addr
+
+Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
 Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/20191024201415.23454-4-f.fainelli@gmail.com
+Link: https://lore.kernel.org/r/20191017113341.13778-1-ben.dooks@codethink.co.uk
 ---
- drivers/irqchip/irq-bcm7038-l1.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm/include/asm/arch_gicv3.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/irqchip/irq-bcm7038-l1.c b/drivers/irqchip/irq-bcm7038-l1.c
-index 689e487..45879e5 100644
---- a/drivers/irqchip/irq-bcm7038-l1.c
-+++ b/drivers/irqchip/irq-bcm7038-l1.c
-@@ -286,6 +286,10 @@ static int __init bcm7038_l1_init_one(struct device_node *dn,
- 		pr_err("failed to map parent interrupt %d\n", parent_irq);
- 		return -EINVAL;
- 	}
-+
-+	if (of_property_read_bool(dn, "brcm,irq-can-wake"))
-+		enable_irq_wake(parent_irq);
-+
- 	irq_set_chained_handler_and_data(parent_irq, bcm7038_l1_irq_handle,
- 					 intc);
+diff --git a/arch/arm/include/asm/arch_gicv3.h b/arch/arm/include/asm/arch_gicv3.h
+index 0555f14..fa50bb0 100644
+--- a/arch/arm/include/asm/arch_gicv3.h
++++ b/arch/arm/include/asm/arch_gicv3.h
+@@ -333,7 +333,7 @@ static inline u64 __gic_readq_nonatomic(const volatile void __iomem *addr)
+  * GITS_VPENDBASER - the Valid bit must be cleared before changing
+  * anything else.
+  */
+-static inline void gits_write_vpendbaser(u64 val, void * __iomem addr)
++static inline void gits_write_vpendbaser(u64 val, void __iomem *addr)
+ {
+ 	u32 tmp;
  
