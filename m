@@ -2,181 +2,227 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAD_ENC_HEADER,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46066C432C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 05:22:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEB37C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 05:25:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 167592240A
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 05:22:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 904CB22461
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 05:25:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=brennan.io header.i=stephen@brennan.io header.b="fhmyyAt3"
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="ov0DGKKW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726532AbfKTFW2 (ORCPT
+        id S1726841AbfKTFZY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 00:22:28 -0500
-Received: from sender4-of-o54.zoho.com ([136.143.188.54]:21405 "EHLO
-        sender4-of-o54.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725554AbfKTFW2 (ORCPT
+        Wed, 20 Nov 2019 00:25:24 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:52691 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726014AbfKTFZX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 00:22:28 -0500
-ARC-Seal: i=1; a=rsa-sha256; t=1574227312; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=Flx7ce4PxJy7rIVAU38qK/e5P92vhuCE1NvcehAyNR1DZLS1LKmGaWaOA3wjYPVMg85QxB68SfLb+jVjPx8Wa63YC+GFw/SCjMFqIr+WRpMKgHoRKTnZa1pmHQRXl3qNn+K2lv+uIjbC7GUpJ7MZFC8I+dTZY8mUGcH4YMnQNM0=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1574227312; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:Message-ID:Subject:To; 
-        bh=4LlqgzIjZJfktOZiZsTPIEsa9bG6LeOMEa6w2orvAZU=; 
-        b=WUsk8P9bm6MKdZmYL1Ek8pk1QyschbC4gW4g14TW8UOV4t+DbX+ODK/OVznYubRtxZOmHQ9+fp1L0rEJW2vRX8QGkr7YA919boHpCMzWwpnbtle4SStptqd49S7DO3urQTDKDXgszmfC/Lm3XfFisjBg8BE0cvEcrmouNaRHGvA=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=brennan.io;
-        spf=pass  smtp.mailfrom=stephen@brennan.io;
-        dmarc=pass header.from=<stephen@brennan.io> header.from=<stephen@brennan.io>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1574227312;
-        s=selector01; d=brennan.io; i=stephen@brennan.io;
-        h=Content-Transfer-Encoding:Content-Type:In-Reply-To:Date:Cc:Subject:From:To:Message-Id;
-        l=2128; bh=4LlqgzIjZJfktOZiZsTPIEsa9bG6LeOMEa6w2orvAZU=;
-        b=fhmyyAt3XgmVDIcH+g30z67FlXW8WFEV+hOiF7EwkkS7d7PA5xHR1dqJhDsSsqop
-        yUfVmbOaAze5M7QtLYXQIDVwr4djdn1JQ8sBw3q0Jklh/Azz5f0VLAb+v9vyyd2cNPV
-        CERklVw73whKx4do3rpW4mcBrGVrX9zg/KX7DPCY=
-Received: from localhost (c-98-207-184-40.hsd1.ca.comcast.net [98.207.184.40]) by mx.zohomail.com
-        with SMTPS id 157422731156931.816597010629835; Tue, 19 Nov 2019 21:21:51 -0800 (PST)
+        Wed, 20 Nov 2019 00:25:23 -0500
+Received: by mail-wm1-f66.google.com with SMTP id l1so5605088wme.2
+        for <linux-kernel@vger.kernel.org>; Tue, 19 Nov 2019 21:25:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from:cc;
+        bh=v+uBk5IEyaYZ7IF/b+w4lvOtghz7YVivbgrg50na0fw=;
+        b=ov0DGKKWFfs9XQfFjYgGbG8mvNWdUX0PZJC5FicSFBTO+iQBnzhDBYDf0xfmRuuOBr
+         NH2BkVXbo2lWyCvfeEiGRw02G5cV770g6ATNSrTxDBSrdPpvQp1L85Uz7nT/qQxJW5IT
+         xyhtRNPhTqG8zfeU/BCM0G3v0+A3UXpnfHUmdcSugqJ3k5LAmAsa9Q+SgcQAhGHjZ04L
+         EbhorRGcgpqvPHItV7Lsd4FN0lJdIMnjiMPgjXAUFeed0SxhsrEJJfJXJ2TCmg3Slhn4
+         ehgDN3mBkccZSvgglZnOre1cpxyoKkowLiR/7oCYcHl1Nj25tfUFuuA2Q2ODmhNAgSg0
+         5LnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from:cc;
+        bh=v+uBk5IEyaYZ7IF/b+w4lvOtghz7YVivbgrg50na0fw=;
+        b=V0K+WMkumjM/mujrWn3Td7AwsWjuA5kSl0qYJkjqsD0VmDtcCoFtZ4wfPhthX4GA1P
+         LEnzi+3Bn3dCGtUexXYPn3lKAiP1DUX9BdiU7nCjTMCXbPu8/uaceAWdR0wyqMGqLCRZ
+         mEXlRE7RbdHdXjTxRq6zr5HiZu6GloxyYCGjrEiZ27YHc1E6kumjXKRnSI9K3qLuGNGl
+         z0+nMdF0CHebyGVLqjMuuH9JW8NT+MTZwgdvS6A2OIjht1BzF+6gWwXRMzTORBaf2y3p
+         eb0kJUgOQqSRGPgiI3HHc6ZrngQK83VCv0yD2APoqIlyKbYD1LHzzRLgBWzp+3vZbtVz
+         Njnw==
+X-Gm-Message-State: APjAAAU8HJQxkjv1C5kFyxeNNiQx+T27V2Vc5NuFKUuqkCtueEpKEjJa
+        aRZncELM/etyZ96izkweXdQiEg==
+X-Google-Smtp-Source: APXvYqwhgSeFCVt1Z3whNFWM5gl6+qPpSEDUXk3HkahrF6XUVFw/zq5QHpMA127VV0d2Ihak5OT+CQ==
+X-Received: by 2002:a1c:1fca:: with SMTP id f193mr894882wmf.173.1574227520777;
+        Tue, 19 Nov 2019 21:25:20 -0800 (PST)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id q15sm29863955wrs.91.2019.11.19.21.25.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Nov 2019 21:25:20 -0800 (PST)
+Message-ID: <5dd4ce40.1c69fb81.548f8.e723@mx.google.com>
+Date:   Tue, 19 Nov 2019 21:25:20 -0800 (PST)
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Originalfrom: "Baruch Siach" <baruch@tkos.co.il>
-Original: =?utf-8?q?Hi_Stephen,_Stefan,
- =0A=0AOn_Wed,_Nov_20_2019,_Stephen_Brennan_w?= =?utf-8?q?rote:
- =0A=0A>_From:_Stefan_Wahren_<wahrenst@gmx.net>=0A>=0A>_The?=
- =?utf-8?q?_BCM2711_has_a_RNG200_block,_so_document_its_compatible_string.?=
- =?utf-8?q?=0A>=0A>_Signed-off-by:_Stefan_Wahren_<wahrenst@gmx.net>=0A>_Si?=
- =?utf-8?q?gned-off-by:_Stephen_Brennan_<stephen@brennan.io>=0A=0AIsn't_th?=
- =?utf-8?q?at_duplicate_of_Florian's_commit_6223949a1531=3F=0A=0A>_---=0A>?=
- =?utf-8?q?__Documentation/devicetree/bindings/rng/brcm,iproc-rng200.txt_|?=
- =?utf-8?q?_1_+=0A>__1_file_changed,_1_insertion(+)=0A>=0A>_diff_--git_a/D?=
- =?utf-8?q?ocumentation/devicetree/bindings/rng/brcm,iproc-rng200.txt_b/Do?=
- =?utf-8?q?cumentation/devicetree/bindings/rng/brcm,iproc-rng200.txt=0A>_i?=
- =?utf-8?q?ndex_c223e54452da..802523196ee5_100644=0A>_---_a/Documentation/?=
- =?utf-8?q?devicetree/bindings/rng/brcm,iproc-rng200.txt=0A>_+++_b/Documen?=
- =?utf-8?q?tation/devicetree/bindings/rng/brcm,iproc-rng200.txt=0A>_@@_-2,?=
- =?utf-8?q?6_+2,7_@@_HWRNG_support_for_the_iproc-rng200_driver=0A>__=0A>__?=
- =?utf-8?q?Required_properties:=0A>__-_compatible_:_Must_be_one_of:=0A>_+?=
- =?utf-8?q?=09_______"brcm,bcm2711-rng200"=0A>__=09_______"brcm,bcm7211-rn?=
- =?utf-8?q?g200"=0A=0AIsn't_this_clear_text_duplication=3F_Am_I_missing_so?=
- =?utf-8?q?mething_obvious=3F=0A=0AI_was_looking_at_versions_of_this_patch?=
- =?utf-8?q?_series_wondering_why_no_one=0Anoticed_that.=0A=0Abaruch=0A=0A>?=
- =?utf-8?q?__=09_______"brcm,bcm7278-rng200"=0A>__=09_______"brcm,iproc-rn?=
- =?utf-8?q?g200"=0A=0A--_=0A_____http://baruch.siach.name/blog/___________?=
- =?utf-8?q?_______~._.~___Tk_Open_Systems=0A=3D}--------------------------?=
- =?utf-8?q?----------------------ooO--U--Ooo------------{=3D=0A___-_baruch?=
- =?utf-8?q?@tkos.co.il_-_tel:_+972.52.368.4656,_http://www.tkos.co.il_-=0A?=
-In-Reply-To: <87ftijgnhz.fsf@tarshish>
-Originaldate: Wed Nov 20, 2019 at 6:50 AM
-Date:   Tue, 19 Nov 2019 21:21:49 -0800
-Cc:     <stephen@brennan.io>, "Mark Rutland" <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>,
-        <linux-rpi-kernel@lists.infradead.org>,
-        "Florian Fainelli" <f.fainelli@gmail.com>,
-        "Herbert Xu" <herbert@gondor.apana.org.au>,
-        "Scott Branden" <sbranden@broadcom.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Ray Jui" <rjui@broadcom.com>, <linux-kernel@vger.kernel.org>,
-        "Eric Anholt" <eric@anholt.net>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "Stefan Wahren" <wahrenst@gmx.net>,
-        "Matt Mackall" <mpm@selenic.com>, "Arnd Bergmann" <arnd@arndb.de>,
-        <linux-crypto@vger.kernel.org>
-Subject: Re: [PATCH v3 1/4] dt-bindings: rng: add BCM2711 RNG compatible
-From:   "Stephen Brennan" <stephen@brennan.io>
-To:     "Baruch Siach" <baruch@tkos.co.il>,
-        <linux-arm-kernel@lists.infradead.org>
-Message-Id: <BYKH0ACN38Y1.2TRTJUY5267L4@pride>
-X-ZohoMailClient: External
+X-Kernelci-Lab-Name: lab-collabora
+X-Kernelci-Branch: clk-next
+X-Kernelci-Tree: clk
+X-Kernelci-Report-Type: bisect
+X-Kernelci-Kernel: clk-fixes-for-linus-196-gcd89054e321a
+Subject: clk/clk-next bisection: boot on tegra124-nyan-big
+To:     tomeu.vizoso@collabora.com, Stephen Boyd <sboyd@kernel.org>,
+        guillaume.tucker@collabora.com, mgalka@collabora.com,
+        Thierry Reding <treding@nvidia.com>, broonie@kernel.org,
+        matthew.hart@linaro.org, khilman@baylibre.com,
+        enric.balletbo@collabora.com
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-kernel@vger.kernel.org,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        linux-tegra@vger.kernel.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Baruch,
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+* This automated bisection report was sent to you on the basis  *
+* that you may be involved with the breaking commit it has      *
+* found.  No manual investigation has been done to verify it,   *
+* and the root cause of the problem may be somewhere else.      *
+*                                                               *
+* If you do send a fix, please include this trailer:            *
+*   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
+*                                                               *
+* Hope this helps!                                              *
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-On Wed Nov 20, 2019 at 6:50 AM, Baruch Siach wrote:
-> Hi Stephen, Stefan,
->
->=20
-> On Wed, Nov 20 2019, Stephen Brennan wrote:
->
->=20
-> > From: Stefan Wahren <wahrenst@gmx.net>
-> >
-> > The BCM2711 has a RNG200 block, so document its compatible string.
-> >
-> > Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-> > Signed-off-by: Stephen Brennan <stephen@brennan.io>
->
->=20
-> Isn't that duplicate of Florian's commit 6223949a1531?
->
->=20
-> > ---
-> >  Documentation/devicetree/bindings/rng/brcm,iproc-rng200.txt | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/rng/brcm,iproc-rng200.tx=
-t b/Documentation/devicetree/bindings/rng/brcm,iproc-rng200.txt
-> > index c223e54452da..802523196ee5 100644
-> > --- a/Documentation/devicetree/bindings/rng/brcm,iproc-rng200.txt
-> > +++ b/Documentation/devicetree/bindings/rng/brcm,iproc-rng200.txt
-> > @@ -2,6 +2,7 @@ HWRNG support for the iproc-rng200 driver
-> > =20
-> >  Required properties:
-> >  - compatible : Must be one of:
-> > +	       "brcm,bcm2711-rng200"
-> >  	       "brcm,bcm7211-rng200"
->
->=20
-> Isn't this clear text duplication? Am I missing something obvious?
->
+clk/clk-next bisection: boot on tegra124-nyan-big
 
-I understand the confusion, but they're different, we're looking at the=20
-difference between:
+Summary:
+  Start:      cd89054e321a Merge branch 'clk-init-leak' into clk-next
+  Details:    https://kernelci.org/boot/id/5dd486b059b514415acf54bd
+  Plain log:  https://storage.kernelci.org//clk/clk-next/clk-fixes-for-linu=
+s-196-gcd89054e321a/arm/tegra_defconfig/gcc-8/lab-collabora/boot-tegra124-n=
+yan-big.txt
+  HTML log:   https://storage.kernelci.org//clk/clk-next/clk-fixes-for-linu=
+s-196-gcd89054e321a/arm/tegra_defconfig/gcc-8/lab-collabora/boot-tegra124-n=
+yan-big.html
+  Result:     25175c806a68 clk: tegra: Reimplement SOR clock on Tegra124
 
-   bcm2711
-   bcm7211
-      ^^
+Checks:
+  revert:     PASS
+  verify:     PASS
 
-These are apparently separate but related chips, leading to confusion in=20
-other places [1] as well. I double checked the commit 6223949a1531 you=20
-pointed out, as well as 1fa6d053b2a5 from your other email, to verify that=
-=20
-this is the case. No duplication (as far as I can tell) is in the series.
+Parameters:
+  Tree:       clk
+  URL:        https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git
+  Branch:     clk-next
+  Target:     tegra124-nyan-big
+  CPU arch:   arm
+  Lab:        lab-collabora
+  Compiler:   gcc-8
+  Config:     tegra_defconfig
+  Test suite: boot
 
-[1]: https://github.com/raspberrypi/linux/issues/3163
+Breaking commit found:
 
-Regards,
-Stephen
+---------------------------------------------------------------------------=
+----
+commit 25175c806a6841149abe46168e0af12593141612
+Author: Thierry Reding <treding@nvidia.com>
+Date:   Thu Jul 25 18:19:00 2019 +0200
 
->=20
-> I was looking at versions of this patch series wondering why no one
-> noticed that.
->
->=20
-> baruch
->
->=20
-> >  	       "brcm,bcm7278-rng200"
-> >  	       "brcm,iproc-rng200"
->
->=20
-> --
-> http://baruch.siach.name/blog/ ~. .~ Tk Open Systems
-> =3D}------------------------------------------------ooO--U--Ooo----------=
---{=3D
-> - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
->
->=20
->
->=20
+    clk: tegra: Reimplement SOR clock on Tegra124
+    =
+
+    In order to allow the display driver to deal uniformly with all SOR
+    generations, implement the SOR clocks in a way that is compatible with
+    Tegra186 and later.
+    =
+
+    Acked-by: Stephen Boyd <sboyd@kernel.org>
+    Signed-off-by: Thierry Reding <treding@nvidia.com>
+
+diff --git a/drivers/clk/tegra/clk-tegra124.c b/drivers/clk/tegra/clk-tegra=
+124.c
+index 7d231529c3a5..b3110d5b5a6c 100644
+--- a/drivers/clk/tegra/clk-tegra124.c
++++ b/drivers/clk/tegra/clk-tegra124.c
+@@ -1005,20 +1005,24 @@ static struct tegra_devclk devclks[] __initdata =3D=
+ {
+ 	{ .con_id =3D "hda2hdmi", .dt_id =3D TEGRA124_CLK_HDA2HDMI },
+ };
+ =
+
+-static const char *mux_pllp_pllm_plld_plla_pllc_plld2_clkm[] =3D {
+-	"pll_p", "pll_m", "pll_d_out0", "pll_a_out0", "pll_c",
+-	"pll_d2_out0", "clk_m"
++static const char * const sor0_parents[] =3D {
++	"pll_p_out0", "pll_m_out0", "pll_d_out0", "pll_a_out0", "pll_c_out0",
++	"pll_d2_out0", "clk_m",
+ };
+-#define mux_pllp_pllm_plld_plla_pllc_plld2_clkm_idx NULL
+ =
+
+-static const char *mux_clkm_plldp_sor0out[] =3D {
+-	"clk_m", "pll_dp", "sor0_out",
++static const char * const sor0_out_parents[] =3D {
++	"clk_m", "sor0_pad_clkout",
+ };
+-#define mux_clkm_plldp_sor0out_idx NULL
+ =
+
+ static struct tegra_periph_init_data tegra124_periph[] =3D {
+-	MUX8_NOGATE_LOCK("sor0_out", mux_pllp_pllm_plld_plla_pllc_plld2_clkm, CLK=
+_SOURCE_SOR0, tegra_clk_sor0_out, &sor0_lock),
+-	NODIV("sor0", mux_clkm_plldp_sor0out, CLK_SOURCE_SOR0, 14, 3, 182, 0, teg=
+ra_clk_sor0, &sor0_lock),
++	TEGRA_INIT_DATA_TABLE("sor0", NULL, NULL, sor0_parents,
++			      CLK_SOURCE_SOR0, 29, 0x7, 0, 0, 0, 0,
++			      0, 182, 0, tegra_clk_sor0, NULL, 0,
++			      &sor0_lock),
++	TEGRA_INIT_DATA_TABLE("sor0_out", NULL, NULL, sor0_out_parents,
++			      CLK_SOURCE_SOR0, 14, 0x1, 0, 0, 0, 0,
++			      0, 0, TEGRA_PERIPH_NO_GATE, tegra_clk_sor0_out,
++			      NULL, 0, &sor0_lock),
+ };
+ =
+
+ static struct clk **clks;
+---------------------------------------------------------------------------=
+----
 
 
+Git bisection log:
+
+---------------------------------------------------------------------------=
+----
+git bisect start
+# good: [dafbb1e6473788cb3068eaeddc58f9d88e9c7a62] Merge branch 'clk-ti' in=
+to clk-next
+git bisect good dafbb1e6473788cb3068eaeddc58f9d88e9c7a62
+# bad: [cd89054e321a893073de7bb50f48b524a4ff675b] Merge branch 'clk-init-le=
+ak' into clk-next
+git bisect bad cd89054e321a893073de7bb50f48b524a4ff675b
+# bad: [097064b841b74b137a7672e8daccd1384574ec9c] Merge tag 'tegra-for-5.5-=
+clk-v2' of git://git.kernel.org/pub/scm/linux/kernel/git/tegra/linux into c=
+lk-tegra
+git bisect bad 097064b841b74b137a7672e8daccd1384574ec9c
+# bad: [bc0b3a60fe19610d649a62879dd318d133ed10c0] clk: tegra: pll: Save and=
+ restore pll context
+git bisect bad bc0b3a60fe19610d649a62879dd318d133ed10c0
+# good: [991a051ea5f15266903f52acb5832a596dd3da51] clk: tegra: Remove last =
+remains of TEGRA210_CLK_SOR1_SRC
+git bisect good 991a051ea5f15266903f52acb5832a596dd3da51
+# bad: [25175c806a6841149abe46168e0af12593141612] clk: tegra: Reimplement S=
+OR clock on Tegra124
+git bisect bad 25175c806a6841149abe46168e0af12593141612
+# good: [da8d1a3555406275650b366460c6235f1696bf8b] clk: tegra: Rename sor0_=
+lvds to sor0_out
+git bisect good da8d1a3555406275650b366460c6235f1696bf8b
+# first bad commit: [25175c806a6841149abe46168e0af12593141612] clk: tegra: =
+Reimplement SOR clock on Tegra124
+---------------------------------------------------------------------------=
+----
