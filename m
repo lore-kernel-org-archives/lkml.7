@@ -2,113 +2,145 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 414D0C43215
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 09:03:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 199F9C432C3
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 09:07:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 261A62243F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 09:03:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B816D22445
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 09:07:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="MZi5cqw4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728135AbfKTJDu convert rfc822-to-8bit (ORCPT
+        id S1728060AbfKTJHw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 04:03:50 -0500
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:34301 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727814AbfKTJDt (ORCPT
+        Wed, 20 Nov 2019 04:07:52 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:37242 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727814AbfKTJHw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 04:03:49 -0500
-X-Originating-IP: 90.76.211.102
-Received: from xps13 (lfbn-1-2154-102.w90-76.abo.wanadoo.fr [90.76.211.102])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 54F251C0016;
-        Wed, 20 Nov 2019 09:03:46 +0000 (UTC)
-Date:   Wed, 20 Nov 2019 10:03:45 +0100
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Richard Weinberger <richard@nod.at>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Jiri Slaby <jslaby@suse.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        linux-serial <linux-serial@vger.kernel.org>
-Subject: Re: [PATCH v2] {tty: serial, nand: onenand}: samsung: rename to fix
- build warning
-Message-ID: <20191120100345.038dd232@xps13>
-In-Reply-To: <20191118194010.GA606660@kroah.com>
-References: <20191117202435.28127-1-sudipm.mukherjee@gmail.com>
-        <20191118114657.GA228826@kroah.com>
-        <1505628642.90849.1574081270290.JavaMail.zimbra@nod.at>
-        <20191118202257.6cfd1a7e@xps13>
-        <884028732.91086.1574105504462.JavaMail.zimbra@nod.at>
-        <20191118194010.GA606660@kroah.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 20 Nov 2019 04:07:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=DSCUinPNKai22HW1JHW+/dL4VKgNpCZryvn5/wZYgtE=; b=MZi5cqw4EjoPe1UaPXozRB3n9
+        Gd5YhBXNyzUKki7Bu+X07b00jfUws///Oewg7+7tM0/fTcGtTeZs4zITQXs/+6Cy2/fkmto/LDFTX
+        UBDbvUm/IrV+Q81Zb1URl6mgMvcgjesfD5TACLxHZ0hq40UXhdZbVKOp9Llz8YflxqxtaeQVkBWn9
+        qrohdiEcF9bUVOVeWsnieqwU3H+VgLaGyP+A9IqgkHow+T12ieVRibjE/l6csKbMsX7sfFLxnY+YT
+        7yAGuRtit6niemo7/lzOmw3LNZPKdvxja6XLt90Vam6X9pLahnGxZOQTlz7oaQ5znVS2x3A/CrdYI
+        yf3JYjxuA==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:58688)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1iXLxj-0007KX-6m; Wed, 20 Nov 2019 09:07:47 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1iXLxh-0001ac-3A; Wed, 20 Nov 2019 09:07:45 +0000
+Date:   Wed, 20 Nov 2019 09:07:45 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Enrico Weigelt <info@metux.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH] ARM: don't export unused return_address()
+Message-ID: <20191120090744.GH25745@shell.armlinux.org.uk>
+References: <20190906154706.2449696-1-arnd@arndb.de>
+ <CAMuHMdUMgDBo1gkvQ_Bd8mjMiPjdWWY=9AU6K1S7NcJy5jhvGQ@mail.gmail.com>
+ <CAK7LNASNp4jPYHmh3e4QYwenYbVrK69tvB_LLyK_ew1eqBNrEw@mail.gmail.com>
+ <20191113114517.GO25745@shell.armlinux.org.uk>
+ <CAMuHMdXk9sWBpYWC-X6V3rp2e0+f5ebdRFFXn8Heuy0qkLq0GQ@mail.gmail.com>
+ <20191113170058.GP25745@shell.armlinux.org.uk>
+ <CAK7LNARiQnc+A0j4ORC-M8ZcbtDYdRF7tU1Zv8Lbst-g8dqmVQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK7LNARiQnc+A0j4ORC-M8ZcbtDYdRF7tU1Zv8Lbst-g8dqmVQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote on Mon, 18 Nov
-2019 20:40:10 +0100:
-
-> On Mon, Nov 18, 2019 at 08:31:44PM +0100, Richard Weinberger wrote:
-> > ----- Ursprüngliche Mail -----  
-> > > Von: "Miquel Raynal" <miquel.raynal@bootlin.com>
-> > > An: "richard" <richard@nod.at>
-> > > CC: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Sudip Mukherjee" <sudipm.mukherjee@gmail.com>, "Kyungmin Park"
-> > > <kyungmin.park@samsung.com>, "Vignesh Raghavendra" <vigneshr@ti.com>, "Jiri Slaby" <jslaby@suse.com>, "linux-kernel"
-> > > <linux-kernel@vger.kernel.org>, "linux-mtd" <linux-mtd@lists.infradead.org>, "linux-serial"
-> > > <linux-serial@vger.kernel.org>
-> > > Gesendet: Montag, 18. November 2019 20:22:57
-> > > Betreff: Re: [PATCH v2] {tty: serial, nand: onenand}: samsung: rename to fix build warning  
-> >   
-> > > Hi all,
-> > > 
-> > > Richard Weinberger <richard@nod.at> wrote on Mon, 18 Nov 2019 13:47:50
-> > > +0100 (CET):
-> > >   
-> > >> ----- Ursprüngliche Mail -----  
-> > >> >> I was not sure if this should have been two different patch, but since
-> > >> >> this will be fixing the same problem so it seems its better to have them
-> > >> >> in a single patch.
-> > >> >> 
-> > >> >>  drivers/mtd/nand/onenand/Makefile                     | 2 +-
-> > >> >>  drivers/mtd/nand/onenand/{samsung.c => samsung_mtd.c} | 0
-> > >> >>  drivers/tty/serial/Makefile                           | 2 +-
-> > >> >>  drivers/tty/serial/{samsung.c => samsung_tty.c}       | 0
-> > >> >>  4 files changed, 2 insertions(+), 2 deletions(-)
-> > >> >>  rename drivers/mtd/nand/onenand/{samsung.c => samsung_mtd.c} (100%)
-> > >> >>  rename drivers/tty/serial/{samsung.c => samsung_tty.c} (100%)  
-> > >> > 
-> > >> > I can take this in the tty tree if the mtd maintainer gives an ack for
-> > >> > it...  
-> > >> 
-> > >> Acked-by: Richard Weinberger <richard@nod.at>  
-> > > 
-> > > If it is not too late, I am not a big fan of the new naming which is
-> > > rather not descriptive. Files in the onenand subdirectory are:
-> > > * onenand_<something>.c for the base files
-> > > * <vendor>.c for the vendors files (currently: omap2.c and samsung.c).  
-> > 
-> > Well, I'm fine with the naming either way. :-)  
+On Wed, Nov 20, 2019 at 06:02:13PM +0900, Masahiro Yamada wrote:
+> Hi Arnd,
 > 
-> If you want to rename the mtd driver later, that's fine, I'll take this
-> for now for 5.5-rc1 and you all can bikeshed it for 5.5-final :)
+> 
+> 
+> On Thu, Nov 14, 2019 at 2:01 AM Russell King - ARM Linux admin
+> <linux@armlinux.org.uk> wrote:
+> >
+> > On Wed, Nov 13, 2019 at 02:15:00PM +0100, Geert Uytterhoeven wrote:
+> > > Hi Russell,
+> > >
+> > > On Wed, Nov 13, 2019 at 12:45 PM Russell King - ARM Linux admin
+> > > <linux@armlinux.org.uk> wrote:
+> > > > On Wed, Nov 13, 2019 at 08:40:39PM +0900, Masahiro Yamada wrote:
+> > > > > On Tue, Oct 1, 2019 at 11:31 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > > > > > On Fri, Sep 6, 2019 at 5:47 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> > > > > > > Without the frame pointer enabled, return_address() is an inline
+> > > > > > > function and does not need to be exported, as shown by this warning:
+> > > > > > >
+> > > > > > > WARNING: "return_address" [vmlinux] is a static EXPORT_SYMBOL_GPL
+> > > > > > >
+> > > > > > > Move the EXPORT_SYMBOL_GPL() into the #ifdef as well.
+> > > > > > >
+> > > > > > > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > > > > >
+> > > > > > Thanks for your patch!
+> > > > > >
+> > > > > > Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > > > > >
+> > > > > > > --- a/arch/arm/kernel/return_address.c
+> > > > > > > +++ b/arch/arm/kernel/return_address.c
+> > > > > > > @@ -53,6 +53,7 @@ void *return_address(unsigned int level)
+> > > > > > >                 return NULL;
+> > > > > > >  }
+> > > > > > >
+> > > > > >
+> > > > > > Checkpatch doesn't like the empty line above:
+> > > > > >
+> > > > > > WARNING: EXPORT_SYMBOL(foo); should immediately follow its function/variable
+> > > > > >
+> > > > > > > +EXPORT_SYMBOL_GPL(return_address);
+> > > > > > > +
+> > > > > > >  #endif /* if defined(CONFIG_FRAME_POINTER) && !defined(CONFIG_ARM_UNWIND) */
+> > > > > > >
+> > > > > > > -EXPORT_SYMBOL_GPL(return_address);
+> > >
+> > > > > What has happened to this patch?
+> > > > >
+> > > > > I still see this warning.
+> > > >
+> > > > Simple - it got merged, it caused build regressions, it got dropped.
+> > > > A new version is pending me doing another round of patch merging.
+> > >
+> > > I believe that was not Arnd's patch, but Ben Dooks' alternative solution[*]?
+> >
+> > I don't keep track of who did what, sorry.
+> 
+> 
+> Arnd,
+> 
+> I believe this patch is the correct fix.
+> Could you please put it into Russell's patch tracker?
+> (patches@arm.linux.org.uk)
 
-Let's not rename it twice, if nobody want's another naming I'm fine
-with this one.
+Is there something wrong with:
 
-Acked-by: Miquel Raynal <miquel.raynal@bootlin.com>
+fb033c95c94c ARM: 8918/2: only build return_address() if needed
 
-Cheers!
-Miquèl
+I haven't seen any build issues with that.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
