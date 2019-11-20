@@ -2,140 +2,120 @@ Return-Path: <SRS0=PPSE=ZM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B59CBC432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:29:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB700C432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:29:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 966F8224CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:29:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFD30224D2
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 13:29:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574256563;
+	bh=kV3kgPdh8C4IDpFXE3HzyO2sRf6elrDUksgyFl5XkcU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=q4YzwEaxoKZQYnZUBXY18UOWYvofGXAFD6rHvNbzzO3/U29E2qvkFesXmp4hSI3Sq
+	 Zn9a0ol6oPuJMXH4pevr7xhMafkkhbZYXq8akmKlY6j9aPfR+AAdYSFJIAzjmoN5A5
+	 a0k+ovrk3rnENKdQ+C8QMCHEjJDw3zPkJNUivHbI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730590AbfKTN3B (ORCPT
+        id S1730602AbfKTN3X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 08:29:01 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:39182 "EHLO gloria.sntech.de"
+        Wed, 20 Nov 2019 08:29:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729530AbfKTN3B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 08:29:01 -0500
-Received: from ip5f5a6266.dynamic.kabel-deutschland.de ([95.90.98.102] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1iXQ2M-0003QS-LP; Wed, 20 Nov 2019 14:28:50 +0100
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Jagan Teki <jagan@amarulasolutions.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Akash Gajjar <akash@openedev.com>, Tom Cubie <tom@radxa.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-amarula@amarulasolutions.com
-Subject: Re: [PATCH 2/5] arm64: dts: rockchip: Add VMARC RK3399Pro SOM initial support
-Date:   Wed, 20 Nov 2019 14:28:50 +0100
-Message-ID: <1707486.7nrk6WTBgP@diego>
-In-Reply-To: <20191120113923.11685-3-jagan@amarulasolutions.com>
-References: <20191120113923.11685-1-jagan@amarulasolutions.com> <20191120113923.11685-3-jagan@amarulasolutions.com>
+        id S1729530AbfKTN3W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 08:29:22 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BFF422520;
+        Wed, 20 Nov 2019 13:29:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574256561;
+        bh=kV3kgPdh8C4IDpFXE3HzyO2sRf6elrDUksgyFl5XkcU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Ww/ce3nIr3UDmOSRx0pVqVkR//4+eBwc9HYghv3xYkOduDua2kha5qiF/jUkHNwV7
+         oyzgbXcbOWVxxtCSn7xd/EZOKIBb20LYihpiYrkx5J4tchmmnf9a1o0yfKdJ169do2
+         HalmL8qod4jmsiMRazb7MX/nvzJmPN+9zWdunXyY=
+Date:   Wed, 20 Nov 2019 14:29:18 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Stephan =?iso-8859-1?Q?M=FCller?= <smueller@chronox.de>
+Cc:     Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        zhangjs <zachary@baishancloud.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        Nicolai Stange <nstange@suse.de>,
+        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
+        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
+        Roman Drahtmueller <draht@schaltsekun.de>,
+        Neil Horman <nhorman@redhat.com>
+Subject: Re: [PATCH v25 10/12] LRNG - add TRNG support
+Message-ID: <20191120132918.GA2892197@kroah.com>
+References: <5390778.VeFRgus4bQ@positron.chronox.de>
+ <CALCETrUKDO1LSMnHNcPiAFQh2ri6saRiRBi9b5e699cm1_Mgsw@mail.gmail.com>
+ <20191119124150.GB1975017@kroah.com>
+ <19681012.svDddlc5pN@positron.chronox.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <19681012.svDddlc5pN@positron.chronox.de>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jagan,
-
-looks good in general, just some small things below:
-
-Am Mittwoch, 20. November 2019, 12:39:20 CET schrieb Jagan Teki:
-> VMARC RK3399Pro SOM is a standard SMARC SOM design with
-> Rockchip RK3399Pro SoC, which is designed by Vamrs.
+On Wed, Nov 20, 2019 at 09:58:35AM +0100, Stephan Müller wrote:
+> Am Dienstag, 19. November 2019, 13:41:50 CET schrieb Greg Kroah-Hartman:
 > 
-> Specification:
-> - Rockchip RK3399Pro
-> - PMIC: RK809-3
-> - SD slot, 16GiB eMMC
-> - 2xUSB-2.0, 1xUSB3.0
-> - USB-C for power supply
-> - Ethernet, PCIe
-> - HDMI, MIPI-DSI/CSI, eDP
+> Hi Greg,
 > 
-> Add initial support for VMARC RK3399Pro SOM, this would use
-> with associated carrier board.
+> > On Tue, Nov 19, 2019 at 02:07:40AM -0800, Andy Lutomirski wrote:
+> > > > As this would introduce a new device file now, is there a special
+> > > > process that I need to follow or do I need to copy? Which major/minor
+> > > > number should I use?
+> > > > 
+> > > > Looking into static const struct memdev devlist[] I see
+> > > > 
+> > > >          [8] = { "random", 0666, &random_fops, 0 },
+> > > >          [9] = { "urandom", 0666, &urandom_fops, 0 },
+> > > > 
+> > > > Shall a true_random be added here with [10]?
+> > > 
+> > > I am not at all an expert on chardevs, but this sounds generally
+> > > reasonable.  gregkh is probably the real authority here.
+> > 
+> > [10] is the aio char device node, so you better not try to overlap it or
+> > bad things will happen :(
 > 
-> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> ---
->  .../dts/rockchip/rk3399pro-vmarc-som.dtsi     | 339 ++++++++++++++++++
->  1 file changed, 339 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
+> Thanks for your insights.
 > 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi b/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
-> new file mode 100644
-> index 000000000000..ddf6ebc9fbe3
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
-> @@ -0,0 +1,339 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (c) 2019 Fuzhou Rockchip Electronics Co., Ltd
-> + * Copyright (c) 2019 Vamrs Limited
-> + * Copyright (c) 2019 Amarula Solutions(India)
-> + */
-> +
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/pinctrl/rockchip.h>
-> +#include <dt-bindings/pwm/pwm.h>
-> +
-> +/ {
-> +	compatible = "vamrs,rk3399pro-vmarc-som", "rockchip,rk3399pro";
-> +
-> +	clkin_gmac: external-gmac-clock {
-> +		compatible = "fixed-clock";
-> +		clock-frequency = <125000000>;
-> +		clock-output-names = "clkin_gmac";
-> +		#clock-cells = <0>;
-> +	};
-> +
-> +	vcc5v0_sys: vcc5v0-sys-regulator {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vcc5v0_sys";
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
+> Which device minor number could we use?
 
-Is vcc5v0_sys really the topmost regulator getting the outside
-power-supply?
+Get your own dynamic one by using a misc device if you _REALLY_ want to
+add yet-another-char-node-for-random-data.
 
+But I would have thought that we all realize that this is not the way to
+do things.  Let's not have "random", "urandom", and "true_random" be
+something we want to totally confuse userspace with, that way is insane.
 
-> +	};
-> +
-> +	vcc_lan: vcc3v3-phy-regulator {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vcc_lan";
+Please just make the existing userspace api "just work", don't add to
+the mess.
 
-vcc_lan / vcc_phy is mostly coming from the vendor bsp in some way
-and will be named differently in schematics ... also it should be connected
-to the regulator tree.
+thanks,
 
-[...]
-
-> +&tsadc {
-> +	status = "okay";
-> +
-> +	/* tshut mode 0:CRU 1:GPIO */
-
-I think we can live without the additional comments for properties :-)
-
-> +	rockchip,hw-tshut-mode = <1>;
-> +	/* tshut polarity 0:LOW 1:HIGH */
-> +	rockchip,hw-tshut-polarity = <1>;
-> +};
-
-Heiko
-
-
-
+greg k-h
