@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7241C432C3
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 636EDC432C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:42:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A28BA2071F
-	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:41:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4394920714
+	for <linux-kernel@archiver.kernel.org>; Wed, 20 Nov 2019 15:42:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730524AbfKTPl5 (ORCPT
+        id S1732164AbfKTPmA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 10:41:57 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:52866 "EHLO
+        Wed, 20 Nov 2019 10:42:00 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:52978 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730104AbfKTPkU (ORCPT
+        by vger.kernel.org with ESMTP id S1731819AbfKTPkU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 Nov 2019 10:40:20 -0500
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iXS5V-0004ag-Bf; Wed, 20 Nov 2019 15:40:13 +0000
+        id 1iXS5X-0004cx-Ds; Wed, 20 Nov 2019 15:40:15 +0000
 Received: from ben by deadeye with local (Exim 4.93-RC1)
         (envelope-from <ben@decadent.org.uk>)
-        id 1iXS5U-0004LP-Rq; Wed, 20 Nov 2019 15:40:12 +0000
+        id 1iXS5V-0004Ni-Fc; Wed, 20 Nov 2019 15:40:13 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Thomas Bogendoerfer" <tbogendoerfer@suse.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Christophe JAILLET" <christophe.jaillet@wanadoo.fr>
-Date:   Wed, 20 Nov 2019 15:38:12 +0000
-Message-ID: <lsq.1574264230.571603722@decadent.org.uk>
+        "Petr Vorel" <pvorel@suse.cz>,
+        "Thadeu Lima de Souza Cascardo" <cascardo@canonical.com>,
+        "Thomas Gleixner" <tglx@linutronix.de>
+Date:   Wed, 20 Nov 2019 15:38:27 +0000
+Message-ID: <lsq.1574264230.686973857@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 62/83] net: seeq: Fix the function used to release
- some memory in an error handling path
+Subject: [PATCH 3.16 77/83] alarmtimer: Use EOPNOTSUPP instead of ENOTSUPP
 In-Reply-To: <lsq.1574264230.280218497@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,49 +56,68 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
 
-commit e1e54ec7fb55501c33b117c111cb0a045b8eded2 upstream.
+commit f18ddc13af981ce3c7b7f26925f099e7c6929aba upstream.
 
-In commit 99cd149efe82 ("sgiseeq: replace use of dma_cache_wback_inv"),
-a call to 'get_zeroed_page()' has been turned into a call to
-'dma_alloc_coherent()'. Only the remove function has been updated to turn
-the corresponding 'free_page()' into 'dma_free_attrs()'.
-The error hndling path of the probe function has not been updated.
+ENOTSUPP is not supposed to be returned to userspace. This was found on an
+OpenPower machine, where the RTC does not support set_alarm.
 
-Fix it now.
+On that system, a clock_nanosleep(CLOCK_REALTIME_ALARM, ...) results in
+"524 Unknown error 524"
 
-Rename the corresponding label to something more in line.
+Replace it with EOPNOTSUPP which results in the expected "95 Operation not
+supported" error.
 
-Fixes: 99cd149efe82 ("sgiseeq: replace use of dma_cache_wback_inv")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Reviewed-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 1c6b39ad3f01 (alarmtimers: Return -ENOTSUPP if no RTC device is present)
+Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20190903171802.28314-1-cascardo@canonical.com
+[ pvorel: backport for v3.16, changes also in alarm_timer_{del,set}(), which
+were removed in f2c45807d3992fe0f173f34af9c347d907c31686 in v4.13-rc1 ]
+Signed-off-by: Petr Vorel <pvorel@suse.cz>
+Acked-by: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/net/ethernet/seeq/sgiseeq.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ kernel/time/alarmtimer.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/drivers/net/ethernet/seeq/sgiseeq.c
-+++ b/drivers/net/ethernet/seeq/sgiseeq.c
-@@ -792,15 +792,16 @@ static int sgiseeq_probe(struct platform
- 		printk(KERN_ERR "Sgiseeq: Cannot register net device, "
- 		       "aborting.\n");
- 		err = -ENODEV;
--		goto err_out_free_page;
-+		goto err_out_free_attrs;
- 	}
+--- a/kernel/time/alarmtimer.c
++++ b/kernel/time/alarmtimer.c
+@@ -533,7 +533,7 @@ static int alarm_timer_create(struct k_i
+ 	struct alarm_base *base;
  
- 	printk(KERN_INFO "%s: %s %pM\n", dev->name, sgiseeqstr, dev->dev_addr);
+ 	if (!alarmtimer_get_rtcdev())
+-		return -ENOTSUPP;
++		return -EOPNOTSUPP;
  
- 	return 0;
+ 	if (!capable(CAP_WAKE_ALARM))
+ 		return -EPERM;
+@@ -576,7 +576,7 @@ static void alarm_timer_get(struct k_iti
+ static int alarm_timer_del(struct k_itimer *timr)
+ {
+ 	if (!rtcdev)
+-		return -ENOTSUPP;
++		return -EOPNOTSUPP;
  
--err_out_free_page:
--	free_page((unsigned long) sp->srings);
-+err_out_free_attrs:
-+	dma_free_attrs(&pdev->dev, sizeof(*sp->srings), sp->srings,
-+		       sp->srings_dma, DMA_ATTR_NON_CONSISTENT);
- err_out_free_dev:
- 	free_netdev(dev);
+ 	if (alarm_try_to_cancel(&timr->it.alarm.alarmtimer) < 0)
+ 		return TIMER_RETRY;
+@@ -600,7 +600,7 @@ static int alarm_timer_set(struct k_itim
+ 	ktime_t exp;
  
+ 	if (!rtcdev)
+-		return -ENOTSUPP;
++		return -EOPNOTSUPP;
+ 
+ 	if (flags & ~TIMER_ABSTIME)
+ 		return -EINVAL;
+@@ -761,7 +761,7 @@ static int alarm_timer_nsleep(const cloc
+ 	struct restart_block *restart;
+ 
+ 	if (!alarmtimer_get_rtcdev())
+-		return -ENOTSUPP;
++		return -EOPNOTSUPP;
+ 
+ 	if (flags & ~TIMER_ABSTIME)
+ 		return -EINVAL;
 
