@@ -2,110 +2,129 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D5E6C43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:36:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FB0EC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:36:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54B03206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:36:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01D6F2071B
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:36:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Nw5dU8mL"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="XkP12c/i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726948AbfKUOgV (ORCPT
+        id S1727040AbfKUOgr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 09:36:21 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:35586 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726396AbfKUOgV (ORCPT
+        Thu, 21 Nov 2019 09:36:47 -0500
+Received: from mail-qv1-f67.google.com ([209.85.219.67]:39113 "EHLO
+        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726568AbfKUOgq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 09:36:21 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xALEXxbg176360;
-        Thu, 21 Nov 2019 14:36:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=M2ZTh/ffoJTAXhTWkUwqBgK4JVTx0Aie1A5Hh2zrp78=;
- b=Nw5dU8mLhMqxRSNdgBbulrptxP5HHvrlO+8tlOEr9Oho9bPZ17gTaLcYlnXYWNM0sd9S
- TmlbtL0vz3o3aNAtf3H4cEG8Jw9cgWNNOrYpWkNy2W5oZWlwERgy5GxSpgybzSiieVQ2
- vyyxDcd9dpnIWWycfLY2Wotq9FL4vpwMduvlqtF/LiXKNRAyQhQmXjc00kK6ewKZgsuE
- sdpKYPr/mofMLC55Q4wnU+d8K5ikPNNkO3Eqdvpba49j57TBFc6YOJlSIpCXCHC9FPJM
- 8huAbbZjxJjUj281dU+dSfc5brdbgPBkaNC0kAZiAfSM/jX+UlQ4WKJDELccXfEOEjtl 9w== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2wa8hu4qjd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 21 Nov 2019 14:36:10 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xALEYZH6166676;
-        Thu, 21 Nov 2019 14:36:09 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2wda0643ft-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 21 Nov 2019 14:36:09 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xALEa7Gm016867;
-        Thu, 21 Nov 2019 14:36:07 GMT
-Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 21 Nov 2019 06:36:06 -0800
-Date:   Thu, 21 Nov 2019 09:36:13 -0500
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Subject: Re: [PATCH 1/4] padata: update documentation
-Message-ID: <20191121143613.xofz7dkpy7e5wtqe@ca-dmjordan1.us.oracle.com>
-References: <20191120185412.302-1-daniel.m.jordan@oracle.com>
- <20191120185412.302-2-daniel.m.jordan@oracle.com>
- <20191120121634.6d989088@lwn.net>
+        Thu, 21 Nov 2019 09:36:46 -0500
+Received: by mail-qv1-f67.google.com with SMTP id v16so1480957qvq.6
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 06:36:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=rv5c3PJEtM2ffNdfZuVl2p9Xs+FPDxJaOjEmQ2G8DAo=;
+        b=XkP12c/ibS/aRyryTCd4qjn/PXxyYCusK1THaNAzNjypEGkjhmCt9LtT+qYEnSe3fB
+         R0spZ8YqysCDI95uGLLvFVswmZUjEqJ9cNCyHcavEFwClRwZ6y4PKDy88MyzZlAfM967
+         hisIg3vRQPZ469GZRWnqA3CNAZUY/hKDr+kXV7+2R0BibPU9CM1KGy5uODfMlNXxTJJo
+         tHEs5mFWOzUwzAdEjcr2fH3dCNIBIBIgehoNt8ki1/1o3yu01BkPAihfF+3/v5R6c6NG
+         mm7J2IKwvLhTCpGsMr85umCSjimcUeH9XgLjTylXIMq1THOPpUYiNcR9NxoGX25nyfzV
+         YKKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rv5c3PJEtM2ffNdfZuVl2p9Xs+FPDxJaOjEmQ2G8DAo=;
+        b=pZxp5ts7nNg6wEDBer3omDGrN0yWX93jrHNlhUQMl06Vy7w68n16wtEoHKfcPSLIeR
+         dr1wEbthpsI26yKDBNn8p4O14ZdhPj/Lo3/2NXDuiacyz1nRT5AqNkGHa+e5v98RZFdK
+         eSg5HaCos37pQgf4VKYc6pFJnDzCWc+ZeDcrtTqyL1ZjtpRHDi+0q3xxFwv9DUvA9Pxd
+         Kg1ionNNbtpF3L8sxuAqMICdQ5PJvtsgg6++vyNaLZ/C5bGohDrw6pasmMiMuklUfS+O
+         F1p2Jzdd2QDldVADiu9MH4qxVKCRQQV2SDBCsE+8r9v4NsxyOz1ciOinZr5wqwU5mjeT
+         lIPw==
+X-Gm-Message-State: APjAAAVags8HpZ1PGNBwFS4TBFdPITE5XpXN/ovcAiozVX+ezJAxpP7i
+        vugY49FN/v9QvuzW5HFpwoMONw==
+X-Google-Smtp-Source: APXvYqxiPTD6uqfSlGreW7CNwXwCXJOA4tNSbO40QzzV7IhKLzuaPAx4PWY7OQoHdNILaiGopmJlAA==
+X-Received: by 2002:a0c:e74a:: with SMTP id g10mr8540002qvn.29.1574347005412;
+        Thu, 21 Nov 2019 06:36:45 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-162-113-180.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.180])
+        by smtp.gmail.com with ESMTPSA id 40sm1584912qtc.95.2019.11.21.06.36.44
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 21 Nov 2019 06:36:44 -0800 (PST)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1iXnZb-0004bF-SZ; Thu, 21 Nov 2019 10:36:43 -0400
+Date:   Thu, 21 Nov 2019 10:36:43 -0400
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     John Hubbard <jhubbard@nvidia.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v7 07/24] IB/umem: use get_user_pages_fast() to pin DMA
+ pages
+Message-ID: <20191121143643.GC7448@ziepe.ca>
+References: <20191121071354.456618-1-jhubbard@nvidia.com>
+ <20191121071354.456618-8-jhubbard@nvidia.com>
+ <20191121080746.GC30991@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191120121634.6d989088@lwn.net>
-User-Agent: NeoMutt/20180716
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9447 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1911210133
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9447 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1911210133
+In-Reply-To: <20191121080746.GC30991@infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 12:16:34PM -0700, Jonathan Corbet wrote:
-> This all seems fine - it's better than not doing it - but can I put in a
-> request or two?
+On Thu, Nov 21, 2019 at 12:07:46AM -0800, Christoph Hellwig wrote:
+> On Wed, Nov 20, 2019 at 11:13:37PM -0800, John Hubbard wrote:
+> > And get rid of the mmap_sem calls, as part of that. Note
+> > that get_user_pages_fast() will, if necessary, fall back to
+> > __gup_longterm_unlocked(), which takes the mmap_sem as needed.
+> > 
+> > Reviewed-by: Jan Kara <jack@suse.cz>
+> > Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+> > Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+> > Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 > 
->  - This document is already formatted as RST, and your changes continue
->    that.  Can we please move it to Documentation/core-api/padata.rst and
->    add it to the TOC tree there?  Then it can become part of our formatted
->    docs.
+> Looks fine,
 > 
->  - The padata code seems to be nicely equipped with kerneldoc comments; it
->    would be awfully nice to pull them into the document directly rather
->    than replicating the API there.  (Why does the document do that now?
->    Blame the bozo who originally wrote it :)  That would make the document
->    more complete and easier to maintain going forward.
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> 
+> Jason, can you queue this up for 5.5 to reduce this patch stack a bit?
 
-Ok.  It would be nice to preserve the how-to aspect of the original doc as
-well, in other words, the order the interfaces should be called in.  Will do
-both.
+Yes, I said I'd do this in an earlier revision. Now that it is clear this
+won't go through Andrew's tree, applied to rdma for-next
 
-> For added goodness we could stick in an SPDX tag while we're at it.
-
-I'll use the license from padata.c/h.
+Thanks,
+Jason
