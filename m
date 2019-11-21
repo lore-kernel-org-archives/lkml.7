@@ -2,143 +2,190 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A7B8C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:25:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ADDFC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:25:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 580FB2075A
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:25:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52FF52075A
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:25:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574306715;
+	bh=NQZEd8v97Kx8SQRm2lC/02RuQn2Hi0S1xJaELXyodjA=;
+	h=From:To:Subject:Date:List-ID:From;
+	b=2dX5WRAloEQZbsGnQevEeTzClwMwXqBMF8evshgKKF7OtP/fUvJ6jccUwBmuk4kBu
+	 FNmSQ0e9rp8o2H+PZf+Mnv6sPOzNbuIytB/3AIbIadRagYXh4jZ85StarVa+mCncG6
+	 FjQIvtR8PajnHNVvp8ta6a8/ZEPL3Z+GIJ+QjhFE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726979AbfKUDZK (ORCPT
+        id S1727085AbfKUDZO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 22:25:10 -0500
-Received: from mail-io1-f70.google.com ([209.85.166.70]:32899 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725842AbfKUDZJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 22:25:09 -0500
-Received: by mail-io1-f70.google.com with SMTP id p19so1219881iog.0
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 19:25:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=tTMBJza7I+CNlM4ltV11PewawOOCN3wvlJFFx+joNqM=;
-        b=T0NkvNpETlB5JPGbnNTmK419uYQzyAn9567ciXRY9kilJcaLxdvtZYf8z8AUwMEbrd
-         QWWoF/Govu891F7uZC1auZl7Yi8ysP24jt2WmeNWPIY6kXvh2s88e4pVgLD5cA3SFJe6
-         84SL+67b7hEH6Ds+pf8lu1ZD9vUEm2NzTCib0HaV8wRr808ll5ZC9dizMeMvkBVou0w1
-         GuRt4rvjJeMpi9p6o/mZQvUTi+9gwxjG211jkOOjSMrjv6b6zjqMqReNirXS3n1F6Ql/
-         w+Oaz8DTj/C/RWJLqaAcDkPe7qVmwYrsyy0RMk7n57MPN5xvRf1K5WsjiTLr0gFnnAXd
-         Wbhw==
-X-Gm-Message-State: APjAAAV+nxMY4aOtIjFOiEW81aZQs3m4hG0JXSnujG35uyrXltXRR+tp
-        AA4olHrkjsGF9bueusu6rB1UTgrKOep+bswHMRfYf0ZAEAiB
-X-Google-Smtp-Source: APXvYqwD2pIardansrgjP3LnHaQttGRCTOnZldnYzP3s94Fh1+Un8226PhVEKKjwmoGDMMNOiKFEH1JWUfNLlRdS1MyLXbWYqpyd
-MIME-Version: 1.0
-X-Received: by 2002:a02:878b:: with SMTP id t11mr6699673jai.20.1574306709039;
- Wed, 20 Nov 2019 19:25:09 -0800 (PST)
-Date:   Wed, 20 Nov 2019 19:25:09 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000028f3c20597d2d8ee@google.com>
-Subject: WARNING in j1939_sk_queue_activate_next
-From:   syzbot <syzbot+49595536c57ef38095ed@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, kernel@pengutronix.de,
-        linux-can@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux@rempel-privat.de, mkl@pengutronix.de, netdev@vger.kernel.org,
-        robin@protonic.nl, socketcan@hartkopp.net,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+        Wed, 20 Nov 2019 22:25:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37548 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725936AbfKUDZM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 22:25:12 -0500
+Received: from PC-kkoz.proceq.com (unknown [213.160.61.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B452B20721;
+        Thu, 21 Nov 2019 03:25:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574306711;
+        bh=NQZEd8v97Kx8SQRm2lC/02RuQn2Hi0S1xJaELXyodjA=;
+        h=From:To:Subject:Date:From;
+        b=tjuF777b81OZLTIAEISe06O6iDt7pAlIM62+iBtTa7iDAgoQaOeOYqiwRledc6MmZ
+         SYGM0S2jQSfuxk4O+A15KLBbZ0pASLcDvEf0naZPGQu0FGiAxkuAUxLhlb4j9obI2X
+         zqkjvTESFPubj46tdActXy/4psdWpw6I5odTw+9I=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Jiri Kosina <trivial@kernel.org>, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        kvm@vger.kernel.org
+Subject: [PATCH] virt: Fix Kconfig indentation
+Date:   Thu, 21 Nov 2019 04:25:02 +0100
+Message-Id: <1574306702-7834-1-git-send-email-krzk@kernel.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Adjust indentation from spaces to tab (+optional two spaces) as in
+coding style with command like:
+	$ sed -e 's/^        /\t/' -i */Kconfig
 
-syzbot found the following crash on:
-
-HEAD commit:    1f12177b Merge branch 'cpsw-switchdev'
-git tree:       net-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=16cd57f6e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ce691bc139ec9632
-dashboard link: https://syzkaller.appspot.com/bug?extid=49595536c57ef38095ed
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14685836e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12f8b2f2e00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+49595536c57ef38095ed@syzkaller.appspotmail.com
-
-vcan0: j1939_tp_rxtimer: 0x00000000bc4b6db0: rx timeout, send abort
-vcan0: j1939_xtp_rx_abort_one: 0x00000000bc4b6db0: 0x00000: (3) A timeout  
-occurred and this is the connection abort to close the session.
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 9 at net/can/j1939/socket.c:180  
-j1939_sk_queue_activate_next_locked net/can/j1939/socket.c:180 [inline]
-WARNING: CPU: 0 PID: 9 at net/can/j1939/socket.c:180  
-j1939_sk_queue_activate_next+0x359/0x460 net/can/j1939/socket.c:204
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 9 Comm: ksoftirqd/0 Not tainted 5.4.0-rc7-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x197/0x210 lib/dump_stack.c:118
-  panic+0x2e3/0x75c kernel/panic.c:221
-  __warn.cold+0x2f/0x35 kernel/panic.c:582
-  report_bug+0x289/0x300 lib/bug.c:195
-  fixup_bug arch/x86/kernel/traps.c:179 [inline]
-  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
-  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
-  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
-RIP: 0010:j1939_sk_queue_activate_next_locked net/can/j1939/socket.c:180  
-[inline]
-RIP: 0010:j1939_sk_queue_activate_next+0x359/0x460  
-net/can/j1939/socket.c:204
-Code: e8 1c 83 c0 0a 89 45 cc eb 9f 48 c7 c7 b4 1a c7 89 e8 cb b1 2d fb e9  
-6a fd ff ff e8 c1 b1 2d fb e9 19 fe ff ff e8 17 f9 f1 fa <0f> 0b 48 8b 45  
-c0 48 8d b8 b0 00 00 00 48 89 f8 48 c1 e8 03 42 0f
-RSP: 0018:ffff8880a98af918 EFLAGS: 00010206
-RAX: ffff8880a98a2240 RBX: ffff888099561000 RCX: ffffffff86816668
-RDX: 0000000000000100 RSI: ffffffff86816709 RDI: 0000000000000005
-RBP: ffff8880a98af970 R08: ffff8880a98a2240 R09: fffffbfff14f0f4c
-R10: fffffbfff14f0f4b R11: ffffffff8a787a5f R12: ffff888099561510
-R13: ffff88809175cc00 R14: ffff888099561548 R15: dffffc0000000000
-  j1939_session_deactivate_activate_next+0x3d/0x50  
-net/can/j1939/transport.c:1046
-  j1939_xtp_rx_abort_one.cold+0x21a/0x35e net/can/j1939/transport.c:1275
-  j1939_xtp_rx_abort net/can/j1939/transport.c:1286 [inline]
-  j1939_tp_cmd_recv net/can/j1939/transport.c:1972 [inline]
-  j1939_tp_recv+0x783/0x9b0 net/can/j1939/transport.c:2005
-  j1939_can_recv+0x502/0x610 net/can/j1939/main.c:101
-  deliver net/can/af_can.c:569 [inline]
-  can_rcv_filter+0x292/0x8e0 net/can/af_can.c:603
-  can_receive+0x2e7/0x530 net/can/af_can.c:660
-  can_rcv+0x133/0x1b0 net/can/af_can.c:686
-  __netif_receive_skb_one_core+0x113/0x1a0 net/core/dev.c:5150
-  __netif_receive_skb+0x2c/0x1d0 net/core/dev.c:5264
-  process_backlog+0x206/0x750 net/core/dev.c:6095
-  napi_poll net/core/dev.c:6532 [inline]
-  net_rx_action+0x508/0x1120 net/core/dev.c:6600
-  __do_softirq+0x262/0x98c kernel/softirq.c:292
-  run_ksoftirqd kernel/softirq.c:603 [inline]
-  run_ksoftirqd+0x8e/0x110 kernel/softirq.c:595
-  smpboot_thread_fn+0x6a3/0xa40 kernel/smpboot.c:165
-  kthread+0x361/0x430 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+Changes since v1:
+1. Fix also 7-space and tab+1 space indentation issues.
+---
+ drivers/virt/Kconfig | 10 +++++-----
+ virt/kvm/Kconfig     | 42 +++++++++++++++++++++---------------------
+ 2 files changed, 26 insertions(+), 26 deletions(-)
+
+diff --git a/drivers/virt/Kconfig b/drivers/virt/Kconfig
+index 363af2eaf2ba..cb5d2d89592f 100644
+--- a/drivers/virt/Kconfig
++++ b/drivers/virt/Kconfig
+@@ -18,17 +18,17 @@ config FSL_HV_MANAGER
+ 	depends on FSL_SOC
+ 	select EPAPR_PARAVIRT
+ 	help
+-          The Freescale hypervisor management driver provides several services
++	  The Freescale hypervisor management driver provides several services
+ 	  to drivers and applications related to the Freescale hypervisor:
+ 
+-          1) An ioctl interface for querying and managing partitions.
++	  1) An ioctl interface for querying and managing partitions.
+ 
+-          2) A file interface to reading incoming doorbells.
++	  2) A file interface to reading incoming doorbells.
+ 
+-          3) An interrupt handler for shutting down the partition upon
++	  3) An interrupt handler for shutting down the partition upon
+ 	     receiving the shutdown doorbell from a manager partition.
+ 
+-          4) A kernel interface for receiving callbacks when a managed
++	  4) A kernel interface for receiving callbacks when a managed
+ 	     partition shuts down.
+ 
+ source "drivers/virt/vboxguest/Kconfig"
+diff --git a/virt/kvm/Kconfig b/virt/kvm/Kconfig
+index aad9284c043a..5f4184ecf1cf 100644
+--- a/virt/kvm/Kconfig
++++ b/virt/kvm/Kconfig
+@@ -2,61 +2,61 @@
+ # KVM common configuration items and defaults
+ 
+ config HAVE_KVM
+-       bool
++	bool
+ 
+ config HAVE_KVM_IRQCHIP
+-       bool
++	bool
+ 
+ config HAVE_KVM_IRQFD
+-       bool
++	bool
+ 
+ config HAVE_KVM_IRQ_ROUTING
+-       bool
++	bool
+ 
+ config HAVE_KVM_EVENTFD
+-       bool
+-       select EVENTFD
++	bool
++	select EVENTFD
+ 
+ config KVM_MMIO
+-       bool
++	bool
+ 
+ config KVM_ASYNC_PF
+-       bool
++	bool
+ 
+ # Toggle to switch between direct notification and batch job
+ config KVM_ASYNC_PF_SYNC
+-       bool
++	bool
+ 
+ config HAVE_KVM_MSI
+-       bool
++	bool
+ 
+ config HAVE_KVM_CPU_RELAX_INTERCEPT
+-       bool
++	bool
+ 
+ config KVM_VFIO
+-       bool
++	bool
+ 
+ config HAVE_KVM_ARCH_TLB_FLUSH_ALL
+-       bool
++	bool
+ 
+ config HAVE_KVM_INVALID_WAKEUPS
+-       bool
++	bool
+ 
+ config KVM_GENERIC_DIRTYLOG_READ_PROTECT
+-       bool
++	bool
+ 
+ config KVM_COMPAT
+-       def_bool y
+-       depends on KVM && COMPAT && !(S390 || ARM64)
++	def_bool y
++	depends on KVM && COMPAT && !(S390 || ARM64)
+ 
+ config HAVE_KVM_IRQ_BYPASS
+-       bool
++	bool
+ 
+ config HAVE_KVM_VCPU_ASYNC_IOCTL
+-       bool
++	bool
+ 
+ config HAVE_KVM_VCPU_RUN_PID_CHANGE
+-       bool
++	bool
+ 
+ config HAVE_KVM_NO_POLL
+-       bool
++	bool
+-- 
+2.7.4
+
