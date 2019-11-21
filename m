@@ -2,208 +2,374 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E5EC432C3
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAF5FC43141
 	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:17:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93C1A2068E
+	by mail.kernel.org (Postfix) with ESMTP id B1EA42067D
 	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:17:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dW/31UQR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726910AbfKUVQm (ORCPT
+        id S1726830AbfKUVQm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 21 Nov 2019 16:16:42 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:34085 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726540AbfKUVQh (ORCPT
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:47063 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726329AbfKUVQZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 16:16:37 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iXtoU-0008AG-T6; Thu, 21 Nov 2019 22:16:30 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iXtoU-0005qn-5O; Thu, 21 Nov 2019 22:16:30 +0100
-Date:   Thu, 21 Nov 2019 22:16:30 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <pza@pengutronix.de>, linux-pwm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com,
-        Jernej Skrabec <jernej.skrabec@siol.net>, kernel@pengutronix.de
-Subject: Re: [PATCH v8 5/6] pwm: sun4i: Add support to output source clock
- directly
-Message-ID: <20191121211630.slgayfbuykwvlvdt@pengutronix.de>
-References: <20191121195902.6906-1-peron.clem@gmail.com>
- <20191121195902.6906-6-peron.clem@gmail.com>
+        Thu, 21 Nov 2019 16:16:25 -0500
+Received: by mail-qt1-f196.google.com with SMTP id r20so5289795qtp.13
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 13:16:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HjVA+vfOa4cuhOG7ZZQ5ZOYhaog/Hi6+sxpMWojKdbQ=;
+        b=dW/31UQR9TpIGK0h/XcisPIhwMkzpKxBQKFvP9I/80AGreRgtSo21q/f23Qm4fF29i
+         Snb0rG7W/Yw6tti1jiLmA8UP7gbcoZAogGZqJXvsU9PtwMiYrNyYVzRjLSka1nf4IqdO
+         ZpDyuLYtxk+M4IeJAnrFALGGYHFTUsmViuXfPRTXyE6kBtj74q/l7HyZxFznr4uslg5K
+         TXuR05iyDt4V5T+OSn6U6Hi0f172P6hoSY/GiKJcN3LYcZ1c+eQWigm5M8ogznXqInn5
+         ROI/zSaIQVEsvJEJqiXA+vSHzJeqBeiy9xdCRKP6epYQuoqLzRZFLoTptiNcyppn+C0v
+         n73Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HjVA+vfOa4cuhOG7ZZQ5ZOYhaog/Hi6+sxpMWojKdbQ=;
+        b=jp3Lk+fe9anXvwI6VWuEEvZbHJMsFrICjrB699UIrKQGCRadD9MXfnbUV1/lBYlhJ8
+         gFcQIYTm1easvPfnaWxBEvDbIhDZXvgcbislt4tiK28oeKPHOmlVyyYOTEGDog3txWyB
+         3Ne9hY5Nl/iOyHxjKhgAQ0n6x1F0+jEOeeMMifAS3IAhXQew8wfFAZGRlbWPQgLy451r
+         4ZchKDRwA/IbQAijyxvysnV+sPplEMXguuwQq1VoGT4DMq/ZBDkaEdrYkLo+Yx7ZOu+7
+         2ynhEviiEG/VvGb6lJVPyETIJhwbTQv7A6aWk78mGFu+DmntiapSHEMtKohORwkGHs4h
+         DrSA==
+X-Gm-Message-State: APjAAAVTX0iOfeyZ7kIhv9WGYX/IyUp2EjOCcndW/e2SFhZRd+HQDxEg
+        mY0JRuPtAn9TKgsCgACyyH6h598Vi6fKfoG6zWQKCA==
+X-Google-Smtp-Source: APXvYqxq7xEzAax5FVtLsPdRun5uqgKjwBTSdow7Rdb+nnIKX2At/wV1oBd6VwfO5SfYKpELtEaDmhqbzJSm2Jr8dkE=
+X-Received: by 2002:aed:31e7:: with SMTP id 94mr4875902qth.71.1574370983986;
+ Thu, 21 Nov 2019 13:16:23 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191121195902.6906-6-peron.clem@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <20191119193036.92831-1-brianvv@google.com> <20191119193036.92831-9-brianvv@google.com>
+ <9f80a432-9825-9a39-cc90-d1358e0fc40f@fb.com>
+In-Reply-To: <9f80a432-9825-9a39-cc90-d1358e0fc40f@fb.com>
+From:   Brian Vazquez <brianvv@google.com>
+Date:   Thu, 21 Nov 2019 13:16:12 -0800
+Message-ID: <CAMzD94Sc5oWxKVoCrXQyM1Zy1FEtxod6x+0UEVkUcE8p8ZX14g@mail.gmail.com>
+Subject: Re: [PATCH v2 bpf-next 8/9] selftests/bpf: add batch ops testing for
+ hmap and hmap_percpu
+To:     Yonghong Song <yhs@fb.com>
+Cc:     Brian Vazquez <brianvv.kernel@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S . Miller" <davem@davemloft.net>,
+        Stanislav Fomichev <sdf@google.com>,
+        Petar Penkov <ppenkov@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 08:59:01PM +0100, Clément Péron wrote:
-> From: Jernej Skrabec <jernej.skrabec@siol.net>
-> 
-> PWM core has an option to bypass whole logic and output unchanged source
-> clock as PWM output. This is achieved by enabling bypass bit.
-> 
-> Note that when bypass is enabled, no other setting has any meaning, not
-> even enable bit.
-> 
-> This mode of operation is needed to achieve high enough frequency to
-> serve as clock source for AC200 chip which is integrated into same
-> package as H6 SoC.
-> 
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> Signed-off-by: Clément Péron <peron.clem@gmail.com>
-> ---
->  drivers/pwm/pwm-sun4i.c | 48 +++++++++++++++++++++++++++++++++++++++--
->  1 file changed, 46 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-> index 1fa2057419fb..0fe9c680d6d0 100644
-> --- a/drivers/pwm/pwm-sun4i.c
-> +++ b/drivers/pwm/pwm-sun4i.c
-> @@ -3,6 +3,10 @@
->   * Driver for Allwinner sun4i Pulse Width Modulation Controller
->   *
->   * Copyright (C) 2014 Alexandre Belloni <alexandre.belloni@free-electrons.com>
-> + *
-> + * Limitations:
-> + * - When outputing the source clock directly, the PWM logic will be bypassed
-> + *   and the currently running period is not guaranteed to be completed
->   */
->  
->  #include <linux/bitops.h>
-> @@ -73,6 +77,7 @@ static const u32 prescaler_table[] = {
->  
->  struct sun4i_pwm_data {
->  	bool has_prescaler_bypass;
-> +	bool has_direct_mod_clk_output;
->  	unsigned int npwm;
->  };
->  
-> @@ -118,6 +123,20 @@ static void sun4i_pwm_get_state(struct pwm_chip *chip,
->  
->  	val = sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
->  
-> +	/*
-> +	 * PWM chapter in H6 manual has a diagram which explains that if bypass
-> +	 * bit is set, no other setting has any meaning. Even more, experiment
-> +	 * proved that also enable bit is ignored in this case.
-> +	 */
-> +	if ((val & BIT_CH(PWM_BYPASS, pwm->hwpwm)) &&
-> +	    sun4i_pwm->data->has_direct_mod_clk_output) {
-> +		state->period = DIV_ROUND_UP_ULL(NSEC_PER_SEC, clk_rate);
-> +		state->duty_cycle = DIV_ROUND_UP_ULL(state->period, 2);
-> +		state->polarity = PWM_POLARITY_NORMAL;
-> +		state->enabled = true;
-> +		return;
-> +	}
-> +
->  	if ((PWM_REG_PRESCAL(val, pwm->hwpwm) == PWM_PRESCAL_MASK) &&
->  	    sun4i_pwm->data->has_prescaler_bypass)
->  		prescaler = 1;
-> @@ -149,13 +168,24 @@ static void sun4i_pwm_get_state(struct pwm_chip *chip,
->  
->  static int sun4i_pwm_calculate(struct sun4i_pwm_chip *sun4i_pwm,
->  			       const struct pwm_state *state,
-> -			       u32 *dty, u32 *prd, unsigned int *prsclr)
-> +			       u32 *dty, u32 *prd, unsigned int *prsclr,
-> +			       bool *bypass)
->  {
->  	u64 clk_rate, div = 0;
->  	unsigned int pval, prescaler = 0;
->  
->  	clk_rate = clk_get_rate(sun4i_pwm->clk);
->  
-> +	*bypass = sun4i_pwm->data->has_direct_mod_clk_output &&
-> +		  state->enabled &&
-> +		  (state->period * clk_rate >= NSEC_PER_SEC) &&
-> +		  (state->period * clk_rate < 2 * NSEC_PER_SEC) &&
-> +		  (state->duty_cycle * clk_rate * 2 >= NSEC_PER_SEC);
-> +
-> +	/* Skip calculation of other parameters if we bypass them */
-> +	if (*bypass)
-> +		return 0;
-> +
->  	if (sun4i_pwm->data->has_prescaler_bypass) {
->  		/* First, test without any prescaler when available */
->  		prescaler = PWM_PRESCAL_MASK;
-> @@ -206,6 +236,7 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->  	int ret;
->  	unsigned int delay_us, prescaler;
->  	unsigned long now;
-> +	bool bypass;
->  
->  	pwm_get_state(pwm, &cstate);
->  
-> @@ -220,7 +251,8 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->  	spin_lock(&sun4i_pwm->ctrl_lock);
->  	ctrl = sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
->  
-> -	ret = sun4i_pwm_calculate(sun4i_pwm, state, &duty, &period, &prescaler);
-> +	ret = sun4i_pwm_calculate(sun4i_pwm, state, &duty, &period, &prescaler,
-> +				  &bypass);
->  	if (ret) {
->  		dev_err(chip->dev, "period exceeds the maximum value\n");
->  		spin_unlock(&sun4i_pwm->ctrl_lock);
-> @@ -229,6 +261,18 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->  		return ret;
->  	}
->  
-> +	if (sun4i_pwm->data->has_direct_mod_clk_output) {
-> +		if (bypass) {
-> +			ctrl |= BIT_CH(PWM_BYPASS, pwm->hwpwm);
-> +			/* We can skip other parameter */
-> +			sun4i_pwm_writel(sun4i_pwm, ctrl, PWM_CTRL_REG);
-> +			spin_unlock(&sun4i_pwm->ctrl_lock);
-> +			return 0;
-> +		} else {
-> +			ctrl &= ~BIT_CH(PWM_BYPASS, pwm->hwpwm);
-> +		}
-> +	}
+On Thu, Nov 21, 2019 at 10:36 AM Yonghong Song <yhs@fb.com> wrote:
+>
+>
+>
+> On 11/19/19 11:30 AM, Brian Vazquez wrote:
+> > From: Yonghong Song <yhs@fb.com>
+> >
+> > Tested bpf_map_lookup_and_delete_batch() and bpf_map_update_batch()
+> > functionality.
+> >    $ ./test_maps
+> >      ...
+> >        test_hmap_lookup_and_delete_batch:PASS
+> >        test_pcpu_hmap_lookup_and_delete_batch:PASS
+> >      ...
+>
+> Maybe you can add another tests for lookup_batch() and delete_batch()
+> so all new APIs get tested?
 
-This could be simplified to:
+I did test lookup_batch() and the code is there, I will add
+delete_batch() testing and change the name of the tests to better
+reflect what is being tested.
 
-	if (bypass) {
-		ctrl |= BIT_CH(PWM_BYPASS, pwm->hwpwm);
-		/*
-		 * Other parameters are not relevant in this mode and so
-		 * writing them can be skipped
-		 */
-		sun4i_pwm_writel(sun4i_pwm, ctrl, PWM_CTRL_REG);
-		spin_unlock(&sun4i_pwm->ctrl_lock);
-		return 0;
-	} else {
-		ctrl &= ~BIT_CH(PWM_BYPASS, pwm->hwpwm);
-	}
-
-which has the advantage(?) that the bypass bit is also (more obviously)
-cleared for SoCs that don't support it and it reduces the indention
-level.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+>
+> >
+> > Signed-off-by: Yonghong Song <yhs@fb.com>
+> > Signed-off-by: Brian Vazquez <brianvv@google.com>
+> > ---
+> >   .../map_lookup_and_delete_batch_htab.c        | 257 ++++++++++++++++++
+> >   1 file changed, 257 insertions(+)
+> >   create mode 100644 tools/testing/selftests/bpf/map_tests/map_lookup_and_delete_batch_htab.c
+> >
+> > diff --git a/tools/testing/selftests/bpf/map_tests/map_lookup_and_delete_batch_htab.c b/tools/testing/selftests/bpf/map_tests/map_lookup_and_delete_batch_htab.c
+> > new file mode 100644
+> > index 0000000000000..93e024cb85c60
+> > --- /dev/null
+> > +++ b/tools/testing/selftests/bpf/map_tests/map_lookup_and_delete_batch_htab.c
+> > @@ -0,0 +1,257 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/* Copyright (c) 2019 Facebook  */
+> > +#include <stdio.h>
+> > +#include <errno.h>
+> > +#include <string.h>
+> > +
+> > +#include <bpf/bpf.h>
+> > +#include <bpf/libbpf.h>
+> > +
+> > +#include <bpf_util.h>
+> > +#include <test_maps.h>
+> > +
+> > +static void map_batch_update(int map_fd, __u32 max_entries, int *keys,
+> > +                          void *values, bool is_pcpu)
+> > +{
+> > +     typedef BPF_DECLARE_PERCPU(int, value);
+> > +     int i, j, err;
+> > +     value *v;
+> > +
+> > +     if (is_pcpu)
+> > +             v = (value *)values;
+> > +
+> > +     for (i = 0; i < max_entries; i++) {
+> > +             keys[i] = i + 1;
+> > +             if (is_pcpu)
+> > +                     for (j = 0; j < bpf_num_possible_cpus(); j++)
+> > +                             bpf_percpu(v[i], j) = i + 2 + j;
+> > +             else
+> > +                     ((int *)values)[i] = i + 2;
+> > +     }
+> > +
+> > +     err = bpf_map_update_batch(map_fd, keys, values, &max_entries, 0, 0);
+> > +     CHECK(err, "bpf_map_update_batch()", "error:%s\n", strerror(errno));
+> > +}
+> > +
+> > +static void map_batch_verify(int *visited, __u32 max_entries,
+> > +                          int *keys, void *values, bool is_pcpu)
+> > +{
+> > +     typedef BPF_DECLARE_PERCPU(int, value);
+> > +     value *v;
+> > +     int i, j;
+> > +
+> > +     if (is_pcpu)
+> > +             v = (value *)values;
+> > +
+> > +     memset(visited, 0, max_entries * sizeof(*visited));
+> > +     for (i = 0; i < max_entries; i++) {
+> > +
+> > +             if (is_pcpu) {
+> > +                     for (j = 0; j < bpf_num_possible_cpus(); j++) {
+> > +                             CHECK(keys[i] + 1 + j != bpf_percpu(v[i], j),
+> > +                                   "key/value checking",
+> > +                                   "error: i %d j %d key %d value %d\n",
+> > +                                   i, j, keys[i], bpf_percpu(v[i],  j));
+> > +                     }
+> > +             } else {
+> > +                     CHECK(keys[i] + 1 != ((int *)values)[i],
+> > +                           "key/value checking",
+> > +                           "error: i %d key %d value %d\n", i, keys[i],
+> > +                           ((int *)values)[i]);
+> > +             }
+> > +
+> > +             visited[i] = 1;
+> > +
+> > +     }
+> > +     for (i = 0; i < max_entries; i++) {
+> > +             CHECK(visited[i] != 1, "visited checking",
+> > +                   "error: keys array at index %d missing\n", i);
+> > +     }
+> > +}
+> > +
+> > +void __test_map_lookup_and_delete_batch(bool is_pcpu)
+> > +{
+> > +     int map_type = is_pcpu ? BPF_MAP_TYPE_PERCPU_HASH : BPF_MAP_TYPE_HASH;
+> > +     struct bpf_create_map_attr xattr = {
+> > +             .name = "hash_map",
+> > +             .map_type = map_type,
+> > +             .key_size = sizeof(int),
+> > +             .value_size = sizeof(int),
+> > +     };
+> > +     typedef BPF_DECLARE_PERCPU(int, value);
+> > +     int map_fd, *keys, *visited, key;
+> > +     __u32 batch = 0, count, total, total_success;
+> > +     const __u32 max_entries = 10;
+> > +     int err, i, step, value_size;
+> > +     value pcpu_values[10];
+> > +     bool nospace_err;
+> > +     void *values;
+> > +
+> > +     xattr.max_entries = max_entries;
+> > +     map_fd = bpf_create_map_xattr(&xattr);
+> > +     CHECK(map_fd == -1,
+> > +           "bpf_create_map_xattr()", "error:%s\n", strerror(errno));
+> > +
+> > +     value_size = is_pcpu ? sizeof(value) : sizeof(int);
+> > +     keys = malloc(max_entries * sizeof(int));
+> > +     if (is_pcpu)
+> > +             values = pcpu_values;
+> > +     else
+> > +             values = malloc(max_entries * sizeof(int));
+> > +     visited = malloc(max_entries * sizeof(int));
+> > +     CHECK(!keys || !values || !visited, "malloc()",
+> > +           "error:%s\n", strerror(errno));
+> > +
+> > +     /* test 1: lookup/delete an empty hash table, -ENOENT */
+> > +     count = max_entries;
+> > +     err = bpf_map_lookup_and_delete_batch(map_fd, NULL, &batch, keys,
+> > +                                           values, &count, 0, 0);
+> > +     CHECK((err && errno != ENOENT), "empty map",
+> > +           "error: %s\n", strerror(errno));
+> > +
+> > +     /* populate elements to the map */
+> > +     map_batch_update(map_fd, max_entries, keys, values, is_pcpu);
+> > +
+> > +     /* test 2: lookup/delete with count = 0, success */
+> > +     batch = 0;
+> > +     count = 0;
+> > +     err = bpf_map_lookup_and_delete_batch(map_fd, NULL, &batch, keys,
+> > +                                           values, &count, 0, 0);
+> > +     CHECK(err, "count = 0", "error: %s\n", strerror(errno));
+> > +
+> > +     /* test 3: lookup/delete with count = max_entries, success */
+> > +     memset(keys, 0, max_entries * sizeof(*keys));
+> > +     memset(values, 0, max_entries * value_size);
+> > +     count = max_entries;
+> > +     batch = 0;
+> > +     err = bpf_map_lookup_and_delete_batch(map_fd, NULL, &batch, keys,
+> > +                                           values, &count, 0, 0);
+> > +     CHECK((err && errno != ENOENT), "count = max_entries",
+> > +            "error: %s\n", strerror(errno));
+> > +     CHECK(count != max_entries, "count = max_entries",
+> > +           "count = %u, max_entries = %u\n", count, max_entries);
+> > +     map_batch_verify(visited, max_entries, keys, values, is_pcpu);
+> > +
+> > +     /* bpf_map_get_next_key() should return -ENOENT for an empty map. */
+> > +     err = bpf_map_get_next_key(map_fd, NULL, &key);
+> > +     CHECK(!err, "bpf_map_get_next_key()", "error: %s\n", strerror(errno));
+> > +
+> > +     /* test 4: lookup/delete in a loop with various steps. */
+> > +     total_success = 0;
+> > +     for (step = 1; step < max_entries; step++) {
+> > +             map_batch_update(map_fd, max_entries, keys, values, is_pcpu);
+> > +             memset(keys, 0, max_entries * sizeof(*keys));
+> > +             memset(values, 0, max_entries * value_size);
+> > +             batch = 0;
+> > +             total = 0;
+> > +             i = 0;
+> > +             /* iteratively lookup/delete elements with 'step'
+> > +              * elements each
+> > +              */
+> > +             count = step;
+> > +             nospace_err = false;
+> > +             while (true) {
+> > +                     err = bpf_map_lookup_batch(map_fd,
+> > +                                                total ? &batch : NULL,
+> > +                                                &batch, keys + total,
+> > +                                                values +
+> > +                                                total * value_size,
+> > +                                                &count, 0, 0);
+> > +                     /* It is possible that we are failing due to buffer size
+> > +                      * not big enough. In such cases, let us just exit and
+> > +                      * go with large steps. Not that a buffer size with
+> > +                      * max_entries should always work.
+> > +                      */
+> > +                     if (err && errno == ENOSPC) {
+> > +                             nospace_err = true;
+> > +                             break;
+> > +                     }
+> > +
+> > +
+> > +                     CHECK((err && errno != ENOENT), "lookup with steps",
+> > +                           "error: %s\n", strerror(errno));
+> > +
+> > +                     total += count;
+> > +                     if (err)
+> > +                             break;
+> > +
+> > +                     i++;
+> > +             }
+> > +             if (nospace_err == true)
+> > +                     continue;
+> > +
+> > +             CHECK(total != max_entries, "lookup with steps",
+> > +                   "total = %u, max_entries = %u\n", total, max_entries);
+> > +             map_batch_verify(visited, max_entries, keys, values, is_pcpu);
+> > +
+> > +             memset(keys, 0, max_entries * sizeof(*keys));
+> > +             memset(values, 0, max_entries * value_size);
+> > +             batch = 0;
+> > +             total = 0;
+> > +             i = 0;
+> > +             /* iteratively lookup/delete elements with 'step'
+> > +              * elements each
+> > +              */
+> > +             count = step;
+> > +             nospace_err = false;
+> > +             while (true) {
+> > +                     err = bpf_map_lookup_and_delete_batch(map_fd,
+> > +                                                     total ? &batch : NULL,
+> > +                                                     &batch, keys + total,
+> > +                                                     values +
+> > +                                                     total * value_size,
+> > +                                                     &count, 0, 0);
+> > +                     /* It is possible that we are failing due to buffer size
+> > +                      * not big enough. In such cases, let us just exit and
+> > +                      * go with large steps. Not that a buffer size with
+> > +                      * max_entries should always work.
+> > +                      */
+> > +                     if (err && errno == ENOSPC) {
+> > +                             nospace_err = true;
+> > +                             break;
+> > +                     }
+> > +
+> > +                     CHECK((err && errno != ENOENT), "lookup with steps",
+> > +                           "error: %s\n", strerror(errno));
+> > +
+> > +                     total += count;
+> > +                     if (err)
+> > +                             break;
+> > +                     i++;
+> > +             }
+> > +
+> > +             if (nospace_err == true)
+> > +                     continue;
+> > +
+> > +             CHECK(total != max_entries, "lookup/delete with steps",
+> > +                   "total = %u, max_entries = %u\n", total, max_entries);
+> > +
+> > +             map_batch_verify(visited, max_entries, keys, values, is_pcpu);
+> > +             err = bpf_map_get_next_key(map_fd, NULL, &key);
+> > +             CHECK(!err, "bpf_map_get_next_key()", "error: %s\n",
+> > +                   strerror(errno));
+> > +
+> > +             total_success++;
+> > +     }
+> > +
+> > +     CHECK(total_success == 0, "check total_success",
+> > +           "unexpected failure\n");
+> > +}
+> > +
+> > +void test_hmap_lookup_and_delete_batch(void)
+> > +{
+> > +     __test_map_lookup_and_delete_batch(false);
+> > +     printf("%s:PASS\n", __func__);
+> > +}
+> > +
+> > +void test_pcpu_hmap_lookup_and_delete_batch(void)
+> > +{
+> > +     __test_map_lookup_and_delete_batch(true);
+> > +     printf("%s:PASS\n", __func__);
+> > +}
+> > +
+> > +void test_map_lookup_and_delete_batch_htab(void)
+> > +{
+> > +     test_hmap_lookup_and_delete_batch();
+> > +     test_pcpu_hmap_lookup_and_delete_batch();
+> > +}
+> >
