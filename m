@@ -2,95 +2,90 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BB49C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 22:58:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A565FC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 23:02:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3054D206CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 22:58:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GNXYPv+M"
+	by mail.kernel.org (Postfix) with ESMTP id 72BAC20692
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 23:02:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbfKUW6f (ORCPT
+        id S1726532AbfKUXCC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 17:58:35 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:40147 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726038AbfKUW6f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 17:58:35 -0500
-Received: by mail-io1-f67.google.com with SMTP id b26so3620076ion.7;
-        Thu, 21 Nov 2019 14:58:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uN4hyE3BsXplYJBM6a2D+eSFwcm1JgVbWlkvWiQItuM=;
-        b=GNXYPv+MoZ6ufzCOmzmZ3FbAGuNxZFHtzj2f+mLFc4MuUsi8YJcOkyliGl2bInzAI/
-         e4Zy5nUd8r4M/WJuXHH69WsI5BOApmhlhe4xbO1CkywTpGBJvqAzk5kzq+IGGuq+HbPF
-         CVGiIgsEzJNLWPQbB7z904ZoBU9uwh3kvmd0TjuMX3Gx1s+8e7Nps9W2iWA0lNaS/c88
-         5B7REKcrpUQLMjkze2sYAD9dL0OHLNGUlcd34h7NHg9gVsCVES3P+6tciTQCSy8DuC23
-         oKWi/dTAt+M5cVXwpI8DInfw8Iznpdpz5JLa23QtpB8QGgoHb+XzGfrmyOtXJyITE9tE
-         /dwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uN4hyE3BsXplYJBM6a2D+eSFwcm1JgVbWlkvWiQItuM=;
-        b=tflF5XoMxZOPv6EiYQWSla8GvLGizFjnICYeY3ZBL32FbzRocSnPG828X4l1JQyd4R
-         qb7nXMJTyqU5cAL/xtrexo0mLXS5b8PzeFqm+6HfuuUf8gTGSyp4Z8zldySb8qewWvHY
-         Ee0K6zb+VLHLgg5te9MhYXKo2HqSMRbD+3KJak5YHqi1kuAVsBO7PFGv5RZJuJWQbACf
-         LeHxKESNJ41XPp2kcBS+hZi3036lZmDWR4KOplQVjYQr+Q05sTCkt/XVinXzze+TKMiH
-         zSBsB5QaF5dZwNa1sLGWk1J/R5VMGniswiq+K4dis3rhEON3CWf2Ewn8ybG84dNpTKZR
-         7UCQ==
-X-Gm-Message-State: APjAAAUTB3xtsAypHmO1xZrLfxTZmIY0krPLT1jcYSxFbsWBO8+b3y7k
-        ROdnqThtHrPWlaJ6J7KF4nLuoJcXkh4/96O8FyY=
-X-Google-Smtp-Source: APXvYqxt2fyeSeuT7Rks7RsLI5P5xJkkHZ7JT6gT1o753wrBhnsAWRGn8abdnAlt9IuIed0B6IO1Ba87ARUD4oQ+9Z8=
-X-Received: by 2002:a02:6a02:: with SMTP id l2mr2823388jac.89.1574377112589;
- Thu, 21 Nov 2019 14:58:32 -0800 (PST)
+        Thu, 21 Nov 2019 18:02:02 -0500
+Received: from mga06.intel.com ([134.134.136.31]:21331 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725936AbfKUXCC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 18:02:02 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Nov 2019 15:02:01 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,227,1571727600"; 
+   d="scan'208";a="219259419"
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by orsmga002.jf.intel.com with ESMTP; 21 Nov 2019 15:02:00 -0800
+Date:   Thu, 21 Nov 2019 15:14:11 -0800
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
+Subject: Re: [PATCH v10 5/6] x86/split_lock: Handle #AC exception for split
+ lock
+Message-ID: <20191121231410.GD199273@romley-ivt3.sc.intel.com>
+References: <1574297603-198156-6-git-send-email-fenghua.yu@intel.com>
+ <5BDDAE0C-2D31-4779-B3A0-5BF206FF3E50@amacapital.net>
 MIME-Version: 1.0
-References: <20191120054728.0979695C0FE4@us180.sjc.aristanetworks.com>
-In-Reply-To: <20191120054728.0979695C0FE4@us180.sjc.aristanetworks.com>
-From:   Dmitry Safonov <0x7f454c46@gmail.com>
-Date:   Thu, 21 Nov 2019 22:58:21 +0000
-Message-ID: <CAJwJo6bu0Hkmneg=DuwN=v_G4pkm1JQnUWKEVcudJD5L0pjLiw@mail.gmail.com>
-Subject: Re: [PATCH] ACPI: only free map once in osl.c
-To:     Francesco Ruggeri <fruggeri@arista.com>
-Cc:     lenb@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-acpi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <5BDDAE0C-2D31-4779-B3A0-5BF206FF3E50@amacapital.net>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 20 Nov 2019 at 05:50, Francesco Ruggeri <fruggeri@arista.com> wrote:
->
-> acpi_os_map_cleanup checks map->refcount outside of acpi_ioremap_lock
-> before freeing the map. This creates a race condition the can result
-> in the map being freed more than once.
-> A panic can be caused by running
->
-> for ((i=0; i<10; i++))
-> do
->         for ((j=0; j<100000; j++))
->         do
->                 cat /sys/firmware/acpi/tables/data/BERT >/dev/null
->         done &
-> done
->
-> This patch makes sure that only the process that drops the reference
-> to 0 does the freeing.
->
-> Fixes: b7c1fadd6c2e ("ACPI: Do not use krefs under a mutex in osl.c")
-> Signed-off-by: Francesco Ruggeri <fruggeri@arista.com>
+On Thu, Nov 21, 2019 at 02:10:38PM -0800, Andy Lutomirski wrote:
+> 
+> 
+> > On Nov 20, 2019, at 5:45 PM, Fenghua Yu <fenghua.yu@intel.com> wrote:
+> > 
+> > +    if (!user_mode(regs) && split_lock_detect_enabled)
+> > +        panic("Split lock detected\n");
+> 
+> NAK.
+> 
+> 1. Don’t say “split lock detected” if you don’t know that you detected a split lock.  Or is this genuinely the only way to get #AC from kernel mode?
 
-Reviewed-by: Dmitry Safonov <0x7f454c46@gmail.com>
+Intel hardware design team confirmed that the only reason for #AC in ring 0 is
+split lock.
 
-Thanks,
-             Dmitry
+> 
+> 2. Don’t panic. Use die() just like every other error where nothing is corrupted.
+
+Ok. Will change to die() which provides all the trace information and
+allow multiple split lock in one boot.
+
+> 
+> And maybe instead turn off split lock detection and print a stack trace instead.  Then the kernel is even more likely to survive to log something useful.
+
+How about we just use simple policy die() in this patch set to allow
+detect and debug split lock issues and extend the code base to handle
+split lock with different policies (panic, disable split lock, maybe other
+options) in the future?
+
+Thanks.
+
+-Fenghua
+ 
