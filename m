@@ -2,105 +2,107 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAB6EC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:07:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CADE0C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:08:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7537D2075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:07:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="vtSF7wZW"
+	by mail.kernel.org (Postfix) with ESMTP id A305A20708
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:08:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574334525;
+	bh=2u05u5yvdV7LFv0UI+rCC49B8G8AxDejzvqEqBPmuUA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=O/HGE5F2lilsu8dl3y8PBjn+NNEHVLRv50rVyJ3wJERVxigc1jjDqbY6Yv26tVTMA
+	 808BWxzSUlT1qCGDUzExehnBzKDf/dK6rtxalVjbB9EXzPrueZcp/Qu7rI3yUfOkrQ
+	 8zTIYunriij+VzhAeBK3UnFdjPaMBcOg3hvKuH3M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727072AbfKULHo (ORCPT
+        id S1727088AbfKULIo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 06:07:44 -0500
-Received: from frisell.zx2c4.com ([192.95.5.64]:33495 "EHLO frisell.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726698AbfKULHo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 06:07:44 -0500
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 88a73f4b;
-        Thu, 21 Nov 2019 10:14:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type:content-transfer-encoding; s=mail; bh=61fXfe0NKcvB
-        w4Cmm/ja0FOScFY=; b=vtSF7wZWkBeha5UYHrE8FnqSWUpC5AjG1seQCjGUgS1y
-        5leda5Fst05ia/zT3iqtIHlNQc332cXRpJ4/VDcC21uBMjQtA0fW173PNm7+K3g+
-        d2DHMusY0FbFG8C8IATbK96axfp1xwFRmZHDgIXfh2Xdkqiy2oxLjJHqKgXHvDf/
-        WSKhRlvCf2mKVoQwXwRxBy4MQTlyJCoWD5LQKswuVKgJH2OdIh+YxQPlk7+UdMZp
-        2lE8DiELGw5RsrsJYJyfyRDsckI715699ZjkHefG4WkDUUjYk8bTfAagIhtmBp2R
-        tgCcy9H9YuN6QfyaDl9yD5bIbfaHkH6fliSzVdx6Iw==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id e550f2ca (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
-        Thu, 21 Nov 2019 10:14:37 +0000 (UTC)
-Received: by mail-oi1-f169.google.com with SMTP id s71so2764258oih.11;
-        Thu, 21 Nov 2019 03:07:40 -0800 (PST)
-X-Gm-Message-State: APjAAAV1zu/0BWjjtD9HcgpgX/1RXOIia9+S2sJhMIAIoDVrTx81T2Fe
-        hNAFmRWNY2fuulb8gkuMUfev3AR+nlpRJ1A7Yek=
-X-Google-Smtp-Source: APXvYqwPmTp2nkwJI5k2zldgO4vWMe6qszxEiAUe/OMq8cL+iGm0YkPWg1k+1+3UKuqspMztajBKI2eo8plROEGY/bY=
-X-Received: by 2002:aca:af0c:: with SMTP id y12mr7355506oie.52.1574334459737;
- Thu, 21 Nov 2019 03:07:39 -0800 (PST)
+        Thu, 21 Nov 2019 06:08:44 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:45296 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726343AbfKULIo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 06:08:44 -0500
+Received: by mail-oi1-f194.google.com with SMTP id 14so2763941oir.12;
+        Thu, 21 Nov 2019 03:08:43 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=J3Cy3tfrJiIUlL+D9Jr0kFLFrHhJQwh4Hdb4cuVFpa8=;
+        b=t7izMp7L9m/mc+anZp95DTBPCpW00kdy7F08hqeD+CGRnja1NdfKf05/DPU3sk1eiX
+         95bD/kg33gi6jU3uBcDk8T63IlASiPOsto3+B4N0peXSJxpLgB0/Ewb7NMnsOLfZFSK5
+         SSs3K2dluw0O+F9ZkA4VJYo6HC7DtsniL9H3DEFngXLe/GkUUseyMdimjAYIjsN5y7Bl
+         3W6oBgNF3AxYL9aZ0i7aGzLEjOK+XPUPTem7vS5yqpSoy5lxELXCFEDhiz+BH7o1E9OB
+         HtmzbsQ3O/V18GP0XVsdvuQ3daRYh5cqw5FGWNOaSPDZnlXBWI1AZHz5/1CqJmj1whu4
+         7e8A==
+X-Gm-Message-State: APjAAAUjdM2BHdEJLbRv1zRTm6QwvVBU72iAJiPpqiFoKLD53eAXVX/f
+        5/PfBJ3RA9uf3tazvyVQz2bbnpHLak01agRCSL4=
+X-Google-Smtp-Source: APXvYqxlqz4qNEUm0jTv4bAaBARGWgCnBqt/66UTTeVhGXft7P2C40EC7WWo0izyYaTsvvvl2QWLzkuMrcwnoaF2ur8=
+X-Received: by 2002:a05:6808:901:: with SMTP id w1mr7358488oih.57.1574334523139;
+ Thu, 21 Nov 2019 03:08:43 -0800 (PST)
 MIME-Version: 1.0
-References: <20191120203538.199367-1-Jason@zx2c4.com> <877e3t8qv7.fsf@toke.dk>
-In-Reply-To: <877e3t8qv7.fsf@toke.dk>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Thu, 21 Nov 2019 12:07:28 +0100
-X-Gmail-Original-Message-ID: <CAHmME9rmFw7xGKNMURBUSiezbsBEikOPiJxtEu=i2Quzf+JNDg@mail.gmail.com>
-Message-ID: <CAHmME9rmFw7xGKNMURBUSiezbsBEikOPiJxtEu=i2Quzf+JNDg@mail.gmail.com>
-Subject: Re: [PATCH RFC net-next] net: WireGuard secure network tunnel
-To:     =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <thoiland@redhat.com>
-Cc:     Netdev <netdev@vger.kernel.org>,
+References: <20191120115127.GD11621@lahna.fi.intel.com> <CACO55tsfNOdtu5SZ-4HzO4Ji6gQtafvZ7Rm19nkPcJAgwUBFMw@mail.gmail.com>
+ <CACO55tscD_96jUVts+MTAUsCt-fZx4O5kyhRKoo4mKoC84io8A@mail.gmail.com>
+ <20191120120913.GE11621@lahna.fi.intel.com> <CACO55tsHy6yZQZ8PkdW8iPA7+uc5rdcEwRJwYEQ3iqu85F8Sqg@mail.gmail.com>
+ <20191120151542.GH11621@lahna.fi.intel.com> <CACO55tvo3rbPtYJcioEgXCEQqVXcVAm-iowr9Nim=bgTdMjgLw@mail.gmail.com>
+ <20191120155301.GL11621@lahna.fi.intel.com> <20191120162306.GM11621@lahna.fi.intel.com>
+ <CACO55tsvTG2E7_3nn1sTdPQXzxaZA96k+gmSBBXjPvei6v=kxg@mail.gmail.com>
+ <20191121101423.GQ11621@lahna.fi.intel.com> <CAJZ5v0hAgz4Fu=83AJE2PYUsi+Jk=Lrr4MNp5ySA9yY=3wr5rg@mail.gmail.com>
+In-Reply-To: <CAJZ5v0hAgz4Fu=83AJE2PYUsi+Jk=Lrr4MNp5ySA9yY=3wr5rg@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 21 Nov 2019 12:08:31 +0100
+Message-ID: <CAJZ5v0jjwaQpYR0P0TPPTGM-1zObm7w1y4bj=7MDvPL78jOz5w@mail.gmail.com>
+Subject: Re: [PATCH v4] pci: prevent putting nvidia GPUs into lower device
+ states on certain intel bridges
+To:     Mika Westerberg <mika.westerberg@intel.com>
+Cc:     Karol Herbst <kherbst@redhat.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        David Miller <davem@davemloft.net>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+        Lyude Paul <lyude@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        Dave Airlie <airlied@gmail.com>,
+        Mario Limonciello <Mario.Limonciello@dell.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 11:29 AM Toke H=C3=B8iland-J=C3=B8rgensen
-<thoiland@redhat.com> wrote:
-> Could you please get rid of the "All Rights Reserved" (here, and
-> everywhere else)? All rights are *not* reserved: this is licensed under
-> the GPL. Besides, that phrase is in general dubious at best:
-> https://en.wikipedia.org/wiki/All_rights_reserved
-
-I've seen people make arguments for this in both ways, and code from
-major corporation enters the kernel every day bearing that line, which
-means lawyers of important kernel contributors disagree with you.
-Neither one of us are lawyers. Lacking any wide scale precedent for
-such changes, or the expertise to even be properly persuaded in any
-direction, I follow the advice of my council to stick to the norm and
-not to mess with copyright headers.
-
-I think there are some Linux Foundation mailing lists that have
-license lawyers on them, relating to SPDX mainly. Maybe we can ask
-there?
-
-> > +     MAX_QUEUED_INCOMING_HANDSHAKES =3D 4096, /* TODO: replace this wi=
-th DQL */
-> > +     MAX_STAGED_PACKETS =3D 128,
-> > +     MAX_QUEUED_PACKETS =3D 1024 /* TODO: replace this with DQL */
+On Thu, Nov 21, 2019 at 12:03 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
 >
-> Yes, please (on the TODO) :)
+> On Thu, Nov 21, 2019 at 11:14 AM Mika Westerberg
+> <mika.westerberg@intel.com> wrote:
+> >
+> > On Wed, Nov 20, 2019 at 10:36:31PM +0100, Karol Herbst wrote:
+> > > with the branch and patch applied:
+> > > https://gist.githubusercontent.com/karolherbst/03c4c8141b0fa292d781badfa186479e/raw/5c62640afbc57d6e69ea924c338bd2836e770d02/gistfile1.txt
+> >
+> > Thanks for testing. Too bad it did not help :( I suppose there is no
+> > change if you increase the delay to say 1s?
 >
-> FWIW, since you're using pointer rings I think the way to do this is
-> probably to just keep the limits in place as a maximum size, and then
-> use DQL (or CoDel) to throttle enqueue to those pointer rings instead of
-> just letting them fill.
+> Well, look at the original patch in this thread.
 >
-> Happy to work with you on this (as I believe I've already promised), but
-> we might as well do that after the initial version is merged...
+> What it does is to prevent the device (GPU in this particular case)
+> from going into a PCI low-power state before invoking AML to power it
+> down (the AML is still invoked after this patch AFAICS), so why would
+> that have anything to do with the delays?
+>
+> The only reason would be the AML running too early, but that doesn't
+> seem likely.  IMO more likely is that the AML does something which
+> cannot be done to a device in a PCI low-power state.
 
-I've actually implemented this a few times, but DQL always seems too
-slow to react properly, and I haven't yet been able to figure out
-what's happening. Let's indeed work on this after the initial version
-is merged. I think this change, and several more like it, will be the
-topic of some interesting discussions. But that doesn't need to happen
-/now/ I don't think.
+BTW, I'm wondering if anyone has tried to skip the AML instead of
+skipping the PCI PM in this case (as of 5.4-rc that would be a similar
+patch to skip the invocations of
+__pci_start/complete_power_transition() in pci_set_power_state() for
+the affected device).
