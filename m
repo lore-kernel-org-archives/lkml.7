@@ -2,79 +2,80 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD7A9C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 09:53:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27F7AC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 09:53:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BB782068D
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 09:53:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0F7E2068D
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 09:53:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SxVFKQkA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h/C2/TL3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726658AbfKUJxj (ORCPT
+        id S1726703AbfKUJx6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 04:53:39 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:34179 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726132AbfKUJxj (ORCPT
+        Thu, 21 Nov 2019 04:53:58 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35467 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726132AbfKUJx5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 04:53:39 -0500
-Received: by mail-pf1-f194.google.com with SMTP id n13so1414857pff.1;
-        Thu, 21 Nov 2019 01:53:38 -0800 (PST)
+        Thu, 21 Nov 2019 04:53:57 -0500
+Received: by mail-wm1-f65.google.com with SMTP id 8so2957489wmo.0;
+        Thu, 21 Nov 2019 01:53:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+        h=cc:subject:to:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=24Z96VAL0Kc1Ory+ij+teunstFq8Wsss9gha+iAZp1A=;
-        b=SxVFKQkA5BaDYF5mJppd2hlZ80wgUKapnXzXhrBilpXnOlr/xCwU7vE//ig32zOceT
-         XtkpMORvWROG5o5fl2D0BxBXRGBggHSUcpa95yRaTuABLqdLLXrzbyKJaQ56WlmFBceL
-         xMPA2xpH+pkOrZSCtgbJISkyeOH56yfseOr377m00McqQbJObdmbdGgXfByGUef1uekX
-         dGxqugCdAm2UnNFD7svyX4IVhZ40X7dISw1a+6mYfDxmD55B1fcPuW1OmCzbZDTpphNo
-         Xq6lm2EXq6CMlY4Zp4SNk/A0YnWCV2Q6/dn3UCeQG0veNqkGUAsErHvJGaqxws4Y6xYW
-         /bYg==
+        bh=HRI7jMsfZg/6yN9y8QeBJ/0eCsSXgHr+K32uQq/2e9o=;
+        b=h/C2/TL3A8u3PVkEFv2fCeeSVIQB/ieJ6Z4tj51otWleTHIFNWzLtOcklguFdiy1v/
+         QqPPCv96AZ6Qv5X4Q8JdP1x3WOE3Z2vWJ/lNyCUM94jQOzYvmgIS24UXkiID85I+gIhk
+         My+s+CAayNoQhwC0lISLjTYl9bkUWiSIUyLTYz+rcYTWGcVeQc6CyD9sciCiPgbH6YS/
+         Jg++igReFZkZR/69jN6GgCEKAXqF8JAvvrWGIk8u03p3m5rifIixtGuQPbT4/mFjeZvg
+         xlbSFRmC5v8vcehSRybrB6iKobgHaxsGa7JEDRgoI58xDF1J69DhvXlrqgo84g27tOFd
+         mXOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=24Z96VAL0Kc1Ory+ij+teunstFq8Wsss9gha+iAZp1A=;
-        b=AGbFZa9djw9Z8QqKQ1JWTmV+wjqkaJdbCt6ijv2/QI5Hp8sxfT+IMogCWd0v8wHwzr
-         eeuzk08QSU0DzYUeFaButNXE0pw2qGFLPyFmdvJu7RKGRoG2O/VxiNUld9lMaO9BzBwK
-         7aAXxD2/zn2thfBoZVRc1hw9fp7JucGNV6wgbdiiNpUyAvop6xU6qd6ZjYNGxN/ZJ0cE
-         KViLek0cvbuyUUSE5ForAsmU84ginjLwmQC5AhRecTyuopHw1zgj1dj4uGsG2UffOAVy
-         /jd9Cwjjo8/Qwky79BOjU1MwxsEQN2y0OBu/+1V2dZ9BC0dcBR6thfp+3WFGtbH3nl8X
-         7gpA==
-X-Gm-Message-State: APjAAAXawnDI3bM0c7UBeABW/YYJZeYDIhrTAVzmxr1flhmXtuo37v2w
-        QOg50LnxxySfYPsfgBiyuw9JI/Cx
-X-Google-Smtp-Source: APXvYqyQQtJCGLeNZ9QIHYtWJHPoYAV8WyiiJMmXgLDMcQgxIw+iZZPKs0Mi17aWOTVD3zHS2LO3Lg==
-X-Received: by 2002:a62:174b:: with SMTP id 72mr8853102pfx.179.1574330017805;
-        Thu, 21 Nov 2019 01:53:37 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id e17sm2655360pfh.121.2019.11.21.01.53.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 21 Nov 2019 01:53:36 -0800 (PST)
-Subject: Re: [PATCH 1/1] drivers: watchdog: stm32_iwdg: set WDOG_HW_RUNNING at
- probe
-To:     Christophe Roullier <christophe.roullier@st.com>,
-        wim@linux-watchdog.org, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com
-Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-References: <20191121082813.29267-1-christophe.roullier@st.com>
- <20191121082813.29267-2-christophe.roullier@st.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <ce10681c-8fa3-0fa6-3509-376a2f37aec9@roeck-us.net>
-Date:   Thu, 21 Nov 2019 01:53:35 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        bh=HRI7jMsfZg/6yN9y8QeBJ/0eCsSXgHr+K32uQq/2e9o=;
+        b=oTb3+Zfkqk7PR+0z2QBUQrn+yzniqka9+npw+5WnadFYIBHtWFWFjmEyMXkPAK6OqD
+         QFPtRDhWOEDz4NXfdkMmFuE11a+4VD/yY6fw0dZ/vJUkznMSjgdBrEC5YfXUMSqQBD6m
+         42FE/OTtMAVQbyeQbLtTHEBkG/RTX+trO9FkA66bHeCvfQ2T3oVrqTjMSQFixWKM21Vw
+         rGOSOirhoDe9Lo+hwNWUyLecAofvW4Zfokgv3S1Kjz4SE7Euba7XGr75jNF5NmPwwaIk
+         6hWDBxbLurvKWdO2hNEkGfoeNP3vtnaahdtxMl1tZNqNg39i8gyt0j1eMfNJWCa5iqgx
+         EM7A==
+X-Gm-Message-State: APjAAAXNlYYElZWViSrfpweOLHtfQGophqOG10pa2XiYTBT7U9h6MG1z
+        XgghHIjgwGMBkosZzdRnlj0=
+X-Google-Smtp-Source: APXvYqxPaiuw+IrHUCpSDRwFSn5UEjFS4ACeKRDkFBKGvOyoSQiRNrDoyvOrqyqMjaWGHDCOPtyZkQ==
+X-Received: by 2002:a7b:c08c:: with SMTP id r12mr8642794wmh.67.1574330034733;
+        Thu, 21 Nov 2019 01:53:54 -0800 (PST)
+Received: from ?IPv6:2001:a61:3a4e:101:8d4d:f454:a7e5:543d? ([2001:a61:3a4e:101:8d4d:f454:a7e5:543d])
+        by smtp.gmail.com with ESMTPSA id w4sm2219462wmk.29.2019.11.21.01.53.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 Nov 2019 01:53:53 -0800 (PST)
+Cc:     mtk.manpages@gmail.com, adrian@lisas.de, akpm@linux-foundation.org,
+        arnd@arndb.de, avagin@gmail.com, christian.brauner@ubuntu.com,
+        dhowells@redhat.com, fweimer@redhat.com, jannh@google.com,
+        keescook@chromium.org, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-man@vger.kernel.org,
+        mingo@elte.hu, oleg@redhat.com, xemul@virtuozzo.com
+Subject: Re: [PATCH] clone.2: Mention that CLONE_PARENT is off-limits for
+ inits
+To:     Christian Brauner <christian@brauner.io>
+References: <20191120104504.22411-1-christian@brauner.io>
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Message-ID: <ac6c1644-c6d3-c7eb-48b1-28eb9342a468@gmail.com>
+Date:   Thu, 21 Nov 2019 10:53:50 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20191121082813.29267-2-christophe.roullier@st.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20191120104504.22411-1-christian@brauner.io>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -82,140 +83,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/21/19 12:28 AM, Christophe Roullier wrote:
-> If the watchdog hardware is already enabled during the boot process,
-> when the Linux watchdog driver loads, it should reset the watchdog and
-> tell the watchdog framework. As a result, ping can be generated from
-> the watchdog framework (if CONFIG_WATCHDOG_HANDLE_BOOT_ENABLED is set),
-> until the userspace watchdog daemon takes over control
+Hello Christian,
+
+On 11/20/19 11:45 AM, Christian Brauner wrote:
+> From: Christian Brauner <christian.brauner@ubuntu.com>
 > 
-
-This is not what the code is doing. It sets the WDOG_HW_RUNNING flag
-unconditionally, no matter if the watchdog is already running or not.
-It also changes the semantic of the rest of the code, as well as
-functionality. The code in start_timeout no longer waits, and the ping
-code explicitly (re-)enables the watchdog.
-
-If you want an option to start the watchdog at probe time unconditionally,
-please add a module parameter to do it. Otherwise you'll need to check if
-it is indeed enabled before setting WDOG_HW_RUNNING, and in that case it
-should not be necessary to re-enable it. It should also not be necessary
-to split the start function.
-
-Thanks,
-Guenter
-
-> Fixes:4332d113c66a ("watchdog: Add STM32 IWDG driver")
-> Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
+> The CLONE_PARENT flag cannot but used by init processes. Let's mention
+> this in the manpages to prevent suprises.
+> 
+> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
 > ---
->   drivers/watchdog/stm32_iwdg.c | 57 ++++++++++++++++++++++++-----------
->   1 file changed, 40 insertions(+), 17 deletions(-)
+>  man2/clone.2 | 7 +++++++
+>  1 file changed, 7 insertions(+)
 > 
-> diff --git a/drivers/watchdog/stm32_iwdg.c b/drivers/watchdog/stm32_iwdg.c
-> index a3a329011a06..2b3be3b1c15b 100644
-> --- a/drivers/watchdog/stm32_iwdg.c
-> +++ b/drivers/watchdog/stm32_iwdg.c
-> @@ -87,8 +87,23 @@ static inline void reg_write(void __iomem *base, u32 reg, u32 val)
->   static int stm32_iwdg_start(struct watchdog_device *wdd)
->   {
->   	struct stm32_iwdg *wdt = watchdog_get_drvdata(wdd);
-> -	u32 tout, presc, iwdg_rlr, iwdg_pr, iwdg_sr;
-> -	int ret;
-> +
-> +	dev_dbg(wdd->parent, "%s\n", __func__);
-> +
-> +	/*  Start the watchdog */
-> +	reg_write(wdt->regs, IWDG_KR, KR_KEY_ENABLE);
-> +
-> +	/* reload watchdog */
-> +	reg_write(wdt->regs, IWDG_KR, KR_KEY_RELOAD);
-> +
-> +	set_bit(WDOG_HW_RUNNING, &wdd->status);
-> +	return 0;
-> +}
-> +
-> +static int stm32_iwdg_setprescaler(struct watchdog_device *wdd)
-> +{
-> +	struct stm32_iwdg *wdt = watchdog_get_drvdata(wdd);
-> +	u32 tout, presc, iwdg_rlr, iwdg_pr;
->   
->   	dev_dbg(wdd->parent, "%s\n", __func__);
->   
-> @@ -108,19 +123,6 @@ static int stm32_iwdg_start(struct watchdog_device *wdd)
->   	/* set prescaler & reload registers */
->   	reg_write(wdt->regs, IWDG_PR, iwdg_pr);
->   	reg_write(wdt->regs, IWDG_RLR, iwdg_rlr);
-> -	reg_write(wdt->regs, IWDG_KR, KR_KEY_ENABLE);
-> -
-> -	/* wait for the registers to be updated (max 100ms) */
-> -	ret = readl_relaxed_poll_timeout(wdt->regs + IWDG_SR, iwdg_sr,
-> -					 !(iwdg_sr & (SR_PVU | SR_RVU)),
-> -					 SLEEP_US, TIMEOUT_US);
-> -	if (ret) {
-> -		dev_err(wdd->parent, "Fail to set prescaler, reload regs\n");
-> -		return ret;
-> -	}
-> -
-> -	/* reload watchdog */
-> -	reg_write(wdt->regs, IWDG_KR, KR_KEY_RELOAD);
->   
->   	return 0;
->   }
-> @@ -131,6 +133,9 @@ static int stm32_iwdg_ping(struct watchdog_device *wdd)
->   
->   	dev_dbg(wdd->parent, "%s\n", __func__);
->   
-> +	/*  Start the watchdog */
-> +	reg_write(wdt->regs, IWDG_KR, KR_KEY_ENABLE);
-> +
->   	/* reload watchdog */
->   	reg_write(wdt->regs, IWDG_KR, KR_KEY_RELOAD);
->   
-> @@ -140,12 +145,21 @@ static int stm32_iwdg_ping(struct watchdog_device *wdd)
->   static int stm32_iwdg_set_timeout(struct watchdog_device *wdd,
->   				  unsigned int timeout)
->   {
-> +	int ret;
-> +
->   	dev_dbg(wdd->parent, "%s timeout: %d sec\n", __func__, timeout);
->   
->   	wdd->timeout = timeout;
->   
-> -	if (watchdog_active(wdd))
-> -		return stm32_iwdg_start(wdd);
-> +	if (watchdog_active(wdd)) {
-> +		ret = stm32_iwdg_setprescaler(wdd);
-> +		if (ret) {
-> +			dev_err(wdd->parent, "failed to set prescaler\n");
-> +			return ret;
-> +		} else {
-> +			return stm32_iwdg_start(wdd);
-> +		}
-> +	}
->   
->   	return 0;
->   }
-> @@ -262,12 +276,21 @@ static int stm32_iwdg_probe(struct platform_device *pdev)
->   	watchdog_set_nowayout(wdd, WATCHDOG_NOWAYOUT);
->   	watchdog_init_timeout(wdd, 0, dev);
->   
-> +	/* Make sure the watchdog is serviced */
-> +	set_bit(WDOG_HW_RUNNING, &wdd->status);
-> +
->   	ret = devm_watchdog_register_device(dev, wdd);
->   	if (ret)
->   		return ret;
->   
->   	platform_set_drvdata(pdev, wdt);
->   
-> +	ret = stm32_iwdg_setprescaler(wdd);
-> +	if (ret) {
-> +		dev_err(dev, "failed to set prescaler\n");
-> +		return ret;
-> +	}
-> +
->   	return 0;
->   }
->   
-> 
+> diff --git a/man2/clone.2 b/man2/clone.2
+> index f0f29d6f1..aa98ab79b 100644
+> --- a/man2/clone.2
+> +++ b/man2/clone.2
+> @@ -646,6 +646,13 @@ if
+>  .B CLONE_PARENT
+>  is set, then the parent of the calling process, rather than the
+>  calling process itself, will be signaled.
+> +.IP
+> +The kernel will not allow global init and init processes in pid
+> +namespaces to use the
+> +.B CLONE_PARENT
+> +flag. This is done to prevent the creation of multi-rooted process
+> +trees. It also avoids unreapable zombies in the initial pid
+> +namespace.
+>  .TP
+>  .BR CLONE_PARENT_SETTID " (since Linux 2.5.49)"
+>  Store the child thread ID at the location pointed to by
 
+Thank. I applied, and then tweaked the text a little,
+and noted the associated EINVAL error. In the end, the
+change is as below.
+
+Cheers,
+
+Michael
+
+index 60e746151..382f6b791 100644
+--- a/man2/clone.2
++++ b/man2/clone.2
+@@ -648,6 +648,14 @@ if
+ .B CLONE_PARENT
+ is set, then the parent of the calling process, rather than the
+ calling process itself, will be signaled.
++.IP
++The
++.B CLONE_PARENT
++flag can't be used in clone calls by the
++global init process (PID 1 in the initial PID namespace)
++and init processes in other PID namespaces.
++This restriction prevents the creation of multi-rooted process trees
++as well as the creation of unreapable zombies in the initial PID namespace.
+ .TP
+ .BR CLONE_PARENT_SETTID " (since Linux 2.5.49)"
+ Store the child thread ID at the location pointed to by
+@@ -1273,6 +1281,11 @@ were specified in the
+ .IR flags
+ mask.
+ .TP
++.BR EINVAL " (since Linux 2.6.32)"
++.\" commit 123be07b0b399670a7cc3d82fef0cb4f93ef885c
++.BR CLONE_PARENT
++was specified, and the caller is an init process.
++.TP
+ .B EINVAL
+ Returned by the glibc
+ .BR clone ()
+
+
+
+-- 
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
