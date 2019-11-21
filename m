@@ -2,146 +2,139 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F29C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 17:21:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA3F6C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 17:22:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7B4F20658
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 17:20:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lwi+PHw2"
+	by mail.kernel.org (Postfix) with ESMTP id B9C272067D
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 17:22:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726822AbfKURU6 (ORCPT
+        id S1726861AbfKURWV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 12:20:58 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:45369 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726279AbfKURU6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 12:20:58 -0500
-Received: by mail-pg1-f196.google.com with SMTP id k1so1904284pgg.12
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 09:20:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=B9Cd6lsebgbNm4s313iOukfjAkgVHP26MAXbnw9I+ys=;
-        b=lwi+PHw2zxipBVCVjR3p0f6wVaizQv25tJnVjtPp9YRV2Yxli9DfKpaiSyNmEHpftc
-         n7IvneVZSZroQY+XDIkuwKzSa7l1m9VThgY6uvAHhnsZmCyZNlymdXYRzMvPfiCVr3ft
-         PQrtb2P/6tSvAmXY7k3qs8rJk1MPVAYmDAbR0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=B9Cd6lsebgbNm4s313iOukfjAkgVHP26MAXbnw9I+ys=;
-        b=F1XsaVfTM6PjOHx5ioC36iyZ5kSFgbyvjPgirKvykI92wcap97SOqqf0xxAGU/e7d3
-         l5ozdoBnuHcfzgcbz439Pi+ofSiBA52hPJQYi/ld+lLUVUg5c45UT5Iasiqvj6yRKFJb
-         k+F0CMaPV3yHF1ENQ8uXB1GmIlxASadhA/NCGbX+naeZEg0PnWr4SDxIkZv8dXX1tg0f
-         rsCpr3zinr2MW8S2vcgrxEI3D7MawyhGEK8EKZZ9X5pl9qDfbS3SxYgVOqWA7VqYQCUz
-         H6WUllZapf80H3sTQdg5+cnr+q+Z0fZNKmefA8oNnRdujVtx/JViTJdkyBJY7sXzomGv
-         jDZA==
-X-Gm-Message-State: APjAAAX8pmloO8CUVTVedWIdRjPRjIkjkuATAHABxq91X52t1WMGhnsD
-        u5lSBq9RXUCO/Pr79u75/DSl1g==
-X-Google-Smtp-Source: APXvYqxUnj4jBe9FdBCwMAVd2svSeexIFajOtiISPNj6f4rEy9mB/I3hH3YYSNTLO+U5cyWiJBT8ww==
-X-Received: by 2002:a63:df09:: with SMTP id u9mr10657407pgg.20.1574356857223;
-        Thu, 21 Nov 2019 09:20:57 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id v3sm4017698pfn.129.2019.11.21.09.20.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Nov 2019 09:20:56 -0800 (PST)
-Date:   Thu, 21 Nov 2019 09:20:55 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc:     Elena Petrova <lenaptr@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-        kernel-hardening@lists.openwall.com
-Subject: Re: [PATCH 1/3] ubsan: Add trap instrumentation option
-Message-ID: <201911210917.F672B39C32@keescook>
-References: <20191120010636.27368-1-keescook@chromium.org>
- <20191120010636.27368-2-keescook@chromium.org>
- <35fa415f-1dab-b93d-f565-f0754b886d1b@virtuozzo.com>
+        Thu, 21 Nov 2019 12:22:21 -0500
+Received: from foss.arm.com ([217.140.110.172]:59898 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726279AbfKURWV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 12:22:21 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 402DD328;
+        Thu, 21 Nov 2019 09:22:20 -0800 (PST)
+Received: from [10.0.2.15] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EDAEF3F52E;
+        Thu, 21 Nov 2019 09:22:18 -0800 (PST)
+Subject: Re: [PATCH 3/3] sched/fair: Consider uclamp for "task fits capacity"
+ checks
+To:     Quentin Perret <qperret@google.com>
+Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
+        mingo@kernel.org, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, patrick.bellasi@matbug.net,
+        qais.yousef@arm.com, morten.rasmussen@arm.com
+References: <20191120175533.4672-1-valentin.schneider@arm.com>
+ <20191120175533.4672-4-valentin.schneider@arm.com>
+ <20191121115602.GA213296@google.com>
+ <f7e5dabb-a7e6-d110-abca-de7d4533bcc5@arm.com>
+ <20191121133043.GA46904@google.com>
+ <09e234a2-ea65-4d09-5215-9b0fe4ec09fe@arm.com>
+ <20191121153029.GA105938@google.com>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <203f730b-b45f-b926-aeb4-7a0c14ae4c99@arm.com>
+Date:   Thu, 21 Nov 2019 17:22:11 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <35fa415f-1dab-b93d-f565-f0754b886d1b@virtuozzo.com>
+In-Reply-To: <20191121153029.GA105938@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 03:52:52PM +0300, Andrey Ryabinin wrote:
-> On 11/20/19 4:06 AM, Kees Cook wrote:
+On 21/11/2019 15:30, Quentin Perret wrote:
+>> uclamp_util_with() (or uclamp_rq_util_with() ;)) picks the max between the
+>> rq-aggregated clamps and the task clamps, which isn't what we want. If the
+>> task has a low-ish uclamp.max (e.g. the 300 example from above) but the
+>> rq-wide max-aggregated uclamp.max is ~800, we'd clamp using that 800. It
+>> makes sense for frequency selection, but not for task placement IMO.
 > 
+> Right, but you could argue that this is in fact a correct behaviour.
+> What we want to know is 'is this CPU big enough to meet the capacity
+> request if I enqueue p there ?'. And the 'capacity request' is the
+> aggregated rq-wide clamped util, IMO.
 > 
-> > +config UBSAN_TRAP
-> > +	bool "On Sanitizer warnings, stop the offending kernel thread"
+> If enqueuing 'p' on a given CPU will cause the rq-wide clamped util to
+> go above the CPU capacity, we want to skip that CPU.
 > 
-> That description seems inaccurate and confusing. It's not about kernel threads.
-> UBSAN may trigger in any context - kernel thread/user process/interrupts... 
-> Probably most of the kernel code runs in the context of user process, so "stop the offending kernel thread"
-> doesn't sound right.
-> 
-> 
-> 
-> > +	depends on UBSAN
-> > +	depends on $(cc-option, -fsanitize-undefined-trap-on-error)
-> > +	help
-> > +	  Building kernels with Sanitizer features enabled tends to grow
-> > +	  the kernel size by over 5%, due to adding all the debugging
-> > +	  text on failure paths. To avoid this, Sanitizer instrumentation
-> > +	  can just issue a trap. This reduces the kernel size overhead but
-> > +	  turns all warnings into full thread-killing exceptions.
-> 
-> I think we should mention that enabling this option also has a potential to 
-> turn some otherwise harmless bugs into more severe problems like lockups, kernel panic etc..
-> So the people who enable this would better understand what they signing up for.
+> The obvious case is if p's min_clamp is larger than the CPU capacity.
 
-Good point about other contexts. I will attempt to clarify and send a
-v2.
+Right, so far we get that with task_fits_capacity().
 
-BTW, which tree should ubsan changes go through? The files are actually
-not mentioned by anything in MAINTAINERS. Should the KASAN entry gain
-paths to cover ubsan too? Something like:
+> 
+> But similarly, if p's max_clamp is going to be ignored because of
+> another task with a larger max_clamp on the same rq, this is relevant
+> information too --  the resulting capacity request might be above the
+> CPU capacity if p's util_avg is large, so we should probably skip the
+> CPU too no ?
+> 
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 9dffd64d5e99..585434c013c4 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8824,7 +8824,7 @@ S:	Maintained
- F:	Documentation/hwmon/k8temp.rst
- F:	drivers/hwmon/k8temp.c
- 
--KASAN
-+KERNEL SANITIZERS (KASAN, UBSAN)
- M:	Andrey Ryabinin <aryabinin@virtuozzo.com>
- R:	Alexander Potapenko <glider@google.com>
- R:	Dmitry Vyukov <dvyukov@google.com>
-@@ -8834,9 +8834,13 @@ F:	arch/*/include/asm/kasan.h
- F:	arch/*/mm/kasan_init*
- F:	Documentation/dev-tools/kasan.rst
- F:	include/linux/kasan*.h
-+F:	lib/Kconfig.ubsan
- F:	lib/test_kasan.c
-+F:	lib/test_ubsan.c
-+F:	lib/ubsan.c
- F:	mm/kasan/
- F:	scripts/Makefile.kasan
-+F:	scripts/Makefile.ubsan
- 
- KCONFIG
- M:	Masahiro Yamada <yamada.masahiro@socionext.com>
+Hmph thinking is hard but I think I agree with you.
 
--- 
-Kees Cook
+
+Say you have
+
+  rq.cpu_capacity_orig = 1024
+  rq.util_avg = 300
+  rq.uclamp.max = 600
+
+  p.util_est = 600
+  p.uclamp.max = 300
+
+If we enqueue p on that rq, we shouldn't go above 600 util (or something
+close, depending on the frequency this lets us select). But, AFAICT,
+cpu_util_next() will see this as going to 900 util and we'll thus skip this
+CPU for this task (because that would make us overutilized). With your
+suggested change, we wouldn't skip this CPU. Plus this is what we end up
+using in compute_energy(), so this would keep both ends aligned.
+
+
+I think we have a similar problem for downmigration (with the current patch),
+say you have:
+
+  rq.cpu_capacity_orig = 462
+  rq.util_avg = 50
+  rq.uclamp.max = 100
+
+  p.util_est = 512
+  p.uclamp.max = 200
+
+In this case I think we should get 200 cpu util, but we first do
+
+  /* Skip CPUs that will be overutilized. */                                                         
+  util = cpu_util_next(cpu, p, cpu);                                                                 
+  cpu_cap = capacity_of(cpu);                                                                        
+  if (!fits_capacity(util, cpu_cap))                                                                 
+          continue;                    
+
+which *doesn't* look at the clamps, so we would see ~562 util which doesn't
+fit on that small CPU, so we'd skip it. With your approach we would correctly
+clamp this to 200 and carry on.
+
+
+One thing I'd like to point out is if we have tasks with default clamp values
+(.min=0, .max=1024) enqueued, we won't "throttle" tasks with low uclamp.max.
+So something to keep in mind.
+
+One last thing: this makes CPU selection slightly different from what
+wake_cap() will do (that latter only uses uclamp_task_util()), but I think
+that is fine.
+
+> Are we gaining anything if we decide to not align the EAS path and the
+> sugov path ?
+> 
+> Thanks,
+> Quentin
+> 
