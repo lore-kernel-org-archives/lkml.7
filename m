@@ -2,137 +2,164 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33FB0C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 00:36:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 127B8C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 00:44:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09EEA20855
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 00:36:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0B8020855
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 00:43:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ryg+BN4y"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z2jQgMma"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbfKUAgf (ORCPT
+        id S1726664AbfKUAn6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 19:36:35 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:44919 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726573AbfKUAge (ORCPT
+        Wed, 20 Nov 2019 19:43:58 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:42194 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726202AbfKUAn6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 19:36:34 -0500
-Received: by mail-pf1-f193.google.com with SMTP id q26so669104pfn.11;
-        Wed, 20 Nov 2019 16:36:33 -0800 (PST)
+        Wed, 20 Nov 2019 19:43:58 -0500
+Received: by mail-oi1-f195.google.com with SMTP id o12so1582749oic.9;
+        Wed, 20 Nov 2019 16:43:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=smBw2eSn7Wp6DrTkKu9yGmpFd55bs+SJ4cWsLvwYGXE=;
-        b=ryg+BN4y7EBIVMsofGNAq5juHnPPshbmSN1na0SOHB2c8Mhdix1jEoG/26zGLqY2LF
-         yERmeUFFkY874jEZPjrXdbbaokgCgWe2flqYt64wJaeAkpQcIIA6CkS6OYTun1h5H8Bd
-         wY8U5GgirFmA8w4xzqIKTkE1VTdSvhvvES7BF9nYvbW8r7itusBgfT8nrgVMEZp/1a1p
-         KwhIXXqJYibgXK61dVCBNwLq+8HMk86KUiyJ7sL1dOwOWTUdpaV6xUUhba/lmujVjlkY
-         78Krz6DDYDKXuv1XYT68RnnsJSHlpIN/6vmMqChLHeVJ2GTz0CzFzxVWOUxraZEjz1hg
-         sWfA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=5duga5hStByFIxQLF43Hvhp6L3zIT7bydBtcmTR/tNg=;
+        b=Z2jQgMmagOSywgBB1g5iBKgaB62SxXVn9HvxA4TtxuZrKXbOMqZUqr3DtxauiYDSlN
+         BYkT35Hc+jUN9XLFQn6JWhbNUelrm62kG2i9tIE4VXXY5kXS5B+TFmxplGVgOg5WZGxL
+         hrhs32e18U6DV8jaGp+0X2katGRzjXEB2RWmeCW3y1ihWRGaavq4um+cydwKTDxfSTDC
+         nrS79UORkjT9JA9140folZWP1QAh3sH9nR4t+jaOPo3QK/mRMh8/AagzcCiExuSddsS4
+         IxtLM8X4ZR6KJnCbn422LRGaOLR/BQ+r27/kTPnFjP3K3Pd2itpCq67taR3Qk0/QG23I
+         BRpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=smBw2eSn7Wp6DrTkKu9yGmpFd55bs+SJ4cWsLvwYGXE=;
-        b=KyFJI1j/O1aWVhBEE4D7S2gu8lfno8/tC/iscNwm/3RwlyZrTKY8no57Tpj7AAUMWI
-         nO6Ia53vrBpZBxjdICnqQqnebLjUqgwVmLKakCpRcbUK1jyMXI5G+CDNTdGTGyCMr9rB
-         tsZESFg7j1Q+dArLq5Fkxf93TUBb31DQDa/jVd6Z/PfzxpFyjcKzkdpkKBBNcVIxiwhz
-         6JLFfQOPX87EEOHrhe94L2LRTQGbfiK+cA4WT5557yrCuH6qBxTnBubYWVEVWx2T/Hm0
-         CJBCAJ9JpMDJgKpZN7Y4uFFfFxr0kCTx33zyEdsNEE3Z+8fxYxGgFRO0+CCIT81JB01P
-         NTYQ==
-X-Gm-Message-State: APjAAAU3VZQXz7yU3JTEE/6Y6lTrUhxhZw7gTa3BSVIosifEfZCjYcD7
-        qEMyYW5Uo9XHX0/lLXUOhYQ=
-X-Google-Smtp-Source: APXvYqwggVMXLJ0YMoRGcJX+V0U2VVPPBgEBy+EYa20Y3sfv68nS805W6coHI3CeMdeYxB4DXP4zTg==
-X-Received: by 2002:a63:33ca:: with SMTP id z193mr5871639pgz.83.1574296593382;
-        Wed, 20 Nov 2019 16:36:33 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id r24sm410551pgu.36.2019.11.20.16.36.31
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 20 Nov 2019 16:36:32 -0800 (PST)
-Date:   Wed, 20 Nov 2019 16:36:30 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Laura Abbott <labbott@redhat.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        Lennert Buytenhek <kernel@wantstofly.org>
-Subject: Re: [PATCH] watchdog: Remove iop_wdt
-Message-ID: <20191121003630.GA1530@roeck-us.net>
-References: <20191118220432.1611-1-labbott@redhat.com>
- <29e94219-22ca-c873-7209-64d1c357fe5c@roeck-us.net>
- <CAK8P3a0=3J3WHTKU7sPvd37VEwg3wOuZ5S2-xXtNYEcSQhWyHw@mail.gmail.com>
- <4f283ab6-0f3c-60e9-cfd1-29d10d978986@roeck-us.net>
- <20191120100341.GK25745@shell.armlinux.org.uk>
- <CAK8P3a2N+aDgFz75dFJy3Me9FPdyDSyPaa29FngLjfXX3MzfvA@mail.gmail.com>
- <20191120103054.GM25745@shell.armlinux.org.uk>
- <20191120230518.GA28840@roeck-us.net>
- <20191120235652.GW25745@shell.armlinux.org.uk>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=5duga5hStByFIxQLF43Hvhp6L3zIT7bydBtcmTR/tNg=;
+        b=KPGV3prKDTWIP295tLh7FQhb76Qwf0PKxfOb2sIXuzROyK7JXgJW8DSXrDA7KdgVik
+         ePpweVIAMz5fNzFN+WTpi6vrnrZDUwDVn+7RAGFMOOkwEejIOlpDGhbEhITstxq/Yzke
+         313AOp+pTkMWJ7bMSE1ySNHtIdIGgOuq663KpgEaqJlc9+/NsFj0I2PmWvhDOCjBrNw1
+         VNC8gVRUEJGlpdDS0rPODc3mfmgGi/Qyr32MYOliRekXmsDn07Y4Sk7xUAmxCdYCr9mf
+         XbibNe1SiEjxum65DHWYh7sUEuTrR5LcBPtenMAlB80rIQAdrMJS7WAJhEzF0+Iomemv
+         X79w==
+X-Gm-Message-State: APjAAAU4zyDbWyFw69R3JG51w83P1pZhBS/Edq/dgiMYaX2sZbGv6Qza
+        Nx7IXg2t74FGDjKOSK8CR08j/xA48rDIvniR1jI=
+X-Google-Smtp-Source: APXvYqyIgj3f6exokWOiCedzvm8QAgFFlxitYlAX6t3TqpDAeoum3Jhy9OJKkCMSSCSK5Pl1VJ8UKJI5Jx1z5wjzZhI=
+X-Received: by 2002:aca:c50f:: with SMTP id v15mr5503455oif.5.1574297037472;
+ Wed, 20 Nov 2019 16:43:57 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191120235652.GW25745@shell.armlinux.org.uk>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <1574221329-12370-1-git-send-email-wanpengli@tencent.com>
+ <61E34902-0743-4DAF-A7DF-94C0E51CDA08@oracle.com> <CA11DF59-9969-4E1C-AF8A-8102D2D9D8A9@oracle.com>
+In-Reply-To: <CA11DF59-9969-4E1C-AF8A-8102D2D9D8A9@oracle.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Thu, 21 Nov 2019 08:43:49 +0800
+Message-ID: <CANRm+CzCyauiJ9TGYxkLw61--WVT2L2ARj8JhedJN+ZhD64uKg@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] KVM: VMX: FIXED+PHYSICAL mode single target IPI fastpath
+To:     Liran Alon <liran.alon@oracle.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 11:56:52PM +0000, Russell King - ARM Linux admin wrote:
-> On Wed, Nov 20, 2019 at 03:05:18PM -0800, Guenter Roeck wrote:
-> > On Wed, Nov 20, 2019 at 10:30:54AM +0000, Russell King - ARM Linux admin wrote:
-> > > On Wed, Nov 20, 2019 at 11:15:01AM +0100, Arnd Bergmann wrote:
-> > > > On Wed, Nov 20, 2019 at 11:03 AM Russell King - ARM Linux admin
-> > > > <linux@armlinux.org.uk> wrote:
-> > > > > On Tue, Nov 19, 2019 at 06:29:09AM -0800, Guenter Roeck wrote:
-> > > > > > On 11/19/19 1:40 AM, Arnd Bergmann wrote:
-> > > > > > > On Tue, Nov 19, 2019 at 3:08 AM Guenter Roeck <linux@roeck-us.net> wrote:
-> > > > > > > > On 11/18/19 2:04 PM, Laura Abbott wrote:
-> > > > > >
-> > > > > > Good point, especially since apparently no one cared for five years.
-> > > > >
-> > > > > Doesn't mean that there aren't interested parties.  I still have
-> > > > > IOP32x hardware running here in the form of a N2100 (my firewall)
-> > > > > and it seems that I never noticed this option disappearing until
-> > > > > now...
-> > > > 
-> > > > It's not that it was ever there for IOP32x: the driver was introduced in 2007
-> > > > and was available for IOP32x but failed to compile for it until 2014 when
-> > > > I sent the patch to disable the driver in all configurations that
-> > > > failed to build.
-> > > 
-> > > Well:
-> > > 
-> > > systems/n2100/boot/config-3.11.5+:CONFIG_IOP_WATCHDOG=m
-> > > systems/n2100/boot/config-3.12.6+:CONFIG_IOP_WATCHDOG=m
-> > > systems/n2100/boot/config-3.9.5+:CONFIG_IOP_WATCHDOG=m
-> > > 
-> > > -rw-rw-r-- 1 rmk rmk 5284 Dec 30  2013 systems/n2100/lib/modules/3.12.6+/kernel/drivers/watchdog/iop_wdt.ko
-> > > -rw-rw-r-- 1 rmk rmk 5276 Dec 20  2013 systems/n2100/lib/modules/3.9.5+/kernel/drivers/watchdog/iop_wdt.ko
-> > > 
-> > > It seems I've been carrying a patch to comment out the troublesome code:
-> > > 
-> > > -       write_wdtsr(IOP13XX_WDTCR_IB_RESET);
-> > > +//     write_wdtsr(IOP13XX_WDTCR_IB_RESET);
-> > > 
-> > > in my stable tree since 2015.
-> > 
-> > Do you have plans to update that kernel to mainline ?
-> > If yes, a patch to make the driver (and I guess everything else that broke
-> > since 3.12) work would be helpful.
-> 
-> It's a currently running 4.19.xx stable kernel, but as a result of the
-> patch to the Kconfig file, without the watchdog which I hadn't realised
-> until I saw this thread.  Is that mainline enough?
-> 
-Yes. Can you send me a patch with the above fix and the necessary Kconfig
-change ?
+On Thu, 21 Nov 2019 at 07:55, Liran Alon <liran.alon@oracle.com> wrote:
+>
+>
+>
+> > On 21 Nov 2019, at 1:36, Liran Alon <liran.alon@oracle.com> wrote:
+> >
+> >
+> >
+> >> On 20 Nov 2019, at 5:42, Wanpeng Li <kernellwp@gmail.com> wrote:
+> >>
+> >> From: Wanpeng Li <wanpengli@tencent.com>
+> >>
+> >> ICR and TSCDEADLINE MSRs write cause the main MSRs write vmexits in
+> >> our product observation, multicast IPIs are not as common as unicast
+> >> IPI like RESCHEDULE_VECTOR and CALL_FUNCTION_SINGLE_VECTOR etc.
+> >
+> > Have you also had the chance to measure non-Linux workloads. Such as Wi=
+ndows?
+> >
+> >>
+> >> This patch tries to optimize x2apic physical destination mode, fixed
+> >> delivery mode single target IPI. The fast path is invoked at
+> >> ->handle_exit_irqoff() to emulate only the effect of the ICR write
+> >> itself, i.e. the sending of IPIs.  Sending IPIs early in the VM-Exit
+> >> flow reduces the latency of virtual IPIs by avoiding the expensive bit=
+s
+> >> of transitioning from guest to host, e.g. reacquiring KVM's SRCU lock.
+> >> Especially when running guest w/ KVM_CAP_X86_DISABLE_EXITS capability
+> >> enabled or guest can keep running, IPI can be injected to target vCPU
+> >> by posted-interrupt immediately.
+> >
+> > May I suggest an alternative phrasing? Something such as:
+> >
+> > =E2=80=9C=E2=80=9D=E2=80=9D
+> > This patch introduce a mechanism to handle certain performance-critical=
+ WRMSRs
+> > in a very early stage of KVM VMExit handler.
+> >
+> > This mechanism is specifically used for accelerating writes to x2APIC I=
+CR that
+> > attempt to send a virtual IPI with physical destination-mode, fixed del=
+ivery-mode
+> > and single target. Which was found as one of the main causes of VMExits=
+ for
+> > Linux workloads.
+> >
+> > The reason this mechanism significantly reduce the latency of such virt=
+ual IPIs
+> > is by sending the physical IPI to the target vCPU in a very early stage=
+ of KVM
+> > VMExit handler, before host interrupts are enabled and before expensive
+> > operations such as reacquiring KVM=E2=80=99s SRCU lock.
+> > Latency is reduced even more when KVM is able to use APICv posted-inter=
+rupt
+> > mechanism (which allows to deliver the virtual IPI directly to target v=
+CPU without
+> > the need to kick it to host).
+> > =E2=80=9C=E2=80=9D=E2=80=9D
+> >
+> >>
+> >> Testing on Xeon Skylake server:
+> >>
+> >> The virtual IPI latency from sender send to receiver receive reduces
+> >> more than 200+ cpu cycles.
+> >>
+> >> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> >> Cc: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com>
+> >> Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+> >> Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+> >> Cc: Liran Alon <liran.alon@oracle.com>
+> >> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> >
+> > I see you used the code I provided my reply to v2. :)
+> > I had only some very minor comments inline below. Therefore:
+> > Reviewed-by: Liran Alon <liran.alon@oracle.com>
+>
+> Oh there is a small thing pointed by Sean I agree with (and missed in my =
+review) before this Reviewed-by can be given.
+> You should avoid performing accelerated WRMSR handling in case vCPU is in=
+ guest-mode.
+> (From obvious reasons as L1 for example could intercept this WRMSR=E2=80=
+=A6)
 
-Thanks,
-Guenter
+Yes, I add !is_guest_mode(vcpu) checking in v1, but careless lose it
+in further versions.
+
+    Wanpeng
