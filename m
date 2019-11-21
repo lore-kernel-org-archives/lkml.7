@@ -2,86 +2,115 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04659C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 09:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 684B1C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 09:13:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA6142089D
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 09:07:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36A2E2071C
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 09:13:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kVdCJlvt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbfKUJHQ (ORCPT
+        id S1726536AbfKUJNT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 04:07:16 -0500
-Received: from mout.kundenserver.de ([212.227.17.13]:58027 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726170AbfKUJHQ (ORCPT
+        Thu, 21 Nov 2019 04:13:19 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:46317 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726014AbfKUJNT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 04:07:16 -0500
-Received: from mail-qk1-f180.google.com ([209.85.222.180]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MlwFp-1i7D7J1bXP-00j50B; Thu, 21 Nov 2019 10:07:14 +0100
-Received: by mail-qk1-f180.google.com with SMTP id e2so2403491qkn.5;
-        Thu, 21 Nov 2019 01:07:14 -0800 (PST)
-X-Gm-Message-State: APjAAAX2EmKFiiT2rUJ9lXShvIUPJAH1iBGH8nV1Kl7H7iG5BZddrOlE
-        Xs5UOcG+yX+XU44ZGRbsYLp35dKDT62dxAspoYM=
-X-Google-Smtp-Source: APXvYqz0knwr27vOcmkkaREpSGNN31fRcZlHTsqa2yOgKtw6XKUZWtgvnf4DEi0F3uVGb6x4PGDYRjeb7NG71QvZYeU=
-X-Received: by 2002:a37:58d:: with SMTP id 135mr6882097qkf.394.1574327233197;
- Thu, 21 Nov 2019 01:07:13 -0800 (PST)
+        Thu, 21 Nov 2019 04:13:19 -0500
+Received: by mail-qt1-f194.google.com with SMTP id r20so2841894qtp.13
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 01:13:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=NcdjicditjmfyWi+GeSCelrI2pCMNcp5zsDjzvV7ISo=;
+        b=kVdCJlvtQj7GEYvaRxCTynENkGAuOqE0fgXhqXjZX3Ok9dJeAYEsszWqOcQNVZgIpl
+         N5Hf96j30qCEl3XYc3fO0h/Uzi7lwD/a57z9IH71QLqgfRAvOMcDGUXGPOYBDrXMzdgT
+         t/DuA2IXS4mtk+lTC7g7cK7hSSVR8FvoIV4j1IJ0y5UeO++jva9S8C3kNszCT4Ee7KKz
+         vK+9dr3H5rrrT8hxO3tHZREMV60csIWaZXrIM4uGPknZpZ8ZmKjtdL90vVOo85Ewr3qJ
+         sVg4HR3Bh/1qYoXy1fDXjCDRbb4kn5uYxnhervg7WqLWMNNhJqiA8giNG/7velhOxHrN
+         2h1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=NcdjicditjmfyWi+GeSCelrI2pCMNcp5zsDjzvV7ISo=;
+        b=AdmtU0BO0L+CLUbP37uW+T3M2Y45wxAaNPSDwbhj5swP/TitAUq9GBl51Zeo8ZFrdj
+         H7mqMz7vNIKXlzHQGAuEB+xrTydiCyk6CCKM5s6WXYG5kmm7ix6PHRZ5+DwvUFIHS2Me
+         Ocx9lvlKVNIdL0n3dkvQWk5YnN2cWJSmYAznNOLlYd2U9SNweinqNbeho7GLMvLzRSbU
+         07pKPu6+BTANno6QkvHJTvQJ0875v9m2KH/Q/vwekYDRsABIdJPKZT343PnFXf0PnDFa
+         hntltDvy36WXVMVTOnAIJ+twH4V3mPQ38qUaL4jrnMrICChkrEuzIOTjBVehrnSYfhwK
+         TYXg==
+X-Gm-Message-State: APjAAAWWgNdmPaDPlRAPFhosNg6Nes/q09dE9Ut3Bc6bLwDFrofuy4oT
+        ciyOiXcqZ8nxKTlwbLA0Z3KGqph+2SajkxN4EEM=
+X-Google-Smtp-Source: APXvYqzIwWcNFEIKnXcu2rncMeN3JIjiyBPOOkvS158/LQiIz5dhvPbbID+0OWweTSJ7l1CvFqytGhBAyPEXOceXt1A=
+X-Received: by 2002:ac8:1084:: with SMTP id a4mr7441268qtj.114.1574327597933;
+ Thu, 21 Nov 2019 01:13:17 -0800 (PST)
 MIME-Version: 1.0
-References: <20191121000303.126523-1-dima@arista.com>
-In-Reply-To: <20191121000303.126523-1-dima@arista.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 21 Nov 2019 10:06:57 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a2ny7SBwQbNcn5nxYrZ9pX1Vh5P2PFXVpOFaquTcFguCA@mail.gmail.com>
-Message-ID: <CAK8P3a2ny7SBwQbNcn5nxYrZ9pX1Vh5P2PFXVpOFaquTcFguCA@mail.gmail.com>
-Subject: Re: [PATCH] time: Zerofy padding in __kernel_timespec on 32-bit
-To:     Dmitry Safonov <dima@arista.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        John Stultz <john.stultz@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        y2038 Mailman List <y2038@lists.linaro.org>,
-        "# 3.4.x" <stable@vger.kernel.org>
+References: <20190904235216.18510-1-kw@linux.com>
+In-Reply-To: <20190904235216.18510-1-kw@linux.com>
+From:   Greentime Hu <green.hu@gmail.com>
+Date:   Thu, 21 Nov 2019 17:12:41 +0800
+Message-ID: <CAEbi=3fpNQC+2qnDuX51gij4ooNbHNNnrQQQPXKzafVbcYoV+A@mail.gmail.com>
+Subject: Re: [PATCH] nds32: Move static keyword to the front of declaration
+To:     Krzysztof Wilczynski <kw@linux.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:+84/mLQW0Wd+nj8N7g/1lDbad3ei+9/DkUcK33umBC8TLCOF47B
- jl/hoWlC09Qa3G64HxmMlKXjo0YuoCextcIc1Mr5UHOx3fTACZWetCTrDC5rx/DYn1U9D0V
- 5oRGE7CuoDTAdyR4rfGvqcewXbTDCIiGLQr4NWcYmrZWYfmF4QzwPp8yIICH7mRhjAZpQe8
- FYZSc3DZ9xKSVLmPVnsgA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:dRmdJ2KizgM=:sf3PrKnyuhy2+ZoLV/2ToI
- sCgzNzQG0lj1uKKffdv0x0b28aZvMuOqVpuZXzOugqWDOQN0gcc4g1NwYBDRYVSqGG78pGzke
- b8kqPEuNSJT+xLfNc4k+E0oYplvmeDRzFyLbYU6H2UrNEIwd7yU9KSztIHEdJrzEFP7nf+GN3
- wrTnvubQ7SYHNrfUKxLlYpPfm6Tu/UC4hQhiyMZSbs3jgA6wddPtUtTzxKatm1JSiy+dmb6SP
- 3TGPPY5jwVAcavgL1R+5sOuFl3dAdIWjCGUw20zgpgwVOeIvcCGGXLHaqSAuPGiXq4YkuwHfU
- kx9dyq65q8xbc7xA/nTrNFtNiK4kdkuanqiBaIaqum9lh5WUdLRBLFvFqE6eCnD8dpXsYqi8r
- 8J5JmAKr2i4kKbPn7nxrvQLJ3oLKoTeVM/YJZUJ2EPg+vTnfBG1Fbt3UXFDslYEUrEVwiiHq3
- olOsTkPynGYayrdpLmb5k2h09OxTJmxSV+8HkS4lVK1vnsad5BRwGHU3tGAX9lToV5L2u40fW
- FyaBq4YAsyCQrzT+MrcD5gPOP6h3qb9mb22xQoFJSiZjfhHrmIt+ju52KrgRxMuVyoSS6+PlM
- jnwV4CEiGXGhgSSg5TPD+IiRfArrnalm5POhbVH0KGS3c/qvwP0yEG24kNiOUXy3d2ta7/sH0
- 8Z0mJxxRWNkKY3V2Dl2uVoKRXz/d17BTJjidstm/eWn7UdOKCkB/PKjr7ib60zXC6kEo9sPxG
- +TuDPjVcl2Y5ZNmnNenoqXSVP3lLEt2dOWFwVUK9dOKQCxnQA1JFGJ+NG4AC3v+gyVKV8Jo+T
- fuDrM4E01mHqVjOdreTm489U2GOoMDkVJ5jgoMDCFeZ2r8EDus2EOteOEeId40Okc3/B/Q4+v
- VKD21MarhfoAIpUinruA==
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 1:03 AM Dmitry Safonov <dima@arista.com> wrote:
+Krzysztof Wilczynski <kw@linux.com> =E6=96=BC 2019=E5=B9=B49=E6=9C=885=E6=
+=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8A=E5=8D=887:52=E5=AF=AB=E9=81=93=EF=BC=9A
 >
-> On compat interfaces, the high order bits of nanoseconds should
-> be zeroed out. This is because the application code or the libc
-> do not guarantee zeroing of these. If used without zeroing,
-> kernel might be at risk of using timespec values incorrectly.
+> Move the static keyword to the front of declaration of
+> cpu_pmu_of_device_ids, and resolve the following compiler
+> warning that can be seen when building with warnings
+> enabled (W=3D1):
 >
-> Originally it was handled correctly, but lost during is_compat_syscall()
-> cleanup. Revert the condition back to check CONFIG_64BIT.
+> arch/nds32/kernel/perf_event_cpu.c:1122:1: warning:
+>   =E2=80=98static=E2=80=99 is not at beginning of declaration [-Wold-styl=
+e-declaration]
 >
-> Reported-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
-> Fixes: 98f76206b335 ("compat: Cleanup in_compat_syscall() callers")
+> Signed-off-by: Krzysztof Wilczynski <kw@linux.com>
+> ---
+> Related: https://lore.kernel.org/r/20190827233017.GK9987@google.com
+>
+>  arch/nds32/kernel/perf_event_cpu.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/nds32/kernel/perf_event_cpu.c b/arch/nds32/kernel/perf_=
+event_cpu.c
+> index 334c2a6cec23..0ce6f9f307e6 100644
+> --- a/arch/nds32/kernel/perf_event_cpu.c
+> +++ b/arch/nds32/kernel/perf_event_cpu.c
+> @@ -1119,7 +1119,7 @@ static void cpu_pmu_init(struct nds32_pmu *cpu_pmu)
+>                 on_each_cpu(cpu_pmu->reset, cpu_pmu, 1);
+>  }
+>
+> -const static struct of_device_id cpu_pmu_of_device_ids[] =3D {
+> +static const struct of_device_id cpu_pmu_of_device_ids[] =3D {
+>         {.compatible =3D "andestech,nds32v3-pmu",
+>          .data =3D device_pmu_init},
+>         {},
 
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+Thanks, Krzysztof.
+Acked-by: Greentime Hu <green.hu@gmail.com>
+
+I will queue it in nds32 next tree.
