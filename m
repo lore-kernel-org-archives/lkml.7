@@ -2,97 +2,160 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A77C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4C28C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:25:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31C8020659
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:24:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7C8920692
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:25:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="LzHiiVp2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbfKUQYB (ORCPT
+        id S1726944AbfKUQZF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 11:24:01 -0500
-Received: from mx2.suse.de ([195.135.220.15]:59100 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726279AbfKUQYA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 11:24:00 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 28362B3BA;
-        Thu, 21 Nov 2019 16:23:59 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 897F91E484C; Thu, 21 Nov 2019 17:23:58 +0100 (CET)
-Date:   Thu, 21 Nov 2019 17:23:58 +0100
-From:   Jan Kara <jack@suse.cz>
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>, Jan Kara <jack@suse.cz>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH v2 3/3] fs: warn if stale pagecache is left after direct
- write
-Message-ID: <20191121162358.GC18158@quack2.suse.cz>
-References: <157270037850.4812.15036239021726025572.stgit@buzz>
- <157270038294.4812.2238891109785106069.stgit@buzz>
+        Thu, 21 Nov 2019 11:25:05 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:38198 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726279AbfKUQZF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 11:25:05 -0500
+Received: from zn.tnic (p200300EC2F0F070070C4546F98AAB214.dip0.t-ipconnect.de [IPv6:2003:ec:2f0f:700:70c4:546f:98aa:b214])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D21C71EC0CE8;
+        Thu, 21 Nov 2019 17:24:59 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1574353500;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=oJS7So1/quisV3oFSM49q/CepXlYRGWbmLBtGCZ7d5s=;
+        b=LzHiiVp2382hxBbqbtKGcmSvPxTGnIGDRNX0wfkbM1hwC4LKf0c4NeO+B1HWju62jNXxOK
+        i2cUlInI5CkTHJCsbhJ1mmBPqQPeIhPfOygRM+/vevqcHC7tRsHHX1tWdAwD7nwDCl/lCg
+        SoARFDBMzTv9wUhdI2Uid7Y95XbtQLA=
+Date:   Thu, 21 Nov 2019 17:24:52 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
+        Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-edac@vger.kernel.org,
+        "linux-kselftest@vger.kernel.org, Jarkko Sakkinen" 
+        <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH v3 09/19] x86/cpu: Clear VMX feature flag if VMX is not
+ fully enabled
+Message-ID: <20191121162452.GJ6540@zn.tnic>
+References: <20191119031240.7779-1-sean.j.christopherson@intel.com>
+ <20191119031240.7779-10-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <157270038294.4812.2238891109785106069.stgit@buzz>
+In-Reply-To: <20191119031240.7779-10-sean.j.christopherson@intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat 02-11-19 16:13:03, Konstantin Khlebnikov wrote:
-> Function generic_file_direct_write() tries to invalidate pagecache after
-> O_DIRECT write. Unlike to similar code in dio_complete() this silently
-> ignores error returned from invalidate_inode_pages2_range().
+On Mon, Nov 18, 2019 at 07:12:30PM -0800, Sean Christopherson wrote:
+> Now that the IA32_FEATURE_CONTROL MSR is guaranteed to be configured and
+> locked, clear the VMX capability flag if the IA32_FEATURE_CONTROL MSR is
+> not supported or if BIOS disabled VMX, i.e. locked IA32_FEATURE_CONTROL
+> and did not set the appropriate VMX enable bit.
 > 
-> According to comment this code here because not all filesystems call
-> dio_complete() to do proper invalidation after O_DIRECT write.
-> Noticeable example is a blkdev_direct_IO().
-> 
-> This patch calls dio_warn_stale_pagecache() if invalidation fails.
-> 
-> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-
-Looks good to me. You can add:
-
-Reviewed-by: Jan Kara <jack@suse.cz>
-
-								Honza
-
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 > ---
->  mm/filemap.c |    8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
+>  arch/x86/kernel/cpu/feature_control.c | 28 ++++++++++++++++++++++++---
+>  1 file changed, 25 insertions(+), 3 deletions(-)
 > 
-> diff --git a/mm/filemap.c b/mm/filemap.c
-> index 189b8f318da2..dc3b78db079b 100644
-> --- a/mm/filemap.c
-> +++ b/mm/filemap.c
-> @@ -3241,11 +3241,13 @@ generic_file_direct_write(struct kiocb *iocb, struct iov_iter *from)
->  	 * do not end up with dio_complete() being called, so let's not break
->  	 * them by removing it completely.
->  	 *
-> +	 * Noticeable example is a blkdev_direct_IO().
-> +	 *
->  	 * Skip invalidation for async writes or if mapping has no pages.
->  	 */
-> -	if (written > 0 && mapping->nrpages)
-> -		invalidate_inode_pages2_range(mapping,
-> -					pos >> PAGE_SHIFT, end);
-> +	if (written > 0 && mapping->nrpages &&
-> +	    invalidate_inode_pages2_range(mapping, pos >> PAGE_SHIFT, end))
-> +		dio_warn_stale_pagecache(file);
+> diff --git a/arch/x86/kernel/cpu/feature_control.c b/arch/x86/kernel/cpu/feature_control.c
+> index 33c9444dda52..2bd1a9e6021a 100644
+> --- a/arch/x86/kernel/cpu/feature_control.c
+> +++ b/arch/x86/kernel/cpu/feature_control.c
+> @@ -5,15 +5,26 @@
+>  #include <asm/msr-index.h>
+>  #include <asm/processor.h>
 >  
->  	if (written > 0) {
->  		pos += written;
-> 
+> +#undef pr_fmt
+> +#define pr_fmt(fmt)	"x86/cpu: " fmt
+> +
+> +#define FEAT_CTL_UNSUPPORTED_MSG "IA32_FEATURE_CONTROL MSR unsupported on VMX capable CPU, suspected hardware or hypervisor issue.\n"
+> +
+>  void init_feature_control_msr(struct cpuinfo_x86 *c)
+>  {
+> +	bool tboot = tboot_enabled();
+>  	u64 msr;
+>  
+> -	if (rdmsrl_safe(MSR_IA32_FEATURE_CONTROL, &msr))
+> +	if (rdmsrl_safe(MSR_IA32_FEATURE_CONTROL, &msr)) {
+> +		if (cpu_has(c, X86_FEATURE_VMX)) {
+> +			pr_err_once(FEAT_CTL_UNSUPPORTED_MSG);
+> +			clear_cpu_cap(c, X86_FEATURE_VMX);
+> +		}
+>  		return;
+> +	}
+
+Right, so this test: is this something that could happen on some
+configurations - i.e., the MSR is not there but VMX bit is set - or are
+you being too cautious here?
+
+IOW, do you have any concrete use cases in mind (cloud provider can f*ck
+it up this way) or?
+
+My angle is that if this is never going to happen, why even bother to
+print anything...
+
+>  	if (msr & FEAT_CTL_LOCKED)
+> -		return;
+> +		goto update_caps;
+>  
+>  	/*
+>  	 * Ignore whatever value BIOS left in the MSR to avoid enabling random
+> @@ -28,8 +39,19 @@ void init_feature_control_msr(struct cpuinfo_x86 *c)
+>  	 */
+>  	if (cpu_has(c, X86_FEATURE_VMX) && IS_ENABLED(CONFIG_KVM)) {
+>  		msr |= FEAT_CTL_VMX_ENABLED_OUTSIDE_SMX;
+> -		if (tboot_enabled())
+> +		if (tboot)
+>  			msr |= FEAT_CTL_VMX_ENABLED_INSIDE_SMX;
+>  	}
+>  	wrmsrl(MSR_IA32_FEATURE_CONTROL, msr);
+> +
+> +update_caps:
+> +	if (!cpu_has(c, X86_FEATURE_VMX))
+> +		return;
+> +
+> +	if ((tboot && !(msr & FEAT_CTL_VMX_ENABLED_INSIDE_SMX)) ||
+> +	    (!tboot && !(msr & FEAT_CTL_VMX_ENABLED_OUTSIDE_SMX))) {
+
+Align those vertically like this so that the check is grokkable at a
+quick glance:
+
+	if ( (tboot && !(msr & FEAT_CTL_VMX_ENABLED_INSIDE_SMX)) ||
+	    (!tboot && !(msr & FEAT_CTL_VMX_ENABLED_OUTSIDE_SMX))) {
+
+Thx.
+
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
