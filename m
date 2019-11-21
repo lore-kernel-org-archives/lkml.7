@@ -2,96 +2,209 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10BE4C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 17:55:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5788FC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 17:55:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1F39206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 17:55:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574358910;
-	bh=2EPdODy+7MNcUT49xdDaA0T1l27GqQB5Ebpa+Jv/aD8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=y9BrwIythfRX16PoT4X/osDq9/jhBq6TRqXxYMwiDiIHv5/XqiHLfHvMnjDxTJXAP
-	 MwHUP9bdLYzw+5TCXkX4FKPorv9SYbOPzaMwA/zgC/BTtJJONwp42cH+VKmEUP2jSx
-	 5WMcbXPUQYOjlPTKgI8bHrwiJ83FAIGcvuH0eXug=
+	by mail.kernel.org (Postfix) with ESMTP id 2729F206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 17:55:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbfKURzJ (ORCPT
+        id S1727020AbfKURzc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 12:55:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45642 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726293AbfKURzJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 12:55:09 -0500
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 950302068F;
-        Thu, 21 Nov 2019 17:55:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574358908;
-        bh=2EPdODy+7MNcUT49xdDaA0T1l27GqQB5Ebpa+Jv/aD8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=0xXJEOJWkxchQu9hKjT7ONzVckkDAv81CwAEZjHdWzA/SdPnXfZMnW0lRtHTsPI0R
-         qjHZmhu1Krn9CtV8y3H7dPWy/s2/8tGF3VOmsIB7uQWSDte8BDRqNwX8nBTz2yGDzw
-         HxeH2ihyqnuP043D2sGTZU9seQ0mDe7yrQapI+ns=
-Date:   Thu, 21 Nov 2019 11:55:07 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "logang@deltatee.com" <logang@deltatee.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>
-Subject: Re: [PATCH v3 1/1] PCI: Fix bug resulting in double hpmemsize being
- assigned to MMIO window
-Message-ID: <20191121175507.GA54569@google.com>
+        Thu, 21 Nov 2019 12:55:32 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:33117 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726784AbfKURzb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 12:55:31 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iXqfr-0002F8-DZ; Thu, 21 Nov 2019 18:55:23 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 16A981C1A46;
+        Thu, 21 Nov 2019 18:55:23 +0100 (CET)
+Date:   Thu, 21 Nov 2019 17:55:23 -0000
+From:   "tip-bot2 for Davidlohr Bueso" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/mm] x86/mm/pat: Drop the rbt_ prefix from external memtype calls
+Cc:     Davidlohr Bueso <dbueso@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20191121011601.20611-4-dave@stgolabs.net>
+References: <20191121011601.20611-4-dave@stgolabs.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PSXP216MB043824FACB1E66E3F31890D2804E0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Message-ID: <157435892301.21853.17987056547102781237.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc Naresh]
+The following commit has been merged into the x86/mm branch of tip:
 
-On Thu, Nov 21, 2019 at 02:52:41PM +0000, Nicholas Johnson wrote:
-> On Tue, Nov 19, 2019 at 07:38:28AM -0600, Bjorn Helgaas wrote:
-> > On Tue, Nov 19, 2019 at 03:17:04AM +0000, Nicholas Johnson wrote:
-> > > I did just discover linux-next and I built it. Should I be doing this 
-> > > more often to help find regressions?
-> > 
-> > Yes, if you build and run linux-next, that's a great service because
-> > it helps find problems before they appear in mainline.
-> 
-> Funnily enough, I just built Linux next-20191121 and it has a NULL 
-> dereference on start-up, which renders the system unusable.
-> 
-> Can anybody else please confirm? I enabled most of the new options since 
-> the last linux-next a few days before.
-> ...
+Commit-ID:     511aaca834fe2dc0b652406bda6283842fdc70ce
+Gitweb:        https://git.kernel.org/tip/511aaca834fe2dc0b652406bda6283842fdc70ce
+Author:        Davidlohr Bueso <dave@stgolabs.net>
+AuthorDate:    Wed, 20 Nov 2019 17:16:00 -08:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Thu, 21 Nov 2019 18:48:07 +01:00
 
-> Here is a preliminary bug report (assuming you are meant to report 
-> linux-next bugs here):
-> https://bugzilla.kernel.org/show_bug.cgi?id=205621
+x86/mm/pat: Drop the rbt_ prefix from external memtype calls
 
-Looks similar to these reports I found by searching for kernfs_find_ns on
-https://lore.kernel.org/lkml:
+Drop the rbt_memtype_*() call rbt_ prefix, as we no longer use
+an rbtree directly.
 
-  https://lore.kernel.org/r/000000000000bdfc8e0597ddbde4@google.com
-  https://lore.kernel.org/r/000000000000c1e9090597ddbd9d@google.com
-  https://lore.kernel.org/r/CA+G9fYsrRw2SRb92eROCt6aU==j6Qr9Fe4AmJyn4fMj5gDFt=w@mail.gmail.com
+Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://lkml.kernel.org/r/20191121011601.20611-4-dave@stgolabs.net
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ arch/x86/mm/pat.c          |  8 ++++----
+ arch/x86/mm/pat_internal.h | 20 ++++++++++----------
+ arch/x86/mm/pat_rbtree.c   | 12 ++++++------
+ 3 files changed, 20 insertions(+), 20 deletions(-)
 
-Thanks very much for doing this testing and reporting the results.  I
-don't think there's anything more you need to do.  It looks like
-Naresh already cc'd some likely candidates.
-
-Bjorn
+diff --git a/arch/x86/mm/pat.c b/arch/x86/mm/pat.c
+index d9fbd4f..2d758e1 100644
+--- a/arch/x86/mm/pat.c
++++ b/arch/x86/mm/pat.c
+@@ -603,7 +603,7 @@ int reserve_memtype(u64 start, u64 end, enum page_cache_mode req_type,
+ 
+ 	spin_lock(&memtype_lock);
+ 
+-	err = rbt_memtype_check_insert(new, new_type);
++	err = memtype_check_insert(new, new_type);
+ 	if (err) {
+ 		pr_info("x86/PAT: reserve_memtype failed [mem %#010Lx-%#010Lx], track %s, req %s\n",
+ 			start, end - 1,
+@@ -650,7 +650,7 @@ int free_memtype(u64 start, u64 end)
+ 	}
+ 
+ 	spin_lock(&memtype_lock);
+-	entry = rbt_memtype_erase(start, end);
++	entry = memtype_erase(start, end);
+ 	spin_unlock(&memtype_lock);
+ 
+ 	if (IS_ERR(entry)) {
+@@ -693,7 +693,7 @@ static enum page_cache_mode lookup_memtype(u64 paddr)
+ 
+ 	spin_lock(&memtype_lock);
+ 
+-	entry = rbt_memtype_lookup(paddr);
++	entry = memtype_lookup(paddr);
+ 	if (entry != NULL)
+ 		rettype = entry->type;
+ 	else
+@@ -1109,7 +1109,7 @@ static struct memtype *memtype_get_idx(loff_t pos)
+ 		return NULL;
+ 
+ 	spin_lock(&memtype_lock);
+-	ret = rbt_memtype_copy_nth_element(print_entry, pos);
++	ret = memtype_copy_nth_element(print_entry, pos);
+ 	spin_unlock(&memtype_lock);
+ 
+ 	if (!ret) {
+diff --git a/arch/x86/mm/pat_internal.h b/arch/x86/mm/pat_internal.h
+index eeb5cae..79a0668 100644
+--- a/arch/x86/mm/pat_internal.h
++++ b/arch/x86/mm/pat_internal.h
+@@ -29,20 +29,20 @@ static inline char *cattr_name(enum page_cache_mode pcm)
+ }
+ 
+ #ifdef CONFIG_X86_PAT
+-extern int rbt_memtype_check_insert(struct memtype *new,
+-					enum page_cache_mode *new_type);
+-extern struct memtype *rbt_memtype_erase(u64 start, u64 end);
+-extern struct memtype *rbt_memtype_lookup(u64 addr);
+-extern int rbt_memtype_copy_nth_element(struct memtype *out, loff_t pos);
++extern int memtype_check_insert(struct memtype *new,
++				enum page_cache_mode *new_type);
++extern struct memtype *memtype_erase(u64 start, u64 end);
++extern struct memtype *memtype_lookup(u64 addr);
++extern int memtype_copy_nth_element(struct memtype *out, loff_t pos);
+ #else
+-static inline int rbt_memtype_check_insert(struct memtype *new,
+-					enum page_cache_mode *new_type)
++static inline int memtype_check_insert(struct memtype *new,
++				       enum page_cache_mode *new_type)
+ { return 0; }
+-static inline struct memtype *rbt_memtype_erase(u64 start, u64 end)
++static inline struct memtype *memtype_erase(u64 start, u64 end)
+ { return NULL; }
+-static inline struct memtype *rbt_memtype_lookup(u64 addr)
++static inline struct memtype *memtype_lookup(u64 addr)
+ { return NULL; }
+-static inline int rbt_memtype_copy_nth_element(struct memtype *out, loff_t pos)
++static inline int memtype_copy_nth_element(struct memtype *out, loff_t pos)
+ { return 0; }
+ #endif
+ 
+diff --git a/arch/x86/mm/pat_rbtree.c b/arch/x86/mm/pat_rbtree.c
+index d31ca77..47a1bf3 100644
+--- a/arch/x86/mm/pat_rbtree.c
++++ b/arch/x86/mm/pat_rbtree.c
+@@ -109,8 +109,8 @@ failure:
+ 	return -EBUSY;
+ }
+ 
+-int rbt_memtype_check_insert(struct memtype *new,
+-			     enum page_cache_mode *ret_type)
++int memtype_check_insert(struct memtype *new,
++			 enum page_cache_mode *ret_type)
+ {
+ 	int err = 0;
+ 
+@@ -125,13 +125,13 @@ int rbt_memtype_check_insert(struct memtype *new,
+ 	return 0;
+ }
+ 
+-struct memtype *rbt_memtype_erase(u64 start, u64 end)
++struct memtype *memtype_erase(u64 start, u64 end)
+ {
+ 	struct memtype *data;
+ 
+ 	/*
+ 	 * Since the memtype_rbroot tree allows overlapping ranges,
+-	 * rbt_memtype_erase() checks with EXACT_MATCH first, i.e. free
++	 * memtype_erase() checks with EXACT_MATCH first, i.e. free
+ 	 * a whole node for the munmap case.  If no such entry is found,
+ 	 * it then checks with END_MATCH, i.e. shrink the size of a node
+ 	 * from the end for the mremap case.
+@@ -157,14 +157,14 @@ struct memtype *rbt_memtype_erase(u64 start, u64 end)
+ 	return data;
+ }
+ 
+-struct memtype *rbt_memtype_lookup(u64 addr)
++struct memtype *memtype_lookup(u64 addr)
+ {
+ 	return memtype_interval_iter_first(&memtype_rbroot, addr,
+ 					   addr + PAGE_SIZE);
+ }
+ 
+ #if defined(CONFIG_DEBUG_FS)
+-int rbt_memtype_copy_nth_element(struct memtype *out, loff_t pos)
++int memtype_copy_nth_element(struct memtype *out, loff_t pos)
+ {
+ 	struct memtype *match;
+ 	int i = 1;
