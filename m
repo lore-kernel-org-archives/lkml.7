@@ -2,94 +2,117 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17DB4C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 12:00:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B429C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 12:00:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E381020855
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 12:00:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E42F220855
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 12:00:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="useGTkdN"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CQrCnz7K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbfKUMAV (ORCPT
+        id S1727182AbfKUMAj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 07:00:21 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:56211 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726342AbfKUMAU (ORCPT
+        Thu, 21 Nov 2019 07:00:39 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:42044 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726342AbfKUMAi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 07:00:20 -0500
-Received: by mail-wm1-f65.google.com with SMTP id b11so3394745wmb.5
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 04:00:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=WrOuxnJH8z2LEEHoE05aukaO/S+sx3wY2zDdww+CY48=;
-        b=useGTkdN0kfUCxBWV9RVjDP3oiQcR9V49e5HKxDCuTBBzMhtkSB2nI8wDmoBr/mW5C
-         TmjYUmPWezdDw1B7n9ApPP3cbiai0aK1FGpiJQ9nrn7kl4UvBKRRk2+m7AK6y31zYgnl
-         CRPNmwxP72YZVNHYWVGbx0FIdi2nQVraF1Xlhb6mlI4s3S/sDN9uH6nVW/GXf1OG1j1F
-         VGf/ecBKNX0K+1Z+bhPP4m5vrgU27NHp9nlLc/+Vmlfp2OQg6/Cwr+jOTJsGr64cHWkx
-         CrGus92zgDlOnt9XyXmo1rsgznb7U7KdED2CxhPMvmJLgjqBZKpFTmU5PYu5YnfKm/Fu
-         S4zg==
+        Thu, 21 Nov 2019 07:00:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574337637;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Q5rBJ14foXXsUIH3cvZz1qwUhkNTdgEVQ2KMu92pgrc=;
+        b=CQrCnz7KI+3ROnhDazKP6zZsV+s/KTSZ4WwSu+KrY+C1rseLogXNZIx7gs9mzP1bGDXsdS
+        IVWVHTA4b/g3B2+5NFSXIgvsLhao9ICBeYTgmO8cdIBgf52H9EewiI6HYwJ3JKHahkIEk6
+        0pEloZLO0n+O5cGwchwnA9aIjGhbZ2w=
+Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
+ [209.85.167.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-424-VTMESFl6Pb2fgyUKIXHswA-1; Thu, 21 Nov 2019 07:00:30 -0500
+Received: by mail-lf1-f71.google.com with SMTP id q28so861397lfo.1
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 04:00:30 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WrOuxnJH8z2LEEHoE05aukaO/S+sx3wY2zDdww+CY48=;
-        b=VSSggUUr7vVpAB1UGU0rpLxd96nGxyM0NxDZEz+8LwizrTG+pr6/icq2hg1LapvL0T
-         0vkBeJ7DisWyhxtFj81/df+xIEqpIwr8z0K2jO4q0gZuivkBjRcnhDa5PIERyAEDDv3g
-         t0aqDAYBl86GiB0AwchBIW5nvmJmRjkXNiOBd5SvNbHvJQIlgyi3fTmViYyvRG03BZOb
-         CZfnySLGR1t6zgpFhgzVdCnt97gvuhfyUmwwQ7S290z1TYGW3lBE7irrooMoLDKZOJ/v
-         FXCFyW3wv/es8a1P2yeuOEna6oZ2gLrOvTYx4Q2Go4u3FYLRsP8qKrRqHPkJ3fIB2Brc
-         HE0A==
-X-Gm-Message-State: APjAAAWMQJeJcwxkfnwwFlEejHmZNfTMib4fcNpgKaYqJKbf7IGF0lLM
-        91azCCLv2pgO+OLiGAvRVWef9I1rhOw=
-X-Google-Smtp-Source: APXvYqyM6C2IJRK4LboK981iYVXOFrMvxJ76CqD2oSxC4D3XEox98MQP5yp44ZaKWEXezC3rVNyY8A==
-X-Received: by 2002:a1c:9ccd:: with SMTP id f196mr9577217wme.152.1574337617994;
-        Thu, 21 Nov 2019 04:00:17 -0800 (PST)
-Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
-        by smtp.gmail.com with ESMTPSA id j7sm3289396wro.54.2019.11.21.04.00.17
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=x7Br6MUt5GIrekmwoW3W/dVDofzaSmCZ4ehtQgntfJg=;
+        b=ZC//oH/Qm6m8faCSTo8DmDembWSqZJjLNenbUlx5f7sF0JoO8YPTQAVMhKkjJtrVZw
+         SdRUPwdHkRc8UHtpvSr2DrI3JBei7pJ+/KglXWu3pfwB0KF6SCogaWNOIEI0V+9bztbQ
+         pmiH1E3tQ89YeszEyUnYtzXg7wuk+NfkcAJa6I1i5orbYbYOu614+CqPn3le7rFHsqWg
+         PZvBPxTSgBen60BFgJKHXFZDw2lB9BUp6IIPEkdlgvdRgXhkM2XG3V1Rtm2yqyQAZBWY
+         4n3hVQBl9XgSZQbVvOiO0yYczFL/UzXXynreI43PigZzXf9gFGgdSY7NA7BTkw1EXq96
+         86YQ==
+X-Gm-Message-State: APjAAAWCqgMkdbNXMxI/lhf6aFqBS/A/gjoxs8UXMarL/X2NvMJuTskQ
+        f3khobkDqbsqrUBvh464Z0JD7Lus0pC7OcgWLh/n8QZeA9YbLruT5mPXqua+m/FkTe7YtDANU3b
+        BXOWESXiOgBEAeSphatx9A3sF
+X-Received: by 2002:ac2:4a71:: with SMTP id q17mr7003180lfp.179.1574337629138;
+        Thu, 21 Nov 2019 04:00:29 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwoeKMb/g8JM/lXuuI1qNoHv9YuoiOe6iH1WkPLFXbg9oIhgY0S6Dx/PfPzgSPCEeKonyhh5w==
+X-Received: by 2002:ac2:4a71:: with SMTP id q17mr7003168lfp.179.1574337628964;
+        Thu, 21 Nov 2019 04:00:28 -0800 (PST)
+Received: from alrua-x1.borgediget.toke.dk ([2a00:7660:6da:443::2])
+        by smtp.gmail.com with ESMTPSA id k25sm1144384ljg.22.2019.11.21.04.00.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Nov 2019 04:00:17 -0800 (PST)
-Date:   Thu, 21 Nov 2019 12:00:14 +0000
-From:   Quentin Perret <qperret@google.com>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
-        mingo@kernel.org, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, patrick.bellasi@matbug.net,
-        qais.yousef@arm.com, morten.rasmussen@arm.com
-Subject: Re: [PATCH 0/3] sched/fair: Task placement biasing using uclamp
-Message-ID: <20191121120014.GA214532@google.com>
-References: <20191120175533.4672-1-valentin.schneider@arm.com>
+        Thu, 21 Nov 2019 04:00:27 -0800 (PST)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+        id C838A1818BA; Thu, 21 Nov 2019 13:00:26 +0100 (CET)
+From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc:     Netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        David Miller <davem@davemloft.net>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+Subject: Re: [PATCH RFC net-next] net: WireGuard secure network tunnel
+In-Reply-To: <CAHmME9rmFw7xGKNMURBUSiezbsBEikOPiJxtEu=i2Quzf+JNDg@mail.gmail.com>
+References: <20191120203538.199367-1-Jason@zx2c4.com> <877e3t8qv7.fsf@toke.dk> <CAHmME9rmFw7xGKNMURBUSiezbsBEikOPiJxtEu=i2Quzf+JNDg@mail.gmail.com>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date:   Thu, 21 Nov 2019 13:00:26 +0100
+Message-ID: <87lfs9782t.fsf@toke.dk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191120175533.4672-1-valentin.schneider@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MC-Unique: VTMESFl6Pb2fgyUKIXHswA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wednesday 20 Nov 2019 at 17:55:30 (+0000), Valentin Schneider wrote:
-> While uclamp restrictions currently only impacts schedutil's frequency
-> selection, it would make sense to also let it impact CPU selection in
-> asymmetric topologies. This would let us steer specific tasks towards
-> certain CPU capacities regardless of their actual utilization - I give a
-> few examples in patch 3.
-> 
-> The first two patches are just paving the way for the meat of the thing
-> which is in patch 3.
+"Jason A. Donenfeld" <Jason@zx2c4.com> writes:
 
-This makes sense, and is in line with what Qais proposed for RT I think.
-So, with the nit applied to patch 3:
+>> > +     MAX_QUEUED_INCOMING_HANDSHAKES =3D 4096, /* TODO: replace this w=
+ith DQL */
+>> > +     MAX_STAGED_PACKETS =3D 128,
+>> > +     MAX_QUEUED_PACKETS =3D 1024 /* TODO: replace this with DQL */
+>>
+>> Yes, please (on the TODO) :)
+>>
+>> FWIW, since you're using pointer rings I think the way to do this is
+>> probably to just keep the limits in place as a maximum size, and then
+>> use DQL (or CoDel) to throttle enqueue to those pointer rings instead of
+>> just letting them fill.
+>>
+>> Happy to work with you on this (as I believe I've already promised), but
+>> we might as well do that after the initial version is merged...
+>
+> I've actually implemented this a few times, but DQL always seems too
+> slow to react properly, and I haven't yet been able to figure out
+> what's happening. Let's indeed work on this after the initial version
+> is merged. I think this change, and several more like it, will be the
+> topic of some interesting discussions. But that doesn't need to happen
+> /now/ I don't think.
 
-  Reviewed-by: Quentin Perret <qperret@google.com>
+Agreed. Let's wait until the initial version is merged and use that as a
+base to benchmark against... :)
 
-Thanks!
-Quentin
+-Toke
+
