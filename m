@@ -2,159 +2,87 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95BB6C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B9ABC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:41:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66CC020672
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:39:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41D7F20692
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:41:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574354375;
-	bh=ZaoHMraTUozUD3c0uExDBQlOQGB/Io6fOe6dl57fG18=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=mdDGyV6aCwNzl9/DtRDuPUXXXEAReNR3VsnCYBeUgKYAikv+Hyh54Uui4b1dEiJ+P
-	 C78FOT3FIQJSn7KJTXurKNGCPg8NbldKj1Yf9vwwSoaJU0XwDZYy1Xyj0BOq9Ni4rW
-	 yxt/l0DLYMOFl7UnOncmfVhOZtRIOLHRpZX/qHn0=
+	s=default; t=1574354506;
+	bh=IrWFGRzmzJof+idBR3hRRL80JDK5bEELlrtOoefbtI8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bCim1kxxTH/FMkNtThaun0bDVxOcN+w2vKmUJJmzXf0xk5XcQmETBDVxpj33ITuKU
+	 32U6qaNkQSxY0yb2qR173VZDAKzcSKT3jJ9JnJGjae+rCUqjpJ7QR7QmWICmi5v5gT
+	 2xxdgiQPKQAN5pZLBTWZX7zlWGzvxvEUt0uFF4eM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726939AbfKUQje (ORCPT
+        id S1726774AbfKUQlp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 11:39:34 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:34978 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726293AbfKUQje (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 11:39:34 -0500
-Received: by mail-ot1-f65.google.com with SMTP id 23so1715747otf.2;
-        Thu, 21 Nov 2019 08:39:33 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4IrWX6mmJ7b0mwXpxOSU05DSHjWhwtw3uJnCs1X0/To=;
-        b=uORh8vgE7pSPRWkrAVlqDgJE7rMnWh5fze8TQgNclvMHwRJr+mgkUgIAwWtvufsYsk
-         w04/NVlJbGcwDVIg3fqMVTTm8W1y3Ji54GQ1sgpx1fLkthoWcqPOOua4whGlFXF5ps9D
-         v2pk7cUnd6cKCeUUJP3MUnRARSva+xGMHaMr+gWMDbJiirCFeY3VFtxx1dhTUxLDyzJV
-         2GwjHxsynEUTAXcpd4V0oxY2sKwBar7/hD+Cmif8P+3vp1h3blPGHAMS3LYTZIHzX3U6
-         qQ5jYSniKIsjH7wPsxNgh/2VPH+ugB05XFbsMyBCUOtYldq/X386S+wTanBrTL6Fd7CD
-         fdxw==
-X-Gm-Message-State: APjAAAW8GvZsHkNf4YMaqmpqmYLLOWZcjXt7PbUyn3E7nFy4Og0z/iWL
-        K9IFzDfEmYsvzAggMZYb58yjbUBJYm/PDHwIrKM=
-X-Google-Smtp-Source: APXvYqw6yon06gwMBAkTS9wKaEXc0zY3KLNduZz9aAoaAE9fqyZLVmoRNCkTobjOW0RmAi51YDxLQ+kr/wefdJcTvpQ=
-X-Received: by 2002:a9d:7d01:: with SMTP id v1mr6911159otn.167.1574354372881;
- Thu, 21 Nov 2019 08:39:32 -0800 (PST)
+        Thu, 21 Nov 2019 11:41:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47746 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726279AbfKUQlo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 11:41:44 -0500
+Received: from localhost (unknown [217.68.49.72])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B04720672;
+        Thu, 21 Nov 2019 16:41:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574354503;
+        bh=IrWFGRzmzJof+idBR3hRRL80JDK5bEELlrtOoefbtI8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZWeKF1wuB8uwMK0EqpJQ3pOHyPA3Exyd5bnLUvSsLKoMQ10eDW9d2elW7ZFtJ+ryV
+         MUp/SwpL64/rlW5F7Ni0/HDVhsVpnSjZTSMuFaRtYtVsZwUQs8V2RnFDTvTxBmWnQj
+         GAZmturMvROOEGE/0MRhJyZiS6XK0Yp2ihp0/sDA=
+Date:   Thu, 21 Nov 2019 17:41:38 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Cc:     Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] tty: use tty_init_dev_retry() to workaround a
+ race condition
+Message-ID: <20191121164138.GD651886@kroah.com>
+References: <20191121152239.28405-1-sudipm.mukherjee@gmail.com>
+ <20191121152239.28405-2-sudipm.mukherjee@gmail.com>
 MIME-Version: 1.0
-References: <20191120120913.GE11621@lahna.fi.intel.com> <CACO55tsHy6yZQZ8PkdW8iPA7+uc5rdcEwRJwYEQ3iqu85F8Sqg@mail.gmail.com>
- <20191120151542.GH11621@lahna.fi.intel.com> <CACO55tvo3rbPtYJcioEgXCEQqVXcVAm-iowr9Nim=bgTdMjgLw@mail.gmail.com>
- <20191120155301.GL11621@lahna.fi.intel.com> <CAJZ5v0hkT-fHFOQKzp2qYPyR+NUa4c-G-uGLPZuQxqsG454PiQ@mail.gmail.com>
- <CACO55ttTPi2XpRRM_NYJU5c5=OvG0=-YngFy1BiR8WpHkavwXw@mail.gmail.com>
- <CAJZ5v0h=7zu3A+ojgUSmwTH0KeXmYP5OKDL__rwkkWaWqcJcWQ@mail.gmail.com>
- <20191121112821.GU11621@lahna.fi.intel.com> <CAJZ5v0hQhj5Wf+piU11abC4pF26yM=XHGHAcDv8Jsgdx04aN-w@mail.gmail.com>
- <20191121114610.GW11621@lahna.fi.intel.com> <CACO55ttXJgXG32HzYP_uJDfQ6T-d8zQaGjXK_AZD3kF0Rmft4g@mail.gmail.com>
- <CAJZ5v0ibzcLEm44udUxW2uVgaF9NapdNBF8Ag+RE++u7gi2yNA@mail.gmail.com> <CACO55ttBkZD9dm0Y_jT931NnzHHtDFyLz28aoo+ZG0pnLzPgbA@mail.gmail.com>
-In-Reply-To: <CACO55ttBkZD9dm0Y_jT931NnzHHtDFyLz28aoo+ZG0pnLzPgbA@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 21 Nov 2019 17:39:21 +0100
-Message-ID: <CAJZ5v0jbh7jz+YQcw-gC5ztmMOc4E9+KFBCy4VGRsRFxBw-gnw@mail.gmail.com>
-Subject: Re: [PATCH v4] pci: prevent putting nvidia GPUs into lower device
- states on certain intel bridges
-To:     Karol Herbst <kherbst@redhat.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Mika Westerberg <mika.westerberg@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lyude Paul <lyude@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        Dave Airlie <airlied@gmail.com>,
-        Mario Limonciello <Mario.Limonciello@dell.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191121152239.28405-2-sudipm.mukherjee@gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 5:06 PM Karol Herbst <kherbst@redhat.com> wrote:
->
-> On Thu, Nov 21, 2019 at 4:47 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> >
-> > On Thu, Nov 21, 2019 at 1:53 PM Karol Herbst <kherbst@redhat.com> wrote:
-> > >
-> > > On Thu, Nov 21, 2019 at 12:46 PM Mika Westerberg
-> > > <mika.westerberg@intel.com> wrote:
-> > > >
-> > > > On Thu, Nov 21, 2019 at 12:34:22PM +0100, Rafael J. Wysocki wrote:
-> > > > > On Thu, Nov 21, 2019 at 12:28 PM Mika Westerberg
-> > > > > <mika.westerberg@intel.com> wrote:
-> > > > > >
-> > > > > > On Wed, Nov 20, 2019 at 11:29:33PM +0100, Rafael J. Wysocki wrote:
-> > > > > > > > last week or so I found systems where the GPU was under the "PCI
-> > > > > > > > Express Root Port" (name from lspci) and on those systems all of that
-> > > > > > > > seems to work. So I am wondering if it's indeed just the 0x1901 one,
-> > > > > > > > which also explains Mikas case that Thunderbolt stuff works as devices
-> > > > > > > > never get populated under this particular bridge controller, but under
-> > > > > > > > those "Root Port"s
-> > > > > > >
-> > > > > > > It always is a PCIe port, but its location within the SoC may matter.
-> > > > > >
-> > > > > > Exactly. Intel hardware has PCIe ports on CPU side (these are called
-> > > > > > PEG, PCI Express Graphics, ports), and the PCH side. I think the IP is
-> > > > > > still the same.
-> > > > > >
-> > >
-> > > yeah, I meant the bridge controller with the ID 0x1901 is on the CPU
-> > > side. And if the Nvidia GPU is on a port on the PCH side it all seems
-> > > to work just fine.
-> >
-> > But that may involve different AML too, may it not?
-> >
-> > > > > > > Also some custom AML-based power management is involved and that may
-> > > > > > > be making specific assumptions on the configuration of the SoC and the
-> > > > > > > GPU at the time of its invocation which unfortunately are not known to
-> > > > > > > us.
-> > > > > > >
-> > > > > > > However, it looks like the AML invoked to power down the GPU from
-> > > > > > > acpi_pci_set_power_state() gets confused if it is not in PCI D0 at
-> > > > > > > that point, so it looks like that AML tries to access device memory on
-> > > > > > > the GPU (beyond the PCI config space) or similar which is not
-> > > > > > > accessible in PCI power states below D0.
-> > > > > >
-> > > > > > Or the PCI config space of the GPU when the parent root port is in D3hot
-> > > > > > (as it is the case here). Also then the GPU config space is not
-> > > > > > accessible.
-> > > > >
-> > > > > Why would the parent port be in D3hot at that point?  Wouldn't that be
-> > > > > a suspend ordering violation?
-> > > >
-> > > > No. We put the GPU into D3hot first, then the root port and then turn
-> > > > off the power resource (which is attached to the root port) resulting
-> > > > the topology entering D3cold.
-> > > >
-> > >
-> > > If the kernel does a D0 -> D3hot -> D0 cycle this works as well, but
-> > > the power savings are way lower, so I kind of prefer skipping D3hot
-> > > instead of D3cold. Skipping D3hot doesn't seem to make any difference
-> > > in power savings in my testing.
-> >
-> > OK
-> >
-> > What exactly did you do to skip D3cold in your testing?
-> >
->
-> For that I poked into the PCI registers directly and skipped doing the
-> ACPI calls and simply checked for the idle power consumption on my
-> laptop.
+On Thu, Nov 21, 2019 at 03:22:39PM +0000, Sudip Mukherjee wrote:
+> There seems to be a race condition in tty drivers and I could see on
+> many boot cycles a NULL pointer dereference as tty_init_dev() tries to
+> do 'tty->port->itty = tty' even though tty->port is NULL.
+> 'tty->port' will be set by the driver and if the driver has not yet done
+> it before we open the tty device we can get to this situation. By adding
+> some extra debug prints, I noticed that:
+> 
+> 6.650130: uart_add_one_port
+> 6.663849: register_console
+> 6.664846: tty_open
+> 6.674391: tty_init_dev
+> 6.675456: tty_port_link_device
+> 
+> uart_add_one_port() registers the console, as soon as it registers, the
+> userspace tries to use it and that leads to tty_open() but
+> uart_add_one_port() has not yet done tty_port_link_device() and so
+> tty->port is not yet configured when control reaches tty_init_dev().
 
-That doesn't involve the PCIe port PM, however.
+Shouldn't we do tty_port_link_device() before uart_add_one_port() to
+remove that race?  Once you register the console, yes, tty_open() can
+happen, so the driver had better be ready to go at that point in time.
 
-> But I guess I should retest with calling pci_d3cold_disable
-> from nouveau instead? Or is there a different preferable way of
-> testing this?
+This feels like it should be fixed by the caller, not in the tty core.
+Any reason that can not happen?
 
-There is a sysfs attribute called "d3cold_allowed" which can be used
-for "blocking" D3cold, so can you please retest using that?
+thanks,
+
+greg k-h
