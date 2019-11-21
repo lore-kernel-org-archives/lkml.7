@@ -2,187 +2,125 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6E05C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 09:45:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5460C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 09:46:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 950EE20748
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 09:45:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A0B020718
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 09:46:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bEbUF9lM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EqWQIKk+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726563AbfKUJpN (ORCPT
+        id S1726716AbfKUJqV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 04:45:13 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:46563 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726014AbfKUJpN (ORCPT
+        Thu, 21 Nov 2019 04:46:21 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35309 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726014AbfKUJqU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 04:45:13 -0500
-Received: by mail-pl1-f196.google.com with SMTP id l4so1301422plt.13;
-        Thu, 21 Nov 2019 01:45:12 -0800 (PST)
+        Thu, 21 Nov 2019 04:46:20 -0500
+Received: by mail-wm1-f65.google.com with SMTP id 8so2930396wmo.0;
+        Thu, 21 Nov 2019 01:46:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=6ASxIbDgZPzjpEeQAS60aSTYiSJ47wEPcbtoAyJxV1I=;
-        b=bEbUF9lMdvlVPkRLX3v5XpRyzMUUn4lP7if0rzHhSFjhwTinaGQxOK9/69n/VhuLKY
-         /SzI5l+Y7om7EUR7OlEg8Eqipiep8zQdCr4XSNPdVMpasCwdsIFAVp1giqgiz/khmNVv
-         fl5iRQJSl99NJjFoMmCVoNAQR22F5iynNI6mnyhXCDzSTOcjb8TVnpozcuiv3ac9EgQM
-         Ux451YOdfd9zDUFD/dKNikmlO61Bv6D2BxEQcJY7kU0AejFGgKBUzjm3b5Z1y+nHtm9/
-         SJdIS1dfPT8Vv7T7LiMZwZZJ04kVWd3mhURMeXoIAyt8iQ/k89ASbZmd004/DxlBXag7
-         gGkA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Zq604zfFYaP1lg3EZmX/ZaHb/wgc+8oQ8qyObi+Xugk=;
+        b=EqWQIKk+Pc+6l/iTZqHgRlRZKxdn4V5MLvDyH0ww5S+V+fMSCiyEKuvRNjME92kpzR
+         xcVvIZLkVoemqT088j6zTquIIRlUtFPaJuPbj1gRvRqz9mkwPyu9vQ6n8z+t2yM32vCz
+         pDquaI0iz8FNlE2lh/MIGSO4oj+ofk8tt9/yAQbbgYHMgE+uXnFhDEaOF55hmhCeo6gZ
+         LqyQHu1s+IZNMbJwy0SkDh4yiE8HuRicUZlJt7NAsuUyMRaekXE7UDU7Rx6NE/3Efqhc
+         grH+DPrIOumY2l92QPIrd6f2xxrX25HXk1PnobD//XAPU3rxd+ttp1nIZ8rmAVLfSebm
+         3s0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6ASxIbDgZPzjpEeQAS60aSTYiSJ47wEPcbtoAyJxV1I=;
-        b=FGrst/8y6kKOE0hs/N31rfoo/d5YJmjj8aACJ3bjAzCKPQIqZE1BuCHQNexWWDr8nN
-         UoGt2MmuoidtbKNZah66KlFhtwreYJlsR2WsfIVie+d3lkWRl96MZ22Os4zHzRfS39Ol
-         QWID9Eg+POPk8e+65Le8a3mmt67RMp1YKxc+rOLNI9xRWoCJYGs1Jk/W0uLY5Idmw0SW
-         iMAQLgKjxtA+79TbJs88rZKZP5oKwTzetzoLYhlfUugSw0NdDjwMN7c6JaWP4YI8LY43
-         QMvFiID7PHojzJ0mxC1P5NufbU5mc2K/fbLqg1xf0pSklPeRSiTdCzsVKZ/q1P+2zaz+
-         2A3Q==
-X-Gm-Message-State: APjAAAUe9QZqMOpKM5FKP15yUiCNbpjn7gwT/6fCdLp5p3KikEFECkxT
-        UJGMn4ehSOr4lkAIllWPCmUzXpBw
-X-Google-Smtp-Source: APXvYqz2pCtYH4yADufGtyDF3nMKzWAlEbR9Vq7cut3R0CBn8yhtcpgMNMollgpDpo8dyXBDHtiovg==
-X-Received: by 2002:a17:902:9344:: with SMTP id g4mr8062166plp.16.1574329511726;
-        Thu, 21 Nov 2019 01:45:11 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id o16sm2292208pjp.23.2019.11.21.01.45.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 21 Nov 2019 01:45:10 -0800 (PST)
-Subject: Re: [PATCH] watchdog: make DesignWare watchdog allow users to set
- bigger timeout value
-To:     "Wang, Peng 1. (NSB - CN/Hangzhou)" <peng.1.wang@nokia-sbell.com>
-Cc:     "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <13477f08400047c1b32030b2680a4241@nokia-sbell.com>
- <20191120171512.GA28255@roeck-us.net>
- <9128f42a3e4347f2adfccb8aa2833e2e@nokia-sbell.com>
- <b0fcaae6-c9da-f551-5af4-ff112b08e851@roeck-us.net>
- <2ba1cd4773c84ce28512aacde17034ed@nokia-sbell.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <685f5142-06a9-062d-b6d9-1d522c3923f8@roeck-us.net>
-Date:   Thu, 21 Nov 2019 01:45:09 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Zq604zfFYaP1lg3EZmX/ZaHb/wgc+8oQ8qyObi+Xugk=;
+        b=AM6K2jmbaSoUD1F4Szq71VAX+xRT8cY3f2NmD+rFgLyQu/4lteks7icnqhcVB9bKBj
+         3BwJQu48gLTmLwP2MqpkXoV8YokyUGAKdSR2/9N2HkA5hWZrBtxieZ/fZ8ZVWITq/h1Z
+         1qdU1QtLWjxbAiqq1+7rSjdjBUJKFpcEuY9K4Z8TXkanEzyTpZ/J3x/cvgIOOo1rf+0S
+         AnZofn04Da+Hl1g7QVdZsYu4CTTfJLNf9FdWe9UK5HBDKdCKb48cl6qnHWDrc5kFkKff
+         +WzuNpNvuh6WBov5+SyMUWyZAPh84G1B/sI49vqKl0//jg7OPlNNYgUb1c5w25uzyEs9
+         Kv9A==
+X-Gm-Message-State: APjAAAVgfqFQ6b+bUgUqKe1TgrWOIm05idTZC42dhy7o8Rcxz9XWJeyW
+        KrvLwai52/XERqvlKvS2NElskpV6qvI=
+X-Google-Smtp-Source: APXvYqyZ8t14KdyBL7WZHEesuhWgOkStCUSzngEXJC35eulov2avg9DZSJMo7BWYsnIIGFoYvTWJJg==
+X-Received: by 2002:a1c:a406:: with SMTP id n6mr9076240wme.90.1574329576856;
+        Thu, 21 Nov 2019 01:46:16 -0800 (PST)
+Received: from localhost ([51.15.41.238])
+        by smtp.gmail.com with ESMTPSA id i203sm1972471wma.35.2019.11.21.01.46.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Nov 2019 01:46:15 -0800 (PST)
+Date:   Thu, 21 Nov 2019 09:46:14 +0000
+From:   Stefan Hajnoczi <stefanha@gmail.com>
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     netdev@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        Dexuan Cui <decui@microsoft.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Jorgen Hansen <jhansen@vmware.com>
+Subject: Re: [PATCH net-next 5/6] vsock: use local transport when it is loaded
+Message-ID: <20191121094614.GC439743@stefanha-x1.localdomain>
+References: <20191119110121.14480-1-sgarzare@redhat.com>
+ <20191119110121.14480-6-sgarzare@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <2ba1cd4773c84ce28512aacde17034ed@nokia-sbell.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="+nBD6E3TurpgldQp"
+Content-Disposition: inline
+In-Reply-To: <20191119110121.14480-6-sgarzare@redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/21/19 12:07 AM, Wang, Peng 1. (NSB - CN/Hangzhou) wrote:
-> Actually, this function is used by watchdog_dev.c, the timeout value in wdd is already modified there.
-> but yes, you are right, decide the actual timeout value here is more reasonable. :)
-> 
 
-Please avoid top-posting.
+--+nBD6E3TurpgldQp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-watchdog_dev.c only sets wdd->timeout if there is no driver function
-to set it.
+On Tue, Nov 19, 2019 at 12:01:20PM +0100, Stefano Garzarella wrote:
+> @@ -420,9 +436,10 @@ int vsock_assign_transport(struct vsock_sock *vsk, struct vsock_sock *psk)
+>  		new_transport = transport_dgram;
+>  		break;
+>  	case SOCK_STREAM:
+> -		if (remote_cid <= VMADDR_CID_HOST ||
+> -		    (transport_g2h &&
+> -		     remote_cid == transport_g2h->get_local_cid()))
+> +		if (vsock_use_local_transport(remote_cid))
+> +			new_transport = transport_local;
+> +		else if (remote_cid == VMADDR_CID_HOST ||
+> +			 remote_cid == VMADDR_CID_HYPERVISOR)
+>  			new_transport = transport_g2h;
+>  		else
+>  			new_transport = transport_h2g;
 
-Guenter
+We used to send VMADDR_CID_RESERVED to the host.  Now we send
+VMADDR_CID_RESERVED (LOCAL) to the guest when there is no
+transport_local loaded?
 
-> thanks,
-> Peng Wang
-> -----Original Message-----
-> From: Guenter Roeck [mailto:groeck7@gmail.com] On Behalf Of Guenter Roeck
-> Sent: Thursday, November 21, 2019 11:41 AM
-> To: Wang, Peng 1. (NSB - CN/Hangzhou) <peng.1.wang@nokia-sbell.com>
-> Cc: wim@linux-watchdog.org; linux-watchdog@vger.kernel.org; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH] watchdog: make DesignWare watchdog allow users to set bigger timeout value
-> 
-> On 11/20/19 5:29 PM, Wang, Peng 1. (NSB - CN/Hangzhou) wrote:
->> Hi Guenter,
->>
->> Thank you for your time.
->> - I will remove the unnecessary {}
->> - wdd->max_hw_heartbeat_ms is the max timeout value which HW can support, this value is limited according to the input clock, say. It only supports 20 seconds, if users requires to set timeout to be say. 60 seconds, the watchdog device driver 'watchdog_dev.c' checks if wdd->timeout is bigger than wdd->max_hw_heartbeat_ms, if yes, watchdog_dev.c feeds the watchdog by a worker queue itself to help to feed the watchdog before 60 seconds elapse. Here the issue of dw_wdt.c is that, the original codes update wdd->timeout to the value which HW can support, which means if users requires 60 seconds to be the timeout, then dw_wdt.c updates the timeout value to 20 seconds, this makes the "feeding helper" mechanism in watchdog_dev.c not take effect. That's why I add this check.
->>
-> 
-> Yes, I understand you need a check. What I am saying is that the check is wrong.
-> 
-> You need something like
-> 
-> 	if (top_s > DW_WDT_MAX_TOP)
-> 		wdt->timeout = top_s;
-> 	else
-> 		wdt->timeout = dw_wdt_top_in_seconds(dw_wdt, top_val);
-> 
-> Guenter
-> 
->> Thanks,
->> Peng Wang
->>
->> -----Original Message-----
->> From: Guenter Roeck [mailto:groeck7@gmail.com] On Behalf Of Guenter
->> Roeck
->> Sent: Thursday, November 21, 2019 1:15 AM
->> To: Wang, Peng 1. (NSB - CN/Hangzhou) <peng.1.wang@nokia-sbell.com>
->> Cc: wim@linux-watchdog.org; linux-watchdog@vger.kernel.org;
->> linux-kernel@vger.kernel.org
->> Subject: Re: [PATCH] watchdog: make DesignWare watchdog allow users to
->> set bigger timeout value
->>
->> On Wed, Nov 20, 2019 at 10:07:57AM +0000, Wang, Peng 1. (NSB - CN/Hangzhou) wrote:
->>>   From 1d051b7c081083751dc0bab97d3ab9efbba0f4a7 Mon Sep 17 00:00:00
->>> 2001
->>> From: Peng Wang <peng.1.wang@nokia-sbell.com>
->>> Date: Wed, 20 Nov 2019 15:12:59 +0800
->>> Subject: [PATCH] watchdog: make DesignWare watchdog allow users to
->>> set bigger  timeout value
->>>
->>> watchdog_dev.c provides means to allow users to set bigger timeout
->>> value than HW can support, make DesignWare watchdog align with this.
->>>
->>> Signed-off-by: Peng Wang <peng.1.wang@nokia-sbell.com>
->>> ---
->>>    drivers/watchdog/dw_wdt.c | 11 +++++++++--
->>>    1 file changed, 9 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c
->>> index fef7c61..8911e5e 100644
->>> --- a/drivers/watchdog/dw_wdt.c
->>> +++ b/drivers/watchdog/dw_wdt.c
->>> @@ -113,8 +113,15 @@ static int dw_wdt_set_timeout(struct watchdog_device *wdd, unsigned int top_s)
->>>    	 */
->>>    	writel(top_val | top_val << WDOG_TIMEOUT_RANGE_TOPINIT_SHIFT,
->>>    	       dw_wdt->regs + WDOG_TIMEOUT_RANGE_REG_OFFSET);
->>> -
->>> -	wdd->timeout = dw_wdt_top_in_seconds(dw_wdt, top_val);
->>> +
->>> +    /*
->>> +     * In case users set bigger timeout value than HW can support,
->>> +     * kernel(watchdog_dev.c) helps to feed watchdog before
->>> +     * wdd->timeout
->>> +     */
->>> +    if ( wdd->timeout * 1000 <= wdd->max_hw_heartbeat_ms ) {
->>> +	    wdd->timeout = dw_wdt_top_in_seconds(dw_wdt, top_val);
->>> +    }
->>
->> { } is unnecessary here. Also, the above code compares the _old_ timeout againt the maximum supported timeout, which doesn't look correct.
->>
->> Thanks,
->> Guenter
->>
->>>    
->>>    	return 0;
->>>    }
->>> --
->>> 1.8.3.1
->>>
->>
-> 
+If this is correct, is there a justification for this change?  It seems
+safest to retain existing behavior.
 
+--+nBD6E3TurpgldQp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl3WXOYACgkQnKSrs4Gr
+c8iT+Qf9ESuEFX++6Sq/wJtYnpiX6cvGw7bvw+fxkdiksMzIPBWT6ZbC/ZrRv87z
+zBMNmGrLElTPu3lN4ISYgd1gjrLn1iTTnkj/A42X5VvjEqfQYXNz84gBMP7jRcxo
+XufjkgajBvxcssZgAPOAMjx/4BbGlW3cwUNoTa7oy9PCQlhBPVDvqPWSM4sQ61cP
+GJ2hFaCeYTmCbYKnyrvqmoXIewMF1XAjAuuXSHz7zVlCpbHL21piJByTKAUnqL7N
+6W6nMibNjso9qI0AYAOsCkFRnhIshBqRhRhO96/1ZEBmLe7kH6gXYpgScRs4IRYD
+V7w4kz76mzwiZZZLiW4/K5FOBe8v9Q==
+=HSd8
+-----END PGP SIGNATURE-----
+
+--+nBD6E3TurpgldQp--
