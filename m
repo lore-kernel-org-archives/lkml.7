@@ -2,190 +2,84 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C61F8C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 01:42:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4E8CC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 01:42:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F69C20878
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 01:42:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="he6m7ZXF"
+	by mail.kernel.org (Postfix) with ESMTP id C755720730
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 01:42:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726406AbfKUBmU (ORCPT
+        id S1726638AbfKUBmV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 20 Nov 2019 20:42:21 -0500
+Received: from mail.loongson.cn ([114.242.206.163]:47540 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725936AbfKUBmU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 Nov 2019 20:42:20 -0500
-Received: from mailout3.samsung.com ([203.254.224.33]:56798 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbfKUBmT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 20:42:19 -0500
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191121014216epoutp03ea7b0fbe578ca6a838b8a17b0aadc68b~ZCf8yhJay2816328163epoutp03h
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 01:42:16 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191121014216epoutp03ea7b0fbe578ca6a838b8a17b0aadc68b~ZCf8yhJay2816328163epoutp03h
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1574300536;
-        bh=XDt3NEv3tS3F+MHLl2VQ/5MdacFRFlCQcvRW128QAoU=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=he6m7ZXFInl0CVdquKN+tnmracBN5vJbgpoiX8SP+bEYZaUdhE8Zt4t6sNaRVApJj
-         zICEREoPuGnS1anktDrPRpIGBhyx6kwa+dk/Pqyd7cqyNrNDFDIQ83/A2LNen0aKM4
-         JV/+l19iiv8JNe1jWfX11dkqrGu2re+YmOPAJZpo=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20191121014215epcas1p4e6dba93392b89a02dc92dd4b87ed12af~ZCf8ST2gb0187501875epcas1p46;
-        Thu, 21 Nov 2019 01:42:15 +0000 (GMT)
-Received: from epsmges1p4.samsung.com (unknown [182.195.40.166]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 47JMkH1PnmzMqYkn; Thu, 21 Nov
-        2019 01:42:15 +0000 (GMT)
-Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
-        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        48.EE.04406.67BE5DD5; Thu, 21 Nov 2019 10:42:14 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20191121014214epcas1p4aa0e7148bd6e5b7a412a2294205cf900~ZCf6mOOhk0777007770epcas1p4e;
-        Thu, 21 Nov 2019 01:42:14 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191121014214epsmtrp2a1afccb106310128863152fd2e536bd6~ZCf6lfamH2549525495epsmtrp2o;
-        Thu, 21 Nov 2019 01:42:14 +0000 (GMT)
-X-AuditID: b6c32a38-947ff70000001136-d1-5dd5eb76f859
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        D1.F4.03654.57BE5DD5; Thu, 21 Nov 2019 10:42:13 +0900 (KST)
-Received: from DONAMJAEJEO06 (unknown [10.88.104.63]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20191121014213epsmtip17570d3b9b427482e46f4a2c9853036fe~ZCf6Zo3K_2005320053epsmtip1P;
-        Thu, 21 Nov 2019 01:42:13 +0000 (GMT)
-From:   "Namjae Jeon" <namjae.jeon@samsung.com>
-To:     "'Nikolay Borisov'" <nborisov@suse.com>
-Cc:     <gregkh@linuxfoundation.org>, <valdis.kletnieks@vt.edu>,
-        <hch@lst.de>, <linkinjeon@gmail.com>, <Markus.Elfring@web.de>,
-        <sj1557.seo@samsung.com>, <linux-kernel@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>
-In-Reply-To: <398eeca9-e59f-385b-791d-561e56567026@suse.com>
-Subject: RE: [PATCH v2 05/13] exfat: add file operations
-Date:   Thu, 21 Nov 2019 10:42:13 +0900
-Message-ID: <00d201d5a00c$e6273ac0$b275b040$@samsung.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 14.0
-Content-Language: ko
-Thread-Index: AQEo1XJlLzywHhHshRBLsQkFEP9+bwE2rzOUAX+3+6QCnhKN6qjDyqqg
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Ta0hTYRjm2zk7O4qr07R8M6h1wrSLtjlnp9KKrqcyNAqCQuwwD07aztbO
-        NLUg6TJLyrKicGlZUpJdrCVppgxmGhLdTFMLIaK7ly5iNzPbOov893zP+zzf+7zfhcRUt4kw
-        MkOw8zaBM9FEIH6zcUZ0VFZPe4qmYjiU2VNeRTAXLzXJmI7uZxhT39CCM0/qSghmxPlWzoz0
-        7sWZ6t935Ezrx0/44gD2lrNbwbpLLyvY2115BFtYXYnYqup2nB1wTWY9Nb0E+/zNTTyZ3GSK
-        N/JcGm9T84LBkpYhpCfQa9anLk3Vx2m0Udp5zFxaLXBmPoFelpgctSLD5M1Hq7M4U6aXSuZE
-        kZ6zMN5mybTzaqNFtCfQvDXNZNVqrNEiZxYzhfRog8U8X6vRxOi9yi0m48jJC4T1DJX9ZOQI
-        ykN1QQUogAQqFpqH9sgKUCCpomoRHB08h/sKKuoLgvf7VkqFrwhqfhxD/xytN174HQ0ITgw/
-        QNLiAwLnz3KZT0VQUfD7l5vw4RBqFpQffPSXx6guBI8/Gnw4gIqHTleR10ySwRQDTfnTfTRO
-        hcOBtrcKH1ZS82D4hEsu4XHQUvwKl7aZAjV9JZgUSA2193uQxIfAqQMOTGq7Aq64e/2aYwpo
-        OzRWwsug7WWhTMLB8OFutULCYTDQ30D44gC1Az67/db9CN59S5CwDrqqrsl9EoyaAVV1cyR6
-        KtwaKvUnGAP9gwfl0i5K2O9QSZJwKGxt9DedBAX5nxRHEO0cNZdz1FzOUbM4/zcrQ3glmsBb
-        RXM6L2qtsaNv2oX+PtyZTC2qf5DoQRSJ6CClMbI9RSXnssQcswcBidEhyvqOthSVMo3LyeVt
-        llRbpokXPUjvPfYiLGy8weL9BoI9VauP0el0TGzc3Di9jg5Vkt8fp6iodM7Ob+V5K2/755OR
-        AWF5qGjd7n7BPBx52XovqeJMX0Og21lmZDr3dl9X5hY7lg/VxU7c/Zq+hDUvUOwa3N5zpbAn
-        /3iuvvtptGbB2o0PM0pn447Gwxv6B05rDJ9Lk3p3nozom57N5niWbnOJQmXEluBrcTnaq02r
-        fhYnnV3EnSvzxGRPO7+kVXVct2jVQsfqzTQuGjntTMwmcn8AnxZtys4DAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrBIsWRmVeSWpSXmKPExsWy7bCSnG7p66uxBs93W1k0L17PZrFy9VEm
-        i+t3bzFb7Nl7ksXi8q45bBb/Zz1ntfj/poXFYsu/I6wWl95/YHHg9Ng56y67x/65a9g9dt9s
-        YPPo27KK0WP9lqssHp83yXkc2v6GzeP2s20sARxRXDYpqTmZZalF+nYJXBn/py9jK5gvUHH5
-        /wTGBsZdPF2MnBwSAiYSlzY/YOpi5OIQEtjNKLF9bgMLREJa4tiJM8xdjBxAtrDE4cPFEDUv
-        GCWu73nEDlLDJqAr8e/PfjYQW0RAW2JxzwUmEJtZ4DGjxL69thANbxklzv/byAqS4BSwkbix
-        aSIjyFBhAQuJo+1qIGEWAVWJzivPwWbyClhK/J22iRXCFpQ4OfMJC8RMbYneh62MELa8xPa3
-        c5gh7lSQ2HH2NVRcRGJ2ZxszxD1uEmv3v2GewCg8C8moWUhGzUIyahaS9gWMLKsYJVMLinPT
-        c4sNCwzzUsv1ihNzi0vz0vWS83M3MYLjT0tzB+PlJfGHGAU4GJV4eDM0rsYKsSaWFVfmHmKU
-        4GBWEuHdc/1KrBBvSmJlVWpRfnxRaU5q8SFGaQ4WJXHep3nHIoUE0hNLUrNTUwtSi2CyTByc
-        Ug2MHRfvP2KT7uGW+Od8UDKOLfQ5o8X8Rpua7n0xuvOmMtaw81vOOdu78L6MURR7VdYCxnlN
-        j0PZfZ4eYn2/p0Jo+pXu5UaJ1b/fM6++0bSJr9a0u/GL7rQv9+Z7Xzu68r7BTkNv8XJ/CQkn
-        XouGR8o3GdgeXos6bfD26TTv/LIzmdsEZfU0OqWVWIozEg21mIuKEwHZkmFGuwIAAA==
-X-CMS-MailID: 20191121014214epcas1p4aa0e7148bd6e5b7a412a2294205cf900
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20191119071404epcas1p4f8df45690c07c4dd032af9cbfb5efcc6
-References: <20191119071107.1947-1-namjae.jeon@samsung.com>
-        <CGME20191119071404epcas1p4f8df45690c07c4dd032af9cbfb5efcc6@epcas1p4.samsung.com>
-        <20191119071107.1947-6-namjae.jeon@samsung.com>
-        <398eeca9-e59f-385b-791d-561e56567026@suse.com>
+Received: from localhost (unknown [124.64.18.131])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx7xVm69VdVT0BAA--.303S2;
+        Thu, 21 Nov 2019 09:41:59 +0800 (CST)
+From:   Lichao Liu <liulichao@loongson.cn>
+To:     Huacai Chen <chenhc@lemote.com>
+Cc:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>,
+        Marc Dionne <marc.dionne@auristor.com>,
+        David Howells <dhowells@redhat.com>,
+        Lichao Liu <liulichao@loongson.cn>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] Use the macro CONFIG_I8259 to control whether to include the asm/i8259.h header file.
+Date:   Thu, 21 Nov 2019 09:41:56 +0800
+Message-Id: <20191121014156.25618-1-liulichao@loongson.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: AQAAf9Dx7xVm69VdVT0BAA--.303S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrtr17ZryDJF1rWF4UXryxKrg_yoWxZrbEka
+        y2yw18G3yfAr48try7Zry3WrW2934UW3W3CFn5ArnIq3Z0qanIgaykAr4kJr13Crn0vr4f
+        XrW8KryrCr47CjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUb48FF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
+        Gr1UM28EF7xvwVC2z280aVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr
+        0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+        6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
+        0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVWk
+        MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr
+        0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0E
+        wIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJV
+        W8JwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1l
+        IxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbLiSPUUUU
+        U==
+X-CM-SenderInfo: xolxzxpfkd0qxorr0wxvrqhubq/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Not all platform config CONFIG_I8259, So Use the macro CONFIG_I8259
+to control whether to include the asm/i8259.h header file.
 
-> > +static int exfat_allow_set_time(struct exfat_sb_info *sbi, struct inode
-> *inode)
-> > +{
-> > +	mode_t allow_utime = sbi->options.allow_utime;
-> > +
-> > +	if (!uid_eq(current_fsuid(), inode->i_uid)) {
-> > +		if (in_group_p(inode->i_gid))
-> > +			allow_utime >>= 3;
-> > +		if (allow_utime & MAY_WRITE)
-> > +			return 1;
-> > +	}
-> > +
-> > +	/* use a default check */
-> > +	return 0;
-> 
-> this function can be made to return bool.
-Okay.
-> 
-> > +}
-> > +
-> 
-> <snip>
-> 
-> > +/* resize the file length */
-> > +int __exfat_truncate(struct inode *inode, loff_t new_size)
-> > +{
-> > +	unsigned int num_clusters_new, num_clusters_phys;
-> > +	unsigned int last_clu = FREE_CLUSTER;
-> > +	struct exfat_chain clu;
-> > +	struct exfat_timestamp tm;
-> > +	struct exfat_dentry *ep, *ep2;
-> > +	struct super_block *sb = inode->i_sb;
-> > +	struct exfat_sb_info *sbi = EXFAT_SB(sb);
-> > +	struct exfat_inode_info *ei = EXFAT_I(inode);
-> > +	struct exfat_entry_set_cache *es = NULL;
-> > +	int evict = (ei->dir.dir == DIR_DELETED) ? 1 : 0;
-> > +
-> > +	/* check if the given file ID is opened */
-> > +	if (ei->type != TYPE_FILE && ei->type != TYPE_DIR)
-> > +		return -EPERM;
-> > +
-> > +	exfat_set_vol_flags(sb, VOL_DIRTY);
-> > +
-> > +	num_clusters_new = EXFAT_B_TO_CLU_ROUND_UP(i_size_read(inode), sbi);
-> > +	num_clusters_phys =
-> > +		EXFAT_B_TO_CLU_ROUND_UP(EXFAT_I(inode)->i_size_ondisk, sbi);
-> > +
-> > +	exfat_chain_set(&clu, ei->start_clu, num_clusters_phys, ei->flags);
-> > +
-> > +	if (new_size > 0) {
-> > +		/*
-> > +		 * Truncate FAT chain num_clusters after the first cluster
-> > +		 * num_clusters = min(new, phys);
-> > +		 */
-> > +		unsigned int num_clusters =
-> > +			min(num_clusters_new, num_clusters_phys);
-> > +
-> > +		/*
-> > +		 * Follow FAT chain
-> > +		 * (defensive coding - works fine even with corrupted FAT table
-> > +		 */
-> > +		if (clu.flags == 0x03) {
-> 
-> That 0x03 is magic constant, better define actual flags and check
-> clu.flag == (FLAG1|FLAG2)
-Okay, Will fix it on v4.
+Signed-off-by: Lichao Liu <liulichao@loongson.cn>
+---
+ arch/mips/loongson64/common/pm.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Thanks for your review!
+diff --git a/arch/mips/loongson64/common/pm.c b/arch/mips/loongson64/common/pm.c
+index b8aed878d..bc619e4d0 100644
+--- a/arch/mips/loongson64/common/pm.c
++++ b/arch/mips/loongson64/common/pm.c
+@@ -9,7 +9,9 @@
+ #include <linux/interrupt.h>
+ #include <linux/pm.h>
+ 
++#ifdef CONFIG_I8259
+ #include <asm/i8259.h>
++#endif
+ #include <asm/mipsregs.h>
+ 
+ #include <loongson.h>
+-- 
+2.17.1
 
