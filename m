@@ -2,47 +2,49 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC6D8C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:03:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 688AEC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:04:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB3DE2089D
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:03:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B6352089D
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:04:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbfKUNDo (ORCPT
+        id S1726961AbfKUNEA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 08:03:44 -0500
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:39098 "EHLO
-        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726293AbfKUNDo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 08:03:44 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;DS=|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07487;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0Tij7W01_1574341419;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0Tij7W01_1574341419)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 21 Nov 2019 21:03:39 +0800
-Subject: Re: [PATCH] mm: fix unsafe page -> lruvec lookups with cgroup charge
- migration
-To:     Hugh Dickins <hughd@google.com>,
-        Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
-        linux-mm@kvack.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com
-References: <20191120165847.423540-1-hannes@cmpxchg.org>
- <alpine.LSU.2.11.1911201836220.1090@eggly.anvils>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <14b15e52-9fff-5497-d30c-2c7c4b99c35a@linux.alibaba.com>
-Date:   Thu, 21 Nov 2019 21:03:36 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.1
+        Thu, 21 Nov 2019 08:04:00 -0500
+Received: from relay.sw.ru ([185.231.240.75]:52106 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726293AbfKUND7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 08:03:59 -0500
+Received: from dhcp-172-16-25-5.sw.ru ([172.16.25.5])
+        by relay.sw.ru with esmtp (Exim 4.92.3)
+        (envelope-from <aryabinin@virtuozzo.com>)
+        id 1iXm7i-0002DQ-S4; Thu, 21 Nov 2019 16:03:50 +0300
+Subject: Re: [PATCH v4 1/2] kasan: detect negative size in memory operation
+ function
+To:     Walter Wu <walter-zh.wu@mediatek.com>
+Cc:     Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        kasan-dev@googlegroups.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        linux-mediatek@lists.infradead.org
+References: <20191112065302.7015-1-walter-zh.wu@mediatek.com>
+ <040479c3-6f96-91c6-1b1a-9f3e947dac06@virtuozzo.com>
+ <1574341376.8338.4.camel@mtksdccf07>
+From:   Andrey Ryabinin <aryabinin@virtuozzo.com>
+Message-ID: <217bd537-e6b7-3acc-b6bb-ac9c5d94da89@virtuozzo.com>
+Date:   Thu, 21 Nov 2019 16:03:38 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <alpine.LSU.2.11.1911201836220.1090@eggly.anvils>
-Content-Type: text/plain; charset=gbk
+In-Reply-To: <1574341376.8338.4.camel@mtksdccf07>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -50,36 +52,58 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-> It like the way you've rearranged isolate_lru_page() there, but I
-> don't think it amounts to more than a cleanup.  Very good thinking
-> about the odd "lruvec->pgdat = pgdat" case tucked away inside
-> mem_cgroup_page_lruvec(), but actually, what harm does it do, if
-> mem_cgroup_move_account() changes page->mem_cgroup concurrently?
 
-Maybe the page could be added to root_mem_cgroup?
+On 11/21/19 4:02 PM, Walter Wu wrote:
+> On Thu, 2019-11-21 at 15:26 +0300, Andrey Ryabinin wrote:
+>>
+>> On 11/12/19 9:53 AM, Walter Wu wrote:
+>>
+>>> diff --git a/mm/kasan/common.c b/mm/kasan/common.c
+>>> index 6814d6d6a023..4bfce0af881f 100644
+>>> --- a/mm/kasan/common.c
+>>> +++ b/mm/kasan/common.c
+>>> @@ -102,7 +102,8 @@ EXPORT_SYMBOL(__kasan_check_write);
+>>>  #undef memset
+>>>  void *memset(void *addr, int c, size_t len)
+>>>  {
+>>> -	check_memory_region((unsigned long)addr, len, true, _RET_IP_);
+>>> +	if (!check_memory_region((unsigned long)addr, len, true, _RET_IP_))
+>>> +		return NULL;
+>>>  
+>>>  	return __memset(addr, c, len);
+>>>  }
+>>> @@ -110,8 +111,9 @@ void *memset(void *addr, int c, size_t len)
+>>>  #undef memmove
+>>>  void *memmove(void *dest, const void *src, size_t len)
+>>>  {
+>>> -	check_memory_region((unsigned long)src, len, false, _RET_IP_);
+>>> -	check_memory_region((unsigned long)dest, len, true, _RET_IP_);
+>>> +	if (!check_memory_region((unsigned long)src, len, false, _RET_IP_) ||
+>>> +	    !check_memory_region((unsigned long)dest, len, true, _RET_IP_))
+>>> +		return NULL;
+>>>  
+>>>  	return __memmove(dest, src, len);
+>>>  }
+>>> @@ -119,8 +121,9 @@ void *memmove(void *dest, const void *src, size_t len)
+>>>  #undef memcpy
+>>>  void *memcpy(void *dest, const void *src, size_t len)
+>>>  {
+>>> -	check_memory_region((unsigned long)src, len, false, _RET_IP_);
+>>> -	check_memory_region((unsigned long)dest, len, true, _RET_IP_);
+>>> +	if (!check_memory_region((unsigned long)src, len, false, _RET_IP_) ||
+>>> +	    !check_memory_region((unsigned long)dest, len, true, _RET_IP_))
+>>> +		return NULL;
+>>>  
+>>
+>> I realized that we are going a wrong direction here. Entirely skipping mem*() operation on any
+>> poisoned shadow value might only make things worse. Some bugs just don't have any serious consequences,
+>> but skipping the mem*() ops entirely might introduce such consequences, which wouldn't happen otherwise.
+>>
+>> So let's keep this code as this, no need to check the result of check_memory_region().
+>>
+>>
+> Ok, we just need to determine whether size is negative number. If yes
+> then KASAN produce report and continue to execute mem*(). right?
+> 
 
-> 
-> You say use-after-free, but we have spin_lock_irq here, and the
-> struct mem_cgroup (and its lruvecs) cannot be freed until an RCU
-> grace period expires, which we rely upon in many places, and which
-> cannot happen until after the spin_unlock_irq.
-> 
-> And the same applies in the pagevec_lru_move functions, doesn't it?
-> 
-> I think now is not the time for such cleanups. If this fits well
-> with Alex's per-lruvec locking (or represents an initial direction
-> that you think he should follow), fine, but better to let him take it
-> into his patchset in that case, than change the base unnecessarily
-> underneath him.
-> 
-> (It happens to go against my own direction, since it separates the
-> locking from the determination of lruvec, which I insist must be
-> kept together; but perhaps that won't be quite the same for Alex.)
-> 
-
-It looks like we share the same base.
-
-Before this patch, root memcg's lruvc lock could guards !PageLRU and it followings, But now, there are much holes in the wall. :)
-
-Thanks
-Alex
+Yes.
