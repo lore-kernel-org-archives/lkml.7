@@ -2,103 +2,106 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D704C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:28:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D091CC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:30:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0479208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:28:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1F8320898
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:30:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574335842;
+	bh=Rwju7mil6tW/AfAn9a6uUogaLmvQb/zy3wNtrHb4LSE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=rDr+ycCGopLty6xdDUFTUOM0+RLE8EFKrcYQ1XAHl9a9WFY94Bc4Fv9rxQ5rG4mcW
+	 q3tRy9G/EJylOkP2w6sHSIlKikO+O5/Q4MMor6VQAvh3B7zJwVkuQ+Kyd7WJu2xQm6
+	 HQo4syGIhKD0o6B27CAuowKRsXuOASvkxOv76320=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbfKUL22 (ORCPT
+        id S1726638AbfKULal (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 06:28:28 -0500
-Received: from mga07.intel.com ([134.134.136.100]:4228 "EHLO mga07.intel.com"
+        Thu, 21 Nov 2019 06:30:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54502 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726165AbfKUL21 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 06:28:27 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Nov 2019 03:28:26 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,224,1571727600"; 
-   d="scan'208";a="216116196"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 21 Nov 2019 03:28:22 -0800
-Received: by lahna (sSMTP sendmail emulation); Thu, 21 Nov 2019 13:28:21 +0200
-Date:   Thu, 21 Nov 2019 13:28:21 +0200
-From:   Mika Westerberg <mika.westerberg@intel.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Karol Herbst <kherbst@redhat.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lyude Paul <lyude@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        Dave Airlie <airlied@gmail.com>,
-        Mario Limonciello <Mario.Limonciello@dell.com>
-Subject: Re: [PATCH v4] pci: prevent putting nvidia GPUs into lower device
- states on certain intel bridges
-Message-ID: <20191121112821.GU11621@lahna.fi.intel.com>
-References: <CACO55tsfNOdtu5SZ-4HzO4Ji6gQtafvZ7Rm19nkPcJAgwUBFMw@mail.gmail.com>
- <CACO55tscD_96jUVts+MTAUsCt-fZx4O5kyhRKoo4mKoC84io8A@mail.gmail.com>
- <20191120120913.GE11621@lahna.fi.intel.com>
- <CACO55tsHy6yZQZ8PkdW8iPA7+uc5rdcEwRJwYEQ3iqu85F8Sqg@mail.gmail.com>
- <20191120151542.GH11621@lahna.fi.intel.com>
- <CACO55tvo3rbPtYJcioEgXCEQqVXcVAm-iowr9Nim=bgTdMjgLw@mail.gmail.com>
- <20191120155301.GL11621@lahna.fi.intel.com>
- <CAJZ5v0hkT-fHFOQKzp2qYPyR+NUa4c-G-uGLPZuQxqsG454PiQ@mail.gmail.com>
- <CACO55ttTPi2XpRRM_NYJU5c5=OvG0=-YngFy1BiR8WpHkavwXw@mail.gmail.com>
- <CAJZ5v0h=7zu3A+ojgUSmwTH0KeXmYP5OKDL__rwkkWaWqcJcWQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0h=7zu3A+ojgUSmwTH0KeXmYP5OKDL__rwkkWaWqcJcWQ@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        id S1726293AbfKULal (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 06:30:41 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6435C20714;
+        Thu, 21 Nov 2019 11:30:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574335840;
+        bh=Rwju7mil6tW/AfAn9a6uUogaLmvQb/zy3wNtrHb4LSE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=G5RLswA97Zv34MBS5+FVmcBxNGECL/UpHfxcNKADLc3btNtRTO5bZoE7xxZu4hxN8
+         EaWGfiTFQMDc+4ILEgRP0n74PDzh7zf0xaRGKJeF0Wbhaju13nf7OMUvEAopZb6zA1
+         LArGSNfSacOYnKFZSviCLV2etHMKB7itiCV7gUF0=
+Date:   Thu, 21 Nov 2019 20:30:35 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] perf probe: fix spelling mistake "addrees" ->
+ "address"
+Message-Id: <20191121203035.5eae09a076f376472cd4465b@kernel.org>
+In-Reply-To: <20191121092623.374896-1-colin.king@canonical.com>
+References: <20191121092623.374896-1-colin.king@canonical.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 11:29:33PM +0100, Rafael J. Wysocki wrote:
-> > last week or so I found systems where the GPU was under the "PCI
-> > Express Root Port" (name from lspci) and on those systems all of that
-> > seems to work. So I am wondering if it's indeed just the 0x1901 one,
-> > which also explains Mikas case that Thunderbolt stuff works as devices
-> > never get populated under this particular bridge controller, but under
-> > those "Root Port"s
+Hi Colin,
+
+On Thu, 21 Nov 2019 09:26:23 +0000
+Colin King <colin.king@canonical.com> wrote:
+
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> It always is a PCIe port, but its location within the SoC may matter.
+> There is a spelling mistake in a pr_warning message. Fix it.
 
-Exactly. Intel hardware has PCIe ports on CPU side (these are called
-PEG, PCI Express Graphics, ports), and the PCH side. I think the IP is
-still the same.
+Oops, good catch! (How my finger miss-typed this...)
 
-> Also some custom AML-based power management is involved and that may
-> be making specific assumptions on the configuration of the SoC and the
-> GPU at the time of its invocation which unfortunately are not known to
-> us.
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+
+Thank you!
+
 > 
-> However, it looks like the AML invoked to power down the GPU from
-> acpi_pci_set_power_state() gets confused if it is not in PCI D0 at
-> that point, so it looks like that AML tries to access device memory on
-> the GPU (beyond the PCI config space) or similar which is not
-> accessible in PCI power states below D0.
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  tools/perf/util/probe-finder.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
+> index 38d6cd22779f..c470c49a804f 100644
+> --- a/tools/perf/util/probe-finder.c
+> +++ b/tools/perf/util/probe-finder.c
+> @@ -812,7 +812,7 @@ static int verify_representive_line(struct probe_finder *pf, const char *fname,
+>  	if (strcmp(fname, __fname) || lineno == __lineno)
+>  		return 0;
+>  
+> -	pr_warning("This line is sharing the addrees with other lines.\n");
+> +	pr_warning("This line is sharing the address with other lines.\n");
+>  
+>  	if (pf->pev->point.function) {
+>  		/* Find best match function name and lines */
+> -- 
+> 2.24.0
+> 
 
-Or the PCI config space of the GPU when the parent root port is in D3hot
-(as it is the case here). Also then the GPU config space is not
-accessible.
 
-I took a look at the HP Omen ACPI tables which has similar problem and
-there is also check for Windows 7 (but not Linux) so I think one
-alternative workaround would be to add these devices into
-acpi_osi_dmi_table[] where .callback is set to dmi_disable_osi_win8 (or
-pass 'acpi_osi="!Windows 2012"' in the kernel command line).
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
