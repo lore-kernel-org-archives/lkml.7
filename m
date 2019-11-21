@@ -7,23 +7,23 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8823C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 17:14:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F603C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 17:14:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A50E7206D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 17:14:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2041F206CC
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 17:14:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727175AbfKURNm (ORCPT
+        id S1727367AbfKUROP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 12:13:42 -0500
-Received: from mx2.suse.de ([195.135.220.15]:54128 "EHLO mx1.suse.de"
+        Thu, 21 Nov 2019 12:14:15 -0500
+Received: from mx2.suse.de ([195.135.220.15]:54188 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727114AbfKURNk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 12:13:40 -0500
+        id S1727173AbfKURNo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 12:13:44 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 4FA82B1B9;
-        Thu, 21 Nov 2019 17:13:37 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 2315BB27E;
+        Thu, 21 Nov 2019 17:13:42 +0000 (UTC)
 From:   Michal Suchanek <msuchanek@suse.de>
 To:     linux-scsi@vger.kernel.org, linux-block@vger.kernel.org
 Cc:     Michal Suchanek <msuchanek@suse.de>,
@@ -46,9 +46,9 @@ Cc:     Michal Suchanek <msuchanek@suse.de>,
         "Ewan D. Milne" <emilne@redhat.com>,
         Christoph Hellwig <hch@infradead.org>,
         Matthew Wilcox <willy@infradead.org>
-Subject: [PATCH v4 03/10] cdrom: wait for the tray to close
-Date:   Thu, 21 Nov 2019 18:13:10 +0100
-Message-Id: <5e8f9d588560ebf117334d6919c3976a731db757.1574355709.git.msuchanek@suse.de>
+Subject: [PATCH v4 08/10] bdev: add open_finish
+Date:   Thu, 21 Nov 2019 18:13:15 +0100
+Message-Id: <e86a001556d880f67047be19aab905f5f51623ac.1574355709.git.msuchanek@suse.de>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1574355709.git.msuchanek@suse.de>
 References: <cover.1574355709.git.msuchanek@suse.de>
@@ -59,94 +59,140 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The scsi command to close the tray only starts the motor and does not
-wait for the tray to close. Wait until the state chages from TRAY_OPEN
-so users do not race with the tray closing.
+Opening a block device may require a long operation such as waiting for
+the cdrom tray to close or disk to spin up. Performing this operation
+with locks held locks out other attempts to open the device from
+processes that donn't care about the medium state.
 
-This looks like inifinte wait but unless the drive is broken it either
-closes the tray shortly or reports an error when it detects the tray is
-blocked. At worst the wait can be interrupted by the user.
+To avoid this issue and still be able to perform time-consuming checks
+at open() the block device driver can provide open_finish(). If it does
+opening the device proceeds even when an error is returned from open(),
+bd_mutex is released and open_finish() is called. If open_finish()
+succeeds the device is now open, if it fails release() is called.
 
-Also wait for the drive to become ready once the tray closes.
+When -ERESTARTSYS is returned from open() blkdev_get may loop without
+calling open_finish(). On -ERESTARTSYS open_finish() is not called.
+
+When -ENXIO is returned there is no device to retry opening so this
+error needs to be honored and open_finish() not called.
+
+Move a ret = 0 assignment up in the if/else branching to avoid returning
+-ENXIO. Previously the return value was ignored on the unhandled branch.
 
 Signed-off-by: Michal Suchanek <msuchanek@suse.de>
 ---
-v2:
- - check drive_status exists before using it
- - rename tray_close -> cdrom_tray_close
- - also wait for drive to become ready after tray closes
- - do not wait in cdrom_ioctl_closetray
-v4: add a status change poll wrapper
+v2: new patch
+v4:
+ - fix crash on ENXIO
+ - initialize capacity and partitions after open_finish
 ---
- drivers/cdrom/cdrom.c | 36 +++++++++++++++++++++++++++++++++---
- 1 file changed, 33 insertions(+), 3 deletions(-)
+ Documentation/filesystems/locking.rst |  2 ++
+ fs/block_dev.c                        | 27 +++++++++++++++++++++++----
+ include/linux/blkdev.h                |  1 +
+ 3 files changed, 26 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/cdrom/cdrom.c b/drivers/cdrom/cdrom.c
-index bb32decdadf1..b2bc0c8f9a69 100644
---- a/drivers/cdrom/cdrom.c
-+++ b/drivers/cdrom/cdrom.c
-@@ -1045,6 +1045,28 @@ static void cdrom_count_tracks(struct cdrom_device_info *cdi, tracktype *tracks)
- 	       tracks->cdi, tracks->xa);
- }
+diff --git a/Documentation/filesystems/locking.rst b/Documentation/filesystems/locking.rst
+index fc3a0704553c..2471ced5a8cf 100644
+--- a/Documentation/filesystems/locking.rst
++++ b/Documentation/filesystems/locking.rst
+@@ -456,6 +456,7 @@ block_device_operations
+ prototypes::
  
-+static int cdrom_wait_for_status_change(struct cdrom_device_info *cdi,
-+					int *status)
-+{
-+	int saved = *status;
-+	const struct cdrom_device_ops *cdo = cdi->ops;
-+
-+	return poll_event_interruptible(saved !=
-+			(*status = cdo->drive_status(cdi, CDSL_CURRENT)), 500);
-+}
-+
-+static int cdrom_tray_close(struct cdrom_device_info *cdi)
-+{
-+	int ret;
-+
-+	ret = cdi->ops->tray_move(cdi, 0);
-+	if (ret || !cdi->ops->drive_status)
-+		return ret;
-+
-+	ret = CDS_TRAY_OPEN;
-+	return cdrom_wait_for_status_change(cdi, &ret);
-+}
-+
- static int open_for_common(struct cdrom_device_info *cdi, tracktype *tracks)
- {
- 	int ret;
-@@ -1062,14 +1084,14 @@ static int open_for_common(struct cdrom_device_info *cdi, tracktype *tracks)
- 				if (!(cdi->options & CDO_AUTO_CLOSE))
- 					return -ENOMEDIUM;
- 				cd_dbg(CD_OPEN, "trying to close the tray\n");
--				ret=cdo->tray_move(cdi,0);
-+				ret = cdrom_tray_close(cdi);
-+				if (ret == -ERESTARTSYS)
-+					return ret;
- 				if (ret) {
- 					cd_dbg(CD_OPEN, "bummer. tried to close the tray but failed.\n");
- 					return -ENOMEDIUM;
+ 	int (*open) (struct block_device *, fmode_t);
++	int (*open_finish) (struct block_device *, fmode_t, int);
+ 	int (*release) (struct gendisk *, fmode_t);
+ 	int (*ioctl) (struct block_device *, fmode_t, unsigned, unsigned long);
+ 	int (*compat_ioctl) (struct block_device *, fmode_t, unsigned, unsigned long);
+@@ -473,6 +474,7 @@ locking rules:
+ ops			bd_mutex
+ ======================= ===================
+ open:			yes
++open_finish:		no
+ release:		yes
+ ioctl:			no
+ compat_ioctl:		no
+diff --git a/fs/block_dev.c b/fs/block_dev.c
+index 10c9e0ae2bdc..dc02af02d439 100644
+--- a/fs/block_dev.c
++++ b/fs/block_dev.c
+@@ -1548,6 +1548,7 @@ static int __blkdev_get(struct block_device *bdev, fmode_t mode, int for_part)
+ 	int partno;
+ 	int perm = 0;
+ 	bool first_open;
++	bool need_finish = false;
+ 
+ 	if (mode & FMODE_READ)
+ 		perm |= MAY_READ;
+@@ -1604,13 +1605,16 @@ static int __blkdev_get(struct block_device *bdev, fmode_t mode, int for_part)
+ 					put_disk_and_module(disk);
+ 					goto restart;
  				}
- 				ret = cdo->drive_status(cdi, CDSL_CURRENT);
--				if (ret == CDS_TRAY_OPEN)
--					cd_dbg(CD_OPEN, "bummer. the tray is still not closed.\n");
- 				if (ret == CDS_NO_DISC)
- 					cd_dbg(CD_OPEN, "tray might not contain a medium\n");
- 			} else {
-@@ -1077,6 +1099,14 @@ static int open_for_common(struct cdrom_device_info *cdi, tracktype *tracks)
- 				return -ENOMEDIUM;
++				if ((ret != -ENXIO) &&
++				    bdev->bd_disk->fops->open_finish)
++					need_finish = true;
  			}
+ 
+ 			if (!ret)
+ 				blkdev_init_size(bdev, disk);
+ 			blkdev_do_partitions(bdev, disk, ret);
+ 
+-			if (ret)
++			if (ret && !need_finish)
+ 				goto out_clear;
+ 		} else {
+ 			struct block_device *whole;
+@@ -1636,14 +1640,18 @@ static int __blkdev_get(struct block_device *bdev, fmode_t mode, int for_part)
+ 		if (bdev->bd_bdi == &noop_backing_dev_info)
+ 			bdev->bd_bdi = bdi_get(disk->queue->backing_dev_info);
+ 	} else {
++		ret = 0;
+ 		if (bdev->bd_contains == bdev) {
+-			ret = 0;
+-			if (bdev->bd_disk->fops->open)
++			if (bdev->bd_disk->fops->open) {
+ 				ret = bdev->bd_disk->fops->open(bdev, mode);
+ 
++				if ((ret != -ERESTARTSYS) && (ret != -ENXIO) &&
++				    bdev->bd_disk->fops->open_finish)
++					need_finish = true;
++			}
+ 			blkdev_do_partitions(bdev, disk, ret);
+ 
+-			if (ret)
++			if (ret && !need_finish)
+ 				goto out_unlock_bdev;
  		}
-+		if (ret == CDS_DRIVE_NOT_READY) {
-+			int poll_res;
-+
-+			cd_dbg(CD_OPEN, "waiting for drive to become ready...\n");
-+			poll_res = cdrom_wait_for_status_change(cdi, &ret);
-+			if (poll_res == -ERESTARTSYS)
-+				return poll_res;
-+		}
- 		if (ret != CDS_DISC_OK)
- 			return -ENOMEDIUM;
  	}
+@@ -1655,6 +1663,17 @@ static int __blkdev_get(struct block_device *bdev, fmode_t mode, int for_part)
+ 	/* only one opener holds refs to the module and disk */
+ 	if (!first_open)
+ 		put_disk_and_module(disk);
++	if (ret && need_finish) {
++		ret = bdev->bd_disk->fops->open_finish(bdev, mode, ret);
++
++		if (!ret && first_open)
++			blkdev_init_size(bdev, disk);
++		blkdev_do_partitions(bdev, disk, ret);
++	}
++	if (ret) {
++		__blkdev_put(bdev, mode, for_part);
++		return ret;
++	}
+ 	return 0;
+ 
+  out_clear:
+diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+index f3ea78b0c91c..b67e93c6afb7 100644
+--- a/include/linux/blkdev.h
++++ b/include/linux/blkdev.h
+@@ -1695,6 +1695,7 @@ static inline struct bio_vec *rq_integrity_vec(struct request *rq)
+ 
+ struct block_device_operations {
+ 	int (*open) (struct block_device *, fmode_t);
++	int (*open_finish)(struct block_device *bdev, fmode_t mode, int ret);
+ 	void (*release) (struct gendisk *, fmode_t);
+ 	int (*rw_page)(struct block_device *, sector_t, struct page *, unsigned int);
+ 	int (*ioctl) (struct block_device *, fmode_t, unsigned, unsigned long);
 -- 
 2.23.0
 
