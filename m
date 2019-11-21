@@ -2,113 +2,128 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB75DC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:31:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF84FC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:31:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D0A0206CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:31:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE7B4206CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:31:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726957AbfKUObo (ORCPT
+        id S1726912AbfKUObo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 21 Nov 2019 09:31:44 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:52763 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726757AbfKUObn (ORCPT
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:53189 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726546AbfKUObn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 21 Nov 2019 09:31:43 -0500
-Received: from [193.96.224.244] (helo=localhost.localdomain)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iXnUk-0000iU-Fh; Thu, 21 Nov 2019 14:31:42 +0000
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] thread fixes
-Date:   Thu, 21 Nov 2019 15:31:33 +0100
-Message-Id: <20191121143133.14913-1-christian.brauner@ubuntu.com>
-X-Mailer: git-send-email 2.24.0
+Received: from litschi.hi.pengutronix.de ([2001:67c:670:100:feaa:14ff:fe6a:8db5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <m.tretter@pengutronix.de>)
+        id 1iXnUL-0002mS-FN; Thu, 21 Nov 2019 15:31:17 +0100
+Date:   Thu, 21 Nov 2019 15:31:15 +0100
+From:   Michael Tretter <m.tretter@pengutronix.de>
+To:     Rajan Vaja <rajan.vaja@xilinx.com>
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, michal.simek@xilinx.com,
+        jolly.shah@xilinx.com, dan.carpenter@oracle.com,
+        gustavo@embeddedor.com, nava.manne@xilinx.com,
+        ravi.patel@xilinx.com, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de,
+        m.tretter@pengutronix.de
+Subject: Re: [PATCH 3/7] clk: zynqmp: Warn user if clock user are more than
+ allowed
+Message-ID: <20191121153115.50340e47@litschi.hi.pengutronix.de>
+In-Reply-To: <1573564580-9006-4-git-send-email-rajan.vaja@xilinx.com>
+References: <1573564580-9006-1-git-send-email-rajan.vaja@xilinx.com>
+        <1573564580-9006-4-git-send-email-rajan.vaja@xilinx.com>
+Organization: Pengutronix
+X-Mailer: Claws Mail 3.14.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:feaa:14ff:fe6a:8db5
+X-SA-Exim-Mail-From: m.tretter@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Tue, 12 Nov 2019 05:16:16 -0800, Rajan Vaja wrote:
+> Warn user if clock is used by more than allowed devices.
+> This check is done by firmware and returns respective
+> error code. Upon receiving error code for excessive user,
+> warn user for the same.
+> 
+> This change is done to restrict VPLL use count. It is
+> assumed that VPLL is used by one user only.
+> 
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
+> ---
+>  drivers/clk/zynqmp/pll.c             | 9 ++++++---
+>  drivers/firmware/xilinx/zynqmp.c     | 2 ++
+>  include/linux/firmware/xlnx-zynqmp.h | 1 +
+>  3 files changed, 9 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/clk/zynqmp/pll.c b/drivers/clk/zynqmp/pll.c
+> index a541397..2f4ccaa 100644
+> --- a/drivers/clk/zynqmp/pll.c
+> +++ b/drivers/clk/zynqmp/pll.c
+> @@ -188,9 +188,12 @@ static int zynqmp_pll_set_rate(struct clk_hw *hw, unsigned long rate,
+>  		frac = (parent_rate * f) / FRAC_DIV;
+>  
+>  		ret = eemi_ops->clock_setdivider(clk_id, m);
+> -		if (ret)
+> -			pr_warn_once("%s() set divider failed for %s, ret = %d\n",
+> -				     __func__, clk_name, ret);
+> +		if (ret) {
+> +			if (ret == -EUSERS)
+> +				WARN(1, "More than allowed devices are using the %s, which is forbidden\n", clk_name);
+> +			pr_err("%s() set divider failed for %s, ret = %d\n",
+> +			       __func__, clk_name, ret);
+> +		}
 
-This contains a simple fix for the pidfd poll method. In the original patchset
-pidfd_poll() was made to return an unsigned int. However, the poll method is
-defined to return a __poll_t. While the unsigned int is not a huge deal it's
-just nicer to return a __poll_t.
+In case of -EUSERS this prints the warning and the error. This seems a
+bit excessive to me. Isn't it enough to leave the existing
+pr_warn_once() for the new error code? If not, then add a new warning
+for the -EUSERS error, but leave the existing warning as it is.
 
-I've decided to send it right before the 5.4 release mainly so that stable
-doesn't need to backport it to both 5.4 and 5.3.
+Michael
 
-The following changes since commit af42d3466bdc8f39806b26f593604fdc54140bcb:
-
-  Linux 5.4-rc8 (2019-11-17 14:47:30 -0800)
-
-are available in the Git repository at:
-
-  git@gitolite.kernel.org:pub/scm/linux/kernel/git/brauner/linux tags/for-linus-2019-11-21
-
-for you to fetch changes up to 9e77716a75bc6cf54965e5ec069ba7c02b32251c:
-
-  fork: fix pidfd_poll()'s return type (2019-11-20 11:48:50 +0100)
-
-/* Testing */
-All patches have seen exposure in linux-next and are based on v5.4-rc8.
-All pidfd selftests passed.
-
-/* Conflicts */
-At the time of creating this PR no merge conflicts were reported from
-linux-next.
-
-Please consider pulling these changes from the signed for-linus-2019-11-21 tag.
-
-Thanks!
-Christian
-
-----------------------------------------------------------------
-for-linus-2019-11-21
-
-----------------------------------------------------------------
-Luc Van Oostenryck (1):
-      fork: fix pidfd_poll()'s return type
-
- kernel/fork.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 55af6931c6ec..13b38794efb5 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -1708,11 +1708,11 @@ static void pidfd_show_fdinfo(struct seq_file *m, struct file *f)
- /*
-  * Poll support for process exit notification.
-  */
--static unsigned int pidfd_poll(struct file *file, struct poll_table_struct *pts)
-+static __poll_t pidfd_poll(struct file *file, struct poll_table_struct *pts)
- {
- 	struct task_struct *task;
- 	struct pid *pid = file->private_data;
--	int poll_flags = 0;
-+	__poll_t poll_flags = 0;
- 
- 	poll_wait(file, &pid->wait_pidfd, pts);
- 
-@@ -1724,7 +1724,7 @@ static unsigned int pidfd_poll(struct file *file, struct poll_table_struct *pts)
- 	 * group, then poll(2) should block, similar to the wait(2) family.
- 	 */
- 	if (!task || (task->exit_state && thread_group_empty(task)))
--		poll_flags = POLLIN | POLLRDNORM;
-+		poll_flags = EPOLLIN | EPOLLRDNORM;
- 	rcu_read_unlock();
- 
- 	return poll_flags;
+>  
+>  		eemi_ops->ioctl(0, IOCTL_SET_PLL_FRAC_DATA, clk_id, f, NULL);
+>  
+> diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
+> index 0137bf3..ecc339d 100644
+> --- a/drivers/firmware/xilinx/zynqmp.c
+> +++ b/drivers/firmware/xilinx/zynqmp.c
+> @@ -53,6 +53,8 @@ static int zynqmp_pm_ret_code(u32 ret_status)
+>  		return -EACCES;
+>  	case XST_PM_ABORT_SUSPEND:
+>  		return -ECANCELED;
+> +	case XST_PM_MULT_USER:
+> +		return -EUSERS;
+>  	case XST_PM_INTERNAL:
+>  	case XST_PM_CONFLICT:
+>  	case XST_PM_INVALID_NODE:
+> diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
+> index 25bedd2..f019d1c 100644
+> --- a/include/linux/firmware/xlnx-zynqmp.h
+> +++ b/include/linux/firmware/xlnx-zynqmp.h
+> @@ -96,6 +96,7 @@ enum pm_ret_status {
+>  	XST_PM_INVALID_NODE,
+>  	XST_PM_DOUBLE_REQ,
+>  	XST_PM_ABORT_SUSPEND,
+> +	XST_PM_MULT_USER = 2008,
+>  };
+>  
+>  enum pm_ioctl_id {
