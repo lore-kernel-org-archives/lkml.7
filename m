@@ -2,211 +2,99 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86160C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 02:32:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BD25C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 02:36:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AFD4206A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 02:32:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62ADB2075A
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 02:36:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726351AbfKUCcd (ORCPT
+        id S1726454AbfKUCgh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 21:32:33 -0500
-Received: from spam01.hygon.cn ([110.188.70.11]:8218 "EHLO spam2.hygon.cn"
-        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725842AbfKUCcd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 21:32:33 -0500
-Received: from MK-DB.hygon.cn ([172.23.18.60])
-        by spam2.hygon.cn with ESMTP id xAL2SwVD032826;
-        Thu, 21 Nov 2019 10:28:58 +0800 (GMT-8)
-        (envelope-from linjiasen@hygon.cn)
-Received: from cncheex01.Hygon.cn ([172.23.18.10])
-        by MK-DB.hygon.cn with ESMTP id xAL2SroJ088303;
-        Thu, 21 Nov 2019 10:28:53 +0800 (GMT-8)
-        (envelope-from linjiasen@hygon.cn)
-Received: from ubuntu.localdomain (172.23.18.44) by cncheex01.Hygon.cn
- (172.23.18.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1466.3; Thu, 21 Nov
- 2019 10:28:56 +0800
-From:   Jiasen Lin <linjiasen@hygon.cn>
-To:     <linux-kernel@vger.kernel.org>, <linux-ntb@googlegroups.com>,
-        <jdmason@kudzu.us>
-CC:     <allenbh@gmail.com>, <dave.jiang@intel.com>, <logang@deltatee.com>,
-        <linjiasen@hygon.cn>
-Subject: [PATCH v3] NTB: ntb_perf: Fix address err in perf_copy_chunk
-Date:   Wed, 20 Nov 2019 18:28:44 -0800
-Message-ID: <1574303324-4763-1-git-send-email-linjiasen@hygon.cn>
-X-Mailer: git-send-email 2.7.4
+        Wed, 20 Nov 2019 21:36:37 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:7159 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725819AbfKUCgg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 21:36:36 -0500
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id D29A86C6613290C8A35D;
+        Thu, 21 Nov 2019 10:36:34 +0800 (CST)
+Received: from [127.0.0.1] (10.184.213.217) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Thu, 21 Nov 2019
+ 10:36:06 +0800
+Subject: Re: [PATCH] tmpfs: use ida to get inode number
+To:     Matthew Wilcox <willy@infradead.org>
+CC:     <viro@zeniv.linux.org.uk>, <hughd@google.com>,
+        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <houtao1@huawei.com>, <yi.zhang@huawei.com>
+References: <1574259798-144561-1-git-send-email-zhengbin13@huawei.com>
+ <20191120154552.GS20752@bombadil.infradead.org>
+From:   "zhengbin (A)" <zhengbin13@huawei.com>
+Message-ID: <1c64e7c2-6460-49cf-6db0-ec5f5f7e09c4@huawei.com>
+Date:   Thu, 21 Nov 2019 10:36:05 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.23.18.44]
-X-ClientProxiedBy: cncheex01.Hygon.cn (172.23.18.10) To cncheex01.Hygon.cn
- (172.23.18.10)
-X-MAIL: spam2.hygon.cn xAL2SwVD032826
-X-DNSRBL: 
+In-Reply-To: <20191120154552.GS20752@bombadil.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Originating-IP: [10.184.213.217]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-peer->outbuf is a virtual address which is get by ioremap, it can not
-be converted to a physical address by virt_to_page and page_to_phys.
-This conversion will result in DMA error, because the destination address
-which is converted by page_to_phys is invalid.
 
-This patch save the MMIO address of NTB BARx in perf_setup_peer_mw,
-and map the BAR space to DMA address after we assign the DMA channel.
-Then fill the destination address of DMA descriptor with this DMA address
-to guarantee that the address of memory write requests fall into
-memory window of NBT BARx with IOMMU enabled and disabled.
+On 2019/11/20 23:45, Matthew Wilcox wrote:
+> On Wed, Nov 20, 2019 at 10:23:18PM +0800, zhengbin wrote:
+>> I have tried to change last_ino type to unsigned long, while this was
+>> rejected, see details on https://patchwork.kernel.org/patch/11023915.
+> Did you end up trying sbitmap?
 
-Changes on v3:
-  * Remove the redundant check for bnd_dma_addr.
-  * Reduce an input argument for perf_copy_chunk, calculate the
-    destination address by the offset and dma base address.
-  * Add Reviewed-by: Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
-Changes on v2:
-  * Map NTB BARx MMIO address to DMA address after assign the DMA channel,
-    to ensure the destination address in valid. (per suggestion from Logan)
+Maybe sbitmap is not a good solution, max_inodes of tmpfs are controlled by mount options--nrinodes,
 
-Fixes: 5648e56d03fa ("NTB: ntb_perf: Add full multi-port NTB API support")
-Signed-off-by: Jiasen Lin <linjiasen@hygon.cn>
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
----
- drivers/ntb/test/ntb_perf.c | 57 +++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 47 insertions(+), 10 deletions(-)
+which can be modified by remountfs(bigger or smaller), as the comment of function sbitmap_resize says:
 
-diff --git a/drivers/ntb/test/ntb_perf.c b/drivers/ntb/test/ntb_perf.c
-index e9b7c2d..972f6d9 100644
---- a/drivers/ntb/test/ntb_perf.c
-+++ b/drivers/ntb/test/ntb_perf.c
-@@ -149,7 +149,8 @@ struct perf_peer {
- 	u64 outbuf_xlat;
- 	resource_size_t outbuf_size;
- 	void __iomem *outbuf;
--
-+	phys_addr_t out_phys_addr;
-+	dma_addr_t dma_dst_addr;
- 	/* Inbound MW params */
- 	dma_addr_t inbuf_xlat;
- 	resource_size_t inbuf_size;
-@@ -782,6 +783,10 @@ static int perf_copy_chunk(struct perf_thread *pthr,
- 	struct dmaengine_unmap_data *unmap;
- 	struct device *dma_dev;
- 	int try = 0, ret = 0;
-+	struct perf_peer *peer = pthr->perf->test_peer;
-+	void __iomem *vbase;
-+	void __iomem *dst_vaddr;
-+	dma_addr_t dst_dma_addr;
- 
- 	if (!use_dma) {
- 		memcpy_toio(dst, src, len);
-@@ -794,6 +799,10 @@ static int perf_copy_chunk(struct perf_thread *pthr,
- 				 offset_in_page(dst), len))
- 		return -EIO;
- 
-+	vbase = peer->outbuf;
-+	dst_vaddr = dst;
-+	dst_dma_addr = peer->dma_dst_addr + (dst_vaddr - vbase);
-+
- 	unmap = dmaengine_get_unmap_data(dma_dev, 2, GFP_NOWAIT);
- 	if (!unmap)
- 		return -ENOMEM;
-@@ -807,8 +816,7 @@ static int perf_copy_chunk(struct perf_thread *pthr,
- 	}
- 	unmap->to_cnt = 1;
- 
--	unmap->addr[1] = dma_map_page(dma_dev, virt_to_page(dst),
--		offset_in_page(dst), len, DMA_FROM_DEVICE);
-+	unmap->addr[1] = dst_dma_addr;
- 	if (dma_mapping_error(dma_dev, unmap->addr[1])) {
- 		ret = -EIO;
- 		goto err_free_resource;
-@@ -865,6 +873,7 @@ static int perf_init_test(struct perf_thread *pthr)
- {
- 	struct perf_ctx *perf = pthr->perf;
- 	dma_cap_mask_t dma_mask;
-+	struct perf_peer *peer = pthr->perf->test_peer;
- 
- 	pthr->src = kmalloc_node(perf->test_peer->outbuf_size, GFP_KERNEL,
- 				 dev_to_node(&perf->ntb->dev));
-@@ -882,15 +891,33 @@ static int perf_init_test(struct perf_thread *pthr)
- 	if (!pthr->dma_chan) {
- 		dev_err(&perf->ntb->dev, "%d: Failed to get DMA channel\n",
- 			pthr->tidx);
--		atomic_dec(&perf->tsync);
--		wake_up(&perf->twait);
--		kfree(pthr->src);
--		return -ENODEV;
-+		goto err_free;
- 	}
-+	peer->dma_dst_addr =
-+		dma_map_resource(pthr->dma_chan->device->dev,
-+				 peer->out_phys_addr, peer->outbuf_size,
-+				 DMA_FROM_DEVICE, 0);
-+	if (dma_mapping_error(pthr->dma_chan->device->dev,
-+			      peer->dma_dst_addr)) {
-+		dev_err(pthr->dma_chan->device->dev, "%d: Failed to map DMA addr\n",
-+			pthr->tidx);
-+		peer->dma_dst_addr = 0;
-+		dma_release_channel(pthr->dma_chan);
-+		goto err_free;
-+	}
-+	dev_dbg(pthr->dma_chan->device->dev, "%d: Map MMIO %pa to DMA addr %pad\n",
-+			pthr->tidx,
-+			&peer->out_phys_addr,
-+			&peer->dma_dst_addr);
- 
- 	atomic_set(&pthr->dma_sync, 0);
--
- 	return 0;
-+
-+err_free:
-+	atomic_dec(&perf->tsync);
-+	wake_up(&perf->twait);
-+	kfree(pthr->src);
-+	return -ENODEV;
- }
- 
- static int perf_run_test(struct perf_thread *pthr)
-@@ -978,8 +1005,13 @@ static void perf_clear_test(struct perf_thread *pthr)
- 	 * We call it anyway just to be sure of the transfers completion.
- 	 */
- 	(void)dmaengine_terminate_sync(pthr->dma_chan);
--
--	dma_release_channel(pthr->dma_chan);
-+	if (pthr->perf->test_peer->dma_dst_addr)
-+		dma_unmap_resource(pthr->dma_chan->device->dev,
-+				   pthr->perf->test_peer->dma_dst_addr,
-+				   pthr->perf->test_peer->outbuf_size,
-+				   DMA_FROM_DEVICE, 0);
-+	if (pthr->dma_chan)
-+		dma_release_channel(pthr->dma_chan);
- 
- no_dma_notify:
- 	atomic_dec(&perf->tsync);
-@@ -1195,6 +1227,9 @@ static ssize_t perf_dbgfs_read_info(struct file *filep, char __user *ubuf,
- 			"\tOut buffer addr 0x%pK\n", peer->outbuf);
- 
- 		pos += scnprintf(buf + pos, buf_size - pos,
-+			"\tOut buff phys addr %pa[p]\n", &peer->out_phys_addr);
-+
-+		pos += scnprintf(buf + pos, buf_size - pos,
- 			"\tOut buffer size %pa\n", &peer->outbuf_size);
- 
- 		pos += scnprintf(buf + pos, buf_size - pos,
-@@ -1388,6 +1423,8 @@ static int perf_setup_peer_mw(struct perf_peer *peer)
- 	if (!peer->outbuf)
- 		return -ENOMEM;
- 
-+	peer->out_phys_addr = phys_addr;
-+
- 	if (max_mw_size && peer->outbuf_size > max_mw_size) {
- 		peer->outbuf_size = max_mw_size;
- 		dev_warn(&peer->perf->ntb->dev,
--- 
-2.7.4
+ * Doesn't reallocate anything. It's up to the caller to ensure that the new
+ * depth doesn't exceed the depth that the sb was initialized with.
+
+We can modify this to meet the growing requirements, there will still be questions as follows:
+
+1. tmpfs is a ram filesystem, we need to allocate sbitmap memory for sbinfo->max_inodes(while this maybe huge)
+
+2.If remountfs changes  max_inode, we have to deal with it, while this may take a long time
+
+(bigger: we need to free the old sbitmap memory, allocate new memory, copy the old sbitmap to new sbitmap
+
+smaller: How do we deal with it?ie: we use sb->map[inode number/8] to find the sbitmap, we need to change the exist
+
+inode numbers?while this maybe used by userspace application.)
+
+>
+> What I think is fundamentally wrong with this patch is that you've found a
+> problem in get_next_ino() and decided to use a different scheme for this
+> one filesystem, leaving every other filesystem which uses get_next_ino()
+> facing the same problem.
+>
+> That could be acceptable if you explained why tmpfs is fundamentally
+> different from all the other filesystems that use get_next_ino(), but
+> you haven't (and I don't think there is such a difference.  eg pipes,
+> autofs and ipc mqueue could all have the same problem.
+
+tmpfs is same with all the other filesystems that use get_next_ino(), but we need to solve this problem one by one.
+
+If tmpfs is ok, we can modify the other filesystems too. Besides, I do not  recommend all file systems share the same
+
+global variable, for performance impact consideration.
+
+>
+> There are some other problems I noticed, but they're not worth bringing
+> up until this fundamental design choice is justified.
+Agree, thanks.
+>
 
