@@ -4,127 +4,138 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3664C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F08C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:07:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BBD3206CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:06:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B7312067D
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:07:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbfKUVGM (ORCPT
+        id S1726861AbfKUVHQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 16:06:12 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:44389 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726554AbfKUVGM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 16:06:12 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iXteL-000788-O7; Thu, 21 Nov 2019 22:06:01 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iXteJ-0005WV-4h; Thu, 21 Nov 2019 22:05:59 +0100
-Date:   Thu, 21 Nov 2019 22:05:59 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <pza@pengutronix.de>, linux-pwm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com,
-        Jernej Skrabec <jernej.skrabec@siol.net>
-Subject: Re: [PATCH v8 3/6] pwm: sun4i: Add an optional probe for bus clock
-Message-ID: <20191121210559.pz3nsyomqfrjuoe4@pengutronix.de>
-References: <20191121195902.6906-1-peron.clem@gmail.com>
- <20191121195902.6906-4-peron.clem@gmail.com>
+        Thu, 21 Nov 2019 16:07:16 -0500
+Received: from mga01.intel.com ([192.55.52.88]:28328 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726293AbfKUVHQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 16:07:16 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Nov 2019 13:07:15 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,227,1571727600"; 
+   d="scan'208";a="238343412"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga002.fm.intel.com with ESMTP; 21 Nov 2019 13:07:14 -0800
+Date:   Thu, 21 Nov 2019 13:07:14 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
+        Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-edac@vger.kernel.org,
+        "linux-kselftest@vger.kernel.org, Jarkko Sakkinen" 
+        <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH v3 09/19] x86/cpu: Clear VMX feature flag if VMX is not
+ fully enabled
+Message-ID: <20191121210714.GB16617@linux.intel.com>
+References: <20191119031240.7779-1-sean.j.christopherson@intel.com>
+ <20191119031240.7779-10-sean.j.christopherson@intel.com>
+ <20191121162452.GJ6540@zn.tnic>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191121195902.6906-4-peron.clem@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20191121162452.GJ6540@zn.tnic>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 08:58:59PM +0100, Clément Péron wrote:
-> From: Jernej Skrabec <jernej.skrabec@siol.net>
+On Thu, Nov 21, 2019 at 05:24:52PM +0100, Borislav Petkov wrote:
+> On Mon, Nov 18, 2019 at 07:12:30PM -0800, Sean Christopherson wrote:
+> > Now that the IA32_FEATURE_CONTROL MSR is guaranteed to be configured and
+> > locked, clear the VMX capability flag if the IA32_FEATURE_CONTROL MSR is
+> > not supported or if BIOS disabled VMX, i.e. locked IA32_FEATURE_CONTROL
+> > and did not set the appropriate VMX enable bit.
+> > 
+> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> > ---
+> >  arch/x86/kernel/cpu/feature_control.c | 28 ++++++++++++++++++++++++---
+> >  1 file changed, 25 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/arch/x86/kernel/cpu/feature_control.c b/arch/x86/kernel/cpu/feature_control.c
+> > index 33c9444dda52..2bd1a9e6021a 100644
+> > --- a/arch/x86/kernel/cpu/feature_control.c
+> > +++ b/arch/x86/kernel/cpu/feature_control.c
+> > @@ -5,15 +5,26 @@
+> >  #include <asm/msr-index.h>
+> >  #include <asm/processor.h>
+> >  
+> > +#undef pr_fmt
+> > +#define pr_fmt(fmt)	"x86/cpu: " fmt
+> > +
+> > +#define FEAT_CTL_UNSUPPORTED_MSG "IA32_FEATURE_CONTROL MSR unsupported on VMX capable CPU, suspected hardware or hypervisor issue.\n"
+> > +
+> >  void init_feature_control_msr(struct cpuinfo_x86 *c)
+> >  {
+> > +	bool tboot = tboot_enabled();
+> >  	u64 msr;
+> >  
+> > -	if (rdmsrl_safe(MSR_IA32_FEATURE_CONTROL, &msr))
+> > +	if (rdmsrl_safe(MSR_IA32_FEATURE_CONTROL, &msr)) {
+> > +		if (cpu_has(c, X86_FEATURE_VMX)) {
+> > +			pr_err_once(FEAT_CTL_UNSUPPORTED_MSG);
+> > +			clear_cpu_cap(c, X86_FEATURE_VMX);
+> > +		}
+> >  		return;
+> > +	}
 > 
-> H6 PWM core needs bus clock to be enabled in order to work.
-> 
-> Add an optional probe for it.
-> 
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> Signed-off-by: Clément Péron <peron.clem@gmail.com>
-> ---
->  drivers/pwm/pwm-sun4i.c | 23 +++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
-> 
-> diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-> index 369990ae7d09..66befd8d6f9c 100644
-> --- a/drivers/pwm/pwm-sun4i.c
-> +++ b/drivers/pwm/pwm-sun4i.c
-> @@ -78,6 +78,7 @@ struct sun4i_pwm_data {
->  
->  struct sun4i_pwm_chip {
->  	struct pwm_chip chip;
-> +	struct clk *bus_clk;
->  	struct clk *clk;
->  	struct reset_control *rst;
->  	void __iomem *base;
-> @@ -391,6 +392,14 @@ static int sun4i_pwm_probe(struct platform_device *pdev)
->  		}
->  	}
->  
-> +	pwm->bus_clk = devm_clk_get_optional(&pdev->dev, "bus");
-> +	if (IS_ERR(pwm->bus_clk)) {
-> +		if (PTR_ERR(pwm->rst) != -EPROBE_DEFER)
-> +			dev_err(&pdev->dev, "get bus clock failed %pe\n",
-> +				pwm->bus_clk);
-> +		return PTR_ERR(pwm->bus_clk);
-> +	}
-> +
->  	pwm->rst = devm_reset_control_get_optional_shared(&pdev->dev, NULL);
->  	if (IS_ERR(pwm->rst)) {
->  		if (PTR_ERR(pwm->rst) != -EPROBE_DEFER)
-> @@ -407,6 +416,17 @@ static int sun4i_pwm_probe(struct platform_device *pdev)
->  		return ret;
->  	}
->  
-> +	/*
-> +	 * We're keeping the bus clock on for the sake of simplicity.
-> +	 * Actually it only needs to be on for hardware register accesses.
-> +	 */
-> +	ret = clk_prepare_enable(pwm->bus_clk);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Cannot prepare and enable bus_clk %d\n",
-> +			ret);
+> Right, so this test: is this something that could happen on some
+> configurations - i.e., the MSR is not there but VMX bit is set - or are
+> you being too cautious here?
 
-nitpick: other error messages in this driver start with a lower case
-letter.
+Probably being overly cautious.
 
-Until there is an equivalent for %pe that consumes an int, I suggest to
-use
+> IOW, do you have any concrete use cases in mind (cloud provider can f*ck
+> it up this way) or?
 
-	dev_err(&pdev->dev, "Cannot prepare and enable bus_clk: %pe\n",
-	        ERR_PTR(ret));
+Yes, VMM somehow managing to break things.  Admittedly extremely unlikely
+given how long IA32_FEATURE_CONTROL has been around.
 
-to benefit from a symbolic error name instead of an error constant.
+> My angle is that if this is never going to happen, why even bother to
+> print anything...
 
-Best regards
-Uwe
+My thought was to add an equivalent of the WARN that fires when an MSR
+access unexpectedly faults.  That's effectively what'd be happening, except
+I used the safe variant to reduce the maintenance cost, e.g. so that the
+RDMSR doesn't have to be conditioned on every possible feature.
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+What about a WARN_ON cpu_has?  That'd be more aligned with the unexpected
+#GP on RDMSR behavior.
+
+	if (rdmsrl_safe(...)) {
+		if (WARN_ON_ONCE(cpu_has(c, X86_FEATURE_VMX)))
+			clear_cpu_cap(c, X86_FEATURE_VMX);
+		return;
+	}
+
+I'm also ok dropping it altogether, though from a KVM developer
+perspective I wouldn't mind the extra sanity check :-)
