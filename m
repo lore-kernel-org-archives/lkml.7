@@ -2,92 +2,164 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D6F0C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:39:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3669C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:39:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9F192071C
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:39:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574347190;
-	bh=+neLzFAvHQ3PkcnVC9iYmWSSop4VQM2zpfDUnBls/sE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=M58VTv3PbBlZViQ4FmaWT1pD3Y6zAlV8WQ7QFXuH2HdKaAWzXa3egSbPhQsMZsWyT
-	 bJNh26WKVrZWgStO88/A8cPsBCFRWp2Ft2lgeU/L1RXRL/mhLB9q927x2XqmfFcOoQ
-	 4CEt9H1Nl6nWyGGZA31l9oSmHzrBCOQMg5NOK0hw=
+	by mail.kernel.org (Postfix) with ESMTP id B977820656
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:39:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OsfjO340"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbfKUOjt (ORCPT
+        id S1727142AbfKUOjy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 09:39:49 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:44901 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726293AbfKUOjt (ORCPT
+        Thu, 21 Nov 2019 09:39:54 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:52556 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726762AbfKUOjy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 09:39:49 -0500
-Received: by mail-ot1-f67.google.com with SMTP id c19so3069304otr.11;
-        Thu, 21 Nov 2019 06:39:49 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=SYYqbOVycEdgZHO+SXnt+K02+QDnVzkJ47TaoH1kdjg=;
-        b=NWN+khUH0MexrV3NVPvl8hIickugu/e99ZmNsRY1zzEuR0PXbVJOnxHgJH8gu6HEMm
-         iEK2nzgS44RSkf7pT4+oBlG/+4azNinjlpZ8XIUN1cwQh0kGFAxorO26Q1lSLiyDPReq
-         TFCmWJNxzRnkgs9a//7fP/tXSyAoJDmTaUpxT3B4J33r8cZUJeCI9pcaI5we/KeHHgCs
-         aF/IA3hw1snczecYOtE7vGKp3lWnpTU1NJN9wSgu4ATpQuzAfxhTUECG/cnlH+kmosxP
-         Jrp0UiiaiT4QZi0OP519PRcHnyChUm5tYX4CZdUSFI1ltxo6FRbgVVW8aCm8tWFl+pt3
-         2QHQ==
-X-Gm-Message-State: APjAAAVi8C8mCUuHZpcfK0a/ULimwlFfwTeCVhOkXFzEuiQgUiYxQPyd
-        y2ZVXzjGHEjAAGCMPWrJrg==
-X-Google-Smtp-Source: APXvYqwUu/biujtjVLDWyb16pwLG4pruuYMM8CW4+uuGpATDphuBWh04Vk6lWGDYxf1mYwHiGV55vA==
-X-Received: by 2002:a9d:b83:: with SMTP id 3mr6529158oth.56.1574347188483;
-        Thu, 21 Nov 2019 06:39:48 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id y145sm955719oia.21.2019.11.21.06.39.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Nov 2019 06:39:47 -0800 (PST)
-Date:   Thu, 21 Nov 2019 08:39:47 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Fabien Dessenne <fabien.dessenne@st.com>,
-        Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Subject: Re: [PATCH v3] dt-bindings: mailbox: convert stm32-ipcc to
- json-schema
-Message-ID: <20191121143947.GA25003@bogus>
-References: <20191121095102.26693-1-arnaud.pouliquen@st.com>
+        Thu, 21 Nov 2019 09:39:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574347192;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=lJDYWSgP00g7qIjqTZLTHnhWuHMmstvkVgAhwaYoRHs=;
+        b=OsfjO340y8YCVflKGYo2v2hZeH0TjPZpY0xKcDkKVKMnjHwvT0y2V/VjlKTGkQUwK5h9qQ
+        HnpdKjtjre9FP+TFJGJzaDzQHFpFmZS+sAaWQ3aIOD/XcAd0afvOL0bHtRpm/wdI67Rt/X
+        zdE+Q1bVhAokLR8q+OUBYHJGJkhh4d8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-280-OUxjw_4_OD6Gq5Bg9m8Kzw-1; Thu, 21 Nov 2019 09:39:48 -0500
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A32FB18B9FC1;
+        Thu, 21 Nov 2019 14:39:47 +0000 (UTC)
+Received: from ovpn-117-89.ams2.redhat.com (ovpn-117-89.ams2.redhat.com [10.36.117.89])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4E0C46E70C;
+        Thu, 21 Nov 2019 14:39:46 +0000 (UTC)
+Message-ID: <65c66f8c860b7fc0c01f65feecae08aebb5cb0c9.camel@redhat.com>
+Subject: Re: [PATCH net] udp: drop skb extensions before marking skb
+ stateless
+From:   Paolo Abeni <pabeni@redhat.com>
+To:     Florian Westphal <fw@strlen.de>, netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Byron Stanoszek <gandalf@winds.org>
+Date:   Thu, 21 Nov 2019 15:39:45 +0100
+In-Reply-To: <20191121055623.20952-1-fw@strlen.de>
+References: <20191121053031.GI20235@breakpoint.cc>
+         <20191121055623.20952-1-fw@strlen.de>
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191121095102.26693-1-arnaud.pouliquen@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-MC-Unique: OUxjw_4_OD6Gq5Bg9m8Kzw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 21 Nov 2019 10:51:02 +0100, Arnaud Pouliquen wrote:
-> Convert the STM32 IPCC bindings to DT schema format using
-> json-schema
-> 
-> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+On Thu, 2019-11-21 at 06:56 +0100, Florian Westphal wrote:
+> Once udp stack has set the UDP_SKB_IS_STATELESS flag, later skb free
+> assumes all skb head state has been dropped already.
+>=20
+> This will leak the extension memory in case the skb has extensions other
+> than the ipsec secpath, e.g. bridge nf data.
+>=20
+> To fix this, set the UDP_SKB_IS_STATELESS flag only if we don't have
+> extensions or if the extension space can be free'd.
+>=20
+> Fixes: 895b5c9f206eb7d25dc1360a ("netfilter: drop bridge nf reset from nf=
+_reset")
+> Cc: Paolo Abeni <pabeni@redhat.com>
+> Reported-by: Byron Stanoszek <gandalf@winds.org>
+> Signed-off-by: Florian Westphal <fw@strlen.de>
 > ---
->  .../bindings/mailbox/st,stm32-ipcc.yaml       | 84 +++++++++++++++++++
->  .../bindings/mailbox/stm32-ipcc.txt           | 47 -----------
->  2 files changed, 84 insertions(+), 47 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mailbox/st,stm32-ipcc.yaml
->  delete mode 100644 Documentation/devicetree/bindings/mailbox/stm32-ipcc.txt
-> 
+>  include/linux/skbuff.h |  6 ++++++
+>  net/ipv4/udp.c         | 27 ++++++++++++++++++++++-----
+>  2 files changed, 28 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
+> index 64a395c7f689..8688f7adfda7 100644
+> --- a/include/linux/skbuff.h
+> +++ b/include/linux/skbuff.h
+> @@ -4169,12 +4169,18 @@ static inline void skb_ext_reset(struct sk_buff *=
+skb)
+>  =09=09skb->active_extensions =3D 0;
+>  =09}
+>  }
+> +
+> +static inline bool skb_has_extensions(struct sk_buff *skb)
+> +{
+> +=09return unlikely(skb->active_extensions);
+> +}
+>  #else
+>  static inline void skb_ext_put(struct sk_buff *skb) {}
+>  static inline void skb_ext_reset(struct sk_buff *skb) {}
+>  static inline void skb_ext_del(struct sk_buff *skb, int unused) {}
+>  static inline void __skb_ext_copy(struct sk_buff *d, const struct sk_buf=
+f *s) {}
+>  static inline void skb_ext_copy(struct sk_buff *dst, const struct sk_buf=
+f *s) {}
+> +static inline bool skb_has_extensions(struct sk_buff *skb) { return fals=
+e; }
+>  #endif /* CONFIG_SKB_EXTENSIONS */
+> =20
+>  static inline void nf_reset_ct(struct sk_buff *skb)
+> diff --git a/net/ipv4/udp.c b/net/ipv4/udp.c
+> index 1d58ce829dca..447defbfccdd 100644
+> --- a/net/ipv4/udp.c
+> +++ b/net/ipv4/udp.c
+> @@ -1297,6 +1297,27 @@ int udp_sendpage(struct sock *sk, struct page *pag=
+e, int offset,
+> =20
+>  #define UDP_SKB_IS_STATELESS 0x80000000
+> =20
+> +/* all head states (dst, sk, nf conntrack) except skb extensions are
+> + * cleared by udp_rcv().
+> + *
+> + * We need to preserve secpath, if present, to eventually process
+> + * IP_CMSG_PASSSEC at recvmsg() time.
+> + *
+> + * Other extensions can be cleared.
+> + */
+> +static bool udp_try_make_stateless(struct sk_buff *skb)
+> +{
+> +=09if (!skb_has_extensions(skb))
+> +=09=09return true;
+> +
+> +=09if (!secpath_exists(skb)) {
+> +=09=09skb_ext_reset(skb);
+> +=09=09return true;
+> +=09}
+> +
+> +=09return false;
+> +}
+> +
+>  static void udp_set_dev_scratch(struct sk_buff *skb)
+>  {
+>  =09struct udp_dev_scratch *scratch =3D udp_skb_scratch(skb);
+> @@ -1308,11 +1329,7 @@ static void udp_set_dev_scratch(struct sk_buff *sk=
+b)
+>  =09scratch->csum_unnecessary =3D !!skb_csum_unnecessary(skb);
+>  =09scratch->is_linear =3D !skb_is_nonlinear(skb);
+>  #endif
+> -=09/* all head states execept sp (dst, sk, nf) are always cleared by
+> -=09 * udp_rcv() and we need to preserve secpath, if present, to eventual=
+ly
+> -=09 * process IP_CMSG_PASSSEC at recvmsg() time
+> -=09 */
+> -=09if (likely(!skb_sec_path(skb)))
+> +=09if (udp_try_make_stateless(skb))
+>  =09=09scratch->_tsize_state |=3D UDP_SKB_IS_STATELESS;
+>  }
 
-Applied, thanks.
+Acked-by: Paolo Abeni <pabeni@redhat.com>
 
-Rob
