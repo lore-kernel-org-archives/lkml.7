@@ -2,211 +2,211 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C93CC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 19:59:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8010BC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:00:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1CEE206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 19:59:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IdESNjVe"
+	by mail.kernel.org (Postfix) with ESMTP id 552ED2068D
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:00:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727200AbfKUT7b (ORCPT
+        id S1726937AbfKUUAT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 14:59:31 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:51193 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726962AbfKUT7S (ORCPT
+        Thu, 21 Nov 2019 15:00:19 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:13828 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726546AbfKUUAS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 14:59:18 -0500
-Received: by mail-wm1-f65.google.com with SMTP id l17so5126708wmh.0;
-        Thu, 21 Nov 2019 11:59:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=dU0M2wH1Fq0Elrc60MLP4chXO/aXp+1AHKdZUUUJPtM=;
-        b=IdESNjVeRmiunPsFcAugnrxh20+dxe5lv7kRSV64Wr2vGmZ0je2ZM/TJrM+tFfGKMF
-         mDCvmkj42vs0Xiyq/1y2cPiuR4a1Ziz38eQlYiI/20+W6OmeOw6NhlulJef6CdauIdeh
-         aG73Q+3g1xxbuY/91JcQYVIBdA9jPaz5p9IjcQjxsBqfzxFxJNAXbgcI0fUdOLkVjNE+
-         TGQnhYdmtcNkluGaVawvSgO0UYUndTBhz0jBJqsuox5KWL0lyh58hxaHfsJK318BYNb4
-         UAPqDfFB3sxKgOPo/BLrh0hAmIbaALLEyV3g8mmSP90cy9PEF/YPDgQ3ExopBThSDT16
-         WouQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=dU0M2wH1Fq0Elrc60MLP4chXO/aXp+1AHKdZUUUJPtM=;
-        b=ahgLBV0TpiH9iipOYXeyOHqz7k2tLgLEE3XRlmcmfuTFbLjyccrKlC1RNeCebiL2Dn
-         qXupGs7qwo6DIJSPfbhY8aCOSJgAIovYITCyhEZ7OoihlSyIwy93BpguAGfT/q/gdQb+
-         pdjdelTUQzvF/oiTLwmdJuNQ1QNljRyTRuuBs0q/Kxh+BhzUcOwySv1y1ypL4q6CbPSb
-         84PLufKiZje6sY5J5rU9RPoopzpqFofz/HHN38e9ocoosr6rSh4cSlmtIttpGOvcNON3
-         4yrs0KQGu5vaHgjlJYau3lmNHw0KY0T+luNJE+H+btxs88IM9TJURttPy8Lq06+fTEQN
-         aacA==
-X-Gm-Message-State: APjAAAUY+pDgB1u+q6X338kSV0RJsRJBkydY5DwYVRHd12aLb1faYJgh
-        R17FddwCzCk/IP8KEpuumnYjnkVtcpk=
-X-Google-Smtp-Source: APXvYqwSaWX6MHEm+ebVVhdIFdmPfawuvHcc0h5bDCG8msobgwlDpoOWMdWS0YAVdAGdSBe6r5t9lA==
-X-Received: by 2002:a1c:410a:: with SMTP id o10mr12354084wma.117.1574366355519;
-        Thu, 21 Nov 2019 11:59:15 -0800 (PST)
-Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::4e2b:d7ca])
-        by smtp.gmail.com with ESMTPSA id l4sm747124wme.4.2019.11.21.11.59.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Nov 2019 11:59:15 -0800 (PST)
-From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <pza@pengutronix.de>
-Cc:     linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v8 5/6] pwm: sun4i: Add support to output source clock directly
-Date:   Thu, 21 Nov 2019 20:59:01 +0100
-Message-Id: <20191121195902.6906-6-peron.clem@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191121195902.6906-1-peron.clem@gmail.com>
-References: <20191121195902.6906-1-peron.clem@gmail.com>
+        Thu, 21 Nov 2019 15:00:18 -0500
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xALJwqVX078608;
+        Thu, 21 Nov 2019 15:00:16 -0500
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wdfxukkbd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 21 Nov 2019 15:00:15 -0500
+Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id xALK0F0j082864;
+        Thu, 21 Nov 2019 15:00:15 -0500
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wdfxukka3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 21 Nov 2019 15:00:15 -0500
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xALJtswm029687;
+        Thu, 21 Nov 2019 20:00:14 GMT
+Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
+        by ppma01dal.us.ibm.com with ESMTP id 2wa8r7mxu2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 21 Nov 2019 20:00:14 +0000
+Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
+        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xALK0CoJ37224862
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 21 Nov 2019 20:00:12 GMT
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 80D9A6E059;
+        Thu, 21 Nov 2019 20:00:12 +0000 (GMT)
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2747A6E053;
+        Thu, 21 Nov 2019 20:00:12 +0000 (GMT)
+Received: from rascal.austin.ibm.com (unknown [9.41.179.32])
+        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu, 21 Nov 2019 20:00:11 +0000 (GMT)
+From:   Scott Cheloha <cheloha@linux.vnet.ibm.com>
+To:     linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Hildenbrand <david@redhat.com>
+Cc:     nathanl@linux.ibm.com, ricklind@linux.vnet.ibm.com,
+        Scott Cheloha <cheloha@linux.vnet.ibm.com>
+Subject: [PATCH v2] drivers/base/memory.c: cache blocks in radix tree to accelerate lookup
+Date:   Thu, 21 Nov 2019 13:59:52 -0600
+Message-Id: <20191121195952.3728-1-cheloha@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.24.0.rc1
+In-Reply-To: <20191120192536.1980-1-cheloha@linux.vnet.ibm.com>
+References: <20191120192536.1980-1-cheloha@linux.vnet.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-21_05:2019-11-21,2019-11-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ phishscore=0 impostorscore=0 malwarescore=0 bulkscore=0 mlxlogscore=999
+ clxscore=1015 spamscore=0 mlxscore=0 suspectscore=0 priorityscore=1501
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1911210164
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jernej Skrabec <jernej.skrabec@siol.net>
+Searching for a particular memory block by id is slow because each block
+device is kept in an unsorted linked list on the subsystem bus.
 
-PWM core has an option to bypass whole logic and output unchanged source
-clock as PWM output. This is achieved by enabling bypass bit.
+Lookup is much faster if we cache the blocks in a radix tree.  Memory
+subsystem initialization and hotplug/hotunplug is at least a little faster
+for any machine with more than ~100 blocks, and the speedup grows with
+the block count.
 
-Note that when bypass is enabled, no other setting has any meaning, not
-even enable bit.
-
-This mode of operation is needed to achieve high enough frequency to
-serve as clock source for AC200 chip which is integrated into same
-package as H6 SoC.
-
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-Signed-off-by: Clément Péron <peron.clem@gmail.com>
+Signed-off-by: Scott Cheloha <cheloha@linux.vnet.ibm.com>
+Acked-by: David Hildenbrand <david@redhat.com>
 ---
- drivers/pwm/pwm-sun4i.c | 48 +++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 46 insertions(+), 2 deletions(-)
+v2 incorporates suggestions from David Hildenbrand.
 
-diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-index 1fa2057419fb..0fe9c680d6d0 100644
---- a/drivers/pwm/pwm-sun4i.c
-+++ b/drivers/pwm/pwm-sun4i.c
-@@ -3,6 +3,10 @@
-  * Driver for Allwinner sun4i Pulse Width Modulation Controller
-  *
-  * Copyright (C) 2014 Alexandre Belloni <alexandre.belloni@free-electrons.com>
-+ *
-+ * Limitations:
-+ * - When outputing the source clock directly, the PWM logic will be bypassed
-+ *   and the currently running period is not guaranteed to be completed
-  */
+Removing the get_device/put_device dance from walk_memory_blocks() can
+be done in a subsequent patch.
+ drivers/base/memory.c | 49 ++++++++++++++++++++++++++-----------------
+ 1 file changed, 30 insertions(+), 19 deletions(-)
+
+diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+index 84c4e1f72cbd..32e74fc1b0ac 100644
+--- a/drivers/base/memory.c
++++ b/drivers/base/memory.c
+@@ -20,6 +20,7 @@
+ #include <linux/memory_hotplug.h>
+ #include <linux/mm.h>
+ #include <linux/mutex.h>
++#include <linux/radix-tree.h>
+ #include <linux/stat.h>
+ #include <linux/slab.h>
  
- #include <linux/bitops.h>
-@@ -73,6 +77,7 @@ static const u32 prescaler_table[] = {
- 
- struct sun4i_pwm_data {
- 	bool has_prescaler_bypass;
-+	bool has_direct_mod_clk_output;
- 	unsigned int npwm;
+@@ -59,6 +60,13 @@ static struct bus_type memory_subsys = {
+ 	.offline = memory_subsys_offline,
  };
  
-@@ -118,6 +123,20 @@ static void sun4i_pwm_get_state(struct pwm_chip *chip,
- 
- 	val = sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
- 
-+	/*
-+	 * PWM chapter in H6 manual has a diagram which explains that if bypass
-+	 * bit is set, no other setting has any meaning. Even more, experiment
-+	 * proved that also enable bit is ignored in this case.
-+	 */
-+	if ((val & BIT_CH(PWM_BYPASS, pwm->hwpwm)) &&
-+	    sun4i_pwm->data->has_direct_mod_clk_output) {
-+		state->period = DIV_ROUND_UP_ULL(NSEC_PER_SEC, clk_rate);
-+		state->duty_cycle = DIV_ROUND_UP_ULL(state->period, 2);
-+		state->polarity = PWM_POLARITY_NORMAL;
-+		state->enabled = true;
-+		return;
-+	}
++/*
++ * Memory blocks are cached in a local radix tree to avoid
++ * a costly linear search for the corresponding device on
++ * the subsystem bus.
++ */
++static RADIX_TREE(memory_blocks, GFP_KERNEL);
 +
- 	if ((PWM_REG_PRESCAL(val, pwm->hwpwm) == PWM_PRESCAL_MASK) &&
- 	    sun4i_pwm->data->has_prescaler_bypass)
- 		prescaler = 1;
-@@ -149,13 +168,24 @@ static void sun4i_pwm_get_state(struct pwm_chip *chip,
+ static BLOCKING_NOTIFIER_HEAD(memory_chain);
  
- static int sun4i_pwm_calculate(struct sun4i_pwm_chip *sun4i_pwm,
- 			       const struct pwm_state *state,
--			       u32 *dty, u32 *prd, unsigned int *prsclr)
-+			       u32 *dty, u32 *prd, unsigned int *prsclr,
-+			       bool *bypass)
+ int register_memory_notifier(struct notifier_block *nb)
+@@ -580,20 +588,14 @@ int __weak arch_get_memory_phys_device(unsigned long start_pfn)
+ /* A reference for the returned memory block device is acquired. */
+ static struct memory_block *find_memory_block_by_id(unsigned long block_id)
  {
- 	u64 clk_rate, div = 0;
- 	unsigned int pval, prescaler = 0;
+-	struct device *dev;
++	struct memory_block *mem;
  
- 	clk_rate = clk_get_rate(sun4i_pwm->clk);
+-	dev = subsys_find_device_by_id(&memory_subsys, block_id, NULL);
+-	return dev ? to_memory_block(dev) : NULL;
++	mem = radix_tree_lookup(&memory_blocks, block_id);
++	if (mem)
++		get_device(&mem->dev);
++	return mem;
+ }
  
-+	*bypass = sun4i_pwm->data->has_direct_mod_clk_output &&
-+		  state->enabled &&
-+		  (state->period * clk_rate >= NSEC_PER_SEC) &&
-+		  (state->period * clk_rate < 2 * NSEC_PER_SEC) &&
-+		  (state->duty_cycle * clk_rate * 2 >= NSEC_PER_SEC);
-+
-+	/* Skip calculation of other parameters if we bypass them */
-+	if (*bypass)
-+		return 0;
-+
- 	if (sun4i_pwm->data->has_prescaler_bypass) {
- 		/* First, test without any prescaler when available */
- 		prescaler = PWM_PRESCAL_MASK;
-@@ -206,6 +236,7 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	int ret;
- 	unsigned int delay_us, prescaler;
- 	unsigned long now;
-+	bool bypass;
+-/*
+- * For now, we have a linear search to go find the appropriate
+- * memory_block corresponding to a particular phys_index. If
+- * this gets to be a real problem, we can always use a radix
+- * tree or something here.
+- *
+- * This could be made generic for all device subsystems.
+- */
+ struct memory_block *find_memory_block(struct mem_section *section)
+ {
+ 	unsigned long block_id = base_memory_block_id(__section_nr(section));
+@@ -636,9 +638,15 @@ int register_memory(struct memory_block *memory)
+ 	memory->dev.offline = memory->state == MEM_OFFLINE;
  
- 	pwm_get_state(pwm, &cstate);
- 
-@@ -220,7 +251,8 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	spin_lock(&sun4i_pwm->ctrl_lock);
- 	ctrl = sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
- 
--	ret = sun4i_pwm_calculate(sun4i_pwm, state, &duty, &period, &prescaler);
-+	ret = sun4i_pwm_calculate(sun4i_pwm, state, &duty, &period, &prescaler,
-+				  &bypass);
- 	if (ret) {
- 		dev_err(chip->dev, "period exceeds the maximum value\n");
- 		spin_unlock(&sun4i_pwm->ctrl_lock);
-@@ -229,6 +261,18 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 		return ret;
- 	}
- 
-+	if (sun4i_pwm->data->has_direct_mod_clk_output) {
-+		if (bypass) {
-+			ctrl |= BIT_CH(PWM_BYPASS, pwm->hwpwm);
-+			/* We can skip other parameter */
-+			sun4i_pwm_writel(sun4i_pwm, ctrl, PWM_CTRL_REG);
-+			spin_unlock(&sun4i_pwm->ctrl_lock);
-+			return 0;
-+		} else {
-+			ctrl &= ~BIT_CH(PWM_BYPASS, pwm->hwpwm);
-+		}
+ 	ret = device_register(&memory->dev);
+-	if (ret)
++	if (ret) {
+ 		put_device(&memory->dev);
+-
++		return ret;
 +	}
++	ret = radix_tree_insert(&memory_blocks, memory->dev.id, memory);
++	if (ret) {
++		put_device(&memory->dev);
++		device_unregister(&memory->dev);
++	}
+ 	return ret;
+ }
+ 
+@@ -696,6 +704,8 @@ static void unregister_memory(struct memory_block *memory)
+ 	if (WARN_ON_ONCE(memory->dev.bus != &memory_subsys))
+ 		return;
+ 
++	WARN_ON(radix_tree_delete(&memory_blocks, memory->dev.id) == NULL);
 +
- 	if (PWM_REG_PRESCAL(ctrl, pwm->hwpwm) != prescaler) {
- 		/* Prescaler changed, the clock has to be gated */
- 		ctrl &= ~BIT_CH(PWM_CLK_GATING, pwm->hwpwm);
+ 	/* drop the ref. we got via find_memory_block() */
+ 	put_device(&memory->dev);
+ 	device_unregister(&memory->dev);
+@@ -851,20 +861,21 @@ void __init memory_dev_init(void)
+ int walk_memory_blocks(unsigned long start, unsigned long size,
+ 		       void *arg, walk_memory_blocks_func_t func)
+ {
++	struct radix_tree_iter iter;
+ 	const unsigned long start_block_id = phys_to_block_id(start);
+ 	const unsigned long end_block_id = phys_to_block_id(start + size - 1);
+ 	struct memory_block *mem;
+-	unsigned long block_id;
++	void **slot;
+ 	int ret = 0;
+ 
+ 	if (!size)
+ 		return 0;
+ 
+-	for (block_id = start_block_id; block_id <= end_block_id; block_id++) {
+-		mem = find_memory_block_by_id(block_id);
+-		if (!mem)
+-			continue;
+-
++	radix_tree_for_each_slot(slot, &memory_blocks, &iter, start_block_id) {
++		if (iter.index > end_block_id)
++			break;
++		mem = radix_tree_deref_slot(slot);
++		get_device(&mem->dev);
+ 		ret = func(mem, arg);
+ 		put_device(&mem->dev);
+ 		if (ret)
 -- 
-2.20.1
+2.24.0.rc1
 
