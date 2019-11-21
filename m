@@ -2,129 +2,175 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 136ADC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:51:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB2BC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:52:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D57982075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:51:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52821208C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:52:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="cOoelbzV"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="bh8aX3M9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726362AbfKUKvg (ORCPT
+        id S1726658AbfKUKvx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 05:51:36 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:35490 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726014AbfKUKvf (ORCPT
+        Thu, 21 Nov 2019 05:51:53 -0500
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:54966 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726454AbfKUKvw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 05:51:35 -0500
-Received: by mail-lj1-f194.google.com with SMTP id r7so2702233ljg.2
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 02:51:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=FdEPe6fpUNXI9/WAZZIOxWELNA+kAoI7dzDky4bTZis=;
-        b=cOoelbzVpuDCXItrFwxTJF/U/0gy8t5gB2RgT8FVGP8uiqR75cwQA4BAtqadKS31di
-         7G5OJUuaQOGdSbOXKXffvaGa9BFA4s8NJhxsv7eaYcoczQfAPyweOCCyRDu+oKVNkB0r
-         MlUf6jOKZrG14pcYrk0WLpVdLeXGhoCPR22tM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=FdEPe6fpUNXI9/WAZZIOxWELNA+kAoI7dzDky4bTZis=;
-        b=pLufeJ/qq7Gm+/O/6w4vPlYlEJHZXP12boluxF+ClIyPSed3eCpwbt4s7AOjPatkv7
-         qD2wcG+RADlY06YuCWfidk/XH92txpb5cgLlqkYG80Oan4vw/8j+6k2EB5kqf/hChdOj
-         RSTKlpCSHFrjf3rvCF/wwXLOxnTV4S3vRsdWTzKgfAzKyChS6TOrcLM8anwqDhxdxxcK
-         7K9p/BGLjcP7Y9xBswQ+sfzWtkPWhOv1jSJXbr2mqe7NFHYel7LjOdzLeedrklaxTWY+
-         7xBpZQtQmzyR0YkA0XiCdTODWmOlQbbYxI10IMy3vobtX32uC4LtQmrycROFDWD0Qa67
-         Xvbw==
-X-Gm-Message-State: APjAAAWXfeg7iwijdcivVtePpxm/UOweiQRIEkw+N3pHjAOg0zSNq21/
-        pUgZBxLboOvRfOYXFgB73cNfiQ==
-X-Google-Smtp-Source: APXvYqwsrJHfNqQKBJ6Az9UWRwDqhmW2Ry/0CYXbRk7uXrYHeOnurDm9is8KSqA1zJkocIOHYpYdEA==
-X-Received: by 2002:a2e:9e97:: with SMTP id f23mr6817404ljk.89.1574333493384;
-        Thu, 21 Nov 2019 02:51:33 -0800 (PST)
-Received: from [172.16.11.28] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id p18sm1167891lfh.24.2019.11.21.02.51.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 21 Nov 2019 02:51:32 -0800 (PST)
-Subject: Re: [PATCH] export.h: reduce __ksymtab_strings string duplication by
- using "MS" section flags
-To:     Jessica Yu <jeyu@kernel.org>, linux-kernel@vger.kernel.org
-Cc:     Matthias Maennich <maennich@google.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <20191120145110.8397-1-jeyu@kernel.org>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <93d3936d-0bc4-9639-7544-42a324f01ac1@rasmusvillemoes.dk>
-Date:   Thu, 21 Nov 2019 11:51:31 +0100
+        Thu, 21 Nov 2019 05:51:52 -0500
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20191121105150euoutp0154e9982609a1d176de2671c48a9c342a~ZJ-yqXgI21450614506euoutp01U
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 10:51:50 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20191121105150euoutp0154e9982609a1d176de2671c48a9c342a~ZJ-yqXgI21450614506euoutp01U
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1574333510;
+        bh=VK5BETXoh+owHaEYvSwcp6bB4KTJnFLs5Im7oFh2S4E=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=bh8aX3M9uC4kCeMZAZrgHhfMLvg0AXvp5gO52KPCKeNmF4UpLh62RJwduAWt0K0RL
+         51vTai8RMUjJpZcwBK4wRGKQKsvbXUAxHYAH8gkJuWGkZE451gS9s0Gz/tMpMm23+G
+         sdCZTPgbxKsDNHX3YwQ5IBhjOJ8HywynHO3IbuYM=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20191121105150eucas1p1ecb54481436fe634903d19d84c4abfab~ZJ-yYbRSE1817918179eucas1p1e;
+        Thu, 21 Nov 2019 10:51:50 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 9B.39.04469.64C66DD5; Thu, 21
+        Nov 2019 10:51:50 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20191121105150eucas1p1fcb74b96f07541573eaaf5008e0648c0~ZJ-x8Fmup0748807488eucas1p1M;
+        Thu, 21 Nov 2019 10:51:50 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20191121105150eusmtrp1db97523583f3ab59d63271be7dff8440~ZJ-x7ad5G0875708757eusmtrp1j;
+        Thu, 21 Nov 2019 10:51:50 +0000 (GMT)
+X-AuditID: cbfec7f2-54fff70000001175-8a-5dd66c4686bb
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id AB.0E.04117.64C66DD5; Thu, 21
+        Nov 2019 10:51:50 +0000 (GMT)
+Received: from [106.120.51.18] (unknown [106.120.51.18]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20191121105149eusmtip2e5aff3cf8b85c6f268556e4d6315547d~ZJ-xhKjH91865018650eusmtip24;
+        Thu, 21 Nov 2019 10:51:49 +0000 (GMT)
+Subject: Re: [RESEND PATCH] MAINTAINERS: update my e-mail address
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>
+From:   Kamil Konieczny <k.konieczny@samsung.com>
+Message-ID: <1bd50b4b-a40a-a0c1-48ce-60e69b11ec3f@samsung.com>
+Date:   Thu, 21 Nov 2019 11:51:49 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191120145110.8397-1-jeyu@kernel.org>
-Content-Type: text/plain; charset=windows-1252
+In-Reply-To: <CAJKOXPefL_nyNaUExCJv6zKmhPTvgiPaaPT-sRoyyOw59aTZiQ@mail.gmail.com>
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrIKsWRmVeSWpSXmKPExsWy7djP87puOddiDbZ9U7TYOGM9q8Wc8y0s
+        Ft2vZCzOn9/AbnH/3k8mi8u75rBZzDi/j8ni/69mZgcOjy0rbzJ5bDug6rFpVSebx7+FU1g8
+        +rasYvT4vEkugC2KyyYlNSezLLVI3y6BK+PhzweMBZf4Kj5ffsDewPiSu4uRk0NCwETizJdF
+        bF2MXBxCAisYJR5Ovw3lfGGUuLL6BCOE85lR4tiKe+wwLU+WP2GHSCxnlPgx+yArhPOWUeLV
+        oa3MIFXCAo4Sl481s4HYIgKaEtf/fgcrYha4wyTx9thpsCI2AX2Jg2dPsoDYvAJ2EgcfbAJq
+        4OBgEVCVePWYCcQUFYiQOP01EaJCUOLkzCdg1ZwCgRJTJq9iBbGZBcQlbj2ZzwRhy0tsfzuH
+        GWSVhMAhdon1Vz+BzZEQcJF4ttQH4gFhiVfHt0A9IyNxenIPC4RdLvF0YR87RG8Lo8SD9o9Q
+        CWuJw8cvsoLMYQb6Zf0ufYiwo8TytlVsEOP5JG68FYQ4gU9i0rbpzBBhXomONiGIalWJ56d6
+        mCBsaYmu/+tYJzAqzULy2Cwkz8xC8swshL0LGFlWMYqnlhbnpqcWG+allusVJ+YWl+al6yXn
+        525iBCak0/+Of9rB+PVS0iFGAQ5GJR5eAbWrsUKsiWXFlbmHGCU4mJVEePdcvxIrxJuSWFmV
+        WpQfX1Sak1p8iFGag0VJnLea4UG0kEB6YklqdmpqQWoRTJaJg1OqgTGsb41OSlWN6oPHN9yC
+        TsXw8NoYbpmyY4vYWq8cFTG56XktWTmzAuuf3O28sUXg2Ocom6wN6/bKLly06qnRl4XeuWH7
+        VE7YWq38nC4rN6so65rGhh/zag2/REwvPfJS1sZ+3p56O+sdq/TFlzzusVUW9OH7Y/v9dqnn
+        l7q6mPadE+8nb3183FqJpTgj0VCLuag4EQDlotqiRAMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrGIsWRmVeSWpSXmKPExsVy+t/xe7puOddiDfY8ZLHYOGM9q8Wc8y0s
+        Ft2vZCzOn9/AbnH/3k8mi8u75rBZzDi/j8ni/69mZgcOjy0rbzJ5bDug6rFpVSebx7+FU1g8
+        +rasYvT4vEkugC1Kz6Yov7QkVSEjv7jEVina0MJIz9DSQs/IxFLP0Ng81srIVEnfziYlNSez
+        LLVI3y5BL+PhzweMBZf4Kj5ffsDewPiSu4uRk0NCwETiyfIn7F2MXBxCAksZJd58m8IEkZCW
+        aDy9GsoWlvhzrYsNoug1o8T+/Q/YQRLCAo4Sl481s4HYIgKaEtf/fmcFKWIWuMMk0XT3AlTH
+        NUaJK1MPgnWwCehLHDx7kgXE5hWwkzj4YBNQEQcHi4CqxKvHYNtEBSIknm+/wQhRIihxcuYT
+        sHJOgUCJKZNXsYLYzALqEn/mXWKGsMUlbj2ZzwRhy0tsfzuHeQKj0Cwk7bOQtMxC0jILScsC
+        RpZVjCKppcW56bnFRnrFibnFpXnpesn5uZsYgXG47djPLTsYu94FH2IU4GBU4uHdrXw1Vog1
+        say4MvcQowQHs5II757rV2KFeFMSK6tSi/Lji0pzUosPMZoC/TaRWUo0OR+YIvJK4g1NDc0t
+        LA3Njc2NzSyUxHk7BA7GCAmkJ5akZqemFqQWwfQxcXBKNTDO5s9doOYf5S/0z5LZnEeUL27C
+        np1bt3GJhgk/2T+tOSvMYbnp78pVM6yK1l73l3rHc6xlnfnkE39SnDI8X0aky3izb9hR+vmi
+        Y9av9D+J51dIThOYfzi8oO8Pm+60qy/Llh1pLHrHUG/58NvlJOG3VyKnZ/YJJj+weDLxUJus
+        jpaHRXb2LBslluKMREMt5qLiRACZRDmD2QIAAA==
+X-CMS-MailID: 20191121105150eucas1p1fcb74b96f07541573eaaf5008e0648c0
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20191120135541eucas1p14033edaac4d015cf1d2110d9d08f2f05
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20191120135541eucas1p14033edaac4d015cf1d2110d9d08f2f05
+References: <CGME20191120135541eucas1p14033edaac4d015cf1d2110d9d08f2f05@eucas1p1.samsung.com>
+        <20191120135527.7636-1-k.konieczny@samsung.com>
+        <CAJKOXPefL_nyNaUExCJv6zKmhPTvgiPaaPT-sRoyyOw59aTZiQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/11/2019 15.51, Jessica Yu wrote:
+On 21.11.2019 06:12, Krzysztof Kozlowski wrote:
+> On Wed, 20 Nov 2019 at 21:55, Kamil Konieczny <k.konieczny@samsung.com> wrote:
+>>
+>> Update my e-mail address to @samsung.com in maintainers.
+>> Add also map in .mailmap to new e-mail.
+>>
+>> Signed-off-by: Kamil Konieczny <k.konieczny@samsung.com>
 > 
-> We can alleviate this situation by utilizing the SHF_MERGE and
-> SHF_STRING section flags. SHF_MERGE|SHF_STRING indicate to the linker
-> that the data in the section are null-terminated strings 
-
-[pet peeve: nul, not null.]
-
-> As of v5.4-rc5, the following statistics were gathered with x86
-> defconfig with approximately 10.7k exported symbols.
+> Hi Kamil,
 > 
-> Size of __ksymtab_strings in vmlinux:
-> -------------------------------------
-> v5.4-rc5: 213834 bytes
-> v5.4-rc5 with commit c3a6cf19e695: 224455 bytes
-> v5.4-rc5 with this patch: 205759 bytes
+> To whom are you addressing it? All people are on CC so I am not sure
+> if I am the one to pick it up.
+
+Sorry, I should add Herbert in to: field,
+my e-mail is in crypto driver so I think it can go by crypto tree.
+
+-- 
+Best regards,
+Kamil Konieczny
+
+>> ---
+>>  .mailmap    | 1 +
+>>  MAINTAINERS | 2 +-
+>>  2 files changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/.mailmap b/.mailmap
+>> index fd6219293057..3727a0066bb1 100644
+>> --- a/.mailmap
+>> +++ b/.mailmap
+>> @@ -133,6 +133,7 @@ Juha Yrjola <at solidboot.com>
+>>  Juha Yrjola <juha.yrjola@nokia.com>
+>>  Juha Yrjola <juha.yrjola@solidboot.com>
+>>  Julien Thierry <julien.thierry.kdev@gmail.com> <julien.thierry@arm.com>
+>> +Kamil Konieczny <k.konieczny@samsung.com> <k.konieczny@partner.samsung.com>
+>>  Kay Sievers <kay.sievers@vrfy.org>
+>>  Kenneth W Chen <kenneth.w.chen@intel.com>
+>>  Konstantin Khlebnikov <koct9i@gmail.com> <k.khlebnikov@samsung.com>
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index e4f170d8bc29..0caf7560c782 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -14294,7 +14294,7 @@ F:      drivers/media/i2c/s5k5baf.c
+>>  SAMSUNG S5P Security SubSystem (SSS) DRIVER
+>>  M:     Krzysztof Kozlowski <krzk@kernel.org>
+>>  M:     Vladimir Zapolskiy <vz@mleia.com>
+>> -M:     Kamil Konieczny <k.konieczny@partner.samsung.com>
+>> +M:     Kamil Konieczny <k.konieczny@samsung.com>
+>>  L:     linux-crypto@vger.kernel.org
+>>  L:     linux-samsung-soc@vger.kernel.org
+>>  S:     Maintained
+>> --
+>> 2.24.0
+>>
 > 
-> So, we already see memory savings of ~8kB compared to vanilla -rc5 and
-> savings of nearly 18.7kB compared to -rc5 with commit c3a6cf19e695 on top.
+> 
 
-Yippee :) Thanks for picking up the ball and sending this.
-
->  /*
-> - * note on .section use: @progbits vs %progbits nastiness doesn't matter,
-> - * since we immediately emit into those sections anyway.
-> + * note on .section use: we specify @progbits vs %progbits since usage of
-> + * "M" (SHF_MERGE) section flag requires it.
->   */
-> +
-> +#ifdef CONFIG_ARM
-> +#define ARCH_PROGBITS %progbits
-> +#else
-> +#define ARCH_PROGBITS @progbits
-> +#endif
-
-Did you figure out a way to determine if ARM is the only odd one? I was
-just going by gas' documentation which mentions ARM as an example, but
-doesn't really provide a way to know what each arch uses. I suppose 0day
-will tell us shortly.
-
-If we want to avoid arch-ifdefs in these headers (and that could become
-unwieldy if ARM is not the only one) I think one could add a
-asm-generic/progbits.h, add progbits.h to mandatory-y in
-include/asm-generic/Kbuild, and then just provide a progbits.h on ARM
-(and the other exceptions) - then I think the kbuild logic automatically
-makes "#include <asm/progbits.h>" pick up the right one. And the header
-could define ARCH_PROGBITS with or without the double quotes depending
-on __ASSEMBLY__.
-
-OTOH, adding a whole new header just for this may be overkill.
-
-Rasmus
