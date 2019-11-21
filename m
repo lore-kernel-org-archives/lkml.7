@@ -2,217 +2,275 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88355C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:39:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17F7FC43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:40:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 624452088F
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:39:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB04820714
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:40:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="VdaT6ljR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726984AbfKUKjd (ORCPT
+        id S1726852AbfKUKkc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 05:39:33 -0500
-Received: from mga18.intel.com ([134.134.136.126]:62455 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726170AbfKUKjd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 05:39:33 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Nov 2019 02:39:31 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,224,1571727600"; 
-   d="scan'208";a="407148659"
-Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.162])
-  by fmsmga005.fm.intel.com with ESMTP; 21 Nov 2019 02:39:25 -0800
-Date:   Thu, 21 Nov 2019 12:39:25 +0200
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
-        Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, Borislav Petkov <bp@suse.de>
-Subject: Re: [PATCH v3 04/19] x86/intel: Initialize IA32_FEATURE_CONTROL MSR
- at boot
-Message-ID: <20191121103925.GB20907@linux.intel.com>
-References: <20191119031240.7779-1-sean.j.christopherson@intel.com>
- <20191119031240.7779-5-sean.j.christopherson@intel.com>
+        Thu, 21 Nov 2019 05:40:32 -0500
+Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:49232 "EHLO
+        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726230AbfKUKkb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 05:40:31 -0500
+Received: from mxbackcorp1g.mail.yandex.net (mxbackcorp1g.mail.yandex.net [IPv6:2a02:6b8:0:1402::301])
+        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id 235CB2E18F1;
+        Thu, 21 Nov 2019 13:40:27 +0300 (MSK)
+Received: from vla5-2bf13a090f43.qloud-c.yandex.net (vla5-2bf13a090f43.qloud-c.yandex.net [2a02:6b8:c18:3411:0:640:2bf1:3a09])
+        by mxbackcorp1g.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id 8k5UtZBVOc-eQuieGpg;
+        Thu, 21 Nov 2019 13:40:27 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1574332827; bh=jJPE2lkmi4is3srgVXQWiJk3+sodk/rEZ57R5XJTD2A=;
+        h=Message-ID:Date:To:From:Subject:Cc;
+        b=VdaT6ljRC2SUcekXlATqcMbKCncFOBIm5Zi1cy5Wj8O8rszKGb1kg2Akj6jgw+oED
+         0vQAdkbhCN4PU6T6/QE5xPLDLlw4ALeDhv7F1coCZUilJKIdu8gY1gJGOGCisicojB
+         8wTDqm+7Xp+WAXkdqGO9YIjiisnLX3FS2MV6X+Z4=
+Authentication-Results: mxbackcorp1g.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:1009:4fae:ad87:4eae])
+        by vla5-2bf13a090f43.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id 4uiq2DmQw7-eQV4np4t;
+        Thu, 21 Nov 2019 13:40:26 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Subject: [PATCH] block: add iostat counters for flush requests
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+To:     linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Cc:     linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
+Date:   Thu, 21 Nov 2019 13:40:26 +0300
+Message-ID: <157433282607.7928.5202409984272248322.stgit@buzz>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191119031240.7779-5-sean.j.christopherson@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 18, 2019 at 07:12:25PM -0800, Sean Christopherson wrote:
-> Opportunistically initialize IA32_FEATURE_CONTROL MSR to enable VMX when
-> the MSR is left unlocked by BIOS.  Configuring IA32_FEATURE_CONTROL at
-> boot time paves the way for similar enabling of other features, e.g.
-> Software Guard Extensions (SGX).
-> 
-> Temporarily leave equivalent KVM code in place in order to avoid
-> introducing a regression on Centaur and Zhaoxin CPUs, e.g. removing
-> KVM's code would leave the MSR unlocked on those CPUs and would break
-> existing functionality if people are loading kvm_intel on Centaur and/or
-> Zhaoxin.  Defer enablement of the boot-time configuration on Centaur and
-> Zhaoxin to future patches to aid bisection.
-> 
-> Note, Local Machine Check Exceptions (LMCE) are also supported by the
-> kernel and enabled via IA32_FEATURE_CONTROL, but the kernel currently
-> uses LMCE if and and only if the feature is explicitly enabled by BIOS.
-> Keep the current behavior to avoid introducing bugs, future patches can
-> opt in to opportunistic enabling if it's deemed desirable to do so.
-> 
-> Always lock IA32_FEATURE_CONTROL if it exists, even if the CPU doesn't
-> support VMX, so that other existing and future kernel code that queries
-> IA32_FEATURE_CONTROL can assume it's locked.
-> 
-> Start from a clean slate when constructing the value to write to
-> IA32_FEATURE_CONTROL, i.e. ignore whatever value BIOS left in the MSR so
-> as not to enable random features or fault on the WRMSR.
-> 
-> Suggested-by: Borislav Petkov <bp@suse.de>
-> Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  arch/x86/Kconfig.cpu                  |  4 +++
->  arch/x86/kernel/cpu/Makefile          |  1 +
->  arch/x86/kernel/cpu/cpu.h             |  4 +++
->  arch/x86/kernel/cpu/feature_control.c | 35 +++++++++++++++++++++++++++
->  arch/x86/kernel/cpu/intel.c           |  2 ++
->  5 files changed, 46 insertions(+)
->  create mode 100644 arch/x86/kernel/cpu/feature_control.c
-> 
-> diff --git a/arch/x86/Kconfig.cpu b/arch/x86/Kconfig.cpu
-> index af9c967782f6..aafc14a0abf7 100644
-> --- a/arch/x86/Kconfig.cpu
-> +++ b/arch/x86/Kconfig.cpu
-> @@ -387,6 +387,10 @@ config X86_DEBUGCTLMSR
->  	def_bool y
->  	depends on !(MK6 || MWINCHIPC6 || MWINCHIP3D || MCYRIXIII || M586MMX || M586TSC || M586 || M486SX || M486) && !UML
->  
-> +config X86_FEATURE_CONTROL_MSR
-> +	def_bool y
-> +	depends on CPU_SUP_INTEL
-> +
->  menuconfig PROCESSOR_SELECT
->  	bool "Supported processor vendors" if EXPERT
->  	---help---
-> diff --git a/arch/x86/kernel/cpu/Makefile b/arch/x86/kernel/cpu/Makefile
-> index 890f60083eca..84e35e762f76 100644
-> --- a/arch/x86/kernel/cpu/Makefile
-> +++ b/arch/x86/kernel/cpu/Makefile
-> @@ -29,6 +29,7 @@ obj-y			+= umwait.o
->  obj-$(CONFIG_PROC_FS)	+= proc.o
->  obj-$(CONFIG_X86_FEATURE_NAMES) += capflags.o powerflags.o
->  
-> +obj-$(CONFIG_X86_FEATURE_CONTROL_MSR) += feature_control.o
->  ifdef CONFIG_CPU_SUP_INTEL
->  obj-y			+= intel.o intel_pconfig.o tsx.o
->  obj-$(CONFIG_PM)	+= intel_epb.o
-> diff --git a/arch/x86/kernel/cpu/cpu.h b/arch/x86/kernel/cpu/cpu.h
-> index 38ab6e115eac..a58e80866a3f 100644
-> --- a/arch/x86/kernel/cpu/cpu.h
-> +++ b/arch/x86/kernel/cpu/cpu.h
-> @@ -80,4 +80,8 @@ extern void x86_spec_ctrl_setup_ap(void);
->  
->  extern u64 x86_read_arch_cap_msr(void);
->  
-> +#ifdef CONFIG_X86_FEATURE_CONTROL_MSR
-> +void init_feature_control_msr(struct cpuinfo_x86 *c);
-> +#endif
-> +
->  #endif /* ARCH_X86_CPU_H */
-> diff --git a/arch/x86/kernel/cpu/feature_control.c b/arch/x86/kernel/cpu/feature_control.c
-> new file mode 100644
-> index 000000000000..33c9444dda52
-> --- /dev/null
-> +++ b/arch/x86/kernel/cpu/feature_control.c
-> @@ -0,0 +1,35 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#include <linux/tboot.h>
-> +
-> +#include <asm/cpufeature.h>
-> +#include <asm/msr-index.h>
-> +#include <asm/processor.h>
-> +
-> +void init_feature_control_msr(struct cpuinfo_x86 *c)
-> +{
-> +	u64 msr;
-> +
-> +	if (rdmsrl_safe(MSR_IA32_FEATURE_CONTROL, &msr))
-> +		return;
-> +
-> +	if (msr & FEAT_CTL_LOCKED)
-> +		return;
-> +
-> +	/*
-> +	 * Ignore whatever value BIOS left in the MSR to avoid enabling random
-> +	 * features or faulting on the WRMSR.
-> +	 */
-> +	msr = FEAT_CTL_LOCKED;
-> +
-> +	/*
-> +	 * Enable VMX if and only if the kernel may do VMXON at some point,
-> +	 * i.e. KVM is enabled, to avoid unnecessarily adding an attack vector
-> +	 * for the kernel, e.g. using VMX to hide malicious code.
-> +	 */
-> +	if (cpu_has(c, X86_FEATURE_VMX) && IS_ENABLED(CONFIG_KVM)) {
-> +		msr |= FEAT_CTL_VMX_ENABLED_OUTSIDE_SMX;
+Requests that triggers flushing volatile writeback cache to disk (barriers)
+have significant effect to overall performance.
 
-Add empty line here.
+Block layer has sophisticated engine for combining several flush requests
+into one. But there is no statistics for actual flushes executed by disk.
+Requests which trigger flushes usually are barriers - zero-size writes.
 
-> +		if (tboot_enabled())
-> +			msr |= FEAT_CTL_VMX_ENABLED_INSIDE_SMX;
-> +	}
+This patch adds two iostat counters into /sys/class/block/$dev/stat and
+/proc/diskstats - count of completed flush requests and their total time.
 
-Add empty line here.
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+---
+ Documentation/ABI/testing/procfs-diskstats |    5 +++++
+ Documentation/ABI/testing/sysfs-block      |    6 ++++++
+ Documentation/admin-guide/iostats.rst      |    9 +++++++++
+ Documentation/block/stat.rst               |   14 ++++++++++++--
+ block/blk-flush.c                          |   15 ++++++++++++++-
+ block/genhd.c                              |    8 ++++++--
+ block/partition-generic.c                  |    7 +++++--
+ include/linux/blk_types.h                  |    1 +
+ 8 files changed, 58 insertions(+), 7 deletions(-)
 
-> +	wrmsrl(MSR_IA32_FEATURE_CONTROL, msr);
-> +}
-> diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-> index 4a900804a023..b7c6ed0b40b6 100644
-> --- a/arch/x86/kernel/cpu/intel.c
-> +++ b/arch/x86/kernel/cpu/intel.c
-> @@ -755,6 +755,8 @@ static void init_intel(struct cpuinfo_x86 *c)
->  	/* Work around errata */
->  	srat_detect_node(c);
->  
-> +	init_feature_control_msr(c);
-> +
+diff --git a/Documentation/ABI/testing/procfs-diskstats b/Documentation/ABI/testing/procfs-diskstats
+index 2c44b4f1b060..70dcaf2481f4 100644
+--- a/Documentation/ABI/testing/procfs-diskstats
++++ b/Documentation/ABI/testing/procfs-diskstats
+@@ -29,4 +29,9 @@ Description:
+ 		17 - sectors discarded
+ 		18 - time spent discarding
+ 
++		Kernel 5.5+ appends two more fields for flush requests:
++
++		19 - flush requests completed successfully
++		20 - time spent flushing
++
+ 		For more details refer to Documentation/admin-guide/iostats.rst
+diff --git a/Documentation/ABI/testing/sysfs-block b/Documentation/ABI/testing/sysfs-block
+index f8c7c7126bb1..ed8c14f161ee 100644
+--- a/Documentation/ABI/testing/sysfs-block
++++ b/Documentation/ABI/testing/sysfs-block
+@@ -15,6 +15,12 @@ Description:
+ 		 9 - I/Os currently in progress
+ 		10 - time spent doing I/Os (ms)
+ 		11 - weighted time spent doing I/Os (ms)
++		12 - discards completed
++		13 - discards merged
++		14 - sectors discarded
++		15 - time spent discarding (ms)
++		16 - flush requests completed
++		17 - time spent flushing (ms)
+ 		For more details refer Documentation/admin-guide/iostats.rst
+ 
+ 
+diff --git a/Documentation/admin-guide/iostats.rst b/Documentation/admin-guide/iostats.rst
+index 5d63b18bd6d1..4f0462af3ca7 100644
+--- a/Documentation/admin-guide/iostats.rst
++++ b/Documentation/admin-guide/iostats.rst
+@@ -121,6 +121,15 @@ Field 15 -- # of milliseconds spent discarding
+     This is the total number of milliseconds spent by all discards (as
+     measured from __make_request() to end_that_request_last()).
+ 
++Field 16 -- # of flush requests completed
++    This is the total number of flush requests completed successfully.
++
++    Block layer combines flush requests and executes at most one at a time.
++    This counts flush requests executed by disk. Not tracked for partitions.
++
++Field 17 -- # of milliseconds spent flushing
++    This is the total number of milliseconds spent by all flush requests.
++
+ To avoid introducing performance bottlenecks, no locks are held while
+ modifying these counters.  This implies that minor inaccuracies may be
+ introduced when changes collide, so (for instance) adding up all the
+diff --git a/Documentation/block/stat.rst b/Documentation/block/stat.rst
+index 9c07bc22b0bc..77311335c08b 100644
+--- a/Documentation/block/stat.rst
++++ b/Documentation/block/stat.rst
+@@ -41,6 +41,8 @@ discard I/Os    requests      number of discard I/Os processed
+ discard merges  requests      number of discard I/Os merged with in-queue I/O
+ discard sectors sectors       number of sectors discarded
+ discard ticks   milliseconds  total wait time for discard requests
++flush I/Os      requests      number of flush I/Os processed
++flush ticks     milliseconds  total wait time for flush requests
+ =============== ============= =================================================
+ 
+ read I/Os, write I/Os, discard I/0s
+@@ -48,6 +50,14 @@ read I/Os, write I/Os, discard I/0s
+ 
+ These values increment when an I/O request completes.
+ 
++flush I/Os
++==========
++
++These values increment when an flush I/O request completes.
++
++Block layer combines flush requests and executes at most one at a time.
++This counts flush requests executed by disk. Not tracked for partitions.
++
+ read merges, write merges, discard merges
+ =========================================
+ 
+@@ -62,8 +72,8 @@ discarded from this block device.  The "sectors" in question are the
+ standard UNIX 512-byte sectors, not any device- or filesystem-specific
+ block size.  The counters are incremented when the I/O completes.
+ 
+-read ticks, write ticks, discard ticks
+-======================================
++read ticks, write ticks, discard ticks, flush ticks
++===================================================
+ 
+ These values count the number of milliseconds that I/O requests have
+ waited on this block device.  If there are multiple I/O requests waiting,
+diff --git a/block/blk-flush.c b/block/blk-flush.c
+index 1eec9cbe5a0a..1777346baf06 100644
+--- a/block/blk-flush.c
++++ b/block/blk-flush.c
+@@ -136,6 +136,17 @@ static void blk_flush_queue_rq(struct request *rq, bool add_front)
+ 	blk_mq_add_to_requeue_list(rq, add_front, true);
+ }
+ 
++static void blk_account_io_flush(struct request *rq)
++{
++	struct hd_struct *part = &rq->rq_disk->part0;
++
++	part_stat_lock();
++	part_stat_inc(part, ios[STAT_FLUSH]);
++	part_stat_add(part, nsecs[STAT_FLUSH],
++		      ktime_get_ns() - rq->start_time_ns);
++	part_stat_unlock();
++}
++
+ /**
+  * blk_flush_complete_seq - complete flush sequence
+  * @rq: PREFLUSH/FUA request being sequenced
+@@ -185,7 +196,7 @@ static void blk_flush_complete_seq(struct request *rq,
+ 
+ 	case REQ_FSEQ_DONE:
+ 		/*
+-		 * @rq was previously adjusted by blk_flush_issue() for
++		 * @rq was previously adjusted by blk_insert_flush() for
+ 		 * flush sequencing and may already have gone through the
+ 		 * flush data request completion path.  Restore @rq for
+ 		 * normal completion and end it.
+@@ -212,6 +223,8 @@ static void flush_end_io(struct request *flush_rq, blk_status_t error)
+ 	struct blk_flush_queue *fq = blk_get_flush_queue(q, flush_rq->mq_ctx);
+ 	struct blk_mq_hw_ctx *hctx;
+ 
++	blk_account_io_flush(flush_rq);
++
+ 	/* release the tag's ownership to the req cloned from */
+ 	spin_lock_irqsave(&fq->mq_flush_lock, flags);
+ 
+diff --git a/block/genhd.c b/block/genhd.c
+index 26b31fcae217..ff6268970ddc 100644
+--- a/block/genhd.c
++++ b/block/genhd.c
+@@ -1385,7 +1385,9 @@ static int diskstats_show(struct seq_file *seqf, void *v)
+ 			   "%lu %lu %lu %u "
+ 			   "%lu %lu %lu %u "
+ 			   "%u %u %u "
+-			   "%lu %lu %lu %u\n",
++			   "%lu %lu %lu %u "
++			   "%lu %u"
++			   "\n",
+ 			   MAJOR(part_devt(hd)), MINOR(part_devt(hd)),
+ 			   disk_name(gp, hd->partno, buf),
+ 			   part_stat_read(hd, ios[STAT_READ]),
+@@ -1402,7 +1404,9 @@ static int diskstats_show(struct seq_file *seqf, void *v)
+ 			   part_stat_read(hd, ios[STAT_DISCARD]),
+ 			   part_stat_read(hd, merges[STAT_DISCARD]),
+ 			   part_stat_read(hd, sectors[STAT_DISCARD]),
+-			   (unsigned int)part_stat_read_msecs(hd, STAT_DISCARD)
++			   (unsigned int)part_stat_read_msecs(hd, STAT_DISCARD),
++			   part_stat_read(hd, ios[STAT_FLUSH]),
++			   (unsigned int)part_stat_read_msecs(hd, STAT_FLUSH)
+ 			);
+ 	}
+ 	disk_part_iter_exit(&piter);
+diff --git a/block/partition-generic.c b/block/partition-generic.c
+index aee643ce13d1..3db8b73a96b1 100644
+--- a/block/partition-generic.c
++++ b/block/partition-generic.c
+@@ -127,7 +127,8 @@ ssize_t part_stat_show(struct device *dev,
+ 		"%8lu %8lu %8llu %8u "
+ 		"%8lu %8lu %8llu %8u "
+ 		"%8u %8u %8u "
+-		"%8lu %8lu %8llu %8u"
++		"%8lu %8lu %8llu %8u "
++		"%8lu %8u"
+ 		"\n",
+ 		part_stat_read(p, ios[STAT_READ]),
+ 		part_stat_read(p, merges[STAT_READ]),
+@@ -143,7 +144,9 @@ ssize_t part_stat_show(struct device *dev,
+ 		part_stat_read(p, ios[STAT_DISCARD]),
+ 		part_stat_read(p, merges[STAT_DISCARD]),
+ 		(unsigned long long)part_stat_read(p, sectors[STAT_DISCARD]),
+-		(unsigned int)part_stat_read_msecs(p, STAT_DISCARD));
++		(unsigned int)part_stat_read_msecs(p, STAT_DISCARD),
++		part_stat_read(p, ios[STAT_FLUSH]),
++		(unsigned int)part_stat_read_msecs(p, STAT_FLUSH));
+ }
+ 
+ ssize_t part_inflight_show(struct device *dev, struct device_attribute *attr,
+diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
+index d688b96d1d63..b811a673a300 100644
+--- a/include/linux/blk_types.h
++++ b/include/linux/blk_types.h
+@@ -371,6 +371,7 @@ enum stat_group {
+ 	STAT_READ,
+ 	STAT_WRITE,
+ 	STAT_DISCARD,
++	STAT_FLUSH,
+ 
+ 	NR_STAT_GROUPS
+ };
 
-... similarly as you do here and earlier when first initializing 'msr'.
-
->  	if (cpu_has(c, X86_FEATURE_VMX))
->  		detect_vmx_virtcap(c);
->  
-> -- 
-> 2.24.0
-> 
-
-/Jarkko
