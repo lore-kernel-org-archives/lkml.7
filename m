@@ -2,150 +2,143 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F01C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 17:34:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B434C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 17:34:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F2A220659
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 17:34:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cI7WavVQ"
+	by mail.kernel.org (Postfix) with ESMTP id 32EF7206CC
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 17:34:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbfKUReF (ORCPT
+        id S1726858AbfKUReq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 12:34:05 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:41238 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726379AbfKUReF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 12:34:05 -0500
-Received: by mail-lf1-f65.google.com with SMTP id m30so1449151lfp.8;
-        Thu, 21 Nov 2019 09:34:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=6J1piRgV0I8ZeSxFU2hLB+lhIu/EsMKbTjoUdKhBoh4=;
-        b=cI7WavVQXW6YTTsx24kyro2bKraJeez/5xvP+u/FCt+8IEeH++xRr7bppVVaMcdStl
-         VqYxOPhucE+noi9PVTucRx3xce0OO49s9ls3Rn0f9DRBFLG6X54uc7hLeS10i4nF8zW1
-         vuqLnHyIWSOvQTAvI4OJmhjUiY1gpB1znoS71dGYEKG5c26PdBdXjfB9+3tj8FSe1rlq
-         smug1wpdMdRqaG6e0+o44KHpGF9s9eBS5+SP7KBhUOEvIakX82SUDuzGwQOlKU2wAIuo
-         Tc4AiK8LReNqyA9rHaQQkFQxFrOOMP1aSH1H1iqDr3iROHhqGnFIYNZ6wnBnJV6FlKXk
-         Lb0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6J1piRgV0I8ZeSxFU2hLB+lhIu/EsMKbTjoUdKhBoh4=;
-        b=XHCnykBwKKHnIbnbZQ8vBM03/0psfRrMD4mdUp3wh6FBP1373W4m25d4nhqv6YtIa9
-         6CaKaitc1P8StcVgF4GCbJv3ebY6uRKm2E6UAsxp2gTXjd4FOR46zeVnYz89TbF0sL4F
-         4WtDZSG7cHaLogRIZhS/4E5wZF3kiTvmgqnzEIluxeWs/za6LXg8kw85pjfB4gPudlar
-         McLR+lufE4rUH6l0QztxeMc9GuZqcjTHXQBS9hUhFpSr2gQoCNlG7XgsXux22C6r9OyJ
-         T8OHACYCOtsreSCTJdbkhG4s+NEiv70jkmrKTIOC+uUKhLXRi9KFFBtElCqyMBSayHJ2
-         /8Gg==
-X-Gm-Message-State: APjAAAVpK83nPfTd7JTIYgO/dvFhstaLdEJESDxnCVgG9E1dLjJzLzxi
-        cULPYtDx1MeM8s2nVBVj8NUUpQ5+
-X-Google-Smtp-Source: APXvYqzI4efW+jpylCKcwwlKWAScScn1OR7oGncmwtojSpUNDIX2q6OMNOWDFnG0E3FBtdAKJO/UzA==
-X-Received: by 2002:ac2:5dcc:: with SMTP id x12mr8758634lfq.163.1574357640859;
-        Thu, 21 Nov 2019 09:34:00 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id y7sm1738852lfb.75.2019.11.21.09.33.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 Nov 2019 09:34:00 -0800 (PST)
-Subject: Re: [PATCH v1 12/29] interconnect: Add memory interconnection
- providers for NVIDIA Tegra SoCs
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Mikko Perttunen <mperttunen@nvidia.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-tegra@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-References: <20191118200247.3567-1-digetx@gmail.com>
- <20191118200247.3567-13-digetx@gmail.com> <20191119063002.GE2462695@ulmo>
- <a16b54bf-a881-84d0-4437-993dc275487c@gmail.com>
-Message-ID: <a9bbe36e-8082-8cab-7377-f71f2489fb30@gmail.com>
-Date:   Thu, 21 Nov 2019 20:33:58 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Thu, 21 Nov 2019 12:34:46 -0500
+Received: from mga17.intel.com ([192.55.52.151]:46714 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726279AbfKURep (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 12:34:45 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Nov 2019 09:34:45 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,226,1571727600"; 
+   d="scan'208";a="209981488"
+Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
+  by orsmga003.jf.intel.com with ESMTP; 21 Nov 2019 09:34:44 -0800
+Date:   Thu, 21 Nov 2019 09:34:44 -0800
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
+Subject: Re: [PATCH v10 6/6] x86/split_lock: Enable split lock detection by
+ kernel parameter
+Message-ID: <20191121173444.GA5581@agluck-desk2.amr.corp.intel.com>
+References: <1574297603-198156-1-git-send-email-fenghua.yu@intel.com>
+ <1574297603-198156-7-git-send-email-fenghua.yu@intel.com>
+ <20191121060444.GA55272@gmail.com>
+ <20191121130153.GS4097@hirez.programming.kicks-ass.net>
+ <20191121171214.GD12042@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <a16b54bf-a881-84d0-4437-993dc275487c@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191121171214.GD12042@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-19.11.2019 19:58, Dmitry Osipenko пишет:
-> 19.11.2019 09:30, Thierry Reding пишет:
->> On Mon, Nov 18, 2019 at 11:02:30PM +0300, Dmitry Osipenko wrote:
->>> All NVIDIA Tegra SoCs have identical topology in regards to memory
->>> interconnection between memory clients and memory controllers.
->>> The memory controller (MC) and external memory controller (EMC) are
->>> providing memory clients with required memory bandwidth. The memory
->>> controller performs arbitration between memory clients, while the
->>> external memory controller transfers data from/to DRAM and pipes that
->>> data from/to memory controller. Memory controller interconnect provider
->>> aggregates bandwidth requests from memory clients and sends the aggregated
->>> request to EMC provider that scales DRAM frequency in order to satisfy the
->>> bandwidth requirement. Memory controller provider could adjust hardware
->>> configuration for a more optimal arbitration depending on bandwidth
->>> requirements from memory clients, but this is unimplemented for now.
->>>
->>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>> ---
->>>  drivers/interconnect/Kconfig               |   1 +
->>>  drivers/interconnect/Makefile              |   1 +
->>>  drivers/interconnect/tegra/Kconfig         |   6 +
->>>  drivers/interconnect/tegra/Makefile        |   4 +
->>>  drivers/interconnect/tegra/tegra-icc-emc.c | 138 +++++++++++++++++++++
->>>  drivers/interconnect/tegra/tegra-icc-mc.c  | 130 +++++++++++++++++++
->>>  include/soc/tegra/mc.h                     |  26 ++++
->>>  7 files changed, 306 insertions(+)
->>>  create mode 100644 drivers/interconnect/tegra/Kconfig
->>>  create mode 100644 drivers/interconnect/tegra/Makefile
->>>  create mode 100644 drivers/interconnect/tegra/tegra-icc-emc.c
->>>  create mode 100644 drivers/interconnect/tegra/tegra-icc-mc.c
->>
->> Why does this have to be separate from the memory controller driver in
->> drivers/memory/tegra? It seems like this requires a bunch of boilerplate
->> just so that this code can live in the drivers/interconnect directory.
+On Thu, Nov 21, 2019 at 06:12:14PM +0100, Ingo Molnar wrote:
 > 
-> It fits with the IOMMU separation. To me that it's a bit nicer to have
-> the separation for the ICC as well, but having ICC within memory
-> controller driver also will be fine.
+> * Peter Zijlstra <peterz@infradead.org> wrote:
 > 
-> Indeed it looks like there is not much in the MC's provider code right
-> now, but maybe more stuff will be added later on.
+> > On Thu, Nov 21, 2019 at 07:04:44AM +0100, Ingo Molnar wrote:
+> > > * Fenghua Yu <fenghua.yu@intel.com> wrote:
+> > 
+> > > > +	split_lock_detect
+> > > > +			[X86] Enable split lock detection
+> > > > +			This is a real time or debugging feature. When enabled
+> > > > +			(and if hardware support is present), atomic
+> > > > +			instructions that access data across cache line
+> > > > +			boundaries will result in an alignment check exception.
+> > > > +			When triggered in applications the kernel will send
+> > > > +			SIGBUS. The kernel will panic for a split lock in
+> > > > +			OS code.
+> > > 
+> > > It would be really nice to be able to enable/disable this runtime as 
+> > > well, has this been raised before, and what was the conclusion?
+> > 
+> > It has, previous versions had that. Somehow a lot of things went missing
+> > and we're back to a broken neutered useless mess.
+> > 
+> > The problem appears to be that due to hardware design the feature cannot
+> > be virtualized, and instead of then disabling it when a VM runs/exists
+> > they just threw in the towel and went back to useless mode.. :-(
+> > 
+> > This feature MUST be default enabled, otherwise everything will
+> > be/remain broken and we'll end up in the situation where you can't use
+> > it even if you wanted to.
 > 
->> If Georgi doesn't insist, I'd prefer if we carried this code directly in
->> the drivers/memory/tegra directory so that we don't have so many
->> indirections.
->>
->> Also, and I already briefly mentioned this in another reply, I think we
->> don't need two providers here. The only one we're really interested in
->> is the memory-client to memory-controller paths. The MC to EMC path is
->> static.
+> Agreed.
 > 
-> Perhaps it is fine to drop EMC path, I'll revisit it.
+> > And I can't be arsed to look it up, but we've been making this very 
+> > same argument since very early (possible the very first) version.
 > 
-> [snip]
+> Yeah, I now have a distinct deja vu...
 
-One advantage of having both MC and EMC as ICC providers is that there
-won't be a need to mess with a custom coupling of MC-EMC drivers
-together because interconnect API naturally takes care of the coupling
-for us by telling ICC users to defer until both providers are registered.
+You'll notice that we are at version 10 ... lots of things have been tried
+in previous versions. This new version is to get the core functionality
+in, so we can build fancier features later.  Painful experience has shown
+that trying to do this all at once just leads to churn with no progress.
 
-I'll take another look at this over the weekend, but for now my v1
-variant looks appropriate in terms of a better hardware description and
-implementation in the code.
+Enabling by default at this point would result in a flurry of complaints
+about applications being killed and kernels panicing. That would be
+followed by:
+
+#include <linus/all-caps-rant-about-backwards-compatability.h>
+
+and the patches being reverted.
+
+This version can serve a very useful purpose. CI systems with h/w that
+supports split lock can enable it and begin the process of finding
+and fixing the remaining kernel issues. Especially helpful if they run
+randconfig and fuzzers.
+
+We'd also find out which libraries and applications currently use
+split locks.
+
+Real-time folks that have identified split lock as a fatal (don't meet
+their deadlines issue) could also enable it as is (because it is better
+to crash the kernel and have the laser be powered down than to keep
+firing long past the point it should have stopped).
+
+Any developer with concerns about their BIOS using split locks can also
+enable using this patch and begin testing today.
+
+I'm totally on board with follow up patches providing extra features like:
+
+	A way to enable/disable at run time.
+
+	Providing a way to allow but rate limit applications that cause
+	split locks.
+
+	Figuring out something useful to do with virtualization.
+
+Those are all good things to have - but we won't get *any* of them if we
+wait until *all* have them have been perfected.
+
+<soapbox>
+So let's just take the first step now and solve world hunger tomorrow.
+</soapbox>
+
+-Tony
