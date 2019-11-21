@@ -2,113 +2,134 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B6BC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 23:53:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DAF8C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 23:54:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 633D020643
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 23:53:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FE0E20643
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 23:54:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dhr8OW0+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726712AbfKUXxw (ORCPT
+        id S1726722AbfKUXyY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 18:53:52 -0500
-Received: from mga11.intel.com ([192.55.52.93]:11343 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725956AbfKUXxw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 18:53:52 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Nov 2019 15:53:51 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,227,1571727600"; 
-   d="asc'?scan'208";a="219272737"
-Received: from lmhaganx-mobl.amr.corp.intel.com ([10.251.138.123])
-  by orsmga002.jf.intel.com with ESMTP; 21 Nov 2019 15:53:51 -0800
-Message-ID: <7fa4d937db14f550b3c3624ff5d13875566e8cdd.camel@intel.com>
-Subject: Re: [PATCH 4.19 079/422] i40e: use correct length for strncpy
-From:   Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-To:     Pavel Machek <pavel@denx.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Mitch Williams <mitch.a.williams@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Date:   Thu, 21 Nov 2019 15:53:50 -0800
-In-Reply-To: <20191121103504.GC26882@amd>
-References: <20191119051400.261610025@linuxfoundation.org>
-         <20191119051404.622986351@linuxfoundation.org> <20191121103504.GC26882@amd>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-ZhLo4uiGTkHBM5nXZKab"
-User-Agent: Evolution 3.34.1 (3.34.1-1.fc31) 
+        Thu, 21 Nov 2019 18:54:24 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:34564 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725956AbfKUXyX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 18:54:23 -0500
+Received: by mail-io1-f65.google.com with SMTP id z193so5852691iof.1;
+        Thu, 21 Nov 2019 15:54:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DyapT21g2Wp2Czfv/8wlid7Ppv2pGmOS7MkDneciDk0=;
+        b=Dhr8OW0+rXQ6hfoqwiFwuU2MXAN3Q9p9W3C8xMAP2hmHwpRF6mCcVE902BWmQcatrg
+         6w6Fa0+61ptq/6uzMmP07QH8PnaX9pUhcAB7Vo+dFyi+k/EaoHlQpXf6eZojJcB3vCvM
+         lpyAgiMpwpPScj9AJOAbuNBdLGBtdeBhTvwR284NyiSnuI1s/igjIhjp1UvlHK+kV++V
+         LDAWfNTSvlj/9ytLJyK9ZsylPZR1E47ndFxQGsSp3YZQ2ni9oqVfCT7AQ+ZPmkBwKqEU
+         7/XsAAYZo9/s8yE4cAO090hpVSft7MYF0ZCrvSsq7ADyqmV33tNXlIUNrtJnZF4/dUDL
+         AUuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DyapT21g2Wp2Czfv/8wlid7Ppv2pGmOS7MkDneciDk0=;
+        b=dGYGrJe7IYkS9KoLfWRrrsh6XQwliHQCyENEXET6I3Y2OXkIX5O3qwRW+hViI9ByX3
+         wZFT8ZxktKJMtVxLjLo0cbwe8R34QENlqAqFIb/7j0EE0ta69ijlSML1wzFoMMw5KSTP
+         GtlrkVGFavocFISlKXPt7cQDsxDNPuXu8ttm/rRFQTctsA9Qo5DsldqOMpNv+4GMJnOC
+         buqPbtk2/1pDatiji4rT7lx3VHwgCwhSpy1Q9U9vNsKb5+NLsXERnDmiki22KY4Zx1xe
+         C/todbzAyXU1xf/IevP0NUtBYceOc0lR8A253UgyHZvSi4M9wUcU8+zgUNpKe5DMdHFc
+         GPKQ==
+X-Gm-Message-State: APjAAAVUOY8Fs44whyhYmioas917QJXEzKXjzHPLGO8oGJPU9cn5t+yE
+        YU+gLryjczaORiYwnVZlcDjhKB+VKQpqj0hSzBsA1zdx
+X-Google-Smtp-Source: APXvYqzG6egS8+w1Kq3TxJBXfd2WNTwoJ/dmy4k1vmmgzoH2WGd8f5qke4NYjuXLMeERbYgmQ4yolyt5NV6VWaVyJV8=
+X-Received: by 2002:a6b:7614:: with SMTP id g20mr8134308iom.294.1574380462584;
+ Thu, 21 Nov 2019 15:54:22 -0800 (PST)
 MIME-Version: 1.0
+References: <20190917033124.1077-1-navid.emamdoost@gmail.com>
+ <CAEkB2EQTO3wtCrZgLv068xGpxJYwir_SuMUBK0jGaTU6KdCRNg@mail.gmail.com> <20191121233535.GW18024@yoga>
+In-Reply-To: <20191121233535.GW18024@yoga>
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+Date:   Thu, 21 Nov 2019 17:54:11 -0600
+Message-ID: <CAEkB2ERykJBh0V7vVVUtBT-yXpdvNap_NTAEuShDBb+hX69ObA@mail.gmail.com>
+Subject: Re: [PATCH] rpmsg: char: release allocated memory
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>, linux-remoteproc@vger.kernel.org,
+        Navid Emamdoost <emamd001@umn.edu>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Thanks for the update.
 
---=-ZhLo4uiGTkHBM5nXZKab
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On Thu, Nov 21, 2019 at 5:35 PM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> On Thu 21 Nov 10:20 PST 2019, Navid Emamdoost wrote:
+>
+> > On Mon, Sep 16, 2019 at 10:31 PM Navid Emamdoost
+> > <navid.emamdoost@gmail.com> wrote:
+> > >
+> > > In rpmsg_eptdev_write_iter, if copy_from_iter_full fails the allocated
+> > > buffer needs to be released.
+> > >
+> > > Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+> >
+> > Would you please review this patch?
+> >
+>
+> I'm sorry, I must have missed to reply as I applied the patch. You can
+> find it in the rpmsg-next branch [1] and it will be part of the pull
+> request for v5.5
+>
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/andersson/remoteproc.git/log/?h=rpmsg-next
+>
+> Regards,
+> Bjorn
+>
+> > Thank you,
+> >
+> > > ---
+> > >  drivers/rpmsg/rpmsg_char.c | 6 ++++--
+> > >  1 file changed, 4 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/drivers/rpmsg/rpmsg_char.c b/drivers/rpmsg/rpmsg_char.c
+> > > index eea5ebbb5119..c655074c07c2 100644
+> > > --- a/drivers/rpmsg/rpmsg_char.c
+> > > +++ b/drivers/rpmsg/rpmsg_char.c
+> > > @@ -227,8 +227,10 @@ static ssize_t rpmsg_eptdev_write_iter(struct kiocb *iocb,
+> > >         if (!kbuf)
+> > >                 return -ENOMEM;
+> > >
+> > > -       if (!copy_from_iter_full(kbuf, len, from))
+> > > -               return -EFAULT;
+> > > +       if (!copy_from_iter_full(kbuf, len, from)) {
+> > > +               ret = -EFAULT;
+> > > +               goto free_kbuf;
+> > > +       }
+> > >
+> > >         if (mutex_lock_interruptible(&eptdev->ept_lock)) {
+> > >                 ret = -ERESTARTSYS;
+> > > --
+> > > 2.17.1
+> > >
+> >
+> >
+> > --
+> > Navid.
 
-On Thu, 2019-11-21 at 11:35 +0100, Pavel Machek wrote:
-> > From: Mitch Williams <mitch.a.williams@intel.com>
-> >=20
-> > [ Upstream commit 7eb74ff891b4e94b8bac48f648a21e4b94ddee64 ]
-> >=20
-> > Caught by GCC 8. When we provide a length for strncpy, we should not
-> > include the terminating null. So we must tell it one less than the size
-> > of the destination buffer.
->=20
-> > +++ b/drivers/net/ethernet/intel/i40e/i40e_ptp.c
-> > @@ -694,7 +694,8 @@ static long i40e_ptp_create_clock(struct i40e_pf
-> *pf)
-> >       if (!IS_ERR_OR_NULL(pf->ptp_clock))
-> >               return 0;
-> > =20
-> > -     strncpy(pf->ptp_caps.name, i40e_driver_name, sizeof(pf-
-> >ptp_caps.name));
-> > +     strncpy(pf->ptp_caps.name, i40e_driver_name,
-> > +             sizeof(pf->ptp_caps.name) - 1);
-> >       pf->ptp_caps.owner =3D THIS_MODULE;
-> >       pf->ptp_caps.max_adj =3D 999999999;
-> >       pf->ptp_caps.n_ext_ts =3D 0;
->=20
-> So... pf is allocated with kzalloc, which will provide the null
-> termination... so the code is okay.
->=20
-> On the other hand, the =3D 0 below is unneeded by the same logic, so
-> this is a bit confusing.
 
-Thanks for the catch, we are putting together a follow-on patch to cleanup
-up the unneeded code.
 
---=-ZhLo4uiGTkHBM5nXZKab
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEiTyZWz+nnTrOJ1LZ5W/vlVpL7c4FAl3XI44ACgkQ5W/vlVpL
-7c5UdA//T42uWRN1y1+11boQlufWFhFADrtJAQAISRBd8Wd+Biaa3mDw9vtcCSRU
-lbPwcFv6DBmpTRKNscMuKPkea4DeAVqtwHTQ2iWR/w7ou8VCgjHhGMp49m+weqaV
-gMi+o/Cuj51cq2RxnvLAnmy3eOuyUHzzAycKeVIDJSyoPX7WGPq6Jy40Wv6w8IqV
-s9oBMikGYDvHtklBrEui9AO5vhro0rlUmVvwx4HD9pNLUFI8NjU0NNPzghYElU8i
-d5fA0PvGjY8lzvabZvM4mAcbFf9n1Wv6vdxCPSnZaxj7phyPb7GdsCgNkoEhxssw
-j+y8JjZJvb2Hyt2mPmwecmRt/UTrRwm8zJjEAaaGceuFd5q52+8jmLotQo3ljZdM
-91WHDJ1nPEAP2aVECnhRTpb4DAdfH4jAGqfFwKBUeUNGIwwN5H/7xTRZMrzSlbVx
-LUEqf9GsTpUEQHUTs1Dz56WrtUvxn5Kh91EC3ZjHFXbTuiJ75PuUsnWzambNhGQe
-zoMhP7vmz8HgY4aTFNDrJTsBYRw10saJhfD+tGIO+FkTpoazS0j6NKYvtociWYpT
-o9YmQM1ADZ4OTjJFpgFuMCfBXbZUYhNpwvcSeYAm5w/ljPSAA61K3vuL6TMu3ZhP
-/wEFmJnsJ1+UcsAW17bA0Mu3ZihJGkgpGPMOxReeaIMbIdQB8hw=
-=99Bu
------END PGP SIGNATURE-----
-
---=-ZhLo4uiGTkHBM5nXZKab--
-
+-- 
+Navid.
