@@ -4,59 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71F4FC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 07:21:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA789C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 07:21:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4218E20872
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 07:21:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C44A620898
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 07:21:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574320865;
-	bh=xWL5Zby+GECjoOtoUZCQ2EvJyad80CvBmt4UeDPkkYc=;
+	s=default; t=1574320887;
+	bh=o22Hi13qhmwZwPmKcq3ZrnZnV5e0srKRPAqCcT43rXU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NwKjVg9aFMSAQ3jmj9E6uRmro8evsiNk+sKfd4xLyLHhYC8DtTA0+ZDF2lMoRYZ2P
-	 lwA7EVclHxvl+ughLdwdMgnGpRsHRMrSDsmK5mor5Rb4D+Z8EeAFEraULVYAuD6o4m
-	 fAiUMr7FIj27SjpQeOFAPbjVUmtuzUDFmxJ7YW+E=
+	b=w7mcW6MKpv7/rt7quJsfNrSdvMYxx3oWd4nLN6FiJl3kMLgAyLeBASVnCEMHOJTPS
+	 P+tpMmJEbBdYyR4YIKDxrt8qohFehscGWiAbAPdn+qikCPHhpN1xPnHC+veN7Gk7pr
+	 hgYYg4CF/TYtSglvEa0vCSFUIlh5jmVk+iNy3ZYc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbfKUHVE (ORCPT
+        id S1726750AbfKUHV1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 02:21:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34816 "EHLO mail.kernel.org"
+        Thu, 21 Nov 2019 02:21:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726165AbfKUHVD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 02:21:03 -0500
+        id S1726165AbfKUHV0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 02:21:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E54A520872;
-        Thu, 21 Nov 2019 07:21:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF2FD20872;
+        Thu, 21 Nov 2019 07:21:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574320863;
-        bh=xWL5Zby+GECjoOtoUZCQ2EvJyad80CvBmt4UeDPkkYc=;
+        s=default; t=1574320886;
+        bh=o22Hi13qhmwZwPmKcq3ZrnZnV5e0srKRPAqCcT43rXU=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uJnuUJinxvgcdw5arQD4Glehnc9wsMqKGoVQ2s7LseNSuqzO8islScRAMJoQAXTe9
-         Ne3z2yiSUyr0I0RhjJVumIEyh9NCYTtqD3Py++xF2cjsO+5PIp+fA6bW3dyCEQ1Qy1
-         UNFfsQS8YlktL00MD5mZ0i4n3ZyhjXcc4t5FPDwU=
-Date:   Thu, 21 Nov 2019 08:21:01 +0100
+        b=ZgrIzQRwbUOEyVKz/MI1dgBCGcwoGLTPXQdb42swkYHrCwBdUPmblMC4Q/DJ93Veh
+         cUKtZrTXsDTe9I6cWhSejkX8CdoTBtJILLyI+lPcBM0hSB7aTJfcGq/VGYp5CThpEU
+         qjna1vkbpGfMBVXtEw5SY+46ppjlCfrcHrc2M9o0=
+Date:   Thu, 21 Nov 2019 08:21:24 +0100
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org
-Subject: Re: [PATCH v2] staging: fwserial: Fix Kconfig indentation
-Message-ID: <20191121072101.GA356558@kroah.com>
-References: <1574306412-21883-1-git-send-email-krzk@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Jiri Slaby <jslaby@suse.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-serial@vger.kernel.org
+Subject: Re: [PATCH v2] tty: Fix Kconfig indentation
+Message-ID: <20191121072124.GA356838@kroah.com>
+References: <1574306408-20021-1-git-send-email-krzk@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1574306412-21883-1-git-send-email-krzk@kernel.org>
+In-Reply-To: <1574306408-20021-1-git-send-email-krzk@kernel.org>
 User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 04:20:12AM +0100, Krzysztof Kozlowski wrote:
+On Thu, Nov 21, 2019 at 04:20:08AM +0100, Krzysztof Kozlowski wrote:
 > Adjust indentation from spaces to tab (+optional two spaces) as in
 > coding style with command like:
 > 	$ sed -e 's/^        /\t/' -i */Kconfig
@@ -68,9 +69,4 @@ On Thu, Nov 21, 2019 at 04:20:12AM +0100, Krzysztof Kozlowski wrote:
 > Changes since v1:
 > 1. Fix also 7-space and tab+1 space indentation issues.
 
-I already applied v1, can you just send a new patch for the additional
-things fixed here?
-
-thanks,
-
-greg k-h
+Same here, I already applied v1, so this one does not apply :(
