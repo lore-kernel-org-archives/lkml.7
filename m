@@ -2,180 +2,130 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 375D7C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:10:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0E34C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:13:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 006BE20672
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:10:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="0JM/IOMH"
+	by mail.kernel.org (Postfix) with ESMTP id 7C26E20672
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:13:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbfKUUKi (ORCPT
+        id S1726962AbfKUUNZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 15:10:38 -0500
-Received: from mail1.bemta25.messagelabs.com ([195.245.230.2]:61681 "EHLO
-        mail1.bemta25.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726379AbfKUUKh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 15:10:37 -0500
-Received: from [46.226.52.98] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-2.bemta.az-a.eu-west-1.aws.symcld.net id 17/62-20391-83FE6DD5; Thu, 21 Nov 2019 20:10:32 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA1WSf0wbZRzGeXvX40BuOwqElwLLrG6yuetaWNi
-  pi6Kbpss2Y4wJUSHbISetK6VpiwVlGRQqsAolUdxgMKYpdUMafvmjMDW2VAJrBsqv4RxZCywb
-  IJuOBdAB2uNg6n+f5/s87/t9/vjiiMiHiXE2z8DqNIxagoWiyt0YTdF3R9NlLncsPfyzW0BX+
-  6cwuqP/QyG9MFwmoIe66jC6vMsqpMdnX6ZbFx0gBVe0zpswhXPcBhSdtePBivamckzx/ZwdU7
-  R8OYIq5tu3vBL8hlClycjJOyZUfm3zI9qzYXnmfmMhaAs9BUJxQDYisGTICXjRg8LO1m8wXnQ
-  A+KDizzWBkr0I9I19EMwJEfmJANZ2nQqIkIDwA1jqFHOMkTT8qNe39iKSnAZwxHlGyAmE/ANA
-  z/V+IZeKIJ+H8xMDGMeR5AvQ6vEBnhPhxFzRWgYlt8Hu/rJABscJkoE/rCTxywqg+VYXynEIe
-  QCu3K5ZY0DGw/tFXyAcI2Q0vDbVIOAYkiS0fTuA8BwFpydXhXyehX2mMcDPd8ErV6fW+VF4rW
-  1oPR8PBxss6/Mj0OT9FdvIPzBb1pmGNosZ5WpC8nG46s7nx1pomnQH87wdWi82C3mOg1f9nvW
-  nPwnhhcWwKrC79j+ted4Fz1+6h/H8JLR/OotwTJDhsK9mCj0P0CawN0OnylIashmVmpLLZJRc
-  nkjJn0qiEvdKmfcoRsrmUkZWb6DkUsaol+rzs99SZ0o1rKEdBI4tU+uKdQLrwpzUDWJwgSSKq
-  H5sNF20KSMnM1/J6JVHdblqVu8GcTgugcTRioAXrmOz2Ly3VerAyW7YEA+TRBL7rAGb0GuZbL
-  0qi7cuAwqvmq7/DBGhmhwNK44m6isDIZILKXM1D7/YOPxBEC+OIEBQUJAoTMvqslWG//szIBo
-  HkgjCzTUJU2kMDzfNBEoIAiXaHINcCQPzryUuFOyw3NgRe3izF6ko+T16MbmpezhhwptxqVqm
-  lUNH8ec+2/LMu9KbxiMLxeKaHvez77zKpjiOn26oE9Qnb8Yby9Xosb8nLzauWpbudwyci7dU7
-  /G+dvkR11+ebTPhzZ23Q4wyZefr3bKdJ8yl6vebyZpZBzNi9CdsObFYPFI2FqW7MdcYs72wxU
-  b0VvfFjIan1iV77Pech6reDF4++dJ80s3Zj7fGTZieybzTUak2XFleYH9JlK9iyU64b8/Zvqc
-  LNqUveUuLDvy4ta0ihSrdv1Jrn21JK/lq9OT1Fyeeu3BwqCnXVXl8eTI17Zzd5Ti0dMcc88Tp
-  Wwmew2npd0U9qQW/ib+ToHolI9+J6PTMP84lu+RzBAAA
-X-Env-Sender: Adam.Thomson.Opensource@diasemi.com
-X-Msg-Ref: server-16.tower-262.messagelabs.com!1574367031!65699!1
-X-Originating-IP: [104.47.6.56]
-X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.44.22; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 15125 invoked from network); 21 Nov 2019 20:10:32 -0000
-Received: from mail-ve1eur02lp2056.outbound.protection.outlook.com (HELO EUR02-VE1-obe.outbound.protection.outlook.com) (104.47.6.56)
-  by server-16.tower-262.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 21 Nov 2019 20:10:32 -0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hQU75dNHIsxGolUkbbHT6bAOk0KSR9eIRo92zhVVWJ+346jW1PT6okRrsZiJeGcK7s6cH2l2PkaORVRs0W3Q/hfG0SRq0vML9Kn5Tzsdzz7BlcOvh1gbySQRmeYDjsAB95LMNyJiwGXbRC3nLBCPlYQ6akuIgC5VTbiaHRB4Xblav/GsONbs6BJ3d7G3bw8SCpdqlQPOk5Si+ROOnrTr42QTWWQeC7/jW/KcAS+Nx13f1JiNy/i98cR3smkZ0oGbqtUvO4YqFkC2zPRDY+nF2hmnuuGtNOOygzNGi7Trpe+cuwmZiNLmqD1c9NfozNauo9bjVB9i1cxok+2JNCNqMg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oXKoHi6GxXbmFwWb+KWmyZmt2OCwyPuD4iSsaxlIb4k=;
- b=AExRZNXVP3CYaGoR5Sfb95PCDTutBAZrClsjnzfUXSy5IKkP8xruykoLSoeQjRQ8xH4cVJzdO6/MhvrRfcRZ7VzvzPS2+jtK5RL4wKVGSgcNSOCKkKRxd2uPTirwXA9bIf2HD4BA7ChIqO7gPLIdnPgmqC9+wFqjMlBIelhxlOYCgFkb209w0Fmv7HsheSqlkJ61fi8vpNFoK8SiJvDHrb9aDBM9ksPRVGr5vG+TVG0sDW8IuI77iDXqPN1iIyS+SSPJ/V8qBVnBNXMvrJ14nvzV/DJ1AShSXM5x1Xte6+KrFc6jF58V/gFaW+QeAPBLLM3RTuYLvWF9bfJcZ1xmcg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=diasemi.com; dmarc=pass action=none header.from=diasemi.com;
- dkim=pass header.d=diasemi.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=dialogsemiconductor.onmicrosoft.com;
- s=selector1-dialogsemiconductor-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oXKoHi6GxXbmFwWb+KWmyZmt2OCwyPuD4iSsaxlIb4k=;
- b=0JM/IOMHJOP5c8TX8sUQ3SbwWWUY1PPDKi9duA7d/fNx1lhNj10NVY94yY7GkmTg2a/qnyKeyczcVhVa3vf0dmTcXchq87FrWsg72lVzmp/w6evdOc/38MguaHsCdsp/wKityRWic2iU/tpkcO+zrHVuddngO1rUrGI6YEqOiyU=
-Received: from AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM (10.169.154.136) by
- AM5PR1001MB0977.EURPRD10.PROD.OUTLOOK.COM (10.169.153.148) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2474.19; Thu, 21 Nov 2019 20:10:30 +0000
-Received: from AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::5525:87da:ca4:e8df]) by AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::5525:87da:ca4:e8df%7]) with mapi id 15.20.2474.021; Thu, 21 Nov 2019
- 20:10:30 +0000
-From:   Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Support Opensource <Support.Opensource@diasemi.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-CC:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel@collabora.com" <kernel@collabora.com>
-Subject: RE: [PATCHv2 1/6] ASoC: da7213: Add da7212 DT compatible
-Thread-Topic: [PATCHv2 1/6] ASoC: da7213: Add da7212 DT compatible
-Thread-Index: AQHVn7aVvSlpZ4UGuEGdGdiqwx7EBqeWDz7g
-Date:   Thu, 21 Nov 2019 20:10:30 +0000
-Message-ID: <AM5PR1001MB0994D2F45FA75E8285938191804E0@AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM>
-References: <20191120152406.2744-1-sebastian.reichel@collabora.com>
- <20191120152406.2744-2-sebastian.reichel@collabora.com>
-In-Reply-To: <20191120152406.2744-2-sebastian.reichel@collabora.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [165.225.80.69]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 67c23ade-7af0-493d-3afb-08d76ebedbca
-x-ms-traffictypediagnostic: AM5PR1001MB0977:
-x-ms-exchange-sharedmailbox-routingagent-processed: True
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM5PR1001MB0977B76538C1DDD96E7140BDA74E0@AM5PR1001MB0977.EURPRD10.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:2803;
-x-forefront-prvs: 0228DDDDD7
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(346002)(376002)(136003)(39850400004)(366004)(189003)(199004)(33656002)(6246003)(5660300002)(2906002)(446003)(11346002)(52536014)(66556008)(64756008)(66446008)(4326008)(66476007)(76116006)(66946007)(478600001)(14454004)(55236004)(53546011)(102836004)(6506007)(7736002)(186003)(305945005)(81156014)(26005)(8676002)(81166006)(74316002)(8936002)(76176011)(7696005)(66066001)(110136005)(99286004)(256004)(55016002)(9686003)(316002)(6436002)(54906003)(229853002)(25786009)(6116002)(86362001)(3846002)(71190400001)(71200400001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR1001MB0977;H:AM5PR1001MB0994.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
-received-spf: None (protection.outlook.com: diasemi.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: +T3SswX1gKTSFo9PYzJjJoHfNcCpphKW0BKjthNqBm9DjyXeUiEZ/hcGKcC0kXRYxBVOem2Z+cAE80IQP8mQ4V/p5Vo1TUvllRJ2+p3GTQNT8GdOl3KpLO+zi8Jid4QvwzenIh8ggbJGQgLvVZCnWQj/BA6lqFRmnDBIBopF3Nf/xPBjH40pg9d6CI+JQDfrA0ZQ2usLjM+dYxlTUIpX8c2955bd8H67qjDr1MMZbxcmqmdQrJkQ8Y6rmRcY6UPHMz8Lh+rNxMieDhVzKfzOuz5Q/orSPbuU+S1P4bLzjPgmlGNswtd7h+Q98HFRts1s4VYTiD16e5VP3v8MhAhvwH9399T12+Oe8d/VIiBxmcp8LxdGJmDZTbi/yXcLB/nXwQvsXPOVQBMnKYjZKseN3CwCGRAG7RH2lbGEapFuVWBjLEOKYUr60BdsCEn/8t5W
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 21 Nov 2019 15:13:25 -0500
+Received: from mga01.intel.com ([192.55.52.88]:24544 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726541AbfKUUNZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 15:13:25 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Nov 2019 12:13:24 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,227,1571727600"; 
+   d="scan'208";a="216209902"
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by fmsmga001.fm.intel.com with ESMTP; 21 Nov 2019 12:13:24 -0800
+Date:   Thu, 21 Nov 2019 12:25:35 -0800
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        David Laight <David.Laight@aculab.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
+Subject: Re: [PATCH v10 6/6] x86/split_lock: Enable split lock detection by
+ kernel parameter
+Message-ID: <20191121202535.GC199273@romley-ivt3.sc.intel.com>
+References: <20191121185303.GB199273@romley-ivt3.sc.intel.com>
+ <4BB1CB74-887B-4F40-B3B2-F0147B264C34@amacapital.net>
 MIME-Version: 1.0
-X-OriginatorOrg: diasemi.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 67c23ade-7af0-493d-3afb-08d76ebedbca
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Nov 2019 20:10:30.1242
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 48DhIPPj+u0PBnG0b9kCrBWGT+AuNxj5JYlXR4b61NAWCgth2CHK/cbrmzYG2+GQKYP2cJhawmUWdioi/3QOS2S0jVrU5g6XBAsUy+GGotA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR1001MB0977
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <4BB1CB74-887B-4F40-B3B2-F0147B264C34@amacapital.net>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20 November 2019 15:24, Sebastian Reichel wrote:=20
+On Thu, Nov 21, 2019 at 11:01:39AM -0800, Andy Lutomirski wrote:
+> 
+> > On Nov 21, 2019, at 10:40 AM, Fenghua Yu <fenghua.yu@intel.com> wrote:
+> > 
+> > ﻿On Thu, Nov 21, 2019 at 09:51:03AM -0800, Andy Lutomirski wrote:
+> >>> On Thu, Nov 21, 2019 at 9:43 AM David Laight <David.Laight@aculab.com> wrote:
+> >>> 
+> >>> From: Ingo Molnar
+> >>>> Sent: 21 November 2019 17:12
+> >>>> * Peter Zijlstra <peterz@infradead.org> wrote:
+> >>> ...
+> >>>>> This feature MUST be default enabled, otherwise everything will
+> >>>>> be/remain broken and we'll end up in the situation where you can't use
+> >>>>> it even if you wanted to.
+> >>>> 
+> >>>> Agreed.
+> >>> 
+> >>> Before it can be enabled by default someone needs to go through the
+> >>> kernel and fix all the code that abuses the 'bit' functions by using them
+> >>> on int[] instead of long[].
+> >>> 
+> >>> I've only seen one fix go through for one use case of one piece of code
+> >>> that repeatedly uses potentially misaligned int[] arrays for bitmasks.
+> >>> 
+> >> 
+> >> Can we really not just change the lock asm to use 32-bit accesses for
+> >> set_bit(), etc?  Sure, it will fail if the bit index is greater than
+> >> 2^32, but that seems nuts.
+> >> 
+> >> (Why the *hell* do the bitops use long anyway?  They're *bit masks*
+> >> for crying out loud.  As in, users generally want to operate on fixed
+> >> numbers of bits.)
+> > 
+> > We are working on a separate patch set to fix all split lock issues
+> > in atomic bitops. Per Peter Anvin and Tony Luck suggestions:
+> > 1. Still keep the byte optimization if nr is constant. No split lock.
+> > 2. If type of *addr is unsigned long, do quadword atomic instruction
+> >   on addr. No split lock.
+> > 3. If type of *addr is unsigned int, do word atomic instruction
+> >   on addr. No split lock.
+> > 4. Otherwise, re-calculate addr to point the 32-bit address which contains
+> >   the bit and operate on the bit. No split lock.
+> > 
+> > Only small percentage of atomic bitops calls are in case 4 (e.g. 3%
+> > for set_bit()) which need a few extra instructions to re-calculate
+> > address but can avoid big split lock overhead.
+> > 
+> > To get real type of *addr instead of type cast type "unsigned long",
+> > the atomic bitops APIs are changed to macros from functions. This change
+> > need to touch all architectures.
+> > 
+> 
+> Isn’t the kernel full of casts to long* to match the signature?  Doing this based on type seems silly to me. I think it’s better to just to a 32-bit operation unconditionally and to try to optimize it
+>using b*l when safe.
 
-> This adds a compatible for da7212. It's handled exactly the
-> same way as DA7213 and follows the ACPI bindings.
->=20
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> ---
->  Documentation/devicetree/bindings/sound/da7213.txt | 4 ++--
->  sound/soc/codecs/da7213.c                          | 1 +
->  2 files changed, 3 insertions(+), 2 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/sound/da7213.txt
-> b/Documentation/devicetree/bindings/sound/da7213.txt
-> index 58902802d56c..759bb04e0283 100644
-> --- a/Documentation/devicetree/bindings/sound/da7213.txt
-> +++ b/Documentation/devicetree/bindings/sound/da7213.txt
-> @@ -1,9 +1,9 @@
-> -Dialog Semiconductor DA7213 Audio Codec bindings
-> +Dialog Semiconductor DA7212/DA7213 Audio Codec bindings
->=20
->  =3D=3D=3D=3D=3D=3D
->=20
->  Required properties:
-> -- compatible : Should be "dlg,da7213"
-> +- compatible : Should be "dlg,da7212" or "dlg,7213"
+Actually we only find 8 places calling atomic bitops using type casting
+"unsigned long *". After above changes, other 8 patches remove the type
+castings and then split lock free in atomic bitops in the current kernel.
 
-Typo? "dlg,da7213"
+To check type casting in new patches, we add checkpatch.pl to warn on
+any type casting on atomic bitops in new patches because the APIs are
+marocs and gcc doesn't warn/issue error on type casting.
 
->  - reg: Specifies the I2C slave address
->=20
->  Optional properties:
-> diff --git a/sound/soc/codecs/da7213.c b/sound/soc/codecs/da7213.c
-> index 925a03996db4..aff306bb58df 100644
-> --- a/sound/soc/codecs/da7213.c
-> +++ b/sound/soc/codecs/da7213.c
-> @@ -1571,6 +1571,7 @@ static int da7213_set_bias_level(struct
-> snd_soc_component *component,
->  #if defined(CONFIG_OF)
->  /* DT */
->  static const struct of_device_id da7213_of_match[] =3D {
-> +	{ .compatible =3D "dlg,da7212", },
->  	{ .compatible =3D "dlg,da7213", },
->  	{ }
->  };
-> --
-> 2.24.0
+Using b*l will change the 8 places as well plus a lot of other places
+where *addr is defined as "unsigned long *", right?
+
+Thanks.
+
+-Fenghua
+
