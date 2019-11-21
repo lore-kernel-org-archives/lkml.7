@@ -2,105 +2,107 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 756CFC43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:42:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9456C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:50:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49776206CC
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:42:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A202B2068E
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:50:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ewatgbtJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbfKUVmp (ORCPT
+        id S1726574AbfKUVuI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 16:42:45 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33540 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726775AbfKUVmp (ORCPT
+        Thu, 21 Nov 2019 16:50:08 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:36850 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726329AbfKUVuI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 16:42:45 -0500
-Received: from [167.98.27.226] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1iXuDq-00009s-A7; Thu, 21 Nov 2019 21:42:42 +0000
-Received: from ben by deadeye with local (Exim 4.93-RC1)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1iXuDp-0004Gv-Ou; Thu, 21 Nov 2019 21:42:41 +0000
-Message-ID: <c5ce084565fbd66b2bce697fe49396eabe6eef81.camel@decadent.org.uk>
-Subject: Re: [PATCH 3.16 81/83] btrfs: partially apply b8b93addde
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     Hans van Kranenburg <hans@knorrie.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>
-Date:   Thu, 21 Nov 2019 21:42:41 +0000
-In-Reply-To: <d8b529f2-fce3-829a-c157-77d574619daf@knorrie.org>
-References: <lsq.1574264230.614031573@decadent.org.uk>
-         <d8b529f2-fce3-829a-c157-77d574619daf@knorrie.org>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-RDcV/LdjPM7QGq8wr3js"
-User-Agent: Evolution 3.30.5-1.1 
+        Thu, 21 Nov 2019 16:50:08 -0500
+Received: by mail-ed1-f68.google.com with SMTP id f7so4191084edq.3
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 13:50:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=441CDEY7r+jAiyFqGWKYoN/In8wLFWAjU8LoG44hNKs=;
+        b=ewatgbtJd/GVsBazwuLbhDVy3ondBBL6YXn7+xys4ddOWJgSkvQyUhlZBIt3D9xmGY
+         fvdvmkQS0NxDmjkrips5s3HdM7Jb0R/3Ge4SW9aEdseDuGeFkoxsMgIp8pBLWPw2uC/E
+         n6lyziC2b0Cntk9mU4KbVq1dLXGcgZJfUOhXA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=441CDEY7r+jAiyFqGWKYoN/In8wLFWAjU8LoG44hNKs=;
+        b=EBPlQ5wid3PcGqLks1wgUrzHUougQnmB+dop+Y6NPys9vjCQPBD1m/XP00ApCok681
+         fm+ypnR0CLWIsu/LmAkq157qyedEetW4m1XQ/9Hr3TfhCl5f3U+yBouwg/ut5WecXJnT
+         M+X9CtwKj8Fn+Fe+JL/RFrb8YTXF5VTPZjP3RuGEcmtUZnolAh8hmExiGQ6uzKD+gGXE
+         +U6zCFLshidhakwr59W7CF5+EiT8nMGpR/p67oWA4QPwVAzDyuLvLOd+cpZWqWGyh9T9
+         2Fibjc6mXBm3Zb3JcVXv5JFSls1jlK4xCB1uvUKCRsO+VFTxaNh3PjIo29DFoqf8i3Os
+         yXBA==
+X-Gm-Message-State: APjAAAU/a/Te9rZQzwgfwHPpAdn3Mmanjh6uUAKrRhg74Ggn0MLf+/4Y
+        sGpnE5Ux51G/c+VWvCPsPZvjMT4oP8k=
+X-Google-Smtp-Source: APXvYqz3zldE47wNoETz4Xb4cR44daq2BMce/hait+KRvmJ9aQ8tfnVa4rTVaNmdEzmaKdo1m6BlGg==
+X-Received: by 2002:a17:906:1d02:: with SMTP id n2mr16484794ejh.219.1574373004406;
+        Thu, 21 Nov 2019 13:50:04 -0800 (PST)
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com. [209.85.221.54])
+        by smtp.gmail.com with ESMTPSA id y2sm170518edd.2.2019.11.21.13.50.03
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 Nov 2019 13:50:03 -0800 (PST)
+Received: by mail-wr1-f54.google.com with SMTP id i12so6216233wrn.11
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 13:50:03 -0800 (PST)
+X-Received: by 2002:adf:db8e:: with SMTP id u14mr4763385wri.274.1574373002609;
+ Thu, 21 Nov 2019 13:50:02 -0800 (PST)
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 167.98.27.226
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+References: <20191121211053.48861-1-rrangel@chromium.org> <20191121140830.4.Iddc7dd74f893297cb932e9825d413e7890633b3d@changeid>
+ <CABXOdTeotUnO_7k9UycJ0vJEKV8pdZOjRrepDv5WVo5RmOLnEA@mail.gmail.com>
+In-Reply-To: <CABXOdTeotUnO_7k9UycJ0vJEKV8pdZOjRrepDv5WVo5RmOLnEA@mail.gmail.com>
+From:   Raul Rangel <rrangel@chromium.org>
+Date:   Thu, 21 Nov 2019 14:49:51 -0700
+X-Gmail-Original-Message-ID: <CAHQZ30CYQd1-ZHJeVnKi9CMeZGiRJmvfYN5PRrpN26gcEJZXOA@mail.gmail.com>
+Message-ID: <CAHQZ30CYQd1-ZHJeVnKi9CMeZGiRJmvfYN5PRrpN26gcEJZXOA@mail.gmail.com>
+Subject: Re: [PATCH 4/4] platform/chrome: i2c: i2c-cros-ec-tunnel: Convert i2c
+ tunnel to MFD Cell
+To:     Guenter Roeck <groeck@google.com>
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Akshu Agrawal <Akshu.Agrawal@amd.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "open list:I2C SUBSYSTEM HOST DRIVERS" <linux-i2c@vger.kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Benson Leung <bleung@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Nov 21, 2019 at 2:40 PM Guenter Roeck <groeck@google.com> wrote:
+>
+> On Thu, Nov 21, 2019 at 1:11 PM Raul E Rangel <rrangel@chromium.org> wrote:
+> >
+> > If the i2c-cros-ec-tunnel driver is compiled into the kernel, it is
+> > possible that i2c-cros-ec-tunnel could be probed before cros_ec_XXX
+> > has finished initializing and setting the drvdata. This would cause a
+> > NULL pointer panic.
+> >
+> > Converting this driver over to an MFD solves the problem and aligns with
+> > where the cros_ec is going.
+> >
+>
+> I thought the mfd maintainer objects to the use of the mfd API outside
+> drivers/mfd. Did that change recently ?
 
---=-RDcV/LdjPM7QGq8wr3js
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+The MFD apis are only used in drivers/mfd/cros_ec_dev.c.
+drivers/i2c/busses/i2c-cros-ec-tunnel.c just registers as a simple
+driver.
 
-On Wed, 2019-11-20 at 16:56 +0100, Hans van Kranenburg wrote:
-> On 11/20/19 4:38 PM, Ben Hutchings wrote:
-> > 3.16.78-rc1 review patch.  If anyone has any objections, please let me =
-know.
-> >=20
-> > ------------------
-> >=20
-> > From: Hans van Kranenburg <hans@knorrie.org>
->=20
-> Thanks for picking this up!
->=20
-> Can you please use my work email, lowercase
->=20
->   hans.van.kranenburg@mendix.com
->=20
-> for this one and for the Cc: line in the second one from Qu?
-
-OK, done.
-
-Ben.
-
---=20
-Ben Hutchings
-Humans are not rational beings; they are rationalising beings.
-
-
-
---=-RDcV/LdjPM7QGq8wr3js
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl3XBNEACgkQ57/I7JWG
-EQkZyRAAsB5jbeyg2zGDZrD4D9CAP9kdtxBpnrad/cwmbWQkiyxYwTnlynNow27D
-VYpIl2XZwE9eaTyCPMd1vlw1/hTjG7kAfpomO5cZXjx8OP8xF4j/M+pN/ek+cbfj
-KHH0UQ1MFa/LmGyR3qlDPKiY/0alwmsjy/rmdNScrarqX/4jmGRc3ZtolfUP+yRH
-WtjWIdfgtVeYR2b5oGflcyUvn2g41JxXtJhdr2xQxRdYFXpXduULVKAs1kPBwJeq
-yvjac57ZWpI1Jw/sG6W+c9oY2cu923IBYoG/m4UonQG2yFlHo8BXDSKySfOuO/pn
-VeGI/OrC/FHYupMHqAO56aRptLfImsqCG6YJacV69p92BBFmHEIihrROB/gAJyiC
-XGQyKqEBBfbx9HU3POdz9BowKC5G8dWrIAc3EepJVwCnMICeIaz4pFIES6CbawhK
-uKUx4VV24XVEaU1ebINPzLT25Vvy8gi3482irPz1ka3SFKF0N+WOAgecPx5O6iGZ
-Thb6sw8weNmVwuLFTxBPKtg9C1mPBCzRsU7jik8TVeiGJUpxOMPArgwDKlHJJNLv
-7TiPHfb9SjCRYz+/8F22ER8VT11KbHDFE+wbrbwQ2RZ51SbzsN3kXHeCfj3I1kLX
-9bcrLUdkwlCBaJi9An5yH+IPjVK7Q4j+d/nUTI+prhTY0oA7/fk=
-=jDHh
------END PGP SIGNATURE-----
-
---=-RDcV/LdjPM7QGq8wr3js--
+Raul
