@@ -2,333 +2,93 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF5DDC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 00:15:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10433C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 00:15:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C502C208A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 00:15:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5D26208A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 00:15:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727187AbfKUAPw (ORCPT
+        id S1727205AbfKUAPy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 19:15:52 -0500
-Received: from mga06.intel.com ([134.134.136.31]:58450 "EHLO mga06.intel.com"
+        Wed, 20 Nov 2019 19:15:54 -0500
+Received: from mga03.intel.com ([134.134.136.65]:22602 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726912AbfKUAPg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727016AbfKUAPg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 Nov 2019 19:15:36 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Nov 2019 16:15:34 -0800
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Nov 2019 16:15:35 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,223,1571727600"; 
-   d="scan'208";a="381553873"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
-  by orsmga005.jf.intel.com with ESMTP; 20 Nov 2019 16:15:34 -0800
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 80ACB3002B7; Wed, 20 Nov 2019 16:15:34 -0800 (PST)
-From:   Andi Kleen <andi@firstfloor.org>
-To:     acme@kernel.org
-Cc:     jolsa@kernel.org, linux-kernel@vger.kernel.org,
-        Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH 01/12] perf pmu: Use file system cache to optimize sysfs access
-Date:   Wed, 20 Nov 2019 16:15:11 -0800
-Message-Id: <20191121001522.180827-2-andi@firstfloor.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191121001522.180827-1-andi@firstfloor.org>
-References: <20191121001522.180827-1-andi@firstfloor.org>
+   d="scan'208";a="408325252"
+Received: from orsmsx105.amr.corp.intel.com ([10.22.225.132])
+  by fmsmga006.fm.intel.com with ESMTP; 20 Nov 2019 16:15:35 -0800
+Received: from orsmsx122.amr.corp.intel.com (10.22.225.227) by
+ ORSMSX105.amr.corp.intel.com (10.22.225.132) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 20 Nov 2019 16:15:35 -0800
+Received: from orsmsx115.amr.corp.intel.com ([169.254.4.121]) by
+ ORSMSX122.amr.corp.intel.com ([169.254.11.73]) with mapi id 14.03.0439.000;
+ Wed, 20 Nov 2019 16:15:34 -0800
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+CC:     "Jiang, Dave" <dave.jiang@intel.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "Lin, Jing" <jing.lin@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Dey, Megha" <megha.dey@intel.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        "hpa@zytor.com" <hpa@zytor.com>
+Subject: RE: [PATCH RFC 01/14] x86/asm: add iosubmit_cmds512() based on
+ movdir64b CPU instruction
+Thread-Topic: [PATCH RFC 01/14] x86/asm: add iosubmit_cmds512() based on
+ movdir64b CPU instruction
+Thread-Index: AQHVn+jQu1FBipL/xUihZzlSbMgW16eVIDmA//+R2QCAAIgqgP//htoQ
+Date:   Thu, 21 Nov 2019 00:15:33 +0000
+Message-ID: <3908561D78D1C84285E8C5FCA982C28F7F4DA734@ORSMSX115.amr.corp.intel.com>
+References: <157428480574.36836.14057238306923901253.stgit@djiang5-desk3.ch.intel.com>
+ <157428502934.36836.8119026517510193201.stgit@djiang5-desk3.ch.intel.com>
+ <20191120215338.GN2634@zn.tnic>
+ <20191120231923.GA32680@agluck-desk2.amr.corp.intel.com>
+ <20191120232645.GO2634@zn.tnic>
+In-Reply-To: <20191120232645.GO2634@zn.tnic>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNjdkNzkzMzItOWQ2NC00NmUxLTg5ZTAtYjBmZjVhZDUzNjNkIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiQndmUm1XVkM3QjVDWVlOMTJvcnJXaW5OZlA2TFdxTXBTYmxVWnN5dTVqaTVKeCtVdU5VYlgrMlMrWXh5NEJvZyJ9
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.140]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
-
-pmu.c does a lot of redundant /sys accesses while parsing aliases
-and probing for PMUs. On large systems with a lot of PMUs this
-can get expensive (>2s):
-
-% time     seconds  usecs/call     calls    errors syscall
------- ----------- ----------- --------- --------- ----------------
- 27.25    1.227847           8    160888     16976 openat
- 26.42    1.190481           7    164224    164077 stat
-
-Add a cache to remember if specific file names exist or don't
-exist, which eliminates most of this overhead.
-
-Also optimize some stat() calls to be slightly cheaper access()
-
-Resulting in:
-
-  0.18    0.004166           2      1851       305 open
-  0.08    0.001970           2       829       622 access
-
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-
----
-
-v2: Use single lookup function as API (Jiri)
----
- tools/perf/util/Build     |  1 +
- tools/perf/util/fncache.c | 63 +++++++++++++++++++++++++++++++++++++++
- tools/perf/util/fncache.h |  7 +++++
- tools/perf/util/pmu.c     | 34 +++++++--------------
- tools/perf/util/srccode.c |  9 +-----
- 5 files changed, 83 insertions(+), 31 deletions(-)
- create mode 100644 tools/perf/util/fncache.c
- create mode 100644 tools/perf/util/fncache.h
-
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index b8e05a147b2b..aab05e2c01a5 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -49,6 +49,7 @@ perf-y += header.o
- perf-y += callchain.o
- perf-y += values.o
- perf-y += debug.o
-+perf-y += fncache.o
- perf-y += machine.o
- perf-y += map.o
- perf-y += pstack.o
-diff --git a/tools/perf/util/fncache.c b/tools/perf/util/fncache.c
-new file mode 100644
-index 000000000000..5afcd7edbe7a
---- /dev/null
-+++ b/tools/perf/util/fncache.c
-@@ -0,0 +1,63 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/* Manage a cache of file names' existence */
-+#include <stdlib.h>
-+#include <unistd.h>
-+#include <string.h>
-+#include <linux/list.h>
-+#include "fncache.h"
-+
-+struct fncache {
-+	struct hlist_node nd;
-+	bool res;
-+	char name[];
-+};
-+
-+#define FNHSIZE 61
-+
-+static struct hlist_head fncache_hash[FNHSIZE];
-+
-+unsigned shash(const unsigned char *s)
-+{
-+	unsigned h = 0;
-+	while (*s)
-+		h = 65599 * h + *s++;
-+	return h ^ (h >> 16);
-+}
-+
-+static bool lookup_fncache(const char *name, bool *res)
-+{
-+	int h = shash((const unsigned char *)name) % FNHSIZE;
-+	struct fncache *n;
-+
-+	hlist_for_each_entry (n, &fncache_hash[h], nd) {
-+		if (!strcmp(n->name, name)) {
-+			*res = n->res;
-+			return true;
-+		}
-+	}
-+	return false;
-+}
-+
-+static void update_fncache(const char *name, bool res)
-+{
-+	struct fncache *n = malloc(sizeof(struct fncache) + strlen(name) + 1);
-+	int h = shash((const unsigned char *)name) % FNHSIZE;
-+
-+	if (!n)
-+		return;
-+	strcpy(n->name, name);
-+	n->res = res;
-+	hlist_add_head(&n->nd, &fncache_hash[h]);
-+}
-+
-+/* No LRU, only use when bounded in some other way. */
-+bool file_available(const char *name)
-+{
-+	bool res;
-+
-+	if (lookup_fncache(name, &res))
-+		return res;
-+	res = access(name, R_OK) == 0;
-+	update_fncache(name, res);
-+	return res;
-+}
-diff --git a/tools/perf/util/fncache.h b/tools/perf/util/fncache.h
-new file mode 100644
-index 000000000000..fe020beaefb1
---- /dev/null
-+++ b/tools/perf/util/fncache.h
-@@ -0,0 +1,7 @@
-+#ifndef _FCACHE_H
-+#define _FCACHE_H 1
-+
-+unsigned shash(const unsigned char *s);
-+bool file_available(const char *name);
-+
-+#endif
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index db1e57113f4b..65780494a290 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -24,6 +24,7 @@
- #include "pmu-events/pmu-events.h"
- #include "string2.h"
- #include "strbuf.h"
-+#include "fncache.h"
- 
- struct perf_pmu_format {
- 	char *name;
-@@ -82,7 +83,6 @@ int perf_pmu__format_parse(char *dir, struct list_head *head)
-  */
- static int pmu_format(const char *name, struct list_head *format)
- {
--	struct stat st;
- 	char path[PATH_MAX];
- 	const char *sysfs = sysfs__mountpoint();
- 
-@@ -92,8 +92,8 @@ static int pmu_format(const char *name, struct list_head *format)
- 	snprintf(path, PATH_MAX,
- 		 "%s" EVENT_SOURCE_DEVICE_PATH "%s/format", sysfs, name);
- 
--	if (stat(path, &st) < 0)
--		return 0;	/* no error if format does not exist */
-+	if (!file_available(path))
-+		return 0;
- 
- 	if (perf_pmu__format_parse(path, format))
- 		return -1;
-@@ -475,7 +475,6 @@ static int pmu_aliases_parse(char *dir, struct list_head *head)
-  */
- static int pmu_aliases(const char *name, struct list_head *head)
- {
--	struct stat st;
- 	char path[PATH_MAX];
- 	const char *sysfs = sysfs__mountpoint();
- 
-@@ -485,8 +484,8 @@ static int pmu_aliases(const char *name, struct list_head *head)
- 	snprintf(path, PATH_MAX,
- 		 "%s/bus/event_source/devices/%s/events", sysfs, name);
- 
--	if (stat(path, &st) < 0)
--		return 0;	 /* no error if 'events' does not exist */
-+	if (!file_available(path))
-+		return 0;
- 
- 	if (pmu_aliases_parse(path, head))
- 		return -1;
-@@ -525,7 +524,6 @@ static int pmu_alias_terms(struct perf_pmu_alias *alias,
-  */
- static int pmu_type(const char *name, __u32 *type)
- {
--	struct stat st;
- 	char path[PATH_MAX];
- 	FILE *file;
- 	int ret = 0;
-@@ -537,7 +535,7 @@ static int pmu_type(const char *name, __u32 *type)
- 	snprintf(path, PATH_MAX,
- 		 "%s" EVENT_SOURCE_DEVICE_PATH "%s/type", sysfs, name);
- 
--	if (stat(path, &st) < 0)
-+	if (access(path, R_OK) < 0)
- 		return -1;
- 
- 	file = fopen(path, "r");
-@@ -628,14 +626,11 @@ static struct perf_cpu_map *pmu_cpumask(const char *name)
- static bool pmu_is_uncore(const char *name)
- {
- 	char path[PATH_MAX];
--	struct perf_cpu_map *cpus;
--	const char *sysfs = sysfs__mountpoint();
-+	const char *sysfs;
- 
-+	sysfs = sysfs__mountpoint();
- 	snprintf(path, PATH_MAX, CPUS_TEMPLATE_UNCORE, sysfs, name);
--	cpus = __pmu_cpumask(path);
--	perf_cpu_map__put(cpus);
--
--	return !!cpus;
-+	return file_available(path);
- }
- 
- /*
-@@ -645,7 +640,6 @@ static bool pmu_is_uncore(const char *name)
-  */
- static int is_arm_pmu_core(const char *name)
- {
--	struct stat st;
- 	char path[PATH_MAX];
- 	const char *sysfs = sysfs__mountpoint();
- 
-@@ -655,10 +649,7 @@ static int is_arm_pmu_core(const char *name)
- 	/* Look for cpu sysfs (specific to arm) */
- 	scnprintf(path, PATH_MAX, "%s/bus/event_source/devices/%s/cpus",
- 				sysfs, name);
--	if (stat(path, &st) == 0)
--		return 1;
--
--	return 0;
-+	return file_available(path);
- }
- 
- static char *perf_pmu__getcpuid(struct perf_pmu *pmu)
-@@ -1534,7 +1525,6 @@ bool pmu_have_event(const char *pname, const char *name)
- 
- static FILE *perf_pmu__open_file(struct perf_pmu *pmu, const char *name)
- {
--	struct stat st;
- 	char path[PATH_MAX];
- 	const char *sysfs;
- 
-@@ -1544,10 +1534,8 @@ static FILE *perf_pmu__open_file(struct perf_pmu *pmu, const char *name)
- 
- 	snprintf(path, PATH_MAX,
- 		 "%s" EVENT_SOURCE_DEVICE_PATH "%s/%s", sysfs, pmu->name, name);
--
--	if (stat(path, &st) < 0)
-+	if (!file_available(path))
- 		return NULL;
--
- 	return fopen(path, "r");
- }
- 
-diff --git a/tools/perf/util/srccode.c b/tools/perf/util/srccode.c
-index d84ed8b6caaa..c29edaaca863 100644
---- a/tools/perf/util/srccode.c
-+++ b/tools/perf/util/srccode.c
-@@ -16,6 +16,7 @@
- #include "srccode.h"
- #include "debug.h"
- #include <internal/lib.h> // page_size
-+#include "fncache.h"
- 
- #define MAXSRCCACHE (32*1024*1024)
- #define MAXSRCFILES     64
-@@ -36,14 +37,6 @@ static LIST_HEAD(srcfile_list);
- static long map_total_sz;
- static int num_srcfiles;
- 
--static unsigned shash(unsigned char *s)
--{
--	unsigned h = 0;
--	while (*s)
--		h = 65599 * h + *s++;
--	return h ^ (h >> 16);
--}
--
- static int countlines(char *map, int maplen)
- {
- 	int numl;
--- 
-2.23.0
-
+Pj4gV2hlbiB1c2luZyBkZWRpY2F0ZWQgcXVldWVzIHRoZSBjYWxsZXIgbXVzdCBrZWVwIGNvdW50
+IG9mIGhvdyBtYW55DQo+PiBvcGVyYXRpb25zIGFyZSBpbiBmbGlnaHQgYW5kIG5vdCBzZW5kIG1v
+cmUgdGhhbiB0aGUgZGVwdGggb2YgdGhlDQo+PiBxdWV1ZS4NCj4NCj4gVGhpcyB3YXk/DQoNClRo
+YXQncyB0aGUgb25seSBwcmFjdGljYWwgd2F5LiBUaGUgZGV2aWNlIGRvZXMga2VlcCBhIGNvdW50
+IG9mIGRyb3BwZWQNCmF0dGVtcHRzIC4uLiBzbyBpbiB0aGVvcnkgeW91IGNvdWxkIGdvIHJlYWQg
+dGhhdCAuLi4gYnV0IHRoYXQgd291bGQgZ2l2ZSB1cA0KbXVjaCBvZiB0aGUgdmFsdWUgcHJvcG9z
+aXRpb24gb2YgbG93IGNvc3QgdG8gc3VibWl0IHdvcmsgaWYgeW91IGhhZCB0byBkbw0KYW4gTU1J
+TyByZWFkIGFmdGVyIGV2ZXJ5IHN1Ym1pc3Npb24uDQoNCi1Ub255DQo=
