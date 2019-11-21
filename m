@@ -2,78 +2,112 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A83EC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:00:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C03DBC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:00:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32E8D2063A
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:00:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9426920692
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:00:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DmhToz9I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbfKUQAb (ORCPT
+        id S1727008AbfKUQAx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 11:00:31 -0500
-Received: from imap1.codethink.co.uk ([176.9.8.82]:55344 "EHLO
-        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726293AbfKUQAb (ORCPT
+        Thu, 21 Nov 2019 11:00:53 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:52612 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726976AbfKUQAx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 11:00:31 -0500
-Received: from [167.98.27.226] (helo=xylophone)
-        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
-        id 1iXosd-0002vX-2D; Thu, 21 Nov 2019 16:00:27 +0000
-Message-ID: <6a987be69356a33cf60ec61df2304404a4f41a3a.camel@codethink.co.uk>
-Subject: Re: [Y2038] [PATCH 6/8] lp: fix sparc64 LPSETTIMEOUT ioctl
-From:   Ben Hutchings <ben.hutchings@codethink.co.uk>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     y2038 Mailman List <y2038@lists.linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "# 3.4.x" <stable@vger.kernel.org>,
-        Bamvor Jian Zhang <bamv2005@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Date:   Thu, 21 Nov 2019 16:00:25 +0000
-In-Reply-To: <CAK8P3a34sty4kTfFSKz8e-D+B14e3oTUPaACzGq_1SjYeuoytg@mail.gmail.com>
-References: <20191108203435.112759-1-arnd@arndb.de>
-         <20191108203435.112759-7-arnd@arndb.de>
-         <41baf20a190039443cb2b82aea0c2a8ec872cfed.camel@codethink.co.uk>
-         <CAK8P3a3U0GWCyU9WOnrGQ2tqnHoyAbJ=HdYJGfTHuxVqcww0wg@mail.gmail.com>
-         <a187cb75cc15ba8ee4a7b652fae8317cb9b03020.camel@codethink.co.uk>
-         <CAK8P3a34sty4kTfFSKz8e-D+B14e3oTUPaACzGq_1SjYeuoytg@mail.gmail.com>
-Organization: Codethink Ltd.
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Thu, 21 Nov 2019 11:00:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574352052;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=fl5jon/Xn0As09tGosG/4/lknhZw/odWV00qKChGNfE=;
+        b=DmhToz9IVhddrl41SMmOyzVAl14AHaPRCv0bo9OJbYvo21j2xCabKtPhYRK/jGgTMwdExB
+        6i24sIG6zoq1zgqKupF/51emmatGyj9NLYyTnJhZEqdIKbsKjppyV2BbfaWTFXZ08jaktc
+        vBrOHbdKM8kLEdEYnKpuFbzenz+44ew=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-220-2dU94oSiO1SQ9yuKpiU7UA-1; Thu, 21 Nov 2019 11:00:50 -0500
+X-MC-Unique: 2dU94oSiO1SQ9yuKpiU7UA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C1644189DAF9;
+        Thu, 21 Nov 2019 16:00:49 +0000 (UTC)
+Received: from localhost (ovpn-117-83.ams2.redhat.com [10.36.117.83])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 970611823F;
+        Thu, 21 Nov 2019 16:00:46 +0000 (UTC)
+Date:   Thu, 21 Nov 2019 16:00:45 +0000
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     Vivek Goyal <vgoyal@redhat.com>
+Cc:     virtio-fs@redhat.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dgilbert@redhat.com,
+        miklos@szeredi.hu
+Subject: Re: [PATCH 2/4] virtiofs: Add an index to keep track of first
+ request queue
+Message-ID: <20191121160045.GD445244@stefanha-x1.localdomain>
+References: <20191115205705.2046-1-vgoyal@redhat.com>
+ <20191115205705.2046-3-vgoyal@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20191115205705.2046-3-vgoyal@redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Mimecast-Spam-Score: 0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="NtwzykIc2mflq5ck"
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-11-21 at 15:04 +0100, Arnd Bergmann wrote:
-[...]
-> As Greg has already merged the original patch, and that version works
-> just as well, I'd probably just leave what I did at first. One benefit is
-> that in case we decide to kill off sparc64 support before drivers/char/lp.c,
-> the special case can be removed more easily.
-> 
-> I don't think either of them is going any time soon, but working on y2038
-> patches has made me think ahead longer term ;-)
-> 
-> If you still think we should change it I can send the below patch (now
-> actually build-tested) with your Ack.
-[...]
+--NtwzykIc2mflq5ck
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I would like it, but since you convinced me the current version works
-correctly it's obvious lower priority than the other changes you have.
+On Fri, Nov 15, 2019 at 03:57:03PM -0500, Vivek Goyal wrote:
+> @@ -990,7 +994,7 @@ static int virtio_fs_enqueue_req(struct virtio_fs_vq =
+*fsvq,
+>  static void virtio_fs_wake_pending_and_unlock(struct fuse_iqueue *fiq)
+>  __releases(fiq->lock)
+>  {
+> -=09unsigned int queue_id =3D VQ_REQUEST; /* TODO multiqueue */
+> +=09unsigned int queue_id;
+>  =09struct virtio_fs *fs;
+>  =09struct fuse_req *req;
+>  =09struct virtio_fs_vq *fsvq;
 
-Ben.
+Sorry, I removed too much context in my reply.  This TODO...
 
--- 
-Ben Hutchings, Software Developer                         Codethink Ltd
-https://www.codethink.co.uk/                 Dale House, 35 Dale Street
-                                     Manchester, M1 2HF, United Kingdom
+> @@ -1004,6 +1008,7 @@ __releases(fiq->lock)
+>  =09spin_unlock(&fiq->lock);
+> =20
+>  =09fs =3D fiq->priv;
+> +=09queue_id =3D fs->first_reqq_idx;
+
+...should be moved here.
+
+--NtwzykIc2mflq5ck
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl3WtK0ACgkQnKSrs4Gr
+c8gQ3Af+PW0BnVxXMs0ogKUzltp1vxcPYfq4/js7a6Q7fcsgCdJFpoDIxKkfC1t0
+/N8JzkRrlqCdSBJ9Y4dvTl7jE4eSK/gVTBcjPt/BM0UY4vr5uLVD4lEtBI56yman
+Nz4nZfZ2llDrIBy1mJy1lih/7bzt/q+qLKwkTKytDpJ9B+cFAJNZzLkFRPni+whc
+2rooMFvXYAa7r6fCV0SjtL8RHCK4G2d12GdWsR0/8bJjxCBW6ponacxps7JWn8fi
+soqP8w5UNmGKAvYZmIkDLOHM7HhpdBKqInNQ4e6ZJCawPNvsKOcv3b+dqrcfgTDe
+iKEo4xRR0AEwcKybfAjhs62bsVLopg==
+=UlMv
+-----END PGP SIGNATURE-----
+
+--NtwzykIc2mflq5ck--
 
