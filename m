@@ -2,115 +2,132 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94BECC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:25:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F882C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:29:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E7AF20872
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:25:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4714120872
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:29:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aCBDXCcj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbfKUKZB (ORCPT
+        id S1726563AbfKUK3Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 05:25:01 -0500
-Received: from mout.kundenserver.de ([212.227.17.10]:47537 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726132AbfKUKZB (ORCPT
+        Thu, 21 Nov 2019 05:29:25 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:23973 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726014AbfKUK3Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 05:25:01 -0500
-Received: from [192.168.1.155] ([95.115.120.75]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MY6TD-1iLpOi45hV-00YNz8; Thu, 21 Nov 2019 11:23:58 +0100
-Subject: Re: [Cocci] [PATCH] net: Zeroing the structure ethtool_wolinfo in
- ethtool_get_wol()
-To:     Joe Perches <joe@perches.com>, zhanglin <zhang.lin16@zte.com.cn>,
-        davem@davemloft.net, cocci <cocci@systeme.lip6.fr>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     mkubecek@suse.cz, jakub.kicinski@netronome.com, ast@kernel.org,
-        jiang.xuexin@zte.com.cn, f.fainelli@gmail.com,
-        daniel@iogearbox.net, john.fastabend@gmail.com,
-        lirongqing@baidu.com, maxime.chevallier@bootlin.com,
-        vivien.didelot@gmail.com, dan.carpenter@oracle.com,
-        wang.yi59@zte.com.cn, hawk@kernel.org, arnd@arndb.de,
-        jiri@mellanox.com, xue.zhihong@zte.com.cn,
-        natechancellor@gmail.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linyunsheng@huawei.com,
-        pablo@netfilter.org, bpf@vger.kernel.org
-References: <1572076456-12463-1-git-send-email-zhang.lin16@zte.com.cn>
- <c790578751dd69fb1080b355f5847c9ea5fb0e15.camel@perches.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Message-ID: <bc150c6a-6d3e-ff01-e40e-840e8a385bda@metux.net>
-Date:   Thu, 21 Nov 2019 11:23:34 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 21 Nov 2019 05:29:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574332163;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=t9X1E0mPwcgFWQfrAV192xVl6AHfJK9mk2N8XSWyhdc=;
+        b=aCBDXCcjzxm+LLFz7Z2qRaZzlXw4Gt/pPwYFHurooOvqoViCgb+ofarvlTnpb/sEUhvuci
+        QOOyFZhlU3ySdm2L4PE7HS7FOQirwjYGIGfDAgK27S0iCAbSdhepWAhiZzqn/Chul+AEKf
+        8tVUpSy3rvA7ZNspXb7eJN9GsgNUnfY=
+Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
+ [209.85.208.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-35-dDULx1lxMfKaKUKBRx0yjQ-1; Thu, 21 Nov 2019 05:29:20 -0500
+Received: by mail-lj1-f198.google.com with SMTP id 70so464567ljf.13
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 02:29:19 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=ucqBuN/GyC2pdnb4QcrvifWl2PtH/4rDjAh47h8mEbo=;
+        b=Gjt4u0x8UyH5BwGiH61pz4pnvPoq2rru0opMczckxTFv9LyO8/XzPD43O81BCeJALv
+         iC3Tz1naU1mKzwtsGpEK0mJcFk1ePZE32q7XvwqcV50CD17h1Zwhe5Mj+eBQ8Snr387s
+         bPGFPiBEwPROzADsZ0pLTTHWOv8P+UDYkh5u0KxCfLbLNvzcdbiGqQqTSNh+NPMbA/Kf
+         Tn+WOCxZtydopOGHcpebBoS1EnWuUlkG4mrOxO8cOfZf5As/4EDkzn+uE/0iXRmoiSdc
+         JOcbYcVxwMPcxZF4Zus9dv3yy85eulO0VaeDPzzlQp0hY9cONTctBsLH3UOmTFRmlXq/
+         umgw==
+X-Gm-Message-State: APjAAAUHSkFLRApJOre/ElyjpfHQOhsqmMStI53XvDPVT9Q8V+0ilDgi
+        TJ3HLHe6ujkOu+1nORo0aC6uiLoZKUrmVpoMEVXpd3wTv9MsQ+cxjmgyzA0V7nlal1KXnU8eiuX
+        fdxWq/sLZd64eRiBhGRlN+3I0
+X-Received: by 2002:a05:651c:390:: with SMTP id e16mr6751316ljp.196.1574332158697;
+        Thu, 21 Nov 2019 02:29:18 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwad1vM01fCMQKOMxvi3SDsPF4W318bJWsoMeOqcAfg1It54CDiNRVixFQOF/1CZYdfjRHvyw==
+X-Received: by 2002:a05:651c:390:: with SMTP id e16mr6751297ljp.196.1574332158521;
+        Thu, 21 Nov 2019 02:29:18 -0800 (PST)
+Received: from alrua-x1.borgediget.toke.dk ([2a00:7660:6da:443::2])
+        by smtp.gmail.com with ESMTPSA id 141sm1013079ljj.37.2019.11.21.02.29.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Nov 2019 02:29:17 -0800 (PST)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+        id CE1A11818B9; Thu, 21 Nov 2019 11:29:16 +0100 (CET)
+From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <thoiland@redhat.com>
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        David Miller <davem@davemloft.net>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        linux-crypto@vger.kernel.org
+Subject: Re: [PATCH RFC net-next] net: WireGuard secure network tunnel
+In-Reply-To: <20191120203538.199367-1-Jason@zx2c4.com>
+References: <20191120203538.199367-1-Jason@zx2c4.com>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date:   Thu, 21 Nov 2019 11:29:16 +0100
+Message-ID: <877e3t8qv7.fsf@toke.dk>
 MIME-Version: 1.0
-In-Reply-To: <c790578751dd69fb1080b355f5847c9ea5fb0e15.camel@perches.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: tl
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:y/h5sb/786gqDEWE6z9CgDPlnpwNX3Gqz3Dd/ECnTJtWNM9dchd
- wYzIcJa2BskCfye2WvWuQJYxPD1WSdzRujKS5IMCH2W4row9fRyWflQacup7BdSwS5mdQ5z
- f7k0w7vMQ2IZDeSZ7WCd4Cq9+uNiSVBhSVNkecGzAcW1I9bgrLzfYmDWl3qQ+ROFL39bUB8
- 1TQmJNqn0xBYKWY1I2q6Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:TMnK+eKxlyc=:WkOGlPj1Fg6eBOPiIJmS8g
- H5AYFdqQAPJKBXp/5cbtKH1sHvPNyiEttn+BXhtZwmhOTqYOoKdvenJCgBHXOhqwM6UvNjtkT
- f4fPVaBWeZr1dKpf8rRzlOJ+Zys6m6eJKEuM0FGicf+BqtHVymDlw4gzRtdrGlwLPccdZyrE1
- bPqS+hDCUTc/aSJYnsRnpeboym6JtWFCq+JchgSMY9I1BL6WjMwfU9NAYph8VqIiheeSB455q
- CJXvVnnWiyIbCMbIhf375LbolBLaC96r4dLFSLo+Tbvb8zrERNAfNq3dRM08VR6eOsYeFtGNN
- rQqMJTOzLhYYSZfgS/tUEt0U+RzCs5X5uwr735yWmmGxUtAMAPs5KtfwRnJOCPJg0z+xdWffP
- SFU/mhpwkZwqf62DuYUBDeHwJ0HdPMTjMM9yJMLwFTIf5wm6E44otJv1dg1kXXCuLYswLw9Ke
- D3VT6XmY1vOG2BiOKtRu6M8FzNB/IUJ1mOQ//uklrRo9moo9GS/nsUoDMz5++yKW/6JMhxSbU
- iJzK7IjQoZLyamOLi0MSqBEiBC1DYULfyh7gZDOehbAXGqctAt70v8Z8gtYaM0ODazzlIoxaa
- sk2czPrncKN8YZ15m9yQU4nTNHJIjulGqCYYATpZJvjHO4V2FLct8G1ItfvTLFhERCFJ9yIff
- GHSB42xLUpUJJOvfjU11LmYVjzP0LLiyNZUIaZsN/W0/LHcuRukMlkTAazibh+LiMb//oCHdI
- HsJcK8QhmKEOjfLkUrtdPeD4Zr5P9LsQE335ammcn3tY4P5sKlss9Ne/NR6poZVa7SVFLj925
- XwHQy3EajV/A48x79Wcw5CeApItN+ft9/bW7yicNBVrhi6ez4vvSzTv29+gF93aawaUmt7Ny6
- fSZhgNBkr0RzK27UmZiA==
+X-MC-Unique: dDULx1lxMfKaKUKBRx0yjQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26.10.19 21:40, Joe Perches wrote:
-> On Sat, 2019-10-26 at 15:54 +0800, zhanglin wrote:
->> memset() the structure ethtool_wolinfo that has padded bytes
->> but the padded bytes have not been zeroed out.
-> []
->> diff --git a/net/core/ethtool.c b/net/core/ethtool.c
-> []
->> @@ -1471,11 +1471,13 @@ static int ethtool_reset(struct net_device *dev, char __user *useraddr)
->>  
->>  static int ethtool_get_wol(struct net_device *dev, char __user *useraddr)
->>  {
->> -	struct ethtool_wolinfo wol = { .cmd = ETHTOOL_GWOL };
->> +	struct ethtool_wolinfo wol;
->>  
->>  	if (!dev->ethtool_ops->get_wol)
->>  		return -EOPNOTSUPP;
->>  
->> +	memset(&wol, 0, sizeof(struct ethtool_wolinfo));
->> +	wol.cmd = ETHTOOL_GWOL;
->>  	dev->ethtool_ops->get_wol(dev, &wol);
->>  
->>  	if (copy_to_user(useraddr, &wol, sizeof(wol)))
-> 
-> It seems likely there are more of these.
-> 
-> Is there any way for coccinelle to find them?
+"Jason A. Donenfeld" <Jason@zx2c4.com> writes:
 
-Just curios: is static struct initialization (on stack) something that
-should be avoided ? I've been under the impression that static
-initialization allows thinner code and gives the compiler better chance
-for optimizations.
+> RFC Note:
+>   This is a RFC for folks who want to play with this early, because
+>   Herbert's cryptodev-2.6 tree hasn't yet made it into net-next. I'll
+>   repost this as a v1 (possibly with feedback incorporated) once the
+>   various trees are in the right place. This compiles on top of the
+>   Frankenzinc patchset from Ard, though it hasn't yet received suitable
+>   testing there for me to call it v1 just yet. Preliminary testing with
+>   the usual netns.sh test suite on x86 indicates it's at least mostly
+>   functional, but I'll be giving things further scrutiny in the days to
+>   come.
 
+Hi Jason
 
---mtx
+Great to see this! Just a few small comments for now:
 
----
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+> +/*
+> + * Copyright (C) 2015-2019 Jason A. Donenfeld <Jason@zx2c4.com>. All Rig=
+hts Reserved.
+> + */
+
+Could you please get rid of the "All Rights Reserved" (here, and
+everywhere else)? All rights are *not* reserved: this is licensed under
+the GPL. Besides, that phrase is in general dubious at best:
+https://en.wikipedia.org/wiki/All_rights_reserved
+
+> +=09MAX_QUEUED_INCOMING_HANDSHAKES =3D 4096, /* TODO: replace this with D=
+QL */
+> +=09MAX_STAGED_PACKETS =3D 128,
+> +=09MAX_QUEUED_PACKETS =3D 1024 /* TODO: replace this with DQL */
+
+Yes, please (on the TODO) :)
+
+FWIW, since you're using pointer rings I think the way to do this is
+probably to just keep the limits in place as a maximum size, and then
+use DQL (or CoDel) to throttle enqueue to those pointer rings instead of
+just letting them fill.
+
+Happy to work with you on this (as I believe I've already promised), but
+we might as well do that after the initial version is merged...
+
+-Toke
+
