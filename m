@@ -2,88 +2,131 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MIME_QP_LONG_LINE,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7546AC43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 23:09:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40241C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 23:12:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F46E20692
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 23:09:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574377766;
-	bh=aJ96Pu0TItbu0cExizL14b1Xpu2jLlpmp08Evn6sd8U=;
-	h=From:To:Subject:Date:List-ID:From;
-	b=LU05onsUx7IGEBDZKuLD0RqO+o1Pd8ghOBXpKeTd7Q1ESGjPR8hGIj3fLsTFvAczB
-	 80eKROQ5UkCwUHlRRNE8tOeA5gN9RoKnFHw/5nG7YpQhIQXpifuDdcRX0DayLEUJsQ
-	 BhppK9ZKpifs1AeZBO5alz/TSXWGYEdd2fGUen0U=
+	by mail.kernel.org (Postfix) with ESMTP id ED854206CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 23:12:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="PsIuuJ/0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbfKUXJZ (ORCPT
+        id S1726529AbfKUXME (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 18:09:25 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:36400 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726038AbfKUXJZ (ORCPT
+        Thu, 21 Nov 2019 18:12:04 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:33429 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725956AbfKUXME (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 18:09:25 -0500
-Received: by mail-ot1-f65.google.com with SMTP id f10so4573179oto.3;
-        Thu, 21 Nov 2019 15:09:24 -0800 (PST)
+        Thu, 21 Nov 2019 18:12:04 -0500
+Received: by mail-pf1-f196.google.com with SMTP id c184so2536603pfb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 15:12:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=NP+haqKPmSQ+6hDWMNAqvC/wCJ+E+aitQAs3F0Y4tsY=;
+        b=PsIuuJ/06Kgz6oSBzYf8Xt4v2tbxWe4SCBn9Iggvo34QGCP0y73nNEI/Bygojn7gG5
+         tMMBhjMa+YK6ImC75z5nYAOfAcaEzezrWY0MkoKdbyrrFzHzOj9zS9okVwU2O7RZW9Fk
+         zVbov70BJHSG+tiV9Wdor8vgDcrpAWLrfJA54QJq/spui7MTp/ASWBBwXB7KHy6cyFgZ
+         b8kbqF0Gi0evM3fUG5i69acEzxrXwSFIKC8Wm+09wP0Bhdhj6HeraNfguMnVA9PV8SN8
+         /4B1VECl5xhz1bsm5rbNgGbbQnjtFEUmwm63j4Dad5GOwZKmW7HLH5LArmUiRm1A9Nfs
+         w0Pw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=PJG++O/7WyYCoHSioQk9zwnAb3uyZILPOLprzryEL3g=;
-        b=R0f40nI7cq2eKAAMYXmvkNGOdReglx240bolhulsmbFvo2seWRf8hMShf8TiixEh5w
-         chKZT3tKXBKWENUQrFEKkS27K2eqJjDKyki8gqFtg4563yvam6Pgt+eGstLFeFXDh3kd
-         L5vehj5WruwIxHFDtOlnPlgGGg23oT8PZGN10abHQ8CChFD24LqXZNAtp4nqRmpC4FVc
-         Sz+5mtM2vCSKmpZG70q7M2Jcl7KiYpgVbHbcHAUeZLUvq2BEdOfzhsmYkiQObj3Sv1J6
-         YUzDYbXCATrt8bEg506W1gjh02o+oDD3xGFZV4891fpKMLKtBqOUhX1NMPFD0VSfk2lQ
-         4mhQ==
-X-Gm-Message-State: APjAAAWR+1KQDc6s8HkipUsL3y6j8p595PpvmUgMPices4R7Y29dvoiG
-        CpIvUBV7Ofl4GaevuKxs8lz69CE=
-X-Google-Smtp-Source: APXvYqxKa4P+GuN1q5TxElqHyMR3QAgbYhYhCljHTzIlbMcN6MuWHWWQVlXURutyxBtvDWV2YrwOnA==
-X-Received: by 2002:a9d:62d2:: with SMTP id z18mr8427005otk.108.1574377763963;
-        Thu, 21 Nov 2019 15:09:23 -0800 (PST)
-Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id s133sm1405942oia.58.2019.11.21.15.09.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Nov 2019 15:09:23 -0800 (PST)
-From:   Rob Herring <robh@kernel.org>
-To:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: firmware: ixp4xx: Drop redundant minItems/maxItems
-Date:   Thu, 21 Nov 2019 17:09:23 -0600
-Message-Id: <20191121230923.4639-1-robh@kernel.org>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=NP+haqKPmSQ+6hDWMNAqvC/wCJ+E+aitQAs3F0Y4tsY=;
+        b=V3eIQhLfMaqNqn+srG/tTI8zwglD1FomR6IderByM4v1bitw5dk3lSoOHk1CH9o1nn
+         sd5QUBGKPKYSSJaZY44mFKVMnHT6Xy5jjXI5ykCIHEM4o9M5vGBpZX6lmpp0hRbT6mcI
+         Aw6TRxUqsM+tylTpYYRcJXx1VurrFWNcjrecm/GcX2MqPeEWUcpWyiO5O6A8qGZ9GLyQ
+         deasznKqV4VK4o8XiHVgeE/B7+nlcesQo9QikI0wmZXkBeWrEMzjfRA57brDI/xj+mMv
+         3qywOH7oYu0gTVN7pa7PXUFiPXz0YuE48rwdssid6ZqDSJSP55veqEYI40zulcMKgByB
+         JUjQ==
+X-Gm-Message-State: APjAAAWw0KiC1KMJA7GK5GwNNfXEIXAM8yS10X7Obf/SIuLUNThp8aEh
+        F2RN5Kf3ke0YauYz6MhI2dcy5g==
+X-Google-Smtp-Source: APXvYqz5dojdO7T/reQkQuf6jRFPZecRF3ZU2VLeLeXAq1I3YjVu+Tvcb7E7riv8dyctTcS9cteYnQ==
+X-Received: by 2002:a62:5485:: with SMTP id i127mr5978697pfb.186.1574377923797;
+        Thu, 21 Nov 2019 15:12:03 -0800 (PST)
+Received: from ?IPv6:2600:1010:b062:827f:f4a7:a1e:b790:5671? ([2600:1010:b062:827f:f4a7:a1e:b790:5671])
+        by smtp.gmail.com with ESMTPSA id h4sm556971pjs.24.2019.11.21.15.12.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 Nov 2019 15:12:02 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v10 5/6] x86/split_lock: Handle #AC exception for split lock
+Date:   Thu, 21 Nov 2019 15:12:01 -0800
+Message-Id: <FB8AAE2A-108E-493A-B5FD-FCBFC1CA1C38@amacapital.net>
+References: <20191121231410.GD199273@romley-ivt3.sc.intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
+In-Reply-To: <20191121231410.GD199273@romley-ivt3.sc.intel.com>
+To:     Fenghua Yu <fenghua.yu@intel.com>
+X-Mailer: iPhone Mail (17A878)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The minItems/maxItems default to the number of items in an 'items' list,
-so drop the redundant specifying of them here.
 
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- .../firmware/intel,ixp4xx-network-processing-engine.yaml        | 2 --
- 1 file changed, 2 deletions(-)
+> On Nov 21, 2019, at 3:02 PM, Fenghua Yu <fenghua.yu@intel.com> wrote:
+>=20
+> =EF=BB=BFOn Thu, Nov 21, 2019 at 02:10:38PM -0800, Andy Lutomirski wrote:
+>>=20
+>>=20
+>>>> On Nov 20, 2019, at 5:45 PM, Fenghua Yu <fenghua.yu@intel.com> wrote:
+>>>=20
+>>> +    if (!user_mode(regs) && split_lock_detect_enabled)
+>>> +        panic("Split lock detected\n");
+>>=20
+>> NAK.
+>>=20
+>> 1. Don=E2=80=99t say =E2=80=9Csplit lock detected=E2=80=9D if you don=E2=80=
+=99t know that you detected a split lock.  Or is this genuinely the only way=
+ to get #AC from kernel mode?
+>=20
+> Intel hardware design team confirmed that the only reason for #AC in ring 0=
+ is
+> split lock.
 
-diff --git a/Documentation/devicetree/bindings/firmware/intel,ixp4xx-network-processing-engine.yaml b/Documentation/devicetree/bindings/firmware/intel,ixp4xx-network-processing-engine.yaml
-index 4f0db8ee226a..878a2079ebb6 100644
---- a/Documentation/devicetree/bindings/firmware/intel,ixp4xx-network-processing-engine.yaml
-+++ b/Documentation/devicetree/bindings/firmware/intel,ixp4xx-network-processing-engine.yaml
-@@ -25,8 +25,6 @@ properties:
-           - const: intel,ixp4xx-network-processing-engine
- 
-   reg:
--    minItems: 3
--    maxItems: 3
-     items:
-       - description: NPE0 register range
-       - description: NPE1 register range
--- 
-2.20.1
+Okay.
 
+This should eventually get integrated with Jann=E2=80=99s decoder work to pr=
+int the lock address and size.
+
+>=20
+>>=20
+>> 2. Don=E2=80=99t panic. Use die() just like every other error where nothi=
+ng is corrupted.
+>=20
+> Ok. Will change to die() which provides all the trace information and
+> allow multiple split lock in one boot.
+>=20
+>>=20
+>> And maybe instead turn off split lock detection and print a stack trace i=
+nstead.  Then the kernel is even more likely to survive to log something use=
+ful.
+>=20
+> How about we just use simple policy die() in this patch set to allow
+> detect and debug split lock issues and extend the code base to handle
+> split lock with different policies (panic, disable split lock, maybe other=
+
+> options) in the future?
+>=20
+>=20
+
+I=E2=80=99m okay with this.  Peter?
+
+>=20
