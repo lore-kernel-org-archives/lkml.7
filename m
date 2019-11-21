@@ -2,112 +2,129 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F3C8C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:45:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 136ADC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:51:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 303DE2088F
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:45:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D57982075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:51:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NMLOmZbG"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="cOoelbzV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbfKUKpt (ORCPT
+        id S1726362AbfKUKvg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 05:45:49 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39350 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726014AbfKUKps (ORCPT
+        Thu, 21 Nov 2019 05:51:36 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35490 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726014AbfKUKvf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 05:45:48 -0500
-Received: by mail-wm1-f68.google.com with SMTP id t26so3104350wmi.4;
-        Thu, 21 Nov 2019 02:45:46 -0800 (PST)
+        Thu, 21 Nov 2019 05:51:35 -0500
+Received: by mail-lj1-f194.google.com with SMTP id r7so2702233ljg.2
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 02:51:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=cxS5SnfMHCr10pDxeGM/7sjAasmtfI9lheTpz/ICL50=;
-        b=NMLOmZbG1QR7h4UQQ4HZf1hVPYrxEm1ZJNehrqPfkOdCdfWlHrkopiy3UcAmeWWXPu
-         46EUdDIIlNcH92rVn/4LIabijIkjTfKTwTBuFQIsx0UZj2M/998qHZEhVFjyCV0grzQs
-         V9KHSnlF3ookG3Vb7mK3stgJbIQgH9sUPko33b+e0raVFDd+rU9jlRePXW0qC7J8SGal
-         u8BPmeIdrwAaeT9KW8IfMnz0nFh7C1N7MHKPQ+ykh3k0X5090qbFW865LYHXlHXSH+jy
-         M48ZZR0NzvTjY4m4z8mg5o8iTic2mlCtNlWqH5xKttE01xzDgrZaYFJJ9qK/HfhfcGxl
-         rbyA==
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=FdEPe6fpUNXI9/WAZZIOxWELNA+kAoI7dzDky4bTZis=;
+        b=cOoelbzVpuDCXItrFwxTJF/U/0gy8t5gB2RgT8FVGP8uiqR75cwQA4BAtqadKS31di
+         7G5OJUuaQOGdSbOXKXffvaGa9BFA4s8NJhxsv7eaYcoczQfAPyweOCCyRDu+oKVNkB0r
+         MlUf6jOKZrG14pcYrk0WLpVdLeXGhoCPR22tM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=cxS5SnfMHCr10pDxeGM/7sjAasmtfI9lheTpz/ICL50=;
-        b=NWAo5RDhqKJeMp/yPIM6YrWwGIZNh750NJw498Y0xXuX6R/68XSKI6c5iP8SYnaPrg
-         lIKqW0Ou7qDhONEugk17Un3aXmWDr4L9dtnCIVgEgLy9ZNZgbd+gZJ04Altzi2o3OnC3
-         +/U92zARydFNkVRML09/3eJhn63Va86pJzR2Td43k2W9TxSG8HZSG/nSXRiDGLOsFEo0
-         JkPzIJcVpLxXun2oZUW/4s11Clob8nEtqUXXAuOU73tUiIHAWXtaPvOV+HH5LEGQBz9X
-         XoG3zWTe/QlyJDsfP5NqAGNiE9s6AvmcXc7AejG0eCqjPaT5v7WIOwL3vB8MVU2Zsein
-         PVHQ==
-X-Gm-Message-State: APjAAAXLNb8GQYT9DPwkOct0bbdxUIVG+HuTlcQNWseazFR9n2vjyolL
-        tjyET1H7DO/B6IA7MqpPmLTPsVje
-X-Google-Smtp-Source: APXvYqxILiCiMhr9y5tsRaYve/TJEB3kVlTw+lE1x7awLVKtBnT5EdHOOOgqYiCiqzHchAY+PNQ0LA==
-X-Received: by 2002:a7b:cb86:: with SMTP id m6mr9552009wmi.124.1574333145541;
-        Thu, 21 Nov 2019 02:45:45 -0800 (PST)
-Received: from 640k.lan ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id k1sm2871745wrp.29.2019.11.21.02.45.44
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=FdEPe6fpUNXI9/WAZZIOxWELNA+kAoI7dzDky4bTZis=;
+        b=pLufeJ/qq7Gm+/O/6w4vPlYlEJHZXP12boluxF+ClIyPSed3eCpwbt4s7AOjPatkv7
+         qD2wcG+RADlY06YuCWfidk/XH92txpb5cgLlqkYG80Oan4vw/8j+6k2EB5kqf/hChdOj
+         RSTKlpCSHFrjf3rvCF/wwXLOxnTV4S3vRsdWTzKgfAzKyChS6TOrcLM8anwqDhxdxxcK
+         7K9p/BGLjcP7Y9xBswQ+sfzWtkPWhOv1jSJXbr2mqe7NFHYel7LjOdzLeedrklaxTWY+
+         7xBpZQtQmzyR0YkA0XiCdTODWmOlQbbYxI10IMy3vobtX32uC4LtQmrycROFDWD0Qa67
+         Xvbw==
+X-Gm-Message-State: APjAAAWXfeg7iwijdcivVtePpxm/UOweiQRIEkw+N3pHjAOg0zSNq21/
+        pUgZBxLboOvRfOYXFgB73cNfiQ==
+X-Google-Smtp-Source: APXvYqwsrJHfNqQKBJ6Az9UWRwDqhmW2Ry/0CYXbRk7uXrYHeOnurDm9is8KSqA1zJkocIOHYpYdEA==
+X-Received: by 2002:a2e:9e97:: with SMTP id f23mr6817404ljk.89.1574333493384;
+        Thu, 21 Nov 2019 02:51:33 -0800 (PST)
+Received: from [172.16.11.28] ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id p18sm1167891lfh.24.2019.11.21.02.51.32
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 21 Nov 2019 02:45:45 -0800 (PST)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Peter Feiner <pfeiner@google.com>
-Subject: [PATCH] KVM: x86: create mmu/ subdirectory
-Date:   Thu, 21 Nov 2019 11:45:43 +0100
-Message-Id: <1574333143-27723-1-git-send-email-pbonzini@redhat.com>
-X-Mailer: git-send-email 1.8.3.1
+        Thu, 21 Nov 2019 02:51:32 -0800 (PST)
+Subject: Re: [PATCH] export.h: reduce __ksymtab_strings string duplication by
+ using "MS" section flags
+To:     Jessica Yu <jeyu@kernel.org>, linux-kernel@vger.kernel.org
+Cc:     Matthias Maennich <maennich@google.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <20191120145110.8397-1-jeyu@kernel.org>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <93d3936d-0bc4-9639-7544-42a324f01ac1@rasmusvillemoes.dk>
+Date:   Thu, 21 Nov 2019 11:51:31 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20191120145110.8397-1-jeyu@kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Preparatory work for shattering mmu.c into multiple files.  Besides making it easier
-to follow, this will also make it possible to write unit tests for various parts.
+On 20/11/2019 15.51, Jessica Yu wrote:
+> 
+> We can alleviate this situation by utilizing the SHF_MERGE and
+> SHF_STRING section flags. SHF_MERGE|SHF_STRING indicate to the linker
+> that the data in the section are null-terminated strings 
 
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/x86/kvm/Makefile                | 4 ++--
- arch/x86/kvm/{ => mmu}/mmu.c         | 0
- arch/x86/kvm/{ => mmu}/page_track.c  | 0
- arch/x86/kvm/{ => mmu}/paging_tmpl.h | 0
- 4 files changed, 2 insertions(+), 2 deletions(-)
- rename arch/x86/kvm/{ => mmu}/mmu.c (100%)
- rename arch/x86/kvm/{ => mmu}/page_track.c (100%)
- rename arch/x86/kvm/{ => mmu}/paging_tmpl.h (100%)
+[pet peeve: nul, not null.]
 
-diff --git a/arch/x86/kvm/Makefile b/arch/x86/kvm/Makefile
-index 31ecf7a76d5a..b19ef421084d 100644
---- a/arch/x86/kvm/Makefile
-+++ b/arch/x86/kvm/Makefile
-@@ -8,9 +8,9 @@ kvm-y			+= $(KVM)/kvm_main.o $(KVM)/coalesced_mmio.o \
- 				$(KVM)/eventfd.o $(KVM)/irqchip.o $(KVM)/vfio.o
- kvm-$(CONFIG_KVM_ASYNC_PF)	+= $(KVM)/async_pf.o
- 
--kvm-y			+= x86.o mmu.o emulate.o i8259.o irq.o lapic.o \
-+kvm-y			+= x86.o emulate.o i8259.o irq.o lapic.o \
- 			   i8254.o ioapic.o irq_comm.o cpuid.o pmu.o mtrr.o \
--			   hyperv.o page_track.o debugfs.o
-+			   hyperv.o debugfs.o mmu/mmu.o mmu/page_track.o
- 
- kvm-intel-y		+= vmx/vmx.o vmx/vmenter.o vmx/pmu_intel.o vmx/vmcs12.o vmx/evmcs.o vmx/nested.o
- kvm-amd-y		+= svm.o pmu_amd.o
-diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu/mmu.c
-similarity index 100%
-rename from arch/x86/kvm/mmu.c
-rename to arch/x86/kvm/mmu/mmu.c
-diff --git a/arch/x86/kvm/page_track.c b/arch/x86/kvm/mmu/page_track.c
-similarity index 100%
-rename from arch/x86/kvm/page_track.c
-rename to arch/x86/kvm/mmu/page_track.c
-diff --git a/arch/x86/kvm/paging_tmpl.h b/arch/x86/kvm/mmu/paging_tmpl.h
-similarity index 100%
-rename from arch/x86/kvm/paging_tmpl.h
-rename to arch/x86/kvm/mmu/paging_tmpl.h
--- 
-1.8.3.1
+> As of v5.4-rc5, the following statistics were gathered with x86
+> defconfig with approximately 10.7k exported symbols.
+> 
+> Size of __ksymtab_strings in vmlinux:
+> -------------------------------------
+> v5.4-rc5: 213834 bytes
+> v5.4-rc5 with commit c3a6cf19e695: 224455 bytes
+> v5.4-rc5 with this patch: 205759 bytes
+> 
+> So, we already see memory savings of ~8kB compared to vanilla -rc5 and
+> savings of nearly 18.7kB compared to -rc5 with commit c3a6cf19e695 on top.
 
+Yippee :) Thanks for picking up the ball and sending this.
+
+>  /*
+> - * note on .section use: @progbits vs %progbits nastiness doesn't matter,
+> - * since we immediately emit into those sections anyway.
+> + * note on .section use: we specify @progbits vs %progbits since usage of
+> + * "M" (SHF_MERGE) section flag requires it.
+>   */
+> +
+> +#ifdef CONFIG_ARM
+> +#define ARCH_PROGBITS %progbits
+> +#else
+> +#define ARCH_PROGBITS @progbits
+> +#endif
+
+Did you figure out a way to determine if ARM is the only odd one? I was
+just going by gas' documentation which mentions ARM as an example, but
+doesn't really provide a way to know what each arch uses. I suppose 0day
+will tell us shortly.
+
+If we want to avoid arch-ifdefs in these headers (and that could become
+unwieldy if ARM is not the only one) I think one could add a
+asm-generic/progbits.h, add progbits.h to mandatory-y in
+include/asm-generic/Kbuild, and then just provide a progbits.h on ARM
+(and the other exceptions) - then I think the kbuild logic automatically
+makes "#include <asm/progbits.h>" pick up the right one. And the header
+could define ARCH_PROGBITS with or without the double quotes depending
+on __ASSEMBLY__.
+
+OTOH, adding a whole new header just for this may be overkill.
+
+Rasmus
