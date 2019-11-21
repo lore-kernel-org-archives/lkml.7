@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24DA4C43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:19:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A143C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:19:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E58B52089D
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:19:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4322A20721
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:19:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574306352;
-	bh=TPz5EgcuOBWB3eKu+t5L++624Br3DKKb2jnElgd4ADM=;
+	s=default; t=1574306356;
+	bh=fuKwYNhnEaHwePLWYy4xsWV102lg4SPtdbTJkGFerLo=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=YDHEIrAjcBD+D8/7MF4zI99LfjS7Zy4GeadA7mhbHVrst55O8KpQ5V7M7syomVlmX
-	 TneppHugD6kBJBXV4oKYW6JM0+tfYqIYxPV+alSpEInzl1tAUzAV/GgRYlXuuWcrIJ
-	 msVTwBi611BXmRRdKlQJmqc4FNX256hc+vmSipTc=
+	b=WQctXWkN7lMamFShB/uaglGn2x6dokSjgXWmPYqGNKRM7f0sekl8WS4Q1NRCFphqg
+	 BxSbyTxCTvK/IWdKW2Om4L0hLZ8F8KB4r0c4I7G1yXeK9iYpnKgU/xedqMR+W79Wrq
+	 3kFYEkdEZEpvMnlELL0WoLLa0RqTz4FBaFuB5/yA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727040AbfKUDTL (ORCPT
+        id S1727096AbfKUDTP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 22:19:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60682 "EHLO mail.kernel.org"
+        Wed, 20 Nov 2019 22:19:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725819AbfKUDTJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 22:19:09 -0500
+        id S1725819AbfKUDTM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 22:19:12 -0500
 Received: from PC-kkoz.proceq.com (unknown [213.160.61.66])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2537820721;
-        Thu, 21 Nov 2019 03:19:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 841ED20721;
+        Thu, 21 Nov 2019 03:19:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574306348;
-        bh=TPz5EgcuOBWB3eKu+t5L++624Br3DKKb2jnElgd4ADM=;
+        s=default; t=1574306351;
+        bh=fuKwYNhnEaHwePLWYy4xsWV102lg4SPtdbTJkGFerLo=;
         h=From:To:Cc:Subject:Date:From;
-        b=X1rWb2kJtwT/XvLPH6WcQrDch7Xhcu4VIHH2NGjxICLVYGKq0bsFPNPQmK4S+GbXB
-         hgHdXmIkpQw/WiqP8HG0s2fTzysuGgsDK/33Edenab+weWQH4oxvykbqlPhnGNnP9y
-         nFCadSKsplCX7k6s5BMoS9NtCrUhgxaukZcYOWxc=
+        b=AbXvEL/J6fGY4IwcGySN2QD28ASDu7NkI8j2eiVglwoIc1FqUKw+TlmZ4qMTyrVAk
+         gaiuK4icHAprAXmuKmXG/+bvlL4jJ7C3/qsc0R+Qvo2r/kKsS/xmW2zi0GTmVbuYYG
+         3ePikbhgmP1/cUDkqfB+cNKpE/ZcUo0wEn1y2OJI=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
-Subject: [PATCH v2] block: Fix Kconfig indentation
-Date:   Thu, 21 Nov 2019 04:19:05 +0100
-Message-Id: <1574306345-29160-1-git-send-email-krzk@kernel.org>
+        Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org
+Subject: [PATCH v2] dmaengine: Fix Kconfig indentation
+Date:   Thu, 21 Nov 2019 04:19:08 +0100
+Message-Id: <1574306348-29212-1-git-send-email-krzk@kernel.org>
 X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -63,132 +64,92 @@ Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Changes since v1:
 1. Fix also 7-space and tab+1 space indentation issues.
 ---
- block/Kconfig                  | 14 +++++++-------
- block/Kconfig.iosched          | 12 ++++++------
- drivers/block/Kconfig          | 28 ++++++++++++++--------------
- drivers/block/mtip32xx/Kconfig |  2 +-
- 4 files changed, 28 insertions(+), 28 deletions(-)
+ drivers/dma/Kconfig | 60 ++++++++++++++++++++++++++---------------------------
+ 1 file changed, 30 insertions(+), 30 deletions(-)
 
-diff --git a/block/Kconfig b/block/Kconfig
-index 9fa6ce2177bc..ec3b958f0a23 100644
---- a/block/Kconfig
-+++ b/block/Kconfig
-@@ -3,11 +3,11 @@
- # Block layer core configuration
- #
- menuconfig BLOCK
--       bool "Enable the block layer" if EXPERT
--       default y
--       select SBITMAP
--       select SRCU
--       help
-+	bool "Enable the block layer" if EXPERT
-+	default y
-+	select SBITMAP
-+	select SRCU
+diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+index 03dfee5c66d9..6fa1eba9d477 100644
+--- a/drivers/dma/Kconfig
++++ b/drivers/dma/Kconfig
+@@ -15,19 +15,19 @@ menuconfig DMADEVICES
+ 	  be empty in some cases.
+ 
+ config DMADEVICES_DEBUG
+-        bool "DMA Engine debugging"
+-        depends on DMADEVICES != n
+-        help
+-          This is an option for use by developers; most people should
+-          say N here.  This enables DMA engine core and driver debugging.
++	bool "DMA Engine debugging"
++	depends on DMADEVICES != n
 +	help
- 	 Provide block layer support for the kernel.
++	  This is an option for use by developers; most people should
++	  say N here.  This enables DMA engine core and driver debugging.
  
- 	 Disable this option to remove the block layer support from the
-@@ -171,8 +171,8 @@ config BLK_DEBUG_FS
- 	say Y here.
+ config DMADEVICES_VDEBUG
+-        bool "DMA Engine verbose debugging"
+-        depends on DMADEVICES_DEBUG != n
+-        help
+-          This is an option for use by developers; most people should
+-          say N here.  This enables deeper (more verbose) debugging of
+-          the DMA engine core and drivers.
++	bool "DMA Engine verbose debugging"
++	depends on DMADEVICES_DEBUG != n
++	help
++	  This is an option for use by developers; most people should
++	  say N here.  This enables deeper (more verbose) debugging of
++	  the DMA engine core and drivers.
  
- config BLK_DEBUG_FS_ZONED
--       bool
--       default BLK_DEBUG_FS && BLK_DEV_ZONED
-+	bool
-+	default BLK_DEBUG_FS && BLK_DEV_ZONED
  
- config BLK_SED_OPAL
- 	bool "Logic for interfacing with Opal enabled SEDs"
-diff --git a/block/Kconfig.iosched b/block/Kconfig.iosched
-index 7df14133adc8..b11a421b7387 100644
---- a/block/Kconfig.iosched
-+++ b/block/Kconfig.iosched
-@@ -29,13 +29,13 @@ config IOSCHED_BFQ
- 	Documentation/block/bfq-iosched.rst
+ if DMADEVICES
+@@ -215,28 +215,28 @@ config FSL_EDMA
+ 	  This module can be found on Freescale Vybrid and LS-1 SoCs.
  
- config BFQ_GROUP_IOSCHED
--       bool "BFQ hierarchical scheduling support"
--       depends on IOSCHED_BFQ && BLK_CGROUP
--       select BLK_CGROUP_RWSTAT
--       ---help---
-+	bool "BFQ hierarchical scheduling support"
-+	depends on IOSCHED_BFQ && BLK_CGROUP
-+	select BLK_CGROUP_RWSTAT
+ config FSL_QDMA
+-       tristate "NXP Layerscape qDMA engine support"
+-       depends on ARM || ARM64
+-       select DMA_ENGINE
+-       select DMA_VIRTUAL_CHANNELS
+-       select DMA_ENGINE_RAID
+-       select ASYNC_TX_ENABLE_CHANNEL_SWITCH
+-       help
+-         Support the NXP Layerscape qDMA engine with command queue and legacy mode.
+-         Channel virtualization is supported through enqueuing of DMA jobs to,
+-         or dequeuing DMA jobs from, different work queues.
+-         This module can be found on NXP Layerscape SoCs.
++	tristate "NXP Layerscape qDMA engine support"
++	depends on ARM || ARM64
++	select DMA_ENGINE
++	select DMA_VIRTUAL_CHANNELS
++	select DMA_ENGINE_RAID
++	select ASYNC_TX_ENABLE_CHANNEL_SWITCH
++	help
++	 Support the NXP Layerscape qDMA engine with command queue and legacy mode.
++	 Channel virtualization is supported through enqueuing of DMA jobs to,
++	 or dequeuing DMA jobs from, different work queues.
++	 This module can be found on NXP Layerscape SoCs.
+ 	  The qdma driver only work on  SoCs with a DPAA hardware block.
+ 
+ config FSL_RAID
+-        tristate "Freescale RAID engine Support"
+-        depends on FSL_SOC && !ASYNC_TX_ENABLE_CHANNEL_SWITCH
+-        select DMA_ENGINE
+-        select DMA_ENGINE_RAID
+-        ---help---
+-          Enable support for Freescale RAID Engine. RAID Engine is
+-          available on some QorIQ SoCs (like P5020/P5040). It has
+-          the capability to offload memcpy, xor and pq computation
++	tristate "Freescale RAID engine Support"
++	depends on FSL_SOC && !ASYNC_TX_ENABLE_CHANNEL_SWITCH
++	select DMA_ENGINE
++	select DMA_ENGINE_RAID
 +	---help---
++	  Enable support for Freescale RAID Engine. RAID Engine is
++	  available on some QorIQ SoCs (like P5020/P5040). It has
++	  the capability to offload memcpy, xor and pq computation
+ 	  for raid5/6.
  
--       Enable hierarchical scheduling in BFQ, using the blkio
--       (cgroups-v1) or io (cgroups-v2) controller.
-+	Enable hierarchical scheduling in BFQ, using the blkio
-+	(cgroups-v1) or io (cgroups-v2) controller.
- 
- config BFQ_CGROUP_DEBUG
- 	bool "BFQ IO controller debugging"
-diff --git a/drivers/block/Kconfig b/drivers/block/Kconfig
-index 1bb8ec575352..fa0cd072f5a1 100644
---- a/drivers/block/Kconfig
-+++ b/drivers/block/Kconfig
-@@ -142,10 +142,10 @@ config BLK_DEV_UBD
- 	bool "Virtual block device"
- 	depends on UML
- 	---help---
--          The User-Mode Linux port includes a driver called UBD which will let
--          you access arbitrary files on the host computer as block devices.
--          Unless you know that you do not need such virtual block devices say
--          Y here.
-+	  The User-Mode Linux port includes a driver called UBD which will let
-+	  you access arbitrary files on the host computer as block devices.
-+	  Unless you know that you do not need such virtual block devices say
-+	  Y here.
- 
- config BLK_DEV_UBD_SYNC
- 	bool "Always do synchronous disk IO for UBD"
-@@ -156,16 +156,16 @@ config BLK_DEV_UBD_SYNC
- 	  Linux 'Virtual Machine' uses a journalling filesystem and the host
- 	  computer crashes.
- 
--          Synchronous operation (i.e. always writing data to the host's disk
--          immediately) is configurable on a per-UBD basis by using a special
--          kernel command line option.  Alternatively, you can say Y here to
--          turn on synchronous operation by default for all block devices.
-+	  Synchronous operation (i.e. always writing data to the host's disk
-+	  immediately) is configurable on a per-UBD basis by using a special
-+	  kernel command line option.  Alternatively, you can say Y here to
-+	  turn on synchronous operation by default for all block devices.
- 
--          If you're running a journalling file system (like reiserfs, for
--          example) in your virtual machine, you will want to say Y here.  If
--          you care for the safety of the data in your virtual machine, Y is a
--          wise choice too.  In all other cases (for example, if you're just
--          playing around with User-Mode Linux) you can choose N.
-+	  If you're running a journalling file system (like reiserfs, for
-+	  example) in your virtual machine, you will want to say Y here.  If
-+	  you care for the safety of the data in your virtual machine, Y is a
-+	  wise choice too.  In all other cases (for example, if you're just
-+	  playing around with User-Mode Linux) you can choose N.
- 
- config BLK_DEV_COW_COMMON
- 	bool
-@@ -430,7 +430,7 @@ config VIRTIO_BLK
- 	depends on VIRTIO
- 	---help---
- 	  This is the virtual block driver for virtio.  It can be used with
--          QEMU based VMMs (like KVM or Xen).  Say Y or M.
-+	  QEMU based VMMs (like KVM or Xen).  Say Y or M.
- 
- config VIRTIO_BLK_SCSI
- 	bool "SCSI passthrough request for the Virtio block driver"
-diff --git a/drivers/block/mtip32xx/Kconfig b/drivers/block/mtip32xx/Kconfig
-index bf221358567e..a469dc72e67a 100644
---- a/drivers/block/mtip32xx/Kconfig
-+++ b/drivers/block/mtip32xx/Kconfig
-@@ -7,4 +7,4 @@ config BLK_DEV_PCIESSD_MTIP32XX
- 	tristate "Block Device Driver for Micron PCIe SSDs"
- 	depends on PCI
- 	help
--          This enables the block driver for Micron PCIe SSDs.
-+	  This enables the block driver for Micron PCIe SSDs.
+ config IMG_MDC_DMA
 -- 
 2.7.4
 
