@@ -2,149 +2,105 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 988F5C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 07:29:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00D3FC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 07:29:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AEB820855
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 07:29:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD52A2089D
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 07:29:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="dF7WIzR/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbfKUH3Q (ORCPT
+        id S1727106AbfKUH3T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 02:29:16 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:32814 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725842AbfKUH3Q (ORCPT
+        Thu, 21 Nov 2019 02:29:19 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:8629 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725842AbfKUH3S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 02:29:16 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: aratiu)
-        with ESMTPSA id DD3A028DB43
-From:   Adrian Ratiu <adrian.ratiu@collabora.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>,
-        Adrian Ratiu <adrian.ratiu@collabora.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
-Cc:     Martyn Welch <martyn.welch@collabora.com>,
-        Sjoerd Simons <sjoerd.simons@collabora.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-imx@nxp.com, kernel@collabora.com
-Subject: Re: [PATCH v3 4/4] dt-bindings: display: add IMX MIPI DSI host
- controller doc
-In-Reply-To: <e19aca1f-842d-a5b4-6fc1-02f7f6dd136d@baylibre.com>
-References: <20191118152518.3374263-1-adrian.ratiu@collabora.com>
- <20191118152518.3374263-5-adrian.ratiu@collabora.com>
- <e19aca1f-842d-a5b4-6fc1-02f7f6dd136d@baylibre.com>
-Date:   Thu, 21 Nov 2019 09:29:39 +0200
-Message-ID: <87a78p7km4.fsf@iwork.i-did-not-set--mail-host-address--so-tickle-me>
+        Thu, 21 Nov 2019 02:29:18 -0500
+X-UUID: 50003c530eab45729dc643b5b631aaf2-20191121
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=DdOBazdkEY8z3b9oLQBOBsUR+PwkBxvsgtd16bL2wP8=;
+        b=dF7WIzR/p2XrAtxWVR+Uau04hx1SguyHDCvtAL0bumQpo8ZGhIzB07H26eHEYfdMkn2/o/0CgR9ItlVNh8Tz6g35yZIUMZs4km/tPhXQSPOFehPH3nUmb72k9cxTI3ZY5Io2WtdLG+tBJ8+lHghSvJ+oEnk/4FWL1CZdQVzL55o=;
+X-UUID: 50003c530eab45729dc643b5b631aaf2-20191121
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
+        (envelope-from <bibby.hsieh@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 2015701134; Thu, 21 Nov 2019 15:29:12 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 21 Nov 2019 15:29:05 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 21 Nov 2019 15:29:07 +0800
+From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
+To:     Jassi Brar <jassisinghbrar@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, CK HU <ck.hu@mediatek.com>
+CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>
+Subject: [PATCH] soc: mediatek: cmdq: avoid racing condition with mutex
+Date:   Thu, 21 Nov 2019 15:29:10 +0800
+Message-ID: <20191121072910.31665-1-bibby.hsieh@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 20 Nov 2019, Neil Armstrong <narmstrong@baylibre.com> 
-wrote:
-> Hi, 
-> 
-> On 18/11/2019 16:25, Adrian Ratiu wrote: 
-> 
-> A small commit log would be welcome here. 
-> 
->> Signed-off-by: Sjoerd Simons <sjoerd.simons@collabora.com> 
->> Signed-off-by: Martyn Welch <martyn.welch@collabora.com> 
->> Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com> --- 
->>  .../bindings/display/imx/mipi-dsi.txt         | 56 
->>  +++++++++++++++++++ 1 file changed, 56 insertions(+) create 
->>  mode 100644 
->>  Documentation/devicetree/bindings/display/imx/mipi-dsi.txt 
->>  diff --git 
->> a/Documentation/devicetree/bindings/display/imx/mipi-dsi.txt 
->> b/Documentation/devicetree/bindings/display/imx/mipi-dsi.txt 
->> new file mode 100644 index 000000000000..3f05c32ef963 --- 
->> /dev/null +++ 
->> b/Documentation/devicetree/bindings/display/imx/mipi-dsi.txt 
-> 
-> New bindings should use the yaml dt-schema format, could you 
-> convert it ?
+SWYgY21kcSBjbGllbnQgaXMgbXVsdGkgdGhyZWFkIHVzZXIsIHJhY2luZyB3aWxsIG9jY3VyIHdp
+dGhvdXQgbXV0ZXgNCnByb3RlY3Rpb24uIEl0IHdpbGwgbWFrZSB0aGUgQyBtZXNzYWdlIHF1ZXVl
+ZCBpbiBtYWlsYm94J3MgcXVldWUNCmFsd2F5cyBuZWVkIEQgbWVzc2FnZSdzIHRyaWdnZXJpbmcu
+DQoNClRocmVhZCBBCQlUaHJlYWQgQgkJICBUaHJlYWQgQwkJVGhyZWFkIEQuLi4NCi0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tDQptYm94X3NlbmRfbWVzc2FnZSgpDQoJc2VuZF9kYXRhKCkNCgkJ
+CW1ib3hfc2VuZF9tZXNzYWdlKCkNCgkJCQkqZXhpdA0KCQkJCQkJbWJveF9zZW5kX21lc3NhZ2Uo
+KQ0KCQkJCQkJCSpleGl0DQptYm94X2NsaWVudF90eGRvbmUoKQ0KCXR4X3RpY2soKQ0KCQkJbWJv
+eF9jbGllbnRfdHhkb25lKCkNCgkJCQl0eF90aWNrKCkNCgkJCQkJCW1ib3hfY2xpZW50X3R4ZG9u
+ZSgpDQoJCQkJCQkJdHhfdGljaygpDQptc2dfc3VibWl0KCkNCglzZW5kX2RhdGEoKQ0KCQkJbXNn
+X3N1Ym1pdCgpDQoJCQkJKmV4aXQNCgkJCQkJCW1zZ19zdWJtaXQoKQ0KCQkJCQkJCSpleGl0DQot
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KDQpTaWduZWQtb2ZmLWJ5OiBCaWJieSBIc2llaCA8
+YmliYnkuaHNpZWhAbWVkaWF0ZWsuY29tPg0KLS0tDQogZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRr
+LWNtZHEtaGVscGVyLmMgfCAzICsrKw0KIGluY2x1ZGUvbGludXgvc29jL21lZGlhdGVrL210ay1j
+bWRxLmggIHwgMSArDQogMiBmaWxlcyBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKykNCg0KZGlmZiAt
+LWdpdCBhL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jIGIvZHJpdmVycy9z
+b2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVyLmMNCmluZGV4IDlhZGQwZmQ1ZmE2Yy4uOWUzNWUw
+YmVmZmFhIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLWNtZHEtaGVscGVy
+LmMNCisrKyBiL2RyaXZlcnMvc29jL21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jDQpAQCAtODEs
+NiArODEsNyBAQCBzdHJ1Y3QgY21kcV9jbGllbnQgKmNtZHFfbWJveF9jcmVhdGUoc3RydWN0IGRl
+dmljZSAqZGV2LCBpbnQgaW5kZXgsIHUzMiB0aW1lb3V0KQ0KIAljbGllbnQtPmNsaWVudC5kZXYg
+PSBkZXY7DQogCWNsaWVudC0+Y2xpZW50LnR4X2Jsb2NrID0gZmFsc2U7DQogCWNsaWVudC0+Y2hh
+biA9IG1ib3hfcmVxdWVzdF9jaGFubmVsKCZjbGllbnQtPmNsaWVudCwgaW5kZXgpOw0KKwltdXRl
+eF9pbml0KCZjbGllbnQtPm11dGV4KTsNCiANCiAJaWYgKElTX0VSUihjbGllbnQtPmNoYW4pKSB7
+DQogCQlsb25nIGVycjsNCkBAIC0zNTIsOSArMzUzLDExIEBAIGludCBjbWRxX3BrdF9mbHVzaF9h
+c3luYyhzdHJ1Y3QgY21kcV9wa3QgKnBrdCwgY21kcV9hc3luY19mbHVzaF9jYiBjYiwNCiAJCXNw
+aW5fdW5sb2NrX2lycXJlc3RvcmUoJmNsaWVudC0+bG9jaywgZmxhZ3MpOw0KIAl9DQogDQorCW11
+dGV4X2xvY2soJmNsaWVudC0+bXV0ZXgpOw0KIAltYm94X3NlbmRfbWVzc2FnZShjbGllbnQtPmNo
+YW4sIHBrdCk7DQogCS8qIFdlIGNhbiBzZW5kIG5leHQgcGFja2V0IGltbWVkaWF0ZWx5LCBzbyBq
+dXN0IGNhbGwgdHhkb25lLiAqLw0KIAltYm94X2NsaWVudF90eGRvbmUoY2xpZW50LT5jaGFuLCAw
+KTsNCisJbXV0ZXhfdW5sb2NrKCZjbGllbnQtPm11dGV4KTsNCiANCiAJcmV0dXJuIDA7DQogfQ0K
+ZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvc29jL21lZGlhdGVrL210ay1jbWRxLmggYi9pbmNs
+dWRlL2xpbnV4L3NvYy9tZWRpYXRlay9tdGstY21kcS5oDQppbmRleCBhNzRjMWQ1YWNkZjMuLjBm
+OTA3MWNkMWJjNyAxMDA2NDQNCi0tLSBhL2luY2x1ZGUvbGludXgvc29jL21lZGlhdGVrL210ay1j
+bWRxLmgNCisrKyBiL2luY2x1ZGUvbGludXgvc29jL21lZGlhdGVrL210ay1jbWRxLmgNCkBAIC0y
+OCw2ICsyOCw3IEBAIHN0cnVjdCBjbWRxX2NsaWVudCB7DQogCXN0cnVjdCBtYm94X2NoYW4gKmNo
+YW47DQogCXN0cnVjdCB0aW1lcl9saXN0IHRpbWVyOw0KIAl1MzIgdGltZW91dF9tczsgLyogaW4g
+dW5pdCBvZiBtaWNyb3NlY29uZCAqLw0KKwlzdHJ1Y3QgbXV0ZXggbXV0ZXg7DQogfTsNCiANCiAv
+KioNCi0tIA0KMi4xOC4wDQo=
 
-Yes, I will convert to yaml and add a commit log in the next 
-version.
-
-Will leave the current patches a little more on review to give 
-others a chance to see them.
-
-Thank you!
-
->
-> Neil
->
->> @@ -0,0 +1,56 @@
->> +Freescale i.MX6 DW MIPI DSI Host Controller
->> +===========================================
->> +
->> +The DSI host controller is a Synopsys DesignWare MIPI DSI v1.01 IP
->> +with a companion PHY IP.
->> +
->> +These DT bindings follow the Synopsys DW MIPI DSI bindings defined in
->> +Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt with
->> +the following device-specific properties.
->> +
->> +Required properties:
->> +
->> +- #address-cells: Should be <1>.
->> +- #size-cells: Should be <0>.
->> +- compatible: "fsl,imx6q-mipi-dsi", "snps,dw-mipi-dsi".
->> +- reg: See dw_mipi_dsi.txt.
->> +- interrupts: The controller's CPU interrupt.
->> +- clocks, clock-names: Phandles to the controller's pll reference
->> +  clock(ref) and APB clock(pclk), as described in [1].
->> +- ports: a port node with endpoint definitions as defined in [2].
->> +- gpr: Should be <&gpr>.
->> +       Phandle to the iomuxc-gpr region containing the multiplexer
->> +       control register.
->> +
->> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
->> +[2] Documentation/devicetree/bindings/media/video-interfaces.txt
->> +
->> +Example:
->> +
->> +	mipi_dsi: mipi@21e0000 {
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +		compatible = "fsl,imx6q-mipi-dsi", "snps,dw-mipi-dsi";
->> +		reg = <0x021e0000 0x4000>;
->> +		interrupts = <0 102 IRQ_TYPE_LEVEL_HIGH>;
->> +		gpr = <&gpr>;
->> +		clocks = <&clks IMX6QDL_CLK_MIPI_CORE_CFG>,
->> +			 <&clks IMX6QDL_CLK_MIPI_IPG>;
->> +		clock-names = "ref", "pclk";
->> +		status = "okay";
->> +
->> +		ports {
->> +			port@0 {
->> +				reg = <0>;
->> +				mipi_mux_0: endpoint {
->> +					remote-endpoint = <&ipu1_di0_mipi>;
->> +				};
->> +			};
->> +			port@1 {
->> +				reg = <1>;
->> +				mipi_mux_1: endpoint {
->> +					remote-endpoint = <&ipu1_di1_mipi>;
->> +				};
->> +			};
->> +		};
->> +        };
->> 
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
