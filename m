@@ -2,100 +2,78 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7D67C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 15:26:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9FA7C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 15:26:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A13392070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 15:26:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B878D20674
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 15:26:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q4XelS6L"
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="TjKXwAJI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727188AbfKUP00 (ORCPT
+        id S1727208AbfKUP0q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 10:26:26 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:35318 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726563AbfKUP00 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 10:26:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574349985;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=1O8R3g+RY/ULKTfO6bXtG8ZXjTQs/NUP/a7VNwETFWY=;
-        b=Q4XelS6LZRzlRVvX2Fx1YK70kph1XrRog8f+IlGeusVcRcn+gBFqzCMWRWxfoz5+3gv1Pn
-        6FK+zun4/BDtSIzpwp8KTDoEl+i6POF7EK+rw1ySFA9E4XphNhX8NjUSuvU8yBFhHxL1GO
-        ELCvHkBikoD5L/gkuT2WNXVIrcqkW2s=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-299-6mxCoIUlPAS30GEnpQ80Eg-1; Thu, 21 Nov 2019 10:26:22 -0500
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CBCD7477;
-        Thu, 21 Nov 2019 15:26:20 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-161.rdu2.redhat.com [10.10.120.161])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 720CE60C23;
-        Thu, 21 Nov 2019 15:26:19 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH] afs: Fix possible assert with callbacks from yfs servers
-From:   David Howells <dhowells@redhat.com>
-To:     torvalds@linux-foundation.org
-Cc:     dhowells@redhat.com, marc.dionne@auristor.com,
-        linux-afs@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 21 Nov 2019 15:26:15 +0000
-Message-ID: <157434997544.8060.6772407595047113730.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
+        Thu, 21 Nov 2019 10:26:46 -0500
+Received: from frisell.zx2c4.com ([192.95.5.64]:53357 "EHLO frisell.zx2c4.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726574AbfKUP0q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 10:26:46 -0500
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 8153aecb;
+        Thu, 21 Nov 2019 14:33:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
+        :references:in-reply-to:from:date:message-id:subject:to:cc
+        :content-type; s=mail; bh=9rO4z5sa5cW/KppMdFyBM7L655M=; b=TjKXwA
+        JIypICoKtVIfvC1uTqy8daQ00OJ9H5PiBR9zcuuFSG7u1kR4cBCEXHyvUbKDwgGw
+        s5iHyQv+/ADmqU5NKFV60z2ABEHhm83h4WRRQh1hA7sm7mM8MFpKvs3KIC/Vt3Ei
+        MG+YkSv5KlM8aBPUFZuExYEfpn+MMViw76ygzsanGv7u2BpoF2HSTArnbY/vo5rA
+        NT8JHTBDZss46jcH+/Br3nnFpK5MTAr2FkVVsw27ZJngF6DZpEP3lBU+9CYHk40i
+        dhhIQt9P3dA5BbpYP1kUSC8a/PgURS61I9xGk2eX7HyjB8Mqu446q0c1zSfi0MOW
+        C4MSMadnTHtLu2fQ==
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id bf8a06f6 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
+        Thu, 21 Nov 2019 14:33:38 +0000 (UTC)
+Received: by mail-ot1-f51.google.com with SMTP id r24so3215243otk.12;
+        Thu, 21 Nov 2019 07:26:43 -0800 (PST)
+X-Gm-Message-State: APjAAAUR72CHIfOJFQO73Rg4tLzvxUlOseJo/bxeKgtCCQLNWc7DsSqp
+        B4k+j0J6LDQcl5ZReZhRhNITHEDvQcNMwDg83Rw=
+X-Google-Smtp-Source: APXvYqy+OOPTbY4wI1lR6UWfKKpza4kME2TCJyAP6+JIFH/G2GBY8787MbunIO+puAfzydaD9ym9gJwPeXC9rAw7Oaw=
+X-Received: by 2002:a9d:4788:: with SMTP id b8mr6990169otf.120.1574350002882;
+ Thu, 21 Nov 2019 07:26:42 -0800 (PST)
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-MC-Unique: 6mxCoIUlPAS30GEnpQ80Eg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+References: <20191120203538.199367-1-Jason@zx2c4.com> <877e3t8qv7.fsf@toke.dk>
+ <CAHmME9rmFw7xGKNMURBUSiezbsBEikOPiJxtEu=i2Quzf+JNDg@mail.gmail.com> <CANiq72mGPmMVBCmOMc_xJbKuOvbmmPAotGx67nSVQrYmXd2x3A@mail.gmail.com>
+In-Reply-To: <CANiq72mGPmMVBCmOMc_xJbKuOvbmmPAotGx67nSVQrYmXd2x3A@mail.gmail.com>
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date:   Thu, 21 Nov 2019 16:26:31 +0100
+X-Gmail-Original-Message-ID: <CAHmME9q6UHweyNBmAOanJB=BBSyjydwurJin2eJd9R+nAe2YYQ@mail.gmail.com>
+Message-ID: <CAHmME9q6UHweyNBmAOanJB=BBSyjydwurJin2eJd9R+nAe2YYQ@mail.gmail.com>
+Subject: Re: [PATCH RFC net-next] net: WireGuard secure network tunnel
+To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc:     =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <thoiland@redhat.com>,
+        Netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        David Miller <davem@davemloft.net>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Dionne <marc.dionne@auristor.com>
+On Thu, Nov 21, 2019 at 3:44 PM Miguel Ojeda
+<miguel.ojeda.sandonis@gmail.com> wrote:
+> Any reason for the .clang-format in drivers/? If yes, it would be nice
+> to state it in the comment of the file.
 
-Servers sending callback breaks to the YFS_CM_SERVICE service may
-send up to YFSCBMAX (1024) fids in a single RPC.  Anything over
-AFSCBMAX (50) will cause the assert in afs_break_callbacks to trigger.
+It's a total accident in porting my scripts from the older Zinc-based
+patchset to this newer Frankenzinc-based one. It won't be there in the
+next submission and is already gone from
+https://git.kernel.org/pub/scm/linux/kernel/git/zx2c4/linux.git/commit/?h=wireguard
 
-Remove the assert, as the count has already been checked against
-the appropriate max values in afs_deliver_cb_callback and
-afs_deliver_yfs_cb_callback.
-
-Fixes: 35dbfba3111a ("afs: Implement the YFS cache manager service")
-Signed-off-by: Marc Dionne <marc.dionne@auristor.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
----
-
- fs/afs/callback.c |    1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/fs/afs/callback.c b/fs/afs/callback.c
-index 6cdd7047c809..2dca8df1a18d 100644
---- a/fs/afs/callback.c
-+++ b/fs/afs/callback.c
-@@ -312,7 +312,6 @@ void afs_break_callbacks(struct afs_server *server, siz=
-e_t count,
- =09_enter("%p,%zu,", server, count);
-=20
- =09ASSERT(server !=3D NULL);
--=09ASSERTCMP(count, <=3D, AFSCBMAX);
-=20
- =09/* TODO: Sort the callback break list by volume ID */
-=20
-
+Jason
