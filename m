@@ -2,88 +2,123 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44EAAC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 02:29:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD5A0C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 02:29:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17E6620878
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 02:29:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hCpDNV+r"
+	by mail.kernel.org (Postfix) with ESMTP id 8E456206A4
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 02:29:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726613AbfKUC3D (ORCPT
+        id S1726714AbfKUC3e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 21:29:03 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:43100 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725904AbfKUC3C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 21:29:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574303341;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=by/zQ+3yLUz+ix0dbdVmiFHSoojhC/RF88zhiK7/yXo=;
-        b=hCpDNV+rk6pJAVht5CARvxS8xQIiB0sCIdEREQaBgiqzoB9MVGRdb0tScGZLc8xf2MSTji
-        UVWkVtOJ3WRjWFaxRyE1EkVY56k8X7v5XRUBveLymxlKoTDSesSiBat0eGRKEKu269iaTH
-        6zx814V+8jEgFoSG272JJ9cI5qJLBRA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-382-GfRTqIQkMFKGzDPUqseiFQ-1; Wed, 20 Nov 2019 21:22:55 -0500
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1555E107ACC4;
-        Thu, 21 Nov 2019 02:22:54 +0000 (UTC)
-Received: from localhost (ovpn-116-6.gru2.redhat.com [10.97.116.6])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 905A95E268;
-        Thu, 21 Nov 2019 02:22:53 +0000 (UTC)
-Date:   Wed, 20 Nov 2019 23:22:52 -0300
-From:   Eduardo Habkost <ehabkost@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        jmattson@google.com,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: Re: [PATCH 5/5] KVM: vmx: use MSR_IA32_TSX_CTRL to hard-disable TSX
- on guest that lack it
-Message-ID: <20191121022252.GX3812@habkost.net>
-References: <1574101067-5638-1-git-send-email-pbonzini@redhat.com>
- <1574101067-5638-6-git-send-email-pbonzini@redhat.com>
+        Wed, 20 Nov 2019 21:29:34 -0500
+Received: from mga06.intel.com ([134.134.136.31]:29715 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725819AbfKUC3e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 21:29:34 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Nov 2019 18:29:33 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,224,1571727600"; 
+   d="scan'208";a="290164598"
+Received: from xsang-optiplex-9020.sh.intel.com (HELO xsang-OptiPlex-9020) ([10.239.159.135])
+  by orsmga001.jf.intel.com with ESMTP; 20 Nov 2019 18:29:31 -0800
+Date:   Thu, 21 Nov 2019 10:36:43 +0800
+From:   Oliver Sang <oliver.sang@intel.com>
+To:     Frederic Weisbecker <frederic@kernel.org>
+Cc:     kernel test robot <rong.a.chen@intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>, lkp@lists.01.org
+Subject: Re: [LKP] Re: [irq_work] feb4a51323: BUG:soft_lockup-CPU##stuck_for#s
+Message-ID: <20191121023643.GA8428@xsang-OptiPlex-9020>
+References: <20191112090357.GB30590@shao2-debian>
+ <20191112144954.GD27917@lenoir>
 MIME-Version: 1.0
-In-Reply-To: <1574101067-5638-6-git-send-email-pbonzini@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-MC-Unique: GfRTqIQkMFKGzDPUqseiFQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20191112144954.GD27917@lenoir>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 18, 2019 at 07:17:47PM +0100, Paolo Bonzini wrote:
-> If X86_FEATURE_RTM is disabled, the guest should not be able to access
-> MSR_IA32_TSX_CTRL.  We can therefore use it in KVM to force all
-> transactions from the guest to abort.
->=20
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+On Tue, Nov 12, 2019 at 03:49:55PM +0100, Frederic Weisbecker wrote:
+> On Tue, Nov 12, 2019 at 05:03:57PM +0800, kernel test robot wrote:
+> > FYI, we noticed the following commit (built with gcc-7):
+> > 
+> > commit: feb4a51323babe13315c3b783ea7f1cf25368918 ("irq_work: Slightly simplify IRQ_WORK_PENDING clearing")
+> > https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
+> > 
+> > in testcase: blktests
+> > with following parameters:
+> > 
+> > 	disk: 1SSD
+> > 	test: block-group1
+> > 
+> > 
+> > 
+> > on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 8G
+> > 
+> > caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
+> > 
+> > 
+> > +------------------------------------------------+------------+------------+
+> > |                                                | 25269871db | feb4a51323 |
+> > +------------------------------------------------+------------+------------+
+> > | boot_successes                                 | 5          | 0          |
+> > | boot_failures                                  | 0          | 10         |
+> > | BUG:soft_lockup-CPU##stuck_for#s               | 0          | 10         |
+> > | RIP:irq_work_sync                              | 0          | 10         |
+> > | Kernel_panic-not_syncing:softlockup:hung_tasks | 0          | 10         |
+> > +------------------------------------------------+------------+------------+
+> > 
+> > 
+> > If you fix the issue, kindly add following tag
+> > Reported-by: kernel test robot <rong.a.chen@intel.com>
+> > 
+> > 
+> > [   81.049506] watchdog: BUG: soft lockup - CPU#0 stuck for 22s! [blktrace:4948]
+> 
+> Duh! Of course we are dealing with the value of flags before we cleared IRQ_WORK_PENDING
+> so later clearing IRQ_WORK_BUZY can't work.
+> 
 
-So, without this patch guest OSes will incorrectly report "Not
-affected" at /sys/devices/system/cpu/vulnerabilities/tsx_async_abort
-if RTM is disabled in the VM configuration.
+Hi Frederic Weisbecker, has this patch submited or merged to some branches? Ask this because feb4a51323
+has already been merged to linux-next
 
-Is there anything host userspace can do to detect this situation
-and issue a warning on that case?
-
-Is there anything the guest kernel can do to detect this and not
-report a false negative at /sys/.../tsx_async_abort?
-
---=20
-Eduardo
-
+> That would be the fix (cooking one with proper changelog):
+> 
+> diff --git a/kernel/irq_work.c b/kernel/irq_work.c
+> index 49c53f80a13a..8ee907eb4d83 100644
+> --- a/kernel/irq_work.c
+> +++ b/kernel/irq_work.c
+> @@ -158,6 +158,7 @@ static void irq_work_run_list(struct llist_head *list)
+>  		 * Clear the BUSY bit and return to the free state if
+>  		 * no-one else claimed it meanwhile.
+>  		 */
+> +		flags ~= IRQ_WORK_PENDING;
+>  		(void)atomic_cmpxchg(&work->flags, flags, flags & ~IRQ_WORK_BUSY);
+>  	}
+>  }
+> 
+> 
+> > [   81.055602] Modules linked in: scsi_debug loop intel_rapl_msr intel_rapl_common sr_mod cdrom crct10dif_pclmul crc32_pclmul bochs_drm crc32c_intel sd_mod sg ghash_clmulni_intel drm_vram_helper ata_generic pata_acpi ttm ppdev drm_kms_helper snd_pcm syscopyarea sysfillrect snd_timer aesni_intel snd sysimgblt fb_sys_fops ata_piix crypto_simd drm cryptd glue_helper libata soundcore pcspkr joydev serio_raw virtio_scsi i2c_piix4 parport_pc floppy parport ip_tables [last unloaded: scsi_debug]
+> > [   81.071683] CPU: 0 PID: 4948 Comm: blktrace Not tainted 5.4.0-rc7-00003-gfeb4a51323bab #1
+> > [   81.075435] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
+> > [   81.079031] RIP: 0010:irq_work_sync+0x4/0x10
+> _______________________________________________
+> LKP mailing list -- lkp@lists.01.org
+> To unsubscribe send an email to lkp-leave@lists.01.org
