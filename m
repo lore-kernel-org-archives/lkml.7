@@ -2,111 +2,88 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C20DC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:21:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21904C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:23:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5150120643
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:21:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6F1B20643
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:23:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="JgLrQ3br"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727171AbfKUUVn (ORCPT
+        id S1726922AbfKUUXL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 15:21:43 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:46426 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726658AbfKUUVn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 15:21:43 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 5DF181C1BCF; Thu, 21 Nov 2019 21:21:41 +0100 (CET)
-Date:   Thu, 21 Nov 2019 21:21:40 +0100
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Jia-Ju Bai <baijiaju1990@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 241/422] net: socionext: Fix two
- sleep-in-atomic-context bugs in ave_rxfifo_reset()
-Message-ID: <20191121202140.GA7573@duo.ucw.cz>
-References: <20191119051400.261610025@linuxfoundation.org>
- <20191119051414.641566074@linuxfoundation.org>
+        Thu, 21 Nov 2019 15:23:11 -0500
+Received: from ozlabs.org ([203.11.71.1]:51153 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726379AbfKUUXL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 15:23:11 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47Jrbd1jZ9z9sPn;
+        Fri, 22 Nov 2019 07:23:09 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1574367789;
+        bh=eqDK1WhxlojWXmAMDyuf2xSNfzj80Bb6879dgkPYv9g=;
+        h=Date:From:To:Cc:Subject:From;
+        b=JgLrQ3br4sWAQYIYfbT2y6E8nXoORGR8SWubdIALpZoKp4cjRT/QPWE2jAdxQ06gk
+         D4t5GfL7LUOwan+OplMjeqJuuErobVy3IfnXGKGXvmBeX8C9rWBGqu9w7IRKzF8yhU
+         Ts3KMMsAkpE1K9p3eD/Mq9AVLKQ1BZhr3RNOWUrrEEG/ir1vteI2T8KsYXdYPjyFrw
+         Yc7Q6O2V2B/RnNQGj5NxG4bsmYVCsIN54yvapeXTJguKgmbWYFOaSrKvR3aRY87aWy
+         5k3UTj1PZgXpwYJiZGavhAP4D4FrItWXYvZmYyNLJfjucf/7m0kQEg2YD/K+kbMqsT
+         tGivUh5FFU29w==
+Date:   Fri, 22 Nov 2019 07:23:07 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Howells <dhowells@redhat.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Signed-off-by missing for commits in the afs tree
+Message-ID: <20191122072307.000b6492@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="CE+1k2dSO48ffgeK"
-Content-Disposition: inline
-In-Reply-To: <20191119051414.641566074@linuxfoundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; boundary="Sig_/IyKTBIMpdB/+bATquc/AKu5";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---CE+1k2dSO48ffgeK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--Sig_/IyKTBIMpdB/+bATquc/AKu5
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-Hi!
+Hi all,
 
-> [ Upstream commit 0020f5c807ef67954d9210eea0ba17a6134cdf7d ]
->=20
-> The driver may sleep with holding a spinlock.
-> The function call paths (from bottom to top) in Linux-4.17 are:
->=20
-> [FUNC] usleep_range
-> drivers/net/ethernet/socionext/sni_ave.c, 892:
-> 	usleep_range in ave_rxfifo_reset
-> drivers/net/ethernet/socionext/sni_ave.c, 932:
-> 	ave_rxfifo_reset in ave_irq_handler
->=20
-> [FUNC] usleep_range
-> drivers/net/ethernet/socionext/sni_ave.c, 888:
-> 	usleep_range in ave_rxfifo_reset
-> drivers/net/ethernet/socionext/sni_ave.c, 932:
-> 	ave_rxfifo_reset in ave_irq_handler
->=20
-> To fix these bugs, usleep_range() is replaced with udelay().
+Commits
 
-I don't believe this is serious enough for -stable, but more
-importantly:
+  297c6f6378a6 ("afs: Remove set but not used variable 'ret'")
+  b264b5bc97c2 ("afs: Remove set but not used variables 'before', 'after'")
+  b850554983e6 ("afs: xattr: use scnprintf")
 
-> +++ b/drivers/net/ethernet/socionext/sni_ave.c
-> @@ -906,11 +906,11 @@ static void ave_rxfifo_reset(struct net_device *nde=
-v)
-> =20
->  	/* assert reset */
->  	writel(AVE_GRR_RXFFR, priv->base + AVE_GRR);
-> -	usleep_range(40, 50);
-> +	udelay(50);
-> =20
->  	/* negate reset */
->  	writel(0, priv->base + AVE_GRR);
-> -	usleep_range(10, 20);
-> +	udelay(20);
->
+are missing a Signed-off-by from their committer.
 
-udelay(40) / udelay(10) should be enough here.
-
-Best regards,
-									Pavel
 --=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+Cheers,
+Stephen Rothwell
 
---CE+1k2dSO48ffgeK
-Content-Type: application/pgp-signature; name="signature.asc"
+--Sig_/IyKTBIMpdB/+bATquc/AKu5
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
 -----BEGIN PGP SIGNATURE-----
 
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXdbx1AAKCRAw5/Bqldv6
-8lsUAJ0Y8goOEYKzk+t/j8TzwhKtk/nf5wCeJX3E5CvCZSNLVxyHha0EDUnewew=
-=d7wy
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3W8isACgkQAVBC80lX
+0GwPIgf/bGACcpuDrS+ma871O3pgUeoKx+70sozkYnJI5kjZzVsnB3EG8aRJ//Xm
+PZeXkgfYLJvOgGM5yaVP/4wRy/uobqwD14+d1nt/jxM8gy3Fs6dAqGxAOdFtghOE
+7ARyaYZ3jP5usoq+bxraqUFMKX2Gv4DPlLqGd9oX6PNHJH2IU74Wl9P6Xe56aaYU
+NcUkGmufawUHX+jgdpVKus0wwRdweJDftM96k2LBR50qtI3bNV9kIZ/g7ez9Zn0+
+L45R4sCpBvwRSKGYyfrtlYW3bsTzGAawaZXjbJhZDrQge830AMyCsTE5r1pCqHTw
+HURqnfcbwJKbgzUzRYzy34C0kJBiCw==
+=cWOi
 -----END PGP SIGNATURE-----
 
---CE+1k2dSO48ffgeK--
+--Sig_/IyKTBIMpdB/+bATquc/AKu5--
