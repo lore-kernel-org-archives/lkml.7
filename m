@@ -2,312 +2,139 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BE8DC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 22:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2C34C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 22:56:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 392AF206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 22:50:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA102206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 22:56:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UnbOIJS4"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Dgq75UxQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbfKUWup (ORCPT
+        id S1726500AbfKUW4y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 17:50:45 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:52547 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726548AbfKUWuo (ORCPT
+        Thu, 21 Nov 2019 17:56:54 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:33438 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726038AbfKUW4y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 17:50:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574376642;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=rTk6XMOiYbuw5+XVlipRiSh5UzNmwzHGNqkkTsALVdg=;
-        b=UnbOIJS4bGF1pGLa/PeSaSlC3cw6VP+ch/v2kfa0DENHVHcW0Hc9DRQa5TqQgL1hZJYPtF
-        H0rR+1oXIFtBInJbmbzrrECg4f5CO47ha6f743E22x3+McCZO6wrAPY4/12CTyyH0cxiT1
-        GQvffRFXpZhgO/utyY2mdQsFVXq85i0=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-381-r4huhGJXOHeCkqYFmD1jqA-1; Thu, 21 Nov 2019 17:50:39 -0500
-Received: by mail-qk1-f199.google.com with SMTP id q125so3050199qka.1
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 14:50:39 -0800 (PST)
+        Thu, 21 Nov 2019 17:56:54 -0500
+Received: by mail-pg1-f193.google.com with SMTP id h27so2406892pgn.0
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 14:56:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=51ePzUa5LZhbNRRNHcVyQNi+kbgLjJEObJHSIPI8Few=;
+        b=Dgq75UxQKQ+n9NET5W+fmhvBZkoxdKTqUAfv3i6EjHKXau+tH7dXyJCOd7sKPCaReG
+         mW+skl8fu0KzoLICwdl5cbOATztar7BuOO58zM+WbsOC3XwhVy+cspC+GMHTITXCjWS5
+         q90o67NXvsAtLjPhEVq7UsaPuAI4gyTiehSBs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=L6kwu2ljuFRHJGSHsZ074oAeIVPpmWLJ+DvKmAed55k=;
-        b=bTLyGB3sGvrmkxARHbmZk5hoWbDaRwNv6wcYOJ3SVGi0dDoJc2+3YgxmyAC9kHwDX3
-         C/gD0S6Wpu89l6AGI80TzcIodLmgzdlzfTOqGFB6FSvwT7uo+ndA+ISFP0BrFDppk9ZB
-         bAbqdcEBDy6T2ljnt4cp901J6nKhO1mjqGakEzyjFm6Kc2IbXYcFCeJ9I+eTcu6OFtt3
-         vVn56DifLAjCWGCE35g8YXZbGGbneNO3H1/tDHvM/b6DJ7xdL01Nvs57dzakmkT1TQqc
-         dtrBmoKwtSrVgHGJiEz4XArgCzt+CD3yXiOVTGKqSomtIiLEF4mTaHX8S4gaf6As33nm
-         ALVA==
-X-Gm-Message-State: APjAAAVi5+xhHIf1Az4R+PBmpItICgGyTLlr7zlsJbNJsWAQhRmbo+kr
-        JHuyi51BiOOCOa0ZWe92dWAV9EUxxKI0x//HjjrwikqBVbDcNU+2OsfcpWasGiJsbtNR0J8lA+n
-        DjwYkb8oEntAO7ir4DFUaTk5bQrIHYjEYRvJoezhz
-X-Received: by 2002:a37:8285:: with SMTP id e127mr2677673qkd.62.1574376638873;
-        Thu, 21 Nov 2019 14:50:38 -0800 (PST)
-X-Google-Smtp-Source: APXvYqziB5Ucb8ZFpCpITvN4kvLRDkloqv4Emub8IRaRDSPVC7EbFpNg+VGTx80DbnaXEZuqQUj9nX/wiwQNyS7b2t8=
-X-Received: by 2002:a37:8285:: with SMTP id e127mr2677652qkd.62.1574376638429;
- Thu, 21 Nov 2019 14:50:38 -0800 (PST)
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=51ePzUa5LZhbNRRNHcVyQNi+kbgLjJEObJHSIPI8Few=;
+        b=nXo7rFpijdjJ+ucQYyu7ug/cG+ZYPLL3qeNiNNuAbETvQ7O4QwbIx0lb/j/07QOcWq
+         17yUXkCWaldyAOzTwjau3qrGGpeeWHYVx9fs9mT1TbwnZp7CVau9+pX/Kl+eg4S2yD6S
+         KGBmIgpNqKVbPh1n4EerkpkO0h00UNXyq5hFh+3hIImh6eKjxKo2gl4tCpk97bR7zZY5
+         EOCPJZj+GaEHTwNYYFS9ilwyQbMi/wveIk9UTI9R1DXqBj8QB+KMLoyoNA58ajd/rZqL
+         8X4XlmklK5f4rQDMOPYhX4SJYUwgYHRohFQe5VsMPgGAgYb035fssff7PCXKoVfKStHb
+         b9Jg==
+X-Gm-Message-State: APjAAAUAq3A2+OZIKu+DXb6Abfhe5Y/CIT4C4FYiPts5syOd2feVK/6y
+        WFgfxQ9k0SuWxe86T08zsJ+o/Q==
+X-Google-Smtp-Source: APXvYqyrHq4Mzk/fXpSWa5CCvgYUBoBsGM3Wwaxzr2MePcj67iCvIBaWCtGswXTvktiZaLE7kazz1w==
+X-Received: by 2002:a63:2003:: with SMTP id g3mr12417392pgg.359.1574377013170;
+        Thu, 21 Nov 2019 14:56:53 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id z10sm4122210pgg.39.2019.11.21.14.56.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Nov 2019 14:56:51 -0800 (PST)
+Date:   Thu, 21 Nov 2019 14:56:50 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        =?iso-8859-1?Q?Jo=E3o?= Moreira <joao.moreira@intel.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Stephan Mueller <smueller@chronox.de>, x86@kernel.org,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-hardening@lists.openwall.com
+Subject: Re: [PATCH v5 3/8] crypto: x86/camellia: Remove glue function macro
+ usage
+Message-ID: <201911211456.CE356C2@keescook>
+References: <20191113182516.13545-1-keescook@chromium.org>
+ <20191113182516.13545-4-keescook@chromium.org>
+ <20191113193911.GC221701@gmail.com>
 MIME-Version: 1.0
-References: <CACO55tvo3rbPtYJcioEgXCEQqVXcVAm-iowr9Nim=bgTdMjgLw@mail.gmail.com>
- <20191120155301.GL11621@lahna.fi.intel.com> <CAJZ5v0hkT-fHFOQKzp2qYPyR+NUa4c-G-uGLPZuQxqsG454PiQ@mail.gmail.com>
- <CACO55ttTPi2XpRRM_NYJU5c5=OvG0=-YngFy1BiR8WpHkavwXw@mail.gmail.com>
- <CAJZ5v0h=7zu3A+ojgUSmwTH0KeXmYP5OKDL__rwkkWaWqcJcWQ@mail.gmail.com>
- <20191121112821.GU11621@lahna.fi.intel.com> <CAJZ5v0hQhj5Wf+piU11abC4pF26yM=XHGHAcDv8Jsgdx04aN-w@mail.gmail.com>
- <20191121114610.GW11621@lahna.fi.intel.com> <20191121125236.GX11621@lahna.fi.intel.com>
- <CAJZ5v0iMwhudB7O0hR-6KfRfa+_iGOY=t0Zzeh6+9OiTzeYJfA@mail.gmail.com>
- <20191121194942.GY11621@lahna.fi.intel.com> <CAJZ5v0gyna0b135uxBVfNXgB9v-U9-93EYe0uzsr2BukJ9OtuA@mail.gmail.com>
-In-Reply-To: <CAJZ5v0gyna0b135uxBVfNXgB9v-U9-93EYe0uzsr2BukJ9OtuA@mail.gmail.com>
-From:   Karol Herbst <kherbst@redhat.com>
-Date:   Thu, 21 Nov 2019 23:50:26 +0100
-Message-ID: <CACO55tvFeTFo3gGdL02gnWMMk+AHPPb=hntkre0ZcA6WvKcV1A@mail.gmail.com>
-Subject: Re: [PATCH v4] pci: prevent putting nvidia GPUs into lower device
- states on certain intel bridges
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Mika Westerberg <mika.westerberg@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lyude Paul <lyude@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        Dave Airlie <airlied@gmail.com>,
-        Mario Limonciello <Mario.Limonciello@dell.com>
-X-MC-Unique: r4huhGJXOHeCkqYFmD1jqA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191113193911.GC221701@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 11:39 PM Rafael J. Wysocki <rafael@kernel.org> wrot=
-e:
->
-> On Thu, Nov 21, 2019 at 8:49 PM Mika Westerberg
-> <mika.westerberg@intel.com> wrote:
-> >
-> > On Thu, Nov 21, 2019 at 04:43:24PM +0100, Rafael J. Wysocki wrote:
-> > > On Thu, Nov 21, 2019 at 1:52 PM Mika Westerberg
-> > > <mika.westerberg@intel.com> wrote:
-> > > >
-> > > > On Thu, Nov 21, 2019 at 01:46:14PM +0200, Mika Westerberg wrote:
-> > > > > On Thu, Nov 21, 2019 at 12:34:22PM +0100, Rafael J. Wysocki wrote=
-:
-> > > > > > On Thu, Nov 21, 2019 at 12:28 PM Mika Westerberg
-> > > > > > <mika.westerberg@intel.com> wrote:
-> > > > > > >
-> > > > > > > On Wed, Nov 20, 2019 at 11:29:33PM +0100, Rafael J. Wysocki w=
-rote:
-> > > > > > > > > last week or so I found systems where the GPU was under t=
-he "PCI
-> > > > > > > > > Express Root Port" (name from lspci) and on those systems=
- all of that
-> > > > > > > > > seems to work. So I am wondering if it's indeed just the =
-0x1901 one,
-> > > > > > > > > which also explains Mikas case that Thunderbolt stuff wor=
-ks as devices
-> > > > > > > > > never get populated under this particular bridge controll=
-er, but under
-> > > > > > > > > those "Root Port"s
-> > > > > > > >
-> > > > > > > > It always is a PCIe port, but its location within the SoC m=
-ay matter.
-> > > > > > >
-> > > > > > > Exactly. Intel hardware has PCIe ports on CPU side (these are=
- called
-> > > > > > > PEG, PCI Express Graphics, ports), and the PCH side. I think =
-the IP is
-> > > > > > > still the same.
-> > > > > > >
-> > > > > > > > Also some custom AML-based power management is involved and=
- that may
-> > > > > > > > be making specific assumptions on the configuration of the =
-SoC and the
-> > > > > > > > GPU at the time of its invocation which unfortunately are n=
-ot known to
-> > > > > > > > us.
-> > > > > > > >
-> > > > > > > > However, it looks like the AML invoked to power down the GP=
-U from
-> > > > > > > > acpi_pci_set_power_state() gets confused if it is not in PC=
-I D0 at
-> > > > > > > > that point, so it looks like that AML tries to access devic=
-e memory on
-> > > > > > > > the GPU (beyond the PCI config space) or similar which is n=
-ot
-> > > > > > > > accessible in PCI power states below D0.
-> > > > > > >
-> > > > > > > Or the PCI config space of the GPU when the parent root port =
-is in D3hot
-> > > > > > > (as it is the case here). Also then the GPU config space is n=
-ot
-> > > > > > > accessible.
-> > > > > >
-> > > > > > Why would the parent port be in D3hot at that point?  Wouldn't =
-that be
-> > > > > > a suspend ordering violation?
-> > > > >
-> > > > > No. We put the GPU into D3hot first,
-> > >
-> > > OK
-> > >
-> > > Does this involve any AML, like a _PS3 under the GPU object?
-> >
-> > I don't see _PS3 (nor _PS0) for that object. If I read it right the GPU
-> > itself is not described in ACPI tables at all.
->
-> OK
->
-> > > > > then the root port and then turn
-> > > > > off the power resource (which is attached to the root port) resul=
-ting
-> > > > > the topology entering D3cold.
-> > > >
-> > > > I don't see that happening in the AML though.
-> > >
-> > > Which AML do you mean, specifically?  The _OFF method for the root
-> > > port's _PR3 power resource or something else?
-> >
-> > The root port's _OFF method for the power resource returned by its _PR3=
-.
->
-> OK, so without the $subject patch we (1) program the downstream
-> component (GPU) into D3hot, then we (2) program the port holding it
-> into D3hot and then we (3) let the AML (_OFF for the power resource
-> listed by _PR3 under the port object) run.
->
-> Something strange happens at this point (and I guess that _OFF doesn't
-> even reach the point where it removes power from the port which is why
-> we see a lock-up).
->
+On Wed, Nov 13, 2019 at 11:39:12AM -0800, Eric Biggers wrote:
+> On Wed, Nov 13, 2019 at 10:25:11AM -0800, Kees Cook wrote:
+> > In order to remove the callsite function casts, regularize the function
+> > prototypes for helpers to avoid triggering Control-Flow Integrity checks
+> > during indirect function calls. Where needed, to avoid changes to
+> > pointer math, u8 pointers are internally cast back to u128 pointers.
+> > 
+> > Co-developed-by: João Moreira <joao.moreira@intel.com>
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> >  arch/x86/crypto/camellia_aesni_avx2_glue.c | 74 ++++++++++------------
+> >  arch/x86/crypto/camellia_aesni_avx_glue.c  | 74 ++++++++++------------
+> >  arch/x86/crypto/camellia_glue.c            | 45 +++++++------
+> >  arch/x86/include/asm/crypto/camellia.h     | 64 ++++++++-----------
+> >  4 files changed, 119 insertions(+), 138 deletions(-)
+> > 
+> > diff --git a/arch/x86/crypto/camellia_aesni_avx2_glue.c b/arch/x86/crypto/camellia_aesni_avx2_glue.c
+> > index a4f00128ea55..a68d54fc2dde 100644
+> > --- a/arch/x86/crypto/camellia_aesni_avx2_glue.c
+> > +++ b/arch/x86/crypto/camellia_aesni_avx2_glue.c
+> > @@ -19,20 +19,17 @@
+> >  #define CAMELLIA_AESNI_AVX2_PARALLEL_BLOCKS 32
+> >  
+> >  /* 32-way AVX2/AES-NI parallel cipher functions */
+> > -asmlinkage void camellia_ecb_enc_32way(struct camellia_ctx *ctx, u8 *dst,
+> > -				       const u8 *src);
+> > -asmlinkage void camellia_ecb_dec_32way(struct camellia_ctx *ctx, u8 *dst,
+> > -				       const u8 *src);
+> > +asmlinkage void camellia_ecb_enc_32way(void *ctx, u8 *dst, const u8 *src);
+> > +asmlinkage void camellia_ecb_dec_32way(void *ctx, u8 *dst, const u8 *src);
+> >  
+> > -asmlinkage void camellia_cbc_dec_32way(struct camellia_ctx *ctx, u8 *dst,
+> > -				       const u8 *src);
+> > -asmlinkage void camellia_ctr_32way(struct camellia_ctx *ctx, u8 *dst,
+> > -				   const u8 *src, le128 *iv);
+> > +asmlinkage void camellia_cbc_dec_32way(void *ctx, u8 *dst, const u8 *src);
+> > +asmlinkage void camellia_ctr_32way(void *ctx, u8 *dst, const u8 *src,
+> > +				   le128 *iv);
+> >  
+> > -asmlinkage void camellia_xts_enc_32way(struct camellia_ctx *ctx, u8 *dst,
+> > -				       const u8 *src, le128 *iv);
+> > -asmlinkage void camellia_xts_dec_32way(struct camellia_ctx *ctx, u8 *dst,
+> > -				       const u8 *src, le128 *iv);
+> > +asmlinkage void camellia_xts_enc_32way(void *ctx, u8 *dst, const u8 *src,
+> > +				       le128 *iv);
+> > +asmlinkage void camellia_xts_dec_32way(void *ctx, u8 *dst, const u8 *src,
+> > +				       le128 *iv);
+> 
+> As long as the type of all the 'ctx' arguments is being changed anyway, can you
+> please make them const, as they should have been all along?  This applies to all
+> the algorithms.  I.e., something like this:
+> 
+> [const diff]
 
-it does though. I will post the data shortly (with the change in power
-consumption), as I also want to do the ACPI traces now.
+Awesome, thanks! I've incorporated this into the series now. :)
 
-> We know that skipping (1) makes things work and we kind of suspect
-> that skipping (3) would make things work either, but what about doing
-> (1) and (3) without (2)?
->
-> > > > Basically the difference is that when Windows 7 or Linux (the _REV=
-=3D=3D5
-> > > > check) then we directly do link disable whereas in Windows 8+ we in=
-voke
-> > > > LKDS() method that puts the link into L2/L3. None of the fields the=
-y
-> > > > access seem to touch the GPU itself.
-> > >
-> > > So that may be where the problem is.
-> > >
-> > > Putting the downstream component into PCI D[1-3] is expected to put
-> > > the link into L1, so I'm not sure how that plays with the later
-> > > attempt to put it into L2/L3 Ready.
-> >
-> > That should be fine. What I've seen the link goes into L1 when
-> > downstream component is put to D-state (not D0) and then it is put back
-> > to L0 when L2/3 ready is propagated. Eventually it goes into L2 or L3.
->
-> Well, that's the expected behavior, but the observed behavior isn't as
-> expected. :-)
->
-> > > Also, L2/L3 Ready is expected to be transient, so finally power shoul=
-d
-> > > be removed somehow.
-> >
-> > There is GPIO for both power and PERST, I think the line here:
-> >
-> >   \_SB.SGOV (0x01010004, Zero)
-> >
-> > is the one that removes power.
->
-> OK
->
-> > > > LKDS() for the first PEG port looks like this:
-> > > >
-> > > >    P0L2 =3D One
-> > > >    Sleep (0x10)
-> > > >    Local0 =3D Zero
-> > > >    While (P0L2)
-> > > >    {
-> > > >         If ((Local0 > 0x04))
-> > > >         {
-> > > >             Break
-> > > >         }
-> > > >
-> > > >         Sleep (0x10)
-> > > >         Local0++
-> > > >    }
-> > > >
-> > > > One thing that comes to mind is that the loop can end even if P0L2 =
-is
-> > > > not cleared as it does only 5 iterations with 16 ms sleep between. =
-Maybe
-> > > > Sleep() is implemented differently in Windows? I mean Linux may be
-> > > > "faster" here and return prematurely and if we leave the port into =
-D0
-> > > > this does not happen, or something. I'm just throwing out ideas :)
-> > >
-> > > But this actually works for the downstream component in D0, doesn't i=
-t?
-> >
-> > It does and that leaves the link in L0 so it could be that then the
-> > above AML works better or something.
->
-> That would be my guess.
->
-> > That reminds me, ASPM may have something to do with this as well.
->
-> Not really if D-states are involved.
->
-> > > Also, if the downstream component is in D0, the port actually should
-> > > stay in D0 too, so what would happen with the $subject patch applied?
-> >
-> > Parent port cannot be lower D-state than the child so I agree it should
-> > stay in D0 as well. However, it seems that what happens is that the
-> > issue goes away :)
->
-> Well, at least this is kind of out of the spec.
->
-> Note that pci_pm_suspend_noirq() won't let the port go into D3 if the
-> downstream device is in D0, so the $subject patch will not work as
-> expected in the suspend-to-idle case.
->
-> Also we really should make up our minds on whether or not to force
-> PCIe ports to stay in D0 when downstream devices are in D0 and be
-> consequent about that.  Right now we do one thing during system-wide
-> suspend and the other one in PM-runtime, which is confusing.
->
-> The current design is mostly based on the PCI PM Spec 1.2, so it would
-> be consequent to follow system-wide suspend in PM-runtime and avoid
-> putting PCIe ports holding devices in D0 into any low-power states.
-> but that would make the approach in the $subject patch ineffective.
->
-> Moreover, the fact that there are separate branches for "Windows 7"
-> and "Windows 8+" kind of suggest a change in the expected behavior
-> between Windows 7 and Windows 8, from the AML perspective.  I would
-> guess that Windows 7 followed PCI PM 1.2 and Windows 8 (and later)
-> does something else.  Now, the structure of the "Windows 8+" branch
-> described by you suggests that, at least in the cases when it is going
-> to remove power from the port eventually, it goes straight for the
-> link preparation (the L2/L3 Ready transition) and power removal
-> without bothering to program the downstream device and port into D3hot
-> (because that's kind of redundant).
->
-> That hypothetical "Windows 8+" approach may really work universally,
-> because it doesn't seem to break any rules (going straight from D0 to
-> D3cold is not disallowed and doing that for both a port and a
-> downstream device at the same time is kind of OK either, as long as
-> the link is ready for that).
->
-
+-- 
+Kees Cook
