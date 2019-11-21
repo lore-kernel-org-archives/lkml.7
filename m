@@ -2,97 +2,81 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59910C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 19:56:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEE49C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 19:58:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DB4C20659
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 19:56:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LuUMK8z+"
+	by mail.kernel.org (Postfix) with ESMTP id B19A120659
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 19:58:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbfKUT4m (ORCPT
+        id S1726968AbfKUT6C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 14:56:42 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:39160 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726293AbfKUT4l (ORCPT
+        Thu, 21 Nov 2019 14:58:02 -0500
+Received: from mail-il1-f197.google.com ([209.85.166.197]:46400 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726655AbfKUT6B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 14:56:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ERsW0Ec/9CwlIdkx+SUdsqC89v+sCvHHndKM+e+JZ0A=; b=LuUMK8z+PevXS6cF+os4NkDlC
-        506kjmh4SjZUrlkWZm7qP9BB6eWjB/YCZ6KaMlwSpfYvnGcGwb44g6NY4p6za+w/EFoCIPXrq/aYQ
-        pnBZ+y30Jj1bZUOfWtTPTvrQ+5H0oP+edq5C8ze/Ic8iIjdXp8ntx7zGaWQa7MDKTKVzaj6ennpOA
-        D703KJ4frxgEKkXBX/qg76YSML5Cwn71rTntlmbryRfvHEt/qzypVWwQKpwkxNIde/ZuZvlXHvKnS
-        XfWA0nbnUqczJ1bClAXo0kvC1TLyFnZ6eNHTHz9vJXQzItXnNMhZ0WdvZCh5sRa5JXJetlFz+y3wn
-        mq2wtRjcw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iXsZA-0000kZ-KF; Thu, 21 Nov 2019 19:56:36 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 81FF2300606;
-        Thu, 21 Nov 2019 20:55:23 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 795AD2022FCFB; Thu, 21 Nov 2019 20:56:34 +0100 (CET)
-Date:   Thu, 21 Nov 2019 20:56:34 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     David Laight <David.Laight@aculab.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
-Subject: Re: [PATCH v10 6/6] x86/split_lock: Enable split lock detection by
- kernel parameter
-Message-ID: <20191121195634.GV4097@hirez.programming.kicks-ass.net>
-References: <1574297603-198156-1-git-send-email-fenghua.yu@intel.com>
- <1574297603-198156-7-git-send-email-fenghua.yu@intel.com>
- <20191121060444.GA55272@gmail.com>
- <20191121130153.GS4097@hirez.programming.kicks-ass.net>
- <20191121171214.GD12042@gmail.com>
- <3481175cbe14457a947f934343946d52@AcuMS.aculab.com>
- <CALCETrW+qxrE633qetS4c1Rn2AX_hk5OgneZRtoZPFN1J395Ng@mail.gmail.com>
+        Thu, 21 Nov 2019 14:58:01 -0500
+Received: by mail-il1-f197.google.com with SMTP id i74so3905486ild.13
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 11:58:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=kyzGaPalk+OtzhfGjgjsp1/zJC5fx+d1jrM2gzyAv18=;
+        b=jvPF6z+KdvGUDFVAHRT4zJD/ZWoLm0DtiexhA9Ilg5kISfgJlLmOMIO1OLRsWCzWJK
+         acNV55Wt29A3EhWueYpSTtpTspfPd2Bw/QiCFhV4PPqHRBzkgpOmFVzD7XQp/Gx5NO0I
+         nQfjdbStq/a/ZfydG8yrUpupS2NgZkKy4tNJnjJSuOemwQHR+ifU52Phey1CJmvZje02
+         dacgG/dI+cYsGunMg6EfA6yMyz05sakxvisFoyNSYuqIcVVX6sh/IR0QnEr10vbrMfHa
+         nGsUkklc8/VQlNCUloT+AdKtoglAFrrvCImzEEPALJSaWi1xTTEIx9f4HWQS6Zxq09/Y
+         n1cw==
+X-Gm-Message-State: APjAAAXIyI13Z0quqoklB3BoaSq9a3TLTPFKMmmPkHUECinXVXeQoJ6k
+        jh5fqW5O4qhMDnkCI6HD7SgyO7zq2o+G+OpLEyDXNA6wxVv9
+X-Google-Smtp-Source: APXvYqzR/3sH9+ja80DnB3QgqV56ETLn3nZ9hdmsRzJEMAlxU1EkYOS6cQQlXeISKiEsafKa+XT4Cq33ry8YgrPFMK3XSs3EldbO
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALCETrW+qxrE633qetS4c1Rn2AX_hk5OgneZRtoZPFN1J395Ng@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Received: by 2002:a5d:81cf:: with SMTP id t15mr9459731iol.288.1574366280984;
+ Thu, 21 Nov 2019 11:58:00 -0800 (PST)
+Date:   Thu, 21 Nov 2019 11:58:00 -0800
+In-Reply-To: <0000000000008f9c780581fd7417@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000ecb2cb0597e0b62e@google.com>
+Subject: Re: INFO: task hung in __flush_work
+From:   syzbot <syzbot+aa0b64a57e300a1c6bcc@syzkaller.appspotmail.com>
+To:     aviadye@mellanox.com, borisp@mellanox.com, daniel@iogearbox.net,
+        davejwatson@fb.com, davem@davemloft.net, john.fastabend@gmail.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, vakul.garg@nxp.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 09:51:03AM -0800, Andy Lutomirski wrote:
+syzbot has bisected this bug to:
 
-> Can we really not just change the lock asm to use 32-bit accesses for
-> set_bit(), etc?  Sure, it will fail if the bit index is greater than
-> 2^32, but that seems nuts.
+commit a42055e8d2c30d4decfc13ce943d09c7b9dad221
+Author: Vakul Garg <vakul.garg@nxp.com>
+Date:   Fri Sep 21 04:16:13 2018 +0000
 
-There are 64bit architectures that do exactly that: Alpha, IA64.
+     net/tls: Add support for async encryption of records for performance
 
-And because of the byte 'optimization' from x86 we already could not
-rely on word atomicity (we actually play games with multi-bit atomicity
-for PG_waiters and clear_bit_unlock_is_negative_byte).
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11bf7ecae00000
+start commit:   90cadbbf Merge git://git.kernel.org/pub/scm/linux/kernel/g..
+git tree:       net-next
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=13bf7ecae00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=15bf7ecae00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=9d41c8529d7e7362
+dashboard link: https://syzkaller.appspot.com/bug?extid=aa0b64a57e300a1c6bcc
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12a6629b400000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1222d29b400000
 
-Also, there's a fun paper on the properties of mixed size atomic
-operations for when you want to hurt your brain real bad:
+Reported-by: syzbot+aa0b64a57e300a1c6bcc@syzkaller.appspotmail.com
+Fixes: a42055e8d2c3 ("net/tls: Add support for async encryption of records  
+for performance")
 
-  https://www.cl.cam.ac.uk/~pes20/popl17/mixed-size.pdf
-
-_If_ we're going to change the bitops interface, I would propose we
-change it to u32 and mandate every operation is indeed 32bit wide.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
