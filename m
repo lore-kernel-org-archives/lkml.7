@@ -2,295 +2,480 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15462C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:34:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9B68C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:34:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D503220709
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:34:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80F6720409
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:34:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574343262;
+	bh=zQna3HK+k+3OWi0D0L2LSMiho5b7q3wpjE1pUQENP0M=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Y6ImSlMTWv+xmBxD5WWerC2x43sMbUj0Nyv69UVPlCkdGbp0wGbtQshIFqqit1Ejq
+	 9swlUW15ZOBsW6yGDl3rn5/NoQuzAbsH5PakiqRWEtVK9RYHe6WbuwuHlO0rawRjz7
+	 8ArHivL73fbUvxeGNVCKj2Hf8r4wZSmEGjDrH9ek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbfKUNeH (ORCPT
+        id S1727088AbfKUNeV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 08:34:07 -0500
-Received: from spam01.hygon.cn ([110.188.70.11]:1863 "EHLO spam1.hygon.cn"
-        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727014AbfKUNeH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 08:34:07 -0500
-Received: from MK-FE.hygon.cn ([172.23.18.61])
-        by spam1.hygon.cn with ESMTP id xALDWutZ014213;
-        Thu, 21 Nov 2019 21:32:56 +0800 (GMT-8)
-        (envelope-from linjiasen@hygon.cn)
-Received: from cncheex01.Hygon.cn ([172.23.18.10])
-        by MK-FE.hygon.cn with ESMTP id xALDWkiW088366;
-        Thu, 21 Nov 2019 21:32:46 +0800 (GMT-8)
-        (envelope-from linjiasen@hygon.cn)
-Received: from [172.20.21.12] (172.23.18.44) by cncheex01.Hygon.cn
- (172.23.18.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1466.3; Thu, 21 Nov
- 2019 21:32:55 +0800
-Subject: Re: Fwd: [PATCH] NTB: Fix an error in get link status
-To:     Sanjay R Mehta <sanmehta@amd.com>
-CC:     "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-ntb <linux-ntb@googlegroups.com>, <linjiasen007@gmail.com>
-References: <1573119336-107732-1-git-send-email-linjiasen@hygon.cn>
- <CAPoiz9wAJz=Hqb6Os=9AHHv_NGpZ8uCaAuOC=aUTkASKdfs9WQ@mail.gmail.com>
- <933f74c7-7249-618c-13dc-9e4e47ad75d7@hygon.cn>
- <11b355a8-0fe0-f256-c510-ddf106017703@hygon.cn>
- <CAADLhr7bpb-F0eF1UFXy7AcN=z061mno_QsqGE8z-mvWKvUyCQ@mail.gmail.com>
- <04b4d1ed-ea47-819e-a7e4-b729fa463506@amd.com>
-From:   Jiasen Lin <linjiasen@hygon.cn>
-Message-ID: <5c3155b5-6eed-d955-b18b-59b0cb1c513b@hygon.cn>
-Date:   Thu, 21 Nov 2019 21:30:36 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <04b4d1ed-ea47-819e-a7e4-b729fa463506@amd.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [172.23.18.44]
-X-ClientProxiedBy: cncheex01.Hygon.cn (172.23.18.10) To cncheex01.Hygon.cn
- (172.23.18.10)
-X-MAIL: spam1.hygon.cn xALDWutZ014213
-X-DNSRBL: 
+        Thu, 21 Nov 2019 08:34:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52906 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726536AbfKUNeV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 08:34:21 -0500
+Received: from localhost.localdomain (unknown [118.189.143.39])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC7912070B;
+        Thu, 21 Nov 2019 13:34:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574343259;
+        bh=zQna3HK+k+3OWi0D0L2LSMiho5b7q3wpjE1pUQENP0M=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ChwgZ1BSVbB+oTxSXEvY1XQ66NkoRA1lPreqOYKQpvF0gYSpWdmbBGrp5YOPdhIky
+         Z7Mzfew+PLhtJQgpZ41b8W7k0TZfo1TyyoUoKqOnqan8v0KmKMy5nIeuDy50sqbm+j
+         afZIg4ueR9S9YRO2pswwYzHR8+2Ub6U2XzC4wZhk=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Jiri Kosina <trivial@kernel.org>, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH] kernel: Fix Kconfig indentation
+Date:   Thu, 21 Nov 2019 21:34:07 +0800
+Message-Id: <20191121133407.29996-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Adjust indentation from spaces to tab (+optional two spaces) as in
+coding style with command like:
+	$ sed -e 's/^        /\t/' -i */Kconfig
 
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ kernel/Kconfig.locks   |   8 +-
+ kernel/Kconfig.preempt |   6 +-
+ kernel/irq/Kconfig     |  26 +++----
+ kernel/time/Kconfig    |  22 +++---
+ kernel/trace/Kconfig   | 166 ++++++++++++++++++++---------------------
+ 5 files changed, 114 insertions(+), 114 deletions(-)
 
-On 2019/11/20 22:13, Sanjay R Mehta wrote:
-> From: *Jiasen Lin* <linjiasen@hygon.cn <mailto:linjiasen@hygon.cn>>
->> Date: Wed, Nov 20, 2019 at 3:25 PM
->> Subject: Re: [PATCH] NTB: Fix an error in get link status
->> To: Jon Mason <jdmason@kudzu.us <mailto:jdmason@kudzu.us>>
->> Cc: S-k, Shyam-sundar <Shyam-sundar.S-k@amd.com <mailto:Shyam-sundar.S-k@amd.com>>, Dave Jiang <dave.jiang@intel.com <mailto:dave.jiang@intel.com>>, Allen Hubbe <allenbh@gmail.com
->> <mailto:allenbh@gmail.com>>, linux-kernel <linux-kernel@vger.kernel.org <mailto:linux-kernel@vger.kernel.org>>, linux-ntb <linux-ntb@googlegroups.com <mailto:linux-ntb@googlegroups.com>>,
->> <linjiasen007@gmail.com <mailto:linjiasen007@gmail.com>>, Jiasen Lin <linjiasen@hygon.cn <mailto:linjiasen@hygon.cn>>
->>
->>
->>
->>
->> On 2019/11/18 18:17, Jiasen Lin wrote:
->>>
->>>
->>> On 2019/11/18 7:00, Jon Mason wrote:
->>>> On Thu, Nov 7, 2019 at 4:37 AM Jiasen Lin <linjiasen@hygon.cn <mailto:linjiasen@hygon.cn>> wrote:
->>>>>
->>>>> The offset of PCIe Capability Header for AMD and HYGON NTB is 0x64,
->>>>> but the macro which named "AMD_LINK_STATUS_OFFSET" is defined as 0x68.
->>>>> It is offset of Device Capabilities Reg rather than Link Control Reg.
->>>>>
->>>>> This code trigger an error in get link statsus:
->>>>>
->>>>>           cat /sys/kernel/debug/ntb_hw_amd/0000:43:00.1/info
->>>>>                   LNK STA -               0x8fa1
->>>>>                   Link Status -           Up
->>>>>                   Link Speed -            PCI-E Gen 0
->>>>>                   Link Width -            x0
->>>>>
->>>>> This patch use pcie_capability_read_dword to get link status.
->>>>> After fix this issue, we can get link status accurately:
->>>>>
->>>>>           cat /sys/kernel/debug/ntb_hw_amd/0000:43:00.1/info
->>>>>                   LNK STA -               0x11030042
->>>>>                   Link Status -           Up
->>>>>                   Link Speed -            PCI-E Gen 3
->>>>>                   Link Width -            x16
->>>>
->>>> No response from AMD maintainers, but it looks like you are correct.
->>>>
->>>> This needs a "Fixes:" line here.  I took the liberty of adding one to
->>>> this patch.
->>>>
->>>
->>> Thank you for your suggestions. Yes, this patch fix the commit id:
->>> a1b3695 ("NTB: Add support for AMD PCI-Express Non-Transparent Bridge").
->>>
->>>>> Signed-off-by: Jiasen Lin <linjiasen@hygon.cn <mailto:linjiasen@hygon.cn>>
->>>>> ---
->>>>>    drivers/ntb/hw/amd/ntb_hw_amd.c | 5 +++--
->>>>>    drivers/ntb/hw/amd/ntb_hw_amd.h | 1 -
->>>>>    2 files changed, 3 insertions(+), 3 deletions(-)
->>>>>
->>>>> diff --git a/drivers/ntb/hw/amd/ntb_hw_amd.c
->>>>> b/drivers/ntb/hw/amd/ntb_hw_amd.c
->>>>> index 156c2a1..ae91105 100644
->>>>> --- a/drivers/ntb/hw/amd/ntb_hw_amd.c
->>>>> +++ b/drivers/ntb/hw/amd/ntb_hw_amd.c
->>>>> @@ -855,8 +855,8 @@ static int amd_poll_link(struct amd_ntb_dev *ndev)
->>>>>
->>>>>           ndev->cntl_sta = reg;
->>>>>
->>>>> -       rc = pci_read_config_dword(ndev->ntb.pdev,
->>>>> -                                  AMD_LINK_STATUS_OFFSET, &stat);
->>>>> +       rc = pcie_capability_read_dword(ndev->ntb.pdev,
->>>>> +                                  PCI_EXP_LNKCTL, &stat);
->>>>>           if (rc)
->>>>>                   return 0;
->>>>>           ndev->lnk_sta = stat;
->>>>> @@ -1139,6 +1139,7 @@ static const struct ntb_dev_data dev_data[] = {
->>>>>    static const struct pci_device_id amd_ntb_pci_tbl[] = {
->>>>>           { PCI_VDEVICE(AMD, 0x145b), (kernel_ulong_t)&dev_data[0] },
->>>>>           { PCI_VDEVICE(AMD, 0x148b), (kernel_ulong_t)&dev_data[1] },
->>>>> +       { PCI_VDEVICE(HYGON, 0x145b), (kernel_ulong_t)&dev_data[0] },
->>>>
->>>> This should be a separate patch.  I took the liberty of splitting it
->>>> off into a unique patch and attributing it to you.  I've pushed them
->>>> to the ntb-next branch on
->>>> https://github.com/jonmason/ntb
->>>>
->>> Thank you for your comment. We appreciate the time and effort you have
->>> spent to split it off, I will test it ASAP.
->>>
->>>> Please verify everything looks acceptable to you (given the changes I
->>>> did above that are attributed to you).  Also, testing of the latest
->>>> code is always appreciated.
->>>>
->>>> Thanks,
->>>> Jon
->>>>
->>
->> I have tested these patches that are pushed to ntb-next branch, they
->> work well on HYGON platforms.
->>
->> Thanks,
->> Jiasen Lin
-> 
-> Hi Jiasen Lin,
-> 
-> Apologies for my delayed response. I was on vacation.
-> 
-> Your patch is a correct fix, but that would work only for primary system.
-> 
-> The design of AMD NTB implementation is such that NTB primary acts as an endpoint device and NTB secondary is a PCIe Root Port (RP). Considering that,
-> the link status and control register needs to be accessed differently based on the NTB topology.
-> 
-> So in the case of NTB secondary, we read the link status and control register of the PCIe RP capabilities structure and in the case of NTB primary, we read the
-> link status and control register from NTB device capabilities structure.
-> 
-> The code below is the proper fix for AMD platform. I will be sending incremental change above your patch.
-> 
-> would appreciate if you could test my patch and let me know whether that works for you.
-> 
+diff --git a/kernel/Kconfig.locks b/kernel/Kconfig.locks
+index e0852dc333ac..d8d7a0d571a7 100644
+--- a/kernel/Kconfig.locks
++++ b/kernel/Kconfig.locks
+@@ -229,12 +229,12 @@ config MUTEX_SPIN_ON_OWNER
+ 	depends on SMP && ARCH_SUPPORTS_ATOMIC_RMW
+ 
+ config RWSEM_SPIN_ON_OWNER
+-       def_bool y
+-       depends on SMP && ARCH_SUPPORTS_ATOMIC_RMW
++	def_bool y
++	depends on SMP && ARCH_SUPPORTS_ATOMIC_RMW
+ 
+ config LOCK_SPIN_ON_OWNER
+-       def_bool y
+-       depends on MUTEX_SPIN_ON_OWNER || RWSEM_SPIN_ON_OWNER
++	def_bool y
++	depends on MUTEX_SPIN_ON_OWNER || RWSEM_SPIN_ON_OWNER
+ 
+ config ARCH_USE_QUEUED_SPINLOCKS
+ 	bool
+diff --git a/kernel/Kconfig.preempt b/kernel/Kconfig.preempt
+index bf82259cff96..4293e52c6cdf 100644
+--- a/kernel/Kconfig.preempt
++++ b/kernel/Kconfig.preempt
+@@ -75,8 +75,8 @@ config PREEMPT_RT
+ endchoice
+ 
+ config PREEMPT_COUNT
+-       bool
++	bool
+ 
+ config PREEMPTION
+-       bool
+-       select PREEMPT_COUNT
++	bool
++	select PREEMPT_COUNT
+diff --git a/kernel/irq/Kconfig b/kernel/irq/Kconfig
+index f92d9a687372..5621902c9921 100644
+--- a/kernel/irq/Kconfig
++++ b/kernel/irq/Kconfig
+@@ -4,11 +4,11 @@ menu "IRQ subsystem"
+ 
+ # Make sparse irq Kconfig switch below available
+ config MAY_HAVE_SPARSE_IRQ
+-       bool
++	bool
+ 
+ # Legacy support, required for itanic
+ config GENERIC_IRQ_LEGACY
+-       bool
++	bool
+ 
+ # Enable the generic irq autoprobe mechanism
+ config GENERIC_IRQ_PROBE
+@@ -16,20 +16,20 @@ config GENERIC_IRQ_PROBE
+ 
+ # Use the generic /proc/interrupts implementation
+ config GENERIC_IRQ_SHOW
+-       bool
++	bool
+ 
+ # Print level/edge extra information
+ config GENERIC_IRQ_SHOW_LEVEL
+-       bool
++	bool
+ 
+ # Supports effective affinity mask
+ config GENERIC_IRQ_EFFECTIVE_AFF_MASK
+-       bool
++	bool
+ 
+ # Facility to allocate a hardware interrupt. This is legacy support
+ # and should not be used in new code. Use irq domains instead.
+ config GENERIC_IRQ_LEGACY_ALLOC_HWIRQ
+-       bool
++	bool
+ 
+ # Support for delayed migration from interrupt context
+ config GENERIC_PENDING_IRQ
+@@ -41,24 +41,24 @@ config GENERIC_IRQ_MIGRATION
+ 
+ # Alpha specific irq affinity mechanism
+ config AUTO_IRQ_AFFINITY
+-       bool
++	bool
+ 
+ # Tasklet based software resend for pending interrupts on enable_irq()
+ config HARDIRQS_SW_RESEND
+-       bool
++	bool
+ 
+ # Preflow handler support for fasteoi (sparc64)
+ config IRQ_PREFLOW_FASTEOI
+-       bool
++	bool
+ 
+ # Edge style eoi based handler (cell)
+ config IRQ_EDGE_EOI_HANDLER
+-       bool
++	bool
+ 
+ # Generic configurable interrupt chip implementation
+ config GENERIC_IRQ_CHIP
+-       bool
+-       select IRQ_DOMAIN
++	bool
++	select IRQ_DOMAIN
+ 
+ # Generic irq_domain hw <--> linux irq number translation
+ config IRQ_DOMAIN
+@@ -109,7 +109,7 @@ config GENERIC_IRQ_RESERVATION_MODE
+ 
+ # Support forced irq threading
+ config IRQ_FORCED_THREADING
+-       bool
++	bool
+ 
+ config SPARSE_IRQ
+ 	bool "Support sparse irq numbering" if MAY_HAVE_SPARSE_IRQ
+diff --git a/kernel/time/Kconfig b/kernel/time/Kconfig
+index fcc42353f125..610d56ccb4da 100644
+--- a/kernel/time/Kconfig
++++ b/kernel/time/Kconfig
+@@ -102,24 +102,24 @@ config NO_HZ_FULL
+ 	select IRQ_WORK
+ 	select CPU_ISOLATION
+ 	help
+-	 Adaptively try to shutdown the tick whenever possible, even when
+-	 the CPU is running tasks. Typically this requires running a single
+-	 task on the CPU. Chances for running tickless are maximized when
+-	 the task mostly runs in userspace and has few kernel activity.
++	  Adaptively try to shutdown the tick whenever possible, even when
++	  the CPU is running tasks. Typically this requires running a single
++	  task on the CPU. Chances for running tickless are maximized when
++	  the task mostly runs in userspace and has few kernel activity.
+ 
+-	 You need to fill up the nohz_full boot parameter with the
+-	 desired range of dynticks CPUs.
++	  You need to fill up the nohz_full boot parameter with the
++	  desired range of dynticks CPUs.
+ 
+-	 This is implemented at the expense of some overhead in user <-> kernel
+-	 transitions: syscalls, exceptions and interrupts. Even when it's
+-	 dynamically off.
++	  This is implemented at the expense of some overhead in user <-> kernel
++	  transitions: syscalls, exceptions and interrupts. Even when it's
++	  dynamically off.
+ 
+-	 Say N.
++	  Say N.
+ 
+ endchoice
+ 
+ config CONTEXT_TRACKING
+-       bool
++	bool
+ 
+ config CONTEXT_TRACKING_FORCE
+ 	bool "Force context tracking"
+diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+index f67620499faa..dbcee0257416 100644
+--- a/kernel/trace/Kconfig
++++ b/kernel/trace/Kconfig
+@@ -73,9 +73,9 @@ config RING_BUFFER
+ 	select IRQ_WORK
+ 
+ config FTRACE_NMI_ENTER
+-       bool
+-       depends on HAVE_FTRACE_NMI_ENTER
+-       default y
++	bool
++	depends on HAVE_FTRACE_NMI_ENTER
++	default y
+ 
+ config EVENT_TRACING
+ 	select CONTEXT_SWITCH_TRACER
+@@ -88,8 +88,8 @@ config CONTEXT_SWITCH_TRACER
+ config RING_BUFFER_ALLOW_SWAP
+ 	bool
+ 	help
+-	 Allow the use of ring_buffer_swap_cpu.
+-	 Adds a very slight overhead to tracing when enabled.
++	  Allow the use of ring_buffer_swap_cpu.
++	  Adds a very slight overhead to tracing when enabled.
+ 
+ config PREEMPTIRQ_TRACEPOINTS
+ 	bool
+@@ -252,36 +252,36 @@ config HWLAT_TRACER
+ 	bool "Tracer to detect hardware latencies (like SMIs)"
+ 	select GENERIC_TRACER
+ 	help
+-	 This tracer, when enabled will create one or more kernel threads,
+-	 depending on what the cpumask file is set to, which each thread
+-	 spinning in a loop looking for interruptions caused by
+-	 something other than the kernel. For example, if a
+-	 System Management Interrupt (SMI) takes a noticeable amount of
+-	 time, this tracer will detect it. This is useful for testing
+-	 if a system is reliable for Real Time tasks.
++	  This tracer, when enabled will create one or more kernel threads,
++	  depending on what the cpumask file is set to, which each thread
++	  spinning in a loop looking for interruptions caused by
++	  something other than the kernel. For example, if a
++	  System Management Interrupt (SMI) takes a noticeable amount of
++	  time, this tracer will detect it. This is useful for testing
++	  if a system is reliable for Real Time tasks.
+ 
+-	 Some files are created in the tracing directory when this
+-	 is enabled:
++	  Some files are created in the tracing directory when this
++	  is enabled:
+ 
+-	   hwlat_detector/width   - time in usecs for how long to spin for
+-	   hwlat_detector/window  - time in usecs between the start of each
++	    hwlat_detector/width   - time in usecs for how long to spin for
++	    hwlat_detector/window  - time in usecs between the start of each
+ 				     iteration
+ 
+-	 A kernel thread is created that will spin with interrupts disabled
+-	 for "width" microseconds in every "window" cycle. It will not spin
+-	 for "window - width" microseconds, where the system can
+-	 continue to operate.
++	  A kernel thread is created that will spin with interrupts disabled
++	  for "width" microseconds in every "window" cycle. It will not spin
++	  for "window - width" microseconds, where the system can
++	  continue to operate.
+ 
+-	 The output will appear in the trace and trace_pipe files.
++	  The output will appear in the trace and trace_pipe files.
+ 
+-	 When the tracer is not running, it has no affect on the system,
+-	 but when it is running, it can cause the system to be
+-	 periodically non responsive. Do not run this tracer on a
+-	 production system.
++	  When the tracer is not running, it has no affect on the system,
++	  but when it is running, it can cause the system to be
++	  periodically non responsive. Do not run this tracer on a
++	  production system.
+ 
+-	 To enable this tracer, echo in "hwlat" into the current_tracer
+-	 file. Every time a latency is greater than tracing_thresh, it will
+-	 be recorded into the ring buffer.
++	  To enable this tracer, echo in "hwlat" into the current_tracer
++	  file. Every time a latency is greater than tracing_thresh, it will
++	  be recorded into the ring buffer.
+ 
+ config ENABLE_DEFAULT_TRACERS
+ 	bool "Trace process context switches and events"
+@@ -339,18 +339,18 @@ choice
+ 	prompt "Branch Profiling"
+ 	default BRANCH_PROFILE_NONE
+ 	help
+-	 The branch profiling is a software profiler. It will add hooks
+-	 into the C conditionals to test which path a branch takes.
++	  The branch profiling is a software profiler. It will add hooks
++	  into the C conditionals to test which path a branch takes.
+ 
+-	 The likely/unlikely profiler only looks at the conditions that
+-	 are annotated with a likely or unlikely macro.
++	  The likely/unlikely profiler only looks at the conditions that
++	  are annotated with a likely or unlikely macro.
+ 
+-	 The "all branch" profiler will profile every if-statement in the
+-	 kernel. This profiler will also enable the likely/unlikely
+-	 profiler.
++	  The "all branch" profiler will profile every if-statement in the
++	  kernel. This profiler will also enable the likely/unlikely
++	  profiler.
+ 
+-	 Either of the above profilers adds a bit of overhead to the system.
+-	 If unsure, choose "No branch profiling".
++	  Either of the above profilers adds a bit of overhead to the system.
++	  If unsure, choose "No branch profiling".
+ 
+ config BRANCH_PROFILE_NONE
+ 	bool "No branch profiling"
+@@ -585,8 +585,8 @@ config BPF_KPROBE_OVERRIDE
+ 	depends on FUNCTION_ERROR_INJECTION
+ 	default n
+ 	help
+-	 Allows BPF to override the execution of a probed function and
+-	 set a different return value.  This is used for error injection.
++	  Allows BPF to override the execution of a probed function and
++	  set a different return value.  This is used for error injection.
+ 
+ config FTRACE_MCOUNT_RECORD
+ 	def_bool y
+@@ -620,13 +620,13 @@ config EVENT_TRACE_TEST_SYSCALLS
+ 	bool "Run selftest on syscall events"
+ 	depends on EVENT_TRACE_STARTUP_TEST
+ 	help
+-	 This option will also enable testing every syscall event.
+-	 It only enables the event and disables it and runs various loads
+-	 with the event enabled. This adds a bit more time for kernel boot
+-	 up since it runs this on every system call defined.
++	  This option will also enable testing every syscall event.
++	  It only enables the event and disables it and runs various loads
++	  with the event enabled. This adds a bit more time for kernel boot
++	  up since it runs this on every system call defined.
+ 
+-	 TBD - enable a way to actually call the syscalls as we test their
+-	       events
++	  TBD - enable a way to actually call the syscalls as we test their
++	        events
+ 
+ config MMIOTRACE
+ 	bool "Memory mapped IO tracing"
+@@ -685,22 +685,22 @@ config MMIOTRACE_TEST
+ config TRACEPOINT_BENCHMARK
+ 	bool "Add tracepoint that benchmarks tracepoints"
+ 	help
+-	 This option creates the tracepoint "benchmark:benchmark_event".
+-	 When the tracepoint is enabled, it kicks off a kernel thread that
+-	 goes into an infinite loop (calling cond_sched() to let other tasks
+-	 run), and calls the tracepoint. Each iteration will record the time
+-	 it took to write to the tracepoint and the next iteration that
+-	 data will be passed to the tracepoint itself. That is, the tracepoint
+-	 will report the time it took to do the previous tracepoint.
+-	 The string written to the tracepoint is a static string of 128 bytes
+-	 to keep the time the same. The initial string is simply a write of
+-	 "START". The second string records the cold cache time of the first
+-	 write which is not added to the rest of the calculations.
++	  This option creates the tracepoint "benchmark:benchmark_event".
++	  When the tracepoint is enabled, it kicks off a kernel thread that
++	  goes into an infinite loop (calling cond_sched() to let other tasks
++	  run), and calls the tracepoint. Each iteration will record the time
++	  it took to write to the tracepoint and the next iteration that
++	  data will be passed to the tracepoint itself. That is, the tracepoint
++	  will report the time it took to do the previous tracepoint.
++	  The string written to the tracepoint is a static string of 128 bytes
++	  to keep the time the same. The initial string is simply a write of
++	  "START". The second string records the cold cache time of the first
++	  write which is not added to the rest of the calculations.
+ 
+-	 As it is a tight loop, it benchmarks as hot cache. That's fine because
+-	 we care most about hot paths that are probably in cache already.
++	  As it is a tight loop, it benchmarks as hot cache. That's fine because
++	  we care most about hot paths that are probably in cache already.
+ 
+-	 An example of the output:
++	  An example of the output:
+ 
+ 	      START
+ 	      first=3672 [COLD CACHED]
+@@ -729,27 +729,27 @@ config RING_BUFFER_BENCHMARK
+ 	  If unsure, say N.
+ 
+ config RING_BUFFER_STARTUP_TEST
+-       bool "Ring buffer startup self test"
+-       depends on RING_BUFFER
+-       help
+-	 Run a simple self test on the ring buffer on boot up. Late in the
+-	 kernel boot sequence, the test will start that kicks off
+-	 a thread per cpu. Each thread will write various size events
+-	 into the ring buffer. Another thread is created to send IPIs
+-	 to each of the threads, where the IPI handler will also write
+-	 to the ring buffer, to test/stress the nesting ability.
+-	 If any anomalies are discovered, a warning will be displayed
+-	 and all ring buffers will be disabled.
+-
+-	 The test runs for 10 seconds. This will slow your boot time
+-	 by at least 10 more seconds.
+-
+-	 At the end of the test, statics and more checks are done.
+-	 It will output the stats of each per cpu buffer. What
+-	 was written, the sizes, what was read, what was lost, and
+-	 other similar details.
+-
+-	 If unsure, say N
++	bool "Ring buffer startup self test"
++	depends on RING_BUFFER
++	help
++	  Run a simple self test on the ring buffer on boot up. Late in the
++	  kernel boot sequence, the test will start that kicks off
++	  a thread per cpu. Each thread will write various size events
++	  into the ring buffer. Another thread is created to send IPIs
++	  to each of the threads, where the IPI handler will also write
++	  to the ring buffer, to test/stress the nesting ability.
++	  If any anomalies are discovered, a warning will be displayed
++	  and all ring buffers will be disabled.
++
++	  The test runs for 10 seconds. This will slow your boot time
++	  by at least 10 more seconds.
++
++	  At the end of the test, statics and more checks are done.
++	  It will output the stats of each per cpu buffer. What
++	  was written, the sizes, what was read, what was lost, and
++	  other similar details.
++
++	  If unsure, say N
+ 
+ config PREEMPTIRQ_DELAY_TEST
+ 	tristate "Preempt / IRQ disable delay thread to test latency tracers"
+@@ -767,9 +767,9 @@ config PREEMPTIRQ_DELAY_TEST
+ 	  If unsure, say N
+ 
+ config TRACE_EVAL_MAP_FILE
+-       bool "Show eval mappings for trace events"
+-       depends on TRACING
+-       help
++	bool "Show eval mappings for trace events"
++	depends on TRACING
++	help
+ 	The "print fmt" of the trace events will show the enum/sizeof names
+ 	instead of their values. This can cause problems for user space tools
+ 	that use this string to parse the raw data as user space does not know
+-- 
+2.17.1
 
-Dhyana CPU dones not support data transfer while both sides of PCIe link 
-are configured as NTB, in other word, Dhyana only support NTB that is 
-connected to RP rather than NT to NT.
-
-As illustrated in the following topology, NTB consists of two PCIe 
-endpoints, a Primary NTB, and a Secondary NTB. Primary CPU can find 
-Priamry NTB, while Secondary NTB, Secondary internal SW.ds and Secondary 
-internal SW.ds are enumerated by secondary CPU.
-
-In this topology, to remove any ambiguity, your suggestion is more 
-accurate method to get link status of NTB.
-
-In primary PCI domain:
-Primary RP--Primary NTB----------------------------------------
-40:04.1-------41:00.1(Pri NTB)                                | 
-
-                                                               | 
-In secondary PCI domain:                                      |
-Secondary RP--Secondary SW.us--Secondary SW.ds--Secondary NTB--
-40:03.1---------41:00.0---------42:00.0---------43:00.1(Sec NTB)
-
-I have modified the code according to your suggestion and tested it
-on Dhyana platform, it works well, expect to receice your patch.
-
-Before modify the code, read the Link Status and control register of the 
-secondary NTB device to get link status.
-
-cat /sys/kernel/debug/ntb_hw_amd/0000\:43\:00.1/info
-NTB Device Information:
-Connection Topology -   NTB_TOPO_SEC
-LNK STA -               0x11030042
-Link Status -           Up
-Link Speed -            PCI-E Gen 3
-Link Width -            x16
-
-After modify the code, read the Link Status and control register of the 
-secondary RP to get link status.
-
-cat /sys/kernel/debug/ntb_hw_amd/0000\:43\:00.1/info
-NTB Device Information:
-Connection Topology -   NTB_TOPO_SEC
-LNK STA -               0x70830042
-Link Status -           Up
-Link Speed -            PCI-E Gen 3
-Link Width -            x8
-
-Thanks,
-Jiasen Lin
-
-> ---
->   drivers/ntb/hw/amd/ntb_hw_amd.c | 27 +++++++++++++++++++++++----
->   drivers/ntb/hw/amd/ntb_hw_amd.h |  1 -
->   2 files changed, 23 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/ntb/hw/amd/ntb_hw_amd.c b/drivers/ntb/hw/amd/ntb_hw_amd.c
-> index 14ad69c..91e1966 100644
-> --- a/drivers/ntb/hw/amd/ntb_hw_amd.c
-> +++ b/drivers/ntb/hw/amd/ntb_hw_amd.c
-> @@ -842,6 +842,8 @@ static inline void ndev_init_struct(struct amd_ntb_dev *ndev,
->   static int amd_poll_link(struct amd_ntb_dev *ndev)
->   {
->       void __iomem *mmio = ndev->peer_mmio;
-> +    struct pci_dev *pci_rp = NULL;
-> +    struct pci_dev *pdev = NULL;
->       u32 reg, stat;
->       int rc;
->   
-> @@ -855,10 +857,27 @@ static int amd_poll_link(struct amd_ntb_dev *ndev)
->   
->       ndev->cntl_sta = reg;
->   
-> -    rc = pci_read_config_dword(ndev->ntb.pdev,
-> -                   AMD_LINK_STATUS_OFFSET, &stat);
-> -    if (rc)
-> -        return 0;
-> +    if (ndev->ntb.topo == NTB_TOPO_SEC) {
-> +        /* Locate the pointer to PCIe Root Port for this device */
-> +        pci_rp = pci_find_pcie_root_port(ndev->ntb.pdev);
-> +        /* Read the PCIe Link Control and Status register */
-> +        if (pci_rp) {
-> +            rc = pcie_capability_read_dword(pci_rp, PCI_EXP_LNKCTL,
-> +                            &stat);
-> +            if (rc)
-> +                return 0;
-> +        }
-> +    } else if (ndev->ntb.topo == NTB_TOPO_PRI) {
-> +        /*
-> +         * For NTB primary, we simply read the Link Status and control
-> +         * register of the NTB device itself.
-> +         */
-> +        pdev = ndev->ntb.pdev;
-> +        rc = pcie_capability_read_dword(pdev, PCI_EXP_LNKCTL, &stat);
-> +        if (rc)
-> +            return 0;
-> +    }
-> +
->       ndev->lnk_sta = stat;
->   
->       return 1;
-> diff --git a/drivers/ntb/hw/amd/ntb_hw_amd.h b/drivers/ntb/hw/amd/ntb_hw_amd.h
-> index 139a307..39e5d18 100644
-> --- a/drivers/ntb/hw/amd/ntb_hw_amd.h
-> +++ b/drivers/ntb/hw/amd/ntb_hw_amd.h
-> @@ -53,7 +53,6 @@
->   #include <linux/pci.h>
->   
->   #define AMD_LINK_HB_TIMEOUT    msecs_to_jiffies(1000)
-> -#define AMD_LINK_STATUS_OFFSET    0x68
->   #define NTB_LIN_STA_ACTIVE_BIT    0x00000002
->   #define NTB_LNK_STA_SPEED_MASK    0x000F0000
->   #define NTB_LNK_STA_WIDTH_MASK    0x03F00000
-> 
