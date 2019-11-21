@@ -2,103 +2,235 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8FEBC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:22:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BD82C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:25:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAAA92068F
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:22:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574371348;
-	bh=bniu8l82DVZK7Xcjyvbp1Kp51VrBQmOfOA8fDc6KI6s=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=A6WjZxOP1G+JVhkj28eYmTErgOPMAuaSk84hibUHNnJNt/fEvwE1XOTG+0W7k7sF5
-	 mizLocCc+1EtSeJjKKRsKZutbVRkS4vmqNmce4+2sLEr5AnclwQXky+h+WnrEXzEth
-	 dEoPOF/kv59z/0AFIGx4/8RU7ujcrE21UXXXRxGw=
+	by mail.kernel.org (Postfix) with ESMTP id E65262068F
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:25:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ndTjdExf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727135AbfKUVW1 (ORCPT
+        id S1726563AbfKUVZs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 16:22:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39256 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726329AbfKUVW1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 16:22:27 -0500
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E73F2071B
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 21:22:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574371346;
-        bh=bniu8l82DVZK7Xcjyvbp1Kp51VrBQmOfOA8fDc6KI6s=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=1W83i/7eltRlSF7Z+DyLIIlHItx8a80Y6f5tU9FdKwcsb2iJufoFbaPfCr76zhjEB
-         su3UsLAlY70TDmOycXobjCKUa5stZ0po+I01HnyIj+z1c8jzc4U91BMasKPjRJf0JH
-         yZ8B83UABywnlwRrW3HoiepIoC7pWmXjp8KMcVRE=
-Received: by mail-wm1-f50.google.com with SMTP id x26so5034306wmk.4
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 13:22:26 -0800 (PST)
-X-Gm-Message-State: APjAAAUTK4uLV7PijIBFriP/TRC0RBk8PYDY7fWDZMrA38CP1aBXtxNm
-        Tw57JTyBrVd9RoJIXqITzlU4eN8rXTDLVb+dqZCCkg==
-X-Google-Smtp-Source: APXvYqzNJW/i57/phfnZvYSWRoPwe87prKP6rWecrzMX1DMcuSiTogtFsHYHxhmWXYGQ+SQXUSJc/vJ9aEWgwSo2nZE=
-X-Received: by 2002:a7b:c1ca:: with SMTP id a10mr13469841wmj.161.1574371344540;
- Thu, 21 Nov 2019 13:22:24 -0800 (PST)
+        Thu, 21 Nov 2019 16:25:48 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:36986 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726293AbfKUVZr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 16:25:47 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xALLApfa106218;
+        Thu, 21 Nov 2019 21:25:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=3q5ELNs+Kx+K1bHZZAOkyUkJbvtpFplQATZijNomOVc=;
+ b=ndTjdExf13XL06VeZrCE8QoGVAmT1KzRkeWci8rsBiAYv4ExC3XTUgwREksXDJ5JJphG
+ Gk6x8D1vU8ElScTr+fLHmiqaFKkgP+SgM+mtF182RpZ+r9wF7YGmVIUGBwB+V2CsPJ5y
+ eWzIt0OMiC9xYqS2zWf3aEMizupJ4/vyZP5e51GuMCQMq8ZrBnwm5f7vKX4mMnQIJeYT
+ 7pBc5SLo91d1cXyak5d7hjRz216npkZEe/RJGHPp3bR9ARWcgym2b8FadYcnM56c+3Yy
+ juxq3UaASc6Cz6xMjps/EioyTwndIVID91JEzhcfzLHZIzzps1+Yq6fiZSWXwPUGgPdl Vw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2wa9rqxycj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 21 Nov 2019 21:25:20 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xALLAd1b005329;
+        Thu, 21 Nov 2019 21:25:19 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 2wdfrv2me3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 21 Nov 2019 21:25:19 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xALLPExt009698;
+        Thu, 21 Nov 2019 21:25:16 GMT
+Received: from localhost (/10.145.178.64)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 21 Nov 2019 13:25:14 -0800
+Date:   Thu, 21 Nov 2019 13:25:12 -0800
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Evan Green <evgreen@chromium.org>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Martin K Petersen <martin.petersen@oracle.com>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Ming Lei <ming.lei@redhat.com>,
+        Alexis Savery <asavery@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        linux-block <linux-block@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v7 2/2] loop: Better discard support for block devices
+Message-ID: <20191121212512.GA2981917@magnolia>
+References: <20191114235008.185111-1-evgreen@chromium.org>
+ <20191114154903.v7.2.I4d476bddbf41a61422ad51502f4361e237d60ad4@changeid>
+ <20191120022518.GU6235@magnolia>
+ <CAE=gft4mjKc4QKFKxp2FX9G2rUMuE3_eDuW_3Oq7NqTYBQwEjg@mail.gmail.com>
+ <20191120191302.GV6235@magnolia>
+ <CAE=gft6x1TmkkNTj+gktYMkHcysYyuYL50cavYusQ7hd9zChvA@mail.gmail.com>
+ <20191120194507.GW6235@magnolia>
+ <CAE=gft4OcxPP7srBe_2bj8K_0jHGD8Ae_PbV1Rq-Nz4F8GtkQA@mail.gmail.com>
 MIME-Version: 1.0
-References: <1574297603-198156-1-git-send-email-fenghua.yu@intel.com>
- <1574297603-198156-7-git-send-email-fenghua.yu@intel.com> <20191121060444.GA55272@gmail.com>
- <20191121130153.GS4097@hirez.programming.kicks-ass.net> <20191121171214.GD12042@gmail.com>
- <3481175cbe14457a947f934343946d52@AcuMS.aculab.com> <CALCETrW+qxrE633qetS4c1Rn2AX_hk5OgneZRtoZPFN1J395Ng@mail.gmail.com>
- <20191121185303.GB199273@romley-ivt3.sc.intel.com> <20191121202508.GZ4097@hirez.programming.kicks-ass.net>
-In-Reply-To: <20191121202508.GZ4097@hirez.programming.kicks-ass.net>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Thu, 21 Nov 2019 13:22:13 -0800
-X-Gmail-Original-Message-ID: <CALCETrXbe_q07kL1AyaNaAqgUHsdN6rEDzzZ0CEtv-k9VvQL0A@mail.gmail.com>
-Message-ID: <CALCETrXbe_q07kL1AyaNaAqgUHsdN6rEDzzZ0CEtv-k9VvQL0A@mail.gmail.com>
-Subject: Re: [PATCH v10 6/6] x86/split_lock: Enable split lock detection by
- kernel parameter
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Fenghua Yu <fenghua.yu@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        David Laight <David.Laight@aculab.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAE=gft4OcxPP7srBe_2bj8K_0jHGD8Ae_PbV1Rq-Nz4F8GtkQA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9448 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1911210177
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9448 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1911210177
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 12:25 PM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Thu, Nov 21, 2019 at 10:53:03AM -0800, Fenghua Yu wrote:
->
-> > 4. Otherwise, re-calculate addr to point the 32-bit address which contains
-> >    the bit and operate on the bit. No split lock.
->
-> That sounds confused, Even BT{,CRS} have a RmW size. There is no
-> 'operate on the bit'.
->
-> Specifically I hard rely on BTSL to be a 32bit RmW, see commit:
->
->   7aa54be29765 ("locking/qspinlock, x86: Provide liveness guarantee")
->
+On Thu, Nov 21, 2019 at 01:18:51PM -0800, Evan Green wrote:
+> On Wed, Nov 20, 2019 at 11:45 AM Darrick J. Wong
+> <darrick.wong@oracle.com> wrote:
+> >
+> > On Wed, Nov 20, 2019 at 11:25:48AM -0800, Evan Green wrote:
+> > > On Wed, Nov 20, 2019 at 11:13 AM Darrick J. Wong
+> > > <darrick.wong@oracle.com> wrote:
+> > > >
+> > > > On Wed, Nov 20, 2019 at 10:56:30AM -0800, Evan Green wrote:
+> > > > > On Tue, Nov 19, 2019 at 6:25 PM Darrick J. Wong <darrick.wong@oracle.com> wrote:
+> > > > > >
+> > > > > > On Thu, Nov 14, 2019 at 03:50:08PM -0800, Evan Green wrote:
+> > > > > > > If the backing device for a loop device is itself a block device,
+> > > > > > > then mirror the "write zeroes" capabilities of the underlying
+> > > > > > > block device into the loop device. Copy this capability into both
+> > > > > > > max_write_zeroes_sectors and max_discard_sectors of the loop device.
+> > > > > > >
+> > > > > > > The reason for this is that REQ_OP_DISCARD on a loop device translates
+> > > > > > > into blkdev_issue_zeroout(), rather than blkdev_issue_discard(). This
+> > > > > > > presents a consistent interface for loop devices (that discarded data
+> > > > > > > is zeroed), regardless of the backing device type of the loop device.
+> > > > > > > There should be no behavior change for loop devices backed by regular
+> > > > > > > files.
+> > >
+> > > (marking this spot for below)
+> > >
+> > > > > > >
+> > > > > > > This change fixes blktest block/003, and removes an extraneous
+> > > > > > > error print in block/013 when testing on a loop device backed
+> > > > > > > by a block device that does not support discard.
+> > > > > > >
+> > > > > > > Signed-off-by: Evan Green <evgreen@chromium.org>
+> > > > > > > Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
+> > > > > > > Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+> > > > > > > ---
+> > > > > > >
+> > > > > > > Changes in v7:
+> > > > > > > - Rebase on top of Darrick's patch
+> > > > > > > - Tweak opening line of commit description (Darrick)
+> > > > > > >
+> > > > > > > Changes in v6: None
+> > > > > > > Changes in v5:
+> > > > > > > - Don't mirror discard if lo_encrypt_key_size is non-zero (Gwendal)
+> > > > > > >
+> > > > > > > Changes in v4:
+> > > > > > > - Mirror blkdev's write_zeroes into loopdev's discard_sectors.
+> > > > > > >
+> > > > > > > Changes in v3:
+> > > > > > > - Updated commit description
+> > > > > > >
+> > > > > > > Changes in v2: None
+> > > > > > >
+> > > > > > >  drivers/block/loop.c | 40 +++++++++++++++++++++++++++++-----------
+> > > > > > >  1 file changed, 29 insertions(+), 11 deletions(-)
+> > > > > > >
+> > > > > > > diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+> > > > > > > index 6a9fe1f9fe84..e8f23e4b78f7 100644
+> > > > > > > --- a/drivers/block/loop.c
+> > > > > > > +++ b/drivers/block/loop.c
+> > > > > > > @@ -427,11 +427,12 @@ static int lo_fallocate(struct loop_device *lo, struct request *rq, loff_t pos,
+> > > > > > >        * information.
+> > > > > > >        */
+> > > > > > >       struct file *file = lo->lo_backing_file;
+> > > > > > > +     struct request_queue *q = lo->lo_queue;
+> > > > > > >       int ret;
+> > > > > > >
+> > > > > > >       mode |= FALLOC_FL_KEEP_SIZE;
+> > > > > > >
+> > > > > > > -     if ((!file->f_op->fallocate) || lo->lo_encrypt_key_size) {
+> > > > > > > +     if (!blk_queue_discard(q)) {
+> > > > > > >               ret = -EOPNOTSUPP;
+> > > > > > >               goto out;
+> > > > > > >       }
+> > > > > > > @@ -862,6 +863,21 @@ static void loop_config_discard(struct loop_device *lo)
+> > > > > > >       struct file *file = lo->lo_backing_file;
+> > > > > > >       struct inode *inode = file->f_mapping->host;
+> > > > > > >       struct request_queue *q = lo->lo_queue;
+> > > > > > > +     struct request_queue *backingq;
+> > > > > > > +
+> > > > > > > +     /*
+> > > > > > > +      * If the backing device is a block device, mirror its zeroing
+> > > > > > > +      * capability. REQ_OP_DISCARD translates to a zero-out even when backed
+> > > > > > > +      * by block devices to keep consistent behavior with file-backed loop
+> > > > > > > +      * devices.
+> > > > > > > +      */
+> 
+> Wait, I went to make this change and realized there's already a comment here.
+> 
+> I can tweak the language a bit, but this is pretty much what you wanted, right?
 
-Okay, spent a bit of time trying to grok this.  Are you saying that
-LOCK BTSL suffices in a case where LOCK BTSB or LOCK XCHG8 would not?
-On x86, all the LOCK operations are full barriers, so they should
-order with adjacent normal accesses even to unrelated addresses,
-right?
+Yep.
 
-I certainly understand that a *non-locked* RMW to a bit might need to
-have a certain width to get the right ordering guarantees, but those
-aren't affected by split-lock detection regardless.
+--D
 
---Andy
+> > > > > > > +     if (S_ISBLK(inode->i_mode) && !lo->lo_encrypt_key_size) {
+> > > > > > > +             backingq = bdev_get_queue(inode->i_bdev);
+> > > > > > > +             blk_queue_max_discard_sectors(q,
+> > > > > > > +                     backingq->limits.max_write_zeroes_sectors);
+> > > > > >
+> > > > > > max_discard_sectors?
+> > > > >
+> > > > > I didn't plumb max_discard_sectors because for my scenario it never
+> > > > > ends up hitting the block device that way.
+> > > > >
+> > > > > The loop device either uses FL_ZERO_RANGE or FL_PUNCH_HOLE. When
+> > > > > backed by a block device, that ends up in blkdev_fallocate(), which
+> > > > > always translates both of those into blkdev_issue_zeroout(), not
+> > > > > blkdev_issue_discard(). So it's really the zeroing capabilities of the
+> > > > > block device that matters, even for loop discard operations. It seems
+> > > > > weird, but I think this is the right thing because it presents a
+> > > > > consistent interface to loop device users whether backed by a file
+> > > > > system file, or directly by a block device. That is, a previously
+> > > > > discarded range will read back as zeroes.
+> > > >
+> > > > Ah, right.  Could you add this paragraph as a comment explaining why
+> > > > we're setting max_discard_sectors from max_write_zeroes_sectors?
+> > >
+> > > Sure. I put an explanation in the commit description (see spot I
+> > > marked above), but I agree a comment is probably also worthwhile.
+> >
+> > <nod> Sorry about the churn here.
+> >
+> > I have a strong preference towards documenting decisions like these
+> > directly in the code because (a) I suck at reading patch prologues, (b)
+> > someone reading the code after this gets committed will see it
+> > immediately and right next to the relevant code, and (c) spelunking
+> > through the git history of a file for commit messages is kind of clunky.
+> >
+> > Dunno if that's just my age showing (mmm, pre-bk linux) or what. :/
+> >
+> > --D
+> >
+> > > >
+> > > > --D
+> > > >
+> > > > > -Evan
