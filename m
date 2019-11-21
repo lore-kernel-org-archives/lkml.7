@@ -2,362 +2,97 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF70C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 09:39:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75054C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 09:42:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B19E020715
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 09:39:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 498B820748
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 09:42:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574329340;
+	bh=Fjo7LOSQOXDhexKCsF2boszIdLMNlYvIHWsD4fqz6xs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Mz/voLkmjV+TVtYNv6/5IwvVPjdmm5CXfL0pHEsqkGudMWzkMefeUjci4BMXDU5YJ
+	 iCYBelL1IZFVoQ6r9EpigHwPNiLNc20Mh41J9IVcVZVaozQwYGL4kSZa38Bs8ihrTs
+	 +osX0AVQ13t9Dcm2yZUO/yo07nSEW1uE72WPMtEs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726861AbfKUJjs (ORCPT
+        id S1726613AbfKUJmT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 04:39:48 -0500
-Received: from mx2.suse.de ([195.135.220.15]:34446 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726132AbfKUJjr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 04:39:47 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 5D6CCB12B;
-        Thu, 21 Nov 2019 09:39:43 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id EADB11E47FC; Thu, 21 Nov 2019 10:39:41 +0100 (CET)
-Date:   Thu, 21 Nov 2019 10:39:41 +0100
-From:   Jan Kara <jack@suse.cz>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 17/24] mm/gup: track FOLL_PIN pages
-Message-ID: <20191121093941.GA18190@quack2.suse.cz>
-References: <20191121071354.456618-1-jhubbard@nvidia.com>
- <20191121071354.456618-18-jhubbard@nvidia.com>
+        Thu, 21 Nov 2019 04:42:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43260 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726165AbfKUJmT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 04:42:19 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24ED920715;
+        Thu, 21 Nov 2019 09:42:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574329338;
+        bh=Fjo7LOSQOXDhexKCsF2boszIdLMNlYvIHWsD4fqz6xs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=xZ3a6eT0PvdMaUPOnmVxID6Rj/TcDc76xJm0ufU3r3g6gamwfpukjqIFS0Vdip8Gq
+         1lqa7oTCXKylryC0NDt92SHyIR9g6RbG/P8gREvk7sIf/AGfl+H1X5d6KXVET4fZRu
+         VEHU999+5ASFS1DzbTEju09dDnwqedzeCdP9wtYQ=
+Date:   Thu, 21 Nov 2019 10:42:15 +0100
+From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+To:     Angelo Dureghello <angelo.dureghello@timesys.com>
+Cc:     Evgeniy Polyakov <zbr@ioremap.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] w1: new driver. DS2430 chip
+Message-ID: <20191121094215.GA421330@kroah.com>
+References: <20191019204015.61474-1-angelo.dureghello@timesys.com>
+ <49814061574280989@sas2-7fadb031fd9b.qloud-c.yandex.net>
+ <20191120205952.GA3113184@kroah.com>
+ <CALJHbkDTNbjbCaVcwF8eSWpmpDptbkktZuvb-cxTOtGhB4iupw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191121071354.456618-18-jhubbard@nvidia.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CALJHbkDTNbjbCaVcwF8eSWpmpDptbkktZuvb-cxTOtGhB4iupw@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 20-11-19 23:13:47, John Hubbard wrote:
-> Add tracking of pages that were pinned via FOLL_PIN.
+On Thu, Nov 21, 2019 at 10:35:26AM +0100, Angelo Dureghello wrote:
+> Hi Greg (and Evgeniy),
 > 
-> As mentioned in the FOLL_PIN documentation, callers who effectively set
-> FOLL_PIN are required to ultimately free such pages via put_user_page().
-> The effect is similar to FOLL_GET, and may be thought of as "FOLL_GET
-> for DIO and/or RDMA use".
+> On Wed, Nov 20, 2019 at 9:59 PM gregkh@linuxfoundation.org
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Wed, Nov 20, 2019 at 11:16:29PM +0300, Evgeniy Polyakov wrote:
+> > > Hi Angelo, Greg
+> > >
+> > > 19.10.2019, 23:38, "Angelo Dureghello" <angelo.dureghello@timesys.com>:
+> > > > add support for ds2430, 1 page, 256bit (32bytes) eeprom
+> > > > (family 0x14).
+> > > >
+> > > > Signed-off-by: Angelo Dureghello <angelo.dureghello@timesys.com>
+> > >
+> > > Looks good to me.
+> > > Greg, please pull it into your tree.
+> > >
+> > > Acked-by: Evgeniy Polyakov <zbr@ioremap.net>
+> >
+> > I don't have a copy of this anywhere :(
+> >
+> > Angelo, can you resend it and cc: me and add evgeniy's ack?
+> >
 > 
-> Pages that have been pinned via FOLL_PIN are identifiable via a
-> new function call:
+> this is he patch you applied to your char-misc-next branch, some days ago.
 > 
->    bool page_dma_pinned(struct page *page);
+> I added Evgeniy acked-by.
 > 
-> What to do in response to encountering such a page, is left to later
-> patchsets. There is discussion about this in [1], [2], and [3].
-> 
-> This also changes a BUG_ON(), to a WARN_ON(), in follow_page_mask().
-> 
-> [1] Some slow progress on get_user_pages() (Apr 2, 2019):
->     https://lwn.net/Articles/784574/
-> [2] DMA and get_user_pages() (LPC: Dec 12, 2018):
->     https://lwn.net/Articles/774411/
-> [3] The trouble with get_user_pages() (Apr 30, 2018):
->     https://lwn.net/Articles/753027/
-> 
-> Suggested-by: Jan Kara <jack@suse.cz>
-> Suggested-by: Jérôme Glisse <jglisse@redhat.com>
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+> So you should revert/remove
+> commit c6bf3842a34abe3ec2f5bc81754883689aea6c0d (patch)
 
-Thanks for the patch! We are mostly getting there. Some smaller comments
-below.
+Ah, no, I'm not going to revert it just for an ack, I'll just leave it
+as-is, thanks.
 
-> +/**
-> + * try_pin_compound_head() - mark a compound page as being used by
-> + * pin_user_pages*().
-> + *
-> + * This is the FOLL_PIN counterpart to try_get_compound_head().
-> + *
-> + * @page:	pointer to page to be marked
-> + * @Return:	true for success, false for failure
-> + */
-> +__must_check bool try_pin_compound_head(struct page *page, int refs)
-> +{
-> +	page = try_get_compound_head(page, GUP_PIN_COUNTING_BIAS * refs);
-> +	if (!page)
-> +		return false;
-> +
-> +	__update_proc_vmstat(page, NR_FOLL_PIN_REQUESTED, refs);
-> +	return true;
-> +}
-> +
-> +#ifdef CONFIG_DEV_PAGEMAP_OPS
-> +static bool __put_devmap_managed_user_page(struct page *page)
-
-Probably call this __unpin_devmap_managed_user_page()? To match the later
-conversion of put_user_page() to unpin_user_page()?
-
-> +{
-> +	bool is_devmap = page_is_devmap_managed(page);
-> +
-> +	if (is_devmap) {
-> +		int count = page_ref_sub_return(page, GUP_PIN_COUNTING_BIAS);
-> +
-> +		__update_proc_vmstat(page, NR_FOLL_PIN_RETURNED, 1);
-> +		/*
-> +		 * devmap page refcounts are 1-based, rather than 0-based: if
-> +		 * refcount is 1, then the page is free and the refcount is
-> +		 * stable because nobody holds a reference on the page.
-> +		 */
-> +		if (count == 1)
-> +			free_devmap_managed_page(page);
-> +		else if (!count)
-> +			__put_page(page);
-> +	}
-> +
-> +	return is_devmap;
-> +}
-> +#else
-> +static bool __put_devmap_managed_user_page(struct page *page)
-> +{
-> +	return false;
-> +}
-> +#endif /* CONFIG_DEV_PAGEMAP_OPS */
-> +
-> +/**
-> + * put_user_page() - release a dma-pinned page
-> + * @page:            pointer to page to be released
-> + *
-> + * Pages that were pinned via pin_user_pages*() must be released via either
-> + * put_user_page(), or one of the put_user_pages*() routines. This is so that
-> + * such pages can be separately tracked and uniquely handled. In particular,
-> + * interactions with RDMA and filesystems need special handling.
-> + */
-> +void put_user_page(struct page *page)
-> +{
-> +	page = compound_head(page);
-> +
-> +	/*
-> +	 * For devmap managed pages we need to catch refcount transition from
-> +	 * GUP_PIN_COUNTING_BIAS to 1, when refcount reach one it means the
-> +	 * page is free and we need to inform the device driver through
-> +	 * callback. See include/linux/memremap.h and HMM for details.
-> +	 */
-> +	if (__put_devmap_managed_user_page(page))
-> +		return;
-> +
-> +	if (page_ref_sub_and_test(page, GUP_PIN_COUNTING_BIAS))
-> +		__put_page(page);
-> +
-> +	__update_proc_vmstat(page, NR_FOLL_PIN_RETURNED, 1);
-> +}
-> +EXPORT_SYMBOL(put_user_page);
-> +
->  /**
->   * put_user_pages_dirty_lock() - release and optionally dirty gup-pinned pages
->   * @pages:  array of pages to be maybe marked dirty, and definitely released.
-> @@ -237,10 +327,11 @@ static struct page *follow_page_pte(struct vm_area_struct *vma,
->  	}
->  
->  	page = vm_normal_page(vma, address, pte);
-> -	if (!page && pte_devmap(pte) && (flags & FOLL_GET)) {
-> +	if (!page && pte_devmap(pte) && (flags & (FOLL_GET | FOLL_PIN))) {
->  		/*
-> -		 * Only return device mapping pages in the FOLL_GET case since
-> -		 * they are only valid while holding the pgmap reference.
-> +		 * Only return device mapping pages in the FOLL_GET or FOLL_PIN
-> +		 * case since they are only valid while holding the pgmap
-> +		 * reference.
->  		 */
->  		*pgmap = get_dev_pagemap(pte_pfn(pte), *pgmap);
->  		if (*pgmap)
-> @@ -283,6 +374,11 @@ static struct page *follow_page_pte(struct vm_area_struct *vma,
->  			page = ERR_PTR(-ENOMEM);
->  			goto out;
->  		}
-> +	} else if (flags & FOLL_PIN) {
-> +		if (unlikely(!try_pin_page(page))) {
-> +			page = ERR_PTR(-ENOMEM);
-> +			goto out;
-> +		}
-
-Use grab_page() here?
-
->  	}
->  	if (flags & FOLL_TOUCH) {
->  		if ((flags & FOLL_WRITE) &&
-> @@ -1890,9 +2000,15 @@ static int gup_pte_range(pmd_t pmd, unsigned long addr, unsigned long end,
->  		VM_BUG_ON(!pfn_valid(pte_pfn(pte)));
->  		page = pte_page(pte);
->  
-> -		head = try_get_compound_head(page, 1);
-> -		if (!head)
-> -			goto pte_unmap;
-> +		if (flags & FOLL_PIN) {
-> +			head = page;
-> +			if (unlikely(!try_pin_page(head)))
-> +				goto pte_unmap;
-> +		} else {
-> +			head = try_get_compound_head(page, 1);
-> +			if (!head)
-> +				goto pte_unmap;
-> +		}
-
-Why don't you use grab_page() here? Also you seem to loose the head =
-compound_head(page) indirection here for the FOLL_PIN case?
-
->  
->  		if (unlikely(pte_val(pte) != pte_val(*ptep))) {
->  			put_page(head);
-> @@ -1946,12 +2062,20 @@ static int __gup_device_huge(unsigned long pfn, unsigned long addr,
->  
->  		pgmap = get_dev_pagemap(pfn, pgmap);
->  		if (unlikely(!pgmap)) {
-> -			undo_dev_pagemap(nr, nr_start, pages);
-> +			undo_dev_pagemap(nr, nr_start, flags, pages);
->  			return 0;
->  		}
->  		SetPageReferenced(page);
->  		pages[*nr] = page;
-> -		get_page(page);
-> +
-> +		if (flags & FOLL_PIN) {
-> +			if (unlikely(!try_pin_page(page))) {
-> +				undo_dev_pagemap(nr, nr_start, flags, pages);
-> +				return 0;
-> +			}
-> +		} else
-> +			get_page(page);
-> +
-
-Use grab_page() here?
-
->  		(*nr)++;
->  		pfn++;
->  	} while (addr += PAGE_SIZE, addr != end);
-...
-> @@ -2025,12 +2149,31 @@ static int __record_subpages(struct page *page, unsigned long addr,
->  	return nr;
->  }
->  
-> -static void put_compound_head(struct page *page, int refs)
-> +static bool grab_compound_head(struct page *head, int refs, unsigned int flags)
->  {
-> +	if (flags & FOLL_PIN) {
-> +		if (unlikely(!try_pin_compound_head(head, refs)))
-> +			return false;
-> +	} else {
-> +		head = try_get_compound_head(head, refs);
-> +		if (!head)
-> +			return false;
-> +	}
-> +
-> +	return true;
-> +}
-> +
-> +static void put_compound_head(struct page *page, int refs, unsigned int flags)
-> +{
-> +	struct page *head = compound_head(page);
-> +
-> +	if (flags & FOLL_PIN)
-> +		refs *= GUP_PIN_COUNTING_BIAS;
-> +
->  	/* Do a get_page() first, in case refs == page->_refcount */
-> -	get_page(page);
-> -	page_ref_sub(page, refs);
-> -	put_page(page);
-> +	get_page(head);
-> +	page_ref_sub(head, refs);
-> +	put_page(head);
->  }
->  
->  #ifdef CONFIG_ARCH_HAS_HUGEPD
-> @@ -2064,14 +2207,13 @@ static int gup_hugepte(pte_t *ptep, unsigned long sz, unsigned long addr,
->  
->  	head = pte_page(pte);
->  	page = head + ((addr & (sz-1)) >> PAGE_SHIFT);
-> -	refs = __record_subpages(page, addr, end, pages + *nr);
-> +	refs = record_subpages(page, addr, end, pages + *nr);
->  
-> -	head = try_get_compound_head(head, refs);
-> -	if (!head)
-> +	if (!grab_compound_head(head, refs, flags))
-
-Are you sure this is correct? Historically we seem to have always had logic
-like:
-
-	head = compound_head(pte_page / pmd_page / ... (orig))
-
-in this code. And you removed this now. Looking at the code I'm not sure
-whether the compound_head() indirection is really needed or not. We seem to
-have already huge page head in the page table but maybe there's some subtle
-case I'm missing. So I'd be calmer if we left the head=compound_head(...)
-in the code but if you really want to remove it, I'd like to see Ack from
-someone actually familiar with huge pages - e.g. Kirill Shutemov...
-
-And even if we find out that compound_head() indirection isn't really
-needed, that is big enough change in the logic that it would deserve to be
-done in a separate patch (if only for debugging by bisection purposes).
-
-> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> index 13cc93785006..981a9ea0b83f 100644
-> --- a/mm/huge_memory.c
-> +++ b/mm/huge_memory.c
-...
-> @@ -5034,8 +5052,20 @@ follow_huge_pmd(struct mm_struct *mm, unsigned long address,
->  	pte = huge_ptep_get((pte_t *)pmd);
->  	if (pte_present(pte)) {
->  		page = pmd_page(*pmd) + ((address & ~PMD_MASK) >> PAGE_SHIFT);
-> +
->  		if (flags & FOLL_GET)
->  			get_page(page);
-> +		else if (flags & FOLL_PIN) {
-> +			/*
-> +			 * try_pin_page() is not actually expected to fail
-> +			 * here because we hold the ptl.
-> +			 */
-> +			if (unlikely(!try_pin_page(page))) {
-> +				WARN_ON_ONCE(1);
-> +				page = NULL;
-> +				goto out;
-> +			}
-> +		}
-
-Use grab_page() here?
-
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+greg k-h
