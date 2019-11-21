@@ -2,131 +2,99 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E751AC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:55:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C738CC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:56:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE68B20714
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:55:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 979932070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:56:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="NXvERH9x"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PROaNuWr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbfKUNzx (ORCPT
+        id S1726984AbfKUN4F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 08:55:53 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:34984 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726546AbfKUNzx (ORCPT
+        Thu, 21 Nov 2019 08:56:05 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:45611 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726961AbfKUN4E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 08:55:53 -0500
-Received: by mail-wm1-f67.google.com with SMTP id 8so3838029wmo.0
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 05:55:51 -0800 (PST)
+        Thu, 21 Nov 2019 08:56:04 -0500
+Received: by mail-lj1-f194.google.com with SMTP id n21so3274594ljg.12
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 05:56:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9ySz0CwRZWHJZeoXGkyjArkEnAI6EPJLUR1wbzYKrBQ=;
-        b=NXvERH9x28CAg2d7Yb67iVNC5YQ/S+Mx85h8A/BauEU7nfIXLInBktQXN0epsENDlP
-         9Ccqiw+qy2rPeiXmtSZ78sJMmK4f2IAr6MFPNm7WgdSCO0K0nvL4R39ngGn5X0ipbI1u
-         Y7IRB3tc3iGQupgccPGXN/bfAnS81ytVunXfU=
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mwVumWvJHo4zvWxGZJD9YSWEBNd/DEDoZWc1zGQkww4=;
+        b=PROaNuWrUKfIWxlt+j8KnAB87S9sEPRRC6XBWLZRSlLDbSCwpFFGXYtL+n3UhxkSnb
+         zltboWUsjHwVXDG8sa1sM8NgJaHgZF4KeCpIkdAaZyRqZqCaHl+rYRUm3D8RS5A/EnCl
+         Q75Zxx34KXOEIEj224cI+oGu1NFCGs7vdCaqpWbgqyBMpoIU0Aj/VrIffmL6710odHKO
+         gULu3ssd8wX29tDvOdwwoYjcU1hc1jN7CkusvCk3jWPw22fId0+TqKLIYq975QXn+C2a
+         qYZgtmLDvAJ/JMwbYbfP/gEoCc7fbYXQ3sWQZXg3offSocrRzpuPbKzNbGwTNdfiIcNQ
+         +jFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=9ySz0CwRZWHJZeoXGkyjArkEnAI6EPJLUR1wbzYKrBQ=;
-        b=FpHPEk8qTpMMm0O/7HL9soooXtRFd7+S+kGj8mFbuhx22RnshBlxBgm07bEhAdjxaZ
-         fRkj5mVkWXO51kD8bF2V35AdvrmdSGU7ve4XVD6oIny7i07mFvm6cdYk8Q9ITDSoUJHR
-         WKnGs8ICAPx1VDT/A8riC9XjnBLpXhaAy0WKXQB+dgYu1KwSoulx0G7eXMmlPBF4NOo0
-         ohG9qIMJf9UGU3pkqoxY7k2zHOP7PI7b6c3jDMx5SUBxfmUUxSlHkYiyBIpIozqKVNhH
-         To1HNITRn72XEtLKXpMnNTcrhsKvIjmkFgPoxK6hTztjoK8V2tcPGnRTWfCNSFOK928j
-         HQBg==
-X-Gm-Message-State: APjAAAXm5tDPGuxOrOHrrrFOaORSA/ZYttcLGxoUQyYZu4r+udqEb2Ll
-        KJYJCnAinN4D2dyVmaLKez2cFw==
-X-Google-Smtp-Source: APXvYqyPjxCiSx6aRgQWwIldMrYfO6t2JwKnW+USv8OSUlMJ3Cgu+UrDu2H7r9eK85r7VgG7mWz6yA==
-X-Received: by 2002:a05:600c:2257:: with SMTP id a23mr10535918wmm.143.1574344551219;
-        Thu, 21 Nov 2019 05:55:51 -0800 (PST)
-Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
-        by smtp.gmail.com with ESMTPSA id q5sm2956771wmc.27.2019.11.21.05.55.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Nov 2019 05:55:50 -0800 (PST)
-Date:   Thu, 21 Nov 2019 14:55:48 +0100
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] drm: share address space for dma bufs
-Message-ID: <20191121135548.GF6236@phenom.ffwll.local>
-Mail-Followup-To: Gerd Hoffmann <kraxel@redhat.com>,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20191121103807.18424-1-kraxel@redhat.com>
- <20191121103807.18424-3-kraxel@redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mwVumWvJHo4zvWxGZJD9YSWEBNd/DEDoZWc1zGQkww4=;
+        b=XTvbO1Vty2wDWQYgGfhjptQkT4Yjdn0q258P1BkXjIA9t7q5iyT4MpIee4SkEDASl7
+         KBlYE3MYI7CTM680O7zq7g79HAwKrI32j5/9cvavrGbCE3sbwh6bzi3GOzrnvZsupAQI
+         X+cn+932Tkl4NT5ZILnJ7nHNYBurZM4KajPLPIgdivJ15qc0w9HkLxh/iB31UnWrS5Sy
+         sEqISQWfQUdNiqNfdpCmr/5TnRwR6Va+rv60olhUWjgseJNZzopkmLNB2C6Kd1tqPfV/
+         PVwNXNCoo8mHwBShi1PH8W+fmoOuejM9tFjuscFY0LCttef1ncop4dIhDEvjm4SEUYc8
+         WThw==
+X-Gm-Message-State: APjAAAVcOf5WlkoX7PMZ3Ou4YiGm7UtL06zWzj8xGNew4V1XVcaLz2Pk
+        D8sI3nJpQRoLQ0QObWelEp1kKDWjEQL3rB4PnkQ5tw==
+X-Google-Smtp-Source: APXvYqxK0E9D55XX4sJlFFn/xkAOM+O9uzYS51IiYbmsrxiwLu/M4n5FQGZais+eCToXwuxAaBgFfC8+x3EE7MMm9YU=
+X-Received: by 2002:a2e:9784:: with SMTP id y4mr7671826lji.77.1574344562426;
+ Thu, 21 Nov 2019 05:56:02 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191121103807.18424-3-kraxel@redhat.com>
-X-Operating-System: Linux phenom 5.3.0-1-amd64 
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20191115155752.2562-1-gregory.clement@bootlin.com>
+In-Reply-To: <20191115155752.2562-1-gregory.clement@bootlin.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 21 Nov 2019 14:55:51 +0100
+Message-ID: <CACRpkda5m-h_v_aNGb5gAOH7-HSd5c+Oxdij=H3UwQG9-FusaQ@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: armada-37xx: Fix irq mask access in armada_37xx_irq_set_type()
+To:     Gregory CLEMENT <gregory.clement@bootlin.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        stable <stable@vger.kernel.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 11:38:07AM +0100, Gerd Hoffmann wrote:
-> Use the shared address space of the drm device (see drm_open() in
-> drm_file.c) for dma-bufs too.  That removes a difference betweem drm
-> device mmap vmas and dma-buf mmap vmas and fixes corner cases like
-> unmaps not working properly.
-> 
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-> ---
->  drivers/gpu/drm/drm_prime.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/drm_prime.c b/drivers/gpu/drm/drm_prime.c
-> index a9633bd241bb..c3fc341453c0 100644
-> --- a/drivers/gpu/drm/drm_prime.c
-> +++ b/drivers/gpu/drm/drm_prime.c
-> @@ -240,6 +240,7 @@ void drm_prime_destroy_file_private(struct drm_prime_file_private *prime_fpriv)
->  struct dma_buf *drm_gem_dmabuf_export(struct drm_device *dev,
->  				      struct dma_buf_export_info *exp_info)
->  {
-> +	struct drm_gem_object *obj = exp_info->priv;
->  	struct dma_buf *dma_buf;
->  
->  	dma_buf = dma_buf_export(exp_info);
-> @@ -247,7 +248,8 @@ struct dma_buf *drm_gem_dmabuf_export(struct drm_device *dev,
->  		return dma_buf;
->  
->  	drm_dev_get(dev);
-> -	drm_gem_object_get(exp_info->priv);
-> +	drm_gem_object_get(obj);
-> +	dma_buf->file->f_mapping = obj->dev->anon_inode->i_mapping;
+On Fri, Nov 15, 2019 at 4:58 PM Gregory CLEMENT
+<gregory.clement@bootlin.com> wrote:
 
-Can you pls also throw the change to amdgpu_gem_prime_export on top here?
-Imo makes a lot more sense that way. With that added I'm happy to r-b.
--Daniel
+> As explained in the following commit a9a1a4833613 ("pinctrl:
+> armada-37xx: Fix gpio interrupt setup") the armada_37xx_irq_set_type()
+> function can be called before the initialization of the mask field.
+>
+> That means that we can't use this field in this function and need to
+> workaround it using hwirq.
+>
+> Fixes: 30ac0d3b0702 ("pinctrl: armada-37xx: Add edge both type gpio irq support")
+> Cc: stable@vger.kernel.org
+> Reported-by: Russell King <rmk+kernel@armlinux.org.uk>
+> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
 
->  
->  	return dma_buf;
->  }
-> -- 
-> 2.18.1
-> 
+Patch applied.
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+I do not have time to send any more fixes pull requests at this
+point, so this will go into v5.5 in the merge window with everything
+else, and then to stable from there.
+
+Yours,
+Linus Walleij
