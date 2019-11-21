@@ -2,73 +2,216 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03EAEC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:52:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DBFCC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:53:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D57D820658
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:52:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED42120658
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:53:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Es5mTW8s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbfKUQws (ORCPT
+        id S1726985AbfKUQxJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 11:52:48 -0500
-Received: from imap1.codethink.co.uk ([176.9.8.82]:56845 "EHLO
-        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726279AbfKUQws (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 11:52:48 -0500
-Received: from [167.98.27.226] (helo=xylophone)
-        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
-        id 1iXpgx-0004CD-G1; Thu, 21 Nov 2019 16:52:27 +0000
-Message-ID: <1634aafd2a99cedceb63efe57e4c7e0a7317917b.camel@codethink.co.uk>
-Subject: Re: [Y2038] [PATCH 21/23] y2038: itimer: change implementation to
- timespec64
-From:   Ben Hutchings <ben.hutchings@codethink.co.uk>
-To:     Arnd Bergmann <arnd@arndb.de>, y2038@lists.linaro.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Kees Cook <keescook@chromium.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Anna-Maria Gleixner <anna-maria@linutronix.de>
-Date:   Thu, 21 Nov 2019 16:52:26 +0000
-In-Reply-To: <20191108211323.1806194-12-arnd@arndb.de>
-References: <20191108210236.1296047-1-arnd@arndb.de>
-         <20191108211323.1806194-12-arnd@arndb.de>
-Organization: Codethink Ltd.
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Thu, 21 Nov 2019 11:53:09 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:42710 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726293AbfKUQxI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 11:53:08 -0500
+Received: from zn.tnic (p200300EC2F0F070070C4546F98AAB214.dip0.t-ipconnect.de [IPv6:2003:ec:2f0f:700:70c4:546f:98aa:b214])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 96D451EC0CFA;
+        Thu, 21 Nov 2019 17:53:06 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1574355186;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=wPL1BxjICNOSRaX+U/Ou4Te4AiCGCtaWl/woUTXZ9Us=;
+        b=Es5mTW8srEVQypAWslBSyMpOwm+f1DTk3cslWQz0ZXffswx0adwUl/Gh7uyrSWxeIt9i4j
+        K0HSxm4zObHPOfNe548FBtPXpixEVzo9WIeXTGeOkc5Hcy4le/fX6lFqOdPBqA3PHFrSc+
+        ye1rE0wWl2Cq6Mwis3wwRmhkHL21lI4=
+Date:   Thu, 21 Nov 2019 17:52:58 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
+        Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-edac@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH v3 12/19] x86/vmx: Introduce VMX_FEATURES_*
+Message-ID: <20191121165250.GK6540@zn.tnic>
+References: <20191119031240.7779-1-sean.j.christopherson@intel.com>
+ <20191119031240.7779-13-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191119031240.7779-13-sean.j.christopherson@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-11-08 at 22:12 +0100, Arnd Bergmann wrote:
-[...] 
-> @@ -292,8 +296,8 @@ static unsigned int alarm_setitimer(unsigned int seconds)
->  	 * We can't return 0 if we have an alarm pending ...  And we'd
->  	 * better return too much than too little anyway
->  	 */
-> -	if ((!it_old.it_value.tv_sec && it_old.it_value.tv_usec) ||
-> -	      it_old.it_value.tv_usec >= 500000)
-> +	if ((!it_old.it_value.tv_sec && it_old.it_value.tv_nsec) ||
-> +	      it_old.it_value.tv_nsec >= 500000)
-[...]
+On Mon, Nov 18, 2019 at 07:12:33PM -0800, Sean Christopherson wrote:
+> Add a VMX specific variant of X86_FEATURE_* flags, which will eventually
+> supplant the synthetic VMX flags defined in cpufeatures word 8.  Use the
+> Intel-defined layouts for the major VMX execution controls so that their
+> word entries can be directly populated from their respective MSRs, and
+> so that the VMX_FEATURE_* flags can be used to define the existing bit
+> definitions in asm/vmx.h, i.e. force developers to define a VMX_FEATURE
+> flag when adding support for a new hardware feature.
+> 
+> The majority of Intel's (and compatible CPU's) VMX capabilities are
+> enumerated via MSRs and not CPUID, i.e. querying /proc/cpuinfo doesn't
+> naturally provide any insight into the virtualization capabilities of
+> VMX enabled CPUs.  Commit e38e05a85828d ("x86: extended "flags" to show
+> virtualization HW feature in /proc/cpuinfo") attempted to address the
+> issue by synthesizing select VMX features into a Linux-defined word in
+> cpufeatures.
+> 
+> The synthetic cpufeatures approach has several flaws:
+> 
+>   - The set of synthesized VMX flags has become extremely stale with
+>     respect to the full set of VMX features, e.g. only one new flag
+>     (EPT A/D) has been added in the the decade since the introduction of
+>     the synthetic VMX features.  Failure to keep the VMX flags up to
+>     date is likely due to the lack of a mechanism that forces developers
+>     to consider whether or not a new feature is worth reporting.
+> 
+>   - The synthetic flags may incorrectly be misinterpreted as affecting
+>     kernel behavior, i.e. KVM, the kernel's sole consumer of VMX,
+>     completely ignores the synthetic flags.
+> 
+>   - New CPU vendors that support VMX have duplicated the hideous code
+>     that propagates VMX features from MSRs to cpufeatures.  Bringing the
+>     synthetic VMX flags up to date would exacerbate the copy+paste
+>     trainwreck.
+> 
+> Define separate VMX_FEATURE flags to set the stage for enumerating VMX
+> capabilities outside of the cpu_has() framework, and for adding
+> functional usage of VMX_FEATURE_* to help ensure the features reported
+> via /proc/cpuinfo is up to date with respect to kernel recognition of
+> VMX capabilities.
 
-This is now off by a factor of 1000.  It might be helpful to use
-NSEC_PER_SEC / 2 here so no-one has to count the 0 digits.
+That's all fine and good but who's going to use those feature bits?
+Or are we reporting them just for the sake of it? Because if only
+that, then it is not worth the effort. Sure, I don't mind extending
+the framework so that you can use cpu_has() for VMX features but the
+/proc/cpuinfo angle is not clear to me.
 
-Ben.
+Especially since you're hiding most of them with the "" prepended in the
+define comment.
+
+> Note, the displayed names 'vnmi', 'tpr_shadow' and 'flexpriority' are
+> retained for backwards compatibility with the existing ABI.
+> 
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  MAINTAINERS                        |  2 +-
+>  arch/x86/include/asm/processor.h   |  1 +
+>  arch/x86/include/asm/vmxfeatures.h | 81 ++++++++++++++++++++++++++++++
+>  3 files changed, 83 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/x86/include/asm/vmxfeatures.h
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index df711965c377..6b736e78ee9e 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -9009,7 +9009,7 @@ F:	arch/x86/include/uapi/asm/svm.h
+>  F:	arch/x86/include/asm/kvm*
+>  F:	arch/x86/include/asm/pvclock-abi.h
+>  F:	arch/x86/include/asm/svm.h
+> -F:	arch/x86/include/asm/vmx.h
+> +F:	arch/x86/include/asm/vmx*.h
+>  F:	arch/x86/kernel/kvm.c
+>  F:	arch/x86/kernel/kvmclock.c
+>  
+> diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
+> index b4e29d8b9e5a..772de8917430 100644
+> --- a/arch/x86/include/asm/processor.h
+> +++ b/arch/x86/include/asm/processor.h
+> @@ -25,6 +25,7 @@ struct vm86;
+>  #include <asm/special_insns.h>
+>  #include <asm/fpu/types.h>
+>  #include <asm/unwind_hints.h>
+> +#include <asm/vmxfeatures.h>
+>  
+>  #include <linux/personality.h>
+>  #include <linux/cache.h>
+> diff --git a/arch/x86/include/asm/vmxfeatures.h b/arch/x86/include/asm/vmxfeatures.h
+> new file mode 100644
+> index 000000000000..aea39b9f1587
+> --- /dev/null
+> +++ b/arch/x86/include/asm/vmxfeatures.h
+> @@ -0,0 +1,81 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _ASM_X86_VMXFEATURES_H
+> +#define _ASM_X86_VMXFEATURES_H
+> +
+> +/*
+> + * Note: If the comment begins with a quoted string, that string is used
+> + * in /proc/cpuinfo instead of the macro name.  If the string is "",
+> + * this feature bit is not displayed in /proc/cpuinfo at all.
+> + */
+> +
+> +/* Pin-Based VM-Execution Controls, EPT/VPID, APIC and VM-Functions, word 0 */
+> +#define VMX_FEATURE_INTR_EXITING	( 0*32+  0) /* "" VM-Exit on vectored interrupts */
+> +#define VMX_FEATURE_NMI_EXITING		( 0*32+  3) /* "" VM-Exit on NMIs */
+> +#define VMX_FEATURE_VIRTUAL_NMIS	( 0*32+  5) /* "vnmi" NMI virtualization */
+> +#define VMX_FEATURE_PREEMPTION_TIMER	( 0*32+  6) /* VMX Preemption Timer */
+
+You really wanna have "preemption_timer" in /proc/cpuinfo? That should
+at least say vmx-something, if it should be visible there at all.
+
+> +#define VMX_FEATURE_POSTED_INTR		( 0*32+  7) /* Posted Interrupts */
+
+Same here.
+
+In general, the questions stand for all those feature bits which will be
+visible in /proc/cpuinfo.
+
+1. Which to show and why?
+
+2. Who's going to use them?
+
+3. If show and dumping them together with the other feature flags, have
+their name be proper (vmx-prefixed etc).
+
+> +/* EPT/VPID features, scattered to bits 16-23 */
+> +#define VMX_FEATURE_INVVPID	        ( 0*32+ 16) /* INVVPID is supported */
+> +#define VMX_FEATURE_EPT_EXECUTE_ONLY	( 0*32+ 17) /* "ept_x_only" EPT entries can be execute only */
+> +#define VMX_FEATURE_EPT_AD      	( 0*32+ 18) /* EPT Accessed/Dirty bits */
+> +#define VMX_FEATURE_EPT_1GB      	( 0*32+ 19) /* 1GB EPT pages */
+			      ^^^^^^^^^^^^
+
+There are some spaces that need to be converted to tabs here.
+
+Thx.
 
 -- 
-Ben Hutchings, Software Developer                         Codethink Ltd
-https://www.codethink.co.uk/                 Dale House, 35 Dale Street
-                                     Manchester, M1 2HF, United Kingdom
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
