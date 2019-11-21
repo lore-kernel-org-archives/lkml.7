@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4CA7C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:48:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA98DC33C9C
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:48:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88772206CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:48:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8C8820672
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:48:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727179AbfKUQsT (ORCPT
+        id S1727196AbfKUQsU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 11:48:19 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:32914 "EHLO
+        Thu, 21 Nov 2019 11:48:20 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:32913 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727109AbfKUQsS (ORCPT
+        with ESMTP id S1726690AbfKUQsS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 21 Nov 2019 11:48:18 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iXpcm-0000Z1-8W; Thu, 21 Nov 2019 17:48:08 +0100
+        id 1iXpcl-0000Yu-UU; Thu, 21 Nov 2019 17:48:08 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id EABCB1C1A3B;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 860781C1A3C;
         Thu, 21 Nov 2019 17:48:07 +0100 (CET)
 Date:   Thu, 21 Nov 2019 16:48:07 -0000
 From:   "tip-bot2 for Frederic Weisbecker" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] procfs: Use all-in-one vtime aware kcpustat accessor
+Subject: [tip: sched/core] rackmeter: Use vtime aware kcpustat accessor
 Cc:     Yauheni Kaliuta <yauheni.kaliuta@redhat.com>,
         Frederic Weisbecker <frederic@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Wanpeng Li <wanpengli@tencent.com>,
         Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191121024430.19938-4-frederic@kernel.org>
-References: <20191121024430.19938-4-frederic@kernel.org>
+In-Reply-To: <20191121024430.19938-7-frederic@kernel.org>
+References: <20191121024430.19938-7-frederic@kernel.org>
 MIME-Version: 1.0
-Message-ID: <157435488789.21853.3157956857911322483.tip-bot2@tip-bot2>
+Message-ID: <157435488743.21853.7693299705375133100.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -60,102 +60,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     26dae145a76c3615588f263885904c6e567ff116
-Gitweb:        https://git.kernel.org/tip/26dae145a76c3615588f263885904c6e567ff116
+Commit-ID:     8392853e964c025b0616bd54c0cdf9cbc3c9a769
+Gitweb:        https://git.kernel.org/tip/8392853e964c025b0616bd54c0cdf9cbc3c9a769
 Author:        Frederic Weisbecker <frederic@kernel.org>
-AuthorDate:    Thu, 21 Nov 2019 03:44:27 +01:00
+AuthorDate:    Thu, 21 Nov 2019 03:44:30 +01:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Thu, 21 Nov 2019 07:33:24 +01:00
+CommitterDate: Thu, 21 Nov 2019 07:59:00 +01:00
 
-procfs: Use all-in-one vtime aware kcpustat accessor
+rackmeter: Use vtime aware kcpustat accessor
 
-Now that we can read also user and guest time safely under vtime, use
-the relevant accessor to fix frozen kcpustat values on nohz_full CPUs.
+Now that we have a vtime safe kcpustat accessor, use it to fetch
+CPUTIME_NICE and fix frozen kcpustat values on nohz_full CPUs.
 
 Reported-by: Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
 Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Wanpeng Li <wanpengli@tencent.com>
-Link: https://lkml.kernel.org/r/20191121024430.19938-4-frederic@kernel.org
+Link: https://lkml.kernel.org/r/20191121024430.19938-7-frederic@kernel.org
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- fs/proc/stat.c | 56 +++++++++++++++++++++++++++----------------------
- 1 file changed, 31 insertions(+), 25 deletions(-)
+ drivers/macintosh/rack-meter.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/fs/proc/stat.c b/fs/proc/stat.c
-index 5c6bd0a..37bdbec 100644
---- a/fs/proc/stat.c
-+++ b/fs/proc/stat.c
-@@ -120,20 +120,23 @@ static int show_stat(struct seq_file *p, void *v)
- 	getboottime64(&boottime);
+diff --git a/drivers/macintosh/rack-meter.c b/drivers/macintosh/rack-meter.c
+index 4134e58..60311e8 100644
+--- a/drivers/macintosh/rack-meter.c
++++ b/drivers/macintosh/rack-meter.c
+@@ -81,13 +81,14 @@ static int rackmeter_ignore_nice;
+  */
+ static inline u64 get_cpu_idle_time(unsigned int cpu)
+ {
++	struct kernel_cpustat *kcpustat = &kcpustat_cpu(cpu);
+ 	u64 retval;
  
- 	for_each_possible_cpu(i) {
--		struct kernel_cpustat *kcs = &kcpustat_cpu(i);
--
--		user += kcs->cpustat[CPUTIME_USER];
--		nice += kcs->cpustat[CPUTIME_NICE];
--		system += kcpustat_field(kcs, CPUTIME_SYSTEM, i);
--		idle += get_idle_time(kcs, i);
--		iowait += get_iowait_time(kcs, i);
--		irq += kcs->cpustat[CPUTIME_IRQ];
--		softirq += kcs->cpustat[CPUTIME_SOFTIRQ];
--		steal += kcs->cpustat[CPUTIME_STEAL];
--		guest += kcs->cpustat[CPUTIME_GUEST];
--		guest_nice += kcs->cpustat[CPUTIME_GUEST_NICE];
--		sum += kstat_cpu_irqs_sum(i);
--		sum += arch_irq_stat_cpu(i);
-+		struct kernel_cpustat kcpustat;
-+		u64 *cpustat = kcpustat.cpustat;
-+
-+		kcpustat_cpu_fetch(&kcpustat, i);
-+
-+		user		+= cpustat[CPUTIME_USER];
-+		nice		+= cpustat[CPUTIME_NICE];
-+		system		+= cpustat[CPUTIME_SYSTEM];
-+		idle		+= get_idle_time(&kcpustat, i);
-+		iowait		+= get_iowait_time(&kcpustat, i);
-+		irq		+= cpustat[CPUTIME_IRQ];
-+		softirq		+= cpustat[CPUTIME_SOFTIRQ];
-+		steal		+= cpustat[CPUTIME_STEAL];
-+		guest		+= cpustat[CPUTIME_GUEST];
-+		guest_nice	+= cpustat[CPUTIME_USER];
-+		sum		+= kstat_cpu_irqs_sum(i);
-+		sum		+= arch_irq_stat_cpu(i);
+-	retval = kcpustat_cpu(cpu).cpustat[CPUTIME_IDLE] +
+-		 kcpustat_cpu(cpu).cpustat[CPUTIME_IOWAIT];
++	retval = kcpustat->cpustat[CPUTIME_IDLE] +
++		 kcpustat->cpustat[CPUTIME_IOWAIT];
  
- 		for (j = 0; j < NR_SOFTIRQS; j++) {
- 			unsigned int softirq_stat = kstat_softirqs_cpu(j, i);
-@@ -157,19 +160,22 @@ static int show_stat(struct seq_file *p, void *v)
- 	seq_putc(p, '\n');
+ 	if (rackmeter_ignore_nice)
+-		retval += kcpustat_cpu(cpu).cpustat[CPUTIME_NICE];
++		retval += kcpustat_field(kcpustat, CPUTIME_NICE, cpu);
  
- 	for_each_online_cpu(i) {
--		struct kernel_cpustat *kcs = &kcpustat_cpu(i);
-+		struct kernel_cpustat kcpustat;
-+		u64 *cpustat = kcpustat.cpustat;
-+
-+		kcpustat_cpu_fetch(&kcpustat, i);
- 
- 		/* Copy values here to work around gcc-2.95.3, gcc-2.96 */
--		user = kcs->cpustat[CPUTIME_USER];
--		nice = kcs->cpustat[CPUTIME_NICE];
--		system = kcpustat_field(kcs, CPUTIME_SYSTEM, i);
--		idle = get_idle_time(kcs, i);
--		iowait = get_iowait_time(kcs, i);
--		irq = kcs->cpustat[CPUTIME_IRQ];
--		softirq = kcs->cpustat[CPUTIME_SOFTIRQ];
--		steal = kcs->cpustat[CPUTIME_STEAL];
--		guest = kcs->cpustat[CPUTIME_GUEST];
--		guest_nice = kcs->cpustat[CPUTIME_GUEST_NICE];
-+		user		= cpustat[CPUTIME_USER];
-+		nice		= cpustat[CPUTIME_NICE];
-+		system		= cpustat[CPUTIME_SYSTEM];
-+		idle		= get_idle_time(&kcpustat, i);
-+		iowait		= get_iowait_time(&kcpustat, i);
-+		irq		= cpustat[CPUTIME_IRQ];
-+		softirq		= cpustat[CPUTIME_SOFTIRQ];
-+		steal		= cpustat[CPUTIME_STEAL];
-+		guest		= cpustat[CPUTIME_GUEST];
-+		guest_nice	= cpustat[CPUTIME_USER];
- 		seq_printf(p, "cpu%d", i);
- 		seq_put_decimal_ull(p, " ", nsec_to_clock_t(user));
- 		seq_put_decimal_ull(p, " ", nsec_to_clock_t(nice));
+ 	return retval;
+ }
