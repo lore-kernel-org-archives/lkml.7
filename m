@@ -6,18 +6,18 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0086C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 00:16:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40C23C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 00:16:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8150F208A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 00:16:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 144B8208A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 00:16:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbfKUAPf (ORCPT
+        id S1727282AbfKUAQL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 19:15:35 -0500
+        Wed, 20 Nov 2019 19:16:11 -0500
 Received: from mga06.intel.com ([134.134.136.31]:58450 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726500AbfKUAPf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726952AbfKUAPf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 Nov 2019 19:15:35 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
@@ -25,18 +25,18 @@ Received: from orsmga005.jf.intel.com ([10.7.209.41])
   by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Nov 2019 16:15:34 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,223,1571727600"; 
-   d="scan'208";a="381553877"
+   d="scan'208";a="381553881"
 Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
   by orsmga005.jf.intel.com with ESMTP; 20 Nov 2019 16:15:34 -0800
 Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id AA15A300D85; Wed, 20 Nov 2019 16:15:34 -0800 (PST)
+        id BC626300D85; Wed, 20 Nov 2019 16:15:34 -0800 (PST)
 From:   Andi Kleen <andi@firstfloor.org>
 To:     acme@kernel.org
 Cc:     jolsa@kernel.org, linux-kernel@vger.kernel.org,
         Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH 08/12] perf stat: Factor out open error handling
-Date:   Wed, 20 Nov 2019 16:15:18 -0800
-Message-Id: <20191121001522.180827-9-andi@firstfloor.org>
+Subject: [PATCH 11/12] perf evsel: Add functions to enable/disable for a specific CPU
+Date:   Wed, 20 Nov 2019 16:15:21 -0800
+Message-Id: <20191121001522.180827-12-andi@firstfloor.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191121001522.180827-1-andi@firstfloor.org>
 References: <20191121001522.180827-1-andi@firstfloor.org>
@@ -49,135 +49,162 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-Factor out the open error handling into a separate function.
-This is useful for followon patches who need to duplicate this.
+Refactor the existing functions to use these functions internally.
 
-No behavior change intended.
+Used in the next patch
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
----
- tools/perf/builtin-stat.c | 100 +++++++++++++++++++++++---------------
- 1 file changed, 60 insertions(+), 40 deletions(-)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 0a15253b438c..1d9d7161815e 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -420,6 +420,57 @@ static bool is_target_alive(struct target *_target,
- 	return false;
+---
+v2: Use NULL instead of 0
+---
+ tools/perf/lib/evsel.c              | 49 +++++++++++++++++++++--------
+ tools/perf/lib/include/perf/evsel.h |  2 ++
+ tools/perf/util/evsel.c             | 13 +++++++-
+ tools/perf/util/evsel.h             |  2 ++
+ 4 files changed, 52 insertions(+), 14 deletions(-)
+
+diff --git a/tools/perf/lib/evsel.c b/tools/perf/lib/evsel.c
+index ea775dacbd2d..4c6485fc31b9 100644
+--- a/tools/perf/lib/evsel.c
++++ b/tools/perf/lib/evsel.c
+@@ -198,38 +198,61 @@ int perf_evsel__read(struct perf_evsel *evsel, int cpu, int thread,
  }
  
-+enum counter_recovery {
-+	COUNTER_SKIP,
-+	COUNTER_RETRY,
-+	COUNTER_FATAL,
-+};
-+
-+static enum counter_recovery stat_handle_error(struct evsel *counter)
+ static int perf_evsel__run_ioctl(struct perf_evsel *evsel,
+-				 int ioc,  void *arg)
++				 int ioc,  void *arg,
++				 int cpu)
+ {
+-	int cpu, thread;
++	int thread;
+ 
+-	for (cpu = 0; cpu < xyarray__max_x(evsel->fd); cpu++) {
+-		for (thread = 0; thread < xyarray__max_y(evsel->fd); thread++) {
+-			int fd = FD(evsel, cpu, thread),
+-			    err = ioctl(fd, ioc, arg);
++	for (thread = 0; thread < xyarray__max_y(evsel->fd); thread++) {
++		int fd = FD(evsel, cpu, thread),
++		    err = ioctl(fd, ioc, arg);
+ 
+-			if (err)
+-				return err;
+-		}
++		if (err)
++			return err;
+ 	}
+ 
+ 	return 0;
+ }
+ 
++int perf_evsel__enable_cpu(struct perf_evsel *evsel, int cpu)
 +{
-+	char msg[BUFSIZ];
-+	/*
-+	 * PPC returns ENXIO for HW counters until 2.6.37
-+	 * (behavior changed with commit b0a873e).
-+	 */
-+	if (errno == EINVAL || errno == ENOSYS ||
-+	    errno == ENOENT || errno == EOPNOTSUPP ||
-+	    errno == ENXIO) {
-+		if (verbose > 0)
-+			ui__warning("%s event is not supported by the kernel.\n",
-+				    perf_evsel__name(counter));
-+		counter->supported = false;
-+
-+		if ((counter->leader != counter) ||
-+		    !(counter->leader->core.nr_members > 1))
-+			return COUNTER_SKIP;
-+	} else if (perf_evsel__fallback(counter, errno, msg, sizeof(msg))) {
-+		if (verbose > 0)
-+			ui__warning("%s\n", msg);
-+		return COUNTER_RETRY;
-+	} else if (target__has_per_thread(&target) &&
-+		   evsel_list->core.threads &&
-+		   evsel_list->core.threads->err_thread != -1) {
-+		/*
-+		 * For global --per-thread case, skip current
-+		 * error thread.
-+		 */
-+		if (!thread_map__remove(evsel_list->core.threads,
-+					evsel_list->core.threads->err_thread)) {
-+			evsel_list->core.threads->err_thread = -1;
-+			return COUNTER_RETRY;
-+		}
-+	}
-+
-+	perf_evsel__open_strerror(counter, &target,
-+				  errno, msg, sizeof(msg));
-+	ui__error("%s\n", msg);
-+
-+	if (child_pid != -1)
-+		kill(child_pid, SIGTERM);
-+	return COUNTER_FATAL;
++	return perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_ENABLE, NULL, cpu);
 +}
 +
- static int __run_perf_stat(int argc, const char **argv, int run_idx)
+ int perf_evsel__enable(struct perf_evsel *evsel)
  {
- 	int interval = stat_config.interval;
-@@ -469,47 +520,16 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
- 				goto try_again;
- 			}
+-	return perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_ENABLE, 0);
++	int i;
++	int err = 0;
++
++	for (i = 0; i < evsel->cpus->nr && !err; i++)
++		err = perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_ENABLE, NULL, i);
++	return err;
++}
++
++int perf_evsel__disable_cpu(struct perf_evsel *evsel, int cpu)
++{
++	return perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_DISABLE, NULL, cpu);
+ }
  
--			/*
--			 * PPC returns ENXIO for HW counters until 2.6.37
--			 * (behavior changed with commit b0a873e).
--			 */
--			if (errno == EINVAL || errno == ENOSYS ||
--			    errno == ENOENT || errno == EOPNOTSUPP ||
--			    errno == ENXIO) {
--				if (verbose > 0)
--					ui__warning("%s event is not supported by the kernel.\n",
--						    perf_evsel__name(counter));
--				counter->supported = false;
--
--				if ((counter->leader != counter) ||
--				    !(counter->leader->core.nr_members > 1))
--					continue;
--			} else if (perf_evsel__fallback(counter, errno, msg, sizeof(msg))) {
--                                if (verbose > 0)
--                                        ui__warning("%s\n", msg);
--                                goto try_again;
--			} else if (target__has_per_thread(&target) &&
--				   evsel_list->core.threads &&
--				   evsel_list->core.threads->err_thread != -1) {
--				/*
--				 * For global --per-thread case, skip current
--				 * error thread.
--				 */
--				if (!thread_map__remove(evsel_list->core.threads,
--							evsel_list->core.threads->err_thread)) {
--					evsel_list->core.threads->err_thread = -1;
--					goto try_again;
--				}
-+			switch (stat_handle_error(counter)) {
-+			case COUNTER_FATAL:
-+				return -1;
-+			case COUNTER_RETRY:
-+				goto try_again;
-+			case COUNTER_SKIP:
-+				continue;
-+			default:
-+				break;
- 			}
--
--			perf_evsel__open_strerror(counter, &target,
--						  errno, msg, sizeof(msg));
--			ui__error("%s\n", msg);
--
--			if (child_pid != -1)
--				kill(child_pid, SIGTERM);
--
--			return -1;
- 		}
- 		counter->supported = true;
+ int perf_evsel__disable(struct perf_evsel *evsel)
+ {
+-	return perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_DISABLE, 0);
++	int i;
++	int err = 0;
++
++	for (i = 0; i < evsel->cpus->nr && !err; i++)
++		err = perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_DISABLE, NULL, i);
++	return err;
+ }
  
+ int perf_evsel__apply_filter(struct perf_evsel *evsel, const char *filter)
+ {
+-	return perf_evsel__run_ioctl(evsel,
++	int err = 0, i;
++
++	for (i = 0; i < evsel->cpus->nr && !err; i++)
++		err = perf_evsel__run_ioctl(evsel,
+ 				     PERF_EVENT_IOC_SET_FILTER,
+-				     (void *)filter);
++				     (void *)filter, i);
++	return err;
+ }
+ 
+ struct perf_cpu_map *perf_evsel__cpus(struct perf_evsel *evsel)
+diff --git a/tools/perf/lib/include/perf/evsel.h b/tools/perf/lib/include/perf/evsel.h
+index e7add554f861..c82ec39a4ad0 100644
+--- a/tools/perf/lib/include/perf/evsel.h
++++ b/tools/perf/lib/include/perf/evsel.h
+@@ -30,7 +30,9 @@ LIBPERF_API void perf_evsel__close_cpu(struct perf_evsel *evsel, int cpu);
+ LIBPERF_API int perf_evsel__read(struct perf_evsel *evsel, int cpu, int thread,
+ 				 struct perf_counts_values *count);
+ LIBPERF_API int perf_evsel__enable(struct perf_evsel *evsel);
++LIBPERF_API int perf_evsel__enable_cpu(struct perf_evsel *evsel, int cpu);
+ LIBPERF_API int perf_evsel__disable(struct perf_evsel *evsel);
++LIBPERF_API int perf_evsel__disable_cpu(struct perf_evsel *evsel, int cpu);
+ LIBPERF_API struct perf_cpu_map *perf_evsel__cpus(struct perf_evsel *evsel);
+ LIBPERF_API struct perf_thread_map *perf_evsel__threads(struct perf_evsel *evsel);
+ LIBPERF_API struct perf_event_attr *perf_evsel__attr(struct perf_evsel *evsel);
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 89910145c070..59b9b4f3fe34 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1205,16 +1205,27 @@ int perf_evsel__append_addr_filter(struct evsel *evsel, const char *filter)
+ 	return perf_evsel__append_filter(evsel, "%s,%s", filter);
+ }
+ 
++/* Caller has to clear disabled after going through all CPUs. */
++int evsel__enable_cpu(struct evsel *evsel, int cpu)
++{
++	return perf_evsel__enable_cpu(&evsel->core, cpu);
++}
++
+ int evsel__enable(struct evsel *evsel)
+ {
+ 	int err = perf_evsel__enable(&evsel->core);
+ 
+ 	if (!err)
+ 		evsel->disabled = false;
+-
+ 	return err;
+ }
+ 
++/* Caller has to set disabled after going through all CPUs. */
++int evsel__disable_cpu(struct evsel *evsel, int cpu)
++{
++	return perf_evsel__disable_cpu(&evsel->core, cpu);
++}
++
+ int evsel__disable(struct evsel *evsel)
+ {
+ 	int err = perf_evsel__disable(&evsel->core);
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index c8af4bc23f8f..dc14f4a823cd 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -222,8 +222,10 @@ int perf_evsel__set_filter(struct evsel *evsel, const char *filter);
+ int perf_evsel__append_tp_filter(struct evsel *evsel, const char *filter);
+ int perf_evsel__append_addr_filter(struct evsel *evsel,
+ 				   const char *filter);
++int evsel__enable_cpu(struct evsel *evsel, int cpu);
+ int evsel__enable(struct evsel *evsel);
+ int evsel__disable(struct evsel *evsel);
++int evsel__disable_cpu(struct evsel *evsel, int cpu);
+ 
+ int perf_evsel__open_per_cpu(struct evsel *evsel,
+ 			     struct perf_cpu_map *cpus,
 -- 
 2.23.0
 
