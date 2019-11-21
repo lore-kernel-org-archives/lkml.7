@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB38DC43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 18:48:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 976E7C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 18:48:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2180206D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 18:48:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 645F8206D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 18:48:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="dH7iy4be"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="VnTNhd+E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726994AbfKUSsM (ORCPT
+        id S1727059AbfKUSsP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 13:48:12 -0500
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:41142 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726279AbfKUSsL (ORCPT
+        Thu, 21 Nov 2019 13:48:15 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:46953 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726279AbfKUSsN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 13:48:11 -0500
-Received: by mail-qv1-f65.google.com with SMTP id g18so1839724qvp.8
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 10:48:10 -0800 (PST)
+        Thu, 21 Nov 2019 13:48:13 -0500
+Received: by mail-qt1-f195.google.com with SMTP id r20so4780881qtp.13
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 10:48:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=soleen.com; s=google;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=6SUpT/Cq7WAcFMI7EYou95uAqCpN60QbhWisTQcUAZE=;
-        b=dH7iy4beDQA0dlnL78YTIs1dGMcBcpDEizGZylqSWQJeyua11ap3URFttiAu/XsDpw
-         uGhONdmEzz1V61aPrClJAF0x4CMm0s/eZ2Au+DZLfBX+sye9mdDqbNx6RNOMoFk7Cv3e
-         G/IBd/It6LWi2PQ9i1n6EDAA/NCvxgP4kytwwT53Qsw5a1Bs4Mz/dzvIZHbdlEfV7Xml
-         Q2+R9+vCRQXedpAVJ9CYG7BcByVgmJ+MFiAh1rMS8sjOULTohB/xGlV+KowLwZ15vuVB
-         +gsRPbtV7gvbSCTrTDy0hIj+pn+t6BjWbW2G3+ValNHGifxejI4aI9CDnh/9t7Jr+4Ft
-         L/0w==
+        bh=axPPUV0SB+vUmPVZgPMEMsCF47yjKoLE+O1nnwx+cnE=;
+        b=VnTNhd+EatzRBtm1XcR533FrbwGf6aLw7QhpytJvJy4EhUmmV/2yP3xUqt7lFpIi/t
+         i00tZ43HaUGN66rML32ooET+jxlZHfUjfezLLaqjb7KDsRbZ7lg/mO/o8wZieqN8iJUT
+         +QoonEXW0BfZhSTjghR2etYtEmgTJR3swErv6QzioOTvVMnXj1TSHJA4iDWgQiLXhhjH
+         9LVv9m7VPOB1+Fmoo+7VAGCOJFyx6j4MokamjH8mcuP9caILW96vLHR71+Lg0ILl+jFT
+         j2/ggw1yYD1pJ6Q7PnBcZPDVgy5c5TxvQGBJeoep+U8Q8XLVu0QurJEAGj5Be6Zayhiq
+         V3fw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=6SUpT/Cq7WAcFMI7EYou95uAqCpN60QbhWisTQcUAZE=;
-        b=nQac6FVT2jsKrgMpMRYu2NT3thO+PskNEdLCZa6bD22h5LdNgXaWRN208oVcbH8Pdw
-         uypX2fQeIH4SMCwW48fgo8jQHGje0e6qKLO4whhZ+6r4xFVL/we4M6nQBIiw5hM7cX7z
-         4tX+alErJHRqsqydvFOAM4LSVWusZB72Ai2xDRHseU2VCKO0n7HqE1qmnpuw8lTwME15
-         iW2I1FcIdK2/DycESfVW2wPhLAx4+LVzJbjV8Fgjxy+wdpFOb7DKx9XwRWK0lhkmZsjz
-         66S+Ox8kJ+/ny3HFmiP9ZFyY6iV7Vm8o8GAaTi0mMgbCR967T9MBGYQWxsn3/r4hqDBo
-         Gdpg==
-X-Gm-Message-State: APjAAAXFNK/Ss8ie+T1rHLV7ZJdqDk2ZIVnyfsdwlpIKutMbkGDx141U
-        znKq4sy6nCphDryqV2zwt5wWxQ==
-X-Google-Smtp-Source: APXvYqwHPZo6IUc+mQlModGko0y+bUwKpgW94ZH45M2odE42WQE3R6U+OVG3m1WRxN6oOvJcf7Ymkw==
-X-Received: by 2002:ad4:44af:: with SMTP id n15mr358027qvt.174.1574362089507;
-        Thu, 21 Nov 2019 10:48:09 -0800 (PST)
+        bh=axPPUV0SB+vUmPVZgPMEMsCF47yjKoLE+O1nnwx+cnE=;
+        b=QyNtB7a7gF5dRcameOclhzffZzayntUY17373jumUcdGKP+5G/AFj6Kqf62UAzrF8d
+         MtFkoTPt9fIwR52Ui2jlHfDxvjds9zDTApa3VGQmfZ5X/w/aEa/xKC+V/Bqw0KWXkS5T
+         bQUaK6LDb5VsBP17Y1Ip35kztnE4bZFlZDAdkqu4l5Ixj36SZdSQvFttFhXW788rkTt7
+         l8KrKLlRc5vA14rLbo+YY64PwY1J+nhpCG1KumbwlTWIk9gpeub+7PEt/HHMukBW+KVq
+         BdVCRouEqeEP59k1iE+j0ZTaLmr427gzi9Qi8HL5k7uKf1mKogtB73n4bsNRoCUd2VVl
+         FITQ==
+X-Gm-Message-State: APjAAAW2IRGohhzBMxV/rmg2rr/id6JxaoRsRAy3kB6y7lE8J7htVl01
+        rEQjOIeekMAmiUF3RxlTa+io0Q==
+X-Google-Smtp-Source: APXvYqysL5MlYKABTCqCZbfEZQ5tWNC+olDXlMCWgPK4umyOQbgkypKnzsUF0Z83ZrFlAdJbpxiFTw==
+X-Received: by 2002:ac8:2d2d:: with SMTP id n42mr10008350qta.119.1574362092735;
+        Thu, 21 Nov 2019 10:48:12 -0800 (PST)
 Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
-        by smtp.gmail.com with ESMTPSA id t2sm1811634qkt.95.2019.11.21.10.48.07
+        by smtp.gmail.com with ESMTPSA id t2sm1811634qkt.95.2019.11.21.10.48.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Nov 2019 10:48:08 -0800 (PST)
+        Thu, 21 Nov 2019 10:48:12 -0800 (PST)
 From:   Pavel Tatashin <pasha.tatashin@soleen.com>
 To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
         linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
@@ -67,9 +67,9 @@ To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
         sstabellini@kernel.org, boris.ostrovsky@oracle.com,
         jgross@suse.com, stefan@agner.ch, yamada.masahiro@socionext.com,
         xen-devel@lists.xenproject.org, linux@armlinux.org.uk
-Subject: [PATCH 1/3] arm/arm64/xen: use C inlines for privcmd_call
-Date:   Thu, 21 Nov 2019 13:48:03 -0500
-Message-Id: <20191121184805.414758-2-pasha.tatashin@soleen.com>
+Subject: [PATCH 3/3] arm64: remove the rest of asm-uaccess.h
+Date:   Thu, 21 Nov 2019 13:48:05 -0500
+Message-Id: <20191121184805.414758-4-pasha.tatashin@soleen.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191121184805.414758-1-pasha.tatashin@soleen.com>
 References: <20191121184805.414758-1-pasha.tatashin@soleen.com>
@@ -80,228 +80,201 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-privcmd_call requires to enable access to userspace for the
-duration of the hypercall.
+The __uaccess_ttbr0_disable and __uaccess_ttbr0_enable,
+are the last two macros defined in asm-uaccess.h.
 
-Currently, this is done via assembly macros. Change it to C
-inlines instead.
+Replace them with C wrappers and call C functions from
+kernel_entry and kernel_exit.
 
 Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
 ---
- arch/arm/include/asm/assembler.h |  2 +-
- arch/arm/include/asm/uaccess.h   | 32 ++++++++++++++++++++++++++------
- arch/arm/xen/enlighten.c         |  2 +-
- arch/arm/xen/hypercall.S         | 15 ++-------------
- arch/arm64/xen/hypercall.S       | 19 ++-----------------
- include/xen/arm/hypercall.h      | 23 ++++++++++++++++++++---
- 6 files changed, 52 insertions(+), 41 deletions(-)
+ arch/arm64/include/asm/asm-uaccess.h | 38 ----------------------------
+ arch/arm64/kernel/entry.S            |  6 ++---
+ arch/arm64/lib/clear_user.S          |  2 +-
+ arch/arm64/lib/copy_from_user.S      |  2 +-
+ arch/arm64/lib/copy_in_user.S        |  2 +-
+ arch/arm64/lib/copy_to_user.S        |  2 +-
+ arch/arm64/mm/cache.S                |  1 -
+ arch/arm64/mm/context.c              | 12 +++++++++
+ arch/xtensa/kernel/coprocessor.S     |  1 -
+ 9 files changed, 19 insertions(+), 47 deletions(-)
+ delete mode 100644 arch/arm64/include/asm/asm-uaccess.h
 
-diff --git a/arch/arm/include/asm/assembler.h b/arch/arm/include/asm/assembler.h
-index 99929122dad7..8e9262a0f016 100644
---- a/arch/arm/include/asm/assembler.h
-+++ b/arch/arm/include/asm/assembler.h
-@@ -480,7 +480,7 @@ THUMB(	orr	\reg , \reg , #PSR_T_BIT	)
- 	.macro	uaccess_disable, tmp, isb=1
- #ifdef CONFIG_CPU_SW_DOMAIN_PAN
- 	/*
--	 * Whenever we re-enter userspace, the domains should always be
-+	 * Whenever we re-enter kernel, the domains should always be
- 	 * set appropriately.
- 	 */
- 	mov	\tmp, #DACR_UACCESS_DISABLE
-diff --git a/arch/arm/include/asm/uaccess.h b/arch/arm/include/asm/uaccess.h
-index 98c6b91be4a8..79d4efa3eb62 100644
---- a/arch/arm/include/asm/uaccess.h
-+++ b/arch/arm/include/asm/uaccess.h
-@@ -16,6 +16,23 @@
- 
- #include <asm/extable.h>
- 
-+#ifdef CONFIG_CPU_SW_DOMAIN_PAN
-+static __always_inline void uaccess_enable(void)
-+{
-+	unsigned long val = DACR_UACCESS_ENABLE;
-+
-+	asm volatile("mcr p15, 0, %0, c3, c0, 0" : : "r" (val));
-+	isb();
-+}
-+
-+static __always_inline void uaccess_disable(void)
-+{
-+	unsigned long val = DACR_UACCESS_ENABLE;
-+
-+	asm volatile("mcr p15, 0, %0, c3, c0, 0" : : "r" (val));
-+	isb();
-+}
-+
- /*
-  * These two functions allow hooking accesses to userspace to increase
-  * system integrity by ensuring that the kernel can not inadvertantly
-@@ -24,7 +41,6 @@
-  */
- static __always_inline unsigned int uaccess_save_and_enable(void)
- {
--#ifdef CONFIG_CPU_SW_DOMAIN_PAN
- 	unsigned int old_domain = get_domain();
- 
- 	/* Set the current domain access to permit user accesses */
-@@ -32,18 +48,22 @@ static __always_inline unsigned int uaccess_save_and_enable(void)
- 		   domain_val(DOMAIN_USER, DOMAIN_CLIENT));
- 
- 	return old_domain;
--#else
--	return 0;
--#endif
- }
- 
- static __always_inline void uaccess_restore(unsigned int flags)
- {
--#ifdef CONFIG_CPU_SW_DOMAIN_PAN
- 	/* Restore the user access mask */
- 	set_domain(flags);
--#endif
- }
-+#else
-+static __always_inline void uaccess_enable(void) {}
-+static __always_inline void uaccess_disable(void) {}
-+static __always_inline unsigned int uaccess_save_and_enable(void)
-+{
-+	return 0;
-+}
-+static __always_inline void uaccess_restore(unsigned int flags) {}
-+#endif /* CONFIG_CPU_SW_DOMAIN_PAN */
- 
- /*
-  * These two are intentionally not defined anywhere - if the kernel
-diff --git a/arch/arm/xen/enlighten.c b/arch/arm/xen/enlighten.c
-index dd6804a64f1a..e87280c6d25d 100644
---- a/arch/arm/xen/enlighten.c
-+++ b/arch/arm/xen/enlighten.c
-@@ -440,4 +440,4 @@ EXPORT_SYMBOL_GPL(HYPERVISOR_platform_op_raw);
- EXPORT_SYMBOL_GPL(HYPERVISOR_multicall);
- EXPORT_SYMBOL_GPL(HYPERVISOR_vm_assist);
- EXPORT_SYMBOL_GPL(HYPERVISOR_dm_op);
--EXPORT_SYMBOL_GPL(privcmd_call);
-+EXPORT_SYMBOL_GPL(arch_privcmd_call);
-diff --git a/arch/arm/xen/hypercall.S b/arch/arm/xen/hypercall.S
-index b11bba542fac..2f5be0dc6195 100644
---- a/arch/arm/xen/hypercall.S
-+++ b/arch/arm/xen/hypercall.S
-@@ -94,29 +94,18 @@ HYPERCALL2(multicall);
- HYPERCALL2(vm_assist);
- HYPERCALL3(dm_op);
- 
--ENTRY(privcmd_call)
-+ENTRY(arch_privcmd_call)
- 	stmdb sp!, {r4}
- 	mov r12, r0
- 	mov r0, r1
- 	mov r1, r2
- 	mov r2, r3
- 	ldr r3, [sp, #8]
--	/*
--	 * Privcmd calls are issued by the userspace. We need to allow the
--	 * kernel to access the userspace memory before issuing the hypercall.
--	 */
--	uaccess_enable r4
- 
- 	/* r4 is loaded now as we use it as scratch register before */
- 	ldr r4, [sp, #4]
- 	__HVC(XEN_IMM)
- 
--	/*
--	 * Disable userspace access from kernel. This is fine to do it
--	 * unconditionally as no set_fs(KERNEL_DS) is called before.
--	 */
--	uaccess_disable r4
+diff --git a/arch/arm64/include/asm/asm-uaccess.h b/arch/arm64/include/asm/asm-uaccess.h
+deleted file mode 100644
+index 8f763e5b41b1..000000000000
+--- a/arch/arm64/include/asm/asm-uaccess.h
++++ /dev/null
+@@ -1,38 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#ifndef __ASM_ASM_UACCESS_H
+-#define __ASM_ASM_UACCESS_H
 -
- 	ldm sp!, {r4}
- 	ret lr
--ENDPROC(privcmd_call);
-+ENDPROC(arch_privcmd_call);
-diff --git a/arch/arm64/xen/hypercall.S b/arch/arm64/xen/hypercall.S
-index c5f05c4a4d00..921611778d2a 100644
---- a/arch/arm64/xen/hypercall.S
-+++ b/arch/arm64/xen/hypercall.S
-@@ -49,7 +49,6 @@
+-#include <asm/alternative.h>
+-#include <asm/kernel-pgtable.h>
+-#include <asm/mmu.h>
+-#include <asm/sysreg.h>
+-#include <asm/assembler.h>
+-
+-/*
+- * User access enabling/disabling macros.
+- */
+-#ifdef CONFIG_ARM64_SW_TTBR0_PAN
+-	.macro	__uaccess_ttbr0_disable, tmp1
+-	mrs	\tmp1, ttbr1_el1			// swapper_pg_dir
+-	bic	\tmp1, \tmp1, #TTBR_ASID_MASK
+-	sub	\tmp1, \tmp1, #RESERVED_TTBR0_SIZE	// reserved_ttbr0 just before swapper_pg_dir
+-	msr	ttbr0_el1, \tmp1			// set reserved TTBR0_EL1
+-	isb
+-	add	\tmp1, \tmp1, #RESERVED_TTBR0_SIZE
+-	msr	ttbr1_el1, \tmp1		// set reserved ASID
+-	isb
+-	.endm
+-
+-	.macro	__uaccess_ttbr0_enable, tmp1, tmp2
+-	get_current_task \tmp1
+-	ldr	\tmp1, [\tmp1, #TSK_TI_TTBR0]	// load saved TTBR0_EL1
+-	mrs	\tmp2, ttbr1_el1
+-	extr    \tmp2, \tmp2, \tmp1, #48
+-	ror     \tmp2, \tmp2, #16
+-	msr	ttbr1_el1, \tmp2		// set the active ASID
+-	isb
+-	msr	ttbr0_el1, \tmp1		// set the non-PAN TTBR0_EL1
+-	isb
+-	.endm
+-#endif
+-#endif
+diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
+index 583f71abbe98..c7b571e6d0f2 100644
+--- a/arch/arm64/kernel/entry.S
++++ b/arch/arm64/kernel/entry.S
+@@ -22,8 +22,8 @@
+ #include <asm/mmu.h>
+ #include <asm/processor.h>
+ #include <asm/ptrace.h>
++#include <asm/kernel-pgtable.h>
+ #include <asm/thread_info.h>
+-#include <asm/asm-uaccess.h>
+ #include <asm/unistd.h>
+ 
+ /*
+@@ -219,7 +219,7 @@ alternative_else_nop_endif
+ 	and	x23, x23, #~PSR_PAN_BIT		// Clear the emulated PAN in the saved SPSR
+ 	.endif
+ 
+-	__uaccess_ttbr0_disable x21
++	bl __uaccess_ttbr0_disable_c
+ 1:
+ #endif
+ 
+@@ -293,7 +293,7 @@ alternative_else_nop_endif
+ 	tbnz	x22, #22, 1f			// Skip re-enabling TTBR0 access if the PSR_PAN_BIT is set
+ 	.endif
+ 
+-	__uaccess_ttbr0_enable x0, x1
++	bl	__uaccess_ttbr0_enable_c
+ 
+ 	.if	\el == 0
+ 	/*
+diff --git a/arch/arm64/lib/clear_user.S b/arch/arm64/lib/clear_user.S
+index aeafc03e961a..b0b4a86a09e2 100644
+--- a/arch/arm64/lib/clear_user.S
++++ b/arch/arm64/lib/clear_user.S
+@@ -6,7 +6,7 @@
+  */
+ #include <linux/linkage.h>
+ 
+-#include <asm/asm-uaccess.h>
++#include <asm/alternative.h>
+ #include <asm/assembler.h>
+ 
+ 	.text
+diff --git a/arch/arm64/lib/copy_from_user.S b/arch/arm64/lib/copy_from_user.S
+index ebb3c06cbb5d..142bc7505518 100644
+--- a/arch/arm64/lib/copy_from_user.S
++++ b/arch/arm64/lib/copy_from_user.S
+@@ -5,7 +5,7 @@
  
  #include <linux/linkage.h>
- #include <asm/assembler.h>
+ 
 -#include <asm/asm-uaccess.h>
- #include <xen/interface/xen.h>
++#include <asm/alternative.h>
+ #include <asm/assembler.h>
+ #include <asm/cache.h>
  
+diff --git a/arch/arm64/lib/copy_in_user.S b/arch/arm64/lib/copy_in_user.S
+index 3d8153a1ebce..04dc48ca26f7 100644
+--- a/arch/arm64/lib/copy_in_user.S
++++ b/arch/arm64/lib/copy_in_user.S
+@@ -7,7 +7,7 @@
  
-@@ -86,27 +85,13 @@ HYPERCALL2(multicall);
- HYPERCALL2(vm_assist);
- HYPERCALL3(dm_op);
+ #include <linux/linkage.h>
  
--ENTRY(privcmd_call)
-+ENTRY(arch_privcmd_call)
- 	mov x16, x0
- 	mov x0, x1
- 	mov x1, x2
- 	mov x2, x3
- 	mov x3, x4
- 	mov x4, x5
--	/*
--	 * Privcmd calls are issued by the userspace. The kernel needs to
--	 * enable access to TTBR0_EL1 as the hypervisor would issue stage 1
--	 * translations to user memory via AT instructions. Since AT
--	 * instructions are not affected by the PAN bit (ARMv8.1), we only
--	 * need the explicit uaccess_enable/disable if the TTBR0 PAN emulation
--	 * is enabled (it implies that hardware UAO and PAN disabled).
--	 */
--	uaccess_ttbr0_enable x6, x7, x8
- 	hvc XEN_IMM
--
--	/*
--	 * Disable userspace access from kernel once the hyp call completed.
--	 */
--	uaccess_ttbr0_disable x6, x7
- 	ret
--ENDPROC(privcmd_call);
-+ENDPROC(arch_privcmd_call);
-diff --git a/include/xen/arm/hypercall.h b/include/xen/arm/hypercall.h
-index b40485e54d80..cfb704fd78c8 100644
---- a/include/xen/arm/hypercall.h
-+++ b/include/xen/arm/hypercall.h
-@@ -34,16 +34,33 @@
- #define _ASM_ARM_XEN_HYPERCALL_H
+-#include <asm/asm-uaccess.h>
++#include <asm/alternative.h>
+ #include <asm/assembler.h>
+ #include <asm/cache.h>
  
- #include <linux/bug.h>
-+#include <linux/uaccess.h>
+diff --git a/arch/arm64/lib/copy_to_user.S b/arch/arm64/lib/copy_to_user.S
+index 357eae2c18eb..8f3218ae88ab 100644
+--- a/arch/arm64/lib/copy_to_user.S
++++ b/arch/arm64/lib/copy_to_user.S
+@@ -5,7 +5,7 @@
  
- #include <xen/interface/xen.h>
- #include <xen/interface/sched.h>
- #include <xen/interface/platform.h>
+ #include <linux/linkage.h>
  
- struct xen_dm_op_buf;
-+long arch_privcmd_call(unsigned int call, unsigned long a1,
-+		       unsigned long a2, unsigned long a3,
-+		       unsigned long a4, unsigned long a5);
+-#include <asm/asm-uaccess.h>
++#include <asm/alternative.h>
+ #include <asm/assembler.h>
+ #include <asm/cache.h>
  
--long privcmd_call(unsigned call, unsigned long a1,
--		unsigned long a2, unsigned long a3,
--		unsigned long a4, unsigned long a5);
-+static inline long privcmd_call(unsigned int call, unsigned long a1,
-+				unsigned long a2, unsigned long a3,
-+				unsigned long a4, unsigned long a5)
+diff --git a/arch/arm64/mm/cache.S b/arch/arm64/mm/cache.S
+index 408d317a47d2..7940d6ef5da5 100644
+--- a/arch/arm64/mm/cache.S
++++ b/arch/arm64/mm/cache.S
+@@ -12,7 +12,6 @@
+ #include <asm/assembler.h>
+ #include <asm/cpufeature.h>
+ #include <asm/alternative.h>
+-#include <asm/asm-uaccess.h>
+ 
+ /*
+  *	__arch_flush_icache_range(start,end)
+diff --git a/arch/arm64/mm/context.c b/arch/arm64/mm/context.c
+index b5e329fde2dd..4fc32c504dea 100644
+--- a/arch/arm64/mm/context.c
++++ b/arch/arm64/mm/context.c
+@@ -237,6 +237,18 @@ void check_and_switch_context(struct mm_struct *mm, unsigned int cpu)
+ 		cpu_switch_mm(mm->pgd, mm);
+ }
+ 
++#ifdef CONFIG_ARM64_SW_TTBR0_PAN
++asmlinkage void __uaccess_ttbr0_enable_c(void)
 +{
-+	long rv;
-+
-+	/*
-+	 * Privcmd calls are issued by the userspace. We need to allow the
-+	 * kernel to access the userspace memory before issuing the hypercall.
-+	 */
-+	uaccess_enable();
-+	rv = arch_privcmd_call(call, a1, a2, a3, a4, a5);
-+	uaccess_disable();
-+
-+	return rv;
++	__uaccess_ttbr0_enable();
 +}
- int HYPERVISOR_xen_version(int cmd, void *arg);
- int HYPERVISOR_console_io(int cmd, int count, char *str);
- int HYPERVISOR_grant_table_op(unsigned int cmd, void *uop, unsigned int count);
++
++asmlinkage void __uaccess_ttbr0_disable_c(void)
++{
++	__uaccess_ttbr0_disable();
++}
++#endif
++
+ /* Errata workaround post TTBRx_EL1 update. */
+ asmlinkage void post_ttbr_update_workaround(void)
+ {
+diff --git a/arch/xtensa/kernel/coprocessor.S b/arch/xtensa/kernel/coprocessor.S
+index 80828b95a51f..6329d17e2aa0 100644
+--- a/arch/xtensa/kernel/coprocessor.S
++++ b/arch/xtensa/kernel/coprocessor.S
+@@ -18,7 +18,6 @@
+ #include <asm/processor.h>
+ #include <asm/coprocessor.h>
+ #include <asm/thread_info.h>
+-#include <asm/asm-uaccess.h>
+ #include <asm/unistd.h>
+ #include <asm/ptrace.h>
+ #include <asm/current.h>
 -- 
 2.24.0
 
