@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17D46C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 02:44:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 239EBC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 02:44:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3F4120895
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 02:44:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E725C20878
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 02:44:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574304290;
-	bh=bVTtftvy/497ZG5CBfJ+tdQkUTY2Eip4rA9yqOgTedc=;
+	s=default; t=1574304293;
+	bh=dFaoUL/kjZQEWQ6Iam/kl52aRoyIpykAOKG/LDr/kZ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FmL7J7/WEdNYw4R2FHBccZozD1FW8qZYb3hmX8QFin3j/LuItVnY2aTzL0r7+coel
-	 Vvdw8bhHIaAdW8pcZFSYFnyesQwQEA11r819weiDL/b/DheD6xdme86tYC+XkvXdI/
-	 eTGR/vbJtzRyoJTk+RuYzteTjQsHEq2a7WOFTEdw=
+	b=gLTUAQ9Pjglcc0jzxsaJegxMrGCzuHPCEx5J5sxbylNvrRV6nhx7dWOT0P56t2KYT
+	 ps6AlPOJObFQ1B5wGdpfhkKxiKuVnO2Z42JDH9aFlF4c2ZgKw+bkxERgWCzbgroOUx
+	 xCSHDbiPJHBh2yEWVR5Zil3acvVeaVLTShjQkI1I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbfKUCot (ORCPT
+        id S1726739AbfKUCow (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 21:44:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54318 "EHLO mail.kernel.org"
+        Wed, 20 Nov 2019 21:44:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726840AbfKUCop (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 21:44:45 -0500
+        id S1726747AbfKUCot (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 21:44:49 -0500
 Received: from lenoir.home (lfbn-ncy-1-150-155.w83-194.abo.wanadoo.fr [83.194.232.155])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A42532089D;
-        Thu, 21 Nov 2019 02:44:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93E09208A3;
+        Thu, 21 Nov 2019 02:44:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574304285;
-        bh=bVTtftvy/497ZG5CBfJ+tdQkUTY2Eip4rA9yqOgTedc=;
+        s=default; t=1574304288;
+        bh=dFaoUL/kjZQEWQ6Iam/kl52aRoyIpykAOKG/LDr/kZ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bLPkw3IrS8wi7V+ItSmG0FlnLfYxSpzZQm44Oi3df/1wpCJBeweCO/W4PrHjugR84
-         ezxljgQQhJdHK3/HZO3L2tCMP2lH/eV0u7irndM0pGGV/FnHmjplf7tQb/GjLt6Gfr
-         fzglAYtPjYqaazgkZOkrY2S6a4cGFX7Tsj6qmaDg=
+        b=oFjAcHXiE4gPg9y6z3F+zaBAHpmR2cqOUAzK6GlyTf2M0/RtNu3KstyT+0fT3zq1A
+         /DpdBnFr0tR+xtECXtRzkEln3oVPGagFYXiarq8xVWKGTGP0rGQCHmhtR0shWkONae
+         x5AbZuvW0KCnzrYU9F3HwVehqltUKF+HB+XYOmSo=
 From:   Frederic Weisbecker <frederic@kernel.org>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@kernel.org>
@@ -53,9 +53,9 @@ Cc:     LKML <linux-kernel@vger.kernel.org>,
         Yauheni Kaliuta <yauheni.kaliuta@redhat.com>,
         Viresh Kumar <viresh.kumar@linaro.org>,
         Pavel Machek <pavel@ucw.cz>
-Subject: [PATCH 3/6] procfs: Use all-in-one vtime aware kcpustat accessor
-Date:   Thu, 21 Nov 2019 03:44:27 +0100
-Message-Id: <20191121024430.19938-4-frederic@kernel.org>
+Subject: [PATCH 4/6] cpufreq: Use vtime aware kcpustat accessors for user time
+Date:   Thu, 21 Nov 2019 03:44:28 +0100
+Message-Id: <20191121024430.19938-5-frederic@kernel.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191121024430.19938-1-frederic@kernel.org>
 References: <20191121024430.19938-1-frederic@kernel.org>
@@ -66,96 +66,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that we can read also user and guest time safely under vtime, use
-the relevant accessor to fix frozen kcpustat values on nohz_full CPUs.
+We can now safely read user and guest kcpustat fields on nohz_full CPUs.
+Use the appropriate accessors.
 
 Reported-by: Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
 Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-Cc: Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Rik van Riel <riel@surriel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Wanpeng Li <wanpengli@tencent.com>
 Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
 ---
- fs/proc/stat.c | 54 ++++++++++++++++++++++++++++----------------------
- 1 file changed, 30 insertions(+), 24 deletions(-)
+ drivers/cpufreq/cpufreq.c          | 17 ++++++++++-------
+ drivers/cpufreq/cpufreq_governor.c |  6 +++---
+ 2 files changed, 13 insertions(+), 10 deletions(-)
 
-diff --git a/fs/proc/stat.c b/fs/proc/stat.c
-index 5c6bd0ae3802..37bdbec5b402 100644
---- a/fs/proc/stat.c
-+++ b/fs/proc/stat.c
-@@ -120,20 +120,23 @@ static int show_stat(struct seq_file *p, void *v)
- 	getboottime64(&boottime);
+diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+index 527fd068dc12..ee23eaf20f35 100644
+--- a/drivers/cpufreq/cpufreq.c
++++ b/drivers/cpufreq/cpufreq.c
+@@ -113,18 +113,21 @@ EXPORT_SYMBOL_GPL(get_governor_parent_kobj);
  
- 	for_each_possible_cpu(i) {
--		struct kernel_cpustat *kcs = &kcpustat_cpu(i);
-+		struct kernel_cpustat kcpustat;
-+		u64 *cpustat = kcpustat.cpustat;
+ static inline u64 get_cpu_idle_time_jiffy(unsigned int cpu, u64 *wall)
+ {
+-	u64 idle_time;
++	struct kernel_cpustat kcpustat;
+ 	u64 cur_wall_time;
++	u64 idle_time;
+ 	u64 busy_time;
  
--		user += kcs->cpustat[CPUTIME_USER];
--		nice += kcs->cpustat[CPUTIME_NICE];
--		system += kcpustat_field(kcs, CPUTIME_SYSTEM, i);
--		idle += get_idle_time(kcs, i);
--		iowait += get_iowait_time(kcs, i);
--		irq += kcs->cpustat[CPUTIME_IRQ];
--		softirq += kcs->cpustat[CPUTIME_SOFTIRQ];
--		steal += kcs->cpustat[CPUTIME_STEAL];
--		guest += kcs->cpustat[CPUTIME_GUEST];
--		guest_nice += kcs->cpustat[CPUTIME_GUEST_NICE];
--		sum += kstat_cpu_irqs_sum(i);
--		sum += arch_irq_stat_cpu(i);
-+		kcpustat_cpu_fetch(&kcpustat, i);
+ 	cur_wall_time = jiffies64_to_nsecs(get_jiffies_64());
+ 
+-	busy_time = kcpustat_cpu(cpu).cpustat[CPUTIME_USER];
+-	busy_time += kcpustat_field(&kcpustat_cpu(cpu), CPUTIME_SYSTEM, cpu);
+-	busy_time += kcpustat_cpu(cpu).cpustat[CPUTIME_IRQ];
+-	busy_time += kcpustat_cpu(cpu).cpustat[CPUTIME_SOFTIRQ];
+-	busy_time += kcpustat_cpu(cpu).cpustat[CPUTIME_STEAL];
+-	busy_time += kcpustat_cpu(cpu).cpustat[CPUTIME_NICE];
++	kcpustat_cpu_fetch(&kcpustat, cpu);
 +
-+		user		+= cpustat[CPUTIME_USER];
-+		nice		+= cpustat[CPUTIME_NICE];
-+		system		+= cpustat[CPUTIME_SYSTEM];
-+		idle		+= get_idle_time(&kcpustat, i);
-+		iowait		+= get_iowait_time(&kcpustat, i);
-+		irq		+= cpustat[CPUTIME_IRQ];
-+		softirq		+= cpustat[CPUTIME_SOFTIRQ];
-+		steal		+= cpustat[CPUTIME_STEAL];
-+		guest		+= cpustat[CPUTIME_GUEST];
-+		guest_nice	+= cpustat[CPUTIME_USER];
-+		sum		+= kstat_cpu_irqs_sum(i);
-+		sum		+= arch_irq_stat_cpu(i);
++	busy_time = kcpustat.cpustat[CPUTIME_USER];
++	busy_time += kcpustat.cpustat[CPUTIME_SYSTEM];
++	busy_time += kcpustat.cpustat[CPUTIME_IRQ];
++	busy_time += kcpustat.cpustat[CPUTIME_SOFTIRQ];
++	busy_time += kcpustat.cpustat[CPUTIME_STEAL];
++	busy_time += kcpustat.cpustat[CPUTIME_NICE];
  
- 		for (j = 0; j < NR_SOFTIRQS; j++) {
- 			unsigned int softirq_stat = kstat_softirqs_cpu(j, i);
-@@ -157,19 +160,22 @@ static int show_stat(struct seq_file *p, void *v)
- 	seq_putc(p, '\n');
+ 	idle_time = cur_wall_time - busy_time;
+ 	if (wall)
+diff --git a/drivers/cpufreq/cpufreq_governor.c b/drivers/cpufreq/cpufreq_governor.c
+index 4bb054d0cb43..f99ae45efaea 100644
+--- a/drivers/cpufreq/cpufreq_governor.c
++++ b/drivers/cpufreq/cpufreq_governor.c
+@@ -105,7 +105,7 @@ void gov_update_cpu_data(struct dbs_data *dbs_data)
+ 			j_cdbs->prev_cpu_idle = get_cpu_idle_time(j, &j_cdbs->prev_update_time,
+ 								  dbs_data->io_is_busy);
+ 			if (dbs_data->ignore_nice_load)
+-				j_cdbs->prev_cpu_nice = kcpustat_cpu(j).cpustat[CPUTIME_NICE];
++				j_cdbs->prev_cpu_nice = kcpustat_field(&kcpustat_cpu(j), CPUTIME_NICE, j);
+ 		}
+ 	}
+ }
+@@ -149,7 +149,7 @@ unsigned int dbs_update(struct cpufreq_policy *policy)
+ 		j_cdbs->prev_cpu_idle = cur_idle_time;
  
- 	for_each_online_cpu(i) {
--		struct kernel_cpustat *kcs = &kcpustat_cpu(i);
-+		struct kernel_cpustat kcpustat;
-+		u64 *cpustat = kcpustat.cpustat;
-+
-+		kcpustat_cpu_fetch(&kcpustat, i);
+ 		if (ignore_nice) {
+-			u64 cur_nice = kcpustat_cpu(j).cpustat[CPUTIME_NICE];
++			u64 cur_nice = kcpustat_field(&kcpustat_cpu(j), CPUTIME_NICE, j);
  
- 		/* Copy values here to work around gcc-2.95.3, gcc-2.96 */
--		user = kcs->cpustat[CPUTIME_USER];
--		nice = kcs->cpustat[CPUTIME_NICE];
--		system = kcpustat_field(kcs, CPUTIME_SYSTEM, i);
--		idle = get_idle_time(kcs, i);
--		iowait = get_iowait_time(kcs, i);
--		irq = kcs->cpustat[CPUTIME_IRQ];
--		softirq = kcs->cpustat[CPUTIME_SOFTIRQ];
--		steal = kcs->cpustat[CPUTIME_STEAL];
--		guest = kcs->cpustat[CPUTIME_GUEST];
--		guest_nice = kcs->cpustat[CPUTIME_GUEST_NICE];
-+		user		= cpustat[CPUTIME_USER];
-+		nice		= cpustat[CPUTIME_NICE];
-+		system		= cpustat[CPUTIME_SYSTEM];
-+		idle		= get_idle_time(&kcpustat, i);
-+		iowait		= get_iowait_time(&kcpustat, i);
-+		irq		= cpustat[CPUTIME_IRQ];
-+		softirq		= cpustat[CPUTIME_SOFTIRQ];
-+		steal		= cpustat[CPUTIME_STEAL];
-+		guest		= cpustat[CPUTIME_GUEST];
-+		guest_nice	= cpustat[CPUTIME_USER];
- 		seq_printf(p, "cpu%d", i);
- 		seq_put_decimal_ull(p, " ", nsec_to_clock_t(user));
- 		seq_put_decimal_ull(p, " ", nsec_to_clock_t(nice));
+ 			idle_time += div_u64(cur_nice - j_cdbs->prev_cpu_nice, NSEC_PER_USEC);
+ 			j_cdbs->prev_cpu_nice = cur_nice;
+@@ -530,7 +530,7 @@ int cpufreq_dbs_governor_start(struct cpufreq_policy *policy)
+ 		j_cdbs->prev_load = 0;
+ 
+ 		if (ignore_nice)
+-			j_cdbs->prev_cpu_nice = kcpustat_cpu(j).cpustat[CPUTIME_NICE];
++			j_cdbs->prev_cpu_nice = kcpustat_field(&kcpustat_cpu(j), CPUTIME_NICE, j);
+ 	}
+ 
+ 	gov->start(policy);
 -- 
 2.23.0
 
