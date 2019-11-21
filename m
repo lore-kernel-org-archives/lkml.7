@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6322C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 15:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0034C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 15:20:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E68C20674
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 15:20:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8025720674
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 15:20:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727127AbfKUPU1 (ORCPT
+        id S1727146AbfKUPUf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 10:20:27 -0500
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:50781 "EHLO
+        Thu, 21 Nov 2019 10:20:35 -0500
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:45711 "EHLO
         relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727113AbfKUPU1 (ORCPT
+        with ESMTP id S1726541AbfKUPUf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 10:20:27 -0500
+        Thu, 21 Nov 2019 10:20:35 -0500
 X-Originating-IP: 153.3.140.100
 Received: from localhost.localdomain.localdomain (unknown [153.3.140.100])
         (Authenticated sender: fly@kernel.page)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id E922A1C000F;
-        Thu, 21 Nov 2019 15:20:15 +0000 (UTC)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 02CAE1C001E;
+        Thu, 21 Nov 2019 15:20:26 +0000 (UTC)
 From:   Pengfei Li <fly@kernel.page>
 To:     akpm@linux-foundation.org
 Cc:     mgorman@techsingularity.net, mhocko@kernel.org, vbabka@suse.cz,
         cl@linux.com, iamjoonsoo.kim@lge.com, guro@fb.com,
         linux-kernel@vger.kernel.org, linux-mm@kvack.org,
         Pengfei Li <fly@kernel.page>
-Subject: [RFC v1 05/19] mm, slab: use for_each_node in fallback_alloc()
-Date:   Thu, 21 Nov 2019 23:17:57 +0800
-Message-Id: <20191121151811.49742-6-fly@kernel.page>
+Subject: [RFC v1 06/19] mm, vmscan: use for_each_node in do_try_to_free_pages()
+Date:   Thu, 21 Nov 2019 23:17:58 +0800
+Message-Id: <20191121151811.49742-7-fly@kernel.page>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191121151811.49742-1-fly@kernel.page>
 References: <20191121151811.49742-1-fly@kernel.page>
@@ -44,46 +44,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In fallback_alloc(), we want to traverse node instead of zone, so
-use for_each_node instead of for_each_zone.
+In do_try_to_free_pages(), we want to traverse node instead of zone,
+so use for_each_node instead of for_each_zone.
 
 Signed-off-by: Pengfei Li <fly@kernel.page>
 ---
- mm/slab.c | 11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
+ mm/vmscan.c | 17 +++++++----------
+ 1 file changed, 7 insertions(+), 10 deletions(-)
 
-diff --git a/mm/slab.c b/mm/slab.c
-index b9a1353cf2ab..b94c06934459 100644
---- a/mm/slab.c
-+++ b/mm/slab.c
-@@ -3103,12 +3103,11 @@ static void *alternate_node_alloc(struct kmem_cache *cachep, gfp_t flags)
-  */
- static void *fallback_alloc(struct kmem_cache *cache, gfp_t flags)
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index a3ad433c8ff4..159a2aaa8db1 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -3033,9 +3033,9 @@ static unsigned long do_try_to_free_pages(struct nodelist *nodelist,
+ 					  struct scan_control *sc)
  {
--	struct nodelist *nodelist;
--	struct nlist_traverser t;
+ 	int initial_priority = sc->priority;
+-	pg_data_t *last_pgdat;
++	pg_data_t *pgdat;
+ 	struct nlist_traverser t;
 -	struct zone *zone;
- 	enum zone_type high_zoneidx = gfp_zone(flags);
- 	void *obj = NULL;
- 	struct page *page;
-+	struct nodelist *nodelist;
-+	struct nlist_traverser t;
- 	int nid;
- 	unsigned int cpuset_mems_cookie;
++	int node;
+ retry:
+ 	delayacct_freepages_start();
  
-@@ -3124,10 +3123,8 @@ static void *fallback_alloc(struct kmem_cache *cache, gfp_t flags)
- 	 * Look through allowed nodes for objects available
- 	 * from existing per node queues.
- 	 */
--	for_each_zone_nlist(zone, &t, nodelist, high_zoneidx) {
--		nid = zone_to_nid(zone);
--
--		if (cpuset_zone_allowed(zone, flags) &&
-+	for_each_node_nlist(nid, &t, nodelist, high_zoneidx) {
-+		if (cpuset_node_allowed(nid, flags) &&
- 			get_node(cache, nid) &&
- 			get_node(cache, nid)->free_objects) {
- 				obj = ____cache_alloc_node(cache,
+@@ -3062,20 +3062,17 @@ static unsigned long do_try_to_free_pages(struct nodelist *nodelist,
+ 			sc->may_writepage = 1;
+ 	} while (--sc->priority >= 0);
+ 
+-	last_pgdat = NULL;
+-	for_each_zone_nlist_nodemask(zone, &t, nodelist, sc->reclaim_idx,
+-					sc->nodemask) {
+-		if (zone->zone_pgdat == last_pgdat)
+-			continue;
+-		last_pgdat = zone->zone_pgdat;
++	for_each_node_nlist_nodemask(node, &t, nodelist,
++					sc->reclaim_idx, sc->nodemask) {
++		pgdat = NODE_DATA(node);
+ 
+-		snapshot_refaults(sc->target_mem_cgroup, zone->zone_pgdat);
++		snapshot_refaults(sc->target_mem_cgroup, pgdat);
+ 
+ 		if (cgroup_reclaim(sc)) {
+ 			struct lruvec *lruvec;
+ 
+ 			lruvec = mem_cgroup_lruvec(sc->target_mem_cgroup,
+-						   zone->zone_pgdat);
++						   pgdat);
+ 			clear_bit(LRUVEC_CONGESTED, &lruvec->flags);
+ 		}
+ 	}
 -- 
 2.23.0
 
