@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F84BC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:28:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7BD1C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:28:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 336B320708
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:28:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CEF020715
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:28:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574342934;
-	bh=dgfpf5kJCL6nN+KhYLJcwVIUErWJUWLBSES+yxGfN88=;
+	s=default; t=1574342938;
+	bh=KDXZLoZXII0XBYiXxrDn8rRTuxKp5hQffiXRs1dksfI=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=qyBIOwf9ptGUwwAZXmvBkyszqHEBmw9ZvzCwrxRLejVD1vLKaM/9ov6lvSWzH0NRt
-	 M0RJaucJnPLg1nM/01WV2l8R1e2Qlwd+wdEoip5Ax6ZNTXTEo+2L63j74azy5AeViR
-	 kM7uG1D5bfnJ3QbOTql1XMORcPc2zPJy/1R6stfo=
+	b=ieTlYMMkqHRD4tNqzpZWEc3l+1myTcmYqZ2ql70cEibsI+3TdWT2rRmqM5YM0OT8b
+	 Vs9KSobX8wGn7HMQ6DoXNs2pAZedzfKK0dlUyNK+e1RxHZKp2S6Hq4NrmDPtPFzXCb
+	 sJhJUKl0eYGb40sH8aS5MJpCCyyc7+3OAqy/kJBA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727111AbfKUN2x (ORCPT
+        id S1727118AbfKUN25 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 08:28:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48586 "EHLO mail.kernel.org"
+        Thu, 21 Nov 2019 08:28:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727096AbfKUN2w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 08:28:52 -0500
+        id S1726722AbfKUN24 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 08:28:56 -0500
 Received: from localhost.localdomain (unknown [118.189.143.39])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D89B12068D;
-        Thu, 21 Nov 2019 13:28:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DE222070B;
+        Thu, 21 Nov 2019 13:28:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574342931;
-        bh=dgfpf5kJCL6nN+KhYLJcwVIUErWJUWLBSES+yxGfN88=;
+        s=default; t=1574342935;
+        bh=KDXZLoZXII0XBYiXxrDn8rRTuxKp5hQffiXRs1dksfI=;
         h=From:To:Cc:Subject:Date:From;
-        b=bCPVxMcurfOZQt+tmrvZo4oejR5NlTCICTlBz7Dx6wr2G0+6usPjvmV9KA+7+w8mx
-         3APzeA799/iteJuw9eU0nHSb95ZFI6up88KAqbk++0L/4vJnb77LiX8QZjd+zkuq1X
-         QaGJWf7CSsiFR5Cm9HLYfHDpfsxkR1uzRIDPYiJg=
+        b=rHHWHGGMDd8c5KD9Vxi2iNLjJlNUZiFZPr2FpoQlumnebSp0HyNhcz5VhLZ/swDTf
+         IN/XxtfUi5pCIG7qM1NBXhED54nhmve7ic9DLnspvYZea6ti6+CUi2mdNcmgzl2nQa
+         +QT0ajVcd0GayhN1cqY5hDvO+cNwp9SdvfsAt+a8=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH] tty: Fix Kconfig indentation, continued
-Date:   Thu, 21 Nov 2019 21:28:47 +0800
-Message-Id: <20191121132847.29015-1-krzk@kernel.org>
+        devel@driverdev.osuosl.org
+Subject: [PATCH] staging: fwserial: Fix Kconfig indentation (seven spaces)
+Date:   Thu, 21 Nov 2019 21:28:51 +0800
+Message-Id: <20191121132851.29072-1-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -55,94 +55,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Adjust indentation from seven spaces to tab (+optional two spaces) as in
 coding style with command like:
-	$ sed -e 's/^        /\t/' -i */Kconfig
+	$ sed -e 's/^       /\t/' -i */Kconfig
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/tty/Kconfig     | 28 ++++++++++++++--------------
- drivers/tty/hvc/Kconfig | 28 ++++++++++++++--------------
- 2 files changed, 28 insertions(+), 28 deletions(-)
+ drivers/staging/fwserial/Kconfig | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/tty/Kconfig b/drivers/tty/Kconfig
-index ec53b1d4aef3..a312cb33a99b 100644
---- a/drivers/tty/Kconfig
-+++ b/drivers/tty/Kconfig
-@@ -82,20 +82,20 @@ config HW_CONSOLE
- 	default y
- 
- config VT_HW_CONSOLE_BINDING
--       bool "Support for binding and unbinding console drivers"
--       depends on HW_CONSOLE
--       ---help---
--	 The virtual terminal is the device that interacts with the physical
--	 terminal through console drivers. On these systems, at least one
--	 console driver is loaded. In other configurations, additional console
--	 drivers may be enabled, such as the framebuffer console. If more than
--	 1 console driver is enabled, setting this to 'y' will allow you to
--	 select the console driver that will serve as the backend for the
--	 virtual terminals.
--
--	 See <file:Documentation/driver-api/console.rst> for more
--	 information. For framebuffer console users, please refer to
--	 <file:Documentation/fb/fbcon.rst>.
-+	bool "Support for binding and unbinding console drivers"
-+	depends on HW_CONSOLE
-+	---help---
-+	  The virtual terminal is the device that interacts with the physical
-+	  terminal through console drivers. On these systems, at least one
-+	  console driver is loaded. In other configurations, additional console
-+	  drivers may be enabled, such as the framebuffer console. If more than
-+	  1 console driver is enabled, setting this to 'y' will allow you to
-+	  select the console driver that will serve as the backend for the
-+	  virtual terminals.
-+
-+	  See <file:Documentation/driver-api/console.rst> for more
-+	  information. For framebuffer console users, please refer to
-+	  <file:Documentation/fb/fbcon.rst>.
- 
- config UNIX98_PTYS
- 	bool "Unix98 PTY support" if EXPERT
-diff --git a/drivers/tty/hvc/Kconfig b/drivers/tty/hvc/Kconfig
-index 94734ac511bf..6a3c97d345a0 100644
---- a/drivers/tty/hvc/Kconfig
-+++ b/drivers/tty/hvc/Kconfig
-@@ -70,22 +70,22 @@ config HVC_XEN_FRONTEND
- 	  Xen driver for secondary virtual consoles
- 
- config HVC_UDBG
--       bool "udbg based fake hypervisor console"
--       depends on PPC
--       select HVC_DRIVER
+diff --git a/drivers/staging/fwserial/Kconfig b/drivers/staging/fwserial/Kconfig
+index d21124a1a127..6964aac2a7ed 100644
+--- a/drivers/staging/fwserial/Kconfig
++++ b/drivers/staging/fwserial/Kconfig
+@@ -1,8 +1,8 @@
+ # SPDX-License-Identifier: GPL-2.0
+ config FIREWIRE_SERIAL
+-       tristate "TTY over Firewire"
+-       depends on FIREWIRE && TTY
 -       help
--	 This is meant to be used during HW bring up or debugging when
--	 no other console mechanism exist but udbg, to get you a quick
--	 console for userspace. Do NOT enable in production kernels. 
-+	bool "udbg based fake hypervisor console"
-+	depends on PPC
-+	select HVC_DRIVER
++	tristate "TTY over Firewire"
++	depends on FIREWIRE && TTY
 +	help
-+	  This is meant to be used during HW bring up or debugging when
-+	  no other console mechanism exist but udbg, to get you a quick
-+	  console for userspace. Do NOT enable in production kernels.
+ 	  This enables TTY over IEEE 1394, providing high-speed serial
+ 	  connectivity to cabled peers. This driver implements a
+ 	  ad-hoc transport protocol and is currently limited to
+@@ -14,17 +14,17 @@ config FIREWIRE_SERIAL
+ if FIREWIRE_SERIAL
  
- config HVC_DCC
--       bool "ARM JTAG DCC console"
--       depends on ARM || ARM64
--       select HVC_DRIVER
+ config FWTTY_MAX_TOTAL_PORTS
+-       int "Maximum number of serial ports supported"
+-       default "64"
 -       help
--	 This console uses the JTAG DCC on ARM to create a console under the HVC
--	 driver. This console is used through a JTAG only on ARM. If you don't have
--	 a JTAG then you probably don't want this option.
-+	bool "ARM JTAG DCC console"
-+	depends on ARM || ARM64
-+	select HVC_DRIVER
++	int "Maximum number of serial ports supported"
++	default "64"
 +	help
-+	  This console uses the JTAG DCC on ARM to create a console under the HVC
-+	  driver. This console is used through a JTAG only on ARM. If you don't have
-+	  a JTAG then you probably don't want this option.
+ 	  Set this to the maximum number of serial ports you want the
+ 	  firewire-serial driver to support.
  
- config HVC_RISCV_SBI
- 	bool "RISC-V SBI console support"
+ config FWTTY_MAX_CARD_PORTS
+-       int "Maximum number of serial ports supported per adapter"
+-       range 0 FWTTY_MAX_TOTAL_PORTS
+-       default "32"
+-       help
++	int "Maximum number of serial ports supported per adapter"
++	range 0 FWTTY_MAX_TOTAL_PORTS
++	default "32"
++	help
+ 	  Set this to the maximum number of serial ports each firewire
+ 	  adapter supports. The actual number of serial ports registered
+ 	  is set with the module parameter "ttys".
 -- 
 2.17.1
 
