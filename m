@@ -2,73 +2,185 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE730C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 08:13:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA89FC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 08:14:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A55520855
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 08:13:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="SJt/F7Sy"
+	by mail.kernel.org (Postfix) with ESMTP id 8C60320898
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 08:14:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726822AbfKUINV (ORCPT
+        id S1726912AbfKUIOR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 03:13:21 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:44455 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726170AbfKUINV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 03:13:21 -0500
-X-UUID: e9cbf3732efd46189b4a8c5819da145b-20191121
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=U97mKHK8idOeQxpJETaSEs2XLJJYwjnYHMcOchdEF+g=;
-        b=SJt/F7SyKCEqREcvs+FW59AwJMxgQkTUFhIt0sEmSuDcXpPD5l3fzGFmLcZBEpJbM4Trh7w+PYETKFwOw8wbuKTU7BKbZncbOnTgCkFciHAFgkcp61lrP1gxhXdRLOFuWoqX69NpwIZ5MsmekvZlLXRvmC/rPoDhyXD8QRvcHW0=;
-X-UUID: e9cbf3732efd46189b4a8c5819da145b-20191121
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <yt.chang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 2107909423; Thu, 21 Nov 2019 16:13:17 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 21 Nov 2019 16:13:13 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 21 Nov 2019 16:13:37 +0800
-From:   YT Chang <yt.chang@mediatek.com>
-To:     YT Chang <yt.chang@mediatek.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-CC:     <wsd_upstream@mediatek.com>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Subject: [PATCH 1/1] sched: panic, when call schedule with preemption disable
-Date:   Thu, 21 Nov 2019 16:13:05 +0800
-Message-ID: <1574323985-24193-1-git-send-email-yt.chang@mediatek.com>
-X-Mailer: git-send-email 1.9.1
+        Thu, 21 Nov 2019 03:14:17 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:7160 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726536AbfKUIOR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 03:14:17 -0500
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 703AAC08955488A0329B;
+        Thu, 21 Nov 2019 16:14:15 +0800 (CST)
+Received: from [127.0.0.1] (10.74.221.148) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Thu, 21 Nov 2019
+ 16:14:05 +0800
+Subject: Re: [PATCH v3] lib: optimize cpumask_local_spread()
+To:     Michal Hocko <mhocko@kernel.org>
+References: <1573091048-10595-1-git-send-email-zhangshaokun@hisilicon.com>
+ <20191108103102.GF15658@dhcp22.suse.cz>
+ <c6f24942-c8d6-e46a-f433-152d29af8c71@hisilicon.com>
+ <20191112115630.GD2763@dhcp22.suse.cz>
+ <00856999-739f-fd73-eddd-d71e4e94962e@hisilicon.com>
+ <20191114144317.GJ20866@dhcp22.suse.cz>
+ <9af13fea-95a6-30cb-2c0e-770aa649a549@hisilicon.com>
+ <20191115133625.GD29990@dhcp22.suse.cz>
+CC:     <linux-kernel@vger.kernel.org>, yuqi jin <jinyuqi@huawei.com>,
+        "Andrew Morton" <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        "Paul Burton" <paul.burton@mips.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        <netdev@vger.kernel.org>
+From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
+Message-ID: <5011c668-65f4-c571-e166-dbc29a8adc27@hisilicon.com>
+Date:   Thu, 21 Nov 2019 16:14:05 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.1.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20191115133625.GD29990@dhcp22.suse.cz>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.221.148]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-V2hlbiBwcmVlbXB0aW9uIGlzIGRpc2FibGUsIGNhbGwgc2NoZWR1bGUoKSBpcyBpbmNvcnJlY3Qg
-YmVoYXZpb3IuDQpTdWdnZXN0IHRvIHBhbmljIGRpcmVjdGx5IHJhdGhlciB0aGFuIGRlcGVuZCBv
-biBwYW5pY19vbl93YXJuLg0KDQpTaWduZWQtb2ZmLWJ5OiBZVCBDaGFuZyA8eXQuY2hhbmdAbWVk
-aWF0ZWsuY29tPg0KLS0tDQoga2VybmVsL3NjaGVkL2NvcmUuYyB8IDMgKy0tDQogMSBmaWxlIGNo
-YW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAyIGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEva2Vy
-bmVsL3NjaGVkL2NvcmUuYyBiL2tlcm5lbC9zY2hlZC9jb3JlLmMNCmluZGV4IDc4ODBmNGYuLjIx
-NGU4ZDggMTAwNjQ0DQotLS0gYS9rZXJuZWwvc2NoZWQvY29yZS5jDQorKysgYi9rZXJuZWwvc2No
-ZWQvY29yZS5jDQpAQCAtMzg2MSw5ICszODYxLDggQEAgc3RhdGljIG5vaW5saW5lIHZvaWQgX19z
-Y2hlZHVsZV9idWcoc3RydWN0IHRhc2tfc3RydWN0ICpwcmV2KQ0KIAkJcHJpbnRfaXBfc3ltKHBy
-ZWVtcHRfZGlzYWJsZV9pcCk7DQogCQlwcl9jb250KCJcbiIpOw0KIAl9DQotCWlmIChwYW5pY19v
-bl93YXJuKQ0KLQkJcGFuaWMoInNjaGVkdWxpbmcgd2hpbGUgYXRvbWljXG4iKTsNCiANCisJcGFu
-aWMoInNjaGVkdWxpbmcgd2hpbGUgYXRvbWljXG4iKTsNCiAJZHVtcF9zdGFjaygpOw0KIAlhZGRf
-dGFpbnQoVEFJTlRfV0FSTiwgTE9DS0RFUF9TVElMTF9PSyk7DQogfQ0KLS0gDQoxLjkuMQ0K
+Hi Michal,
+
+On 2019/11/15 21:36, Michal Hocko wrote:
+> On Fri 15-11-19 17:09:13, Shaokun Zhang wrote:
+> [...]
+>> Oh, my mistake, for the previous instance, I don't list all IRQs and
+>> just choose one IRQ from one NUMA node. You can see that the IRQ
+>> number is not consistent :-).
+>> IRQ from 345 to 368 will be bound to CPU cores which are in NUMA node2
+>> and each IRQ is corresponding to one core.
+>>
+> 
+> This is quite confusing then. I would suggest providing all IRQ used for
+
+node 0 cpus: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+node 0 size: 63379 MB
+node 0 free: 61899 MB
+node 1 cpus: 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47
+node 1 size: 64509 MB
+node 1 free: 63942 MB
+node 2 cpus: 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71
+node 2 size: 64509 MB
+node 2 free: 63056 MB
+node 3 cpus: 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95
+node 3 size: 63997 MB
+node 3 free: 63420 MB
+node distances:
+node   0   1   2   3
+  0:  10  16  32  33
+  1:  16  10  25  32
+  2:  32  25  10  16
+  3:  33  32  16  10
+
+Before the patch:
+/* I/O device is located on NUMA node2 */
+Euler:/sys/bus/pci/devices/0000:7d:00.2 # cat numa_node
+2
+Euler:/sys/bus/pci # cat /proc/irq/345/smp_affinity_list
+48
+Euler:/sys/bus/pci # cat /proc/irq/346/smp_affinity_list
+49
+.
+.
+.
+Euler:/sys/bus/pci # cat /proc/irq/367/smp_affinity_list
+70
+Euler:/sys/bus/pci # cat /proc/irq/368/smp_affinity_list
+71
+
+/* there we expect irq form 24 to 47 binding to node3 */
+Euler:/sys/bus/pci # cat /proc/irq/369/smp_affinity_list
+0
+Euler:/sys/bus/pci # cat /proc/irq/370/smp_affinity_list
+1
+.
+.
+.
+Euler:/sys/bus/pci # cat /proc/irq/391/smp_affinity_list
+22
+Euler:/sys/bus/pci # cat /proc/irq/392/smp_affinity_list
+23
+
+Euler:/sys/bus/pci # cat /proc/irq/393/smp_affinity_list
+24
+Euler:/sys/bus/pci # cat /proc/irq/394/smp_affinity_list
+25
+.
+.
+.
+/* There are total 64 irqs on eth IO device. */
+Euler:/sys/bus/pci # cat /proc/irq/407/smp_affinity_list
+38
+Euler:/sys/bus/pci # cat /proc/irq/408/smp_affinity_list
+39                              	
+Euler:/sys/bus/pci #
+
+After the patch:
+Euler:/sys/bus/pci/devices/0000:7d:00.2 # cat numa_node
+2
+
+Euler:/sys/bus/pci # cat /proc/irq/345/smp_affinity_list
+48
+Euler:/sys/bus/pci # cat /proc/irq/346/smp_affinity_list
+49
+.
+.
+.
+Euler:/sys/bus/pci # cat /proc/irq/367/smp_affinity_list
+70
+Euler:/sys/bus/pci # cat /proc/irq/368/smp_affinity_list
+71
+
+Euler:/sys/bus/pci # cat /proc/irq/369/smp_affinity_list
+72
+Euler:/sys/bus/pci # cat /proc/irq/370/smp_affinity_list
+73
+.
+.
+.
+Euler:/sys/bus/pci # cat /proc/irq/391/smp_affinity_list
+94
+Euler:/sys/bus/pci # cat /proc/irq/392/smp_affinity_list
+95
+/* when the cores of socket were used up, we choose the node which is closer to node 2
+before this patch choose the same node here is a coincident event*/
+Euler:/sys/bus/pci # cat /proc/irq/393/smp_affinity_list
+24
+Euler:/sys/bus/pci # cat /proc/irq/394/smp_affinity_list
+25
+.
+.
+.
+/* There are total 64 irqs on eth IO device. */
+Euler:/sys/bus/pci # cat /proc/irq/407/smp_affinity_list
+38
+Euler:/sys/bus/pci # cat /proc/irq/408/smp_affinity_list
+39
+Euler:/sys/bus/pci #
+
+Thanks,
+Shaokun
+
+> the device with the specific node affinity to see the difference in the
+> setup.
+> 
 
