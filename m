@@ -2,108 +2,146 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6743BC33C9C
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:14:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 877ACC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:14:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40B8A2089D
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:14:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F0F6206CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:14:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="gYhCPNg9"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="CWKQRgVh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726822AbfKUKOh (ORCPT
+        id S1726983AbfKUKOy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 05:14:37 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:40551 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726634AbfKUKOf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 05:14:35 -0500
-Received: by mail-wm1-f66.google.com with SMTP id y5so2983366wmi.5
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 02:14:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=FduBAwwMEHW84QfHh6b1tdX58pVww+y/7cRWB+UMkbY=;
-        b=gYhCPNg9B4NLAQ6K7VLo0nzzDQaInJM7Hf864FAuXqZfI2Jc1yLh9PMQiTaLmNB+mV
-         EqT7xwT8uNA1ntizSXNTpAnY/17baf4nfFyRH1jHSYu4nNpsy0nZ/rWyrX4HbdwvXqLM
-         sH6VOkZNct+q1ZT2V5TDE1zLeVuuGlrzP3CCifoDSNgCrhVNyHOgs4w9VaL6jdFATevZ
-         BkYePMw7gyVJ62maxFfsNFBQiRdxH5VZGKPaAqU527vISy8VTa1HYfES4DwNdbGutEe1
-         /QMpVdOXWkV0U48snGckdcUmiuUye7GRqbqyM+Nq4K1NBdj2P9nb6OBH46AZ3hvYi4PR
-         en9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=FduBAwwMEHW84QfHh6b1tdX58pVww+y/7cRWB+UMkbY=;
-        b=Tso0/mmdj6/X+px5APXxj0KgdwWVdIZ9UAMmHm5TQgsMegPhTn+IBBJL8UcM8Mrev0
-         pkHSpa5yN+pI8FLftVT97U5HJG401l4096gHjjoK9+MVbrThijzq8Fd7ggxmmE/R8vx4
-         L7gVFM6fec5G9jzLHZevmfIHSr/L+vtHIE5P74e6PpgVugJQDjmtDJI3ge2YEyUDutBz
-         OjIw9GU2P40G/9x9or8ZKNs9GylG69J7v4cUPJGahYZ3xXTltT5iBTHeyd6iK+MMNVAs
-         eKL9cxH8hR6pWP77l450BYVGkvXtu9xKs3hNk/TAziIKdvYl/qt+PEXGdjoHsY/iqWTj
-         zItQ==
-X-Gm-Message-State: APjAAAUbz2lMbEJUMlRMglAT6LqHTN7Rs0k1v9UhqpDZT6qBs9siBY1h
-        3RYg1rH74hhLoghmhGHMnlg5aw==
-X-Google-Smtp-Source: APXvYqzdsV8tU3MpgnNLOKLPCEPdCdfdteZK2zsom+LUvNxzOUhXlYOv4B+zASrT6qXl8f+2fDeuiA==
-X-Received: by 2002:a05:600c:296:: with SMTP id 22mr8886475wmk.155.1574331272221;
-        Thu, 21 Nov 2019 02:14:32 -0800 (PST)
-Received: from bender.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id o21sm1289932wmc.17.2019.11.21.02.14.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Nov 2019 02:14:31 -0800 (PST)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     mjourdan@baylibre.com, devicetree@vger.kernel.org
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] dt-bindings: media: amlogic,gx-vdec: add bindings for SM1 family
-Date:   Thu, 21 Nov 2019 11:14:27 +0100
-Message-Id: <20191121101429.23831-2-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20191121101429.23831-1-narmstrong@baylibre.com>
-References: <20191121101429.23831-1-narmstrong@baylibre.com>
+        Thu, 21 Nov 2019 05:14:54 -0500
+Received: from mout.gmx.net ([212.227.15.18]:49805 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726948AbfKUKOx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 05:14:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1574331269;
+        bh=ZWabn5cPEZdM/dU9k7wTedMC47TS5i2tDFXWn60+DOs=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=CWKQRgVhuOIUhCNpJUY3dP41+GKdPHtHldjxJ1DvtdOEyZjH1/Mi+/G76Hfrijjb7
+         zoHRD4yikNARTFY+9FAqGXjCYHcw8zbzQxPKcZSH/0GcZ+it0ZmyH4MDrutWuTu4kB
+         zye1MDAFNaLL11W8qpIY35e8yhEkSMw3Pt+c9eb8=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.1.176] ([37.4.249.139]) by mail.gmx.com (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1N5VDE-1hn2lC4AWo-016tzL; Thu, 21
+ Nov 2019 11:14:29 +0100
+Subject: Re: [PATCH v3 0/4] Raspberry Pi 4 HWRNG Support
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Stephen Brennan <stephen@brennan.io>
+Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Scott Branden <sbranden@broadcom.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, Ray Jui <rjui@broadcom.com>,
+        Eric Anholt <eric@anholt.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, linux-crypto@vger.kernel.org,
+        Matt Mackall <mpm@selenic.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rpi-kernel@lists.infradead.org
+References: <20191120031622.88949-1-stephen@brennan.io>
+ <99554159-6abb-6ea5-aebb-57a148a59b78@gmx.net>
+ <6aaa37d2cbe91c177b7be2d7f8aa3846efe3dc34.camel@suse.de>
+From:   Stefan Wahren <wahrenst@gmx.net>
+Message-ID: <79995d88-ad9c-e2cc-3f79-0fc9cf8352d2@gmx.net>
+Date:   Thu, 21 Nov 2019 11:14:25 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <6aaa37d2cbe91c177b7be2d7f8aa3846efe3dc34.camel@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Provags-ID: V03:K1:oeIJr8IJyuJ/vS51pMEcSu7Yj39vWst+y+r9CPsXWP7HunwteIc
+ egP5Y8cxeEiRXU4LvKDlX/9esGv2STZa/M/Q7404ZUthVaybzTLQLFi4tnQ2/AMGHQinzFa
+ A/kE0mGrtwiBGKZE+/3ZxYjKn2NR/+cwIWadtynSh2CnxuCjSn8cAqQNx2HX4OVjiTZL34z
+ OcWQPE/GGnLpp3QxQzdgQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:vn0z0Y9b/OQ=:KFcXAJndPuH1F9vw1xhnWE
+ ogT6+YtFfNMMJex53vqOrvjeTkqxvqEDCOmjmXuA7x9HdvyH+R3dkVxeA/h6cGVSgb+YESv0U
+ Jh+ZgANrfvCs4asrWXujNysoqmXEwi1cFg+o/q5G0ZKJ7DeaBL3qSHnrBFzXeiDHcTT7UKfu/
+ uoubAdDAWJ4M9YT2qQh1su1VBSa/HziBvFvRRVtTdeyNh3m5zKm3pZLbTkHXIJ1mow6vadeuV
+ 4zz2v5XZTav0n28BJqwW6lM7rLQFr/9bkTPEPhIsjF8rmlxRNk4UEZ7FbPMlJpz9+WSI6cn+9
+ jbScYxCFRoYRJ/GEbpd+f5rP1T+nuXIR5CpMg7lMqRoampgdzjBbzK7/ub897h3XIsSlc/VBZ
+ lm99I/aIlsNsnCE/XnrKoo4VIhYousiwvT5G/ZrVefLRvgouaDr98O+pBMJGYRN5Zmzlvicfd
+ co7/1M5WXwKqE4GU0A9P7GuPuDTKFPeSRjQdOkRBFGltfm4B0yG1qsoYjBR/V+kumCKAkTwi2
+ GH8D+EaxdiF5ubLN+WR+Njn1C7Z+xIAeglgfq6BuONF3HxSuOaY/lHGkpJNLLx41w3WfCA59T
+ qdEsLMONJ4qxFHXWH+xABpNqgu725FfOlAdm9Ovu4b5IkduS5ahvYRcY34ouhsYSe8N99ndYx
+ hJmNFpGhIYvLRz+k5r6smWWGht8TIRaCD3Tl1WbImosaYdj6jAQjhuCIc/Nv4uKWRb1O48D+C
+ oYQSj0fTUTRy9692QDfxV8qbbHpRqdovHkWax5mGZ6tSIymGVSdemAZQJLeweMg0yaKR9fyo1
+ dBOcMFzVnzEYy36vyqJsXTyhsaa91Jn8pNf8X055SXruU8eANLqzTMW2DFPrc2IEcgUmoqsFg
+ mEvo/1IU0lP98GfQ5grsqEHoVXuFVAgOTExTCd40jTsUfn0x8WTPJjCq7nvYodn01xOonsauY
+ LpQ2v0+1oCu5AhgxHn2SjTyc+9w3siFlsV373D3BKgeJ32hD6HnXdy2BjfLvbG2P8sb8CXbTC
+ Q57gqNwV6a8cMX3NrdcppqCZ1PE+qXvd8Qladi6rKLM0rGrFnToukkd3qOPoqhsWMBhlu/wom
+ gRwajYI98pxl019XccgxkJ7xPk+uYMgrIc4cMFkHq5k49w6eph1jepbNOd8IYmCL1i4SHgb3R
+ WMEORmGvMXxlEkf0whZ7EdHCa4zrZeLQ+FixyOH7g6uw1eud0quCTufLmPLpmk/63AbrKxuXc
+ VqqDW2HlvkjOw/jLJcYYiGGMCnPBiP2NcQp+B6C9/cdOzZVcCggaokriGAKw=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add bindings to support the Amlogic Video Decoder on the Amlogic SM1 family.
+Hi,
 
-SM1 has a slightly different power management handling, thus needing a
-separate compatible.
+Am 20.11.19 um 20:50 schrieb Nicolas Saenz Julienne:
+> On Wed, 2019-11-20 at 17:16 +0100, Stefan Wahren wrote:
+>> Hi Stephen,
+>>
+>> Am 20.11.19 um 04:16 schrieb Stephen Brennan:
+>>> This patch series enables support for the HWRNG included on the Raspberry
+>>> Pi 4.  It is simply a rebase of Stefan's branch [1]. I went ahead and
+>>> tested this out on a Pi 4.  Prior to this patch series, attempting to use
+>>> the hwrng gives:
+>>>
+>>>     $ head -c 2 /dev/hwrng
+>>>     head: /dev/hwrng: Input/output error
+>>>
+>>> After this series, the same command gives two random bytes.
+>> just a note: a more expressive test would be running rngtest (package
+>> rng-tools) on this device.
+> Just had a go at it,
+>
+> root@rpi4:~# rngtest -c 1000 < /dev/hwrng
+> rngtest 2-unofficial-mt.14
+> Copyright (c) 2004 by Henrique de Moraes Holschuh
+> This is free software; see the source for copying conditions.  There is NO
+> warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+>
+> rngtest: starting FIPS tests...
+> rngtest: bits received from input: 20000032
+> rngtest: FIPS 140-2 successes: 998
+> rngtest: FIPS 140-2 failures: 2
+> rngtest: FIPS 140-2(2001-10-10) Monobit: 0
+> rngtest: FIPS 140-2(2001-10-10) Poker: 1
+> rngtest: FIPS 140-2(2001-10-10) Runs: 0
+> rngtest: FIPS 140-2(2001-10-10) Long run: 1
+> rngtest: FIPS 140-2(2001-10-10) Continuous run: 0
+> rngtest: input channel speed: (min=1.284; avg=113.786; max=126.213)Kibits/s
+> rngtest: FIPS tests speed: (min=17.122; avg=28.268; max=28.812)Mibits/s
+> rngtest: Program run time: 172323761 microseconds
+>
+> AFAIR (Arch wiki) some small failures are acceptable.
+>
+> Regards,
+> Nicolas
+>
+thanks for the results. AFAIR the downstream implementation [1] has a
+significant higher input speed. So there is possibly some room for
+optimizations later.
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- Documentation/devicetree/bindings/media/amlogic,gx-vdec.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+Regards
+Stefan
 
-diff --git a/Documentation/devicetree/bindings/media/amlogic,gx-vdec.yaml b/Documentation/devicetree/bindings/media/amlogic,gx-vdec.yaml
-index 8ea979bb97e6..a7ef69d02336 100644
---- a/Documentation/devicetree/bindings/media/amlogic,gx-vdec.yaml
-+++ b/Documentation/devicetree/bindings/media/amlogic,gx-vdec.yaml
-@@ -36,6 +36,7 @@ properties:
-         - const: amlogic,gx-vdec
-       - enum:
-         - amlogic,g12a-vdec # G12A (S905X2, S905D2)
-+        - amlogic,sm1-vdec # SM1 (S905X3, S905D3)
- 
-   interrupts:
-     minItems: 2
-@@ -100,6 +101,7 @@ allOf:
-           contains:
-             enum:
-               - amlogic,g12a-vdec
-+              - amlogic,sm1-vdec
- 
-     then:
-       properties:
--- 
-2.22.0
+[1] -
+https://github.com/raspberrypi/linux/commit/5e74aadfd1e0e6c00994521863ba044ce25b40de
 
