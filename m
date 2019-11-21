@@ -2,190 +2,105 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ADDFC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:25:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 265D5C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:28:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52FF52075A
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:25:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574306715;
-	bh=NQZEd8v97Kx8SQRm2lC/02RuQn2Hi0S1xJaELXyodjA=;
-	h=From:To:Subject:Date:List-ID:From;
-	b=2dX5WRAloEQZbsGnQevEeTzClwMwXqBMF8evshgKKF7OtP/fUvJ6jccUwBmuk4kBu
-	 FNmSQ0e9rp8o2H+PZf+Mnv6sPOzNbuIytB/3AIbIadRagYXh4jZ85StarVa+mCncG6
-	 FjQIvtR8PajnHNVvp8ta6a8/ZEPL3Z+GIJ+QjhFE=
+	by mail.kernel.org (Postfix) with ESMTP id EBA9C20898
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:28:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="HgFJWqMu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbfKUDZO (ORCPT
+        id S1726333AbfKUD2i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 22:25:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37548 "EHLO mail.kernel.org"
+        Wed, 20 Nov 2019 22:28:38 -0500
+Received: from ozlabs.org ([203.11.71.1]:55439 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725936AbfKUDZM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 22:25:12 -0500
-Received: from PC-kkoz.proceq.com (unknown [213.160.61.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        id S1725819AbfKUD2i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 22:28:38 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B452B20721;
-        Thu, 21 Nov 2019 03:25:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574306711;
-        bh=NQZEd8v97Kx8SQRm2lC/02RuQn2Hi0S1xJaELXyodjA=;
-        h=From:To:Subject:Date:From;
-        b=tjuF777b81OZLTIAEISe06O6iDt7pAlIM62+iBtTa7iDAgoQaOeOYqiwRledc6MmZ
-         SYGM0S2jQSfuxk4O+A15KLBbZ0pASLcDvEf0naZPGQu0FGiAxkuAUxLhlb4j9obI2X
-         zqkjvTESFPubj46tdActXy/4psdWpw6I5odTw+9I=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Jiri Kosina <trivial@kernel.org>, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        kvm@vger.kernel.org
-Subject: [PATCH] virt: Fix Kconfig indentation
-Date:   Thu, 21 Nov 2019 04:25:02 +0100
-Message-Id: <1574306702-7834-1-git-send-email-krzk@kernel.org>
-X-Mailer: git-send-email 2.7.4
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47JQ4x62H0z9sNx;
+        Thu, 21 Nov 2019 14:28:33 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1574306915;
+        bh=Mvq90HaeaI0x9DRfRjhhop6y3CYj6tXKi2H4KwQK4jQ=;
+        h=Date:From:To:Cc:Subject:From;
+        b=HgFJWqMuaMVmRcsjKRSyNDBekV/0M7aoKlC15Vx4Gq5rcW8pMsHO9Xe+w/MQUcZgQ
+         YdM8UhalBEJ903R9BKeaFJ5AyeOqCX0k8uXw3ttrt9OlBmIb5MY86txhwGFWa4TTqr
+         6eP09ff50DaYCUGJI+TfpSJ9ShNhi5HQomDiRrcRc/8Wxd9X+jM/DgHhZYiqGlJ4TX
+         hVLo7tm3zaCq2oQOzgBWL+B4q3nG9Gp7QyJDvCfPycwXej+qV4orBGfCpWuy5lWDDD
+         k8p4As6Ae0VSB2D7BNVCc71JNlx0J9a4RdtUvq0UjtB50sLQ2rkkRSrs3PrpSp1qmQ
+         ttz22/ySJdegg==
+Date:   Thu, 21 Nov 2019 14:28:33 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Chuck Lever <chuck.lever@oracle.com>
+Subject: linux-next: manual merge of the tip tree with the nfsd tree
+Message-ID: <20191121142833.2c9ffd62@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/244Syx9z7RddCIKTXoxFf7G";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adjust indentation from spaces to tab (+optional two spaces) as in
-coding style with command like:
-	$ sed -e 's/^        /\t/' -i */Kconfig
+--Sig_/244Syx9z7RddCIKTXoxFf7G
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Hi all,
 
----
+Today's linux-next merge of the tip tree got a conflict in:
 
-Changes since v1:
-1. Fix also 7-space and tab+1 space indentation issues.
----
- drivers/virt/Kconfig | 10 +++++-----
- virt/kvm/Kconfig     | 42 +++++++++++++++++++++---------------------
- 2 files changed, 26 insertions(+), 26 deletions(-)
+  include/trace/events/rpcrdma.h
 
-diff --git a/drivers/virt/Kconfig b/drivers/virt/Kconfig
-index 363af2eaf2ba..cb5d2d89592f 100644
---- a/drivers/virt/Kconfig
-+++ b/drivers/virt/Kconfig
-@@ -18,17 +18,17 @@ config FSL_HV_MANAGER
- 	depends on FSL_SOC
- 	select EPAPR_PARAVIRT
- 	help
--          The Freescale hypervisor management driver provides several services
-+	  The Freescale hypervisor management driver provides several services
- 	  to drivers and applications related to the Freescale hypervisor:
- 
--          1) An ioctl interface for querying and managing partitions.
-+	  1) An ioctl interface for querying and managing partitions.
- 
--          2) A file interface to reading incoming doorbells.
-+	  2) A file interface to reading incoming doorbells.
- 
--          3) An interrupt handler for shutting down the partition upon
-+	  3) An interrupt handler for shutting down the partition upon
- 	     receiving the shutdown doorbell from a manager partition.
- 
--          4) A kernel interface for receiving callbacks when a managed
-+	  4) A kernel interface for receiving callbacks when a managed
- 	     partition shuts down.
- 
- source "drivers/virt/vboxguest/Kconfig"
-diff --git a/virt/kvm/Kconfig b/virt/kvm/Kconfig
-index aad9284c043a..5f4184ecf1cf 100644
---- a/virt/kvm/Kconfig
-+++ b/virt/kvm/Kconfig
-@@ -2,61 +2,61 @@
- # KVM common configuration items and defaults
- 
- config HAVE_KVM
--       bool
-+	bool
- 
- config HAVE_KVM_IRQCHIP
--       bool
-+	bool
- 
- config HAVE_KVM_IRQFD
--       bool
-+	bool
- 
- config HAVE_KVM_IRQ_ROUTING
--       bool
-+	bool
- 
- config HAVE_KVM_EVENTFD
--       bool
--       select EVENTFD
-+	bool
-+	select EVENTFD
- 
- config KVM_MMIO
--       bool
-+	bool
- 
- config KVM_ASYNC_PF
--       bool
-+	bool
- 
- # Toggle to switch between direct notification and batch job
- config KVM_ASYNC_PF_SYNC
--       bool
-+	bool
- 
- config HAVE_KVM_MSI
--       bool
-+	bool
- 
- config HAVE_KVM_CPU_RELAX_INTERCEPT
--       bool
-+	bool
- 
- config KVM_VFIO
--       bool
-+	bool
- 
- config HAVE_KVM_ARCH_TLB_FLUSH_ALL
--       bool
-+	bool
- 
- config HAVE_KVM_INVALID_WAKEUPS
--       bool
-+	bool
- 
- config KVM_GENERIC_DIRTYLOG_READ_PROTECT
--       bool
-+	bool
- 
- config KVM_COMPAT
--       def_bool y
--       depends on KVM && COMPAT && !(S390 || ARM64)
-+	def_bool y
-+	depends on KVM && COMPAT && !(S390 || ARM64)
- 
- config HAVE_KVM_IRQ_BYPASS
--       bool
-+	bool
- 
- config HAVE_KVM_VCPU_ASYNC_IOCTL
--       bool
-+	bool
- 
- config HAVE_KVM_VCPU_RUN_PID_CHANGE
--       bool
-+	bool
- 
- config HAVE_KVM_NO_POLL
--       bool
-+	bool
--- 
-2.7.4
+between commit:
 
+  832b2cb95543 ("svcrdma: Improve DMA mapping trace points")
+
+from the nfsd tree and commit:
+
+  60fdad00827c ("ftrace: Rework event_create_dir()")
+
+from the tip tree.
+
+I fixed it up (I just used the former) and can carry the fix as
+necessary. This is now fixed as far as linux-next is concerned, but any
+non trivial conflicts should be mentioned to your upstream maintainer
+when your tree is submitted for merging.  You may also want to consider
+cooperating with the maintainer of the conflicting tree to minimise any
+particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/244Syx9z7RddCIKTXoxFf7G
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3WBGEACgkQAVBC80lX
+0Gxg/gf9FuUbl7pHHEJhCN5peXYPr5XMRqlu34WmdrYdS0nbtwX+wxz/TVs8rq4I
+mqXPv7UNNSLhhQszinnd8ul8RJ884t3u7MNnE6oLbrHMdi89vNEchZuvo4sCsJpM
+1oqz/5bsYyd0C/gE1d7c7jXWptJ1Gfu+MWwT4+Hr34XlFLZ+wJFILz4td+mmsNz+
+tWFbPnthyV5AknC8X4o5o3/CDwmrPT57MYgT6osg5TaRvaUS8GyQ9XxmYmj408Ic
+xENtwavJvWmjGbcVyWnSmTzgX4xdP3u+k0xMmqlQ2t8ZGWBkPP9DdpG7YpU0RTQV
+4xxOkynbotQldvSx9QvGqmX9dMyv9Q==
+=JM1c
+-----END PGP SIGNATURE-----
+
+--Sig_/244Syx9z7RddCIKTXoxFf7G--
