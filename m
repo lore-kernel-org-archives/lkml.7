@@ -2,105 +2,136 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 265D5C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:28:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD6BC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:39:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBA9C20898
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:28:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A40542089D
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:39:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="HgFJWqMu"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="B3HCn4y8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726333AbfKUD2i (ORCPT
+        id S1726230AbfKUDji (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 22:28:38 -0500
-Received: from ozlabs.org ([203.11.71.1]:55439 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725819AbfKUD2i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 22:28:38 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47JQ4x62H0z9sNx;
-        Thu, 21 Nov 2019 14:28:33 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1574306915;
-        bh=Mvq90HaeaI0x9DRfRjhhop6y3CYj6tXKi2H4KwQK4jQ=;
-        h=Date:From:To:Cc:Subject:From;
-        b=HgFJWqMuaMVmRcsjKRSyNDBekV/0M7aoKlC15Vx4Gq5rcW8pMsHO9Xe+w/MQUcZgQ
-         YdM8UhalBEJ903R9BKeaFJ5AyeOqCX0k8uXw3ttrt9OlBmIb5MY86txhwGFWa4TTqr
-         6eP09ff50DaYCUGJI+TfpSJ9ShNhi5HQomDiRrcRc/8Wxd9X+jM/DgHhZYiqGlJ4TX
-         hVLo7tm3zaCq2oQOzgBWL+B4q3nG9Gp7QyJDvCfPycwXej+qV4orBGfCpWuy5lWDDD
-         k8p4As6Ae0VSB2D7BNVCc71JNlx0J9a4RdtUvq0UjtB50sLQ2rkkRSrs3PrpSp1qmQ
-         ttz22/ySJdegg==
-Date:   Thu, 21 Nov 2019 14:28:33 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Chuck Lever <chuck.lever@oracle.com>
-Subject: linux-next: manual merge of the tip tree with the nfsd tree
-Message-ID: <20191121142833.2c9ffd62@canb.auug.org.au>
+        Wed, 20 Nov 2019 22:39:38 -0500
+Received: from mailout1.samsung.com ([203.254.224.24]:58789 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725842AbfKUDji (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 22:39:38 -0500
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20191121033934epoutp0198b100bb173c376332d25c53883d71f6~ZEGX5tyth1341313413epoutp01t
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 03:39:34 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20191121033934epoutp0198b100bb173c376332d25c53883d71f6~ZEGX5tyth1341313413epoutp01t
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1574307574;
+        bh=uQNbH50lNFfugAkg2yFVCKuYW7I5kKvXlaRcbbWS5PE=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=B3HCn4y85BRIz8YqC98ZJyfPmR5Eopx8DxzsZ0pcbwZv23nj1Sy8MBZLJPEwq8ALn
+         NIImVF3JPw2rgrBY0Dc2Iaao1yktrXJcYt+X4r85+4x9sHXAL4qNHXX3ZwQODOAm8E
+         JuIJ/wGZiB1Sin8lGdBtKIBM/rzEzYOFJh1s0RNs=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+        20191121033934epcas1p453727c81c1517e448da6431e4b29b161~ZEGXMrETe2622126221epcas1p4R;
+        Thu, 21 Nov 2019 03:39:34 +0000 (GMT)
+Received: from epsmges1p4.samsung.com (unknown [182.195.40.161]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 47JQKd21fpzMqYkd; Thu, 21 Nov
+        2019 03:39:33 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        CA.B1.04406.3F606DD5; Thu, 21 Nov 2019 12:39:31 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20191121033930epcas1p221152c49adc0bcc2a8d2664515dbcbd3~ZEGT5sI0q2663826638epcas1p2a;
+        Thu, 21 Nov 2019 03:39:30 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20191121033930epsmtrp125cd19ce6e3661c38e62fd26d702e51c~ZEGT5Ba2z1812818128epsmtrp1O;
+        Thu, 21 Nov 2019 03:39:30 +0000 (GMT)
+X-AuditID: b6c32a38-95fff70000001136-d5-5dd606f3a6b4
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        12.AF.03814.2F606DD5; Thu, 21 Nov 2019 12:39:30 +0900 (KST)
+Received: from DONAMJAEJEO06 (unknown [10.88.104.63]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20191121033930epsmtip2d8a298d0e2e602ae24814c235b2b4700~ZEGTwHdHB0367903679epsmtip2g;
+        Thu, 21 Nov 2019 03:39:30 +0000 (GMT)
+From:   "Namjae Jeon" <namjae.jeon@samsung.com>
+To:     =?windows-1257?Q?'Valdis_Kl=E7tnieks'?= <valdis.kletnieks@vt.edu>
+Cc:     "'Nikolay Borisov'" <nborisov@suse.com>,
+        <gregkh@linuxfoundation.org>, <hch@lst.de>, <linkinjeon@gmail.com>,
+        <Markus.Elfring@web.de>, <sj1557.seo@samsung.com>,
+        <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>
+In-Reply-To: <87255.1574306312@turing-police>
+Subject: RE: [PATCH v2 05/13] exfat: add file operations
+Date:   Thu, 21 Nov 2019 12:39:30 +0900
+Message-ID: <010201d5a01d$48493270$d8db9750$@samsung.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/244Syx9z7RddCIKTXoxFf7G";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset="windows-1257"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 14.0
+Content-Language: ko
+Thread-Index: AQEo1XJlLzywHhHshRBLsQkFEP9+bwE2rzOUAX+3+6QCnhKN6gFMKmQnAnC4oSSopgQxUA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Tf0hTURTHu3tvb2/R4rWsDpNqvTJKWO41Z89qEfSDUUJSEWGIvfTprO1t
+        7U3J+keyZkloUotcSj+kKAuMNDXTtrQI+2FkvzBTi6IflqmzsjCqzbdi/33uued77vecey+J
+        qZsJDZktuHinwFlpYjxe1zpfpxsmnqXqm0sptqCymmAvXLwtY593v8DYpuY2nH3cWE6wf7zv
+        5eyfz/twtvb3LTnbMTCIL1ear3m7FWZfxSWF+XpnPmEurq1C5urap7h5+MoMc0v9Z8Lc9a4O
+        TyZTrEstPJfBO7W8kG7PyBayTPTaDWkr0owJekbHJLKLaK3A2XgTvTIpWbc62xr0R2tzOWtO
+        MJTMiSIdt2yp057j4rUWu+gy0bwjw+pg9I4FImcTc4SsBel222JGr19oDGZutVp6igdwx0/Z
+        rpvPbsny0VFZEVKSQMXDSNu5MVZTDQj8pVuL0PggBxC883hwafEdgae68b/ixaefhLTRjODq
+        6FlMkvch6GlPDDFB6eD3Lx8R4ihqFVS4C1BIgFEfEbReagyWJUllMKnLYwrhZIqF24VzQ+k4
+        FQPtnld4iFVUIhy+XhPmSdBW9naMMUoP/vtnkcQzob6/HJO8aaHhwadwPApOHHRjkoVNcHNv
+        DRayAFSJAnpLzxOSYCWUjR5DEk+Gvju1Cok18LHErQh5A2oPDPnC9Q8g+DBiktgAndWX5RLP
+        gmujFeFzJ8KXb4fkklQFB9xqKSUGijtawyOMhqLCQcVhRHsjOvNGdOaN6Mwb0c0phFehqbxD
+        tGXxIuOIj7zrK2js6cayDaipPakFUSSiJ6gs856mquVcrphna0FAYnSUqun5k1S1KoPL2807
+        7WnOHCsvtiBjcPKlmGZKuj34EQRXGmNcaDAY2PiERQlGAz1NRf54lKqmsjgXv4PnHbzzn05G
+        KjX5qJLxz/Br1BCzvFK+ZqBbk1lmeTTT81Lw5cb2REcfT/jatH1cXpQfqxS2nFSeiQukFBew
+        XwuHc/e/sVYFyG+ZJTcuJvb2Ne7HV21rD6z3uYf7M2fPuZc+WFJjz9t8mjqy5PW6O9OHuoeS
+        7z7u7awfIR/2k2VxOwNdDn35KwY2dtC4aOGYWMwpcn8B8MTEctADAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrOIsWRmVeSWpSXmKPExsWy7bCSvO4ntmuxBt92KVo0L17PZrFy9VEm
+        i+t3bzFb7Nl7ksXi8q45bBb/Zz1ntfj/poXFYsu/I6wWl95/YHHg9Ng56y67x/65a9g9dt9s
+        YPPo27KK0WP9lqssHp83yXkc2v6GzeP2s20sARxRXDYpqTmZZalF+nYJXBn3+t6zFPxkqjh4
+        7QhTA+MUpi5GTg4JAROJW69/snUxcnEICexmlNj9bQ0jREJa4tiJM8xdjBxAtrDE4cPFEDUv
+        GCW2zl7JDFLDJqAr8e/PfjYQW0TAVWJuWzNYL7PAR0aJq3s5IRr2MEncXnuQFWQQJ1DD7am2
+        IKawgIXE0XY1kHIWAVWJc1MfsIDYvAKWEhN2b4ayBSVOznzCAjHSSGJS53smCFteYvvbOcwQ
+        ZypI7Dj7GmqtiMTszjZmiHPCJA42bWaewCg8C8moWUhGzUIyahaS9gWMLKsYJVMLinPTc4sN
+        C4zyUsv1ihNzi0vz0vWS83M3MYKjT0trB+OJE/GHGAU4GJV4eDM0rsYKsSaWFVfmHmKU4GBW
+        EuHdc/1KrBBvSmJlVWpRfnxRaU5q8SFGaQ4WJXFe+fxjkUIC6YklqdmpqQWpRTBZJg5OqQbG
+        6U1HVRTfrdllevn9wdwvU39ZS/eKpbgeeO55pGO65q+nFrseP7/1/k/ZlxCXhT6rtVnflnaF
+        PGNIt28q7Ijq/SXkLvDrmOHqklvPLuz6opuWvDdmk18tV9hK14BjZeWrfSbrTzZJ0FVbPE9j
+        RbpR46cp7O4ajjc6CzNEt3JevCyh8i/KUeiVEktxRqKhFnNRcSIAhw2EQboCAAA=
+X-CMS-MailID: 20191121033930epcas1p221152c49adc0bcc2a8d2664515dbcbd3
+X-Msg-Generator: CA
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20191119071404epcas1p4f8df45690c07c4dd032af9cbfb5efcc6
+References: <20191119071107.1947-1-namjae.jeon@samsung.com>
+        <CGME20191119071404epcas1p4f8df45690c07c4dd032af9cbfb5efcc6@epcas1p4.samsung.com>
+        <20191119071107.1947-6-namjae.jeon@samsung.com>
+        <398eeca9-e59f-385b-791d-561e56567026@suse.com>
+        <00d201d5a00c$e6273ac0$b275b040$@samsung.com>
+        <87255.1574306312@turing-police>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/244Syx9z7RddCIKTXoxFf7G
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+> 
+> On Thu, 21 Nov 2019 10:42:13 +0900, "Namjae Jeon" said:
+> 
+> > > > +		if (clu.flags == 0x03) {
+> > >
+> > > That 0x03 is magic constant, better define actual flags and check
+> > > clu.flag == (FLAG1|FLAG2)
+> > Okay, Will fix it on v4.
+> 
+> Make sure you catch all the cases.  I seem to remember a lot of 0x01's
+> in the code as well....
+Yes, I know.
+Thanks!
 
-Hi all,
-
-Today's linux-next merge of the tip tree got a conflict in:
-
-  include/trace/events/rpcrdma.h
-
-between commit:
-
-  832b2cb95543 ("svcrdma: Improve DMA mapping trace points")
-
-from the nfsd tree and commit:
-
-  60fdad00827c ("ftrace: Rework event_create_dir()")
-
-from the tip tree.
-
-I fixed it up (I just used the former) and can carry the fix as
-necessary. This is now fixed as far as linux-next is concerned, but any
-non trivial conflicts should be mentioned to your upstream maintainer
-when your tree is submitted for merging.  You may also want to consider
-cooperating with the maintainer of the conflicting tree to minimise any
-particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/244Syx9z7RddCIKTXoxFf7G
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3WBGEACgkQAVBC80lX
-0Gxg/gf9FuUbl7pHHEJhCN5peXYPr5XMRqlu34WmdrYdS0nbtwX+wxz/TVs8rq4I
-mqXPv7UNNSLhhQszinnd8ul8RJ884t3u7MNnE6oLbrHMdi89vNEchZuvo4sCsJpM
-1oqz/5bsYyd0C/gE1d7c7jXWptJ1Gfu+MWwT4+Hr34XlFLZ+wJFILz4td+mmsNz+
-tWFbPnthyV5AknC8X4o5o3/CDwmrPT57MYgT6osg5TaRvaUS8GyQ9XxmYmj408Ic
-xENtwavJvWmjGbcVyWnSmTzgX4xdP3u+k0xMmqlQ2t8ZGWBkPP9DdpG7YpU0RTQV
-4xxOkynbotQldvSx9QvGqmX9dMyv9Q==
-=JM1c
------END PGP SIGNATURE-----
-
---Sig_/244Syx9z7RddCIKTXoxFf7G--
