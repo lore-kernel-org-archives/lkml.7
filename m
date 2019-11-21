@@ -2,83 +2,56 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D620C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 17:14:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03735C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 17:16:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 468A2206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 17:14:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF05A206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 17:16:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PXTQz/+H"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="VGaFauFc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727425AbfKUROl (ORCPT
+        id S1726947AbfKURQ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 12:14:41 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:34374 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726563AbfKUROk (ORCPT
+        Thu, 21 Nov 2019 12:16:28 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:34234 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726541AbfKURQ2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 12:14:40 -0500
-Received: by mail-lf1-f65.google.com with SMTP id l28so3287250lfj.1;
-        Thu, 21 Nov 2019 09:14:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=cAzhUxhbi0ipJJRlq7LEPrGywJG5HkdxE06SxVESVKU=;
-        b=PXTQz/+Hd1s0CfRFTJDfyk4lkxAwzEQmZwcZZUy9l91K9JI/XZfGPbFhBdnt5WVooS
-         df2ySPhZBMZoQsNlxicqFixYOg9eiDRQcpBqB0rDmPCDWwflyXiLf3kOJs37sGuoADnl
-         SxAF5+GVCBpludbWA/oTghn5Z0/D5IT+q5rEIraqu3CY7AIcUqkZFRkYHO096ViBly50
-         Ru4c/1mhi5dsBboNqrLLr5LyBMkY3ZT8pK1B90JtQCOr+kgNrtxENg+n3RWLUMmIRfGr
-         vFY9PwdyXdEqQ9agz0Rj7R0mQBfIGQ4wxznDrQKmvdqpSgLh+hT0FZKl/X5VfHHLdWZS
-         WXzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=cAzhUxhbi0ipJJRlq7LEPrGywJG5HkdxE06SxVESVKU=;
-        b=Tck4EqklIx6OYyMO8Iv+00FhxZMM2BCUdJAdfLw0iJbHZ15p+P1dBdJxz2YZOtivfi
-         ThAfN7GqeDAh/Ebhe4KiFW3D3DR0X7nPQQGz5zoy1GkpdfS9i9oA9nMKo/dgE+8YdnAo
-         OGdZI74wvKtJa0t9YTQKJzdZvG7VKwaJUi1bRuH0A4b6qFmXPLArb6A0QD6i5DzdmiyR
-         ACiknQeM/uyH8eeQ3KYTPZBgt7mOzgXZUh92NlmRwSzQOSOP06cow0s8KP+tqRQwA8T5
-         fJSCaKjgR98doO7eCQvgfOXbiwhSJlTkfCaDHf889rILz4qSH9auxllzTrpTwLBEj94a
-         aC0A==
-X-Gm-Message-State: APjAAAU8COqpFSrcBIg8zTAoBV6PPsCYN2UVhOZsj346GDvtT0g1uJNe
-        OgrpHRNNgi7jJGMEaquZpoCxQ6W6
-X-Google-Smtp-Source: APXvYqwWYb4yZPpewD8z8jU6llJI5iWJWK6txjiQJN0ChqrVUrDu6k8kR6SO8R5t194m7diWfvyJjg==
-X-Received: by 2002:ac2:4c3b:: with SMTP id u27mr8918560lfq.131.1574356477219;
-        Thu, 21 Nov 2019 09:14:37 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id z19sm1583151ljk.66.2019.11.21.09.14.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 Nov 2019 09:14:36 -0800 (PST)
-Subject: Re: [PATCH v1 08/29] dt-bindings: interconnect: tegra: Add initial
- IDs
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Mikko Perttunen <mperttunen@nvidia.com>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-tegra@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-References: <20191118200247.3567-1-digetx@gmail.com>
- <20191118200247.3567-9-digetx@gmail.com> <20191119062535.GC2462695@ulmo>
- <8cff3af3-42c7-3312-5f98-cd5eb98b7b7a@gmail.com>
-Message-ID: <f0f36176-8070-08a6-a61f-77221d916f04@gmail.com>
-Date:   Thu, 21 Nov 2019 20:14:35 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Thu, 21 Nov 2019 12:16:28 -0500
+Received: from [10.137.112.108] (unknown [131.107.174.108])
+        by linux.microsoft.com (Postfix) with ESMTPSA id B562520B7185;
+        Thu, 21 Nov 2019 09:16:27 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B562520B7185
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1574356587;
+        bh=qat8oBu3lTpPZCIADeKrXEqOEeEglX6sCbk/08Ye0xY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=VGaFauFcEmscLAjXlvBoPG6FNb9b6UeymvFXF+EQpSkm8a204R9K5/dRwB8i7ByXO
+         IPsj4qI/xFmN+MsLo+Z3rItTS07qprkf6SicjtbaE0kiOckYtSZ20ADfNFi8GRuDnG
+         Y/loVCfZiNEAxN1oRlrt1AB467Af9y5pmeeAPo1Y=
+Subject: Re: [PATCH v8 2/5] IMA: Define an IMA hook to measure keys
+To:     Mimi Zohar <zohar@linux.ibm.com>,
+        Eric Snowberg <eric.snowberg@oracle.com>
+Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        keyrings@vger.kernel.org
+References: <20191118223818.3353-1-nramas@linux.microsoft.com>
+ <20191118223818.3353-3-nramas@linux.microsoft.com>
+ <ED63593E-BE9B-40B7-B7FD-9DE772DC2EB1@oracle.com>
+ <98eeec95-cc19-2900-b96e-eadaac1b4a68@linux.microsoft.com>
+ <1574299330.4793.158.camel@linux.ibm.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <2dfe3a9b-8a24-5da4-f889-9ac3db44c50b@linux.microsoft.com>
+Date:   Thu, 21 Nov 2019 09:16:22 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <8cff3af3-42c7-3312-5f98-cd5eb98b7b7a@gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <1574299330.4793.158.camel@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -86,55 +59,21 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-19.11.2019 19:56, Dmitry Osipenko пишет:
-> 19.11.2019 09:25, Thierry Reding пишет:
->> On Mon, Nov 18, 2019 at 11:02:26PM +0300, Dmitry Osipenko wrote:
->>> Define interconnect IDs for memory controller (MC), external memory
->>> controller (EMC), external memory (EMEM) and memory clients of display
->>> controllers (DC).
->>>
->>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>> ---
->>>  include/dt-bindings/interconnect/tegra-icc.h | 11 +++++++++++
->>>  1 file changed, 11 insertions(+)
->>>  create mode 100644 include/dt-bindings/interconnect/tegra-icc.h
-> 
-> 
-> Hello Thierry,
-> 
->> There was a bit of discussion regarding this for a recent patch that I
->> was working on, see:
+On 11/20/19 5:22 PM, Mimi Zohar wrote:
+
+>> I had the following check in process_buffer_measurement() as part of my
+>> patch, but removed it since it is being upstreamed separately (by Mimi)
 >>
->> 	http://patchwork.ozlabs.org/project/linux-tegra/list/?series=140318
+>>    if (!ima_policy_flag)
+>>    	return;
 > 
-> Thank you very much for the link.
+> Did you post it as a separate patch?  I can't seem to find it.
 > 
->> I'd rather not use an additional set of definitions for this. The memory
->> controller already has a set of native IDs for memory clients that I
->> think we can reuse for this.
-> 
-> I missed that it's fine to have multiple ICC connections defined
-> per-path, at quick glance looks like indeed it should be fine to re-use
-> MC IDs.
-
-Well, it is not quite correct to have multiple connections per-path.
-
-Please take look at interconnect's binding and core.c:
-
-  1. there should be one src->dst connection per-path
-  2. each connection should comprise of one source and one destination nodes
-
->> I've only added these client IDs for Tegra194 because that's where we
->> need it to actually describe a specific hardware quirk, but I can come
->> up with the equivalent for older chips as well.
-> 
-> Older Tegra SoCs have hardware units connected to MC through AHB bus,
-> like USB for example. These units do not have MC client IDs and there is
-> no MC ID defined for the AHB bus either, but probably it won't be a
-> problem to define IDs for them if will be necessary.
+> Mimi
 > 
 
-Since interconnect binding requires to define both source and
-destination nodes for the path, then MC IDs are not enough in order to
-define interconnect path because these IDs represent only the source
-nodes. Destination node should be either EMC or EMEM.
+I have sent a separate patch with just this change (to check 
+ima_policy_flag in process_buffer_measurement()).
+
+thanks,
+  -lakshmi
