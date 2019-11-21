@@ -2,132 +2,70 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D0E0C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:17:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F01BCC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:18:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8025220872
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:17:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C81162089D
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:18:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726967AbfKULRt (ORCPT
+        id S1727004AbfKULSX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 06:17:49 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:15204 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726293AbfKULRs (ORCPT
+        Thu, 21 Nov 2019 06:18:23 -0500
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:37694 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726293AbfKULSX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 06:17:48 -0500
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xALBHQcl025931
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 06:17:48 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wd5gd7679-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 06:17:47 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Thu, 21 Nov 2019 11:17:44 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 21 Nov 2019 11:17:41 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xALBHejQ21823532
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 21 Nov 2019 11:17:40 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3937DA4051;
-        Thu, 21 Nov 2019 11:17:40 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2764DA4040;
-        Thu, 21 Nov 2019 11:17:40 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Thu, 21 Nov 2019 11:17:40 +0000 (GMT)
-Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 25651)
-        id C9B9EE0193; Thu, 21 Nov 2019 12:17:39 +0100 (CET)
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-To:     guro@fb.com
-Cc:     akpm@linux-foundation.org, hannes@cmpxchg.org, kernel-team@fb.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        longman@redhat.com, shakeelb@google.com, vdavydov.dev@gmail.com,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: WARNING bisected (was Re: [PATCH v7 08/10] mm: rework non-root kmem_cache lifecycle management)
-Date:   Thu, 21 Nov 2019 12:17:39 +0100
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190611231813.3148843-9-guro@fb.com>
-References: <20190611231813.3148843-9-guro@fb.com>
+        Thu, 21 Nov 2019 06:18:23 -0500
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id E397E3C0579;
+        Thu, 21 Nov 2019 12:18:21 +0100 (CET)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id j3j6zWReGeb2; Thu, 21 Nov 2019 12:18:17 +0100 (CET)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 00F4B3C0022;
+        Thu, 21 Nov 2019 12:18:17 +0100 (CET)
+Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Thu, 21 Nov
+ 2019 12:18:16 +0100
+Date:   Thu, 21 Nov 2019 12:18:13 +0100
+From:   Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+CC:     Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Jiada Wang <jiada_wang@mentor.com>,
+        Mark Brown <broonie@kernel.org>, <alsa-devel@alsa-project.org>,
+        <linux-kernel@vger.kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>,
+        Nilkanth Ahirrao <external.anilkanth@jp.adit-jv.com>,
+        Andrew Gabbasov <andrew_gabbasov@mentor.com>
+Subject: Re: [PATCH] ASoC: rsnd: fix DALIGN register for SSIU
+Message-ID: <20191121111813.GA11061@vmlxhi-102.adit-jv.com>
+References: <20191118140126.23596-1-erosca@de.adit-jv.com>
+ <8736ek7kx8.wl-kuninori.morimoto.gx@renesas.com>
+ <20191119104312.GA15556@vmlxhi-102.adit-jv.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19112111-0016-0000-0000-000002CA4DD7
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19112111-0017-0000-0000-0000332C1314
-Message-Id: <20191121111739.3054-1-borntraeger@de.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-21_02:2019-11-21,2019-11-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
- priorityscore=1501 mlxscore=0 clxscore=1011 impostorscore=0 spamscore=0
- lowpriorityscore=0 bulkscore=0 malwarescore=0 adultscore=0 mlxlogscore=357
- suspectscore=1 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1911210102
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20191119104312.GA15556@vmlxhi-102.adit-jv.com>
+User-Agent: Mutt/1.12.1+40 (7f8642d4ee82) (2019-06-28)
+X-Originating-IP: [10.72.93.184]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Folks,
+Superseded by v2:
+https://lore.kernel.org/alsa-devel/20191121111023.10976-1-erosca@de.adit-jv.com/
 
-I do get errors like the following when running a new testcase in our KVM CI.
-The test basically unloads kvm, reloads with with hpage=1 (enable huge page
-support for guests on s390) start a guest with libvirt and hugepages, shut the
-guest down and unload the kvm module. 
-
-WARNING: CPU: 8 PID: 208 at lib/percpu-refcount.c:108 percpu_ref_exit+0x50/0x58
-Modules linked in: kvm(-) xt_CHECKSUM xt_MASQUERADE bonding xt_tcpudp ip6t_rpfilter ip6t_REJECT nf_reject_ipv6 ipt_REJECT nf_reject_ipv4 xt_conntrack ip6table_na>
-CPU: 8 PID: 208 Comm: kworker/8:1 Not tainted 5.2.0+ #66
-Hardware name: IBM 2964 NC9 712 (LPAR)
-Workqueue: events sysfs_slab_remove_workfn
-Krnl PSW : 0704e00180000000 0000001529746850 (percpu_ref_exit+0x50/0x58)
-           R:0 T:1 IO:1 EX:1 Key:0 M:1 W:0 P:0 AS:3 CC:2 PM:0 RI:0 EA:3
-Krnl GPRS: 00000000ffff8808 0000001529746740 000003f4e30e8e18 0036008100000000
-           0000001f00000000 0035008100000000 0000001fb3573ab8 0000000000000000
-           0000001fbdb6de00 0000000000000000 0000001529f01328 0000001fb3573b00
-           0000001fbb27e000 0000001fbdb69300 000003e009263d00 000003e009263cd0
-Krnl Code: 0000001529746842: f0a0000407fe        srp        4(11,%r0),2046,0
-           0000001529746848: 47000700            bc         0,1792
-          #000000152974684c: a7f40001            brc        15,152974684e
-          >0000001529746850: a7f4fff2            brc        15,1529746834
-           0000001529746854: 0707                bcr        0,%r7
-           0000001529746856: 0707                bcr        0,%r7
-           0000001529746858: eb8ff0580024        stmg       %r8,%r15,88(%r15)
-           000000152974685e: a738ffff            lhi        %r3,-1
-Call Trace:
-([<000003e009263d00>] 0x3e009263d00)
- [<00000015293252ea>] slab_kmem_cache_release+0x3a/0x70 
- [<0000001529b04882>] kobject_put+0xaa/0xe8 
- [<000000152918cf28>] process_one_work+0x1e8/0x428 
- [<000000152918d1b0>] worker_thread+0x48/0x460 
- [<00000015291942c6>] kthread+0x126/0x160 
- [<0000001529b22344>] ret_from_fork+0x28/0x30 
- [<0000001529b2234c>] kernel_thread_starter+0x0/0x10 
-Last Breaking-Event-Address:
- [<000000152974684c>] percpu_ref_exit+0x4c/0x58
----[ end trace b035e7da5788eb09 ]---
-
-I have bisected this to
-# first bad commit: [f0a3a24b532d9a7e56a33c5112b2a212ed6ec580] mm: memcg/slab: rework non-root kmem_cache lifecycle management
-
-unmounting /sys/fs/cgroup/memory/ before the test makes the problem go away so
-it really seems to be related to the new percpu-refs from this patch.
- 
-Any ideas?
-
-Christian
-
+-- 
+Best Regards,
+Eugeniu
