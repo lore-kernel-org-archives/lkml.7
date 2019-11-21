@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACAF9C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:59:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D005C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73248208A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:59:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A67120855
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:59:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574337563;
-	bh=dSF5vqpDpckD1n1tH35vNdJJ6S6Ueq+laXO4oXdTDXA=;
+	s=default; t=1574337565;
+	bh=re/idHpzRZwn1LEe0L8fWvitauhmd8oGWhSorZXIQE8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WhtPI2zsEzZY09VGWc3AYa3lWP6RTkRDXsBytlZbSo72B3NNfNfHY0OXrP5z2MSgV
-	 +M/3DYodaSnJ47BSawZ1dt1rSjBAVIyqVRf42gKomiXW5PjKy6is7V+CsC/Z54TIfx
-	 EpV/I2Sez4yb7DuPV3jtcFnhkQfxVNHtBOwBvXns=
+	b=YZLaGXK+grD8bS1VHvJ+9UMXsWIOHWQMO878qFWvaa5/0f+rYOqJ3eHCfr2PBPbjN
+	 xiJItY1Am8xYgdZ+dVuOmqaWfP0e7PhKBP+fwcTnuJ0zJ4k8ibrxBpzZJefs2KnZJK
+	 I7SrrqCkxX60g4UaYmy2tKii19x3/VHpPHr8pq4E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727052AbfKUL7W (ORCPT
+        id S1727097AbfKUL7Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 06:59:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45806 "EHLO mail.kernel.org"
+        Thu, 21 Nov 2019 06:59:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726961AbfKUL7T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 06:59:19 -0500
+        id S1726833AbfKUL7V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 06:59:21 -0500
 Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4757A20855;
-        Thu, 21 Nov 2019 11:59:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6136F20872;
+        Thu, 21 Nov 2019 11:59:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574337557;
-        bh=dSF5vqpDpckD1n1tH35vNdJJ6S6Ueq+laXO4oXdTDXA=;
+        s=default; t=1574337559;
+        bh=re/idHpzRZwn1LEe0L8fWvitauhmd8oGWhSorZXIQE8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M6Kcx7uhE/UtwNrpboiL/Uz5M7qLrsbUkwIId5CuGxQMvUr7OHMXpndpqxdywD0//
-         /PuJKEF4egZ9Gm0jIvM6Ho/Hg7iqObEr4Bj4agzVBuLjMng2vJTCKc1ebI1596Sels
-         dzi+xcSHo+SqhQwitj7pLuDxQ+sGgtvKyrkOSHIM=
+        b=sepSRgah/+kSOkYc60zVqDi4VT6GUzT9JMmB//CNzHeOl4S2itVCUkqiQWUEDY+x7
+         Nh+sRPJokTXYtZCiiKZyFO5hQtIGtbVieEK9/5gN13IWDSaw+HqQmOmuyUG9k8mhbY
+         RBnsPJP04/Lpb+2Pf+CoTVKD8Qf6WZkQ5RSDZits=
 From:   Will Deacon <will@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Will Deacon <will@kernel.org>, Kees Cook <keescook@chromium.org>,
@@ -46,11 +46,10 @@ Cc:     Will Deacon <will@kernel.org>, Kees Cook <keescook@chromium.org>,
         Elena Reshetova <elena.reshetova@intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Jan Glauber <jglauber@marvell.com>
-Subject: [RESEND PATCH v4 05/10] lib/refcount: Improve performance of generic REFCOUNT_FULL code
-Date:   Thu, 21 Nov 2019 11:58:57 +0000
-Message-Id: <20191121115902.2551-6-will@kernel.org>
+        Hanjun Guo <guohanjun@huawei.com>
+Subject: [RESEND PATCH v4 06/10] lib/refcount: Move saturation warnings out of line
+Date:   Thu, 21 Nov 2019 11:58:58 +0000
+Message-Id: <20191121115902.2551-7-will@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191121115902.2551-1-will@kernel.org>
 References: <20191121115902.2551-1-will@kernel.org>
@@ -61,240 +60,151 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rewrite the generic REFCOUNT_FULL implementation so that the saturation
-point is moved to INT_MIN / 2. This allows us to defer the sanity checks
-until after the atomic operation, which removes many uses of cmpxchg()
-in favour of atomic_fetch_{add,sub}().
+Having the refcount saturation and warnings inline bloats the text,
+despite the fact that these paths should never be executed in normal
+operation.
 
-Some crude perf results obtained from lkdtm show substantially less
-overhead, despite the checking:
+Move the refcount saturation and warnings out of line to reduce the
+image size when refcount_t checking is enabled. Relative to an x86_64
+defconfig, the sizes reported by bloat-o-meter are:
 
- $ perf stat -r 3 -B -- echo {ATOMIC,REFCOUNT}_TIMING >/sys/kernel/debug/provoke-crash/DIRECT
+ # defconfig+REFCOUNT_FULL, inline saturation (i.e. before this patch)
+ Total: Before=14762076, After=14915442, chg +1.04%
 
- # arm64
- ATOMIC_TIMING:                                      46.50451 +- 0.00134 seconds time elapsed  ( +-  0.00% )
- REFCOUNT_TIMING (REFCOUNT_FULL, mainline):          77.57522 +- 0.00982 seconds time elapsed  ( +-  0.01% )
- REFCOUNT_TIMING (REFCOUNT_FULL, this series):       48.7181 +- 0.0256 seconds time elapsed  ( +-  0.05% )
+ # defconfig+REFCOUNT_FULL, out-of-line saturation (i.e. after this patch)
+ Total: Before=14762076, After=14835497, chg +0.50%
 
- # x86
- ATOMIC_TIMING:                                      31.6225 +- 0.0776 seconds time elapsed  ( +-  0.25% )
- REFCOUNT_TIMING (!REFCOUNT_FULL, mainline/x86 asm): 31.6689 +- 0.0901 seconds time elapsed  ( +-  0.28% )
- REFCOUNT_TIMING (REFCOUNT_FULL, mainline):          53.203 +- 0.138 seconds time elapsed  ( +-  0.26% )
- REFCOUNT_TIMING (REFCOUNT_FULL, this series):       31.7408 +- 0.0486 seconds time elapsed  ( +-  0.15% )
+A side-effect of this change is that we now only get one warning per
+refcount saturation type, rather than one per problematic call-site.
 
 Cc: Ingo Molnar <mingo@kernel.org>
 Cc: Elena Reshetova <elena.reshetova@intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Tested-by: Hanjun Guo <guohanjun@huawei.com>
-Tested-by: Jan Glauber <jglauber@marvell.com>
 Reviewed-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Will Deacon <will@kernel.org>
 ---
- include/linux/refcount.h | 131 ++++++++++++++++++++++-----------------
- 1 file changed, 75 insertions(+), 56 deletions(-)
+ include/linux/refcount.h | 39 ++++++++++++++++++++-------------------
+ lib/refcount.c           | 28 ++++++++++++++++++++++++++++
+ 2 files changed, 48 insertions(+), 19 deletions(-)
 
 diff --git a/include/linux/refcount.h b/include/linux/refcount.h
-index e719b5b1220e..e3b218d669ce 100644
+index e3b218d669ce..1cd0a876a789 100644
 --- a/include/linux/refcount.h
 +++ b/include/linux/refcount.h
-@@ -47,8 +47,8 @@ static inline unsigned int refcount_read(const refcount_t *r)
- #ifdef CONFIG_REFCOUNT_FULL
- #include <linux/bug.h>
+@@ -23,6 +23,16 @@ typedef struct refcount_struct {
  
--#define REFCOUNT_MAX		(UINT_MAX - 1)
--#define REFCOUNT_SATURATED	UINT_MAX
-+#define REFCOUNT_MAX		INT_MAX
-+#define REFCOUNT_SATURATED	(INT_MIN / 2)
+ #define REFCOUNT_INIT(n)	{ .refs = ATOMIC_INIT(n), }
  
- /*
-  * Variant of atomic_t specialized for reference counts.
-@@ -56,9 +56,47 @@ static inline unsigned int refcount_read(const refcount_t *r)
-  * The interface matches the atomic_t interface (to aid in porting) but only
-  * provides the few functions one should use for reference counting.
-  *
-- * It differs in that the counter saturates at REFCOUNT_SATURATED and will not
-- * move once there. This avoids wrapping the counter and causing 'spurious'
-- * use-after-free issues.
-+ * Saturation semantics
-+ * ====================
-+ *
-+ * refcount_t differs from atomic_t in that the counter saturates at
-+ * REFCOUNT_SATURATED and will not move once there. This avoids wrapping the
-+ * counter and causing 'spurious' use-after-free issues. In order to avoid the
-+ * cost associated with introducing cmpxchg() loops into all of the saturating
-+ * operations, we temporarily allow the counter to take on an unchecked value
-+ * and then explicitly set it to REFCOUNT_SATURATED on detecting that underflow
-+ * or overflow has occurred. Although this is racy when multiple threads
-+ * access the refcount concurrently, by placing REFCOUNT_SATURATED roughly
-+ * equidistant from 0 and INT_MAX we minimise the scope for error:
-+ *
-+ * 	                           INT_MAX     REFCOUNT_SATURATED   UINT_MAX
-+ *   0                          (0x7fff_ffff)    (0xc000_0000)    (0xffff_ffff)
-+ *   +--------------------------------+----------------+----------------+
-+ *                                     <---------- bad value! ---------->
-+ *
-+ * (in a signed view of the world, the "bad value" range corresponds to
-+ * a negative counter value).
-+ *
-+ * As an example, consider a refcount_inc() operation that causes the counter
-+ * to overflow:
-+ *
-+ * 	int old = atomic_fetch_add_relaxed(r);
-+ *	// old is INT_MAX, refcount now INT_MIN (0x8000_0000)
-+ *	if (old < 0)
-+ *		atomic_set(r, REFCOUNT_SATURATED);
-+ *
-+ * If another thread also performs a refcount_inc() operation between the two
-+ * atomic operations, then the count will continue to edge closer to 0. If it
-+ * reaches a value of 1 before /any/ of the threads reset it to the saturated
-+ * value, then a concurrent refcount_dec_and_test() may erroneously free the
-+ * underlying object. Given the precise timing details involved with the
-+ * round-robin scheduling of each thread manipulating the refcount and the need
-+ * to hit the race multiple times in succession, there doesn't appear to be a
-+ * practical avenue of attack even if using refcount_add() operations with
-+ * larger increments.
-+ *
-+ * Memory ordering
-+ * ===============
-  *
-  * Memory ordering rules are slightly relaxed wrt regular atomic_t functions
-  * and provide only what is strictly required for refcounts.
-@@ -109,25 +147,19 @@ static inline unsigned int refcount_read(const refcount_t *r)
-  */
- static inline __must_check bool refcount_add_not_zero(int i, refcount_t *r)
- {
--	unsigned int new, val = atomic_read(&r->refs);
-+	int old = refcount_read(r);
- 
- 	do {
--		if (!val)
--			return false;
--
--		if (unlikely(val == REFCOUNT_SATURATED))
--			return true;
--
--		new = val + i;
--		if (new < val)
--			new = REFCOUNT_SATURATED;
-+		if (!old)
-+			break;
-+	} while (!atomic_try_cmpxchg_relaxed(&r->refs, &old, old + i));
- 
--	} while (!atomic_try_cmpxchg_relaxed(&r->refs, &val, new));
--
--	WARN_ONCE(new == REFCOUNT_SATURATED,
--		  "refcount_t: saturated; leaking memory.\n");
-+	if (unlikely(old < 0 || old + i < 0)) {
-+		refcount_set(r, REFCOUNT_SATURATED);
-+		WARN_ONCE(1, "refcount_t: saturated; leaking memory.\n");
-+	}
- 
--	return true;
-+	return old;
- }
- 
- /**
-@@ -148,7 +180,13 @@ static inline __must_check bool refcount_add_not_zero(int i, refcount_t *r)
-  */
- static inline void refcount_add(int i, refcount_t *r)
- {
--	WARN_ONCE(!refcount_add_not_zero(i, r), "refcount_t: addition on 0; use-after-free.\n");
-+	int old = atomic_fetch_add_relaxed(i, &r->refs);
++enum refcount_saturation_type {
++	REFCOUNT_ADD_NOT_ZERO_OVF,
++	REFCOUNT_ADD_OVF,
++	REFCOUNT_ADD_UAF,
++	REFCOUNT_SUB_UAF,
++	REFCOUNT_DEC_LEAK,
++};
 +
-+	WARN_ONCE(!old, "refcount_t: addition on 0; use-after-free.\n");
-+	if (unlikely(old <= 0 || old + i <= 0)) {
-+		refcount_set(r, REFCOUNT_SATURATED);
-+		WARN_ONCE(old, "refcount_t: saturated; leaking memory.\n");
-+	}
++void refcount_warn_saturate(refcount_t *r, enum refcount_saturation_type t);
++
+ /**
+  * refcount_set - set a refcount's value
+  * @r: the refcount
+@@ -154,10 +164,8 @@ static inline __must_check bool refcount_add_not_zero(int i, refcount_t *r)
+ 			break;
+ 	} while (!atomic_try_cmpxchg_relaxed(&r->refs, &old, old + i));
+ 
+-	if (unlikely(old < 0 || old + i < 0)) {
+-		refcount_set(r, REFCOUNT_SATURATED);
+-		WARN_ONCE(1, "refcount_t: saturated; leaking memory.\n");
+-	}
++	if (unlikely(old < 0 || old + i < 0))
++		refcount_warn_saturate(r, REFCOUNT_ADD_NOT_ZERO_OVF);
+ 
+ 	return old;
+ }
+@@ -182,11 +190,10 @@ static inline void refcount_add(int i, refcount_t *r)
+ {
+ 	int old = atomic_fetch_add_relaxed(i, &r->refs);
+ 
+-	WARN_ONCE(!old, "refcount_t: addition on 0; use-after-free.\n");
+-	if (unlikely(old <= 0 || old + i <= 0)) {
+-		refcount_set(r, REFCOUNT_SATURATED);
+-		WARN_ONCE(old, "refcount_t: saturated; leaking memory.\n");
+-	}
++	if (unlikely(!old))
++		refcount_warn_saturate(r, REFCOUNT_ADD_UAF);
++	else if (unlikely(old < 0 || old + i < 0))
++		refcount_warn_saturate(r, REFCOUNT_ADD_OVF);
  }
  
  /**
-@@ -166,23 +204,7 @@ static inline void refcount_add(int i, refcount_t *r)
-  */
- static inline __must_check bool refcount_inc_not_zero(refcount_t *r)
- {
--	unsigned int new, val = atomic_read(&r->refs);
--
--	do {
--		new = val + 1;
--
--		if (!val)
--			return false;
--
--		if (unlikely(!new))
--			return true;
--
--	} while (!atomic_try_cmpxchg_relaxed(&r->refs, &val, new));
--
--	WARN_ONCE(new == REFCOUNT_SATURATED,
--		  "refcount_t: saturated; leaking memory.\n");
--
--	return true;
-+	return refcount_add_not_zero(1, r);
- }
- 
- /**
-@@ -199,7 +221,7 @@ static inline __must_check bool refcount_inc_not_zero(refcount_t *r)
-  */
- static inline void refcount_inc(refcount_t *r)
- {
--	WARN_ONCE(!refcount_inc_not_zero(r), "refcount_t: increment on 0; use-after-free.\n");
-+	refcount_add(1, r);
- }
- 
- /**
-@@ -224,26 +246,19 @@ static inline void refcount_inc(refcount_t *r)
-  */
- static inline __must_check bool refcount_sub_and_test(int i, refcount_t *r)
- {
--	unsigned int new, val = atomic_read(&r->refs);
--
--	do {
--		if (unlikely(val == REFCOUNT_SATURATED))
--			return false;
-+	int old = atomic_fetch_sub_release(i, &r->refs);
- 
--		new = val - i;
--		if (new > val) {
--			WARN_ONCE(new > val, "refcount_t: underflow; use-after-free.\n");
--			return false;
--		}
--
--	} while (!atomic_try_cmpxchg_release(&r->refs, &val, new));
--
--	if (!new) {
-+	if (old == i) {
- 		smp_acquire__after_ctrl_dep();
+@@ -253,10 +260,8 @@ static inline __must_check bool refcount_sub_and_test(int i, refcount_t *r)
  		return true;
  	}
--	return false;
  
-+	if (unlikely(old < 0 || old - i < 0)) {
-+		refcount_set(r, REFCOUNT_SATURATED);
-+		WARN_ONCE(1, "refcount_t: underflow; use-after-free.\n");
-+	}
-+
-+	return false;
+-	if (unlikely(old < 0 || old - i < 0)) {
+-		refcount_set(r, REFCOUNT_SATURATED);
+-		WARN_ONCE(1, "refcount_t: underflow; use-after-free.\n");
+-	}
++	if (unlikely(old < 0 || old - i < 0))
++		refcount_warn_saturate(r, REFCOUNT_SUB_UAF);
+ 
+ 	return false;
  }
- 
- /**
-@@ -276,9 +291,13 @@ static inline __must_check bool refcount_dec_and_test(refcount_t *r)
+@@ -291,12 +296,8 @@ static inline __must_check bool refcount_dec_and_test(refcount_t *r)
   */
  static inline void refcount_dec(refcount_t *r)
  {
--	WARN_ONCE(refcount_dec_and_test(r), "refcount_t: decrement hit 0; leaking memory.\n");
--}
-+	int old = atomic_fetch_sub_release(1, &r->refs);
- 
-+	if (unlikely(old <= 1)) {
-+		refcount_set(r, REFCOUNT_SATURATED);
-+		WARN_ONCE(1, "refcount_t: decrement hit 0; leaking memory.\n");
-+	}
-+}
+-	int old = atomic_fetch_sub_release(1, &r->refs);
+-
+-	if (unlikely(old <= 1)) {
+-		refcount_set(r, REFCOUNT_SATURATED);
+-		WARN_ONCE(1, "refcount_t: decrement hit 0; leaking memory.\n");
+-	}
++	if (unlikely(atomic_fetch_sub_release(1, &r->refs) <= 1))
++		refcount_warn_saturate(r, REFCOUNT_DEC_LEAK);
+ }
  #else /* CONFIG_REFCOUNT_FULL */
  
- #define REFCOUNT_MAX		INT_MAX
+diff --git a/lib/refcount.c b/lib/refcount.c
+index 3a534fbebdcc..8b7e249c0e10 100644
+--- a/lib/refcount.c
++++ b/lib/refcount.c
+@@ -8,6 +8,34 @@
+ #include <linux/spinlock.h>
+ #include <linux/bug.h>
+ 
++#define REFCOUNT_WARN(str)	WARN_ONCE(1, "refcount_t: " str ".\n")
++
++void refcount_warn_saturate(refcount_t *r, enum refcount_saturation_type t)
++{
++	refcount_set(r, REFCOUNT_SATURATED);
++
++	switch (t) {
++	case REFCOUNT_ADD_NOT_ZERO_OVF:
++		REFCOUNT_WARN("saturated; leaking memory");
++		break;
++	case REFCOUNT_ADD_OVF:
++		REFCOUNT_WARN("saturated; leaking memory");
++		break;
++	case REFCOUNT_ADD_UAF:
++		REFCOUNT_WARN("addition on 0; use-after-free");
++		break;
++	case REFCOUNT_SUB_UAF:
++		REFCOUNT_WARN("underflow; use-after-free");
++		break;
++	case REFCOUNT_DEC_LEAK:
++		REFCOUNT_WARN("decrement hit 0; leaking memory");
++		break;
++	default:
++		REFCOUNT_WARN("unknown saturation event!?");
++	}
++}
++EXPORT_SYMBOL(refcount_warn_saturate);
++
+ /**
+  * refcount_dec_if_one - decrement a refcount if it is 1
+  * @r: the refcount
 -- 
 2.24.0.432.g9d3f5f5b63-goog
 
