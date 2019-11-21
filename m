@@ -5,39 +5,39 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A8E3C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 07:14:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91CD3C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 07:14:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1A6020898
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 07:14:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A36320872
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 07:14:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="l02+ePxv"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ae5eh6US"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727233AbfKUHOE (ORCPT
+        id S1727351AbfKUHOI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 02:14:04 -0500
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:4295 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727175AbfKUHOC (ORCPT
+        Thu, 21 Nov 2019 02:14:08 -0500
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:13095 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727175AbfKUHOF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 02:14:02 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dd639350002>; Wed, 20 Nov 2019 23:13:57 -0800
+        Thu, 21 Nov 2019 02:14:05 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dd6393b0000>; Wed, 20 Nov 2019 23:14:03 -0800
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 20 Nov 2019 23:13:56 -0800
+  Wed, 20 Nov 2019 23:14:00 -0800
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 20 Nov 2019 23:13:56 -0800
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 21 Nov
+        by hqpgpgate101.nvidia.com on Wed, 20 Nov 2019 23:14:00 -0800
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 21 Nov
  2019 07:13:56 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Thu, 21 Nov 2019 07:13:55 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Thu, 21 Nov 2019 07:13:56 +0000
 Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5dd63933000a>; Wed, 20 Nov 2019 23:13:55 -0800
+        id <B5dd639340005>; Wed, 20 Nov 2019 23:13:56 -0800
 From:   John Hubbard <jhubbard@nvidia.com>
 To:     Andrew Morton <akpm@linux-foundation.org>
 CC:     Al Viro <viro@zeniv.linux.org.uk>,
@@ -68,11 +68,10 @@ CC:     Al Viro <viro@zeniv.linux.org.uk>,
         <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
         <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
         <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Subject: [PATCH v7 08/24] media/v4l2-core: set pages dirty upon releasing DMA buffers
-Date:   Wed, 20 Nov 2019 23:13:38 -0800
-Message-ID: <20191121071354.456618-9-jhubbard@nvidia.com>
+        John Hubbard <jhubbard@nvidia.com>
+Subject: [PATCH v7 15/24] fs/io_uring: set FOLL_PIN via pin_user_pages()
+Date:   Wed, 20 Nov 2019 23:13:45 -0800
+Message-ID: <20191121071354.456618-16-jhubbard@nvidia.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20191121071354.456618-1-jhubbard@nvidia.com>
 References: <20191121071354.456618-1-jhubbard@nvidia.com>
@@ -81,54 +80,53 @@ X-NVConfidentiality: public
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1574320437; bh=baa1oHQC+1Mr0fCveGP8H7qjkYYEgQstEl5cvxrT4lI=;
+        t=1574320443; bh=/H9b+aFChAqx04E818JcymcP2r9Q91gVxUQ0f1y3FiI=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:MIME-Version:X-NVConfidentiality:
          Content-Transfer-Encoding:Content-Type;
-        b=l02+ePxvyNgAM8Jq9iVmvL89ZIGCWhL51aR8TLCdsj1IuxYjPgmcTTvEcClj+kdLG
-         yX0iZsvpJz11Jp/ma+4TLdhqCGe/biUJQLm1TzQc3ga1SDkp92M0QjeXtcDHUAbq8p
-         4eholacjz/7av+JG9AuYr08DNgvP+x98oMMiFLEPqwWjRxpz60A+fyLBAz1k1hAtKc
-         xNXlJ9sUI5XAZM7ZtwcMZynCfXg5lCwiGv13JlW9HmqOhR4T6/M1CAv6IQi84ZICFl
-         YOQiPFSfOZoS5jpUKNBMOJhfULQdszsViMhBSbqB4n4970ZOSd4O9UVriQ7pFPk/yY
-         oSuCMn2wZuTOQ==
+        b=ae5eh6USUeLSTBA3O+2eYU5oJ3XYCWbHe/Atk9InBjJQPAiJ2wQqIfoYw9wA8OMtn
+         h3do92KKTz0rl9Tepf6TWe96vAmLS338kH0quLHfmcbMtuCZuR2iXw8vZZvi1SPmjb
+         HltRLeLOAwa3jsD5QpzamQ67sDkFEXNsUDkn0lXposvPhEgLQuwo0s4fotTM5sLPRg
+         c60VUD+66DCi96WxpG6Z4X/QHJmppYMBgWg8Ghav1bAvtyAlpo5RFlealsnzwOYydQ
+         sHRYpoPL2ANz4vgyhxnqLGgOJ+X6yMO33VkURFctks1LV+tbHvRAqHkZR/Q/J6vgZT
+         0tUDHRblYyXuw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After DMA is complete, and the device and CPU caches are synchronized,
-it's still required to mark the CPU pages as dirty, if the data was
-coming from the device. However, this driver was just issuing a
-bare put_page() call, without any set_page_dirty*() call.
+Convert fs/io_uring to use the new pin_user_pages() call, which sets
+FOLL_PIN. Setting FOLL_PIN is now required for code that requires
+tracking of pinned pages, and therefore for any code that calls
+put_user_page().
 
-Fix the problem, by calling set_page_dirty_lock() if the CPU pages
-were potentially receiving data from the device.
+In partial anticipation of this work, the io_uring code was already
+calling put_user_page() instead of put_page(). Therefore, in order to
+convert from the get_user_pages()/put_page() model, to the
+pin_user_pages()/put_user_page() model, the only change required
+here is to change get_user_pages() to pin_user_pages().
 
-Acked-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Reviewed-by: Jens Axboe <axboe@kernel.dk>
+Reviewed-by: Jan Kara <jack@suse.cz>
 Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 ---
- drivers/media/v4l2-core/videobuf-dma-sg.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ fs/io_uring.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/v4l2-core/videobuf-dma-sg.c b/drivers/media/v4l2=
--core/videobuf-dma-sg.c
-index 66a6c6c236a7..28262190c3ab 100644
---- a/drivers/media/v4l2-core/videobuf-dma-sg.c
-+++ b/drivers/media/v4l2-core/videobuf-dma-sg.c
-@@ -349,8 +349,11 @@ int videobuf_dma_free(struct videobuf_dmabuf *dma)
- 	BUG_ON(dma->sglen);
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 2c819c3c855d..15715eeebaec 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -3449,7 +3449,7 @@ static int io_sqe_buffer_register(struct io_ring_ctx =
+*ctx, void __user *arg,
 =20
- 	if (dma->pages) {
--		for (i =3D 0; i < dma->nr_pages; i++)
-+		for (i =3D 0; i < dma->nr_pages; i++) {
-+			if (dma->direction =3D=3D DMA_FROM_DEVICE)
-+				set_page_dirty_lock(dma->pages[i]);
- 			put_page(dma->pages[i]);
-+		}
- 		kfree(dma->pages);
- 		dma->pages =3D NULL;
- 	}
+ 		ret =3D 0;
+ 		down_read(&current->mm->mmap_sem);
+-		pret =3D get_user_pages(ubuf, nr_pages,
++		pret =3D pin_user_pages(ubuf, nr_pages,
+ 				      FOLL_WRITE | FOLL_LONGTERM,
+ 				      pages, vmas);
+ 		if (pret =3D=3D nr_pages) {
 --=20
 2.24.0
 
