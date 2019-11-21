@@ -2,65 +2,98 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FBECC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 01:25:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB9FEC43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 01:27:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCFB220878
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 01:25:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87F7B20898
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 01:27:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574299660;
+	bh=R22Op0DeOX2LBrbP7cckMdDgBWRoMNkNLhX1uIRD5F0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=zRaCaSMALVVVdVlNfUbuYMuSXvDIDZZQjRVJeKlr5Tdbo1/PAUOt0TLac7eN/9p2k
+	 RYDaxYCQheuKhJV753sdCATBy8dMTh1ogYLd32q2G+kKCJofzqGDgXm94AZR9a4xsh
+	 6qHB46XU5Z2Z8dNtpdBh/iMcOqLI8hU07e9BKPRg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726803AbfKUBZt (ORCPT
+        id S1726765AbfKUB1j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 20:25:49 -0500
-Received: from helcar.hmeau.com ([216.24.177.18]:32924 "EHLO deadmen.hmeau.com"
+        Wed, 20 Nov 2019 20:27:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725819AbfKUBZt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 20:25:49 -0500
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1iXbE5-0005zr-FJ; Thu, 21 Nov 2019 09:25:41 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1iXbDx-0002KX-Bf; Thu, 21 Nov 2019 09:25:33 +0800
-Date:   Thu, 21 Nov 2019 09:25:33 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Will Deacon <will@kernel.org>
-Cc:     linux@armlinux.org.uk, torvalds@linux-foundation.org,
-        catalin.marinas@arm.com, vincent.whitchurch@axis.com,
-        axboe@kernel.dk, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, rabinv@axis.com,
-        Richard.Earnshaw@arm.com
-Subject: Re: [PATCH v2] buffer: Fix I/O error due to ARM read-after-read
- hazard
-Message-ID: <20191121012533.3h6akm4oczswj7zr@gondor.apana.org.au>
-References: <20191113104945.GC25900@willie-the-truck>
- <20191114132848.55atqtjshjmi2udl@gondor.apana.org.au>
- <20191120191839.GF4799@willie-the-truck>
+        id S1725819AbfKUB1j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 20:27:39 -0500
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A7B920898;
+        Thu, 21 Nov 2019 01:27:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574299658;
+        bh=R22Op0DeOX2LBrbP7cckMdDgBWRoMNkNLhX1uIRD5F0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=wE2IQ5OAY/1KErp65KA9zmFBjOLSjmEtUmphJIXe1FjaHxf1TQj7dlkU0XrQyFa7y
+         nrgue+jE0nOxEOBQc0eymSqqMe9BbPZ8ZIuXHNwVvOrVF5fSgLkc2Jcf58FHiQDnEy
+         yIAACPiyW+z66nBGhD+t86wNZXC+zUEsABeuG7H0=
+Received: by mail-lj1-f176.google.com with SMTP id d5so1292059ljl.4;
+        Wed, 20 Nov 2019 17:27:38 -0800 (PST)
+X-Gm-Message-State: APjAAAUDxLsErrAcWOq2melSLhtoVrT4HFEXQP0L+ChKxyZ9VG94bFcP
+        EYXIjvuNBWkjotgdZMa6Hf7mf0liSaYj2bHzIgU=
+X-Google-Smtp-Source: APXvYqzzC4/Fcn5mZhi9416C655teQ+R71jRODP7JGvSHDRSKX27QQZKpiWfBMhadkypvz5QsSQ19ELC6H8QXJSBa5o=
+X-Received: by 2002:a2e:9a55:: with SMTP id k21mr4599321ljj.85.1574299656479;
+ Wed, 20 Nov 2019 17:27:36 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191120191839.GF4799@willie-the-truck>
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <20191120134019.14333-1-krzk@kernel.org> <279930f8-7463-555a-2dce-7c50fec8067e@pengutronix.de>
+In-Reply-To: <279930f8-7463-555a-2dce-7c50fec8067e@pengutronix.de>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Thu, 21 Nov 2019 09:27:24 +0800
+X-Gmail-Original-Message-ID: <CAJKOXPc6C5WE0mV4=YRGBkKxLb_CWYKGAK=v43NjJW8MY8FMEQ@mail.gmail.com>
+Message-ID: <CAJKOXPc6C5WE0mV4=YRGBkKxLb_CWYKGAK=v43NjJW8MY8FMEQ@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: Fix Kconfig indentation
+To:     Ahmad Fatoum <a.fatoum@pengutronix.de>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-gpio@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        linux-arm-msm@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 07:18:40PM +0000, Will Deacon wrote:
+On Wed, 20 Nov 2019 at 22:15, Ahmad Fatoum <a.fatoum@pengutronix.de> wrote:
 >
-> > The Alpha barrier matters for pointers, how could it make a
-> > difference for individual bits?
-> 
-> I guess you could use the result of test_bit to index into an array or
-> something?
+> Hello Krzysztof,
+>
+> On 11/20/19 2:40 PM, Krzysztof Kozlowski wrote:
+> > Adjust indentation from spaces to tab (+optional two spaces) as in
+> > coding style with command like:
+> >       $ sed -e 's/^        /\t/' -i */Kconfig
+>
+> >  config PINCTRL_ARTPEC6
+> > -        bool "Axis ARTPEC-6 pin controller driver"
+> > +     bool "Axis ARTPEC-6 pin controller driver"
+>
+> Here you replace spaces for tabs before the prompt type.
+>
+> >  config PINCTRL_SM8150
+> >         tristate "Qualcomm Technologies Inc SM8150 pin controller driver"
+>
+> Here you leave the spaces before intact.
+>
+> Intentional?
 
-Can Alpha Assembly even do this without using a branch?
+No, not intentional. Thanks for pointing it out. I made the sed
+patterns precise - 8 spaces -> tab, and there you have 7 spaces
+(ugh!). I'll send a follow up.
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Best regards,
+Krzysztof
