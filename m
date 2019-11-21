@@ -2,128 +2,110 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC6BFC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 18:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A41FC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 18:33:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCCDC206CC
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 18:31:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wkp25PFc"
+	by mail.kernel.org (Postfix) with ESMTP id D2EAF2067D
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 18:33:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574361182;
+	bh=wE2tHf3ZYWYbliD+R/Z0yBNHf5NZkidjFVls8TJM8C0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uREcq0ealAL/AVvGysn8y4QeAxgLJA7KladlSsv53nZqjjsQhv/pTQcyLOybxkZBG
+	 5X/d135h3aY/235j32ppDneNjjMyo6IjnWa9RJYTYh3aSTqduCNOrvWaPCOfAP1lBr
+	 5UCoWVRSW3lDHbVG1N+wLgTZgL1JkYlnZdYvBk+k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727164AbfKUSb3 (ORCPT
+        id S1726968AbfKUSdB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 13:31:29 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:45224 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726563AbfKUSb3 (ORCPT
+        Thu, 21 Nov 2019 13:33:01 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:52173 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726293AbfKUSdB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 13:31:29 -0500
-Received: by mail-oi1-f195.google.com with SMTP id 14so4067976oir.12
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 10:31:28 -0800 (PST)
+        Thu, 21 Nov 2019 13:33:01 -0500
+Received: by mail-wm1-f68.google.com with SMTP id g206so4603074wme.1
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 10:33:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zes9nx3wWOfwgkI+Dul1p5z28VLkMHp34WWYw/4B4xM=;
-        b=Wkp25PFcZ403A1Ab9dtH00UDW+ztY9yfO5ob/GgE/2yV3cRKXm7YMtYFtLdE+Dsva3
-         9Rp7LdEU0QVZIsPXy980hXnC4LQ9KYwFcnhhwyD0vo4Ok6W3S6MZRT5jISG4FvLREXtz
-         AWAp8TsSWkWK8zlCxWzKcEZ/j6zwmvwRFNOG78fD68Z8CxTbK06XUuEF+1q0XUT1Ovhs
-         C0xgW4AGzSMcuLFkJ64mQbF2vtg/0a2TRJhlwNHdWkkfTCAr3cgi3cBxR9GKcC1Gkppu
-         YTEvvuuBpO9jyZpYHtYh0xn7CGIvTzBvTNIjpSvir4A692IKFEazzfbK47bCNvU0KlKx
-         qS1g==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=QpdFGCi5ivXxDIzboDWyNYO66cHHS/lXg7ziVev9IZo=;
+        b=jgCStv+qGqRqOTsBMWfs2Jen+gMWWaUoAyhn0xoaM56h0671j8K3ZpBnXIqKTolMly
+         PunnmPMGBqBe2PWVlSJ3OxfES+8WRolNvYNd4C7jJb8ctYk33ZZj1jA2FI4ujcthwzLa
+         oi6vKi84bgrulrqNHINLZKKcPRK7EHcIbNITnG8Nzl5Dc2txlK4RtHY/vwBdCJbJxics
+         LNP2F9LhLW+/juuQ4N+/eIfgwd0IOfvCRs6+JTnUOiKphpVQECIdIARC3gE7JDMG/fCg
+         3yx8FBYoMWJhUwBge7uNaKxEg6e5QoGb1ybUb5y+16ppzoSlyDQv6sdVhxPq5U3cWJ6b
+         iE1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zes9nx3wWOfwgkI+Dul1p5z28VLkMHp34WWYw/4B4xM=;
-        b=ip9C865k/878yljdalDJ6T2kJo9FpADAkkeNt0cz98cQK3bWM4tyk3ZH5vViEPK8LG
-         zJt2P5GUr9K1R0rmoUy9tSDzEJTvP6sNWtGVKJpZkQmpVZX/+en8vj2mrLfNV8TIOyGQ
-         EwUoMmmdI8eg1iCgwKVA1YXWhhLWmbvfUuoa5Pp2zbX/s9aSZ26vueHFrDJtj7dfD8jm
-         xeHGjtqcntBTI/NTgq3+deRNJVwj8armrZBk2hx9ZhpXzX5+4prhrUtrroGRYF/ZlUhf
-         qoKY9KrYBl1vlj3RJXHNdVg8is6gV2DvTKcmTfDlsuhwVSbHDT0nI+pDGeGbg83WUqDC
-         06sw==
-X-Gm-Message-State: APjAAAUbeUpWr7iIXVqNOqOB8OLLNLLSGRQLtSChwl9xMBACqxaIAcym
-        XE8EL3XpKPDCicW6bpocBSn26GMsLp1nq9jSIPw=
-X-Google-Smtp-Source: APXvYqyen3cn+EY2RAzHvEa5NUjEhWs2OO/9/OSlmmI0VmHx00JqrZodxXdJRT5Kl/NB0JdTu71ixm3Ce1mmHgz5IXQ=
-X-Received: by 2002:aca:c50f:: with SMTP id v15mr9263185oif.5.1574361088233;
- Thu, 21 Nov 2019 10:31:28 -0800 (PST)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QpdFGCi5ivXxDIzboDWyNYO66cHHS/lXg7ziVev9IZo=;
+        b=oUgda+sqBU0LI1Finmci9d4W8UXF2Wy+F0/lJgVEHvh/GmtOKdUMozYvwaCAA7wGQV
+         T4cZF699TpAFCrN2AaFVUIFeSEBIxDmDVC4Bsne4zBhPCH+5z7BlT/wY4wjnIwlsmf2z
+         G+5h9t1YhWfioNEMxkmBaDepn3pyepGXqoU5ZA4htO2SwQJBXlj8iI9gvW/fGh43/92J
+         GiSWsM3PauSm8I3PYxdh9IyILKSO1bKFyAzow6CB8FH7qQSbU6t8DPuKhbufXBBQRJtm
+         xr4o0jyEytZuxzQQL8ihdXe38hs9vStNwoqmnRw+rqU6e92zFXJfNsiMFwEhuJk2V/fK
+         w9Gg==
+X-Gm-Message-State: APjAAAXM+rVxBDBzL/gAUsuJLG5ROQ0Ue5KwIyZ1RFxnd6Vaza5Cko1V
+        YYQHI+joneNFck2qCmOMg8Q=
+X-Google-Smtp-Source: APXvYqxGdwJCh/RRx1XOPoqG1UX9YkIrYDWrkN5YLSJmIqCy3k62JPFmw42dzBYNc2cawVlYml+ZJQ==
+X-Received: by 2002:a7b:cc13:: with SMTP id f19mr12081590wmh.81.1574361179554;
+        Thu, 21 Nov 2019 10:32:59 -0800 (PST)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id t185sm526758wmf.45.2019.11.21.10.32.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Nov 2019 10:32:59 -0800 (PST)
+Date:   Thu, 21 Nov 2019 19:32:57 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Marco Elver <elver@google.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, will@kernel.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] spinlock_debug: Fix various data races
+Message-ID: <20191121183257.GA124760@gmail.com>
+References: <20191120155715.28089-1-elver@google.com>
 MIME-Version: 1.0
-References: <20191004190938.15353-1-navid.emamdoost@gmail.com>
-In-Reply-To: <20191004190938.15353-1-navid.emamdoost@gmail.com>
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-Date:   Thu, 21 Nov 2019 12:31:17 -0600
-Message-ID: <CAEkB2EQGCcwBO4iZBiHthUAJUeprw2Q09932GATd6XVyXqukzw@mail.gmail.com>
-Subject: Re: [PATCH] drm/imx: fix memory leak in imx_pd_bind
-To:     Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>
-Cc:     Navid Emamdoost <emamd001@umn.edu>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191120155715.28089-1-elver@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 4, 2019 at 2:09 PM Navid Emamdoost
-<navid.emamdoost@gmail.com> wrote:
->
-> In imx_pd_bind, the duplicated memory for imxpd->edid via kmemdup should
-> be released in drm_of_find_panel_or_bridge or imx_pd_register fail.
->
-> Fixes: ebc944613567 ("drm: convert drivers to use drm_of_find_panel_or_bridge")
-> Fixes: 19022aaae677 ("staging: drm/imx: Add parallel display support")
-> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-> ---
 
-Would you please review this patch?
+* Marco Elver <elver@google.com> wrote:
+
+>  static inline void debug_spin_lock_after(raw_spinlock_t *lock)
+>  {
+> -	lock->owner_cpu = raw_smp_processor_id();
+> -	lock->owner = current;
+> +	WRITE_ONCE(lock->owner_cpu, raw_smp_processor_id());
+> +	WRITE_ONCE(lock->owner, current);
+>  }
+
+debug_spin_lock_after() runs inside the spinlock itself - why do these 
+writes have to be WRITE_ONCE()?
+
+> @@ -197,8 +197,8 @@ static inline void debug_write_unlock(rwlock_t *lock)
+>  	RWLOCK_BUG_ON(lock->owner != current, lock, "wrong owner");
+>  	RWLOCK_BUG_ON(lock->owner_cpu != raw_smp_processor_id(),
+>  							lock, "wrong CPU");
+> -	lock->owner = SPINLOCK_OWNER_INIT;
+> -	lock->owner_cpu = -1;
+> +	WRITE_ONCE(lock->owner, SPINLOCK_OWNER_INIT);
+> +	WRITE_ONCE(lock->owner_cpu, -1);
+>  }
+
+This too is running inside the critical section of the spinlock - why are 
+the WRITE_ONCE() calls necessary?
 
 Thanks,
 
->  drivers/gpu/drm/imx/parallel-display.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/gpu/drm/imx/parallel-display.c b/drivers/gpu/drm/imx/parallel-display.c
-> index e7ce17503ae1..9522d2cb0ad5 100644
-> --- a/drivers/gpu/drm/imx/parallel-display.c
-> +++ b/drivers/gpu/drm/imx/parallel-display.c
-> @@ -227,14 +227,18 @@ static int imx_pd_bind(struct device *dev, struct device *master, void *data)
->
->         /* port@1 is the output port */
->         ret = drm_of_find_panel_or_bridge(np, 1, 0, &imxpd->panel, &imxpd->bridge);
-> -       if (ret && ret != -ENODEV)
-> +       if (ret && ret != -ENODEV) {
-> +               kfree(imxpd->edid);
->                 return ret;
-> +       }
->
->         imxpd->dev = dev;
->
->         ret = imx_pd_register(drm, imxpd);
-> -       if (ret)
-> +       if (ret) {
-> +               kfree(imxpd->edid);
->                 return ret;
-> +       }
->
->         dev_set_drvdata(dev, imxpd);
->
-> --
-> 2.17.1
->
-
-
--- 
-Navid.
+	Ingo
