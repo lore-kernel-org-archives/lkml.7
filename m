@@ -2,124 +2,119 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B3C0C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 09:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D323C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 09:20:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B818204FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 09:19:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0522120748
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 09:20:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574328030;
+	bh=bTNVfVe4arXMnIkD+ydUbUETWvtr6dMXjj69lEAtdc0=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=NJSvfLz+PxEpZwxN8lP9hKWrHW5P7mfsjdFh8fdKbfj9EG5mhbvant+LjFbnANegi
+	 6FcTrWHB4TNgevgda8rbi2SCaqT7T3DOFIk9+9TJAB8hky1VJG4Vpwi9MwvIFii8k9
+	 DjM1fGWVXOzSu3rHC1HBwngHe4uUyr2T7GvOBCnU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbfKUJTF (ORCPT
+        id S1726655AbfKUJU3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 04:19:05 -0500
-Received: from mx2.suse.de ([195.135.220.15]:49138 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726014AbfKUJTE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 04:19:04 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 134B7B324;
-        Thu, 21 Nov 2019 09:19:01 +0000 (UTC)
-Message-ID: <f7c09f06913fa1ed5e98c55ebe6d9db81bf232c0.camel@suse.de>
-Subject: Re: [PATCH] dma-mapping: treat dev->bus_dma_mask as a DMA limit
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Christoph Hellwig <hch@lst.de>, Robin Murphy <robin.murphy@arm.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-mips@vger.kernel.org, linux-ide@vger.kernel.org,
-        Paul Mackerras <paulus@samba.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Joerg Roedel <joro@8bytes.org>, x86@kernel.org,
-        phil@raspberrypi.org, linux-acpi@vger.kernel.org,
-        Ingo Molnar <mingo@redhat.com>, linux-pci@vger.kernel.org,
-        James Hogan <jhogan@kernel.org>, Len Brown <lenb@kernel.org>,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org, Jens Axboe <axboe@kernel.dk>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        linux-kernel@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
-        iommu@lists.linux-foundation.org,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        linuxppc-dev@lists.ozlabs.org
-Date:   Thu, 21 Nov 2019 10:18:54 +0100
-In-Reply-To: <20191121073152.GB24024@lst.de>
-References: <20191113161340.27228-1-nsaenzjulienne@suse.de>
-         <dd074ef5c23ba56598e92be19e8e25ae31b75f93.camel@suse.de>
-         <20191119170006.GA19569@lst.de>
-         <7609007d-52f5-bb10-e8d5-96fadbfab46d@arm.com>
-         <20191121073152.GB24024@lst.de>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-lq+O6sjXzX+AgzEMEd7n"
-User-Agent: Evolution 3.34.1 
+        Thu, 21 Nov 2019 04:20:29 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:37660 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726014AbfKUJU2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 04:20:28 -0500
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iXidO-0004TK-QZ; Thu, 21 Nov 2019 10:20:18 +0100
+To:     Yash Shah <yash.shah@sifive.com>
+Subject: RE: [PATCH v2 1/5] genirq: introduce =?UTF-8?Q?irq=5Fdomain=5Ftra?=  =?UTF-8?Q?nslate=5Fonecell?=
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 21 Nov 2019 09:20:18 +0000
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     <mark.rutland@arm.com>, <devicetree@vger.kernel.org>,
+        <aou@eecs.berkeley.edu>, <jason@lakedaemon.net>,
+        <atish.patra@wdc.com>, Sachin Ghadi <sachin.ghadi@sifive.com>,
+        <linus.walleij@linaro.org>, <linux-kernel@vger.kernel.org>,
+        <bgolaszewski@baylibre.com>, <robh+dt@kernel.org>,
+        <palmer@dabbelt.com>, Sagar Kadam <sagar.kadam@sifive.com>,
+        <linux-gpio@vger.kernel.org>,
+        "Paul Walmsley ( Sifive)" <paul.walmsley@sifive.com>,
+        <tglx@linutronix.de>, <bmeng.cn@gmail.com>,
+        <linux-riscv@lists.infradead.org>
+In-Reply-To: <CH2PR13MB336857C8AAC4CD3EB48942BF8C4E0@CH2PR13MB3368.namprd13.prod.outlook.com>
+References: <1574233128-28114-1-git-send-email-yash.shah@sifive.com>
+ <1574233128-28114-2-git-send-email-yash.shah@sifive.com>
+ <5ec51559d8b4cd3b8e80943788b52926@www.loen.fr>
+ <CH2PR13MB33682B1E7B40DC5C2FD1094C8C4E0@CH2PR13MB3368.namprd13.prod.outlook.com>
+ <CH2PR13MB336857C8AAC4CD3EB48942BF8C4E0@CH2PR13MB3368.namprd13.prod.outlook.com>
+Message-ID: <35606a5012643fcc71592ab4e2c3fdd5@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: yash.shah@sifive.com, mark.rutland@arm.com, devicetree@vger.kernel.org, aou@eecs.berkeley.edu, jason@lakedaemon.net, atish.patra@wdc.com, sachin.ghadi@sifive.com, linus.walleij@linaro.org, linux-kernel@vger.kernel.org, bgolaszewski@baylibre.com, robh+dt@kernel.org, palmer@dabbelt.com, sagar.kadam@sifive.com, linux-gpio@vger.kernel.org, paul.walmsley@sifive.com, tglx@linutronix.de, bmeng.cn@gmail.com, linux-riscv@lists.infradead.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2019-11-21 08:55, Yash Shah wrote:
 
---=-lq+O6sjXzX+AgzEMEd7n
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+[...]
 
-On Thu, 2019-11-21 at 08:31 +0100, Christoph Hellwig wrote:
-> On Tue, Nov 19, 2019 at 05:17:03PM +0000, Robin Murphy wrote:
-> > TBH I can't see it being a massive problem even if the DMA patch, drive=
-r=20
-> > and DTS patch went entirely separately via the respective DMA, PCI, and=
-=20
-> > arm-soc trees in the same cycle. Bisecting over a merge window is a big=
-=20
-> > enough pain in the bum as it is, and if the worst case is that someone=
-=20
-> > trying to do that on a Pi4 has a wonky PCI controller appear for a coup=
-le=20
-> > of commits, they may as well just disable that driver for their bisecti=
-on,=20
-> > because it wasn't there at the start so can't possibly be the thing the=
-y're=20
-> > looking for regressions in ;)
->=20
-> Agreed.
->=20
-> Nicolas, can you send a respin?  That way I can still queue it up
-> for 5.5.
+>> > > + * bindings where the cell values map directly to the hwirq 
+>> number.
+>> > > + */
+>> > > +int irq_domain_translate_onecell(struct irq_domain *d,
+>> > > +				 struct irq_fwspec *fwspec,
+>> > > +				 unsigned long *out_hwirq,
+>> > > +				 unsigned int *out_type)
+>> > > +{
+>> > > +	if (WARN_ON(fwspec->param_count < 1))
+>> > > +		return -EINVAL;
+>> > > +	*out_hwirq = fwspec->param[0];
+>> > > +	*out_type = IRQ_TYPE_NONE;
+>> > > +	return 0;
+>> > > +}
+>> > > +EXPORT_SYMBOL_GPL(irq_domain_translate_onecell);
+>> > > +
+>> > > +/**
+>> > >   * irq_domain_translate_twocell() - Generic translate for 
+>> direct
+>> > > two cell
+>> > >   * bindings
+>> > >   *
+>> >
+>> > Can you please also update (potentially in a separate patch) the
+>> > potential users of this? I mentioned the nvic driver last time...
+>> >
+>>
+>> Ok, I will separate out this patch from the patchset and send it 
+>> individually
+>> along with potential users of it.
+>> Thanks for your comments
+>
+> I am sorry, I think I misunderstood you.
+> You want me to send a new separate patch in which the potential users
+> will be updated to this new function.
+> Hope I got it right?
 
-Oh, I thought it was too late for that already. I'll send it in a minute.
+Just add, as part of this series, a patch that updates the one or two
+drivers that could make use of this. It doesn't need to be in a 
+separate
+patch set (which would cause dependency issues).
 
-Regards,
-Nicolas
+Thanks,
 
-
---=-lq+O6sjXzX+AgzEMEd7n
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3WVn4ACgkQlfZmHno8
-x/6kBwf/SKtubLT3BK6PDi2kFxS7U1Nuy9X/MqsOPMdQNIIzccK4WqpweJsn3fn7
-WUh4Tsn5H2fjaeqsOCLpG5PeYLO6nDWDmCzVszhsyBjqWczikEWQ8reuCbXbbW6G
-rUh1wlp8+VDFDs0reFtW9POlYcvxixcMmbkSjKPEtZCh/GjdgIcjdkCtvwGkdrE1
-8E8Z6K9lqyiB2WQ0z7tdOf3fglQwJ7HxRgsmlYm1u0UQCm3+Hdrvy2hO7X/OYhtB
-4JbPmzPk62RNUjdmnuJ8t2ar57gMQ4VwRi7hjfCir9Iq8t/B7vCzCAQnzREpL05w
-BEUfJlvCYEvS3eArOErmv3Mm+/ugdg==
-=NUIQ
------END PGP SIGNATURE-----
-
---=-lq+O6sjXzX+AgzEMEd7n--
-
+         M.
+-- 
+Jazz is not dead. It just smells funny...
