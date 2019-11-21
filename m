@@ -2,340 +2,161 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C2DBC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:15:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 758F1C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:16:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6263220721
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:15:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 465A620721
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:16:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WdZkxAug"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e42q5Dt7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726500AbfKUDPp (ORCPT
+        id S1726623AbfKUDQq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 22:15:45 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:35170 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725842AbfKUDPp (ORCPT
+        Wed, 20 Nov 2019 22:16:46 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:43318 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725842AbfKUDQp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 22:15:45 -0500
-Received: by mail-pl1-f193.google.com with SMTP id s10so874634plp.2
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 19:15:44 -0800 (PST)
+        Wed, 20 Nov 2019 22:16:45 -0500
+Received: by mail-ot1-f67.google.com with SMTP id l14so1617095oti.10;
+        Wed, 20 Nov 2019 19:16:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=Qnht2shM2MOiZ4qxbMYfoGx4QUY80uCQHx76GTp8h50=;
-        b=WdZkxAugtSTkcAAghiVszxg3soV9gfbHLCGNOuj7qFiqNPlrnJuRyLg9Pq8goQGwht
-         4U0p8//TlOV0H7/Q5hAV2RQiyotnpjik5S0UM0k0z7Nx0KMjswUTNrDPxJ1U/nISZTl/
-         QOZc4aklGn34lRsTk/sNpSr8DOrxhmy258H4cywxKTa4l2Z++nIFgmkhNo84dltCHcyR
-         DxR5fPVjSk4qfLDJikFehsHVuNjJQ+aUvRx25Bl2hmozMUns/nTpJytfdfQlY6YA+osZ
-         m78U3D7jCvgzGpc2bq2OA0ZLdPzMcDTy5cHvBPQ3w6SuV8xpWdNKhWxh6CY77s57J7i1
-         kRqg==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=W8NJFXMq1hP4Qw4qrsGTgJ6LydZYVSf7XvUILF35TkI=;
+        b=e42q5Dt7gHmj9sk3HkUelEJSbwzQa5GeZLVk7+svkiu0ehkrRBfykcQ7JH7/X6HYA4
+         I46io4ICsit03LC1b71x8Wt4azLEocRlomjDC7ZBqnF/2uHf8hjdFDUXD1GjPJ4C6Pk5
+         KrsXjEKiTB+reJQkXh+sxGCfu1iGhnDnozGVrq0nLC15xL3XqvGQLwuC0aFConcDXfWs
+         /WE7bWtY+LdFihCVHTT4zg2eEGo1cAcsnyyzAwbG+PU++U9ZRFGOlhziGvL0nUEE3NC/
+         dbnmlEJnWthi9pC7mJLqwYNrlzriPq7xtlaXUjHtUzqwtmEhdcY5wH0ArmZFz7Zts+Be
+         Cnhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=Qnht2shM2MOiZ4qxbMYfoGx4QUY80uCQHx76GTp8h50=;
-        b=NoehhptjgvVcrQuA35ADO/RBLqzoV3rzU0nMzFsVAUeiEZw65FVKchXKfCJmxrGDPj
-         J+nl2xS0hRe2j6ElHsh68epcpkJu3SFqbpExyTbzfLPsTrIkCvdP97UJKQffzx5bnXPB
-         3JICOY9DQGmot0eraHTPuPVdbbsdMx7gTBDnGMK0ebSPyt5TK38hPtsooiWYKITgxsyB
-         ThRIig3W+oCGnfxHcxmvK312l0fbVeLzmAccjRtc1KnV0fHqhztt4kGr9io9fP1YtsMx
-         qg2k9xMntNbYcZoNLClRhUxylEp5pD9/4oDuXilL8cGAkqIQYj5X4bUK23sdjFP5FcfB
-         G5Ig==
-X-Gm-Message-State: APjAAAUg5x30wilZeEvG4d43/t4SY62XpkXEWDgnNwxYDPW98pkyF+V5
-        nvdDRP29YyXeujPnW4aUOYSqxg==
-X-Google-Smtp-Source: APXvYqz9D9bgV1lMd0JB2f9uP7pGnQ/BlLLIFH1vadxvPNHlxybArK1TFPGMIxO/j6mYAWepfTkRXQ==
-X-Received: by 2002:a17:902:b702:: with SMTP id d2mr6385546pls.104.1574306142865;
-        Wed, 20 Nov 2019 19:15:42 -0800 (PST)
-Received: from [100.112.92.218] ([104.133.9.106])
-        by smtp.gmail.com with ESMTPSA id 83sm25557pfv.157.2019.11.20.19.15.40
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 20 Nov 2019 19:15:41 -0800 (PST)
-Date:   Wed, 20 Nov 2019 19:15:27 -0800 (PST)
-From:   Hugh Dickins <hughd@google.com>
-X-X-Sender: hugh@eggly.anvils
-To:     Johannes Weiner <hannes@cmpxchg.org>
-cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Hugh Dickins <hughd@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH] mm: fix unsafe page -> lruvec lookups with cgroup charge
- migration
-In-Reply-To: <20191120165847.423540-1-hannes@cmpxchg.org>
-Message-ID: <alpine.LSU.2.11.1911201836220.1090@eggly.anvils>
-References: <20191120165847.423540-1-hannes@cmpxchg.org>
-User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=W8NJFXMq1hP4Qw4qrsGTgJ6LydZYVSf7XvUILF35TkI=;
+        b=Lf5kAgzpfOXG12qeMYiSPeeQHEsBVZtg67YO863L7A16TIvFUdXMqzvO7zK7gpXEMk
+         sFDEW+YmPpsvSuBzMKFUTAE2gE31QLxhUfhl3ZA/lCrEdH6Pyz2GQJe9ESw20LwrJJv9
+         7cSMBK91nmGT/1S8MrqF3kiQWhtLpqwuugzmJHff+JKfd9puuAbxaTLg8Snl7tuZemx6
+         2hzBYhwHzd3rdwN55CZLr/DGhabGtDIWz2Zg/xjXdZp+rS0W22PFq7blTvMfJ7Ca9e+G
+         0hpz+Xk0Tgvhpu4d8Bvkz+Z3A+Ia7jHauCcLrXC9cTdCHmZJmCui5J8BV4AoGX+znGCY
+         wlLQ==
+X-Gm-Message-State: APjAAAXPmolPXkdKzZjnXisB9uJkLdA4/3vYvH8/1/Or2JSJ6W8JV5WC
+        L/PI1rQ9wgN/7kLgvp2ixT5MD/gbhUVrfW1WFad5Lg==
+X-Google-Smtp-Source: APXvYqzhuStBie25VFTE/1Gzpl/ag0wWxervXgFlKbr2I1x3phPpgtQIXbEF2Zfjzsh+WUETR40DR4fRj9afDw+lmrU=
+X-Received: by 2002:a9d:b83:: with SMTP id 3mr4524380oth.56.1574306204696;
+ Wed, 20 Nov 2019 19:16:44 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+References: <1574221329-12370-1-git-send-email-wanpengli@tencent.com> <61E34902-0743-4DAF-A7DF-94C0E51CDA08@oracle.com>
+In-Reply-To: <61E34902-0743-4DAF-A7DF-94C0E51CDA08@oracle.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Thu, 21 Nov 2019 11:16:36 +0800
+Message-ID: <CANRm+CyyEda_X=+Nzo0QV-75eeVSi0c3E69piG0TrhK-+7sZWg@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] KVM: VMX: FIXED+PHYSICAL mode single target IPI fastpath
+To:     Liran Alon <liran.alon@oracle.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 20 Nov 2019, Johannes Weiner wrote:
+On Thu, 21 Nov 2019 at 07:37, Liran Alon <liran.alon@oracle.com> wrote:
+>
+>
+>
+> > On 20 Nov 2019, at 5:42, Wanpeng Li <kernellwp@gmail.com> wrote:
+> >
+> > From: Wanpeng Li <wanpengli@tencent.com>
+> >
+> > ICR and TSCDEADLINE MSRs write cause the main MSRs write vmexits in
+> > our product observation, multicast IPIs are not as common as unicast
+> > IPI like RESCHEDULE_VECTOR and CALL_FUNCTION_SINGLE_VECTOR etc.
+>
+> Have you also had the chance to measure non-Linux workloads. Such as Wind=
+ows?
 
-> While reviewing the "per lruvec lru_lock for memcg" series, Hugh and I
-> noticed two places in the existing code where the page -> memcg ->
-> lruvec lookup can result in a use-after-free bug. This affects cgroup1
-> setups that have charge migration enabled.
+I ask around, guys not pay attention to IPIs under windows guests before.
 
-I don't see how it can result in a use-after-free, or other bug.
+>
+> >
+> > This patch tries to optimize x2apic physical destination mode, fixed
+> > delivery mode single target IPI. The fast path is invoked at
+> > ->handle_exit_irqoff() to emulate only the effect of the ICR write
+> > itself, i.e. the sending of IPIs.  Sending IPIs early in the VM-Exit
+> > flow reduces the latency of virtual IPIs by avoiding the expensive bits
+> > of transitioning from guest to host, e.g. reacquiring KVM's SRCU lock.
+> > Especially when running guest w/ KVM_CAP_X86_DISABLE_EXITS capability
+> > enabled or guest can keep running, IPI can be injected to target vCPU
+> > by posted-interrupt immediately.
+>
+> May I suggest an alternative phrasing? Something such as:
 
-> 
-> To pin page->mem_cgroup, callers need to either have the page locked,
-> an exclusive refcount (0), or hold the lru_lock and "own" PageLRU
+Great, thanks for better English.
 
-"exclusive refcount (0)", okay, that's quite a good term for it -
-though "frozen refcount (0)" is what we would usually say.
+>
+> =E2=80=9C=E2=80=9D=E2=80=9D
+> This patch introduce a mechanism to handle certain performance-critical W=
+RMSRs
+> in a very early stage of KVM VMExit handler.
+>
+> This mechanism is specifically used for accelerating writes to x2APIC ICR=
+ that
+> attempt to send a virtual IPI with physical destination-mode, fixed deliv=
+ery-mode
+> and single target. Which was found as one of the main causes of VMExits f=
+or
+> Linux workloads.
+>
+> The reason this mechanism significantly reduce the latency of such virtua=
+l IPIs
+> is by sending the physical IPI to the target vCPU in a very early stage o=
+f KVM
+> VMExit handler, before host interrupts are enabled and before expensive
+> operations such as reacquiring KVM=E2=80=99s SRCU lock.
+> Latency is reduced even more when KVM is able to use APICv posted-interru=
+pt
+> mechanism (which allows to deliver the virtual IPI directly to target vCP=
+U without
+> the need to kick it to host).
+> =E2=80=9C=E2=80=9D=E2=80=9D
+>
+> >
+> > Testing on Xeon Skylake server:
+> >
+> > The virtual IPI latency from sender send to receiver receive reduces
+> > more than 200+ cpu cycles.
+> >
+> > Cc: Paolo Bonzini <pbonzini@redhat.com>
+> > Cc: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com>
+> > Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+> > Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+> > Cc: Liran Alon <liran.alon@oracle.com>
+> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+>
+> I see you used the code I provided my reply to v2. :)
+> I had only some very minor comments inline below. Therefore:
+> Reviewed-by: Liran Alon <liran.alon@oracle.com>
 
-You don't suggest holding move_lock, but I guess move_lock is never
-used in that way (nor should be).
+Thanks, handle them in v4.
 
-Okay.
+>
+> Thanks for doing this optimisation.
 
-> (either ensure it's set, or be the one to hold the page in isolation)
-> to make cgroup migration fail the isolation step. Failure to follow
-> this can result in the page moving out of the memcg and freeing it,
-> along with its lruvecs, while the observer is dereferencing them.
-> 
-> 1. isolate_lru_page() calls mem_cgroup_page_lruvec() with the lru_lock
-> held but before testing PageLRU. It doesn't dereference the returned
-> lruvec before testing PageLRU, giving the impression that it might
-> just be safe ordering after all - but mem_cgroup_page_lruvec() itself
-> touches the lruvec to lazily initialize the pgdat back pointer. This
-> one is easy to fix, just move the lookup into the PageLRU branch.
-> 
-> 2. pagevec_lru_move_fn() conveniently looks up the lruvec for all the
-> callbacks it might get invoked on. Unfortunately, it's the callbacks
-> that first check PageLRU under the lru_lock, which makes this order
-> equally unsafe as isolate_lru_page(). Remove the lruvec argument from
-> the move callbacks and let them do it inside their PageLRU branches.
-> 
-> Reported-by: Hugh Dickins <hughd@google.com>
+Thanks everybody who help make this work nice. :)
 
-You are overly generous to name me there! I have to demur, it's true
-that yesterday I said "even isolate_lru_page() looks unsafe to me now",
-but I was talking (in private mail) about my own mods, not current
-upstream.  And you have then gone on to observe something suspicious
-in the current code, but I don't think it amounts to a bug at all.
-Appreciated, but please delete me!
-
-Further explanation below, at the smaller isolate_lru_page() hunk,
-where it's easier to see what goes on without the indirections of
-mm/swap.c.
-
-> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
-> ---
->  mm/swap.c   | 48 +++++++++++++++++++++++++++++-------------------
->  mm/vmscan.c |  8 ++++----
->  2 files changed, 33 insertions(+), 23 deletions(-)
-> 
-> diff --git a/mm/swap.c b/mm/swap.c
-> index 5341ae93861f..6b015e9532fb 100644
-> --- a/mm/swap.c
-> +++ b/mm/swap.c
-> @@ -188,12 +188,11 @@ int get_kernel_page(unsigned long start, int write, struct page **pages)
->  EXPORT_SYMBOL_GPL(get_kernel_page);
->  
->  static void pagevec_lru_move_fn(struct pagevec *pvec,
-> -	void (*move_fn)(struct page *page, struct lruvec *lruvec, void *arg),
-> +	void (*move_fn)(struct page *page, void *arg),
->  	void *arg)
->  {
->  	int i;
->  	struct pglist_data *pgdat = NULL;
-> -	struct lruvec *lruvec;
->  	unsigned long flags = 0;
->  
->  	for (i = 0; i < pagevec_count(pvec); i++) {
-> @@ -207,8 +206,7 @@ static void pagevec_lru_move_fn(struct pagevec *pvec,
->  			spin_lock_irqsave(&pgdat->lru_lock, flags);
->  		}
->  
-> -		lruvec = mem_cgroup_page_lruvec(page, pgdat);
-> -		(*move_fn)(page, lruvec, arg);
-> +		(*move_fn)(page, arg);
->  	}
->  	if (pgdat)
->  		spin_unlock_irqrestore(&pgdat->lru_lock, flags);
-> @@ -216,12 +214,14 @@ static void pagevec_lru_move_fn(struct pagevec *pvec,
->  	pagevec_reinit(pvec);
->  }
->  
-> -static void pagevec_move_tail_fn(struct page *page, struct lruvec *lruvec,
-> -				 void *arg)
-> +static void pagevec_move_tail_fn(struct page *page, void *arg)
->  {
->  	int *pgmoved = arg;
->  
->  	if (PageLRU(page) && !PageUnevictable(page)) {
-> +		struct lruvec *lruvec;
-> +
-> +		lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
->  		del_page_from_lru_list(page, lruvec, page_lru(page));
->  		ClearPageActive(page);
->  		add_page_to_lru_list_tail(page, lruvec, page_lru(page));
-> @@ -272,12 +272,14 @@ static void update_page_reclaim_stat(struct lruvec *lruvec,
->  		reclaim_stat->recent_rotated[file]++;
->  }
->  
-> -static void __activate_page(struct page *page, struct lruvec *lruvec,
-> -			    void *arg)
-> +static void __activate_page(struct page *page, void *arg)
->  {
->  	if (PageLRU(page) && !PageActive(page) && !PageUnevictable(page)) {
->  		int file = page_is_file_cache(page);
->  		int lru = page_lru_base_type(page);
-> +		struct lruvec *lruvec;
-> +
-> +		lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
->  
->  		del_page_from_lru_list(page, lruvec, lru);
->  		SetPageActive(page);
-> @@ -328,7 +330,7 @@ void activate_page(struct page *page)
->  
->  	page = compound_head(page);
->  	spin_lock_irq(&pgdat->lru_lock);
-> -	__activate_page(page, mem_cgroup_page_lruvec(page, pgdat), NULL);
-> +	__activate_page(page, NULL);
->  	spin_unlock_irq(&pgdat->lru_lock);
->  }
->  #endif
-> @@ -498,9 +500,9 @@ void lru_cache_add_active_or_unevictable(struct page *page,
->   * be write it out by flusher threads as this is much more effective
->   * than the single-page writeout from reclaim.
->   */
-> -static void lru_deactivate_file_fn(struct page *page, struct lruvec *lruvec,
-> -			      void *arg)
-> +static void lru_deactivate_file_fn(struct page *page, void *arg)
->  {
-> +	struct lruvec *lruvec;
->  	int lru, file;
->  	bool active;
->  
-> @@ -518,6 +520,8 @@ static void lru_deactivate_file_fn(struct page *page, struct lruvec *lruvec,
->  	file = page_is_file_cache(page);
->  	lru = page_lru_base_type(page);
->  
-> +	lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
-> +
->  	del_page_from_lru_list(page, lruvec, lru + active);
->  	ClearPageActive(page);
->  	ClearPageReferenced(page);
-> @@ -544,12 +548,14 @@ static void lru_deactivate_file_fn(struct page *page, struct lruvec *lruvec,
->  	update_page_reclaim_stat(lruvec, file, 0);
->  }
->  
-> -static void lru_deactivate_fn(struct page *page, struct lruvec *lruvec,
-> -			    void *arg)
-> +static void lru_deactivate_fn(struct page *page, void *arg)
->  {
->  	if (PageLRU(page) && PageActive(page) && !PageUnevictable(page)) {
->  		int file = page_is_file_cache(page);
->  		int lru = page_lru_base_type(page);
-> +		struct lruvec *lruvec;
-> +
-> +		lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
->  
->  		del_page_from_lru_list(page, lruvec, lru + LRU_ACTIVE);
->  		ClearPageActive(page);
-> @@ -561,12 +567,14 @@ static void lru_deactivate_fn(struct page *page, struct lruvec *lruvec,
->  	}
->  }
->  
-> -static void lru_lazyfree_fn(struct page *page, struct lruvec *lruvec,
-> -			    void *arg)
-> +static void lru_lazyfree_fn(struct page *page, void *arg)
->  {
->  	if (PageLRU(page) && PageAnon(page) && PageSwapBacked(page) &&
->  	    !PageSwapCache(page) && !PageUnevictable(page)) {
->  		bool active = PageActive(page);
-> +		struct lruvec *lruvec;
-> +
-> +		lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
->  
->  		del_page_from_lru_list(page, lruvec,
->  				       LRU_INACTIVE_ANON + active);
-> @@ -921,15 +929,17 @@ void lru_add_page_tail(struct page *page, struct page *page_tail,
->  }
->  #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
->  
-> -static void __pagevec_lru_add_fn(struct page *page, struct lruvec *lruvec,
-> -				 void *arg)
-> +static void __pagevec_lru_add_fn(struct page *page, void *arg)
->  {
-> -	enum lru_list lru;
->  	int was_unevictable = TestClearPageUnevictable(page);
-> +	struct lruvec *lruvec;
-> +	enum lru_list lru;
->  
->  	VM_BUG_ON_PAGE(PageLRU(page), page);
-> -
->  	SetPageLRU(page);
-> +
-> +	lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
-> +
->  	/*
->  	 * Page becomes evictable in two ways:
->  	 * 1) Within LRU lock [munlock_vma_page() and __munlock_pagevec()].
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index df859b1d583c..3c8b81990146 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -1767,15 +1767,15 @@ int isolate_lru_page(struct page *page)
->  
->  	if (PageLRU(page)) {
->  		pg_data_t *pgdat = page_pgdat(page);
-> -		struct lruvec *lruvec;
->  
->  		spin_lock_irq(&pgdat->lru_lock);
-> -		lruvec = mem_cgroup_page_lruvec(page, pgdat);
->  		if (PageLRU(page)) {
-> -			int lru = page_lru(page);
-> +			struct lruvec *lruvec;
-> +
-> +			lruvec = mem_cgroup_page_lruvec(page, pgdat);
->  			get_page(page);
->  			ClearPageLRU(page);
-> -			del_page_from_lru_list(page, lruvec, lru);
-> +			del_page_from_lru_list(page, lruvec, page_lru(page));
->  			ret = 0;
->  		}
->  		spin_unlock_irq(&pgdat->lru_lock);
-> -- 
-> 2.24.0
-
-It like the way you've rearranged isolate_lru_page() there, but I
-don't think it amounts to more than a cleanup.  Very good thinking
-about the odd "lruvec->pgdat = pgdat" case tucked away inside
-mem_cgroup_page_lruvec(), but actually, what harm does it do, if
-mem_cgroup_move_account() changes page->mem_cgroup concurrently?
-
-You say use-after-free, but we have spin_lock_irq here, and the
-struct mem_cgroup (and its lruvecs) cannot be freed until an RCU
-grace period expires, which we rely upon in many places, and which
-cannot happen until after the spin_unlock_irq.
-
-And the same applies in the pagevec_lru_move functions, doesn't it?
-
-I think now is not the time for such cleanups. If this fits well
-with Alex's per-lruvec locking (or represents an initial direction
-that you think he should follow), fine, but better to let him take it
-into his patchset in that case, than change the base unnecessarily
-underneath him.
-
-(It happens to go against my own direction, since it separates the
-locking from the determination of lruvec, which I insist must be
-kept together; but perhaps that won't be quite the same for Alex.)
-
-Hugh
+    Wanpeng
