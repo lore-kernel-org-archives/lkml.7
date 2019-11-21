@@ -2,251 +2,187 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F81CC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:40:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 690F0C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:42:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA0902068E
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:40:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 306502068E
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:42:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ld86EQA0"
+	dkim=pass (2048-bit key) header.d=fomichev-me.20150623.gappssmtp.com header.i=@fomichev-me.20150623.gappssmtp.com header.b="NzfzBTFL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbfKUVk4 (ORCPT
+        id S1726774AbfKUVm3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 16:40:56 -0500
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:44237 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726293AbfKUVkz (ORCPT
+        Thu, 21 Nov 2019 16:42:29 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:32918 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726329AbfKUVm2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 16:40:55 -0500
-Received: by mail-yw1-f65.google.com with SMTP id p128so1789423ywc.11
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 13:40:54 -0800 (PST)
+        Thu, 21 Nov 2019 16:42:28 -0500
+Received: by mail-pl1-f193.google.com with SMTP id ay6so2207630plb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 13:42:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tR7zPw0NRIBlEH7Gx7mSFzrrOGPQV8KzgffSPPviA7M=;
-        b=Ld86EQA0R1hOJ6sKkuqoxblruwPy6VQjEUfD9LsILZ/pXkITFpjk7hCHa700buT9cT
-         6I2WbMMtkwKDhmBRAF+koqT7jbdgXSTQjf33HLc365fgiMxqIzYS9lZ6gF0YGGyVDXkM
-         wtjGPR9rIxnop4U3/iUAJAD9pe+2bRgKhHtAec4TeN59H1xdF2CtBzUpyJy9A41EVors
-         sJO9jb3P6EeposVy4HDBXOGuybyTMF8OAs+osCjgksDatqKqnfUiensm1MSyDEFIlsub
-         BmQcZdGcJno+6dvnyqxWHQMBSe829VLEO3Uc7pmGUBxKBAyw5g9WqsRZiD2m62MyKqom
-         rMLQ==
+        d=fomichev-me.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=t6UbFd+jsoBUib7qTx+BJ7svX081NKhXcR40/0W3LxE=;
+        b=NzfzBTFLLQbShuKd0+1iHPSbgolHJ4OtPiIo3cDBAbu/SkruCzBCsN/endbdxELPdg
+         a2BGy0s6vp2YcKj3PofvztX4RQFiTivhdir/N//IVWWRGQ2a6JfQvwJKUa/sAuQPkwBl
+         vBzjsu5iH77F4iDXo+o57Y1A0xCR1HoBzEOIXdj4vx1A4uyAlcehU83323iGR7g2J/+T
+         uLncB6IFuO9PUxXESW8i/3VrqJSUb5vUYh9h4fhk7GTlwcBXKjqFLvEuw58816PaT84Z
+         740FYIO0PN1Pk84xVg5afM3Ai1eLS0aNwBlJYsNwBCTkO/bbIj6cSHCWddN53w5Qr6VY
+         QAsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tR7zPw0NRIBlEH7Gx7mSFzrrOGPQV8KzgffSPPviA7M=;
-        b=UW6FQiSBVpBCI8l8qE72ysSqE24BgF9UVRnOfyaP2eIsaiPXfYJDZsek496Q6B4NmW
-         0fZenmiH/82xjC1l6LnmV9yeJxIwy2M94TFWObBNz/SDMWZPusRxDnG4e7TJ7ubjaD0t
-         ofEgb80QDqaT2yrkX1pqo3qTkPKZlIq5BGsGtx+MoOgWtz1qlZMq+kg22EXqabRB18lj
-         AAykCLACgF1uH9ArwNXByGrYvGxRbMmIoAvPdPQO1ttX3wCgXqaMGth4R0zcEaGtj1Zy
-         GQr4XMH0YiB6L60BqbvofdJ2kwrSemtwb+Aeo7XjDiw2oWfrrbd3W3COIM0QGQWdA+Qm
-         Pu6Q==
-X-Gm-Message-State: APjAAAVanq5S0VbVCFeOiMafygiKNBzdAj59x+IfIExkRPu1wtya3P5F
-        f2mtzdrRyotahOdBmuV7m55mmOu/WDkZPsI8SdNqGQ==
-X-Google-Smtp-Source: APXvYqzkC4Cnw8HBuYgSsOFwu4Nz2GYwMnfpI/naBWvx4a/s+O82jMYRsWmhKrCcrtthofEB98iwmxCg/jwbjLLLES4=
-X-Received: by 2002:a81:3c91:: with SMTP id j139mr6737132ywa.371.1574372453557;
- Thu, 21 Nov 2019 13:40:53 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=t6UbFd+jsoBUib7qTx+BJ7svX081NKhXcR40/0W3LxE=;
+        b=iwNeGLWqYpW4mA75mH2x3Rthos3tsFVY3Jb6qTmdWYquI8ySusnjbo/HfFelPxsE1Z
+         cdXTzinQP4Y2+D1dKqXgcWQ86knCmUtCtP0qdVmrpE1WdKTXpP9JV2R9MOHXyKPxQG0N
+         AVs1Bb9aLCaHt44biHn1sHbG9/1Qz3JGVzAc9fG/XKapKZEWTHon8fA39iWX+cmopX4l
+         fQkDw3yQZM56GSV0WtAjcQ7YcGdn4X6r+RGkcqz/5bB9vE3ycURRkASJ4/VNyblMUuIS
+         ssfaEHL5tWw4rg/mzDRvI60rtwQ8Jsi3capKp7br3Aoqt10Sj00CGkXfbuuE2SNBw8Hw
+         FQVA==
+X-Gm-Message-State: APjAAAVD45/O2MMJAlCJF22YOQ3ZTo78Pi1040HL+vzs9fWscfiDLFWG
+        rZPzMT9Hxr7jJkUG/Tb9h2TUSg==
+X-Google-Smtp-Source: APXvYqzbwEqp+od0wOuk1Bhy360HecFCd8C8kLSld7Mxdz+8NHByzGE6CLBQgIGfRr178ZNtj+Y9wA==
+X-Received: by 2002:a17:902:854c:: with SMTP id d12mr6529877plo.264.1574372547563;
+        Thu, 21 Nov 2019 13:42:27 -0800 (PST)
+Received: from localhost ([2601:646:8f00:18d9:d0fa:7a4b:764f:de48])
+        by smtp.gmail.com with ESMTPSA id 6sm4768899pfy.43.2019.11.21.13.42.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Nov 2019 13:42:25 -0800 (PST)
+Date:   Thu, 21 Nov 2019 13:42:25 -0800
+From:   Stanislav Fomichev <sdf@fomichev.me>
+To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Cc:     ast@kernel.org, daniel@iogearbox.net, yhs@fb.com,
+        davem@davemloft.net, jakub.kicinski@netronome.com, hawk@kernel.org,
+        john.fastabend@gmail.com, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        clang-built-linux@googlegroups.com, ilias.apalodimas@linaro.org,
+        sergei.shtylyov@cogentembedded.com, andriin@fb.com
+Subject: Re: [PATCH v5 bpf-next 11/15] libbpf: don't use cxx to test_libpf
+ target
+Message-ID: <20191121214225.GA3145429@mini-arch.hsd1.ca.comcast.net>
+References: <20191011002808.28206-1-ivan.khoronzhuk@linaro.org>
+ <20191011002808.28206-12-ivan.khoronzhuk@linaro.org>
 MIME-Version: 1.0
-References: <20191121211053.48861-1-rrangel@chromium.org> <20191121140830.4.Iddc7dd74f893297cb932e9825d413e7890633b3d@changeid>
-In-Reply-To: <20191121140830.4.Iddc7dd74f893297cb932e9825d413e7890633b3d@changeid>
-From:   Guenter Roeck <groeck@google.com>
-Date:   Thu, 21 Nov 2019 13:40:42 -0800
-Message-ID: <CABXOdTeotUnO_7k9UycJ0vJEKV8pdZOjRrepDv5WVo5RmOLnEA@mail.gmail.com>
-Subject: Re: [PATCH 4/4] platform/chrome: i2c: i2c-cros-ec-tunnel: Convert i2c
- tunnel to MFD Cell
-To:     Raul E Rangel <rrangel@chromium.org>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Wolfram Sang <wsa@the-dreams.de>, Akshu.Agrawal@amd.com,
-        Guenter Roeck <groeck@chromium.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-i2c@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Benson Leung <bleung@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191011002808.28206-12-ivan.khoronzhuk@linaro.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 1:11 PM Raul E Rangel <rrangel@chromium.org> wrote:
->
-> If the i2c-cros-ec-tunnel driver is compiled into the kernel, it is
-> possible that i2c-cros-ec-tunnel could be probed before cros_ec_XXX
-> has finished initializing and setting the drvdata. This would cause a
-> NULL pointer panic.
->
-> Converting this driver over to an MFD solves the problem and aligns with
-> where the cros_ec is going.
->
+On 10/11, Ivan Khoronzhuk wrote:
+> No need to use C++ for test_libbpf target when libbpf is on C and it
+> can be tested with C, after this change the CXXFLAGS in makefiles can
+> be avoided, at least in bpf samples, when sysroot is used, passing
+> same C/LDFLAGS as for lib.
+> 
+> Add "return 0" in test_libbpf to avoid warn, but also remove spaces at
+> start of the lines to keep same style and avoid warns while apply.
+Hey, just spotted this patch, not sure how it slipped through.
+The c++ test was there to make sure libbpf can be included and
+linked against c++ code (i.e. libbpf headers don't have some c++
+keywords/etc).
 
-I thought the mfd maintainer objects to the use of the mfd API outside
-drivers/mfd. Did that change recently ?
+Any particular reason you were not happy with it? Can we revert it
+back to c++ and fix your use-case instead? Alternatively, we can just
+remove this test if we don't really care about c++.
 
-Guenter
-
-> Signed-off-by: Raul E Rangel <rrangel@chromium.org>
+> Acked-by: Andrii Nakryiko <andriin@fb.com>
+> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
 > ---
-> You can now see the device node lives under the mfd device.
->
-> $ find /sys/bus/platform/devices/cros-ec-dev.0.auto/cros-ec-i2c-tunnel.12.auto/ -iname firmware_node -exec ls -l '{}' \;
-> /sys/bus/platform/devices/cros-ec-dev.0.auto/cros-ec-i2c-tunnel.12.auto/firmware_node -> ../../../../../../LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00/device:1c/PNP0C09:00/GOOG0004:00/GOOG0012:00
-> /sys/bus/platform/devices/cros-ec-dev.0.auto/cros-ec-i2c-tunnel.12.auto/i2c-9/firmware_node -> ../../../../../../../LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00/device:1c/PNP0C09:00/GOOG0004:00/GOOG0012:00
-> /sys/bus/platform/devices/cros-ec-dev.0.auto/cros-ec-i2c-tunnel.12.auto/i2c-9/i2c-10EC5682:00/firmware_node -> ../../../../../../../../LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00/device:1c/PNP0C09:00/GOOG0004:00/GOOG0012:00/10EC5682:00
->
->  drivers/i2c/busses/i2c-cros-ec-tunnel.c | 36 +++++++++----------------
->  drivers/mfd/cros_ec_dev.c               | 19 +++++++++++++
->  2 files changed, 32 insertions(+), 23 deletions(-)
->
-> diff --git a/drivers/i2c/busses/i2c-cros-ec-tunnel.c b/drivers/i2c/busses/i2c-cros-ec-tunnel.c
-> index 5d91e33eb600..2e3217678fa3 100644
-> --- a/drivers/i2c/busses/i2c-cros-ec-tunnel.c
-> +++ b/drivers/i2c/busses/i2c-cros-ec-tunnel.c
-> @@ -6,6 +6,7 @@
->  #include <linux/acpi.h>
->  #include <linux/module.h>
->  #include <linux/i2c.h>
-> +#include <linux/mfd/cros_ec.h>
->  #include <linux/platform_data/cros_ec_commands.h>
->  #include <linux/platform_data/cros_ec_proto.h>
->  #include <linux/platform_device.h>
-> @@ -27,7 +28,6 @@
->  struct ec_i2c_device {
->         struct device *dev;
->         struct i2c_adapter adap;
-> -       struct cros_ec_device *ec;
->
->         u16 remote_bus;
->
-> @@ -176,6 +176,7 @@ static int ec_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg i2c_msgs[],
->  {
->         struct ec_i2c_device *bus = adap->algo_data;
->         struct device *dev = bus->dev;
-> +       struct cros_ec_dev *ec = dev_get_drvdata(dev->parent);
->         const u16 bus_num = bus->remote_bus;
->         int request_len;
->         int response_len;
-> @@ -183,6 +184,16 @@ static int ec_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg i2c_msgs[],
->         int result;
->         struct cros_ec_command *msg;
->
-> +       if (!ec) {
-> +               dev_err(dev, "%s: ec is missing!\n", __func__);
-> +               return -EINVAL;
-> +       }
-> +
-> +       if (!ec->ec_dev) {
-> +               dev_err(dev, "%s: ec->ec_dev is missing!\n", __func__);
-> +               return -EINVAL;
-> +       }
-> +
->         request_len = ec_i2c_count_message(i2c_msgs, num);
->         if (request_len < 0) {
->                 dev_warn(dev, "Error constructing message %d\n", request_len);
-> @@ -212,7 +223,7 @@ static int ec_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg i2c_msgs[],
->         msg->outsize = request_len;
->         msg->insize = response_len;
->
-> -       result = cros_ec_cmd_xfer_status(bus->ec, msg);
-> +       result = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
->         if (result < 0) {
->                 dev_err(dev, "Error transferring EC i2c message %d\n", result);
->                 goto exit;
-> @@ -241,17 +252,11 @@ static const struct i2c_algorithm ec_i2c_algorithm = {
->
->  static int ec_i2c_probe(struct platform_device *pdev)
->  {
-> -       struct cros_ec_device *ec = dev_get_drvdata(pdev->dev.parent);
->         struct device *dev = &pdev->dev;
->         struct ec_i2c_device *bus = NULL;
->         u32 remote_bus;
->         int err;
->
-> -       if (!ec->cmd_xfer) {
-> -               dev_err(dev, "Missing sendrecv\n");
-> -               return -EINVAL;
-> -       }
+>  tools/lib/bpf/Makefile                         | 18 +++++-------------
+>  .../lib/bpf/{test_libbpf.cpp => test_libbpf.c} | 14 ++++++++------
+>  2 files changed, 13 insertions(+), 19 deletions(-)
+>  rename tools/lib/bpf/{test_libbpf.cpp => test_libbpf.c} (61%)
+> 
+> diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
+> index 1270955e4845..46280b5ad48d 100644
+> --- a/tools/lib/bpf/Makefile
+> +++ b/tools/lib/bpf/Makefile
+> @@ -52,7 +52,7 @@ ifndef VERBOSE
+>  endif
+>  
+>  FEATURE_USER = .libbpf
+> -FEATURE_TESTS = libelf libelf-mmap bpf reallocarray cxx
+> +FEATURE_TESTS = libelf libelf-mmap bpf reallocarray
+>  FEATURE_DISPLAY = libelf bpf
+>  
+>  INCLUDES = -I. -I$(srctree)/tools/include -I$(srctree)/tools/arch/$(ARCH)/include/uapi -I$(srctree)/tools/include/uapi
+> @@ -142,15 +142,7 @@ GLOBAL_SYM_COUNT = $(shell readelf -s --wide $(BPF_IN) | \
+>  VERSIONED_SYM_COUNT = $(shell readelf -s --wide $(OUTPUT)libbpf.so | \
+>  			      grep -Eo '[^ ]+@LIBBPF_' | cut -d@ -f1 | sort -u | wc -l)
+>  
+> -CMD_TARGETS = $(LIB_TARGET) $(PC_FILE)
 > -
->         bus = devm_kzalloc(dev, sizeof(*bus), GFP_KERNEL);
->         if (bus == NULL)
->                 return -ENOMEM;
-> @@ -263,7 +268,6 @@ static int ec_i2c_probe(struct platform_device *pdev)
->         }
->         bus->remote_bus = remote_bus;
->
-> -       bus->ec = ec;
->         bus->dev = dev;
->
->         bus->adap.owner = THIS_MODULE;
-> @@ -292,25 +296,11 @@ static int ec_i2c_remove(struct platform_device *dev)
->         return 0;
+> -CXX_TEST_TARGET = $(OUTPUT)test_libbpf
+> -
+> -ifeq ($(feature-cxx), 1)
+> -	CMD_TARGETS += $(CXX_TEST_TARGET)
+> -endif
+> -
+> -TARGETS = $(CMD_TARGETS)
+> +CMD_TARGETS = $(LIB_TARGET) $(PC_FILE) $(OUTPUT)test_libbpf
+>  
+>  all: fixdep
+>  	$(Q)$(MAKE) all_cmd
+> @@ -190,8 +182,8 @@ $(OUTPUT)libbpf.so.$(LIBBPF_VERSION): $(BPF_IN)
+>  $(OUTPUT)libbpf.a: $(BPF_IN)
+>  	$(QUIET_LINK)$(RM) $@; $(AR) rcs $@ $^
+>  
+> -$(OUTPUT)test_libbpf: test_libbpf.cpp $(OUTPUT)libbpf.a
+> -	$(QUIET_LINK)$(CXX) $(INCLUDES) $^ -lelf -o $@
+> +$(OUTPUT)test_libbpf: test_libbpf.c $(OUTPUT)libbpf.a
+> +	$(QUIET_LINK)$(CC) $(INCLUDES) $^ -lelf -o $@
+>  
+>  $(OUTPUT)libbpf.pc:
+>  	$(QUIET_GEN)sed -e "s|@PREFIX@|$(prefix)|" \
+> @@ -266,7 +258,7 @@ config-clean:
+>  	$(Q)$(MAKE) -C $(srctree)/tools/build/feature/ clean >/dev/null
+>  
+>  clean:
+> -	$(call QUIET_CLEAN, libbpf) $(RM) $(TARGETS) $(CXX_TEST_TARGET) \
+> +	$(call QUIET_CLEAN, libbpf) $(RM) $(CMD_TARGETS) \
+>  		*.o *~ *.a *.so *.so.$(LIBBPF_MAJOR_VERSION) .*.d .*.cmd \
+>  		*.pc LIBBPF-CFLAGS bpf_helper_defs.h
+>  	$(call QUIET_CLEAN, core-gen) $(RM) $(OUTPUT)FEATURE-DUMP.libbpf
+> diff --git a/tools/lib/bpf/test_libbpf.cpp b/tools/lib/bpf/test_libbpf.c
+> similarity index 61%
+> rename from tools/lib/bpf/test_libbpf.cpp
+> rename to tools/lib/bpf/test_libbpf.c
+> index fc134873bb6d..f0eb2727b766 100644
+> --- a/tools/lib/bpf/test_libbpf.cpp
+> +++ b/tools/lib/bpf/test_libbpf.c
+> @@ -7,12 +7,14 @@
+>  
+>  int main(int argc, char *argv[])
+>  {
+> -    /* libbpf.h */
+> -    libbpf_set_print(NULL);
+> +	/* libbpf.h */
+> +	libbpf_set_print(NULL);
+>  
+> -    /* bpf.h */
+> -    bpf_prog_get_fd_by_id(0);
+> +	/* bpf.h */
+> +	bpf_prog_get_fd_by_id(0);
+>  
+> -    /* btf.h */
+> -    btf__new(NULL, 0);
+> +	/* btf.h */
+> +	btf__new(NULL, 0);
+> +
+> +	return 0;
 >  }
->
-> -static const struct of_device_id cros_ec_i2c_of_match[] = {
-> -       { .compatible = "google,cros-ec-i2c-tunnel" },
-> -       {},
-> -};
-> -MODULE_DEVICE_TABLE(of, cros_ec_i2c_of_match);
-> -
-> -static const struct acpi_device_id cros_ec_i2c_tunnel_acpi_id[] = {
-> -       { "GOOG0012", 0 },
-> -       { }
-> -};
-> -MODULE_DEVICE_TABLE(acpi, cros_ec_i2c_tunnel_acpi_id);
-> -
->  static struct platform_driver ec_i2c_tunnel_driver = {
->         .probe = ec_i2c_probe,
->         .remove = ec_i2c_remove,
->         .driver = {
->                 .name = "cros-ec-i2c-tunnel",
-> -               .acpi_match_table = ACPI_PTR(cros_ec_i2c_tunnel_acpi_id),
-> -               .of_match_table = of_match_ptr(cros_ec_i2c_of_match),
->         },
->  };
->
-> diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
-> index 1efdba18f20b..61b20e061f75 100644
-> --- a/drivers/mfd/cros_ec_dev.c
-> +++ b/drivers/mfd/cros_ec_dev.c
-> @@ -113,6 +113,18 @@ static const struct mfd_cell cros_ec_vbc_cells[] = {
->         { .name = "cros-ec-vbc", }
->  };
->
-> +static struct mfd_cell_acpi_match cros_ec_i2c_tunnel_acpi_match = {
-> +       .pnpid = "GOOG0012"
-> +};
-> +
-> +static struct mfd_cell cros_ec_fw_cells[] = {
-> +       {
-> +               .name = "cros-ec-i2c-tunnel",
-> +               .acpi_match = &cros_ec_i2c_tunnel_acpi_match,
-> +               .of_compatible = "google,cros-ec-i2c-tunnel"
-> +       },
-> +};
-> +
->  int cros_ec_check_features(struct cros_ec_dev *ec, int feature)
->  {
->         struct cros_ec_command *msg;
-> @@ -485,6 +497,13 @@ static int ec_device_probe(struct platform_device *pdev)
->                          "failed to add cros-ec platform devices: %d\n",
->                          retval);
->
-> +       retval = mfd_add_hotplug_devices(ec->dev, cros_ec_fw_cells,
-> +                                        ARRAY_SIZE(cros_ec_fw_cells));
-> +       if (retval)
-> +               dev_warn(ec->dev,
-> +                        "failed to add cros-ec fw platform devices: %d\n",
-> +                        retval);
-> +
->         /* Check whether this EC instance has a VBC NVRAM */
->         node = ec->ec_dev->dev->of_node;
->         if (of_property_read_bool(node, "google,has-vbc-nvram")) {
-> --
-> 2.24.0.432.g9d3f5f5b63-goog
->
+> -- 
+> 2.17.1
+> 
