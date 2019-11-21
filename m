@@ -2,494 +2,183 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0004C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 06:03:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C46DC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 06:04:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90B1120748
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 06:03:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5CE920748
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 06:04:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Q8f6Yxfo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726634AbfKUGDg (ORCPT
+        id S1726689AbfKUGEr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 01:03:36 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:59727 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbfKUGDf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 01:03:35 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iXfYf-0004QT-PP; Thu, 21 Nov 2019 07:03:13 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 56B0B1C19AE;
-        Thu, 21 Nov 2019 07:03:13 +0100 (CET)
-Date:   Thu, 21 Nov 2019 06:03:13 -0000
-From:   "tip-bot2 for Davidlohr Bueso" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/mm] x86/mm/pat: Rename pat_rbtree.c to pat_interval.c
-Cc:     Davidlohr Bueso <dbueso@suse.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rik van Riel <riel@surriel.com>,
-        Thomas Gleixner <tglx@linutronix.de>, dave@stgolabs.net,
-        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191021231924.25373-5-dave@stgolabs.net>
-References: <20191021231924.25373-5-dave@stgolabs.net>
+        Thu, 21 Nov 2019 01:04:47 -0500
+Received: from mail-eopbgr1310124.outbound.protection.outlook.com ([40.107.131.124]:56580
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726014AbfKUGEq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 01:04:46 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kd82ysVmAntD6G9fpjNY9fnaj+BNtZLET3/4tVO8ZIWj2RMWzLkx2mZkUhLOPmovUv4A7HbfYby00EvWFcz10UaKy0gxsOWjdz5msCHm6uQKRTA6/aM9kOuyuTlhXo1WWuGn7f0lUR0fKO76lnOFlvZY2W2WVA9kC5tIJMSq8wYUtB+KK+LS16AzVLorotyFzVlLV/meGGHGYdi7kpLpx22i2MhVTx1jYgxNhEhe22qYl54qyFaqg+O+2nDxYPD5UIp4Pa/nmALJweSRQMklm6AoI0GyTm3wZ5bYtEYugnWf9AWGJ2J15xWjM4HSF+8RuTFjcq5tqtbmrnOwPUdcxQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3Oxv3ctmYWgT2BZXAttyha0B2WgLb6uXbu5FZ0sQRc4=;
+ b=MrDWc0mO9/dxrWxuxfaXQFJUSdvs/CYnXO8QkTQMNJezGd12NGMddgH8gzfcx78wd+PR8XQk8uPfzak/+NGJMM/lb4YlW5b1xBBNmIZQP4OdXI127sY9U2vaIZ37Jf/WMbBDcbfaS6RRwR5GNkm3UklaOxL+ja/yM1PwfB6NUvdHwayrm59N56vezUeafTIOj2gOJ7USaQoCuSKmdiWQFtRxzmTFHzGNWtTp5pprCwwCMcxIDysQOqnVaJhD6vLz13u6HErnF1deAhQrRZRDa/Id1XekLhY9fnxac8euEvbvufw81y4qO/PpeVFkHm8NBuTe6qMR/eZphsmj0B4w5w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3Oxv3ctmYWgT2BZXAttyha0B2WgLb6uXbu5FZ0sQRc4=;
+ b=Q8f6YxfoDh+/rCeNiYVzzHNkFbf2p4xpTiRf6hxxzPiOOAVltcaddJKqgQGlXAYMWkz672cB11l/5XK7ecnx4h+lLtXILRRlpcT33BKKPD6+U4zStF0yDWNV1cr9GLhw1fOLVrgMrmajZkG3nBkv3Xn+ALlFV86nm7vtTTUe19A=
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
+ PU1P153MB0122.APCP153.PROD.OUTLOOK.COM (10.170.188.15) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2495.0; Thu, 21 Nov 2019 06:04:36 +0000
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::704b:f2b6:33d:557a]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::704b:f2b6:33d:557a%9]) with mapi id 15.20.2495.010; Thu, 21 Nov 2019
+ 06:04:36 +0000
+From:   Wei Hu <weh@microsoft.com>
+To:     Dexuan Cui <decui@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "b.zolnierkie@samsung.com" <b.zolnierkie@samsung.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>
+Subject: RE: [PATCH] video: hyperv_fb: Fix hibernation for the deferred IO
+ feature
+Thread-Topic: [PATCH] video: hyperv_fb: Fix hibernation for the deferred IO
+ feature
+Thread-Index: AQHVn3IaBpxutL9CjUq7Dxtj1Of6aKeU7DrwgAA3eZA=
+Date:   Thu, 21 Nov 2019 06:04:35 +0000
+Message-ID: <PU1P153MB0169BF13B371A3A5037DA538BB4E0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+References: <1574234028-48574-1-git-send-email-decui@microsoft.com>
+ <PU1P153MB01699A8B75901F896F1E4503BB4E0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+In-Reply-To: <PU1P153MB01699A8B75901F896F1E4503BB4E0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=weh@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-11-21T02:47:14.6204741Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=7e51bbfc-6a79-4f24-a8ad-0c7f07e32939;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=weh@microsoft.com; 
+x-originating-ip: [167.220.255.72]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: da3c40ac-1617-4278-5034-08d76e48afd1
+x-ms-traffictypediagnostic: PU1P153MB0122:|PU1P153MB0122:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <PU1P153MB0122D0374ADA80D821A0B20FBB4E0@PU1P153MB0122.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0228DDDDD7
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(376002)(366004)(39860400002)(396003)(136003)(13464003)(199004)(189003)(478600001)(1511001)(316002)(86362001)(8936002)(6246003)(446003)(11346002)(256004)(2940100002)(25786009)(53546011)(6506007)(74316002)(305945005)(476003)(8676002)(7736002)(2201001)(14444005)(22452003)(102836004)(81156014)(81166006)(5660300002)(26005)(10090500001)(186003)(99286004)(110136005)(52536014)(76176011)(9686003)(6436002)(966005)(14454004)(76116006)(71190400001)(71200400001)(486006)(6306002)(6636002)(66446008)(66556008)(64756008)(66066001)(66476007)(2501003)(229853002)(2906002)(66946007)(8990500004)(10290500003)(55016002)(7696005)(33656002)(6116002)(3846002)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0122;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 43vvaM3VlhxAMc9XltOVZOhIkB1roZ4joj0IjT5QgFKgDV4hA9o61wabE9y7zsxygmF7u0Ws2uZ3ElGsp/KQ7rOEfqHkmysATd3D0qnT4BCwMEpyP9L4cU2+YPAIB29rrrqDsFbz9F/byBMqA3eeViYjHTnL/QsgTmpN7Jl3NhTfI/rIRfcBP8G/BSjMMjXOwjWjTyE2OOF8xhrWFkqR5KASKIPTxst8rxIsrwIHlZvGUXAYW6ncE3sUJkRVAs6FR9SgTWpYk6J17AkuIYyvAOmBTz2VDpSzUqBTfvh7r2r/fw1nAr3QMc0ZAmTXInV4UUxmmoLd3wAx8NEV+ATn6IBsFr+2DW4vN2jSn7FPIACKLG6KgcICbVfqGRpkkioS+h8JwxUeqCShXQ04Amp3JdjmPm6s9FrP5zSGo4HSI1EM1M63PlnXvJE40S4uVH81qBuF/oR081h+iP0t9KRP1Fe+RuJKyEFoDICn8F7AAdg=
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Message-ID: <157431619321.21853.6320580586819014584.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: da3c40ac-1617-4278-5034-08d76e48afd1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Nov 2019 06:04:35.9027
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: sS8EpL9W9u3dUK2x90x+XXuUmHiHuT0GrwfLUwyyTysji5LZjA35Kz85vv+oVUPLev9QcrmQ+CRFtRSz1kRMww==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0122
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/mm branch of tip:
-
-Commit-ID:     ee4e7b04b718cc8a674810e3e0a339a493833640
-Gitweb:        https://git.kernel.org/tip/ee4e7b04b718cc8a674810e3e0a339a493833640
-Author:        Davidlohr Bueso <dave@stgolabs.net>
-AuthorDate:    Mon, 21 Oct 2019 16:19:24 -07:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 19 Nov 2019 09:16:00 +01:00
-
-x86/mm/pat: Rename pat_rbtree.c to pat_interval.c
-
-Considering that we don't use an rbtree but an interval tree,
-rename the main file accordingly.
-
-Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: dave@stgolabs.net
-Link: https://lkml.kernel.org/r/20191021231924.25373-5-dave@stgolabs.net
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- arch/x86/mm/Makefile       |   2 +-
- arch/x86/mm/pat_interval.c | 186 ++++++++++++++++++++++++++++++++++++-
- arch/x86/mm/pat_rbtree.c   | 186 +------------------------------------
- 3 files changed, 187 insertions(+), 187 deletions(-)
- create mode 100644 arch/x86/mm/pat_interval.c
- delete mode 100644 arch/x86/mm/pat_rbtree.c
-
-diff --git a/arch/x86/mm/Makefile b/arch/x86/mm/Makefile
-index 84373dc..de403df 100644
---- a/arch/x86/mm/Makefile
-+++ b/arch/x86/mm/Makefile
-@@ -23,7 +23,7 @@ CFLAGS_mem_encrypt_identity.o	:= $(nostackp)
- 
- CFLAGS_fault.o := -I $(srctree)/$(src)/../include/asm/trace
- 
--obj-$(CONFIG_X86_PAT)		+= pat_rbtree.o
-+obj-$(CONFIG_X86_PAT)		+= pat_interval.o
- 
- obj-$(CONFIG_X86_32)		+= pgtable_32.o iomap_32.o
- 
-diff --git a/arch/x86/mm/pat_interval.c b/arch/x86/mm/pat_interval.c
-new file mode 100644
-index 0000000..ef59e0a
---- /dev/null
-+++ b/arch/x86/mm/pat_interval.c
-@@ -0,0 +1,186 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Handle caching attributes in page tables (PAT)
-+ *
-+ * Authors: Venkatesh Pallipadi <venkatesh.pallipadi@intel.com>
-+ *          Suresh B Siddha <suresh.b.siddha@intel.com>
-+ *
-+ * Interval tree used to store the PAT memory type reservations.
-+ */
-+
-+#include <linux/seq_file.h>
-+#include <linux/debugfs.h>
-+#include <linux/kernel.h>
-+#include <linux/interval_tree_generic.h>
-+#include <linux/sched.h>
-+#include <linux/gfp.h>
-+
-+#include <asm/pgtable.h>
-+#include <asm/pat.h>
-+
-+#include "pat_internal.h"
-+
-+/*
-+ * The memtype tree keeps track of memory type for specific
-+ * physical memory areas. Without proper tracking, conflicting memory
-+ * types in different mappings can cause CPU cache corruption.
-+ *
-+ * The tree is an interval tree (augmented rbtree) with tree ordered
-+ * on starting address. Tree can contain multiple entries for
-+ * different regions which overlap. All the aliases have the same
-+ * cache attributes of course.
-+ *
-+ * memtype_lock protects the rbtree.
-+ */
-+static inline u64 memtype_interval_start(struct memtype *memtype)
-+{
-+	return memtype->start;
-+}
-+
-+static inline u64 memtype_interval_end(struct memtype *memtype)
-+{
-+	return memtype->end - 1;
-+}
-+INTERVAL_TREE_DEFINE(struct memtype, rb, u64, subtree_max_end,
-+		     memtype_interval_start, memtype_interval_end,
-+		     static, memtype_interval)
-+
-+static struct rb_root_cached memtype_rbroot = RB_ROOT_CACHED;
-+
-+enum {
-+	MEMTYPE_EXACT_MATCH	= 0,
-+	MEMTYPE_END_MATCH	= 1
-+};
-+
-+static struct memtype *memtype_match(u64 start, u64 end, int match_type)
-+{
-+	struct memtype *match;
-+
-+	match = memtype_interval_iter_first(&memtype_rbroot, start, end);
-+	while (match != NULL && match->start < end) {
-+		if ((match_type == MEMTYPE_EXACT_MATCH) &&
-+		    (match->start == start) && (match->end == end))
-+			return match;
-+
-+		if ((match_type == MEMTYPE_END_MATCH) &&
-+		    (match->start < start) && (match->end == end))
-+			return match;
-+
-+		match = memtype_interval_iter_next(match, start, end);
-+	}
-+
-+	return NULL; /* Returns NULL if there is no match */
-+}
-+
-+static int memtype_check_conflict(u64 start, u64 end,
-+				  enum page_cache_mode reqtype,
-+				  enum page_cache_mode *newtype)
-+{
-+	struct memtype *match;
-+	enum page_cache_mode found_type = reqtype;
-+
-+	match = memtype_interval_iter_first(&memtype_rbroot, start, end);
-+	if (match == NULL)
-+		goto success;
-+
-+	if (match->type != found_type && newtype == NULL)
-+		goto failure;
-+
-+	dprintk("Overlap at 0x%Lx-0x%Lx\n", match->start, match->end);
-+	found_type = match->type;
-+
-+	match = memtype_interval_iter_next(match, start, end);
-+	while (match) {
-+		if (match->type != found_type)
-+			goto failure;
-+
-+		match = memtype_interval_iter_next(match, start, end);
-+	}
-+success:
-+	if (newtype)
-+		*newtype = found_type;
-+
-+	return 0;
-+
-+failure:
-+	pr_info("x86/PAT: %s:%d conflicting memory types %Lx-%Lx %s<->%s\n",
-+		current->comm, current->pid, start, end,
-+		cattr_name(found_type), cattr_name(match->type));
-+	return -EBUSY;
-+}
-+
-+int memtype_check_insert(struct memtype *new,
-+			 enum page_cache_mode *ret_type)
-+{
-+	int err = 0;
-+
-+	err = memtype_check_conflict(new->start, new->end,
-+					new->type, ret_type);
-+	if (err)
-+		goto done;
-+
-+	if (ret_type)
-+		new->type = *ret_type;
-+	memtype_interval_insert(new, &memtype_rbroot);
-+done:
-+	return err;
-+}
-+
-+struct memtype *memtype_erase(u64 start, u64 end)
-+{
-+	struct memtype *data;
-+
-+	/*
-+	 * Since the memtype_rbroot tree allows overlapping ranges,
-+	 * memtype_erase() checks with EXACT_MATCH first, i.e. free
-+	 * a whole node for the munmap case.  If no such entry is found,
-+	 * it then checks with END_MATCH, i.e. shrink the size of a node
-+	 * from the end for the mremap case.
-+	 */
-+	data = memtype_match(start, end, MEMTYPE_EXACT_MATCH);
-+	if (!data) {
-+		data = memtype_match(start, end, MEMTYPE_END_MATCH);
-+		if (!data)
-+			return ERR_PTR(-EINVAL);
-+	}
-+
-+	if (data->start == start) {
-+		/* munmap: erase this node */
-+		memtype_interval_remove(data, &memtype_rbroot);
-+	} else {
-+		/* mremap: update the end value of this node */
-+		memtype_interval_remove(data, &memtype_rbroot);
-+		data->end = start;
-+		memtype_interval_insert(data, &memtype_rbroot);
-+		return NULL;
-+	}
-+
-+	return data;
-+}
-+
-+struct memtype *memtype_lookup(u64 addr)
-+{
-+	return memtype_interval_iter_first(&memtype_rbroot, addr,
-+					   addr + PAGE_SIZE);
-+}
-+
-+#if defined(CONFIG_DEBUG_FS)
-+int memtype_copy_nth_element(struct memtype *out, loff_t pos)
-+{
-+	struct memtype *match;
-+	int i = 1;
-+
-+	match = memtype_interval_iter_first(&memtype_rbroot, 0, ULONG_MAX);
-+	while (match && pos != i) {
-+		match = memtype_interval_iter_next(match, 0, ULONG_MAX);
-+		i++;
-+	}
-+
-+	if (match) { /* pos == i */
-+		*out = *match;
-+		return 0;
-+	} else {
-+		return 1;
-+	}
-+}
-+#endif
-diff --git a/arch/x86/mm/pat_rbtree.c b/arch/x86/mm/pat_rbtree.c
-deleted file mode 100644
-index ef59e0a..0000000
---- a/arch/x86/mm/pat_rbtree.c
-+++ /dev/null
-@@ -1,186 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--/*
-- * Handle caching attributes in page tables (PAT)
-- *
-- * Authors: Venkatesh Pallipadi <venkatesh.pallipadi@intel.com>
-- *          Suresh B Siddha <suresh.b.siddha@intel.com>
-- *
-- * Interval tree used to store the PAT memory type reservations.
-- */
--
--#include <linux/seq_file.h>
--#include <linux/debugfs.h>
--#include <linux/kernel.h>
--#include <linux/interval_tree_generic.h>
--#include <linux/sched.h>
--#include <linux/gfp.h>
--
--#include <asm/pgtable.h>
--#include <asm/pat.h>
--
--#include "pat_internal.h"
--
--/*
-- * The memtype tree keeps track of memory type for specific
-- * physical memory areas. Without proper tracking, conflicting memory
-- * types in different mappings can cause CPU cache corruption.
-- *
-- * The tree is an interval tree (augmented rbtree) with tree ordered
-- * on starting address. Tree can contain multiple entries for
-- * different regions which overlap. All the aliases have the same
-- * cache attributes of course.
-- *
-- * memtype_lock protects the rbtree.
-- */
--static inline u64 memtype_interval_start(struct memtype *memtype)
--{
--	return memtype->start;
--}
--
--static inline u64 memtype_interval_end(struct memtype *memtype)
--{
--	return memtype->end - 1;
--}
--INTERVAL_TREE_DEFINE(struct memtype, rb, u64, subtree_max_end,
--		     memtype_interval_start, memtype_interval_end,
--		     static, memtype_interval)
--
--static struct rb_root_cached memtype_rbroot = RB_ROOT_CACHED;
--
--enum {
--	MEMTYPE_EXACT_MATCH	= 0,
--	MEMTYPE_END_MATCH	= 1
--};
--
--static struct memtype *memtype_match(u64 start, u64 end, int match_type)
--{
--	struct memtype *match;
--
--	match = memtype_interval_iter_first(&memtype_rbroot, start, end);
--	while (match != NULL && match->start < end) {
--		if ((match_type == MEMTYPE_EXACT_MATCH) &&
--		    (match->start == start) && (match->end == end))
--			return match;
--
--		if ((match_type == MEMTYPE_END_MATCH) &&
--		    (match->start < start) && (match->end == end))
--			return match;
--
--		match = memtype_interval_iter_next(match, start, end);
--	}
--
--	return NULL; /* Returns NULL if there is no match */
--}
--
--static int memtype_check_conflict(u64 start, u64 end,
--				  enum page_cache_mode reqtype,
--				  enum page_cache_mode *newtype)
--{
--	struct memtype *match;
--	enum page_cache_mode found_type = reqtype;
--
--	match = memtype_interval_iter_first(&memtype_rbroot, start, end);
--	if (match == NULL)
--		goto success;
--
--	if (match->type != found_type && newtype == NULL)
--		goto failure;
--
--	dprintk("Overlap at 0x%Lx-0x%Lx\n", match->start, match->end);
--	found_type = match->type;
--
--	match = memtype_interval_iter_next(match, start, end);
--	while (match) {
--		if (match->type != found_type)
--			goto failure;
--
--		match = memtype_interval_iter_next(match, start, end);
--	}
--success:
--	if (newtype)
--		*newtype = found_type;
--
--	return 0;
--
--failure:
--	pr_info("x86/PAT: %s:%d conflicting memory types %Lx-%Lx %s<->%s\n",
--		current->comm, current->pid, start, end,
--		cattr_name(found_type), cattr_name(match->type));
--	return -EBUSY;
--}
--
--int memtype_check_insert(struct memtype *new,
--			 enum page_cache_mode *ret_type)
--{
--	int err = 0;
--
--	err = memtype_check_conflict(new->start, new->end,
--					new->type, ret_type);
--	if (err)
--		goto done;
--
--	if (ret_type)
--		new->type = *ret_type;
--	memtype_interval_insert(new, &memtype_rbroot);
--done:
--	return err;
--}
--
--struct memtype *memtype_erase(u64 start, u64 end)
--{
--	struct memtype *data;
--
--	/*
--	 * Since the memtype_rbroot tree allows overlapping ranges,
--	 * memtype_erase() checks with EXACT_MATCH first, i.e. free
--	 * a whole node for the munmap case.  If no such entry is found,
--	 * it then checks with END_MATCH, i.e. shrink the size of a node
--	 * from the end for the mremap case.
--	 */
--	data = memtype_match(start, end, MEMTYPE_EXACT_MATCH);
--	if (!data) {
--		data = memtype_match(start, end, MEMTYPE_END_MATCH);
--		if (!data)
--			return ERR_PTR(-EINVAL);
--	}
--
--	if (data->start == start) {
--		/* munmap: erase this node */
--		memtype_interval_remove(data, &memtype_rbroot);
--	} else {
--		/* mremap: update the end value of this node */
--		memtype_interval_remove(data, &memtype_rbroot);
--		data->end = start;
--		memtype_interval_insert(data, &memtype_rbroot);
--		return NULL;
--	}
--
--	return data;
--}
--
--struct memtype *memtype_lookup(u64 addr)
--{
--	return memtype_interval_iter_first(&memtype_rbroot, addr,
--					   addr + PAGE_SIZE);
--}
--
--#if defined(CONFIG_DEBUG_FS)
--int memtype_copy_nth_element(struct memtype *out, loff_t pos)
--{
--	struct memtype *match;
--	int i = 1;
--
--	match = memtype_interval_iter_first(&memtype_rbroot, 0, ULONG_MAX);
--	while (match && pos != i) {
--		match = memtype_interval_iter_next(match, 0, ULONG_MAX);
--		i++;
--	}
--
--	if (match) { /* pos == i */
--		*out = *match;
--		return 0;
--	} else {
--		return 1;
--	}
--}
--#endif
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFdlaSBIdQ0KPiBTZW50OiAy
+MDE5xOoxMdTCMjHI1SAxMDo0Nw0KPiBUbzogRGV4dWFuIEN1aSA8ZGVjdWlAbWljcm9zb2Z0LmNv
+bT47IEtZIFNyaW5pdmFzYW4gPGt5c0BtaWNyb3NvZnQuY29tPjsNCj4gSGFpeWFuZyBaaGFuZyA8
+aGFpeWFuZ3pAbWljcm9zb2Z0LmNvbT47IFN0ZXBoZW4gSGVtbWluZ2VyDQo+IDxzdGhlbW1pbkBt
+aWNyb3NvZnQuY29tPjsgc2FzaGFsQGtlcm5lbC5vcmc7IGIuem9sbmllcmtpZUBzYW1zdW5nLmNv
+bTsNCj4gbGludXgtaHlwZXJ2QHZnZXIua2VybmVsLm9yZzsgZHJpLWRldmVsQGxpc3RzLmZyZWVk
+ZXNrdG9wLm9yZzsgbGludXgtDQo+IGZiZGV2QHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVs
+QHZnZXIua2VybmVsLm9yZzsgTWljaGFlbCBLZWxsZXkNCj4gPG1pa2VsbGV5QG1pY3Jvc29mdC5j
+b20+OyBTYXNoYSBMZXZpbiA8QWxleGFuZGVyLkxldmluQG1pY3Jvc29mdC5jb20+DQo+IFN1Ympl
+Y3Q6IFJFOiBbUEFUQ0hdIHZpZGVvOiBoeXBlcnZfZmI6IEZpeCBoaWJlcm5hdGlvbiBmb3IgdGhl
+IGRlZmVycmVkIElPDQo+IGZlYXR1cmUNCj4gDQo+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0t
+LS0NCj4gPiBGcm9tOiBEZXh1YW4gQ3VpIDxkZWN1aUBtaWNyb3NvZnQuY29tPg0KPiA+IFNlbnQ6
+IFdlZG5lc2RheSwgTm92ZW1iZXIgMjAsIDIwMTkgMzoxNCBQTQ0KPiA+IFRvOiBLWSBTcmluaXZh
+c2FuIDxreXNAbWljcm9zb2Z0LmNvbT47IEhhaXlhbmcgWmhhbmcNCj4gPiA8aGFpeWFuZ3pAbWlj
+cm9zb2Z0LmNvbT47IFN0ZXBoZW4gSGVtbWluZ2VyDQo+IDxzdGhlbW1pbkBtaWNyb3NvZnQuY29t
+PjsNCj4gPiBzYXNoYWxAa2VybmVsLm9yZzsgYi56b2xuaWVya2llQHNhbXN1bmcuY29tOyBsaW51
+eC1oeXBlcnZAdmdlci5rZXJuZWwub3JnOw0KPiA+IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
+cC5vcmc7IGxpbnV4LWZiZGV2QHZnZXIua2VybmVsLm9yZzsgbGludXgtDQo+ID4ga2VybmVsQHZn
+ZXIua2VybmVsLm9yZzsgTWljaGFlbCBLZWxsZXkgPG1pa2VsbGV5QG1pY3Jvc29mdC5jb20+OyBT
+YXNoYQ0KPiBMZXZpbg0KPiA+IDxBbGV4YW5kZXIuTGV2aW5AbWljcm9zb2Z0LmNvbT4NCj4gPiBD
+YzogV2VpIEh1IDx3ZWhAbWljcm9zb2Z0LmNvbT47IERleHVhbiBDdWkgPGRlY3VpQG1pY3Jvc29m
+dC5jb20+DQo+ID4gU3ViamVjdDogW1BBVENIXSB2aWRlbzogaHlwZXJ2X2ZiOiBGaXggaGliZXJu
+YXRpb24gZm9yIHRoZSBkZWZlcnJlZCBJTyBmZWF0dXJlDQo+ID4NCj4gPiBmYl9kZWZlcnJlZF9p
+b193b3JrKCkgY2FuIGFjY2VzcyB0aGUgdm1idXMgcmluZ2J1ZmZlciBieSBjYWxsaW5nDQo+ID4g
+ZmJkZWZpby0+ZGVmZXJyZWRfaW8oKSAtPiBzeW50aHZpZF9kZWZlcnJlZF9pbygpIC0+IHN5bnRo
+dmlkX3VwZGF0ZSgpLg0KPiA+DQo+ID4gQmVjYXVzZSB0aGUgdm1idXMgcmluZ2J1ZmZlciBpcyBp
+bmFjY2Vzc2libGUgYmV0d2VlbiBodmZiX3N1c3BlbmQoKSBhbmQNCj4gPiBodmZiX3Jlc3VtZSgp
+LCB3ZSBtdXN0IGNhbmNlbCBpbmZvLT5kZWZlcnJlZF93b3JrIGJlZm9yZSBjYWxsaW5nDQo+ID4g
+dm1idXNfY2xvc2UoKSBhbmQgdGhlbiByZXNjaGVkdWxlIGl0IGFmdGVyIHdlIHJlb3BlbiB0aGUg
+Y2hhbm5lbCBpbg0KPiA+IGh2ZmJfcmVzdW1lKCkuDQo+ID4NCj4gPiBGaXhlczogYTRkZGIxMWQy
+OTdlICgidmlkZW86IGh5cGVydjogaHlwZXJ2X2ZiOiBTdXBwb3J0IGRlZmVycmVkIElPIGZvcg0K
+PiA+IEh5cGVyLVYgZnJhbWUgYnVmZmVyIGRyaXZlciIpDQo+ID4gRml4ZXM6IDgyNDk0NmE4YjZm
+YiAoInZpZGVvOiBoeXBlcnZfZmI6IEFkZCB0aGUgc3VwcG9ydCBvZiBoaWJlcm5hdGlvbiIpDQo+
+ID4gU2lnbmVkLW9mZi1ieTogRGV4dWFuIEN1aSA8ZGVjdWlAbWljcm9zb2Z0LmNvbT4NCj4gPiAt
+LS0NCj4gPg0KPiA+IFRoaXMgcGF0Y2ggZml4ZXMgdGhlIDIgYWZvcmVtZW50aW9uZWQgcGF0Y2hl
+cyBvbiBTYXNoYSBMZXZpbidzIEh5cGVyLVYgdHJlZSdzDQo+ID4gaHlwZXJ2LW5leHQgYnJhbmNo
+Og0KPiA+DQo+IGh0dHBzOi8vbmFtMDYuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20v
+P3VybD1odHRwcyUzQSUyRiUyRmdpdC5rZXJuDQo+ID4gZWwub3JnJTJGcHViJTJGc2NtJTJGbGlu
+dXglMkZrZXJuZWwlMkZnaXQlMkZoeXBlcnYlMkZsaW51eC5naXQlMkZsb2cNCj4gPiAlMkYlM0Zo
+JTNEaHlwZXJ2LQ0KPiA+DQo+IG5leHQmYW1wO2RhdGE9MDIlN0MwMSU3Q3dlaCU0MG1pY3Jvc29m
+dC5jb20lN0M0NTExNDNmZjc4ZjA0NDAxZDkNCj4gPiA2ZjA4ZDc2ZDg5M2E4NCU3QzcyZjk4OGJm
+ODZmMTQxYWY5MWFiMmQ3Y2QwMTFkYjQ3JTdDMSU3QzAlN0M2MzcNCj4gPg0KPiAwOTgzMDg0OTMy
+MTcxMjEmYW1wO3NkYXRhPVAyZm8lMkYxVEpVTUlqNUZ0SkNPcDJRd0RyZ2hoVmZQU0NFSjRmMQ0K
+PiA+IHZrT1h2SSUzRCZhbXA7cmVzZXJ2ZWQ9MA0KPiA+DQo+ID4gVGhlIDIgYWZvcmVtZW50aW9u
+ZWQgcGF0Y2hlcyBoYXZlIG5vdCBhcHBlYXJlZCBpbiB0aGUgbWFpbmxpbmUgeWV0LCBzbw0KPiBw
+bGVhc2UNCj4gPiBwaWNrIHVwIHRoaXMgcGF0Y2ggb250byBoZSBzYW1lIGh5cGVydi1uZXh0IGJy
+YW5jaC4NCj4gPg0KPiA+ICBkcml2ZXJzL3ZpZGVvL2ZiZGV2L2h5cGVydl9mYi5jIHwgMiArKw0K
+PiA+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspDQo+ID4NCj4gPiBkaWZmIC0tZ2l0
+IGEvZHJpdmVycy92aWRlby9mYmRldi9oeXBlcnZfZmIuYyBiL2RyaXZlcnMvdmlkZW8vZmJkZXYv
+aHlwZXJ2X2ZiLmMNCj4gPiBpbmRleCA0Y2QyN2U1MTcyYTEuLjA4YmMwZGZiNWNlNyAxMDA2NDQN
+Cj4gPiAtLS0gYS9kcml2ZXJzL3ZpZGVvL2ZiZGV2L2h5cGVydl9mYi5jDQo+ID4gKysrIGIvZHJp
+dmVycy92aWRlby9mYmRldi9oeXBlcnZfZmIuYw0KPiA+IEBAIC0xMTk0LDYgKzExOTQsNyBAQCBz
+dGF0aWMgaW50IGh2ZmJfc3VzcGVuZChzdHJ1Y3QgaHZfZGV2aWNlICpoZGV2KQ0KPiA+ICAJZmJf
+c2V0X3N1c3BlbmQoaW5mbywgMSk7DQo+ID4NCj4gPiAgCWNhbmNlbF9kZWxheWVkX3dvcmtfc3lu
+YygmcGFyLT5kd29yayk7DQo+ID4gKwljYW5jZWxfZGVsYXllZF93b3JrX3N5bmMoJmluZm8tPmRl
+ZmVycmVkX3dvcmspOw0KPiA+DQo+ID4gIAlwYXItPnVwZGF0ZV9zYXZlZCA9IHBhci0+dXBkYXRl
+Ow0KPiA+ICAJcGFyLT51cGRhdGUgPSBmYWxzZTsNCj4gPiBAQCAtMTIyNyw2ICsxMjI4LDcgQEAg
+c3RhdGljIGludCBodmZiX3Jlc3VtZShzdHJ1Y3QgaHZfZGV2aWNlICpoZGV2KQ0KPiA+ICAJcGFy
+LT5mYl9yZWFkeSA9IHRydWU7DQo+ID4gIAlwYXItPnVwZGF0ZSA9IHBhci0+dXBkYXRlX3NhdmVk
+Ow0KPiA+DQo+ID4gKwlzY2hlZHVsZV9kZWxheWVkX3dvcmsoJmluZm8tPmRlZmVycmVkX3dvcmss
+IGluZm8tPmZiZGVmaW8tPmRlbGF5KTsNCj4gPiAgCXNjaGVkdWxlX2RlbGF5ZWRfd29yaygmcGFy
+LT5kd29yaywgSFZGQl9VUERBVEVfREVMQVkpOw0KPiA+DQo+ID4gIAkvKiAwIG1lYW5zIGRvIHJl
+c3VtZSAqLw0KPiA+IC0tDQo+ID4gMi4xOS4xDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBXZWkgSHUg
+PHdlaEBtaWNyb3NvZnQuY29tPg0KDQpTb3JyeSwgcGxlYXNlIGRpc3JlZ2FyZCB0aGUgU2lnbmVk
+LW9mZi1ieSBsaW5lIEkgYWRkZWQgYWJvdmUuIEl0IHdhcyBteSBtaXN0YWtlLg0Kc2hvdWxkIGJl
+Og0KDQpSZXZpZXdlZC1ieTogV2VpIEh1IDx3ZWhAbWljcm9zb2Z0LmNvbT4NCg0KDQo=
