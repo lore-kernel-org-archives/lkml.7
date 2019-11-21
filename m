@@ -2,399 +2,160 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8D1CC33C9C
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:21:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30214C47410
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:21:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CE4C208D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:21:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574306486;
-	bh=Yw0ufUfHulq2vo62DxjQC9ecbJjIe6mu7X7ZCdJA4Kw=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=OTbBwaxLB4l27A4YK5xYsCO5j6tBq6OlW1x6es2ZIw7Xw7uBXfAdbf1g1vS9ZYhi+
-	 ZgIzkQsUapwLwdd+Ufn72Lj/2QlDWKm/Ue0IdF3ktRjEdt6L+UI5C9BbHxy+GbgxWa
-	 wv04ZnW4B7ErxDYRRJNhGoyzXyW9oKiJ1o09Iglo=
+	by mail.kernel.org (Postfix) with ESMTP id 02F03214E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:21:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="oFGVqqzr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727719AbfKUDVZ (ORCPT
+        id S1727508AbfKUDUi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 22:21:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35402 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726541AbfKUDVT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 22:21:19 -0500
-Received: from PC-kkoz.proceq.com (unknown [213.160.61.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7DAF208D4;
-        Thu, 21 Nov 2019 03:21:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574306478;
-        bh=Yw0ufUfHulq2vo62DxjQC9ecbJjIe6mu7X7ZCdJA4Kw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=ndIRK9KtLvVPbG5pQPibGSA8dHAvfqMJV2UKRIDk8AsHjG7VhEtRK77HO3dmPcecV
-         c1meTyTSBZK6lAcuAsXky0SYv+a649ySRKcm9dyo0ZbinDZaek0VdSIspdBBQf0Rqv
-         drtXz2EX/OgBKBhqLNBiYze4erNKdxHXSdpINttA=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        platform-driver-x86@vger.kernel.org
-Subject: [PATCH v2] platform/x86: Fix Kconfig indentation
-Date:   Thu, 21 Nov 2019 04:21:14 +0100
-Message-Id: <1574306475-11966-1-git-send-email-krzk@kernel.org>
+        Wed, 20 Nov 2019 22:20:38 -0500
+Received: from mailout3.samsung.com ([203.254.224.33]:59223 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726760AbfKUDUg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 22:20:36 -0500
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191121032032epoutp03f5c7d0d3d9a82d0c622a50203d62dd53~ZD1wZ-aLH1711717117epoutp03A
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 03:20:32 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191121032032epoutp03f5c7d0d3d9a82d0c622a50203d62dd53~ZD1wZ-aLH1711717117epoutp03A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1574306433;
+        bh=ccSkOQg4F6U9pZaBUzz7NJ9wxz842W9I4PHLHZxX2WA=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=oFGVqqzrkJgtduydRIZTh/4mVjf6K5aX2AvZisDAV8Fh8CT6Sf0wfoTOMETWBpByx
+         EOuoO/VvRkwHExLv08mPsAmveHui8zskR0TCHVOM8OgzRiu0ZMEGwjLMcopwjXkAAY
+         MjNFjSR9A88S8me9XdKAalZUCbfE6ohy7R5S0ob4=
+Received: from epsmges5p1new.samsung.com (unknown [182.195.42.73]) by
+        epcas5p4.samsung.com (KnoxPortal) with ESMTP id
+        20191121032032epcas5p4f088ee297e83e8febb353fbe49e600d8~ZD1vfri9m0464404644epcas5p4O;
+        Thu, 21 Nov 2019 03:20:32 +0000 (GMT)
+Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
+        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        98.41.04078.F7206DD5; Thu, 21 Nov 2019 12:20:31 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+        20191121032031epcas5p29659e014c9ff4564b24c9b1457d6b0b7~ZD1ukL5zj1591515915epcas5p29;
+        Thu, 21 Nov 2019 03:20:31 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20191121032031epsmtrp2956f58b5da0d0cf8a3a7f2c760ccda7c~ZD1ujZ4Kw1130011300epsmtrp2M;
+        Thu, 21 Nov 2019 03:20:31 +0000 (GMT)
+X-AuditID: b6c32a49-605ff70000000fee-fa-5dd6027f4ec5
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        5D.BE.03814.E7206DD5; Thu, 21 Nov 2019 12:20:30 +0900 (KST)
+Received: from ubuntu.sa.corp.samsungelectronics.net (unknown
+        [107.108.83.125]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20191121032029epsmtip20321a3cb9aebda76e4d5787b127942ff~ZD1s6de2r3029530295epsmtip2c;
+        Thu, 21 Nov 2019 03:20:29 +0000 (GMT)
+From:   Anvesh Salveru <anvesh.s@samsung.com>
+To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        pankaj.dubey@samsung.com, lorenzo.pieralisi@arm.com,
+        andrew.murray@arm.com, bhelgaas@google.com, kishon@ti.com,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        Anvesh Salveru <anvesh.s@samsung.com>
+Subject: [PATCH v4 0/2] Add support to handle ZRX-DC Compliant PHYs
+Date:   Thu, 21 Nov 2019 08:50:06 +0530
+Message-Id: <1574306408-4360-1-git-send-email-anvesh.s@samsung.com>
 X-Mailer: git-send-email 2.7.4
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrHIsWRmVeSWpSXmKPExsWy7bCmum4907VYg/Zj5hbN/7ezWpzdtZDV
+        YklThsWuux3sFiu+zGS3uPC0h83i8q45bBZn5x1ns3jz+wW7xdLrF5ksFm39wm7RuvcIuwOP
+        x5p5axg9ds66y+6xYFOpx6ZVnWwefVtWMXps2f+Z0eP4je1MHp83yQVwRHHZpKTmZJalFunb
+        JXBlfFpyk6XgA3/FrudTWRsYn/J0MXJySAiYSLRuf8LSxcjFISSwm1Fi/a5udgjnE6PEqxlP
+        WSGcb4wSvdsXscG0dM76ygyR2MsoserSZiinhUni1qdDYFVsAtoSP4/uZQexRQSsJQ63b2ED
+        KWIW+McocfXLPMYuRg4OYQFnifn37EBqWARUJa5uvcMMYvMChc8fOcYKsU1O4ua5TrAFEgJ7
+        2CRezL/PApFwkZjcvwbKFpZ4dXwLO4QtJfH53V6oU/Mleu8uhYrXSEy528EIYdtLHLgyhwXk
+        BmYBTaCn9UHCzAJ8Er2/nzCBhCUEeCU62oQgTCWJtpnVEI0SEovn32SGsD0kDq2+BnaAkECs
+        xNK7L9gmMMrMQpi5gJFxFaNkakFxbnpqsWmBYV5quV5xYm5xaV66XnJ+7iZGcKrQ8tzBOOuc
+        zyFGAQ5GJR7eDI2rsUKsiWXFlbmHGCU4mJVEePdcvxIrxJuSWFmVWpQfX1Sak1p8iFGag0VJ
+        nHcS69UYIYH0xJLU7NTUgtQimCwTB6dUA6Pez9sF9ewP27YyL9iw4H/RiS8uvNabrKtcl26+
+        7S4hliPpMDdNPdI15kn2Ab+g5x0aQsvdfpi9kpb/ZHDKuubep9vbtuk7V2rqajvaLJQP0NTZ
+        uyj1oEPyxAdy1g//Lqrhaww8wiqeGbyULfCVLLfzqeAo7r+6a25snc9ysEAz7cvmpdGejkos
+        xRmJhlrMRcWJAMeAlVQRAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrELMWRmVeSWpSXmKPExsWy7bCSvG4d07VYg+t3LC2a/29ntTi7ayGr
+        xZKmDItddzvYLVZ8mcluceFpD5vF5V1z2CzOzjvOZvHm9wt2i6XXLzJZLNr6hd2ide8Rdgce
+        jzXz1jB67Jx1l91jwaZSj02rOtk8+rasYvTYsv8zo8fxG9uZPD5vkgvgiOKySUnNySxLLdK3
+        S+DK+LTkJkvBB/6KXc+nsjYwPuXpYuTkkBAwkeic9ZW5i5GLQ0hgN6PEkndtbBAJCYkve79C
+        2cISK/89Z4coamKSOHD9MTtIgk1AW+Ln0b1gtoiArcT9R5NZQYqYBbqYJNae3gKU4OAQFnCW
+        mH/PDqSGRUBV4urWO8wgNi9Q+PyRY6wQC+Qkbp7rZJ7AyLOAkWEVo2RqQXFuem6xYYFRXmq5
+        XnFibnFpXrpecn7uJkZwSGpp7WA8cSL+EKMAB6MSD2+GxtVYIdbEsuLK3EOMEhzMSiK8e65f
+        iRXiTUmsrEotyo8vKs1JLT7EKM3BoiTOK59/LFJIID2xJDU7NbUgtQgmy8TBKdXAuPYZsxIf
+        p/SuWjkBya0/D5+rFVI+3OEvbbPVWX7S9RWb2L3ZZ91WsV1bq9kS8cLzw+FL+XE/Lm5KTeo+
+        c7P3xRXdqNJakasanzrZDZPl1yxJ0Ep+kiTP4GPm1C1uu/C3wSzRVB/Zginemx0ezDrlx66/
+        SXyDYbqdFoPealHR5V/X9ul/3/xAiaU4I9FQi7moOBEAEVYYmUUCAAA=
+X-CMS-MailID: 20191121032031epcas5p29659e014c9ff4564b24c9b1457d6b0b7
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20191121032031epcas5p29659e014c9ff4564b24c9b1457d6b0b7
+References: <CGME20191121032031epcas5p29659e014c9ff4564b24c9b1457d6b0b7@epcas5p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adjust indentation from spaces to tab (+optional two spaces) as in
-coding style with command like:
-	$ sed -e 's/^        /\t/' -i */Kconfig
+According the PCI Express base specification when PHY does not meet
+ZRX-DC specification, after every 100ms timeout the link should
+transition to recovery state when the link is in low power states. 
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Ports that meet the ZRX-DC specification for 2.5 GT/s while in the
+L1.Idle state and are therefore not required to implement the 100 ms
+timeout and transition to Recovery should avoid implementing it, since
+it will reduce the power savings expected from the L1 state.
 
----
+DesignWare controller provides GEN3_ZRXDC_NONCOMPL field in
+GEN3_RELATED_OFF to specify about ZRX-DC compliant PHY.
 
-Changes since v1:
-1. Fix also 7-space and tab+1 space indentation issues.
----
- drivers/platform/x86/Kconfig | 174 +++++++++++++++++++++----------------------
- 1 file changed, 87 insertions(+), 87 deletions(-)
+We need to get the PHY property in controller driver. So, we are
+proposing a new method phy_property_present() in the phy driver.
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 27d5b40fb717..e1892d2a07d2 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -28,7 +28,7 @@ config ACER_WMI
- 	depends on ACPI_WMI
- 	select INPUT_SPARSEKMAP
- 	# Acer WMI depends on ACPI_VIDEO when ACPI is enabled
--        select ACPI_VIDEO if ACPI
-+	select ACPI_VIDEO if ACPI
- 	---help---
- 	  This is a driver for newer Acer (and Wistron) laptops. It adds
- 	  wireless radio and bluetooth control, and on some laptops,
-@@ -38,18 +38,18 @@ config ACER_WMI
- 	  here.
- 
- config ACER_WIRELESS
--        tristate "Acer Wireless Radio Control Driver"
--        depends on ACPI
--        depends on INPUT
--        ---help---
--          The Acer Wireless Radio Control handles the airplane mode hotkey
--          present on new Acer laptops.
-+	tristate "Acer Wireless Radio Control Driver"
-+	depends on ACPI
-+	depends on INPUT
-+	---help---
-+	  The Acer Wireless Radio Control handles the airplane mode hotkey
-+	  present on new Acer laptops.
- 
--          Say Y or M here if you have an Acer notebook with an airplane mode
--          hotkey.
-+	  Say Y or M here if you have an Acer notebook with an airplane mode
-+	  hotkey.
- 
--          If you choose to compile this driver as a module the module will be
--          called acer-wireless.
-+	  If you choose to compile this driver as a module the module will be
-+	  called acer-wireless.
- 
- config ACERHDF
- 	tristate "Acer Aspire One temperature and fan driver"
-@@ -79,10 +79,10 @@ config ALIENWARE_WMI
- 	depends on NEW_LEDS
- 	depends on ACPI_WMI
- 	---help---
--	 This is a driver for controlling Alienware BIOS driven
--	 features.  It exposes an interface for controlling the AlienFX
--	 zones on Alienware machines that don't contain a dedicated AlienFX
--	 USB MCU such as the X51 and X51-R2.
-+	  This is a driver for controlling Alienware BIOS driven
-+	  features.  It exposes an interface for controlling the AlienFX
-+	  zones on Alienware machines that don't contain a dedicated AlienFX
-+	  USB MCU such as the X51 and X51-R2.
- 
- config ASUS_LAPTOP
- 	tristate "Asus Laptop Extras"
-@@ -134,10 +134,10 @@ config DELL_SMBIOS
- 	depends on DCDBAS || DCDBAS=n
- 	depends on ACPI_WMI || ACPI_WMI=n
- 	---help---
--	This provides support for the Dell SMBIOS calling interface.
--	If you have a Dell computer you should enable this option.
-+	  This provides support for the Dell SMBIOS calling interface.
-+	  If you have a Dell computer you should enable this option.
- 
--	Be sure to select at least one backend for it to work properly.
-+	  Be sure to select at least one backend for it to work properly.
- 
- config DELL_SMBIOS_WMI
- 	bool "Dell SMBIOS driver WMI backend"
-@@ -146,12 +146,12 @@ config DELL_SMBIOS_WMI
- 	select DELL_WMI_DESCRIPTOR
- 	depends on DELL_SMBIOS
- 	---help---
--	This provides an implementation for the Dell SMBIOS calling interface
--	communicated over ACPI-WMI.
-+	  This provides an implementation for the Dell SMBIOS calling interface
-+	  communicated over ACPI-WMI.
- 
--	If you have a Dell computer from >2007 you should say Y here.
--	If you aren't sure and this module doesn't work for your computer
--	it just won't load.
-+	  If you have a Dell computer from >2007 you should say Y here.
-+	  If you aren't sure and this module doesn't work for your computer
-+	  it just won't load.
- 
- config DELL_SMBIOS_SMM
- 	bool "Dell SMBIOS driver SMM backend"
-@@ -159,12 +159,12 @@ config DELL_SMBIOS_SMM
- 	depends on DCDBAS
- 	depends on DELL_SMBIOS
- 	---help---
--	This provides an implementation for the Dell SMBIOS calling interface
--	communicated over SMI/SMM.
-+	  This provides an implementation for the Dell SMBIOS calling interface
-+	  communicated over SMI/SMM.
- 
--	If you have a Dell computer from <=2017 you should say Y here.
--	If you aren't sure and this module doesn't work for your computer
--	it just won't load.
-+	  If you have a Dell computer from <=2017 you should say Y here.
-+	  If you aren't sure and this module doesn't work for your computer
-+	  it just won't load.
- 
- config DELL_LAPTOP
- 	tristate "Dell Laptop Extras"
-@@ -180,8 +180,8 @@ config DELL_LAPTOP
- 	select LEDS_TRIGGERS
- 	select LEDS_TRIGGER_AUDIO
- 	---help---
--	This driver adds support for rfkill and backlight control to Dell
--	laptops (except for some models covered by the Compal driver).
-+	  This driver adds support for rfkill and backlight control to Dell
-+	  laptops (except for some models covered by the Compal driver).
- 
- config DELL_WMI
- 	tristate "Dell WMI notifications"
-@@ -254,11 +254,11 @@ config DELL_RBU
- 	select FW_LOADER
- 	select FW_LOADER_USER_HELPER
- 	help
--	 Say m if you want to have the option of updating the BIOS for your
--	 DELL system. Note you need a Dell OpenManage or Dell Update package (DUP)
--	 supporting application to communicate with the BIOS regarding the new
--	 image for the image update to take effect.
--	 See <file:Documentation/admin-guide/dell_rbu.rst> for more details on the driver.
-+	  Say m if you want to have the option of updating the BIOS for your
-+	  DELL system. Note you need a Dell OpenManage or Dell Update package (DUP)
-+	  supporting application to communicate with the BIOS regarding the new
-+	  image for the image update to take effect.
-+	  See <file:Documentation/admin-guide/dell_rbu.rst> for more details on the driver.
- 
- 
- config FUJITSU_LAPTOP
-@@ -281,21 +281,21 @@ config FUJITSU_LAPTOP
- 	  If you have a Fujitsu laptop, say Y or M here.
- 
- config FUJITSU_TABLET
--       tristate "Fujitsu Tablet Extras"
--       depends on ACPI
--       depends on INPUT
--       ---help---
--         This is a driver for tablets built by Fujitsu:
-+	tristate "Fujitsu Tablet Extras"
-+	depends on ACPI
-+	depends on INPUT
-+	---help---
-+	  This is a driver for tablets built by Fujitsu:
- 
--           * Lifebook P1510/P1610/P1620/Txxxx
--           * Stylistic ST5xxx
--           * Possibly other Fujitsu tablet models
-+	   * Lifebook P1510/P1610/P1620/Txxxx
-+	   * Stylistic ST5xxx
-+	   * Possibly other Fujitsu tablet models
- 
--         It adds support for the panel buttons, docking station detection,
--         tablet/notebook mode detection for convertible and
--         orientation detection for docked slates.
-+	  It adds support for the panel buttons, docking station detection,
-+	  tablet/notebook mode detection for convertible and
-+	  orientation detection for docked slates.
- 
--         If you have a Fujitsu convertible or slate, say Y or M here.
-+	  If you have a Fujitsu convertible or slate, say Y or M here.
- 
- config AMILO_RFKILL
- 	tristate "Fujitsu-Siemens Amilo rfkill support"
-@@ -350,11 +350,11 @@ config HP_WIRELESS
- 	depends on ACPI
- 	depends on INPUT
- 	help
--	 This driver provides supports for new HP wireless button for Windows 8.
--	 On such systems the driver should load automatically (via ACPI alias).
-+	  This driver provides supports for new HP wireless button for Windows 8.
-+	  On such systems the driver should load automatically (via ACPI alias).
- 
--	 To compile this driver as a module, choose M here: the module will
--	 be called hp-wireless.
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called hp-wireless.
- 
- config HP_WMI
- 	tristate "HP WMI extras"
-@@ -363,11 +363,11 @@ config HP_WMI
- 	depends on RFKILL || RFKILL = n
- 	select INPUT_SPARSEKMAP
- 	help
--	 Say Y here if you want to support WMI-based hotkeys on HP laptops and
--	 to read data from WMI such as docking or ambient light sensor state.
-+	  Say Y here if you want to support WMI-based hotkeys on HP laptops and
-+	  to read data from WMI such as docking or ambient light sensor state.
- 
--	 To compile this driver as a module, choose M here: the module will
--	 be called hp-wmi.
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called hp-wmi.
- 
- config LG_LAPTOP
- 	tristate "LG Laptop Extras"
-@@ -377,11 +377,11 @@ config LG_LAPTOP
- 	select INPUT_SPARSEKMAP
- 	select LEDS_CLASS
- 	help
--	 This driver adds support for hotkeys as well as control of keyboard
--	 backlight, battery maximum charge level and various other ACPI
--	 features.
-+	  This driver adds support for hotkeys as well as control of keyboard
-+	  backlight, battery maximum charge level and various other ACPI
-+	  features.
- 
--	 If you have an LG Gram laptop, say Y or M here.
-+	  If you have an LG Gram laptop, say Y or M here.
- 
- config MSI_LAPTOP
- 	tristate "MSI Laptop Extras"
-@@ -795,17 +795,17 @@ config MSI_WMI
- 	depends on ACPI_VIDEO || ACPI_VIDEO = n
- 	select INPUT_SPARSEKMAP
- 	help
--	 Say Y here if you want to support WMI-based hotkeys on MSI laptops.
-+	  Say Y here if you want to support WMI-based hotkeys on MSI laptops.
- 
--	 To compile this driver as a module, choose M here: the module will
--	 be called msi-wmi.
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called msi-wmi.
- 
- config PEAQ_WMI
- 	tristate "PEAQ 2-in-1 WMI hotkey driver"
- 	depends on ACPI_WMI
- 	depends on INPUT
- 	help
--	 Say Y here if you want to support WMI-based hotkeys on PEAQ 2-in-1s.
-+	  Say Y here if you want to support WMI-based hotkeys on PEAQ 2-in-1s.
- 
- config TOPSTAR_LAPTOP
- 	tristate "Topstar Laptop Extras"
-@@ -1012,11 +1012,11 @@ config INTEL_MID_POWER_BUTTON
- 	  If unsure, say N.
- 
- config INTEL_MFLD_THERMAL
--       tristate "Thermal driver for Intel Medfield platform"
--       depends on MFD_INTEL_MSIC && THERMAL
--       help
--         Say Y here to enable thermal driver support for the  Intel Medfield
--         platform.
-+	tristate "Thermal driver for Intel Medfield platform"
-+	depends on MFD_INTEL_MSIC && THERMAL
-+	help
-+	  Say Y here to enable thermal driver support for the  Intel Medfield
-+	  platform.
- 
- config INTEL_IPS
- 	tristate "Intel Intelligent Power Sharing"
-@@ -1071,17 +1071,17 @@ config IBM_RTL
- 	tristate "Device driver to enable PRTL support"
- 	depends on PCI
- 	---help---
--	 Enable support for IBM Premium Real Time Mode (PRTM).
--	 This module will allow you the enter and exit PRTM in the BIOS via
--	 sysfs on platforms that support this feature.  System in PRTM will
--	 not receive CPU-generated SMIs for recoverable errors.  Use of this
--	 feature without proper support may void your hardware warranty.
-+	  Enable support for IBM Premium Real Time Mode (PRTM).
-+	  This module will allow you the enter and exit PRTM in the BIOS via
-+	  sysfs on platforms that support this feature.  System in PRTM will
-+	  not receive CPU-generated SMIs for recoverable errors.  Use of this
-+	  feature without proper support may void your hardware warranty.
- 
--	 If the proper BIOS support is found the driver will load and create
--	 /sys/devices/system/ibm_rtl/.  The "state" variable will indicate
--	 whether or not the BIOS is in PRTM.
--	 state = 0 (BIOS SMIs on)
--	 state = 1 (BIOS SMIs off)
-+	  If the proper BIOS support is found the driver will load and create
-+	  /sys/devices/system/ibm_rtl/.  The "state" variable will indicate
-+	  whether or not the BIOS is in PRTM.
-+	  state = 0 (BIOS SMIs on)
-+	  state = 1 (BIOS SMIs off)
- 
- config XO1_RFKILL
- 	tristate "OLPC XO-1 software RF kill switch"
-@@ -1120,10 +1120,10 @@ config SAMSUNG_LAPTOP
- 	  will be called samsung-laptop.
- 
- config MXM_WMI
--       tristate "WMI support for MXM Laptop Graphics"
--       depends on ACPI_WMI
--       ---help---
--          MXM is a standard for laptop graphics cards, the WMI interface
-+	tristate "WMI support for MXM Laptop Graphics"
-+	depends on ACPI_WMI
-+	---help---
-+	  MXM is a standard for laptop graphics cards, the WMI interface
- 	  is required for switchable nvidia graphics machines
- 
- config INTEL_OAKTRAIL
-@@ -1158,7 +1158,7 @@ config APPLE_GMUX
- 	  control is supported by the driver.
- 
- config INTEL_RST
--        tristate "Intel Rapid Start Technology Driver"
-+	tristate "Intel Rapid Start Technology Driver"
- 	depends on ACPI
- 	---help---
- 	  This driver provides support for modifying paramaters on systems
-@@ -1170,7 +1170,7 @@ config INTEL_RST
- 	  as usual.
- 
- config INTEL_SMARTCONNECT
--        tristate "Intel Smart Connect disabling driver"
-+	tristate "Intel Smart Connect disabling driver"
- 	depends on ACPI
- 	---help---
- 	  Intel Smart Connect is a technology intended to permit devices to
-@@ -1355,6 +1355,6 @@ config SYSTEM76_ACPI
- endif # X86_PLATFORM_DEVICES
- 
- config PMC_ATOM
--       def_bool y
--       depends on PCI
--       select COMMON_CLK
-+	def_bool y
-+	depends on PCI
-+	select COMMON_CLK
+Platform specific phy drivers should implement the callback for
+property_present which will return true if the property exists in
+the PHY.
+
+static bool xxxx_phy_property_present(struct phy *phy, const char *property)
+{
+       struct device *dev = &phy->dev;
+
+       return of_property_read_bool(dev->of_node, property);
+}
+
+And controller platform driver should populate the phy_zrxdc_compliant
+flag, which will be used by generic DesignWare driver.
+
+pci->phy_zrxdc_compliant = phy_property_present(xxxx_ctrl->phy, "phy-zrxdc-compliant");
+
+Patchset v2 can be found at:
+ - 1/2: https://lkml.org/lkml/2019/11/11/672
+ - 2/2: https://lkml.org/lkml/2019/10/28/285
+
+Changes w.r.t v2:
+ - Addressed review comments
+ - Rebased on latest linus/master
+
+Changes w.r.t v3:
+ - Added linux-pci@vger.kernel.org as pointed by Gustavo, Sorry for annoying.
+
+Anvesh Salveru (2):
+  phy: core: add phy_property_present method
+  PCI: dwc: add support to handle ZRX-DC Compliant PHYs
+
+ drivers/pci/controller/dwc/pcie-designware.c |  6 ++++++
+ drivers/pci/controller/dwc/pcie-designware.h |  4 ++++
+ drivers/phy/phy-core.c                       | 26 ++++++++++++++++++++++++++
+ include/linux/phy/phy.h                      |  8 ++++++++
+ 4 files changed, 44 insertions(+)
+
 -- 
 2.7.4
 
