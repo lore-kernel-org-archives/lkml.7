@@ -2,103 +2,132 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF45DC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:07:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6476BC43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:07:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A637520872
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:07:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39D2E20872
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:07:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="M3Ixx7GO"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uhsXVbWv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726990AbfKULG7 (ORCPT
+        id S1727007AbfKULH3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 06:06:59 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:40792 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726197AbfKULG7 (ORCPT
+        Thu, 21 Nov 2019 06:07:29 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:39150 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726351AbfKULH3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 06:06:59 -0500
-Received: by mail-wr1-f66.google.com with SMTP id 4so530824wro.7
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 03:06:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ljgj1xBlmM+fK+Y7fLIkJkb9AcnZl/Iz6MDt7yS8lHs=;
-        b=M3Ixx7GOLmOHI/ZOcnBvPkpZbDz64yJzUuEk+gnpcVJSRKKF0ZT+xATB8qsP5hzTFV
-         YqQ3lW+mQVoZRNIbEQxcLHZLW6T/atRm4BBh4rTxdoV3L1AE8TQVPMNp7szbeJY5eJsq
-         +g5E7fPjbqhUUNiyDJN94NtvLSvnlCCecKPyjVZEd/3Ad+R4Kh8hfOVjFCoXhgZUeEGQ
-         ++Dj7w0Am4a/IcMtnyCIfDobFiY0VJg8I6wKuY0YhxRFMVNwGsHWtBIlV33xeqiPXF2j
-         P8i6qRHGXFp5pEXmChZW/fBRqfGcleRS03ZDaRZMkVcE03hAA/z53333c9IcmizvqGbG
-         q2QA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ljgj1xBlmM+fK+Y7fLIkJkb9AcnZl/Iz6MDt7yS8lHs=;
-        b=gelhBTroT3F4UR0P4jvfS3Y0TbJ/7+59WcsU2/wYlTJVv3ZCBNmkeRolHlIEjZDguN
-         A+GB+QdR5URzZS+DdT3bwP7TsZ9QH2YtHhDN7qjoPYEB2bpG8SrM2ZiczUpaw9d902Nd
-         ESkDo45cc+xTpj+I57KRx3y+o3zyDpjcs+WiPIvaoK9L1Dmt8mApFpQ+TZ+d54yYsD+7
-         12pA1ANqNvnjHp4rQ/Pl5cmM+p4ra+puLf07AHg/cz03DpCN7iiou1jpTmUEshjMLwQE
-         VS/+OHhpPIgDp32GOwvZGKAA8tOvmRVmNIQl7cO2XLAzFWzzJLFR0350m3AKOTTvqCkg
-         qjCw==
-X-Gm-Message-State: APjAAAWkeI7H+CVY0956+TKNj7FwwRCZo5HxgltfjBorkbhxymEwBbE2
-        taBEMHkc4cKP6RyPj4ppFZ+uTg==
-X-Google-Smtp-Source: APXvYqyfowC60J9HexHKh65Jj0TsFNXovztkKoBf2uUSJT/8LOcFJFgstWnJjyny0i5QCKMyp/1Sig==
-X-Received: by 2002:adf:e449:: with SMTP id t9mr10075992wrm.196.1574334415422;
-        Thu, 21 Nov 2019 03:06:55 -0800 (PST)
-Received: from localhost.localdomain ([79.140.122.151])
-        by smtp.gmail.com with ESMTPSA id 13sm2427358wmk.1.2019.11.21.03.06.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Nov 2019 03:06:54 -0800 (PST)
-From:   Christian Brauner <christian@brauner.io>
-To:     mtk.manpages@gmail.com
-Cc:     adrian@lisas.de, akpm@linux-foundation.org, arnd@arndb.de,
-        avagin@gmail.com, christian.brauner@ubuntu.com,
-        dhowells@redhat.com, fweimer@redhat.com, jannh@google.com,
-        keescook@chromium.org, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-man@vger.kernel.org,
-        mingo@elte.hu, oleg@redhat.com, xemul@virtuozzo.com
-Subject: [PATCH] clone.2: Fix typo
-Date:   Thu, 21 Nov 2019 12:06:46 +0100
-Message-Id: <20191121110646.1398-1-christian@brauner.io>
-X-Mailer: git-send-email 2.24.0
+        Thu, 21 Nov 2019 06:07:29 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xALB7LBG043683;
+        Thu, 21 Nov 2019 05:07:21 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1574334441;
+        bh=gzB4/LlAd/cjajkp4WzCcmuttJEpkCwH3rgIB0EX1Eg=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=uhsXVbWvsCWpNXgbUdM3G8AODHOI0gu2LjjDROioDK8D67pqsiXXmPAZFnkUesyFg
+         geaLjCkxlsPUfz75DrTADmietNW8zufAUPWh1JDy1fU3uqa3jBLtT4ZGrVEeBLyxpl
+         3NSvKjdLNmF3QrvH9WmCCiZY/dEUWX3jFmJV1grA=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xALB7Lre045244
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 21 Nov 2019 05:07:21 -0600
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 21
+ Nov 2019 05:07:21 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 21 Nov 2019 05:07:21 -0600
+Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xALB7G3X120060;
+        Thu, 21 Nov 2019 05:07:17 -0600
+Subject: Re: [PATCH v2] ARM: dts: am5729: beaglebone-ai: adding device tree
+To:     Caleb Robey <c-robey@ti.com>, <linux-omap@vger.kernel.org>
+CC:     Jason Kridner <jkridner@gmail.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>, Jason Kridner <jdk@ti.com>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Andreas Dannenberg <dannenberg@ti.com>,
+        Jean-Jacques Hiblot <jjhiblot@ti.com>,
+        Praneeth Bajjuri <praneeth@ti.com>,
+        "Andrew F . Davis" <afd@ti.com>, Tom Rini <trini@konsulko.com>,
+        Robert Nelson <robertcnelson@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20191120220559.18914-1-c-robey@ti.com>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <41c73bc1-99ae-6797-5bb7-7acc0f6518c0@ti.com>
+Date:   Thu, 21 Nov 2019 13:07:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191120220559.18914-1-c-robey@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Brauner <christian.brauner@ubuntu.com>
 
-This surely meant to say clone3() and not clone(3).
 
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
----
- man2/clone.2 | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 21/11/2019 00:05, Caleb Robey wrote:
+> From: Jason Kridner <jdk@ti.com>
+> 
+> BeagleBoard.org BeagleBone AI is an open source hardware single
+> board computer based on the Texas Instruments AM5729 SoC featuring
+> dual-core 1.5GHz Arm Cortex-A15 processor, dual-core C66 digital
+> signal processor (DSP), quad-core embedded vision engine (EVE),
+> Arm Cortex-M4 processors, dual programmable realtime unit
+> industrial control subsystems and more. The board features 1GB
+> DDR3L, USB3.0 Type-C, USB HS Type-A, microHDMI, 16GB eMMC flash,
+> 1G Ethernet, 802.11ac 2/5GHz, Bluetooth, and BeagleBone expansion
+> headers.
+> 
+> For more information, refer to:
+> https://beaglebone.ai
+> 
+> This patch introduces the BeagleBone AI device tree.
+> 
+> Note that the device use the "ti,tpd12s016" component which is
+> software compatible with "ti,tpd12s015". Thus we only use the
+> latter driver.
 
-diff --git a/man2/clone.2 b/man2/clone.2
-index 382f6b791..e5ab2a096 100644
---- a/man2/clone.2
-+++ b/man2/clone.2
-@@ -252,7 +252,7 @@ argument supplied to
- lb lb lb
- l l l
- li li l.
--clone()	clone(3)	Notes
-+clone()	clone3()	Notes
- 	\fIcl_args\fP field
- flags & ~0xff	flags	For most flags; details below
- parent_tid	pidfd	See CLONE_PIDFD
+Ah. thanks. I see my comments resolved here.
+no more comments to net part from my side.
 
-base-commit: be479fdf027a3288e88d53dbe05ba76bf202776e
+> 
+> Signed-off-by: Jason Kridner <jdk@ti.com>
+> Signed-off-by: Caleb Robey <c-robey@ti.com>
+> Cc: Robert Nelson <robertcnelson@gmail.com>
+> 
+> 
+> ---
+> 
+> V2 Changes:
+>    - dra7.dtsi was reintroduced and components that are only
+>      not present in upstream linux dts were removed.
+> 
+>   arch/arm/boot/dts/Makefile                |   1 +
+>   arch/arm/boot/dts/am5729-beagleboneai.dts | 731 ++++++++++++++++++++++
+>   arch/arm/boot/dts/dra7.dtsi               |   2 +-
+>   3 files changed, 733 insertions(+), 1 deletion(-)
+>   create mode 100644 arch/arm/boot/dts/am5729-beagleboneai.dts
+> 
+
+[..]
+
 -- 
-2.24.0
-
+Best regards,
+grygorii
