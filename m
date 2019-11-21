@@ -2,157 +2,88 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EC3FC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 02:28:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44EAAC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 02:29:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 465D920878
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 02:28:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17E6620878
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 02:29:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="YLlnwWS5"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hCpDNV+r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbfKUC2N (ORCPT
+        id S1726613AbfKUC3D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 21:28:13 -0500
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:10333 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbfKUC2N (ORCPT
+        Wed, 20 Nov 2019 21:29:03 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:43100 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725904AbfKUC3C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 21:28:13 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dd5f17c0000>; Wed, 20 Nov 2019 18:07:56 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 20 Nov 2019 18:07:55 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 20 Nov 2019 18:07:55 -0800
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 21 Nov
- 2019 02:07:54 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Thu, 21 Nov 2019 02:07:54 +0000
-Received: from henryl-tu10x.nvidia.com (Not Verified[10.19.109.104]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5dd5f1790000>; Wed, 20 Nov 2019 18:07:54 -0800
-From:   Henry Lin <henryl@nvidia.com>
-CC:     <jackp@codeaurora.org>, Henry Lin <henryl@nvidia.com>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v4] usb: xhci: only set D3hot for pci device
-Date:   Thu, 21 Nov 2019 10:07:03 +0800
-Message-ID: <20191121020703.10173-1-henryl@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191119081656.8746-1-henryl@nvidia.com>
-References: <20191119081656.8746-1-henryl@nvidia.com>
-X-NVConfidentiality: public
+        Wed, 20 Nov 2019 21:29:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574303341;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=by/zQ+3yLUz+ix0dbdVmiFHSoojhC/RF88zhiK7/yXo=;
+        b=hCpDNV+rk6pJAVht5CARvxS8xQIiB0sCIdEREQaBgiqzoB9MVGRdb0tScGZLc8xf2MSTji
+        UVWkVtOJ3WRjWFaxRyE1EkVY56k8X7v5XRUBveLymxlKoTDSesSiBat0eGRKEKu269iaTH
+        6zx814V+8jEgFoSG272JJ9cI5qJLBRA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-382-GfRTqIQkMFKGzDPUqseiFQ-1; Wed, 20 Nov 2019 21:22:55 -0500
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1555E107ACC4;
+        Thu, 21 Nov 2019 02:22:54 +0000 (UTC)
+Received: from localhost (ovpn-116-6.gru2.redhat.com [10.97.116.6])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 905A95E268;
+        Thu, 21 Nov 2019 02:22:53 +0000 (UTC)
+Date:   Wed, 20 Nov 2019 23:22:52 -0300
+From:   Eduardo Habkost <ehabkost@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        jmattson@google.com,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: Re: [PATCH 5/5] KVM: vmx: use MSR_IA32_TSX_CTRL to hard-disable TSX
+ on guest that lack it
+Message-ID: <20191121022252.GX3812@habkost.net>
+References: <1574101067-5638-1-git-send-email-pbonzini@redhat.com>
+ <1574101067-5638-6-git-send-email-pbonzini@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1574302076; bh=LFURWC9StPxfn6pVQEi+FakzbyuQQSR3hqKKmpk8NqQ=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=YLlnwWS5RGPSQ4Z/IvIeMsVUpkgvbLNLTam0/Zpc4q6SniI63/wDZa+McjKrp3Wql
-         aOI/OPWDYcaSbHsi+efWgjjpLimdgLokcq1dFsvoCqerKL+hPy6Y4C/q3pZad9hKzf
-         u6RKn1TsJRcMqRaJiTN5FciRDhfgMC+ZQzorRz7mRuQhFH0WSVz2huMbbjIDL+qrvm
-         wKh42EdUthKAqIembwRt7tXcnlGkZ+XYjVweOW7ewhKhKjfnu558td03tBoxFgh8h4
-         Dw9ekg72dGT+dE4B5O7Fr2hc9K1YN+GxHglvPOs5Cgw/Ecx1/FnSdsNmgZR9pmPUbv
-         YZmvbGBpIBSjw==
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <1574101067-5638-6-git-send-email-pbonzini@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: GfRTqIQkMFKGzDPUqseiFQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Xhci driver cannot call pci_set_power_state() on non-pci xhci host
-controllers. For example, NVIDIA Tegra XHCI host controller which acts
-as platform device with XHCI_SPURIOUS_WAKEUP quirk set in some platform
-hits this issue during shutdown.
+On Mon, Nov 18, 2019 at 07:17:47PM +0100, Paolo Bonzini wrote:
+> If X86_FEATURE_RTM is disabled, the guest should not be able to access
+> MSR_IA32_TSX_CTRL.  We can therefore use it in KVM to force all
+> transactions from the guest to abort.
+>=20
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 
-Signed-off-by: Henry Lin <henryl@nvidia.com>
----
-v4:
-  1. export xhci_shutdown for CONFIG_USB_XHCI_PCI=m
----
- drivers/usb/host/xhci-pci.c | 13 +++++++++++++
- drivers/usb/host/xhci.c     |  7 ++-----
- drivers/usb/host/xhci.h     |  1 +
- 3 files changed, 16 insertions(+), 5 deletions(-)
+So, without this patch guest OSes will incorrectly report "Not
+affected" at /sys/devices/system/cpu/vulnerabilities/tsx_async_abort
+if RTM is disabled in the VM configuration.
 
-diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
-index 1e0236e90687..1904ef56f61c 100644
---- a/drivers/usb/host/xhci-pci.c
-+++ b/drivers/usb/host/xhci-pci.c
-@@ -519,6 +519,18 @@ static int xhci_pci_resume(struct usb_hcd *hcd, bool hibernated)
- }
- #endif /* CONFIG_PM */
- 
-+static void xhci_pci_shutdown(struct usb_hcd *hcd)
-+{
-+	struct xhci_hcd		*xhci = hcd_to_xhci(hcd);
-+	struct pci_dev		*pdev = to_pci_dev(hcd->self.controller);
-+
-+	xhci_shutdown(hcd);
-+
-+	/* Yet another workaround for spurious wakeups at shutdown with HSW */
-+	if (xhci->quirks & XHCI_SPURIOUS_WAKEUP)
-+		pci_set_power_state(pdev, PCI_D3hot);
-+}
-+
- /*-------------------------------------------------------------------------*/
- 
- /* PCI driver selection metadata; PCI hotplugging uses this */
-@@ -554,6 +566,7 @@ static int __init xhci_pci_init(void)
- #ifdef CONFIG_PM
- 	xhci_pci_hc_driver.pci_suspend = xhci_pci_suspend;
- 	xhci_pci_hc_driver.pci_resume = xhci_pci_resume;
-+	xhci_pci_hc_driver.shutdown = xhci_pci_shutdown;
- #endif
- 	return pci_register_driver(&xhci_pci_driver);
- }
-diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
-index 6c17e3fe181a..90aa811165f1 100644
---- a/drivers/usb/host/xhci.c
-+++ b/drivers/usb/host/xhci.c
-@@ -770,7 +770,7 @@ static void xhci_stop(struct usb_hcd *hcd)
-  *
-  * This will only ever be called with the main usb_hcd (the USB3 roothub).
-  */
--static void xhci_shutdown(struct usb_hcd *hcd)
-+void xhci_shutdown(struct usb_hcd *hcd)
- {
- 	struct xhci_hcd *xhci = hcd_to_xhci(hcd);
- 
-@@ -789,11 +789,8 @@ static void xhci_shutdown(struct usb_hcd *hcd)
- 	xhci_dbg_trace(xhci, trace_xhci_dbg_init,
- 			"xhci_shutdown completed - status = %x",
- 			readl(&xhci->op_regs->status));
--
--	/* Yet another workaround for spurious wakeups at shutdown with HSW */
--	if (xhci->quirks & XHCI_SPURIOUS_WAKEUP)
--		pci_set_power_state(to_pci_dev(hcd->self.sysdev), PCI_D3hot);
- }
-+EXPORT_SYMBOL_GPL(xhci_shutdown);
- 
- #ifdef CONFIG_PM
- static void xhci_save_registers(struct xhci_hcd *xhci)
-diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
-index f9f88626a57a..973d665052a2 100644
---- a/drivers/usb/host/xhci.h
-+++ b/drivers/usb/host/xhci.h
-@@ -2050,6 +2050,7 @@ int xhci_start(struct xhci_hcd *xhci);
- int xhci_reset(struct xhci_hcd *xhci);
- int xhci_run(struct usb_hcd *hcd);
- int xhci_gen_setup(struct usb_hcd *hcd, xhci_get_quirks_t get_quirks);
-+void xhci_shutdown(struct usb_hcd *hcd);
- void xhci_init_driver(struct hc_driver *drv,
- 		      const struct xhci_driver_overrides *over);
- int xhci_disable_slot(struct xhci_hcd *xhci, u32 slot_id);
--- 
-2.17.1
+Is there anything host userspace can do to detect this situation
+and issue a warning on that case?
+
+Is there anything the guest kernel can do to detect this and not
+report a false negative at /sys/.../tsx_async_abort?
+
+--=20
+Eduardo
 
