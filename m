@@ -2,97 +2,202 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAE7AC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 12:18:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 718F3C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 12:18:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D2BE2089D
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 12:18:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5292C2089D
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 12:18:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbfKUMSI (ORCPT
+        id S1726861AbfKUMSQ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 07:18:08 -0500
-Received: from foss.arm.com ([217.140.110.172]:55414 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726197AbfKUMSI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 07:18:08 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 895F61045;
-        Thu, 21 Nov 2019 04:18:07 -0800 (PST)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CF27B3F703;
-        Thu, 21 Nov 2019 04:18:06 -0800 (PST)
-Date:   Thu, 21 Nov 2019 12:18:05 +0000
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     devicetree@vger.kernel.org, f.fainelli@gmail.com,
-        linux-rdma@vger.kernel.org, maz@kernel.org, phil@raspberrypi.org,
-        linux-kernel@vger.kernel.org, jeremy.linton@arm.com,
-        linux-rockchip@lists.infradead.org,
-        iommu@lists.linux-foundation.org, mbrugger@suse.com,
-        bcm-kernel-feedback-list@broadcom.com, wahrenst@gmx.net,
-        james.quinlan@broadcom.com, linux-pci@vger.kernel.org,
-        Robin Murphy <robin.murphy@arm.com>, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rpi-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 0/6] Raspberry Pi 4 PCIe support
-Message-ID: <20191121121804.GY43905@e119886-lin.cambridge.arm.com>
-References: <20191112155926.16476-1-nsaenzjulienne@suse.de>
- <20191119111848.GR43905@e119886-lin.cambridge.arm.com>
- <1b116fabe85a324e2d05a593d38811467f43fb91.camel@suse.de>
+        Thu, 21 Nov 2019 07:18:16 -0500
+Received: from mx2.suse.de ([195.135.220.15]:32998 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726197AbfKUMSP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 07:18:15 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 2C9E2B033;
+        Thu, 21 Nov 2019 12:18:13 +0000 (UTC)
+From:   Nicolai Stange <nstange@suse.de>
+To:     Stephan =?utf-8?Q?M=C3=BCller?= <smueller@chronox.de>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-api@vger.kernel.org,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        zhangjs <zachary@baishancloud.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        Nicolai Stange <nstange@suse.de>,
+        "Peter\, Matthias" <matthias.peter@bsi.bund.de>,
+        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
+        Roman Drahtmueller <draht@schaltsekun.de>,
+        Neil Horman <nhorman@redhat.com>
+Subject: Re: [PATCH v25 12/12] LRNG - add interface for gathering of raw entropy
+References: <6157374.ptSnyUpaCn@positron.chronox.de>
+        <2787174.DQlWHN5GGo@positron.chronox.de>
+        <3610406.x8mDjznOIz@positron.chronox.de>
+Date:   Thu, 21 Nov 2019 13:18:10 +0100
+In-Reply-To: <3610406.x8mDjznOIz@positron.chronox.de> ("Stephan
+ \=\?utf-8\?Q\?M\=C3\=BCller\=22's\?\=
+        message of "Sat, 16 Nov 2019 10:38:12 +0100")
+Message-ID: <87a78pl8xp.fsf@suse.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.3 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1b116fabe85a324e2d05a593d38811467f43fb91.camel@suse.de>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 12:49:24PM +0100, Nicolas Saenz Julienne wrote:
-> On Tue, 2019-11-19 at 11:18 +0000, Andrew Murray wrote:
-> > On Tue, Nov 12, 2019 at 04:59:19PM +0100, Nicolas Saenz Julienne wrote:
-> > > This series aims at providing support for Raspberry Pi 4's PCIe
-> > > controller, which is also shared with the Broadcom STB family of
-> > > devices.
-> > > 
-> > > There was a previous attempt to upstream this some years ago[1] but was
-> > > blocked as most STB PCIe integrations have a sparse DMA mapping[2] which
-> > > is something currently not supported by the kernel.  Luckily this is not
-> > > the case for the Raspberry Pi 4.
-> > > 
-> > > Note that the driver code is to be based on top of Rob Herring's series
-> > > simplifying inbound and outbound range parsing.
-> > > 
-> > > [1] https://patchwork.kernel.org/cover/10605933/
-> > > [2] https://patchwork.kernel.org/patch/10605957/
-> > > 
-> > 
-> > What happened to patch 3? I can't see it on the list or in patchwork?
-> 
-> For some reason the script I use to call get_maintainer.sh or git send-mail
-> failed to add linux-pci@vger.kernel.org and linux-kernel@vger.kernel.org as
-> recipients. I didn't do anything different between v1 and v2 as far as mailing
-> is concerned.
-> 
-> Nevertheless it's here: https://www.spinics.net/lists/arm-kernel/msg768461.html
-> and should be present in the linux-arm-kernel list.
-> 
-> I'll look in to it and make sure this doesn't happen in v3.
+Hi Stephan,
 
-No problem.
+two general remarks on debugfs usage below
+
+Stephan Müller <smueller@chronox.de> writes:
+
+> diff --git a/drivers/char/lrng/lrng_testing.c b/drivers/char/lrng/lrng_testing.c
+> new file mode 100644
+> index 000000000000..5c33d3bd2172
+> --- /dev/null
+> +++ b/drivers/char/lrng/lrng_testing.c
+
+<snip>
+
+
+> +/*
+> + * This data structure holds the dentry's of the debugfs files establishing
+> + * the interface to user space.
+> + */
+> +struct lrng_raw_debugfs {
+> +	struct dentry *lrng_raw_debugfs_root; /* root dentry */
+> +	struct dentry *lrng_raw_debugfs_lrng_raw; /* .../lrng_raw */
+> +};
+> +
+> +static struct lrng_raw_debugfs lrng_raw_debugfs;
+> +
+> +/* DebugFS operations and definition of the debugfs files */
+> +static ssize_t lrng_raw_read(struct file *file, char __user *to,
+> +			     size_t count, loff_t *ppos)
+> +{
+> +	loff_t pos = *ppos;
+> +	int ret;
+> +
+> +	if (!count)
+> +		return 0;
+> +	lrng_raw_entropy_init();
+> +	ret = lrng_raw_extract_user(to, count);
+> +	lrng_raw_entropy_fini();
+> +	if (ret < 0)
+> +		return ret;
+> +	count -= ret;
+> +	*ppos = pos + count;
+> +	return ret;
+> +}
+> +
+> +/* Module init: allocate memory, register the debugfs files */
+> +static int lrng_raw_debugfs_init(void)
+> +{
+> +	lrng_raw_debugfs.lrng_raw_debugfs_root =
+> +		debugfs_create_dir(KBUILD_MODNAME, NULL);
+> +	if (IS_ERR(lrng_raw_debugfs.lrng_raw_debugfs_root)) {
+> +		lrng_raw_debugfs.lrng_raw_debugfs_root = NULL;
+> +		return PTR_ERR(lrng_raw_debugfs.lrng_raw_debugfs_root);
+> +	}
+
+I think pointers returned by the debugfs API are not supposed to get
+checked for NULL/IS_ERR(), c.f commit ff9fb72bc077 ("debugfs: return
+error values, not NULL") or the the output from
+
+  git log --pretty=oneline | grep 'no need to check return value of debugfs_create'
+
+(Also the above code is dubious: you're effectively returning
+ PTR_ERR(NULL)).
+
+
+
+> +	return 0;
+> +}
+> +
+> +static struct file_operations lrng_raw_name_fops = {
+> +	.owner = THIS_MODULE,
+> +	.read = lrng_raw_read,
+> +};
+> +
+> +static int lrng_raw_debugfs_init_name(void)
+> +{
+> +	lrng_raw_debugfs.lrng_raw_debugfs_lrng_raw =
+> +		debugfs_create_file("lrng_raw", 0400,
+> +				    lrng_raw_debugfs.lrng_raw_debugfs_root,
+> +				    NULL, &lrng_raw_name_fops);q
+
+CONFIG_LRNG_TESTING is a bool and thus, this debugfs file can't ever get
+removed. Even if it could, this inode hasn't got any data associated
+with it and so file removal would not be a problem for lrng_raw_read().
+
+Please consider using debugfs_create_file_unsafe() instead to save
+debugfs from kmalloc()ing a proxy file_operations protecting your fops
+against concurrent file removal.
+
+
+
+> +	if (IS_ERR(lrng_raw_debugfs.lrng_raw_debugfs_lrng_raw)) {
+> +		lrng_raw_debugfs.lrng_raw_debugfs_lrng_raw = NULL;
+> +		return PTR_ERR(lrng_raw_debugfs.lrng_raw_debugfs_lrng_raw);
+> +	}
+
+Same comment regarding return value checking applies here.
 
 Thanks,
 
-Andrew Murray
-
-> 
-> Regards,
-> Nicolas
-> 
+Nicolai
 
 
+> +	return 0;
+> +}
+> +
+> +static int __init lrng_raw_init(void)
+> +{
+> +	int ret = lrng_raw_debugfs_init();
+> +
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = lrng_raw_debugfs_init_name();
+> +	if (ret < 0)
+> +		debugfs_remove_recursive(
+> +					lrng_raw_debugfs.lrng_raw_debugfs_root);
+> +
+> +	return ret;
+> +}
+> +
+> +static void __exit lrng_raw_exit(void)
+> +{
+> +	debugfs_remove_recursive(lrng_raw_debugfs.lrng_raw_debugfs_root);
+> +}
+> +
+> +module_init(lrng_raw_init);
+> +module_exit(lrng_raw_exit);
+> +
+> +MODULE_LICENSE("Dual BSD/GPL");
+> +MODULE_AUTHOR("Stephan Mueller <smueller@chronox.de>");
+> +MODULE_DESCRIPTION("Kernel module for gathering raw entropy");
+
+-- 
+SUSE Software Solutions Germany GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+(HRB 36809, AG Nürnberg), GF: Felix Imendörffer
