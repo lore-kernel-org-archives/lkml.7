@@ -2,140 +2,141 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F08C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B69FDC43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:07:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B7312067D
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:07:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88E70206CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:07:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g5iDPAGu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726861AbfKUVHQ (ORCPT
+        id S1726947AbfKUVHX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 16:07:16 -0500
-Received: from mga01.intel.com ([192.55.52.88]:28328 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726293AbfKUVHQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 16:07:16 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Nov 2019 13:07:15 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,227,1571727600"; 
-   d="scan'208";a="238343412"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by fmsmga002.fm.intel.com with ESMTP; 21 Nov 2019 13:07:14 -0800
-Date:   Thu, 21 Nov 2019 13:07:14 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
-        Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-edac@vger.kernel.org,
-        "linux-kselftest@vger.kernel.org, Jarkko Sakkinen" 
-        <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v3 09/19] x86/cpu: Clear VMX feature flag if VMX is not
- fully enabled
-Message-ID: <20191121210714.GB16617@linux.intel.com>
-References: <20191119031240.7779-1-sean.j.christopherson@intel.com>
- <20191119031240.7779-10-sean.j.christopherson@intel.com>
- <20191121162452.GJ6540@zn.tnic>
+        Thu, 21 Nov 2019 16:07:23 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:33955 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726875AbfKUVHW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 16:07:22 -0500
+Received: by mail-qk1-f195.google.com with SMTP id b188so4424596qkg.1
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 13:07:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:references:cc:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding;
+        bh=NENUynk4I14cLJ1gzY7kbHVItSkGHRUyltKk2t7G71k=;
+        b=g5iDPAGusrJ5T04T0la9VutqkiP2FlaTpfWeszcdEhnqyy+Wf4O7trjWSqztvlc2Y/
+         eOq0JX+qxqp862BdbChJYLpfkyRSkxU1OgZBos12SGOrDTklEIy9Oho3glmf4U8ZDkh3
+         Y8wIV8XPhXqjnI28AakLPiO29iU6jwSTorgYdDO+I7QVznE7zId5aO9qy/AHiwMtAOMR
+         4FCd24PhP/eEvqyVfd6pECXj+cBkfho5b3MlVxhnlBrWP3avZ1yQjn8pgZJxbtbga3Pz
+         dGIP4nXO7tvKkElauREkFPC6GmkN6DVS1bbFzlyD4wBiQy7vTIEVMP31Zt+6MrQ0Tbep
+         iCpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
+        bh=NENUynk4I14cLJ1gzY7kbHVItSkGHRUyltKk2t7G71k=;
+        b=fm0e/X3fwZw69XYXA+PfiiUcPzhhydmYPjFzyQB9/55idSrm+Xt7j/W1sSu9D3tF8M
+         10i6h/GI9N4xwI29Wro6zAGpYkbJVsrrUFbEg3EGhQOQug9G/G/Spln93fGKydR0TRGY
+         fh0weAbFt+eKKqbAPnd/T41znF+t98973AnnL0oxXl9+hVSwSBwlXpwCryBGNyut8P8m
+         RChtxx43tlcBI4MBXr1NmcbIpRhv67OfSd3IUgv8S3n3JvwTszu1sr9yyXuxzYG6VoDx
+         g5h/OY8gD0IvhBaC/fpwdW+k7nRUD41LfGDxOuuwtwruKUDDaRKfHGEalOAG5VGm5L5e
+         DlVQ==
+X-Gm-Message-State: APjAAAWv5UwTleJZ6JBvgtJD88OY3DFqghL+YgqWYtEYrL5QnS5uVPjJ
+        Y1f8KMKftt+WBCGgtvuQKjW28w==
+X-Google-Smtp-Source: APXvYqwlynOQgNTLE0weHTUVWiNQd0hgkoM+NrDMGZXLhgwxuK7tEo4Ra/hAtmxs4ObbQbOXtAGAWA==
+X-Received: by 2002:a37:9b4a:: with SMTP id d71mr9974147qke.0.1574370441784;
+        Thu, 21 Nov 2019 13:07:21 -0800 (PST)
+Received: from [192.168.1.169] (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
+        by smtp.gmail.com with ESMTPSA id d139sm1983435qkb.36.2019.11.21.13.07.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 21 Nov 2019 13:07:20 -0800 (PST)
+Subject: Re: [PATCH] drivers: thermal: step_wise: add support for hysteresis
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+References: <8e812065f4a76325097c5f9c17f3386736d8c1d4.1574315190.git.amit.kucheria@linaro.org>
+ <5DD69AB7.3060307@linaro.org>
+ <CAP245DVwEij-fs-LK=i3+Ps6BrsHt4DfxKG=C-tFM3CVKadtXA@mail.gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        "J, KEERTHY" <j-keerthy@ti.com>, Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Ram Chandrasekar <rkumbako@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Linux PM list <linux-pm@vger.kernel.org>
+From:   Thara Gopinath <thara.gopinath@linaro.org>
+Message-ID: <5DD6FC87.6040403@linaro.org>
+Date:   Thu, 21 Nov 2019 16:07:19 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191121162452.GJ6540@zn.tnic>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <CAP245DVwEij-fs-LK=i3+Ps6BrsHt4DfxKG=C-tFM3CVKadtXA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 05:24:52PM +0100, Borislav Petkov wrote:
-> On Mon, Nov 18, 2019 at 07:12:30PM -0800, Sean Christopherson wrote:
-> > Now that the IA32_FEATURE_CONTROL MSR is guaranteed to be configured and
-> > locked, clear the VMX capability flag if the IA32_FEATURE_CONTROL MSR is
-> > not supported or if BIOS disabled VMX, i.e. locked IA32_FEATURE_CONTROL
-> > and did not set the appropriate VMX enable bit.
-> > 
-> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> > ---
-> >  arch/x86/kernel/cpu/feature_control.c | 28 ++++++++++++++++++++++++---
-> >  1 file changed, 25 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/arch/x86/kernel/cpu/feature_control.c b/arch/x86/kernel/cpu/feature_control.c
-> > index 33c9444dda52..2bd1a9e6021a 100644
-> > --- a/arch/x86/kernel/cpu/feature_control.c
-> > +++ b/arch/x86/kernel/cpu/feature_control.c
-> > @@ -5,15 +5,26 @@
-> >  #include <asm/msr-index.h>
-> >  #include <asm/processor.h>
-> >  
-> > +#undef pr_fmt
-> > +#define pr_fmt(fmt)	"x86/cpu: " fmt
-> > +
-> > +#define FEAT_CTL_UNSUPPORTED_MSG "IA32_FEATURE_CONTROL MSR unsupported on VMX capable CPU, suspected hardware or hypervisor issue.\n"
-> > +
-> >  void init_feature_control_msr(struct cpuinfo_x86 *c)
-> >  {
-> > +	bool tboot = tboot_enabled();
-> >  	u64 msr;
-> >  
-> > -	if (rdmsrl_safe(MSR_IA32_FEATURE_CONTROL, &msr))
-> > +	if (rdmsrl_safe(MSR_IA32_FEATURE_CONTROL, &msr)) {
-> > +		if (cpu_has(c, X86_FEATURE_VMX)) {
-> > +			pr_err_once(FEAT_CTL_UNSUPPORTED_MSG);
-> > +			clear_cpu_cap(c, X86_FEATURE_VMX);
-> > +		}
-> >  		return;
-> > +	}
+On 11/21/2019 09:38 AM, Amit Kucheria wrote:
+> On Thu, Nov 21, 2019 at 7:40 PM Thara Gopinath
+> <thara.gopinath@linaro.org> wrote:
+>>
+>> On 11/21/2019 12:50 AM, Amit Kucheria wrote:
+>>> From: Ram Chandrasekar <rkumbako@codeaurora.org>
+>>>
+>>> Currently, step wise governor increases the mitigation when the
+>>> temperature goes above a threshold and decreases the mitigation when the
+>>> temperature goes below the threshold. If there is a case where the
+>>> temperature is wavering around the threshold, the mitigation will be
+>>> applied and removed every iteration, which is not very efficient.
+>>>
+>>> The use of hysteresis temperature could avoid this ping-pong of
+>>> mitigation by relaxing the mitigation to happen only when the
+>>> temperature goes below this lower hysteresis value.
+>> Hi Amit,
+>>
+>> Can this not lead to ping-pong around the hysteresis temperature?
 > 
-> Right, so this test: is this something that could happen on some
-> configurations - i.e., the MSR is not there but VMX bit is set - or are
-> you being too cautious here?
+> That isn't how hysteresis is supposed to work if there is a sufficient
+> delta between your trip point and your hysteresis value.
+> 
+> e.g. if you have a trip at 80C and a hysteresis of 10C, it means that
+> you will start throttling at 80C, but you won't STOP throttling until
+> you cool down to 70C. At that point, you will wait again to get to 80C
+> before throttling again.
+> IOW, on the downward slope (80 -> 70) you still have throttling active
+> and on the upward slope (70 -> 80), you have no[1] throttling, so
+> different behaviour is the same temperature range depending on
+> direction.
+> 
+> If your hysteresis value was very low .e.g. 1C, it would certainly be useless.
 
-Probably being overly cautious.
+Thanks for the explanation. I think averaging can still give a smoother
+experience/transition. But then it has to be implemented and tested
+against this solution. Other reason for this solution is hysteresis can
+be a higher value if needed where as averaging might not give that
+flexibility. I have some other comments on the patch which I have posted
+separately.
+> 
+>> If the idea is to minimize ping-pong isn't average a better method?
+> 
+> We shouldn't ping-pong with the asymmetric behaviour described above.
+> 
+> Regards,
+> Amit
+> [1] This is a simple example with a single trip point.
+> 
 
-> IOW, do you have any concrete use cases in mind (cloud provider can f*ck
-> it up this way) or?
 
-Yes, VMM somehow managing to break things.  Admittedly extremely unlikely
-given how long IA32_FEATURE_CONTROL has been around.
-
-> My angle is that if this is never going to happen, why even bother to
-> print anything...
-
-My thought was to add an equivalent of the WARN that fires when an MSR
-access unexpectedly faults.  That's effectively what'd be happening, except
-I used the safe variant to reduce the maintenance cost, e.g. so that the
-RDMSR doesn't have to be conditioned on every possible feature.
-
-What about a WARN_ON cpu_has?  That'd be more aligned with the unexpected
-#GP on RDMSR behavior.
-
-	if (rdmsrl_safe(...)) {
-		if (WARN_ON_ONCE(cpu_has(c, X86_FEATURE_VMX)))
-			clear_cpu_cap(c, X86_FEATURE_VMX);
-		return;
-	}
-
-I'm also ok dropping it altogether, though from a KVM developer
-perspective I wouldn't mind the extra sanity check :-)
+-- 
+Warm Regards
+Thara
