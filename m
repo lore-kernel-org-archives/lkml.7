@@ -2,169 +2,160 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C96C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:45:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91BE1C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:47:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 444F920708
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:45:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5705720708
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:47:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="pVhvccO5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mjvLZw7a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727172AbfKUOpg (ORCPT
+        id S1726722AbfKUOru (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 09:45:36 -0500
-Received: from mail-eopbgr730060.outbound.protection.outlook.com ([40.107.73.60]:7616
-        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726293AbfKUOpf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 09:45:35 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=U7jGzBDywQYgTsWBNRktbjob0AQxPYiROVeQbVo/qT095lXVpc9LdBqG/TYTsIv/7YNblqvnuHnwqZpchKqI89/uL809Ep2c5iVOm3IIQSv7uz/in/0YEDe6PjlQX4iUgDmjqP1nPOpTD/h04hufHfNosXQLRcFF/51nc8ylWYtLZsq1kcA+gxS2SNmsX6H3cUw0QHiDch80bYttoAayyl6vR/sTv3x4ojJcbXg8/xCeJ0TjNHq0XgivAFT47KowPRhq5poUd0pjUF0QWVrZTYxWPoFKm2CUmWF8esqxT8DZILgdtKOCAdKZXZG9VAnYMNR3pjnlDuVvfhWoJMvRhg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HHZQ7mFRNDH24ZO/Apdnkglm+mP0xhv+1pZFgZu0yQU=;
- b=MTNv27Nk3uyghaoB2gGcLhEzjMNGcS+xZPEMLLa7nyjsZPi5OK7GyRKxQzZFJ6OkYnBoC1m4YqO0e0eQj6ru319ItRiIwxSs5OhVF78cxnm0ql+9ldgWfen3iWV8rJdu4TdQ3HopAr7gVHBgZMKvE434HCRwA78wOn6Reer5EQgi/PmeEyg1wZR6r2MZMpKdUcdTvyGJEp707/bYr9ZugyIZ3gedfRna9eU8u/4dpgGvL0wwGEAJS6RczjbRPQ2j9O9xk02RKRsqK+Qojsx6jrPC/bJpGHiZrZb0kIDdI/66hcyF9X1NEvrE62Yvnp+25iM5hwknvTIcqEnZKkCwag==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
- dkim=pass header.d=vmware.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HHZQ7mFRNDH24ZO/Apdnkglm+mP0xhv+1pZFgZu0yQU=;
- b=pVhvccO5yn02oltx9xLCZFVqgvZNQPO5wZqLwKgSIsVxPeu8U2pKrZTKSSv3dUFpemtxKvzyLxB5SpXufbSd4a2xHd6M7tlMvz4OO5VjNbM4ILtedRhdSQ9mHfD2y4S8//Bfs8f/HwivjBVwAaJv6Lqy/JJEEL6dKB4EaIk3cEU=
-Received: from MWHPR05MB3376.namprd05.prod.outlook.com (10.174.175.149) by
- MWHPR05MB2990.namprd05.prod.outlook.com (10.168.246.146) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2474.12; Thu, 21 Nov 2019 14:45:32 +0000
-Received: from MWHPR05MB3376.namprd05.prod.outlook.com
- ([fe80::4098:2c39:d8d3:a209]) by MWHPR05MB3376.namprd05.prod.outlook.com
- ([fe80::4098:2c39:d8d3:a209%7]) with mapi id 15.20.2474.015; Thu, 21 Nov 2019
- 14:45:32 +0000
-From:   Jorgen Hansen <jhansen@vmware.com>
-To:     'Stefano Garzarella' <sgarzare@redhat.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: RE: [PATCH net-next 0/6] vsock: add local transport support
-Thread-Topic: [PATCH net-next 0/6] vsock: add local transport support
-Thread-Index: AQHVnsi4kz4RAPX5S02yxj8Sa/r70aeVsxKg
-Date:   Thu, 21 Nov 2019 14:45:32 +0000
-Message-ID: <MWHPR05MB3376B8241546664BBCA6FC37DA4E0@MWHPR05MB3376.namprd05.prod.outlook.com>
-References: <20191119110121.14480-1-sgarzare@redhat.com>
-In-Reply-To: <20191119110121.14480-1-sgarzare@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jhansen@vmware.com; 
-x-originating-ip: [208.91.2.1]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c0d55e97-e0d6-4485-0e18-08d76e917616
-x-ms-traffictypediagnostic: MWHPR05MB2990:
-x-microsoft-antispam-prvs: <MWHPR05MB2990F74A0DD06BB9A3BF6C8DDA4E0@MWHPR05MB2990.namprd05.prod.outlook.com>
-x-vmwhitelist: True
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0228DDDDD7
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(366004)(39860400002)(396003)(136003)(376002)(189003)(199004)(305945005)(99286004)(14454004)(81166006)(81156014)(8676002)(8936002)(71200400001)(71190400001)(7736002)(86362001)(74316002)(6436002)(33656002)(4326008)(478600001)(66476007)(66556008)(64756008)(52536014)(76116006)(66946007)(110136005)(54906003)(11346002)(446003)(25786009)(5660300002)(66446008)(7696005)(6506007)(102836004)(9686003)(76176011)(55016002)(186003)(26005)(316002)(229853002)(66066001)(6246003)(256004)(2906002)(2501003)(6116002)(3846002);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR05MB2990;H:MWHPR05MB3376.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: vmware.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: pEgvhpcD7UgxVgIdd+loqntBwxfIKRCZIlf0ARPMDXzUf4xMo9BxP6Wz9vi/fojiMmcJUobrbJCjLIb7gLv+DJ/0X/3Qduv4hbUJ9hzX4HA0SB0t8lBqb3SVB/fsjZym85YyLlKmk+C0C3UP6xgyMWeQGuCBJuDq1H0zSafou7iRT/hhvU1YQSonSnEW6nIUqGyRn7gbtmYhGR50BVl0lL/zHu6LpHDxiBDxyJumgE2yvTCf38nMGjHYMjpIYc9/Lqr4QYls4wwMIFBJN0rRkumidqxA7Z/TC/m8HGglPdJquDEpbGXsAdu4C8oIoQ2yL0fAqXEDxqfXzMwH9wgXUxMgUWSRIfiqILB72zKiTd0mO2Kb+H2AwfKynRLjb+tjycvhsl+5cCRtJPEyrOhGdYhnygRYcYZKxxGIMtulFS8dp0UvgHIwqU+Vn9yefdIj
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 21 Nov 2019 09:47:50 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:42418 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726541AbfKUOrt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 09:47:49 -0500
+Received: by mail-qk1-f193.google.com with SMTP id i3so3221645qkk.9
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 06:47:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=9vdcmn1+3xWMnRDagEegM970Sjr+dGziiJdK5fsuiiM=;
+        b=mjvLZw7a0yL6AlXcd6Zxt6dr83OQeu+0WNTEixGYwfmow+04mNk6KAmpgC0S7My6JD
+         f9f5wVMCTb4MIZSDYn03rwP+r3wJPMA+oEoG2BwVPrIDbpF+SUOT5//KtGW2L7hMdUfJ
+         d7ZtZW5vYO854MT8xfN3gwbZcHZePNCUSfb1hQNksod98RaYFRfZ8K8eX7TX6EE3FFf6
+         JAlY2g9SnHygGABIYHUl7WRMy1G5XCw2FYuZGa4Iad/XbxiZiInvPj2UIHi9hbieiZXJ
+         s/OraAsj12QVNyqlxqO7G1F3Z5FNWD9iovATkSHS7A3pdcuV3zaQwF9FBHLE6tkjWWfK
+         8C7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9vdcmn1+3xWMnRDagEegM970Sjr+dGziiJdK5fsuiiM=;
+        b=UHum64GtXtBR+Mi/4BNX7g7HQT0QTwuRYwdtYXmPGKFkZmq+CxT7Vloj0nQK9q1H7D
+         p0DGpFx2TzVBgAX8btkLQWhJAnw1hqDQ5/DpdDp7BW91HdU/ARk4F2e7r08bj3AsmaUf
+         QpUC05gnADoE9tZEJzfHmoXCnq3GNkbmm4Q1x9t9rCrMZjID2LcDouHm4QQaDF7qxjlW
+         /IaMVjeLCg4FxLAPzuYuQZvbF7vFRNqqIPo0Yx/1ujsYPLFqy6BRLebmepFDssnaT9Ug
+         fYjOSs/3YyYDQvQzX7rUcbU5o2CKoNVln5ZveAuMJF5+Vx3NvbPSSiWx44Zg4esyILcJ
+         RqRQ==
+X-Gm-Message-State: APjAAAXXE2rGktLcS5TBjsZdQyXUzc6aEGekFmKfLRrzUFEHGrWsD1cT
+        rFii916hlrdbrOUJ1zf1PeY=
+X-Google-Smtp-Source: APXvYqy8O0Z1bmM6bi5OawpJm2ccCS3stk00YQDa/rHqatx0z0pmMJ8k1ko+8QekQ49rGm3eYy6+hA==
+X-Received: by 2002:a37:f915:: with SMTP id l21mr716881qkj.209.1574347667475;
+        Thu, 21 Nov 2019 06:47:47 -0800 (PST)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id z6sm1012802qkz.101.2019.11.21.06.47.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Nov 2019 06:47:46 -0800 (PST)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 6937840D3E; Thu, 21 Nov 2019 11:47:44 -0300 (-03)
+Date:   Thu, 21 Nov 2019 11:47:44 -0300
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH] perf tools: fix potential memory leak
+Message-ID: <20191121144744.GI5078@kernel.org>
+References: <20191120180925.21787-1-irogers@google.com>
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c0d55e97-e0d6-4485-0e18-08d76e917616
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Nov 2019 14:45:32.3986
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 6tkywh7tOiRgz+zwDunUrtVuWFTm9QB9jK1Vd4qOPtZEAlp8hUI/dgtec0hl9pcsew/k9xGUwYgB9n+ibbrs8A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR05MB2990
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191120180925.21787-1-irogers@google.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Stefano Garzarella [mailto:sgarzare@redhat.com]
-> Sent: Tuesday, November 19, 2019 12:01 PM
-> This series introduces a new transport (vsock_loopback) to handle
-> local communication.
-> This could be useful to test vsock core itself and to allow developers
-> to test their applications without launching a VM.
->=20
-> Before this series, vmci and virtio transports allowed this behavior,
-> but only in the guest.
-> We are moving the loopback handling in a new transport, because it
-> might be useful to provide this feature also in the host or when
-> no H2G/G2H transports (hyperv, virtio, vmci) are loaded.
->=20
-> The user can use the loopback with the new VMADDR_CID_LOCAL (that
-> replaces VMADDR_CID_RESERVED) in any condition.
-> Otherwise, if the G2H transport is loaded, it can also use the guest
-> local CID as previously supported by vmci and virtio transports.
-> If G2H transport is not loaded, the user can also use VMADDR_CID_HOST
-> for local communication.
->=20
-> Patch 1 is a cleanup to build virtio_transport_common without virtio
-> Patch 2 adds the new VMADDR_CID_LOCAL, replacing
-> VMADDR_CID_RESERVED
-> Patch 3 adds a new feature flag to register a loopback transport
-> Patch 4 adds the new vsock_loopback transport based on the loopback
->         implementation of virtio_transport
-> Patch 5 implements the logic to use the local transport for loopback
->         communication
-> Patch 6 removes the loopback from virtio_transport
->=20
-> @Jorgen: Do you think it might be a problem to replace
-> VMADDR_CID_RESERVED with VMADDR_CID_LOCAL?
+Em Wed, Nov 20, 2019 at 10:09:25AM -0800, Ian Rogers escreveu:
+> An error may be in place when tracepoint_error is called, use
+> parse_events__handle_error to avoid a memory leak and to capture the
+> first and last error. Error detected by LLVM's libFuzzer using the
+> following event:
+> 
+> $ perf stat -e 'msr/event/,f:e'
+> event syntax error: 'msr/event/,f:e'
+>                      \___ can't access trace events
+> 
+> Error:  No permissions to read /sys/kernel/debug/tracing/events/f/e
+> Hint:   Try 'sudo mount -o remount,mode=755 /sys/kernel/debug/tracing/'
+> 
+> Initial error:
+> event syntax error: 'msr/event/,f:e'
+>                                 \___ no value assigned for term
+> Run 'perf list' for a list of valid events
+> 
+>  Usage: perf stat [<options>] [<command>]
+> 
+>     -e, --event <event>   event selector. use 'perf list' to list available events
 
-No, that should be fine. It has never allowed for use with stream sockets i=
-n
-AF_VSOCK. The only potential use would be for datagram sockets, but that
-side appears to be unaffected by your changes, since loopback is only
-introduced for SOCK_STREAM.
+Thanks, applied.
 
->=20
-> Thanks,
-> Stefano
->=20
-> Stefano Garzarella (6):
->   vsock/virtio_transport_common: remove unused virtio header includes
->   vsock: add VMADDR_CID_LOCAL definition
->   vsock: add local transport support in the vsock core
->   vsock: add vsock_loopback transport
->   vsock: use local transport when it is loaded
->   vsock/virtio: remove loopback handling
->=20
->  MAINTAINERS                             |   1 +
->  include/net/af_vsock.h                  |   2 +
->  include/uapi/linux/vm_sockets.h         |   8 +-
->  net/vmw_vsock/Kconfig                   |  12 ++
->  net/vmw_vsock/Makefile                  |   1 +
->  net/vmw_vsock/af_vsock.c                |  49 +++++-
->  net/vmw_vsock/virtio_transport.c        |  61 +------
->  net/vmw_vsock/virtio_transport_common.c |   3 -
->  net/vmw_vsock/vmci_transport.c          |   2 +-
->  net/vmw_vsock/vsock_loopback.c          | 217
-> ++++++++++++++++++++++++
->  10 files changed, 283 insertions(+), 73 deletions(-)
->  create mode 100644 net/vmw_vsock/vsock_loopback.c
->=20
-> --
-> 2.21.0
+- Arnaldo
+ 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/parse-events.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+> 
+> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+> index 6bae9d6edc12..ecef5b8037b4 100644
+> --- a/tools/perf/util/parse-events.c
+> +++ b/tools/perf/util/parse-events.c
+> @@ -511,6 +511,7 @@ int parse_events_add_cache(struct list_head *list, int *idx,
+>  static void tracepoint_error(struct parse_events_error *e, int err,
+>  			     const char *sys, const char *name)
+>  {
+> +	const char *str;
+>  	char help[BUFSIZ];
+>  
+>  	if (!e)
+> @@ -524,18 +525,18 @@ static void tracepoint_error(struct parse_events_error *e, int err,
+>  
+>  	switch (err) {
+>  	case EACCES:
+> -		e->str = strdup("can't access trace events");
+> +		str = "can't access trace events";
+>  		break;
+>  	case ENOENT:
+> -		e->str = strdup("unknown tracepoint");
+> +		str = "unknown tracepoint";
+>  		break;
+>  	default:
+> -		e->str = strdup("failed to add tracepoint");
+> +		str = "failed to add tracepoint";
+>  		break;
+>  	}
+>  
+>  	tracing_path__strerror_open_tp(err, help, sizeof(help), sys, name);
+> -	e->help = strdup(help);
+> +	parse_events__handle_error(e, 0, strdup(str), strdup(help));
+>  }
+>  
+>  static int add_tracepoint(struct list_head *list, int *idx,
+> -- 
+> 2.24.0.432.g9d3f5f5b63-goog
 
+-- 
+
+- Arnaldo
