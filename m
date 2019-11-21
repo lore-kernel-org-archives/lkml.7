@@ -2,95 +2,102 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 841BAC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:59:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58E8CC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:59:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64CB020672
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:59:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 301E920672
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:59:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="f/yitGOm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbfKUU72 (ORCPT
+        id S1727080AbfKUU7g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 15:59:28 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:33484 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726546AbfKUU72 (ORCPT
+        Thu, 21 Nov 2019 15:59:36 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:41264 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726912AbfKUU7d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 15:59:28 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iXtXv-0005dd-H6; Thu, 21 Nov 2019 21:59:23 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 362A71C1A63;
-        Thu, 21 Nov 2019 21:59:23 +0100 (CET)
-Date:   Thu, 21 Nov 2019 20:59:23 -0000
-From:   "tip-bot2 for Andy Lutomirski" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] selftests/x86/mov_ss_trap: Fix the SYSENTER test
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>, stable@kernel.org,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-MIME-Version: 1.0
-Message-ID: <157436996315.21853.1892350494410986303.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Thu, 21 Nov 2019 15:59:33 -0500
+Received: by mail-pg1-f194.google.com with SMTP id 207so2235494pge.8
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 12:59:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=8Oee3vw8WRriKUoe5bSDCmHamPjslpnmApMeu92EjOg=;
+        b=f/yitGOmaX1zVyf8c9dnjx1HQ0qr34w/JLsFbCb0RzFmfXL8vdk+ZDfAVW+GG2CxFr
+         gPs208G9vnH8kUUxhpv4iW3DRbhVF/MU9iIgqExyDU0pW+KfXk18RsptF8ZEaIr2FJ22
+         dPlXj0aJkD2/blKkCxO5n76q6ZOebV6QRErZI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=8Oee3vw8WRriKUoe5bSDCmHamPjslpnmApMeu92EjOg=;
+        b=BMpGiH7AGeXrchuWmk1VqjZW1t6W0v4LMvHHe+XX6p1MeUxKR478fFd6szj0WWw51/
+         rxM+AjZvIjQY+H1psJVDISl3fwgAXbK1/3FLZihPn5ljnTkKPeCib+Fux2XohS37kclo
+         qo5HRgt2+U//mvKFsz6SFvcmOWoXhVDL8iNxUxfO2W35+RdwRLsZvpuXik8OwAieTzGc
+         Kgf7LeSOSIE6dwL+8TMNNZTpIvnudA/0kGkS7dgVO0xUKiXMoBIKGnP6pff9YFOWtF7r
+         AA8/LXhY9TSFQGt/gFh0/LH9AfBAQtngo20DznAwvnSTS7di3jUnH/Yol3dDZB5fhxZB
+         5BjQ==
+X-Gm-Message-State: APjAAAXWo675tY7oo6t1z4f++IOU3Lvy9iTN/fza25Rdh2e6tyMu4J+l
+        UJy1NzGBwvErwuZl+Qr8Ls9x2A==
+X-Google-Smtp-Source: APXvYqwL0OXmzN8/bfX694dBzdWxuxxtGXMPFhfm81eIowKKqapauOLMdkt26IfydJnmN7bOoWrzWg==
+X-Received: by 2002:a62:2bc1:: with SMTP id r184mr13133526pfr.88.1574369973119;
+        Thu, 21 Nov 2019 12:59:33 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id r13sm4658805pfg.3.2019.11.21.12.59.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Nov 2019 12:59:31 -0800 (PST)
+From:   Kees Cook <keescook@chromium.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/3] docs, parallelism: Rearrange how jobserver reservations are made
+Date:   Thu, 21 Nov 2019 12:59:26 -0800
+Message-Id: <20191121205929.40371-1-keescook@chromium.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/urgent branch of tip:
+v2:
+    - correct comments and commit logs (rasmus)
+    - handle non-parallel mode more cleanly (rasmus)
+    - reserve slots 8 at a time (rasmus)
+v1: https://lore.kernel.org/lkml/20191121000304.48829-1-keescook@chromium.org
 
-Commit-ID:     8caa016bfc129f2c925d52da43022171d1d1de91
-Gitweb:        https://git.kernel.org/tip/8caa016bfc129f2c925d52da43022171d1d1de91
-Author:        Andy Lutomirski <luto@kernel.org>
-AuthorDate:    Wed, 20 Nov 2019 12:59:13 -08:00
-Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Thu, 21 Nov 2019 21:55:51 +01:00
+Hi,
 
-selftests/x86/mov_ss_trap: Fix the SYSENTER test
+As Rasmus noted[1], there were some deficiencies in how the Make jobserver
+vs sphinx parallelism logic was handled. This series attempts to address
+all those problems by building a set of wrappers and fixing some of the
+internal logic.
 
-For reasons that I haven't quite fully diagnosed, running
-mov_ss_trap_32 on a 32-bit kernel results in an infinite loop in
-userspace.  This appears to be because the hacky SYSENTER test
-doesn't segfault as desired; instead it corrupts the program state
-such that it infinite loops.
+Thank you Rasmus for the suggestions (and the "jobhog" example)! :)
 
-Fix it by explicitly clearing EBP before doing SYSENTER.  This will
-give a more reliable segfault.
+-Kees
 
-Fixes: 59c2a7226fc5 ("x86/selftests: Add mov_to_ss test")
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: stable@kernel.org
----
- tools/testing/selftests/x86/mov_ss_trap.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+[1] https://lore.kernel.org/lkml/eb25959a-9ec4-3530-2031-d9d716b40b20@rasmusvillemoes.dk
 
-diff --git a/tools/testing/selftests/x86/mov_ss_trap.c b/tools/testing/selftests/x86/mov_ss_trap.c
-index 3c3a022..6da0ac3 100644
---- a/tools/testing/selftests/x86/mov_ss_trap.c
-+++ b/tools/testing/selftests/x86/mov_ss_trap.c
-@@ -257,7 +257,8 @@ int main()
- 			err(1, "sigaltstack");
- 		sethandler(SIGSEGV, handle_and_longjmp, SA_RESETHAND | SA_ONSTACK);
- 		nr = SYS_getpid;
--		asm volatile ("mov %[ss], %%ss; SYSENTER" : "+a" (nr)
-+		/* Clear EBP first to make sure we segfault cleanly. */
-+		asm volatile ("xorl %%ebp, %%ebp; mov %[ss], %%ss; SYSENTER" : "+a" (nr)
- 			      : [ss] "m" (ss) : "flags", "rcx"
- #ifdef __x86_64__
- 				, "r11"
+Kees Cook (3):
+  docs, parallelism: Fix failure path and add comment
+  docs, parallelism: Do not leak blocking mode to other readers
+  docs, parallelism: Rearrange how jobserver reservations are made
+
+ Documentation/Makefile                   |  5 +-
+ Documentation/sphinx/parallel-wrapper.sh | 33 ++++++++++++
+ scripts/jobserver-count                  | 58 ---------------------
+ scripts/jobserver-exec                   | 66 ++++++++++++++++++++++++
+ 4 files changed, 101 insertions(+), 61 deletions(-)
+ create mode 100644 Documentation/sphinx/parallel-wrapper.sh
+ delete mode 100755 scripts/jobserver-count
+ create mode 100755 scripts/jobserver-exec
+
+-- 
+2.17.1
+
