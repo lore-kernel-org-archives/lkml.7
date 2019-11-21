@@ -2,237 +2,94 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C158C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:55:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF78C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:56:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 374E420855
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:55:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2005D20855
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:56:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="pwE8Hqyy"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YOqA8iRA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbfKULzD (ORCPT
+        id S1726750AbfKUL4I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 06:55:03 -0500
-Received: from mail-il1-f195.google.com ([209.85.166.195]:43215 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726379AbfKULzD (ORCPT
+        Thu, 21 Nov 2019 06:56:08 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:36086 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726379AbfKUL4I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 06:55:03 -0500
-Received: by mail-il1-f195.google.com with SMTP id r9so2952186ilq.10
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 03:54:59 -0800 (PST)
+        Thu, 21 Nov 2019 06:56:08 -0500
+Received: by mail-wr1-f67.google.com with SMTP id z3so4060018wru.3
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 03:56:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OASxd9sL3P/EAyFnEHWqDD5LpfqZZMnAsfvorrhUyyg=;
-        b=pwE8Hqyyt9JggoFN9jl5bxSbMElKMXFsPnZeJyh3roSkWGRiPz6qnu1SvgDOJ3Hw6i
-         UaAeZvMNr2kYe4IsFb6a2uhjOyO9sujSvCApwbh+oXGNBtkdjike5of1kVIQFsBK+8EE
-         btJumOPBgYOevLDsXDFlEIrsPC76sE6BH4JhE=
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=9s0Szgje6dpjr0n1pOVioXKzl3AXPEDnWb0L/NtVhy8=;
+        b=YOqA8iRATXa4hiQpcuWEo88UUFOhYt04+y39MAUSbsFkYjXU/7A1l92XdZTpjszuVR
+         kgjfL/m1n0J/JqUDeJzUP8WbAiODQ7PmzfW7KbOWpHCwjxGycqwkc+cveckxzaF12fcb
+         POJfMrMzdHAjWp8lZaawCDOOT1cxn/iI1q/hSGSQZ7po7sSYziEoCmMLiTXrwnDRwZCS
+         HEUytpO3v01RIVBWusmqNQqkce5PFcBDUG7yL6Gr/wXkSnkWurGrIZESZsIUOo077yS/
+         6hXQMb+wI37IFti1iZZxiZViP7ByC8DBVVY/jkrS0YJ2JiJ9p++9iB4wE5VFpFVsb6/C
+         AmMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OASxd9sL3P/EAyFnEHWqDD5LpfqZZMnAsfvorrhUyyg=;
-        b=QHhwGI+6jtkadorsE/CDxmVSQwZIfJd+gwp8cU3BsIf60G6SwEIUmT2PCt2eGJHYwf
-         RwHB2u5SfZEOvoWfL3Sr/fYbosT6TJXD28Gr6Xf+5+APzH5FWWPs2jLeNXoHZagDMyvc
-         MMvSWebtr/VDwpbQGnelsfz5zGu9vZFckx8ZI04mFYfjeXbD3NFch4vhCAMjyX76Hp+w
-         aFeVHlhtMe7aqYg1Iq7cAip2svgCnJOYQABxNR8o32wi5wAxBXh87aXm8mYxrbSMgImP
-         JnxBflGseOfBFV1m1Yp3MJeRrTN8g+MFNdnWu6n3Tjrde+MN/F50I+CiHOtqTVY1RHmv
-         2sYg==
-X-Gm-Message-State: APjAAAXOzGe5JDVHX/R8DDjjWB5aWfIYIbS5fQYyPMGu2IGe4pi9p5Aa
-        uIO7LckQ0B41/PnsGUXbmqDMxiQCjTW9erjde6bh7g==
-X-Google-Smtp-Source: APXvYqxfumqpEZg771COtbxon7u4bR0X9QYm3AdjlbTzg0aqVValkgGD39VvNZ52KOhtkplgn0JszB4c2khzBZn3bTg=
-X-Received: by 2002:a92:5d8f:: with SMTP id e15mr9728918ilg.173.1574337299234;
- Thu, 21 Nov 2019 03:54:59 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9s0Szgje6dpjr0n1pOVioXKzl3AXPEDnWb0L/NtVhy8=;
+        b=oEfjmXaIqJgHNL06whSM5C+yvIMRf7I6S/00lnrFQz2TDHqHarKZxRLNaePykQ8Wu0
+         ly/V9dcRo7JSd6VgPOQkx/8BvDnYuDjBbYIESRsEPsmCObZrazDIhYDjbrnLu/3HqiHA
+         6+YZHLiJ8TE9VB/lZLXONLfjVEctmfbfLOQEcp+TsQV6QqmZKNAaK7zWtmWAdAIvYWTY
+         7UmRcFqkv7stOi4vyYoReQzXHmOQmSuzifZ3FA3aL1CJ1YatySTPNIFXyFBUck5GIkjw
+         oxheUCvwWrO+I43sHAnOYAyi2eu8ORnReYBkkiK4XlsSdsiALcCPAsBGp6ubw3czPr/I
+         TQ1g==
+X-Gm-Message-State: APjAAAVVZfZvpgB7r/Bj2lcJpv6wPMCyhe+ACydEa5oaEGAw5cylFL6C
+        9V296Fpf/xvv6q4fPOj59BZALA==
+X-Google-Smtp-Source: APXvYqz3fNLfaGGdec9/pzJD6ZwR2e0KkKVgt3mwXRQxDQHhz+Y/ljjCJjoa474G1YOVNmadbxRcpg==
+X-Received: by 2002:adf:c649:: with SMTP id u9mr10576080wrg.20.1574337366018;
+        Thu, 21 Nov 2019 03:56:06 -0800 (PST)
+Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
+        by smtp.gmail.com with ESMTPSA id m1sm3132668wrv.37.2019.11.21.03.56.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Nov 2019 03:56:05 -0800 (PST)
+Date:   Thu, 21 Nov 2019 11:56:02 +0000
+From:   Quentin Perret <qperret@google.com>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
+        mingo@kernel.org, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, patrick.bellasi@matbug.net,
+        qais.yousef@arm.com, morten.rasmussen@arm.com
+Subject: Re: [PATCH 3/3] sched/fair: Consider uclamp for "task fits capacity"
+ checks
+Message-ID: <20191121115602.GA213296@google.com>
+References: <20191120175533.4672-1-valentin.schneider@arm.com>
+ <20191120175533.4672-4-valentin.schneider@arm.com>
 MIME-Version: 1.0
-References: <20191025175625.8011-1-jagan@amarulasolutions.com>
- <20191025175625.8011-5-jagan@amarulasolutions.com> <20191028153427.pc3tnoz2d23filhx@hendrix>
- <CAMty3ZCisTrFGjzHyqSofqFAsKSLV1n2xP5Li3Lonhdi0WUZVA@mail.gmail.com>
- <20191029085401.gvqpwmmpyml75vis@hendrix> <CAMty3ZAWPZSHtAZDf_0Dpx588YGGv3pJX1cXMfkZus3+WF94cA@mail.gmail.com>
- <20191103173227.GF7001@gilmour>
-In-Reply-To: <20191103173227.GF7001@gilmour>
-From:   Jagan Teki <jagan@amarulasolutions.com>
-Date:   Thu, 21 Nov 2019 17:24:47 +0530
-Message-ID: <CAMty3ZD5uxU=xb0z7PWaXzodYbWRJkP9HjGX-HZYFT4bwk0GOg@mail.gmail.com>
-Subject: Re: [PATCH v11 4/7] drm/sun4i: dsi: Handle bus clock explicitly
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        linux-amarula <linux-amarula@amarulasolutions.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Icenowy Zheng <icenowy@aosc.io>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191120175533.4672-4-valentin.schneider@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maxime,
+On Wednesday 20 Nov 2019 at 17:55:33 (+0000), Valentin Schneider wrote:
+> +static inline
+> +unsigned long uclamp_task_util(struct task_struct *p, unsigned long util)
 
-On Sun, Nov 3, 2019 at 11:02 PM Maxime Ripard <mripard@kernel.org> wrote:
->
-> On Fri, Nov 01, 2019 at 07:42:55PM +0530, Jagan Teki wrote:
-> > Hi Maxime,
-> >
-> > On Tue, Oct 29, 2019 at 2:24 PM Maxime Ripard <mripard@kernel.org> wrote:
-> > >
-> > > On Tue, Oct 29, 2019 at 04:03:56AM +0530, Jagan Teki wrote:
-> > > > > > explicit handling of common clock would require since the A64
-> > > > > > doesn't need to mention the clock-names explicitly in dts since it
-> > > > > > support only one bus clock.
-> > > > > >
-> > > > > > Also pass clk_id NULL instead "bus" to regmap clock init function
-> > > > > > since the single clock variants no need to mention clock-names
-> > > > > > explicitly.
-> > > > >
-> > > > > You don't need explicit clock handling. Passing NULL as the argument
-> > > > > in regmap_init_mmio_clk will make it use the first clock, which is the
-> > > > > bus clock.
-> > > >
-> > > > Indeed I tried that, since NULL clk_id wouldn't enable the bus clock
-> > > > during regmap_mmio_gen_context code, passing NULL triggering vblank
-> > > > timeout.
-> > >
-> > > There's a bunch of users of NULL in tree, so finding out why NULL
-> > > doesn't work is the way forward.
-> >
-> > I'd have looked the some of the users before checking the code as
-> > well. As I said passing NULL clk_id to devm_regmap_init_mmio_clk =>
-> > __devm_regmap_init_mmio_clk would return before processing the clock.
-> >
-> > Here is the code snippet on the tree just to make sure I'm on the same
-> > page or not.
-> >
-> > static struct regmap_mmio_context *regmap_mmio_gen_context(struct device *dev,
-> >                                         const char *clk_id,
-> >                                         void __iomem *regs,
-> >                                         const struct regmap_config *config)
-> > {
-> >         -----------------------
-> >         --------------
-> >         if (clk_id == NULL)
-> >                 return ctx;
-> >
-> >         ctx->clk = clk_get(dev, clk_id);
-> >         if (IS_ERR(ctx->clk)) {
-> >                 ret = PTR_ERR(ctx->clk);
-> >                 goto err_free;
-> >         }
-> >
-> >         ret = clk_prepare(ctx->clk);
-> >         if (ret < 0) {
-> >                 clk_put(ctx->clk);
-> >                 goto err_free;
-> >         }
-> >         -------------
-> >         ---------------
-> > }
-> >
-> > Yes, I did check on the driver in the tree before committing explicit
-> > clock handle, which make similar requirements like us in [1]. this
-> > imx2 wdt driver is handling the explicit clock as well. I'm sure this
-> > driver is updated as I have seen few changes related to this driver in
-> > ML.
->
-> I guess we have two ways to go at this then.
->
-> Either we remove the return, but it might have a few side-effects, or
-> we call clk_get with NULL or bus depending on the case, and then call
-> regmap_mmio_attach_clk.
+This 'util' parameter is always task_util_est(p) right ? You might want
+to remove it.
 
-Thanks for the inputs.
+> +{
+> +	return clamp(util,
+> +		     (unsigned long)uclamp_eff_value(p, UCLAMP_MIN),
+> +		     (unsigned long)uclamp_eff_value(p, UCLAMP_MAX));
+> +}
 
-Please have a look at this snippet, I have used your second
-suggestions. let me know if you have any comments?
-
-diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-index 8fa90cfc2ac8..91c95e56d870 100644
---- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-+++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-@@ -1109,24 +1109,36 @@ static int sun6i_dsi_probe(struct platform_device *pdev)
-         return PTR_ERR(dsi->regulator);
-     }
-
--    dsi->regs = devm_regmap_init_mmio_clk(dev, "bus", base,
--                          &sun6i_dsi_regmap_config);
--    if (IS_ERR(dsi->regs)) {
--        dev_err(dev, "Couldn't create the DSI encoder regmap\n");
--        return PTR_ERR(dsi->regs);
--    }
--
-     dsi->reset = devm_reset_control_get_shared(dev, NULL);
-     if (IS_ERR(dsi->reset)) {
-         dev_err(dev, "Couldn't get our reset line\n");
-         return PTR_ERR(dsi->reset);
-     }
-
-+    dsi->regs = regmap_init_mmio(dev, base, &sun6i_dsi_regmap_config);
-+    if (IS_ERR(dsi->regs)) {
-+        dev_err(dev, "Couldn't init regmap\n");
-+        return PTR_ERR(dsi->regs);
-+    }
-+
-+    dsi->bus_clk = devm_clk_get(dev, NULL);
-+    if (IS_ERR(dsi->bus_clk)) {
-+        dev_err(dev, "Couldn't get the DSI bus clock\n");
-+        ret = PTR_ERR(dsi->bus_clk);
-+        goto err_regmap;
-+    } else {
-+        printk("Jagan.. Got the BUS clock\n");
-+        ret = regmap_mmio_attach_clk(dsi->regs, dsi->bus_clk);
-+        if (ret)
-+            goto err_bus_clk;
-+    }
-+
-     if (dsi->variant->has_mod_clk) {
-         dsi->mod_clk = devm_clk_get(dev, "mod");
-         if (IS_ERR(dsi->mod_clk)) {
-             dev_err(dev, "Couldn't get the DSI mod clock\n");
--            return PTR_ERR(dsi->mod_clk);
-+            ret = PTR_ERR(dsi->mod_clk);
-+            goto err_attach_clk;
-         }
-     }
-
-@@ -1167,6 +1179,14 @@ static int sun6i_dsi_probe(struct platform_device *pdev)
- err_unprotect_clk:
-     if (dsi->variant->has_mod_clk)
-         clk_rate_exclusive_put(dsi->mod_clk);
-+err_attach_clk:
-+    if (!IS_ERR(dsi->bus_clk))
-+        regmap_mmio_detach_clk(dsi->regs);
-+err_bus_clk:
-+    if (!IS_ERR(dsi->bus_clk))
-+        clk_put(dsi->bus_clk);
-+err_regmap:
-+    regmap_exit(dsi->regs);
-     return ret;
- }
-
-@@ -1181,6 +1201,13 @@ static int sun6i_dsi_remove(struct platform_device *pdev)
-     if (dsi->variant->has_mod_clk)
-         clk_rate_exclusive_put(dsi->mod_clk);
-
-+    if (!IS_ERR(dsi->bus_clk)) {
-+        regmap_mmio_detach_clk(dsi->regs);
-+        clk_put(dsi->bus_clk);
-+    }
-+
-+    regmap_exit(dsi->regs);
-+
-     return 0;
- }
-
-
-Jagan.
+Thanks,
+Quentin
