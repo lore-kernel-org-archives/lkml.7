@@ -2,79 +2,102 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C109CC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:15:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7710FC43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9518420714
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:15:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46383206CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:16:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pumQOLzE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbfKUKPg (ORCPT
+        id S1727073AbfKUKQT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 05:15:36 -0500
-Received: from mx2.suse.de ([195.135.220.15]:55124 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726994AbfKUKPg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 05:15:36 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 2CEEEB1EC;
-        Thu, 21 Nov 2019 10:15:34 +0000 (UTC)
-Date:   Thu, 21 Nov 2019 11:15:32 +0100
-From:   Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Christoph Hellwig <hch@infradead.org>, linux-scsi@vger.kernel.org,
-        Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Eric Biggers <ebiggers@google.com>,
-        "J. Bruce Fields" <bfields@redhat.com>,
-        Benjamin Coddington <bcodding@redhat.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Omar Sandoval <osandov@fb.com>, Ming Lei <ming.lei@redhat.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Tejun Heo <tj@kernel.org>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v2 6/8] bdev: add open_finish.
-Message-ID: <20191121101532.GI11661@kitsune.suse.cz>
-References: <cover.1571834862.git.msuchanek@suse.de>
- <ea2652294651cbc8549736728c650d16d2fe1808.1571834862.git.msuchanek@suse.de>
- <20191024022232.GB11485@infradead.org>
- <20191024085514.GI938@kitsune.suse.cz>
- <20191024131254.GE2963@bombadil.infradead.org>
+        Thu, 21 Nov 2019 05:16:19 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:41306 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726132AbfKUKQT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 05:16:19 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xALAG6r2052188;
+        Thu, 21 Nov 2019 04:16:06 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1574331366;
+        bh=xuzXrhK8wsNkydl2luiWvTQcw+C29Mf+uDMeILvZ2r4=;
+        h=From:To:CC:Subject:Date;
+        b=pumQOLzEBmCvNsoLm6JsnPthRXHGFpy8/cHb12eiUvsMtvXxa7FXUmgNp4zvFWtW7
+         UFqMOxRN1BWQfnhLzxr8jwbEOMsiLk20200nHnfbgcG2FbDSOuYi+O4geYWniYpvsH
+         FZRL/fbkyA18zsaRIshRT2KUUnqkkUADuawH4oh4=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xALAG6dg100499
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 21 Nov 2019 04:16:06 -0600
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 21
+ Nov 2019 04:16:06 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 21 Nov 2019 04:16:05 -0600
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xALAG3b4105173;
+        Thu, 21 Nov 2019 04:16:03 -0600
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
+        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+        <ludovic.desroches@microchip.com>
+CC:     <vkoul@kernel.org>, <linux-crypto@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 0/3] crypto: atmel - Retire dma_request_slave_channel_compat()
+Date:   Thu, 21 Nov 2019 12:15:59 +0200
+Message-ID: <20191121101602.21941-1-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191024131254.GE2963@bombadil.infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 24, 2019 at 06:12:54AM -0700, Matthew Wilcox wrote:
-> On Thu, Oct 24, 2019 at 10:55:14AM +0200, Michal Suchánek wrote:
-> > On Wed, Oct 23, 2019 at 07:22:32PM -0700, Christoph Hellwig wrote:
-> > > On Wed, Oct 23, 2019 at 02:52:45PM +0200, Michal Suchanek wrote:
-> > > > Opening a block device may require a long operation such as waiting for
-> > > > the cdrom tray to close. Performing this operation with locks held locks
-> > > > out other attempts to open the device. These processes waiting to open
-> > > > the device are not killable.
-> 
-> You can use mutex_lock_killable() to fix that.
-> 
-That fixes only half of the problem.
+Hi,
 
-Other processes still cannot access the device while you wait on
-mutex_lock_killable
+Changes since v1:
+- Rebased on next-20191121 to avoid conflict for atmel-aes
 
-Thanks
+I'm going through the kernel to crack down on dma_request_slave_channel_compat()
+users.
 
-Michal
+These drivers no longer needs it as they are only probed via DT and even if they
+would probe in legacy mode, the dma_request_chan() + dma_slave_map must be used
+for supporting non DT boots.
+
+I have only compile tested the drivers!
+
+Regards,
+Peter
+---
+Peter Ujfalusi (3):
+  crypto: atmel-aes - Retire dma_request_slave_channel_compat()
+  crypto: atmel-sha - Retire dma_request_slave_channel_compat()
+  crypto: atmel-tdes - Retire dma_request_slave_channel_compat()
+
+ drivers/crypto/atmel-aes.c  | 50 ++++++++-----------------------------
+ drivers/crypto/atmel-sha.c  | 39 ++++++-----------------------
+ drivers/crypto/atmel-tdes.c | 47 ++++++++++------------------------
+ 3 files changed, 30 insertions(+), 106 deletions(-)
+
+-- 
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
