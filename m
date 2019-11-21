@@ -2,94 +2,90 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5BADC43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:19:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D063BC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:20:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B349A206CC
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:19:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="d8xUkNw7"
+	by mail.kernel.org (Postfix) with ESMTP id 9E49A20708
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:20:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574367605;
+	bh=tLTI+rrMTmofvOGL7fPngNOUF+n7CrK8+TfuJYXHWWU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MtSVD7CsqBaEBX8Ec53RAjTASB9Sw/Gu0fwaron8M12f8z0EO3UexA/+RcD9ybM43
+	 zdv/Z8bMNUvBlZdp8RzzoIL0OBDvkBqMm9QvqoUeLQWyuHw/RD7XIe3bUEBylSu1dX
+	 FZla8RCfJqv0E20R94VK4RtR+LkxNoP6YbgbLdig=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726985AbfKUUT2 (ORCPT
+        id S1727059AbfKUUUE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 15:19:28 -0500
-Received: from ozlabs.org ([203.11.71.1]:37673 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726293AbfKUUT1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 15:19:27 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47JrWK2nGDz9sPf;
-        Fri, 22 Nov 2019 07:19:25 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1574367565;
-        bh=3N87yUeqrZg5ZwLLtfLJ9ViubbjCA6czfsD0tOkznZ8=;
-        h=Date:From:To:Cc:Subject:From;
-        b=d8xUkNw75kpJJJZMEZGudoi7UYKr9M2ySLMAhwM58IS2qyJAk5Oejn5YHf0XUO3kO
-         bUFrcEEyfRMuSmfThAHe1ZU/4QMiiviAOr4nnaP7Lcw0wVI8JJRbP8cDJPJ8Z0UBFo
-         bsgI6xx2CUmXVBHPnbIdtIyfZSfKV+00ODO/Hd4hOBbtAeOX0+ysszRQ2Ow0+Ozu3V
-         RID6stCyayf/2JZMoI+v563fWGhlXd5rnd08vhakaQnX47zPO7UmwzPHs4/HjjNfKP
-         9xLqJc3tjLwqRHu0CJtOQNKBY7QK6tCeEkN3tjd6zldYy12LY45HJEKndQjnmSBb1v
-         V6oe8rCGv3TeQ==
-Date:   Fri, 22 Nov 2019 07:19:24 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Dominik Brodowski <linux@dominikbrodowski.net>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Fixes tag needs some work in the pcmcia tree
-Message-ID: <20191122071924.50f1fa52@canb.auug.org.au>
+        Thu, 21 Nov 2019 15:20:04 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:32966 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726293AbfKUUUE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 15:20:04 -0500
+Received: by mail-oi1-f195.google.com with SMTP id m193so4459564oig.0;
+        Thu, 21 Nov 2019 12:20:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ctEbvEF+D3upIcOL5VXM4n468EvW3StUvGyLExGsOyc=;
+        b=TxR6rwohsnIVpmpfmd6k+cMZ7qFf6mPk0C60hSW3OUSw+w992KFwbk0cSKaC8/HcbK
+         UN6f+Ep1zESf9cz2YYEO02j0pCDy1dQaJdw6CU3h7DeFIFvvN28Eiil0t73tGPtPWNNw
+         xxsL1ElQxQwZ7BfJHqhq89lVviYAuRNUlBdZmHUEVT1oKeSV1JxmvFHTR5NVkt7o4gMr
+         ock0g7GUsQxg4spCz8v3DxMvkC0N79vry0Q86ja6D7ygH2nbW5KEAHKn7/GN5TzqCdfw
+         etB8bVgBo/+M/14bY8w3l/O7B5lQobmsE88Ce58NdnMwVDZBJGq7BcVCvzJUoEyDTxir
+         KneA==
+X-Gm-Message-State: APjAAAUJIrzeinkdJH5F9y4DM4q6UEsyuyr71Y4BKmdUrFhyrMoPom7y
+        PKQtZ3a3UqAy/jBcKa4NMA==
+X-Google-Smtp-Source: APXvYqxt9oXGFEJN7MoDV16iEhPuS0xuVhs0yYo1/QRqf/rvK8UqBXM9F42AdY5F2UufMMuGLxwOcw==
+X-Received: by 2002:a05:6808:8ce:: with SMTP id k14mr9093989oij.76.1574367603254;
+        Thu, 21 Nov 2019 12:20:03 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id l18sm1341155oti.11.2019.11.21.12.20.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Nov 2019 12:20:02 -0800 (PST)
+Date:   Thu, 21 Nov 2019 14:20:01 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jeffrey Hugo <jhugo@codeaurora.org>
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, agross@kernel.org,
+        bjorn.andersson@linaro.org, marc.w.gonzalez@free.fr,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Jeffrey Hugo <jhugo@codeaurora.org>
+Subject: Re: [PATCH v10 2/4] dt-bindings: clock: Convert qcom,mmcc to DT
+ schema
+Message-ID: <20191121202001.GA19935@bogus>
+References: <1574025887-32667-1-git-send-email-jhugo@codeaurora.org>
+ <0101016e7b4311fe-8edd7849-df65-47dd-98fa-1e2063c83178-000000@us-west-2.amazonses.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/fBjqzIx8Qq/+x_zgiWtVFBH";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0101016e7b4311fe-8edd7849-df65-47dd-98fa-1e2063c83178-000000@us-west-2.amazonses.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/fBjqzIx8Qq/+x_zgiWtVFBH
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Sun, 17 Nov 2019 21:27:03 +0000, Jeffrey Hugo wrote:
+> Convert the qcom,mmcc-X clock controller binding to DT schema.  Add the
+> protected-clocks property to the schema to show that is it explicitly
+> allowed, instead of relying on the generic, pre-schema binding.
+> 
+> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+> ---
+>  .../devicetree/bindings/clock/qcom,mmcc.txt        | 28 ----------
+>  .../devicetree/bindings/clock/qcom,mmcc.yaml       | 60 ++++++++++++++++++++++
+>  2 files changed, 60 insertions(+), 28 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/clock/qcom,mmcc.txt
+>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,mmcc.yaml
+> 
 
-Hi all,
-
-In commit
-
-  59558fd909b0 ("pcmcia: remove unused dprintk definition")
-
-Fixes tag
-
-  Fixes: 836e9494f448 ("Refactored dprintk macro for dev_dbg().")
-
-has these problem(s):
-
-  - Subject does not match target commit subject
-    Just use
-	git log -1 --format=3D'Fixes: %h ("%s")'
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/fBjqzIx8Qq/+x_zgiWtVFBH
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3W8UwACgkQAVBC80lX
-0GzKDwf/fkP+biuTm8gsNsQX5oumLfO0t8ymNxnCtOI9NTkSyucjFzjZyyNZYfry
-1OWrnTgQTeyNCqaIxmmSPNAk5yTiiKf3FLGvZXTWX9u7cz5r2gluq9u4ogmsIG8x
-1og1aOjMwH/6Ds0Nxb4i6iE1Udba2pDsNWbGGYBzYPCiaWSXfd4Qn0yk9+6SHXRK
-jaXbTBIMGTVfFslWIO0Lpwh/pwh8z8DPjXF49kzoFgUmuRnC3sfAr/lSj1ooFoi4
-el4PS5QTl3FQVLG+xA/Y3mZdmBmQ4rfteCIYEXVorXm12pfNunVdL0btKpVfzckU
-thKU4PUaB7krWI9jveEBcJEDFlL/dw==
-=/ioD
------END PGP SIGNATURE-----
-
---Sig_/fBjqzIx8Qq/+x_zgiWtVFBH--
+Reviewed-by: Rob Herring <robh@kernel.org>
