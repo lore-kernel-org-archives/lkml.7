@@ -2,163 +2,122 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D2FC43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:12:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD779C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:13:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C145206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:12:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80B3F206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:13:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VrWSc8k2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rrBHiUoK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbfKUOM0 (ORCPT
+        id S1727031AbfKUONe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 09:12:26 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:56316 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726762AbfKUOMZ (ORCPT
+        Thu, 21 Nov 2019 09:13:34 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:42140 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726573AbfKUONd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 09:12:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574345544;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=zDwJ/jJ372BrVR0P0VcF5vd7qMAwSsydtsAUBf3ZVoA=;
-        b=VrWSc8k28eCOgWWWs+58Mf3i4ZaHJRPTCgRm9jOCur/VBZrMEGmNi1LFa2FvJB78WJDl4/
-        DnTwweEGKr62w4k6Q+ALo4nAKNuHzAGhAcVqD4CRZkP4pvMghb3/NTjPgEFlMogcJ1SXQl
-        tt7klSeG0dJ4g58Cp0BuzFn7L9WaP38=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-264-d5XFD52QP8eoROOPRCjHSQ-1; Thu, 21 Nov 2019 09:12:20 -0500
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5B26518B9FC2;
-        Thu, 21 Nov 2019 14:12:18 +0000 (UTC)
-Received: from pauld.bos.csb (dhcp-17-51.bos.redhat.com [10.18.17.51])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5E6D2537B8;
-        Thu, 21 Nov 2019 14:12:09 +0000 (UTC)
-Date:   Thu, 21 Nov 2019 09:12:07 -0500
-From:   Phil Auld <pauld@redhat.com>
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Dave Chinner <david@fromorbit.com>,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jeff Moyer <jmoyer@redhat.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Eric Sandeen <sandeen@redhat.com>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Subject: Re: single aio thread is migrated crazily by scheduler
-Message-ID: <20191121141207.GA18443@pauld.bos.csb>
-References: <20191114235415.GL4614@dread.disaster.area>
- <20191115010824.GC4847@ming.t460p>
- <20191115045634.GN4614@dread.disaster.area>
- <20191115070843.GA24246@ming.t460p>
- <20191115234005.GO4614@dread.disaster.area>
- <20191118092121.GV4131@hirez.programming.kicks-ass.net>
- <20191118204054.GV4614@dread.disaster.area>
- <20191120191636.GI4097@hirez.programming.kicks-ass.net>
- <20191120220313.GC18056@pauld.bos.csb>
- <20191121041218.GK24548@ming.t460p>
+        Thu, 21 Nov 2019 09:13:33 -0500
+Received: by mail-lf1-f65.google.com with SMTP id y19so2750514lfl.9
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 06:13:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6JyZcuxmnqH9o3l1XIsdo9JoDg6orfPAOo4vV+1ArwI=;
+        b=rrBHiUoKWpM7JYxtbtpxA0m+4KENiEgkqrUsZmhr0SztUWa9GUvIt/JXaO0iFQRllZ
+         t3wzjzr03SFpjcFQGnFj0y/UpVyUqyecuAW3vxE4lWRgvib88TaOl4LfTUkWVuMwstOc
+         rVaLG+TK5EOxzs2vEIlhxL5ZIx/y9z9hGkS1GycaeyORQgAMz42kb38UDvW/4yFgHKwg
+         mWjGFjw7UbrtvZtMwDsn43Fo5dHuTInhPJYUXXghPs2lxBPvZJceDwQaYZRs4EGrNi9c
+         PVuTDWJPExc34WanbcJGVM0rfhNW78ycZ8o22Jb0KYITgABmMcdEUNWVksb8I1S9G1li
+         junQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6JyZcuxmnqH9o3l1XIsdo9JoDg6orfPAOo4vV+1ArwI=;
+        b=oTMJMK31pzBvgbfMZVH/YgUo4QD+5aMGRod7dE4/YtnfT4JYfW0hvE+FBDGII1n5ig
+         hOh8Q5zokdtJATt1UDimuPI3M8q0ggQ5+QBuLlL0qBiLdeovV2uPaoOY6EqNnfBMDjj8
+         NSrJTozyA3KskL8BorMzBQQ8JVO5nE6SQMJ2TXteL/89N1ySU+OaRTiefeyehP+83aJn
+         diI/er7uCxq4Iiy137ZJCQjTX9TSgdYhPjD4HubQNgZiKZker7MPpVK2WAo3XZPfyuLI
+         w8y3F6F2e6l52XoCNoqm40qDGswl26mlh2FsMXtANFBveyNy425Lf112THNlMzRLVFBy
+         xcUQ==
+X-Gm-Message-State: APjAAAUqImkuh+9Ttj3/suvTN+ybnn+ezOJu4XSJswBNpVfyZj+kPr8I
+        ej+vjJjo2usz9j3ttlsnuWKzWmMlodPr/VXbb12fWQ==
+X-Google-Smtp-Source: APXvYqzimZuG3p1BLtFLAcUV8Mt4bdmTDeHVDJCNJZDdvOb/9aTIsO3K13nkITKtnZC6f5/fil79Hmb8rkLOz0NdB1U=
+X-Received: by 2002:ac2:4a8f:: with SMTP id l15mr7859980lfp.5.1574345612125;
+ Thu, 21 Nov 2019 06:13:32 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191121041218.GK24548@ming.t460p>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-MC-Unique: d5XFD52QP8eoROOPRCjHSQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+References: <cover.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
+ <8dd9dad2765d47fd6c6fec20566326d00e48a696.1574059625.git.matti.vaittinen@fi.rohmeurope.com>
+ <CACRpkdY_2WzAnK01bQdMF69KsDvHHu9TXuyRoBcmiQMziux=eQ@mail.gmail.com> <ece1ab1418e237d6f4968fc4cf59202c35f02ba7.camel@fi.rohmeurope.com>
+In-Reply-To: <ece1ab1418e237d6f4968fc4cf59202c35f02ba7.camel@fi.rohmeurope.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 21 Nov 2019 15:13:20 +0100
+Message-ID: <CACRpkdZvED9He0gcCzYMs_q1=-RzEfUgoP11HEW-cNDg1fgnvg@mail.gmail.com>
+Subject: Re: [PATCH v5 10/16] gpio: devres: Add devm_gpiod_get_parent_array
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Cc:     "corbet@lwn.net" <corbet@lwn.net>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "phil.edworthy@renesas.com" <phil.edworthy@renesas.com>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "jeffrey.t.kirsher@intel.com" <jeffrey.t.kirsher@intel.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "hofrat@osadl.org" <hofrat@osadl.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 12:12:18PM +0800 Ming Lei wrote:
-> On Wed, Nov 20, 2019 at 05:03:13PM -0500, Phil Auld wrote:
-> > Hi Peter,
-> >=20
-> > On Wed, Nov 20, 2019 at 08:16:36PM +0100 Peter Zijlstra wrote:
-> > > On Tue, Nov 19, 2019 at 07:40:54AM +1100, Dave Chinner wrote:
-> > > > On Mon, Nov 18, 2019 at 10:21:21AM +0100, Peter Zijlstra wrote:
-> > >=20
-> > > > > We typically only fall back to the active balancer when there is
-> > > > > (persistent) imbalance and we fail to migrate anything else (of
-> > > > > substance).
-> > > > >=20
-> > > > > The tuning mentioned has the effect of less frequent scheduling, =
-IOW,
-> > > > > leaving (short) tasks on the runqueue longer. This obviously mean=
-s the
-> > > > > load-balancer will have a bigger chance of seeing them.
-> > > > >=20
-> > > > > Now; it's been a while since I looked at the workqueue code but o=
-ne
-> > > > > possible explanation would be if the kworker that picks up the wo=
-rk item
-> > > > > is pinned. That would make it runnable but not migratable, the ex=
-act
-> > > > > situation in which we'll end up shooting the current task with ac=
-tive
-> > > > > balance.
-> > > >=20
-> > > > Yes, that's precisely the problem - work is queued, by default, on =
-a
-> > > > specific CPU and it will wait for a kworker that is pinned to that
-> > >=20
-> > > I'm thinking the problem is that it doesn't wait. If it went and wait=
-ed
-> > > for it, active balance wouldn't be needed, that only works on active
-> > > tasks.
-> >=20
-> > Since this is AIO I wonder if it should queue_work on a nearby cpu by=
-=20
-> > default instead of unbound. =20
->=20
-> When the current CPU isn't busy enough, there is still cost for completin=
-g
-> request remotely.
->=20
-> Or could we change queue_work() in the following way?
->=20
->  * We try to queue the work to the CPU on which it was submitted, but if =
-the
->  * CPU dies or is saturated enough it can be processed by another CPU.
->=20
-> Can we decide in a simple or efficient way if the current CPU is saturate=
-d
-> enough?
->=20
+On Tue, Nov 19, 2019 at 6:54 PM Vaittinen, Matti
+<Matti.Vaittinen@fi.rohmeurope.com> wrote:
+> [Me]
+> > So what is this? NULL?
+>
+> Here we don't have separate manager device - thus the manager is NULL
+> -and the consumer device ("dev" here) is what we use to manage GPIO.
+>
+> >
+> > Doesn't that mean you just removed all resource management for this
+> > call?
+>
+> No :)
+>
+> >
+> > Or am I reading it wrong?
+>
+> Either you are reading it wrong or I am writing it wrong xD. In any
+> case this means I need to drop few comments in code :) Thanks.
 
-The scheduler doesn't know if the queued_work submitter is going to go to s=
-leep.
-That's why I was singling out AIO. My understanding of it is that you submi=
-t the IO
-and then keep going. So in that case it might be better to pick a node-loca=
-l nearby
-cpu instead. But this is a user of work queue issue not a scheduler issue.=
-=20
+I was reading it wrong, so not your bad. I guess lack of focus on
+my side, this part is fine!
 
-Interestingly in our fio case the 4k one does not sleep and we get the acti=
-ve balance
-case where it moves the actually running thread.  The 512 byte case seems t=
-o be=20
-sleeping since the migrations are all at wakeup time I believe.=20
-
-Cheers,
-Phil
-
-
-> Thanks,
-> Ming
-
---=20
-
+Yours,
+Linus Walleij
