@@ -2,100 +2,125 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B509DC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 00:23:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF524C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 00:27:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8922C20715
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 00:23:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF23E20715
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 00:27:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbfKUAX3 (ORCPT
+        id S1726574AbfKUA1j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 19:23:29 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:59224 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726230AbfKUAX3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 19:23:29 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iXaFn-0001DS-9e; Thu, 21 Nov 2019 01:23:23 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C418A1C0070;
-        Thu, 21 Nov 2019 01:23:22 +0100 (CET)
-Date:   Thu, 21 Nov 2019 00:23:22 -0000
-From:   "tip-bot2 for Dmitry Safonov" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/urgent] time: Zero the upper 32-bits in
- __kernel_timespec on 32-bit
-Cc:     Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        Dmitry Safonov <dima@arista.com>,
-        Thomas Gleixner <tglx@linutronix.de>, stable@vger.kernel.org,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191121000303.126523-1-dima@arista.com>
-References: <20191121000303.126523-1-dima@arista.com>
+        Wed, 20 Nov 2019 19:27:39 -0500
+Received: from mga01.intel.com ([192.55.52.88]:64139 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726044AbfKUA1j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 19:27:39 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Nov 2019 16:27:39 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,223,1571727600"; 
+   d="scan'208";a="204989376"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by fmsmga007.fm.intel.com with ESMTP; 20 Nov 2019 16:27:37 -0800
+Subject: Re: [PATCH RFC 01/14] x86/asm: add iosubmit_cmds512() based on
+ movdir64b CPU instruction
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        "Luck, Tony" <tony.luck@intel.com>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "Lin, Jing" <jing.lin@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Dey, Megha" <megha.dey@intel.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        "hpa@zytor.com" <hpa@zytor.com>
+References: <157428480574.36836.14057238306923901253.stgit@djiang5-desk3.ch.intel.com>
+ <157428502934.36836.8119026517510193201.stgit@djiang5-desk3.ch.intel.com>
+ <20191120215338.GN2634@zn.tnic>
+ <20191120231923.GA32680@agluck-desk2.amr.corp.intel.com>
+ <alpine.DEB.2.21.1911210120410.29534@nanos.tec.linutronix.de>
+From:   Dave Jiang <dave.jiang@intel.com>
+Message-ID: <9504173f-29b5-40a6-3fa8-4bfd498e2e31@intel.com>
+Date:   Wed, 20 Nov 2019 17:27:37 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Message-ID: <157429580269.21853.3914350918293284243.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <alpine.DEB.2.21.1911210120410.29534@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the timers/urgent branch of tip:
 
-Commit-ID:     7b8474466ed97be458c825f34a85f2c2b84c3f95
-Gitweb:        https://git.kernel.org/tip/7b8474466ed97be458c825f34a85f2c2b84c3f95
-Author:        Dmitry Safonov <dima@arista.com>
-AuthorDate:    Thu, 21 Nov 2019 00:03:03 
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Thu, 21 Nov 2019 01:17:58 +01:00
 
-time: Zero the upper 32-bits in __kernel_timespec on 32-bit
+On 11/20/19 5:22 PM, Thomas Gleixner wrote:
+> On Wed, 20 Nov 2019, Luck, Tony wrote:
+>> On Wed, Nov 20, 2019 at 10:53:39PM +0100, Borislav Petkov wrote:
+>>> On Wed, Nov 20, 2019 at 02:23:49PM -0700, Dave Jiang wrote:
+>>>> +static inline void iosubmit_cmds512(void __iomem *dst, const void *src,
+>>>> +				    size_t count)
+>>>
+>>> An iosubmit function which returns void and doesn't tell its callers
+>>> whether it succeeded or not? That looks non-optimal to say the least.
+>>
+>> That's the underlying functionality of the MOVDIR64B instruction. A
+>> posted write so no way to know if it succeeded. When using dedicated
+>> queues the caller must keep count of how many operations are in flight
+>> and not send more than the depth of the queue.
+>>
+>>> Why isn't there a fallback function which to call when the CPU doesn't
+>>> support movdir64b?
+>>
+>> This particular driver has no option for fallback. Descriptors can
+>> only be submitted with MOVDIR64B (to dedicated queues ... in later
+>> patch series support for shared queues will be added, but those require
+>> ENQCMD or ENQCMDS to submit).
+>>
+>> The driver bails out at the beginning of the probe routine if the
+>> necessary instructions are not supported:
+>>
+>> +       /*
+>> +        * If the CPU does not support write512, there's no point in
+>> +        * enumerating the device. We can not utilize it.
+>> +        */
+>> +       if (!cpu_has_write512())
+>> +               return -ENXIO;
+>>
+>> Though we should always get past that as this PCI device ID shouldn't
+>> every appear on a system that doesn't have the support. Device is on
+>> the die, not a plug-in card.
+> 
+> Then the condition in the iosubmit function is just prone to silently paper
+> over any bug in a driver:
+> 
+>> +       if (!cpu_has_write512())
+>> +               return;
+> 
+> This should at least issue a WARN_ON_ONCE()
 
-On compat interfaces, the high order bits of nanoseconds should be zeroed
-out. This is because the application code or the libc do not guarantee
-zeroing of these. If used without zeroing, kernel might be at risk of using
-timespec values incorrectly.
+Thanks! I'll be adding the WARN_ON_ONCE() for the cap check. Also with 
+the alignment check Borislav mentioned, I'll add a WARN_ON() for failures.
 
-Originally it was handled correctly, but lost during is_compat_syscall()
-cleanup. Revert the condition back to check CONFIG_64BIT.
 
-Fixes: 98f76206b335 ("compat: Cleanup in_compat_syscall() callers")
-Reported-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
-Signed-off-by: Dmitry Safonov <dima@arista.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20191121000303.126523-1-dima@arista.com
----
- kernel/time/time.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/time/time.c b/kernel/time/time.c
-index 5c54ca6..83f403e 100644
---- a/kernel/time/time.c
-+++ b/kernel/time/time.c
-@@ -881,7 +881,8 @@ int get_timespec64(struct timespec64 *ts,
- 	ts->tv_sec = kts.tv_sec;
- 
- 	/* Zero out the padding for 32 bit systems or in compat mode */
--	if (IS_ENABLED(CONFIG_64BIT_TIME) && in_compat_syscall())
-+	if (IS_ENABLED(CONFIG_64BIT_TIME) && (!IS_ENABLED(CONFIG_64BIT) ||
-+					      in_compat_syscall()))
- 		kts.tv_nsec &= 0xFFFFFFFFUL;
- 
- 	ts->tv_nsec = kts.tv_nsec;
+> 
+> Thanks,
+> 
+> 	tglx
+> 
