@@ -7,53 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B0B7C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:19:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8515C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:19:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7BFA20721
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:19:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF5C0208A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:19:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574306343;
-	bh=9Ksqhhd1L7R8tO8N1qP062uhuD/S93g4xX+3n7nrjuk=;
+	s=default; t=1574306347;
+	bh=1bqZPQuO1X7ZNq9CpnFjGd2MPvDWAZkp3viGUMDkQ7M=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=P6oxVjhkzuDL96OF+DunGxNTEdvXx+jSaRMQmKjRHftiHJzDc/mem1E1uJOafE82e
-	 bevOuEPebLAhT4YAzfPYMJGj5KO9qyWFnDx4hAvu1Xou1TgTLzy0CDxudq58POMnRs
-	 gzIcNFjkvcnI/54VXpllkE3GxSOzSKNn9wTA21Lo=
+	b=wBJbmd9TlKDof/3VE4TQ0+39qqQnxyuT0y+/g8DUfC13mylw9BwY+qmLn20VMOYnZ
+	 7tUEuu2dEqs5Z+xwOiv951ia8GMb0mKfjl+pRTKu/0FEUax3FqNANJ14ocnqISgAUj
+	 5pnCTS19zU8VYvrI3tUl860Cp9/71RXPd8/KL/88=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726967AbfKUDTC (ORCPT
+        id S1727004AbfKUDTG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 22:19:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60482 "EHLO mail.kernel.org"
+        Wed, 20 Nov 2019 22:19:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725819AbfKUDTB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 22:19:01 -0500
+        id S1725819AbfKUDTF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 22:19:05 -0500
 Received: from PC-kkoz.proceq.com (unknown [213.160.61.66])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2A6820898;
-        Thu, 21 Nov 2019 03:18:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9206520898;
+        Thu, 21 Nov 2019 03:19:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574306340;
-        bh=9Ksqhhd1L7R8tO8N1qP062uhuD/S93g4xX+3n7nrjuk=;
+        s=default; t=1574306344;
+        bh=1bqZPQuO1X7ZNq9CpnFjGd2MPvDWAZkp3viGUMDkQ7M=;
         h=From:To:Cc:Subject:Date:From;
-        b=dhjxDrCGeRc2byEQxgwNLsSWWxA7ebiuc5DOawNk7mBXmN8SBRIeMGPYM1L+rtUsk
-         jw5AuZek5sXPBBufjND8mFIc8AMxc1Xv0+fQ4GjTQqcegDJyr8JlxRHhMzoDZbTaWx
-         V8psmrv+ovo0Q7Mfd7RsK//vg6HkD+Uq/hzXOUYc=
+        b=m/hX2Q3JKGQIqE9nxtGxON8p5plTPSoQZMpi1ynYAlIK1+Z5CAbgjMFBKGRHeCxGt
+         AKvojYbj6EKleMYwxZ78MgaSVgNuQHZAEodKkJ/jpr7omNVhGFqQlRlMss3WZTlfcy
+         /wJ2NA0LU+Yz+2S9toC9JnqRI7k9d70e0VdNC9QA=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH v2] clk: Fix Kconfig indentation
-Date:   Thu, 21 Nov 2019 04:18:55 +0100
-Message-Id: <1574306335-29026-1-git-send-email-krzk@kernel.org>
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Airlie <airlied@linux.ie>,
+        Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Corey Minyard <minyard@acm.org>, linux-crypto@vger.kernel.org,
+        openipmi-developer@lists.sourceforge.net
+Subject: [PATCH v2] char: Fix Kconfig indentation
+Date:   Thu, 21 Nov 2019 04:19:00 +0100
+Message-Id: <1574306340-29108-1-git-send-email-krzk@kernel.org>
 X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -71,129 +69,201 @@ Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Changes since v1:
 1. Fix also 7-space and tab+1 space indentation issues.
 ---
- drivers/clk/Kconfig           |  2 +-
- drivers/clk/mediatek/Kconfig  | 44 +++++++++++++++++++++----------------------
- drivers/clk/mvebu/Kconfig     |  2 +-
- drivers/clk/qcom/Kconfig      |  4 ++--
- drivers/clk/versatile/Kconfig |  2 +-
- 5 files changed, 27 insertions(+), 27 deletions(-)
+ drivers/char/Kconfig           |  6 ++--
+ drivers/char/agp/Kconfig       |  2 +-
+ drivers/char/hw_random/Kconfig | 18 +++++------
+ drivers/char/ipmi/Kconfig      | 70 +++++++++++++++++++++---------------------
+ 4 files changed, 48 insertions(+), 48 deletions(-)
 
-diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-index 0530bebfc25a..b8ebf7b93d63 100644
---- a/drivers/clk/Kconfig
-+++ b/drivers/clk/Kconfig
-@@ -27,7 +27,7 @@ config COMMON_CLK_WM831X
- 	tristate "Clock driver for WM831x/2x PMICs"
- 	depends on MFD_WM831X
- 	---help---
--          Supports the clocking subsystem of the WM831x/2x series of
-+	  Supports the clocking subsystem of the WM831x/2x series of
- 	  PMICs from Wolfson Microelectronics.
+diff --git a/drivers/char/Kconfig b/drivers/char/Kconfig
+index df0fc997dc3e..26956c006987 100644
+--- a/drivers/char/Kconfig
++++ b/drivers/char/Kconfig
+@@ -439,8 +439,8 @@ config RAW_DRIVER
+ 	  Once bound, I/O against /dev/raw/rawN uses efficient zero-copy I/O.
+ 	  See the raw(8) manpage for more details.
  
- source "drivers/clk/versatile/Kconfig"
-diff --git a/drivers/clk/mediatek/Kconfig b/drivers/clk/mediatek/Kconfig
-index 7efc3617bbd5..e4c7cb518cda 100644
---- a/drivers/clk/mediatek/Kconfig
-+++ b/drivers/clk/mediatek/Kconfig
-@@ -174,36 +174,36 @@ config COMMON_CLK_MT6779_AUDSYS
- 	  This driver supports Mediatek MT6779 audsys clocks.
+-          Applications should preferably open the device (eg /dev/hda1)
+-          with the O_DIRECT flag.
++	  Applications should preferably open the device (eg /dev/hda1)
++	  with the O_DIRECT flag.
  
- config COMMON_CLK_MT6797
--       bool "Clock driver for MediaTek MT6797"
--       depends on (ARCH_MEDIATEK && ARM64) || COMPILE_TEST
--       select COMMON_CLK_MEDIATEK
--       default ARCH_MEDIATEK && ARM64
+ config MAX_RAW_DEVS
+ 	int "Maximum number of RAW devices to support (1-65536)"
+@@ -559,4 +559,4 @@ config RANDOM_TRUST_BOOTLOADER
+ 	device randomness. Say Y here to assume the entropy provided by the
+ 	booloader is trustworthy so it will be added to the kernel's entropy
+ 	pool. Otherwise, say N here so it will be regarded as device input that
+-	only mixes the entropy pool.
+\ No newline at end of file
++	only mixes the entropy pool.
+diff --git a/drivers/char/agp/Kconfig b/drivers/char/agp/Kconfig
+index 812d6aa6e013..bc54235a7022 100644
+--- a/drivers/char/agp/Kconfig
++++ b/drivers/char/agp/Kconfig
+@@ -63,7 +63,7 @@ config AGP_AMD64
+ 	  This option gives you AGP support for the GLX component of
+ 	  X using the on-CPU northbridge of the AMD Athlon64/Opteron CPUs.
+ 	  You still need an external AGP bridge like the AMD 8151, VIA
+-          K8T400M, SiS755. It may also support other AGP bridges when loaded
++	  K8T400M, SiS755. It may also support other AGP bridges when loaded
+ 	  with agp_try_unsupported=1.
+ 
+ config AGP_INTEL
+diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
+index 7c7fecfa2fb2..9f19bfc22061 100644
+--- a/drivers/char/hw_random/Kconfig
++++ b/drivers/char/hw_random/Kconfig
+@@ -386,17 +386,17 @@ config HW_RANDOM_MESON
+ 	  If unsure, say Y.
+ 
+ config HW_RANDOM_CAVIUM
+-       tristate "Cavium ThunderX Random Number Generator support"
+-       depends on HW_RANDOM && PCI && (ARM64 || (COMPILE_TEST && 64BIT))
+-       default HW_RANDOM
 -       ---help---
--         This driver supports MediaTek MT6797 basic clocks.
-+	bool "Clock driver for MediaTek MT6797"
-+	depends on (ARCH_MEDIATEK && ARM64) || COMPILE_TEST
-+	select COMMON_CLK_MEDIATEK
-+	default ARCH_MEDIATEK && ARM64
+-         This driver provides kernel-side support for the Random Number
+-         Generator hardware found on Cavium SoCs.
++	tristate "Cavium ThunderX Random Number Generator support"
++	depends on HW_RANDOM && PCI && (ARM64 || (COMPILE_TEST && 64BIT))
++	default HW_RANDOM
 +	---help---
-+	 This driver supports MediaTek MT6797 basic clocks.
++	 This driver provides kernel-side support for the Random Number
++	 Generator hardware found on Cavium SoCs.
  
- config COMMON_CLK_MT6797_MMSYS
--       bool "Clock driver for MediaTek MT6797 mmsys"
--       depends on COMMON_CLK_MT6797
--       ---help---
--         This driver supports MediaTek MT6797 mmsys clocks.
-+	bool "Clock driver for MediaTek MT6797 mmsys"
-+	depends on COMMON_CLK_MT6797
-+	---help---
-+	 This driver supports MediaTek MT6797 mmsys clocks.
+-         To compile this driver as a module, choose M here: the
+-         module will be called cavium_rng.
++	 To compile this driver as a module, choose M here: the
++	 module will be called cavium_rng.
  
- config COMMON_CLK_MT6797_IMGSYS
--       bool "Clock driver for MediaTek MT6797 imgsys"
--       depends on COMMON_CLK_MT6797
--       ---help---
--         This driver supports MediaTek MT6797 imgsys clocks.
-+	bool "Clock driver for MediaTek MT6797 imgsys"
-+	depends on COMMON_CLK_MT6797
-+	---help---
-+	 This driver supports MediaTek MT6797 imgsys clocks.
+-         If unsure, say Y.
++	 If unsure, say Y.
  
- config COMMON_CLK_MT6797_VDECSYS
--       bool "Clock driver for MediaTek MT6797 vdecsys"
--       depends on COMMON_CLK_MT6797
--       ---help---
--         This driver supports MediaTek MT6797 vdecsys clocks.
-+	bool "Clock driver for MediaTek MT6797 vdecsys"
-+	depends on COMMON_CLK_MT6797
-+	---help---
-+	 This driver supports MediaTek MT6797 vdecsys clocks.
+ config HW_RANDOM_MTK
+ 	tristate "Mediatek Random Number Generator support"
+diff --git a/drivers/char/ipmi/Kconfig b/drivers/char/ipmi/Kconfig
+index 4bad0614109b..6a26bab8b101 100644
+--- a/drivers/char/ipmi/Kconfig
++++ b/drivers/char/ipmi/Kconfig
+@@ -4,32 +4,32 @@
+ #
  
- config COMMON_CLK_MT6797_VENCSYS
--       bool "Clock driver for MediaTek MT6797 vencsys"
--       depends on COMMON_CLK_MT6797
--       ---help---
--         This driver supports MediaTek MT6797 vencsys clocks.
-+	bool "Clock driver for MediaTek MT6797 vencsys"
-+	depends on COMMON_CLK_MT6797
-+	---help---
-+	 This driver supports MediaTek MT6797 vencsys clocks.
+ menuconfig IPMI_HANDLER
+-       tristate 'IPMI top-level message handler'
+-       depends on HAS_IOMEM
+-       select IPMI_DMI_DECODE if DMI
+-       help
+-         This enables the central IPMI message handler, required for IPMI
++	tristate 'IPMI top-level message handler'
++	depends on HAS_IOMEM
++	select IPMI_DMI_DECODE if DMI
++	help
++	 This enables the central IPMI message handler, required for IPMI
+ 	 to work.
  
- config COMMON_CLK_MT7622
- 	bool "Clock driver for MediaTek MT7622"
-diff --git a/drivers/clk/mvebu/Kconfig b/drivers/clk/mvebu/Kconfig
-index 415e6906a113..ded07b0bd0d5 100644
---- a/drivers/clk/mvebu/Kconfig
-+++ b/drivers/clk/mvebu/Kconfig
-@@ -29,7 +29,7 @@ config ARMADA_39X_CLK
- 	select MVEBU_CLK_COMMON
+-         IPMI is a standard for managing sensors (temperature,
+-         voltage, etc.) in a system.
++	 IPMI is a standard for managing sensors (temperature,
++	 voltage, etc.) in a system.
  
- config ARMADA_37XX_CLK
+-         See <file:Documentation/IPMI.txt> for more details on the driver.
++	 See <file:Documentation/IPMI.txt> for more details on the driver.
+ 
+ 	 If unsure, say N.
+ 
+ config IPMI_DMI_DECODE
+-       select IPMI_PLAT_DATA
+-       bool
++	select IPMI_PLAT_DATA
++	bool
+ 
+ config IPMI_PLAT_DATA
 -       bool
 +	bool
  
- config ARMADA_XP_CLK
- 	bool
-diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
-index 3b33ef129274..f37f3cd615f2 100644
---- a/drivers/clk/qcom/Kconfig
-+++ b/drivers/clk/qcom/Kconfig
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0-only
- config KRAIT_CLOCKS
--       bool
--       select KRAIT_L2_ACCESSORS
-+	bool
-+	select KRAIT_L2_ACCESSORS
+ if IPMI_HANDLER
  
- config QCOM_GDSC
- 	bool
-diff --git a/drivers/clk/versatile/Kconfig b/drivers/clk/versatile/Kconfig
-index ac766855ba16..c2618f1477a2 100644
---- a/drivers/clk/versatile/Kconfig
-+++ b/drivers/clk/versatile/Kconfig
-@@ -9,7 +9,7 @@ config COMMON_CLK_VERSATILE
- 		COMPILE_TEST
- 	select REGMAP_MMIO
- 	---help---
--          Supports clocking on ARM Reference designs:
-+	  Supports clocking on ARM Reference designs:
- 	  - Integrator/AP and Integrator/CP
- 	  - RealView PB1176, EB, PB11MP and PBX
- 	  - Versatile Express
+ config IPMI_PANIC_EVENT
+-       bool 'Generate a panic event to all BMCs on a panic'
+-       help
++	bool 'Generate a panic event to all BMCs on a panic'
++	help
+ 	 When a panic occurs, this will cause the IPMI message handler to,
+ 	 by default, generate an IPMI event describing the panic to each
+ 	 interface registered with the message handler.  This is always
+@@ -54,42 +54,42 @@ config IPMI_PANIC_STRING
+ 	  causes the default value to be set to "string".
+ 
+ config IPMI_DEVICE_INTERFACE
+-       tristate 'Device interface for IPMI'
+-       help
+-         This provides an IOCTL interface to the IPMI message handler so
++	tristate 'Device interface for IPMI'
++	help
++	 This provides an IOCTL interface to the IPMI message handler so
+ 	 userland processes may use IPMI.  It supports poll() and select().
+ 
+ config IPMI_SI
+-       tristate 'IPMI System Interface handler'
+-       select IPMI_PLAT_DATA
+-       help
+-         Provides a driver for System Interfaces (KCS, SMIC, BT).
++	tristate 'IPMI System Interface handler'
++	select IPMI_PLAT_DATA
++	help
++	 Provides a driver for System Interfaces (KCS, SMIC, BT).
+ 	 Currently, only KCS and SMIC are supported.  If
+ 	 you are using IPMI, you should probably say "y" here.
+ 
+ config IPMI_SSIF
+-       tristate 'IPMI SMBus handler (SSIF)'
+-       select I2C
+-       help
+-         Provides a driver for a SMBus interface to a BMC, meaning that you
++	tristate 'IPMI SMBus handler (SSIF)'
++	select I2C
++	help
++	 Provides a driver for a SMBus interface to a BMC, meaning that you
+ 	 have a driver that must be accessed over an I2C bus instead of a
+ 	 standard interface.  This module requires I2C support.
+ 
+ config IPMI_POWERNV
+-       depends on PPC_POWERNV
+-       tristate 'POWERNV (OPAL firmware) IPMI interface'
+-       help
+-         Provides a driver for OPAL firmware-based IPMI interfaces.
++	depends on PPC_POWERNV
++	tristate 'POWERNV (OPAL firmware) IPMI interface'
++	help
++	 Provides a driver for OPAL firmware-based IPMI interfaces.
+ 
+ config IPMI_WATCHDOG
+-       tristate 'IPMI Watchdog Timer'
+-       help
+-         This enables the IPMI watchdog timer.
++	tristate 'IPMI Watchdog Timer'
++	help
++	 This enables the IPMI watchdog timer.
+ 
+ config IPMI_POWEROFF
+-       tristate 'IPMI Poweroff'
+-       help
+-         This enables a function to power off the system with IPMI if
++	tristate 'IPMI Poweroff'
++	help
++	 This enables a function to power off the system with IPMI if
+ 	 the IPMI management controller is capable of this.
+ 
+ endif # IPMI_HANDLER
+@@ -126,7 +126,7 @@ config NPCM7XX_KCS_IPMI_BMC
+ 
+ config ASPEED_BT_IPMI_BMC
+ 	depends on ARCH_ASPEED || COMPILE_TEST
+-       depends on REGMAP && REGMAP_MMIO && MFD_SYSCON
++	depends on REGMAP && REGMAP_MMIO && MFD_SYSCON
+ 	tristate "BT IPMI bmc driver"
+ 	help
+ 	  Provides a driver for the BT (Block Transfer) IPMI interface
 -- 
 2.7.4
 
