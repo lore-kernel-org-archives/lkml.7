@@ -2,188 +2,149 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C010BC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 15:30:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 773A7C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 15:32:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94225206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 15:30:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B6B3206D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 15:32:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PvPm0N/j"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="g7wTo36j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbfKUPai (ORCPT
+        id S1726747AbfKUPcD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 10:30:38 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:56193 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726574AbfKUPai (ORCPT
+        Thu, 21 Nov 2019 10:32:03 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:51923 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726279AbfKUPcC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 10:30:38 -0500
-Received: by mail-wm1-f67.google.com with SMTP id b11so4176385wmb.5
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 07:30:35 -0800 (PST)
+        Thu, 21 Nov 2019 10:32:02 -0500
+Received: by mail-wm1-f68.google.com with SMTP id g206so3936507wme.1
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 07:32:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=fwUMKfMJE5zmhfeOZVzrKhaAfjtqUIOOXfyEnwGW3wU=;
-        b=PvPm0N/j1KirLROnANazbtECjIY2qt9Tmhg3vNHz25x+U4Z0MyTr0EQeUxt2vnEe4E
-         8uzFls12r/9gOBEhgW/7x10kOIWY7q2lmXbuiEA5ooqUDmq7LF852Vg6omho1SUv7UjQ
-         0d3hMZKj25dMcTFD3CsH5t/QFKNxywnAVeUTEIK+zxLk57f4GR9UNx8xjXJ0VnqrwwDR
-         2Imc+H/6m0jUnXciJpX+AL4SQTxo0VVQOlV2KUjpvysfqvxRQCCkjqXczk2v4URkKQ3y
-         d4bYu0bDAHYsQ4j0HM1G8Youxkpe3wFmDHaDS9ugmaIxc8lR6s76FW3Smah51TfZciti
-         iuVw==
+        d=sartura-hr.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=h3JB+CPTSq4N72ZLvXLiiiG1zAE4KtwmOfqjMHLKlCQ=;
+        b=g7wTo36jVO8nP95kktpDbk266oeLWP/70+1Tww2s1Jn5HQ608EcBG1qg4BSU8JXwzQ
+         ELo+sHigumVYvVyik1N6d2G5CcMSa/vXzHZB1xN+sc1dJbKKgj+uBsZBBWdDCNMxxsPX
+         KkjtHAIovNQUz2QDch7wufy1XSbzDggP8wdQ9XQN+jnUXCTSUC3Dy3l63EI7rT5yihKy
+         C12T/h1K5yUx+PBzAgs5YJ6KlOCPVO0HcyGNqe5jYD93OqTmlnHXCkbGvPIGq9zy7Vor
+         cNRgMQORUZdsdHzDvN+UH3ruxFe/rqwc3AppsQVARtAoZJBt6EG8/gPhvMGGFQ11ShRT
+         0sDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fwUMKfMJE5zmhfeOZVzrKhaAfjtqUIOOXfyEnwGW3wU=;
-        b=QRBkprk7okGgT1DywiBQUA/kFjvZXEdCPPlRZPLa7kl12QDCmb5GNOv0JoVSXlq750
-         Nj6HaKBBQAeiPtOdvY2KTV791VIA0LgawWynO2xYmY9kYtPv+N0TPOrMj1Dub2gyYNPK
-         iG/Ebqga/eqBgdA8eDqGl7Hu6pbOvcwzRldTAfxZPqSgAN5JhB+TlRWbsxFvoTeovoCc
-         NTaQISaZvfv2K8qvH7DymaQJ7LcyVO1q4bvJcZvl6/2cYJhYjwSF/yjVZW3AymOrBJn2
-         su0dn6D2shsmR70b3JXfIHl1hYP77tmMIIjGtJBQ0aev4986WKhbzP89O75yVZm3qo6k
-         VIxw==
-X-Gm-Message-State: APjAAAXjIKQWk6HbrqH7G8qdqp94oOCRWi9ioIzzfyagi1AKpadXqTZd
-        FngtmIl54dUDiGaMaXofuuEyFg==
-X-Google-Smtp-Source: APXvYqxZosL6fF2YBCeoGPIUdrdxtjHo46UiCr1XponLO3gwtklqPpXNxfsI8bwt1nBRwpqaLWCO5w==
-X-Received: by 2002:a1c:750f:: with SMTP id o15mr9686762wmc.161.1574350234738;
-        Thu, 21 Nov 2019 07:30:34 -0800 (PST)
-Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
-        by smtp.gmail.com with ESMTPSA id w7sm3678802wru.62.2019.11.21.07.30.33
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=h3JB+CPTSq4N72ZLvXLiiiG1zAE4KtwmOfqjMHLKlCQ=;
+        b=DS1uGPgqtSKch+wLwo+O5VJRPglC+KBs8bdcCDOLpCgbB/TIi1RAR9ABITKUrC51F/
+         WJKUUyfUdyC1ZfPbtnSxNJNaTH5YIPlkegCpOksZBMJW0T+X0xus7MvNCHJnY5NzN995
+         NyMES+M8Zryeyg7n1isXDqkRCWp3HeleRXuXE3Gz9ZdP5Gj3WfV4aYuFnXlfin0TPXtt
+         fhjfvvzgbw4QCF8yMy7zZv3D+HocRIxzpHvs7DVU/8SNi9un6znhJf4OyceGjspcDrUx
+         BKrZDARzmz4LuXQ0XMRghvTaONg5YGtaiYq5eKCpbV1H9IiiUstCtxsYwz5Ll4m5qxVz
+         H3VQ==
+X-Gm-Message-State: APjAAAV6obX6PuXGgGXoIAVPe3x2JxZCSg8DSf8jbCcqO9nrtlrxNSC2
+        hf+j/IDZdnXChy9AFvdXeEQ88w==
+X-Google-Smtp-Source: APXvYqzT05RuHMG6V7kEDU7t+mZjhzJqvbh8fcSitLWaeNEk5JXNALubr9+oQJSCLbUPlL9+YS3v1A==
+X-Received: by 2002:a1c:e915:: with SMTP id q21mr9877441wmc.148.1574350320590;
+        Thu, 21 Nov 2019 07:32:00 -0800 (PST)
+Received: from localhost.localdomain (mx1.racunarstvo.hr. [193.198.208.162])
+        by smtp.googlemail.com with ESMTPSA id 11sm3413640wmb.34.2019.11.21.07.31.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Nov 2019 07:30:33 -0800 (PST)
-Date:   Thu, 21 Nov 2019 15:30:29 +0000
-From:   Quentin Perret <qperret@google.com>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
-        mingo@kernel.org, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, patrick.bellasi@matbug.net,
-        qais.yousef@arm.com, morten.rasmussen@arm.com
-Subject: Re: [PATCH 3/3] sched/fair: Consider uclamp for "task fits capacity"
- checks
-Message-ID: <20191121153029.GA105938@google.com>
-References: <20191120175533.4672-1-valentin.schneider@arm.com>
- <20191120175533.4672-4-valentin.schneider@arm.com>
- <20191121115602.GA213296@google.com>
- <f7e5dabb-a7e6-d110-abca-de7d4533bcc5@arm.com>
- <20191121133043.GA46904@google.com>
- <09e234a2-ea65-4d09-5215-9b0fe4ec09fe@arm.com>
+        Thu, 21 Nov 2019 07:32:00 -0800 (PST)
+From:   damir.franusic@sartura.hr
+X-Google-Original-From: damir.franusic@gmail.com
+Cc:     Damir Franusic <damir.franusic@sartura.hr>,
+        Luka Perkov <luka.perkov@sartura.hr>,
+        Robert Marko <robert.marko@sartura.hr>,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ARM: dts: qcom: Add nodes for SMP boot in IPQ40xx
+Date:   Thu, 21 Nov 2019 16:29:02 +0100
+Message-Id: <20191121152902.21394-1-damir.franusic@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <09e234a2-ea65-4d09-5215-9b0fe4ec09fe@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday 21 Nov 2019 at 14:51:06 (+0000), Valentin Schneider wrote:
-> On 21/11/2019 13:30, Quentin Perret wrote:
-> > On Thursday 21 Nov 2019 at 12:56:39 (+0000), Valentin Schneider wrote:
-> >>> @@ -6274,6 +6274,15 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
-> >>>  			if (!fits_capacity(util, cpu_cap))
-> >>>  				continue;
-> >>>  
-> >>> +			/*
-> >>> +			 * Skip CPUs that don't satisfy uclamp requests. Note
-> >>> +			 * that the above already ensures the CPU has enough
-> >>> +			 * spare capacity for the task; this is only really for
-> >>> +			 * uclamp restrictions.
-> >>> +			 */
-> >>> +			if (!task_fits_capacity(p, capacity_orig_of(cpu)))
-> >>> +				continue;
-> >>
-> >> This is partly redundant with the above, I think. What we really want here
-> >> is just
-> >>
-> >> fits_capacity(uclamp_eff_value(p, UCLAMP_MIN), capacity_orig_of(cpu))
-> >>
-> >> but this would require some inline #ifdeffery.
-> > 
-> > This suggested change lacks the UCLAMP_MAX part, which is a shame
-> > because this is precisely in the EAS path that we should try and
-> > down-migrate tasks if they have an appropriate max_clamp. So, your first
-> > proposal made sense, IMO.
-> > 
->  
-> Hm right, had to let that spin in my head for a while but I think I got it.
-> 
-> I was only really thinking of:
-> 
->   (h960: LITTLE = 462 cap, big = 1024)
->   p.uclamp.min = 512 -> skip LITTLEs regardless of the actual util_est
-> 
-> but your point is we also want stuff like:
-> 
->   p.uclamp.max = 300 -> accept LITTLEs regardless of the actual util_est
+From: Damir Franusic <damir.franusic@sartura.hr>
 
-Right, sorry if my message wasn't clear.
+Add missing nodes and properties to enable SMP
+support on IPQ40xx devices.
 
-> I'll keep the feec() change as-is and add something like the above in the
-> changelog for v2.
-> 
-> > Another option to avoid the redundancy would be to do something along
-> > the lines of the totally untested diff below.
-> > 
-> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> > index 69a81a5709ff..38cb5fe7ba65 100644
-> > --- a/kernel/sched/fair.c
-> > +++ b/kernel/sched/fair.c
-> > @@ -6372,9 +6372,12 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
-> >                         if (!cpumask_test_cpu(cpu, p->cpus_ptr))
-> >                                 continue;
-> >  
-> > -                       /* Skip CPUs that will be overutilized. */
-> >                         util = cpu_util_next(cpu, p, cpu);
-> >                         cpu_cap = capacity_of(cpu);
-> > +                       spare_cap = cpu_cap - util;
-> > +                       util = uclamp_util_with(cpu_rq(cpu), util, p);
-> > +
-> > +                       /* Skip CPUs that will be overutilized. */
-> >                         if (!fits_capacity(util, cpu_cap))
-> >                                 continue;
-> >  
-> > @@ -6389,7 +6392,6 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
-> >                          * Find the CPU with the maximum spare capacity in
-> >                          * the performance domain
-> >                          */
-> > -                       spare_cap = cpu_cap - util;
-> >                         if (spare_cap > max_spare_cap) {
-> >                                 max_spare_cap = spare_cap;
-> >                                 max_spare_cap_cpu = cpu;
-> > 
-> > Thoughts ?
-> > 
-> 
-> uclamp_util_with() (or uclamp_rq_util_with() ;)) picks the max between the
-> rq-aggregated clamps and the task clamps, which isn't what we want. If the
-> task has a low-ish uclamp.max (e.g. the 300 example from above) but the
-> rq-wide max-aggregated uclamp.max is ~800, we'd clamp using that 800. It
-> makes sense for frequency selection, but not for task placement IMO.
+Booting without "saw_l2" node:
 
-Right, but you could argue that this is in fact a correct behaviour.
-What we want to know is 'is this CPU big enough to meet the capacity
-request if I enqueue p there ?'. And the 'capacity request' is the
-aggregated rq-wide clamped util, IMO.
+[    0.001400] CPU: Testing write buffer coherency: ok
+[    0.001856] CPU0: thread -1, cpu 0, socket 0, mpidr 80000000
+[    0.060163] Setting up static identity map for 0x80300000 - 0x80300060
+[    0.080140] rcu: Hierarchical SRCU implementation.
+[    0.120258] smp: Bringing up secondary CPUs ...
+[    0.200540] CPU1: failed to boot: -19
+[    0.280689] CPU2: failed to boot: -19
+[    0.360874] CPU3: failed to boot: -19
+[    0.360966] smp: Brought up 1 node, 1 CPU
+[    0.360979] SMP: Total of 1 processors activated (96.00 BogoMIPS).
+[    0.360988] CPU: All CPU(s) started in SVC mode.
 
-If enqueuing 'p' on a given CPU will cause the rq-wide clamped util to
-go above the CPU capacity, we want to skip that CPU.
+Then, booting with "saw_l2" node present (this patch applied):
 
-The obvious case is if p's min_clamp is larger than the CPU capacity.
+[    0.001450] CPU: Testing write buffer coherency: ok
+[    0.001904] CPU0: thread -1, cpu 0, socket 0, mpidr 80000000
+[    0.060161] Setting up static identity map for 0x80300000 - 0x80300060
+[    0.080137] rcu: Hierarchical SRCU implementation.
+[    0.120252] smp: Bringing up secondary CPUs ...
+[    0.200958] CPU1: thread -1, cpu 1, socket 0, mpidr 80000001
+[    0.281091] CPU2: thread -1, cpu 2, socket 0, mpidr 80000002
+[    0.361264] CPU3: thread -1, cpu 3, socket 0, mpidr 80000003
+[    0.361430] smp: Brought up 1 node, 4 CPUs
+[    0.361460] SMP: Total of 4 processors activated (384.00 BogoMIPS).
+[    0.361469] CPU: All CPU(s) started in SVC mode.
 
-But similarly, if p's max_clamp is going to be ignored because of
-another task with a larger max_clamp on the same rq, this is relevant
-information too --  the resulting capacity request might be above the
-CPU capacity if p's util_avg is large, so we should probably skip the
-CPU too no ?
+Signed-off-by: Damir Franusic <damir.franusic@sartura.hr>
+Cc: Luka Perkov <luka.perkov@sartura.hr>
+Cc: Robert Marko <robert.marko@sartura.hr>
+Cc: Andy Gross <agross@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org
+---
+ arch/arm/boot/dts/qcom-ipq4019.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Are we gaining anything if we decide to not align the EAS path and the
-sugov path ?
+diff --git a/arch/arm/boot/dts/qcom-ipq4019.dtsi b/arch/arm/boot/dts/qcom-ipq4019.dtsi
+index 56f51599852d..72d4e290b543 100644
+--- a/arch/arm/boot/dts/qcom-ipq4019.dtsi
++++ b/arch/arm/boot/dts/qcom-ipq4019.dtsi
+@@ -102,6 +102,7 @@
+ 		L2: l2-cache {
+ 			compatible = "cache";
+ 			cache-level = <2>;
++			qcom,saw = <&saw_l2>;
+ 		};
+ 	};
+ 
+@@ -341,6 +342,12 @@
+ 			regulator;
+ 		};
+ 
++		saw_l2: regulator@b012000 {
++			compatible = "qcom,saw2";
++			reg = <0xb012000 0x1000>;
++			regulator;
++		};
++
+ 		blsp1_uart1: serial@78af000 {
+ 			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
+ 			reg = <0x78af000 0x200>;
+-- 
+2.23.0
 
-Thanks,
-Quentin
