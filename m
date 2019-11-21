@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F6EC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:19:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35D78C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:19:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC3D520898
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:19:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D81B20721
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:19:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574306381;
-	bh=EO3tzJcNEbW2uQoxO6QQq7HGJGFttwty/JOizXrh/eA=;
+	s=default; t=1574306385;
+	bh=lchu/KX2vsWxSi8jH1B3g1xn82G2zo0dqdm09ot22HI=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=JqkfmaPu0f0y5sfzUacjtBFz0zC4jbj5yS4yjnYwqP4APTefQjrmiapZD70LL7bWN
-	 j60wT6fV2E7tDKvNBBAyAqP374tijyJPpWwJvxNp0gVXgwhyKB9J53RtJBmU7+iNnE
-	 yLN0sVhBB9DEMXek6v09IHd2m2c0p/Wy3nf3D2dk=
+	b=AHThi6nLXhIqidvGgEeaa1A4rudbMpgZT9hyAvWkZOoyiK4Y1bxUC5vfb8kovxMCp
+	 VkwTNRBWfdCvhZ7RasQD9sN6Ueo1hsEVEkVGmqTnoZDbfaGBBZiSJ/2nQRTpHXw8OT
+	 jbZzJZ7mH15ojYwh0rBnWM3P70VqgNvbO8fZFtKo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727258AbfKUDTk (ORCPT
+        id S1727289AbfKUDTo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 22:19:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33018 "EHLO mail.kernel.org"
+        Wed, 20 Nov 2019 22:19:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726541AbfKUDTi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 22:19:38 -0500
+        id S1726541AbfKUDTm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 22:19:42 -0500
 Received: from PC-kkoz.proceq.com (unknown [213.160.61.66])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C24BE2089D;
-        Thu, 21 Nov 2019 03:19:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C8FB20721;
+        Thu, 21 Nov 2019 03:19:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574306376;
-        bh=EO3tzJcNEbW2uQoxO6QQq7HGJGFttwty/JOizXrh/eA=;
+        s=default; t=1574306381;
+        bh=lchu/KX2vsWxSi8jH1B3g1xn82G2zo0dqdm09ot22HI=;
         h=From:To:Cc:Subject:Date:From;
-        b=kowbRM3bzIDhm9Qg4NRX/FtwIhxerqSkdf8OdugqGlhuKp55Ord83YvlxM6DY6E8I
-         ons2PPb9zHPe7AvWCx1jVqbsLg30JXaUSUF4RN6IwIQzrNmaTYb9WtN49iL6SryzUK
-         btbTA7hM2AdyNe6c2d/idCfe3YgfZFbo8DVEcLe4=
+        b=1qFijktoYtNuoo2iHnx0rqjpGJjP02Yc5gPd+CW1iSG9vJLkQYbMTxMELAFtjhFPG
+         w2BhV+09JwK9X0A29WfnOZ5EbM/ylnO/95HH8edvu+yi/g6OUYQbS8pukMHE42X3Ku
+         h7ChmHewCd8fa5hjE1wV1MeRWjc8TZ7yLp5QvXAs=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-input@vger.kernel.org
-Subject: [PATCH v2] input: Fix Kconfig indentation
-Date:   Thu, 21 Nov 2019 04:19:33 +0100
-Message-Id: <1574306373-29581-1-git-send-email-krzk@kernel.org>
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>, linux-media@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Subject: [PATCH v2] media: Fix Kconfig indentation
+Date:   Thu, 21 Nov 2019 04:19:37 +0100
+Message-Id: <1574306377-30120-1-git-send-email-krzk@kernel.org>
 X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -64,110 +68,147 @@ Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Changes since v1:
 1. Fix also 7-space and tab+1 space indentation issues.
 ---
- drivers/input/keyboard/Kconfig    | 16 ++++++++--------
- drivers/input/mouse/Kconfig       | 16 ++++++++--------
- drivers/input/tablet/Kconfig      | 20 ++++++++++----------
- drivers/input/touchscreen/Kconfig |  2 +-
- 4 files changed, 27 insertions(+), 27 deletions(-)
+ drivers/media/Kconfig                     |  6 +--
+ drivers/media/platform/Kconfig            | 74 +++++++++++++++----------------
+ drivers/media/platform/exynos4-is/Kconfig |  2 +-
+ drivers/media/radio/si470x/Kconfig        |  4 +-
+ 4 files changed, 43 insertions(+), 43 deletions(-)
 
-diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
-index 1ddfc2413035..36067ed1160d 100644
---- a/drivers/input/keyboard/Kconfig
-+++ b/drivers/input/keyboard/Kconfig
-@@ -167,14 +167,14 @@ config KEYBOARD_QT1050
- 	  the module will be called qt1050
+diff --git a/drivers/media/Kconfig b/drivers/media/Kconfig
+index b36a41332867..9dfea5c4b6ab 100644
+--- a/drivers/media/Kconfig
++++ b/drivers/media/Kconfig
+@@ -208,9 +208,9 @@ config MEDIA_SUBDRV_AUTOSELECT
+ 	  If unsure say Y.
  
- config KEYBOARD_QT1070
--       tristate "Atmel AT42QT1070 Touch Sensor Chip"
--       depends on I2C
--       help
--         Say Y here if you want to use Atmel AT42QT1070 QTouch
--         Sensor chip as input device.
--
--         To compile this driver as a module, choose M here:
--         the module will be called qt1070
-+	tristate "Atmel AT42QT1070 Touch Sensor Chip"
-+	depends on I2C
-+	help
-+	 Say Y here if you want to use Atmel AT42QT1070 QTouch
-+	 Sensor chip as input device.
-+
-+	 To compile this driver as a module, choose M here:
-+	 the module will be called qt1070
- 
- config KEYBOARD_QT2160
- 	tristate "Atmel AT42QT2160 Touch Sensor Chip"
-diff --git a/drivers/input/mouse/Kconfig b/drivers/input/mouse/Kconfig
-index bf738d3b7fe4..6e1ff481c977 100644
---- a/drivers/input/mouse/Kconfig
-+++ b/drivers/input/mouse/Kconfig
-@@ -92,14 +92,14 @@ config MOUSE_PS2_SYNAPTICS_SMBUS
- 	  If unsure, say Y.
- 
- config MOUSE_PS2_CYPRESS
--       bool "Cypress PS/2 mouse protocol extension" if EXPERT
--       default y
--       depends on MOUSE_PS2
--       help
--         Say Y here if you have a Cypress PS/2 Trackpad connected to
--         your system.
--
--         If unsure, say Y.
-+	bool "Cypress PS/2 mouse protocol extension" if EXPERT
+ config MEDIA_HIDE_ANCILLARY_SUBDRV
+-        bool
+-        depends on MEDIA_SUBDRV_AUTOSELECT && !COMPILE_TEST && !EXPERT
+-        default y
++	bool
++	depends on MEDIA_SUBDRV_AUTOSELECT && !COMPILE_TEST && !EXPERT
 +	default y
-+	depends on MOUSE_PS2
+ 
+ config MEDIA_ATTACH
+ 	bool
+diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
+index e84f35d3a68e..cd977dfb1da2 100644
+--- a/drivers/media/platform/Kconfig
++++ b/drivers/media/platform/Kconfig
+@@ -610,49 +610,49 @@ config CEC_GPIO
+ 	  between compatible devices.
+ 
+ config VIDEO_SAMSUNG_S5P_CEC
+-       tristate "Samsung S5P CEC driver"
+-       depends on ARCH_EXYNOS || COMPILE_TEST
+-       select CEC_CORE
+-       select CEC_NOTIFIER
+-       help
+-	 This is a driver for Samsung S5P HDMI CEC interface. It uses the
+-	 generic CEC framework interface.
+-	 CEC bus is present in the HDMI connector and enables communication
+-	 between compatible devices.
++	tristate "Samsung S5P CEC driver"
++	depends on ARCH_EXYNOS || COMPILE_TEST
++	select CEC_CORE
++	select CEC_NOTIFIER
 +	help
-+	 Say Y here if you have a Cypress PS/2 Trackpad connected to
-+	 your system.
-+
-+	 If unsure, say Y.
++	  This is a driver for Samsung S5P HDMI CEC interface. It uses the
++	  generic CEC framework interface.
++	  CEC bus is present in the HDMI connector and enables communication
++	  between compatible devices.
  
- config MOUSE_PS2_LIFEBOOK
- 	bool "Fujitsu Lifebook PS/2 mouse protocol extension" if EXPERT
-diff --git a/drivers/input/tablet/Kconfig b/drivers/input/tablet/Kconfig
-index e4c0d9a055b9..51c339182017 100644
---- a/drivers/input/tablet/Kconfig
-+++ b/drivers/input/tablet/Kconfig
-@@ -39,16 +39,16 @@ config TABLET_USB_AIPTEK
- 	  module will be called aiptek.
- 
- config TABLET_USB_GTCO
--        tristate "GTCO CalComp/InterWrite USB Support"
--        depends on USB && INPUT
--        help
--          Say Y here if you want to use the USB version of the GTCO
--          CalComp/InterWrite Tablet.  Make sure to say Y to "Mouse support"
--          (CONFIG_INPUT_MOUSEDEV) and/or "Event interface support"
--          (CONFIG_INPUT_EVDEV) as well.
--
--          To compile this driver as a module, choose M here: the
--          module will be called gtco.
-+	tristate "GTCO CalComp/InterWrite USB Support"
-+	depends on USB && INPUT
+ config VIDEO_STI_HDMI_CEC
+-       tristate "STMicroelectronics STiH4xx HDMI CEC driver"
+-       depends on ARCH_STI || COMPILE_TEST
+-       select CEC_CORE
+-       select CEC_NOTIFIER
+-       help
+-	 This is a driver for STIH4xx HDMI CEC interface. It uses the
+-	 generic CEC framework interface.
+-	 CEC bus is present in the HDMI connector and enables communication
+-	 between compatible devices.
++	tristate "STMicroelectronics STiH4xx HDMI CEC driver"
++	depends on ARCH_STI || COMPILE_TEST
++	select CEC_CORE
++	select CEC_NOTIFIER
 +	help
-+	  Say Y here if you want to use the USB version of the GTCO
-+	  CalComp/InterWrite Tablet.  Make sure to say Y to "Mouse support"
-+	  (CONFIG_INPUT_MOUSEDEV) and/or "Event interface support"
-+	  (CONFIG_INPUT_EVDEV) as well.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called gtco.
++	  This is a driver for STIH4xx HDMI CEC interface. It uses the
++	  generic CEC framework interface.
++	  CEC bus is present in the HDMI connector and enables communication
++	  between compatible devices.
  
- config TABLET_USB_HANWANG
- 	tristate "Hanwang Art Master III tablet support (USB)"
-diff --git a/drivers/input/touchscreen/Kconfig b/drivers/input/touchscreen/Kconfig
-index 40bfc551ce30..c071f7c407b6 100644
---- a/drivers/input/touchscreen/Kconfig
-+++ b/drivers/input/touchscreen/Kconfig
-@@ -633,7 +633,7 @@ config TOUCHSCREEN_HP600
- 	depends on SH_HP6XX && SH_ADC
+ config VIDEO_STM32_HDMI_CEC
+-       tristate "STMicroelectronics STM32 HDMI CEC driver"
+-       depends on ARCH_STM32 || COMPILE_TEST
+-       select REGMAP
+-       select REGMAP_MMIO
+-       select CEC_CORE
+-       help
+-	 This is a driver for STM32 interface. It uses the
+-	 generic CEC framework interface.
+-	 CEC bus is present in the HDMI connector and enables communication
+-	 between compatible devices.
++	tristate "STMicroelectronics STM32 HDMI CEC driver"
++	depends on ARCH_STM32 || COMPILE_TEST
++	select REGMAP
++	select REGMAP_MMIO
++	select CEC_CORE
++	help
++	  This is a driver for STM32 interface. It uses the
++	  generic CEC framework interface.
++	  CEC bus is present in the HDMI connector and enables communication
++	  between compatible devices.
+ 
+ config VIDEO_TEGRA_HDMI_CEC
+-       tristate "Tegra HDMI CEC driver"
+-       depends on ARCH_TEGRA || COMPILE_TEST
+-       select CEC_CORE
+-       select CEC_NOTIFIER
+-       help
+-	 This is a driver for the Tegra HDMI CEC interface. It uses the
+-	 generic CEC framework interface.
+-	 The CEC bus is present in the HDMI connector and enables communication
+-	 between compatible devices.
++	tristate "Tegra HDMI CEC driver"
++	depends on ARCH_TEGRA || COMPILE_TEST
++	select CEC_CORE
++	select CEC_NOTIFIER
++	help
++	  This is a driver for the Tegra HDMI CEC interface. It uses the
++	  generic CEC framework interface.
++	  The CEC bus is present in the HDMI connector and enables communication
++	  between compatible devices.
+ 
+ config VIDEO_SECO_CEC
+ 	tristate "SECO Boards HDMI CEC driver"
+diff --git a/drivers/media/platform/exynos4-is/Kconfig b/drivers/media/platform/exynos4-is/Kconfig
+index 989cb34f19b1..be4effcbfe7b 100644
+--- a/drivers/media/platform/exynos4-is/Kconfig
++++ b/drivers/media/platform/exynos4-is/Kconfig
+@@ -13,7 +13,7 @@ config VIDEO_SAMSUNG_EXYNOS4_IS
+ if VIDEO_SAMSUNG_EXYNOS4_IS
+ 
+ config VIDEO_EXYNOS4_IS_COMMON
+-       tristate
++	tristate
+ 
+ config VIDEO_S5P_FIMC
+ 	tristate "S5P/EXYNOS4 FIMC/CAMIF camera interface driver"
+diff --git a/drivers/media/radio/si470x/Kconfig b/drivers/media/radio/si470x/Kconfig
+index 537f8e1601f3..a1ba8bc54b62 100644
+--- a/drivers/media/radio/si470x/Kconfig
++++ b/drivers/media/radio/si470x/Kconfig
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ config RADIO_SI470X
+-        tristate "Silicon Labs Si470x FM Radio Receiver support"
+-        depends on VIDEO_V4L2
++	tristate "Silicon Labs Si470x FM Radio Receiver support"
++	depends on VIDEO_V4L2
  	help
- 	  Say Y here if you have a HP Jornada 620/660/680/690 and want to
--          support the built-in touchscreen.
-+	  support the built-in touchscreen.
- 
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called hp680_ts_input.
+ 	  This is a driver for devices with the Silicon Labs SI470x
+ 	  chip (either via USB or I2C buses).
 -- 
 2.7.4
 
