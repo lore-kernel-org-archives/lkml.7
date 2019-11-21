@@ -2,103 +2,97 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 718EAC43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:05:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A61C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:05:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48D3D2075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:05:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DC3820674
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:05:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="XYmeF2or"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="ZY01aSvH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726803AbfKULFM (ORCPT
+        id S1726944AbfKULFl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 06:05:12 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:38862 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726170AbfKULFM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 06:05:12 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xALB54W1042887;
-        Thu, 21 Nov 2019 05:05:04 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574334304;
-        bh=2jhTB3ZCG+VXa9OTzwERZTfnUMAKUnfWeesl2loHDWQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=XYmeF2orc4R5/8+V8cz7ZJlnd1Eq9nhCpog0qXdVXg4+1scUTdfB05kjMTgeYUoxc
-         M52qvuXul80YgYSszHxo85kxg2FhHFHpVPd1mG0CtKjGEUbv0JeW5Jj2bubV6evzbx
-         7diC877KbzDteZnWWmW5+P+li6/WHS2vJe9kEVok=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xALB52Lb093070
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 21 Nov 2019 05:05:03 -0600
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 21
- Nov 2019 05:05:03 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 21 Nov 2019 05:05:03 -0600
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xALB4wso079763;
-        Thu, 21 Nov 2019 05:04:59 -0600
-Subject: Re: [PATCH 0/1] ARM: dts: am5729: beaglebone-ai: enable board
-To:     Caleb Robey <c-robey@ti.com>, <linux-omap@vger.kernel.org>
-CC:     Jason Kridner <jkridner@gmail.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>, Jason Kridner <jdk@ti.com>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        Andreas Dannenberg <dannenberg@ti.com>,
-        Jean-Jacques Hiblot <jjhiblot@ti.com>,
-        Praneeth Bajjuri <praneeth@ti.com>,
-        "Andrew F . Davis" <afd@ti.com>, Tom Rini <trini@konsulko.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        Thu, 21 Nov 2019 06:05:41 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:44722 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726014AbfKULFl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 06:05:41 -0500
+Received: from zn.tnic (p200300EC2F0F07006553A4184595DC73.dip0.t-ipconnect.de [IPv6:2003:ec:2f0f:700:6553:a418:4595:dc73])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 59F9C1EC0CF0;
+        Thu, 21 Nov 2019 12:05:35 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1574334335;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=uDA1XNH/BDEQTxr9BABuMzUgYDIn2hXZ3aP/cBDMLVo=;
+        b=ZY01aSvHF7c4EoU+iM0ZCScSFeQNFtWU/+MDFyPJCPtEWLx3Hb2EnvMfQhbh9cMRZRoo0y
+        SGvuVpJPyqDfS1zGs3B0B2hcie36w0DSAENy2TehmN7lEu8QfdPc0q/F7tyt6N/Zmppmn/
+        nevOTxhrAvrKr81GvYA9mfgh8butiHM=
+Date:   Thu, 21 Nov 2019 12:05:33 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20191119202850.18149-1-c-robey@ti.com>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <e831422f-66b7-32e1-5b44-f7ca287abc4b@ti.com>
-Date:   Thu, 21 Nov 2019 13:05:02 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
+        Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-edac@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v3 04/19] x86/intel: Initialize IA32_FEATURE_CONTROL MSR
+ at boot
+Message-ID: <20191121110533.GD6540@zn.tnic>
+References: <20191119031240.7779-1-sean.j.christopherson@intel.com>
+ <20191119031240.7779-5-sean.j.christopherson@intel.com>
+ <20191121103925.GB20907@linux.intel.com>
+ <20191121104145.GC20907@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20191119202850.18149-1-c-robey@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191121104145.GC20907@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 19/11/2019 22:28, Caleb Robey wrote:
-> The following patch adds the device tree file for BeagleBone AI
-
-
-Please, add version info in subjects and
-provide change log in cover.
-
-
->   
-> Caleb Robey (1):
->    ARM: dts: am5729: beaglebone-ai: adding device tree
+On Thu, Nov 21, 2019 at 12:41:45PM +0200, Jarkko Sakkinen wrote:
+> On Thu, Nov 21, 2019 at 12:39:25PM +0200, Jarkko Sakkinen wrote:
+> > > +void init_feature_control_msr(struct cpuinfo_x86 *c)
 > 
->   arch/arm/boot/dts/Makefile                |   1 +
->   arch/arm/boot/dts/am5729-beagleboneai.dts | 782 ++++++++++++++++++++++
->   2 files changed, 783 insertions(+)
->   create mode 100644 arch/arm/boot/dts/am5729-beagleboneai.dts
-> 
+> I'd also use here shorter init_feat_ctl_msr(). It has one call site
+> but shorter name is more convenient when playing with tracing tools.
+
+Yeah, and since we're shortening all to feat_ctl, let's do:
+
+mv arch/x86/kernel/cpu/feature_control.c arch/x86/kernel/cpu/feat_ctl.c
+
+too.
+
+Thx.
 
 -- 
-Best regards,
-grygorii
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
