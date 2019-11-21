@@ -2,120 +2,81 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D069C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:38:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EA37C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:38:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2350C206CC
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:38:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574368708;
-	bh=tkue0peFTapJgtiml9Rsf9+zPuGR8vfy55j8RC72cxA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xEexolgUw6Z0xlZWv/qixpotWXqrp+xv1N4IcSP1xmQFCUtqGGDlCQOrJnfySLrMZ
-	 VB98nzX7iF0aN5wSVeYD3XoG5gminPp/vhjVoi6CvPvNU3qvn9z7VSPMS9Bs/bmOe+
-	 Ot3bqmzeA4i2vtX4O9AyBAUBp2d57nyZaz1mnTN0=
+	by mail.kernel.org (Postfix) with ESMTP id D6794206CC
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:38:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FoTRNgJz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbfKUUi1 (ORCPT
+        id S1727114AbfKUUif (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 15:38:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34768 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726546AbfKUUi0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 15:38:26 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 21 Nov 2019 15:38:35 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:26093 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726546AbfKUUif (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 15:38:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574368714;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Q5xmbM7S9oTnc1i2DG5ScuBudhWd8zh5E/mOB6XLuO4=;
+        b=FoTRNgJzKDLp0eH6EpldJp9BgZhxHYbIQ7Fj//xtulU3kwHWLviC3nuBo8NTV/j8f+207i
+        7vdKzBkZ38U8U9KhLQLIG587Beg5xS23heqP8MkU9B3aqVfGvnCcNzYDA6yAMhGIb+RABN
+        AsVMDkw07sJ0e06xhLQpS2ZX5NT8i/g=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-277-uHAReWEoMmWa0K7WY-ucGg-1; Thu, 21 Nov 2019 15:38:32 -0500
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6BC7D2068D;
-        Thu, 21 Nov 2019 20:38:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574368705;
-        bh=tkue0peFTapJgtiml9Rsf9+zPuGR8vfy55j8RC72cxA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eWXxVHyMqL0FI5PfBcn+Pf+oXV3Wt0TEUIIKeT2DmhIJ0+/NPjMyhZbU4t8RJgByi
-         VM84KxBJcrKGn/A2W2PsBHIBRSiXenDXc4E1Oj9C5BvNe5/YNMZ6P1AnHwQe43GhO3
-         LYAi9LAE0OIKCVwiVR9v5/NShNJn1tnY2xohgi7Q=
-Date:   Thu, 21 Nov 2019 21:38:23 +0100
-From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-To:     Ajay Kaher <akaher@vmware.com>
-Cc:     Vlastimil Babka <vbabka@suse.cz>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "punit.agrawal@arm.com" <punit.agrawal@arm.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-        "willy@infradead.org" <willy@infradead.org>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "mszeredi@redhat.com" <mszeredi@redhat.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Srivatsa Bhat <srivatsab@vmware.com>,
-        "srivatsa@csail.mit.edu" <srivatsa@csail.mit.edu>,
-        Alexey Makhalov <amakhalov@vmware.com>,
-        Srinidhi Rao <srinidhir@vmware.com>,
-        Vikash Bansal <bvikas@vmware.com>,
-        Anish Swaminathan <anishs@vmware.com>,
-        Vasavi Sirnapalli <vsirnapalli@vmware.com>,
-        Steven Rostedt <srostedt@vmware.com>,
-        "stable@kernel.org" <stable@kernel.org>,
-        Ben Hutchings <ben@decadent.org.uk>
-Subject: Re: [PATCH v2 6/8] mm: prevent get_user_pages() from overflowing
- page refcount
-Message-ID: <20191121203823.GE813260@kroah.com>
-References: <1570581863-12090-1-git-send-email-akaher@vmware.com>
- <1570581863-12090-7-git-send-email-akaher@vmware.com>
- <f899be71-4bc0-d07b-f650-d85a335cdebb@suse.cz>
- <BF0587E3-D104-4DB2-B972-9BC4FD4CA014@vmware.com>
- <0E5175FB-7058-4211-9AA4-9D5E2F6A30B9@vmware.com>
- <35d74931-2c18-00ff-7622-522a79be9103@suse.cz>
- <88E8A78A-6CA3-46C1-A2AA-DFE7A3A52586@vmware.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 28CA8107ACC4;
+        Thu, 21 Nov 2019 20:38:31 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-161.rdu2.redhat.com [10.10.120.161])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3B552100EBAC;
+        Thu, 21 Nov 2019 20:38:30 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20191122072307.000b6492@canb.auug.org.au>
+References: <20191122072307.000b6492@canb.auug.org.au>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     dhowells@redhat.com,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: Signed-off-by missing for commits in the afs tree
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <88E8A78A-6CA3-46C1-A2AA-DFE7A3A52586@vmware.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-ID: <9440.1574368709.1@warthog.procyon.org.uk>
+Date:   Thu, 21 Nov 2019 20:38:29 +0000
+Message-ID: <9441.1574368709@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: uHAReWEoMmWa0K7WY-ucGg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 11, 2019 at 05:00:29AM +0000, Ajay Kaher wrote:
-> 
-> ﻿On 06/11/19, 2:25 PM, "Vlastimil Babka" <vbabka@suse.cz> wrote:
-> 
-> > On 10/25/19 8:18 AM, Ajay Kaher wrote:
-> >> On 17/10/19, 9:58 PM, "Ajay Kaher" <akaher@vmware.com> wrote:
-> >>     
-> >>>    
-> >>> Could we handle arch-specific gup.c in different patch sets and 
-> >>> let these patches to merge to 4.4.y?
-> >>   
-> >> Vlastimil, please suggest if it's fine to merge these patches to 4.4.y
-> >
-> > I'm not sure if it makes much sense to merge them without the arch-specific gup
-> > support, when we're aware that it's missing.
-> >
-> >> and handle arch-specific gup.c in different patch sets starts from 4.19.y,
-> >
-> > Actually arch-specific gup.c were removed in 4.13, so it's enough to start from
-> > 4.9.y, which I'm going to finally look into.
-> 
-> Yes x86 gup.c is removed. s390 gup.c is present till 4.19,
-> so if you are making changes in this file for 4.4.y and 4.9.y, 
-> then same should be done for 4.14.y and v4.19.y.
+Stephen Rothwell <sfr@canb.auug.org.au> wrote:
 
-Ok, I have no idea what to do here.  I have two different series from
-both of you, yet they are different.
+>   297c6f6378a6 ("afs: Remove set but not used variable 'ret'")
+>   b264b5bc97c2 ("afs: Remove set but not used variables 'before', 'after'=
+")
+>   b850554983e6 ("afs: xattr: use scnprintf")
 
-Can you both come up with a series you agree on, and send it to me, with
-both of your acks so that I know this is what should be applied?  I've
-deleted both of your current series from my todo mbox.
+I've signed them off, retagged and repushed.
 
-thanks,
+David
 
-greg k-h
