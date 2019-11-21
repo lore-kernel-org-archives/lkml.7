@@ -2,94 +2,186 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 983AFC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 22:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C532BC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 22:09:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 685D620718
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 22:07:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E5CD206CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 22:09:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="muVq5zaK"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="eyJ1zYPz";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="BXdsM3g+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbfKUWHl (ORCPT
+        id S1726721AbfKUWJd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 17:07:41 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:40268 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726813AbfKUWHl (ORCPT
+        Thu, 21 Nov 2019 17:09:33 -0500
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:36278 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726297AbfKUWJd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 17:07:41 -0500
-Received: by mail-pg1-f195.google.com with SMTP id e17so2328500pgd.7
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 14:07:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=Wso9M2AptCOQ/FSB/cF//hdr5Wmb6Utbp6FwVtSvgFg=;
-        b=muVq5zaKkBQRopIc2gUyZS+KHD4OCOG0Y0Lj9B2+WEvWxaf2p7IF3xq6IVyLVHF/hi
-         hhFNsLIeUddkEjHpGStAkfUtqdyDYWvzQGPuti6Tjxn9uGaT+ChklsBz2+FboMQNqJ8c
-         madsv1PEL3adKYmbw+yn9sZeSGJ2Zev5fqTvM7OhNGf+lhJqyvxhQ8zwzH6fCPCt1iVE
-         CnVaWt1iXAR9zQyLbNHKvxP1GhyFxccyMLU9SEqCXYi+8L7y2he1JApd92rh5MDKW8F2
-         NMu/Y9Fi0QydQSpgXIMFhgMcWvYOZGi/Xkx+t/wahNlb0K+ILJiYZ/MDe1tBdh9d0I2L
-         nIAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=Wso9M2AptCOQ/FSB/cF//hdr5Wmb6Utbp6FwVtSvgFg=;
-        b=gVVhtG2GycRJ1gj9MQIM0SkAGsuMeoa6dkUQcLlumiow5pt7QDarwieX9gGMOqUV/i
-         VsOn+oyDmK4MsMp3iAXt4s9uXQaralpLV7YP+Y9H+/zoWzZ20rirPeefubVFXRz/R4zI
-         HYc0JCyff9fCTPzbeCaAqEZJXJErcrjMP/I5GVrRC2acJvuOWOahAQhp/ldNa5/ZzE1C
-         ie7iq5mFp5xPPgzjXwzNDifrXJPLRgBXqRay1oS5qpgTJgEQ8nUYldoM6PNt7LnaB0Ao
-         Umk27+NYx1HoSYiT5OSC1fYcY1f2QkQ+opXuy3X+A2lgCPWe1f6G9MPY83qG7N/Mlmm4
-         8QUQ==
-X-Gm-Message-State: APjAAAX4YKCqsyDTHQbH+zMBWyZumOE2hdytqiIFgq61cejGC1iNKR9j
-        C452J1k23C2vS3qroFyd0KEYHA==
-X-Google-Smtp-Source: APXvYqwDorQg7vv5808xuL8+fLkJF5Lnbg5y3BdQ92DW3UKMbp5u4/p2LgdvLTGB+TEFVKbNK0K2Jw==
-X-Received: by 2002:a63:25c7:: with SMTP id l190mr12263520pgl.429.1574374060188;
-        Thu, 21 Nov 2019 14:07:40 -0800 (PST)
-Received: from ?IPv6:2601:646:c200:1ef2:1956:3100:f5cd:d9bc? ([2601:646:c200:1ef2:1956:3100:f5cd:d9bc])
-        by smtp.gmail.com with ESMTPSA id y24sm4833234pfr.116.2019.11.21.14.07.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 Nov 2019 14:07:39 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
+        Thu, 21 Nov 2019 17:09:33 -0500
+Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
+        by m0001303.ppops.net (8.16.0.42/8.16.0.42) with SMTP id xALM80Sx028447;
+        Thu, 21 Nov 2019 14:09:23 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=bNLZnYjP/wFIyBNpjTIKFYblZQAqTIs5yPGkGrPhqiU=;
+ b=eyJ1zYPz2bNvrF9RpczpTnJQFaPSpkzsrcYGpewnIPLOSnjIC5xcHf9Ys362zwQuLpSP
+ 74I2pf/lrBEFni//SWFhSubt+c5HC7s9QFDGJLHxvodH6nuSw5JSgZCry+6Tu+uMfmV5
+ U9XTlWS1AA9+FnrHgJyQn/9xfNxFRj8945k= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by m0001303.ppops.net with ESMTP id 2wdtbk30t9-3
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Thu, 21 Nov 2019 14:09:23 -0800
+Received: from ash-exhub102.TheFacebook.com (2620:10d:c0a8:82::f) by
+ ash-exhub102.TheFacebook.com (2620:10d:c0a8:82::f) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 21 Nov 2019 14:09:22 -0800
+Received: from NAM03-DM3-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.172) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Thu, 21 Nov 2019 14:09:22 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PALMcKdWa0nlhZmPm/+IvJeRScjqd1l+uv650jz4JldiCus7R1roxVZpeQTtxOMoK0NqB1azJUrwxnubl4gEfrvMSZtJz5MoBMnorKCtiNcTAUBNCGUGyfwO6yNdVIh4ZerPKQaQj3HiMhISSeL9zMylVXrnChxSqx/LnvQctlsYSuDzRNLxwnqeEwg/+me9EbjjkIYvZqIO3oKidjoRfiPscI8fISlWVuUjiAvNpgKIHKQblnKIhnGWjAoQ43QzaoXCBywCisQtQkiOaME2Qy50wpsJaxkeRefSeRkXtsEQU/jewiT8qC8cHxvQsIkzVEzXLnMl6zFRmFjuuixkMw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bNLZnYjP/wFIyBNpjTIKFYblZQAqTIs5yPGkGrPhqiU=;
+ b=PeQzjpciWMPiy4vgEu6JSvyXP4fv/3r4+NbEBswxMFtGQc1rFF7+WWxqdeXrhdT90enQiFUal2Qz//CBnl6nwBBxX338Y/HytPwdsSswUbZXFqfGSytGzanIubElYvEj6oBVQxtkHPVRRf0caO8mWWRQmX7vJ12Y59pwQajgA8q7dJSqeu7FJnzgQ4L2tYxJo73VAuJIhvVIb/2En/2pmsA1F6LM0SdWTOEPmWxSF75fYC41joK/6WeQsliLztm6P7eECP0ZGj6QylavdTO/4T9UGPIJxoOFx2YDthRbN2D2RWGHe2jnLHU8wHGruQmktN6EkruJc8Wlvu19rGfpYw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bNLZnYjP/wFIyBNpjTIKFYblZQAqTIs5yPGkGrPhqiU=;
+ b=BXdsM3g+IrE8qtQuzJ0RCNv8Tc0GHdunS3lYlYh96uY0jqMOKoWSJgP/nEp5TtE0hdTQs2tXR77ugi/5gaCl9Qch1Lyrb6F3lutZ9D+PKlEAqMAV5HIh5fG/1tlu2bV80IVQjXchx9zHMyt515KFX/QnS/PJZVLYekTWqSVskdo=
+Received: from BN8PR15MB2626.namprd15.prod.outlook.com (20.179.137.220) by
+ BN8PR15MB3458.namprd15.prod.outlook.com (20.179.75.222) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2451.30; Thu, 21 Nov 2019 22:09:19 +0000
+Received: from BN8PR15MB2626.namprd15.prod.outlook.com
+ ([fe80::50eb:bc03:b3de:375c]) by BN8PR15MB2626.namprd15.prod.outlook.com
+ ([fe80::50eb:bc03:b3de:375c%7]) with mapi id 15.20.2474.018; Thu, 21 Nov 2019
+ 22:09:19 +0000
+From:   Roman Gushchin <guro@fb.com>
+To:     Rik van Riel <riel@fb.com>
+CC:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "hannes@cmpxchg.org" <hannes@cmpxchg.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "longman@redhat.com" <longman@redhat.com>,
+        "shakeelb@google.com" <shakeelb@google.com>,
+        "vdavydov.dev@gmail.com" <vdavydov.dev@gmail.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: Re: WARNING bisected (was Re: [PATCH v7 08/10] mm: rework non-root
+ kmem_cache lifecycle management)
+Thread-Topic: WARNING bisected (was Re: [PATCH v7 08/10] mm: rework non-root
+ kmem_cache lifecycle management)
+Thread-Index: AQHVoF1eUJGIXl/jo02oA2+fhmBRU6eV2PaAgAAAgACAAB16AIAAINyAgAADcQCAABSlgA==
+Date:   Thu, 21 Nov 2019 22:09:19 +0000
+Message-ID: <20191121220913.GA6325@localhost.localdomain>
+References: <20190611231813.3148843-9-guro@fb.com>
+ <20191121111739.3054-1-borntraeger@de.ibm.com>
+ <20191121165807.GA201621@localhost.localdomain>
+ <c6a2696b-6e35-de7c-8387-b21285b6776f@de.ibm.com>
+ <20191121184524.GA4758@localhost.localdomain>
+ <30a2e4babdcb22974a0a5ae8c5e764d951eef7dc.camel@fb.com>
+ <20191121205520.GA5815@localhost.localdomain>
+In-Reply-To: <20191121205520.GA5815@localhost.localdomain>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MWHPR21CA0059.namprd21.prod.outlook.com
+ (2603:10b6:300:db::21) To BN8PR15MB2626.namprd15.prod.outlook.com
+ (2603:10b6:408:c7::28)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:180::af5a]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1de592d8-e0ac-4c0b-bad8-08d76ecf74e3
+x-ms-traffictypediagnostic: BN8PR15MB3458:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BN8PR15MB3458F393495B245323790508BE4E0@BN8PR15MB3458.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0228DDDDD7
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(346002)(376002)(366004)(39860400002)(396003)(189003)(199004)(6506007)(52116002)(66946007)(66446008)(33656002)(186003)(14454004)(6862004)(446003)(81156014)(4001150100001)(4326008)(386003)(81166006)(8676002)(2906002)(25786009)(8936002)(7736002)(6512007)(5660300002)(478600001)(6486002)(229853002)(86362001)(9686003)(11346002)(99286004)(1076003)(66476007)(66556008)(76176011)(6436002)(46003)(6246003)(71200400001)(64756008)(7416002)(71190400001)(54906003)(6636002)(256004)(14444005)(6116002)(316002)(305945005)(102836004);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR15MB3458;H:BN8PR15MB2626.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: r+b3eW3xYyllzryUvM7Me+dmwx0XwOH8hqM/j7LC5Fuki3Fc9cW5kMefFmktkKFTtuF6y9bN7/PZLYB1H1NBLu5xtTwDBCCqvtaWOlMEQMo/22E4XUDqaa3yoag0hul/nY0xa3LsvzPgNGkPOXhZj1SguM96wBErS3j08WkZa0qdYdB8vOjx7jTSd5QNL2aFd56b/RAtgnxKInCFAUPNXt59aRMt7eYSR4CT3XKpJiMRdpwiWP2cKfQO5Ecs9PqbQz/hh7jUhX54PBQG1rk3cUrtBlw14FOtCgMhYx4gkEzKrRFov7ygROsn6n5a46m0wt/yH+VcxK8CYYcZcxWNNETg521Z5bB8GdnUtv95bj8WjZmGNf46Yeoj6W9RtwYh2E+bsypKoPOk8jE+GNV4tsCXvYw8f7vSUuTRgMH8/EbCkEH/vtKrP1rW7FWLt6Pz
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <AA60E95E9191DE4B85FD79D491B82FDF@namprd15.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v10 4/6] x86/split_lock: Enumerate split lock detection if the IA32_CORE_CAPABILITIES MSR is not supported
-Date:   Thu, 21 Nov 2019 14:07:38 -0800
-Message-Id: <D4D6F51D-D791-4B78-8FCA-5D419B1D079C@amacapital.net>
-References: <1574297603-198156-5-git-send-email-fenghua.yu@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
-In-Reply-To: <1574297603-198156-5-git-send-email-fenghua.yu@intel.com>
-To:     Fenghua Yu <fenghua.yu@intel.com>
-X-Mailer: iPhone Mail (17A878)
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1de592d8-e0ac-4c0b-bad8-08d76ecf74e3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Nov 2019 22:09:19.6950
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jmnQYLxTQJ3nsaDiQHU+ZZTu6l+6l2qQGANALKQxEK2Cp/EH5/fDyQpUYa5Bz8//
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR15MB3458
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-21_06:2019-11-21,2019-11-21 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 bulkscore=0 phishscore=0
+ lowpriorityscore=0 suspectscore=0 clxscore=1015 priorityscore=1501
+ mlxlogscore=999 adultscore=0 spamscore=0 mlxscore=0 impostorscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1911210185
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-> On Nov 20, 2019, at 5:45 PM, Fenghua Yu <fenghua.yu@intel.com> wrote:
+On Thu, Nov 21, 2019 at 12:55:28PM -0800, Roman Gushchin wrote:
+> On Thu, Nov 21, 2019 at 12:43:01PM -0800, Rik van Riel wrote:
+> > On Thu, 2019-11-21 at 13:45 -0500, Roman Gushchin wrote:
+> > > On Thu, Nov 21, 2019 at 05:59:54PM +0100, Christian Borntraeger
+> > > wrote:
+> > > >=20
+> > > >=20
+> > > > Yes, rmmod has to be called directly after the guest shutdown to
+> > > > see the issue.
+> > > > See my 2nd mail.
+> > >=20
+> > > I see. Do you know, which kmem_cache it is? If not, can you, please,
+> > > figure it out?
+> > >=20
+> > > I tried to reproduce the issue, but wasn't successful so far. So I
+> > > wonder
+> > > what can make your case special.
+> >=20
+> > I do not know either, but have a guess.
+> >=20
+> > My guess would be that either the slab object or the
+> > slab page is RCU freed, and the kmem_cache destruction
+> > is called before that RCU callback has completed.
+> >=20
 >=20
-> =EF=BB=BFArchitecturally the split lock detection feature is enumerated by=
+> I've a reproducer, but it requires SLAB_TYPESAFE_BY_RCU to panic.
+> The only question is if it's the same or different issues.
+> As soon as I'll have a fix, I'll post it here to test.
 
-> IA32_CORE_CAPABILITIES MSR and future CPU models will indicate presence
-> of the feature by setting bit 5. But the feature is present in a few
-> older models where split lock detection is enumerated by the CPU models.
->=20
-> Use a "x86_cpu_id" table to list the older CPU models with the feature.
->=20
+Ah, no, the issue I've reproduced is already fixed by commit b749ecfaf6c5
+("mm: memcg/slab: fix panic in __free_slab() caused by premature memcg poin=
+ter release").
 
-This may need to be disabled if the HYPERVISOR bit is set.=
+Christian, can you, please, confirm that you have this one in your tree?
+
+Also, can you, please, provide you config?
+And you mentioned some panics, but didn't send any dmesg messages.
+Can you, please, provide them?
+
+Thanks!
