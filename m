@@ -2,148 +2,80 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 278BCC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:17:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD842C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:19:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE4C920672
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:17:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="eekO0u0S"
+	by mail.kernel.org (Postfix) with ESMTP id 9CDF020658
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:19:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727118AbfKUURS (ORCPT
+        id S1726802AbfKUUTC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 15:17:18 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:60694 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726293AbfKUURR (ORCPT
+        Thu, 21 Nov 2019 15:19:02 -0500
+Received: from mail-il1-f198.google.com ([209.85.166.198]:52866 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726293AbfKUUTC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 15:17:17 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xALKEbjE061861;
-        Thu, 21 Nov 2019 20:14:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=VXCOimzgvVy9KqhSDIxCVNWugmykimsVTHYCDeSsKHs=;
- b=eekO0u0SQlqpWrXPvS+FY2HW0Apsk31ygvow3cpbRhqS5OLGVb33b/6stY7qURXz6CSA
- 9ytPFwZ3KemwlteFWMkND0HjRwxWjE0UwZP2pmDxyRS7I93sw5g1GG+0ncNwKIzrZsC+
- fQgz8hpy74Y4IkXN6Nv/9R2tQod0nIaadLfJcV2UtyxvGODhyeb1+oiYapwXn5b4bvPV
- biezNGpmIhScJQT+ve8fk8barYDiOXjrazE7ooDmKKuSXkr0+MP9gxmRKrktPfEzIW0T
- v3Ey7e3NiJilfX9NeoBbMOZ3KVQUK0BrSaBZ4w5ArCkm8msZPWR+UojdYwD7+jgEX+TJ mg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2wa9rqxmyw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 21 Nov 2019 20:14:53 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xALKDHXn046274;
-        Thu, 21 Nov 2019 20:14:53 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2wd46yybg1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 21 Nov 2019 20:14:53 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xALKEicM028952;
-        Thu, 21 Nov 2019 20:14:46 GMT
-Received: from kadam (/41.210.146.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 21 Nov 2019 12:14:43 -0800
-Date:   Thu, 21 Nov 2019 23:14:34 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     syzbot <syzbot+3967c1caf256f4d5aefe@syzkaller.appspotmail.com>
-Cc:     alsa-devel@alsa-project.org, davem@davemloft.net,
-        dccp@vger.kernel.org, gerrit@erg.abdn.ac.uk,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        perex@perex.cz, syzkaller-bugs@googlegroups.com, tiwai@suse.com,
-        tiwai@suse.de, Eric Dumazet <edumazet@google.com>
-Subject: Re: KASAN: use-after-free Read in ccid_hc_tx_delete
-Message-ID: <20191121201433.GD617@kadam>
-References: <000000000000de3c7705746dcbb7@google.com>
- <0000000000002c243a0597dc8d9d@google.com>
+        Thu, 21 Nov 2019 15:19:02 -0500
+Received: by mail-il1-f198.google.com with SMTP id t23so3948031ila.19
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 12:19:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=Y1SOgO1vbqsOUPBquz7MWoLGB9Vn/Lm+PXrguH65k6c=;
+        b=ZJmM0uzoFVJzsx4JvxluJD+qHSB8Flgp2oAoxAnp7c4tJTZq90i5hn8M5bcV+Px1UH
+         c0iwqQNibgTsuAYnw7kn/J5LmprN/cSlXtI6zwAFeYtaBvehlvzQLHncgS/KHdc1KOMp
+         fhv5BCWxORletdOg3ck3rtF9OQiwPk5q2XMlIgpo7T6/gUXtAKO8aiq7gIOKJLsOd/ax
+         vQGP0bfACWFy2jfWE1ulGhDojAx3AEzwQqJVmee4djZ4gpJtYd1Ai91Ko5tIysDi3mEw
+         aEDO0hSiuUpUvv0mu3VH19JB2WobfZWa3JZ7EWMvyFUCE051Ozm019MLAhOOPe5tu99D
+         wlWA==
+X-Gm-Message-State: APjAAAU6FIzaJ64klml1fbPTC8Z4eyDdEwIZoiTbo/GlB9TyCZMuVbjI
+        gr5J5ykVSh+pJ30SdOfO3sc0RMslHCyxcmSiUO2G4GGH36FH
+X-Google-Smtp-Source: APXvYqwaEMl0Hp+7ruHPeLd8tBXlYivqUgbaT2MhzmNKW7nTuJ4raKuMZPqcGTl21/zLVSq9bhVj0KrakFYEQwXk0EWcQfBgJHfB
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0000000000002c243a0597dc8d9d@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9448 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1911210168
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9448 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1911210168
+X-Received: by 2002:a92:c6d0:: with SMTP id v16mr12024641ilm.274.1574367541228;
+ Thu, 21 Nov 2019 12:19:01 -0800 (PST)
+Date:   Thu, 21 Nov 2019 12:19:01 -0800
+In-Reply-To: <201911210931.DB5346C8@keescook>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000000a7dfc0597e10206@google.com>
+Subject: Re: general protection fault in tss_update_io_bitmap
+From:   syzbot <syzbot+81e6ff9d4cdb05fd4f5e@syzkaller.appspotmail.com>
+To:     adobriyan@gmail.com, ak@linux.intel.com, bigeasy@linutronix.de,
+        bp@alien8.de, fenghua.yu@intel.com, frederic@kernel.org,
+        hpa@zytor.com, keescook@chromium.org, kernelfans@gmail.com,
+        len.brown@intel.com, linux-kernel@vger.kernel.org,
+        longman@redhat.com, luto@kernel.org, mingo@redhat.com,
+        peterz@infradead.org, rafael.j.wysocki@intel.com, riel@surriel.com,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
+        tim.c.chen@linux.intel.com, tonywwang-oc@zhaoxin.com,
+        wang.yi59@zte.com.cn, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 07:00:00AM -0800, syzbot wrote:
-> syzbot has bisected this bug to:
-> 
-> commit f04684b4d85d6371126f476d3268ebf6a0bd57cf
-> Author: Dan Carpenter <dan.carpenter@oracle.com>
-> Date:   Thu Jun 21 08:07:21 2018 +0000
-> 
->     ALSA: lx6464es: Missing error code in snd_lx6464es_create()
-> 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10dd11cae00000
-> start commit:   eb6cf9f8 Merge tag 'arm64-fixes' of git://git.kernel.org/p..
-> git tree:       upstream
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=12dd11cae00000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=14dd11cae00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=c8970c89a0efbb23
-> dashboard link: https://syzkaller.appspot.com/bug?extid=3967c1caf256f4d5aefe
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11022ccd400000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=124581db400000
-> 
-> Reported-by: syzbot+3967c1caf256f4d5aefe@syzkaller.appspotmail.com
-> Fixes: f04684b4d85d ("ALSA: lx6464es: Missing error code in
-> snd_lx6464es_create()")
-> 
-> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+Hello,
 
-This crash isn't related to my commit, it's seems something specific to
-DCCP.
+syzbot has tested the proposed patch and the reproducer did not trigger  
+crash:
 
-My guess is that the fix is probably something like this.  The old sk
-and the new sk re-use the same newdp->dccps_hc_rx/tx_ccid pointers.
-The first sk destructor frees it and that causes a use after free when
-the second destructor tries to free it.
+Reported-and-tested-by:  
+syzbot+81e6ff9d4cdb05fd4f5e@syzkaller.appspotmail.com
 
-But I don't know DCCP code at all so I might be totally off and I
-haven't tested this at all...  It was just easier to write a patch than
-to try to explain in words.  Maybe we should clone the ccid instead of
-setting it to NULL.  Or I might be completely wrong.
+Tested on:
 
----
- net/dccp/minisocks.c | 2 ++
- 1 file changed, 2 insertions(+)
+commit:         e3cb0c71 x86/ioperm: Fix use of deprecated config option
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
+kernel config:  https://syzkaller.appspot.com/x/.config?x=1fc51b2845bfe6fc
+dashboard link: https://syzkaller.appspot.com/bug?extid=81e6ff9d4cdb05fd4f5e
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-diff --git a/net/dccp/minisocks.c b/net/dccp/minisocks.c
-index 25187528c308..4cbfcccbbbbb 100644
---- a/net/dccp/minisocks.c
-+++ b/net/dccp/minisocks.c
-@@ -98,6 +98,8 @@ struct sock *dccp_create_openreq_child(const struct sock *sk,
- 		newdp->dccps_timestamp_echo = dreq->dreq_timestamp_echo;
- 		newdp->dccps_timestamp_time = dreq->dreq_timestamp_time;
- 		newicsk->icsk_rto	    = DCCP_TIMEOUT_INIT;
-+		newdp->dccps_hc_rx_ccid     = NULL;
-+		newdp->dccps_hc_tx_ccid     = NULL;
- 
- 		INIT_LIST_HEAD(&newdp->dccps_featneg);
- 		/*
--- 
-2.11.0
-
-
-
-
+Note: testing is done by a robot and is best-effort only.
