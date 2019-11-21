@@ -2,136 +2,159 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD6BC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:39:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5582C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:41:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A40542089D
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:39:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 929BB20898
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:41:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="B3HCn4y8"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XRWfvtCE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726230AbfKUDji (ORCPT
+        id S1726500AbfKUDlB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 22:39:38 -0500
-Received: from mailout1.samsung.com ([203.254.224.24]:58789 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725842AbfKUDji (ORCPT
+        Wed, 20 Nov 2019 22:41:01 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:44414 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725819AbfKUDlB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 22:39:38 -0500
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20191121033934epoutp0198b100bb173c376332d25c53883d71f6~ZEGX5tyth1341313413epoutp01t
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 03:39:34 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20191121033934epoutp0198b100bb173c376332d25c53883d71f6~ZEGX5tyth1341313413epoutp01t
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1574307574;
-        bh=uQNbH50lNFfugAkg2yFVCKuYW7I5kKvXlaRcbbWS5PE=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=B3HCn4y85BRIz8YqC98ZJyfPmR5Eopx8DxzsZ0pcbwZv23nj1Sy8MBZLJPEwq8ALn
-         NIImVF3JPw2rgrBY0Dc2Iaao1yktrXJcYt+X4r85+4x9sHXAL4qNHXX3ZwQODOAm8E
-         JuIJ/wGZiB1Sin8lGdBtKIBM/rzEzYOFJh1s0RNs=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20191121033934epcas1p453727c81c1517e448da6431e4b29b161~ZEGXMrETe2622126221epcas1p4R;
-        Thu, 21 Nov 2019 03:39:34 +0000 (GMT)
-Received: from epsmges1p4.samsung.com (unknown [182.195.40.161]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 47JQKd21fpzMqYkd; Thu, 21 Nov
-        2019 03:39:33 +0000 (GMT)
-Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
-        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        CA.B1.04406.3F606DD5; Thu, 21 Nov 2019 12:39:31 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20191121033930epcas1p221152c49adc0bcc2a8d2664515dbcbd3~ZEGT5sI0q2663826638epcas1p2a;
-        Thu, 21 Nov 2019 03:39:30 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20191121033930epsmtrp125cd19ce6e3661c38e62fd26d702e51c~ZEGT5Ba2z1812818128epsmtrp1O;
-        Thu, 21 Nov 2019 03:39:30 +0000 (GMT)
-X-AuditID: b6c32a38-95fff70000001136-d5-5dd606f3a6b4
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        12.AF.03814.2F606DD5; Thu, 21 Nov 2019 12:39:30 +0900 (KST)
-Received: from DONAMJAEJEO06 (unknown [10.88.104.63]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20191121033930epsmtip2d8a298d0e2e602ae24814c235b2b4700~ZEGTwHdHB0367903679epsmtip2g;
-        Thu, 21 Nov 2019 03:39:30 +0000 (GMT)
-From:   "Namjae Jeon" <namjae.jeon@samsung.com>
-To:     =?windows-1257?Q?'Valdis_Kl=E7tnieks'?= <valdis.kletnieks@vt.edu>
-Cc:     "'Nikolay Borisov'" <nborisov@suse.com>,
-        <gregkh@linuxfoundation.org>, <hch@lst.de>, <linkinjeon@gmail.com>,
-        <Markus.Elfring@web.de>, <sj1557.seo@samsung.com>,
-        <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>
-In-Reply-To: <87255.1574306312@turing-police>
-Subject: RE: [PATCH v2 05/13] exfat: add file operations
-Date:   Thu, 21 Nov 2019 12:39:30 +0900
-Message-ID: <010201d5a01d$48493270$d8db9750$@samsung.com>
+        Wed, 20 Nov 2019 22:41:01 -0500
+Received: by mail-pj1-f68.google.com with SMTP id w8so801239pjh.11;
+        Wed, 20 Nov 2019 19:41:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=j2sIOAWSvpcv/m2cgkSSXwml8VEfhQygMxdbbJ2m/Dc=;
+        b=XRWfvtCERahEU9IT10r54RhM9sMtIofkQd4lVaVCCt5gYEdEK975a+bi0EGLvOCzbJ
+         LPTsAmDUxgtTB/mffMxzuuSAsH+A4md0y05Yepij6ZNI7OqrseVnzBalmZzYgA4HMHC7
+         b7EOsYHq09jJpfZoejvD9NYRk1Fa9tyEafbaXMKTlzsbpiRqW1WgOXvJ8NRFlXAcIfqI
+         7bkAhMSDp6eTmB62fK1pk3lYjHqCR1L3Vl4DEtbOXOEsmbv9iAnZYGOYJwgxR57dRyrA
+         s+VvOSKjNmPNozfQaGRbNtEdLvNmPCQ7Us3hm+KqXbo/KPqeDDCDXKyFmjbnm+hkqOsN
+         XnOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=j2sIOAWSvpcv/m2cgkSSXwml8VEfhQygMxdbbJ2m/Dc=;
+        b=IQFcxsYGNJ+rd82f47CZV4+fUoOBy1FiaP88sCZ70C8Ci89qIZo7PlqSFrw4fYlC5P
+         2RknjtK0vV8ARyA05qUcJOBeGkV6ioHPgHWIk9P3++tN7R8BjvE0C6DmwBE4WUhaTjj9
+         Qd3i2d3b+zJUZYmpuW3E67RVkXyWrU46/LEFL6qSdWUIlRwPTTybbFtGxKEG4Vx0p54i
+         icj9M4HVBVQyFpVr8knB+84E/L5Zkw1xUHODTv8tdphtTK3tuIf3Dq6iNLtEJx2NM42U
+         eqLSrBaY+nr/g+UEckp6Au6ZxqKl7uwYt2G9wFgsLS3rRrkGkAsASf5NQxkQX9Qyh997
+         x41Q==
+X-Gm-Message-State: APjAAAX8RNcxE6Q8SWI9saQpuwJF4v6FF27l69Fustnbf5oS+Uu7pthy
+        VCRRGj0Onxx1DoXNp680OaelK8iT
+X-Google-Smtp-Source: APXvYqwdJwsvC3LoRltY/ESqSe+FOR2qqKjgaAgG/SHOCdGjWFqMJrjNvRV6svePMpiJM/Z2uOttrQ==
+X-Received: by 2002:a17:902:8541:: with SMTP id d1mr194528plo.112.1574307659961;
+        Wed, 20 Nov 2019 19:40:59 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id h13sm941580pfr.98.2019.11.20.19.40.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 20 Nov 2019 19:40:59 -0800 (PST)
+Subject: Re: [PATCH] watchdog: make DesignWare watchdog allow users to set
+ bigger timeout value
+To:     "Wang, Peng 1. (NSB - CN/Hangzhou)" <peng.1.wang@nokia-sbell.com>
+Cc:     "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <13477f08400047c1b32030b2680a4241@nokia-sbell.com>
+ <20191120171512.GA28255@roeck-us.net>
+ <9128f42a3e4347f2adfccb8aa2833e2e@nokia-sbell.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <b0fcaae6-c9da-f551-5af4-ff112b08e851@roeck-us.net>
+Date:   Wed, 20 Nov 2019 19:40:58 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="windows-1257"
+In-Reply-To: <9128f42a3e4347f2adfccb8aa2833e2e@nokia-sbell.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 14.0
-Content-Language: ko
-Thread-Index: AQEo1XJlLzywHhHshRBLsQkFEP9+bwE2rzOUAX+3+6QCnhKN6gFMKmQnAnC4oSSopgQxUA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Tf0hTURTHu3tvb2/R4rWsDpNqvTJKWO41Z89qEfSDUUJSEWGIvfTprO1t
-        7U3J+keyZkloUotcSj+kKAuMNDXTtrQI+2FkvzBTi6IflqmzsjCqzbdi/33uued77vecey+J
-        qZsJDZktuHinwFlpYjxe1zpfpxsmnqXqm0sptqCymmAvXLwtY593v8DYpuY2nH3cWE6wf7zv
-        5eyfz/twtvb3LTnbMTCIL1ear3m7FWZfxSWF+XpnPmEurq1C5urap7h5+MoMc0v9Z8Lc9a4O
-        TyZTrEstPJfBO7W8kG7PyBayTPTaDWkr0owJekbHJLKLaK3A2XgTvTIpWbc62xr0R2tzOWtO
-        MJTMiSIdt2yp057j4rUWu+gy0bwjw+pg9I4FImcTc4SsBel222JGr19oDGZutVp6igdwx0/Z
-        rpvPbsny0VFZEVKSQMXDSNu5MVZTDQj8pVuL0PggBxC883hwafEdgae68b/ixaefhLTRjODq
-        6FlMkvch6GlPDDFB6eD3Lx8R4ihqFVS4C1BIgFEfEbReagyWJUllMKnLYwrhZIqF24VzQ+k4
-        FQPtnld4iFVUIhy+XhPmSdBW9naMMUoP/vtnkcQzob6/HJO8aaHhwadwPApOHHRjkoVNcHNv
-        DRayAFSJAnpLzxOSYCWUjR5DEk+Gvju1Cok18LHErQh5A2oPDPnC9Q8g+DBiktgAndWX5RLP
-        gmujFeFzJ8KXb4fkklQFB9xqKSUGijtawyOMhqLCQcVhRHsjOvNGdOaN6Mwb0c0phFehqbxD
-        tGXxIuOIj7zrK2js6cayDaipPakFUSSiJ6gs856mquVcrphna0FAYnSUqun5k1S1KoPL2807
-        7WnOHCsvtiBjcPKlmGZKuj34EQRXGmNcaDAY2PiERQlGAz1NRf54lKqmsjgXv4PnHbzzn05G
-        KjX5qJLxz/Br1BCzvFK+ZqBbk1lmeTTT81Lw5cb2REcfT/jatH1cXpQfqxS2nFSeiQukFBew
-        XwuHc/e/sVYFyG+ZJTcuJvb2Ne7HV21rD6z3uYf7M2fPuZc+WFJjz9t8mjqy5PW6O9OHuoeS
-        7z7u7awfIR/2k2VxOwNdDn35KwY2dtC4aOGYWMwpcn8B8MTEctADAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrOIsWRmVeSWpSXmKPExsWy7bCSvO4ntmuxBt92KVo0L17PZrFy9VEm
-        i+t3bzFb7Nl7ksXi8q45bBb/Zz1ntfj/poXFYsu/I6wWl95/YHHg9Ng56y67x/65a9g9dt9s
-        YPPo27KK0WP9lqssHp83yXkc2v6GzeP2s20sARxRXDYpqTmZZalF+nYJXBn3+t6zFPxkqjh4
-        7QhTA+MUpi5GTg4JAROJW69/snUxcnEICexmlNj9bQ0jREJa4tiJM8xdjBxAtrDE4cPFEDUv
-        GCW2zl7JDFLDJqAr8e/PfjYQW0TAVWJuWzNYL7PAR0aJq3s5IRr2MEncXnuQFWQQJ1DD7am2
-        IKawgIXE0XY1kHIWAVWJc1MfsIDYvAKWEhN2b4ayBSVOznzCAjHSSGJS53smCFteYvvbOcwQ
-        ZypI7Dj7GmqtiMTszjZmiHPCJA42bWaewCg8C8moWUhGzUIyahaS9gWMLKsYJVMLinPTc4sN
-        C4zyUsv1ihNzi0vz0vWS83M3MYKjT0trB+OJE/GHGAU4GJV4eDM0rsYKsSaWFVfmHmKU4GBW
-        EuHdc/1KrBBvSmJlVWpRfnxRaU5q8SFGaQ4WJXFe+fxjkUIC6YklqdmpqQWpRTBZJg5OqQbG
-        6U1HVRTfrdllevn9wdwvU39ZS/eKpbgeeO55pGO65q+nFrseP7/1/k/ZlxCXhT6rtVnflnaF
-        PGNIt28q7Ijq/SXkLvDrmOHqklvPLuz6opuWvDdmk18tV9hK14BjZeWrfSbrTzZJ0FVbPE9j
-        RbpR46cp7O4ajjc6CzNEt3JevCyh8i/KUeiVEktxRqKhFnNRcSIAhw2EQboCAAA=
-X-CMS-MailID: 20191121033930epcas1p221152c49adc0bcc2a8d2664515dbcbd3
-X-Msg-Generator: CA
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20191119071404epcas1p4f8df45690c07c4dd032af9cbfb5efcc6
-References: <20191119071107.1947-1-namjae.jeon@samsung.com>
-        <CGME20191119071404epcas1p4f8df45690c07c4dd032af9cbfb5efcc6@epcas1p4.samsung.com>
-        <20191119071107.1947-6-namjae.jeon@samsung.com>
-        <398eeca9-e59f-385b-791d-561e56567026@suse.com>
-        <00d201d5a00c$e6273ac0$b275b040$@samsung.com>
-        <87255.1574306312@turing-police>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 11/20/19 5:29 PM, Wang, Peng 1. (NSB - CN/Hangzhou) wrote:
+> Hi Guenter,
 > 
-> On Thu, 21 Nov 2019 10:42:13 +0900, "Namjae Jeon" said:
+> Thank you for your time.
+> - I will remove the unnecessary {}
+> - wdd->max_hw_heartbeat_ms is the max timeout value which HW can support, this value is limited according to the input clock, say. It only supports 20 seconds, if users requires to set timeout to be say. 60 seconds, the watchdog device driver 'watchdog_dev.c' checks if wdd->timeout is bigger than wdd->max_hw_heartbeat_ms, if yes, watchdog_dev.c feeds the watchdog by a worker queue itself to help to feed the watchdog before 60 seconds elapse. Here the issue of dw_wdt.c is that, the original codes update wdd->timeout to the value which HW can support, which means if users requires 60 seconds to be the timeout, then dw_wdt.c updates the timeout value to 20 seconds, this makes the "feeding helper" mechanism in watchdog_dev.c not take effect. That's why I add this check.
 > 
-> > > > +		if (clu.flags == 0x03) {
-> > >
-> > > That 0x03 is magic constant, better define actual flags and check
-> > > clu.flag == (FLAG1|FLAG2)
-> > Okay, Will fix it on v4.
+
+Yes, I understand you need a check. What I am saying is that the check is wrong.
+
+You need something like
+
+	if (top_s > DW_WDT_MAX_TOP)
+		wdt->timeout = top_s;
+	else
+		wdt->timeout = dw_wdt_top_in_seconds(dw_wdt, top_val);
+
+Guenter
+
+> Thanks,
+> Peng Wang
 > 
-> Make sure you catch all the cases.  I seem to remember a lot of 0x01's
-> in the code as well....
-Yes, I know.
-Thanks!
+> -----Original Message-----
+> From: Guenter Roeck [mailto:groeck7@gmail.com] On Behalf Of Guenter Roeck
+> Sent: Thursday, November 21, 2019 1:15 AM
+> To: Wang, Peng 1. (NSB - CN/Hangzhou) <peng.1.wang@nokia-sbell.com>
+> Cc: wim@linux-watchdog.org; linux-watchdog@vger.kernel.org; linux-kernel@vger.kernel.org
+> Subject: Re: [PATCH] watchdog: make DesignWare watchdog allow users to set bigger timeout value
+> 
+> On Wed, Nov 20, 2019 at 10:07:57AM +0000, Wang, Peng 1. (NSB - CN/Hangzhou) wrote:
+>>  From 1d051b7c081083751dc0bab97d3ab9efbba0f4a7 Mon Sep 17 00:00:00 2001
+>> From: Peng Wang <peng.1.wang@nokia-sbell.com>
+>> Date: Wed, 20 Nov 2019 15:12:59 +0800
+>> Subject: [PATCH] watchdog: make DesignWare watchdog allow users to set
+>> bigger  timeout value
+>>
+>> watchdog_dev.c provides means to allow users to set bigger timeout
+>> value than HW can support, make DesignWare watchdog align with this.
+>>
+>> Signed-off-by: Peng Wang <peng.1.wang@nokia-sbell.com>
+>> ---
+>>   drivers/watchdog/dw_wdt.c | 11 +++++++++--
+>>   1 file changed, 9 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c
+>> index fef7c61..8911e5e 100644
+>> --- a/drivers/watchdog/dw_wdt.c
+>> +++ b/drivers/watchdog/dw_wdt.c
+>> @@ -113,8 +113,15 @@ static int dw_wdt_set_timeout(struct watchdog_device *wdd, unsigned int top_s)
+>>   	 */
+>>   	writel(top_val | top_val << WDOG_TIMEOUT_RANGE_TOPINIT_SHIFT,
+>>   	       dw_wdt->regs + WDOG_TIMEOUT_RANGE_REG_OFFSET);
+>> -
+>> -	wdd->timeout = dw_wdt_top_in_seconds(dw_wdt, top_val);
+>> +
+>> +    /*
+>> +     * In case users set bigger timeout value than HW can support,
+>> +     * kernel(watchdog_dev.c) helps to feed watchdog before
+>> +     * wdd->timeout
+>> +     */
+>> +    if ( wdd->timeout * 1000 <= wdd->max_hw_heartbeat_ms ) {
+>> +	    wdd->timeout = dw_wdt_top_in_seconds(dw_wdt, top_val);
+>> +    }
+> 
+> { } is unnecessary here. Also, the above code compares the _old_ timeout againt the maximum supported timeout, which doesn't look correct.
+> 
+> Thanks,
+> Guenter
+> 
+>>   
+>>   	return 0;
+>>   }
+>> --
+>> 1.8.3.1
+>>
+> 
 
