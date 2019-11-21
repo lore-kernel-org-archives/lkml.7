@@ -2,164 +2,209 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BB27C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 15:25:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90058C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 15:25:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 720A820674
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 15:25:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EC7920674
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 15:25:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BZyUrSto"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbfKUPZN (ORCPT
+        id S1727126AbfKUPZ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 10:25:13 -0500
-Received: from mail-il1-f198.google.com ([209.85.166.198]:36715 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726613AbfKUPZM (ORCPT
+        Thu, 21 Nov 2019 10:25:26 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:60737 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726689AbfKUPZZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 10:25:12 -0500
-Received: by mail-il1-f198.google.com with SMTP id m16so3241817ilh.3
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 07:25:10 -0800 (PST)
+        Thu, 21 Nov 2019 10:25:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574349924;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=kBm3B1uW0ATy8DLnD/N50So/7howYiU9bWi3eGPQ8KQ=;
+        b=BZyUrSto5o2CWfb2u7Au4/2bJfT9L7J+OoaA3WWxf0XbhkePDBeJq6b4l0XD3z4mBoW/eM
+        wHbGEWik78dbrFTdjTsO+3MR2dsXszCjFxy5IjyPMPp0ka+yufqtQcy5zoWq47rG5qIUjO
+        NQJqbkatmPhXdV3+dtl4TYJ1j9CNAxQ=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-377-KJtjaTdLMnm4F1RcTtcCkw-1; Thu, 21 Nov 2019 10:25:21 -0500
+Received: by mail-wm1-f70.google.com with SMTP id g8so1701781wmg.6
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 07:25:21 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=5/Y0Vx39t23ptU6jPQhVbmYRjMhm1ty9Ei09eq/gC9A=;
-        b=MT6x3HmEvBUVyFh9J/DgpBuFRTLAvllNDkwfY4zVEocihOqZnsmeBZXzNLeuVI/T7F
-         dUPRSfLOSyH3rsiOFAHaBw6oShBP/2glkaTybOXzVRkxz4cXEQQ5Ol1SbgKezgTvZWip
-         LCCicg9dabXujY+uwlpb0aFEJJ3KVdJR5Uvs5QXURInylSu5nr0PEhcTnL57bBwTFejZ
-         lmqJ6pTIZ7X9iiIjTgYD+kVOeXDnGzU8+fsz+PgMZLS68RPSU1go2Hxc9pxDmSgRj3ID
-         BnDPV/WSZyjf2fVned97mO7VEoQBDHLUaByGOvkd8GeSx5RU99Cn3CrfEpb7AaK5Eu27
-         ojZA==
-X-Gm-Message-State: APjAAAWMFKoKZr7fVKm5w3c/mXWs7F/g3bcARLn4aW92H0WaWDOb3qfN
-        e+OowQPLJIbtZWstXftMiXJnG3zrQ1Mx38a57yHGrxSV9wRS
-X-Google-Smtp-Source: APXvYqx24QzbX7sKyq85/7BIRL34ERuzFmfT0f4o2upQazdDIQDaiWYBiXJvRiaFLTa7nbXlURC2Xd8wrVjbHDvIHveClSU3Tblu
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Luh/FRsdrygdtryuzjcgAMyRo3l6t+Zhjzz9aLHJ0EU=;
+        b=APbfrbEm7lGQ0dna3vFRmC+Hr8r2vJ43EPwY+Y65jNfqe9ubO1psdYmkvq/lie578I
+         WVYZxPt9vcwFfyGqrkP9702Ro9Z4ju3JPRldUxbfED+1Wb8L8+WAiISFU+EJ9idHCEaK
+         RWDs/qDmEKp2vj0PkMP8sJdVAQz379q2qWt3vvf0wyNpny+tYOf4NY6/sEPpObWloi3e
+         bAzQtMFD/dnEK362l6XNkAz1aF0Cwm9gvkL9Nt1yt0f6V74i8A9UMI8e5Qtqnd2ob67n
+         Ft/YC4lU6MirWvZwiVl1w6+NQZwMP0PE6MchZy++/yvwuxntFmQ0qqbEla8gwmjR+Lc1
+         kQoQ==
+X-Gm-Message-State: APjAAAV3ogwaBYUkjyYaSI7eGPuOb5V3jCN8MDU+ZEQsgN+uFXnsKQnN
+        jsEBhkUxl0/AnId6S1n6II9hpN5/I4Wjyou0uS072bYo+QZX6CXgPFci3abhxYqGdbc7LENDzR/
+        GNyTJHmHHiBLMTk+buytVtQV3
+X-Received: by 2002:a05:600c:2410:: with SMTP id 16mr10111957wmp.36.1574349920265;
+        Thu, 21 Nov 2019 07:25:20 -0800 (PST)
+X-Google-Smtp-Source: APXvYqw6kCXHNhqyKfZOnNRC+6rkdzH+5TteBCvmm65ewNpd7LRKY0hfW8ym9t1TkIRcJ7FqzYeccA==
+X-Received: by 2002:a05:600c:2410:: with SMTP id 16mr10111918wmp.36.1574349919938;
+        Thu, 21 Nov 2019 07:25:19 -0800 (PST)
+Received: from steredhat (a-nu5-32.tin.it. [212.216.181.31])
+        by smtp.gmail.com with ESMTPSA id w17sm3864052wrt.45.2019.11.21.07.25.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Nov 2019 07:25:19 -0800 (PST)
+Date:   Thu, 21 Nov 2019 16:25:17 +0100
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Stefan Hajnoczi <stefanha@gmail.com>
+Cc:     netdev@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        Dexuan Cui <decui@microsoft.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Jorgen Hansen <jhansen@vmware.com>
+Subject: Re: [PATCH net-next 4/6] vsock: add vsock_loopback transport
+Message-ID: <20191121152517.zfedz6hg6ftcb2ks@steredhat>
+References: <20191119110121.14480-1-sgarzare@redhat.com>
+ <20191119110121.14480-5-sgarzare@redhat.com>
+ <20191121093458.GB439743@stefanha-x1.localdomain>
+ <20191121095948.bc7lc3ptsh6jxizw@steredhat>
 MIME-Version: 1.0
-X-Received: by 2002:a5e:c314:: with SMTP id a20mr8275088iok.300.1574349909859;
- Thu, 21 Nov 2019 07:25:09 -0800 (PST)
-Date:   Thu, 21 Nov 2019 07:25:09 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000002129080597dce70d@google.com>
-Subject: general protection fault in snd_usb_create_mixer
-From:   syzbot <syzbot+a36ab65c6653d7ccdd62@syzkaller.appspotmail.com>
-To:     alsa-devel@alsa-project.org, andreyknvl@google.com,
-        benquike@gmail.com, dan.carpenter@oracle.com, g@b4.vu,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, perex@perex.cz,
-        syzkaller-bugs@googlegroups.com, tiwai@suse.com, wang6495@umn.edu
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <20191121095948.bc7lc3ptsh6jxizw@steredhat>
+X-MC-Unique: KJtjaTdLMnm4F1RcTtcCkw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Thu, Nov 21, 2019 at 10:59:48AM +0100, Stefano Garzarella wrote:
+> On Thu, Nov 21, 2019 at 09:34:58AM +0000, Stefan Hajnoczi wrote:
+> > On Tue, Nov 19, 2019 at 12:01:19PM +0100, Stefano Garzarella wrote:
+> >=20
+> > Ideas for long-term changes below.
+> >=20
+> > Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+> >=20
+>=20
+> Thanks for reviewing!
+>=20
+> > > diff --git a/MAINTAINERS b/MAINTAINERS
+> > > index 760049454a23..c2a3dc3113ba 100644
+> > > --- a/MAINTAINERS
+> > > +++ b/MAINTAINERS
+> > > @@ -17239,6 +17239,7 @@ F:=09net/vmw_vsock/diag.c
+> > >  F:=09net/vmw_vsock/af_vsock_tap.c
+> > >  F:=09net/vmw_vsock/virtio_transport_common.c
+> > >  F:=09net/vmw_vsock/virtio_transport.c
+> > > +F:=09net/vmw_vsock/vsock_loopback.c
+> > >  F:=09drivers/net/vsockmon.c
+> > >  F:=09drivers/vhost/vsock.c
+> > >  F:=09tools/testing/vsock/
+> >=20
+> > At this point you are most active in virtio-vsock and I am reviewing
+> > patches on a best-effort basis.  Feel free to add yourself as
+> > maintainer.
+> >=20
+>=20
+> Sure, I'd be happy to maintain it.
+>=20
+> > > diff --git a/net/vmw_vsock/vsock_loopback.c b/net/vmw_vsock/vsock_loo=
+pback.c
+> > > new file mode 100644
+> > > index 000000000000..3d1c1a88305f
+> > > --- /dev/null
+> > > +++ b/net/vmw_vsock/vsock_loopback.c
+> > > @@ -0,0 +1,217 @@
+> > > +// SPDX-License-Identifier: GPL-2.0-only
+> > > +/*
+> > > + * loopback transport for vsock using virtio_transport_common APIs
+> > > + *
+> > > + * Copyright (C) 2013-2019 Red Hat, Inc.
+> > > + * Author: Asias He <asias@redhat.com>
+> > > + *         Stefan Hajnoczi <stefanha@redhat.com>
+> > > + *         Stefano Garzarella <sgarzare@redhat.com>
+> > > + *
+> > > + */
+> > > +#include <linux/spinlock.h>
+> > > +#include <linux/module.h>
+> > > +#include <linux/list.h>
+> > > +#include <linux/virtio_vsock.h>
+> >=20
+> > Is it time to rename the generic functionality in
+> > virtio_transport_common.c?  This doesn't have anything to do with virti=
+o
+> > :).
+> >=20
+>=20
+> Completely agree, new transports could use it to handle the protocol with=
+out
+> reimplementing things already done.
+>=20
+> > > +
+> > > +static struct workqueue_struct *vsock_loopback_workqueue;
+> > > +static struct vsock_loopback *the_vsock_loopback;
+> >=20
+> > the_vsock_loopback could be a static global variable (not a pointer) an=
+d
+> > vsock_loopback_workqueue could also be included in the struct.
+> >=20
+> > The RCU pointer is really a way to synchronize vsock_loopback_send_pkt(=
+)
+> > and vsock_loopback_cancel_pkt() with module exit.  There is no other
+> > reason for using a pointer.
+> >=20
+> > It's cleaner to implement the synchronization once in af_vsock.c (or
+> > virtio_transport_common.c) instead of making each transport do it.
+> > Maybe try_module_get() and related APIs provide the necessary semantics
+> > so that core vsock code can hold the transport module while it's being
+> > used to send/cancel a packet.
+>=20
+> Right, the module cannot be unloaded until open sockets, so here the
+> synchronization is not needed.
+>=20
+> The synchronization come from virtio-vsock device that can be
+> hot-unplugged while sockets are still open, but that can't happen here.
+>=20
+> I will remove the pointers and RCU in the v2.
+>=20
+> Can I keep your R-b or do you prefer to watch v2 first?
+>=20
+> >=20
+> > > +MODULE_ALIAS_NETPROTO(PF_VSOCK);
+> >=20
+> > Why does this module define the alias for PF_VSOCK?  Doesn't another
+> > module already define this alias?
+>=20
+> It is a way to load this module when PF_VSOCK is starting to be used.
+> MODULE_ALIAS_NETPROTO(PF_VSOCK) is already defined in vmci_transport
+> and hyperv_transport. IIUC it is used for the same reason.
+>=20
+> In virtio_transport we don't need it because it will be loaded when
+> the PCI device is discovered.
+>=20
+> Do you think there's a better way?
+> Should I include the vsock_loopback transport directly in af_vsock
+> without creating a new module?
+>=20
 
-syzbot found the following crash on:
+That last thing I said may not be possible:
+I remembered that I tried, but DEPMOD found a cyclic dependency because
+vsock_transport use virtio_transport_common that use vsock, so if I
+include vsock_transport in the vsock module, DEPMOD is not happy.
 
-HEAD commit:    46178223 usb: gadget: add raw-gadget interface
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=176f9836e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=99c88c44660624e7
-dashboard link: https://syzkaller.appspot.com/bug?extid=a36ab65c6653d7ccdd62
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1447d3bae00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17ef3a86e00000
+Do you think it's okay in this case to keep MODULE_ALIAS_NETPROTO(PF_VSOCK)
+or is there a better way?
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+a36ab65c6653d7ccdd62@syzkaller.appspotmail.com
+Thanks,
+Stefano
 
-usb 1-1: 208:241 : does not exist
-usb 1-1: 208:242 : does not exist
-usb 1-1: 208:243 : does not exist
-usb 1-1: 208:244 : does not exist
-usb 1-1: 208:245 : does not exist
-usb 1-1: 208:246 : does not exist
-usb 1-1: 208:247 : does not exist
-usb 1-1: 208:248 : does not exist
-usb 1-1: 208:249 : does not exist
-usb 1-1: 208:250 : does not exist
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] SMP KASAN
-CPU: 1 PID: 22 Comm: kworker/1:1 Not tainted 5.4.0-rc6+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-RIP: 0010:snd_usb_mixer_controls_badd sound/usb/mixer.c:2931 [inline]
-RIP: 0010:snd_usb_create_mixer+0xbb9/0x1890 sound/usb/mixer.c:3441
-Code: ee e8 9b 23 a6 fc 41 39 ee 74 a4 e8 a1 22 a6 fc 48 8b 7c 24 28 89 ee  
-e8 25 59 b4 fe 48 8d 78 10 48 89 c3 48 89 f8 48 c1 e8 03 <42> 0f b6 04 28  
-84 c0 74 08 3c 03 0f 8e 2f 09 00 00 8b 6b 10 bf 01
-RSP: 0018:ffff8881d932f0a0 EFLAGS: 00010202
-RAX: 0000000000000002 RBX: 0000000000000000 RCX: ffffffff834c5dac
-RDX: 0000000000000000 RSI: ffffffff834c5e1b RDI: 0000000000000010
-RBP: 0000000000000021 R08: ffff8881da24e000 R09: fffffbfff11aadb5
-R10: fffffbfff11aadb4 R11: ffffffff88d56da7 R12: 00000000000000da
-R13: dffffc0000000000 R14: 00000000000000d0 R15: 0000000000000000
-FS:  0000000000000000(0000) GS:ffff8881db300000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000000000043f100 CR3: 0000000006c21000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-  usb_audio_probe+0xc76/0x2010 sound/usb/card.c:653
-  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
-  really_probe+0x281/0x6d0 drivers/base/dd.c:548
-  driver_probe_device+0x104/0x210 drivers/base/dd.c:721
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
-  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
-  __device_attach+0x217/0x360 drivers/base/dd.c:894
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
-  device_add+0xae6/0x16f0 drivers/base/core.c:2202
-  usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
-  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
-  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
-  really_probe+0x281/0x6d0 drivers/base/dd.c:548
-  driver_probe_device+0x104/0x210 drivers/base/dd.c:721
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
-  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
-  __device_attach+0x217/0x360 drivers/base/dd.c:894
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
-  device_add+0xae6/0x16f0 drivers/base/core.c:2202
-  usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2537
-  hub_port_connect drivers/usb/core/hub.c:5184 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5324 [inline]
-  port_event drivers/usb/core/hub.c:5470 [inline]
-  hub_event+0x1df8/0x3800 drivers/usb/core/hub.c:5552
-  process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
-  worker_thread+0x96/0xe20 kernel/workqueue.c:2415
-  kthread+0x318/0x420 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-Modules linked in:
----[ end trace 1d30a29898ec11e8 ]---
-RIP: 0010:snd_usb_mixer_controls_badd sound/usb/mixer.c:2931 [inline]
-RIP: 0010:snd_usb_create_mixer+0xbb9/0x1890 sound/usb/mixer.c:3441
-Code: ee e8 9b 23 a6 fc 41 39 ee 74 a4 e8 a1 22 a6 fc 48 8b 7c 24 28 89 ee  
-e8 25 59 b4 fe 48 8d 78 10 48 89 c3 48 89 f8 48 c1 e8 03 <42> 0f b6 04 28  
-84 c0 74 08 3c 03 0f 8e 2f 09 00 00 8b 6b 10 bf 01
-RSP: 0018:ffff8881d932f0a0 EFLAGS: 00010202
-RAX: 0000000000000002 RBX: 0000000000000000 RCX: ffffffff834c5dac
-RDX: 0000000000000000 RSI: ffffffff834c5e1b RDI: 0000000000000010
-RBP: 0000000000000021 R08: ffff8881da24e000 R09: fffffbfff11aadb5
-R10: fffffbfff11aadb4 R11: ffffffff88d56da7 R12: 00000000000000da
-R13: dffffc0000000000 R14: 00000000000000d0 R15: 0000000000000000
-FS:  0000000000000000(0000) GS:ffff8881db300000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000000000043f100 CR3: 0000000006c21000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
