@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 034B8C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:24:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4E5CC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:24:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAFEF20721
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:24:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A2F220721
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:24:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574306669;
-	bh=7A4U/YUdzOb9u4gB3EqFDEwOe4mEVMCRR5zz4OrpPuE=;
+	s=default; t=1574306679;
+	bh=89IjGbwB0gjkHcS+1oER2cFFDzTzslXVgJDvMKoYmNg=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=1QXViX4AUn7wc8B+sd6w2KhfNLIdQYBGqr0JEvijlqNGkarN8z84TTghxcKANE8cV
-	 /3FNKAOhzDR1oHeWLCBGFyfTVeXc9sf8l7ShY2aGv0qlKRCKYmM0BsCq4908jU/M8W
-	 NPBAKamCVBdRHG+NbD60KZtbkS5/IJu4ZmusDg/k=
+	b=bmhbje5E8Fq5+tZvOkOt8fsqO5j79BEu92YE4u/qO/S0h/vSAQBS1va8gB7Z7YElg
+	 RRVDiGL5wpjRVytSXwPnHyOsORw4JS+66TJsbQ1uDR8SX93yeTUJ452rCLywsgsqxG
+	 5NlQ7X6ECkQUddLVXkd/t4bbab0iGpzSw1jBLflU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbfKUDY2 (ORCPT
+        id S1726927AbfKUDYi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 22:24:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37102 "EHLO mail.kernel.org"
+        Wed, 20 Nov 2019 22:24:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726613AbfKUDY2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 22:24:28 -0500
+        id S1725936AbfKUDYh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 22:24:37 -0500
 Received: from PC-kkoz.proceq.com (unknown [213.160.61.66])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C41220721;
-        Thu, 21 Nov 2019 03:24:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB0F920721;
+        Thu, 21 Nov 2019 03:24:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574306666;
-        bh=7A4U/YUdzOb9u4gB3EqFDEwOe4mEVMCRR5zz4OrpPuE=;
+        s=default; t=1574306676;
+        bh=89IjGbwB0gjkHcS+1oER2cFFDzTzslXVgJDvMKoYmNg=;
         h=From:To:Cc:Subject:Date:From;
-        b=meWYwrnMFEEau1zZIWSMYUpeI989/SREHqOglGxwN/8pBTo2r5yfZyMtVh/LknWbS
-         Ddxbc+9dCI9hrqF5iF6Lvt9Wfqmb96U89ILyuhcM+x6lisMkUjX8Od1NFac6rKVOpl
-         uvyoa41NBax4vnW0a/P05XqilcjXEtHCs6wjYqRQ=
+        b=RO7BkHV2hAfPUnQvXNSQoIwA6Wr6b80ynQDSVbe7nFH0V9eZYuzZSsIUiGxJyXlCo
+         JwSDv5ytfL1IssVGdQVlhA73FyOW4ziH9N7xKNmZzEhIGsuO9uVtxIje7wtjwH6DnH
+         8Ajx0F6Pcn1ZZu8g/ALWExQ0vTWFiiqT9ccPKI3k=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Jiri Kosina <trivial@kernel.org>, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
+        kernel-janitors@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH] lib: Fix Kconfig indentation
-Date:   Thu, 21 Nov 2019 04:24:20 +0100
-Message-Id: <1574306660-27099-1-git-send-email-krzk@kernel.org>
+Subject: [PATCH] init: Fix Kconfig indentation
+Date:   Thu, 21 Nov 2019 04:24:30 +0100
+Message-Id: <1574306670-30234-1-git-send-email-krzk@kernel.org>
 X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -63,364 +66,147 @@ Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Changes since v1:
 1. Fix also 7-space and tab+1 space indentation issues.
 ---
- lib/Kconfig       |  18 +++---
- lib/Kconfig.debug | 162 +++++++++++++++++++++++++++---------------------------
- lib/Kconfig.kgdb  |  16 +++---
- 3 files changed, 98 insertions(+), 98 deletions(-)
+ init/Kconfig | 76 ++++++++++++++++++++++++++++++------------------------------
+ 1 file changed, 38 insertions(+), 38 deletions(-)
 
-diff --git a/lib/Kconfig b/lib/Kconfig
-index 6d7c5877c9f1..4b022bb2cb5d 100644
---- a/lib/Kconfig
-+++ b/lib/Kconfig
-@@ -522,7 +522,7 @@ config NLATTR
- # Generic 64-bit atomic support is selected if needed
- #
- config GENERIC_ATOMIC64
+diff --git a/init/Kconfig b/init/Kconfig
+index ff15a3c71176..c28cd305b496 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -146,13 +146,13 @@ config LOCALVERSION_AUTO
+ 	  which is done within the script "scripts/setlocalversion".)
+ 
+ config BUILD_SALT
+-       string "Build ID Salt"
+-       default ""
+-       help
+-          The build ID is used to link binaries and their debug info. Setting
+-          this option will use the value in the calculation of the build id.
+-          This is mostly useful for distributions which want to ensure the
+-          build is unique between builds. It's safe to leave the default.
++	string "Build ID Salt"
++	default ""
++	help
++	  The build ID is used to link binaries and their debug info. Setting
++	  this option will use the value in the calculation of the build id.
++	  This is mostly useful for distributions which want to ensure the
++	  build is unique between builds. It's safe to leave the default.
+ 
+ config HAVE_KERNEL_GZIP
+ 	bool
+@@ -818,7 +818,7 @@ menuconfig CGROUPS
+ if CGROUPS
+ 
+ config PAGE_COUNTER
 -       bool
 +	bool
  
- config LRU_CACHE
- 	tristate
-@@ -572,7 +572,7 @@ config OID_REGISTRY
- 	  Enable fast lookup object identifier registry.
- 
- config UCS2_STRING
--        tristate
-+	tristate
- 
- #
- # generic vdso
-@@ -584,16 +584,16 @@ source "lib/fonts/Kconfig"
- config SG_SPLIT
- 	def_bool n
+ config MEMCG
+ 	bool "Memory controller"
+@@ -1311,9 +1311,9 @@ menuconfig EXPERT
+ 	select DEBUG_KERNEL
  	help
--	 Provides a helper to split scatterlists into chunks, each chunk being
--	 a scatterlist. This should be selected by a driver or an API which
--	 whishes to split a scatterlist amongst multiple DMA channels.
-+	  Provides a helper to split scatterlists into chunks, each chunk being
-+	  a scatterlist. This should be selected by a driver or an API which
-+	  whishes to split a scatterlist amongst multiple DMA channels.
+ 	  This option allows certain base kernel options and settings
+-          to be disabled or tweaked. This is for specialized
+-          environments which can tolerate a "non-standard" kernel.
+-          Only use this if you really know what you are doing.
++	  to be disabled or tweaked. This is for specialized
++	  environments which can tolerate a "non-standard" kernel.
++	  Only use this if you really know what you are doing.
  
- config SG_POOL
- 	def_bool n
+ config UID16
+ 	bool "Enable 16-bit UID system calls" if EXPERT
+@@ -1423,11 +1423,11 @@ config BUG
+ 	bool "BUG() support" if EXPERT
+ 	default y
  	help
--	 Provides a helper to allocate chained scatterlists. This should be
--	 selected by a driver or an API which whishes to allocate chained
--	 scatterlist.
-+	  Provides a helper to allocate chained scatterlists. This should be
-+	  selected by a driver or an API which whishes to allocate chained
-+	  scatterlist.
+-          Disabling this option eliminates support for BUG and WARN, reducing
+-          the size of your kernel image and potentially quietly ignoring
+-          numerous fatal conditions. You should only consider disabling this
+-          option for embedded systems with no facilities for reporting errors.
+-          Just say Y.
++	  Disabling this option eliminates support for BUG and WARN, reducing
++	  the size of your kernel image and potentially quietly ignoring
++	  numerous fatal conditions. You should only consider disabling this
++	  option for embedded systems with no facilities for reporting errors.
++	  Just say Y.
  
- #
- # sg chaining option
-@@ -620,7 +620,7 @@ config ARCH_HAS_UACCESS_MCSAFE
+ config ELF_CORE
+ 	depends on COREDUMP
+@@ -1443,8 +1443,8 @@ config PCSPKR_PLATFORM
+ 	select I8253_LOCK
+ 	default y
+ 	help
+-          This option allows to disable the internal PC-Speaker
+-          support, saving some memory.
++	  This option allows to disable the internal PC-Speaker
++	  support, saving some memory.
  
- # Temporary. Goes away when all archs are cleaned up
- config ARCH_STACKWALK
--       bool
-+	bool
+ config BASE_FULL
+ 	default y
+@@ -1562,29 +1562,29 @@ config MEMBARRIER
+ 	  If unsure, say Y.
  
- config STACKDEPOT
+ config KALLSYMS
+-	 bool "Load all symbols for debugging/ksymoops" if EXPERT
+-	 default y
+-	 help
+-	   Say Y here to let the kernel print out symbolic crash information and
+-	   symbolic stack backtraces. This increases the size of the kernel
+-	   somewhat, as all symbols have to be loaded into the kernel image.
++	bool "Load all symbols for debugging/ksymoops" if EXPERT
++	default y
++	help
++	  Say Y here to let the kernel print out symbolic crash information and
++	  symbolic stack backtraces. This increases the size of the kernel
++	  somewhat, as all symbols have to be loaded into the kernel image.
+ 
+ config KALLSYMS_ALL
+ 	bool "Include all symbols in kallsyms"
+ 	depends on DEBUG_KERNEL && KALLSYMS
+ 	help
+-	   Normally kallsyms only contains the symbols of functions for nicer
+-	   OOPS messages and backtraces (i.e., symbols from the text and inittext
+-	   sections). This is sufficient for most cases. And only in very rare
+-	   cases (e.g., when a debugger is used) all symbols are required (e.g.,
+-	   names of variables from the data sections, etc).
++	  Normally kallsyms only contains the symbols of functions for nicer
++	  OOPS messages and backtraces (i.e., symbols from the text and inittext
++	  sections). This is sufficient for most cases. And only in very rare
++	  cases (e.g., when a debugger is used) all symbols are required (e.g.,
++	  names of variables from the data sections, etc).
+ 
+-	   This option makes sure that all symbols are loaded into the kernel
+-	   image (i.e., symbols from all sections) in cost of increased kernel
+-	   size (depending on the kernel configuration, it may be 300KiB or
+-	   something like this).
++	  This option makes sure that all symbols are loaded into the kernel
++	  image (i.e., symbols from all sections) in cost of increased kernel
++	  size (depending on the kernel configuration, it may be 300KiB or
++	  something like this).
+ 
+-	   Say N unless you really need all symbols.
++	  Say N unless you really need all symbols.
+ 
+ config KALLSYMS_ABSOLUTE_PERCPU
  	bool
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 4217bd26e220..d39046beed51 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -128,8 +128,8 @@ config DYNAMIC_DEBUG
- 	  lineno : line number of the debug statement
- 	  module : module that contains the debug statement
- 	  function : function that contains the debug statement
--          flags : '=p' means the line is turned 'on' for printing
--          format : the format used for the debug statement
-+	  flags : '=p' means the line is turned 'on' for printing
-+	  format : the format used for the debug statement
- 
- 	  From a live system:
- 
-@@ -190,7 +190,7 @@ config DEBUG_INFO
- 	bool "Compile the kernel with debug info"
- 	depends on DEBUG_KERNEL && !COMPILE_TEST
+@@ -1727,12 +1727,12 @@ config DEBUG_PERF_USE_VMALLOC
+ 	depends on PERF_EVENTS && DEBUG_KERNEL && !PPC
+ 	select PERF_USE_VMALLOC
  	help
--          If you say Y here the resulting kernel image will include
-+	  If you say Y here the resulting kernel image will include
- 	  debugging info resulting in a larger kernel image.
- 	  This adds debug symbols to the kernel and modules (gcc -g), and
- 	  is needed if you intend to use kernel crashdump or binary object
-@@ -287,13 +287,13 @@ config STRIP_ASM_SYMS
- 	  get_wchan() and suchlike.
+-	 Use vmalloc memory to back perf mmap() buffers.
++	  Use vmalloc memory to back perf mmap() buffers.
  
- config READABLE_ASM
--        bool "Generate readable assembler code"
--        depends on DEBUG_KERNEL
--        help
--          Disable some compiler optimizations that tend to generate human unreadable
--          assembler output. This may make the kernel slightly slower, but it helps
--          to keep kernel developers who have to stare a lot at assembler listings
--          sane.
-+	bool "Generate readable assembler code"
-+	depends on DEBUG_KERNEL
-+	help
-+	  Disable some compiler optimizations that tend to generate human unreadable
-+	  assembler output. This may make the kernel slightly slower, but it helps
-+	  to keep kernel developers who have to stare a lot at assembler listings
-+	  sane.
+-	 Mostly useful for debugging the vmalloc code on platforms
+-	 that don't require it.
++	  Mostly useful for debugging the vmalloc code on platforms
++	  that don't require it.
  
- config HEADERS_INSTALL
- 	bool "Install uapi headers to usr/include"
-@@ -525,11 +525,11 @@ config DEBUG_OBJECTS_PERCPU_COUNTER
+-	 Say N if unsure.
++	  Say N if unsure.
  
- config DEBUG_OBJECTS_ENABLE_DEFAULT
- 	int "debug_objects bootup default value (0-1)"
--        range 0 1
--        default "1"
--        depends on DEBUG_OBJECTS
--        help
--          Debug objects boot parameter default value
-+	range 0 1
-+	default "1"
-+	depends on DEBUG_OBJECTS
-+	help
-+	  Debug objects boot parameter default value
+ endmenu
  
- config DEBUG_SLAB
- 	bool "Debug slab memory allocations"
-@@ -660,7 +660,7 @@ config DEBUG_VM
- 	depends on DEBUG_KERNEL
- 	help
- 	  Enable this to turn on extended checks in the virtual-memory system
--          that may impact performance.
-+	  that may impact performance.
- 
- 	  If unsure, say N.
- 
-@@ -1055,38 +1055,38 @@ config PROVE_LOCKING
- 	select TRACE_IRQFLAGS
- 	default n
- 	help
--	 This feature enables the kernel to prove that all locking
--	 that occurs in the kernel runtime is mathematically
--	 correct: that under no circumstance could an arbitrary (and
--	 not yet triggered) combination of observed locking
--	 sequences (on an arbitrary number of CPUs, running an
--	 arbitrary number of tasks and interrupt contexts) cause a
--	 deadlock.
--
--	 In short, this feature enables the kernel to report locking
--	 related deadlocks before they actually occur.
--
--	 The proof does not depend on how hard and complex a
--	 deadlock scenario would be to trigger: how many
--	 participant CPUs, tasks and irq-contexts would be needed
--	 for it to trigger. The proof also does not depend on
--	 timing: if a race and a resulting deadlock is possible
--	 theoretically (no matter how unlikely the race scenario
--	 is), it will be proven so and will immediately be
--	 reported by the kernel (once the event is observed that
--	 makes the deadlock theoretically possible).
--
--	 If a deadlock is impossible (i.e. the locking rules, as
--	 observed by the kernel, are mathematically correct), the
--	 kernel reports nothing.
--
--	 NOTE: this feature can also be enabled for rwlocks, mutexes
--	 and rwsems - in which case all dependencies between these
--	 different locking variants are observed and mapped too, and
--	 the proof of observed correctness is also maintained for an
--	 arbitrary combination of these separate locking variants.
--
--	 For more details, see Documentation/locking/lockdep-design.rst.
-+	  This feature enables the kernel to prove that all locking
-+	  that occurs in the kernel runtime is mathematically
-+	  correct: that under no circumstance could an arbitrary (and
-+	  not yet triggered) combination of observed locking
-+	  sequences (on an arbitrary number of CPUs, running an
-+	  arbitrary number of tasks and interrupt contexts) cause a
-+	  deadlock.
-+
-+	  In short, this feature enables the kernel to report locking
-+	  related deadlocks before they actually occur.
-+
-+	  The proof does not depend on how hard and complex a
-+	  deadlock scenario would be to trigger: how many
-+	  participant CPUs, tasks and irq-contexts would be needed
-+	  for it to trigger. The proof also does not depend on
-+	  timing: if a race and a resulting deadlock is possible
-+	  theoretically (no matter how unlikely the race scenario
-+	  is), it will be proven so and will immediately be
-+	  reported by the kernel (once the event is observed that
-+	  makes the deadlock theoretically possible).
-+
-+	  If a deadlock is impossible (i.e. the locking rules, as
-+	  observed by the kernel, are mathematically correct), the
-+	  kernel reports nothing.
-+
-+	  NOTE: this feature can also be enabled for rwlocks, mutexes
-+	  and rwsems - in which case all dependencies between these
-+	  different locking variants are observed and mapped too, and
-+	  the proof of observed correctness is also maintained for an
-+	  arbitrary combination of these separate locking variants.
-+
-+	  For more details, see Documentation/locking/lockdep-design.rst.
- 
- config LOCK_STAT
- 	bool "Lock usage statistics"
-@@ -1098,24 +1098,24 @@ config LOCK_STAT
- 	select DEBUG_LOCK_ALLOC
- 	default n
- 	help
--	 This feature enables tracking lock contention points
-+	  This feature enables tracking lock contention points
- 
--	 For more details, see Documentation/locking/lockstat.rst
-+	  For more details, see Documentation/locking/lockstat.rst
- 
--	 This also enables lock events required by "perf lock",
--	 subcommand of perf.
--	 If you want to use "perf lock", you also need to turn on
--	 CONFIG_EVENT_TRACING.
-+	  This also enables lock events required by "perf lock",
-+	  subcommand of perf.
-+	  If you want to use "perf lock", you also need to turn on
-+	  CONFIG_EVENT_TRACING.
- 
--	 CONFIG_LOCK_STAT defines "contended" and "acquired" lock events.
--	 (CONFIG_LOCKDEP defines "acquire" and "release" events.)
-+	  CONFIG_LOCK_STAT defines "contended" and "acquired" lock events.
-+	  (CONFIG_LOCKDEP defines "acquire" and "release" events.)
- 
- config DEBUG_RT_MUTEXES
- 	bool "RT Mutex debugging, deadlock detection"
- 	depends on DEBUG_KERNEL && RT_MUTEXES
- 	help
--	 This allows rt mutex semantics violations and rt mutex related
--	 deadlocks (lockups) to be detected and reported automatically.
-+	  This allows rt mutex semantics violations and rt mutex related
-+	  deadlocks (lockups) to be detected and reported automatically.
- 
- config DEBUG_SPINLOCK
- 	bool "Spinlock and rw-lock debugging: basic checks"
-@@ -1131,8 +1131,8 @@ config DEBUG_MUTEXES
- 	bool "Mutex debugging: basic checks"
- 	depends on DEBUG_KERNEL
- 	help
--	 This feature allows mutex semantics violations to be detected and
--	 reported.
-+	  This feature allows mutex semantics violations to be detected and
-+	  reported.
- 
- config DEBUG_WW_MUTEX_SLOWPATH
- 	bool "Wait/wound mutex debugging: Slowpath testing"
-@@ -1141,15 +1141,15 @@ config DEBUG_WW_MUTEX_SLOWPATH
- 	select DEBUG_SPINLOCK
- 	select DEBUG_MUTEXES
- 	help
--	 This feature enables slowpath testing for w/w mutex users by
--	 injecting additional -EDEADLK wound/backoff cases. Together with
--	 the full mutex checks enabled with (CONFIG_PROVE_LOCKING) this
--	 will test all possible w/w mutex interface abuse with the
--	 exception of simply not acquiring all the required locks.
--	 Note that this feature can introduce significant overhead, so
--	 it really should not be enabled in a production or distro kernel,
--	 even a debug kernel.  If you are a driver writer, enable it.  If
--	 you are a distro, do not.
-+	  This feature enables slowpath testing for w/w mutex users by
-+	  injecting additional -EDEADLK wound/backoff cases. Together with
-+	  the full mutex checks enabled with (CONFIG_PROVE_LOCKING) this
-+	  will test all possible w/w mutex interface abuse with the
-+	  exception of simply not acquiring all the required locks.
-+	  Note that this feature can introduce significant overhead, so
-+	  it really should not be enabled in a production or distro kernel,
-+	  even a debug kernel.  If you are a driver writer, enable it.  If
-+	  you are a distro, do not.
- 
- config DEBUG_RWSEMS
- 	bool "RW Semaphore debugging: basic checks"
-@@ -1166,12 +1166,12 @@ config DEBUG_LOCK_ALLOC
- 	select DEBUG_RT_MUTEXES if RT_MUTEXES
- 	select LOCKDEP
- 	help
--	 This feature will check whether any held lock (spinlock, rwlock,
--	 mutex or rwsem) is incorrectly freed by the kernel, via any of the
--	 memory-freeing routines (kfree(), kmem_cache_free(), free_pages(),
--	 vfree(), etc.), whether a live lock is incorrectly reinitialized via
--	 spin_lock_init()/mutex_init()/etc., or whether there is any lock
--	 held during task exit.
-+	  This feature will check whether any held lock (spinlock, rwlock,
-+	  mutex or rwsem) is incorrectly freed by the kernel, via any of the
-+	  memory-freeing routines (kfree(), kmem_cache_free(), free_pages(),
-+	  vfree(), etc.), whether a live lock is incorrectly reinitialized via
-+	  spin_lock_init()/mutex_init()/etc., or whether there is any lock
-+	  held during task exit.
- 
- config LOCKDEP
- 	bool
-@@ -1400,7 +1400,7 @@ config DEBUG_WQ_FORCE_RR_CPU
- 	  be impacted.
- 
- config DEBUG_BLOCK_EXT_DEVT
--        bool "Force extended block device numbers and spread them"
-+	bool "Force extended block device numbers and spread them"
- 	depends on DEBUG_KERNEL
- 	depends on BLOCK
- 	default n
-@@ -1529,10 +1529,10 @@ config IO_STRICT_DEVMEM
- 	  If in doubt, say Y.
- 
- config DEBUG_AID_FOR_SYZBOT
--       bool "Additional debug code for syzbot"
--       default n
--       help
--         This option is intended for testing by syzbot.
-+	bool "Additional debug code for syzbot"
-+	default n
-+	help
-+	  This option is intended for testing by syzbot.
- 
- menu "$(SRCARCH) Debugging"
- 
-@@ -1800,7 +1800,7 @@ config TEST_LKM
- config TEST_VMALLOC
- 	tristate "Test module for stress/performance analysis of vmalloc allocator"
- 	default n
--       depends on MMU
-+	depends on MMU
- 	depends on m
- 	help
- 	  This builds the "test_vmalloc" module that should be used for
-diff --git a/lib/Kconfig.kgdb b/lib/Kconfig.kgdb
-index bbe397df04a3..b91dfded57f1 100644
---- a/lib/Kconfig.kgdb
-+++ b/lib/Kconfig.kgdb
-@@ -60,13 +60,13 @@ config KGDB_TESTS_BOOT_STRING
- 	  default of V1F100.
- 
- config KGDB_LOW_LEVEL_TRAP
--       bool "KGDB: Allow debugging with traps in notifiers"
--       depends on X86 || MIPS
--       default n
--       help
--         This will add an extra call back to kgdb for the breakpoint
--         exception handler which will allow kgdb to step through a
--         notify handler.
-+	bool "KGDB: Allow debugging with traps in notifiers"
-+	depends on X86 || MIPS
-+	default n
-+	help
-+	  This will add an extra call back to kgdb for the breakpoint
-+	  exception handler which will allow kgdb to step through a
-+	  notify handler.
- 
- config KGDB_KDB
- 	bool "KGDB_KDB: include kdb frontend for kgdb"
-@@ -96,7 +96,7 @@ config KDB_DEFAULT_ENABLE
- 
- 	  The config option merely sets the default at boot time. Both
- 	  issuing 'echo X > /sys/module/kdb/parameters/cmd_enable' or
--          setting with kdb.cmd_enable=X kernel command line option will
-+	  setting with kdb.cmd_enable=X kernel command line option will
- 	  override the default settings.
- 
- config KDB_KEYBOARD
 -- 
 2.7.4
 
