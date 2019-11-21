@@ -2,108 +2,156 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F694C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 08:21:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40DF2C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 08:26:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2B0720718
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 08:21:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F24420718
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 08:26:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=sifive.com header.i=@sifive.com header.b="tK7wnDUN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726634AbfKUIVg convert rfc822-to-8bit (ORCPT
+        id S1726500AbfKUI02 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 03:21:36 -0500
-Received: from cnshjsmin05.nokia-sbell.com ([116.246.26.45]:14507 "EHLO
-        cnshjsmin05.nokia-sbell.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726165AbfKUIVf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 03:21:35 -0500
-X-AuditID: ac18929d-483ff700000014de-16-5dd6490b9a27
-Received: from CNSHPPEXCH1604.nsn-intra.net (Unknown_Domain [135.251.51.104])
-        (using TLS with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client did not present a certificate)
-        by cnshjsmin05.nokia-sbell.com (Symantec Messaging Gateway) with SMTP id E9.B5.05342.B0946DD5; Thu, 21 Nov 2019 16:21:31 +0800 (HKT)
-Received: from CNSHPPEXCH1601.nsn-intra.net (135.251.51.101) by
- CNSHPPEXCH1604.nsn-intra.net (135.251.51.104) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 21 Nov 2019 16:21:30 +0800
-Received: from CNSHPPEXCH1601.nsn-intra.net ([135.251.51.101]) by
- CNSHPPEXCH1601.nsn-intra.net ([135.251.51.101]) with mapi id 15.01.1713.007;
- Thu, 21 Nov 2019 16:21:30 +0800
-From:   "Wang, Peng 1. (NSB - CN/Hangzhou)" <peng.1.wang@nokia-sbell.com>
-To:     Guenter Roeck <groeck7@gmail.com>
-CC:     "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH] watchdog: make DesignWare watchdog allow users to set bigger
- timeout value
-Thread-Topic: [PATCH] watchdog: make DesignWare watchdog allow users to set
- bigger timeout value
-Thread-Index: AdWgRKybru2HRl6jT8acRiZ9mycWxQ==
-Date:   Thu, 21 Nov 2019 08:21:30 +0000
-Message-ID: <4468f40ed5f5413ab27825bbcc611d65@nokia-sbell.com>
-Accept-Language: zh-CN, en-US
+        Thu, 21 Nov 2019 03:26:28 -0500
+Received: from mail-eopbgr790074.outbound.protection.outlook.com ([40.107.79.74]:10435
+        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726170AbfKUI02 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 03:26:28 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CML7GUZk99wddAzTZgJK0AaDnNwvapOsIHhdhQFxSLOZ8yxALndivk+YIXO4pnhV3CbIzXcDCB9XFcNEX8CDIia+9Pxh/G3fwFCdG1KatuhpSsf3cbjgNRqtNU8Nc+EgrQ6plPIm0g5HACmsN9GnXEL60i+fxjhKqyS7bls71G5i5NhmW2aEVhsxf4mDtxaWNi+K/+cp4JhpqoPmOOeKY2gavalM2yjJwWwbWz4Vrbl9Ny0W9WlYrRTVVQzNqGuJ+nyYDrUBNOMWYKuC8jtOUeWp4iMSMtbA9qVTHB/ISr1ZJprG4jF0ht1M+puTCYWbqolzVAXpiZQsB6k72MplNQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lU9cWMIPiYHwVyQUUrfkQYj1anBgZAlTDlv6URNbx+U=;
+ b=Lk4+5eVZ9ITSwnsoj/dG+twZWL11pxc0gzdXtnyu5p4RfRQzmOcnxIGZrwO23jPBuWcq8IaRR1Qq3KdqBazdvLYNvIOV7lWGukOV3cMsu0ayen3EY1XYsClUcRQkzhy7Z9abUscVmgPjRmIEnvWiNOihBb//wQ0BNbEret9FZv+Xz8UShvH9NCS7+cCXguDS11SZlLfRjYCVLlT7HEl63UkVdP6JUXzIpjKSy6+E90MWJo+6iiJDNkQo+ryczIvPZ40Da7wgi+57syVGQY83bB9L4M4R+t9ec7nro6pllv5zeN9W5iCnTcdl5hDvUw6qNi274r69aTAkx+q9zkYTZA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=sifive.com; dmarc=pass action=none header.from=sifive.com;
+ dkim=pass header.d=sifive.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sifive.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lU9cWMIPiYHwVyQUUrfkQYj1anBgZAlTDlv6URNbx+U=;
+ b=tK7wnDUNLL4B2fVPf0VYXdRyqZh9wAYb7E9FAoOyNxjIgv7AinVc6g708Xlmm+5GBECGHEDlrdSXFpzCRYLwi4jCQiqG3lhjkLKr4AqEzsdB4PSqdx1IrBq91lVERT3bFYjJtxoyDndYEnn4VWILnNvwE95NQcACqLgOH8u0mVs=
+Received: from CH2PR13MB3368.namprd13.prod.outlook.com (52.132.246.90) by
+ CH2PR13MB3622.namprd13.prod.outlook.com (20.180.4.210) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2474.7; Thu, 21 Nov 2019 08:26:24 +0000
+Received: from CH2PR13MB3368.namprd13.prod.outlook.com
+ ([fe80::853e:1256:311e:d29]) by CH2PR13MB3368.namprd13.prod.outlook.com
+ ([fe80::853e:1256:311e:d29%7]) with mapi id 15.20.2474.018; Thu, 21 Nov 2019
+ 08:26:24 +0000
+From:   Yash Shah <yash.shah@sifive.com>
+To:     Andreas Schwab <schwab@suse.de>
+CC:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "palmer@dabbelt.com" <palmer@dabbelt.com>,
+        "Paul Walmsley ( Sifive)" <paul.walmsley@sifive.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "jason@lakedaemon.net" <jason@lakedaemon.net>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "atish.patra@wdc.com" <atish.patra@wdc.com>,
+        Sagar Kadam <sagar.kadam@sifive.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "bmeng.cn@gmail.com" <bmeng.cn@gmail.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        Sachin Ghadi <sachin.ghadi@sifive.com>
+Subject: RE: [PATCH v2 5/5] riscv: dts: Add DT support for SiFive FU540 GPIO
+ driver
+Thread-Topic: [PATCH v2 5/5] riscv: dts: Add DT support for SiFive FU540 GPIO
+ driver
+Thread-Index: AQHVn3AcQeUBZ0Ytu0eVtL/jFebGtqeTxthcgAGEqlA=
+Date:   Thu, 21 Nov 2019 08:26:23 +0000
+Message-ID: <CH2PR13MB3368B53AE4978141B463A1418C4E0@CH2PR13MB3368.namprd13.prod.outlook.com>
+References: <1574233128-28114-1-git-send-email-yash.shah@sifive.com>
+        <1574233128-28114-6-git-send-email-yash.shah@sifive.com>
+ <mvmlfsaoqp3.fsf@suse.de>
+In-Reply-To: <mvmlfsaoqp3.fsf@suse.de>
+Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-originating-ip: [135.251.51.115]
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yash.shah@sifive.com; 
+x-originating-ip: [114.143.65.226]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1cd3682b-b9cc-4e31-b7e6-08d76e5c7ee0
+x-ms-traffictypediagnostic: CH2PR13MB3622:
+x-ld-processed: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CH2PR13MB3622C5A58B9702FFDD43C1EA8C4E0@CH2PR13MB3622.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3631;
+x-forefront-prvs: 0228DDDDD7
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(6029001)(39850400004)(346002)(376002)(366004)(396003)(136003)(13464003)(199004)(189003)(446003)(102836004)(6436002)(478600001)(53546011)(6506007)(14454004)(11346002)(66446008)(66476007)(64756008)(66946007)(9686003)(66066001)(55016002)(26005)(4326008)(66556008)(44832011)(186003)(107886003)(3846002)(6246003)(229853002)(6116002)(8676002)(7736002)(8936002)(6916009)(33656002)(99286004)(2906002)(81156014)(81166006)(7416002)(305945005)(54906003)(256004)(316002)(25786009)(76176011)(5660300002)(71190400001)(71200400001)(7696005)(76116006)(52536014)(74316002)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR13MB3622;H:CH2PR13MB3368.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: sifive.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: w3GIV36VhljK/osjGAy0eLVPUX4q63abjzJSkhTor5azxJ7q5t/uriAXIScmKoZtSJry/fJgjvzcvjznSm1+KYuEanPCdVzVqXEv+oUVlmHRhGFH8asrBVM5y+lL/W+G6WP/VQtEN1K0lri1pbKEFXV7geQthOYUujefzBKrRK4VuesZyPh4xAluEyB/1WoK63RTKNdPye2sPrDHJGpDwTCWQtvzLrtGAjjawcQsVM0+7vyQRVkOYkX4in71sW31+9VxaOAxnidTgJEYZxu1ed5pXSwUCYOHRAnuNAQvTbA3RDh2SgE6f5k3BhTj+tZs5OtENwd0GDrr566MQp6e8fI0AEFm6445uagQmcCRY3acc08d9nJ+eA3cJttkVFBZZUZMlIy9THPQQl9FKDZaA+T3Q5ODcDKbjS0rHhbGLFip7Xfbpmo+7R4fIVdUopzt
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpjkeLIzCtJLcpLzFFi42Jp/22cocvteS3W4Mwsdot9ndeZLC7vmsNm
-        cWPdPnaLxy//MTuweOycdZfdY+WaNawenzfJBTBHcdmkpOZklqUW6dslcGXcXv6JueACV8XW
-        12+ZGxjfcHQxcnJICJhIbP28k62LkYtDSOAQk8StnStYIZy/jBLdTzuZIZxNjBJLb3cwg7Sw
-        CbhLNG1axwZiiwioSuzbsRKsiFlgN6PE3MY3LCAJYYFYia97vzBDFCVJ3Hj4nwXC1pP4vXwy
-        I4jNAtR84fJesBpeATuJGW0vWEFsRgFZiWmP7jOB2MwC4hK3nsxngrhVQGLJnvPMELaoxMvH
-        /4DqOYBsJYm+DVDlOhILdn9ig7C1JZYtfA01XlDi5MwnLBMYRWYhmToLScssJC2zkLQsYGRZ
-        xSidnFeckVWcm5lnYKqXl5+dmahbnJSak6OXnJ+7iREYO2skJs3dwdjZGX+IUYCDUYmHN0Pj
-        aqwQa2JZcWXuIUYJDmYlEd4916/ECvGmJFZWpRblxxeV5qQWH2KU5mBREudtmbwwVkggPbEk
-        NTs1tSC1CCbLxMEp1cDoF5x13jrv8ENrPbWM+KmflnDeyzLrd60U3WV98r/nX+tTs9iXJF76
-        YzEl6Nv7s5Mma94LePRuzjqnFMnrTSt/5CvtPLtzvsyLtFP3G1VzM4OCTu8+dWjmM1cjTt9G
-        hXevVB721eeZKJ4uL1y17rVnqUTFXCUW+Qqm0KPst6JCXbLllYp1MzqUWIozEg21mIuKEwG1
-        HR5YmQIAAA==
+X-OriginatorOrg: sifive.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1cd3682b-b9cc-4e31-b7e6-08d76e5c7ee0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Nov 2019 08:26:23.9288
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: arigcGFqJ2BvWXXIZxmyo/FsleuY2vE+DqFKZXvynEAi3SNrSoLGikLaQOMtbnneeBCsBjaG2yeQCC/gBSyDZw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3622
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From d21d084122d08816454a1e338f0946a9da1f81e3 Mon Sep 17 00:00:00 2001
-From: Peng Wang <peng.1.wang@nokia-sbell.com>
-Date: Wed, 20 Nov 2019 15:12:59 +0800
-Subject: [PATCH] watchdog: make DesignWare watchdog allow users to set bigger
- timeout value
 
-watchdog_dev.c provides means to allow users to set bigger timeout value
-than HW can support, make DesignWare watchdog align with this.
 
-Signed-off-by: Peng Wang <peng.1.wang@nokia-sbell.com>
----
- drivers/watchdog/dw_wdt.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+> -----Original Message-----
+> From: Andreas Schwab <schwab@suse.de>
+> Sent: 20 November 2019 14:44
+> To: Yash Shah <yash.shah@sifive.com>
+> Cc: linus.walleij@linaro.org; bgolaszewski@baylibre.com;
+> robh+dt@kernel.org; mark.rutland@arm.com; palmer@dabbelt.com; Paul
+> Walmsley ( Sifive) <paul.walmsley@sifive.com>;
+> devicetree@vger.kernel.org; aou@eecs.berkeley.edu;
+> jason@lakedaemon.net; linux-gpio@vger.kernel.org; maz@kernel.org; linux-
+> kernel@vger.kernel.org; atish.patra@wdc.com; Sagar Kadam
+> <sagar.kadam@sifive.com>; tglx@linutronix.de; bmeng.cn@gmail.com;
+> linux-riscv@lists.infradead.org; Sachin Ghadi <sachin.ghadi@sifive.com>
+> Subject: Re: [PATCH v2 5/5] riscv: dts: Add DT support for SiFive FU540 G=
+PIO
+> driver
+>=20
+> On Nov 20 2019, Yash Shah wrote:
+>=20
+> > diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+> > b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+> > index 88cfcb9..609198c 100644
+> > --- a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+> > +++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+> > @@ -94,3 +94,7 @@
+> >  &pwm1 {
+> >  	status =3D "okay";
+> >  };
+> > +
+> > +&gpio {
+> > +	status =3D "okay";
+> > +};
+>=20
+> How about adding a gpio-restart?
 
-diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c
-index fef7c61..f1a431c 100644
---- a/drivers/watchdog/dw_wdt.c
-+++ b/drivers/watchdog/dw_wdt.c
-@@ -114,7 +114,15 @@ static int dw_wdt_set_timeout(struct watchdog_device *wdd, unsigned int top_s)
- 	writel(top_val | top_val << WDOG_TIMEOUT_RANGE_TOPINIT_SHIFT,
- 	       dw_wdt->regs + WDOG_TIMEOUT_RANGE_REG_OFFSET);
- 
--	wdd->timeout = dw_wdt_top_in_seconds(dw_wdt, top_val);
-+	/*
-+	 * In case users set bigger timeout value than HW can support,
-+	 * kernel(watchdog_dev.c) helps to feed watchdog before 
-+	 * wdd->timeout
-+	 */
-+	if ( top_s * 1000 <= wdd->max_hw_heartbeat_ms )
-+		wdd->timeout = dw_wdt_top_in_seconds(dw_wdt, top_val);
-+	else
-+		wdd->timeout = top_s;
- 
- 	return 0;
- }
--- 
-1.8.3.1
+I am planning to add it in a separate patch.
+
+- Yash
 
