@@ -2,119 +2,192 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 162A2C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D921EC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:03:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3F0320672
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:02:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A15F120672
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:03:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aQ5UutHQ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="odaRKkuG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726861AbfKUVCA (ORCPT
+        id S1726880AbfKUVDq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 16:02:00 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34084 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726574AbfKUVCA (ORCPT
+        Thu, 21 Nov 2019 16:03:46 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:38817 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726541AbfKUVDq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 16:02:00 -0500
-Received: by mail-wr1-f68.google.com with SMTP id t2so6183793wrr.1
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 13:01:58 -0800 (PST)
+        Thu, 21 Nov 2019 16:03:46 -0500
+Received: by mail-lf1-f66.google.com with SMTP id q28so3773266lfa.5
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 13:03:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=KhhCdcenu8JT9fVRRF+JElxTcseh8uLlM6hjFlflU3o=;
-        b=aQ5UutHQBuXkrv9M84UPYripNNscWYe6D13MxWHjk1yqKjMHcqyiq6aOOKc7twFITr
-         v6qQ/921HHCLC8jz+0Lv9qhOrEeRjUoikbD7v/mNzQ8LZJpZ8QDleBG0ObYgmAMiHXw4
-         /tjkR9NGqco19+mI33LsgYoqb28/yZTX0Q4gm1uzwVPnmuezCKjH7+YxY724AXP2puic
-         E+5XILxRfNM33WJZIx+05j1jwD6hhkNQuoXoooDP4aAtcTm4sVARmS8QM+14W3JiUfn8
-         +pDy+jMS1GUj/SR62zTSSCeLoSdlPN373bXVmEuNDgYBouon4iThZlmAf0+sYabxK5mX
-         11RA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YNzs4jULlBYKgRUq4sXe7wSTJqBHw/l2lYwwkY2GLAU=;
+        b=odaRKkuGQDfxQZVGXVZDckPRLCCSTNhrW3Hmz+nbHGvUysbMPvywmSDal3NUI3tXmX
+         YxNL68DjT/wPewyXKi/zj6DDp3spqDMe30bMyWUT03E0sy4MhLmlEswGSRJ60aC5+w4r
+         /nmxnoN/2iJIlbvnzkffiCpnDYAs+9hx+3b84PROJAJMHqSiu6b2MvsPkBm/k00o4dYC
+         ksdArXzHBDXNgChWu7D4Wl3eTgg5ZH1dbUL3KM1QxA+H5Rj8ne69CXhFIywwx/iQrzEK
+         avfIEzFacNzUVRiPHfXy1CwgJuKZmeqv1fGijqZYcZ/yYUdAkf31eyKpmCX3u59yfd1a
+         YZMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KhhCdcenu8JT9fVRRF+JElxTcseh8uLlM6hjFlflU3o=;
-        b=TBa3RdZyigNAY6L2rQudf6GqJ1vf4CpeD372Uh3hqmEcXTy7hjtOpthysCiVKQcSRf
-         bJzWuHk3tNyPXVHrX1Coyq10lIwozO+WCME2UXJmFLtkEc63axv15kspCFwsFRFhbgOP
-         iL2o5n7zyfDtRxoOo8nN3EVGrwOJdOOj9lzP1XnQ8qOdTJrUlqGAf04I9pQidkiZOR4D
-         siI8zvL64NYVoqTkS0cCzqT7fJ4ou8DcqpXZtfklCRYIN55IBXoZux7t9FrILanByNpd
-         Xsx08TkM31nTmAmYCEgZFsBe5yrliyTPiv+CbngTRu+rjZlsGuGGCcufZAKoU6NzuWJo
-         rOQg==
-X-Gm-Message-State: APjAAAXHsWEBOXN82pwqFv7vCO+iw84dIA+G7Bl5b9AxlGwhvf5CKrr7
-        pKPNtNE5/BYveu2+XeeWmmYddUBQ
-X-Google-Smtp-Source: APXvYqwq2JlYeIu+6mVOQkeUgo9gvK2zoKiQsoH+85wKzLXsau2IvdRIVSP2pfUvE5tgO3ucOcXQ+w==
-X-Received: by 2002:adf:f18c:: with SMTP id h12mr13597678wro.122.1574370118024;
-        Thu, 21 Nov 2019 13:01:58 -0800 (PST)
-Received: from debian (host-78-144-219-162.as13285.net. [78.144.219.162])
-        by smtp.gmail.com with ESMTPSA id x13sm911927wmc.19.2019.11.21.13.01.57
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 21 Nov 2019 13:01:57 -0800 (PST)
-Date:   Thu, 21 Nov 2019 21:01:55 +0000
-From:   Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] tty: use tty_init_dev_retry() to workaround a
- race condition
-Message-ID: <20191121210155.limd7v6cpd5yz2e7@debian>
-References: <20191121152239.28405-1-sudipm.mukherjee@gmail.com>
- <20191121152239.28405-2-sudipm.mukherjee@gmail.com>
- <20191121164138.GD651886@kroah.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YNzs4jULlBYKgRUq4sXe7wSTJqBHw/l2lYwwkY2GLAU=;
+        b=oSJ5Xndxq2aijOFaxZXZI+y0VcK558u2wy6YyKK8WjKKvDKB7Fh+rkByxxwEuTPiDs
+         oZcYGqsVaj0c55Az2n0meFcnIiN4j6cS5bkjwUj8udZtGqcRDRdsn4Afg90Pw11KrHzD
+         Iv+7fYIS47icN0Ty0Zmc9ZYWm54isdszSzRbltTnIO7J+F8MThTkDNb+RpxoZTmcyLmY
+         HbBK4hH2I825jnLm8ou2GEhLq3vz7diMaNFLgLzC3s/M5cmGN60Nw4ETeVvQvbLjyEj+
+         +ZRSzkkRVtBHjNH2LDrT1+G931iC2taokEBBrEt9Iy0wZyRaClu9Wnsvq5H8vKTznWqh
+         Ey4Q==
+X-Gm-Message-State: APjAAAX/DkRZyE2kv3b3+DzA1lhcgWDHmbGIKCY/srpyE0AkTyoOsB17
+        CmyqGKv6cZbQ+PQ86fL0+/HrmPbW1g1I0yYIyFJ2Ow==
+X-Google-Smtp-Source: APXvYqwM5Ro4dCWMxIQabUQXYkDNuBTZ1m4bYObIKaLNV951ynrYifleFuIlwZTwmYEbPGh93jLgZndzTAqW7YSF60E=
+X-Received: by 2002:ac2:5624:: with SMTP id b4mr9589817lff.75.1574370222903;
+ Thu, 21 Nov 2019 13:03:42 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191121164138.GD651886@kroah.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <b1c83f8a-9bf6-eac5-82d0-cf5b90128fbf@gmail.com> <20191121204924.GA81030@google.com>
+In-Reply-To: <20191121204924.GA81030@google.com>
+From:   Rajat Jain <rajatja@google.com>
+Date:   Thu, 21 Nov 2019 13:03:06 -0800
+Message-ID: <CACK8Z6HTiMNOHx6favzWyN6ZbVD9d2WVmf6KTxt_n0O+EpJ97A@mail.gmail.com>
+Subject: Re: [PATCH v7 4/5] PCI/ASPM: Add sysfs attributes for controlling
+ ASPM link states
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Heiner Kallweit <hkallweit1@gmail.com>,
+        Frederick Lawler <fred@fredlawl.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Wong Vee Khee <vee.khee.wong@ni.com>,
+        Hui Chun Ong <hui.chun.ong@ni.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+Hi,
 
-On Thu, Nov 21, 2019 at 05:41:38PM +0100, Greg Kroah-Hartman wrote:
-> On Thu, Nov 21, 2019 at 03:22:39PM +0000, Sudip Mukherjee wrote:
-> > There seems to be a race condition in tty drivers and I could see on
-> > many boot cycles a NULL pointer dereference as tty_init_dev() tries to
-> > do 'tty->port->itty = tty' even though tty->port is NULL.
-> > 'tty->port' will be set by the driver and if the driver has not yet done
-> > it before we open the tty device we can get to this situation. By adding
-> > some extra debug prints, I noticed that:
-> > 
-> > 6.650130: uart_add_one_port
-> > 6.663849: register_console
-> > 6.664846: tty_open
-> > 6.674391: tty_init_dev
-> > 6.675456: tty_port_link_device
-> > 
-> > uart_add_one_port() registers the console, as soon as it registers, the
-> > userspace tries to use it and that leads to tty_open() but
-> > uart_add_one_port() has not yet done tty_port_link_device() and so
-> > tty->port is not yet configured when control reaches tty_init_dev().
-> 
-> Shouldn't we do tty_port_link_device() before uart_add_one_port() to
-> remove that race?  Once you register the console, yes, tty_open() can
-> happen, so the driver had better be ready to go at that point in time.
-> 
+On Thu, Nov 21, 2019 at 12:49 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> [+cc Rafael, Mika, Wong, Hui, Rajat, Keith, LKML, original patch at [5]]
+>
+> On Sat, Oct 05, 2019 at 02:07:56PM +0200, Heiner Kallweit wrote:
+>
+> > +What:                /sys/bus/pci/devices/.../link_pm/clkpm
+> > +             /sys/bus/pci/devices/.../link_pm/l0s_aspm
+> > +             /sys/bus/pci/devices/.../link_pm/l1_aspm
+> > +             /sys/bus/pci/devices/.../link_pm/l1_1_aspm
+> > +             /sys/bus/pci/devices/.../link_pm/l1_2_aspm
+> > +             /sys/bus/pci/devices/.../link_pm/l1_1_pcipm
+> > +             /sys/bus/pci/devices/.../link_pm/l1_2_pcipm
+> > +Date:                October 2019
+> > +Contact:     Heiner Kallweit <hkallweit1@gmail.com>
+> > +Description: If ASPM is supported for an endpoint, then these files
+> > +             can be used to disable or enable the individual
+> > +             power management states. Write y/1/on to enable,
+> > +             n/0/off to disable.
+>
+> This is queued up for the v5.5 merge window, so if we want to tweak
+> anything (path names or otherwise), now is the time.
+>
+> I think I might be inclined to change the directory from "link_pm" to
+> "link", e.g.,
+>
+>   - /sys/bus/pci/devices/0000:00:1c.0/link_pm/clkpm
+>   + /sys/bus/pci/devices/0000:00:1c.0/link/clkpm
+>
+> because there are other things that haven't been merged yet that could
+> go in link/ as well:
+>
+>   * Mika's "link disable" control [1]
+>   * Dilip's link width/speed controls [2,3]
+>
+> The max_link_speed, max_link_width, current_link_speed,
+> current_link_width files could also logically be in link/, although
+> they've already been merged at the top level.
+>
+> Rajat's AER statistics change [4] is also coming.  Those stats aren't
+> link-related, so they wouldn't go in link/.  The current strawman is
+> an "aer_stats" directory, but I wonder if we should make a more
+> generic directory like "errors" that could be used for both AER and
+> DPC and potentially other error-related things.
 
-But tty_port_link_device() is done by uart_add_one_port() itself.
-After registering the console uart_add_one_port() will call
-tty_port_register_device_attr_serdev() and tty_port_link_device() is
-called from this. Thats still tty core.
+Sorry, I haven't been able to find time for it for some time. I doubt
+if I'll be able to make it to 5.6 timeframe. Nevertheless...
 
-> This feels like it should be fixed by the caller, not in the tty core.
-> Any reason that can not happen?
+>
+> For example, we could have these link-related things:
+>
+>   /sys/.../0000:00:1c.0/link/clkpm            # RW ASPM stuff
+>   /sys/.../0000:00:1c.0/link/l0s_aspm
+>   /sys/.../0000:00:1c.0/link/...
+>   /sys/.../0000:00:1c.0/link/disable          # RW Mika
+>   /sys/.../0000:00:1c.0/link/speed            # RW Dilip's control
+>   /sys/.../0000:00:1c.0/link/width            # RW Dilip's control
+>   /sys/.../0000:00:1c.0/link/max_speed        # RO possible rework
+>   /sys/.../0000:00:1c.0/link/max_width        # RO possible rework
+>
+> With these backwards compatibility symlinks:
+>
+>   /sys/.../0000:00:1c.0/max_link_speed     -> link/max_speed
+>   /sys/.../0000:00:1c.0/current_link_speed -> link/speed
+>
+> Rajat's current patch puts the AER stats here at the top level:
+>
+>   /sys/.../0000:00:1c.0/aer_stats/fatal_bit4_DLP
+>
+> But maybe we could push them down like this:
+>
+>   /sys/.../0000:00:1c.0/errors/aer/stats/unc_04_dlp
+>   /sys/.../0000:00:1c.0/errors/aer/stats/unc_26_poison_tlb_blocked
+>   /sys/.../0000:00:1c.0/errors/aer/stats/cor_00_rx_err
+>   /sys/.../0000:00:1c.0/errors/aer/stats/cor_15_hdr_log_overflow
 
-tty_port_register_device_attr_serdev() is part of tty core. Or is my
-above understanding wrong?
+How do we create sub-sub-sub directories in sysfs (errors/aer/stats)?
+My understanding is that we can only create 1 subdirectory by using a
+"named" attribute group. If we want more hierarchy, the "errors" and
+the "aer" will need to be backed up by a kobject. Doable, but just
+mentioning.
 
+Overall the proposal looks like a step in the right direction to me.
 
---
-Regards
-Sudip
+Thanks & Best Regards,
+
+Rajat
+
+>
+> There are some AER-related things we don't have at all today that
+> could go here:
+>
+>   /sys/.../0000:00:1c.0/errors/aer/ecrc_gen
+>   /sys/.../0000:00:1c.0/errors/aer/ecrc_check
+>   /sys/.../0000:00:1c.0/errors/aer/unc_err_status
+>   /sys/.../0000:00:1c.0/errors/aer/unc_err_mask
+>   /sys/.../0000:00:1c.0/errors/aer/unc_err_sev
+>
+> And we might someday want DPC knobs like this:
+>
+>   /sys/.../0000:00:1c.0/errors/dpc/status
+>   /sys/.../0000:00:1c.0/errors/dpc/error_source
+>
+> Any thoughts?
+>
+> Bjorn
+>
+> [1] https://lore.kernel.org/r/20190529104942.74991-1-mika.westerberg@linux.intel.com
+> [2] https://lore.kernel.org/r/d8574605f8e70f41ce1e88ccfb56b63c8f85e4df.1571638827.git.eswara.kota@linux.intel.com
+> [3] https://lore.kernel.org/r/20191030221436.GA261632@google.com/
+> [4] https://lore.kernel.org/r/20190827222145.32642-2-rajatja@google.com
+> [5] https://lore.kernel.org/r/b1c83f8a-9bf6-eac5-82d0-cf5b90128fbf@gmail.com
