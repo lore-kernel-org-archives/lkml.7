@@ -2,92 +2,110 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CDB2C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:34:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D5E6C43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:36:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4159A206CC
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:34:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54B03206DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:36:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Nw5dU8mL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbfKUOet (ORCPT
+        id S1726948AbfKUOgV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 09:34:49 -0500
-Received: from mga07.intel.com ([134.134.136.100]:15979 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726396AbfKUOet (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 09:34:49 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Nov 2019 06:34:48 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,226,1571727600"; 
-   d="scan'208";a="209921903"
-Received: from unknown (HELO localhost) ([10.239.159.128])
-  by orsmga003.jf.intel.com with ESMTP; 21 Nov 2019 06:34:46 -0800
-Date:   Thu, 21 Nov 2019 22:36:43 +0800
-From:   Yang Weijiang <weijiang.yang@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Yang Weijiang <weijiang.yang@intel.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jmattson@google.com,
-        sean.j.christopherson@intel.com, yu.c.zhang@linux.intel.com,
-        alazar@bitdefender.com, edwin.zhai@intel.com
-Subject: Re: [PATCH v7 0/9] Enable Sub-Page Write Protection Support
-Message-ID: <20191121143643.GA17169@local-michael-cet-test>
-References: <20191119084949.15471-1-weijiang.yang@intel.com>
- <e1b64143-d372-81ae-349d-bcd72fd3b668@redhat.com>
+        Thu, 21 Nov 2019 09:36:21 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:35586 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726396AbfKUOgV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 09:36:21 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xALEXxbg176360;
+        Thu, 21 Nov 2019 14:36:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=M2ZTh/ffoJTAXhTWkUwqBgK4JVTx0Aie1A5Hh2zrp78=;
+ b=Nw5dU8mLhMqxRSNdgBbulrptxP5HHvrlO+8tlOEr9Oho9bPZ17gTaLcYlnXYWNM0sd9S
+ TmlbtL0vz3o3aNAtf3H4cEG8Jw9cgWNNOrYpWkNy2W5oZWlwERgy5GxSpgybzSiieVQ2
+ vyyxDcd9dpnIWWycfLY2Wotq9FL4vpwMduvlqtF/LiXKNRAyQhQmXjc00kK6ewKZgsuE
+ sdpKYPr/mofMLC55Q4wnU+d8K5ikPNNkO3Eqdvpba49j57TBFc6YOJlSIpCXCHC9FPJM
+ 8huAbbZjxJjUj281dU+dSfc5brdbgPBkaNC0kAZiAfSM/jX+UlQ4WKJDELccXfEOEjtl 9w== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2wa8hu4qjd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 21 Nov 2019 14:36:10 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xALEYZH6166676;
+        Thu, 21 Nov 2019 14:36:09 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2wda0643ft-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 21 Nov 2019 14:36:09 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xALEa7Gm016867;
+        Thu, 21 Nov 2019 14:36:07 GMT
+Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 21 Nov 2019 06:36:06 -0800
+Date:   Thu, 21 Nov 2019 09:36:13 -0500
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Subject: Re: [PATCH 1/4] padata: update documentation
+Message-ID: <20191121143613.xofz7dkpy7e5wtqe@ca-dmjordan1.us.oracle.com>
+References: <20191120185412.302-1-daniel.m.jordan@oracle.com>
+ <20191120185412.302-2-daniel.m.jordan@oracle.com>
+ <20191120121634.6d989088@lwn.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e1b64143-d372-81ae-349d-bcd72fd3b668@redhat.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20191120121634.6d989088@lwn.net>
+User-Agent: NeoMutt/20180716
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9447 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1911210133
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9447 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1911210133
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 11:43:17AM +0100, Paolo Bonzini wrote:
-> On 19/11/19 09:49, Yang Weijiang wrote:
-> > EPT-Based Sub-Page write Protection(SPP) allows Virtual Machine Monitor(VMM)
-> > specify write-permission for guest physical memory at a sub-page(128 byte)
-> > granularity. When SPP works, HW enforces write-access check for sub-pages
-> > within a protected 4KB page.
-> > 
-> > The feature targets to provide fine-grained memory protection for
-> > usages such as memory guard and VM introspection etc.
-> > 
-> > SPP is active when the "sub-page write protection" (bit 23) is 1 in
-> > Secondary VM-Execution Controls. The feature is backed with a Sub-Page
-> > Permission Table(SPPT), and subpage permission vector is stored in the
-> > leaf entry of SPPT. The root page is referenced via a Sub-Page Permission
-> > Table Pointer (SPPTP) in VMCS.
-> > 
-> > To enable SPP for guest memory, the guest page should be first mapped
-> > to a 4KB EPT entry, then set SPP bit 61 of the corresponding entry. 
-> > While HW walks EPT, it traverses SPPT with the gpa to look up the sub-page
-> > permission vector within SPPT leaf entry. If the corresponding bit is set,
-> > write to sub-page is permitted, otherwise, SPP induced EPT violation is generated.
-> > 
-> > This patch serial passed SPP function test and selftest on Ice-Lake platform.
-> > 
-> > Please refer to the SPP introduction document in this patch set and
-> > Intel SDM for details:
-> > 
-> > Intel SDM:
-> > https://software.intel.com/sites/default/files/managed/39/c5/325462-sdm-vol-1-2abcd-3abcd.pdf
-> > 
-> > SPP selftest patch:
-> > https://lkml.org/lkml/2019/6/18/1197
+On Wed, Nov 20, 2019 at 12:16:34PM -0700, Jonathan Corbet wrote:
+> This all seems fine - it's better than not doing it - but can I put in a
+> request or two?
 > 
-> On top of the changes I sent for the individual patches, please move
-> vmx/spp.c to mmu/spp.c, and vmx/spp.h to spp.h (I've just sent a patch
-> to create the mmu/ directory).  Also, please include the selftest in
-> this series.
+>  - This document is already formatted as RST, and your changes continue
+>    that.  Can we please move it to Documentation/core-api/padata.rst and
+>    add it to the TOC tree there?  Then it can become part of our formatted
+>    docs.
 > 
-> Paolo
-> 
-Thanks Paolo! Will follow it.
+>  - The padata code seems to be nicely equipped with kerneldoc comments; it
+>    would be awfully nice to pull them into the document directly rather
+>    than replicating the API there.  (Why does the document do that now?
+>    Blame the bozo who originally wrote it :)  That would make the document
+>    more complete and easier to maintain going forward.
+
+Ok.  It would be nice to preserve the how-to aspect of the original doc as
+well, in other words, the order the interfaces should be called in.  Will do
+both.
+
+> For added goodness we could stick in an SPDX tag while we're at it.
+
+I'll use the license from padata.c/h.
