@@ -2,182 +2,106 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE0BC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:06:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F3AEC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:07:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E96620637
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:06:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66A80206CC
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:07:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VZ1qDEao"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="MRC5GtQY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726803AbfKUQG0 (ORCPT
+        id S1726990AbfKUQH3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 11:06:26 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:53809 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726541AbfKUQG0 (ORCPT
+        Thu, 21 Nov 2019 11:07:29 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:34792 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726379AbfKUQH3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 11:06:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574352384;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=2bUmJw5NVvVVplfFLTrj0DWj0K1ssd2HaG6I0BvVfDc=;
-        b=VZ1qDEaodViSDGiu4IZVwLGVcllu2AfAZB+V93m01oQXuRKKKIf2VDrTdABtnRkWNqFO2B
-        D8xfusEjXTUE5auPvNxoZlwXR7N+LwtnYivg3K/SkoeYmrjRwv8ZNB+FqyjkawrHliZiu6
-        q4RgSxsRs4U9LXzkPoYo79eZP6/utUc=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-304-ALnY89q1P2yoRVFqlkTrbg-1; Thu, 21 Nov 2019 11:06:23 -0500
-Received: by mail-qt1-f198.google.com with SMTP id v92so2557796qtd.18
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 08:06:23 -0800 (PST)
+        Thu, 21 Nov 2019 11:07:29 -0500
+Received: by mail-il1-f194.google.com with SMTP id p6so3830095ilp.1
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 08:07:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=P4W4hyYZ6T+wL1O213mYLd96KdBzBHpg9/YQCjoVILM=;
+        b=MRC5GtQYRbjWjFGZ/vJsaClUMDJ7hy8XeLThYplbe7u/VBoJyVDfOQRYNCc9WHf1+R
+         YM8i3LUmqrCtDbaOPuE+/759ibNWitWsdr/1LB32m8NQp+rYS/R5MRMYP0SxrAH7pDW/
+         yzbDF1xvKxuXI/4YwDImOAMRtkxOBtfLCZb7Rn0Rg5lGNiLHY69oLwDT8tQHHONCPyOL
+         VRRMjJIF0O4osgapAp43czNPYKTjL442yIx7Ljhmy1ctls9w6UWWmnJ6QyM6DqVy3hqf
+         4k0Yi51vruRfdY62Nc1rpQ3KoiUObEVajgdICck/bxmpkaj8MaFGqq96EHvYxa8LmC1u
+         C7Og==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4u5SaUcnCKvjh6UsP+VC2r3Fd3UTQ4sI8vEm9p9IspQ=;
-        b=PQHEAlOiZcELUCpNACov6bpr0NEc+uMIZEqiFgSqOultVB0fSz7uylsBodf+v7AA+J
-         Zgnzu7ZdlIb232m9ij6L11mirVzPr+25TcgjynXc0hpcUF7NjuAlKwQQzB8algImZxBP
-         uEqlK8gEr03LQGANWpq2F0JHkABNMCuBqhcD5po2tKQBbT3g7od8afIr/Rj7ZYoO993/
-         L5daACdhETk+XUlT4WEwtK+m0qVapei4Ud2YBv61rZXX8GeJHQEhRYH/fxIiffydOvca
-         DPgTT3RHNu1wWDw+PhBKRCB9CsIsAdZhl8vJ09mHLsUq4OQILvY9XPUe93UsRo/RD/AC
-         O7wg==
-X-Gm-Message-State: APjAAAXN7gRXbDhREYXNZK8am9yROY//RMqPnI6S7uS7xL2K7xAt0Oal
-        j/WuiiX/HaCAFbuJXW1aZ7bMHI78ySH2peKBiYQCPqZIIr6cq8JAgDN+10wGZpJp4/r0IH5C4gB
-        Xv3XmMk2fh6aQ3WUSpgmVy3RHq2M+kko3QOODQJWw
-X-Received: by 2002:ac8:73c6:: with SMTP id v6mr9366599qtp.137.1574352381603;
-        Thu, 21 Nov 2019 08:06:21 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyMWsnX6Oq8sVu9TbpGunjITLNboA1N6sHCOJjdw/pIhaC+MKSuuxVJFGx9BLlu7cQMJ12GJrcBaxUzBIiQcN8=
-X-Received: by 2002:ac8:73c6:: with SMTP id v6mr9366479qtp.137.1574352380570;
- Thu, 21 Nov 2019 08:06:20 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=P4W4hyYZ6T+wL1O213mYLd96KdBzBHpg9/YQCjoVILM=;
+        b=a1H7ds2hSE8CgoaV6KRvr38hAn9M8erE0b4Q2tcQ3OqiHe88efMi/pEoDtJ+yajYy2
+         v+xCuGxKdBwCq7BRDaVYDaLH14cYPJO+6+ntxQqIEypJ7p6u6mNs2Zs8U0LcKpeAAsP5
+         GHvsXkFY8m7KpMjVW2R7MjUq9+7wpNFoxgQkQS4++MlSIJwyGqRrnsJH7gk+Fc7XimS4
+         76SXS+irXvOXeiUuWQFjdvHnijMuuRRBbxfMOvGO1GGbtPXnKdLY/n35IVNxeuOwNgo/
+         2YomFmrKNyVuelDCR3itP779THVBVEVJVxqhTgwwrwOP7ymbHEgqMz/C5Gsmo6+RXILR
+         PH9A==
+X-Gm-Message-State: APjAAAX52krZS4dfTwjvHR6pHbuN6T8gVyHFO1nlpo2P2ZiXUlCkZ+91
+        9Z8aFMgH+xQw8n7n0MSyVBbS4Q==
+X-Google-Smtp-Source: APXvYqwBuxR5GnmNrTTF+fDPqQ/m+MVGAFtj5D46hjZm7URBjIHtPwDjypsu1kC4QDIwCYtLqK4NhA==
+X-Received: by 2002:a92:9ace:: with SMTP id c75mr11197162ill.296.1574352448192;
+        Thu, 21 Nov 2019 08:07:28 -0800 (PST)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id v15sm1379208ilk.8.2019.11.21.08.07.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 21 Nov 2019 08:07:27 -0800 (PST)
+Subject: Re: [PATCH] block: add iostat counters for flush requests
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-api@vger.kernel.org,
+        Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
+References: <157433282607.7928.5202409984272248322.stgit@buzz>
+ <ff971ff6-9a10-c3f1-107d-4f7d378e8755@kernel.dk>
+ <20191121160430.GJ6211@magnolia>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <f542739c-7d43-1ea3-5235-c7809bb59f62@kernel.dk>
+Date:   Thu, 21 Nov 2019 09:07:26 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191120120913.GE11621@lahna.fi.intel.com> <CACO55tsHy6yZQZ8PkdW8iPA7+uc5rdcEwRJwYEQ3iqu85F8Sqg@mail.gmail.com>
- <20191120151542.GH11621@lahna.fi.intel.com> <CACO55tvo3rbPtYJcioEgXCEQqVXcVAm-iowr9Nim=bgTdMjgLw@mail.gmail.com>
- <20191120155301.GL11621@lahna.fi.intel.com> <CAJZ5v0hkT-fHFOQKzp2qYPyR+NUa4c-G-uGLPZuQxqsG454PiQ@mail.gmail.com>
- <CACO55ttTPi2XpRRM_NYJU5c5=OvG0=-YngFy1BiR8WpHkavwXw@mail.gmail.com>
- <CAJZ5v0h=7zu3A+ojgUSmwTH0KeXmYP5OKDL__rwkkWaWqcJcWQ@mail.gmail.com>
- <20191121112821.GU11621@lahna.fi.intel.com> <CAJZ5v0hQhj5Wf+piU11abC4pF26yM=XHGHAcDv8Jsgdx04aN-w@mail.gmail.com>
- <20191121114610.GW11621@lahna.fi.intel.com> <CACO55ttXJgXG32HzYP_uJDfQ6T-d8zQaGjXK_AZD3kF0Rmft4g@mail.gmail.com>
- <CAJZ5v0ibzcLEm44udUxW2uVgaF9NapdNBF8Ag+RE++u7gi2yNA@mail.gmail.com>
-In-Reply-To: <CAJZ5v0ibzcLEm44udUxW2uVgaF9NapdNBF8Ag+RE++u7gi2yNA@mail.gmail.com>
-From:   Karol Herbst <kherbst@redhat.com>
-Date:   Thu, 21 Nov 2019 17:06:09 +0100
-Message-ID: <CACO55ttBkZD9dm0Y_jT931NnzHHtDFyLz28aoo+ZG0pnLzPgbA@mail.gmail.com>
-Subject: Re: [PATCH v4] pci: prevent putting nvidia GPUs into lower device
- states on certain intel bridges
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Mika Westerberg <mika.westerberg@intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lyude Paul <lyude@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        Dave Airlie <airlied@gmail.com>,
-        Mario Limonciello <Mario.Limonciello@dell.com>
-X-MC-Unique: ALnY89q1P2yoRVFqlkTrbg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191121160430.GJ6211@magnolia>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 4:47 PM Rafael J. Wysocki <rafael@kernel.org> wrote=
-:
->
-> On Thu, Nov 21, 2019 at 1:53 PM Karol Herbst <kherbst@redhat.com> wrote:
-> >
-> > On Thu, Nov 21, 2019 at 12:46 PM Mika Westerberg
-> > <mika.westerberg@intel.com> wrote:
-> > >
-> > > On Thu, Nov 21, 2019 at 12:34:22PM +0100, Rafael J. Wysocki wrote:
-> > > > On Thu, Nov 21, 2019 at 12:28 PM Mika Westerberg
-> > > > <mika.westerberg@intel.com> wrote:
-> > > > >
-> > > > > On Wed, Nov 20, 2019 at 11:29:33PM +0100, Rafael J. Wysocki wrote=
-:
-> > > > > > > last week or so I found systems where the GPU was under the "=
-PCI
-> > > > > > > Express Root Port" (name from lspci) and on those systems all=
- of that
-> > > > > > > seems to work. So I am wondering if it's indeed just the 0x19=
-01 one,
-> > > > > > > which also explains Mikas case that Thunderbolt stuff works a=
-s devices
-> > > > > > > never get populated under this particular bridge controller, =
-but under
-> > > > > > > those "Root Port"s
-> > > > > >
-> > > > > > It always is a PCIe port, but its location within the SoC may m=
-atter.
-> > > > >
-> > > > > Exactly. Intel hardware has PCIe ports on CPU side (these are cal=
-led
-> > > > > PEG, PCI Express Graphics, ports), and the PCH side. I think the =
-IP is
-> > > > > still the same.
-> > > > >
-> >
-> > yeah, I meant the bridge controller with the ID 0x1901 is on the CPU
-> > side. And if the Nvidia GPU is on a port on the PCH side it all seems
-> > to work just fine.
->
-> But that may involve different AML too, may it not?
->
-> > > > > > Also some custom AML-based power management is involved and tha=
-t may
-> > > > > > be making specific assumptions on the configuration of the SoC =
-and the
-> > > > > > GPU at the time of its invocation which unfortunately are not k=
-nown to
-> > > > > > us.
-> > > > > >
-> > > > > > However, it looks like the AML invoked to power down the GPU fr=
-om
-> > > > > > acpi_pci_set_power_state() gets confused if it is not in PCI D0=
- at
-> > > > > > that point, so it looks like that AML tries to access device me=
-mory on
-> > > > > > the GPU (beyond the PCI config space) or similar which is not
-> > > > > > accessible in PCI power states below D0.
-> > > > >
-> > > > > Or the PCI config space of the GPU when the parent root port is i=
-n D3hot
-> > > > > (as it is the case here). Also then the GPU config space is not
-> > > > > accessible.
-> > > >
-> > > > Why would the parent port be in D3hot at that point?  Wouldn't that=
- be
-> > > > a suspend ordering violation?
-> > >
-> > > No. We put the GPU into D3hot first, then the root port and then turn
-> > > off the power resource (which is attached to the root port) resulting
-> > > the topology entering D3cold.
-> > >
-> >
-> > If the kernel does a D0 -> D3hot -> D0 cycle this works as well, but
-> > the power savings are way lower, so I kind of prefer skipping D3hot
-> > instead of D3cold. Skipping D3hot doesn't seem to make any difference
-> > in power savings in my testing.
->
-> OK
->
-> What exactly did you do to skip D3cold in your testing?
->
+On 11/21/19 9:04 AM, Darrick J. Wong wrote:
+> On Thu, Nov 21, 2019 at 08:56:14AM -0700, Jens Axboe wrote:
+>> On 11/21/19 3:40 AM, Konstantin Khlebnikov wrote:
+>>> Requests that triggers flushing volatile writeback cache to disk (barriers)
+>>> have significant effect to overall performance.
+>>>
+>>> Block layer has sophisticated engine for combining several flush requests
+>>> into one. But there is no statistics for actual flushes executed by disk.
+>>> Requests which trigger flushes usually are barriers - zero-size writes.
+>>>
+>>> This patch adds two iostat counters into /sys/class/block/$dev/stat and
+>>> /proc/diskstats - count of completed flush requests and their total time.
+>>
+>> This makes sense to me, and the "recent" discard addition already proved
+>> that we're fine extending with more fields. Unless folks object, I'd be
+>> happy to queue this up for 5.5.
+> 
+> Looks like a good addition to /me... :)
 
-For that I poked into the PCI registers directly and skipped doing the
-ACPI calls and simply checked for the idle power consumption on my
-laptop. But I guess I should retest with calling pci_d3cold_disable
-from nouveau instead? Or is there a different preferable way of
-testing this?
+That's all the encouragement I needed, added :-)
+
+-- 
+Jens Axboe
 
