@@ -2,68 +2,71 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46BFCC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:14:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87D49C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:14:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BC15206CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:14:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D469206CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:14:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="CzFSpjV1"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="lFzeH9x5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbfKUKOe (ORCPT
+        id S1726939AbfKUKOk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 05:14:34 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:54881 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726014AbfKUKOd (ORCPT
+        Thu, 21 Nov 2019 05:14:40 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:38453 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726695AbfKUKOg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 05:14:33 -0500
-Received: by mail-wm1-f68.google.com with SMTP id x26so2755528wmk.4
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 02:14:32 -0800 (PST)
+        Thu, 21 Nov 2019 05:14:36 -0500
+Received: by mail-wr1-f65.google.com with SMTP id i12so3649863wro.5
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 02:14:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=n7DzjzsuSLvj9pdWFStqaFJF8gdHM1T9f/YXYyoJOjk=;
-        b=CzFSpjV143IUsg5swiQ/xd6HekWPa8WT+SHymkLFYW8WZccwKp/V8QjnOfEjuNP5t8
-         w1z9rdRXOZ+T7qZDUi3vPMh3P9JWM+j4gZ7XTw0wFUO1vLMosw9OCFMGHaa13EE/zh/v
-         pc3Y+j7ILOj0i+k14bnEZTcqxcxkpAo1TwUCm8geSaM9PF24vQ771JN0p19hpN84c4JP
-         EgQ3njdMGF/c0Ra+WHZDIEOONMVnKYqIQ4QldDIeGamQNwG7x4mZWuDD1929IZk4gj1y
-         omx3QqMOxGBNqbSdF+oD4fm6Gb5fknsFczRcokiQ4ZUgZ1tN1xyTizuJfONw9k4j0V/Q
-         1/bA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=0wg42Ie2oicewNtAQ2/KQD6s/n4R5PzVImaC+y7L2/I=;
+        b=lFzeH9x56IU0xzBmSWRZ6DcwLxw1LdGEIJ5MlxSDkIZqsb0vFRQ5uS/KuSKEhv4Rpe
+         zXtQOFjQ5v/kTiNdmSeeMdIpd/tLUgDYdIlHZJY++DJQqDyXRl+O2emaVMMdfEMYpbXS
+         lPPASwiAaZXdpBiEx8xmrla3280an3xZAkQlbeDlAHyRTMheWJ1BWs1RBZaPlkYk5ZyR
+         zGBc4uGluDTwDdqqFLevoP1HfKsU1jK4h2lDg+opAN/Rlpuf7/yfRyLVCalk44pvBFjL
+         Q3Uo0kH1qvOW1GrBmhdrITJLvv8OKVb0Z4+4oPyHHtRSxHaUFITEv1aOgLAmvTvJhIBF
+         5OEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=n7DzjzsuSLvj9pdWFStqaFJF8gdHM1T9f/YXYyoJOjk=;
-        b=SHp5WDYzYqfazLPvry+iAh+P+HCQPR/N16oknhyfIY57Dtx2qZ5PImxx7L5CSiY8HF
-         JawZB1csYJ/cpQJe8ycd3pJXnr9IfWZ+LjRpmlIv5Zkz1KJe1KurtIJiOuZJYqZB3oGw
-         X03lxPa9LEJojtYNdvFJNrFgr4jLGAM2SMv0XlBqAQSpQRezRPaDfzQzN9yvs713Oy2O
-         GYjRN6LZkiuE1I8NIDyKwirPhSiyJ7ysWSV0BDVkDCps0aE/KwWqQIj4J2975HJWo7X+
-         ILDnLrEHWunrZ6fkJBvXya6TTZ32jelNlTXTAApAbuD2IPJXxmQ+UTv5Dt28X3S6tZ7L
-         ezdw==
-X-Gm-Message-State: APjAAAUNknGjEGggw1TEEIF73lrTxLZJj+FAXtJZXU/nojHguTcPwwya
-        VDiWEXebIYxk3CaKdfek3Z/iKA==
-X-Google-Smtp-Source: APXvYqxPADgVv5/yD9ctzuTcZNw5cUFWHwvJhUI0DOZzRCGful8vLGq7ZwkZBc87z0uvxwTFov8oDQ==
-X-Received: by 2002:a7b:ca4d:: with SMTP id m13mr8689497wml.21.1574331271418;
-        Thu, 21 Nov 2019 02:14:31 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=0wg42Ie2oicewNtAQ2/KQD6s/n4R5PzVImaC+y7L2/I=;
+        b=qpNCSOu6bCZbaAXghAMzINpWL8gzSn2OZqi+rSQRoMwQ0Mc58sEn1YtDPG/F0noWFl
+         mZzOKxhhOW13VOHOUpI+nNwVpgTeAvAQRsS3kLIU5I8CqsO640X277M70AIRSVIzN/tC
+         vxb8H9RhUFreZKSWg5vY+e8KJc81ic7oa9DZ5A/UCAvmeyH5oMV8fOx+Z5n4AJiiHxjg
+         U2bL7sDDkb5Dg097yy24cVQQnuKcV3z46RaBZ08t02lkc6QtH6hxEbAgu9BqpEUpPj7z
+         VdxC58eQDBZ+4uxX0F6Tval4iJa1nbF8oQ6LYKIR7y/tvJMrKfmkLik5yPn7X1xMQ6tU
+         iOIg==
+X-Gm-Message-State: APjAAAXPACY/zfMEwcORPhw7UwFOKE+XHy3lOsrwBbleNOeNj1sfte3X
+        xk7jD3dqlFdV9T5yOS3ndxXPLA==
+X-Google-Smtp-Source: APXvYqxaDVnzGeg++beFGsQYq3Z9at9EOfwRlpJHiF3RSAfp90GcgPYTGGemHS3Jb/bwbNGcDgkpQA==
+X-Received: by 2002:a5d:4608:: with SMTP id t8mr9739630wrq.91.1574331273780;
+        Thu, 21 Nov 2019 02:14:33 -0800 (PST)
 Received: from bender.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id o21sm1289932wmc.17.2019.11.21.02.14.30
+        by smtp.gmail.com with ESMTPSA id o21sm1289932wmc.17.2019.11.21.02.14.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Nov 2019 02:14:30 -0800 (PST)
+        Thu, 21 Nov 2019 02:14:33 -0800 (PST)
 From:   Neil Armstrong <narmstrong@baylibre.com>
 To:     mjourdan@baylibre.com
 Cc:     Neil Armstrong <narmstrong@baylibre.com>,
         linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 0/3] media: meson: vdec: add sm1 platform
-Date:   Thu, 21 Nov 2019 11:14:26 +0100
-Message-Id: <20191121101429.23831-1-narmstrong@baylibre.com>
+Subject: [PATCH 3/3] arm64: dts: meson-sm1: add video decoder compatible
+Date:   Thu, 21 Nov 2019 11:14:29 +0100
+Message-Id: <20191121101429.23831-4-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20191121101429.23831-1-narmstrong@baylibre.com>
+References: <20191121101429.23831-1-narmstrong@baylibre.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -71,122 +74,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset adds support for the current Amlogic Video Decoder
-driver for the Amlogic SM1 & compatible SoCs.
+Add the video decoder specific compatible for Amlogic SM1 SoC.
 
-Then support is added for the currently supported MPEG1 & MPEG2 decoders
-like for G12A support.
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ arch/arm64/boot/dts/amlogic/meson-sm1.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-This patchset depends on G12A support patchset at [1].
-
-M2M Decoder compliance is handled in a separate patchset at [2].
-
-# v4l2-compliance 
-v4l2-compliance SHA: 7ead0e1856b89f2e19369af452bb03fd0cd16793, 64 bits
-
-Compliance test for meson-vdec device /dev/video0:
-
-Driver Info:
-	Driver name      : meson-vdec
-	Card type        : Amlogic Video Decoder
-	Bus info         : platform:meson-vdec
-	Driver version   : 5.4.0
-	Capabilities     : 0x84204000
-		Video Memory-to-Memory Multiplanar
-		Streaming
-		Extended Pix Format
-		Device Capabilities
-	Device Caps      : 0x04204000
-		Video Memory-to-Memory Multiplanar
-		Streaming
-		Extended Pix Format
-	Detected Stateful Decoder
-
-Required ioctls:
-	test VIDIOC_QUERYCAP: OK
-
-Allow for multiple opens:
-	test second /dev/video0 open: OK
-	test VIDIOC_QUERYCAP: OK
-	test VIDIOC_G/S_PRIORITY: OK
-	test for unlimited opens: OK
-
-Debug ioctls:
-	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
-	test VIDIOC_LOG_STATUS: OK (Not Supported)
-
-Input ioctls:
-	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-	test VIDIOC_ENUMAUDIO: OK (Not Supported)
-	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
-	test VIDIOC_G/S_AUDIO: OK (Not Supported)
-	Inputs: 0 Audio Inputs: 0 Tuners: 0
-
-Output ioctls:
-	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-	Outputs: 0 Audio Outputs: 0 Modulators: 0
-
-Input/Output configuration ioctls:
-	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-	test VIDIOC_G/S_EDID: OK (Not Supported)
-
-Control ioctls:
-	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
-	test VIDIOC_QUERYCTRL: OK
-	test VIDIOC_G/S_CTRL: OK
-	test VIDIOC_G/S/TRY_EXT_CTRLS: OK
-	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
-	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-	Standard Controls: 2 Private Controls: 0
-
-Format ioctls:
-	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
-	test VIDIOC_G/S_PARM: OK (Not Supported)
-	test VIDIOC_G_FBUF: OK (Not Supported)
-	test VIDIOC_G_FMT: OK
-	test VIDIOC_TRY_FMT: OK
-	test VIDIOC_S_FMT: OK
-	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-	test Cropping: OK (Not Supported)
-	test Composing: OK (Not Supported)
-	test Scaling: OK (Not Supported)
-
-Codec ioctls:
-	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-	test VIDIOC_(TRY_)DECODER_CMD: OK
-
-Buffer ioctls:
-	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
-	test VIDIOC_EXPBUF: OK
-	test Requests: OK (Not Supported)
-
-Total for meson-vdec device /dev/video0: 44, Succeeded: 44, Failed: 0, Warnings: 0
-
-[1] https://lore.kernel.org/linux-media/20191120111430.29552-1-narmstrong@baylibre.com
-[2] https://lore.kernel.org/linux-media/20191007145909.29979-1-mjourdan@baylibre.com
-
-Neil Armstrong (3):
-  dt-bindings: media: amlogic,gx-vdec: add bindings for SM1 family
-  media: meson: vdec: add sm1 platform
-  arm64: dts: meson-sm1: add video decoder compatible
-
- .../bindings/media/amlogic,gx-vdec.yaml       |  2 ++
- arch/arm64/boot/dts/amlogic/meson-sm1.dtsi    |  4 +++
- drivers/staging/media/meson/vdec/vdec.c       |  5 +++-
- drivers/staging/media/meson/vdec/vdec_1.c     | 29 ++++++++++++++----
- .../staging/media/meson/vdec/vdec_platform.c  | 30 +++++++++++++++++++
- .../staging/media/meson/vdec/vdec_platform.h  |  2 ++
- 6 files changed, 65 insertions(+), 7 deletions(-)
-
+diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1.dtsi b/arch/arm64/boot/dts/amlogic/meson-sm1.dtsi
+index 521573f3a5ba..b94a4eae973f 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-sm1.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-sm1.dtsi
+@@ -138,6 +138,10 @@
+ 	compatible = "amlogic,meson-sm1-pwrc";
+ };
+ 
++&vdec {
++	compatible = "amlogic,sm1-vdec";
++};
++
+ &vpu {
+ 	power-domains = <&pwrc PWRC_SM1_VPU_ID>;
+ };
 -- 
 2.22.0
 
