@@ -2,104 +2,99 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AC3CC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 15:58:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC17C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:00:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EE4720692
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 15:58:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 550912063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:00:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D9KoJ27q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726948AbfKUP6F (ORCPT
+        id S1726735AbfKUQAR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 10:58:05 -0500
-Received: from mout.kundenserver.de ([212.227.17.10]:55157 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726541AbfKUP6E (ORCPT
+        Thu, 21 Nov 2019 11:00:17 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:23167 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726293AbfKUQAR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 10:58:04 -0500
-Received: from orion.localdomain ([95.115.120.75]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MPosX-1iBbIX35UJ-00Mqxr; Thu, 21 Nov 2019 16:58:03 +0100
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     info@metux.net, platform-driver-x86@vger.kernel.org
-Subject: [PATCH] platform: x86: pcengines-apuv2: detect apuv4 board
-Date:   Thu, 21 Nov 2019 16:57:43 +0100
-Message-Id: <20191121155743.28755-1-info@metux.net>
-X-Mailer: git-send-email 2.11.0
-X-Provags-ID: V03:K1:FFinIR+bmKvR9eQY2dnfiPu7KToYiAC40zr4SVkjX/oUxI3pU5/
- yMjbACur20mr0gM3qTEwWleo9ehKTi48w2Dz9vJ5n+gfgeZLgAjLdaZjXQx4djSCupx6B+M
- 8V/yZjRM5u8z60ikJuuGe4P8pFH8kCsMT4vGNb1wdmHtzg1WeIl/dq+LqmBVAmS+yoWV+Dr
- EmP7d3FP3YE49CHo9ZrZw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:/Gs8DMwwI9c=:8tVTICvQLHhhm2GvbeJPYP
- MfYfayyAxv6F9lPO4wPuXU4Uq5F2v3R4W5moWj4OaDLaq/4bX00kzb/Ar7MDkPWk6zBB0dIBk
- e1gSkuXVAqH8woju+fGDLyJK8shXLhHIw3zYZoeKkcmEmT1vv6BqmR0/S7krKLOxPJuz9ty+k
- 0kgvf44gU7VL96QM5GCbkTZ4SzgXAgEvKR4OjCqx4h++ZL7wWyCFGJaPYXBdq+OjzgAkx3IF5
- OF9aykoHHs2FvVC7LTPNRThyFCelHUJxphMBuzej/+AgRpNbLIsWQGnhboWQAucV/V63t5ExQ
- EuYo/9oxFMb4vclUyhlorIu1QQbStndk7SYmgQZ/JVvvOfQp1n97F1qvsLFFYoGR6i/O3yz9y
- KhlMnsDPsiS5+jmHAj0+kPEgDMOXtE4DA9Q9GcLN7M6Xdi74smrHT89eBPVzmQWaB7uzI57PP
- n9x/08Frp2X1f4IjnjnXUyhyFz0j2dubrbuoRr9l28jnwJLMS83GjHI7J3XBW4Fk9l1iqlHv3
- 2GROououNCqM9SaD54rAqZys1BBK1Og6GeLUFPxdoUxgTpt1CdNBuSuU1e7hZEJoa4YstJQEL
- hVfEI9fYNQWiLyyq1y9Omnxf7YjktxBP1PNW5wm2LiZMC3JDRKsE1ACqf7YoP/870e+of5Z6o
- YmlHmUeFQHMF+fd4shqW+MRiQ5sPDc5JOzm7Ne6Nq6TwLE/iLaGs8AtcWlEXbNB7T/v8YD4Kc
- b4qTT948R9V2U7DJ55gA6GxqQTTmjo1ITaEqZdtG/Hb8OzUeZa17l+PwWUnNH/URy+yu13QMM
- ZyP3b0CDQhXkiHY1gxO0FwLHNykS8TCBChuyauespVn8jCeN3xrO0Ze8meEbWuJCRFN+SYohL
- oPUHmXIIgjoJjSo4I5Hg==
+        Thu, 21 Nov 2019 11:00:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574352016;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=FaPLEQrdTtUL2Ob9GHzV8gvblPJ9sIr1fQNhRCiAn7Q=;
+        b=D9KoJ27q006SC4FbEu8QR32tmOHP8QnIeGBv4ykdDZ3yF9cSpeY3TtV3GdbumOfOwnpR3N
+        /JWuTU2oO8wFCZ/PWqhAVBOoB+Cs1v19E2MQ56Q/jc20AtgDj1kKUEq/Se9rh2QWnczLWH
+        /1myAwhsVYct5MVrVPsuPd1BoXa4rWo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-337-Jp2VdSAyNJmSVgtfRmHTdw-1; Thu, 21 Nov 2019 11:00:12 -0500
+X-MC-Unique: Jp2VdSAyNJmSVgtfRmHTdw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 29DA49B3A8;
+        Thu, 21 Nov 2019 16:00:11 +0000 (UTC)
+Received: from localhost (ovpn-117-83.ams2.redhat.com [10.36.117.83])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B833E1081303;
+        Thu, 21 Nov 2019 16:00:03 +0000 (UTC)
+Date:   Thu, 21 Nov 2019 16:00:01 +0000
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     Vivek Goyal <vgoyal@redhat.com>
+Cc:     virtio-fs@redhat.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dgilbert@redhat.com,
+        miklos@szeredi.hu
+Subject: Re: [PATCH 2/4] virtiofs: Add an index to keep track of first
+ request queue
+Message-ID: <20191121160001.GC445244@stefanha-x1.localdomain>
+References: <20191115205705.2046-1-vgoyal@redhat.com>
+ <20191115205705.2046-3-vgoyal@redhat.com>
+MIME-Version: 1.0
+In-Reply-To: <20191115205705.2046-3-vgoyal@redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Mimecast-Spam-Score: 0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="tqI+Z3u+9OQ7kwn0"
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-GPIO stuff on APUv4 seems to be the same as on APUv2, so we just
-need to match on DMI data.
+--tqI+Z3u+9OQ7kwn0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Fixes: f8eb0235f65989fc5521c40c78d1261e7f25cdbe
-Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
----
- drivers/platform/x86/pcengines-apuv2.c | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+On Fri, Nov 15, 2019 at 03:57:03PM -0500, Vivek Goyal wrote:
+> @@ -1004,6 +1008,7 @@ __releases(fiq->lock)
+>  =09spin_unlock(&fiq->lock);
+> =20
+>  =09fs =3D fiq->priv;
+> +=09queue_id =3D fs->first_reqq_idx;
 
-diff --git a/drivers/platform/x86/pcengines-apuv2.c b/drivers/platform/x86/pcengines-apuv2.c
-index 48b112b4f0b0..49f25bffce3c 100644
---- a/drivers/platform/x86/pcengines-apuv2.c
-+++ b/drivers/platform/x86/pcengines-apuv2.c
-@@ -189,6 +189,33 @@ static const struct dmi_system_id apu_gpio_dmi_table[] __initconst = {
- 		},
- 		.driver_data = (void *)&board_apu2,
- 	},
-+	/* APU4 w/ legacy bios < 4.0.8 */
-+	{
-+		.ident        = "apu4",
-+		.matches    = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "PC Engines"),
-+			DMI_MATCH(DMI_BOARD_NAME, "APU4")
-+		},
-+		.driver_data = (void *)&board_apu2,
-+	},
-+	/* APU4 w/ legacy bios >= 4.0.8 */
-+	{
-+		.ident       = "apu4",
-+		.matches     = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "PC Engines"),
-+			DMI_MATCH(DMI_BOARD_NAME, "apu4")
-+		},
-+		.driver_data = (void *)&board_apu2,
-+	},
-+	/* APU4 w/ mainline bios */
-+	{
-+		.ident       = "apu4",
-+		.matches     = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "PC Engines"),
-+			DMI_MATCH(DMI_BOARD_NAME, "PC Engines apu4")
-+		},
-+		.driver_data = (void *)&board_apu2,
-+	},
- 	{}
- };
- 
--- 
-2.11.0
+The TODO should be moved here.
+
+--tqI+Z3u+9OQ7kwn0
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl3WtIEACgkQnKSrs4Gr
+c8gp1wf9FsjNknItwwiYqgaMkCFsD/lJY+7ZWvz25GCPp4aHChGQMvg/GBxEXbUs
+d2n5sxD4UcV/wmUt3amPMondoXmfLu//QOg0X5+ftyWLbVK7Tq0rO+hPkysOeP+6
+2svIACl5UtYuzU3SxRS5nY3CGZ3/HxLKgJyLVhorSNXacI6ijRHZLnLDEqXU/90o
+GCVuxTJfvf8UMQ42KSjwmCM+hyWb9HlNj/NoSZ63K8Zq6Y41N45bx+36k9J8LIlQ
+UaFITc5HT6wWTHN0tVJxRQVsV5ZEBx1lauzDLxKCsD47+AJOMDhX/5mbVkndJZS/
+xuPiSOtg8Is+zto/rTm+wN9K4/gEAw==
+=Cosk
+-----END PGP SIGNATURE-----
+
+--tqI+Z3u+9OQ7kwn0--
 
