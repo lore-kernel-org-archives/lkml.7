@@ -2,200 +2,139 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 428EFC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 17:14:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D620C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 17:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 207C5206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 17:14:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 468A2206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 17:14:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PXTQz/+H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727413AbfKURO3 (ORCPT
+        id S1727425AbfKUROl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 12:14:29 -0500
-Received: from mx2.suse.de ([195.135.220.15]:54188 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727125AbfKURNk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 12:13:40 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 3AAC4B2CE;
-        Thu, 21 Nov 2019 17:13:38 +0000 (UTC)
-From:   Michal Suchanek <msuchanek@suse.de>
-To:     linux-scsi@vger.kernel.org, linux-block@vger.kernel.org
-Cc:     Michal Suchanek <msuchanek@suse.de>,
-        Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Eric Biggers <ebiggers@google.com>,
-        "J. Bruce Fields" <bfields@redhat.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Benjamin Coddington <bcodding@redhat.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Hou Tao <houtao1@huawei.com>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Jan Kara <jack@suse.cz>, Hannes Reinecke <hare@suse.com>,
-        "Ewan D. Milne" <emilne@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Matthew Wilcox <willy@infradead.org>
-Subject: [PATCH v4 04/10] cdrom: export autoclose logic as a separate function
-Date:   Thu, 21 Nov 2019 18:13:11 +0100
-Message-Id: <17ea0fe3b17634740466f62f7d7f69408d4c9ee2.1574355709.git.msuchanek@suse.de>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <cover.1574355709.git.msuchanek@suse.de>
-References: <cover.1574355709.git.msuchanek@suse.de>
+        Thu, 21 Nov 2019 12:14:41 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:34374 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726563AbfKUROk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 12:14:40 -0500
+Received: by mail-lf1-f65.google.com with SMTP id l28so3287250lfj.1;
+        Thu, 21 Nov 2019 09:14:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=cAzhUxhbi0ipJJRlq7LEPrGywJG5HkdxE06SxVESVKU=;
+        b=PXTQz/+Hd1s0CfRFTJDfyk4lkxAwzEQmZwcZZUy9l91K9JI/XZfGPbFhBdnt5WVooS
+         df2ySPhZBMZoQsNlxicqFixYOg9eiDRQcpBqB0rDmPCDWwflyXiLf3kOJs37sGuoADnl
+         SxAF5+GVCBpludbWA/oTghn5Z0/D5IT+q5rEIraqu3CY7AIcUqkZFRkYHO096ViBly50
+         Ru4c/1mhi5dsBboNqrLLr5LyBMkY3ZT8pK1B90JtQCOr+kgNrtxENg+n3RWLUMmIRfGr
+         vFY9PwdyXdEqQ9agz0Rj7R0mQBfIGQ4wxznDrQKmvdqpSgLh+hT0FZKl/X5VfHHLdWZS
+         WXzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=cAzhUxhbi0ipJJRlq7LEPrGywJG5HkdxE06SxVESVKU=;
+        b=Tck4EqklIx6OYyMO8Iv+00FhxZMM2BCUdJAdfLw0iJbHZ15p+P1dBdJxz2YZOtivfi
+         ThAfN7GqeDAh/Ebhe4KiFW3D3DR0X7nPQQGz5zoy1GkpdfS9i9oA9nMKo/dgE+8YdnAo
+         OGdZI74wvKtJa0t9YTQKJzdZvG7VKwaJUi1bRuH0A4b6qFmXPLArb6A0QD6i5DzdmiyR
+         ACiknQeM/uyH8eeQ3KYTPZBgt7mOzgXZUh92NlmRwSzQOSOP06cow0s8KP+tqRQwA8T5
+         fJSCaKjgR98doO7eCQvgfOXbiwhSJlTkfCaDHf889rILz4qSH9auxllzTrpTwLBEj94a
+         aC0A==
+X-Gm-Message-State: APjAAAU8COqpFSrcBIg8zTAoBV6PPsCYN2UVhOZsj346GDvtT0g1uJNe
+        OgrpHRNNgi7jJGMEaquZpoCxQ6W6
+X-Google-Smtp-Source: APXvYqwWYb4yZPpewD8z8jU6llJI5iWJWK6txjiQJN0ChqrVUrDu6k8kR6SO8R5t194m7diWfvyJjg==
+X-Received: by 2002:ac2:4c3b:: with SMTP id u27mr8918560lfq.131.1574356477219;
+        Thu, 21 Nov 2019 09:14:37 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id z19sm1583151ljk.66.2019.11.21.09.14.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 Nov 2019 09:14:36 -0800 (PST)
+Subject: Re: [PATCH v1 08/29] dt-bindings: interconnect: tegra: Add initial
+ IDs
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Mikko Perttunen <mperttunen@nvidia.com>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-tegra@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+References: <20191118200247.3567-1-digetx@gmail.com>
+ <20191118200247.3567-9-digetx@gmail.com> <20191119062535.GC2462695@ulmo>
+ <8cff3af3-42c7-3312-5f98-cd5eb98b7b7a@gmail.com>
+Message-ID: <f0f36176-8070-08a6-a61f-77221d916f04@gmail.com>
+Date:   Thu, 21 Nov 2019 20:14:35 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
+In-Reply-To: <8cff3af3-42c7-3312-5f98-cd5eb98b7b7a@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This allows the sr driver to call it without blocking other processes
-accessing the device. This solves a issue with process waiting in open()
-on broken drive to close the tray blocking out all access to the device,
-including nonblocking access to determine drive status.
+19.11.2019 19:56, Dmitry Osipenko пишет:
+> 19.11.2019 09:25, Thierry Reding пишет:
+>> On Mon, Nov 18, 2019 at 11:02:26PM +0300, Dmitry Osipenko wrote:
+>>> Define interconnect IDs for memory controller (MC), external memory
+>>> controller (EMC), external memory (EMEM) and memory clients of display
+>>> controllers (DC).
+>>>
+>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>> ---
+>>>  include/dt-bindings/interconnect/tegra-icc.h | 11 +++++++++++
+>>>  1 file changed, 11 insertions(+)
+>>>  create mode 100644 include/dt-bindings/interconnect/tegra-icc.h
+> 
+> 
+> Hello Thierry,
+> 
+>> There was a bit of discussion regarding this for a recent patch that I
+>> was working on, see:
+>>
+>> 	http://patchwork.ozlabs.org/project/linux-tegra/list/?series=140318
+> 
+> Thank you very much for the link.
+> 
+>> I'd rather not use an additional set of definitions for this. The memory
+>> controller already has a set of native IDs for memory clients that I
+>> think we can reuse for this.
+> 
+> I missed that it's fine to have multiple ICC connections defined
+> per-path, at quick glance looks like indeed it should be fine to re-use
+> MC IDs.
 
-Signed-off-by: Michal Suchanek <msuchanek@suse.de>
----
-v2: new patch
-v3:
- - change IOCTL to export
- - fix the logic about reporting cdroms inability to close tray
-v4:
- - move the autoclose code to the open code, align debug messages with
- the open code
----
- drivers/cdrom/cdrom.c | 85 ++++++++++++++++++++++++++++++-------------
- include/linux/cdrom.h |  1 +
- 2 files changed, 61 insertions(+), 25 deletions(-)
+Well, it is not quite correct to have multiple connections per-path.
 
-diff --git a/drivers/cdrom/cdrom.c b/drivers/cdrom/cdrom.c
-index b2bc0c8f9a69..38e6db879de0 100644
---- a/drivers/cdrom/cdrom.c
-+++ b/drivers/cdrom/cdrom.c
-@@ -1067,6 +1067,56 @@ static int cdrom_tray_close(struct cdrom_device_info *cdi)
- 	return cdrom_wait_for_status_change(cdi, &ret);
- }
- 
-+int cdrom_autoclose(struct cdrom_device_info *cdi)
-+{
-+	int ret;
-+	const struct cdrom_device_ops *cdo = cdi->ops;
-+
-+	cd_dbg(CD_OPEN, "entering cdrom_autoclose\n");
-+	if (!cdo->drive_status)
-+		return -EOPNOTSUPP;
-+
-+	ret = cdo->drive_status(cdi, CDSL_CURRENT);
-+	cd_dbg(CD_OPEN, "drive_status=%d\n", ret);
-+
-+	if (ret == CDS_TRAY_OPEN) {
-+		cd_dbg(CD_OPEN, "the tray is open...\n");
-+		if (CDROM_CAN(CDC_CLOSE_TRAY)) {
-+			if (!(cdi->options & CDO_AUTO_CLOSE))
-+				return -ENOMEDIUM;
-+			cd_dbg(CD_OPEN, "trying to close the tray\n");
-+			ret = cdrom_tray_close(cdi);
-+			if (ret == -ERESTARTSYS)
-+				return ret;
-+			if (ret) {
-+				cd_dbg(CD_OPEN, "bummer. tried to close the tray but failed.\n");
-+				return -ENOMEDIUM;
-+			}
-+			ret = cdo->drive_status(cdi, CDSL_CURRENT);
-+			if (ret == CDS_NO_DISC)
-+				cd_dbg(CD_OPEN, "tray might not contain a medium\n");
-+		} else {
-+			cd_dbg(CD_OPEN, "bummer. this drive can't close the tray.\n");
-+			return -ENOMEDIUM;
-+		}
-+	}
-+
-+	if (ret == CDS_DRIVE_NOT_READY) {
-+		int poll_res;
-+
-+		cd_dbg(CD_OPEN, "waiting for drive to become ready...\n");
-+		poll_res = cdrom_wait_for_status_change(cdi, &ret);
-+		if (poll_res == -ERESTARTSYS)
-+			return poll_res;
-+	}
-+
-+	if (ret != CDS_DISC_OK)
-+		return -ENOMEDIUM;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(cdrom_autoclose);
-+
- static int open_for_common(struct cdrom_device_info *cdi, tracktype *tracks)
- {
- 	int ret;
-@@ -1080,35 +1130,20 @@ static int open_for_common(struct cdrom_device_info *cdi, tracktype *tracks)
- 		cd_dbg(CD_OPEN, "drive_status=%d\n", ret);
- 		if (ret == CDS_TRAY_OPEN) {
- 			cd_dbg(CD_OPEN, "the tray is open...\n");
--			if (CDROM_CAN(CDC_CLOSE_TRAY)) {
--				if (!(cdi->options & CDO_AUTO_CLOSE))
--					return -ENOMEDIUM;
--				cd_dbg(CD_OPEN, "trying to close the tray\n");
--				ret = cdrom_tray_close(cdi);
--				if (ret == -ERESTARTSYS)
--					return ret;
--				if (ret) {
--					cd_dbg(CD_OPEN, "bummer. tried to close the tray but failed.\n");
--					return -ENOMEDIUM;
--				}
--				ret = cdo->drive_status(cdi, CDSL_CURRENT);
--				if (ret == CDS_NO_DISC)
--					cd_dbg(CD_OPEN, "tray might not contain a medium\n");
--			} else {
--				cd_dbg(CD_OPEN, "bummer. this drive can't close the tray.\n");
--				return -ENOMEDIUM;
--			}
-+			return -ENOMEDIUM;
- 		}
- 		if (ret == CDS_DRIVE_NOT_READY) {
--			int poll_res;
--
--			cd_dbg(CD_OPEN, "waiting for drive to become ready...\n");
--			poll_res = cdrom_wait_for_status_change(cdi, &ret);
--			if (poll_res == -ERESTARTSYS)
--				return poll_res;
-+			cd_dbg(CD_OPEN, "the drive is not ready...\n");
-+			return -ENOMEDIUM;
- 		}
--		if (ret != CDS_DISC_OK)
-+		if (ret == CDS_NO_DISC) {
-+			cd_dbg(CD_OPEN, "tray might not contain a medium...\n");
- 			return -ENOMEDIUM;
-+		}
-+		if (ret != CDS_DISC_OK) {
-+			cd_dbg(CD_OPEN, "drive returned status %i...\n", ret);
-+			return -ENOMEDIUM;
-+		}
- 	}
- 	cdrom_count_tracks(cdi, tracks);
- 	if (tracks->error == CDS_NO_DISC) {
-diff --git a/include/linux/cdrom.h b/include/linux/cdrom.h
-index 528271c60018..ea0415ba9f9d 100644
---- a/include/linux/cdrom.h
-+++ b/include/linux/cdrom.h
-@@ -126,6 +126,7 @@ extern void init_cdrom_command(struct packet_command *cgc,
- 			       void *buffer, int len, int type);
- extern int cdrom_dummy_generic_packet(struct cdrom_device_info *cdi,
- 				      struct packet_command *cgc);
-+int cdrom_autoclose(struct cdrom_device_info *cdi);
- 
- /* The SCSI spec says there could be 256 slots. */
- #define CDROM_MAX_SLOTS	256
--- 
-2.23.0
+Please take look at interconnect's binding and core.c:
 
+  1. there should be one src->dst connection per-path
+  2. each connection should comprise of one source and one destination nodes
+
+>> I've only added these client IDs for Tegra194 because that's where we
+>> need it to actually describe a specific hardware quirk, but I can come
+>> up with the equivalent for older chips as well.
+> 
+> Older Tegra SoCs have hardware units connected to MC through AHB bus,
+> like USB for example. These units do not have MC client IDs and there is
+> no MC ID defined for the AHB bus either, but probably it won't be a
+> problem to define IDs for them if will be necessary.
+> 
+
+Since interconnect binding requires to define both source and
+destination nodes for the path, then MC IDs are not enough in order to
+define interconnect path because these IDs represent only the source
+nodes. Destination node should be either EMC or EMEM.
