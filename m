@@ -2,174 +2,111 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C2C9C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 23:04:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93B1CC43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 23:04:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68D7A206CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 23:04:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574377455;
-	bh=Koai7NErl1GH0nfA4RIYH2veWqB1jR0BLhVOBmDicqg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=gGI90lW4myUHC9j8x/CW09+ZUJNwMISZSt8QRD9SEN8NgGWi24JUhi+oJQqSpiD9N
-	 dU37ePtmh+lalcsXCg7M4XLqo6IFQ5meuLdJnTlxvetSxFihsHp25fMwvGRJTW6J5a
-	 2HKOJ+mPplqqAHT+irgHaxC0XDgXDtwMW8lK/7Dk=
+	by mail.kernel.org (Postfix) with ESMTP id 68B83206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 23:04:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="Nc6/mbo0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbfKUXEO (ORCPT
+        id S1726757AbfKUXE4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 18:04:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39588 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725956AbfKUXEO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 18:04:14 -0500
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03EC220692;
-        Thu, 21 Nov 2019 23:04:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574377453;
-        bh=Koai7NErl1GH0nfA4RIYH2veWqB1jR0BLhVOBmDicqg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=PteXjos4P+Yc6cmX2NKNL3aCWYl3n+qjkuYxRc4c7haMT/JUNzz7vpOlAIQfEuGFI
-         44iX3LapUSP6GUVnM2m62kNxSDzael+GD4AsS+pnMSFru/OwG2DQHbfOlM4ryx+80L
-         9raBImGZdOPvfDjIICYiouCJOZ5dg1qyimlMHFrE=
-Date:   Thu, 21 Nov 2019 17:04:11 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Rajat Jain <rajatja@google.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Frederick Lawler <fred@fredlawl.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 4/5] PCI/ASPM: Add sysfs attributes for controlling
- ASPM link states
-Message-ID: <20191121230411.GA92983@google.com>
+        Thu, 21 Nov 2019 18:04:56 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:45415 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726265AbfKUXEz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 18:04:55 -0500
+Received: by mail-lj1-f193.google.com with SMTP id n21so5073499ljg.12
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 15:04:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=ujSnirx0MMYk1nWbIfrsLRgvcTHBcDKnqPSTu0uZhPM=;
+        b=Nc6/mbo0NU7TqyfZ0KlcWiAFlSVLQv17ZroqrY0RRWkOLd+EX3M0YN/8CWH1eoWDxm
+         2XpNdcx5yss6p7g5w7yowMTkhd7PhLgYbpaqA/BdiMguJHL7uZ8TFq9ct50g3xAb9MKi
+         uhYApgEyRVoNYA0UGHawQt2+EmxOwKrQGWpeHVB9t/hau3ZCsCa2P8QRC9000TmAfAaU
+         8WzEu4NDMYH1F3s30mvOmIRvbIfbo2uSIU29VSXlubGOa3SYWiqK5xXIvi3A7I0iz9Ix
+         VUVSNyhYKiy8s/u9kOjcbbaUoswVrPIZdGtdLvMJVR6nLYyPFZUKK98OIX58Vf1LFTdr
+         8P8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=ujSnirx0MMYk1nWbIfrsLRgvcTHBcDKnqPSTu0uZhPM=;
+        b=f/JRs6d0uIeNJJiAxu76S2S+Ujg9SANn/aqv5tj8d8sRU5uhazE0YdJ01jhioMBT+F
+         Hqkw1NIPZ+Mq31y9iZ+vyINusgpMELcKgZP9r/i0yCfhX6X0Fl8pX5F7lfE4Ex3LUhoK
+         w8eMJX8S6Ro2ho8vQ/bsudX/dNzxSq84BASFhRqAQ20s3hu9ox5u8nofcR/PodC/tfLA
+         EkWn3kT5W+aYrA4rNggjNiSSON72vD+uAi+xlSodfJCbngZi/CngMYppcNcyYZ0VTwmx
+         3SMfmDLphYyDDdsNjZEUY6E97ZyAjeRuxG1mBquwalsVUOO2ilGvA241qhl7TL3BldeX
+         IsIQ==
+X-Gm-Message-State: APjAAAVnhgb1b0yGIxtNlQQBVpJpimfZIyjl1sDh1zelSPWJKTnEBbKi
+        JvBbwO5kCONrkCmOk4u9qmQgyg==
+X-Google-Smtp-Source: APXvYqz0mplj+GIU5C+xgkex6FnLpZY91dYMJ1RaB5pMlahZp9Gr58LPzTcEQ5ePObyFharZ/pSU9g==
+X-Received: by 2002:a2e:8857:: with SMTP id z23mr10180706ljj.50.1574377493540;
+        Thu, 21 Nov 2019 15:04:53 -0800 (PST)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id i6sm2129075lfo.12.2019.11.21.15.04.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Nov 2019 15:04:53 -0800 (PST)
+Date:   Thu, 21 Nov 2019 15:04:45 -0800
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Haiyang Zhang <haiyangz@microsoft.com>
+Cc:     sashal@kernel.org, linux-hyperv@vger.kernel.org,
+        netdev@vger.kernel.org, kys@microsoft.com, sthemmin@microsoft.com,
+        olaf@aepfle.de, vkuznets@redhat.com, davem@davemloft.net,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net,v2 1/2] hv_netvsc: Fix offset usage in
+ netvsc_send_table()
+Message-ID: <20191121150445.47fc3358@cakuba.netronome.com>
+In-Reply-To: <1574372021-29439-2-git-send-email-haiyangz@microsoft.com>
+References: <1574372021-29439-1-git-send-email-haiyangz@microsoft.com>
+        <1574372021-29439-2-git-send-email-haiyangz@microsoft.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191121211017.GA854512@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[-cc Wong, Hui]
-
-On Thu, Nov 21, 2019 at 10:10:17PM +0100, Greg KH wrote:
-> On Thu, Nov 21, 2019 at 01:03:06PM -0800, Rajat Jain wrote:
-> > On Thu, Nov 21, 2019 at 12:49 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > On Sat, Oct 05, 2019 at 02:07:56PM +0200, Heiner Kallweit wrote:
-> > >
-> > > > +What:                /sys/bus/pci/devices/.../link_pm/clkpm
-> > > > +             /sys/bus/pci/devices/.../link_pm/l0s_aspm
-> > > > +             /sys/bus/pci/devices/.../link_pm/l1_aspm
-> > > > +             /sys/bus/pci/devices/.../link_pm/l1_1_aspm
-> > > > +             /sys/bus/pci/devices/.../link_pm/l1_2_aspm
-> > > > +             /sys/bus/pci/devices/.../link_pm/l1_1_pcipm
-> > > > +             /sys/bus/pci/devices/.../link_pm/l1_2_pcipm
-> > > > +Date:                October 2019
-> > > > +Contact:     Heiner Kallweit <hkallweit1@gmail.com>
-> > > > +Description: If ASPM is supported for an endpoint, then these files
-> > > > +             can be used to disable or enable the individual
-> > > > +             power management states. Write y/1/on to enable,
-> > > > +             n/0/off to disable.
-> > >
-> > > This is queued up for the v5.5 merge window, so if we want to tweak
-> > > anything (path names or otherwise), now is the time.
-> > >
-> > > I think I might be inclined to change the directory from "link_pm" to
-> > > "link", e.g.,
-> > >
-> > >   - /sys/bus/pci/devices/0000:00:1c.0/link_pm/clkpm
-> > >   + /sys/bus/pci/devices/0000:00:1c.0/link/clkpm
-> > >
-> > > because there are other things that haven't been merged yet that could
-> > > go in link/ as well:
-> > >
-> > >   * Mika's "link disable" control [1]
-> > >   * Dilip's link width/speed controls [2,3]
-> > >
-> > > The max_link_speed, max_link_width, current_link_speed,
-> > > current_link_width files could also logically be in link/, although
-> > > they've already been merged at the top level.
-> > >
-> > > Rajat's AER statistics change [4] is also coming.  Those stats aren't
-> > > link-related, so they wouldn't go in link/.  The current strawman is
-> > > an "aer_stats" directory, but I wonder if we should make a more
-> > > generic directory like "errors" that could be used for both AER and
-> > > DPC and potentially other error-related things.
-> > 
-> > Sorry, I haven't been able to find time for it for some time. I doubt
-> > if I'll be able to make it to 5.6 timeframe. Nevertheless...
-> > 
-> > > For example, we could have these link-related things:
-> > >
-> > >   /sys/.../0000:00:1c.0/link/clkpm            # RW ASPM stuff
-> > >   /sys/.../0000:00:1c.0/link/l0s_aspm
-> > >   /sys/.../0000:00:1c.0/link/...
-> > >   /sys/.../0000:00:1c.0/link/disable          # RW Mika
-> > >   /sys/.../0000:00:1c.0/link/speed            # RW Dilip's control
-> > >   /sys/.../0000:00:1c.0/link/width            # RW Dilip's control
-> > >   /sys/.../0000:00:1c.0/link/max_speed        # RO possible rework
-> > >   /sys/.../0000:00:1c.0/link/max_width        # RO possible rework
-> > >
-> > > With these backwards compatibility symlinks:
-> > >
-> > >   /sys/.../0000:00:1c.0/max_link_speed     -> link/max_speed
-> > >   /sys/.../0000:00:1c.0/current_link_speed -> link/speed
-> > >
-> > > Rajat's current patch puts the AER stats here at the top level:
-> > >
-> > >   /sys/.../0000:00:1c.0/aer_stats/fatal_bit4_DLP
-> > >
-> > > But maybe we could push them down like this:
-> > >
-> > >   /sys/.../0000:00:1c.0/errors/aer/stats/unc_04_dlp
-> > >   /sys/.../0000:00:1c.0/errors/aer/stats/unc_26_poison_tlb_blocked
-> > >   /sys/.../0000:00:1c.0/errors/aer/stats/cor_00_rx_err
-> > >   /sys/.../0000:00:1c.0/errors/aer/stats/cor_15_hdr_log_overflow
-> > 
-> > How do we create sub-sub-sub directories in sysfs (errors/aer/stats)?
+On Thu, 21 Nov 2019 13:33:40 -0800, Haiyang Zhang wrote:
+> To reach the data region, the existing code adds offset in struct
+> nvsp_5_send_indirect_table on the beginning of this struct. But the
+> offset should be based on the beginning of its container,
+> struct nvsp_message. This bug causes the first table entry missing,
+> and adds an extra zero from the zero pad after the data region.
+> This can put extra burden on the channel 0.
 > 
-> You should not.
-> 
-> > My understanding is that we can only create 1 subdirectory by using a
-> > "named" attribute group. If we want more hierarchy, the "errors" and
-> > the "aer" will need to be backed up by a kobject. Doable, but just
-> > mentioning.
-> 
-> Not doable, you break userspace tools as they will not "see" those
-> directories or attributes.
->
-> Keep it only 1 deep if at all possible please.
+> So, correct the offset usage. Also add a boundary check to ensure
+> not reading beyond data region.
 
-Oh, that's good to know, thanks!  I guess we'll have to think more
-about the error stuff.
+Please provide a change log at the end of the commit message when
+posting new version in the future.
 
-What sort of tools would this break?  There are no AER tools since the
-AER stats sysfs files don't exist yet, so I assume there are some
-generic sysfs tools or libraries.
+> Fixes: 5b54dac856cb ("hyperv: Add support for virtual Receive Side Scaling (vRSS)")
+> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
 
-Incidentally,
-https://www.kernel.org/doc/html/latest/admin-guide/sysfs-rules.html
-suggests that maybe we should be documenting these files with
-/sys/devices paths instead of the symlinks in /sys/bus/pci/devices/,
-e.g.,
+>  
+> -	tab = (u32 *)((unsigned long)&nvmsg->msg.v5_msg.send_table +
+> -		      nvmsg->msg.v5_msg.send_table.offset);
+> +	if (offset > msglen - count * sizeof(u32)) {
 
-  diff --git a/Documentation/ABI/testing/sysfs-bus-pci b/Documentation/ABI/testing/sysfs-bus-pci
-  -What:		/sys/bus/pci/devices/.../msi_bus
-  -What:		/sys/bus/pci/devices/.../msi_irqs/
-  -What:		/sys/bus/pci/devices/.../msi_irqs/<N>
-  +What:		/sys/devices/pci*/.../msi_bus
-  +What:		/sys/devices/pci*/.../msi_irqs/
-  +What:		/sys/devices/pci*/.../msi_irqs/<N>
+Can't this underflow now? What if msglen is small?
+
+> +		netdev_err(ndev, "Received send-table offset too big:%u\n",
+> +			   offset);
+> +		return;
+> +	}
+> +
+> +	tab = (void *)nvmsg + offset;
+>  
+>  	for (i = 0; i < count; i++)
+>  		net_device_ctx->tx_table[i] = tab[i];
