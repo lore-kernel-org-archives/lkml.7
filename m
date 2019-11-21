@@ -2,136 +2,109 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E7BEC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 12:07:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82DEFC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 12:08:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10A692073F
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 12:07:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56F7220679
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 12:08:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oM5zxwWj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EIKBJKnJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726541AbfKUMHq (ORCPT
+        id S1726655AbfKUMIq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 07:07:46 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40512 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726197AbfKUMHq (ORCPT
+        Thu, 21 Nov 2019 07:08:46 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46566 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726500AbfKUMIq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 07:07:46 -0500
-Received: by mail-wr1-f67.google.com with SMTP id 4so770759wro.7
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 04:07:45 -0800 (PST)
+        Thu, 21 Nov 2019 07:08:46 -0500
+Received: by mail-wr1-f66.google.com with SMTP id z7so678315wrl.13
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 04:08:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7mYFFCf+Z8nXytmTMuBZdPdUGhhj9kPEmros5X8MpI8=;
-        b=oM5zxwWj71aKIK5gCiqEg+Xfgz/PgCFK35D6Tf7BaiVD9qsk4r29bvVMeiKyDwuiZa
-         RUjplmH7Qag3ZB7ejbg//qBuodF/HGAHEzs6LpMUn4oRs6UtJSK9a3aGNFuVfbqAcCEo
-         uAGfWXRH1XHvAWZ2pprlEs5whnjdpwqPwud/6fflCdfnpBiJJJEh5lNigfjXvsuhpLaD
-         sDw4jcg6m6ibTEMBcnqoLufTobjrnwy+UOP3p4ajmvuAv8rFsn5wXjGX7dhuStr+nPgy
-         Ky92E4k/8Qj1pdpE3gdiaV+IVoKWI5LGjk2O0EWg8HFcg2ALYbwRwiimbjXTIXO1/wsT
-         32sw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KJqYvhXBJDffzJ0SjrFtTMgdKaiuOXK87Udh2aE1kIk=;
+        b=EIKBJKnJiIYImuHuGrq//OUcOmc2QWisi6PUQPO/OyaDLGtuuQM11gsFNR4tIaWIzQ
+         vkr0GFkp5oGVj32D4+DhnCOMVlIGOz+JFtvyLi/a79ZMb/e75QDLrBu+4GraHqwted9I
+         tt7BIJ7Sjj0Dv6fDTh5UWk4dlmm272JnXAXtZiGMs+uJygjivWYd3JcSYLNX802ocVA+
+         LbLASb3ZkekGzZfVY/toSTaYngajR6MVAPwGQJiuBypVc31mniCL8daeFXpz32nqmMbi
+         oKFYnqKtQU16WLzVCWiwiX/HuCYgGVQ/q31l8g+psrT5/oJfpnHY7XwKx1o4CsoTwSr/
+         PRZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7mYFFCf+Z8nXytmTMuBZdPdUGhhj9kPEmros5X8MpI8=;
-        b=hz0zs7/31yYSzFmvTqBxQe4/A+xs3Bsa0ryCfSi97dfWu0pBKjiakQSQ9We0KbqDho
-         WLHENHnYPin4cUUmUTrmfQ8SHcSlvBBoFF4BKQulDgbz/eatWlllPpmAc/OJrXwszPDM
-         wgO9eIQHGAE3VVQOxBRIiTQVu5jYWs8Y6XzUwBlLpweAMeOpCO8PJEUKE4c3ZAvu3KRi
-         QIUiwIWfh5p3HwTNeEwRBvDQEH9bNGtYURx7vJNC5qtjfts1ZrVNE6Ug+nXTEDYsU/vw
-         mCdzJ1CaJcb9ssu4t+PIGnHiJ/nntWOw9uzlU1zlbtMUR/HLnzToNk4cKJb1DYklQqzs
-         5qMA==
-X-Gm-Message-State: APjAAAWSZjDuv04sh4m//iw+gV9bRwQB90gcGNt5R/3hv6h3D0BIYI55
-        LGGanN/iTUTPjwWyYCXJW36bP7zPqmxJwi3jkbSV6w==
-X-Google-Smtp-Source: APXvYqy6hGQ0wJNUCAKu1MGiGHRqX9gJyFiRnZfGuHAvB39GJT5pxL0cV3J7ESw6KZzJ2qr/Xk/7ExxM/1+otTXGMm4=
-X-Received: by 2002:adf:f20d:: with SMTP id p13mr9663729wro.325.1574338064211;
- Thu, 21 Nov 2019 04:07:44 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KJqYvhXBJDffzJ0SjrFtTMgdKaiuOXK87Udh2aE1kIk=;
+        b=KsorRGfJjREsFvN6nEm5FkSpm0yPTfnLmVoHZ22BzF86Bk8yBjJq0G6fUHCEUBF/oU
+         PefeBfeiEMHUW5Szk/9dCrodFl2+/EpQvzzB7RTjI5txhG6sx02/5xEfbm2o4v3o31nF
+         u7eLkuhZwIaOy/CyhQc1ZKBukHw8Cwhn2YivSntczDuobriV1hlsQ8glkTa9KQYOPTIg
+         WnTDHAy3WfTRFxAm+O+USji2RVAoY1wFNrrDgYFulvKiw7gTstqFYTJ0F9JXr3E7VY7e
+         6srriR9WqxpyE4nMXRzwtFmKGBC4//nIcd/e1JSrsiioQieqUchL+VTzJo+oR8KDZlp+
+         iKMw==
+X-Gm-Message-State: APjAAAW8kMbR0IkSr9yxhhji4KCZ3w+Nkc1FFW7zu6LbJjA6OtYump/Z
+        bxh2kmmJJaLYHGfuSjs0w50GEDj3
+X-Google-Smtp-Source: APXvYqxt7UYus/QYBp7KgEb4MEKvp80qZOawsyaiNOw6CLOIZfZXznUS+4AiMe1KGWmh6JstEnKHaw==
+X-Received: by 2002:a5d:6192:: with SMTP id j18mr10526390wru.239.1574338124290;
+        Thu, 21 Nov 2019 04:08:44 -0800 (PST)
+Received: from localhost.localdomain ([2a02:a03f:40e1:9900:8828:fc8c:bd94:ae7f])
+        by smtp.gmail.com with ESMTPSA id g8sm2738874wmk.23.2019.11.21.04.08.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Nov 2019 04:08:43 -0800 (PST)
+From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Derek Kiernan <derek.kiernan@xilinx.com>,
+        Dragan Cvetic <dragan.cvetic@xilinx.com>
+Subject: [PATCH] misc: xilinx_sdfec: add missing __user annotation
+Date:   Thu, 21 Nov 2019 13:08:27 +0100
+Message-Id: <20191121120827.4079-1-luc.vanoostenryck@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-References: <20191121115902.2551-1-will@kernel.org>
-In-Reply-To: <20191121115902.2551-1-will@kernel.org>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Thu, 21 Nov 2019 13:07:32 +0100
-Message-ID: <CAKv+Gu_w1uE=9on8xU7z5uvkXE2xvPKsOqxUv2W_FkEi=TmJhw@mail.gmail.com>
-Subject: Re: [RESEND PATCH v4 00/10] Rework REFCOUNT_FULL using atomic_fetch_* operations
-To:     Will Deacon <will@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Hanjun Guo <guohanjun@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 21 Nov 2019 at 12:59, Will Deacon <will@kernel.org> wrote:
->
-> Hi everybody,
->
-> This is a resend of version four of the patches I posted here:
->
->   v4: https://lore.kernel.org/lkml/20191030143035.19440-1-will@kernel.org
->
-> Previous versions can be found at:
->
->   v1: https://lkml.kernel.org/r/20190802101000.12958-1-will@kernel.org
->   v2: https://lkml.kernel.org/r/20190827163204.29903-1-will@kernel.org
->   v3: https://lkml.kernel.org/r/20191007154703.5574-1-will@kernel.org
->
-> I didn't receive any feedback last time around, other than some positive
-> noises from Kees, so please consider this for inclusion in mainline.
->
+The second arg of xsdfec_set_order() is a 'void __user *'
+and this pointer is then used in get_user() which expect
+a __user pointer.
 
-For the series,
+But get_user() can't be used with a void pointer, it a
+pointer to the effective type. This is done here by casting
+the argument to a pointer to the effective type but the
+__user is missing in the cast.
 
-Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+Fix this by adding the missing __user in the cast.
 
+CC: Derek Kiernan <derek.kiernan@xilinx.com>
+CC: Dragan Cvetic <dragan.cvetic@xilinx.com>
+Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+---
+ drivers/misc/xilinx_sdfec.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: Ingo Molnar <mingo@kernel.org>
-> Cc: Elena Reshetova <elena.reshetova@intel.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> Cc: Hanjun Guo <guohanjun@huawei.com>
->
-> --->8
->
-> Will Deacon (10):
->   lib/refcount: Define constants for saturation and max refcount values
->   lib/refcount: Ensure integer operands are treated as signed
->   lib/refcount: Remove unused refcount_*_checked() variants
->   lib/refcount: Move bulk of REFCOUNT_FULL implementation into header
->   lib/refcount: Improve performance of generic REFCOUNT_FULL code
->   lib/refcount: Move saturation warnings out of line
->   lib/refcount: Consolidate REFCOUNT_{MAX,SATURATED} definitions
->   refcount: Consolidate implementations of refcount_t
->   lib/refcount: Remove unused 'refcount_error_report()' function
->   drivers/lkdtm: Remove references to CONFIG_REFCOUNT_FULL
->
->  arch/Kconfig                       |  21 ---
->  arch/arm/Kconfig                   |   1 -
->  arch/arm64/Kconfig                 |   1 -
->  arch/s390/configs/debug_defconfig  |   1 -
->  arch/x86/Kconfig                   |   1 -
->  arch/x86/include/asm/asm.h         |   6 -
->  arch/x86/include/asm/refcount.h    | 126 --------------
->  arch/x86/mm/extable.c              |  49 ------
->  drivers/gpu/drm/i915/Kconfig.debug |   1 -
->  drivers/misc/lkdtm/refcount.c      |  11 +-
->  include/linux/kernel.h             |   7 -
->  include/linux/refcount.h           | 269 ++++++++++++++++++++++++-----
->  kernel/panic.c                     |  11 --
->  lib/refcount.c                     | 255 +++------------------------
->  14 files changed, 257 insertions(+), 503 deletions(-)
->  delete mode 100644 arch/x86/include/asm/refcount.h
->
-> --
-> 2.24.0.432.g9d3f5f5b63-goog
->
+diff --git a/drivers/misc/xilinx_sdfec.c b/drivers/misc/xilinx_sdfec.c
+index 11835969e982..f05e1b4c2826 100644
+--- a/drivers/misc/xilinx_sdfec.c
++++ b/drivers/misc/xilinx_sdfec.c
+@@ -733,7 +733,7 @@ static int xsdfec_set_order(struct xsdfec_dev *xsdfec, void __user *arg)
+ 	enum xsdfec_order order;
+ 	int err;
+ 
+-	err = get_user(order, (enum xsdfec_order *)arg);
++	err = get_user(order, (enum xsdfec_order __user *)arg);
+ 	if (err)
+ 		return -EFAULT;
+ 
+-- 
+2.24.0
+
