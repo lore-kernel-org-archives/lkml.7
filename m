@@ -2,164 +2,143 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3669C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:39:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF02C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:40:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B977820656
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:39:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5616220656
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:40:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OsfjO340"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PA9bCfC2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727142AbfKUOjy (ORCPT
+        id S1727165AbfKUOkG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 09:39:54 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:52556 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726762AbfKUOjy (ORCPT
+        Thu, 21 Nov 2019 09:40:06 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:37847 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726762AbfKUOkF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 09:39:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574347192;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=lJDYWSgP00g7qIjqTZLTHnhWuHMmstvkVgAhwaYoRHs=;
-        b=OsfjO340y8YCVflKGYo2v2hZeH0TjPZpY0xKcDkKVKMnjHwvT0y2V/VjlKTGkQUwK5h9qQ
-        HnpdKjtjre9FP+TFJGJzaDzQHFpFmZS+sAaWQ3aIOD/XcAd0afvOL0bHtRpm/wdI67Rt/X
-        zdE+Q1bVhAokLR8q+OUBYHJGJkhh4d8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-280-OUxjw_4_OD6Gq5Bg9m8Kzw-1; Thu, 21 Nov 2019 09:39:48 -0500
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A32FB18B9FC1;
-        Thu, 21 Nov 2019 14:39:47 +0000 (UTC)
-Received: from ovpn-117-89.ams2.redhat.com (ovpn-117-89.ams2.redhat.com [10.36.117.89])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4E0C46E70C;
-        Thu, 21 Nov 2019 14:39:46 +0000 (UTC)
-Message-ID: <65c66f8c860b7fc0c01f65feecae08aebb5cb0c9.camel@redhat.com>
-Subject: Re: [PATCH net] udp: drop skb extensions before marking skb
- stateless
-From:   Paolo Abeni <pabeni@redhat.com>
-To:     Florian Westphal <fw@strlen.de>, netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Byron Stanoszek <gandalf@winds.org>
-Date:   Thu, 21 Nov 2019 15:39:45 +0100
-In-Reply-To: <20191121055623.20952-1-fw@strlen.de>
-References: <20191121053031.GI20235@breakpoint.cc>
-         <20191121055623.20952-1-fw@strlen.de>
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30)
+        Thu, 21 Nov 2019 09:40:05 -0500
+Received: by mail-qt1-f194.google.com with SMTP id g50so3915869qtb.4;
+        Thu, 21 Nov 2019 06:40:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=cz2tp7tcw8k14gkrUnEP9zX8ksAJjsAkvSmuB4LZNbQ=;
+        b=PA9bCfC2QaMdT3abm5t9qg6tld7cebGzmYocA7wE3d2WCahijpsoOQ2dhT2Yt78Cc1
+         slmIFEz4FRIA//ThFS1+Z//pP84evv+lw0Zng9HuWsnpH3virjSWYROI9b5hzujx3gQB
+         AT0xHsyiv1dEpGsUGayvgUw0da5h3O9k+tlZ4pU+c2jxdP/sZ/snJJb1LS9fUWUbC5bB
+         ra9eOImYroIOb5OUgPvywOUmaIjhDReY0RjRSrP1EEZkz3LBG9bmuy4DjQscNNFbLdHV
+         jCiMvMxARLF3PF2925VhmLj8+LdX1Y5Vz++XQuCEl6ECI41L1K4hl6LH6ZVpZV3RP00b
+         BGAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=cz2tp7tcw8k14gkrUnEP9zX8ksAJjsAkvSmuB4LZNbQ=;
+        b=Koai2rMx+zCIDvTMR7ZHs7fXoDucB52okkVhSPcFf2SpPLgLteSIYM0UIjxP6ROKXz
+         1V5dSfjepcJ+szUGRuGDhmPf9ymwtAKEUqnNU+19E6We/nXw6nwTcSKt+d76nx24wM+F
+         XH1MxZotlQQj7r7+OKG3LSidSVHL6J2N60tTn0VihaqrQG9lRfw91kyXRVGMaUV1Mw4w
+         9YSY18KLatSU7Q+vspooZZrW0kCSzPKGF08BJG3WoGsd2BF13aR7RaTychOSrDL80IIk
+         hmCWoc5i2v2IlQNVcjPyCcV2gvzvkiYwI+hYoJr+SC1uhAOWQUMA1rECUG7cA3gJxNgr
+         2JGA==
+X-Gm-Message-State: APjAAAWGLdyzyxp7m09c4iBXkSLfzG31tkTXJzRQeHDHi2jOfpFar2j5
+        2BMLsUy6+Ib5i87T+8stXYI=
+X-Google-Smtp-Source: APXvYqxoPNNEp3XfqyoLMTw9ZAzBvWkITtRpOOYWrC7wKiBhnPQzKioSBjYvjgD0TLf3kHQymvdr3A==
+X-Received: by 2002:ac8:6d0b:: with SMTP id o11mr8818428qtt.253.1574347204774;
+        Thu, 21 Nov 2019 06:40:04 -0800 (PST)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id q34sm1638736qte.50.2019.11.21.06.40.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Nov 2019 06:40:04 -0800 (PST)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id F271F40D3E; Thu, 21 Nov 2019 11:40:01 -0300 (-03)
+Date:   Thu, 21 Nov 2019 11:40:01 -0300
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-trace-devel@vger.kernel.org
+Subject: Re: [PATCH] libtraceevent: fix header installation
+Message-ID: <20191121144001.GF5078@kernel.org>
+References: <20191114133719.309-1-sudipm.mukherjee@gmail.com>
+ <20191114174022.62c8259e@gandalf.local.home>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: OUxjw_4_OD6Gq5Bg9m8Kzw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191114174022.62c8259e@gandalf.local.home>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-11-21 at 06:56 +0100, Florian Westphal wrote:
-> Once udp stack has set the UDP_SKB_IS_STATELESS flag, later skb free
-> assumes all skb head state has been dropped already.
->=20
-> This will leak the extension memory in case the skb has extensions other
-> than the ipsec secpath, e.g. bridge nf data.
->=20
-> To fix this, set the UDP_SKB_IS_STATELESS flag only if we don't have
-> extensions or if the extension space can be free'd.
->=20
-> Fixes: 895b5c9f206eb7d25dc1360a ("netfilter: drop bridge nf reset from nf=
-_reset")
-> Cc: Paolo Abeni <pabeni@redhat.com>
-> Reported-by: Byron Stanoszek <gandalf@winds.org>
-> Signed-off-by: Florian Westphal <fw@strlen.de>
-> ---
->  include/linux/skbuff.h |  6 ++++++
->  net/ipv4/udp.c         | 27 ++++++++++++++++++++++-----
->  2 files changed, 28 insertions(+), 5 deletions(-)
->=20
-> diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
-> index 64a395c7f689..8688f7adfda7 100644
-> --- a/include/linux/skbuff.h
-> +++ b/include/linux/skbuff.h
-> @@ -4169,12 +4169,18 @@ static inline void skb_ext_reset(struct sk_buff *=
-skb)
->  =09=09skb->active_extensions =3D 0;
->  =09}
->  }
-> +
-> +static inline bool skb_has_extensions(struct sk_buff *skb)
-> +{
-> +=09return unlikely(skb->active_extensions);
-> +}
->  #else
->  static inline void skb_ext_put(struct sk_buff *skb) {}
->  static inline void skb_ext_reset(struct sk_buff *skb) {}
->  static inline void skb_ext_del(struct sk_buff *skb, int unused) {}
->  static inline void __skb_ext_copy(struct sk_buff *d, const struct sk_buf=
-f *s) {}
->  static inline void skb_ext_copy(struct sk_buff *dst, const struct sk_buf=
-f *s) {}
-> +static inline bool skb_has_extensions(struct sk_buff *skb) { return fals=
-e; }
->  #endif /* CONFIG_SKB_EXTENSIONS */
-> =20
->  static inline void nf_reset_ct(struct sk_buff *skb)
-> diff --git a/net/ipv4/udp.c b/net/ipv4/udp.c
-> index 1d58ce829dca..447defbfccdd 100644
-> --- a/net/ipv4/udp.c
-> +++ b/net/ipv4/udp.c
-> @@ -1297,6 +1297,27 @@ int udp_sendpage(struct sock *sk, struct page *pag=
-e, int offset,
-> =20
->  #define UDP_SKB_IS_STATELESS 0x80000000
-> =20
-> +/* all head states (dst, sk, nf conntrack) except skb extensions are
-> + * cleared by udp_rcv().
-> + *
-> + * We need to preserve secpath, if present, to eventually process
-> + * IP_CMSG_PASSSEC at recvmsg() time.
-> + *
-> + * Other extensions can be cleared.
-> + */
-> +static bool udp_try_make_stateless(struct sk_buff *skb)
-> +{
-> +=09if (!skb_has_extensions(skb))
-> +=09=09return true;
-> +
-> +=09if (!secpath_exists(skb)) {
-> +=09=09skb_ext_reset(skb);
-> +=09=09return true;
-> +=09}
-> +
-> +=09return false;
-> +}
-> +
->  static void udp_set_dev_scratch(struct sk_buff *skb)
->  {
->  =09struct udp_dev_scratch *scratch =3D udp_skb_scratch(skb);
-> @@ -1308,11 +1329,7 @@ static void udp_set_dev_scratch(struct sk_buff *sk=
-b)
->  =09scratch->csum_unnecessary =3D !!skb_csum_unnecessary(skb);
->  =09scratch->is_linear =3D !skb_is_nonlinear(skb);
->  #endif
-> -=09/* all head states execept sp (dst, sk, nf) are always cleared by
-> -=09 * udp_rcv() and we need to preserve secpath, if present, to eventual=
-ly
-> -=09 * process IP_CMSG_PASSSEC at recvmsg() time
-> -=09 */
-> -=09if (likely(!skb_sec_path(skb)))
-> +=09if (udp_try_make_stateless(skb))
->  =09=09scratch->_tsize_state |=3D UDP_SKB_IS_STATELESS;
->  }
+Em Thu, Nov 14, 2019 at 05:40:22PM -0500, Steven Rostedt escreveu:
+> 
+> Arnaldo,
+> 
+> Can you take this?
+> 
+> Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-Acked-by: Paolo Abeni <pabeni@redhat.com>
+Thanks, applied.
 
+- Arnaldo
+ 
+> -- Steve
+> 
+> 
+> On Thu, 14 Nov 2019 13:37:19 +0000
+> Sudip Mukherjee <sudipm.mukherjee@gmail.com> wrote:
+> 
+> > When we passed some location in DESTDIR, install_headers called
+> > do_install with DESTDIR as part of the second argument. But do_install
+> > is again using '$(DESTDIR_SQ)$2', so as a result the headers were
+> > installed in a location $DESTDIR/$DESTDIR. In my testing I passed
+> > DESTDIR=/home/sudip/test and the headers were installed in:
+> > /home/sudip/test/home/sudip/test/usr/include/traceevent.
+> > Lets remove DESTDIR from the second argument of do_install so that the
+> > headers are installed in the correct location.
+> > 
+> > Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+> > ---
+> > 
+> > Hi Steve,
+> > sent this earlier as an attachment to an email thread, not sure if you
+> > saw it, so sending it now properly.
+> > The other problem with the pkgconfig, I guess we can live with that for
+> > now as that folder is given by pc_path.
+> > 
+> >  tools/lib/traceevent/Makefile | 8 ++++----
+> >  1 file changed, 4 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/tools/lib/traceevent/Makefile b/tools/lib/traceevent/Makefile
+> > index 5315f3787f8d..cbb429f55062 100644
+> > --- a/tools/lib/traceevent/Makefile
+> > +++ b/tools/lib/traceevent/Makefile
+> > @@ -232,10 +232,10 @@ install_pkgconfig:
+> >  
+> >  install_headers:
+> >  	$(call QUIET_INSTALL, headers) \
+> > -		$(call do_install,event-parse.h,$(DESTDIR)$(includedir_SQ),644); \
+> > -		$(call do_install,event-utils.h,$(DESTDIR)$(includedir_SQ),644); \
+> > -		$(call do_install,trace-seq.h,$(DESTDIR)$(includedir_SQ),644); \
+> > -		$(call do_install,kbuffer.h,$(DESTDIR)$(includedir_SQ),644)
+> > +		$(call do_install,event-parse.h,$(includedir_SQ),644); \
+> > +		$(call do_install,event-utils.h,$(includedir_SQ),644); \
+> > +		$(call do_install,trace-seq.h,$(includedir_SQ),644); \
+> > +		$(call do_install,kbuffer.h,$(includedir_SQ),644)
+> >  
+> >  install: install_lib
+> >  
+
+-- 
+
+- Arnaldo
