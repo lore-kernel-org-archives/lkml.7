@@ -2,137 +2,97 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13399C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:50:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA38DC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:51:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC2A92068E
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:50:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="DnacKCm2"
+	by mail.kernel.org (Postfix) with ESMTP id A6EF32068E
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:51:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbfKUVui (ORCPT
+        id S1726921AbfKUVv1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 16:50:38 -0500
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:8904 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726329AbfKUVuh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 16:50:37 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dd706a70001>; Thu, 21 Nov 2019 13:50:32 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 21 Nov 2019 13:50:35 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 21 Nov 2019 13:50:35 -0800
-Received: from [10.2.168.213] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 21 Nov
- 2019 21:50:35 +0000
-Subject: Re: [PATCH v7 02/24] mm/gup: factor out duplicate code from four
- routines
-To:     Jan Kara <jack@suse.cz>
-CC:     Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
-        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
-        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
-References: <20191121071354.456618-1-jhubbard@nvidia.com>
- <20191121071354.456618-3-jhubbard@nvidia.com> <20191121080356.GA24784@lst.de>
- <852f6c27-8b65-547b-89e0-e8f32a4d17b9@nvidia.com>
- <20191121094908.GB18190@quack2.suse.cz>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <ecd0a178-3890-5fad-2313-11b3df907f9f@nvidia.com>
-Date:   Thu, 21 Nov 2019 13:47:47 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 21 Nov 2019 16:51:27 -0500
+Received: from mga05.intel.com ([192.55.52.43]:33229 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726329AbfKUVv1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 16:51:27 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Nov 2019 13:51:26 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,227,1571727600"; 
+   d="scan'208";a="210049893"
+Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
+  by orsmga003.jf.intel.com with ESMTP; 21 Nov 2019 13:51:26 -0800
+Date:   Thu, 21 Nov 2019 13:51:26 -0800
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@kernel.org>, Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
+Subject: Re: [PATCH v10 6/6] x86/split_lock: Enable split lock detection by
+ kernel parameter
+Message-ID: <20191121215126.GA9075@agluck-desk2.amr.corp.intel.com>
+References: <1574297603-198156-1-git-send-email-fenghua.yu@intel.com>
+ <1574297603-198156-7-git-send-email-fenghua.yu@intel.com>
+ <20191121060444.GA55272@gmail.com>
+ <20191121130153.GS4097@hirez.programming.kicks-ass.net>
+ <20191121131522.GX5671@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <20191121094908.GB18190@quack2.suse.cz>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1574373032; bh=kU5UGk7rYta5qBqyhgDE8hfKXijiGAD2NIzjPl1Hld4=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=DnacKCm2GFnxzRow8XHHjnv9A3uMI6LI6SiIGhg9bKcp76MqPQ8kF1M27y/KaRAbw
-         xxowc8Q3DyiD2kAcAm0nQ17JpX8GvIrqJ8uSjriDnOLoj/h1UR33AwThcGRh+kdiFs
-         sIZ9xwXRicfai3imhi7lfxcAqYrkI8TWeVUm4/7D0SDPmiW6FMWhSFSQx92VV4EoOz
-         XFN+VtOdWxZk+dXcyMd50CRCI5bozfozwO/LAtNo36xbQ2gRR/BBiAeTLEx8hKdZSK
-         Fx3jsqI8EasMtw1tkRf01vJb8NeCgZkxRIPz/M0TVfxHrLLklLoxP+jEnZwmUVejAC
-         k2q6xFFz7w7hA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191121131522.GX5671@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/21/19 1:49 AM, Jan Kara wrote:
-> On Thu 21-11-19 00:29:59, John Hubbard wrote:
->> On 11/21/19 12:03 AM, Christoph Hellwig wrote:
->>> Otherwise this looks fine and might be a worthwhile cleanup to feed
->>> Andrew for 5.5 independent of the gut of the changes.
->>>
->>> Reviewed-by: Christoph Hellwig <hch@lst.de>
->>>
->>
->> Thanks for the reviews! Say, it sounds like your view here is that this
->> series should be targeted at 5.6 (not 5.5), is that what you have in mind?
->> And get the preparatory patches (1-9, and maybe even 10-16) into 5.5?
-> 
-> Yeah, actually I feel the same. The merge window is going to open on Sunday
-> and the series isn't still fully baked and happily sitting in linux-next
-> (and larger changes should really sit in linux-next for at least a week,
-> preferably two, before the merge window opens to get some reasonable test
-> coverage).  So I'd take out the independent easy patches that are already
-> reviewed, get them merged into Andrew's (or whatever other appropriate
-> tree) now so that they get at least a week of testing in linux-next before
-> going upstream.  And the more involved bits will have to wait for 5.6 -
-> which means let's just continue working on them as we do now because
-> ideally in 4 weeks we should have them ready with all the reviews so that
-> they can be picked up and integrated into linux-next.
-> 
-> 								Honza
+On Thu, Nov 21, 2019 at 02:15:22PM +0100, Peter Zijlstra wrote:
+> Also, just to remind everyone why we really want this. Split lock is a
+> potent, unprivileged, DoS vector.
 
-OK, thanks for spelling it out. I'll shift over to getting the easy patches
-prepared for 5.5, for now.
+So how much do we "really want this"?
 
-thanks,
--- 
-John Hubbard
-NVIDIA
+It's been 543 days since the first version of this patch was
+posted. We've made exactly zero progress.
+
+Current cut down patch series is the foundation to move one
+small step towards getting this done.
+
+Almost all of what's in this set will be required in whatever
+final solution we want to end up with. Out of this:
+
+ Documentation/admin-guide/kernel-parameters.txt |   10 +++
+ arch/x86/include/asm/cpu.h                      |    5 +
+ arch/x86/include/asm/cpufeatures.h              |    2 
+ arch/x86/include/asm/msr-index.h                |    8 ++
+ arch/x86/include/asm/traps.h                    |    3 +
+ arch/x86/kernel/cpu/common.c                    |    2 
+ arch/x86/kernel/cpu/intel.c                     |   72 ++++++++++++++++++++++++
+ arch/x86/kernel/traps.c                         |   22 +++++++
+ 8 files changed, 123 insertions(+), 1 deletion(-)
+
+the only substantive thing that will *change* is to make the default
+be "on" rather than "off".
+
+Everything else we want to do is *additions* to this base. We could
+wait until we have those done and maybe see if we can stall out this
+series to an even thousand days. Or, we can take the imperfect base
+and build incrementally on it.
+
+You've expressed concern about firmware ... with a simple kernel command
+line switch to flip, LUV (https://01.org/linux-uefi-validation) could begin
+testing to make sure that firmware is ready for the big day when we throw
+the switch from "off" to "on".
+
+-Tony
