@@ -2,444 +2,152 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5942FC43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 07:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA162C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 07:50:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20391206D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 07:48:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O18KP3c8"
+	by mail.kernel.org (Postfix) with ESMTP id A7E5020898
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 07:50:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726614AbfKUHsy (ORCPT
+        id S1726658AbfKUHuZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 02:48:54 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:34542 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725842AbfKUHsx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 02:48:53 -0500
-Received: by mail-pf1-f194.google.com with SMTP id n13so1256895pff.1;
-        Wed, 20 Nov 2019 23:48:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=0AHoXKBeiHfVOAlJ8eUc0ml1SVtw0bxVrUMv8+xZmSY=;
-        b=O18KP3c8MuNE/peTVtVbsMFGzxa1d5zRbE/0MI9YjODcfKHC70NvuQ/hEGRuqgtFze
-         i2StBN7mcK+1Ab4mfoEd46g3Sg71PXE9XIK840GAsqZw4ZbKc7NhOV28xordQFsZ9dJG
-         ciPgbl8tJxg79uEBDlCbh7hgQ0EZk3KPUnmT5NJZRRxaDW35bOecLOwXTnmLMqaE6yO2
-         j3lz5c+aHbLOPPgk3L+h5y1G37rgrGL9Xgm2zypiBeoaLmU97YMeiuABQmAssPol6clI
-         xjalaikZ0rPqXKhf9nwDhVyOHoIsIhcGL+3HKrgLdBbjD7Bo6qp3MH2VwMNQMmxKrXnN
-         kinA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=0AHoXKBeiHfVOAlJ8eUc0ml1SVtw0bxVrUMv8+xZmSY=;
-        b=hNjO6DP5ASHp/QT7tnF6dpAVfZBprmM4FjFUJgLBsdgmR+1kFb2BzeCAgQRbFG3vfh
-         KDthFIuA3aLp1pZX9I0dHNks6v/1iqofGzmSpV5DbcwNfGuXZGqexTAEZ3UicrIMX1gb
-         0RAkXEWdlj/7SS/0BdeVhGgpoVHe3Jm4L57RSsYcIemPXKPtDTVIOubRAIK2JznmsrTn
-         C2N/108qNrsrRLLgTSm38Ch+skqazr46F99d5bqJaApqKRLCFx+NIsOVrYeeBZjthsIM
-         HFDtlwA9B1UO1B/5bh+3hsYXjnistvNh8UFm4Cr8YOoK/D9ugrwGcpmMVCvQLhmi9gGw
-         U2Vw==
-X-Gm-Message-State: APjAAAVkFQpC7s3FKo1NG3604hR1rKUQiMSbj4kqtfexNzKZkS6pDOPg
-        rp+/qJNXP3OrvxRuZRiVOG2PERWr
-X-Google-Smtp-Source: APXvYqzvkWa/OpRByvNc2AbV0OfSnNxlcYaG+GEMcyVJa9xbmT9KIDL/JW+GeWTt7/FITTZev9uwmA==
-X-Received: by 2002:aa7:8690:: with SMTP id d16mr8978023pfo.117.1574322532634;
-        Wed, 20 Nov 2019 23:48:52 -0800 (PST)
-Received: from cnn ([2402:3a80:474:4290:5d90:34b2:635a:ec78])
-        by smtp.gmail.com with ESMTPSA id s26sm2000234pfh.66.2019.11.20.23.48.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 20 Nov 2019 23:48:52 -0800 (PST)
-Date:   Thu, 21 Nov 2019 13:18:44 +0530
-From:   Manikandan <manikandan.hcl.ers.epl@gmail.com>
-To:     Vijay Khemka <vijaykhemka@fb.com>, andrew@aj.id.au
-Cc:     joel@jms.id.au, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
-        manikandan.e@hcl.com
-Subject: Re: [PATCH] ARM: dts: aspeed: Adding Facebook Yosemite V2 BMC
-Message-ID: <20191121074843.GA10607@cnn>
-References: <20191118123707.GA5560@cnn>
- <b2f503f0-0f13-46bc-a1be-c82a42b85797@www.fastmail.com>
- <D34D3A2F-9CD5-4924-8407-F6EB0A4C66B5@fb.com>
+        Thu, 21 Nov 2019 02:50:25 -0500
+Received: from mx2.suse.de ([195.135.220.15]:42132 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725842AbfKUHuZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 02:50:25 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C0303B270;
+        Thu, 21 Nov 2019 07:50:22 +0000 (UTC)
+Subject: Re: [PATCH] drm/mgag200: Fix Kconfig indentation
+To:     Krzysztof Kozlowski <krzk@kernel.org>, linux-kernel@vger.kernel.org
+Cc:     David Airlie <airlied@linux.ie>, Dave Airlie <airlied@redhat.com>,
+        dri-devel@lists.freedesktop.org
+References: <20191120133625.11478-1-krzk@kernel.org>
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
+ BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
+ Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
+ irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
+ clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
+ mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
+ KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
+ Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
+ UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
+ RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
+ dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
+ ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
+ 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
+ wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
+ h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
+ n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
+ aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
+ HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
+ 3H26qrE=
+Message-ID: <3ae84d5d-a50c-8772-4088-868fc8a6ed8b@suse.de>
+Date:   Thu, 21 Nov 2019 08:50:18 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="gKMricLos+KVdGMg"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <D34D3A2F-9CD5-4924-8407-F6EB0A4C66B5@fb.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20191120133625.11478-1-krzk@kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="p2L1lQQ6oq7m4AD5N54b9Al1ZDXIphrzL"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--p2L1lQQ6oq7m4AD5N54b9Al1ZDXIphrzL
+Content-Type: multipart/mixed; boundary="EJGRMvCdgKmGCMh4YYBZbxspFyJifmuc4";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Krzysztof Kozlowski <krzk@kernel.org>, linux-kernel@vger.kernel.org
+Cc: David Airlie <airlied@linux.ie>, Dave Airlie <airlied@redhat.com>,
+ dri-devel@lists.freedesktop.org
+Message-ID: <3ae84d5d-a50c-8772-4088-868fc8a6ed8b@suse.de>
+Subject: Re: [PATCH] drm/mgag200: Fix Kconfig indentation
+References: <20191120133625.11478-1-krzk@kernel.org>
+In-Reply-To: <20191120133625.11478-1-krzk@kernel.org>
 
---gKMricLos+KVdGMg
+--EJGRMvCdgKmGCMh4YYBZbxspFyJifmuc4
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
 
-Hi Andrew/Vijay,
 
-Thanks for the review .
+Am 20.11.19 um 14:36 schrieb Krzysztof Kozlowski:
+> Adjust indentation from spaces to tab (+optional two spaces) as in
+> coding style with command like:
+> 	$ sed -e 's/^        /\t/' -i */Kconfig
+>=20
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-The following changes done in dts and tested in Facebook Yosemite V2 BMC platform,
-  1. LPC feature removed as not supported .
-  2. VUART feature removed as not supported.
-  3. Host UART feature removed as not in the current scope.
-  4. ADC pinctrl details added in dts.
+Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
 
-Thanks
-Mani.E
+> ---
+>  drivers/gpu/drm/mgag200/Kconfig | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/mgag200/Kconfig b/drivers/gpu/drm/mgag200/=
+Kconfig
+> index aed11f4f4c55..d60aa4b9ccd4 100644
+> --- a/drivers/gpu/drm/mgag200/Kconfig
+> +++ b/drivers/gpu/drm/mgag200/Kconfig
+> @@ -8,8 +8,8 @@ config DRM_MGAG200
+>  	select DRM_TTM_HELPER
+>  	help
+>  	 This is a KMS driver for the MGA G200 server chips, it
+> -         does not support the original MGA G200 or any of the desktop
+> -         chips. It requires 0.3.0 of the modesetting userspace driver,=
 
-On Wed, Nov 20, 2019 at 06:50:15AM +0000, Vijay Khemka wrote:
-> 
-> 
-> ﻿On 11/19/19, 9:56 PM, "Linux-aspeed on behalf of Andrew Jeffery" <linux-aspeed-bounces+vijaykhemka=fb.com@lists.ozlabs.org on behalf of andrew@aj.id.au> wrote:
-> 
->     
->     
->     On Mon, 18 Nov 2019, at 23:07, manikandan-e wrote:
->     > The Yosemite V2 is a facebook multi-node server
->     > platform that host four OCP server. The BMC
->     > in the Yosemite V2 platorm based on AST2500 SoC.
->     > 
->     > This patch adds linux device tree entry related to
->     > Yosemite V2 specific devices connected to BMC SoC.
->     > 
->     > Signed-off-by: manikandan-e <manikandan.hcl.ers.epl@gmail.com>
->     > ---
->     >  .../boot/dts/aspeed-bmc-facebook-yosemitev2.dts    | 170 +++++++++++++++++++++
->     >  1 file changed, 170 insertions(+)
->     >  create mode 100644 arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
->     > 
->     > diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts 
->     > b/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
->     > new file mode 100644
->     > index 0000000..46a285a
->     > --- /dev/null
->     > +++ b/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
->     > @@ -0,0 +1,170 @@
->     > +// SPDX-License-Identifier: GPL-2.0+
->     > +// Copyright (c) 2018 Facebook Inc.
->     > +// Author:
->     > +/dts-v1/;
->     > +
->     > +#include "aspeed-g5.dtsi"
->     > +#include <dt-bindings/gpio/aspeed-gpio.h>
->     > +
->     > +/ {
->     > +	model = "Facebook Yosemitev2 BMC";
->     > +	compatible = "facebook,yosemitev2-bmc", "aspeed,ast2500";
->     > +	aliases {
->     > +		serial0 = &uart1;
->     > +		serial4 = &uart5;
->     > +	};
->     > +	chosen {
->     > +		stdout-path = &uart5;
->     > +		bootargs = "console=ttyS4,115200 earlyprintk";
->     > +	};
->     > +
->     > +	memory@80000000 {
->     > +		reg = <0x80000000 0x20000000>;
->     > +	};
->     > +
->     > +	iio-hwmon {
->     > +		// VOLATAGE SENSOR
->     > +		compatible = "iio-hwmon";
->     > +		io-channels = <&adc 0> , <&adc 1> , <&adc 2> ,  <&adc 3> ,
->     > +		<&adc 4> , <&adc 5> , <&adc 6> ,  <&adc 7> ,
->     > +		<&adc 8> , <&adc 9> , <&adc 10>, <&adc 11> ,
->     > +		<&adc 12> , <&adc 13> , <&adc 14> , <&adc 15> ;
->     > +	};
->     > +};
->     > +
->     > +&fmc {
->     > +	status = "okay";
->     > +	flash@0 {
->     > +		status = "okay";
->     > +		m25p,fast-read;
->     > +#include "openbmc-flash-layout.dtsi"
->     > +	};
->     > +};
->     > +
->     > +&spi1 {
->     > +	status = "okay";
->     > +	pinctrl-names = "default";
->     > +	pinctrl-0 = <&pinctrl_spi1_default>;
->     > +	flash@0 {
->     > +		status = "okay";
->     > +		m25p,fast-read;
->     > +		label = "pnor";
->     > +	};
->     > +};
->     > +
->     > +&lpc_snoop {
->     > +	status = "okay";
->     > +	snoop-ports = <0x80>;
->     > +};
-> No lpc in Yosemite so please remove.
-> 
->     > +
->     > +&lpc_ctrl {
->     > +	// Enable lpc clock
->     > +	status = "okay";
-> Same here remove.
->     
->     Something I'm intending to fix in the devicetrees using LPC is to hog
->     the pins in the pinctrl node. You should consider doing the same here.
->     
->     > +};
->     > +
->     > +&vuart {
->     > +	// VUART Host Console
->     > +	status = "okay";
->     > +};
-> No Vuart.
-> 
->     > +
->     > +&uart1 {
->     > +	// Host Console
->     > +	status = "okay";
->     > +	pinctrl-names = "default";
->     > +	pinctrl-0 = <&pinctrl_txd1_default
->     > +		     &pinctrl_rxd1_default>;
->     > +};
->     > +
->     > +&uart2 {
->     > +	// SoL Host Console
->     > +	status = "okay";
-> 
-> uart1-4 are all assigned for 4 multiple hosts so define accordingly.  
->     
->     Also needs pinctrl configuration.
->     
->     > +};
->     > +
->     > +&uart3 {
->     > +	// SoL BMC Console
->     > +	status = "okay";
->     
->     Again needs pinctrl.
->     
->     > +};
->     > +
->     > +&uart5 {
->     > +	// BMC Console
->     > +	status = "okay";
->     > +};
->     > +
->     > +&mac0 {
->     > +	status = "okay";
->     > +
->     > +	pinctrl-names = "default";
->     > +	pinctrl-0 = <&pinctrl_rmii1_default>;
->     > +	use-ncsi;
->     > +};
->     > +
->     > +&adc {
->     > +	status = "okay";
->     
->     Strongly suggest adding the pinctrl properties here to ensure
->     exclusive access for the ADC pins.
->     
->     Otherwise it looks reasonable.
->     
->     Andrew
->     
-> 
+> -         and a version of mga driver that will fail on KMS enabled
+> -         devices.
+> +	 does not support the original MGA G200 or any of the desktop
+> +	 chips. It requires 0.3.0 of the modesetting userspace driver,
+> +	 and a version of mga driver that will fail on KMS enabled
+> +	 devices.
+> =20
+>=20
 
---gKMricLos+KVdGMg
-Content-Type: text/x-diff; charset=us-ascii
-Content-Disposition: attachment; filename="0001-ARM-dts-aspeed-Adding-Facebook-Yosemite-V2-BMC.patch"
-
-From 9a17872b5faf2c00ab0b572bac0072e44a3d8b91 Mon Sep 17 00:00:00 2001
-From: manikandan-e <manikandan.hcl.ers.epl@gmail.com>
-Date: Thu, 21 Nov 2019 11:57:07 +0530
-Subject: [PATCH] ARM: dts: aspeed: Adding Facebook Yosemite V2 BMC
-
-The Yosemite V2 is a facebook multi-node server
-platform that host four OCP server. The BMC
-in the Yosemite V2 platorm based on AST2500 SoC.
-
-This patch adds linux device tree entry related to
-Yosemite V2 specific devices connected to BMC SoC.
-
-Signed-off-by: manikandan-e <manikandan.hcl.ers.epl@gmail.com>
----
- .../boot/dts/aspeed-bmc-facebook-yosemitev2.dts    | 152 +++++++++++++++++++++
- 1 file changed, 152 insertions(+)
- create mode 100644 arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
-
-diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
-new file mode 100644
-index 0000000..5f9a2e1
---- /dev/null
-+++ b/arch/arm/boot/dts/aspeed-bmc-facebook-yosemitev2.dts
-@@ -0,0 +1,152 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+// Copyright (c) 2018 Facebook Inc.
-+/dts-v1/;
-+
-+#include "aspeed-g5.dtsi"
-+#include <dt-bindings/gpio/aspeed-gpio.h>
-+
-+/ {
-+	model = "Facebook Yosemitev2 BMC";
-+	compatible = "facebook,yosemitev2-bmc", "aspeed,ast2500";
-+	aliases {
-+		serial0 = &uart1;
-+		serial4 = &uart5;
-+	};
-+	chosen {
-+		stdout-path = &uart5;
-+		bootargs = "console=ttyS4,115200 earlyprintk";
-+	};
-+
-+	memory@80000000 {
-+		reg = <0x80000000 0x20000000>;
-+	};
-+
-+	iio-hwmon {
-+		// VOLATAGE SENSOR
-+		compatible = "iio-hwmon";
-+		io-channels = <&adc 0> , <&adc 1> , <&adc 2> ,  <&adc 3> ,
-+		<&adc 4> , <&adc 5> , <&adc 6> ,  <&adc 7> ,
-+		<&adc 8> , <&adc 9> , <&adc 10>, <&adc 11> ,
-+		<&adc 12> , <&adc 13> , <&adc 14> , <&adc 15> ;
-+	};
-+};
-+
-+&fmc {
-+	status = "okay";
-+	flash@0 {
-+		status = "okay";
-+		m25p,fast-read;
-+#include "openbmc-flash-layout.dtsi"
-+	};
-+};
-+
-+&spi1 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_spi1_default>;
-+	flash@0 {
-+		status = "okay";
-+		m25p,fast-read;
-+		label = "pnor";
-+	};
-+};
-+
-+&uart5 {
-+	// BMC Console
-+	status = "okay";
-+};
-+
-+&mac0 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_rmii1_default>;
-+	use-ncsi;
-+};
-+
-+&adc {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_adc0_default
-+		&pinctrl_adc1_default
-+		&pinctrl_adc2_default
-+		&pinctrl_adc3_default
-+		&pinctrl_adc4_default
-+		&pinctrl_adc5_default
-+		&pinctrl_adc6_default
-+		&pinctrl_adc7_default
-+		&pinctrl_adc8_default
-+		&pinctrl_adc9_default
-+		&pinctrl_adc10_default
-+		&pinctrl_adc11_default
-+		&pinctrl_adc12_default
-+		&pinctrl_adc13_default
-+		&pinctrl_adc14_default
-+		&pinctrl_adc15_default>;
-+};
-+
-+&i2c8 {
-+	status = "okay";
-+	//FRU EEPROM
-+	eeprom@51 {
-+		compatible = "atmel,24c64";
-+		reg = <0x51>;
-+		pagesize = <32>;
-+	};
-+};
-+
-+&i2c9 {
-+	status = "okay";
-+	tmp421@4e {
-+	//INLET TEMP
-+		compatible = "ti,tmp421";
-+		reg = <0x4e>;
-+	};
-+	//OUTLET TEMP
-+	tmp421@4f {
-+		compatible = "ti,tmp421";
-+		reg = <0x4f>;
-+	};
-+};
-+
-+&i2c10 {
-+	status = "okay";
-+	//HSC
-+	adm1278@40 {
-+		compatible = "adi,adm1278";
-+		reg = <0x40>;
-+	};
-+};
-+
-+&i2c11 {
-+	status = "okay";
-+	//MEZZ_TEMP_SENSOR
-+	tmp421@1f {
-+		compatible = "ti,tmp421";
-+		reg = <0x1f>;
-+	};
-+};
-+
-+&i2c12 {
-+	status = "okay";
-+	//MEZZ_FRU
-+	eeprom@51 {
-+		compatible = "atmel,24c64";
-+		reg = <0x51>;
-+		pagesize = <32>;
-+	};
-+};
-+
-+&pwm_tacho {
-+	status = "okay";
-+	//FSC
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm0_default &pinctrl_pwm1_default>;
-+	fan@0 {
-+		reg = <0x00>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x00>;
-+	};
-+	fan@1 {
-+		reg = <0x01>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x02>;
-+	};
-+};
--- 
-2.7.4
+--=20
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+(HRB 36809, AG N=C3=BCrnberg)
+Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
 
 
---gKMricLos+KVdGMg--
+--EJGRMvCdgKmGCMh4YYBZbxspFyJifmuc4--
+
+--p2L1lQQ6oq7m4AD5N54b9Al1ZDXIphrzL
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl3WQb0ACgkQaA3BHVML
+eiMPcQgAwc4ueoZsjOBGHYYTR92f4owRjn0JV6b1IHgoYAaUbv7kCZtbRYibmHJO
+8vgH56rEYhIi0u12X1nJ3M4pVhSzNSNKeZ0Pughhn+G69w8qkqUbvbXVIjuV4YJ6
+F3BCOVpOyelI7yIdKRb0om+3EqnQVKkMrvOKL5XzAbo/3eAuqRk4Owv00YUqdhT2
+caKaYPd7d/s/ZTrEES6AwDMrUsjoz8OfBunFYu9RdyeIs+a0X5PFt4hc+XtS7BuY
+zF5TRLsel6xPFTaMYqoxeRdYmQ5I4HP0+S2vZJvY2KYmeVr8U4M9JA8HkTv+f5FI
+OUUhCgNtX+qe+hq2Pa+w3jN2bZDDZw==
+=DX5L
+-----END PGP SIGNATURE-----
+
+--p2L1lQQ6oq7m4AD5N54b9Al1ZDXIphrzL--
