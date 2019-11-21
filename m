@@ -2,456 +2,188 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B20FC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:36:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87188C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:37:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB9DC2068E
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:36:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50C24206CC
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:37:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZnaLPGPS"
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="QZSlGR/9";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="RoZCAj5q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727080AbfKUVgr (ORCPT
+        id S1726822AbfKUVhQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 16:36:47 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:33951 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726297AbfKUVgr (ORCPT
+        Thu, 21 Nov 2019 16:37:16 -0500
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:44032 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726297AbfKUVhQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 16:36:47 -0500
-Received: by mail-qt1-f196.google.com with SMTP id i17so5443907qtq.1
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 13:36:45 -0800 (PST)
+        Thu, 21 Nov 2019 16:37:16 -0500
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xALLa7Ew019620;
+        Thu, 21 Nov 2019 13:37:01 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pfpt0818;
+ bh=LhkwCDxj2zmr/bo/TCb6irLf/K8dkYFWaKp+YNfoiDk=;
+ b=QZSlGR/9gaPwmpSAXW1Zdtulu+SIHXyATNwZebXWo7w0SgNMx8udGd/aQXKobS/Jlw7Q
+ qrZcHHwwycqqbKoIu0k7hdHeujmOTyPa0qTOhMyaPnBSw3JMGYhNxDeX8mMtdUDDaiFg
+ o6jE4SjWLz5G8HnIQZy4mihEP+CyncyzIExnAouchcQz95zJLgbfJXG39bPNwEZRQnQQ
+ U7XaGxo60BSepvwi+5hYXz08Wc4CCGZGXnAGwY14oXbK5kRkDJwYfo50SOLRlI7863WS
+ 0I+CXd7XVy5mneQYjMO9+81qDNuYLcNBLOzuBm/DXsaZh0kAqiK2z1aOe5gjvtbkNkZN 7A== 
+Received: from sc-exch01.marvell.com ([199.233.58.181])
+        by mx0b-0016f401.pphosted.com with ESMTP id 2wd09116yf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Thu, 21 Nov 2019 13:37:00 -0800
+Received: from SC-EXCH04.marvell.com (10.93.176.84) by SC-EXCH01.marvell.com
+ (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Thu, 21 Nov
+ 2019 13:36:58 -0800
+Received: from NAM04-CO1-obe.outbound.protection.outlook.com (104.47.45.50) by
+ SC-EXCH04.marvell.com (10.93.176.84) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Thu, 21 Nov 2019 13:36:58 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SJZFLJ3u7ssSRew4DEbP6fKZYkJkTOf/8SdHpzUyW8rL447I1XJBgB0h5uaJaCTDf7VGlOVVjFKNW9cGns2FrrHyvN+xcMug8MWIWguILbm78pWDoEDx99Y3gU+LXNAR6UPgZivEGELGVWW9NPgY3vtAjLjplIMOdA2qXT4BLRsh1ZBouNmuYaY8n5aaVbOsCljgWRrD9u7CJoqUJJTlanmysB2jzg1cXmsBnX2egQ9cVtaMOs/qcga9huiX0ynBA85Bu+gsyoGSksLHyec8rrwVoPSZNzFzsziXjPB04ZL+x147g66sJHU6+NLnSudAmqJZ6ri1/w3hmhkywirRpw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LhkwCDxj2zmr/bo/TCb6irLf/K8dkYFWaKp+YNfoiDk=;
+ b=hLdFjUgXVQ2qr7mrVElZ5R6i7ixBUO3lAYtanliDdAh2AU2Mk/Vq7cHpU8nWdPO+ZDdjGxf2mKZTXnCmCIQqEh0dqGWoV50ZKhXYNkJrBe3x2UwI71aEyGTRiWQtuUgwR3H3mq61Qp9mAlxCzIdgs9RQun8XPLIpRKw8Isrvlx3j8zpVyDBSlth7LOf0MqTGYaVSZAOgqxo8H/tdnF++TwxqXLfSXx8pTUVutHMsfdgDrubGb4ZlaUZEXOmJ87stIOAsCvGDowo0gR6/HHwEXYK5Dt2zdKdmTbWTdPgRsfg2SYsIWvXixC2WvG/EnhMlAiUrM7LcGZNvVNyA26EkTg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
+ dkim=pass header.d=marvell.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZXH/qSaia/mtRLdnPBEb9WQPrUWDOjWQAMBCnXB/vUw=;
-        b=ZnaLPGPSDZhOWgJOm+5wJhr6bYh1sg+f4cUQFnP73ZzRuZJ6YYiLlXXV7vH2lp2DaD
-         VmEpvWp49Me4Wcqe8k0f04+BPOCNHtAZkfiCVDIOquO2SdkeLiKSIi9MlHP/TWYuu2Pw
-         LWJSB9tidxBsJ9lTffpfnDWjQfXGGJVu34VPh1ebJCGI6sBM5JCMc0tr20sI11AouWZG
-         lQbdCWDAP+nuwA0Kj/R8Vbgr9PuuvcjEEdpRxFeWW0E/VuXUd8YUHLl1h3hX9bPuOWDC
-         8p+cZUBzFfM2QdpsQzLw+1d0ZtNT3DVnv7y0FGzgMyAExHRNOCKL+aC73i9w9NCsnQm+
-         rOMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZXH/qSaia/mtRLdnPBEb9WQPrUWDOjWQAMBCnXB/vUw=;
-        b=pAsgG+Z3nTeItQ6tmxpqTEt81Qf0HY6zoeRfT9/TG5DjcLr6vCYYTp8NyPorTMoBfV
-         C0q9Uo1X9OEHcU+PzV9UtEedvxIY559NPzp7Cxh4c7iEKxdpzglmuZiCL4GOD0F3eIwM
-         G9W1nWYUDzlOwmA+0FL6DdBcATAjv3Is10k0yG40osxrGldH4zvfhKb7eVYDN3yO574l
-         HL03Jwqtcr5Fnx+6gJQ8Hs9Wk3crNhgktaNGsT9aNr2E3+NlhMEg8xJBxBOo2TSz3YgA
-         L/W7hRxEnQINTudjshm9RuhuwsFoTzjLYdOHA2dnMv4UnwBh+3mLvjtTDDa+2ZgWqxPw
-         gdtQ==
-X-Gm-Message-State: APjAAAW0C0Bf8r6JVDOGOImHofXqbAZqhm5KfI/Z+E8KnqsGykGxdGV+
-        n1f9vS8lpMTq3kB85NWmt52CEXj2bS8lE3zNCUjRpA==
-X-Google-Smtp-Source: APXvYqwCEWsk+yQF5Aykpihy5xSsrZK+aZL23vsQZD7o/EIuD5IdI269YxEVt21icfYqz+mHdWs1I5+JOLn5uSGYdIg=
-X-Received: by 2002:ac8:1e13:: with SMTP id n19mr4815349qtl.384.1574372204088;
- Thu, 21 Nov 2019 13:36:44 -0800 (PST)
-MIME-Version: 1.0
-References: <20191119193036.92831-1-brianvv@google.com> <20191119193036.92831-3-brianvv@google.com>
- <de05c3f2-5b70-b9af-445c-9cf43b55737c@fb.com>
-In-Reply-To: <de05c3f2-5b70-b9af-445c-9cf43b55737c@fb.com>
-From:   Brian Vazquez <brianvv@google.com>
-Date:   Thu, 21 Nov 2019 13:36:33 -0800
-Message-ID: <CAMzD94TfpQaFN=7cQR9kmHun0gZNF2oMwEJu7aZMYhsYhvgRDg@mail.gmail.com>
-Subject: Re: [PATCH v2 bpf-next 2/9] bpf: add generic support for lookup and
- lookup_and_delete batch ops
-To:     Yonghong Song <yhs@fb.com>
-Cc:     Brian Vazquez <brianvv.kernel@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S . Miller" <davem@davemloft.net>,
-        Stanislav Fomichev <sdf@google.com>,
-        Petar Penkov <ppenkov@google.com>,
-        Willem de Bruijn <willemb@google.com>,
+ d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LhkwCDxj2zmr/bo/TCb6irLf/K8dkYFWaKp+YNfoiDk=;
+ b=RoZCAj5qPc3fr4TBZls1NLKecl+p1Pd8nlXPGrlzOw0ffxsH00qYgXNGown4Ty/hSR+9RCB6zlPoKxMS9nyAbgyFXxgqM3K92/4qu46WdBgildP0oaJYgBwUT7dhC1XSpH4EIW9McVRL+V4Wsf94xRs6Z+XX+ebWtI525CzvNdQ=
+Received: from MN2PR18MB3408.namprd18.prod.outlook.com (10.255.237.10) by
+ MN2PR18MB2510.namprd18.prod.outlook.com (20.179.83.21) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2474.18; Thu, 21 Nov 2019 21:36:57 +0000
+Received: from MN2PR18MB3408.namprd18.prod.outlook.com
+ ([fe80::657c:6c81:859d:106]) by MN2PR18MB3408.namprd18.prod.outlook.com
+ ([fe80::657c:6c81:859d:106%7]) with mapi id 15.20.2474.019; Thu, 21 Nov 2019
+ 21:36:57 +0000
+From:   Robert Richter <rrichter@marvell.com>
+To:     "john.garry@huawei.com" <john.garry@huawei.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>
+CC:     "huangming23@huawei.com" <huangming23@huawei.com>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        "linuxarm@huawei.com" <linuxarm@huawei.com>,
+        Robert Richter <rrichter@marvell.com>,
+        "tanxiaofei@huawei.com" <tanxiaofei@huawei.com>,
+        "wanghuiqiang@huawei.com" <wanghuiqiang@huawei.com>
+Subject: [PATCH] EDAC/ghes: Do not warn when incrementing refcount on 0
+Thread-Topic: [PATCH] EDAC/ghes: Do not warn when incrementing refcount on 0
+Thread-Index: AQHVoLPMTYQWqoUDAEKhsjLdTKvU5A==
+Date:   Thu, 21 Nov 2019 21:36:57 +0000
+Message-ID: <20191121213628.21244-1-rrichter@marvell.com>
+References: <4ff7631f-fbb7-e45f-87dd-9223beca4da7@huawei.com>
+In-Reply-To: <4ff7631f-fbb7-e45f-87dd-9223beca4da7@huawei.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HE1PR0101CA0024.eurprd01.prod.exchangelabs.com
+ (2603:10a6:3:77::34) To MN2PR18MB3408.namprd18.prod.outlook.com
+ (2603:10b6:208:165::10)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.20.1
+x-originating-ip: [31.208.96.227]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 4909f83b-9846-44b8-9800-08d76ecaef03
+x-ms-traffictypediagnostic: MN2PR18MB2510:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR18MB25103BEB52ACD3E32227FFA1D94E0@MN2PR18MB2510.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0228DDDDD7
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39850400004)(136003)(376002)(346002)(366004)(189003)(199004)(81156014)(6506007)(66476007)(3846002)(54906003)(66556008)(66446008)(110136005)(66066001)(6436002)(6116002)(11346002)(64756008)(66946007)(386003)(316002)(2501003)(102836004)(25786009)(446003)(7416002)(14454004)(76176011)(6486002)(86362001)(6512007)(36756003)(71200400001)(8676002)(71190400001)(2906002)(2616005)(14444005)(4326008)(256004)(5660300002)(1076003)(50226002)(8936002)(81166006)(99286004)(52116002)(7736002)(186003)(305945005)(26005)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB2510;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: marvell.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: d83YqB0kn+QYiyc1Y5f4iayGFX3/zGMqpdOA7F2aMRdVMAa74OQ/84wyR33Je/Wvn5zwo/ZAoFIPGcyBNCDl/7oqf1Az9Dbu1t50j3pKsmtGW3qm8uzgRuIpMrsO8UpGEs3XMpSULSXdRq8NhLtqrT7Km7R6SdAh5mMdAHZR5lRpAJ+llDJB0IEh3SRcvyMc9yrFOrr00Pba1PYPqjFlJHYEKzwpP2PFyiq/xPUBPdtUhGEWgg0P6LfCGRACnibNhvRbx741tspv9D3kGje2sx1pfN7FAQxdPwUFuYXz0LKD7vr4iKfsv1t7W7YAaImNEWa8jcjev8On46JEn1eLbkfYUO8BZAvX9LdqVpbuXYJEdv7FHwvpPrQ9iHjzOo6JavbcvH09CaCWHIn2ZIhE2Bb8U/P7Z8FUDGXCPWbFoFHdW7Ly26+ukX8FXH3dLRmx
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4909f83b-9846-44b8-9800-08d76ecaef03
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Nov 2019 21:36:57.1602
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: c7jSiKTU4mqakC4Ev3vmO3A8S17n87u8zIWumsH1c7m1x5OAa3o9YnggbmPHysUqkdgnllPCwb7jN90ye0hqmw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2510
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-21_06:2019-11-21,2019-11-21 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yonghong,
-thanks for reviewing the patch, I will fix all the direct returns and
-small fixes in next version.
+Following warning from the refcount framework is seen during ghes
+initialization:
 
-On Thu, Nov 21, 2019 at 9:36 AM Yonghong Song <yhs@fb.com> wrote:
->
->
->
-> On 11/19/19 11:30 AM, Brian Vazquez wrote:
-> > This commit introduces generic support for the bpf_map_lookup_batch and
-> > bpf_map_lookup_and_delete_batch ops. This implementation can be used by
-> > almost all the bpf maps since its core implementation is relying on the
-> > existing map_get_next_key, map_lookup_elem and map_delete_elem
-> > functions. The bpf syscall subcommands introduced are:
-> >
-> >    BPF_MAP_LOOKUP_BATCH
-> >    BPF_MAP_LOOKUP_AND_DELETE_BATCH
-> >
-> > The UAPI attribute is:
-> >
-> >    struct { /* struct used by BPF_MAP_*_BATCH commands */
-> >           __aligned_u64   in_batch;       /* start batch,
-> >                                            * NULL to start from beginning
-> >                                            */
-> >           __aligned_u64   out_batch;      /* output: next start batch */
-> >           __aligned_u64   keys;
-> >           __aligned_u64   values;
-> >           __u32           count;          /* input/output:
-> >                                            * input: # of key/value
-> >                                            * elements
-> >                                            * output: # of filled elements
-> >                                            */
-> >           __u32           map_fd;
-> >           __u64           elem_flags;
-> >           __u64           flags;
-> >    } batch;
-> >
-> > in_batch/out_batch are opaque values use to communicate between
-> > user/kernel space, in_batch/out_batch must be of key_size length.
-> >
-> > To start iterating from the beginning in_batch must be null,
-> > count is the # of key/value elements to retrieve. Note that the 'keys'
-> > buffer must be a buffer of key_size * count size and the 'values' buffer
-> > must be value_size * count, where value_size must be aligned to 8 bytes
-> > by userspace if it's dealing with percpu maps. 'count' will contain the
-> > number of keys/values successfully retrieved. Note that 'count' is an
-> > input/output variable and it can contain a lower value after a call.
-> >
-> > If there's no more entries to retrieve, ENOENT will be returned. If error
-> > is ENOENT, count might be > 0 in case it copied some values but there were
-> > no more entries to retrieve.
-> >
-> > Note that if the return code is an error and not -EFAULT,
-> > count indicates the number of elements successfully processed.
-> >
-> > Suggested-by: Stanislav Fomichev <sdf@google.com>
-> > Signed-off-by: Brian Vazquez <brianvv@google.com>
-> > Signed-off-by: Yonghong Song <yhs@fb.com>
-> > ---
-> >   include/linux/bpf.h      |  11 +++
-> >   include/uapi/linux/bpf.h |  19 +++++
-> >   kernel/bpf/syscall.c     | 176 +++++++++++++++++++++++++++++++++++++++
-> >   3 files changed, 206 insertions(+)
-> >
-> > diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-> > index 5b81cde47314e..767a823dbac74 100644
-> > --- a/include/linux/bpf.h
-> > +++ b/include/linux/bpf.h
-> > @@ -41,6 +41,11 @@ struct bpf_map_ops {
-> >       int (*map_get_next_key)(struct bpf_map *map, void *key, void *next_key);
-> >       void (*map_release_uref)(struct bpf_map *map);
-> >       void *(*map_lookup_elem_sys_only)(struct bpf_map *map, void *key);
-> > +     int (*map_lookup_batch)(struct bpf_map *map, const union bpf_attr *attr,
-> > +                             union bpf_attr __user *uattr);
-> > +     int (*map_lookup_and_delete_batch)(struct bpf_map *map,
-> > +                                        const union bpf_attr *attr,
-> > +                                        union bpf_attr __user *uattr);
-> >
-> >       /* funcs callable from userspace and from eBPF programs */
-> >       void *(*map_lookup_elem)(struct bpf_map *map, void *key);
-> > @@ -797,6 +802,12 @@ void bpf_map_charge_move(struct bpf_map_memory *dst,
-> >   void *bpf_map_area_alloc(size_t size, int numa_node);
-> >   void bpf_map_area_free(void *base);
-> >   void bpf_map_init_from_attr(struct bpf_map *map, union bpf_attr *attr);
-> > +int  generic_map_lookup_batch(struct bpf_map *map,
-> > +                           const union bpf_attr *attr,
-> > +                           union bpf_attr __user *uattr);
-> > +int  generic_map_lookup_and_delete_batch(struct bpf_map *map,
-> > +                                      const union bpf_attr *attr,
-> > +                                      union bpf_attr __user *uattr);
-> >
-> >   extern int sysctl_unprivileged_bpf_disabled;
-> >
-> > diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
-> > index 4842a134b202a..e60b7b7cda61a 100644
-> > --- a/include/uapi/linux/bpf.h
-> > +++ b/include/uapi/linux/bpf.h
-> > @@ -107,6 +107,8 @@ enum bpf_cmd {
-> >       BPF_MAP_LOOKUP_AND_DELETE_ELEM,
-> >       BPF_MAP_FREEZE,
-> >       BPF_BTF_GET_NEXT_ID,
-> > +     BPF_MAP_LOOKUP_BATCH,
-> > +     BPF_MAP_LOOKUP_AND_DELETE_BATCH,
-> >   };
-> >
-> >   enum bpf_map_type {
-> > @@ -400,6 +402,23 @@ union bpf_attr {
-> >               __u64           flags;
-> >       };
-> >
-> > +     struct { /* struct used by BPF_MAP_*_BATCH commands */
-> > +             __aligned_u64   in_batch;       /* start batch,
-> > +                                              * NULL to start from beginning
-> > +                                              */
-> > +             __aligned_u64   out_batch;      /* output: next start batch */
-> > +             __aligned_u64   keys;
-> > +             __aligned_u64   values;
-> > +             __u32           count;          /* input/output:
-> > +                                              * input: # of key/value
-> > +                                              * elements
-> > +                                              * output: # of filled elements
-> > +                                              */
-> > +             __u32           map_fd;
-> > +             __u64           elem_flags;
-> > +             __u64           flags;
-> > +     } batch;
-> > +
-> >       struct { /* anonymous struct used by BPF_PROG_LOAD command */
-> >               __u32           prog_type;      /* one of enum bpf_prog_type */
-> >               __u32           insn_cnt;
-> > diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-> > index cc714c9d5b4cc..d0d3d0e0eaca4 100644
-> > --- a/kernel/bpf/syscall.c
-> > +++ b/kernel/bpf/syscall.c
-> > @@ -1127,6 +1127,124 @@ static int map_get_next_key(union bpf_attr *attr)
-> >       return err;
-> >   }
-> >
-> > +static int __generic_map_lookup_batch(struct bpf_map *map,
-> > +                                   const union bpf_attr *attr,
-> > +                                   union bpf_attr __user *uattr,
-> > +                                   bool do_delete)
-> > +{
-> > +     void __user *ubatch = u64_to_user_ptr(attr->batch.in_batch);
-> > +     void __user *uobatch = u64_to_user_ptr(attr->batch.out_batch);
-> > +     void __user *values = u64_to_user_ptr(attr->batch.values);
-> > +     void __user *keys = u64_to_user_ptr(attr->batch.keys);
-> > +     void *buf, *prev_key, *key, *value;
-> > +     u32 value_size, cp, max_count;
-> > +     bool first_key = false;
-> > +     int err, retry = 3;
-> > +
-> > +     if (attr->batch.elem_flags & ~BPF_F_LOCK)
-> > +             return -EINVAL;
-> > +
-> > +     if ((attr->batch.elem_flags & BPF_F_LOCK) &&
-> > +         !map_value_has_spin_lock(map)) {
-> > +             err = -EINVAL;
-> > +             goto err_put;
-> > +     }
->
-> Direct return -EINVAL?
->
-> > +
-> > +     if (map->map_type == BPF_MAP_TYPE_QUEUE ||
-> > +         map->map_type == BPF_MAP_TYPE_STACK) {
-> > +             err = -ENOTSUPP;
-> > +             goto err_put;
-> > +     }
->
-> Direct return -ENOTSUPP?
->
-> > +
-> > +     value_size = bpf_map_value_size(map);
-> > +
-> > +     max_count = attr->batch.count;
-> > +     if (!max_count)
-> > +             return 0;
-> > +
-> > +     err = -ENOMEM;
-> > +     buf = kmalloc(map->key_size + value_size, GFP_USER | __GFP_NOWARN);
-> > +     if (!buf)
-> > +             goto err_put;
->
-> Direct return -ENOMEM?
->
-> > +
-> > +     err = -EFAULT;
-> > +     first_key = false;
-> > +     if (ubatch && copy_from_user(buf, ubatch, map->key_size))
-> > +             goto free_buf;
-> > +     key = buf;
-> > +     value = key + map->key_size;
-> > +     if (!ubatch) {
-> > +             prev_key = NULL;
-> > +             first_key = true;
-> > +     }
-> > +
-> > +
-> One extra line.
->
-> > +     for (cp = 0; cp < max_count; cp++) {
-> > +             if (cp || first_key) {
-> > +                     rcu_read_lock();
-> > +                     err = map->ops->map_get_next_key(map, prev_key, key);
-> > +                     rcu_read_unlock();
-> > +                     if (err)
-> > +                             break;
-> > +             }
-> > +             err = bpf_map_copy_value(map, key, value,
-> > +                                      attr->batch.elem_flags, do_delete);
-> > +
-> > +             if (err == -ENOENT) {
-> > +                     if (retry) {
-> > +                             retry--;
->
-> What is the 'retry' semantics here? After 'continue', cp++ is executed.
+ EDAC MC0: Giving out device to module ghes_edac.c controller ghes_edac: DE=
+V ghes (INTERRUPT)
+ ------------[ cut here ]------------
+ refcount_t: increment on 0; use-after-free.
+ WARNING: CPU: 36 PID: 1 at lib/refcount.c:156 refcount_inc_checked+0x44/0x=
+50
+[...]
+ Call trace:
+  refcount_inc_checked+0x44/0x50
+  ghes_edac_register+0x258/0x388
+  ghes_probe+0x28c/0x5f0
 
-Good catch, I'll move cp++ to a proper place. retry is used to prevent
-the cases where the map is doing many concurrent additions and
-deletions, this could result in map_get_next_key succeeding but
-bpf_map_copy_value failing, in which case I think it'd be better to
-try and find a next elem, but we don't want to do this for more than 3
-times.
+It warns if the refcount is incremented from zero. This warning is
+reasonable as a kernel object is typically created with a refcount of
+one and freed once the refcount is zero. Afterwards the object would
+be "used-after-free".
 
->
-> > +                             continue;
-> > +                     }
-> > +                     err = -EINTR;
->
-> Why returning -EINTR?
+For ghes the refcount is initialized with zero, and that is why this
+message is seen when initializing the first instance. However,
+whenever the refcount is zero, the device will be allocated and
+registered. Since the ghes_reg_mutex protects the refcount and
+serializes allocation and freeing of ghes devices, a use-after-free
+cannot happen here.
 
-I thought that this is the err more appropriate for the behaviour I
-describe above. Should I handle that case? WDYT?
+Instead of using refcount_inc() for the first instance, use
+refcount_set(). This can be used here because the refcount is zero at
+this point and can not change due to its protection by the mutex.
 
+Reported-by: John Garry <john.garry@huawei.com>
+Tested-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Robert Richter <rrichter@marvell.com>
+---
+ drivers/edac/ghes_edac.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
->
-> > +                     break;
-> > +             }
-> > +
-> > +             if (err)
-> > +                     goto free_buf;
-> > +
-> > +             if (copy_to_user(keys + cp * map->key_size, key,
-> > +                              map->key_size)) {
-> > +                     err = -EFAULT;
-> > +                     goto free_buf;
-> > +             }
-> > +             if (copy_to_user(values + cp * value_size, value, value_size)) {
-> > +                     err = -EFAULT;
-> > +                     goto free_buf;
-> > +             }
-> > +
-> > +             prev_key = key;
-> > +             retry = 3;
-> > +     }
-> > +     if (!err) {
-> > +             rcu_read_lock();
-> > +             err = map->ops->map_get_next_key(map, prev_key, key);
->
-> if err != 0, the 'key' will be invalid and it cannot be used by below
-> copy_to_user.
->
-> > +             rcu_read_unlock();
-> > +     } > +
-> > +     if ((copy_to_user(&uattr->batch.count, &cp, sizeof(cp)) ||
->
-> The 'cp' may not be accurate if 'retry' is triggered in the above.
->
-> > +                 (copy_to_user(uobatch, key, map->key_size))))
-> > +             err = -EFAULT;
-> > +
-> > +free_buf:
-> > +     kfree(buf);
-> > +err_put:
->
-> err_put can be removed.
->
-> > +     return err;
-> > +}
-> > +
-> > +int generic_map_lookup_batch(struct bpf_map *map,
-> > +                          const union bpf_attr *attr,
-> > +                          union bpf_attr __user *uattr)
-> > +{
-> > +     return __generic_map_lookup_batch(map, attr, uattr, false);
-> > +}
-> > +
-> > +int generic_map_lookup_and_delete_batch(struct bpf_map *map,
-> > +                                     const union bpf_attr *attr,
-> > +                                     union bpf_attr __user *uattr)
-> > +{
-> > +     return __generic_map_lookup_batch(map, attr, uattr, true);
-> > +}
-> > +
-> >   #define BPF_MAP_LOOKUP_AND_DELETE_ELEM_LAST_FIELD value
-> >
-> >   static int map_lookup_and_delete_elem(union bpf_attr *attr)
-> > @@ -2956,6 +3074,57 @@ static int bpf_task_fd_query(const union bpf_attr *attr,
-> >       return err;
-> >   }
-> >
-> > +#define BPF_MAP_BATCH_LAST_FIELD batch.flags
-> > +
-> > +#define BPF_DO_BATCH(fn)                     \
-> > +     do {                                    \
-> > +             if (!fn) {                      \
-> > +                     err = -ENOTSUPP;        \
-> > +                     goto err_put;           \
-> > +             }                               \
-> > +             err = fn(map, attr, uattr);     \
-> > +     } while (0)
-> > +
-> > +static int bpf_map_do_batch(const union bpf_attr *attr,
-> > +                         union bpf_attr __user *uattr,
-> > +                         int cmd)
-> > +{
-> > +     struct bpf_map *map;
-> > +     int err, ufd;
-> > +     struct fd f;
-> > +
-> > +     if (CHECK_ATTR(BPF_MAP_BATCH))
-> > +             return -EINVAL;
-> > +
-> > +     ufd = attr->batch.map_fd;
-> > +     f = fdget(ufd);
-> > +     map = __bpf_map_get(f);
-> > +     if (IS_ERR(map))
-> > +             return PTR_ERR(map);
-> > +
-> > +     if ((cmd == BPF_MAP_LOOKUP_BATCH ||
-> > +          cmd == BPF_MAP_LOOKUP_AND_DELETE_BATCH) &&
-> > +         !(map_get_sys_perms(map, f) & FMODE_CAN_READ)) {
-> > +             err = -EPERM;
-> > +             goto err_put;
-> > +     }
-> > +
-> > +     if (cmd != BPF_MAP_LOOKUP_BATCH &&
->
-> Here should be BPF_MAP_LOOKUP_AND_DELETE_BATCH.
-> BPF_MAP_LOOKUP_BATCH does not need FMODE_CAN_WRITE.
+diff --git a/drivers/edac/ghes_edac.c b/drivers/edac/ghes_edac.c
+index 47f4e7f90ef0..b99080d8a10c 100644
+--- a/drivers/edac/ghes_edac.c
++++ b/drivers/edac/ghes_edac.c
+@@ -556,8 +556,8 @@ int ghes_edac_register(struct ghes *ghes, struct device=
+ *dev)
+ 	ghes_pvt =3D pvt;
+ 	spin_unlock_irqrestore(&ghes_lock, flags);
+=20
+-	/* only increment on success */
+-	refcount_inc(&ghes_refcount);
++	/* only set on success */
++	refcount_set(&ghes_refcount, 1);
+=20
+ unlock:
+ 	mutex_unlock(&ghes_reg_mutex);
+--=20
+2.20.1
 
-ACK.
->
-> > +         !(map_get_sys_perms(map, f) & FMODE_CAN_WRITE)) {
-> > +             err = -EPERM;
-> > +             goto err_put;
-> > +     }
-> > +
-> > +     if (cmd == BPF_MAP_LOOKUP_BATCH)
-> > +             BPF_DO_BATCH(map->ops->map_lookup_batch);
-> > +     else
-> > +             BPF_DO_BATCH(map->ops->map_lookup_and_delete_batch);
-> > +
-> > +err_put:
-> > +     fdput(f);
-> > +     return err;
-> > +}
-> > +
-> >   SYSCALL_DEFINE3(bpf, int, cmd, union bpf_attr __user *, uattr, unsigned int, size)
-> >   {
-> >       union bpf_attr attr = {};
-> > @@ -3053,6 +3222,13 @@ SYSCALL_DEFINE3(bpf, int, cmd, union bpf_attr __user *, uattr, unsigned int, siz
-> >       case BPF_MAP_LOOKUP_AND_DELETE_ELEM:
-> >               err = map_lookup_and_delete_elem(&attr);
-> >               break;
-> > +     case BPF_MAP_LOOKUP_BATCH:
-> > +             err = bpf_map_do_batch(&attr, uattr, BPF_MAP_LOOKUP_BATCH);
-> > +             break;
-> > +     case BPF_MAP_LOOKUP_AND_DELETE_BATCH:
-> > +             err = bpf_map_do_batch(&attr, uattr,
-> > +                                    BPF_MAP_LOOKUP_AND_DELETE_BATCH);
-> > +             break;
-> >       default:
-> >               err = -EINVAL;
-> >               break;
-> >
