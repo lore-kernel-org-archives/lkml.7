@@ -2,265 +2,340 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.8 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9A21C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:10:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C2DBC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:15:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D44520721
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:10:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6263220721
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:15:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WdZkxAug"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726290AbfKUDKv (ORCPT
+        id S1726500AbfKUDPp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 22:10:51 -0500
-Received: from spam01.hygon.cn ([110.188.70.11]:21574 "EHLO spam2.hygon.cn"
-        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725904AbfKUDKv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 22:10:51 -0500
-Received: from MK-FE.hygon.cn ([172.23.18.61])
-        by spam2.hygon.cn with ESMTP id xAL37FXW036107;
-        Thu, 21 Nov 2019 11:07:15 +0800 (GMT-8)
-        (envelope-from linjiasen@hygon.cn)
-Received: from cncheex01.Hygon.cn ([172.23.18.10])
-        by MK-FE.hygon.cn with ESMTP id xAL372eZ030228;
-        Thu, 21 Nov 2019 11:07:02 +0800 (GMT-8)
-        (envelope-from linjiasen@hygon.cn)
-Received: from [172.20.21.12] (172.23.18.44) by cncheex01.Hygon.cn
- (172.23.18.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1466.3; Thu, 21 Nov
- 2019 11:07:10 +0800
-Subject: Re: [PATCH v2] NTB: ntb_perf: Fix address err in perf_copy_chunk
-To:     Logan Gunthorpe <logang@deltatee.com>,
-        <linux-kernel@vger.kernel.org>, <linux-ntb@googlegroups.com>,
-        <jdmason@kudzu.us>
-CC:     <allenbh@gmail.com>, <dave.jiang@intel.com>
-References: <1574136121-7941-1-git-send-email-linjiasen@hygon.cn>
- <c487042e-471b-dd99-37a6-2119b4115283@deltatee.com>
-From:   Jiasen Lin <linjiasen@hygon.cn>
-Message-ID: <c09e061e-43ba-773f-a964-1ff629e06cb5@hygon.cn>
-Date:   Thu, 21 Nov 2019 11:04:51 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Wed, 20 Nov 2019 22:15:45 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:35170 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725842AbfKUDPp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 22:15:45 -0500
+Received: by mail-pl1-f193.google.com with SMTP id s10so874634plp.2
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 19:15:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=Qnht2shM2MOiZ4qxbMYfoGx4QUY80uCQHx76GTp8h50=;
+        b=WdZkxAugtSTkcAAghiVszxg3soV9gfbHLCGNOuj7qFiqNPlrnJuRyLg9Pq8goQGwht
+         4U0p8//TlOV0H7/Q5hAV2RQiyotnpjik5S0UM0k0z7Nx0KMjswUTNrDPxJ1U/nISZTl/
+         QOZc4aklGn34lRsTk/sNpSr8DOrxhmy258H4cywxKTa4l2Z++nIFgmkhNo84dltCHcyR
+         DxR5fPVjSk4qfLDJikFehsHVuNjJQ+aUvRx25Bl2hmozMUns/nTpJytfdfQlY6YA+osZ
+         m78U3D7jCvgzGpc2bq2OA0ZLdPzMcDTy5cHvBPQ3w6SuV8xpWdNKhWxh6CY77s57J7i1
+         kRqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=Qnht2shM2MOiZ4qxbMYfoGx4QUY80uCQHx76GTp8h50=;
+        b=NoehhptjgvVcrQuA35ADO/RBLqzoV3rzU0nMzFsVAUeiEZw65FVKchXKfCJmxrGDPj
+         J+nl2xS0hRe2j6ElHsh68epcpkJu3SFqbpExyTbzfLPsTrIkCvdP97UJKQffzx5bnXPB
+         3JICOY9DQGmot0eraHTPuPVdbbsdMx7gTBDnGMK0ebSPyt5TK38hPtsooiWYKITgxsyB
+         ThRIig3W+oCGnfxHcxmvK312l0fbVeLzmAccjRtc1KnV0fHqhztt4kGr9io9fP1YtsMx
+         qg2k9xMntNbYcZoNLClRhUxylEp5pD9/4oDuXilL8cGAkqIQYj5X4bUK23sdjFP5FcfB
+         G5Ig==
+X-Gm-Message-State: APjAAAUg5x30wilZeEvG4d43/t4SY62XpkXEWDgnNwxYDPW98pkyF+V5
+        nvdDRP29YyXeujPnW4aUOYSqxg==
+X-Google-Smtp-Source: APXvYqz9D9bgV1lMd0JB2f9uP7pGnQ/BlLLIFH1vadxvPNHlxybArK1TFPGMIxO/j6mYAWepfTkRXQ==
+X-Received: by 2002:a17:902:b702:: with SMTP id d2mr6385546pls.104.1574306142865;
+        Wed, 20 Nov 2019 19:15:42 -0800 (PST)
+Received: from [100.112.92.218] ([104.133.9.106])
+        by smtp.gmail.com with ESMTPSA id 83sm25557pfv.157.2019.11.20.19.15.40
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 20 Nov 2019 19:15:41 -0800 (PST)
+Date:   Wed, 20 Nov 2019 19:15:27 -0800 (PST)
+From:   Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@eggly.anvils
+To:     Johannes Weiner <hannes@cmpxchg.org>
+cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Hugh Dickins <hughd@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH] mm: fix unsafe page -> lruvec lookups with cgroup charge
+ migration
+In-Reply-To: <20191120165847.423540-1-hannes@cmpxchg.org>
+Message-ID: <alpine.LSU.2.11.1911201836220.1090@eggly.anvils>
+References: <20191120165847.423540-1-hannes@cmpxchg.org>
+User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
 MIME-Version: 1.0
-In-Reply-To: <c487042e-471b-dd99-37a6-2119b4115283@deltatee.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [172.23.18.44]
-X-ClientProxiedBy: cncheex02.Hygon.cn (172.23.18.12) To cncheex01.Hygon.cn
- (172.23.18.10)
-X-MAIL: spam2.hygon.cn xAL37FXW036107
-X-DNSRBL: 
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 20 Nov 2019, Johannes Weiner wrote:
 
+> While reviewing the "per lruvec lru_lock for memcg" series, Hugh and I
+> noticed two places in the existing code where the page -> memcg ->
+> lruvec lookup can result in a use-after-free bug. This affects cgroup1
+> setups that have charge migration enabled.
 
-On 2019/11/20 0:50, Logan Gunthorpe wrote:
-> 
-> 
-> On 2019-11-18 9:02 p.m., Jiasen Lin wrote:
->> peer->outbuf is a virtual address which is get by ioremap, it can not
->> be converted to a physical address by virt_to_page and page_to_phys.
->> This conversion will result in DMA error, because the destination address
->> which is converted by page_to_phys is invalid.
->>
->> This patch save the MMIO address of NTB BARx in perf_setup_peer_mw,
->> and map the BAR space to DMA address after we assign the DMA channel.
->> Then fill the destination address of DMA descriptor with this DMA address
->> to guarantee that the address of memory write requests fall into
->> memory window of NBT BARx with IOMMU enabled and disabled.
->>
->> Changes since v1:
->>    * Map NTB BARx MMIO address to DMA address after assign the DMA channel,
->>      to ensure the destination address in valid. (per suggestion from Logan)
->>
->> Fixes: 5648e56d03fa ("NTB: ntb_perf: Add full multi-port NTB API support")
->> Signed-off-by: Jiasen Lin <linjiasen@hygon.cn>
-> 
-> Thanks, looks good to me except for the one nit below.
-> 
-> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
-> 
->> ---
->>   drivers/ntb/test/ntb_perf.c | 69 ++++++++++++++++++++++++++++++++++++---------
->>   1 file changed, 56 insertions(+), 13 deletions(-)
->>
->> diff --git a/drivers/ntb/test/ntb_perf.c b/drivers/ntb/test/ntb_perf.c
->> index e9b7c2d..dfca7e1 100644
->> --- a/drivers/ntb/test/ntb_perf.c
->> +++ b/drivers/ntb/test/ntb_perf.c
->> @@ -149,7 +149,8 @@ struct perf_peer {
->>   	u64 outbuf_xlat;
->>   	resource_size_t outbuf_size;
->>   	void __iomem *outbuf;
->> -
->> +	phys_addr_t out_phys_addr;
->> +	dma_addr_t dma_dst_addr;
->>   	/* Inbound MW params */
->>   	dma_addr_t inbuf_xlat;
->>   	resource_size_t inbuf_size;
->> @@ -776,7 +777,8 @@ static void perf_dma_copy_callback(void *data)
->>   }
->>   
->>   static int perf_copy_chunk(struct perf_thread *pthr,
->> -			   void __iomem *dst, void *src, size_t len)
->> +			   void __iomem *dst, void *src, size_t len,
->> +			   dma_addr_t dst_dma_addr)
->>   {
->>   	struct dma_async_tx_descriptor *tx;
->>   	struct dmaengine_unmap_data *unmap;
->> @@ -807,8 +809,7 @@ static int perf_copy_chunk(struct perf_thread *pthr,
->>   	}
->>   	unmap->to_cnt = 1;
->>   
->> -	unmap->addr[1] = dma_map_page(dma_dev, virt_to_page(dst),
->> -		offset_in_page(dst), len, DMA_FROM_DEVICE);
->> +	unmap->addr[1] = dst_dma_addr;
->>   	if (dma_mapping_error(dma_dev, unmap->addr[1])) {
->>   		ret = -EIO;
->>   		goto err_free_resource;
->> @@ -865,6 +866,7 @@ static int perf_init_test(struct perf_thread *pthr)
->>   {
->>   	struct perf_ctx *perf = pthr->perf;
->>   	dma_cap_mask_t dma_mask;
->> +	struct perf_peer *peer = pthr->perf->test_peer;
->>   
->>   	pthr->src = kmalloc_node(perf->test_peer->outbuf_size, GFP_KERNEL,
->>   				 dev_to_node(&perf->ntb->dev));
->> @@ -882,15 +884,33 @@ static int perf_init_test(struct perf_thread *pthr)
->>   	if (!pthr->dma_chan) {
->>   		dev_err(&perf->ntb->dev, "%d: Failed to get DMA channel\n",
->>   			pthr->tidx);
->> -		atomic_dec(&perf->tsync);
->> -		wake_up(&perf->twait);
->> -		kfree(pthr->src);
->> -		return -ENODEV;
->> +		goto err_free;
->> +	}
->> +	peer->dma_dst_addr =
->> +		dma_map_resource(pthr->dma_chan->device->dev,
->> +				 peer->out_phys_addr, peer->outbuf_size,
->> +				 DMA_FROM_DEVICE, 0);
->> +	if (dma_mapping_error(pthr->dma_chan->device->dev,
->> +			      peer->dma_dst_addr)) {
->> +		dev_err(pthr->dma_chan->device->dev, "%d: Failed to map DMA addr\n",
->> +			pthr->tidx);
->> +		peer->dma_dst_addr = 0;
->> +		dma_release_channel(pthr->dma_chan);
->> +		goto err_free;
->>   	}
->> +	dev_dbg(pthr->dma_chan->device->dev, "%d: Map MMIO %pa to DMA addr %pad\n",
->> +			pthr->tidx,
->> +			&peer->out_phys_addr,
->> +			&peer->dma_dst_addr);
->>   
->>   	atomic_set(&pthr->dma_sync, 0);
->> -
->>   	return 0;
->> +
->> +err_free:
->> +	atomic_dec(&perf->tsync);
->> +	wake_up(&perf->twait);
->> +	kfree(pthr->src);
->> +	return -ENODEV;
->>   }
->>   
->>   static int perf_run_test(struct perf_thread *pthr)
->> @@ -901,6 +921,8 @@ static int perf_run_test(struct perf_thread *pthr)
->>   	u64 total_size, chunk_size;
->>   	void *flt_src;
->>   	int ret = 0;
->> +	dma_addr_t flt_dma_addr;
->> +	dma_addr_t bnd_dma_addr;
->>   
->>   	total_size = 1ULL << total_order;
->>   	chunk_size = 1ULL << chunk_order;
->> @@ -910,11 +932,15 @@ static int perf_run_test(struct perf_thread *pthr)
->>   	bnd_dst = peer->outbuf + peer->outbuf_size;
->>   	flt_dst = peer->outbuf;
->>   
->> +	flt_dma_addr = peer->dma_dst_addr;
->> +	bnd_dma_addr = peer->dma_dst_addr + peer->outbuf_size;
->> +
->>   	pthr->duration = ktime_get();
->>   
->>   	/* Copied field is cleared on test launch stage */
->>   	while (pthr->copied < total_size) {
->> -		ret = perf_copy_chunk(pthr, flt_dst, flt_src, chunk_size);
->> +		ret = perf_copy_chunk(pthr, flt_dst, flt_src, chunk_size,
->> +				flt_dma_addr);
->>   		if (ret) {
->>   			dev_err(&perf->ntb->dev, "%d: Got error %d on test\n",
->>   				pthr->tidx, ret);
->> @@ -925,8 +951,15 @@ static int perf_run_test(struct perf_thread *pthr)
->>   
->>   		flt_dst += chunk_size;
->>   		flt_src += chunk_size;
->> -		if (flt_dst >= bnd_dst || flt_dst < peer->outbuf) {
->> +		flt_dma_addr += chunk_size;
->> +
->> +		if (flt_dst >= bnd_dst ||
->> +		    flt_dst < peer->outbuf ||
->> +		    flt_dma_addr >= bnd_dma_addr ||
-> 
-> Nit: I'm pretty sure the check against bnd_dma_addr is redundant with
-> the check on bnd_dst.
-> 
+I don't see how it can result in a use-after-free, or other bug.
 
-Maybe, it would be better to calculate destination address in version 3 
-patch. It will be reduce one input argument for perf_copy_chunk, so 
-flt_dma_addr and bnd_dma_addr are no longer needed.
-Take a look at this link:
-https://lore.kernel.org/patchwork/patch/1156715/
+> 
+> To pin page->mem_cgroup, callers need to either have the page locked,
+> an exclusive refcount (0), or hold the lru_lock and "own" PageLRU
 
-Thanks,
-Jiasen Lin
+"exclusive refcount (0)", okay, that's quite a good term for it -
+though "frozen refcount (0)" is what we would usually say.
 
->> +		    flt_dma_addr < peer->dma_dst_addr) {
->> +
->>   			flt_dst = peer->outbuf;
->> +			flt_dma_addr = peer->dma_dst_addr;
->>   			flt_src = pthr->src;
->>   		}
->>   
->> @@ -978,8 +1011,13 @@ static void perf_clear_test(struct perf_thread *pthr)
->>   	 * We call it anyway just to be sure of the transfers completion.
->>   	 */
->>   	(void)dmaengine_terminate_sync(pthr->dma_chan);
->> -
->> -	dma_release_channel(pthr->dma_chan);
->> +	if (pthr->perf->test_peer->dma_dst_addr)
->> +		dma_unmap_resource(pthr->dma_chan->device->dev,
->> +				   pthr->perf->test_peer->dma_dst_addr,
->> +				   pthr->perf->test_peer->outbuf_size,
->> +				   DMA_FROM_DEVICE, 0);
->> +	if (pthr->dma_chan)
->> +		dma_release_channel(pthr->dma_chan);
->>   
->>   no_dma_notify:
->>   	atomic_dec(&perf->tsync);
->> @@ -1195,6 +1233,9 @@ static ssize_t perf_dbgfs_read_info(struct file *filep, char __user *ubuf,
->>   			"\tOut buffer addr 0x%pK\n", peer->outbuf);
->>   
->>   		pos += scnprintf(buf + pos, buf_size - pos,
->> +			"\tOut buff phys addr %pa[p]\n", &peer->out_phys_addr);
->> +
->> +		pos += scnprintf(buf + pos, buf_size - pos,
->>   			"\tOut buffer size %pa\n", &peer->outbuf_size);
->>   
->>   		pos += scnprintf(buf + pos, buf_size - pos,
->> @@ -1388,6 +1429,8 @@ static int perf_setup_peer_mw(struct perf_peer *peer)
->>   	if (!peer->outbuf)
->>   		return -ENOMEM;
->>   
->> +	peer->out_phys_addr = phys_addr;
->> +
->>   	if (max_mw_size && peer->outbuf_size > max_mw_size) {
->>   		peer->outbuf_size = max_mw_size;
->>   		dev_warn(&peer->perf->ntb->dev,
->>
+You don't suggest holding move_lock, but I guess move_lock is never
+used in that way (nor should be).
+
+Okay.
+
+> (either ensure it's set, or be the one to hold the page in isolation)
+> to make cgroup migration fail the isolation step. Failure to follow
+> this can result in the page moving out of the memcg and freeing it,
+> along with its lruvecs, while the observer is dereferencing them.
+> 
+> 1. isolate_lru_page() calls mem_cgroup_page_lruvec() with the lru_lock
+> held but before testing PageLRU. It doesn't dereference the returned
+> lruvec before testing PageLRU, giving the impression that it might
+> just be safe ordering after all - but mem_cgroup_page_lruvec() itself
+> touches the lruvec to lazily initialize the pgdat back pointer. This
+> one is easy to fix, just move the lookup into the PageLRU branch.
+> 
+> 2. pagevec_lru_move_fn() conveniently looks up the lruvec for all the
+> callbacks it might get invoked on. Unfortunately, it's the callbacks
+> that first check PageLRU under the lru_lock, which makes this order
+> equally unsafe as isolate_lru_page(). Remove the lruvec argument from
+> the move callbacks and let them do it inside their PageLRU branches.
+> 
+> Reported-by: Hugh Dickins <hughd@google.com>
+
+You are overly generous to name me there! I have to demur, it's true
+that yesterday I said "even isolate_lru_page() looks unsafe to me now",
+but I was talking (in private mail) about my own mods, not current
+upstream.  And you have then gone on to observe something suspicious
+in the current code, but I don't think it amounts to a bug at all.
+Appreciated, but please delete me!
+
+Further explanation below, at the smaller isolate_lru_page() hunk,
+where it's easier to see what goes on without the indirections of
+mm/swap.c.
+
+> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+> ---
+>  mm/swap.c   | 48 +++++++++++++++++++++++++++++-------------------
+>  mm/vmscan.c |  8 ++++----
+>  2 files changed, 33 insertions(+), 23 deletions(-)
+> 
+> diff --git a/mm/swap.c b/mm/swap.c
+> index 5341ae93861f..6b015e9532fb 100644
+> --- a/mm/swap.c
+> +++ b/mm/swap.c
+> @@ -188,12 +188,11 @@ int get_kernel_page(unsigned long start, int write, struct page **pages)
+>  EXPORT_SYMBOL_GPL(get_kernel_page);
+>  
+>  static void pagevec_lru_move_fn(struct pagevec *pvec,
+> -	void (*move_fn)(struct page *page, struct lruvec *lruvec, void *arg),
+> +	void (*move_fn)(struct page *page, void *arg),
+>  	void *arg)
+>  {
+>  	int i;
+>  	struct pglist_data *pgdat = NULL;
+> -	struct lruvec *lruvec;
+>  	unsigned long flags = 0;
+>  
+>  	for (i = 0; i < pagevec_count(pvec); i++) {
+> @@ -207,8 +206,7 @@ static void pagevec_lru_move_fn(struct pagevec *pvec,
+>  			spin_lock_irqsave(&pgdat->lru_lock, flags);
+>  		}
+>  
+> -		lruvec = mem_cgroup_page_lruvec(page, pgdat);
+> -		(*move_fn)(page, lruvec, arg);
+> +		(*move_fn)(page, arg);
+>  	}
+>  	if (pgdat)
+>  		spin_unlock_irqrestore(&pgdat->lru_lock, flags);
+> @@ -216,12 +214,14 @@ static void pagevec_lru_move_fn(struct pagevec *pvec,
+>  	pagevec_reinit(pvec);
+>  }
+>  
+> -static void pagevec_move_tail_fn(struct page *page, struct lruvec *lruvec,
+> -				 void *arg)
+> +static void pagevec_move_tail_fn(struct page *page, void *arg)
+>  {
+>  	int *pgmoved = arg;
+>  
+>  	if (PageLRU(page) && !PageUnevictable(page)) {
+> +		struct lruvec *lruvec;
+> +
+> +		lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
+>  		del_page_from_lru_list(page, lruvec, page_lru(page));
+>  		ClearPageActive(page);
+>  		add_page_to_lru_list_tail(page, lruvec, page_lru(page));
+> @@ -272,12 +272,14 @@ static void update_page_reclaim_stat(struct lruvec *lruvec,
+>  		reclaim_stat->recent_rotated[file]++;
+>  }
+>  
+> -static void __activate_page(struct page *page, struct lruvec *lruvec,
+> -			    void *arg)
+> +static void __activate_page(struct page *page, void *arg)
+>  {
+>  	if (PageLRU(page) && !PageActive(page) && !PageUnevictable(page)) {
+>  		int file = page_is_file_cache(page);
+>  		int lru = page_lru_base_type(page);
+> +		struct lruvec *lruvec;
+> +
+> +		lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
+>  
+>  		del_page_from_lru_list(page, lruvec, lru);
+>  		SetPageActive(page);
+> @@ -328,7 +330,7 @@ void activate_page(struct page *page)
+>  
+>  	page = compound_head(page);
+>  	spin_lock_irq(&pgdat->lru_lock);
+> -	__activate_page(page, mem_cgroup_page_lruvec(page, pgdat), NULL);
+> +	__activate_page(page, NULL);
+>  	spin_unlock_irq(&pgdat->lru_lock);
+>  }
+>  #endif
+> @@ -498,9 +500,9 @@ void lru_cache_add_active_or_unevictable(struct page *page,
+>   * be write it out by flusher threads as this is much more effective
+>   * than the single-page writeout from reclaim.
+>   */
+> -static void lru_deactivate_file_fn(struct page *page, struct lruvec *lruvec,
+> -			      void *arg)
+> +static void lru_deactivate_file_fn(struct page *page, void *arg)
+>  {
+> +	struct lruvec *lruvec;
+>  	int lru, file;
+>  	bool active;
+>  
+> @@ -518,6 +520,8 @@ static void lru_deactivate_file_fn(struct page *page, struct lruvec *lruvec,
+>  	file = page_is_file_cache(page);
+>  	lru = page_lru_base_type(page);
+>  
+> +	lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
+> +
+>  	del_page_from_lru_list(page, lruvec, lru + active);
+>  	ClearPageActive(page);
+>  	ClearPageReferenced(page);
+> @@ -544,12 +548,14 @@ static void lru_deactivate_file_fn(struct page *page, struct lruvec *lruvec,
+>  	update_page_reclaim_stat(lruvec, file, 0);
+>  }
+>  
+> -static void lru_deactivate_fn(struct page *page, struct lruvec *lruvec,
+> -			    void *arg)
+> +static void lru_deactivate_fn(struct page *page, void *arg)
+>  {
+>  	if (PageLRU(page) && PageActive(page) && !PageUnevictable(page)) {
+>  		int file = page_is_file_cache(page);
+>  		int lru = page_lru_base_type(page);
+> +		struct lruvec *lruvec;
+> +
+> +		lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
+>  
+>  		del_page_from_lru_list(page, lruvec, lru + LRU_ACTIVE);
+>  		ClearPageActive(page);
+> @@ -561,12 +567,14 @@ static void lru_deactivate_fn(struct page *page, struct lruvec *lruvec,
+>  	}
+>  }
+>  
+> -static void lru_lazyfree_fn(struct page *page, struct lruvec *lruvec,
+> -			    void *arg)
+> +static void lru_lazyfree_fn(struct page *page, void *arg)
+>  {
+>  	if (PageLRU(page) && PageAnon(page) && PageSwapBacked(page) &&
+>  	    !PageSwapCache(page) && !PageUnevictable(page)) {
+>  		bool active = PageActive(page);
+> +		struct lruvec *lruvec;
+> +
+> +		lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
+>  
+>  		del_page_from_lru_list(page, lruvec,
+>  				       LRU_INACTIVE_ANON + active);
+> @@ -921,15 +929,17 @@ void lru_add_page_tail(struct page *page, struct page *page_tail,
+>  }
+>  #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
+>  
+> -static void __pagevec_lru_add_fn(struct page *page, struct lruvec *lruvec,
+> -				 void *arg)
+> +static void __pagevec_lru_add_fn(struct page *page, void *arg)
+>  {
+> -	enum lru_list lru;
+>  	int was_unevictable = TestClearPageUnevictable(page);
+> +	struct lruvec *lruvec;
+> +	enum lru_list lru;
+>  
+>  	VM_BUG_ON_PAGE(PageLRU(page), page);
+> -
+>  	SetPageLRU(page);
+> +
+> +	lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
+> +
+>  	/*
+>  	 * Page becomes evictable in two ways:
+>  	 * 1) Within LRU lock [munlock_vma_page() and __munlock_pagevec()].
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index df859b1d583c..3c8b81990146 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -1767,15 +1767,15 @@ int isolate_lru_page(struct page *page)
+>  
+>  	if (PageLRU(page)) {
+>  		pg_data_t *pgdat = page_pgdat(page);
+> -		struct lruvec *lruvec;
+>  
+>  		spin_lock_irq(&pgdat->lru_lock);
+> -		lruvec = mem_cgroup_page_lruvec(page, pgdat);
+>  		if (PageLRU(page)) {
+> -			int lru = page_lru(page);
+> +			struct lruvec *lruvec;
+> +
+> +			lruvec = mem_cgroup_page_lruvec(page, pgdat);
+>  			get_page(page);
+>  			ClearPageLRU(page);
+> -			del_page_from_lru_list(page, lruvec, lru);
+> +			del_page_from_lru_list(page, lruvec, page_lru(page));
+>  			ret = 0;
+>  		}
+>  		spin_unlock_irq(&pgdat->lru_lock);
+> -- 
+> 2.24.0
+
+It like the way you've rearranged isolate_lru_page() there, but I
+don't think it amounts to more than a cleanup.  Very good thinking
+about the odd "lruvec->pgdat = pgdat" case tucked away inside
+mem_cgroup_page_lruvec(), but actually, what harm does it do, if
+mem_cgroup_move_account() changes page->mem_cgroup concurrently?
+
+You say use-after-free, but we have spin_lock_irq here, and the
+struct mem_cgroup (and its lruvecs) cannot be freed until an RCU
+grace period expires, which we rely upon in many places, and which
+cannot happen until after the spin_unlock_irq.
+
+And the same applies in the pagevec_lru_move functions, doesn't it?
+
+I think now is not the time for such cleanups. If this fits well
+with Alex's per-lruvec locking (or represents an initial direction
+that you think he should follow), fine, but better to let him take it
+into his patchset in that case, than change the base unnecessarily
+underneath him.
+
+(It happens to go against my own direction, since it separates the
+locking from the determination of lruvec, which I insist must be
+kept together; but perhaps that won't be quite the same for Alex.)
+
+Hugh
