@@ -2,125 +2,88 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F025C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 00:10:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7CE4C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 00:14:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3A3E20878
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 00:10:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D57B20730
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 00:14:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FtsVZiHS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbfKUAKo (ORCPT
+        id S1726593AbfKUAOZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 19:10:44 -0500
-Received: from mga12.intel.com ([192.55.52.136]:38966 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726293AbfKUAKn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 19:10:43 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Nov 2019 16:10:43 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,223,1571727600"; 
-   d="scan'208";a="204986105"
-Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by fmsmga007.fm.intel.com with ESMTP; 20 Nov 2019 16:10:42 -0800
-Subject: Re: [PATCH RFC 01/14] x86/asm: add iosubmit_cmds512() based on
- movdir64b CPU instruction
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Lin, Jing" <jing.lin@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Dey, Megha" <megha.dey@intel.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "Yu, Fenghua" <fenghua.yu@intel.com>,
-        "hpa@zytor.com" <hpa@zytor.com>
-References: <157428480574.36836.14057238306923901253.stgit@djiang5-desk3.ch.intel.com>
- <157428502934.36836.8119026517510193201.stgit@djiang5-desk3.ch.intel.com>
- <20191120215338.GN2634@zn.tnic>
-From:   Dave Jiang <dave.jiang@intel.com>
-Message-ID: <247008b5-6d33-a51b-0caa-7f1991a94dbd@intel.com>
-Date:   Wed, 20 Nov 2019 17:10:41 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Wed, 20 Nov 2019 19:14:25 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:32832 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726044AbfKUAOZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 19:14:25 -0500
+Received: by mail-pg1-f193.google.com with SMTP id h27so614028pgn.0
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 16:14:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=iWcHlEgNUMXWNtKMo9fnHArr6iM67LDOF9B6/mC5eh0=;
+        b=FtsVZiHS0XjHawCmjdwhHMQklah08Y+cI5JlQyrmYL0+HJeWbW4B5FqM/V3xIUNFps
+         ESSb1QTy3Nqa2LHI/2Q9ErojKLztxhds+mZVEt7luzVOAlUOw+yHR1vuNjdrYy6VwAX4
+         l1DeaynlLib7Wb9UOYvUSuEjZ1gM7AqyJI9iFecvlu2FBuwabg+BznsHDiwda8a6qIkC
+         lgFeurHDPHcZEfCAG0tH1S5MrFlAc8Kxj3zegQIr3/f/xnuN7kR5OTaAN+1rXyfvMsH0
+         Hrj+lDNatJ0cM0EbflECXE+f9IQSp0Cb7RqlGH+cKLhgphjzx7e/q+1yXg7MbHNKT781
+         /hoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=iWcHlEgNUMXWNtKMo9fnHArr6iM67LDOF9B6/mC5eh0=;
+        b=RpnxtHynXSenWXYKuhG1EWgbrmNLl15AI8cAfh/nWXBxyxvmDSiPqmlcp8mhWQFjHv
+         IjmkLUBSDopzalLQ/rqcFKN8CRDCWHmxVTM+0JGqVYRQmjyklTJ5aQIpmzdVCoOUw/5D
+         2tI8FuK2EIfENFc8Z4e/Elg/dlaVfiRtnQJ9XJcCSc9rL4PdmnUtuVo8MMK9Vmms1YqK
+         n/vralQ5El+Zl7MlWEPROfMdlL37oD933u6TIptkRk/BPrJKzhv1tHKPmopoWTCq3yyn
+         GCOCknC6G2sUvs0GhS2L3NNp+skztIlxd3u78VQHjjJZg0+W+QPdUaXw2DDoUvz9MfIL
+         hBlw==
+X-Gm-Message-State: APjAAAXX3OHEvlp4YzStluGXe8toDa2dgVdLrXWZMTnFNzXuLEGvXaD4
+        A8nlqvYcWpjQ2YKAN6DtOR0TQav3t6U=
+X-Google-Smtp-Source: APXvYqzMz3F5gc0bmdB8045zo0z/zHlARfgRPm4Md5Gby/s36OsyddwO4k65Ri++p+1zF7BVsSTEyQ==
+X-Received: by 2002:a63:f48:: with SMTP id 8mr6308884pgp.329.1574295264037;
+        Wed, 20 Nov 2019 16:14:24 -0800 (PST)
+Received: from tw-172-25-31-76.office.twttr.net ([8.25.197.24])
+        by smtp.gmail.com with ESMTPSA id r4sm565981pfl.61.2019.11.20.16.14.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Nov 2019 16:14:23 -0800 (PST)
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+To:     iommu@lists.linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, joro@8bytes.org,
+        Cong Wang <xiyou.wangcong@gmail.com>
+Subject: [PATCH 0/3] iommu: reduce spinlock contention on fast path
+Date:   Wed, 20 Nov 2019 16:13:45 -0800
+Message-Id: <20191121001348.27230-1-xiyou.wangcong@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <20191120215338.GN2634@zn.tnic>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patchset contains three small optimizations for the global spinlock
+contention in IOVA cache. Our memcache perf test shows this reduced its
+p999 latency down by 45% on AMD when IOMMU is enabled.
 
+Cong Wang (3):
+  iommu: match the original algorithm
+  iommu: optimize iova_magazine_free_pfns()
+  iommu: avoid taking iova_rbtree_lock twice
 
-On 11/20/19 2:53 PM, Borislav Petkov wrote:
-> On Wed, Nov 20, 2019 at 02:23:49PM -0700, Dave Jiang wrote:
->> +/**
->> + * iosubmit_cmds512 - copy data to single MMIO location, in 512-bit units
-> 
-> Where is the alignment check on that data before doing the copying?
+---
+ drivers/iommu/iova.c | 44 +++++++++++++++++++++++++-------------------
+ 1 file changed, 25 insertions(+), 19 deletions(-)
 
-I'll add the check on the destination address. The call is modeled after 
-__iowrite64_copy() / __iowrite32_copy() in lib/iomap_copy.c. Looks like 
-those functions do not check for the alignment requirements either.
+-- 
+2.21.0
 
-> 
->> + * @dst: destination, in MMIO space (must be 512-bit aligned)
->> + * @src: source
->> + * @count: number of 512 bits quantities to submit
-> 
-> Where's that check on the data?
-
-I don't follow?
-
-> 
->> + *
->> + * Submit data from kernel space to MMIO space, in units of 512 bits at a
->> + * time.  Order of access is not guaranteed, nor is a memory barrier
->> + * performed afterwards.
->> + */
->> +static inline void iosubmit_cmds512(void __iomem *dst, const void *src,
->> +				    size_t count)
-> 
-> An iosubmit function which returns void and doesn't tell its callers
-> whether it succeeded or not? That looks non-optimal to say the least.
-> 
-> Why isn't there a fallback function which to call when the CPU doesn't
-> support movdir64b?
-> 
-> Because then you can use alternative_call() and have the thing work
-> regardless of hardware support for MOVDIR*.
-
-Looks like Tony answered this part.
-
-> 
->> +{
->> +	const u8 *from = src;
->> +	const u8 *end = from + count * 64;
->> +
->> +	if (!cpu_has_write512())
-> 
-> If anything, that thing needs to go and you should use
-> 
->    static_cpu_has(X86_FEATURE_MOVDIR64B)
-> 
-> as it looks to me like you would care about speed on this fast path?
-> Yes, no?
-> 
-
-Yes thank you!
