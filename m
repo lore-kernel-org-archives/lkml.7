@@ -2,96 +2,91 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52537C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:57:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC8CC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:02:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E12A20714
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:57:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D876C20714
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:02:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574344668;
-	bh=cf0uWOIfUkIj9zjrethb4lj0w1bhSCTZgxGIhOJ55EU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oTYE0L7BIyieQRAhZ8VXQKM9pmssq5RXSaiLpUsiMZmeovAd2TNhYaAL6LAmpXcKx
-	 k8tj3T3gz7P90OoagopDqXDlzqJXwAIzIzJFO6Ue+ETexo0pq6u/Y83FggcfZkifyw
-	 8zlEI24YRPVM6IUwC0SSEF3WzprRW4wZaSEDacLg=
+	s=default; t=1574344950;
+	bh=kegAbqQ55YAKJFVhHNJc+bQ0rbgYivDuVa8I99XBJ9c=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=T0DklFpJsfgg9PGYC2lC9SPt0JHZOd52LEPT+1RHdFap9EiYLhzkUkdPIJe0g1LjI
+	 7oElR38E4w32ZLZ041bI0EdNrXNkBXnWRGT2wagmWI3xvOgUsGdcvLZDf/Hm+FoEU9
+	 2azyyR+27gVuORpoAUENsIySvS3UTvDSOHtYQFx8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbfKUN5r (ORCPT
+        id S1726689AbfKUOC3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 08:57:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34482 "EHLO mail.kernel.org"
+        Thu, 21 Nov 2019 09:02:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726695AbfKUN5q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 08:57:46 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1726293AbfKUOC3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 09:02:29 -0500
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1EAB2070B;
-        Thu, 21 Nov 2019 13:57:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDE4020679;
+        Thu, 21 Nov 2019 14:02:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574344666;
-        bh=cf0uWOIfUkIj9zjrethb4lj0w1bhSCTZgxGIhOJ55EU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AAe0p8myHUaTS3uGM7P/wWCP1xJdsJuJW7np3Sw3RsUY4HcC48A/M/Oe+vOPJOumt
-         A1vN2q+pRUyf6OrW5tvaRAQhbCqdEDOy4tcReFO3Ay2EueWrsn7hEFB7mFB0IaSp0T
-         BunpTt1lEbNchA2Knmpsu5+/F++klqJtUWKZ+Ssc=
-Date:   Thu, 21 Nov 2019 14:57:43 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] driver core: Print device in really_probe() warning
- backtrace
-Message-ID: <20191121135743.GA552517@kroah.com>
-References: <20191120143619.1027-1-geert+renesas@glider.be>
- <20191120143619.1027-3-geert+renesas@glider.be>
+        s=default; t=1574344949;
+        bh=kegAbqQ55YAKJFVhHNJc+bQ0rbgYivDuVa8I99XBJ9c=;
+        h=From:To:Cc:Subject:Date:From;
+        b=2GwomWDZvpK92iHDorjwezZ5/4UYvebR151EZGZfqqlASQxqholOLgorVKdkbFWVw
+         YdmgL7/pi5HxEhqxeWxTshMRLxwChujHVtmORfyy8/eHF8Is1ZT7ErJwWM26jA4UQq
+         FGE0WL6vIXveCEfARsgvY03PTEZJX8q1ujxCFors=
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     linux-pci@vger.kernel.org
+Cc:     Alex Deucher <alexdeucher@gmail.com>,
+        Frederick Lawler <fred@fredlawl.com>,
+        Christian Koenig <christian.koenig@amd.com>,
+        Chunming Zhou <David1.Zhou@amd.com>,
+        Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH v2 0/7] PCI: Prefer pcie_capability_read_word()
+Date:   Thu, 21 Nov 2019 08:02:13 -0600
+Message-Id: <20191121140220.38030-1-helgaas@kernel.org>
+X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191120143619.1027-3-geert+renesas@glider.be>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 03:36:19PM +0100, Geert Uytterhoeven wrote:
-> If a device already has devres items attached before probing, a warning
-> backtrace is printed.  However, this backtrace does not reveal the
-> offending device, leaving the user uninformed.
-> 
-> Use dev_WARN_ON() instead of WARN_ON() to fix this.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
->  drivers/base/dd.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-> index d811e60610d33ae9..a7e8040ef0003f44 100644
-> --- a/drivers/base/dd.c
-> +++ b/drivers/base/dd.c
-> @@ -516,7 +516,7 @@ static int really_probe(struct device *dev, struct device_driver *drv)
->  	atomic_inc(&probe_count);
->  	pr_debug("bus: '%s': %s: probing driver %s with device %s\n",
->  		 drv->bus->name, __func__, drv->name, dev_name(dev));
-> -	WARN_ON(!list_empty(&dev->devres_head));
-> +	dev_WARN_ON(dev, !list_empty(&dev->devres_head));
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-We really do not want WARN_ON() anywhere, as that causes systems with
-panic-on-warn to reboot.
+Use pcie_capability_read_word() and similar instead of using
+pci_read_config_word() directly.  Add #defines to replace some magic
+numbers.  Fix typos in use of Transmit Margin field.
 
-If this can happen, we should switch it to a real error message, with
-dev_err() and the like, and recover properly.
+These are currently on my pci/misc branch for v5.5.  Let me know if you see
+any issues.
 
-I don't want to make it easier to add WARN_ON() lines, like
-dev_WARN_ON() would allow, instead we should be removing them, as they
-encourage slopping programming habits.
 
-thanks,
+Bjorn Helgaas (5):
+  PCI: Add #defines for Enter Compliance, Transmit Margin
+  drm/amdgpu: Correct Transmit Margin masks
+  drm/amdgpu: Replace numbers with PCI_EXP_LNKCTL2 definitions
+  drm/radeon: Correct Transmit Margin masks
+  drm/radeon: Replace numbers with PCI_EXP_LNKCTL2 definitions
 
-greg k-h
+Frederick Lawler (2):
+  drm/amdgpu: Prefer pcie_capability_read_word()
+  drm/radeon: Prefer pcie_capability_read_word()
+
+ drivers/gpu/drm/amd/amdgpu/cik.c | 95 +++++++++++++++++++------------
+ drivers/gpu/drm/amd/amdgpu/si.c  | 97 ++++++++++++++++++++------------
+ drivers/gpu/drm/radeon/cik.c     | 94 +++++++++++++++++++------------
+ drivers/gpu/drm/radeon/si.c      | 97 ++++++++++++++++++++------------
+ include/uapi/linux/pci_regs.h    |  2 +
+ 5 files changed, 243 insertions(+), 142 deletions(-)
+
+-- 
+2.24.0.432.g9d3f5f5b63-goog
+
