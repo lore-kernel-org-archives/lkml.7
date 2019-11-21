@@ -2,156 +2,204 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 659DDC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:20:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B7BAC33C9C
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:20:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 390BE208D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:20:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574306443;
-	bh=Ws+h2XCB+4cYjoU6hb4miQHTjGVkwBMyL5AK0BvvSPI=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=TFbMNlFLQXh4PiVd8cYatCne458+gELxHbUwC7fX9vL+XlMdKmrMkJQH7GBIqHArp
-	 bFEMiw+2zfurR3FLs8rRYxZl+TLEzvQRu8oQSKIJG0FXu0fPLYui0SB2oVy9wGZFiX
-	 mSSYtZJ0MebNK3EqgbYOG8X80b6P9fkezejbikB4=
+	by mail.kernel.org (Postfix) with ESMTP id 3550A208D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:20:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="FEB9UpPF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727556AbfKUDUm (ORCPT
+        id S1727539AbfKUDUl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 22:20:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34438 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727532AbfKUDUl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 Nov 2019 22:20:41 -0500
-Received: from PC-kkoz.proceq.com (unknown [213.160.61.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 950CB208A3;
-        Thu, 21 Nov 2019 03:20:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574306440;
-        bh=Ws+h2XCB+4cYjoU6hb4miQHTjGVkwBMyL5AK0BvvSPI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=UgfmOavldxRPfdtooKkb9hrGUODSqqsfRixWGeqX+MrhWNlHQ2rpO4cxRWL/rJzMd
-         g1h9XZuPr7J7ztsJZtbxq1G58GmJlHje1SKifay5OW9UZSS302sVntrj+iDvmrenAN
-         iLraQptPIwhwM0oXK9S21hZoLQ1L8WFab843hwwA=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
-Subject: [PATCH v2] mm: Fix Kconfig indentation
-Date:   Thu, 21 Nov 2019 04:20:37 +0100
-Message-Id: <1574306437-28837-1-git-send-email-krzk@kernel.org>
+Received: from mailout1.samsung.com ([203.254.224.24]:51057 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727509AbfKUDUj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 22:20:39 -0500
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20191121032037epoutp019f4b32dd70cb7ae055f1a1a7e85f390f~ZD10zEHOD2939629396epoutp01P
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 03:20:37 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20191121032037epoutp019f4b32dd70cb7ae055f1a1a7e85f390f~ZD10zEHOD2939629396epoutp01P
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1574306437;
+        bh=2YYXgjCg4OpFQwaAFuEh8nJn991F2oDFmVnHATA+nac=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=FEB9UpPFZhYng4mlH7+JmmA4+9WAEmATwrm1V9uar9+YkEP/iDEr5/X6K40TTKrOG
+         IpMtyEGGVpryE2CSjytC59DN1dtTfAM0gSYjmrgxv6n4GyVDMr+79qg9ZcYpCGcs5d
+         13mMnzq1yvBTGcEpjFoUQuDp0VBYNQA72sgDiBzo=
+Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
+        epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+        20191121032037epcas5p28c24613dedc01675ea87f0c899e8b5fb~ZD10ZQUaC0606906069epcas5p2p;
+        Thu, 21 Nov 2019 03:20:37 +0000 (GMT)
+Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
+        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        AA.9F.04403.58206DD5; Thu, 21 Nov 2019 12:20:37 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+        20191121032036epcas5p1ec12cabed1104c131a3cab202a180c21~ZD1z1c92w2857128571epcas5p1J;
+        Thu, 21 Nov 2019 03:20:36 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20191121032036epsmtrp1a6336e44477a887e1a22d9c76edaada5~ZD1z0sUHs0943209432epsmtrp1C;
+        Thu, 21 Nov 2019 03:20:36 +0000 (GMT)
+X-AuditID: b6c32a4a-3cbff70000001133-5c-5dd60285df84
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        16.1C.03654.48206DD5; Thu, 21 Nov 2019 12:20:36 +0900 (KST)
+Received: from ubuntu.sa.corp.samsungelectronics.net (unknown
+        [107.108.83.125]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20191121032034epsmtip25a429275ad648a37efb20d8c671e49c8~ZD1yLlJ3H2680226802epsmtip2X;
+        Thu, 21 Nov 2019 03:20:34 +0000 (GMT)
+From:   Anvesh Salveru <anvesh.s@samsung.com>
+To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        pankaj.dubey@samsung.com, lorenzo.pieralisi@arm.com,
+        andrew.murray@arm.com, bhelgaas@google.com, kishon@ti.com,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        Anvesh Salveru <anvesh.s@samsung.com>
+Subject: [PATCH v4 1/2] phy: core: add phy_property_present method
+Date:   Thu, 21 Nov 2019 08:50:07 +0530
+Message-Id: <1574306408-4360-2-git-send-email-anvesh.s@samsung.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1574306408-4360-1-git-send-email-anvesh.s@samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupileLIzCtJLcpLzFFi42LZdlhTQ7eV6Vqswb7lfBbN/7ezWpzdtZDV
+        YklThsWuux3sFiu+zGS3uPC0h83i8q45bBZn5x1ns3jz+wW7xdLrF5ksFm39wm7RuvcIuwOP
+        x5p5axg9ds66y+6xYFOpx6ZVnWwefVtWMXps2f+Z0eP4je1MHp83yQVwRHHZpKTmZJalFunb
+        JXBl/L93lbHgiETFgnnaDYzdIl2MHBwSAiYSax9pdjFycQgJ7GaUeL72EyOE84lR4lfbT3YI
+        5xujRNfZ2cxdjJxgHW/OvGGCSOxllGj5thzKaWGS+LW4lRGkik1AW+Ln0b3sILaIgLXE4fYt
+        bCBFzAL/GCWufpkHViQs4CTxfd4isLEsAqoSp79PYAKxeQWcJXYcXccOsU5O4ua5TrAaTgEX
+        iaZb28G2SQhcZ5O49fooG0SRi8Tuib9YIWxhiVfHt0A1S0m87G+DsvMleu8uhbJrJKbc7WCE
+        sO0lDlyZwwIKDWYBTYn1u/RBwswCfBK9v58wQQKJV6KjTQjCVJJom1kN0SghsXj+TWigeEhc
+        OfebGRIO0xklTr56wDqBUXYWwtAFjIyrGCVTC4pz01OLTQuM8lLL9YoTc4tL89L1kvNzNzGC
+        U4iW1w7GZed8DjEKcDAq8fBmaFyNFWJNLCuuzD3EKMHBrCTCu+f6lVgh3pTEyqrUovz4otKc
+        1OJDjNIcLErivJNYr8YICaQnlqRmp6YWpBbBZJk4OKUaGLeK6vMzyMxqr+bozD/QFjx7Xav+
+        k23x2uZqZYnNHbs2pVRHm5c1z+yMUitlCEt62vpS3Xm982GBosvWB38WNE1bMv2l25ymyT57
+        L+2NdTi1wviIi2sf98lfckqsjW8sHRIs1QzecT+9uYJX+tjxZTcnpLc+T3n6uvzAsr2im7Yo
+        i5W8XD3zthJLcUaioRZzUXEiAI+ob8UdAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrFLMWRmVeSWpSXmKPExsWy7bCSvG4L07VYg5ufVCya/29ntTi7ayGr
+        xZKmDItddzvYLVZ8mcluceFpD5vF5V1z2CzOzjvOZvHm9wt2i6XXLzJZLNr6hd2ide8Rdgce
+        jzXz1jB67Jx1l91jwaZSj02rOtk8+rasYvTYsv8zo8fxG9uZPD5vkgvgiOKySUnNySxLLdK3
+        S+DK+H/vKmPBEYmKBfO0Gxi7RboYOTkkBEwk3px5w9TFyMUhJLCbUeLYnUWMEAkJiS97v7JB
+        2MISK/89Z4coamKS+LJgIhNIgk1AW+Ln0b3sILaIgK3E/UeTWUGKmAW6mCTWnt4ClhAWcJL4
+        Pm8RM4jNIqAqcfr7BLBmXgFniR1H17FDbJCTuHmuE6yGU8BFounWdrAaIaCa3Vdusk5g5FvA
+        yLCKUTK1oDg3PbfYsMAwL7Vcrzgxt7g0L10vOT93EyM4hLU0dzBeXhJ/iFGAg1GJhzdD42qs
+        EGtiWXFl7iFGCQ5mJRHePdevxArxpiRWVqUW5ccXleakFh9ilOZgURLnfZp3LFJIID2xJDU7
+        NbUgtQgmy8TBKdXAKPE0atG+vUq2HXO+xbJeUrjkYHc2Nedm776oLguhT56xjzkqdVTnWe9I
+        NWuXLFm26JLcrqVHb67l8ZDtYDjw4Pe0D2f+R2b9NBFSZjf4yfyqVrN6T+tR5l9MXdZnJ1tw
+        7Gg+GPIv/+O1U5/nCVSKs805H/1g9dbJcd85e0N17rvqTNY86VlYqMRSnJFoqMVcVJwIAFhr
+        3ihdAgAA
+X-CMS-MailID: 20191121032036epcas5p1ec12cabed1104c131a3cab202a180c21
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20191121032036epcas5p1ec12cabed1104c131a3cab202a180c21
+References: <1574306408-4360-1-git-send-email-anvesh.s@samsung.com>
+        <CGME20191121032036epcas5p1ec12cabed1104c131a3cab202a180c21@epcas5p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adjust indentation from spaces to tab (+optional two spaces) as in
-coding style with command like:
-	$ sed -e 's/^        /\t/' -i */Kconfig
+In some platforms, we need information of phy properties in
+the controller drivers. This patch adds a new phy_property_present()
+method which can be used to check if some property exists in PHY
+or not.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Reviewed-by: David Hildenbrand <david@redhat.com>
+In case of DesignWare PCIe controller, we need to write into controller
+register to specify about ZRX-DC compliance property of the PHY, which
+reduces the power consumption during lower power states.
 
+Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
+Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
 ---
+ drivers/phy/phy-core.c  | 26 ++++++++++++++++++++++++++
+ include/linux/phy/phy.h |  8 ++++++++
+ 2 files changed, 34 insertions(+)
 
-Changes since v1:
-1. Fix also 7-space and tab+1 space indentation issues.
----
- mm/Kconfig | 38 +++++++++++++++++++-------------------
- 1 file changed, 19 insertions(+), 19 deletions(-)
-
-diff --git a/mm/Kconfig b/mm/Kconfig
-index e38ff1d5968d..5a6cd8038b6d 100644
---- a/mm/Kconfig
-+++ b/mm/Kconfig
-@@ -122,9 +122,9 @@ config SPARSEMEM_VMEMMAP
- 	depends on SPARSEMEM && SPARSEMEM_VMEMMAP_ENABLE
- 	default y
- 	help
--	 SPARSEMEM_VMEMMAP uses a virtually mapped memmap to optimise
--	 pfn_to_page and page_to_pfn operations.  This is the most
--	 efficient option when sufficient kernel resources are available.
-+	  SPARSEMEM_VMEMMAP uses a virtually mapped memmap to optimise
-+	  pfn_to_page and page_to_pfn operations.  This is the most
-+	  efficient option when sufficient kernel resources are available.
+diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
+index b04f4fe..0a62eca 100644
+--- a/drivers/phy/phy-core.c
++++ b/drivers/phy/phy-core.c
+@@ -420,6 +420,32 @@ int phy_calibrate(struct phy *phy)
+ EXPORT_SYMBOL_GPL(phy_calibrate);
  
- config HAVE_MEMBLOCK_NODE_MAP
- 	bool
-@@ -160,9 +160,9 @@ config MEMORY_HOTPLUG_SPARSE
- 	depends on SPARSEMEM && MEMORY_HOTPLUG
+ /**
++ * phy_property_present() - checks if the property is present in PHY
++ * @phy: the phy returned by phy_get()
++ * @property: name of the property to check
++ *
++ * Used to check if the given property is present in PHY. PHY drivers
++ * can implement this callback function to expose PHY properties to
++ * controller drivers.
++ *
++ * Returns: true if property exists, false otherwise
++ */
++bool phy_property_present(struct phy *phy, const char *property)
++{
++	bool ret;
++
++	if (!phy || !phy->ops->property_present)
++		return false;
++
++	mutex_lock(&phy->mutex);
++	ret = phy->ops->property_present(phy, property);
++	mutex_unlock(&phy->mutex);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(phy_property_present);
++
++/**
+  * phy_configure() - Changes the phy parameters
+  * @phy: the phy returned by phy_get()
+  * @opts: New configuration to apply
+diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
+index 15032f14..3dd8f3c 100644
+--- a/include/linux/phy/phy.h
++++ b/include/linux/phy/phy.h
+@@ -61,6 +61,7 @@ union phy_configure_opts {
+  * @reset: resetting the phy
+  * @calibrate: calibrate the phy
+  * @release: ops to be performed while the consumer relinquishes the PHY
++ * @property_present: check if some property is present in PHY
+  * @owner: the module owner containing the ops
+  */
+ struct phy_ops {
+@@ -103,6 +104,7 @@ struct phy_ops {
+ 	int	(*reset)(struct phy *phy);
+ 	int	(*calibrate)(struct phy *phy);
+ 	void	(*release)(struct phy *phy);
++	bool	(*property_present)(struct phy *phy, const char *property);
+ 	struct module *owner;
+ };
  
- config MEMORY_HOTPLUG_DEFAULT_ONLINE
--        bool "Online the newly added memory blocks by default"
--        depends on MEMORY_HOTPLUG
--        help
-+	bool "Online the newly added memory blocks by default"
-+	depends on MEMORY_HOTPLUG
-+	help
- 	  This option sets the default policy setting for memory hotplug
- 	  onlining policy (/sys/devices/system/memory/auto_online_blocks) which
- 	  determines what happens to newly added memory regions. Policy setting
-@@ -227,14 +227,14 @@ config COMPACTION
- 	select MIGRATION
- 	depends on MMU
- 	help
--          Compaction is the only memory management component to form
--          high order (larger physically contiguous) memory blocks
--          reliably. The page allocator relies on compaction heavily and
--          the lack of the feature can lead to unexpected OOM killer
--          invocations for high order memory requests. You shouldn't
--          disable this option unless there really is a strong reason for
--          it and then we would be really interested to hear about that at
--          linux-mm@kvack.org.
-+	  Compaction is the only memory management component to form
-+	  high order (larger physically contiguous) memory blocks
-+	  reliably. The page allocator relies on compaction heavily and
-+	  the lack of the feature can lead to unexpected OOM killer
-+	  invocations for high order memory requests. You shouldn't
-+	  disable this option unless there really is a strong reason for
-+	  it and then we would be really interested to hear about that at
-+	  linux-mm@kvack.org.
+@@ -217,6 +219,7 @@ static inline enum phy_mode phy_get_mode(struct phy *phy)
+ }
+ int phy_reset(struct phy *phy);
+ int phy_calibrate(struct phy *phy);
++bool phy_property_present(struct phy *phy, const char *property);
+ static inline int phy_get_bus_width(struct phy *phy)
+ {
+ 	return phy->attrs.bus_width;
+@@ -354,6 +357,11 @@ static inline int phy_calibrate(struct phy *phy)
+ 	return -ENOSYS;
+ }
  
- #
- # support for page migration
-@@ -258,7 +258,7 @@ config ARCH_ENABLE_THP_MIGRATION
- 	bool
- 
- config CONTIG_ALLOC
--       def_bool (MEMORY_ISOLATION && COMPACTION) || CMA
-+	def_bool (MEMORY_ISOLATION && COMPACTION) || CMA
- 
- config PHYS_ADDR_T_64BIT
- 	def_bool 64BIT
-@@ -302,10 +302,10 @@ config KSM
- 	  root has set /sys/kernel/mm/ksm/run to 1 (if CONFIG_SYSFS is set).
- 
- config DEFAULT_MMAP_MIN_ADDR
--        int "Low address space to protect from user allocation"
-+	int "Low address space to protect from user allocation"
- 	depends on MMU
--        default 4096
--        help
-+	default 4096
-+	help
- 	  This is the portion of low virtual memory which should be protected
- 	  from userspace allocation.  Keeping a user from writing to low pages
- 	  can help reduce the impact of kernel NULL pointer bugs.
-@@ -408,7 +408,7 @@ choice
- endchoice
- 
- config ARCH_WANTS_THP_SWAP
--       def_bool n
-+	def_bool n
- 
- config THP_SWAP
- 	def_bool y
++static inline bool phy_property_present(struct phy *phy, const char *property)
++{
++	return false;
++}
++
+ static inline int phy_configure(struct phy *phy,
+ 				union phy_configure_opts *opts)
+ {
 -- 
 2.7.4
 
