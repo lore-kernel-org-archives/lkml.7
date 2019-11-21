@@ -2,113 +2,142 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B40C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 19:01:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F378C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 19:01:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2E782067D
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 19:01:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 441D220672
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 19:01:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hw0tGGpy"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="Y0KBxnvk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbfKUTB3 (ORCPT
+        id S1727047AbfKUTBn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 14:01:29 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:38152 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726546AbfKUTB3 (ORCPT
+        Thu, 21 Nov 2019 14:01:43 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:36733 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726992AbfKUTBn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 14:01:29 -0500
-Received: by mail-ed1-f66.google.com with SMTP id s10so3754379edi.5;
-        Thu, 21 Nov 2019 11:01:28 -0800 (PST)
+        Thu, 21 Nov 2019 14:01:43 -0500
+Received: by mail-pg1-f196.google.com with SMTP id k13so2086029pgh.3
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 11:01:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WGlv9N7emzPPMkGFW2suWUAOKKS+im2D/mbhQrUjPOw=;
-        b=hw0tGGpydIclVWzvfKyqExS+ky3mFe5zVFYzo8L/vE9QIsquY7DLXT3bxgRHCc913E
-         QPYswTjKLbcK2rh16yudPur9Safmg77tW/A/pa8QnF37XhIQ5u2H6l5XQnrqZ0aSXohF
-         y6vPt6lysOVpBO2kR2FnrJoNlGusPUTt7c8MvEYo4Ow7Xs5zpbwdCctguSfnT+blVgEB
-         Q4i301/C0VgEKQcp8OXyj0B4DEMiIH+KW8S+llH6hOmRla4aO4RRVQjT1xyHulgZf1VE
-         +VPAp76Wx4D/VNMQcC/VxE3KHRvxo2QJLj9rf50nPHnZVipfoaeoJSPhd6ml6WK1/f/3
-         nZ8Q==
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=HsAyezn4NTj/SPx6Qh9c2H7K5cVNh7JQA3rXW5kOjAA=;
+        b=Y0KBxnvkWdleqS0LtZsX/EmN5e7j9KkMvoFQXqsMzJa/0LhJKMvH6++eHDuadnPeWc
+         MZM5qAooDhvPIPyZcNwnLw1e4cANCbzxypeT/kPvugL2/cf9bMcMOhShauyz4kjDXDGj
+         7dTkp5BX7xKmErkLiQUcteL+MI2fuplzoEOeo+Q8Bs6l9PX1sCpP1PQ/7lbCz6ckPvvs
+         bXEK4oX5Upztj9S1F46C3obetEA1fNS7TZH8Kc82Ojj623vOgqQ4HOevtZIhZePMFeFY
+         V7eQm8xq5vtTYrYYW1he4sQ6E7AKVl3Cy630l3IJaKG0zcTg3WbACBfeVRGBbg2MMjC5
+         qUkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WGlv9N7emzPPMkGFW2suWUAOKKS+im2D/mbhQrUjPOw=;
-        b=geFjy27muvt1MM06Qe8Pm0+7EIjbkjcgAY3n8YcKQkKrVV67OdF5EeHB1JhrgigUjU
-         7L+9duCpy1YYkV8Iy+5AvUi+1KhF+LHR4j3KpDnkgNYPIMRfwFrdpmhksBmOGMLtrudw
-         24yfbuZ/KCIfbEmYZvs5EUQo4GPmUQJlcrRqiuk3ka+UHu57EDUYSEeNQwjHoVuzRRwc
-         /+/MFI6RbHZ+VSHeJfGfj/8r+27iPpo1SbVkrHIIJ2G1xj91mqt/9f9ZlUq+Qm8HRJtr
-         s87sQneT52NZy40ecmTs0DkEl8ZWc2q9GLOaKEHYYLtQN0tH+/Gh977LGxHJrQWp/1XQ
-         8ACQ==
-X-Gm-Message-State: APjAAAWwTnSo7PqxS1SMTMD8DMlYFf41ToHJ9ICqf8ElvKSk0OPmEubn
-        nd2qvgr5wU/tAGgOByZCZeY+7B+lx38dcjzr+7fkAoFI
-X-Google-Smtp-Source: APXvYqw7XM4/ilKVdiKymLyfmxi48lasfzIxyiJ681Tf/Q+giqd2n8es7XgsJNBR5MISNx52NIpdSQew5FnTSv5teuU=
-X-Received: by 2002:a17:906:11cf:: with SMTP id o15mr16093149eja.208.1574362887584;
- Thu, 21 Nov 2019 11:01:27 -0800 (PST)
-MIME-Version: 1.0
-References: <1574232449-13570-1-git-send-email-manish.narani@xilinx.com> <1574232449-13570-5-git-send-email-manish.narani@xilinx.com>
-In-Reply-To: <1574232449-13570-5-git-send-email-manish.narani@xilinx.com>
-From:   Rob Herring <rob.e.herring@gmail.com>
-Date:   Thu, 21 Nov 2019 13:01:16 -0600
-Message-ID: <CAC=3edbHWA7gv-mTFVXXcMzN6hyzO4LPqkbcRZ-zDp5BAm8_Vw@mail.gmail.com>
-Subject: Re: [PATCH v6 4/8] dt-bindings: mmc: Add optional generic properties
- for mmc
-To:     Manish Narani <manish.narani@xilinx.com>
-Cc:     ulf.hansson@linaro.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, adrian.hunter@intel.com,
-        michal.simek@xilinx.com, jolly.shah@xilinx.com,
-        rajan.vaja@xilinx.com, nava.manne@xilinx.com, mdf@kernel.org,
-        linux-mmc@vger.kernel.org, devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        git@xilinx.com
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=HsAyezn4NTj/SPx6Qh9c2H7K5cVNh7JQA3rXW5kOjAA=;
+        b=d2+fHlq8p8qsHmevFC2LGSh5idMndV1Bvk83GuMJb1A1mVJedUvph3zUeIAx0qn1md
+         kqf8RoTySO/m/3w7pRUpgkNgRZyXkplJBBXErFeJr993gTry5mbGG3HjaK2jRgA7oyRi
+         9Q0bD9BrJO8sXsWQP6TxuR8wzjJ0x0r0zJ6zYd93bigSWWdyFmX1Qk1R7TlWVejobccH
+         g8x0e17oLHa4V9wnQpKxGtAD6Pi7ilt47vEMbyNQ/y43nhi7+368EW5S0I6Gq/t4sypa
+         bqJIeHEUt6HI7NwCfGm7Tye0y5XH4KbaCoR8oGKYe2hvzP2rTId34WxSwcu9dsW5gncb
+         4QLQ==
+X-Gm-Message-State: APjAAAV80gTNT0imyIcaI1ApSXtOp8lBqUBQ91khhRelqulTTmK0eXdD
+        4t1oAQcZSK5O16TJUM9Nn6NLPw==
+X-Google-Smtp-Source: APXvYqzlxmolRqPIZZkpOYTVMkE+fkIpqak56g/krWqKWT754wqM5ae95dJAgQBaL3iPl/VOdw0ZlA==
+X-Received: by 2002:a63:ba1c:: with SMTP id k28mr11026315pgf.244.1574362901886;
+        Thu, 21 Nov 2019 11:01:41 -0800 (PST)
+Received: from ?IPv6:2600:1010:b062:827f:f4a7:a1e:b790:5671? ([2600:1010:b062:827f:f4a7:a1e:b790:5671])
+        by smtp.gmail.com with ESMTPSA id 1sm3927505pgp.88.2019.11.21.11.01.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 Nov 2019 11:01:41 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v10 6/6] x86/split_lock: Enable split lock detection by kernel parameter
+Date:   Thu, 21 Nov 2019 11:01:39 -0800
+Message-Id: <4BB1CB74-887B-4F40-B3B2-F0147B264C34@amacapital.net>
+References: <20191121185303.GB199273@romley-ivt3.sc.intel.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        David Laight <David.Laight@aculab.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
+In-Reply-To: <20191121185303.GB199273@romley-ivt3.sc.intel.com>
+To:     Fenghua Yu <fenghua.yu@intel.com>
+X-Mailer: iPhone Mail (17A878)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 12:49 AM Manish Narani <manish.narani@xilinx.com> wrote:
->
-> Add optional properties for mmc hosts which are used to set clk delays
-> for different speed modes in the controller.
->
-> Signed-off-by: Manish Narani <manish.narani@xilinx.com>
-> ---
->  .../devicetree/bindings/mmc/mmc-controller.yaml     | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/mmc/mmc-controller.yaml b/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
-> index 080754e0ef35..305b2016bc17 100644
-> --- a/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
-> +++ b/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
-> @@ -333,6 +333,18 @@ patternProperties:
->      required:
->        - reg
->
-> +  "^clk-phase-(legacy|sd-hs|mmc-(hs|hs[24]00|ddr52)|uhs-(sdr(12|25|50|104)|ddr50))$":
-> +    minItems: 2
-> +    maxItems: 2
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32
-> +      - minimum: 0
-> +        maximum: 359
 
-This is wrong. It can't be both minItems of 2 and a single uint32.
-What's needed is:
+> On Nov 21, 2019, at 10:40 AM, Fenghua Yu <fenghua.yu@intel.com> wrote:
+>=20
+> =EF=BB=BFOn Thu, Nov 21, 2019 at 09:51:03AM -0800, Andy Lutomirski wrote:
+>>> On Thu, Nov 21, 2019 at 9:43 AM David Laight <David.Laight@aculab.com> w=
+rote:
+>>>=20
+>>> From: Ingo Molnar
+>>>> Sent: 21 November 2019 17:12
+>>>> * Peter Zijlstra <peterz@infradead.org> wrote:
+>>> ...
+>>>>> This feature MUST be default enabled, otherwise everything will
+>>>>> be/remain broken and we'll end up in the situation where you can't use=
 
-allOf:
-  - $ref: /schemas/types.yaml#/definitions/uint32-array
-minItems: 2
-maxItems: 2
-items:
-  minimum: 0
-  maximum: 359
+>>>>> it even if you wanted to.
+>>>>=20
+>>>> Agreed.
+>>>=20
+>>> Before it can be enabled by default someone needs to go through the
+>>> kernel and fix all the code that abuses the 'bit' functions by using the=
+m
+>>> on int[] instead of long[].
+>>>=20
+>>> I've only seen one fix go through for one use case of one piece of code
+>>> that repeatedly uses potentially misaligned int[] arrays for bitmasks.
+>>>=20
+>>=20
+>> Can we really not just change the lock asm to use 32-bit accesses for
+>> set_bit(), etc?  Sure, it will fail if the bit index is greater than
+>> 2^32, but that seems nuts.
+>>=20
+>> (Why the *hell* do the bitops use long anyway?  They're *bit masks*
+>> for crying out loud.  As in, users generally want to operate on fixed
+>> numbers of bits.)
+>=20
+> We are working on a separate patch set to fix all split lock issues
+> in atomic bitops. Per Peter Anvin and Tony Luck suggestions:
+> 1. Still keep the byte optimization if nr is constant. No split lock.
+> 2. If type of *addr is unsigned long, do quadword atomic instruction
+>   on addr. No split lock.
+> 3. If type of *addr is unsigned int, do word atomic instruction
+>   on addr. No split lock.
+> 4. Otherwise, re-calculate addr to point the 32-bit address which contains=
+
+>   the bit and operate on the bit. No split lock.
+>=20
+> Only small percentage of atomic bitops calls are in case 4 (e.g. 3%
+> for set_bit()) which need a few extra instructions to re-calculate
+> address but can avoid big split lock overhead.
+>=20
+> To get real type of *addr instead of type cast type "unsigned long",
+> the atomic bitops APIs are changed to macros from functions. This change
+> need to touch all architectures.
+>=20
+
+Isn=E2=80=99t the kernel full of casts to long* to match the signature?  Doi=
+ng this based on type seems silly to me. I think it=E2=80=99s better to just=
+ to a 32-bit operation unconditionally and to try to optimize it using b*l w=
+hen safe.=
