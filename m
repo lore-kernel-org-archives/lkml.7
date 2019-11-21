@@ -2,152 +2,79 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FDE4C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 22:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F34AC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 22:29:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4455C2071B
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 22:25:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="QiiyQjBd"
+	by mail.kernel.org (Postfix) with ESMTP id ED80A206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 22:29:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727008AbfKUWZP (ORCPT
+        id S1726634AbfKUW3o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 17:25:15 -0500
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:14864 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726714AbfKUWZO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 17:25:14 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dd70ecc0001>; Thu, 21 Nov 2019 14:25:17 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 21 Nov 2019 14:25:13 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 21 Nov 2019 14:25:13 -0800
-Received: from [10.2.168.213] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 21 Nov
- 2019 22:25:13 +0000
-Subject: Re: [PATCH v7 05/24] mm: devmap: refactor 1-based refcounting for
- ZONE_DEVICE pages
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>, KVM list <kvm@vger.kernel.org>,
-        <linux-block@vger.kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        <linux-kselftest@vger.kernel.org>,
-        "Linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Netdev <netdev@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20191121071354.456618-1-jhubbard@nvidia.com>
- <20191121071354.456618-6-jhubbard@nvidia.com> <20191121080555.GC24784@lst.de>
- <c5f8750f-af82-8aec-ce70-116acf24fa82@nvidia.com>
- <CAPcyv4jzDfxFAnAYc6g8Zz=3DweQFEBLBQyA_tSDP2Wy-RoA4A@mail.gmail.com>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <461d6611-0cfb-dd13-f827-0db1ff8a9f2d@nvidia.com>
-Date:   Thu, 21 Nov 2019 14:22:24 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <CAPcyv4jzDfxFAnAYc6g8Zz=3DweQFEBLBQyA_tSDP2Wy-RoA4A@mail.gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
+        Thu, 21 Nov 2019 17:29:44 -0500
+Received: from mga07.intel.com ([134.134.136.100]:49227 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726329AbfKUW3n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 17:29:43 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Nov 2019 14:29:43 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,227,1571727600"; 
+   d="scan'208";a="259515670"
+Received: from orsmsx106.amr.corp.intel.com ([10.22.225.133])
+  by FMSMGA003.fm.intel.com with ESMTP; 21 Nov 2019 14:29:42 -0800
+Received: from orsmsx155.amr.corp.intel.com (10.22.240.21) by
+ ORSMSX106.amr.corp.intel.com (10.22.225.133) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 21 Nov 2019 14:29:42 -0800
+Received: from orsmsx115.amr.corp.intel.com ([169.254.4.121]) by
+ ORSMSX155.amr.corp.intel.com ([169.254.7.211]) with mapi id 14.03.0439.000;
+ Thu, 21 Nov 2019 14:29:41 -0800
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     Andy Lutomirski <luto@amacapital.net>
+CC:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
+Subject: RE: [PATCH v10 6/6] x86/split_lock: Enable split lock detection by
+ kernel parameter
+Thread-Topic: [PATCH v10 6/6] x86/split_lock: Enable split lock detection by
+ kernel parameter
+Thread-Index: AQHVoA1uR0NpEjA1wUmtm7eAgTQzs6eVqSUAgAB0jYCAAAPEAIAAChQAgACPToD//3rs4A==
+Date:   Thu, 21 Nov 2019 22:29:41 +0000
+Message-ID: <3908561D78D1C84285E8C5FCA982C28F7F4DC167@ORSMSX115.amr.corp.intel.com>
+References: <20191121215126.GA9075@agluck-desk2.amr.corp.intel.com>
+ <159DB397-87E2-435D-9F33-067FF9296ADC@amacapital.net>
+In-Reply-To: <159DB397-87E2-435D-9F33-067FF9296ADC@amacapital.net>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1574375117; bh=D/eKIo+FJi5bpXqwJfXr6PJt8uCFLnCZclyeodxgmoA=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=QiiyQjBd99PA4tfLyLMiUlQLWaGQU2+co6FamS71fAjNe7NqeNYDH8w7d2wRbOpAp
-         FO2FB4fRVvM6b8p6VFBEfZcwYG6pgVEpA9JmE6+ROgRRGxXCqZY/+YxPczpJznwImd
-         p6u80IPFPE4x/PJetPMB9IpPtmHNp690Ig3KD/FI3Pg1Spw0uK9yY10oBbvhOlh90u
-         VDHu/ArBa3unFu4nkBBDe7Ce1Uz+1D/XrvQ7tfArBFBClI1tdcdtAK+LKBrbmv90AQ
-         ydolBZYKkzfeBhYUC0ZjSrXWwqBfaUR0ElhSrvf057yQhGgjhUwUU8jj5KSdyTH5QE
-         YNZVYalLmeVQg==
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYmFjNTRmZjgtNDBmYS00MDI5LWJkMzgtMmQ0ZGEzNDNhOTkwIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiS1paY29aMjdmWlwvb1hoRUhtRFY0XC9qTEFSbmxwbGFqdVVKaU1xZVBxd1dDNFYxNzZkOTdWSTVxME40VEdVN0pyIn0=
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.140]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/21/19 8:59 AM, Dan Williams wrote:
-> On Thu, Nov 21, 2019 at 12:57 AM John Hubbard <jhubbard@nvidia.com> wrote:
->>
->> On 11/21/19 12:05 AM, Christoph Hellwig wrote:
->>> So while this looks correct and I still really don't see the major
->>> benefit of the new code organization, especially as it bloats all
->>> put_page callers.
->>>
->>> I'd love to see code size change stats for an allyesconfig on this
->>> commit.
->>>
->>
->> Right, I'm running that now, will post the results. (btw, if there is
->> a script and/or standard format I should use, I'm all ears. I'll dig
->> through lwn...)
->>
-> 
-> Just run:
-> 
->      size vmlinux
-> 
-
-Beautiful. I thought it would involve a lot more. Here's results:
-
-linux.git (Linux 5.4-rc8+):
-==============================================
-   text	   data	    bss	    dec	    hex	filename
-227578032	213267935	76877984	517723951	1edbd72f	vmlinux
-
-
-With patches 4 and 5 applied to linux.git:
-==========================================
-   text	   data	    bss	    dec	    hex	filename
-229698560	213288379	76853408	519840347	1efc225b	vmlinux
-
-
-Analysis:
-=========
-
-This increased the size of text by 0.93%. Which is a measurable bloat, so
-the inlining really is undesirable here, yes. I'll do it differently.
-
-thanks,
--- 
-John Hubbard
-NVIDIA
+PiBJdCB3b3VsZCBiZSByZWFsbHksIHJlYWxseSBuaWNlIGlmIHdlIGNvdWxkIHBhc3MgdGhpcyBm
+ZWF0dXJlIHRocm91Z2ggdG8gYSBWTS4gQ2FuIHdlPw0KDQpJdCdzIGhhcmQgYmVjYXVzZSB0aGUg
+TVNSIGlzIGNvcmUgc2NvcGVkIHJhdGhlciB0aGFuIHRocmVhZCBzY29wZWQuICBTbyBvbiBhbiBI
+VA0KZW5hYmxlZCBzeXN0ZW0gYSBwYWlyIG9mIGxvZ2ljYWwgcHJvY2Vzc29ycyBnZXRzIGVuYWJs
+ZWQvZGlzYWJsZWQgdG9nZXRoZXIuDQoNCi1Ub255DQo=
