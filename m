@@ -2,187 +2,105 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 690F0C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:42:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 756CFC43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:42:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 306502068E
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:42:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=fomichev-me.20150623.gappssmtp.com header.i=@fomichev-me.20150623.gappssmtp.com header.b="NzfzBTFL"
+	by mail.kernel.org (Postfix) with ESMTP id 49776206CC
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:42:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbfKUVm3 (ORCPT
+        id S1726836AbfKUVmp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 16:42:29 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:32918 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726329AbfKUVm2 (ORCPT
+        Thu, 21 Nov 2019 16:42:45 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33540 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726775AbfKUVmp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 16:42:28 -0500
-Received: by mail-pl1-f193.google.com with SMTP id ay6so2207630plb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 13:42:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fomichev-me.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=t6UbFd+jsoBUib7qTx+BJ7svX081NKhXcR40/0W3LxE=;
-        b=NzfzBTFLLQbShuKd0+1iHPSbgolHJ4OtPiIo3cDBAbu/SkruCzBCsN/endbdxELPdg
-         a2BGy0s6vp2YcKj3PofvztX4RQFiTivhdir/N//IVWWRGQ2a6JfQvwJKUa/sAuQPkwBl
-         vBzjsu5iH77F4iDXo+o57Y1A0xCR1HoBzEOIXdj4vx1A4uyAlcehU83323iGR7g2J/+T
-         uLncB6IFuO9PUxXESW8i/3VrqJSUb5vUYh9h4fhk7GTlwcBXKjqFLvEuw58816PaT84Z
-         740FYIO0PN1Pk84xVg5afM3Ai1eLS0aNwBlJYsNwBCTkO/bbIj6cSHCWddN53w5Qr6VY
-         QAsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=t6UbFd+jsoBUib7qTx+BJ7svX081NKhXcR40/0W3LxE=;
-        b=iwNeGLWqYpW4mA75mH2x3Rthos3tsFVY3Jb6qTmdWYquI8ySusnjbo/HfFelPxsE1Z
-         cdXTzinQP4Y2+D1dKqXgcWQ86knCmUtCtP0qdVmrpE1WdKTXpP9JV2R9MOHXyKPxQG0N
-         AVs1Bb9aLCaHt44biHn1sHbG9/1Qz3JGVzAc9fG/XKapKZEWTHon8fA39iWX+cmopX4l
-         fQkDw3yQZM56GSV0WtAjcQ7YcGdn4X6r+RGkcqz/5bB9vE3ycURRkASJ4/VNyblMUuIS
-         ssfaEHL5tWw4rg/mzDRvI60rtwQ8Jsi3capKp7br3Aoqt10Sj00CGkXfbuuE2SNBw8Hw
-         FQVA==
-X-Gm-Message-State: APjAAAVD45/O2MMJAlCJF22YOQ3ZTo78Pi1040HL+vzs9fWscfiDLFWG
-        rZPzMT9Hxr7jJkUG/Tb9h2TUSg==
-X-Google-Smtp-Source: APXvYqzbwEqp+od0wOuk1Bhy360HecFCd8C8kLSld7Mxdz+8NHByzGE6CLBQgIGfRr178ZNtj+Y9wA==
-X-Received: by 2002:a17:902:854c:: with SMTP id d12mr6529877plo.264.1574372547563;
-        Thu, 21 Nov 2019 13:42:27 -0800 (PST)
-Received: from localhost ([2601:646:8f00:18d9:d0fa:7a4b:764f:de48])
-        by smtp.gmail.com with ESMTPSA id 6sm4768899pfy.43.2019.11.21.13.42.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Nov 2019 13:42:25 -0800 (PST)
-Date:   Thu, 21 Nov 2019 13:42:25 -0800
-From:   Stanislav Fomichev <sdf@fomichev.me>
-To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Cc:     ast@kernel.org, daniel@iogearbox.net, yhs@fb.com,
-        davem@davemloft.net, jakub.kicinski@netronome.com, hawk@kernel.org,
-        john.fastabend@gmail.com, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        clang-built-linux@googlegroups.com, ilias.apalodimas@linaro.org,
-        sergei.shtylyov@cogentembedded.com, andriin@fb.com
-Subject: Re: [PATCH v5 bpf-next 11/15] libbpf: don't use cxx to test_libpf
- target
-Message-ID: <20191121214225.GA3145429@mini-arch.hsd1.ca.comcast.net>
-References: <20191011002808.28206-1-ivan.khoronzhuk@linaro.org>
- <20191011002808.28206-12-ivan.khoronzhuk@linaro.org>
+        Thu, 21 Nov 2019 16:42:45 -0500
+Received: from [167.98.27.226] (helo=deadeye)
+        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1iXuDq-00009s-A7; Thu, 21 Nov 2019 21:42:42 +0000
+Received: from ben by deadeye with local (Exim 4.93-RC1)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1iXuDp-0004Gv-Ou; Thu, 21 Nov 2019 21:42:41 +0000
+Message-ID: <c5ce084565fbd66b2bce697fe49396eabe6eef81.camel@decadent.org.uk>
+Subject: Re: [PATCH 3.16 81/83] btrfs: partially apply b8b93addde
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     Hans van Kranenburg <hans@knorrie.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>
+Date:   Thu, 21 Nov 2019 21:42:41 +0000
+In-Reply-To: <d8b529f2-fce3-829a-c157-77d574619daf@knorrie.org>
+References: <lsq.1574264230.614031573@decadent.org.uk>
+         <d8b529f2-fce3-829a-c157-77d574619daf@knorrie.org>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+        protocol="application/pgp-signature"; boundary="=-RDcV/LdjPM7QGq8wr3js"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191011002808.28206-12-ivan.khoronzhuk@linaro.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+X-SA-Exim-Connect-IP: 167.98.27.226
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/11, Ivan Khoronzhuk wrote:
-> No need to use C++ for test_libbpf target when libbpf is on C and it
-> can be tested with C, after this change the CXXFLAGS in makefiles can
-> be avoided, at least in bpf samples, when sysroot is used, passing
-> same C/LDFLAGS as for lib.
-> 
-> Add "return 0" in test_libbpf to avoid warn, but also remove spaces at
-> start of the lines to keep same style and avoid warns while apply.
-Hey, just spotted this patch, not sure how it slipped through.
-The c++ test was there to make sure libbpf can be included and
-linked against c++ code (i.e. libbpf headers don't have some c++
-keywords/etc).
 
-Any particular reason you were not happy with it? Can we revert it
-back to c++ and fix your use-case instead? Alternatively, we can just
-remove this test if we don't really care about c++.
+--=-RDcV/LdjPM7QGq8wr3js
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> Acked-by: Andrii Nakryiko <andriin@fb.com>
-> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-> ---
->  tools/lib/bpf/Makefile                         | 18 +++++-------------
->  .../lib/bpf/{test_libbpf.cpp => test_libbpf.c} | 14 ++++++++------
->  2 files changed, 13 insertions(+), 19 deletions(-)
->  rename tools/lib/bpf/{test_libbpf.cpp => test_libbpf.c} (61%)
-> 
-> diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
-> index 1270955e4845..46280b5ad48d 100644
-> --- a/tools/lib/bpf/Makefile
-> +++ b/tools/lib/bpf/Makefile
-> @@ -52,7 +52,7 @@ ifndef VERBOSE
->  endif
->  
->  FEATURE_USER = .libbpf
-> -FEATURE_TESTS = libelf libelf-mmap bpf reallocarray cxx
-> +FEATURE_TESTS = libelf libelf-mmap bpf reallocarray
->  FEATURE_DISPLAY = libelf bpf
->  
->  INCLUDES = -I. -I$(srctree)/tools/include -I$(srctree)/tools/arch/$(ARCH)/include/uapi -I$(srctree)/tools/include/uapi
-> @@ -142,15 +142,7 @@ GLOBAL_SYM_COUNT = $(shell readelf -s --wide $(BPF_IN) | \
->  VERSIONED_SYM_COUNT = $(shell readelf -s --wide $(OUTPUT)libbpf.so | \
->  			      grep -Eo '[^ ]+@LIBBPF_' | cut -d@ -f1 | sort -u | wc -l)
->  
-> -CMD_TARGETS = $(LIB_TARGET) $(PC_FILE)
-> -
-> -CXX_TEST_TARGET = $(OUTPUT)test_libbpf
-> -
-> -ifeq ($(feature-cxx), 1)
-> -	CMD_TARGETS += $(CXX_TEST_TARGET)
-> -endif
-> -
-> -TARGETS = $(CMD_TARGETS)
-> +CMD_TARGETS = $(LIB_TARGET) $(PC_FILE) $(OUTPUT)test_libbpf
->  
->  all: fixdep
->  	$(Q)$(MAKE) all_cmd
-> @@ -190,8 +182,8 @@ $(OUTPUT)libbpf.so.$(LIBBPF_VERSION): $(BPF_IN)
->  $(OUTPUT)libbpf.a: $(BPF_IN)
->  	$(QUIET_LINK)$(RM) $@; $(AR) rcs $@ $^
->  
-> -$(OUTPUT)test_libbpf: test_libbpf.cpp $(OUTPUT)libbpf.a
-> -	$(QUIET_LINK)$(CXX) $(INCLUDES) $^ -lelf -o $@
-> +$(OUTPUT)test_libbpf: test_libbpf.c $(OUTPUT)libbpf.a
-> +	$(QUIET_LINK)$(CC) $(INCLUDES) $^ -lelf -o $@
->  
->  $(OUTPUT)libbpf.pc:
->  	$(QUIET_GEN)sed -e "s|@PREFIX@|$(prefix)|" \
-> @@ -266,7 +258,7 @@ config-clean:
->  	$(Q)$(MAKE) -C $(srctree)/tools/build/feature/ clean >/dev/null
->  
->  clean:
-> -	$(call QUIET_CLEAN, libbpf) $(RM) $(TARGETS) $(CXX_TEST_TARGET) \
-> +	$(call QUIET_CLEAN, libbpf) $(RM) $(CMD_TARGETS) \
->  		*.o *~ *.a *.so *.so.$(LIBBPF_MAJOR_VERSION) .*.d .*.cmd \
->  		*.pc LIBBPF-CFLAGS bpf_helper_defs.h
->  	$(call QUIET_CLEAN, core-gen) $(RM) $(OUTPUT)FEATURE-DUMP.libbpf
-> diff --git a/tools/lib/bpf/test_libbpf.cpp b/tools/lib/bpf/test_libbpf.c
-> similarity index 61%
-> rename from tools/lib/bpf/test_libbpf.cpp
-> rename to tools/lib/bpf/test_libbpf.c
-> index fc134873bb6d..f0eb2727b766 100644
-> --- a/tools/lib/bpf/test_libbpf.cpp
-> +++ b/tools/lib/bpf/test_libbpf.c
-> @@ -7,12 +7,14 @@
->  
->  int main(int argc, char *argv[])
->  {
-> -    /* libbpf.h */
-> -    libbpf_set_print(NULL);
-> +	/* libbpf.h */
-> +	libbpf_set_print(NULL);
->  
-> -    /* bpf.h */
-> -    bpf_prog_get_fd_by_id(0);
-> +	/* bpf.h */
-> +	bpf_prog_get_fd_by_id(0);
->  
-> -    /* btf.h */
-> -    btf__new(NULL, 0);
-> +	/* btf.h */
-> +	btf__new(NULL, 0);
-> +
-> +	return 0;
->  }
-> -- 
-> 2.17.1
-> 
+On Wed, 2019-11-20 at 16:56 +0100, Hans van Kranenburg wrote:
+> On 11/20/19 4:38 PM, Ben Hutchings wrote:
+> > 3.16.78-rc1 review patch.  If anyone has any objections, please let me =
+know.
+> >=20
+> > ------------------
+> >=20
+> > From: Hans van Kranenburg <hans@knorrie.org>
+>=20
+> Thanks for picking this up!
+>=20
+> Can you please use my work email, lowercase
+>=20
+>   hans.van.kranenburg@mendix.com
+>=20
+> for this one and for the Cc: line in the second one from Qu?
+
+OK, done.
+
+Ben.
+
+--=20
+Ben Hutchings
+Humans are not rational beings; they are rationalising beings.
+
+
+
+--=-RDcV/LdjPM7QGq8wr3js
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAl3XBNEACgkQ57/I7JWG
+EQkZyRAAsB5jbeyg2zGDZrD4D9CAP9kdtxBpnrad/cwmbWQkiyxYwTnlynNow27D
+VYpIl2XZwE9eaTyCPMd1vlw1/hTjG7kAfpomO5cZXjx8OP8xF4j/M+pN/ek+cbfj
+KHH0UQ1MFa/LmGyR3qlDPKiY/0alwmsjy/rmdNScrarqX/4jmGRc3ZtolfUP+yRH
+WtjWIdfgtVeYR2b5oGflcyUvn2g41JxXtJhdr2xQxRdYFXpXduULVKAs1kPBwJeq
+yvjac57ZWpI1Jw/sG6W+c9oY2cu923IBYoG/m4UonQG2yFlHo8BXDSKySfOuO/pn
+VeGI/OrC/FHYupMHqAO56aRptLfImsqCG6YJacV69p92BBFmHEIihrROB/gAJyiC
+XGQyKqEBBfbx9HU3POdz9BowKC5G8dWrIAc3EepJVwCnMICeIaz4pFIES6CbawhK
+uKUx4VV24XVEaU1ebINPzLT25Vvy8gi3482irPz1ka3SFKF0N+WOAgecPx5O6iGZ
+Thb6sw8weNmVwuLFTxBPKtg9C1mPBCzRsU7jik8TVeiGJUpxOMPArgwDKlHJJNLv
+7TiPHfb9SjCRYz+/8F22ER8VT11KbHDFE+wbrbwQ2RZ51SbzsN3kXHeCfj3I1kLX
+9bcrLUdkwlCBaJi9An5yH+IPjVK7Q4j+d/nUTI+prhTY0oA7/fk=
+=jDHh
+-----END PGP SIGNATURE-----
+
+--=-RDcV/LdjPM7QGq8wr3js--
