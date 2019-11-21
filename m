@@ -2,93 +2,98 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 816FCC43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:46:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57812C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:47:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D83620692
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:46:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C6A620672
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:47:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iItYx5dQ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PtWa9axG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727020AbfKUQqc (ORCPT
+        id S1727072AbfKUQrA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 11:46:32 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:37075 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726379AbfKUQqc (ORCPT
+        Thu, 21 Nov 2019 11:47:00 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:51757 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726541AbfKUQq7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 11:46:32 -0500
-Received: by mail-lf1-f67.google.com with SMTP id b20so3189625lfp.4;
-        Thu, 21 Nov 2019 08:46:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EjangubdYbmIqePnQ2tFTagrb21HEQtT8HpyfP7ti1w=;
-        b=iItYx5dQzTP531ILoUqhAXs7e+4wRs6j6pWyYQQxjrmpyioKzvJb36V20DpUtFeF0u
-         PbRiDJUbyJpSR0WWRRJUwwMNbcuVvOrG7VUrV0l2bMogckdzTreDbhs2uHNWoQs2tnri
-         rfyy4wsFfGe5IRqit3VjlaCz8F3hb/Op7pd7vkWM25vWC/qSvN5JvCL+7PL0kU+kQyUa
-         WFr8ZuwovAYDixeXnydSWN3h6rAi38rxOc/Q1aLoYnRcqfgKim6IQwDYG7vwy/LRQab9
-         E7O8FOb97tbHzP0nGPpIJlx1tvgWR9lAzFp6/8VfS0Voh7YqTYkZsU3yHw/4cIrTmHTW
-         S/bw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EjangubdYbmIqePnQ2tFTagrb21HEQtT8HpyfP7ti1w=;
-        b=BVJpjxy5jAQMlFT+IcknHO6rzI70j+E7LOo1Rk8OQuyF+hKelcbQiGBJEABW4njS7P
-         UnIOd4/VSa5ExxZObvBD7hwosNAa9HouQESUBDDfIXW3NUIaqc/hSDzyH0T7c5oigOJw
-         4hO1kpRCVxwDd77DktJIxNQpdzJ7F43XOcRxoBFchDIgxhGvbl5nBp6LKgNDrF0iBUFC
-         zcs2eObUfkMtbZKcvHUIHuQusUYqx02Yr0Z49I5q4pK/rMVjuVLClKmm6FBTDxJa6XkN
-         JvIxfW2wfEgQGv4KiN/hjGppdEGXBGOHf2HC0ndDpJZFbgu1QHeScF+m4QMhMIZVKWd/
-         h7Pw==
-X-Gm-Message-State: APjAAAVF8jUHCpIIkZqL9FSPO2zp8N2BlAqAhkRizNGtC8EY1V7L0mJa
-        42zmnWVNOUq16ihbz6Fy4PNRewcb1yZJOgKT43Q=
-X-Google-Smtp-Source: APXvYqwt7Q3Tcz5l9BHsHKlZA/wVWUZ0x2W/W2EvB1/diUYJozdnSbuDZ5tPKX3zSB6GmSvliMB927yOQXDkS/YKPp0=
-X-Received: by 2002:ac2:5b86:: with SMTP id o6mr8591591lfn.44.1574354789928;
- Thu, 21 Nov 2019 08:46:29 -0800 (PST)
+        Thu, 21 Nov 2019 11:46:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574354818;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=0Qn10hWiy8/uuGhAalu5dcn/1mOJukydQej1fnpUxnI=;
+        b=PtWa9axGY/iI8kLfNNo1nOSUTVzZA3g13C+aY36NpOCyOHYgg7j5YRVHUu5Gp/VmMOtkPj
+        K/2dEC55qBKtV7xtZ2JcHUyO57X+gY2xk2i41naH4xd1YMu8DAv8D21c+XRfvj+RRgJc71
+        m0wDyKSF75BHV7Qet+c+qkowEm07ORo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-26-6h2M2xD7NiC0_q3MyI91Sg-1; Thu, 21 Nov 2019 11:46:54 -0500
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D4899107ACCC;
+        Thu, 21 Nov 2019 16:46:52 +0000 (UTC)
+Received: from suzdal.zaitcev.lan (ovpn-117-3.phx2.redhat.com [10.3.117.3])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id F1DB310631CE;
+        Thu, 21 Nov 2019 16:46:51 +0000 (UTC)
+Date:   Thu, 21 Nov 2019 10:46:51 -0600
+From:   Pete Zaitcev <zaitcev@redhat.com>
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     syzbot <syzbot+56f9673bb4cdcbeb0e92@syzkaller.appspotmail.com>,
+        <arnd@arndb.de>, <gregkh@linuxfoundation.org>,
+        <jrdr.linux@gmail.com>, <keescook@chromium.org>,
+        <kstewart@linuxfoundation.org>,
+        Kernel development list <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        <syzkaller-bugs@googlegroups.com>, <tglx@linutronix.de>,
+        <viro@zeniv.linux.org.uk>, zaitcev@redhat.com
+Subject: Re: possible deadlock in mon_bin_vma_fault
+Message-ID: <20191121104651.0d50d2bd@suzdal.zaitcev.lan>
+In-Reply-To: <Pine.LNX.4.44L0.1911211118450.1553-100000@iolanthe.rowland.org>
+References: <20191121084842.095edf87@suzdal.zaitcev.lan>
+        <Pine.LNX.4.44L0.1911211118450.1553-100000@iolanthe.rowland.org>
+Organization: Red Hat, Inc.
 MIME-Version: 1.0
-References: <1574332142-7130-1-git-send-email-peng.fan@nxp.com>
-In-Reply-To: <1574332142-7130-1-git-send-email-peng.fan@nxp.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Thu, 21 Nov 2019 13:46:31 -0300
-Message-ID: <CAOMZO5AHd7Sucj4pjVnFt_iGexMk-2_ENp4D3xDQe8PPqaoqdw@mail.gmail.com>
-Subject: Re: [PATCH] clk: imx: clk-composite-7ulp: add lock
-To:     Peng Fan <peng.fan@nxp.com>
-Cc:     "sboyd@kernel.org" <sboyd@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Alice Guo <alice.guo@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: 6h2M2xD7NiC0_q3MyI91Sg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peng,
+On Thu, 21 Nov 2019 11:20:20 -0500 (EST)
+Alan Stern <stern@rowland.harvard.edu> wrote:
 
-On Thu, Nov 21, 2019 at 7:30 AM Peng Fan <peng.fan@nxp.com> wrote:
->
-> From: Peng Fan <peng.fan@nxp.com>
->
-> Add lock to mux/gate/divider to protect the access to the register
+> On Thu, 21 Nov 2019, Pete Zaitcev wrote:
+>=20
+> > Anyway... If you are looking at it too, what do you think about not usi=
+ng
+> > any locks in mon_bin_vma_fault() at all? Isn't it valid? I think I trie=
+d
+> > to be "safe", but it only uses things that are constants unless we're
+> > opening and closing; a process cannot make page faults unless it has
+> > some thing mapped; and that is only possible if device is open and stay=
+s
+> > open. Can you find a hole in this reasoning? =20
+>=20
+> I think you're right.  But one thing concerns me: What happens if the=20
+> same buffer is mapped by more than one process?  Do you allow that?
 
-The "access to the register" is too vague.
+Yes, we allow 2 processes reading from mmap in the same time.
+They may miss events, but there should be no issue to the internal
+consistency of any pointers in usbmon, and no crashes or deadlocks.
+Also, we cannot prohibit that. Imagine a process that does open(),
+mmap(), fork()/clone().
 
-Could you please be more specific in the commit log and send a v2?
+-- Pete
 
-Thanks
