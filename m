@@ -2,98 +2,99 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE47C47410
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 09:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8810C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 09:54:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 900262089D
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 09:54:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9007D2067D
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 09:54:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbfKUJyR (ORCPT
+        id S1727047AbfKUJyk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 04:54:17 -0500
-Received: from mx2.suse.de ([195.135.220.15]:42156 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726132AbfKUJyQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 04:54:16 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 1B5FCAC46;
-        Thu, 21 Nov 2019 09:54:13 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 5A11F1E47FC; Thu, 21 Nov 2019 10:54:11 +0100 (CET)
-Date:   Thu, 21 Nov 2019 10:54:11 +0100
-From:   Jan Kara <jack@suse.cz>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
-Subject: Re: [PATCH v7 02/24] mm/gup: factor out duplicate code from four
- routines
-Message-ID: <20191121095411.GC18190@quack2.suse.cz>
-References: <20191121071354.456618-1-jhubbard@nvidia.com>
- <20191121071354.456618-3-jhubbard@nvidia.com>
- <20191121080356.GA24784@lst.de>
- <852f6c27-8b65-547b-89e0-e8f32a4d17b9@nvidia.com>
+        Thu, 21 Nov 2019 04:54:40 -0500
+Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:45266 "EHLO
+        herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726170AbfKUJyk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 04:54:40 -0500
+Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
+        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id xAL9rx6n021979;
+        Thu, 21 Nov 2019 11:54:00 +0200
+Received: by taln60.nuvoton.co.il (Postfix, from userid 20088)
+        id 98FCA60103; Thu, 21 Nov 2019 11:53:59 +0200 (IST)
+From:   Tali Perry <tali.perry1@gmail.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, yuenn@google.com,
+        venture@google.com, benjaminfair@google.com,
+        avifishman70@gmail.com, joel@jms.id.au, tmaimon77@gmail.com,
+        wsa@the-dreams.de, syniurge@gmail.com
+Cc:     linux-i2c@vger.kernel.org, openbmc@lists.ozlabs.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tali Perry <tali.perry1@gmail.com>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v7 1/2] dt-bindings: i2c: npcm7xx: add NPCM I2C controller documentation
+Date:   Thu, 21 Nov 2019 11:53:49 +0200
+Message-Id: <20191121095350.158689-2-tali.perry1@gmail.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20191121095350.158689-1-tali.perry1@gmail.com>
+References: <20191121095350.158689-1-tali.perry1@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <852f6c27-8b65-547b-89e0-e8f32a4d17b9@nvidia.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 21-11-19 00:29:59, John Hubbard wrote:
-> > 
-> > Otherwise this looks fine and might be a worthwhile cleanup to feed
-> > Andrew for 5.5 independent of the gut of the changes.
-> > 
-> > Reviewed-by: Christoph Hellwig <hch@lst.de>
-> > 
-> 
-> Thanks for the reviews! Say, it sounds like your view here is that this
-> series should be targeted at 5.6 (not 5.5), is that what you have in mind?
-> And get the preparatory patches (1-9, and maybe even 10-16) into 5.5?
+Added device tree binding documentation for Nuvoton BMC
+NPCM I2C controller.
 
-One more note :) If you are going to push pin_user_pages() interfaces
-(which I'm fine with), it would probably make sense to push also the
-put_user_pages() -> unpin_user_pages() renaming so that that inconsistency
-in naming does not exist in the released upstream kernel.
+Signed-off-by: Tali Perry <tali.perry1@gmail.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 
-								Honza
+---
+
+ .../devicetree/bindings/i2c/i2c-npcm7xx.txt   | 29 +++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-npcm7xx.txt
+
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-npcm7xx.txt b/Documentation/devicetree/bindings/i2c/i2c-npcm7xx.txt
+new file mode 100644
+index 000000000000..d36cc20742fd
+--- /dev/null
++++ b/Documentation/devicetree/bindings/i2c/i2c-npcm7xx.txt
+@@ -0,0 +1,29 @@
++Nuvoton NPCM7XX I2C bus
++
++The NPCM750x includes sixteen I2C bus controllers. All Controllers support
++both master and slave mode. Each controller has two 16 byte HW FIFO for TX and
++RX.
++
++Required properties:
++- compatible      : must be "nuvoton,npcm750-i2c"
++- reg             : Offset and length of the register set for the device.
++- interrupts      : Contain the I2C interrupt with flags for falling edge.
++- clocks          : phandle of I2C reference clock.
++
++Optional:
++- bus-frequency   : Contain the I2C bus frequency,
++			the default I2C bus frequency is 100000.
++- pinctrl-0       : for example <&smbX_pins>, X is module number
++			(on NPCM7XX it's 0 to 15)
++- pinctrl-names   : should be set to "default"
++Example:
++
++	i2c0: i2c@80000 {
++		compatible = "nuvoton,npcm750-i2c";
++		reg = <0x80000 0x1000>;
++		clocks = <&clk NPCM7XX_CLK_APB2>;
++		bus-frequency = <100000>;
++		interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&smb0_pins>;
++	};
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.22.0
+
