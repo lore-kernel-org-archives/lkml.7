@@ -2,142 +2,98 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCD8FC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 08:10:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F8BC43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 08:10:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D91420855
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 08:10:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BDCE20855
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 08:10:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WyrA3cO5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tSf+ntFI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbfKUIKA (ORCPT
+        id S1727164AbfKUIKd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 03:10:00 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:57718 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbfKUIKA (ORCPT
+        Thu, 21 Nov 2019 03:10:33 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:43222 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726343AbfKUIKc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 03:10:00 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAL89wKX097906;
-        Thu, 21 Nov 2019 02:09:58 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574323798;
-        bh=dK4eXj5EEvgO3cvsnxwNSK/prItfj2cpptJ431X4p6w=;
-        h=From:To:CC:Subject:Date;
-        b=WyrA3cO5ub0tzCAqcHvcs6l8MWNvjwcMWjWiOWXyDvp52csnf5YGZA2qimMgxomjK
-         Q3vYgo5GHu24KaDtJagBpMlbsHNOB86ZsaB1bWr6I6dnquQenOYhKE944/tXy7z33+
-         vKtIkbDu51/fP9UubUwx/ZBOQv+5Y+4QzBEMTVTs=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAL89wgt034493
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 21 Nov 2019 02:09:58 -0600
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 21
- Nov 2019 02:09:56 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 21 Nov 2019 02:09:56 -0600
-Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAL89sYk028502;
-        Thu, 21 Nov 2019 02:09:55 -0600
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <broonie@kernel.org>
-CC:     <vkoul@kernel.org>, <linux-spi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] spi: pic32: Retire dma_request_slave_channel_compat()
-Date:   Thu, 21 Nov 2019 10:09:54 +0200
-Message-ID: <20191121080954.14915-1-peter.ujfalusi@ti.com>
-X-Mailer: git-send-email 2.24.0
+        Thu, 21 Nov 2019 03:10:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ayytCJcth5GS0yhMc7G3JkwZ14SgYTl8WFFvY2/7v8M=; b=tSf+ntFIx+E4ElPWg7N/YrDA5
+        DJpdGB/LPxrZKjR8XgqAl2zR85VHA697aheq0Zg246jsWgb8mrSdltGy5yMP9HbBodsPoR+gwGpD+
+        QVOFwWDZ+KabSirkp4Tt9dB6kmJIUn0J+Il59Ko2Pkv3hkIl+fSJj/KbwMadKof/10NbX4BVK4ecW
+        CzXkmxFI+A8ZBzCm+FXsPX/uDD3s0HAgf0WBL/2Hz3XeBUWuBLfRR+cpozCLlR9UfRS5SZMBsI4/v
+        eMEAVutB9ql9MJsVHEW4sKjJfLq4kUoa0IJZZM6O6F/e7LcxIe5kML6J3bUd6SLeM+OcPR4CPMA97
+        R/3mfYL1g==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iXhVv-0008IQ-Ap; Thu, 21 Nov 2019 08:08:31 +0000
+Date:   Thu, 21 Nov 2019 00:08:31 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v7 06/24] goldish_pipe: rename local pin_user_pages()
+ routine
+Message-ID: <20191121080831.GD30991@infradead.org>
+References: <20191121071354.456618-1-jhubbard@nvidia.com>
+ <20191121071354.456618-7-jhubbard@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191121071354.456618-7-jhubbard@nvidia.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no reason to use the dma_request_slave_channel_compat() as no
-filter function and parameter is provided.
+On Wed, Nov 20, 2019 at 11:13:36PM -0800, John Hubbard wrote:
+> +static int pin_goldfish_pages(unsigned long first_page,
+> +			      unsigned long last_page,
+> +			      unsigned int last_page_size,
+> +			      int is_write,
+> +			      struct page *pages[MAX_BUFFERS_PER_COMMAND],
+> +			      unsigned int *iter_last_page_size)
 
-Switch the driver to use dma_request_chan() instead.
+Why not goldfish_pin_pages?  Normally we put the module / subsystem
+in front.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
-Hi,
-
-Trying to crack down on the dma_request_slave_channel_compat() in the tree...
-
-Only compile tested!
-
-Regards,
-Peter
-
- drivers/spi/spi-pic32.c | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/spi/spi-pic32.c b/drivers/spi/spi-pic32.c
-index 69f517ec59c6..2f90ca5118af 100644
---- a/drivers/spi/spi-pic32.c
-+++ b/drivers/spi/spi-pic32.c
-@@ -609,22 +609,18 @@ static void pic32_spi_cleanup(struct spi_device *spi)
- static void pic32_spi_dma_prep(struct pic32_spi *pic32s, struct device *dev)
- {
- 	struct spi_master *master = pic32s->master;
--	dma_cap_mask_t mask;
- 
--	dma_cap_zero(mask);
--	dma_cap_set(DMA_SLAVE, mask);
--
--	master->dma_rx = dma_request_slave_channel_compat(mask, NULL, NULL,
--							  dev, "spi-rx");
--	if (!master->dma_rx) {
-+	master->dma_rx = dma_request_chan(dev, "spi-rx");
-+	if (IS_ERR(master->dma_rx)) {
- 		dev_warn(dev, "RX channel not found.\n");
-+		master->dma_rx = NULL;
- 		goto out_err;
- 	}
- 
--	master->dma_tx = dma_request_slave_channel_compat(mask, NULL, NULL,
--							  dev, "spi-tx");
--	if (!master->dma_tx) {
-+	master->dma_tx = dma_request_chan(dev, "spi-tx");
-+	if (IS_ERR(master->dma_tx)) {
- 		dev_warn(dev, "TX channel not found.\n");
-+		master->dma_tx = NULL;
- 		goto out_err;
- 	}
- 
-@@ -637,11 +633,15 @@ static void pic32_spi_dma_prep(struct pic32_spi *pic32s, struct device *dev)
- 	return;
- 
- out_err:
--	if (master->dma_rx)
-+	if (master->dma_rx) {
- 		dma_release_channel(master->dma_rx);
-+		master->dma_rx = NULL;
-+	}
- 
--	if (master->dma_tx)
-+	if (master->dma_tx) {
- 		dma_release_channel(master->dma_tx);
-+		master->dma_tx = NULL;
-+	}
- }
- 
- static void pic32_spi_dma_unprep(struct pic32_spi *pic32s)
--- 
-Peter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
+Also can we get this queued up for 5.5 to get some trivial changes
+out of the way?
