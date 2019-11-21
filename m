@@ -2,123 +2,100 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82952C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 15:26:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7D67C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 15:26:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 590DD20674
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 15:26:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A13392070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 15:26:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q4XelS6L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727171AbfKUP0J (ORCPT
+        id S1727188AbfKUP00 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 10:26:09 -0500
-Received: from mx2.suse.de ([195.135.220.15]:55978 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726833AbfKUP0J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 10:26:09 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 92733B12D;
-        Thu, 21 Nov 2019 15:26:05 +0000 (UTC)
-Message-ID: <7dce4b4ae17e67a4cd093c7e3e709c9f1bb694f9.camel@suse.de>
-Subject: Re: [PATCH v2] dma-mapping: treat dev->bus_dma_mask as a DMA limit
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-ide@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Joerg Roedel <joro@8bytes.org>, x86@kernel.org,
-        linux-acpi@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        James Hogan <jhogan@kernel.org>, Len Brown <lenb@kernel.org>,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org, Jens Axboe <axboe@kernel.dk>,
-        linuxppc-dev@lists.ozlabs.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-mips@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
-        iommu@lists.linux-foundation.org,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>
-Date:   Thu, 21 Nov 2019 16:26:00 +0100
-In-Reply-To: <20191121152457.GA525@lst.de>
-References: <20191121092646.8449-1-nsaenzjulienne@suse.de>
-         <20191121152457.GA525@lst.de>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-AVtHArOyK73WmsFla+MI"
-User-Agent: Evolution 3.34.1 
+        Thu, 21 Nov 2019 10:26:26 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:35318 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726563AbfKUP00 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 10:26:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574349985;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=1O8R3g+RY/ULKTfO6bXtG8ZXjTQs/NUP/a7VNwETFWY=;
+        b=Q4XelS6LZRzlRVvX2Fx1YK70kph1XrRog8f+IlGeusVcRcn+gBFqzCMWRWxfoz5+3gv1Pn
+        6FK+zun4/BDtSIzpwp8KTDoEl+i6POF7EK+rw1ySFA9E4XphNhX8NjUSuvU8yBFhHxL1GO
+        ELCvHkBikoD5L/gkuT2WNXVIrcqkW2s=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-299-6mxCoIUlPAS30GEnpQ80Eg-1; Thu, 21 Nov 2019 10:26:22 -0500
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CBCD7477;
+        Thu, 21 Nov 2019 15:26:20 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-161.rdu2.redhat.com [10.10.120.161])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 720CE60C23;
+        Thu, 21 Nov 2019 15:26:19 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+ Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+ Kingdom.
+ Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH] afs: Fix possible assert with callbacks from yfs servers
+From:   David Howells <dhowells@redhat.com>
+To:     torvalds@linux-foundation.org
+Cc:     dhowells@redhat.com, marc.dionne@auristor.com,
+        linux-afs@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 21 Nov 2019 15:26:15 +0000
+Message-ID: <157434997544.8060.6772407595047113730.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: 6mxCoIUlPAS30GEnpQ80Eg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Marc Dionne <marc.dionne@auristor.com>
 
---=-AVtHArOyK73WmsFla+MI
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Servers sending callback breaks to the YFS_CM_SERVICE service may
+send up to YFSCBMAX (1024) fids in a single RPC.  Anything over
+AFSCBMAX (50) will cause the assert in afs_break_callbacks to trigger.
 
-On Thu, 2019-11-21 at 16:24 +0100, Christoph Hellwig wrote:
-> On Thu, Nov 21, 2019 at 10:26:44AM +0100, Nicolas Saenz Julienne wrote:
-> > Using a mask to represent bus DMA constraints has a set of limitations.
-> > The biggest one being it can only hold a power of two (minus one). The
-> > DMA mapping code is already aware of this and treats dev->bus_dma_mask
-> > as a limit. This quirk is already used by some architectures although
-> > still rare.
-> >=20
-> > With the introduction of the Raspberry Pi 4 we've found a new contender
-> > for the use of bus DMA limits, as its PCIe bus can only address the
-> > lower 3GB of memory (of a total of 4GB). This is impossible to represen=
-t
-> > with a mask. To make things worse the device-tree code rounds non power
-> > of two bus DMA limits to the next power of two, which is unacceptable i=
-n
-> > this case.
-> >=20
-> > In the light of this, rename dev->bus_dma_mask to dev->bus_dma_limit al=
-l
-> > over the tree and treat it as such. Note that dev->bus_dma_limit should
-> > contain the higher accesible DMA address.
-> >=20
-> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
->=20
-> I've tentatively added this patch to the dma-mapping tree based on
-> Robins principal approval of the last version.  That way tomorrows
-> linux-next run should still pick it up.
+Remove the assert, as the count has already been checked against
+the appropriate max values in afs_deliver_cb_callback and
+afs_deliver_yfs_cb_callback.
 
-Thanks!
+Fixes: 35dbfba3111a ("afs: Implement the YFS cache manager service")
+Signed-off-by: Marc Dionne <marc.dionne@auristor.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
+---
 
+ fs/afs/callback.c |    1 -
+ 1 file changed, 1 deletion(-)
 
---=-AVtHArOyK73WmsFla+MI
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl3WrIgACgkQlfZmHno8
-x/4/VAf/dsxMKNREPohHeI7vgp+6EimdhbVCl85q5A/tDQBGfxT0jH8qWWHH8vIe
-jOcJJvY2x/QgJp2yJjQDvqH8jmakrl/jXYcLKMs2m5/4ZBEZn+ZE1aHndjaHsVYV
-hIwCCJHOYYakbn6bZqyqRuFZsmEoGaP2ep/8+pRnI9Rqsm9iAJfJGL9GFCIq8GMp
-9EYLurmczPVdlj6upREqPVBlmwjZ+5mJlJ2mLBdHuECEok0EqNyAQx27xprA3s4Q
-zwGXR3RGjsgDBpLkmpp3p85VWai+dh/9ETFqr1IV9xQwKtUfXN3ioKBBKeWzlAZd
-MiNU31P6cP68zLbbRggeBCaoZBoq6w==
-=j1XI
------END PGP SIGNATURE-----
-
---=-AVtHArOyK73WmsFla+MI--
+diff --git a/fs/afs/callback.c b/fs/afs/callback.c
+index 6cdd7047c809..2dca8df1a18d 100644
+--- a/fs/afs/callback.c
++++ b/fs/afs/callback.c
+@@ -312,7 +312,6 @@ void afs_break_callbacks(struct afs_server *server, siz=
+e_t count,
+ =09_enter("%p,%zu,", server, count);
+=20
+ =09ASSERT(server !=3D NULL);
+-=09ASSERTCMP(count, <=3D, AFSCBMAX);
+=20
+ =09/* TODO: Sort the callback break list by volume ID */
+=20
 
