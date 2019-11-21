@@ -2,153 +2,102 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 430A8C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B299CC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:33:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1697B20692
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:32:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8246620692
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:33:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tessares-net.20150623.gappssmtp.com header.i=@tessares-net.20150623.gappssmtp.com header.b="cI5GhUFA"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="b3374WAE";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="rx8RIxy5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbfKUQcr (ORCPT
+        id S1726887AbfKUQdQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 11:32:47 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:34169 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726293AbfKUQcr (ORCPT
+        Thu, 21 Nov 2019 11:33:16 -0500
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:35629 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726293AbfKUQdQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 11:32:47 -0500
-Received: by mail-wm1-f65.google.com with SMTP id j18so8132340wmk.1
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 08:32:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares-net.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=NQxtDcltG16uG1uS9wamfGd4yutfyPnnxbr+AjuLUAM=;
-        b=cI5GhUFAm0E84FvqsurqwXZ2PTpfPLTDEBEN4BTQHPAETIZonjrn3V2Re572L5Z7WZ
-         rPdNCcbzFm9XNm6ITcrbeR2Yofw25xbtS6truDenPKi644jLuU1CmDuhT/9qZBr89Ypq
-         uWYlH3MKkCVQG1N3rzsBn8RhA0MqB2RXjwvs49Xy7gL8xWcyp9vC01NSEqVIC8ZWDXB0
-         rLZkALZW4UD49fjYQo0H71Hit/36ZDI9PNKRj39O2kqvUsKo2pPyMDbRVS92lPTzYSfI
-         8faJj7wSG266tAc0RiveJhSpwZy5o12t5AdVo5DShGGYWC/DAz5LrZLWjxn1EsVfSwvE
-         qFfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=NQxtDcltG16uG1uS9wamfGd4yutfyPnnxbr+AjuLUAM=;
-        b=SLDr0e07WY6xrqh6cEVorYMXype0U3C0ZLLGzGIlxnuBc/ltFdphqq/R9RsR3q1o01
-         vkxD8edwf6u8JLgyw6GkyGqJcUVowi4SfBpjKvLqX4dA2EvubIUnze8BnduhZQ/o6ecf
-         53pMGdTtUFNo6AbIpbtrHQxt7tghN4IFhhxNk70rz8Q1ufkXLmadnIEbW+BQAhjvB5zE
-         VwZsEa7T12aSl/JPjJHnw/ZKvPxJx6ZK2xsFRf6ITp0giglmH3oqB4AxCm9Tr1d9E0tw
-         PhZB/KgH/JFfOvIUH6ZIFaTHUvHAfL4TlCDq0CNoUVhUFQ2ExGudxIMLUklcqz+sk9VS
-         r5qw==
-X-Gm-Message-State: APjAAAVIlvvWcnkS5IA9gqf679x5mDOvu9AS3jbemuflICsTHFAXPWB0
-        rVxRZYTZEet0btRW9g5LsXGwNc12kG2a9Q==
-X-Google-Smtp-Source: APXvYqyhX3P6aJ0eBeiUHi+lNIMXMOPRcx29eHnfiokfxYjutI8j2DDb2UTjkGeqfIJW6fDnnPrkzg==
-X-Received: by 2002:a7b:c7d3:: with SMTP id z19mr11321336wmk.98.1574353964502;
-        Thu, 21 Nov 2019 08:32:44 -0800 (PST)
-Received: from tsr-lap-08.nix.tessares.net (hag0-main.tessares.net. [87.98.252.165])
-        by smtp.gmail.com with ESMTPSA id w11sm4353502wra.83.2019.11.21.08.32.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 Nov 2019 08:32:43 -0800 (PST)
-Subject: Re: [PATCH] selftests: settings: tests can be in subsubdirs
-To:     Shuah Khan <shuah@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191022171223.27934-1-matthieu.baerts@tessares.net>
-From:   Matthieu Baerts <matthieu.baerts@tessares.net>
-Message-ID: <c9ce5016-9e83-67c0-ae22-2d3c46427b25@tessares.net>
-Date:   Thu, 21 Nov 2019 17:32:42 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 21 Nov 2019 11:33:16 -0500
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 8BD475306;
+        Thu, 21 Nov 2019 11:33:14 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Thu, 21 Nov 2019 11:33:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=nHWHTDLVdOX1uKKYN8BXRNsJUsY
+        isZ2RlAbvZf+iPwU=; b=b3374WAEob5A+fRL+rZ+069sr+JtdUKxgKB/ToCBPRL
+        r3dZ5ayl7aXJWzmP3MUbfp0+sP87QtczbOMsyFzLSk+Yl5tLrnnBuxLzUINt0Wui
+        T1n00awDYzQU5pWmeo9nIPXI3cbBMvKZNSwbtJYN/N6oIpWl5ZJXS7YZO2VzbLvY
+        RtLlYFjEDtty+lEE/5ndz3j4bMfPOG0xAIRxQdAInTLYxHnH24MK++2jOiN2KnyE
+        gcTfCp52z4mqkiXg9LC0FKO3Q/GXJLxa6DwtWBG+bHoZhM5K3uUs1m5nOT69nhtF
+        SQXranVQ8oLWOU1RpbewPv3Hl3UD60YdhKdpwP2M8eQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=nHWHTD
+        LVdOX1uKKYN8BXRNsJUsYisZ2RlAbvZf+iPwU=; b=rx8RIxy5FU8XfaUY3DEDwz
+        wFN5FnToTX9OiZCMr1cSXv8uzPMZox+KlAk8KymZjv7a28nF+hnwGeBWl8g7sW4v
+        uF0ylic0iT/Zv906gdK+ZDary5J1VHXiDt/lrOTgWtV1ZeDEqCUxG9WM6yyl1ZcF
+        eIFKH0CPQ9AuOO404pMZ4cHclhV/6r/Tn1036KEkRV+zffdSICLVmAIOHvc3HH3p
+        KKGHjHianpJBI6ornp+KIRpZ8kYrzhHQCu6mgXajr/kgQ4S1O1zZxeVkUG8PzlVn
+        k8QdOvWg1h2/tsHIjZlbXCv08ZS7TIt5MqYc5tBWK+zngpgBwNNP3GHoWkcO2Tew
+        ==
+X-ME-Sender: <xms:SbzWXfqUIP-Ex0KyewkmRcGyfkMbSaQLzfc-gYBKxwrCCcCw2xYNlg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudehvddgledvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpeffhffvuffkfhggtggujggfsehttd
+    ertddtredvnecuhfhrohhmpefirhgvghcumffjuceoghhrvghgsehkrhhorghhrdgtohhm
+    qeenucfkphepvddujedrieekrdegledrjedvnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    hgrhgvgheskhhrohgrhhdrtghomhenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:SbzWXdK_Bz-xJCLPXMCeSbZGcOjeKLubzDwVAjgZpcbKQHqw-tZ61w>
+    <xmx:SbzWXS8ziwxJ6RgcWbeRx7WoZLP_d8xkcUyC4N1VNE6iYRUQjf2igA>
+    <xmx:SbzWXRICWCwmJwkNcZ6JkoZ2Gwo7_lzEGFyiPQcSQ5VCkVqMPTQaXA>
+    <xmx:SrzWXWnHSDGmJVjsKjytHt0DRejx3cxEnDQfSRgCXyU93ikhbMutmg>
+Received: from localhost (unknown [217.68.49.72])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 830958005C;
+        Thu, 21 Nov 2019 11:33:12 -0500 (EST)
+Date:   Thu, 21 Nov 2019 17:33:09 +0100
+From:   Greg KH <greg@kroah.com>
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     linux-kernel@vger.kernel.org, jikos@kernel.org,
+        benjamin.tissoires@redhat.com, dmitry.torokhov@gmail.com,
+        Jes.Sorensen@gmail.com, kvalo@codeaurora.org, johan@kernel.org,
+        linux-input@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [PATCH] drivers: usb: consolidate USB vendor IDs in one include
+ file
+Message-ID: <20191121163309.GA651886@kroah.com>
+References: <20191121161742.31435-1-info@metux.net>
 MIME-Version: 1.0
-In-Reply-To: <20191022171223.27934-1-matthieu.baerts@tessares.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191121161742.31435-1-info@metux.net>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shuah,
+On Thu, Nov 21, 2019 at 05:17:42PM +0100, Enrico Weigelt, metux IT consult wrote:
+> Instead of redefining usb vendor IDs in several places, consolidate
+> into one include file: include/linux/usb/usb_ids.h
 
-First, thank you for maintaining the Kernel Selftest framework!
+No, please no.
 
-On 22/10/2019 19:12, Matthieu Baerts wrote:
-> Commit 852c8cbf34d3 (selftests/kselftest/runner.sh: Add 45 second
-> timeout per test) adds support for a new per-test-directory "settings"
-> file. But this only works for tests not in a sub-subdirectories, e.g.
-> 
->   - tools/testing/selftests/rtc (rtc) is OK,
->   - tools/testing/selftests/net/mptcp (net/mptcp) is not.
-> 
-> We have to increase the timeout for net/mptcp tests which are not
-> upstreamed yet but this fix is valid for other tests if they need to add
-> a "settings" file, see the full list with:
-> 
->    tools/testing/selftests/*/*/**/Makefile
-> 
-> Note that this patch changes the text header message printed at the end
-> of the execution but this text is modified only for the tests that are
-> in sub-subdirectories, e.g.
-> 
->    ok 1 selftests: net/mptcp: mptcp_connect.sh
-> 
-> Before we had:
-> 
->    ok 1 selftests: mptcp: mptcp_connect.sh
-> 
-> But showing the full target name is probably better, just in case a
-> subsubdir has the same name as another one in another subdirectory.
-> 
-> Fixes: 852c8cbf34d3 (selftests/kselftest/runner.sh: Add 45 second timeout per test)
-> Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Sorry to bother you again with this but by chance, did you have a look 
-at the patch below? :)
+There's a specific reason we do not have this, unlike other operating
+systems.  It's because merges are a pain, and touching the "big one
+file" ends up rebuilding too many things.
 
-It doesn't only fix an issue with MPTCP, not in the kernel yet. But it 
-also fixes the issue of taking the right "settings" file (if available) 
-for any other tests in a sub-directory, e.g.:
+Read the top of the pci-ids.h file for why I do not want to see us do
+this for any other type of id.  It's best to leave them where they are
+used, right in the driver itself.
 
-   drivers/dma-buf
-   filesystems/binderfs
-   net/forwarding
-   networking/timestamping
+thanks,
 
-But I guess all tests in powerpc/* dirs and others.
-
-Cheers,
-Matt
-
-> ---
->   tools/testing/selftests/kselftest/runner.sh | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/testing/selftests/kselftest/runner.sh b/tools/testing/selftests/kselftest/runner.sh
-> index 84de7bc74f2c..0d7a89901ef7 100644
-> --- a/tools/testing/selftests/kselftest/runner.sh
-> +++ b/tools/testing/selftests/kselftest/runner.sh
-> @@ -90,7 +90,7 @@ run_one()
->   run_many()
->   {
->   	echo "TAP version 13"
-> -	DIR=$(basename "$PWD")
-> +	DIR="${PWD#${BASE_DIR}/}"
->   	test_num=0
->   	total=$(echo "$@" | wc -w)
->   	echo "1..$total"
-> 
-
--- 
-Matthieu Baerts | R&D Engineer
-matthieu.baerts@tessares.net
-Tessares SA | Hybrid Access Solutions
-www.tessares.net
-1 Avenue Jean Monnet, 1348 Louvain-la-Neuve, Belgium
+greg k-h
