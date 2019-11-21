@@ -2,118 +2,92 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6123EC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 08:02:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC2A8C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 08:04:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35B5820872
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 08:02:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M/BxHV9M"
+	by mail.kernel.org (Postfix) with ESMTP id C41E020872
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 08:04:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726775AbfKUICD (ORCPT
+        id S1726840AbfKUIEF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 03:02:03 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:33617 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726358AbfKUICD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 03:02:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574323322;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=mG0FHW0fig4Cx/LxAaJLR6J3VqDT9J+mhAWOfYVykWs=;
-        b=M/BxHV9MEmk+gkhq8PlUSFXybhegVDOwzS6YMLHmbbxGpTLlNaX2b/P8YOkXHJaiseT6Nw
-        PqiAltKhhfmZA+ltywuW0U4hovVizkkYUZrVED+8/XTE2b1nx6L14I142IKt5dj5kEWcg+
-        NfrXnjS1px0UtRCO8cHHdEtzaOtWMd4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-380-g80Ev-2mMmmrw3oAT5So1Q-1; Thu, 21 Nov 2019 03:01:58 -0500
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C6273801E5D;
-        Thu, 21 Nov 2019 08:01:56 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B7AEC692BE;
-        Thu, 21 Nov 2019 08:01:56 +0000 (UTC)
-Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
-        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 8F4591809563;
-        Thu, 21 Nov 2019 08:01:56 +0000 (UTC)
-Date:   Thu, 21 Nov 2019 03:01:56 -0500 (EST)
-From:   Pankaj Gupta <pagupta@redhat.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Jeff Moyer <jmoyer@redhat.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Vivek Goyal <vgoyal@redhat.com>,
-        Keith Busch <keith.busch@intel.com>
-Message-ID: <2089367516.35808121.1574323316486.JavaMail.zimbra@redhat.com>
-In-Reply-To: <CAPcyv4gCe8k1GdatAWn1991pm3QZq2WBFAGEFsZ2PXpyo2=wMw@mail.gmail.com>
-References: <20191120092831.6198-1-pagupta@redhat.com> <x49d0dmihmu.fsf@segfault.boston.devel.redhat.com> <CAPcyv4gCe8k1GdatAWn1991pm3QZq2WBFAGEFsZ2PXpyo2=wMw@mail.gmail.com>
-Subject: Re: [PATCH] virtio pmem: fix async flush ordering
+        Thu, 21 Nov 2019 03:04:05 -0500
+Received: from verein.lst.de ([213.95.11.211]:44639 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725842AbfKUIEE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 03:04:04 -0500
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id C80DF68BFE; Thu, 21 Nov 2019 09:03:56 +0100 (CET)
+Date:   Thu, 21 Nov 2019 09:03:56 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
+Subject: Re: [PATCH v7 02/24] mm/gup: factor out duplicate code from four
+ routines
+Message-ID: <20191121080356.GA24784@lst.de>
+References: <20191121071354.456618-1-jhubbard@nvidia.com> <20191121071354.456618-3-jhubbard@nvidia.com>
 MIME-Version: 1.0
-X-Originating-IP: [10.67.116.169, 10.4.195.1]
-Thread-Topic: virtio pmem: fix async flush ordering
-Thread-Index: n73vjZWQN2B3un3TvjjmhkQyzbgvzg==
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-MC-Unique: g80Ev-2mMmmrw3oAT5So1Q-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191121071354.456618-3-jhubbard@nvidia.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Nov 20, 2019 at 11:13:32PM -0800, John Hubbard wrote:
+> There are four locations in gup.c that have a fair amount of code
+> duplication. This means that changing one requires making the same
+> changes in four places, not to mention reading the same code four
+> times, and wondering if there are subtle differences.
+> 
+> Factor out the common code into static functions, thus reducing the
+> overall line count and the code's complexity.
+> 
+> Also, take the opportunity to slightly improve the efficiency of the
+> error cases, by doing a mass subtraction of the refcount, surrounded
+> by get_page()/put_page().
+> 
+> Also, further simplify (slightly), by waiting until the the successful
+> end of each routine, to increment *nr.
 
+Any reason for the spurious underscore in the function name?
 
-> >
-> > >  Remove logic to create child bio in the async flush function which
-> > >  causes child bio to get executed after parent bio 'pmem_make_request=
-'
-> > >  completes. This resulted in wrong ordering of REQ_PREFLUSH with the
-> > >  data write request.
-> > >
-> > >  Instead we are performing flush from the parent bio to maintain the
-> > >  correct order. Also, returning from function 'pmem_make_request' if
-> > >  REQ_PREFLUSH returns an error.
-> > >
-> > > Reported-by: Jeff Moyer <jmoyer@redhat.com>
-> > > Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
-> >
-> > There's a slight change in behavior for the error path in the
-> > virtio_pmem driver.  Previously, all errors from virtio_pmem_flush were
-> > converted to -EIO.  Now, they are reported as-is.  I think this is
-> > actually an improvement.
-> >
-> > I'll also note that the current behavior can result in data corruption,
-> > so this should be tagged for stable.
->=20
-> I added that and was about to push this out, but what about the fact
-> that now the guest will synchronously wait for flushing to occur. The
-> goal of the child bio was to allow that to be an I/O wait with
-> overlapping I/O, or at least not blocking the submission thread. Does
-> the block layer synchronously wait for PREFLUSH requests? If not I
-> think a synchronous wait is going to be a significant performance
-> regression. Are there any numbers to accompany this change?
+Otherwise this looks fine and might be a worthwhile cleanup to feed
+Andrew for 5.5 independent of the gut of the changes.
 
-My bad, I missed this point completely.
-
-Thanks,
-Pankaj
-
->=20
->=20
-
+Reviewed-by: Christoph Hellwig <hch@lst.de>
