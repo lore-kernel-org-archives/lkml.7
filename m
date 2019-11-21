@@ -2,181 +2,138 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC18C43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 08:32:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0537C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 08:32:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75FCC208A1
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 08:32:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C977420898
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 08:32:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=sifive.com header.i=@sifive.com header.b="P/A1nIxk"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="o245NH6j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726563AbfKUIcj (ORCPT
+        id S1726944AbfKUIct (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 03:32:39 -0500
-Received: from mail-eopbgr720060.outbound.protection.outlook.com ([40.107.72.60]:37443
-        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726132AbfKUIcj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 03:32:39 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kZAq84s4rX+3DPQgo3i/TwB95MGnCzq2/zXzXmEylM1RxpGF3kFxrERXMvsANfQChW68tWyFB0JUeIfCL569+1eimS9MTxxCjG0PMxGI7NkD9rrRRe9mtlbECaN7seshFmZuuNscL0G+a1F4kOvdNZ0dIoE7H51bT1w2NYf8ixB7bWiT1pY+P6PjjLuVLsVuYHhgv4+miNmZaBPL+kY1SE/8vwxdaqcbL1dwY513dL7vdW7T54Gk9tjBzbxBxDjQjevmpJBCy2JhESwWRhNjsXTYUdvfgMKyslX1mG45xVk0cuts8k5P1IknXLBL2puQs2sYRJf6LPxjEoi6wYIdlA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1LObPKV2I3TIgIm3aGytSrIHyCFApil+sQwyntJfBDc=;
- b=jfXpM/VoL9hGdkFeccnkq71FGfmnPJBf8ONxCdq6C40QvuczNRRcBPHPI+4Nf0I1boPHZ30uSFRT9wnaq+01LtwH09IDHVV3bFcyuLl5bhWDuras8THbVT4yTZd+vvbXUyJbl2JdVd/Zk2KV5iFlvWwUWlrnMNfno8ylqN4DFlpGQnmKcjqtWgyqHMsjMGx1H5PfycIMpjH0HEe/VcjN7/Vn6u50fhbuTKIna8oRDH9BR5sGL8HT8ct/VyknDQEaBwS7FJSMmchAfGvpwBPmiET8xHF+yTb59xDuMnyZ8f1sMA0Kp4LHxlp8nJ2V41sM8J/VRf3b5rdkOuUniLAnWA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=sifive.com; dmarc=pass action=none header.from=sifive.com;
- dkim=pass header.d=sifive.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sifive.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1LObPKV2I3TIgIm3aGytSrIHyCFApil+sQwyntJfBDc=;
- b=P/A1nIxk7sE2EIQwDo9HGmP42NUbPQs1g2kXJTpiufFb6ddey6v5/QCy305GYuHB+UPXahN5u8m5i1XrRc7hGqoXbYz47WtyWj+YsA7GyZmZ8B2nTE7TCWYyH+zLsZGlTB1E8sX8Okwaj7manVGkQwCOqzBaasNj7Os1eFM+1S0=
-Received: from CH2PR13MB3368.namprd13.prod.outlook.com (52.132.246.90) by
- CH2PR13MB3606.namprd13.prod.outlook.com (52.132.246.217) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2495.10; Thu, 21 Nov 2019 08:32:33 +0000
-Received: from CH2PR13MB3368.namprd13.prod.outlook.com
- ([fe80::853e:1256:311e:d29]) by CH2PR13MB3368.namprd13.prod.outlook.com
- ([fe80::853e:1256:311e:d29%7]) with mapi id 15.20.2474.018; Thu, 21 Nov 2019
- 08:32:33 +0000
-From:   Yash Shah <yash.shah@sifive.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-CC:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "palmer@dabbelt.com" <palmer@dabbelt.com>,
-        "Paul Walmsley ( Sifive)" <paul.walmsley@sifive.com>,
-        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "jason@lakedaemon.net" <jason@lakedaemon.net>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bmeng.cn@gmail.com" <bmeng.cn@gmail.com>,
-        "atish.patra@wdc.com" <atish.patra@wdc.com>,
-        Sagar Kadam <sagar.kadam@sifive.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sachin Ghadi <sachin.ghadi@sifive.com>
-Subject: RE: [PATCH v2 4/5] gpio: sifive: Add GPIO driver for SiFive SoCs
-Thread-Topic: [PATCH v2 4/5] gpio: sifive: Add GPIO driver for SiFive SoCs
-Thread-Index: AQHVn3AVOu1YvEqrSUK2kxGeF7Rov6eT0/+AgAF4gCA=
-Date:   Thu, 21 Nov 2019 08:32:33 +0000
-Message-ID: <CH2PR13MB3368A85F74CA82994E8C0D1B8C4E0@CH2PR13MB3368.namprd13.prod.outlook.com>
-References: <1574233128-28114-1-git-send-email-yash.shah@sifive.com>
- <1574233128-28114-5-git-send-email-yash.shah@sifive.com>
- <CAMpxmJX0A+_6LmrWPe=Ne5KGhG9r_HySpstDhV5ZTnpz2QXF7Q@mail.gmail.com>
-In-Reply-To: <CAMpxmJX0A+_6LmrWPe=Ne5KGhG9r_HySpstDhV5ZTnpz2QXF7Q@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yash.shah@sifive.com; 
-x-originating-ip: [114.143.65.226]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: efe53d99-ae6c-4409-e020-08d76e5d5ae7
-x-ms-traffictypediagnostic: CH2PR13MB3606:
-x-ld-processed: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CH2PR13MB3606558442BD56B81775A4718C4E0@CH2PR13MB3606.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0228DDDDD7
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(6029001)(376002)(39840400004)(366004)(136003)(396003)(346002)(13464003)(189003)(199004)(86362001)(186003)(53546011)(6506007)(26005)(446003)(44832011)(11346002)(102836004)(14454004)(6916009)(5660300002)(7736002)(478600001)(52536014)(14444005)(7696005)(76116006)(305945005)(66946007)(74316002)(7416002)(76176011)(66476007)(25786009)(66446008)(64756008)(66556008)(81166006)(81156014)(3846002)(8936002)(6116002)(33656002)(99286004)(256004)(316002)(8676002)(54906003)(6246003)(107886003)(55016002)(9686003)(4326008)(66066001)(71200400001)(71190400001)(229853002)(2906002)(6436002);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR13MB3606;H:CH2PR13MB3368.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: sifive.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: GUbGOwExWAoAkA2lyxtdOwT5CfL9vEtcB2OyRM0uLVWgQzF9qsO+jMWJT0qzgShxrHygEeym3Nx6D2uQuqi5kpDu6J/wUZV6q2d4sqNL+pqA6/b97HVl2gw5HTcb3T5SNmu6m6zuoXp/r/qqPaTsv3dyJnkyXbRg+7gP2EmEdED/2k79B+cSFS06kZuEhIe4eXShVinF6zXOwB/6yqB8oHPOdcv1SxV6wCCqnqKJtWSvp5Glyl+yEicNMyGG5au4IN/8Ef7vdDHO1eA/9oYssR1VgeXtC5WvpjD4+hCuw3ry6tDp4QCUOK2Q8TWdLEqBiPaufp51DdibcROUO299vVtmswy/2/pBpObnw+64RGeji5MIyoFM1FjQVgFU8yJsBqMy+TY1aoNLtfx+GanNXbZ3w3S3Jl1/rE+a3Tv+4hEjNxgI3ydX/D6TtAKDxB5u
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 21 Nov 2019 03:32:49 -0500
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:17688 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726568AbfKUIct (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 03:32:49 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dd64bb20000>; Thu, 21 Nov 2019 00:32:51 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 21 Nov 2019 00:32:47 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 21 Nov 2019 00:32:47 -0800
+Received: from [10.2.169.101] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 21 Nov
+ 2019 08:32:47 +0000
+Subject: Re: [PATCH v7 02/24] mm/gup: factor out duplicate code from four
+ routines
+To:     Christoph Hellwig <hch@lst.de>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
+References: <20191121071354.456618-1-jhubbard@nvidia.com>
+ <20191121071354.456618-3-jhubbard@nvidia.com> <20191121080356.GA24784@lst.de>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <852f6c27-8b65-547b-89e0-e8f32a4d17b9@nvidia.com>
+Date:   Thu, 21 Nov 2019 00:29:59 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-X-OriginatorOrg: sifive.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: efe53d99-ae6c-4409-e020-08d76e5d5ae7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Nov 2019 08:32:33.1474
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Yh0JX270p+ErwDZVg19Bqh44nwlqt4Frx7Ee/wOFxTJ/IjQ/7jNamxTjQ629AHz7nP+gw1X69O9hgccOd4loTg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3606
+In-Reply-To: <20191121080356.GA24784@lst.de>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1574325171; bh=zDciOg6KuRn3nxO/F8s9PAXpBobtVEtvpIDiU9i7cho=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=o245NH6j1RBD/91bIgnXA2u+iVZPtUYc4XEd05QhEOZNOiZYzfw/GFcveJvKQudX5
+         dLZsGgVUHhvmd1nGNx/JrZ9mxzYaJw5jBv7I9AOtjq55xyJVy978/mkepEaZsZ4Jdh
+         F7Q1lJglcDgOm/TfPzXptT+ffg3dPcYqQ/YE2QHKjAn7RuUVlfvjepKyjOT8iLOeP5
+         P9RGmGVhbNZZaq2buLl/ZGciWf84d+hZhxGEZwtKDXdTaeOTeOoxk+GuaJBpkc922I
+         5UIDntRh0zXkYjneJ/cY0eUs62/fAinVukvPCoGn37W+7eCdxnHrxBHjSsCjqEp6Ly
+         txEbXCaryPmyA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBCYXJ0b3N6IEdvbGFzemV3c2tp
-IDxiZ29sYXN6ZXdza2lAYmF5bGlicmUuY29tPg0KPiBTZW50OiAyMCBOb3ZlbWJlciAyMDE5IDE1
-OjMxDQo+IFRvOiBZYXNoIFNoYWggPHlhc2guc2hhaEBzaWZpdmUuY29tPg0KPiBDYzogbGludXMu
-d2FsbGVpakBsaW5hcm8ub3JnOyByb2JoK2R0QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0u
-Y29tOw0KPiBwYWxtZXJAZGFiYmVsdC5jb207IFBhdWwgV2FsbXNsZXkgKCBTaWZpdmUpIDxwYXVs
-LndhbG1zbGV5QHNpZml2ZS5jb20+Ow0KPiBhb3VAZWVjcy5iZXJrZWxleS5lZHU7IHRnbHhAbGlu
-dXRyb25peC5kZTsgamFzb25AbGFrZWRhZW1vbi5uZXQ7DQo+IG1hekBrZXJuZWwub3JnOyBibWVu
-Zy5jbkBnbWFpbC5jb207IGF0aXNoLnBhdHJhQHdkYy5jb207IFNhZ2FyIEthZGFtDQo+IDxzYWdh
-ci5rYWRhbUBzaWZpdmUuY29tPjsgbGludXgtZ3Bpb0B2Z2VyLmtlcm5lbC5vcmc7DQo+IGRldmlj
-ZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1yaXNjdkBsaXN0cy5pbmZyYWRlYWQub3JnOyBs
-aW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9yZzsgU2FjaGluIEdoYWRpIDxzYWNoaW4uZ2hh
-ZGlAc2lmaXZlLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MiA0LzVdIGdwaW86IHNpZml2
-ZTogQWRkIEdQSU8gZHJpdmVyIGZvciBTaUZpdmUgU29Dcw0KPiANCj4gxZtyLiwgMjAgbGlzIDIw
-MTkgbyAwNzo1OSBZYXNoIFNoYWggPHlhc2guc2hhaEBzaWZpdmUuY29tPiBuYXBpc2HFgihhKToN
-Cj4gPg0KPiA+IEFkZHMgdGhlIEdQSU8gZHJpdmVyIGZvciBTaUZpdmUgUklTQy1WIFNvQ3MuDQo+
-ID4NCj4gDQo+IFRoaXMgbG9va3MgbXVjaCBiZXR0ZXIganVzdCBhIGNvdXBsZSBuaXRzLg0KPiAN
-Cj4gPiBTaWduZWQtb2ZmLWJ5OiBXZXNsZXkgVy4gVGVycHN0cmEgPHdlc2xleUBzaWZpdmUuY29t
-Pg0KPiA+IFtBdGlzaDogVmFyaW91cyBmaXhlcyBhbmQgY29kZSBjbGVhbnVwXQ0KPiA+IFNpZ25l
-ZC1vZmYtYnk6IEF0aXNoIFBhdHJhIDxhdGlzaC5wYXRyYUB3ZGMuY29tPg0KPiA+IFNpZ25lZC1v
-ZmYtYnk6IFlhc2ggU2hhaCA8eWFzaC5zaGFoQHNpZml2ZS5jb20+DQpbLi4uXQ0KPiA+IGRpZmYg
-LS1naXQgYS9kcml2ZXJzL2dwaW8vZ3Bpby1zaWZpdmUuYyBiL2RyaXZlcnMvZ3Bpby9ncGlvLXNp
-Zml2ZS5jDQo+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQgaW5kZXggMDAwMDAwMC4uMDI2NjZhZQ0K
-PiA+IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9kcml2ZXJzL2dwaW8vZ3Bpby1zaWZpdmUuYw0K
-PiA+IEBAIC0wLDAgKzEsMjU2IEBADQo+ID4gKy8vIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBH
-UEwtMi4wDQo+ID4gKy8qDQo+ID4gKyAqIENvcHlyaWdodCAoQykgMjAxOSBTaUZpdmUNCj4gPiAr
-ICovDQo+IA0KPiBJIHByZWZlciB0byBoYXZlIGEgbmV3bGluZSBiZXR3ZWVuIHRoZSBjb3B5cmln
-aHQgbm90aWNlIGFuZCB0aGUgaGVhZGVycy4NCg0KRG9uZQ0KDQo+IA0KPiA+ICsjaW5jbHVkZSA8
-bGludXgvYml0b3BzLmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9kZXZpY2UuaD4NCj4gPiArI2lu
-Y2x1ZGUgPGxpbnV4L2Vycm5vLmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9vZl9pcnEuaD4NCj4g
-PiArI2luY2x1ZGUgPGxpbnV4L2dwaW8vZHJpdmVyLmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9p
-bml0Lmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9vZi5oPg0KPiANCj4gSXMgdGhpcyByZWFsbHkg
-bmVlZGVkPyBJIG9ubHkgc2VlIGZ1bmN0aW9ucyBkZWZpbmVkIGluIG9mX2lycS5oLg0KPiANCj4g
-PiArI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2RldmljZS5oPg0KPiA+ICsjaW5jbHVkZSA8bGlu
-dXgvcG0uaD4NCj4gDQo+IFNhbWUgaGVyZSAtIEkgZG9uJ3Qgc2VlIGFueSBmdW5jdGlvbnMgZnJv
-bSB0aGlzIGhlYWRlciBiZWluZyBjYWxsZWQuDQo+IA0KDQpZZXMsIHlvdSBhcmUgcmlnaHQuIEJv
-dGggdGhlIGFib3ZlIGluY2x1c2lvbiBvZiBoZWFkZXIgZmlsZSBpcyB1bm5lY2Vzc2FyeS4gV2ls
-bCByZW1vdmUgdGhlbS4NCg0KPiA+ICsjaW5jbHVkZSA8bGludXgvc2xhYi5oPg0KPiA+ICsjaW5j
-bHVkZSA8bGludXgvc3BpbmxvY2suaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L3JlZ21hcC5oPg0K
-PiA+ICsNCj4gPiArI2RlZmluZSBHUElPX0lOUFVUX1ZBTCAweDAwDQo+ID4gKyNkZWZpbmUgR1BJ
-T19JTlBVVF9FTiAgMHgwNA0KPiA+ICsjZGVmaW5lIEdQSU9fT1VUUFVUX0VOIDB4MDgNCj4gPiAr
-I2RlZmluZSBHUElPX09VVFBVVF9WQUwgICAgICAgIDB4MEMNCj4gPiArI2RlZmluZSBHUElPX1JJ
-U0VfSUUgICAweDE4DQo+ID4gKyNkZWZpbmUgR1BJT19SSVNFX0lQICAgMHgxQw0KPiA+ICsjZGVm
-aW5lIEdQSU9fRkFMTF9JRSAgIDB4MjANCj4gPiArI2RlZmluZSBHUElPX0ZBTExfSVAgICAweDI0
-DQo+ID4gKyNkZWZpbmUgR1BJT19ISUdIX0lFICAgMHgyOA0KPiA+ICsjZGVmaW5lIEdQSU9fSElH
-SF9JUCAgIDB4MkMNCj4gPiArI2RlZmluZSBHUElPX0xPV19JRSAgICAweDMwDQo+ID4gKyNkZWZp
-bmUgR1BJT19MT1dfSVAgICAgMHgzNA0KPiA+ICsjZGVmaW5lIEdQSU9fT1VUUFVUX1hPUiAgICAg
-ICAgMHg0MA0KPiA+ICsNCj4gPiArI2RlZmluZSBNQVhfR1BJTyAgICAgICAgICAgICAgIDMyDQo+
-ID4gKyNkZWZpbmUgU0lGSVZFX0dQSU9fSVJRX09GRlNFVCA3DQo+IA0KPiBQbGVhc2UgdXNlIGEg
-c2luZ2xlIHByZWZpeCBmb3IgYWxsIHN5bWJvbHMgaW4gdGhpcyBkcml2ZXIuIExldCdzIHN0aWNr
-IHRvIHNpZml2ZV9ncGlvDQo+IGFuZCBTSUZJVkVfR1BJTyBmb3IgZGVmaW5lcy4NCg0KU3VyZS4N
-Cg0KPiANCj4gPiArDQo+ID4gK3N0cnVjdCBzaWZpdmVfZ3BpbyB7DQo+ID4gKyAgICAgICB2b2lk
-IF9faW9tZW0gICAgICAgICAgICAqYmFzZTsNCj4gPiArICAgICAgIHN0cnVjdCBncGlvX2NoaXAg
-ICAgICAgIGdjOw0KPiA+ICsgICAgICAgc3RydWN0IHJlZ21hcCAgICAgICAgICAgKnJlZ3M7DQo+
-ID4gKyAgICAgICB1MzIgICAgICAgICAgICAgICAgICAgICBlbmFibGVkOw0KPiANCj4gVGhlIG5h
-bWUgb2YgdGhpcyBmaWVsZCBpcyBhIGJpdCBjb25mdXNpbmcgLSBkbyB5b3UgbWluZCByZW5hbWlu
-ZyBpdCB0bw0KPiBzb21ldGhpbmcgbGlrZSBpcnFfc3RhdGU/IE1heWJlIHNvbWV0aGluZyBlbHNl
-LCBidXQgc2ltcGx5IHVzaW5nICdlbmFibGVkJw0KPiBtYWtlcyBtZSB0aGluayB0aGlzIGhhcyBt
-b3JlIHRvIGRvIHdpdGggdGhlIGNoaXAgYmVpbmcgZW5hYmxlZC4NCj4gDQoNClN1cmUsIHdpbGwg
-cmVuYW1lIGl0IHRvIGlycV9zdGF0ZS4NCg0KWy4uLl0NCj4gPiArICAgICAgIHNwaW5fbG9ja19p
-cnFzYXZlKCZjaGlwLT5nYy5iZ3Bpb19sb2NrLCBmbGFncyk7DQo+ID4gKyAgICAgICAvKiBEaXNh
-YmxlIGFsbCBHUElPIGludGVycnVwdHMgYmVmb3JlIGVuYWJsaW5nIHBhcmVudCBpbnRlcnJ1cHRz
-ICovDQo+ID4gKyAgICAgICByZWdtYXBfd3JpdGUoY2hpcC0+cmVncywgR1BJT19SSVNFX0lFLCAw
-KTsNCj4gPiArICAgICAgIHJlZ21hcF93cml0ZShjaGlwLT5yZWdzLCBHUElPX0ZBTExfSUUsIDAp
-Ow0KPiA+ICsgICAgICAgcmVnbWFwX3dyaXRlKGNoaXAtPnJlZ3MsIEdQSU9fSElHSF9JRSwgMCk7
-DQo+ID4gKyAgICAgICByZWdtYXBfd3JpdGUoY2hpcC0+cmVncywgR1BJT19MT1dfSUUsIDApOw0K
-PiA+ICsgICAgICAgc3Bpbl91bmxvY2tfaXJxcmVzdG9yZSgmY2hpcC0+Z2MuYmdwaW9fbG9jaywg
-ZmxhZ3MpOw0KPiANCj4gTm8gbmVlZCBmb3IgbG9ja2luZyBpbiBwcm9iZSgpLg0KDQpPay4NClRo
-YW5rcyBmb3IgeW91ciBjb21tZW50cyENCg0KLSBZYXNoDQoNCg==
+On 11/21/19 12:03 AM, Christoph Hellwig wrote:
+> On Wed, Nov 20, 2019 at 11:13:32PM -0800, John Hubbard wrote:
+>> There are four locations in gup.c that have a fair amount of code
+>> duplication. This means that changing one requires making the same
+>> changes in four places, not to mention reading the same code four
+>> times, and wondering if there are subtle differences.
+>>
+>> Factor out the common code into static functions, thus reducing the
+>> overall line count and the code's complexity.
+>>
+>> Also, take the opportunity to slightly improve the efficiency of the
+>> error cases, by doing a mass subtraction of the refcount, surrounded
+>> by get_page()/put_page().
+>>
+>> Also, further simplify (slightly), by waiting until the the successful
+>> end of each routine, to increment *nr.
+> 
+> Any reason for the spurious underscore in the function name?
+
+argghh, I just fixed that, but applied the fix to the wrong patch! So now
+patch 17 ("mm/gup: track FOLL_PIN pages") is improperly renaming it, instead
+of this patch naming it correctly in the first place. Will fix.
+
+> 
+> Otherwise this looks fine and might be a worthwhile cleanup to feed
+> Andrew for 5.5 independent of the gut of the changes.
+> 
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> 
+
+Thanks for the reviews! Say, it sounds like your view here is that this
+series should be targeted at 5.6 (not 5.5), is that what you have in mind?
+And get the preparatory patches (1-9, and maybe even 10-16) into 5.5?
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
