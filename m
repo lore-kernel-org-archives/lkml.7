@@ -2,145 +2,98 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CC75C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 12:16:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A08F1C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 12:16:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BA432089D
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 12:16:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C39162089D
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 12:16:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="GRmr62Ab"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726573AbfKUMQt (ORCPT
+        id S1726689AbfKUMQv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 21 Nov 2019 07:16:51 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.50]:19573 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726197AbfKUMQt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 21 Nov 2019 07:16:49 -0500
-Received: from foss.arm.com ([217.140.110.172]:55370 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726358AbfKUMQt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 07:16:49 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 92903328;
-        Thu, 21 Nov 2019 04:16:48 -0800 (PST)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0B8133F703;
-        Thu, 21 Nov 2019 04:16:47 -0800 (PST)
-Date:   Thu, 21 Nov 2019 12:16:46 +0000
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>, maz@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Eric Anholt <eric@anholt.net>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com,
-        mbrugger@suse.com, phil@raspberrypi.org, jeremy.linton@arm.com,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 4/6] PCI: brcmstb: add Broadcom STB PCIe host
- controller driver
-Message-ID: <20191121121646.GX43905@e119886-lin.cambridge.arm.com>
-References: <20191112155926.16476-1-nsaenzjulienne@suse.de>
- <20191112155926.16476-5-nsaenzjulienne@suse.de>
- <20191119162502.GS43905@e119886-lin.cambridge.arm.com>
- <8b5ea071-d7a1-ea31-c7fe-3b4585d9cc36@gmail.com>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1574338605;
+        s=strato-dkim-0002; d=xenosoft.de;
+        h=In-Reply-To:Date:Message-ID:From:References:Cc:To:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=AxkjqpX58AUIucsroDUl2nypkVTcNCP8/zSs6m4uJM0=;
+        b=GRmr62AbML4wFGL9qv2oKx+S0EC8+NamrTlPgNWLUWQmjO6fpW31dQOSwENY3dYXtR
+        KpDvc7tyTZzhlnzZ7cFQr1KiiGcU9RdyWWWrX6Mtipgqcbjm2ZCEu6U6dbXxc+Mkh1+h
+        dFeZh8mre5zgXBv3W9dz05+Bl1ZfR13zhw3u94C5rX481F9BiQ8pP35flOTI/HZK1+dT
+        XhPmm/tBzrDMWdDT4nXe6tdM/Xeqpbv/L9AWSeCQDvI9wy8S0T70O7hgARF4fenBGZQN
+        HXbIK1W6rJ7fPUVSlE3LPevBJ3Cts0CatyixZhNaAJvdHMV6cEEG9EruEf7VG+o8/k0i
+        nccA==
+X-RZG-AUTH: ":L2QefEenb+UdBJSdRCXu93KJ1bmSGnhMdmOod1DhGM4l4Hio94KKxRySfLxnHfJ+Dkjp5DdBJSrwuuqxvPgBcsBrTF1qGB6TwVFx4Pq4s7A="
+X-RZG-CLASS-ID: mo00
+Received: from [IPv6:2a02:8109:89c0:ebfc:bd57:573a:d50f:b5]
+        by smtp.strato.de (RZmta 44.29.0 AUTH)
+        with ESMTPSA id q007c8vALCGdiTu
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Thu, 21 Nov 2019 13:16:39 +0100 (CET)
+Subject: Re: Bug 205201 - Booting halts if Dawicontrol DC-2976 UW SCSI board
+ installed, unless RAM size limited to 3500M
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        paulus@samba.org, darren@stevens-zone.net,
+        "contact@a-eon.com" <contact@a-eon.com>, rtd2@xtra.co.nz,
+        mad skateman <madskateman@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        nsaenzjulienne@suse.de
+References: <F1EBB706-73DF-430E-9020-C214EC8ED5DA@xenosoft.de>
+ <20191121072943.GA24024@lst.de>
+From:   Christian Zigotzky <chzigotzky@xenosoft.de>
+Message-ID: <dbde2252-035e-6183-7897-43348e60647e@xenosoft.de>
+Date:   Thu, 21 Nov 2019 13:16:39 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8b5ea071-d7a1-ea31-c7fe-3b4585d9cc36@gmail.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+In-Reply-To: <20191121072943.GA24024@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: de-DE
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 10:34:59AM -0800, Florian Fainelli wrote:
-> On 11/19/19 8:25 AM, Andrew Murray wrote:
-> > On Tue, Nov 12, 2019 at 04:59:23PM +0100, Nicolas Saenz Julienne wrote:
-> >> From: Jim Quinlan <james.quinlan@broadcom.com>
-> >>
-> >> This commit adds the basic Broadcom STB PCIe controller.  Missing is the
-> >> ability to process MSI. This functionality is added in a subsequent
-> >> commit.
-> >>
-> >> The PCIe block contains an MDIO interface.  This is a local interface
-> >> only accessible by the PCIe controller.  It cannot be used or shared
-> >> by any other HW.  As such, the small amount of code for this
-> >> controller is included in this driver as there is little upside to put
-> >> it elsewhere.
-> > 
-> > This commit message hasn't changed, despite earlier feedback.
-> 
-> Please strip out large parts of the original patch that you are not
-> quoting for future responses.
-> 
-> [snip]
-> 
-> > 
-> > I'd rather see use of the pcie_cfg_data structure removed from this series.
-> > 
-> > I've seen the comments in the previous thread [1], and I understand that
-> > the intention is that this driver will eventually be used for other SOCs.
-> > 
-> > However this indirection isn't needed *now* and it makes reviewing this
-> > patch more difficult. If and when a later series is made to cover other
-> > SOCs - then I'd expect that series to find a way to apply this indirection.
-> 
-> I am not completely sold on the difficulty to review given that the
-> indirection is in place for only 3 registers which are used in only 3
-> functions:
-> 
-> brcm_pcie_bridge_sw_init_set()
-> brcm_pcie_perst_set()
-> brcm_pcie_map_conf()
-> 
-> but if you think that is a deal breaker, then, okay, let's get rid of it
-> and we will add it back for other STB SoCs in the future.
-
-It's also about the context - This driver already has lots of indirection, lots
-of macros, lots of defines, etc. And in that context this pcie_cfg_data adds
-even more. It all adds to the complexity of understanding what the driver is
-doing. Indirection often adds value - but I don't yet see that here.
-
-I'd like to see it removed.
-
-> 
-> > 
-> > And if that later series is more difficult to review because of the newly
-> > added indirection, then I'd expect an early patch of that series to apply
-> > the indirection in a single patch - which would be easy to review.
-> > 
-> > The other risk of such premature changes like this is that when you come
-> > to adding other SOCs, you may then discover that there were shortcomings
-> > in the way you've approached it here.
-> 
-> 2711 is the latest SoC that has actually been supported by this driver,
-
-I appreciate that this is frustrating - taking a complete driver that supports
-lots of platforms and then stripping it down for review one platform at a time.
-It also means removing all the indirection and abstraction that will likely
-later be required. Only to have to add it back in on the second platform.
-
-But those subsequent patches aren't available for review, we don't know if
-they will make it into the kernel or how long that will take. And we don't
-want to be left with maintaining a Pi only driver that has lots of unnecessary
-code that it is more difficult to understand than it needs to be.
-
-> every other ones that this driver will support in the future has been in
-> production for years and all the quirks/subtleties are known. This means
-> that 2711 was added while fitting in the existing abstraction and
-> Nicholas took out every other chip to leave 2711 only.
-
-I'm not referring to the quirks in the hardware - it may be that when you
-update this driver to add another SoC (on the list) - others reviewers
-may not agree with the method of abstraction, or find some issue with it.
-Yet until the abstraction can be reviewed in the context of support for the
-next SoC it's hard to tell.
-
-Thanks,
-
-Andrew Murray
-
-> -- 
-> Florian
+On 21 November 2019 at 08:29 am, Christoph Hellwig wrote:
+> On Sat, Nov 16, 2019 at 08:06:05AM +0100, Christian Zigotzky wrote:
+>> /*
+>>   *  DMA addressing mode.
+>>   *
+>>   *  0 : 32 bit addressing for all chips.
+>>   *  1 : 40 bit addressing when supported by chip.
+>>   *  2 : 64 bit addressing when supported by chip,
+>>   *      limited to 16 segments of 4 GB -> 64 GB max.
+>>   */
+>> #define   SYM_CONF_DMA_ADDRESSING_MODE CONFIG_SCSI_SYM53C8XX_DMA_ADDRESSING_MODE
+>>
+>> Cyrus config:
+>>
+>> CONFIG_SCSI_SYM53C8XX_DMA_ADDRESSING_MODE=1
+>>
+>> I will configure “0 : 32 bit addressing for all chips” for the RC8. Maybe this is the solution.
+> 0 means you are going to do bounce buffering a lot, which seems
+> generally like a bad idea.
+>
+> But why are we talking about the sym53c8xx driver now?  The last issue
+> you reported was about video4linux allocations.
+>
+Both drivers have the same problem. They don't work if we have more than 
+3.5GB RAM. I try to find a solution until your have a good solution. I 
+have already a solution for V4L but I still need one for the sym53c8xx 
+driver.
