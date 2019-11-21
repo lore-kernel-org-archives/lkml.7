@@ -2,144 +2,183 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9E67C43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:42:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBD13C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:42:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A61E720656
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:42:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4DF52072E
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:42:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="v+TpD8Gk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y97OH20n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726992AbfKUOmB (ORCPT
+        id S1727046AbfKUOm2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 09:42:01 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:38434 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726927AbfKUOmA (ORCPT
+        Thu, 21 Nov 2019 09:42:28 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:51364 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726784AbfKUOm2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 09:42:00 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xALEfofv117535;
-        Thu, 21 Nov 2019 08:41:50 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574347310;
-        bh=X3k1ah00JHrP/MAWY03kTO2aU8Sh6x1vrKpLESudLkU=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=v+TpD8Gk1GlAHAF1V2koWCttKh0UuUwudm33kJmE0z078cfb7JbiHbClybXEnSfxO
-         DPdOQdxu5jjA72JcY8hbS75XEA+573FKovVE1+hmB0x/68NXBgovB8mJHmKz7O5+jz
-         soNiKYAchyCUHJltOKg/dtFYJ/ZU7A8hRcEep93I=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xALEfoov094649
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 21 Nov 2019 08:41:50 -0600
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 21
- Nov 2019 08:41:49 -0600
-Received: from DFLE106.ent.ti.com ([fe80::4dc:7374:f90c:1f12]) by
- DFLE106.ent.ti.com ([fe80::4dc:7374:f90c:1f12%17]) with mapi id
- 15.01.1847.003; Thu, 21 Nov 2019 08:41:49 -0600
-From:   "Robey, Caleb" <c-robey@ti.com>
-To:     "Strashko, Grygorii" <grygorii.strashko@ti.com>,
-        "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
-CC:     Jason Kridner <jkridner@gmail.com>,
-        "Vutla, Lokesh" <lokeshvutla@ti.com>,
-        "Kridner, Jason" <jdk@ti.com>,
-        "Rizvi, Mohammad Faiz Abbas" <faiz_abbas@ti.com>,
-        "Dannenberg, Andreas" <dannenberg@ti.com>,
-        "Hiblot, Jean-Jacques" <jjhiblot@ti.com>,
-        "Bajjuri, Praneeth" <praneeth@ti.com>,
-        "Davis, Andrew" <afd@ti.com>, Tom Rini <trini@konsulko.com>,
-        Robert Nelson <robertcnelson@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?utf-8?B?QmVub8OudCBDb3Vzc29u?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 1/1] ARM: dts: am5729: beaglebone-ai: adding device tree
-Thread-Topic: [PATCH 1/1] ARM: dts: am5729: beaglebone-ai: adding device tree
-Thread-Index: AQHVnxgKGYt/3fBzT0yydyTQPJmWqKeV3U+A///XuDA=
-Date:   Thu, 21 Nov 2019 14:41:49 +0000
-Message-ID: <12acbc1a96754fe68d7447b6ee99efd3@ti.com>
-References: <20191119202850.18149-1-c-robey@ti.com>
- <20191119202850.18149-2-c-robey@ti.com>
- <8465b8c3-db4b-31fd-a299-3d5251ec99cf@ti.com>
-In-Reply-To: <8465b8c3-db4b-31fd-a299-3d5251ec99cf@ti.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.247.31.74]
-x-exclaimer-md-config: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 21 Nov 2019 09:42:28 -0500
+Received: by mail-wm1-f66.google.com with SMTP id g206so3731050wme.1
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 06:42:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=q/Olg7DOM35HM7vIU895qxlJTUIGF7wwE3/5QEjtx+8=;
+        b=Y97OH20nyRr5v3BjSJJld8Ur7jXCzsvNVtWZdpgpyvAijvahM4FMOEaNm8vRvXGLxB
+         ZnIgcqpwSDm5dBglA2md/nvSZcoZJECdJdlykqxQmtWK8gmg4BtUaZjh2vKNCCTaLe5T
+         GYo54VVSkCJ98x0xfH1DtJZnd348vQeMzy6rkepjlM1iVnhu/7ZOkh5LQsKYcfDYvnbx
+         Dl1IPxJZnzOTPd13MBTHCJzIr9FrOV/Bd9P6IJXyqqDcAN1BxtQKJWm6o2L/tasbZs49
+         mwp/Z0jLyn8s35mLYY6ASzyAZylZUKKvdJqE2j0nzgMekOX3kApbwNwtmWRvqLjYaxCH
+         qBTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=q/Olg7DOM35HM7vIU895qxlJTUIGF7wwE3/5QEjtx+8=;
+        b=uWsGh6PJfqmsI7oSL6efg89/AeWGFc2R1dNy2EvKqu4CZvhylJgEZ3w0M8EXQRtmyZ
+         8yNdjRM16RMQyT4UOajMGfyxLMlfR8L5FT6fXQyAe4Ig9wzkIrMuwl38cfNwny0Q7TxZ
+         A5m5seA+jr3eZ7AdmGzzxbmCdru86krtuwe9CLpfjhnjvJ6IUzrDJUp8LOwDZm1dTDiR
+         wOY4wSmJ7ebXKblWjD8Vs2v8X3ZwPKl6HcMc+z7EfztRd56zMsF/GzOvoZwwVFVIkeUX
+         lSGuUvdDHc7M+SmQKBnoYQ3URyjYpR2RsYjePqolsaOCirv2kpxZbBbECvC2P9BmnnVO
+         hKig==
+X-Gm-Message-State: APjAAAW6A1IMO1d2ahkOITsZn0yVzLq0INOD/2SIAks4XpoWtnjdbqFA
+        sg9J8guMq6FL80LM8Y4cvTA=
+X-Google-Smtp-Source: APXvYqwqWwq50SFoKeW9cd6WBjhBhp5ITw+JzOCs9V7v3fe0CYtb1PIsDHmz0bcQ7u70oEvXHWKfwg==
+X-Received: by 2002:a7b:cd92:: with SMTP id y18mr5155498wmj.52.1574347345721;
+        Thu, 21 Nov 2019 06:42:25 -0800 (PST)
+Received: from ogabbay-VM ([31.154.190.6])
+        by smtp.gmail.com with ESMTPSA id f67sm3212980wme.16.2019.11.21.06.42.24
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 21 Nov 2019 06:42:25 -0800 (PST)
+Date:   Thu, 21 Nov 2019 16:42:23 +0200
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [git pull] habanalabs pull request for kernel 5.5
+Message-ID: <20191121144223.GA14312@ogabbay-VM>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU3RyYXNoa28sIEdyeWdv
-cmlpDQo+IFNlbnQ6IFRodXJzZGF5LCBOb3ZlbWJlciAyMSwgMjAxOSA1OjA1IEFNDQo+IFRvOiBS
-b2JleSwgQ2FsZWI7IGxpbnV4LW9tYXBAdmdlci5rZXJuZWwub3JnDQo+IENjOiBKYXNvbiBLcmlk
-bmVyOyBWdXRsYSwgTG9rZXNoOyBLcmlkbmVyLCBKYXNvbjsgUml6dmksIE1vaGFtbWFkIEZhaXoN
-Cj4gQWJiYXM7IERhbm5lbmJlcmcsIEFuZHJlYXM7IEhpYmxvdCwgSmVhbi1KYWNxdWVzOyBCYWpq
-dXJpLCBQcmFuZWV0aDsgRGF2aXMsDQo+IEFuZHJldzsgVG9tIFJpbmk7IFJvYmVydCBOZWxzb247
-IFJvYiBIZXJyaW5nOyBNYXJrIFJ1dGxhbmQ7IEJlbm/DrnQNCj4gQ291c3NvbjsgVG9ueSBMaW5k
-Z3JlbjsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5r
-ZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMS8xXSBBUk06IGR0czogYW01NzI5OiBi
-ZWFnbGVib25lLWFpOiBhZGRpbmcgZGV2aWNlDQo+IHRyZWUNCj4gDQo+IA0KPiANCj4gT24gMTkv
-MTEvMjAxOSAyMjoyOCwgQ2FsZWIgUm9iZXkgd3JvdGU6DQo+ID4gRnJvbTogSmFzb24gS3JpZG5l
-ciA8amRrQHRpLmNvbT4NCj4gPg0KPiA+IEJlYWdsZUJvYXJkLm9yZyBCZWFnbGVCb25lIEFJIGlz
-IGFuIG9wZW4gc291cmNlIGhhcmR3YXJlIHNpbmdsZQ0KPiA+IGJvYXJkIGNvbXB1dGVyIGJhc2Vk
-IG9uIHRoZSBUZXhhcyBJbnN0cnVtZW50cyBBTTU3MjkgU29DIGZlYXR1cmluZw0KPiA+IGR1YWwt
-Y29yZSAxLjVHSHogQXJtIENvcnRleC1BMTUgcHJvY2Vzc29yLCBkdWFsLWNvcmUgQzY2IGRpZ2l0
-YWwNCj4gPiBzaWduYWwgcHJvY2Vzc29yIChEU1ApLCBxdWFkLWNvcmUgZW1iZWRkZWQgdmlzaW9u
-IGVuZ2luZSAoRVZFKSwNCj4gPiBBcm0gQ29ydGV4LU00IHByb2Nlc3NvcnMsIGR1YWwgcHJvZ3Jh
-bW1hYmxlIHJlYWx0aW1lIHVuaXQNCj4gPiBpbmR1c3RyaWFsIGNvbnRyb2wgc3Vic3lzdGVtcyBh
-bmQgbW9yZS4gVGhlIGJvYXJkIGZlYXR1cmVzIDFHQg0KPiA+IEREUjNMLCBVU0IzLjAgVHlwZS1D
-LCBVU0IgSFMgVHlwZS1BLCBtaWNyb0hETUksIDE2R0IgZU1NQyBmbGFzaCwNCj4gPiAxRyBFdGhl
-cm5ldCwgODAyLjExYWMgMi81R0h6LCBCbHVldG9vdGgsIGFuZCBCZWFnbGVCb25lIGV4cGFuc2lv
-bg0KPiA+IGhlYWRlcnMuDQo+ID4NCj4gPiBGb3IgbW9yZSBpbmZvcm1hdGlvbiwgcmVmZXIgdG86
-DQo+ID4gaHR0cHM6Ly9iZWFnbGVib25lLmFpDQo+IA0KPiANCj4gPg0KPiA+IFRoaXMgcGF0Y2gg
-aW50cm9kdWNlcyB0aGUgQmVhZ2xlQm9uZSBBSSBkZXZpY2UgdHJlZS4NCj4gPg0KPiA+IE5vdGUg
-dGhhdCB0aGUgZGV2aWNlIHVzZSB0aGUgInRpLHRwZDEyczAxNiIgY29tcG9uZW50IHdoaWNoIGlz
-DQo+ID4gc29mdHdhcmUgY29tcGF0aWJsZSB3aXRoICJ0aSx0cGQxMnMwMTUiLiBUaHVzIHdlIG9u
-bHkgdXNlIHRoZQ0KPiA+IGxhdHRlciBkcml2ZXIuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBK
-YXNvbiBLcmlkbmVyIDxqZGtAdGkuY29tPg0KPiA+IFNpZ25lZC1vZmYtYnk6IENhbGViIFJvYmV5
-IDxjLXJvYmV5QHRpLmNvbT4NCj4gPiBDYzogUm9iZXJ0IE5lbHNvbiA8cm9iZXJ0Y25lbHNvbkBn
-bWFpbC5jb20+DQo+ID4NCj4gPiAtLS0NCj4gPiAgIGFyY2gvYXJtL2Jvb3QvZHRzL01ha2VmaWxl
-ICAgICAgICAgICAgICAgIHwgICAxICsNCj4gPiAgIGFyY2gvYXJtL2Jvb3QvZHRzL2FtNTcyOS1i
-ZWFnbGVib25lYWkuZHRzIHwgNzgyDQo+ICsrKysrKysrKysrKysrKysrKysrKysNCj4gPiAgIDIg
-ZmlsZXMgY2hhbmdlZCwgNzgzIGluc2VydGlvbnMoKykNCj4gPiAgIGNyZWF0ZSBtb2RlIDEwMDY0
-NCBhcmNoL2FybS9ib290L2R0cy9hbTU3MjktYmVhZ2xlYm9uZWFpLmR0cw0KPiA+DQo+ID4gZGlm
-ZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL01ha2VmaWxlIGIvYXJjaC9hcm0vYm9vdC9kdHMv
-TWFrZWZpbGUNCj4gPiBpbmRleCBiMjFiM2E2NDY0MWEuLmIxMTU0ZGJkYTczYyAxMDA2NDQNCj4g
-PiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9NYWtlZmlsZQ0KPiA+ICsrKyBiL2FyY2gvYXJtL2Jv
-b3QvZHRzL01ha2VmaWxlDQo+IA0KPiBbLi5dDQo+IA0KPiA+ICsNCj4gPiArJnVhcnQxIHsNCj4g
-PiArCXN0YXR1cyA9ICJva2F5IjsNCj4gPiArfTsNCj4gPiArDQo+ID4gKyZkYXZpbmNpX21kaW8g
-ew0KPiA+ICsJcmVzZXQtZ3Bpb3MgPSA8JmdwaW8yIDIzIEdQSU9fQUNUSVZFX0xPVz47DQo+ID4g
-KwlyZXNldC1kZWxheS11cyA9IDwyPjsNCj4gPiArDQo+ID4gKwlwaHkwOiBldGhlcm5ldC1waHlA
-MSB7DQo+ID4gKwkJcmVnID0gPDQ+Ow0KPiA+ICsJCWNvbXBhdGlibGUgPSAiZXRoZXJuZXQtcGh5
-LWlkMDA0ZC5kMDcyIiwNCj4gPiArCQkJImV0aGVybmV0LXBoeS1pZWVlODAyLjMtYzIyIjsNCj4g
-DQo+IFBscywgZG8gbm90IGlnbm9yZSBteSBjb21tZW50cy4NCj4gDQo+IEFib3ZlIGNvbXBhdGli
-bGUgc2hvdWxkIG5vdCBiZSByZXF1aXJlZC4NCg0KR3J5Z29yaSwgSSBhbSBzbyBzb3JyeSBhYm91
-dCB0aGlzIC0gSSBoYWQgZGVsZXRlZCB0aGlzLA0KYnV0IG11c3QgaGF2ZSBtYWRlIGEgbWlzdGFr
-ZSBpbiB0aGUgcmVzdWJtaXNzaW9uLiBJDQp3aWxsIGZpeCBpdCBpbW1lZGlhdGVseS4NCg0KDQo+
-IA0KPiA+ICsJCWVlZS1icm9rZW4tMTAwdHg7DQo+ID4gKwkJZWVlLWJyb2tlbi0xMDAwdDsNCj4g
-PiArCX07DQo+ID4gK307DQo+ID4gKw0KPiA+ICsmbWFjIHsNCj4gPiArCXNsYXZlcyA9IDwxPjsN
-Cj4gPiArCXN0YXR1cyA9ICJva2F5IjsNCj4gPiArfTsNCj4gDQo+IFBscywgbW92ZSBjcHN3IG5v
-ZGUgaGVyZQ0KDQpTYW1lIGFzIGFib3ZlLi4uIHRoaXMgbXVzdCBiZSB0aGUgd3JvbmcgZmlsZS4g
-SSBhcG9sb2dpemUuDQogDQoNCj4gDQo+ID4gKw0KPiA+ICsmb2NwIHsNCj4gPiArCXBydXNzMV9z
-aG1lbTogcHJ1c3Nfc2htZW1ANGIyMDAwMDAgew0KPiA+ICsJCXN0YXR1cyA9ICJva2F5IjsNCj4g
-PiArCQljb21wYXRpYmxlID0gInRpLHBydXNzLXNobWVtIjsNCj4gPiArCQlyZWcgPSA8MHg0YjIw
-MDAwMCAweDAyMDAwMD47DQo+ID4gKwl9Ow0KPiA+ICsNCj4gDQo+IFsuLl0NCj4gDQo+ID4gKw0K
-PiA+ICsmY3Bzd19lbWFjMCB7DQo+ID4gKwlwaHktaGFuZGxlID0gPCZwaHkwPjsNCj4gPiArCXBo
-eS1tb2RlID0gInJnbWlpIjsNCj4gPiArfTsNCj4gDQo+IE1vdmUgaXQgdXAsIHBscy4NCj4gDQo+
-IC0tDQo+IEJlc3QgcmVnYXJkcywNCj4gZ3J5Z29yaWkNCg==
+Hello Greg,
+
+This is the pull request for habanalabs driver for kernel 5.5.
+
+It mainly contains improvements to MMU and reset code, and exposes more
+information through our INFO IOCTL.
+
+Please see the tag message for more details on what this pull request
+contains.
+
+Thanks,
+Oded
+
+The following changes since commit ab64ec1db25e0cceab0bad15b03fd57e2b461b15:
+
+  misc: Fix Kconfig indentation (2019-11-20 15:09:49 +0100)
+
+are available in the Git repository at:
+
+  git://people.freedesktop.org/~gabbayo/linux tags/misc-habanalabs-next-2019-11-21
+
+for you to fetch changes up to 5feccddcf9922ee3c25587d5e609bf58503ad93e:
+
+  habanalabs: add more protection of device during reset (2019-11-21 11:35:47 +0200)
+
+----------------------------------------------------------------
+This tag contains the following changes for kernel 5.5:
+
+- MMU code improvements that includes:
+  - Distinguish between "normal" unmapping and unmapping that is done as
+    part of the tear-down of a user process. This improves performance of
+    unmapping during reset of the device.
+  - Add future ASIC support in generic MMU code.
+
+- Improve device reset code by adding more protection around accessing the
+  device during the reset process.
+
+- Add new H/W queue type for future ASIC support
+
+- Add more information to be retrieved by users through INFO IOCTL:
+  - clock rate
+  - board name
+  - reset counters
+
+- Small bug fixes and minor improvements to code.
+
+----------------------------------------------------------------
+Moti Haimovski (1):
+      habanalabs: expose reset counters via existing INFO IOCTL
+
+Oded Gabbay (16):
+      habanalabs: handle F/W failure for sensor initialization
+      habanalabs: set TPC Icache to 16 cache lines
+      habanalabs: add opcode to INFO IOCTL to return clock rate
+      habanalabs: expose card name in INFO IOCTL
+      habanalabs: read F/W versions before failure
+      habanalabs: use registers name defines for ETR block
+      habanalabs: set ETR as non-secured
+      habanalabs: increase max jobs number to 512
+      habanalabs: don't print error when queues are full
+      habanalabs: export uapi defines to user-space
+      habanalabs: remove prints on successful device initialization
+      habanalabs: use defines for F/W files
+      habanalabs: make code more concise
+      habanalabs: make the reset code more consistent
+      habanalabs: flush EQ workers in hard reset
+      habanalabs: add more protection of device during reset
+
+Omer Shpigelman (9):
+      habanalabs: re-factor memory module code
+      habanalabs: type specific MMU cache invalidation
+      habanalabs: re-factor MMU masks and documentation
+      habanalabs: split MMU properties to PCI/DRAM
+      habanalabs: prevent read/write from/to the device during hard reset
+      habanalabs: optimize MMU unmap
+      habanalabs: skip VA block list update in reset flow
+      habanalabs: invalidate MMU cache only once
+      habanalabs: remove unnecessary checks
+
+Tomer Tayar (3):
+      habanalabs: Fix typos
+      habanalabs: Mark queue as expecting CB handle or address
+      habanalabs: Add a new H/W queue type
+
+YueHaibing (2):
+      habanalabs: remove set but not used variable 'ctx'
+      habanalabs: remove set but not used variable 'qman_base_addr'
+
+ drivers/misc/habanalabs/command_submission.c       | 127 ++++---
+ drivers/misc/habanalabs/debugfs.c                  | 112 ++++--
+ drivers/misc/habanalabs/device.c                   |  18 +-
+ drivers/misc/habanalabs/firmware_if.c              |   5 +-
+ drivers/misc/habanalabs/goya/goya.c                |  78 ++--
+ drivers/misc/habanalabs/goya/goyaP.h               |   2 +
+ drivers/misc/habanalabs/goya/goya_coresight.c      |  53 +--
+ drivers/misc/habanalabs/goya/goya_hwmgr.c          |  31 ++
+ drivers/misc/habanalabs/habanalabs.h               | 171 +++++----
+ drivers/misc/habanalabs/habanalabs_ioctl.c         |  73 +++-
+ drivers/misc/habanalabs/hw_queue.c                 | 249 ++++++++++---
+ .../habanalabs/include/goya/asic_reg/goya_masks.h  |   2 +
+ .../habanalabs/include/goya/asic_reg/goya_regs.h   |   1 +
+ .../include/goya/asic_reg/psoc_etr_regs.h          | 114 ++++++
+ drivers/misc/habanalabs/include/hl_boot_if.h       |   2 +
+ .../habanalabs/include/hw_ip/mmu/mmu_general.h     |   7 +-
+ drivers/misc/habanalabs/include/qman_if.h          |  12 +
+ drivers/misc/habanalabs/memory.c                   | 392 +++++++++++----------
+ drivers/misc/habanalabs/mmu.c                      | 204 ++++++-----
+ include/uapi/misc/habanalabs.h                     |  48 ++-
+ 20 files changed, 1159 insertions(+), 542 deletions(-)
+ create mode 100644 drivers/misc/habanalabs/include/goya/asic_reg/psoc_etr_regs.h
