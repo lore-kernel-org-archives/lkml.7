@@ -2,104 +2,115 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CEE9C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:24:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94BECC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:25:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65C0620659
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:24:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="PymkjOAx"
+	by mail.kernel.org (Postfix) with ESMTP id 6E7AF20872
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:25:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726658AbfKUKY0 (ORCPT
+        id S1726774AbfKUKZB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 05:24:26 -0500
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:59519 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726014AbfKUKYZ (ORCPT
+        Thu, 21 Nov 2019 05:25:01 -0500
+Received: from mout.kundenserver.de ([212.227.17.10]:47537 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726132AbfKUKZB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 05:24:25 -0500
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id xALAOLBX022410;
-        Thu, 21 Nov 2019 19:24:21 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com xALAOLBX022410
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1574331862;
-        bh=JcLX7D3CXanPLZcBh2rx5qAiol6xBUPrVbHtsQ/A0Tk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=PymkjOAxeTHo2+buFpmnrbgesnJiHpveqGfdKDc2R/6EzRtyt3pWEDuYwJ3m2FDWG
-         CKehgoOjfhu3EMvVuhkdp7k35ifDWeyDDKoaVRp+9H1UMG30bI4aLnXT/26/q/4CqO
-         W5EMZOZN0V7y1pOURIqb5iyItvQ1aWiQap5PtRpycoY/1vsl1kF7YY/LFbgc/RMDTn
-         z/k0vELRQszRvuJjjOeokgw0Oq8QbJmxCv6d8mygYLUAJBsUMXm3wPLbYKPSdYfhmL
-         +4cA6qx01sfyk4VFNJcc2CKFyfPrpr3w+Rao7+8HYEzXBmnM4nQPITfttS1yBP/SSO
-         LVwboQeHliJMw==
-X-Nifty-SrcIP: [209.85.222.51]
-Received: by mail-ua1-f51.google.com with SMTP id r22so792027uam.11;
-        Thu, 21 Nov 2019 02:24:21 -0800 (PST)
-X-Gm-Message-State: APjAAAWgep34Y+yigXEyOdQfHsJ6T4wxa8wIrTeNcPVOyiWbHdemmbOE
-        8sXCYkXCn8xNf7EFvkFWRGm13vxhOSu8ZUgbeEA=
-X-Google-Smtp-Source: APXvYqw/aVCgnKJDvq6ztT3UGVD4j248axKaGhITiWpkbXumzL5wr9NirEnlL4DX5NPtupeCYN1H/uGWaksNJyDqGXY=
-X-Received: by 2002:ab0:3395:: with SMTP id y21mr5081794uap.25.1574331860583;
- Thu, 21 Nov 2019 02:24:20 -0800 (PST)
+        Thu, 21 Nov 2019 05:25:01 -0500
+Received: from [192.168.1.155] ([95.115.120.75]) by mrelayeu.kundenserver.de
+ (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MY6TD-1iLpOi45hV-00YNz8; Thu, 21 Nov 2019 11:23:58 +0100
+Subject: Re: [Cocci] [PATCH] net: Zeroing the structure ethtool_wolinfo in
+ ethtool_get_wol()
+To:     Joe Perches <joe@perches.com>, zhanglin <zhang.lin16@zte.com.cn>,
+        davem@davemloft.net, cocci <cocci@systeme.lip6.fr>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     mkubecek@suse.cz, jakub.kicinski@netronome.com, ast@kernel.org,
+        jiang.xuexin@zte.com.cn, f.fainelli@gmail.com,
+        daniel@iogearbox.net, john.fastabend@gmail.com,
+        lirongqing@baidu.com, maxime.chevallier@bootlin.com,
+        vivien.didelot@gmail.com, dan.carpenter@oracle.com,
+        wang.yi59@zte.com.cn, hawk@kernel.org, arnd@arndb.de,
+        jiri@mellanox.com, xue.zhihong@zte.com.cn,
+        natechancellor@gmail.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linyunsheng@huawei.com,
+        pablo@netfilter.org, bpf@vger.kernel.org
+References: <1572076456-12463-1-git-send-email-zhang.lin16@zte.com.cn>
+ <c790578751dd69fb1080b355f5847c9ea5fb0e15.camel@perches.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Message-ID: <bc150c6a-6d3e-ff01-e40e-840e8a385bda@metux.net>
+Date:   Thu, 21 Nov 2019 11:23:34 +0100
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20190808173028.1930-1-yamada.masahiro@socionext.com> <CAEbi=3cZ29rmO55DcZSi8PmELay08HByabPETu_UOgXKZPk0cw@mail.gmail.com>
-In-Reply-To: <CAEbi=3cZ29rmO55DcZSi8PmELay08HByabPETu_UOgXKZPk0cw@mail.gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 21 Nov 2019 19:23:44 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATw0V8yzh=62QefN+hHvUfaHNW1ZtSmLhtVJHJDqvbXMA@mail.gmail.com>
-Message-ID: <CAK7LNATw0V8yzh=62QefN+hHvUfaHNW1ZtSmLhtVJHJDqvbXMA@mail.gmail.com>
-Subject: Re: [PATCH] nds32: remove unneeded clean-files for DTB
-To:     Greentime Hu <green.hu@gmail.com>
-Cc:     Nickhu <nickhu@andestech.com>, Vincent Chen <deanbo422@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <c790578751dd69fb1080b355f5847c9ea5fb0e15.camel@perches.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: tl
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:y/h5sb/786gqDEWE6z9CgDPlnpwNX3Gqz3Dd/ECnTJtWNM9dchd
+ wYzIcJa2BskCfye2WvWuQJYxPD1WSdzRujKS5IMCH2W4row9fRyWflQacup7BdSwS5mdQ5z
+ f7k0w7vMQ2IZDeSZ7WCd4Cq9+uNiSVBhSVNkecGzAcW1I9bgrLzfYmDWl3qQ+ROFL39bUB8
+ 1TQmJNqn0xBYKWY1I2q6Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:TMnK+eKxlyc=:WkOGlPj1Fg6eBOPiIJmS8g
+ H5AYFdqQAPJKBXp/5cbtKH1sHvPNyiEttn+BXhtZwmhOTqYOoKdvenJCgBHXOhqwM6UvNjtkT
+ f4fPVaBWeZr1dKpf8rRzlOJ+Zys6m6eJKEuM0FGicf+BqtHVymDlw4gzRtdrGlwLPccdZyrE1
+ bPqS+hDCUTc/aSJYnsRnpeboym6JtWFCq+JchgSMY9I1BL6WjMwfU9NAYph8VqIiheeSB455q
+ CJXvVnnWiyIbCMbIhf375LbolBLaC96r4dLFSLo+Tbvb8zrERNAfNq3dRM08VR6eOsYeFtGNN
+ rQqMJTOzLhYYSZfgS/tUEt0U+RzCs5X5uwr735yWmmGxUtAMAPs5KtfwRnJOCPJg0z+xdWffP
+ SFU/mhpwkZwqf62DuYUBDeHwJ0HdPMTjMM9yJMLwFTIf5wm6E44otJv1dg1kXXCuLYswLw9Ke
+ D3VT6XmY1vOG2BiOKtRu6M8FzNB/IUJ1mOQ//uklrRo9moo9GS/nsUoDMz5++yKW/6JMhxSbU
+ iJzK7IjQoZLyamOLi0MSqBEiBC1DYULfyh7gZDOehbAXGqctAt70v8Z8gtYaM0ODazzlIoxaa
+ sk2czPrncKN8YZ15m9yQU4nTNHJIjulGqCYYATpZJvjHO4V2FLct8G1ItfvTLFhERCFJ9yIff
+ GHSB42xLUpUJJOvfjU11LmYVjzP0LLiyNZUIaZsN/W0/LHcuRukMlkTAazibh+LiMb//oCHdI
+ HsJcK8QhmKEOjfLkUrtdPeD4Zr5P9LsQE335ammcn3tY4P5sKlss9Ne/NR6poZVa7SVFLj925
+ XwHQy3EajV/A48x79Wcw5CeApItN+ft9/bW7yicNBVrhi6ez4vvSzTv29+gF93aawaUmt7Ny6
+ fSZhgNBkr0RzK27UmZiA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 6:46 PM Greentime Hu <green.hu@gmail.com> wrote:
->
-> Masahiro Yamada <yamada.masahiro@socionext.com> =E6=96=BC 2019=E5=B9=B48=
-=E6=9C=889=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8A=E5=8D=881:31=E5=AF=AB=E9=
-=81=93=EF=BC=9A
-> >
-> > These patterns are cleaned-up by the top-level Makefile
-> >
-> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > ---
-> >
-> >  arch/nds32/boot/dts/Makefile | 2 --
-> >  1 file changed, 2 deletions(-)
-> >
-> > diff --git a/arch/nds32/boot/dts/Makefile b/arch/nds32/boot/dts/Makefil=
-e
-> > index fff8ade7a84f..f84bd529b6fd 100644
-> > --- a/arch/nds32/boot/dts/Makefile
-> > +++ b/arch/nds32/boot/dts/Makefile
-> > @@ -5,5 +5,3 @@ else
-> >  BUILTIN_DTB :=3D
-> >  endif
-> >  obj-$(CONFIG_OF) +=3D $(BUILTIN_DTB)
-> > -
-> > -clean-files :=3D *.dtb *.dtb.S
->
-> Thanks, Masahiro.
-> Acked-by: Greentime Hu <green.hu@gmail.com>
+On 26.10.19 21:40, Joe Perches wrote:
+> On Sat, 2019-10-26 at 15:54 +0800, zhanglin wrote:
+>> memset() the structure ethtool_wolinfo that has padded bytes
+>> but the padded bytes have not been zeroed out.
+> []
+>> diff --git a/net/core/ethtool.c b/net/core/ethtool.c
+> []
+>> @@ -1471,11 +1471,13 @@ static int ethtool_reset(struct net_device *dev, char __user *useraddr)
+>>  
+>>  static int ethtool_get_wol(struct net_device *dev, char __user *useraddr)
+>>  {
+>> -	struct ethtool_wolinfo wol = { .cmd = ETHTOOL_GWOL };
+>> +	struct ethtool_wolinfo wol;
+>>  
+>>  	if (!dev->ethtool_ops->get_wol)
+>>  		return -EOPNOTSUPP;
+>>  
+>> +	memset(&wol, 0, sizeof(struct ethtool_wolinfo));
+>> +	wol.cmd = ETHTOOL_GWOL;
+>>  	dev->ethtool_ops->get_wol(dev, &wol);
+>>  
+>>  	if (copy_to_user(useraddr, &wol, sizeof(wol)))
+> 
+> It seems likely there are more of these.
+> 
+> Is there any way for coccinelle to find them?
+
+Just curios: is static struct initialization (on stack) something that
+should be avoided ? I've been under the impression that static
+initialization allows thinner code and gives the compiler better chance
+for optimizations.
 
 
-Would you apply this to the nds32 tree?
+--mtx
 
-
-
---=20
-Best Regards
-Masahiro Yamada
+---
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
