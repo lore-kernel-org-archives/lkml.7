@@ -2,189 +2,322 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-11.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FBC0C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 02:47:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C673C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 02:52:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C88E2075A
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 02:47:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BE0F20855
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 02:52:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="ejsEFJ+S"
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="xZFDYMPh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726532AbfKUCr1 (ORCPT
+        id S1726293AbfKUCwm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 21:47:27 -0500
-Received: from mail-eopbgr1310131.outbound.protection.outlook.com ([40.107.131.131]:2389
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725936AbfKUCr0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 21:47:26 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cR2WqiHncsAYhRXUgl+WNnYzxvu7211H2O8lbaA8j25/+9nI0tewL7GvIWwUevbFOOwMnFuii173YnPrFQJagM2weJCc6B1kNpfVkNDp+JI1ZNkVASUBIgwaHmu0Y8a48J9AFBQDNE8/XEaNDaVuh4nBhrmR9AdZURxiwKnvPLNMes5kGE7xYP7e1Jvr1uFiV2Y8Ccrc9JTRiRWLHxSTEfryqGKQGuDK7lPsDvih2+wLuKW/M/7vzipV3ptmgHkBBFzqNED/8+io8SK6Pr2T5i4ZnPILjnQBQk/+nxmdX3k0DYzciAiwGnX8Vbs6l19Q+FpA13RwM6HrUIiZwomGGw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KhG3u5uFIBkgXzhDA6J+f1Lj13g1qlp+EQQY5NgoWv4=;
- b=V8MMnx6/o8l3m514t7U4wVhF5YmMmXHHL5/hMP36crhHtZPgKnsj4h2/QqGLP8QPHD9JZgfBssaLTcH8B8yv8Wo/nC32kwrspNzUVsPMbslvHZU2E/tmrq34ZJHV5A7tc3o2IZVmc6Z/RFWdZJv8m0XhVFmfhP813TpRhLGJkKudoXPrLs/DUvMIhCBl97JRSbFet9AFCaTpqJ3ZDuqXWAaW6Or5OKQFGrAoCWjhyXP75alJ1XXZdiVXg5vgFCqKXHb5H3kGW+A9myzv7rtENLz4JRhc3Dsi4YUlxnL6EQcqcbzAj6/+ySJH7oklc1ZqA27oA/LdOeP6SZpd8dqzzQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KhG3u5uFIBkgXzhDA6J+f1Lj13g1qlp+EQQY5NgoWv4=;
- b=ejsEFJ+Sj+ovMvyDBBKv4ELgxTuaHoJEQ6ljEGQcRyKRhPep//OXJHHXE2jy6DQBcQ+HbPBzX8B9Bz7I8E2Ne0q6Rtq3kGM/0/T8XThX4jY6vJ6ppz5rD9qxOf26LXqIa7Xvyf8Iom63FfaWGahcT0aomI4/BvgtADK4LZ+jQjs=
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
- PU1P153MB0140.APCP153.PROD.OUTLOOK.COM (10.170.188.142) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2495.3; Thu, 21 Nov 2019 02:47:17 +0000
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::704b:f2b6:33d:557a]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::704b:f2b6:33d:557a%9]) with mapi id 15.20.2495.010; Thu, 21 Nov 2019
- 02:47:17 +0000
-From:   Wei Hu <weh@microsoft.com>
-To:     Dexuan Cui <decui@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "b.zolnierkie@samsung.com" <b.zolnierkie@samsung.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>
-Subject: RE: [PATCH] video: hyperv_fb: Fix hibernation for the deferred IO
- feature
-Thread-Topic: [PATCH] video: hyperv_fb: Fix hibernation for the deferred IO
- feature
-Thread-Index: AQHVn3IaBpxutL9CjUq7Dxtj1Of6aKeU7Drw
-Date:   Thu, 21 Nov 2019 02:47:17 +0000
-Message-ID: <PU1P153MB01699A8B75901F896F1E4503BB4E0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-References: <1574234028-48574-1-git-send-email-decui@microsoft.com>
-In-Reply-To: <1574234028-48574-1-git-send-email-decui@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=weh@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-11-21T02:47:14.6204741Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=7e51bbfc-6a79-4f24-a8ad-0c7f07e32939;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=weh@microsoft.com; 
-x-originating-ip: [167.220.233.146]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 001c367f-1a7a-4580-27d3-08d76e2d1f83
-x-ms-traffictypediagnostic: PU1P153MB0140:|PU1P153MB0140:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <PU1P153MB0140FD7265CA0524D11E5E31BB4E0@PU1P153MB0140.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0228DDDDD7
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(136003)(366004)(396003)(376002)(346002)(199004)(189003)(13464003)(76116006)(66446008)(64756008)(33656002)(7696005)(10090500001)(76176011)(3846002)(6506007)(1511001)(8990500004)(53546011)(71200400001)(6116002)(71190400001)(8676002)(66066001)(6246003)(305945005)(2201001)(6636002)(7736002)(229853002)(99286004)(26005)(74316002)(6436002)(110136005)(52536014)(478600001)(966005)(25786009)(10290500003)(9686003)(14454004)(2906002)(86362001)(186003)(102836004)(55016002)(81166006)(476003)(11346002)(8936002)(2501003)(14444005)(256004)(5660300002)(316002)(81156014)(66476007)(66946007)(446003)(486006)(22452003)(66556008)(6306002)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0140;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: AMl0iMpsWsM+xYs/hUOBop2wo50ifZYrGPAPFCqZWUdPAbNurvX3b//JL3PFP9Fy9sUSzlC+ZQZ6pEVpp/z0Ca4NdzHBklu0Z3ehC/ziqH+EIhdHegPKmDCuMVPqlQ4dP++YDKOhO2akHsDiqfiBQfpxo3ZYx5tGj8cmTzZdovf3gSMgS/WRH9nbNbPRr3C5T9h7Tq+13nXg8h2rRaAwUV79kRWLxbn/zdBqnSUGG4UpRqb9s4mD8z4pXrJ5rLAKnJUDIMTHB396Jedtm56I0OoixFWxl5QhhBoz3HdDYa7tdhR/m6ePWL+fV94um4WyIQHGqbM19hvfZT+M/mIui5Aaw7FC8J6DwjK+1/7sbRNPZNeacgjcNjx1iQoZIpcf4G2N1iosYcZLxaq23nqb8T5yomfty4RMtR29tRsJZgyoqb4Bkt8oFTKt0jWPNWZ1sAy1t7KDr1OlxJH2Nq8qQPV2C5soJGjSAze//KPfl1A=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 20 Nov 2019 21:52:42 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:34595 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725842AbfKUCwl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 21:52:41 -0500
+Received: by mail-wm1-f68.google.com with SMTP id j18so6563367wmk.1
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 18:52:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from:cc;
+        bh=50QrlJDi7Gpaq9op5/mm2tC/ZSPgqpHtAFV7iMRaYTQ=;
+        b=xZFDYMPhIIOyWZQ3bVxQUVPxAeiMI+4DuVJgqAKm62ZW9PI5XxD1c20jX6SqPxYSHI
+         XrFx2wMNG2xDFkjUpN9uEYVWeRZdTYaX2PNtI6fsvNIF010djK1WwpeyMH0T2TnCkdyU
+         byl7IhhS86B76iTVx2dJdI/6BfebvJp4JtXCJLVWy9mDUXicEQWA76N/Gj0c1nwKAhLX
+         PGylebYXVzLMx20KZCIqhilzMuET5+mWeY7FXIzqC/LeNxWjGdzaxk0vZW3XlMoudnj5
+         RUgtKuoR0+K6X6y/x4AECyKwUGkHyYGRXGqM3KeufP/dDOJhqE3TN8L3tH3aDyvhi1CQ
+         IcXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from:cc;
+        bh=50QrlJDi7Gpaq9op5/mm2tC/ZSPgqpHtAFV7iMRaYTQ=;
+        b=o5xJLQv8bYLq29kx9OF1RFyk2+r61HM4TVqVYYD8tmdf+Trhh0Oa7FJGEWXPrynN+e
+         dBVrMipZM38fG6Ol/IFdMAo53HceJo9z29zLiTTgClZ7P3q4mZ0Y7E3YWuL7nZ0sDEdz
+         uNolqUZ6rhvzvnh+C/erzIokDgTnoKNusGw2rHmBOgW2qFCe0waFUTSXg0C01SNUSpe1
+         4tEby+KNEYFy78BKKGwiUYwkOd9WaUM5Le9UsPhvDilO0xUbcCzlH0+UojANGbvX9CF5
+         V2gCfBVthWZIBfK4eDmlr8/CEqhLVXC/DSnZFPnqphmDEv35IMVLgfeOyRkvY2D3sagq
+         EQgA==
+X-Gm-Message-State: APjAAAVoCmpyfdNSixhlQH8gYlaPa4Is3pkXN1uvowYNAQZYgW7ntSBA
+        a8O+4IEYwVm2lhg5/H0/SErPkQ==
+X-Google-Smtp-Source: APXvYqzfHy+V5e3Z1yURW9s8k4l3uYF+uqVgyqFavekIkldGLT4aaQKRbBDmCuZw9FYnDY6W3HQsmA==
+X-Received: by 2002:a7b:c3ce:: with SMTP id t14mr6761601wmj.22.1574304758621;
+        Wed, 20 Nov 2019 18:52:38 -0800 (PST)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id y6sm1604427wrw.6.2019.11.20.18.52.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Nov 2019 18:52:37 -0800 (PST)
+Message-ID: <5dd5fbf5.1c69fb81.0938.8061@mx.google.com>
+Date:   Wed, 20 Nov 2019 18:52:37 -0800 (PST)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 001c367f-1a7a-4580-27d3-08d76e2d1f83
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Nov 2019 02:47:17.1430
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: AZfHwwLxt8mwTWUUv2vTAyA5wgyzITXF1ypleNuZNxROYy10E6XLtSRcC2EP37VgezxgZnkXBL4tJFxvflsqXw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0140
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Lab-Name: lab-collabora
+X-Kernelci-Branch: linux-4.14.y
+X-Kernelci-Tree: stable
+X-Kernelci-Report-Type: bisect
+X-Kernelci-Kernel: v4.14.155
+Subject: stable/linux-4.14.y bisection: boot on odroid-x2
+To:     tomeu.vizoso@collabora.com, Sasha Levin <sashal@kernel.org>,
+        guillaume.tucker@collabora.com,
+        Niklas Cassel <niklas.cassel@linaro.org>, broonie@kernel.org,
+        khilman@baylibre.com, mgalka@collabora.com,
+        enric.balletbo@collabora.com,
+        Viresh Kumar <viresh.kumar@linaro.org>
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     linux-pm@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>,
+        linux-kernel@vger.kernel.org, Nishanth Menon <nm@ti.com>,
+        Len Brown <len.brown@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>, Viresh Kumar <vireshk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Dexuan Cui <decui@microsoft.com>
-> Sent: Wednesday, November 20, 2019 3:14 PM
-> To: KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
-> <haiyangz@microsoft.com>; Stephen Hemminger <sthemmin@microsoft.com>;
-> sashal@kernel.org; b.zolnierkie@samsung.com; linux-hyperv@vger.kernel.org=
-;
-> dri-devel@lists.freedesktop.org; linux-fbdev@vger.kernel.org; linux-
-> kernel@vger.kernel.org; Michael Kelley <mikelley@microsoft.com>; Sasha Le=
-vin
-> <Alexander.Levin@microsoft.com>
-> Cc: Wei Hu <weh@microsoft.com>; Dexuan Cui <decui@microsoft.com>
-> Subject: [PATCH] video: hyperv_fb: Fix hibernation for the deferred IO fe=
-ature
->=20
-> fb_deferred_io_work() can access the vmbus ringbuffer by calling
-> fbdefio->deferred_io() -> synthvid_deferred_io() -> synthvid_update().
->=20
-> Because the vmbus ringbuffer is inaccessible between hvfb_suspend() and
-> hvfb_resume(), we must cancel info->deferred_work before calling
-> vmbus_close() and then reschedule it after we reopen the channel in
-> hvfb_resume().
->=20
-> Fixes: a4ddb11d297e ("video: hyperv: hyperv_fb: Support deferred IO for
-> Hyper-V frame buffer driver")
-> Fixes: 824946a8b6fb ("video: hyperv_fb: Add the support of hibernation")
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> ---
->=20
-> This patch fixes the 2 aforementioned patches on Sasha Levin's Hyper-V tr=
-ee's
-> hyperv-next branch:
-> https://nam06.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fgit.k=
-ern
-> el.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Fhyperv%2Flinux.git%2Flog
-> %2F%3Fh%3Dhyperv-
-> next&amp;data=3D02%7C01%7Cweh%40microsoft.com%7C451143ff78f04401d9
-> 6f08d76d893a84%7C72f988bf86f141af91ab2d7cd011db47%7C1%7C0%7C637
-> 098308493217121&amp;sdata=3DP2fo%2F1TJUMIj5FtJCOp2QwDrghhVfPSCEJ4f1
-> vkOXvI%3D&amp;reserved=3D0
->=20
-> The 2 aforementioned patches have not appeared in the mainline yet, so pl=
-ease
-> pick up this patch onto he same hyperv-next branch.
->=20
->  drivers/video/fbdev/hyperv_fb.c | 2 ++
->  1 file changed, 2 insertions(+)
->=20
-> diff --git a/drivers/video/fbdev/hyperv_fb.c b/drivers/video/fbdev/hyperv=
-_fb.c
-> index 4cd27e5172a1..08bc0dfb5ce7 100644
-> --- a/drivers/video/fbdev/hyperv_fb.c
-> +++ b/drivers/video/fbdev/hyperv_fb.c
-> @@ -1194,6 +1194,7 @@ static int hvfb_suspend(struct hv_device *hdev)
->  	fb_set_suspend(info, 1);
->=20
->  	cancel_delayed_work_sync(&par->dwork);
-> +	cancel_delayed_work_sync(&info->deferred_work);
->=20
->  	par->update_saved =3D par->update;
->  	par->update =3D false;
-> @@ -1227,6 +1228,7 @@ static int hvfb_resume(struct hv_device *hdev)
->  	par->fb_ready =3D true;
->  	par->update =3D par->update_saved;
->=20
-> +	schedule_delayed_work(&info->deferred_work, info->fbdefio->delay);
->  	schedule_delayed_work(&par->dwork, HVFB_UPDATE_DELAY);
->=20
->  	/* 0 means do resume */
-> --
-> 2.19.1
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+* This automated bisection report was sent to you on the basis  *
+* that you may be involved with the breaking commit it has      *
+* found.  No manual investigation has been done to verify it,   *
+* and the root cause of the problem may be somewhere else.      *
+*                                                               *
+* If you do send a fix, please include this trailer:            *
+*   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
+*                                                               *
+* Hope this helps!                                              *
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-Signed-off-by: Wei Hu <weh@microsoft.com>
+stable/linux-4.14.y bisection: boot on odroid-x2
+
+Summary:
+  Start:      f56f3d0e65ad Linux 4.14.155
+  Details:    https://kernelci.org/boot/id/5dd5a12159b5143a10cf54c3
+  Plain log:  https://storage.kernelci.org//stable/linux-4.14.y/v4.14.155/a=
+rm/exynos_defconfig/gcc-8/lab-collabora/boot-exynos4412-odroidx2.txt
+  HTML log:   https://storage.kernelci.org//stable/linux-4.14.y/v4.14.155/a=
+rm/exynos_defconfig/gcc-8/lab-collabora/boot-exynos4412-odroidx2.html
+  Result:     714ab224a8db OPP: Protect dev_list with opp_table lock
+
+Checks:
+  revert:     PASS
+  verify:     PASS
+
+Parameters:
+  Tree:       stable
+  URL:        https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-=
+stable.git
+  Branch:     linux-4.14.y
+  Target:     odroid-x2
+  CPU arch:   arm
+  Lab:        lab-collabora
+  Compiler:   gcc-8
+  Config:     exynos_defconfig
+  Test suite: boot
+
+Breaking commit found:
+
+---------------------------------------------------------------------------=
+----
+commit 714ab224a8db6e8255c61a42613de9349ceb0bba
+Author: Viresh Kumar <viresh.kumar@linaro.org>
+Date:   Fri Aug 3 07:05:21 2018 +0530
+
+    OPP: Protect dev_list with opp_table lock
+    =
+
+    [ Upstream commit 3d2556992a878a2210d3be498416aee39e0c32aa ]
+    =
+
+    The dev_list needs to be protected with a lock, else we may have
+    simultaneous access (addition/removal) to it and that would be racy.
+    Extend scope of the opp_table lock to protect dev_list as well.
+    =
+
+    Tested-by: Niklas Cassel <niklas.cassel@linaro.org>
+    Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+    Signed-off-by: Sasha Levin <sashal@kernel.org>
+
+diff --git a/drivers/base/power/opp/core.c b/drivers/base/power/opp/core.c
+index d5e7e8cc4f22..8100c8769149 100644
+--- a/drivers/base/power/opp/core.c
++++ b/drivers/base/power/opp/core.c
+@@ -49,9 +49,14 @@ static struct opp_device *_find_opp_dev(const struct dev=
+ice *dev,
+ static struct opp_table *_find_opp_table_unlocked(struct device *dev)
+ {
+ 	struct opp_table *opp_table;
++	bool found;
+ =
+
+ 	list_for_each_entry(opp_table, &opp_tables, node) {
+-		if (_find_opp_dev(dev, opp_table)) {
++		mutex_lock(&opp_table->lock);
++		found =3D !!_find_opp_dev(dev, opp_table);
++		mutex_unlock(&opp_table->lock);
++
++		if (found) {
+ 			_get_opp_table_kref(opp_table);
+ =
+
+ 			return opp_table;
+@@ -711,6 +716,8 @@ struct opp_device *_add_opp_dev(const struct device *de=
+v,
+ =
+
+ 	/* Initialize opp-dev */
+ 	opp_dev->dev =3D dev;
++
++	mutex_lock(&opp_table->lock);
+ 	list_add(&opp_dev->node, &opp_table->dev_list);
+ =
+
+ 	/* Create debugfs entries for the opp_table */
+@@ -718,6 +725,7 @@ struct opp_device *_add_opp_dev(const struct device *de=
+v,
+ 	if (ret)
+ 		dev_err(dev, "%s: Failed to register opp debugfs (%d)\n",
+ 			__func__, ret);
++	mutex_unlock(&opp_table->lock);
+ =
+
+ 	return opp_dev;
+ }
+@@ -736,6 +744,7 @@ static struct opp_table *_allocate_opp_table(struct dev=
+ice *dev)
+ 	if (!opp_table)
+ 		return NULL;
+ =
+
++	mutex_init(&opp_table->lock);
+ 	INIT_LIST_HEAD(&opp_table->dev_list);
+ =
+
+ 	opp_dev =3D _add_opp_dev(dev, opp_table);
+@@ -757,7 +766,6 @@ static struct opp_table *_allocate_opp_table(struct dev=
+ice *dev)
+ =
+
+ 	BLOCKING_INIT_NOTIFIER_HEAD(&opp_table->head);
+ 	INIT_LIST_HEAD(&opp_table->opp_list);
+-	mutex_init(&opp_table->lock);
+ 	kref_init(&opp_table->kref);
+ =
+
+ 	/* Secure the device table modification */
+@@ -799,6 +807,10 @@ static void _opp_table_kref_release(struct kref *kref)
+ 	if (!IS_ERR(opp_table->clk))
+ 		clk_put(opp_table->clk);
+ =
+
++	/*
++	 * No need to take opp_table->lock here as we are guaranteed that no
++	 * references to the OPP table are taken at this point.
++	 */
+ 	opp_dev =3D list_first_entry(&opp_table->dev_list, struct opp_device,
+ 				   node);
+ =
+
+@@ -1702,6 +1714,9 @@ void _dev_pm_opp_remove_table(struct opp_table *opp_t=
+able, struct device *dev,
+ {
+ 	struct dev_pm_opp *opp, *tmp;
+ =
+
++	/* Protect dev_list */
++	mutex_lock(&opp_table->lock);
++
+ 	/* Find if opp_table manages a single device */
+ 	if (list_is_singular(&opp_table->dev_list)) {
+ 		/* Free static OPPs */
+@@ -1712,6 +1727,8 @@ void _dev_pm_opp_remove_table(struct opp_table *opp_t=
+able, struct device *dev,
+ 	} else {
+ 		_remove_opp_dev(_find_opp_dev(dev, opp_table), opp_table);
+ 	}
++
++	mutex_unlock(&opp_table->lock);
+ }
+ =
+
+ void _dev_pm_opp_find_and_remove_table(struct device *dev, bool remove_all)
+diff --git a/drivers/base/power/opp/cpu.c b/drivers/base/power/opp/cpu.c
+index 2d87bc1adf38..66e406bd4d62 100644
+--- a/drivers/base/power/opp/cpu.c
++++ b/drivers/base/power/opp/cpu.c
+@@ -222,8 +222,10 @@ int dev_pm_opp_get_sharing_cpus(struct device *cpu_dev=
+, struct cpumask *cpumask)
+ 	cpumask_clear(cpumask);
+ =
+
+ 	if (opp_table->shared_opp =3D=3D OPP_TABLE_ACCESS_SHARED) {
++		mutex_lock(&opp_table->lock);
+ 		list_for_each_entry(opp_dev, &opp_table->dev_list, node)
+ 			cpumask_set_cpu(opp_dev->dev->id, cpumask);
++		mutex_unlock(&opp_table->lock);
+ 	} else {
+ 		cpumask_set_cpu(cpu_dev->id, cpumask);
+ 	}
+diff --git a/drivers/base/power/opp/opp.h b/drivers/base/power/opp/opp.h
+index 166eef990599..0a206c6b9086 100644
+--- a/drivers/base/power/opp/opp.h
++++ b/drivers/base/power/opp/opp.h
+@@ -124,7 +124,7 @@ enum opp_table_access {
+  * @dev_list:	list of devices that share these OPPs
+  * @opp_list:	table of opps
+  * @kref:	for reference count of the table.
+- * @lock:	mutex protecting the opp_list.
++ * @lock:	mutex protecting the opp_list and dev_list.
+  * @np:		struct device_node pointer for opp's DT node.
+  * @clock_latency_ns_max: Max clock latency in nanoseconds.
+  * @shared_opp: OPP is shared between multiple devices.
+---------------------------------------------------------------------------=
+----
+
+
+Git bisection log:
+
+---------------------------------------------------------------------------=
+----
+git bisect start
+# good: [775d01b65b5daa002a9ba60f2d2bb3b1a6ce12fb] Linux 4.14.154
+git bisect good 775d01b65b5daa002a9ba60f2d2bb3b1a6ce12fb
+# bad: [f56f3d0e65adb447b8b583c8ed4fbbe544c9bfde] Linux 4.14.155
+git bisect bad f56f3d0e65adb447b8b583c8ed4fbbe544c9bfde
+# good: [46af2022de198ebbf47141b7b33522e28733045d] arm64: dts: meson: Fix e=
+rroneous SPI bus warnings
+git bisect good 46af2022de198ebbf47141b7b33522e28733045d
+# bad: [0b9c70939b60221f2210ef55a325fec6dea8cde1] media: au0828: Fix incorr=
+ect error messages
+git bisect bad 0b9c70939b60221f2210ef55a325fec6dea8cde1
+# bad: [70c3daaa03e965d3f2bd10696be130b376f73bca] net: broadcom: fix return=
+ type of ndo_start_xmit function
+git bisect bad 70c3daaa03e965d3f2bd10696be130b376f73bca
+# good: [45503ce9086cabc9b3faaaed4563b2da8af1ffe2] samples/bpf: fix a compi=
+lation failure
+git bisect good 45503ce9086cabc9b3faaaed4563b2da8af1ffe2
+# good: [9bee4f9f4460db86c47fe01f9671af6a8951efda] powerpc: Fix duplicate c=
+onst clang warning in user access code
+git bisect good 9bee4f9f4460db86c47fe01f9671af6a8951efda
+# bad: [b1fdcfbdb93cc899d19091a2385edb40a07420e3] power: supply: twl4030_ch=
+arger: fix charging current out-of-bounds
+git bisect bad b1fdcfbdb93cc899d19091a2385edb40a07420e3
+# bad: [714ab224a8db6e8255c61a42613de9349ceb0bba] OPP: Protect dev_list wit=
+h opp_table lock
+git bisect bad 714ab224a8db6e8255c61a42613de9349ceb0bba
+# good: [7dbc3efb7430abdddf0be186bd0ad2611d767d23] RDMA/i40iw: Fix incorrec=
+t iterator type
+git bisect good 7dbc3efb7430abdddf0be186bd0ad2611d767d23
+# first bad commit: [714ab224a8db6e8255c61a42613de9349ceb0bba] OPP: Protect=
+ dev_list with opp_table lock
+---------------------------------------------------------------------------=
+----
