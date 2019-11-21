@@ -2,165 +2,231 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56C86C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 09:49:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BC0EC43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 09:51:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27F4320872
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 09:49:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A4BD204FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 09:51:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Lc7VSrvS"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="DEcaXk8b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbfKUJtc (ORCPT
+        id S1726536AbfKUJve (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 04:49:32 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:56019 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726792AbfKUJtb (ORCPT
+        Thu, 21 Nov 2019 04:51:34 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:58413 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726170AbfKUJve (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 04:49:31 -0500
-Received: by mail-wm1-f66.google.com with SMTP id b11so2943680wmb.5
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 01:49:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mQ72QGAuONoaD06OtAUFQjjkbWWipmAJdNTyvJOj0zw=;
-        b=Lc7VSrvSOKjJsQGNVMBoNqty9LZdG+eGBss036j1dc+dtCkIbLCBYS6Xu3Mzr+uCCH
-         U+4PvmPM16zC4t743caJWje5/YOdFcChk7BIoVIYbt63eDeTa1Z5ySkg1GDMk1iEXph6
-         MkdejZkPZ14Xqv4Kx6WhConq/x7/9mS8EN1U4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=mQ72QGAuONoaD06OtAUFQjjkbWWipmAJdNTyvJOj0zw=;
-        b=Zd9y4ktIMEj8XS9wpMu8b58j1PCGGrUT35mZGvSn8IecE7wy55PRhfh1uK9AIg39zy
-         t5DfOJRUrAan8FEx+eiUEvKx2sCW/wFzLWEdkNhHtGKEsdzjNsFLi+6qAbdsBvzf3mIo
-         rPc+Etd/2hTpPo97kQWf4ZcVplrHk8aG+qG+VJMaqcdQRAulBGGqYKAjnRyK/KeAC83T
-         WQdngoct7Hq44tKPFo8JfIrASdRzszMk9VW31y6QOoLbLNcoosmzSiSv+gA7bZ5L1MKx
-         Su98es216gN5MVdq/Y+QNDoER/zvB0yLCLQrylSMnYcZMOV4YhZxV7hvmRqyswutjMy+
-         sPmQ==
-X-Gm-Message-State: APjAAAU02SehcP3MTfWU4RgKbOwxsVLyq+m20OJGrJfCAzIDwqqv5+ji
-        0Q5UD2rdsHqzr08vMi9d0I3WEA==
-X-Google-Smtp-Source: APXvYqyWLlsZIl/sVzGpMq0amP0tId4NYVfLQK9FPM7iZRvYtQmGILYlVx6PgqxtGP5+7WicEJmtgw==
-X-Received: by 2002:a05:600c:2295:: with SMTP id 21mr8289518wmf.85.1574329769158;
-        Thu, 21 Nov 2019 01:49:29 -0800 (PST)
-Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
-        by smtp.gmail.com with ESMTPSA id r25sm2269227wmh.6.2019.11.21.01.49.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Nov 2019 01:49:28 -0800 (PST)
-Date:   Thu, 21 Nov 2019 10:49:26 +0100
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
-        Dave Airlie <airlied@gmail.com>
-Cc:     Liviu Dudau <Liviu.Dudau@arm.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        "maarten.lankhorst@linux.intel.com" 
-        <maarten.lankhorst@linux.intel.com>,
-        Mihail Atanassov <Mihail.Atanassov@arm.com>, nd <nd@arm.com>,
-        "Oscar Zhang (Arm Technology China)" <Oscar.Zhang@arm.com>,
-        "Tiannan Zhu (Arm Technology China)" <Tiannan.Zhu@arm.com>,
-        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
-        "Channing Chen (Arm Technology China)" <Channing.Chen@arm.com>,
-        "Thomas Sun (Arm Technology China)" <thomas.Sun@arm.com>,
-        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
-        Ben Davis <Ben.Davis@arm.com>
-Subject: Re: [PATCH v4 6/6] drm/komeda: Expose side_by_side by sysfs/config_id
-Message-ID: <20191121094926.GC6236@phenom.ffwll.local>
-Mail-Followup-To: "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
-        Dave Airlie <airlied@gmail.com>, Liviu Dudau <Liviu.Dudau@arm.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
-        Mihail Atanassov <Mihail.Atanassov@arm.com>, nd <nd@arm.com>,
-        "Oscar Zhang (Arm Technology China)" <Oscar.Zhang@arm.com>,
-        "Tiannan Zhu (Arm Technology China)" <Tiannan.Zhu@arm.com>,
-        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
-        "Channing Chen (Arm Technology China)" <Channing.Chen@arm.com>,
-        "Thomas Sun (Arm Technology China)" <thomas.Sun@arm.com>,
-        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
-        Ben Davis <Ben.Davis@arm.com>
-References: <20191121071205.27511-1-james.qian.wang@arm.com>
- <20191121071205.27511-7-james.qian.wang@arm.com>
+        Thu, 21 Nov 2019 04:51:34 -0500
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAL9loLB020234;
+        Thu, 21 Nov 2019 10:51:15 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=vMVqWdMgq7XcfSmbVIKes0Z7/ha4OWc9hvpq/0ZosUY=;
+ b=DEcaXk8blgP51AcF+Pf7BM2f17zgZW885nmJLBc1+B/N4GkpHQNuF64fo6l4D1MmgxZb
+ lUFtgX4K52DiM3D25p/8d9PgPvbWXfLyk0oa0I2bwOV2bUPs4UTu4C8br1tkU1Erbkp4
+ wjnPewiILzwQGc8W4ZIlYy+Wcc3navPadpKxlfSGokP+nLO4k9uGldy+BNxPBz4GxMsl
+ QB/lwX81Q12Q8PrWS1TPhnDNt8fVxXi7bwKtwC+RQvef7ydiRm0qcgkW6DeI3uaGwqim
+ Q+EoPF5l6cfGqtf0m9OwkDC+T2t5o2PMKJ9UyWnf5I+5MaRNx23NPM+ypUSCMzeq2oAt XQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2wa9usjgv8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 21 Nov 2019 10:51:15 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 2C7CF10002A;
+        Thu, 21 Nov 2019 10:51:15 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 14AD32B41D3;
+        Thu, 21 Nov 2019 10:51:15 +0100 (CET)
+Received: from localhost (10.75.127.45) by SFHDAG3NODE1.st.com (10.75.127.7)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 21 Nov 2019 10:51:14
+ +0100
+From:   Arnaud Pouliquen <arnaud.pouliquen@st.com>
+To:     Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jassi Brar <jassisinghbrar@gmail.com>
+CC:     <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Fabien Dessenne <fabien.dessenne@st.com>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Subject: [PATCH v3] dt-bindings: mailbox: convert stm32-ipcc to json-schema
+Date:   Thu, 21 Nov 2019 10:51:02 +0100
+Message-ID: <20191121095102.26693-1-arnaud.pouliquen@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191121071205.27511-7-james.qian.wang@arm.com>
-X-Operating-System: Linux phenom 5.3.0-1-amd64 
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG6NODE2.st.com (10.75.127.17) To SFHDAG3NODE1.st.com
+ (10.75.127.7)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-21_01:2019-11-21,2019-11-21 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 07:12:55AM +0000, james qian wang (Arm Technology China) wrote:
-> There are some restrictions if HW works on side_by_side, expose it via
-> config_id to user.
-> 
-> Signed-off-by: James Qian Wang (Arm Technology China) <james.qian.wang@arm.com>
-> ---
->  drivers/gpu/drm/arm/display/include/malidp_product.h | 3 ++-
->  drivers/gpu/drm/arm/display/komeda/komeda_dev.c      | 1 +
->  2 files changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/arm/display/include/malidp_product.h b/drivers/gpu/drm/arm/display/include/malidp_product.h
-> index 1053b11352eb..96e2e4016250 100644
-> --- a/drivers/gpu/drm/arm/display/include/malidp_product.h
-> +++ b/drivers/gpu/drm/arm/display/include/malidp_product.h
-> @@ -27,7 +27,8 @@ union komeda_config_id {
->  			n_scalers:2, /* number of scalers per pipeline */
->  			n_layers:3, /* number of layers per pipeline */
->  			n_richs:3, /* number of rich layers per pipeline */
-> -			reserved_bits:6;
-> +			side_by_side:1, /* if HW works on side_by_side mode */
-> +			reserved_bits:5;
->  	};
->  	__u32 value;
->  };
-> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_dev.c b/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
-> index c3fa4835cb8d..4dd4699d4e3d 100644
-> --- a/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
-> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
-> @@ -83,6 +83,7 @@ config_id_show(struct device *dev, struct device_attribute *attr, char *buf)
+Convert the STM32 IPCC bindings to DT schema format using
+json-schema
 
-Uh, this sysfs file here looks a lot like uapi for some compositor to
-decide what to do. Do you have the userspace for this?
+Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+---
+ .../bindings/mailbox/st,stm32-ipcc.yaml       | 84 +++++++++++++++++++
+ .../bindings/mailbox/stm32-ipcc.txt           | 47 -----------
+ 2 files changed, 84 insertions(+), 47 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/st,stm32-ipcc.yaml
+ delete mode 100644 Documentation/devicetree/bindings/mailbox/stm32-ipcc.txt
 
-Also a few more thoughts on this:
-- You can't just add more fields to uapi structs.
-- This doesn't really feel like it was ever reviewed to fit into atomic.
-- sysfs should be one value per file, not a smorgasbrod of things stuffed
-  into a binary structure.
--Daniel
-
->  	memset(&config_id, 0, sizeof(config_id));
->  
->  	config_id.max_line_sz = pipe->layers[0]->hsize_in.end;
-> +	config_id.side_by_side = mdev->side_by_side;
->  	config_id.n_pipelines = mdev->n_pipelines;
->  	config_id.n_scalers = pipe->n_scalers;
->  	config_id.n_layers = pipe->n_layers;
-> -- 
-> 2.20.1
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
-
+diff --git a/Documentation/devicetree/bindings/mailbox/st,stm32-ipcc.yaml b/Documentation/devicetree/bindings/mailbox/st,stm32-ipcc.yaml
+new file mode 100644
+index 000000000000..5b13d6672996
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mailbox/st,stm32-ipcc.yaml
+@@ -0,0 +1,84 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/mailbox/st,stm32-ipcc.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: STMicroelectronics STM32 IPC controller bindings
++
++description:
++  The IPCC block provides a non blocking signaling mechanism to post and
++  retrieve messages in an atomic way between two processors.
++  It provides the signaling for N bidirectionnal channels. The number of
++  channels (N) can be read from a dedicated register.
++
++maintainers:
++  - Fabien Dessenne <fabien.dessenne@st.com>
++  - Arnaud Pouliquen <arnaud.pouliquen@st.com>
++
++properties:
++  compatible:
++    const: st,stm32mp1-ipcc
++
++  reg:
++    maxItems: 1
++
++  clocks:
++     maxItems: 1
++
++  interrupts:
++    items:
++      - description: rx channel occupied
++      - description: tx channel free
++      - description: wakeup source
++    minItems: 2
++    maxItems: 3
++
++  interrupt-names:
++    items:
++      - const: rx
++      - const: tx
++      - const: wakeup
++    minItems: 2
++    maxItems: 3
++
++  wakeup-source: true
++
++  "#mbox-cells":
++    const: 1
++
++  st,proc-id:
++    description: Processor id using the mailbox (0 or 1)
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++      - enum: [ 0, 1 ]
++
++required:
++  - compatible
++  - reg
++  - st,proc-id
++  - clocks
++  - interrupt-names
++  - "#mbox-cells"
++  - interrupts
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/clock/stm32mp1-clks.h>
++    ipcc: mailbox@4c001000 {
++      compatible = "st,stm32mp1-ipcc";
++      #mbox-cells = <1>;
++      reg = <0x4c001000 0x400>;
++      st,proc-id = <0>;
++      interrupts-extended = <&intc GIC_SPI 100 IRQ_TYPE_NONE>,
++      		      <&intc GIC_SPI 101 IRQ_TYPE_NONE>,
++      		      <&aiec 62 1>;
++      interrupt-names = "rx", "tx", "wakeup";
++      clocks = <&rcc_clk IPCC>;
++      wakeup-source;
++    };
++
++...
+diff --git a/Documentation/devicetree/bindings/mailbox/stm32-ipcc.txt b/Documentation/devicetree/bindings/mailbox/stm32-ipcc.txt
+deleted file mode 100644
+index 1d2b7fee7b85..000000000000
+--- a/Documentation/devicetree/bindings/mailbox/stm32-ipcc.txt
++++ /dev/null
+@@ -1,47 +0,0 @@
+-* STMicroelectronics STM32 IPCC (Inter-Processor Communication Controller)
+-
+-The IPCC block provides a non blocking signaling mechanism to post and
+-retrieve messages in an atomic way between two processors.
+-It provides the signaling for N bidirectionnal channels. The number of channels
+-(N) can be read from a dedicated register.
+-
+-Required properties:
+-- compatible:   Must be "st,stm32mp1-ipcc"
+-- reg:          Register address range (base address and length)
+-- st,proc-id:   Processor id using the mailbox (0 or 1)
+-- clocks:       Input clock
+-- interrupt-names: List of names for the interrupts described by the interrupt
+-                   property. Must contain the following entries:
+-                   - "rx"
+-                   - "tx"
+-                   - "wakeup"
+-- interrupts:   Interrupt specifiers for "rx channel occupied", "tx channel
+-                free" and "system wakeup".
+-- #mbox-cells:  Number of cells required for the mailbox specifier. Must be 1.
+-                The data contained in the mbox specifier of the "mboxes"
+-                property in the client node is the mailbox channel index.
+-
+-Optional properties:
+-- wakeup-source: Flag to indicate whether this device can wake up the system
+-
+-
+-
+-Example:
+-	ipcc: mailbox@4c001000 {
+-		compatible = "st,stm32mp1-ipcc";
+-		#mbox-cells = <1>;
+-		reg = <0x4c001000 0x400>;
+-		st,proc-id = <0>;
+-		interrupts-extended = <&intc GIC_SPI 100 IRQ_TYPE_NONE>,
+-				      <&intc GIC_SPI 101 IRQ_TYPE_NONE>,
+-				      <&aiec 62 1>;
+-		interrupt-names = "rx", "tx", "wakeup";
+-		clocks = <&rcc_clk IPCC>;
+-		wakeup-source;
+-	}
+-
+-Client:
+-	mbox_test {
+-		...
+-		mboxes = <&ipcc 0>, <&ipcc 1>;
+-	};
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+2.17.1
+
