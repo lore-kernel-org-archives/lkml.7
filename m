@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F75C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 01:46:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC241C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 01:46:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EAF020885
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 01:46:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D9E020878
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 01:46:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726664AbfKUBpv (ORCPT
+        id S1726944AbfKUBqD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 20:45:51 -0500
-Received: from mga05.intel.com ([192.55.52.43]:49098 "EHLO mga05.intel.com"
+        Wed, 20 Nov 2019 20:46:03 -0500
+Received: from mga05.intel.com ([192.55.52.43]:49101 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725936AbfKUBpv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 20:45:51 -0500
+        id S1726695AbfKUBpw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 20:45:52 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
   by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Nov 2019 17:45:50 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,224,1571727600"; 
-   d="scan'208";a="407025894"
+   d="scan'208";a="407025914"
 Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by fmsmga005.fm.intel.com with ESMTP; 20 Nov 2019 17:45:49 -0800
+  by fmsmga005.fm.intel.com with ESMTP; 20 Nov 2019 17:45:50 -0800
 From:   Fenghua Yu <fenghua.yu@intel.com>
 To:     "Thomas Gleixner" <tglx@linutronix.de>,
         "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
@@ -38,9 +38,9 @@ To:     "Thomas Gleixner" <tglx@linutronix.de>,
         "Ravi V Shankar" <ravi.v.shankar@intel.com>
 Cc:     "linux-kernel" <linux-kernel@vger.kernel.org>,
         "x86" <x86@kernel.org>, Fenghua Yu <fenghua.yu@intel.com>
-Subject: [PATCH v10 1/6] x86/msr-index: Add two new MSRs
-Date:   Wed, 20 Nov 2019 16:53:18 -0800
-Message-Id: <1574297603-198156-2-git-send-email-fenghua.yu@intel.com>
+Subject: [PATCH v10 6/6] x86/split_lock: Enable split lock detection by kernel parameter
+Date:   Wed, 20 Nov 2019 16:53:23 -0800
+Message-Id: <1574297603-198156-7-git-send-email-fenghua.yu@intel.com>
 X-Mailer: git-send-email 2.5.0
 In-Reply-To: <1574297603-198156-1-git-send-email-fenghua.yu@intel.com>
 References: <1574297603-198156-1-git-send-email-fenghua.yu@intel.com>
@@ -49,44 +49,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-IA32_CORE_CAPABILITIES(0xCF): Core Capabilities Register
-        Bit5: #AC(0) exception for split locked accesses supported.
+Split lock detection is disabled by default. Enable the feature by
+kernel parameter "split_lock_detect".
 
-TEST_CTRL(0x33): Test Control Register
-        Bit29: Enable #AC(0) exception for split locked accesses.
+Usually it is enabled in real time when expensive split lock issues
+cannot be tolerated so should be fatal errors, or for debugging and
+fixing the split lock issues to improve performance.
+
+Please note: enabling this feature will cause kernel panic or SIGBUS
+to user application when a split lock issue is detected.
 
 Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
 Reviewed-by: Tony Luck <tony.luck@intel.com>
 ---
- arch/x86/include/asm/msr-index.h | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ .../admin-guide/kernel-parameters.txt         | 10 ++++++
+ arch/x86/kernel/cpu/intel.c                   | 34 +++++++++++++++++++
+ 2 files changed, 44 insertions(+)
 
-diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-index 6a3124664289..7b25cec494fd 100644
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -41,6 +41,10 @@
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 8dee8f68fe15..1ed313891f44 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -3166,6 +3166,16 @@
  
- /* Intel MSRs. Some also available on other CPUs */
+ 	nosoftlockup	[KNL] Disable the soft-lockup detector.
  
-+#define MSR_TEST_CTRL				0x00000033
-+#define MSR_TEST_CTRL_SPLIT_LOCK_DETECT_BIT	29
-+#define MSR_TEST_CTRL_SPLIT_LOCK_DETECT		BIT(MSR_TEST_CTRL_SPLIT_LOCK_DETECT_BIT)
++	split_lock_detect
++			[X86] Enable split lock detection
++			This is a real time or debugging feature. When enabled
++			(and if hardware support is present), atomic
++			instructions that access data across cache line
++			boundaries will result in an alignment check exception.
++			When triggered in applications the kernel will send
++			SIGBUS. The kernel will panic for a split lock in
++			OS code.
 +
- #define MSR_IA32_SPEC_CTRL		0x00000048 /* Speculation Control */
- #define SPEC_CTRL_IBRS			BIT(0)	   /* Indirect Branch Restricted Speculation */
- #define SPEC_CTRL_STIBP_SHIFT		1	   /* Single Thread Indirect Branch Predictor (STIBP) bit */
-@@ -70,6 +74,10 @@
-  */
- #define MSR_IA32_UMWAIT_CONTROL_TIME_MASK	(~0x03U)
+ 	nosync		[HW,M68K] Disables sync negotiation for all devices.
  
-+#define MSR_IA32_CORE_CAPABILITIES			  0x000000cf
-+#define MSR_IA32_CORE_CAPABILITIES_SPLIT_LOCK_DETECT_BIT  5
-+#define MSR_IA32_CORE_CAPABILITIES_SPLIT_LOCK_DETECT	  BIT(MSR_IA32_CORE_CAPABILITIES_SPLIT_LOCK_DETECT_BIT)
+ 	nowatchdog	[KNL] Disable both lockup detectors, i.e.
+diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+index bc0c2f288509..9bf6daf185b9 100644
+--- a/arch/x86/kernel/cpu/intel.c
++++ b/arch/x86/kernel/cpu/intel.c
+@@ -20,6 +20,7 @@
+ #include <asm/hwcap2.h>
+ #include <asm/elf.h>
+ #include <asm/cpu_device_id.h>
++#include <asm/cmdline.h>
+ 
+ #ifdef CONFIG_X86_64
+ #include <linux/topology.h>
+@@ -655,6 +656,26 @@ static void init_intel_misc_features(struct cpuinfo_x86 *c)
+ 	wrmsrl(MSR_MISC_FEATURES_ENABLES, msr);
+ }
+ 
++static void split_lock_init(void)
++{
++	if (split_lock_detect_enabled) {
++		u64 test_ctrl_val;
 +
- #define MSR_PKG_CST_CONFIG_CONTROL	0x000000e2
- #define NHM_C3_AUTO_DEMOTE		(1UL << 25)
- #define NHM_C1_AUTO_DEMOTE		(1UL << 26)
++		/*
++		 * The TEST_CTRL MSR is per core. So multiple threads can
++		 * read/write the MSR in parallel. But it's possible to
++		 * simplify the read/write without locking and without
++		 * worry about overwriting the MSR because only bit 29
++		 * is implemented in the MSR and the bit is set as 1 by all
++		 * threads. Locking may be needed in the future if situation
++		 * is changed e.g. other bits are implemented.
++		 */
++		rdmsrl(MSR_TEST_CTRL, test_ctrl_val);
++		test_ctrl_val |= MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
++		wrmsrl(MSR_TEST_CTRL, test_ctrl_val);
++	}
++}
++
+ static void init_intel(struct cpuinfo_x86 *c)
+ {
+ 	early_init_intel(c);
+@@ -770,6 +791,8 @@ static void init_intel(struct cpuinfo_x86 *c)
+ 		tsx_enable();
+ 	if (tsx_ctrl_state == TSX_CTRL_DISABLE)
+ 		tsx_disable();
++
++	split_lock_init();
+ }
+ 
+ #ifdef CONFIG_X86_32
+@@ -1032,9 +1055,20 @@ static const struct cpu_dev intel_cpu_dev = {
+ 
+ cpu_dev_register(intel_cpu_dev);
+ 
++#undef pr_fmt
++#define pr_fmt(fmt) "x86/split lock detection: " fmt
++
+ static void __init split_lock_setup(void)
+ {
+ 	setup_force_cpu_cap(X86_FEATURE_SPLIT_LOCK_DETECT);
++
++	if (cmdline_find_option_bool(boot_command_line,
++				     "split_lock_detect")) {
++		split_lock_detect_enabled = true;
++		pr_info("enabled\n");
++	} else {
++		pr_info("disabled\n");
++	}
+ }
+ 
+ #define SPLIT_LOCK_CPU(model) {X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY}
 -- 
 2.19.1
 
