@@ -2,108 +2,130 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B0CBC43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 01:33:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 174B6C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 01:34:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60D5520878
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 01:33:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5FF020855
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 01:34:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="mRU7xzfW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hCQOu+Rt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726634AbfKUBdE (ORCPT
+        id S1726703AbfKUBeo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 20:33:04 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:46576 "EHLO
+        Wed, 20 Nov 2019 20:34:44 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:33833 "EHLO
         mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725842AbfKUBdE (ORCPT
+        with ESMTP id S1725904AbfKUBen (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 20:33:04 -0500
-Received: by mail-oi1-f196.google.com with SMTP id n14so1652205oie.13
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 17:33:03 -0800 (PST)
+        Wed, 20 Nov 2019 20:34:43 -0500
+Received: by mail-oi1-f196.google.com with SMTP id l202so1738533oig.1;
+        Wed, 20 Nov 2019 17:34:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=UhJHMTqQnmWIqxesSBnGsexK8t9okcFaiyDuQ7k24M0=;
-        b=mRU7xzfWzlNkEvtTdz3pIlH+3O6kb04aJMU+hvjzP8JcMRn4vyRFSLFXwzgHY3OwPo
-         YLw/quYtOCfsb3ffw0TSidvzYUKS7StgFRMC7rK/wrmY0Jp2VO1d9G4Fh6aH5Wk/sMwf
-         axawgGcwEb9XHDFgon8i0dMk7WwXZN/EmGViYDyw038bvxXGd0wopHAyJGNvQGRm6uoJ
-         xNHfRnqucCgURoB644Bvf/HzmOu7Q695RN+gv8E+hCfjiI8vtLMzXFR0wvletlY3nYFV
-         P6ApOXU2rqnLLArdql3PlrztKWvC33xnc6Na99GPDm8VMiD4USMaA7V1Yz7BG3ouyVMS
-         O4Jw==
+        bh=lpEa+/BRm24XesFPsnNk5cI0mT1TDDR8Zk/jTKgI6uM=;
+        b=hCQOu+RtXc+YXfM1Aja28NLxoCRtfmCn2qZbMjZj5luctKt9TvpQsZJerrqPznbs1n
+         K3zr4y7z2dA/M6CkglXs6aS7AVLpRj+13QF0doj3sxcoOFQh7uc2Xx+ZLc7+bYvrHkRz
+         yStcTqVPDo0yD6y94m9A7mG+48ywg401un2aDv8C+VEyfNA1eRFgF3PAPc2w0m/K5HlA
+         Tx4ryfdHVA65brhhxqvEwtu5vGwhB7H/1CILjybawf+/N98lrvo8TdI4GCWms8H01oKP
+         g51T6XE+PtDo8agk1mKeP5FfxSj/CxM4+KOgLR4rYj1IyCToj20LOLNn9VhXGfgVvW9k
+         iG+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=UhJHMTqQnmWIqxesSBnGsexK8t9okcFaiyDuQ7k24M0=;
-        b=dSOU2eq5nEvo8EUSYJX1CVXVbCON5JBBOOScBVdVjdgP1KXHL3C4I5oA3TCn8Ce4UD
-         znzx7uT0bF3Spv+35bJqSAE3UORfaloqrXX+YBB6ECOMYnWB7QCsl3qkCpEQdqeQjM07
-         VzElzmRPoQWnodi5P4VUsLbJODfDyVurS/DkT37PPyoF59UO2PsviTptqb/WVuOay5uc
-         loYfm4styMtbrky2PKHCO4QEtI+hlNV8Havo5GwuMWNwxD15mqQxM0g52el4XgcL+SDJ
-         Oj1jIUB596oPaNt4Tr8neciGIlOzAHGDBBaAAkKkso83OjGuvxQH8xC1xIyBPAJcJ5y5
-         cUcg==
-X-Gm-Message-State: APjAAAWqAbVHG2tPzM93k0HPP9vHyBGEKEKjkhCqCrhfRaET+VGz6q5W
-        8LwG7bWTh+SiXSHZQ4j3Ba8hsm546gqBMb5h3LTQ+w==
-X-Google-Smtp-Source: APXvYqy5tmgwRxWX41AQ9XnZeha9eExdYJyr4K4VvcRX0lydlUbNkCzkY541hqgxQW34OHd2w4cwj1NeHarUVFvSaXQ=
-X-Received: by 2002:aca:ead7:: with SMTP id i206mr5618684oih.0.1574299983189;
- Wed, 20 Nov 2019 17:33:03 -0800 (PST)
+        bh=lpEa+/BRm24XesFPsnNk5cI0mT1TDDR8Zk/jTKgI6uM=;
+        b=IGitO5EUApfom5R3MAXyNda+NUwDasz4Ak8+ZSzIKfCH1t5I2P4nf0bGHU4tLg0sVK
+         HahU4W9+ZL2e53ZUM5c+u/eWF5fteoL58vkfLRKRKvlznjTczMh5VA+cR2u+94r05QXR
+         PSt0HoWl0jsxLhL7gBiq6wTU+h3UqrfyGShvNDSix17oyNA01C3Acx4RWhLOQJ5FdckU
+         t0t3nfmDD2JoXJZy2+ARVz55obEFCsTZ5sXlnx1o/Ciyu8UysV/Snc7t9J02IMzL1er4
+         RIRrWMp5nmf7Vfn9mLBmNx59MwAVbL/3vx+9S1oVYRvlEzdWfwOn6IKzD34+vMo7MxLZ
+         dodQ==
+X-Gm-Message-State: APjAAAU3YsjgfZJ3VPZCKYeIIDeVdP3Vu0nGmV8Ef0EnIFU4tx2AohoJ
+        pmqqNooQAFElKRNs8lfRWXbtfxH6zwULeXhXkzI=
+X-Google-Smtp-Source: APXvYqwSSP+8HVivUWXCp6o5UY+Z2Yt0nRWPRkJz7YfyieQdmUfv+3R4fBsTIDUJxwAyEFviUq3P6xI7T2McJgjJLV0=
+X-Received: by 2002:aca:c50f:: with SMTP id v15mr5658442oif.5.1574300082776;
+ Wed, 20 Nov 2019 17:34:42 -0800 (PST)
 MIME-Version: 1.0
-References: <157428480574.36836.14057238306923901253.stgit@djiang5-desk3.ch.intel.com>
- <157428502934.36836.8119026517510193201.stgit@djiang5-desk3.ch.intel.com>
- <20191120215338.GN2634@zn.tnic> <20191120231923.GA32680@agluck-desk2.amr.corp.intel.com>
- <20191120232645.GO2634@zn.tnic> <CAPcyv4gngO04iWuKu2_DV4_AXw5yssd6njTNKF=eKk+YJw3AfQ@mail.gmail.com>
- <alpine.DEB.2.21.1911210151590.29534@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1911210151590.29534@nanos.tec.linutronix.de>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 20 Nov 2019 17:32:51 -0800
-Message-ID: <CAPcyv4iSv893n_gri+SC42Wcsr8EOGJfuWYUzi3v-fDnGBSriA@mail.gmail.com>
-Subject: Re: [PATCH RFC 01/14] x86/asm: add iosubmit_cmds512() based on
- movdir64b CPU instruction
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Borislav Petkov <bp@alien8.de>, "Luck, Tony" <tony.luck@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>, dmaengine@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Vinod Koul <vkoul@kernel.org>, Jing Lin <jing.lin@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Dey, Megha" <megha.dey@intel.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, Jens Axboe <axboe@kernel.dk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>
+References: <1574145389-12149-1-git-send-email-wanpengli@tencent.com>
+ <09CD3BD3-1F5E-48DA-82ED-58E3196DBD83@oracle.com> <CANRm+CxZ5Opj44Aj+LL18nVSuU63hXpt9U9E3jJEQP67Hx6WMg@mail.gmail.com>
+ <20191120170228.GC32572@linux.intel.com>
+In-Reply-To: <20191120170228.GC32572@linux.intel.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Thu, 21 Nov 2019 09:34:34 +0800
+Message-ID: <CANRm+CyTeKkAyi5Dswi1JpBjCiMc9c4B4jj5+JKoY_aFhb-AwA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] KVM: VMX: FIXED+PHYSICAL mode single target IPI fastpath
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Liran Alon <liran.alon@oracle.com>,
+        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 4:53 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+On Thu, 21 Nov 2019 at 01:02, Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
 >
-> On Wed, 20 Nov 2019, Dan Williams wrote:
-> > On Wed, Nov 20, 2019 at 3:27 PM Borislav Petkov <bp@alien8.de> wrote:
+> On Wed, Nov 20, 2019 at 11:49:36AM +0800, Wanpeng Li wrote:
+> > On Tue, 19 Nov 2019 at 20:11, Liran Alon <liran.alon@oracle.com> wrote:
+> > > > +
+> > > > +static void vmx_handle_exit_irqoff(struct kvm_vcpu *vcpu, u32 *exit_reason)
+> > > > {
+> > > >       struct vcpu_vmx *vmx = to_vmx(vcpu);
+> > > >
+> > > > @@ -6231,6 +6263,8 @@ static void vmx_handle_exit_irqoff(struct kvm_vcpu *vcpu)
+> > > >               handle_external_interrupt_irqoff(vcpu);
+> > > >       else if (vmx->exit_reason == EXIT_REASON_EXCEPTION_NMI)
+> > > >               handle_exception_nmi_irqoff(vmx);
+> > > > +     else if (vmx->exit_reason == EXIT_REASON_MSR_WRITE)
+> > > > +             *exit_reason = handle_ipi_fastpath(vcpu);
 > > >
-> > > On Wed, Nov 20, 2019 at 03:19:23PM -0800, Luck, Tony wrote:
-> > > > That's the underlying functionality of the MOVDIR64B instruction. A
-> > > > posted write so no way to know if it succeeded.
+> > > 1) This case requires a comment as the only reason it is called here is an
+> > > optimisation.  In contrast to the other cases which must be called before
+> > > interrupts are enabled on the host.
 > > >
-> > > So how do you know whether any of the writes went through?
+> > > 2) I would rename handler to handle_accel_set_msr_irqoff().  To signal this
+> > > handler runs with host interrupts disabled and to make it a general place
+> > > for accelerating WRMSRs in case we would require more in the future.
 > >
-> > It's identical to the writel() mmio-write to start a SATA command
-> > transfer. The higher level device driver protocol validates that the
-> > command went through, ultimately with a timeout. There's no return
-> > value for iosubmit_cmds512() for the same reason there's no return
-> > value for the other iowrite primitives.
+> > Yes, TSCDEADLINE/VMX PREEMPTION TIMER is in my todo list after this merged
+> > upstream, handle all the comments in v3, thanks for making this nicer
+> > further. :)
 >
-> With the difference that other iowrite primitive have no dependencies on
-> cpu feature bits and cannot fail on the software level.
+> Handling those is very different than what is being proposed here though.
+> For this case, only the side effect of the WRMSR is being expedited, KVM
+> still goes through the heavy VM-Exit handler path to handle emulating the
+> WRMSR itself.
+>
+> To truly expedite things like TSCDEADLINE, the entire emulation of WRMSR
+> would need be handled without going through the standard VM-Exit handler,
+> which is a much more fundamental change to vcpu_enter_guest() and has
+> different requirements.  For example, keeping IRQs disabled is pointless
+> for generic WRMSR emulation since the interrupt will fire as soon as KVM
+> resumes the guest, whereas keeping IRQs disabled for processing ICR writes
+> is a valid optimization since recognition of the IPI on the dest vCPU
+> isn't dependent on KVM resuming the current vCPU.
+>
+> Rather than optimizing full emulation flows one at a time, i.e. exempting
+> the ICR case, I wonder if we're better off figuring out a way to improve
+> the performance of VM-Exit handling at a larger scale, e.g. avoid locking
+> kvm->srcu unnecessarily, Andrea's retpolin changes, etc...
 
-True, but that would be a driver coding mistake flagged by the
-WARN_ON_ONCE, and the failure is static. The driver must check for
-static_cpu_has(X86_FEATURE_MOVDIR64B) once at init, but it need not
-check again on every command submission.
+I use the latest kvm/queue, so Andrea's patch is there. As you know,
+improve the performance of vmexit is a long term effort. But, let's
+make v4 upstream firstly. :)
+
+    Wanpeng
