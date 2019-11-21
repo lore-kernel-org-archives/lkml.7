@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A985FC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:29:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE9B7C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:29:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8279B20715
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:29:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74AF120715
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:29:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574342957;
-	bh=oEF0TfEmI5WbhcAKUDT9nBHfxFGfK9gs2w7wsiab6Iw=;
+	s=default; t=1574342962;
+	bh=182E69orGVAr6uDhiU/Wa8kfY2L4r3LvkNVQrldlYAk=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=bMEBoiz12haRksPn+Z0OIbS4uD3lRFsS3jWjwPiaEFPrfdHPHcWZEPmvHuiCHsbIs
-	 QqsuddBL+x7Q5tNxkUQIHTcVJ/TNwX9NUQ4+/sIjeG70U579tCgYEZptmphlbJ8R7R
-	 fF7qQgSirxaSBioxOdvslQSZ85n82+C1uGvV9qOE=
+	b=Ig3InWPMf4o7/+2tGrKLRvgliuHqMpwyAjzN64DOXaS+qARyADQhvUyOa6HWWUm9W
+	 PeaojCvJjenjBz5VG0C7kWUSBpYaqEJBPGkGsyHEdKdHVEypU/yhMuICFJ+QL3JkTt
+	 Uof8HiMoPSvX83oa4j03oDZJ9dZG2dsjjjj6uWQo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727216AbfKUN3Q (ORCPT
+        id S1727237AbfKUN3V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 08:29:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49334 "EHLO mail.kernel.org"
+        Thu, 21 Nov 2019 08:29:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727196AbfKUN3P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 08:29:15 -0500
+        id S1727196AbfKUN3T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 08:29:19 -0500
 Received: from localhost.localdomain (unknown [118.189.143.39])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B061E20715;
-        Thu, 21 Nov 2019 13:29:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D45C52070B;
+        Thu, 21 Nov 2019 13:29:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574342953;
-        bh=oEF0TfEmI5WbhcAKUDT9nBHfxFGfK9gs2w7wsiab6Iw=;
+        s=default; t=1574342958;
+        bh=182E69orGVAr6uDhiU/Wa8kfY2L4r3LvkNVQrldlYAk=;
         h=From:To:Cc:Subject:Date:From;
-        b=MIZ/vWIUBRhsqvyiX0JpG5JLd/5n9l5z5vfX/MJMMfa4NiLFCUig6mCSlFZu2nW1T
-         YfKrrlrozHBWOMZOU4pu7AEIe6u/1a3cYNbb1MhaMQn9LYqIVu9GJrftipIjxa1HOb
-         SBquITR8Z3thHnCcXYGnVYxA6pwVGd3dwDHXbn7Y=
+        b=fIC3mT5QdPx0VRaXrx5GuimHdvBlw+y0s12AhH0mfcYE77QLljgpbWykSDfntBCCT
+         nR6M/+jfNk6duL62WMBFCsC6VsvrA81o1niQLD5e/kn5Py3ppaINOQyFR7ipOvN2BG
+         /ifLyLcEESAx/H+a3laaTyk54Dx4371LiH2bk4yY=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Felipe Balbi <balbi@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-usb@vger.kernel.org
-Subject: [PATCH] usb: host: Fix Kconfig indentation
-Date:   Thu, 21 Nov 2019 21:29:10 +0800
-Message-Id: <20191121132910.29310-1-krzk@kernel.org>
+Subject: [PATCH] usb: dwc3: Fix Kconfig indentation
+Date:   Thu, 21 Nov 2019 21:29:14 +0800
+Message-Id: <20191121132914.29368-1-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -59,105 +60,53 @@ coding style with command like:
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/usb/host/Kconfig | 50 ++++++++++++++++++++--------------------
- 1 file changed, 25 insertions(+), 25 deletions(-)
+ drivers/usb/dwc3/Kconfig | 30 +++++++++++++++---------------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
-index d6164ede63d3..8d730180db06 100644
---- a/drivers/usb/host/Kconfig
-+++ b/drivers/usb/host/Kconfig
-@@ -38,9 +38,9 @@ config USB_XHCI_DBGCAP
- 	  before enabling this option. If unsure, say 'N'.
+diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
+index 0d97e6bfaf36..206caa0ea1c6 100644
+--- a/drivers/usb/dwc3/Kconfig
++++ b/drivers/usb/dwc3/Kconfig
+@@ -97,24 +97,24 @@ config USB_DWC3_KEYSTONE
+ 	  Say 'Y' or 'M' here if you have one such device
  
- config USB_XHCI_PCI
--       tristate
--       depends on USB_PCI
--       default y
-+	tristate
-+	depends on USB_PCI
-+	default y
- 
- config USB_XHCI_PLATFORM
- 	tristate "Generic xHCI driver for a platform device"
-@@ -245,13 +245,13 @@ config USB_EHCI_HCD_AT91
- 	  Atmel chips.
- 
- config USB_EHCI_TEGRA
--       tristate "NVIDIA Tegra HCD support"
--       depends on ARCH_TEGRA
--       select USB_EHCI_ROOT_HUB_TT
--       select USB_TEGRA_PHY
+ config USB_DWC3_MESON_G12A
+-       tristate "Amlogic Meson G12A Platforms"
+-       depends on OF && COMMON_CLK
+-       depends on ARCH_MESON || COMPILE_TEST
+-       default USB_DWC3
+-       select USB_ROLE_SWITCH
++	tristate "Amlogic Meson G12A Platforms"
++	depends on OF && COMMON_CLK
++	depends on ARCH_MESON || COMPILE_TEST
++	default USB_DWC3
++	select USB_ROLE_SWITCH
+ 	select REGMAP_MMIO
 -       help
--	 This driver enables support for the internal USB Host Controllers
--	 found in NVIDIA Tegra SoCs. The controllers are EHCI compliant.
-+	tristate "NVIDIA Tegra HCD support"
-+	depends on ARCH_TEGRA
-+	select USB_EHCI_ROOT_HUB_TT
-+	select USB_TEGRA_PHY
+-	 Support USB2/3 functionality in Amlogic G12A platforms.
+-	 Say 'Y' or 'M' if you have one such device.
 +	help
-+	  This driver enables support for the internal USB Host Controllers
-+	  found in NVIDIA Tegra SoCs. The controllers are EHCI compliant.
++	  Support USB2/3 functionality in Amlogic G12A platforms.
++	  Say 'Y' or 'M' if you have one such device.
  
- config USB_EHCI_HCD_PPC_OF
- 	bool "EHCI support for PPC USB controller on OF platform bus"
-@@ -269,10 +269,10 @@ config USB_EHCI_SH
- 	  If you use the PCI EHCI controller, this option is not necessary.
- 
- config USB_EHCI_EXYNOS
--       tristate "EHCI support for Samsung S5P/EXYNOS SoC Series"
--       depends on ARCH_S5PV210 || ARCH_EXYNOS
+ config USB_DWC3_OF_SIMPLE
+-       tristate "Generic OF Simple Glue Layer"
+-       depends on OF && COMMON_CLK
+-       default USB_DWC3
 -       help
--	Enable support for the Samsung Exynos SOC's on-chip EHCI controller.
-+	tristate "EHCI support for Samsung S5P/EXYNOS SoC Series"
-+	depends on ARCH_S5PV210 || ARCH_EXYNOS
+-	 Support USB2/3 functionality in simple SoC integrations.
+-	 Currently supports Xilinx and Qualcomm DWC USB3 IP.
+-	 Say 'Y' or 'M' if you have one such device.
++	tristate "Generic OF Simple Glue Layer"
++	depends on OF && COMMON_CLK
++	default USB_DWC3
 +	help
-+	  Enable support for the Samsung Exynos SOC's on-chip EHCI controller.
++	  Support USB2/3 functionality in simple SoC integrations.
++	  Currently supports Xilinx and Qualcomm DWC USB3 IP.
++	  Say 'Y' or 'M' if you have one such device.
  
- config USB_EHCI_MV
- 	tristate "EHCI support for Marvell PXA/MMP USB controller"
-@@ -545,7 +545,7 @@ config USB_OHCI_EXYNOS
- 	tristate "OHCI support for Samsung S5P/EXYNOS SoC Series"
- 	depends on ARCH_S5PV210 || ARCH_EXYNOS
- 	help
--	 Enable support for the Samsung Exynos SOC's on-chip OHCI controller.
-+	  Enable support for the Samsung Exynos SOC's on-chip OHCI controller.
- 
- config USB_CNS3XXX_OHCI
- 	bool "Cavium CNS3XXX OHCI Module (DEPRECATED)"
-@@ -609,8 +609,8 @@ config USB_UHCI_PLATFORM
- 	default y if (ARCH_VT8500 || ARCH_ASPEED)
- 
- config USB_UHCI_ASPEED
--       bool
--       default y if ARCH_ASPEED
-+	bool
-+	default y if ARCH_ASPEED
- 
- config USB_FHCI_HCD
- 	tristate "Freescale QE USB Host Controller support"
-@@ -713,14 +713,14 @@ config USB_RENESAS_USBHS_HCD
- 	  module will be called renesas-usbhs.
- 
- config USB_IMX21_HCD
--       tristate "i.MX21 HCD support"
--       depends on ARM && ARCH_MXC
--       help
--	 This driver enables support for the on-chip USB host in the
--	 i.MX21 processor.
--
--	 To compile this driver as a module, choose M here: the
--	 module will be called "imx21-hcd".
-+	tristate "i.MX21 HCD support"
-+	depends on ARM && ARCH_MXC
-+	help
-+	  This driver enables support for the on-chip USB host in the
-+	  i.MX21 processor.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called "imx21-hcd".
- 
- config USB_HCD_BCMA
- 	tristate "BCMA usb host driver"
+ config USB_DWC3_ST
+ 	tristate "STMicroelectronics Platforms"
 -- 
 2.17.1
 
