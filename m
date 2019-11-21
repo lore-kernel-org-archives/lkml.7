@@ -2,185 +2,206 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21380C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 12:57:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 327C0C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 12:58:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC7D120731
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 12:57:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00A5420731
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 12:58:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IJjLyLmf"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ic9y14j/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbfKUM5N (ORCPT
+        id S1726757AbfKUM6d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 07:57:13 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:53953 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726293AbfKUM5N (ORCPT
+        Thu, 21 Nov 2019 07:58:33 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:37398 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726358AbfKUM6c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 07:57:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574341031;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=nVnuS3G07UEp6AIL04Xz4q+Tzbj4PQPwyBSCk9uHGkw=;
-        b=IJjLyLmfUKo+7eHjcuvWWSQBr+5Vu6Tpmpx4vcIwd+0hY6t5kNQX+CA54HCeKDy6MR0pL6
-        GN2MBCFVGnbVSvBlJTiRq8fm3j8rkwWvuDBl9ok4te1Bv6m7Kstt00CZg2yZYEk1X9mTM/
-        q/Y8JlQvSelYzr5dPBXkUv3iK06KN20=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-304-IdTq9dY6NIWP4AC8byP3cg-1; Thu, 21 Nov 2019 07:57:10 -0500
-Received: by mail-qt1-f200.google.com with SMTP id o13so2214096qtr.3
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 04:57:10 -0800 (PST)
+        Thu, 21 Nov 2019 07:58:32 -0500
+Received: by mail-wr1-f66.google.com with SMTP id t1so4311876wrv.4
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 04:58:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=WVDdCVAVvfXUp96b+K4Bvi3DKiAcKkcFAJ8o78jw2lM=;
+        b=ic9y14j/LXfCo79jPngoZmQbRUfN0Q3R5fsdc4ajFRalLImGXWYQmf9VN++QZhsaqx
+         qM2/JbjvBQgMiotIcd9ioWZtvcpKjXJZONp9s5TEdxJDvl4dDL5/MeWTRocuL1ON98gF
+         7GuWIvzHOUwc2FSe+zv7aEEIpEf8lxNcaxsJfsCWb34VlY4xHgOE05SAeE2OePqEDgmS
+         uQvr5t8pf6ORHki3ciSn9WjMwMj249Wn642XWv5FW/O2IF+t+te65gnkyLWcXqOoyS4k
+         8TvX8CTp2Sx5cbeZNqF0Otat3rjY/uvM6dyXAWQAK5Lf2AtKT28X2z3v8zNhu6yc2SQ9
+         I5PQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QH9raaSEy0ZT3Ng+Xr/UbfMvZg5iClSyjL5MYEeeB0o=;
-        b=AkCsA34uzO8iE7U9Qvv5VayE7VDC4lUhqziUx6epWEbYPmab5A7aCCom9TOOdEBKdc
-         VMVz3st7UD8t1ehHBUHsU3Q5R+f4+500yf3h1yZf7Xqkgw8CVELyuXLERySaAeNABVnZ
-         ZOozey25LBWqRKUhQRt0oInCunIRldUMZ4/XY/hvdpjcfJLnRBbnxIFv7IffOnvBLdEb
-         JtNrj2awewpQCMtW1TQrDgqfPHR/UzHnvm9G9AS4/oyApSu57FVueNKdQfDjVfczYeuT
-         nU5VSvP4B1G9HPGGYcdMF6N2o3GclLp8dphgcGLpWYFZu/gnkXKEooeyIcnlizykc+eE
-         Lzpw==
-X-Gm-Message-State: APjAAAWnFTz5Pwl/Ayum6MmkeCloOnfgTO/FgPvU+KGRxS2MN4IvZpzo
-        Fu6ZlUyk+oTDn9ekfAfzmEVNrruHWNroFWVH2Dd8QhVdNFXWIONBeoss54ssd+WGx5qFkCbtede
-        fQiYMKNNlLmtm78REtr8p7XvYOG6bIz8ofQbtUGMI
-X-Received: by 2002:ac8:7550:: with SMTP id b16mr8247883qtr.286.1574341029753;
-        Thu, 21 Nov 2019 04:57:09 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzCB3+oy9LxTLupf+9fIdsK0rCf/DUfxOcnQaIfyPvrUsIjLHSyzhlMj9XMgXerrNXcdpm7ZYcN/G4r6b/xReI=
-X-Received: by 2002:ac8:7550:: with SMTP id b16mr8247859qtr.286.1574341029535;
- Thu, 21 Nov 2019 04:57:09 -0800 (PST)
-MIME-Version: 1.0
-References: <CACO55tsHy6yZQZ8PkdW8iPA7+uc5rdcEwRJwYEQ3iqu85F8Sqg@mail.gmail.com>
- <20191120151542.GH11621@lahna.fi.intel.com> <CACO55tvo3rbPtYJcioEgXCEQqVXcVAm-iowr9Nim=bgTdMjgLw@mail.gmail.com>
- <20191120155301.GL11621@lahna.fi.intel.com> <CAJZ5v0hkT-fHFOQKzp2qYPyR+NUa4c-G-uGLPZuQxqsG454PiQ@mail.gmail.com>
- <CACO55ttTPi2XpRRM_NYJU5c5=OvG0=-YngFy1BiR8WpHkavwXw@mail.gmail.com>
- <CAJZ5v0h=7zu3A+ojgUSmwTH0KeXmYP5OKDL__rwkkWaWqcJcWQ@mail.gmail.com>
- <20191121112821.GU11621@lahna.fi.intel.com> <CAJZ5v0hQhj5Wf+piU11abC4pF26yM=XHGHAcDv8Jsgdx04aN-w@mail.gmail.com>
- <20191121114610.GW11621@lahna.fi.intel.com> <20191121125236.GX11621@lahna.fi.intel.com>
-In-Reply-To: <20191121125236.GX11621@lahna.fi.intel.com>
-From:   Karol Herbst <kherbst@redhat.com>
-Date:   Thu, 21 Nov 2019 13:56:57 +0100
-Message-ID: <CACO55ttOgx=jyCh_uZLH4t8C5SW0f2u3BSrw93vPmusM98p0Mg@mail.gmail.com>
-Subject: Re: [PATCH v4] pci: prevent putting nvidia GPUs into lower device
- states on certain intel bridges
-To:     Mika Westerberg <mika.westerberg@intel.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=WVDdCVAVvfXUp96b+K4Bvi3DKiAcKkcFAJ8o78jw2lM=;
+        b=ZBMCy8tP287WXeef2331YT5ofRbtTnQL4E74Kac6dHLCXBL9CDd2iz/KciKVELWYRq
+         UahF6kXVTtekWc2yY7VuW8EEdOPMCiW29oXIp4GJhSHGu4D9LwgB45SMZOYRVfn0S8Du
+         eEro/+l3cl9IBEmWc/3IfyceJHiT42aJTvSySM2pyG0f8PkhIIloWEf4RAVTGW30vRaW
+         rP5tVtLR/Aq/nFYNfODSCpbDcWifBVQ0M0fXcO3p9nHg+dhzr/pW8riqbIDnZ+ukrGcQ
+         STuDs/e5Kga99eHN+/PXB4AqgGpVN4PdzeN+U7bRkOsq5i0cIVRVWV32Tt4zu9kdqyZq
+         A5DQ==
+X-Gm-Message-State: APjAAAU2hjwDAg5pm2VAn8jsxsN8IhQn0m3ktZYM9D9ZARXWNAL1o1pF
+        Lui6U2b07kiye35ii9VFrc7pIg==
+X-Google-Smtp-Source: APXvYqwIRQHfyZsDMcJvT7grkZ/0cjkEQe8IGAt/tMfssMA3K3x/CJMLxU41zRVNRGuqHGIiZGRjGQ==
+X-Received: by 2002:adf:fecf:: with SMTP id q15mr5143405wrs.75.1574341109518;
+        Thu, 21 Nov 2019 04:58:29 -0800 (PST)
+Received: from [10.44.66.8] ([212.45.67.2])
+        by smtp.googlemail.com with ESMTPSA id w19sm2746143wmk.36.2019.11.21.04.58.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 21 Nov 2019 04:58:28 -0800 (PST)
+Subject: Re: [PATCH v3 2/2] interconnect: qcom: Add OSM L3 interconnect
+ provider support
+To:     Evan Green <evgreen@chromium.org>,
+        Sibi Sankar <sibis@codeaurora.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Lyude Paul <lyude@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        Dave Airlie <airlied@gmail.com>,
-        Mario Limonciello <Mario.Limonciello@dell.com>
-X-MC-Unique: IdTq9dY6NIWP4AC8byP3cg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        David Dai <daidavid1@codeaurora.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+References: <20191118154435.20357-1-sibis@codeaurora.org>
+ <0101016e7f30ad15-18908ef0-a2b9-4a2a-bf32-6cb3aa447b01-000000@us-west-2.amazonses.com>
+ <CAE=gft5jGagsFS2yBeJCLt9R26RQjx9bfMxhQu8Jj4uc4ca40w@mail.gmail.com>
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+ KEmKjLDvB0pePJkdTw==
+Message-ID: <534d80fb-249d-ce18-86c0-1a1bc4f98c03@linaro.org>
+Date:   Thu, 21 Nov 2019 14:58:27 +0200
+MIME-Version: 1.0
+In-Reply-To: <CAE=gft5jGagsFS2yBeJCLt9R26RQjx9bfMxhQu8Jj4uc4ca40w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 1:52 PM Mika Westerberg
-<mika.westerberg@intel.com> wrote:
->
-> On Thu, Nov 21, 2019 at 01:46:14PM +0200, Mika Westerberg wrote:
-> > On Thu, Nov 21, 2019 at 12:34:22PM +0100, Rafael J. Wysocki wrote:
-> > > On Thu, Nov 21, 2019 at 12:28 PM Mika Westerberg
-> > > <mika.westerberg@intel.com> wrote:
-> > > >
-> > > > On Wed, Nov 20, 2019 at 11:29:33PM +0100, Rafael J. Wysocki wrote:
-> > > > > > last week or so I found systems where the GPU was under the "PC=
-I
-> > > > > > Express Root Port" (name from lspci) and on those systems all o=
-f that
-> > > > > > seems to work. So I am wondering if it's indeed just the 0x1901=
- one,
-> > > > > > which also explains Mikas case that Thunderbolt stuff works as =
-devices
-> > > > > > never get populated under this particular bridge controller, bu=
-t under
-> > > > > > those "Root Port"s
-> > > > >
-> > > > > It always is a PCIe port, but its location within the SoC may mat=
-ter.
-> > > >
-> > > > Exactly. Intel hardware has PCIe ports on CPU side (these are calle=
-d
-> > > > PEG, PCI Express Graphics, ports), and the PCH side. I think the IP=
- is
-> > > > still the same.
-> > > >
-> > > > > Also some custom AML-based power management is involved and that =
-may
-> > > > > be making specific assumptions on the configuration of the SoC an=
-d the
-> > > > > GPU at the time of its invocation which unfortunately are not kno=
-wn to
-> > > > > us.
-> > > > >
-> > > > > However, it looks like the AML invoked to power down the GPU from
-> > > > > acpi_pci_set_power_state() gets confused if it is not in PCI D0 a=
-t
-> > > > > that point, so it looks like that AML tries to access device memo=
-ry on
-> > > > > the GPU (beyond the PCI config space) or similar which is not
-> > > > > accessible in PCI power states below D0.
-> > > >
-> > > > Or the PCI config space of the GPU when the parent root port is in =
-D3hot
-> > > > (as it is the case here). Also then the GPU config space is not
-> > > > accessible.
-> > >
-> > > Why would the parent port be in D3hot at that point?  Wouldn't that b=
-e
-> > > a suspend ordering violation?
-> >
-> > No. We put the GPU into D3hot first, then the root port and then turn
-> > off the power resource (which is attached to the root port) resulting
-> > the topology entering D3cold.
->
-> I don't see that happening in the AML though.
->
-> Basically the difference is that when Windows 7 or Linux (the _REV=3D=3D5
-> check) then we directly do link disable whereas in Windows 8+ we invoke
-> LKDS() method that puts the link into L2/L3. None of the fields they
-> access seem to touch the GPU itself.
->
-> LKDS() for the first PEG port looks like this:
->
->    P0L2 =3D One
->    Sleep (0x10)
->    Local0 =3D Zero
->    While (P0L2)
->    {
->         If ((Local0 > 0x04))
->         {
->             Break
->         }
->
->         Sleep (0x10)
->         Local0++
->    }
->
-> One thing that comes to mind is that the loop can end even if P0L2 is
-> not cleared as it does only 5 iterations with 16 ms sleep between. Maybe
-> Sleep() is implemented differently in Windows? I mean Linux may be
-> "faster" here and return prematurely and if we leave the port into D0
-> this does not happen, or something. I'm just throwing out ideas :)
->
+Hi Evan,
 
-keep in mind, that I am able to hit this bug with my python script:
-https://raw.githubusercontent.com/karolherbst/pci-stub-runpm/master/nv_runp=
-m_bug_test.py
+On 11/19/19 00:42, Evan Green wrote:
+> Hi Sibi,
+> 
+> On Mon, Nov 18, 2019 at 7:45 AM Sibi Sankar <sibis@codeaurora.org> wrote:
+>>
+>> On some Qualcomm SoCs, Operating State Manager (OSM) controls the
+>> resources of scaling L3 caches. Add a driver to handle bandwidth
+>> requests to OSM L3 from CPU/GPU.
+>>
+>> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+>> ---
+>>  drivers/interconnect/qcom/Kconfig  |   7 +
+>>  drivers/interconnect/qcom/Makefile |   2 +
+>>  drivers/interconnect/qcom/osm-l3.c | 284 +++++++++++++++++++++++++++++
+>>  3 files changed, 293 insertions(+)
+>>  create mode 100644 drivers/interconnect/qcom/osm-l3.c
+>>
+[..]
+>> +static int qcom_icc_aggregate(struct icc_node *node, u32 tag, u32 avg_bw,
+>> +                             u32 peak_bw, u32 *agg_avg, u32 *agg_peak)
+>> +{
+>> +       *agg_avg += avg_bw;
+>> +       *agg_peak = max_t(u32, *agg_peak, peak_bw);
+>> +
+>> +       return 0;
+>> +}
+> 
+> Georgi, I wonder if it's a good idea to make a small collection of
+> "std" aggregate functions in the interconnect core that a driver can
+> just point to if it's doing something super standard like this (ie
+> driver->aggregate = icc_std_aggregate;). This is probably fine as-is
+> for now, but if we see a lot more copy/pastes of this function we
+> should think about it.
 
+Sure, thanks for the suggestion! Will submit a patch for this.
+
+> 
+>> +
+>> +static int qcom_icc_set(struct icc_node *src, struct icc_node *dst)
+>> +{
+[..]
+>> +
+>> +static int qcom_osm_l3_remove(struct platform_device *pdev)
+>> +{
+>> +       struct qcom_osm_l3_icc_provider *qp = platform_get_drvdata(pdev);
+>> +       struct icc_provider *provider = &qp->provider;
+>> +       struct icc_node *n;
+>> +
+>> +       list_for_each_entry(n, &provider->nodes, node_list) {
+> 
+> There was a comment on one of the other threads that we've been
+> copy/pasting this snippet around and it's wrong because it doesn't use
+> the _safe variant of the macro. So we end up destroying the list we're
+> iterating over.
+> 
+> Georgi, did you have a plan to refactor this, or should we just change
+> this to be the _safe version?
+
+I have fixes that convert this to the _safe variant (for stable) and also
+factor this out into icc_nodes_remove() function. Will post them.
+
+Thanks,
+Georgi
+
+> 
+>> +               icc_node_del(n);
+>> +               icc_node_destroy(n->id);
+>> +       }
+>> +
+>> +       return icc_provider_del(provider);
+>> +}
