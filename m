@@ -2,300 +2,164 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21723C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:59:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A2F7C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:00:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB9CD20672
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:59:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="STbB6eOt"
+	by mail.kernel.org (Postfix) with ESMTP id 01D092068F
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:00:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbfKUU7o (ORCPT
+        id S1726957AbfKUVA4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 15:59:44 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:36785 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727031AbfKUU7f (ORCPT
+        Thu, 21 Nov 2019 16:00:56 -0500
+Received: from out01.mta.xmission.com ([166.70.13.231]:48534 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726293AbfKUVAz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 15:59:35 -0500
-Received: by mail-pj1-f65.google.com with SMTP id cq11so2057391pjb.3
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 12:59:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=DRoA2EhvMXtyon9YkUmd/X1Q313xd8cuv+FnMNFKmCA=;
-        b=STbB6eOts0UWAyZ8/n3Rz6xnBEK1XumpRqT/PxHZvy9l59qrxtiAlUgnO+ke1nWRqR
-         sxEVtWJkaSLh6wQAdVkbGTtLKkTYHFP70MJUJnmI0vLbNk1WzhitU5RuU0ar/EICva0X
-         EanjqoQvHeJMo9GlkY0AbGBZDQYFSpVGBrDh8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=DRoA2EhvMXtyon9YkUmd/X1Q313xd8cuv+FnMNFKmCA=;
-        b=P5oeqdBUpCovD3+jxXg1gzs7SydzwPaw/oU20e9QdeL8Aqiq0q6tD9a9hPu9SDNolk
-         fDb6Q26VTBMiSnArhOSxGQSh03owQM33PNJDojNGsdCDY/TzO3YVuLVW6tBfqK4Hqstw
-         UjHvuRLVAwIHKCEz/mm70ujFlBBz1Vpe0CFWbzRqKzaO2LZdNT9d83UpqCqRvm7b4Pkn
-         5weAKAwByiXSb4XtC8iq4cwer0t1czhY31cDecPxcTV8GnDUcRVq4bNZeptFCj99oN/e
-         XczDgPU8+F+Elw/x/3vXEmf8GnLiByFCn6/QitK1yJ8R0FFSgaoAzK1Dcl3yYEsWnZCW
-         obsw==
-X-Gm-Message-State: APjAAAVkedepXiiX2oVvhclQdrPpsuB+l1vWwu/VinK05KxsSqbGVyFk
-        nSilMt6OEEpysrGetkmSsPJd/g==
-X-Google-Smtp-Source: APXvYqzM03HmVHpcqOdxSnbQwFcYraVV46uuaF/gkBLRLufpnKoP0WZot+Xwq+9XDMd3Fj6PpCCInQ==
-X-Received: by 2002:a17:90b:3015:: with SMTP id hg21mr14018116pjb.96.1574369974968;
-        Thu, 21 Nov 2019 12:59:34 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id c1sm426801pjc.23.2019.11.21.12.59.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Nov 2019 12:59:34 -0800 (PST)
-From:   Kees Cook <keescook@chromium.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/3] docs, parallelism: Rearrange how jobserver reservations are made
-Date:   Thu, 21 Nov 2019 12:59:29 -0800
-Message-Id: <20191121205929.40371-4-keescook@chromium.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191121205929.40371-1-keescook@chromium.org>
-References: <20191121205929.40371-1-keescook@chromium.org>
+        Thu, 21 Nov 2019 16:00:55 -0500
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1iXtZL-0002sS-Rv; Thu, 21 Nov 2019 14:00:51 -0700
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1iXtZE-0008Ey-Gy; Thu, 21 Nov 2019 14:00:51 -0700
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        syzbot <syzbot+6b074f741adbd93d2df5@syzkaller.appspotmail.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        "open list\:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        "Luis R. Rodriguez" <mcgrof@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+References: <0000000000006e31980579315914@google.com>
+        <000000000000a6993c0597cc8375@google.com>
+        <CALCETrVfWHPHiOmyJ9iDJDiCD3idPA4BdeM=4FUEO-uuxM07_g@mail.gmail.com>
+        <CACT4Y+YVfyb6VSiFALAJT-O0GAxsVRY0XafAyx1NM+bkGw9vCQ@mail.gmail.com>
+Date:   Thu, 21 Nov 2019 15:00:13 -0600
+In-Reply-To: <CACT4Y+YVfyb6VSiFALAJT-O0GAxsVRY0XafAyx1NM+bkGw9vCQ@mail.gmail.com>
+        (Dmitry Vyukov's message of "Thu, 21 Nov 2019 21:13:12 +0100")
+Message-ID: <87v9rd0wte.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-XM-SPF: eid=1iXtZE-0008Ey-Gy;;;mid=<87v9rd0wte.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1+/jXqjH+WgpIi9WaXPa/NIDOfo5vaWQXM=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: INFO: task hung in __do_page_fault (2)
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rasmus correctly observed that the existing jobserver reservation only
-worked if no other build targets were specified. The correct approach
-is to hold the jobserver slots until sphinx has finished. To fix this,
-the following changes are made:
+Dmitry Vyukov <dvyukov@google.com> writes:
 
-- refactor (and rename) scripts/jobserver-exec to set an environment
-  variable for the maximally reserved jobserver slots and exec a
-  child, to release the slots on exit.
+> On Thu, Nov 21, 2019 at 7:01 PM Andy Lutomirski <luto@kernel.org> wrote:
+>>
+>> On Wed, Nov 20, 2019 at 11:52 AM syzbot
+>> <syzbot+6b074f741adbd93d2df5@syzkaller.appspotmail.com> wrote:
+>> >
+>> > syzbot has bisected this bug to:
+>> >
+>> > commit 0161028b7c8aebef64194d3d73e43bc3b53b5c66
+>> > Author: Andy Lutomirski <luto@kernel.org>
+>> > Date:   Mon May 9 22:48:51 2016 +0000
+>> >
+>> >      perf/core: Change the default paranoia level to 2
+>> >
+>> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15910e86e00000
+>> > start commit:   18d0eae3 Merge tag 'char-misc-4.20-rc1' of git://git.kerne..
+>> > git tree:       upstream
+>> > final crash:    https://syzkaller.appspot.com/x/report.txt?x=17910e86e00000
+>> > console output: https://syzkaller.appspot.com/x/log.txt?x=13910e86e00000
+>> > kernel config:  https://syzkaller.appspot.com/x/.config?x=342f43de913c81b9
+>> > dashboard link: https://syzkaller.appspot.com/bug?extid=6b074f741adbd93d2df5
+>> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12482713400000
+>> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=158fd4a3400000
+>> >
+>> > Reported-by: syzbot+6b074f741adbd93d2df5@syzkaller.appspotmail.com
+>> > Fixes: 0161028b7c8a ("perf/core: Change the default paranoia level to 2")
+>> >
+>> > For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+>>
+>> Hi syzbot-
+>>
+>> I'm not quite sure how to tell you this in syzbotese, but I'm pretty
+>> sure you've bisected this wrong.  The blamed patch makes no sense.
+>
+>
+> Hi Andy,
+>
+> Three is no way to tell syzbot about this, it does not have any way to
+> use this information.
+> You can tell this to other recipients, though, and for the record on
+> the bug report email thread. For this you can use any free form.
+>
+> But what makes you think this is wrong?
+> From everything I see this looks like amazingly precise bisection.
+> The reproducer contains perf_event_open which seems to cause the hang
+> (there is a number of reports where perf_event_open hangs kernel dead
+> IIRC) _and_ it contains setresuid. Which makes good match for
+> "perf/core: Change the default paranoia level to 2" (for unpriv
+> users).
+> The bisection log also looks perfectly correct to me: no unrelated
+> kernel bugs were hit along the way; the crash was always reproduced
+> 100% reliably in all 10 runs; nothing else suspicious.
+> I can totally imagine that your patch unmasked some latent bug, but
+> it's not 100% obvious to me and in either case syzbot did the job as
+> well as a robot could possibly do.
 
-- create Documentation/scripts/parallel-wrapper.sh which examines both
-  $PARALLELISM and the detected "-jauto" logic from Documentation/Makefile
-  to decide sphinx's final -j argument.
+All Andy's patch did was change the default value of
+sysctl_perf_event_paranoid.  Which a quick skim of the code can only
+cause perf_event_open to fail.
 
-- chain these together in Documentation/Makefile
+So if perf is running as non-root aka unprivileged it might have
+been affected.
 
-Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Link: https://lore.kernel.org/lkml/eb25959a-9ec4-3530-2031-d9d716b40b20@rasmusvillemoes.dk
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- Documentation/Makefile                   |  5 +-
- Documentation/sphinx/parallel-wrapper.sh | 33 ++++++++++++
- scripts/jobserver-count                  | 59 ---------------------
- scripts/jobserver-exec                   | 66 ++++++++++++++++++++++++
- 4 files changed, 101 insertions(+), 62 deletions(-)
- create mode 100644 Documentation/sphinx/parallel-wrapper.sh
- delete mode 100755 scripts/jobserver-count
- create mode 100755 scripts/jobserver-exec
+That said the most likely effect that would cause a hang is for perf to
+not be started and therefore it's NMI's did not happen and so something
+else was free to hang.
 
-diff --git a/Documentation/Makefile b/Documentation/Makefile
-index ce8eb63b523a..30554a2fbdd7 100644
---- a/Documentation/Makefile
-+++ b/Documentation/Makefile
-@@ -33,8 +33,6 @@ ifeq ($(HAVE_SPHINX),0)
- 
- else # HAVE_SPHINX
- 
--export SPHINX_PARALLEL = $(shell perl -e 'open IN,"sphinx-build --version 2>&1 |"; while (<IN>) { if (m/([\d\.]+)/) { print "auto" if ($$1 >= "1.7") } ;} close IN')
--
- # User-friendly check for pdflatex and latexmk
- HAVE_PDFLATEX := $(shell if which $(PDFLATEX) >/dev/null 2>&1; then echo 1; else echo 0; fi)
- HAVE_LATEXMK := $(shell if which latexmk >/dev/null 2>&1; then echo 1; else echo 0; fi)
-@@ -67,8 +65,9 @@ quiet_cmd_sphinx = SPHINX  $@ --> file://$(abspath $(BUILDDIR)/$3/$4)
-       cmd_sphinx = $(MAKE) BUILDDIR=$(abspath $(BUILDDIR)) $(build)=Documentation/media $2 && \
- 	PYTHONDONTWRITEBYTECODE=1 \
- 	BUILDDIR=$(abspath $(BUILDDIR)) SPHINX_CONF=$(abspath $(srctree)/$(src)/$5/$(SPHINX_CONF)) \
-+	$(PYTHON) $(srctree)/scripts/jobserver-exec \
-+	$(SHELL) $(srctree)/Documentation/sphinx/parallel-wrapper.sh \
- 	$(SPHINXBUILD) \
--	-j $(shell python $(srctree)/scripts/jobserver-count $(SPHINX_PARALLEL)) \
- 	-b $2 \
- 	-c $(abspath $(srctree)/$(src)) \
- 	-d $(abspath $(BUILDDIR)/.doctrees/$3) \
-diff --git a/Documentation/sphinx/parallel-wrapper.sh b/Documentation/sphinx/parallel-wrapper.sh
-new file mode 100644
-index 000000000000..7daf5133bdd3
---- /dev/null
-+++ b/Documentation/sphinx/parallel-wrapper.sh
-@@ -0,0 +1,33 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0+
-+#
-+# Figure out if we should follow a specific parallelism from the make
-+# environment (as exported by scripts/jobserver-exec), or fall back to
-+# the "auto" parallelism when "-jN" is not specified at the top-level
-+# "make" invocation.
-+
-+sphinx="$1"
-+shift || true
-+
-+parallel="$PARALLELISM"
-+if [ -z "$parallel" ] ; then
-+	# If no parallelism is specified at the top-level make, then
-+	# fall back to the expected "-jauto" mode that the "htmldocs"
-+	# target has had.
-+	auto=$(perl -e 'open IN,"'"$sphinx"' --version 2>&1 |";
-+			while (<IN>) {
-+				if (m/([\d\.]+)/) {
-+					print "auto" if ($1 >= "1.7")
-+				}
-+			}
-+			close IN')
-+	if [ -n "$auto" ] ; then
-+		parallel="$auto"
-+	fi
-+fi
-+# Only if some parallelism has been determined do we add the -jN option.
-+if [ -n "$parallel" ] ; then
-+	parallel="-j$parallel"
-+fi
-+
-+exec "$sphinx" "$parallel" "$@"
-diff --git a/scripts/jobserver-count b/scripts/jobserver-count
-deleted file mode 100755
-index 7807bfa7dafa..000000000000
---- a/scripts/jobserver-count
-+++ /dev/null
-@@ -1,59 +0,0 @@
--#!/usr/bin/env python
--# SPDX-License-Identifier: GPL-2.0+
--#
--# This determines how many parallel tasks "make" is expecting, as it is
--# not exposed via an special variables.
--# https://www.gnu.org/software/make/manual/html_node/POSIX-Jobserver.html#POSIX-Jobserver
--from __future__ import print_function
--import os, sys, fcntl, errno
--
--# Default parallelism is "1" unless overridden on the command-line.
--default="1"
--if len(sys.argv) > 1:
--	default=sys.argv[1]
--
--# Extract and prepare jobserver file descriptors from envirnoment.
--try:
--	# Fetch the make environment options.
--	flags = os.environ['MAKEFLAGS']
--
--	# Look for "--jobserver=R,W"
--	# Note that GNU Make has used --jobserver-fds and --jobserver-auth
--	# so this handles all of them.
--	opts = [x for x in flags.split(" ") if x.startswith("--jobserver")]
--
--	# Parse out R,W file descriptor numbers and set them nonblocking.
--	fds = opts[0].split("=", 1)[1]
--	reader, writer = [int(x) for x in fds.split(",", 1)]
--	# Open a private copy of reader to avoid setting nonblocking
--	# on an unexpecting process with the same reader fd.
--	reader = os.open("/proc/self/fd/%d" % (reader),
--			 os.O_RDONLY | os.O_NONBLOCK)
--except (KeyError, IndexError, ValueError, IOError, OSError) as e:
--	print(e, file=sys.stderr)
--	# Any missing environment strings or bad fds should result in just
--	# using the default specified parallelism.
--	print(default)
--	sys.exit(0)
--
--# Read out as many jobserver slots as possible.
--jobs = b""
--while True:
--	try:
--		slot = os.read(reader, 1)
--		jobs += slot
--	except (OSError, IOError) as e:
--		if e.errno == errno.EWOULDBLOCK:
--			# Stop when reach the end of the jobserver queue.
--			break
--		raise e
--# Return all the reserved slots.
--os.write(writer, jobs)
--
--# If the jobserver was (impossibly) full or communication failed, use default.
--if len(jobs) < 1:
--	print(default)
--	sys.exit(0)
--
--# Report available slots (with a bump for our caller's reserveration).
--print(len(jobs) + 1)
-diff --git a/scripts/jobserver-exec b/scripts/jobserver-exec
-new file mode 100755
-index 000000000000..0fdb31a790a8
---- /dev/null
-+++ b/scripts/jobserver-exec
-@@ -0,0 +1,66 @@
-+#!/usr/bin/env python
-+# SPDX-License-Identifier: GPL-2.0+
-+#
-+# This determines how many parallel tasks "make" is expecting, as it is
-+# not exposed via an special variables, reserves them all, runs a subprocess
-+# with PARALLELISM environment variable set, and releases the jobs back again.
-+#
-+# https://www.gnu.org/software/make/manual/html_node/POSIX-Jobserver.html#POSIX-Jobserver
-+from __future__ import print_function
-+import os, sys, errno
-+import subprocess
-+
-+# Extract and prepare jobserver file descriptors from envirnoment.
-+claim = 0
-+jobs = b""
-+try:
-+	# Fetch the make environment options.
-+	flags = os.environ['MAKEFLAGS']
-+
-+	# Look for "--jobserver=R,W"
-+	# Note that GNU Make has used --jobserver-fds and --jobserver-auth
-+	# so this handles all of them.
-+	opts = [x for x in flags.split(" ") if x.startswith("--jobserver")]
-+
-+	# Parse out R,W file descriptor numbers and set them nonblocking.
-+	fds = opts[0].split("=", 1)[1]
-+	reader, writer = [int(x) for x in fds.split(",", 1)]
-+	# Open a private copy of reader to avoid setting nonblocking
-+	# on an unexpecting process with the same reader fd.
-+	reader = os.open("/proc/self/fd/%d" % (reader),
-+			 os.O_RDONLY | os.O_NONBLOCK)
-+
-+	# Read out as many jobserver slots as possible.
-+	while True:
-+		try:
-+			slot = os.read(reader, 8)
-+			jobs += slot
-+		except (OSError, IOError) as e:
-+			if e.errno == errno.EWOULDBLOCK:
-+				# Stop at the end of the jobserver queue.
-+				break
-+			# If something went wrong, give back the jobs.
-+			if len(jobs):
-+				os.write(writer, jobs)
-+			raise e
-+	# Add a bump for our caller's reserveration, since we're just going
-+	# to sit here blocked on our child.
-+	claim = len(jobs) + 1
-+except (KeyError, IndexError, ValueError, OSError, IOError) as e:
-+	# Any missing environment strings or bad fds should result in just
-+	# not being parallel.
-+	pass
-+
-+# We can only claim parallelism if there was a jobserver (i.e. a top-level
-+# "-jN" argument) and there were no other failures. Otherwise leave out the
-+# environment variable and let the child figure out what is best.
-+if claim > 0:
-+	os.environ['PARALLELISM'] = '%d' % (claim)
-+
-+rc = subprocess.call(sys.argv[1:])
-+
-+# Return all the reserved slots.
-+if len(jobs):
-+	os.write(writer, jobs)
-+
-+sys.exit(rc)
--- 
-2.17.1
+The other possibility is something in perf_event_open goes haywire
+when it attempts to start and gets permission denied.  That seems
+unlikely.  Assuming that was the case Andy's change did not
+touch any of the perf_event_open code.  So at most it is highlighting
+a path that was broken in earlier kernels and Andy's change to
+the default caused the syzbot code to take a path that was broken
+much earlier.
+
+
+The common sense operation to perform at this point is to realize
+that the setting of sysctl_perf_event_open matters to the test and
+to modify the test to set sysctl_perf_event_open before it does
+more things, and then syzbot or it's keepers can track down a likely
+cause for the hang.
+
+
+Certainly pointing at Andy's patch gives no one any real information of
+why the kernel was hanging.  It is literally changing an default value
+of 1 to a default value of 2.
+
+Eric
+
 
