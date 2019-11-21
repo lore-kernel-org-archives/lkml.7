@@ -2,80 +2,112 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8623C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 07:32:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E54A2C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 07:32:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88BB92089F
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 07:32:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B970A20855
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 07:32:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="RUey+MSk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbfKUHcA (ORCPT
+        id S1726880AbfKUHc3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 02:32:00 -0500
-Received: from verein.lst.de ([213.95.11.211]:44458 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726230AbfKUHb7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 02:31:59 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 0FAB768B05; Thu, 21 Nov 2019 08:31:53 +0100 (CET)
-Date:   Thu, 21 Nov 2019 08:31:52 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-ide@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org,
-        phil@raspberrypi.org, linux-acpi@vger.kernel.org,
-        Ingo Molnar <mingo@redhat.com>,
-        James Hogan <jhogan@kernel.org>, Len Brown <lenb@kernel.org>,
-        devicetree@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-mips@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
-        iommu@lists.linux-foundation.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH] dma-mapping: treat dev->bus_dma_mask as a DMA limit
-Message-ID: <20191121073152.GB24024@lst.de>
-References: <20191113161340.27228-1-nsaenzjulienne@suse.de> <dd074ef5c23ba56598e92be19e8e25ae31b75f93.camel@suse.de> <20191119170006.GA19569@lst.de> <7609007d-52f5-bb10-e8d5-96fadbfab46d@arm.com>
+        Thu, 21 Nov 2019 02:32:29 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:37294 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726230AbfKUHc3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 02:32:29 -0500
+Received: by mail-ot1-f65.google.com with SMTP id d5so2089389otp.4
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 23:32:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=w9wDawpHcea7HfUbnxzvdCHT/HpQNck9P448/UedoQM=;
+        b=RUey+MSk1Jxsoa8ZqmDeOeA4Qu0lkrGc8OKXCXqKYlNDPNE/RI693KUy2YDy1bs0Bq
+         ckWMixCAW5axJ3kJe7EpdMPizq+94X82FKhtwD7vIIOrm5PL4rWL5tMsRQc+gCoqi2TK
+         RVgk0Kg9QPwUIVbMM59J11QqVgfeIgZPu4jOo1P8CBl7ke4N9DJQqfgylUSmvoKQKCbj
+         mBjTqC/uvyUH/7bVZEmz7QQpfP5gtFAcrfBHGIuVQoZJNq8iC+Dgu0eAy4vcTOSab/Fh
+         5mD7rv1Vz3M2bsNxX5R/1UKzn0KB1ehwLLvkMlxZ8kQlbvrKCCz1llIjyOUowure8p6X
+         BRpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=w9wDawpHcea7HfUbnxzvdCHT/HpQNck9P448/UedoQM=;
+        b=Q3ohUa6tph1eAZVv6CdQ665C6SgqF97EmoGUWRr/teadRy+xm1gbZBmHoTQj5OMTEU
+         c7Vj9QcVQG9AoBNnucN9dbKUgl21jQVL9ZOn5Of+Gx2I2B75B/Uno2W8O7EBU0H99baK
+         1hBjD31Mfeqk67WiKYViNG5U/FrvgVBDVrw65lByfODObvvzpDSkoXxGKFD2hkzLU0GR
+         rhIj+Kvukvw20SdWVWbQ4p4XtxwHapIkVmP+oQHfUl79oQCn5TTpxDa4cnA4L0ptX9yg
+         vBBLnuZsBJqPfuniXTsMDkbUajTLAN8hYGGOUw3OEtQ1TMQqK6WWxxOrZhdSFluUuyTV
+         WHqg==
+X-Gm-Message-State: APjAAAUWy1UGKi6xjmC/GvNLNQC7BjX8yYRKoopspZ6Dgsyxt7J+OaTF
+        cQbWKfmSQxsGmkQ0WVOedsciUaCPTQhFaWNLsmTSHg==
+X-Google-Smtp-Source: APXvYqxVdzze/Bv9h7nJAgHDFshYj18n/blQjGCiUjfCo8aBpbC+/jW+Mgs+B30i9qOHhWav26iyCwsoCBet2GWzaNY=
+X-Received: by 2002:a9d:30c8:: with SMTP id r8mr5418112otg.363.1574321547958;
+ Wed, 20 Nov 2019 23:32:27 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7609007d-52f5-bb10-e8d5-96fadbfab46d@arm.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+References: <20191120092831.6198-1-pagupta@redhat.com> <x49d0dmihmu.fsf@segfault.boston.devel.redhat.com>
+ <CAPcyv4gCe8k1GdatAWn1991pm3QZq2WBFAGEFsZ2PXpyo2=wMw@mail.gmail.com>
+In-Reply-To: <CAPcyv4gCe8k1GdatAWn1991pm3QZq2WBFAGEFsZ2PXpyo2=wMw@mail.gmail.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 20 Nov 2019 23:32:16 -0800
+Message-ID: <CAPcyv4hJ6gHX=NYz-CoXFSrN93HUT+Xh+DP+QAjzqgGmmghmGA@mail.gmail.com>
+Subject: Re: [PATCH] virtio pmem: fix async flush ordering
+To:     Jeff Moyer <jmoyer@redhat.com>
+Cc:     Pankaj Gupta <pagupta@redhat.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Weiny, Ira" <ira.weiny@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Vivek Goyal <vgoyal@redhat.com>,
+        Keith Busch <keith.busch@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 05:17:03PM +0000, Robin Murphy wrote:
-> TBH I can't see it being a massive problem even if the DMA patch, driver 
-> and DTS patch went entirely separately via the respective DMA, PCI, and 
-> arm-soc trees in the same cycle. Bisecting over a merge window is a big 
-> enough pain in the bum as it is, and if the worst case is that someone 
-> trying to do that on a Pi4 has a wonky PCI controller appear for a couple 
-> of commits, they may as well just disable that driver for their bisection, 
-> because it wasn't there at the start so can't possibly be the thing they're 
-> looking for regressions in ;)
+On Wed, Nov 20, 2019 at 11:23 PM Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> On Wed, Nov 20, 2019 at 9:26 AM Jeff Moyer <jmoyer@redhat.com> wrote:
+> >
+> > Pankaj Gupta <pagupta@redhat.com> writes:
+> >
+> > >  Remove logic to create child bio in the async flush function which
+> > >  causes child bio to get executed after parent bio 'pmem_make_request'
+> > >  completes. This resulted in wrong ordering of REQ_PREFLUSH with the
+> > >  data write request.
+> > >
+> > >  Instead we are performing flush from the parent bio to maintain the
+> > >  correct order. Also, returning from function 'pmem_make_request' if
+> > >  REQ_PREFLUSH returns an error.
+> > >
+> > > Reported-by: Jeff Moyer <jmoyer@redhat.com>
+> > > Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
+> >
+> > There's a slight change in behavior for the error path in the
+> > virtio_pmem driver.  Previously, all errors from virtio_pmem_flush were
+> > converted to -EIO.  Now, they are reported as-is.  I think this is
+> > actually an improvement.
+> >
+> > I'll also note that the current behavior can result in data corruption,
+> > so this should be tagged for stable.
+>
+> I added that and was about to push this out, but what about the fact
+> that now the guest will synchronously wait for flushing to occur. The
+> goal of the child bio was to allow that to be an I/O wait with
+> overlapping I/O, or at least not blocking the submission thread. Does
+> the block layer synchronously wait for PREFLUSH requests? If not I
+> think a synchronous wait is going to be a significant performance
+> regression. Are there any numbers to accompany this change?
 
-Agreed.
-
-Nicolas, can you send a respin?  That way I can still queue it up
-for 5.5.
+Why not just swap the parent child relationship in the PREFLUSH case?
