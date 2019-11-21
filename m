@@ -2,120 +2,108 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4847AC43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:38:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F11C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:39:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B30B2070E
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:38:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0ED1206EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:39:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727014AbfKUNiW (ORCPT
+        id S1727072AbfKUNjD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 08:38:22 -0500
-Received: from mx2.suse.de ([195.135.220.15]:45360 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726532AbfKUNiW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 08:38:22 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id DB831B19F;
-        Thu, 21 Nov 2019 13:38:18 +0000 (UTC)
-Received: by unicorn.suse.cz (Postfix, from userid 1000)
-        id 22A6EE03A4; Thu, 21 Nov 2019 14:38:17 +0100 (CET)
-Date:   Thu, 21 Nov 2019 14:38:17 +0100
-From:   Michal Kubecek <mkubecek@suse.cz>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
-        Joe Perches <joe@perches.com>,
-        zhanglin <zhang.lin16@zte.com.cn>, davem@davemloft.net,
-        cocci <cocci@systeme.lip6.fr>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        jakub.kicinski@netronome.com, ast@kernel.org,
-        jiang.xuexin@zte.com.cn, f.fainelli@gmail.com,
-        daniel@iogearbox.net, john.fastabend@gmail.com,
-        lirongqing@baidu.com, maxime.chevallier@bootlin.com,
-        vivien.didelot@gmail.com, wang.yi59@zte.com.cn, hawk@kernel.org,
-        arnd@arndb.de, jiri@mellanox.com, xue.zhihong@zte.com.cn,
-        natechancellor@gmail.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linyunsheng@huawei.com,
-        pablo@netfilter.org, bpf@vger.kernel.org
-Subject: Re: [Cocci] [PATCH] net: Zeroing the structure ethtool_wolinfo in
- ethtool_get_wol()
-Message-ID: <20191121133817.GF29650@unicorn.suse.cz>
-References: <1572076456-12463-1-git-send-email-zhang.lin16@zte.com.cn>
- <c790578751dd69fb1080b355f5847c9ea5fb0e15.camel@perches.com>
- <bc150c6a-6d3e-ff01-e40e-840e8a385bda@metux.net>
- <20191121111917.GE29650@unicorn.suse.cz>
- <20191121120733.GF5604@kadam>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191121120733.GF5604@kadam>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 21 Nov 2019 08:39:03 -0500
+Received: from mout.kundenserver.de ([212.227.126.133]:55747 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726358AbfKUNjD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 08:39:03 -0500
+Received: from orion.localdomain ([95.115.120.75]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1Mi2eP-1huJ2m16AL-00e4qC; Thu, 21 Nov 2019 14:38:33 +0100
+From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     rostedt@goodmis.org, mingo@redhat.com
+Subject: [PATCH] include: linux: ftrace.h: use BIT() macro
+Date:   Thu, 21 Nov 2019 14:38:15 +0100
+Message-Id: <20191121133815.15040-1-info@metux.net>
+X-Mailer: git-send-email 2.11.0
+X-Provags-ID: V03:K1:YWHX0B4zLw+p3zuqSV0NxLxGMZb+yVVumbHyPnTn/6hA6A/FLRX
+ eehc12fB/IB5/dYFi41Zg2cCCByANCXBJZTY7U7uTRmW8XkDJFLZpnhuO/3nAQz4A6vOIh2
+ M0HpE54E+w3BjdNfO9bA1Pt2fNwvUx5JlPfL7LO/XCT/freC/jacfmtAk7mLUSGZk0q76kJ
+ V7vXUX1VqbwqeqtPvVtog==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:6Xqp1jn7lO4=:9VwcofcNtvlKNqv5J9JT2a
+ zZ+VrmzfJyS91NXRBktEXyNP3x9Vzwkf1HezBx3Pt6hz910IOmbYxxDjCMknF7JNk/yF033tK
+ LTFV5qDlGKXR3C9Zcl4axod8TN2g+gNU7W3dvJE9Jqo2T6HFebfDBl1rRtWL0fFas9zyY+KJN
+ fXFhDWVJcckvskAeg5r5hXdEF1nEN1zrjntxk/hKpccEnzmLY6WPCEt1Cbrcf2xDx+ZoVH1Hf
+ vbZLNrnRfNDR+AL9U1THjk/7akUQuAgU94ixtGJMKfx/19gJNDPwexNceLVz1C8kbbw5XwlfW
+ eDeN4pKJQIXeddtKvumlFZSNK95ViJBwJCpQniPJTxSnlFrAoe9gFqndAETIJA1rFlqp5yrWj
+ ztqDREW31OJFym7fg5Zo3yOVYkhRmK5TpEL8dQb/OxEs2jxxn+9jfYwjBJE9eqvAbD/RoXm51
+ mOKD2f6j5bhDETL0I/icTmchRV1PMVRsqLALR8O8WgP80G0svWdcC41okhrgKD8ZhDXB5Tb4Q
+ GG5BfyTX4qCaX8fquHewTW+K6SyIw0dobLz8yfJzWQMKi9WkAE33rT6yNHlLzAnaVSB8I/pJF
+ idsvneW9YptEYxF1PXOla3HkRcz2NyWEwi7xTZnUld71oSJirhxKp8gYT9c3Y9bQWrtjAZckt
+ x5TDCxCicxopmRtpEuryjjpnO/AeCyvqbeoNLLNI5BE2YbMIdY2m2vaNVqqv/3oIq2un2JLGe
+ JW3ChlCK5MkkQHP1QW6qqreFurUQmqoUAGy5d4KLtPvy+94Ser46Is8pG3LTnreZLbFNEqoWQ
+ +Inoq9lwr1pmUn/xbncm1pHJ/FtGnU++7AP0TjdH2txmgpdFRdQw3NNm3GzchWEGULf5NCcD9
+ nwBhEeC72ykxoA2JJvqQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 03:07:33PM +0300, Dan Carpenter wrote:
-> On Thu, Nov 21, 2019 at 12:19:17PM +0100, Michal Kubecek wrote:
-> > On Thu, Nov 21, 2019 at 11:23:34AM +0100, Enrico Weigelt, metux IT consult wrote:
-> > > On 26.10.19 21:40, Joe Perches wrote:
-> > > > On Sat, 2019-10-26 at 15:54 +0800, zhanglin wrote:
-> > > >> memset() the structure ethtool_wolinfo that has padded bytes
-> > > >> but the padded bytes have not been zeroed out.
-> > > > []
-> > > >> diff --git a/net/core/ethtool.c b/net/core/ethtool.c
-> > > > []
-> > > >> @@ -1471,11 +1471,13 @@ static int ethtool_reset(struct net_device *dev, char __user *useraddr)
-> > > >>  
-> > > >>  static int ethtool_get_wol(struct net_device *dev, char __user *useraddr)
-> > > >>  {
-> > > >> -	struct ethtool_wolinfo wol = { .cmd = ETHTOOL_GWOL };
-> > > >> +	struct ethtool_wolinfo wol;
-> > > >>  
-> > > >>  	if (!dev->ethtool_ops->get_wol)
-> > > >>  		return -EOPNOTSUPP;
-> > > >>  
-> > > >> +	memset(&wol, 0, sizeof(struct ethtool_wolinfo));
-> > > >> +	wol.cmd = ETHTOOL_GWOL;
-> > > >>  	dev->ethtool_ops->get_wol(dev, &wol);
-> > > >>  
-> > > >>  	if (copy_to_user(useraddr, &wol, sizeof(wol)))
-> > > > 
-> > > > It seems likely there are more of these.
-> > > > 
-> > > > Is there any way for coccinelle to find them?
-> > > 
-> > > Just curios: is static struct initialization (on stack) something that
-> > > should be avoided ? I've been under the impression that static
-> > > initialization allows thinner code and gives the compiler better chance
-> > > for optimizations.
-> > 
-> > Not in general. The (potential) problem here is that the structure has
-> > padding and it is as a whole (i.e. including the padding) copied to
-> > userspace. While I'm not aware of a compiler that wouldn't actually
-> > initialize the whole data block including the padding in this case, the
-> > C standard provides no guarantee about that so that to be sure we cannot
-> > leak leftover kernel data to userspace, we need to explicitly initialize
-> > the whole block.
-> 
-> GCC will not always initialize the struct holes.  This patch fixes a
-> real bug that GCC on my system (v7.4)
+It's cleaner to use the BIT() macro instead of raw shift operation.
 
-Just checked (again) to be sure. No matter if the function is inlined or
-not, gcc 7.4.1 initializes the structure by one movl (of 0x5) and two
-movq (of 0x0), i.e. initializes all sizeof(struct ethtool_wolinfo) = 20
-bytes including the padding.
+Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+---
+ include/linux/ftrace.h | 32 ++++++++++++++++----------------
+ 1 file changed, 16 insertions(+), 16 deletions(-)
 
-One could certainly construct examples where a real life compiler would
-only initialize the fields. That's why I said "in this case".
-
-Michal Kubecek
-
+diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+index 8a8cb3c401b2..0a84b4ca3e7c 100644
+--- a/include/linux/ftrace.h
++++ b/include/linux/ftrace.h
+@@ -144,22 +144,22 @@ ftrace_func_t ftrace_ops_get_func(struct ftrace_ops *ops);
+  * TRACE_ARRAY - The ops->private points to a trace_array descriptor.
+  */
+ enum {
+-	FTRACE_OPS_FL_ENABLED			= 1 << 0,
+-	FTRACE_OPS_FL_DYNAMIC			= 1 << 1,
+-	FTRACE_OPS_FL_SAVE_REGS			= 1 << 2,
+-	FTRACE_OPS_FL_SAVE_REGS_IF_SUPPORTED	= 1 << 3,
+-	FTRACE_OPS_FL_RECURSION_SAFE		= 1 << 4,
+-	FTRACE_OPS_FL_STUB			= 1 << 5,
+-	FTRACE_OPS_FL_INITIALIZED		= 1 << 6,
+-	FTRACE_OPS_FL_DELETED			= 1 << 7,
+-	FTRACE_OPS_FL_ADDING			= 1 << 8,
+-	FTRACE_OPS_FL_REMOVING			= 1 << 9,
+-	FTRACE_OPS_FL_MODIFYING			= 1 << 10,
+-	FTRACE_OPS_FL_ALLOC_TRAMP		= 1 << 11,
+-	FTRACE_OPS_FL_IPMODIFY			= 1 << 12,
+-	FTRACE_OPS_FL_PID			= 1 << 13,
+-	FTRACE_OPS_FL_RCU			= 1 << 14,
+-	FTRACE_OPS_FL_TRACE_ARRAY		= 1 << 15,
++	FTRACE_OPS_FL_ENABLED			= BIT(0),
++	FTRACE_OPS_FL_DYNAMIC			= BIT(1),
++	FTRACE_OPS_FL_SAVE_REGS			= BIT(2),
++	FTRACE_OPS_FL_SAVE_REGS_IF_SUPPORTED	= BIT(3),
++	FTRACE_OPS_FL_RECURSION_SAFE		= BIT(4),
++	FTRACE_OPS_FL_STUB			= BIT(5),
++	FTRACE_OPS_FL_INITIALIZED		= BIT(6),
++	FTRACE_OPS_FL_DELETED			= BIT(7),
++	FTRACE_OPS_FL_ADDING			= BIT(8),
++	FTRACE_OPS_FL_REMOVING			= BIT(9),
++	FTRACE_OPS_FL_MODIFYING			= BIT(10),
++	FTRACE_OPS_FL_ALLOC_TRAMP		= BIT(11),
++	FTRACE_OPS_FL_IPMODIFY			= BIT(12),
++	FTRACE_OPS_FL_PID			= BIT(13),
++	FTRACE_OPS_FL_RCU			= BIT(14),
++	FTRACE_OPS_FL_TRACE_ARRAY		= BIT(15),
+ };
+ 
+ #ifdef CONFIG_DYNAMIC_FTRACE
+-- 
+2.11.0
 
