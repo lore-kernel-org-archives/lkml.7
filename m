@@ -2,109 +2,72 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19E26C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:27:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C12AC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB05B2068F
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:27:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6C41206D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:30:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574368021;
-	bh=C/VgH8BwEy1i023RhpUjVEPMpC/v8y+ViYx7+0Ra5wo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SAHZHvIj4EO/UaYHrg78TVBeXyKDywwNT3PAp0YPHJa5qKj3Gy2lLMISGPb9gnPxb
-	 b+a08Sub+u3P+UjN/PyV1kTy4+DR7xKIPD/o3ZWj0GIeZQWLGvpatV/9XsDyqXZ4kn
-	 352i0rOgyrXdSA1Lr/YM0nMJ1F9uq9VUOaCga3h0=
+	s=default; t=1574368206;
+	bh=fLqpfbhK5NxWQC09H+TpqZ1OT3CBYKdbsF12naOftO4=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=lFrsJezJ0nFyDv9ypQJxA54gjaugm+I5nD19blCtXtEhnXtcZNxalNQjSj5GZ5fd3
+	 ox/NTl7TarTwEiGPAYcJIusxDWM+1gVtEGMDFw3V7M1bMKBlKhPPCk2VzudV+2l0hz
+	 cTiTZrV8sDjgJKTjmM/tw+MjwiBnFPAdyXJtR5YE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbfKUU1A (ORCPT
+        id S1726792AbfKUUaF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 15:27:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58840 "EHLO mail.kernel.org"
+        Thu, 21 Nov 2019 15:30:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726554AbfKUU07 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 15:26:59 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7216820643;
-        Thu, 21 Nov 2019 20:26:58 +0000 (UTC)
+        id S1726293AbfKUUaF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 15:30:05 -0500
+Subject: Re: [GIT PULL] GPIO fixes for v5.4
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574368018;
-        bh=C/VgH8BwEy1i023RhpUjVEPMpC/v8y+ViYx7+0Ra5wo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AT+rFE0mVw18OzGtBTNnaO1v8aUq3U+0wOMZnz+5S05vvrS5ntR4eaWkFRlwrxjyJ
-         5Pe8PTTjzBww2l3oAWAevHU25p0faSGGa/NIHlILdve9DEr//LfnGMbnIFuoZR7BKh
-         W6CXKEOeH9xFlwEFTogGOpmUIHKaAeVyEKu1DnMc=
-Date:   Thu, 21 Nov 2019 21:26:56 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Jia-Ju Bai <baijiaju1990@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 241/422] net: socionext: Fix two
- sleep-in-atomic-context bugs in ave_rxfifo_reset()
-Message-ID: <20191121202656.GA813044@kroah.com>
-References: <20191119051400.261610025@linuxfoundation.org>
- <20191119051414.641566074@linuxfoundation.org>
- <20191121202140.GA7573@duo.ucw.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191121202140.GA7573@duo.ucw.cz>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        s=default; t=1574368205;
+        bh=fLqpfbhK5NxWQC09H+TpqZ1OT3CBYKdbsF12naOftO4=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=TVvuCft3XNMAxb2Sn643UwH6TNBaXm5U91tZS5F6L9FjCVozcrHpTJ7UOL+c1MZNN
+         srphtbrZdEtPZnxUXkbKjt940d00UWQT8v0Z/d4H3JUPowU53991Dd1pU5nCza8i+T
+         HGr0qj+Zq6Z2WRkgsdrmzonz5zmGgI5cBk467NW0=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <CACRpkdbfVvxAUEeGApGx7jhagkOrNY7_G=ch4kzUE5YCD_N3ZA@mail.gmail.com>
+References: <CACRpkdbfVvxAUEeGApGx7jhagkOrNY7_G=ch4kzUE5YCD_N3ZA@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CACRpkdbfVvxAUEeGApGx7jhagkOrNY7_G=ch4kzUE5YCD_N3ZA@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
+ tags/gpio-v5.4-5
+X-PR-Tracked-Commit-Id: cbdaa5e7bd90db9980ff6187baea9d49fc4de960
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: cec353f6c2c9ff003332a41ed37b55df88dfa9a5
+Message-Id: <157436820500.3070.10997266497098964682.pr-tracker-bot@kernel.org>
+Date:   Thu, 21 Nov 2019 20:30:05 +0000
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Hans de Goede <hdegoede@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 09:21:40PM +0100, Pavel Machek wrote:
-> Hi!
-> 
-> > [ Upstream commit 0020f5c807ef67954d9210eea0ba17a6134cdf7d ]
-> > 
-> > The driver may sleep with holding a spinlock.
-> > The function call paths (from bottom to top) in Linux-4.17 are:
-> > 
-> > [FUNC] usleep_range
-> > drivers/net/ethernet/socionext/sni_ave.c, 892:
-> > 	usleep_range in ave_rxfifo_reset
-> > drivers/net/ethernet/socionext/sni_ave.c, 932:
-> > 	ave_rxfifo_reset in ave_irq_handler
-> > 
-> > [FUNC] usleep_range
-> > drivers/net/ethernet/socionext/sni_ave.c, 888:
-> > 	usleep_range in ave_rxfifo_reset
-> > drivers/net/ethernet/socionext/sni_ave.c, 932:
-> > 	ave_rxfifo_reset in ave_irq_handler
-> > 
-> > To fix these bugs, usleep_range() is replaced with udelay().
-> 
-> I don't believe this is serious enough for -stable, but more
-> importantly:
+The pull request you sent on Thu, 21 Nov 2019 08:11:43 +0100:
 
-Sleeping in a spinlock is not allowed, yes, this is a bugfix worth of
-stable, how could it not?
+> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git tags/gpio-v5.4-5
 
-> > +++ b/drivers/net/ethernet/socionext/sni_ave.c
-> > @@ -906,11 +906,11 @@ static void ave_rxfifo_reset(struct net_device *ndev)
-> >  
-> >  	/* assert reset */
-> >  	writel(AVE_GRR_RXFFR, priv->base + AVE_GRR);
-> > -	usleep_range(40, 50);
-> > +	udelay(50);
-> >  
-> >  	/* negate reset */
-> >  	writel(0, priv->base + AVE_GRR);
-> > -	usleep_range(10, 20);
-> > +	udelay(20);
-> >
-> 
-> udelay(40) / udelay(10) should be enough here.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/cec353f6c2c9ff003332a41ed37b55df88dfa9a5
 
-Maybe not, this way is safe, right?
+Thank you!
 
-greg k-h
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
