@@ -2,425 +2,169 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B01DC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 12:33:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 138BEC43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 12:34:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E66D20855
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 12:33:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="URMVc+YH"
+	by mail.kernel.org (Postfix) with ESMTP id EA73620872
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 12:34:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbfKUMdp (ORCPT
+        id S1726690AbfKUMe0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 07:33:45 -0500
-Received: from mail-pj1-f54.google.com ([209.85.216.54]:41134 "EHLO
-        mail-pj1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726197AbfKUMdo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 07:33:44 -0500
-Received: by mail-pj1-f54.google.com with SMTP id gc1so1405289pjb.8;
-        Thu, 21 Nov 2019 04:33:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8frb8WHCoy70zm05lxFhNW/L91b1gcHJUpq90Ej20KA=;
-        b=URMVc+YH2CepPNe+Y1R9sVB6iuo4d6cKV2gyrIFNYvKcOElUY+QDQG/KrIEVFlBCOU
-         hFtBHcKLImA7pNAbOg5ETBhMBT8seNG8l+d31STd8tToKcG8acDV29OTshAFb0FVh3ou
-         lXsWYVOU6I7VNePKMejyFpO3sxiWQzRETovaerckVALpGOLw3sWFs3mBjmy5YEo90Xq+
-         SZs66FVhKpeP3ZzMT0BpfxbJy6hE3TwPgLVP6ew8qdmCDAcxcnLZGfi3Qmiet4STmdls
-         5pv9pJfwH18NKtsJ0rIoGeiTWYobv6Bfg8IRlrGx0lk7pDwpYOtgK7ENA55Wp1dTXk8u
-         Ne0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8frb8WHCoy70zm05lxFhNW/L91b1gcHJUpq90Ej20KA=;
-        b=H4ZrFvP4iLu3Qqbrq1cU/hgggGREb+J1HPKUdLYV6LrredlRvU+mlrWp1kMegrO86A
-         zjYUmJ9ITJiXquRV8jnnBOXBXKO0aipJnhcUUWHYXPxRIoigjYJrRwQMNd5x1MJvm4iT
-         s6+cYZDnV0wsC0p227cnJN3uYEeDbN7yBFDWn//D+FB74DIawlzt30khsJR530o4XgIj
-         B2zTT2bq3UYjr5Ixfwi4ge5h78dKpQedYnR2BcZgoM1r5V1nD2E/DzehHK2hG8vDbkQB
-         ttT3Ii7ntHxsqbauvCrEk1MpOOKetyisLcE3gU6pKUjszWBzJH7DEj8pdJ/TE+xghI+P
-         bycA==
-X-Gm-Message-State: APjAAAWeF+zJJ/K2i+8v/L3SQXh9rYlBYkUsXSVrtMR9ig7uc9+Cj6iX
-        6ms5URgNU/q1AN430fsR5/Up1XqpNcgzK/KxmEE=
-X-Google-Smtp-Source: APXvYqxQQbyt9vboRWq62o71wdTMNRun6H2jaVVAEp/2Pd38n26UNLJIls8OXiy0Uy67l0vZSEq5+Uk7wzgLnGSBUe4=
-X-Received: by 2002:a17:902:ff14:: with SMTP id f20mr457476plj.262.1574339621775;
- Thu, 21 Nov 2019 04:33:41 -0800 (PST)
+        Thu, 21 Nov 2019 07:34:26 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2111 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726230AbfKUMeZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 07:34:25 -0500
+Received: from lhreml704-cah.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id D03F698E43703977E066;
+        Thu, 21 Nov 2019 12:34:23 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ lhreml704-cah.china.huawei.com (10.201.108.45) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Thu, 21 Nov 2019 12:34:23 +0000
+Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Thu, 21 Nov
+ 2019 12:34:23 +0000
+Subject: linuxnext-2019119 edac warns (was Re: edac KASAN warning in
+ experimental arm64 allmodconfig boot)
+From:   John Garry <john.garry@huawei.com>
+To:     Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        James Morse <james.morse@arm.com>, <tony.luck@intel.com>,
+        Robert Richter <rrichter@marvell.com>
+CC:     <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <304df85b-8b56-b77e-1a11-aa23769f2e7c@huawei.com>
+Message-ID: <93bdc04e-9e8f-b766-6e97-9fd9e1460a8c@huawei.com>
+Date:   Thu, 21 Nov 2019 12:34:22 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-References: <1574306475-11966-1-git-send-email-krzk@kernel.org>
-In-Reply-To: <1574306475-11966-1-git-send-email-krzk@kernel.org>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 21 Nov 2019 14:33:31 +0200
-Message-ID: <CAHp75VcDbXsrBDHDRWc6gcgVeSMO_O6ByDyW8gapNRsrbW588A@mail.gmail.com>
-Subject: Re: [PATCH v2] platform/x86: Fix Kconfig indentation
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <304df85b-8b56-b77e-1a11-aa23769f2e7c@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.46]
+X-ClientProxiedBy: lhreml720-chm.china.huawei.com (10.201.108.71) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 5:21 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> Adjust indentation from spaces to tab (+optional two spaces) as in
-> coding style with command like:
->         $ sed -e 's/^        /\t/' -i */Kconfig
->
-
-Not applicable (conflicts) to our for-next branch.
-
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
->
-> ---
->
-> Changes since v1:
-> 1. Fix also 7-space and tab+1 space indentation issues.
-> ---
->  drivers/platform/x86/Kconfig | 174 +++++++++++++++++++++----------------------
->  1 file changed, 87 insertions(+), 87 deletions(-)
->
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 27d5b40fb717..e1892d2a07d2 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -28,7 +28,7 @@ config ACER_WMI
->         depends on ACPI_WMI
->         select INPUT_SPARSEKMAP
->         # Acer WMI depends on ACPI_VIDEO when ACPI is enabled
-> -        select ACPI_VIDEO if ACPI
-> +       select ACPI_VIDEO if ACPI
->         ---help---
->           This is a driver for newer Acer (and Wistron) laptops. It adds
->           wireless radio and bluetooth control, and on some laptops,
-> @@ -38,18 +38,18 @@ config ACER_WMI
->           here.
->
->  config ACER_WIRELESS
-> -        tristate "Acer Wireless Radio Control Driver"
-> -        depends on ACPI
-> -        depends on INPUT
-> -        ---help---
-> -          The Acer Wireless Radio Control handles the airplane mode hotkey
-> -          present on new Acer laptops.
-> +       tristate "Acer Wireless Radio Control Driver"
-> +       depends on ACPI
-> +       depends on INPUT
-> +       ---help---
-> +         The Acer Wireless Radio Control handles the airplane mode hotkey
-> +         present on new Acer laptops.
->
-> -          Say Y or M here if you have an Acer notebook with an airplane mode
-> -          hotkey.
-> +         Say Y or M here if you have an Acer notebook with an airplane mode
-> +         hotkey.
->
-> -          If you choose to compile this driver as a module the module will be
-> -          called acer-wireless.
-> +         If you choose to compile this driver as a module the module will be
-> +         called acer-wireless.
->
->  config ACERHDF
->         tristate "Acer Aspire One temperature and fan driver"
-> @@ -79,10 +79,10 @@ config ALIENWARE_WMI
->         depends on NEW_LEDS
->         depends on ACPI_WMI
->         ---help---
-> -        This is a driver for controlling Alienware BIOS driven
-> -        features.  It exposes an interface for controlling the AlienFX
-> -        zones on Alienware machines that don't contain a dedicated AlienFX
-> -        USB MCU such as the X51 and X51-R2.
-> +         This is a driver for controlling Alienware BIOS driven
-> +         features.  It exposes an interface for controlling the AlienFX
-> +         zones on Alienware machines that don't contain a dedicated AlienFX
-> +         USB MCU such as the X51 and X51-R2.
->
->  config ASUS_LAPTOP
->         tristate "Asus Laptop Extras"
-> @@ -134,10 +134,10 @@ config DELL_SMBIOS
->         depends on DCDBAS || DCDBAS=n
->         depends on ACPI_WMI || ACPI_WMI=n
->         ---help---
-> -       This provides support for the Dell SMBIOS calling interface.
-> -       If you have a Dell computer you should enable this option.
-> +         This provides support for the Dell SMBIOS calling interface.
-> +         If you have a Dell computer you should enable this option.
->
-> -       Be sure to select at least one backend for it to work properly.
-> +         Be sure to select at least one backend for it to work properly.
->
->  config DELL_SMBIOS_WMI
->         bool "Dell SMBIOS driver WMI backend"
-> @@ -146,12 +146,12 @@ config DELL_SMBIOS_WMI
->         select DELL_WMI_DESCRIPTOR
->         depends on DELL_SMBIOS
->         ---help---
-> -       This provides an implementation for the Dell SMBIOS calling interface
-> -       communicated over ACPI-WMI.
-> +         This provides an implementation for the Dell SMBIOS calling interface
-> +         communicated over ACPI-WMI.
->
-> -       If you have a Dell computer from >2007 you should say Y here.
-> -       If you aren't sure and this module doesn't work for your computer
-> -       it just won't load.
-> +         If you have a Dell computer from >2007 you should say Y here.
-> +         If you aren't sure and this module doesn't work for your computer
-> +         it just won't load.
->
->  config DELL_SMBIOS_SMM
->         bool "Dell SMBIOS driver SMM backend"
-> @@ -159,12 +159,12 @@ config DELL_SMBIOS_SMM
->         depends on DCDBAS
->         depends on DELL_SMBIOS
->         ---help---
-> -       This provides an implementation for the Dell SMBIOS calling interface
-> -       communicated over SMI/SMM.
-> +         This provides an implementation for the Dell SMBIOS calling interface
-> +         communicated over SMI/SMM.
->
-> -       If you have a Dell computer from <=2017 you should say Y here.
-> -       If you aren't sure and this module doesn't work for your computer
-> -       it just won't load.
-> +         If you have a Dell computer from <=2017 you should say Y here.
-> +         If you aren't sure and this module doesn't work for your computer
-> +         it just won't load.
->
->  config DELL_LAPTOP
->         tristate "Dell Laptop Extras"
-> @@ -180,8 +180,8 @@ config DELL_LAPTOP
->         select LEDS_TRIGGERS
->         select LEDS_TRIGGER_AUDIO
->         ---help---
-> -       This driver adds support for rfkill and backlight control to Dell
-> -       laptops (except for some models covered by the Compal driver).
-> +         This driver adds support for rfkill and backlight control to Dell
-> +         laptops (except for some models covered by the Compal driver).
->
->  config DELL_WMI
->         tristate "Dell WMI notifications"
-> @@ -254,11 +254,11 @@ config DELL_RBU
->         select FW_LOADER
->         select FW_LOADER_USER_HELPER
->         help
-> -        Say m if you want to have the option of updating the BIOS for your
-> -        DELL system. Note you need a Dell OpenManage or Dell Update package (DUP)
-> -        supporting application to communicate with the BIOS regarding the new
-> -        image for the image update to take effect.
-> -        See <file:Documentation/admin-guide/dell_rbu.rst> for more details on the driver.
-> +         Say m if you want to have the option of updating the BIOS for your
-> +         DELL system. Note you need a Dell OpenManage or Dell Update package (DUP)
-> +         supporting application to communicate with the BIOS regarding the new
-> +         image for the image update to take effect.
-> +         See <file:Documentation/admin-guide/dell_rbu.rst> for more details on the driver.
->
->
->  config FUJITSU_LAPTOP
-> @@ -281,21 +281,21 @@ config FUJITSU_LAPTOP
->           If you have a Fujitsu laptop, say Y or M here.
->
->  config FUJITSU_TABLET
-> -       tristate "Fujitsu Tablet Extras"
-> -       depends on ACPI
-> -       depends on INPUT
-> -       ---help---
-> -         This is a driver for tablets built by Fujitsu:
-> +       tristate "Fujitsu Tablet Extras"
-> +       depends on ACPI
-> +       depends on INPUT
-> +       ---help---
-> +         This is a driver for tablets built by Fujitsu:
->
-> -           * Lifebook P1510/P1610/P1620/Txxxx
-> -           * Stylistic ST5xxx
-> -           * Possibly other Fujitsu tablet models
-> +          * Lifebook P1510/P1610/P1620/Txxxx
-> +          * Stylistic ST5xxx
-> +          * Possibly other Fujitsu tablet models
->
-> -         It adds support for the panel buttons, docking station detection,
-> -         tablet/notebook mode detection for convertible and
-> -         orientation detection for docked slates.
-> +         It adds support for the panel buttons, docking station detection,
-> +         tablet/notebook mode detection for convertible and
-> +         orientation detection for docked slates.
->
-> -         If you have a Fujitsu convertible or slate, say Y or M here.
-> +         If you have a Fujitsu convertible or slate, say Y or M here.
->
->  config AMILO_RFKILL
->         tristate "Fujitsu-Siemens Amilo rfkill support"
-> @@ -350,11 +350,11 @@ config HP_WIRELESS
->         depends on ACPI
->         depends on INPUT
->         help
-> -        This driver provides supports for new HP wireless button for Windows 8.
-> -        On such systems the driver should load automatically (via ACPI alias).
-> +         This driver provides supports for new HP wireless button for Windows 8.
-> +         On such systems the driver should load automatically (via ACPI alias).
->
-> -        To compile this driver as a module, choose M here: the module will
-> -        be called hp-wireless.
-> +         To compile this driver as a module, choose M here: the module will
-> +         be called hp-wireless.
->
->  config HP_WMI
->         tristate "HP WMI extras"
-> @@ -363,11 +363,11 @@ config HP_WMI
->         depends on RFKILL || RFKILL = n
->         select INPUT_SPARSEKMAP
->         help
-> -        Say Y here if you want to support WMI-based hotkeys on HP laptops and
-> -        to read data from WMI such as docking or ambient light sensor state.
-> +         Say Y here if you want to support WMI-based hotkeys on HP laptops and
-> +         to read data from WMI such as docking or ambient light sensor state.
->
-> -        To compile this driver as a module, choose M here: the module will
-> -        be called hp-wmi.
-> +         To compile this driver as a module, choose M here: the module will
-> +         be called hp-wmi.
->
->  config LG_LAPTOP
->         tristate "LG Laptop Extras"
-> @@ -377,11 +377,11 @@ config LG_LAPTOP
->         select INPUT_SPARSEKMAP
->         select LEDS_CLASS
->         help
-> -        This driver adds support for hotkeys as well as control of keyboard
-> -        backlight, battery maximum charge level and various other ACPI
-> -        features.
-> +         This driver adds support for hotkeys as well as control of keyboard
-> +         backlight, battery maximum charge level and various other ACPI
-> +         features.
->
-> -        If you have an LG Gram laptop, say Y or M here.
-> +         If you have an LG Gram laptop, say Y or M here.
->
->  config MSI_LAPTOP
->         tristate "MSI Laptop Extras"
-> @@ -795,17 +795,17 @@ config MSI_WMI
->         depends on ACPI_VIDEO || ACPI_VIDEO = n
->         select INPUT_SPARSEKMAP
->         help
-> -        Say Y here if you want to support WMI-based hotkeys on MSI laptops.
-> +         Say Y here if you want to support WMI-based hotkeys on MSI laptops.
->
-> -        To compile this driver as a module, choose M here: the module will
-> -        be called msi-wmi.
-> +         To compile this driver as a module, choose M here: the module will
-> +         be called msi-wmi.
->
->  config PEAQ_WMI
->         tristate "PEAQ 2-in-1 WMI hotkey driver"
->         depends on ACPI_WMI
->         depends on INPUT
->         help
-> -        Say Y here if you want to support WMI-based hotkeys on PEAQ 2-in-1s.
-> +         Say Y here if you want to support WMI-based hotkeys on PEAQ 2-in-1s.
->
->  config TOPSTAR_LAPTOP
->         tristate "Topstar Laptop Extras"
-> @@ -1012,11 +1012,11 @@ config INTEL_MID_POWER_BUTTON
->           If unsure, say N.
->
->  config INTEL_MFLD_THERMAL
-> -       tristate "Thermal driver for Intel Medfield platform"
-> -       depends on MFD_INTEL_MSIC && THERMAL
-> -       help
-> -         Say Y here to enable thermal driver support for the  Intel Medfield
-> -         platform.
-> +       tristate "Thermal driver for Intel Medfield platform"
-> +       depends on MFD_INTEL_MSIC && THERMAL
-> +       help
-> +         Say Y here to enable thermal driver support for the  Intel Medfield
-> +         platform.
->
->  config INTEL_IPS
->         tristate "Intel Intelligent Power Sharing"
-> @@ -1071,17 +1071,17 @@ config IBM_RTL
->         tristate "Device driver to enable PRTL support"
->         depends on PCI
->         ---help---
-> -        Enable support for IBM Premium Real Time Mode (PRTM).
-> -        This module will allow you the enter and exit PRTM in the BIOS via
-> -        sysfs on platforms that support this feature.  System in PRTM will
-> -        not receive CPU-generated SMIs for recoverable errors.  Use of this
-> -        feature without proper support may void your hardware warranty.
-> +         Enable support for IBM Premium Real Time Mode (PRTM).
-> +         This module will allow you the enter and exit PRTM in the BIOS via
-> +         sysfs on platforms that support this feature.  System in PRTM will
-> +         not receive CPU-generated SMIs for recoverable errors.  Use of this
-> +         feature without proper support may void your hardware warranty.
->
-> -        If the proper BIOS support is found the driver will load and create
-> -        /sys/devices/system/ibm_rtl/.  The "state" variable will indicate
-> -        whether or not the BIOS is in PRTM.
-> -        state = 0 (BIOS SMIs on)
-> -        state = 1 (BIOS SMIs off)
-> +         If the proper BIOS support is found the driver will load and create
-> +         /sys/devices/system/ibm_rtl/.  The "state" variable will indicate
-> +         whether or not the BIOS is in PRTM.
-> +         state = 0 (BIOS SMIs on)
-> +         state = 1 (BIOS SMIs off)
->
->  config XO1_RFKILL
->         tristate "OLPC XO-1 software RF kill switch"
-> @@ -1120,10 +1120,10 @@ config SAMSUNG_LAPTOP
->           will be called samsung-laptop.
->
->  config MXM_WMI
-> -       tristate "WMI support for MXM Laptop Graphics"
-> -       depends on ACPI_WMI
-> -       ---help---
-> -          MXM is a standard for laptop graphics cards, the WMI interface
-> +       tristate "WMI support for MXM Laptop Graphics"
-> +       depends on ACPI_WMI
-> +       ---help---
-> +         MXM is a standard for laptop graphics cards, the WMI interface
->           is required for switchable nvidia graphics machines
->
->  config INTEL_OAKTRAIL
-> @@ -1158,7 +1158,7 @@ config APPLE_GMUX
->           control is supported by the driver.
->
->  config INTEL_RST
-> -        tristate "Intel Rapid Start Technology Driver"
-> +       tristate "Intel Rapid Start Technology Driver"
->         depends on ACPI
->         ---help---
->           This driver provides support for modifying paramaters on systems
-> @@ -1170,7 +1170,7 @@ config INTEL_RST
->           as usual.
->
->  config INTEL_SMARTCONNECT
-> -        tristate "Intel Smart Connect disabling driver"
-> +       tristate "Intel Smart Connect disabling driver"
->         depends on ACPI
->         ---help---
->           Intel Smart Connect is a technology intended to permit devices to
-> @@ -1355,6 +1355,6 @@ config SYSTEM76_ACPI
->  endif # X86_PLATFORM_DEVICES
->
->  config PMC_ATOM
-> -       def_bool y
-> -       depends on PCI
-> -       select COMMON_CLK
-> +       def_bool y
-> +       depends on PCI
-> +       select COMMON_CLK
-> --
-> 2.7.4
->
+On 14/10/2019 16:18, John Garry wrote:
 
 
--- 
-With Best Regards,
-Andy Shevchenko
+Hi guys,
+
+JFYI, I see an issue on linuxnext-2019119, as follows:
+
+    21.645388] io scheduler kyber registered
+[   21.734011] input: Power Button as 
+/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0C0C:00/input/input0
+[   21.743295] ACPI: Power Button [PWRB]
+[   21.809644] [Firmware Bug]: APEI: Invalid bit width + offset in GAR 
+[0x94110034/64/0/3/0]
+[   21.821974] EDAC MC0: Giving out device to module ghes_edac.c 
+controller ghes_edac: DEV ghes (INTERRUPT)
+[   21.831763] ------------[ cut here ]------------
+[   21.836374] refcount_t: increment on 0; use-after-free.
+[   21.841620] WARNING: CPU: 36 PID: 1 at lib/refcount.c:156 
+refcount_inc_checked+0x44/0x50
+[   21.849697] Modules linked in:
+[   21.852745] CPU: 36 PID: 1 Comm: swapper/0 Not tainted 
+5.4.0-rc8-next-20191119-00003-g141a9fef5092-dirty #650
+[   21.862645] Hardware name: Huawei D06 /D06, BIOS Hisilicon D06 UEFI 
+RC0 - V1.16.01 03/15/2019
+[   21.871157] pstate: 60c00009 (nZCv daif +PAN +UAO)
+[   21.875936] pc : refcount_inc_checked+0x44/0x50
+[   21.880455] lr : refcount_inc_checked+0x44/0x50
+[   21.884972] sp : ffff00236ffbf8a0
+[   21.888274] x29: ffff00236ffbf8a0 x28: 0000000000000002
+[   21.893576] x27: ffff00236cd07900 x26: ffff002369063010
+[   21.898876] x25: 0000000000000000 x24: ffff00233c236824
+[   21.904177] x23: ffffa000137b9000 x22: ffffa00016fbb7c0
+[   21.909477] x21: ffffa00012dfd000 x20: 1fffe0046dff7f24
+[   21.914777] x19: ffff00233c236000 x18: 0000000000000000
+[   21.920077] x17: 0000000000000000 x16: 0000000000000000
+[   21.925377] x15: 0000000000007700 x14: 64655f7365686720
+[   21.930677] x13: 72656c6c6f72746e x12: 1ffff40002719618
+[   21.935977] x11: ffff940002719618 x10: dfffa00000000000
+[   21.941278] x9 : ffff940002719619 x8 : 0000000000000001
+[   21.946578] x7 : 0000000000000000 x6 : 0000000000000001
+[   21.951877] x5 : ffff940002719618 x4 : ffff00236ffb0010
+[   21.957178] x3 : ffffa000112415e4 x2 : ffff80046dff7ede
+[   21.962478] x1 : 5aff78756b1cf400 x0 : 0000000000000000
+[   21.967779] Call trace:
+[   21.970214]  refcount_inc_checked+0x44/0x50
+[   21.974389]  ghes_edac_register+0x258/0x388
+[   21.978562]  ghes_probe+0x28c/0x5f0
+[   21.982041]  platform_drv_probe+0x70/0xd8
+[   21.986039]  really_probe+0x174/0x468
+[   21.989690]  driver_probe_device+0x7c/0x148
+[   21.993862]  device_driver_attach+0x94/0xa0
+[   21.998033]  __driver_attach+0xa4/0x110
+[   22.001857]  bus_for_each_dev+0xe8/0x158
+[   22.005768]  driver_attach+0x30/0x40
+[   22.009331]  bus_add_driver+0x234/0x2f0
+[   22.013156]  driver_register+0xbc/0x1d0
+[   22.016981]  __platform_driver_register+0x7c/0x88
+[   22.021675]  ghes_init+0xbc/0x14c
+[   22.024979]  do_one_initcall+0xb4/0x254
+[   22.028805]  kernel_init_freeable+0x248/0x2f4
+[   22.033151]  kernel_init+0x10/0x118
+[   22.036628]  ret_from_fork+0x10/0x18
+[   22.040194] ---[ end trace 33655bb65a9835fe ]---
+[   22.046666] EDAC MC: bug in low-level driver: attempt to assign
+[   22.046666]     duplicate mc_idx 0 in add_mc_to_global_list()
+[   22.058311] ghes_edac: Can't register at EDAC core
+[   22.065402] EDAC MC: bug in low-level driver: attempt to assign
+[   22.065402]     duplicate mc_idx 0 in add_mc_to_global_list()
+[   22.077080] ghes_edac: Can't register at EDAC core
+[   22.084140] EDAC MC: bug in low-level driver: attempt to assign
+[   22.084140]     duplicate mc_idx 0 in add_mc_to_global_list()
+[   22.095789] ghes_edac: Can't register at EDAC core
+[   22.102873] EDAC MC: bug in low-level driver: attempt to assign
+[   22.102873]     duplicate mc_idx 0 in add_mc_to_global_list()
+[   22.115442] ghes_edac: Can't register at EDAC core
+[   22.122536] EDAC MC: bug in low-level driver: attempt to assign
+[   22.122536]     duplicate mc_idx 0 in add_mc_to_global_list()
+[   22.134344] ghes_edac: Can't register at EDAC core
+[   22.141441] EDAC MC: bug in low-level driver: attempt to assign
+[   22.141441]     duplicate mc_idx 0 in add_mc_to_global_list()
+[   22.153089] ghes_edac: Can't register at EDAC core
+[   22.160161] EDAC MC: bug in low-level driver: attempt to assign
+[   22.160161]     duplicate mc_idx 0 in add_mc_to_global_list()
+[   22.171810] ghes_edac: Can't register at EDAC core
+[   22.178933] GHES: APEI firmware first mode is enabled by APEI bit and 
+WHEA _OSC.
+
+This time I'm using a standard arm64 defconfig, except kasan and 
+kmemleak is enabled (I need to enable them when developing software - 
+joke). Maybe it's a known issue, I don't know.
+
+Cheers,
+John
+
+> Hi guys,
+> 
+> I'm experimenting by trying to boot an allmodconfig arm64 kernel, as 
+> mentioned here:
+> https://lore.kernel.org/linux-arm-kernel/507325a3-030e-2843-0f46-7e18c60257de@huawei.com/ 
+> 
+> 
+> One thing that I noticed - it's hard to miss actually - is the amount of 
+> complaining from KASAN about the EDAC/ghes code. Maybe this is something 
+> I should not care about/red herring, or maybe something genuine. Let me 
+> know what you think.
+> 
+> The kernel is v5.4-rc3, and I raised the EDAC mc debug level to get 
+> extra debug prints.
+> 
+
+[cut]
