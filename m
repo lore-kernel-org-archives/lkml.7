@@ -2,148 +2,116 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5885C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 17:35:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 718FCC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 17:36:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D7E6206CC
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 17:35:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43E2620692
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 17:36:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="a/E0I485"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ezo3TE+L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbfKURfQ (ORCPT
+        id S1726967AbfKURgT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 12:35:16 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:57568 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726279AbfKURfQ (ORCPT
+        Thu, 21 Nov 2019 12:36:19 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:38797 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726279AbfKURgS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 12:35:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=kT85EYnF8HVqmBD+sD5mv1wk+c/n8OFhrGY8G/TqmhQ=; b=a/E0I485O72yRrViXyHzOa+hv
-        cxyZeqYZeEtuT7frD0Pg5pbmQFf3f3CIuEIastTdK8rsT0R9c4KqotVfWEEXktP77e6rzAuHooZFp
-        NawuZyC2S+FONuBVSJeFI/68eo06B+qvo1nOImUSQIIcNvGUYwO9KdapqwCa47LtoXMN0KG8yxBhN
-        0hRNoiPAeYLXFMIYoKoqeiw7RZJMvgRAKNveTaKNef3+yHmDxgnvpUymmXjNkg90YI0nSit929jYP
-        YJQGn56Rx1jIwLVa+IlZQFxigKyXQ2nAeq691rML8mB+W6YkOjNjWK4eMwJdU7sROLL/hfHbWGnEq
-        Ly2liGlcA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iXqMC-0006KW-AC; Thu, 21 Nov 2019 17:35:04 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 786B13056C8;
-        Thu, 21 Nov 2019 18:33:50 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 414EC2021C978; Thu, 21 Nov 2019 18:35:01 +0100 (CET)
-Date:   Thu, 21 Nov 2019 18:35:01 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Fenghua Yu <fenghua.yu@intel.com>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
-Subject: Re: [PATCH v10 6/6] x86/split_lock: Enable split lock detection by
- kernel parameter
-Message-ID: <20191121173501.GT4097@hirez.programming.kicks-ass.net>
-References: <1574297603-198156-1-git-send-email-fenghua.yu@intel.com>
- <1574297603-198156-7-git-send-email-fenghua.yu@intel.com>
- <20191121060444.GA55272@gmail.com>
- <20191121130153.GS4097@hirez.programming.kicks-ass.net>
- <20191121161410.GA199273@romley-ivt3.sc.intel.com>
+        Thu, 21 Nov 2019 12:36:18 -0500
+Received: by mail-pf1-f195.google.com with SMTP id c13so2053249pfp.5
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 09:36:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=m4d6AZEZPRvVJ76CuMbdinqD/PFVnzwGlvHzSNE9aH4=;
+        b=ezo3TE+LCwK/fh8gnSUNRPx+lCpxkSs4U3F7FUg8dhWcgXARY2yEbamni63DYQmmDP
+         FNFflEH4h1WMFSxsyDQ06IUOY7frbar01+SUyXP+INw+hQuYekMqepSKOFK0FLmZ8vRL
+         wF+Dgw+5dKezrBE4PPRuhvotKDUqtt6iXacOs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=m4d6AZEZPRvVJ76CuMbdinqD/PFVnzwGlvHzSNE9aH4=;
+        b=bB6sgcAPp9pX2PBA12BnlIXA3UL1KOoSYH/vAiFVHB34MnLA2fa38iMDGhsttNO+M9
+         RHNGA3WxovtAIBxjVS3fwIueXSjQcvcpbM3Gy59XhV05AVZwIhgwObdPl1d+r/os9AC1
+         iAEh15EYizzWfEoKv3fKjR2Ak2aBXbEzjmhbq19c/H2bjTNCQOENvp24Q3IQ04+2jeVj
+         1P+KF0C7Sbxpzjxyz4J1kU21YYZMHsdHHvVZFYAhYGS20nBSYxG6zgc8/324EOcv3Ie1
+         q8IKBNrSFI/dH3O+GvYJHipyhFxNYopNehtHUFUnRzHbIYOC/h6gqmi2OvuasVuz2Au9
+         WAQg==
+X-Gm-Message-State: APjAAAU9SA6g1dM6PYas45YKg3ebkrMvnhy3dsi3gg3BrspoZbrmj5f7
+        PUx5i8NWdK26zv4Zm/U9rEecJA==
+X-Google-Smtp-Source: APXvYqx255rjDwfNZwwEwFf8fx73jPuVuKWS6RuwVoBUPqtWjhwcH235pxIMreAIQWYI0vYua1ZWiw==
+X-Received: by 2002:a62:a103:: with SMTP id b3mr12251005pff.5.1574357776848;
+        Thu, 21 Nov 2019 09:36:16 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id e5sm152682pjv.29.2019.11.21.09.36.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Nov 2019 09:36:15 -0800 (PST)
+Date:   Thu, 21 Nov 2019 09:36:14 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     syzbot <syzbot+81e6ff9d4cdb05fd4f5e@syzkaller.appspotmail.com>
+Cc:     Borislav Petkov <bp@alien8.de>, adobriyan@gmail.com,
+        ak@linux.intel.com, bigeasy@linutronix.de, fenghua.yu@intel.com,
+        frederic@kernel.org, hpa@zytor.com, kernelfans@gmail.com,
+        len.brown@intel.com, linux-kernel@vger.kernel.org,
+        longman@redhat.com, luto@kernel.org, mingo@redhat.com,
+        peterz@infradead.org, rafael.j.wysocki@intel.com, riel@surriel.com,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
+        tim.c.chen@linux.intel.com, tonywwang-oc@zhaoxin.com,
+        wang.yi59@zte.com.cn, x86@kernel.org
+Subject: Re: general protection fault in tss_update_io_bitmap
+Message-ID: <201911210931.DB5346C8@keescook>
+References: <0000000000004dccce0597d1967b@google.com>
+ <20191121110115.GC6540@zn.tnic>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191121161410.GA199273@romley-ivt3.sc.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191121110115.GC6540@zn.tnic>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 08:14:10AM -0800, Fenghua Yu wrote:
-
-> The usage scope of this patch set is largely reduced to only real time.
-> The long split lock processing time (>1000 cycles) cannot be tolerated
-> by real time.
-
-I'm thinking you're clueless on realtime. There's plenty of things that
-can cause many cycles to go out the window. And just a single
-instruction soaking up cycles like that really isn't the problem.
-
-The problem is that split lock defeats isolation. An otherwise contained
-task can have pretty horrific side effects on other tasks.
-
-> Real time customers do want to use this feature to detect the fatal
-> split lock error. They don't want any split lock issue from BIOS/EFI/
-> firmware/kerne/drivers/user apps.
-
-Cloud vendors also don't want them. Nobody wants them, they stink. They
-have a system wide impact.
-
-I don't want them on my system.
-
-> > Imagine the BIOS/EFI/firmware containing an #AC exception. At that point
-> > the feature becomes useless, because you cannot enable it without your
-> > machine dying.
+On Thu, Nov 21, 2019 at 12:01:15PM +0100, Borislav Petkov wrote:
+> On Wed, Nov 20, 2019 at 05:55:09PM -0800, syzbot wrote:
+> > Hello,
+> > 
+> > syzbot found the following crash on:
+> > 
+> > HEAD commit:    5d1131b4 Add linux-next specific files for 20191119
+> > git tree:       linux-next
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=177979d2e00000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=b60c562d89e5a8df
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=81e6ff9d4cdb05fd4f5e
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1549ed8ce00000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17f91012e00000
+> > 
+> > The bug was bisected to:
+> > 
+> > commit 111e7b15cf10f6e973ccf537c70c66a5de539060
+> > Author: Thomas Gleixner <tglx@linutronix.de>
+> > Date:   Tue Nov 12 20:40:33 2019 +0000
+> > 
+> >     x86/ioperm: Extend IOPL config to control ioperm() as well
+> > 
+> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10490e86e00000
+> > final crash:    https://syzkaller.appspot.com/x/report.txt?x=12490e86e00000
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=14490e86e00000
 > 
-> I believe Intel real time team guarantees to deliever a split lock FREE
-> BIOS/EFI/firmware to their real time users.
+> Try this:
+> 
+> https://git.kernel.org/tip/e3cb0c7102f04c83bf1a7cb1d052e92749310b46
 
-Not good enough. Any system shipping with this capability needs to have
-a split lock free firmware blob. And the only way to make that happen is
-to force enable it by default.
+Rewording so syzbot can see it (https://goo.gl/tpsmEJ#testing-patches) ...
 
-> From kernel point of view, we are working on a split lock free kernel.
-> Some blocking split lock issues have been fixed in TIP tree.
+#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git e3cb0c7102f04c83bf1a7cb1d052e92749310b46
 
-Haven't we fixed them all by now?
-
-> Only limited user apps can run on real time and should be split lock
-> free before they are allowed to run on the real time system.
-
-I'm thinking most of the normal Linux userspace will run just fine.
-Seeing how other architectures have rejected such nonsense forever.
-
-> In summary, the patch set only wants to enable the feature for real time
-> and disable it by default.
-
-We told you that wasn't good enough many times. Lot's of people run the
-preemp-rt kernel on lots of different hardware. And like I said, even
-cloudy folks would want this.
-
-Features that require special firmware that nobody has are useless.
-
-For giggles, run the below. You can notice your desktop getting slower.
-
----
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/mman.h>
-
-void main(void)
-{
-	void *addr = mmap(NULL, 4096*2, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
-	unsigned int *var;
-	if (addr == (void*)-1) {
-		printf("fail\n");
-		return;
-	}
-
-	var = addr + 4096 - 2;
-
-	for (;;)
-		asm volatile ("lock incl %0" : : "m" (*var));
-}
+-- 
+Kees Cook
