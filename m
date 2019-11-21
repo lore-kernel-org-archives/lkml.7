@@ -2,141 +2,286 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF7CDC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 08:39:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39908C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 08:40:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 692A920898
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 08:39:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF1932067D
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 08:40:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="iy4ijtDP"
+	dkim=pass (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="oC/Kk4UR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726967AbfKUIjx (ORCPT
+        id S1726983AbfKUIkq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 03:39:53 -0500
-Received: from mail-eopbgr800088.outbound.protection.outlook.com ([40.107.80.88]:12992
-        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726165AbfKUIjx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 03:39:53 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jcpESoneMiMNWbfVUiB8bKrwPqj5aUWafBcdTarF/RNVtFaZ9wdic+CxSoHIszFVD3185oLsnD8mfpI0czBTTdy28+dKCP2HFtmDgL70h4VOH/gD66SCpDPJWr8niQOD0Hjl1SvkaN0JIlFzuih34XXZk0+Fg2k640ZYr8sOJCjUlYXu4RhdgszJNa9SgCLobdpd4GWnKLZ0p/Io8mLwMXI9Xak3cZgyIkjiHLzbmnrZJxoDzMldf3+VqUwImLxIhLZIIbCX/fvlXoNQZgX9UxWsrkMgMzLGx3281/SAhRUfgBM3x4Zq7ooZXYKYaSL2lHj3eJrRDHsgIiZALxL+EA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uO8houtejB5zjNS3R5yQz60B3XHroWij2CxYSLwnUdQ=;
- b=H1e/LTfOKG7b/jxs/It4bQJDgVhCHma+CnFu9Azug3MbPF45D1JbzZI4JiT6ITRsWV0ZwSrda+bxGsy440d+dw1naO3cpcH4gF/pZ1wOpBhrZlJIbfJKlGaCUT2FIcUb6de6K3SALHJT2EHNvF2Ar866nrsisXuaZT6/OEnxj3Zi9rfKIjw+ONVOA3qiQtYkttpadGwCpiL8TzfiL33CC9UtF2oR6aqFpSrdTNKXlHxzouNZQ1M1KuRsAurLAe+Ra+mGEUy2Mje4O/i0Um4NRRYXFgpwdRzywe11s8mDNgtIOATTu+iGNAfEb7R5tRMWM2SLkEvcOznbeOo+2uN8lQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=grandegger.com smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
+        Thu, 21 Nov 2019 03:40:46 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:41809 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726613AbfKUIkp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 03:40:45 -0500
+Received: by mail-wr1-f66.google.com with SMTP id b18so3260611wrj.8
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 00:40:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uO8houtejB5zjNS3R5yQz60B3XHroWij2CxYSLwnUdQ=;
- b=iy4ijtDP5CLQ3zMNAPE+lxoYHqbltETyd/77imek4KGjUGfABnxV1fGbQw3JwZcg0FO+P7zjy1+K0Gh9bF8WoI0+xlHqyZQN5/o+KzIRNqy81KcFStFYN3LyFMdo7lFsHyxjCGd/H2pO+FZ2q5zZ12fABBhClCnMpol9MHB84Tk=
-Received: from BN7PR02CA0026.namprd02.prod.outlook.com (2603:10b6:408:20::39)
- by DM5PR02MB2857.namprd02.prod.outlook.com (2603:10b6:3:10d::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2451.22; Thu, 21 Nov
- 2019 08:39:50 +0000
-Received: from BL2NAM02FT052.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e46::200) by BN7PR02CA0026.outlook.office365.com
- (2603:10b6:408:20::39) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2474.19 via Frontend
- Transport; Thu, 21 Nov 2019 08:39:50 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; grandegger.com; dkim=none (message not signed)
- header.d=none;grandegger.com; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- BL2NAM02FT052.mail.protection.outlook.com (10.152.77.0) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2474.17
- via Frontend Transport; Thu, 21 Nov 2019 08:39:49 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <appana.durga.rao@xilinx.com>)
-        id 1iXi0D-0004iZ-1M; Thu, 21 Nov 2019 00:39:49 -0800
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <appana.durga.rao@xilinx.com>)
-        id 1iXi07-0005Sw-Ti; Thu, 21 Nov 2019 00:39:43 -0800
-Received: from [10.140.6.6] (helo=xhdappanad40.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <appana.durga.rao@xilinx.com>)
-        id 1iXi00-0005R1-C6; Thu, 21 Nov 2019 00:39:36 -0800
-From:   Appana Durga Kedareswara rao <appana.durga.rao@xilinx.com>
-To:     wg@grandegger.com, mkl@pengutronix.de, davem@davemloft.net,
-        michal.simek@xilinx.com
-Cc:     linux-can@vger.kernel.org, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Appana Durga Kedareswara rao <appana.durga.rao@xilinx.com>
-Subject: [PATCH] MAINTAINERS: Add fragment for xilinx CAN driver
-Date:   Thu, 21 Nov 2019 14:09:24 +0530
-Message-Id: <1574325564-30529-1-git-send-email-appana.durga.rao@xilinx.com>
-X-Mailer: git-send-email 2.7.4
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(376002)(136003)(396003)(346002)(39860400002)(199004)(189003)(426003)(81166006)(336012)(81156014)(50226002)(2616005)(186003)(9786002)(16586007)(8936002)(36756003)(106002)(8676002)(5660300002)(107886003)(50466002)(478600001)(4326008)(36386004)(26005)(316002)(51416003)(4744005)(7696005)(70586007)(48376002)(356004)(6666004)(6636002)(47776003)(70206006)(305945005)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR02MB2857;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
+        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
+        h=subject:from:to:cc:references:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to;
+        bh=dmzgyGyJBsv+FiIjz6xKse5E3FYB5toNY8Ml4QJq0Cs=;
+        b=oC/Kk4URzShCREA7XOlJqpTFtSFD4q/4U6EhWi1qPYleiOONeIGXECMvCsnrwmU/i7
+         dEpTgcvSy02RItVzfwSE+zTgV8T55PnIqLoUbbcoABTaQl4gLCJzE0QcEM738hA8RHPC
+         dgLaVYUGO0NFzoJ6JJETXsgdT1Q5uMjLRvBVT3sVFrFQtdpixuHzNBgwQkptn+CldnaP
+         9hUSa8WzjkCuFYNBJ5pI3Zy45kBteSYuQ0AFt/9/aWIGUuGk+kMx5zvW6vNG4zZ2ae7E
+         X7qbVqqppdLAtJtT0n3hKvvQNxZItxcJP9nARQkkqGElCavfYd14BH3D4VfA6iZ2NJwa
+         2aBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to;
+        bh=dmzgyGyJBsv+FiIjz6xKse5E3FYB5toNY8Ml4QJq0Cs=;
+        b=WOvDKrChAHSPcGD5dyFI4Mn65CPdbMm7c8YgkvZFMP6RZayw0CpSk0jNvcG58eXOtA
+         WxIWVWdIoW0IKIhwo5/wtL0r3+QoLtR4TgYu6KfDQHLRRF0/seNsDoSBX8Snq8pU/yTm
+         cZoqEYIZMLMzqksaLidvRnpwtUZsrJovRDpJ4qR7YV6fKXwrcERn4Wrds91tUHg4iATX
+         TKDMuvUGBGbVOcq4/I6nHHTlY8mFJzpIvVkuW90jX63yH1XrvL0n1vJVZDCT16fjPqP6
+         qVm5EhFzqDkiZEbd/J9gdz2Zy689nHL9x/Ooe2MlmGt34cUD/6+FnQHsLYCsB6INKHuN
+         /A/w==
+X-Gm-Message-State: APjAAAUXGyUFhjDClCVlgcCfSi9PKWjCL88Wa8aaT9SkUz5BlNgNJDOA
+        KI5aqUgYr/MMYQ7gGoW3/mKJaSn3ezDbjQ==
+X-Google-Smtp-Source: APXvYqxNL0UjlqYYh/b+yLlEqYduwv8KSN1furp8RArBk3vTPdMDKAOA9vVTDVhB7KQfaGqRhQhXfA==
+X-Received: by 2002:adf:f489:: with SMTP id l9mr8597409wro.337.1574325641096;
+        Thu, 21 Nov 2019 00:40:41 -0800 (PST)
+Received: from [173.194.76.108] ([149.199.62.129])
+        by smtp.gmail.com with ESMTPSA id d9sm2395141wrj.10.2019.11.21.00.40.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 21 Nov 2019 00:40:40 -0800 (PST)
+Subject: Re: [PATCH v3] arm64: zynqmp: Add ZynqMP SDHCI compatible string
+From:   Michal Simek <monstr@monstr.eu>
+To:     Manish Narani <manish.narani@xilinx.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, michal.simek@xilinx.com, arnd@arndb.de,
+        horms+renesas@verge.net.au, khilman@baylibre.com
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, git@xilinx.com
+References: <1571297331-99924-1-git-send-email-manish.narani@xilinx.com>
+ <a0033b99-c58e-deb1-9313-f079c74775ae@monstr.eu>
+Openpgp: preference=signencrypt
+Autocrypt: addr=monstr@monstr.eu; keydata=
+ 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
+Message-ID: <8c6936aa-0760-2f35-3996-4992651f4ed7@monstr.eu>
+Date:   Thu, 21 Nov 2019 09:40:30 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: ea4641c3-012e-429a-7897-08d76e5e5f1e
-X-MS-TrafficTypeDiagnostic: DM5PR02MB2857:
-X-Microsoft-Antispam-PRVS: <DM5PR02MB28576856C163E368540FA2FDDC4E0@DM5PR02MB2857.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:1227;
-X-Forefront-PRVS: 0228DDDDD7
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 2JNO0GVHI/gTusEccULJcbyCsnsFOzY2Fch1Bi3brDjJNfQBxsGI9VveMnLZD9lFplJpVlzXi5m8HjrZ61Llfsb1/ah7frU6IYGtyOeBYmyZY5jQCLCqtlmkQE2udTNKb6D4pE7Oshm35hRcBrraZjee6QcJ9MlsxW2JTIdAmuiDcKd+36yH7O+bAQ52MFwl5QJeP46v5eLSzHPB4Rg7jZux2+3TmuORA7aS/Qq1CaPg8NpbNcb7FC4qeNCi4rMlpVgUltfhTPlNoYLAGKnPCzQ6fYX9c8ypvmdofmLMAAKvmv1flAAc8yPqBY6Wkz0za7cb6YRuStEpRt2+ZzzujfUkJUcDtNYp3JCa6d3J82OmcoPnram40XeDGzXVUDqvginxHnk2a0TSbRHw/6bSJkyutzbUfjxM5WolTq/y0lygvNWBOwGdxMnn/1oCnjlY
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Nov 2019 08:39:49.6286
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ea4641c3-012e-429a-7897-08d76e5e5f1e
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR02MB2857
+In-Reply-To: <a0033b99-c58e-deb1-9313-f079c74775ae@monstr.eu>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="9wGfnAsabiQwA6vNDjsBlojUs5CAFpGAS"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Added entry for xilinx CAN driver.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--9wGfnAsabiQwA6vNDjsBlojUs5CAFpGAS
+Content-Type: multipart/mixed; boundary="83PUAtFV3z9CmBe3ARDehnDuY7tVwU02f";
+ protected-headers="v1"
+From: Michal Simek <monstr@monstr.eu>
+To: Manish Narani <manish.narani@xilinx.com>, robh+dt@kernel.org,
+ mark.rutland@arm.com, michal.simek@xilinx.com, arnd@arndb.de,
+ horms+renesas@verge.net.au, khilman@baylibre.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, git@xilinx.com
+Message-ID: <8c6936aa-0760-2f35-3996-4992651f4ed7@monstr.eu>
+Subject: Re: [PATCH v3] arm64: zynqmp: Add ZynqMP SDHCI compatible string
+References: <1571297331-99924-1-git-send-email-manish.narani@xilinx.com>
+ <a0033b99-c58e-deb1-9313-f079c74775ae@monstr.eu>
+In-Reply-To: <a0033b99-c58e-deb1-9313-f079c74775ae@monstr.eu>
 
-Signed-off-by: Appana Durga Kedareswara rao <appana.durga.rao@xilinx.com>
----
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+--83PUAtFV3z9CmBe3ARDehnDuY7tVwU02f
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 3e57fc1d9962..d0f590517eaf 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -17890,6 +17890,13 @@ M:	Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
- S:	Maintained
- F:	drivers/net/ethernet/xilinx/xilinx_axienet*
- 
-+XILINX CAN DRIVER
-+M:	Appana Durga Kedareswara rao <appana.durga.rao@xilinx.com>
-+R:	Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
-+S:	Maintained
-+F:	drivers/net/can/xilinx_can.c
-+F:	Documentation/devicetree/bindings/net/can/xilinx_can.txt
-+
- XILINX UARTLITE SERIAL DRIVER
- M:	Peter Korsgaard <jacmet@sunsite.dk>
- L:	linux-serial@vger.kernel.org
--- 
-2.7.4
+On 21. 11. 19 9:34, Michal Simek wrote:
+> On 17. 10. 19 9:28, Manish Narani wrote:
+>> Add the new compatible string for ZynqMP SD Host Controller for its us=
+e
+>> in the Arasan SDHCI driver for some of the ZynqMP specific operations.=
 
+>> Add required properties for the same.
+>>
+>> Signed-off-by: Manish Narani <manish.narani@xilinx.com>
+>> ---
+>> This patch depends on the below series of patches:
+>> https://lkml.org/lkml/2019/10/17/37
+>>
+>> Changes in v2:
+>> 	- Added clock-names for SD card clocks for getting clocks in the driv=
+er
+>>
+>> Changes in v3:
+>> 	- Reverted "Added clock-names for SD card clocks for getting clocks i=
+n the driver"
+>> ---
+>>  arch/arm64/boot/dts/xilinx/zynqmp.dtsi | 6 ++++++
+>>  1 file changed, 6 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/=
+dts/xilinx/zynqmp.dtsi
+>> index 9aa67340a4d8..c7b8c3c28aa7 100644
+>> --- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+>> +++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+>> @@ -494,20 +494,26 @@
+>> =20
+>>  		sdhci0: mmc@ff160000 {
+>>  			compatible =3D "arasan,sdhci-8.9a";
+>> +			compatible =3D "xlnx,zynqmp-8.9a", "arasan,sdhci-8.9a";
+>>  			status =3D "disabled";
+>>  			interrupt-parent =3D <&gic>;
+>>  			interrupts =3D <0 48 4>;
+>>  			reg =3D <0x0 0xff160000 0x0 0x1000>;
+>>  			clock-names =3D "clk_xin", "clk_ahb";
+>> +			#clock-cells =3D <1>;
+>> +			clock-output-names =3D "clk_out_sd0", "clk_in_sd0";
+>>  		};
+>> =20
+>>  		sdhci1: mmc@ff170000 {
+>>  			compatible =3D "arasan,sdhci-8.9a";
+>> +			compatible =3D "xlnx,zynqmp-8.9a", "arasan,sdhci-8.9a";
+>>  			status =3D "disabled";
+>>  			interrupt-parent =3D <&gic>;
+>>  			interrupts =3D <0 49 4>;
+>>  			reg =3D <0x0 0xff170000 0x0 0x1000>;
+>>  			clock-names =3D "clk_xin", "clk_ahb";
+>> +			#clock-cells =3D <1>;
+>> +			clock-output-names =3D "clk_out_sd1", "clk_in_sd1";
+>>  		};
+>> =20
+>>  		smmu: smmu@fd800000 {
+>>
+>=20
+> Patches have been applied
+> https://lkml.org/lkml/2019/11/20/366
+>=20
+> That's why I have applied this one to my tree.
+
+Sorry for confusion. I removed this patch. There are two lines with
+compatible property which is wrong. Please send v4.
+
+Thanks,
+Michal
+
+
+
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Xilinx Microblaze
+Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
+U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP/Versal SoCs
+
+
+
+--83PUAtFV3z9CmBe3ARDehnDuY7tVwU02f--
+
+--9wGfnAsabiQwA6vNDjsBlojUs5CAFpGAS
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EARECAB0WIQQbPNTMvXmYlBPRwx7KSWXLKUoMIQUCXdZNfgAKCRDKSWXLKUoM
+IdCvAJ9yiPEpy8IXdcyvoEBl6JZ/XrSZAACgiVCqXvO6nZ7neFjKgmcxFIyiVDY=
+=f5Et
+-----END PGP SIGNATURE-----
+
+--9wGfnAsabiQwA6vNDjsBlojUs5CAFpGAS--
