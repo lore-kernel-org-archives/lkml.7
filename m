@@ -2,259 +2,106 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A225C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 22:39:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5AC9C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 22:45:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47B1A206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 22:39:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574375978;
-	bh=xcU6fTgxdLv74kpFN8DKv/pBAvjj9RMTpVs/XF/lOLk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=oAqFQmh2jrmExj9EOSR3kZT5gcsB6YftQU+kBYn6mYRTIxHFUXWmz0IGVGjOJmc0s
-	 iDReghPYqfgVmktu2jORqFWQUzcYFeVP2QCHZ+UFTooihGOD8UJCWBBiSzYSjNw7Fc
-	 Z5qn6AR4XOBV803TGFnpXk/BfzY8PY8wxC1DmECU=
+	by mail.kernel.org (Postfix) with ESMTP id 7558120692
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 22:45:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="ZH+/ClKx";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PODPb8be"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726655AbfKUWjh (ORCPT
+        id S1726685AbfKUWpQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 17:39:37 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:42297 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725936AbfKUWjg (ORCPT
+        Thu, 21 Nov 2019 17:45:16 -0500
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:45925 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726265AbfKUWpQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 17:39:36 -0500
-Received: by mail-oi1-f195.google.com with SMTP id o12so4742726oic.9;
-        Thu, 21 Nov 2019 14:39:35 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NLYFavhbkkDdG7LcuO9ziHs6bI5bNJfLd6u9oodoong=;
-        b=Jpcxp9yieJmnRKxStqVTe6kjKzrlKwUt4eoqY1SFjfqJ0xCAOuU1CPVGL1Sb/DCRQc
-         a/fkpcCKaxmyPXexNq4xPxf9pxrZgt9+jNBRGVgiYt8sjIBW0AhzYknlNkfNMQfLs47/
-         lXZyWKD23m5oEMju8Qf8kcsUQ/Ly2NXZ+cYeFGS+4NHFSCDu0nqiqPLe+LITKdQkTwNS
-         OdpH86thLzdFJFJB1Mc6xuQJo27DC3h3pbMWYEZaTHJPKjDcYIvJwUuhEz4PYIuPR0MY
-         OgtiQ3AyPhUF+zy09AMxKW1QHIQWUJt0/qGfo2ghIsYyata+dEfOMeQoyfr492POZZWU
-         rAYA==
-X-Gm-Message-State: APjAAAWvrSilWtmoPdFrx7aG4UwGyaSZqQe5GvxSrY+dGL8rziaasQfh
-        larP8cKEkXEnbJct7qOmO6K3suXnavhluk+C87E=
-X-Google-Smtp-Source: APXvYqwECneoBISM2Y2vnLNkW0AoWS0hC1bkpTThuacStQrgW7498tAQSgqzADmzbsGZl1KXqCv/A9FOuenN8aBy2rk=
-X-Received: by 2002:aca:530c:: with SMTP id h12mr10122483oib.110.1574375975225;
- Thu, 21 Nov 2019 14:39:35 -0800 (PST)
-MIME-Version: 1.0
-References: <CACO55tvo3rbPtYJcioEgXCEQqVXcVAm-iowr9Nim=bgTdMjgLw@mail.gmail.com>
- <20191120155301.GL11621@lahna.fi.intel.com> <CAJZ5v0hkT-fHFOQKzp2qYPyR+NUa4c-G-uGLPZuQxqsG454PiQ@mail.gmail.com>
- <CACO55ttTPi2XpRRM_NYJU5c5=OvG0=-YngFy1BiR8WpHkavwXw@mail.gmail.com>
- <CAJZ5v0h=7zu3A+ojgUSmwTH0KeXmYP5OKDL__rwkkWaWqcJcWQ@mail.gmail.com>
- <20191121112821.GU11621@lahna.fi.intel.com> <CAJZ5v0hQhj5Wf+piU11abC4pF26yM=XHGHAcDv8Jsgdx04aN-w@mail.gmail.com>
- <20191121114610.GW11621@lahna.fi.intel.com> <20191121125236.GX11621@lahna.fi.intel.com>
- <CAJZ5v0iMwhudB7O0hR-6KfRfa+_iGOY=t0Zzeh6+9OiTzeYJfA@mail.gmail.com> <20191121194942.GY11621@lahna.fi.intel.com>
-In-Reply-To: <20191121194942.GY11621@lahna.fi.intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 21 Nov 2019 23:39:23 +0100
-Message-ID: <CAJZ5v0gyna0b135uxBVfNXgB9v-U9-93EYe0uzsr2BukJ9OtuA@mail.gmail.com>
-Subject: Re: [PATCH v4] pci: prevent putting nvidia GPUs into lower device
- states on certain intel bridges
-To:     Mika Westerberg <mika.westerberg@intel.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Karol Herbst <kherbst@redhat.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lyude Paul <lyude@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        Dave Airlie <airlied@gmail.com>,
-        Mario Limonciello <Mario.Limonciello@dell.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 21 Nov 2019 17:45:16 -0500
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id B147922C9D;
+        Thu, 21 Nov 2019 17:45:14 -0500 (EST)
+Received: from imap2 ([10.202.2.52])
+  by compute4.internal (MEProxy); Thu, 21 Nov 2019 17:45:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm1; bh=dtxfG1NstJO0gZ3w3rZPANJZr2PPUHV
+        Erzd70gBGFhE=; b=ZH+/ClKxc2IJ3766JJ4Etfw/LlvWwEYV2j5Md6sQP2rKTvH
+        jNSywaGPikAJfhCzCWAXTrrpF51K6rwiI1o/19qJtnMTTbhUVB3s9UPkmSv2DZUm
+        iDcJLLv0/EzzlpxWpZnByRMgmoCBbpegEg2PpE3e8lUnyBEWSQ9Lz6uI5kmzZUT0
+        0K3XOpbSFpCV/N3vmcfyQ7gUJ75LYZZFWOCLYWoh/WI9aeUfyu0tGkUbwCc9gFn9
+        tYAKjxZFk+k7Q3t+UxwQT9jxpGsspEhWn8hvfrG3+pqaqn7BlWUuUpt1V69uuN/F
+        YnN4qgF6SuQbpsPevyyjzbRpe976p++26NrlZRw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=dtxfG1
+        NstJO0gZ3w3rZPANJZr2PPUHVErzd70gBGFhE=; b=PODPb8beQz48rVN07lqgzy
+        9NWnIwrrJjbgryblubT/MmPPfRdM3/tAtubpoOCWgSRjXZUD0Sjw8aqOdzE9Ea7R
+        FAwa4OQ/2AGwlfrxZayVEARSbTsI2+Fkii2Vn81FwAO3yfNfqpbBMQQ4Xw3qucU8
+        YioZfsXrthuCtNI5DBpxQ4LSoutGYFFgeoMz46izfhD6dp90y4USobL/myr9gDeI
+        4a6Dy27wL4Vh/gSVeuTQNNIdQ1Pv6edOSSxyikxnxpAB4ni6qFzUUOb1dpp+cfA2
+        Lu2qnmQxogMkOCacEYUc52RZxwEbl0/iQ5snky5jidN4ORkeuhdHaVGmkWxtl+2A
+        ==
+X-ME-Sender: <xms:eRPXXdE-Mw2ufJuK4b8r3148Xf9W78K2QfoHjCqVI6Agd2PagqHYmQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudehfecutefuodetggdotefrodftvfcurf
+    hrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehnughrvgif
+    ucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucfrrghrrghmpe
+    hmrghilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruhenucevlhhushhtvghrufhi
+    iigvpedt
+X-ME-Proxy: <xmx:eRPXXVmNawSsD6EQTugb0EdbWZyA9HYxNzSNxF3Lrm646vdt0QIgrQ>
+    <xmx:eRPXXYmon-eNmASI3UnMS9iGijDbuWchEH5aKBOixD7V5pt2AKojKA>
+    <xmx:eRPXXetTE6dJ57zza3usLFCGJ7ER_mOQK9M1lE5Hh06iAvEJPstByw>
+    <xmx:ehPXXbM8L_WFmZyTskLctbFhZxFIv6RfVnX-p7nIePAvKL-CS_kk7Q>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id BC162E00B1; Thu, 21 Nov 2019 17:45:13 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.7-578-g826f590-fmstable-20191119v1
+Mime-Version: 1.0
+Message-Id: <0fce7468-bb35-4d47-8d5d-abc228e99085@www.fastmail.com>
+In-Reply-To: <20191121074843.GA10607@cnn>
+References: <20191118123707.GA5560@cnn>
+ <b2f503f0-0f13-46bc-a1be-c82a42b85797@www.fastmail.com>
+ <D34D3A2F-9CD5-4924-8407-F6EB0A4C66B5@fb.com> <20191121074843.GA10607@cnn>
+Date:   Fri, 22 Nov 2019 09:16:39 +1030
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     manikandan-e <manikandan.hcl.ers.epl@gmail.com>,
+        "Vijay Khemka" <vijaykhemka@fb.com>
+Cc:     "Joel Stanley" <joel@jms.id.au>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
+        manikandan.e@hcl.com
+Subject: Re: [PATCH] ARM: dts: aspeed: Adding Facebook Yosemite V2 BMC
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 8:49 PM Mika Westerberg
-<mika.westerberg@intel.com> wrote:
->
-> On Thu, Nov 21, 2019 at 04:43:24PM +0100, Rafael J. Wysocki wrote:
-> > On Thu, Nov 21, 2019 at 1:52 PM Mika Westerberg
-> > <mika.westerberg@intel.com> wrote:
-> > >
-> > > On Thu, Nov 21, 2019 at 01:46:14PM +0200, Mika Westerberg wrote:
-> > > > On Thu, Nov 21, 2019 at 12:34:22PM +0100, Rafael J. Wysocki wrote:
-> > > > > On Thu, Nov 21, 2019 at 12:28 PM Mika Westerberg
-> > > > > <mika.westerberg@intel.com> wrote:
-> > > > > >
-> > > > > > On Wed, Nov 20, 2019 at 11:29:33PM +0100, Rafael J. Wysocki wrote:
-> > > > > > > > last week or so I found systems where the GPU was under the "PCI
-> > > > > > > > Express Root Port" (name from lspci) and on those systems all of that
-> > > > > > > > seems to work. So I am wondering if it's indeed just the 0x1901 one,
-> > > > > > > > which also explains Mikas case that Thunderbolt stuff works as devices
-> > > > > > > > never get populated under this particular bridge controller, but under
-> > > > > > > > those "Root Port"s
-> > > > > > >
-> > > > > > > It always is a PCIe port, but its location within the SoC may matter.
-> > > > > >
-> > > > > > Exactly. Intel hardware has PCIe ports on CPU side (these are called
-> > > > > > PEG, PCI Express Graphics, ports), and the PCH side. I think the IP is
-> > > > > > still the same.
-> > > > > >
-> > > > > > > Also some custom AML-based power management is involved and that may
-> > > > > > > be making specific assumptions on the configuration of the SoC and the
-> > > > > > > GPU at the time of its invocation which unfortunately are not known to
-> > > > > > > us.
-> > > > > > >
-> > > > > > > However, it looks like the AML invoked to power down the GPU from
-> > > > > > > acpi_pci_set_power_state() gets confused if it is not in PCI D0 at
-> > > > > > > that point, so it looks like that AML tries to access device memory on
-> > > > > > > the GPU (beyond the PCI config space) or similar which is not
-> > > > > > > accessible in PCI power states below D0.
-> > > > > >
-> > > > > > Or the PCI config space of the GPU when the parent root port is in D3hot
-> > > > > > (as it is the case here). Also then the GPU config space is not
-> > > > > > accessible.
-> > > > >
-> > > > > Why would the parent port be in D3hot at that point?  Wouldn't that be
-> > > > > a suspend ordering violation?
-> > > >
-> > > > No. We put the GPU into D3hot first,
-> >
-> > OK
-> >
-> > Does this involve any AML, like a _PS3 under the GPU object?
->
-> I don't see _PS3 (nor _PS0) for that object. If I read it right the GPU
-> itself is not described in ACPI tables at all.
 
-OK
 
-> > > > then the root port and then turn
-> > > > off the power resource (which is attached to the root port) resulting
-> > > > the topology entering D3cold.
-> > >
-> > > I don't see that happening in the AML though.
-> >
-> > Which AML do you mean, specifically?  The _OFF method for the root
-> > port's _PR3 power resource or something else?
->
-> The root port's _OFF method for the power resource returned by its _PR3.
+On Thu, 21 Nov 2019, at 18:18, Manikandan wrote:
+> 
+> Hi Andrew/Vijay,
+> 
+> Thanks for the review .
+> 
+> The following changes done in dts and tested in Facebook Yosemite V2 
+> BMC platform,
+>   1. LPC feature removed as not supported .
+>   2. VUART feature removed as not supported.
+>   3. Host UART feature removed as not in the current scope.
+>   4. ADC pinctrl details added in dts.
 
-OK, so without the $subject patch we (1) program the downstream
-component (GPU) into D3hot, then we (2) program the port holding it
-into D3hot and then we (3) let the AML (_OFF for the power resource
-listed by _PR3 under the port object) run.
+Can you please re-send the patch as a v2 and inline to the mail rather than
+as an attachment?
 
-Something strange happens at this point (and I guess that _OFF doesn't
-even reach the point where it removes power from the port which is why
-we see a lock-up).
+Cheers,
 
-We know that skipping (1) makes things work and we kind of suspect
-that skipping (3) would make things work either, but what about doing
-(1) and (3) without (2)?
-
-> > > Basically the difference is that when Windows 7 or Linux (the _REV==5
-> > > check) then we directly do link disable whereas in Windows 8+ we invoke
-> > > LKDS() method that puts the link into L2/L3. None of the fields they
-> > > access seem to touch the GPU itself.
-> >
-> > So that may be where the problem is.
-> >
-> > Putting the downstream component into PCI D[1-3] is expected to put
-> > the link into L1, so I'm not sure how that plays with the later
-> > attempt to put it into L2/L3 Ready.
->
-> That should be fine. What I've seen the link goes into L1 when
-> downstream component is put to D-state (not D0) and then it is put back
-> to L0 when L2/3 ready is propagated. Eventually it goes into L2 or L3.
-
-Well, that's the expected behavior, but the observed behavior isn't as
-expected. :-)
-
-> > Also, L2/L3 Ready is expected to be transient, so finally power should
-> > be removed somehow.
->
-> There is GPIO for both power and PERST, I think the line here:
->
->   \_SB.SGOV (0x01010004, Zero)
->
-> is the one that removes power.
-
-OK
-
-> > > LKDS() for the first PEG port looks like this:
-> > >
-> > >    P0L2 = One
-> > >    Sleep (0x10)
-> > >    Local0 = Zero
-> > >    While (P0L2)
-> > >    {
-> > >         If ((Local0 > 0x04))
-> > >         {
-> > >             Break
-> > >         }
-> > >
-> > >         Sleep (0x10)
-> > >         Local0++
-> > >    }
-> > >
-> > > One thing that comes to mind is that the loop can end even if P0L2 is
-> > > not cleared as it does only 5 iterations with 16 ms sleep between. Maybe
-> > > Sleep() is implemented differently in Windows? I mean Linux may be
-> > > "faster" here and return prematurely and if we leave the port into D0
-> > > this does not happen, or something. I'm just throwing out ideas :)
-> >
-> > But this actually works for the downstream component in D0, doesn't it?
->
-> It does and that leaves the link in L0 so it could be that then the
-> above AML works better or something.
-
-That would be my guess.
-
-> That reminds me, ASPM may have something to do with this as well.
-
-Not really if D-states are involved.
-
-> > Also, if the downstream component is in D0, the port actually should
-> > stay in D0 too, so what would happen with the $subject patch applied?
->
-> Parent port cannot be lower D-state than the child so I agree it should
-> stay in D0 as well. However, it seems that what happens is that the
-> issue goes away :)
-
-Well, at least this is kind of out of the spec.
-
-Note that pci_pm_suspend_noirq() won't let the port go into D3 if the
-downstream device is in D0, so the $subject patch will not work as
-expected in the suspend-to-idle case.
-
-Also we really should make up our minds on whether or not to force
-PCIe ports to stay in D0 when downstream devices are in D0 and be
-consequent about that.  Right now we do one thing during system-wide
-suspend and the other one in PM-runtime, which is confusing.
-
-The current design is mostly based on the PCI PM Spec 1.2, so it would
-be consequent to follow system-wide suspend in PM-runtime and avoid
-putting PCIe ports holding devices in D0 into any low-power states.
-but that would make the approach in the $subject patch ineffective.
-
-Moreover, the fact that there are separate branches for "Windows 7"
-and "Windows 8+" kind of suggest a change in the expected behavior
-between Windows 7 and Windows 8, from the AML perspective.  I would
-guess that Windows 7 followed PCI PM 1.2 and Windows 8 (and later)
-does something else.  Now, the structure of the "Windows 8+" branch
-described by you suggests that, at least in the cases when it is going
-to remove power from the port eventually, it goes straight for the
-link preparation (the L2/L3 Ready transition) and power removal
-without bothering to program the downstream device and port into D3hot
-(because that's kind of redundant).
-
-That hypothetical "Windows 8+" approach may really work universally,
-because it doesn't seem to break any rules (going straight from D0 to
-D3cold is not disallowed and doing that for both a port and a
-downstream device at the same time is kind of OK either, as long as
-the link is ready for that).
+Andrew
