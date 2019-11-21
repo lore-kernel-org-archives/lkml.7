@@ -2,118 +2,90 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48FBAC43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:38:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2C94C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:38:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 215CB20726
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:38:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qHqYx5I4"
+	by mail.kernel.org (Postfix) with ESMTP id CAD742072E
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:38:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574347138;
+	bh=h1GRbks7EnBZQwQMp7D+aESnqrGn62t6a/Nn6SbqbaU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=r067y9YFGpSNWayn8EgIlzsOtuSNgGi44l0BATUHUwXaY0BmQFrS4/c3CgB5u0rnS
+	 iHkjjQ3fGzxiE88uzSaQzE4u/ILOcGAL3Gs+NvuDIQ0ZZVIBpR5QxAuJYhst0HN3UK
+	 yxS+0QRV/fd01unnhJ5SOfmJrmg9uFIQs8bkve+M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbfKUOig (ORCPT
+        id S1727102AbfKUOi6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 09:38:36 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:39823 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726690AbfKUOif (ORCPT
+        Thu, 21 Nov 2019 09:38:58 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:44790 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726623AbfKUOi5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 09:38:35 -0500
-Received: by mail-qk1-f196.google.com with SMTP id o17so3218124qko.6
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 06:38:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6uBnaV53sfik9uxAcuVDwoQxz4HOkeWfiqm0sSdBIt8=;
-        b=qHqYx5I4KcHedAmjd1d5VA7Cra9+uql2Yg67DF2JfSdPqsJ9EBrZsdLeui/10SaKzH
-         lrrFFHp0N+fIKs1O5Kq/ZoBYYg9bm60jFhTHSBSqZ/pz0a4O0hlJpEaSpXZT/a4rCBba
-         r+b7qbul7RWhqR5/gvoKpK10Z9wOYvo2Znmq1eO73y/pTQ3Jw4cmkXMi7fwGTAqv0w+Q
-         dwBt78bp5McJFh6GlndtSeqBFnLD4teFPcw8DJUGYUHzCbeVj4wq/9zaKDYbajO3NSKz
-         G1rS+kNrXqfzQnLlMxpsau6iJW7BUFPZ2L4DWv80kqaGYmPNiPllMKTBqmyIrbNU0aHE
-         WE7w==
+        Thu, 21 Nov 2019 09:38:57 -0500
+Received: by mail-ot1-f67.google.com with SMTP id c19so3066435otr.11;
+        Thu, 21 Nov 2019 06:38:57 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6uBnaV53sfik9uxAcuVDwoQxz4HOkeWfiqm0sSdBIt8=;
-        b=KeZuZYBclSJBwdxJIJfePVsvnLfGetBvTYHJCAs7nkvHUdCj2JysnxcKplx+xK71hv
-         A0HglkhmuCslUifZt2dt7VBsqGFUtDBkn1PRDKzyNb7UqI9l+WIuze/FkNmXspMZE68y
-         LfQl20wDy+wBD8ish3CdNuHAT0ypkYK6qXMrUwfFrBNVHXnM+N+zChQYqcxaaA7rEEE8
-         JKWSP9cCNV93e5T+Lfu/leiUoGfXT/xeZ0XVhDpFdcKzoi9hCXFNm+M09BEXXQP4Dih1
-         tMpGn3qo4pPuXUPaqvWK4yupvym/rrWh5INXmnEy8d9bBbtXPVbjtAfTes0p1GJFr2ao
-         r1Yw==
-X-Gm-Message-State: APjAAAWQ0iy2WlC584rw6dyQzDpaL6LznLXxCbJrehJIrS3H8bXxje2z
-        hcuczo1fli0vD3+PacmNsbmriKZoNEPOCFimkaioSuxoReI=
-X-Google-Smtp-Source: APXvYqxtKxAUh/ZMebivKk+zZk45NjEKinlCwFUHSVbBLFIM++OG8OJ5sUmC4KwJfvFX69uhnJx9VWkHLUjlF+d0+LQ=
-X-Received: by 2002:a05:620a:12f3:: with SMTP id f19mr7967709qkl.106.1574347111146;
- Thu, 21 Nov 2019 06:38:31 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0blBAL3wZkz50HycghqiK2pciwvxeqAeMTt/kJRNm5g=;
+        b=qbz3JTU/Fm0TUnxowGxCiuSAU+NDoYoSMxXGSD1+YybXUE1vLhZ0EMZY+Fe0UXUuvw
+         UWj8Z/lBY20URlXdRcXUXC2C0GYxDsGOf8EPpVKBXtl8ZSefVC9uq3PuKLjvgyL88SEe
+         0Q1LZea0QZ+67AjozVVQf++mpE9AUmtyz4IL5IdAoWmFjl08BsZY90kGVOgQvgUxLUw5
+         +1HdfoeKCJ0Rv3PwTg2AVtNrXCkJrPuU8NRS9exfjscZrGv+VA6RISiso52A0c6L3Bcj
+         x3tuQ2t4S8i6Pa4Bj33RGmQSQuyuZ3WOFaT5L60pSw3lkywBaXwJKOK4OzKQGYHlt8fd
+         bt3A==
+X-Gm-Message-State: APjAAAUrKxCNHgnIthpSGJM4OUuJJtKsVhxvJnYuwovplVkxY/J9qWNL
+        qx5WkW0qIphwVg5Ya7eF6JgxO/0=
+X-Google-Smtp-Source: APXvYqwnaGGSvHw3eVxDSnMv1fQxO7SKEamfp9zxy8HwVAD1LSiD/kDoELucP/RnyFz5AWlq8jVXBQ==
+X-Received: by 2002:a9d:7a93:: with SMTP id l19mr6448599otn.314.1574347136596;
+        Thu, 21 Nov 2019 06:38:56 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id h39sm1055423oth.9.2019.11.21.06.38.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Nov 2019 06:38:56 -0800 (PST)
+Date:   Thu, 21 Nov 2019 08:38:55 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc:     broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        alexandre.torgue@st.com, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: Re: [PATCH v2] dt-bindings: spi: Convert stm32 QSPI bindings to
+ json-schema
+Message-ID: <20191121143855.GA23685@bogus>
+References: <20191120194444.10540-1-benjamin.gaignard@st.com>
 MIME-Version: 1.0
-References: <8e812065f4a76325097c5f9c17f3386736d8c1d4.1574315190.git.amit.kucheria@linaro.org>
- <5DD69AB7.3060307@linaro.org>
-In-Reply-To: <5DD69AB7.3060307@linaro.org>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Thu, 21 Nov 2019 20:08:20 +0530
-Message-ID: <CAP245DVwEij-fs-LK=i3+Ps6BrsHt4DfxKG=C-tFM3CVKadtXA@mail.gmail.com>
-Subject: Re: [PATCH] drivers: thermal: step_wise: add support for hysteresis
-To:     Thara Gopinath <thara.gopinath@linaro.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        "J, KEERTHY" <j-keerthy@ti.com>, Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Ram Chandrasekar <rkumbako@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191120194444.10540-1-benjamin.gaignard@st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 7:40 PM Thara Gopinath
-<thara.gopinath@linaro.org> wrote:
->
-> On 11/21/2019 12:50 AM, Amit Kucheria wrote:
-> > From: Ram Chandrasekar <rkumbako@codeaurora.org>
-> >
-> > Currently, step wise governor increases the mitigation when the
-> > temperature goes above a threshold and decreases the mitigation when the
-> > temperature goes below the threshold. If there is a case where the
-> > temperature is wavering around the threshold, the mitigation will be
-> > applied and removed every iteration, which is not very efficient.
-> >
-> > The use of hysteresis temperature could avoid this ping-pong of
-> > mitigation by relaxing the mitigation to happen only when the
-> > temperature goes below this lower hysteresis value.
-> Hi Amit,
->
-> Can this not lead to ping-pong around the hysteresis temperature?
+On Wed, 20 Nov 2019 20:44:44 +0100, Benjamin Gaignard wrote:
+> Convert the STM32 QSPI binding to DT schema format using json-schema
+> 
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> ---
+> changes in version 2:
+> - fix subject
+> - remove useless minItems and maxItems
+>  .../devicetree/bindings/spi/spi-stm32-qspi.txt     | 47 ------------
+>  .../devicetree/bindings/spi/st,stm32-qspi.yaml     | 83 ++++++++++++++++++++++
+>  2 files changed, 83 insertions(+), 47 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/spi/spi-stm32-qspi.txt
+>  create mode 100644 Documentation/devicetree/bindings/spi/st,stm32-qspi.yaml
+> 
 
-That isn't how hysteresis is supposed to work if there is a sufficient
-delta between your trip point and your hysteresis value.
-
-e.g. if you have a trip at 80C and a hysteresis of 10C, it means that
-you will start throttling at 80C, but you won't STOP throttling until
-you cool down to 70C. At that point, you will wait again to get to 80C
-before throttling again.
-IOW, on the downward slope (80 -> 70) you still have throttling active
-and on the upward slope (70 -> 80), you have no[1] throttling, so
-different behaviour is the same temperature range depending on
-direction.
-
-If your hysteresis value was very low .e.g. 1C, it would certainly be useless.
-
-> If the idea is to minimize ping-pong isn't average a better method?
-
-We shouldn't ping-pong with the asymmetric behaviour described above.
-
-Regards,
-Amit
-[1] This is a simple example with a single trip point.
+Reviewed-by: Rob Herring <robh@kernel.org>
