@@ -2,50 +2,46 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E0CEC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 12:55:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDFD2C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 12:56:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E07620731
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 12:55:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99E4920731
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 12:56:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726803AbfKUMzA (ORCPT
+        id S1726822AbfKUM4u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 07:55:00 -0500
-Received: from relay.sw.ru ([185.231.240.75]:51644 "EHLO relay.sw.ru"
+        Thu, 21 Nov 2019 07:56:50 -0500
+Received: from foss.arm.com ([217.140.110.172]:55778 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726293AbfKUMy7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 07:54:59 -0500
-Received: from dhcp-172-16-25-5.sw.ru ([172.16.25.5])
-        by relay.sw.ru with esmtp (Exim 4.92.3)
-        (envelope-from <aryabinin@virtuozzo.com>)
-        id 1iXlz7-00025W-30; Thu, 21 Nov 2019 15:54:57 +0300
-Subject: Re: [PATCH 2/3] ubsan: Split "bounds" checker from other options
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Elena Petrova <lenaptr@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-        kernel-hardening@lists.openwall.com
-References: <20191120010636.27368-1-keescook@chromium.org>
- <20191120010636.27368-3-keescook@chromium.org>
-From:   Andrey Ryabinin <aryabinin@virtuozzo.com>
-Message-ID: <06a84afd-bc97-d2b5-3129-d23473f7acb5@virtuozzo.com>
-Date:   Thu, 21 Nov 2019 15:54:44 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        id S1726293AbfKUM4u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 07:56:50 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5D365DA7;
+        Thu, 21 Nov 2019 04:56:49 -0800 (PST)
+Received: from [10.0.2.15] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 023513F703;
+        Thu, 21 Nov 2019 04:56:47 -0800 (PST)
+Subject: Re: [PATCH 3/3] sched/fair: Consider uclamp for "task fits capacity"
+ checks
+To:     Quentin Perret <qperret@google.com>
+Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
+        mingo@kernel.org, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, patrick.bellasi@matbug.net,
+        qais.yousef@arm.com, morten.rasmussen@arm.com
+References: <20191120175533.4672-1-valentin.schneider@arm.com>
+ <20191120175533.4672-4-valentin.schneider@arm.com>
+ <20191121115602.GA213296@google.com>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <f7e5dabb-a7e6-d110-abca-de7d4533bcc5@arm.com>
+Date:   Thu, 21 Nov 2019 12:56:39 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191120010636.27368-3-keescook@chromium.org>
+In-Reply-To: <20191121115602.GA213296@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -54,42 +50,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 21/11/2019 11:56, Quentin Perret wrote:
+> On Wednesday 20 Nov 2019 at 17:55:33 (+0000), Valentin Schneider wrote:
+>> +static inline
+>> +unsigned long uclamp_task_util(struct task_struct *p, unsigned long util)
+> 
+> This 'util' parameter is always task_util_est(p) right ? You might want
+> to remove it.
+> 
 
+I went with copying uclamp_rq_util()'s API, but you're right in that I don't
+see what other value (than util_est) would make sense for this helper. If
+there is no objections I'll kill the parameter for v2.
 
-On 11/20/19 4:06 AM, Kees Cook wrote:
-> In order to do kernel builds with the bounds checker individually
-> available, introduce CONFIG_UBSAN_BOUNDS, with the remaining options
-> under CONFIG_UBSAN_MISC.
+>> +{
+>> +	return clamp(util,
+>> +		     (unsigned long)uclamp_eff_value(p, UCLAMP_MIN),
+>> +		     (unsigned long)uclamp_eff_value(p, UCLAMP_MAX));
+>> +}
 > 
-> For example, using this, we can start to expand the coverage syzkaller is
-> providing. Right now, all of UBSan is disabled for syzbot builds because
-> taken as a whole, it is too noisy. This will let us focus on one feature
-> at a time.
+> Thanks,
+> Quentin
 > 
-> For the bounds checker specifically, this provides a mechanism to
-> eliminate an entire class of array overflows with close to zero
-> performance overhead (I cannot measure a difference). In my (mostly)
-> defconfig, enabling bounds checking adds ~4200 checks to the kernel.
-> Performance changes are in the noise, likely due to the branch predictors
-> optimizing for the non-fail path.
-> 
-> Some notes on the bounds checker:
-> 
-> - it does not instrument {mem,str}*()-family functions, it only
->   instruments direct indexed accesses (e.g. "foo[i]"). Dealing with
->   the {mem,str}*()-family functions is a work-in-progress around
->   CONFIG_FORTIFY_SOURCE[1].
-> 
-> - it ignores flexible array members, including the very old single
->   byte (e.g. "int foo[1];") declarations. (Note that GCC's
->   implementation appears to ignore _all_ trailing arrays, but Clang only
->   ignores empty, 0, and 1 byte arrays[2].)
-> 
-> [1] https://github.com/KSPP/linux/issues/6
-> [2] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=92589
-> 
-> Suggested-by: Elena Petrova <lenaptr@google.com>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Reviewed-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Another thing I realized overnight; tell me what you think:
 
+> @@ -6274,6 +6274,15 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
+>  			if (!fits_capacity(util, cpu_cap))
+>  				continue;
+>  
+> +			/*
+> +			 * Skip CPUs that don't satisfy uclamp requests. Note
+> +			 * that the above already ensures the CPU has enough
+> +			 * spare capacity for the task; this is only really for
+> +			 * uclamp restrictions.
+> +			 */
+> +			if (!task_fits_capacity(p, capacity_orig_of(cpu)))
+> +				continue;
+
+This is partly redundant with the above, I think. What we really want here
+is just
+
+fits_capacity(uclamp_eff_value(p, UCLAMP_MIN), capacity_orig_of(cpu))
+
+but this would require some inline #ifdeffery.
+
+> +
+>  			/* Always use prev_cpu as a candidate. */
+>  			if (cpu == prev_cpu) {
+>  				prev_delta = compute_energy(p, prev_cpu, pd);
