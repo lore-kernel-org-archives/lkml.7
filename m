@@ -2,286 +2,226 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 100AAC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 07:15:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35834C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 07:15:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5AC920872
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 07:15:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F273B20872
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 07:15:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vPxf+Oyg"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="gMl5VQep"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727698AbfKUHPr (ORCPT
+        id S1727671AbfKUHPb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 02:15:47 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:35123 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727662AbfKUHPc (ORCPT
+        Thu, 21 Nov 2019 02:15:31 -0500
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:4375 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727298AbfKUHOH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 02:15:32 -0500
-Received: by mail-lj1-f194.google.com with SMTP id r7so2016310ljg.2
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 23:15:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LvNqh176+zTPkEmAJQRV3mdnP6nbhg4hTBDop+8hPYA=;
-        b=vPxf+OygpR7DfiE6peFYKxo98DSa6b8AW9efxo16EidBlFVsMFVPJk+EWWAPGWjryY
-         7y/TX++vWiLACep4/2DeucDbQFDHvNYkT1ZdXuujcZEs0lCM1K4gevvDVgD3BryZvAcE
-         bB3WaM918Ek5YDCoTUmB4FPv2JE8TQ6Rz5AufpfmYIhCuIMsaoNkxTx+grfDcdqGVs3v
-         WsLoyBQp0WjvpGNgl4jqxHPGZUPvRjV0gBxQchkkCpYqFXfpEp60sFMBSGjZx9hu4KY5
-         IWjAfnC9V6MhTTENt0Un0P3sfu4z3SzUMlao9TtFjZWHV5Ed0drv4LhgWdPcg+cfnv2l
-         RJuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LvNqh176+zTPkEmAJQRV3mdnP6nbhg4hTBDop+8hPYA=;
-        b=jjNXBwA7yv69yrhRcNvu56Kmp7nXc4A6Ge1hyTom9rBWZUmaXOZCkk6DAvucoX+0Sc
-         WdPRU9Os7xdEIuuHhJTq79yGFPPUrop8gT0UiSYIYYNqjV2tE74jA0i02Bqey+NFS5bj
-         x26K7TiSs5KJ3Czrk9M5WlRR+ezVuepcx2BiZPSIjInzzcnVqvfXxnJC77SuVDa1jY2k
-         BQk5gkdjxb9vkc27qxx0NGVcFvpemicrQgtw35Jki3PRpTCQ1dL8m2CrcqfDnIZl6H5M
-         YfERCz424pKkxmkPbzhvrnIDAih9WlkaW6tZ5035YI3Zy+MkchsjvrZKpmgBJottYQSA
-         TIDw==
-X-Gm-Message-State: APjAAAVeDMDLIrHxpouum71zwyQ5EXu+W8ILL5MWsaHxaSYHfaE3cL7f
-        XVuMndgBBaiocBMog0v8WvKlaId3skXFPas45faswQ==
-X-Google-Smtp-Source: APXvYqyGAKEeWeRP7BqCjrUxerAcHNAccAFfalJFom/KvdUfzuAtXZit1ER159PqgPvYFOySvI5hV+unEi7fdRYjUKU=
-X-Received: by 2002:a2e:95c5:: with SMTP id y5mr6074005ljh.184.1574320529091;
- Wed, 20 Nov 2019 23:15:29 -0800 (PST)
+        Thu, 21 Nov 2019 02:14:07 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dd639350003>; Wed, 20 Nov 2019 23:13:57 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 20 Nov 2019 23:13:56 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 20 Nov 2019 23:13:56 -0800
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 21 Nov
+ 2019 07:13:55 +0000
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 21 Nov
+ 2019 07:13:55 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Thu, 21 Nov 2019 07:13:55 +0000
+Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5dd639330002>; Wed, 20 Nov 2019 23:13:55 -0800
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        "Paul Mackerras" <paulus@samba.org>, Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: [PATCH v7 01/24] mm/gup: pass flags arg to __gup_device_* functions
+Date:   Wed, 20 Nov 2019 23:13:31 -0800
+Message-ID: <20191121071354.456618-2-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20191121071354.456618-1-jhubbard@nvidia.com>
+References: <20191121071354.456618-1-jhubbard@nvidia.com>
 MIME-Version: 1.0
-References: <20191120152255.18928-1-anders.roxell@linaro.org> <e07311c7-24b8-8c48-d6f2-a7c93976613c@gmail.com>
-In-Reply-To: <e07311c7-24b8-8c48-d6f2-a7c93976613c@gmail.com>
-From:   Anders Roxell <anders.roxell@linaro.org>
-Date:   Thu, 21 Nov 2019 08:15:17 +0100
-Message-ID: <CADYN=9Jzxgun9k8v9oQT47ZUFGPhCnsDoYaohG-DXmA1De1zXg@mail.gmail.com>
-Subject: Re: [PATCH v2] net: ipmr: fix suspicious RCU warning
-To:     Eric Dumazet <eric.dumazet@gmail.com>
-Cc:     David Miller <davem@davemloft.net>, kuznet@ms2.inr.ac.ru,
-        yoshfuji@linux-ipv6.org, paulmck@kernel.org,
-        Networking <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+X-NVConfidentiality: public
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1574320437; bh=shQdk3aSV65MVp9nCFIR9V5hifAIbJq1aZuVoQR8zJ0=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
+         Content-Type:Content-Transfer-Encoding;
+        b=gMl5VQepYNVpBXofZza0/ow/8Dn935aB6KBsCZ3lc9TtHFCtZyjmhmWYKFH6IWFRl
+         TnRRGXEo+FQ1av+GEsBdTTibE5RnfRI0tvxbsmRxdI4PCW3jO/hquda7Nqn64ZXawG
+         T+V/mOygdWd7MqVqN4z8k9KRlTyE13FGZfZ/+PDzYWF+aFUwKAGCLnX7kwEmv54wid
+         3MAjQlavR9EuuEsEgQ/PitjNtZMvDTpGftK/rWJbNiEidCFo0rrQT4pTRQDQusw5qt
+         gcHbrtSkK7sCuZHREU4ExJ34LPx8dY52thRmUp1xUZrjzb41EgN4GTlQH6yk+ltaIr
+         FsssYdqLifkmg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 20 Nov 2019 at 18:45, Eric Dumazet <eric.dumazet@gmail.com> wrote:
->
->
->
-> On 11/20/19 7:22 AM, Anders Roxell wrote:
-> > When booting an arm64 allmodconfig kernel on linux-next next-20191115
-> > The following "suspicious RCU usage" warning shows up.  This bug seems
-> > to have been introduced by commit f0ad0860d01e ("ipv4: ipmr: support
-> > multiple tables") in 2010, but the warning was added only in this past
-> > year by commit 28875945ba98 ("rcu: Add support for consolidated-RCU
-> > reader checking").
-> >
-> > [   32.496021][    T1] =============================
-> > [   32.497616][    T1] WARNING: suspicious RCU usage
-> > [   32.499614][    T1] 5.4.0-rc6-next-20191108-00003-gf74bac957b5c-dirty #2 Not tainted
-> > [   32.502018][    T1] -----------------------------
-> > [   32.503976][    T1] net/ipv4/ipmr.c:136 RCU-list traversed in non-reader section!!
-> > [   32.506746][    T1]
-> > [   32.506746][    T1] other info that might help us debug this:
-> > [   32.506746][    T1]
-> > [   32.509794][    T1]
-> > [   32.509794][    T1] rcu_scheduler_active = 2, debug_locks = 1
-> > [   32.512661][    T1] 1 lock held by swapper/0/1:
-> > [   32.514169][    T1]  #0: ffffa000150dd678 (pernet_ops_rwsem){+.+.}, at: register_pernet_subsys+0x24/0x50
-> > [   32.517621][    T1]
-> > [   32.517621][    T1] stack backtrace:
-> > [   32.519930][    T1] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.4.0-rc6-next-20191108-00003-gf74bac957b5c-dirty #2
-> > [   32.523063][    T1] Hardware name: linux,dummy-virt (DT)
-> > [   32.524787][    T1] Call trace:
-> > [   32.525946][    T1]  dump_backtrace+0x0/0x2d0
-> > [   32.527433][    T1]  show_stack+0x20/0x30
-> > [   32.528811][    T1]  dump_stack+0x204/0x2ac
-> > [   32.530258][    T1]  lockdep_rcu_suspicious+0xf4/0x108
-> > [   32.531993][    T1]  ipmr_get_table+0xc8/0x170
-> > [   32.533496][    T1]  ipmr_new_table+0x48/0xa0
-> > [   32.535002][    T1]  ipmr_net_init+0xe8/0x258
-> > [   32.536465][    T1]  ops_init+0x280/0x2d8
-> > [   32.537876][    T1]  register_pernet_operations+0x210/0x420
-> > [   32.539707][    T1]  register_pernet_subsys+0x30/0x50
-> > [   32.541372][    T1]  ip_mr_init+0x54/0x180
-> > [   32.542785][    T1]  inet_init+0x25c/0x3e8
-> > [   32.544186][    T1]  do_one_initcall+0x4c0/0xad8
-> > [   32.545757][    T1]  kernel_init_freeable+0x3e0/0x500
-> > [   32.547443][    T1]  kernel_init+0x14/0x1f0
-> > [   32.548875][    T1]  ret_from_fork+0x10/0x18
-> >
-> > This commit therefore holds RTNL mutex around the problematic code path,
-> > which is function ipmr_rules_init() in ipmr_net_init().  This commit
-> > also adds a lockdep_rtnl_is_held() check to the ipmr_for_each_table()
-> > macro.
-> >
-> > Suggested-by: David Miller <davem@davemloft.net>
-> > Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
-> > Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
-> > ---
-> >  net/ipv4/ipmr.c | 5 ++++-
-> >  1 file changed, 4 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/net/ipv4/ipmr.c b/net/ipv4/ipmr.c
-> > index 6e68def66822..53dff9a0e60a 100644
-> > --- a/net/ipv4/ipmr.c
-> > +++ b/net/ipv4/ipmr.c
-> > @@ -110,7 +110,8 @@ static void ipmr_expire_process(struct timer_list *t);
-> >
-> >  #ifdef CONFIG_IP_MROUTE_MULTIPLE_TABLES
-> >  #define ipmr_for_each_table(mrt, net) \
-> > -     list_for_each_entry_rcu(mrt, &net->ipv4.mr_tables, list)
-> > +     list_for_each_entry_rcu(mrt, &net->ipv4.mr_tables, list, \
-> > +                             lockdep_rtnl_is_held())
-> >
-> >  static struct mr_table *ipmr_mr_table_iter(struct net *net,
-> >                                          struct mr_table *mrt)
-> > @@ -3086,7 +3087,9 @@ static int __net_init ipmr_net_init(struct net *net)
-> >       if (err)
-> >               goto ipmr_notifier_fail;
-> >
-> > +     rtnl_lock();
-> >       err = ipmr_rules_init(net);
-> > +     rtnl_unlock();
-> >       if (err < 0)
-> >               goto ipmr_rules_fail;
->
-> Hmmm... this might have performance impact for creation of a new netns
->
-> Since the 'struct net' is not yet fully initialized (thus published/visible),
-> should we really have to grab RTNL (again) only to silence a warning ?
->
-> What about the following alternative ?
+A subsequent patch requires access to gup flags, so
+pass the flags argument through to the __gup_device_*
+functions.
 
-I tried what you suggested, unfortunately, I still got the warning.
+Also placate checkpatch.pl by shortening a nearby line.
 
+Reviewed-by: Jan Kara <jack@suse.cz>
+Reviewed-by: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+---
+ mm/gup.c | 28 ++++++++++++++++++----------
+ 1 file changed, 18 insertions(+), 10 deletions(-)
 
-[   43.253850][    T1] =============================
-[   43.255473][    T1] WARNING: suspicious RCU usage
-[   43.259068][    T1]
-5.4.0-rc8-next-20191120-00003-g3aa7c2a8649e-dirty #6 Not tainted
-[   43.263078][    T1] -----------------------------
-[   43.265134][    T1] net/ipv4/ipmr.c:1759 RCU-list traversed in
-non-reader section!!
-[   43.267587][    T1]
-[   43.267587][    T1] other info that might help us debug this:
-[   43.267587][    T1]
-[   43.271129][    T1]
-[   43.271129][    T1] rcu_scheduler_active = 2, debug_locks = 1
-[   43.274021][    T1] 2 locks held by swapper/0/1:
-[   43.275532][    T1]  #0: ffff000065abeaa0 (&dev->mutex){....}, at:
-__device_driver_lock+0xa0/0xb0
-[   43.278930][    T1]  #1: ffffa000153017f0 (rtnl_mutex){+.+.}, at:
-rtnl_lock+0x1c/0x28
-[   43.282023][    T1]
-[   43.282023][    T1] stack backtrace:
-[   43.283921][    T1] CPU: 0 PID: 1 Comm: swapper/0 Not tainted
-5.4.0-rc8-next-20191120-00003-g3aa7c2a8649e-dirty #6
-[   43.287152][    T1] Hardware name: linux,dummy-virt (DT)
-[   43.288920][    T1] Call trace:
-[   43.290057][    T1]  dump_backtrace+0x0/0x2d0
-[   43.291535][    T1]  show_stack+0x20/0x30
-[   43.292967][    T1]  dump_stack+0x204/0x2ac
-[   43.294423][    T1]  lockdep_rcu_suspicious+0xf4/0x108
-[   43.296163][    T1]  ipmr_device_event+0x100/0x1e8
-[   43.297812][    T1]  notifier_call_chain+0x100/0x1a8
-[   43.299486][    T1]  raw_notifier_call_chain+0x38/0x48
-[   43.301248][    T1]  call_netdevice_notifiers_info+0x128/0x148
-[   43.303158][    T1]  rollback_registered_many+0x684/0xb48
-[   43.304963][    T1]  rollback_registered+0xd8/0x150
-[   43.306595][    T1]  unregister_netdevice_queue+0x194/0x1b8
-[   43.308406][    T1]  unregister_netdev+0x24/0x38
-[   43.310012][    T1]  virtnet_remove+0x44/0x78
-[   43.311519][    T1]  virtio_dev_remove+0x5c/0xc0
-[   43.313114][    T1]  really_probe+0x508/0x920
-[   43.314635][    T1]  driver_probe_device+0x164/0x230
-[   43.316337][    T1]  device_driver_attach+0x8c/0xc0
-[   43.318024][    T1]  __driver_attach+0x1e0/0x1f8
-[   43.319584][    T1]  bus_for_each_dev+0xf0/0x188
-[   43.321169][    T1]  driver_attach+0x34/0x40
-[   43.322645][    T1]  bus_add_driver+0x204/0x3c8
-[   43.324202][    T1]  driver_register+0x160/0x1f8
-[   43.325788][    T1]  register_virtio_driver+0x7c/0x88
-[   43.327480][    T1]  virtio_net_driver_init+0xa8/0xf4
-[   43.329196][    T1]  do_one_initcall+0x4c0/0xad8
-[   43.330767][    T1]  kernel_init_freeable+0x3e0/0x500
-[   43.332444][    T1]  kernel_init+0x14/0x1f0
-[   43.333901][    T1]  ret_from_fork+0x10/0x18
+diff --git a/mm/gup.c b/mm/gup.c
+index 8f236a335ae9..85caf76b3012 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -1890,7 +1890,8 @@ static int gup_pte_range(pmd_t pmd, unsigned long add=
+r, unsigned long end,
+=20
+ #if defined(CONFIG_ARCH_HAS_PTE_DEVMAP) && defined(CONFIG_TRANSPARENT_HUGE=
+PAGE)
+ static int __gup_device_huge(unsigned long pfn, unsigned long addr,
+-		unsigned long end, struct page **pages, int *nr)
++			     unsigned long end, unsigned int flags,
++			     struct page **pages, int *nr)
+ {
+ 	int nr_start =3D *nr;
+ 	struct dev_pagemap *pgmap =3D NULL;
+@@ -1916,13 +1917,14 @@ static int __gup_device_huge(unsigned long pfn, uns=
+igned long addr,
+ }
+=20
+ static int __gup_device_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long ad=
+dr,
+-		unsigned long end, struct page **pages, int *nr)
++				 unsigned long end, unsigned int flags,
++				 struct page **pages, int *nr)
+ {
+ 	unsigned long fault_pfn;
+ 	int nr_start =3D *nr;
+=20
+ 	fault_pfn =3D pmd_pfn(orig) + ((addr & ~PMD_MASK) >> PAGE_SHIFT);
+-	if (!__gup_device_huge(fault_pfn, addr, end, pages, nr))
++	if (!__gup_device_huge(fault_pfn, addr, end, flags, pages, nr))
+ 		return 0;
+=20
+ 	if (unlikely(pmd_val(orig) !=3D pmd_val(*pmdp))) {
+@@ -1933,13 +1935,14 @@ static int __gup_device_huge_pmd(pmd_t orig, pmd_t =
+*pmdp, unsigned long addr,
+ }
+=20
+ static int __gup_device_huge_pud(pud_t orig, pud_t *pudp, unsigned long ad=
+dr,
+-		unsigned long end, struct page **pages, int *nr)
++				 unsigned long end, unsigned int flags,
++				 struct page **pages, int *nr)
+ {
+ 	unsigned long fault_pfn;
+ 	int nr_start =3D *nr;
+=20
+ 	fault_pfn =3D pud_pfn(orig) + ((addr & ~PUD_MASK) >> PAGE_SHIFT);
+-	if (!__gup_device_huge(fault_pfn, addr, end, pages, nr))
++	if (!__gup_device_huge(fault_pfn, addr, end, flags, pages, nr))
+ 		return 0;
+=20
+ 	if (unlikely(pud_val(orig) !=3D pud_val(*pudp))) {
+@@ -1950,14 +1953,16 @@ static int __gup_device_huge_pud(pud_t orig, pud_t =
+*pudp, unsigned long addr,
+ }
+ #else
+ static int __gup_device_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long ad=
+dr,
+-		unsigned long end, struct page **pages, int *nr)
++				 unsigned long end, unsigned int flags,
++				 struct page **pages, int *nr)
+ {
+ 	BUILD_BUG();
+ 	return 0;
+ }
+=20
+ static int __gup_device_huge_pud(pud_t pud, pud_t *pudp, unsigned long add=
+r,
+-		unsigned long end, struct page **pages, int *nr)
++				 unsigned long end, unsigned int flags,
++				 struct page **pages, int *nr)
+ {
+ 	BUILD_BUG();
+ 	return 0;
+@@ -2062,7 +2067,8 @@ static int gup_huge_pmd(pmd_t orig, pmd_t *pmdp, unsi=
+gned long addr,
+ 	if (pmd_devmap(orig)) {
+ 		if (unlikely(flags & FOLL_LONGTERM))
+ 			return 0;
+-		return __gup_device_huge_pmd(orig, pmdp, addr, end, pages, nr);
++		return __gup_device_huge_pmd(orig, pmdp, addr, end, flags,
++					     pages, nr);
+ 	}
+=20
+ 	refs =3D 0;
+@@ -2092,7 +2098,8 @@ static int gup_huge_pmd(pmd_t orig, pmd_t *pmdp, unsi=
+gned long addr,
+ }
+=20
+ static int gup_huge_pud(pud_t orig, pud_t *pudp, unsigned long addr,
+-		unsigned long end, unsigned int flags, struct page **pages, int *nr)
++			unsigned long end, unsigned int flags,
++			struct page **pages, int *nr)
+ {
+ 	struct page *head, *page;
+ 	int refs;
+@@ -2103,7 +2110,8 @@ static int gup_huge_pud(pud_t orig, pud_t *pudp, unsi=
+gned long addr,
+ 	if (pud_devmap(orig)) {
+ 		if (unlikely(flags & FOLL_LONGTERM))
+ 			return 0;
+-		return __gup_device_huge_pud(orig, pudp, addr, end, pages, nr);
++		return __gup_device_huge_pud(orig, pudp, addr, end, flags,
++					     pages, nr);
+ 	}
+=20
+ 	refs =3D 0;
+--=20
+2.24.0
 
-
-Cheers,
-Anders
-
->
-> diff --git a/net/ipv4/ipmr.c b/net/ipv4/ipmr.c
-> index 6e68def66822f47fc08d94eddd32a4bd4f9fdfb0..b6dcdce08f1d82c83756a319623e24ae0174092c 100644
-> --- a/net/ipv4/ipmr.c
-> +++ b/net/ipv4/ipmr.c
-> @@ -94,7 +94,7 @@ static DEFINE_SPINLOCK(mfc_unres_lock);
->
->  static struct kmem_cache *mrt_cachep __ro_after_init;
->
-> -static struct mr_table *ipmr_new_table(struct net *net, u32 id);
-> +static struct mr_table *ipmr_new_table(struct net *net, u32 id, bool init);
->  static void ipmr_free_table(struct mr_table *mrt);
->
->  static void ip_mr_forward(struct net *net, struct mr_table *mrt,
-> @@ -245,7 +245,7 @@ static int __net_init ipmr_rules_init(struct net *net)
->
->         INIT_LIST_HEAD(&net->ipv4.mr_tables);
->
-> -       mrt = ipmr_new_table(net, RT_TABLE_DEFAULT);
-> +       mrt = ipmr_new_table(net, RT_TABLE_DEFAULT, true);
->         if (IS_ERR(mrt)) {
->                 err = PTR_ERR(mrt);
->                 goto err1;
-> @@ -322,7 +322,7 @@ static int __net_init ipmr_rules_init(struct net *net)
->  {
->         struct mr_table *mrt;
->
-> -       mrt = ipmr_new_table(net, RT_TABLE_DEFAULT);
-> +       mrt = ipmr_new_table(net, RT_TABLE_DEFAULT, true);
->         if (IS_ERR(mrt))
->                 return PTR_ERR(mrt);
->         net->ipv4.mrt = mrt;
-> @@ -392,7 +392,7 @@ static struct mr_table_ops ipmr_mr_table_ops = {
->         .cmparg_any = &ipmr_mr_table_ops_cmparg_any,
->  };
->
-> -static struct mr_table *ipmr_new_table(struct net *net, u32 id)
-> +static struct mr_table *ipmr_new_table(struct net *net, u32 id, bool init)
->  {
->         struct mr_table *mrt;
->
-> @@ -400,9 +400,11 @@ static struct mr_table *ipmr_new_table(struct net *net, u32 id)
->         if (id != RT_TABLE_DEFAULT && id >= 1000000000)
->                 return ERR_PTR(-EINVAL);
->
-> -       mrt = ipmr_get_table(net, id);
-> -       if (mrt)
-> -               return mrt;
-> +       if (!init) {
-> +               mrt = ipmr_get_table(net, id);
-> +               if (mrt)
-> +                       return mrt;
-> +       }
->
->         return mr_table_alloc(net, id, &ipmr_mr_table_ops,
->                               ipmr_expire_process, ipmr_new_table_set);
-> @@ -1547,7 +1549,7 @@ int ip_mroute_setsockopt(struct sock *sk, int optname, char __user *optval,
->                 if (sk == rtnl_dereference(mrt->mroute_sk)) {
->                         ret = -EBUSY;
->                 } else {
-> -                       mrt = ipmr_new_table(net, uval);
-> +                       mrt = ipmr_new_table(net, uval, false);
->                         if (IS_ERR(mrt))
->                                 ret = PTR_ERR(mrt);
->                         else
->
->
