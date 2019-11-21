@@ -2,90 +2,92 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D063BC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:20:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B35CEC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:20:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E49A20708
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:20:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574367605;
-	bh=tLTI+rrMTmofvOGL7fPngNOUF+n7CrK8+TfuJYXHWWU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MtSVD7CsqBaEBX8Ec53RAjTASB9Sw/Gu0fwaron8M12f8z0EO3UexA/+RcD9ybM43
-	 zdv/Z8bMNUvBlZdp8RzzoIL0OBDvkBqMm9QvqoUeLQWyuHw/RD7XIe3bUEBylSu1dX
-	 FZla8RCfJqv0E20R94VK4RtR+LkxNoP6YbgbLdig=
+	by mail.kernel.org (Postfix) with ESMTP id 8871920672
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:20:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QKqJyLmM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbfKUUUE (ORCPT
+        id S1727107AbfKUUUH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 15:20:04 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:32966 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726293AbfKUUUE (ORCPT
+        Thu, 21 Nov 2019 15:20:07 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:58896 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726293AbfKUUUG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 15:20:04 -0500
-Received: by mail-oi1-f195.google.com with SMTP id m193so4459564oig.0;
-        Thu, 21 Nov 2019 12:20:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ctEbvEF+D3upIcOL5VXM4n468EvW3StUvGyLExGsOyc=;
-        b=TxR6rwohsnIVpmpfmd6k+cMZ7qFf6mPk0C60hSW3OUSw+w992KFwbk0cSKaC8/HcbK
-         UN6f+Ep1zESf9cz2YYEO02j0pCDy1dQaJdw6CU3h7DeFIFvvN28Eiil0t73tGPtPWNNw
-         xxsL1ElQxQwZ7BfJHqhq89lVviYAuRNUlBdZmHUEVT1oKeSV1JxmvFHTR5NVkt7o4gMr
-         ock0g7GUsQxg4spCz8v3DxMvkC0N79vry0Q86ja6D7ygH2nbW5KEAHKn7/GN5TzqCdfw
-         etB8bVgBo/+M/14bY8w3l/O7B5lQobmsE88Ce58NdnMwVDZBJGq7BcVCvzJUoEyDTxir
-         KneA==
-X-Gm-Message-State: APjAAAUJIrzeinkdJH5F9y4DM4q6UEsyuyr71Y4BKmdUrFhyrMoPom7y
-        PKQtZ3a3UqAy/jBcKa4NMA==
-X-Google-Smtp-Source: APXvYqxt9oXGFEJN7MoDV16iEhPuS0xuVhs0yYo1/QRqf/rvK8UqBXM9F42AdY5F2UufMMuGLxwOcw==
-X-Received: by 2002:a05:6808:8ce:: with SMTP id k14mr9093989oij.76.1574367603254;
-        Thu, 21 Nov 2019 12:20:03 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id l18sm1341155oti.11.2019.11.21.12.20.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Nov 2019 12:20:02 -0800 (PST)
-Date:   Thu, 21 Nov 2019 14:20:01 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jeffrey Hugo <jhugo@codeaurora.org>
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, agross@kernel.org,
-        bjorn.andersson@linaro.org, marc.w.gonzalez@free.fr,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Jeffrey Hugo <jhugo@codeaurora.org>
-Subject: Re: [PATCH v10 2/4] dt-bindings: clock: Convert qcom,mmcc to DT
- schema
-Message-ID: <20191121202001.GA19935@bogus>
-References: <1574025887-32667-1-git-send-email-jhugo@codeaurora.org>
- <0101016e7b4311fe-8edd7849-df65-47dd-98fa-1e2063c83178-000000@us-west-2.amazonses.com>
+        Thu, 21 Nov 2019 15:20:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=qOktCdLLVB7nTmJcxwH9iwxLQvm6tnAzKuSohvP2NxY=; b=QKqJyLmM0ryi+pVTsX9E5xBDo
+        1LT0g4qnkID9F1BatrY2Fz0Kcu9yWX72F6OGoAmH2zebp/uh9sBEY4AZCOC89AB64baY+GxFV28Jn
+        bELXaEPnDl0G9RI/iq8xeOVyUReRHZ4hCdqB7cZsi219jx4Qy9U+DbkZfZKlYxTjE6Xzx/QCmtMFP
+        5jfbOIL4yvZUlW3q99MxBFAwm/di7EVk1AJsOz5/vbLc19jBUZnRWhrqqiiIAGeeClSa4wqJt4cth
+        JWjx6oaz8wR987r13sC3BYbcJNlrP4bfCeFCDkVeyAetAPEtUyAXFIB0qIiNf8m5a0vw8E2PWEXJF
+        7+PTGMpFQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iXsvh-0000l2-QH; Thu, 21 Nov 2019 20:19:53 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1EF1E300606;
+        Thu, 21 Nov 2019 21:18:40 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1D64A201F87D3; Thu, 21 Nov 2019 21:19:51 +0100 (CET)
+Date:   Thu, 21 Nov 2019 21:19:51 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Fenghua Yu <fenghua.yu@intel.com>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        Andy Lutomirski <luto@kernel.org>,
+        David Laight <David.Laight@aculab.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
+Subject: Re: [PATCH v10 6/6] x86/split_lock: Enable split lock detection by
+ kernel parameter
+Message-ID: <20191121201951.GY4097@hirez.programming.kicks-ass.net>
+References: <20191121185303.GB199273@romley-ivt3.sc.intel.com>
+ <4BB1CB74-887B-4F40-B3B2-F0147B264C34@amacapital.net>
+ <20191121202535.GC199273@romley-ivt3.sc.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0101016e7b4311fe-8edd7849-df65-47dd-98fa-1e2063c83178-000000@us-west-2.amazonses.com>
+In-Reply-To: <20191121202535.GC199273@romley-ivt3.sc.intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 17 Nov 2019 21:27:03 +0000, Jeffrey Hugo wrote:
-> Convert the qcom,mmcc-X clock controller binding to DT schema.  Add the
-> protected-clocks property to the schema to show that is it explicitly
-> allowed, instead of relying on the generic, pre-schema binding.
-> 
-> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
-> ---
->  .../devicetree/bindings/clock/qcom,mmcc.txt        | 28 ----------
->  .../devicetree/bindings/clock/qcom,mmcc.yaml       | 60 ++++++++++++++++++++++
->  2 files changed, 60 insertions(+), 28 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/clock/qcom,mmcc.txt
->  create mode 100644 Documentation/devicetree/bindings/clock/qcom,mmcc.yaml
-> 
+On Thu, Nov 21, 2019 at 12:25:35PM -0800, Fenghua Yu wrote:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+> > > We are working on a separate patch set to fix all split lock issues
+> > > in atomic bitops. Per Peter Anvin and Tony Luck suggestions:
+> > > 1. Still keep the byte optimization if nr is constant. No split lock.
+> > > 2. If type of *addr is unsigned long, do quadword atomic instruction
+> > >   on addr. No split lock.
+> > > 3. If type of *addr is unsigned int, do word atomic instruction
+> > >   on addr. No split lock.
+> > > 4. Otherwise, re-calculate addr to point the 32-bit address which contains
+> > >   the bit and operate on the bit. No split lock.
+
+> Actually we only find 8 places calling atomic bitops using type casting
+> "unsigned long *". After above changes, other 8 patches remove the type
+> castings and then split lock free in atomic bitops in the current kernel.
+
+Those above changes are never going to happen.
