@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34808C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:49:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7AF5C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:49:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C6D4208A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:49:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF8E9208A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:49:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574336978;
-	bh=rFa51ueQf+pwORJuugnBWYiOLfrkbP2Z9ytS43pAtgQ=;
+	s=default; t=1574336981;
+	bh=aEPYGEM/si64JFWI1l4dTVmrsiPeIdSBtN2ueivkcyI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fGTVfN5n6uLaaUtgDyRXtWGjpZLQqQdYz21pIXTl79U58ZQcONaijY0NPEe2fO/7h
-	 zXLQTshOt/UtiqhP7vNbm2VoGrizwB5yiuLIbSRlmuU6YRKq9K+mESdCPhLgnpp1yN
-	 3Y9xIztAZn0+DXftWkRBFXtPWBojlpwl7Rhoeq6g=
+	b=wHgKFytuToCMu4UV1DyFapizJIpMunwBgUitRy0HD6GzXgETLK/QYk7nCku3YrzVY
+	 v+IAm97b659X1ARb0SVrUfEzUZtI+KDjV1hv52p0w3pC7GSBZnA6nztUUIXNjhJ1ep
+	 Cb8XYuvH71dDzb6giFRqyv9FcWtR6WWyAFl7dNNU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727110AbfKULth (ORCPT
+        id S1727125AbfKULtk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 06:49:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38910 "EHLO mail.kernel.org"
+        Thu, 21 Nov 2019 06:49:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727047AbfKULtf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 06:49:35 -0500
+        id S1727047AbfKULti (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 06:49:38 -0500
 Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C912E208D4;
-        Thu, 21 Nov 2019 11:49:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C56C214DA;
+        Thu, 21 Nov 2019 11:49:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574336975;
-        bh=rFa51ueQf+pwORJuugnBWYiOLfrkbP2Z9ytS43pAtgQ=;
+        s=default; t=1574336977;
+        bh=aEPYGEM/si64JFWI1l4dTVmrsiPeIdSBtN2ueivkcyI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y/+udVerl5xd/obteEt4iJpxk0e4PijhYlb+LdCvS+78kfK/yvnCRabJyLiVQ9mX0
-         7hrQSMb07q2YQ+9w6DxGn2BgA45NXll7vYRDCEjnY8WJaQErR+WWfrXBAVbZbeWwk4
-         EwDv1pCmB3JPjU2yAU6MmJXBmq6I4w47o6fL+yis=
+        b=motDXRgBeVprCkYWHYIIyBr1NqYvKmn+v9hBIoMPlZb5sEH9Gq4BZYkUtHu31HhxV
+         bHu4H0q+QCgKVWmi8hiHFh0ut0syQru6Xi1e3DVP98UQVxDoqm3AsxSm/zEKw7piXy
+         aJaStOyDmKwtk5kljfEyrdjnci8WrlBbPuvTlTDA=
 From:   Will Deacon <will@kernel.org>
 To:     iommu@lists.linuxfoundation.org, linux-kernel@vger.kernel.org
 Cc:     Will Deacon <will@kernel.org>,
@@ -52,9 +52,9 @@ Cc:     Will Deacon <will@kernel.org>,
         Robin Murphy <robin.murphy@arm.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Joerg Roedel <joro@8bytes.org>
-Subject: [PATCH v3 04/14] drivers/iommu: Take a ref to the IOMMU driver prior to ->add_device()
-Date:   Thu, 21 Nov 2019 11:49:08 +0000
-Message-Id: <20191121114918.2293-5-will@kernel.org>
+Subject: [PATCH v3 05/14] iommu/of: Take a ref to the IOMMU driver during ->of_xlate()
+Date:   Thu, 21 Nov 2019 11:49:09 +0000
+Message-Id: <20191121114918.2293-6-will@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191121114918.2293-1-will@kernel.org>
 References: <20191121114918.2293-1-will@kernel.org>
@@ -65,85 +65,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To avoid accidental removal of an active IOMMU driver module, take a
-reference to the driver module in 'iommu_probe_device()' immediately
-prior to invoking the '->add_device()' callback and hold it until the
-after the device has been removed by '->remove_device()'.
+Ensure that we hold a reference to the IOMMU driver module while calling
+the '->of_xlate()' callback during early device probing.
 
-Suggested-by: Joerg Roedel <joro@8bytes.org>
 Signed-off-by: Will Deacon <will@kernel.org>
 ---
- drivers/iommu/iommu.c | 19 +++++++++++++++++--
- include/linux/iommu.h |  2 ++
- 2 files changed, 19 insertions(+), 2 deletions(-)
+ drivers/iommu/of_iommu.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index c1aadb570145..4bfecfbbe2cf 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -22,6 +22,7 @@
- #include <linux/bitops.h>
- #include <linux/property.h>
- #include <linux/fsl/mc.h>
+diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
+index 78faa9f73a91..25491403a0bd 100644
+--- a/drivers/iommu/of_iommu.c
++++ b/drivers/iommu/of_iommu.c
+@@ -8,6 +8,7 @@
+ #include <linux/export.h>
+ #include <linux/iommu.h>
+ #include <linux/limits.h>
 +#include <linux/module.h>
- #include <trace/events/iommu.h>
+ #include <linux/of.h>
+ #include <linux/of_iommu.h>
+ #include <linux/of_pci.h>
+@@ -89,16 +90,16 @@ static int of_iommu_xlate(struct device *dev,
+ {
+ 	const struct iommu_ops *ops;
+ 	struct fwnode_handle *fwnode = &iommu_spec->np->fwnode;
+-	int err;
++	int ret;
  
- static struct kset *iommu_group_kset;
-@@ -185,10 +186,21 @@ int iommu_probe_device(struct device *dev)
- 	if (!iommu_get_dev_param(dev))
- 		return -ENOMEM;
+ 	ops = iommu_ops_from_fwnode(fwnode);
+ 	if ((ops && !ops->of_xlate) ||
+ 	    !of_device_is_available(iommu_spec->np))
+ 		return NO_IOMMU;
  
-+	if (!try_module_get(ops->owner)) {
-+		ret = -EINVAL;
-+		goto err_free_dev_param;
-+	}
+-	err = iommu_fwspec_init(dev, &iommu_spec->np->fwnode, ops);
+-	if (err)
+-		return err;
++	ret = iommu_fwspec_init(dev, &iommu_spec->np->fwnode, ops);
++	if (ret)
++		return ret;
+ 	/*
+ 	 * The otherwise-empty fwspec handily serves to indicate the specific
+ 	 * IOMMU device we're waiting for, which will be useful if we ever get
+@@ -107,7 +108,12 @@ static int of_iommu_xlate(struct device *dev,
+ 	if (!ops)
+ 		return driver_deferred_probe_check_state(dev);
+ 
+-	return ops->of_xlate(dev, iommu_spec);
++	if (!try_module_get(ops->owner))
++		return -ENODEV;
 +
- 	ret = ops->add_device(dev);
- 	if (ret)
--		iommu_free_dev_param(dev);
-+		goto err_module_put;
-+
-+	return 0;
- 
-+err_module_put:
++	ret = ops->of_xlate(dev, iommu_spec);
 +	module_put(ops->owner);
-+err_free_dev_param:
-+	iommu_free_dev_param(dev);
- 	return ret;
++	return ret;
  }
  
-@@ -199,7 +211,10 @@ void iommu_release_device(struct device *dev)
- 	if (dev->iommu_group)
- 		ops->remove_device(dev);
- 
--	iommu_free_dev_param(dev);
-+	if (dev->iommu_param) {
-+		module_put(ops->owner);
-+		iommu_free_dev_param(dev);
-+	}
- }
- 
- static struct iommu_domain *__iommu_domain_alloc(struct bus_type *bus,
-diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-index 29bac5345563..d9dab5a3e912 100644
---- a/include/linux/iommu.h
-+++ b/include/linux/iommu.h
-@@ -245,6 +245,7 @@ struct iommu_iotlb_gather {
-  * @sva_get_pasid: Get PASID associated to a SVA handle
-  * @page_response: handle page request response
-  * @pgsize_bitmap: bitmap of all possible supported page sizes
-+ * @owner: Driver module providing these ops
-  */
- struct iommu_ops {
- 	bool (*capable)(enum iommu_cap);
-@@ -308,6 +309,7 @@ struct iommu_ops {
- 			     struct iommu_page_response *msg);
- 
- 	unsigned long pgsize_bitmap;
-+	struct module *owner;
- };
- 
- /**
+ struct of_pci_iommu_alias_info {
 -- 
 2.24.0.432.g9d3f5f5b63-goog
 
