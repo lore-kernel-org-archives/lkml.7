@@ -6,18 +6,18 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46C75C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 00:15:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF5DDC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 00:15:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D8E621783
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 00:15:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C502C208A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 00:15:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727158AbfKUAPr (ORCPT
+        id S1727187AbfKUAPw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 19:15:47 -0500
-Received: from mga06.intel.com ([134.134.136.31]:58451 "EHLO mga06.intel.com"
+        Wed, 20 Nov 2019 19:15:52 -0500
+Received: from mga06.intel.com ([134.134.136.31]:58450 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727050AbfKUAPg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726912AbfKUAPg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 Nov 2019 19:15:36 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
@@ -25,18 +25,18 @@ Received: from orsmga005.jf.intel.com ([10.7.209.41])
   by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Nov 2019 16:15:34 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,223,1571727600"; 
-   d="scan'208";a="381553874"
+   d="scan'208";a="381553873"
 Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
   by orsmga005.jf.intel.com with ESMTP; 20 Nov 2019 16:15:34 -0800
 Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 86B94300FC7; Wed, 20 Nov 2019 16:15:34 -0800 (PST)
+        id 80ACB3002B7; Wed, 20 Nov 2019 16:15:34 -0800 (PST)
 From:   Andi Kleen <andi@firstfloor.org>
 To:     acme@kernel.org
 Cc:     jolsa@kernel.org, linux-kernel@vger.kernel.org,
         Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH 02/12] perf affinity: Add infrastructure to save/restore affinity
-Date:   Wed, 20 Nov 2019 16:15:12 -0800
-Message-Id: <20191121001522.180827-3-andi@firstfloor.org>
+Subject: [PATCH 01/12] perf pmu: Use file system cache to optimize sysfs access
+Date:   Wed, 20 Nov 2019 16:15:11 -0800
+Message-Id: <20191121001522.180827-2-andi@firstfloor.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191121001522.180827-1-andi@firstfloor.org>
 References: <20191121001522.180827-1-andi@firstfloor.org>
@@ -49,152 +49,286 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-The kernel perf subsystem has to IPI to the target CPU for many
-operations. On systems with many CPUs and when managing many events the
-overhead can be dominated by lots of IPIs.
+pmu.c does a lot of redundant /sys accesses while parsing aliases
+and probing for PMUs. On large systems with a lot of PMUs this
+can get expensive (>2s):
 
-An alternative is to set up CPU affinity in the perf tool, then set up
-all the events for that CPU, and then move on to the next CPU.
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ----------------
+ 27.25    1.227847           8    160888     16976 openat
+ 26.42    1.190481           7    164224    164077 stat
 
-Add some affinity management infrastructure to enable such a model.
-Used in followon patches.
+Add a cache to remember if specific file names exist or don't
+exist, which eliminates most of this overhead.
+
+Also optimize some stat() calls to be slightly cheaper access()
+
+Resulting in:
+
+  0.18    0.004166           2      1851       305 open
+  0.08    0.001970           2       829       622 access
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 
 ---
 
-v2: Use linux/bitmap.h functions.
-v3: Add affinity.c to the python-ext-sources to fix the python
-interface.  Thanks 0day!
+v2: Use single lookup function as API (Jiri)
 ---
- tools/perf/util/Build              |  1 +
- tools/perf/util/affinity.c         | 72 ++++++++++++++++++++++++++++++
- tools/perf/util/affinity.h         | 15 +++++++
- tools/perf/util/python-ext-sources |  1 +
- 4 files changed, 89 insertions(+)
- create mode 100644 tools/perf/util/affinity.c
- create mode 100644 tools/perf/util/affinity.h
+ tools/perf/util/Build     |  1 +
+ tools/perf/util/fncache.c | 63 +++++++++++++++++++++++++++++++++++++++
+ tools/perf/util/fncache.h |  7 +++++
+ tools/perf/util/pmu.c     | 34 +++++++--------------
+ tools/perf/util/srccode.c |  9 +-----
+ 5 files changed, 83 insertions(+), 31 deletions(-)
+ create mode 100644 tools/perf/util/fncache.c
+ create mode 100644 tools/perf/util/fncache.h
 
 diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index aab05e2c01a5..07da6c790b63 100644
+index b8e05a147b2b..aab05e2c01a5 100644
 --- a/tools/perf/util/Build
 +++ b/tools/perf/util/Build
-@@ -77,6 +77,7 @@ perf-y += sort.o
- perf-y += hist.o
- perf-y += util.o
- perf-y += cpumap.o
-+perf-y += affinity.o
- perf-y += cputopo.o
- perf-y += cgroup.o
- perf-y += target.o
-diff --git a/tools/perf/util/affinity.c b/tools/perf/util/affinity.c
+@@ -49,6 +49,7 @@ perf-y += header.o
+ perf-y += callchain.o
+ perf-y += values.o
+ perf-y += debug.o
++perf-y += fncache.o
+ perf-y += machine.o
+ perf-y += map.o
+ perf-y += pstack.o
+diff --git a/tools/perf/util/fncache.c b/tools/perf/util/fncache.c
 new file mode 100644
-index 000000000000..e197b0416f56
+index 000000000000..5afcd7edbe7a
 --- /dev/null
-+++ b/tools/perf/util/affinity.c
-@@ -0,0 +1,72 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Manage affinity to optimize IPIs inside the kernel perf API. */
-+#define _GNU_SOURCE 1
-+#include <sched.h>
++++ b/tools/perf/util/fncache.c
+@@ -0,0 +1,63 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/* Manage a cache of file names' existence */
 +#include <stdlib.h>
-+#include <linux/bitmap.h>
-+#include "perf.h"
-+#include "cpumap.h"
-+#include "affinity.h"
++#include <unistd.h>
++#include <string.h>
++#include <linux/list.h>
++#include "fncache.h"
 +
-+static int get_cpu_set_size(void)
-+{
-+	int sz = cpu__max_cpu() + 8 - 1;
-+	/*
-+	 * sched_getaffinity doesn't like masks smaller than the kernel.
-+	 * Hopefully that's big enough.
-+	 */
-+	if (sz < 4096)
-+		sz = 4096;
-+	return sz/8;
-+}
-+
-+int affinity__setup(struct affinity *a)
-+{
-+	int cpu_set_size = get_cpu_set_size();
-+
-+	a->orig_cpus = bitmap_alloc(cpu_set_size*8);
-+	if (!a->orig_cpus)
-+		return -1;
-+	sched_getaffinity(0, cpu_set_size, (cpu_set_t *)a->orig_cpus);
-+	a->sched_cpus = bitmap_alloc(cpu_set_size*8);
-+	if (!a->sched_cpus) {
-+		free(a->orig_cpus);
-+		return -1;
-+	}
-+	bitmap_zero((unsigned long *)a->sched_cpus, cpu_set_size);
-+	a->changed = false;
-+	return 0;
-+}
-+
-+/*
-+ * perf_event_open does an IPI internally to the target CPU.
-+ * It is more efficient to change perf's affinity to the target
-+ * CPU and then set up all events on that CPU, so we amortize
-+ * CPU communication.
-+ */
-+void affinity__set(struct affinity *a, int cpu)
-+{
-+	int cpu_set_size = get_cpu_set_size();
-+
-+	if (cpu == -1)
-+		return;
-+	a->changed = true;
-+	set_bit(cpu, a->sched_cpus);
-+	/*
-+	 * We ignore errors because affinity is just an optimization.
-+	 * This could happen for example with isolated CPUs or cpusets.
-+	 * In this case the IPIs inside the kernel's perf API still work.
-+	 */
-+	sched_setaffinity(0, cpu_set_size, (cpu_set_t *)a->sched_cpus);
-+	clear_bit(cpu, a->sched_cpus);
-+}
-+
-+void affinity__cleanup(struct affinity *a)
-+{
-+	int cpu_set_size = get_cpu_set_size();
-+
-+	if (a->changed)
-+		sched_setaffinity(0, cpu_set_size, (cpu_set_t *)a->orig_cpus);
-+	free(a->sched_cpus);
-+	free(a->orig_cpus);
-+}
-diff --git a/tools/perf/util/affinity.h b/tools/perf/util/affinity.h
-new file mode 100644
-index 000000000000..008e2c3995b9
---- /dev/null
-+++ b/tools/perf/util/affinity.h
-@@ -0,0 +1,15 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#ifndef AFFINITY_H
-+#define AFFINITY_H 1
-+
-+struct affinity {
-+	unsigned long *orig_cpus;
-+	unsigned long *sched_cpus;
-+	bool changed;
++struct fncache {
++	struct hlist_node nd;
++	bool res;
++	char name[];
 +};
 +
-+void affinity__cleanup(struct affinity *a);
-+void affinity__set(struct affinity *a, int cpu);
-+int affinity__setup(struct affinity *a);
++#define FNHSIZE 61
++
++static struct hlist_head fncache_hash[FNHSIZE];
++
++unsigned shash(const unsigned char *s)
++{
++	unsigned h = 0;
++	while (*s)
++		h = 65599 * h + *s++;
++	return h ^ (h >> 16);
++}
++
++static bool lookup_fncache(const char *name, bool *res)
++{
++	int h = shash((const unsigned char *)name) % FNHSIZE;
++	struct fncache *n;
++
++	hlist_for_each_entry (n, &fncache_hash[h], nd) {
++		if (!strcmp(n->name, name)) {
++			*res = n->res;
++			return true;
++		}
++	}
++	return false;
++}
++
++static void update_fncache(const char *name, bool res)
++{
++	struct fncache *n = malloc(sizeof(struct fncache) + strlen(name) + 1);
++	int h = shash((const unsigned char *)name) % FNHSIZE;
++
++	if (!n)
++		return;
++	strcpy(n->name, name);
++	n->res = res;
++	hlist_add_head(&n->nd, &fncache_hash[h]);
++}
++
++/* No LRU, only use when bounded in some other way. */
++bool file_available(const char *name)
++{
++	bool res;
++
++	if (lookup_fncache(name, &res))
++		return res;
++	res = access(name, R_OK) == 0;
++	update_fncache(name, res);
++	return res;
++}
+diff --git a/tools/perf/util/fncache.h b/tools/perf/util/fncache.h
+new file mode 100644
+index 000000000000..fe020beaefb1
+--- /dev/null
++++ b/tools/perf/util/fncache.h
+@@ -0,0 +1,7 @@
++#ifndef _FCACHE_H
++#define _FCACHE_H 1
++
++unsigned shash(const unsigned char *s);
++bool file_available(const char *name);
 +
 +#endif
-diff --git a/tools/perf/util/python-ext-sources b/tools/perf/util/python-ext-sources
-index 9af183860fbd..e7279ea6043a 100644
---- a/tools/perf/util/python-ext-sources
-+++ b/tools/perf/util/python-ext-sources
-@@ -33,3 +33,4 @@ util/trace-event.c
- util/string.c
- util/symbol_fprintf.c
- util/units.c
-+util/affinity.c
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index db1e57113f4b..65780494a290 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -24,6 +24,7 @@
+ #include "pmu-events/pmu-events.h"
+ #include "string2.h"
+ #include "strbuf.h"
++#include "fncache.h"
+ 
+ struct perf_pmu_format {
+ 	char *name;
+@@ -82,7 +83,6 @@ int perf_pmu__format_parse(char *dir, struct list_head *head)
+  */
+ static int pmu_format(const char *name, struct list_head *format)
+ {
+-	struct stat st;
+ 	char path[PATH_MAX];
+ 	const char *sysfs = sysfs__mountpoint();
+ 
+@@ -92,8 +92,8 @@ static int pmu_format(const char *name, struct list_head *format)
+ 	snprintf(path, PATH_MAX,
+ 		 "%s" EVENT_SOURCE_DEVICE_PATH "%s/format", sysfs, name);
+ 
+-	if (stat(path, &st) < 0)
+-		return 0;	/* no error if format does not exist */
++	if (!file_available(path))
++		return 0;
+ 
+ 	if (perf_pmu__format_parse(path, format))
+ 		return -1;
+@@ -475,7 +475,6 @@ static int pmu_aliases_parse(char *dir, struct list_head *head)
+  */
+ static int pmu_aliases(const char *name, struct list_head *head)
+ {
+-	struct stat st;
+ 	char path[PATH_MAX];
+ 	const char *sysfs = sysfs__mountpoint();
+ 
+@@ -485,8 +484,8 @@ static int pmu_aliases(const char *name, struct list_head *head)
+ 	snprintf(path, PATH_MAX,
+ 		 "%s/bus/event_source/devices/%s/events", sysfs, name);
+ 
+-	if (stat(path, &st) < 0)
+-		return 0;	 /* no error if 'events' does not exist */
++	if (!file_available(path))
++		return 0;
+ 
+ 	if (pmu_aliases_parse(path, head))
+ 		return -1;
+@@ -525,7 +524,6 @@ static int pmu_alias_terms(struct perf_pmu_alias *alias,
+  */
+ static int pmu_type(const char *name, __u32 *type)
+ {
+-	struct stat st;
+ 	char path[PATH_MAX];
+ 	FILE *file;
+ 	int ret = 0;
+@@ -537,7 +535,7 @@ static int pmu_type(const char *name, __u32 *type)
+ 	snprintf(path, PATH_MAX,
+ 		 "%s" EVENT_SOURCE_DEVICE_PATH "%s/type", sysfs, name);
+ 
+-	if (stat(path, &st) < 0)
++	if (access(path, R_OK) < 0)
+ 		return -1;
+ 
+ 	file = fopen(path, "r");
+@@ -628,14 +626,11 @@ static struct perf_cpu_map *pmu_cpumask(const char *name)
+ static bool pmu_is_uncore(const char *name)
+ {
+ 	char path[PATH_MAX];
+-	struct perf_cpu_map *cpus;
+-	const char *sysfs = sysfs__mountpoint();
++	const char *sysfs;
+ 
++	sysfs = sysfs__mountpoint();
+ 	snprintf(path, PATH_MAX, CPUS_TEMPLATE_UNCORE, sysfs, name);
+-	cpus = __pmu_cpumask(path);
+-	perf_cpu_map__put(cpus);
+-
+-	return !!cpus;
++	return file_available(path);
+ }
+ 
+ /*
+@@ -645,7 +640,6 @@ static bool pmu_is_uncore(const char *name)
+  */
+ static int is_arm_pmu_core(const char *name)
+ {
+-	struct stat st;
+ 	char path[PATH_MAX];
+ 	const char *sysfs = sysfs__mountpoint();
+ 
+@@ -655,10 +649,7 @@ static int is_arm_pmu_core(const char *name)
+ 	/* Look for cpu sysfs (specific to arm) */
+ 	scnprintf(path, PATH_MAX, "%s/bus/event_source/devices/%s/cpus",
+ 				sysfs, name);
+-	if (stat(path, &st) == 0)
+-		return 1;
+-
+-	return 0;
++	return file_available(path);
+ }
+ 
+ static char *perf_pmu__getcpuid(struct perf_pmu *pmu)
+@@ -1534,7 +1525,6 @@ bool pmu_have_event(const char *pname, const char *name)
+ 
+ static FILE *perf_pmu__open_file(struct perf_pmu *pmu, const char *name)
+ {
+-	struct stat st;
+ 	char path[PATH_MAX];
+ 	const char *sysfs;
+ 
+@@ -1544,10 +1534,8 @@ static FILE *perf_pmu__open_file(struct perf_pmu *pmu, const char *name)
+ 
+ 	snprintf(path, PATH_MAX,
+ 		 "%s" EVENT_SOURCE_DEVICE_PATH "%s/%s", sysfs, pmu->name, name);
+-
+-	if (stat(path, &st) < 0)
++	if (!file_available(path))
+ 		return NULL;
+-
+ 	return fopen(path, "r");
+ }
+ 
+diff --git a/tools/perf/util/srccode.c b/tools/perf/util/srccode.c
+index d84ed8b6caaa..c29edaaca863 100644
+--- a/tools/perf/util/srccode.c
++++ b/tools/perf/util/srccode.c
+@@ -16,6 +16,7 @@
+ #include "srccode.h"
+ #include "debug.h"
+ #include <internal/lib.h> // page_size
++#include "fncache.h"
+ 
+ #define MAXSRCCACHE (32*1024*1024)
+ #define MAXSRCFILES     64
+@@ -36,14 +37,6 @@ static LIST_HEAD(srcfile_list);
+ static long map_total_sz;
+ static int num_srcfiles;
+ 
+-static unsigned shash(unsigned char *s)
+-{
+-	unsigned h = 0;
+-	while (*s)
+-		h = 65599 * h + *s++;
+-	return h ^ (h >> 16);
+-}
+-
+ static int countlines(char *map, int maplen)
+ {
+ 	int numl;
 -- 
 2.23.0
 
