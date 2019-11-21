@@ -4,49 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59944C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:18:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B0B7C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:19:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 217112089D
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:18:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7BFA20721
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:19:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574306337;
-	bh=9H2OF06r0z9vuOQPos4thK3Jm060C1E9j+rNO8kjxq8=;
+	s=default; t=1574306343;
+	bh=9Ksqhhd1L7R8tO8N1qP062uhuD/S93g4xX+3n7nrjuk=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=C8PIo5zKwoilaRpOP02Yl9artC9bme7c5/Y1CKHXCD+gdwMfIvOKvUi8klJk4gTtD
-	 wKWt00Ysnw2VRbKNENyzBGFZwGFUn46nGF2LriCn1tv+WKYeZ5ET/8HfiH+Lenpo/b
-	 uVmrqhc3ecMKzi3Pd9YDzRm9W0tpBTgWZaJkQit0=
+	b=P6oxVjhkzuDL96OF+DunGxNTEdvXx+jSaRMQmKjRHftiHJzDc/mem1E1uJOafE82e
+	 bevOuEPebLAhT4YAzfPYMJGj5KO9qyWFnDx4hAvu1Xou1TgTLzy0CDxudq58POMnRs
+	 gzIcNFjkvcnI/54VXpllkE3GxSOzSKNn9wTA21Lo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbfKUDS4 (ORCPT
+        id S1726967AbfKUDTC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 22:18:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60404 "EHLO mail.kernel.org"
+        Wed, 20 Nov 2019 22:19:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60482 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725842AbfKUDSz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 22:18:55 -0500
+        id S1725819AbfKUDTB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 22:19:01 -0500
 Received: from PC-kkoz.proceq.com (unknown [213.160.61.66])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CDDA20721;
-        Thu, 21 Nov 2019 03:18:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2A6820898;
+        Thu, 21 Nov 2019 03:18:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574306335;
-        bh=9H2OF06r0z9vuOQPos4thK3Jm060C1E9j+rNO8kjxq8=;
+        s=default; t=1574306340;
+        bh=9Ksqhhd1L7R8tO8N1qP062uhuD/S93g4xX+3n7nrjuk=;
         h=From:To:Cc:Subject:Date:From;
-        b=xO/lSD7umPYQXXuA+UM2wrEcjh6DDQvk1VEFM1pOYc6haFTNaMK8JboxifYKnrK9H
-         cGHZ+QCLhOaCtJJON2poYJje3WJyebxlOYW8Opitpfi96pfwEVuIDizfjk8dmzbDqH
-         t2gM+3c0M5o4Z9MZ07T488l2pjPh8iSJZkphJ/EY=
+        b=dhjxDrCGeRc2byEQxgwNLsSWWxA7ebiuc5DOawNk7mBXmN8SBRIeMGPYM1L+rtUsk
+         jw5AuZek5sXPBBufjND8mFIc8AMxc1Xv0+fQ4GjTQqcegDJyr8JlxRHhMzoDZbTaWx
+         V8psmrv+ovo0Q7Mfd7RsK//vg6HkD+Uq/hzXOUYc=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH v2] fs: Fix Kconfig indentation
-Date:   Thu, 21 Nov 2019 04:18:51 +0100
-Message-Id: <1574306331-28973-1-git-send-email-krzk@kernel.org>
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH v2] clk: Fix Kconfig indentation
+Date:   Thu, 21 Nov 2019 04:18:55 +0100
+Message-Id: <1574306335-29026-1-git-send-email-krzk@kernel.org>
 X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -64,59 +71,129 @@ Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Changes since v1:
 1. Fix also 7-space and tab+1 space indentation issues.
 ---
- fs/Kconfig        | 6 +++---
- fs/Kconfig.binfmt | 6 +++---
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ drivers/clk/Kconfig           |  2 +-
+ drivers/clk/mediatek/Kconfig  | 44 +++++++++++++++++++++----------------------
+ drivers/clk/mvebu/Kconfig     |  2 +-
+ drivers/clk/qcom/Kconfig      |  4 ++--
+ drivers/clk/versatile/Kconfig |  2 +-
+ 5 files changed, 27 insertions(+), 27 deletions(-)
 
-diff --git a/fs/Kconfig b/fs/Kconfig
-index 7b623e9fc1b0..59ad80f92446 100644
---- a/fs/Kconfig
-+++ b/fs/Kconfig
-@@ -7,7 +7,7 @@ menu "File systems"
+diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+index 0530bebfc25a..b8ebf7b93d63 100644
+--- a/drivers/clk/Kconfig
++++ b/drivers/clk/Kconfig
+@@ -27,7 +27,7 @@ config COMMON_CLK_WM831X
+ 	tristate "Clock driver for WM831x/2x PMICs"
+ 	depends on MFD_WM831X
+ 	---help---
+-          Supports the clocking subsystem of the WM831x/2x series of
++	  Supports the clocking subsystem of the WM831x/2x series of
+ 	  PMICs from Wolfson Microelectronics.
  
- # Use unaligned word dcache accesses
- config DCACHE_WORD_ACCESS
+ source "drivers/clk/versatile/Kconfig"
+diff --git a/drivers/clk/mediatek/Kconfig b/drivers/clk/mediatek/Kconfig
+index 7efc3617bbd5..e4c7cb518cda 100644
+--- a/drivers/clk/mediatek/Kconfig
++++ b/drivers/clk/mediatek/Kconfig
+@@ -174,36 +174,36 @@ config COMMON_CLK_MT6779_AUDSYS
+ 	  This driver supports Mediatek MT6779 audsys clocks.
+ 
+ config COMMON_CLK_MT6797
+-       bool "Clock driver for MediaTek MT6797"
+-       depends on (ARCH_MEDIATEK && ARM64) || COMPILE_TEST
+-       select COMMON_CLK_MEDIATEK
+-       default ARCH_MEDIATEK && ARM64
+-       ---help---
+-         This driver supports MediaTek MT6797 basic clocks.
++	bool "Clock driver for MediaTek MT6797"
++	depends on (ARCH_MEDIATEK && ARM64) || COMPILE_TEST
++	select COMMON_CLK_MEDIATEK
++	default ARCH_MEDIATEK && ARM64
++	---help---
++	 This driver supports MediaTek MT6797 basic clocks.
+ 
+ config COMMON_CLK_MT6797_MMSYS
+-       bool "Clock driver for MediaTek MT6797 mmsys"
+-       depends on COMMON_CLK_MT6797
+-       ---help---
+-         This driver supports MediaTek MT6797 mmsys clocks.
++	bool "Clock driver for MediaTek MT6797 mmsys"
++	depends on COMMON_CLK_MT6797
++	---help---
++	 This driver supports MediaTek MT6797 mmsys clocks.
+ 
+ config COMMON_CLK_MT6797_IMGSYS
+-       bool "Clock driver for MediaTek MT6797 imgsys"
+-       depends on COMMON_CLK_MT6797
+-       ---help---
+-         This driver supports MediaTek MT6797 imgsys clocks.
++	bool "Clock driver for MediaTek MT6797 imgsys"
++	depends on COMMON_CLK_MT6797
++	---help---
++	 This driver supports MediaTek MT6797 imgsys clocks.
+ 
+ config COMMON_CLK_MT6797_VDECSYS
+-       bool "Clock driver for MediaTek MT6797 vdecsys"
+-       depends on COMMON_CLK_MT6797
+-       ---help---
+-         This driver supports MediaTek MT6797 vdecsys clocks.
++	bool "Clock driver for MediaTek MT6797 vdecsys"
++	depends on COMMON_CLK_MT6797
++	---help---
++	 This driver supports MediaTek MT6797 vdecsys clocks.
+ 
+ config COMMON_CLK_MT6797_VENCSYS
+-       bool "Clock driver for MediaTek MT6797 vencsys"
+-       depends on COMMON_CLK_MT6797
+-       ---help---
+-         This driver supports MediaTek MT6797 vencsys clocks.
++	bool "Clock driver for MediaTek MT6797 vencsys"
++	depends on COMMON_CLK_MT6797
++	---help---
++	 This driver supports MediaTek MT6797 vencsys clocks.
+ 
+ config COMMON_CLK_MT7622
+ 	bool "Clock driver for MediaTek MT7622"
+diff --git a/drivers/clk/mvebu/Kconfig b/drivers/clk/mvebu/Kconfig
+index 415e6906a113..ded07b0bd0d5 100644
+--- a/drivers/clk/mvebu/Kconfig
++++ b/drivers/clk/mvebu/Kconfig
+@@ -29,7 +29,7 @@ config ARMADA_39X_CLK
+ 	select MVEBU_CLK_COMMON
+ 
+ config ARMADA_37XX_CLK
 -       bool
 +	bool
  
- config VALIDATE_FS_PARSER
- 	bool "Validate filesystem parameter description"
-@@ -97,8 +97,8 @@ config FILE_LOCKING
- 	default y
- 	help
- 	  This option enables standard file locking support, required
--          for filesystems like NFS and for the flock() system
--          call. Disabling this option saves about 11k.
-+	  for filesystems like NFS and for the flock() system
-+	  call. Disabling this option saves about 11k.
+ config ARMADA_XP_CLK
+ 	bool
+diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
+index 3b33ef129274..f37f3cd615f2 100644
+--- a/drivers/clk/qcom/Kconfig
++++ b/drivers/clk/qcom/Kconfig
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ config KRAIT_CLOCKS
+-       bool
+-       select KRAIT_L2_ACCESSORS
++	bool
++	select KRAIT_L2_ACCESSORS
  
- config MANDATORY_FILE_LOCKING
- 	bool "Enable Mandatory file locking"
-diff --git a/fs/Kconfig.binfmt b/fs/Kconfig.binfmt
-index 62dc4f577ba1..72c5daeb257d 100644
---- a/fs/Kconfig.binfmt
-+++ b/fs/Kconfig.binfmt
-@@ -127,7 +127,7 @@ config BINFMT_SHARED_FLAT
- 	  Support FLAT shared libraries
- 
- config HAVE_AOUT
--       def_bool n
-+	def_bool n
- 
- config BINFMT_AOUT
- 	tristate "Kernel support for a.out and ECOFF binaries"
-@@ -191,9 +191,9 @@ config BINFMT_MISC
- 	  <file:Documentation/admin-guide/binfmt-misc.rst> to learn how to use this
- 	  feature, <file:Documentation/admin-guide/java.rst> for information about how
- 	  to include Java support. and <file:Documentation/admin-guide/mono.rst> for
--          information about how to include Mono-based .NET support.
-+	  information about how to include Mono-based .NET support.
- 
--          To use binfmt_misc, you will need to mount it:
-+	  To use binfmt_misc, you will need to mount it:
- 		mount binfmt_misc -t binfmt_misc /proc/sys/fs/binfmt_misc
- 
- 	  You may say M here for module support and later load the module when
+ config QCOM_GDSC
+ 	bool
+diff --git a/drivers/clk/versatile/Kconfig b/drivers/clk/versatile/Kconfig
+index ac766855ba16..c2618f1477a2 100644
+--- a/drivers/clk/versatile/Kconfig
++++ b/drivers/clk/versatile/Kconfig
+@@ -9,7 +9,7 @@ config COMMON_CLK_VERSATILE
+ 		COMPILE_TEST
+ 	select REGMAP_MMIO
+ 	---help---
+-          Supports clocking on ARM Reference designs:
++	  Supports clocking on ARM Reference designs:
+ 	  - Integrator/AP and Integrator/CP
+ 	  - RealView PB1176, EB, PB11MP and PBX
+ 	  - Versatile Express
 -- 
 2.7.4
 
