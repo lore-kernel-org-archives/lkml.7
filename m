@@ -2,98 +2,100 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65ACAC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:58:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59414C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:59:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33BF320674
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:58:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DC092075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:59:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="c5n+Tu9C"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="I1M5VzyS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726573AbfKUK6w (ORCPT
+        id S1726719AbfKUK7Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 05:58:52 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:45837 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726014AbfKUK6w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 05:58:52 -0500
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xALAv0D0003536;
-        Thu, 21 Nov 2019 11:58:42 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=+ryPb9ETJPdsYWVGk+7MMd7fF4WRlNWEqIU9BO/5o/E=;
- b=c5n+Tu9CAwZRtKQzeN+Gk8BIJqhT8+m8ggCyptm0ywzgiRLJSE8JSbYgaf1Q74YvNe1S
- iMiCAiNSbaz3lmcSc7eZg7p//tEkJuDgffXpQK99A7AzmXj1NpBdeF19kOI/v+42rGPl
- bEavf9hTpDw/AAtrkegWrKwv+oProMFBNjv7Cc24wM/8DuOc2mv11/btkS5JYsrmFz9N
- PVqwFnPezKkLlkIvUnhvAu29qnHPVEgK2R3xSroOwu7SGUS67BONKotm7AMjZxas/4xp
- tp0CnzLLlB5iguJknqTti1mf3A7HAB2X9a5RYhaW9Q5TtcE0knB4TjmWARN19XfJQPa6 zA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2wa9usjv1h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 21 Nov 2019 11:58:42 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 34550100034;
-        Thu, 21 Nov 2019 11:58:42 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2690D2B90B8;
-        Thu, 21 Nov 2019 11:58:42 +0100 (CET)
-Received: from localhost (10.75.127.46) by SFHDAG5NODE3.st.com (10.75.127.15)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 21 Nov 2019 11:58:41
- +0100
-From:   Fabrice Gasnier <fabrice.gasnier@st.com>
-To:     <thierry.reding@gmail.com>, <u.kleine-koenig@pengutronix.de>
-CC:     <alexandre.torgue@st.com>, <benjamin.gaignard@st.com>,
-        <fabrice.gasnier@st.com>, <linux-pwm@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-Subject: [PATCH] pwm: stm32: remove automatic output enable
-Date:   Thu, 21 Nov 2019 11:58:00 +0100
-Message-ID: <1574333880-29339-1-git-send-email-fabrice.gasnier@st.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 21 Nov 2019 05:59:25 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:43724 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726014AbfKUK7Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 05:59:24 -0500
+Received: from zn.tnic (p200300EC2F0F07006553A4184595DC73.dip0.t-ipconnect.de [IPv6:2003:ec:2f0f:700:6553:a418:4595:dc73])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8E3F31EC0CE5;
+        Thu, 21 Nov 2019 11:59:19 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1574333959;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=QhsFZCXrb1b4ERZRWtn5IkK6bsH9IOyVY2ulQt2IjIg=;
+        b=I1M5VzyS/+wDFhWcVQugJqlf1BgdxtOdJJWBIARqrZG6pXKpqHmawFxdDLSRbG7Q+ew9UC
+        +8jG/8ji9Bb+Fr0kORmuojafVT6cJKxEoNn7lbGQkI/Dz4JeX6vE6MX7BfBfUDQrYNfc7t
+        f5oWVyDDI1wQ2UjrrT1G11rLCHQFWZY=
+Date:   Thu, 21 Nov 2019 11:59:13 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Dave Jiang <dave.jiang@intel.com>
+Cc:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Lin, Jing" <jing.lin@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Dey, Megha" <megha.dey@intel.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        "hpa@zytor.com" <hpa@zytor.com>
+Subject: Re: [PATCH RFC 01/14] x86/asm: add iosubmit_cmds512() based on
+ movdir64b CPU instruction
+Message-ID: <20191121105913.GB6540@zn.tnic>
+References: <157428480574.36836.14057238306923901253.stgit@djiang5-desk3.ch.intel.com>
+ <157428502934.36836.8119026517510193201.stgit@djiang5-desk3.ch.intel.com>
+ <20191120215338.GN2634@zn.tnic>
+ <247008b5-6d33-a51b-0caa-7f1991a94dbd@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG7NODE3.st.com (10.75.127.21) To SFHDAG5NODE3.st.com
- (10.75.127.15)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-21_02:2019-11-21,2019-11-21 signatures=0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <247008b5-6d33-a51b-0caa-7f1991a94dbd@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Don't use AOE (automatic output enable) by default.
-In case of break events, pwm is automatically re-enabled on next pwm
-cycle otherwise.
+On Wed, Nov 20, 2019 at 05:10:41PM -0700, Dave Jiang wrote:
+> I'll add the check on the destination address. The call is modeled after
+> __iowrite64_copy() / __iowrite32_copy() in lib/iomap_copy.c. Looks like
+> those functions do not check for the alignment requirements either.
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
----
- drivers/pwm/pwm-stm32.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+So just because they don't check, you don't need to check either?
 
-diff --git a/drivers/pwm/pwm-stm32.c b/drivers/pwm/pwm-stm32.c
-index 359b085..3079818 100644
---- a/drivers/pwm/pwm-stm32.c
-+++ b/drivers/pwm/pwm-stm32.c
-@@ -374,9 +374,7 @@ static int stm32_pwm_config(struct stm32_pwm *priv, int ch,
- 	else
- 		regmap_update_bits(priv->regmap, TIM_CCMR2, mask, ccmr);
- 
--	regmap_update_bits(priv->regmap, TIM_BDTR,
--			   TIM_BDTR_MOE | TIM_BDTR_AOE,
--			   TIM_BDTR_MOE | TIM_BDTR_AOE);
-+	regmap_update_bits(priv->regmap, TIM_BDTR, TIM_BDTR_MOE, TIM_BDTR_MOE);
- 
- 	return 0;
- }
+Can you guarantee that all callers will always do the right thing?
+
+I mean, if you don't care too much, why even write "(must be 512-bit
+aligned)"? Who cares then if the data is aligned or not...
+
+> > > + * @dst: destination, in MMIO space (must be 512-bit aligned)
+> > > + * @src: source
+> > > + * @count: number of 512 bits quantities to submit
+> > 
+> > Where's that check on the data?
+> 
+> I don't follow?
+
+What do you do if the caller doesn't submit data in 512 bits quantities?
+
 -- 
-2.7.4
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
