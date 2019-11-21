@@ -2,277 +2,78 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93E96C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 07:38:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AC3AC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 07:41:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 620272089D
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 07:38:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574321904;
-	bh=iPaegC2Fc/YfqxXzQq+rKC4ut3oJhHjxsJHyhJOMr6o=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=xNDK49MwtIRbT7U1SEmW5JsCkiZBFyCVUP+Fi6zZLfHXVBJe8kJceVDmMzEjhejU5
-	 0Ro6T4XLDiWP9U5quKW5qi1rc/FyldgOqRXML2/j0TZFL1Px4Ha/tXjavHaSs9KPif
-	 zxuJJ+PECMZ5QHaXUEoFcwSe3WVLjxJDNZEw9HR8=
+	by mail.kernel.org (Postfix) with ESMTP id 0977D2088F
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 07:41:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbfKUHiX (ORCPT
+        id S1726614AbfKUHlE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 02:38:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40588 "EHLO mail.kernel.org"
+        Thu, 21 Nov 2019 02:41:04 -0500
+Received: from verein.lst.de ([213.95.11.211]:44505 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726170AbfKUHiX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 02:38:23 -0500
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E9672089F;
-        Thu, 21 Nov 2019 07:38:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574321901;
-        bh=iPaegC2Fc/YfqxXzQq+rKC4ut3oJhHjxsJHyhJOMr6o=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Gxmr7hkqoqe4nozqTBM5oRmtM3cW053hJ1ImnHqQFqn1tLjOTuUcVPQFfefy/lrPK
-         yeX0TKfwGDSz3ZuemTTnDzyMNjNySRvpFCGcqHoF/ttJLxHAHrHwH889CiGd6tCK0Y
-         3oa+LmP/JdwIg1SLH+4Bw3porGtIoT1wzexr5ExY=
-Received: by mail-lj1-f177.google.com with SMTP id g3so2014686ljl.11;
-        Wed, 20 Nov 2019 23:38:21 -0800 (PST)
-X-Gm-Message-State: APjAAAUhvwKWD3iH1D8OJsUHN9o6gygBy/lOZPra62d2T2wbXQk9MyQ9
-        CMFLXS7sH+COC/i9fSOvPVA1oLx8E0LpHHWsr10=
-X-Google-Smtp-Source: APXvYqzIZSww42wLMbKd99lnRiuy4DvVWuQlpvBLqdlbdGUmZM2j6BMEs6rEqORD0iP6Pis5OViGamvZ0Ari2qlGhoY=
-X-Received: by 2002:a2e:3009:: with SMTP id w9mr6359832ljw.74.1574321899606;
- Wed, 20 Nov 2019 23:38:19 -0800 (PST)
+        id S1726014AbfKUHlE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 02:41:04 -0500
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id E48C268B05; Thu, 21 Nov 2019 08:41:00 +0100 (CET)
+Date:   Thu, 21 Nov 2019 08:41:00 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     David Miller <davem@davemloft.net>
+Cc:     laurentiu.tudor@nxp.com, hch@lst.de, robin.murphy@arm.com,
+        joro@8bytes.org, ruxandra.radulescu@nxp.com,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        netdev@vger.kernel.org, ioana.ciornei@nxp.com, leoyang.li@nxp.com,
+        diana.craciun@nxp.com, madalin.bucur@nxp.com, camelia.groza@nxp.com
+Subject: Re: [PATCH v3 0/4] dma-mapping: introduce new dma unmap and sync
+ variants
+Message-ID: <20191121074100.GD24024@lst.de>
+References: <20191113122407.1171-1-laurentiu.tudor@nxp.com> <20191113.121132.1658930697082028145.davem@davemloft.net>
 MIME-Version: 1.0
-References: <CGME20191121072643epcas2p452071a503725c7764acf5084d24425b1@epcas2p4.samsung.com>
- <001001d5a03d$05de1f70$119a5e50$@samsung.com>
-In-Reply-To: <001001d5a03d$05de1f70$119a5e50$@samsung.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Thu, 21 Nov 2019 15:38:08 +0800
-X-Gmail-Original-Message-ID: <CAJKOXPckbRowhCmnJfT8-DT3gYaTpDOf0wVxmxdf-tZpOyM5ew@mail.gmail.com>
-Message-ID: <CAJKOXPckbRowhCmnJfT8-DT3gYaTpDOf0wVxmxdf-tZpOyM5ew@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: samsung: modularize samsung pinctrl driver
-To:     =?UTF-8?B?6rWs7ZiE6riw?= <hyunki00.koo@samsung.com>
-Cc:     Tomasz Figa <tomasz.figa@gmail.com>, s.nawrocki@samsung.com,
-        linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>, linux-gpio@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191113.121132.1658930697082028145.davem@davemloft.net>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, Nov 13, 2019 at 12:11:32PM -0800, David Miller wrote:
+> > This series introduces a few new dma unmap and sync api variants that,
+> > on top of what the originals do, return the virtual address
+> > corresponding to the input dma address. In order to do that a new dma
+> > map op is added, .get_virt_addr that takes the input dma address and
+> > returns the virtual address backing it up.
+> > The second patch adds an implementation for this new dma map op in the
+> > generic iommu dma glue code and wires it in.
+> > The third patch updates the dpaa2-eth driver to use the new apis.
+> 
+> The driver should store the mapping in it's private software state if
+> it needs this kind of conversion.
 
-Thanks for the patch. Few comments below:
+I think the problem for this driver (and a few others) is that they
+somehow manage to split I/O completions at a different boundary
+than submissions.  For me with my block I/O background this seems
+weird, but I'll need networking folks to double check the theory.
 
-On Thu, 21 Nov 2019 at 15:26, =EA=B5=AC=ED=98=84=EA=B8=B0 <hyunki00.koo@sam=
-sung.com> wrote:
->
-> Enable samsung pinctrl driver to be compiled as modules.
+> This is huge precendence for this, and there is therefore no need to
+> add even more complication and methods and burdon to architecture code
+> for the sake of this.
 
-Why? What's the benefit? Are platforms capable of such boot? Pinctrl
-is needed early - even before mounting rootfs...
-What about module unloading? Is it reasonable?
-Please answer to all this also in commit message.
+Unfortunately there are various drivers that abuse iommu_iova_to_phys
+to get a struct page to unmap.  Two of theose are network drivers
+that went in through you (dpaa2 and thunder), additonally the 
+caam crypto driver (which I think is the same SOC family as dpaa,
+but I'm not sure) and the AMD GPU driver.
 
->
-> Change-Id: I92a9953c92831a316f7f50146898ff19831549ec
+We also have drivers that just don't unmap and this don't work with
+iommus or dma-debug (IBM EMAC another net driver).
 
-This does not belong to Git.
-
-> Signed-off-by: Hyunki Koo <hyunki00.koo@samsung.com>
-
-You "From" name is different than written here in Signed-off-by. They
-should match and I do not know Korean to be able to tell whether they
-really match or not :).
-How about using Latin transliteration also in "From" field?
-
-> ---
->  drivers/pinctrl/samsung/Kconfig                |  5 +----
->  drivers/pinctrl/samsung/Makefile               | 13 +++++++------
->  drivers/pinctrl/samsung/pinctrl-exynos-arm.c   |  2 ++
->  drivers/pinctrl/samsung/pinctrl-exynos-arm64.c |  2 ++
->  drivers/pinctrl/samsung/pinctrl-exynos.c       |  2 ++
->  drivers/pinctrl/samsung/pinctrl-samsung.c      | 13 +++++++++++++
->  6 files changed, 27 insertions(+), 10 deletions(-)
->
-> diff --git a/drivers/pinctrl/samsung/Kconfig
-> b/drivers/pinctrl/samsung/Kconfig
-> index 425fadd6c346..25e16984ef23 100644
-> --- a/drivers/pinctrl/samsung/Kconfig
-> +++ b/drivers/pinctrl/samsung/Kconfig
-> @@ -3,14 +3,13 @@
->  # Samsung Pin control drivers
->  #
->  config PINCTRL_SAMSUNG
-> -       bool
-> +       tristate "Pinctrl driver data for Samsung SoCs"
->         select PINMUX
->         select PINCONF
->
->  config PINCTRL_EXYNOS
->         bool "Pinctrl driver data for Samsung EXYNOS SoCs"
->         depends on OF && GPIOLIB && (ARCH_EXYNOS || ARCH_S5PV210)
-> -       select PINCTRL_SAMSUNG
->         select PINCTRL_EXYNOS_ARM if ARM && (ARCH_EXYNOS || ARCH_S5PV210)
->         select PINCTRL_EXYNOS_ARM64 if ARM64 && ARCH_EXYNOS
->
-> @@ -25,9 +24,7 @@ config PINCTRL_EXYNOS_ARM64
->  config PINCTRL_S3C24XX
->         bool "Samsung S3C24XX SoC pinctrl driver"
->         depends on ARCH_S3C24XX && OF
-> -       select PINCTRL_SAMSUNG
->
->  config PINCTRL_S3C64XX
->         bool "Samsung S3C64XX SoC pinctrl driver"
->         depends on ARCH_S3C64XX
-> -       select PINCTRL_SAMSUNG
-> diff --git a/drivers/pinctrl/samsung/Makefile
-> b/drivers/pinctrl/samsung/Makefile
-> index ed951df6a112..b3ac01838b8a 100644
-> --- a/drivers/pinctrl/samsung/Makefile
-> +++ b/drivers/pinctrl/samsung/Makefile
-> @@ -1,9 +1,10 @@
->  # SPDX-License-Identifier: GPL-2.0
->  # Samsung pin control drivers
->
-> -obj-$(CONFIG_PINCTRL_SAMSUNG)  +=3D pinctrl-samsung.o
-> -obj-$(CONFIG_PINCTRL_EXYNOS)   +=3D pinctrl-exynos.o
-> -obj-$(CONFIG_PINCTRL_EXYNOS_ARM)       +=3D pinctrl-exynos-arm.o
-> -obj-$(CONFIG_PINCTRL_EXYNOS_ARM64)     +=3D pinctrl-exynos-arm64.o
-> -obj-$(CONFIG_PINCTRL_S3C24XX)  +=3D pinctrl-s3c24xx.o
-> -obj-$(CONFIG_PINCTRL_S3C64XX)  +=3D pinctrl-s3c64xx.o
-> +obj-$(CONFIG_PINCTRL_SAMSUNG)  +=3D pinctrl-samsung-super.o
-> +pinctrl-samsung-super-$(CONFIG_PINCTRL_SAMSUNG)        +=3D pinctrl-sams=
-ung.o
-> +pinctrl-samsung-super-$(CONFIG_PINCTRL_EXYNOS) +=3D pinctrl-exynos.o
-> +pinctrl-samsung-super-$(CONFIG_PINCTRL_EXYNOS_ARM)     +=3D pinctrl-exyn=
-os-
-> arm.o
-> +pinctrl-samsung-super-$(CONFIG_PINCTRL_EXYNOS_ARM64)   +=3D pinctrl-exyn=
-os-
-> arm64.o
-> +pinctrl-samsung-super-$(CONFIG_PINCTRL_S3C24XX)        +=3D pinctrl-s3c2=
-4xx.o
-> +pinctrl-samsung-super-$(CONFIG_PINCTRL_S3C64XX)        +=3D pinctrl-s3c6=
-4xx.o
-
-I don't get why you need to rename obj to pinctrl-samsung-super?
-
-> diff --git a/drivers/pinctrl/samsung/pinctrl-exynos-arm.c
-> b/drivers/pinctrl/samsung/pinctrl-exynos-arm.c
-> index 85ddf49a5188..28906bf213c4 100644
-> --- a/drivers/pinctrl/samsung/pinctrl-exynos-arm.c
-> +++ b/drivers/pinctrl/samsung/pinctrl-exynos-arm.c
-> @@ -14,6 +14,7 @@
->  // external gpio and wakeup interrupt support.
->
->  #include <linux/device.h>
-> +#include <linux/module.h>
->  #include <linux/of_address.h>
->  #include <linux/slab.h>
->  #include <linux/err.h>
-> @@ -891,3 +892,4 @@ const struct samsung_pinctrl_of_match_data
-> exynos5420_of_data __initconst =3D {
->         .ctrl           =3D exynos5420_pin_ctrl,
->         .num_ctrl       =3D ARRAY_SIZE(exynos5420_pin_ctrl),
->  };
-> +MODULE_LICENSE("GPL");
-> diff --git a/drivers/pinctrl/samsung/pinctrl-exynos-arm64.c
-> b/drivers/pinctrl/samsung/pinctrl-exynos-arm64.c
-> index b6e56422a700..2b19476ad5ff 100644
-> --- a/drivers/pinctrl/samsung/pinctrl-exynos-arm64.c
-> +++ b/drivers/pinctrl/samsung/pinctrl-exynos-arm64.c
-> @@ -14,6 +14,7 @@
->  // external gpio and wakeup interrupt support.
->
->  #include <linux/slab.h>
-> +#include <linux/module.h>
->  #include <linux/soc/samsung/exynos-regs-pmu.h>
->
->  #include "pinctrl-samsung.h"
-> @@ -422,3 +423,4 @@ const struct samsung_pinctrl_of_match_data
-> exynos7_of_data __initconst =3D {
->         .ctrl           =3D exynos7_pin_ctrl,
->         .num_ctrl       =3D ARRAY_SIZE(exynos7_pin_ctrl),
->  };
-> +MODULE_LICENSE("GPL");
-> diff --git a/drivers/pinctrl/samsung/pinctrl-exynos.c
-> b/drivers/pinctrl/samsung/pinctrl-exynos.c
-> index ebc27b06718c..630d606330f1 100644
-> --- a/drivers/pinctrl/samsung/pinctrl-exynos.c
-> +++ b/drivers/pinctrl/samsung/pinctrl-exynos.c
-> @@ -18,6 +18,7 @@
->  #include <linux/irqdomain.h>
->  #include <linux/irq.h>
->  #include <linux/irqchip/chained_irq.h>
-> +#include <linux/module.h>
->  #include <linux/of.h>
->  #include <linux/of_irq.h>
->  #include <linux/slab.h>
-> @@ -713,3 +714,4 @@ exynos_retention_init(struct samsung_pinctrl_drv_data
-> *drvdata,
->
->         return ctrl;
->  }
-> +MODULE_LICENSE("GPL");
-> diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.c
-> b/drivers/pinctrl/samsung/pinctrl-samsung.c
-> index de0477bb469d..4483eaed27f8 100644
-> --- a/drivers/pinctrl/samsung/pinctrl-samsung.c
-> +++ b/drivers/pinctrl/samsung/pinctrl-samsung.c
-> @@ -15,6 +15,7 @@
->  // but provides extensions to which platform specific implementation of
-> the gpio
->  // and wakeup interrupts can be hooked to.
->
-> +#include <linux/module.h>
->  #include <linux/init.h>
->  #include <linux/platform_device.h>
->  #include <linux/io.h>
-> @@ -1275,6 +1276,7 @@ static const struct of_device_id
-> samsung_pinctrl_dt_match[] =3D {
->  #endif
->         {},
->  };
-> +MODULE_DEVICE_TABLE(of, samsung_pinctrl_dt_match);
->
->  static const struct dev_pm_ops samsung_pinctrl_pm_ops =3D {
->         SET_LATE_SYSTEM_SLEEP_PM_OPS(samsung_pinctrl_suspend,
-> @@ -1296,3 +1298,14 @@ static int __init samsung_pinctrl_drv_register(voi=
-d)
->         return platform_driver_register(&samsung_pinctrl_driver);
->  }
->  postcore_initcall(samsung_pinctrl_drv_register);
-> +
-> +static void __exit samsung_pinctrl_drv_unregister(void)
-> +{
-> +       platform_driver_unregister(&samsung_pinctrl_driver);
-> +}
-> +module_exit(samsung_pinctrl_drv_unregister);
-
-Since .suppress_bind_attrs are defined, I find it weird to be able to
-unload module... Another warning sign...
-
-> +
-> +
-> +MODULE_LICENSE("GPL");
-> +MODULE_AUTHOR("Hyunki Koo <hyunki00.koo@samsung.com>");
-
-I cannot find any contributions to this file from you. The author
-should be the main contributor(s). You need to go through history...
-
-> +MODULE_DESCRIPTION("Samsung Exynos PINCTRL driver");
-
-That's not Exynos but Samsung-generic part... Samsung Exynos/S3C/S5P
-pinctrl driver.
-
-Best regards,
-Krzysztof
+That being said I hate these new API, but I still think they are less
+bad than these IOMMU API abuses people do now.  If experienced
+networking folks know a way to get rid of both I'm all for it.
