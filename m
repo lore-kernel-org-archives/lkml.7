@@ -2,143 +2,148 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B434C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 17:34:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5885C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 17:35:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32EF7206CC
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 17:34:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D7E6206CC
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 17:35:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="a/E0I485"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbfKUReq (ORCPT
+        id S1726944AbfKURfQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 12:34:46 -0500
-Received: from mga17.intel.com ([192.55.52.151]:46714 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726279AbfKURep (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 12:34:45 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Nov 2019 09:34:45 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,226,1571727600"; 
-   d="scan'208";a="209981488"
-Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
-  by orsmga003.jf.intel.com with ESMTP; 21 Nov 2019 09:34:44 -0800
-Date:   Thu, 21 Nov 2019 09:34:44 -0800
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
+        Thu, 21 Nov 2019 12:35:16 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:57568 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726279AbfKURfQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 12:35:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=kT85EYnF8HVqmBD+sD5mv1wk+c/n8OFhrGY8G/TqmhQ=; b=a/E0I485O72yRrViXyHzOa+hv
+        cxyZeqYZeEtuT7frD0Pg5pbmQFf3f3CIuEIastTdK8rsT0R9c4KqotVfWEEXktP77e6rzAuHooZFp
+        NawuZyC2S+FONuBVSJeFI/68eo06B+qvo1nOImUSQIIcNvGUYwO9KdapqwCa47LtoXMN0KG8yxBhN
+        0hRNoiPAeYLXFMIYoKoqeiw7RZJMvgRAKNveTaKNef3+yHmDxgnvpUymmXjNkg90YI0nSit929jYP
+        YJQGn56Rx1jIwLVa+IlZQFxigKyXQ2nAeq691rML8mB+W6YkOjNjWK4eMwJdU7sROLL/hfHbWGnEq
+        Ly2liGlcA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iXqMC-0006KW-AC; Thu, 21 Nov 2019 17:35:04 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 786B13056C8;
+        Thu, 21 Nov 2019 18:33:50 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 414EC2021C978; Thu, 21 Nov 2019 18:35:01 +0100 (CET)
+Date:   Thu, 21 Nov 2019 18:35:01 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Fenghua Yu <fenghua.yu@intel.com>
+Cc:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         H Peter Anvin <hpa@zytor.com>,
+        Tony Luck <tony.luck@intel.com>,
         Ashok Raj <ashok.raj@intel.com>,
         Ravi V Shankar <ravi.v.shankar@intel.com>,
         linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
 Subject: Re: [PATCH v10 6/6] x86/split_lock: Enable split lock detection by
  kernel parameter
-Message-ID: <20191121173444.GA5581@agluck-desk2.amr.corp.intel.com>
+Message-ID: <20191121173501.GT4097@hirez.programming.kicks-ass.net>
 References: <1574297603-198156-1-git-send-email-fenghua.yu@intel.com>
  <1574297603-198156-7-git-send-email-fenghua.yu@intel.com>
  <20191121060444.GA55272@gmail.com>
  <20191121130153.GS4097@hirez.programming.kicks-ass.net>
- <20191121171214.GD12042@gmail.com>
+ <20191121161410.GA199273@romley-ivt3.sc.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191121171214.GD12042@gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191121161410.GA199273@romley-ivt3.sc.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 06:12:14PM +0100, Ingo Molnar wrote:
+On Thu, Nov 21, 2019 at 08:14:10AM -0800, Fenghua Yu wrote:
+
+> The usage scope of this patch set is largely reduced to only real time.
+> The long split lock processing time (>1000 cycles) cannot be tolerated
+> by real time.
+
+I'm thinking you're clueless on realtime. There's plenty of things that
+can cause many cycles to go out the window. And just a single
+instruction soaking up cycles like that really isn't the problem.
+
+The problem is that split lock defeats isolation. An otherwise contained
+task can have pretty horrific side effects on other tasks.
+
+> Real time customers do want to use this feature to detect the fatal
+> split lock error. They don't want any split lock issue from BIOS/EFI/
+> firmware/kerne/drivers/user apps.
+
+Cloud vendors also don't want them. Nobody wants them, they stink. They
+have a system wide impact.
+
+I don't want them on my system.
+
+> > Imagine the BIOS/EFI/firmware containing an #AC exception. At that point
+> > the feature becomes useless, because you cannot enable it without your
+> > machine dying.
 > 
-> * Peter Zijlstra <peterz@infradead.org> wrote:
-> 
-> > On Thu, Nov 21, 2019 at 07:04:44AM +0100, Ingo Molnar wrote:
-> > > * Fenghua Yu <fenghua.yu@intel.com> wrote:
-> > 
-> > > > +	split_lock_detect
-> > > > +			[X86] Enable split lock detection
-> > > > +			This is a real time or debugging feature. When enabled
-> > > > +			(and if hardware support is present), atomic
-> > > > +			instructions that access data across cache line
-> > > > +			boundaries will result in an alignment check exception.
-> > > > +			When triggered in applications the kernel will send
-> > > > +			SIGBUS. The kernel will panic for a split lock in
-> > > > +			OS code.
-> > > 
-> > > It would be really nice to be able to enable/disable this runtime as 
-> > > well, has this been raised before, and what was the conclusion?
-> > 
-> > It has, previous versions had that. Somehow a lot of things went missing
-> > and we're back to a broken neutered useless mess.
-> > 
-> > The problem appears to be that due to hardware design the feature cannot
-> > be virtualized, and instead of then disabling it when a VM runs/exists
-> > they just threw in the towel and went back to useless mode.. :-(
-> > 
-> > This feature MUST be default enabled, otherwise everything will
-> > be/remain broken and we'll end up in the situation where you can't use
-> > it even if you wanted to.
-> 
-> Agreed.
-> 
-> > And I can't be arsed to look it up, but we've been making this very 
-> > same argument since very early (possible the very first) version.
-> 
-> Yeah, I now have a distinct deja vu...
+> I believe Intel real time team guarantees to deliever a split lock FREE
+> BIOS/EFI/firmware to their real time users.
 
-You'll notice that we are at version 10 ... lots of things have been tried
-in previous versions. This new version is to get the core functionality
-in, so we can build fancier features later.  Painful experience has shown
-that trying to do this all at once just leads to churn with no progress.
+Not good enough. Any system shipping with this capability needs to have
+a split lock free firmware blob. And the only way to make that happen is
+to force enable it by default.
 
-Enabling by default at this point would result in a flurry of complaints
-about applications being killed and kernels panicing. That would be
-followed by:
+> From kernel point of view, we are working on a split lock free kernel.
+> Some blocking split lock issues have been fixed in TIP tree.
 
-#include <linus/all-caps-rant-about-backwards-compatability.h>
+Haven't we fixed them all by now?
 
-and the patches being reverted.
+> Only limited user apps can run on real time and should be split lock
+> free before they are allowed to run on the real time system.
 
-This version can serve a very useful purpose. CI systems with h/w that
-supports split lock can enable it and begin the process of finding
-and fixing the remaining kernel issues. Especially helpful if they run
-randconfig and fuzzers.
+I'm thinking most of the normal Linux userspace will run just fine.
+Seeing how other architectures have rejected such nonsense forever.
 
-We'd also find out which libraries and applications currently use
-split locks.
+> In summary, the patch set only wants to enable the feature for real time
+> and disable it by default.
 
-Real-time folks that have identified split lock as a fatal (don't meet
-their deadlines issue) could also enable it as is (because it is better
-to crash the kernel and have the laser be powered down than to keep
-firing long past the point it should have stopped).
+We told you that wasn't good enough many times. Lot's of people run the
+preemp-rt kernel on lots of different hardware. And like I said, even
+cloudy folks would want this.
 
-Any developer with concerns about their BIOS using split locks can also
-enable using this patch and begin testing today.
+Features that require special firmware that nobody has are useless.
 
-I'm totally on board with follow up patches providing extra features like:
+For giggles, run the below. You can notice your desktop getting slower.
 
-	A way to enable/disable at run time.
+---
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/mman.h>
 
-	Providing a way to allow but rate limit applications that cause
-	split locks.
+void main(void)
+{
+	void *addr = mmap(NULL, 4096*2, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
+	unsigned int *var;
+	if (addr == (void*)-1) {
+		printf("fail\n");
+		return;
+	}
 
-	Figuring out something useful to do with virtualization.
+	var = addr + 4096 - 2;
 
-Those are all good things to have - but we won't get *any* of them if we
-wait until *all* have them have been perfected.
-
-<soapbox>
-So let's just take the first step now and solve world hunger tomorrow.
-</soapbox>
-
--Tony
+	for (;;)
+		asm volatile ("lock incl %0" : : "m" (*var));
+}
