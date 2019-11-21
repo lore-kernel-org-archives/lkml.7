@@ -2,75 +2,104 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66AC0C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 15:36:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41AAAC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 15:37:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4499E20709
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 15:36:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1549F2070E
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 15:37:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JlBPirUR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbfKUPgA (ORCPT
+        id S1726858AbfKUPhd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 10:36:00 -0500
-Received: from mout.kundenserver.de ([212.227.126.131]:33425 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726477AbfKUPgA (ORCPT
+        Thu, 21 Nov 2019 10:37:33 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:24658 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726293AbfKUPhc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 10:36:00 -0500
-Received: from orion.localdomain ([95.115.120.75]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MJmX3-1iIkaN1UBl-00K6ei; Thu, 21 Nov 2019 16:35:58 +0100
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     wsa@the-dreams.de, linux-i2c@vger.kernel.org
-Subject: [PATCH] i2c: i2c-core-base: tiny indention cleanup
-Date:   Thu, 21 Nov 2019 16:35:41 +0100
-Message-Id: <20191121153541.26402-1-info@metux.net>
-X-Mailer: git-send-email 2.11.0
-X-Provags-ID: V03:K1:L6EOFn0STmgsIK79q6tHtVhD0cjobzcbBwLr/SzPFpeQYjM9ZPH
- 59kFgTeDOjgMu0BJwpi0Po+upOXAx5352VOKzodWRd/ICCM6bs1hWDv4+3aS1oYHfsh/JsO
- 1TXW1V5s4qjNlaiLMZumITx3xohQXbnA0XCf5dRpX2huSDBVKeqNmzkAAWKoenpuc40/BpO
- K1/ILPOhUPgEUbd2+bC7g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:F5VK7nogLpA=:itMk1bZoeMJBvG8RKb5XiB
- j9m9mNAX3NcSPoBLEKZq4WzRAPpdZrpXIrnG2mUzBcN6OJ0eSpIQpE6/4a/x6/OxrluaQq2R5
- K9FsgyuFWQTzfUF7gQCp+Jj/T6EB2BsYdGQdBPA4+pzOxtqPAmxy1ta0fg80jP1tQCtqtnMxE
- rr/UJXFaIB9CPkSRUVoo9wZkg8yV8Benw7MJDU4cIsDJulaeUcfbcoMBb4CwKrAosSETXw6n1
- jnRP27seoP1hym6tbNkLIz+4/af9FNO3gDXBgNl/xgNFK4WQNAAoV0lCv7UtyY9uHhisCCd+d
- gL7600g0lGfY9gnmFaNKWbq885IEhd5aSKDeu2ael07hN9FrzSmM5ciXSUw1P1ChSokYA25yV
- ruog1oPU3Vn1nUQFlORzqnUIlw62ut3p6iEmCp/W3L15xDXrNpsZl2OtI3w+/95vG2d/aHAxZ
- R8A9BEw7iM/JakRMWq/OTpOcd0eM7TnwAa1+ldqPHJ9lGcg97Wyx1S8gI5ADCH9BXsX/dsyIL
- HLNvBBYROx21318ys79g8ocFKVJSou6lb693nM0Rr16MEhGedlMG+H80QTxsVHlOIc4n9EyxV
- NcYJJgolGZHrDLXYOkiQs+orwFB2vUuW87L9dQWMcFYVx3RKmZuDnVfKsGgHVRMoyNY6/gvsP
- id0JwGzIotOqaFGWBlvgdjznaDudIt7ZgrJGP3GEOIFnGyqcItUVB8Cr7D9iLN1o4m7fW77V5
- EcwWqvB4OOBu6gjSJwR5eZShq2io6REFqlvBhrye0jyAjS+HQICS4vftOMlBYbKQ97r9t8851
- EPusDa/XoWqIs21tFBVlsZ8uRSX5Qx3FP2/S5TbvA6mkWx04q7oAm7S//tRaXzvc3ErZs+qeS
- LD7M948AEpB5fZlDA2Jg==
+        Thu, 21 Nov 2019 10:37:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574350651;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=jCutdT9TaQdIImo/1AFgCrOpVjlugrWqMw96TD3dGTc=;
+        b=JlBPirUR2wJ3zhRuMeNgWdxWBGgS0juojBpy+YKYu0v5djucdY5mYc56Lae+8jGUPY/onb
+        jdiClDavA/mqMJr3bx5tykpwL7zdRbIq+lkQeegNo6izJbT+T5KryWu4QBmbNZtQJLIACQ
+        0HGgEFVD54SLQYpULrB4/INrnJFiLe4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-128-0jpKBEWHNDKHOS8NdKZ-Dg-1; Thu, 21 Nov 2019 10:37:29 -0500
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 67F3C10171AB;
+        Thu, 21 Nov 2019 15:37:28 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-161.rdu2.redhat.com [10.10.120.161])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5229E692AE;
+        Thu, 21 Nov 2019 15:37:27 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+ Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+ Kingdom.
+ Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH] afs: Fix large file support
+From:   David Howells <dhowells@redhat.com>
+To:     torvalds@linux-foundation.org
+Cc:     dhowells@redhat.com, marc.dionne@auristor.com,
+        linux-afs@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 21 Nov 2019 15:37:26 +0000
+Message-ID: <157435064653.9583.16369826233033888377.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/unknown-version
+MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MC-Unique: 0jpKBEWHNDKHOS8NdKZ-Dg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
----
- drivers/i2c/i2c-core-base.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+From: Marc Dionne <marc.dionne@auristor.com>
 
-diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-index 5f6a4985f2bc..68be4e89d16a 100644
---- a/drivers/i2c/i2c-core-base.c
-+++ b/drivers/i2c/i2c-core-base.c
-@@ -2326,7 +2326,7 @@ struct i2c_adapter *i2c_get_adapter(int nr)
- 	else
- 		adapter = NULL;
- 
-- exit:
-+exit:
- 	mutex_unlock(&core_lock);
- 	return adapter;
- }
--- 
-2.11.0
+By default s_maxbytes is set to MAX_NON_LFS, which limits the usable
+file size to 2GB, enforced by the vfs.
+
+Commit b9b1f8d5930a ("AFS: write support fixes") added support for the
+64-bit fetch and store server operations, but did not change this value.
+As a result, attempts to write past the 2G mark result in EFBIG errors:
+
+ $ dd if=3D/dev/zero of=3Dfoo bs=3D1M count=3D1 seek=3D2048
+ dd: error writing 'foo': File too large
+
+Set s_maxbytes to MAX_LFS_FILESIZE.
+
+Fixes: b9b1f8d5930a ("AFS: write support fixes")
+Signed-off-by: Marc Dionne <marc.dionne@auristor.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
+---
+
+ fs/afs/super.c |    1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/fs/afs/super.c b/fs/afs/super.c
+index f18911e8d770..488641b1a418 100644
+--- a/fs/afs/super.c
++++ b/fs/afs/super.c
+@@ -435,6 +435,7 @@ static int afs_fill_super(struct super_block *sb, struc=
+t afs_fs_context *ctx)
+ =09/* fill in the superblock */
+ =09sb->s_blocksize=09=09=3D PAGE_SIZE;
+ =09sb->s_blocksize_bits=09=3D PAGE_SHIFT;
++=09sb->s_maxbytes=09=09=3D MAX_LFS_FILESIZE;
+ =09sb->s_magic=09=09=3D AFS_FS_MAGIC;
+ =09sb->s_op=09=09=3D &afs_super_ops;
+ =09if (!as->dyn_root)
 
