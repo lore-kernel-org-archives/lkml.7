@@ -2,158 +2,137 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CBA8C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:50:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13399C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:50:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51BC02068E
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:50:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC2A92068E
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:50:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="DnacKCm2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbfKUVuV (ORCPT
+        id S1726905AbfKUVui (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 16:50:21 -0500
-Received: from mga01.intel.com ([192.55.52.88]:31428 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726329AbfKUVuV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 16:50:21 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Nov 2019 13:50:18 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,227,1571727600"; 
-   d="scan'208";a="205283769"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by fmsmga007.fm.intel.com with ESMTP; 21 Nov 2019 13:50:17 -0800
-Date:   Thu, 21 Nov 2019 13:50:17 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
-        Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v3 12/19] x86/vmx: Introduce VMX_FEATURES_*
-Message-ID: <20191121215017.GC16617@linux.intel.com>
-References: <20191119031240.7779-1-sean.j.christopherson@intel.com>
- <20191119031240.7779-13-sean.j.christopherson@intel.com>
- <20191121165250.GK6540@zn.tnic>
+        Thu, 21 Nov 2019 16:50:38 -0500
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:8904 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726329AbfKUVuh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 16:50:37 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dd706a70001>; Thu, 21 Nov 2019 13:50:32 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 21 Nov 2019 13:50:35 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 21 Nov 2019 13:50:35 -0800
+Received: from [10.2.168.213] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 21 Nov
+ 2019 21:50:35 +0000
+Subject: Re: [PATCH v7 02/24] mm/gup: factor out duplicate code from four
+ routines
+To:     Jan Kara <jack@suse.cz>
+CC:     Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
+References: <20191121071354.456618-1-jhubbard@nvidia.com>
+ <20191121071354.456618-3-jhubbard@nvidia.com> <20191121080356.GA24784@lst.de>
+ <852f6c27-8b65-547b-89e0-e8f32a4d17b9@nvidia.com>
+ <20191121094908.GB18190@quack2.suse.cz>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <ecd0a178-3890-5fad-2313-11b3df907f9f@nvidia.com>
+Date:   Thu, 21 Nov 2019 13:47:47 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191121165250.GK6540@zn.tnic>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20191121094908.GB18190@quack2.suse.cz>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1574373032; bh=kU5UGk7rYta5qBqyhgDE8hfKXijiGAD2NIzjPl1Hld4=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=DnacKCm2GFnxzRow8XHHjnv9A3uMI6LI6SiIGhg9bKcp76MqPQ8kF1M27y/KaRAbw
+         xxowc8Q3DyiD2kAcAm0nQ17JpX8GvIrqJ8uSjriDnOLoj/h1UR33AwThcGRh+kdiFs
+         sIZ9xwXRicfai3imhi7lfxcAqYrkI8TWeVUm4/7D0SDPmiW6FMWhSFSQx92VV4EoOz
+         XFN+VtOdWxZk+dXcyMd50CRCI5bozfozwO/LAtNo36xbQ2gRR/BBiAeTLEx8hKdZSK
+         Fx3jsqI8EasMtw1tkRf01vJb8NeCgZkxRIPz/M0TVfxHrLLklLoxP+jEnZwmUVejAC
+         k2q6xFFz7w7hA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 05:52:58PM +0100, Borislav Petkov wrote:
-> On Mon, Nov 18, 2019 at 07:12:33PM -0800, Sean Christopherson wrote:
-> > Define separate VMX_FEATURE flags to set the stage for enumerating VMX
-> > capabilities outside of the cpu_has() framework, and for adding
-> > functional usage of VMX_FEATURE_* to help ensure the features reported
-> > via /proc/cpuinfo is up to date with respect to kernel recognition of
-> > VMX capabilities.
+On 11/21/19 1:49 AM, Jan Kara wrote:
+> On Thu 21-11-19 00:29:59, John Hubbard wrote:
+>> On 11/21/19 12:03 AM, Christoph Hellwig wrote:
+>>> Otherwise this looks fine and might be a worthwhile cleanup to feed
+>>> Andrew for 5.5 independent of the gut of the changes.
+>>>
+>>> Reviewed-by: Christoph Hellwig <hch@lst.de>
+>>>
+>>
+>> Thanks for the reviews! Say, it sounds like your view here is that this
+>> series should be targeted at 5.6 (not 5.5), is that what you have in mind?
+>> And get the preparatory patches (1-9, and maybe even 10-16) into 5.5?
 > 
-> That's all fine and good but who's going to use those feature bits?
-> Or are we reporting them just for the sake of it? Because if only
-> that, then it is not worth the effort. Sure, I don't mind extending
-> the framework so that you can use cpu_has() for VMX features but the
-> /proc/cpuinfo angle is not clear to me.
+> Yeah, actually I feel the same. The merge window is going to open on Sunday
+> and the series isn't still fully baked and happily sitting in linux-next
+> (and larger changes should really sit in linux-next for at least a week,
+> preferably two, before the merge window opens to get some reasonable test
+> coverage).  So I'd take out the independent easy patches that are already
+> reviewed, get them merged into Andrew's (or whatever other appropriate
+> tree) now so that they get at least a week of testing in linux-next before
+> going upstream.  And the more involved bits will have to wait for 5.6 -
+> which means let's just continue working on them as we do now because
+> ideally in 4 weeks we should have them ready with all the reviews so that
+> they can be picked up and integrated into linux-next.
+> 
+> 								Honza
 
-I actually don't want to use cpu_has() for the VMX features, which is
-why I put these in a separate array (one of the future patches).
- 
-The motivation is purely for /proc/cpuinfo.  Currently there is no sane
-way for a user to query the capabilities of their platform.  The issue
-comes up on a fairly regular basis, e.g. when trying to find a platform
-to test a new feature or to debug an issue that has a hardware dependency.
+OK, thanks for spelling it out. I'll shift over to getting the easy patches
+prepared for 5.5, for now.
 
-Lack of reporting is especially annoying when the end user isn't familiar
-with VMX, e.g. the format of the MSRs is non-standard, existence of some
-MSRs is reported by bits in other MSRs, several features from KVM's point
-of view are actually enumerated as 3+ separate features by hardware, etc...
-
-Punting to a userspace utility isn't a viable option because all of the
-capabilities are reported via MSRs.
-
-As for why I want to keep these out of cpu_has()... VMX has a concept of
-features being fixed "on", e.g. early CPUs don't allow disabling off CR3
-interception.  A cpu_has() approach doesn't work well since it loses the
-information regarding which bits are fixed-1.  KVM also has several module
-params that can be used to disable use of features, i.e. we don't want
-cpu_has() for VMX features because the KVM-specific variables need to be
-the canonical reference.
-
-> Especially since you're hiding most of them with the "" prepended in the
-> define comment.
-> 
-> > +/* Pin-Based VM-Execution Controls, EPT/VPID, APIC and VM-Functions, word 0 */
-> > +#define VMX_FEATURE_INTR_EXITING	( 0*32+  0) /* "" VM-Exit on vectored interrupts */
-> > +#define VMX_FEATURE_NMI_EXITING		( 0*32+  3) /* "" VM-Exit on NMIs */
-> > +#define VMX_FEATURE_VIRTUAL_NMIS	( 0*32+  5) /* "vnmi" NMI virtualization */
-> > +#define VMX_FEATURE_PREEMPTION_TIMER	( 0*32+  6) /* VMX Preemption Timer */
-> 
-> You really wanna have "preemption_timer" in /proc/cpuinfo? That should
-> at least say vmx-something, if it should be visible there at all.
-
-Originally I wanted these to go in a completely separate line in
-/proc/cpuinfo, e.g. "vmx flags".  That's what I submitted in v1, but then
-found out it'd break the ABI due to handful of VMX features being
-enumerated in "flags" via synthetic cpufeature bits.
-
-Paolo suggested dropping the "vmx flags" approach as an easy solution, and
-I obviously didn't update the names to prepend vmx_.  Preprending vmx_
-would be somewhat annoying because changing the names of the synthetic
-flags would also break the ABI...
-
-Alternatively, what about adding "vmx flags" but keeping the existing
-synthetic flags?  That'd mean having duplicates for tpr_shadow, vnmi, ept,
-flexpriority, vpi and ept_ad.  On the plus side, we'd cap the pollution of
-"flags" at those six features.
- 
-> > +#define VMX_FEATURE_POSTED_INTR		( 0*32+  7) /* Posted Interrupts */
-> 
-> Same here.
-> 
-> In general, the questions stand for all those feature bits which will be
-> visible in /proc/cpuinfo.
-> 
-> 1. Which to show and why?
-> 
-> 2. Who's going to use them?
-> 
-> 3. If show and dumping them together with the other feature flags, have
-> their name be proper (vmx-prefixed etc).
-> 
-> > +/* EPT/VPID features, scattered to bits 16-23 */
-> > +#define VMX_FEATURE_INVVPID	        ( 0*32+ 16) /* INVVPID is supported */
-> > +#define VMX_FEATURE_EPT_EXECUTE_ONLY	( 0*32+ 17) /* "ept_x_only" EPT entries can be execute only */
-> > +#define VMX_FEATURE_EPT_AD      	( 0*32+ 18) /* EPT Accessed/Dirty bits */
-> > +#define VMX_FEATURE_EPT_1GB      	( 0*32+ 19) /* 1GB EPT pages */
-> 			      ^^^^^^^^^^^^
-> 
-> There are some spaces that need to be converted to tabs here.
-
-Doh.
+thanks,
+-- 
+John Hubbard
+NVIDIA
