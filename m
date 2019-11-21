@@ -2,44 +2,41 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40C23C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 00:16:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34501C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 00:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 144B8208A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 00:16:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07FCB208A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 00:16:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727282AbfKUAQL (ORCPT
+        id S1727319AbfKUAQS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 19:16:11 -0500
-Received: from mga06.intel.com ([134.134.136.31]:58450 "EHLO mga06.intel.com"
+        Wed, 20 Nov 2019 19:16:18 -0500
+Received: from mga17.intel.com ([192.55.52.151]:36701 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726952AbfKUAPf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726343AbfKUAPf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 20 Nov 2019 19:15:35 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Nov 2019 16:15:34 -0800
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Nov 2019 16:15:34 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,223,1571727600"; 
-   d="scan'208";a="381553881"
+   d="scan'208";a="357620027"
 Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
-  by orsmga005.jf.intel.com with ESMTP; 20 Nov 2019 16:15:34 -0800
+  by orsmga004.jf.intel.com with ESMTP; 20 Nov 2019 16:15:34 -0800
 Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id BC626300D85; Wed, 20 Nov 2019 16:15:34 -0800 (PST)
+        id 7CE65300B64; Wed, 20 Nov 2019 16:15:34 -0800 (PST)
 From:   Andi Kleen <andi@firstfloor.org>
 To:     acme@kernel.org
-Cc:     jolsa@kernel.org, linux-kernel@vger.kernel.org,
-        Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH 11/12] perf evsel: Add functions to enable/disable for a specific CPU
-Date:   Wed, 20 Nov 2019 16:15:21 -0800
-Message-Id: <20191121001522.180827-12-andi@firstfloor.org>
+Cc:     jolsa@kernel.org, linux-kernel@vger.kernel.org
+Subject: Optimize perf stat for large number of events/cpus
+Date:   Wed, 20 Nov 2019 16:15:10 -0800
+Message-Id: <20191121001522.180827-1-andi@firstfloor.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191121001522.180827-1-andi@firstfloor.org>
-References: <20191121001522.180827-1-andi@firstfloor.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -47,164 +44,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+[v8: Address review feedback. Only changes one patch.]
 
-Refactor the existing functions to use these functions internally.
+This patch kit optimizes perf stat for a large number of events 
+on systems with many CPUs and PMUs.
 
-Used in the next patch
+Some profiling shows that the most overhead is doing IPIs to
+all the target CPUs. We can optimize this by using sched_setaffinity
+to set the affinity to a target CPU once and then doing
+the perf operation for all events on that CPU. This requires
+some restructuring, but cuts the set up time quite a bit.
 
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
+In theory we could go further by parallelizing these setups
+too, but that would be much more complicated and for now just batching it
+per CPU seems to be sufficient. At some point with many more cores 
+parallelization or a better bulk perf setup API might be needed though.
 
----
-v2: Use NULL instead of 0
----
- tools/perf/lib/evsel.c              | 49 +++++++++++++++++++++--------
- tools/perf/lib/include/perf/evsel.h |  2 ++
- tools/perf/util/evsel.c             | 13 +++++++-
- tools/perf/util/evsel.h             |  2 ++
- 4 files changed, 52 insertions(+), 14 deletions(-)
+In addition perf does a lot of redundant /sys accesses with
+many PMUs, which can be also expensve. This is also optimized.
 
-diff --git a/tools/perf/lib/evsel.c b/tools/perf/lib/evsel.c
-index ea775dacbd2d..4c6485fc31b9 100644
---- a/tools/perf/lib/evsel.c
-+++ b/tools/perf/lib/evsel.c
-@@ -198,38 +198,61 @@ int perf_evsel__read(struct perf_evsel *evsel, int cpu, int thread,
- }
- 
- static int perf_evsel__run_ioctl(struct perf_evsel *evsel,
--				 int ioc,  void *arg)
-+				 int ioc,  void *arg,
-+				 int cpu)
- {
--	int cpu, thread;
-+	int thread;
- 
--	for (cpu = 0; cpu < xyarray__max_x(evsel->fd); cpu++) {
--		for (thread = 0; thread < xyarray__max_y(evsel->fd); thread++) {
--			int fd = FD(evsel, cpu, thread),
--			    err = ioctl(fd, ioc, arg);
-+	for (thread = 0; thread < xyarray__max_y(evsel->fd); thread++) {
-+		int fd = FD(evsel, cpu, thread),
-+		    err = ioctl(fd, ioc, arg);
- 
--			if (err)
--				return err;
--		}
-+		if (err)
-+			return err;
- 	}
- 
- 	return 0;
- }
- 
-+int perf_evsel__enable_cpu(struct perf_evsel *evsel, int cpu)
-+{
-+	return perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_ENABLE, NULL, cpu);
-+}
-+
- int perf_evsel__enable(struct perf_evsel *evsel)
- {
--	return perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_ENABLE, 0);
-+	int i;
-+	int err = 0;
-+
-+	for (i = 0; i < evsel->cpus->nr && !err; i++)
-+		err = perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_ENABLE, NULL, i);
-+	return err;
-+}
-+
-+int perf_evsel__disable_cpu(struct perf_evsel *evsel, int cpu)
-+{
-+	return perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_DISABLE, NULL, cpu);
- }
- 
- int perf_evsel__disable(struct perf_evsel *evsel)
- {
--	return perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_DISABLE, 0);
-+	int i;
-+	int err = 0;
-+
-+	for (i = 0; i < evsel->cpus->nr && !err; i++)
-+		err = perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_DISABLE, NULL, i);
-+	return err;
- }
- 
- int perf_evsel__apply_filter(struct perf_evsel *evsel, const char *filter)
- {
--	return perf_evsel__run_ioctl(evsel,
-+	int err = 0, i;
-+
-+	for (i = 0; i < evsel->cpus->nr && !err; i++)
-+		err = perf_evsel__run_ioctl(evsel,
- 				     PERF_EVENT_IOC_SET_FILTER,
--				     (void *)filter);
-+				     (void *)filter, i);
-+	return err;
- }
- 
- struct perf_cpu_map *perf_evsel__cpus(struct perf_evsel *evsel)
-diff --git a/tools/perf/lib/include/perf/evsel.h b/tools/perf/lib/include/perf/evsel.h
-index e7add554f861..c82ec39a4ad0 100644
---- a/tools/perf/lib/include/perf/evsel.h
-+++ b/tools/perf/lib/include/perf/evsel.h
-@@ -30,7 +30,9 @@ LIBPERF_API void perf_evsel__close_cpu(struct perf_evsel *evsel, int cpu);
- LIBPERF_API int perf_evsel__read(struct perf_evsel *evsel, int cpu, int thread,
- 				 struct perf_counts_values *count);
- LIBPERF_API int perf_evsel__enable(struct perf_evsel *evsel);
-+LIBPERF_API int perf_evsel__enable_cpu(struct perf_evsel *evsel, int cpu);
- LIBPERF_API int perf_evsel__disable(struct perf_evsel *evsel);
-+LIBPERF_API int perf_evsel__disable_cpu(struct perf_evsel *evsel, int cpu);
- LIBPERF_API struct perf_cpu_map *perf_evsel__cpus(struct perf_evsel *evsel);
- LIBPERF_API struct perf_thread_map *perf_evsel__threads(struct perf_evsel *evsel);
- LIBPERF_API struct perf_event_attr *perf_evsel__attr(struct perf_evsel *evsel);
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 89910145c070..59b9b4f3fe34 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1205,16 +1205,27 @@ int perf_evsel__append_addr_filter(struct evsel *evsel, const char *filter)
- 	return perf_evsel__append_filter(evsel, "%s,%s", filter);
- }
- 
-+/* Caller has to clear disabled after going through all CPUs. */
-+int evsel__enable_cpu(struct evsel *evsel, int cpu)
-+{
-+	return perf_evsel__enable_cpu(&evsel->core, cpu);
-+}
-+
- int evsel__enable(struct evsel *evsel)
- {
- 	int err = perf_evsel__enable(&evsel->core);
- 
- 	if (!err)
- 		evsel->disabled = false;
--
- 	return err;
- }
- 
-+/* Caller has to set disabled after going through all CPUs. */
-+int evsel__disable_cpu(struct evsel *evsel, int cpu)
-+{
-+	return perf_evsel__disable_cpu(&evsel->core, cpu);
-+}
-+
- int evsel__disable(struct evsel *evsel)
- {
- 	int err = perf_evsel__disable(&evsel->core);
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index c8af4bc23f8f..dc14f4a823cd 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -222,8 +222,10 @@ int perf_evsel__set_filter(struct evsel *evsel, const char *filter);
- int perf_evsel__append_tp_filter(struct evsel *evsel, const char *filter);
- int perf_evsel__append_addr_filter(struct evsel *evsel,
- 				   const char *filter);
-+int evsel__enable_cpu(struct evsel *evsel, int cpu);
- int evsel__enable(struct evsel *evsel);
- int evsel__disable(struct evsel *evsel);
-+int evsel__disable_cpu(struct evsel *evsel, int cpu);
- 
- int perf_evsel__open_per_cpu(struct evsel *evsel,
- 			     struct perf_cpu_map *cpus,
--- 
-2.23.0
+On a large test case (>700 events with many weak groups) on a 94 CPU
+system I go from
+
+real	0m8.607s
+user	0m0.550s
+sys	0m8.041s
+
+to 
+
+real	0m3.269s
+user	0m0.760s
+sys	0m1.694s
+
+so shaving ~6 seconds of system time, at slightly more cost
+in perf stat itself. On a 4 socket system the savings
+are more dramatic:
+
+real	0m15.641s
+user	0m0.873s
+sys	0m14.729s
+
+to 
+
+real	0m4.493s
+user	0m1.578s
+sys	0m2.444s
+
+so 11s difference in the user visible set up time.
+
+Also available in 
+
+git://git.kernel.org/pub/scm/linux/kernel/git/ak/linux-misc perf/stat-scale-11
+
+v1: Initial post.
+v2: Rebase. Fix some minor issues.
+v3: Rebase. Address review feedback. Fix one minor issue
+v4: Modified based on review feedback. Now it maintains
+all_cpus per evlist. There is still a need for cpu_index iteration
+to get the correct index for indexing the file descriptors.
+Fix bug with unsorted cpu maps, now they are always sorted.
+Some cleanups and refactoring.
+v5: Split patches. Redo loop iteration again. Fix cpu map
+merging for uncore. Remove duplicates from cpumaps. Add unit
+tests.
+v6: Address review feedback. Fix some bugs. Add more comments.
+Merge one invalid patch split.
+v7: Address review feedback. Fix python scripting (thanks 0day)
+Minor updates.
+v8: Address review feedback.
+
+-Andi
 
