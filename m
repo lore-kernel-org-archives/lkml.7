@@ -2,293 +2,220 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 537E6C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 09:53:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD7A9C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 09:53:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17B94204FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 09:53:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BB782068D
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 09:53:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="u65R19sz"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SxVFKQkA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726593AbfKUJxM (ORCPT
+        id S1726658AbfKUJxj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 04:53:12 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:30330 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726165AbfKUJxL (ORCPT
+        Thu, 21 Nov 2019 04:53:39 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:34179 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726132AbfKUJxj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 04:53:11 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAL9lSHh027654;
-        Thu, 21 Nov 2019 10:53:00 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=WbtwwDT3nWx9hLJ3/dJjwMMjxpPXL7VD+gsWmcpdC3o=;
- b=u65R19szElJQq90oIOlasfp8pyb/ecYhA3tO1KIU2If2FEjhqsexava9kMOAzzmRIGpx
- OAn1Uq0JKDpBlhx5Y5vY6aArNkQS7IK/DtIvA0Qx7a4uQJoB25g2MOGH8Lcq8sfA/7M0
- guW8TEEmQ8ZkTbyR2P3Glz4mXq9GTb9w0ALH5recdW8FjkZu+MDBGFmlJNHSoFZfCfHh
- 2orZHscb7Y7EcfJmzx+mu1tZbEXUI02T8kLx+grudI5jZAQ5L8XXqsMlJZ2AmVAy37sR
- d7Tt98kcMSFbO/FF8gFHr+bCz6IT4cm2G30KVOI2MNpJLT5H7l8Zc5sUFmHd1bfLm4nR 7w== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2wa9ujagqw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 21 Nov 2019 10:53:00 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 5BF3E100039;
-        Thu, 21 Nov 2019 10:52:58 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 4C1C92B05D9;
-        Thu, 21 Nov 2019 10:52:58 +0100 (CET)
-Received: from localhost (10.75.127.44) by SFHDAG3NODE1.st.com (10.75.127.7)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 21 Nov 2019 10:52:57
- +0100
-From:   Arnaud Pouliquen <arnaud.pouliquen@st.com>
-To:     Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>
-CC:     <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Fabien Dessenne <fabien.dessenne@st.com>,
-        Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Subject: [PATCH v2] dt-bindings: remoteproc: convert stm32-rproc to json-schema
-Date:   Thu, 21 Nov 2019 10:52:25 +0100
-Message-ID: <20191121095225.26775-1-arnaud.pouliquen@st.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 21 Nov 2019 04:53:39 -0500
+Received: by mail-pf1-f194.google.com with SMTP id n13so1414857pff.1;
+        Thu, 21 Nov 2019 01:53:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=24Z96VAL0Kc1Ory+ij+teunstFq8Wsss9gha+iAZp1A=;
+        b=SxVFKQkA5BaDYF5mJppd2hlZ80wgUKapnXzXhrBilpXnOlr/xCwU7vE//ig32zOceT
+         XtkpMORvWROG5o5fl2D0BxBXRGBggHSUcpa95yRaTuABLqdLLXrzbyKJaQ56WlmFBceL
+         xMPA2xpH+pkOrZSCtgbJISkyeOH56yfseOr377m00McqQbJObdmbdGgXfByGUef1uekX
+         dGxqugCdAm2UnNFD7svyX4IVhZ40X7dISw1a+6mYfDxmD55B1fcPuW1OmCzbZDTpphNo
+         Xq6lm2EXq6CMlY4Zp4SNk/A0YnWCV2Q6/dn3UCeQG0veNqkGUAsErHvJGaqxws4Y6xYW
+         /bYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=24Z96VAL0Kc1Ory+ij+teunstFq8Wsss9gha+iAZp1A=;
+        b=AGbFZa9djw9Z8QqKQ1JWTmV+wjqkaJdbCt6ijv2/QI5Hp8sxfT+IMogCWd0v8wHwzr
+         eeuzk08QSU0DzYUeFaButNXE0pw2qGFLPyFmdvJu7RKGRoG2O/VxiNUld9lMaO9BzBwK
+         7aAXxD2/zn2thfBoZVRc1hw9fp7JucGNV6wgbdiiNpUyAvop6xU6qd6ZjYNGxN/ZJ0cE
+         KViLek0cvbuyUUSE5ForAsmU84ginjLwmQC5AhRecTyuopHw1zgj1dj4uGsG2UffOAVy
+         /jd9Cwjjo8/Qwky79BOjU1MwxsEQN2y0OBu/+1V2dZ9BC0dcBR6thfp+3WFGtbH3nl8X
+         7gpA==
+X-Gm-Message-State: APjAAAXawnDI3bM0c7UBeABW/YYJZeYDIhrTAVzmxr1flhmXtuo37v2w
+        QOg50LnxxySfYPsfgBiyuw9JI/Cx
+X-Google-Smtp-Source: APXvYqyQQtJCGLeNZ9QIHYtWJHPoYAV8WyiiJMmXgLDMcQgxIw+iZZPKs0Mi17aWOTVD3zHS2LO3Lg==
+X-Received: by 2002:a62:174b:: with SMTP id 72mr8853102pfx.179.1574330017805;
+        Thu, 21 Nov 2019 01:53:37 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id e17sm2655360pfh.121.2019.11.21.01.53.36
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 21 Nov 2019 01:53:36 -0800 (PST)
+Subject: Re: [PATCH 1/1] drivers: watchdog: stm32_iwdg: set WDOG_HW_RUNNING at
+ probe
+To:     Christophe Roullier <christophe.roullier@st.com>,
+        wim@linux-watchdog.org, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com
+Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+References: <20191121082813.29267-1-christophe.roullier@st.com>
+ <20191121082813.29267-2-christophe.roullier@st.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <ce10681c-8fa3-0fa6-3509-376a2f37aec9@roeck-us.net>
+Date:   Thu, 21 Nov 2019 01:53:35 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG6NODE2.st.com (10.75.127.17) To SFHDAG3NODE1.st.com
- (10.75.127.7)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-21_01:2019-11-21,2019-11-21 signatures=0
+In-Reply-To: <20191121082813.29267-2-christophe.roullier@st.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the STM32 remoteproc bindings to DT schema format using
-json-schema
+On 11/21/19 12:28 AM, Christophe Roullier wrote:
+> If the watchdog hardware is already enabled during the boot process,
+> when the Linux watchdog driver loads, it should reset the watchdog and
+> tell the watchdog framework. As a result, ping can be generated from
+> the watchdog framework (if CONFIG_WATCHDOG_HANDLE_BOOT_ENABLED is set),
+> until the userspace watchdog daemon takes over control
+> 
 
-Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
----
- .../bindings/remoteproc/st,stm32-rproc.yaml   | 131 ++++++++++++++++++
- .../bindings/remoteproc/stm32-rproc.txt       |  63 ---------
- 2 files changed, 131 insertions(+), 63 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/remoteproc/st,stm32-rproc.yaml
- delete mode 100644 Documentation/devicetree/bindings/remoteproc/stm32-rproc.txt
+This is not what the code is doing. It sets the WDOG_HW_RUNNING flag
+unconditionally, no matter if the watchdog is already running or not.
+It also changes the semantic of the rest of the code, as well as
+functionality. The code in start_timeout no longer waits, and the ping
+code explicitly (re-)enables the watchdog.
 
-diff --git a/Documentation/devicetree/bindings/remoteproc/st,stm32-rproc.yaml b/Documentation/devicetree/bindings/remoteproc/st,stm32-rproc.yaml
-new file mode 100644
-index 000000000000..13c2d06c2e0f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/remoteproc/st,stm32-rproc.yaml
-@@ -0,0 +1,131 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/remoteproc/st,stm32-rproc.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: STMicroelectronics STM32 remote processor controller bindings
-+
-+description:
-+  This document defines the binding for the remoteproc component that loads and
-+  boots firmwares on the ST32MP family chipset.
-+
-+maintainers:
-+  - Fabien Dessenne <fabien.dessenne@st.com>
-+  - Arnaud Pouliquen <arnaud.pouliquen@st.com>
-+
-+
-+allOf:
-+  - $ref: /schemas/mbox/mbox-consumer.yaml#
-+
-+properties:
-+  compatible:
-+    const: st,stm32mp1-m4
-+
-+  reg:
-+    description:
-+      Address ranges of the RETRAM and MCU SRAM memories used by the remote
-+      processor.
-+    maxItems: 3
-+
-+  resets:
-+     maxItems: 1
-+
-+  st,syscfg-holdboot:
-+    allOf:
-+      - $ref: "/schemas/types.yaml#/definitions/phandle-array"
-+    description: remote processor reset hold boot
-+      - Phandle of syscon block.
-+      - The offset of the hold boot setting register.
-+      - The field mask of the hold boot.
-+    maxItems: 1
-+
-+  st,syscfg-tz:
-+    allOf:
-+      - $ref: "/schemas/types.yaml#/definitions/phandle-array"
-+    description:
-+      Reference to the system configuration which holds the RCC trust zone mode
-+      - Phandle of syscon block.
-+      - The offset of the RCC trust zone mode register.
-+      - The field mask of the RCC trust zone mode.
-+    maxItems: 1
-+
-+  interrupts:
-+    description: Should contain the WWDG1 watchdog reset interrupt
-+    maxItems: 1
-+
-+  mboxes:
-+    description:
-+      This property is required only if the rpmsg/virtio functionality is used.
-+    items:
-+      - description: |
-+          A channel (a) used to communicate through virtqueues with the
-+          remote proc.
-+          Bi-directional channel:
-+            - from local to remote = send message
-+            - from remote to local = send message ack
-+      - description: |
-+          A channel (b) working the opposite direction of channel (a)
-+      - description: |
-+          A channel (c) used by the local proc to notify the remote proc that it
-+          is about to be shut down.
-+          Unidirectional channel:
-+            - from local to remote, where ACK from the remote means that it is
-+              ready for shutdown
-+    maxItems: 3
-+
-+  mbox-names:
-+    items:
-+      - const: vq0
-+      - const: vq1
-+      - const: shutdown
-+    minItems: 1
-+    maxItems: 3
-+
-+  memory-region:
-+    description:
-+      List of phandles to the reserved memory regions associated with the
-+      remoteproc device. This is variable and describes the memories shared with
-+      the remote processor (e.g. remoteproc firmware and carveouts, rpmsg
-+      vrings, ...).
-+      (see ../reserved-memory/reserved-memory.txt)
-+
-+  st,syscfg-pdds:
-+    allOf:
-+      - $ref: "/schemas/types.yaml#/definitions/phandle-array"
-+    description: |
-+      Reference to the system configuration which holds the remote
-+        1st cell: phandle to syscon block
-+        2nd cell: register offset containing the deep sleep setting
-+        3rd cell: register bitmask for the deep sleep bit
-+    maxItems: 1
-+
-+  st,auto-boot:
-+    $ref: /schemas/types.yaml#/definitions/flag
-+    description:
-+      If defined, when remoteproc is probed, it loads the default firmware and
-+      starts the remote processor.
-+
-+required:
-+  - compatible
-+  - reg
-+  - resets
-+  - st,syscfg-holdboot
-+  - st,syscfg-tz
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/reset/stm32mp1-resets.h>
-+    m4_rproc: m4@10000000 {
-+      compatible = "st,stm32mp1-m4";
-+      reg = <0x10000000 0x40000>,
-+            <0x30000000 0x40000>,
-+            <0x38000000 0x10000>;
-+      resets = <&rcc MCU_R>;
-+      st,syscfg-holdboot = <&rcc 0x10C 0x1>;
-+      st,syscfg-tz = <&rcc 0x000 0x1>;
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/remoteproc/stm32-rproc.txt b/Documentation/devicetree/bindings/remoteproc/stm32-rproc.txt
-deleted file mode 100644
-index 5fa915a4b736..000000000000
---- a/Documentation/devicetree/bindings/remoteproc/stm32-rproc.txt
-+++ /dev/null
-@@ -1,63 +0,0 @@
--STMicroelectronics STM32 Remoteproc
-------------------------------------
--This document defines the binding for the remoteproc component that loads and
--boots firmwares on the ST32MP family chipset.
--
--Required properties:
--- compatible:	Must be "st,stm32mp1-m4"
--- reg:		Address ranges of the RETRAM and MCU SRAM memories used by the
--		remote processor.
--- resets:	Reference to a reset controller asserting the remote processor.
--- st,syscfg-holdboot: Reference to the system configuration which holds the
--		remote processor reset hold boot
--	1st cell: phandle of syscon block
--	2nd cell: register offset containing the hold boot setting
--	3rd cell: register bitmask for the hold boot field
--- st,syscfg-tz: Reference to the system configuration which holds the RCC trust
--		zone mode
--	1st cell: phandle to syscon block
--	2nd cell: register offset containing the RCC trust zone mode setting
--	3rd cell: register bitmask for the RCC trust zone mode bit
--
--Optional properties:
--- interrupts:	Should contain the watchdog interrupt
--- mboxes:	This property is required only if the rpmsg/virtio functionality
--		is used. List of phandle and mailbox channel specifiers:
--		- a channel (a) used to communicate through virtqueues with the
--		  remote proc.
--		  Bi-directional channel:
--		      - from local to remote = send message
--		      - from remote to local = send message ack
--		- a channel (b) working the opposite direction of channel (a)
--		- a channel (c) used by the local proc to notify the remote proc
--		  that it is about to be shut down.
--		  Unidirectional channel:
--		      - from local to remote, where ACK from the remote means
--		        that it is ready for shutdown
--- mbox-names:	This property is required if the mboxes property is used.
--		- must be "vq0" for channel (a)
--		- must be "vq1" for channel (b)
--		- must be "shutdown" for channel (c)
--- memory-region: List of phandles to the reserved memory regions associated with
--		the remoteproc device. This is variable and describes the
--		memories shared with the remote processor (eg: remoteproc
--		firmware and carveouts, rpmsg vrings, ...).
--		(see ../reserved-memory/reserved-memory.txt)
--- st,syscfg-pdds: Reference to the system configuration which holds the remote
--		processor deep sleep setting
--	1st cell: phandle to syscon block
--	2nd cell: register offset containing the deep sleep setting
--	3rd cell: register bitmask for the deep sleep bit
--- st,auto-boot:	If defined, when remoteproc is probed, it loads the default
--		firmware and starts the remote processor.
--
--Example:
--	m4_rproc: m4@10000000 {
--		compatible = "st,stm32mp1-m4";
--		reg = <0x10000000 0x40000>,
--		      <0x30000000 0x40000>,
--		      <0x38000000 0x10000>;
--		resets = <&rcc MCU_R>;
--		st,syscfg-holdboot = <&rcc 0x10C 0x1>;
--		st,syscfg-tz = <&rcc 0x000 0x1>;
--	};
--- 
-2.17.1
+If you want an option to start the watchdog at probe time unconditionally,
+please add a module parameter to do it. Otherwise you'll need to check if
+it is indeed enabled before setting WDOG_HW_RUNNING, and in that case it
+should not be necessary to re-enable it. It should also not be necessary
+to split the start function.
+
+Thanks,
+Guenter
+
+> Fixes:4332d113c66a ("watchdog: Add STM32 IWDG driver")
+> Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
+> ---
+>   drivers/watchdog/stm32_iwdg.c | 57 ++++++++++++++++++++++++-----------
+>   1 file changed, 40 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/watchdog/stm32_iwdg.c b/drivers/watchdog/stm32_iwdg.c
+> index a3a329011a06..2b3be3b1c15b 100644
+> --- a/drivers/watchdog/stm32_iwdg.c
+> +++ b/drivers/watchdog/stm32_iwdg.c
+> @@ -87,8 +87,23 @@ static inline void reg_write(void __iomem *base, u32 reg, u32 val)
+>   static int stm32_iwdg_start(struct watchdog_device *wdd)
+>   {
+>   	struct stm32_iwdg *wdt = watchdog_get_drvdata(wdd);
+> -	u32 tout, presc, iwdg_rlr, iwdg_pr, iwdg_sr;
+> -	int ret;
+> +
+> +	dev_dbg(wdd->parent, "%s\n", __func__);
+> +
+> +	/*  Start the watchdog */
+> +	reg_write(wdt->regs, IWDG_KR, KR_KEY_ENABLE);
+> +
+> +	/* reload watchdog */
+> +	reg_write(wdt->regs, IWDG_KR, KR_KEY_RELOAD);
+> +
+> +	set_bit(WDOG_HW_RUNNING, &wdd->status);
+> +	return 0;
+> +}
+> +
+> +static int stm32_iwdg_setprescaler(struct watchdog_device *wdd)
+> +{
+> +	struct stm32_iwdg *wdt = watchdog_get_drvdata(wdd);
+> +	u32 tout, presc, iwdg_rlr, iwdg_pr;
+>   
+>   	dev_dbg(wdd->parent, "%s\n", __func__);
+>   
+> @@ -108,19 +123,6 @@ static int stm32_iwdg_start(struct watchdog_device *wdd)
+>   	/* set prescaler & reload registers */
+>   	reg_write(wdt->regs, IWDG_PR, iwdg_pr);
+>   	reg_write(wdt->regs, IWDG_RLR, iwdg_rlr);
+> -	reg_write(wdt->regs, IWDG_KR, KR_KEY_ENABLE);
+> -
+> -	/* wait for the registers to be updated (max 100ms) */
+> -	ret = readl_relaxed_poll_timeout(wdt->regs + IWDG_SR, iwdg_sr,
+> -					 !(iwdg_sr & (SR_PVU | SR_RVU)),
+> -					 SLEEP_US, TIMEOUT_US);
+> -	if (ret) {
+> -		dev_err(wdd->parent, "Fail to set prescaler, reload regs\n");
+> -		return ret;
+> -	}
+> -
+> -	/* reload watchdog */
+> -	reg_write(wdt->regs, IWDG_KR, KR_KEY_RELOAD);
+>   
+>   	return 0;
+>   }
+> @@ -131,6 +133,9 @@ static int stm32_iwdg_ping(struct watchdog_device *wdd)
+>   
+>   	dev_dbg(wdd->parent, "%s\n", __func__);
+>   
+> +	/*  Start the watchdog */
+> +	reg_write(wdt->regs, IWDG_KR, KR_KEY_ENABLE);
+> +
+>   	/* reload watchdog */
+>   	reg_write(wdt->regs, IWDG_KR, KR_KEY_RELOAD);
+>   
+> @@ -140,12 +145,21 @@ static int stm32_iwdg_ping(struct watchdog_device *wdd)
+>   static int stm32_iwdg_set_timeout(struct watchdog_device *wdd,
+>   				  unsigned int timeout)
+>   {
+> +	int ret;
+> +
+>   	dev_dbg(wdd->parent, "%s timeout: %d sec\n", __func__, timeout);
+>   
+>   	wdd->timeout = timeout;
+>   
+> -	if (watchdog_active(wdd))
+> -		return stm32_iwdg_start(wdd);
+> +	if (watchdog_active(wdd)) {
+> +		ret = stm32_iwdg_setprescaler(wdd);
+> +		if (ret) {
+> +			dev_err(wdd->parent, "failed to set prescaler\n");
+> +			return ret;
+> +		} else {
+> +			return stm32_iwdg_start(wdd);
+> +		}
+> +	}
+>   
+>   	return 0;
+>   }
+> @@ -262,12 +276,21 @@ static int stm32_iwdg_probe(struct platform_device *pdev)
+>   	watchdog_set_nowayout(wdd, WATCHDOG_NOWAYOUT);
+>   	watchdog_init_timeout(wdd, 0, dev);
+>   
+> +	/* Make sure the watchdog is serviced */
+> +	set_bit(WDOG_HW_RUNNING, &wdd->status);
+> +
+>   	ret = devm_watchdog_register_device(dev, wdd);
+>   	if (ret)
+>   		return ret;
+>   
+>   	platform_set_drvdata(pdev, wdt);
+>   
+> +	ret = stm32_iwdg_setprescaler(wdd);
+> +	if (ret) {
+> +		dev_err(dev, "failed to set prescaler\n");
+> +		return ret;
+> +	}
+> +
+>   	return 0;
+>   }
+>   
+> 
 
