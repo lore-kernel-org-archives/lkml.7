@@ -2,211 +2,128 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCD59C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:55:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8CCEC43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:55:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BD55206CC
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:55:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1613206CC
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:55:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WkEf5jcq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WU+cjX6P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbfKUQzA (ORCPT
+        id S1727184AbfKUQz2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 11:55:00 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:34269 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726279AbfKUQzA (ORCPT
+        Thu, 21 Nov 2019 11:55:28 -0500
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:47061 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726541AbfKUQz2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 11:55:00 -0500
-Received: by mail-qt1-f196.google.com with SMTP id i17so4460725qtq.1;
-        Thu, 21 Nov 2019 08:54:59 -0800 (PST)
+        Thu, 21 Nov 2019 11:55:28 -0500
+Received: by mail-yw1-f66.google.com with SMTP id i2so1442338ywg.13;
+        Thu, 21 Nov 2019 08:55:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=FTi7Dvg/d0dXm7xuFygWnPv5XbbIL8YDOlUOqtHAZRA=;
-        b=WkEf5jcqS8zxRM9xUmSno444pUXfkVM6nWtzbblogn4kR7zBQ11SzgjmNfk6Xyk4Kh
-         AzZZ5sRpze5v2FtJw8Zd5phltv2mzwd4dH2Oa0IRMVLfwylXfP3HVlA0SIcHA32/Wxai
-         7JIP8+kswZRVSjf8EIIStfboZYf/JpdBk9HAE/+Lwftshy1+Kvg7n/s3k2MCaydU1zny
-         tTwqmHTmAhVcKzIbpbzkBmlkIe7gsDD0xmRVFqy6MrzSNtajvgBRLOEC0qGjd5uzmmXE
-         o7RaeBzWJxHkUKVx4Cibwrrg7jgORmZvwTtCb1VYojsnjgEXuBCjaf99dfAyufhx0jEW
-         1+sA==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Wk5v7/X0jZcqwNwgZ9ExtYiD+9LZHDYkMo+MHCqNDlo=;
+        b=WU+cjX6PryvO660Dp27hixmMkHdbCRIqjno76TmdHV7r6IuoyDmFaqhHZkTInoHYrF
+         JpLn/zeD/HBavn8FzJbei5PE0ebQ8/QaFrPqWk966nVfzytXFqiatk8WQjirJBIIBBF6
+         I+vpnXXPljS702Z9/vKwWn0us+Rpw6sRRWaob7JDTzLVrLmMuir6hPpq4ksvufVzEmlv
+         7gLpToB17jQ3v/8pCqWOnCyZO5vT+ssAp1qvCGS8c6MH15WvBJRr4Yu6qlHHbDeUKIcH
+         hrmsBEwMGpcGbHgJAtLaWrFhEOB6xLYcFgS+qWkgnO3OsTbagyO7R4cUYOIIPV2bYD/F
+         FGlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=FTi7Dvg/d0dXm7xuFygWnPv5XbbIL8YDOlUOqtHAZRA=;
-        b=kbYrkSu62svS41A9t8C/EAw7MAMg9Z1jFh7OdKkNBFKZxcM/YIWsT0yQ9kdXOItx6S
-         Mx7V4Dw4zaw/EkSXdCJNArnsaftQ/APkUEwaom2hXBvYzwnCoQZKToPthd/e7s2LxUbP
-         fSAdw/hrTtYxKuVQrqbBVjONpFTNCcNvJTZmU7jW+gQ8+3HhbLC5ydm1/aGVHrSLXx4F
-         fEW0VT+FAXw2xPSgGgZHuAEilYfEb1JSlX6zdQunPnz05ybCnceW7NOGP8nq1iuEJL4d
-         q8Ct/PS9BsYi40bXb0ITdqwGHteqdgP3bQe+pEyj4MBYrW43R+yQ4CG/tuJxnl91Xnrz
-         QDlA==
-X-Gm-Message-State: APjAAAXmLCOeCAAvIcAg7gXaF5uN5T+r3fZ6S/sHX4sXiJlH67s9AaUc
-        6QP3hYPTqmnpLIY26DkT4Q==
-X-Google-Smtp-Source: APXvYqy7G4H3+ldsE0l+ou4E9ikRKJclTXReeBsg5pGLjWBFRTaj+kYv7bzCYzaQTbN5DU1QZLeZBQ==
-X-Received: by 2002:aed:248e:: with SMTP id t14mr9953119qtc.264.1574355298616;
-        Thu, 21 Nov 2019 08:54:58 -0800 (PST)
-Received: from gabell (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id d145sm1616978qkc.120.2019.11.21.08.54.57
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 21 Nov 2019 08:54:57 -0800 (PST)
-Date:   Thu, 21 Nov 2019 11:54:51 -0500
-From:   Masayoshi Mizuma <msys.mizuma@gmail.com>
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-efi@vger.kernel.org
-Cc:     Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
-        linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
-        d.hatayama@fujitsu.com
-Subject: Re: [RFC PATCH v2] efi: arm64: Introduce
- /sys/firmware/efi/memreserve to tell the persistent pages
-Message-ID: <20191121165451.ddc4e7rz5swvoirc@gabell>
-References: <20191114161019.8735-1-msys.mizuma@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Wk5v7/X0jZcqwNwgZ9ExtYiD+9LZHDYkMo+MHCqNDlo=;
+        b=C3pUs9b8cG8JMGuWbnGxLI7fzuz2fOd8iDZ+0O17Oc2KCVG0kam1JspMB+GaOI+dN7
+         FO54XdsJ1SY+1Q7bpCfbbG0j1UcA/kHywFI/Vdqgqlc30t3A77TzJsfSuBw6WNVHlNsr
+         q5hiEqRn+QVBOcdXMOf0WWqIC8+lABvDzOygni1EBh+sLVrG7refLngNCMNdA2wX6Q0E
+         JaDDAO8EdsK9AcoL+tO+Q5lhFrqjr+7BMvUUmVy6ApMgt+MgFn8actav7W2ot5nN4Hym
+         0rJpcxxIuw4x4EyPJH8/87SZTQzAz6DWbL5cVC2tA5Hct7/JqtCM+tmXdtLC/XY+sgV5
+         zDqA==
+X-Gm-Message-State: APjAAAXtG8NqT2ig54JARDIftErxVdFoJ7i5jUNj57IJyCCWyEtx6MNu
+        uM94yWv8y5ERb4/kwhb2qxE=
+X-Google-Smtp-Source: APXvYqytyN+7LvfvE4zxeWlee1iRxvOUrdscD+DO7/bs+Xm4INPKtvYH7u58ANm9NzkmLmS6xPUJYw==
+X-Received: by 2002:a0d:d204:: with SMTP id u4mr5836603ywd.199.1574355327542;
+        Thu, 21 Nov 2019 08:55:27 -0800 (PST)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id z14sm962522ywj.74.2019.11.21.08.55.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 21 Nov 2019 08:55:27 -0800 (PST)
+Subject: Re: [PATCH 1/2] of: overlay: fix properties memory leak
+To:     Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        pantelis.antoniou@konsulko.com, robh+dt@kernel.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vincent Whitchurch <rabinv@axis.com>
+References: <20191118132809.30127-1-vincent.whitchurch@axis.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <53898749-ab88-19c3-77e7-6c81a8b0e8ee@gmail.com>
+Date:   Thu, 21 Nov 2019 10:55:26 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191114161019.8735-1-msys.mizuma@gmail.com>
+In-Reply-To: <20191118132809.30127-1-vincent.whitchurch@axis.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 11:10:19AM -0500, Masayoshi Mizuma wrote:
-> From: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
+Hi Vincent,
+
+On 11/18/19 7:28 AM, Vincent Whitchurch wrote:
+> No changeset entries are created for #address-cells and #size-cells
+> properties, but the duplicated properies are never freed.  This results
+> in a memory leak which is detected by kmemleak:
 > 
-> kexec reboot stops in early boot sequence because efi_config_parse_tables()
-> refers garbage data. We can see the log with memblock=debug kernel option:
+>  unreferenced object 0x85887180 (size 64):
+>    backtrace:
+>      kmem_cache_alloc_trace+0x1fb/0x1fc
+>      __of_prop_dup+0x25/0x7c
+>      add_changeset_property+0x17f/0x370
+>      build_changeset_next_level+0x29/0x20c
+>      of_overlay_fdt_apply+0x32b/0x6b4
+>      ...
 > 
->   efi:  ACPI 2.0=0x9821790014  PROP=0x8757f5c0  SMBIOS 3.0=0x9820740000  MEMRESERVE=0x9820bfdc58
->   memblock_reserve: [0x0000009820bfdc58-0x0000009820bfdc67] efi_config_parse_tables+0x228/0x278
->   memblock_reserve: [0x0000000082760000-0x00000000324d07ff] efi_config_parse_tables+0x228/0x278
->   memblock_reserve: [0xcc4f84ecc0511670-0x5f6e5214a7fd91f9] efi_config_parse_tables+0x244/0x278
->   memblock_reserve: [0xd2fd4144b9af693d-0xad0c1db1086f40a2] efi_config_parse_tables+0x244/0x278
->   memblock_reserve: [0x0c719bb159b1fadc-0x5aa6e62a1417ce12] efi_config_parse_tables+0x244/0x278
->   ...
-> 
-> That happens because 0x82760000, struct linux_efi_memreserve, is destroyed.
-> 0x82760000 is pointed from efi.mem_reseve, and efi.mem_reserve points the
-> head page of LPI pending table and LPI property table which are allocated by
-> gic_reserve_range().
-> 
-> The destroyer is kexec. kexec locates the initrd to the area:
-> 
->   ]# kexec -d -l /boot/vmlinuz-5.4.0-rc7 /boot/initramfs-5.4.0-rc7.img --reuse-cmdline
->   ...
->   initrd: base 82290000, size 388dd8ah (59301258)
->   ...
-> 
-> From dynamic debug log. initrd is located in segment[1]:
->   machine_kexec_prepare:70:
->     kexec kimage info:
->       type:        0
->       start:       85b30680
->       head:        0
->       nr_segments: 4
->         segment[0]: 0000000080480000 - 0000000082290000, 0x1e10000 bytes, 481 pages
->         segment[1]: 0000000082290000 - 0000000085b20000, 0x3890000 bytes, 905 pages
->         segment[2]: 0000000085b20000 - 0000000085b30000, 0x10000 bytes, 1 pages
->         segment[3]: 0000000085b30000 - 0000000085b40000, 0x10000 bytes, 1 pages
-> 
-> kexec searches the memory region to locate initrd through
-> "System RAM" in /proc/iomem. The pending tables are included in
-> "System RAM" because they are allocated by alloc_pages(), so kexec
-> destroys the LPI pending tables.
-> 
-> Introduce /sys/firmware/efi/memreserve to tell the pages pointed by
-> efi.mem_reserve so that kexec can avoid the area to locate initrd.
-> 
-> Signed-off-by: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
+> Fixes: 6f75118800acf77f8 ("of: overlay: validate overlay properties #address-cells and #size-cells")
+> Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
 > ---
->  drivers/firmware/efi/efi.c | 41 +++++++++++++++++++++++++++++++++++++-
->  1 file changed, 40 insertions(+), 1 deletion(-)
+>  drivers/of/overlay.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-> index 0b6b0c19a..07812d697 100644
-> --- a/drivers/firmware/efi/efi.c
-> +++ b/drivers/firmware/efi/efi.c
-> @@ -149,6 +149,45 @@ static ssize_t systab_show(struct kobject *kobj,
+> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+> index c423e94baf0f..5f8869e2a8b3 100644
+> --- a/drivers/of/overlay.c
+> +++ b/drivers/of/overlay.c
+> @@ -360,7 +360,7 @@ static int add_changeset_property(struct overlay_changeset *ovcs,
+>  		pr_err("WARNING: memory leak will occur if overlay removed, property: %pOF/%s\n",
+>  		       target->np, new_prop->name);
 >  
->  static struct kobj_attribute efi_attr_systab = __ATTR_RO_MODE(systab, 0400);
->  
-> +static struct linux_efi_memreserve *efi_memreserve_root __ro_after_init;
-
-> +static ssize_t memreserve_show(struct kobject *kobj,
-> +			   struct kobj_attribute *attr, char *buf)
-> +{
-> +	struct linux_efi_memreserve *rsv;
-> +	phys_addr_t start, end;
-> +	unsigned long prsv;
-> +	char *str = buf;
-> +	int count, i;
-> +
-> +	if (!kobj || !buf)
-> +		return -EINVAL;
-> +
-> +	if ((efi_memreserve_root == (void *)ULONG_MAX) ||
-> +			(!efi_memreserve_root))
-> +		return -ENODEV;
-> +
-> +	for (prsv = efi_memreserve_root->next; prsv; prsv = rsv->next) {
-> +		rsv = memremap(prsv, sizeof(*rsv), MEMREMAP_WB);
-> +		if (!rsv) {
-> +			pr_err("Could not map efi_memreserve\n");
-> +			return -ENOMEM;
-> +		}
-> +		count = atomic_read(&rsv->count);
-> +		for (i = 0; i < count; i++) {
-> +			start = rsv->entry[i].base;
-> +			end = start + rsv->entry[i].size - 1;
-> +
-> +			str += sprintf(str, "%pa-%pa\n", &start, &end);
-> +		}
-> +		memunmap(rsv);
-> +	}
-> +
-> +	return str - buf;
-> +}
-> +
-> +static struct kobj_attribute efi_attr_memreserve =
-> +			__ATTR_RO_MODE(memreserve, 0444);
-> +
-
-I think it's better to put above between #ifdef CONFIG_KEXEC and #endif
-because it's useful for only kexec...
-
->  #define EFI_FIELD(var) efi.var
->  
->  #define EFI_ATTR_SHOW(name) \
-> @@ -180,6 +219,7 @@ static struct attribute *efi_subsys_attrs[] = {
->  	&efi_attr_runtime.attr,
->  	&efi_attr_config_table.attr,
->  	&efi_attr_fw_platform_size.attr,
-
-> +	&efi_attr_memreserve.attr,
-
-Same as.
-I'll post the patch to change above and will remove the RFC.
-
-Thanks,
-Masa
-
->  	NULL,
->  };
->  
-> @@ -964,7 +1004,6 @@ int efi_status_to_err(efi_status_t status)
->  }
->  
->  static DEFINE_SPINLOCK(efi_mem_reserve_persistent_lock);
-> -static struct linux_efi_memreserve *efi_memreserve_root __ro_after_init;
->  
->  static int __init efi_memreserve_map_root(void)
->  {
-> -- 
-> 2.21.0
+> -	if (ret) {
+> +	if (ret || !check_for_non_overlay_node) {
+>  		kfree(new_prop->name);
+>  		kfree(new_prop->value);
+>  		kfree(new_prop);
 > 
+
+Thanks for finding and proposing a fix for the memory leak.
+
+The proposed patch conveniently uses check_for_non_overlay_node
+which leads to a nice small patch.  But ends up adding an
+additional hidden meaning to the variable, resulting in more
+fragile code.
+
+I will propose a different solution and ask you to test it
+to make sure it also solves the memory leak.
+
+-Frank
