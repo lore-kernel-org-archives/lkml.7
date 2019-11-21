@@ -2,92 +2,107 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 059C0C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:37:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28060C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:38:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1F972088F
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:37:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F40AA20714
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:38:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Lxe4g4Wv"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AlMs0mLP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbfKUKhl (ORCPT
+        id S1726905AbfKUKiT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 05:37:41 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:40430 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726293AbfKUKhk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 05:37:40 -0500
-Received: from zn.tnic (p200300EC2F0F07006553A4184595DC73.dip0.t-ipconnect.de [IPv6:2003:ec:2f0f:700:6553:a418:4595:dc73])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 56EAC1EC0CE8;
-        Thu, 21 Nov 2019 11:37:39 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1574332659;
+        Thu, 21 Nov 2019 05:38:19 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:33638 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726132AbfKUKiS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 05:38:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574332697;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=my9hQkLlPxW1AW3Gf6LZ+XTRjwwqHQaGN1kMFbCEOqE=;
-        b=Lxe4g4WvUvDvhj0e3y9i6X8rFEb/ZwgPwWLV+22CCGmthpcg/8F/AGemWTGZt97D+ZJisu
-        TMqjdV8iM/oD7CTpIkXqMARMwe9RztOmT93qV8yoK1AXPakLeaa+VWzXLDzvnkz0KQNuR5
-        kbkg6ZBgj+DmK0a7/3FeZqgyjFAlQaY=
-Date:   Thu, 21 Nov 2019 11:37:32 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>, dmaengine@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Vinod Koul <vkoul@kernel.org>, Jing Lin <jing.lin@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Dey, Megha" <megha.dey@intel.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, Jens Axboe <axboe@kernel.dk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH RFC 01/14] x86/asm: add iosubmit_cmds512() based on
- movdir64b CPU instruction
-Message-ID: <20191121103732.GA6540@zn.tnic>
-References: <157428480574.36836.14057238306923901253.stgit@djiang5-desk3.ch.intel.com>
- <157428502934.36836.8119026517510193201.stgit@djiang5-desk3.ch.intel.com>
- <20191120215338.GN2634@zn.tnic>
- <20191120231923.GA32680@agluck-desk2.amr.corp.intel.com>
- <20191120232645.GO2634@zn.tnic>
- <CAPcyv4gngO04iWuKu2_DV4_AXw5yssd6njTNKF=eKk+YJw3AfQ@mail.gmail.com>
- <alpine.DEB.2.21.1911210151590.29534@nanos.tec.linutronix.de>
- <CAPcyv4iSv893n_gri+SC42Wcsr8EOGJfuWYUzi3v-fDnGBSriA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4iSv893n_gri+SC42Wcsr8EOGJfuWYUzi3v-fDnGBSriA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+         to:to:cc:cc:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=VhfsdgfnBGFdqQ+uLrLd0ryQWfyJPaQk6Np/gMUhFtg=;
+        b=AlMs0mLPG3tgVK6amhXEELwBkEVJRzamQFS8kAiR9RdmD4oE9UkfgOyTq4zInCe0yOz31d
+        cUy92csFt9/iN0NE4u16VUMqetwzMey/mzFzVmn4jLg3wHddBLNj/Lv8p/mhEdvguuMjmn
+        X5KOZSt0TpBHjFPysqyl+guuNdoCGSc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-21-PqYQGKb9MKe9HMCdYqCfBA-1; Thu, 21 Nov 2019 05:38:14 -0500
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A2BE1107BA9E;
+        Thu, 21 Nov 2019 10:38:12 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-116-67.ams2.redhat.com [10.36.116.67])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 79FD1106F972;
+        Thu, 21 Nov 2019 10:38:08 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id C868DA1E0; Thu, 21 Nov 2019 11:38:07 +0100 (CET)
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     intel-gfx@lists.freedesktop.org, Gerd Hoffmann <kraxel@redhat.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 2/2] drm: share address space for dma bufs
+Date:   Thu, 21 Nov 2019 11:38:07 +0100
+Message-Id: <20191121103807.18424-3-kraxel@redhat.com>
+In-Reply-To: <20191121103807.18424-1-kraxel@redhat.com>
+References: <20191121103807.18424-1-kraxel@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: PqYQGKb9MKe9HMCdYqCfBA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 05:32:51PM -0800, Dan Williams wrote:
-> True, but that would be a driver coding mistake flagged by the
-> WARN_ON_ONCE, and the failure is static. The driver must check for
-> static_cpu_has(X86_FEATURE_MOVDIR64B) once at init,
+Use the shared address space of the drm device (see drm_open() in
+drm_file.c) for dma-bufs too.  That removes a difference betweem drm
+device mmap vmas and dma-buf mmap vmas and fixes corner cases like
+unmaps not working properly.
 
-So if you do that at driver init time, you don't need the static variant
-- simply use boot_cpu_has(). But if this function is going to be used on
-other platforms, then you need the check in the function and it must be
-static_cpu_has() for speed.
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+---
+ drivers/gpu/drm/drm_prime.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-The static_cpu_has() thing is a soft-of once check anyway because it
-gets patched by alternatives and after that it is 0 overhead.
+diff --git a/drivers/gpu/drm/drm_prime.c b/drivers/gpu/drm/drm_prime.c
+index a9633bd241bb..c3fc341453c0 100644
+--- a/drivers/gpu/drm/drm_prime.c
++++ b/drivers/gpu/drm/drm_prime.c
+@@ -240,6 +240,7 @@ void drm_prime_destroy_file_private(struct drm_prime_fi=
+le_private *prime_fpriv)
+ struct dma_buf *drm_gem_dmabuf_export(struct drm_device *dev,
+ =09=09=09=09      struct dma_buf_export_info *exp_info)
+ {
++=09struct drm_gem_object *obj =3D exp_info->priv;
+ =09struct dma_buf *dma_buf;
+=20
+ =09dma_buf =3D dma_buf_export(exp_info);
+@@ -247,7 +248,8 @@ struct dma_buf *drm_gem_dmabuf_export(struct drm_device=
+ *dev,
+ =09=09return dma_buf;
+=20
+ =09drm_dev_get(dev);
+-=09drm_gem_object_get(exp_info->priv);
++=09drm_gem_object_get(obj);
++=09dma_buf->file->f_mapping =3D obj->dev->anon_inode->i_mapping;
+=20
+ =09return dma_buf;
+ }
+--=20
+2.18.1
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
