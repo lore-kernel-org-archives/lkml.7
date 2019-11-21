@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22D5CC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 17:06:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 800A6C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 17:06:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDEA4206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 17:06:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58C4B206CC
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 17:06:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OiGjZ/6H"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H36Ym9ke"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727304AbfKURGO (ORCPT
+        id S1727207AbfKURGA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 12:06:14 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:46692 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727166AbfKURGB (ORCPT
+        Thu, 21 Nov 2019 12:06:00 -0500
+Received: from mail-wm1-f54.google.com ([209.85.128.54]:37930 "EHLO
+        mail-wm1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727166AbfKURF6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 12:06:01 -0500
-Received: by mail-wr1-f66.google.com with SMTP id z7so1927592wrl.13
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 09:06:00 -0800 (PST)
+        Thu, 21 Nov 2019 12:05:58 -0500
+Received: by mail-wm1-f54.google.com with SMTP id z19so4590334wmk.3
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 09:05:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=YC1onaWGjgTiGrUp75mNaoNmZWZWn8ozsG+Lz8zEBxg=;
-        b=OiGjZ/6HgFqifxkfowVtJjQqTqFfdS/ToscQHYZuAZ457wTJBcCYUY+ZlWODG59Bha
-         GghowrjEwvVNEf8bryAhzrQm36CGD+RvjQpy6Z5PWKv5tmhsXmuTJpd2JjpPV6vrC+iv
-         AM7zvsDjFlJY9Pn/ieonZa0PmbpX2NUPvzn+APuOy8HBuOrvBXuevczg+Nh2fLbz+I7R
-         ZxCE148bKqFoPCYxbQ8SCeTh3k9c+/cdJ91DJxX9YjomlnMhaOEEbuE3f4L4HPCgvBxw
-         F1e5g7qgsWnrgyDbPl70cSDThUZ8WFcRBIL4GJ/3erLwkKfg8FAh7oBKe0ebBWEDmVQo
-         petA==
+        bh=XyoLjI/p85FmtU9sQ7uHTafXrtQ51MQgfkvDFnGjUfc=;
+        b=H36Ym9keWbPzJ5lVYh8uv0JYNxaxXo75tGofwCllVhQwj7OG9xKnvGdqaHh0VZdnb9
+         MMRSCIAKpgB4xNLSj3lV2b0YH8jgRE5PA8he+wPCxiAZovM9rYZ2amS3oxNE0L4y6/UJ
+         O0iTxRYugHqAXlLerh05MTpyFowxjiCOHc/C7tOX6HaarHA8tPGZa6CsJTbbYXgL4Lmz
+         aCPwfMJ0/nOt0D2bPTYxLaGB4eBmvCMezudjSSj0gr20jrYJco51sehio+UsMmy4Bi97
+         jGutvRTVG8UB9DVL5yu7lI9m/bMEy7dAQaySfFlxCXJogWj+LgAlp88r1WGA2+/OMJat
+         xQ4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=YC1onaWGjgTiGrUp75mNaoNmZWZWn8ozsG+Lz8zEBxg=;
-        b=P9MQ3s7GxpIaih5su6TL6H/lJ4HmrT88YhS5/27EzWAop28H3xhypEjRl+8voFCgT3
-         FGPSI+ZkNvEZBl/BjUDbiFC4XDqJjLOlY0CK8umhJ9XbwMuy6LO6T1xX1naMgfKNcgg7
-         RUzalxju4YtlHsVe/tpxOUXBNbeFZ2Er21FWT3hhHsvieYpU2QTmZMhRNFQYe2eY170S
-         AJc2CCL01z32HoUvxZjovX0w/oL4h3dlFTVc277Hm9TA83uELwwIJAT4dbcU8r9LtRvC
-         RD82rGGSnFYKHWLIed5JTcpYuf2mnl9qO0tFIRFW1NJnfhp/Cf6FVSaN+gCkDt7tnmIN
-         2jdg==
-X-Gm-Message-State: APjAAAWYLsIoHXvNh5yIik5ajuAtpC8RptdV7QYJ3NnFUD24tVD/v/F9
-        cwGJHcHjiNkgepRE+rWcxkNP0g==
-X-Google-Smtp-Source: APXvYqxxTp8LzEjyKmHdLa9JtltjBFMatq0lqKOl/TmxVgxr67cJZBCxg7paChQjot9qRNj/gCVHQw==
-X-Received: by 2002:adf:edc5:: with SMTP id v5mr12049689wro.322.1574355960208;
-        Thu, 21 Nov 2019 09:06:00 -0800 (PST)
+        bh=XyoLjI/p85FmtU9sQ7uHTafXrtQ51MQgfkvDFnGjUfc=;
+        b=PElOIUfes3VVl5fJvChxVWdu/XyyK/Vvhhi2vLOryflg6eaaO6Rh+bF/bSbK8i5mQD
+         jkSf4cgxUBBuODd2r9Ls2QL8NxJGqUNd7h7ZhoNNVzK+dWX4S7s313YXOZX3m9EipT5j
+         JMTPLqniSB6rqw41jxyXDd7BQUKzNWr2Smg6LBDXVjQS3Md4ZI7Nj3b3kJwQYA9UcSmV
+         tJRIidnLa3XEJCTdJw9V0pdWME+su2oIGP08EHN5vd4MMjEp68wOf2qit8SGpv4KUVG7
+         FW40Qy8X2jkOy0y8v9Kpy7ClheZFO0D283rl/FGHKa/XawIpCbhjda5d2OlUhMwONxq6
+         Lbvw==
+X-Gm-Message-State: APjAAAUIhJRPGVljEP1U4O4ypShcoVS9j8mSqu2gDetWpdP+A1usM0a9
+        2kPF4U3SvvYV3VAUiBiSX2QyvA==
+X-Google-Smtp-Source: APXvYqxEwo8PX1yZ5dMNrtuP1K3nSh9t2jtx/KIyNWa7VtUCekIxRfaZK+K1UUKvfdsSacXI1QqpmA==
+X-Received: by 2002:a1c:e915:: with SMTP id q21mr10405135wmc.148.1574355956834;
+        Thu, 21 Nov 2019 09:05:56 -0800 (PST)
 Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id i71sm4423731wri.68.2019.11.21.09.05.58
+        by smtp.gmail.com with ESMTPSA id i71sm4423731wri.68.2019.11.21.09.05.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Nov 2019 09:05:59 -0800 (PST)
+        Thu, 21 Nov 2019 09:05:56 -0800 (PST)
 From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 To:     robh@kernel.org, broonie@kernel.org, lee.jones@linaro.org,
         linus.walleij@linaro.org
@@ -64,9 +64,9 @@ Cc:     vinod.koul@linaro.org, alsa-devel@alsa-project.org,
         spapothi@codeaurora.org, bgoswami@codeaurora.org,
         linux-gpio@vger.kernel.org,
         Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v4 11/12] ASoC: qcom: dt-bindings: Add compatible for DB845c and Lenovo Yoga
-Date:   Thu, 21 Nov 2019 17:05:08 +0000
-Message-Id: <20191121170509.10579-12-srinivas.kandagatla@linaro.org>
+Subject: [PATCH v4 09/12] dt-bindings: gpio: wcd934x: Add bindings for gpio
+Date:   Thu, 21 Nov 2019 17:05:06 +0000
+Message-Id: <20191121170509.10579-10-srinivas.kandagatla@linaro.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191121170509.10579-1-srinivas.kandagatla@linaro.org>
 References: <20191121170509.10579-1-srinivas.kandagatla@linaro.org>
@@ -77,32 +77,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds compatible strings for DB845c and Lenovo Yoga C630
-soundcard. Based on this compatible strings common machine driver
-will be in better position to setup board specific configuration.
+Qualcomm Technologies Inc WCD9340/WCD9341 Audio Codec has integrated
+gpio controller to control 5 gpios on the chip. This patch adds
+required device tree bindings for it.
 
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Acked-by: Rob Herring <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/sound/qcom,sdm845.txt | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ .../bindings/gpio/qcom,wcd934x-gpio.yaml      | 47 +++++++++++++++++++
+ 1 file changed, 47 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/qcom,wcd934x-gpio.yaml
 
-diff --git a/Documentation/devicetree/bindings/sound/qcom,sdm845.txt b/Documentation/devicetree/bindings/sound/qcom,sdm845.txt
-index 408c4837e6d5..ca8c89e88bfa 100644
---- a/Documentation/devicetree/bindings/sound/qcom,sdm845.txt
-+++ b/Documentation/devicetree/bindings/sound/qcom,sdm845.txt
-@@ -5,7 +5,10 @@ This binding describes the SDM845 sound card, which uses qdsp for audio.
- - compatible:
- 	Usage: required
- 	Value type: <stringlist>
--	Definition: must be "qcom,sdm845-sndcard"
-+	Definition: must be one of this
-+			"qcom,sdm845-sndcard"
-+			"qcom,db845c-sndcard"
-+			"lenovo,yoga-c630-sndcard"
- 
- - audio-routing:
- 	Usage: Optional
+diff --git a/Documentation/devicetree/bindings/gpio/qcom,wcd934x-gpio.yaml b/Documentation/devicetree/bindings/gpio/qcom,wcd934x-gpio.yaml
+new file mode 100644
+index 000000000000..32a566ec3558
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/qcom,wcd934x-gpio.yaml
+@@ -0,0 +1,47 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/gpio/qcom,wcd934x-gpio.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: WCD9340/WCD9341 GPIO controller
++
++maintainers:
++  - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
++
++description: |
++  Qualcomm Technologies Inc WCD9340/WCD9341 Audio Codec has integrated
++  gpio controller to control 5 gpios on the chip.
++
++properties:
++  compatible:
++    enum:
++      - qcom,wcd9340-gpio
++      - qcom,wcd9341-gpio
++
++  reg:
++    maxItems: 1
++
++  gpio-controller: true
++
++  '#gpio-cells':
++    const: 2
++
++required:
++  - compatible
++  - reg
++  - gpio-controller
++  - "#gpio-cells"
++
++additionalProperties: false
++
++examples:
++  - |
++    wcdgpio: gpio@42 {
++        compatible = "qcom,wcd9340-gpio";
++        reg = <0x042 0x2>;
++        gpio-controller;
++        #gpio-cells = <2>;
++    };
++
++...
 -- 
 2.21.0
 
