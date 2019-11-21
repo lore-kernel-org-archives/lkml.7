@@ -2,82 +2,115 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79EAAC43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 05:31:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 438EDC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 05:32:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50A6420898
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 05:31:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 170D320872
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 05:32:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M7BBqQwb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727014AbfKUFbN (ORCPT
+        id S1726975AbfKUFcO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 00:31:13 -0500
-Received: from helcar.hmeau.com ([216.24.177.18]:34578 "EHLO deadmen.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726132AbfKUFbN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 00:31:13 -0500
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1iXf3P-0000vj-W0; Thu, 21 Nov 2019 13:30:56 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1iXf3G-0002bu-Mm; Thu, 21 Nov 2019 13:30:46 +0800
-Date:   Thu, 21 Nov 2019 13:30:46 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Stephen Brennan <stephen@brennan.io>,
-        Matt Mackall <mpm@selenic.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Eric Anholt <eric@anholt.net>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 0/4] Raspberry Pi 4 HWRNG Support
-Message-ID: <20191121053046.coobocevp4uwwugb@gondor.apana.org.au>
-References: <20191120031622.88949-1-stephen@brennan.io>
- <3e78d01f-f7a4-b3c4-4d23-7be7d6ad764d@gmail.com>
+        Thu, 21 Nov 2019 00:32:14 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:37342 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726310AbfKUFcO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 00:32:14 -0500
+Received: by mail-pf1-f195.google.com with SMTP id p24so1072216pfn.4
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 21:32:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=yE3H52ST3bCRAdHmUDzhL/7UmgqQkrfup+4Ir818ZIQ=;
+        b=M7BBqQwbeIa8JPve1L1VxPnrWig2i9WY0ZyJQqNtb4XAMmkDMSCMWoXgsK/BUgwDUG
+         +d9RoKdI2qyNSdaD+nSIAoT7F4oQIUqrWJd/nlez1kwBmCmhxwHQwABfxrJ5IP+wo2Np
+         tAso4ANpMBRdhCbXYBWd9wpXO9r11KzHWL9BoyF9oNUi9p7j3jazmA2qZctVscY3YyDJ
+         GWW/g07xgm2+CEP4ffmAH+DyewVtNhP/yJaOVzOJK5pztvZNrR1n9PqUzwRYF8FWjpFf
+         +nQ0SA77fRXYfHhgPIg2TTZCDsMmEdFh0XpHNs3hB8UFqQTbHJ0EM/l3gY7KwLMyAD30
+         cNtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=yE3H52ST3bCRAdHmUDzhL/7UmgqQkrfup+4Ir818ZIQ=;
+        b=Rr3UNaCMI73CjWAbUfZ5UbP+kALyn8Wty/yDQ7WvM/zoAO5lqrsoYmNj7VWr9ldrwm
+         MTm0oUjfHQPm121J0UJQ4fbftDGhSfqeI6z15y78Zzg/vB25mog85XEUklJ8rlHAhyWs
+         O0S2RHs+uv4iFVgbg6VlASwZ0Ur0giUoBHLYR95pZxqy+zDRHnkNqRmfP3wu3MwNz3U4
+         TR18eUfbeAnifmUiIUpgLhRIqQdORSpee5PxTWk/egHvHSUK4iXkPRixGYLMtH5FxPIh
+         r0OYXuOjOYPLCPkyN7M8dUjiSjchs+c4FX9lwEuebUOvwYtXbhmokxF22T1oklOSjwvY
+         7YUQ==
+X-Gm-Message-State: APjAAAX+9hfwGk5BBslmfEGswNQUkMzYRISnGyExKb1AYiSBN+jOOq39
+        C9w6bv6dQsM2vWmWG1haeHPDvg==
+X-Google-Smtp-Source: APXvYqwNM9dZdansKs8pKoOeaen5b9vqImpjSGgtw89kbCl3/6894oiyg46ElaulgywEwwJJ0Y0fIQ==
+X-Received: by 2002:aa7:8421:: with SMTP id q1mr8754271pfn.174.1574314333119;
+        Wed, 20 Nov 2019 21:32:13 -0800 (PST)
+Received: from localhost ([223.226.74.76])
+        by smtp.gmail.com with ESMTPSA id p16sm1083971pjp.31.2019.11.20.21.32.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 20 Nov 2019 21:32:12 -0800 (PST)
+Date:   Thu, 21 Nov 2019 11:02:07 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, edubezval@gmail.com,
+        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Guillaume La Roque <glaroque@baylibre.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Javi Merino <javi.merino@kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jun Nie <jun.nie@linaro.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>, linux-pm@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 08/11] thermal: samsung: Appease the kernel-doc deity
+Message-ID: <20191121053207.gyulu3vb3caaituv@vireshk-i7>
+References: <cover.1574242756.git.amit.kucheria@linaro.org>
+ <1ded1697c6e5eff11b034b3302b9c79e88fa9c42.1574242756.git.amit.kucheria@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3e78d01f-f7a4-b3c4-4d23-7be7d6ad764d@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <1ded1697c6e5eff11b034b3302b9c79e88fa9c42.1574242756.git.amit.kucheria@linaro.org>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 08:09:57PM -0800, Florian Fainelli wrote:
-> Hi Herbert,
+On 20-11-19, 21:15, Amit Kucheria wrote:
+> Fix up the following warning when compiled with make W=1:
 > 
-> On 11/19/2019 7:16 PM, Stephen Brennan wrote:
-> > This patch series enables support for the HWRNG included on the Raspberry
-> > Pi 4.  It is simply a rebase of Stefan's branch [1]. I went ahead and
-> > tested this out on a Pi 4.  Prior to this patch series, attempting to use
-> > the hwrng gives:
-> > 
-> >     $ head -c 2 /dev/hwrng
-> >     head: /dev/hwrng: Input/output error
-> > 
-> > After this series, the same command gives two random bytes.
+> linux.git/drivers/thermal/samsung/exynos_tmu.c:141: warning: bad
+> line:         driver
+> linux.git/drivers/thermal/samsung/exynos_tmu.c:203: warning: Function
+> parameter or member 'tzd' not described in 'exynos_tmu_data'
+> linux.git/drivers/thermal/samsung/exynos_tmu.c:203: warning: Function
+> parameter or member 'tmu_set_trip_temp' not described in
+> 'exynos_tmu_data'
+> linux.git/drivers/thermal/samsung/exynos_tmu.c:203: warning: Function
+> parameter or member 'tmu_set_trip_hyst' not described in
+> 'exynos_tmu_data'
 > 
-> When we get a review from Rob, you can take patches 1-2 through your
-> tree and Stefan/Nicholas can queue patches 3-4 through the BCM2835 tree
-> where the DTS files already exist. Does that work for you?
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> ---
+>  drivers/thermal/samsung/exynos_tmu.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 
-Yes sure.
+Reviewed-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-Cheers,
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+viresh
