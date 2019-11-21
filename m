@@ -2,112 +2,157 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC83FC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 02:06:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EC3FC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 02:28:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBA532075A
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 02:06:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 465D920878
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 02:28:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Am9AlC+y"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="YLlnwWS5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726333AbfKUCGV (ORCPT
+        id S1726437AbfKUC2N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 21:06:21 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:46634 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725936AbfKUCGV (ORCPT
+        Wed, 20 Nov 2019 21:28:13 -0500
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:10333 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725904AbfKUC2N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 21:06:21 -0500
-Received: by mail-pl1-f196.google.com with SMTP id l4so760142plt.13
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 18:06:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=uo9mEPcaYcwnzYyWGiXlb2tEqoly25jIf2ri/BJ7dDw=;
-        b=Am9AlC+yrXpYjI9tLZJABP+RtHy2I4MpTU3JDy2quw9lARH0E9nsUx5sZLzW3WsDXO
-         MTT+d/n1iXXdDWbHu/+5ZNlEjJkBCfuMGQ0lkn8Y7lm/Tzm4N0xy3n8V3/0Et0gCoKEN
-         La77ktcLIHHNXLrDobr2UBGIDQa807YwOkRStoKCQx7d8nF5nRTY9eGyAdB04aZCf5yD
-         rO4aRJlugOJko5ct311BHN7FOI/OtYpsdzrpnaN7mckQkPbFwVkF+LgJJq63UARVC8nL
-         O2ZgCy5Q6Agt+f5TU+Sl3EUB3XFTfODjPAndMGYek+NU+pNGWBS4nA0GY5D6/JQ4Jzi9
-         BNsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=uo9mEPcaYcwnzYyWGiXlb2tEqoly25jIf2ri/BJ7dDw=;
-        b=oa6/PHB6zaxBF0Wz01lRnyrHPI4gm4HNoPlJeIkYIVv4VWaRkDB0OL6Yqt3Mbt9Q/t
-         yap3q55RV8F0xwf2gd+0x2tN10+I2qHEtpfnV6L2cL5C+aMq0i4BQJ0zDCU8oVsxFF6j
-         DOwz/sI5Fo6iTmP2lIm0r3u88FTcz9MVOX/ZBY7b9Z18x0HP064o/KQszFeIb1dDXKUv
-         Cn6mxCHAXCUkwBU2sSam2Zz001IdO+F2wabW5HDEa5adTeQRgB4yHXT3TIu6LSmv9LhC
-         6X9zJQLv15UunKAEjgJdn53Y222o7QxMB1UMSMsnnJu4siDOPRFeXLrDxJD2boEnjMr+
-         YpyA==
-X-Gm-Message-State: APjAAAW97WOeVYhbPb9jYea67nyMrEDOl1cEZBUxpwQefvIABmepYypa
-        zIvW1sgoKFFdQb5dht+o90OYVJ179m5mdw==
-X-Google-Smtp-Source: APXvYqytngQq8IjjeiFBpEFRQm5zInwYRJW6QSTLANZYdx6eBrIH2RFe+esQWcWUc+a6h1YGF2wf6w==
-X-Received: by 2002:a17:90a:ec13:: with SMTP id l19mr8419701pjy.0.1574301978779;
-        Wed, 20 Nov 2019 18:06:18 -0800 (PST)
-Received: from [192.168.1.188] ([66.219.217.79])
-        by smtp.gmail.com with ESMTPSA id s15sm541405pjp.3.2019.11.20.18.06.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 20 Nov 2019 18:06:17 -0800 (PST)
-Subject: Re: [PATCH -next] writeback: fix -Wformat compilation warnings
-To:     Qian Cai <cai@lca.pw>, Tejun Heo <tj@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     jack@suse.cz, gregkh@linuxfoundation.org, cgroups@vger.kernel.org,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191114192118.GK4163745@devbig004.ftw2.facebook.com>
- <9D52EBB0-BE48-4C59-9145-857C3247B20D@lca.pw>
- <20191115145540.GP4163745@devbig004.ftw2.facebook.com>
- <1574279778.9585.15.camel@lca.pw>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <26dc5699-9223-3e35-65f3-955fef7a990a@kernel.dk>
-Date:   Wed, 20 Nov 2019 16:17:51 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 20 Nov 2019 21:28:13 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dd5f17c0000>; Wed, 20 Nov 2019 18:07:56 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 20 Nov 2019 18:07:55 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 20 Nov 2019 18:07:55 -0800
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 21 Nov
+ 2019 02:07:54 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Thu, 21 Nov 2019 02:07:54 +0000
+Received: from henryl-tu10x.nvidia.com (Not Verified[10.19.109.104]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5dd5f1790000>; Wed, 20 Nov 2019 18:07:54 -0800
+From:   Henry Lin <henryl@nvidia.com>
+CC:     <jackp@codeaurora.org>, Henry Lin <henryl@nvidia.com>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v4] usb: xhci: only set D3hot for pci device
+Date:   Thu, 21 Nov 2019 10:07:03 +0800
+Message-ID: <20191121020703.10173-1-henryl@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191119081656.8746-1-henryl@nvidia.com>
+References: <20191119081656.8746-1-henryl@nvidia.com>
+X-NVConfidentiality: public
 MIME-Version: 1.0
-In-Reply-To: <1574279778.9585.15.camel@lca.pw>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1574302076; bh=LFURWC9StPxfn6pVQEi+FakzbyuQQSR3hqKKmpk8NqQ=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=YLlnwWS5RGPSQ4Z/IvIeMsVUpkgvbLNLTam0/Zpc4q6SniI63/wDZa+McjKrp3Wql
+         aOI/OPWDYcaSbHsi+efWgjjpLimdgLokcq1dFsvoCqerKL+hPy6Y4C/q3pZad9hKzf
+         u6RKn1TsJRcMqRaJiTN5FciRDhfgMC+ZQzorRz7mRuQhFH0WSVz2huMbbjIDL+qrvm
+         wKh42EdUthKAqIembwRt7tXcnlGkZ+XYjVweOW7ewhKhKjfnu558td03tBoxFgh8h4
+         Dw9ekg72dGT+dE4B5O7Fr2hc9K1YN+GxHglvPOs5Cgw/Ecx1/FnSdsNmgZR9pmPUbv
+         YZmvbGBpIBSjw==
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/20/19 12:56 PM, Qian Cai wrote:
-> On Fri, 2019-11-15 at 06:55 -0800, Tejun Heo wrote:
->> On Thu, Nov 14, 2019 at 07:26:21PM -0500, Qian Cai wrote:
->>>
->>>
->>>> On Nov 14, 2019, at 2:21 PM, Tejun Heo <tj@kernel.org> wrote:
->>>>
->>>> Acked-by: Tejun Heo <tj@kernel.org>
->>>
->>> Tejun, suppose you will take this patch via your tree together with the series or should I Cc Andrew who normally handle this file?
->>
->> Patches in this area usually goes through Jens's block tree.
-> 
-> I remember that last time Jens had no interests in picking up trivial patches
-> like this one. See the commit d1a445d3b86c ("include/trace/events/writeback.h:
-> fix -Wstringop-truncation warnings").
-> 
-> Andrew, care to pick up this again?
-> 
-> https://lore.kernel.org/lkml/1573751861-10303-1-git-send-email-cai@lca.pw/
+Xhci driver cannot call pci_set_power_state() on non-pci xhci host
+controllers. For example, NVIDIA Tegra XHCI host controller which acts
+as platform device with XHCI_SPURIOUS_WAKEUP quirk set in some platform
+hits this issue during shutdown.
 
-I'm fine with picking it up, this one isn't trivial and it's fixing
-warnings. But I didn't (and don't) carry f05499a06fb4 in my tree,
-so it'd be more logical to funnel this one through the tree that
-has the offending commit.
+Signed-off-by: Henry Lin <henryl@nvidia.com>
+---
+v4:
+  1. export xhci_shutdown for CONFIG_USB_XHCI_PCI=m
+---
+ drivers/usb/host/xhci-pci.c | 13 +++++++++++++
+ drivers/usb/host/xhci.c     |  7 ++-----
+ drivers/usb/host/xhci.h     |  1 +
+ 3 files changed, 16 insertions(+), 5 deletions(-)
 
+diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
+index 1e0236e90687..1904ef56f61c 100644
+--- a/drivers/usb/host/xhci-pci.c
++++ b/drivers/usb/host/xhci-pci.c
+@@ -519,6 +519,18 @@ static int xhci_pci_resume(struct usb_hcd *hcd, bool hibernated)
+ }
+ #endif /* CONFIG_PM */
+ 
++static void xhci_pci_shutdown(struct usb_hcd *hcd)
++{
++	struct xhci_hcd		*xhci = hcd_to_xhci(hcd);
++	struct pci_dev		*pdev = to_pci_dev(hcd->self.controller);
++
++	xhci_shutdown(hcd);
++
++	/* Yet another workaround for spurious wakeups at shutdown with HSW */
++	if (xhci->quirks & XHCI_SPURIOUS_WAKEUP)
++		pci_set_power_state(pdev, PCI_D3hot);
++}
++
+ /*-------------------------------------------------------------------------*/
+ 
+ /* PCI driver selection metadata; PCI hotplugging uses this */
+@@ -554,6 +566,7 @@ static int __init xhci_pci_init(void)
+ #ifdef CONFIG_PM
+ 	xhci_pci_hc_driver.pci_suspend = xhci_pci_suspend;
+ 	xhci_pci_hc_driver.pci_resume = xhci_pci_resume;
++	xhci_pci_hc_driver.shutdown = xhci_pci_shutdown;
+ #endif
+ 	return pci_register_driver(&xhci_pci_driver);
+ }
+diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
+index 6c17e3fe181a..90aa811165f1 100644
+--- a/drivers/usb/host/xhci.c
++++ b/drivers/usb/host/xhci.c
+@@ -770,7 +770,7 @@ static void xhci_stop(struct usb_hcd *hcd)
+  *
+  * This will only ever be called with the main usb_hcd (the USB3 roothub).
+  */
+-static void xhci_shutdown(struct usb_hcd *hcd)
++void xhci_shutdown(struct usb_hcd *hcd)
+ {
+ 	struct xhci_hcd *xhci = hcd_to_xhci(hcd);
+ 
+@@ -789,11 +789,8 @@ static void xhci_shutdown(struct usb_hcd *hcd)
+ 	xhci_dbg_trace(xhci, trace_xhci_dbg_init,
+ 			"xhci_shutdown completed - status = %x",
+ 			readl(&xhci->op_regs->status));
+-
+-	/* Yet another workaround for spurious wakeups at shutdown with HSW */
+-	if (xhci->quirks & XHCI_SPURIOUS_WAKEUP)
+-		pci_set_power_state(to_pci_dev(hcd->self.sysdev), PCI_D3hot);
+ }
++EXPORT_SYMBOL_GPL(xhci_shutdown);
+ 
+ #ifdef CONFIG_PM
+ static void xhci_save_registers(struct xhci_hcd *xhci)
+diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
+index f9f88626a57a..973d665052a2 100644
+--- a/drivers/usb/host/xhci.h
++++ b/drivers/usb/host/xhci.h
+@@ -2050,6 +2050,7 @@ int xhci_start(struct xhci_hcd *xhci);
+ int xhci_reset(struct xhci_hcd *xhci);
+ int xhci_run(struct usb_hcd *hcd);
+ int xhci_gen_setup(struct usb_hcd *hcd, xhci_get_quirks_t get_quirks);
++void xhci_shutdown(struct usb_hcd *hcd);
+ void xhci_init_driver(struct hc_driver *drv,
+ 		      const struct xhci_driver_overrides *over);
+ int xhci_disable_slot(struct xhci_hcd *xhci, u32 slot_id);
 -- 
-Jens Axboe
+2.17.1
 
