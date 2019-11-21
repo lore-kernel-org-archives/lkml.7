@@ -2,128 +2,93 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C289EC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:10:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA579C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:11:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0DBC2089D
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:10:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6A2220721
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:11:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726529AbfKULKq (ORCPT
+        id S1726750AbfKULLf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 06:10:46 -0500
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:37584 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726165AbfKULKq (ORCPT
+        Thu, 21 Nov 2019 06:11:35 -0500
+Received: from smtprelay0073.hostedemail.com ([216.40.44.73]:59779 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726165AbfKULLf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 06:10:46 -0500
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 8FB4F3C057F;
-        Thu, 21 Nov 2019 12:10:43 +0100 (CET)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id ppSTeXKvVKHo; Thu, 21 Nov 2019 12:10:38 +0100 (CET)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 164CA3C0022;
-        Thu, 21 Nov 2019 12:10:38 +0100 (CET)
-Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Thu, 21 Nov
- 2019 12:10:37 +0100
-From:   Eugeniu Rosca <erosca@de.adit-jv.com>
-To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
-        Jiada Wang <jiada_wang@mentor.com>,
-        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>
-CC:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Nilkanth Ahirrao <external.anilkanth@jp.adit-jv.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>
-Subject: [PATCH v2] ASoC: rsnd: fix DALIGN register for SSIU
-Date:   Thu, 21 Nov 2019 12:10:23 +0100
-Message-ID: <20191121111023.10976-1-erosca@de.adit-jv.com>
-X-Mailer: git-send-email 2.24.0
+        Thu, 21 Nov 2019 06:11:35 -0500
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay06.hostedemail.com (Postfix) with ESMTP id B400F18224D7B;
+        Thu, 21 Nov 2019 11:11:33 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: team37_64653de87240c
+X-Filterd-Recvd-Size: 2559
+Received: from XPS-9350.home (unknown [47.151.135.224])
+        (Authenticated sender: joe@perches.com)
+        by omf19.hostedemail.com (Postfix) with ESMTPA;
+        Thu, 21 Nov 2019 11:11:29 +0000 (UTC)
+Message-ID: <6f444819493c5d55fee3871fcb7c067085726c2d.camel@perches.com>
+Subject: Re: [PATCH v4 02/10] lib: introduce generic min max heap
+From:   Joe Perches <joe@perches.com>
+To:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Qian Cai <cai@lca.pw>, Joe Lawrence <joe.lawrence@redhat.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        Gary Hook <Gary.Hook@amd.com>, Arnd Bergmann <arnd@arndb.de>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        Andi Kleen <ak@linux.intel.com>
+Date:   Thu, 21 Nov 2019 03:11:06 -0800
+In-Reply-To: <20191116011845.177150-3-irogers@google.com>
+References: <20191114003042.85252-1-irogers@google.com>
+         <20191116011845.177150-1-irogers@google.com>
+         <20191116011845.177150-3-irogers@google.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.72.93.184]
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nilkanth Ahirrao <anilkanth@jp.adit-jv.com>
+On Fri, 2019-11-15 at 17:18 -0800, Ian Rogers wrote:
+> Supports push, pop and converting an array into a heap.
+> Based-on-work-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+[]
+> diff --git a/include/linux/min_max_heap.h b/include/linux/min_max_heap.h
+[]
+> +/* Sift the element at pos down the heap. */
+> +static inline void min_max_heapify(struct min_max_heap *heap, int pos,
+> +				const struct min_max_heap_callbacks *func)
 
-The current driver only sets 0x76543210 and 0x67452301 for DALIGN.
-This doesn’t work well for TDM split and ex-split mode for all SSIU.
-This patch programs the DALIGN registers based on the SSIU number.
+s/inline/__always_inline/g
 
-Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Jiada Wang <jiada_wang@mentor.com>
-Cc: Andrew Gabbasov <andrew_gabbasov@mentor.com>
-Fixes: a914e44693d41b ("ASoC: rsnd: more clear rsnd_get_dalign() for DALIGN")
-Signed-off-by: Nilkanth Ahirrao <anilkanth@jp.adit-jv.com>
-Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
----
-v2:
- - Follow Kuninori Morimoto's suggestion to reuse dalign_values[0][x]
- - Simplify the code based on Andrew Gabbasov's review finding
-v1:
- - https://patchwork.kernel.org/patch/11249769/
----
- sound/soc/sh/rcar/core.c | 20 ++++++++++++++++++--
- 1 file changed, 18 insertions(+), 2 deletions(-)
+> +static void min_max_heap_pop_push(struct min_max_heap *heap,
+> +				const void *element,
+> +				const struct min_max_heap_callbacks *func)
 
-diff --git a/sound/soc/sh/rcar/core.c b/sound/soc/sh/rcar/core.c
-index e9596c2096cd..a6c1cf987e6e 100644
---- a/sound/soc/sh/rcar/core.c
-+++ b/sound/soc/sh/rcar/core.c
-@@ -376,6 +376,17 @@ u32 rsnd_get_adinr_bit(struct rsnd_mod *mod, struct rsnd_dai_stream *io)
-  */
- u32 rsnd_get_dalign(struct rsnd_mod *mod, struct rsnd_dai_stream *io)
- {
-+	static const u32 dalign_values[8][2] = {
-+		{0x76543210, 0x67452301},
-+		{0x00000032, 0x00000023},
-+		{0x00007654, 0x00006745},
-+		{0x00000076, 0x00000067},
-+		{0xfedcba98, 0xefcdab89},
-+		{0x000000ba, 0x000000ab},
-+		{0x0000fedc, 0x0000efcd},
-+		{0x000000fe, 0x000000ef},
-+	};
-+	int id = 0, inv;
- 	struct rsnd_mod *ssiu = rsnd_io_to_mod_ssiu(io);
- 	struct rsnd_mod *target;
- 	struct snd_pcm_runtime *runtime = rsnd_io_to_runtime(io);
-@@ -411,13 +422,18 @@ u32 rsnd_get_dalign(struct rsnd_mod *mod, struct rsnd_dai_stream *io)
- 		target = cmd ? cmd : ssiu;
- 	}
- 
-+	if (mod == ssiu)
-+		id = rsnd_mod_id_sub(mod);
-+
- 	/* Non target mod or non 16bit needs normal DALIGN */
- 	if ((snd_pcm_format_width(runtime->format) != 16) ||
- 	    (mod != target))
--		return 0x76543210;
-+		inv = 0;
- 	/* Target mod needs inverted DALIGN when 16bit */
- 	else
--		return 0x67452301;
-+		inv = 1;
-+
-+	return dalign_values[id][inv];
- }
- 
- u32 rsnd_get_busif_shift(struct rsnd_dai_stream *io, struct rsnd_mod *mod)
--- 
-2.24.0
+And this still misses the inline attribute
+
 
