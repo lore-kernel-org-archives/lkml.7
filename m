@@ -2,122 +2,151 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77F57C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 17:14:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8823C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 17:14:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BC71206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 17:14:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574356449;
-	bh=Ti/dngwhJigigI0vZvNQ4kqW2wZg+aYllS0eHqXlFSA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GDd147hiboFq1SOXBzNt8wm0GT583r/51I8t+6Zzv52xRf60dixla2igm3YJwLZwS
-	 ZuOg3yDeprfvlldA5iSYRyDTQn+eae/mPilkcR9Pkrxp+CbGkn6sHdnGh3vz4zATbz
-	 /iHAXsxVQNQvRMpTIElgQZLWUlC22GPtFpHZlCLY=
+	by mail.kernel.org (Postfix) with ESMTP id A50E7206D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 17:14:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727341AbfKUROI (ORCPT
+        id S1727175AbfKURNm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 12:14:08 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:36644 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726861AbfKUROG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 12:14:06 -0500
-Received: by mail-wr1-f67.google.com with SMTP id z3so5401522wru.3
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 09:14:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=i3dXbaeM8/fgEzXWHf4j73/qD2/JvKlKOG24q2kDLhU=;
-        b=GcLaoiocTB43exyz2Sw7c1bE8QYr4ZxVv8UNC56FfbxP3Gkhhfz5i0jLfiYUPQCMoa
-         AUGVKhWAFxYXZdN3aWMfWxjEZQOZ+8ggRIzXKkCUzea0eV45bxX5v+DssT28edUaD12Z
-         ls5k4OgXVu/SKelNO5qo4NtGYWuTVY+CDVaN192Wx6SoGGJh1M7uWrQHTMZ6xM2lY9Le
-         TD7KveNHoXLh5htI3rXzHQL5xCcrG9uSqeXNA/qgfqBCgssLx3zUQ5qRE39PwtS2f0qw
-         OtPwq2v51cjIdhQJcex+IkJBSUZwEomo3oqSSjcKQp/m6LqYcKXAQgB9vzQnfk3F1RvE
-         zrUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=i3dXbaeM8/fgEzXWHf4j73/qD2/JvKlKOG24q2kDLhU=;
-        b=DV2Qt4gOt2kBjfo+XkbxfSJbEIkaDIKiL81r0yvDi6FeGLP5R/C4TjVsnhk4xesCEs
-         6S6RYfNHk17WYMa751aYLD+iTYoqWN0pN0pngBHNIXhzEfNGsdoFC6B5hoIQ+iHwGSlk
-         yJQrIxM9iaNI5KNJRwzEJw6j4euEVMYKm2a84NIkbe85zCl+ha9xyNAG0ES/raXoK/aq
-         9ZuXSxqkZHAAvZDtjRdaMiQWiBqYipXyHUNpdEcM6rCU+lIFnuMbWNBgb27CWJyhCWwm
-         YRNB0dRM9rk9PoIdKrA5v8m8vb3XuOx5Q123Etzzt5UDcBjdkZj4wD147Gi3RnT/04kl
-         1ZzA==
-X-Gm-Message-State: APjAAAV8MClJ4QAVW8pRV39wfYGb4zVySr9t6fpm07n74Q1fTc8JYc/s
-        1e3jBIQWipWMpNJLgVrA8uk=
-X-Google-Smtp-Source: APXvYqxEpvzKJM8+RiUL39rs/NOLQBXQix4AlKzUu9X1je8OxVPAWunSU7INi5WBD4jktiReGQop1A==
-X-Received: by 2002:adf:eecc:: with SMTP id a12mr1519815wrp.363.1574356444030;
-        Thu, 21 Nov 2019 09:14:04 -0800 (PST)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id v184sm297255wme.31.2019.11.21.09.14.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Nov 2019 09:14:03 -0800 (PST)
-Date:   Thu, 21 Nov 2019 18:14:01 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Fenghua Yu <fenghua.yu@intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
-Subject: Re: [PATCH v10 6/6] x86/split_lock: Enable split lock detection by
- kernel parameter
-Message-ID: <20191121171401.GE12042@gmail.com>
-References: <1574297603-198156-1-git-send-email-fenghua.yu@intel.com>
- <1574297603-198156-7-git-send-email-fenghua.yu@intel.com>
- <20191121060444.GA55272@gmail.com>
- <20191121130153.GS4097@hirez.programming.kicks-ass.net>
- <20191121161410.GA199273@romley-ivt3.sc.intel.com>
+        Thu, 21 Nov 2019 12:13:42 -0500
+Received: from mx2.suse.de ([195.135.220.15]:54128 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727114AbfKURNk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 12:13:40 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 4FA82B1B9;
+        Thu, 21 Nov 2019 17:13:37 +0000 (UTC)
+From:   Michal Suchanek <msuchanek@suse.de>
+To:     linux-scsi@vger.kernel.org, linux-block@vger.kernel.org
+Cc:     Michal Suchanek <msuchanek@suse.de>,
+        Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Eric Biggers <ebiggers@google.com>,
+        "J. Bruce Fields" <bfields@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Benjamin Coddington <bcodding@redhat.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Hou Tao <houtao1@huawei.com>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Jan Kara <jack@suse.cz>, Hannes Reinecke <hare@suse.com>,
+        "Ewan D. Milne" <emilne@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Matthew Wilcox <willy@infradead.org>
+Subject: [PATCH v4 03/10] cdrom: wait for the tray to close
+Date:   Thu, 21 Nov 2019 18:13:10 +0100
+Message-Id: <5e8f9d588560ebf117334d6919c3976a731db757.1574355709.git.msuchanek@suse.de>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <cover.1574355709.git.msuchanek@suse.de>
+References: <cover.1574355709.git.msuchanek@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191121161410.GA199273@romley-ivt3.sc.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The scsi command to close the tray only starts the motor and does not
+wait for the tray to close. Wait until the state chages from TRAY_OPEN
+so users do not race with the tray closing.
 
-* Fenghua Yu <fenghua.yu@intel.com> wrote:
+This looks like inifinte wait but unless the drive is broken it either
+closes the tray shortly or reports an error when it detects the tray is
+blocked. At worst the wait can be interrupted by the user.
 
-> > This feature MUST be default enabled, otherwise everything will 
-> > be/remain broken and we'll end up in the situation where you can't 
-> > use it even if you wanted to.
-> 
-> The usage scope of this patch set is largely reduced to only real time. 
-> The long split lock processing time (>1000 cycles) cannot be tolerated 
-> by real time.
-> 
-> Real time customers do want to use this feature to detect the fatal 
-> split lock error. They don't want any split lock issue from BIOS/EFI/ 
-> firmware/kerne/drivers/user apps.
-> 
-> Real time can enable the feature (set bit 29 in TEST_CTRL MSR) in BIOS 
-> and don't need OS to enable it. But, #AC handler cannot handle split 
-> lock in the kernel and will return to the faulting instruction and 
-> re-enter #AC. So current #AC handler doesn't provide useful information 
-> for the customers. That's why we add the new #AC handler in this patch 
-> set.
+Also wait for the drive to become ready once the tray closes.
 
-Immaterial - for this feature to be useful it must be default-enabled, 
-with reasonable quirk knobs offered to people who happen to be bitten by 
-such bugs and cannot fix the software.
+Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+---
+v2:
+ - check drive_status exists before using it
+ - rename tray_close -> cdrom_tray_close
+ - also wait for drive to become ready after tray closes
+ - do not wait in cdrom_ioctl_closetray
+v4: add a status change poll wrapper
+---
+ drivers/cdrom/cdrom.c | 36 +++++++++++++++++++++++++++++++++---
+ 1 file changed, 33 insertions(+), 3 deletions(-)
 
-But default-enabled is a must-have, as Peter said.
+diff --git a/drivers/cdrom/cdrom.c b/drivers/cdrom/cdrom.c
+index bb32decdadf1..b2bc0c8f9a69 100644
+--- a/drivers/cdrom/cdrom.c
++++ b/drivers/cdrom/cdrom.c
+@@ -1045,6 +1045,28 @@ static void cdrom_count_tracks(struct cdrom_device_info *cdi, tracktype *tracks)
+ 	       tracks->cdi, tracks->xa);
+ }
+ 
++static int cdrom_wait_for_status_change(struct cdrom_device_info *cdi,
++					int *status)
++{
++	int saved = *status;
++	const struct cdrom_device_ops *cdo = cdi->ops;
++
++	return poll_event_interruptible(saved !=
++			(*status = cdo->drive_status(cdi, CDSL_CURRENT)), 500);
++}
++
++static int cdrom_tray_close(struct cdrom_device_info *cdi)
++{
++	int ret;
++
++	ret = cdi->ops->tray_move(cdi, 0);
++	if (ret || !cdi->ops->drive_status)
++		return ret;
++
++	ret = CDS_TRAY_OPEN;
++	return cdrom_wait_for_status_change(cdi, &ret);
++}
++
+ static int open_for_common(struct cdrom_device_info *cdi, tracktype *tracks)
+ {
+ 	int ret;
+@@ -1062,14 +1084,14 @@ static int open_for_common(struct cdrom_device_info *cdi, tracktype *tracks)
+ 				if (!(cdi->options & CDO_AUTO_CLOSE))
+ 					return -ENOMEDIUM;
+ 				cd_dbg(CD_OPEN, "trying to close the tray\n");
+-				ret=cdo->tray_move(cdi,0);
++				ret = cdrom_tray_close(cdi);
++				if (ret == -ERESTARTSYS)
++					return ret;
+ 				if (ret) {
+ 					cd_dbg(CD_OPEN, "bummer. tried to close the tray but failed.\n");
+ 					return -ENOMEDIUM;
+ 				}
+ 				ret = cdo->drive_status(cdi, CDSL_CURRENT);
+-				if (ret == CDS_TRAY_OPEN)
+-					cd_dbg(CD_OPEN, "bummer. the tray is still not closed.\n");
+ 				if (ret == CDS_NO_DISC)
+ 					cd_dbg(CD_OPEN, "tray might not contain a medium\n");
+ 			} else {
+@@ -1077,6 +1099,14 @@ static int open_for_common(struct cdrom_device_info *cdi, tracktype *tracks)
+ 				return -ENOMEDIUM;
+ 			}
+ 		}
++		if (ret == CDS_DRIVE_NOT_READY) {
++			int poll_res;
++
++			cd_dbg(CD_OPEN, "waiting for drive to become ready...\n");
++			poll_res = cdrom_wait_for_status_change(cdi, &ret);
++			if (poll_res == -ERESTARTSYS)
++				return poll_res;
++		}
+ 		if (ret != CDS_DISC_OK)
+ 			return -ENOMEDIUM;
+ 	}
+-- 
+2.23.0
 
-Thanks,
-
-	Ingo
