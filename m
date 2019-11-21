@@ -2,103 +2,73 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E6B0C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:52:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03EAEC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:52:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 601D1206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:52:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D57D820658
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:52:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbfKUQwW (ORCPT
+        id S1726909AbfKUQws (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 11:52:22 -0500
-Received: from mga18.intel.com ([134.134.136.126]:23669 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726279AbfKUQwW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 11:52:22 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Nov 2019 08:52:21 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,226,1571727600"; 
-   d="scan'208";a="205204778"
-Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
-  by fmsmga007.fm.intel.com with ESMTP; 21 Nov 2019 08:52:19 -0800
-Subject: Re: [PATCH RFC 01/14] x86/asm: add iosubmit_cmds512() based on
- movdir64b CPU instruction
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Lin, Jing" <jing.lin@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Dey, Megha" <megha.dey@intel.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "Yu, Fenghua" <fenghua.yu@intel.com>,
-        "hpa@zytor.com" <hpa@zytor.com>
-References: <157428480574.36836.14057238306923901253.stgit@djiang5-desk3.ch.intel.com>
- <157428502934.36836.8119026517510193201.stgit@djiang5-desk3.ch.intel.com>
- <20191120215338.GN2634@zn.tnic>
- <247008b5-6d33-a51b-0caa-7f1991a94dbd@intel.com>
- <20191121105913.GB6540@zn.tnic>
-From:   Dave Jiang <dave.jiang@intel.com>
-Message-ID: <ef6bc4a4-b307-9bc4-f3be-f7ab7232d303@intel.com>
-Date:   Thu, 21 Nov 2019 09:52:19 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Thu, 21 Nov 2019 11:52:48 -0500
+Received: from imap1.codethink.co.uk ([176.9.8.82]:56845 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726279AbfKUQws (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 11:52:48 -0500
+Received: from [167.98.27.226] (helo=xylophone)
+        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
+        id 1iXpgx-0004CD-G1; Thu, 21 Nov 2019 16:52:27 +0000
+Message-ID: <1634aafd2a99cedceb63efe57e4c7e0a7317917b.camel@codethink.co.uk>
+Subject: Re: [Y2038] [PATCH 21/23] y2038: itimer: change implementation to
+ timespec64
+From:   Ben Hutchings <ben.hutchings@codethink.co.uk>
+To:     Arnd Bergmann <arnd@arndb.de>, y2038@lists.linaro.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Kees Cook <keescook@chromium.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        linux-kernel@vger.kernel.org,
+        Anna-Maria Gleixner <anna-maria@linutronix.de>
+Date:   Thu, 21 Nov 2019 16:52:26 +0000
+In-Reply-To: <20191108211323.1806194-12-arnd@arndb.de>
+References: <20191108210236.1296047-1-arnd@arndb.de>
+         <20191108211323.1806194-12-arnd@arndb.de>
+Organization: Codethink Ltd.
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-In-Reply-To: <20191121105913.GB6540@zn.tnic>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 2019-11-08 at 22:12 +0100, Arnd Bergmann wrote:
+[...] 
+> @@ -292,8 +296,8 @@ static unsigned int alarm_setitimer(unsigned int seconds)
+>  	 * We can't return 0 if we have an alarm pending ...  And we'd
+>  	 * better return too much than too little anyway
+>  	 */
+> -	if ((!it_old.it_value.tv_sec && it_old.it_value.tv_usec) ||
+> -	      it_old.it_value.tv_usec >= 500000)
+> +	if ((!it_old.it_value.tv_sec && it_old.it_value.tv_nsec) ||
+> +	      it_old.it_value.tv_nsec >= 500000)
+[...]
 
+This is now off by a factor of 1000.  It might be helpful to use
+NSEC_PER_SEC / 2 here so no-one has to count the 0 digits.
 
-On 11/21/19 3:59 AM, Borislav Petkov wrote:
-> On Wed, Nov 20, 2019 at 05:10:41PM -0700, Dave Jiang wrote:
->> I'll add the check on the destination address. The call is modeled after
->> __iowrite64_copy() / __iowrite32_copy() in lib/iomap_copy.c. Looks like
->> those functions do not check for the alignment requirements either.
-> 
-> So just because they don't check, you don't need to check either?
+Ben.
 
-No what I mean was those primitives are missing the checks and we should 
-probably address that at some point.
+-- 
+Ben Hutchings, Software Developer                         Codethink Ltd
+https://www.codethink.co.uk/                 Dale House, 35 Dale Street
+                                     Manchester, M1 2HF, United Kingdom
 
-> 
-> Can you guarantee that all callers will always do the right thing?
-> 
-> I mean, if you don't care too much, why even write "(must be 512-bit
-> aligned)"? Who cares then if the data is aligned or not...
-> 
-
-
->>>> + * @dst: destination, in MMIO space (must be 512-bit aligned)
->>>> + * @src: source
->>>> + * @count: number of 512 bits quantities to submit
->>>
->>> Where's that check on the data?
->>
->> I don't follow?
-> 
-> What do you do if the caller doesn't submit data in 512 bits quantities?
-> 
-
-How would I detect that? Add a size (in bytes) parameter for the total 
-source data?
