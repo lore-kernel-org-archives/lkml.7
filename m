@@ -4,193 +4,94 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04E62C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 08:28:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8FE8C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 08:30:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C136520718
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 08:28:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5C0620898
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 08:30:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="kS72Yi03"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="i1ke+CB4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726920AbfKUI25 (ORCPT
+        id S1726593AbfKUIaR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 03:28:57 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:11014 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726351AbfKUI2y (ORCPT
+        Thu, 21 Nov 2019 03:30:17 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:47827 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726132AbfKUIaR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 03:28:54 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAL8RHQa015864;
-        Thu, 21 Nov 2019 09:28:25 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=twjnrkDQj2gpn7S/JQi3Gp1h6gkqTNkfZfkN2FjeW78=;
- b=kS72Yi03+KvFUReVKUamtKicfbFyH9gJlCoOercgzbymyMMqc0qclVMFhtfXzFCyKdm8
- E/4ZOepUX7kkwgR807/AyBK78OvSNIgq63Vbz0B8Tr0RotlTXNnB3uJ9ocTqeyz/yVu6
- +WpR+id2duSFNbx1c3P6H2pnGTaLgdZ1Rww7R2BcT4uDRrzTwKH/8hJA2/cppBKC3YdD
- oC7GEU62Z7o/HMwmTSkQmdSwTf9rs8G9lyBY495FHUwCumG6i+PHh1Vxwlo/WFeZgO1a
- UCKxjzM/ejDmC0PiK9gRUlFbqp0EH91KhhWcRZfXPOI84Yx5PA3T0buAPTBx8PJdqhhK Ng== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2wa9upafmh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 21 Nov 2019 09:28:25 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A879E100049;
-        Thu, 21 Nov 2019 09:28:24 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 9B92E2AEF15;
-        Thu, 21 Nov 2019 09:28:24 +0100 (CET)
-Received: from localhost (10.75.127.45) by SFHDAG5NODE3.st.com (10.75.127.15)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 21 Nov 2019 09:28:24
- +0100
-From:   Christophe Roullier <christophe.roullier@st.com>
-To:     <wim@linux-watchdog.org>, <linux@roeck-us.net>,
-        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>
-CC:     <linux-watchdog@vger.kernel.org>, <christophe.roullier@st.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH  1/1] drivers: watchdog: stm32_iwdg: set WDOG_HW_RUNNING at probe
-Date:   Thu, 21 Nov 2019 09:28:13 +0100
-Message-ID: <20191121082813.29267-2-christophe.roullier@st.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191121082813.29267-1-christophe.roullier@st.com>
-References: <20191121082813.29267-1-christophe.roullier@st.com>
+        Thu, 21 Nov 2019 03:30:17 -0500
+X-UUID: 5b0f312b28e8411f8ed7e8ca90f4bd26-20191121
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=0Ckld6EwBzz2+Vv2aLPvbwitkSnSY2s1D7AUbqn0zrg=;
+        b=i1ke+CB4hO9trYn+KlvsKyGptMnYEreF+L2kHRi5BQEeT1Jup1ewWq5B7VLn4GDFN4M3mtDPEFCIhSSkUU52hnR3i/ryJZFxUbV1ek9WYv8Io771D6k9E0iBNZj5GQaSesQuNxn6cuN2/M9pFLbvE1z12ISXPdizbcqbbxjDjzg=;
+X-UUID: 5b0f312b28e8411f8ed7e8ca90f4bd26-20191121
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <yt.chang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1952610544; Thu, 21 Nov 2019 16:30:11 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 21 Nov 2019 16:30:04 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 21 Nov 2019 16:30:14 +0800
+From:   YT Chang <yt.chang@mediatek.com>
+To:     YT Chang <yt.chang@mediatek.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     <wsd_upstream@mediatek.com>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Subject: [PATCH 1/1] sched: cfs_rq h_load might not update due to irq disable
+Date:   Thu, 21 Nov 2019 16:30:09 +0800
+Message-ID: <1574325009-10846-1-git-send-email-yt.chang@mediatek.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.75.127.45]
-X-ClientProxiedBy: SFHDAG3NODE1.st.com (10.75.127.7) To SFHDAG5NODE3.st.com
- (10.75.127.15)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-20_08:2019-11-20,2019-11-20 signatures=0
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the watchdog hardware is already enabled during the boot process,
-when the Linux watchdog driver loads, it should reset the watchdog and
-tell the watchdog framework. As a result, ping can be generated from
-the watchdog framework (if CONFIG_WATCHDOG_HANDLE_BOOT_ENABLED is set),
-until the userspace watchdog daemon takes over control
-
-Fixes:4332d113c66a ("watchdog: Add STM32 IWDG driver")
-Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
----
- drivers/watchdog/stm32_iwdg.c | 57 ++++++++++++++++++++++++-----------
- 1 file changed, 40 insertions(+), 17 deletions(-)
-
-diff --git a/drivers/watchdog/stm32_iwdg.c b/drivers/watchdog/stm32_iwdg.c
-index a3a329011a06..2b3be3b1c15b 100644
---- a/drivers/watchdog/stm32_iwdg.c
-+++ b/drivers/watchdog/stm32_iwdg.c
-@@ -87,8 +87,23 @@ static inline void reg_write(void __iomem *base, u32 reg, u32 val)
- static int stm32_iwdg_start(struct watchdog_device *wdd)
- {
- 	struct stm32_iwdg *wdt = watchdog_get_drvdata(wdd);
--	u32 tout, presc, iwdg_rlr, iwdg_pr, iwdg_sr;
--	int ret;
-+
-+	dev_dbg(wdd->parent, "%s\n", __func__);
-+
-+	/*  Start the watchdog */
-+	reg_write(wdt->regs, IWDG_KR, KR_KEY_ENABLE);
-+
-+	/* reload watchdog */
-+	reg_write(wdt->regs, IWDG_KR, KR_KEY_RELOAD);
-+
-+	set_bit(WDOG_HW_RUNNING, &wdd->status);
-+	return 0;
-+}
-+
-+static int stm32_iwdg_setprescaler(struct watchdog_device *wdd)
-+{
-+	struct stm32_iwdg *wdt = watchdog_get_drvdata(wdd);
-+	u32 tout, presc, iwdg_rlr, iwdg_pr;
- 
- 	dev_dbg(wdd->parent, "%s\n", __func__);
- 
-@@ -108,19 +123,6 @@ static int stm32_iwdg_start(struct watchdog_device *wdd)
- 	/* set prescaler & reload registers */
- 	reg_write(wdt->regs, IWDG_PR, iwdg_pr);
- 	reg_write(wdt->regs, IWDG_RLR, iwdg_rlr);
--	reg_write(wdt->regs, IWDG_KR, KR_KEY_ENABLE);
--
--	/* wait for the registers to be updated (max 100ms) */
--	ret = readl_relaxed_poll_timeout(wdt->regs + IWDG_SR, iwdg_sr,
--					 !(iwdg_sr & (SR_PVU | SR_RVU)),
--					 SLEEP_US, TIMEOUT_US);
--	if (ret) {
--		dev_err(wdd->parent, "Fail to set prescaler, reload regs\n");
--		return ret;
--	}
--
--	/* reload watchdog */
--	reg_write(wdt->regs, IWDG_KR, KR_KEY_RELOAD);
- 
- 	return 0;
- }
-@@ -131,6 +133,9 @@ static int stm32_iwdg_ping(struct watchdog_device *wdd)
- 
- 	dev_dbg(wdd->parent, "%s\n", __func__);
- 
-+	/*  Start the watchdog */
-+	reg_write(wdt->regs, IWDG_KR, KR_KEY_ENABLE);
-+
- 	/* reload watchdog */
- 	reg_write(wdt->regs, IWDG_KR, KR_KEY_RELOAD);
- 
-@@ -140,12 +145,21 @@ static int stm32_iwdg_ping(struct watchdog_device *wdd)
- static int stm32_iwdg_set_timeout(struct watchdog_device *wdd,
- 				  unsigned int timeout)
- {
-+	int ret;
-+
- 	dev_dbg(wdd->parent, "%s timeout: %d sec\n", __func__, timeout);
- 
- 	wdd->timeout = timeout;
- 
--	if (watchdog_active(wdd))
--		return stm32_iwdg_start(wdd);
-+	if (watchdog_active(wdd)) {
-+		ret = stm32_iwdg_setprescaler(wdd);
-+		if (ret) {
-+			dev_err(wdd->parent, "failed to set prescaler\n");
-+			return ret;
-+		} else {
-+			return stm32_iwdg_start(wdd);
-+		}
-+	}
- 
- 	return 0;
- }
-@@ -262,12 +276,21 @@ static int stm32_iwdg_probe(struct platform_device *pdev)
- 	watchdog_set_nowayout(wdd, WATCHDOG_NOWAYOUT);
- 	watchdog_init_timeout(wdd, 0, dev);
- 
-+	/* Make sure the watchdog is serviced */
-+	set_bit(WDOG_HW_RUNNING, &wdd->status);
-+
- 	ret = devm_watchdog_register_device(dev, wdd);
- 	if (ret)
- 		return ret;
- 
- 	platform_set_drvdata(pdev, wdt);
- 
-+	ret = stm32_iwdg_setprescaler(wdd);
-+	if (ret) {
-+		dev_err(dev, "failed to set prescaler\n");
-+		return ret;
-+	}
-+
- 	return 0;
- }
- 
--- 
-2.17.1
+U3luZHJvbWU6DQoNClR3byBDUFVzIG1pZ2h0IGRvIGlkbGUgYmFsYW5jZSBpbiB0aGUgc2FtZSB0
+aW1lLg0KT25lIENQVSBkb2VzIGlkbGUgYmFsYW5jZSBhbmQgcHVsbHMgc29tZSB0YXNrcy4NCkhv
+d2V2ZXIgYmVmb3JlIHBpY2sgbmV4dCB0YXNrLCBBTEwgdGFzayBhcmUgcHVsbGVkIGJhY2sgdG8g
+b3RoZXIgQ1BVLg0KVGhhdCByZXN1bHRzIGluIGluZmluaXRlIGxvb3AgaW4gYm90aCBDUFVzLg0K
+DQo9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQ0KY29kZSBmbG93Og0K
+DQppbiBwaWNrX25leHRfdGFza19mYWlyKCkNCg0KYWdhaW46DQoNCmlmIG5yX3J1bm5pbmcgPT0g
+MA0KCWdvdG8gaWRsZQ0KcGljayBuZXh0IHRhc2sNCglyZXR1cm4NCg0KaWRsZToNCglpZGxlX2Jh
+bGFuY2UNCiAgICAgICAvKiBwdWxsIHNvbWUgdGFza3MgZnJvbSBvdGhlciBDUFUsDQogICAgICAg
+ICogSG93ZXZlciBvdGhlciBDUFUgYXJlIGFsc28gZG8gaWRsZSBiYWxhbmNlLA0KCSogYW5kIHB1
+bGwgYmFjayB0aGVzZSB0YXNrICovDQoNCglnbyB0byBhZ2Fpbg0KDQo9PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PQ0KVGhlIHJlc3VsdCB0byBwdWxsIEFMTCB0YXNrcyBi
+YWNrIHdoZW4gdGhlIHRhc2tfaF9sb2FkDQppcyBpbmNvcnJlY3QgYW5kIHRvbyBsb3cuDQoNCnN0
+YXRpYyB1bnNpZ25lZCBsb25nIHRhc2tfaF9sb2FkKHN0cnVjdCB0YXNrX3N0cnVjdCAqcCkNCnsN
+CiAgICAgICAgc3RydWN0IGNmc19ycSAqY2ZzX3JxID0gdGFza19jZnNfcnEocCk7DQoNCgl1cGRh
+dGVfY2ZzX3JxX2hfbG9hZChjZnNfcnEpOw0KCXJldHVybiBkaXY2NF91bChwLT5zZS5hdmcubG9h
+ZF9hdmdfY29udHJpYiAqIGNmc19ycS0+aF9sb2FkLA0KCQkJY2ZzX3JxLT5ydW5uYWJsZV9sb2Fk
+X2F2ZyArIDEpOw0KfQ0KDQpUaGUgY2ZzX3JxLT5oX2xvYWQgaXMgaW5jb3JyZWN0IGFuZCBtaWdo
+dCB0b28gc21hbGwuDQpUaGUgb3JpZ2luYWwgaWRlYSBvZiBjZnNfcnE6Omxhc3RfaF9sb2FkX3Vw
+ZGF0ZSB3aWxsIG5vdA0KdXBkYXRlIGNmc19ycTo6aF9sb2FkIG1vcmUgdGhhbiBvbmNlIGEgamlm
+Zmllcy4NCldoZW4gdGhlIFR3byBDUFVzIHB1bGwgZWFjaCBvdGhlciBpbiB0aGUgcGlja19uZXh0
+X3Rhc2tfZmFpciwNCnRoZSBpcnEgZGlzYWJsZWQgYW5kIHJlc3VsdCBpbiBqaWZmaWUgbm90IHVw
+ZGF0ZS4NCihPdGhlciBDUFVzIHdhaXQgZm9yIHJ1bnF1ZXVlIGxvY2sgbG9ja2VkIGJ5IHRoZSB0
+d28gQ1BVcy4NClNvLCBBTEwgQ1BVcyBhcmUgaXJxIGRpc2FibGVkLikNCg0KU29sdXRpb246DQpj
+ZnNfcnEgaF9sb2FkIG1pZ2h0IG5vdCB1cGRhdGUgZHVlIHRvIGlycSBkaXNhYmxlDQp1c2Ugc2No
+ZWRfY2xvY2sgaW5zdGVhZCBqaWZmaWVzDQoNClNpZ25lZC1vZmYtYnk6IFlUIENoYW5nIDx5dC5j
+aGFuZ0BtZWRpYXRlay5jb20+DQotLS0NCiBrZXJuZWwvc2NoZWQvZmFpci5jIHwgNCArKystDQog
+MSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KDQpkaWZmIC0t
+Z2l0IGEva2VybmVsL3NjaGVkL2ZhaXIuYyBiL2tlcm5lbC9zY2hlZC9mYWlyLmMNCmluZGV4IDgz
+YWIzNWUuLjIzMWM1M2YgMTAwNjQ0DQotLS0gYS9rZXJuZWwvc2NoZWQvZmFpci5jDQorKysgYi9r
+ZXJuZWwvc2NoZWQvZmFpci5jDQpAQCAtNzU3OCw5ICs3NTc4LDExIEBAIHN0YXRpYyB2b2lkIHVw
+ZGF0ZV9jZnNfcnFfaF9sb2FkKHN0cnVjdCBjZnNfcnEgKmNmc19ycSkNCiB7DQogCXN0cnVjdCBy
+cSAqcnEgPSBycV9vZihjZnNfcnEpOw0KIAlzdHJ1Y3Qgc2NoZWRfZW50aXR5ICpzZSA9IGNmc19y
+cS0+dGctPnNlW2NwdV9vZihycSldOw0KLQl1bnNpZ25lZCBsb25nIG5vdyA9IGppZmZpZXM7DQor
+CXU2NCBub3cgPSBzY2hlZF9jbG9ja19jcHUoY3B1X29mKHJxKSk7DQogCXVuc2lnbmVkIGxvbmcg
+bG9hZDsNCiANCisJbm93ID0gbm93ICogSFogPj4gMzA7DQorDQogCWlmIChjZnNfcnEtPmxhc3Rf
+aF9sb2FkX3VwZGF0ZSA9PSBub3cpDQogCQlyZXR1cm47DQogDQotLSANCjEuOS4xDQo=
 
