@@ -2,136 +2,183 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAAF4C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 08:40:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 446DDC43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 08:43:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C5502089F
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 08:40:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19F9B206EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 08:43:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="yai/2WpP"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="BuQcLUSp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727008AbfKUIkx (ORCPT
+        id S1726522AbfKUInx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 03:40:53 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:49280 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726265AbfKUIkw (ORCPT
+        Thu, 21 Nov 2019 03:43:53 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:46634 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726165AbfKUInx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 03:40:52 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAL8el3Z123034;
-        Thu, 21 Nov 2019 02:40:47 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574325647;
-        bh=3pylHeaN7iP6cxBeTqVahG6KV6jdHcvq0KcnwEGK/LI=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=yai/2WpPT8zYSQ9++gVSogRTbCi+pMS2ua+nUCFcysWmgP6Q8biDbD5aSyFrKX1M+
-         ISqkkFs5dWettRGuHIG2vAO3xRHou12aNXokBdOtQYtgyHVEO385fOcGvJK5Tx/SbF
-         0zf0Cn5liOL6dpbvr72ODXWRUji/2FeCJ9C9tyVw=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAL8elVs122541
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 21 Nov 2019 02:40:47 -0600
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 21
- Nov 2019 02:40:46 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 21 Nov 2019 02:40:46 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAL8eikU059437;
-        Thu, 21 Nov 2019 02:40:45 -0600
-Subject: Re: [PATCH] spi: pic32: Retire dma_request_slave_channel_compat()
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-CC:     Mark Brown <broonie@kernel.org>, Vinod <vkoul@kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20191121080954.14915-1-peter.ujfalusi@ti.com>
- <CAMuHMdVWCM_LQ5Fx+3NMhyd21LSpYQWCX2pmtkU2tHvtzDzUzw@mail.gmail.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <c14dd693-74e6-7e48-9697-849f44b8e0d9@ti.com>
-Date:   Thu, 21 Nov 2019 10:40:44 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 21 Nov 2019 03:43:53 -0500
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAL8ggaE025989;
+        Thu, 21 Nov 2019 09:43:22 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=GwWBHQ9N4yig6Dd7KbgCOG6gB1C+OQALGmmDk+pmewM=;
+ b=BuQcLUSpXyNlazcUbw/2qq1STEtvc9EVxz3578cIOrRiF7FaZNl22wur2C0JSlbMs++k
+ rUacF6+CS6E+wgGwiE4IMuUj4dWlGh5oWbNlf2XZ0AjPW7N/g8IPE7kUuH7wL7kE2hv9
+ c1s6MsW+gL3BZ5nmp9wspcig3wx1n31U8GjTw+fv/G/+qTt51Z23tndGIwrgBsboyh88
+ hJXutr759jifbXnE1kw0jDYwBOI+GGaZcY7UJhFREHwzj9NSBrVvU2UWFTAfIfwRhPD9
+ 1/UYGw47HZJOZg42z+1H7KJQzwjCVP8c4V6hZ4pmxFi4LtSOI6QWqn5RlnQqKB7/5USp 0A== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2wa9uvjg7g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 21 Nov 2019 09:43:22 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id DCD8B100038;
+        Thu, 21 Nov 2019 09:43:20 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C2A4F2B05DD;
+        Thu, 21 Nov 2019 09:43:20 +0100 (CET)
+Received: from localhost (10.75.127.49) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 21 Nov 2019 09:43:20
+ +0100
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <wim@linux-watchdog.org>, <linux@roeck-us.net>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <alexandre.torgue@st.com>
+CC:     <linux-watchdog@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH v2] dt-bindings: watchdog: Convert stm32 watchdog bindings to json-schema
+Date:   Thu, 21 Nov 2019 09:43:16 +0100
+Message-ID: <20191121084316.13839-1-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
 MIME-Version: 1.0
-In-Reply-To: <CAMuHMdVWCM_LQ5Fx+3NMhyd21LSpYQWCX2pmtkU2tHvtzDzUzw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.49]
+X-ClientProxiedBy: SFHDAG7NODE2.st.com (10.75.127.20) To SFHDAG3NODE3.st.com
+ (10.75.127.9)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-21_01:2019-11-20,2019-11-21 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
+Convert the STM32 watchdog binding to DT schema format using json-schema
 
-On 21/11/2019 10.30, Geert Uytterhoeven wrote:
-> Hi Peter,
-> 
-> On Thu, Nov 21, 2019 at 9:11 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
->> There is no reason to use the dma_request_slave_channel_compat() as no
->> filter function and parameter is provided.
->>
->> Switch the driver to use dma_request_chan() instead.
->>
->> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> 
->> --- a/drivers/spi/spi-pic32.c
->> +++ b/drivers/spi/spi-pic32.c
->> @@ -609,22 +609,18 @@ static void pic32_spi_cleanup(struct spi_device *spi)
->>  static void pic32_spi_dma_prep(struct pic32_spi *pic32s, struct device *dev)
->>  {
->>         struct spi_master *master = pic32s->master;
->> -       dma_cap_mask_t mask;
->>
->> -       dma_cap_zero(mask);
->> -       dma_cap_set(DMA_SLAVE, mask);
->> -
->> -       master->dma_rx = dma_request_slave_channel_compat(mask, NULL, NULL,
->> -                                                         dev, "spi-rx");
->> -       if (!master->dma_rx) {
->> +       master->dma_rx = dma_request_chan(dev, "spi-rx");
-> 
-> Why not dma_request_slave_channel()?
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+---
+changes in version 2:
+- remove trailer space
+- add Christophe in the maintainers list
+  
+ .../devicetree/bindings/watchdog/st,stm32-iwdg.txt | 26 ----------
+ .../bindings/watchdog/st,stm32-iwdg.yaml           | 55 ++++++++++++++++++++++
+ 2 files changed, 55 insertions(+), 26 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt
+ create mode 100644 Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.yaml
 
-The longer term plan is to retire dma_request_slave_channel() as well.
-With dma_request_chan() deferred probing against DMA drivers is possible
-and it also supports legacy boot with dma_slave_map.
+diff --git a/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt b/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt
+deleted file mode 100644
+index d8f4430b0a13..000000000000
+--- a/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.txt
++++ /dev/null
+@@ -1,26 +0,0 @@
+-STM32 Independent WatchDoG (IWDG)
+----------------------------------
+-
+-Required properties:
+-- compatible: Should be either:
+-  - "st,stm32-iwdg"
+-  - "st,stm32mp1-iwdg"
+-- reg: Physical base address and length of the registers set for the device
+-- clocks: Reference to the clock entry lsi. Additional pclk clock entry
+-  is required only for st,stm32mp1-iwdg.
+-- clock-names: Name of the clocks used.
+-  "lsi" for st,stm32-iwdg
+-  "lsi", "pclk" for st,stm32mp1-iwdg
+-
+-Optional Properties:
+-- timeout-sec: Watchdog timeout value in seconds.
+-
+-Example:
+-
+-iwdg: watchdog@40003000 {
+-	compatible = "st,stm32-iwdg";
+-	reg = <0x40003000 0x400>;
+-	clocks = <&clk_lsi>;
+-	clock-names = "lsi";
+-	timeout-sec = <32>;
+-};
+diff --git a/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.yaml b/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.yaml
+new file mode 100644
+index 000000000000..975b697930a4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/watchdog/st,stm32-iwdg.yaml
+@@ -0,0 +1,55 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/watchdog/st,stm32-iwdg.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: STMicroelectronics STM32 Independent WatchDoG (IWDG) bindings
++
++maintainers:
++  - Yannick Fertre <yannick.fertre@st.com>
++  - Christophe Roullier <christophe.roullier@st.com>
++
++allOf:
++  - $ref: "watchdog.yaml#"
++
++properties:
++  compatible:
++    enum:
++      - st,stm32-iwdg
++      - st,stm32mp1-iwdg
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    items:
++      - description: Low speed clock
++      - description: Optional peripheral clock
++    minItems: 1
++    maxItems: 2
++
++  clock-names:
++    items:
++      enums: [ lsi, pclk ]
++    minItems: 1
++    maxItems: 2
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++
++examples:
++  - |
++    #include <dt-bindings/clock/stm32mp1-clks.h>
++    watchdog@5a002000 {
++      compatible = "st,stm32mp1-iwdg";
++      reg = <0x5a002000 0x400>;
++      clocks = <&rcc IWDG2>, <&rcc CK_LSI>;
++      clock-names = "pclk", "lsi";
++      timeout-sec = <32>;
++    };
++
++...
+-- 
+2.15.0
 
-At the end we should be left with only dma_request_chan() for slave
-channels in the kernel.
-
-> That way you...
-> 
->> +       if (IS_ERR(master->dma_rx)) {
-> 
-> ... don't have to change the NULL check here, and...
-> 
->>                 dev_warn(dev, "RX channel not found.\n");
->> +               master->dma_rx = NULL;
-> 
-> ...  don't have to override by NULL here.
-
-It is a small sacrifice, true, but if anyone cares the driver can
-support deferred probing with dma_request_chan().
-
-> 
-> (same for TX below).
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
