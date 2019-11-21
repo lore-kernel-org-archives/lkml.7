@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27CC7C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:20:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF11AC43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:20:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1809208CE
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:20:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B23EB214E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:20:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574306424;
-	bh=srdnebtzKEySU4A3SaqY8Gx5DAif6RUKvhzFQiZMlcs=;
+	s=default; t=1574306429;
+	bh=ICtU3L2SGCxL5d13ilpqPvEB+MBDUd3UY3pWS7CJXr8=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=1oShjjg2uIquXFK5KFcZ8VO36S6+Vay1Ph9mmGwenv+QDNSFBqefibGBQp7f60upA
-	 0NALOBJ87hF0jyJ/h+BWOS4xaH8U6dttdAHULFprzpinSbNzgDaYTuYQDFHbwNmRmE
-	 qqWV1yFwOp4gqt2qLtE0u4h99sX/V4369ouMe+Ig=
+	b=fhnG0M0BLCainEGaCh+NglQRBLJCkCOluV7zCwXZJv554IT+77leeJDVtyz9QhjU0
+	 B4sW3SDJm+fof6vqmUG7ARzZf+aUmioXB5r/TU+Jk8oNptOLmqKsrldqcPPDAILWgr
+	 apqG+OET7aCGcFYylBitZctoqaUI55zCVKNsbtPc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727466AbfKUDUW (ORCPT
+        id S1727478AbfKUDU1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 22:20:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33978 "EHLO mail.kernel.org"
+        Wed, 20 Nov 2019 22:20:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727450AbfKUDUU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 22:20:20 -0500
+        id S1727450AbfKUDUZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 22:20:25 -0500
 Received: from PC-kkoz.proceq.com (unknown [213.160.61.66])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6368E20898;
-        Thu, 21 Nov 2019 03:20:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76B19208CC;
+        Thu, 21 Nov 2019 03:20:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574306419;
-        bh=srdnebtzKEySU4A3SaqY8Gx5DAif6RUKvhzFQiZMlcs=;
+        s=default; t=1574306424;
+        bh=ICtU3L2SGCxL5d13ilpqPvEB+MBDUd3UY3pWS7CJXr8=;
         h=From:To:Cc:Subject:Date:From;
-        b=XaRPg600K2NA2y/DWZ4j1LaK5aD/YKEdc8VsvJltNeMoWhiYIcKWiUoZICn8gYZxN
-         2LOd0hq9jZLk8fuUA8Ez5mpsAaVsqcmqY5hG70EfWw60uTZ3vJrNHiSgoantCz/ONT
-         uJxm6vLBSvzVuZ+rVfSxWXAnsrpveQTOt23kWc/M=
+        b=Qfh0BrqgN2Sy9wxcIiZHCkTPtNpWZNn7gC6G3huJi7Rk/QV/pi+qc4faZ1ocDVp8C
+         A8vqTqeBi8mhKLq8xB0nWzTcg6ULzkWJImhdDHyT9GrXu5vNPaaVfoOveJmnvrDgCS
+         WUKeWg1tY95otr4qGw7m2TNN+/9lZ6k5V73nAXT0=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        xen-devel@lists.xenproject.org
-Subject: [PATCH v2] xen: Fix Kconfig indentation
-Date:   Thu, 21 Nov 2019 04:20:16 +0100
-Message-Id: <1574306416-22882-1-git-send-email-krzk@kernel.org>
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu
+Subject: [PATCH v2] arm64: Fix Kconfig indentation
+Date:   Thu, 21 Nov 2019 04:20:20 +0100
+Message-Id: <1574306420-23985-1-git-send-email-krzk@kernel.org>
 X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -66,110 +68,105 @@ Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Changes since v1:
 1. Fix also 7-space and tab+1 space indentation issues.
 ---
- drivers/xen/Kconfig | 58 ++++++++++++++++++++++++++---------------------------
- 1 file changed, 29 insertions(+), 29 deletions(-)
+ arch/arm64/Kconfig     | 42 +++++++++++++++++++++---------------------
+ arch/arm64/kvm/Kconfig |  2 +-
+ 2 files changed, 22 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/xen/Kconfig b/drivers/xen/Kconfig
-index b71f1ad1013c..61212fc7f0c7 100644
---- a/drivers/xen/Kconfig
-+++ b/drivers/xen/Kconfig
-@@ -106,27 +106,27 @@ config XENFS
- 	  If in doubt, say yes.
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index c4d6d8d6b6c4..d31bf024830f 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -209,31 +209,31 @@ config ARM64_CONT_SHIFT
+ 	default 4
  
- config XEN_COMPAT_XENFS
--       bool "Create compatibility mount point /proc/xen"
--       depends on XENFS
--       default y
--       help
--         The old xenstore userspace tools expect to find "xenbus"
--         under /proc/xen, but "xenbus" is now found at the root of the
--         xenfs filesystem.  Selecting this causes the kernel to create
--         the compatibility mount point /proc/xen if it is running on
--         a xen platform.
--         If in doubt, say yes.
-+	bool "Create compatibility mount point /proc/xen"
-+	depends on XENFS
-+	default y
-+	help
-+	  The old xenstore userspace tools expect to find "xenbus"
-+	  under /proc/xen, but "xenbus" is now found at the root of the
-+	  xenfs filesystem.  Selecting this causes the kernel to create
-+	  the compatibility mount point /proc/xen if it is running on
-+	  a xen platform.
-+	  If in doubt, say yes.
+ config ARCH_MMAP_RND_BITS_MIN
+-       default 14 if ARM64_64K_PAGES
+-       default 16 if ARM64_16K_PAGES
+-       default 18
++	default 14 if ARM64_64K_PAGES
++	default 16 if ARM64_16K_PAGES
++	default 18
  
- config XEN_SYS_HYPERVISOR
--       bool "Create xen entries under /sys/hypervisor"
--       depends on SYSFS
--       select SYS_HYPERVISOR
--       default y
--       help
--         Create entries under /sys/hypervisor describing the Xen
--	 hypervisor environment.  When running native or in another
--	 virtual environment, /sys/hypervisor will still be present,
--	 but will have no xen contents.
-+	bool "Create xen entries under /sys/hypervisor"
-+	depends on SYSFS
-+	select SYS_HYPERVISOR
-+	default y
-+	help
-+	  Create entries under /sys/hypervisor describing the Xen
-+	  hypervisor environment.  When running native or in another
-+	  virtual environment, /sys/hypervisor will still be present,
-+	  but will have no xen contents.
+ # max bits determined by the following formula:
+ #  VA_BITS - PAGE_SHIFT - 3
+ config ARCH_MMAP_RND_BITS_MAX
+-       default 19 if ARM64_VA_BITS=36
+-       default 24 if ARM64_VA_BITS=39
+-       default 27 if ARM64_VA_BITS=42
+-       default 30 if ARM64_VA_BITS=47
+-       default 29 if ARM64_VA_BITS=48 && ARM64_64K_PAGES
+-       default 31 if ARM64_VA_BITS=48 && ARM64_16K_PAGES
+-       default 33 if ARM64_VA_BITS=48
+-       default 14 if ARM64_64K_PAGES
+-       default 16 if ARM64_16K_PAGES
+-       default 18
++	default 19 if ARM64_VA_BITS=36
++	default 24 if ARM64_VA_BITS=39
++	default 27 if ARM64_VA_BITS=42
++	default 30 if ARM64_VA_BITS=47
++	default 29 if ARM64_VA_BITS=48 && ARM64_64K_PAGES
++	default 31 if ARM64_VA_BITS=48 && ARM64_16K_PAGES
++	default 33 if ARM64_VA_BITS=48
++	default 14 if ARM64_64K_PAGES
++	default 16 if ARM64_16K_PAGES
++	default 18
  
- config XEN_XENBUS_FRONTEND
- 	tristate
-@@ -271,7 +271,7 @@ config XEN_ACPI_PROCESSOR
- 	depends on XEN && XEN_DOM0 && X86 && ACPI_PROCESSOR && CPU_FREQ
- 	default m
- 	help
--          This ACPI processor uploads Power Management information to the Xen
-+	  This ACPI processor uploads Power Management information to the Xen
- 	  hypervisor.
+ config ARCH_MMAP_RND_COMPAT_BITS_MIN
+-       default 7 if ARM64_64K_PAGES
+-       default 9 if ARM64_16K_PAGES
+-       default 11
++	default 7 if ARM64_64K_PAGES
++	default 9 if ARM64_16K_PAGES
++	default 11
  
- 	  To do that the driver parses the Power Management data and uploads
-@@ -280,7 +280,7 @@ config XEN_ACPI_PROCESSOR
- 	  SMM so that other drivers (such as ACPI cpufreq scaling driver) will
- 	  not load.
+ config ARCH_MMAP_RND_COMPAT_BITS_MAX
+-       default 16
++	default 16
  
--          To compile this driver as a module, choose M here: the module will be
-+	  To compile this driver as a module, choose M here: the module will be
- 	  called xen_acpi_processor  If you do not know what to choose, select
- 	  M here. If the CPUFREQ drivers are built in, select Y here.
- 
-@@ -292,7 +292,7 @@ config XEN_MCE_LOG
- 	  converting it into Linux mcelog format for mcelog tools
- 
- config XEN_HAVE_PVMMU
--       bool
-+	bool
- 
- config XEN_EFI
+ config NO_IOPORT_MAP
+ 	def_bool y if !PCI
+@@ -263,7 +263,7 @@ config GENERIC_HWEIGHT
  	def_bool y
-@@ -309,15 +309,15 @@ config XEN_ACPI
- 	depends on X86 && ACPI
  
- config XEN_SYMS
--       bool "Xen symbols"
--       depends on X86 && XEN_DOM0 && XENFS
--       default y if KALLSYMS
+ config GENERIC_CSUM
+-        def_bool y
++	def_bool y
+ 
+ config GENERIC_CALIBRATE_DELAY
+ 	def_bool y
+@@ -886,8 +886,8 @@ choice
+ 	  that is selected here.
+ 
+ config CPU_BIG_ENDIAN
+-       bool "Build big-endian kernel"
 -       help
--          Exports hypervisor symbols (along with their types and addresses) via
--          /proc/xen/xensyms file, similar to /proc/kallsyms
-+	bool "Xen symbols"
-+	depends on X86 && XEN_DOM0 && XENFS
-+	default y if KALLSYMS
++	bool "Build big-endian kernel"
 +	help
-+	  Exports hypervisor symbols (along with their types and addresses) via
-+	  /proc/xen/xensyms file, similar to /proc/kallsyms
+ 	  Say Y if you plan on running a kernel with a big-endian userspace.
  
- config XEN_HAVE_VPMU
--       bool
-+	bool
+ config CPU_LITTLE_ENDIAN
+@@ -1670,7 +1670,7 @@ config EFI
+ 	help
+ 	  This option provides support for runtime services provided
+ 	  by UEFI firmware (such as non-volatile variables, realtime
+-          clock, and platform reset). A UEFI stub is also provided to
++	  clock, and platform reset). A UEFI stub is also provided to
+ 	  allow the kernel to be booted as an EFI application. This
+ 	  is only useful on systems that have UEFI firmware.
  
- config XEN_FRONT_PGDIR_SHBUF
- 	tristate
+diff --git a/arch/arm64/kvm/Kconfig b/arch/arm64/kvm/Kconfig
+index a475c68cbfec..1b10785bc75a 100644
+--- a/arch/arm64/kvm/Kconfig
++++ b/arch/arm64/kvm/Kconfig
+@@ -62,7 +62,7 @@ config KVM_ARM_PMU
+ 	  virtual machines.
+ 
+ config KVM_INDIRECT_VECTORS
+-       def_bool KVM && (HARDEN_BRANCH_PREDICTOR || HARDEN_EL2_VECTORS)
++	def_bool KVM && (HARDEN_BRANCH_PREDICTOR || HARDEN_EL2_VECTORS)
+ 
+ source "drivers/vhost/Kconfig"
+ 
 -- 
 2.7.4
 
