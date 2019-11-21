@@ -2,134 +2,120 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59114C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:14:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5367C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:15:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C8FA206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:14:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574345657;
-	bh=yrY1+PrSgHnuhC1q4l+RJtecHMlK3eI481hfgDhR2nI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fJkOZYV/oiF2IJGIDuJ8Ot/sYlGWTe6AfCQaz3IpoIswP0e4WhAUB4dQmKChfhuLE
-	 Hpbiz9AlvNs8BanhSzHnjpGOnHa1IDyX8cOs0Lz5OpqFNHTanWpO6UPEjYnWSFrUIZ
-	 ssGQnlr96NYdWha4FnhIvZkE10KWFYwGoLubSCiE=
+	by mail.kernel.org (Postfix) with ESMTP id 8A83B2068E
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:15:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="Dn06DFYA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbfKUOOQ (ORCPT
+        id S1726957AbfKUOPG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 09:14:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42862 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726613AbfKUOOP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 09:14:15 -0500
-Received: from localhost (lfbn-ncy-1-150-155.w83-194.abo.wanadoo.fr [83.194.232.155])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E40D2206D7;
-        Thu, 21 Nov 2019 14:14:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574345654;
-        bh=yrY1+PrSgHnuhC1q4l+RJtecHMlK3eI481hfgDhR2nI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YWaunm5rNrJy8+9XedsaT48F+WyCoeAqkczVNMjaIbaw+MDbTeoaJ7hPH/84HZFLi
-         CcbauHV82zlmLimN1wnrWNQtICWuiuKybcR3GEJI8cQ8K31dopCswGGkB9GLcxMMXw
-         V+2kp0z6sdLO/mqpraeK7hwe2vA/SdgDBEFIqbIA=
-Date:   Thu, 21 Nov 2019 15:14:11 +0100
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Rik van Riel <riel@surriel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Yauheni Kaliuta <yauheni.kaliuta@redhat.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH 5/6] leds: Use all-in-one vtime aware kcpustat accessor
-Message-ID: <20191121141410.GA17301@lenoir>
-References: <20191121024430.19938-1-frederic@kernel.org>
- <20191121024430.19938-6-frederic@kernel.org>
- <20191121065826.GA3552@gmail.com>
+        Thu, 21 Nov 2019 09:15:06 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:36474 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726546AbfKUOPG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 09:15:06 -0500
+Received: by mail-pf1-f194.google.com with SMTP id b19so1757312pfd.3
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 06:15:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0lg7xoqCU9griTX07bOPborDv4xC+ndaqpkFXe9TjLg=;
+        b=Dn06DFYADguxXrNrHFoCiFbFd1uG/ryAw8ky8mYHCn9oUzVz9hB2yMDAu5ULjtXAI0
+         hqC4JRrQZa8CXukoaP5Y2URVyXUjUpoKO7Lgzizd9Bp5vGOLa8HrAUeWBKmfT0wOmT1z
+         p43ut5Cy5wBhePmkmrvHQVgasIXEG9iPq+vVA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0lg7xoqCU9griTX07bOPborDv4xC+ndaqpkFXe9TjLg=;
+        b=TgQfGbeD0zRpxp6FLmws8rJdR5r0Em/NsJyt0jw69mldxxumOkBIPolP6Veh4KrD44
+         Kp1GtBCShCC0EZgqXqGe1xFd9kx8DHJw9g9/LJliyvfnctSjBYh2gGruWNlErVhewLRf
+         5Fptay8Wws0XnJZRhxfC7gGQmc9slEjdsRaU6E+nI05Jl/R3rtNrr0ELSM/QEu1olY7Q
+         ii57bnQZxmiecY8F0VvSOUGbQ/w5qi006HF/qtZFRLIDU4WurO0NsKRShSwIfdGmsthU
+         v/1WS4QEeA1ity0kxpqtFadko/AHiz//dO2Cp4StD4IDKTYUmaEZomUbDe6YVIHwTKxy
+         zZpw==
+X-Gm-Message-State: APjAAAVQX1eDc/FrTy8RlYJmUAcuwf19yEYsiTvy6Nxjw53c6KaQcTz5
+        ziTbT0KiL0V2SiULvl0n9xj/kQ==
+X-Google-Smtp-Source: APXvYqwuTjhpD/waPmGZkM+fuBj2AUAa0JiWceYv23FKWcp+RSP3vrbjA1wVoDSX04kNhqg5Ck74hQ==
+X-Received: by 2002:a63:1303:: with SMTP id i3mr9710113pgl.430.1574345702647;
+        Thu, 21 Nov 2019 06:15:02 -0800 (PST)
+Received: from localhost.localdomain ([115.97.180.31])
+        by smtp.gmail.com with ESMTPSA id w138sm4072304pfc.68.2019.11.21.06.14.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Nov 2019 06:15:01 -0800 (PST)
+From:   Jagan Teki <jagan@amarulasolutions.com>
+To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Akash Gajjar <akash@openedev.com>, Tom Cubie <tom@radxa.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-amarula@amarulasolutions.com,
+        Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH v2 0/5] arm64: dts: rockchip: Add Rock Pi N10 support
+Date:   Thu, 21 Nov 2019 19:44:40 +0530
+Message-Id: <20191121141445.28712-1-jagan@amarulasolutions.com>
+X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191121065826.GA3552@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 07:58:26AM +0100, Ingo Molnar wrote:
-> 
-> * Frederic Weisbecker <frederic@kernel.org> wrote:
-> 
-> > We can now safely read user kcpustat fields on nohz_full CPUs.
-> > Use the appropriate accessor.
-> > 
-> > Reported-by: Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
-> > Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-> > Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> > Cc: Pavel Machek <pavel@ucw.cz>
-> > Cc: Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
-> > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > Cc: Rik van Riel <riel@surriel.com>
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > Cc: Wanpeng Li <wanpengli@tencent.com>
-> > Cc: Ingo Molnar <mingo@kernel.org>
-> > ---
-> >  drivers/leds/trigger/ledtrig-activity.c | 14 +++++++++-----
-> >  1 file changed, 9 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/drivers/leds/trigger/ledtrig-activity.c b/drivers/leds/trigger/ledtrig-activity.c
-> > index ddfc5edd07c8..6901e3631c22 100644
-> > --- a/drivers/leds/trigger/ledtrig-activity.c
-> > +++ b/drivers/leds/trigger/ledtrig-activity.c
-> > @@ -57,11 +57,15 @@ static void led_activity_function(struct timer_list *t)
-> >  	curr_used = 0;
-> >  
-> >  	for_each_possible_cpu(i) {
-> > -		curr_used += kcpustat_cpu(i).cpustat[CPUTIME_USER]
-> > -			  +  kcpustat_cpu(i).cpustat[CPUTIME_NICE]
-> > -			  +  kcpustat_field(&kcpustat_cpu(i), CPUTIME_SYSTEM, i)
-> > -			  +  kcpustat_cpu(i).cpustat[CPUTIME_SOFTIRQ]
-> > -			  +  kcpustat_cpu(i).cpustat[CPUTIME_IRQ];
-> > +		struct kernel_cpustat kcpustat;
-> > +
-> > +		kcpustat_fetch_cpu(&kcpustat, i);
-> > +
-> > +		curr_used += kcpustat.cpustat[CPUTIME_USER]
-> > +			  +  kcpustat.cpustat[CPUTIME_NICE]
-> > +			  +  kcpustat.cpustat[CPUTIME_SYSTEM]
-> > +			  +  kcpustat.cpustat[CPUTIME_SOFTIRQ]
-> > +			  +  kcpustat.cpustat[CPUTIME_IRQ];
-> 
-> Not the best tested series:
-> 
-> --- a/drivers/leds/trigger/ledtrig-activity.c
-> +++ b/drivers/leds/trigger/ledtrig-activity.c
-> @@ -59,7 +59,7 @@ static void led_activity_function(struct timer_list *t)
->  	for_each_possible_cpu(i) {
->  		struct kernel_cpustat kcpustat;
->  
-> -		kcpustat_fetch_cpu(&kcpustat, i);
-> +		kcpustat_cpu_fetch(&kcpustat, i);
->  
->  		curr_used += kcpustat.cpustat[CPUTIME_USER]
->  			  +  kcpustat.cpustat[CPUTIME_NICE]
-> 
-> 
-> :-)
+Unlike, other Rock PI boards from radxa, Rock Pi N10 SBC is based
+on SOM + Carrier board combination.
 
-Oops, I tested with vtime on and off but that one slipped under my config.
-Do you want me to resend?
+Rock Pi N10 is a Rockchip RK3399Pro based SBC, which has
+- VMARC RK3399Pro SOM (as per SMARC standard) from Vamrs.
+- Dalang carrier board from Radxa.
 
-Thanks.
+This series add initial support for Rock Pi N10 and fixes comments 
+from Heiko from v1[1].
+
+patch 0001: dt-bindings for VMARC RK3399Pro SOM
+
+patch 0002: VMARC RK3399Pro SOM dtsi support
+
+patch 0003: dt-bindings for Rock Pi N10
+
+patch 0004: Radxa Dalang carrier board dtsi support
+
+patch 0005: Rock Pi N10 dts support
+
+Tested basic peripherals and will all more in future patches.
+
+[1] https://patchwork.kernel.org/cover/11253649/
+
+Any inputs?
+Jagan.
+
+Jagan Teki (5):
+  dt-bindings: arm: rockchip: Add VMARC RK3399Pro SOM binding
+  arm64: dts: rockchip: Add VMARC RK3399Pro SOM initial support
+  dt-bindings: arm: rockchip: Add Rock Pi N10 binding
+  ARM: dts: rockchip: Add Radxa Dalang Carrier board
+  arm64: dts: rockchip: Add Radxa Rock Pi N10 initial support
+
+ .../devicetree/bindings/arm/rockchip.yaml     |  10 +
+ .../dts/rockchip-radxa-dalang-carrier.dtsi    |  81 +++++
+ arch/arm64/boot/dts/rockchip/Makefile         |   1 +
+ .../dts/rockchip/rk3399pro-rock-pi-n10.dts    |  17 +
+ .../dts/rockchip/rk3399pro-vmarc-som.dtsi     | 333 ++++++++++++++++++
+ 5 files changed, 442 insertions(+)
+ create mode 100644 arch/arm/boot/dts/rockchip-radxa-dalang-carrier.dtsi
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3399pro-rock-pi-n10.dts
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3399pro-vmarc-som.dtsi
+
+-- 
+2.18.0.321.gffc6fa0e3
+
