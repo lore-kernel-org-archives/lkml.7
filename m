@@ -2,98 +2,92 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F61AC43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:35:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 059C0C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:37:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 210F220872
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:35:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1F972088F
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:37:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Lxe4g4Wv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbfKUKfT (ORCPT
+        id S1726716AbfKUKhl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 05:35:19 -0500
-Received: from cnshjsmin05.app.nokia-sbell.com ([116.246.26.45]:56124 "EHLO
-        cnshjsmin05.nokia-sbell.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726613AbfKUKfS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 05:35:18 -0500
-X-AuditID: ac18929d-483ff700000014de-52-5dd668616efd
-Received: from CNSHPPEXCH1604.nsn-intra.net (Unknown_Domain [135.251.51.104])
-        (using TLS with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client did not present a certificate)
-        by cnshjsmin05.nokia-sbell.com (Symantec Messaging Gateway) with SMTP id 24.6B.05342.16866DD5; Thu, 21 Nov 2019 18:35:13 +0800 (HKT)
-Received: from CNSHPPEXCH1601.nsn-intra.net (135.251.51.101) by
- CNSHPPEXCH1604.nsn-intra.net (135.251.51.104) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 21 Nov 2019 18:35:13 +0800
-Received: from CNSHPPEXCH1601.nsn-intra.net ([135.251.51.101]) by
- CNSHPPEXCH1601.nsn-intra.net ([135.251.51.101]) with mapi id 15.01.1713.007;
- Thu, 21 Nov 2019 18:35:13 +0800
-From:   "Wang, Peng 1. (NSB - CN/Hangzhou)" <peng.1.wang@nokia-sbell.com>
-To:     Guenter Roeck <groeck7@gmail.com>
-CC:     "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2] watchdog: make DesignWare watchdog allow users to set
- bigger timeout value
-Thread-Topic: [PATCH v2] watchdog: make DesignWare watchdog allow users to set
- bigger timeout value
-Thread-Index: AdWgVy1kREB4bw5dQ4u+4ZEezt20uw==
-Date:   Thu, 21 Nov 2019 10:35:12 +0000
-Message-ID: <dc8ce91610dd4860858bfe92f104d74a@nokia-sbell.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [135.251.51.115]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 21 Nov 2019 05:37:41 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:40430 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726293AbfKUKhk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 05:37:40 -0500
+Received: from zn.tnic (p200300EC2F0F07006553A4184595DC73.dip0.t-ipconnect.de [IPv6:2003:ec:2f0f:700:6553:a418:4595:dc73])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 56EAC1EC0CE8;
+        Thu, 21 Nov 2019 11:37:39 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1574332659;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=my9hQkLlPxW1AW3Gf6LZ+XTRjwwqHQaGN1kMFbCEOqE=;
+        b=Lxe4g4WvUvDvhj0e3y9i6X8rFEb/ZwgPwWLV+22CCGmthpcg/8F/AGemWTGZt97D+ZJisu
+        TMqjdV8iM/oD7CTpIkXqMARMwe9RztOmT93qV8yoK1AXPakLeaa+VWzXLDzvnkz0KQNuR5
+        kbkg6ZBgj+DmK0a7/3FeZqgyjFAlQaY=
+Date:   Thu, 21 Nov 2019 11:37:32 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>, dmaengine@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Vinod Koul <vkoul@kernel.org>, Jing Lin <jing.lin@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Dey, Megha" <megha.dey@intel.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, Jens Axboe <axboe@kernel.dk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH RFC 01/14] x86/asm: add iosubmit_cmds512() based on
+ movdir64b CPU instruction
+Message-ID: <20191121103732.GA6540@zn.tnic>
+References: <157428480574.36836.14057238306923901253.stgit@djiang5-desk3.ch.intel.com>
+ <157428502934.36836.8119026517510193201.stgit@djiang5-desk3.ch.intel.com>
+ <20191120215338.GN2634@zn.tnic>
+ <20191120231923.GA32680@agluck-desk2.amr.corp.intel.com>
+ <20191120232645.GO2634@zn.tnic>
+ <CAPcyv4gngO04iWuKu2_DV4_AXw5yssd6njTNKF=eKk+YJw3AfQ@mail.gmail.com>
+ <alpine.DEB.2.21.1911210151590.29534@nanos.tec.linutronix.de>
+ <CAPcyv4iSv893n_gri+SC42Wcsr8EOGJfuWYUzi3v-fDnGBSriA@mail.gmail.com>
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpmkeLIzCtJLcpLzFFi42Jp/22coZuYcS3W4G+XiMW+zutMFpd3zWGz
-        uLFuH7vF45f/mB1YPHbOusvusXLNGlaPz5vkApijuGxSUnMyy1KL9O0SuDKOHlnFVnBGoGLL
-        IfMGxikCXYycHBICJhLLf39h7GLk4hASOMQkcfTbMXYI5y+jxIZ1J5ghnE2MEvP2vWcBaWET
-        cJdo2rSODcQWEVCV2LdjJVgRs8BuRom5jW/AioQFEiQu7mxngihKlfg24QCUrScxY/MmsBoW
-        oObOczfABvEK2EnsPDqHGcRmFJCVmPboPlg9s4C4xK0n85kgbhWQWLLnPDOELSrx8vE/1i5G
-        DiBbSaJvAxOIySygKbF+lz5Ep6LElO6H7BDTBSVOznzCMoFRZBaSobMQOmYh6ZiFpGMBI8sq
-        RunkvOKMrOLczDwDU728/OzMRN3ipNScHL3k/NxNjMCoWSMxae4Oxs7O+EOMAhyMSjy8GRpX
-        Y4VYE8uKK3MPMUpwMCuJ8O65fiVWiDclsbIqtSg/vqg0J7X4EKM0B4uSOG/L5IWxQgLpiSWp
-        2ampBalFMFkmDk6pBsYV7UZX7y9YKnL7Ksexl4c2Hq7ncBbUiWh04feqnV62RaCr5OqWsvXP
-        b3b9CT0axpw/rWZBJuf7rb9WWsiXP9r+X+j57KD9Gyecz3p77HqV8M5P9mwm33glgrb1yv+c
-        Ozej407/s/y1E+PVz0mVvV/HuddpwgcdB9eDDYorY73nrFEWbnYzP2ivxFKckWioxVxUnAgA
-        M7xmhJYCAAA=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4iSv893n_gri+SC42Wcsr8EOGJfuWYUzi3v-fDnGBSriA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbSBhYWJhYTRiNzA5YmQ0NTFlNTY2YzkwNmU4ZDFkY2E0OGY5MmY5YjEyIE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQ0KRnJvbTogUGVuZyBXYW5nIDxwZW5nLjEud2FuZ0Bub2tpYS1zYmVsbC5j
-b20+DQpEYXRlOiBXZWQsIDIwIE5vdiAyMDE5IDE1OjEyOjU5ICswODAwDQpTdWJqZWN0OiBbUEFU
-Q0hdIHdhdGNoZG9nOiBtYWtlIERlc2lnbldhcmUgd2F0Y2hkb2cgYWxsb3cgdXNlcnMgdG8gc2V0
-IGJpZ2dlcg0KIHRpbWVvdXQgdmFsdWUNCg0Kd2F0Y2hkb2dfZGV2LmMgcHJvdmlkZXMgbWVhbnMg
-dG8gYWxsb3cgdXNlcnMgdG8gc2V0IGJpZ2dlciB0aW1lb3V0IHZhbHVlDQp0aGFuIEhXIGNhbiBz
-dXBwb3J0LCBtYWtlIERlc2lnbldhcmUgd2F0Y2hkb2cgYWxpZ24gd2l0aCB0aGlzLg0KDQotLS0N
-Cg0KdjIgLT4gdjE6DQogICAgICAgLSB1c2UgdG9wX3MgdG8gY29tcGFyZSB3aXRoIHdkZC0+bWF4
-X2h3X2hlYXJ0YmVhdF9tcw0KICAgICAgIC0gdXBkYXRlIHdkZC0+dGltZW91dCBpbiBjYXNlIGl0
-J3MgZ3JlYXRlciB0aGFuIEhXIHN1cHBvcnRzDQogICAgICAgLSBmaXggY29tbWVudHMgZXJyb3IN
-Cg0KdjE6IGluaXRpYWwgdmVyc2lvbg0KDQpTaWduZWQtb2ZmLWJ5OiBQZW5nIFdhbmcgPHBlbmcu
-MS53YW5nQG5va2lhLXNiZWxsLmNvbT4NCi0tLQ0KIGRyaXZlcnMvd2F0Y2hkb2cvZHdfd2R0LmMg
-fCAxMCArKysrKysrKystDQogMSBmaWxlIGNoYW5nZWQsIDkgaW5zZXJ0aW9ucygrKSwgMSBkZWxl
-dGlvbigtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy93YXRjaGRvZy9kd193ZHQuYyBiL2RyaXZl
-cnMvd2F0Y2hkb2cvZHdfd2R0LmMNCmluZGV4IGZlZjdjNjEuLjEyYzExNmUgMTAwNjQ0DQotLS0g
-YS9kcml2ZXJzL3dhdGNoZG9nL2R3X3dkdC5jDQorKysgYi9kcml2ZXJzL3dhdGNoZG9nL2R3X3dk
-dC5jDQpAQCAtMTE0LDcgKzExNCwxNSBAQCBzdGF0aWMgaW50IGR3X3dkdF9zZXRfdGltZW91dChz
-dHJ1Y3Qgd2F0Y2hkb2dfZGV2aWNlICp3ZGQsIHVuc2lnbmVkIGludCB0b3BfcykNCiAJd3JpdGVs
-KHRvcF92YWwgfCB0b3BfdmFsIDw8IFdET0dfVElNRU9VVF9SQU5HRV9UT1BJTklUX1NISUZULA0K
-IAkgICAgICAgZHdfd2R0LT5yZWdzICsgV0RPR19USU1FT1VUX1JBTkdFX1JFR19PRkZTRVQpOw0K
-IA0KLQl3ZGQtPnRpbWVvdXQgPSBkd193ZHRfdG9wX2luX3NlY29uZHMoZHdfd2R0LCB0b3BfdmFs
-KTsNCisJLyoNCisJICogSW4gY2FzZSB1c2VycyBzZXQgYmlnZ2VyIHRpbWVvdXQgdmFsdWUgdGhh
-biBIVyBjYW4gc3VwcG9ydCwNCisJICoga2VybmVsKHdhdGNoZG9nX2Rldi5jKSBoZWxwcyB0byBm
-ZWVkIHdhdGNoZG9nIGJlZm9yZSANCisJICogd2RkLT5tYXhfaHdfaGVhcnRiZWF0X21zDQorCSAq
-Lw0KKwlpZiAoIHRvcF9zICogMTAwMCA8PSB3ZGQtPm1heF9od19oZWFydGJlYXRfbXMgKQ0KKwkJ
-d2RkLT50aW1lb3V0ID0gZHdfd2R0X3RvcF9pbl9zZWNvbmRzKGR3X3dkdCwgdG9wX3ZhbCk7DQor
-CWVsc2UNCisJCXdkZC0+dGltZW91dCA9IHRvcF9zOw0KIA0KIAlyZXR1cm4gMDsNCiB9DQotLSAN
-CjEuOC4zLjENCg0K
+On Wed, Nov 20, 2019 at 05:32:51PM -0800, Dan Williams wrote:
+> True, but that would be a driver coding mistake flagged by the
+> WARN_ON_ONCE, and the failure is static. The driver must check for
+> static_cpu_has(X86_FEATURE_MOVDIR64B) once at init,
+
+So if you do that at driver init time, you don't need the static variant
+- simply use boot_cpu_has(). But if this function is going to be used on
+other platforms, then you need the check in the function and it must be
+static_cpu_has() for speed.
+
+The static_cpu_has() thing is a soft-of once check anyway because it
+gets patched by alternatives and after that it is 0 overhead.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
