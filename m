@@ -2,159 +2,152 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5582C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:41:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEDDEC43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:54:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 929BB20898
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:41:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82516208D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:54:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XRWfvtCE"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="PdGarOq1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726500AbfKUDlB (ORCPT
+        id S1726536AbfKUDyL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 22:41:01 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:44414 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725819AbfKUDlB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 22:41:01 -0500
-Received: by mail-pj1-f68.google.com with SMTP id w8so801239pjh.11;
-        Wed, 20 Nov 2019 19:41:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=j2sIOAWSvpcv/m2cgkSSXwml8VEfhQygMxdbbJ2m/Dc=;
-        b=XRWfvtCERahEU9IT10r54RhM9sMtIofkQd4lVaVCCt5gYEdEK975a+bi0EGLvOCzbJ
-         LPTsAmDUxgtTB/mffMxzuuSAsH+A4md0y05Yepij6ZNI7OqrseVnzBalmZzYgA4HMHC7
-         b7EOsYHq09jJpfZoejvD9NYRk1Fa9tyEafbaXMKTlzsbpiRqW1WgOXvJ8NRFlXAcIfqI
-         7bkAhMSDp6eTmB62fK1pk3lYjHqCR1L3Vl4DEtbOXOEsmbv9iAnZYGOYJwgxR57dRyrA
-         s+VvOSKjNmPNozfQaGRbNtEdLvNmPCQ7Us3hm+KqXbo/KPqeDDCDXKyFmjbnm+hkqOsN
-         XnOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=j2sIOAWSvpcv/m2cgkSSXwml8VEfhQygMxdbbJ2m/Dc=;
-        b=IQFcxsYGNJ+rd82f47CZV4+fUoOBy1FiaP88sCZ70C8Ci89qIZo7PlqSFrw4fYlC5P
-         2RknjtK0vV8ARyA05qUcJOBeGkV6ioHPgHWIk9P3++tN7R8BjvE0C6DmwBE4WUhaTjj9
-         Qd3i2d3b+zJUZYmpuW3E67RVkXyWrU46/LEFL6qSdWUIlRwPTTybbFtGxKEG4Vx0p54i
-         icj9M4HVBVQyFpVr8knB+84E/L5Zkw1xUHODTv8tdphtTK3tuIf3Dq6iNLtEJx2NM42U
-         eqLSrBaY+nr/g+UEckp6Au6ZxqKl7uwYt2G9wFgsLS3rRrkGkAsASf5NQxkQX9Qyh997
-         x41Q==
-X-Gm-Message-State: APjAAAX8RNcxE6Q8SWI9saQpuwJF4v6FF27l69Fustnbf5oS+Uu7pthy
-        VCRRGj0Onxx1DoXNp680OaelK8iT
-X-Google-Smtp-Source: APXvYqwdJwsvC3LoRltY/ESqSe+FOR2qqKjgaAgG/SHOCdGjWFqMJrjNvRV6svePMpiJM/Z2uOttrQ==
-X-Received: by 2002:a17:902:8541:: with SMTP id d1mr194528plo.112.1574307659961;
-        Wed, 20 Nov 2019 19:40:59 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id h13sm941580pfr.98.2019.11.20.19.40.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 20 Nov 2019 19:40:59 -0800 (PST)
-Subject: Re: [PATCH] watchdog: make DesignWare watchdog allow users to set
- bigger timeout value
-To:     "Wang, Peng 1. (NSB - CN/Hangzhou)" <peng.1.wang@nokia-sbell.com>
-Cc:     "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <13477f08400047c1b32030b2680a4241@nokia-sbell.com>
- <20191120171512.GA28255@roeck-us.net>
- <9128f42a3e4347f2adfccb8aa2833e2e@nokia-sbell.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <b0fcaae6-c9da-f551-5af4-ff112b08e851@roeck-us.net>
-Date:   Wed, 20 Nov 2019 19:40:58 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 20 Nov 2019 22:54:11 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:49761 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725842AbfKUDyL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 22:54:11 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47JQfM4Bydz9sPV;
+        Thu, 21 Nov 2019 14:54:03 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1574308448;
+        bh=HyzAF+NbAj3ZEvp+YZR2B5zi9YxVvmPTkJQX0jphq5s=;
+        h=Date:From:To:Cc:Subject:From;
+        b=PdGarOq1X9S3LCvhOzbRgw4pZV8U1Rne8yZeM3X8bDSig9VaQLgyRjCVEx4Lzx32x
+         f3EkHRa8Vvi3pbOw733TjNNejt4q/+mfClUUTDWUotGLXRXBidEE0Sg6XDPNCfKQ/e
+         NajES7mJySYSAggzVTBmyHuU+sKXtl3t5cHQE1bhausd7Xf2mC4vCdOYK7wl9RUIv0
+         TB966IjUlvlEycr1zh+LS6Znh3+jLq5QWKGO06LbmnEjWkZW9YRaLGVi8a1j9ay9k5
+         7LVlk67qbN2/8KaAe9WAWnYAd/aX39ZDmqkH/NhKQIH0wNb4VVn3hh+KAmeK8lp20O
+         N0nP8d7mNwDog==
+Date:   Thu, 21 Nov 2019 14:54:03 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dave Airlie <airlied@linux.ie>,
+        DRI <dri-devel@lists.freedesktop.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kevin Wang <kevin1.wang@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: linux-next: build failure after merge of the tip tree
+Message-ID: <20191121145403.46789cb5@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <9128f42a3e4347f2adfccb8aa2833e2e@nokia-sbell.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/6nJncfZqw2XrrBb4gmo.xLN";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/20/19 5:29 PM, Wang, Peng 1. (NSB - CN/Hangzhou) wrote:
-> Hi Guenter,
-> 
-> Thank you for your time.
-> - I will remove the unnecessary {}
-> - wdd->max_hw_heartbeat_ms is the max timeout value which HW can support, this value is limited according to the input clock, say. It only supports 20 seconds, if users requires to set timeout to be say. 60 seconds, the watchdog device driver 'watchdog_dev.c' checks if wdd->timeout is bigger than wdd->max_hw_heartbeat_ms, if yes, watchdog_dev.c feeds the watchdog by a worker queue itself to help to feed the watchdog before 60 seconds elapse. Here the issue of dw_wdt.c is that, the original codes update wdd->timeout to the value which HW can support, which means if users requires 60 seconds to be the timeout, then dw_wdt.c updates the timeout value to 20 seconds, this makes the "feeding helper" mechanism in watchdog_dev.c not take effect. That's why I add this check.
-> 
+--Sig_/6nJncfZqw2XrrBb4gmo.xLN
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Yes, I understand you need a check. What I am saying is that the check is wrong.
+Hi all,
 
-You need something like
+After merging the tip tree, today's linux-next build (x86_64 allmodconfig)
+failed like this:
 
-	if (top_s > DW_WDT_MAX_TOP)
-		wdt->timeout = top_s;
-	else
-		wdt->timeout = dw_wdt_top_in_seconds(dw_wdt, top_val);
+In file included from include/trace/define_trace.h:102,
+                 from drivers/gpu/drm/amd/amdgpu/amdgpu_trace.h:502,
+                 from drivers/gpu/drm/amd/amdgpu/amdgpu_trace_points.c:29:
+include/trace/../../drivers/gpu/drm/amd/amdgpu/amdgpu_trace.h:476:52: error=
+: expected expression before ';' token
+  476 |         __string(ring, sched_job->base.sched->name);
+      |                                                    ^
+include/trace/trace_events.h:435:2: note: in definition of macro 'DECLARE_E=
+VENT_CLASS'
+  435 |  tstruct        \
+      |  ^~~~~~~
+include/trace/trace_events.h:77:9: note: in expansion of macro 'PARAMS'
+   77 |         PARAMS(tstruct),         \
+      |         ^~~~~~
+include/trace/../../drivers/gpu/drm/amd/amdgpu/amdgpu_trace.h:472:1: note: =
+in expansion of macro 'TRACE_EVENT'
+  472 | TRACE_EVENT(amdgpu_ib_pipe_sync,
+      | ^~~~~~~~~~~
+include/trace/../../drivers/gpu/drm/amd/amdgpu/amdgpu_trace.h:475:6: note: =
+in expansion of macro 'TP_STRUCT__entry'
+  475 |      TP_STRUCT__entry(
+      |      ^~~~~~~~~~~~~~~~
 
-Guenter
+Caused by commit
 
-> Thanks,
-> Peng Wang
-> 
-> -----Original Message-----
-> From: Guenter Roeck [mailto:groeck7@gmail.com] On Behalf Of Guenter Roeck
-> Sent: Thursday, November 21, 2019 1:15 AM
-> To: Wang, Peng 1. (NSB - CN/Hangzhou) <peng.1.wang@nokia-sbell.com>
-> Cc: wim@linux-watchdog.org; linux-watchdog@vger.kernel.org; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH] watchdog: make DesignWare watchdog allow users to set bigger timeout value
-> 
-> On Wed, Nov 20, 2019 at 10:07:57AM +0000, Wang, Peng 1. (NSB - CN/Hangzhou) wrote:
->>  From 1d051b7c081083751dc0bab97d3ab9efbba0f4a7 Mon Sep 17 00:00:00 2001
->> From: Peng Wang <peng.1.wang@nokia-sbell.com>
->> Date: Wed, 20 Nov 2019 15:12:59 +0800
->> Subject: [PATCH] watchdog: make DesignWare watchdog allow users to set
->> bigger  timeout value
->>
->> watchdog_dev.c provides means to allow users to set bigger timeout
->> value than HW can support, make DesignWare watchdog align with this.
->>
->> Signed-off-by: Peng Wang <peng.1.wang@nokia-sbell.com>
->> ---
->>   drivers/watchdog/dw_wdt.c | 11 +++++++++--
->>   1 file changed, 9 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c
->> index fef7c61..8911e5e 100644
->> --- a/drivers/watchdog/dw_wdt.c
->> +++ b/drivers/watchdog/dw_wdt.c
->> @@ -113,8 +113,15 @@ static int dw_wdt_set_timeout(struct watchdog_device *wdd, unsigned int top_s)
->>   	 */
->>   	writel(top_val | top_val << WDOG_TIMEOUT_RANGE_TOPINIT_SHIFT,
->>   	       dw_wdt->regs + WDOG_TIMEOUT_RANGE_REG_OFFSET);
->> -
->> -	wdd->timeout = dw_wdt_top_in_seconds(dw_wdt, top_val);
->> +
->> +    /*
->> +     * In case users set bigger timeout value than HW can support,
->> +     * kernel(watchdog_dev.c) helps to feed watchdog before
->> +     * wdd->timeout
->> +     */
->> +    if ( wdd->timeout * 1000 <= wdd->max_hw_heartbeat_ms ) {
->> +	    wdd->timeout = dw_wdt_top_in_seconds(dw_wdt, top_val);
->> +    }
-> 
-> { } is unnecessary here. Also, the above code compares the _old_ timeout againt the maximum supported timeout, which doesn't look correct.
-> 
-> Thanks,
-> Guenter
-> 
->>   
->>   	return 0;
->>   }
->> --
->> 1.8.3.1
->>
-> 
+  2c2fdb8bca29 ("drm/amdgpu: fix amdgpu trace event print string format err=
+or")
 
+from the drm tree interacting with commit
+
+  60fdad00827c ("ftrace: Rework event_create_dir()")
+
+from the tip tree.
+
+I have added the following merge fix patch:
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Thu, 21 Nov 2019 14:46:00 +1100
+Subject: [PATCH] merge fix for "ftrace: Rework event_create_dir()"
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ drivers/gpu/drm/amd/amdgpu/amdgpu_trace.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_trace.h b/drivers/gpu/drm/am=
+d/amdgpu/amdgpu_trace.h
+index f940526c5889..63e734a125fb 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_trace.h
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_trace.h
+@@ -473,7 +473,7 @@ TRACE_EVENT(amdgpu_ib_pipe_sync,
+ 	    TP_PROTO(struct amdgpu_job *sched_job, struct dma_fence *fence),
+ 	    TP_ARGS(sched_job, fence),
+ 	    TP_STRUCT__entry(
+-			     __string(ring, sched_job->base.sched->name);
++			     __string(ring, sched_job->base.sched->name)
+ 			     __field(uint64_t, id)
+ 			     __field(struct dma_fence *, fence)
+ 			     __field(uint64_t, ctx)
+--=20
+2.23.0
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/6nJncfZqw2XrrBb4gmo.xLN
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3WClsACgkQAVBC80lX
+0Gy2OAf9EyXiwTJsRzceW1iTFyC+UI+w6fYgYlkNSasyj1fIqxj9flyI/tDEyI33
+t2128Zxozu+9UTfHjSaTDSy2o5wnvEeYZO39pMV4YFezPcso7KLDtl9Ryr9LTodv
++XRy2/letnvyADGVu82b0vyulcQnjrVgfOOFBHbpNZc0M0NUYMafuj3ONl1g0If8
+sesZL0RaM7s3MqyyoKQEB2lHUuwuzndfh9x1Bub4t5+LGeWxTd0ReT3as1za5Zct
+GQk8aOH/9kNIxcNA6HUSUPd6bxDnITq7yyGVbOyfYN8fmeN7wO+8qEO5kQhHmKbJ
+IZxtGfq7Or1OaGdsZoUYg/xtwlqdNQ==
+=eF8H
+-----END PGP SIGNATURE-----
+
+--Sig_/6nJncfZqw2XrrBb4gmo.xLN--
