@@ -2,351 +2,143 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26073C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:35:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12780C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:37:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A545B206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:35:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2A6E20672
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:37:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="TyVrdzgI"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="HY9TScAW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbfKUQfE (ORCPT
+        id S1726869AbfKUQhq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 11:35:04 -0500
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.50]:21562 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726279AbfKUQfE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 11:35:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1574354099;
-        s=strato-dkim-0002; d=xenosoft.de;
-        h=In-Reply-To:Date:Message-ID:From:References:Cc:To:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=MR6HbPNBWmyhl8iShSyS/i2w9Bm/K5EVySERuVVBGj4=;
-        b=TyVrdzgI1FPDm9KOIuHfLT2UKmM1GT61qGppwmtrkIUJ+BIZLy+mQE2cgaZHJB88k+
-        CKZuIbVQqGikB8MzYwEv0NeonnrKd8i5NLjs7vwBzk4hJs3sVp4Neg8cTI5V/PBO1Trx
-        XUHgFerlZH9XNt7Y8FWBvr6pVk5XmCZC0Lb6pdmW1q64E33Dg0xCeINnRptPGkttc0aX
-        7E59uwXr4gGgE2ArOQb9SuNwplcqkbMA2leyM6S2ZAfa4rYC4o5Xcu56D0lja6kiZN1v
-        Iz4vR2dMSJ+4lUO7hmuZb1b7BDzgXUTUN8AavrVhqHSNhFLbqQUZfl5FiNK2QtBMJpoA
-        cmVw==
-X-RZG-AUTH: ":L2QefEenb+UdBJSdRCXu93KJ1bmSGnhMdmOod1DhGM4l4Hio94KKxRySfLxnHfJ+Dkjp5DdBJSrwuuqxvPgBcsBrTF1qGB6TwVFx4Pq4s7A="
-X-RZG-CLASS-ID: mo00
-Received: from [IPv6:2a02:8109:89c0:ebfc:bd57:573a:d50f:b5]
-        by smtp.strato.de (RZmta 44.29.0 AUTH)
-        with ESMTPSA id q007c8vALGYnkb1
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Thu, 21 Nov 2019 17:34:49 +0100 (CET)
-Subject: Re: Bug 205201 - Booting halts if Dawicontrol DC-2976 UW SCSI board
- installed, unless RAM size limited to 3500M
-To:     Robin Murphy <robin.murphy@arm.com>, Christoph Hellwig <hch@lst.de>
-Cc:     linux-arch@vger.kernel.org, darren@stevens-zone.net,
-        mad skateman <madskateman@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        iommu@lists.linux-foundation.org, Rob Herring <robh+dt@kernel.org>,
-        paulus@samba.org, rtd2@xtra.co.nz,
-        "contact@a-eon.com" <contact@a-eon.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        nsaenzjulienne@suse.de
-References: <F1EBB706-73DF-430E-9020-C214EC8ED5DA@xenosoft.de>
- <20191121072943.GA24024@lst.de>
- <dbde2252-035e-6183-7897-43348e60647e@xenosoft.de>
- <6eec5c42-019c-a988-fc2a-cb804194683d@xenosoft.de>
- <d0252d29-7a03-20e1-ccd7-e12d906e4bdf@arm.com>
-From:   Christian Zigotzky <chzigotzky@xenosoft.de>
-Message-ID: <b3217742-2c0b-8447-c9ac-608b93265363@xenosoft.de>
-Date:   Thu, 21 Nov 2019 17:34:48 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Thu, 21 Nov 2019 11:37:46 -0500
+Received: from mail-eopbgr790073.outbound.protection.outlook.com ([40.107.79.73]:36529
+        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726541AbfKUQhq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 11:37:46 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jeM3V7W3SYmbQ2514e97M8kHxSQNpe247DBdfp/HlRVsDCYgxtgIg2OpowTVntjhaMTiBPmgVBUBOFlGivCep4MJZrPLRTb/0pWM+W9WhAJdQYTmKmdWcikj7doi9NOEwW19W+hQpE9WMlzdmoKRicFQYnLTpJY7PkLFh1d5ZOfyQn2WHWyH+y82klF6ADzi4uoTKKibauYMH2ad1DMpdDMOS+cOBj/K+4TeA2gPI0uZnGV3If116FRb1jhtARLxQPWBFjSiyiW/6ctWhub1gTp2jPT0S6ED44nK/FTds9tdZtwECw+BkEFleMiWAYSPpGT4fDedkQMdmRc0FCqJLw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xoWBmXpzmdr5byS8YiT2p+LOR8k2XJcjMHyzF1tpDGM=;
+ b=CRg81ae9mx9iQPd+Az3QuS+TmSGFY7pYzzOEUAJi14akaFzMwcqUoq74sVoJYqfe35lJpx1eaL4Xi1p9lnPvyhtnITN8NKM4mMZBhMVu31vgwGY1pzcOK7Wx9d1WZa8BsciIqBBIoou9Y7N+TGMW0+7ti587DELIeVSolYL81+b/6nZ5eRh9ZMsqSLUNW0YAZrNezOw1TdY/asm+7OKIdBae8NC2dYrieFJl76rHiczBTP7rUS69cmN0iffcLelp57Dokq47FYs7TDnpua6tbsY2DjnqOzzqFVoowpmDr1AgVrSKTNqLGmAU8wae8BTJdC7KSGoFcVfF5UhiY9MYGQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xoWBmXpzmdr5byS8YiT2p+LOR8k2XJcjMHyzF1tpDGM=;
+ b=HY9TScAW+H5gPYRypSIpH6fp6PDrlheZuhfz2SVHxSUAN1VEUt9iw6dccK5BrVevwAFJew3hOjza+yJ+P2NaksmFW6BTUqsueuOx9kmZ/XTEW2PGVzO2lfuWbXNJXuW7hgy5RZ43c75Y6RT8ZMjs9WnMqNWjAXc7J5kKg+J38jg=
+Received: from DM5PR12MB1820.namprd12.prod.outlook.com (10.175.88.143) by
+ DM5PR12MB1372.namprd12.prod.outlook.com (10.168.238.135) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2474.19; Thu, 21 Nov 2019 16:37:42 +0000
+Received: from DM5PR12MB1820.namprd12.prod.outlook.com
+ ([fe80::a0bb:dcbd:9ae:7807]) by DM5PR12MB1820.namprd12.prod.outlook.com
+ ([fe80::a0bb:dcbd:9ae:7807%5]) with mapi id 15.20.2451.031; Thu, 21 Nov 2019
+ 16:37:42 +0000
+From:   "Deucher, Alexander" <Alexander.Deucher@amd.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+CC:     "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
+        Frederick Lawler <fred@fredlawl.com>,
+        Dave Airlie <airlied@linux.ie>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Alex Deucher <alexdeucher@gmail.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>
+Subject: RE: [PATCH v2 0/7] PCI: Prefer pcie_capability_read_word()
+Thread-Topic: [PATCH v2 0/7] PCI: Prefer pcie_capability_read_word()
+Thread-Index: AQHVoHRVGkX/SQKnskm32qbSRJ9NLKeV0u+Q
+Date:   Thu, 21 Nov 2019 16:37:41 +0000
+Message-ID: <DM5PR12MB1820520F8CC4DA28219F2DC3F74E0@DM5PR12MB1820.namprd12.prod.outlook.com>
+References: <20191121140220.38030-1-helgaas@kernel.org>
+In-Reply-To: <20191121140220.38030-1-helgaas@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Alexander.Deucher@amd.com; 
+x-originating-ip: [165.204.11.250]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 1c3ea2c3-4ccd-43ce-6840-08d76ea12135
+x-ms-traffictypediagnostic: DM5PR12MB1372:|DM5PR12MB1372:
+x-ms-exchange-purlcount: 1
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM5PR12MB1372537384CD38533BA9FDA0F74E0@DM5PR12MB1372.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1002;
+x-forefront-prvs: 0228DDDDD7
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(376002)(136003)(39860400002)(346002)(199004)(189003)(13464003)(229853002)(66946007)(305945005)(64756008)(76116006)(7736002)(66446008)(256004)(7416002)(66556008)(66476007)(6436002)(2501003)(52536014)(86362001)(74316002)(8936002)(55016002)(71200400001)(71190400001)(6306002)(110136005)(54906003)(316002)(9686003)(81166006)(26005)(8676002)(5660300002)(81156014)(7696005)(6246003)(186003)(66066001)(11346002)(25786009)(446003)(76176011)(6116002)(3846002)(53546011)(2906002)(99286004)(508600001)(6506007)(102836004)(4326008)(966005)(14454004)(33656002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB1372;H:DM5PR12MB1820.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Xzkdcl/MUko6hyV93PLCKEYcRyhUIvDDQD7RAEea4ShuTSK11wccYlci4ZdUUyFJ5atDnuIsANOOaNq01Jhz8qu3eOUzuJBKTeeM/aEpJ9KPkr4M/wLahfUgwtFrD46fBYMDmdzHqpitqaoXmcqhnSDmK4Yu5Kz3sZGj520XwKshIfYgVHN615H3U9DvI5B36GNw1i0fSxg0ve2kLirw/n5UFIg3kj4ku8SgSLVJdUY7694fvLRPI58aHLaAPQfcvI/+7gS15/zvpy9h81tW/Upv1VtJNzWPnrhW4/dMRoc7ZtXTLyNy43d2ex7XnH9EWj0DBJ6ZhtlfYtr1lwj+JXoCVVfQErnQkRsJZXcVDSFPu7fR5emhofGDQAbbNvwd81tJV4yV2yDU9D0IeawY67fPqxW+PUqzlz7pelrpcxgaP7OqQncr1LFh/HcPqQtNbr/kv6LahM8BYCqZRNXo5vCgxUlvE5+PAWWExVcYuvc=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <d0252d29-7a03-20e1-ccd7-e12d906e4bdf@arm.com>
-Content-Type: multipart/mixed;
- boundary="------------CA5FBA987424D6E471C8129F"
-Content-Language: de-DE
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1c3ea2c3-4ccd-43ce-6840-08d76ea12135
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Nov 2019 16:37:42.0803
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: nXXqRCpHK5gMjY8gSqjqwE4/ozKR/cg06LbFGysME6+p5vE5SUWdCzCG9PLzZ0Fkr7JMc+f00R0By2AzYK60KQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1372
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------CA5FBA987424D6E471C8129F
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-
-Am 21.11.19 um 14:33 schrieb Robin Murphy:
-> On 21/11/2019 12:21 pm, Christian Zigotzky wrote:
->> On 21 November 2019 at 01:16 pm, Christian Zigotzky wrote:
->>> On 21 November 2019 at 08:29 am, Christoph Hellwig wrote:
->>>> On Sat, Nov 16, 2019 at 08:06:05AM +0100, Christian Zigotzky wrote:
->>>>> /*
->>>>>   *  DMA addressing mode.
->>>>>   *
->>>>>   *  0 : 32 bit addressing for all chips.
->>>>>   *  1 : 40 bit addressing when supported by chip.
->>>>>   *  2 : 64 bit addressing when supported by chip,
->>>>>   *      limited to 16 segments of 4 GB -> 64 GB max.
->>>>>   */
->>>>> #define   SYM_CONF_DMA_ADDRESSING_MODE 
->>>>> CONFIG_SCSI_SYM53C8XX_DMA_ADDRESSING_MODE
->>>>>
->>>>> Cyrus config:
->>>>>
->>>>> CONFIG_SCSI_SYM53C8XX_DMA_ADDRESSING_MODE=1
->>>>>
->>>>> I will configure “0 : 32 bit addressing for all chips” for the 
->>>>> RC8. Maybe this is the solution.
->>>> 0 means you are going to do bounce buffering a lot, which seems
->>>> generally like a bad idea.
->>>>
->>>> But why are we talking about the sym53c8xx driver now?  The last issue
->>>> you reported was about video4linux allocations.
->>>>
->>> Both drivers have the same problem. They don't work if we have more 
->>> than 3.5GB RAM. I try to find a solution until you have a good 
->>> solution. I have already a solution for V4L but I still need one for 
->>> the sym53c8xx driver.
->> OK, you mean that "0" is a bad idea but maybe it works until you have 
->> a solution. ;-)
->
-> Is this on the same machine with the funny non-power-of-two 
-> bus_dma_mask as your other report? If so, does Nicolas' latest 
-> patch[1] help at all?
->
-> Robin.
->
-> [1] 
-> https://lore.kernel.org/linux-iommu/20191121092646.8449-1-nsaenzjulienne@suse.de/T/#u
->
-Robin,
-
-I modified the patch and compiled a new RC8 of kernel 5.4 today. (patch 
-attached)
-
-We have to wait to Rolands test results with his SCSI PCI card. I tested 
-it today but my TV card doesn't work with this patch.
-
-Thanks
-
---------------CA5FBA987424D6E471C8129F
-Content-Type: text/x-patch;
- name="dma-v1.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename="dma-v1.patch"
-
-diff -rupN a/arch/powerpc/sysdev/fsl_pci.c b/arch/powerpc/sysdev/fsl_pci.c
---- a/arch/powerpc/sysdev/fsl_pci.c	2019-11-17 23:47:30.000000000 +0100
-+++ b/arch/powerpc/sysdev/fsl_pci.c	2019-11-21 15:32:50.216488955 +0100
-@@ -115,8 +115,8 @@ static void pci_dma_dev_setup_swiotlb(st
- {
- 	struct pci_controller *hose = pci_bus_to_host(pdev->bus);
- 
--	pdev->dev.bus_dma_mask =
--		hose->dma_window_base_cur + hose->dma_window_size;
-+	pdev->dev.bus_dma_limit =
-+		hose->dma_window_base_cur + hose->dma_window_size - 1;
- }
- 
- static void setup_swiotlb_ops(struct pci_controller *hose)
-@@ -135,7 +135,7 @@ static void fsl_pci_dma_set_mask(struct
- 	 * mapping that allows addressing any RAM address from across PCI.
- 	 */
- 	if (dev_is_pci(dev) && dma_mask >= pci64_dma_offset * 2 - 1) {
--		dev->bus_dma_mask = 0;
-+		dev->bus_dma_limit = 0;
- 		dev->archdata.dma_offset = pci64_dma_offset;
- 	}
- }
-diff -rupN a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
---- a/drivers/iommu/dma-iommu.c	2019-11-17 23:47:30.000000000 +0100
-+++ b/drivers/iommu/dma-iommu.c	2019-11-21 15:32:50.216488955 +0100
-@@ -405,8 +405,7 @@ static dma_addr_t iommu_dma_alloc_iova(s
- 	if (iova_len < (1 << (IOVA_RANGE_CACHE_MAX_SIZE - 1)))
- 		iova_len = roundup_pow_of_two(iova_len);
- 
--	if (dev->bus_dma_mask)
--		dma_limit &= dev->bus_dma_mask;
-+	dma_limit = min_not_zero(dma_limit, dev->bus_dma_limit);
- 
- 	if (domain->geometry.force_aperture)
- 		dma_limit = min(dma_limit, domain->geometry.aperture_end);
-diff -rupN a/drivers/of/device.c b/drivers/of/device.c
---- a/drivers/of/device.c	2019-11-17 23:47:30.000000000 +0100
-+++ b/drivers/of/device.c	2019-11-21 15:32:50.216488955 +0100
-@@ -93,7 +93,7 @@ int of_dma_configure(struct device *dev,
- 	bool coherent;
- 	unsigned long offset;
- 	const struct iommu_ops *iommu;
--	u64 mask;
-+	u64 mask, end;
- 
- 	ret = of_dma_get_range(np, &dma_addr, &paddr, &size);
- 	if (ret < 0) {
-@@ -148,12 +148,13 @@ int of_dma_configure(struct device *dev,
- 	 * Limit coherent and dma mask based on size and default mask
- 	 * set by the driver.
- 	 */
--	mask = DMA_BIT_MASK(ilog2(dma_addr + size - 1) + 1);
-+	end = dma_addr + size - 1;
-+	mask = DMA_BIT_MASK(ilog2(end) + 1);
- 	dev->coherent_dma_mask &= mask;
- 	*dev->dma_mask &= mask;
--	/* ...but only set bus mask if we found valid dma-ranges earlier */
-+	/* ...but only set bus limit if we found valid dma-ranges earlier */
- 	if (!ret)
--		dev->bus_dma_mask = mask;
-+		dev->bus_dma_limit = end;
- 
- 	coherent = of_dma_is_coherent(np);
- 	dev_dbg(dev, "device is%sdma coherent\n",
-diff -rupN a/include/linux/device.h b/include/linux/device.h
---- a/include/linux/device.h	2019-11-17 23:47:30.000000000 +0100
-+++ b/include/linux/device.h	2019-11-21 15:32:50.216488955 +0100
-@@ -1186,8 +1186,8 @@ struct dev_links_info {
-  * @coherent_dma_mask: Like dma_mask, but for alloc_coherent mapping as not all
-  * 		hardware supports 64-bit addresses for consistent allocations
-  * 		such descriptors.
-- * @bus_dma_mask: Mask of an upstream bridge or bus which imposes a smaller DMA
-- *		limit than the device itself supports.
-+ * @bus_dma_limit: Limit of an upstream bridge or bus which imposes a smaller
-+ *		DMA limit than the device itself supports.
-  * @dma_pfn_offset: offset of DMA memory range relatively of RAM
-  * @dma_parms:	A low level driver may set these to teach IOMMU code about
-  * 		segment limitations.
-@@ -1270,7 +1270,7 @@ struct device {
- 					     not all hardware supports
- 					     64 bit addresses for consistent
- 					     allocations such descriptors. */
--	u64		bus_dma_mask;	/* upstream dma_mask constraint */
-+	u64		bus_dma_limit;	/* upstream dma constraint */
- 	unsigned long	dma_pfn_offset;
- 
- 	struct device_dma_parameters *dma_parms;
-diff -rupN a/include/linux/dma-direct.h b/include/linux/dma-direct.h
---- a/include/linux/dma-direct.h	2019-11-17 23:47:30.000000000 +0100
-+++ b/include/linux/dma-direct.h	2019-11-21 15:37:40.091564417 +0100
-@@ -28,7 +28,7 @@ static inline bool dma_capable(struct de
- 		return false;
- 
- 	return addr + size - 1 <=
--		min_not_zero(*dev->dma_mask, dev->bus_dma_mask);
-+		min_not_zero(*dev->dma_mask, dev->bus_dma_limit);
- }
- #endif /* !CONFIG_ARCH_HAS_PHYS_TO_DMA */
- 
-diff -rupN a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
---- a/include/linux/dma-mapping.h	2019-11-17 23:47:30.000000000 +0100
-+++ b/include/linux/dma-mapping.h	2019-11-21 15:32:50.220488949 +0100
-@@ -693,7 +693,7 @@ static inline int dma_coerce_mask_and_co
-  */
- static inline bool dma_addressing_limited(struct device *dev)
- {
--	return min_not_zero(dma_get_mask(dev), dev->bus_dma_mask) <
-+	return min_not_zero(dma_get_mask(dev), dev->bus_dma_limit) <
- 			    dma_get_required_mask(dev);
- }
- 
-diff -rupN a/kernel/dma/direct.c b/kernel/dma/direct.c
---- a/kernel/dma/direct.c	2019-11-17 23:47:30.000000000 +0100
-+++ b/kernel/dma/direct.c	2019-11-21 15:50:09.570609847 +0100
-@@ -27,10 +27,10 @@ static void report_addr(struct device *d
- {
- 	if (!dev->dma_mask) {
- 		dev_err_once(dev, "DMA map on device without dma_mask\n");
--	} else if (*dev->dma_mask >= DMA_BIT_MASK(32) || dev->bus_dma_mask) {
-+	} else if (*dev->dma_mask >= DMA_BIT_MASK(32) || dev->bus_dma_limit) {
- 		dev_err_once(dev,
--			"overflow %pad+%zu of DMA mask %llx bus mask %llx\n",
--			&dma_addr, size, *dev->dma_mask, dev->bus_dma_mask);
-+			"overflow %pad+%zu of DMA mask %llx bus limit %llx\n",
-+			&dma_addr, size, *dev->dma_mask, dev->bus_dma_limit);
- 	}
- 	WARN_ON_ONCE(1);
- }
-@@ -51,15 +51,14 @@ u64 dma_direct_get_required_mask(struct
- }
- 
- static gfp_t __dma_direct_optimal_gfp_mask(struct device *dev, u64 dma_mask,
--		u64 *phys_mask)
-+		u64 *phys_limit)
- {
--	if (dev->bus_dma_mask && dev->bus_dma_mask < dma_mask)
--		dma_mask = dev->bus_dma_mask;
-+	u64 dma_limit = min_not_zero(dma_mask, dev->bus_dma_limit);
- 
- 	if (force_dma_unencrypted(dev))
--		*phys_mask = __dma_to_phys(dev, dma_mask);
-+		*phys_limit = __dma_to_phys(dev, dma_limit);
- 	else
--		*phys_mask = dma_to_phys(dev, dma_mask);
-+		*phys_limit = dma_to_phys(dev, dma_limit);
- 
- 	/*
- 	 * Optimistically try the zone that the physical address mask falls
-@@ -69,9 +68,9 @@ static gfp_t __dma_direct_optimal_gfp_ma
- 	 * Note that GFP_DMA32 and GFP_DMA are no ops without the corresponding
- 	 * zones.
- 	 */
--	if (*phys_mask <= DMA_BIT_MASK(ARCH_ZONE_DMA_BITS))
-+	if (*phys_limit <= DMA_BIT_MASK(ARCH_ZONE_DMA_BITS))
- 		return GFP_DMA;
--	if (*phys_mask <= DMA_BIT_MASK(32))
-+	if (*phys_limit <= DMA_BIT_MASK(32))
- 		return GFP_DMA32;
- 	return 0;
- }
-@@ -79,7 +78,7 @@ static gfp_t __dma_direct_optimal_gfp_ma
- static bool dma_coherent_ok(struct device *dev, phys_addr_t phys, size_t size)
- {
- 	return phys_to_dma_direct(dev, phys) + size - 1 <=
--			min_not_zero(dev->coherent_dma_mask, dev->bus_dma_mask);
-+			min_not_zero(dev->coherent_dma_mask, dev->bus_dma_limit);
- }
- 
- struct page *__dma_direct_alloc_pages(struct device *dev, size_t size,
-@@ -88,7 +87,7 @@ struct page *__dma_direct_alloc_pages(st
- 	size_t alloc_size = PAGE_ALIGN(size);
- 	int node = dev_to_node(dev);
- 	struct page *page = NULL;
--	u64 phys_mask;
-+	u64 phys_limit;
- 
- 	if (attrs & DMA_ATTR_NO_WARN)
- 		gfp |= __GFP_NOWARN;
-@@ -96,7 +95,7 @@ struct page *__dma_direct_alloc_pages(st
- 	/* we always manually zero the memory once we are done: */
- 	gfp &= ~__GFP_ZERO;
- 	gfp |= __dma_direct_optimal_gfp_mask(dev, dev->coherent_dma_mask,
--			&phys_mask);
-+			&phys_limit);
- 	page = dma_alloc_contiguous(dev, alloc_size, gfp);
- 	if (page && !dma_coherent_ok(dev, page_to_phys(page), size)) {
- 		dma_free_contiguous(dev, page, alloc_size);
-@@ -110,7 +109,7 @@ again:
- 		page = NULL;
- 
- 		if (IS_ENABLED(CONFIG_ZONE_DMA32) &&
--		    phys_mask < DMA_BIT_MASK(64) &&
-+		    phys_limit < DMA_BIT_MASK(64) &&
- 		    !(gfp & (GFP_DMA32 | GFP_DMA))) {
- 			gfp |= GFP_DMA32;
- 			goto again;
-diff -rupN a/arch/powerpc/include/asm/dma-direct.h b/arch/powerpc/include/asm/dma-direct.h
---- a/arch/powerpc/include/asm/dma-direct.h	2019-11-17 23:47:30.000000000 +0100
-+++ b/arch/powerpc/include/asm/dma-direct.h	2019-11-21 16:18:13.316815445 +0100
-@@ -8,7 +8,7 @@ static inline bool dma_capable(struct de
- 		return false;
- 
- 	return addr + size - 1 <=
--		min_not_zero(*dev->dma_mask, dev->bus_dma_mask);
-+		min_not_zero(*dev->dma_mask, dev->bus_dma_limit);
- }
- 
- static inline dma_addr_t __phys_to_dma(struct device *dev, phys_addr_t paddr)
-
---------------CA5FBA987424D6E471C8129F--
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBhbWQtZ2Z4IDxhbWQtZ2Z4LWJv
+dW5jZXNAbGlzdHMuZnJlZWRlc2t0b3Aub3JnPiBPbiBCZWhhbGYgT2YNCj4gQmpvcm4gSGVsZ2Fh
+cw0KPiBTZW50OiBUaHVyc2RheSwgTm92ZW1iZXIgMjEsIDIwMTkgOTowMiBBTQ0KPiBUbzogbGlu
+dXgtcGNpQHZnZXIua2VybmVsLm9yZw0KPiBDYzogWmhvdSwgRGF2aWQoQ2h1bk1pbmcpIDxEYXZp
+ZDEuWmhvdUBhbWQuY29tPjsgRnJlZGVyaWNrIExhd2xlcg0KPiA8ZnJlZEBmcmVkbGF3bC5jb20+
+OyBEYXZlIEFpcmxpZSA8YWlybGllZEBsaW51eC5pZT47IGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5r
+ZXJuZWwub3JnOyBkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnOyBCam9ybiBIZWxnYWFz
+DQo+IDxiaGVsZ2Fhc0Bnb29nbGUuY29tPjsgYW1kLWdmeEBsaXN0cy5mcmVlZGVza3RvcC5vcmc7
+IERhbmllbCBWZXR0ZXINCj4gPGRhbmllbEBmZndsbC5jaD47IEFsZXggRGV1Y2hlciA8YWxleGRl
+dWNoZXJAZ21haWwuY29tPjsgS29lbmlnLA0KPiBDaHJpc3RpYW4gPENocmlzdGlhbi5Lb2VuaWdA
+YW1kLmNvbT4NCj4gU3ViamVjdDogW1BBVENIIHYyIDAvN10gUENJOiBQcmVmZXIgcGNpZV9jYXBh
+YmlsaXR5X3JlYWRfd29yZCgpDQo+IA0KPiBGcm9tOiBCam9ybiBIZWxnYWFzIDxiaGVsZ2Fhc0Bn
+b29nbGUuY29tPg0KPiANCj4gVXNlIHBjaWVfY2FwYWJpbGl0eV9yZWFkX3dvcmQoKSBhbmQgc2lt
+aWxhciBpbnN0ZWFkIG9mIHVzaW5nDQo+IHBjaV9yZWFkX2NvbmZpZ193b3JkKCkgZGlyZWN0bHku
+ICBBZGQgI2RlZmluZXMgdG8gcmVwbGFjZSBzb21lIG1hZ2ljDQo+IG51bWJlcnMuICBGaXggdHlw
+b3MgaW4gdXNlIG9mIFRyYW5zbWl0IE1hcmdpbiBmaWVsZC4NCj4gDQo+IFRoZXNlIGFyZSBjdXJy
+ZW50bHkgb24gbXkgcGNpL21pc2MgYnJhbmNoIGZvciB2NS41LiAgTGV0IG1lIGtub3cgaWYgeW91
+IHNlZQ0KPiBhbnkgaXNzdWVzLg0KPiANCg0KU2VyaWVzIGlzOg0KUmV2aWV3ZWQtYnk6IEFsZXgg
+RGV1Y2hlciA8YWxleGFuZGVyLmRldWNoZXJAYW1kLmNvbT4NCg0KPiANCj4gQmpvcm4gSGVsZ2Fh
+cyAoNSk6DQo+ICAgUENJOiBBZGQgI2RlZmluZXMgZm9yIEVudGVyIENvbXBsaWFuY2UsIFRyYW5z
+bWl0IE1hcmdpbg0KPiAgIGRybS9hbWRncHU6IENvcnJlY3QgVHJhbnNtaXQgTWFyZ2luIG1hc2tz
+DQo+ICAgZHJtL2FtZGdwdTogUmVwbGFjZSBudW1iZXJzIHdpdGggUENJX0VYUF9MTktDVEwyIGRl
+ZmluaXRpb25zDQo+ICAgZHJtL3JhZGVvbjogQ29ycmVjdCBUcmFuc21pdCBNYXJnaW4gbWFza3MN
+Cj4gICBkcm0vcmFkZW9uOiBSZXBsYWNlIG51bWJlcnMgd2l0aCBQQ0lfRVhQX0xOS0NUTDIgZGVm
+aW5pdGlvbnMNCj4gDQo+IEZyZWRlcmljayBMYXdsZXIgKDIpOg0KPiAgIGRybS9hbWRncHU6IFBy
+ZWZlciBwY2llX2NhcGFiaWxpdHlfcmVhZF93b3JkKCkNCj4gICBkcm0vcmFkZW9uOiBQcmVmZXIg
+cGNpZV9jYXBhYmlsaXR5X3JlYWRfd29yZCgpDQo+IA0KPiAgZHJpdmVycy9ncHUvZHJtL2FtZC9h
+bWRncHUvY2lrLmMgfCA5NSArKysrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0tDQo+IGRyaXZl
+cnMvZ3B1L2RybS9hbWQvYW1kZ3B1L3NpLmMgIHwgOTcgKysrKysrKysrKysrKysrKysrKystLS0t
+LS0tLS0tLS0NCj4gIGRyaXZlcnMvZ3B1L2RybS9yYWRlb24vY2lrLmMgICAgIHwgOTQgKysrKysr
+KysrKysrKysrKysrKy0tLS0tLS0tLS0tLQ0KPiAgZHJpdmVycy9ncHUvZHJtL3JhZGVvbi9zaS5j
+ICAgICAgfCA5NyArKysrKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tLQ0KPiAgaW5jbHVkZS91
+YXBpL2xpbnV4L3BjaV9yZWdzLmggICAgfCAgMiArDQo+ICA1IGZpbGVzIGNoYW5nZWQsIDI0MyBp
+bnNlcnRpb25zKCspLCAxNDIgZGVsZXRpb25zKC0pDQo+IA0KPiAtLQ0KPiAyLjI0LjAuNDMyLmc5
+ZDNmNWY1YjYzLWdvb2cNCj4gDQo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fDQo+IGFtZC1nZnggbWFpbGluZyBsaXN0DQo+IGFtZC1nZnhAbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnDQo+IGh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
+dGluZm8vYW1kLWdmeA0K
