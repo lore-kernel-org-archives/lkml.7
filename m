@@ -2,140 +2,226 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3000C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 15:47:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 115F2C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 15:53:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E60A20730
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 15:47:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574351247;
-	bh=bfWV3wtu9Z6FNWqaa2NQCC6kdoqJTnbxdSHIWkBDoSk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=cKs7wblYSjL313nZikKwzbUrjELZk39XA4EmErJW3jiDL1p59gd829qoSMtWCbzgl
-	 SfYJbPlMN4jObwTlLWeOOox5uKQ8ZUL5biPDpZFkZVqQj+p8W3hB67AC3brUOtc1yb
-	 xwfu2ST6GF/iL/UPWfZwjyJY08wAm/Uq6KsEUunE=
+	by mail.kernel.org (Postfix) with ESMTP id C21BF2068D
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 15:53:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="nIUnnFA6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbfKUPr0 (ORCPT
+        id S1726852AbfKUPx5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 10:47:26 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:40295 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726279AbfKUPr0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 10:47:26 -0500
-Received: by mail-ot1-f65.google.com with SMTP id m15so3315224otq.7;
-        Thu, 21 Nov 2019 07:47:25 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cENdR/YNP8WrkCnrRlfKo/wx15sIIepZ4jmxr2d85Gc=;
-        b=NEV0BMMzi2ceMhmYh2NvynkD/34CXFFAdYcLzHubxWKPYdscnVzC/H4kOciDL4QNol
-         5kpkxPLbg4RF0hyvKNf29ZbS3JiQ3IErLbCeOoo/R/qKP6j5sl+j2S9fABBwNkVgT8pR
-         eGcRZelB9Xa18K0oUK1XZMQWehCQlfmYmsuf5Enn1b14J/0TkwLinKDWYs2PpURrVlfd
-         m1XGOZjN7IkFNwMFGYiLmw4Ekmap0QA29A0GPzbJqgnGE5U4lN0ZiPYyyBMOFsb2OGC5
-         Gecr9LsJIaH+tlySm5fzp1gcOh5FQyCoM6qr56TzzpRqgwExG+2u9wrWTRAIAOK+8hW+
-         Yv/w==
-X-Gm-Message-State: APjAAAXd/NmrBZf+RU9PhJYE/L8AS18+kuKLDz9dENCkS7bBKkvBYGxn
-        Sp18+qkh6R0oAs9Q6ieuRnxHWYypCErTtcWOsji1JA==
-X-Google-Smtp-Source: APXvYqw1iwAHzb0NCqnuFton0CCPRqV6XwmgvO+O7iPDqA3/HjpBzqll2kKyoYasjd6DGrsXRz/cJtR9Xj0PRUbIR3g=
-X-Received: by 2002:a05:6830:103:: with SMTP id i3mr7223613otp.266.1574351245103;
- Thu, 21 Nov 2019 07:47:25 -0800 (PST)
+        Thu, 21 Nov 2019 10:53:57 -0500
+Received: from mail-eopbgr730087.outbound.protection.outlook.com ([40.107.73.87]:12512
+        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726279AbfKUPx4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 10:53:56 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YLy2Z1rObqHKh7BrkIOgCOFunWItBTaVzzUnrtQQsGy/PJTMJYc8iKr0+T7GDb4Fuswy3pBFF78EMp0get9JmEtHR/UQdlck1AXTzreHGRaMdqGMf6BUg6pgFoKEgiN37uyLZ61PJ41lFRwAe+cJ/NJsnI8eGb7ykum0NYFshGHNN/AHN8PsAUbqATcKoZVHQk+niqXw1YqqoQlXPtPdDZKqdHFGf2JYA3C+glD60es6s4ttPCSMC9dGI5mIYIa15SR6mxmyH1JLkMHS0/tdVNn98vz1Es3lYiG2bFU8ue1f3PQSdFwgnU5tuv5o5qIAALDf2iqK5lT9VvZp0oHppw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ax36A33+/7b7muHsk6F44iGcyRMic1uTUlDCkdwx5fo=;
+ b=FbSab7gn56CSAWIWfvEIeoww1ytypXZVx6QooKgyIheLf0nL9nTH+W8rMVYF+bg3E8TdzgeWsqsHM1cVJCyA1faDU9KbhwdcAfZeCtlZORHDA/fbWEKzUDxa4vmZRAdMgh139CY1AtwH01O/aGynedXkxIhmnQiXB+Uh0SgARzyeZ+h9zSRxN1fxeisH2LESuXc93KpaDrWhGXUEyomYCZu8YkzpBZ6nZ0JjZu7MxPpfqo0uN/J4oxEAEp6FOWgkOv50pd7QWAWjgvEfHFljBTWUabCDPpGBMih2M07KUmrRfc+7U4Iad8t/LUj4Hf8bDahO42OL6H24PSk4zdWKhg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
+ dkim=pass header.d=vmware.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ax36A33+/7b7muHsk6F44iGcyRMic1uTUlDCkdwx5fo=;
+ b=nIUnnFA6TPyGEppLSEeyisjLvSrQvKnk1Qp531tT7q+O4xSS+9YT+NgmwVtOioki1jQGnQPSxmmf4A3CCoNuT7Bz3oqPMIj9SM1Mf0pU6oSpeUnBilJVKf/VZVyM5uUMFYJqPsCLJVfeR4GD35kH9h4NL+/ZRJzjBLOM/irg8H8=
+Received: from MWHPR05MB3376.namprd05.prod.outlook.com (10.174.175.149) by
+ MWHPR05MB3631.namprd05.prod.outlook.com (10.174.251.17) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2474.9; Thu, 21 Nov 2019 15:53:47 +0000
+Received: from MWHPR05MB3376.namprd05.prod.outlook.com
+ ([fe80::4098:2c39:d8d3:a209]) by MWHPR05MB3376.namprd05.prod.outlook.com
+ ([fe80::4098:2c39:d8d3:a209%7]) with mapi id 15.20.2474.015; Thu, 21 Nov 2019
+ 15:53:47 +0000
+From:   Jorgen Hansen <jhansen@vmware.com>
+To:     'Stefano Garzarella' <sgarzare@redhat.com>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: RE: [PATCH net-next 3/6] vsock: add local transport support in the
+ vsock core
+Thread-Topic: [PATCH net-next 3/6] vsock: add local transport support in the
+ vsock core
+Thread-Index: AQHVnsi6A5C79S6UD0KKiVDL3k1B8qeVuhZQgAAHIACAAAGVwA==
+Date:   Thu, 21 Nov 2019 15:53:47 +0000
+Message-ID: <MWHPR05MB3376D95B5E50DF7CAF675EEDDA4E0@MWHPR05MB3376.namprd05.prod.outlook.com>
+References: <20191119110121.14480-1-sgarzare@redhat.com>
+ <20191119110121.14480-4-sgarzare@redhat.com>
+ <MWHPR05MB3376F4452F0CF38C1AFABA2EDA4E0@MWHPR05MB3376.namprd05.prod.outlook.com>
+ <20191121152148.slv26oesn25dpjb6@steredhat>
+In-Reply-To: <20191121152148.slv26oesn25dpjb6@steredhat>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jhansen@vmware.com; 
+x-originating-ip: [208.91.2.1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 2e5c9b05-5229-47b4-ccf0-08d76e9afed2
+x-ms-traffictypediagnostic: MWHPR05MB3631:
+x-microsoft-antispam-prvs: <MWHPR05MB36318B83B106F7C7BC15AE85DA4E0@MWHPR05MB3631.namprd05.prod.outlook.com>
+x-vmwhitelist: True
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0228DDDDD7
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(136003)(346002)(396003)(366004)(39860400002)(199004)(189003)(26005)(316002)(7736002)(76116006)(7696005)(71190400001)(71200400001)(81166006)(81156014)(446003)(186003)(86362001)(6116002)(9686003)(11346002)(2906002)(55016002)(229853002)(53546011)(6506007)(6246003)(3846002)(54906003)(305945005)(5660300002)(66066001)(6916009)(14444005)(256004)(99286004)(102836004)(478600001)(76176011)(52536014)(4326008)(66446008)(25786009)(74316002)(64756008)(66556008)(66476007)(66946007)(14454004)(33656002)(6436002)(8676002)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR05MB3631;H:MWHPR05MB3376.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: +vH6rivpM+K+oUMpPEMVav7Sl2MrxAoPXzcRQ8N+uWElk5NMAk0udjqWIEDwSSfwNHx201zBGkj5SoJ8VyNQ/BA9OU5BqGX9Uay0lo5Jy7lhg98D35SH6Rpqf1j0ImFzMzOaZXKnxMtBboOy5mxlIwR2SSeI9P2OWVUPLPTM8OThsR73HKBUjFd8XZRiClvA/JR2e+i8gnnR8NEx69o/ppjJlLvw9q31/sn2Tj1HLM+TIXH8b+/L6KVN+0lE+rrjOkiHaXxxofsAdOfOrQDaG7scl9rSohtquieEDIghd6OzO+/y0XuCaW2JZ0OVL5C3vn/dQHBYQap/MrDHz7rN7lQqk+SMBikDd0N+gBZLQklol8eShtvx9N0Kam6qf3GaeMdfWmaZuXrtdzA0cQHQhKP6jocm365oSOiKvGVR2lcNi5stCr+FJ59GwgDi4qkR
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20191120120913.GE11621@lahna.fi.intel.com> <CACO55tsHy6yZQZ8PkdW8iPA7+uc5rdcEwRJwYEQ3iqu85F8Sqg@mail.gmail.com>
- <20191120151542.GH11621@lahna.fi.intel.com> <CACO55tvo3rbPtYJcioEgXCEQqVXcVAm-iowr9Nim=bgTdMjgLw@mail.gmail.com>
- <20191120155301.GL11621@lahna.fi.intel.com> <CAJZ5v0hkT-fHFOQKzp2qYPyR+NUa4c-G-uGLPZuQxqsG454PiQ@mail.gmail.com>
- <CACO55ttTPi2XpRRM_NYJU5c5=OvG0=-YngFy1BiR8WpHkavwXw@mail.gmail.com>
- <CAJZ5v0h=7zu3A+ojgUSmwTH0KeXmYP5OKDL__rwkkWaWqcJcWQ@mail.gmail.com>
- <20191121112821.GU11621@lahna.fi.intel.com> <CAJZ5v0hQhj5Wf+piU11abC4pF26yM=XHGHAcDv8Jsgdx04aN-w@mail.gmail.com>
- <20191121114610.GW11621@lahna.fi.intel.com> <CACO55ttXJgXG32HzYP_uJDfQ6T-d8zQaGjXK_AZD3kF0Rmft4g@mail.gmail.com>
-In-Reply-To: <CACO55ttXJgXG32HzYP_uJDfQ6T-d8zQaGjXK_AZD3kF0Rmft4g@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 21 Nov 2019 16:47:13 +0100
-Message-ID: <CAJZ5v0ibzcLEm44udUxW2uVgaF9NapdNBF8Ag+RE++u7gi2yNA@mail.gmail.com>
-Subject: Re: [PATCH v4] pci: prevent putting nvidia GPUs into lower device
- states on certain intel bridges
-To:     Karol Herbst <kherbst@redhat.com>
-Cc:     Mika Westerberg <mika.westerberg@intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lyude Paul <lyude@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        Dave Airlie <airlied@gmail.com>,
-        Mario Limonciello <Mario.Limonciello@dell.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2e5c9b05-5229-47b4-ccf0-08d76e9afed2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Nov 2019 15:53:47.5041
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: givXglQbZQq/2XbesKUQxk8Opz91jIATMfbuuqBBpyG7EJ1IpGBoo7zlKby34bsHddIWJch2qHy6mYfoEUkouA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR05MB3631
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 1:53 PM Karol Herbst <kherbst@redhat.com> wrote:
->
-> On Thu, Nov 21, 2019 at 12:46 PM Mika Westerberg
-> <mika.westerberg@intel.com> wrote:
-> >
-> > On Thu, Nov 21, 2019 at 12:34:22PM +0100, Rafael J. Wysocki wrote:
-> > > On Thu, Nov 21, 2019 at 12:28 PM Mika Westerberg
-> > > <mika.westerberg@intel.com> wrote:
-> > > >
-> > > > On Wed, Nov 20, 2019 at 11:29:33PM +0100, Rafael J. Wysocki wrote:
-> > > > > > last week or so I found systems where the GPU was under the "PCI
-> > > > > > Express Root Port" (name from lspci) and on those systems all of that
-> > > > > > seems to work. So I am wondering if it's indeed just the 0x1901 one,
-> > > > > > which also explains Mikas case that Thunderbolt stuff works as devices
-> > > > > > never get populated under this particular bridge controller, but under
-> > > > > > those "Root Port"s
-> > > > >
-> > > > > It always is a PCIe port, but its location within the SoC may matter.
-> > > >
-> > > > Exactly. Intel hardware has PCIe ports on CPU side (these are called
-> > > > PEG, PCI Express Graphics, ports), and the PCH side. I think the IP is
-> > > > still the same.
-> > > >
->
-> yeah, I meant the bridge controller with the ID 0x1901 is on the CPU
-> side. And if the Nvidia GPU is on a port on the PCH side it all seems
-> to work just fine.
-
-But that may involve different AML too, may it not?
-
-> > > > > Also some custom AML-based power management is involved and that may
-> > > > > be making specific assumptions on the configuration of the SoC and the
-> > > > > GPU at the time of its invocation which unfortunately are not known to
-> > > > > us.
-> > > > >
-> > > > > However, it looks like the AML invoked to power down the GPU from
-> > > > > acpi_pci_set_power_state() gets confused if it is not in PCI D0 at
-> > > > > that point, so it looks like that AML tries to access device memory on
-> > > > > the GPU (beyond the PCI config space) or similar which is not
-> > > > > accessible in PCI power states below D0.
-> > > >
-> > > > Or the PCI config space of the GPU when the parent root port is in D3hot
-> > > > (as it is the case here). Also then the GPU config space is not
-> > > > accessible.
+> From: Stefano Garzarella [mailto:sgarzare@redhat.com]
+> Sent: Thursday, November 21, 2019 4:22 PM
+>=20
+> On Thu, Nov 21, 2019 at 03:04:18PM +0000, Jorgen Hansen wrote:
+> > > From: Stefano Garzarella [mailto:sgarzare@redhat.com]
+> > > Sent: Tuesday, November 19, 2019 12:01 PM
+> > > To: netdev@vger.kernel.org
 > > >
-> > > Why would the parent port be in D3hot at that point?  Wouldn't that be
-> > > a suspend ordering violation?
+> > > This patch allows to register a transport able to handle
+> > > local communication (loopback).
+> > >
+> > > Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+> > > ---
+> > >  include/net/af_vsock.h   |  2 ++
+> > >  net/vmw_vsock/af_vsock.c | 17 ++++++++++++++++-
+> > >  2 files changed, 18 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/include/net/af_vsock.h b/include/net/af_vsock.h
+> > > index 4206dc6d813f..b1c717286993 100644
+> > > --- a/include/net/af_vsock.h
+> > > +++ b/include/net/af_vsock.h
+> > > @@ -98,6 +98,8 @@ struct vsock_transport_send_notify_data {
+> > >  #define VSOCK_TRANSPORT_F_G2H		0x00000002
+> > >  /* Transport provides DGRAM communication */
+> > >  #define VSOCK_TRANSPORT_F_DGRAM		0x00000004
+> > > +/* Transport provides local (loopback) communication */
+> > > +#define VSOCK_TRANSPORT_F_LOCAL		0x00000008
+> > >
+> > >  struct vsock_transport {
+> > >  	struct module *module;
+> > > diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
+> > > index cc8659838bf2..c9e5bad59dc1 100644
+> > > --- a/net/vmw_vsock/af_vsock.c
+> > > +++ b/net/vmw_vsock/af_vsock.c
+> > > @@ -136,6 +136,8 @@ static const struct vsock_transport
+> *transport_h2g;
+> > >  static const struct vsock_transport *transport_g2h;
+> > >  /* Transport used for DGRAM communication */
+> > >  static const struct vsock_transport *transport_dgram;
+> > > +/* Transport used for local communication */
+> > > +static const struct vsock_transport *transport_local;
+> > >  static DEFINE_MUTEX(vsock_register_mutex);
+> > >
+> > >  /**** UTILS ****/
+> > > @@ -2130,7 +2132,7 @@
+> EXPORT_SYMBOL_GPL(vsock_core_get_transport);
+> > >
+> > >  int vsock_core_register(const struct vsock_transport *t, int feature=
+s)
+> > >  {
+> > > -	const struct vsock_transport *t_h2g, *t_g2h, *t_dgram;
+> > > +	const struct vsock_transport *t_h2g, *t_g2h, *t_dgram, *t_local;
+> > >  	int err =3D mutex_lock_interruptible(&vsock_register_mutex);
+> > >
+> > >  	if (err)
+> > > @@ -2139,6 +2141,7 @@ int vsock_core_register(const struct
+> > > vsock_transport *t, int features)
+> > >  	t_h2g =3D transport_h2g;
+> > >  	t_g2h =3D transport_g2h;
+> > >  	t_dgram =3D transport_dgram;
+> > > +	t_local =3D transport_local;
+> > >
+> > >  	if (features & VSOCK_TRANSPORT_F_H2G) {
+> > >  		if (t_h2g) {
+> > > @@ -2164,9 +2167,18 @@ int vsock_core_register(const struct
+> > > vsock_transport *t, int features)
+> > >  		t_dgram =3D t;
+> > >  	}
+> > >
+> > > +	if (features & VSOCK_TRANSPORT_F_LOCAL) {
+> > > +		if (t_local) {
+> > > +			err =3D -EBUSY;
+> > > +			goto err_busy;
+> > > +		}
+> > > +		t_local =3D t;
+> > > +	}
+> > > +
+> > >  	transport_h2g =3D t_h2g;
+> > >  	transport_g2h =3D t_g2h;
+> > >  	transport_dgram =3D t_dgram;
+> > > +	transport_local =3D t_local;
+> > >
+> > >  err_busy:
+> > >  	mutex_unlock(&vsock_register_mutex);
+> > > @@ -2187,6 +2199,9 @@ void vsock_core_unregister(const struct
+> > > vsock_transport *t)
+> > >  	if (transport_dgram =3D=3D t)
+> > >  		transport_dgram =3D NULL;
+> > >
+> > > +	if (transport_local =3D=3D t)
+> > > +		transport_local =3D NULL;
+> > > +
+> > >  	mutex_unlock(&vsock_register_mutex);
+> > >  }
+> > >  EXPORT_SYMBOL_GPL(vsock_core_unregister);
+> > > --
+> > > 2.21.0
 > >
-> > No. We put the GPU into D3hot first, then the root port and then turn
-> > off the power resource (which is attached to the root port) resulting
-> > the topology entering D3cold.
-> >
->
-> If the kernel does a D0 -> D3hot -> D0 cycle this works as well, but
-> the power savings are way lower, so I kind of prefer skipping D3hot
-> instead of D3cold. Skipping D3hot doesn't seem to make any difference
-> in power savings in my testing.
+> > Having loopback support as a separate transport fits nicely, but do we =
+need
+> to support
+> > different variants of loopback? It could just be built in.
+>=20
+> I agree with you, indeed initially I developed it as built in, but
+> DEPMOD found a cyclic dependency because vsock_transport use
+> virtio_transport_common that use vsock, so if I include vsock_transport
+> in the vsock module, DEPMOD is not happy.
+>=20
+> I don't know how to break this cyclic dependency, do you have any ideas?
 
-OK
+One way to view this would be that the loopback transport and the support
+it uses from virtio_transport_common are independent of virtio as such,
+and could be part of  the af_vsock module if loopback is configured. So
+in a way, the virtio g2h and h2g transports would be extensions of the
+built in loopback transport. But that brings in quite a bit of code so
+it could be better to just keep it as is.
 
-What exactly did you do to skip D3cold in your testing?
+Thanks,
+Jorgen
