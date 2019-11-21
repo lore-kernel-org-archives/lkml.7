@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A143C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F511C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:19:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4322A20721
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:19:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D86E620898
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:19:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574306356;
-	bh=fuKwYNhnEaHwePLWYy4xsWV102lg4SPtdbTJkGFerLo=;
+	s=default; t=1574306358;
+	bh=5CuMeteoMTQfuON89jjX7S9uHe2uK9dnR5V5Sn9kLeA=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=WQctXWkN7lMamFShB/uaglGn2x6dokSjgXWmPYqGNKRM7f0sekl8WS4Q1NRCFphqg
-	 BxSbyTxCTvK/IWdKW2Om4L0hLZ8F8KB4r0c4I7G1yXeK9iYpnKgU/xedqMR+W79Wrq
-	 3kFYEkdEZEpvMnlELL0WoLLa0RqTz4FBaFuB5/yA=
+	b=YauMCqbqK27LCY4u2v/Tne4EbFS+TU3oKf7YgFeWfwCRY01MQmqE3CIW5P9gXbtpG
+	 eFqK9Wn3QlFa6+0FoyHyvB7FYvm/cK2JcSbnpT2jQ2giUzOo61UZR5qGf8aV9dA/h5
+	 5uYiNLgTNF8JSuVYa/srVzdDacvoUvv1mDIlh6Fc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727096AbfKUDTP (ORCPT
+        id S1727112AbfKUDTR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 22:19:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60748 "EHLO mail.kernel.org"
+        Wed, 20 Nov 2019 22:19:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725819AbfKUDTM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 22:19:12 -0500
+        id S1725819AbfKUDTP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 22:19:15 -0500
 Received: from PC-kkoz.proceq.com (unknown [213.160.61.66])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 841ED20721;
-        Thu, 21 Nov 2019 03:19:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 296F22089D;
+        Thu, 21 Nov 2019 03:19:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574306351;
-        bh=fuKwYNhnEaHwePLWYy4xsWV102lg4SPtdbTJkGFerLo=;
+        s=default; t=1574306355;
+        bh=5CuMeteoMTQfuON89jjX7S9uHe2uK9dnR5V5Sn9kLeA=;
         h=From:To:Cc:Subject:Date:From;
-        b=AbXvEL/J6fGY4IwcGySN2QD28ASDu7NkI8j2eiVglwoIc1FqUKw+TlmZ4qMTyrVAk
-         gaiuK4icHAprAXmuKmXG/+bvlL4jJ7C3/qsc0R+Qvo2r/kKsS/xmW2zi0GTmVbuYYG
-         3ePikbhgmP1/cUDkqfB+cNKpE/ZcUo0wEn1y2OJI=
+        b=Y60ApEHOfo0BCRaWUCXTxlQ6aFMjv4aMNbUHN5R0Hd95JndyxB2ntvJtLJxCEDS+S
+         Ep4WASmKQgVGAVyQAdZbFS6YeaHMu5/u2GaXtuM3xIzXnX5jfRsLxP2oJ0hUhTFq7M
+         I+D7FK6BRGwW42WS0n2E7FGWY5Rtczwqr6BDIm1c=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org
-Subject: [PATCH v2] dmaengine: Fix Kconfig indentation
-Date:   Thu, 21 Nov 2019 04:19:08 +0100
-Message-Id: <1574306348-29212-1-git-send-email-krzk@kernel.org>
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-pm@vger.kernel.org
+Subject: [PATCH v2] cpuidle: Fix Kconfig indentation
+Date:   Thu, 21 Nov 2019 04:19:12 +0100
+Message-Id: <1574306352-29264-1-git-send-email-krzk@kernel.org>
 X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -64,92 +65,72 @@ Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Changes since v1:
 1. Fix also 7-space and tab+1 space indentation issues.
 ---
- drivers/dma/Kconfig | 60 ++++++++++++++++++++++++++---------------------------
- 1 file changed, 30 insertions(+), 30 deletions(-)
+ drivers/cpuidle/Kconfig     | 16 ++++++++--------
+ drivers/cpuidle/Kconfig.arm | 16 ++++++++--------
+ 2 files changed, 16 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index 03dfee5c66d9..6fa1eba9d477 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -15,19 +15,19 @@ menuconfig DMADEVICES
- 	  be empty in some cases.
+diff --git a/drivers/cpuidle/Kconfig b/drivers/cpuidle/Kconfig
+index 88727b7c0d59..c0aeedd66f02 100644
+--- a/drivers/cpuidle/Kconfig
++++ b/drivers/cpuidle/Kconfig
+@@ -16,7 +16,7 @@ config CPU_IDLE
+ if CPU_IDLE
  
- config DMADEVICES_DEBUG
--        bool "DMA Engine debugging"
--        depends on DMADEVICES != n
--        help
--          This is an option for use by developers; most people should
--          say N here.  This enables DMA engine core and driver debugging.
-+	bool "DMA Engine debugging"
-+	depends on DMADEVICES != n
-+	help
-+	  This is an option for use by developers; most people should
-+	  say N here.  This enables DMA engine core and driver debugging.
+ config CPU_IDLE_MULTIPLE_DRIVERS
+-        bool
++	bool
  
- config DMADEVICES_VDEBUG
--        bool "DMA Engine verbose debugging"
--        depends on DMADEVICES_DEBUG != n
--        help
--          This is an option for use by developers; most people should
--          say N here.  This enables deeper (more verbose) debugging of
--          the DMA engine core and drivers.
-+	bool "DMA Engine verbose debugging"
-+	depends on DMADEVICES_DEBUG != n
-+	help
-+	  This is an option for use by developers; most people should
-+	  say N here.  This enables deeper (more verbose) debugging of
-+	  the DMA engine core and drivers.
+ config CPU_IDLE_GOV_LADDER
+ 	bool "Ladder governor (for periodic timer tick)"
+@@ -63,13 +63,13 @@ source "drivers/cpuidle/Kconfig.powerpc"
+ endmenu
  
- 
- if DMADEVICES
-@@ -215,28 +215,28 @@ config FSL_EDMA
- 	  This module can be found on Freescale Vybrid and LS-1 SoCs.
- 
- config FSL_QDMA
--       tristate "NXP Layerscape qDMA engine support"
--       depends on ARM || ARM64
--       select DMA_ENGINE
--       select DMA_VIRTUAL_CHANNELS
--       select DMA_ENGINE_RAID
--       select ASYNC_TX_ENABLE_CHANNEL_SWITCH
+ config HALTPOLL_CPUIDLE
+-       tristate "Halt poll cpuidle driver"
+-       depends on X86 && KVM_GUEST
+-       default y
 -       help
--         Support the NXP Layerscape qDMA engine with command queue and legacy mode.
--         Channel virtualization is supported through enqueuing of DMA jobs to,
--         or dequeuing DMA jobs from, different work queues.
--         This module can be found on NXP Layerscape SoCs.
-+	tristate "NXP Layerscape qDMA engine support"
-+	depends on ARM || ARM64
-+	select DMA_ENGINE
-+	select DMA_VIRTUAL_CHANNELS
-+	select DMA_ENGINE_RAID
-+	select ASYNC_TX_ENABLE_CHANNEL_SWITCH
+-         This option enables halt poll cpuidle driver, which allows to poll
+-         before halting in the guest (more efficient than polling in the
+-         host via halt_poll_ns for some scenarios).
++	tristate "Halt poll cpuidle driver"
++	depends on X86 && KVM_GUEST
++	default y
 +	help
-+	 Support the NXP Layerscape qDMA engine with command queue and legacy mode.
-+	 Channel virtualization is supported through enqueuing of DMA jobs to,
-+	 or dequeuing DMA jobs from, different work queues.
-+	 This module can be found on NXP Layerscape SoCs.
- 	  The qdma driver only work on  SoCs with a DPAA hardware block.
++	 This option enables halt poll cpuidle driver, which allows to poll
++	 before halting in the guest (more efficient than polling in the
++	 host via halt_poll_ns for some scenarios).
  
- config FSL_RAID
--        tristate "Freescale RAID engine Support"
--        depends on FSL_SOC && !ASYNC_TX_ENABLE_CHANNEL_SWITCH
--        select DMA_ENGINE
--        select DMA_ENGINE_RAID
--        ---help---
--          Enable support for Freescale RAID Engine. RAID Engine is
--          available on some QorIQ SoCs (like P5020/P5040). It has
--          the capability to offload memcpy, xor and pq computation
-+	tristate "Freescale RAID engine Support"
-+	depends on FSL_SOC && !ASYNC_TX_ENABLE_CHANNEL_SWITCH
-+	select DMA_ENGINE
-+	select DMA_ENGINE_RAID
-+	---help---
-+	  Enable support for Freescale RAID Engine. RAID Engine is
-+	  available on some QorIQ SoCs (like P5020/P5040). It has
-+	  the capability to offload memcpy, xor and pq computation
- 	  for raid5/6.
+ endif
  
- config IMG_MDC_DMA
+diff --git a/drivers/cpuidle/Kconfig.arm b/drivers/cpuidle/Kconfig.arm
+index d8530475493c..e91ab792d14d 100644
+--- a/drivers/cpuidle/Kconfig.arm
++++ b/drivers/cpuidle/Kconfig.arm
+@@ -3,15 +3,15 @@
+ # ARM CPU Idle drivers
+ #
+ config ARM_CPUIDLE
+-        bool "Generic ARM/ARM64 CPU idle Driver"
+-        select DT_IDLE_STATES
++	bool "Generic ARM/ARM64 CPU idle Driver"
++	select DT_IDLE_STATES
+ 	select CPU_IDLE_MULTIPLE_DRIVERS
+-        help
+-          Select this to enable generic cpuidle driver for ARM.
+-          It provides a generic idle driver whose idle states are configured
+-          at run-time through DT nodes. The CPUidle suspend backend is
+-          initialized by calling the CPU operations init idle hook
+-          provided by architecture code.
++	help
++	  Select this to enable generic cpuidle driver for ARM.
++	  It provides a generic idle driver whose idle states are configured
++	  at run-time through DT nodes. The CPUidle suspend backend is
++	  initialized by calling the CPU operations init idle hook
++	  provided by architecture code.
+ 
+ config ARM_PSCI_CPUIDLE
+ 	bool "PSCI CPU idle Driver"
 -- 
 2.7.4
 
