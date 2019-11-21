@@ -2,164 +2,99 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E63A2C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:10:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1FC9C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:11:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD6382067D
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:10:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574370639;
-	bh=pwT0+cZQ3uscXqyiAY2DeMl3p9vjTJhcjcjs1VsLJVs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=KUbWZ0sd4U6l8YstpNLNGx2UDti9aJRoR7LGGyL7XNE9rLUzxTXYuvWdlq9ZnU9+5
-	 1x8cPMuT1lOdz8yrPBT3mykdEQUxsP4YC0P/pfUu+P2UR+Wq6XDQhqcSikITnLz1o3
-	 91A0qr4Gp42HKIDDcZ5z0hZ43FEgL2svv8A5uFhI=
+	by mail.kernel.org (Postfix) with ESMTP id 6CE4D2067D
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:11:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jj3ZoDWG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726970AbfKUVKi (ORCPT
+        id S1726984AbfKUVLH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 16:10:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36214 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726852AbfKUVKi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 16:10:38 -0500
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD4DD2067D;
-        Thu, 21 Nov 2019 21:10:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574370637;
-        bh=pwT0+cZQ3uscXqyiAY2DeMl3p9vjTJhcjcjs1VsLJVs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=AY9TQZUF4oTTDWoojlqTj4H3H54QzoLh4b+qU9+xvoySRaf3I38A3YIKwt/J49Rya
-         nXdowbvA7XC6t+vY5K+kAoD8cCZmgSfaMhugh/dljaIOdBrgIvX7kCKmvqvFmNKz6W
-         lFkgMVCHGVt13jVSnvJ9cOaVCD43lrE5oDhTBy4I=
-Date:   Thu, 21 Nov 2019 15:10:35 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        linux-pci@vger.kernel.org, Jon Derrick <jonathan.derrick@intel.com>
-Subject: Re: [PATCH] pci: Fix Kconfig indentation
-Message-ID: <20191121211035.GA92037@google.com>
+        Thu, 21 Nov 2019 16:11:07 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:41326 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726676AbfKUVLG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 16:11:06 -0500
+Received: by mail-io1-f67.google.com with SMTP id z26so1669311iot.8
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 13:11:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kgavvxB/Hc/+H2w7jNsoVQ+s9+9QFbvWPpzL0FkQJxU=;
+        b=jj3ZoDWGylf7UQuOrCkLtgehxUWrurNOfmINioGWqw63zWwZXuMSC2bxgmmO4TrD4/
+         9Am+0gf0QO51cHmL+KT49hDvfBIzAnEfYO4oixNGFQSVzLQdYHx8rUSIUSKZamKPQqmn
+         Una7L61JHDV0xan+uOmAMs3utj7t2iyCDn2FU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kgavvxB/Hc/+H2w7jNsoVQ+s9+9QFbvWPpzL0FkQJxU=;
+        b=N+RGEUgHlBPJ/oK3InD7Wg0QraScO0NsjoVdwbNzaBif7QASTn3u22/ZUGxR15ToxG
+         rFC4wAxMT7dfLAax7EEFrd8RDrYvgkvZ3d66ROthBygMTiWNzP7YOnPT2P8zxlcahLJW
+         ZsIhmbHry0tcOLQ+jE9X9yI6YyDar+6GSXfnVzoP5Etmcc6QqHbQWtrqCmXXsdjyQJnm
+         qJvzaJJlnGsnZa1KOdDRaOJasMkuOyoF8PZYCR2Ft5YZKNQkMFR6BgHzdShdT113+Hiy
+         BJi5UHbTVHgKl/FRrJs6ZDEA+m/nvfT8j/cctmVfY1Tq8QbcPbhIfQQSoznlHlSez5BS
+         +vEQ==
+X-Gm-Message-State: APjAAAXGemwDJfrHck0CUfRKyyTkw/gA7DVm6pVlBu9vTvrGsSII+k6I
+        Al37S7TT0rEpRTzSiIxk2OlAVw==
+X-Google-Smtp-Source: APXvYqywvvLAlZvLYMaohpzFDxBaOdABSDQzVADBr0tUo8Kaq3yObLAmQcK+1QglmTB69HMqDB6Yew==
+X-Received: by 2002:a02:77d5:: with SMTP id g204mr10770186jac.125.1574370665501;
+        Thu, 21 Nov 2019 13:11:05 -0800 (PST)
+Received: from localhost ([2620:15c:183:0:82e0:aef8:11bc:24c4])
+        by smtp.gmail.com with ESMTPSA id h6sm1649609ilr.7.2019.11.21.13.11.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 Nov 2019 13:11:05 -0800 (PST)
+From:   Raul E Rangel <rrangel@chromium.org>
+To:     enric.balletbo@collabora.com, Wolfram Sang <wsa@the-dreams.de>
+Cc:     Akshu.Agrawal@amd.com, Raul E Rangel <rrangel@chromium.org>,
+        Akshu Agrawal <akshu.agrawal@amd.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        linux-kernel@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-i2c@vger.kernel.org, Benson Leung <bleung@chromium.org>,
+        dlaurie@chromium.org
+Subject: [PATCH 0/4] Convert cros-ec-i2c-tunnel to MFD Cell
+Date:   Thu, 21 Nov 2019 14:10:49 -0700
+Message-Id: <20191121211053.48861-1-rrangel@chromium.org>
+X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191120134036.14502-1-krzk@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc Jon, just FYI, no action required]
+Having the cros-ec-i2c-tunnel behave as a MFD Cell fixes a race condition
+that could happen if the cros-ec-i2c-tunnel gets probed before the
+cros_ec_lpc init has finished.
 
-On Wed, Nov 20, 2019 at 09:40:36PM +0800, Krzysztof Kozlowski wrote:
-> Adjust indentation from spaces to tab (+optional two spaces) as in
-> coding style with command like:
-> 	$ sed -e 's/^        /\t/' -i */Kconfig
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+There were also some bugs in the original cros-ec-i2c-tunnel ACPI patch.
 
-Applied to pci/trivial for v5.5, thanks!
+Raul E Rangel (4):
+  i2c: i2c-cros-ec-tunnel: Pass ACPI node to i2c adapter
+  i2c: i2c-cros-ec-tunnel: Fix ACPI identifier
+  platform/chrome: cros_ec: Pass firmware node to MFD device
+  platform/chrome: i2c: i2c-cros-ec-tunnel: Convert i2c tunnel to MFD
+    Cell
 
-I applied the same change to drivers/pci/controller/vmd.c, the only
-other file in drivers/pci I found with eight leading spaces.
+ drivers/i2c/busses/i2c-cros-ec-tunnel.c | 37 ++++++++++---------------
+ drivers/mfd/cros_ec_dev.c               | 19 +++++++++++++
+ drivers/platform/chrome/cros_ec.c       | 13 +++++++--
+ 3 files changed, 43 insertions(+), 26 deletions(-)
 
-> ---
->  drivers/pci/Kconfig                | 24 ++++++++++++------------
->  drivers/pci/controller/dwc/Kconfig |  6 +++---
->  drivers/pci/hotplug/Kconfig        |  2 +-
->  3 files changed, 16 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-> index 77c1428cd945..4bef5c2bae9f 100644
-> --- a/drivers/pci/Kconfig
-> +++ b/drivers/pci/Kconfig
-> @@ -106,14 +106,14 @@ config PCI_PF_STUB
->  	  When in doubt, say N.
->  
->  config XEN_PCIDEV_FRONTEND
-> -        tristate "Xen PCI Frontend"
-> -        depends on X86 && XEN
-> -        select PCI_XEN
-> +	tristate "Xen PCI Frontend"
-> +	depends on X86 && XEN
-> +	select PCI_XEN
->  	select XEN_XENBUS_FRONTEND
-> -        default y
-> -        help
-> -          The PCI device frontend driver allows the kernel to import arbitrary
-> -          PCI devices from a PCI backend to support PCI driver domains.
-> +	default y
-> +	help
-> +	  The PCI device frontend driver allows the kernel to import arbitrary
-> +	  PCI devices from a PCI backend to support PCI driver domains.
->  
->  config PCI_ATS
->  	bool
-> @@ -180,12 +180,12 @@ config PCI_LABEL
->  	select NLS
->  
->  config PCI_HYPERV
-> -        tristate "Hyper-V PCI Frontend"
-> -        depends on X86_64 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN && SYSFS
-> +	tristate "Hyper-V PCI Frontend"
-> +	depends on X86_64 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN && SYSFS
->  	select PCI_HYPERV_INTERFACE
-> -        help
-> -          The PCI device frontend driver allows the kernel to import arbitrary
-> -          PCI devices from a PCI backend to support PCI driver domains.
-> +	help
-> +	  The PCI device frontend driver allows the kernel to import arbitrary
-> +	  PCI devices from a PCI backend to support PCI driver domains.
->  
->  source "drivers/pci/hotplug/Kconfig"
->  source "drivers/pci/controller/Kconfig"
-> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> index 0ba988b5b5bc..625a031b2193 100644
-> --- a/drivers/pci/controller/dwc/Kconfig
-> +++ b/drivers/pci/controller/dwc/Kconfig
-> @@ -7,9 +7,9 @@ config PCIE_DW
->  	bool
->  
->  config PCIE_DW_HOST
-> -        bool
-> +	bool
->  	depends on PCI_MSI_IRQ_DOMAIN
-> -        select PCIE_DW
-> +	select PCIE_DW
->  
->  config PCIE_DW_EP
->  	bool
-> @@ -224,7 +224,7 @@ config PCIE_HISI_STB
->  	depends on PCI_MSI_IRQ_DOMAIN
->  	select PCIE_DW_HOST
->  	help
-> -          Say Y here if you want PCIe controller support on HiSilicon STB SoCs
-> +	  Say Y here if you want PCIe controller support on HiSilicon STB SoCs
->  
->  config PCI_MESON
->  	bool "MESON PCIe controller"
-> diff --git a/drivers/pci/hotplug/Kconfig b/drivers/pci/hotplug/Kconfig
-> index e7b493c22bf3..32455a79372d 100644
-> --- a/drivers/pci/hotplug/Kconfig
-> +++ b/drivers/pci/hotplug/Kconfig
-> @@ -83,7 +83,7 @@ config HOTPLUG_PCI_CPCI_ZT5550
->  	depends on HOTPLUG_PCI_CPCI && X86
->  	help
->  	  Say Y here if you have an Performance Technologies (formerly Intel,
-> -          formerly just Ziatech) Ziatech ZT5550 CompactPCI system card.
-> +	  formerly just Ziatech) Ziatech ZT5550 CompactPCI system card.
->  
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called cpcihp_zt5550.
-> -- 
-> 2.17.1
-> 
+-- 
+2.24.0.432.g9d3f5f5b63-goog
+
