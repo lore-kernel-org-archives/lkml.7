@@ -2,152 +2,97 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF515C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 18:37:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDAACC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 18:37:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 852AC20672
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 18:37:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6D0D20672
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 18:37:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TqCL0T6N"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="EJjPbSz0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727149AbfKUShX (ORCPT
+        id S1727188AbfKUSha (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 13:37:23 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:38362 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727092AbfKUShW (ORCPT
+        Thu, 21 Nov 2019 13:37:30 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:40360 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727092AbfKUSh3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 13:37:22 -0500
-Received: by mail-wr1-f67.google.com with SMTP id i12so5699786wro.5;
-        Thu, 21 Nov 2019 10:37:21 -0800 (PST)
+        Thu, 21 Nov 2019 13:37:29 -0500
+Received: by mail-il1-f193.google.com with SMTP id v17so412843ilg.7
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 10:37:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DP2863yACbff5i+RB3eZcwhNt5zRZsKWECbY34JBcgA=;
-        b=TqCL0T6NAWRZxDvpie2AstfsSje6ENUuHqVWYhyMpDwMihvL3IVbv4lfh7bRYOxeDC
-         OAm9kjeRqp63n1gZP92JqXyABQxJk8jE6A53cdPJQrQkGj33N9Ero1yWvfbsVVKFNa8/
-         YPYJQDJuUetzBzUj/8coik4Q2EvmX5srQLQ+1B0pTx5XmNqsfKW8hPG9ErbIBTwhBj+F
-         xUHwgCmXC8zwX+oKI5OGaLs4sumgIvpTk1LNPiHa7slWqezoG6W0nFdpwkkepiyeWUs/
-         ob5zd1b/O3gBtP8EUCPpmOaj+AFABXFnyEyDUpJX7Lu6aADQ/QfrLWZzDLiw7isPBCdJ
-         mMqw==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=faq1HCiwAUKpn9KibrFveIIN8Gq95mpKVvXAdv0gtDk=;
+        b=EJjPbSz0Y6tDOEGVI+1jJ8atWnfgVSawkkT8eN6V6cCPix2Oo1Ul5auUyUzMkYlDoK
+         3qNVcfI7jBdMccdBn/qZtJ6b635qSK6GyU075QBm/DiZL+E8zm9p4ZUKRL1MoOZVUo9N
+         hoLYwkn2XLv87sQlikDmsBXss5UhTiaeuDHLmSWYC9JxUub0lmUUW2xZVXJnpyOXNaGw
+         y82WJV8Pyc4iflpx/NYF12hA4nSerOKHfUJ23hnfkFrUUUVENyO4lqlRhEgEEDYvonHB
+         7Ro2z4dGPGwjzFmYorVFleDJuov531ZDGun6BqLfvQZGB8jgtd1IecdJaPKyCHOmApK5
+         PRKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DP2863yACbff5i+RB3eZcwhNt5zRZsKWECbY34JBcgA=;
-        b=Sz2LF6p9a98PubE2ZzuJa9IKshhwsEuXjRSnsfrMGBBo0q4a9tDAxQJQV/3MX/jEyh
-         BfNwbwI1SgS9gdbiepbslBmK+4T81vAXhSTTdUpK5eKGGfCFeCbonvkAYp/jLYWFBdIN
-         EccH7NmuH6dvHJK2tNjihiEQRnGLioNv1dgJloJmtQeWsdoGR9gPAEHme1OqwpCYTncK
-         QrfZGlF1iu9yVDiEE+PK5pgEH8C6K9HyLg8IPJr9YL2w2i8/Ltmeb/wx+ZMF4YtAzBXh
-         l8To7lcaBP3s+3JJNZj61ZGTqwsBdxIwLRXmil8f3/CbOgLWaO60m0eAyWZ3IqLepDXW
-         oAyw==
-X-Gm-Message-State: APjAAAWRJUUy0znfquLX/qSg4Wj/GZq2yeyx0uJmH7At/xLkyqilyP6M
-        OnXgyaEu2OyDDXbXQuQfe/aZ8aXQiQmH758Ejac=
-X-Google-Smtp-Source: APXvYqw0gk8+IPXr82CnrP23ZVlU698/XaqMec5S9dwPM2xvZo/BgowQ0jIeqLBr0yaDtAygzcPKTGG5mcm9rFvHOmU=
-X-Received: by 2002:a5d:4688:: with SMTP id u8mr12610035wrq.40.1574361441116;
- Thu, 21 Nov 2019 10:37:21 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=faq1HCiwAUKpn9KibrFveIIN8Gq95mpKVvXAdv0gtDk=;
+        b=Xk0eWVXJdvF160xXbqGcgB19NjlAcQ3vXAc7mKI4tCdtGRnBbQIJGw5UxP/SW1IE4b
+         G2wT/bC3EIj/dGBN3kW7fvJtRnyz/H2ceANbK0O7Mcco8R471nVzRDmEfZFpfNcVwSis
+         aGdOje0OQ/uuAGgAAH62lX4jld1fB3bJsaFUN2j46spOBHiyCo1iWSV/ZIa5IeniIvgw
+         VJZsjvjdR3gAanbP7zeVLKZv9JoGnEA9M3Fxr3SO0joydK/GR4CDvkPh33hGbT0wBAgC
+         7cVrdkZ2Tn+PGpZwg6/oGGeEUllmS+WLsb/u+lmucZrcPO0H3dEQ4VHJgwA4yPalr2t4
+         gX6A==
+X-Gm-Message-State: APjAAAVin7cRjCgaIQF6DB22LrK3XvVvx7u1DFW4tbL11+ZAJFfFOJg3
+        nBUQgnGkepOQodpFnMY7/6jPb0X1M5y2ng==
+X-Google-Smtp-Source: APXvYqwleGilbYtjejG0htBS2Id79yaqhJ2aVAJKwRv51I6HzmumqzuaenMu1RY8209HZRrCTLCAsA==
+X-Received: by 2002:a92:b686:: with SMTP id m6mr11013166ill.35.1574361446126;
+        Thu, 21 Nov 2019 10:37:26 -0800 (PST)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id s11sm1518746ilh.54.2019.11.21.10.37.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 21 Nov 2019 10:37:25 -0800 (PST)
+Subject: Re: [PATCH] nbd: prevent memory leak
+To:     Josef Bacik <josef@toxicpanda.com>,
+        Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
+        linux-block@vger.kernel.org, nbd@other.debian.org,
+        linux-kernel@vger.kernel.org
+References: <20190923200959.29643-1-navid.emamdoost@gmail.com>
+ <20191121183017.h3qkpib5re27ty3b@MacBook-Pro-91.local>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <ae75694c-02a5-6f7f-c812-1350512490da@kernel.dk>
+Date:   Thu, 21 Nov 2019 11:37:23 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191121145403.46789cb5@canb.auug.org.au>
-In-Reply-To: <20191121145403.46789cb5@canb.auug.org.au>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Thu, 21 Nov 2019 13:37:09 -0500
-Message-ID: <CADnq5_O+J3pVR_SxP8cYnkwJo9LK8uQTXrFtpMbz9c8NYmOGnA@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the tip tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dave Airlie <airlied@linux.ie>,
-        DRI <dri-devel@lists.freedesktop.org>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kevin Wang <kevin1.wang@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191121183017.h3qkpib5re27ty3b@MacBook-Pro-91.local>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 10:54 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi all,
->
-> After merging the tip tree, today's linux-next build (x86_64 allmodconfig)
-> failed like this:
->
-> In file included from include/trace/define_trace.h:102,
->                  from drivers/gpu/drm/amd/amdgpu/amdgpu_trace.h:502,
->                  from drivers/gpu/drm/amd/amdgpu/amdgpu_trace_points.c:29:
-> include/trace/../../drivers/gpu/drm/amd/amdgpu/amdgpu_trace.h:476:52: error: expected expression before ';' token
->   476 |         __string(ring, sched_job->base.sched->name);
->       |                                                    ^
-> include/trace/trace_events.h:435:2: note: in definition of macro 'DECLARE_EVENT_CLASS'
->   435 |  tstruct        \
->       |  ^~~~~~~
-> include/trace/trace_events.h:77:9: note: in expansion of macro 'PARAMS'
->    77 |         PARAMS(tstruct),         \
->       |         ^~~~~~
-> include/trace/../../drivers/gpu/drm/amd/amdgpu/amdgpu_trace.h:472:1: note: in expansion of macro 'TRACE_EVENT'
->   472 | TRACE_EVENT(amdgpu_ib_pipe_sync,
->       | ^~~~~~~~~~~
-> include/trace/../../drivers/gpu/drm/amd/amdgpu/amdgpu_trace.h:475:6: note: in expansion of macro 'TP_STRUCT__entry'
->   475 |      TP_STRUCT__entry(
->       |      ^~~~~~~~~~~~~~~~
->
-> Caused by commit
->
->   2c2fdb8bca29 ("drm/amdgpu: fix amdgpu trace event print string format error")
->
-> from the drm tree interacting with commit
->
->   60fdad00827c ("ftrace: Rework event_create_dir()")
->
-> from the tip tree.
->
-> I have added the following merge fix patch:
+On 11/21/19 11:30 AM, Josef Bacik wrote:
+> On Mon, Sep 23, 2019 at 03:09:58PM -0500, Navid Emamdoost wrote:
+>> In nbd_add_socket when krealloc succeeds, if nsock's allocation fail the
+>> reallocted memory is leak. The correct behaviour should be assigning the
+>> reallocted memory to config->socks right after success.
+>>
+>> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+>> ---
+> 
+> Reviewed-by: Josef Bacik <josef@toxicpanda.com>
 
-Applied.  Thanks!
+Now applied, thanks.
 
-Alex
+-- 
+Jens Axboe
 
->
-> From: Stephen Rothwell <sfr@canb.auug.org.au>
-> Date: Thu, 21 Nov 2019 14:46:00 +1100
-> Subject: [PATCH] merge fix for "ftrace: Rework event_create_dir()"
->
-> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> ---
->  drivers/gpu/drm/amd/amdgpu/amdgpu_trace.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_trace.h b/drivers/gpu/drm/amd/amdgpu/amdgpu_trace.h
-> index f940526c5889..63e734a125fb 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_trace.h
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_trace.h
-> @@ -473,7 +473,7 @@ TRACE_EVENT(amdgpu_ib_pipe_sync,
->             TP_PROTO(struct amdgpu_job *sched_job, struct dma_fence *fence),
->             TP_ARGS(sched_job, fence),
->             TP_STRUCT__entry(
-> -                            __string(ring, sched_job->base.sched->name);
-> +                            __string(ring, sched_job->base.sched->name)
->                              __field(uint64_t, id)
->                              __field(struct dma_fence *, fence)
->                              __field(uint64_t, ctx)
-> --
-> 2.23.0
->
-> --
-> Cheers,
-> Stephen Rothwell
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
