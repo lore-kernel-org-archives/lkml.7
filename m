@@ -2,168 +2,169 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 104C5C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:45:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C96C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:45:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9C88206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:45:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 444F920708
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:45:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="pVhvccO5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727146AbfKUOpN (ORCPT
+        id S1727172AbfKUOpg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 09:45:13 -0500
-Received: from mail-il1-f199.google.com ([209.85.166.199]:54970 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726922AbfKUOpM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 09:45:12 -0500
-Received: by mail-il1-f199.google.com with SMTP id t67so3074838ill.21
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 06:45:10 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=gKVEHAypeETPe8BrGsTwrpNX1ECF4WGPfjBww5LbXIE=;
-        b=rebcDtJOHkYHJBTXBLzf9OhAZoLUJkgtQwRzsFoluaSnajRmS3r3u89jVbjqcI+iK4
-         y4YxjJoVPigXVDjMeh6UGTg2STqmjw0uEp/nmo3FEIoEYRyPHr4nG038OWv3gwFC8dRT
-         EIJgsSVOd5ekvE0E0Vg5GFnwm9LqbHkAlUnl7813ne2iLeSqS8RNj/rlXMhjVL16h7qK
-         XjfTNiP8t/gBhqVCc3nYhd4xM+V2leeT78dGRfKyQlx8Q54d0a/OVFWP7b9hlBS2OG1L
-         xvhkS3rr3hLvm4aYhkHEtReMbU39K7KqzJWsGUcLomhxQRybv5rhsC/xNIsd3zKmfTfl
-         8syA==
-X-Gm-Message-State: APjAAAVvo7LRj+VCZJyqZbA7obbOqiaz2WqQ1LbnwKU+cfOSkPIWlqGR
-        NfNUbEs+XTMULc4D/CY+k1yAqZKoJqU6Q9f+uYVwCheIodib
-X-Google-Smtp-Source: APXvYqxZ3Qw0R6eFPKZCR7qRh2nPXw7qOlHgzU6f4Hf5Qk1q8lnrgvdMAX6Pp1H4q86+9fHJuXYS3a+iyTb3/yjV/hgXlTBd9LeB
+        Thu, 21 Nov 2019 09:45:36 -0500
+Received: from mail-eopbgr730060.outbound.protection.outlook.com ([40.107.73.60]:7616
+        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726293AbfKUOpf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 09:45:35 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=U7jGzBDywQYgTsWBNRktbjob0AQxPYiROVeQbVo/qT095lXVpc9LdBqG/TYTsIv/7YNblqvnuHnwqZpchKqI89/uL809Ep2c5iVOm3IIQSv7uz/in/0YEDe6PjlQX4iUgDmjqP1nPOpTD/h04hufHfNosXQLRcFF/51nc8ylWYtLZsq1kcA+gxS2SNmsX6H3cUw0QHiDch80bYttoAayyl6vR/sTv3x4ojJcbXg8/xCeJ0TjNHq0XgivAFT47KowPRhq5poUd0pjUF0QWVrZTYxWPoFKm2CUmWF8esqxT8DZILgdtKOCAdKZXZG9VAnYMNR3pjnlDuVvfhWoJMvRhg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HHZQ7mFRNDH24ZO/Apdnkglm+mP0xhv+1pZFgZu0yQU=;
+ b=MTNv27Nk3uyghaoB2gGcLhEzjMNGcS+xZPEMLLa7nyjsZPi5OK7GyRKxQzZFJ6OkYnBoC1m4YqO0e0eQj6ru319ItRiIwxSs5OhVF78cxnm0ql+9ldgWfen3iWV8rJdu4TdQ3HopAr7gVHBgZMKvE434HCRwA78wOn6Reer5EQgi/PmeEyg1wZR6r2MZMpKdUcdTvyGJEp707/bYr9ZugyIZ3gedfRna9eU8u/4dpgGvL0wwGEAJS6RczjbRPQ2j9O9xk02RKRsqK+Qojsx6jrPC/bJpGHiZrZb0kIDdI/66hcyF9X1NEvrE62Yvnp+25iM5hwknvTIcqEnZKkCwag==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
+ dkim=pass header.d=vmware.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HHZQ7mFRNDH24ZO/Apdnkglm+mP0xhv+1pZFgZu0yQU=;
+ b=pVhvccO5yn02oltx9xLCZFVqgvZNQPO5wZqLwKgSIsVxPeu8U2pKrZTKSSv3dUFpemtxKvzyLxB5SpXufbSd4a2xHd6M7tlMvz4OO5VjNbM4ILtedRhdSQ9mHfD2y4S8//Bfs8f/HwivjBVwAaJv6Lqy/JJEEL6dKB4EaIk3cEU=
+Received: from MWHPR05MB3376.namprd05.prod.outlook.com (10.174.175.149) by
+ MWHPR05MB2990.namprd05.prod.outlook.com (10.168.246.146) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2474.12; Thu, 21 Nov 2019 14:45:32 +0000
+Received: from MWHPR05MB3376.namprd05.prod.outlook.com
+ ([fe80::4098:2c39:d8d3:a209]) by MWHPR05MB3376.namprd05.prod.outlook.com
+ ([fe80::4098:2c39:d8d3:a209%7]) with mapi id 15.20.2474.015; Thu, 21 Nov 2019
+ 14:45:32 +0000
+From:   Jorgen Hansen <jhansen@vmware.com>
+To:     'Stefano Garzarella' <sgarzare@redhat.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC:     "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: RE: [PATCH net-next 0/6] vsock: add local transport support
+Thread-Topic: [PATCH net-next 0/6] vsock: add local transport support
+Thread-Index: AQHVnsi4kz4RAPX5S02yxj8Sa/r70aeVsxKg
+Date:   Thu, 21 Nov 2019 14:45:32 +0000
+Message-ID: <MWHPR05MB3376B8241546664BBCA6FC37DA4E0@MWHPR05MB3376.namprd05.prod.outlook.com>
+References: <20191119110121.14480-1-sgarzare@redhat.com>
+In-Reply-To: <20191119110121.14480-1-sgarzare@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jhansen@vmware.com; 
+x-originating-ip: [208.91.2.1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c0d55e97-e0d6-4485-0e18-08d76e917616
+x-ms-traffictypediagnostic: MWHPR05MB2990:
+x-microsoft-antispam-prvs: <MWHPR05MB2990F74A0DD06BB9A3BF6C8DDA4E0@MWHPR05MB2990.namprd05.prod.outlook.com>
+x-vmwhitelist: True
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0228DDDDD7
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(366004)(39860400002)(396003)(136003)(376002)(189003)(199004)(305945005)(99286004)(14454004)(81166006)(81156014)(8676002)(8936002)(71200400001)(71190400001)(7736002)(86362001)(74316002)(6436002)(33656002)(4326008)(478600001)(66476007)(66556008)(64756008)(52536014)(76116006)(66946007)(110136005)(54906003)(11346002)(446003)(25786009)(5660300002)(66446008)(7696005)(6506007)(102836004)(9686003)(76176011)(55016002)(186003)(26005)(316002)(229853002)(66066001)(6246003)(256004)(2906002)(2501003)(6116002)(3846002);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR05MB2990;H:MWHPR05MB3376.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: pEgvhpcD7UgxVgIdd+loqntBwxfIKRCZIlf0ARPMDXzUf4xMo9BxP6Wz9vi/fojiMmcJUobrbJCjLIb7gLv+DJ/0X/3Qduv4hbUJ9hzX4HA0SB0t8lBqb3SVB/fsjZym85YyLlKmk+C0C3UP6xgyMWeQGuCBJuDq1H0zSafou7iRT/hhvU1YQSonSnEW6nIUqGyRn7gbtmYhGR50BVl0lL/zHu6LpHDxiBDxyJumgE2yvTCf38nMGjHYMjpIYc9/Lqr4QYls4wwMIFBJN0rRkumidqxA7Z/TC/m8HGglPdJquDEpbGXsAdu4C8oIoQ2yL0fAqXEDxqfXzMwH9wgXUxMgUWSRIfiqILB72zKiTd0mO2Kb+H2AwfKynRLjb+tjycvhsl+5cCRtJPEyrOhGdYhnygRYcYZKxxGIMtulFS8dp0UvgHIwqU+Vn9yefdIj
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-Received: by 2002:a6b:8e47:: with SMTP id q68mr4633416iod.274.1574347509632;
- Thu, 21 Nov 2019 06:45:09 -0800 (PST)
-Date:   Thu, 21 Nov 2019 06:45:09 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000109c040597dc5843@google.com>
-Subject: INFO: rcu detected stall in hub_event
-From:   syzbot <syzbot+ec5f884c4a135aa0dbb9@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, benjamin.tissoires@redhat.com,
-        jikos@kernel.org, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c0d55e97-e0d6-4485-0e18-08d76e917616
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Nov 2019 14:45:32.3986
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 6tkywh7tOiRgz+zwDunUrtVuWFTm9QB9jK1Vd4qOPtZEAlp8hUI/dgtec0hl9pcsew/k9xGUwYgB9n+ibbrs8A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR05MB2990
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+> From: Stefano Garzarella [mailto:sgarzare@redhat.com]
+> Sent: Tuesday, November 19, 2019 12:01 PM
+> This series introduces a new transport (vsock_loopback) to handle
+> local communication.
+> This could be useful to test vsock core itself and to allow developers
+> to test their applications without launching a VM.
+>=20
+> Before this series, vmci and virtio transports allowed this behavior,
+> but only in the guest.
+> We are moving the loopback handling in a new transport, because it
+> might be useful to provide this feature also in the host or when
+> no H2G/G2H transports (hyperv, virtio, vmci) are loaded.
+>=20
+> The user can use the loopback with the new VMADDR_CID_LOCAL (that
+> replaces VMADDR_CID_RESERVED) in any condition.
+> Otherwise, if the G2H transport is loaded, it can also use the guest
+> local CID as previously supported by vmci and virtio transports.
+> If G2H transport is not loaded, the user can also use VMADDR_CID_HOST
+> for local communication.
+>=20
+> Patch 1 is a cleanup to build virtio_transport_common without virtio
+> Patch 2 adds the new VMADDR_CID_LOCAL, replacing
+> VMADDR_CID_RESERVED
+> Patch 3 adds a new feature flag to register a loopback transport
+> Patch 4 adds the new vsock_loopback transport based on the loopback
+>         implementation of virtio_transport
+> Patch 5 implements the logic to use the local transport for loopback
+>         communication
+> Patch 6 removes the loopback from virtio_transport
+>=20
+> @Jorgen: Do you think it might be a problem to replace
+> VMADDR_CID_RESERVED with VMADDR_CID_LOCAL?
 
-syzbot found the following crash on:
+No, that should be fine. It has never allowed for use with stream sockets i=
+n
+AF_VSOCK. The only potential use would be for datagram sockets, but that
+side appears to be unaffected by your changes, since loopback is only
+introduced for SOCK_STREAM.
 
-HEAD commit:    46178223 usb: gadget: add raw-gadget interface
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=15a05836e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=99c88c44660624e7
-dashboard link: https://syzkaller.appspot.com/bug?extid=ec5f884c4a135aa0dbb9
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1061395ae00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13653d1ce00000
+>=20
+> Thanks,
+> Stefano
+>=20
+> Stefano Garzarella (6):
+>   vsock/virtio_transport_common: remove unused virtio header includes
+>   vsock: add VMADDR_CID_LOCAL definition
+>   vsock: add local transport support in the vsock core
+>   vsock: add vsock_loopback transport
+>   vsock: use local transport when it is loaded
+>   vsock/virtio: remove loopback handling
+>=20
+>  MAINTAINERS                             |   1 +
+>  include/net/af_vsock.h                  |   2 +
+>  include/uapi/linux/vm_sockets.h         |   8 +-
+>  net/vmw_vsock/Kconfig                   |  12 ++
+>  net/vmw_vsock/Makefile                  |   1 +
+>  net/vmw_vsock/af_vsock.c                |  49 +++++-
+>  net/vmw_vsock/virtio_transport.c        |  61 +------
+>  net/vmw_vsock/virtio_transport_common.c |   3 -
+>  net/vmw_vsock/vmci_transport.c          |   2 +-
+>  net/vmw_vsock/vsock_loopback.c          | 217
+> ++++++++++++++++++++++++
+>  10 files changed, 283 insertions(+), 73 deletions(-)
+>  create mode 100644 net/vmw_vsock/vsock_loopback.c
+>=20
+> --
+> 2.21.0
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+ec5f884c4a135aa0dbb9@syzkaller.appspotmail.com
-
-rcu: INFO: rcu_sched self-detected stall on CPU
-rcu: 	0-....: (10499 ticks this GP) idle=8ea/1/0x4000000000000002  
-softirq=1810/1810 fqs=5108
-	(t=10500 jiffies g=1553 q=595)
-NMI backtrace for cpu 0
-CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.4.0-rc6+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-Call Trace:
-  <IRQ>
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xca/0x13e lib/dump_stack.c:113
-  nmi_cpu_backtrace.cold+0x55/0x96 lib/nmi_backtrace.c:101
-  nmi_trigger_cpumask_backtrace+0x1b0/0x1c7 lib/nmi_backtrace.c:62
-  trigger_single_cpu_backtrace include/linux/nmi.h:164 [inline]
-  rcu_dump_cpu_stacks+0x169/0x1b3 kernel/rcu/tree_stall.h:254
-  print_cpu_stall kernel/rcu/tree_stall.h:455 [inline]
-  check_cpu_stall kernel/rcu/tree_stall.h:529 [inline]
-  rcu_pending kernel/rcu/tree.c:2795 [inline]
-  rcu_sched_clock_irq.cold+0x4da/0x936 kernel/rcu/tree.c:2244
-  update_process_times+0x25/0x60 kernel/time/timer.c:1726
-  tick_sched_handle+0x9b/0x180 kernel/time/tick-sched.c:167
-  tick_sched_timer+0x42/0x130 kernel/time/tick-sched.c:1299
-  __run_hrtimer kernel/time/hrtimer.c:1514 [inline]
-  __hrtimer_run_queues+0x303/0xc60 kernel/time/hrtimer.c:1576
-  hrtimer_interrupt+0x2e8/0x730 kernel/time/hrtimer.c:1638
-  local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1110 [inline]
-  smp_apic_timer_interrupt+0xf5/0x500 arch/x86/kernel/apic/apic.c:1135
-  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
-  </IRQ>
-RIP: 0010:hid_apply_multiplier drivers/hid/hid-core.c:1058 [inline]
-RIP: 0010:hid_setup_resolution_multiplier+0x33b/0x990  
-drivers/hid/hid-core.c:1114
-Code: e8 2a 96 ed fc 48 8d 7d 04 48 89 f8 48 c1 e8 03 42 0f b6 14 38 48 89  
-f8 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85 0c 05 00 00 <44> 8b 6d 04 bf  
-02 00 00 00 44 89 ee e8 64 97 ed fc 41 83 fd 02 74
-RSP: 0018:ffff8881da226cd8 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff13
-RAX: 0000000000000007 RBX: 0000000000000000 RCX: ffffffff8450902c
-RDX: 0000000000000000 RSI: ffffffff84509036 RDI: ffff8881d4df1204
-RBP: ffff8881d4df1200 R08: ffff8881da211800 R09: ffffc900004770cc
-R10: fffff5200009241b R11: ffffc900004920db R12: ffff8881c6640000
-R13: 0000000000000000 R14: ffff8881d4df1200 R15: dffffc0000000000
-  hid_open_report+0x438/0x640 drivers/hid/hid-core.c:1225
-  hid_parse include/linux/hid.h:1017 [inline]
-  ms_probe+0x12d/0x4d0 drivers/hid/hid-microsoft.c:388
-  hid_device_probe+0x2be/0x3f0 drivers/hid/hid-core.c:2212
-  really_probe+0x281/0x6d0 drivers/base/dd.c:548
-  driver_probe_device+0x104/0x210 drivers/base/dd.c:721
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
-  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
-  __device_attach+0x217/0x360 drivers/base/dd.c:894
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
-  device_add+0xae6/0x16f0 drivers/base/core.c:2202
-  hid_add_device drivers/hid/hid-core.c:2368 [inline]
-  hid_add_device+0x33c/0x9a0 drivers/hid/hid-core.c:2317
-  usbhid_probe+0xa81/0xfa0 drivers/hid/usbhid/hid-core.c:1386
-  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
-  really_probe+0x281/0x6d0 drivers/base/dd.c:548
-  driver_probe_device+0x104/0x210 drivers/base/dd.c:721
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
-  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
-  __device_attach+0x217/0x360 drivers/base/dd.c:894
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
-  device_add+0xae6/0x16f0 drivers/base/core.c:2202
-  usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
-  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
-  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
-  really_probe+0x281/0x6d0 drivers/base/dd.c:548
-  driver_probe_device+0x104/0x210 drivers/base/dd.c:721
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
-  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
-  __device_attach+0x217/0x360 drivers/base/dd.c:894
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
-  device_add+0xae6/0x16f0 drivers/base/core.c:2202
-  usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2537
-  hub_port_connect drivers/usb/core/hub.c:5184 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5324 [inline]
-  port_event drivers/usb/core/hub.c:5470 [inline]
-  hub_event+0x1df8/0x3800 drivers/usb/core/hub.c:5552
-  process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
-  process_scheduled_works kernel/workqueue.c:2331 [inline]
-  worker_thread+0x7ab/0xe20 kernel/workqueue.c:2417
-  kthread+0x318/0x420 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
