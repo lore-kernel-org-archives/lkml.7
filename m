@@ -2,199 +2,102 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D75C1C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:57:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B12F9C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:59:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DE3E20672
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:57:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oN3wZvC1"
+	by mail.kernel.org (Postfix) with ESMTP id 86DB020672
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:59:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726990AbfKUU5Y (ORCPT
+        id S1726880AbfKUU72 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 15:57:24 -0500
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:41365 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726922AbfKUU5Y (ORCPT
+        Thu, 21 Nov 2019 15:59:28 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:33483 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726541AbfKUU72 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 15:57:24 -0500
-Received: by mail-qv1-f68.google.com with SMTP id g18so2009356qvp.8
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 12:57:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:references:cc:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding;
-        bh=sQ8Qhu5I7Yu+t8z9NI1yRkhgiVWdzL96yBPPh8PD1oo=;
-        b=oN3wZvC1R6G5/Jf3gq0qoDYMfS/8AQUj7eJjlx0h/BtHfjkdRhs994GeewnMwU06WA
-         QH0wrZXmsuVvpMMcHemlFtpq0jv0LBKDE/kVPPk5O0IZZHXvkR69cMAA84MqGHqqjaMr
-         GN1eYiQ2Vjj5r5fXMQiM+V5pmp6TRkffh70XILZIZsW3pm+lneowgk8+Z//hlT+6J2vO
-         9HliYPfAbK6tJ1fMNOyIbbhsmVHoryv7X7Wu2EFP4mWf06g+3k9nF2qyYneHnhPHw+yq
-         3v4g/XBQsmGDelHXqJAtDqkdGImDuqC8cPLfg6zDRZGqP8ewc4aCsBjk6COkmYtJeqXF
-         26/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
-        bh=sQ8Qhu5I7Yu+t8z9NI1yRkhgiVWdzL96yBPPh8PD1oo=;
-        b=GokJiLMlQJ9Gda9A/9oyqbnXW4YgcikPUKTHDN8qOPHVRWhK6GIL1cItLLW9SHXvwM
-         Gblg4LG7BS0cuX0kCkSDR7ZD6EYJcyVBjvszUV1lxdv5g5IdSaRnqIkX+bHL8QKYPCmm
-         /V+LkJKcsHTUKG+tPeqOvFZ7Ye5wVzjDUGwagJp5T8I1EdCFoPA/D1OmXiPDHNLSOo6D
-         5zX1b9DqFNezZaGtuLhwNaMOPfPDc7JN94vhPzXjMUFVF1GBdc9ufTIWmrsYSTMoL8oA
-         GGMn1frasz/BSUFhcogrqE+N1XcoXYIOtZEwAtVZpoqThwNcExOoDr3eqhq5/RIA0cbN
-         L3Ag==
-X-Gm-Message-State: APjAAAVIpsReIHciiniWv7e/Ne78SgN729ZLkxgPXXdGT8XuD+NR0mkP
-        KmO6XB6enafb2TeHBDm0lFVKig==
-X-Google-Smtp-Source: APXvYqwjAkXBpg5htqYU978h+VtAKuq77kT0b2WXFTCFGyw+usd4elChK5PukSEkKw1SYmyPk3ZqoQ==
-X-Received: by 2002:ad4:55cc:: with SMTP id bt12mr10044192qvb.58.1574369841267;
-        Thu, 21 Nov 2019 12:57:21 -0800 (PST)
-Received: from [192.168.1.169] (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
-        by smtp.gmail.com with ESMTPSA id l12sm888494qtf.93.2019.11.21.12.57.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 21 Nov 2019 12:57:20 -0800 (PST)
-Subject: Re: [PATCH] drivers: thermal: step_wise: add support for hysteresis
-To:     Amit Kucheria <amit.kucheria@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        bjorn.andersson@linaro.org, swboyd@chromium.org, j-keerthy@ti.com,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>
-References: <8e812065f4a76325097c5f9c17f3386736d8c1d4.1574315190.git.amit.kucheria@linaro.org>
-Cc:     Ram Chandrasekar <rkumbako@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>, linux-pm@vger.kernel.org
-From:   Thara Gopinath <thara.gopinath@linaro.org>
-Message-ID: <5DD6FA2E.9010704@linaro.org>
-Date:   Thu, 21 Nov 2019 15:57:18 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.5.1
+        Thu, 21 Nov 2019 15:59:28 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iXtXv-0005dc-Dk; Thu, 21 Nov 2019 21:59:23 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 1116D1C1A62;
+        Thu, 21 Nov 2019 21:59:23 +0100 (CET)
+Date:   Thu, 21 Nov 2019 20:59:22 -0000
+From:   "tip-bot2 for Andy Lutomirski" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] selftests/x86/sigreturn/32: Invalidate DS and ES
+ when abusing the kernel
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>, stable@kernel.org,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <8e812065f4a76325097c5f9c17f3386736d8c1d4.1574315190.git.amit.kucheria@linaro.org>
-Content-Type: text/plain; charset=windows-1252
+Message-ID: <157436996291.21853.2383668050357228763.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Amit,
+The following commit has been merged into the x86/urgent branch of tip:
 
-On 11/21/2019 12:50 AM, Amit Kucheria wrote:
-> From: Ram Chandrasekar <rkumbako@codeaurora.org>
-> 
-> Currently, step wise governor increases the mitigation when the
-> temperature goes above a threshold and decreases the mitigation when the
-> temperature goes below the threshold. If there is a case where the
-> temperature is wavering around the threshold, the mitigation will be
-> applied and removed every iteration, which is not very efficient.
-> 
-> The use of hysteresis temperature could avoid this ping-pong of
-> mitigation by relaxing the mitigation to happen only when the
-> temperature goes below this lower hysteresis value.
-> 
-> Signed-off-by: Ram Chandrasekar <rkumbako@codeaurora.org>
-> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
-> [Rebased patch from downstream]
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> ---
->  drivers/thermal/step_wise.c | 35 ++++++++++++++++++++++++-----------
->  1 file changed, 24 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/thermal/step_wise.c b/drivers/thermal/step_wise.c
-> index 6e051cbd824ff..2c8a34a7cf959 100644
-> --- a/drivers/thermal/step_wise.c
-> +++ b/drivers/thermal/step_wise.c
-> @@ -24,7 +24,7 @@
->   *       for this trip point
->   *    d. if the trend is THERMAL_TREND_DROP_FULL, use lower limit
->   *       for this trip point
-> - * If the temperature is lower than a trip point,
-> + * If the temperature is lower than a hysteresis temperature,
->   *    a. if the trend is THERMAL_TREND_RAISING, do nothing
->   *    b. if the trend is THERMAL_TREND_DROPPING, use lower cooling
->   *       state for this trip point, if the cooling state already
-> @@ -115,30 +115,31 @@ static void update_passive_instance(struct thermal_zone_device *tz,
->  
->  static void thermal_zone_trip_update(struct thermal_zone_device *tz, int trip)
->  {
-> -	int trip_temp;
-> +	int trip_temp, hyst_temp;
->  	enum thermal_trip_type trip_type;
->  	enum thermal_trend trend;
->  	struct thermal_instance *instance;
-> -	bool throttle = false;
-> +	bool throttle;
+Commit-ID:     4d2fa82d98d2d296043a04eb517d7dbade5b13b8
+Gitweb:        https://git.kernel.org/tip/4d2fa82d98d2d296043a04eb517d7dbade5b13b8
+Author:        Andy Lutomirski <luto@kernel.org>
+AuthorDate:    Wed, 20 Nov 2019 11:58:32 -08:00
+Committer:     Peter Zijlstra <peterz@infradead.org>
+CommitterDate: Thu, 21 Nov 2019 21:55:59 +01:00
 
-There is no need to remove throttle = false here. You are setting it to
-false later down.
+selftests/x86/sigreturn/32: Invalidate DS and ES when abusing the kernel
 
->  	int old_target;
->  
->  	if (trip == THERMAL_TRIPS_NONE) {
-> -		trip_temp = tz->forced_passive;
-> +		hyst_temp = trip_temp = tz->forced_passive;
->  		trip_type = THERMAL_TRIPS_NONE;
->  	} else {
->  		tz->ops->get_trip_temp(tz, trip, &trip_temp);
-> +		hyst_temp = trip_temp;
-> +		if (tz->ops->get_trip_hyst) {
-> +			tz->ops->get_trip_hyst(tz, trip, &hyst_temp);
-> +			hyst_temp = trip_temp - hyst_temp;
-> +		}
->  		tz->ops->get_trip_type(tz, trip, &trip_type);
->  	}
->  
->  	trend = get_tz_trend(tz, trip);
->  
-> -	if (tz->temperature >= trip_temp) {
-> -		throttle = true;
-> -		trace_thermal_zone_trip(tz, trip, trip_type);
-> -	}
-> -
-> -	dev_dbg(&tz->device, "Trip%d[type=%d,temp=%d]:trend=%d,throttle=%d\n",
-> -				trip, trip_type, trip_temp, trend, throttle);
-> +	dev_dbg(&tz->device,
-> +		"Trip%d[type=%d,temp=%d,hyst=%d]:trend=%d,throttle=%d\n",
-> +		trip, trip_type, trip_temp, hyst_temp, trend, throttle);
+If the kernel accidentally uses DS or ES while the user values are
+loaded, it will work fine for sane userspace.  In the interest of
+simulating maximally insane userspace, make sigreturn_32 zero out DS
+and ES for the nasty parts so that inadvertent use of these segments
+will crash.
 
-throttle value is not final here. Why is the debug print and the setting
-of throttle reversed ? Idea is to print the final value of
-throttle.
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: stable@kernel.org
+---
+ tools/testing/selftests/x86/sigreturn.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
->  
->  	mutex_lock(&tz->lock);
->  
-> @@ -147,6 +148,18 @@ static void thermal_zone_trip_update(struct thermal_zone_device *tz, int trip)
->  			continue;
->  
->  		old_target = instance->target;
-> +		throttle = false;
-> +		/*
-> +		 * Lower the mitigation only if the temperature
-> +		 * goes below the hysteresis temperature.
-> +		 */
-
-I think this requires more comment here on why there is a check for
-old_target != THERMAL_NO_TARGET. Basically to ensure that the hysteresis
-is considered only when temperature is dropping.
-
-> +		if (tz->temperature >= trip_temp ||
-> +		    (tz->temperature >= hyst_temp &&
-> +		     old_target != THERMAL_NO_TARGET)) {
-> +			throttle = true;
-> +			trace_thermal_zone_trip(tz, trip, trip_type);
-> +		}
-> +
->  		instance->target = get_target_state(instance, trend, throttle);
->  		dev_dbg(&instance->cdev->device, "old_target=%d, target=%d\n",
->  					old_target, (int)instance->target);
-> 
-
-
--- 
-Warm Regards
-Thara
+diff --git a/tools/testing/selftests/x86/sigreturn.c b/tools/testing/selftests/x86/sigreturn.c
+index 3e49a78..57c4f67 100644
+--- a/tools/testing/selftests/x86/sigreturn.c
++++ b/tools/testing/selftests/x86/sigreturn.c
+@@ -451,6 +451,19 @@ static void sigusr1(int sig, siginfo_t *info, void *ctx_void)
+ 	ctx->uc_mcontext.gregs[REG_SP] = (unsigned long)0x8badf00d5aadc0deULL;
+ 	ctx->uc_mcontext.gregs[REG_CX] = 0;
+ 
++#ifdef __i386__
++	/*
++	 * Make sure the kernel doesn't inadvertently use DS or ES-relative
++	 * accesses in a region where user DS or ES is loaded.
++	 *
++	 * Skip this for 64-bit builds because long mode doesn't care about
++	 * DS and ES and skipping it increases test coverage a little bit,
++	 * since 64-bit kernels can still run the 32-bit build.
++	 */
++	ctx->uc_mcontext.gregs[REG_DS] = 0;
++	ctx->uc_mcontext.gregs[REG_ES] = 0;
++#endif
++
+ 	memcpy(&requested_regs, &ctx->uc_mcontext.gregs, sizeof(gregset_t));
+ 	requested_regs[REG_CX] = *ssptr(ctx);	/* The asm code does this. */
+ 
