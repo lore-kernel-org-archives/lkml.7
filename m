@@ -2,147 +2,117 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5448C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:02:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45B0DC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:02:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E39920692
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:02:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DB1B20692
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:02:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BmVtjoxI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727016AbfKUQCd (ORCPT
+        id S1727096AbfKUQCt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 11:02:33 -0500
-Received: from mga14.intel.com ([192.55.52.115]:4801 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726358AbfKUQCd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 11:02:33 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Nov 2019 08:01:59 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,226,1571727600"; 
-   d="scan'208";a="216163671"
-Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by fmsmga001.fm.intel.com with ESMTP; 21 Nov 2019 08:01:59 -0800
-Date:   Thu, 21 Nov 2019 08:14:10 -0800
-From:   Fenghua Yu <fenghua.yu@intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
-Subject: Re: [PATCH v10 6/6] x86/split_lock: Enable split lock detection by
- kernel parameter
-Message-ID: <20191121161410.GA199273@romley-ivt3.sc.intel.com>
-References: <1574297603-198156-1-git-send-email-fenghua.yu@intel.com>
- <1574297603-198156-7-git-send-email-fenghua.yu@intel.com>
- <20191121060444.GA55272@gmail.com>
- <20191121130153.GS4097@hirez.programming.kicks-ass.net>
+        Thu, 21 Nov 2019 11:02:49 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:40413 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726840AbfKUQCs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 11:02:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574352167;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
+        bh=rcqdeTgChHnCDo5l36uHf88TY7b96FHBlN+sSTw6btQ=;
+        b=BmVtjoxIr5/kEVcZAGQEG9/n33t+2C5KAAe3WQ1Moe8EfYTCkq3Ub9NVIDH3X8gQlxJQac
+        egxxbRY8mkJ8Xy8lHJWl3S2dsAHraHWq/iBzaYLsPieamtDQJcH52QP6FOqMP6kQDQ0S6X
+        l0CNvcmuW3wPynZrxYChEVQsejv7Gbo=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-316-OL8DMrZQOAKklK-1YLdTlg-1; Thu, 21 Nov 2019 11:02:45 -0500
+Received: by mail-wm1-f71.google.com with SMTP id y14so2034914wmi.4
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 08:02:45 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=qM2tyh78ojNvdG7Z8M8T/3nGHyd1QQztV+4YABQwg58=;
+        b=KXl77w9Ju2fsX7nSkQbZKc/24L2YO5EvKjf+InEG5HJHyhgZj2etTRnH2MNQOPE4j5
+         DKYcws8ACuCIOno9wDj3zu7fMRL4/4wUhJs1zcopr+tu1rzLAZi0ow7V9G3lPyhkUnaJ
+         aLqgvQTYlY7WsHlnMlDhE9PNczGsk3kmBk2K/HMgRVJKlJsjUbnZbVPFBCAXnzny38Df
+         SNgXX+akrDaqWbKpqyA8W5wvTYZyVTEVNO7d1/WWAMsxXVcG/6q6UhljohlJw9cTMwSO
+         jjdTqodl6HI/dgmBLAF8iuSLiw2YAJ5WEvce3ZpzG9orVcstA0WOHnVPR0M0QIqQXaH/
+         Ccow==
+X-Gm-Message-State: APjAAAXlmzhgSQ6RJaFcd86l6VuYhVNdhmme3hZT08q19EH8QZ7vaI/a
+        UQWwVkk4APfe49ZNXNxFDYwh4MCyOuhgPCwnGWBFTn8TUFiv+BlfHYw86tkxtQE422MqQp+Rsgn
+        YtDUtAfC5oxBAwxOKdJUir67Z
+X-Received: by 2002:a1c:6641:: with SMTP id a62mr10623029wmc.54.1574352164372;
+        Thu, 21 Nov 2019 08:02:44 -0800 (PST)
+X-Google-Smtp-Source: APXvYqz/tD9hcxHhcQWoHQpZcdfK2t0X0v9XjAW7cHY4kYJ0mn+rkqwZ9CmqXq9Xn2xNMJAol/s4ww==
+X-Received: by 2002:a1c:6641:: with SMTP id a62mr10623001wmc.54.1574352164065;
+        Thu, 21 Nov 2019 08:02:44 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:71a5:6e:f854:d744? ([2001:b07:6468:f312:71a5:6e:f854:d744])
+        by smtp.gmail.com with ESMTPSA id x5sm94545wmj.7.2019.11.21.08.02.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 Nov 2019 08:02:43 -0800 (PST)
+Subject: Re: [PATCH v7 2/9] vmx: spp: Add control flags for Sub-Page
+ Protection(SPP)
+To:     Yang Weijiang <weijiang.yang@intel.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jmattson@google.com, sean.j.christopherson@intel.com,
+        yu.c.zhang@linux.intel.com, alazar@bitdefender.com,
+        edwin.zhai@intel.com
+References: <20191119084949.15471-1-weijiang.yang@intel.com>
+ <20191119084949.15471-3-weijiang.yang@intel.com>
+ <d6e71e7b-b708-211c-24b7-8ffe03a52842@redhat.com>
+ <20191121153442.GH17169@local-michael-cet-test>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <58b4b445-bd47-d357-9fdd-118043624215@redhat.com>
+Date:   Thu, 21 Nov 2019 17:02:42 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191121130153.GS4097@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20191121153442.GH17169@local-michael-cet-test>
+Content-Language: en-US
+X-MC-Unique: OL8DMrZQOAKklK-1YLdTlg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 02:01:53PM +0100, Peter Zijlstra wrote:
-> On Thu, Nov 21, 2019 at 07:04:44AM +0100, Ingo Molnar wrote:
-> > * Fenghua Yu <fenghua.yu@intel.com> wrote:
-> 
-> > > +	split_lock_detect
-> > > +			[X86] Enable split lock detection
-> > > +			This is a real time or debugging feature. When enabled
-> > > +			(and if hardware support is present), atomic
-> > > +			instructions that access data across cache line
-> > > +			boundaries will result in an alignment check exception.
-> > > +			When triggered in applications the kernel will send
-> > > +			SIGBUS. The kernel will panic for a split lock in
-> > > +			OS code.
-> > 
-> > It would be really nice to be able to enable/disable this runtime as 
-> > well, has this been raised before, and what was the conclusion?
-> 
-> It has, previous versions had that. Somehow a lot of things went missing
-> and we're back to a broken neutered useless mess.
-> 
-> The problem appears to be that due to hardware design the feature cannot
-> be virtualized, and instead of then disabling it when a VM runs/exists
-> they just threw in the towel and went back to useless mode.. :-(
+On 21/11/19 16:34, Yang Weijiang wrote:
+> On Thu, Nov 21, 2019 at 11:04:51AM +0100, Paolo Bonzini wrote:
+>> On 19/11/19 09:49, Yang Weijiang wrote:
+>>> @@ -228,6 +228,7 @@
+>>>  #define X86_FEATURE_FLEXPRIORITY=09( 8*32+ 2) /* Intel FlexPriority */
+>>>  #define X86_FEATURE_EPT=09=09=09( 8*32+ 3) /* Intel Extended Page Tabl=
+e */
+>>>  #define X86_FEATURE_VPID=09=09( 8*32+ 4) /* Intel Virtual Processor ID=
+ */
+>>> +#define X86_FEATURE_SPP=09=09=09( 8*32+ 5) /* Intel EPT-based Sub-Page=
+ Write Protection */
+>>
+>> Please do not include X86_FEATURE_SPP.  In general I don't like the VMX
+>> features word, but apart from that SPP is not a feature that affects all
+>> VMs in the same way as EPT or FlexPriority.
+>>
+> So what's a friendly way to let a user check if SPP feature is there?
 
-It's a bit complex to virtualize the TEST_CTRL MSR because it's per core
-instead of per thread. But it's still doable to virtualize it as
-discussion:
-https://lore.kernel.org/lkml/20191017233824.GA23654@linux.intel.com/
+QEMU for example ships with a program called vmxcap (though it requires
+root).  We also could write a program to analyze the KVM capabilities
+and print them, and put it in tools/kvm.
 
-KVM code will be released later. Even if there is no KVM code for split
-lock, the patch set will killl qemu/guest if split lock happens there.
-The goal of this patch set is to have a basic enabling code.
+Thanks,
 
-> 
-> This feature MUST be default enabled, otherwise everything will
-> be/remain broken and we'll end up in the situation where you can't use
-> it even if you wanted to.
+Paolo
 
-The usage scope of this patch set is largely reduced to only real time.
-The long split lock processing time (>1000 cycles) cannot be tolerated
-by real time.
-
-Real time customers do want to use this feature to detect the fatal
-split lock error. They don't want any split lock issue from BIOS/EFI/
-firmware/kerne/drivers/user apps.
-
-Real time can enable the feature (set bit 29 in TEST_CTRL MSR) in BIOS and
-don't need OS to enable it. But, #AC handler cannot handle split lock
-in the kernel and will return to the faulting instruction and re-enter #AC. So
-current #AC handler doesn't provide useful information for the customers.
-That's why we add the new #AC handler in this patch set.
-
->
-> Imagine the BIOS/EFI/firmware containing an #AC exception. At that point
-> the feature becomes useless, because you cannot enable it without your
-> machine dying.
-
-I believe Intel real time team guarantees to deliever a split lock FREE
-BIOS/EFI/firmware to their real time users.
-
-From kernel point of view, we are working on a split lock free kernel.
-Some blocking split lock issues have been fixed in TIP tree.
-
-Only limited user apps can run on real time and should be split lock
-free before they are allowed to run on the real time system.
-
-So the feature is enabled only for real time that wants to have
-a controlled split lock free environment.
-
-The point is a split lock issue is a FATAL error on real time. Whenever
-it happens, the long processing time (>1000 cycles) cannot meet hard real
-time requirement any more and the system/user app has to die.
-
-> 
-> Now, from long and painful experience we all know that if a BIOS can be
-> wrong, it will be. Therefore this feature will be/is useless as
-> presented.
-> 
-> And I can't be arsed to look it up, but we've been making this very same
-> argument since very early (possible the very first) version.
-> 
-> So this version goes straight into the bit bucket. Please try again.
-
-In summary, the patch set only wants to enable the feature for real time
-and disable it by default.
-
-Thanks.
-
--Fenghua
