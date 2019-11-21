@@ -2,157 +2,178 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68F04C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:49:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4182CC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:52:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 400A4206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:49:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574369369;
-	bh=5De6lyHZUeIRTKocUVUZWotA5hsrs6wr64RApzhHGgI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=c61qHJ4OExh3vfHSEgRPaJCqq9B9b8cDjuZGCs12j4CpGebx/8B8QgzffY7Nwmp6G
-	 2mADOyyvAYDGZrShj6KHRX5wDKp+7rutwJCpc9HOBzXqrhN8C+fPCsBhxefNCaIbgo
-	 I0dHTa34PwxiCHp0YT/2LeC0l12k32o6e1wFOQo0=
+	by mail.kernel.org (Postfix) with ESMTP id 0D74A20672
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:52:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="sRJg4b6j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726822AbfKUUt2 (ORCPT
+        id S1726912AbfKUUw3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 15:49:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55762 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726293AbfKUUt2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 15:49:28 -0500
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6BD242068D;
-        Thu, 21 Nov 2019 20:49:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574369366;
-        bh=5De6lyHZUeIRTKocUVUZWotA5hsrs6wr64RApzhHGgI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=RxqRR/wsuytn/Fk9HzlloMcfWPyCmZvWj4q5D85e7WnL/HwjE6sSpXaCPt5ezzfHP
-         hx/jsG8D4t+dyh/UgLYDBunGpDfNo6DiRQO9HG1UlrYGlkIXA2O8vSBaqnwpANHKV9
-         Oqy0KvYY0UM3dpvN+VOgNPO9C1kXgK+k9Abhx2DU=
-Date:   Thu, 21 Nov 2019 14:49:24 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Frederick Lawler <fred@fredlawl.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Rajat Jain <rajatja@google.com>, linux-pci@vger.kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Wong Vee Khee <vee.khee.wong@ni.com>,
-        Hui Chun Ong <hui.chun.ong@ni.com>,
-        Keith Busch <keith.busch@intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 4/5] PCI/ASPM: Add sysfs attributes for controlling
- ASPM link states
-Message-ID: <20191121204924.GA81030@google.com>
+        Thu, 21 Nov 2019 15:52:29 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:58632 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726802AbfKUUw1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 15:52:27 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xALKnNGp101533;
+        Thu, 21 Nov 2019 20:50:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=JqMqk6Pam98kfZFKlDoAMn1so5XjHeYutDiswf96RFU=;
+ b=sRJg4b6jEE3FX2oCNtwZ3h7BrtDVOvdJXXXsQzMgYNFaT4KkWQQZBvCr16tl3uDvg3QL
+ hbUZIinoXwIE7c9h1GLbhs0NmFIgSikwqy1uesZmB2XfjcW9Q+bzTywvrhIYVC7Pov1m
+ KYjCQ3fvDcl3ETtHADppgN1sJjOjAfudpFle9vKC7IFdZBGj/1rhnlrYdiAl8Q+OEwlc
+ oW696zYDYubgmamGDUGG6FjQOBkZ2X6g0XvAgaRPXkCfldVTawfPvEE+zL/OOiyo+Vbo
+ 4vwStNp3RSACWtqoUgag2JAo5RCGXT5Uny8+F7rnqlKIgy+hCaQxW9g0kLR5Jc0egKBb Rw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2wa92q6uu1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 21 Nov 2019 20:50:16 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xALKiT7a129317;
+        Thu, 21 Nov 2019 20:50:15 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2wd4700v9b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 21 Nov 2019 20:50:15 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xALKo7PE022130;
+        Thu, 21 Nov 2019 20:50:11 GMT
+Received: from kadam (/41.210.146.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 21 Nov 2019 12:50:07 -0800
+Date:   Thu, 21 Nov 2019 23:49:56 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     syzbot <syzbot+a36ab65c6653d7ccdd62@syzkaller.appspotmail.com>
+Cc:     alsa-devel@alsa-project.org, andreyknvl@google.com,
+        benquike@gmail.com, g@b4.vu, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        perex@perex.cz, syzkaller-bugs@googlegroups.com, tiwai@suse.com,
+        wang6495@umn.edu
+Subject: Re: general protection fault in snd_usb_create_mixer
+Message-ID: <20191121204956.GE617@kadam>
+References: <0000000000002129080597dce70d@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b1c83f8a-9bf6-eac5-82d0-cf5b90128fbf@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <0000000000002129080597dce70d@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9448 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-1911210173
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9448 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-1911210174
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc Rafael, Mika, Wong, Hui, Rajat, Keith, LKML, original patch at [5]]
+On Thu, Nov 21, 2019 at 07:25:09AM -0800, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following crash on:
+> 
+> HEAD commit:    46178223 usb: gadget: add raw-gadget interface
+> git tree:       https://github.com/google/kasan.git usb-fuzzer
+> console output: https://syzkaller.appspot.com/x/log.txt?x=176f9836e00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=99c88c44660624e7
+> dashboard link: https://syzkaller.appspot.com/bug?extid=a36ab65c6653d7ccdd62
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1447d3bae00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17ef3a86e00000
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+a36ab65c6653d7ccdd62@syzkaller.appspotmail.com
+> 
+> usb 1-1: 208:241 : does not exist
+> usb 1-1: 208:242 : does not exist
+> usb 1-1: 208:243 : does not exist
+> usb 1-1: 208:244 : does not exist
+> usb 1-1: 208:245 : does not exist
+> usb 1-1: 208:246 : does not exist
+> usb 1-1: 208:247 : does not exist
+> usb 1-1: 208:248 : does not exist
+> usb 1-1: 208:249 : does not exist
+> usb 1-1: 208:250 : does not exist
 
-On Sat, Oct 05, 2019 at 02:07:56PM +0200, Heiner Kallweit wrote:
+These error messages are because:
 
-> +What:		/sys/bus/pci/devices/.../link_pm/clkpm
-> +		/sys/bus/pci/devices/.../link_pm/l0s_aspm
-> +		/sys/bus/pci/devices/.../link_pm/l1_aspm
-> +		/sys/bus/pci/devices/.../link_pm/l1_1_aspm
-> +		/sys/bus/pci/devices/.../link_pm/l1_2_aspm
-> +		/sys/bus/pci/devices/.../link_pm/l1_1_pcipm
-> +		/sys/bus/pci/devices/.../link_pm/l1_2_pcipm
-> +Date:		October 2019
-> +Contact:	Heiner Kallweit <hkallweit1@gmail.com>
-> +Description:	If ASPM is supported for an endpoint, then these files
-> +		can be used to disable or enable the individual
-> +		power management states. Write y/1/on to enable,
-> +		n/0/off to disable.
+sound/usb/card.c
+   128  static int snd_usb_create_stream(struct snd_usb_audio *chip, int ctrlif, int interface)
+   129  {
+   130          struct usb_device *dev = chip->dev;
+   131          struct usb_host_interface *alts;
+   132          struct usb_interface_descriptor *altsd;
+   133          struct usb_interface *iface = usb_ifnum_to_if(dev, interface);
+   134  
+   135          if (!iface) {
+   136                  dev_err(&dev->dev, "%u:%d : does not exist\n",
+   137                          ctrlif, interface);
+   138                  return -EINVAL;
+   139          }
 
-This is queued up for the v5.5 merge window, so if we want to tweak
-anything (path names or otherwise), now is the time.
+"iface" is NULL.  The caller ignores the -EINVAL (correctly I think).
 
-I think I might be inclined to change the directory from "link_pm" to
-"link", e.g.,
+Then the NULL dereference happens in snd_usb_mixer_controls_badd()
 
-  - /sys/bus/pci/devices/0000:00:1c.0/link_pm/clkpm
-  + /sys/bus/pci/devices/0000:00:1c.0/link/clkpm
+sound/usb/mixer.c
+  2903  static int snd_usb_mixer_controls_badd(struct usb_mixer_interface *mixer,
+  2904                                         int ctrlif)
+  2905  {
+  2906          struct usb_device *dev = mixer->chip->dev;
+  2907          struct usb_interface_assoc_descriptor *assoc;
+  2908          int badd_profile = mixer->chip->badd_profile;
+  2909          struct uac3_badd_profile *f;
+  2910          const struct usbmix_ctl_map *map;
+  2911          int p_chmask = 0, c_chmask = 0, st_chmask = 0;
+  2912          int i;
+  2913  
+  2914          assoc = usb_ifnum_to_if(dev, ctrlif)->intf_assoc;
+  2915  
+  2916          /* Detect BADD capture/playback channels from AS EP descriptors */
+  2917          for (i = 0; i < assoc->bInterfaceCount; i++) {
+  2918                  int intf = assoc->bFirstInterface + i;
+  2919  
+  2920                  struct usb_interface *iface;
+  2921                  struct usb_host_interface *alts;
+  2922                  struct usb_interface_descriptor *altsd;
+  2923                  unsigned int maxpacksize;
+  2924                  char dir_in;
+  2925                  int chmask, num;
+  2926  
+  2927                  if (intf == ctrlif)
+  2928                          continue;
+  2929  
+  2930                  iface = usb_ifnum_to_if(dev, intf);
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+iface is not checked.
 
-because there are other things that haven't been merged yet that could
-go in link/ as well:
+Should it be "if (!iface) continue;?"
 
-  * Mika's "link disable" control [1]
-  * Dilip's link width/speed controls [2,3]
+  2931                  num = iface->num_altsetting;
+  2932  
+  2933                  if (num < 2)
+  2934                          return -EINVAL;
+  2935  
 
-The max_link_speed, max_link_width, current_link_speed,
-current_link_width files could also logically be in link/, although
-they've already been merged at the top level.
+I'm not sure.
 
-Rajat's AER statistics change [4] is also coming.  Those stats aren't
-link-related, so they wouldn't go in link/.  The current strawman is
-an "aer_stats" directory, but I wonder if we should make a more
-generic directory like "errors" that could be used for both AER and
-DPC and potentially other error-related things.
+regards,
+dan carpenter
 
-For example, we could have these link-related things:
-
-  /sys/.../0000:00:1c.0/link/clkpm            # RW ASPM stuff
-  /sys/.../0000:00:1c.0/link/l0s_aspm
-  /sys/.../0000:00:1c.0/link/...
-  /sys/.../0000:00:1c.0/link/disable          # RW Mika
-  /sys/.../0000:00:1c.0/link/speed            # RW Dilip's control
-  /sys/.../0000:00:1c.0/link/width            # RW Dilip's control
-  /sys/.../0000:00:1c.0/link/max_speed        # RO possible rework
-  /sys/.../0000:00:1c.0/link/max_width        # RO possible rework
-
-With these backwards compatibility symlinks:
-
-  /sys/.../0000:00:1c.0/max_link_speed     -> link/max_speed
-  /sys/.../0000:00:1c.0/current_link_speed -> link/speed
-
-Rajat's current patch puts the AER stats here at the top level:
-
-  /sys/.../0000:00:1c.0/aer_stats/fatal_bit4_DLP
-
-But maybe we could push them down like this:
-
-  /sys/.../0000:00:1c.0/errors/aer/stats/unc_04_dlp
-  /sys/.../0000:00:1c.0/errors/aer/stats/unc_26_poison_tlb_blocked
-  /sys/.../0000:00:1c.0/errors/aer/stats/cor_00_rx_err
-  /sys/.../0000:00:1c.0/errors/aer/stats/cor_15_hdr_log_overflow
-
-There are some AER-related things we don't have at all today that
-could go here:
-
-  /sys/.../0000:00:1c.0/errors/aer/ecrc_gen
-  /sys/.../0000:00:1c.0/errors/aer/ecrc_check
-  /sys/.../0000:00:1c.0/errors/aer/unc_err_status
-  /sys/.../0000:00:1c.0/errors/aer/unc_err_mask
-  /sys/.../0000:00:1c.0/errors/aer/unc_err_sev
-
-And we might someday want DPC knobs like this:
-
-  /sys/.../0000:00:1c.0/errors/dpc/status
-  /sys/.../0000:00:1c.0/errors/dpc/error_source
-
-Any thoughts?
-
-Bjorn
-
-[1] https://lore.kernel.org/r/20190529104942.74991-1-mika.westerberg@linux.intel.com
-[2] https://lore.kernel.org/r/d8574605f8e70f41ce1e88ccfb56b63c8f85e4df.1571638827.git.eswara.kota@linux.intel.com
-[3] https://lore.kernel.org/r/20191030221436.GA261632@google.com/
-[4] https://lore.kernel.org/r/20190827222145.32642-2-rajatja@google.com
-[5] https://lore.kernel.org/r/b1c83f8a-9bf6-eac5-82d0-cf5b90128fbf@gmail.com
