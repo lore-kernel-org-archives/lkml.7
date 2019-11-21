@@ -2,178 +2,228 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4182CC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:52:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A57ECC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:52:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D74A20672
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:52:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6129820672
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:52:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="sRJg4b6j"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nYjw7Uiz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbfKUUw3 (ORCPT
+        id S1726840AbfKUUw0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 15:52:29 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:58632 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726802AbfKUUw1 (ORCPT
+        Thu, 21 Nov 2019 15:52:26 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:42450 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726293AbfKUUwZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 15:52:27 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xALKnNGp101533;
-        Thu, 21 Nov 2019 20:50:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=JqMqk6Pam98kfZFKlDoAMn1so5XjHeYutDiswf96RFU=;
- b=sRJg4b6jEE3FX2oCNtwZ3h7BrtDVOvdJXXXsQzMgYNFaT4KkWQQZBvCr16tl3uDvg3QL
- hbUZIinoXwIE7c9h1GLbhs0NmFIgSikwqy1uesZmB2XfjcW9Q+bzTywvrhIYVC7Pov1m
- KYjCQ3fvDcl3ETtHADppgN1sJjOjAfudpFle9vKC7IFdZBGj/1rhnlrYdiAl8Q+OEwlc
- oW696zYDYubgmamGDUGG6FjQOBkZ2X6g0XvAgaRPXkCfldVTawfPvEE+zL/OOiyo+Vbo
- 4vwStNp3RSACWtqoUgag2JAo5RCGXT5Uny8+F7rnqlKIgy+hCaQxW9g0kLR5Jc0egKBb Rw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2wa92q6uu1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 21 Nov 2019 20:50:16 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xALKiT7a129317;
-        Thu, 21 Nov 2019 20:50:15 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2wd4700v9b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 21 Nov 2019 20:50:15 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xALKo7PE022130;
-        Thu, 21 Nov 2019 20:50:11 GMT
-Received: from kadam (/41.210.146.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 21 Nov 2019 12:50:07 -0800
-Date:   Thu, 21 Nov 2019 23:49:56 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     syzbot <syzbot+a36ab65c6653d7ccdd62@syzkaller.appspotmail.com>
-Cc:     alsa-devel@alsa-project.org, andreyknvl@google.com,
-        benquike@gmail.com, g@b4.vu, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        perex@perex.cz, syzkaller-bugs@googlegroups.com, tiwai@suse.com,
-        wang6495@umn.edu
-Subject: Re: general protection fault in snd_usb_create_mixer
-Message-ID: <20191121204956.GE617@kadam>
-References: <0000000000002129080597dce70d@google.com>
+        Thu, 21 Nov 2019 15:52:25 -0500
+Received: by mail-pf1-f195.google.com with SMTP id s5so2329441pfh.9;
+        Thu, 21 Nov 2019 12:52:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=9U2qqaFTNnfIBTOta2W1cA2dziggMNyD+HUy1loDO1g=;
+        b=nYjw7Uiz0QUJnKMqYM73GeL/nLoBRnqaXqU8DHfnykpLqPidcGO8FwsfzyjH4yCdSE
+         DhuY1INHupxSRdcDu/vXKx5H7LV2vJkcNSFtIC57K0S/+VydXpvaglWt7F9sU9wBV+ws
+         2uw5xKU3s6yiOZSTLWNcCndWy5AznenRaUcWHY7vhWQr7jsReUAPuwdsSVnQqN9K0sZ3
+         HVAXW9Nv1jkxBD5F56IFniIVUHn04YtIiVy45vKf+5zclo1UGVUmHzgh859lRSWq7NHa
+         ymBCA1kvoQGbjpc5jljm6E1MG3gwrz4IG2ef9DBScP8HbjqsOl+ABdumZSZnfIRKtw2y
+         tr6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=9U2qqaFTNnfIBTOta2W1cA2dziggMNyD+HUy1loDO1g=;
+        b=YwEHUCSiamM5rIz73d93Jt0XJHK1kvTU29xBiDHwV0F8cLTCMNEsrpqI7sGtpdNzTw
+         m/Qa/+IKhwsYbO2F/XEOcSli3iYhmlSJ6fXg+7UImGhrT6PSuuF7PHRbytdGBUobRTNb
+         OqiCiVHl0LTgyVRQAuw6EZjTlioiUl6WSDyHuBkATRI+vKklBB0J06kq9npO+IYxjA/i
+         zBvZpr5+Q9iPMV2AYdBmrxshvmW2+lloPoj92r3WvTua8Rq7NJXlHCjLThuSDziabN4C
+         NcrKH6e4aVyQg4Ogp9GGBC0GqltaEHqC5jlRPib4AJKdcjbYtCbxM1Xc2Lpz8MU8N1Hk
+         4Kdw==
+X-Gm-Message-State: APjAAAXwLZeSlX/lBJHGcMnJRYW9reXs6ZKeNf/WLiJ6DPmtR+bZSh+Y
+        IXhRVOm8jyD1Pur+kQtxPJA=
+X-Google-Smtp-Source: APXvYqyHrchtONXQoQmVbfSKMYMI1MDo9BkqRo9FOqVJDD6DMfOwkY7I3v4cwHDs/cWvqHFMnPOPTw==
+X-Received: by 2002:a63:184c:: with SMTP id 12mr5247366pgy.418.1574369544598;
+        Thu, 21 Nov 2019 12:52:24 -0800 (PST)
+Received: from [10.67.50.53] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id a29sm3887100pgd.12.2019.11.21.12.52.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 21 Nov 2019 12:52:23 -0800 (PST)
+Subject: Re: next/master bisection: boot on beaglebone-black
+To:     "kernelci.org bot" <bot@kernelci.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        tomeu.vizoso@collabora.com, guillaume.tucker@collabora.com,
+        Jouni Hogander <jouni.hogander@unikie.com>, broonie@kernel.org,
+        khilman@baylibre.com, mgalka@collabora.com,
+        enric.balletbo@collabora.com
+Cc:     Eric Dumazet <edumazet@google.com>, linux-kernel@vger.kernel.org,
+        Jiri Pirko <jiri@mellanox.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        netdev@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
+        Wang Hai <wanghai26@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>
+References: <5dd6d7d2.1c69fb81.48b6f.33f2@mx.google.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
+Message-ID: <4e43ed85-139f-d23f-96d1-a50b9fc56780@gmail.com>
+Date:   Thu, 21 Nov 2019 12:52:22 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0000000000002129080597dce70d@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9448 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-1911210173
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9448 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-1911210174
+In-Reply-To: <5dd6d7d2.1c69fb81.48b6f.33f2@mx.google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 07:25:09AM -0800, syzbot wrote:
-> Hello,
+On 11/21/19 10:30 AM, kernelci.org bot wrote:
+> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+> * This automated bisection report was sent to you on the basis  *
+> * that you may be involved with the breaking commit it has      *
+> * found.  No manual investigation has been done to verify it,   *
+> * and the root cause of the problem may be somewhere else.      *
+> *                                                               *
+> * If you do send a fix, please include this trailer:            *
+> *   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
+> *                                                               *
+> * Hope this helps!                                              *
+> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 > 
-> syzbot found the following crash on:
+> next/master bisection: boot on beaglebone-black
 > 
-> HEAD commit:    46178223 usb: gadget: add raw-gadget interface
-> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=176f9836e00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=99c88c44660624e7
-> dashboard link: https://syzkaller.appspot.com/bug?extid=a36ab65c6653d7ccdd62
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1447d3bae00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17ef3a86e00000
+> Summary:
+>   Start:      9942eae47585 Add linux-next specific files for 20191121
+>   Details:    https://kernelci.org/boot/id/5dd6696859b514303ecf550d
+>   Plain log:  https://storage.kernelci.org//next/master/next-20191121/arm/multi_v7_defconfig/gcc-8/lab-baylibre/boot-am335x-boneblack.txt
+>   HTML log:   https://storage.kernelci.org//next/master/next-20191121/arm/multi_v7_defconfig/gcc-8/lab-baylibre/boot-am335x-boneblack.html
+>   Result:     b8eb718348b8 net-sysfs: Fix reference count leak in rx|netdev_queue_add_kobject
 > 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+a36ab65c6653d7ccdd62@syzkaller.appspotmail.com
+> Checks:
+>   revert:     PASS
+>   verify:     PASS
 > 
-> usb 1-1: 208:241 : does not exist
-> usb 1-1: 208:242 : does not exist
-> usb 1-1: 208:243 : does not exist
-> usb 1-1: 208:244 : does not exist
-> usb 1-1: 208:245 : does not exist
-> usb 1-1: 208:246 : does not exist
-> usb 1-1: 208:247 : does not exist
-> usb 1-1: 208:248 : does not exist
-> usb 1-1: 208:249 : does not exist
-> usb 1-1: 208:250 : does not exist
+> Parameters:
+>   Tree:       next
+>   URL:        git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+>   Branch:     master
+>   Target:     beaglebone-black
+>   CPU arch:   arm
+>   Lab:        lab-baylibre
+>   Compiler:   gcc-8
+>   Config:     multi_v7_defconfig
+>   Test suite: boot
+> 
+> Breaking commit found:
+> 
+> -------------------------------------------------------------------------------
+> commit b8eb718348b8fb30b5a7d0a8fce26fb3f4ac741b
+> Author: Jouni Hogander <jouni.hogander@unikie.com>
+> Date:   Wed Nov 20 09:08:16 2019 +0200
+> 
+>     net-sysfs: Fix reference count leak in rx|netdev_queue_add_kobject
+>     
+>     kobject_init_and_add takes reference even when it fails. This has
+>     to be given up by the caller in error handling. Otherwise memory
+>     allocated by kobject_init_and_add is never freed. Originally found
+>     by Syzkaller:
+>     
+>     BUG: memory leak
+>     unreferenced object 0xffff8880679f8b08 (size 8):
+>       comm "netdev_register", pid 269, jiffies 4294693094 (age 12.132s)
+>       hex dump (first 8 bytes):
+>         72 78 2d 30 00 36 20 d4                          rx-0.6 .
+>       backtrace:
+>         [<000000008c93818e>] __kmalloc_track_caller+0x16e/0x290
+>         [<000000001f2e4e49>] kvasprintf+0xb1/0x140
+>         [<000000007f313394>] kvasprintf_const+0x56/0x160
+>         [<00000000aeca11c8>] kobject_set_name_vargs+0x5b/0x140
+>         [<0000000073a0367c>] kobject_init_and_add+0xd8/0x170
+>         [<0000000088838e4b>] net_rx_queue_update_kobjects+0x152/0x560
+>         [<000000006be5f104>] netdev_register_kobject+0x210/0x380
+>         [<00000000e31dab9d>] register_netdevice+0xa1b/0xf00
+>         [<00000000f68b2465>] __tun_chr_ioctl+0x20d5/0x3dd0
+>         [<000000004c50599f>] tun_chr_ioctl+0x2f/0x40
+>         [<00000000bbd4c317>] do_vfs_ioctl+0x1c7/0x1510
+>         [<00000000d4c59e8f>] ksys_ioctl+0x99/0xb0
+>         [<00000000946aea81>] __x64_sys_ioctl+0x78/0xb0
+>         [<0000000038d946e5>] do_syscall_64+0x16f/0x580
+>         [<00000000e0aa5d8f>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>         [<00000000285b3d1a>] 0xffffffffffffffff
+>     
+>     Cc: David Miller <davem@davemloft.net>
+>     Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+>     Signed-off-by: Jouni Hogander <jouni.hogander@unikie.com>
+>     Signed-off-by: David S. Miller <davem@davemloft.net>
 
-These error messages are because:
+This should be fixed by Eric's patch here:
 
-sound/usb/card.c
-   128  static int snd_usb_create_stream(struct snd_usb_audio *chip, int ctrlif, int interface)
-   129  {
-   130          struct usb_device *dev = chip->dev;
-   131          struct usb_host_interface *alts;
-   132          struct usb_interface_descriptor *altsd;
-   133          struct usb_interface *iface = usb_ifnum_to_if(dev, interface);
-   134  
-   135          if (!iface) {
-   136                  dev_err(&dev->dev, "%u:%d : does not exist\n",
-   137                          ctrlif, interface);
-   138                  return -EINVAL;
-   139          }
-
-"iface" is NULL.  The caller ignores the -EINVAL (correctly I think).
-
-Then the NULL dereference happens in snd_usb_mixer_controls_badd()
-
-sound/usb/mixer.c
-  2903  static int snd_usb_mixer_controls_badd(struct usb_mixer_interface *mixer,
-  2904                                         int ctrlif)
-  2905  {
-  2906          struct usb_device *dev = mixer->chip->dev;
-  2907          struct usb_interface_assoc_descriptor *assoc;
-  2908          int badd_profile = mixer->chip->badd_profile;
-  2909          struct uac3_badd_profile *f;
-  2910          const struct usbmix_ctl_map *map;
-  2911          int p_chmask = 0, c_chmask = 0, st_chmask = 0;
-  2912          int i;
-  2913  
-  2914          assoc = usb_ifnum_to_if(dev, ctrlif)->intf_assoc;
-  2915  
-  2916          /* Detect BADD capture/playback channels from AS EP descriptors */
-  2917          for (i = 0; i < assoc->bInterfaceCount; i++) {
-  2918                  int intf = assoc->bFirstInterface + i;
-  2919  
-  2920                  struct usb_interface *iface;
-  2921                  struct usb_host_interface *alts;
-  2922                  struct usb_interface_descriptor *altsd;
-  2923                  unsigned int maxpacksize;
-  2924                  char dir_in;
-  2925                  int chmask, num;
-  2926  
-  2927                  if (intf == ctrlif)
-  2928                          continue;
-  2929  
-  2930                  iface = usb_ifnum_to_if(dev, intf);
-                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-iface is not checked.
-
-Should it be "if (!iface) continue;?"
-
-  2931                  num = iface->num_altsetting;
-  2932  
-  2933                  if (num < 2)
-  2934                          return -EINVAL;
-  2935  
-
-I'm not sure.
-
-regards,
-dan carpenter
-
+https://git.kernel.org/pub/scm/linux/kernel/git/davem/net.git/commit/?id=48a322b6f9965b2f1e4ce81af972f0e287b07ed0
+-- 
+Florian
