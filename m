@@ -2,160 +2,136 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30214C47410
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:21:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E23DFC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:23:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02F03214E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:21:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="oFGVqqzr"
+	by mail.kernel.org (Postfix) with ESMTP id ACB1D2075A
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:23:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574306582;
+	bh=hIlGXiSU5SnrczKKiHi8MseNBB+eDECUYnyLZNXn52Y=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=aY0EkHRBdK3Yl4GLzieLzizhVDEMhYmdyX94zjRZ4EOxuqDyOcud4m5hKfSLOSpsM
+	 awZjB8x7MLF5U7aCIKW2dr+mdCIyA78tcsV9UYFSONOMKy3wa3TKz+OPTEQyuGKcRy
+	 aB9BnuWs5C0Cz5HqSp3D+KY61AptB1AA1im5w9fc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727508AbfKUDUi (ORCPT
+        id S1726620AbfKUDXB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 22:20:38 -0500
-Received: from mailout3.samsung.com ([203.254.224.33]:59223 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726760AbfKUDUg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 22:20:36 -0500
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191121032032epoutp03f5c7d0d3d9a82d0c622a50203d62dd53~ZD1wZ-aLH1711717117epoutp03A
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 03:20:32 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191121032032epoutp03f5c7d0d3d9a82d0c622a50203d62dd53~ZD1wZ-aLH1711717117epoutp03A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1574306433;
-        bh=ccSkOQg4F6U9pZaBUzz7NJ9wxz842W9I4PHLHZxX2WA=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=oFGVqqzrkJgtduydRIZTh/4mVjf6K5aX2AvZisDAV8Fh8CT6Sf0wfoTOMETWBpByx
-         EOuoO/VvRkwHExLv08mPsAmveHui8zskR0TCHVOM8OgzRiu0ZMEGwjLMcopwjXkAAY
-         MjNFjSR9A88S8me9XdKAalZUCbfE6ohy7R5S0ob4=
-Received: from epsmges5p1new.samsung.com (unknown [182.195.42.73]) by
-        epcas5p4.samsung.com (KnoxPortal) with ESMTP id
-        20191121032032epcas5p4f088ee297e83e8febb353fbe49e600d8~ZD1vfri9m0464404644epcas5p4O;
-        Thu, 21 Nov 2019 03:20:32 +0000 (GMT)
-Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
-        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        98.41.04078.F7206DD5; Thu, 21 Nov 2019 12:20:31 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-        20191121032031epcas5p29659e014c9ff4564b24c9b1457d6b0b7~ZD1ukL5zj1591515915epcas5p29;
-        Thu, 21 Nov 2019 03:20:31 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191121032031epsmtrp2956f58b5da0d0cf8a3a7f2c760ccda7c~ZD1ujZ4Kw1130011300epsmtrp2M;
-        Thu, 21 Nov 2019 03:20:31 +0000 (GMT)
-X-AuditID: b6c32a49-605ff70000000fee-fa-5dd6027f4ec5
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        5D.BE.03814.E7206DD5; Thu, 21 Nov 2019 12:20:30 +0900 (KST)
-Received: from ubuntu.sa.corp.samsungelectronics.net (unknown
-        [107.108.83.125]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20191121032029epsmtip20321a3cb9aebda76e4d5787b127942ff~ZD1s6de2r3029530295epsmtip2c;
-        Thu, 21 Nov 2019 03:20:29 +0000 (GMT)
-From:   Anvesh Salveru <anvesh.s@samsung.com>
-To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        pankaj.dubey@samsung.com, lorenzo.pieralisi@arm.com,
-        andrew.murray@arm.com, bhelgaas@google.com, kishon@ti.com,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        Anvesh Salveru <anvesh.s@samsung.com>
-Subject: [PATCH v4 0/2] Add support to handle ZRX-DC Compliant PHYs
-Date:   Thu, 21 Nov 2019 08:50:06 +0530
-Message-Id: <1574306408-4360-1-git-send-email-anvesh.s@samsung.com>
+        Wed, 20 Nov 2019 22:23:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36332 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725936AbfKUDXB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 22:23:01 -0500
+Received: from PC-kkoz.proceq.com (unknown [213.160.61.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98AA020721;
+        Thu, 21 Nov 2019 03:22:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574306580;
+        bh=hIlGXiSU5SnrczKKiHi8MseNBB+eDECUYnyLZNXn52Y=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Hk+qF3jhYRDNh0NXSkG9Wx7IrytWXuUs1KqYsGbHyGm7aGI8nNa/82LCnDBRCAvCf
+         pL9zQV97W5g3HLwIF/U+w36crdBvUT/uWiIv8cr6jjG+BoYqwR2srv1YyoRTHRusra
+         0BScKvyn08YjBQNy2nSysQq4acmutBDVdJf48Uxg=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Jiri Kosina <trivial@kernel.org>, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH] arch: Fix Kconfig indentation
+Date:   Thu, 21 Nov 2019 04:22:53 +0100
+Message-Id: <1574306573-10886-1-git-send-email-krzk@kernel.org>
 X-Mailer: git-send-email 2.7.4
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrHIsWRmVeSWpSXmKPExsWy7bCmum4907VYg/Zj5hbN/7ezWpzdtZDV
-        YklThsWuux3sFiu+zGS3uPC0h83i8q45bBZn5x1ns3jz+wW7xdLrF5ksFm39wm7RuvcIuwOP
-        x5p5axg9ds66y+6xYFOpx6ZVnWwefVtWMXps2f+Z0eP4je1MHp83yQVwRHHZpKTmZJalFunb
-        JXBlfFpyk6XgA3/FrudTWRsYn/J0MXJySAiYSLRuf8LSxcjFISSwm1Fi/a5udgjnE6PEqxlP
-        WSGcb4wSvdsXscG0dM76ygyR2MsoserSZiinhUni1qdDYFVsAtoSP4/uZQexRQSsJQ63b2ED
-        KWIW+McocfXLPMYuRg4OYQFnifn37EBqWARUJa5uvcMMYvMChc8fOcYKsU1O4ua5TrAFEgJ7
-        2CRezL/PApFwkZjcvwbKFpZ4dXwLO4QtJfH53V6oU/Mleu8uhYrXSEy528EIYdtLHLgyhwXk
-        BmYBTaCn9UHCzAJ8Er2/nzCBhCUEeCU62oQgTCWJtpnVEI0SEovn32SGsD0kDq2+BnaAkECs
-        xNK7L9gmMMrMQpi5gJFxFaNkakFxbnpqsWmBYV5quV5xYm5xaV66XnJ+7iZGcKrQ8tzBOOuc
-        zyFGAQ5GJR7eDI2rsUKsiWXFlbmHGCU4mJVEePdcvxIrxJuSWFmVWpQfX1Sak1p8iFGag0VJ
-        nHcS69UYIYH0xJLU7NTUgtQimCwTB6dUA6Pez9sF9ewP27YyL9iw4H/RiS8uvNabrKtcl26+
-        7S4hliPpMDdNPdI15kn2Ab+g5x0aQsvdfpi9kpb/ZHDKuubep9vbtuk7V2rqajvaLJQP0NTZ
-        uyj1oEPyxAdy1g//Lqrhaww8wiqeGbyULfCVLLfzqeAo7r+6a25snc9ysEAz7cvmpdGejkos
-        xRmJhlrMRcWJAMeAlVQRAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrELMWRmVeSWpSXmKPExsWy7bCSvG4d07VYg+t3LC2a/29ntTi7ayGr
-        xZKmDItddzvYLVZ8mcluceFpD5vF5V1z2CzOzjvOZvHm9wt2i6XXLzJZLNr6hd2ide8Rdgce
-        jzXz1jB67Jx1l91jwaZSj02rOtk8+rasYvTYsv8zo8fxG9uZPD5vkgvgiOKySUnNySxLLdK3
-        S+DK+LTkJkvBB/6KXc+nsjYwPuXpYuTkkBAwkeic9ZW5i5GLQ0hgN6PEkndtbBAJCYkve79C
-        2cISK/89Z4coamKSOHD9MTtIgk1AW+Ln0b1gtoiArcT9R5NZQYqYBbqYJNae3gKU4OAQFnCW
-        mH/PDqSGRUBV4urWO8wgNi9Q+PyRY6wQC+Qkbp7rZJ7AyLOAkWEVo2RqQXFuem6xYYFRXmq5
-        XnFibnFpXrpecn7uJkZwSGpp7WA8cSL+EKMAB6MSD2+GxtVYIdbEsuLK3EOMEhzMSiK8e65f
-        iRXiTUmsrEotyo8vKs1JLT7EKM3BoiTOK59/LFJIID2xJDU7NbUgtQgmy8TBKdXAuPYZsxIf
-        p/SuWjkBya0/D5+rFVI+3OEvbbPVWX7S9RWb2L3ZZ91WsV1bq9kS8cLzw+FL+XE/Lm5KTeo+
-        c7P3xRXdqNJakasanzrZDZPl1yxJ0Ep+kiTP4GPm1C1uu/C3wSzRVB/Zginemx0ezDrlx66/
-        SXyDYbqdFoPealHR5V/X9ul/3/xAiaU4I9FQi7moOBEAEVYYmUUCAAA=
-X-CMS-MailID: 20191121032031epcas5p29659e014c9ff4564b24c9b1457d6b0b7
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20191121032031epcas5p29659e014c9ff4564b24c9b1457d6b0b7
-References: <CGME20191121032031epcas5p29659e014c9ff4564b24c9b1457d6b0b7@epcas5p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According the PCI Express base specification when PHY does not meet
-ZRX-DC specification, after every 100ms timeout the link should
-transition to recovery state when the link is in low power states. 
+Adjust indentation from spaces to tab (+optional two spaces) as in
+coding style with command like:
+	$ sed -e 's/^        /\t/' -i */Kconfig
 
-Ports that meet the ZRX-DC specification for 2.5 GT/s while in the
-L1.Idle state and are therefore not required to implement the 100 ms
-timeout and transition to Recovery should avoid implementing it, since
-it will reduce the power savings expected from the L1 state.
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-DesignWare controller provides GEN3_ZRXDC_NONCOMPL field in
-GEN3_RELATED_OFF to specify about ZRX-DC compliant PHY.
+---
 
-We need to get the PHY property in controller driver. So, we are
-proposing a new method phy_property_present() in the phy driver.
+Changes since v1:
+1. Fix also 7-space and tab+1 space indentation issues.
+---
+ arch/Kconfig | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
-Platform specific phy drivers should implement the callback for
-property_present which will return true if the property exists in
-the PHY.
-
-static bool xxxx_phy_property_present(struct phy *phy, const char *property)
-{
-       struct device *dev = &phy->dev;
-
-       return of_property_read_bool(dev->of_node, property);
-}
-
-And controller platform driver should populate the phy_zrxdc_compliant
-flag, which will be used by generic DesignWare driver.
-
-pci->phy_zrxdc_compliant = phy_property_present(xxxx_ctrl->phy, "phy-zrxdc-compliant");
-
-Patchset v2 can be found at:
- - 1/2: https://lkml.org/lkml/2019/11/11/672
- - 2/2: https://lkml.org/lkml/2019/10/28/285
-
-Changes w.r.t v2:
- - Addressed review comments
- - Rebased on latest linus/master
-
-Changes w.r.t v3:
- - Added linux-pci@vger.kernel.org as pointed by Gustavo, Sorry for annoying.
-
-Anvesh Salveru (2):
-  phy: core: add phy_property_present method
-  PCI: dwc: add support to handle ZRX-DC Compliant PHYs
-
- drivers/pci/controller/dwc/pcie-designware.c |  6 ++++++
- drivers/pci/controller/dwc/pcie-designware.h |  4 ++++
- drivers/phy/phy-core.c                       | 26 ++++++++++++++++++++++++++
- include/linux/phy/phy.h                      |  8 ++++++++
- 4 files changed, 44 insertions(+)
-
+diff --git a/arch/Kconfig b/arch/Kconfig
+index 3c6ec65596da..3fd3e835f891 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -72,11 +72,11 @@ config KPROBES
+ 	  If in doubt, say "N".
+ 
+ config JUMP_LABEL
+-       bool "Optimize very unlikely/likely branches"
+-       depends on HAVE_ARCH_JUMP_LABEL
+-       depends on CC_HAS_ASM_GOTO
+-       help
+-         This option enables a transparent branch optimization that
++	bool "Optimize very unlikely/likely branches"
++	depends on HAVE_ARCH_JUMP_LABEL
++	depends on CC_HAS_ASM_GOTO
++	help
++	 This option enables a transparent branch optimization that
+ 	 makes certain almost-always-true or almost-always-false branch
+ 	 conditions even cheaper to execute within the kernel.
+ 
+@@ -84,7 +84,7 @@ config JUMP_LABEL
+ 	 scheduler functionality, networking code and KVM have such
+ 	 branches and include support for this optimization technique.
+ 
+-         If it is detected that the compiler has support for "asm goto",
++	 If it is detected that the compiler has support for "asm goto",
+ 	 the kernel will compile such branches with just a nop
+ 	 instruction. When the condition flag is toggled to true, the
+ 	 nop will be converted to a jump instruction to execute the
+@@ -151,8 +151,8 @@ config HAVE_EFFICIENT_UNALIGNED_ACCESS
+ 	  information on the topic of unaligned memory accesses.
+ 
+ config ARCH_USE_BUILTIN_BSWAP
+-       bool
+-       help
++	bool
++	help
+ 	 Modern versions of GCC (since 4.4) have builtin functions
+ 	 for handling byte-swapping. Using these, instead of the old
+ 	 inline assembler that the architecture code provides in the
+@@ -221,10 +221,10 @@ config HAVE_DMA_CONTIGUOUS
+ 	bool
+ 
+ config GENERIC_SMP_IDLE_THREAD
+-       bool
++	bool
+ 
+ config GENERIC_IDLE_POLL_SETUP
+-       bool
++	bool
+ 
+ config ARCH_HAS_FORTIFY_SOURCE
+ 	bool
+@@ -257,7 +257,7 @@ config ARCH_HAS_UNCACHED_SEGMENT
+ 
+ # Select if arch init_task must go in the __init_task_data section
+ config ARCH_TASK_STRUCT_ON_STACK
+-       bool
++	bool
+ 
+ # Select if arch has its private alloc_task_struct() function
+ config ARCH_TASK_STRUCT_ALLOCATOR
 -- 
 2.7.4
 
