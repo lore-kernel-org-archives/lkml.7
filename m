@@ -7,102 +7,105 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FE34C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 08:15:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E897C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 08:15:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 458AD20898
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 08:15:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63A9E20855
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 08:15:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="yq3uTprM"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="lDQLQkLF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727105AbfKUIPQ (ORCPT
+        id S1727114AbfKUIPW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 03:15:16 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43801 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727028AbfKUIPK (ORCPT
+        Thu, 21 Nov 2019 03:15:22 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:36198 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726961AbfKUIPH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 03:15:10 -0500
-Received: by mail-wr1-f68.google.com with SMTP id n1so3157646wra.10
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 00:15:08 -0800 (PST)
+        Thu, 21 Nov 2019 03:15:07 -0500
+Received: by mail-wr1-f67.google.com with SMTP id z3so3206592wru.3
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 00:15:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=S85Lb8WCrvzvHsXJ1JP6vJm29LDHnvv8cinVUtImNUA=;
-        b=yq3uTprMfeFN489dyXFOl4m/qrdnE7eA2cjunM2zTtR4UzDnl6oQiaoS9uColT8q2h
-         wSzZgoGOtmJvVG3/bcQbKvkBPwTgsAI4pbcteHAiL654TKVR8qKocXKSzfTIYt1jEUdI
-         d8QWlvvR89ZJamV3huZEneoVQDB24YemVutwEGXJ/crJmSINH//i0XWOqGkOGe2gYgBU
-         cOsHAD9eLTf66ifK2U3WkpLlVAPRn1erMWf6UKVoQuSgxpxbb72CERomZVM+HLZyQTff
-         FX0GlPhHUyTgfuCvyXlcWO8+KKu1xx6IWRzydMZQYIvkCoviWDEpPtldm1QvSbRh1J5T
-         UKLw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=8LjJcUv5JRc8/4Vw05C03H9zEwwInU8us44q9tvp9r0=;
+        b=lDQLQkLFnXHou+oCKFJriVm046psHa6PF4fvQ88rVy8xkKbVud6HDaf5BbBKWorYaG
+         9JqhW4wsHV9WyzfjpMwcieA03kIJrYrmsTs2TKpgRF/0ze1l+yFLtdaMn6lM/x0/ZMcZ
+         gN8VuphDjfs3yZHIQwGImS367kLOMoEvagMJ3vCF1mTPU29ATxQQQFaVSpUjQyfM49/w
+         JWLGU+VUMdyGfRPnSWuMRWG/JiXnCIV5MpgvVOC5m7yzqS1zN7+PxiWfcCju2TKbwpT/
+         d/F0AewpDtoCFSsHP1OuXvyMybR3YNTJVEpu/eUr3JCiknF3mZmcCWfs0gzNucjdCHqz
+         DVYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=S85Lb8WCrvzvHsXJ1JP6vJm29LDHnvv8cinVUtImNUA=;
-        b=jp55PCtoUJO90/awSI75G4LiC7hBaRnPpbIUz8dKkSxOWoawD5uDKC4SnFJJlOjpy6
-         0iVPuduobqE5ikp0KAj1iLywblbAtj2rhx1XJcnFygu94LgAGI1cgxZHMHnu4iOp2NeX
-         GoPE5PrmBVyGXH/R+v/oQlBwvcBzC293/RXRiLd5+m7mLK83yq6UFVFDaNylsJG4JJwX
-         uNxeFNfZybLA1O/GvTLHi4Gzq9IL/gIbxfQIDy+MPxOnTDrV+9fLaXEdNa0A93oxGxkz
-         4p6gEYeNMMa4qcrkkUJi/GQxn/bKx/tNVfoZQxtyMepjwUYTiq5TR1V5swIVh988xSxb
-         MXoA==
-X-Gm-Message-State: APjAAAUBqtIi5EKzX714d5A7IMkje9E2hEp+SiImIf8iZny9j+WbXhGT
-        JUJ/RAURjmBolh/FxDD6wVsCeQ==
-X-Google-Smtp-Source: APXvYqwHgkPusxSIOYywogp+NmRlVVWIOoz0RqJdPk/4zC/qUu85b4/pJcVwbAtIK3Y6U6qbm6wG8g==
-X-Received: by 2002:a5d:678f:: with SMTP id v15mr8567761wru.242.1574324107777;
-        Thu, 21 Nov 2019 00:15:07 -0800 (PST)
+         :references;
+        bh=8LjJcUv5JRc8/4Vw05C03H9zEwwInU8us44q9tvp9r0=;
+        b=BqzXzzPAzwnYwuOvdg6GT9u/OwPiV4oqPnc8454YXhm99eJq/4DqHODMpe67vTA399
+         37JdQe4vc9v0J23TqSbqjY3lAYT6LTT4eMLk9vACwSmilETI65QWjrHkRByovDytlor5
+         FcFP2SN3T19RoBK6GQLzRZetLZf+wwt0VnIQ2JcGrPm3k6C9L5OB8gFp6T4fOMhJ+N2y
+         ucT3afEzXDY/1EJj3CNn1vzaGy+/uOoe70DQMdTU0yh3K85IA1fdeAuLpdy4b2rWNGFv
+         wgKtJ7d5NdhK4aZuRM73jjAeZZlnsvB+iUOVjintZrqJg/Mz85GgQNaSk/H5U6QXL7Qf
+         OpdQ==
+X-Gm-Message-State: APjAAAU1Tzz8yZhVE7LPVKEqp4K+hO/uQPDMkK24xoPokgnO+QDXAlrn
+        lWA2l4F/ZWUVDk3uZ3pFrdZ5FQ==
+X-Google-Smtp-Source: APXvYqxuvxQ3VmGAQNQNFsb26ptbHyJKZeZzcG5Kiwzno83aX29giQBgYYZkraYJUUx7vIR0vINsIA==
+X-Received: by 2002:a5d:53c1:: with SMTP id a1mr489050wrw.373.1574324105155;
+        Thu, 21 Nov 2019 00:15:05 -0800 (PST)
 Received: from localhost.localdomain ([51.15.160.169])
-        by smtp.googlemail.com with ESMTPSA id w13sm2315075wrm.8.2019.11.21.00.15.06
+        by smtp.googlemail.com with ESMTPSA id w13sm2315075wrm.8.2019.11.21.00.15.04
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 21 Nov 2019 00:15:07 -0800 (PST)
+        Thu, 21 Nov 2019 00:15:04 -0800 (PST)
 From:   Corentin Labbe <clabbe@baylibre.com>
 To:     airlied@redhat.com, airlied@linux.ie, arnd@arndb.de,
         fenghua.yu@intel.com, gregkh@linuxfoundation.org,
         tony.luck@intel.com
 Cc:     linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org,
         Corentin Labbe <clabbe@baylibre.com>
-Subject: [PATCH v2 5/5] ia64: agp: Replace empty define with do while
-Date:   Thu, 21 Nov 2019 08:14:45 +0000
-Message-Id: <1574324085-4338-6-git-send-email-clabbe@baylibre.com>
+Subject: [PATCH v2 2/5] agp: move AGPGART_MINOR to include/linux/miscdevice.h
+Date:   Thu, 21 Nov 2019 08:14:42 +0000
+Message-Id: <1574324085-4338-3-git-send-email-clabbe@baylibre.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1574324085-4338-1-git-send-email-clabbe@baylibre.com>
 References: <1574324085-4338-1-git-send-email-clabbe@baylibre.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's dangerous to use empty code define.
-Furthermore it lead to the following warning:
-drivers/char/agp/generic.c: In function « agp_generic_destroy_page »:
-drivers/char/agp/generic.c:1266:28: attention : suggest braces around empty body in an « if » statement [-Wempty-body]
-
-So let's replace emptyness by "do {} while(0)"
+This patch move the define for AGPGART_MINOR to include/linux/miscdevice.h.
+It is better that all minor number definitions are in the same place.
 
 Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
 ---
- arch/ia64/include/asm/agp.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/linux/agpgart.h    | 2 --
+ include/linux/miscdevice.h | 1 +
+ 2 files changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/ia64/include/asm/agp.h b/arch/ia64/include/asm/agp.h
-index 2b451c4496da..0261507dc264 100644
---- a/arch/ia64/include/asm/agp.h
-+++ b/arch/ia64/include/asm/agp.h
-@@ -14,8 +14,8 @@
-  * in coherent mode, which lets us map the AGP memory as normal (write-back) memory
-  * (unlike x86, where it gets mapped "write-coalescing").
-  */
--#define map_page_into_agp(page)		/* nothing */
--#define unmap_page_from_agp(page)	/* nothing */
-+#define map_page_into_agp(page)		do { } while (0)
-+#define unmap_page_from_agp(page)	do { } while (0)
- #define flush_agp_cache()		mb()
+diff --git a/include/linux/agpgart.h b/include/linux/agpgart.h
+index c6b61ca97053..21b34a96cfd8 100644
+--- a/include/linux/agpgart.h
++++ b/include/linux/agpgart.h
+@@ -30,8 +30,6 @@
+ #include <linux/agp_backend.h>
+ #include <uapi/linux/agpgart.h>
  
- /* GATT allocation. Returns/accepts GATT kernel virtual address. */
+-#define AGPGART_MINOR 175
+-
+ struct agp_info {
+ 	struct agp_version version;	/* version of the driver        */
+ 	u32 bridge_id;		/* bridge vendor/device         */
+diff --git a/include/linux/miscdevice.h b/include/linux/miscdevice.h
+index b06b75776a32..becde6981a95 100644
+--- a/include/linux/miscdevice.h
++++ b/include/linux/miscdevice.h
+@@ -33,6 +33,7 @@
+ #define SGI_MMTIMER		153
+ #define STORE_QUEUE_MINOR	155	/* unused */
+ #define I2O_MINOR		166
++#define AGPGART_MINOR		175
+ #define HWRNG_MINOR		183
+ #define MICROCODE_MINOR		184
+ #define IRNET_MINOR		187
 -- 
 2.23.0
 
