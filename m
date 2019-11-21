@@ -2,63 +2,82 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B168C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 15:13:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5AF7C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 15:14:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BD6420659
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 15:13:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE19F20659
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 15:14:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xge9dF4Q"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BFZPun6W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726714AbfKUPNp (ORCPT
+        id S1726905AbfKUPOE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 10:13:45 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:58205 "EHLO
+        Thu, 21 Nov 2019 10:14:04 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:43006 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726293AbfKUPNp (ORCPT
+        by vger.kernel.org with ESMTP id S1726735AbfKUPOE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 10:13:45 -0500
+        Thu, 21 Nov 2019 10:14:04 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574349224;
+        s=mimecast20190719; t=1574349242;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=J9pzKrfd3gSA7b3Gm7deCK2+P1QDiqTdKw/nLYXO50E=;
-        b=Xge9dF4QyCsF7V3cdtx4YDPCvr7buUH3wJiygGG4TugE0AWMCTOlshu0YcEYE/J3gsWVvp
-        ejCB8ISjEFmoUDiwsjsA/BZt+upEacPqNHKTF1vGfrJJaxUqSzmlrBoSVbamnSHHHuazQS
-        T4FPQnvrqXufZpjWEXhoQnZIx70PVO8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-254-3yZsFvRzOq-8Io2RG1_QWQ-1; Thu, 21 Nov 2019 10:13:42 -0500
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C89AD8018A3;
-        Thu, 21 Nov 2019 15:13:40 +0000 (UTC)
-Received: from krava (unknown [10.43.17.48])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 8C01066839;
-        Thu, 21 Nov 2019 15:13:39 +0000 (UTC)
-Date:   Thu, 21 Nov 2019 16:13:38 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Andi Kleen <ak@linux.intel.com>
-Cc:     Andi Kleen <andi@firstfloor.org>, acme@kernel.org,
-        jolsa@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 09/12] perf stat: Use affinity for opening events
-Message-ID: <20191121151338.GC811@krava>
-References: <20191116055229.62002-1-andi@firstfloor.org>
- <20191116055229.62002-10-andi@firstfloor.org>
- <20191120150732.GE4007@krava>
- <20191120223101.GB84886@tassilo.jf.intel.com>
+        bh=S/ndUKKJCxI76HoRVTG7jNdszQTcPJXiUk69ASnD9hc=;
+        b=BFZPun6Wui8mst5ik4v+igZbbNO52U03jnmSpDZ1ATsGYUxUJFr+Ti3ykcD52EkazKpp+B
+        ko2SioijMq46xlosEU/tY9Nt7mHwLezU+K1xLd3BvLSJRmSAi5PvMABX2yMrB2PxStfrsf
+        GYB6ESIY9PDnA2Y+Db56AsDis/pFM7w=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-248-MyCj3NooMKShAbR2Zq1UDA-1; Thu, 21 Nov 2019 10:13:59 -0500
+Received: by mail-wm1-f71.google.com with SMTP id 199so1990770wmb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 07:13:58 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=iHsCY/CMXwIcgnSHclUoHJ8eh4Q1rh48lgjW6W5ihDs=;
+        b=pOvwYTJlxgxQoHJjrjFaSt3IXW6PoXCuncxVXosdSO2814k8Dj9tiBJjipLEkOKEM1
+         mFVxRVGtXd8PCbiTRoAB8lwh4kV8+F3O2W0P3HwmVQfkSZ4Dqq9daRRpcJB/GdejccNZ
+         SMmfzN6uXSCy2vS2hX1JYU809d63+vSNUkGSVY+fM4MMtmw+egnVI1KgagN5K52o4nWQ
+         3lShO4k86tbveznLz2l8GTy7Y54P8sp/2QN3IkCuz6CVFB3n/PrN7c8V0UQGS/rMoigG
+         BDhXkvskK6BESNtQfi4enna8zuDLBQYa8PWAazvJaC5Tl5xYjv/xTzfNxyr5X7vt6gSL
+         r9VQ==
+X-Gm-Message-State: APjAAAW6N/fVFrxjPdLBVnwWiQa95iRBGMeP4LqBflvFo4xrtO3QXikw
+        epg4XZdOaOw1QNURAZ6UFbCAt1QlrdqcCb2HivxS4dbaVOMRpFK94BAELunJNAFx4Abi32QyA7o
+        nLnI/caiVLnfcNWoahFo9V4m7
+X-Received: by 2002:adf:fd4a:: with SMTP id h10mr10771265wrs.90.1574349237927;
+        Thu, 21 Nov 2019 07:13:57 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwffrnaWrX2CTnz1mrGFjyWf4QxuPdCHsb+nu0fFKK6LVRRphnlRgzFqP4BBbEKQFy/2FMiLQ==
+X-Received: by 2002:adf:fd4a:: with SMTP id h10mr10771237wrs.90.1574349237686;
+        Thu, 21 Nov 2019 07:13:57 -0800 (PST)
+Received: from steredhat (a-nu5-32.tin.it. [212.216.181.31])
+        by smtp.gmail.com with ESMTPSA id z7sm1978953wma.46.2019.11.21.07.13.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Nov 2019 07:13:57 -0800 (PST)
+Date:   Thu, 21 Nov 2019 16:13:55 +0100
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Jorgen Hansen <jhansen@vmware.com>
+Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH net-next 0/6] vsock: add local transport support
+Message-ID: <20191121151355.grgfbte6xniqe6xo@steredhat>
+References: <20191119110121.14480-1-sgarzare@redhat.com>
+ <MWHPR05MB3376B8241546664BBCA6FC37DA4E0@MWHPR05MB3376.namprd05.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <20191120223101.GB84886@tassilo.jf.intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-MC-Unique: 3yZsFvRzOq-8Io2RG1_QWQ-1
+In-Reply-To: <MWHPR05MB3376B8241546664BBCA6FC37DA4E0@MWHPR05MB3376.namprd05.prod.outlook.com>
+X-MC-Unique: MyCj3NooMKShAbR2Zq1UDA-1
 X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: quoted-printable
@@ -68,37 +87,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 02:31:01PM -0800, Andi Kleen wrote:
-> > > +=09=09evlist__for_each_cpu (evsel_list, i, cpu) {
-> > > +=09=09=09affinity__set(&affinity, cpu);
-> > > +=09=09=09/* First close errored or weak retry */
-> > > +=09=09=09evlist__for_each_entry(evsel_list, counter) {
-> > > +=09=09=09=09if (!counter->reset_group && !counter->errored)
-> > > +=09=09=09=09=09continue;
-> > > +=09=09=09=09if (evsel__cpu_iter_skip_no_inc(counter, cpu))
-> > > +=09=09=09=09=09continue;
-> > > +=09=09=09=09perf_evsel__close_cpu(&counter->core, counter->cpu_iter)=
-;
-> > > +=09=09=09}
-> > > +=09=09=09/* Now reopen weak */
-> > > +=09=09=09evlist__for_each_entry(evsel_list, counter) {
-> > > +=09=09=09=09if (!counter->reset_group && !counter->errored)
-> > > +=09=09=09=09=09continue;
-> > > +=09=09=09=09if (evsel__cpu_iter_skip(counter, cpu))
-> > > +=09=09=09=09=09continue;
+On Thu, Nov 21, 2019 at 02:45:32PM +0000, Jorgen Hansen wrote:
+> > From: Stefano Garzarella [mailto:sgarzare@redhat.com]
+> > Sent: Tuesday, November 19, 2019 12:01 PM
+> > This series introduces a new transport (vsock_loopback) to handle
+> > local communication.
+> > This could be useful to test vsock core itself and to allow developers
+> > to test their applications without launching a VM.
 > >=20
-> > why staring at this I wonder why can't we call perf_evsel__close_cpu in
-> > here and remove the above loop? together with evsel__cpu_iter_skip_no_i=
-nc
-> > function
+> > Before this series, vmci and virtio transports allowed this behavior,
+> > but only in the guest.
+> > We are moving the loopback handling in a new transport, because it
+> > might be useful to provide this feature also in the host or when
+> > no H2G/G2H transports (hyperv, virtio, vmci) are loaded.
+> >=20
+> > The user can use the loopback with the new VMADDR_CID_LOCAL (that
+> > replaces VMADDR_CID_RESERVED) in any condition.
+> > Otherwise, if the G2H transport is loaded, it can also use the guest
+> > local CID as previously supported by vmci and virtio transports.
+> > If G2H transport is not loaded, the user can also use VMADDR_CID_HOST
+> > for local communication.
+> >=20
+> > Patch 1 is a cleanup to build virtio_transport_common without virtio
+> > Patch 2 adds the new VMADDR_CID_LOCAL, replacing
+> > VMADDR_CID_RESERVED
+> > Patch 3 adds a new feature flag to register a loopback transport
+> > Patch 4 adds the new vsock_loopback transport based on the loopback
+> >         implementation of virtio_transport
+> > Patch 5 implements the logic to use the local transport for loopback
+> >         communication
+> > Patch 6 removes the loopback from virtio_transport
+> >=20
+> > @Jorgen: Do you think it might be a problem to replace
+> > VMADDR_CID_RESERVED with VMADDR_CID_LOCAL?
 >=20
-> We only want to close events which errored or need a weak entry.
-> The others can stay open.  perf_evsel__close_cpu closes all unconditional=
-ly.
+> No, that should be fine. It has never allowed for use with stream sockets=
+ in
+> AF_VSOCK. The only potential use would be for datagram sockets, but that
+> side appears to be unaffected by your changes, since loopback is only
+> introduced for SOCK_STREAM.
+>=20
 
-but the first loops checks fir !counter->errored, same as the second
-one, so you could scratch the first loop and move perf_evsel__close_cpu
-in the second one
+Yes, datagram sockets are not affected.
 
-jirka
+Thanks for the clarification,
+Stefano
 
