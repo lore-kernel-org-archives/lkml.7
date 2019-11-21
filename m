@@ -2,260 +2,132 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 194ECC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:06:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 807E9C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:07:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB64A20855
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:06:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC0F1208A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:07:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="f81Mnilf"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="LF9XC0Q1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbfKUNGy (ORCPT
+        id S1726998AbfKUNHW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 08:06:54 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:28508 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726293AbfKUNGx (ORCPT
+        Thu, 21 Nov 2019 08:07:22 -0500
+Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.170]:34844 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726554AbfKUNHV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 08:06:53 -0500
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xALD2sic023372;
-        Thu, 21 Nov 2019 14:06:22 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=CZLchOtGzzjkcSU/Amhs8d3lsV5kVJY44jLWirDhTC0=;
- b=f81Mnilf5iGhL2LVdhHNWiAXVKxuTj+fahFGZ0UGGF98dtC6xBdnPZ5VHJbLDz3yn+cy
- RHyJ5BxJDsIBVzaIDnidRfHI4HBF4O9MKtavjH5uZeR/00DETFhqL5hnFdiKH77Z8DAq
- Kl3O/VN9wZ9dZuIplkr47jsngG7jqv1/m+pquWGXP8KZ2TvTU7cskgJFLQZwx4Pr4QIq
- zovQii3tRWUBj1lH/drLHLk1HsKaQLIrnJCnBNoNS1oL3FqD77F0w272F8R6K4YqtLPv
- 876iSdjvLmYqMI/bfUWaFrZfh0kIXXk/pYSD7eRILyKuLF7n4/NT1hbfb8ujne9feRT4 9g== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2wa9uskdhk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 21 Nov 2019 14:06:22 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 48B83100039;
-        Thu, 21 Nov 2019 14:06:17 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2E59C2BEC5B;
-        Thu, 21 Nov 2019 14:06:17 +0100 (CET)
-Received: from localhost (10.75.127.49) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 21 Nov 2019 14:06:16
- +0100
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <dwmw2@infradead.org>, <computersforpeace@gmail.com>,
-        <marek.vasut@gmail.com>, <miquel.raynal@bootlin.com>,
-        <richard@nod.at>, <vigneshr@ti.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <alexandre.torgue@st.com>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <linux-mtd@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Christophe Kerello <christophe.kerello@st.com>
-Subject: [PATCH] dt-bindings: mtd: Convert stm32 fmc2-nand bindings to json-schema
-Date:   Thu, 21 Nov 2019 14:06:15 +0100
-Message-ID: <20191121130615.13007-1-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
+        Thu, 21 Nov 2019 08:07:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1574341639;
+        s=strato-dkim-0002; d=chronox.de;
+        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=lkH2kJJroo23f8ysnr6W6slIIL5c54hIxdLApd4rKcc=;
+        b=LF9XC0Q1hlupOno6vPeKRb4fO7/GvKCi+JwuWcqX6ngoKX+9tjHUKtHP+LKUSO2hGH
+        5m5r+RONviIfQBO8X9MXEO/IB2BU2tNkhziTmUMpcyMhfTU73xXuXdqpTUvuM41AKT7I
+        MfyPq8dObJTawEn0VqJZL+hZVEYD+DPd3fOhdKm5U/UzXtvBSs5GoCvcdEuSRwrsCn+f
+        gtQzO4MDUDs2e0uHmAGc4YhXhYP9qplJntR0oWWdvnoUr46d2a+aJSPMxRKiZTrib3/v
+        3e8aePAjq+8qno8Zwy5kV7GcZLP7NBZUHANoNEVm79HPdM1QwnCdu9OkBEPQYOfsKcQg
+        TFWQ==
+X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzHHXPSIvSWlTs="
+X-RZG-CLASS-ID: mo00
+Received: from positron.chronox.de
+        by smtp.strato.de (RZmta 44.29.0 DYNA|AUTH)
+        with ESMTPSA id N09a57vALD63rSB
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Thu, 21 Nov 2019 14:06:03 +0100 (CET)
+From:   Stephan =?ISO-8859-1?Q?M=FCller?= <smueller@chronox.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Andy Lutomirski <luto@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        zhangjs <zachary@baishancloud.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        Nicolai Stange <nstange@suse.de>,
+        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
+        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
+        Roman Drahtmueller <draht@schaltsekun.de>,
+        Neil Horman <nhorman@redhat.com>
+Subject: Re: [PATCH v25 10/12] LRNG - add TRNG support
+Date:   Thu, 21 Nov 2019 14:06:03 +0100
+Message-ID: <5032854.qLNvD48x4y@positron.chronox.de>
+In-Reply-To: <20191120203232.GB3109949@kroah.com>
+References: <5390778.VeFRgus4bQ@positron.chronox.de> <1695782.oZ5Vf4nH9s@positron.chronox.de> <20191120203232.GB3109949@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG4NODE3.st.com (10.75.127.12) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-21_02:2019-11-21,2019-11-21 signatures=0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the STM32 fmc2-nand binding to DT schema format using json-schema
+Am Mittwoch, 20. November 2019, 21:32:32 CET schrieb Greg Kroah-Hartman:
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-CC: Christophe Kerello <christophe.kerello@st.com>
----
- .../bindings/mtd/st,stm32-fmc2-nand.yaml           | 98 ++++++++++++++++++++++
- .../devicetree/bindings/mtd/stm32-fmc2-nand.txt    | 61 --------------
- 2 files changed, 98 insertions(+), 61 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml
- delete mode 100644 Documentation/devicetree/bindings/mtd/stm32-fmc2-nand.txt
+Hi Greg,
 
-diff --git a/Documentation/devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml b/Documentation/devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml
-new file mode 100644
-index 000000000000..b059267f6d20
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml
-@@ -0,0 +1,98 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mtd/st,stm32-fmc2-nand.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: STMicroelectronics Flexible Memory Controller 2 (FMC2) Bindings
-+
-+maintainers:
-+  - Christophe Kerello <christophe.kerello@st.com>
-+
-+allOf:
-+  - $ref: "nand-controller.yaml#"
-+
-+properties:
-+  compatible:
-+    const: st,stm32mp15-fmc2
-+
-+  reg:
-+    items:
-+      - description: Registers
-+      - description: Chip select 0 data
-+      - description: Chip select 0 command
-+      - description: Chip select 0 address space
-+      - description: Chip select 1 data
-+      - description: Chip select 1 command
-+      - description: Chip select 1 address space
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  resets:
-+    maxItems: 1
-+
-+  dmas:
-+    items:
-+      - description: tx DMA channel
-+      - description: rx DMA channel
-+      - description: ecc DMA channel
-+
-+  dma-names:
-+    items:
-+      - const: tx
-+      - const: rx
-+      - const: ecc
-+
-+patternProperties:
-+  "^nand@[a-f0-9]$":
-+    type: object
-+    properties:
-+      nand-ecc-step-size:
-+        const: 512
-+
-+      nand-ecc-strength:
-+        enum: [1, 4 ,8 ]
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/clock/stm32mp1-clks.h>
-+    #include <dt-bindings/reset/stm32mp1-resets.h>
-+    nand-controller@58002000 {
-+      compatible = "st,stm32mp15-fmc2";
-+      reg = <0x58002000 0x1000>,
-+            <0x80000000 0x1000>,
-+            <0x88010000 0x1000>,
-+            <0x88020000 0x1000>,
-+            <0x81000000 0x1000>,
-+            <0x89010000 0x1000>,
-+            <0x89020000 0x1000>;
-+            interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
-+            dmas = <&mdma1 20 0x10 0x12000a02 0x0 0x0>,
-+                   <&mdma1 20 0x10 0x12000a08 0x0 0x0>,
-+                   <&mdma1 21 0x10 0x12000a0a 0x0 0x0>;
-+            dma-names = "tx", "rx", "ecc";
-+            clocks = <&rcc FMC_K>;
-+            resets = <&rcc FMC_R>;
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      nand@0 {
-+        reg = <0>;
-+        nand-on-flash-bbt;
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+      };
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/mtd/stm32-fmc2-nand.txt b/Documentation/devicetree/bindings/mtd/stm32-fmc2-nand.txt
-deleted file mode 100644
-index e55895e8dae4..000000000000
---- a/Documentation/devicetree/bindings/mtd/stm32-fmc2-nand.txt
-+++ /dev/null
-@@ -1,61 +0,0 @@
--STMicroelectronics Flexible Memory Controller 2 (FMC2)
--NAND Interface
--
--Required properties:
--- compatible: Should be one of:
--              * st,stm32mp15-fmc2
--- reg: NAND flash controller memory areas.
--       First region contains the register location.
--       Regions 2 to 4 respectively contain the data, command,
--       and address space for CS0.
--       Regions 5 to 7 contain the same areas for CS1.
--- interrupts: The interrupt number
--- pinctrl-0: Standard Pinctrl phandle (see: pinctrl/pinctrl-bindings.txt)
--- clocks: The clock needed by the NAND flash controller
--
--Optional properties:
--- resets: Reference to a reset controller asserting the FMC controller
--- dmas: DMA specifiers (see: dma/stm32-mdma.txt)
--- dma-names: Must be "tx", "rx" and "ecc"
--
--* NAND device bindings:
--
--Required properties:
--- reg: describes the CS lines assigned to the NAND device.
--
--Optional properties:
--- nand-on-flash-bbt: see nand-controller.yaml
--- nand-ecc-strength: see nand-controller.yaml
--- nand-ecc-step-size: see nand-controller.yaml
--
--The following ECC strength and step size are currently supported:
-- - nand-ecc-strength = <1>, nand-ecc-step-size = <512> (Hamming)
-- - nand-ecc-strength = <4>, nand-ecc-step-size = <512> (BCH4)
-- - nand-ecc-strength = <8>, nand-ecc-step-size = <512> (BCH8) (default)
--
--Example:
--
--	fmc: nand-controller@58002000 {
--		compatible = "st,stm32mp15-fmc2";
--		reg = <0x58002000 0x1000>,
--		      <0x80000000 0x1000>,
--		      <0x88010000 0x1000>,
--		      <0x88020000 0x1000>,
--		      <0x81000000 0x1000>,
--		      <0x89010000 0x1000>,
--		      <0x89020000 0x1000>;
--		interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&rcc FMC_K>;
--		resets = <&rcc FMC_R>;
--		pinctrl-names = "default";
--		pinctrl-0 = <&fmc_pins_a>;
--		#address-cells = <1>;
--		#size-cells = <0>;
--
--		nand@0 {
--			reg = <0>;
--			nand-on-flash-bbt;
--			#address-cells = <1>;
--			#size-cells = <1>;
--		};
--	};
--- 
-2.15.0
+> No, do not abuse sysfs or procfs for something like this.  Use a real
+> syscall please if you really need it.
+
+You are right.
+
+Ok, let us get back to the drawing board. What are our requirements? We need 
+to have an interface for the TRNG that should ensure other users of entropy 
+are not starved by unprivileged users.
+
+What about the following: we use the getrandom(2) system call and add 
+GRND_TRUERANDOM as already indicated. However, there is one more caveat we 
+would add:
+
+- if the caller of GRND_TRUERANDOM is !CAP_SYS_ADMIN the entropy pool can only 
+be depleted to the point where at least one or two full seeding operations 
+worth of entropy is left.
+
+- if the caller of GRND_TRUERANDOM is CAP_SYS_ADMIN, the entropy can be 
+depleted completely
+
+At runtime, the LRNG would then behave like the following:
+
+- calling getrandom(..., 0), /dev/random or /dev/urandom would deplete the 
+entropy pool during reseeding operations but leaving an emergency level of 512 
+bits of entropy in the pool. If equal or less are in the pool, reseeding would 
+be skipped.
+
+- calling getrandom(..., GRND_TRUERANDOM) with CAP_SYS_ADMIN allows the 
+entropy pool to be fully depleted.
+
+- calling getrandom(..., GRND_TRUERANDOM) without CAP_SYS_ADMIN allows the 
+entropy pool to be depleted down to 1024 bits of entropy. If the pool has 
+equal or less, the caller is blocked. This allows the DRNG feeding /dev/
+random, /dev/urandom or getrandom(..., 0) with 512 bits of entropy (i.e. two 
+reseed operations are possible). Only if the entropy pool has more than 1024 
+bits of entropy, the getrandom call would unblock and provide data.
+
+With that approach, I think we can honor the request from Greg to not add any 
+new interface and yet honor the note from Alexander to not allow unprivileged 
+user space to deplete the entropy pool to the extent that other users of 
+entropy are too much affected.
+
+If GRND_TRUERANDOM is not implemented, EOPNOTSUPP is returned.
+
+Thank you.
+
+Ciao
+Stephan
+
 
