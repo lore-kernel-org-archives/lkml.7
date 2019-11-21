@@ -2,124 +2,229 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A37A8C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 06:46:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D79EAC43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 06:53:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78F7520855
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 06:46:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6A262089D
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 06:53:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574319233;
+	bh=elzipZssOMXAhsOcxFrMqMwESJbT+KvlyapJgNDL5Q4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lBhgfO1q1wXZd4u6daxHtqv1RAYWf1Fp8FcyBzVvs27EbL2walcGUMb9KgSbV5srR
+	 9elOVMO1h9tNxZBtZnAbMYSHoZW2SUdFHHgq5bOi+jUeRNjUgymsTOC3lxICWkS40/
+	 TmvA1/nSSzZ1nMjCYThMhAoDpWgbCFxWU7BrXCzU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726563AbfKUGqe (ORCPT
+        id S1726437AbfKUGxw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 01:46:34 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:49044 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725904AbfKUGqe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 01:46:34 -0500
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 73A6C2041FC65341FC57;
-        Thu, 21 Nov 2019 14:46:31 +0800 (CST)
-Received: from [127.0.0.1] (10.184.213.217) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Thu, 21 Nov 2019
- 14:45:02 +0800
-Subject: Re: [PATCH] tmpfs: use ida to get inode number
-To:     Hugh Dickins <hughd@google.com>
-CC:     Matthew Wilcox <willy@infradead.org>, <viro@zeniv.linux.org.uk>,
-        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        <houtao1@huawei.com>, <yi.zhang@huawei.com>,
-        "J. R. Okajima" <hooanon05g@gmail.com>
-References: <1574259798-144561-1-git-send-email-zhengbin13@huawei.com>
- <20191120154552.GS20752@bombadil.infradead.org>
- <1c64e7c2-6460-49cf-6db0-ec5f5f7e09c4@huawei.com>
- <alpine.LSU.2.11.1911202026040.1825@eggly.anvils>
-From:   "zhengbin (A)" <zhengbin13@huawei.com>
-Message-ID: <d22bcbcb-d507-7c8c-e946-704ffc499fa6@huawei.com>
-Date:   Thu, 21 Nov 2019 14:45:00 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.0
+        Thu, 21 Nov 2019 01:53:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52768 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725842AbfKUGxw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 01:53:52 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E5E22088F;
+        Thu, 21 Nov 2019 06:53:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574319231;
+        bh=elzipZssOMXAhsOcxFrMqMwESJbT+KvlyapJgNDL5Q4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Vf76KJmxlnnQgqA9oUXltMiHeAVmQC9NITMwu2YpLieErxb7gFEJZHTOcyZGHCHWe
+         jI+MUIaOh7E1IXQZwe7XLezaBz9INELBkXual6pY5kIl/uytotCYcfDo1FkVraQ6ci
+         J53NpdqBTnIsK1sbrtClfkwOS42C5b4OV9XfgdzE=
+Date:   Thu, 21 Nov 2019 07:53:48 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Jun Gao <jun.gao@mediatek.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 127/422] i2c: mediatek: Use DMA safe buffers for i2c
+ transactions
+Message-ID: <20191121065348.GC340798@kroah.com>
+References: <20191119051400.261610025@linuxfoundation.org>
+ <20191119051407.175902069@linuxfoundation.org>
+ <20191120014406.nfmrfe5ic5vm6b2l@toshiba.co.jp>
 MIME-Version: 1.0
-In-Reply-To: <alpine.LSU.2.11.1911202026040.1825@eggly.anvils>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Originating-IP: [10.184.213.217]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191120014406.nfmrfe5ic5vm6b2l@toshiba.co.jp>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Nov 20, 2019 at 10:44:06AM +0900, Nobuhiro Iwamatsu wrote:
+> Hi,
+> 
+> On Tue, Nov 19, 2019 at 06:15:24AM +0100, Greg Kroah-Hartman wrote:
+> > From: Jun Gao <jun.gao@mediatek.com>
+> > 
+> > [ Upstream commit fc66b39fe36acfd06f716e338de7cd8f9550fad2 ]
+> > 
+> > DMA mode will always be used in i2c transactions, try to allocate
+> > a DMA safe buffer if the buf of struct i2c_msg used is not DMA safe.
+> > 
+> > Signed-off-by: Jun Gao <jun.gao@mediatek.com>
+> > Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+> > Signed-off-by: Sasha Levin <sashal@kernel.org>
+> 
+> This patch requires the following additional commit:
+> 
+> commit bc1a7f75c85e226e82f183d30d75c357f92b6029
+> Author: Hsin-Yi Wang <hsinyi@chromium.org>
+> Date:   Fri Feb 15 17:02:02 2019 +0800
+> 
+>     i2c: mediatek: modify threshold passed to i2c_get_dma_safe_msg_buf()
+> 
+>     DMA with zero-length transfers doesn't make sense and this HW doesn't
+>     support them at all, so increase the threshold.
+> 
+>     Fixes: fc66b39fe36a ("i2c: mediatek: Use DMA safe buffers for i2c transactions")
+>     Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+>     [wsa: reworded commit message]
+>     Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+> 
+> Please apply this commit.
+> 
+> Best regards,
+>   Nobuhiro
+> 
+> > ---
+> >  drivers/i2c/busses/i2c-mt65xx.c | 62 +++++++++++++++++++++++++++++----
+> >  1 file changed, 55 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/drivers/i2c/busses/i2c-mt65xx.c b/drivers/i2c/busses/i2c-mt65xx.c
+> > index 1e57f58fcb001..a74ef76705e0c 100644
+> > --- a/drivers/i2c/busses/i2c-mt65xx.c
+> > +++ b/drivers/i2c/busses/i2c-mt65xx.c
+> > @@ -441,6 +441,8 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
+> >  	u16 control_reg;
+> >  	u16 restart_flag = 0;
+> >  	u32 reg_4g_mode;
+> > +	u8 *dma_rd_buf = NULL;
+> > +	u8 *dma_wr_buf = NULL;
+> >  	dma_addr_t rpaddr = 0;
+> >  	dma_addr_t wpaddr = 0;
+> >  	int ret;
+> > @@ -500,10 +502,18 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
+> >  	if (i2c->op == I2C_MASTER_RD) {
+> >  		writel(I2C_DMA_INT_FLAG_NONE, i2c->pdmabase + OFFSET_INT_FLAG);
+> >  		writel(I2C_DMA_CON_RX, i2c->pdmabase + OFFSET_CON);
+> > -		rpaddr = dma_map_single(i2c->dev, msgs->buf,
+> > +
+> > +		dma_rd_buf = i2c_get_dma_safe_msg_buf(msgs, 0);
+> > +		if (!dma_rd_buf)
+> > +			return -ENOMEM;
+> > +
+> > +		rpaddr = dma_map_single(i2c->dev, dma_rd_buf,
+> >  					msgs->len, DMA_FROM_DEVICE);
+> > -		if (dma_mapping_error(i2c->dev, rpaddr))
+> > +		if (dma_mapping_error(i2c->dev, rpaddr)) {
+> > +			i2c_put_dma_safe_msg_buf(dma_rd_buf, msgs, false);
+> > +
+> >  			return -ENOMEM;
+> > +		}
+> >  
+> >  		if (i2c->dev_comp->support_33bits) {
+> >  			reg_4g_mode = mtk_i2c_set_4g_mode(rpaddr);
+> > @@ -515,10 +525,18 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
+> >  	} else if (i2c->op == I2C_MASTER_WR) {
+> >  		writel(I2C_DMA_INT_FLAG_NONE, i2c->pdmabase + OFFSET_INT_FLAG);
+> >  		writel(I2C_DMA_CON_TX, i2c->pdmabase + OFFSET_CON);
+> > -		wpaddr = dma_map_single(i2c->dev, msgs->buf,
+> > +
+> > +		dma_wr_buf = i2c_get_dma_safe_msg_buf(msgs, 0);
+> > +		if (!dma_wr_buf)
+> > +			return -ENOMEM;
+> > +
+> > +		wpaddr = dma_map_single(i2c->dev, dma_wr_buf,
+> >  					msgs->len, DMA_TO_DEVICE);
+> > -		if (dma_mapping_error(i2c->dev, wpaddr))
+> > +		if (dma_mapping_error(i2c->dev, wpaddr)) {
+> > +			i2c_put_dma_safe_msg_buf(dma_wr_buf, msgs, false);
+> > +
+> >  			return -ENOMEM;
+> > +		}
+> >  
+> >  		if (i2c->dev_comp->support_33bits) {
+> >  			reg_4g_mode = mtk_i2c_set_4g_mode(wpaddr);
+> > @@ -530,16 +548,39 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
+> >  	} else {
+> >  		writel(I2C_DMA_CLR_FLAG, i2c->pdmabase + OFFSET_INT_FLAG);
+> >  		writel(I2C_DMA_CLR_FLAG, i2c->pdmabase + OFFSET_CON);
+> > -		wpaddr = dma_map_single(i2c->dev, msgs->buf,
+> > +
+> > +		dma_wr_buf = i2c_get_dma_safe_msg_buf(msgs, 0);
+> > +		if (!dma_wr_buf)
+> > +			return -ENOMEM;
+> > +
+> > +		wpaddr = dma_map_single(i2c->dev, dma_wr_buf,
+> >  					msgs->len, DMA_TO_DEVICE);
+> > -		if (dma_mapping_error(i2c->dev, wpaddr))
+> > +		if (dma_mapping_error(i2c->dev, wpaddr)) {
+> > +			i2c_put_dma_safe_msg_buf(dma_wr_buf, msgs, false);
+> > +
+> >  			return -ENOMEM;
+> > -		rpaddr = dma_map_single(i2c->dev, (msgs + 1)->buf,
+> > +		}
+> > +
+> > +		dma_rd_buf = i2c_get_dma_safe_msg_buf((msgs + 1), 0);
+> > +		if (!dma_rd_buf) {
+> > +			dma_unmap_single(i2c->dev, wpaddr,
+> > +					 msgs->len, DMA_TO_DEVICE);
+> > +
+> > +			i2c_put_dma_safe_msg_buf(dma_wr_buf, msgs, false);
+> > +
+> > +			return -ENOMEM;
+> > +		}
+> > +
+> > +		rpaddr = dma_map_single(i2c->dev, dma_rd_buf,
+> >  					(msgs + 1)->len,
+> >  					DMA_FROM_DEVICE);
+> >  		if (dma_mapping_error(i2c->dev, rpaddr)) {
+> >  			dma_unmap_single(i2c->dev, wpaddr,
+> >  					 msgs->len, DMA_TO_DEVICE);
+> > +
+> > +			i2c_put_dma_safe_msg_buf(dma_wr_buf, msgs, false);
+> > +			i2c_put_dma_safe_msg_buf(dma_rd_buf, (msgs + 1), false);
+> > +
+> >  			return -ENOMEM;
+> >  		}
+> >  
+> > @@ -578,14 +619,21 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
+> >  	if (i2c->op == I2C_MASTER_WR) {
+> >  		dma_unmap_single(i2c->dev, wpaddr,
+> >  				 msgs->len, DMA_TO_DEVICE);
+> > +
+> > +		i2c_put_dma_safe_msg_buf(dma_wr_buf, msgs, true);
+> >  	} else if (i2c->op == I2C_MASTER_RD) {
+> >  		dma_unmap_single(i2c->dev, rpaddr,
+> >  				 msgs->len, DMA_FROM_DEVICE);
+> > +
+> > +		i2c_put_dma_safe_msg_buf(dma_rd_buf, msgs, true);
+> >  	} else {
+> >  		dma_unmap_single(i2c->dev, wpaddr, msgs->len,
+> >  				 DMA_TO_DEVICE);
+> >  		dma_unmap_single(i2c->dev, rpaddr, (msgs + 1)->len,
+> >  				 DMA_FROM_DEVICE);
+> > +
+> > +		i2c_put_dma_safe_msg_buf(dma_wr_buf, msgs, true);
+> > +		i2c_put_dma_safe_msg_buf(dma_rd_buf, (msgs + 1), true);
+> >  	}
+> >  
+> >  	if (ret == 0) {
+> > -- 
+> > 2.20.1
 
-On 2019/11/21 12:52, Hugh Dickins wrote:
-> On Thu, 21 Nov 2019, zhengbin (A) wrote:
->> On 2019/11/20 23:45, Matthew Wilcox wrote:
->>> On Wed, Nov 20, 2019 at 10:23:18PM +0800, zhengbin wrote:
->>>> I have tried to change last_ino type to unsigned long, while this was
->>>> rejected, see details on https://patchwork.kernel.org/patch/11023915.
->>> Did you end up trying sbitmap?
->> Maybe sbitmap is not a good solution, max_inodes of tmpfs are controlled by mount options--nrinodes,
->>
->> which can be modified by remountfs(bigger or smaller), as the comment of function sbitmap_resize says:
->>
->>  * Doesn't reallocate anything. It's up to the caller to ensure that the new
->>  * depth doesn't exceed the depth that the sb was initialized with.
->>
->> We can modify this to meet the growing requirements, there will still be questions as follows:
->>
->> 1. tmpfs is a ram filesystem, we need to allocate sbitmap memory for sbinfo->max_inodes(while this maybe huge)
->>
->> 2.If remountfs changes  max_inode, we have to deal with it, while this may take a long time
->>
->> (bigger: we need to free the old sbitmap memory, allocate new memory, copy the old sbitmap to new sbitmap
->>
->> smaller: How do we deal with it?ie: we use sb->map[inode number/8] to find the sbitmap, we need to change the exist
->>
->> inode numbers?while this maybe used by userspace application.)
->>
->>> What I think is fundamentally wrong with this patch is that you've found a
->>> problem in get_next_ino() and decided to use a different scheme for this
->>> one filesystem, leaving every other filesystem which uses get_next_ino()
->>> facing the same problem.
->>>
->>> That could be acceptable if you explained why tmpfs is fundamentally
->>> different from all the other filesystems that use get_next_ino(), but
->>> you haven't (and I don't think there is such a difference.  eg pipes,
->>> autofs and ipc mqueue could all have the same problem.
->> tmpfs is same with all the other filesystems that use get_next_ino(), but we need to solve this problem one by one.
->>
->> If tmpfs is ok, we can modify the other filesystems too. Besides, I do not  recommend all file systems share the same
->>
->> global variable, for performance impact consideration.
->>
->>> There are some other problems I noticed, but they're not worth bringing
->>> up until this fundamental design choice is justified.
->> Agree, thanks.
-> Just a rushed FYI without looking at your patch or comments.
->
-> Internally (in Google) we do rely on good tmpfs inode numbers more
-> than on those of other get_next_ino() filesystems, and carry a patch
-> to mm/shmem.c for it to use 64-bit inode numbers (and separate inode
-> number space for each superblock) - essentially,
->
-> 	ino = sbinfo->next_ino++;
-> 	/* Avoid 0 in the low 32 bits: might appear deleted */
-> 	if (unlikely((unsigned int)ino == 0))
-> 		ino = sbinfo->next_ino++;
->
-> Which I think would be faster, and need less memory, than IDA.
-> But whether that is of general interest, or of interest to you,
-> depends upon how prevalent 32-bit executables built without
-> __FILE_OFFSET_BITS=64 still are these days.
+Now queued up, thanks.
 
-So how google think about this? inode number > 32-bit, but 32-bit executables
-
-cat not handle this? "separate inode number space for each superblock" can reduce the
-
-probability, but still can not solve it.
-
->
-> Hugh
-
+greg k-h
