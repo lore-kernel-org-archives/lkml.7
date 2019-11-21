@@ -2,230 +2,135 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 309FFC43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 15:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 077BCC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 15:19:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0843920674
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 15:19:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="Nvqxc6vJ"
+	by mail.kernel.org (Postfix) with ESMTP id D86FE20674
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 15:19:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbfKUPT3 (ORCPT
+        id S1726869AbfKUPTj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 10:19:29 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.84]:25890 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726546AbfKUPT3 (ORCPT
+        Thu, 21 Nov 2019 10:19:39 -0500
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:41523 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726546AbfKUPTj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 10:19:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1574349566;
-        s=strato-dkim-0002; d=chronox.de;
-        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=2RiF8MQSa3XBV1fR1xKat6hykVT+ebuvV4G+mKmn2PA=;
-        b=Nvqxc6vJkD4JxsRYaRyKivNQMKYiFdkybhgiuRLsD0kz8LBhAqZQ9WXx6yFkVUhn2K
-        zm1gJqAbgNyUfx12CRiDw+eMFLMX8A2W0+80vxa20P1FUpC1LPOb2ce65Q/M6JaFB8ai
-        sTXHzS8wGsgfZZNnhgD55FDi7EwZSfy0Zw6lOFtAVQu6+LRM5d+oUyi3Y+s2QDqsoO/S
-        L+LQjv8fi7L9n61oVHnOJb/VPn443u2Vwom8IFgOqFolT3q8cbIeA/tkIRkrkSjIF68S
-        7rHqn+Dw6rR+9T7IFqKssn7VlE316gxGUx5rPyT3s+HCxGg+Zl9aspIFGwcbxp6v8iU8
-        N1Dg==
-X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzHHXPSIvSWlTs="
-X-RZG-CLASS-ID: mo00
-Received: from positron.chronox.de
-        by smtp.strato.de (RZmta 44.29.0 DYNA|AUTH)
-        with ESMTPSA id N09a57vALFIJsIY
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Thu, 21 Nov 2019 16:18:19 +0100 (CET)
-From:   Stephan =?ISO-8859-1?Q?M=FCller?= <smueller@chronox.de>
-To:     Nicolai Stange <nstange@suse.de>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-api@vger.kernel.org,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
-        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
-        Roman Drahtmueller <draht@schaltsekun.de>,
-        Neil Horman <nhorman@redhat.com>
-Subject: Re: [PATCH v25 12/12] LRNG - add interface for gathering of raw entropy
-Date:   Thu, 21 Nov 2019 16:18:18 +0100
-Message-ID: <23500762.5LfuSYdpsK@positron.chronox.de>
-In-Reply-To: <87a78pl8xp.fsf@suse.de>
-References: <6157374.ptSnyUpaCn@positron.chronox.de> <3610406.x8mDjznOIz@positron.chronox.de> <87a78pl8xp.fsf@suse.de>
+        Thu, 21 Nov 2019 10:19:39 -0500
+X-Originating-IP: 153.3.140.100
+Received: from localhost.localdomain.localdomain (unknown [153.3.140.100])
+        (Authenticated sender: fly@kernel.page)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 6C8521C0004;
+        Thu, 21 Nov 2019 15:19:26 +0000 (UTC)
+From:   Pengfei Li <fly@kernel.page>
+To:     akpm@linux-foundation.org
+Cc:     mgorman@techsingularity.net, mhocko@kernel.org, vbabka@suse.cz,
+        cl@linux.com, iamjoonsoo.kim@lge.com, guro@fb.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Pengfei Li <fly@kernel.page>
+Subject: [RFC v1 00/19] Modify zonelist to nodelist v1
+Date:   Thu, 21 Nov 2019 23:17:52 +0800
+Message-Id: <20191121151811.49742-1-fly@kernel.page>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Donnerstag, 21. November 2019, 13:18:10 CET schrieb Nicolai Stange:
+Motivation
+----------
+Currently if we want to iterate through all the nodes we have to
+traverse all the zones from the zonelist.
 
-Hi Nicolai,
+So in order to reduce the number of loops required to traverse node,
+this series of patches modified the zonelist to nodelist.
 
-> Hi Stephan,
->=20
-> two general remarks on debugfs usage below
->=20
-> Stephan M=FCller <smueller@chronox.de> writes:
-> > diff --git a/drivers/char/lrng/lrng_testing.c
-> > b/drivers/char/lrng/lrng_testing.c new file mode 100644
-> > index 000000000000..5c33d3bd2172
-> > --- /dev/null
-> > +++ b/drivers/char/lrng/lrng_testing.c
->=20
-> <snip>
->=20
-> > +/*
-> > + * This data structure holds the dentry's of the debugfs files
-> > establishing + * the interface to user space.
-> > + */
-> > +struct lrng_raw_debugfs {
-> > +	struct dentry *lrng_raw_debugfs_root; /* root dentry */
-> > +	struct dentry *lrng_raw_debugfs_lrng_raw; /* .../lrng_raw */
-> > +};
-> > +
-> > +static struct lrng_raw_debugfs lrng_raw_debugfs;
-> > +
-> > +/* DebugFS operations and definition of the debugfs files */
-> > +static ssize_t lrng_raw_read(struct file *file, char __user *to,
-> > +			     size_t count, loff_t *ppos)
-> > +{
-> > +	loff_t pos =3D *ppos;
-> > +	int ret;
-> > +
-> > +	if (!count)
-> > +		return 0;
-> > +	lrng_raw_entropy_init();
-> > +	ret =3D lrng_raw_extract_user(to, count);
-> > +	lrng_raw_entropy_fini();
-> > +	if (ret < 0)
-> > +		return ret;
-> > +	count -=3D ret;
-> > +	*ppos =3D pos + count;
-> > +	return ret;
-> > +}
-> > +
-> > +/* Module init: allocate memory, register the debugfs files */
-> > +static int lrng_raw_debugfs_init(void)
-> > +{
-> > +	lrng_raw_debugfs.lrng_raw_debugfs_root =3D
-> > +		debugfs_create_dir(KBUILD_MODNAME, NULL);
-> > +	if (IS_ERR(lrng_raw_debugfs.lrng_raw_debugfs_root)) {
-> > +		lrng_raw_debugfs.lrng_raw_debugfs_root =3D NULL;
-> > +		return PTR_ERR(lrng_raw_debugfs.lrng_raw_debugfs_root);
-> > +	}
->=20
-> I think pointers returned by the debugfs API are not supposed to get
-> checked for NULL/IS_ERR(), c.f commit ff9fb72bc077 ("debugfs: return
-> error values, not NULL") or the the output from
->=20
->   git log --pretty=3Doneline | grep 'no need to check return value of
-> debugfs_create'
->=20
-> (Also the above code is dubious: you're effectively returning
->  PTR_ERR(NULL)).
-
-Removed the check compliant to the mentioned patches.
->=20
-> > +	return 0;
-> > +}
-> > +
-> > +static struct file_operations lrng_raw_name_fops =3D {
-> > +	.owner =3D THIS_MODULE,
-> > +	.read =3D lrng_raw_read,
-> > +};
-> > +
-> > +static int lrng_raw_debugfs_init_name(void)
-> > +{
-> > +	lrng_raw_debugfs.lrng_raw_debugfs_lrng_raw =3D
-> > +		debugfs_create_file("lrng_raw", 0400,
-> > +				    lrng_raw_debugfs.lrng_raw_debugfs_root,
-> > +				    NULL, &lrng_raw_name_fops);q
->=20
-> CONFIG_LRNG_TESTING is a bool and thus, this debugfs file can't ever get
-> removed. Even if it could, this inode hasn't got any data associated
-> with it and so file removal would not be a problem for lrng_raw_read().
-
-Correct.
->=20
-> Please consider using debugfs_create_file_unsafe() instead to save
-> debugfs from kmalloc()ing a proxy file_operations protecting your fops
-> against concurrent file removal.
-
-Yes, you are correct. Changed.
->=20
-> > +	if (IS_ERR(lrng_raw_debugfs.lrng_raw_debugfs_lrng_raw)) {
-> > +		lrng_raw_debugfs.lrng_raw_debugfs_lrng_raw =3D NULL;
-> > +		return PTR_ERR(lrng_raw_debugfs.lrng_raw_debugfs_lrng_raw);
-> > +	}
->=20
-> Same comment regarding return value checking applies here.
-
-Same here: I removed the check.
-
-With that, I also removed the static variable to maintain the two dentries=
-=20
-following the examples seen in other kernel code. Also, the __exit function=
- is=20
-removed as we do not need it as you pointed out.
-
-Thanks a lot.
->=20
-> Thanks,
->=20
-> Nicolai
->=20
-> > +	return 0;
-> > +}
-> > +
-> > +static int __init lrng_raw_init(void)
-> > +{
-> > +	int ret =3D lrng_raw_debugfs_init();
-> > +
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	ret =3D lrng_raw_debugfs_init_name();
-> > +	if (ret < 0)
-> > +		debugfs_remove_recursive(
-> > +					lrng_raw_debugfs.lrng_raw_debugfs_root);
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static void __exit lrng_raw_exit(void)
-> > +{
-> > +	debugfs_remove_recursive(lrng_raw_debugfs.lrng_raw_debugfs_root);
-> > +}
-> > +
-> > +module_init(lrng_raw_init);
-> > +module_exit(lrng_raw_exit);
-> > +
-> > +MODULE_LICENSE("Dual BSD/GPL");
-> > +MODULE_AUTHOR("Stephan Mueller <smueller@chronox.de>");
-> > +MODULE_DESCRIPTION("Kernel module for gathering raw entropy");
+Two new macros have been introduced:
+1) for_each_node_nlist
+2) for_each_node_nlist_nodemask
 
 
-Ciao
-Stephan
+Benefit
+-------
+1. For a NUMA system with N nodes, each node has M zones, the number
+   of loops is reduced from N*M times to N times when traversing node.
 
+2. The size of pg_data_t is much reduced.
+
+
+Test Result
+-----------
+Currently I have only performed a simple page allocation benchmark
+test on my laptop, and the results show that the performance of a
+system with only one node is almost unaffected.
+
+
+Others
+------
+Next I will do more performance testing and add it to the Test Result.
+
+Since I don't currently have multiple node NUMA systems, I would be
+grateful if anyone would like to test this series of patches.
+
+I am still not sure this series of patches is on the right way so I
+am sending this as an RFC. 
+
+Any comments are highly appreciated.
+
+Pengfei Li (19):
+  mm, mmzone: modify zonelist to nodelist
+  mm, hugetlb: use for_each_node in dequeue_huge_page_nodemask()
+  mm, oom_kill: use for_each_node in constrained_alloc()
+  mm, slub: use for_each_node in get_any_partial()
+  mm, slab: use for_each_node in fallback_alloc()
+  mm, vmscan: use for_each_node in do_try_to_free_pages()
+  mm, vmscan: use first_node in throttle_direct_reclaim()
+  mm, vmscan: pass pgdat to wakeup_kswapd()
+  mm, vmscan: use for_each_node in shrink_zones()
+  mm, page_alloc: use for_each_node in wake_all_kswapds()
+  mm, mempolicy: use first_node in mempolicy_slab_node()
+  mm, mempolicy: use first_node in mpol_misplaced()
+  mm, page_alloc: use first_node in local_memory_node()
+  mm, compaction: rename compaction_zonelist_suitable
+  mm, mm_init: rename mminit_verify_zonelist
+  mm, page_alloc: cleanup build_zonelists
+  mm, memory_hotplug: cleanup online_pages()
+  kernel, sysctl: cleanup numa_zonelist_order
+  mm, mmzone: cleanup zonelist in comments
+
+ arch/hexagon/mm/init.c           |   2 +-
+ arch/ia64/include/asm/topology.h |   2 +-
+ arch/x86/mm/numa.c               |   2 +-
+ drivers/tty/sysrq.c              |   2 +-
+ include/linux/compaction.h       |   2 +-
+ include/linux/gfp.h              |  18 +-
+ include/linux/mmzone.h           | 249 +++++++++++++------------
+ include/linux/oom.h              |   4 +-
+ include/linux/swap.h             |   2 +-
+ include/trace/events/oom.h       |   9 +-
+ init/main.c                      |   2 +-
+ kernel/cgroup/cpuset.c           |   4 +-
+ kernel/sysctl.c                  |   8 +-
+ mm/compaction.c                  |  20 +-
+ mm/hugetlb.c                     |  21 +--
+ mm/internal.h                    |  13 +-
+ mm/memcontrol.c                  |   2 +-
+ mm/memory_hotplug.c              |  24 +--
+ mm/mempolicy.c                   |  26 ++-
+ mm/mm_init.c                     |  74 +++++---
+ mm/mmzone.c                      |  30 ++-
+ mm/oom_kill.c                    |  16 +-
+ mm/page_alloc.c                  | 301 ++++++++++++++++---------------
+ mm/slab.c                        |  13 +-
+ mm/slub.c                        |  14 +-
+ mm/vmscan.c                      | 149 ++++++++-------
+ 26 files changed, 518 insertions(+), 491 deletions(-)
+
+-- 
+2.23.0
 
