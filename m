@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E0DC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 975E7C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:19:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B0B920898
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:19:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FAFD208D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:19:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574306371;
-	bh=D6FMJJPB1KSQ+QPvSUopfheu6AZl/36orkEH4W02BiE=;
+	s=default; t=1574306373;
+	bh=4GfdPB5jOzjO+xt5kQ0DZRHDgqNQ2xIh+jw78VaMXWM=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=QZujOn268OvePyKqSHMiH7/u+jYiqisPDBKTkOOVEOL97iy+KAypv9fBEysRS7p+F
-	 gj4+SASj1VGAyLUmwjSGdADtIuUy913p6tEUqbBnODKi5WXcD6rqsiNK4s343mkuxL
-	 0SCW2LSjQIgpVgv7mpJe+lgwKl0QXC95WBFZzw0k=
+	b=UHxCcPLPfXamh90ZBx4xWmYVx8jasUqy4VI6Mv6OSjb6VxztvL789F5J+M9Vn2IOd
+	 aFephwtesQxSAJXwtQbIcVNehkmlPeDBOdTJPXxE2eSLSxNmidAOw2IDo+mZR+4Kyy
+	 fyWghDWgd9wy5kJyWvgyUJTtc4tlIYxxsl+uFE58=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727197AbfKUDT3 (ORCPT
+        id S1727216AbfKUDTc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 22:19:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32832 "EHLO mail.kernel.org"
+        Wed, 20 Nov 2019 22:19:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726541AbfKUDT0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 22:19:26 -0500
+        id S1726541AbfKUDTa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 22:19:30 -0500
 Received: from PC-kkoz.proceq.com (unknown [213.160.61.66])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 350D0208D4;
-        Thu, 21 Nov 2019 03:19:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD5B420721;
+        Thu, 21 Nov 2019 03:19:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574306366;
-        bh=D6FMJJPB1KSQ+QPvSUopfheu6AZl/36orkEH4W02BiE=;
+        s=default; t=1574306369;
+        bh=4GfdPB5jOzjO+xt5kQ0DZRHDgqNQ2xIh+jw78VaMXWM=;
         h=From:To:Cc:Subject:Date:From;
-        b=fyyghwWvdKv1ifbHnlifXEttHsgqiMvSMbtlQjkl5/EwMCcWw9T94Ty97VbFPw1+F
-         M1FzchqUciahn6PS6CYxnso/LMxrOECePBuUyz7BRFzlMh6sP35WZOvISUGUhLtw1V
-         UbtJLFWJFg6TQ+UfYGgX2xlDEJRjdzn8pg8JKOO0=
+        b=AK7c0yssmkKf9g7yQ+FbEGdBJDaNt3YhKXGQt8xCyYzTqnQi0rSapERqCp6Kclypb
+         mDODXGARhffwh7KBbfDACRkh52uj28QuzDMB+dpPTW8VzD9hzNam4IXF1FusAc0Oku
+         /lXqZCdjFHg+hAiKnQfddybSrnpy3jwglHwtJ6EE=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Peter Rosin <peda@axentia.se>, linux-i2c@vger.kernel.org
-Subject: [PATCH v2] i2c: Fix Kconfig indentation
-Date:   Thu, 21 Nov 2019 04:19:23 +0100
-Message-Id: <1574306363-29424-1-git-send-email-krzk@kernel.org>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>
+Subject: [PATCH v2] irqchip: Fix Kconfig indentation
+Date:   Thu, 21 Nov 2019 04:19:26 +0100
+Message-Id: <1574306366-29476-1-git-send-email-krzk@kernel.org>
 X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -63,93 +65,75 @@ Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Changes since v1:
 1. Fix also 7-space and tab+1 space indentation issues.
 ---
- drivers/i2c/busses/Kconfig | 22 +++++++++++-----------
- drivers/i2c/muxes/Kconfig  | 18 +++++++++---------
- 2 files changed, 20 insertions(+), 20 deletions(-)
+ drivers/irqchip/Kconfig | 32 ++++++++++++++++----------------
+ 1 file changed, 16 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
-index 45ca099e7315..da243f153319 100644
---- a/drivers/i2c/busses/Kconfig
-+++ b/drivers/i2c/busses/Kconfig
-@@ -293,7 +293,7 @@ config I2C_VIA
- 	select I2C_ALGOBIT
- 	help
- 	  If you say yes to this option, support will be included for the VIA
--          82C586B I2C interface
-+	  82C586B I2C interface
+diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+index 697e6a8ccaae..d8f4862f13bb 100644
+--- a/drivers/irqchip/Kconfig
++++ b/drivers/irqchip/Kconfig
+@@ -276,9 +276,9 @@ config VERSATILE_FPGA_IRQ
+ 	select IRQ_DOMAIN
  
- 	  This driver can also be built as a module.  If so, the module
- 	  will be called i2c-via.
-@@ -678,11 +678,11 @@ config I2C_IMX_LPI2C
- 	tristate "IMX Low Power I2C interface"
- 	depends on ARCH_MXC || COMPILE_TEST
- 	help
--          Say Y here if you want to use the Low Power IIC bus controller
--          on the Freescale i.MX processors.
-+	  Say Y here if you want to use the Low Power IIC bus controller
-+	  on the Freescale i.MX processors.
+ config VERSATILE_FPGA_IRQ_NR
+-       int
+-       default 4
+-       depends on VERSATILE_FPGA_IRQ
++	int
++	default 4
++	depends on VERSATILE_FPGA_IRQ
  
--          This driver can also be built as a module. If so, the module
--          will be called i2c-imx-lpi2c.
-+	  This driver can also be built as a module. If so, the module
-+	  will be called i2c-imx-lpi2c.
+ config XTENSA_MX
+ 	bool
+@@ -328,7 +328,7 @@ config INGENIC_TCU_IRQ
+ 	  If unsure, say N.
  
- config I2C_IOP3XX
- 	tristate "Intel IOPx3xx and IXP4xx on-chip I2C interface"
-@@ -1184,9 +1184,9 @@ config I2C_DIOLAN_U2C
- 	  will be called i2c-diolan-u2c.
+ config RENESAS_H8300H_INTC
+-        bool
++	bool
+ 	select IRQ_DOMAIN
  
- config I2C_DLN2
--       tristate "Diolan DLN-2 USB I2C adapter"
--       depends on MFD_DLN2
+ config RENESAS_H8S_INTC
+@@ -368,7 +368,7 @@ config MVEBU_PIC
+ 	bool
+ 
+ config MVEBU_SEI
+-        bool
++	bool
+ 
+ config LS_EXTIRQ
+ 	def_bool y if SOC_LS1021A || ARCH_LAYERSCAPE
+@@ -410,19 +410,19 @@ config IRQ_UNIPHIER_AIDET
+ 	  Support for the UniPhier AIDET (ARM Interrupt Detector).
+ 
+ config MESON_IRQ_GPIO
+-       bool "Meson GPIO Interrupt Multiplexer"
+-       depends on ARCH_MESON
+-       select IRQ_DOMAIN_HIERARCHY
 -       help
-+	tristate "Diolan DLN-2 USB I2C adapter"
-+	depends on MFD_DLN2
+-         Support Meson SoC Family GPIO Interrupt Multiplexer
++	bool "Meson GPIO Interrupt Multiplexer"
++	depends on ARCH_MESON
++	select IRQ_DOMAIN_HIERARCHY
 +	help
- 	 If you say yes to this option, support will be included for Diolan
- 	 DLN2, a USB to I2C interface.
++	  Support Meson SoC Family GPIO Interrupt Multiplexer
  
-@@ -1285,9 +1285,9 @@ config I2C_VIPERBOARD
- 	help
- 	  Say yes here to access the I2C part of the Nano River
- 	  Technologies Viperboard as I2C master.
--          See viperboard API specification and Nano
--          River Tech's viperboard.h for detailed meaning
--          of the module parameters.
-+	  See viperboard API specification and Nano
-+	  River Tech's viperboard.h for detailed meaning
-+	  of the module parameters.
- 
- comment "Other I2C/SMBus bus drivers"
- 
-diff --git a/drivers/i2c/muxes/Kconfig b/drivers/i2c/muxes/Kconfig
-index c6040aa839ac..1708b1a82da2 100644
---- a/drivers/i2c/muxes/Kconfig
-+++ b/drivers/i2c/muxes/Kconfig
-@@ -109,14 +109,14 @@ config I2C_DEMUX_PINCTRL
- 	  want to change the I2C master at run-time depending on features.
- 
- config I2C_MUX_MLXCPLD
--        tristate "Mellanox CPLD based I2C multiplexer"
--        help
--          If you say yes to this option, support will be included for a
--          CPLD based I2C multiplexer. This driver provides access to
--          I2C busses connected through a MUX, which is controlled
--          by a CPLD register.
--
--          This driver can also be built as a module.  If so, the module
--          will be called i2c-mux-mlxcpld.
-+	tristate "Mellanox CPLD based I2C multiplexer"
+ config GOLDFISH_PIC
+-       bool "Goldfish programmable interrupt controller"
+-       depends on MIPS && (GOLDFISH || COMPILE_TEST)
+-       select IRQ_DOMAIN
+-       help
+-         Say yes here to enable Goldfish interrupt controller driver used
+-         for Goldfish based virtual platforms.
++	bool "Goldfish programmable interrupt controller"
++	depends on MIPS && (GOLDFISH || COMPILE_TEST)
++	select IRQ_DOMAIN
 +	help
-+	  If you say yes to this option, support will be included for a
-+	  CPLD based I2C multiplexer. This driver provides access to
-+	  I2C busses connected through a MUX, which is controlled
-+	  by a CPLD register.
-+
-+	  This driver can also be built as a module.  If so, the module
-+	  will be called i2c-mux-mlxcpld.
++	  Say yes here to enable Goldfish interrupt controller driver used
++	  for Goldfish based virtual platforms.
  
- endmenu
+ config QCOM_PDC
+ 	bool "QCOM PDC"
 -- 
 2.7.4
 
