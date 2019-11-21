@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C6C9C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:29:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA49C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:29:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72F2A2070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:29:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE24B20708
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:29:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574342978;
-	bh=0aOPNq5lXI55EI7T6Z/U8tjiPKHmWfdsWlLmyY7a3Rs=;
+	s=default; t=1574342983;
+	bh=0R4Ar318xIMMrKKDyOvPURJgpXcwotUCVc4m7Yx9gPc=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=bV0yn3KbmGkfDk70NgMVooziKCtcCMKfI9aIu/FBpn0tEkcfYFGKhUNVVGQA/48SZ
-	 I9S6wiwMMDzOgxspPSskQcvfH1fiwanbFH6XaAUq5FhvAsm684nO8h/DdK9r6Cc4lu
-	 bnhDRpeQStFVIuVx5/S+GVxyqNEfAEJPwHcTIMcI=
+	b=vrnhrwXcJV2S7xlAvYYHZzK271xHVTZdb2Td3fpo/Pdnc79tX8xtYI9SKJKcbD/Zl
+	 PCvOTiEFDIISSg/DaeKf6tztwqZC2oQc5JxJucnIK4p1FHdOKxMs6q+3MrxcjEpzjg
+	 hxoZfwF5MH0FA3tObZpsSn+vj6moWHNkmyymw79c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727335AbfKUN3h (ORCPT
+        id S1727345AbfKUN3l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 08:29:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50344 "EHLO mail.kernel.org"
+        Thu, 21 Nov 2019 08:29:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727277AbfKUN3f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 08:29:35 -0500
+        id S1726634AbfKUN3k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 08:29:40 -0500
 Received: from localhost.localdomain (unknown [118.189.143.39])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E188020708;
-        Thu, 21 Nov 2019 13:29:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A4E4214DA;
+        Thu, 21 Nov 2019 13:29:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574342975;
-        bh=0aOPNq5lXI55EI7T6Z/U8tjiPKHmWfdsWlLmyY7a3Rs=;
+        s=default; t=1574342980;
+        bh=0R4Ar318xIMMrKKDyOvPURJgpXcwotUCVc4m7Yx9gPc=;
         h=From:To:Cc:Subject:Date:From;
-        b=vZ/TGfN092xHxItzh1k40rwiwOfUH8RR41oFZrUozW73w3jkMOB3rXuCRdOAIfZsf
-         tZHj0xy3DLTiYeAppfN2UI574SG+rSkdRLCthqDlTkUbg4VhY2htsgnKfHHrdCyp08
-         SNHZoCZPyj8TdNLeMi5hNX454ZyZqJdCZsiCsVeg=
+        b=W3U2VdZtoB369d5xUrc2zRcoLezlLlS8WAvKLmzWYrDQ6ul4HWAKIdcxT0A0tFINF
+         bfeQha2RoveKTTQ1QjoYGEmgTOjZ0YrTNp8uZuR56lozW6eHNvZ9qB39N4qlUzasKI
+         4N9pIqx/8iUlpG/C+l5EAdDNImr21wzXbH0lK6/w=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH] drm/amd: Fix Kconfig indentation
-Date:   Thu, 21 Nov 2019 21:29:30 +0800
-Message-Id: <20191121132930.29544-1-krzk@kernel.org>
+        Minchan Kim <minchan@kernel.org>,
+        Nitin Gupta <ngupta@vflare.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
+Subject: [PATCH] zram: Fix Kconfig indentation
+Date:   Thu, 21 Nov 2019 21:29:35 +0800
+Message-Id: <20191121132935.29604-1-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -63,30 +61,26 @@ coding style with command like:
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/gpu/drm/amd/acp/Kconfig | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/block/zram/Kconfig | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/acp/Kconfig b/drivers/gpu/drm/amd/acp/Kconfig
-index d968c2471412..19bae9100da4 100644
---- a/drivers/gpu/drm/amd/acp/Kconfig
-+++ b/drivers/gpu/drm/amd/acp/Kconfig
-@@ -2,11 +2,11 @@
- menu "ACP (Audio CoProcessor) Configuration"
+diff --git a/drivers/block/zram/Kconfig b/drivers/block/zram/Kconfig
+index fe7a4b7d30cf..f7ad14f53516 100644
+--- a/drivers/block/zram/Kconfig
++++ b/drivers/block/zram/Kconfig
+@@ -15,9 +15,9 @@ config ZRAM
+ 	  See Documentation/admin-guide/blockdev/zram.rst for more information.
  
- config DRM_AMD_ACP
--       bool "Enable AMD Audio CoProcessor IP support"
--       depends on DRM_AMDGPU
--       select MFD_CORE
--       select PM_GENERIC_DOMAINS if PM
+ config ZRAM_WRITEBACK
+-       bool "Write back incompressible or idle page to backing device"
+-       depends on ZRAM
 -       help
-+	bool "Enable AMD Audio CoProcessor IP support"
-+	depends on DRM_AMDGPU
-+	select MFD_CORE
-+	select PM_GENERIC_DOMAINS if PM
++	bool "Write back incompressible or idle page to backing device"
++	depends on ZRAM
 +	help
- 	Choose this option to enable ACP IP support for AMD SOCs.
- 	This adds the ACP (Audio CoProcessor) IP driver and wires
- 	it up into the amdgpu driver.  The ACP block provides the DMA
+ 	 With incompressible page, there is no memory saving to keep it
+ 	 in memory. Instead, write it out to backing device.
+ 	 For this feature, admin should set up backing device via
 -- 
 2.17.1
 
