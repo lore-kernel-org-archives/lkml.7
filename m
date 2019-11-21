@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B153C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:29:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A985FC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:29:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4164E2070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:29:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8279B20715
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:29:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574342952;
-	bh=Kx3MISgtagb4e+ZJuZjuqEvPg+uwfNk1F4TZpwAktfY=;
+	s=default; t=1574342957;
+	bh=oEF0TfEmI5WbhcAKUDT9nBHfxFGfK9gs2w7wsiab6Iw=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=nNs73ffoxoI5WNmTC6HybBoQ7SJvMF5tVUHuQfbjRzVXJ6njbzuf3ij+OWJwkrARY
-	 gXagDITqsMLtNEKkUumR/9s0jBXtcLVg1KXkkG5iRJAt/J/I0kAxv+wxiT7DAkOKBn
-	 XlztWGOcTD8PPnLHsOy09CC7leL1Sc2ARWl82778=
+	b=bMEBoiz12haRksPn+Z0OIbS4uD3lRFsS3jWjwPiaEFPrfdHPHcWZEPmvHuiCHsbIs
+	 QqsuddBL+x7Q5tNxkUQIHTcVJ/TNwX9NUQ4+/sIjeG70U579tCgYEZptmphlbJ8R7R
+	 fF7qQgSirxaSBioxOdvslQSZ85n82+C1uGvV9qOE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727194AbfKUN3L (ORCPT
+        id S1727216AbfKUN3Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 08:29:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49182 "EHLO mail.kernel.org"
+        Thu, 21 Nov 2019 08:29:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49334 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727173AbfKUN3K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 08:29:10 -0500
+        id S1727196AbfKUN3P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 08:29:15 -0500
 Received: from localhost.localdomain (unknown [118.189.143.39])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F5D32070B;
-        Thu, 21 Nov 2019 13:29:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B061E20715;
+        Thu, 21 Nov 2019 13:29:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574342949;
-        bh=Kx3MISgtagb4e+ZJuZjuqEvPg+uwfNk1F4TZpwAktfY=;
+        s=default; t=1574342953;
+        bh=oEF0TfEmI5WbhcAKUDT9nBHfxFGfK9gs2w7wsiab6Iw=;
         h=From:To:Cc:Subject:Date:From;
-        b=omXIxakSxdlk95IjRQShAsRxZJXArM5Q0uDp0lZ4rHkxAtODAmKVEfrW3z0sWDPzs
-         VNaLLzaRi6KSpiNNyV72/kbMBttksfdT5oo4b3Kv5DnzC3eQ/wiqjQ/mhLCKhA+5KD
-         8O+GxtVs0ZLbGbS0e9CjT4CV6uZdhOExS9s5WoGs=
+        b=MIZ/vWIUBRhsqvyiX0JpG5JLd/5n9l5z5vfX/MJMMfa4NiLFCUig6mCSlFZu2nW1T
+         YfKrrlrozHBWOMZOU4pu7AEIe6u/1a3cYNbb1MhaMQn9LYqIVu9GJrftipIjxa1HOb
+         SBquITR8Z3thHnCcXYGnVYxA6pwVGd3dwDHXbn7Y=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Felipe Balbi <balbi@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-usb@vger.kernel.org
-Subject: [PATCH] usb: gadget: Fix Kconfig indentation
-Date:   Thu, 21 Nov 2019 21:29:05 +0800
-Message-Id: <20191121132905.29248-1-krzk@kernel.org>
+Subject: [PATCH] usb: host: Fix Kconfig indentation
+Date:   Thu, 21 Nov 2019 21:29:10 +0800
+Message-Id: <20191121132910.29310-1-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -60,66 +59,105 @@ coding style with command like:
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/usb/gadget/legacy/Kconfig | 26 +++++++++++++-------------
- drivers/usb/gadget/udc/Kconfig    |  6 +++---
- 2 files changed, 16 insertions(+), 16 deletions(-)
+ drivers/usb/host/Kconfig | 50 ++++++++++++++++++++--------------------
+ 1 file changed, 25 insertions(+), 25 deletions(-)
 
-diff --git a/drivers/usb/gadget/legacy/Kconfig b/drivers/usb/gadget/legacy/Kconfig
-index 38eaa9417b38..119a4e47681f 100644
---- a/drivers/usb/gadget/legacy/Kconfig
-+++ b/drivers/usb/gadget/legacy/Kconfig
-@@ -149,21 +149,21 @@ config USB_ETH_RNDIS
- 	   is given in comments found in that info file.
+diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
+index d6164ede63d3..8d730180db06 100644
+--- a/drivers/usb/host/Kconfig
++++ b/drivers/usb/host/Kconfig
+@@ -38,9 +38,9 @@ config USB_XHCI_DBGCAP
+ 	  before enabling this option. If unsure, say 'N'.
  
- config USB_ETH_EEM
--       bool "Ethernet Emulation Model (EEM) support"
--       depends on USB_ETH
-+	bool "Ethernet Emulation Model (EEM) support"
-+	depends on USB_ETH
- 	select USB_LIBCOMPOSITE
- 	select USB_F_EEM
+ config USB_XHCI_PCI
+-       tristate
+-       depends on USB_PCI
+-       default y
++	tristate
++	depends on USB_PCI
++	default y
+ 
+ config USB_XHCI_PLATFORM
+ 	tristate "Generic xHCI driver for a platform device"
+@@ -245,13 +245,13 @@ config USB_EHCI_HCD_AT91
+ 	  Atmel chips.
+ 
+ config USB_EHCI_TEGRA
+-       tristate "NVIDIA Tegra HCD support"
+-       depends on ARCH_TEGRA
+-       select USB_EHCI_ROOT_HUB_TT
+-       select USB_TEGRA_PHY
 -       help
--	 CDC EEM is a newer USB standard that is somewhat simpler than CDC ECM
--	 and therefore can be supported by more hardware.  Technically ECM and
--	 EEM are designed for different applications.  The ECM model extends
--	 the network interface to the target (e.g. a USB cable modem), and the
--	 EEM model is for mobile devices to communicate with hosts using
--	 ethernet over USB.  For Linux gadgets, however, the interface with
--	 the host is the same (a usbX device), so the differences are minimal.
+-	 This driver enables support for the internal USB Host Controllers
+-	 found in NVIDIA Tegra SoCs. The controllers are EHCI compliant.
++	tristate "NVIDIA Tegra HCD support"
++	depends on ARCH_TEGRA
++	select USB_EHCI_ROOT_HUB_TT
++	select USB_TEGRA_PHY
++	help
++	  This driver enables support for the internal USB Host Controllers
++	  found in NVIDIA Tegra SoCs. The controllers are EHCI compliant.
+ 
+ config USB_EHCI_HCD_PPC_OF
+ 	bool "EHCI support for PPC USB controller on OF platform bus"
+@@ -269,10 +269,10 @@ config USB_EHCI_SH
+ 	  If you use the PCI EHCI controller, this option is not necessary.
+ 
+ config USB_EHCI_EXYNOS
+-       tristate "EHCI support for Samsung S5P/EXYNOS SoC Series"
+-       depends on ARCH_S5PV210 || ARCH_EXYNOS
+-       help
+-	Enable support for the Samsung Exynos SOC's on-chip EHCI controller.
++	tristate "EHCI support for Samsung S5P/EXYNOS SoC Series"
++	depends on ARCH_S5PV210 || ARCH_EXYNOS
++	help
++	  Enable support for the Samsung Exynos SOC's on-chip EHCI controller.
+ 
+ config USB_EHCI_MV
+ 	tristate "EHCI support for Marvell PXA/MMP USB controller"
+@@ -545,7 +545,7 @@ config USB_OHCI_EXYNOS
+ 	tristate "OHCI support for Samsung S5P/EXYNOS SoC Series"
+ 	depends on ARCH_S5PV210 || ARCH_EXYNOS
+ 	help
+-	 Enable support for the Samsung Exynos SOC's on-chip OHCI controller.
++	  Enable support for the Samsung Exynos SOC's on-chip OHCI controller.
+ 
+ config USB_CNS3XXX_OHCI
+ 	bool "Cavium CNS3XXX OHCI Module (DEPRECATED)"
+@@ -609,8 +609,8 @@ config USB_UHCI_PLATFORM
+ 	default y if (ARCH_VT8500 || ARCH_ASPEED)
+ 
+ config USB_UHCI_ASPEED
+-       bool
+-       default y if ARCH_ASPEED
++	bool
++	default y if ARCH_ASPEED
+ 
+ config USB_FHCI_HCD
+ 	tristate "Freescale QE USB Host Controller support"
+@@ -713,14 +713,14 @@ config USB_RENESAS_USBHS_HCD
+ 	  module will be called renesas-usbhs.
+ 
+ config USB_IMX21_HCD
+-       tristate "i.MX21 HCD support"
+-       depends on ARM && ARCH_MXC
+-       help
+-	 This driver enables support for the on-chip USB host in the
+-	 i.MX21 processor.
 -
--	 If you say "y" here, the Ethernet gadget driver will use the EEM
--	 protocol rather than ECM.  If unsure, say "n".
+-	 To compile this driver as a module, choose M here: the
+-	 module will be called "imx21-hcd".
++	tristate "i.MX21 HCD support"
++	depends on ARM && ARCH_MXC
 +	help
-+	  CDC EEM is a newer USB standard that is somewhat simpler than CDC ECM
-+	  and therefore can be supported by more hardware.  Technically ECM and
-+	  EEM are designed for different applications.  The ECM model extends
-+	  the network interface to the target (e.g. a USB cable modem), and the
-+	  EEM model is for mobile devices to communicate with hosts using
-+	  ethernet over USB.  For Linux gadgets, however, the interface with
-+	  the host is the same (a usbX device), so the differences are minimal.
++	  This driver enables support for the on-chip USB host in the
++	  i.MX21 processor.
 +
-+	  If you say "y" here, the Ethernet gadget driver will use the EEM
-+	  protocol rather than ECM.  If unsure, say "n".
++	  To compile this driver as a module, choose M here: the
++	  module will be called "imx21-hcd".
  
- config USB_G_NCM
- 	tristate "Network Control Model (NCM) support"
-diff --git a/drivers/usb/gadget/udc/Kconfig b/drivers/usb/gadget/udc/Kconfig
-index acaec3ae6ad7..ae70ce29d5e4 100644
---- a/drivers/usb/gadget/udc/Kconfig
-+++ b/drivers/usb/gadget/udc/Kconfig
-@@ -120,9 +120,9 @@ config USB_FOTG210_UDC
- 	   dynamically linked module called "fotg210_udc".
- 
- config USB_GR_UDC
--       tristate "Aeroflex Gaisler GRUSBDC USB Peripheral Controller Driver"
--       depends on HAS_DMA
--       help
-+	tristate "Aeroflex Gaisler GRUSBDC USB Peripheral Controller Driver"
-+	depends on HAS_DMA
-+	help
- 	  Select this to support Aeroflex Gaisler GRUSBDC cores from the GRLIB
- 	  VHDL IP core library.
- 
+ config USB_HCD_BCMA
+ 	tristate "BCMA usb host driver"
 -- 
 2.17.1
 
