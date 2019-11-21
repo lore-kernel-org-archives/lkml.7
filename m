@@ -2,152 +2,115 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A398C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:24:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03A8EC43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:27:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58A49206CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:24:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE596206DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:27:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aLv72o+2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726840AbfKUOYQ (ORCPT
+        id S1726676AbfKUO1e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 09:24:16 -0500
-Received: from mout.kundenserver.de ([217.72.192.75]:39615 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726500AbfKUOYQ (ORCPT
+        Thu, 21 Nov 2019 09:27:34 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:39266 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726379AbfKUO1d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 09:24:16 -0500
-Received: from mail-qt1-f175.google.com ([209.85.160.175]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MZl1l-1iJIoD2KLX-00WmYZ for <linux-kernel@vger.kernel.org>; Thu, 21 Nov
- 2019 15:24:14 +0100
-Received: by mail-qt1-f175.google.com with SMTP id y10so3867350qto.3
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 06:24:14 -0800 (PST)
-X-Gm-Message-State: APjAAAVt8PEPg9vcPcEcDnanxHqg8ddOE0vbddz1ysqLg4T+vCpiKMVT
-        2dGjB/Xqo9RTR4lp3ic6PF1h+kGEeDabDgPjhyc=
-X-Google-Smtp-Source: APXvYqxFuJH0j+fTO645LFq3XWUle+OVKIIWeKTMT9rd4eBnk7TfSc6qphGLOOeNOrVmq3kG2kK5oJwj2Q5qEsXSZb8=
-X-Received: by 2002:ac8:2e57:: with SMTP id s23mr8721925qta.204.1574346253447;
- Thu, 21 Nov 2019 06:24:13 -0800 (PST)
-MIME-Version: 1.0
-References: <20191108210236.1296047-1-arnd@arndb.de> <20191108210824.1534248-7-arnd@arndb.de>
- <4faa78cd0a86cf5d0aea9bb16d03145c5745450b.camel@codethink.co.uk>
-In-Reply-To: <4faa78cd0a86cf5d0aea9bb16d03145c5745450b.camel@codethink.co.uk>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 21 Nov 2019 15:23:57 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a1nRq98ngfKnR2Du+7_vOxSRFD9AyjHyUCsAtk_gLR_Uw@mail.gmail.com>
-Message-ID: <CAK8P3a1nRq98ngfKnR2Du+7_vOxSRFD9AyjHyUCsAtk_gLR_Uw@mail.gmail.com>
-Subject: Re: [Y2038] [PATCH 07/23] y2038: vdso: powerpc: avoid timespec references
-To:     Ben Hutchings <ben.hutchings@codethink.co.uk>
-Cc:     y2038 Mailman List <y2038@lists.linaro.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Allison Randal <allison@lohutok.net>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:thaGe92lauKzvGRpUcTnzklgacYNQOLlCOIaImyQHuC4rJ3uDLN
- ypAEvW2QRbIGLU2U6yNMSoGFVZgSbbvAIE1H/55ebeflCeLoVt5NksysZV5SnZmg3PAzJJz
- j4lWdzBt817cHj9RVYZsQf+cYAo2cEs8wYE4sohCC+6ShB9iJ096ncjz7mFrrbM6veakI5N
- laJteiTExGWpydD7G52tw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:P9YvcJrdvJc=:+xITPrYapp+AP8gREjnW0y
- YFp+4U3kjPJ7Ne/+pH1AGbYUiFCdQZAcZyJLicyQdmQHnP5qRLcNT2cEWtg0omdfzQCIHfiOa
- oU9bu8b3EypstVblmHiU/HbIqmbaBIwfomcQ8KtjcxWPIIfS0ufWjK5xownN6OrGqB8oz/Bhj
- woWUgwMId9h3+WJU5N8z/TcjE8nkAquMrlJKnmN6zRh6PHxE+IDsNplHIyeoXxMqp5QMBCXD5
- JKkUa5czzUghrH/aoDCA/ZIBwhLeWdibAQpnP6+ApjktFqzWT8lY1iqKQee+ALb5QtybwbuEw
- leYHU8pJeeWE7yANkgX/98JkYan4LvDomWIin8vuZvzvuTM5V5uALZqVSiyMcuhvFmmzaysXl
- POAc9+DnaeHVeyTXpmk9Wx2JGkXlSJ7STw1xo+vMR/TBqc/X+eBqkEODc5/9Zuw41ooP5nSQ9
- NePK9J12HbYW0isX8PQYYVi18f0NK829xItxjqbIVZMah0LAU5ISaFbUHDrUauLMdjlD3TXD+
- lNkprUP6E/H1UmTY+B26JgE34hx7wNrgtBqyMIpseOmnwTKtz5b9Cg9JiX6r6zZYXbDyDqTEX
- Hk0Z8M8xtw1uXZnWARTlkZe59NZt0tDL+FsC4M3KTmNuOfWhsF+Hqugajzmkx8fK6/+LidreD
- /lz+eWYHG8zjnVqPva/GgZJJhow2b9+MDOZTbBH7UXgIjVVXYTJIBmmADBoJt4oHA29U3XRNc
- dQtv/DEcFxK9/GzKbeCt1kUixr7LSHyCiDES1OiEWqojpxMEJ0d+R+hW/v16Kt1swyADEG/1M
- hZVq5NKUAk/Lre3p0QJCnHJ2BEVtQYuaN2rSBnBK+wnrqsumQjaAmmHb5iO1S1kx7f8g61S6B
- XvaaRJlsftCBUWTm4ubw==
+        Thu, 21 Nov 2019 09:27:33 -0500
+Received: by mail-qt1-f196.google.com with SMTP id t8so3875486qtc.6;
+        Thu, 21 Nov 2019 06:27:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=z3Rgwff4mW05eEw3aRpfEtDwcdTG4aD4VTMxiRfMsmE=;
+        b=aLv72o+2wFDfIAmXIF/yB7mMwZ8UBE8FKlgfTAegymH7fv7GPPIds4bc8rJcc2S1mC
+         ZBw7PgMItKMFnAG0vGxQPfYsjq95dG7p1rzKUHbRejQXIxIzbucgBQabw6O3PTDH2kY+
+         2Hs5cHmqhf1HeLalENIG8BGWPRdVW26QjiOego1H/kNzf9xnbNm+lljIekKCGkW2J46z
+         0sCbtsKJUQAs7ibrMXfrjSB9dqzQ3XNyJAgu5zJkCbL77gZtaoFgwDOU0SOeVcEbX93A
+         Rzo5IqbuwKybhqAXa6ggt0QAqm8+BrggEbwQZjxRK/7wGcaznajDC7lorzD22ARvpFEJ
+         PGJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=z3Rgwff4mW05eEw3aRpfEtDwcdTG4aD4VTMxiRfMsmE=;
+        b=qBqFzMX+qmVXgE1wqA7DK18zquvCacsiZYDOAtspaqvxJeEdFSBoO74AyaCsQ3Un15
+         LOkMhGI82EZ06kLpZDdnsreua0coj/ahpUstWH5TcnVNDjR/0W6xUoVpQRBGVgXkkVLX
+         RoJE9ScTuOK7Hzd1gkxFgYPy1DqNrOZFD2Pscvq+b+MJ9z88QC/OJK4lKXvmxAHVk2LE
+         Fuz5vP/HdIduU5yTl5XMPBV0Luo3ATy7ZfGjFszFGjdl8GwDdL7TNkJ+XbNohMzrzOg9
+         yIaTHW6xAlk0X0tmh9j9FbJH9CZP9r/CsVzVEO5dtlp2gDsriMbJI8QcDjAEHh083jiL
+         41xA==
+X-Gm-Message-State: APjAAAU/DCAlJmlz/pbkF3oNOy8MCGepAZnQOqzwXdLW09vnBHAYdKfD
+        asmrMVApH5sizfNv5Pds9cg=
+X-Google-Smtp-Source: APXvYqyvyKTEDG4kCWqZBLbZtqSUuslKOQ1alMpboXLbtLnctFh422B78+JdZN5IDsZZ+nkNzQC0+A==
+X-Received: by 2002:aed:3c0a:: with SMTP id t10mr8945130qte.173.1574346452231;
+        Thu, 21 Nov 2019 06:27:32 -0800 (PST)
+Received: from localhost.localdomain ([72.53.229.209])
+        by smtp.gmail.com with ESMTPSA id l198sm1442931qke.70.2019.11.21.06.27.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Nov 2019 06:27:31 -0800 (PST)
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
+To:     Lee Jones <lee.jones@linaro.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Grigoryev Denis <grigoryev@fastwel.ru>,
+        Axel Lin <axel.lin@ingics.com>, Dan Murphy <dmurphy@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-leds@vger.kernel.org
+Subject: [PATCH v4 0/2] tps6105x add devicetree and leds support
+Date:   Thu, 21 Nov 2019 09:27:24 -0500
+Message-Id: <20191121142726.22856-1-TheSven73@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 11:43 PM Ben Hutchings
-<ben.hutchings@codethink.co.uk> wrote:
->
-> On Fri, 2019-11-08 at 22:07 +0100, Arnd Bergmann wrote:
-> [...]
-> > --- a/arch/powerpc/kernel/vdso32/gettimeofday.S
-> > +++ b/arch/powerpc/kernel/vdso32/gettimeofday.S
-> > @@ -15,10 +15,8 @@
-> >  /* Offset for the low 32-bit part of a field of long type */
-> >  #if defined(CONFIG_PPC64) && defined(CONFIG_CPU_BIG_ENDIAN)
-> >  #define LOPART       4
-> > -#define TSPEC_TV_SEC TSPC64_TV_SEC+LOPART
-> >  #else
-> >  #define LOPART       0
-> > -#define TSPEC_TV_SEC TSPC32_TV_SEC
-> >  #endif
-> >
-> >       .text
-> > @@ -192,7 +190,7 @@ V_FUNCTION_BEGIN(__kernel_time)
-> >       bl      __get_datapage@local
-> >       mr      r9, r3                  /* datapage ptr in r9 */
-> >
-> > -     lwz     r3,STAMP_XTIME+TSPEC_TV_SEC(r9)
-> > +     lwz     r3,STAMP_XTIME_SEC+LOWPART(r9)
->
-> "LOWPART" should be "LOPART".
->
+v3 -> v4:
+	Removed tps6105 mfd patch - it was accepted (Mark Brown).
+	
+	Use the new LED registration API - suggested by Jacek Anaszewski.
+	
+	Updated led dt bindings to document function, color usage.
 
-Thanks, fixed both instances in a patch on top now. I considered folding
-it into the original patch, but as it's close to the merge window I'd
-rather not rebase it, and this way I also give you credit for finding the bug.
+v2 -> v3:
+	Removed tps6105x regulator patch - it was accepted (Mark Brown).
+	
+	Removed devicetree/platdata bindings for tps6105x led naming.
+	I can test only with a 4.19 vendor kernel, which does not have the
+	latest led naming infrastructure (function/color). Drop devicetree/
+	fwnode/pdata led naming in favour of hard-coding to "tps6105x::torch",
+	so the patch can be tested by me, yet remains acceptable to upstream.
 
-I'm surprised that the 0-day bot did not report this already.
+v1 -> v2:
+	Select chip operational mode by looking at subnode name, _not_ its
+	compatible property. Suggested by Mark Brown.
 
-Thanks fro the careful review!
+I needed led operation for this mfd chip, so I added a very simple
+driver for this.
 
-        Arnd
+My platform (arm imx6q) is devicetree-based, so I added optional
+devicetree support for this chip and its sub-drivers.
 
-commit 1c11ca7a0584ddede5b8c93057b40d31e8a96d3d (HEAD)
-Author: Arnd Bergmann <arnd@arndb.de>
-Date:   Thu Nov 21 15:19:49 2019 +0100
+Sven Van Asbroeck (2):
+  leds: tps6105x: add driver for mfd chip led mode
+  dt-bindings: mfd: update TI tps6105x chip bindings
 
-    y2038: fix typo in powerpc vdso "LOPART"
+ .../devicetree/bindings/mfd/tps6105x.txt      | 47 ++++++++++-
+ drivers/leds/Kconfig                          | 10 +++
+ drivers/leds/Makefile                         |  1 +
+ drivers/leds/leds-tps6105x.c                  | 83 +++++++++++++++++++
+ 4 files changed, 140 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/leds/leds-tps6105x.c
 
-    The earlier patch introduced a typo, change LOWPART back to
-    LOPART.
+-- 
+2.17.1
 
-    Fixes: 176ed98c8a76 ("y2038: vdso: powerpc: avoid timespec references")
-    Reported-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
-    Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-
-diff --git a/arch/powerpc/kernel/vdso32/gettimeofday.S
-b/arch/powerpc/kernel/vdso32/gettimeofday.S
-index a7180b0f4aa1..c8e6902cb01b 100644
---- a/arch/powerpc/kernel/vdso32/gettimeofday.S
-+++ b/arch/powerpc/kernel/vdso32/gettimeofday.S
-@@ -190,7 +190,7 @@ V_FUNCTION_BEGIN(__kernel_time)
-        bl      __get_datapage@local
-        mr      r9, r3                  /* datapage ptr in r9 */
-
--       lwz     r3,STAMP_XTIME_SEC+LOWPART(r9)
-+       lwz     r3,STAMP_XTIME_SEC+LOPART(r9)
-
-        cmplwi  r11,0                   /* check if t is NULL */
-        beq     2f
-@@ -266,7 +266,7 @@ __do_get_tspec:
-         * as a 32.32 fixed-point number in r3 and r4.
-         * Load & add the xtime stamp.
-         */
--       lwz     r5,STAMP_XTIME_SEC+LOWPART(r9)
-+       lwz     r5,STAMP_XTIME_SEC+LOPART(r9)
-
-        lwz     r6,STAMP_SEC_FRAC(r9)
-        addc    r4,r4,r6
-        adde    r3,r3,r5
