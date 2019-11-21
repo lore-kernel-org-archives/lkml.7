@@ -2,132 +2,105 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6476BC43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:07:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAB6EC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:07:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39D2E20872
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:07:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7537D2075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:07:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uhsXVbWv"
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="vtSF7wZW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727007AbfKULH3 (ORCPT
+        id S1727072AbfKULHo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 06:07:29 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:39150 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726351AbfKULH3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 06:07:29 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xALB7LBG043683;
-        Thu, 21 Nov 2019 05:07:21 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574334441;
-        bh=gzB4/LlAd/cjajkp4WzCcmuttJEpkCwH3rgIB0EX1Eg=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=uhsXVbWvsCWpNXgbUdM3G8AODHOI0gu2LjjDROioDK8D67pqsiXXmPAZFnkUesyFg
-         geaLjCkxlsPUfz75DrTADmietNW8zufAUPWh1JDy1fU3uqa3jBLtT4ZGrVEeBLyxpl
-         3NSvKjdLNmF3QrvH9WmCCiZY/dEUWX3jFmJV1grA=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xALB7Lre045244
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 21 Nov 2019 05:07:21 -0600
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 21
- Nov 2019 05:07:21 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 21 Nov 2019 05:07:21 -0600
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xALB7G3X120060;
-        Thu, 21 Nov 2019 05:07:17 -0600
-Subject: Re: [PATCH v2] ARM: dts: am5729: beaglebone-ai: adding device tree
-To:     Caleb Robey <c-robey@ti.com>, <linux-omap@vger.kernel.org>
-CC:     Jason Kridner <jkridner@gmail.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>, Jason Kridner <jdk@ti.com>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        Andreas Dannenberg <dannenberg@ti.com>,
-        Jean-Jacques Hiblot <jjhiblot@ti.com>,
-        Praneeth Bajjuri <praneeth@ti.com>,
-        "Andrew F . Davis" <afd@ti.com>, Tom Rini <trini@konsulko.com>,
-        Robert Nelson <robertcnelson@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20191120220559.18914-1-c-robey@ti.com>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <41c73bc1-99ae-6797-5bb7-7acc0f6518c0@ti.com>
-Date:   Thu, 21 Nov 2019 13:07:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 21 Nov 2019 06:07:44 -0500
+Received: from frisell.zx2c4.com ([192.95.5.64]:33495 "EHLO frisell.zx2c4.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726698AbfKULHo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 06:07:44 -0500
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 88a73f4b;
+        Thu, 21 Nov 2019 10:14:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
+        :references:in-reply-to:from:date:message-id:subject:to:cc
+        :content-type:content-transfer-encoding; s=mail; bh=61fXfe0NKcvB
+        w4Cmm/ja0FOScFY=; b=vtSF7wZWkBeha5UYHrE8FnqSWUpC5AjG1seQCjGUgS1y
+        5leda5Fst05ia/zT3iqtIHlNQc332cXRpJ4/VDcC21uBMjQtA0fW173PNm7+K3g+
+        d2DHMusY0FbFG8C8IATbK96axfp1xwFRmZHDgIXfh2Xdkqiy2oxLjJHqKgXHvDf/
+        WSKhRlvCf2mKVoQwXwRxBy4MQTlyJCoWD5LQKswuVKgJH2OdIh+YxQPlk7+UdMZp
+        2lE8DiELGw5RsrsJYJyfyRDsckI715699ZjkHefG4WkDUUjYk8bTfAagIhtmBp2R
+        tgCcy9H9YuN6QfyaDl9yD5bIbfaHkH6fliSzVdx6Iw==
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id e550f2ca (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
+        Thu, 21 Nov 2019 10:14:37 +0000 (UTC)
+Received: by mail-oi1-f169.google.com with SMTP id s71so2764258oih.11;
+        Thu, 21 Nov 2019 03:07:40 -0800 (PST)
+X-Gm-Message-State: APjAAAV1zu/0BWjjtD9HcgpgX/1RXOIia9+S2sJhMIAIoDVrTx81T2Fe
+        hNAFmRWNY2fuulb8gkuMUfev3AR+nlpRJ1A7Yek=
+X-Google-Smtp-Source: APXvYqwPmTp2nkwJI5k2zldgO4vWMe6qszxEiAUe/OMq8cL+iGm0YkPWg1k+1+3UKuqspMztajBKI2eo8plROEGY/bY=
+X-Received: by 2002:aca:af0c:: with SMTP id y12mr7355506oie.52.1574334459737;
+ Thu, 21 Nov 2019 03:07:39 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191120220559.18914-1-c-robey@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20191120203538.199367-1-Jason@zx2c4.com> <877e3t8qv7.fsf@toke.dk>
+In-Reply-To: <877e3t8qv7.fsf@toke.dk>
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date:   Thu, 21 Nov 2019 12:07:28 +0100
+X-Gmail-Original-Message-ID: <CAHmME9rmFw7xGKNMURBUSiezbsBEikOPiJxtEu=i2Quzf+JNDg@mail.gmail.com>
+Message-ID: <CAHmME9rmFw7xGKNMURBUSiezbsBEikOPiJxtEu=i2Quzf+JNDg@mail.gmail.com>
+Subject: Re: [PATCH RFC net-next] net: WireGuard secure network tunnel
+To:     =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <thoiland@redhat.com>
+Cc:     Netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        David Miller <davem@davemloft.net>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Nov 21, 2019 at 11:29 AM Toke H=C3=B8iland-J=C3=B8rgensen
+<thoiland@redhat.com> wrote:
+> Could you please get rid of the "All Rights Reserved" (here, and
+> everywhere else)? All rights are *not* reserved: this is licensed under
+> the GPL. Besides, that phrase is in general dubious at best:
+> https://en.wikipedia.org/wiki/All_rights_reserved
 
+I've seen people make arguments for this in both ways, and code from
+major corporation enters the kernel every day bearing that line, which
+means lawyers of important kernel contributors disagree with you.
+Neither one of us are lawyers. Lacking any wide scale precedent for
+such changes, or the expertise to even be properly persuaded in any
+direction, I follow the advice of my council to stick to the norm and
+not to mess with copyright headers.
 
-On 21/11/2019 00:05, Caleb Robey wrote:
-> From: Jason Kridner <jdk@ti.com>
-> 
-> BeagleBoard.org BeagleBone AI is an open source hardware single
-> board computer based on the Texas Instruments AM5729 SoC featuring
-> dual-core 1.5GHz Arm Cortex-A15 processor, dual-core C66 digital
-> signal processor (DSP), quad-core embedded vision engine (EVE),
-> Arm Cortex-M4 processors, dual programmable realtime unit
-> industrial control subsystems and more. The board features 1GB
-> DDR3L, USB3.0 Type-C, USB HS Type-A, microHDMI, 16GB eMMC flash,
-> 1G Ethernet, 802.11ac 2/5GHz, Bluetooth, and BeagleBone expansion
-> headers.
-> 
-> For more information, refer to:
-> https://beaglebone.ai
-> 
-> This patch introduces the BeagleBone AI device tree.
-> 
-> Note that the device use the "ti,tpd12s016" component which is
-> software compatible with "ti,tpd12s015". Thus we only use the
-> latter driver.
+I think there are some Linux Foundation mailing lists that have
+license lawyers on them, relating to SPDX mainly. Maybe we can ask
+there?
 
-Ah. thanks. I see my comments resolved here.
-no more comments to net part from my side.
+> > +     MAX_QUEUED_INCOMING_HANDSHAKES =3D 4096, /* TODO: replace this wi=
+th DQL */
+> > +     MAX_STAGED_PACKETS =3D 128,
+> > +     MAX_QUEUED_PACKETS =3D 1024 /* TODO: replace this with DQL */
+>
+> Yes, please (on the TODO) :)
+>
+> FWIW, since you're using pointer rings I think the way to do this is
+> probably to just keep the limits in place as a maximum size, and then
+> use DQL (or CoDel) to throttle enqueue to those pointer rings instead of
+> just letting them fill.
+>
+> Happy to work with you on this (as I believe I've already promised), but
+> we might as well do that after the initial version is merged...
 
-> 
-> Signed-off-by: Jason Kridner <jdk@ti.com>
-> Signed-off-by: Caleb Robey <c-robey@ti.com>
-> Cc: Robert Nelson <robertcnelson@gmail.com>
-> 
-> 
-> ---
-> 
-> V2 Changes:
->    - dra7.dtsi was reintroduced and components that are only
->      not present in upstream linux dts were removed.
-> 
->   arch/arm/boot/dts/Makefile                |   1 +
->   arch/arm/boot/dts/am5729-beagleboneai.dts | 731 ++++++++++++++++++++++
->   arch/arm/boot/dts/dra7.dtsi               |   2 +-
->   3 files changed, 733 insertions(+), 1 deletion(-)
->   create mode 100644 arch/arm/boot/dts/am5729-beagleboneai.dts
-> 
-
-[..]
-
--- 
-Best regards,
-grygorii
+I've actually implemented this a few times, but DQL always seems too
+slow to react properly, and I haven't yet been able to figure out
+what's happening. Let's indeed work on this after the initial version
+is merged. I think this change, and several more like it, will be the
+topic of some interesting discussions. But that doesn't need to happen
+/now/ I don't think.
