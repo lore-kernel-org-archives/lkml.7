@@ -2,135 +2,154 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C4B7C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC0BAC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:25:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC9C220692
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:25:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8934820692
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:25:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbfKUQZR (ORCPT
+        id S1727142AbfKUQZ3 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 11:25:17 -0500
-Received: from mail-io1-f70.google.com ([209.85.166.70]:34385 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726992AbfKUQZL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 11:25:11 -0500
-Received: by mail-io1-f70.google.com with SMTP id a13so2656307iol.1
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 08:25:11 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=OCLPduJlcDY35lmbRV7Z+GvbBWX59f8XlTByb6+mk3E=;
-        b=B5slKsVKxND3oNSnbIK6qGBGljvgIw9VisZDqz8CP8EMltO9c2F9beWyDlz+D5Htwf
-         guqoVf/daZ7cxwhm0WMf4HY0hnJsyubBW2nNZblDyT86yK4KlUhEjpg4IdlsCIUJE3/7
-         A/YqsnqupaVmiDd65gwDzXrAimdVw8oHLazQYmjc9iUuohPZUSEydU1ff487MgV5XfvD
-         OeXGvEOJRsfRyS1PiMHyrhAVI2RvFbbiIIr6PMzWd1VJZHSnsYYB0JdY91Glc1U2bNrn
-         pxP4yAw8VeFvCjtIlA9+2DjXDVjpdFv3V+7ZOLMB5y32ALCPVJe1La+jP0/nmy+7Pyhs
-         mXng==
-X-Gm-Message-State: APjAAAW6VXYuRjiG8YOtDrY//+iLMu9JTwRrjwTW3Mx1KTdIqgcTDilf
-        1NLVY7rhsWOBvPs5WuL5cxu3oEbN6WDbGphYCLpYhOQVynfX
-X-Google-Smtp-Source: APXvYqz+aRPvGQJfzUTE3z9KBtc31Q8WdJoa00t0yOL4+JsK641UDZ4MK4QGTWRmAbwF/wye0Fa2RsnmkxCOkg9LPyo0L/Zy+LqS
+        Thu, 21 Nov 2019 11:25:29 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:30567 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726279AbfKUQZ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 11:25:29 -0500
+Received: from localhost (mailhub1-ext [192.168.12.233])
+        by localhost (Postfix) with ESMTP id 47JlKK4v2fz9tyYX;
+        Thu, 21 Nov 2019 17:25:25 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id ZzcxYupBwo2Z; Thu, 21 Nov 2019 17:25:25 +0100 (CET)
+Received: from vm-hermes.si.c-s.fr (vm-hermes.si.c-s.fr [192.168.25.253])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 47JlKK3y07z9tyYW;
+        Thu, 21 Nov 2019 17:25:25 +0100 (CET)
+Received: by vm-hermes.si.c-s.fr (Postfix, from userid 33)
+        id 38943C08; Thu, 21 Nov 2019 17:25:29 +0100 (CET)
+Received: from 37-167-57-154.coucou-networks.fr
+ (37-167-57-154.coucou-networks.fr [37.167.57.154]) by messagerie.si.c-s.fr
+ (Horde Framework) with HTTP; Thu, 21 Nov 2019 17:25:29 +0100
+Date:   Thu, 21 Nov 2019 17:25:29 +0100
+Message-ID: <20191121172529.Horde.0uDMS4xQ-xexjp4a2mIoXQ5@messagerie.si.c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Allison Randal <allison@lohutok.net>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        y2038 Mailman List <y2038@lists.linaro.org>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>
+Subject: Re: [Y2038] [PATCH 07/23] y2038: vdso: powerpc: avoid timespec
+ references
+References: <20191108210236.1296047-1-arnd@arndb.de>
+ <20191108210824.1534248-7-arnd@arndb.de>
+ <4faa78cd0a86cf5d0aea9bb16d03145c5745450b.camel@codethink.co.uk>
+ <CAK8P3a1nRq98ngfKnR2Du+7_vOxSRFD9AyjHyUCsAtk_gLR_Uw@mail.gmail.com>
+In-Reply-To: <CAK8P3a1nRq98ngfKnR2Du+7_vOxSRFD9AyjHyUCsAtk_gLR_Uw@mail.gmail.com>
+User-Agent: Internet Messaging Program (IMP) H5 (6.2.3)
+Content-Type: text/plain; charset=UTF-8; format=flowed; DelSp=Yes
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:d85:: with SMTP id i5mr11318199ilj.161.1574353510719;
- Thu, 21 Nov 2019 08:25:10 -0800 (PST)
-Date:   Thu, 21 Nov 2019 08:25:10 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000c1e9090597ddbd9d@google.com>
-Subject: net test error: general protection fault in kernfs_find_ns
-From:   syzbot <syzbot+36275730ddc1625afdb5@syzkaller.appspotmail.com>
-To:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        tj@kernel.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Arnd Bergmann <arnd@arndb.de> a écrit :
 
-syzbot found the following crash on:
+> On Wed, Nov 20, 2019 at 11:43 PM Ben Hutchings
+> <ben.hutchings@codethink.co.uk> wrote:
+>>
+>> On Fri, 2019-11-08 at 22:07 +0100, Arnd Bergmann wrote:
+>> [...]
+>> > --- a/arch/powerpc/kernel/vdso32/gettimeofday.S
+>> > +++ b/arch/powerpc/kernel/vdso32/gettimeofday.S
+>> > @@ -15,10 +15,8 @@
+>> >  /* Offset for the low 32-bit part of a field of long type */
+>> >  #if defined(CONFIG_PPC64) && defined(CONFIG_CPU_BIG_ENDIAN)
+>> >  #define LOPART       4
+>> > -#define TSPEC_TV_SEC TSPC64_TV_SEC+LOPART
+>> >  #else
+>> >  #define LOPART       0
+>> > -#define TSPEC_TV_SEC TSPC32_TV_SEC
+>> >  #endif
+>> >
+>> >       .text
+>> > @@ -192,7 +190,7 @@ V_FUNCTION_BEGIN(__kernel_time)
+>> >       bl      __get_datapage@local
+>> >       mr      r9, r3                  /* datapage ptr in r9 */
+>> >
+>> > -     lwz     r3,STAMP_XTIME+TSPEC_TV_SEC(r9)
+>> > +     lwz     r3,STAMP_XTIME_SEC+LOWPART(r9)
+>>
+>> "LOWPART" should be "LOPART".
+>>
+>
+> Thanks, fixed both instances in a patch on top now. I considered folding
+> it into the original patch, but as it's close to the merge window I'd
+> rather not rebase it, and this way I also give you credit for  
+> finding the bug.
 
-HEAD commit:    064a1899 Merge tag 'mlx5-fixes-2019-11-20' of git://git.ke..
-git tree:       net
-console output: https://syzkaller.appspot.com/x/log.txt?x=124aee22e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=1aab6d4187ddf667
-dashboard link: https://syzkaller.appspot.com/bug?extid=36275730ddc1625afdb5
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+Take care, might conflict with  
+https://github.com/linuxppc/linux/commit/5e381d727fe8834ca5a126f510194a7a4ac6dd3a
 
-Unfortunately, I don't have any reproducer for this crash yet.
+Christophe
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+36275730ddc1625afdb5@syzkaller.appspotmail.com
-
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 7 Comm: kworker/u4:0 Not tainted 5.4.0-rc7-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: netns cleanup_net
-RIP: 0010:kernfs_find_ns+0x36/0x380 fs/kernfs/dir.c:836
-Code: 55 41 54 49 89 fc 53 48 83 ec 10 48 89 75 d0 e8 d0 7d 94 ff 49 8d 7c  
-24 68 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f  
-85 24 03 00 00 49 8d bc 24 90 00 00 00 49 8b 5c 24
-RSP: 0018:ffff8880a9897898 EFLAGS: 00010202
-RAX: dffffc0000000000 RBX: ffffffff8848f7a0 RCX: 0000000000000000
-RDX: 000000000000000d RSI: ffffffff81deda20 RDI: 0000000000000068
-RBP: ffff8880a98978d0 R08: 1ffffffff1214718 R09: fffffbfff1214719
-R10: ffff8880a98978d0 R11: ffffffff890a38c7 R12: 0000000000000000
-R13: ffffffff8848f760 R14: 0000000000000000 R15: 0000000000000000
-FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000000c420800000 CR3: 00000000a8dc9000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-  kernfs_find_and_get_ns+0x34/0x70 fs/kernfs/dir.c:913
-  kernfs_find_and_get include/linux/kernfs.h:522 [inline]
-  sysfs_remove_group+0x76/0x1b0 fs/sysfs/group.c:276
-  netdev_queue_update_kobjects+0x261/0x3e0 net/core/net-sysfs.c:1505
-  remove_queue_kobjects net/core/net-sysfs.c:1560 [inline]
-  netdev_unregister_kobject+0x15e/0x1f0 net/core/net-sysfs.c:1710
-  rollback_registered_many+0x7c6/0xfc0 net/core/dev.c:8546
-  unregister_netdevice_many.part.0+0x1b/0x1f0 net/core/dev.c:9675
-  unregister_netdevice_many+0x3b/0x50 net/core/dev.c:9674
-  ip6gre_exit_batch_net+0x541/0x760 net/ipv6/ip6_gre.c:1604
-  ops_exit_list.isra.0+0x10c/0x160 net/core/net_namespace.c:175
-  cleanup_net+0x538/0xaf0 net/core/net_namespace.c:597
-  process_one_work+0x9af/0x1740 kernel/workqueue.c:2269
-  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
-  kthread+0x361/0x430 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-Modules linked in:
----[ end trace b94ff3c5954003d3 ]---
-RIP: 0010:kernfs_find_ns+0x36/0x380 fs/kernfs/dir.c:836
-Code: 55 41 54 49 89 fc 53 48 83 ec 10 48 89 75 d0 e8 d0 7d 94 ff 49 8d 7c  
-24 68 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f  
-85 24 03 00 00 49 8d bc 24 90 00 00 00 49 8b 5c 24
-RSP: 0018:ffff8880a9897898 EFLAGS: 00010202
-RAX: dffffc0000000000 RBX: ffffffff8848f7a0 RCX: 0000000000000000
-RDX: 000000000000000d RSI: ffffffff81deda20 RDI: 0000000000000068
-RBP: ffff8880a98978d0 R08: 1ffffffff1214718 R09: fffffbfff1214719
-R10: ffff8880a98978d0 R11: ffffffff890a38c7 R12: 0000000000000000
-R13: ffffffff8848f760 R14: 0000000000000000 R15: 0000000000000000
-FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000000c420800000 CR3: 00000000a7903000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>
+> I'm surprised that the 0-day bot did not report this already.
+>
+> Thanks fro the careful review!
+>
+>         Arnd
+>
+> commit 1c11ca7a0584ddede5b8c93057b40d31e8a96d3d (HEAD)
+> Author: Arnd Bergmann <arnd@arndb.de>
+> Date:   Thu Nov 21 15:19:49 2019 +0100
+>
+>     y2038: fix typo in powerpc vdso "LOPART"
+>
+>     The earlier patch introduced a typo, change LOWPART back to
+>     LOPART.
+>
+>     Fixes: 176ed98c8a76 ("y2038: vdso: powerpc: avoid timespec references")
+>     Reported-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
+>     Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>
+> diff --git a/arch/powerpc/kernel/vdso32/gettimeofday.S
+> b/arch/powerpc/kernel/vdso32/gettimeofday.S
+> index a7180b0f4aa1..c8e6902cb01b 100644
+> --- a/arch/powerpc/kernel/vdso32/gettimeofday.S
+> +++ b/arch/powerpc/kernel/vdso32/gettimeofday.S
+> @@ -190,7 +190,7 @@ V_FUNCTION_BEGIN(__kernel_time)
+>         bl      __get_datapage@local
+>         mr      r9, r3                  /* datapage ptr in r9 */
+>
+> -       lwz     r3,STAMP_XTIME_SEC+LOWPART(r9)
+> +       lwz     r3,STAMP_XTIME_SEC+LOPART(r9)
+>
+>         cmplwi  r11,0                   /* check if t is NULL */
+>         beq     2f
+> @@ -266,7 +266,7 @@ __do_get_tspec:
+>          * as a 32.32 fixed-point number in r3 and r4.
+>          * Load & add the xtime stamp.
+>          */
+> -       lwz     r5,STAMP_XTIME_SEC+LOWPART(r9)
+> +       lwz     r5,STAMP_XTIME_SEC+LOPART(r9)
+>
+>         lwz     r6,STAMP_SEC_FRAC(r9)
+>         addc    r4,r4,r6
+>         adde    r3,r3,r5
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
