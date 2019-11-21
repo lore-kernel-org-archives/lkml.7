@@ -2,132 +2,121 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56B5AC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 07:11:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D436C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 07:11:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E56E20898
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 07:11:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574320275;
-	bh=N9Kaj7UNS7Ea6awEOY5ykIJwFNYXO2L/DbIOFWA+YLs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2ErcD1SWJImJj27SlVwyqHTvIYoDxHLj+jiLTm7DRvs/WDCge1UimvXyepgfQH/Kw
-	 ZA0uYP2KMHKYLgZAFLczjwtAMlDAVRJeWRBhCXB9P5IM8l7aDF3pRDUkp9GkoW48br
-	 iiiQ16PLQuj2D9r+Y3zV/2biy22x/J3Ear7kPddA=
+	by mail.kernel.org (Postfix) with ESMTP id E115A20898
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 07:11:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="br53oIpb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726536AbfKUHLO (ORCPT
+        id S1726613AbfKUHL5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 02:11:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55124 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726014AbfKUHLN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 02:11:13 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE86620872;
-        Thu, 21 Nov 2019 07:11:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574320272;
-        bh=N9Kaj7UNS7Ea6awEOY5ykIJwFNYXO2L/DbIOFWA+YLs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ltJPd14tmE4FLLxP1LWLjhCb02srWll+/u9e3EZyujx8FQEy+FCYFpP0K9o1TrkvT
-         mWfRcRR4/+1WlGETdgyCoPgZ7lvERWHBAeS7i31wfEoTtIUXJyRkL2IwtK7ao0b8Nu
-         WMAOEh+b2VSyt+N7Xd5AQ5ZWgHlzljD4VAWCgYbo=
-Date:   Thu, 21 Nov 2019 08:11:10 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Jiangfeng Xiao <xiaojiangfeng@huawei.com>
-Cc:     jslaby@suse.com, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org, leeyou.li@huawei.com,
-        nixiaoming@huawei.com, zhangwen8@huawei.com
-Subject: Re: [PATCH] serial: serial_core: Perform NULL checks for break_ctl
- ops
-Message-ID: <20191121071110.GA345427@kroah.com>
-References: <1574263133-28259-1-git-send-email-xiaojiangfeng@huawei.com>
- <20191120154235.GA3004157@kroah.com>
- <35ac1c40-d2f4-f6dc-5e2f-f168a0a17c8b@huawei.com>
+        Thu, 21 Nov 2019 02:11:57 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:41374 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726230AbfKUHL4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 02:11:56 -0500
+Received: by mail-lf1-f65.google.com with SMTP id j14so1693100lfb.8
+        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 23:11:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=C8kRodRL8XSmhyVZocIedEzxOc9YWRiTUdGRplCklx8=;
+        b=br53oIpbhWMQuSOBZ85hloBwEXKLJa6ayX8pjCUt5ja0k5GVVkZPsX4Sg0buNDkSnl
+         cYYKZaQ6Kg9yIs8i5OS8bzspp4023qzP8y3BtUdKZKZkdK1paYt2ZeHc6taGagwEWZP2
+         Kh5FC+xlQNXxwZf1bRlzQqoS7Rhs+j/iqLAU5kQMQ+Ta46YaNv4EMzkmIIEeB1TbgVJn
+         Os6J01kqT+WreZVH53NTfc2EV6PtgaCcCpPDo4Tmxaz2Ys0YDdVNL3dbrqI/GVODO9NR
+         ULZPQLtfRv22prhV0EdyQBeWJ9kVlQ9EG2XVL/0eUe/SF01OFoZhQZ1zOYFLyFmZKGF5
+         0xaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=C8kRodRL8XSmhyVZocIedEzxOc9YWRiTUdGRplCklx8=;
+        b=UKiItGzjqm0WqHK9w8rCoL/kPtCmckVGcNM41nP29uS0kuJBms9gVoBjQiHI9Kqjpa
+         xhNAwzahL+UxdC2GQPMr+qi9mn8stuZC1c9fiFUdY32PbyHwNtcXlZqczH4ze6MLZba/
+         NXJ50gsTFl5v5X5Px1TZEgumfA3DEKul0b+MCW4bmaiGvlzrME+zWrA8txHsGKv+FbYq
+         l/0TW2ZhAcGSj4bsq0a01oOgPqh/oRWjLsS8Uj42/LNnxSIqejqgT4T0royjvde/9WE8
+         +vxZCR454I1Q9HNXdaPrErUl1ylHOtwHsEluAsrUdBCLTH0DslnUBGAjqUV1mEVqxBgO
+         VvhQ==
+X-Gm-Message-State: APjAAAV++Q2C6KEKuHsrsj58junh/Hyp1Dyd6agVUv6XZpSr9XS4x7Wg
+        l0ayt8Xbc0fEiofwUlEFezumHI7joDn+tGAC7O+zP7pH+urZ3y5V
+X-Google-Smtp-Source: APXvYqyNFkF/zk17TtnoDXV2+D0NUTf4ixhVv9c3tjT5yI5EgRyIj8a9Gf/3mBaaFZML6AdzHBAZfMhU2TypEvDE2Yw=
+X-Received: by 2002:ac2:4a8f:: with SMTP id l15mr6156904lfp.5.1574320314719;
+ Wed, 20 Nov 2019 23:11:54 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <35ac1c40-d2f4-f6dc-5e2f-f168a0a17c8b@huawei.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 21 Nov 2019 08:11:43 +0100
+Message-ID: <CACRpkdbfVvxAUEeGApGx7jhagkOrNY7_G=ch4kzUE5YCD_N3ZA@mail.gmail.com>
+Subject: [GIT PULL] GPIO fixes for v5.4
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Hans de Goede <hdegoede@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 10:14:02AM +0800, Jiangfeng Xiao wrote:
-> On 2019/11/20 23:42, Greg KH wrote:
-> > On Wed, Nov 20, 2019 at 11:18:53PM +0800, Jiangfeng Xiao wrote:
-> >> Doing fuzz test on sbsa uart device, causes a kernel crash
-> >> due to NULL pointer dereference:
-> >>
-> >> ------------[ cut here ]------------
-> >> Unable to handle kernel paging request at virtual address fffffffffffffffc
-> >> CPU: 2 PID: 2385 Comm: tty_fuzz_test Tainted: G           O    4.4.193 #1
-> >> task: ffffffe32b23f110 task.stack: ffffffe32bda4000
-> >> PC is at uart_break_ctl+0x44/0x84
-> >> LR is at uart_break_ctl+0x34/0x84
-> >> pc : [<ffffff8393196098>] lr : [<ffffff8393196088>] pstate: 80000005
-> >> sp : ffffffe32bda7cc0
-> >> [<ffffff8393196098>] uart_break_ctl+0x44/0x84
-> >> [<ffffff8393177718>] send_break+0xa0/0x114
-> >> [<ffffff8393179a1c>] tty_ioctl+0xc50/0xe84
-> >> [<ffffff8392fa5a40>] do_vfs_ioctl+0xc4/0x6e8
-> >> [<ffffff8392fa60cc>] SyS_ioctl+0x68/0x9c
-> >> [<ffffff8392e02e78>] __sys_trace_return+0x0/0x4
-> >> Code: b9410ea0 34000160 f9408aa0 f9402814 (b85fc280)
-> >> ---[ end trace 8606094f1960c5e0 ]---
-> >> Kernel panic - not syncing: Fatal exception
-> >>
-> >> Fix this problem by adding NULL checks prior to calling break_ctl ops.
-> >>
-> >> Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
-> >> ---
-> >>  drivers/tty/serial/serial_core.c | 2 +-
-> >>  1 file changed, 1 insertion(+), 1 deletion(-)
-> >>
-> >> diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
-> >> index c4a414a..b0a6eb1 100644
-> >> --- a/drivers/tty/serial/serial_core.c
-> >> +++ b/drivers/tty/serial/serial_core.c
-> >> @@ -1111,7 +1111,7 @@ static int uart_break_ctl(struct tty_struct *tty, int break_state)
-> >>  	if (!uport)
-> >>  		goto out;
-> >>  
-> >> -	if (uport->type != PORT_UNKNOWN)
-> >> +	if (uport->type != PORT_UNKNOWN && uport->ops->break_ctl)
-> > 
-> > What serial driver does not define break_ctl?
-> 
-> I'm using arm_sbsa_uart_platform_driver, and sbsa_uart_pops does not define break_ctl.
-> I did a troubleshooting on the latest mainline 5.4-rc8 kernel.
-> There are 7 uart_ops without defining break_ctl:
-> ./drivers/tty/serial/men_z135_uart.c:774:static const struct uart_ops men_z135_ops = {
-> ./drivers/tty/serial/amba-pl011.c:2173:static const struct uart_ops sbsa_uart_pops = {
-> ./drivers/tty/serial/owl-uart.c:464:static const struct uart_ops owl_uart_ops = {
-> ./drivers/tty/serial/meson_uart.c:430:static const struct uart_ops meson_uart_ops = {
-> ./drivers/tty/serial/qcom_geni_serial.c:1212:static const struct uart_ops qcom_geni_console_pops = {
-> ./drivers/tty/serial/qcom_geni_serial.c:1232:static const struct uart_ops qcom_geni_uart_pops = {
-> ./drivers/tty/serial/rda-uart.c:559:static const struct uart_ops rda_uart_ops = {
-> 
-> > You are running with a bunch of "out-of-tree" drivers, perhaps one of
-> > those needs to be fixed here instead?
-> 
-> I carefully confirmed it again, the kernel crash was caused by arm_sbsa_uart_platform_driver which is "in-tree".
-> 
-> There are two ways to fix this problem, one is to add a null pointer check,
-> and the other is to define break_ctl for each uart_ops.
-> I am a newbie on serial_core, so I don't know which way is more reasonable.
-> 
-> Based on the principle of minimal change, I chose to add a null pointer check.
+Hi Linus,
 
-Yeah, that makes sense to me as well, I'll go queue this up.  Thanks for
-the detailed information.
+a last set of small fixes for GPIO, this cycle was quite busy.
 
-greg k-h
+Details in the signed tag, please pull it in!
+
+Yours,
+Linus Walleij
+
+The following changes since commit 31f4f5b495a62c9a8b15b1c3581acd5efeb9af8c:
+
+  Linux 5.4-rc7 (2019-11-10 16:17:15 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
+tags/gpio-v5.4-5
+
+for you to fetch changes up to cbdaa5e7bd90db9980ff6187baea9d49fc4de960:
+
+  Merge tag 'gpio-v5.4-rc8-fixes-for-linus' of
+git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux into fixes
+(2019-11-13 22:58:01 +0100)
+
+----------------------------------------------------------------
+GPIO fixes for v5.4:
+
+- Fix debounce delays on the MAX77620 GPIO expander
+- Use the correct unit for debounce times on the BD70528 GPIO expander
+- Get proper deps for parallel builds of the GPIO tools
+- Add a specific ACPI quirk for the Terra Pad 1061
+
+----------------------------------------------------------------
+Hans de Goede (1):
+      gpiolib: acpi: Add Terra Pad 1061 to the run_edge_events_on_boot_blacklist
+
+Laura Abbott (1):
+      tools: gpio: Correctly add make dependencies for gpio_utils
+
+Linus Walleij (1):
+      Merge tag 'gpio-v5.4-rc8-fixes-for-linus' of
+git://git.kernel.org/.../brgl/linux into fixes
+
+Thierry Reding (2):
+      gpio: max77620: Fixup debounce delays
+      gpio: bd70528: Use correct unit for debounce times
+
+ drivers/gpio/gpio-bd70528.c  |  6 +++---
+ drivers/gpio/gpio-max77620.c |  6 +++---
+ drivers/gpio/gpiolib-acpi.c  | 17 +++++++++++++++++
+ tools/gpio/Build             |  1 +
+ tools/gpio/Makefile          | 10 +++++++---
+ 5 files changed, 31 insertions(+), 9 deletions(-)
