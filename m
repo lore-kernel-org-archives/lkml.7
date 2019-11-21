@@ -7,45 +7,43 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6547C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F45C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:48:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B094F206CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:48:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3637220692
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:48:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727014AbfKUQsZ (ORCPT
+        id S1727237AbfKUQsa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 11:48:25 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:32926 "EHLO
+        Thu, 21 Nov 2019 11:48:30 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:32915 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726690AbfKUQsX (ORCPT
+        with ESMTP id S1727113AbfKUQsS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 11:48:23 -0500
+        Thu, 21 Nov 2019 11:48:18 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iXpcm-0000Yw-1p; Thu, 21 Nov 2019 17:48:08 +0100
+        id 1iXpcn-0000ZA-LC; Thu, 21 Nov 2019 17:48:09 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A807F1C1A3D;
-        Thu, 21 Nov 2019 17:48:07 +0100 (CET)
-Date:   Thu, 21 Nov 2019 16:48:07 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 3E4D41C1A3C;
+        Thu, 21 Nov 2019 17:48:08 +0100 (CET)
+Date:   Thu, 21 Nov 2019 16:48:08 -0000
 From:   "tip-bot2 for Frederic Weisbecker" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] leds: Use all-in-one vtime aware kcpustat accessor
-Cc:     Yauheni Kaliuta <yauheni.kaliuta@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+Subject: [tip: sched/core] sched/cputime: Support other fields on kcpustat_field()
+Cc:     Frederic Weisbecker <frederic@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Wanpeng Li <wanpengli@tencent.com>,
+        Yauheni Kaliuta <yauheni.kaliuta@redhat.com>,
         Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191121024430.19938-6-frederic@kernel.org>
-References: <20191121024430.19938-6-frederic@kernel.org>
+In-Reply-To: <20191121024430.19938-2-frederic@kernel.org>
+References: <20191121024430.19938-2-frederic@kernel.org>
 MIME-Version: 1.0
-Message-ID: <157435488761.21853.4853862724156729541.tip-bot2@tip-bot2>
+Message-ID: <157435488818.21853.7585699144904848918.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -61,55 +59,129 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     8688f2fb671b2ed59b1b16083136b6edc3750435
-Gitweb:        https://git.kernel.org/tip/8688f2fb671b2ed59b1b16083136b6edc3750435
+Commit-ID:     5a1c95580f1d89c8a736bb02ecd82a8858388b8a
+Gitweb:        https://git.kernel.org/tip/5a1c95580f1d89c8a736bb02ecd82a8858388b8a
 Author:        Frederic Weisbecker <frederic@kernel.org>
-AuthorDate:    Thu, 21 Nov 2019 03:44:29 +01:00
+AuthorDate:    Thu, 21 Nov 2019 03:44:25 +01:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Thu, 21 Nov 2019 07:58:48 +01:00
+CommitterDate: Thu, 21 Nov 2019 07:33:23 +01:00
 
-leds: Use all-in-one vtime aware kcpustat accessor
+sched/cputime: Support other fields on kcpustat_field()
 
-We can now safely read user kcpustat fields on nohz_full CPUs.
-Use the appropriate accessor.
+Provide support for user, nice, guest and guest_nice fields through
+kcpustat_field().
 
-[ mingo: Fixed build failure. ]
+Whether we account the delta to a nice or not nice field is decided on
+top of the nice value snapshot taken at the time we call kcpustat_field().
+If the nice value of the task has been changed since the last vtime
+update, we may have inacurrate distribution of the nice VS unnice
+cputime.
 
-Reported-by: Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
+However this is considered as a minor issue compared to the proper fix
+that would involve interrupting the target on nice updates, which is
+undesired on nohz_full CPUs.
+
 Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com> (maintainer:LED SUBSYSTEM)
-Cc: Pavel Machek <pavel@ucw.cz> (maintainer:LED SUBSYSTEM)
-Cc: Dan Murphy <dmurphy@ti.com> (reviewer:LED SUBSYSTEM)
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Wanpeng Li <wanpengli@tencent.com>
-Link: https://lkml.kernel.org/r/20191121024430.19938-6-frederic@kernel.org
+Cc: Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
+Link: https://lkml.kernel.org/r/20191121024430.19938-2-frederic@kernel.org
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- drivers/leds/trigger/ledtrig-activity.c | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+ kernel/sched/cputime.c | 54 ++++++++++++++++++++++++++++++++---------
+ 1 file changed, 43 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/leds/trigger/ledtrig-activity.c b/drivers/leds/trigger/ledtrig-activity.c
-index ddfc5ed..14ba7fa 100644
---- a/drivers/leds/trigger/ledtrig-activity.c
-+++ b/drivers/leds/trigger/ledtrig-activity.c
-@@ -57,11 +57,15 @@ static void led_activity_function(struct timer_list *t)
- 	curr_used = 0;
+diff --git a/kernel/sched/cputime.c b/kernel/sched/cputime.c
+index e0cd206..27b5406 100644
+--- a/kernel/sched/cputime.c
++++ b/kernel/sched/cputime.c
+@@ -912,11 +912,21 @@ void task_cputime(struct task_struct *t, u64 *utime, u64 *stime)
+ 	} while (read_seqcount_retry(&vtime->seqcount, seq));
+ }
  
- 	for_each_possible_cpu(i) {
--		curr_used += kcpustat_cpu(i).cpustat[CPUTIME_USER]
--			  +  kcpustat_cpu(i).cpustat[CPUTIME_NICE]
--			  +  kcpustat_field(&kcpustat_cpu(i), CPUTIME_SYSTEM, i)
--			  +  kcpustat_cpu(i).cpustat[CPUTIME_SOFTIRQ]
--			  +  kcpustat_cpu(i).cpustat[CPUTIME_IRQ];
-+		struct kernel_cpustat kcpustat;
++static u64 kcpustat_user_vtime(struct vtime *vtime)
++{
++	if (vtime->state == VTIME_USER)
++		return vtime->utime + vtime_delta(vtime);
++	else if (vtime->state == VTIME_GUEST)
++		return vtime->gtime + vtime_delta(vtime);
++	return 0;
++}
 +
-+		kcpustat_cpu_fetch(&kcpustat, i);
-+
-+		curr_used += kcpustat.cpustat[CPUTIME_USER]
-+			  +  kcpustat.cpustat[CPUTIME_NICE]
-+			  +  kcpustat.cpustat[CPUTIME_SYSTEM]
-+			  +  kcpustat.cpustat[CPUTIME_SOFTIRQ]
-+			  +  kcpustat.cpustat[CPUTIME_IRQ];
- 		cpus++;
- 	}
+ static int kcpustat_field_vtime(u64 *cpustat,
+-				struct vtime *vtime,
++				struct task_struct *tsk,
+ 				enum cpu_usage_stat usage,
+ 				int cpu, u64 *val)
+ {
++	struct vtime *vtime = &tsk->vtime;
+ 	unsigned int seq;
+ 	int err;
  
+@@ -946,9 +956,37 @@ static int kcpustat_field_vtime(u64 *cpustat,
+ 
+ 		*val = cpustat[usage];
+ 
+-		if (vtime->state == VTIME_SYS)
+-			*val += vtime->stime + vtime_delta(vtime);
+-
++		/*
++		 * Nice VS unnice cputime accounting may be inaccurate if
++		 * the nice value has changed since the last vtime update.
++		 * But proper fix would involve interrupting target on nice
++		 * updates which is a no go on nohz_full (although the scheduler
++		 * may still interrupt the target if rescheduling is needed...)
++		 */
++		switch (usage) {
++		case CPUTIME_SYSTEM:
++			if (vtime->state == VTIME_SYS)
++				*val += vtime->stime + vtime_delta(vtime);
++			break;
++		case CPUTIME_USER:
++			if (task_nice(tsk) <= 0)
++				*val += kcpustat_user_vtime(vtime);
++			break;
++		case CPUTIME_NICE:
++			if (task_nice(tsk) > 0)
++				*val += kcpustat_user_vtime(vtime);
++			break;
++		case CPUTIME_GUEST:
++			if (vtime->state == VTIME_GUEST && task_nice(tsk) <= 0)
++				*val += vtime->gtime + vtime_delta(vtime);
++			break;
++		case CPUTIME_GUEST_NICE:
++			if (vtime->state == VTIME_GUEST && task_nice(tsk) > 0)
++				*val += vtime->gtime + vtime_delta(vtime);
++			break;
++		default:
++			break;
++		}
+ 	} while (read_seqcount_retry(&vtime->seqcount, seq));
+ 
+ 	return 0;
+@@ -965,15 +1003,10 @@ u64 kcpustat_field(struct kernel_cpustat *kcpustat,
+ 	if (!vtime_accounting_enabled_cpu(cpu))
+ 		return cpustat[usage];
+ 
+-	/* Only support sys vtime for now */
+-	if (usage != CPUTIME_SYSTEM)
+-		return cpustat[usage];
+-
+ 	rq = cpu_rq(cpu);
+ 
+ 	for (;;) {
+ 		struct task_struct *curr;
+-		struct vtime *vtime;
+ 
+ 		rcu_read_lock();
+ 		curr = rcu_dereference(rq->curr);
+@@ -982,8 +1015,7 @@ u64 kcpustat_field(struct kernel_cpustat *kcpustat,
+ 			return cpustat[usage];
+ 		}
+ 
+-		vtime = &curr->vtime;
+-		err = kcpustat_field_vtime(cpustat, vtime, usage, cpu, &val);
++		err = kcpustat_field_vtime(cpustat, curr, usage, cpu, &val);
+ 		rcu_read_unlock();
+ 
+ 		if (!err)
