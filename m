@@ -2,123 +2,117 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD5A0C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 02:29:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3EC3C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 02:30:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E456206A4
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 02:29:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D92F20878
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 02:30:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726714AbfKUC3e (ORCPT
+        id S1726762AbfKUCaz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 21:29:34 -0500
-Received: from mga06.intel.com ([134.134.136.31]:29715 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725819AbfKUC3e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 21:29:34 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Nov 2019 18:29:33 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,224,1571727600"; 
-   d="scan'208";a="290164598"
-Received: from xsang-optiplex-9020.sh.intel.com (HELO xsang-OptiPlex-9020) ([10.239.159.135])
-  by orsmga001.jf.intel.com with ESMTP; 20 Nov 2019 18:29:31 -0800
-Date:   Thu, 21 Nov 2019 10:36:43 +0800
-From:   Oliver Sang <oliver.sang@intel.com>
-To:     Frederic Weisbecker <frederic@kernel.org>
-Cc:     kernel test robot <rong.a.chen@intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>, lkp@lists.01.org
-Subject: Re: [LKP] Re: [irq_work] feb4a51323: BUG:soft_lockup-CPU##stuck_for#s
-Message-ID: <20191121023643.GA8428@xsang-OptiPlex-9020>
-References: <20191112090357.GB30590@shao2-debian>
- <20191112144954.GD27917@lenoir>
+        Wed, 20 Nov 2019 21:30:55 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6260 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725819AbfKUCaz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 21:30:55 -0500
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 516E85B082EA019336F2;
+        Thu, 21 Nov 2019 10:14:08 +0800 (CST)
+Received: from [127.0.0.1] (10.67.103.228) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Thu, 21 Nov 2019
+ 10:14:02 +0800
+Subject: Re: [PATCH] serial: serial_core: Perform NULL checks for break_ctl
+ ops
+To:     Greg KH <gregkh@linuxfoundation.org>
+References: <1574263133-28259-1-git-send-email-xiaojiangfeng@huawei.com>
+ <20191120154235.GA3004157@kroah.com>
+CC:     <jslaby@suse.com>, <linux-serial@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <leeyou.li@huawei.com>,
+        <nixiaoming@huawei.com>, <zhangwen8@huawei.com>
+From:   Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+Message-ID: <35ac1c40-d2f4-f6dc-5e2f-f168a0a17c8b@huawei.com>
+Date:   Thu, 21 Nov 2019 10:14:02 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191112144954.GD27917@lenoir>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191120154235.GA3004157@kroah.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.103.228]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 12, 2019 at 03:49:55PM +0100, Frederic Weisbecker wrote:
-> On Tue, Nov 12, 2019 at 05:03:57PM +0800, kernel test robot wrote:
-> > FYI, we noticed the following commit (built with gcc-7):
-> > 
-> > commit: feb4a51323babe13315c3b783ea7f1cf25368918 ("irq_work: Slightly simplify IRQ_WORK_PENDING clearing")
-> > https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
-> > 
-> > in testcase: blktests
-> > with following parameters:
-> > 
-> > 	disk: 1SSD
-> > 	test: block-group1
-> > 
-> > 
-> > 
-> > on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 8G
-> > 
-> > caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
-> > 
-> > 
-> > +------------------------------------------------+------------+------------+
-> > |                                                | 25269871db | feb4a51323 |
-> > +------------------------------------------------+------------+------------+
-> > | boot_successes                                 | 5          | 0          |
-> > | boot_failures                                  | 0          | 10         |
-> > | BUG:soft_lockup-CPU##stuck_for#s               | 0          | 10         |
-> > | RIP:irq_work_sync                              | 0          | 10         |
-> > | Kernel_panic-not_syncing:softlockup:hung_tasks | 0          | 10         |
-> > +------------------------------------------------+------------+------------+
-> > 
-> > 
-> > If you fix the issue, kindly add following tag
-> > Reported-by: kernel test robot <rong.a.chen@intel.com>
-> > 
-> > 
-> > [   81.049506] watchdog: BUG: soft lockup - CPU#0 stuck for 22s! [blktrace:4948]
+On 2019/11/20 23:42, Greg KH wrote:
+> On Wed, Nov 20, 2019 at 11:18:53PM +0800, Jiangfeng Xiao wrote:
+>> Doing fuzz test on sbsa uart device, causes a kernel crash
+>> due to NULL pointer dereference:
+>>
+>> ------------[ cut here ]------------
+>> Unable to handle kernel paging request at virtual address fffffffffffffffc
+>> CPU: 2 PID: 2385 Comm: tty_fuzz_test Tainted: G           O    4.4.193 #1
+>> task: ffffffe32b23f110 task.stack: ffffffe32bda4000
+>> PC is at uart_break_ctl+0x44/0x84
+>> LR is at uart_break_ctl+0x34/0x84
+>> pc : [<ffffff8393196098>] lr : [<ffffff8393196088>] pstate: 80000005
+>> sp : ffffffe32bda7cc0
+>> [<ffffff8393196098>] uart_break_ctl+0x44/0x84
+>> [<ffffff8393177718>] send_break+0xa0/0x114
+>> [<ffffff8393179a1c>] tty_ioctl+0xc50/0xe84
+>> [<ffffff8392fa5a40>] do_vfs_ioctl+0xc4/0x6e8
+>> [<ffffff8392fa60cc>] SyS_ioctl+0x68/0x9c
+>> [<ffffff8392e02e78>] __sys_trace_return+0x0/0x4
+>> Code: b9410ea0 34000160 f9408aa0 f9402814 (b85fc280)
+>> ---[ end trace 8606094f1960c5e0 ]---
+>> Kernel panic - not syncing: Fatal exception
+>>
+>> Fix this problem by adding NULL checks prior to calling break_ctl ops.
+>>
+>> Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+>> ---
+>>  drivers/tty/serial/serial_core.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
+>> index c4a414a..b0a6eb1 100644
+>> --- a/drivers/tty/serial/serial_core.c
+>> +++ b/drivers/tty/serial/serial_core.c
+>> @@ -1111,7 +1111,7 @@ static int uart_break_ctl(struct tty_struct *tty, int break_state)
+>>  	if (!uport)
+>>  		goto out;
+>>  
+>> -	if (uport->type != PORT_UNKNOWN)
+>> +	if (uport->type != PORT_UNKNOWN && uport->ops->break_ctl)
 > 
-> Duh! Of course we are dealing with the value of flags before we cleared IRQ_WORK_PENDING
-> so later clearing IRQ_WORK_BUZY can't work.
-> 
+> What serial driver does not define break_ctl?
 
-Hi Frederic Weisbecker, has this patch submited or merged to some branches? Ask this because feb4a51323
-has already been merged to linux-next
+I'm using arm_sbsa_uart_platform_driver, and sbsa_uart_pops does not define break_ctl.
+I did a troubleshooting on the latest mainline 5.4-rc8 kernel.
+There are 7 uart_ops without defining break_ctl:
+./drivers/tty/serial/men_z135_uart.c:774:static const struct uart_ops men_z135_ops = {
+./drivers/tty/serial/amba-pl011.c:2173:static const struct uart_ops sbsa_uart_pops = {
+./drivers/tty/serial/owl-uart.c:464:static const struct uart_ops owl_uart_ops = {
+./drivers/tty/serial/meson_uart.c:430:static const struct uart_ops meson_uart_ops = {
+./drivers/tty/serial/qcom_geni_serial.c:1212:static const struct uart_ops qcom_geni_console_pops = {
+./drivers/tty/serial/qcom_geni_serial.c:1232:static const struct uart_ops qcom_geni_uart_pops = {
+./drivers/tty/serial/rda-uart.c:559:static const struct uart_ops rda_uart_ops = {
 
-> That would be the fix (cooking one with proper changelog):
-> 
-> diff --git a/kernel/irq_work.c b/kernel/irq_work.c
-> index 49c53f80a13a..8ee907eb4d83 100644
-> --- a/kernel/irq_work.c
-> +++ b/kernel/irq_work.c
-> @@ -158,6 +158,7 @@ static void irq_work_run_list(struct llist_head *list)
->  		 * Clear the BUSY bit and return to the free state if
->  		 * no-one else claimed it meanwhile.
->  		 */
-> +		flags ~= IRQ_WORK_PENDING;
->  		(void)atomic_cmpxchg(&work->flags, flags, flags & ~IRQ_WORK_BUSY);
->  	}
->  }
-> 
-> 
-> > [   81.055602] Modules linked in: scsi_debug loop intel_rapl_msr intel_rapl_common sr_mod cdrom crct10dif_pclmul crc32_pclmul bochs_drm crc32c_intel sd_mod sg ghash_clmulni_intel drm_vram_helper ata_generic pata_acpi ttm ppdev drm_kms_helper snd_pcm syscopyarea sysfillrect snd_timer aesni_intel snd sysimgblt fb_sys_fops ata_piix crypto_simd drm cryptd glue_helper libata soundcore pcspkr joydev serio_raw virtio_scsi i2c_piix4 parport_pc floppy parport ip_tables [last unloaded: scsi_debug]
-> > [   81.071683] CPU: 0 PID: 4948 Comm: blktrace Not tainted 5.4.0-rc7-00003-gfeb4a51323bab #1
-> > [   81.075435] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
-> > [   81.079031] RIP: 0010:irq_work_sync+0x4/0x10
-> _______________________________________________
-> LKP mailing list -- lkp@lists.01.org
-> To unsubscribe send an email to lkp-leave@lists.01.org
+> You are running with a bunch of "out-of-tree" drivers, perhaps one of
+> those needs to be fixed here instead?
+
+I carefully confirmed it again, the kernel crash was caused by arm_sbsa_uart_platform_driver which is "in-tree".
+
+There are two ways to fix this problem, one is to add a null pointer check,
+and the other is to define break_ctl for each uart_ops.
+I am a newbie on serial_core, so I don't know which way is more reasonable.
+
+Based on the principle of minimal change, I chose to add a null pointer check.
+
+Thank you for your review.
+
