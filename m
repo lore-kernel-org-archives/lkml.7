@@ -2,125 +2,154 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F02CC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 12:36:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C77C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 12:38:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49EA320855
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 12:36:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 594562089D
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 12:38:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="H7Gffehm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbfKUMgK (ORCPT
+        id S1726774AbfKUMiI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 07:36:10 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:17182 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726532AbfKUMgJ (ORCPT
+        Thu, 21 Nov 2019 07:38:08 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:37460 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726342AbfKUMiH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 07:36:09 -0500
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xALCWAGj133909
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 07:36:08 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wdfxu3yf5-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 07:36:08 -0500
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <hoeppner@linux.ibm.com>;
-        Thu, 21 Nov 2019 12:36:05 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 21 Nov 2019 12:36:02 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xALCa1GP46268858
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 21 Nov 2019 12:36:01 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3EC744C050;
-        Thu, 21 Nov 2019 12:36:01 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DC98B4C058;
-        Thu, 21 Nov 2019 12:36:00 +0000 (GMT)
-Received: from [9.152.212.204] (unknown [9.152.212.204])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 21 Nov 2019 12:36:00 +0000 (GMT)
-Subject: Re: [PATCH] dasd_fba: Display '00000000' for zero page when dumping
- sense
-To:     Hannes Reinecke <hare@suse.de>
-Cc:     Stefan Haberland <sth@linux.ibm.com>, linux-s390@vger.kernel.org,
-        Linux Kernel Mailinglist <linux-kernel@vger.kernel.org>,
-        Hannes Reinecke <hare@suse.com>,
-        Sebastian Parschauer <sparschauer@suse.de>
-References: <20191118111226.56666-1-hare@suse.de>
-From:   =?UTF-8?Q?Jan_H=c3=b6ppner?= <hoeppner@linux.ibm.com>
-Date:   Thu, 21 Nov 2019 13:36:00 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Thu, 21 Nov 2019 07:38:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=TXLU5lx1Bkxo3ywrxVI3JlMFn+Xwo+ncCfBlxFtyhyU=; b=H7GffehmG0T3CLTlYNJs8Zerl
+        vBvHd+/Y9VHhblQSJK0+3y3VxQVbjsnySzbA2VXp7pls9EPyj8FQBjeCXYuwkpXlvTB7x3+9A9jgQ
+        BTDz5w/5gaSpAHTz/+X0lkryVpqUplpR88jRos7wX7OmOdqmS9yrtno9n3t7/7oqI9EZX1xgJZnde
+        0urUc2hGCUFeToxnX/uCsrvABdvS9XC2EBLnKjHdqoa/njUrpXQfMj5fLoFa0x2Ux8uKXloDxAttu
+        9xNfk5LADrUoH9iufgkhoGWFyIR7tESo14eqUiOCqjtIbU0/4lJIkkETR9Y5mfLEG/d8sDELZQXdn
+        ips9IxP7g==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iXlin-0005qq-Qq; Thu, 21 Nov 2019 12:38:05 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 55B7E300565;
+        Thu, 21 Nov 2019 13:36:53 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 33847201DD6AF; Thu, 21 Nov 2019 13:38:04 +0100 (CET)
+Date:   Thu, 21 Nov 2019 13:38:04 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     YT Chang <yt.chang@mediatek.com>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
+        wsd_upstream@mediatek.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Subject: Re: [PATCH 1/1] sched: cfs_rq h_load might not update due to irq
+ disable
+Message-ID: <20191121123804.GR4097@hirez.programming.kicks-ass.net>
+References: <1574325009-10846-1-git-send-email-yt.chang@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <20191118111226.56666-1-hare@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19112112-0008-0000-0000-00000335AFD2
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19112112-0009-0000-0000-00004A54D8D4
-Message-Id: <d329f133-6ed7-0389-2c7f-64c6bdc364c5@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-21_02:2019-11-21,2019-11-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- phishscore=0 impostorscore=0 malwarescore=0 bulkscore=0 mlxlogscore=999
- clxscore=1011 spamscore=0 mlxscore=0 suspectscore=0 priorityscore=1501
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1911210115
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1574325009-10846-1-git-send-email-yt.chang@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/18/19 12:12 PM, Hannes Reinecke wrote:
-> When a discard I/O fails, dasd_fba_dump_sense() will crash as it
-> tries to print out the CCW, and failing to take into account that
-> for discard I/O we have only one data pointer, not one per sg.
-> As the data pointer will always point to the zero page this patch
-> replaces the data pointer output with '00000000' to avoid the crash.
+On Thu, Nov 21, 2019 at 04:30:09PM +0800, YT Chang wrote:
+> Syndrome:
 > 
-> Signed-off-by: Hannes Reinecke <hare@suse.com>
-> [sparschauer: replaced "ccw" with "act", "snprintf" with "sprintf"]
-> [sparschauer v2: added missing curly braces to for loops]
-> Signed-off-by: Sebastian Parschauer <sparschauer@suse.de>
+> Two CPUs might do idle balance in the same time.
+> One CPU does idle balance and pulls some tasks.
+> However before pick next task, ALL task are pulled back to other CPU.
+> That results in infinite loop in both CPUs.
+
+Can you easily reproduce this?
+
+> =========================================
+> code flow:
+> 
+> in pick_next_task_fair()
+> 
+> again:
+> 
+> if nr_running == 0
+> 	goto idle
+> pick next task
+> 	return
+> 
+> idle:
+> 	idle_balance
+>        /* pull some tasks from other CPU,
+>         * However other CPU are also do idle balance,
+> 	* and pull back these task */
+> 
+> 	go to again
+> 
+> =========================================
+> The result to pull ALL tasks back when the task_h_load
+> is incorrect and too low.
+
+Clearly you're not running a PREEMPT kernel, otherwise the break in
+detach_tasks() would've saved you, right?
+
+> static unsigned long task_h_load(struct task_struct *p)
+> {
+>         struct cfs_rq *cfs_rq = task_cfs_rq(p);
+> 
+> 	update_cfs_rq_h_load(cfs_rq);
+> 	return div64_ul(p->se.avg.load_avg_contrib * cfs_rq->h_load,
+> 			cfs_rq->runnable_load_avg + 1);
+> }
+> 
+> The cfs_rq->h_load is incorrect and might too small.
+> The original idea of cfs_rq::last_h_load_update will not
+> update cfs_rq::h_load more than once a jiffies.
+> When the Two CPUs pull each other in the pick_next_task_fair,
+> the irq disabled and result in jiffie not update.
+> (Other CPUs wait for runqueue lock locked by the two CPUs.
+> So, ALL CPUs are irq disabled.)
+
+This cannot be true; because the loop drops rq->lock, so other CPUs
+should have an opportunity to acquire the lock and make progress.
+
+> Solution:
+> cfs_rq h_load might not update due to irq disable
+> use sched_clock instead jiffies
+> 
+> Signed-off-by: YT Chang <yt.chang@mediatek.com>
 > ---
->  drivers/s390/block/dasd_fba.c | 21 ++++++++++++++++++---
->  1 file changed, 18 insertions(+), 3 deletions(-)
+>  kernel/sched/fair.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 83ab35e..231c53f 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -7578,9 +7578,11 @@ static void update_cfs_rq_h_load(struct cfs_rq *cfs_rq)
+>  {
+>  	struct rq *rq = rq_of(cfs_rq);
+>  	struct sched_entity *se = cfs_rq->tg->se[cpu_of(rq)];
+> -	unsigned long now = jiffies;
+> +	u64 now = sched_clock_cpu(cpu_of(rq));
+>  	unsigned long load;
+>  
+> +	now = now * HZ >> 30;
+> +
+>  	if (cfs_rq->last_h_load_update == now)
+>  		return;
+>  
 
-Hi Hannes,
-
-thanks for the patch. However,
-
-> diff --git a/drivers/s390/block/dasd_fba.c b/drivers/s390/block/dasd_fba.c
-> index cbb770824226..4b867bd6b164 100644
-> --- a/drivers/s390/block/dasd_fba.c
-> +++ b/drivers/s390/block/dasd_fba.c
-> @@ -717,10 +717,15 @@ dasd_fba_dump_sense(struct dasd_device *device, struct dasd_ccw_req * req,
->  			       " CCW %p: %08X %08X DAT:",
->  			       act, ((int *) act)[0], ((int *) act)[1]);
->  		for (count = 0; count < 32 && count < act->count;
-> -		     count += sizeof(int))
-> +		     count += sizeof(int)) {
-> +			if (act->flags & CCW_FLAG_SLI) {
-
-I'm not quite happy with the usage of CCW_FLAG_SLI here.
-We're currently looking into this issue in more detail to fully
-understand the problem.
-
-I'll let you know the outcome and possible improvements for the
-patch as soon as possible.
-
-regards,
-Jan
-
+This is disguisting and wrong. That is not the correct relation between
+sched_clock() and jiffies.
