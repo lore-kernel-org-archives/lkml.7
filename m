@@ -2,65 +2,157 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C27AC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:46:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68F04C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:49:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 110C62068D
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:46:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 400A4206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:49:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574369369;
+	bh=5De6lyHZUeIRTKocUVUZWotA5hsrs6wr64RApzhHGgI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=c61qHJ4OExh3vfHSEgRPaJCqq9B9b8cDjuZGCs12j4CpGebx/8B8QgzffY7Nwmp6G
+	 2mADOyyvAYDGZrShj6KHRX5wDKp+7rutwJCpc9HOBzXqrhN8C+fPCsBhxefNCaIbgo
+	 I0dHTa34PwxiCHp0YT/2LeC0l12k32o6e1wFOQo0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727008AbfKUUqH (ORCPT
+        id S1726822AbfKUUt2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 15:46:07 -0500
-Received: from winds.org ([68.75.195.9]:54434 "EHLO winds.org"
+        Thu, 21 Nov 2019 15:49:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726293AbfKUUqG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 15:46:06 -0500
-Received: by winds.org (Postfix, from userid 100)
-        id C91A110D2378; Thu, 21 Nov 2019 15:46:05 -0500 (EST)
-Received: from localhost (localhost [127.0.0.1])
-        by winds.org (Postfix) with ESMTP id C6A8E1063606;
-        Thu, 21 Nov 2019 15:46:05 -0500 (EST)
-Date:   Thu, 21 Nov 2019 15:46:05 -0500 (EST)
-From:   Byron Stanoszek <gandalf@winds.org>
-To:     Florian Westphal <fw@strlen.de>
-cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Paolo Abeni <pabeni@redhat.com>
-Subject: Re: [PATCH net] udp: drop skb extensions before marking skb
- stateless
-In-Reply-To: <20191121055623.20952-1-fw@strlen.de>
-Message-ID: <alpine.LNX.2.21.1.1911211544070.26591@winds.org>
-References: <20191121053031.GI20235@breakpoint.cc> <20191121055623.20952-1-fw@strlen.de>
-User-Agent: Alpine 2.21.1 (LNX 202 2017-01-01)
+        id S1726293AbfKUUt2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 15:49:28 -0500
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BD242068D;
+        Thu, 21 Nov 2019 20:49:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574369366;
+        bh=5De6lyHZUeIRTKocUVUZWotA5hsrs6wr64RApzhHGgI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=RxqRR/wsuytn/Fk9HzlloMcfWPyCmZvWj4q5D85e7WnL/HwjE6sSpXaCPt5ezzfHP
+         hx/jsG8D4t+dyh/UgLYDBunGpDfNo6DiRQO9HG1UlrYGlkIXA2O8vSBaqnwpANHKV9
+         Oqy0KvYY0UM3dpvN+VOgNPO9C1kXgK+k9Abhx2DU=
+Date:   Thu, 21 Nov 2019 14:49:24 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     Frederick Lawler <fred@fredlawl.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Rajat Jain <rajatja@google.com>, linux-pci@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Wong Vee Khee <vee.khee.wong@ni.com>,
+        Hui Chun Ong <hui.chun.ong@ni.com>,
+        Keith Busch <keith.busch@intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 4/5] PCI/ASPM: Add sysfs attributes for controlling
+ ASPM link states
+Message-ID: <20191121204924.GA81030@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b1c83f8a-9bf6-eac5-82d0-cf5b90128fbf@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 21 Nov 2019, Florian Westphal wrote:
+[+cc Rafael, Mika, Wong, Hui, Rajat, Keith, LKML, original patch at [5]]
 
-> Once udp stack has set the UDP_SKB_IS_STATELESS flag, later skb free
-> assumes all skb head state has been dropped already.
->
-> This will leak the extension memory in case the skb has extensions other
-> than the ipsec secpath, e.g. bridge nf data.
->
-> To fix this, set the UDP_SKB_IS_STATELESS flag only if we don't have
-> extensions or if the extension space can be free'd.
->
-> Fixes: 895b5c9f206eb7d25dc1360a ("netfilter: drop bridge nf reset from nf_reset")
-> Cc: Paolo Abeni <pabeni@redhat.com>
-> Reported-by: Byron Stanoszek <gandalf@winds.org>
-> Signed-off-by: Florian Westphal <fw@strlen.de>
+On Sat, Oct 05, 2019 at 02:07:56PM +0200, Heiner Kallweit wrote:
 
-I confirm that this fixes the memory leak on my systems. Thank you for the fast
-turnaround.
+> +What:		/sys/bus/pci/devices/.../link_pm/clkpm
+> +		/sys/bus/pci/devices/.../link_pm/l0s_aspm
+> +		/sys/bus/pci/devices/.../link_pm/l1_aspm
+> +		/sys/bus/pci/devices/.../link_pm/l1_1_aspm
+> +		/sys/bus/pci/devices/.../link_pm/l1_2_aspm
+> +		/sys/bus/pci/devices/.../link_pm/l1_1_pcipm
+> +		/sys/bus/pci/devices/.../link_pm/l1_2_pcipm
+> +Date:		October 2019
+> +Contact:	Heiner Kallweit <hkallweit1@gmail.com>
+> +Description:	If ASPM is supported for an endpoint, then these files
+> +		can be used to disable or enable the individual
+> +		power management states. Write y/1/on to enable,
+> +		n/0/off to disable.
 
-Regards,
-  -Byron
+This is queued up for the v5.5 merge window, so if we want to tweak
+anything (path names or otherwise), now is the time.
 
+I think I might be inclined to change the directory from "link_pm" to
+"link", e.g.,
+
+  - /sys/bus/pci/devices/0000:00:1c.0/link_pm/clkpm
+  + /sys/bus/pci/devices/0000:00:1c.0/link/clkpm
+
+because there are other things that haven't been merged yet that could
+go in link/ as well:
+
+  * Mika's "link disable" control [1]
+  * Dilip's link width/speed controls [2,3]
+
+The max_link_speed, max_link_width, current_link_speed,
+current_link_width files could also logically be in link/, although
+they've already been merged at the top level.
+
+Rajat's AER statistics change [4] is also coming.  Those stats aren't
+link-related, so they wouldn't go in link/.  The current strawman is
+an "aer_stats" directory, but I wonder if we should make a more
+generic directory like "errors" that could be used for both AER and
+DPC and potentially other error-related things.
+
+For example, we could have these link-related things:
+
+  /sys/.../0000:00:1c.0/link/clkpm            # RW ASPM stuff
+  /sys/.../0000:00:1c.0/link/l0s_aspm
+  /sys/.../0000:00:1c.0/link/...
+  /sys/.../0000:00:1c.0/link/disable          # RW Mika
+  /sys/.../0000:00:1c.0/link/speed            # RW Dilip's control
+  /sys/.../0000:00:1c.0/link/width            # RW Dilip's control
+  /sys/.../0000:00:1c.0/link/max_speed        # RO possible rework
+  /sys/.../0000:00:1c.0/link/max_width        # RO possible rework
+
+With these backwards compatibility symlinks:
+
+  /sys/.../0000:00:1c.0/max_link_speed     -> link/max_speed
+  /sys/.../0000:00:1c.0/current_link_speed -> link/speed
+
+Rajat's current patch puts the AER stats here at the top level:
+
+  /sys/.../0000:00:1c.0/aer_stats/fatal_bit4_DLP
+
+But maybe we could push them down like this:
+
+  /sys/.../0000:00:1c.0/errors/aer/stats/unc_04_dlp
+  /sys/.../0000:00:1c.0/errors/aer/stats/unc_26_poison_tlb_blocked
+  /sys/.../0000:00:1c.0/errors/aer/stats/cor_00_rx_err
+  /sys/.../0000:00:1c.0/errors/aer/stats/cor_15_hdr_log_overflow
+
+There are some AER-related things we don't have at all today that
+could go here:
+
+  /sys/.../0000:00:1c.0/errors/aer/ecrc_gen
+  /sys/.../0000:00:1c.0/errors/aer/ecrc_check
+  /sys/.../0000:00:1c.0/errors/aer/unc_err_status
+  /sys/.../0000:00:1c.0/errors/aer/unc_err_mask
+  /sys/.../0000:00:1c.0/errors/aer/unc_err_sev
+
+And we might someday want DPC knobs like this:
+
+  /sys/.../0000:00:1c.0/errors/dpc/status
+  /sys/.../0000:00:1c.0/errors/dpc/error_source
+
+Any thoughts?
+
+Bjorn
+
+[1] https://lore.kernel.org/r/20190529104942.74991-1-mika.westerberg@linux.intel.com
+[2] https://lore.kernel.org/r/d8574605f8e70f41ce1e88ccfb56b63c8f85e4df.1571638827.git.eswara.kota@linux.intel.com
+[3] https://lore.kernel.org/r/20191030221436.GA261632@google.com/
+[4] https://lore.kernel.org/r/20190827222145.32642-2-rajatja@google.com
+[5] https://lore.kernel.org/r/b1c83f8a-9bf6-eac5-82d0-cf5b90128fbf@gmail.com
