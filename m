@@ -2,105 +2,124 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86DECC43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:19:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ACEDC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:25:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 688BD20898
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:19:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 528AB20714
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:25:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tSu0Chpe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbfKULTW (ORCPT
+        id S1726593AbfKULZ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 06:19:22 -0500
-Received: from mx2.suse.de ([195.135.220.15]:60160 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726165AbfKULTW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 06:19:22 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 93A30B049;
-        Thu, 21 Nov 2019 11:19:19 +0000 (UTC)
-Received: by unicorn.suse.cz (Postfix, from userid 1000)
-        id 9A4A9E03A4; Thu, 21 Nov 2019 12:19:17 +0100 (CET)
-Date:   Thu, 21 Nov 2019 12:19:17 +0100
-From:   Michal Kubecek <mkubecek@suse.cz>
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Cc:     Joe Perches <joe@perches.com>, zhanglin <zhang.lin16@zte.com.cn>,
-        davem@davemloft.net, cocci <cocci@systeme.lip6.fr>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        jakub.kicinski@netronome.com, ast@kernel.org,
-        jiang.xuexin@zte.com.cn, f.fainelli@gmail.com,
-        daniel@iogearbox.net, john.fastabend@gmail.com,
-        lirongqing@baidu.com, maxime.chevallier@bootlin.com,
-        vivien.didelot@gmail.com, dan.carpenter@oracle.com,
-        wang.yi59@zte.com.cn, hawk@kernel.org, arnd@arndb.de,
-        jiri@mellanox.com, xue.zhihong@zte.com.cn,
-        natechancellor@gmail.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linyunsheng@huawei.com,
-        pablo@netfilter.org, bpf@vger.kernel.org
-Subject: Re: [Cocci] [PATCH] net: Zeroing the structure ethtool_wolinfo in
- ethtool_get_wol()
-Message-ID: <20191121111917.GE29650@unicorn.suse.cz>
-References: <1572076456-12463-1-git-send-email-zhang.lin16@zte.com.cn>
- <c790578751dd69fb1080b355f5847c9ea5fb0e15.camel@perches.com>
- <bc150c6a-6d3e-ff01-e40e-840e8a385bda@metux.net>
+        Thu, 21 Nov 2019 06:25:56 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:45280 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726165AbfKULZ4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 06:25:56 -0500
+Received: by mail-wr1-f68.google.com with SMTP id z10so3874647wrs.12;
+        Thu, 21 Nov 2019 03:25:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=cc:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=RKpyo00ROy+/Y9f0zH5fPZcKWCaV9OV4wE3z16JscDo=;
+        b=tSu0ChpeAMAQ10VqOMxc8zVD/kaE9h6EIIzrGQVkEe3spJp7L21DiXW2ZRpUnGPufM
+         s4QYhD2s3oiO8ywYgLdu/db1I9Co9bfPUoWmKoszt4aDEMbFbH3iwdJF17VKOyYfhnYz
+         qjeDt28kY4/wKjsfFQXJkfqTKRPoS5qrjqLxrde3gOUKYQHqG8o1iS3mCm8klOEy4xKj
+         4fWCULo+nSEvU9jTJm5EwXPTzQE9jaSmR9kBN1OMyo1uav93cR2QLAvXgbs0ULhpp9UK
+         PAUpnxUn1VbPF7IzOKQlN3TMg5X+P5SE/3w0jPGwHKxs19VAEfcEisGUTyqJHLJvJ2Y+
+         2HVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=RKpyo00ROy+/Y9f0zH5fPZcKWCaV9OV4wE3z16JscDo=;
+        b=AmcBE7XaFWdQ9F3JBNz4o9WBv2rnGPu5JrEorJhwySYYYQhqeMx1JUaI8QnO/jE0TT
+         dH19bSJavKqoHxjD4t5TozQupaqNM6IZpLbBOFt4CMYm/yNBND2fhNoggkLVv+dq5FFD
+         Rh6MamVbYJTVx69OP8XFWIV4wBDlg9ExuZZ+et8KMoamO7pM1LxQKJ3eICUCFh7NkhNH
+         Umb0jkH59zL5qOOQ3oUvWk8NsuDEWT+r4XZlrvxdWz9eWNj76nHH+2yOydyl9J22hrPb
+         SItf3Ii5o/t1ScGh0Fs8h4dDM9EfHRkYb6FD9mvTrYM9Xpn//1pr1lcXMpB9iqSEhXd/
+         udpw==
+X-Gm-Message-State: APjAAAU4yUtKkvHQgrygMbXXBBS8jrOIh7yNkidW+c/NjcNnkMdv1A/c
+        wZELj+3l7zD393jI/rxy79s=
+X-Google-Smtp-Source: APXvYqz0KjTFP/rlC8vO1RXEgHqmE4R/K2ICQOdQl0uoKyR7t4F2/a+yHbz7fDC3TmQQ7t4khbBAHg==
+X-Received: by 2002:a05:6000:150:: with SMTP id r16mr9674483wrx.313.1574335551966;
+        Thu, 21 Nov 2019 03:25:51 -0800 (PST)
+Received: from ?IPv6:2001:a61:3a4e:101:8d4d:f454:a7e5:543d? ([2001:a61:3a4e:101:8d4d:f454:a7e5:543d])
+        by smtp.gmail.com with ESMTPSA id i203sm2267610wma.35.2019.11.21.03.25.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 Nov 2019 03:25:51 -0800 (PST)
+Cc:     mtk.manpages@gmail.com, adrian@lisas.de, akpm@linux-foundation.org,
+        arnd@arndb.de, avagin@gmail.com, christian.brauner@ubuntu.com,
+        dhowells@redhat.com, fweimer@redhat.com, jannh@google.com,
+        keescook@chromium.org, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-man@vger.kernel.org,
+        mingo@elte.hu, oleg@redhat.com, xemul@virtuozzo.com
+Subject: Re: [PATCH] clone.2: Fix typo
+To:     Christian Brauner <christian@brauner.io>
+References: <20191121110646.1398-1-christian@brauner.io>
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Message-ID: <9218d76c-96ec-920c-7304-a9247fb6d05a@gmail.com>
+Date:   Thu, 21 Nov 2019 12:25:48 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bc150c6a-6d3e-ff01-e40e-840e8a385bda@metux.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191121110646.1398-1-christian@brauner.io>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 11:23:34AM +0100, Enrico Weigelt, metux IT consult wrote:
-> On 26.10.19 21:40, Joe Perches wrote:
-> > On Sat, 2019-10-26 at 15:54 +0800, zhanglin wrote:
-> >> memset() the structure ethtool_wolinfo that has padded bytes
-> >> but the padded bytes have not been zeroed out.
-> > []
-> >> diff --git a/net/core/ethtool.c b/net/core/ethtool.c
-> > []
-> >> @@ -1471,11 +1471,13 @@ static int ethtool_reset(struct net_device *dev, char __user *useraddr)
-> >>  
-> >>  static int ethtool_get_wol(struct net_device *dev, char __user *useraddr)
-> >>  {
-> >> -	struct ethtool_wolinfo wol = { .cmd = ETHTOOL_GWOL };
-> >> +	struct ethtool_wolinfo wol;
-> >>  
-> >>  	if (!dev->ethtool_ops->get_wol)
-> >>  		return -EOPNOTSUPP;
-> >>  
-> >> +	memset(&wol, 0, sizeof(struct ethtool_wolinfo));
-> >> +	wol.cmd = ETHTOOL_GWOL;
-> >>  	dev->ethtool_ops->get_wol(dev, &wol);
-> >>  
-> >>  	if (copy_to_user(useraddr, &wol, sizeof(wol)))
-> > 
-> > It seems likely there are more of these.
-> > 
-> > Is there any way for coccinelle to find them?
+Hi Christian,
+
+On 11/21/19 12:06 PM, Christian Brauner wrote:
+> From: Christian Brauner <christian.brauner@ubuntu.com>
 > 
-> Just curios: is static struct initialization (on stack) something that
-> should be avoided ? I've been under the impression that static
-> initialization allows thinner code and gives the compiler better chance
-> for optimizations.
+> This surely meant to say clone3() and not clone(3).
 
-Not in general. The (potential) problem here is that the structure has
-padding and it is as a whole (i.e. including the padding) copied to
-userspace. While I'm not aware of a compiler that wouldn't actually
-initialize the whole data block including the padding in this case, the
-C standard provides no guarantee about that so that to be sure we cannot
-leak leftover kernel data to userspace, we need to explicitly initialize
-the whole block.
+Thanks. Patch applied.
 
-If the structure is not going to be copied to userspace (or otherwise
-exposed), using the initializer is fully sufficient and looks cleaner.
+Cheers,
 
-Michal Kubecek
+Michael
+
+ 
+> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+> ---
+>  man2/clone.2 | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/man2/clone.2 b/man2/clone.2
+> index 382f6b791..e5ab2a096 100644
+> --- a/man2/clone.2
+> +++ b/man2/clone.2
+> @@ -252,7 +252,7 @@ argument supplied to
+>  lb lb lb
+>  l l l
+>  li li l.
+> -clone()	clone(3)	Notes
+> +clone()	clone3()	Notes
+>  	\fIcl_args\fP field
+>  flags & ~0xff	flags	For most flags; details below
+>  parent_tid	pidfd	See CLONE_PIDFD
+> 
+> base-commit: be479fdf027a3288e88d53dbe05ba76bf202776e
+> 
+Hi Christian,,
+
+-- 
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
