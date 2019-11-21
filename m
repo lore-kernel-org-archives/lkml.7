@@ -2,59 +2,260 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5426C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:04:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 194ECC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:06:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1FE12089D
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:04:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB64A20855
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:06:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="f81Mnilf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbfKUNEz (ORCPT
+        id S1726983AbfKUNGy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 08:04:55 -0500
-Received: from mga02.intel.com ([134.134.136.20]:45188 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726293AbfKUNEz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 08:04:55 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Nov 2019 05:04:54 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,224,1571727600"; 
-   d="scan'208";a="238169809"
-Received: from unknown (HELO [10.237.72.70]) ([10.237.72.70])
-  by fmsmga002.fm.intel.com with ESMTP; 21 Nov 2019 05:04:53 -0800
-Subject: Re: [PATCH 00/15] perf tools: Add support for AUX area sampling
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
-References: <20191115124225.5247-1-adrian.hunter@intel.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <c661b392-ae22-3303-daa3-46ab15bf5b74@intel.com>
-Date:   Thu, 21 Nov 2019 15:03:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 21 Nov 2019 08:06:54 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:28508 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726293AbfKUNGx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 08:06:53 -0500
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xALD2sic023372;
+        Thu, 21 Nov 2019 14:06:22 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=CZLchOtGzzjkcSU/Amhs8d3lsV5kVJY44jLWirDhTC0=;
+ b=f81Mnilf5iGhL2LVdhHNWiAXVKxuTj+fahFGZ0UGGF98dtC6xBdnPZ5VHJbLDz3yn+cy
+ RHyJ5BxJDsIBVzaIDnidRfHI4HBF4O9MKtavjH5uZeR/00DETFhqL5hnFdiKH77Z8DAq
+ Kl3O/VN9wZ9dZuIplkr47jsngG7jqv1/m+pquWGXP8KZ2TvTU7cskgJFLQZwx4Pr4QIq
+ zovQii3tRWUBj1lH/drLHLk1HsKaQLIrnJCnBNoNS1oL3FqD77F0w272F8R6K4YqtLPv
+ 876iSdjvLmYqMI/bfUWaFrZfh0kIXXk/pYSD7eRILyKuLF7n4/NT1hbfb8ujne9feRT4 9g== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2wa9uskdhk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 21 Nov 2019 14:06:22 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 48B83100039;
+        Thu, 21 Nov 2019 14:06:17 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2E59C2BEC5B;
+        Thu, 21 Nov 2019 14:06:17 +0100 (CET)
+Received: from localhost (10.75.127.49) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 21 Nov 2019 14:06:16
+ +0100
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <dwmw2@infradead.org>, <computersforpeace@gmail.com>,
+        <marek.vasut@gmail.com>, <miquel.raynal@bootlin.com>,
+        <richard@nod.at>, <vigneshr@ti.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <alexandre.torgue@st.com>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <linux-mtd@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Christophe Kerello <christophe.kerello@st.com>
+Subject: [PATCH] dt-bindings: mtd: Convert stm32 fmc2-nand bindings to json-schema
+Date:   Thu, 21 Nov 2019 14:06:15 +0100
+Message-ID: <20191121130615.13007-1-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
 MIME-Version: 1.0
-In-Reply-To: <20191115124225.5247-1-adrian.hunter@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.49]
+X-ClientProxiedBy: SFHDAG4NODE3.st.com (10.75.127.12) To SFHDAG3NODE3.st.com
+ (10.75.127.9)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-21_02:2019-11-21,2019-11-21 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/11/19 2:42 PM, Adrian Hunter wrote:
-> Hi
-> 
-> The kernel changes for AUX area sampling are now in tip, so here are the
-> tools' patches.
+Convert the STM32 fmc2-nand binding to DT schema format using json-schema
 
-Here is a branch containing the patches:
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+CC: Christophe Kerello <christophe.kerello@st.com>
+---
+ .../bindings/mtd/st,stm32-fmc2-nand.yaml           | 98 ++++++++++++++++++++++
+ .../devicetree/bindings/mtd/stm32-fmc2-nand.txt    | 61 --------------
+ 2 files changed, 98 insertions(+), 61 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml
+ delete mode 100644 Documentation/devicetree/bindings/mtd/stm32-fmc2-nand.txt
 
-	git://git.infradead.org/users/ahunter/linux-perf.git pt-sampling
+diff --git a/Documentation/devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml b/Documentation/devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml
+new file mode 100644
+index 000000000000..b059267f6d20
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mtd/st,stm32-fmc2-nand.yaml
+@@ -0,0 +1,98 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mtd/st,stm32-fmc2-nand.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: STMicroelectronics Flexible Memory Controller 2 (FMC2) Bindings
++
++maintainers:
++  - Christophe Kerello <christophe.kerello@st.com>
++
++allOf:
++  - $ref: "nand-controller.yaml#"
++
++properties:
++  compatible:
++    const: st,stm32mp15-fmc2
++
++  reg:
++    items:
++      - description: Registers
++      - description: Chip select 0 data
++      - description: Chip select 0 command
++      - description: Chip select 0 address space
++      - description: Chip select 1 data
++      - description: Chip select 1 command
++      - description: Chip select 1 address space
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  resets:
++    maxItems: 1
++
++  dmas:
++    items:
++      - description: tx DMA channel
++      - description: rx DMA channel
++      - description: ecc DMA channel
++
++  dma-names:
++    items:
++      - const: tx
++      - const: rx
++      - const: ecc
++
++patternProperties:
++  "^nand@[a-f0-9]$":
++    type: object
++    properties:
++      nand-ecc-step-size:
++        const: 512
++
++      nand-ecc-strength:
++        enum: [1, 4 ,8 ]
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/clock/stm32mp1-clks.h>
++    #include <dt-bindings/reset/stm32mp1-resets.h>
++    nand-controller@58002000 {
++      compatible = "st,stm32mp15-fmc2";
++      reg = <0x58002000 0x1000>,
++            <0x80000000 0x1000>,
++            <0x88010000 0x1000>,
++            <0x88020000 0x1000>,
++            <0x81000000 0x1000>,
++            <0x89010000 0x1000>,
++            <0x89020000 0x1000>;
++            interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
++            dmas = <&mdma1 20 0x10 0x12000a02 0x0 0x0>,
++                   <&mdma1 20 0x10 0x12000a08 0x0 0x0>,
++                   <&mdma1 21 0x10 0x12000a0a 0x0 0x0>;
++            dma-names = "tx", "rx", "ecc";
++            clocks = <&rcc FMC_K>;
++            resets = <&rcc FMC_R>;
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      nand@0 {
++        reg = <0>;
++        nand-on-flash-bbt;
++        #address-cells = <1>;
++        #size-cells = <1>;
++      };
++    };
++
++...
+diff --git a/Documentation/devicetree/bindings/mtd/stm32-fmc2-nand.txt b/Documentation/devicetree/bindings/mtd/stm32-fmc2-nand.txt
+deleted file mode 100644
+index e55895e8dae4..000000000000
+--- a/Documentation/devicetree/bindings/mtd/stm32-fmc2-nand.txt
++++ /dev/null
+@@ -1,61 +0,0 @@
+-STMicroelectronics Flexible Memory Controller 2 (FMC2)
+-NAND Interface
+-
+-Required properties:
+-- compatible: Should be one of:
+-              * st,stm32mp15-fmc2
+-- reg: NAND flash controller memory areas.
+-       First region contains the register location.
+-       Regions 2 to 4 respectively contain the data, command,
+-       and address space for CS0.
+-       Regions 5 to 7 contain the same areas for CS1.
+-- interrupts: The interrupt number
+-- pinctrl-0: Standard Pinctrl phandle (see: pinctrl/pinctrl-bindings.txt)
+-- clocks: The clock needed by the NAND flash controller
+-
+-Optional properties:
+-- resets: Reference to a reset controller asserting the FMC controller
+-- dmas: DMA specifiers (see: dma/stm32-mdma.txt)
+-- dma-names: Must be "tx", "rx" and "ecc"
+-
+-* NAND device bindings:
+-
+-Required properties:
+-- reg: describes the CS lines assigned to the NAND device.
+-
+-Optional properties:
+-- nand-on-flash-bbt: see nand-controller.yaml
+-- nand-ecc-strength: see nand-controller.yaml
+-- nand-ecc-step-size: see nand-controller.yaml
+-
+-The following ECC strength and step size are currently supported:
+- - nand-ecc-strength = <1>, nand-ecc-step-size = <512> (Hamming)
+- - nand-ecc-strength = <4>, nand-ecc-step-size = <512> (BCH4)
+- - nand-ecc-strength = <8>, nand-ecc-step-size = <512> (BCH8) (default)
+-
+-Example:
+-
+-	fmc: nand-controller@58002000 {
+-		compatible = "st,stm32mp15-fmc2";
+-		reg = <0x58002000 0x1000>,
+-		      <0x80000000 0x1000>,
+-		      <0x88010000 0x1000>,
+-		      <0x88020000 0x1000>,
+-		      <0x81000000 0x1000>,
+-		      <0x89010000 0x1000>,
+-		      <0x89020000 0x1000>;
+-		interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&rcc FMC_K>;
+-		resets = <&rcc FMC_R>;
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&fmc_pins_a>;
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-
+-		nand@0 {
+-			reg = <0>;
+-			nand-on-flash-bbt;
+-			#address-cells = <1>;
+-			#size-cells = <1>;
+-		};
+-	};
+-- 
+2.15.0
+
