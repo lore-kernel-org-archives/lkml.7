@@ -2,97 +2,163 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A09C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:48:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EDCEC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:49:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA6A2206D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:48:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58040206D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:49:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WdAFI0OR"
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="Usv5MI1N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726922AbfKUOst (ORCPT
+        id S1726980AbfKUOtc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 09:48:49 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:46601 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726379AbfKUOss (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 09:48:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574347727;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=vBwingZgYTW82TS3d0tJl0goOomstXZnkfoRxFBHZCI=;
-        b=WdAFI0ORqDnlMqkMvA2jZd58zx/zDb7fhnRddLjQ2naQajGXv8UCSo+YE2bkHZkxMFDucD
-        +/MsvDsJJXuC93b0K/+/6QQTXZDaN9ciaKV0DPvBC3783/9U4OBzFHpyWb2Bpio2Jez9Yi
-        E4arRkUSST8wDJYV6sZH9lBvvMb49dU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-183-eeECgZNrMhGjSDmNcxSs8g-1; Thu, 21 Nov 2019 09:48:46 -0500
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C6B111883524;
-        Thu, 21 Nov 2019 14:48:43 +0000 (UTC)
-Received: from suzdal.zaitcev.lan (ovpn-117-3.phx2.redhat.com [10.3.117.3])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8B32B60BDA;
-        Thu, 21 Nov 2019 14:48:42 +0000 (UTC)
-Date:   Thu, 21 Nov 2019 08:48:42 -0600
-From:   Pete Zaitcev <zaitcev@redhat.com>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     syzbot <syzbot+56f9673bb4cdcbeb0e92@syzkaller.appspotmail.com>,
-        <arnd@arndb.de>, <gregkh@linuxfoundation.org>,
-        <jrdr.linux@gmail.com>, <keescook@chromium.org>,
-        <kstewart@linuxfoundation.org>,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        <syzkaller-bugs@googlegroups.com>, <tglx@linutronix.de>,
-        <viro@zeniv.linux.org.uk>, zaitcev@redhat.com
-Subject: Re: possible deadlock in mon_bin_vma_fault
-Message-ID: <20191121084842.095edf87@suzdal.zaitcev.lan>
-In-Reply-To: <Pine.LNX.4.44L0.1911201343580.1498-100000@iolanthe.rowland.org>
-References: <20191120111235.7d306f23@suzdal.zaitcev.lan>
-        <Pine.LNX.4.44L0.1911201343580.1498-100000@iolanthe.rowland.org>
-Organization: Red Hat, Inc.
-MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-MC-Unique: eeECgZNrMhGjSDmNcxSs8g-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
+        Thu, 21 Nov 2019 09:49:32 -0500
+Received: from mail-eopbgr770072.outbound.protection.outlook.com ([40.107.77.72]:12097
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726293AbfKUOtb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 09:49:31 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BBkI4vunlT1Qd5Yr9bgqgMd2IpVPHq/4qF7UqQN1qVRJ64YByizjtX/ebHIPkJzEg1Ezkd5nWO3m0yi0/BEpiedBZmTG6fAmvpulQH6Adk2rgyazx5FRVXiotQSgTDK5xrsWmlIQX7sobZPyxlF6m5wT6CmquMToSIzESX3c7ba8rEpQnnX8+987ItgeNNXA8ZMGIhO4ePMrs8fdv2A3lpgMhyPuW577hNhswBqgFP5AynpQQkhBb1WDceU5p7Dy2Z2YYaFt/QHGBrYwqWh8qp7oxRTK8Pr/7jzY1IozG7/1kad8Pf62sKTzbmjqBUvuO/nqXapblwVATe2rFSlBGQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=N9vS1KIYVvEOfpH2Fg5Ht25laCoL7MvW+J/8IT+g1zI=;
+ b=LeMMER0BQcNqbuX9FnjfY/cmW1RxUMjxT7FBOEEXKQ1qCremPJnm5jMn6CpWv9JJkGpjH+SKK6qvvg/8nyCpM3qiDO+50utCBesxju3QoSrSeRt59e/7h0+Gnuh24en9kZrQFQYtMPkn9267wsjQSnXtFYQdCJ89DRg8EvIvbC+2as80x9iB+Y+JM6F6tLePxUu3KaLFIiQPAaGDJTI3RCTIn8M+qObY8xqFslhUhvqXVskjH/Ds/B1Q4wWGQfiyEHLjYf9K1wTTqdp/sEeOGZD2eF927VGLFoZBb4fFf43GokxTJZTdVsynDB9V0K2YEA4+aYRqm805x7YTHZnKpg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
+ dkim=pass header.d=vmware.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=N9vS1KIYVvEOfpH2Fg5Ht25laCoL7MvW+J/8IT+g1zI=;
+ b=Usv5MI1Ngg2ZVerUC632g1e2H5QAtlVUks8OA8DcgHS+QygeovJQwUNqIhXFTefXc7eQqmaLjxDn+FQfgJ9D/y7I3gnKojQbZFcNhXmy2oxEP4yYPaWs0kqecGYFNAj0Ls+xH7hFsD+4hlhIFi48fVAeqRxzc7hTHd/va6Vbdmk=
+Received: from MWHPR05MB3376.namprd05.prod.outlook.com (10.174.175.149) by
+ MWHPR05MB2990.namprd05.prod.outlook.com (10.168.246.146) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2474.12; Thu, 21 Nov 2019 14:49:25 +0000
+Received: from MWHPR05MB3376.namprd05.prod.outlook.com
+ ([fe80::4098:2c39:d8d3:a209]) by MWHPR05MB3376.namprd05.prod.outlook.com
+ ([fe80::4098:2c39:d8d3:a209%7]) with mapi id 15.20.2474.015; Thu, 21 Nov 2019
+ 14:49:25 +0000
+From:   Jorgen Hansen <jhansen@vmware.com>
+To:     'Stefano Garzarella' <sgarzare@redhat.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC:     "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: RE: [PATCH net-next 2/6] vsock: add VMADDR_CID_LOCAL definition
+Thread-Topic: [PATCH net-next 2/6] vsock: add VMADDR_CID_LOCAL definition
+Thread-Index: AQHVnsi5Wq8LW+X9eEusiPvX4m8fNqeVt8Jw
+Date:   Thu, 21 Nov 2019 14:49:25 +0000
+Message-ID: <MWHPR05MB33764A74EC512852DF16C6C9DA4E0@MWHPR05MB3376.namprd05.prod.outlook.com>
+References: <20191119110121.14480-1-sgarzare@redhat.com>
+ <20191119110121.14480-3-sgarzare@redhat.com>
+In-Reply-To: <20191119110121.14480-3-sgarzare@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jhansen@vmware.com; 
+x-originating-ip: [208.91.2.1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3f7775d0-d2e5-4973-12e3-08d76e92011e
+x-ms-traffictypediagnostic: MWHPR05MB2990:
+x-microsoft-antispam-prvs: <MWHPR05MB29908DA2B671604018191DA3DA4E0@MWHPR05MB2990.namprd05.prod.outlook.com>
+x-vmwhitelist: True
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0228DDDDD7
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(366004)(39860400002)(396003)(136003)(376002)(189003)(199004)(305945005)(99286004)(14454004)(81166006)(81156014)(8676002)(8936002)(71200400001)(71190400001)(7736002)(86362001)(74316002)(6436002)(33656002)(4326008)(478600001)(66476007)(66556008)(64756008)(52536014)(76116006)(66946007)(110136005)(54906003)(11346002)(446003)(25786009)(5660300002)(66446008)(7696005)(6506007)(102836004)(9686003)(76176011)(55016002)(186003)(26005)(316002)(229853002)(66066001)(6246003)(256004)(2906002)(2501003)(6116002)(3846002);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR05MB2990;H:MWHPR05MB3376.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: c1ZRHmRk62P4wHssWTA3SE6TE8iBQ2wrZ5xsxzfHxyx5ZKYe4wI5+fCSnFasnSH/b7dItCtgruyYEqVwNm2Rpk924nUR4bh0eKHWdCH7es6kthmMJ3PUCVHsXO3odvY6hHHzub3IomMra0j1mY+jtR2quZxvDgD8/GQuBtl1M+TPKjug9IVuaIvADdFDADzE1lisasXZE6ZoWAiHwJ7qyjtTpsSPcE+xHxguo9toqb02gKJfd+ggqajoVlV7yEdTBRZL0aLC8IRkiUWxnCru2Lm3brog/np266eJ6C9GilHQiwtUvmBgEi6sKYkR+dWoQVqHC8Is2jTDZ5oYJm4sXBmjqSfiXFideWx+Z2cwnHLIoy6aXHxgM/4wMpGTjD4hpQ/vs+eiOry9DgKyHblVtZkHZ56Q4euUmOBYyQbyC4c7me40JTJzn1R03jUnODen
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3f7775d0-d2e5-4973-12e3-08d76e92011e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Nov 2019 14:49:25.7374
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 5MjEIS0NKvSM3ypAzaNdgbgn9vAxvKEc7ABk+OPElAHMwxqEd/94RkKc/mjgaBEd1ei9M81lxkcCAXU/hN0Mhg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR05MB2990
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 20 Nov 2019 13:47:00 -0500 (EST)
-Alan Stern <stern@rowland.harvard.edu> wrote:
+> From: Stefano Garzarella [mailto:sgarzare@redhat.com]
+> Sent: Tuesday, November 19, 2019 12:01 PM
+>=20
+> The VMADDR_CID_RESERVED (1) was used by VMCI, but now it is not
+> used anymore, so we can reuse it for local communication
+> (loopback) adding the new well-know CID: VMADDR_CID_LOCAL.
+>=20
+> Cc: Jorgen Hansen <jhansen@vmware.com>
+> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+> ---
+>  include/uapi/linux/vm_sockets.h | 8 +++++---
+>  net/vmw_vsock/vmci_transport.c  | 2 +-
+>  2 files changed, 6 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/include/uapi/linux/vm_sockets.h
+> b/include/uapi/linux/vm_sockets.h
+> index 68d57c5e99bc..fd0ed7221645 100644
+> --- a/include/uapi/linux/vm_sockets.h
+> +++ b/include/uapi/linux/vm_sockets.h
+> @@ -99,11 +99,13 @@
+>=20
+>  #define VMADDR_CID_HYPERVISOR 0
+>=20
+> -/* This CID is specific to VMCI and can be considered reserved (even VMC=
+I
+> - * doesn't use it anymore, it's a legacy value from an older release).
+> +/* Use this as the destination CID in an address when referring to the
+> + * local communication (loopback).
+> + * (This was VMADDR_CID_RESERVED, but even VMCI doesn't use it
+> anymore,
+> + * it was a legacy value from an older release).
+>   */
+>=20
+> -#define VMADDR_CID_RESERVED 1
+> +#define VMADDR_CID_LOCAL 1
+>=20
+>  /* Use this as the destination CID in an address when referring to the h=
+ost
+>   * (any process other than the hypervisor).  VMCI relies on it being 2, =
+but
+> diff --git a/net/vmw_vsock/vmci_transport.c
+> b/net/vmw_vsock/vmci_transport.c
+> index 644d32e43d23..4b8b1150a738 100644
+> --- a/net/vmw_vsock/vmci_transport.c
+> +++ b/net/vmw_vsock/vmci_transport.c
+> @@ -648,7 +648,7 @@ static int vmci_transport_recv_dgram_cb(void *data,
+> struct vmci_datagram *dg)
+>  static bool vmci_transport_stream_allow(u32 cid, u32 port)
+>  {
+>  	static const u32 non_socket_contexts[] =3D {
+> -		VMADDR_CID_RESERVED,
+> +		VMADDR_CID_LOCAL,
+>  	};
+>  	int i;
+>=20
+> --
+> 2.21.0
 
-> > +               if (rp->mmap_active)
-> > +                       return -EBUSY;
-
-> Like that, yes, but the test has to be made while fetch_lock is held. =20
-
-Certainly, thanks. I was rushing just to add a postscriptum.
-
-> Incidentally, the comment for fetch_lock says that it protects b_read=20
-> and b_out, but mon_bin_vma_fault doesn't use either of those fields.
-
-I probably should change that comment to "protect the integrity of the
-circular buffer, such as b_out".
-
-Anyway... If you are looking at it too, what do you think about not using
-any locks in mon_bin_vma_fault() at all? Isn't it valid? I think I tried
-to be "safe", but it only uses things that are constants unless we're
-opening and closing; a process cannot make page faults unless it has
-some thing mapped; and that is only possible if device is open and stays
-open. Can you find a hole in this reasoning?
-
--- Pete
+Reviewed-by: Jorgen Hansen <jhansen@vmware.com>
 
