@@ -2,194 +2,259 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10680C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 22:36:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A225C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 22:39:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEDA720692
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 22:36:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="n7kt5gyB"
+	by mail.kernel.org (Postfix) with ESMTP id 47B1A206DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 22:39:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574375978;
+	bh=xcU6fTgxdLv74kpFN8DKv/pBAvjj9RMTpVs/XF/lOLk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=oAqFQmh2jrmExj9EOSR3kZT5gcsB6YftQU+kBYn6mYRTIxHFUXWmz0IGVGjOJmc0s
+	 iDReghPYqfgVmktu2jORqFWQUzcYFeVP2QCHZ+UFTooihGOD8UJCWBBiSzYSjNw7Fc
+	 Z5qn6AR4XOBV803TGFnpXk/BfzY8PY8wxC1DmECU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726541AbfKUWgi (ORCPT
+        id S1726655AbfKUWjh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 17:36:38 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:32933 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725956AbfKUWgi (ORCPT
+        Thu, 21 Nov 2019 17:39:37 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:42297 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725936AbfKUWjg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 17:36:38 -0500
-Received: by mail-lf1-f65.google.com with SMTP id d6so3976004lfc.0
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 14:36:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=S2Jylx8PFuLRy2WCWeEwRvTNTPuu/3y4ij0pIDLCdHk=;
-        b=n7kt5gyBx7+CfN0u3awNWs09SUh4HqDtQ8C4yhDsqMjUifowUL/yemrQXqXtFZ+d6m
-         vWN75RfzO6X5Vi1k/t5gVnaXMOOqjcVAjMjfMwCo7tlh0mlA3FTuNdtRrDHqX/wJMjKN
-         yxEKySDdIRP22OyQXOvLPnKVuV6mSP7IPd8C4=
+        Thu, 21 Nov 2019 17:39:36 -0500
+Received: by mail-oi1-f195.google.com with SMTP id o12so4742726oic.9;
+        Thu, 21 Nov 2019 14:39:35 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=S2Jylx8PFuLRy2WCWeEwRvTNTPuu/3y4ij0pIDLCdHk=;
-        b=rR00/TK3TqQecLyeVS0RTFAi7QPiWWALog510HXJbz2ZiBcFDng+raQvy3fDgnyOAI
-         Ggxe/9uf5ooZWWAl/qYcLNX7ig2p5RKcJuWI/l8f9EJUWNKtyTlo2NcJ3g4DYSo9b81U
-         WtUjL3AujomcYYggvdCGz/c5qJGQJ54gNu26f5kDGLWbSpENUuiKa4K/8ptGU1mez2iR
-         1wy8CO+E3MOTFsQo7Ozwa+0iXYSN+zibr2LhZ6ZjOy/OVONzgKZ9edY0vFiabJolnUwi
-         cRb4K1hon3XuEWuMvTquRetVnpbV2LppN5nTzYsgcLA0n8xG/W697nb01S9MLoflErBR
-         z0sA==
-X-Gm-Message-State: APjAAAWGZdaG1o6p6+nv1x20lFg+GzZgw/Ghp8FZI3Dfy4GoTCcIdmrM
-        MTjJ81LU6xRQ91+tHt007N26BPsKZgw=
-X-Google-Smtp-Source: APXvYqxyqzzEAnvuLFxHUY2mnO/oz022VjTNktFLjCb2CjTjG/qj3LmgZNQw+CRp7pF7ICXYygqUxg==
-X-Received: by 2002:a19:5211:: with SMTP id m17mr10072036lfb.126.1574375794762;
-        Thu, 21 Nov 2019 14:36:34 -0800 (PST)
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com. [209.85.167.42])
-        by smtp.gmail.com with ESMTPSA id o10sm2167946lfn.64.2019.11.21.14.36.33
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 Nov 2019 14:36:33 -0800 (PST)
-Received: by mail-lf1-f42.google.com with SMTP id a17so3905826lfi.13
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 14:36:33 -0800 (PST)
-X-Received: by 2002:ac2:4945:: with SMTP id o5mr9307426lfi.93.1574375792616;
- Thu, 21 Nov 2019 14:36:32 -0800 (PST)
+        bh=NLYFavhbkkDdG7LcuO9ziHs6bI5bNJfLd6u9oodoong=;
+        b=Jpcxp9yieJmnRKxStqVTe6kjKzrlKwUt4eoqY1SFjfqJ0xCAOuU1CPVGL1Sb/DCRQc
+         a/fkpcCKaxmyPXexNq4xPxf9pxrZgt9+jNBRGVgiYt8sjIBW0AhzYknlNkfNMQfLs47/
+         lXZyWKD23m5oEMju8Qf8kcsUQ/Ly2NXZ+cYeFGS+4NHFSCDu0nqiqPLe+LITKdQkTwNS
+         OdpH86thLzdFJFJB1Mc6xuQJo27DC3h3pbMWYEZaTHJPKjDcYIvJwUuhEz4PYIuPR0MY
+         OgtiQ3AyPhUF+zy09AMxKW1QHIQWUJt0/qGfo2ghIsYyata+dEfOMeQoyfr492POZZWU
+         rAYA==
+X-Gm-Message-State: APjAAAWvrSilWtmoPdFrx7aG4UwGyaSZqQe5GvxSrY+dGL8rziaasQfh
+        larP8cKEkXEnbJct7qOmO6K3suXnavhluk+C87E=
+X-Google-Smtp-Source: APXvYqwECneoBISM2Y2vnLNkW0AoWS0hC1bkpTThuacStQrgW7498tAQSgqzADmzbsGZl1KXqCv/A9FOuenN8aBy2rk=
+X-Received: by 2002:aca:530c:: with SMTP id h12mr10122483oib.110.1574375975225;
+ Thu, 21 Nov 2019 14:39:35 -0800 (PST)
 MIME-Version: 1.0
-References: <20191114235008.185111-1-evgreen@chromium.org> <20191114154903.v7.2.I4d476bddbf41a61422ad51502f4361e237d60ad4@changeid>
- <20191120022518.GU6235@magnolia> <CAE=gft4mjKc4QKFKxp2FX9G2rUMuE3_eDuW_3Oq7NqTYBQwEjg@mail.gmail.com>
- <20191120191302.GV6235@magnolia> <CAE=gft6x1TmkkNTj+gktYMkHcysYyuYL50cavYusQ7hd9zChvA@mail.gmail.com>
- <20191120194507.GW6235@magnolia> <CAE=gft4OcxPP7srBe_2bj8K_0jHGD8Ae_PbV1Rq-Nz4F8GtkQA@mail.gmail.com>
- <20191121212512.GA2981917@magnolia>
-In-Reply-To: <20191121212512.GA2981917@magnolia>
-From:   Evan Green <evgreen@chromium.org>
-Date:   Thu, 21 Nov 2019 14:35:56 -0800
-X-Gmail-Original-Message-ID: <CAE=gft4uLmLKexyCdRi2N8iJxzuBMXW-rcw+ob_pxBfyLVNijg@mail.gmail.com>
-Message-ID: <CAE=gft4uLmLKexyCdRi2N8iJxzuBMXW-rcw+ob_pxBfyLVNijg@mail.gmail.com>
-Subject: Re: [PATCH v7 2/2] loop: Better discard support for block devices
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Martin K Petersen <martin.petersen@oracle.com>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Ming Lei <ming.lei@redhat.com>,
-        Alexis Savery <asavery@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        linux-block <linux-block@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <CACO55tvo3rbPtYJcioEgXCEQqVXcVAm-iowr9Nim=bgTdMjgLw@mail.gmail.com>
+ <20191120155301.GL11621@lahna.fi.intel.com> <CAJZ5v0hkT-fHFOQKzp2qYPyR+NUa4c-G-uGLPZuQxqsG454PiQ@mail.gmail.com>
+ <CACO55ttTPi2XpRRM_NYJU5c5=OvG0=-YngFy1BiR8WpHkavwXw@mail.gmail.com>
+ <CAJZ5v0h=7zu3A+ojgUSmwTH0KeXmYP5OKDL__rwkkWaWqcJcWQ@mail.gmail.com>
+ <20191121112821.GU11621@lahna.fi.intel.com> <CAJZ5v0hQhj5Wf+piU11abC4pF26yM=XHGHAcDv8Jsgdx04aN-w@mail.gmail.com>
+ <20191121114610.GW11621@lahna.fi.intel.com> <20191121125236.GX11621@lahna.fi.intel.com>
+ <CAJZ5v0iMwhudB7O0hR-6KfRfa+_iGOY=t0Zzeh6+9OiTzeYJfA@mail.gmail.com> <20191121194942.GY11621@lahna.fi.intel.com>
+In-Reply-To: <20191121194942.GY11621@lahna.fi.intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 21 Nov 2019 23:39:23 +0100
+Message-ID: <CAJZ5v0gyna0b135uxBVfNXgB9v-U9-93EYe0uzsr2BukJ9OtuA@mail.gmail.com>
+Subject: Re: [PATCH v4] pci: prevent putting nvidia GPUs into lower device
+ states on certain intel bridges
+To:     Mika Westerberg <mika.westerberg@intel.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Karol Herbst <kherbst@redhat.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lyude Paul <lyude@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        Dave Airlie <airlied@gmail.com>,
+        Mario Limonciello <Mario.Limonciello@dell.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 1:25 PM Darrick J. Wong <darrick.wong@oracle.com> wrote:
+On Thu, Nov 21, 2019 at 8:49 PM Mika Westerberg
+<mika.westerberg@intel.com> wrote:
 >
-> On Thu, Nov 21, 2019 at 01:18:51PM -0800, Evan Green wrote:
-> > On Wed, Nov 20, 2019 at 11:45 AM Darrick J. Wong
-> > <darrick.wong@oracle.com> wrote:
+> On Thu, Nov 21, 2019 at 04:43:24PM +0100, Rafael J. Wysocki wrote:
+> > On Thu, Nov 21, 2019 at 1:52 PM Mika Westerberg
+> > <mika.westerberg@intel.com> wrote:
 > > >
-> > > On Wed, Nov 20, 2019 at 11:25:48AM -0800, Evan Green wrote:
-> > > > On Wed, Nov 20, 2019 at 11:13 AM Darrick J. Wong
-> > > > <darrick.wong@oracle.com> wrote:
-> > > > >
-> > > > > On Wed, Nov 20, 2019 at 10:56:30AM -0800, Evan Green wrote:
-> > > > > > On Tue, Nov 19, 2019 at 6:25 PM Darrick J. Wong <darrick.wong@oracle.com> wrote:
+> > > On Thu, Nov 21, 2019 at 01:46:14PM +0200, Mika Westerberg wrote:
+> > > > On Thu, Nov 21, 2019 at 12:34:22PM +0100, Rafael J. Wysocki wrote:
+> > > > > On Thu, Nov 21, 2019 at 12:28 PM Mika Westerberg
+> > > > > <mika.westerberg@intel.com> wrote:
+> > > > > >
+> > > > > > On Wed, Nov 20, 2019 at 11:29:33PM +0100, Rafael J. Wysocki wrote:
+> > > > > > > > last week or so I found systems where the GPU was under the "PCI
+> > > > > > > > Express Root Port" (name from lspci) and on those systems all of that
+> > > > > > > > seems to work. So I am wondering if it's indeed just the 0x1901 one,
+> > > > > > > > which also explains Mikas case that Thunderbolt stuff works as devices
+> > > > > > > > never get populated under this particular bridge controller, but under
+> > > > > > > > those "Root Port"s
 > > > > > > >
-> > > > > > > On Thu, Nov 14, 2019 at 03:50:08PM -0800, Evan Green wrote:
-> > > > > > > > If the backing device for a loop device is itself a block device,
-> > > > > > > > then mirror the "write zeroes" capabilities of the underlying
-> > > > > > > > block device into the loop device. Copy this capability into both
-> > > > > > > > max_write_zeroes_sectors and max_discard_sectors of the loop device.
-> > > > > > > >
-> > > > > > > > The reason for this is that REQ_OP_DISCARD on a loop device translates
-> > > > > > > > into blkdev_issue_zeroout(), rather than blkdev_issue_discard(). This
-> > > > > > > > presents a consistent interface for loop devices (that discarded data
-> > > > > > > > is zeroed), regardless of the backing device type of the loop device.
-> > > > > > > > There should be no behavior change for loop devices backed by regular
-> > > > > > > > files.
+> > > > > > > It always is a PCIe port, but its location within the SoC may matter.
+> > > > > >
+> > > > > > Exactly. Intel hardware has PCIe ports on CPU side (these are called
+> > > > > > PEG, PCI Express Graphics, ports), and the PCH side. I think the IP is
+> > > > > > still the same.
+> > > > > >
+> > > > > > > Also some custom AML-based power management is involved and that may
+> > > > > > > be making specific assumptions on the configuration of the SoC and the
+> > > > > > > GPU at the time of its invocation which unfortunately are not known to
+> > > > > > > us.
+> > > > > > >
+> > > > > > > However, it looks like the AML invoked to power down the GPU from
+> > > > > > > acpi_pci_set_power_state() gets confused if it is not in PCI D0 at
+> > > > > > > that point, so it looks like that AML tries to access device memory on
+> > > > > > > the GPU (beyond the PCI config space) or similar which is not
+> > > > > > > accessible in PCI power states below D0.
+> > > > > >
+> > > > > > Or the PCI config space of the GPU when the parent root port is in D3hot
+> > > > > > (as it is the case here). Also then the GPU config space is not
+> > > > > > accessible.
+> > > > >
+> > > > > Why would the parent port be in D3hot at that point?  Wouldn't that be
+> > > > > a suspend ordering violation?
 > > > >
-> > > > (marking this spot for below)
-> > > >
-> > > > > > > >
-> > > > > > > > This change fixes blktest block/003, and removes an extraneous
-> > > > > > > > error print in block/013 when testing on a loop device backed
-> > > > > > > > by a block device that does not support discard.
-> > > > > > > >
-> > > > > > > > Signed-off-by: Evan Green <evgreen@chromium.org>
-> > > > > > > > Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
-> > > > > > > > Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-> > > > > > > > ---
-> > > > > > > >
-> > > > > > > > Changes in v7:
-> > > > > > > > - Rebase on top of Darrick's patch
-> > > > > > > > - Tweak opening line of commit description (Darrick)
-> > > > > > > >
-> > > > > > > > Changes in v6: None
-> > > > > > > > Changes in v5:
-> > > > > > > > - Don't mirror discard if lo_encrypt_key_size is non-zero (Gwendal)
-> > > > > > > >
-> > > > > > > > Changes in v4:
-> > > > > > > > - Mirror blkdev's write_zeroes into loopdev's discard_sectors.
-> > > > > > > >
-> > > > > > > > Changes in v3:
-> > > > > > > > - Updated commit description
-> > > > > > > >
-> > > > > > > > Changes in v2: None
-> > > > > > > >
-> > > > > > > >  drivers/block/loop.c | 40 +++++++++++++++++++++++++++++-----------
-> > > > > > > >  1 file changed, 29 insertions(+), 11 deletions(-)
-> > > > > > > >
-> > > > > > > > diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-> > > > > > > > index 6a9fe1f9fe84..e8f23e4b78f7 100644
-> > > > > > > > --- a/drivers/block/loop.c
-> > > > > > > > +++ b/drivers/block/loop.c
-> > > > > > > > @@ -427,11 +427,12 @@ static int lo_fallocate(struct loop_device *lo, struct request *rq, loff_t pos,
-> > > > > > > >        * information.
-> > > > > > > >        */
-> > > > > > > >       struct file *file = lo->lo_backing_file;
-> > > > > > > > +     struct request_queue *q = lo->lo_queue;
-> > > > > > > >       int ret;
-> > > > > > > >
-> > > > > > > >       mode |= FALLOC_FL_KEEP_SIZE;
-> > > > > > > >
-> > > > > > > > -     if ((!file->f_op->fallocate) || lo->lo_encrypt_key_size) {
-> > > > > > > > +     if (!blk_queue_discard(q)) {
-> > > > > > > >               ret = -EOPNOTSUPP;
-> > > > > > > >               goto out;
-> > > > > > > >       }
-> > > > > > > > @@ -862,6 +863,21 @@ static void loop_config_discard(struct loop_device *lo)
-> > > > > > > >       struct file *file = lo->lo_backing_file;
-> > > > > > > >       struct inode *inode = file->f_mapping->host;
-> > > > > > > >       struct request_queue *q = lo->lo_queue;
-> > > > > > > > +     struct request_queue *backingq;
-> > > > > > > > +
-> > > > > > > > +     /*
-> > > > > > > > +      * If the backing device is a block device, mirror its zeroing
-> > > > > > > > +      * capability. REQ_OP_DISCARD translates to a zero-out even when backed
-> > > > > > > > +      * by block devices to keep consistent behavior with file-backed loop
-> > > > > > > > +      * devices.
-> > > > > > > > +      */
+> > > > No. We put the GPU into D3hot first,
 > >
-> > Wait, I went to make this change and realized there's already a comment here.
+> > OK
 > >
-> > I can tweak the language a bit, but this is pretty much what you wanted, right?
+> > Does this involve any AML, like a _PS3 under the GPU object?
 >
-> Yep.
+> I don't see _PS3 (nor _PS0) for that object. If I read it right the GPU
+> itself is not described in ACPI tables at all.
+
+OK
+
+> > > > then the root port and then turn
+> > > > off the power resource (which is attached to the root port) resulting
+> > > > the topology entering D3cold.
+> > >
+> > > I don't see that happening in the AML though.
+> >
+> > Which AML do you mean, specifically?  The _OFF method for the root
+> > port's _PR3 power resource or something else?
 >
+> The root port's _OFF method for the power resource returned by its _PR3.
 
-Jens, any opinions? I'm happy to spin one more time to clarify the
-comment as follows if desired, or leave it as-is too!
+OK, so without the $subject patch we (1) program the downstream
+component (GPU) into D3hot, then we (2) program the port holding it
+into D3hot and then we (3) let the AML (_OFF for the power resource
+listed by _PR3 under the port object) run.
 
-        /*
-         * If the backing device is a block device, mirror its zeroing
-         * capability. Set the discard sectors to the block device's zeroing
-         * capabilities because loop discards result in blkdev_issue_zeroout(),
-         * not blkdev_issue_discard(). This maintains consistent behavior with
-         * file-backed loop devices: discarded regions read back as zero.
-         */
+Something strange happens at this point (and I guess that _OFF doesn't
+even reach the point where it removes power from the port which is why
+we see a lock-up).
+
+We know that skipping (1) makes things work and we kind of suspect
+that skipping (3) would make things work either, but what about doing
+(1) and (3) without (2)?
+
+> > > Basically the difference is that when Windows 7 or Linux (the _REV==5
+> > > check) then we directly do link disable whereas in Windows 8+ we invoke
+> > > LKDS() method that puts the link into L2/L3. None of the fields they
+> > > access seem to touch the GPU itself.
+> >
+> > So that may be where the problem is.
+> >
+> > Putting the downstream component into PCI D[1-3] is expected to put
+> > the link into L1, so I'm not sure how that plays with the later
+> > attempt to put it into L2/L3 Ready.
+>
+> That should be fine. What I've seen the link goes into L1 when
+> downstream component is put to D-state (not D0) and then it is put back
+> to L0 when L2/3 ready is propagated. Eventually it goes into L2 or L3.
+
+Well, that's the expected behavior, but the observed behavior isn't as
+expected. :-)
+
+> > Also, L2/L3 Ready is expected to be transient, so finally power should
+> > be removed somehow.
+>
+> There is GPIO for both power and PERST, I think the line here:
+>
+>   \_SB.SGOV (0x01010004, Zero)
+>
+> is the one that removes power.
+
+OK
+
+> > > LKDS() for the first PEG port looks like this:
+> > >
+> > >    P0L2 = One
+> > >    Sleep (0x10)
+> > >    Local0 = Zero
+> > >    While (P0L2)
+> > >    {
+> > >         If ((Local0 > 0x04))
+> > >         {
+> > >             Break
+> > >         }
+> > >
+> > >         Sleep (0x10)
+> > >         Local0++
+> > >    }
+> > >
+> > > One thing that comes to mind is that the loop can end even if P0L2 is
+> > > not cleared as it does only 5 iterations with 16 ms sleep between. Maybe
+> > > Sleep() is implemented differently in Windows? I mean Linux may be
+> > > "faster" here and return prematurely and if we leave the port into D0
+> > > this does not happen, or something. I'm just throwing out ideas :)
+> >
+> > But this actually works for the downstream component in D0, doesn't it?
+>
+> It does and that leaves the link in L0 so it could be that then the
+> above AML works better or something.
+
+That would be my guess.
+
+> That reminds me, ASPM may have something to do with this as well.
+
+Not really if D-states are involved.
+
+> > Also, if the downstream component is in D0, the port actually should
+> > stay in D0 too, so what would happen with the $subject patch applied?
+>
+> Parent port cannot be lower D-state than the child so I agree it should
+> stay in D0 as well. However, it seems that what happens is that the
+> issue goes away :)
+
+Well, at least this is kind of out of the spec.
+
+Note that pci_pm_suspend_noirq() won't let the port go into D3 if the
+downstream device is in D0, so the $subject patch will not work as
+expected in the suspend-to-idle case.
+
+Also we really should make up our minds on whether or not to force
+PCIe ports to stay in D0 when downstream devices are in D0 and be
+consequent about that.  Right now we do one thing during system-wide
+suspend and the other one in PM-runtime, which is confusing.
+
+The current design is mostly based on the PCI PM Spec 1.2, so it would
+be consequent to follow system-wide suspend in PM-runtime and avoid
+putting PCIe ports holding devices in D0 into any low-power states.
+but that would make the approach in the $subject patch ineffective.
+
+Moreover, the fact that there are separate branches for "Windows 7"
+and "Windows 8+" kind of suggest a change in the expected behavior
+between Windows 7 and Windows 8, from the AML perspective.  I would
+guess that Windows 7 followed PCI PM 1.2 and Windows 8 (and later)
+does something else.  Now, the structure of the "Windows 8+" branch
+described by you suggests that, at least in the cases when it is going
+to remove power from the port eventually, it goes straight for the
+link preparation (the L2/L3 Ready transition) and power removal
+without bothering to program the downstream device and port into D3hot
+(because that's kind of redundant).
+
+That hypothetical "Windows 8+" approach may really work universally,
+because it doesn't seem to break any rules (going straight from D0 to
+D3cold is not disallowed and doing that for both a port and a
+downstream device at the same time is kind of OK either, as long as
+the link is ready for that).
