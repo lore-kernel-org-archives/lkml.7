@@ -2,143 +2,144 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF02C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:40:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57286C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:41:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5616220656
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:40:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PA9bCfC2"
+	by mail.kernel.org (Postfix) with ESMTP id 3663920656
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:41:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727165AbfKUOkG (ORCPT
+        id S1726922AbfKUOl5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 09:40:06 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:37847 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726762AbfKUOkF (ORCPT
+        Thu, 21 Nov 2019 09:41:57 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:34317 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726396AbfKUOl4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 09:40:05 -0500
-Received: by mail-qt1-f194.google.com with SMTP id g50so3915869qtb.4;
-        Thu, 21 Nov 2019 06:40:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cz2tp7tcw8k14gkrUnEP9zX8ksAJjsAkvSmuB4LZNbQ=;
-        b=PA9bCfC2QaMdT3abm5t9qg6tld7cebGzmYocA7wE3d2WCahijpsoOQ2dhT2Yt78Cc1
-         slmIFEz4FRIA//ThFS1+Z//pP84evv+lw0Zng9HuWsnpH3virjSWYROI9b5hzujx3gQB
-         AT0xHsyiv1dEpGsUGayvgUw0da5h3O9k+tlZ4pU+c2jxdP/sZ/snJJb1LS9fUWUbC5bB
-         ra9eOImYroIOb5OUgPvywOUmaIjhDReY0RjRSrP1EEZkz3LBG9bmuy4DjQscNNFbLdHV
-         jCiMvMxARLF3PF2925VhmLj8+LdX1Y5Vz++XQuCEl6ECI41L1K4hl6LH6ZVpZV3RP00b
-         BGAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cz2tp7tcw8k14gkrUnEP9zX8ksAJjsAkvSmuB4LZNbQ=;
-        b=Koai2rMx+zCIDvTMR7ZHs7fXoDucB52okkVhSPcFf2SpPLgLteSIYM0UIjxP6ROKXz
-         1V5dSfjepcJ+szUGRuGDhmPf9ymwtAKEUqnNU+19E6We/nXw6nwTcSKt+d76nx24wM+F
-         XH1MxZotlQQj7r7+OKG3LSidSVHL6J2N60tTn0VihaqrQG9lRfw91kyXRVGMaUV1Mw4w
-         9YSY18KLatSU7Q+vspooZZrW0kCSzPKGF08BJG3WoGsd2BF13aR7RaTychOSrDL80IIk
-         hmCWoc5i2v2IlQNVcjPyCcV2gvzvkiYwI+hYoJr+SC1uhAOWQUMA1rECUG7cA3gJxNgr
-         2JGA==
-X-Gm-Message-State: APjAAAWGLdyzyxp7m09c4iBXkSLfzG31tkTXJzRQeHDHi2jOfpFar2j5
-        2BMLsUy6+Ib5i87T+8stXYI=
-X-Google-Smtp-Source: APXvYqxoPNNEp3XfqyoLMTw9ZAzBvWkITtRpOOYWrC7wKiBhnPQzKioSBjYvjgD0TLf3kHQymvdr3A==
-X-Received: by 2002:ac8:6d0b:: with SMTP id o11mr8818428qtt.253.1574347204774;
-        Thu, 21 Nov 2019 06:40:04 -0800 (PST)
-Received: from quaco.ghostprotocols.net ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id q34sm1638736qte.50.2019.11.21.06.40.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Nov 2019 06:40:04 -0800 (PST)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id F271F40D3E; Thu, 21 Nov 2019 11:40:01 -0300 (-03)
-Date:   Thu, 21 Nov 2019 11:40:01 -0300
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-trace-devel@vger.kernel.org
-Subject: Re: [PATCH] libtraceevent: fix header installation
-Message-ID: <20191121144001.GF5078@kernel.org>
-References: <20191114133719.309-1-sudipm.mukherjee@gmail.com>
- <20191114174022.62c8259e@gandalf.local.home>
+        Thu, 21 Nov 2019 09:41:56 -0500
+Received: from litschi.hi.pengutronix.de ([2001:67c:670:100:feaa:14ff:fe6a:8db5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <m.tretter@pengutronix.de>)
+        id 1iXneJ-000425-JC; Thu, 21 Nov 2019 15:41:35 +0100
+Date:   Thu, 21 Nov 2019 15:41:34 +0100
+From:   Michael Tretter <m.tretter@pengutronix.de>
+To:     Rajan Vaja <rajan.vaja@xilinx.com>
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, michal.simek@xilinx.com,
+        jolly.shah@xilinx.com, dan.carpenter@oracle.com,
+        gustavo@embeddedor.com, tejas.patel@xilinx.com,
+        nava.manne@xilinx.com, ravi.patel@xilinx.com,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kernel@pengutronix.de, m.tretter@pengutronix.de
+Subject: Re: [PATCH 7/7] clk: zynqmp: Fix fractional clock check
+Message-ID: <20191121154134.404304c9@litschi.hi.pengutronix.de>
+In-Reply-To: <1573564580-9006-8-git-send-email-rajan.vaja@xilinx.com>
+References: <1573564580-9006-1-git-send-email-rajan.vaja@xilinx.com>
+        <1573564580-9006-8-git-send-email-rajan.vaja@xilinx.com>
+Organization: Pengutronix
+X-Mailer: Claws Mail 3.14.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191114174022.62c8259e@gandalf.local.home>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:feaa:14ff:fe6a:8db5
+X-SA-Exim-Mail-From: m.tretter@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Nov 14, 2019 at 05:40:22PM -0500, Steven Rostedt escreveu:
+On Tue, 12 Nov 2019 05:16:20 -0800, Rajan Vaja wrote:
+> Firmware driver sets BIT(4) to BIT(7) as custom type flags. To make
+> divider as fractional divider firmware sets BIT(4). So add support
+> for custom type flag and use BIT(4) of custom type flag as CLOCK_FRAC
+> bit.
 > 
-> Arnaldo,
+> Add a new field to the clock_topology to store custom type flags.
 > 
-> Can you take this?
+> Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
+> ---
+>  drivers/clk/zynqmp/clk-zynqmp.h | 1 +
+>  drivers/clk/zynqmp/clkc.c       | 4 ++++
+>  drivers/clk/zynqmp/divider.c    | 7 +++----
+>  3 files changed, 8 insertions(+), 4 deletions(-)
 > 
-> Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> diff --git a/drivers/clk/zynqmp/clk-zynqmp.h b/drivers/clk/zynqmp/clk-zynqmp.h
+> index fec9a15..5beeb41 100644
+> --- a/drivers/clk/zynqmp/clk-zynqmp.h
+> +++ b/drivers/clk/zynqmp/clk-zynqmp.h
+> @@ -30,6 +30,7 @@ struct clock_topology {
+>  	u32 type;
+>  	u32 flag;
+>  	u32 type_flag;
+> +	u8 custom_type_flag;
+>  };
+>  
+>  struct clk_hw *zynqmp_clk_register_pll(const char *name, u32 clk_id,
+> diff --git a/drivers/clk/zynqmp/clkc.c b/drivers/clk/zynqmp/clkc.c
+> index 10e89f2..4dd8413 100644
+> --- a/drivers/clk/zynqmp/clkc.c
+> +++ b/drivers/clk/zynqmp/clkc.c
+> @@ -84,6 +84,7 @@ struct name_resp {
+>  
+>  struct topology_resp {
+>  #define CLK_TOPOLOGY_TYPE		GENMASK(3, 0)
+> +#define CLK_TOPOLOGY_CUSTOM_TYPE_FLAGS	GENMASK(7, 4)
+>  #define CLK_TOPOLOGY_FLAGS		GENMASK(23, 8)
+>  #define CLK_TOPOLOGY_TYPE_FLAGS		GENMASK(31, 24)
+>  	u32 topology[CLK_GET_TOPOLOGY_RESP_WORDS];
+> @@ -396,6 +397,9 @@ static int __zynqmp_clock_get_topology(struct clock_topology *topology,
+>  		topology[*nnodes].type_flag =
+>  				FIELD_GET(CLK_TOPOLOGY_TYPE_FLAGS,
+>  					  response->topology[i]);
+> +		topology[*nnodes].custom_type_flag =
+> +			FIELD_GET(CLK_TOPOLOGY_CUSTOM_TYPE_FLAGS,
+> +				  response->topology[i]);
+>  		(*nnodes)++;
+>  	}
+>  
+> diff --git a/drivers/clk/zynqmp/divider.c b/drivers/clk/zynqmp/divider.c
+> index 67aa88c..e700504 100644
+> --- a/drivers/clk/zynqmp/divider.c
+> +++ b/drivers/clk/zynqmp/divider.c
+> @@ -25,7 +25,7 @@
+>  #define to_zynqmp_clk_divider(_hw)		\
+>  	container_of(_hw, struct zynqmp_clk_divider, hw)
+>  
+> -#define CLK_FRAC	BIT(13) /* has a fractional parent */
+> +#define CLK_FRAC	BIT(4) /* has a fractional parent */
 
-Thanks, applied.
+Still NACK. This breaks the compatibility with the mainline TF-A. The
+bit is now a different from the bit than in the previous version of
+that patch. Moving the flag to custom_type_flags is fine, but please
+make sure that you stay backwards compatible to existing versions of the
+TF-A.
 
-- Arnaldo
- 
-> -- Steve
-> 
-> 
-> On Thu, 14 Nov 2019 13:37:19 +0000
-> Sudip Mukherjee <sudipm.mukherjee@gmail.com> wrote:
-> 
-> > When we passed some location in DESTDIR, install_headers called
-> > do_install with DESTDIR as part of the second argument. But do_install
-> > is again using '$(DESTDIR_SQ)$2', so as a result the headers were
-> > installed in a location $DESTDIR/$DESTDIR. In my testing I passed
-> > DESTDIR=/home/sudip/test and the headers were installed in:
-> > /home/sudip/test/home/sudip/test/usr/include/traceevent.
-> > Lets remove DESTDIR from the second argument of do_install so that the
-> > headers are installed in the correct location.
-> > 
-> > Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-> > ---
-> > 
-> > Hi Steve,
-> > sent this earlier as an attachment to an email thread, not sure if you
-> > saw it, so sending it now properly.
-> > The other problem with the pkgconfig, I guess we can live with that for
-> > now as that folder is given by pc_path.
-> > 
-> >  tools/lib/traceevent/Makefile | 8 ++++----
-> >  1 file changed, 4 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/tools/lib/traceevent/Makefile b/tools/lib/traceevent/Makefile
-> > index 5315f3787f8d..cbb429f55062 100644
-> > --- a/tools/lib/traceevent/Makefile
-> > +++ b/tools/lib/traceevent/Makefile
-> > @@ -232,10 +232,10 @@ install_pkgconfig:
-> >  
-> >  install_headers:
-> >  	$(call QUIET_INSTALL, headers) \
-> > -		$(call do_install,event-parse.h,$(DESTDIR)$(includedir_SQ),644); \
-> > -		$(call do_install,event-utils.h,$(DESTDIR)$(includedir_SQ),644); \
-> > -		$(call do_install,trace-seq.h,$(DESTDIR)$(includedir_SQ),644); \
-> > -		$(call do_install,kbuffer.h,$(DESTDIR)$(includedir_SQ),644)
-> > +		$(call do_install,event-parse.h,$(includedir_SQ),644); \
-> > +		$(call do_install,event-utils.h,$(includedir_SQ),644); \
-> > +		$(call do_install,trace-seq.h,$(includedir_SQ),644); \
-> > +		$(call do_install,kbuffer.h,$(includedir_SQ),644)
-> >  
-> >  install: install_lib
-> >  
+Michael
 
--- 
-
-- Arnaldo
+>  
+>  /**
+>   * struct zynqmp_clk_divider - adjustable divider clock
+> @@ -279,13 +279,12 @@ struct clk_hw *zynqmp_clk_register_divider(const char *name,
+>  
+>  	init.name = name;
+>  	init.ops = &zynqmp_clk_divider_ops;
+> -	/* CLK_FRAC is not defined in the common clk framework */
+> -	init.flags = nodes->flag & ~CLK_FRAC;
+> +	init.flags = nodes->flag;
+>  	init.parent_names = parents;
+>  	init.num_parents = 1;
+>  
+>  	/* struct clk_divider assignments */
+> -	div->is_frac = !!(nodes->flag & CLK_FRAC);
+> +	div->is_frac = !!(nodes->custom_type_flag & CLK_FRAC);
+>  	div->flags = nodes->type_flag;
+>  	div->hw.init = &init;
+>  	div->clk_id = clk_id;
