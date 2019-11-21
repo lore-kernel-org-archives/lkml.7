@@ -2,123 +2,170 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76902C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:20:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C89D5C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:20:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 448A9208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:20:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574306451;
-	bh=NjVI8odmttsECwSZARjFEDrBXK5my+3emM678PTtG94=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=xydao3yBO0MdyJW5zlhvf9Ikx2oZ/BmkiX+zdRb5jbIyISODEAtKeFcc3NhCmVc4z
-	 /+o3GYxK1h8j4dSKY5fzVAxyJcQ7wYapTCFB2+V9VM3tLRv7Zjn1KO9h95DjPCggJV
-	 lWBmAyuJz36noURn1kPdDSUG0smD7gI9xvNZY2Sc=
+	by mail.kernel.org (Postfix) with ESMTP id 94FEE208A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:20:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="mGr9z48Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727604AbfKUDUu (ORCPT
+        id S1727574AbfKUDUq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 22:20:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34664 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727590AbfKUDUs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 22:20:48 -0500
-Received: from PC-kkoz.proceq.com (unknown [213.160.61.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD5B8208A3;
-        Thu, 21 Nov 2019 03:20:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574306447;
-        bh=NjVI8odmttsECwSZARjFEDrBXK5my+3emM678PTtG94=;
-        h=From:To:Cc:Subject:Date:From;
-        b=WQZK6cMtaWkIJOSMao3ywIh41eaZr/u5Q+zJRP2Ygdiih7Vut5cuyF2oorTeQxGlh
-         8UhcwkSQ7REj+BI1zv0UYiC6enciol0rMqllbx5yAPsRoQCYcITn7fO/0tfEWxY6z2
-         pnake7TWOhdy79laqUJpRXpKzt7Hkz/srqWieYx8=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Jens Axboe <axboe@kernel.dk>, linux-ide@vger.kernel.org
-Subject: [PATCH v2] ata: Fix Kconfig indentation
-Date:   Thu, 21 Nov 2019 04:20:44 +0100
-Message-Id: <1574306444-30831-1-git-send-email-krzk@kernel.org>
+        Wed, 20 Nov 2019 22:20:46 -0500
+Received: from mailout4.samsung.com ([203.254.224.34]:47083 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727557AbfKUDUp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 22:20:45 -0500
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20191121032042epoutp0458ac12628b1d2735ababf00ffb9e07fb~ZD145EOKi1077410774epoutp04B
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 03:20:42 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20191121032042epoutp0458ac12628b1d2735ababf00ffb9e07fb~ZD145EOKi1077410774epoutp04B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1574306442;
+        bh=KCs1uvI97PpS5Asra3/xeMU8NeStzT9VkGskDOx2tBM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=mGr9z48Z1nIK2qa7PHil19dVQwiqsLpzDdCEB67R+xcLnB0y3/R6d6HKuYZy2uGYe
+         npQjxD7BwPa0jh3lGnJPAOoVGrS5cx7dKqS31K5n5jXCWS5/94sMCkcqqrYmM8GvHO
+         OmQx+ygiwwNARsdvS63ME3Icye1540PUdWpGwzYo=
+Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+        20191121032041epcas5p33c52f9aa3e046f3bc9af469bfbdc2bad~ZD14SKwze0576405764epcas5p3-;
+        Thu, 21 Nov 2019 03:20:41 +0000 (GMT)
+Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
+        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        2F.9F.04403.98206DD5; Thu, 21 Nov 2019 12:20:41 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+        20191121032041epcas5p433066ebc6a07b73a1949da26e55e9b2f~ZD13_kzQ20459004590epcas5p4i;
+        Thu, 21 Nov 2019 03:20:41 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20191121032041epsmtrp2c9a877fe4c7526a4b0d55f5190b92cfa~ZD139xxl91130011300epsmtrp2Q;
+        Thu, 21 Nov 2019 03:20:41 +0000 (GMT)
+X-AuditID: b6c32a4a-3b3ff70000001133-67-5dd60289765d
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        E1.CE.03814.88206DD5; Thu, 21 Nov 2019 12:20:41 +0900 (KST)
+Received: from ubuntu.sa.corp.samsungelectronics.net (unknown
+        [107.108.83.125]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20191121032039epsmtip28cdd1dc39af89a4660c7300bb6a97ae6~ZD12Tw9m82815928159epsmtip2D;
+        Thu, 21 Nov 2019 03:20:39 +0000 (GMT)
+From:   Anvesh Salveru <anvesh.s@samsung.com>
+To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        pankaj.dubey@samsung.com, lorenzo.pieralisi@arm.com,
+        andrew.murray@arm.com, bhelgaas@google.com, kishon@ti.com,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        Anvesh Salveru <anvesh.s@samsung.com>
+Subject: [PATCH v4 2/2] PCI: dwc: add support to handle ZRX-DC Compliant
+ PHYs
+Date:   Thu, 21 Nov 2019 08:50:08 +0530
+Message-Id: <1574306408-4360-3-git-send-email-anvesh.s@samsung.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1574306408-4360-1-git-send-email-anvesh.s@samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupgleLIzCtJLcpLzFFi42LZdlhTU7eT6VqswecdEhbN/7ezWpzdtZDV
+        YklThsWuux3sFiu+zGS3uPC0h83i8q45bBZn5x1ns3jz+wW7xdLrF5ksFm39wm7RuvcIuwOP
+        x5p5axg9ds66y+6xYFOpx6ZVnWwefVtWMXps2f+Z0eP4je1MHp83yQVwRHHZpKTmZJalFunb
+        JXBlHOydy1jQJ1Sx4Vt1A+Nm/i5GDg4JAROJptMZXYxcHEICuxkl7vx9wAjhfGKU6F7dxwzh
+        fGOUOLrmJRNMx9zfORDxvYwSG95uYO1i5ARyWpgkOn9agNhsAtoSP4/uZQexRQSsJQ63b2ED
+        aWAW+McocfXLPEaQhLCAv8T5vrVsIDaLgKrEhTXbwOK8As4Srw9MBotLCMhJ3DzXyQxicwq4
+        SDTd2s4EMkhC4DqbxKpnnVBFLhIHVs6HsoUlXh3fwg5hS0l8frcXKp4v0Xt3KVS8RmLK3Q5G
+        CNte4sCVOSwgnzELaEqs36UPEmYW4JPo/f0E6mFeiY42IQhTSaJtZjVEo4TE4vk3mSFsD4l/
+        W2ZAw2o6o8SrmSdYJzDKzkIYuoCRcRWjZGpBcW56arFpgVFearlecWJucWleul5yfu4mRnD6
+        0PLawbjsnM8hRgEORiUe3gyNq7FCrIllxZW5hxglOJiVRHj3XL8SK8SbklhZlVqUH19UmpNa
+        fIhRmoNFSZx3EuvVGCGB9MSS1OzU1ILUIpgsEwenVAPjhPNyiaH8Qnc+vP/su83Q6JljsXvx
+        +dSE0t2/bQ5kJV49fzxVLHKhq+pS2/vhTDy/Y2yuOlqH8jm8Xij6qb4j2WraY+v2Kr03LHfn
+        u9j+Ug14VfnzscjhBjZ3Li2fZ0HqHakakfM6Kowz2i4uZ5izvSIpZMJW5Sniu6d/Fs6VDTK4
+        +lQwwlaJpTgj0VCLuag4EQDe6bCxGwMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrJLMWRmVeSWpSXmKPExsWy7bCSvG4n07VYg42nmSya/29ntTi7ayGr
+        xZKmDItddzvYLVZ8mcluceFpD5vF5V1z2CzOzjvOZvHm9wt2i6XXLzJZLNr6hd2ide8Rdgce
+        jzXz1jB67Jx1l91jwaZSj02rOtk8+rasYvTYsv8zo8fxG9uZPD5vkgvgiOKySUnNySxLLdK3
+        S+DKONg7l7GgT6hiw7fqBsbN/F2MHBwSAiYSc3/ndDFycQgJ7GaUWLr0AnsXIydQXELiy96v
+        bBC2sMTKf8/ZIYqamCRubLsElmAT0Jb4eXQvWIOIgK3E/UeTWUGKmAW6mCTWnt4ClhAW8JWY
+        faqPBcRmEVCVuLBmGyOIzSvgLPH6wGSoDXISN891MoPYnAIuEk23tjOB2EJANbuv3GSdwMi3
+        gJFhFaNkakFxbnpusWGBUV5quV5xYm5xaV66XnJ+7iZGcABrae1gPHEi/hCjAAejEg9vhsbV
+        WCHWxLLiytxDjBIczEoivHuuX4kV4k1JrKxKLcqPLyrNSS0+xCjNwaIkziuffyxSSCA9sSQ1
+        OzW1ILUIJsvEwSnVwGjZsu3f5SC/6SLqCR11edLP+pRWvKlhCedd+fLUu4n9BxV3L5yYILuI
+        JSatICr8/zW+1XvOPd7wyuHg08cT1/AZxHz9ZKpwKbWncLeAWUKLWCbffE6LwlKHerWWFoMe
+        01o/rWX2fupGH//ztB7YzrO4IIP7NMPhVd4FGYHpCkGL3ft9bZ4JKbEUZyQaajEXFScCANJD
+        jUxcAgAA
+X-CMS-MailID: 20191121032041epcas5p433066ebc6a07b73a1949da26e55e9b2f
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20191121032041epcas5p433066ebc6a07b73a1949da26e55e9b2f
+References: <1574306408-4360-1-git-send-email-anvesh.s@samsung.com>
+        <CGME20191121032041epcas5p433066ebc6a07b73a1949da26e55e9b2f@epcas5p4.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adjust indentation from spaces to tab (+optional two spaces) as in
-coding style with command like:
-	$ sed -e 's/^        /\t/' -i */Kconfig
+Many platforms use DesignWare controller but the PHY can be different in
+different platforms. If the PHY is compliant is to ZRX-DC specification
+it helps in low power consumption during power states.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+If current data rate is 8.0 GT/s or higher and PHY is not compliant to
+ZRX-DC specification, then after every 100ms link should transition to
+recovery state during the low power states.
 
+DesignWare controller provides GEN3_ZRXDC_NONCOMPL field in
+GEN3_RELATED_OFF to specify about ZRX-DC compliant PHY.
+
+Platforms with ZRX-DC compliant PHY can set phy_zrxdc_compliant variable
+to specify this property to the controller.
+
+Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
+Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
 ---
+ drivers/pci/controller/dwc/pcie-designware.c | 6 ++++++
+ drivers/pci/controller/dwc/pcie-designware.h | 4 ++++
+ 2 files changed, 10 insertions(+)
 
-Changes since v1:
-1. Fix also 7-space and tab+1 space indentation issues.
----
- drivers/ata/Kconfig | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/ata/Kconfig b/drivers/ata/Kconfig
-index a6beb2c5a692..c9132177faee 100644
---- a/drivers/ata/Kconfig
-+++ b/drivers/ata/Kconfig
-@@ -32,7 +32,7 @@ menuconfig ATA
- if ATA
+diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+index 820488d..36a01b7 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.c
++++ b/drivers/pci/controller/dwc/pcie-designware.c
+@@ -556,4 +556,10 @@ void dw_pcie_setup(struct dw_pcie *pci)
+ 		       PCIE_PL_CHK_REG_CHK_REG_START;
+ 		dw_pcie_writel_dbi(pci, PCIE_PL_CHK_REG_CONTROL_STATUS, val);
+ 	}
++
++	if (pci->phy_zrxdc_compliant) {
++		val = dw_pcie_readl_dbi(pci, PCIE_PORT_GEN3_RELATED);
++		val &= ~PORT_LOGIC_GEN3_ZRXDC_NONCOMPL;
++		dw_pcie_writel_dbi(pci, PCIE_PORT_GEN3_RELATED, val);
++	}
+ }
+diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+index 5a18e94..f43f986 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.h
++++ b/drivers/pci/controller/dwc/pcie-designware.h
+@@ -60,6 +60,9 @@
+ #define PCIE_MSI_INTR0_MASK		0x82C
+ #define PCIE_MSI_INTR0_STATUS		0x830
  
- config ATA_NONSTANDARD
--       bool
-+	bool
- 
- config ATA_VERBOSE_ERROR
- 	bool "Verbose ATA error reporting"
-@@ -695,7 +695,7 @@ config PATA_IMX
- 	depends on ARCH_MXC
- 	help
- 	  This option enables support for the PATA host available on Freescale
--          iMX SoCs.
-+	  iMX SoCs.
- 
- 	  If unsure, say N.
- 
-@@ -704,7 +704,7 @@ config PATA_IT8213
- 	depends on PCI
- 	help
- 	  This option enables support for the ITE 821 PATA
--          controllers via the new ATA layer.
-+	  controllers via the new ATA layer.
- 
- 	  If unsure, say N.
- 
-@@ -732,9 +732,9 @@ config PATA_MACIO
- 	depends on PPC_PMAC
- 	help
- 	  Most IDE capable PowerMacs have IDE busses driven by a variant
--          of this controller which is part of the Apple chipset used on
--          most PowerMac models. Some models have multiple busses using
--          different chipsets, though generally, MacIO is one of them.
-+	  of this controller which is part of the Apple chipset used on
-+	  most PowerMac models. Some models have multiple busses using
-+	  different chipsets, though generally, MacIO is one of them.
- 
- config PATA_MARVELL
- 	tristate "Marvell PATA support via legacy mode"
-@@ -915,7 +915,7 @@ config PATA_PXA
- 	  This option enables support for harddrive attached to PXA CPU's bus.
- 
- 	  NOTE: This driver utilizes PXA DMA controller, in case your hardware
--	        is not capable of doing MWDMA, use pata_platform instead.
-+	  is not capable of doing MWDMA, use pata_platform instead.
- 
- 	  If unsure, say N.
- 
++#define PCIE_PORT_GEN3_RELATED		0x890
++#define PORT_LOGIC_GEN3_ZRXDC_NONCOMPL	BIT(0)
++
+ #define PCIE_ATU_VIEWPORT		0x900
+ #define PCIE_ATU_REGION_INBOUND		BIT(31)
+ #define PCIE_ATU_REGION_OUTBOUND	0
+@@ -249,6 +252,7 @@ struct dw_pcie {
+ 	void __iomem		*atu_base;
+ 	u32			num_viewport;
+ 	u8			iatu_unroll_enabled;
++	bool			phy_zrxdc_compliant;
+ 	struct pcie_port	pp;
+ 	struct dw_pcie_ep	ep;
+ 	const struct dw_pcie_ops *ops;
 -- 
 2.7.4
 
