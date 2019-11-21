@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE9B7C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCD84C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:29:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74AF120715
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:29:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3ED42070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:29:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574342962;
-	bh=182E69orGVAr6uDhiU/Wa8kfY2L4r3LvkNVQrldlYAk=;
+	s=default; t=1574342966;
+	bh=dIc++Icth9GruF6aBBYRNcCyQoKImA4/t49XcatR4Ig=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Ig3InWPMf4o7/+2tGrKLRvgliuHqMpwyAjzN64DOXaS+qARyADQhvUyOa6HWWUm9W
-	 PeaojCvJjenjBz5VG0C7kWUSBpYaqEJBPGkGsyHEdKdHVEypU/yhMuICFJ+QL3JkTt
-	 Uof8HiMoPSvX83oa4j03oDZJ9dZG2dsjjjj6uWQo=
+	b=JlYAFsU23iq/cMjLDYOE13EMLa7QNEV4TW7nY7dZwEee0617J9uP/Lm/LEw8D4CSG
+	 CE8xQau6lK5LAeQwxyfG0RhHf5B8CkbCODaQnxLkQaJXQDULh5GXUDGl19nwyQFhZb
+	 NsBuRYbUXqoaFfdFTLPTQuw+0H65Vf6lapotAecQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727237AbfKUN3V (ORCPT
+        id S1727268AbfKUN3Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 08:29:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49554 "EHLO mail.kernel.org"
+        Thu, 21 Nov 2019 08:29:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727196AbfKUN3T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 08:29:19 -0500
+        id S1726634AbfKUN3X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 08:29:23 -0500
 Received: from localhost.localdomain (unknown [118.189.143.39])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D45C52070B;
-        Thu, 21 Nov 2019 13:29:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88C822070B;
+        Thu, 21 Nov 2019 13:29:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574342958;
-        bh=182E69orGVAr6uDhiU/Wa8kfY2L4r3LvkNVQrldlYAk=;
+        s=default; t=1574342963;
+        bh=dIc++Icth9GruF6aBBYRNcCyQoKImA4/t49XcatR4Ig=;
         h=From:To:Cc:Subject:Date:From;
-        b=fIC3mT5QdPx0VRaXrx5GuimHdvBlw+y0s12AhH0mfcYE77QLljgpbWykSDfntBCCT
-         nR6M/+jfNk6duL62WMBFCsC6VsvrA81o1niQLD5e/kn5Py3ppaINOQyFR7ipOvN2BG
-         /ifLyLcEESAx/H+a3laaTyk54Dx4371LiH2bk4yY=
+        b=neYUUfstg+Bc8trip8Y8omRdynVEAse6l+mu4mDVSzhSdq1Gj+GwQcdA/W4BenhJ1
+         gKt7iCJho+qJV5ONRq86CDAw4lfrr0PjwmtLSFcFgcBpHFpDOyoiLK7MuduwyZLKRS
+         lt0Az+ZzQWwbwDlagCCrfDYM+SXFP9++Wdr0BwQ4=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org
-Subject: [PATCH] usb: dwc3: Fix Kconfig indentation
-Date:   Thu, 21 Nov 2019 21:29:14 +0800
-Message-Id: <20191121132914.29368-1-krzk@kernel.org>
+        Eric Anholt <eric@anholt.net>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH] drm/vc4: Fix Kconfig indentation
+Date:   Thu, 21 Nov 2019 21:29:19 +0800
+Message-Id: <20191121132919.29430-1-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -60,53 +60,27 @@ coding style with command like:
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/usb/dwc3/Kconfig | 30 +++++++++++++++---------------
- 1 file changed, 15 insertions(+), 15 deletions(-)
+ drivers/gpu/drm/vc4/Kconfig | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
-index 0d97e6bfaf36..206caa0ea1c6 100644
---- a/drivers/usb/dwc3/Kconfig
-+++ b/drivers/usb/dwc3/Kconfig
-@@ -97,24 +97,24 @@ config USB_DWC3_KEYSTONE
- 	  Say 'Y' or 'M' here if you have one such device
+diff --git a/drivers/gpu/drm/vc4/Kconfig b/drivers/gpu/drm/vc4/Kconfig
+index 7c2317efd5b7..118e8a426b1a 100644
+--- a/drivers/gpu/drm/vc4/Kconfig
++++ b/drivers/gpu/drm/vc4/Kconfig
+@@ -22,9 +22,9 @@ config DRM_VC4
+ 	  our display setup.
  
- config USB_DWC3_MESON_G12A
--       tristate "Amlogic Meson G12A Platforms"
--       depends on OF && COMMON_CLK
--       depends on ARCH_MESON || COMPILE_TEST
--       default USB_DWC3
--       select USB_ROLE_SWITCH
-+	tristate "Amlogic Meson G12A Platforms"
-+	depends on OF && COMMON_CLK
-+	depends on ARCH_MESON || COMPILE_TEST
-+	default USB_DWC3
-+	select USB_ROLE_SWITCH
- 	select REGMAP_MMIO
+ config DRM_VC4_HDMI_CEC
+-       bool "Broadcom VC4 HDMI CEC Support"
+-       depends on DRM_VC4
+-       select CEC_CORE
 -       help
--	 Support USB2/3 functionality in Amlogic G12A platforms.
--	 Say 'Y' or 'M' if you have one such device.
++	bool "Broadcom VC4 HDMI CEC Support"
++	depends on DRM_VC4
++	select CEC_CORE
 +	help
-+	  Support USB2/3 functionality in Amlogic G12A platforms.
-+	  Say 'Y' or 'M' if you have one such device.
- 
- config USB_DWC3_OF_SIMPLE
--       tristate "Generic OF Simple Glue Layer"
--       depends on OF && COMMON_CLK
--       default USB_DWC3
--       help
--	 Support USB2/3 functionality in simple SoC integrations.
--	 Currently supports Xilinx and Qualcomm DWC USB3 IP.
--	 Say 'Y' or 'M' if you have one such device.
-+	tristate "Generic OF Simple Glue Layer"
-+	depends on OF && COMMON_CLK
-+	default USB_DWC3
-+	help
-+	  Support USB2/3 functionality in simple SoC integrations.
-+	  Currently supports Xilinx and Qualcomm DWC USB3 IP.
-+	  Say 'Y' or 'M' if you have one such device.
- 
- config USB_DWC3_ST
- 	tristate "STMicroelectronics Platforms"
+ 	  Choose this option if you have a Broadcom VC4 GPU
+ 	  and want to use CEC.
 -- 
 2.17.1
 
