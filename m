@@ -2,114 +2,70 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4D93C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 08:36:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A946C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 08:38:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC3AC20872
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 08:36:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Wlpnle+I"
+	by mail.kernel.org (Postfix) with ESMTP id 57E0F20872
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 08:38:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbfKUIgq (ORCPT
+        id S1726536AbfKUIik (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 03:36:46 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:54112 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726132AbfKUIgp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 03:36:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=8yuhHKa2tv0IroxhcfR79s+SBVyzCtZ3ViQc9dMEjNk=; b=Wlpnle+IlnxsOWdlTWbL6jPPW
-        MPfdTk2/2kqtzygaPQiLheJvJkFLb858gPiGtRyT82X1Sb0YJ2hdi8uFL2qVXXLWAgi65yzcyntww
-        KDwVXdhfzn2Q3eLaePbPkN6AI1vgyRzA8DUvN7lvQmVGE61iMrufv2nqFO2aGm6KiWt4rg5FP1IIg
-        R544lY3CmLXbHbAUADEnfbYLPO2xO3IEhhMqiN+rAjXTDAwTMYGSASGWB0iGW/4CWkyZD6QMBgNv7
-        zuFM+jFgBsNNpSB8Iys/mXKS1a73EyCCWGPQWv2zhQ1/VahRLQq0DZWAK+TY4gw9BGottFYoMbwIm
-        HffGAIk2g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iXhx9-0004Wp-Ib; Thu, 21 Nov 2019 08:36:39 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7DB1630068E;
-        Thu, 21 Nov 2019 09:35:26 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 2DED12B28AC3E; Thu, 21 Nov 2019 09:36:37 +0100 (CET)
-Date:   Thu, 21 Nov 2019 09:36:37 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>, Dave Airlie <airlied@linux.ie>,
-        DRI <dri-devel@lists.freedesktop.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kevin Wang <kevin1.wang@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: Re: linux-next: build failure after merge of the tip tree
-Message-ID: <20191121083637.GM4097@hirez.programming.kicks-ass.net>
-References: <20191121145403.46789cb5@canb.auug.org.au>
+        Thu, 21 Nov 2019 03:38:40 -0500
+Received: from mga09.intel.com ([134.134.136.24]:3026 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726165AbfKUIik (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 03:38:40 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Nov 2019 00:38:40 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,224,1571727600"; 
+   d="scan'208";a="209830619"
+Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.29])
+  by orsmga003.jf.intel.com with ESMTP; 21 Nov 2019 00:38:37 -0800
+From:   "Huang\, Ying" <ying.huang@intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>, Rik van Riel <riel@redhat.com>,
+        Mel Gorman <mgorman@suse.de>, Ingo Molnar <mingo@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Fengguang Wu <fengguang.wu@intel.com>
+Subject: Re: [RFC 10/10] autonuma, memory tiering: Adjust hot threshold automatically
+References: <20191101075727.26683-1-ying.huang@intel.com>
+        <20191101075727.26683-11-ying.huang@intel.com>
+        <20191101093145.GT4131@hirez.programming.kicks-ass.net>
+        <877e4gcgsg.fsf@yhuang-dev.intel.com>
+        <20191104084924.GB4131@hirez.programming.kicks-ass.net>
+Date:   Thu, 21 Nov 2019 16:38:37 +0800
+In-Reply-To: <20191104084924.GB4131@hirez.programming.kicks-ass.net> (Peter
+        Zijlstra's message of "Mon, 4 Nov 2019 09:49:24 +0100")
+Message-ID: <87o8x5mxo2.fsf@yhuang-dev.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="LTeJQqWS0MN7I/qa"
-Content-Disposition: inline
-In-Reply-To: <20191121145403.46789cb5@canb.auug.org.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi, Peter,
 
---LTeJQqWS0MN7I/qa
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Peter Zijlstra <peterz@infradead.org> writes:
 
-On Thu, Nov 21, 2019 at 02:54:03PM +1100, Stephen Rothwell wrote:
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_trace.h b/drivers/gpu/drm/amd/amdgpu/amdgpu_trace.h
-> index f940526c5889..63e734a125fb 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_trace.h
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_trace.h
-> @@ -473,7 +473,7 @@ TRACE_EVENT(amdgpu_ib_pipe_sync,
->  	    TP_PROTO(struct amdgpu_job *sched_job, struct dma_fence *fence),
->  	    TP_ARGS(sched_job, fence),
->  	    TP_STRUCT__entry(
-> -			     __string(ring, sched_job->base.sched->name);
-> +			     __string(ring, sched_job->base.sched->name)
->  			     __field(uint64_t, id)
->  			     __field(struct dma_fence *, fence)
->  			     __field(uint64_t, ctx)
+> I still need to think and review the whole concept in more detail, now
+> that I've read the patches. But I need to chase regressions first :/
 
-Correct, ';' there is invalid and now results in very verbose compile
-errors :-)
+Have you found some time to review the concept?
 
---LTeJQqWS0MN7I/qa
-Content-Type: application/pgp-signature; name="signature.asc"
+Just want to check the status.  Please don't regard this as pushing.
 
------BEGIN PGP SIGNATURE-----
+Best Regards,
+Huang, Ying
 
-iQIzBAABCgAdFiEEv3OU3/byMaA0LqWJdkfhpEvA5LoFAl3WTJUACgkQdkfhpEvA
-5LpZMw//RHTmbvHg8d+lchE5r0wyI+WJWr159P2CxPxKKfZ92bMxqbFMTqlB9ZH/
-6NWvhi2+bfMFiUL408h9HdRmuxzH2Op+x2I3JtekG2r3ckjV2pQ0VPQePeMdFndu
-YfRRyB1Sce3TGGmDd7Mx9YVcnhBFDV1AZxmZtiwaYTreb+4+8DYgniy2MYL1GaXu
-pDqkF3UcJlHYZef7ua9/Kgq25S+Wq6DS67oFe4lecctMVKmIIngKsHxg2XAYgRbz
-ajwNgjXCPFEnakbiHek2jUb9gn+zYK3903rF4cf5/PH2vShCFaRKkM+xy5qIWoem
-4u5D8eGRgmc9UlRq2SEKdbFS3CUTCYqoMVCSouL5TBiQThL9BlohGdlgaAn5gcwl
-rWCaOGt7J1/aKTsdEHNe5QdajReoF6IesslJxJokbTBsv0ly+p0pWfN3hqi6OI4G
-RqHcXLSZ2H1VNM1CoTr/5/ym3IMDIyQ9+vhbuqoRJn5diC0ZFiDLr3rieGAG7C+Q
-ASHlJBDIYnee8exD6Ykcse1/gAzDqIjugvUMucutz0jo8V4M5M9F60A5scmUtIUs
-d7z1DXxJARL+GMgwvW48p5uDirE97G3WlBpLHLpAq3gXBoSroujzoIqmGecCxHh9
-ICKjT4LmvDWFgPuObn8bJEY7sqTEwh1Mj4fXLqk2/syPQD/uMtc=
-=xHvz
------END PGP SIGNATURE-----
-
---LTeJQqWS0MN7I/qa--
