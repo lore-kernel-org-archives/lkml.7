@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D73B5C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:21:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54036C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:21:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAAA9208C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:21:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B66A208CE
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:21:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574306468;
-	bh=fwlpMajiWDAf3vBnnuBrL+s1Cn+tsLMw1vyP9IajspA=;
+	s=default; t=1574306472;
+	bh=Ez6X3EKrkxhppyCurfnzf160xqaEmJGUUDMp8vXIXhM=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=dcZLc4Rn5KgzNqKXsiebRHdmO+DHPbtLDaCFlSQlQ33UwGWOTmSYdf3SLwYffnKcD
-	 EE7fVNfSvn0bdnznowxuMmNMp4hiQkDXx6nXG3F0YUuR0iVqqAxbO77zpVY0upiCmN
-	 +677qpClfeJC+zoyMhT+7MEX2Oq1p0tRl3rCfXXY=
+	b=qX7TNFGNnN3PV1vsB3sDb7peExQqsXwGq23urDxbtFn01BTel6z7lqxmYfw854OMP
+	 DV8CMmBcXHYtAHBWdKCkHsziyPGhPEE+uR2377mkpZvh8UW7YsITFB5a+iLl/MpoFf
+	 Fwh2xopLPs0qbYtvP+8vLPUoCooBZQSW+yfu+sHY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727673AbfKUDVH (ORCPT
+        id S1727688AbfKUDVL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 22:21:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35050 "EHLO mail.kernel.org"
+        Wed, 20 Nov 2019 22:21:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726840AbfKUDVF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 22:21:05 -0500
+        id S1726083AbfKUDVJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 22:21:09 -0500
 Received: from PC-kkoz.proceq.com (unknown [213.160.61.66])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B33DF20B7C;
-        Thu, 21 Nov 2019 03:21:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A76FE208CE;
+        Thu, 21 Nov 2019 03:21:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574306465;
-        bh=fwlpMajiWDAf3vBnnuBrL+s1Cn+tsLMw1vyP9IajspA=;
+        s=default; t=1574306469;
+        bh=Ez6X3EKrkxhppyCurfnzf160xqaEmJGUUDMp8vXIXhM=;
         h=From:To:Cc:Subject:Date:From;
-        b=ERy4uiiEOU9ECuxAVGXidWH+RnFh1E5LjcGvMpGG4nqEPPZ3+SiOJIUesaoHLhizX
-         KHPCMRDLkEnwElwsoVy4ufuuJzCzk76rkq/zDzhaxtIET39qhxuoEG3JcPx/Dd5ygc
-         eA8qRg+fN2dj1ZMuCwGb8EF+PAQqSOuIMtq2LGDc=
+        b=VSM9cNglHXCjUUaiqDjqpR/fymL0/I82COgAM48NBfhZasH1dtOnuncvPzVEjP4pT
+         /YRk2IO0fs1Rk/ZzgX/Vu6L3nwO0cJ4TLYl3tuOQ6ZNixaJJkCxvRzOc0BluEuQN6y
+         prEDEdTIUjEYj1R42AEpy43SAS1O1UQ+YIhw7Juo=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH v2] powerpc: Fix Kconfig indentation
-Date:   Thu, 21 Nov 2019 04:21:01 +0100
-Message-Id: <1574306461-7646-1-git-send-email-krzk@kernel.org>
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: [PATCH v2] interconnect: qcom: Fix Kconfig indentation
+Date:   Thu, 21 Nov 2019 04:21:05 +0100
+Message-Id: <1574306465-8959-1-git-send-email-krzk@kernel.org>
 X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -66,90 +66,34 @@ Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Changes since v1:
 1. Fix also 7-space and tab+1 space indentation issues.
 ---
- arch/powerpc/Kconfig.debug             | 18 +++++++++---------
- arch/powerpc/platforms/Kconfig.cputype | 10 +++++-----
- 2 files changed, 14 insertions(+), 14 deletions(-)
+ drivers/interconnect/qcom/Kconfig | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/arch/powerpc/Kconfig.debug b/arch/powerpc/Kconfig.debug
-index c59920920ddc..4e1d39847462 100644
---- a/arch/powerpc/Kconfig.debug
-+++ b/arch/powerpc/Kconfig.debug
-@@ -122,8 +122,8 @@ config XMON_DEFAULT_RO_MODE
- 	depends on XMON
- 	default y
- 	help
--          Operate xmon in read-only mode. The cmdline options 'xmon=rw' and
--          'xmon=ro' override this default.
-+	  Operate xmon in read-only mode. The cmdline options 'xmon=rw' and
-+	  'xmon=ro' override this default.
+diff --git a/drivers/interconnect/qcom/Kconfig b/drivers/interconnect/qcom/Kconfig
+index c49afbea3458..2f9304d1db49 100644
+--- a/drivers/interconnect/qcom/Kconfig
++++ b/drivers/interconnect/qcom/Kconfig
+@@ -6,13 +6,13 @@ config INTERCONNECT_QCOM
+ 	  Support for Qualcomm's Network-on-Chip interconnect hardware.
  
- config DEBUGGER
- 	bool
-@@ -222,7 +222,7 @@ config PPC_EARLY_DEBUG_44x
- 	help
- 	  Select this to enable early debugging for IBM 44x chips via the
- 	  inbuilt serial port.  If you enable this, ensure you set
--          PPC_EARLY_DEBUG_44x_PHYSLOW below to suit your target board.
-+	  PPC_EARLY_DEBUG_44x_PHYSLOW below to suit your target board.
- 
- config PPC_EARLY_DEBUG_40x
- 	bool "Early serial debugging for IBM/AMCC 40x CPUs"
-@@ -325,7 +325,7 @@ config PPC_EARLY_DEBUG_44x_PHYSLOW
- 	default "0x40000200"
- 	help
- 	  You probably want 0x40000200 for ebony boards and
--          0x40000300 for taishan
-+	  0x40000300 for taishan
- 
- config PPC_EARLY_DEBUG_44x_PHYSHIGH
- 	hex "EPRN of early debug UART physical address"
-@@ -359,9 +359,9 @@ config FAIL_IOMMU
- 	  If you are unsure, say N.
- 
- config PPC_PTDUMP
--        bool "Export kernel pagetable layout to userspace via debugfs"
--        depends on DEBUG_KERNEL && DEBUG_FS
--        help
-+	bool "Export kernel pagetable layout to userspace via debugfs"
-+	depends on DEBUG_KERNEL && DEBUG_FS
-+	help
- 	  This option exports the state of the kernel pagetables to a
- 	  debugfs file. This is only useful for kernel developers who are
- 	  working in architecture specific areas of the kernel - probably
-@@ -390,8 +390,8 @@ config PPC_DEBUG_WX
- 
- config PPC_FAST_ENDIAN_SWITCH
- 	bool "Deprecated fast endian-switch syscall"
--        depends on DEBUG_KERNEL && PPC_BOOK3S_64
--        help
-+	depends on DEBUG_KERNEL && PPC_BOOK3S_64
-+	help
- 	  If you're unsure what this is, say N.
- 
- config KASAN_SHADOW_OFFSET
-diff --git a/arch/powerpc/platforms/Kconfig.cputype b/arch/powerpc/platforms/Kconfig.cputype
-index 303752f97c19..8d7f9c3dc771 100644
---- a/arch/powerpc/platforms/Kconfig.cputype
-+++ b/arch/powerpc/platforms/Kconfig.cputype
-@@ -415,13 +415,13 @@ config PPC_MM_SLICES
- 	bool
- 
- config PPC_HAVE_PMU_SUPPORT
--       bool
-+	bool
- 
- config PPC_PERF_CTRS
--       def_bool y
--       depends on PERF_EVENTS && PPC_HAVE_PMU_SUPPORT
+ config INTERCONNECT_QCOM_MSM8974
+-       tristate "Qualcomm MSM8974 interconnect driver"
+-       depends on INTERCONNECT_QCOM
+-       depends on QCOM_SMD_RPM
+-       select INTERCONNECT_QCOM_SMD_RPM
 -       help
--         This enables the powerpc-specific perf_event back-end.
-+	def_bool y
-+	depends on PERF_EVENTS && PPC_HAVE_PMU_SUPPORT
+-         This is a driver for the Qualcomm Network-on-Chip on msm8974-based
+-         platforms.
++	tristate "Qualcomm MSM8974 interconnect driver"
++	depends on INTERCONNECT_QCOM
++	depends on QCOM_SMD_RPM
++	select INTERCONNECT_QCOM_SMD_RPM
 +	help
-+	 This enables the powerpc-specific perf_event back-end.
++	 This is a driver for the Qualcomm Network-on-Chip on msm8974-based
++	 platforms.
  
- config FORCE_SMP
- 	# Allow platforms to force SMP=y by selecting this
+ config INTERCONNECT_QCOM_QCS404
+ 	tristate "Qualcomm QCS404 interconnect driver"
 -- 
 2.7.4
 
