@@ -2,89 +2,100 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE13C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 23:41:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31A04C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 23:41:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 974C3206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 23:41:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06A58206D8
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 23:41:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bVMsuoTY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726695AbfKUXlV (ORCPT
+        id S1726750AbfKUXl4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 18:41:21 -0500
-Received: from mga01.intel.com ([192.55.52.88]:39193 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725956AbfKUXlT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 18:41:19 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Nov 2019 15:41:19 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,227,1571727600"; 
-   d="scan'208";a="216242622"
-Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by fmsmga001.fm.intel.com with ESMTP; 21 Nov 2019 15:41:18 -0800
-Date:   Thu, 21 Nov 2019 15:53:29 -0800
-From:   Fenghua Yu <fenghua.yu@intel.com>
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Christopherson Sean J <sean.j.christopherson@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
-Subject: Re: [PATCH v10 6/6] x86/split_lock: Enable split lock detection by
- kernel parameter
-Message-ID: <20191121235329.GE199273@romley-ivt3.sc.intel.com>
-References: <3908561D78D1C84285E8C5FCA982C28F7F4DC167@ORSMSX115.amr.corp.intel.com>
- <B2612A75-BEC8-4FF7-9FDA-A7B55C2E0B4A@amacapital.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <B2612A75-BEC8-4FF7-9FDA-A7B55C2E0B4A@amacapital.net>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        Thu, 21 Nov 2019 18:41:56 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42403 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726714AbfKUXl4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 18:41:56 -0500
+Received: by mail-wr1-f67.google.com with SMTP id a15so6493979wrf.9;
+        Thu, 21 Nov 2019 15:41:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=pxac2gjvB3glHAzQ3VWzQMcHTiYDtnpxlq6kTZbB4+g=;
+        b=bVMsuoTYT3l3u4dKC1kQUfMuGPSu9V59pYf0Z6THKJutOO+T4ARAj45rzh23i/LFPo
+         CGzxJSNogHO1iN+GENwSGrX8FBMh1HlbB+qWeu+uxAPUr9XrPFaOmUYi9azpuxLk4OQA
+         RWBWkC2/DpbviaYHU/x44e/KVjJ2ZDVpZu6rGxKAjNMg417HXBOIQYRr4O+rRzb6shxm
+         BR+6QeQHjlAkdP4l+nbq0nV7C3Mx59wZkoke59ua4S3+/+pa3XdF++d1rHnTzISUjXTJ
+         Dubcbczs4mr83Q6JZ+zhczytUDlbRZNQelv4s1Aw/GSKbQUh2WJcDZXqY/+qUN2XlSUI
+         Navw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=pxac2gjvB3glHAzQ3VWzQMcHTiYDtnpxlq6kTZbB4+g=;
+        b=YE/Yc3OVOKF6aml/zHZlQ54YLI1HUXwK/ctjrRsmRpeQrw6KbhWmn+AFCrrZBju6wu
+         5h3fLiVRa5p1PAcQfQsGGYy+sljXTO6gOvCShm9vpLLKsX2amUPTY6uzgUMravdCPhvB
+         o3O/ILnriLpJrdkn24dznUVYRBPhB+gACR6JCtaRQ/EokjDLxGSDa/qqD6L0z03n1nnu
+         xHPHhIuIwoTMt8MLmCxegg6a1FaRc1fZW30UOExiRfNzt0fbdFG8L6FpuhfeSFnmImuM
+         6Kjpy8NSEQ3YkGUSw3ZlBDmjFQxTOv7gKl0bDEp6mX5JTxvmW3UU0OrGcMdAoX4cKKmL
+         p1fw==
+X-Gm-Message-State: APjAAAVBLMmhFjWc7HujmkKlkgTrYRPTOamLhvwX8vAOybNxHgNHbXI3
+        adkDGBGk0mVg+qPQ5kB5/mk=
+X-Google-Smtp-Source: APXvYqwmcH4X8ObVPyILzqCvBJI6hE2KtSvN2G51p6D7c8GRteZ1IRdTt2gKhdNGNds9qQ2ZF2fckQ==
+X-Received: by 2002:adf:ed48:: with SMTP id u8mr13719315wro.28.1574379712150;
+        Thu, 21 Nov 2019 15:41:52 -0800 (PST)
+Received: from localhost.localdomain ([2a02:2450:10d2:194d:5015:4c4c:42e9:e517])
+        by smtp.gmail.com with ESMTPSA id l10sm5894420wrg.90.2019.11.21.15.41.51
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 21 Nov 2019 15:41:51 -0800 (PST)
+From:   SeongJae Park <sj38.park@gmail.com>
+To:     corbet@lwn.net, will@kernel.org, paulmck@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        SeongJae Park <sj38.park@gmail.com>
+Subject: [PATCH 0/7] docs: Update ko_KR translations
+Date:   Fri, 22 Nov 2019 00:41:18 +0100
+Message-Id: <20191121234125.28032-1-sj38.park@gmail.com>
+X-Mailer: git-send-email 2.17.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 03:18:46PM -0800, Andy Lutomirski wrote:
-> 
-> 
-> > On Nov 21, 2019, at 2:29 PM, Luck, Tony <tony.luck@intel.com> wrote:
-> > 
-> > ﻿
-> >> 
-> >> It would be really, really nice if we could pass this feature through to a VM. Can we?
-> > 
-> > It's hard because the MSR is core scoped rather than thread scoped.  So on an HT
-> > enabled system a pair of logical processors gets enabled/disabled together.
-> > 
-> > 
-> 
-> Well that sucks.
-> 
-> Could we pass it through if the host has no HT?  Debugging is *so* much easier in a VM.  And HT is a bit dubious these days anyway.
+This patchset contains updates of Korean translation documents and a fix
+of original document.
 
-I think it's doable to pass it through to KVM. The difficulty is to disable
-split lock detection in KVM because that will disable split lock on
-the whole core including threads for the host. Without disabling split lock
-in KVM, it's doable to debug split lock in KVM.
+First 4 patches update the Korean translation of memory-barriers.txt.
+Fifth patch fixes a broken section reference in the original
+memory-barriers.txt.
 
-Sean and Xiaoyao are working on split lock for KVM (in separate patch set).
-They may have insight on how to do this.
+Sixth and seventh patches update the Korean translation of howto.rst.
 
-Thanks.
+*** BLURB HERE ***
 
--Fenghua
+SeongJae Park (7):
+  docs/memory-barriers.txt/kokr: Rewrite "KERNEL I/O BARRIER EFFECTS"
+    section
+  Documentation/kokr: Kill all references to mmiowb()
+  docs/memory-barriers.txt/kokr: Fix style, spacing and grammar in I/O
+    section
+  docs/memory-barriers.txt/kokr: Update I/O section to be clearer about
+    CPU vs thread
+  docs/memory-barriers.txt: Remove remaining references to mmiowb()
+  Documentation/translation: Use Korean for Korean translation title
+  Documentation/process/howto/kokr: Update for 4.x -> 5.x versioning
+
+ Documentation/memory-barriers.txt             |  11 +-
+ Documentation/translations/ko_KR/howto.rst    |  56 +++--
+ Documentation/translations/ko_KR/index.rst    |   4 +-
+ .../translations/ko_KR/memory-barriers.txt    | 227 +++++++-----------
+ 4 files changed, 119 insertions(+), 179 deletions(-)
+
+-- 
+2.17.2
+
