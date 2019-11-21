@@ -2,161 +2,93 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EFA2C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:46:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 816FCC43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:46:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D87820672
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:46:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D83620692
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:46:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="eif0I6Xf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iItYx5dQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726922AbfKUQqH (ORCPT
+        id S1727020AbfKUQqc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 11:46:07 -0500
-Received: from mail-eopbgr00041.outbound.protection.outlook.com ([40.107.0.41]:51908
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726379AbfKUQqG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 11:46:06 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=h56pdZDzQcvMN2RmSmurgqOuxpNaJg1xWXpQmDCPYp4h2jG79TMY3ld5E2Xxp2MCwgh27tDsuFpCU/yjjjL75SQCTVwOSRICTVCaHyeVejCxgQf4NR7SRQnf9oSzzI5n8Ih9GuIv5YQpexrhNr5ph4IbtQ6NPMmUwXr0CmIRyGTD0N4/BSPF8EKAzUgbFgm2+n/ZYg52D2VSKD+97TNZ07n2x6l0OMODu4yhrMoU/E7hy0n29rZqjUJUfQweY3yfl68B7Yss7EX36Kz5n9EatoOwlxG9t0k68AHFmPLSKI87Lq85AUjWGah+ceJSI8FoTCl+6QGIw1gBmJ2axMcFjA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8xHxrU5fYyVtTolyV7nPmm6s6RdE1DJ4v5fxZKYxCVE=;
- b=jAxScznjYPe7hRoml3JKyXkhG03KT6fMLCSNy5eAiRD4y3ZihCR7aurHRk0ih7B/vYvPyOmyl09PP6plhFOhEx1YlIIDYk6ajJ+ZuNTYhcEltmWUTogvycJQc5IyM+KqXBqw+RYthFmbChjyZU3biNKlzKlNln3U1juvh/Da0oXnH6+ARf5B45KLGRjVqDKxk1KFQXETab5AmQF1YMNbECPFah0m/7k5esNsGDdR7zB0OGZJhhTB7E+ePDO8cFDYx6rwA80l2Eno9gy/jyE+5JNgJcfHi7u97KSuNgi2Bxf3T5tMUptEOrW2n8GwOZwoxE1gG3ciGiJPSIITstDIoA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8xHxrU5fYyVtTolyV7nPmm6s6RdE1DJ4v5fxZKYxCVE=;
- b=eif0I6XfLbO/1Fh4JsbbNg0RoYwM22tDNwcD5VvV523pu7shNFh6RsZzqRMoFtFn3UFpNx864YhWDyw4sV+JFMUgiqktNBwf6CEgXB/ZDwgqQ49G06KrQubuXENeDFGHZQxqwmHXTmUX0WKwqNMLqAc9oyNcs9FjIzYVumLnCg4=
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
- VI1PR0402MB2944.eurprd04.prod.outlook.com (10.172.255.22) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2474.19; Thu, 21 Nov 2019 16:46:02 +0000
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::89e1:552e:a24d:e72]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::89e1:552e:a24d:e72%3]) with mapi id 15.20.2474.018; Thu, 21 Nov 2019
- 16:46:02 +0000
-From:   Horia Geanta <horia.geanta@nxp.com>
-To:     Iuliana Prodan <iuliana.prodan@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>
-CC:     "David S. Miller" <davem@davemloft.net>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Gary Hook <gary.hook@amd.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH 10/12] crypto: caam - add crypto_engine support for AEAD
- algorithms
-Thread-Topic: [PATCH 10/12] crypto: caam - add crypto_engine support for AEAD
- algorithms
-Thread-Index: AQHVnZa1FyZOwAzxGE6ZWqnis9ksHA==
-Date:   Thu, 21 Nov 2019 16:46:02 +0000
-Message-ID: <VI1PR0402MB3485587572B8720F372F4ED5984E0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-References: <1574029845-22796-1-git-send-email-iuliana.prodan@nxp.com>
- <1574029845-22796-11-git-send-email-iuliana.prodan@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=horia.geanta@nxp.com; 
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: bbc3181a-6384-43b4-79b6-08d76ea24b94
-x-ms-traffictypediagnostic: VI1PR0402MB2944:|VI1PR0402MB2944:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0402MB29446156897FA47345327F77984E0@VI1PR0402MB2944.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:525;
-x-forefront-prvs: 0228DDDDD7
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(136003)(376002)(346002)(396003)(366004)(199004)(189003)(256004)(2906002)(99286004)(110136005)(54906003)(8676002)(316002)(8936002)(3846002)(6116002)(81156014)(81166006)(33656002)(71200400001)(71190400001)(6436002)(229853002)(6246003)(4326008)(66066001)(9686003)(55016002)(86362001)(44832011)(6636002)(14454004)(5660300002)(6506007)(53546011)(186003)(26005)(102836004)(446003)(76176011)(25786009)(66476007)(66556008)(64756008)(66446008)(305945005)(91956017)(76116006)(74316002)(66946007)(52536014)(478600001)(7736002)(7696005)(14444005);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB2944;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: /2X8gl8e9GkqMtA98cPI8hkxs10AxcJgHoSmWArhn2LgbkgaC0R3x1F8xlE1SFz/jjSC9Kp3COVHI4gzus5P4xWoHC1BTy2I8GR+LlUw65qvb87lO+BKjKRt4mWehkeWHXQbK4cvlXewKR7t5rFDBCT8snEmYCiCfM5073uZwFGLGB5tEEFSKJ90qWsZWoLOwrf85eYmr5Tg2Uj7/pKejbD4EO3ZloFWRhTnGP/1NesJlFLyn7ZrsiTMgta6bV2jzugadlLsICHEtaWIRuiN7WaJCev74evfamD0ylgImdN9ymUuMkt8oV4XyxSh0nja+qqbHf14qQjtNOPSR82Q5KPnzN8Kj/5FiTBotyZLuQ7JQdhEKpzYl3gT7pL8UMG3EMjICWA5GlSxtp9tKlRDT+kOMvbjyGNQ1IhRj9k6C15X4pdEhS3nKmb0NZjxZ82t
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 21 Nov 2019 11:46:32 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:37075 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726379AbfKUQqc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 11:46:32 -0500
+Received: by mail-lf1-f67.google.com with SMTP id b20so3189625lfp.4;
+        Thu, 21 Nov 2019 08:46:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EjangubdYbmIqePnQ2tFTagrb21HEQtT8HpyfP7ti1w=;
+        b=iItYx5dQzTP531ILoUqhAXs7e+4wRs6j6pWyYQQxjrmpyioKzvJb36V20DpUtFeF0u
+         PbRiDJUbyJpSR0WWRRJUwwMNbcuVvOrG7VUrV0l2bMogckdzTreDbhs2uHNWoQs2tnri
+         rfyy4wsFfGe5IRqit3VjlaCz8F3hb/Op7pd7vkWM25vWC/qSvN5JvCL+7PL0kU+kQyUa
+         WFr8ZuwovAYDixeXnydSWN3h6rAi38rxOc/Q1aLoYnRcqfgKim6IQwDYG7vwy/LRQab9
+         E7O8FOb97tbHzP0nGPpIJlx1tvgWR9lAzFp6/8VfS0Voh7YqTYkZsU3yHw/4cIrTmHTW
+         S/bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EjangubdYbmIqePnQ2tFTagrb21HEQtT8HpyfP7ti1w=;
+        b=BVJpjxy5jAQMlFT+IcknHO6rzI70j+E7LOo1Rk8OQuyF+hKelcbQiGBJEABW4njS7P
+         UnIOd4/VSa5ExxZObvBD7hwosNAa9HouQESUBDDfIXW3NUIaqc/hSDzyH0T7c5oigOJw
+         4hO1kpRCVxwDd77DktJIxNQpdzJ7F43XOcRxoBFchDIgxhGvbl5nBp6LKgNDrF0iBUFC
+         zcs2eObUfkMtbZKcvHUIHuQusUYqx02Yr0Z49I5q4pK/rMVjuVLClKmm6FBTDxJa6XkN
+         JvIxfW2wfEgQGv4KiN/hjGppdEGXBGOHf2HC0ndDpJZFbgu1QHeScF+m4QMhMIZVKWd/
+         h7Pw==
+X-Gm-Message-State: APjAAAVF8jUHCpIIkZqL9FSPO2zp8N2BlAqAhkRizNGtC8EY1V7L0mJa
+        42zmnWVNOUq16ihbz6Fy4PNRewcb1yZJOgKT43Q=
+X-Google-Smtp-Source: APXvYqwt7Q3Tcz5l9BHsHKlZA/wVWUZ0x2W/W2EvB1/diUYJozdnSbuDZ5tPKX3zSB6GmSvliMB927yOQXDkS/YKPp0=
+X-Received: by 2002:ac2:5b86:: with SMTP id o6mr8591591lfn.44.1574354789928;
+ Thu, 21 Nov 2019 08:46:29 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bbc3181a-6384-43b4-79b6-08d76ea24b94
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Nov 2019 16:46:02.7064
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: EK+ElHOIXMwqF4qLesKC2CyDxMYveuxrv2h8JCnUK1kk2QC9GFlfUZJs6ZwhrWhnL3HfWVffecmdTNKU5jtX5w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB2944
+References: <1574332142-7130-1-git-send-email-peng.fan@nxp.com>
+In-Reply-To: <1574332142-7130-1-git-send-email-peng.fan@nxp.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Thu, 21 Nov 2019 13:46:31 -0300
+Message-ID: <CAOMZO5AHd7Sucj4pjVnFt_iGexMk-2_ENp4D3xDQe8PPqaoqdw@mail.gmail.com>
+Subject: Re: [PATCH] clk: imx: clk-composite-7ulp: add lock
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     "sboyd@kernel.org" <sboyd@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Alice Guo <alice.guo@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/18/2019 12:31 AM, Iuliana Prodan wrote:=0A=
-> @@ -1465,7 +1484,6 @@ static inline int aead_crypt(struct aead_request *r=
-eq, bool encrypt)=0A=
->  	struct aead_edesc *edesc;=0A=
->  	struct crypto_aead *aead =3D crypto_aead_reqtfm(req);=0A=
->  	struct caam_ctx *ctx =3D crypto_aead_ctx(aead);=0A=
-> -	struct caam_jr_request_entry *jrentry;=0A=
->  	struct device *jrdev =3D ctx->jrdev;=0A=
->  	bool all_contig;=0A=
->  	u32 *desc;=0A=
-> @@ -1479,16 +1497,14 @@ static inline int aead_crypt(struct aead_request =
-*req, bool encrypt)=0A=
->  =0A=
->  	/* Create and submit job descriptor */=0A=
->  	init_authenc_job(req, edesc, all_contig, encrypt);=0A=
-> +	desc =3D edesc->hw_desc;=0A=
->  =0A=
-This change is unrelated.=0A=
-=0A=
->  	print_hex_dump_debug("aead jobdesc@"__stringify(__LINE__)": ",=0A=
-> -			     DUMP_PREFIX_ADDRESS, 16, 4, edesc->hw_desc,=0A=
-> -			     desc_bytes(edesc->hw_desc), 1);=0A=
-> -=0A=
-> -	desc =3D edesc->hw_desc;=0A=
-> -	jrentry =3D &edesc->jrentry;=0A=
-> +			     DUMP_PREFIX_ADDRESS, 16, 4, desc,=0A=
-> +			     desc_bytes(desc), 1);=0A=
->  =0A=
-[...]=0A=
->  static inline int gcm_crypt(struct aead_request *req, bool encrypt)=0A=
->  {=0A=
->  	struct aead_edesc *edesc;=0A=
->  	struct crypto_aead *aead =3D crypto_aead_reqtfm(req);=0A=
->  	struct caam_ctx *ctx =3D crypto_aead_ctx(aead);=0A=
->  	struct device *jrdev =3D ctx->jrdev;=0A=
-> -	struct caam_jr_request_entry *jrentry;=0A=
->  	bool all_contig;=0A=
->  	u32 *desc;=0A=
->  	int ret =3D 0;=0A=
-> @@ -1525,16 +1565,14 @@ static inline int gcm_crypt(struct aead_request *=
-req, bool encrypt)=0A=
->  =0A=
->  	/* Create and submit job descriptor */=0A=
->  	init_gcm_job(req, edesc, all_contig, encrypt);=0A=
-> +	desc =3D edesc->hw_desc;=0A=
->  =0A=
-Same here.=0A=
-=0A=
->  	print_hex_dump_debug("aead jobdesc@"__stringify(__LINE__)": ",=0A=
-> -			     DUMP_PREFIX_ADDRESS, 16, 4, edesc->hw_desc,=0A=
-> -			     desc_bytes(edesc->hw_desc), 1);=0A=
-> -=0A=
-> -	desc =3D edesc->hw_desc;=0A=
-> -	jrentry =3D &edesc->jrentry;=0A=
-> +			     DUMP_PREFIX_ADDRESS, 16, 4, desc,=0A=
-> +			     desc_bytes(desc), 1);=0A=
->  =0A=
-=0A=
-Horia=0A=
+Hi Peng,
+
+On Thu, Nov 21, 2019 at 7:30 AM Peng Fan <peng.fan@nxp.com> wrote:
+>
+> From: Peng Fan <peng.fan@nxp.com>
+>
+> Add lock to mux/gate/divider to protect the access to the register
+
+The "access to the register" is too vague.
+
+Could you please be more specific in the commit log and send a v2?
+
+Thanks
