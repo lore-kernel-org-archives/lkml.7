@@ -2,246 +2,285 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E739C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:36:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAAB2C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:38:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E19F220674
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:36:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD4E320674
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:38:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JVcxGDcT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OJ6+E/4m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726664AbfKULga (ORCPT
+        id S1726690AbfKULiS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 06:36:30 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:23929 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726170AbfKULg3 (ORCPT
+        Thu, 21 Nov 2019 06:38:18 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:40526 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726230AbfKULiS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 06:36:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574336187;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=aQgCg9r/2dGUecDTxLpk5eHc+IzUOk9xvu+4L1ToBKI=;
-        b=JVcxGDcTRrXgrK4wRzEPZxMt+0S+N7GCFPCimNxt0goujDLNl2gsS2xFoGtd0xeCaB6/QK
-        haSqVfz7DAcOegCfSnbZThWtBmONVR2cS1zTVZjm9rvlYXxSGOz8zyiR1dsZRP5CJFQd2H
-        HByGEfce2+ak6Oc2LWA/Yu9Dw222XkE=
-Received: from mail-lf1-f69.google.com (mail-lf1-f69.google.com
- [209.85.167.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-63-sG2OA2RIMWOdKffZa8RKmg-1; Thu, 21 Nov 2019 06:36:23 -0500
-Received: by mail-lf1-f69.google.com with SMTP id m2so831945lfo.20
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 03:36:22 -0800 (PST)
+        Thu, 21 Nov 2019 06:38:18 -0500
+Received: by mail-wm1-f67.google.com with SMTP id y5so3285856wmi.5;
+        Thu, 21 Nov 2019 03:38:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=ymYVwgS3u3Is3vut5facTUt0ewbtP1AkLC3XruiyyFw=;
+        b=OJ6+E/4mIpJrfVzL/CzFsbRw9we7mEYlDp7DNWT6XbKCr1OrAw8g8vkoD6Zs3L6d8R
+         hFeiCRE2bXcNKEx3SQ90HrjFvdsXhWvMLEA7FVszTd/tmVlXQO1/2/3WJztfGHejQgTE
+         WkdYVkpVof2pqJKS4FIm4spQpy+ApI2GQrGbcWnv/TG+Wd/zda3fYSCiV/DrJBGNfcaN
+         Qa7hf0RMxxsUcNWy9dpER6xwRV8EVUvOq33j0V4M1c4CwKJVcmbM53K2QQtDUFtd4jq9
+         rlmman9bZojiY3ADvfPfD+x20y1L1m2pbHD+y+1UQ5T6clpXW2zDmEZDepGYU5ULxFGE
+         +1xQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=AI3Lz+fe3tgGnmZzp6UnbNwKZ/HmZt3MkWV/7daYNmM=;
-        b=KrGbWODs6CmIbZSuXiRD+W71XGYTv4G3CJ+CdEDFxt+dzOpZFkfFuq9sXkf0F0l1k7
-         MA2bqrwVv28subXRDXASQ9X81Y6U3JHv+4M8K24JmTy1emTwaAiXvp1qbW0AuoJRk9iU
-         wOZGJTDhhQFEw9yaR5vhRP1njk2ir85o6mYw6Xa8OElEzRjyTEr22SynWjO12At2zGTD
-         8kGk6rTk+dnhLNhdDUJKMUaI53CxPZZdWYlb7TdpZGioWj/H6GPD7c99JIr8M7u2MpOo
-         YchnCNcS/eKU9B8PzMPGObapf+IDZqPighRfBDEityFzZHt9zKOgP6WA8nB32xCKdXBQ
-         QvGg==
-X-Gm-Message-State: APjAAAXPVHR4RFNhyTrPT/T7HCS4UNRaVZUFAgnNpRB3PNZZgHkqFoAs
-        ftgwgWQpTvtA6Uw/DR9Y700YzrJ9hB1r8Bhcqvsyc6PnpXkNiJCI4HY+FKbSlPldXLHA+1BL1/L
-        odFeh4/Ka+dr1bDdU09YqQD0S
-X-Received: by 2002:a05:651c:1109:: with SMTP id d9mr6850557ljo.192.1574336181716;
-        Thu, 21 Nov 2019 03:36:21 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyClpgq0ySxcdbFUXrT7LPszdsXz5qIxbI3zgOlx7KT5l17QqYRjdek47VQoA5ZLEvRq1gdpQ==
-X-Received: by 2002:a05:651c:1109:: with SMTP id d9mr6850524ljo.192.1574336181425;
-        Thu, 21 Nov 2019 03:36:21 -0800 (PST)
-Received: from alrua-x1.borgediget.toke.dk (borgediget.toke.dk. [85.204.121.218])
-        by smtp.gmail.com with ESMTPSA id d4sm1213174lfi.32.2019.11.21.03.36.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Nov 2019 03:36:19 -0800 (PST)
-Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-        id 0D9681818B9; Thu, 21 Nov 2019 12:36:19 +0100 (CET)
-From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        syzbot <syzbot+30209ea299c09d8785c9@syzkaller.appspotmail.com>,
-        ddstreet@ieee.org, Dmitry Vyukov <dvyukov@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        bpf <bpf@vger.kernel.org>, Yonghong Song <yhs@fb.com>
-Subject: Re: unregister_netdevice: waiting for DEV to become free (2)
-In-Reply-To: <6f69f704-b51d-c3cb-02c6-8e6eb93f4194@i-love.sakura.ne.jp>
-References: <00000000000056268e05737dcb95@google.com> <0000000000007d22100573d66078@google.com> <063a57ba-7723-6513-043e-ee99c5797271@I-love.SAKURA.ne.jp> <CAADnVQJ7BZMVSt9on4updWrWsFWq6b5J1qEGwTdGYV+BLqH7tg@mail.gmail.com> <87imopgere.fsf@toke.dk> <6f69f704-b51d-c3cb-02c6-8e6eb93f4194@i-love.sakura.ne.jp>
-X-Clacks-Overhead: GNU Terry Pratchett
-Date:   Thu, 21 Nov 2019 12:36:18 +0100
-Message-ID: <87r2217971.fsf@toke.dk>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ymYVwgS3u3Is3vut5facTUt0ewbtP1AkLC3XruiyyFw=;
+        b=CQCeLXAdMFvAxsrKf6aIIfuU4xiIO0Fhp90rL2bQx3UXg+f5kiPPy7FkQMyODMwNSw
+         ItsPZYlxgqcmgAr0oLWGjJ0NNwL5R2S3fwm41viYVAU4uDBvSh8vTusZglgsmavC/dSt
+         gIirNU2y7Qjyn8d23WlDuy/8CI3OBiutDYzD3ZYiiQAcZi9OLSmya0ILKCnWHESrq6EM
+         07ZuwngGEXX86EGI/BHTSvoe4dGmvCAfrdvtKDxskhhI0/y382KEb7l1fepyhVQHI+RD
+         l6rEn9JYELqDwMICXEojOOCIlJTR/2/gPrYHulT5XaJTnRwE9vLjzkDlIp2k1TsIxspl
+         SwsQ==
+X-Gm-Message-State: APjAAAVmD4PeiK4NWltdAoGghsce7mHI11bP8Lr0gPK41FWrzxdJrmRw
+        si0s7lgaDioQLUOHYAZRVOc8Yxb+Q3vUrqjx8Dw=
+X-Google-Smtp-Source: APXvYqyR9LDxGzxU1MMCH+7C5pWOo65/JRU9WwJr6HTbFIdaYXl6lkFahCsi/SxbBT63istEhq66gV2+uvSK+1/4UPs=
+X-Received: by 2002:a7b:c934:: with SMTP id h20mr2550286wml.56.1574336294490;
+ Thu, 21 Nov 2019 03:38:14 -0800 (PST)
 MIME-Version: 1.0
-X-MC-Unique: sG2OA2RIMWOdKffZa8RKmg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
+References: <20191119175319.16561-1-peron.clem@gmail.com> <20191119175319.16561-6-peron.clem@gmail.com>
+ <20191121073647.phutknyb3tzp44ye@pengutronix.de>
+In-Reply-To: <20191121073647.phutknyb3tzp44ye@pengutronix.de>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Thu, 21 Nov 2019 12:38:03 +0100
+Message-ID: <CAJiuCcd3p-=G9TEadARPmCs6cS7gi61M4CaxX17=NOHwo9onzA@mail.gmail.com>
+Subject: Re: [PATCH v7 5/8] pwm: sun4i: Add support to output source clock directly
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Philipp Zabel <pza@pengutronix.de>, linux-pwm@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp> writes:
+Hi Uwe,
 
-> Hello.
+On Thu, 21 Nov 2019 at 08:36, Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
 >
-> syzbot is still reporting that bpf(BPF_MAP_UPDATE_ELEM) causes
-> unregister_netdevice() to hang. It seems that commit 546ac1ffb70d25b5
-> ("bpf: add devmap, a map for storing net device references") assigned
-> dtab->netdev_map[i] at dev_map_update_elem() but commit 6f9d451ab1a33728
-> ("xdp: Add devmap_hash map type for looking up devices by hashed index")
-> forgot to assign dtab->netdev_map[idx] at __dev_map_hash_update_elem()
-> when dev is newly allocated by __dev_map_alloc_node(). As far as I and
-> syzbot tested, https://syzkaller.appspot.com/x/patch.diff?x=3D140dd206e00=
-000
-> can avoid the problem, but I don't know whether this is right location to
-> assign it. Please check and fix.
+> Hello Cl=C3=A9ment,
+>
+> On Tue, Nov 19, 2019 at 06:53:16PM +0100, Cl=C3=A9ment P=C3=A9ron wrote:
+> > From: Jernej Skrabec <jernej.skrabec@siol.net>
+> >
+> > PWM core has an option to bypass whole logic and output unchanged sourc=
+e
+> > clock as PWM output. This is achieved by enabling bypass bit.
+> >
+> > Note that when bypass is enabled, no other setting has any meaning, not
+> > even enable bit.
+> >
+> > This mode of operation is needed to achieve high enough frequency to
+> > serve as clock source for AC200 chip which is integrated into same
+> > package as H6 SoC.
+> >
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> > ---
+> >  drivers/pwm/pwm-sun4i.c | 92 ++++++++++++++++++++++++++++-------------
+> >  1 file changed, 64 insertions(+), 28 deletions(-)
+> >
+> > diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
+> > index ce83d479ba0e..a1d8851b18f0 100644
+> > --- a/drivers/pwm/pwm-sun4i.c
+> > +++ b/drivers/pwm/pwm-sun4i.c
+> > @@ -3,6 +3,10 @@
+> >   * Driver for Allwinner sun4i Pulse Width Modulation Controller
+> >   *
+> >   * Copyright (C) 2014 Alexandre Belloni <alexandre.belloni@free-electr=
+ons.com>
+> > + *
+> > + * Limitations:
+> > + * - When outputing the source clock directly, the PWM logic will be b=
+ypassed
+> > + *   and the currently running period is not guaranteed to be complete=
+d
+> >   */
+> >
+> >  #include <linux/bitops.h>
+> > @@ -73,6 +77,7 @@ static const u32 prescaler_table[] =3D {
+> >
+> >  struct sun4i_pwm_data {
+> >       bool has_prescaler_bypass;
+> > +     bool has_direct_mod_clk_output;
+> >       unsigned int npwm;
+> >  };
+> >
+> > @@ -118,6 +123,20 @@ static void sun4i_pwm_get_state(struct pwm_chip *c=
+hip,
+> >
+> >       val =3D sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
+> >
+> > +     /*
+> > +      * PWM chapter in H6 manual has a diagram which explains that if =
+bypass
+> > +      * bit is set, no other setting has any meaning. Even more, exper=
+iment
+> > +      * proved that also enable bit is ignored in this case.
+> > +      */
+> > +     if ((val & BIT_CH(PWM_BYPASS, pwm->hwpwm)) &&
+> > +         sun4i_pwm->data->has_direct_mod_clk_output) {
+> > +             state->period =3D DIV_ROUND_UP_ULL(NSEC_PER_SEC, clk_rate=
+);
+> > +             state->duty_cycle =3D DIV_ROUND_UP_ULL(state->period, 2);
+> > +             state->polarity =3D PWM_POLARITY_NORMAL;
+> > +             state->enabled =3D true;
+> > +             return;
+> > +     }
+> > +
+> >       if ((PWM_REG_PRESCAL(val, pwm->hwpwm) =3D=3D PWM_PRESCAL_MASK) &&
+> >           sun4i_pwm->data->has_prescaler_bypass)
+> >               prescaler =3D 1;
+> > @@ -149,13 +168,23 @@ static void sun4i_pwm_get_state(struct pwm_chip *=
+chip,
+> >
+> >  static int sun4i_pwm_calculate(struct sun4i_pwm_chip *sun4i_pwm,
+> >                              const struct pwm_state *state,
+> > -                            u32 *dty, u32 *prd, unsigned int *prsclr)
+> > +                            u32 *dty, u32 *prd, unsigned int *prsclr,
+> > +                            bool *bypass)
+> >  {
+> >       u64 clk_rate, div =3D 0;
+> >       unsigned int pval, prescaler =3D 0;
+> >
+> >       clk_rate =3D clk_get_rate(sun4i_pwm->clk);
+> >
+> > +     *bypass =3D state->enabled &&
+> > +               (state->period * clk_rate >=3D NSEC_PER_SEC) &&
+> > +               (state->period * clk_rate < 2 * NSEC_PER_SEC) &&
+> > +               (state->duty_cycle * clk_rate * 2 >=3D NSEC_PER_SEC);
+> > +
+> > +     /* Skip calculation of other parameters if we bypass them */
+> > +     if (*bypass && sun4i_pwm->data->has_direct_mod_clk_output)
+> > +             return 0;
+> > +
+>
+> Hmm, so if my PWM doesn't support the bypass bit *bypass might still be
+> true on return of sun4i_pwm_calculate. It doesn't hurt because the value
+> is only used after another check of has_direct_mod_clk_output, but still
+> this is a bit confusing.
 
-Hi Tetsuo
+Ok will change this
 
-Sorry for missing this email last week :(
+>
+> >       if (sun4i_pwm->data->has_prescaler_bypass) {
+> >               /* First, test without any prescaler when available */
+> >               prescaler =3D PWM_PRESCAL_MASK;
+> > @@ -202,10 +231,11 @@ static int sun4i_pwm_apply(struct pwm_chip *chip,=
+ struct pwm_device *pwm,
+> >  {
+> >       struct sun4i_pwm_chip *sun4i_pwm =3D to_sun4i_pwm_chip(chip);
+> >       struct pwm_state cstate;
+> > -     u32 ctrl;
+> > +     u32 ctrl, period, duty, val;
+> >       int ret;
+> > -     unsigned int delay_us;
+> > +     unsigned int delay_us, prescaler;
+> >       unsigned long now;
+> > +     bool bypass;
+> >
+> >       pwm_get_state(pwm, &cstate);
+> >
+> > @@ -220,43 +250,48 @@ static int sun4i_pwm_apply(struct pwm_chip *chip,=
+ struct pwm_device *pwm,
+> >       spin_lock(&sun4i_pwm->ctrl_lock);
+> >       ctrl =3D sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
+> >
+> > -     if ((cstate.period !=3D state->period) ||
+> > -         (cstate.duty_cycle !=3D state->duty_cycle)) {
+> > -             u32 period, duty, val;
+> > -             unsigned int prescaler;n write the register and return
+But
+> > +     ret =3D sun4i_pwm_calculate(sun4i_pwm, state, &duty, &period, &pr=
+escaler,
+> > +                               &bypass);
+> > +     if (ret) {
+> > +             dev_err(chip->dev, "period exceeds the maximum value\n");
+> > +             spin_unlock(&sun4i_pwm->ctrl_lock);
+> > +             if (!cstate.enabled)
+> > +                     clk_disable_unprepare(sun4i_pwm->clk);
+> > +             return ret;
+> > +     }
+> >
+> > -             ret =3D sun4i_pwm_calculate(sun4i_pwm, state,
+> > -                                       &duty, &period, &prescaler);
+> > -             if (ret) {
+> > -                     dev_err(chip->dev, "period exceeds the maximum va=
+lue\n");
+> > -                     spin_unlock(&sun4i_pwm->ctrl_lock);
+> > -                     if (!cstate.enabled)
+> > -                             clk_disable_unprepare(sun4i_pwm->clk);
+> > -                     return ret;
+>
+> This would be a bit easier to review if this commit was split into two
+> patches. One that drops the check for cstate.period !=3D state->period et=
+c
+> (which otherwise is nearly empty when ignoring whitespace changes), and
+> a second that then adds bypass support.
 
-I think the issue is not a missing update of dtab->netdev_map (that is
-not used at all for DEVMAP_HASH), but rather that dev_map_free() is not
-cleaning up properly for DEVMAP_HASH types. Could you please check if
-the patch below helps?
+Ok
 
--Toke
+>
+>
+> > +     if (sun4i_pwm->data->has_direct_mod_clk_output) {
+> > +             if (bypass) {
+> > +                     ctrl |=3D BIT_CH(PWM_BYPASS, pwm->hwpwm);
+> > +                     /* We can skip apply of other parameters */
+> > +                     goto bypass_mode;
+>
+> I would prefer to use goto only for error handling. Not sure if there is
+> a nice way to do that.
 
-diff --git a/kernel/bpf/devmap.c b/kernel/bpf/devmap.c
-index 3867864cdc2f..42ccfcb38424 100644
---- a/kernel/bpf/devmap.c
-+++ b/kernel/bpf/devmap.c
-@@ -74,7 +74,7 @@ struct bpf_dtab_netdev {
-=20
- struct bpf_dtab {
- =09struct bpf_map map;
--=09struct bpf_dtab_netdev **netdev_map;
-+=09struct bpf_dtab_netdev **netdev_map; /* DEVMAP type only */
- =09struct list_head __percpu *flush_list;
- =09struct list_head list;
-=20
-@@ -101,6 +101,12 @@ static struct hlist_head *dev_map_create_hash(unsigned=
- int entries)
- =09return hash;
- }
-=20
-+static inline struct hlist_head *dev_map_index_hash(struct bpf_dtab *dtab,
-+=09=09=09=09=09=09    int idx)
-+{
-+=09return &dtab->dev_index_head[idx & (dtab->n_buckets - 1)];
-+}
-+
- static int dev_map_init_map(struct bpf_dtab *dtab, union bpf_attr *attr)
- {
- =09int err, cpu;
-@@ -143,24 +149,22 @@ static int dev_map_init_map(struct bpf_dtab *dtab, un=
-ion bpf_attr *attr)
- =09for_each_possible_cpu(cpu)
- =09=09INIT_LIST_HEAD(per_cpu_ptr(dtab->flush_list, cpu));
-=20
--=09dtab->netdev_map =3D bpf_map_area_alloc(dtab->map.max_entries *
--=09=09=09=09=09      sizeof(struct bpf_dtab_netdev *),
--=09=09=09=09=09      dtab->map.numa_node);
--=09if (!dtab->netdev_map)
--=09=09goto free_percpu;
--
- =09if (attr->map_type =3D=3D BPF_MAP_TYPE_DEVMAP_HASH) {
- =09=09dtab->dev_index_head =3D dev_map_create_hash(dtab->n_buckets);
- =09=09if (!dtab->dev_index_head)
--=09=09=09goto free_map_area;
-+=09=09=09goto free_percpu;
-=20
- =09=09spin_lock_init(&dtab->index_lock);
-+=09} else {
-+=09=09dtab->netdev_map =3D bpf_map_area_alloc(dtab->map.max_entries *
-+=09=09=09=09=09=09      sizeof(struct bpf_dtab_netdev *),
-+=09=09=09=09=09=09      dtab->map.numa_node);
-+=09=09if (!dtab->netdev_map)
-+=09=09=09goto free_percpu;
- =09}
-=20
- =09return 0;
-=20
--free_map_area:
--=09bpf_map_area_free(dtab->netdev_map);
- free_percpu:
- =09free_percpu(dtab->flush_list);
- free_charge:
-@@ -228,21 +232,40 @@ static void dev_map_free(struct bpf_map *map)
- =09=09=09cond_resched();
- =09}
-=20
--=09for (i =3D 0; i < dtab->map.max_entries; i++) {
--=09=09struct bpf_dtab_netdev *dev;
-+=09if (dtab->map.map_type =3D=3D BPF_MAP_TYPE_DEVMAP_HASH) {
-+=09=09for (i =3D 0; i < dtab->n_buckets; i++) {
-+=09=09=09struct bpf_dtab_netdev *dev;
-+=09=09=09struct hlist_head *head;
-+=09=09=09struct hlist_node *next;
-=20
--=09=09dev =3D dtab->netdev_map[i];
--=09=09if (!dev)
--=09=09=09continue;
-+=09=09=09head =3D dev_map_index_hash(dtab, i);
-=20
--=09=09free_percpu(dev->bulkq);
--=09=09dev_put(dev->dev);
--=09=09kfree(dev);
-+=09=09=09hlist_for_each_entry_safe(dev, next, head, index_hlist) {
-+=09=09=09=09hlist_del_rcu(&dev->index_hlist);
-+=09=09=09=09free_percpu(dev->bulkq);
-+=09=09=09=09dev_put(dev->dev);
-+=09=09=09=09kfree(dev);
-+=09=09=09}
-+=09=09}
-+
-+=09=09kfree(dtab->dev_index_head);
-+=09} else {
-+=09=09for (i =3D 0; i < dtab->map.max_entries; i++) {
-+=09=09=09struct bpf_dtab_netdev *dev;
-+
-+=09=09=09dev =3D dtab->netdev_map[i];
-+=09=09=09if (!dev)
-+=09=09=09=09continue;
-+
-+=09=09=09free_percpu(dev->bulkq);
-+=09=09=09dev_put(dev->dev);
-+=09=09=09kfree(dev);
-+=09=09}
-+
-+=09=09bpf_map_area_free(dtab->netdev_map);
- =09}
-=20
- =09free_percpu(dtab->flush_list);
--=09bpf_map_area_free(dtab->netdev_map);
--=09kfree(dtab->dev_index_head);
- =09kfree(dtab);
- }
-=20
-@@ -263,12 +286,6 @@ static int dev_map_get_next_key(struct bpf_map *map, v=
-oid *key, void *next_key)
- =09return 0;
- }
-=20
--static inline struct hlist_head *dev_map_index_hash(struct bpf_dtab *dtab,
--=09=09=09=09=09=09    int idx)
--{
--=09return &dtab->dev_index_head[idx & (dtab->n_buckets - 1)];
--}
--
- struct bpf_dtab_netdev *__dev_map_hash_lookup_elem(struct bpf_map *map, u3=
-2 key)
- {
- =09struct bpf_dtab *dtab =3D container_of(map, struct bpf_dtab, map);
+As the PWM is necessarily enabled we can write the register and return
+but not sure it's more proper.
 
+sun4i_pwm_writel(sun4i_pwm, ctrl, PWM_CTRL_REG);
+spin_unlock(&sun4i_pwm->ctrl_lock);
+return 0;
+
+Regards,
+Cl=C3=A9ment
+
+>
+> > +             } else {
+> > +                     ctrl &=3D ~BIT_CH(PWM_BYPASS, pwm->hwpwm);
+> >               }
+> > +     }
+>
+> Best regards
+> Uwe
+>
+> --
+> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
+     |
+> Industrial Linux Solutions                 | https://www.pengutronix.de/ =
+|
