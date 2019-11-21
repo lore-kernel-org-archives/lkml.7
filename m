@@ -2,374 +2,219 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAF5FC43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:17:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D9B1C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:19:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1EA42067D
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:17:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 350E02067D
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:19:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dW/31UQR"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cHI403mF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726830AbfKUVQm (ORCPT
+        id S1726704AbfKUVTf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 16:16:42 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:47063 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726329AbfKUVQZ (ORCPT
+        Thu, 21 Nov 2019 16:19:35 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:43152 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726293AbfKUVTf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 16:16:25 -0500
-Received: by mail-qt1-f196.google.com with SMTP id r20so5289795qtp.13
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 13:16:25 -0800 (PST)
+        Thu, 21 Nov 2019 16:19:35 -0500
+Received: by mail-lj1-f196.google.com with SMTP id y23so4842020ljh.10
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 13:19:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=HjVA+vfOa4cuhOG7ZZQ5ZOYhaog/Hi6+sxpMWojKdbQ=;
-        b=dW/31UQR9TpIGK0h/XcisPIhwMkzpKxBQKFvP9I/80AGreRgtSo21q/f23Qm4fF29i
-         Snb0rG7W/Yw6tti1jiLmA8UP7gbcoZAogGZqJXvsU9PtwMiYrNyYVzRjLSka1nf4IqdO
-         ZpDyuLYtxk+M4IeJAnrFALGGYHFTUsmViuXfPRTXyE6kBtj74q/l7HyZxFznr4uslg5K
-         TXuR05iyDt4V5T+OSn6U6Hi0f172P6hoSY/GiKJcN3LYcZ1c+eQWigm5M8ogznXqInn5
-         ROI/zSaIQVEsvJEJqiXA+vSHzJeqBeiy9xdCRKP6epYQuoqLzRZFLoTptiNcyppn+C0v
-         n73Q==
+        bh=L59pxlP2h08giolehrbEu//J/zWHVNPRb2f26ecJqHM=;
+        b=cHI403mFP70A3RgVqDv2UyS2js6BF1mI1YRiR/P7BDbQyTnZFaOYsC3SIL4X1UVXt9
+         jXdZ/NK2In5G19otIuHbirY05Xi5rSZE+FPhBdyzIgjqlMQXogxnYynlfCsG3zMU+pZR
+         lAIMOqlTk8L0KfipBKDFixcUBmcWuT/u49X2Q=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=HjVA+vfOa4cuhOG7ZZQ5ZOYhaog/Hi6+sxpMWojKdbQ=;
-        b=jp3Lk+fe9anXvwI6VWuEEvZbHJMsFrICjrB699UIrKQGCRadD9MXfnbUV1/lBYlhJ8
-         gFcQIYTm1easvPfnaWxBEvDbIhDZXvgcbislt4tiK28oeKPHOmlVyyYOTEGDog3txWyB
-         3Ne9hY5Nl/iOyHxjKhgAQ0n6x1F0+jEOeeMMifAS3IAhXQew8wfFAZGRlbWPQgLy451r
-         4ZchKDRwA/IbQAijyxvysnV+sPplEMXguuwQq1VoGT4DMq/ZBDkaEdrYkLo+Yx7ZOu+7
-         2ynhEviiEG/VvGb6lJVPyETIJhwbTQv7A6aWk78mGFu+DmntiapSHEMtKohORwkGHs4h
-         DrSA==
-X-Gm-Message-State: APjAAAVTX0iOfeyZ7kIhv9WGYX/IyUp2EjOCcndW/e2SFhZRd+HQDxEg
-        mY0JRuPtAn9TKgsCgACyyH6h598Vi6fKfoG6zWQKCA==
-X-Google-Smtp-Source: APXvYqxq7xEzAax5FVtLsPdRun5uqgKjwBTSdow7Rdb+nnIKX2At/wV1oBd6VwfO5SfYKpELtEaDmhqbzJSm2Jr8dkE=
-X-Received: by 2002:aed:31e7:: with SMTP id 94mr4875902qth.71.1574370983986;
- Thu, 21 Nov 2019 13:16:23 -0800 (PST)
+        bh=L59pxlP2h08giolehrbEu//J/zWHVNPRb2f26ecJqHM=;
+        b=mpZwNwhZVkvL8SdYFxz2qL6cAe9elmgci4V0vSpqDofGx+J20DCIDVK95cmfXl6mL5
+         Gs6nlamefcanAO5q3CpTCu0jB9/HHIjg2L4IoFxy2IsQlNXhELOd5zli/6udn2z8RobW
+         09J92VKAaKghCCTn1fmiz2oF65DsuLw011OByA7wJuM3pA6nVm4D1zwEtnzZgguHrF25
+         MhkQIvgUB1zzhojAn3ome6WanwkHMXUjYwZSpNZ7mpaeWkMdiVhC7rTzfAyGK6O2QB19
+         0H9Me2JRkXb/bOmJcBvR2L54a7S4nUXG98WikFHxkUHegZnw9ADcvYzSw2LhArJ3zh9Z
+         rWYA==
+X-Gm-Message-State: APjAAAUc+R+ZO5jioY4JN0XeuOzAkYVRlc5Pvq3NKfSltXbrXLWijUIb
+        d2nLIcwI+evZdmzyu68DT1KhOecthak=
+X-Google-Smtp-Source: APXvYqyCh2V7+3Kt5pc63WZ5AyFSi509/lB31HqLG73cU2sU+6OZVpeOY1SWmRi4hJ7/xJlERLTLJA==
+X-Received: by 2002:a2e:9a95:: with SMTP id p21mr9222297lji.175.1574371171016;
+        Thu, 21 Nov 2019 13:19:31 -0800 (PST)
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
+        by smtp.gmail.com with ESMTPSA id m12sm2002295lfb.60.2019.11.21.13.19.28
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 Nov 2019 13:19:29 -0800 (PST)
+Received: by mail-lj1-f176.google.com with SMTP id m4so4852708ljj.8
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 13:19:28 -0800 (PST)
+X-Received: by 2002:a2e:9208:: with SMTP id k8mr9619555ljg.14.1574371167841;
+ Thu, 21 Nov 2019 13:19:27 -0800 (PST)
 MIME-Version: 1.0
-References: <20191119193036.92831-1-brianvv@google.com> <20191119193036.92831-9-brianvv@google.com>
- <9f80a432-9825-9a39-cc90-d1358e0fc40f@fb.com>
-In-Reply-To: <9f80a432-9825-9a39-cc90-d1358e0fc40f@fb.com>
-From:   Brian Vazquez <brianvv@google.com>
-Date:   Thu, 21 Nov 2019 13:16:12 -0800
-Message-ID: <CAMzD94Sc5oWxKVoCrXQyM1Zy1FEtxod6x+0UEVkUcE8p8ZX14g@mail.gmail.com>
-Subject: Re: [PATCH v2 bpf-next 8/9] selftests/bpf: add batch ops testing for
- hmap and hmap_percpu
-To:     Yonghong Song <yhs@fb.com>
-Cc:     Brian Vazquez <brianvv.kernel@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S . Miller" <davem@davemloft.net>,
-        Stanislav Fomichev <sdf@google.com>,
-        Petar Penkov <ppenkov@google.com>,
-        Willem de Bruijn <willemb@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>
+References: <20191114235008.185111-1-evgreen@chromium.org> <20191114154903.v7.2.I4d476bddbf41a61422ad51502f4361e237d60ad4@changeid>
+ <20191120022518.GU6235@magnolia> <CAE=gft4mjKc4QKFKxp2FX9G2rUMuE3_eDuW_3Oq7NqTYBQwEjg@mail.gmail.com>
+ <20191120191302.GV6235@magnolia> <CAE=gft6x1TmkkNTj+gktYMkHcysYyuYL50cavYusQ7hd9zChvA@mail.gmail.com>
+ <20191120194507.GW6235@magnolia>
+In-Reply-To: <20191120194507.GW6235@magnolia>
+From:   Evan Green <evgreen@chromium.org>
+Date:   Thu, 21 Nov 2019 13:18:51 -0800
+X-Gmail-Original-Message-ID: <CAE=gft4OcxPP7srBe_2bj8K_0jHGD8Ae_PbV1Rq-Nz4F8GtkQA@mail.gmail.com>
+Message-ID: <CAE=gft4OcxPP7srBe_2bj8K_0jHGD8Ae_PbV1Rq-Nz4F8GtkQA@mail.gmail.com>
+Subject: Re: [PATCH v7 2/2] loop: Better discard support for block devices
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Martin K Petersen <martin.petersen@oracle.com>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Ming Lei <ming.lei@redhat.com>,
+        Alexis Savery <asavery@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        linux-block <linux-block@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 10:36 AM Yonghong Song <yhs@fb.com> wrote:
+On Wed, Nov 20, 2019 at 11:45 AM Darrick J. Wong
+<darrick.wong@oracle.com> wrote:
 >
->
->
-> On 11/19/19 11:30 AM, Brian Vazquez wrote:
-> > From: Yonghong Song <yhs@fb.com>
+> On Wed, Nov 20, 2019 at 11:25:48AM -0800, Evan Green wrote:
+> > On Wed, Nov 20, 2019 at 11:13 AM Darrick J. Wong
+> > <darrick.wong@oracle.com> wrote:
+> > >
+> > > On Wed, Nov 20, 2019 at 10:56:30AM -0800, Evan Green wrote:
+> > > > On Tue, Nov 19, 2019 at 6:25 PM Darrick J. Wong <darrick.wong@oracle.com> wrote:
+> > > > >
+> > > > > On Thu, Nov 14, 2019 at 03:50:08PM -0800, Evan Green wrote:
+> > > > > > If the backing device for a loop device is itself a block device,
+> > > > > > then mirror the "write zeroes" capabilities of the underlying
+> > > > > > block device into the loop device. Copy this capability into both
+> > > > > > max_write_zeroes_sectors and max_discard_sectors of the loop device.
+> > > > > >
+> > > > > > The reason for this is that REQ_OP_DISCARD on a loop device translates
+> > > > > > into blkdev_issue_zeroout(), rather than blkdev_issue_discard(). This
+> > > > > > presents a consistent interface for loop devices (that discarded data
+> > > > > > is zeroed), regardless of the backing device type of the loop device.
+> > > > > > There should be no behavior change for loop devices backed by regular
+> > > > > > files.
 > >
-> > Tested bpf_map_lookup_and_delete_batch() and bpf_map_update_batch()
-> > functionality.
-> >    $ ./test_maps
-> >      ...
-> >        test_hmap_lookup_and_delete_batch:PASS
-> >        test_pcpu_hmap_lookup_and_delete_batch:PASS
-> >      ...
->
-> Maybe you can add another tests for lookup_batch() and delete_batch()
-> so all new APIs get tested?
+> > (marking this spot for below)
+> >
+> > > > > >
+> > > > > > This change fixes blktest block/003, and removes an extraneous
+> > > > > > error print in block/013 when testing on a loop device backed
+> > > > > > by a block device that does not support discard.
+> > > > > >
+> > > > > > Signed-off-by: Evan Green <evgreen@chromium.org>
+> > > > > > Reviewed-by: Gwendal Grignou <gwendal@chromium.org>
+> > > > > > Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+> > > > > > ---
+> > > > > >
+> > > > > > Changes in v7:
+> > > > > > - Rebase on top of Darrick's patch
+> > > > > > - Tweak opening line of commit description (Darrick)
+> > > > > >
+> > > > > > Changes in v6: None
+> > > > > > Changes in v5:
+> > > > > > - Don't mirror discard if lo_encrypt_key_size is non-zero (Gwendal)
+> > > > > >
+> > > > > > Changes in v4:
+> > > > > > - Mirror blkdev's write_zeroes into loopdev's discard_sectors.
+> > > > > >
+> > > > > > Changes in v3:
+> > > > > > - Updated commit description
+> > > > > >
+> > > > > > Changes in v2: None
+> > > > > >
+> > > > > >  drivers/block/loop.c | 40 +++++++++++++++++++++++++++++-----------
+> > > > > >  1 file changed, 29 insertions(+), 11 deletions(-)
+> > > > > >
+> > > > > > diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+> > > > > > index 6a9fe1f9fe84..e8f23e4b78f7 100644
+> > > > > > --- a/drivers/block/loop.c
+> > > > > > +++ b/drivers/block/loop.c
+> > > > > > @@ -427,11 +427,12 @@ static int lo_fallocate(struct loop_device *lo, struct request *rq, loff_t pos,
+> > > > > >        * information.
+> > > > > >        */
+> > > > > >       struct file *file = lo->lo_backing_file;
+> > > > > > +     struct request_queue *q = lo->lo_queue;
+> > > > > >       int ret;
+> > > > > >
+> > > > > >       mode |= FALLOC_FL_KEEP_SIZE;
+> > > > > >
+> > > > > > -     if ((!file->f_op->fallocate) || lo->lo_encrypt_key_size) {
+> > > > > > +     if (!blk_queue_discard(q)) {
+> > > > > >               ret = -EOPNOTSUPP;
+> > > > > >               goto out;
+> > > > > >       }
+> > > > > > @@ -862,6 +863,21 @@ static void loop_config_discard(struct loop_device *lo)
+> > > > > >       struct file *file = lo->lo_backing_file;
+> > > > > >       struct inode *inode = file->f_mapping->host;
+> > > > > >       struct request_queue *q = lo->lo_queue;
+> > > > > > +     struct request_queue *backingq;
+> > > > > > +
+> > > > > > +     /*
+> > > > > > +      * If the backing device is a block device, mirror its zeroing
+> > > > > > +      * capability. REQ_OP_DISCARD translates to a zero-out even when backed
+> > > > > > +      * by block devices to keep consistent behavior with file-backed loop
+> > > > > > +      * devices.
+> > > > > > +      */
 
-I did test lookup_batch() and the code is there, I will add
-delete_batch() testing and change the name of the tests to better
-reflect what is being tested.
+Wait, I went to make this change and realized there's already a comment here.
 
+I can tweak the language a bit, but this is pretty much what you wanted, right?
+
+> > > > > > +     if (S_ISBLK(inode->i_mode) && !lo->lo_encrypt_key_size) {
+> > > > > > +             backingq = bdev_get_queue(inode->i_bdev);
+> > > > > > +             blk_queue_max_discard_sectors(q,
+> > > > > > +                     backingq->limits.max_write_zeroes_sectors);
+> > > > >
+> > > > > max_discard_sectors?
+> > > >
+> > > > I didn't plumb max_discard_sectors because for my scenario it never
+> > > > ends up hitting the block device that way.
+> > > >
+> > > > The loop device either uses FL_ZERO_RANGE or FL_PUNCH_HOLE. When
+> > > > backed by a block device, that ends up in blkdev_fallocate(), which
+> > > > always translates both of those into blkdev_issue_zeroout(), not
+> > > > blkdev_issue_discard(). So it's really the zeroing capabilities of the
+> > > > block device that matters, even for loop discard operations. It seems
+> > > > weird, but I think this is the right thing because it presents a
+> > > > consistent interface to loop device users whether backed by a file
+> > > > system file, or directly by a block device. That is, a previously
+> > > > discarded range will read back as zeroes.
+> > >
+> > > Ah, right.  Could you add this paragraph as a comment explaining why
+> > > we're setting max_discard_sectors from max_write_zeroes_sectors?
+> >
+> > Sure. I put an explanation in the commit description (see spot I
+> > marked above), but I agree a comment is probably also worthwhile.
 >
-> >
-> > Signed-off-by: Yonghong Song <yhs@fb.com>
-> > Signed-off-by: Brian Vazquez <brianvv@google.com>
-> > ---
-> >   .../map_lookup_and_delete_batch_htab.c        | 257 ++++++++++++++++++
-> >   1 file changed, 257 insertions(+)
-> >   create mode 100644 tools/testing/selftests/bpf/map_tests/map_lookup_and_delete_batch_htab.c
-> >
-> > diff --git a/tools/testing/selftests/bpf/map_tests/map_lookup_and_delete_batch_htab.c b/tools/testing/selftests/bpf/map_tests/map_lookup_and_delete_batch_htab.c
-> > new file mode 100644
-> > index 0000000000000..93e024cb85c60
-> > --- /dev/null
-> > +++ b/tools/testing/selftests/bpf/map_tests/map_lookup_and_delete_batch_htab.c
-> > @@ -0,0 +1,257 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/* Copyright (c) 2019 Facebook  */
-> > +#include <stdio.h>
-> > +#include <errno.h>
-> > +#include <string.h>
-> > +
-> > +#include <bpf/bpf.h>
-> > +#include <bpf/libbpf.h>
-> > +
-> > +#include <bpf_util.h>
-> > +#include <test_maps.h>
-> > +
-> > +static void map_batch_update(int map_fd, __u32 max_entries, int *keys,
-> > +                          void *values, bool is_pcpu)
-> > +{
-> > +     typedef BPF_DECLARE_PERCPU(int, value);
-> > +     int i, j, err;
-> > +     value *v;
-> > +
-> > +     if (is_pcpu)
-> > +             v = (value *)values;
-> > +
-> > +     for (i = 0; i < max_entries; i++) {
-> > +             keys[i] = i + 1;
-> > +             if (is_pcpu)
-> > +                     for (j = 0; j < bpf_num_possible_cpus(); j++)
-> > +                             bpf_percpu(v[i], j) = i + 2 + j;
-> > +             else
-> > +                     ((int *)values)[i] = i + 2;
-> > +     }
-> > +
-> > +     err = bpf_map_update_batch(map_fd, keys, values, &max_entries, 0, 0);
-> > +     CHECK(err, "bpf_map_update_batch()", "error:%s\n", strerror(errno));
-> > +}
-> > +
-> > +static void map_batch_verify(int *visited, __u32 max_entries,
-> > +                          int *keys, void *values, bool is_pcpu)
-> > +{
-> > +     typedef BPF_DECLARE_PERCPU(int, value);
-> > +     value *v;
-> > +     int i, j;
-> > +
-> > +     if (is_pcpu)
-> > +             v = (value *)values;
-> > +
-> > +     memset(visited, 0, max_entries * sizeof(*visited));
-> > +     for (i = 0; i < max_entries; i++) {
-> > +
-> > +             if (is_pcpu) {
-> > +                     for (j = 0; j < bpf_num_possible_cpus(); j++) {
-> > +                             CHECK(keys[i] + 1 + j != bpf_percpu(v[i], j),
-> > +                                   "key/value checking",
-> > +                                   "error: i %d j %d key %d value %d\n",
-> > +                                   i, j, keys[i], bpf_percpu(v[i],  j));
-> > +                     }
-> > +             } else {
-> > +                     CHECK(keys[i] + 1 != ((int *)values)[i],
-> > +                           "key/value checking",
-> > +                           "error: i %d key %d value %d\n", i, keys[i],
-> > +                           ((int *)values)[i]);
-> > +             }
-> > +
-> > +             visited[i] = 1;
-> > +
-> > +     }
-> > +     for (i = 0; i < max_entries; i++) {
-> > +             CHECK(visited[i] != 1, "visited checking",
-> > +                   "error: keys array at index %d missing\n", i);
-> > +     }
-> > +}
-> > +
-> > +void __test_map_lookup_and_delete_batch(bool is_pcpu)
-> > +{
-> > +     int map_type = is_pcpu ? BPF_MAP_TYPE_PERCPU_HASH : BPF_MAP_TYPE_HASH;
-> > +     struct bpf_create_map_attr xattr = {
-> > +             .name = "hash_map",
-> > +             .map_type = map_type,
-> > +             .key_size = sizeof(int),
-> > +             .value_size = sizeof(int),
-> > +     };
-> > +     typedef BPF_DECLARE_PERCPU(int, value);
-> > +     int map_fd, *keys, *visited, key;
-> > +     __u32 batch = 0, count, total, total_success;
-> > +     const __u32 max_entries = 10;
-> > +     int err, i, step, value_size;
-> > +     value pcpu_values[10];
-> > +     bool nospace_err;
-> > +     void *values;
-> > +
-> > +     xattr.max_entries = max_entries;
-> > +     map_fd = bpf_create_map_xattr(&xattr);
-> > +     CHECK(map_fd == -1,
-> > +           "bpf_create_map_xattr()", "error:%s\n", strerror(errno));
-> > +
-> > +     value_size = is_pcpu ? sizeof(value) : sizeof(int);
-> > +     keys = malloc(max_entries * sizeof(int));
-> > +     if (is_pcpu)
-> > +             values = pcpu_values;
-> > +     else
-> > +             values = malloc(max_entries * sizeof(int));
-> > +     visited = malloc(max_entries * sizeof(int));
-> > +     CHECK(!keys || !values || !visited, "malloc()",
-> > +           "error:%s\n", strerror(errno));
-> > +
-> > +     /* test 1: lookup/delete an empty hash table, -ENOENT */
-> > +     count = max_entries;
-> > +     err = bpf_map_lookup_and_delete_batch(map_fd, NULL, &batch, keys,
-> > +                                           values, &count, 0, 0);
-> > +     CHECK((err && errno != ENOENT), "empty map",
-> > +           "error: %s\n", strerror(errno));
-> > +
-> > +     /* populate elements to the map */
-> > +     map_batch_update(map_fd, max_entries, keys, values, is_pcpu);
-> > +
-> > +     /* test 2: lookup/delete with count = 0, success */
-> > +     batch = 0;
-> > +     count = 0;
-> > +     err = bpf_map_lookup_and_delete_batch(map_fd, NULL, &batch, keys,
-> > +                                           values, &count, 0, 0);
-> > +     CHECK(err, "count = 0", "error: %s\n", strerror(errno));
-> > +
-> > +     /* test 3: lookup/delete with count = max_entries, success */
-> > +     memset(keys, 0, max_entries * sizeof(*keys));
-> > +     memset(values, 0, max_entries * value_size);
-> > +     count = max_entries;
-> > +     batch = 0;
-> > +     err = bpf_map_lookup_and_delete_batch(map_fd, NULL, &batch, keys,
-> > +                                           values, &count, 0, 0);
-> > +     CHECK((err && errno != ENOENT), "count = max_entries",
-> > +            "error: %s\n", strerror(errno));
-> > +     CHECK(count != max_entries, "count = max_entries",
-> > +           "count = %u, max_entries = %u\n", count, max_entries);
-> > +     map_batch_verify(visited, max_entries, keys, values, is_pcpu);
-> > +
-> > +     /* bpf_map_get_next_key() should return -ENOENT for an empty map. */
-> > +     err = bpf_map_get_next_key(map_fd, NULL, &key);
-> > +     CHECK(!err, "bpf_map_get_next_key()", "error: %s\n", strerror(errno));
-> > +
-> > +     /* test 4: lookup/delete in a loop with various steps. */
-> > +     total_success = 0;
-> > +     for (step = 1; step < max_entries; step++) {
-> > +             map_batch_update(map_fd, max_entries, keys, values, is_pcpu);
-> > +             memset(keys, 0, max_entries * sizeof(*keys));
-> > +             memset(values, 0, max_entries * value_size);
-> > +             batch = 0;
-> > +             total = 0;
-> > +             i = 0;
-> > +             /* iteratively lookup/delete elements with 'step'
-> > +              * elements each
-> > +              */
-> > +             count = step;
-> > +             nospace_err = false;
-> > +             while (true) {
-> > +                     err = bpf_map_lookup_batch(map_fd,
-> > +                                                total ? &batch : NULL,
-> > +                                                &batch, keys + total,
-> > +                                                values +
-> > +                                                total * value_size,
-> > +                                                &count, 0, 0);
-> > +                     /* It is possible that we are failing due to buffer size
-> > +                      * not big enough. In such cases, let us just exit and
-> > +                      * go with large steps. Not that a buffer size with
-> > +                      * max_entries should always work.
-> > +                      */
-> > +                     if (err && errno == ENOSPC) {
-> > +                             nospace_err = true;
-> > +                             break;
-> > +                     }
-> > +
-> > +
-> > +                     CHECK((err && errno != ENOENT), "lookup with steps",
-> > +                           "error: %s\n", strerror(errno));
-> > +
-> > +                     total += count;
-> > +                     if (err)
-> > +                             break;
-> > +
-> > +                     i++;
-> > +             }
-> > +             if (nospace_err == true)
-> > +                     continue;
-> > +
-> > +             CHECK(total != max_entries, "lookup with steps",
-> > +                   "total = %u, max_entries = %u\n", total, max_entries);
-> > +             map_batch_verify(visited, max_entries, keys, values, is_pcpu);
-> > +
-> > +             memset(keys, 0, max_entries * sizeof(*keys));
-> > +             memset(values, 0, max_entries * value_size);
-> > +             batch = 0;
-> > +             total = 0;
-> > +             i = 0;
-> > +             /* iteratively lookup/delete elements with 'step'
-> > +              * elements each
-> > +              */
-> > +             count = step;
-> > +             nospace_err = false;
-> > +             while (true) {
-> > +                     err = bpf_map_lookup_and_delete_batch(map_fd,
-> > +                                                     total ? &batch : NULL,
-> > +                                                     &batch, keys + total,
-> > +                                                     values +
-> > +                                                     total * value_size,
-> > +                                                     &count, 0, 0);
-> > +                     /* It is possible that we are failing due to buffer size
-> > +                      * not big enough. In such cases, let us just exit and
-> > +                      * go with large steps. Not that a buffer size with
-> > +                      * max_entries should always work.
-> > +                      */
-> > +                     if (err && errno == ENOSPC) {
-> > +                             nospace_err = true;
-> > +                             break;
-> > +                     }
-> > +
-> > +                     CHECK((err && errno != ENOENT), "lookup with steps",
-> > +                           "error: %s\n", strerror(errno));
-> > +
-> > +                     total += count;
-> > +                     if (err)
-> > +                             break;
-> > +                     i++;
-> > +             }
-> > +
-> > +             if (nospace_err == true)
-> > +                     continue;
-> > +
-> > +             CHECK(total != max_entries, "lookup/delete with steps",
-> > +                   "total = %u, max_entries = %u\n", total, max_entries);
-> > +
-> > +             map_batch_verify(visited, max_entries, keys, values, is_pcpu);
-> > +             err = bpf_map_get_next_key(map_fd, NULL, &key);
-> > +             CHECK(!err, "bpf_map_get_next_key()", "error: %s\n",
-> > +                   strerror(errno));
-> > +
-> > +             total_success++;
-> > +     }
-> > +
-> > +     CHECK(total_success == 0, "check total_success",
-> > +           "unexpected failure\n");
-> > +}
-> > +
-> > +void test_hmap_lookup_and_delete_batch(void)
-> > +{
-> > +     __test_map_lookup_and_delete_batch(false);
-> > +     printf("%s:PASS\n", __func__);
-> > +}
-> > +
-> > +void test_pcpu_hmap_lookup_and_delete_batch(void)
-> > +{
-> > +     __test_map_lookup_and_delete_batch(true);
-> > +     printf("%s:PASS\n", __func__);
-> > +}
-> > +
-> > +void test_map_lookup_and_delete_batch_htab(void)
-> > +{
-> > +     test_hmap_lookup_and_delete_batch();
-> > +     test_pcpu_hmap_lookup_and_delete_batch();
-> > +}
-> >
+> <nod> Sorry about the churn here.
+>
+> I have a strong preference towards documenting decisions like these
+> directly in the code because (a) I suck at reading patch prologues, (b)
+> someone reading the code after this gets committed will see it
+> immediately and right next to the relevant code, and (c) spelunking
+> through the git history of a file for commit messages is kind of clunky.
+>
+> Dunno if that's just my age showing (mmm, pre-bk linux) or what. :/
+>
+> --D
+>
+> > >
+> > > --D
+> > >
+> > > > -Evan
