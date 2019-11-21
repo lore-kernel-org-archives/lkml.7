@@ -2,118 +2,113 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE29FC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 19:00:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B40C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 19:01:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A697620672
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 19:00:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2E782067D
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 19:01:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="v+yf4A6a"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hw0tGGpy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbfKUTAH (ORCPT
+        id S1726975AbfKUTB3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 14:00:07 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:36792 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726293AbfKUTAH (ORCPT
+        Thu, 21 Nov 2019 14:01:29 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:38152 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726546AbfKUTB3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 14:00:07 -0500
-Received: by mail-io1-f67.google.com with SMTP id s3so4767779ioe.3
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 11:00:06 -0800 (PST)
+        Thu, 21 Nov 2019 14:01:29 -0500
+Received: by mail-ed1-f66.google.com with SMTP id s10so3754379edi.5;
+        Thu, 21 Nov 2019 11:01:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=SnPj/n1gyGH0v59Wr7JbdghJQmtp3nHLjHxqakaNQHY=;
-        b=v+yf4A6aRgckwfN25zrv7pKeKGK6P2XVAvXldacF+NRZh72s3fqXxw895IGgT3kpJ8
-         J0OgyZgRa5EykvqtQ4nlYu2dzwJqrcPu3ygwQatG0jYJ4izFKF4YiFuO3M8eE3TAZMUa
-         JaiLbU169r/mOsVmJIvi2s+I58CDBQY4tdMucTV3RV4eLage8BB3Yd75kYYyAi9ndu0n
-         F4ePjwNjCbZ7yFLNqVUK78A2YqBBp0Wtv6MMpPS5g1y0FUCv0/EXWLB4B/dY/CSpTxFg
-         mrO6v7iaLGZcq2pVfRo/btCriOBV1ZR8IcYvUwaaZttwkJlvUftuWYKJ9wpvxJI32QwW
-         rAhQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WGlv9N7emzPPMkGFW2suWUAOKKS+im2D/mbhQrUjPOw=;
+        b=hw0tGGpydIclVWzvfKyqExS+ky3mFe5zVFYzo8L/vE9QIsquY7DLXT3bxgRHCc913E
+         QPYswTjKLbcK2rh16yudPur9Safmg77tW/A/pa8QnF37XhIQ5u2H6l5XQnrqZ0aSXohF
+         y6vPt6lysOVpBO2kR2FnrJoNlGusPUTt7c8MvEYo4Ow7Xs5zpbwdCctguSfnT+blVgEB
+         Q4i301/C0VgEKQcp8OXyj0B4DEMiIH+KW8S+llH6hOmRla4aO4RRVQjT1xyHulgZf1VE
+         +VPAp76Wx4D/VNMQcC/VxE3KHRvxo2QJLj9rf50nPHnZVipfoaeoJSPhd6ml6WK1/f/3
+         nZ8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=SnPj/n1gyGH0v59Wr7JbdghJQmtp3nHLjHxqakaNQHY=;
-        b=Gm//S/vP/IipI/FdsFPwHrzBRLVMyjC1Lyx6bv/ZfW9z2Urgti0eHfi8EhcajfHfsP
-         RmQaOXjN5B0OtQ/ynHaOAkRk6moEhUM7Aof1UAYidebmMVKStwe5qrJpWSMdPFhBCi3b
-         g4IT8z7lK/9aKRor6BH2DnkYxmt4HsgVHIaGPPjFY5Db1Nj7K17kFPF0/jZzkDfdGrpU
-         d2xgvCpmnrBeqivO7Nmk6Cdyq4BX0e14xgwDnNEWC9LQvoc+5nojxxwlJtAa0NoleHQY
-         WrdxyBe8/eNqre03Dfspyqo4kqS9cAj9UBWeFEKlSiPYZWdWyIFxq3xj+Gz9DJwclFgJ
-         1jMQ==
-X-Gm-Message-State: APjAAAVQeQ+nOBrihpdM1/ED4UIJkHri+9WCDstL3l+KFB2uspuz4+54
-        /ad7Tnh0xpdl+gKkd3fspK5z+L2SXUnAoriN
-X-Google-Smtp-Source: APXvYqwRT3wSZZTVGt8hSDmQAxZRovFkX++EpdpjERq09vW/IKK+mqwWvCHPHk9lkKVR7nOrptsX6g==
-X-Received: by 2002:a02:b00c:: with SMTP id p12mr4583129jah.112.1574362806304;
-        Thu, 21 Nov 2019 11:00:06 -0800 (PST)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id i79sm1492127ild.6.2019.11.21.11.00.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 21 Nov 2019 11:00:05 -0800 (PST)
-Subject: Re: [PATCH v4 00/10] Fix cdrom autoclose
-To:     Michal Suchanek <msuchanek@suse.de>, linux-scsi@vger.kernel.org,
-        linux-block@vger.kernel.org
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Eric Biggers <ebiggers@google.com>,
-        "J. Bruce Fields" <bfields@redhat.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Benjamin Coddington <bcodding@redhat.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Hou Tao <houtao1@huawei.com>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Jan Kara <jack@suse.cz>, Hannes Reinecke <hare@suse.com>,
-        "Ewan D. Milne" <emilne@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Matthew Wilcox <willy@infradead.org>
-References: <cover.1574355709.git.msuchanek@suse.de>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <4ba670de-80d4-130e-91f3-c6e1cc9c7a47@kernel.dk>
-Date:   Thu, 21 Nov 2019 12:00:03 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WGlv9N7emzPPMkGFW2suWUAOKKS+im2D/mbhQrUjPOw=;
+        b=geFjy27muvt1MM06Qe8Pm0+7EIjbkjcgAY3n8YcKQkKrVV67OdF5EeHB1JhrgigUjU
+         7L+9duCpy1YYkV8Iy+5AvUi+1KhF+LHR4j3KpDnkgNYPIMRfwFrdpmhksBmOGMLtrudw
+         24yfbuZ/KCIfbEmYZvs5EUQo4GPmUQJlcrRqiuk3ka+UHu57EDUYSEeNQwjHoVuzRRwc
+         /+/MFI6RbHZ+VSHeJfGfj/8r+27iPpo1SbVkrHIIJ2G1xj91mqt/9f9ZlUq+Qm8HRJtr
+         s87sQneT52NZy40ecmTs0DkEl8ZWc2q9GLOaKEHYYLtQN0tH+/Gh977LGxHJrQWp/1XQ
+         8ACQ==
+X-Gm-Message-State: APjAAAWwTnSo7PqxS1SMTMD8DMlYFf41ToHJ9ICqf8ElvKSk0OPmEubn
+        nd2qvgr5wU/tAGgOByZCZeY+7B+lx38dcjzr+7fkAoFI
+X-Google-Smtp-Source: APXvYqw7XM4/ilKVdiKymLyfmxi48lasfzIxyiJ681Tf/Q+giqd2n8es7XgsJNBR5MISNx52NIpdSQew5FnTSv5teuU=
+X-Received: by 2002:a17:906:11cf:: with SMTP id o15mr16093149eja.208.1574362887584;
+ Thu, 21 Nov 2019 11:01:27 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <cover.1574355709.git.msuchanek@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1574232449-13570-1-git-send-email-manish.narani@xilinx.com> <1574232449-13570-5-git-send-email-manish.narani@xilinx.com>
+In-Reply-To: <1574232449-13570-5-git-send-email-manish.narani@xilinx.com>
+From:   Rob Herring <rob.e.herring@gmail.com>
+Date:   Thu, 21 Nov 2019 13:01:16 -0600
+Message-ID: <CAC=3edbHWA7gv-mTFVXXcMzN6hyzO4LPqkbcRZ-zDp5BAm8_Vw@mail.gmail.com>
+Subject: Re: [PATCH v6 4/8] dt-bindings: mmc: Add optional generic properties
+ for mmc
+To:     Manish Narani <manish.narani@xilinx.com>
+Cc:     ulf.hansson@linaro.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, adrian.hunter@intel.com,
+        michal.simek@xilinx.com, jolly.shah@xilinx.com,
+        rajan.vaja@xilinx.com, nava.manne@xilinx.com, mdf@kernel.org,
+        linux-mmc@vger.kernel.org, devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        git@xilinx.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/21/19 10:13 AM, Michal Suchanek wrote:
-> Hello,
-> 
-> there is cdrom autoclose feature that is supposed to close the tray,
-> wait for the disc to become ready, and then open the device.
-> 
-> This used to work in ancient times. Then in old times there was a hack
-> in util-linux which worked around the breakage which probably resulted
-> from switching to scsi emulation.
-> 
-> Currently util-linux maintainer refuses to merge another hack on the
-> basis that kernel still has the feature so it should be fixed there.
-> The code needs not be replicated in every userspace utility like mount
-> or dd which has no business knowing which devices are CD-roms and where
-> the autoclose setting is in the kernel.
+On Wed, Nov 20, 2019 at 12:49 AM Manish Narani <manish.narani@xilinx.com> wrote:
+>
+> Add optional properties for mmc hosts which are used to set clk delays
+> for different speed modes in the controller.
+>
+> Signed-off-by: Manish Narani <manish.narani@xilinx.com>
+> ---
+>  .../devicetree/bindings/mmc/mmc-controller.yaml     | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/mmc-controller.yaml b/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
+> index 080754e0ef35..305b2016bc17 100644
+> --- a/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
+> +++ b/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
+> @@ -333,6 +333,18 @@ patternProperties:
+>      required:
+>        - reg
+>
+> +  "^clk-phase-(legacy|sd-hs|mmc-(hs|hs[24]00|ddr52)|uhs-(sdr(12|25|50|104)|ddr50))$":
+> +    minItems: 2
+> +    maxItems: 2
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +      - minimum: 0
+> +        maximum: 359
 
-This is a lot of code/churn (and even an fops addition...) to work around
-a broken hw emulation, essentially. Why aren't we just pushing vmware
-to fix this?
+This is wrong. It can't be both minItems of 2 and a single uint32.
+What's needed is:
 
--- 
-Jens Axboe
-
+allOf:
+  - $ref: /schemas/types.yaml#/definitions/uint32-array
+minItems: 2
+maxItems: 2
+items:
+  minimum: 0
+  maximum: 359
