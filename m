@@ -2,80 +2,94 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD842C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:19:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5BADC43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:19:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CDF020658
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:19:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B349A206CC
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:19:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="d8xUkNw7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726802AbfKUUTC (ORCPT
+        id S1726985AbfKUUT2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 15:19:02 -0500
-Received: from mail-il1-f198.google.com ([209.85.166.198]:52866 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726293AbfKUUTC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 15:19:02 -0500
-Received: by mail-il1-f198.google.com with SMTP id t23so3948031ila.19
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 12:19:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=Y1SOgO1vbqsOUPBquz7MWoLGB9Vn/Lm+PXrguH65k6c=;
-        b=ZJmM0uzoFVJzsx4JvxluJD+qHSB8Flgp2oAoxAnp7c4tJTZq90i5hn8M5bcV+Px1UH
-         c0iwqQNibgTsuAYnw7kn/J5LmprN/cSlXtI6zwAFeYtaBvehlvzQLHncgS/KHdc1KOMp
-         fhv5BCWxORletdOg3ck3rtF9OQiwPk5q2XMlIgpo7T6/gUXtAKO8aiq7gIOKJLsOd/ax
-         vQGP0bfACWFy2jfWE1ulGhDojAx3AEzwQqJVmee4djZ4gpJtYd1Ai91Ko5tIysDi3mEw
-         aEDO0hSiuUpUvv0mu3VH19JB2WobfZWa3JZ7EWMvyFUCE051Ozm019MLAhOOPe5tu99D
-         wlWA==
-X-Gm-Message-State: APjAAAU6FIzaJ64klml1fbPTC8Z4eyDdEwIZoiTbo/GlB9TyCZMuVbjI
-        gr5J5ykVSh+pJ30SdOfO3sc0RMslHCyxcmSiUO2G4GGH36FH
-X-Google-Smtp-Source: APXvYqwaEMl0Hp+7ruHPeLd8tBXlYivqUgbaT2MhzmNKW7nTuJ4raKuMZPqcGTl21/zLVSq9bhVj0KrakFYEQwXk0EWcQfBgJHfB
+        Thu, 21 Nov 2019 15:19:28 -0500
+Received: from ozlabs.org ([203.11.71.1]:37673 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726293AbfKUUT1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 15:19:27 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47JrWK2nGDz9sPf;
+        Fri, 22 Nov 2019 07:19:25 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1574367565;
+        bh=3N87yUeqrZg5ZwLLtfLJ9ViubbjCA6czfsD0tOkznZ8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=d8xUkNw75kpJJJZMEZGudoi7UYKr9M2ySLMAhwM58IS2qyJAk5Oejn5YHf0XUO3kO
+         bUFrcEEyfRMuSmfThAHe1ZU/4QMiiviAOr4nnaP7Lcw0wVI8JJRbP8cDJPJ8Z0UBFo
+         bsgI6xx2CUmXVBHPnbIdtIyfZSfKV+00ODO/Hd4hOBbtAeOX0+ysszRQ2Ow0+Ozu3V
+         RID6stCyayf/2JZMoI+v563fWGhlXd5rnd08vhakaQnX47zPO7UmwzPHs4/HjjNfKP
+         9xLqJc3tjLwqRHu0CJtOQNKBY7QK6tCeEkN3tjd6zldYy12LY45HJEKndQjnmSBb1v
+         V6oe8rCGv3TeQ==
+Date:   Fri, 22 Nov 2019 07:19:24 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Dominik Brodowski <linux@dominikbrodowski.net>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Fixes tag needs some work in the pcmcia tree
+Message-ID: <20191122071924.50f1fa52@canb.auug.org.au>
 MIME-Version: 1.0
-X-Received: by 2002:a92:c6d0:: with SMTP id v16mr12024641ilm.274.1574367541228;
- Thu, 21 Nov 2019 12:19:01 -0800 (PST)
-Date:   Thu, 21 Nov 2019 12:19:01 -0800
-In-Reply-To: <201911210931.DB5346C8@keescook>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000000a7dfc0597e10206@google.com>
-Subject: Re: general protection fault in tss_update_io_bitmap
-From:   syzbot <syzbot+81e6ff9d4cdb05fd4f5e@syzkaller.appspotmail.com>
-To:     adobriyan@gmail.com, ak@linux.intel.com, bigeasy@linutronix.de,
-        bp@alien8.de, fenghua.yu@intel.com, frederic@kernel.org,
-        hpa@zytor.com, keescook@chromium.org, kernelfans@gmail.com,
-        len.brown@intel.com, linux-kernel@vger.kernel.org,
-        longman@redhat.com, luto@kernel.org, mingo@redhat.com,
-        peterz@infradead.org, rafael.j.wysocki@intel.com, riel@surriel.com,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
-        tim.c.chen@linux.intel.com, tonywwang-oc@zhaoxin.com,
-        wang.yi59@zte.com.cn, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: multipart/signed; boundary="Sig_/fBjqzIx8Qq/+x_zgiWtVFBH";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+--Sig_/fBjqzIx8Qq/+x_zgiWtVFBH
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-syzbot has tested the proposed patch and the reproducer did not trigger  
-crash:
+Hi all,
 
-Reported-and-tested-by:  
-syzbot+81e6ff9d4cdb05fd4f5e@syzkaller.appspotmail.com
+In commit
 
-Tested on:
+  59558fd909b0 ("pcmcia: remove unused dprintk definition")
 
-commit:         e3cb0c71 x86/ioperm: Fix use of deprecated config option
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
-kernel config:  https://syzkaller.appspot.com/x/.config?x=1fc51b2845bfe6fc
-dashboard link: https://syzkaller.appspot.com/bug?extid=81e6ff9d4cdb05fd4f5e
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+Fixes tag
 
-Note: testing is done by a robot and is best-effort only.
+  Fixes: 836e9494f448 ("Refactored dprintk macro for dev_dbg().")
+
+has these problem(s):
+
+  - Subject does not match target commit subject
+    Just use
+	git log -1 --format=3D'Fixes: %h ("%s")'
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/fBjqzIx8Qq/+x_zgiWtVFBH
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3W8UwACgkQAVBC80lX
+0GzKDwf/fkP+biuTm8gsNsQX5oumLfO0t8ymNxnCtOI9NTkSyucjFzjZyyNZYfry
+1OWrnTgQTeyNCqaIxmmSPNAk5yTiiKf3FLGvZXTWX9u7cz5r2gluq9u4ogmsIG8x
+1og1aOjMwH/6Ds0Nxb4i6iE1Udba2pDsNWbGGYBzYPCiaWSXfd4Qn0yk9+6SHXRK
+jaXbTBIMGTVfFslWIO0Lpwh/pwh8z8DPjXF49kzoFgUmuRnC3sfAr/lSj1ooFoi4
+el4PS5QTl3FQVLG+xA/Y3mZdmBmQ4rfteCIYEXVorXm12pfNunVdL0btKpVfzckU
+thKU4PUaB7krWI9jveEBcJEDFlL/dw==
+=/ioD
+-----END PGP SIGNATURE-----
+
+--Sig_/fBjqzIx8Qq/+x_zgiWtVFBH--
