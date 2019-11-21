@@ -2,117 +2,96 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7751C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:02:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61FFAC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:02:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D1D82073F
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:02:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JrY9+zrK"
+	by mail.kernel.org (Postfix) with ESMTP id 3E41520898
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:02:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbfKUKCG (ORCPT
+        id S1726722AbfKUKCr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 05:02:06 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:46186 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726014AbfKUKCF (ORCPT
+        Thu, 21 Nov 2019 05:02:47 -0500
+Received: from mout.kundenserver.de ([212.227.126.133]:58335 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726014AbfKUKCr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 05:02:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574330523;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=XEzzNkobngto7A7JkTiA2JRstWm/Qwf1aRo6Iv3/3m8=;
-        b=JrY9+zrKYQ4lU35o1TthZ7NwWNE1m8g2qERBIvydwD74QV3j41fz0F3RRPuoTr78cAKY4c
-        2m289oWySaD/ANnq1rvOyLzW4QI4i1cpAPY8W7T1BELVkPjI2vVCpHRfAbAaPCeYsg2h3A
-        M9tyjo5eULZLcpLSQy3P3+eIDaEcRCc=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-431-960pRAP1O06vnwrlXtV4UA-1; Thu, 21 Nov 2019 05:02:00 -0500
-Received: by mail-wm1-f71.google.com with SMTP id m68so1537684wme.7
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 02:02:00 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=tFqAKgUAsSLJXhwvvIOsI4T22gRsWSmbmVmEZ/F0Ht4=;
-        b=FM1jsfoXyTXiIWF1tIkwGLm0rgK5gCV/zW+WNlvWRajqI43nSe16gklQ7wl0uuoFcp
-         2UsesdrxCGIGByPDbXkpuwmGcqy3thpmq01w2/3j0EkXRQlOMZcZfebLoWv2BWU8l6AS
-         H71J9AVTY12w5anBKi1+oYHNU9LyG7pURMxvX+EAzf6jD/BtuJ6q+Fx9Zb3QGhGIcZIC
-         sTP74VDRf44sPX1kG95Au4CCyJShzou3MpTJEnQUN1HYkkYzS8t7xkcqEaupwaNGGWdE
-         mr5/nnZLVTZFlx0BFNdVV1aK8OLzU5M8pKzPcr+Y89Iu54/PjsJMy7bnIU2J0v3zCG2j
-         jKqA==
-X-Gm-Message-State: APjAAAUmQtEU1Zg+mTeQCS0UVV63qUm7QkSWcT4NEdlfMLhZyeb8BU52
-        ZZFJpfXjz3mr5y677Hie+itstFjATKnjAMnfTk9JZFvIy/Xi2YdovM189u7lWYvIvsEf8fawMSj
-        U0IV0TFn9sRlYui/JCzTk+V/m
-X-Received: by 2002:adf:db8e:: with SMTP id u14mr274453wri.274.1574330519204;
-        Thu, 21 Nov 2019 02:01:59 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxy6brRF1ev/m1DKBfFjA6HTGnTBIhroRW1ilhIuPxww1/cdIQc+e2rt6PwX9NqSCpO1cJSPg==
-X-Received: by 2002:adf:db8e:: with SMTP id u14mr274435wri.274.1574330519006;
-        Thu, 21 Nov 2019 02:01:59 -0800 (PST)
-Received: from steredhat (a-nu5-32.tin.it. [212.216.181.31])
-        by smtp.gmail.com with ESMTPSA id f188sm2272358wmf.3.2019.11.21.02.01.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Nov 2019 02:01:58 -0800 (PST)
-Date:   Thu, 21 Nov 2019 11:01:56 +0100
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Stefan Hajnoczi <stefanha@gmail.com>
-Cc:     netdev@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        Dexuan Cui <decui@microsoft.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Jorgen Hansen <jhansen@vmware.com>
-Subject: Re: [PATCH net-next 5/6] vsock: use local transport when it is loaded
-Message-ID: <20191121100156.v4ehwmstlhujrviv@steredhat>
-References: <20191119110121.14480-1-sgarzare@redhat.com>
- <20191119110121.14480-6-sgarzare@redhat.com>
- <20191121094614.GC439743@stefanha-x1.localdomain>
+        Thu, 21 Nov 2019 05:02:47 -0500
+Received: from mail-qt1-f181.google.com ([209.85.160.181]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MLRI3-1iFn2U2WFn-00IXcv for <linux-kernel@vger.kernel.org>; Thu, 21 Nov
+ 2019 11:02:45 +0100
+Received: by mail-qt1-f181.google.com with SMTP id o3so3014862qtj.8
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 02:02:45 -0800 (PST)
+X-Gm-Message-State: APjAAAUb+RGjT+E3EACrN+KvciGu2zPAS/ytjxOXEk1QhXMs9PvLuuAy
+        yGBVTa0EbnVzfjg5f6p2G+b54X/Ek8AhUk44LuY=
+X-Google-Smtp-Source: APXvYqzE9t0AKsL1ncZ+umQ6xzlJILzipFxI4dN5a7JRB94aN2AlXoeFAbsRXYBGWls5F1FUF+i6obdblOQRDjk7tOw=
+X-Received: by 2002:ac8:75c4:: with SMTP id z4mr7253771qtq.142.1574330564561;
+ Thu, 21 Nov 2019 02:02:44 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191121094614.GC439743@stefanha-x1.localdomain>
-X-MC-Unique: 960pRAP1O06vnwrlXtV4UA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+References: <20191108203435.112759-1-arnd@arndb.de> <20191108203435.112759-4-arnd@arndb.de>
+ <fdcb510863c801f1f64448e558ee0f8ed20db418.camel@codethink.co.uk>
+ <CAK8P3a3BPhX_NRFj66WyRLQUOCV-FGRjmPCgB7gqxMoK8hfywg@mail.gmail.com> <d82ef7b94b9c3adc4fbb4e62c17b81a868fb32d8.camel@codethink.co.uk>
+In-Reply-To: <d82ef7b94b9c3adc4fbb4e62c17b81a868fb32d8.camel@codethink.co.uk>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 21 Nov 2019 11:02:27 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a1eZwCVMdibuPDzbSF6430yBLuoF+o-VZKX_HBWGePCqA@mail.gmail.com>
+Message-ID: <CAK8P3a1eZwCVMdibuPDzbSF6430yBLuoF+o-VZKX_HBWGePCqA@mail.gmail.com>
+Subject: Re: [Y2038] [PATCH 3/8] powerpc: fix vdso32 for ppc64le
+To:     Ben Hutchings <ben.hutchings@codethink.co.uk>
+Cc:     y2038 Mailman List <y2038@lists.linaro.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:41XpRS828esakJIKa5bYvZq2wDOJaAcY5zBlfDy8tJbttj/QtDA
+ JVjCi/s9I2SKY83OIZqfeAOoglGrlhUFDfX4takhQLnL1jsibmlqTTS4O973pdMweXkjfNw
+ IIevDpXhEfMaCbek/5v+Eaeu5wGgzHn6TaEtfOSHWG1SdP4dVxuamHdWwOmY2vgmGb+Phfo
+ 3zF2xripkLit/u8kiz5gA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:/HG6Xz3kEUw=:GoglAnKBBYWkkGpxibP3qe
+ sKKbzdGtLIkU8Tr+M9rksz3J4QGJrXk0xtFESAxg3KhnujrbFonmIUePR8Fz06EnSnkOnLJrd
+ JLikYAp8SV1omt4O23DrxXV/WopQ0IWWjiIXmO+3ZBcUysr0CdmUPyBHVTpf5Bx6MOjE7h+xG
+ V/QvvnuLAxUoIhovOeBV4vH9Hy7KtnMcWmGMu9jQDHt4ksr3mQViNp6rD1jOGsu9CYe400TWz
+ 7b+LULhZKiS2f2+sUlAnTuUgpIq5K1a68bzPIAVAZYwZHDNnKZVk1zeOt1tikGRpPKWJAevf4
+ H2BLTvHo4qHcVX4sv57JN3xaP+QeHNvAtfEVzJLURDrsai7XmIT5RMuW+XUGhPVe9Ft/HKz8N
+ ogRB7KO9aTWFg9kRZMyKENO1Gpv67k0V071qMRKN3Y+gUCZV/cJ/hB1hC57B8zV25jLX5w3cH
+ PM7t0H2BPnT/BvFs7rJHvDhIbfxs2MW1CXk2Vsg1lHy5f0jwD8y8kt0iu/Ir92imEXGkq189W
+ UWuvh3QnwrF/JkGVJcOzt/KB/spFv/4B/E+D7KQ8BD/Zcx3qHeIgMOzdZqDgrzyIXERXnBIGF
+ oTiNtFKtbvHIN9Od2u0JmJjT2cz/7cR+PGHjFpetC9C2OK4ifdVg7Wj5/zn/3Lis0LHSgzocj
+ kwPe1PSDnEt9xf/ujSmEEsE5ULWhSHrdSiBeC/rX8nOzrQqSolbLa4+uMAvpltfnHGF+mMKQB
+ bfwPlzIuuorRXNqsJWA/wBkd2OTDUNoGZW6oL7RFGJrSt94eEblsnuW3aEDwNMPhuyUWSElhW
+ NuWchr9N9uGpSNQekETIGUnOW1RI2pgtGmkXDbf/zBjEkKlS1tK3Fl5sopIDejj8Swtr87PId
+ wTr6pdypSTIO7PQYcUQQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 09:46:14AM +0000, Stefan Hajnoczi wrote:
-> On Tue, Nov 19, 2019 at 12:01:20PM +0100, Stefano Garzarella wrote:
-> > @@ -420,9 +436,10 @@ int vsock_assign_transport(struct vsock_sock *vsk,=
- struct vsock_sock *psk)
-> >  =09=09new_transport =3D transport_dgram;
-> >  =09=09break;
-> >  =09case SOCK_STREAM:
-> > -=09=09if (remote_cid <=3D VMADDR_CID_HOST ||
-> > -=09=09    (transport_g2h &&
-> > -=09=09     remote_cid =3D=3D transport_g2h->get_local_cid()))
-> > +=09=09if (vsock_use_local_transport(remote_cid))
-> > +=09=09=09new_transport =3D transport_local;
-> > +=09=09else if (remote_cid =3D=3D VMADDR_CID_HOST ||
-> > +=09=09=09 remote_cid =3D=3D VMADDR_CID_HYPERVISOR)
-> >  =09=09=09new_transport =3D transport_g2h;
-> >  =09=09else
-> >  =09=09=09new_transport =3D transport_h2g;
->=20
-> We used to send VMADDR_CID_RESERVED to the host.  Now we send
-> VMADDR_CID_RESERVED (LOCAL) to the guest when there is no
-> transport_local loaded?
->=20
-> If this is correct, is there a justification for this change?  It seems
-> safest to retain existing behavior.
+On Wed, Nov 20, 2019 at 10:49 PM Ben Hutchings
+<ben.hutchings@codethink.co.uk> wrote:
+> On Wed, 2019-11-20 at 20:35 +0100, Arnd Bergmann wrote:
+> > On Wed, Nov 20, 2019 at 8:13 PM Ben Hutchings
+> > <ben.hutchings@codethink.co.uk> wrote:
+> > > On Fri, 2019-11-08 at 21:34 +0100, Arnd Bergmann wrote:
+> > > > On little-endian 32-bit application running on 64-bit kernels,
+> > > > the current vdso would read the wrong half of the xtime seconds
+> > > > field. Change it to return the lower half like it does on
+> > > > big-endian.
+> > >
+> > > ppc64le doesn't have 32-bit compat so this is only theoretical.
+> >
+> > That is probably true. I only looked at the kernel, which today still
+> > supports compat mode for ppc64le, but I saw the patches to disable
+> > it, and I don't think anyone has even attempted building user space
+> > for it.
+>
+> COMPAT is still enabled for some reason, but VDSO32 isn't (since 4.2).
 
-You're right, I'll revert this change in v2.
+Ok, I had missed that detail. Should I just drop my patch then?
 
-Thanks,
-Stefano
-
+      Arnd
