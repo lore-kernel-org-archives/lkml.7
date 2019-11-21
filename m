@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 593BAC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:19:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD72EC43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:19:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2579420721
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:19:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5FDA20721
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 03:19:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574306365;
-	bh=HEUpb8bNwc8SarAfdtsw12BjG6dRX4eNspNtneMvqTQ=;
+	s=default; t=1574306366;
+	bh=ifqHJVoSLl+vbbYtf0TPbPr6t6kMcndP/j4HcMcUtpU=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=1ldskSojqoXnnjOQqX1eVSNO431RqhwsFaIGjgj1IJn3eG4pHUbZ8AtEM8Et9LmmY
-	 5/YlQwVDph6+BlfpCIXn5fK56kcIKCmjaik9+Uzz/VffTC0BurYX7QNVtlh9BbcfYI
-	 2nWsc5Iq1M/RfIBNhgKnBXbtqo0qrdxSGnPGG/o8=
+	b=uzW5JEInrYlwu6vh5qXtcJ0dI/s6OPOZs/Xb0MsggbFl4/+sIMqRm58kvSXVqFPQP
+	 om54z+sJFTEsWhcVQgg4E770SeyzFxAs/eHFR7xmBBPr1Jw6wLJXH7ouoUl9WQj/Wi
+	 JxaSuez+4ZEGuVFypTR/oDsYL/Mk/UojfGHrFqo0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727165AbfKUDTY (ORCPT
+        id S1727184AbfKUDTZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 22:19:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60890 "EHLO mail.kernel.org"
+        Wed, 20 Nov 2019 22:19:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32768 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725819AbfKUDTT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 22:19:19 -0500
+        id S1727148AbfKUDTX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 22:19:23 -0500
 Received: from PC-kkoz.proceq.com (unknown [213.160.61.66])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2DF520721;
-        Thu, 21 Nov 2019 03:19:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40A322089D;
+        Thu, 21 Nov 2019 03:19:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574306358;
-        bh=HEUpb8bNwc8SarAfdtsw12BjG6dRX4eNspNtneMvqTQ=;
+        s=default; t=1574306362;
+        bh=ifqHJVoSLl+vbbYtf0TPbPr6t6kMcndP/j4HcMcUtpU=;
         h=From:To:Cc:Subject:Date:From;
-        b=UVa/7Q5rZROQia7OQ2qGtMmzIqt/reLDb7O4T6Y9egPwaYhpIYwO3MnREteXgE4ms
-         wdeZln250gAydvCr91UpTgl9Cdlcz0lFKU3CGw8IW10rZTCCiZVJ3rOlVY2dAscNy3
-         NqGFkDTuEQcaZXM4oyvc3bo67yB42BkFoHkFEiYo=
+        b=yYq4Yd0UuWujyXv+F5jJ06wCTGY+2AJPa9SeACpXMOmQQ9HILv+UP/Idh5ilBtPMe
+         PJ9qRQ5svMZe3Yhm4nfZB/JIKbVIyq8gxDtqFR1fWZxqrYvtzhF9h39+Yny68QUly1
+         q2IOvxfiGYVzYkjx8mms3Cje44wYv1WEU0+Y/tLM=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-pm@vger.kernel.org
-Subject: [PATCH v2] cpufreq: Fix Kconfig indentation
-Date:   Thu, 21 Nov 2019 04:19:15 +0100
-Message-Id: <1574306355-29316-1-git-send-email-krzk@kernel.org>
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org
+Subject: [PATCH v2] iio: Fix Kconfig indentation
+Date:   Thu, 21 Nov 2019 04:19:19 +0100
+Message-Id: <1574306359-29372-1-git-send-email-krzk@kernel.org>
 X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -65,58 +67,56 @@ Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Changes since v1:
 1. Fix also 7-space and tab+1 space indentation issues.
 ---
- drivers/cpufreq/Kconfig.powerpc |  8 ++++----
- drivers/cpufreq/Kconfig.x86     | 16 ++++++++--------
- 2 files changed, 12 insertions(+), 12 deletions(-)
+ drivers/iio/gyro/Kconfig | 32 ++++++++++++++++----------------
+ 1 file changed, 16 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/cpufreq/Kconfig.powerpc b/drivers/cpufreq/Kconfig.powerpc
-index 35b4f700f054..58151ca56695 100644
---- a/drivers/cpufreq/Kconfig.powerpc
-+++ b/drivers/cpufreq/Kconfig.powerpc
-@@ -48,9 +48,9 @@ config PPC_PASEMI_CPUFREQ
- 	  PWRficient processors.
+diff --git a/drivers/iio/gyro/Kconfig b/drivers/iio/gyro/Kconfig
+index 95e6f96d4529..7de77419b4a1 100644
+--- a/drivers/iio/gyro/Kconfig
++++ b/drivers/iio/gyro/Kconfig
+@@ -75,26 +75,26 @@ config BMG160_SPI
+ 	select REGMAP_SPI
  
- config POWERNV_CPUFREQ
--       tristate "CPU frequency scaling for IBM POWERNV platform"
--       depends on PPC_POWERNV
--       default y
+ config FXAS21002C
+-       tristate "NXP FXAS21002C Gyro Sensor"
+-       select IIO_BUFFER
+-       select IIO_TRIGGERED_BUFFER
+-       select FXAS21002C_I2C if (I2C)
+-       select FXAS21002C_SPI if (SPI)
+-       depends on (I2C || SPI_MASTER)
 -       help
-+	tristate "CPU frequency scaling for IBM POWERNV platform"
-+	depends on PPC_POWERNV
-+	default y
+-         Say yes here to build support for NXP FXAS21002C Tri-axis Gyro
+-         Sensor driver connected via I2C or SPI.
+-
+-         This driver can also be built as a module.  If so, the module
+-         will be called fxas21002c_i2c or fxas21002c_spi.
++	tristate "NXP FXAS21002C Gyro Sensor"
++	select IIO_BUFFER
++	select IIO_TRIGGERED_BUFFER
++	select FXAS21002C_I2C if (I2C)
++	select FXAS21002C_SPI if (SPI)
++	depends on (I2C || SPI_MASTER)
 +	help
- 	 This adds support for CPU frequency switching on IBM POWERNV
- 	 platform
-diff --git a/drivers/cpufreq/Kconfig.x86 b/drivers/cpufreq/Kconfig.x86
-index dfa6457deaf6..a6528388952e 100644
---- a/drivers/cpufreq/Kconfig.x86
-+++ b/drivers/cpufreq/Kconfig.x86
-@@ -4,17 +4,17 @@
- #
++	 Say yes here to build support for NXP FXAS21002C Tri-axis Gyro
++	 Sensor driver connected via I2C or SPI.
++
++	 This driver can also be built as a module.  If so, the module
++	 will be called fxas21002c_i2c or fxas21002c_spi.
  
- config X86_INTEL_PSTATE
--       bool "Intel P state control"
--       depends on X86
--       select ACPI_PROCESSOR if ACPI
--       select ACPI_CPPC_LIB if X86_64 && ACPI && SCHED_MC_PRIO
--       help
--          This driver provides a P state for Intel core processors.
-+	bool "Intel P state control"
-+	depends on X86
-+	select ACPI_PROCESSOR if ACPI
-+	select ACPI_CPPC_LIB if X86_64 && ACPI && SCHED_MC_PRIO
-+	help
-+	  This driver provides a P state for Intel core processors.
- 	  The driver implements an internal governor and will become
--          the scaling driver and governor for Sandy bridge processors.
-+	  the scaling driver and governor for Sandy bridge processors.
+ config FXAS21002C_I2C
+-       tristate
+-       select REGMAP_I2C
++	tristate
++	select REGMAP_I2C
  
- 	  When this driver is enabled it will become the preferred
--          scaling driver for Sandy bridge processors.
-+	  scaling driver for Sandy bridge processors.
+ config FXAS21002C_SPI
+-       tristate
+-       select REGMAP_SPI
++	tristate
++	select REGMAP_SPI
  
- 	  If in doubt, say N.
- 
+ config HID_SENSOR_GYRO_3D
+ 	depends on HID_SENSOR_HUB
 -- 
 2.7.4
 
