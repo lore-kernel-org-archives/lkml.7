@@ -2,83 +2,143 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCBAEC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:21:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29DA3C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:24:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 921ED20679
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:21:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AF442075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:24:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726833AbfKUNVF (ORCPT
+        id S1726623AbfKUNYf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 08:21:05 -0500
-Received: from mout.kundenserver.de ([212.227.126.134]:33499 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726293AbfKUNVF (ORCPT
+        Thu, 21 Nov 2019 08:24:35 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:21310 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726342AbfKUNYf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 08:21:05 -0500
-Received: from orion.localdomain ([95.115.120.75]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1Mo77T-1i4oDM1mzz-00pfFZ; Thu, 21 Nov 2019 14:21:03 +0100
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     dmitry.torokhov@gmail.com, linux-input@vger.kernel.org
-Subject: [PATCH] input: misc: Kconfig: use select instead of depends on KEYBOARD_GPIO
-Date:   Thu, 21 Nov 2019 14:20:46 +0100
-Message-Id: <20191121132046.11977-1-info@metux.net>
-X-Mailer: git-send-email 2.11.0
-X-Provags-ID: V03:K1:IILHN2gZyS/uD0ijtR3gpcJUJy3FftXsgrH1MzQ+23L6j1fpvVf
- EfCR+YvcrUTzV34S08cFqJrBL1qq2szZ7KElXWbrT+/qPWEjPrhzh00UHdkM0eJg9PJFgow
- yq05yqTcV7XKhP9TKnEQoeYDBChgHC59Vj+IaAn1w4yfOcqcvAgzdY3Ze3XtyOKe4qmlCbj
- 3YUNiN/NjpYWocPeLM+Aw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:/83MODPXh00=:kewR5FyNX8qhcslOklspDd
- NsOVmXeUNSymLHWV6UJ6K5Zbq/ZXNxVZL1JKy5zTSSD77EktDTQh0yga0u8VOg+AceWBzYtJt
- fxMgTFOVHtD8dBl4Ux24rfqBTn5TVkYKfgVu35xVThckfRzszb+pyC9VhV9p2S8kDlUwvr3G4
- 47CLFMFq9ABaO3zYAknsLF3OU33qdLA95hOPdPyIZ5+pcOwCqOAsS97y1EP0kSkcXe4RbcwiV
- 8bRJMWXcqqfGJ7YPbHse4UIqVvokYpv3DonQgwyioIRUttAqAc0PrrEU5zS0Ys9VyOMNULAo6
- hLULBl6ujA1cUdlK/c5qOpj+yBSiDqwt15iiMIiJ60JJx8DZontKYPTs3sKXTZdyKh0B0pcHW
- t9RyO4aI7a/fITISu/L3Cc7bbsmVdBK9dPjMuo+o2EeljaOvBLFthm1HfPUYw4XO+F6Oaproz
- uuFgnaBMDdtkeSOocTggKLzqs+A3EXSgj4LPIq/7OJwCyIbUVthhHGVZJeWrr1mGtXdvbHp5u
- x9jS/P8gjTYptT+C2H44DPlZoXxIv1uzj1CN5rm8+bxw8aCWowOa/D9Z+I38Pnyg2NI9iaSw9
- YqWLdQ3dGgNt+aTkIQz6N5EU8wmlR6bb5fowCN3VfjKBHHHaQf+hb+8T0O3ymbS9cBpuhvuqq
- Jaab1jF1L81ZRN2SdByLpH2tEdhj8lMJJ9yiWe71LQApNDoCTEaAztMYxpLa/ROzVNvU2wD3X
- 9+sqmvzIos3Ccod7hyi6owYGzbVCXOT8HdHH2F/knJIDOi6I+DHqO06Vx6fB6FkY8TJUZ0UHT
- +KTuXWNNT0P0htN37lAGqQ7/RNvS84sraGKpfjkvnZbJU8mmSnGhSJqmS0IwGh5xgp+fr8cxp
- MliF+7TacbSfifvjH4iw==
+        Thu, 21 Nov 2019 08:24:35 -0500
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xALDKHsK112587;
+        Thu, 21 Nov 2019 08:24:19 -0500
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wact9fw38-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 21 Nov 2019 08:24:18 -0500
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xALDAUl7019567;
+        Thu, 21 Nov 2019 13:24:16 GMT
+Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
+        by ppma04wdc.us.ibm.com with ESMTP id 2wa8r7e4kb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 21 Nov 2019 13:24:16 +0000
+Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xALDOFeb34275632
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 21 Nov 2019 13:24:16 GMT
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DE447112064;
+        Thu, 21 Nov 2019 13:24:15 +0000 (GMT)
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2CC05112061;
+        Thu, 21 Nov 2019 13:24:14 +0000 (GMT)
+Received: from LeoBras (unknown [9.85.198.25])
+        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 21 Nov 2019 13:24:13 +0000 (GMT)
+Message-ID: <b8f93386fe124d2328b6f393845a3435fd3b94fa.camel@linux.ibm.com>
+Subject: Re: [PATCH v2 1/4] powerpc/kvm/book3s: Fixes possible 'use after
+ release' of kvm
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>, kvm-ppc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc:     Paul Mackerras <paulus@ozlabs.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Date:   Thu, 21 Nov 2019 10:24:08 -0300
+In-Reply-To: <c792fdc629d87f452d4348d33ab179df01d42017.camel@linux.ibm.com>
+References: <20191107170258.36379-1-leonardo@linux.ibm.com>
+         <20191107170258.36379-2-leonardo@linux.ibm.com>
+         <87mud13d4r.fsf@mpe.ellerman.id.au>
+         <c792fdc629d87f452d4348d33ab179df01d42017.camel@linux.ibm.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-jZ/Mz7t2a8V2KVKqQFTu"
+User-Agent: Evolution 3.34.1 (3.34.1-1.fc31) 
+MIME-Version: 1.0
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-21_03:2019-11-21,2019-11-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ priorityscore=1501 phishscore=0 mlxlogscore=999 suspectscore=0
+ adultscore=0 mlxscore=0 bulkscore=0 clxscore=1015 spamscore=0
+ malwarescore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-1910280000 definitions=main-1911210123
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Enrico Weigelt <info@metux.net>
 
-Make selection of the driver a bit easier by replacing depends on
-KEYBOARD_GPIO by select, so we don't need to enable KEYBOARD_GPIO
-before being able to enable INPUT_SOC_BUTTON_ARRAY.
+--=-jZ/Mz7t2a8V2KVKqQFTu
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
----
- drivers/input/misc/Kconfig | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+On Thu, 2019-11-14 at 15:43 -0300, Leonardo Bras wrote:
+> > If the kvm_put_kvm() you've moved actually caused the last
+> > reference
+> > to
+> > be dropped that would mean that our caller had passed us a kvm
+> > struct
+> > without holding a reference to it, and that would be a bug in our
+> > caller.
+> >=20
+>=20
+> So, there is no chance that between this function's kvm_get_kvm()
+> and=20
+> kvm_put_kvm(), another thread can decrease this reference counter?
 
-diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
-index 7d9ae394e597..99d263177d8d 100644
---- a/drivers/input/misc/Kconfig
-+++ b/drivers/input/misc/Kconfig
-@@ -813,7 +813,8 @@ config INPUT_IDEAPAD_SLIDEBAR
- 
- config INPUT_SOC_BUTTON_ARRAY
- 	tristate "Windows-compatible SoC Button Array"
--	depends on KEYBOARD_GPIO && ACPI
-+	depends on ACPI
-+	select KEYBOARD_GPIO
- 	help
- 	  Say Y here if you have a SoC-based tablet that originally runs
- 	  Windows 8 or a Microsoft Surface Book 2, Pro 5, Laptop 1 or later.
--- 
-2.11.0
+I am probably missing something here, could you please help me
+understand that?
+
+> > Or put another way, it would mean the mutex_lock() above could
+> > already
+> > be operating on a freed kvm struct.
+> >=20
+> > The kvm_get_kvm() prior to the anon_inode_getfd() is to account for
+> > the
+> > reference that's held by the `stt` struct, and dropped in
+> > kvm_spapr_tce_release().
+> >=20
+> > So although this patch isn't wrong, the explanation is not
+> > accurate.
+> >=20
+> > cheers
+>=20
+> Kind regards
+
+Best regards,
+
+--=-jZ/Mz7t2a8V2KVKqQFTu
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl3Wj/gACgkQlQYWtz9S
+ttQQhxAA3MFdSCc3LtKuX3KaXXl0ANgOzVWMrxMN5oUiiwIRPLZT33KNI6g8ugpT
+lWqOESy9bYgPUt8c7dO/kKVMEAgh82MAG1NzLbyFFGuijeClhC9YI6rTl7/3AdFr
+t/ovi/ofIJomu/P5rLXZmFGslc5CbHUHJ6De8ncngwG2ZZ5We7vQDnCmdJa7l+XW
+TTPaTQBNdrOWBDOqV0kVz35pOktKSxHyjQ36myP/wmEzaOmTn4lKmKpz4cv287dD
+8TcoXv2IPgUgEmSWPC1pGF2tyc4cHXL5rzirdNuREr4iKezhdWrOecbp5A1G/+tN
+Y4d65+H073/Ni+DbhsQBrypmAKdskfrSFx8N3e3Kn1DTxlBonHq3xdTB9cmIDfEg
+PNqH79orqQoTzJqiLCGcPQKTAtS9mFKNWJJvi7lhB7JhBDdP0prjUmO5rroiub7f
+TMiAqRKYgvWRkXm+Q+Fnn1CM+j1s/YmwLCnz2hLjyY9h0FNzqHMIB1o4DMDTEn9m
+ysZqENLzZcLZUne36/EPu9Z0J8KJ6GnvxVbkgydiA2CdyIUm4cPkDAaXuPY8B+Qd
+/CcFeXAouKj4jeTYKvxabyJ55XJPbUwt4EuPovqufF3FPyGRr+YiGeJ6VZfLnL4I
+/AmcpHnSqZNKrPcokrZc197LhwuQdHEwI+UJ/s+wDs9KxGdfcqM=
+=y4OU
+-----END PGP SIGNATURE-----
+
+--=-jZ/Mz7t2a8V2KVKqQFTu--
 
