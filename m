@@ -2,78 +2,160 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43F01C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 07:27:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E4BC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 07:27:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C15820872
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 07:27:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C66052089F
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 07:27:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbfKUH1E (ORCPT
+        id S1726961AbfKUH1k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 02:27:04 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:41841 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725842AbfKUH1D (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 02:27:03 -0500
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iXgrW-0007YF-7y; Thu, 21 Nov 2019 08:26:46 +0100
-Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iXgrU-000219-Ff; Thu, 21 Nov 2019 08:26:44 +0100
-Date:   Thu, 21 Nov 2019 08:26:44 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <pza@pengutronix.de>, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
-        kernel@pengutronix.de
-Subject: Re: [PATCH v7 3/8] pwm: sun4i: Prefer "mod" clock to unnamed
-Message-ID: <20191121072644.vzemxd6gtjpluqbw@pengutronix.de>
-References: <20191119175319.16561-1-peron.clem@gmail.com>
- <20191119175319.16561-4-peron.clem@gmail.com>
+        Thu, 21 Nov 2019 02:27:40 -0500
+Received: from mga04.intel.com ([192.55.52.120]:2742 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725842AbfKUH1k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 02:27:40 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Nov 2019 23:27:40 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,224,1571727600"; 
+   d="scan'208";a="238065022"
+Received: from hu.sh.intel.com ([10.239.158.51])
+  by fmsmga002.fm.intel.com with ESMTP; 20 Nov 2019 23:27:38 -0800
+From:   "Chen, Hu" <hu1.chen@intel.com>
+Cc:     avagin@openvz.org, hu1.chen@intel.com,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] proc: align mnt_id in /proc/pid/fdinfo and /proc/pid/mountinfo
+Date:   Thu, 21 Nov 2019 15:06:12 +0800
+Message-Id: <20191121070613.4286-1-hu1.chen@intel.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191119175319.16561-4-peron.clem@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 19, 2019 at 06:53:14PM +0100, Clément Péron wrote:
-> New device tree bindings called the source clock of the module
-> "mod" when several clocks are defined.
-> 
-> Try to get a clock called "mod" if nothing is found try to get
-> an unnamed clock.
-> 
-> Signed-off-by: Clément Péron <peron.clem@gmail.com>
+For Android application process, we found that the mnt_id read from
+/proc/pid/fdinfo doesn't exist in /proc/pid/mountinfo. Thus CRIU fails
+to dump such process and it complains
 
-Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+"(00.019206) Error (criu/files-reg.c:1299): Can't lookup mount=42 for
+fd=-3 path=/data/dalvik-cache/x86_64/system@framework@boot.art"
 
-Thanks
-Uwe
+This is due to how Android application is launched. In Android, there is
+a special process called Zygote which handles the forking of each new
+application process:
+0. Zygote opens and maps some files, for example
+   "/data/dalvik-cache/x86_64/system@framework@boot.art" in its current
+   mount namespace, say "old mnt ns".
+1. Zygote waits for the request to fork a new application.
+2. Zygote gets a request, it forks and run the new process in a new
+   mount namespace, say "new mnt ns".
 
+The file opened in step 0 ties to the mount point in "old mnt ns". The
+mnt_id of that mount is listed in /proc/pid/fdinfo. However,
+/proc/pid/mountinfo points to current ns, i.e., "new mnt ns".
+
+Althgouh this issue is exposed in Android, we believe it's generic.
+Prcoess may open files and enter new mnt ns.
+
+To address it, this patch searches the mirror mount in current ns with
+MAJOR and MINOR and shows the mirror's mnt_id.
+
+Signed-off-by: Chen, Hu <hu1.chen@intel.com>
+
+diff --git a/fs/mount.h b/fs/mount.h
+index 711a4093e475..6bbfc2b3b8ba 100644
+--- a/fs/mount.h
++++ b/fs/mount.h
+@@ -153,3 +153,5 @@ static inline bool is_anon_ns(struct mnt_namespace *ns)
+ {
+ 	return ns->seq == 0;
+ }
++
++extern struct mount *lookup_mirror_mnt(const struct mount *mnt);
+diff --git a/fs/namespace.c b/fs/namespace.c
+index 2adfe7b166a3..4ea9b4464cd0 100644
+--- a/fs/namespace.c
++++ b/fs/namespace.c
+@@ -683,6 +683,36 @@ bool __is_local_mountpoint(struct dentry *dentry)
+ 	return is_covered;
+ }
+ 
++/*
++ * lookup_mirror_mnt - Return @mnt's mirror mount in the current/local mount
++ * namespace. If mirror isn't found, just return NULL.
++ */
++struct mount *lookup_mirror_mnt(const struct mount *mnt)
++{
++	struct mnt_namespace *ns = current->nsproxy->mnt_ns;
++	struct mount *mnt_local;
++	bool is_matched = false;
++
++	/* mnt belongs to current namesapce */
++	if (mnt->mnt_ns == ns)
++		return mnt;
++
++	down_read(&namespace_sem);
++	list_for_each_entry(mnt_local, &ns->list, mnt_list) {
++		struct super_block *sb = mnt->mnt.mnt_sb;
++		struct super_block *sb_local = mnt_local->mnt.mnt_sb;
++
++		if (MAJOR(sb->s_dev) == MAJOR(sb_local->s_dev) &&
++		    MINOR(sb->s_dev) == MINOR(sb_local->s_dev)) {
++			is_matched = true;
++			break;
++		}
++	}
++	up_read(&namespace_sem);
++
++	return is_matched ? mnt_local : NULL;
++}
++
+ static struct mountpoint *lookup_mountpoint(struct dentry *dentry)
+ {
+ 	struct hlist_head *chain = mp_hash(dentry);
+diff --git a/fs/proc/fd.c b/fs/proc/fd.c
+index 81882a13212d..cbf2571b0620 100644
+--- a/fs/proc/fd.c
++++ b/fs/proc/fd.c
+@@ -23,6 +23,7 @@ static int seq_show(struct seq_file *m, void *v)
+ 	int f_flags = 0, ret = -ENOENT;
+ 	struct file *file = NULL;
+ 	struct task_struct *task;
++	struct mount *mount = NULL;
+ 
+ 	task = get_proc_task(m->private);
+ 	if (!task)
+@@ -53,9 +54,16 @@ static int seq_show(struct seq_file *m, void *v)
+ 	if (ret)
+ 		return ret;
+ 
++	/* After unshare -m, real_mount(file->f_path.mnt) is not meaningful in
++	 * current mount namesapce. We want to know the mnt_id in current mount
++	 * namespace
++	 */
++	mount = lookup_mirror_mnt(real_mount(file->f_path.mnt));
++	if (!mount)
++		mount = real_mount(file->f_path.mnt);
++
+ 	seq_printf(m, "pos:\t%lli\nflags:\t0%o\nmnt_id:\t%i\n",
+-		   (long long)file->f_pos, f_flags,
+-		   real_mount(file->f_path.mnt)->mnt_id);
++		   (long long)file->f_pos, f_flags, mount->mnt_id);
+ 
+ 	show_fd_locks(m, file, files);
+ 	if (seq_has_overflowed(m))
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+2.22.0
+
