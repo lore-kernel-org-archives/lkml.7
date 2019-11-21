@@ -2,84 +2,118 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D13FC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:52:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9ACAC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:52:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28952208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:52:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574337157;
-	bh=9dV5S4yll5QlivhlsmfXP6fOtjF+LPAskIKlZvCsV7s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Lum6rWkwTnbLsQ7mqiIma+rIRBesrVZOUarqpdMPsYddmWGBuv55CqCx69GSXhu60
-	 VqCZECrgYWmCCJKbuuhNeVRKKxtUcebkWeUYPeSFAkLXQ/cj6kk9HsIHlNTz+FOzpE
-	 u81exPW3+M13sgAt9Qq1xSzyVsWDQ8DXx/rS2B+s=
+	by mail.kernel.org (Postfix) with ESMTP id 99025208A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:52:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="DhQtwEVk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726869AbfKULwg (ORCPT
+        id S1726976AbfKULwq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 06:52:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40812 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726593AbfKULwf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 06:52:35 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E983F2089D;
-        Thu, 21 Nov 2019 11:52:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574337155;
-        bh=9dV5S4yll5QlivhlsmfXP6fOtjF+LPAskIKlZvCsV7s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wf+ZC3WAf5rDweKlimM3XCkS3Bq03Fk8YrQcr2NKyqGMkQhOWWN03SLMOo3flq/RP
-         RPAr6fOWDl4o72+Rw0NOGUDEP6uUTS+A3N0KuBTdNl0AB6jGp0iDlslHe4FlftpIfH
-         NLLzOiz7w2Gk5qPyRbh+EZQrBzwlIFDS53AkJ6dc=
-Date:   Thu, 21 Nov 2019 12:52:32 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Kusanagi Kouichi <slash@ac.auone-net.jp>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] debugfs: Fix !DEBUG_FS debugfs_create_automount
-Message-ID: <20191121115232.GC427938@kroah.com>
-References: <20191121102021787.MLMY.25002.ppp.dion.ne.jp@dmta0003.auone-net.jp>
+        Thu, 21 Nov 2019 06:52:46 -0500
+Received: from ste-pvt-msa2.bahnhof.se ([213.80.101.71]:34148 "EHLO
+        ste-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726909AbfKULwq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 06:52:46 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTP id 173E53F5A2;
+        Thu, 21 Nov 2019 12:52:43 +0100 (CET)
+Authentication-Results: ste-pvt-msa2.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=DhQtwEVk;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Authentication-Results: ste-ftg-msa2.bahnhof.se (amavisd-new);
+        dkim=pass (1024-bit key) header.d=shipmail.org
+Received: from ste-pvt-msa2.bahnhof.se ([127.0.0.1])
+        by localhost (ste-ftg-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 5QL1eylg0w_I; Thu, 21 Nov 2019 12:52:42 +0100 (CET)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id 6611E3F59D;
+        Thu, 21 Nov 2019 12:52:41 +0100 (CET)
+Received: from localhost.localdomain.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id DFFD13601A3;
+        Thu, 21 Nov 2019 12:52:40 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
+        t=1574337160; bh=GgpXsnJVZPKyPe+h+0gIt+VQkmGTuW5nmRdMrtnMCT8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=DhQtwEVknumPNenH6P8RzVcvRF39BpRQFFa59wO9swleFk3W+XhR0GqFSLUA7zvvP
+         GGTeCmX3cbDSVDGuZd11NrWNJLaNpuOAtUFKqydn2H4bEEiHpxF4j8zvsA04ORBiYt
+         qHAElm5tKUqVNMazxruCP8mFnCmf1RFSLXHybl5o=
+From:   =?UTF-8?q?Thomas=20Hellstr=C3=B6m=20=28VMware=29?= 
+        <thomas_os@shipmail.org>
+To:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pv-drivers@vmware.com
+Cc:     Thomas Hellstrom <thellstrom@vmware.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Jim Gill <jgill@vmware.com>
+Subject: [PATCH 2/2] scsi: vmw_pvscsi: Silence dma mapping errors
+Date:   Thu, 21 Nov 2019 12:52:04 +0100
+Message-Id: <20191121115204.53060-2-thomas_os@shipmail.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20191121115204.53060-1-thomas_os@shipmail.org>
+References: <20191121115204.53060-1-thomas_os@shipmail.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191121102021787.MLMY.25002.ppp.dion.ne.jp@dmta0003.auone-net.jp>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 07:20:21PM +0900, Kusanagi Kouichi wrote:
-> If DEBUG_FS=n, compile fails with the following error:
-> 
-> kernel/trace/trace.c: In function 'tracing_init_dentry':
-> kernel/trace/trace.c:8658:9: error: passing argument 3 of 'debugfs_create_automount' from incompatible pointer type [-Werror=incompatible-pointer-types]
->  8658 |         trace_automount, NULL);
->       |         ^~~~~~~~~~~~~~~
->       |         |
->       |         struct vfsmount * (*)(struct dentry *, void *)
-> In file included from kernel/trace/trace.c:24:
-> ./include/linux/debugfs.h:206:25: note: expected 'struct vfsmount * (*)(void *)' but argument is of type 'struct vfsmount * (*)(struct dentry *, void *)'
->   206 |      struct vfsmount *(*f)(void *),
->       |      ~~~~~~~~~~~~~~~~~~~^~~~~~~~~~
-> 
-> Signed-off-by: Kusanagi Kouichi <slash@ac.auone-net.jp>
-> ---
->  include/linux/debugfs.h | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+From: Thomas Hellstrom <thellstrom@vmware.com>
 
-Has this always been a problem, or did it just show up due to some other
-kernel change?
+These errors typically occur with swiotlb when the swiotlb buffer is full.
+But they are transient and would typically unnecessarily worry a user.
+Instead of errors, print debug messages.
 
-thanks,
+Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
+Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
+Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+Acked-by: Jim Gill <jgill@vmware.com>
+---
+ drivers/scsi/vmw_pvscsi.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-greg k-h
+diff --git a/drivers/scsi/vmw_pvscsi.c b/drivers/scsi/vmw_pvscsi.c
+index 8a09d184a320..c3f010df641e 100644
+--- a/drivers/scsi/vmw_pvscsi.c
++++ b/drivers/scsi/vmw_pvscsi.c
+@@ -365,7 +365,7 @@ static int pvscsi_map_buffers(struct pvscsi_adapter *adapter,
+ 		int segs = scsi_dma_map(cmd);
+ 
+ 		if (segs == -ENOMEM) {
+-			scmd_printk(KERN_ERR, cmd,
++			scmd_printk(KERN_DEBUG, cmd,
+ 				    "vmw_pvscsi: Failed to map cmd sglist for DMA.\n");
+ 			return -ENOMEM;
+ 		} else if (segs > 1) {
+@@ -392,7 +392,7 @@ static int pvscsi_map_buffers(struct pvscsi_adapter *adapter,
+ 		ctx->dataPA = dma_map_single(&adapter->dev->dev, sg, bufflen,
+ 					     cmd->sc_data_direction);
+ 		if (dma_mapping_error(&adapter->dev->dev, ctx->dataPA)) {
+-			scmd_printk(KERN_ERR, cmd,
++			scmd_printk(KERN_DEBUG, cmd,
+ 				    "vmw_pvscsi: Failed to map direct data buffer for DMA.\n");
+ 			return -ENOMEM;
+ 		}
+@@ -725,7 +725,7 @@ static int pvscsi_queue_ring(struct pvscsi_adapter *adapter,
+ 				cmd->sense_buffer, SCSI_SENSE_BUFFERSIZE,
+ 				DMA_FROM_DEVICE);
+ 		if (dma_mapping_error(&adapter->dev->dev, ctx->sensePA)) {
+-			scmd_printk(KERN_ERR, cmd,
++			scmd_printk(KERN_DEBUG, cmd,
+ 				    "vmw_pvscsi: Failed to map sense buffer for DMA.\n");
+ 			ctx->sensePA = 0;
+ 			return -ENOMEM;
+-- 
+2.21.0
+
