@@ -2,107 +2,93 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27ACAC43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 06:56:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 534E2C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 06:58:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3B5F2088F
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 06:56:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FBjdYX6V"
+	by mail.kernel.org (Postfix) with ESMTP id 2C1FD2088F
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 06:58:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574319507;
+	bh=YGyhRwlY72JDTjzaZmlNQykwtpBveLAAsHXNDUiazXo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UzU3d80IHsNeIpq/IiD1axXgaa/FABFOfdEyzKHVzciZpcdcFJzcboPm56twcL8LM
+	 KmpMBX/nlbm71CPcnv7DZOubKb0TzWRl+V+4SzJOX0qjUryYUt233pWy+Ha/G0XxIA
+	 yLSNrCe82sKCml99BrQoZQaimfkZ7qYv7YqBrMBU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726574AbfKUG4t (ORCPT
+        id S1726623AbfKUG60 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 01:56:49 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:38926 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725842AbfKUG4s (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 01:56:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=MPeNAWungv26bQAwYJD7nCaq+Sl1GrBA7DY8FsKxn9M=; b=FBjdYX6V1FG6rFKCsfrm7Lq3s
-        TUtSU0xAgmdjmnHN6lpOuTZyt5AuU1RkqA4hpTDc5M7zIQE9eWYV4UlZ/e1xt7BXYCGHl4M8/TV0c
-        4E39VUaN3l6ToZ8bz+I/Ini3h5SGmAl6njkWhVw2apbaURgojGhjuqC6gq94R3BF/GJpaQpDM9N3N
-        7SZXtL3QLv4Ci/qjJkKfhVpuCU54MbtzBDj8wVU3eDlm7X52kEMLlGjzAHUfNULH0B0MYaXVMsfxA
-        LeWx7J4Adc9H8ENDHCr3CAvd7/vY8jsZfLN/J0tuH7dv5F5awLxxHFAg6hIu7xoRnj207y+Fa6bbs
-        nHJHqIzeA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iXgOS-0004Lc-0x; Thu, 21 Nov 2019 06:56:44 +0000
-Date:   Wed, 20 Nov 2019 22:56:44 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Shaokun Zhang <zhangshaokun@hisilicon.com>,
-        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Yang Guo <guoyang2@huawei.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>
-Subject: Re: [PATCH] xfs: optimise xfs_mod_icount/ifree when delta < 0
-Message-ID: <20191121065644.GA21798@infradead.org>
-References: <1572866980-13001-1-git-send-email-zhangshaokun@hisilicon.com>
- <20191104204909.GB4614@dread.disaster.area>
- <dc7456d6-616d-78c5-0ac6-c5ffaf721e41@hisilicon.com>
- <20191105040325.GC4614@dread.disaster.area>
- <675693c2-8600-1cbd-ce50-5696c45c6cd9@hisilicon.com>
- <20191106212041.GF4614@dread.disaster.area>
- <d627883a-850c-1ec4-e057-cf9e9b47c50e@hisilicon.com>
- <20191118081212.GT4614@dread.disaster.area>
- <20191120210825.GB4614@dread.disaster.area>
+        Thu, 21 Nov 2019 01:58:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53378 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725842AbfKUG6Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 01:58:25 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 424742088F;
+        Thu, 21 Nov 2019 06:58:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574319503;
+        bh=YGyhRwlY72JDTjzaZmlNQykwtpBveLAAsHXNDUiazXo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TIgkhTvTAfGBCUZBORyLkBvRPlBvdZ77YbyP3Rpe5LBritT8i6KMlETO4M5FxmpwW
+         EYrq/jaBc54+644LF7yEXNIKwnnnYk8XDLWECJd4mtz+rAj8+4mWq82G7bNjK+WduV
+         A4BT4yzvPPhRwysFcyEtDNPo9wMBSBULCYv3oY3A=
+Date:   Thu, 21 Nov 2019 07:58:21 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Sasha Levin <sashal@kernel.org>,
+        "kernelci.org bot" <bot@kernelci.org>, tomeu.vizoso@collabora.com,
+        guillaume.tucker@collabora.com,
+        Niklas Cassel <niklas.cassel@linaro.org>, broonie@kernel.org,
+        khilman@baylibre.com, mgalka@collabora.com,
+        enric.balletbo@collabora.com, linux-pm@vger.kernel.org,
+        Stephen Boyd <sboyd@codeaurora.org>,
+        linux-kernel@vger.kernel.org, Nishanth Menon <nm@ti.com>,
+        Len Brown <len.brown@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>, Viresh Kumar <vireshk@kernel.org>
+Subject: Re: stable/linux-4.14.y bisection: boot on odroid-x2
+Message-ID: <20191121065821.GA344102@kroah.com>
+References: <5dd5fbf5.1c69fb81.0938.8061@mx.google.com>
+ <20191121060811.mvzzh4zlfzlubzlv@vireshk-i7>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191120210825.GB4614@dread.disaster.area>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20191121060811.mvzzh4zlfzlubzlv@vireshk-i7>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> +static void
->  xfs_sb_mod8(
->  	uint8_t			*field,
->  	int8_t			delta)
->  {
->  	int8_t			counter = *field;
->  
-> +	if (!delta)
-> +		return;
->  	counter += delta;
-> +	ASSERT(counter >= 0);
->  	*field = counter;
->  }
+On Thu, Nov 21, 2019 at 11:38:11AM +0530, Viresh Kumar wrote:
+> On 20-11-19, 18:52, kernelci.org bot wrote:
+> > commit 714ab224a8db6e8255c61a42613de9349ceb0bba
+> > Author: Viresh Kumar <viresh.kumar@linaro.org>
+> > Date:   Fri Aug 3 07:05:21 2018 +0530
+> > 
+> >     OPP: Protect dev_list with opp_table lock
+> >     
+> >     [ Upstream commit 3d2556992a878a2210d3be498416aee39e0c32aa ]
+> >     
+> >     The dev_list needs to be protected with a lock, else we may have
+> >     simultaneous access (addition/removal) to it and that would be racy.
+> >     Extend scope of the opp_table lock to protect dev_list as well.
+> >     
+> >     Tested-by: Niklas Cassel <niklas.cassel@linaro.org>
+> >     Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> >     Signed-off-by: Sasha Levin <sashal@kernel.org>
+> 
+> @Sasha: Please drop this patch for now.
 
-I'd almost find it easier to keep the != 0 check in the caller, and
-in fact also move the assert there and just kill these helpers, e.g.
+Drop it from 4.14 and 4.19?
 
-	if (tp->t_imaxpct_delta != 0) {
-		mp->m_sb.sb_imax_pct += tp->t_imaxpct_delta;
-		ASSERT(mp->m_sb.sb_imax_pct >= 0);
-	}
-	if (tp->t_rextsize_delta != 0) {
-		mp->m_sb.sb_rextsize += tp->t_rextsize_delta;
-		ASSERT(mp->m_sb.sb_rextsize >= 0);
-	}
+thanks,
 
-While this is 2 more lines per counter it is a lot more explicit and
-easier to follow.
-
->  	if (idelta) {
-> -		error = xfs_mod_icount(mp, idelta);
-> -		if (error)
-> -			goto out_undo_fdblocks;
-> +		percpu_counter_add_batch(&mp->m_icount, idelta,
-> +					 XFS_ICOUNT_BATCH);
-> +		if (idelta < 0)
-> +			ASSERT(__percpu_counter_compare(&mp->m_icount, 0,
-> +							XFS_ICOUNT_BATCH) >= 0)
-
-And here I wonder if keeping single use helpers wouldn't have been a
-little nicer.  Not that it really matters.
+greg k-h
