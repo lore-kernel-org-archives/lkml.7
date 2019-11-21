@@ -2,67 +2,111 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6C32C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 08:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35563C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 08:51:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B624A2089F
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 08:49:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DC2B2089D
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 08:51:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Z+x3gLJV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbfKUItk (ORCPT
+        id S1726852AbfKUIvC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 03:49:40 -0500
-Received: from www62.your-server.de ([213.133.104.62]:34272 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726132AbfKUItk (ORCPT
+        Thu, 21 Nov 2019 03:51:02 -0500
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:4340 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726165AbfKUIvB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 03:49:40 -0500
-Received: from [2a02:1205:507e:bf80:bef8:7f66:49c8:72e5] (helo=localhost)
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1iXi9f-0002It-P2; Thu, 21 Nov 2019 09:49:35 +0100
-Date:   Thu, 21 Nov 2019 09:49:35 +0100
-From:   Daniel Borkmann <daniel@iogearbox.net>
-To:     =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>
-Cc:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
+        Thu, 21 Nov 2019 03:51:01 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dd64ff00000>; Thu, 21 Nov 2019 00:50:56 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 21 Nov 2019 00:51:00 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 21 Nov 2019 00:51:00 -0800
+Received: from [10.2.169.101] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 21 Nov
+ 2019 08:50:57 +0000
+Subject: Re: [PATCH v7 09/24] vfio, mm: fix get_user_pages_remote() and
+ FOLL_LONGTERM
+To:     Christoph Hellwig <hch@infradead.org>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
         Magnus Karlsson <magnus.karlsson@intel.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        bpf <bpf@vger.kernel.org>
-Subject: Re: [PATCH] xsk: fix xsk_poll()'s return type
-Message-ID: <20191121084935.GB31576@pc-11.home>
-References: <20191120001042.30830-1-luc.vanoostenryck@gmail.com>
- <103f550e-4a78-e540-4a57-bdecc2f066cf@intel.com>
+        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        "Paul Mackerras" <paulus@samba.org>, Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        Jason Gunthorpe <jgg@mellanox.com>
+References: <20191121071354.456618-1-jhubbard@nvidia.com>
+ <20191121071354.456618-10-jhubbard@nvidia.com>
+ <20191121081019.GF30991@infradead.org>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <daa90e74-ce6c-726f-c16c-b973390e96f7@nvidia.com>
+Date:   Thu, 21 Nov 2019 00:48:09 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <103f550e-4a78-e540-4a57-bdecc2f066cf@intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.101.4/25639/Wed Nov 20 11:02:53 2019)
+In-Reply-To: <20191121081019.GF30991@infradead.org>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1574326256; bh=UHmS3HaBGjmYSzQqUGVl3ICvWTX3pmd5BL/EguYi/Wc=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=Z+x3gLJVvvSsNmbJxfvKoMQ17fDDVhYzRi55HX3hITWwCeb/BaThjwuDfHWXQ2K53
+         HFWjGPFJfyLqqMrztMFqHTp5+odo6bntDk66mQpkwmHgD01l6MePY7oBu7dI5amAm6
+         mWFXkb+WtDqpHKuOwqy4u+Q0ATobQoK3TAaBcowjz8gxjeZ/26gNn7iyrr8lBXskIU
+         BLJxtARBqO9pllqLJ3t6UR+2fLAc7BGxsr6AdGvtx7Jig1eMZiQdgTKDRL70xPfI7p
+         LawM9A5bl0tFutwK8JCa4Nii1wdq73PZcJlgKxDsflTxNmTDOzy8kVbjCi6X76PtZx
+         SiFb+OtUTa48Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 07:15:42AM +0100, Björn Töpel wrote:
-> On 2019-11-20 01:10, Luc Van Oostenryck wrote:
-> > xsk_poll() is defined as returning 'unsigned int' but the
-> > .poll method is declared as returning '__poll_t', a bitwise type.
-> > 
-> > Fix this by using the proper return type and using the EPOLL
-> > constants instead of the POLL ones, as required for __poll_t.
-> 
-> Thanks for the cleanup!
-> 
-> Acked-by: Björn Töpel <bjorn.topel@intel.com>
-> 
-> Daniel/Alexei: This should go through bpf-next.
+On 11/21/19 12:10 AM, Christoph Hellwig wrote:
+> Should this be two patches, one for th core infrastructure and one for
+> the user?  These changes also look like another candidate to pre-load.
 
-Done, applied, thanks!
+OK, I'll split them up.
+
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
+  
