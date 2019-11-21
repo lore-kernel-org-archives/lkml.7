@@ -2,294 +2,256 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 716E7C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:19:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBB3EC43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:21:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 424E92068E
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:19:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A5E02067D
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:21:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OG4/ddKE"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q/BiBo5h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726869AbfKUOTs (ORCPT
+        id S1726765AbfKUOV3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 09:19:48 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:25107 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726554AbfKUOTr (ORCPT
+        Thu, 21 Nov 2019 09:21:29 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:36400 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726500AbfKUOV3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 09:19:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574345986;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Mw+cO9LOWM9AAalb2mQwDjkTO4iW67Tkd/Br4OFvMps=;
-        b=OG4/ddKEgSlh/bHe8GpONrZzmf+BnBvo+mSVaIRBpFfYQ5r3RkMA2rhiXykbgO8TtLN/6J
-        wVb0BTefSMay9ZOBhQwqPreLVstTjhdIGn1hCo9AYdMk9xQ2sQHP2j8KZD81GalXB+8KLt
-        5Fv8cu6DAN2Cl+3X1Y/Q9wVLquLATfE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-58-lh5z5WgaP-Sb5bTx0nn0-w-1; Thu, 21 Nov 2019 09:19:41 -0500
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 662B3107ACC4;
-        Thu, 21 Nov 2019 14:19:36 +0000 (UTC)
-Received: from hmswarspite.think-freely.org (ovpn-120-15.rdu2.redhat.com [10.10.120.15])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id CA09E6FF12;
-        Thu, 21 Nov 2019 14:19:32 +0000 (UTC)
-Date:   Thu, 21 Nov 2019 09:19:30 -0500
-From:   Neil Horman <nhorman@redhat.com>
-To:     Stephan =?iso-8859-1?Q?M=FCller?= <smueller@chronox.de>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-api@vger.kernel.org,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        Nicolai Stange <nstange@suse.de>,
-        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
-        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
-        Roman Drahtmueller <draht@schaltsekun.de>
-Subject: Re: [PATCH v25 09/12] LRNG - add Jitter RNG fast noise source
-Message-ID: <20191121141930.GB27405@hmswarspite.think-freely.org>
-References: <6157374.ptSnyUpaCn@positron.chronox.de>
- <2377947.mlgTlHak1g@positron.chronox.de>
- <20191120133303.GA28341@hmswarspite.think-freely.org>
- <1844272.AK0ElEJLVa@positron.chronox.de>
+        Thu, 21 Nov 2019 09:21:29 -0500
+Received: by mail-pl1-f195.google.com with SMTP id d7so1645273pls.3;
+        Thu, 21 Nov 2019 06:21:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=advO9e9Vq8oX5pUg5eqAZ8hMHDIBv+K1uEoGcfdp6Pg=;
+        b=Q/BiBo5hxPoRt7be6VMJbLczAnhSIy2lPWLssuK4UBRdiypufvszol2d35aiqoLm5B
+         SnKaYGix1iSdFR4Z0iQBRcoWRRlWgS/LX1T6OfxQc3J0zhILkVpifvNiTb+y+rfbDm0w
+         ftICNsoRSXB+p/53aKCBsZkAQSeFLuZGwKG7uzTDMnpCiIguML0XbtgPDbEfn2KTgui9
+         mJJTt8oyI2BtuJmRycEYuvd+Hz+5Dxb4VKgYRsIZip1h8tBA1E3la98IQ4r4pfkT961c
+         kPFz98ibRpZdmkkrQD717+Xw7H+1b3wOmfc3GyB3eIe907cuW8Umfblwh4MtaukzCmZe
+         r4dA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=advO9e9Vq8oX5pUg5eqAZ8hMHDIBv+K1uEoGcfdp6Pg=;
+        b=AtNaeCqTI0eYme7jphPL2LWZkak2y85O2wjRq4dE+u2R1lQsZUE3pcZAPPRAxFJK4m
+         pM4XAuv+fmtnRYCODsFc9CEEn2n6hRkseXJGu/oZoCnqy2+TpdikPZ/slGgd6gMwt9x6
+         NdtUlQKmUR6ZY0bQZS9vPSxVTusDAZYMMZDYPemh4PfDx93IovfLDt+5WoV99YUtzkhd
+         DY2uxVtnGmr5C7LAhB6IPsMKfRe8r6tlYoIbzF+pF99qtUe4mNAdi2EGGB0nJd/ksnbJ
+         2DdxnXpXhKVHe0SgLtVsd51prI3rFjnsM/8kYRfsN3NK4gTB5YI7U6m3he/girt7r1KU
+         Q86w==
+X-Gm-Message-State: APjAAAVeRFOpW8E519MVva1UdagqAUGDN2rbI2XqppZlJvaIAIwK5Ccl
+        yaYr8saqSTgkopWjUlBnV1I=
+X-Google-Smtp-Source: APXvYqxJTWh2kG8FI80v+Upz1ZQtluio58NfbwFL3EB19Ri9bUOi5lj878945BYaiTM4NAZUFidO8g==
+X-Received: by 2002:a17:902:9043:: with SMTP id w3mr9308463plz.30.1574346088100;
+        Thu, 21 Nov 2019 06:21:28 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id m34sm3321136pgb.26.2019.11.21.06.21.26
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 21 Nov 2019 06:21:27 -0800 (PST)
+Date:   Thu, 21 Nov 2019 06:21:26 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Christophe ROULLIER <christophe.roullier@st.com>
+Cc:     "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 1/1] drivers: watchdog: stm32_iwdg: set WDOG_HW_RUNNING
+ at probe
+Message-ID: <20191121142126.GB13249@roeck-us.net>
+References: <20191121082813.29267-1-christophe.roullier@st.com>
+ <20191121082813.29267-2-christophe.roullier@st.com>
+ <ce10681c-8fa3-0fa6-3509-376a2f37aec9@roeck-us.net>
+ <550566ff-31bd-1f40-63d1-67b013f8be75@st.com>
 MIME-Version: 1.0
-In-Reply-To: <1844272.AK0ElEJLVa@positron.chronox.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-MC-Unique: lh5z5WgaP-Sb5bTx0nn0-w-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <550566ff-31bd-1f40-63d1-67b013f8be75@st.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 09:07:13PM +0100, Stephan M=FCller wrote:
-> Am Mittwoch, 20. November 2019, 14:33:03 CET schrieb Neil Horman:
->=20
-> Hi Neil,
->=20
-> > On Sat, Nov 16, 2019 at 10:36:52AM +0100, Stephan M=FCller wrote:
-> > > The Jitter RNG fast noise source implemented as part of the kernel
-> > > crypto API is queried for 256 bits of entropy at the time the seed
-> > > buffer managed by the LRNG is about to be filled.
-> > >=20
-> > > CC: "Eric W. Biederman" <ebiederm@xmission.com>
-> > > CC: "Alexander E. Patrakov" <patrakov@gmail.com>
-> > > CC: "Ahmed S. Darwish" <darwish.07@gmail.com>
-> > > CC: "Theodore Y. Ts'o" <tytso@mit.edu>
-> > > CC: Willy Tarreau <w@1wt.eu>
-> > > CC: Matthew Garrett <mjg59@srcf.ucam.org>
-> > > CC: Vito Caputo <vcaputo@pengaru.com>
-> > > CC: Andreas Dilger <adilger.kernel@dilger.ca>
-> > > CC: Jan Kara <jack@suse.cz>
-> > > CC: Ray Strode <rstrode@redhat.com>
-> > > CC: William Jon McCann <mccann@jhu.edu>
-> > > CC: zhangjs <zachary@baishancloud.com>
-> > > CC: Andy Lutomirski <luto@kernel.org>
-> > > CC: Florian Weimer <fweimer@redhat.com>
-> > > CC: Lennart Poettering <mzxreary@0pointer.de>
-> > > CC: Nicolai Stange <nstange@suse.de>
-> > > Reviewed-by: Marcelo Henrique Cerri <marcelo.cerri@canonical.com>
-> > > Reviewed-by: Roman Drahtmueller <draht@schaltsekun.de>
-> > > Tested-by: Roman Drahtm=FCller <draht@schaltsekun.de>
-> > > Tested-by: Marcelo Henrique Cerri <marcelo.cerri@canonical.com>
-> > > Tested-by: Neil Horman <nhorman@redhat.com>
-> > > Signed-off-by: Stephan Mueller <smueller@chronox.de>
-> > > ---
-> > >=20
-> > >  drivers/char/lrng/Kconfig     | 11 +++++
-> > >  drivers/char/lrng/Makefile    |  1 +
-> > >  drivers/char/lrng/lrng_jent.c | 88 +++++++++++++++++++++++++++++++++=
-++
-> > >  3 files changed, 100 insertions(+)
-> > >  create mode 100644 drivers/char/lrng/lrng_jent.c
-> > >=20
-> > > diff --git a/drivers/char/lrng/Kconfig b/drivers/char/lrng/Kconfig
-> > > index 03e6e2ec356b..80fc723c67d2 100644
-> > > --- a/drivers/char/lrng/Kconfig
-> > > +++ b/drivers/char/lrng/Kconfig
-> > > @@ -80,4 +80,15 @@ config LRNG_KCAPI
-> > >=20
-> > >  =09  provided by the selected kernel crypto API RNG.
-> > > =20
-> > >  endif # LRNG_DRNG_SWITCH
-> > >=20
-> > > +config LRNG_JENT
-> > > +=09bool "Enable Jitter RNG as LRNG Seed Source"
-> > > +=09select CRYPTO_JITTERENTROPY
-> > > +=09help
-> > > +=09  The Linux RNG may use the Jitter RNG as noise source. Enabling
-> > > +=09  this option enables the use of the Jitter RNG. Its default
-> > > +=09  entropy level is 16 bits of entropy per 256 data bits delivered
-> > > +=09  by the Jitter RNG. This entropy level can be changed at boot
-> > > +=09  time or at runtime with the lrng_base.jitterrng configuration
-> > > +=09  variable.
-> > > +
-> > >=20
-> > >  endif # LRNG
-> > >=20
-> > > diff --git a/drivers/char/lrng/Makefile b/drivers/char/lrng/Makefile
-> > > index 027b6ea51c20..a87d800c9aae 100644
-> > > --- a/drivers/char/lrng/Makefile
-> > > +++ b/drivers/char/lrng/Makefile
-> > > @@ -13,3 +13,4 @@ obj-$(CONFIG_SYSCTL)=09=09+=3D lrng_proc.o
-> > >=20
-> > >  obj-$(CONFIG_LRNG_DRNG_SWITCH)=09+=3D lrng_switch.o
-> > >  obj-$(CONFIG_LRNG_DRBG)=09=09+=3D lrng_drbg.o
-> > >  obj-$(CONFIG_LRNG_KCAPI)=09+=3D lrng_kcapi.o
-> > >=20
-> > > +obj-$(CONFIG_LRNG_JENT)=09=09+=3D lrng_jent.o
-> > > diff --git a/drivers/char/lrng/lrng_jent.c b/drivers/char/lrng/lrng_j=
-ent.c
-> > > new file mode 100644
-> > > index 000000000000..43114a44b8f5
-> > > --- /dev/null
-> > > +++ b/drivers/char/lrng/lrng_jent.c
-> > > @@ -0,0 +1,88 @@
-> > > +// SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
-> > > +/*
-> > > + * LRNG Fast Noise Source: Jitter RNG
-> > > + *
-> > > + * Copyright (C) 2016 - 2019, Stephan Mueller <smueller@chronox.de>
-> > > + */
-> > > +
-> > > +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> > > +
-> > > +#include "lrng_internal.h"
-> > > +
-> > > +/*
-> > > + * Estimated entropy of data is a 16th of
-> > > LRNG_DRNG_SECURITY_STRENGTH_BITS. + * Albeit a full entropy assessmen=
-t is
-> > > provided for the noise source indicating + * that it provides high
-> > > entropy rates and considering that it deactivates + * when it detects
-> > > insufficient hardware, the chosen under estimation of + * entropy is
-> > > considered to be acceptable to all reviewers.
-> > > + */
-> > > +static u32 jitterrng =3D LRNG_DRNG_SECURITY_STRENGTH_BITS>>4;
-> > > +module_param(jitterrng, uint, 0644);
-> > > +MODULE_PARM_DESC(jitterrng, "Entropy in bits of 256 data bits from J=
-itter
-> > > " +=09=09=09    "RNG noise source");
-> > > +
-> > > +/**
-> > > + * Get Jitter RNG entropy
-> > > + *
-> > > + * @outbuf buffer to store entropy
-> > > + * @outbuflen length of buffer
-> > > + * @return > 0 on success where value provides the added entropy in =
-bits
-> > > + *=09   0 if no fast source was available
-> > > + */
-> > > +struct rand_data;
-> > > +struct rand_data *jent_lrng_entropy_collector(void);
-> > > +int jent_read_entropy(struct rand_data *ec, unsigned char *data,
-> > > +=09=09      unsigned int len);
-> > > +static struct rand_data *lrng_jent_state;
-> > > +
-> > > +u32 lrng_get_jent(u8 *outbuf, unsigned int outbuflen)
-> > > +{
-> > > +=09int ret;
-> > > +=09u32 ent_bits =3D jitterrng;
-> > > +=09unsigned long flags;
-> > > +=09static DEFINE_SPINLOCK(lrng_jent_lock);
-> > > +=09static int lrng_jent_initialized =3D 0;
-> > > +
-> > > +=09spin_lock_irqsave(&lrng_jent_lock, flags);
-> > > +
-> > > +=09if (!ent_bits || (lrng_jent_initialized =3D=3D -1)) {
-> > > +=09=09spin_unlock_irqrestore(&lrng_jent_lock, flags);
-> > > +=09=09return 0;
-> > > +=09}
-> > > +
-> >=20
-> > this works, but I think you can avoid the use of the spin lock on the r=
-ead
-> > calls here.  If you assign a global pointer to the value of
-> > &lrng_jent_state on init, you can just take the spinlock on assignment,=
- and
-> > assume its stable after that (which it should be given that its only ev=
-er
-> > going to point to a static data structure).
->=20
-> It is correct that the lock protects the assignment of the data structure=
-.
->=20
-> But the Jitter RNG itself is not multi-threaded. So, a form of serializat=
-ion=20
-> is needed to also "read" data from the Jitter RNG using one and the same=
-=20
-> state.
->=20
-> Granted, there is a serialization in the current code as the=20
-> lrng_pool_trylock() is taken before the Jitter RNG is called by=20
-> lrng_fill_seed_buffer which effectively serializes all requests to also t=
-he=20
-> Jitter RNG. But this is coincidence in this case. I would think, however,=
- that=20
-> this coincidence could easily lead to programming errors further down the=
- road=20
-> when the spinlock is not present and that trylock() is moved to some plac=
-e=20
-> else considering that this trylock() is meant to protect reading the entr=
-opy=20
-> pool and not the Jitter RNG.
->=20
-> As the reading of the Jitter RNG is always performed in process context, =
-I=20
-> think having this additional spin lock against possible programming error=
-s=20
-> should not lead to performance regressions.
->=20
-> What do you think?
->=20
-I take your meaning that each random device needs protection, and yes, each=
- of
-the random devices (trng and sdrng) have their own locking.  But it also ap=
-pears
-to me that each of those random devices contains its own private copy of th=
-e
-entropy_buf (they're statically declared on the stack in lrng_trng_seed and
-_lrng_sdrng_seed), so while the additional locking doesn't necessecarily hu=
-rt,
-I'm struggling to see why the additional work is needed.  If ever you have =
-a
-situation in which multiple rngs want want to share an entropy buffer, yes,=
- you
-would need that lock, or some other protection, but I don't see the need
-immediately.
+On Thu, Nov 21, 2019 at 01:45:21PM +0000, Christophe ROULLIER wrote:
+> Hi Guenter,
+> 
+> On 11/21/19 10:53 AM, Guenter Roeck wrote:
+> > On 11/21/19 12:28 AM, Christophe Roullier wrote:
+> >> If the watchdog hardware is already enabled during the boot process,
+> >> when the Linux watchdog driver loads, it should reset the watchdog and
+> >> tell the watchdog framework. As a result, ping can be generated from
+> >> the watchdog framework (if CONFIG_WATCHDOG_HANDLE_BOOT_ENABLED is set),
+> >> until the userspace watchdog daemon takes over control
+> >>
+> >
+> > This is not what the code is doing. It sets the WDOG_HW_RUNNING flag
+> > unconditionally, no matter if the watchdog is already running or not.
+> > It also changes the semantic of the rest of the code, as well as
+> > functionality. The code in start_timeout no longer waits, and the ping
+> > code explicitly (re-)enables the watchdog.
+> >
+> > If you want an option to start the watchdog at probe time 
+> > unconditionally,
+> > please add a module parameter to do it. Otherwise you'll need to check if
+> > it is indeed enabled before setting WDOG_HW_RUNNING, and in that case it
+> > should not be necessary to re-enable it. It should also not be necessary
+> > to split the start function.
+> 
+> With our IWDG IP, there is no way to read values from hardware (if it is 
+> running or not)
+> 
+> We are in same case of intel-mid_wdt.c driver, we have Uboot which can
+> 
+> leaves the watchdog running. So we need to force the kicking of our 
+> watchdog.
+> 
 
-Neil
+"can" or "leaves" ? 
 
-> Thank you for your review!
->=20
-> Ciao
-> Stephan
->=20
->=20
+Anyway, if that is the case, please follow the guidance from intel-mid_wdt.c,
+and explain it accordingly. Alternatively, please explain why something like
 
+	ret = wdt_start(wdt_dev);
+        if (ret)
+                return ret;
+
+	/* Make sure the watchdog is serviced */
+        set_bit(WDOG_HW_RUNNING, &wdt_dev->status);
+
+would not work in your case, and why all that added complexity
+is needed.
+
+Thanks,
+Guenter
+
+> Thanks
+> 
+> Christophe
+> 
+> >
+> > Thanks,
+> > Guenter
+> >
+> >> Fixes:4332d113c66a ("watchdog: Add STM32 IWDG driver")
+> >> Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
+> >> ---
+> >>   drivers/watchdog/stm32_iwdg.c | 57 ++++++++++++++++++++++++-----------
+> >>   1 file changed, 40 insertions(+), 17 deletions(-)
+> >>
+> >> diff --git a/drivers/watchdog/stm32_iwdg.c 
+> >> b/drivers/watchdog/stm32_iwdg.c
+> >> index a3a329011a06..2b3be3b1c15b 100644
+> >> --- a/drivers/watchdog/stm32_iwdg.c
+> >> +++ b/drivers/watchdog/stm32_iwdg.c
+> >> @@ -87,8 +87,23 @@ static inline void reg_write(void __iomem *base, 
+> >> u32 reg, u32 val)
+> >>   static int stm32_iwdg_start(struct watchdog_device *wdd)
+> >>   {
+> >>       struct stm32_iwdg *wdt = watchdog_get_drvdata(wdd);
+> >> -    u32 tout, presc, iwdg_rlr, iwdg_pr, iwdg_sr;
+> >> -    int ret;
+> >> +
+> >> +    dev_dbg(wdd->parent, "%s\n", __func__);
+> >> +
+> >> +    /*  Start the watchdog */
+> >> +    reg_write(wdt->regs, IWDG_KR, KR_KEY_ENABLE);
+> >> +
+> >> +    /* reload watchdog */
+> >> +    reg_write(wdt->regs, IWDG_KR, KR_KEY_RELOAD);
+> >> +
+> >> +    set_bit(WDOG_HW_RUNNING, &wdd->status);
+> >> +    return 0;
+> >> +}
+> >> +
+> >> +static int stm32_iwdg_setprescaler(struct watchdog_device *wdd)
+> >> +{
+> >> +    struct stm32_iwdg *wdt = watchdog_get_drvdata(wdd);
+> >> +    u32 tout, presc, iwdg_rlr, iwdg_pr;
+> >>         dev_dbg(wdd->parent, "%s\n", __func__);
+> >>   @@ -108,19 +123,6 @@ static int stm32_iwdg_start(struct 
+> >> watchdog_device *wdd)
+> >>       /* set prescaler & reload registers */
+> >>       reg_write(wdt->regs, IWDG_PR, iwdg_pr);
+> >>       reg_write(wdt->regs, IWDG_RLR, iwdg_rlr);
+> >> -    reg_write(wdt->regs, IWDG_KR, KR_KEY_ENABLE);
+> >> -
+> >> -    /* wait for the registers to be updated (max 100ms) */
+> >> -    ret = readl_relaxed_poll_timeout(wdt->regs + IWDG_SR, iwdg_sr,
+> >> -                     !(iwdg_sr & (SR_PVU | SR_RVU)),
+> >> -                     SLEEP_US, TIMEOUT_US);
+> >> -    if (ret) {
+> >> -        dev_err(wdd->parent, "Fail to set prescaler, reload regs\n");
+> >> -        return ret;
+> >> -    }
+> >> -
+> >> -    /* reload watchdog */
+> >> -    reg_write(wdt->regs, IWDG_KR, KR_KEY_RELOAD);
+> >>         return 0;
+> >>   }
+> >> @@ -131,6 +133,9 @@ static int stm32_iwdg_ping(struct watchdog_device 
+> >> *wdd)
+> >>         dev_dbg(wdd->parent, "%s\n", __func__);
+> >>   +    /*  Start the watchdog */
+> >> +    reg_write(wdt->regs, IWDG_KR, KR_KEY_ENABLE);
+> >> +
+> >>       /* reload watchdog */
+> >>       reg_write(wdt->regs, IWDG_KR, KR_KEY_RELOAD);
+> >>   @@ -140,12 +145,21 @@ static int stm32_iwdg_ping(struct 
+> >> watchdog_device *wdd)
+> >>   static int stm32_iwdg_set_timeout(struct watchdog_device *wdd,
+> >>                     unsigned int timeout)
+> >>   {
+> >> +    int ret;
+> >> +
+> >>       dev_dbg(wdd->parent, "%s timeout: %d sec\n", __func__, timeout);
+> >>         wdd->timeout = timeout;
+> >>   -    if (watchdog_active(wdd))
+> >> -        return stm32_iwdg_start(wdd);
+> >> +    if (watchdog_active(wdd)) {
+> >> +        ret = stm32_iwdg_setprescaler(wdd);
+> >> +        if (ret) {
+> >> +            dev_err(wdd->parent, "failed to set prescaler\n");
+> >> +            return ret;
+> >> +        } else {
+> >> +            return stm32_iwdg_start(wdd);
+> >> +        }
+> >> +    }
+> >>         return 0;
+> >>   }
+> >> @@ -262,12 +276,21 @@ static int stm32_iwdg_probe(struct 
+> >> platform_device *pdev)
+> >>       watchdog_set_nowayout(wdd, WATCHDOG_NOWAYOUT);
+> >>       watchdog_init_timeout(wdd, 0, dev);
+> >>   +    /* Make sure the watchdog is serviced */
+> >> +    set_bit(WDOG_HW_RUNNING, &wdd->status);
+> >> +
+> >>       ret = devm_watchdog_register_device(dev, wdd);
+> >>       if (ret)
+> >>           return ret;
+> >>         platform_set_drvdata(pdev, wdt);
+> >>   +    ret = stm32_iwdg_setprescaler(wdd);
+> >> +    if (ret) {
+> >> +        dev_err(dev, "failed to set prescaler\n");
+> >> +        return ret;
+> >> +    }
+> >> +
+> >>       return 0;
+> >>   }
+> >>
+> >
