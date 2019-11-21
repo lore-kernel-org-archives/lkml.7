@@ -2,78 +2,95 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9FA7C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 15:26:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B96F9C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 15:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B878D20674
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 15:26:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="TjKXwAJI"
+	by mail.kernel.org (Postfix) with ESMTP id 9565220674
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 15:26:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727208AbfKUP0q (ORCPT
+        id S1727247AbfKUP05 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 10:26:46 -0500
-Received: from frisell.zx2c4.com ([192.95.5.64]:53357 "EHLO frisell.zx2c4.com"
+        Thu, 21 Nov 2019 10:26:57 -0500
+Received: from verein.lst.de ([213.95.11.211]:46733 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726574AbfKUP0q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 10:26:46 -0500
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 8153aecb;
-        Thu, 21 Nov 2019 14:33:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=9rO4z5sa5cW/KppMdFyBM7L655M=; b=TjKXwA
-        JIypICoKtVIfvC1uTqy8daQ00OJ9H5PiBR9zcuuFSG7u1kR4cBCEXHyvUbKDwgGw
-        s5iHyQv+/ADmqU5NKFV60z2ABEHhm83h4WRRQh1hA7sm7mM8MFpKvs3KIC/Vt3Ei
-        MG+YkSv5KlM8aBPUFZuExYEfpn+MMViw76ygzsanGv7u2BpoF2HSTArnbY/vo5rA
-        NT8JHTBDZss46jcH+/Br3nnFpK5MTAr2FkVVsw27ZJngF6DZpEP3lBU+9CYHk40i
-        dhhIQt9P3dA5BbpYP1kUSC8a/PgURS61I9xGk2eX7HyjB8Mqu446q0c1zSfi0MOW
-        C4MSMadnTHtLu2fQ==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id bf8a06f6 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
-        Thu, 21 Nov 2019 14:33:38 +0000 (UTC)
-Received: by mail-ot1-f51.google.com with SMTP id r24so3215243otk.12;
-        Thu, 21 Nov 2019 07:26:43 -0800 (PST)
-X-Gm-Message-State: APjAAAUR72CHIfOJFQO73Rg4tLzvxUlOseJo/bxeKgtCCQLNWc7DsSqp
-        B4k+j0J6LDQcl5ZReZhRhNITHEDvQcNMwDg83Rw=
-X-Google-Smtp-Source: APXvYqy+OOPTbY4wI1lR6UWfKKpza4kME2TCJyAP6+JIFH/G2GBY8787MbunIO+puAfzydaD9ym9gJwPeXC9rAw7Oaw=
-X-Received: by 2002:a9d:4788:: with SMTP id b8mr6990169otf.120.1574350002882;
- Thu, 21 Nov 2019 07:26:42 -0800 (PST)
+        id S1726563AbfKUP05 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 10:26:57 -0500
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 9128268BFE; Thu, 21 Nov 2019 16:26:50 +0100 (CET)
+Date:   Thu, 21 Nov 2019 16:26:50 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org,
+        iommu@lists.linux-foundation.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2] dma-mapping: treat dev->bus_dma_mask as a DMA limit
+Message-ID: <20191121152650.GA651@lst.de>
+References: <20191121092646.8449-1-nsaenzjulienne@suse.de> <20191121152457.GA525@lst.de>
 MIME-Version: 1.0
-References: <20191120203538.199367-1-Jason@zx2c4.com> <877e3t8qv7.fsf@toke.dk>
- <CAHmME9rmFw7xGKNMURBUSiezbsBEikOPiJxtEu=i2Quzf+JNDg@mail.gmail.com> <CANiq72mGPmMVBCmOMc_xJbKuOvbmmPAotGx67nSVQrYmXd2x3A@mail.gmail.com>
-In-Reply-To: <CANiq72mGPmMVBCmOMc_xJbKuOvbmmPAotGx67nSVQrYmXd2x3A@mail.gmail.com>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Thu, 21 Nov 2019 16:26:31 +0100
-X-Gmail-Original-Message-ID: <CAHmME9q6UHweyNBmAOanJB=BBSyjydwurJin2eJd9R+nAe2YYQ@mail.gmail.com>
-Message-ID: <CAHmME9q6UHweyNBmAOanJB=BBSyjydwurJin2eJd9R+nAe2YYQ@mail.gmail.com>
-Subject: Re: [PATCH RFC net-next] net: WireGuard secure network tunnel
-To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc:     =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <thoiland@redhat.com>,
-        Netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        David Miller <davem@davemloft.net>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191121152457.GA525@lst.de>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 3:44 PM Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
-> Any reason for the .clang-format in drivers/? If yes, it would be nice
-> to state it in the comment of the file.
+On Thu, Nov 21, 2019 at 04:24:57PM +0100, Christoph Hellwig wrote:
+> On Thu, Nov 21, 2019 at 10:26:44AM +0100, Nicolas Saenz Julienne wrote:
+> > Using a mask to represent bus DMA constraints has a set of limitations.
+> > The biggest one being it can only hold a power of two (minus one). The
+> > DMA mapping code is already aware of this and treats dev->bus_dma_mask
+> > as a limit. This quirk is already used by some architectures although
+> > still rare.
+> > 
+> > With the introduction of the Raspberry Pi 4 we've found a new contender
+> > for the use of bus DMA limits, as its PCIe bus can only address the
+> > lower 3GB of memory (of a total of 4GB). This is impossible to represent
+> > with a mask. To make things worse the device-tree code rounds non power
+> > of two bus DMA limits to the next power of two, which is unacceptable in
+> > this case.
+> > 
+> > In the light of this, rename dev->bus_dma_mask to dev->bus_dma_limit all
+> > over the tree and treat it as such. Note that dev->bus_dma_limit should
+> > contain the higher accesible DMA address.
+> > 
+> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> 
+> I've tentatively added this patch to the dma-mapping tree based on
+> Robins principal approval of the last version.  That way tomorrows
+> linux-next run should still pick it up.
 
-It's a total accident in porting my scripts from the older Zinc-based
-patchset to this newer Frankenzinc-based one. It won't be there in the
-next submission and is already gone from
-https://git.kernel.org/pub/scm/linux/kernel/git/zx2c4/linux.git/commit/?h=wireguard
-
-Jason
+Actually.  This doesn't apply because the dma-mapping tree doesn't
+have you zone_dma_bits change.  I guess we'll need to wait for the
+next merge window, or maybe post rc1 if this happens to fix the
+powerpc problem that Christian reported.
