@@ -7,39 +7,38 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B12F9C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:59:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 841BAC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:59:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86DB020672
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:59:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64CB020672
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:59:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbfKUU72 (ORCPT
+        id S1726774AbfKUU72 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Thu, 21 Nov 2019 15:59:28 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:33483 "EHLO
+Received: from Galois.linutronix.de ([193.142.43.55]:33484 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726541AbfKUU72 (ORCPT
+        with ESMTP id S1726546AbfKUU72 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 21 Nov 2019 15:59:28 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iXtXv-0005dc-Dk; Thu, 21 Nov 2019 21:59:23 +0100
+        id 1iXtXv-0005dd-H6; Thu, 21 Nov 2019 21:59:23 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 1116D1C1A62;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 362A71C1A63;
         Thu, 21 Nov 2019 21:59:23 +0100 (CET)
-Date:   Thu, 21 Nov 2019 20:59:22 -0000
+Date:   Thu, 21 Nov 2019 20:59:23 -0000
 From:   "tip-bot2 for Andy Lutomirski" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] selftests/x86/sigreturn/32: Invalidate DS and ES
- when abusing the kernel
+Subject: [tip: x86/urgent] selftests/x86/mov_ss_trap: Fix the SYSENTER test
 Cc:     Andy Lutomirski <luto@kernel.org>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>, stable@kernel.org,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <157436996291.21853.2383668050357228763.tip-bot2@tip-bot2>
+Message-ID: <157436996315.21853.1892350494410986303.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -55,49 +54,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/urgent branch of tip:
 
-Commit-ID:     4d2fa82d98d2d296043a04eb517d7dbade5b13b8
-Gitweb:        https://git.kernel.org/tip/4d2fa82d98d2d296043a04eb517d7dbade5b13b8
+Commit-ID:     8caa016bfc129f2c925d52da43022171d1d1de91
+Gitweb:        https://git.kernel.org/tip/8caa016bfc129f2c925d52da43022171d1d1de91
 Author:        Andy Lutomirski <luto@kernel.org>
-AuthorDate:    Wed, 20 Nov 2019 11:58:32 -08:00
+AuthorDate:    Wed, 20 Nov 2019 12:59:13 -08:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Thu, 21 Nov 2019 21:55:59 +01:00
+CommitterDate: Thu, 21 Nov 2019 21:55:51 +01:00
 
-selftests/x86/sigreturn/32: Invalidate DS and ES when abusing the kernel
+selftests/x86/mov_ss_trap: Fix the SYSENTER test
 
-If the kernel accidentally uses DS or ES while the user values are
-loaded, it will work fine for sane userspace.  In the interest of
-simulating maximally insane userspace, make sigreturn_32 zero out DS
-and ES for the nasty parts so that inadvertent use of these segments
-will crash.
+For reasons that I haven't quite fully diagnosed, running
+mov_ss_trap_32 on a 32-bit kernel results in an infinite loop in
+userspace.  This appears to be because the hacky SYSENTER test
+doesn't segfault as desired; instead it corrupts the program state
+such that it infinite loops.
 
+Fix it by explicitly clearing EBP before doing SYSENTER.  This will
+give a more reliable segfault.
+
+Fixes: 59c2a7226fc5 ("x86/selftests: Add mov_to_ss test")
 Signed-off-by: Andy Lutomirski <luto@kernel.org>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Cc: stable@kernel.org
 ---
- tools/testing/selftests/x86/sigreturn.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ tools/testing/selftests/x86/mov_ss_trap.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/x86/sigreturn.c b/tools/testing/selftests/x86/sigreturn.c
-index 3e49a78..57c4f67 100644
---- a/tools/testing/selftests/x86/sigreturn.c
-+++ b/tools/testing/selftests/x86/sigreturn.c
-@@ -451,6 +451,19 @@ static void sigusr1(int sig, siginfo_t *info, void *ctx_void)
- 	ctx->uc_mcontext.gregs[REG_SP] = (unsigned long)0x8badf00d5aadc0deULL;
- 	ctx->uc_mcontext.gregs[REG_CX] = 0;
- 
-+#ifdef __i386__
-+	/*
-+	 * Make sure the kernel doesn't inadvertently use DS or ES-relative
-+	 * accesses in a region where user DS or ES is loaded.
-+	 *
-+	 * Skip this for 64-bit builds because long mode doesn't care about
-+	 * DS and ES and skipping it increases test coverage a little bit,
-+	 * since 64-bit kernels can still run the 32-bit build.
-+	 */
-+	ctx->uc_mcontext.gregs[REG_DS] = 0;
-+	ctx->uc_mcontext.gregs[REG_ES] = 0;
-+#endif
-+
- 	memcpy(&requested_regs, &ctx->uc_mcontext.gregs, sizeof(gregset_t));
- 	requested_regs[REG_CX] = *ssptr(ctx);	/* The asm code does this. */
- 
+diff --git a/tools/testing/selftests/x86/mov_ss_trap.c b/tools/testing/selftests/x86/mov_ss_trap.c
+index 3c3a022..6da0ac3 100644
+--- a/tools/testing/selftests/x86/mov_ss_trap.c
++++ b/tools/testing/selftests/x86/mov_ss_trap.c
+@@ -257,7 +257,8 @@ int main()
+ 			err(1, "sigaltstack");
+ 		sethandler(SIGSEGV, handle_and_longjmp, SA_RESETHAND | SA_ONSTACK);
+ 		nr = SYS_getpid;
+-		asm volatile ("mov %[ss], %%ss; SYSENTER" : "+a" (nr)
++		/* Clear EBP first to make sure we segfault cleanly. */
++		asm volatile ("xorl %%ebp, %%ebp; mov %[ss], %%ss; SYSENTER" : "+a" (nr)
+ 			      : [ss] "m" (ss) : "flags", "rcx"
+ #ifdef __x86_64__
+ 				, "r11"
