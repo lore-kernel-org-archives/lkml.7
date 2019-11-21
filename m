@@ -2,168 +2,103 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B5CBC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:50:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E6B0C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:52:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15D1B2067D
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:50:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574355005;
-	bh=TB9g6SOH+1ya0uwgfVHDrexpC8uetzw8yiOnRhgswBs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=k2uWTf3FuqZhsxNcQ3HRj1QGggj7kuKifpSi9uuuZlfePib1eGLCA8JJziX5s/mM+
-	 c9jvD59I/kf4QPXj8rhRSnudrT7VusUxwg1pi06Oh6I6IeY9k3VlLkmgjxu2IZXRLp
-	 9B9uvzLo1eqIcymEO0W6SDnQyK8d+mdnxiCsOUOQ=
+	by mail.kernel.org (Postfix) with ESMTP id 601D1206B6
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:52:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726990AbfKUQuE (ORCPT
+        id S1726858AbfKUQwW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 11:50:04 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:36581 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726279AbfKUQuD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 11:50:03 -0500
-Received: by mail-wm1-f66.google.com with SMTP id n188so2593113wme.1
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 08:50:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=nARvRJe8IG8Ozbyqs0oQ0/7TITtn5wag058peJHBpZg=;
-        b=Md7qsHyhqKF3kozzj2W2LpQc9Ck3Zlp4BsZy3JhEM1p8qJalTWheghmCL9n1sNqHvU
-         /sHDzMTnhYsRu/X9pKjmSn9nOEDyDnlbCwx54F/mQ43AIraqwOu7GjXd6rSpvx3MXvXb
-         9HbH/fgMaAos2pfN0KSBPXxwmX2nLNThFT2mbfWicLtAsJ4ZlmFMkFSkhDKu6n5xQ551
-         SJUUCbW/6tHnmysyuRKdplPMlh+AU3hw9bLZrit3VOKV9fyEU0kKgQnLuq16ekO6Qj2k
-         fpZB0mJC7ZMBfA+qwiUuAvbsDB8nNTz7i+aRMCo8h7Z/UPh7jkYd46xjRIQ10+D1w52U
-         buAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nARvRJe8IG8Ozbyqs0oQ0/7TITtn5wag058peJHBpZg=;
-        b=ulPviOFXYyniF3CIuBSumC9KTXzMZe5yVGqR/UWPCsuInPb2WuSbwC7o87v+W3fffP
-         +K+N4DFY92Ts4SxvdzsW/U0gZzYng7Qqggco0UFMCBOmbQ+UT7ZTtL24wUdt9q9v/xOh
-         SB2OZksUaMClEUbDCzB89S1nLV8TQC+fAaoZh7MHgYUklGE/7Pg14TB4KJGVXbKCpIo8
-         RO+ar/LqyvOlAlBXOQSZ18l9bAJQNYF2uopyHmZo2W6leXrFqfM7tzulkFZv7MEg5vIn
-         +xdBdZSVw1adPtVcWE48F41+GBp1Uos5kJ5Sc1pFLdd87VNwVNjDgqyNd8NA31eMZ/BB
-         aIpA==
-X-Gm-Message-State: APjAAAUuho3KxjGzExjtc5KviM54ZwUbtfFnHIx9CxYqmexT1sUUlqez
-        Gs2OdyVVX0g52U9EIbmjxCY=
-X-Google-Smtp-Source: APXvYqyalndcchVSDARCT74h65CZta/v+w5MAn9OYVISbrmcoBLXrvACtNcMrL2KQ7h5zdtRzuvZjQ==
-X-Received: by 2002:a05:600c:2253:: with SMTP id a19mr11068931wmm.97.1574355001650;
-        Thu, 21 Nov 2019 08:50:01 -0800 (PST)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id i71sm4369790wri.68.2019.11.21.08.50.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Nov 2019 08:50:01 -0800 (PST)
-Date:   Thu, 21 Nov 2019 17:49:58 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Frederic Weisbecker <frederic@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Rik van Riel <riel@surriel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Yauheni Kaliuta <yauheni.kaliuta@redhat.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH 5/6] leds: Use all-in-one vtime aware kcpustat accessor
-Message-ID: <20191121164958.GA46146@gmail.com>
-References: <20191121024430.19938-1-frederic@kernel.org>
- <20191121024430.19938-6-frederic@kernel.org>
- <20191121065826.GA3552@gmail.com>
- <20191121141410.GA17301@lenoir>
+        Thu, 21 Nov 2019 11:52:22 -0500
+Received: from mga18.intel.com ([134.134.136.126]:23669 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726279AbfKUQwW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 11:52:22 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Nov 2019 08:52:21 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,226,1571727600"; 
+   d="scan'208";a="205204778"
+Received: from djiang5-desk3.ch.intel.com ([143.182.136.137])
+  by fmsmga007.fm.intel.com with ESMTP; 21 Nov 2019 08:52:19 -0800
+Subject: Re: [PATCH RFC 01/14] x86/asm: add iosubmit_cmds512() based on
+ movdir64b CPU instruction
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Lin, Jing" <jing.lin@intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
+        "Dey, Megha" <megha.dey@intel.com>,
+        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        "hpa@zytor.com" <hpa@zytor.com>
+References: <157428480574.36836.14057238306923901253.stgit@djiang5-desk3.ch.intel.com>
+ <157428502934.36836.8119026517510193201.stgit@djiang5-desk3.ch.intel.com>
+ <20191120215338.GN2634@zn.tnic>
+ <247008b5-6d33-a51b-0caa-7f1991a94dbd@intel.com>
+ <20191121105913.GB6540@zn.tnic>
+From:   Dave Jiang <dave.jiang@intel.com>
+Message-ID: <ef6bc4a4-b307-9bc4-f3be-f7ab7232d303@intel.com>
+Date:   Thu, 21 Nov 2019 09:52:19 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191121141410.GA17301@lenoir>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191121105913.GB6540@zn.tnic>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-* Frederic Weisbecker <frederic@kernel.org> wrote:
 
-> On Thu, Nov 21, 2019 at 07:58:26AM +0100, Ingo Molnar wrote:
-> > 
-> > * Frederic Weisbecker <frederic@kernel.org> wrote:
-> > 
-> > > We can now safely read user kcpustat fields on nohz_full CPUs.
-> > > Use the appropriate accessor.
-> > > 
-> > > Reported-by: Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
-> > > Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-> > > Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> > > Cc: Pavel Machek <pavel@ucw.cz>
-> > > Cc: Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
-> > > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > > Cc: Rik van Riel <riel@surriel.com>
-> > > Cc: Peter Zijlstra <peterz@infradead.org>
-> > > Cc: Wanpeng Li <wanpengli@tencent.com>
-> > > Cc: Ingo Molnar <mingo@kernel.org>
-> > > ---
-> > >  drivers/leds/trigger/ledtrig-activity.c | 14 +++++++++-----
-> > >  1 file changed, 9 insertions(+), 5 deletions(-)
-> > > 
-> > > diff --git a/drivers/leds/trigger/ledtrig-activity.c b/drivers/leds/trigger/ledtrig-activity.c
-> > > index ddfc5edd07c8..6901e3631c22 100644
-> > > --- a/drivers/leds/trigger/ledtrig-activity.c
-> > > +++ b/drivers/leds/trigger/ledtrig-activity.c
-> > > @@ -57,11 +57,15 @@ static void led_activity_function(struct timer_list *t)
-> > >  	curr_used = 0;
-> > >  
-> > >  	for_each_possible_cpu(i) {
-> > > -		curr_used += kcpustat_cpu(i).cpustat[CPUTIME_USER]
-> > > -			  +  kcpustat_cpu(i).cpustat[CPUTIME_NICE]
-> > > -			  +  kcpustat_field(&kcpustat_cpu(i), CPUTIME_SYSTEM, i)
-> > > -			  +  kcpustat_cpu(i).cpustat[CPUTIME_SOFTIRQ]
-> > > -			  +  kcpustat_cpu(i).cpustat[CPUTIME_IRQ];
-> > > +		struct kernel_cpustat kcpustat;
-> > > +
-> > > +		kcpustat_fetch_cpu(&kcpustat, i);
-> > > +
-> > > +		curr_used += kcpustat.cpustat[CPUTIME_USER]
-> > > +			  +  kcpustat.cpustat[CPUTIME_NICE]
-> > > +			  +  kcpustat.cpustat[CPUTIME_SYSTEM]
-> > > +			  +  kcpustat.cpustat[CPUTIME_SOFTIRQ]
-> > > +			  +  kcpustat.cpustat[CPUTIME_IRQ];
-> > 
-> > Not the best tested series:
-> > 
-> > --- a/drivers/leds/trigger/ledtrig-activity.c
-> > +++ b/drivers/leds/trigger/ledtrig-activity.c
-> > @@ -59,7 +59,7 @@ static void led_activity_function(struct timer_list *t)
-> >  	for_each_possible_cpu(i) {
-> >  		struct kernel_cpustat kcpustat;
-> >  
-> > -		kcpustat_fetch_cpu(&kcpustat, i);
-> > +		kcpustat_cpu_fetch(&kcpustat, i);
-> >  
-> >  		curr_used += kcpustat.cpustat[CPUTIME_USER]
-> >  			  +  kcpustat.cpustat[CPUTIME_NICE]
-> > 
-> > 
-> > :-)
+On 11/21/19 3:59 AM, Borislav Petkov wrote:
+> On Wed, Nov 20, 2019 at 05:10:41PM -0700, Dave Jiang wrote:
+>> I'll add the check on the destination address. The call is modeled after
+>> __iowrite64_copy() / __iowrite32_copy() in lib/iomap_copy.c. Looks like
+>> those functions do not check for the alignment requirements either.
 > 
-> Oops, I tested with vtime on and off but that one slipped under my config.
-> Do you want me to resend?
+> So just because they don't check, you don't need to check either?
 
-No need, I suspect this slipped in via my last minute request for that 
-interface cleanup - so I just applied the fix and tested it - it all 
-passed testing today and I just pushed it out into tip:sched/core.
+No what I mean was those primitives are missing the checks and we should 
+probably address that at some point.
 
-So all's good so far.
+> 
+> Can you guarantee that all callers will always do the right thing?
+> 
+> I mean, if you don't care too much, why even write "(must be 512-bit
+> aligned)"? Who cares then if the data is aligned or not...
+> 
 
-Thanks Frederic!
 
-	Ingo
+>>>> + * @dst: destination, in MMIO space (must be 512-bit aligned)
+>>>> + * @src: source
+>>>> + * @count: number of 512 bits quantities to submit
+>>>
+>>> Where's that check on the data?
+>>
+>> I don't follow?
+> 
+> What do you do if the caller doesn't submit data in 512 bits quantities?
+> 
+
+How would I detect that? Add a size (in bytes) parameter for the total 
+source data?
