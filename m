@@ -2,135 +2,248 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF739C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:19:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46545C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:19:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A67B120658
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:19:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02E2920658
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:19:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="13PRjt8K"
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="Fwh5P52p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbfKUQTd (ORCPT
+        id S1727085AbfKUQTx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 11:19:33 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:33519 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726293AbfKUQTd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 11:19:33 -0500
-Received: by mail-il1-f196.google.com with SMTP id m5so3866206ilq.0
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 08:19:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Kvj1OGlYWXQ7ytbrKDsR/TZrdswK2tP2241AuGz5/5c=;
-        b=13PRjt8K4a2KOy8p0LkwxnTJWoXSCik2jil6eEf+nKpRFAw/WneYao35gDdiKIYb8a
-         /xbKq7CVsVyzhDgT+qYN/CXr3mCN2tfs+V0MqYVdrCI2Jb32I4Ml32hjse8GLaNlaycf
-         hYaBMSvPkL+QfF3Lvq/i3o6MjQtTDBiQupjgl92he/XUE3u4BgZxrZD9tAbZinpSEUYU
-         2lSCSv9xThV5eLe3YZDmcM97/cNnOWZV98EnnXiUAMBXRqNCvJZBU5vH+6PmZW8aIykE
-         9DEJv2ax5uyrJda8ehDfb4X3GDoJCPgbX91gZGQy8X+YmKVFC3yiYvNgQw+HOQ+Sveg+
-         m5CQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Kvj1OGlYWXQ7ytbrKDsR/TZrdswK2tP2241AuGz5/5c=;
-        b=WspHcE93fUrqRB9q3zlghqzeRmZy2RkeznfM/VR2MxUHYEMye8S5+vmNH3WMIoNCtW
-         tqxDbBOy83DGaoOwTfUUw79MAlshs+10973foussZU7Jy6JH/JC0TeAzD6yhRDYqv/pG
-         IxtS9GUo2bKyDjFtMHyIZVlms5BB9ijjOl80zecnRdK4fJCI/ncUj8O0S36QqOup9yCZ
-         PDhIo02qrNQDdDnFcUMDy6lbAcJj3CD8UU5qT4/Kn/peVoFEDdPY9F/k6xE6oB8Nd3TG
-         wlSB3mwOCoGPCnTIbrFTaHLvA2xtjDD6KieriIhifvDspJ0qIU2sNLkLoMLdHnTPveZT
-         j5DQ==
-X-Gm-Message-State: APjAAAXnZxhy58Q5M/NsZCGHPbY8N44rGbYlNl8FWlRQes1x2eLqkJ00
-        uDXUU0jPO8jVsldN0JduGgU1fw==
-X-Google-Smtp-Source: APXvYqzH3122XVz+Xjvvs3/f2ovlox5AqFaHNu3z266z0L1JjdEWxY4sgwdfmFDwsQc2XOJwI0yKSQ==
-X-Received: by 2002:a05:6e02:8e7:: with SMTP id n7mr10886315ilt.302.1574353172148;
-        Thu, 21 Nov 2019 08:19:32 -0800 (PST)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id b21sm1392809ilg.88.2019.11.21.08.19.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 21 Nov 2019 08:19:31 -0800 (PST)
-Subject: Re: single aio thread is migrated crazily by scheduler
-To:     Boaz Harrosh <boaz@plexistor.com>, Phil Auld <pauld@redhat.com>,
-        Ming Lei <ming.lei@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Dave Chinner <david@fromorbit.com>,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jeff Moyer <jmoyer@redhat.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Eric Sandeen <sandeen@redhat.com>,
-        Christoph Hellwig <hch@lst.de>, Ingo Molnar <mingo@redhat.com>,
-        Tejun Heo <tj@kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-References: <20191114235415.GL4614@dread.disaster.area>
- <20191115010824.GC4847@ming.t460p>
- <20191115045634.GN4614@dread.disaster.area>
- <20191115070843.GA24246@ming.t460p>
- <20191115234005.GO4614@dread.disaster.area>
- <20191118092121.GV4131@hirez.programming.kicks-ass.net>
- <20191118204054.GV4614@dread.disaster.area>
- <20191120191636.GI4097@hirez.programming.kicks-ass.net>
- <20191120220313.GC18056@pauld.bos.csb> <20191121041218.GK24548@ming.t460p>
- <20191121141207.GA18443@pauld.bos.csb>
- <93de0f75-3664-c71e-9947-5b37ae935ddc@plexistor.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <8c02ab43-3880-68db-f293-9958510fb29e@kernel.dk>
-Date:   Thu, 21 Nov 2019 09:19:29 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <93de0f75-3664-c71e-9947-5b37ae935ddc@plexistor.com>
-Content-Type: text/plain; charset=utf-8
+        Thu, 21 Nov 2019 11:19:53 -0500
+Received: from mail-eopbgr820088.outbound.protection.outlook.com ([40.107.82.88]:60806
+        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726967AbfKUQTw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 11:19:52 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=eqY3UcW7dWiAWKrXduoXp9x/JZ0SaFQrakwrJQbgU2KqgNgAoD5gbfcVvVTs4UlIDavIcUDYOI5/qIFi7Y+OWbSImHB5QUtgHgN3NtfqsFnHtb9gKR4pVpwA+NRnQJl1fBghebqnjhIX56AZJ5mUie4SRkh8Hn9MI2RosYmOOqkISIQxVljH7rd4oJAT2t5MpfHZmoSwSec0uiH+yHX5xvQdWEZBHshHmfEjC2+LFnVAtkL1n3cdhDjWvXMIzy098WKVTQzJpVCSQ0eMSY38VqXGyAVc38I0UyUwqAO5UgwFmWQDlfHjUJGDZZOkVwPggpWO3NYdu+jcVdGxZLTR5A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QMMeBq/9aomTlwObrpenS8dw0g+uYMvvmqOUnyCj2Rw=;
+ b=frC6yKhoLpUlY8homFn9WDxt3AFedNK6KRtsQW+QMjXjyzo0Bpj1qXEc4HsA3wiW5W7X3X0G9MLTgFv3RqDe3AuN7cI0FVfxWohBv58an/uNYE6P3s9hGApAIQm4V4EFf1nVJ35IVahuDjUxHTuH8fOaet/mX9epTgD2LS4/Cl/KrPBLcxqwEFV4kVSB3wYLqhibMHiiRSJJtCqohLVQDDu8WQGcbwY6gvT8FAzRTqSUmMpCl4cYpeqljiQzgw+E6IQzkspcPcqCpryQk5L14Tgvgio3z0RlMD3DCsd8xMZyFPgRCtEWovvSJS30z/3BvyA7fJ+O8cJFs1NdBYA0yw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
+ dkim=pass header.d=vmware.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QMMeBq/9aomTlwObrpenS8dw0g+uYMvvmqOUnyCj2Rw=;
+ b=Fwh5P52pmi7hZm4F1NaUh6pgARKKNvFpcXNEXJbsIrzD9swm3+SPHByi+OoWHa7T+icq2sG7UccF87M6Bukfkc2cFaeBBQB549cJzhPCztS8+167QGIiDz+oHwDdDygc2YGHrwsDwSg7l2sGRQN93gZtAsKBjah4Ic6hhQXMqTo=
+Received: from MWHPR05MB3376.namprd05.prod.outlook.com (10.174.175.149) by
+ MWHPR05MB3677.namprd05.prod.outlook.com (10.174.175.30) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2474.13; Thu, 21 Nov 2019 16:19:46 +0000
+Received: from MWHPR05MB3376.namprd05.prod.outlook.com
+ ([fe80::4098:2c39:d8d3:a209]) by MWHPR05MB3376.namprd05.prod.outlook.com
+ ([fe80::4098:2c39:d8d3:a209%7]) with mapi id 15.20.2474.015; Thu, 21 Nov 2019
+ 16:19:46 +0000
+From:   Jorgen Hansen <jhansen@vmware.com>
+To:     'Stefano Garzarella' <sgarzare@redhat.com>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: RE: [PATCH net-next 3/6] vsock: add local transport support in the
+ vsock core
+Thread-Topic: [PATCH net-next 3/6] vsock: add local transport support in the
+ vsock core
+Thread-Index: AQHVnsi6A5C79S6UD0KKiVDL3k1B8qeVuhZQgAAHIACAAAGVwIAADKqAgAAA1wA=
+Date:   Thu, 21 Nov 2019 16:19:46 +0000
+Message-ID: <MWHPR05MB33765BAE0807B11C507FF626DA4E0@MWHPR05MB3376.namprd05.prod.outlook.com>
+References: <20191119110121.14480-1-sgarzare@redhat.com>
+ <20191119110121.14480-4-sgarzare@redhat.com>
+ <MWHPR05MB3376F4452F0CF38C1AFABA2EDA4E0@MWHPR05MB3376.namprd05.prod.outlook.com>
+ <20191121152148.slv26oesn25dpjb6@steredhat>
+ <MWHPR05MB3376D95B5E50DF7CAF675EEDDA4E0@MWHPR05MB3376.namprd05.prod.outlook.com>
+ <20191121161247.u6xvrso272q4ujag@steredhat>
+In-Reply-To: <20191121161247.u6xvrso272q4ujag@steredhat>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jhansen@vmware.com; 
+x-originating-ip: [208.91.2.1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a7c3599a-916f-4256-3f3d-08d76e9ea033
+x-ms-traffictypediagnostic: MWHPR05MB3677:
+x-microsoft-antispam-prvs: <MWHPR05MB3677C2D988B3D0C1FF801400DA4E0@MWHPR05MB3677.namprd05.prod.outlook.com>
+x-vmwhitelist: True
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0228DDDDD7
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(346002)(366004)(39860400002)(376002)(189003)(199004)(2906002)(66476007)(66946007)(7696005)(76176011)(4326008)(33656002)(66446008)(66556008)(64756008)(76116006)(5660300002)(52536014)(71190400001)(71200400001)(8936002)(99286004)(6916009)(74316002)(9686003)(55016002)(478600001)(7736002)(6246003)(8676002)(81156014)(81166006)(229853002)(6436002)(305945005)(3846002)(6116002)(316002)(14454004)(11346002)(446003)(256004)(14444005)(66066001)(86362001)(102836004)(26005)(54906003)(6506007)(53546011)(186003)(25786009);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR05MB3677;H:MWHPR05MB3376.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 5hj/4Vnd8z7ohkqZBlDzjUhVarbLKNUFln3WcM3gbpQRybRJP2Zflqqlg+bhOKfeNv/MSMHRcJjPSZCg+CJVPjqgyEavAXG3k8pbCoSesFD62/+6sYeJeaIvERn2WIRoJtmArHsLPKzHJLJ5aNf1Fx2STM3r2hx6ewwsofuzir+pt23IbjoMOzHBg6J5dgpBT5/IT18Nuxjehx0sU9AS70k+g3uVanURowwYCSIYNAn1mE2N44mmXWKPbUHKHkRuQ0N6SMguI3M2Qi/Tcw6GNLdRxcPGs2A9NnCJkcb37mHXv8mawSEK+jAhQ2Z5aclHODvX0aRp0qpI1d9XP+jREFm4kTNrKal+Vj5YUV+JkZ/xzZPEwooufVH2SeWBI8lQKyAk1jKRBg+BiLSmuj2+B/ncgHX7D9aEIh/vEb2dazPYSoVtAwhe1KQTjz/jZPGF
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a7c3599a-916f-4256-3f3d-08d76e9ea033
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Nov 2019 16:19:46.6726
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 4CDAl1ocMcevzE7ExJQBfnOklGjlc51jn2nk16Fb7hsT05ACP0LTQaIor+YpqXr5F05otBXkN5Y8IruDJkx2cg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR05MB3677
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/21/19 8:02 AM, Boaz Harrosh wrote:
-> On 21/11/2019 16:12, Phil Auld wrote:
-> <>
->>
->> The scheduler doesn't know if the queued_work submitter is going to go to sleep.
->> That's why I was singling out AIO. My understanding of it is that you submit the IO
->> and then keep going. So in that case it might be better to pick a node-local nearby
->> cpu instead. But this is a user of work queue issue not a scheduler issue.
->>
-> 
-> We have a very similar long standing problem in our system (zufs), that we had to do
-> hacks to fix.
-> 
-> We have seen these CPU bouncing exacly as above in fio and more
-> benchmarks, Our final analysis was:
->
-> One thread is in wait_event() if the wake_up() is on the same CPU as
-> the waiter, on some systems usually real HW and not VMs, would bounce
-> to a different CPU.  Now our system has an array of worker-threads
-> bound to each CPU. an incoming thread chooses a corresponding cpu
-> worker-thread, let it run, waiting for a reply, then when the
-> worker-thread is done it will do a wake_up(). Usually its fine and the
-> wait_event() stays on the same CPU. But on some systems it will wakeup
-> in a different CPU.
-> 
-> Now this is a great pity because in our case and the work_queue case
-> and high % of places the thread calling wake_up() will then
-> immediately go to sleep on something.  (Work done lets wait for new
-> work)
-> 
-> I wish there was a flag to wake_up() or to the event object that says
-> to relinquish the remaning of the time-slice to the waiter on same
-> CPU, since I will be soon sleeping.
+> From: Stefano Garzarella [mailto:sgarzare@redhat.com]
+> Sent: Thursday, November 21, 2019 5:13 PM
+>=20
+> On Thu, Nov 21, 2019 at 03:53:47PM +0000, Jorgen Hansen wrote:
+> > > From: Stefano Garzarella [mailto:sgarzare@redhat.com]
+> > > Sent: Thursday, November 21, 2019 4:22 PM
+> > >
+> > > On Thu, Nov 21, 2019 at 03:04:18PM +0000, Jorgen Hansen wrote:
+> > > > > From: Stefano Garzarella [mailto:sgarzare@redhat.com]
+> > > > > Sent: Tuesday, November 19, 2019 12:01 PM
+> > > > > To: netdev@vger.kernel.org
+> > > > >
+> > > > > This patch allows to register a transport able to handle
+> > > > > local communication (loopback).
+> > > > >
+> > > > > Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+> > > > > ---
+> > > > >  include/net/af_vsock.h   |  2 ++
+> > > > >  net/vmw_vsock/af_vsock.c | 17 ++++++++++++++++-
+> > > > >  2 files changed, 18 insertions(+), 1 deletion(-)
+> > > > >
+> > > > > diff --git a/include/net/af_vsock.h b/include/net/af_vsock.h
+> > > > > index 4206dc6d813f..b1c717286993 100644
+> > > > > --- a/include/net/af_vsock.h
+> > > > > +++ b/include/net/af_vsock.h
+> > > > > @@ -98,6 +98,8 @@ struct vsock_transport_send_notify_data {
+> > > > >  #define VSOCK_TRANSPORT_F_G2H		0x00000002
+> > > > >  /* Transport provides DGRAM communication */
+> > > > >  #define VSOCK_TRANSPORT_F_DGRAM		0x00000004
+> > > > > +/* Transport provides local (loopback) communication */
+> > > > > +#define VSOCK_TRANSPORT_F_LOCAL		0x00000008
+> > > > >
+> > > > >  struct vsock_transport {
+> > > > >  	struct module *module;
+> > > > > diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
+> > > > > index cc8659838bf2..c9e5bad59dc1 100644
+> > > > > --- a/net/vmw_vsock/af_vsock.c
+> > > > > +++ b/net/vmw_vsock/af_vsock.c
+> > > > > @@ -136,6 +136,8 @@ static const struct vsock_transport
+> > > *transport_h2g;
+> > > > >  static const struct vsock_transport *transport_g2h;
+> > > > >  /* Transport used for DGRAM communication */
+> > > > >  static const struct vsock_transport *transport_dgram;
+> > > > > +/* Transport used for local communication */
+> > > > > +static const struct vsock_transport *transport_local;
+> > > > >  static DEFINE_MUTEX(vsock_register_mutex);
+> > > > >
+> > > > >  /**** UTILS ****/
+> > > > > @@ -2130,7 +2132,7 @@
+> > > EXPORT_SYMBOL_GPL(vsock_core_get_transport);
+> > > > >
+> > > > >  int vsock_core_register(const struct vsock_transport *t, int fea=
+tures)
+> > > > >  {
+> > > > > -	const struct vsock_transport *t_h2g, *t_g2h, *t_dgram;
+> > > > > +	const struct vsock_transport *t_h2g, *t_g2h, *t_dgram,
+> *t_local;
+> > > > >  	int err =3D mutex_lock_interruptible(&vsock_register_mutex);
+> > > > >
+> > > > >  	if (err)
+> > > > > @@ -2139,6 +2141,7 @@ int vsock_core_register(const struct
+> > > > > vsock_transport *t, int features)
+> > > > >  	t_h2g =3D transport_h2g;
+> > > > >  	t_g2h =3D transport_g2h;
+> > > > >  	t_dgram =3D transport_dgram;
+> > > > > +	t_local =3D transport_local;
+> > > > >
+> > > > >  	if (features & VSOCK_TRANSPORT_F_H2G) {
+> > > > >  		if (t_h2g) {
+> > > > > @@ -2164,9 +2167,18 @@ int vsock_core_register(const struct
+> > > > > vsock_transport *t, int features)
+> > > > >  		t_dgram =3D t;
+> > > > >  	}
+> > > > >
+> > > > > +	if (features & VSOCK_TRANSPORT_F_LOCAL) {
+> > > > > +		if (t_local) {
+> > > > > +			err =3D -EBUSY;
+> > > > > +			goto err_busy;
+> > > > > +		}
+> > > > > +		t_local =3D t;
+> > > > > +	}
+> > > > > +
+> > > > >  	transport_h2g =3D t_h2g;
+> > > > >  	transport_g2h =3D t_g2h;
+> > > > >  	transport_dgram =3D t_dgram;
+> > > > > +	transport_local =3D t_local;
+> > > > >
+> > > > >  err_busy:
+> > > > >  	mutex_unlock(&vsock_register_mutex);
+> > > > > @@ -2187,6 +2199,9 @@ void vsock_core_unregister(const struct
+> > > > > vsock_transport *t)
+> > > > >  	if (transport_dgram =3D=3D t)
+> > > > >  		transport_dgram =3D NULL;
+> > > > >
+> > > > > +	if (transport_local =3D=3D t)
+> > > > > +		transport_local =3D NULL;
+> > > > > +
+> > > > >  	mutex_unlock(&vsock_register_mutex);
+> > > > >  }
+> > > > >  EXPORT_SYMBOL_GPL(vsock_core_unregister);
+> > > > > --
+> > > > > 2.21.0
+> > > >
+> > > > Having loopback support as a separate transport fits nicely, but do=
+ we
+> need
+> > > to support
+> > > > different variants of loopback? It could just be built in.
+> > >
+> > > I agree with you, indeed initially I developed it as built in, but
+> > > DEPMOD found a cyclic dependency because vsock_transport use
+> > > virtio_transport_common that use vsock, so if I include vsock_transpo=
+rt
+> > > in the vsock module, DEPMOD is not happy.
+> > >
+> > > I don't know how to break this cyclic dependency, do you have any ide=
+as?
+> >
+> > One way to view this would be that the loopback transport and the suppo=
+rt
+> > it uses from virtio_transport_common are independent of virtio as such,
+> > and could be part of  the af_vsock module if loopback is configured. So
+> > in a way, the virtio g2h and h2g transports would be extensions of the
+> > built in loopback transport. But that brings in quite a bit of code so
+> > it could be better to just keep it as is.
+>=20
+> Great idea!
+>=20
+> Stefan already suggested (as a long-term goal) to rename the generic
+> functionality in virtio_transport_common.c
+>=20
+> Maybe I can do both in another series later on, since it requires enough
+> changes.
 
-Isn't that basically what wake_up_sync() is?
+Sounds good to me.
 
--- 
-Jens Axboe
+Thanks,
+Jorgen
 
