@@ -2,172 +2,207 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAE59C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:02:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94A76C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:04:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8427C2070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:02:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574344974;
-	bh=1lXyjGM5mdu6b1DIbFqIOoI/8E8GqYuuQKF5hGnC2ak=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZfZDV0sEHYiIKM3hM7jLQCp5unDdPbzX6egU+YjBcR4haeCvc17yGAK7j3q1iIB6F
-	 5hAQ7QyupQrDJzTB+BuV8gCjSti4GGKgtgqbrwJGzvhS+jBmCmXV3yNFAYpBTzzmaR
-	 cmJjHnU6IRXZ+iNbKkM8gtx52mFlbqPp6NBo6v6I=
+	by mail.kernel.org (Postfix) with ESMTP id 6E09B2068E
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:04:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726957AbfKUOCh (ORCPT
+        id S1727088AbfKUOEV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 09:02:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35812 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726775AbfKUOCe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 09:02:34 -0500
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03A8720679;
-        Thu, 21 Nov 2019 14:02:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574344953;
-        bh=1lXyjGM5mdu6b1DIbFqIOoI/8E8GqYuuQKF5hGnC2ak=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KMqg9B6vgak41GmxUoJYyS+T0xP3dBW6GSLhosyQByo2vmiMFrQtAG+VI+FQXwCgf
-         NRBsVJ2nknjYKcBSdl+CogQYbvWLwaps/VmmsOJW9FZwgAgJNdMa4AMKTohhXSlRox
-         x84Cg9fB+3WujnkIQAX8ex8AICD4Nl5bwjYYtzA8=
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     linux-pci@vger.kernel.org
-Cc:     Alex Deucher <alexdeucher@gmail.com>,
-        Frederick Lawler <fred@fredlawl.com>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Chunming Zhou <David1.Zhou@amd.com>,
-        Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 3/7] drm/amdgpu: Replace numbers with PCI_EXP_LNKCTL2 definitions
-Date:   Thu, 21 Nov 2019 08:02:16 -0600
-Message-Id: <20191121140220.38030-4-helgaas@kernel.org>
-X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
-In-Reply-To: <20191121140220.38030-1-helgaas@kernel.org>
-References: <20191121140220.38030-1-helgaas@kernel.org>
+        Thu, 21 Nov 2019 09:04:21 -0500
+Received: from mout.kundenserver.de ([212.227.126.134]:38581 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726379AbfKUOEV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 09:04:21 -0500
+Received: from mail-qv1-f45.google.com ([209.85.219.45]) by
+ mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1M76jv-1iUCAn3WNb-008aaE; Thu, 21 Nov 2019 15:04:19 +0100
+Received: by mail-qv1-f45.google.com with SMTP id cv8so1443034qvb.3;
+        Thu, 21 Nov 2019 06:04:18 -0800 (PST)
+X-Gm-Message-State: APjAAAUcTRtphHzKa1PuvTueI1SSIZkWn4aaQ3uOVoDSr04RKDFmYz6M
+        GT8Wi7l2XOKSACgSGf34SvLAv4enLrAhn/ufQik=
+X-Google-Smtp-Source: APXvYqxGJKDevMqGXHCfpshFTRTpEsI+ahENxha33s1Adcjl8n9v6B+Ztqx2ECoC+IZykQ0h6TF9HFyn+lOGGs0Fb98=
+X-Received: by 2002:ad4:50a4:: with SMTP id d4mr7944964qvq.211.1574345057594;
+ Thu, 21 Nov 2019 06:04:17 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191108203435.112759-1-arnd@arndb.de> <20191108203435.112759-7-arnd@arndb.de>
+ <41baf20a190039443cb2b82aea0c2a8ec872cfed.camel@codethink.co.uk>
+ <CAK8P3a3U0GWCyU9WOnrGQ2tqnHoyAbJ=HdYJGfTHuxVqcww0wg@mail.gmail.com> <a187cb75cc15ba8ee4a7b652fae8317cb9b03020.camel@codethink.co.uk>
+In-Reply-To: <a187cb75cc15ba8ee4a7b652fae8317cb9b03020.camel@codethink.co.uk>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 21 Nov 2019 15:04:00 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a34sty4kTfFSKz8e-D+B14e3oTUPaACzGq_1SjYeuoytg@mail.gmail.com>
+Message-ID: <CAK8P3a34sty4kTfFSKz8e-D+B14e3oTUPaACzGq_1SjYeuoytg@mail.gmail.com>
+Subject: Re: [Y2038] [PATCH 6/8] lp: fix sparc64 LPSETTIMEOUT ioctl
+To:     Ben Hutchings <ben.hutchings@codethink.co.uk>
+Cc:     y2038 Mailman List <y2038@lists.linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "# 3.4.x" <stable@vger.kernel.org>,
+        Bamvor Jian Zhang <bamv2005@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:vewZiqcUvewdI1whKBH+bm/MkhVl8m2XyYfjPCbSvFGlZXNT7bI
+ jekfxwrrl1po78fxpusdmeJOKZffxnVTmZ2bujuFMzomkdSCgw73qJvb+eLswEvNT8JMQkf
+ JUf2lySyEN5couEkWfEUFTURopgRGF57YLJuABU1jmn9xjP1GQ5g0ega53o6JEMIQZlzM6u
+ 1TlLm0q4Pc4WRe836vx3g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:vOZG7/b6cZQ=:knuCdckBDnhMtcOl8vl+AD
+ iQpwdD8NnW8Wm/l33QO0mW0pxtkIF7J+Y/kVcME98xZe6qxyK41zWGR6gU0UMfWr1AdBZXYBB
+ YzfHnzhZlDVToMyqpMd/C6++n/dGCEy2p6Rtj4Bkeis24anhqf/jQ3ANWpRkAR34pa2eu7dE8
+ c29V+14UL1w+J9D+Icmti4DBzHpAj75/TGWVYiB1HInFRaiEZPuBqRavS7NSibmCCBeK+SS85
+ IMkFeqXugd/VxW8Izjm3VUnMocfRhr4jr+qHjsDkYk2oy+2Lt8XWVA/g+dENU8VmPzJNiInhH
+ 4BAIyroTFQuUJQ+gDrqSn3jrYSYJk7SUWSPxdjLDTVoobrllDdnXYrCFGsJd477GQbUvViDmt
+ nD7VEYKjnFaorjUU/XdmzYjjpl0xREYhxmcSffMQ8YHWnLDaOaH/I2FPyyN8l/bSzjETQ1dln
+ UxJCODZu3/KddUzqvHT+lkw4Pr1M1HrDNNfU6Yw6PSNjmnEtC/ouLHszgD8uZ/WqwQA99y7qV
+ 7cDlRngnxEezh70onqv9WQRBC767zLINx+3fAEorvPyYcqWz48du9EjzQKPMoKvwPqFFyzTLZ
+ BpXe/vnMzhzGZtW9GydYln/MnhqPpcv9Chk2MQxGAXfhxFogCsm20ExG1yDOgfbd/J0sUkzk6
+ IdLJMFuw338zppQZ0Ab2DU27nY+/OtChbfFxcITcgNrUODh5bJFZDSv58ChhOBagvoCj2r33M
+ NWeW7im5JSHYf6uKkXLexEPglCCjxMulyvVshE+Xf+rfSOkndaO+95FQL+awvvs10BQY7cJie
+ nIt4JDBWlyowAtI4QcaxHKE0/g3CK+NHTsgJ/ctZgxvBnl6Ng3ZPh+Gl1+8BBQ6QuwYsoesqj
+ 5QIKr2siMbXzq9QPAqAA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+On Wed, Nov 20, 2019 at 11:10 PM Ben Hutchings
+<ben.hutchings@codethink.co.uk> wrote:
+> On Wed, 2019-11-20 at 20:46 +0100, Arnd Bergmann wrote:
+> > On Wed, Nov 20, 2019 at 8:27 PM Ben Hutchings <ben.hutchings@codethink.co.uk> wrote:
+> > -
+> >         return lp_set_timeout(minor, karg[0], karg[1]);
+> >  }
+> >
+> > +static int lp_set_timeout(unsigned int minor, void __user *arg)
+>
+> That function name is already used!  Maybe this should be
+> lp_set_timeout_old()?
 
-Replace hard-coded magic numbers with the descriptive PCI_EXP_LNKCTL2
-definitions.  No functional change intended.
+Yes, that's what I used after actually compile-testing and running
+into a couple of issues with my draft.
 
-Link: https://lore.kernel.org/r/20191112173503.176611-4-helgaas@kernel.org
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+> > @@ -730,11 +736,8 @@ static long lp_ioctl(struct file *file, unsigned int cmd,
+> >         mutex_lock(&lp_mutex);
+> >         switch (cmd) {
+> >         case LPSETTIMEOUT_OLD:
+> > -               if (BITS_PER_LONG == 32) {
+> > -                       ret = lp_set_timeout32(minor, (void __user *)arg);
+> > -                       break;
+> > -               }
+> > -               /* fall through - for 64-bit */
+> > +               ret = lp_set_timeout(minor, (void __user *)arg);
+> > +               break;
+> >         case LPSETTIMEOUT_NEW:
+> >                 ret = lp_set_timeout64(minor, (void __user *)arg);
+> >                 break;
+> >
+> > Do you like that better?
+>
+> Yes.  Aside from the duplicate function name, it looks correct and
+> cleaner than the current version.
+
+As Greg has already merged the original patch, and that version works
+just as well, I'd probably just leave what I did at first. One benefit is
+that in case we decide to kill off sparc64 support before drivers/char/lp.c,
+the special case can be removed more easily.
+
+I don't think either of them is going any time soon, but working on y2038
+patches has made me think ahead longer term ;-)
+
+If you still think we should change it I can send the below patch (now
+actually build-tested) with your Ack.
+
+       Arnd
 ---
- drivers/gpu/drm/amd/amdgpu/cik.c | 22 ++++++++++++++--------
- drivers/gpu/drm/amd/amdgpu/si.c  | 22 ++++++++++++++--------
- 2 files changed, 28 insertions(+), 16 deletions(-)
+commit 93efbb1768a5071a0a98bf4627f0104075cf83a6 (HEAD -> y2038)
+Author: Arnd Bergmann <arnd@arndb.de>
+Date:   Thu Nov 21 14:45:14 2019 +0100
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/cik.c b/drivers/gpu/drm/amd/amdgpu/cik.c
-index 13a5696d2a6a..3067bb874032 100644
---- a/drivers/gpu/drm/amd/amdgpu/cik.c
-+++ b/drivers/gpu/drm/amd/amdgpu/cik.c
-@@ -1498,13 +1498,19 @@ static void cik_pcie_gen3_enable(struct amdgpu_device *adev)
- 
- 				/* linkctl2 */
- 				pci_read_config_word(root, bridge_pos + PCI_EXP_LNKCTL2, &tmp16);
--				tmp16 &= ~((1 << 4) | (7 << 7));
--				tmp16 |= (bridge_cfg2 & ((1 << 4) | (7 << 7)));
-+				tmp16 &= ~(PCI_EXP_LNKCTL2_ENTER_COMP |
-+					   PCI_EXP_LNKCTL2_TX_MARGIN);
-+				tmp16 |= (bridge_cfg2 &
-+					  (PCI_EXP_LNKCTL2_ENTER_COMP |
-+					   PCI_EXP_LNKCTL2_TX_MARGIN));
- 				pci_write_config_word(root, bridge_pos + PCI_EXP_LNKCTL2, tmp16);
- 
- 				pci_read_config_word(adev->pdev, gpu_pos + PCI_EXP_LNKCTL2, &tmp16);
--				tmp16 &= ~((1 << 4) | (7 << 7));
--				tmp16 |= (gpu_cfg2 & ((1 << 4) | (7 << 7)));
-+				tmp16 &= ~(PCI_EXP_LNKCTL2_ENTER_COMP |
-+					   PCI_EXP_LNKCTL2_TX_MARGIN);
-+				tmp16 |= (gpu_cfg2 &
-+					  (PCI_EXP_LNKCTL2_ENTER_COMP |
-+					   PCI_EXP_LNKCTL2_TX_MARGIN));
- 				pci_write_config_word(adev->pdev, gpu_pos + PCI_EXP_LNKCTL2, tmp16);
- 
- 				tmp = RREG32_PCIE(ixPCIE_LC_CNTL4);
-@@ -1521,13 +1527,13 @@ static void cik_pcie_gen3_enable(struct amdgpu_device *adev)
- 	WREG32_PCIE(ixPCIE_LC_SPEED_CNTL, speed_cntl);
- 
- 	pci_read_config_word(adev->pdev, gpu_pos + PCI_EXP_LNKCTL2, &tmp16);
--	tmp16 &= ~0xf;
-+	tmp16 &= ~PCI_EXP_LNKCTL2_TLS;
- 	if (adev->pm.pcie_gen_mask & CAIL_PCIE_LINK_SPEED_SUPPORT_GEN3)
--		tmp16 |= 3; /* gen3 */
-+		tmp16 |= PCI_EXP_LNKCTL2_TLS_8_0GT; /* gen3 */
- 	else if (adev->pm.pcie_gen_mask & CAIL_PCIE_LINK_SPEED_SUPPORT_GEN2)
--		tmp16 |= 2; /* gen2 */
-+		tmp16 |= PCI_EXP_LNKCTL2_TLS_5_0GT; /* gen2 */
- 	else
--		tmp16 |= 1; /* gen1 */
-+		tmp16 |= PCI_EXP_LNKCTL2_TLS_2_5GT; /* gen1 */
- 	pci_write_config_word(adev->pdev, gpu_pos + PCI_EXP_LNKCTL2, tmp16);
- 
- 	speed_cntl = RREG32_PCIE(ixPCIE_LC_SPEED_CNTL);
-diff --git a/drivers/gpu/drm/amd/amdgpu/si.c b/drivers/gpu/drm/amd/amdgpu/si.c
-index 1e350172dc7b..a7dcb0d0f039 100644
---- a/drivers/gpu/drm/amd/amdgpu/si.c
-+++ b/drivers/gpu/drm/amd/amdgpu/si.c
-@@ -1737,13 +1737,19 @@ static void si_pcie_gen3_enable(struct amdgpu_device *adev)
- 				pci_write_config_word(adev->pdev, gpu_pos + PCI_EXP_LNKCTL, tmp16);
- 
- 				pci_read_config_word(root, bridge_pos + PCI_EXP_LNKCTL2, &tmp16);
--				tmp16 &= ~((1 << 4) | (7 << 7));
--				tmp16 |= (bridge_cfg2 & ((1 << 4) | (7 << 7)));
-+				tmp16 &= ~(PCI_EXP_LNKCTL2_ENTER_COMP |
-+					   PCI_EXP_LNKCTL2_TX_MARGIN);
-+				tmp16 |= (bridge_cfg2 &
-+					  (PCI_EXP_LNKCTL2_ENTER_COMP |
-+					   PCI_EXP_LNKCTL2_TX_MARGIN));
- 				pci_write_config_word(root, bridge_pos + PCI_EXP_LNKCTL2, tmp16);
- 
- 				pci_read_config_word(adev->pdev, gpu_pos + PCI_EXP_LNKCTL2, &tmp16);
--				tmp16 &= ~((1 << 4) | (7 << 7));
--				tmp16 |= (gpu_cfg2 & ((1 << 4) | (7 << 7)));
-+				tmp16 &= ~(PCI_EXP_LNKCTL2_ENTER_COMP |
-+					   PCI_EXP_LNKCTL2_TX_MARGIN);
-+				tmp16 |= (gpu_cfg2 &
-+					  (PCI_EXP_LNKCTL2_ENTER_COMP |
-+					   PCI_EXP_LNKCTL2_TX_MARGIN));
- 				pci_write_config_word(adev->pdev, gpu_pos + PCI_EXP_LNKCTL2, tmp16);
- 
- 				tmp = RREG32_PCIE_PORT(PCIE_LC_CNTL4);
-@@ -1758,13 +1764,13 @@ static void si_pcie_gen3_enable(struct amdgpu_device *adev)
- 	WREG32_PCIE_PORT(PCIE_LC_SPEED_CNTL, speed_cntl);
- 
- 	pci_read_config_word(adev->pdev, gpu_pos + PCI_EXP_LNKCTL2, &tmp16);
--	tmp16 &= ~0xf;
-+	tmp16 &= ~PCI_EXP_LNKCTL2_TLS;
- 	if (adev->pm.pcie_gen_mask & CAIL_PCIE_LINK_SPEED_SUPPORT_GEN3)
--		tmp16 |= 3;
-+		tmp16 |= PCI_EXP_LNKCTL2_TLS_8_0GT; /* gen3 */
- 	else if (adev->pm.pcie_gen_mask & CAIL_PCIE_LINK_SPEED_SUPPORT_GEN2)
--		tmp16 |= 2;
-+		tmp16 |= PCI_EXP_LNKCTL2_TLS_5_0GT; /* gen2 */
- 	else
--		tmp16 |= 1;
-+		tmp16 |= PCI_EXP_LNKCTL2_TLS_2_5GT; /* gen1 */
- 	pci_write_config_word(adev->pdev, gpu_pos + PCI_EXP_LNKCTL2, tmp16);
- 
- 	speed_cntl = RREG32_PCIE_PORT(PCIE_LC_SPEED_CNTL);
--- 
-2.24.0.432.g9d3f5f5b63-goog
+    lp: clean up set_timeout handling
 
+    As Ben Hutchings noticed, we can avoid the special case for sparc64
+    by dealing with '__kernel_old_timeval' arguments separately from
+    the fixed-length 32-bit and 64-bit arguments.
+
+    Note that the behavior for LPSETTIMEOUT_NEW changes on sparc64 to
+    expect the same argument as other architectures, but this is ok
+    because sparc64 users would pass LPSETTIMEOUT_OLD anyway.
+
+    Suggested-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
+    Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+
+diff --git a/drivers/char/lp.c b/drivers/char/lp.c
+index bd95aba1f9fe..cc17d5a387c5 100644
+--- a/drivers/char/lp.c
++++ b/drivers/char/lp.c
+@@ -696,14 +696,14 @@ static int lp_set_timeout(unsigned int minor,
+s64 tv_sec, long tv_usec)
+        return 0;
+ }
+
+-static int lp_set_timeout32(unsigned int minor, void __user *arg)
++static int lp_set_timeout_old(unsigned int minor, void __user *arg)
+ {
+-       s32 karg[2];
++       struct __kernel_old_timeval tv;
+
+-       if (copy_from_user(karg, arg, sizeof(karg)))
++       if (copy_from_user(&tv, arg, sizeof(tv)))
+                return -EFAULT;
+
+-       return lp_set_timeout(minor, karg[0], karg[1]);
++       return lp_set_timeout(minor, tv.tv_sec, tv.tv_usec);
+ }
+
+ static int lp_set_timeout64(unsigned int minor, void __user *arg)
+@@ -713,10 +713,6 @@ static int lp_set_timeout64(unsigned int minor,
+void __user *arg)
+        if (copy_from_user(karg, arg, sizeof(karg)))
+                return -EFAULT;
+
+-       /* sparc64 suseconds_t is 32-bit only */
+-       if (IS_ENABLED(CONFIG_SPARC64) && !in_compat_syscall())
+-               karg[1] >>= 32;
+-
+        return lp_set_timeout(minor, karg[0], karg[1]);
+ }
+
+@@ -730,11 +726,8 @@ static long lp_ioctl(struct file *file, unsigned int cmd,
+        mutex_lock(&lp_mutex);
+        switch (cmd) {
+        case LPSETTIMEOUT_OLD:
+-               if (BITS_PER_LONG == 32) {
+-                       ret = lp_set_timeout32(minor, (void __user *)arg);
+-                       break;
+-               }
+-               /* fall through - for 64-bit */
++               ret = lp_set_timeout_old(minor, (void __user *)arg);
++               break;
+        case LPSETTIMEOUT_NEW:
+                ret = lp_set_timeout64(minor, (void __user *)arg);
+                break;
+@@ -748,6 +741,16 @@ static long lp_ioctl(struct file *file, unsigned int cmd,
+ }
+
+ #ifdef CONFIG_COMPAT
++static int lp_set_timeout32(unsigned int minor, void __user *arg)
++{
++       s32 karg[2];
++
++       if (copy_from_user(karg, arg, sizeof(karg)))
++               return -EFAULT;
++
++       return lp_set_timeout(minor, karg[0], karg[1]);
++}
++
+ static long lp_compat_ioctl(struct file *file, unsigned int cmd,
+                        unsigned long arg)
+ {
