@@ -2,116 +2,205 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12068C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 17:38:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFFCDC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 17:41:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC7942068F
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 17:38:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AA27206DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 17:41:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MybPdpf6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nfKjiIRM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727007AbfKURir (ORCPT
+        id S1726875AbfKURlN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 12:38:47 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:34352 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726279AbfKURir (ORCPT
+        Thu, 21 Nov 2019 12:41:13 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:46037 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726541AbfKURlM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 12:38:47 -0500
-Received: by mail-pl1-f196.google.com with SMTP id h13so1897499plr.1
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 09:38:47 -0800 (PST)
+        Thu, 21 Nov 2019 12:41:12 -0500
+Received: by mail-pg1-f193.google.com with SMTP id k1so1932607pgg.12;
+        Thu, 21 Nov 2019 09:41:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=n0l5A9UoqjVI1sY5PPJyL17z33+kBWrkankas44MyTI=;
-        b=MybPdpf6BAPp1aRDB1eeIjw2B/Dq0pyUNJ1csAvdv0Cba2+j5EY7K3OMBKv/jTMlgL
-         T/tn+16bqw0epfRDgtWkYlVlo/JuqVTUZsSnT/73AOxejSWw3iiNzWL7JavsgNDhZ0zJ
-         aW8T7onRojBC1uhhK4gxWj1TDatbOlhrGxy8j33dugQz6BUXqRoBNubAhVby3eRRGmNe
-         /79gN+x4IeKenRaCjn/R+asKt0B2/YduvVXppspcoAnxpNToKKtzPvAdggQSmv4GyVQS
-         IpApIsVenAU8tCvVAlRfxQwUK18kK59hjExBSP+WlHYBsO1tt5IR1SyHt5/7YE6gVAtm
-         U1PA==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Gj3j4wW1LcJXUsfRUfHXA/hV3jdPeZ9DVCb2XMC1Meo=;
+        b=nfKjiIRMngcffCxR40onlG04nX9NLiy5kLvCmS1pbo3alC6Cnu3heD/+YDmsyozHf+
+         JuVl2BrHbqKDYhmHlPqm9voUN8oyZpHsGK5YFBwypOUwOTk+OuQKpxzcWIrsVHAcA5Ji
+         kV0x8Y7fcHqpBY6FZAFyqznbwfEJK58lRap5LJ4GLwJKyfFMW18o+1AX7uFZyMYSrncb
+         VFd+K+np7bIT5BREgD9jt3erPBr6bisIhHXBytWS0oabdQpAV8PAQfmyCVu3PO2cO3u5
+         SsU/r85Pgeun0QPP5oTCJpayUWL8CsR8uIwk+jtUWOJAbj8VJr3mGkcaAwJNQioZZWvh
+         pDXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=n0l5A9UoqjVI1sY5PPJyL17z33+kBWrkankas44MyTI=;
-        b=L5s0OU9hiCUeQSMJbDoVY5tY0mJfeaMpOuTSYa3FKO6h2/6ZQ2t50YOEtqLkPsX7CS
-         uqnHx760jikHx71LqLLKfEuD8naq8xyynpdgBWDDvPBoFyrqzSXdAgFTHbc+Jp573BER
-         PAXCO0CN55XMJyzfOwMlWVhoSNf+Gp+pI7gMjF7AwnIhVcB/E49MXu7V9hH5OXLJRmyU
-         y/guSTL8kz7361nzs/vlObG0wIbjIpu+/ITD8KoAzeQMvLfno6QHx5/TPJBns3lePyoV
-         AQrkZgHVsmvu9Z5f/Ip9u3kr6jEohsmSAwRxRz/QWtgTWDbz6X9dQeuuWYHdvEG6KL0g
-         7mcg==
-X-Gm-Message-State: APjAAAVxD0mN4S6cO/+WpK35SP3rKP8g/lRGsPYcjAvf4yNr+0DzowaE
-        LysS9jQC70FjyNxFIQG+ZHI=
-X-Google-Smtp-Source: APXvYqxdvlf3bpokDoeWHYjxqwLvrJpxKLfXDVN8CmNraCM4hqsXq1QLwcAzKDvdgqU3wKauhTjD7g==
-X-Received: by 2002:a17:90b:4393:: with SMTP id in19mr13261050pjb.132.1574357926843;
-        Thu, 21 Nov 2019 09:38:46 -0800 (PST)
-Received: from localhost.localdomain ([2408:8025:ad:7e20:1c97:67e5:7b87:2fd3])
-        by smtp.gmail.com with ESMTPSA id d187sm3753526pgc.1.2019.11.21.09.38.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Nov 2019 09:38:46 -0800 (PST)
-From:   chengkaitao <pilgrimtao@gmail.com>
-To:     tglx@linutronix.de
-Cc:     pilgrimtao@163.com, smuchun@gmail.com,
-        linux-kernel@vger.kernel.org, Kaitao Cheng <pilgrimtao@gmail.com>
-Subject: [PATCH] irq: cleanup some duplicate code
-Date:   Thu, 21 Nov 2019 09:38:32 -0800
-Message-Id: <20191121173832.2734-1-pilgrimtao@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        bh=Gj3j4wW1LcJXUsfRUfHXA/hV3jdPeZ9DVCb2XMC1Meo=;
+        b=PDZoV9VLOKzuEoLy5RpwvV2wlaHt+mMkkB7+pNlK44zFjuFcsii+TYUbPrhYr4OczO
+         LYYAE9SsTziy5sdI4fzAWmaSq12856gNvAcCMp01GS63m2z1+TxphpNxEP/jozXrlHAz
+         8oV/t6mti5ZuprkYzn4iQ+acVvlX/OsHJabWEkDz16NL0qds4zZk4bzRPhJoiP2megVe
+         Wi4ofZij9ru2ylOhkzouDZBPX0L2lUhFIo+nBJCZSrHcHfQAAuP7z1n5TshjOdbgkcAD
+         tjnbTwRx1R+Ln7gNfAmx18cPUNxa0mKFcIWHwuOR68672DCLjWNzDP4pli2Px+biahgt
+         j/Ig==
+X-Gm-Message-State: APjAAAWUl2Pv2wrq9aOv/AXCl3kiKvbnhc3Yl93+q1WCLNgRMDgnJAmq
+        8pUSf6bI1iz6EToGPOj7/3KfwCt9
+X-Google-Smtp-Source: APXvYqx/HLBFtOJ6ArRBY8+Ltz14FwPQepAqZjHqZYrxvLZN/ns3qwZQ5hndF6XL8dohY7YDjg1wPg==
+X-Received: by 2002:a63:1e4e:: with SMTP id p14mr10801747pgm.127.1574358071398;
+        Thu, 21 Nov 2019 09:41:11 -0800 (PST)
+Received: from ?IPv6:2620:15c:2c1:200:55c7:81e6:c7d8:94b? ([2620:15c:2c1:200:55c7:81e6:c7d8:94b])
+        by smtp.gmail.com with ESMTPSA id a145sm4412442pfa.7.2019.11.21.09.41.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 Nov 2019 09:41:10 -0800 (PST)
+Subject: Re: [PATCH v2] net: ipmr: fix suspicious RCU warning
+To:     Anders Roxell <anders.roxell@linaro.org>,
+        Eric Dumazet <eric.dumazet@gmail.com>
+Cc:     David Miller <davem@davemloft.net>, kuznet@ms2.inr.ac.ru,
+        yoshfuji@linux-ipv6.org, paulmck@kernel.org,
+        Networking <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20191120152255.18928-1-anders.roxell@linaro.org>
+ <e07311c7-24b8-8c48-d6f2-a7c93976613c@gmail.com>
+ <CADYN=9Jzxgun9k8v9oQT47ZUFGPhCnsDoYaohG-DXmA1De1zXg@mail.gmail.com>
+ <CADYN=9Kzz0DoK+hMaWqUyxXYrpTXpxG6YEWz-fo1Zgt+Z37T3Q@mail.gmail.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <a31bebef-ae89-988b-8c17-c3076f857cde@gmail.com>
+Date:   Thu, 21 Nov 2019 09:41:08 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CADYN=9Kzz0DoK+hMaWqUyxXYrpTXpxG6YEWz-fo1Zgt+Z37T3Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kaitao Cheng <pilgrimtao@gmail.com>
 
-Cleanup extra if(test_and_clear_bit), and put the other one in front.
 
-Signed-off-by: Kaitao Cheng <pilgrimtao@gmail.com>
----
- kernel/irq/manage.c | 16 +++++-----------
- 1 file changed, 5 insertions(+), 11 deletions(-)
+On 11/21/19 2:17 AM, Anders Roxell wrote:
+> On Thu, 21 Nov 2019 at 08:15, Anders Roxell <anders.roxell@linaro.org> wrote:
+>>
+>> On Wed, 20 Nov 2019 at 18:45, Eric Dumazet <eric.dumazet@gmail.com> wrote:
+>>>
+>>>
+>>>
+>>> On 11/20/19 7:22 AM, Anders Roxell wrote:
+> 
+> [snippet]
+> 
+>>>> +     rtnl_lock();
+>>>>       err = ipmr_rules_init(net);
+>>>> +     rtnl_unlock();
+>>>>       if (err < 0)
+>>>>               goto ipmr_rules_fail;
+>>>
+>>> Hmmm... this might have performance impact for creation of a new netns
+>>>
+>>> Since the 'struct net' is not yet fully initialized (thus published/visible),
+>>> should we really have to grab RTNL (again) only to silence a warning ?
+>>>
+>>> What about the following alternative ?
+>>
+>> I tried what you suggested, unfortunately, I still got the warning.
+> 
+> I was wrong, so if I also add "lockdep_rtnl_is_held()" to the
+> "ipmr_for_each_table()" macro it works.
+> 
+>>
+>>
+>> [   43.253850][    T1] =============================
+>> [   43.255473][    T1] WARNING: suspicious RCU usage
+>> [   43.259068][    T1]
+>> 5.4.0-rc8-next-20191120-00003-g3aa7c2a8649e-dirty #6 Not tainted
+>> [   43.263078][    T1] -----------------------------
+>> [   43.265134][    T1] net/ipv4/ipmr.c:1759 RCU-list traversed in
+>> non-reader section!!
+>> [   43.267587][    T1]
+>> [   43.267587][    T1] other info that might help us debug this:
+>> [   43.267587][    T1]
+>> [   43.271129][    T1]
+>> [   43.271129][    T1] rcu_scheduler_active = 2, debug_locks = 1
+>> [   43.274021][    T1] 2 locks held by swapper/0/1:
+>> [   43.275532][    T1]  #0: ffff000065abeaa0 (&dev->mutex){....}, at:
+>> __device_driver_lock+0xa0/0xb0
+>> [   43.278930][    T1]  #1: ffffa000153017f0 (rtnl_mutex){+.+.}, at:
+>> rtnl_lock+0x1c/0x28
+>> [   43.282023][    T1]
+>> [   43.282023][    T1] stack backtrace:
+>> [   43.283921][    T1] CPU: 0 PID: 1 Comm: swapper/0 Not tainted
+>> 5.4.0-rc8-next-20191120-00003-g3aa7c2a8649e-dirty #6
+>> [   43.287152][    T1] Hardware name: linux,dummy-virt (DT)
+>> [   43.288920][    T1] Call trace:
+>> [   43.290057][    T1]  dump_backtrace+0x0/0x2d0
+>> [   43.291535][    T1]  show_stack+0x20/0x30
+>> [   43.292967][    T1]  dump_stack+0x204/0x2ac
+>> [   43.294423][    T1]  lockdep_rcu_suspicious+0xf4/0x108
+>> [   43.296163][    T1]  ipmr_device_event+0x100/0x1e8
+>> [   43.297812][    T1]  notifier_call_chain+0x100/0x1a8
+>> [   43.299486][    T1]  raw_notifier_call_chain+0x38/0x48
+>> [   43.301248][    T1]  call_netdevice_notifiers_info+0x128/0x148
+>> [   43.303158][    T1]  rollback_registered_many+0x684/0xb48
+>> [   43.304963][    T1]  rollback_registered+0xd8/0x150
+>> [   43.306595][    T1]  unregister_netdevice_queue+0x194/0x1b8
+>> [   43.308406][    T1]  unregister_netdev+0x24/0x38
+>> [   43.310012][    T1]  virtnet_remove+0x44/0x78
+>> [   43.311519][    T1]  virtio_dev_remove+0x5c/0xc0
+>> [   43.313114][    T1]  really_probe+0x508/0x920
+>> [   43.314635][    T1]  driver_probe_device+0x164/0x230
+>> [   43.316337][    T1]  device_driver_attach+0x8c/0xc0
+>> [   43.318024][    T1]  __driver_attach+0x1e0/0x1f8
+>> [   43.319584][    T1]  bus_for_each_dev+0xf0/0x188
+>> [   43.321169][    T1]  driver_attach+0x34/0x40
+>> [   43.322645][    T1]  bus_add_driver+0x204/0x3c8
+>> [   43.324202][    T1]  driver_register+0x160/0x1f8
+>> [   43.325788][    T1]  register_virtio_driver+0x7c/0x88
+>> [   43.327480][    T1]  virtio_net_driver_init+0xa8/0xf4
+>> [   43.329196][    T1]  do_one_initcall+0x4c0/0xad8
+>> [   43.330767][    T1]  kernel_init_freeable+0x3e0/0x500
+>> [   43.332444][    T1]  kernel_init+0x14/0x1f0
+>> [   43.333901][    T1]  ret_from_fork+0x10/0x18
+>>
+>>
+>> Cheers,
+>> Anders
+>>
+>>>
+>>> diff --git a/net/ipv4/ipmr.c b/net/ipv4/ipmr.c
+>>> index 6e68def66822f47fc08d94eddd32a4bd4f9fdfb0..b6dcdce08f1d82c83756a319623e24ae0174092c 100644
+>>> --- a/net/ipv4/ipmr.c
+>>> +++ b/net/ipv4/ipmr.c
+>>> @@ -94,7 +94,7 @@ static DEFINE_SPINLOCK(mfc_unres_lock);
+>>>
+>>>  static struct kmem_cache *mrt_cachep __ro_after_init;
+>>>
+>>> -static struct mr_table *ipmr_new_table(struct net *net, u32 id);
+>>> +static struct mr_table *ipmr_new_table(struct net *net, u32 id, bool init);
+>>>  static void ipmr_free_table(struct mr_table *mrt);
+>>>
+> 
+>  static void ip_mr_forward(struct net *net, struct mr_table *mrt,
+> @@ -110,7 +110,8 @@ static void ipmr_expire_process(struct timer_list *t);
+> 
+>  #ifdef CONFIG_IP_MROUTE_MULTIPLE_TABLES
+>  #define ipmr_for_each_table(mrt, net) \
+> -       list_for_each_entry_rcu(mrt, &net->ipv4.mr_tables, list)
+> +       list_for_each_entry_rcu(mrt, &net->ipv4.mr_tables, list, \
+> +                               lockdep_rtnl_is_held())
+>  static struct mr_table *ipmr_mr_table_iter(struct net *net,
+>                                            struct mr_table *mrt)
+> 
+> 
+> Cheers,
+> Anders
 
-diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
-index 1753486b440c..7266d0d30fa9 100644
---- a/kernel/irq/manage.c
-+++ b/kernel/irq/manage.c
-@@ -863,21 +863,15 @@ static int irq_wait_for_interrupt(struct irqaction *action)
- 	for (;;) {
- 		set_current_state(TASK_INTERRUPTIBLE);
- 
--		if (kthread_should_stop()) {
--			/* may need to run one last time */
--			if (test_and_clear_bit(IRQTF_RUNTHREAD,
--					       &action->thread_flags)) {
--				__set_current_state(TASK_RUNNING);
--				return 0;
--			}
-+		if (test_and_clear_bit(IRQTF_RUNTHREAD,
-+					&action->thread_flags)) {
- 			__set_current_state(TASK_RUNNING);
--			return -1;
-+			return 0;
- 		}
- 
--		if (test_and_clear_bit(IRQTF_RUNTHREAD,
--				       &action->thread_flags)) {
-+		if (kthread_should_stop()) {
- 			__set_current_state(TASK_RUNNING);
--			return 0;
-+			return -1;
- 		}
- 		schedule();
- 	}
--- 
-2.20.1
+That is great, I guess we can submit the two patches in a series.
 
