@@ -2,174 +2,182 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6041BC43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:04:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE0BC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:06:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3907C20637
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:04:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E96620637
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:06:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qUUsGcoj"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VZ1qDEao"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727175AbfKUQEy (ORCPT
+        id S1726803AbfKUQG0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 11:04:54 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:50900 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727146AbfKUQEx (ORCPT
+        Thu, 21 Nov 2019 11:06:26 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:53809 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726541AbfKUQG0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 11:04:53 -0500
-Received: by mail-wm1-f67.google.com with SMTP id l17so4351262wmh.0
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 08:04:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:subject:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=87tiBp3c75vDSn7hIQnnDZhCnOm8JFXZ75XeKixOdSM=;
-        b=qUUsGcojBpG1gCO1BJ5PXIeexMi7RCkgqWBgWl984UjvHuJgTYhbEn08ftoAPZvzx3
-         p4Vy6fbkVkXnDjtb2LGqKNq2bWwD2c3k0lYX7YdyzU5T6Qfoj4hWC0KdJfpbKb21/7Pc
-         bTRQ/7pAZI8mu6mwmtuHV2F9OG1LXyK4vfMW1G39BERxfgRZaZsXq8M+23crHQwjhW4g
-         Xq/E2oiX72VHPoscikXPO9wAczEABwPDzLPoS2YL5PiDuaSHP4zSJrks/RuFvzSvls6z
-         Ql9t9rK9WWY4pxhmSYGwGPqdfkK3pzXrD8DDWGZspgVgIQqbUDXs91gS4VCsVSVdQQC/
-         iUtg==
+        Thu, 21 Nov 2019 11:06:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574352384;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=2bUmJw5NVvVVplfFLTrj0DWj0K1ssd2HaG6I0BvVfDc=;
+        b=VZ1qDEaodViSDGiu4IZVwLGVcllu2AfAZB+V93m01oQXuRKKKIf2VDrTdABtnRkWNqFO2B
+        D8xfusEjXTUE5auPvNxoZlwXR7N+LwtnYivg3K/SkoeYmrjRwv8ZNB+FqyjkawrHliZiu6
+        q4RgSxsRs4U9LXzkPoYo79eZP6/utUc=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-304-ALnY89q1P2yoRVFqlkTrbg-1; Thu, 21 Nov 2019 11:06:23 -0500
+Received: by mail-qt1-f198.google.com with SMTP id v92so2557796qtd.18
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 08:06:23 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=87tiBp3c75vDSn7hIQnnDZhCnOm8JFXZ75XeKixOdSM=;
-        b=JTQ13LaMElnDJOCY1fAwBC4Jox37Oi8oSe0ynfCJ2jXQTfIlxpCocC/nQSU+grmNkY
-         JnIsEmmifHbVKAa6lCTvO6OKP44bk/W66uoAw+zBR+dTEqtdBjxbQLB7VJFbuOAXT2m7
-         TAVWi8gh25AGcbof+kZRDt2RV3MOJ0wIlNKfxcNgchC5dQ2LbpFD7fZBN9mrvESggpqw
-         E1CZ9GX5xXXj1SMhdTnUTw8wa77DTJxS3SkxON81vSVx3S/qD7OapT95Fm6SmoRmRoaI
-         Lzsy30bjXZ3JvoxOkSH4nCSktHVqxmFLulN8FvBd9GCuTX0+GAwlJUf8GgiREDRz8x8H
-         7+tw==
-X-Gm-Message-State: APjAAAVPMFe/6H/DNEAs2SCXqpELGLPRxCdeTJqzyNs21wbUypJ37bt5
-        GEu07E71VY3I/lEnyFHMzZQ5Cg==
-X-Google-Smtp-Source: APXvYqz8t59aCjs93Wh8D7M2VkgT3kCB9nTafuHTSPwHjb4uywwfkxqK30tFpEIbitNI6DRQhp8UbA==
-X-Received: by 2002:a1c:9c54:: with SMTP id f81mr10980467wme.89.1574352292043;
-        Thu, 21 Nov 2019 08:04:52 -0800 (PST)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id w17sm4003453wrt.45.2019.11.21.08.04.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 21 Nov 2019 08:04:51 -0800 (PST)
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH 2/3] dt-bindings: soc: qcom: apr: Add protection domain
- bindings
-To:     Sibi Sankar <sibis@codeaurora.org>, bjorn.andersson@linaro.org,
-        robh+dt@kernel.org, tsoni@codeaurora.org
-Cc:     agross@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        rnayak@codeaurora.org
-References: <20191118142728.30187-1-sibis@codeaurora.org>
- <0101016e7ee9c786-fcf80f4e-9b57-4d6b-8806-9ca408e21b55-000000@us-west-2.amazonses.com>
-Message-ID: <55d4bf2c-58e1-f5ce-4b2d-502b89140f93@linaro.org>
-Date:   Thu, 21 Nov 2019 16:04:49 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4u5SaUcnCKvjh6UsP+VC2r3Fd3UTQ4sI8vEm9p9IspQ=;
+        b=PQHEAlOiZcELUCpNACov6bpr0NEc+uMIZEqiFgSqOultVB0fSz7uylsBodf+v7AA+J
+         Zgnzu7ZdlIb232m9ij6L11mirVzPr+25TcgjynXc0hpcUF7NjuAlKwQQzB8algImZxBP
+         uEqlK8gEr03LQGANWpq2F0JHkABNMCuBqhcD5po2tKQBbT3g7od8afIr/Rj7ZYoO993/
+         L5daACdhETk+XUlT4WEwtK+m0qVapei4Ud2YBv61rZXX8GeJHQEhRYH/fxIiffydOvca
+         DPgTT3RHNu1wWDw+PhBKRCB9CsIsAdZhl8vJ09mHLsUq4OQILvY9XPUe93UsRo/RD/AC
+         O7wg==
+X-Gm-Message-State: APjAAAXN7gRXbDhREYXNZK8am9yROY//RMqPnI6S7uS7xL2K7xAt0Oal
+        j/WuiiX/HaCAFbuJXW1aZ7bMHI78ySH2peKBiYQCPqZIIr6cq8JAgDN+10wGZpJp4/r0IH5C4gB
+        Xv3XmMk2fh6aQ3WUSpgmVy3RHq2M+kko3QOODQJWw
+X-Received: by 2002:ac8:73c6:: with SMTP id v6mr9366599qtp.137.1574352381603;
+        Thu, 21 Nov 2019 08:06:21 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyMWsnX6Oq8sVu9TbpGunjITLNboA1N6sHCOJjdw/pIhaC+MKSuuxVJFGx9BLlu7cQMJ12GJrcBaxUzBIiQcN8=
+X-Received: by 2002:ac8:73c6:: with SMTP id v6mr9366479qtp.137.1574352380570;
+ Thu, 21 Nov 2019 08:06:20 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <0101016e7ee9c786-fcf80f4e-9b57-4d6b-8806-9ca408e21b55-000000@us-west-2.amazonses.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191120120913.GE11621@lahna.fi.intel.com> <CACO55tsHy6yZQZ8PkdW8iPA7+uc5rdcEwRJwYEQ3iqu85F8Sqg@mail.gmail.com>
+ <20191120151542.GH11621@lahna.fi.intel.com> <CACO55tvo3rbPtYJcioEgXCEQqVXcVAm-iowr9Nim=bgTdMjgLw@mail.gmail.com>
+ <20191120155301.GL11621@lahna.fi.intel.com> <CAJZ5v0hkT-fHFOQKzp2qYPyR+NUa4c-G-uGLPZuQxqsG454PiQ@mail.gmail.com>
+ <CACO55ttTPi2XpRRM_NYJU5c5=OvG0=-YngFy1BiR8WpHkavwXw@mail.gmail.com>
+ <CAJZ5v0h=7zu3A+ojgUSmwTH0KeXmYP5OKDL__rwkkWaWqcJcWQ@mail.gmail.com>
+ <20191121112821.GU11621@lahna.fi.intel.com> <CAJZ5v0hQhj5Wf+piU11abC4pF26yM=XHGHAcDv8Jsgdx04aN-w@mail.gmail.com>
+ <20191121114610.GW11621@lahna.fi.intel.com> <CACO55ttXJgXG32HzYP_uJDfQ6T-d8zQaGjXK_AZD3kF0Rmft4g@mail.gmail.com>
+ <CAJZ5v0ibzcLEm44udUxW2uVgaF9NapdNBF8Ag+RE++u7gi2yNA@mail.gmail.com>
+In-Reply-To: <CAJZ5v0ibzcLEm44udUxW2uVgaF9NapdNBF8Ag+RE++u7gi2yNA@mail.gmail.com>
+From:   Karol Herbst <kherbst@redhat.com>
+Date:   Thu, 21 Nov 2019 17:06:09 +0100
+Message-ID: <CACO55ttBkZD9dm0Y_jT931NnzHHtDFyLz28aoo+ZG0pnLzPgbA@mail.gmail.com>
+Subject: Re: [PATCH v4] pci: prevent putting nvidia GPUs into lower device
+ states on certain intel bridges
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Mika Westerberg <mika.westerberg@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lyude Paul <lyude@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        Dave Airlie <airlied@gmail.com>,
+        Mario Limonciello <Mario.Limonciello@dell.com>
+X-MC-Unique: ALnY89q1P2yoRVFqlkTrbg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Nov 21, 2019 at 4:47 PM Rafael J. Wysocki <rafael@kernel.org> wrote=
+:
+>
+> On Thu, Nov 21, 2019 at 1:53 PM Karol Herbst <kherbst@redhat.com> wrote:
+> >
+> > On Thu, Nov 21, 2019 at 12:46 PM Mika Westerberg
+> > <mika.westerberg@intel.com> wrote:
+> > >
+> > > On Thu, Nov 21, 2019 at 12:34:22PM +0100, Rafael J. Wysocki wrote:
+> > > > On Thu, Nov 21, 2019 at 12:28 PM Mika Westerberg
+> > > > <mika.westerberg@intel.com> wrote:
+> > > > >
+> > > > > On Wed, Nov 20, 2019 at 11:29:33PM +0100, Rafael J. Wysocki wrote=
+:
+> > > > > > > last week or so I found systems where the GPU was under the "=
+PCI
+> > > > > > > Express Root Port" (name from lspci) and on those systems all=
+ of that
+> > > > > > > seems to work. So I am wondering if it's indeed just the 0x19=
+01 one,
+> > > > > > > which also explains Mikas case that Thunderbolt stuff works a=
+s devices
+> > > > > > > never get populated under this particular bridge controller, =
+but under
+> > > > > > > those "Root Port"s
+> > > > > >
+> > > > > > It always is a PCIe port, but its location within the SoC may m=
+atter.
+> > > > >
+> > > > > Exactly. Intel hardware has PCIe ports on CPU side (these are cal=
+led
+> > > > > PEG, PCI Express Graphics, ports), and the PCH side. I think the =
+IP is
+> > > > > still the same.
+> > > > >
+> >
+> > yeah, I meant the bridge controller with the ID 0x1901 is on the CPU
+> > side. And if the Nvidia GPU is on a port on the PCH side it all seems
+> > to work just fine.
+>
+> But that may involve different AML too, may it not?
+>
+> > > > > > Also some custom AML-based power management is involved and tha=
+t may
+> > > > > > be making specific assumptions on the configuration of the SoC =
+and the
+> > > > > > GPU at the time of its invocation which unfortunately are not k=
+nown to
+> > > > > > us.
+> > > > > >
+> > > > > > However, it looks like the AML invoked to power down the GPU fr=
+om
+> > > > > > acpi_pci_set_power_state() gets confused if it is not in PCI D0=
+ at
+> > > > > > that point, so it looks like that AML tries to access device me=
+mory on
+> > > > > > the GPU (beyond the PCI config space) or similar which is not
+> > > > > > accessible in PCI power states below D0.
+> > > > >
+> > > > > Or the PCI config space of the GPU when the parent root port is i=
+n D3hot
+> > > > > (as it is the case here). Also then the GPU config space is not
+> > > > > accessible.
+> > > >
+> > > > Why would the parent port be in D3hot at that point?  Wouldn't that=
+ be
+> > > > a suspend ordering violation?
+> > >
+> > > No. We put the GPU into D3hot first, then the root port and then turn
+> > > off the power resource (which is attached to the root port) resulting
+> > > the topology entering D3cold.
+> > >
+> >
+> > If the kernel does a D0 -> D3hot -> D0 cycle this works as well, but
+> > the power savings are way lower, so I kind of prefer skipping D3hot
+> > instead of D3cold. Skipping D3hot doesn't seem to make any difference
+> > in power savings in my testing.
+>
+> OK
+>
+> What exactly did you do to skip D3cold in your testing?
+>
 
+For that I poked into the PCI registers directly and skipped doing the
+ACPI calls and simply checked for the idle power consumption on my
+laptop. But I guess I should retest with calling pci_d3cold_disable
+from nouveau instead? Or is there a different preferable way of
+testing this?
 
-On 18/11/2019 14:28, Sibi Sankar wrote:
-> Add optional "qcom,protection-domain" bindings for APR services. This
-> helps to capture the dependencies between APR services and the PD on
-> which each apr service run.
-> 
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-
-LGTM
-
-Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
->   .../devicetree/bindings/soc/qcom/qcom,apr.txt | 59 +++++++++++++++++++
->   1 file changed, 59 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
-> index db501269f47b8..f87c0b2a48de4 100644
-> --- a/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
-> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
-> @@ -45,6 +45,12 @@ by the individual bindings for the specific service
->   			12 - Ultrasound stream manager.
->   			13 - Listen stream manager.
->   
-> +- qcom,protection-domain
-> +	Usage: optional
-> +	Value type: <stringlist>
-> +	Definition: Must list the protection domain service name and path
-> +		    that the particular apr service has a dependency on.
-> +
->   = EXAMPLE
->   The following example represents a QDSP based sound card on a MSM8996 device
->   which uses apr as communication between Apps and QDSP.
-> @@ -82,3 +88,56 @@ which uses apr as communication between Apps and QDSP.
->   			...
->   		};
->   	};
-> +
-> += EXAMPLE 2
-> +The following example represents a QDSP based sound card on SDM845 device.
-> +Here the apr services are dependent on "avs/audio" service running on AUDIO
-> +Protection Domain hosted on ADSP remote processor.
-> +
-> +	apr {
-> +		compatible = "qcom,apr-v2";
-> +		qcom,glink-channels = "apr_audio_svc";
-> +		qcom,apr-domain = <APR_DOMAIN_ADSP>;
-> +
-> +		q6core {
-> +			compatible = "qcom,q6core";
-> +			reg = <APR_SVC_ADSP_CORE>;
-> +			qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
-> +		};
-> +
-> +		q6afe: q6afe {
-> +			compatible = "qcom,q6afe";
-> +			reg = <APR_SVC_AFE>;
-> +			qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
-> +			q6afedai: dais {
-> +				compatible = "qcom,q6afe-dais";
-> +				#sound-dai-cells = <1>;
-> +
-> +				qi2s@22 {
-> +					reg = <22>;
-> +					qcom,sd-lines = <3>;
-> +				};
-> +			};
-> +		};
-> +
-> +		q6asm: q6asm {
-> +			compatible = "qcom,q6asm";
-> +			reg = <APR_SVC_ASM>;
-> +			qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
-> +			q6asmdai: dais {
-> +				compatible = "qcom,q6asm-dais";
-> +				#sound-dai-cells = <1>;
-> +				iommus = <&apps_smmu 0x1821 0x0>;
-> +			};
-> +		};
-> +
-> +		q6adm: q6adm {
-> +			compatible = "qcom,q6adm";
-> +			reg = <APR_SVC_ADM>;
-> +			qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
-> +			q6routing: routing {
-> +				compatible = "qcom,q6adm-routing";
-> +				#sound-dai-cells = <0>;
-> +			};
-> +		};
-> +	};
-> 
