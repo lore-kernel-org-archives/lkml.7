@@ -2,107 +2,125 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB8EBC43141
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 09:55:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9B9DC43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 09:56:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A29F62067D
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 09:55:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EF672067D
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 09:56:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gkLUSRZ5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727105AbfKUJy7 (ORCPT
+        id S1726719AbfKUJ4D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 04:54:59 -0500
-Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:45274 "EHLO
-        herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726170AbfKUJy6 (ORCPT
+        Thu, 21 Nov 2019 04:56:03 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:38950 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbfKUJ4D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 04:54:58 -0500
-Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
-        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id xAL9rxav021978;
-        Thu, 21 Nov 2019 11:54:00 +0200
-Received: by taln60.nuvoton.co.il (Postfix, from userid 20088)
-        id 8C38E60329; Thu, 21 Nov 2019 11:53:59 +0200 (IST)
-From:   Tali Perry <tali.perry1@gmail.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, yuenn@google.com,
-        venture@google.com, benjaminfair@google.com,
-        avifishman70@gmail.com, joel@jms.id.au, tmaimon77@gmail.com,
-        wsa@the-dreams.de, syniurge@gmail.com
-Cc:     linux-i2c@vger.kernel.org, openbmc@lists.ozlabs.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tali Perry <tali.perry1@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        kbuild test robot <lkp@intel.com>
-Subject: [PATCH v7 0/2] i2c: npcm: add NPCM i2c controller driver
-Date:   Thu, 21 Nov 2019 11:53:48 +0200
-Message-Id: <20191121095350.158689-1-tali.perry1@gmail.com>
-X-Mailer: git-send-email 2.22.0
+        Thu, 21 Nov 2019 04:56:03 -0500
+Received: by mail-pg1-f195.google.com with SMTP id b126so1327687pga.6;
+        Thu, 21 Nov 2019 01:56:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=FzoSL4YP+wGhKXl+dqpfFhOcKj1KTUkz/Dcb+UIksRo=;
+        b=gkLUSRZ57R42ncaj1Bx/kvu7relx6lzvV5Xn0I6r0sBxURtE1G5TWry9NP/BMT8BNF
+         3S+kDKmnBj/WuPhqh4ANh59+4wGbZvZfPCDdxdkO2mA4AyMc11Od74bt54Q0vHa20hAb
+         zG2o/zMVd3//A5wOPM5jlulk4BK2f/GZ7TqIQGxuug6XxqqlHWfQ5pY81l55QICfHn84
+         EU+fOSNb+9V2NoPd8j3VsqHCJJJmbukdakcn6WNjQeh+05V10vd/ek9g0ao/+K9XZI4I
+         8eLZrAhFe91mPLk6ze4v3kLC7ZPeaLSKrpVnAsWOEszlazVf4AV5l4FRqhozEpHn3QsP
+         0W8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=FzoSL4YP+wGhKXl+dqpfFhOcKj1KTUkz/Dcb+UIksRo=;
+        b=e7GlTYIvfdO1AdeSpAfI2B1t4Pmmju8aI34nqNqYpFVb8EGRVLmypCbS2Cshh4xy5/
+         derJijXIGR4gAEpzH05mVe7k2UskTIynBfrfeLmufrtcQZv1cMa7Xf2G+93WQHCl7Ike
+         JcKJGewueSZtG+cIGRJbPTFw6QG1arLPVaDTXZ1m/wMDAs+JU3Ig/XjraLC+aznOAusO
+         hNVeHIrf5k7VKnGGV+ezSjWkFafIvXYzhufwRu8YGplAkiO4isoz/kUu5VOSp+BGGJPU
+         3beNE+CJjwRIbQU/8ysohcNts1ScpBDTdOfOHxDOF2yEJEe49FHWwfzuHHMHGLuuwdUP
+         atXQ==
+X-Gm-Message-State: APjAAAVzii1EuhpqAb5tgwVr7DOgpiCjvoTEdrNbzdJbYmafpecqOxGV
+        H6egTqdcAu0W4DfSU8XxQPAwVq62
+X-Google-Smtp-Source: APXvYqyb4umAwUrsdD0WCRtfuTBglwOyAN46dhme08ZiqWXDp3YaUcs4wdsgRn0piCBPqPDoEcCseA==
+X-Received: by 2002:aa7:9a96:: with SMTP id w22mr10066954pfi.162.1574330161967;
+        Thu, 21 Nov 2019 01:56:01 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id c2sm2614445pfn.55.2019.11.21.01.56.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 21 Nov 2019 01:56:01 -0800 (PST)
+Subject: Re: [PATCH] watchdog: make DesignWare watchdog allow users to set
+ bigger timeout value
+To:     "Wang, Peng 1. (NSB - CN/Hangzhou)" <peng.1.wang@nokia-sbell.com>,
+        Guenter Roeck <groeck7@gmail.com>
+Cc:     "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <4468f40ed5f5413ab27825bbcc611d65@nokia-sbell.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <d31883d3-7f5b-545c-cc64-beb3848dbe7d@roeck-us.net>
+Date:   Thu, 21 Nov 2019 01:56:00 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <4468f40ed5f5413ab27825bbcc611d65@nokia-sbell.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch set adds i2c controller support 
-for the Nuvoton NPCM Baseboard Management Controller (BMC).
+On 11/21/19 12:21 AM, Wang, Peng 1. (NSB - CN/Hangzhou) wrote:
+>>From d21d084122d08816454a1e338f0946a9da1f81e3 Mon Sep 17 00:00:00 2001
+> From: Peng Wang <peng.1.wang@nokia-sbell.com>
+> Date: Wed, 20 Nov 2019 15:12:59 +0800
+> Subject: [PATCH] watchdog: make DesignWare watchdog allow users to set bigger
+>   timeout value
+> 
+> watchdog_dev.c provides means to allow users to set bigger timeout value
+> than HW can support, make DesignWare watchdog align with this.
+> 
+> Signed-off-by: Peng Wang <peng.1.wang@nokia-sbell.com>
+> ---
 
-NPCM7xx includes 16 I2C controllers. This driver operates the controller.
-This module also includes a slave mode.
+Please version your patches, and add a change log here.
 
----
+>   drivers/watchdog/dw_wdt.c | 10 +++++++++-
+>   1 file changed, 9 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c
+> index fef7c61..f1a431c 100644
+> --- a/drivers/watchdog/dw_wdt.c
+> +++ b/drivers/watchdog/dw_wdt.c
+> @@ -114,7 +114,15 @@ static int dw_wdt_set_timeout(struct watchdog_device *wdd, unsigned int top_s)
+>   	writel(top_val | top_val << WDOG_TIMEOUT_RANGE_TOPINIT_SHIFT,
+>   	       dw_wdt->regs + WDOG_TIMEOUT_RANGE_REG_OFFSET);
+>   
+> -	wdd->timeout = dw_wdt_top_in_seconds(dw_wdt, top_val);
+> +	/*
+> +	 * In case users set bigger timeout value than HW can support,
+> +	 * kernel(watchdog_dev.c) helps to feed watchdog before
+> +	 * wdd->timeout
 
-v7 -> v6:
-	- Rebased on Linux 5.4-rc8  (was Linux 5.4-rc7).
-	- Fix issue found by kbuild test robot (redundant include).
-	- Note: left a warning related to fall through. This fall through is
-	  intentional.
-	
-v6 -> v5:
-	- Update documentation
+No, before wdd->max_hw_heartbeat_ms.
 
-v5 -> v4:
-	- support recovery
-	- master-slave switch support needed for IPMB
-
-v4 -> v3:
-	- typo on cover letter.
-
-v3 -> v2:
-	- fix dt binding: compatible name: omit "bus"
-
-v2 -> v1:
-	- run check patch in strict mode.
-	- use linux crc.
-	- define regs in constant offset without base.
-	- remove debug prints.
-	- no declarations for local functions.
-	
-v1: initial version
-
-Signed-off-by: Tali Perry <tali.perry1@gmail.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reported-by: kbuild test robot <lkp@intel.com>
-
----
-Tali Perry (2):
-  Added device tree binding documentation for Nuvoton BMC NPCM I2C
-    controller.
-  Add Nuvoton NPCM BMC I2C controller driver.
-
- .../devicetree/bindings/i2c/i2c-npcm7xx.txt   |   29 +
- drivers/i2c/busses/Kconfig                    |   11 +
- drivers/i2c/busses/Makefile                   |    1 +
- drivers/i2c/busses/i2c-npcm7xx.c              | 2485 +++++++++++++++++
- 4 files changed, 2526 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/i2c/i2c-npcm7xx.txt
- create mode 100644 drivers/i2c/busses/i2c-npcm7xx.c
-
-
-base-commit: af42d3466bdc8f39806b26f593604fdc54140bcb
--- 
-2.22.0
+> +	 */
+> +	if ( top_s * 1000 <= wdd->max_hw_heartbeat_ms )
+> +		wdd->timeout = dw_wdt_top_in_seconds(dw_wdt, top_val);
+> +	else
+> +		wdd->timeout = top_s;
+>   
+>   	return 0;
+>   }
+> 
 
