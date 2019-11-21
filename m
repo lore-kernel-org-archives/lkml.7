@@ -2,104 +2,100 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8266DC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:32:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45958C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:35:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5730020872
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:32:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f1zvNif8"
+	by mail.kernel.org (Postfix) with ESMTP id 1DD4020872
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:35:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbfKUKcb (ORCPT
+        id S1726546AbfKUKfH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 05:32:31 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:38277 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726722AbfKUKca (ORCPT
+        Thu, 21 Nov 2019 05:35:07 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:40252 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726014AbfKUKfG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 05:32:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574332350;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=U2LDZt6nZQHHH1FrYL2g9MKCC3YAvWLT/E1GHIFcizM=;
-        b=f1zvNif8aQbpLg1f80n+vZpgi33T2Sov99RhNT9HjZn34AQJ00NqWCZsM6jt2DtydZRu4Y
-        aKAt6ngKJV/9LO34I2CuE56E9p2KfeV7YVkE1MDqqaW0SS/qDED0+z3tNWUFxXXaMsaV5i
-        z2XFlH5R2EWbJIlIYT+rL0pLjk4aeLM=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-381-2uxADx0wPsCPRCPifNQuLQ-1; Thu, 21 Nov 2019 05:32:24 -0500
-Received: by mail-wr1-f71.google.com with SMTP id k15so1794633wrp.22
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 02:32:24 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=RCefIYme6aC+9QN5HQO2IUHc5f9eX+/leRuEDcD7AXs=;
-        b=DBGQE65OWBu9FsaR4qk/676Jb/RmOszMwWa0qi+eqYZwquoG1VBElMMi0JqpDN/1kf
-         QJeUw8QZjIHEtpPMpMe/zug2LsBiIT0TDvelP5Yk662q1IZJjjA+BKu04Uhkmjx/0e9t
-         zZk9d0gkm7CgHi9D/RahGACnaFZpztNzLeXFSVbonVWN7pbsydQfhE3B6Ricdlco0YQF
-         UabLOOdWlL5zOmG5uFgsYm8vQUxEvdQI9Ic75DsjVSHjdqoT9oTv6P/RBLqgQ8x0bt8m
-         ZWsS6yaIMvGH3xYg0vwbbfb/40NFdDIWqn/80qHMoZb0h8lRN8HMmFrNWOM7PcBBGYaQ
-         +nZQ==
-X-Gm-Message-State: APjAAAXgwGXmx6e6mnSXpNb8xaps7/wh2QVZeuzzJKQDptcmWn1tuUOa
-        DNVJArQKqaO8nmhhFDrlyWLaYz2SO3AwgBXWdIJzaxgfLaIDAru5+hlF5OMOxOE6X6FlzTNGvAz
-        q0gbG5A54tqa7aH/dIbOFman5
-X-Received: by 2002:a1c:e915:: with SMTP id q21mr9238796wmc.164.1574332343498;
-        Thu, 21 Nov 2019 02:32:23 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzvXDq5rFnE9rr8q7oymU/5CiGqw7gSv8pDuc8DAo5L5cbB5Pc0QJ+smg7kQvVgP8C6NIlFSg==
-X-Received: by 2002:a1c:e915:: with SMTP id q21mr9238755wmc.164.1574332343227;
-        Thu, 21 Nov 2019 02:32:23 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:71a5:6e:f854:d744? ([2001:b07:6468:f312:71a5:6e:f854:d744])
-        by smtp.gmail.com with ESMTPSA id g74sm2153099wme.5.2019.11.21.02.32.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 Nov 2019 02:32:22 -0800 (PST)
-Subject: Re: [PATCH v7 6/9] vmx: spp: Set up SPP paging table at
- vmentry/vmexit
-To:     Yang Weijiang <weijiang.yang@intel.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jmattson@google.com,
-        sean.j.christopherson@intel.com
-Cc:     yu.c.zhang@linux.intel.com, alazar@bitdefender.com,
-        edwin.zhai@intel.com
-References: <20191119084949.15471-1-weijiang.yang@intel.com>
- <20191119084949.15471-7-weijiang.yang@intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <b67b07bf-7051-7dbc-2911-9268d72f0b70@redhat.com>
-Date:   Thu, 21 Nov 2019 11:32:22 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 21 Nov 2019 05:35:06 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id D8DEA1C1B56; Thu, 21 Nov 2019 11:35:04 +0100 (CET)
+Date:   Thu, 21 Nov 2019 11:35:04 +0100
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Mitch Williams <mitch.a.williams@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 079/422] i40e: use correct length for strncpy
+Message-ID: <20191121103504.GC26882@amd>
+References: <20191119051400.261610025@linuxfoundation.org>
+ <20191119051404.622986351@linuxfoundation.org>
 MIME-Version: 1.0
-In-Reply-To: <20191119084949.15471-7-weijiang.yang@intel.com>
-Content-Language: en-US
-X-MC-Unique: 2uxADx0wPsCPRCPifNQuLQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="hYooF8G/hrfVAmum"
+Content-Disposition: inline
+In-Reply-To: <20191119051404.622986351@linuxfoundation.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/11/19 09:49, Yang Weijiang wrote:
-> @@ -5400,6 +5434,10 @@ int kvm_mmu_page_fault(struct kvm_vcpu *vcpu, gva_=
-t cr2, u64 error_code,
->  =09=09r =3D vcpu->arch.mmu->page_fault(vcpu, cr2,
->  =09=09=09=09=09       lower_32_bits(error_code),
->  =09=09=09=09=09       false);
-> +
-> +=09=09if (vcpu->run->exit_reason =3D=3D KVM_EXIT_SPP)
-> +=09=09=09return 0;
-> +
 
-Instead of this, please add a RET_PF_USERSPACE case to the RET_PF_* enum
-in mmu.c.
+--hYooF8G/hrfVAmum
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Paolo
+Hi!
 
+> From: Mitch Williams <mitch.a.williams@intel.com>
+>=20
+> [ Upstream commit 7eb74ff891b4e94b8bac48f648a21e4b94ddee64 ]
+>=20
+> Caught by GCC 8. When we provide a length for strncpy, we should not
+> include the terminating null. So we must tell it one less than the size
+> of the destination buffer.
+
+> +++ b/drivers/net/ethernet/intel/i40e/i40e_ptp.c
+> @@ -694,7 +694,8 @@ static long i40e_ptp_create_clock(struct i40e_pf *pf)
+>  	if (!IS_ERR_OR_NULL(pf->ptp_clock))
+>  		return 0;
+> =20
+> -	strncpy(pf->ptp_caps.name, i40e_driver_name, sizeof(pf->ptp_caps.name));
+> +	strncpy(pf->ptp_caps.name, i40e_driver_name,
+> +		sizeof(pf->ptp_caps.name) - 1);
+>  	pf->ptp_caps.owner =3D THIS_MODULE;
+>  	pf->ptp_caps.max_adj =3D 999999999;
+>  	pf->ptp_caps.n_ext_ts =3D 0;
+
+So... pf is allocated with kzalloc, which will provide the null
+termination... so the code is okay.
+
+On the other hand, the =3D 0 below is unneeded by the same logic, so
+this is a bit confusing.
+
+Best regards,
+								Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--hYooF8G/hrfVAmum
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl3WaFcACgkQMOfwapXb+vJJHACfRuY88Hc7nM5FRo+hzyQlowfF
+DrQAoLdm0t9gzcVpQk4tJRuS1vLYgHbO
+=ZNgA
+-----END PGP SIGNATURE-----
+
+--hYooF8G/hrfVAmum--
