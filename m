@@ -2,211 +2,122 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1726C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 17:14:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77F57C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 17:14:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B2BE206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 17:14:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BC71206DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 17:14:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574356449;
+	bh=Ti/dngwhJigigI0vZvNQ4kqW2wZg+aYllS0eHqXlFSA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GDd147hiboFq1SOXBzNt8wm0GT583r/51I8t+6Zzv52xRf60dixla2igm3YJwLZwS
+	 ZuOg3yDeprfvlldA5iSYRyDTQn+eae/mPilkcR9Pkrxp+CbGkn6sHdnGh3vz4zATbz
+	 /iHAXsxVQNQvRMpTIElgQZLWUlC22GPtFpHZlCLY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727333AbfKUROC (ORCPT
+        id S1727341AbfKUROI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 12:14:02 -0500
-Received: from mx2.suse.de ([195.135.220.15]:54128 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727179AbfKURNp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 12:13:45 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 18EA4B1B9;
-        Thu, 21 Nov 2019 17:13:43 +0000 (UTC)
-From:   Michal Suchanek <msuchanek@suse.de>
-To:     linux-scsi@vger.kernel.org, linux-block@vger.kernel.org
-Cc:     Michal Suchanek <msuchanek@suse.de>,
-        Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Eric Biggers <ebiggers@google.com>,
-        "J. Bruce Fields" <bfields@redhat.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Benjamin Coddington <bcodding@redhat.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Hou Tao <houtao1@huawei.com>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Jan Kara <jack@suse.cz>, Hannes Reinecke <hare@suse.com>,
-        "Ewan D. Milne" <emilne@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Matthew Wilcox <willy@infradead.org>
-Subject: [PATCH v4 09/10] scsi: blacklist: add VMware ESXi cdrom - broken tray emulation
-Date:   Thu, 21 Nov 2019 18:13:16 +0100
-Message-Id: <9612980c3ea0fcf6f8c8e7a95eed741d5a65b9f0.1574355709.git.msuchanek@suse.de>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <cover.1574355709.git.msuchanek@suse.de>
-References: <cover.1574355709.git.msuchanek@suse.de>
+        Thu, 21 Nov 2019 12:14:08 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:36644 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726861AbfKUROG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 12:14:06 -0500
+Received: by mail-wr1-f67.google.com with SMTP id z3so5401522wru.3
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 09:14:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=i3dXbaeM8/fgEzXWHf4j73/qD2/JvKlKOG24q2kDLhU=;
+        b=GcLaoiocTB43exyz2Sw7c1bE8QYr4ZxVv8UNC56FfbxP3Gkhhfz5i0jLfiYUPQCMoa
+         AUGVKhWAFxYXZdN3aWMfWxjEZQOZ+8ggRIzXKkCUzea0eV45bxX5v+DssT28edUaD12Z
+         ls5k4OgXVu/SKelNO5qo4NtGYWuTVY+CDVaN192Wx6SoGGJh1M7uWrQHTMZ6xM2lY9Le
+         TD7KveNHoXLh5htI3rXzHQL5xCcrG9uSqeXNA/qgfqBCgssLx3zUQ5qRE39PwtS2f0qw
+         OtPwq2v51cjIdhQJcex+IkJBSUZwEomo3oqSSjcKQp/m6LqYcKXAQgB9vzQnfk3F1RvE
+         zrUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=i3dXbaeM8/fgEzXWHf4j73/qD2/JvKlKOG24q2kDLhU=;
+        b=DV2Qt4gOt2kBjfo+XkbxfSJbEIkaDIKiL81r0yvDi6FeGLP5R/C4TjVsnhk4xesCEs
+         6S6RYfNHk17WYMa751aYLD+iTYoqWN0pN0pngBHNIXhzEfNGsdoFC6B5hoIQ+iHwGSlk
+         yJQrIxM9iaNI5KNJRwzEJw6j4euEVMYKm2a84NIkbe85zCl+ha9xyNAG0ES/raXoK/aq
+         9ZuXSxqkZHAAvZDtjRdaMiQWiBqYipXyHUNpdEcM6rCU+lIFnuMbWNBgb27CWJyhCWwm
+         YRNB0dRM9rk9PoIdKrA5v8m8vb3XuOx5Q123Etzzt5UDcBjdkZj4wD147Gi3RnT/04kl
+         1ZzA==
+X-Gm-Message-State: APjAAAV8MClJ4QAVW8pRV39wfYGb4zVySr9t6fpm07n74Q1fTc8JYc/s
+        1e3jBIQWipWMpNJLgVrA8uk=
+X-Google-Smtp-Source: APXvYqxEpvzKJM8+RiUL39rs/NOLQBXQix4AlKzUu9X1je8OxVPAWunSU7INi5WBD4jktiReGQop1A==
+X-Received: by 2002:adf:eecc:: with SMTP id a12mr1519815wrp.363.1574356444030;
+        Thu, 21 Nov 2019 09:14:04 -0800 (PST)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id v184sm297255wme.31.2019.11.21.09.14.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Nov 2019 09:14:03 -0800 (PST)
+Date:   Thu, 21 Nov 2019 18:14:01 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Fenghua Yu <fenghua.yu@intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
+Subject: Re: [PATCH v10 6/6] x86/split_lock: Enable split lock detection by
+ kernel parameter
+Message-ID: <20191121171401.GE12042@gmail.com>
+References: <1574297603-198156-1-git-send-email-fenghua.yu@intel.com>
+ <1574297603-198156-7-git-send-email-fenghua.yu@intel.com>
+ <20191121060444.GA55272@gmail.com>
+ <20191121130153.GS4097@hirez.programming.kicks-ass.net>
+ <20191121161410.GA199273@romley-ivt3.sc.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191121161410.GA199273@romley-ivt3.sc.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The WMware ESXi cdrom identifies itself as:
-sr 0:0:0:0: [sr0] scsi3-mmc drive: vendor: "NECVMWarVMware SATA CD001.00"
-model: "VMware SATA CD001.00"
-with the following get_capabilities print in sr.c:
-        sr_printk(KERN_INFO, cd,
-                  "scsi3-mmc drive: vendor: \"%s\" model: \"%s\"\n",
-                  cd->device->vendor, cd->device->model);
 
-The model looks like reliable identification while vendor does not.
+* Fenghua Yu <fenghua.yu@intel.com> wrote:
 
-The drive claims to have a tray and claims to be able to close it.
-However, the UI has no notion of a tray - when medium is ejected it is
-dropped in the floor and the user must select a medium again before the
-drive can be re-loaded.  On the kernel side the tray_move call to close
-the tray succeeds but the drive state does not change as a result of the
-call.
+> > This feature MUST be default enabled, otherwise everything will 
+> > be/remain broken and we'll end up in the situation where you can't 
+> > use it even if you wanted to.
+> 
+> The usage scope of this patch set is largely reduced to only real time. 
+> The long split lock processing time (>1000 cycles) cannot be tolerated 
+> by real time.
+> 
+> Real time customers do want to use this feature to detect the fatal 
+> split lock error. They don't want any split lock issue from BIOS/EFI/ 
+> firmware/kerne/drivers/user apps.
+> 
+> Real time can enable the feature (set bit 29 in TEST_CTRL MSR) in BIOS 
+> and don't need OS to enable it. But, #AC handler cannot handle split 
+> lock in the kernel and will return to the faulting instruction and 
+> re-enter #AC. So current #AC handler doesn't provide useful information 
+> for the customers. That's why we add the new #AC handler in this patch 
+> set.
 
-The drive does not in fact emulate the tray state. There are two ways to
-get the medium state. One is the SCSI status:
+Immaterial - for this feature to be useful it must be default-enabled, 
+with reasonable quirk knobs offered to people who happen to be bitten by 
+such bugs and cannot fix the software.
 
-Physical drive:
+But default-enabled is a must-have, as Peter said.
 
-Fixed format, current; Sense key: Not Ready
-Additional sense: Medium not present - tray open
-Raw sense data (in hex):
-        70 00 02 00 00 00 00 0a  00 00 00 00 3a 02 00 00
-        00 00
+Thanks,
 
-Fixed format, current; Sense key: Not Ready
-Additional sense: Medium not present - tray closed
- Raw sense data (in hex):
-        70 00 02 00 00 00 00 0a  00 00 00 00 3a 01 00 00
-        00 00
-
-VMware ESXi:
-
-Fixed format, current; Sense key: Not Ready
-Additional sense: Medium not present
-  Info fld=0x0 [0]
- Raw sense data (in hex):
-        f0 00 02 00 00 00 00 0a  00 00 00 00 3a 00 00 00
-        00 00
-
-So the tray state is not reported here. Other is medium status which the
-kernel prefers if available. Adding a print here gives:
-
-cdrom: get_media_event success: code = 0, door_open = 1, medium_present = 0
-
-door_open is interpreted as open tray. This is fine so long as tray_move
-would close the tray when requested or report an error which never
-happens on VMware ESXi servers (5.5 and 6.5 tested).
-
-This is a popular virtualization platform so a workaround is worthwhile.
-
-Signed-off-by: Michal Suchanek <msuchanek@suse.de>
----
-v2: new patch
-v3: change into a blacklist flag
-v4: fix vendor match condition
----
- drivers/scsi/scsi_devinfo.c | 15 +++++++++------
- drivers/scsi/sr.c           |  6 ++++++
- include/scsi/scsi_devinfo.h |  7 ++++++-
- 3 files changed, 21 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/scsi/scsi_devinfo.c b/drivers/scsi/scsi_devinfo.c
-index df14597752ec..923f54b88d24 100644
---- a/drivers/scsi/scsi_devinfo.c
-+++ b/drivers/scsi/scsi_devinfo.c
-@@ -252,6 +252,7 @@ static struct {
- 	{"TOSHIBA", "CD-ROM", NULL, BLIST_ISROM},
- 	{"Traxdata", "CDR4120", NULL, BLIST_NOLUN},	/* locks up */
- 	{"USB2.0", "SMARTMEDIA/XD", NULL, BLIST_FORCELUN | BLIST_INQUIRY_36},
-+	{"VMware", "VMware", NULL, BLIST_NO_MATCH_VENDOR | BLIST_NO_TRAY},
- 	{"WangDAT", "Model 2600", "01.7", BLIST_SELECT_NO_ATN},
- 	{"WangDAT", "Model 3200", "02.2", BLIST_SELECT_NO_ATN},
- 	{"WangDAT", "Model 1300", "02.4", BLIST_SELECT_NO_ATN},
-@@ -454,10 +455,11 @@ static struct scsi_dev_info_list *scsi_dev_info_list_find(const char *vendor,
- 			/*
- 			 * vendor strings must be an exact match
- 			 */
--			if (vmax != strnlen(devinfo->vendor,
--					    sizeof(devinfo->vendor)) ||
--			    memcmp(devinfo->vendor, vskip, vmax))
--				continue;
-+			if (!(devinfo->flags & BLIST_NO_MATCH_VENDOR))
-+				if (vmax != strnlen(devinfo->vendor,
-+						    sizeof(devinfo->vendor)) ||
-+				    memcmp(devinfo->vendor, vskip, vmax))
-+					continue;
- 
- 			/*
- 			 * @model specifies the full string, and
-@@ -468,8 +470,9 @@ static struct scsi_dev_info_list *scsi_dev_info_list_find(const char *vendor,
- 				continue;
- 			return devinfo;
- 		} else {
--			if (!memcmp(devinfo->vendor, vendor,
--				    sizeof(devinfo->vendor)) &&
-+			if ((!memcmp(devinfo->vendor, vendor,
-+				    sizeof(devinfo->vendor))
-+			       || (devinfo->flags & BLIST_NO_MATCH_VENDOR)) &&
- 			    !memcmp(devinfo->model, model,
- 				    sizeof(devinfo->model)))
- 				return devinfo;
-diff --git a/drivers/scsi/sr.c b/drivers/scsi/sr.c
-index 4664fdf75c0f..07c319494bf4 100644
---- a/drivers/scsi/sr.c
-+++ b/drivers/scsi/sr.c
-@@ -58,6 +58,7 @@
- #include <scsi/scsi_eh.h>
- #include <scsi/scsi_host.h>
- #include <scsi/scsi_ioctl.h>	/* For the door lock/unlock commands */
-+#include <scsi/scsi_devinfo.h>
- 
- #include "scsi_logging.h"
- #include "sr.h"
-@@ -922,6 +923,11 @@ static void get_capabilities(struct scsi_cd *cd)
- 		  buffer[n + 4] & 0x20 ? "xa/form2 " : "",	/* can read xa/from2 */
- 		  buffer[n + 5] & 0x01 ? "cdda " : "", /* can read audio data */
- 		  loadmech[buffer[n + 6] >> 5]);
-+	if (cd->device->sdev_bflags & BLIST_NO_TRAY) {
-+		buffer[n + 6] &= ~(0xff << 5);
-+		sr_printk(KERN_INFO, cd,
-+			  "Tray emulation bug workaround: tray -> caddy\n");
-+	}
- 	if ((buffer[n + 6] >> 5) == 0)
- 		/* caddy drives can't close tray... */
- 		cd->cdi.mask |= CDC_CLOSE_TRAY;
-diff --git a/include/scsi/scsi_devinfo.h b/include/scsi/scsi_devinfo.h
-index 3fdb322d4c4b..17ea96936cc6 100644
---- a/include/scsi/scsi_devinfo.h
-+++ b/include/scsi/scsi_devinfo.h
-@@ -67,8 +67,13 @@
- #define BLIST_RETRY_ITF		((__force blist_flags_t)(1ULL << 32))
- /* Always retry ABORTED_COMMAND with ASC 0xc1 */
- #define BLIST_RETRY_ASC_C1	((__force blist_flags_t)(1ULL << 33))
-+/* Device reports to have a tray but it cannot be operated reliably */
-+#define BLIST_NO_TRAY		((__force blist_flags_t)(1ULL << 34))
-+/* Vendor string is bogus */
-+#define BLIST_NO_MATCH_VENDOR	((__force blist_flags_t)(1ULL << 35))
- 
--#define __BLIST_LAST_USED BLIST_RETRY_ASC_C1
-+
-+#define __BLIST_LAST_USED BLIST_NO_MATCH_VENDOR
- 
- #define __BLIST_HIGH_UNUSED (~(__BLIST_LAST_USED | \
- 			       (__force blist_flags_t) \
--- 
-2.23.0
-
+	Ingo
