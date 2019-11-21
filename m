@@ -2,117 +2,116 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45B0DC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:02:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9460FC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:03:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DB1B20692
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:02:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BmVtjoxI"
+	by mail.kernel.org (Postfix) with ESMTP id 745EE20692
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:03:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727096AbfKUQCt (ORCPT
+        id S1727113AbfKUQDS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 11:02:49 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:40413 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726840AbfKUQCs (ORCPT
+        Thu, 21 Nov 2019 11:03:18 -0500
+Received: from mout.kundenserver.de ([212.227.126.133]:46255 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726840AbfKUQDS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 11:02:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574352167;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
-        bh=rcqdeTgChHnCDo5l36uHf88TY7b96FHBlN+sSTw6btQ=;
-        b=BmVtjoxIr5/kEVcZAGQEG9/n33t+2C5KAAe3WQ1Moe8EfYTCkq3Ub9NVIDH3X8gQlxJQac
-        egxxbRY8mkJ8Xy8lHJWl3S2dsAHraHWq/iBzaYLsPieamtDQJcH52QP6FOqMP6kQDQ0S6X
-        l0CNvcmuW3wPynZrxYChEVQsejv7Gbo=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-316-OL8DMrZQOAKklK-1YLdTlg-1; Thu, 21 Nov 2019 11:02:45 -0500
-Received: by mail-wm1-f71.google.com with SMTP id y14so2034914wmi.4
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 08:02:45 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=qM2tyh78ojNvdG7Z8M8T/3nGHyd1QQztV+4YABQwg58=;
-        b=KXl77w9Ju2fsX7nSkQbZKc/24L2YO5EvKjf+InEG5HJHyhgZj2etTRnH2MNQOPE4j5
-         DKYcws8ACuCIOno9wDj3zu7fMRL4/4wUhJs1zcopr+tu1rzLAZi0ow7V9G3lPyhkUnaJ
-         aLqgvQTYlY7WsHlnMlDhE9PNczGsk3kmBk2K/HMgRVJKlJsjUbnZbVPFBCAXnzny38Df
-         SNgXX+akrDaqWbKpqyA8W5wvTYZyVTEVNO7d1/WWAMsxXVcG/6q6UhljohlJw9cTMwSO
-         jjdTqodl6HI/dgmBLAF8iuSLiw2YAJ5WEvce3ZpzG9orVcstA0WOHnVPR0M0QIqQXaH/
-         Ccow==
-X-Gm-Message-State: APjAAAXlmzhgSQ6RJaFcd86l6VuYhVNdhmme3hZT08q19EH8QZ7vaI/a
-        UQWwVkk4APfe49ZNXNxFDYwh4MCyOuhgPCwnGWBFTn8TUFiv+BlfHYw86tkxtQE422MqQp+Rsgn
-        YtDUtAfC5oxBAwxOKdJUir67Z
-X-Received: by 2002:a1c:6641:: with SMTP id a62mr10623029wmc.54.1574352164372;
-        Thu, 21 Nov 2019 08:02:44 -0800 (PST)
-X-Google-Smtp-Source: APXvYqz/tD9hcxHhcQWoHQpZcdfK2t0X0v9XjAW7cHY4kYJ0mn+rkqwZ9CmqXq9Xn2xNMJAol/s4ww==
-X-Received: by 2002:a1c:6641:: with SMTP id a62mr10623001wmc.54.1574352164065;
-        Thu, 21 Nov 2019 08:02:44 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:71a5:6e:f854:d744? ([2001:b07:6468:f312:71a5:6e:f854:d744])
-        by smtp.gmail.com with ESMTPSA id x5sm94545wmj.7.2019.11.21.08.02.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 Nov 2019 08:02:43 -0800 (PST)
-Subject: Re: [PATCH v7 2/9] vmx: spp: Add control flags for Sub-Page
- Protection(SPP)
-To:     Yang Weijiang <weijiang.yang@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jmattson@google.com, sean.j.christopherson@intel.com,
-        yu.c.zhang@linux.intel.com, alazar@bitdefender.com,
-        edwin.zhai@intel.com
-References: <20191119084949.15471-1-weijiang.yang@intel.com>
- <20191119084949.15471-3-weijiang.yang@intel.com>
- <d6e71e7b-b708-211c-24b7-8ffe03a52842@redhat.com>
- <20191121153442.GH17169@local-michael-cet-test>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <58b4b445-bd47-d357-9fdd-118043624215@redhat.com>
-Date:   Thu, 21 Nov 2019 17:02:42 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20191121153442.GH17169@local-michael-cet-test>
-Content-Language: en-US
-X-MC-Unique: OL8DMrZQOAKklK-1YLdTlg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+        Thu, 21 Nov 2019 11:03:18 -0500
+Received: from orion.localdomain ([95.115.120.75]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1M3VAI-1iXGxS16va-000aMP; Thu, 21 Nov 2019 17:03:08 +0100
+From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     jejb@linux.ibm.com, martin.petersen@oracle.com,
+        linux-scsi@vger.kernel.org
+Subject: [PATCH] drivers: scsi: Kconfig: minor indention fixes
+Date:   Thu, 21 Nov 2019 17:02:50 +0100
+Message-Id: <20191121160250.29550-1-info@metux.net>
+X-Mailer: git-send-email 2.11.0
+X-Provags-ID: V03:K1:Z/KGzKYZjrlXQbBuU9VIG+nxEaMt5xZK3P/AazMTDwDiMWrn7l7
+ cJPrG46z+knfobETUJ+YwFFiOD7WiUtt2nxc44iTuQQlmtNCeMiCceEajv3w0CrgcvQgWGp
+ SfnBtJWH9Gz6X3IWJ9Oo92kNDn9xj6BnWzPX2KcXiuWEw/7XvYtWTWshZeXk6y6/HEVC3mH
+ CqjshLNP5eTr/t4iqAgQg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:B/HK5rhMmco=:pNVI92OOy9tsAylT0lqQlW
+ 3zRoDO4YbOIVu/q+jlN4FITz8fX7V91HBWRNuOiNdSVx0zKJdS4hZlCBi8vvbe5+KDqCb0vrl
+ 4nNExAbqdExErukVeUgwClZd1ZWxRzriVzxK4Njq5o9Bx519QRZcIXb+viADjw8khhAR/DmrJ
+ 9mBRoT/6FDEpCd17LWd2esOSX5/l4cdiMJl6ApZLPyPZ44QjcH6tejhqh27VRHorcadpMxnoK
+ DqpZSR2OwKNoiY2XZFBol+CTc5j1dxAsHx54XEEyXSYOR0qnqz5FmFisSjSpedbJppAheU0f5
+ mSPABzQyGmaFTMaznyfomlAS+yI8b3Joa8+1KZxAaBKS8IfE2T3FsOtIWAmXZSqa4VjPU7VFC
+ 5a9ctlHxkPNkyEqEfPkCwfmd3G317+wwgq9PORNNyVm5ewSqIMGpVJDEqCHFmcI7N83qMCXpO
+ dduiFxkB/mK9umyWsVxgOJw6N+DdH7TDeOnvdfQeVeAc5Ea5X4CQYE8X9jwFFC/i6+R46bU/N
+ +G0a3jQ6zhrlejCS/C7dGYKnwK6QNN0/IdJnPevqdOyoLvHQX3Vsuujk6xepjR5QBhxzN/v2e
+ 0DFkXSr6m8ndZ4z4JMHhhgTTwVSD9YAm6rsTnzFFYw5ma0wWLj/iuQkwt4a6KRV1mJAv23bGT
+ IytByag8SfHu8haKEKEnmr0aMNXNgoRLQ6ivVcFV5kHVGs5GFSMqPHG3W++W12FhiRFZcE4gY
+ 2MCCQODlKlVSdKvO8vE+c5baV7d9kRAj0ZS0tA6/VdQn92NcR04CdzYQ3ag6BEGVlYlyUTo4d
+ kIvyEM1S0ObnHo0laXFQRh1Np1aiSJB5t1LbHoNs+6HoYbtD/zIkqyvoUq/1+z7NtcIdJh1rF
+ hYYCRCfYCXbP9Hjm323w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/11/19 16:34, Yang Weijiang wrote:
-> On Thu, Nov 21, 2019 at 11:04:51AM +0100, Paolo Bonzini wrote:
->> On 19/11/19 09:49, Yang Weijiang wrote:
->>> @@ -228,6 +228,7 @@
->>>  #define X86_FEATURE_FLEXPRIORITY=09( 8*32+ 2) /* Intel FlexPriority */
->>>  #define X86_FEATURE_EPT=09=09=09( 8*32+ 3) /* Intel Extended Page Tabl=
-e */
->>>  #define X86_FEATURE_VPID=09=09( 8*32+ 4) /* Intel Virtual Processor ID=
- */
->>> +#define X86_FEATURE_SPP=09=09=09( 8*32+ 5) /* Intel EPT-based Sub-Page=
- Write Protection */
->>
->> Please do not include X86_FEATURE_SPP.  In general I don't like the VMX
->> features word, but apart from that SPP is not a feature that affects all
->> VMs in the same way as EPT or FlexPriority.
->>
-> So what's a friendly way to let a user check if SPP feature is there?
+Align the indentions to the common practise in Kconfig files,
+make it look at little bit prettier. Just whitespace changes.
 
-QEMU for example ships with a program called vmxcap (though it requires
-root).  We also could write a program to analyze the KVM capabilities
-and print them, and put it in tools/kvm.
+Signed-off-by: Enrico Weigelt <info@metux.net>
+---
+ drivers/scsi/Kconfig | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-Thanks,
-
-Paolo
+diff --git a/drivers/scsi/Kconfig b/drivers/scsi/Kconfig
+index 90cf4691b8c3..329ddbb46222 100644
+--- a/drivers/scsi/Kconfig
++++ b/drivers/scsi/Kconfig
+@@ -2,9 +2,9 @@
+ menu "SCSI device support"
+ 
+ config SCSI_MOD
+-       tristate
+-       default y if SCSI=n || SCSI=y
+-       default m if SCSI=m
++	tristate
++	default y if SCSI=n || SCSI=y
++	default m if SCSI=m
+ 
+ config RAID_ATTRS
+ 	tristate "RAID Transport Class"
+@@ -1480,14 +1480,14 @@ config ZFCP
+ 	depends on S390 && QDIO && SCSI
+ 	depends on SCSI_FC_ATTRS
+ 	help
+-          If you want to access SCSI devices attached to your IBM eServer
+-          zSeries by means of Fibre Channel interfaces say Y.
+-          For details please refer to the documentation provided by IBM at
+-          <http://oss.software.ibm.com/developerworks/opensource/linux390>
++	  If you want to access SCSI devices attached to your IBM eServer
++	  zSeries by means of Fibre Channel interfaces say Y.
++	  For details please refer to the documentation provided by IBM at
++	  <http://oss.software.ibm.com/developerworks/opensource/linux390>
+ 
+-          This driver is also available as a module. This module will be
+-          called zfcp. If you want to compile it as a module, say M here
+-          and read <file:Documentation/kbuild/modules.rst>.
++	  This driver is also available as a module. This module will be
++	  called zfcp. If you want to compile it as a module, say M here
++	  and read <file:Documentation/kbuild/modules.rst>.
+ 
+ config SCSI_PMCRAID
+ 	tristate "PMC SIERRA Linux MaxRAID adapter support"
+@@ -1518,8 +1518,8 @@ config SCSI_VIRTIO
+ 	tristate "virtio-scsi support"
+ 	depends on VIRTIO
+ 	help
+-          This is the virtual HBA driver for virtio.  If the kernel will
+-          be used in a virtual machine, say Y or M.
++	  This is the virtual HBA driver for virtio. If the kernel will
++	  be used in a virtual machine, say Y or M.
+ 
+ source "drivers/scsi/csiostor/Kconfig"
+ 
+-- 
+2.11.0
 
