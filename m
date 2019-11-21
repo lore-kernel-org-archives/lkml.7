@@ -2,141 +2,100 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B501AC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:30:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31795C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:32:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B2EC2068D
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:30:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 050722068D
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:32:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WOqsXLW2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eYpeBUR8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726861AbfKUNau (ORCPT
+        id S1726774AbfKUNcW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 08:30:50 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:51829 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726358AbfKUNau (ORCPT
+        Thu, 21 Nov 2019 08:32:22 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:41926 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726546AbfKUNcW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 08:30:50 -0500
-Received: by mail-wm1-f66.google.com with SMTP id g206so3457956wme.1
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 05:30:48 -0800 (PST)
+        Thu, 21 Nov 2019 08:32:22 -0500
+Received: by mail-wr1-f66.google.com with SMTP id b18so4401619wrj.8;
+        Thu, 21 Nov 2019 05:32:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Jo+ES8Xc5JRhOigJYOHMRS0C9xfeoUlcZgoW8bE/klw=;
-        b=WOqsXLW22kr4axDfqEH5dPhsTbkK5xKkbZfYrn+lbxNAo3grp4lJI62h4bBNN6zfqN
-         h0Ezl+mfeIlN4g/wUslgGqCDuY4OzJsQk4qA41onqSgrwJv1c15So7vTaANZiV7xTFel
-         UkFldHazH0+pYJwf9XZpxPpBvII5ZuZUGU08ovJIOY5spfr0DlUwgXDx1buJbVU+D8XZ
-         nAgL359OjUCojdYI+zxZZEUy3ponYMJZxpDPBvppuVzB4aLgpG6voOHT1+z813EeQdES
-         G4QPrletLL3WzD/ncqxZrlNM69ATLY/tEacFoJIIBxuMon8uJRU3U6rz+ftoioaDOCVg
-         wHiw==
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=+C/cs017OrqlyrW+ijapSly866aUVTUkDdweWrl6lFE=;
+        b=eYpeBUR8QAO1EAEZp+JARhcC6Wz+tdkK2dpTM8QAFn18v1PBrRBAoSxPNJNg1Oqs2N
+         P81KObUNS4ZjP3MhCpJHcwXHNMK3WydTf5ILGcCLYVfTwM6mbPkDfEDtS6X+VLConr8P
+         xiNkmSWRev6Ptm424zs55BDDz544q9oVrCEl2OAySET98SjgA7a3T7axjNKqqrv3sgLg
+         kXB/JlLlRQdTSg0xhCcrlcz2pSJzx/bQ3HHuJ6+KK/s8FJkOpFdVPXREISyO7SvD8Zeg
+         ePLeltpyddXJVzWcOvIrTCFS0FoBKJCh9tHXbBfQOEkV/RKupLEo4LnwEda2D2CK7s/G
+         yMTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Jo+ES8Xc5JRhOigJYOHMRS0C9xfeoUlcZgoW8bE/klw=;
-        b=SN0CP/y6IXHnEz964gMLc81X+ps+FP+xmnQitXAZbxRX8ubdDb4tyeTl6m8Y+RN3CG
-         eyYyyQUEXt+vQXCzyYZCx7KFvIankEmCkBH4iUaNTxcCAk0H2zhpV3UaxPfsNHKnhufN
-         CtgI0DJDKk8jH/kE8pIPUsaCBIr/KoEQY5NQKqSESwF4GO0hPrfmm7E6myf/zztPRVxV
-         hmmLgNHkoqgCjfZEg7Inb3pRNq4gOrLpba4me/yqsU7zo4Myj1WZdk6HrWcP/2gUzoCw
-         PVMCZM0kM3i8WKreM5DxOH/hJVatLFOA1k7nBVjeR8fiQrnWgte4Kbq7YtUo1I6be591
-         /hyw==
-X-Gm-Message-State: APjAAAW9le/G7iZ0+aVGUI/C13zSyQc3DUiIuAE3wa82LjOhuatCrff6
-        /usqhRzK6Uqenc47b65kCJNWDw==
-X-Google-Smtp-Source: APXvYqwfKqvBfhToGbmgTDkb4afoB9HGvbkBU0UqNXIj/iBpVqvczE4D3AVjR+XgW01I+HY3OmXE9Q==
-X-Received: by 2002:a7b:c747:: with SMTP id w7mr10380769wmk.62.1574343047861;
-        Thu, 21 Nov 2019 05:30:47 -0800 (PST)
-Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
-        by smtp.gmail.com with ESMTPSA id f67sm2994421wme.16.2019.11.21.05.30.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Nov 2019 05:30:47 -0800 (PST)
-Date:   Thu, 21 Nov 2019 13:30:43 +0000
-From:   Quentin Perret <qperret@google.com>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
-        mingo@kernel.org, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, patrick.bellasi@matbug.net,
-        qais.yousef@arm.com, morten.rasmussen@arm.com
-Subject: Re: [PATCH 3/3] sched/fair: Consider uclamp for "task fits capacity"
- checks
-Message-ID: <20191121133043.GA46904@google.com>
-References: <20191120175533.4672-1-valentin.schneider@arm.com>
- <20191120175533.4672-4-valentin.schneider@arm.com>
- <20191121115602.GA213296@google.com>
- <f7e5dabb-a7e6-d110-abca-de7d4533bcc5@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f7e5dabb-a7e6-d110-abca-de7d4533bcc5@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=+C/cs017OrqlyrW+ijapSly866aUVTUkDdweWrl6lFE=;
+        b=EkzgVI46OnSbyiLK4UlVxOj4OM061tkROOdqPAmxps0rjF8T8rH5BYxHmstyJnGAdt
+         kkv0xQi/g+1QaiacEoxhfQvQrT7AkDA2aCu/vtk0KgGZHPW7/wDfg4EDqMvWScRpwvto
+         EpGjSaVEhFxsrjjZXhXXwTodSZEU1r8uvwrFqA/9rIf9Aas8eX3diIb+/6GX5JjUZ0vG
+         IVdESiKpainZgw6lCGzH1bmGHs1RO+k4zWqr3QWS87t0BuATzePtTrjvE0Zlk4M0yp87
+         2ZVCsyBeCvN7xI2J9DILkhrcgciVEj/9TM6RNF1/WxPsGib1rHuYVROIUUiWCzKuL78F
+         Ws0w==
+X-Gm-Message-State: APjAAAXDRAkdOOb/YgrX1DOfg31PiuXirBZmZyM0k47oJbUf+sPvEJD1
+        1ZsUSfhZp3DPLVPkQghi/g8yGD0T
+X-Google-Smtp-Source: APXvYqxgWF5Wbj1AfbjM8EnG5GkwL4TW9/QfOscwNry6IPTsj+6uG1pih6CfGBhNznygbNEwOUi0JQ==
+X-Received: by 2002:a5d:51c8:: with SMTP id n8mr10632150wrv.302.1574343139817;
+        Thu, 21 Nov 2019 05:32:19 -0800 (PST)
+Received: from 640k.lan ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id m25sm2703329wmi.46.2019.11.21.05.32.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 21 Nov 2019 05:32:19 -0800 (PST)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     stable@vger.kernel.org
+Subject: [PATCH] KVM: nVMX: expose "load IA32_PERF_GLOBAL_CTRL" controls
+Date:   Thu, 21 Nov 2019 14:32:18 +0100
+Message-Id: <1574343138-32015-1-git-send-email-pbonzini@redhat.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday 21 Nov 2019 at 12:56:39 (+0000), Valentin Schneider wrote:
-> > @@ -6274,6 +6274,15 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
-> >  			if (!fits_capacity(util, cpu_cap))
-> >  				continue;
-> >  
-> > +			/*
-> > +			 * Skip CPUs that don't satisfy uclamp requests. Note
-> > +			 * that the above already ensures the CPU has enough
-> > +			 * spare capacity for the task; this is only really for
-> > +			 * uclamp restrictions.
-> > +			 */
-> > +			if (!task_fits_capacity(p, capacity_orig_of(cpu)))
-> > +				continue;
-> 
-> This is partly redundant with the above, I think. What we really want here
-> is just
-> 
-> fits_capacity(uclamp_eff_value(p, UCLAMP_MIN), capacity_orig_of(cpu))
-> 
-> but this would require some inline #ifdeffery.
+These controls have always been supported (or at least have been
+supported for longer than nested_vmx_setup_ctls_msrs has existed),
+so we should advertise them to userspace.
 
-This suggested change lacks the UCLAMP_MAX part, which is a shame
-because this is precisely in the EAS path that we should try and
-down-migrate tasks if they have an appropriate max_clamp. So, your first
-proposal made sense, IMO.
+Cc: stable@vger.kernel.org
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ arch/x86/kvm/vmx/nested.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Another option to avoid the redundancy would be to do something along
-the lines of the totally untested diff below.
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index 4aea7d304beb..4b4ce6a804ff 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -5982,6 +5982,7 @@ void nested_vmx_setup_ctls_msrs(struct nested_vmx_msrs *msrs, u32 ept_caps,
+ #ifdef CONFIG_X86_64
+ 		VM_EXIT_HOST_ADDR_SPACE_SIZE |
+ #endif
++		VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL |
+ 		VM_EXIT_LOAD_IA32_PAT | VM_EXIT_SAVE_IA32_PAT;
+ 	msrs->exit_ctls_high |=
+ 		VM_EXIT_ALWAYSON_WITHOUT_TRUE_MSR |
+@@ -6001,6 +6002,7 @@ void nested_vmx_setup_ctls_msrs(struct nested_vmx_msrs *msrs, u32 ept_caps,
+ #ifdef CONFIG_X86_64
+ 		VM_ENTRY_IA32E_MODE |
+ #endif
++		VM_ENTRY_LOAD_IA32_PERF_GLOBAL_CTRL |
+ 		VM_ENTRY_LOAD_IA32_PAT;
+ 	msrs->entry_ctls_high |=
+ 		(VM_ENTRY_ALWAYSON_WITHOUT_TRUE_MSR | VM_ENTRY_LOAD_IA32_EFER);
+-- 
+1.8.3.1
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 69a81a5709ff..38cb5fe7ba65 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -6372,9 +6372,12 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
-                        if (!cpumask_test_cpu(cpu, p->cpus_ptr))
-                                continue;
- 
--                       /* Skip CPUs that will be overutilized. */
-                        util = cpu_util_next(cpu, p, cpu);
-                        cpu_cap = capacity_of(cpu);
-+                       spare_cap = cpu_cap - util;
-+                       util = uclamp_util_with(cpu_rq(cpu), util, p);
-+
-+                       /* Skip CPUs that will be overutilized. */
-                        if (!fits_capacity(util, cpu_cap))
-                                continue;
- 
-@@ -6389,7 +6392,6 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
-                         * Find the CPU with the maximum spare capacity in
-                         * the performance domain
-                         */
--                       spare_cap = cpu_cap - util;
-                        if (spare_cap > max_spare_cap) {
-                                max_spare_cap = spare_cap;
-                                max_spare_cap_cpu = cpu;
-
-Thoughts ?
-
-Thanks,
-Quentin
