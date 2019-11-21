@@ -2,148 +2,94 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B374DC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 09:42:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84807C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 09:42:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7528820715
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 09:42:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5007E20715
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 09:42:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="XS6pFtak"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Efp7Y13E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbfKUJmX (ORCPT
+        id S1726937AbfKUJm2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 04:42:23 -0500
-Received: from mout.web.de ([212.227.15.4]:43043 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726165AbfKUJmW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 04:42:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1574329241;
-        bh=YIoQTG4bDJnKMejs3T7ERV32Zk7VF12+dw41Hf+WY34=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=XS6pFtakM7xygGm3VV1wbVc2vQcRaQREjrAtuKh5fYK0wPBd9/qFpSNFL4UP4MSl2
-         l5ciExFgOpAUoIelKdDbPj7Nx9PiszZlx4YCy3l16a0Fr3EmWDGyELOAbmwMHeUATa
-         tk8XPQxlwGiazHaA1jEPd2htX45mA8BSHGE5S2pE=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.3] ([78.48.172.213]) by smtp.web.de (mrweb003
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0MJCR8-1iZMZv2XVK-002mUf; Thu, 21
- Nov 2019 10:40:41 +0100
-Subject: Re: [PATCH v4 02/13] exfat: add super block operations
-To:     Namjae Jeon <namjae.jeon@samsung.com>,
-        linux-fsdevel@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>,
-        Daniel Wagner <dwagner@suse.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nikolay Borisov <nborisov@suse.com>,
-        Sungjong Seo <sj1557.seo@samsung.com>,
-        =?UTF-8?Q?Valdis_Kl=c4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        linkinjeon@gmail.com
-References: <20191121052618.31117-1-namjae.jeon@samsung.com>
- <CGME20191121052915epcas1p30f42f12990926942d24aa514ebc437ac@epcas1p3.samsung.com>
- <20191121052618.31117-3-namjae.jeon@samsung.com>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <177371e7-9f52-407c-4f9b-ec9efb15f4a8@web.de>
-Date:   Thu, 21 Nov 2019 10:40:39 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <20191121052618.31117-3-namjae.jeon@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:R1qBJGD04r4jJmDhih46YCu5L63wsz8Wovz29qWssmwhoW69GdB
- +MuYe62XOQNuOduaul5SpxHvEGx5dEN3+WF9wEhrWIXozbjzwnnasvIbQ7FHukmQjZSCHdc
- 1t7WACxEyec2t6SljebB39ELasNathu3S9U7bIpsxZlgUaVs7qyNnFgn/tDq+mQSuPZr5FK
- bVejRx6FelN+klLZPG1Mg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:mJzi07PvMXQ=:nwfIfXIiriwYwJIpQiNnb8
- HWPHXzD191YUsvg+EadngBPE32OKRUgp4Qif3xJi1HbIcPqZkAXhhdNhNVodN62Yw6IYYKcyv
- T6pNQb5rhtmxRTM2fwiG0z9/glH7L08uSeok7NxDcnjHN/5i/kgemrwfIYN9xc7705bPbgD8n
- Cmo29g1WNWmHRaKkWf7zBEPNnmSWpWH5jnCrcTf7QXPG2OUrQoqKakobhEFvTt/RhKB3xwwTw
- 5Qlk/iiLWmMDxqNoUl+IImfjzf5tsDFht7q3PXAjLqWxuY91s3p043uCclo0VPguGPf5j6j6k
- 68a9t0GDwA05YI17LGlpIZjuoBFxtUN6aak+llX4/r2LP4Zdt1kHtF1gedZh4hWjLwZPNW/Ff
- T10Lqw4Fi68ODeNXYdxcQNVrC27nZgmvt5rKcKRwTQmYf2TSJRee7eFtRDvizCoH6fp93XO1x
- b34USURAKiVXgtJ7g/I6NzB50DzjtiMXtgsTv6gc4vm4SeQkAxh6V3sBPm8QlG7efhpf1v+Wa
- oPWoxiz6HYycN09OuSGaEfXE+jJ8s67NnKPN0znKX7SZKQ+ooFh8f+0gwPU3To09mKVPUuz87
- y+dpRYFhbpbOCu4TyLa/y+u9fvGj9ylcmgq7KFXgf1ROPjrtrgfxDbZbKB/vZLOScfmPKfka6
- UCyy0hB4oH3Y6hoIK94Bs4lnJM3b6dzvl/jtsw5nQJETaT8lgRGWIQeDzrA6US3PpMXS3vTdZ
- QMCQ7zMwViYug0RxKaYq+7Hs9uv5yLKKgbLXIbMVAqZ0XUBAE/7X5w72VcV56bnEoPROqlZ9p
- w14yLVhDTtEZwfyMvEU/DxymWso/Gdw4+s3gletEJWQgw1vIqMfYVKE0k78DnPDoKI13sanZ3
- unbq+sdfFfUYEScwRVc6sjjywr2FtUwD+Zl0esnA/5d2BjyeGYypmcjZi9w7ylxQSbmAQ4qWY
- h04X6wzk2CDEXv9JMmye62yz3mbxdsBFCjsrpd937B5eDeWDsl4hV08pCzFqFJnnv8YwDEzQR
- CGiZCpg6EzFInRwF8Ij9o/fRGgq18NdoNg0QpHdLTgU7wTRmy7GeBbryWx3M27hd/kBTdXDYx
- /SiYDnOHE7vCrY5YoEKdV0x6zxrPmBP+3sT4FglgRKl/yfxZnR2jFyuHe2rkGr9XoPHfSva8N
- EoR8AMq3WJDwztbHomyRr/FFGaY8ByQmNB+faDYXrFtfg2GrZ0nPX+5UEIddDeoOaCtvALHZv
- qAHwkaPiNTuSKI4BltMb9ZmDmu5M4Xryx8763n/3ch3xOM820DlxQI0GkUjo=
+        Thu, 21 Nov 2019 04:42:28 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:35158 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726014AbfKUJm1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 04:42:27 -0500
+Received: by mail-pj1-f67.google.com with SMTP id s8so1221462pji.2
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 01:42:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=jlEFsPSyQfklMXQiO7TZHJePMQppbvYfAggjx8UnLsA=;
+        b=Efp7Y13ER5e4QmUg+juqCnZvYUMTXk79HRofQq2tOrAu+hBwf8Je8dhdPzV+Jusvlo
+         xYHHRdVBtgEzzUPTcsszBGHByAtkzx2ovroo5IdpgOqJPTrTWBPM3RVo43+px3BuPx/f
+         o7eJe9assWPAVaC7dCdeXVQIGLD0CSPnpWJoyjnqEiNI4ac6gOZ3vLGgplY933GB6KcB
+         nInBdywVDlHs4LCRZHD2zsAahh6/UwbyQa8kLT00fjcBfvntwCPdRrOc0QpqTR70WsW/
+         Ye4Y5DYyNVz51O5jRH2OjR8xJXTb1f3irB9BZ3upWa7P5HZ12YoDwAi6TDwjtF4vbfYA
+         eTwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=jlEFsPSyQfklMXQiO7TZHJePMQppbvYfAggjx8UnLsA=;
+        b=dTMFeg1IhKBQK4tZc49PIXP0kmt2d93lO4xIEnKwjLscdhITjQnTSbuHIyNeBo1H30
+         34IV1TE6ut5UU2Q3s38ceVjb5mFpSwlJH3xeRh7EwsQNvgCWIwKWhknOkW2yLWRWjTFo
+         CI4x2y6haQSbY2tns71wm35YAYR3XrGoThYV7j6skeOUljjvYTZ2361mozObocXggjvV
+         vv8QMbxt0QsPBHwRZ5bAWQ7ypD3z2faqdXk4RvvmXku4/UluiwmO2Iey2PrL++CrHGWp
+         fPvph+XAiKfE3LQt9MntgFMItsq4613TzIh7zM3p8nwZd/hpvapzPOQmWVCYCMYcj7ok
+         5hzw==
+X-Gm-Message-State: APjAAAWI03CEwpg5DoNgXLhnKLlRto8O57Q74QGc0WwbRLCcQHfaLrlo
+        FzK8Zgf1B4eqyoIg97bPupsIAJuCWFU=
+X-Google-Smtp-Source: APXvYqw3LI8P4btGJVE6BONou86XZ3BBTganShVFEckMPDCoMhjNDN3vIGO8hI4CiijAfmUQupMTgQ==
+X-Received: by 2002:a17:90a:353:: with SMTP id 19mr10763183pjf.128.1574329345665;
+        Thu, 21 Nov 2019 01:42:25 -0800 (PST)
+Received: from localhost.localdomain (220-132-236-182.HINET-IP.hinet.net. [220.132.236.182])
+        by smtp.gmail.com with ESMTPSA id t15sm2457105pgb.0.2019.11.21.01.42.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Nov 2019 01:42:25 -0800 (PST)
+From:   green.hu@gmail.com
+To:     green.hu@gmail.com, linux-kernel@vger.kernel.org,
+        nickhu@andestech.com, arnd@arndb.de
+Cc:     Greentime Hu <greentime.hu@sifive.com>
+Subject: [PATCH] MAINTAINERS: add nds32 maintainer
+Date:   Thu, 21 Nov 2019 17:42:20 +0800
+Message-Id: <20191121094220.1127-1-green.hu@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=E2=80=A6
-> +++ b/fs/exfat/super.c
-=E2=80=A6
-> +static int __init init_exfat_fs(void)
-> +{
-=E2=80=A6
-> +	err =3D -ENOMEM;
-> +	exfat_inode_cachep =3D kmem_cache_create("exfat_inode_cache",
-> +			sizeof(struct exfat_inode_info),
-> +			0, SLAB_RECLAIM_ACCOUNT | SLAB_MEM_SPREAD,
-> +			exfat_inode_init_once);
-> +	if (!exfat_inode_cachep)
-> +		goto shutdown_cache;
+From: Greentime Hu <greentime.hu@sifive.com>
 
-Should such an error code assignment be performed only after a failed func=
-tion call?
+Nick implements many features of nds32 such as perf, power management and
+unaligned access handler. Let's add him as a maintainer.
 
-Regards,
-Markus
+Signed-off-by: Greentime Hu <green.hu@gmail.com>
+---
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e4f170d8bc29..e439bcce21bc 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1040,6 +1040,7 @@ F:	drivers/clk/analogbits/*
+ F:	include/linux/clk/analogbits*
+ 
+ ANDES ARCHITECTURE
++M:	Nick Hu <nickhu@andestech.com>
+ M:	Greentime Hu <green.hu@gmail.com>
+ M:	Vincent Chen <deanbo422@gmail.com>
+ T:	git https://git.kernel.org/pub/scm/linux/kernel/git/greentime/linux.git
+-- 
+2.17.1
+
