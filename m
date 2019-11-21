@@ -2,105 +2,98 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86DD1C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 12:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3667C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 12:27:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59DAE20855
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 12:21:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="qWkfjImq"
+	by mail.kernel.org (Postfix) with ESMTP id 9A8F320855
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 12:27:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726574AbfKUMVb (ORCPT
+        id S1726546AbfKUM1R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 07:21:31 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.83]:18310 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726197AbfKUMVb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 07:21:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1574338887;
-        s=strato-dkim-0002; d=xenosoft.de;
-        h=In-Reply-To:Date:Message-ID:References:Cc:To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=bshxsySaQL89IBapcTw7rIhhAV9yvH+q6m8w6XoYDuE=;
-        b=qWkfjImqiavh2xJ9eMBxh9TYkI4rfv9nL+8iB8jB2fsFfmTwnNGVjFkk5gy9EF+lH5
-        UnnzuHZ4RMfspzN5Zk9Y31eSrtfF/LgmMF6pMxoD/oEDeClaOLgiGBrD2aXsUHl3vr6I
-        l7l+8gZXMKjhZCwZft+Elt0B2ENssC8YMCDjTGfyZn8Io9jBzYF86iPlxn8iWZpIgZ0p
-        wqKnd+v4FJxdWfauSJzoD2Ic3GoCL9jcSUddmDzZgwMv4gqnKOB5SYsqPq5JJdM10dtJ
-        Cl3H5HYpqzqlrMrp1wD6vYQnAPXaUbOXc+pNJDPJ097asatlSv1ARmKa3m7ChwkuVYIg
-        h1rQ==
-X-RZG-AUTH: ":L2QefEenb+UdBJSdRCXu93KJ1bmSGnhMdmOod1DhGM4l4Hio94KKxRySfLxnHfJ+Dkjp5DdBJSrwuuqxvPgBcsBrTF1qGB6TwVFx4Pq4s7A="
-X-RZG-CLASS-ID: mo00
-Received: from [IPv6:2a02:8109:89c0:ebfc:bd57:573a:d50f:b5]
-        by smtp.strato.de (RZmta 44.29.0 AUTH)
-        with ESMTPSA id q007c8vALCLOiWS
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Thu, 21 Nov 2019 13:21:24 +0100 (CET)
-Subject: Re: Bug 205201 - Booting halts if Dawicontrol DC-2976 UW SCSI board
- installed, unless RAM size limited to 3500M
-From:   Christian Zigotzky <chzigotzky@xenosoft.de>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        paulus@samba.org, darren@stevens-zone.net,
-        "contact@a-eon.com" <contact@a-eon.com>, rtd2@xtra.co.nz,
-        mad skateman <madskateman@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        nsaenzjulienne@suse.de
-References: <F1EBB706-73DF-430E-9020-C214EC8ED5DA@xenosoft.de>
- <20191121072943.GA24024@lst.de>
- <dbde2252-035e-6183-7897-43348e60647e@xenosoft.de>
-Message-ID: <6eec5c42-019c-a988-fc2a-cb804194683d@xenosoft.de>
-Date:   Thu, 21 Nov 2019 13:21:23 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Thu, 21 Nov 2019 07:27:17 -0500
+Received: from relay.sw.ru ([185.231.240.75]:49600 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726197AbfKUM1R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 07:27:17 -0500
+Received: from dhcp-172-16-25-5.sw.ru ([172.16.25.5])
+        by relay.sw.ru with esmtp (Exim 4.92.3)
+        (envelope-from <aryabinin@virtuozzo.com>)
+        id 1iXlXu-00015y-97; Thu, 21 Nov 2019 15:26:50 +0300
+Subject: Re: [PATCH v4 1/2] kasan: detect negative size in memory operation
+ function
+To:     Walter Wu <walter-zh.wu@mediatek.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     kasan-dev@googlegroups.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        linux-mediatek@lists.infradead.org
+References: <20191112065302.7015-1-walter-zh.wu@mediatek.com>
+From:   Andrey Ryabinin <aryabinin@virtuozzo.com>
+Message-ID: <040479c3-6f96-91c6-1b1a-9f3e947dac06@virtuozzo.com>
+Date:   Thu, 21 Nov 2019 15:26:38 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <dbde2252-035e-6183-7897-43348e60647e@xenosoft.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: de-DE
+In-Reply-To: <20191112065302.7015-1-walter-zh.wu@mediatek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21 November 2019 at 01:16 pm, Christian Zigotzky wrote:
-> On 21 November 2019 at 08:29 am, Christoph Hellwig wrote:
->> On Sat, Nov 16, 2019 at 08:06:05AM +0100, Christian Zigotzky wrote:
->>> /*
->>>   *  DMA addressing mode.
->>>   *
->>>   *  0 : 32 bit addressing for all chips.
->>>   *  1 : 40 bit addressing when supported by chip.
->>>   *  2 : 64 bit addressing when supported by chip,
->>>   *      limited to 16 segments of 4 GB -> 64 GB max.
->>>   */
->>> #define   SYM_CONF_DMA_ADDRESSING_MODE 
->>> CONFIG_SCSI_SYM53C8XX_DMA_ADDRESSING_MODE
->>>
->>> Cyrus config:
->>>
->>> CONFIG_SCSI_SYM53C8XX_DMA_ADDRESSING_MODE=1
->>>
->>> I will configure “0 : 32 bit addressing for all chips” for the RC8. 
->>> Maybe this is the solution.
->> 0 means you are going to do bounce buffering a lot, which seems
->> generally like a bad idea.
->>
->> But why are we talking about the sym53c8xx driver now?  The last issue
->> you reported was about video4linux allocations.
->>
-> Both drivers have the same problem. They don't work if we have more 
-> than 3.5GB RAM. I try to find a solution until you have a good 
-> solution. I have already a solution for V4L but I still need one for 
-> the sym53c8xx driver.
-OK, you mean that "0" is a bad idea but maybe it works until you have a 
-solution. ;-)
+
+
+On 11/12/19 9:53 AM, Walter Wu wrote:
+
+> diff --git a/mm/kasan/common.c b/mm/kasan/common.c
+> index 6814d6d6a023..4bfce0af881f 100644
+> --- a/mm/kasan/common.c
+> +++ b/mm/kasan/common.c
+> @@ -102,7 +102,8 @@ EXPORT_SYMBOL(__kasan_check_write);
+>  #undef memset
+>  void *memset(void *addr, int c, size_t len)
+>  {
+> -	check_memory_region((unsigned long)addr, len, true, _RET_IP_);
+> +	if (!check_memory_region((unsigned long)addr, len, true, _RET_IP_))
+> +		return NULL;
+>  
+>  	return __memset(addr, c, len);
+>  }
+> @@ -110,8 +111,9 @@ void *memset(void *addr, int c, size_t len)
+>  #undef memmove
+>  void *memmove(void *dest, const void *src, size_t len)
+>  {
+> -	check_memory_region((unsigned long)src, len, false, _RET_IP_);
+> -	check_memory_region((unsigned long)dest, len, true, _RET_IP_);
+> +	if (!check_memory_region((unsigned long)src, len, false, _RET_IP_) ||
+> +	    !check_memory_region((unsigned long)dest, len, true, _RET_IP_))
+> +		return NULL;
+>  
+>  	return __memmove(dest, src, len);
+>  }
+> @@ -119,8 +121,9 @@ void *memmove(void *dest, const void *src, size_t len)
+>  #undef memcpy
+>  void *memcpy(void *dest, const void *src, size_t len)
+>  {
+> -	check_memory_region((unsigned long)src, len, false, _RET_IP_);
+> -	check_memory_region((unsigned long)dest, len, true, _RET_IP_);
+> +	if (!check_memory_region((unsigned long)src, len, false, _RET_IP_) ||
+> +	    !check_memory_region((unsigned long)dest, len, true, _RET_IP_))
+> +		return NULL;
+>  
+
+I realized that we are going a wrong direction here. Entirely skipping mem*() operation on any
+poisoned shadow value might only make things worse. Some bugs just don't have any serious consequences,
+but skipping the mem*() ops entirely might introduce such consequences, which wouldn't happen otherwise.
+
+So let's keep this code as this, no need to check the result of check_memory_region().
+
 
