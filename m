@@ -2,104 +2,117 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03983C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 06:12:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD699C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 06:14:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C580520748
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 06:12:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59C622084D
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 06:14:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="PSMYM+fm"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="bYt8f7gv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726333AbfKUGMz (ORCPT
+        id S1726522AbfKUGOv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 01:12:55 -0500
-Received: from forward104p.mail.yandex.net ([77.88.28.107]:42803 "EHLO
-        forward104p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725842AbfKUGMy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 01:12:54 -0500
-Received: from mxback24g.mail.yandex.net (mxback24g.mail.yandex.net [IPv6:2a02:6b8:0:1472:2741:0:8b7:324])
-        by forward104p.mail.yandex.net (Yandex) with ESMTP id ED4604B02103;
-        Thu, 21 Nov 2019 09:12:50 +0300 (MSK)
-Received: from myt2-853c0a8cbfab.qloud-c.yandex.net (myt2-853c0a8cbfab.qloud-c.yandex.net [2a02:6b8:c00:1796:0:640:853c:a8c])
-        by mxback24g.mail.yandex.net (mxback/Yandex) with ESMTP id hgCGn180GH-CnomQ2ex;
-        Thu, 21 Nov 2019 09:12:50 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1574316770;
-        bh=PXo65QxMlWhp/UDTIBmzqTf/sEd8JUruM/q7kIX5HZI=;
-        h=From:To:Subject:CC:References:Date:In-Reply-To:Message-ID;
-        b=PSMYM+fm7kL4yAFJPPDp2EMytG5DXU8lH/m5vYOkDBR3cOtKP3KzOw9sJSg4SsGv8
-         vKPrO4+INszoXlZB+bJjbZgSqHX/vj9XVYfZDGbm0RwteKDgZq2310nDEVZHgx6oTu
-         0t4PsUSxF/Zp2ui4sh81lLNuzzVGumxHSL3p6K/c=
-Authentication-Results: mxback24g.mail.yandex.net; dkim=pass header.i=@flygoat.com
-Received: by myt2-853c0a8cbfab.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id ELM35Wy97q-Cl1CZMtN;
-        Thu, 21 Nov 2019 09:12:48 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Date:   Thu, 21 Nov 2019 14:12:40 +0800
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20191121014156.25618-1-liulichao@loongson.cn>
-References: <20191121014156.25618-1-liulichao@loongson.cn>
+        Thu, 21 Nov 2019 01:14:51 -0500
+Received: from ozlabs.org ([203.11.71.1]:57627 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725842AbfKUGOv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 01:14:51 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47JTmm1znCz9sPL;
+        Thu, 21 Nov 2019 17:14:48 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1574316888;
+        bh=jdKLsx29Q9L7/ElLtLnnBgAqSCKsEsGccFSh1cgYUzQ=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=bYt8f7gvy84TtwIJFpoHoCsN1Ip6mXbPnA3PKhBuLT6ZDv9SABp/q+fdL2ju85J8S
+         Unr/SuCxT0jHSOFG1/rcDMDoLCv+0isuRc/8vXUOH691JLFpbuto2U1K2pb7Qh8C9G
+         phdT9SUlqtQWry5HZkg4RnA3bOCkoF47YbNzZjSy2hxyFP8W227en1MMQz4q7xziMr
+         AKQMbY6db0esZNwhFtUvmIHVEFo7NoDB5Xz52x9RFVtTlcMboj5mdWneAeCHIMdudV
+         fRoEK5FDmMUbxXJ9+adoXYs6ipY5sBDtp++6B3x4bWChN70af3/OfG3VvfwZPyBbGZ
+         w4Hd8xt01XjLw==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>, segher@kernel.crashing.org
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v4 2/2] powerpc/irq: inline call_do_irq() and call_do_softirq()
+In-Reply-To: <5ca6639b7c1c21ee4b4138b7cfb31d6245c4195c.1570684298.git.christophe.leroy@c-s.fr>
+References: <f12fb9a6cc52d83ee9ddf15a36ee12ac77e6379f.1570684298.git.christophe.leroy@c-s.fr> <5ca6639b7c1c21ee4b4138b7cfb31d6245c4195c.1570684298.git.christophe.leroy@c-s.fr>
+Date:   Thu, 21 Nov 2019 17:14:45 +1100
+Message-ID: <877e3tbvsa.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] Use the macro CONFIG_I8259 to control whether to include the asm/i8259.h header file.
-To:     Lichao Liu <liulichao@loongson.cn>, Huacai Chen <chenhc@lemote.com>
-CC:     Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        David Howells <dhowells@redhat.com>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Message-ID: <61337744-0502-4245-8129-535B9125939C@flygoat.com>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Christophe Leroy <christophe.leroy@c-s.fr> writes:
 
-
-=E4=BA=8E 2019=E5=B9=B411=E6=9C=8821=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=88=
-9:41:56, Lichao Liu <liulichao@loongson=2Ecn> =E5=86=99=E5=88=B0:
->Not all platform config CONFIG_I8259, So Use the macro CONFIG_I8259
->to control whether to include the asm/i8259=2Eh header file=2E
+> call_do_irq() and call_do_softirq() are quite similar on PPC32 and
+> PPC64 and are simple enough to be worth inlining.
 >
->Signed-off-by: Lichao Liu <liulichao@loongson=2Ecn>
-
-Acked-by: Jiaxun Yang <jiaxun=2Eyang@flygoat=2Ecom>
-
-I'm glad to see Loongson guys finally get here=2E
-
-I will send v3 of my previous "modernize" set=2E
-Which will also refactor interrupt part=2E=20
-Do you have any comments based on v2 [1]?
-
-[1]: https://patchwork=2Ekernel=2Eorg/cover/11133237/
->---
-> arch/mips/loongson64/common/pm=2Ec | 2 ++
-> 1 file changed, 2 insertions(+)
+> Inlining them avoids an mflr/mtlr pair plus a save/reload on stack.
 >
->diff --git a/arch/mips/loongson64/common/pm=2Ec
->b/arch/mips/loongson64/common/pm=2Ec
->index b8aed878d=2E=2Ebc619e4d0 100644
->--- a/arch/mips/loongson64/common/pm=2Ec
->+++ b/arch/mips/loongson64/common/pm=2Ec
->@@ -9,7 +9,9 @@
-> #include <linux/interrupt=2Eh>
-> #include <linux/pm=2Eh>
->=20
->+#ifdef CONFIG_I8259
-> #include <asm/i8259=2Eh>
->+#endif
-> #include <asm/mipsregs=2Eh>
->=20
-> #include <loongson=2Eh>
+> This is inspired from S390 arch. Several other arches do more or
+> less the same. The way sparc arch does seems odd thought.
+>
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> Reviewed-by: Segher Boessenkool <segher@kernel.crashing.org>
+>
+> ---
+> v2: no change.
+> v3: no change.
+> v4:
+> - comment reminding the purpose of the inline asm block.
+> - added r2 as clobbered reg
 
---=20
-Jiaxun Yang
+That breaks 64-bit with GCC9:
+
+  arch/powerpc/kernel/irq.c: In function 'do_IRQ':
+  arch/powerpc/kernel/irq.c:650:2: error: PIC register clobbered by 'r2' in 'asm'
+    650 |  asm volatile(
+        |  ^~~
+  arch/powerpc/kernel/irq.c: In function 'do_softirq_own_stack':
+  arch/powerpc/kernel/irq.c:711:2: error: PIC register clobbered by 'r2' in 'asm'
+    711 |  asm volatile(
+        |  ^~~
+
+
+> diff --git a/arch/powerpc/kernel/irq.c b/arch/powerpc/kernel/irq.c
+> index 04204be49577..d62fe18405a0 100644
+> --- a/arch/powerpc/kernel/irq.c
+> +++ b/arch/powerpc/kernel/irq.c
+> @@ -642,6 +642,22 @@ void __do_irq(struct pt_regs *regs)
+>  	irq_exit();
+>  }
+>  
+> +static inline void call_do_irq(struct pt_regs *regs, void *sp)
+> +{
+> +	register unsigned long r3 asm("r3") = (unsigned long)regs;
+> +
+> +	/* Temporarily switch r1 to sp, call __do_irq() then restore r1 */
+> +	asm volatile(
+> +		"	"PPC_STLU"	1, %2(%1);\n"
+> +		"	mr		1, %1;\n"
+> +		"	bl		%3;\n"
+> +		"	"PPC_LL"	1, 0(1);\n" :
+> +		"+r"(r3) :
+> +		"b"(sp), "i"(THREAD_SIZE - STACK_FRAME_OVERHEAD), "i"(__do_irq) :
+> +		"lr", "xer", "ctr", "memory", "cr0", "cr1", "cr5", "cr6", "cr7",
+> +		"r0", "r2", "r4", "r5", "r6", "r7", "r8", "r9", "r10", "r11", "r12");
+> +}
+
+If we add a nop after the bl, so the linker could insert a TOC restore,
+then I don't think there's any circumstance under which we expect this
+to actually clobber r2, is there?
+
+cheers
