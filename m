@@ -2,114 +2,148 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67AD0C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 23:51:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65FB3C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 23:52:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D9B7206D7
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 23:51:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wT/BEegA"
+	by mail.kernel.org (Postfix) with ESMTP id 4694A2063A
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 23:52:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726532AbfKUXvn (ORCPT
+        id S1726613AbfKUXwU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 18:51:43 -0500
-Received: from mail-pg1-f201.google.com ([209.85.215.201]:43930 "EHLO
-        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725956AbfKUXvm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 18:51:42 -0500
-Received: by mail-pg1-f201.google.com with SMTP id k7so2850636pgq.10
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 15:51:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=1T1UpCeydKo8c69iE696L0TyG6TBO0S0rujCmrpRiXc=;
-        b=wT/BEegA59gkz+IDqsv8EwP2H4rvwnrvlBG8zAXZ25M2YldyjfigLKYpyqHpT379WL
-         Lopo5fVUW4NUMEEZrrIc4kJeyzURU5YrHZm4wHyOV7h8d44mADXqmM9htGMNvN1JZq7B
-         I5PejRWhV4WPrJ+0sw979iln17jtBT/UcYKtU/Fl4JAM0jx9rOsvwYJ5jzVdPtsKLyB4
-         EjtaMD2RQBx7xP5P9W3o9M0dZ/r+dy06zNVYGLiRw1EUrBx6q/NSvJgIdQYjWlPXmLYi
-         s3LJHQrg3JQzvedPtiLScLol2lPo09BNNGKBxLy6+zAlEKyEaPD4NFgrHRdo24Lt3jni
-         ezJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=1T1UpCeydKo8c69iE696L0TyG6TBO0S0rujCmrpRiXc=;
-        b=ftRZGAJqkxEtloYYdvQyPKj9xP0Mc9RIsTlrHwkoVx0Nv0h1De93jGVUJuAfBSoE/t
-         4ClXwiLSVgv4d7AWpFcHHiIoBATR1zOvMgQZtiiIwaVtXV4apSaQoKmaqrY26ls5AH0p
-         NUzn5CcDnGFSIBqezxFg0pekKiUUqUvIarOl2OA9Gara1mta1d2RjTRxd1pE4r3SacyL
-         Cj7wcYVPzZTTrKiRaaRTJClwKdZcw4peo7K3Df1RdwApC9iVM6Kg9HBw9J0rWoFRLAgl
-         EOiw80R4YSsRZTKzdkSymACr9IlSxkMqJ7/GwepIgGFTEtGiCAnS9q0U0sBVqd0Ep8XH
-         gx7w==
-X-Gm-Message-State: APjAAAUUUnFWSn2P/gY4S3US4swazqPy4cHYaTq+Lw8pa8SiAhEPXJ0i
-        BrQ1IK6/7vv2ZGoCh4CpneQx9a8ojOV5Zg==
-X-Google-Smtp-Source: APXvYqxqDObiKuAtQd6VNMB5jJg4dvQfChOpJvo0SZqGPpVKts3oLqyq/Kj/rY6/KKnc3g5dRMYeF9eD/qV48Q==
-X-Received: by 2002:a63:6cc8:: with SMTP id h191mr12813226pgc.345.1574380301840;
- Thu, 21 Nov 2019 15:51:41 -0800 (PST)
-Date:   Thu, 21 Nov 2019 15:50:58 -0800
-Message-Id: <20191121235058.21653-1-davidgow@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
-Subject: [PATCH kselftest/test] kunit: Always print actual pointer values in asserts
-From:   David Gow <davidgow@google.com>
-To:     Brendan Higgins <brendanhiggins@google.com>, shuah@kernel.org
-Cc:     linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, David Gow <davidgow@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 21 Nov 2019 18:52:20 -0500
+Received: from mga04.intel.com ([192.55.52.120]:11589 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725956AbfKUXwU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 18:52:20 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Nov 2019 15:52:19 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,227,1571727600"; 
+   d="asc'?scan'208";a="197434268"
+Received: from lmhaganx-mobl.amr.corp.intel.com ([10.251.138.123])
+  by orsmga007.jf.intel.com with ESMTP; 21 Nov 2019 15:52:18 -0800
+Message-ID: <e5273fa943335bbc1300360d7944c66d57ea5e27.camel@intel.com>
+Subject: Re: [PATCH 4.19 063/422] ice: Prevent control queue operations
+ during reset
+From:   Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+To:     Pavel Machek <pavel@denx.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>,
+        Tony Brelinski <tonyx.brelinski@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Date:   Thu, 21 Nov 2019 15:52:18 -0800
+In-Reply-To: <20191120214848.GA13271@duo.ucw.cz>
+References: <20191119051400.261610025@linuxfoundation.org>
+         <20191119051403.783565468@linuxfoundation.org>
+         <20191120214848.GA13271@duo.ucw.cz>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+        protocol="application/pgp-signature"; boundary="=-2ZlOwiajNpxv6Imgsesg"
+User-Agent: Evolution 3.34.1 (3.34.1-1.fc31) 
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-KUnit assertions and expectations will print the values being tested. If
-these are pointers (e.g., KUNIT_EXPECT_PTR_EQ(test, a, b)), these
-pointers are currently printed with the %pK format specifier, which -- to
-prevent information leaks which may compromise, e.g., ASLR -- are often
-either hashed or replaced with ____ptrval____ or similar, making debugging
-tests difficult.
 
-By replacing %pK with %px as Documentation/core-api/printk-formats.rst
-suggests, we disable this security feature for KUnit assertions and
-expectations, allowing the actual pointer values to be printed. Given
-that KUnit is not intended for use in production kernels, and the
-pointers are only printed on failing tests, this seems like a worthwhile
-tradeoff.
+--=-2ZlOwiajNpxv6Imgsesg
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: David Gow <davidgow@google.com>
----
-This seems like the best way of solving this problem to me, but if
-anyone has a better solution I'd love to hear it.
+On Wed, 2019-11-20 at 22:48 +0100, Pavel Machek wrote:
+> Hi!
+> > [ Upstream commit fd2a981777d911b2e94cdec50779c85c58a0dec9 ]
+> >=20
+> > Once reset is issued, the driver loses all control queue interfaces.
+> > Exercising control queue operations during reset is incorrect and
+> > may result in long timeouts.
+> >=20
+> > This patch introduces a new field 'reset_ongoing' in the hw structure.
+> > This is set to 1 by the core driver when it receives a reset interrupt.
+> > ice_sq_send_cmd checks reset_ongoing before actually issuing the
+> > control
+> > queue operation. If a reset is in progress, it returns a soft error
+> > code
+> > (ICE_ERR_RESET_PENDING) to the caller. The caller may or may not have
+> > to
+> > take any action based on this return. Once the driver knows that the
+> > reset is done, it has to set reset_ongoing back to 0. This will allow
+> > control queue operations to be posted to the hardware again.
+> >=20
+> > This "bail out" logic was specifically added to ice_sq_send_cmd (which
+> > is pretty low level function) so that we have one solution in one place
+> > that applies to all types of control queues.
+>=20
+> I don't think this is suitable for stable. Would driver maintainers
+> comment?
 
-Note also that this does trigger two checkpatch.pl warnings, which warn
-that the change will potentially cause the kernel memory layout to be
-exposed. Since that's the whole point of the change, they probably
-sohuld stay there.
+Actually this change is fine for stable.
 
- lib/kunit/assert.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> > +			 *
+> > +			 * As this is the start of the reset/rebuild cycle,
+> > set
+> > +			 * both to indicate that.
+> > +			 */
+> > +			hw->reset_ongoing =3D true;
+> >  		}
+> >  	}
+>=20
+> This should be =3D 1, since variable is u8...
 
-diff --git a/lib/kunit/assert.c b/lib/kunit/assert.c
-index 86013d4cf891..a87960409bd4 100644
---- a/lib/kunit/assert.c
-+++ b/lib/kunit/assert.c
-@@ -110,10 +110,10 @@ void kunit_binary_ptr_assert_format(const struct kunit_assert *assert,
- 			 binary_assert->left_text,
- 			 binary_assert->operation,
- 			 binary_assert->right_text);
--	string_stream_add(stream, "\t\t%s == %pK\n",
-+	string_stream_add(stream, "\t\t%s == %px\n",
- 			 binary_assert->left_text,
- 			 binary_assert->left_value);
--	string_stream_add(stream, "\t\t%s == %pK",
-+	string_stream_add(stream, "\t\t%s == %px",
- 			 binary_assert->right_text,
- 			 binary_assert->right_value);
- 	kunit_assert_print_msg(assert, stream);
--- 
-2.24.0.432.g9d3f5f5b63-goog
+This variable is treated as a bool, and since bools vary depending on
+architecture, Linus has stated that using a u8 would be more consistent
+across the vary architectures.  So we have used u8's for variables treated
+as bools.
+
+In addition, there has been no issue assigning "true" or "false" to a u8.
+
+>=20
+> Best regards,
+> 									Pav
+> el     	      =20
+>=20
+> > +++ b/drivers/net/ethernet/intel/ice/ice_type.h
+> > @@ -293,6 +293,7 @@ struct ice_hw {
+> >  	u8 sw_entry_point_layer;
+> > =20
+> >  	u8 evb_veb;		/* true for VEB, false for VEPA */
+> > +	u8 reset_ongoing;	/* true if hw is in reset, false otherwise */
+> >  	struct ice_bus_info bus;
+> >  	struct ice_nvm_info nvm;
+> >  	struct ice_hw_dev_caps dev_caps;	/* device capabilities */
+> > --=20
+
+
+--=-2ZlOwiajNpxv6Imgsesg
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEiTyZWz+nnTrOJ1LZ5W/vlVpL7c4FAl3XIzIACgkQ5W/vlVpL
+7c6pMA/+LBAQ7x99yucQ9+nNxAkaE2uLli0g0MRBmLb9G3Jphymle2pRNfQ1lL+o
+iQMo9BnFm7K5cOVBp3/sNG6BuyKv7Oa0TR5mQKHDo9pyRH5wFaKE8JsxErBYaRgr
+9qIrrh33V1CqEwNB9hA/gWRUhFcVymdkozojvyjvtYICLahMIEMw94mbJqkhXYps
+BEERDn+w+E94bKTcTdkxs9o3zv0bPCYEwDcwnm9sYRRqcxQeOqmDTRLxqk3IzztH
+inFFKkTrcpTf/4dhv3gZytjooFPD5zyBRdrtZv57dWVzqNcOhXl3xOABLZl/Xskx
+2v3kfcvudSio52RZzSNzrTQEngRz37kyDFVsiSLHibvt4vLnlMeBiluBB6gJQOeb
+yjH+laB/W5d/2VCT/w5ps8vFw0TZs20IUGvdG4R5Se88IqyMF9JF4rX81hNS3+mz
+Mv1JadysPakfMVKQ5tipFRRykuGiUfJKjKraMDHoLPD37QhOkG0RHdb5CtzycZE9
+w1bABOiBh2PEZnDUvJQ1RCNSjU5hptc3NYsmMMeX/PnFNmZegBUkp+vGxMglM4Dn
+mk+w7Htj2YdOTsGizcZE4vXIEwTwwdxcS0Cc04ygc+NBu528RUQLC3H00KeR0FsB
+KiZPh5DgHI/CmwLmFSGeaavvK8urPyw7d+No4r+LMhYpeL1ie8g=
+=qE4m
+-----END PGP SIGNATURE-----
+
+--=-2ZlOwiajNpxv6Imgsesg--
 
