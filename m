@@ -2,144 +2,111 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84984C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:30:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 036D9C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:32:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BC9E20898
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:30:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lg4JgcZK"
+	by mail.kernel.org (Postfix) with ESMTP id CEC4220898
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:32:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574335931;
+	bh=ojiuDFiYTw8I726hFOqmkuUZ2H/Y8Yt0mV9sqr8BO0o=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Ol6zAmgjprRhJ0MgmrBeYhBxPRtMFKx/13WTniRvaKBvN2fk1U112CZOlwUDk1TvX
+	 zwj56JvOt8AoDy7xhTBZQD0BlQNWBS545KWsx+eAdjTGaLEvWvwgaq4Jr+pXkqt8tW
+	 94gmq+wFtXANmdWCbR/lNsjMjkme2UwzuGTggNFU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726765AbfKULao (ORCPT
+        id S1726757AbfKULcK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 06:30:44 -0500
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:37987 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726655AbfKULam (ORCPT
+        Thu, 21 Nov 2019 06:32:10 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:36589 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726170AbfKULcK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 06:30:42 -0500
-Received: by mail-vs1-f68.google.com with SMTP id u18so2008672vsg.5
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 03:30:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TzOo2JV6kkqnrwHkbUSJuC+75l0A5IKM+uRyHywuXgo=;
-        b=lg4JgcZK7t2R0U9FLgUevhlhy7bVd0uQOQbZ4FU/lBtzXd/Oe0ED7vvfm1wvlaHer3
-         swUXak8Mp79XDGOXu3i/EslwDffIo0voi3c3icVXgsFPaSVRwrKOttt42XJba2hionhC
-         1Hk3DX9a3lazZ6iu4L60+jNWjOusc+WkPQBo+Le3GPYbUEMKz9yEKSh4RB7iTBvA/3Sy
-         s9USQXzn4lNKgwvl7WR0/+JlRPv4ytRumvQ9cbf8UDEYbNrsNoDfC/A/GToOD7ELC/Z7
-         A1pzL3o9mIogCGh2Vz4fbrJCXjZ+fnCMFyqKczspqNnwVhwbX/cdn7qQzxwqnJoL6YBn
-         O40A==
+        Thu, 21 Nov 2019 06:32:10 -0500
+Received: by mail-ot1-f68.google.com with SMTP id f10so2620315oto.3;
+        Thu, 21 Nov 2019 03:32:09 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=TzOo2JV6kkqnrwHkbUSJuC+75l0A5IKM+uRyHywuXgo=;
-        b=rM22V04oDvRWQECp7t1P3a1br2hRzcqbzJp8Xwcc24Pf2UCNRzRepU8lhE58VWpCQ+
-         eEr5Dz00v+M79WJSMZx3ALKdetPoq9zj7ld0f2SyZykx23OVspOHRvnYxGaf2XUoS1zw
-         P9Z9Kj67IJ2PmBRs2BJQoRhbN/WlpVDZq/n4xUsbeLBQ6TvzawY1qU9BRQ1C1F5XuAUf
-         +XZs0ihuw4gp5g0x/5667nBa8DAdqpn2Mr0McEpwjhfBzl94J+lXjDFpKqCRwZ426C1v
-         +0kg9UIsl9iy5QhJmYmu+Ap+uvDVydmVk7mVg5g98lfBe/GlXaJsJSXNnY7C7IslHUD8
-         Nhkw==
-X-Gm-Message-State: APjAAAVAEQTu2DCEDHwFu1u30eM+cMGHhIFHTX6apuoTyZRcq5Ob+GRq
-        SpCNJNiKbaa/chxN1jWTWIReyu58c9Hhyl/mfsOeGg==
-X-Google-Smtp-Source: APXvYqyi/CNSLQC7kcZJtahFRlILYFYUIVR4PapSxddBUrS44erqpLciYYxGapgJhka0MHjM+RpzfqX/W4c1YbQcBh8=
-X-Received: by 2002:a67:ef4e:: with SMTP id k14mr5559804vsr.165.1574335841550;
- Thu, 21 Nov 2019 03:30:41 -0800 (PST)
+        bh=f3k4Aw80bkAO/6lAcOnkrOVE0ZhJFwvrlGzBabrShVQ=;
+        b=Kv1F6bEUhx6XQilNyRp5ccDX97+jKHY04dGPtgnXkkNmN1nLCsZet1HBp6NxiFTCog
+         LFD0D3/jhQrn3W+nMSAx+K7SiH3b7BUp6boLA4Uils2pfjlE4o3TCsknqqVYMD80hAw7
+         BgDVuUgWkXW8nOUM/tAavm4mCsW1TeHPJdU2VqLKkwazZ27TFUIrsjssF3fNVThU0pJ5
+         z1qjBToEZMIIYuTX9F8ubmlrBHK+Bxvn4ujWxg5FuoMCbvgzUJW6nWLHA1u1F2dzaXfj
+         lT85jmnalnuQ5yGCQPiD0paYorzZqOJvKqVsibm9e8jPhpJEuFcMbPpupdgK2n30PZq2
+         srpQ==
+X-Gm-Message-State: APjAAAXqIg6oIv7uJUPnZvBy0m/fv6zw9IXiur2wEVxHpIDmdM6TuYmt
+        N3ph8zTqmHJE/KZz1+H9V+mLPUHvkRiGQdB9FTY=
+X-Google-Smtp-Source: APXvYqyCvKoq/cebzpfoCwlOfAUaYaxdKEecqatFjILqmn5JZJGCEgUqfxdBRzz6K72JW/bHFhwWpS917aNaWsJQbzY=
+X-Received: by 2002:a9d:4c85:: with SMTP id m5mr5838389otf.118.1574335929309;
+ Thu, 21 Nov 2019 03:32:09 -0800 (PST)
 MIME-Version: 1.0
-References: <20191120134101.14738-1-krzk@kernel.org>
-In-Reply-To: <20191120134101.14738-1-krzk@kernel.org>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 21 Nov 2019 12:30:05 +0100
-Message-ID: <CAPDyKFohHYuqu=a4PJMqPq6ydNGcVjVMotyiSniF=mhZQ-qa4Q@mail.gmail.com>
-Subject: Re: [PATCH] memstick: Fix Kconfig indentation
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Maxim Levitsky <maximlevitsky@gmail.com>,
-        Alex Dubov <oakad@yahoo.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+References: <CACO55tscD_96jUVts+MTAUsCt-fZx4O5kyhRKoo4mKoC84io8A@mail.gmail.com>
+ <20191120120913.GE11621@lahna.fi.intel.com> <CACO55tsHy6yZQZ8PkdW8iPA7+uc5rdcEwRJwYEQ3iqu85F8Sqg@mail.gmail.com>
+ <20191120151542.GH11621@lahna.fi.intel.com> <CACO55tvo3rbPtYJcioEgXCEQqVXcVAm-iowr9Nim=bgTdMjgLw@mail.gmail.com>
+ <20191120155301.GL11621@lahna.fi.intel.com> <20191120162306.GM11621@lahna.fi.intel.com>
+ <CACO55tsvTG2E7_3nn1sTdPQXzxaZA96k+gmSBBXjPvei6v=kxg@mail.gmail.com>
+ <20191121101423.GQ11621@lahna.fi.intel.com> <CAJZ5v0hAgz4Fu=83AJE2PYUsi+Jk=Lrr4MNp5ySA9yY=3wr5rg@mail.gmail.com>
+ <20191121111739.GT11621@lahna.fi.intel.com>
+In-Reply-To: <20191121111739.GT11621@lahna.fi.intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 21 Nov 2019 12:31:57 +0100
+Message-ID: <CAJZ5v0h=c2d6G04kPnLzTLZ6Xn8bLfg3=F73Dz+o6fQ3w4tfPQ@mail.gmail.com>
+Subject: Re: [PATCH v4] pci: prevent putting nvidia GPUs into lower device
+ states on certain intel bridges
+To:     Mika Westerberg <mika.westerberg@intel.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Karol Herbst <kherbst@redhat.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lyude Paul <lyude@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        Dave Airlie <airlied@gmail.com>,
+        Mario Limonciello <Mario.Limonciello@dell.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 20 Nov 2019 at 14:41, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+On Thu, Nov 21, 2019 at 12:17 PM Mika Westerberg
+<mika.westerberg@intel.com> wrote:
 >
-> Adjust indentation from spaces to tab (+optional two spaces) as in
-> coding style with command like:
->         $ sed -e 's/^        /\t/' -i */Kconfig
+> On Thu, Nov 21, 2019 at 12:03:52PM +0100, Rafael J. Wysocki wrote:
+> > On Thu, Nov 21, 2019 at 11:14 AM Mika Westerberg
+> > <mika.westerberg@intel.com> wrote:
+> > >
+> > > On Wed, Nov 20, 2019 at 10:36:31PM +0100, Karol Herbst wrote:
+> > > > with the branch and patch applied:
+> > > > https://gist.githubusercontent.com/karolherbst/03c4c8141b0fa292d781badfa186479e/raw/5c62640afbc57d6e69ea924c338bd2836e770d02/gistfile1.txt
+> > >
+> > > Thanks for testing. Too bad it did not help :( I suppose there is no
+> > > change if you increase the delay to say 1s?
+> >
+> > Well, look at the original patch in this thread.
+> >
+> > What it does is to prevent the device (GPU in this particular case)
+> > from going into a PCI low-power state before invoking AML to power it
+> > down (the AML is still invoked after this patch AFAICS), so why would
+> > that have anything to do with the delays?
 >
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Yes, I know what it does :) I was just thinking that maybe it's still
+> the link that does not come up when we go back to D0 I guess that's not
+> the case here.
 
-Applied for next, thanks!
-
-Kind regards
-Uffe
-
-> ---
->  drivers/memstick/core/Kconfig | 18 +++++++++---------
->  drivers/memstick/host/Kconfig |  4 ++--
->  2 files changed, 11 insertions(+), 11 deletions(-)
->
-> diff --git a/drivers/memstick/core/Kconfig b/drivers/memstick/core/Kconfig
-> index 516f454fde14..08192fd70eb4 100644
-> --- a/drivers/memstick/core/Kconfig
-> +++ b/drivers/memstick/core/Kconfig
-> @@ -6,16 +6,16 @@
->  comment "MemoryStick drivers"
->
->  config MEMSTICK_UNSAFE_RESUME
-> -        bool "Allow unsafe resume (DANGEROUS)"
-> -        help
-> -          If you say Y here, the MemoryStick layer will assume that all
-> -          cards stayed in their respective slots during the suspend. The
-> -          normal behaviour is to remove them at suspend and
-> -          redetecting them at resume. Breaking this assumption will
-> -          in most cases result in data corruption.
-> +       bool "Allow unsafe resume (DANGEROUS)"
-> +       help
-> +         If you say Y here, the MemoryStick layer will assume that all
-> +         cards stayed in their respective slots during the suspend. The
-> +         normal behaviour is to remove them at suspend and
-> +         redetecting them at resume. Breaking this assumption will
-> +         in most cases result in data corruption.
->
-> -          This option is usually just for embedded systems which use
-> -          a MemoryStick card for rootfs. Most people should say N here.
-> +         This option is usually just for embedded systems which use
-> +         a MemoryStick card for rootfs. Most people should say N here.
->
->  config MSPRO_BLOCK
->         tristate "MemoryStick Pro block device driver"
-> diff --git a/drivers/memstick/host/Kconfig b/drivers/memstick/host/Kconfig
-> index 446c93ecef8f..4113343da056 100644
-> --- a/drivers/memstick/host/Kconfig
-> +++ b/drivers/memstick/host/Kconfig
-> @@ -18,7 +18,7 @@ config MEMSTICK_TIFM_MS
->           'Misc devices: TI Flash Media PCI74xx/PCI76xx host adapter support
->           (TIFM_7XX1)'.
->
-> -          To compile this driver as a module, choose M here: the
-> +         To compile this driver as a module, choose M here: the
->           module will be called tifm_ms.
->
->  config MEMSTICK_JMICRON_38X
-> @@ -29,7 +29,7 @@ config MEMSTICK_JMICRON_38X
->           Say Y here if you want to be able to access MemoryStick cards with
->           the JMicron(R) JMB38X MemoryStick card reader.
->
-> -          To compile this driver as a module, choose M here: the
-> +         To compile this driver as a module, choose M here: the
->           module will be called jmb38x_ms.
->
->  config MEMSTICK_R592
-> --
-> 2.17.1
->
+I'm not sure why that would be related to putting the device into,
+say, PCI D3 before invoking AML to remove power from it.  If it is not
+in PCI D3 at this point, the AML still runs and still removes power
+from it IIUC, so on the way back the situation is the same regardless:
+the device has no power which (again) needs to be restored by AML.
+That (in principle) should not depend on what happened to the device
+before it lost power.
