@@ -2,97 +2,137 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C25C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 00:27:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33FB0C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 00:36:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78B4720715
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 00:27:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09EEA20855
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 00:36:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="UsxjVTvi"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ryg+BN4y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbfKUA14 (ORCPT
+        id S1726703AbfKUAgf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 19:27:56 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:41843 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726044AbfKUA14 (ORCPT
+        Wed, 20 Nov 2019 19:36:35 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:44919 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726573AbfKUAge (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 19:27:56 -0500
-Received: by mail-ot1-f67.google.com with SMTP id 94so1340285oty.8
-        for <linux-kernel@vger.kernel.org>; Wed, 20 Nov 2019 16:27:55 -0800 (PST)
+        Wed, 20 Nov 2019 19:36:34 -0500
+Received: by mail-pf1-f193.google.com with SMTP id q26so669104pfn.11;
+        Wed, 20 Nov 2019 16:36:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RRno2ndEL0aLy2ekCq8SNn5kziBB2zvsTzrFr0XgIgU=;
-        b=UsxjVTviHd1kq3bZY0wQXN4tO71PI7wZsg8+pSSo6kwk8/8EHAMXGv9vdcs9hutQlP
-         0leGxb9TacCeXprtwZiY3xsNY6gripp3Qc0tIXxhZ03aDz342HV0mW2x1q45x+bl6UWA
-         VWJcMEKRUuHcLh1HZqqGctCaPdfbNFp2oLVjWSy0iWOfjwd4XhDxBMIP/lKIc3a7p/fF
-         Y9NVorH1XEf/AfhzqEc8Ntbk1sS/Ox85kDbjLyXyR0BZ8Vo/WfNmRdG5MlXpopfqVJ+x
-         dF64g8ETXHgomru5gvKmhahhIoBkVD30oGxPHoUxpVLudN14DWdVmlSpXrAs8wQDJWAL
-         J9LQ==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=smBw2eSn7Wp6DrTkKu9yGmpFd55bs+SJ4cWsLvwYGXE=;
+        b=ryg+BN4y7EBIVMsofGNAq5juHnPPshbmSN1na0SOHB2c8Mhdix1jEoG/26zGLqY2LF
+         yERmeUFFkY874jEZPjrXdbbaokgCgWe2flqYt64wJaeAkpQcIIA6CkS6OYTun1h5H8Bd
+         wY8U5GgirFmA8w4xzqIKTkE1VTdSvhvvES7BF9nYvbW8r7itusBgfT8nrgVMEZp/1a1p
+         KwhIXXqJYibgXK61dVCBNwLq+8HMk86KUiyJ7sL1dOwOWTUdpaV6xUUhba/lmujVjlkY
+         78Krz6DDYDKXuv1XYT68RnnsJSHlpIN/6vmMqChLHeVJ2GTz0CzFzxVWOUxraZEjz1hg
+         sWfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RRno2ndEL0aLy2ekCq8SNn5kziBB2zvsTzrFr0XgIgU=;
-        b=Ze7lj6IKP70GIiZBM8In/FtJwskQuSZZdbIN4AIXpcoIh+9dvd1kCGOBnH2hRDEX+T
-         LhlihN/1/S8HegniTiorLhesK+XfTWEPQhktS+DUMSXjC6nuRy8qmRPHLVsorTS6XY/7
-         KlSV1U5PSJdZNzr9LCBxSCxuVQRUnEn/DOHspeqVaZkbl0QPs0I9iggENq+sSBsiTGTf
-         ffWCMWB7ZjgBdrX5WVELWl09MA2UooOyMHJKkr7TgeRFsOS4UavikOCmqYzpFNpOJvU1
-         RKAy68KCDlaYL2gx99eb95WOAWgr0t2404ouoOdy7CqWQmCKCzXHQGn90372efO5syXk
-         plDw==
-X-Gm-Message-State: APjAAAUwsP92VSVcpvmCg5gZrXtDPJFnyhAhKax6oiHQVG1GRCOEgS8M
-        8Ppb9Dgfot+eDxdaXa/DXyDiN3sQ0E8EeC4LudZ0BQ==
-X-Google-Smtp-Source: APXvYqydVUCALCV2gDjSgpUPjbBj1Jy2nVlG6eMJ9zJZGgKne8uQD9fRLPiO5DU7wqHm7+NmtFxuyY4SSgF+oSAxO8Y=
-X-Received: by 2002:a9d:2d89:: with SMTP id g9mr4139129otb.126.1574296075328;
- Wed, 20 Nov 2019 16:27:55 -0800 (PST)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=smBw2eSn7Wp6DrTkKu9yGmpFd55bs+SJ4cWsLvwYGXE=;
+        b=KyFJI1j/O1aWVhBEE4D7S2gu8lfno8/tC/iscNwm/3RwlyZrTKY8no57Tpj7AAUMWI
+         nO6Ia53vrBpZBxjdICnqQqnebLjUqgwVmLKakCpRcbUK1jyMXI5G+CDNTdGTGyCMr9rB
+         tsZESFg7j1Q+dArLq5Fkxf93TUBb31DQDa/jVd6Z/PfzxpFyjcKzkdpkKBBNcVIxiwhz
+         6JLFfQOPX87EEOHrhe94L2LRTQGbfiK+cA4WT5557yrCuH6qBxTnBubYWVEVWx2T/Hm0
+         CJBCAJ9JpMDJgKpZN7Y4uFFfFxr0kCTx33zyEdsNEE3Z+8fxYxGgFRO0+CCIT81JB01P
+         NTYQ==
+X-Gm-Message-State: APjAAAU3VZQXz7yU3JTEE/6Y6lTrUhxhZw7gTa3BSVIosifEfZCjYcD7
+        qEMyYW5Uo9XHX0/lLXUOhYQ=
+X-Google-Smtp-Source: APXvYqwggVMXLJ0YMoRGcJX+V0U2VVPPBgEBy+EYa20Y3sfv68nS805W6coHI3CeMdeYxB4DXP4zTg==
+X-Received: by 2002:a63:33ca:: with SMTP id z193mr5871639pgz.83.1574296593382;
+        Wed, 20 Nov 2019 16:36:33 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id r24sm410551pgu.36.2019.11.20.16.36.31
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 20 Nov 2019 16:36:32 -0800 (PST)
+Date:   Wed, 20 Nov 2019 16:36:30 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Laura Abbott <labbott@redhat.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
+        Lennert Buytenhek <kernel@wantstofly.org>
+Subject: Re: [PATCH] watchdog: Remove iop_wdt
+Message-ID: <20191121003630.GA1530@roeck-us.net>
+References: <20191118220432.1611-1-labbott@redhat.com>
+ <29e94219-22ca-c873-7209-64d1c357fe5c@roeck-us.net>
+ <CAK8P3a0=3J3WHTKU7sPvd37VEwg3wOuZ5S2-xXtNYEcSQhWyHw@mail.gmail.com>
+ <4f283ab6-0f3c-60e9-cfd1-29d10d978986@roeck-us.net>
+ <20191120100341.GK25745@shell.armlinux.org.uk>
+ <CAK8P3a2N+aDgFz75dFJy3Me9FPdyDSyPaa29FngLjfXX3MzfvA@mail.gmail.com>
+ <20191120103054.GM25745@shell.armlinux.org.uk>
+ <20191120230518.GA28840@roeck-us.net>
+ <20191120235652.GW25745@shell.armlinux.org.uk>
 MIME-Version: 1.0
-References: <157428480574.36836.14057238306923901253.stgit@djiang5-desk3.ch.intel.com>
- <157428502934.36836.8119026517510193201.stgit@djiang5-desk3.ch.intel.com>
- <20191120215338.GN2634@zn.tnic> <20191120231923.GA32680@agluck-desk2.amr.corp.intel.com>
- <20191120232645.GO2634@zn.tnic>
-In-Reply-To: <20191120232645.GO2634@zn.tnic>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 20 Nov 2019 16:27:43 -0800
-Message-ID: <CAPcyv4gngO04iWuKu2_DV4_AXw5yssd6njTNKF=eKk+YJw3AfQ@mail.gmail.com>
-Subject: Re: [PATCH RFC 01/14] x86/asm: add iosubmit_cmds512() based on
- movdir64b CPU instruction
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     "Luck, Tony" <tony.luck@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>, dmaengine@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Vinod Koul <vkoul@kernel.org>, Jing Lin <jing.lin@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Dey, Megha" <megha.dey@intel.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, Jens Axboe <axboe@kernel.dk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191120235652.GW25745@shell.armlinux.org.uk>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 3:27 PM Borislav Petkov <bp@alien8.de> wrote:
->
-> On Wed, Nov 20, 2019 at 03:19:23PM -0800, Luck, Tony wrote:
-> > That's the underlying functionality of the MOVDIR64B instruction. A
-> > posted write so no way to know if it succeeded.
->
-> So how do you know whether any of the writes went through?
+On Wed, Nov 20, 2019 at 11:56:52PM +0000, Russell King - ARM Linux admin wrote:
+> On Wed, Nov 20, 2019 at 03:05:18PM -0800, Guenter Roeck wrote:
+> > On Wed, Nov 20, 2019 at 10:30:54AM +0000, Russell King - ARM Linux admin wrote:
+> > > On Wed, Nov 20, 2019 at 11:15:01AM +0100, Arnd Bergmann wrote:
+> > > > On Wed, Nov 20, 2019 at 11:03 AM Russell King - ARM Linux admin
+> > > > <linux@armlinux.org.uk> wrote:
+> > > > > On Tue, Nov 19, 2019 at 06:29:09AM -0800, Guenter Roeck wrote:
+> > > > > > On 11/19/19 1:40 AM, Arnd Bergmann wrote:
+> > > > > > > On Tue, Nov 19, 2019 at 3:08 AM Guenter Roeck <linux@roeck-us.net> wrote:
+> > > > > > > > On 11/18/19 2:04 PM, Laura Abbott wrote:
+> > > > > >
+> > > > > > Good point, especially since apparently no one cared for five years.
+> > > > >
+> > > > > Doesn't mean that there aren't interested parties.  I still have
+> > > > > IOP32x hardware running here in the form of a N2100 (my firewall)
+> > > > > and it seems that I never noticed this option disappearing until
+> > > > > now...
+> > > > 
+> > > > It's not that it was ever there for IOP32x: the driver was introduced in 2007
+> > > > and was available for IOP32x but failed to compile for it until 2014 when
+> > > > I sent the patch to disable the driver in all configurations that
+> > > > failed to build.
+> > > 
+> > > Well:
+> > > 
+> > > systems/n2100/boot/config-3.11.5+:CONFIG_IOP_WATCHDOG=m
+> > > systems/n2100/boot/config-3.12.6+:CONFIG_IOP_WATCHDOG=m
+> > > systems/n2100/boot/config-3.9.5+:CONFIG_IOP_WATCHDOG=m
+> > > 
+> > > -rw-rw-r-- 1 rmk rmk 5284 Dec 30  2013 systems/n2100/lib/modules/3.12.6+/kernel/drivers/watchdog/iop_wdt.ko
+> > > -rw-rw-r-- 1 rmk rmk 5276 Dec 20  2013 systems/n2100/lib/modules/3.9.5+/kernel/drivers/watchdog/iop_wdt.ko
+> > > 
+> > > It seems I've been carrying a patch to comment out the troublesome code:
+> > > 
+> > > -       write_wdtsr(IOP13XX_WDTCR_IB_RESET);
+> > > +//     write_wdtsr(IOP13XX_WDTCR_IB_RESET);
+> > > 
+> > > in my stable tree since 2015.
+> > 
+> > Do you have plans to update that kernel to mainline ?
+> > If yes, a patch to make the driver (and I guess everything else that broke
+> > since 3.12) work would be helpful.
+> 
+> It's a currently running 4.19.xx stable kernel, but as a result of the
+> patch to the Kconfig file, without the watchdog which I hadn't realised
+> until I saw this thread.  Is that mainline enough?
+> 
+Yes. Can you send me a patch with the above fix and the necessary Kconfig
+change ?
 
-It's identical to the writel() mmio-write to start a SATA command
-transfer. The higher level device driver protocol validates that the
-command went through, ultimately with a timeout. There's no return
-value for iosubmit_cmds512() for the same reason there's no return
-value for the other iowrite primitives.
+Thanks,
+Guenter
