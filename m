@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25E13C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 02:44:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17D46C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 02:44:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3A6B20895
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 02:44:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3F4120895
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 02:44:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574304287;
-	bh=Ue1B0LLPG3CxGJuFT54MuyKwfQ0rwUv5ZkF2IWs0GyI=;
+	s=default; t=1574304290;
+	bh=bVTtftvy/497ZG5CBfJ+tdQkUTY2Eip4rA9yqOgTedc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hqNpC+Xl/U1XycPWSlgP+f2RAPcPAsCSBawVGjM1qrpKkqrtLnLvFFSsWsmjrYSoj
-	 W3g/nrXCCp0Lnn6fw61aQy5GSaoDV6RBUgEUPp+hxlcwOGyU6nVhpsoXLKojbhS2ii
-	 6MlSgVVE91hDoC5oXxbbh3IX1K9nezHDruRMVWNI=
+	b=FmL7J7/WEdNYw4R2FHBccZozD1FW8qZYb3hmX8QFin3j/LuItVnY2aTzL0r7+coel
+	 Vvdw8bhHIaAdW8pcZFSYFnyesQwQEA11r819weiDL/b/DheD6xdme86tYC+XkvXdI/
+	 eTGR/vbJtzRyoJTk+RuYzteTjQsHEq2a7WOFTEdw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726852AbfKUCop (ORCPT
+        id S1726909AbfKUCot (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 21:44:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54250 "EHLO mail.kernel.org"
+        Wed, 20 Nov 2019 21:44:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726695AbfKUCon (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 21:44:43 -0500
+        id S1726840AbfKUCop (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 21:44:45 -0500
 Received: from lenoir.home (lfbn-ncy-1-150-155.w83-194.abo.wanadoo.fr [83.194.232.155])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B62BA20885;
-        Thu, 21 Nov 2019 02:44:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A42532089D;
+        Thu, 21 Nov 2019 02:44:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574304282;
-        bh=Ue1B0LLPG3CxGJuFT54MuyKwfQ0rwUv5ZkF2IWs0GyI=;
+        s=default; t=1574304285;
+        bh=bVTtftvy/497ZG5CBfJ+tdQkUTY2Eip4rA9yqOgTedc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wIOZuAtRntu96iK2XmiK7ELzMp9Yvj3x6ZN2zZAhjgPDwrilPGrTN9PndqNA09Dqj
-         R7xcVdy1JPJahNtlWwQQCLv+vc/7b5ieOT+0IVLi7rUeDc9BxbzvllKje88sy/qZrB
-         hdosbSy4wnEfgE21RZDp2nrcz+KKnIrUjb+4c1tQ=
+        b=bLPkw3IrS8wi7V+ItSmG0FlnLfYxSpzZQm44Oi3df/1wpCJBeweCO/W4PrHjugR84
+         ezxljgQQhJdHK3/HZO3L2tCMP2lH/eV0u7irndM0pGGV/FnHmjplf7tQb/GjLt6Gfr
+         fzglAYtPjYqaazgkZOkrY2S6a4cGFX7Tsj6qmaDg=
 From:   Frederic Weisbecker <frederic@kernel.org>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@kernel.org>
@@ -53,9 +53,9 @@ Cc:     LKML <linux-kernel@vger.kernel.org>,
         Yauheni Kaliuta <yauheni.kaliuta@redhat.com>,
         Viresh Kumar <viresh.kumar@linaro.org>,
         Pavel Machek <pavel@ucw.cz>
-Subject: [PATCH 2/6] sched/vtime: Bring up complete kcpustat accessor
-Date:   Thu, 21 Nov 2019 03:44:26 +0100
-Message-Id: <20191121024430.19938-3-frederic@kernel.org>
+Subject: [PATCH 3/6] procfs: Use all-in-one vtime aware kcpustat accessor
+Date:   Thu, 21 Nov 2019 03:44:27 +0100
+Message-Id: <20191121024430.19938-4-frederic@kernel.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191121024430.19938-1-frederic@kernel.org>
 References: <20191121024430.19938-1-frederic@kernel.org>
@@ -66,15 +66,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Many callsites want to fetch the values of system, user, user_nice, guest
-or guest_nice kcpustat fields altogether or at least a pair of these.
+Now that we can read also user and guest time safely under vtime, use
+the relevant accessor to fix frozen kcpustat values on nohz_full CPUs.
 
-In that case calling kcpustat_field() for each requested field brings
-unecessary overhead when we could fetch all of them in a row.
-
-So provide kcpustat_cpu_fetch() that fetches the whole kcpustat array
-in a vtime safe way under the same RCU and seqcount block.
-
+Reported-by: Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
 Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
 Cc: Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
@@ -83,193 +78,84 @@ Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Wanpeng Li <wanpengli@tencent.com>
 Cc: Ingo Molnar <mingo@kernel.org>
 ---
- include/linux/kernel_stat.h |   7 ++
- kernel/sched/cputime.c      | 136 ++++++++++++++++++++++++++++++------
- 2 files changed, 123 insertions(+), 20 deletions(-)
+ fs/proc/stat.c | 54 ++++++++++++++++++++++++++++----------------------
+ 1 file changed, 30 insertions(+), 24 deletions(-)
 
-diff --git a/include/linux/kernel_stat.h b/include/linux/kernel_stat.h
-index 79781196eb25..89f0745c096d 100644
---- a/include/linux/kernel_stat.h
-+++ b/include/linux/kernel_stat.h
-@@ -81,12 +81,19 @@ static inline unsigned int kstat_cpu_irqs_sum(unsigned int cpu)
- #ifdef CONFIG_VIRT_CPU_ACCOUNTING_GEN
- extern u64 kcpustat_field(struct kernel_cpustat *kcpustat,
- 			  enum cpu_usage_stat usage, int cpu);
-+extern void kcpustat_cpu_fetch(struct kernel_cpustat *dst, int cpu);
- #else
- static inline u64 kcpustat_field(struct kernel_cpustat *kcpustat,
- 				 enum cpu_usage_stat usage, int cpu)
- {
- 	return kcpustat->cpustat[usage];
- }
-+
-+static inline void kcpustat_cpu_fetch(struct kernel_cpustat *dst, int cpu)
-+{
-+	*dst = kcpustat_cpu(cpu);
-+}
-+
- #endif
+diff --git a/fs/proc/stat.c b/fs/proc/stat.c
+index 5c6bd0ae3802..37bdbec5b402 100644
+--- a/fs/proc/stat.c
++++ b/fs/proc/stat.c
+@@ -120,20 +120,23 @@ static int show_stat(struct seq_file *p, void *v)
+ 	getboottime64(&boottime);
  
- extern void account_user_time(struct task_struct *, u64);
-diff --git a/kernel/sched/cputime.c b/kernel/sched/cputime.c
-index 27b5406222fc..d43318a489f2 100644
---- a/kernel/sched/cputime.c
-+++ b/kernel/sched/cputime.c
-@@ -912,6 +912,30 @@ void task_cputime(struct task_struct *t, u64 *utime, u64 *stime)
- 	} while (read_seqcount_retry(&vtime->seqcount, seq));
- }
+ 	for_each_possible_cpu(i) {
+-		struct kernel_cpustat *kcs = &kcpustat_cpu(i);
++		struct kernel_cpustat kcpustat;
++		u64 *cpustat = kcpustat.cpustat;
  
-+static int vtime_state_check(struct vtime *vtime, int cpu)
-+{
-+	/*
-+	 * We raced against a context switch, fetch the
-+	 * kcpustat task again.
-+	 */
-+	if (vtime->cpu != cpu && vtime->cpu != -1)
-+		return -EAGAIN;
+-		user += kcs->cpustat[CPUTIME_USER];
+-		nice += kcs->cpustat[CPUTIME_NICE];
+-		system += kcpustat_field(kcs, CPUTIME_SYSTEM, i);
+-		idle += get_idle_time(kcs, i);
+-		iowait += get_iowait_time(kcs, i);
+-		irq += kcs->cpustat[CPUTIME_IRQ];
+-		softirq += kcs->cpustat[CPUTIME_SOFTIRQ];
+-		steal += kcs->cpustat[CPUTIME_STEAL];
+-		guest += kcs->cpustat[CPUTIME_GUEST];
+-		guest_nice += kcs->cpustat[CPUTIME_GUEST_NICE];
+-		sum += kstat_cpu_irqs_sum(i);
+-		sum += arch_irq_stat_cpu(i);
++		kcpustat_cpu_fetch(&kcpustat, i);
 +
-+	/*
-+	 * Two possible things here:
-+	 * 1) We are seeing the scheduling out task (prev) or any past one.
-+	 * 2) We are seeing the scheduling in task (next) but it hasn't
-+	 *    passed though vtime_task_switch() yet so the pending
-+	 *    cputime of the prev task may not be flushed yet.
-+	 *
-+	 * Case 1) is ok but 2) is not. So wait for a safe VTIME state.
-+	 */
-+	if (vtime->state == VTIME_INACTIVE)
-+		return -EAGAIN;
-+
-+	return 0;
-+}
-+
- static u64 kcpustat_user_vtime(struct vtime *vtime)
- {
- 	if (vtime->state == VTIME_USER)
-@@ -933,26 +957,9 @@ static int kcpustat_field_vtime(u64 *cpustat,
- 	do {
- 		seq = read_seqcount_begin(&vtime->seqcount);
++		user		+= cpustat[CPUTIME_USER];
++		nice		+= cpustat[CPUTIME_NICE];
++		system		+= cpustat[CPUTIME_SYSTEM];
++		idle		+= get_idle_time(&kcpustat, i);
++		iowait		+= get_iowait_time(&kcpustat, i);
++		irq		+= cpustat[CPUTIME_IRQ];
++		softirq		+= cpustat[CPUTIME_SOFTIRQ];
++		steal		+= cpustat[CPUTIME_STEAL];
++		guest		+= cpustat[CPUTIME_GUEST];
++		guest_nice	+= cpustat[CPUTIME_USER];
++		sum		+= kstat_cpu_irqs_sum(i);
++		sum		+= arch_irq_stat_cpu(i);
  
--		/*
--		 * We raced against context switch, fetch the
--		 * kcpustat task again.
--		 */
--		if (vtime->cpu != cpu && vtime->cpu != -1)
--			return -EAGAIN;
--
--		/*
--		 * Two possible things here:
--		 * 1) We are seeing the scheduling out task (prev) or any past one.
--		 * 2) We are seeing the scheduling in task (next) but it hasn't
--		 *    passed though vtime_task_switch() yet so the pending
--		 *    cputime of the prev task may not be flushed yet.
--		 *
--		 * Case 1) is ok but 2) is not. So wait for a safe VTIME state.
--		 */
--		if (vtime->state == VTIME_INACTIVE)
--			return -EAGAIN;
--
--		err = 0;
-+		err = vtime_state_check(vtime, cpu);
-+		if (err < 0)
-+			return err;
+ 		for (j = 0; j < NR_SOFTIRQS; j++) {
+ 			unsigned int softirq_stat = kstat_softirqs_cpu(j, i);
+@@ -157,19 +160,22 @@ static int show_stat(struct seq_file *p, void *v)
+ 	seq_putc(p, '\n');
  
- 		*val = cpustat[usage];
+ 	for_each_online_cpu(i) {
+-		struct kernel_cpustat *kcs = &kcpustat_cpu(i);
++		struct kernel_cpustat kcpustat;
++		u64 *cpustat = kcpustat.cpustat;
++
++		kcpustat_cpu_fetch(&kcpustat, i);
  
-@@ -1025,4 +1032,93 @@ u64 kcpustat_field(struct kernel_cpustat *kcpustat,
- 	}
- }
- EXPORT_SYMBOL_GPL(kcpustat_field);
-+
-+static int kcpustat_cpu_fetch_vtime(struct kernel_cpustat *dst,
-+				    const struct kernel_cpustat *src,
-+				    struct task_struct *tsk, int cpu)
-+{
-+	struct vtime *vtime = &tsk->vtime;
-+	unsigned int seq;
-+	int err;
-+
-+	do {
-+		u64 *cpustat;
-+		u64 delta;
-+
-+		seq = read_seqcount_begin(&vtime->seqcount);
-+
-+		err = vtime_state_check(vtime, cpu);
-+		if (err < 0)
-+			return err;
-+
-+		*dst = *src;
-+		cpustat = dst->cpustat;
-+
-+		/* Task is sleeping, dead or idle, nothing to add */
-+		if (vtime->state < VTIME_SYS)
-+			continue;
-+
-+		delta = vtime_delta(vtime);
-+
-+		/*
-+		 * Task runs either in user (including guest) or kernel space,
-+		 * add pending nohz time to the right place.
-+		 */
-+		if (vtime->state == VTIME_SYS) {
-+			cpustat[CPUTIME_SYSTEM] += vtime->stime + delta;
-+		} else if (vtime->state == VTIME_USER) {
-+			if (task_nice(tsk) > 0)
-+				cpustat[CPUTIME_NICE] += vtime->utime + delta;
-+			else
-+				cpustat[CPUTIME_USER] += vtime->utime + delta;
-+		} else {
-+			WARN_ON_ONCE(vtime->state != VTIME_GUEST);
-+			if (task_nice(tsk) > 0) {
-+				cpustat[CPUTIME_GUEST_NICE] += vtime->gtime + delta;
-+				cpustat[CPUTIME_NICE] += vtime->gtime + delta;
-+			} else {
-+				cpustat[CPUTIME_GUEST] += vtime->gtime + delta;
-+				cpustat[CPUTIME_USER] += vtime->gtime + delta;
-+			}
-+		}
-+	} while (read_seqcount_retry(&vtime->seqcount, seq));
-+
-+	return err;
-+}
-+
-+void kcpustat_cpu_fetch(struct kernel_cpustat *dst, int cpu)
-+{
-+	const struct kernel_cpustat *src = &kcpustat_cpu(cpu);
-+	struct rq *rq;
-+	int err;
-+
-+	if (!vtime_accounting_enabled_cpu(cpu)) {
-+		*dst = *src;
-+		return;
-+	}
-+
-+	rq = cpu_rq(cpu);
-+
-+	for (;;) {
-+		struct task_struct *curr;
-+
-+		rcu_read_lock();
-+		curr = rcu_dereference(rq->curr);
-+		if (WARN_ON_ONCE(!curr)) {
-+			rcu_read_unlock();
-+			*dst = *src;
-+			return;
-+		}
-+
-+		err = kcpustat_cpu_fetch_vtime(dst, src, curr, cpu);
-+		rcu_read_unlock();
-+
-+		if (!err)
-+			return;
-+
-+		cpu_relax();
-+	}
-+}
-+EXPORT_SYMBOL_GPL(kcpustat_cpu_fetch);
-+
- #endif /* CONFIG_VIRT_CPU_ACCOUNTING_GEN */
+ 		/* Copy values here to work around gcc-2.95.3, gcc-2.96 */
+-		user = kcs->cpustat[CPUTIME_USER];
+-		nice = kcs->cpustat[CPUTIME_NICE];
+-		system = kcpustat_field(kcs, CPUTIME_SYSTEM, i);
+-		idle = get_idle_time(kcs, i);
+-		iowait = get_iowait_time(kcs, i);
+-		irq = kcs->cpustat[CPUTIME_IRQ];
+-		softirq = kcs->cpustat[CPUTIME_SOFTIRQ];
+-		steal = kcs->cpustat[CPUTIME_STEAL];
+-		guest = kcs->cpustat[CPUTIME_GUEST];
+-		guest_nice = kcs->cpustat[CPUTIME_GUEST_NICE];
++		user		= cpustat[CPUTIME_USER];
++		nice		= cpustat[CPUTIME_NICE];
++		system		= cpustat[CPUTIME_SYSTEM];
++		idle		= get_idle_time(&kcpustat, i);
++		iowait		= get_iowait_time(&kcpustat, i);
++		irq		= cpustat[CPUTIME_IRQ];
++		softirq		= cpustat[CPUTIME_SOFTIRQ];
++		steal		= cpustat[CPUTIME_STEAL];
++		guest		= cpustat[CPUTIME_GUEST];
++		guest_nice	= cpustat[CPUTIME_USER];
+ 		seq_printf(p, "cpu%d", i);
+ 		seq_put_decimal_ull(p, " ", nsec_to_clock_t(user));
+ 		seq_put_decimal_ull(p, " ", nsec_to_clock_t(nice));
 -- 
 2.23.0
 
