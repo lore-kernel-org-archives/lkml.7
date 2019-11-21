@@ -2,91 +2,109 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 226EDC43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:06:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43D8DC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:08:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE1EF205C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:06:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C388206CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:08:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="prbs1dP8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbfKUKGT (ORCPT
+        id S1726664AbfKUKIw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 05:06:19 -0500
-Received: from mx2.suse.de ([195.135.220.15]:49890 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726014AbfKUKGS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 05:06:18 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 38FAEADC8;
-        Thu, 21 Nov 2019 10:06:16 +0000 (UTC)
-Date:   Thu, 21 Nov 2019 11:06:14 +0100
-From:   Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     linux-scsi@vger.kernel.org, Matthew Wilcox <willy@infradead.org>,
-        "Ewan D. Milne" <emilne@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "J. Bruce Fields" <bfields@redhat.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Eric Biggers <ebiggers@google.com>,
-        Benjamin Coddington <bcodding@redhat.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Omar Sandoval <osandov@fb.com>, Ming Lei <ming.lei@redhat.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Tejun Heo <tj@kernel.org>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v3 5/7] bdev: add open_finish.
-Message-ID: <20191121100614.GH11661@kitsune.suse.cz>
-References: <cover.1572002144.git.msuchanek@suse.de>
- <31f640791d9cc20cdbbb3000dfcf8370cf3c6223.1572002144.git.msuchanek@suse.de>
- <20191105001727.GA29826@infradead.org>
+        Thu, 21 Nov 2019 05:08:52 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:52095 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726132AbfKUKIv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 05:08:51 -0500
+Received: by mail-wm1-f68.google.com with SMTP id g206so2761044wme.1
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 02:08:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=R4hjhKPyQPWEsWK0HmI2zX8e76pSPH6drX+KAe0V84E=;
+        b=prbs1dP81sRgtZ7wMCz80nqk+aX4U4XK85NdUe3WyuZaaGzWb6qcXqMherEtvNOdfQ
+         0mFggBF0xyVTaVOrAJi9kBoL3Wz2rHwKRiBtK9dd0Cix8BWDWQTxqphMaHDloq0dR2uW
+         cfaEJuWSZRXBi3t8JQ1a9RiTet71dpIlmxSrix9fiPhjr6ViM4JByd+qlWkc1Lw9s6Dn
+         MNPXnRbI/U7zcw5K40Cx1EmUwjrSZKUjVf6KH4pEa+ucjPeoQioSZwwvYerH2K54/sZ/
+         SB33awdggXTa/GgebY19XswcrwnmF8mLAP9YsQ3US8r9L3ZqbmEsEPGe693crpzqwMIp
+         imEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=R4hjhKPyQPWEsWK0HmI2zX8e76pSPH6drX+KAe0V84E=;
+        b=j1WTb3LxI8ooQ4EPlxO/B+GXUUUVB47TgzGBGROemCC7iD0a4cf1i7CyWg65df8Qdc
+         FXDjee++EI/XOlJxDrrgTqUfh9GU4HCt4DSDUrfuey0T9HtAb6QPw+48HAy1kJdr1uCx
+         EdzCIWiGMLWPzo+01IhD3azFVfo1B5PBPuFB2awY3UiewT19NTVm2yjisInowJyFULZN
+         fnF2ukJJD2uZyqd9eqwzQAAvbQnHXHKiLhKAUEmw7lXwGoVQijpr35g0w0hieT/mpRkP
+         iWL76rBGSUTINYgrQEq9iJePK3oSkCKsFiMEJ0gRSMJCd6alcP6otTI+yvzIgdnG518i
+         6s5g==
+X-Gm-Message-State: APjAAAV1eVDceEVQYe+U21pXhhWdXiJbF77J7EL13AWbYkB+sQWDz6pW
+        XXWmFZ1Ce8MPnZiWbYfBZRc=
+X-Google-Smtp-Source: APXvYqwK4BLAl1njfaoGUIR/wJpfPYIvklCz7Cwdpuk+lsOrpbr4tVRvmsBX1oWogL8be666keQqvw==
+X-Received: by 2002:a1c:e08a:: with SMTP id x132mr8950374wmg.146.1574330927887;
+        Thu, 21 Nov 2019 02:08:47 -0800 (PST)
+Received: from ltop.local ([2a02:a03f:40e1:9900:4082:8c56:ea03:cdcd])
+        by smtp.gmail.com with ESMTPSA id y2sm2568116wmy.2.2019.11.21.02.08.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Nov 2019 02:08:47 -0800 (PST)
+Date:   Thu, 21 Nov 2019 11:08:23 +0100
+From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+To:     Joel Stanley <joel@jms.id.au>
+Cc:     Andrew Jeffery <andrew@aj.id.au>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Robert Lippert <rlippert@google.com>,
+        Patrick Venture <venture@google.com>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH] aspeed: fix snoop_file_poll()'s return type
+Message-ID: <20191121100823.2twowr42nsyykvgg@ltop.local>
+References: <20191120000647.30551-1-luc.vanoostenryck@gmail.com>
+ <787e54c2-2fe3-4afc-a69b-94771726194b@www.fastmail.com>
+ <CACPK8XfO=F-BtCuDqyQODJv=6joYmyFiQ5eOYC5YuDJhcLSJtw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191105001727.GA29826@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CACPK8XfO=F-BtCuDqyQODJv=6joYmyFiQ5eOYC5YuDJhcLSJtw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 04, 2019 at 04:17:27PM -0800, Christoph Hellwig wrote:
-> Please make sure you CC linux-block if you add block device ops.
+On Thu, Nov 21, 2019 at 02:52:39AM +0000, Joel Stanley wrote:
+> On Wed, 20 Nov 2019 at 05:42, Andrew Jeffery <andrew@aj.id.au> wrote:
+> >
+> > Looks fine to me as POLLIN and EPOLLIN evaluate to the same value despite
+> > the type difference.
 > 
-> On Fri, Oct 25, 2019 at 01:21:42PM +0200, Michal Suchanek wrote:
-> > Opening a block device may require a long operation such as waiting for
-> > the cdrom tray to close. Performing this operation with locks held locks
-> > out other attempts to open the device. These processes waiting to open
-> > the device are not killable.
-> > 
-> > To avoid this issue and still be able to perform time-consuming checks
-> > at open() time the block device driver can provide open_finish(). If it
-> > does opening the device proceeds even when an error is returned from
-> > open(), bd_mutex is released and open_finish() is called. If
-> > open_finish() succeeds the device is now open, if it fails release() is
-> > called.
-> > 
-> > When -ERESTARTSYS is returned from open() blkdev_get may loop without
-> > calling open_finish(). On -ERESTARTSYS open_finish() is not called.
-> > 
-> > Move a ret = 0 assignment up in the if/else branching to avoid returning
-> > -ENXIO. Previously the return value was ignored on the unhandled branch.
+> I assume Luc was using sparse to check:
 > 
-> Still a complete nack for splitting a fundamental operation over two
-> ops, especially just for working around a piece of buggy software.
+> CHECK   ../drivers/soc/aspeed/aspeed-lpc-snoop.c
+> ../drivers/soc/aspeed/aspeed-lpc-snoop.c:112:19: warning: incorrect
+> type in initializer (different base types)
+> ../drivers/soc/aspeed/aspeed-lpc-snoop.c:112:19:    expected
+> restricted __poll_t ( *poll )( ... )
+> ../drivers/soc/aspeed/aspeed-lpc-snoop.c:112:19:    got unsigned int (
+> * )( ... )
+> 
+> If you fix the return type:
+> 
+>   CHECK   ../drivers/soc/aspeed/aspeed-lpc-snoop.c
+> ../drivers/soc/aspeed/aspeed-lpc-snoop.c:106:45: warning: incorrect
+> type in return expression (different base types)
+> ../drivers/soc/aspeed/aspeed-lpc-snoop.c:106:45:    expected restricted __poll_t
+> ../drivers/soc/aspeed/aspeed-lpc-snoop.c:106:45:    got int
 
-Still did not provide an awesome alternative that does not sneed
-splitting the operation.
-
-What is it, specifically?
-
-Thanks
-
-Michal
+Yes, but with the change s/POLLIN/EPOLLIN/ this last warning
+is not issued.
+ 
+Cheers,
+-- Luc
