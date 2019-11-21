@@ -2,103 +2,167 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C259C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:31:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4554EC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:31:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68E45206CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:31:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1331F206D7
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:31:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KQXl3u2S"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UEfE1Sng"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726666AbfKUVbG (ORCPT
+        id S1726775AbfKUVbq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 16:31:06 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:38649 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726293AbfKUVbG (ORCPT
+        Thu, 21 Nov 2019 16:31:46 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46480 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726297AbfKUVbp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 16:31:06 -0500
-Received: by mail-oi1-f195.google.com with SMTP id a14so4613767oid.5
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 13:31:05 -0800 (PST)
+        Thu, 21 Nov 2019 16:31:45 -0500
+Received: by mail-wr1-f67.google.com with SMTP id z7so2797050wrl.13;
+        Thu, 21 Nov 2019 13:31:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4Ih+wdf+T8QIhxXa0Z/BjR6OEVlveBg+npb+LGLRLAs=;
-        b=KQXl3u2SVxyMz8rlN77m7iXC4ogPKT54d6c96jwtR1V+9QP6TEJSfb7qFvrb+c8sYn
-         K1HETXSPjLCE+ngl2e3oauOhqVrEPFPM/ZhnnrzVqESA+rClKn4LlMg7AyKV4Td5W2Ef
-         xZ/qSXNCfrpe4jEh11iqbzoHAebuFk6JndluiFnmlqwAn8qHcNvAmBcFo4YjRec62s+I
-         GRFgKzmVkO22wLfhbM8JasOVjj3eAkjRhG06EPVSfLHi7Oxy1zwpIe9LLOjMTDraMIfi
-         5/lkMveIVEwgKvw90PoSaktKGc7LanP0P3AO+m//ciW9Hi25i5albVbdjQTMnkwoR8HF
-         Truw==
+         :cc:content-transfer-encoding;
+        bh=SoUQjIpFH9P3ATfJoGFUNE500XWpftLyS5ervo+RPr0=;
+        b=UEfE1SngNpm6u6VyDXcMCWEbOBNvZBhnOw/HHfv1NOUt8C4HjuZ9AVT61Krh9rYZ/G
+         B/Qe30Em1qPbRb2B058RM3d4A2kv+3Lc//WvO/36DQBUdBGD04iWs23v0p99nY4Dd866
+         54tqpQ18Vf1uCwiNcgeaSxVX/QHM3yk1LDR0ZZxNH86mpwxzxYL6waZFQS5I1T1yiszg
+         6t3lmLXpM48Yz4Mfamr8dzJtFHf5gfnD06jm3D9x5WjzO+syTHvNsAxd2foMhBS/NIuL
+         ZPLYsGtC5XvkQWb7edA9heFd1VfbOeC24cLpaDwaU6Ue/kyT2U3rn0MUdXrFjLfbrCXt
+         ghZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4Ih+wdf+T8QIhxXa0Z/BjR6OEVlveBg+npb+LGLRLAs=;
-        b=mVi7tenEhJo13CnKgSW4nOxeU2hHzyk66eClWi4bGoWhUgtJ3gkHrMg6OvocLLULnk
-         z7Wq6aevP6gtH7jGtOC8HhKlFP09K6KFv3m48gWK/e4HNpRXa+JjMx0rtltW3vMNCRDY
-         xQHNMsEp/fX0jwIREVJ3XPm4WROBs2KyzriBLYFOfk/LdD9Mp4cMRis8iXqjuxH38MiJ
-         LHKUZsS+WKHT+AY9g25xif4rlgQnx3JkOGaYbSCdv4hJkk5PdKJ72cyByqWUrd1epbmC
-         jzRmg9a/dFH1RK+pbx0yOsIHtaOYRHFs7tMebDQy/sDqAET3v2qRxPUfzOFc78lIfJj4
-         TPbg==
-X-Gm-Message-State: APjAAAXHoYj/XU5UKHoVhUTlFdZ7QG1MgGgcezpLhwbFkAXy91sftPH0
-        Dj4bO8HCIc6065KTlIoNhtfdWXY7uFIQVVlJSMP0tg==
-X-Google-Smtp-Source: APXvYqyyYZQan3opx0rXCprghR1vY7gbbQA4CJmeQnXT2oWPmvhKt0mBKHrMonq2HYj1qOct6NiLQYx4svVuB+BfkVI=
-X-Received: by 2002:aca:7516:: with SMTP id q22mr9124234oic.144.1574371864860;
- Thu, 21 Nov 2019 13:31:04 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=SoUQjIpFH9P3ATfJoGFUNE500XWpftLyS5ervo+RPr0=;
+        b=P52y49VV3T+3MJs7izU5qZ8kgKVKi83myUWd3+w+NPAUyXoOX+gk7P5/uJaVgZ34qS
+         0GRyChZuLk+iuMftlnJVwA1jsmDGkb9innXoHYqZodQpKXWHH0p35oZOgpR6nGN7kiEd
+         pKgztfj8cDEB8xdJLrzSqPHREcfTxUnYAYqAq+UMCsGUjBwLqH0qhKE79a1GrfFV5vKv
+         pT7rabLyhj0pmWKbhkojm5GHaaE4YbowvrxU917/50tltiPUebcSSHs//8Vk5RD63gUH
+         4IGcXbUm55v8+EPsdzx4+5ooVQJUJnmijrAkQ18ovWMZnxUBcWdcu8fNC67zMxMkRMz+
+         f+og==
+X-Gm-Message-State: APjAAAV74KCzHkn4oU7cfULbDN4Y9bFGKWnt0dR+TyM5/UCWqDC+r+x5
+        6ArZflc1fJeT/G3/UfTfHLMWzvGPfdEO5zBFxOA=
+X-Google-Smtp-Source: APXvYqxsJhXfTc8mMDtjZSX8K/+oYy2Mi3i1Rsn27A6eUuEv2h+lplYbUwux8ECvZizvbfOakcuTlnkkQPqrPK41ZIk=
+X-Received: by 2002:a5d:5411:: with SMTP id g17mr13463079wrv.360.1574371902690;
+ Thu, 21 Nov 2019 13:31:42 -0800 (PST)
 MIME-Version: 1.0
-References: <20191120165847.423540-1-hannes@cmpxchg.org> <alpine.LSU.2.11.1911201836220.1090@eggly.anvils>
- <20191121205631.GA487872@cmpxchg.org>
-In-Reply-To: <20191121205631.GA487872@cmpxchg.org>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Thu, 21 Nov 2019 13:30:52 -0800
-Message-ID: <CALvZod7FG+fTFE89j8E6-1RBG6st1Y9sSju-ModT9Rj6SzrVLw@mail.gmail.com>
-Subject: Re: [PATCH] mm: fix unsafe page -> lruvec lookups with cgroup charge migration
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Hugh Dickins <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Roman Gushchin <guro@fb.com>, Linux MM <linux-mm@kvack.org>,
-        Cgroups <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kernel Team <kernel-team@fb.com>
+References: <20191121195902.6906-1-peron.clem@gmail.com> <20191121195902.6906-4-peron.clem@gmail.com>
+ <20191121210559.pz3nsyomqfrjuoe4@pengutronix.de>
+In-Reply-To: <20191121210559.pz3nsyomqfrjuoe4@pengutronix.de>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Thu, 21 Nov 2019 22:31:31 +0100
+Message-ID: <CAJiuCcfj7rngTgbZQDwjKoLgRGcqsYscBvrCP095zzyASKSqdQ@mail.gmail.com>
+Subject: Re: [PATCH v8 3/6] pwm: sun4i: Add an optional probe for bus clock
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Philipp Zabel <pza@pengutronix.de>, linux-pwm@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 12:56 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
->
-> On Wed, Nov 20, 2019 at 07:15:27PM -0800, Hugh Dickins wrote:
-> > It like the way you've rearranged isolate_lru_page() there, but I
-> > don't think it amounts to more than a cleanup.  Very good thinking
-> > about the odd "lruvec->pgdat = pgdat" case tucked away inside
-> > mem_cgroup_page_lruvec(), but actually, what harm does it do, if
-> > mem_cgroup_move_account() changes page->mem_cgroup concurrently?
-> >
-> > You say use-after-free, but we have spin_lock_irq here, and the
-> > struct mem_cgroup (and its lruvecs) cannot be freed until an RCU
-> > grace period expires, which we rely upon in many places, and which
-> > cannot happen until after the spin_unlock_irq.
->
-> You are correct, I missed the rcu locking implied by the
-> spinlock. With this, the justification for this patch is wrong.
->
-> But all of this is way too fragile and error-prone for my taste. We're
-> looking up a page's lruvec in a scope that does not promise at all
-> that the lruvec will be the page's. Luckily we currently don't touch
-> the lruvec outside of the PageLRU branch, but this subtlety is
-> entirely non-obvious from the code.
->
-> I will put more thought into this. Let's scrap this patch for now.
+Hi Uwe,
 
-What about the comment on mem_cgroup_page_lruvec()? I feel that
-comment is a good documentation independent of the original patch.
+On Thu, 21 Nov 2019 at 22:06, Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+>
+> On Thu, Nov 21, 2019 at 08:58:59PM +0100, Cl=C3=A9ment P=C3=A9ron wrote:
+> > From: Jernej Skrabec <jernej.skrabec@siol.net>
+> >
+> > H6 PWM core needs bus clock to be enabled in order to work.
+> >
+> > Add an optional probe for it.
+> >
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> > ---
+> >  drivers/pwm/pwm-sun4i.c | 23 +++++++++++++++++++++++
+> >  1 file changed, 23 insertions(+)
+> >
+> > diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
+> > index 369990ae7d09..66befd8d6f9c 100644
+> > --- a/drivers/pwm/pwm-sun4i.c
+> > +++ b/drivers/pwm/pwm-sun4i.c
+> > @@ -78,6 +78,7 @@ struct sun4i_pwm_data {
+> >
+> >  struct sun4i_pwm_chip {
+> >       struct pwm_chip chip;
+> > +     struct clk *bus_clk;
+> >       struct clk *clk;
+> >       struct reset_control *rst;
+> >       void __iomem *base;
+> > @@ -391,6 +392,14 @@ static int sun4i_pwm_probe(struct platform_device =
+*pdev)
+> >               }
+> >       }
+> >
+> > +     pwm->bus_clk =3D devm_clk_get_optional(&pdev->dev, "bus");
+> > +     if (IS_ERR(pwm->bus_clk)) {
+> > +             if (PTR_ERR(pwm->rst) !=3D -EPROBE_DEFER)
+> > +                     dev_err(&pdev->dev, "get bus clock failed %pe\n",
+> > +                             pwm->bus_clk);
+> > +             return PTR_ERR(pwm->bus_clk);
+> > +     }
+> > +
+> >       pwm->rst =3D devm_reset_control_get_optional_shared(&pdev->dev, N=
+ULL);
+> >       if (IS_ERR(pwm->rst)) {
+> >               if (PTR_ERR(pwm->rst) !=3D -EPROBE_DEFER)
+> > @@ -407,6 +416,17 @@ static int sun4i_pwm_probe(struct platform_device =
+*pdev)
+> >               return ret;
+> >       }
+> >
+> > +     /*
+> > +      * We're keeping the bus clock on for the sake of simplicity.
+> > +      * Actually it only needs to be on for hardware register accesses=
+.
+> > +      */
+> > +     ret =3D clk_prepare_enable(pwm->bus_clk);
+> > +     if (ret) {
+> > +             dev_err(&pdev->dev, "Cannot prepare and enable bus_clk %d=
+\n",
+> > +                     ret);
+>
+> nitpick: other error messages in this driver start with a lower case
+> letter.
+>
+> Until there is an equivalent for %pe that consumes an int, I suggest to
+> use
+>
+>         dev_err(&pdev->dev, "Cannot prepare and enable bus_clk: %pe\n",
+>                 ERR_PTR(ret));
+>
+> to benefit from a symbolic error name instead of an error constant.
+
+Ok i will fix both
+
+Thanks,
+Clement
+
+>
+> Best regards
+> Uwe
+>
+> --
+> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
+     |
+> Industrial Linux Solutions                 | https://www.pengutronix.de/ =
+|
