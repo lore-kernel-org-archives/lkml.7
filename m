@@ -2,129 +2,120 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FB0EC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:36:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7D2CC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:37:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01D6F2071B
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:36:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="XkP12c/i"
+	by mail.kernel.org (Postfix) with ESMTP id C2D5D20714
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:37:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727040AbfKUOgr (ORCPT
+        id S1726992AbfKUOht (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 09:36:47 -0500
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:39113 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726568AbfKUOgq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 09:36:46 -0500
-Received: by mail-qv1-f67.google.com with SMTP id v16so1480957qvq.6
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 06:36:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=rv5c3PJEtM2ffNdfZuVl2p9Xs+FPDxJaOjEmQ2G8DAo=;
-        b=XkP12c/ibS/aRyryTCd4qjn/PXxyYCusK1THaNAzNjypEGkjhmCt9LtT+qYEnSe3fB
-         R0spZ8YqysCDI95uGLLvFVswmZUjEqJ9cNCyHcavEFwClRwZ6y4PKDy88MyzZlAfM967
-         hisIg3vRQPZ469GZRWnqA3CNAZUY/hKDr+kXV7+2R0BibPU9CM1KGy5uODfMlNXxTJJo
-         tHEs5mFWOzUwzAdEjcr2fH3dCNIBIBIgehoNt8ki1/1o3yu01BkPAihfF+3/v5R6c6NG
-         mm7J2IKwvLhTCpGsMr85umCSjimcUeH9XgLjTylXIMq1THOPpUYiNcR9NxoGX25nyfzV
-         YKKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rv5c3PJEtM2ffNdfZuVl2p9Xs+FPDxJaOjEmQ2G8DAo=;
-        b=pZxp5ts7nNg6wEDBer3omDGrN0yWX93jrHNlhUQMl06Vy7w68n16wtEoHKfcPSLIeR
-         dr1wEbthpsI26yKDBNn8p4O14ZdhPj/Lo3/2NXDuiacyz1nRT5AqNkGHa+e5v98RZFdK
-         eSg5HaCos37pQgf4VKYc6pFJnDzCWc+ZeDcrtTqyL1ZjtpRHDi+0q3xxFwv9DUvA9Pxd
-         Kg1ionNNbtpF3L8sxuAqMICdQ5PJvtsgg6++vyNaLZ/C5bGohDrw6pasmMiMuklUfS+O
-         F1p2Jzdd2QDldVADiu9MH4qxVKCRQQV2SDBCsE+8r9v4NsxyOz1ciOinZr5wqwU5mjeT
-         lIPw==
-X-Gm-Message-State: APjAAAVags8HpZ1PGNBwFS4TBFdPITE5XpXN/ovcAiozVX+ezJAxpP7i
-        vugY49FN/v9QvuzW5HFpwoMONw==
-X-Google-Smtp-Source: APXvYqxiPTD6uqfSlGreW7CNwXwCXJOA4tNSbO40QzzV7IhKLzuaPAx4PWY7OQoHdNILaiGopmJlAA==
-X-Received: by 2002:a0c:e74a:: with SMTP id g10mr8540002qvn.29.1574347005412;
-        Thu, 21 Nov 2019 06:36:45 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-162-113-180.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.180])
-        by smtp.gmail.com with ESMTPSA id 40sm1584912qtc.95.2019.11.21.06.36.44
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 21 Nov 2019 06:36:44 -0800 (PST)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1iXnZb-0004bF-SZ; Thu, 21 Nov 2019 10:36:43 -0400
-Date:   Thu, 21 Nov 2019 10:36:43 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     John Hubbard <jhubbard@nvidia.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 07/24] IB/umem: use get_user_pages_fast() to pin DMA
- pages
-Message-ID: <20191121143643.GC7448@ziepe.ca>
-References: <20191121071354.456618-1-jhubbard@nvidia.com>
- <20191121071354.456618-8-jhubbard@nvidia.com>
- <20191121080746.GC30991@infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191121080746.GC30991@infradead.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Thu, 21 Nov 2019 09:37:49 -0500
+Received: from mga04.intel.com ([192.55.52.120]:32456 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726293AbfKUOht (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 09:37:49 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Nov 2019 06:37:49 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,226,1571727600"; 
+   d="scan'208";a="209922600"
+Received: from labuser-ice-lake-client-platform.jf.intel.com ([10.54.55.50])
+  by orsmga003.jf.intel.com with ESMTP; 21 Nov 2019 06:37:48 -0800
+From:   kan.liang@linux.intel.com
+To:     peterz@infradead.org, acme@redhat.com, mingo@kernel.org,
+        eranian@google.com, mpe@ellerman.id.au,
+        linux-kernel@vger.kernel.org
+Cc:     jolsa@kernel.org, namhyung@kernel.org, vitaly.slobodskoy@intel.com,
+        pavel.gerasimov@intel.com, ak@linux.intel.com,
+        Kan Liang <kan.liang@linux.intel.com>
+Subject: [PATCH V5 0/2] Stitch LBR call stack (kernel)
+Date:   Thu, 21 Nov 2019 06:36:44 -0800
+Message-Id: <20191121143646.8687-1-kan.liang@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 12:07:46AM -0800, Christoph Hellwig wrote:
-> On Wed, Nov 20, 2019 at 11:13:37PM -0800, John Hubbard wrote:
-> > And get rid of the mmap_sem calls, as part of that. Note
-> > that get_user_pages_fast() will, if necessary, fall back to
-> > __gup_longterm_unlocked(), which takes the mmap_sem as needed.
-> > 
-> > Reviewed-by: Jan Kara <jack@suse.cz>
-> > Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-> > Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-> > Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-> 
-> Looks fine,
-> 
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
-> 
-> Jason, can you queue this up for 5.5 to reduce this patch stack a bit?
+From: Kan Liang <kan.liang@linux.intel.com>
 
-Yes, I said I'd do this in an earlier revision. Now that it is clear this
-won't go through Andrew's tree, applied to rdma for-next
+Changes since V4
+- Only include the kernel patches
+- Abstract TOS to HW index, which can be used across hw platforms.
+  If we don't know the order of raw branch records, the hw_idx should be
+  -1ULL. Set hw_idx to -1ULL for IBM Power for now.
+- Move the new branch sample type back to bit 17
 
-Thanks,
-Jason
+Changes since V3
+- Add the new branch sample type at the end of enum
+  perf_branch_sample_type.
+- Rebase the user space patch on top of acme's perf/core branch
+
+Changes since V2
+- Move tos into struct perf_branch_stack
+
+Changes since V1
+- Add a new branch sample type for LBR TOS. Drop the sample type in V1.
+- Add check in perf header to detect unknown input bits in event attr
+- Save and use the LBR cursor nodes from previous sample to avoid
+  duplicate calculation of cursor nodes.
+- Add fast path for duplicate entries check. It benefits all call stack
+  parsing, not just for stitch LBR call stack. It can be merged
+  independetely.
+
+Start from Haswell, Linux perf can utilize the existing Last Branch
+Record (LBR) facility to record call stack. However, the depth of the
+reconstructed LBR call stack limits to the number of LBR registers.
+E.g. on skylake, the depth of reconstructed LBR call stack is <= 32
+That's because HW will overwrite the oldest LBR registers when it's
+full.
+
+However, the overwritten LBRs may still be retrieved from previous
+sample. At that moment, HW hasn't overwritten the LBR registers yet.
+Perf tools can stitch those overwritten LBRs on current call stacks to
+get a more complete call stack.
+
+To determine if LBRs can be stitched, the physical index of LBR
+registers is required. A new branch sample type is introduced to
+dump the LBR Top-of-Stack (TOS) information for perf tools.
+
+The stitching approach base on LBR call stack technology. The known
+limitations of LBR call stack technology still apply to the approach,
+e.g. Exception handing such as setjmp/longjmp will have calls/returns
+not match.
+This approach is not full proof. There can be cases where it creates
+incorrect call stacks from incorrect matches. There is no attempt
+to validate any matches in another way. So it is not enabled by default.
+However in many common cases with call stack overflows it can recreate
+better call stacks than the default lbr call stack output. So if there
+are problems with LBR overflows this is a possible workaround.
+
+Regression:
+Users may collect LBR call stack on a machine with new perf tool and
+new kernel (support LBR TOS). However, they may parse the perf.data with
+old perf tool (not support LBR TOS). The old tool doesn't check
+attr.branch_sample_type. Users probably get incorrect information
+without any warning.
+
+Kan Liang (2):
+  perf/core: Add new branch sample type for HW index of raw branch
+    records
+  perf/x86/intel: Output LBR TOS information
+
+ arch/powerpc/perf/core-book3s.c |  1 +
+ arch/x86/events/intel/lbr.c     |  9 +++++++++
+ include/linux/perf_event.h      | 12 ++++++++++++
+ include/uapi/linux/perf_event.h | 10 +++++++++-
+ kernel/events/core.c            | 11 +++++++++++
+ 5 files changed, 42 insertions(+), 1 deletion(-)
+
+-- 
+2.17.1
+
