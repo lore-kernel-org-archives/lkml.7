@@ -2,337 +2,135 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E130AC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:18:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF739C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:19:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B102E20643
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:18:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A67B120658
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:19:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="13PRjt8K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726922AbfKUQSN (ORCPT
+        id S1726952AbfKUQTd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 11:18:13 -0500
-Received: from mout.kundenserver.de ([212.227.126.131]:53351 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726563AbfKUQSN (ORCPT
+        Thu, 21 Nov 2019 11:19:33 -0500
+Received: from mail-il1-f196.google.com ([209.85.166.196]:33519 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726293AbfKUQTd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 11:18:13 -0500
-Received: from orion.localdomain ([95.115.120.75]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MY60L-1iM0v62R4f-00YSvf; Thu, 21 Nov 2019 17:18:01 +0100
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     jikos@kernel.org, benjamin.tissoires@redhat.com,
-        dmitry.torokhov@gmail.com, Jes.Sorensen@gmail.com,
-        kvalo@codeaurora.org, johan@kernel.org,
-        linux-input@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: [PATCH] drivers: usb: consolidate USB vendor IDs in one include file
-Date:   Thu, 21 Nov 2019 17:17:42 +0100
-Message-Id: <20191121161742.31435-1-info@metux.net>
-X-Mailer: git-send-email 2.11.0
-X-Provags-ID: V03:K1:m09Mu4opge9FH7x1/cOt9HjdwnEbIR+SFkI2Fyra51rBxLSO70b
- k+IgC1ek13z1XMuhR4XpRYBp7Su+15oGqe6ZD4yo8bszSP4MJ9ukiM2XEDqvZ4zwl0fQr17
- oKDgNxprYt5YEzr8StWcryFD7zwxnYHCWMtRvb0Jt1nIss+pZrkfQ5gFiTuBfaPt0TwUTZv
- +qiaf8OmgcZjF3ONtkYIA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:qxvFVnioYPQ=:Sx9gB/1+V8KUZvcurQf9yX
- lbUzaAEhRwI665kTaQzKgkFN0vcwG2bD0CaSpENJ58+o80RC7ArfljGUzNgs9tPBcCGjUtUw3
- eXD0TmM4mhfgbaPDJYXbUJULzwzmiGsjNAyOPz//jStIPewAXkbJaeU0vpTNkjQIEB4rLBk0a
- 4HIrA5gTQ1/NcyFZ6HBVI6j8O9iE2XK/fjgs6JhmcMjxTAWcRcckR7JSsmjJzwYiHzSVIWd44
- i04+6xpXC2DSEVqfbzmOucbKBFKb+5QspgAv9IwwwX6chF01+ko3/efbOAhN077NAABrZ2DeT
- N7lY6G9LkgCn/bJOdycoiE1vO6f0nEQLLN8+kxfhtlq/wqRN14S35Q5Hx0F0C6cv4SLSybPpX
- tVjo+5FWtZGPnBtEd7a1lDvIKufPuh51BfmrMLPgr32Xbaqshf5f/1qWiAz/6DvxS4x6NUCaN
- IBz2UuBO0iecZZ3WqsKi8G4OioF7V5JSIUBvXdUV5E/zHbxykphGLqpPq0YCdEdApBJHfiBPc
- hSnbD4XIs5aN9QOWHswBKxw4m7wuUST9F2IYOzrXvwe5H3WcggXd/Q/NsQiyp7x7peeN6D20h
- ufOgbte1HDSThNrtKvxGw8qsaljRszfY0mYBtoLha6NQCRboOXIftuvALeciPXMt226L+EDBV
- 1V47u0Aqlg1UjLy9kafiweM7ntN7k07lUXAt+rkb9rdpf2mOMxkOjggLiz0avOT9fEmDygHze
- KBrpv6POjoBmowDsftNZsqv9LBJirmCykayEoJNsfv05c6YYHvYe8f48WWbEqURrFnmNN1R5W
- YurtzSsCAcvU8nw/U+OqRmgaVf7MuXICMF20NC8AJIR8gN3gUXzxmA6yS+Jg9C3+g4OMGDIh1
- RYhJk4Sn8DnL0jc153Fg==
+        Thu, 21 Nov 2019 11:19:33 -0500
+Received: by mail-il1-f196.google.com with SMTP id m5so3866206ilq.0
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 08:19:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Kvj1OGlYWXQ7ytbrKDsR/TZrdswK2tP2241AuGz5/5c=;
+        b=13PRjt8K4a2KOy8p0LkwxnTJWoXSCik2jil6eEf+nKpRFAw/WneYao35gDdiKIYb8a
+         /xbKq7CVsVyzhDgT+qYN/CXr3mCN2tfs+V0MqYVdrCI2Jb32I4Ml32hjse8GLaNlaycf
+         hYaBMSvPkL+QfF3Lvq/i3o6MjQtTDBiQupjgl92he/XUE3u4BgZxrZD9tAbZinpSEUYU
+         2lSCSv9xThV5eLe3YZDmcM97/cNnOWZV98EnnXiUAMBXRqNCvJZBU5vH+6PmZW8aIykE
+         9DEJv2ax5uyrJda8ehDfb4X3GDoJCPgbX91gZGQy8X+YmKVFC3yiYvNgQw+HOQ+Sveg+
+         m5CQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Kvj1OGlYWXQ7ytbrKDsR/TZrdswK2tP2241AuGz5/5c=;
+        b=WspHcE93fUrqRB9q3zlghqzeRmZy2RkeznfM/VR2MxUHYEMye8S5+vmNH3WMIoNCtW
+         tqxDbBOy83DGaoOwTfUUw79MAlshs+10973foussZU7Jy6JH/JC0TeAzD6yhRDYqv/pG
+         IxtS9GUo2bKyDjFtMHyIZVlms5BB9ijjOl80zecnRdK4fJCI/ncUj8O0S36QqOup9yCZ
+         PDhIo02qrNQDdDnFcUMDy6lbAcJj3CD8UU5qT4/Kn/peVoFEDdPY9F/k6xE6oB8Nd3TG
+         wlSB3mwOCoGPCnTIbrFTaHLvA2xtjDD6KieriIhifvDspJ0qIU2sNLkLoMLdHnTPveZT
+         j5DQ==
+X-Gm-Message-State: APjAAAXnZxhy58Q5M/NsZCGHPbY8N44rGbYlNl8FWlRQes1x2eLqkJ00
+        uDXUU0jPO8jVsldN0JduGgU1fw==
+X-Google-Smtp-Source: APXvYqzH3122XVz+Xjvvs3/f2ovlox5AqFaHNu3z266z0L1JjdEWxY4sgwdfmFDwsQc2XOJwI0yKSQ==
+X-Received: by 2002:a05:6e02:8e7:: with SMTP id n7mr10886315ilt.302.1574353172148;
+        Thu, 21 Nov 2019 08:19:32 -0800 (PST)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id b21sm1392809ilg.88.2019.11.21.08.19.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 21 Nov 2019 08:19:31 -0800 (PST)
+Subject: Re: single aio thread is migrated crazily by scheduler
+To:     Boaz Harrosh <boaz@plexistor.com>, Phil Auld <pauld@redhat.com>,
+        Ming Lei <ming.lei@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Dave Chinner <david@fromorbit.com>,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jeff Moyer <jmoyer@redhat.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        Eric Sandeen <sandeen@redhat.com>,
+        Christoph Hellwig <hch@lst.de>, Ingo Molnar <mingo@redhat.com>,
+        Tejun Heo <tj@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>
+References: <20191114235415.GL4614@dread.disaster.area>
+ <20191115010824.GC4847@ming.t460p>
+ <20191115045634.GN4614@dread.disaster.area>
+ <20191115070843.GA24246@ming.t460p>
+ <20191115234005.GO4614@dread.disaster.area>
+ <20191118092121.GV4131@hirez.programming.kicks-ass.net>
+ <20191118204054.GV4614@dread.disaster.area>
+ <20191120191636.GI4097@hirez.programming.kicks-ass.net>
+ <20191120220313.GC18056@pauld.bos.csb> <20191121041218.GK24548@ming.t460p>
+ <20191121141207.GA18443@pauld.bos.csb>
+ <93de0f75-3664-c71e-9947-5b37ae935ddc@plexistor.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <8c02ab43-3880-68db-f293-9958510fb29e@kernel.dk>
+Date:   Thu, 21 Nov 2019 09:19:29 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <93de0f75-3664-c71e-9947-5b37ae935ddc@plexistor.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of redefining usb vendor IDs in several places, consolidate
-into one include file: include/linux/usb/usb_ids.h
+On 11/21/19 8:02 AM, Boaz Harrosh wrote:
+> On 21/11/2019 16:12, Phil Auld wrote:
+> <>
+>>
+>> The scheduler doesn't know if the queued_work submitter is going to go to sleep.
+>> That's why I was singling out AIO. My understanding of it is that you submit the IO
+>> and then keep going. So in that case it might be better to pick a node-local nearby
+>> cpu instead. But this is a user of work queue issue not a scheduler issue.
+>>
+> 
+> We have a very similar long standing problem in our system (zufs), that we had to do
+> hacks to fix.
+> 
+> We have seen these CPU bouncing exacly as above in fio and more
+> benchmarks, Our final analysis was:
+>
+> One thread is in wait_event() if the wake_up() is on the same CPU as
+> the waiter, on some systems usually real HW and not VMs, would bounce
+> to a different CPU.  Now our system has an array of worker-threads
+> bound to each CPU. an incoming thread chooses a corresponding cpu
+> worker-thread, let it run, waiting for a reply, then when the
+> worker-thread is done it will do a wake_up(). Usually its fine and the
+> wait_event() stays on the same CPU. But on some systems it will wakeup
+> in a different CPU.
+> 
+> Now this is a great pity because in our case and the work_queue case
+> and high % of places the thread calling wake_up() will then
+> immediately go to sleep on something.  (Work done lets wait for new
+> work)
+> 
+> I wish there was a flag to wake_up() or to the event object that says
+> to relinquish the remaning of the time-slice to the waiter on same
+> CPU, since I will be soon sleeping.
 
-Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
----
- drivers/hid/hid-ids.h                              | 15 ++------------
- drivers/hid/wacom.h                                |  4 +---
- drivers/input/joydev.c                             |  5 +----
- drivers/input/mouse/bcm5974.c                      |  3 +--
- drivers/input/mouse/synaptics_usb.c                |  2 +-
- drivers/input/tablet/aiptek.c                      |  3 +--
- .../net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c  |  2 +-
- drivers/usb/serial/io_usbvend.h                    |  1 -
- include/linux/usb/usb_ids.h                        | 24 ++++++++++++++++++++++
- 9 files changed, 32 insertions(+), 27 deletions(-)
- create mode 100644 include/linux/usb/usb_ids.h
+Isn't that basically what wake_up_sync() is?
 
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index 447e8db21174..7520800da1e4 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -14,6 +14,8 @@
- #ifndef HID_IDS_H_FILE
- #define HID_IDS_H_FILE
- 
-+#include <linux/usb/usb_ids.h>
-+
- #define USB_VENDOR_ID_258A		0x258a
- #define USB_DEVICE_ID_258A_6A88		0x6a88
- 
-@@ -46,7 +48,6 @@
- #define USB_VENDOR_ID_AFATECH		0x15a4
- #define USB_DEVICE_ID_AFATECH_AF9016	0x9016
- 
--#define USB_VENDOR_ID_AIPTEK		0x08ca
- #define USB_DEVICE_ID_AIPTEK_01		0x0001
- #define USB_DEVICE_ID_AIPTEK_10		0x0010
- #define USB_DEVICE_ID_AIPTEK_20		0x0020
-@@ -89,7 +90,6 @@
- #define USB_VENDOR_ID_ANTON		0x1130
- #define USB_DEVICE_ID_ANTON_TOUCH_PAD	0x3101
- 
--#define USB_VENDOR_ID_APPLE		0x05ac
- #define BT_VENDOR_ID_APPLE		0x004c
- #define USB_DEVICE_ID_APPLE_MIGHTYMOUSE	0x0304
- #define USB_DEVICE_ID_APPLE_MAGICMOUSE	0x030d
-@@ -658,7 +658,6 @@
- #define USB_VENDOR_ID_KEYTOUCH		0x0926
- #define USB_DEVICE_ID_KEYTOUCH_IEC	0x3333
- 
--#define USB_VENDOR_ID_KYE		0x0458
- #define USB_DEVICE_ID_KYE_ERGO_525V	0x0087
- #define USB_DEVICE_ID_GENIUS_GILA_GAMING_MOUSE	0x0138
- #define USB_DEVICE_ID_GENIUS_MANTICORE	0x0153
-@@ -715,7 +714,6 @@
- #define USB_DEVICE_ID_LD_HYBRID		0x2090
- #define USB_DEVICE_ID_LD_HEATCONTROL	0x20A0
- 
--#define USB_VENDOR_ID_LENOVO		0x17ef
- #define USB_DEVICE_ID_LENOVO_TPKBD	0x6009
- #define USB_DEVICE_ID_LENOVO_CUSBKBD	0x6047
- #define USB_DEVICE_ID_LENOVO_CBTKBD	0x6048
-@@ -963,7 +961,6 @@
- #define USB_VENDOR_ID_RAZER            0x1532
- #define USB_DEVICE_ID_RAZER_BLADE_14   0x011D
- 
--#define USB_VENDOR_ID_REALTEK		0x0bda
- #define USB_DEVICE_ID_REALTEK_READER	0x0152
- 
- #define USB_VENDOR_ID_RETROUSB		0xf000
-@@ -1029,8 +1026,6 @@
- #define USB_DEVICE_ID_SMK_NSG_MR5U_REMOTE       0x0368
- #define USB_DEVICE_ID_SMK_NSG_MR7U_REMOTE       0x0369
- 
--
--#define USB_VENDOR_ID_SONY			0x054c
- #define USB_DEVICE_ID_SONY_VAIO_VGX_MOUSE	0x024b
- #define USB_DEVICE_ID_SONY_VAIO_VGP_MOUSE	0x0374
- #define USB_DEVICE_ID_SONY_PS3_BDREMOTE		0x0306
-@@ -1082,7 +1077,6 @@
- #define USB_DEVICE_ID_SYMBOL_SCANNER_2	0x1300
- #define USB_DEVICE_ID_SYMBOL_SCANNER_3	0x1200
- 
--#define USB_VENDOR_ID_SYNAPTICS		0x06cb
- #define USB_DEVICE_ID_SYNAPTICS_TP	0x0001
- #define USB_DEVICE_ID_SYNAPTICS_INT_TP	0x0002
- #define USB_DEVICE_ID_SYNAPTICS_CPAD	0x0003
-@@ -1105,12 +1099,8 @@
- #define USB_VENDOR_ID_THINGM		0x27b8
- #define USB_DEVICE_ID_BLINK1		0x01ed
- 
--#define USB_VENDOR_ID_THQ		0x20d6
--#define USB_DEVICE_ID_THQ_PS3_UDRAW	0xcb17
--
- #define USB_VENDOR_ID_THRUSTMASTER	0x044f
- 
--#define USB_VENDOR_ID_TIVO		0x150a
- #define USB_DEVICE_ID_TIVO_SLIDE_BT	0x1200
- #define USB_DEVICE_ID_TIVO_SLIDE	0x1201
- #define USB_DEVICE_ID_TIVO_SLIDE_PRO	0x1203
-@@ -1180,7 +1170,6 @@
- #define USB_VENDOR_ID_VTL		0x0306
- #define USB_DEVICE_ID_VTL_MULTITOUCH_FF3F	0xff3f
- 
--#define USB_VENDOR_ID_WACOM		0x056a
- #define USB_DEVICE_ID_WACOM_GRAPHIRE_BLUETOOTH	0x81
- #define USB_DEVICE_ID_WACOM_INTUOS4_BLUETOOTH   0x00BD
- 
-diff --git a/drivers/hid/wacom.h b/drivers/hid/wacom.h
-index 203d27d198b8..86d08f70184f 100644
---- a/drivers/hid/wacom.h
-+++ b/drivers/hid/wacom.h
-@@ -90,6 +90,7 @@
- #include <linux/kfifo.h>
- #include <linux/leds.h>
- #include <linux/usb/input.h>
-+#include <linux/usb/usb_ids.h>
- #include <linux/power_supply.h>
- #include <asm/unaligned.h>
- 
-@@ -100,9 +101,6 @@
- #define DRIVER_AUTHOR "Vojtech Pavlik <vojtech@ucw.cz>"
- #define DRIVER_DESC "USB Wacom tablet driver"
- 
--#define USB_VENDOR_ID_WACOM	0x056a
--#define USB_VENDOR_ID_LENOVO	0x17ef
--
- enum wacom_worker {
- 	WACOM_WORKER_WIRELESS,
- 	WACOM_WORKER_BATTERY,
-diff --git a/drivers/input/joydev.c b/drivers/input/joydev.c
-index a2b5fbba2d3b..49a93f445b3b 100644
---- a/drivers/input/joydev.c
-+++ b/drivers/input/joydev.c
-@@ -23,6 +23,7 @@
- #include <linux/init.h>
- #include <linux/device.h>
- #include <linux/cdev.h>
-+#include <linux/usb/usb_ids.h>
- 
- MODULE_AUTHOR("Vojtech Pavlik <vojtech@ucw.cz>");
- MODULE_DESCRIPTION("Joystick device interfaces");
-@@ -747,15 +748,11 @@ static void joydev_cleanup(struct joydev *joydev)
-  * These codes are copied from from hid-ids.h, unfortunately there is no common
-  * usb_ids/bt_ids.h header.
-  */
--#define USB_VENDOR_ID_SONY			0x054c
- #define USB_DEVICE_ID_SONY_PS3_CONTROLLER		0x0268
- #define USB_DEVICE_ID_SONY_PS4_CONTROLLER		0x05c4
- #define USB_DEVICE_ID_SONY_PS4_CONTROLLER_2		0x09cc
- #define USB_DEVICE_ID_SONY_PS4_CONTROLLER_DONGLE	0x0ba0
- 
--#define USB_VENDOR_ID_THQ			0x20d6
--#define USB_DEVICE_ID_THQ_PS3_UDRAW			0xcb17
--
- #define ACCEL_DEV(vnd, prd)						\
- 	{								\
- 		.flags = INPUT_DEVICE_ID_MATCH_VENDOR |			\
-diff --git a/drivers/input/mouse/bcm5974.c b/drivers/input/mouse/bcm5974.c
-index 59a14505b9cd..e00c5133ad05 100644
---- a/drivers/input/mouse/bcm5974.c
-+++ b/drivers/input/mouse/bcm5974.c
-@@ -24,12 +24,11 @@
- #include <linux/slab.h>
- #include <linux/module.h>
- #include <linux/usb/input.h>
-+#include <linux/usb/usb_ids.h>
- #include <linux/hid.h>
- #include <linux/mutex.h>
- #include <linux/input/mt.h>
- 
--#define USB_VENDOR_ID_APPLE		0x05ac
--
- /* MacbookAir, aka wellspring */
- #define USB_DEVICE_ID_APPLE_WELLSPRING_ANSI	0x0223
- #define USB_DEVICE_ID_APPLE_WELLSPRING_ISO	0x0224
-diff --git a/drivers/input/mouse/synaptics_usb.c b/drivers/input/mouse/synaptics_usb.c
-index b5ff27e32a0c..010f13d803b4 100644
---- a/drivers/input/mouse/synaptics_usb.c
-+++ b/drivers/input/mouse/synaptics_usb.c
-@@ -39,10 +39,10 @@
- #include <linux/module.h>
- #include <linux/moduleparam.h>
- #include <linux/usb.h>
-+#include <linux/usb/usb_ids.h>
- #include <linux/input.h>
- #include <linux/usb/input.h>
- 
--#define USB_VENDOR_ID_SYNAPTICS	0x06cb
- #define USB_DEVICE_ID_SYNAPTICS_TP	0x0001	/* Synaptics USB TouchPad */
- #define USB_DEVICE_ID_SYNAPTICS_INT_TP	0x0002	/* Integrated USB TouchPad */
- #define USB_DEVICE_ID_SYNAPTICS_CPAD	0x0003	/* Synaptics cPad */
-diff --git a/drivers/input/tablet/aiptek.c b/drivers/input/tablet/aiptek.c
-index 2ca586fb914f..c1cde51a6929 100644
---- a/drivers/input/tablet/aiptek.c
-+++ b/drivers/input/tablet/aiptek.c
-@@ -62,6 +62,7 @@
- #include <linux/slab.h>
- #include <linux/module.h>
- #include <linux/usb/input.h>
-+#include <linux/usb/usb_ids.h>
- #include <linux/uaccess.h>
- #include <asm/unaligned.h>
- 
-@@ -162,8 +163,6 @@
-  * (Step 9 can be omitted, but you'll then have no function keys.)
-  */
- 
--#define USB_VENDOR_ID_AIPTEK				0x08ca
--#define USB_VENDOR_ID_KYE				0x0458
- #define USB_REQ_GET_REPORT				0x01
- #define USB_REQ_SET_REPORT				0x09
- 
-diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
-index c6c41fb962ff..44ffbab12b7e 100644
---- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
-+++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c
-@@ -22,6 +22,7 @@
- #include <linux/spinlock.h>
- #include <linux/list.h>
- #include <linux/usb.h>
-+#include <linux/usb/usb_ids.h>
- #include <linux/netdevice.h>
- #include <linux/etherdevice.h>
- #include <linux/ethtool.h>
-@@ -64,7 +65,6 @@ MODULE_PARM_DESC(dma_agg_timeout, "Set DMA aggregation timeout (range 1-127)");
- module_param_named(dma_agg_pages, rtl8xxxu_dma_agg_pages, int, 0600);
- MODULE_PARM_DESC(dma_agg_pages, "Set DMA aggregation pages (range 1-127, 0 to disable)");
- 
--#define USB_VENDOR_ID_REALTEK		0x0bda
- #define RTL8XXXU_RX_URBS		32
- #define RTL8XXXU_RX_URB_PENDING_WATER	8
- #define RTL8XXXU_TX_URBS		64
-diff --git a/drivers/usb/serial/io_usbvend.h b/drivers/usb/serial/io_usbvend.h
-index c38e87ac5ea9..b94c69207bc3 100644
---- a/drivers/usb/serial/io_usbvend.h
-+++ b/drivers/usb/serial/io_usbvend.h
-@@ -26,7 +26,6 @@
- //
- 
- #define	USB_VENDOR_ID_ION	0x1608		// Our VID
--#define	USB_VENDOR_ID_TI	0x0451		// TI VID
- #define USB_VENDOR_ID_AXIOHM	0x05D9		/* Axiohm VID */
- 
- //
-diff --git a/include/linux/usb/usb_ids.h b/include/linux/usb/usb_ids.h
-new file mode 100644
-index 000000000000..d72c1bfa8621
---- /dev/null
-+++ b/include/linux/usb/usb_ids.h
-@@ -0,0 +1,24 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ *	USB Vendor and Device IDs
-+ *
-+ */
-+#ifndef _LINUX_USB_IDS_H
-+#define _LINUX_USB_IDS_H
-+
-+#define USB_VENDOR_ID_AIPTEK		0x08ca
-+#define USB_VENDOR_ID_APPLE		0x05ac
-+#define USB_VENDOR_ID_KYE		0x0458
-+#define USB_VENDOR_ID_LENOVO		0x17ef
-+#define USB_VENDOR_ID_REALTEK		0x0bda
-+#define USB_VENDOR_ID_SONY		0x054c
-+#define USB_VENDOR_ID_SYNAPTICS		0x06cb
-+
-+#define USB_VENDOR_ID_THQ		0x20d6
-+#define USB_DEVICE_ID_THQ_PS3_UDRAW	0xcb17
-+
-+#define USB_VENDOR_ID_TI		0x0451
-+#define USB_VENDOR_ID_TIVO		0x150a
-+#define USB_VENDOR_ID_WACOM		0x056a
-+
-+#endif /* _LINUX_USB_IDS_H */
 -- 
-2.11.0
+Jens Axboe
 
