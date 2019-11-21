@@ -2,247 +2,114 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E38CC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B634FC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:09:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D64520731
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:09:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81E4A20731
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:09:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="CciPYHuN"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="K8JOzSEH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbfKUNJH (ORCPT
+        id S1727050AbfKUNJV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 08:09:07 -0500
-Received: from mout.web.de ([212.227.17.11]:50009 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726358AbfKUNJG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 08:09:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1574341650;
-        bh=Bl1M9oXask9WgvTRgAZYOO+YcirOmLpgsPrvqH+BMV4=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=CciPYHuN5K6YIBjpeF9sMfjUvJguqACBNF/5DGvP1F3RNGYSzV0rnuBeyuWrJrd2C
-         6xnRSjsSN7T5w+ZXtANXznndW6EE8pP3Pn++u+X8PYFfTWnGlp0J0/bmeFpVovrBY3
-         iLUq2DUC4HqxfAWM9octfXKhDafptxZ8Nt8Q1/Zk=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.3] ([78.48.172.213]) by smtp.web.de (mrweb101
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MQNeK-1iQAQv2uEu-00TmZM; Thu, 21
- Nov 2019 14:07:29 +0100
-Subject: Re: [PATCH v4 04/13] exfat: add directory operations
-To:     Namjae Jeon <namjae.jeon@samsung.com>,
-        linux-fsdevel@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>,
-        Daniel Wagner <dwagner@suse.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nikolay Borisov <nborisov@suse.com>,
-        Sungjong Seo <sj1557.seo@samsung.com>,
-        =?UTF-8?Q?Valdis_Kl=c4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        linkinjeon@gmail.com
-References: <20191121052618.31117-1-namjae.jeon@samsung.com>
- <CGME20191121052917epcas1p259b8cb61ab86975cabc0cf4815a8dc38@epcas1p2.samsung.com>
- <20191121052618.31117-5-namjae.jeon@samsung.com>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <498a958f-9066-09c6-7240-114234965c1a@web.de>
-Date:   Thu, 21 Nov 2019 14:07:15 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 21 Nov 2019 08:09:21 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:58363 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726358AbfKUNJV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 08:09:21 -0500
+X-UUID: 68b52b8743034574967e8b319804cedc-20191121
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=GKRpbk2ZaobBcrGmB5jVBprxNIO5Hbu7SfyTwGSrIKk=;
+        b=K8JOzSEHkHL3MO8oyOwdXAKMIDqQpcxBEwEqlODopZEl7MFXIVymzFGDLqKxfOdWdz+LHf5P3vSb6Ev8xRUjc3ht/ru5qp7u3wwEn62wMugngeCHGIBNxYKJrFS3DSsAjRBqZ9xW9UcDmEt38gUd8ubGNI3FuTjP7915/GxBVws=;
+X-UUID: 68b52b8743034574967e8b319804cedc-20191121
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
+        (envelope-from <walter-zh.wu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1392207874; Thu, 21 Nov 2019 21:09:14 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 21 Nov 2019 21:09:07 +0800
+Received: from [172.21.84.99] (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 21 Nov 2019 21:09:08 +0800
+Message-ID: <1574341753.8338.7.camel@mtksdccf07>
+Subject: Re: [PATCH v4 1/2] kasan: detect negative size in memory operation
+ function
+From:   Walter Wu <walter-zh.wu@mediatek.com>
+To:     Andrey Ryabinin <aryabinin@virtuozzo.com>
+CC:     Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <kasan-dev@googlegroups.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        <linux-mediatek@lists.infradead.org>
+Date:   Thu, 21 Nov 2019 21:09:13 +0800
+In-Reply-To: <217bd537-e6b7-3acc-b6bb-ac9c5d94da89@virtuozzo.com>
+References: <20191112065302.7015-1-walter-zh.wu@mediatek.com>
+         <040479c3-6f96-91c6-1b1a-9f3e947dac06@virtuozzo.com>
+         <1574341376.8338.4.camel@mtksdccf07>
+         <217bd537-e6b7-3acc-b6bb-ac9c5d94da89@virtuozzo.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-In-Reply-To: <20191121052618.31117-5-namjae.jeon@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:MOEVo3x2zyMK82ubMAciySTOlnzTy6xS7QKdHLf+vQEI0peQnRq
- ORFwXWRwq8iv7kqMvBA7XEgbMtHERM+N9oOtfsl7w/1CCL+YMqJ2wTywCFh+ZAnI6fwnBvh
- Mp42RPxORAC1zcbtKo6lfCbvD87z1zG/oreKzLr8FBoDxOgwB4QamzGRaMpVdmgC/h3AULv
- VgI1C0qvSERXQwETnYqlA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:u+e4M6qFg6g=:oiz/zLSIstBOFSjDLhfu8N
- 06gVP2W3o8g12gtktWbYv2nR3UAh7yoOMbBPeYglkv3k985qIpGeMszVrdMSLRhQ8EmLmBStu
- ar045SwM3S4QhghSJF/ooGdNQ/ggyWoPhArB+Cyphw65eahYrzW2LjWJxaiYAab+ULuyZF/he
- Ihl5Mwwyxv8pWPwRMQySXW+EbKAGq6UQsnvXZ7mUIOcC1OJM1chtVOAEqP8eKBREl5+5nnqoh
- nqeNISdJQcJ5NqAjB8DBYAl1QoPpBQsaSra/bFrG70AKoRoEvfqLA1GSF3VDOphMJB+8sF3Ss
- iWbf5OYJe0Qgie6d6/OqFmATxjbkaNcJ2LLegw9vIaUiGmiH8dN7W/x81yPMxn8F6pZOPKhTW
- XB5NmUHPGJdAG2cAT7GTO07BLkY7OAbiZmAkX5BS3eErLSL5UeW7YEEx0JMZyagqNvCLYsQjU
- I8+ZVa1m1IZIVFdl+l2rsTieT7BAzWDjMIIaoKosexRkCpz9orG1Sp1Dn19Andlxn4CxFH6Gn
- 2v451p4exG975f9OfSuXEuBE1CIhHy8GUo0VhKbqsSdAk6e4QPvLm7kljdjx2AoLjeWw/mhwt
- VdRBQyO1FMsKbG87oJvVC3QOUsikcygz/ZBMNYgAbF8AkRRAVoTJKmuZ8d/hYHOfd2UjYqs+V
- NjlFs0GhgU3iSlWqFEHea2SkBLEEhaXJjBhr+VZSvmdpLtILbnFJYM4kGFB/ZSmMuN5kV5GWB
- xlTowt+sDINQ5XMSvkvkARONaOXiJttu3l6e3tc2rAV93NgE1XDKkFWCyP7m0Mn39NeTwLdpq
- ccEogc9F3clMJmU49H0mPqak0MDjCqzWxOY5hhxPnV1Tp3NnMttvPt4BUzzFzY3wRjEjmQRH4
- UwFQ2d0ZEmDHrDH1UIfyQ8+RouUpXnHPoR38mIu08VXNeUUc7Vf2/JG1R28iJadltmuSXkouv
- btRMSXAXci4K9/jeyoTaaEapvgtlMCdrdykHBrPwgFScaYdoZDc/BkMwpgnT0bUCT+0unLS/s
- GbyhgRNaZjJemmqgMYli5EDw/MMhKxML4Et+yoaRLvNXwbYlL33hGQCoRxkXyfuXPYITMLMmb
- UNvXlrvPkLCr+n+OnSk/Kto+7qJ93Tt9pd2lh/dYuhOSvcOWiEqWnH70h8P8mc3kKyjcz+RGC
- a2VDtyo8SLWM7leUTPZltihpdwIxN4F+mECws6DxzbkR8cqZzQfrFwLLdiYJQwWppqtF7rqv6
- 5df9ftlc9jIJUvNibTRwsNMOFx+TlIV1ETQwMQ25/aHh2vBRZJZVECehXCgI=
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=E2=80=A6
-> +++ b/fs/exfat/dir.c
-=E2=80=A6
-> +static int exfat_readdir(struct inode *inode, struct exfat_dir_entry *d=
-ir_entry)
-> +{
-=E2=80=A6
-> +			if (!ep) {
-> +				ret =3D -EIO;
-> +				goto free_clu;
-> +			}
+T24gVGh1LCAyMDE5LTExLTIxIGF0IDE2OjAzICswMzAwLCBBbmRyZXkgUnlhYmluaW4gd3JvdGU6
+DQo+IA0KPiBPbiAxMS8yMS8xOSA0OjAyIFBNLCBXYWx0ZXIgV3Ugd3JvdGU6DQo+ID4gT24gVGh1
+LCAyMDE5LTExLTIxIGF0IDE1OjI2ICswMzAwLCBBbmRyZXkgUnlhYmluaW4gd3JvdGU6DQo+ID4+
+DQo+ID4+IE9uIDExLzEyLzE5IDk6NTMgQU0sIFdhbHRlciBXdSB3cm90ZToNCj4gPj4NCj4gPj4+
+IGRpZmYgLS1naXQgYS9tbS9rYXNhbi9jb21tb24uYyBiL21tL2thc2FuL2NvbW1vbi5jDQo+ID4+
+PiBpbmRleCA2ODE0ZDZkNmEwMjMuLjRiZmNlMGFmODgxZiAxMDA2NDQNCj4gPj4+IC0tLSBhL21t
+L2thc2FuL2NvbW1vbi5jDQo+ID4+PiArKysgYi9tbS9rYXNhbi9jb21tb24uYw0KPiA+Pj4gQEAg
+LTEwMiw3ICsxMDIsOCBAQCBFWFBPUlRfU1lNQk9MKF9fa2FzYW5fY2hlY2tfd3JpdGUpOw0KPiA+
+Pj4gICN1bmRlZiBtZW1zZXQNCj4gPj4+ICB2b2lkICptZW1zZXQodm9pZCAqYWRkciwgaW50IGMs
+IHNpemVfdCBsZW4pDQo+ID4+PiAgew0KPiA+Pj4gLQljaGVja19tZW1vcnlfcmVnaW9uKCh1bnNp
+Z25lZCBsb25nKWFkZHIsIGxlbiwgdHJ1ZSwgX1JFVF9JUF8pOw0KPiA+Pj4gKwlpZiAoIWNoZWNr
+X21lbW9yeV9yZWdpb24oKHVuc2lnbmVkIGxvbmcpYWRkciwgbGVuLCB0cnVlLCBfUkVUX0lQXykp
+DQo+ID4+PiArCQlyZXR1cm4gTlVMTDsNCj4gPj4+ICANCj4gPj4+ICAJcmV0dXJuIF9fbWVtc2V0
+KGFkZHIsIGMsIGxlbik7DQo+ID4+PiAgfQ0KPiA+Pj4gQEAgLTExMCw4ICsxMTEsOSBAQCB2b2lk
+ICptZW1zZXQodm9pZCAqYWRkciwgaW50IGMsIHNpemVfdCBsZW4pDQo+ID4+PiAgI3VuZGVmIG1l
+bW1vdmUNCj4gPj4+ICB2b2lkICptZW1tb3ZlKHZvaWQgKmRlc3QsIGNvbnN0IHZvaWQgKnNyYywg
+c2l6ZV90IGxlbikNCj4gPj4+ICB7DQo+ID4+PiAtCWNoZWNrX21lbW9yeV9yZWdpb24oKHVuc2ln
+bmVkIGxvbmcpc3JjLCBsZW4sIGZhbHNlLCBfUkVUX0lQXyk7DQo+ID4+PiAtCWNoZWNrX21lbW9y
+eV9yZWdpb24oKHVuc2lnbmVkIGxvbmcpZGVzdCwgbGVuLCB0cnVlLCBfUkVUX0lQXyk7DQo+ID4+
+PiArCWlmICghY2hlY2tfbWVtb3J5X3JlZ2lvbigodW5zaWduZWQgbG9uZylzcmMsIGxlbiwgZmFs
+c2UsIF9SRVRfSVBfKSB8fA0KPiA+Pj4gKwkgICAgIWNoZWNrX21lbW9yeV9yZWdpb24oKHVuc2ln
+bmVkIGxvbmcpZGVzdCwgbGVuLCB0cnVlLCBfUkVUX0lQXykpDQo+ID4+PiArCQlyZXR1cm4gTlVM
+TDsNCj4gPj4+ICANCj4gPj4+ICAJcmV0dXJuIF9fbWVtbW92ZShkZXN0LCBzcmMsIGxlbik7DQo+
+ID4+PiAgfQ0KPiA+Pj4gQEAgLTExOSw4ICsxMjEsOSBAQCB2b2lkICptZW1tb3ZlKHZvaWQgKmRl
+c3QsIGNvbnN0IHZvaWQgKnNyYywgc2l6ZV90IGxlbikNCj4gPj4+ICAjdW5kZWYgbWVtY3B5DQo+
+ID4+PiAgdm9pZCAqbWVtY3B5KHZvaWQgKmRlc3QsIGNvbnN0IHZvaWQgKnNyYywgc2l6ZV90IGxl
+bikNCj4gPj4+ICB7DQo+ID4+PiAtCWNoZWNrX21lbW9yeV9yZWdpb24oKHVuc2lnbmVkIGxvbmcp
+c3JjLCBsZW4sIGZhbHNlLCBfUkVUX0lQXyk7DQo+ID4+PiAtCWNoZWNrX21lbW9yeV9yZWdpb24o
+KHVuc2lnbmVkIGxvbmcpZGVzdCwgbGVuLCB0cnVlLCBfUkVUX0lQXyk7DQo+ID4+PiArCWlmICgh
+Y2hlY2tfbWVtb3J5X3JlZ2lvbigodW5zaWduZWQgbG9uZylzcmMsIGxlbiwgZmFsc2UsIF9SRVRf
+SVBfKSB8fA0KPiA+Pj4gKwkgICAgIWNoZWNrX21lbW9yeV9yZWdpb24oKHVuc2lnbmVkIGxvbmcp
+ZGVzdCwgbGVuLCB0cnVlLCBfUkVUX0lQXykpDQo+ID4+PiArCQlyZXR1cm4gTlVMTDsNCj4gPj4+
+ICANCj4gPj4NCj4gPj4gSSByZWFsaXplZCB0aGF0IHdlIGFyZSBnb2luZyBhIHdyb25nIGRpcmVj
+dGlvbiBoZXJlLiBFbnRpcmVseSBza2lwcGluZyBtZW0qKCkgb3BlcmF0aW9uIG9uIGFueQ0KPiA+
+PiBwb2lzb25lZCBzaGFkb3cgdmFsdWUgbWlnaHQgb25seSBtYWtlIHRoaW5ncyB3b3JzZS4gU29t
+ZSBidWdzIGp1c3QgZG9uJ3QgaGF2ZSBhbnkgc2VyaW91cyBjb25zZXF1ZW5jZXMsDQo+ID4+IGJ1
+dCBza2lwcGluZyB0aGUgbWVtKigpIG9wcyBlbnRpcmVseSBtaWdodCBpbnRyb2R1Y2Ugc3VjaCBj
+b25zZXF1ZW5jZXMsIHdoaWNoIHdvdWxkbid0IGhhcHBlbiBvdGhlcndpc2UuDQo+ID4+DQo+ID4+
+IFNvIGxldCdzIGtlZXAgdGhpcyBjb2RlIGFzIHRoaXMsIG5vIG5lZWQgdG8gY2hlY2sgdGhlIHJl
+c3VsdCBvZiBjaGVja19tZW1vcnlfcmVnaW9uKCkuDQo+ID4+DQo+ID4+DQo+ID4gT2ssIHdlIGp1
+c3QgbmVlZCB0byBkZXRlcm1pbmUgd2hldGhlciBzaXplIGlzIG5lZ2F0aXZlIG51bWJlci4gSWYg
+eWVzDQo+ID4gdGhlbiBLQVNBTiBwcm9kdWNlIHJlcG9ydCBhbmQgY29udGludWUgdG8gZXhlY3V0
+ZSBtZW0qKCkuIHJpZ2h0Pw0KPiA+IA0KPiANCj4gWWVzLg0KDQpUaGFua3MgZm9yIHlvdXIgc3Vn
+Z2VzdGlvbi4NCkkgd2lsbCBzZW5kIGEgbmV3IHY1IHBhdGNoIHRvbW9ycm93Lg0KDQpXYWx0ZXIN
+Cg0K
 
-How do you think about to move a bit of common exception handling code
-(at similar places)?
-
-+			if (!ep)
-+				goto e_io;
-
-
-=E2=80=A6
-> +free_clu:
-> +	kfree(clu);
-> +	return ret;
-
-+
-+e_io:
-+	ret =3D -EIO;
-+	goto free_clu;
-
-> +}
-=E2=80=A6
-> +static void exfat_set_entry_type(struct exfat_dentry *ep, unsigned int =
-type)
-> +{
-> +	if (type =3D=3D TYPE_UNUSED) {
-> +		ep->type =3D EXFAT_UNUSED;
-> +	} else if (type =3D=3D TYPE_DELETED) {
-> +		ep->type &=3D EXFAT_DELETE;
-
-The other assignments are working without the ampersand.
-Thus I would find its usage suspicious at this place.
-
-
-=E2=80=A6
-> +int update_dir_chksum(struct inode *inode, struct exfat_chain *p_dir,
-> +		int entry)
-> +{
-=E2=80=A6
-> +out_unlock:
-> +	brelse(fbh);
-
-Can the label =E2=80=9Crelease_fbh=E2=80=9D be more helpful?
-
-
-=E2=80=A6
-> +struct exfat_entry_set_cache *exfat_get_dentry_set(struct super_block *=
-sb,
-> +		struct exfat_chain *p_dir, int entry, unsigned int type,
-> +		struct exfat_dentry **file_ep)
-> +{
-=E2=80=A6
-> +	/* FIXME : is available in error case? */
-> +	if (p_dir->dir =3D=3D DIR_DELETED) {
-> +		exfat_msg(sb, KERN_ERR, "access to deleted dentry\n");
-> +		return NULL;
-> +	}
-
-Will this place need any further improvements?
-
-
-=E2=80=A6
-> +	bh =3D sb_bread(sb, sec);
-> +	if (!bh)
-> +		goto err_out;
-
-Can it be nicer to return directly?
-
-
-=E2=80=A6
-> +	ep =3D (struct exfat_dentry *)(bh->b_data + off);
-> +	entry_type =3D exfat_get_entry_type(ep);
-> +
-> +	if (entry_type !=3D TYPE_FILE && entry_type !=3D TYPE_DIR)
-> +		goto err_out;
-
-+		goto release_bh;
-
-=E2=80=A6
-> +		if (!exfat_validate_entry(exfat_get_entry_type(ep), &mode))
-> +			goto err_out;
-
-
-=E2=80=A6
-> +	brelse(bh);
-> +
-> +	return es;
-> +err_out:
-> +	kfree(es);
-> +	brelse(bh);
-
-I suggest to improve the exception handling also for this function impleme=
-ntation.
-
-+	brelse(bh);
-+	return es;
-+
-+free_es:
-+	kfree(es);
-+release_bh:
-+	brelse(bh);
-
-
-* Would you like to adjust any more jump targets at similar places?
-
-* Can another initialisation be omitted then for a pointer variable?
-
-Regards,
-Markus
