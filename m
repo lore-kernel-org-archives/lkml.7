@@ -2,137 +2,155 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F27AC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:51:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE803C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:52:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5704A206D8
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:51:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89027206EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:52:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726775AbfKUOvL (ORCPT
+        id S1726803AbfKUOwt convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 09:51:11 -0500
-Received: from foss.arm.com ([217.140.110.172]:57558 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726396AbfKUOvL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 09:51:11 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 161AFDA7;
-        Thu, 21 Nov 2019 06:51:10 -0800 (PST)
-Received: from [10.0.2.15] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C4FB83F703;
-        Thu, 21 Nov 2019 06:51:08 -0800 (PST)
-Subject: Re: [PATCH 3/3] sched/fair: Consider uclamp for "task fits capacity"
- checks
-To:     Quentin Perret <qperret@google.com>
-Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org,
-        mingo@kernel.org, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, patrick.bellasi@matbug.net,
-        qais.yousef@arm.com, morten.rasmussen@arm.com
-References: <20191120175533.4672-1-valentin.schneider@arm.com>
- <20191120175533.4672-4-valentin.schneider@arm.com>
- <20191121115602.GA213296@google.com>
- <f7e5dabb-a7e6-d110-abca-de7d4533bcc5@arm.com>
- <20191121133043.GA46904@google.com>
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <09e234a2-ea65-4d09-5215-9b0fe4ec09fe@arm.com>
-Date:   Thu, 21 Nov 2019 14:51:06 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191121133043.GA46904@google.com>
-Content-Type: text/plain; charset=utf-8
+        Thu, 21 Nov 2019 09:52:49 -0500
+Received: from mail-oln040092253037.outbound.protection.outlook.com ([40.92.253.37]:60959
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726358AbfKUOwt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 09:52:49 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hbUw3Bn93KDK9/H/BfnPARvBQaJeMkyGSZYjxxkZNDeiymuZaZm042JuJg//rIC1dhKhdzIOG86KcZkFX6VL1+WBlRfot3dK1OM0MwXfHxYjllZ5WLFagEwe03bKAepE428Lz/gVPuR+HLuXggoedWLbXZxOSkUuo9dC6tB1ZXkfUKygadKYhM0IIMD4kR5qkQLBWbIfzqPBwavfMVkJkC6cGyfqnTc2LDHfHyJT5yqJ62+YM1AJMOMO1Y/V725xutwammcwSQTUX/tvgJvWDs425VIQFHl+wi+bIba1B90RLHH+IqW1iXSghOUJsPuFx2J710iy7g8n3EFlEFnHPg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ghgmefyddDSLyM7kzWDvbAuDXR6ksbvey4TExZPAw2Q=;
+ b=KdiK4pyjsW1ZgbDS4ahZG44bHUIok4/J+7F3iWIzGktGgEiOYN50tn6I9myl/CqsYAVzYMqTW2HNvFcg/KUBhuEjEKSrC4trDBe34GQ14vfzHQ0Ousg2s30B1cBg9Q/ZGVgq9mHKYRCkJ0K6WIkB+W0NpnnH70Rd91r8JyApGjfG/cRFq5MugSpTzIxVFfqI7SuPm7rVxE0mF1Bp0BtSWY8dLd814tBDOAysvcsErntv9Zeof2jHYzLsBUG+C4gEzfBcECkOAWzLarSDPKk14sldUzavLtkfeR+uyjeDaNWvurbM5H7hFENxYCsXTOg7AnUBX+eISpIcbp5YA+DCOw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from SG2APC01FT044.eop-APC01.prod.protection.outlook.com
+ (10.152.250.57) by SG2APC01HT165.eop-APC01.prod.protection.outlook.com
+ (10.152.251.137) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2474.17; Thu, 21 Nov
+ 2019 14:52:42 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (10.152.250.55) by
+ SG2APC01FT044.mail.protection.outlook.com (10.152.250.239) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2474.17 via Frontend Transport; Thu, 21 Nov 2019 14:52:42 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::b880:961e:dd88:8b5d]) by PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::b880:961e:dd88:8b5d%12]) with mapi id 15.20.2474.019; Thu, 21 Nov
+ 2019 14:52:42 +0000
+From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "logang@deltatee.com" <logang@deltatee.com>
+Subject: Re: [PATCH v3 1/1] PCI: Fix bug resulting in double hpmemsize being
+ assigned to MMIO window
+Thread-Topic: [PATCH v3 1/1] PCI: Fix bug resulting in double hpmemsize being
+ assigned to MMIO window
+Thread-Index: AQHVmjaUpBZrOiNs+EaePGmphxD+QaeK5IeAgAXQSwCAAN4DAIAASFMAgACtqgCAAzleAA==
+Date:   Thu, 21 Nov 2019 14:52:41 +0000
+Message-ID: <PSXP216MB043824FACB1E66E3F31890D2804E0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+References: <PS2P216MB07556573D454EB9A6D1A5140804C0@PS2P216MB0755.KORP216.PROD.OUTLOOK.COM>
+ <20191119133828.GA171084@google.com>
+In-Reply-To: <20191119133828.GA171084@google.com>
+Accept-Language: en-AU, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MEAPR01CA0023.ausprd01.prod.outlook.com
+ (2603:10c6:201:1::35) To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:300:d::20)
+x-incomingtopheadermarker: OriginalChecksum:72FC63663633B3B664E68DEF549225B11997C666484C02A1AE1DA2D0B3EDA93C;UpperCasedChecksum:624F68319A1A333BBA400F72882CB839AC477F431A0B6F43C85F0B2B865B686C;SizeAsReceived:7756;Count:49
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [OdNfpSA1jXSPEd3piWq08THcgmT+PPzE]
+x-microsoft-original-message-id: <20191121145234.GA2038@nicholas-dell-linux>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 49
+x-eopattributedmessage: 0
+x-ms-office365-filtering-correlation-id: bce18599-6cea-41cc-c8dc-08d76e9275be
+x-ms-traffictypediagnostic: SG2APC01HT165:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Wgx2T7XV6GcZJnCaZPanqUVP3jIptAFd+B9T2EqXkG8OHhdiicqXeAypPwJUqSZeq0hc4uIU0gnJteIrWEW0EpFysbAslTIPafC9pV+5wHDWwJYAu6L7e9GFmLAMzDY7PvPGWcd+aGlk2LC/7UE6gnQqOLw4ioNeroXPwhOdkXp60j2ACk180+89R682MUtGwozQCUx07BAuxfOMwXxvjRVWC4m3JWaLa0rJNfg+OrA=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1B73B06479F0504DA7C6096638876204@KORP216.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: bce18599-6cea-41cc-c8dc-08d76e9275be
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Nov 2019 14:52:41.9201
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2APC01HT165
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/11/2019 13:30, Quentin Perret wrote:
-> On Thursday 21 Nov 2019 at 12:56:39 (+0000), Valentin Schneider wrote:
->>> @@ -6274,6 +6274,15 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
->>>  			if (!fits_capacity(util, cpu_cap))
->>>  				continue;
->>>  
->>> +			/*
->>> +			 * Skip CPUs that don't satisfy uclamp requests. Note
->>> +			 * that the above already ensures the CPU has enough
->>> +			 * spare capacity for the task; this is only really for
->>> +			 * uclamp restrictions.
->>> +			 */
->>> +			if (!task_fits_capacity(p, capacity_orig_of(cpu)))
->>> +				continue;
->>
->> This is partly redundant with the above, I think. What we really want here
->> is just
->>
->> fits_capacity(uclamp_eff_value(p, UCLAMP_MIN), capacity_orig_of(cpu))
->>
->> but this would require some inline #ifdeffery.
+On Tue, Nov 19, 2019 at 07:38:28AM -0600, Bjorn Helgaas wrote:
+> On Tue, Nov 19, 2019 at 03:17:04AM +0000, Nicholas Johnson wrote:
+> > I did just discover linux-next and I built it. Should I be doing this 
+> > more often to help find regressions?
 > 
-> This suggested change lacks the UCLAMP_MAX part, which is a shame
-> because this is precisely in the EAS path that we should try and
-> down-migrate tasks if they have an appropriate max_clamp. So, your first
-> proposal made sense, IMO.
+> Yes, if you build and run linux-next, that's a great service because
+> it helps find problems before they appear in mainline.
+
+Funnily enough, I just built Linux next-20191121 and it has a NULL 
+dereference on start-up, which renders the system unusable.
+
+Can anybody else please confirm? I enabled most of the new options since 
+the last linux-next a few days before.
+
+I did just compile on an i7-4770K using my USB SSD to boot. I suppose 
+there is a tiny chance that the CPU had an error and produced bad code. 
+It is not my machine. It was pegged at 100 degrees Celsius the whole 
+time.... I do find it hard to believe that I am the first to notice it, 
+though. I cannot find any bug reports on this.
+
+If this turns out to be an actual bug, is there a preferred way to 
+report it? It is probably not from pci subsystem.
+
+I can do a bisect, but they consume a lot of time on a slow system.
+
+Here is a preliminary bug report (assuming you are meant to report 
+linux-next bugs here):
+https://bugzilla.kernel.org/show_bug.cgi?id=205621
+
+Cheers!
+
+Regards,
+Nicholas Johnson
+
 > 
- 
-Hm right, had to let that spin in my head for a while but I think I got it.
-
-I was only really thinking of:
-
-  (h960: LITTLE = 462 cap, big = 1024)
-  p.uclamp.min = 512 -> skip LITTLEs regardless of the actual util_est
-
-but your point is we also want stuff like:
-
-  p.uclamp.max = 300 -> accept LITTLEs regardless of the actual util_est
-
-I'll keep the feec() change as-is and add something like the above in the
-changelog for v2.
-
-> Another option to avoid the redundancy would be to do something along
-> the lines of the totally untested diff below.
+> > I will now concentrate on fixing the problem where pci=nocrs does not 
+> > ignore the bus resource. One motherboard I own gives 00-7e or similar, 
+> > instead of 00-ff. The nocrs does not help, and I had to patch the kernel 
+> > myself. Only acpi=off fixes the problem, while knocking out SMT (MADT), 
+> > IOMMU (DMAR) and the ability to suspend without crashing.
+> > 
+> > If you disagree that nocrs should override bus resource, then let me 
+> > know and I will not attempt this.
 > 
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 69a81a5709ff..38cb5fe7ba65 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -6372,9 +6372,12 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
->                         if (!cpumask_test_cpu(cpu, p->cpus_ptr))
->                                 continue;
->  
-> -                       /* Skip CPUs that will be overutilized. */
->                         util = cpu_util_next(cpu, p, cpu);
->                         cpu_cap = capacity_of(cpu);
-> +                       spare_cap = cpu_cap - util;
-> +                       util = uclamp_util_with(cpu_rq(cpu), util, p);
-> +
-> +                       /* Skip CPUs that will be overutilized. */
->                         if (!fits_capacity(util, cpu_cap))
->                                 continue;
->  
-> @@ -6389,7 +6392,6 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
->                          * Find the CPU with the maximum spare capacity in
->                          * the performance domain
->                          */
-> -                       spare_cap = cpu_cap - util;
->                         if (spare_cap > max_spare_cap) {
->                                 max_spare_cap = spare_cap;
->                                 max_spare_cap_cpu = cpu;
+> I guess the problem is that with "pci=nocrs", we ignore the MMIO and
+> I/O port resources from _CRS, but we still pay attention to bus number
+> resources in _CRS?  That does sound like it would be unexpected
+> behavior.
 > 
-> Thoughts ?
+> I *would* like to see the complete dmesg log because these _CRS
+> methods are pretty reliable because Windows relies on them as well, so
+> problems are frequently a result of Linux defects.  If we can fix
+> Linux or automatically work around issues so users don't have to use
+> "pci=nocrs" explicitly, that's the best.
 > 
-
-uclamp_util_with() (or uclamp_rq_util_with() ;)) picks the max between the
-rq-aggregated clamps and the task clamps, which isn't what we want. If the
-task has a low-ish uclamp.max (e.g. the 300 example from above) but the
-rq-wide max-aggregated uclamp.max is ~800, we'd clamp using that 800. It
-makes sense for frequency selection, but not for task placement IMO.
-
-> Thanks,
-> Quentin
-> 
+> Bjorn
