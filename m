@@ -2,128 +2,102 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBF52C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 15:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B17EEC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 15:28:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C927420674
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 15:27:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A5EA2070E
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 15:28:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbfKUP1g (ORCPT
+        id S1726968AbfKUP2x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 10:27:36 -0500
-Received: from mout.kundenserver.de ([212.227.17.10]:41955 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726546AbfKUP1f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 10:27:35 -0500
-Received: from orion.localdomain ([95.115.120.75]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MJW18-1iITLJ3m6i-00JrJT; Thu, 21 Nov 2019 16:27:34 +0100
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     wsa@the-dreams.de, linux-i2c@vger.kernel.org
-Subject: [PATCH] drivers: i2c: introduce devm_i2c_add_adapter()
-Date:   Thu, 21 Nov 2019 16:27:16 +0100
-Message-Id: <20191121152716.23940-1-info@metux.net>
-X-Mailer: git-send-email 2.11.0
-X-Provags-ID: V03:K1:ET/rQWaaj+bqgKvzzHm7j0cGhbypk2slAUvAcx1PA1h6UOx75CS
- 83ugTIkteaXVtIZ8MkFAQqji9tgVzfKMzE3jeJei1t5nUyPoS9evulJSKjo28CKUyeFIIjw
- IJ8XEDVPRAhvsWLJoKtcA5SNkiGda7QLVhTdy5DHJDDgEef2SLC7RR0GJ0HQ7sI5SR9J4C4
- FtXG3nM7l50b/N7BVPIbg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:eqiHgmuKDfY=:dcngmJbBwN6ZZbI2T8T+p2
- /pQhvjNvZx6Cu/klqM/4P1KusslymmESqTZR4q1v3OKj4QWGIlogJvPVyLb1Z+skoGisWwjWa
- Gk1fwghyyjxGGrGy4IImKTl+rCWTmSudPK7uN27MSo2eAJUqPI+xAVE2bg46x+Ep2r2vaAHHs
- nCQ925PCFUsIF5gQr498o4utANXKMQslF+BGF54+gu9WH4hmZHYEWVlvgEMBKTFHHGCY8y108
- Rj372EdfIMxNH++U7yTBsyturCDn+pso+5kYEudbNY8MfeCbtFXMUqgp6Vktkl95mTJQwoS0z
- l2N46jw1NhIV0hX5L4sAuWu+s2ymoTJDwmGp1Uqbdja0RjDHba5jU3BoQJHCasnTpClqr9xFg
- rodEzvb7RXjUWFDtnfwr4fLZ1XdISTGheRyFQbeYXIleWKz/QFxZ3cms/Nm2eWbUCz0euc+uj
- +elDsd/Ranq0ik/0fLxcBzjcZoX6YH7FpSXUg12u5+/S2AVjoiwvETVIpkgPCkB5aGKSl4mB6
- s0Q6U9xiVn9OYyoLWUaQ5quPYfWTBg1Q4inNnGy1gu5d1SR48BzeMIgyTQrHUKiJOd0Zua2GF
- iK5x0qnGV8Mu28y7OchXT96DXr3cgcD9m1VFDWv7AFPfTjHwDLdn9PEQgSIIZg8evVMQM3jgB
- 5j9JQWMd1C0vcxHcb0z5OfL6gQfeHbGhhDIqpy/tnjWVKQdwKstwYz4IJiErTjSFJ7faH1x8f
- +QQIfw5emE/Vqt+KQpv5fG8pfbAgl6fyEX0ZMLM69Tnru4KEYUXADzPEwGiwfIYIYE3LsjJOZ
- uaDygzLYLII4MBbRzsfm5YIk5EH+P8lhN36ChZ/d+18XI2FS0SgZS8196LB/IIO1NmCx91QZl
- CxL+JCGvk66R3fok2Ntg==
+        Thu, 21 Nov 2019 10:28:53 -0500
+Received: from mx2.suse.de ([195.135.220.15]:57076 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726546AbfKUP2x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 10:28:53 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 7F730B231;
+        Thu, 21 Nov 2019 15:28:51 +0000 (UTC)
+Date:   Thu, 21 Nov 2019 16:28:47 +0100
+From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH 1/2] mm: memcg: switch to css_tryget() in
+ get_mem_cgroup_from_mm()
+Message-ID: <20191121152847.GA14375@blackbody.suse.cz>
+References: <20191106225131.3543616-1-guro@fb.com>
+ <20191113162934.GF19372@blackbody.suse.cz>
+ <20191113170823.GA12464@castle.DHCP.thefacebook.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="dDRMvlgZJXvWKvBx"
+Content-Disposition: inline
+In-Reply-To: <20191113170823.GA12464@castle.DHCP.thefacebook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce devm'ed version of i2c_add_adapter() which triggers
-i2c_del_adapter() to be called when parent device is removed.
 
-Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
----
- drivers/i2c/i2c-core-base.c | 38 ++++++++++++++++++++++++++++++++++++++
- include/linux/i2c.h         |  2 ++
- 2 files changed, 40 insertions(+)
+--dDRMvlgZJXvWKvBx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-index 5f6a4985f2bc..bd713e451633 100644
---- a/drivers/i2c/i2c-core-base.c
-+++ b/drivers/i2c/i2c-core-base.c
-@@ -1452,6 +1452,44 @@ int i2c_add_adapter(struct i2c_adapter *adapter)
- }
- EXPORT_SYMBOL(i2c_add_adapter);
- 
-+static void devm_i2c_adapter_release(struct device *dev, void *res)
-+{
-+	i2c_del_adapter(*(struct i2c_adapter**)res);
-+}
-+
-+/**
-+ * devm_i2c_add_adapter - devm version of i2c_add_adapter()
-+ * @adapter: the adapter to add
-+ * @data: private data to attach (if non-NULL)
-+ * Context: can sleep
-+ */
-+int devm_i2c_add_adapter(struct device *parent,
-+			 struct i2c_adapter *adap,
-+			 void *data)
-+{
-+	struct i2c_adapter **dr;
-+	int rc;
-+
-+	dr = devres_alloc(devm_i2c_adapter_release, sizeof(*dr), GFP_KERNEL);
-+	if (!dr)
-+		return -ENOMEM;
-+
-+	rc = i2c_add_adapter(adap);
-+	if (rc) {
-+		devres_free(dr);
-+		return rc;
-+	}
-+
-+	if (data)
-+		i2c_set_adapdata(adap, data);
-+
-+	*dr = adap;
-+	devres_add(parent, dr);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(devm_i2c_add_adapter);
-+
- /**
-  * i2c_add_numbered_adapter - declare i2c adapter, use static bus number
-  * @adap: the adapter to register (with adap->nr initialized)
-diff --git a/include/linux/i2c.h b/include/linux/i2c.h
-index 1361637c369d..8dc07d03a502 100644
---- a/include/linux/i2c.h
-+++ b/include/linux/i2c.h
-@@ -834,6 +834,8 @@ static inline void i2c_mark_adapter_resumed(struct i2c_adapter *adap)
-  */
- #if IS_ENABLED(CONFIG_I2C)
- extern int i2c_add_adapter(struct i2c_adapter *adap);
-+extern int devm_i2c_add_adapter(struct device *parent,
-+				struct i2c_adapter *adap, void *data);
- extern void i2c_del_adapter(struct i2c_adapter *adap);
- extern int i2c_add_numbered_adapter(struct i2c_adapter *adap);
- 
--- 
-2.11.0
+On Wed, Nov 13, 2019 at 05:08:29PM +0000, Roman Gushchin <guro@fb.com> wrote:
+> The thing here is that css_tryget_online() cannot pin the online state,
+> so even if returned true, the cgroup can be offline at the return from
+> the function.
+Adding this for the record.
 
+The actual offlining happens only from css_killed_ref_fn, which is
+percpu_ref_kill_and_confirm confirmation callback. That is only called
+after RCU grace period. So, css_tryget_online will pin the online state
+_inside_ rcu_read_{,un}lock section.
+
+The fact is that many call sites pass the css reference over
+rcu_read_unlock boundary allowing potential offlining.
+
+> So if we rely somewhere on it, it's already broken.
+Charges into offlined memcg should fine (wrt the original patch). I
+didn't check other callers though...
+
+> Generally speaking, it's better to reduce it's usage to the bare minimum.
+...I agree as it's confusing and potentially redundant.
+
+Michal
+
+--dDRMvlgZJXvWKvBx
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEEoQaUCWq8F2Id1tNia1+riC5qSgFAl3WrScACgkQia1+riC5
+qShpuA//a/oxK/bmsjDKt4LE1wwkZ3GsY3MsYuExq3lBFEGj8FGXFuDA7qgrTHc5
+MTk5HWE2HvGNuF/zUGKElTggicIlcEHb14RjiUpFstAZlVNkgL7CvILRNd+vIKZ8
+nA8n509j+H8mtbdtsb9yvHFpvKKwz97X2Rvm8z8fhnzbiQEOOD0vdA/C7mIhVUty
+YP7mT4GsinaUxlpnD6VP8V656yEM7PPCLSryJaJabdJAnk5rG4GXCfu15GRvGX4u
+OMlRvSuF0YsRcSD6ay7YHo0+8dXyoLJyhZLyevCyqzRenWY5I6FUAV+1xwlukYY6
+WaCPpJn7ZFo/Xb0f4g/2JBjnfw0sSRh9VDlg8Jct0uhckd1dCJIh8/DV2AJEs7X+
+Ud+tgZHaULVPwFDI7489ovfdMi0z3xDwUVwCyh0l6x7zxLnrisuwCVPn3BSS6KRE
+xKDGMbwwqdjviUmWbagxCVJnc140TKvkXvnwApn3yBG5qkYo+2eHHn74gYP7Pg6n
+GplINVmLDEbJAxD6dtYWR4aKPgBQIJjfjgT8oRp6SNzULyKOm7KB2jyA6T5biHon
+a7GmuSiOBMse4Ot2YoR5Z4h7AIcNN5HkZjn3phXM2UFRZuacuu/k8fsgSi7Mt3cR
+qgRY69rUsd57kRC1Bm56FizYUDJL6S7FoeQrk/r2eR7giof1mGM=
+=CqvJ
+-----END PGP SIGNATURE-----
+
+--dDRMvlgZJXvWKvBx--
