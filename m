@@ -2,139 +2,114 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2C34C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 22:56:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E52B4C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 22:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA102206B6
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 22:56:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAEDE206EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 22:57:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Dgq75UxQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JcEQ1i23"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726500AbfKUW4y (ORCPT
+        id S1726573AbfKUW5c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 17:56:54 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:33438 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726038AbfKUW4y (ORCPT
+        Thu, 21 Nov 2019 17:57:32 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:46310 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726038AbfKUW5c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 17:56:54 -0500
-Received: by mail-pg1-f193.google.com with SMTP id h27so2406892pgn.0
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 14:56:53 -0800 (PST)
+        Thu, 21 Nov 2019 17:57:32 -0500
+Received: by mail-pg1-f196.google.com with SMTP id r18so2364447pgu.13;
+        Thu, 21 Nov 2019 14:57:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=51ePzUa5LZhbNRRNHcVyQNi+kbgLjJEObJHSIPI8Few=;
-        b=Dgq75UxQKQ+n9NET5W+fmhvBZkoxdKTqUAfv3i6EjHKXau+tH7dXyJCOd7sKPCaReG
-         mW+skl8fu0KzoLICwdl5cbOATztar7BuOO58zM+WbsOC3XwhVy+cspC+GMHTITXCjWS5
-         q90o67NXvsAtLjPhEVq7UsaPuAI4gyTiehSBs=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=vqy0Ktfx+e1VHKIzbLW7lEwWr2BHqTiwe+oCnkuSYZA=;
+        b=JcEQ1i2352AaD6f01ASy44G06Y2RW0EDhvQMO4UMcpwVlnRog2R1SLmwm7U5ft+e/u
+         d9pufedYWHLk7P1BIbIbjGA4XA4HU/AYoAf9PfrSjDprwvkMTz5Gwy6ICPbrs/8kcOxy
+         6t1A6uLuQuCNoJoQjtMtrLR8WifzvNXSn4OBMPK1B0o9S2+714zJwW7vMrbEHlHn1BIR
+         zWjwAlOhTCVzvLarL1GJSeIeQXcKEXRRDC1f9TcB76s8TeYZuMlqVotTlVmHg35YZamN
+         IkeEVDX74PGXvvKHFeA7Utp0jE+B4UGBWSWZ2PBVbf3tIzmU4wOiWTY8/QWGy4Xhkq7M
+         XPzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=51ePzUa5LZhbNRRNHcVyQNi+kbgLjJEObJHSIPI8Few=;
-        b=nXo7rFpijdjJ+ucQYyu7ug/cG+ZYPLL3qeNiNNuAbETvQ7O4QwbIx0lb/j/07QOcWq
-         17yUXkCWaldyAOzTwjau3qrGGpeeWHYVx9fs9mT1TbwnZp7CVau9+pX/Kl+eg4S2yD6S
-         KGBmIgpNqKVbPh1n4EerkpkO0h00UNXyq5hFh+3hIImh6eKjxKo2gl4tCpk97bR7zZY5
-         EOCPJZj+GaEHTwNYYFS9ilwyQbMi/wveIk9UTI9R1DXqBj8QB+KMLoyoNA58ajd/rZqL
-         8X4XlmklK5f4rQDMOPYhX4SJYUwgYHRohFQe5VsMPgGAgYb035fssff7PCXKoVfKStHb
-         b9Jg==
-X-Gm-Message-State: APjAAAUAq3A2+OZIKu+DXb6Abfhe5Y/CIT4C4FYiPts5syOd2feVK/6y
-        WFgfxQ9k0SuWxe86T08zsJ+o/Q==
-X-Google-Smtp-Source: APXvYqyrHq4Mzk/fXpSWa5CCvgYUBoBsGM3Wwaxzr2MePcj67iCvIBaWCtGswXTvktiZaLE7kazz1w==
-X-Received: by 2002:a63:2003:: with SMTP id g3mr12417392pgg.359.1574377013170;
-        Thu, 21 Nov 2019 14:56:53 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id z10sm4122210pgg.39.2019.11.21.14.56.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Nov 2019 14:56:51 -0800 (PST)
-Date:   Thu, 21 Nov 2019 14:56:50 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        =?iso-8859-1?Q?Jo=E3o?= Moreira <joao.moreira@intel.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Stephan Mueller <smueller@chronox.de>, x86@kernel.org,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-hardening@lists.openwall.com
-Subject: Re: [PATCH v5 3/8] crypto: x86/camellia: Remove glue function macro
- usage
-Message-ID: <201911211456.CE356C2@keescook>
-References: <20191113182516.13545-1-keescook@chromium.org>
- <20191113182516.13545-4-keescook@chromium.org>
- <20191113193911.GC221701@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=vqy0Ktfx+e1VHKIzbLW7lEwWr2BHqTiwe+oCnkuSYZA=;
+        b=FJmeQZUe2zZ52Xb582SDUqh96+kun7lQjpP6xKStnHRP3t6g/Zg7QudPfJ9YfzoCFa
+         mvg6Rlhtxfrq0zyrws45MstVkvETtXSbx5BvIZItYXe/jN3GyvPB5460GyHlkLlSbNPB
+         NdAMWsUmd9JTx9+61Ltxsw+0D7P942/bkakHFdoPNBMmG7brfx/ZQQhw23v0KuVVaoqK
+         9gwVaJF9/e3PbIay2qj0A6y+vn4jn4J2iC8FVIWz8rK1yE/C4t+8Toe4ZPBEI9ztEUSA
+         MJzjfnHSpoDsd31VcJFFlTZsB5vxhAllAg4T2aw5B2q80smTtByp/+6Gz/8kzUPwIOG8
+         PMyg==
+X-Gm-Message-State: APjAAAU1XoszPJ1th2eF/L3Hcn9NzajMluN5OpYlBbj4l42nwOSWt7q/
+        1GT/UiMS4t8C1PlhdUcbcWj2ehrVSnc=
+X-Google-Smtp-Source: APXvYqzXCoAOVZjVBqkK4XttGVG0TfnLBIPYbN6VlOIB+NbeaH+S0Ej7DsDQ1hHQxQZP8frLpROxQA==
+X-Received: by 2002:a63:d901:: with SMTP id r1mr12330337pgg.328.1574377050294;
+        Thu, 21 Nov 2019 14:57:30 -0800 (PST)
+Received: from [10.83.36.153] ([217.173.96.166])
+        by smtp.gmail.com with ESMTPSA id a23sm535836pjv.26.2019.11.21.14.57.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 Nov 2019 14:57:29 -0800 (PST)
+Subject: Re: [PATCH] ACPI: only free map once in osl.c
+To:     Francesco Ruggeri <fruggeri@arista.com>
+Cc:     lenb@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-acpi@vger.kernel.org
+References: <20191120054728.0979695C0FE4@us180.sjc.aristanetworks.com>
+ <CAJwJo6ZTSw93zKdN3i-YqVtEEwh4qWc22Hk-emHvJth+HsaQbQ@mail.gmail.com>
+ <CA+HUmGh+tEnP7n+_FcJuwZOF4HBgfatLwUa8a=K_BdqnKETNCw@mail.gmail.com>
+From:   Dmitry Safonov <0x7f454c46@gmail.com>
+Message-ID: <1bb01499-34f7-c4a5-a910-bb6419e9e476@gmail.com>
+Date:   Thu, 21 Nov 2019 22:57:20 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191113193911.GC221701@gmail.com>
+In-Reply-To: <CA+HUmGh+tEnP7n+_FcJuwZOF4HBgfatLwUa8a=K_BdqnKETNCw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 13, 2019 at 11:39:12AM -0800, Eric Biggers wrote:
-> On Wed, Nov 13, 2019 at 10:25:11AM -0800, Kees Cook wrote:
-> > In order to remove the callsite function casts, regularize the function
-> > prototypes for helpers to avoid triggering Control-Flow Integrity checks
-> > during indirect function calls. Where needed, to avoid changes to
-> > pointer math, u8 pointers are internally cast back to u128 pointers.
-> > 
-> > Co-developed-by: João Moreira <joao.moreira@intel.com>
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> >  arch/x86/crypto/camellia_aesni_avx2_glue.c | 74 ++++++++++------------
-> >  arch/x86/crypto/camellia_aesni_avx_glue.c  | 74 ++++++++++------------
-> >  arch/x86/crypto/camellia_glue.c            | 45 +++++++------
-> >  arch/x86/include/asm/crypto/camellia.h     | 64 ++++++++-----------
-> >  4 files changed, 119 insertions(+), 138 deletions(-)
-> > 
-> > diff --git a/arch/x86/crypto/camellia_aesni_avx2_glue.c b/arch/x86/crypto/camellia_aesni_avx2_glue.c
-> > index a4f00128ea55..a68d54fc2dde 100644
-> > --- a/arch/x86/crypto/camellia_aesni_avx2_glue.c
-> > +++ b/arch/x86/crypto/camellia_aesni_avx2_glue.c
-> > @@ -19,20 +19,17 @@
-> >  #define CAMELLIA_AESNI_AVX2_PARALLEL_BLOCKS 32
-> >  
-> >  /* 32-way AVX2/AES-NI parallel cipher functions */
-> > -asmlinkage void camellia_ecb_enc_32way(struct camellia_ctx *ctx, u8 *dst,
-> > -				       const u8 *src);
-> > -asmlinkage void camellia_ecb_dec_32way(struct camellia_ctx *ctx, u8 *dst,
-> > -				       const u8 *src);
-> > +asmlinkage void camellia_ecb_enc_32way(void *ctx, u8 *dst, const u8 *src);
-> > +asmlinkage void camellia_ecb_dec_32way(void *ctx, u8 *dst, const u8 *src);
-> >  
-> > -asmlinkage void camellia_cbc_dec_32way(struct camellia_ctx *ctx, u8 *dst,
-> > -				       const u8 *src);
-> > -asmlinkage void camellia_ctr_32way(struct camellia_ctx *ctx, u8 *dst,
-> > -				   const u8 *src, le128 *iv);
-> > +asmlinkage void camellia_cbc_dec_32way(void *ctx, u8 *dst, const u8 *src);
-> > +asmlinkage void camellia_ctr_32way(void *ctx, u8 *dst, const u8 *src,
-> > +				   le128 *iv);
-> >  
-> > -asmlinkage void camellia_xts_enc_32way(struct camellia_ctx *ctx, u8 *dst,
-> > -				       const u8 *src, le128 *iv);
-> > -asmlinkage void camellia_xts_dec_32way(struct camellia_ctx *ctx, u8 *dst,
-> > -				       const u8 *src, le128 *iv);
-> > +asmlinkage void camellia_xts_enc_32way(void *ctx, u8 *dst, const u8 *src,
-> > +				       le128 *iv);
-> > +asmlinkage void camellia_xts_dec_32way(void *ctx, u8 *dst, const u8 *src,
-> > +				       le128 *iv);
+On 11/21/19 10:49 PM, Francesco Ruggeri wrote:
+> On Thu, Nov 21, 2019 at 1:19 PM Dmitry Safonov <0x7f454c46@gmail.com> wrote:
+>>
+>> Hi Francesco,
+>>
+>> I believe, there's still an issue with your patch.
+>>
+>> On Wed, 20 Nov 2019 at 05:50, Francesco Ruggeri <fruggeri@arista.com> wrote:
+>>> @@ -472,10 +477,11 @@ void acpi_os_unmap_generic_address(struct acpi_generic_address *gas)
+>>>                 mutex_unlock(&acpi_ioremap_lock);
+>>>                 return;
+>>>         }
+>>> -       acpi_os_drop_map_ref(map);
+>>> +       refcount = acpi_os_drop_map_ref(map);
+>>>         mutex_unlock(&acpi_ioremap_lock);
+>>
+>> Here comes acpi_os_get_iomem() increasing the refcount again.
 > 
-> As long as the type of all the 'ctx' arguments is being changed anyway, can you
-> please make them const, as they should have been all along?  This applies to all
-> the algorithms.  I.e., something like this:
-> 
-> [const diff]
+> Thanks Dmitry.
+> I think that any code that increments the refcount does so after
+> looking for map in acpi_ioremap under acpi_ioremap_lock,
+> and the process that drops the last reference removes map
+> from the list, also under acpi_ioremap_lock, so I am not sure
+> this could happen.
+> The synchronize_rcu_expedited in acpi_os_map_cleanup should
+> then take care of any other references to map (which it is my
+> understanding require acpi_ioremap_lock or rcu read lock).
 
-Awesome, thanks! I've incorporated this into the series now. :)
+Ah, right you are!
+Sorry for a false alarm.
 
--- 
-Kees Cook
+Thanks,
+          Dmitry
