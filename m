@@ -2,161 +2,80 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C0F8C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 07:28:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8989AC432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 07:28:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 511E2208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 07:28:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IB/u1Mki"
+	by mail.kernel.org (Postfix) with ESMTP id 6894920872
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 07:28:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727166AbfKUH1x (ORCPT
+        id S1727230AbfKUH2h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 02:27:53 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:50828 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726962AbfKUH1s (ORCPT
+        Thu, 21 Nov 2019 02:28:37 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:58635 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726293AbfKUH2h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 02:27:48 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xAL7RYFr081645;
-        Thu, 21 Nov 2019 01:27:34 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1574321254;
-        bh=pE69mjXGRtzpdlcRpFWBhAVSwz09Tx2CA10ZtUiAstA=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=IB/u1MkiR06t8hyB7ae/x/pZ3PFrFA5LRBna9BHimQORrxNZVqwo3h7h6JBj+F/SB
-         Eexs8ceoCxQ0iycEGVCJmyzT5ohJNw0MjylUFZesEoSx95A7D6B6udnQIZ2LXVVv6c
-         Oxk0ynuzDakj1kBf9Vw/dYtjbXLMw4DpK1fcwOHo=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xAL7RY84100906
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 21 Nov 2019 01:27:34 -0600
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 21
- Nov 2019 01:27:31 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 21 Nov 2019 01:27:31 -0600
-Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xAL7RNTs079857;
-        Thu, 21 Nov 2019 01:27:29 -0600
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
-        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-        <ludovic.desroches@microchip.com>
-CC:     <vkoul@kernel.org>, <linux-crypto@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH 2/3] crypto: atmel-sha - Retire dma_request_slave_channel_compat()
-Date:   Thu, 21 Nov 2019 09:27:22 +0200
-Message-ID: <20191121072723.28479-3-peter.ujfalusi@ti.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191121072723.28479-1-peter.ujfalusi@ti.com>
-References: <20191121072723.28479-1-peter.ujfalusi@ti.com>
+        Thu, 21 Nov 2019 02:28:37 -0500
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iXgtC-0007ve-4V; Thu, 21 Nov 2019 08:28:30 +0100
+Received: from ukl by ptx.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iXgtB-000224-Md; Thu, 21 Nov 2019 08:28:29 +0100
+Date:   Thu, 21 Nov 2019 08:28:29 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Philipp Zabel <pza@pengutronix.de>, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
+        Jernej Skrabec <jernej.skrabec@siol.net>
+Subject: Re: [PATCH v7 4/8] pwm: sun4i: Add an optional probe for bus clock
+Message-ID: <20191121072829.vitly7altcvlt4sj@pengutronix.de>
+References: <20191119175319.16561-1-peron.clem@gmail.com>
+ <20191119175319.16561-5-peron.clem@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20191119175319.16561-5-peron.clem@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver no longer boots in legacy mode, only via DT. This makes the
-dma_request_slave_channel_compat() redundant.
-If ever the filter function would be executed it will return false as the
-dma_slave is not really initialized.
+Hello Clément,
 
-Switch to use dma_request_chan() which would allow legacy boot if ever
-needed again by configuring dma_slave_map for the DMA driver.
+On Tue, Nov 19, 2019 at 06:53:15PM +0100, Clément Péron wrote:
+> +	/*
+> +	 * We're keeping the bus clock on for the sake of simplicity.
+> +	 * Actually it only needs to be on for hardware register accesses.
+> +	 */
+> +	ret = clk_prepare_enable(pwm->bus_clk);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Cannot prepare and enable bus_clk\n");
 
-At the same time skip allocating memory for dma_slave as it is not used
-anymore.
+Maybe add the error code to the message?
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
- drivers/crypto/atmel-sha.c | 39 +++++++-------------------------------
- 1 file changed, 7 insertions(+), 32 deletions(-)
+Best regards
+Uwe
 
-diff --git a/drivers/crypto/atmel-sha.c b/drivers/crypto/atmel-sha.c
-index 8ea0e4bcde0d..9d392c5ff06b 100644
---- a/drivers/crypto/atmel-sha.c
-+++ b/drivers/crypto/atmel-sha.c
-@@ -2608,32 +2608,16 @@ static int atmel_sha_register_algs(struct atmel_sha_dev *dd)
- 	return err;
- }
- 
--static bool atmel_sha_filter(struct dma_chan *chan, void *slave)
--{
--	struct at_dma_slave	*sl = slave;
--
--	if (sl && sl->dma_dev == chan->device->dev) {
--		chan->private = sl;
--		return true;
--	} else {
--		return false;
--	}
--}
--
- static int atmel_sha_dma_init(struct atmel_sha_dev *dd,
- 				struct crypto_platform_data *pdata)
- {
--	dma_cap_mask_t mask_in;
-+	dd->dma_lch_in.chan = dma_request_chan(dd->dev, "tx");
-+	if (IS_ERR(dd->dma_lch_in.chan)) {
-+		int ret = PTR_ERR(dd->dma_lch_in.chan);
- 
--	/* Try to grab DMA channel */
--	dma_cap_zero(mask_in);
--	dma_cap_set(DMA_SLAVE, mask_in);
--
--	dd->dma_lch_in.chan = dma_request_slave_channel_compat(mask_in,
--			atmel_sha_filter, &pdata->dma_slave->rxdata, dd->dev, "tx");
--	if (!dd->dma_lch_in.chan) {
--		dev_warn(dd->dev, "no DMA channel available\n");
--		return -ENODEV;
-+		if (ret != -EPROBE_DEFER)
-+			dev_warn(dd->dev, "no DMA channel available\n");
-+		return ret;
- 	}
- 
- 	dd->dma_lch_in.dma_conf.direction = DMA_MEM_TO_DEV;
-@@ -2724,12 +2708,6 @@ static struct crypto_platform_data *atmel_sha_of_init(struct platform_device *pd
- 	if (!pdata)
- 		return ERR_PTR(-ENOMEM);
- 
--	pdata->dma_slave = devm_kzalloc(&pdev->dev,
--					sizeof(*(pdata->dma_slave)),
--					GFP_KERNEL);
--	if (!pdata->dma_slave)
--		return ERR_PTR(-ENOMEM);
--
- 	return pdata;
- }
- #else /* CONFIG_OF */
-@@ -2823,10 +2801,7 @@ static int atmel_sha_probe(struct platform_device *pdev)
- 				goto iclk_unprepare;
- 			}
- 		}
--		if (!pdata->dma_slave) {
--			err = -ENXIO;
--			goto iclk_unprepare;
--		}
-+
- 		err = atmel_sha_dma_init(sha_dd, pdata);
- 		if (err)
- 			goto err_sha_dma;
 -- 
-Peter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
