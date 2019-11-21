@@ -2,107 +2,158 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9456C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:50:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CBA8C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:50:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A202B2068E
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:50:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ewatgbtJ"
+	by mail.kernel.org (Postfix) with ESMTP id 51BC02068E
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:50:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726574AbfKUVuI (ORCPT
+        id S1726747AbfKUVuV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 16:50:08 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:36850 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726329AbfKUVuI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 16:50:08 -0500
-Received: by mail-ed1-f68.google.com with SMTP id f7so4191084edq.3
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 13:50:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=441CDEY7r+jAiyFqGWKYoN/In8wLFWAjU8LoG44hNKs=;
-        b=ewatgbtJd/GVsBazwuLbhDVy3ondBBL6YXn7+xys4ddOWJgSkvQyUhlZBIt3D9xmGY
-         fvdvmkQS0NxDmjkrips5s3HdM7Jb0R/3Ge4SW9aEdseDuGeFkoxsMgIp8pBLWPw2uC/E
-         n6lyziC2b0Cntk9mU4KbVq1dLXGcgZJfUOhXA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=441CDEY7r+jAiyFqGWKYoN/In8wLFWAjU8LoG44hNKs=;
-        b=EBPlQ5wid3PcGqLks1wgUrzHUougQnmB+dop+Y6NPys9vjCQPBD1m/XP00ApCok681
-         fm+ypnR0CLWIsu/LmAkq157qyedEetW4m1XQ/9Hr3TfhCl5f3U+yBouwg/ut5WecXJnT
-         M+X9CtwKj8Fn+Fe+JL/RFrb8YTXF5VTPZjP3RuGEcmtUZnolAh8hmExiGQ6uzKD+gGXE
-         +U6zCFLshidhakwr59W7CF5+EiT8nMGpR/p67oWA4QPwVAzDyuLvLOd+cpZWqWGyh9T9
-         2Fibjc6mXBm3Zb3JcVXv5JFSls1jlK4xCB1uvUKCRsO+VFTxaNh3PjIo29DFoqf8i3Os
-         yXBA==
-X-Gm-Message-State: APjAAAU/a/Te9rZQzwgfwHPpAdn3Mmanjh6uUAKrRhg74Ggn0MLf+/4Y
-        sGpnE5Ux51G/c+VWvCPsPZvjMT4oP8k=
-X-Google-Smtp-Source: APXvYqz3zldE47wNoETz4Xb4cR44daq2BMce/hait+KRvmJ9aQ8tfnVa4rTVaNmdEzmaKdo1m6BlGg==
-X-Received: by 2002:a17:906:1d02:: with SMTP id n2mr16484794ejh.219.1574373004406;
-        Thu, 21 Nov 2019 13:50:04 -0800 (PST)
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com. [209.85.221.54])
-        by smtp.gmail.com with ESMTPSA id y2sm170518edd.2.2019.11.21.13.50.03
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 Nov 2019 13:50:03 -0800 (PST)
-Received: by mail-wr1-f54.google.com with SMTP id i12so6216233wrn.11
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 13:50:03 -0800 (PST)
-X-Received: by 2002:adf:db8e:: with SMTP id u14mr4763385wri.274.1574373002609;
- Thu, 21 Nov 2019 13:50:02 -0800 (PST)
+        Thu, 21 Nov 2019 16:50:21 -0500
+Received: from mga01.intel.com ([192.55.52.88]:31428 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726329AbfKUVuV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 16:50:21 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Nov 2019 13:50:18 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,227,1571727600"; 
+   d="scan'208";a="205283769"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga007.fm.intel.com with ESMTP; 21 Nov 2019 13:50:17 -0800
+Date:   Thu, 21 Nov 2019 13:50:17 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
+        Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-edac@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH v3 12/19] x86/vmx: Introduce VMX_FEATURES_*
+Message-ID: <20191121215017.GC16617@linux.intel.com>
+References: <20191119031240.7779-1-sean.j.christopherson@intel.com>
+ <20191119031240.7779-13-sean.j.christopherson@intel.com>
+ <20191121165250.GK6540@zn.tnic>
 MIME-Version: 1.0
-References: <20191121211053.48861-1-rrangel@chromium.org> <20191121140830.4.Iddc7dd74f893297cb932e9825d413e7890633b3d@changeid>
- <CABXOdTeotUnO_7k9UycJ0vJEKV8pdZOjRrepDv5WVo5RmOLnEA@mail.gmail.com>
-In-Reply-To: <CABXOdTeotUnO_7k9UycJ0vJEKV8pdZOjRrepDv5WVo5RmOLnEA@mail.gmail.com>
-From:   Raul Rangel <rrangel@chromium.org>
-Date:   Thu, 21 Nov 2019 14:49:51 -0700
-X-Gmail-Original-Message-ID: <CAHQZ30CYQd1-ZHJeVnKi9CMeZGiRJmvfYN5PRrpN26gcEJZXOA@mail.gmail.com>
-Message-ID: <CAHQZ30CYQd1-ZHJeVnKi9CMeZGiRJmvfYN5PRrpN26gcEJZXOA@mail.gmail.com>
-Subject: Re: [PATCH 4/4] platform/chrome: i2c: i2c-cros-ec-tunnel: Convert i2c
- tunnel to MFD Cell
-To:     Guenter Roeck <groeck@google.com>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Akshu Agrawal <Akshu.Agrawal@amd.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        "open list:I2C SUBSYSTEM HOST DRIVERS" <linux-i2c@vger.kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Benson Leung <bleung@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191121165250.GK6540@zn.tnic>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 2:40 PM Guenter Roeck <groeck@google.com> wrote:
->
-> On Thu, Nov 21, 2019 at 1:11 PM Raul E Rangel <rrangel@chromium.org> wrote:
-> >
-> > If the i2c-cros-ec-tunnel driver is compiled into the kernel, it is
-> > possible that i2c-cros-ec-tunnel could be probed before cros_ec_XXX
-> > has finished initializing and setting the drvdata. This would cause a
-> > NULL pointer panic.
-> >
-> > Converting this driver over to an MFD solves the problem and aligns with
-> > where the cros_ec is going.
-> >
->
-> I thought the mfd maintainer objects to the use of the mfd API outside
-> drivers/mfd. Did that change recently ?
+On Thu, Nov 21, 2019 at 05:52:58PM +0100, Borislav Petkov wrote:
+> On Mon, Nov 18, 2019 at 07:12:33PM -0800, Sean Christopherson wrote:
+> > Define separate VMX_FEATURE flags to set the stage for enumerating VMX
+> > capabilities outside of the cpu_has() framework, and for adding
+> > functional usage of VMX_FEATURE_* to help ensure the features reported
+> > via /proc/cpuinfo is up to date with respect to kernel recognition of
+> > VMX capabilities.
+> 
+> That's all fine and good but who's going to use those feature bits?
+> Or are we reporting them just for the sake of it? Because if only
+> that, then it is not worth the effort. Sure, I don't mind extending
+> the framework so that you can use cpu_has() for VMX features but the
+> /proc/cpuinfo angle is not clear to me.
 
-The MFD apis are only used in drivers/mfd/cros_ec_dev.c.
-drivers/i2c/busses/i2c-cros-ec-tunnel.c just registers as a simple
-driver.
+I actually don't want to use cpu_has() for the VMX features, which is
+why I put these in a separate array (one of the future patches).
+ 
+The motivation is purely for /proc/cpuinfo.  Currently there is no sane
+way for a user to query the capabilities of their platform.  The issue
+comes up on a fairly regular basis, e.g. when trying to find a platform
+to test a new feature or to debug an issue that has a hardware dependency.
 
-Raul
+Lack of reporting is especially annoying when the end user isn't familiar
+with VMX, e.g. the format of the MSRs is non-standard, existence of some
+MSRs is reported by bits in other MSRs, several features from KVM's point
+of view are actually enumerated as 3+ separate features by hardware, etc...
+
+Punting to a userspace utility isn't a viable option because all of the
+capabilities are reported via MSRs.
+
+As for why I want to keep these out of cpu_has()... VMX has a concept of
+features being fixed "on", e.g. early CPUs don't allow disabling off CR3
+interception.  A cpu_has() approach doesn't work well since it loses the
+information regarding which bits are fixed-1.  KVM also has several module
+params that can be used to disable use of features, i.e. we don't want
+cpu_has() for VMX features because the KVM-specific variables need to be
+the canonical reference.
+
+> Especially since you're hiding most of them with the "" prepended in the
+> define comment.
+> 
+> > +/* Pin-Based VM-Execution Controls, EPT/VPID, APIC and VM-Functions, word 0 */
+> > +#define VMX_FEATURE_INTR_EXITING	( 0*32+  0) /* "" VM-Exit on vectored interrupts */
+> > +#define VMX_FEATURE_NMI_EXITING		( 0*32+  3) /* "" VM-Exit on NMIs */
+> > +#define VMX_FEATURE_VIRTUAL_NMIS	( 0*32+  5) /* "vnmi" NMI virtualization */
+> > +#define VMX_FEATURE_PREEMPTION_TIMER	( 0*32+  6) /* VMX Preemption Timer */
+> 
+> You really wanna have "preemption_timer" in /proc/cpuinfo? That should
+> at least say vmx-something, if it should be visible there at all.
+
+Originally I wanted these to go in a completely separate line in
+/proc/cpuinfo, e.g. "vmx flags".  That's what I submitted in v1, but then
+found out it'd break the ABI due to handful of VMX features being
+enumerated in "flags" via synthetic cpufeature bits.
+
+Paolo suggested dropping the "vmx flags" approach as an easy solution, and
+I obviously didn't update the names to prepend vmx_.  Preprending vmx_
+would be somewhat annoying because changing the names of the synthetic
+flags would also break the ABI...
+
+Alternatively, what about adding "vmx flags" but keeping the existing
+synthetic flags?  That'd mean having duplicates for tpr_shadow, vnmi, ept,
+flexpriority, vpi and ept_ad.  On the plus side, we'd cap the pollution of
+"flags" at those six features.
+ 
+> > +#define VMX_FEATURE_POSTED_INTR		( 0*32+  7) /* Posted Interrupts */
+> 
+> Same here.
+> 
+> In general, the questions stand for all those feature bits which will be
+> visible in /proc/cpuinfo.
+> 
+> 1. Which to show and why?
+> 
+> 2. Who's going to use them?
+> 
+> 3. If show and dumping them together with the other feature flags, have
+> their name be proper (vmx-prefixed etc).
+> 
+> > +/* EPT/VPID features, scattered to bits 16-23 */
+> > +#define VMX_FEATURE_INVVPID	        ( 0*32+ 16) /* INVVPID is supported */
+> > +#define VMX_FEATURE_EPT_EXECUTE_ONLY	( 0*32+ 17) /* "ept_x_only" EPT entries can be execute only */
+> > +#define VMX_FEATURE_EPT_AD      	( 0*32+ 18) /* EPT Accessed/Dirty bits */
+> > +#define VMX_FEATURE_EPT_1GB      	( 0*32+ 19) /* 1GB EPT pages */
+> 			      ^^^^^^^^^^^^
+> 
+> There are some spaces that need to be converted to tabs here.
+
+Doh.
