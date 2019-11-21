@@ -2,172 +2,232 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_QP_LONG_LINE,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0268AC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 22:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78ABBC43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 22:11:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4517206CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 22:10:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="Xc2XgOoV"
+	by mail.kernel.org (Postfix) with ESMTP id 57337206CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 22:11:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbfKUWKl (ORCPT
+        id S1726944AbfKUWLA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 17:10:41 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:34383 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726297AbfKUWKl (ORCPT
+        Thu, 21 Nov 2019 17:11:00 -0500
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:39292 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726563AbfKUWLA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 17:10:41 -0500
-Received: by mail-pj1-f65.google.com with SMTP id bo14so2143907pjb.1
-        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 14:10:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=qcPs784CbumiKQYaUrwCzqNYc6XDhkHEE5cXJGE/TCQ=;
-        b=Xc2XgOoVRPmMbOCOXl+I/uEXvTahrcCXq0PHwT7SBMOj21E7/+b2IB/xfeRvFQh4m/
-         xSa08VXTH91AKvAXeNgz9r/m17LLufzO9x+frdPckIQfQpOjc10ZpFYBvIpIZEveD3VC
-         gHcNCa16AhRQFCX2vUX8oqiEyINJJx0CvdogfiRn4JFy83aeHWwW0htuHIwd5VnPyAoK
-         lbgbNcJ7/4NWiBAFqhFHmombMQ7yAaIq8gleaeGgZLzJZk+eMWz2ytj3QnHwR5aAZ2YH
-         A3+UXOG37R5Mj7lbRPJsiUfISwucn5mCOh98XBgw1sILb07A/+kJ8iJCZcJnRyMosWR/
-         itoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=qcPs784CbumiKQYaUrwCzqNYc6XDhkHEE5cXJGE/TCQ=;
-        b=LJgAMiOePMIUzZiLDKz4J3U2Wb6Vuy+eW0gPIm1g9UEy09T40/BORse5WYTVPzBCCU
-         jpWiPxJcIPD0V9A3xQoBpuIPdLrjDaFDjk4C19+sZQGOVeAxZ+X1N2GjyWJgjVSxmX17
-         bI/OB/yD9V63FmH+56wlinBDHuAOiWuCEPmTxvH8eodkfxTwRnNH6akQeubMMZJoj4LI
-         Lo90kQeD3WxAZhvO9ql2cOd1TfMZ0zf/gVbNaDWHBzPKuzNIo5ZPbKpQ8+6jq6MJGnUm
-         D2pZJjoUjA6tdZHjhvCO6duScgWLetbQ6nvGkBECr8WRsG3y+UP5+gN8NtBPKooRqvbl
-         SNBQ==
-X-Gm-Message-State: APjAAAXjKyulaCmJQG1KeEGPkBnlu3yl4XYMQaI4FpT03dB4KujaKzsQ
-        h9R/OHNDs1xUlwYGII18G7ty4cIF2Ak3TA==
-X-Google-Smtp-Source: APXvYqyqDomZtopgc7SZ330pFyO+LlTyoxpUpISJ5YEQJYEsW22pDlk2n5ttCNMz4PHqETC9pLPc9w==
-X-Received: by 2002:a17:90b:110f:: with SMTP id gi15mr14863711pjb.128.1574374240713;
-        Thu, 21 Nov 2019 14:10:40 -0800 (PST)
-Received: from ?IPv6:2601:646:c200:1ef2:1956:3100:f5cd:d9bc? ([2601:646:c200:1ef2:1956:3100:f5cd:d9bc])
-        by smtp.gmail.com with ESMTPSA id y4sm4455350pfn.97.2019.11.21.14.10.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 Nov 2019 14:10:39 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v10 5/6] x86/split_lock: Handle #AC exception for split lock
-Date:   Thu, 21 Nov 2019 14:10:38 -0800
-Message-Id: <5BDDAE0C-2D31-4779-B3A0-5BF206FF3E50@amacapital.net>
-References: <1574297603-198156-6-git-send-email-fenghua.yu@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
+        Thu, 21 Nov 2019 17:11:00 -0500
+Received: from dread.disaster.area (pa49-181-174-87.pa.nsw.optusnet.com.au [49.181.174.87])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id BC18043FDB6;
+        Fri, 22 Nov 2019 09:10:53 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1iXuf5-0005LT-V4; Fri, 22 Nov 2019 09:10:51 +1100
+Date:   Fri, 22 Nov 2019 09:10:51 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Phil Auld <pauld@redhat.com>
+Cc:     Ming Lei <ming.lei@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
-In-Reply-To: <1574297603-198156-6-git-send-email-fenghua.yu@intel.com>
-To:     Fenghua Yu <fenghua.yu@intel.com>
-X-Mailer: iPhone Mail (17A878)
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jeff Moyer <jmoyer@redhat.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        Eric Sandeen <sandeen@redhat.com>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Subject: Re: single aio thread is migrated crazily by scheduler
+Message-ID: <20191121221051.GG4614@dread.disaster.area>
+References: <20191115010824.GC4847@ming.t460p>
+ <20191115045634.GN4614@dread.disaster.area>
+ <20191115070843.GA24246@ming.t460p>
+ <20191115234005.GO4614@dread.disaster.area>
+ <20191118092121.GV4131@hirez.programming.kicks-ass.net>
+ <20191118204054.GV4614@dread.disaster.area>
+ <20191120191636.GI4097@hirez.programming.kicks-ass.net>
+ <20191120220313.GC18056@pauld.bos.csb>
+ <20191121041218.GK24548@ming.t460p>
+ <20191121141207.GA18443@pauld.bos.csb>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191121141207.GA18443@pauld.bos.csb>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0
+        a=3v0Do7u/0+cnL2zxahI5mg==:117 a=3v0Do7u/0+cnL2zxahI5mg==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=MeAgGD-zjQ4A:10
+        a=7-415B0cAAAA:8 a=YOsLQFoBVTFCsumd8cMA:9 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Nov 21, 2019 at 09:12:07AM -0500, Phil Auld wrote:
+> On Thu, Nov 21, 2019 at 12:12:18PM +0800 Ming Lei wrote:
+> > On Wed, Nov 20, 2019 at 05:03:13PM -0500, Phil Auld wrote:
+> > > Hi Peter,
+> > > 
+> > > On Wed, Nov 20, 2019 at 08:16:36PM +0100 Peter Zijlstra wrote:
+> > > > On Tue, Nov 19, 2019 at 07:40:54AM +1100, Dave Chinner wrote:
+> > > > > On Mon, Nov 18, 2019 at 10:21:21AM +0100, Peter Zijlstra wrote:
+> > > > 
+> > > > > > We typically only fall back to the active balancer when there is
+> > > > > > (persistent) imbalance and we fail to migrate anything else (of
+> > > > > > substance).
+> > > > > > 
+> > > > > > The tuning mentioned has the effect of less frequent scheduling, IOW,
+> > > > > > leaving (short) tasks on the runqueue longer. This obviously means the
+> > > > > > load-balancer will have a bigger chance of seeing them.
+> > > > > > 
+> > > > > > Now; it's been a while since I looked at the workqueue code but one
+> > > > > > possible explanation would be if the kworker that picks up the work item
+> > > > > > is pinned. That would make it runnable but not migratable, the exact
+> > > > > > situation in which we'll end up shooting the current task with active
+> > > > > > balance.
+> > > > > 
+> > > > > Yes, that's precisely the problem - work is queued, by default, on a
+> > > > > specific CPU and it will wait for a kworker that is pinned to that
+> > > > 
+> > > > I'm thinking the problem is that it doesn't wait. If it went and waited
+> > > > for it, active balance wouldn't be needed, that only works on active
+> > > > tasks.
+> > > 
+> > > Since this is AIO I wonder if it should queue_work on a nearby cpu by 
+> > > default instead of unbound.  
+> > 
+> > When the current CPU isn't busy enough, there is still cost for completing
+> > request remotely.
+> > 
+> > Or could we change queue_work() in the following way?
+> > 
+> >  * We try to queue the work to the CPU on which it was submitted, but if the
+> >  * CPU dies or is saturated enough it can be processed by another CPU.
+> > 
+> > Can we decide in a simple or efficient way if the current CPU is saturated
+> > enough?
+> > 
+> 
+> The scheduler doesn't know if the queued_work submitter is going to go to sleep.
+> That's why I was singling out AIO. My understanding of it is that you submit the IO
+> and then keep going. So in that case it might be better to pick a node-local nearby
+> cpu instead. But this is a user of work queue issue not a scheduler issue. 
 
+I think the part people are missing completely here is that the
+workqueue in question here is the -completion- work queue, and is
+not actually directly connected to the submitter process that is
+getting migrated. This all happens on the one CPU:
 
-> On Nov 20, 2019, at 5:45 PM, Fenghua Yu <fenghua.yu@intel.com> wrote:
->=20
-> =EF=BB=BFCurrently Linux does not expect to see an alignment check excepti=
-on in
-> kernel mode (since it does not set CR4.AC). The existing #AC handlers
-> will just return from exception to the faulting instruction which will
-> trigger another exception.
->=20
-> Add a new handler for #AC exceptions that will force a panic on split
-> lock for kernel mode.
->=20
-> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
-> Reviewed-by: Tony Luck <tony.luck@intel.com>
-> ---
-> arch/x86/include/asm/traps.h |  3 +++
-> arch/x86/kernel/cpu/intel.c  |  2 ++
-> arch/x86/kernel/traps.c      | 22 +++++++++++++++++++++-
-> 3 files changed, 26 insertions(+), 1 deletion(-)
->=20
-> diff --git a/arch/x86/include/asm/traps.h b/arch/x86/include/asm/traps.h
-> index b25e633033c3..0fa4eef83057 100644
-> --- a/arch/x86/include/asm/traps.h
-> +++ b/arch/x86/include/asm/traps.h
-> @@ -172,4 +172,7 @@ enum x86_pf_error_code {
->    X86_PF_INSTR    =3D        1 << 4,
->    X86_PF_PK    =3D        1 << 5,
-> };
-> +
-> +extern bool split_lock_detect_enabled;
-> +
-> #endif /* _ASM_X86_TRAPS_H */
-> diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-> index 2614616fb6d3..bc0c2f288509 100644
-> --- a/arch/x86/kernel/cpu/intel.c
-> +++ b/arch/x86/kernel/cpu/intel.c
-> @@ -32,6 +32,8 @@
-> #include <asm/apic.h>
-> #endif
->=20
-> +bool split_lock_detect_enabled;
-> +
-> /*
->  * Just in case our CPU detection goes bad, or you have a weird system,
->  * allow a way to override the automatic disabling of MPX.
-> diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-> index 4bb0f8447112..044033ff4326 100644
-> --- a/arch/x86/kernel/traps.c
-> +++ b/arch/x86/kernel/traps.c
-> @@ -293,9 +293,29 @@ DO_ERROR(X86_TRAP_OLD_MF, SIGFPE,           0, NULL, "=
-coprocessor segment overru
-> DO_ERROR(X86_TRAP_TS,     SIGSEGV,          0, NULL, "invalid TSS",       =
-  invalid_TSS)
-> DO_ERROR(X86_TRAP_NP,     SIGBUS,           0, NULL, "segment not present"=
-, segment_not_present)
-> DO_ERROR(X86_TRAP_SS,     SIGBUS,           0, NULL, "stack segment",     =
-  stack_segment)
-> -DO_ERROR(X86_TRAP_AC,     SIGBUS,  BUS_ADRALN, NULL, "alignment check",  =
-   alignment_check)
-> #undef IP
->=20
-> +dotraplinkage void do_alignment_check(struct pt_regs *regs, long error_co=
-de)
-> +{
-> +    unsigned int trapnr =3D X86_TRAP_AC;
-> +    char str[] =3D "alignment check";
-> +    int signr =3D SIGBUS;
-> +
-> +    RCU_LOCKDEP_WARN(!rcu_is_watching(), "entry code didn't wake RCU");
-> +
-> +    if (notify_die(DIE_TRAP, str, regs, error_code, trapnr, signr) =3D=3D=
- NOTIFY_STOP)
-> +        return;
-> +
-> +    if (!user_mode(regs) && split_lock_detect_enabled)
-> +        panic("Split lock detected\n");
+Submitter		blk-mq completion (softirq)		wq
 
-NAK.
+io_submit()
+  aio_write
+    submit_bio
+  aio_write
+    submit_bio
+  .....
+			blk-mq bh triggered
+			bio_endio
+			  iomap_dio_endio(dio)
+			    queue_work(dio)
+							kworker queued
+			bio_endio
+			  iomap_dio_endio(dio)
+			    queue_work(dio)
+			....
+			<softirq ends, back to submitter>
+  aio_write
+    submit_bio
+  aio_write
+    submit_bio
+  ...
+  <scheduler migrates task>
+							iomap_dio_complete()
+							  aio_complete()
+							....
+							iomap_dio_complete()
+							  aio_complete()
+							....
+							iomap_dio_complete()
+							  aio_complete()
 
-1. Don=E2=80=99t say =E2=80=9Csplit lock detected=E2=80=9D if you don=E2=80=99=
-t know that you detected a split lock.  Or is this genuinely the only way to=
- get #AC from kernel mode?
+IOWs, the reason we see this behaviour is the IO completion steering
+done by the blk-mq layer is, by default, directing completion back
+to the submitter CPU. IIUC, it's the per-cpu submission/completion
+queues that result in this behaviour, because local completion of
+IOs has been measured to be substantially faster for highly
+concurrent, high IOPS workloads.
 
-2. Don=E2=80=99t panic. Use die() just like every other error where nothing i=
-s corrupted.
+What Ming's reproducer workload does is increase the amount of CPU
+that the submitter process uses to the point where it uses the
+entire CPU and starves the completion kworker thread from running.
+i.e. there is no idle CPU left for the completion to be processed
+without pre-empting the running submitter task in some way.
 
-And maybe instead turn off split lock detection and print a stack trace inst=
-ead.  Then the kernel is even more likely to survive to log something useful=
-.
+Sometimes we see the scheduler run the kworker thread and switch
+straight back to the submitter task - this is what typically happens
+when the scheduler is using the default tunings. But when the
+non-default tunings are used, task migrations occur.
 
+So the scheduler migrates the submitter task, because it cannot move
+the IO completion tasks. And then the blk-mq sees that submission
+are coming from a different CPU, and it queues the incoming
+completions to that new CPU, theyby repeating the pattern.
+
+> Interestingly in our fio case the 4k one does not sleep and we get
+> the active balance case where it moves the actually running
+> thread.  The 512 byte case seems to be sleeping since the
+> migrations are all at wakeup time I believe. 
+
+The 512 byte case demonstrates a behaviour where the submitter task
+is ping ponging between CPUs on each IO submission. It is likely
+another corner case when the blk-mq behaviour of delivering
+completions to the submitter CPU triggers immediate migration rather
+than just context switching to the kworker thread. Further
+investigation needs to be done there to determine if the migration
+is caused by pre-emption, or whether it is a result of the submitter
+finishing work and yeilding the CPU, but then being woken and
+finding the CPU is held by a running bound task and so is migrated
+to an idle CPU. The next IO completion has the completion directed
+to the new CPU, and so it migrates back when woken.
+
+IOWs, Whatever the cause of the task migration is, it is likely that
+it is repeating because IO completions are following the submitter
+task around and repeatedly triggering the same migration heuristic
+over and over again.
+
+Also, keep in mind this is *not caused by AIO*. Workqueues are used
+in IO completion to avoid a basic "can't do filesystem modification
+work in irq context" problem. i.e. we can't take blocking locks or
+run transactions in bio completion context, because that will stall
+IO completion processing for that CPU completelyi, and then the
+fileystem deadlocks.
+
+And "non-AIO" example is page cache writeback: the bdi flusher
+threads are designed around an asynchrnous IO submission pattern
+where it never waits for completions. In this case, delayed
+allocation is the reason the submitter consumes a big chunk of CPU.
+And IO completion uses workqueues ifor the same reason as AIO -
+because we often have to run transactions to complete the metadata
+updates necessary to finish the IO correctly. We can't do those
+updates in the bio completion context (softirq) because we need to
+block and do stuff that is dependent on future IO completions being
+processed.
+
+So, yeah, this "queue small amounts of work to a workqueue from IO
+completion context" is fundamental to how the filesystem IO stack
+functions in a modern kernel. As such, this specific IO completion
+workqueue usage needs to be handled correctly by the default kernel
+config, and not fall apart when scheduler tunings are slightly
+tweaked.
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
