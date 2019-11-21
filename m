@@ -2,144 +2,144 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57286C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9E67C43141
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:42:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3663920656
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:41:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A61E720656
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:42:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="v+TpD8Gk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726922AbfKUOl5 (ORCPT
+        id S1726992AbfKUOmB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 09:41:57 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:34317 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726396AbfKUOl4 (ORCPT
+        Thu, 21 Nov 2019 09:42:01 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:38434 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726927AbfKUOmA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 09:41:56 -0500
-Received: from litschi.hi.pengutronix.de ([2001:67c:670:100:feaa:14ff:fe6a:8db5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <m.tretter@pengutronix.de>)
-        id 1iXneJ-000425-JC; Thu, 21 Nov 2019 15:41:35 +0100
-Date:   Thu, 21 Nov 2019 15:41:34 +0100
-From:   Michael Tretter <m.tretter@pengutronix.de>
-To:     Rajan Vaja <rajan.vaja@xilinx.com>
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, michal.simek@xilinx.com,
-        jolly.shah@xilinx.com, dan.carpenter@oracle.com,
-        gustavo@embeddedor.com, tejas.patel@xilinx.com,
-        nava.manne@xilinx.com, ravi.patel@xilinx.com,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kernel@pengutronix.de, m.tretter@pengutronix.de
-Subject: Re: [PATCH 7/7] clk: zynqmp: Fix fractional clock check
-Message-ID: <20191121154134.404304c9@litschi.hi.pengutronix.de>
-In-Reply-To: <1573564580-9006-8-git-send-email-rajan.vaja@xilinx.com>
-References: <1573564580-9006-1-git-send-email-rajan.vaja@xilinx.com>
-        <1573564580-9006-8-git-send-email-rajan.vaja@xilinx.com>
-Organization: Pengutronix
-X-Mailer: Claws Mail 3.14.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+        Thu, 21 Nov 2019 09:42:00 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xALEfofv117535;
+        Thu, 21 Nov 2019 08:41:50 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1574347310;
+        bh=X3k1ah00JHrP/MAWY03kTO2aU8Sh6x1vrKpLESudLkU=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=v+TpD8Gk1GlAHAF1V2koWCttKh0UuUwudm33kJmE0z078cfb7JbiHbClybXEnSfxO
+         DPdOQdxu5jjA72JcY8hbS75XEA+573FKovVE1+hmB0x/68NXBgovB8mJHmKz7O5+jz
+         soNiKYAchyCUHJltOKg/dtFYJ/ZU7A8hRcEep93I=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xALEfoov094649
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 21 Nov 2019 08:41:50 -0600
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 21
+ Nov 2019 08:41:49 -0600
+Received: from DFLE106.ent.ti.com ([fe80::4dc:7374:f90c:1f12]) by
+ DFLE106.ent.ti.com ([fe80::4dc:7374:f90c:1f12%17]) with mapi id
+ 15.01.1847.003; Thu, 21 Nov 2019 08:41:49 -0600
+From:   "Robey, Caleb" <c-robey@ti.com>
+To:     "Strashko, Grygorii" <grygorii.strashko@ti.com>,
+        "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
+CC:     Jason Kridner <jkridner@gmail.com>,
+        "Vutla, Lokesh" <lokeshvutla@ti.com>,
+        "Kridner, Jason" <jdk@ti.com>,
+        "Rizvi, Mohammad Faiz Abbas" <faiz_abbas@ti.com>,
+        "Dannenberg, Andreas" <dannenberg@ti.com>,
+        "Hiblot, Jean-Jacques" <jjhiblot@ti.com>,
+        "Bajjuri, Praneeth" <praneeth@ti.com>,
+        "Davis, Andrew" <afd@ti.com>, Tom Rini <trini@konsulko.com>,
+        Robert Nelson <robertcnelson@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?utf-8?B?QmVub8OudCBDb3Vzc29u?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 1/1] ARM: dts: am5729: beaglebone-ai: adding device tree
+Thread-Topic: [PATCH 1/1] ARM: dts: am5729: beaglebone-ai: adding device tree
+Thread-Index: AQHVnxgKGYt/3fBzT0yydyTQPJmWqKeV3U+A///XuDA=
+Date:   Thu, 21 Nov 2019 14:41:49 +0000
+Message-ID: <12acbc1a96754fe68d7447b6ee99efd3@ti.com>
+References: <20191119202850.18149-1-c-robey@ti.com>
+ <20191119202850.18149-2-c-robey@ti.com>
+ <8465b8c3-db4b-31fd-a299-3d5251ec99cf@ti.com>
+In-Reply-To: <8465b8c3-db4b-31fd-a299-3d5251ec99cf@ti.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.247.31.74]
+x-exclaimer-md-config: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:feaa:14ff:fe6a:8db5
-X-SA-Exim-Mail-From: m.tretter@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 12 Nov 2019 05:16:20 -0800, Rajan Vaja wrote:
-> Firmware driver sets BIT(4) to BIT(7) as custom type flags. To make
-> divider as fractional divider firmware sets BIT(4). So add support
-> for custom type flag and use BIT(4) of custom type flag as CLOCK_FRAC
-> bit.
-> 
-> Add a new field to the clock_topology to store custom type flags.
-> 
-> Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
-> ---
->  drivers/clk/zynqmp/clk-zynqmp.h | 1 +
->  drivers/clk/zynqmp/clkc.c       | 4 ++++
->  drivers/clk/zynqmp/divider.c    | 7 +++----
->  3 files changed, 8 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/clk/zynqmp/clk-zynqmp.h b/drivers/clk/zynqmp/clk-zynqmp.h
-> index fec9a15..5beeb41 100644
-> --- a/drivers/clk/zynqmp/clk-zynqmp.h
-> +++ b/drivers/clk/zynqmp/clk-zynqmp.h
-> @@ -30,6 +30,7 @@ struct clock_topology {
->  	u32 type;
->  	u32 flag;
->  	u32 type_flag;
-> +	u8 custom_type_flag;
->  };
->  
->  struct clk_hw *zynqmp_clk_register_pll(const char *name, u32 clk_id,
-> diff --git a/drivers/clk/zynqmp/clkc.c b/drivers/clk/zynqmp/clkc.c
-> index 10e89f2..4dd8413 100644
-> --- a/drivers/clk/zynqmp/clkc.c
-> +++ b/drivers/clk/zynqmp/clkc.c
-> @@ -84,6 +84,7 @@ struct name_resp {
->  
->  struct topology_resp {
->  #define CLK_TOPOLOGY_TYPE		GENMASK(3, 0)
-> +#define CLK_TOPOLOGY_CUSTOM_TYPE_FLAGS	GENMASK(7, 4)
->  #define CLK_TOPOLOGY_FLAGS		GENMASK(23, 8)
->  #define CLK_TOPOLOGY_TYPE_FLAGS		GENMASK(31, 24)
->  	u32 topology[CLK_GET_TOPOLOGY_RESP_WORDS];
-> @@ -396,6 +397,9 @@ static int __zynqmp_clock_get_topology(struct clock_topology *topology,
->  		topology[*nnodes].type_flag =
->  				FIELD_GET(CLK_TOPOLOGY_TYPE_FLAGS,
->  					  response->topology[i]);
-> +		topology[*nnodes].custom_type_flag =
-> +			FIELD_GET(CLK_TOPOLOGY_CUSTOM_TYPE_FLAGS,
-> +				  response->topology[i]);
->  		(*nnodes)++;
->  	}
->  
-> diff --git a/drivers/clk/zynqmp/divider.c b/drivers/clk/zynqmp/divider.c
-> index 67aa88c..e700504 100644
-> --- a/drivers/clk/zynqmp/divider.c
-> +++ b/drivers/clk/zynqmp/divider.c
-> @@ -25,7 +25,7 @@
->  #define to_zynqmp_clk_divider(_hw)		\
->  	container_of(_hw, struct zynqmp_clk_divider, hw)
->  
-> -#define CLK_FRAC	BIT(13) /* has a fractional parent */
-> +#define CLK_FRAC	BIT(4) /* has a fractional parent */
-
-Still NACK. This breaks the compatibility with the mainline TF-A. The
-bit is now a different from the bit than in the previous version of
-that patch. Moving the flag to custom_type_flags is fine, but please
-make sure that you stay backwards compatible to existing versions of the
-TF-A.
-
-Michael
-
->  
->  /**
->   * struct zynqmp_clk_divider - adjustable divider clock
-> @@ -279,13 +279,12 @@ struct clk_hw *zynqmp_clk_register_divider(const char *name,
->  
->  	init.name = name;
->  	init.ops = &zynqmp_clk_divider_ops;
-> -	/* CLK_FRAC is not defined in the common clk framework */
-> -	init.flags = nodes->flag & ~CLK_FRAC;
-> +	init.flags = nodes->flag;
->  	init.parent_names = parents;
->  	init.num_parents = 1;
->  
->  	/* struct clk_divider assignments */
-> -	div->is_frac = !!(nodes->flag & CLK_FRAC);
-> +	div->is_frac = !!(nodes->custom_type_flag & CLK_FRAC);
->  	div->flags = nodes->type_flag;
->  	div->hw.init = &init;
->  	div->clk_id = clk_id;
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU3RyYXNoa28sIEdyeWdv
+cmlpDQo+IFNlbnQ6IFRodXJzZGF5LCBOb3ZlbWJlciAyMSwgMjAxOSA1OjA1IEFNDQo+IFRvOiBS
+b2JleSwgQ2FsZWI7IGxpbnV4LW9tYXBAdmdlci5rZXJuZWwub3JnDQo+IENjOiBKYXNvbiBLcmlk
+bmVyOyBWdXRsYSwgTG9rZXNoOyBLcmlkbmVyLCBKYXNvbjsgUml6dmksIE1vaGFtbWFkIEZhaXoN
+Cj4gQWJiYXM7IERhbm5lbmJlcmcsIEFuZHJlYXM7IEhpYmxvdCwgSmVhbi1KYWNxdWVzOyBCYWpq
+dXJpLCBQcmFuZWV0aDsgRGF2aXMsDQo+IEFuZHJldzsgVG9tIFJpbmk7IFJvYmVydCBOZWxzb247
+IFJvYiBIZXJyaW5nOyBNYXJrIFJ1dGxhbmQ7IEJlbm/DrnQNCj4gQ291c3NvbjsgVG9ueSBMaW5k
+Z3JlbjsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5r
+ZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMS8xXSBBUk06IGR0czogYW01NzI5OiBi
+ZWFnbGVib25lLWFpOiBhZGRpbmcgZGV2aWNlDQo+IHRyZWUNCj4gDQo+IA0KPiANCj4gT24gMTkv
+MTEvMjAxOSAyMjoyOCwgQ2FsZWIgUm9iZXkgd3JvdGU6DQo+ID4gRnJvbTogSmFzb24gS3JpZG5l
+ciA8amRrQHRpLmNvbT4NCj4gPg0KPiA+IEJlYWdsZUJvYXJkLm9yZyBCZWFnbGVCb25lIEFJIGlz
+IGFuIG9wZW4gc291cmNlIGhhcmR3YXJlIHNpbmdsZQ0KPiA+IGJvYXJkIGNvbXB1dGVyIGJhc2Vk
+IG9uIHRoZSBUZXhhcyBJbnN0cnVtZW50cyBBTTU3MjkgU29DIGZlYXR1cmluZw0KPiA+IGR1YWwt
+Y29yZSAxLjVHSHogQXJtIENvcnRleC1BMTUgcHJvY2Vzc29yLCBkdWFsLWNvcmUgQzY2IGRpZ2l0
+YWwNCj4gPiBzaWduYWwgcHJvY2Vzc29yIChEU1ApLCBxdWFkLWNvcmUgZW1iZWRkZWQgdmlzaW9u
+IGVuZ2luZSAoRVZFKSwNCj4gPiBBcm0gQ29ydGV4LU00IHByb2Nlc3NvcnMsIGR1YWwgcHJvZ3Jh
+bW1hYmxlIHJlYWx0aW1lIHVuaXQNCj4gPiBpbmR1c3RyaWFsIGNvbnRyb2wgc3Vic3lzdGVtcyBh
+bmQgbW9yZS4gVGhlIGJvYXJkIGZlYXR1cmVzIDFHQg0KPiA+IEREUjNMLCBVU0IzLjAgVHlwZS1D
+LCBVU0IgSFMgVHlwZS1BLCBtaWNyb0hETUksIDE2R0IgZU1NQyBmbGFzaCwNCj4gPiAxRyBFdGhl
+cm5ldCwgODAyLjExYWMgMi81R0h6LCBCbHVldG9vdGgsIGFuZCBCZWFnbGVCb25lIGV4cGFuc2lv
+bg0KPiA+IGhlYWRlcnMuDQo+ID4NCj4gPiBGb3IgbW9yZSBpbmZvcm1hdGlvbiwgcmVmZXIgdG86
+DQo+ID4gaHR0cHM6Ly9iZWFnbGVib25lLmFpDQo+IA0KPiANCj4gPg0KPiA+IFRoaXMgcGF0Y2gg
+aW50cm9kdWNlcyB0aGUgQmVhZ2xlQm9uZSBBSSBkZXZpY2UgdHJlZS4NCj4gPg0KPiA+IE5vdGUg
+dGhhdCB0aGUgZGV2aWNlIHVzZSB0aGUgInRpLHRwZDEyczAxNiIgY29tcG9uZW50IHdoaWNoIGlz
+DQo+ID4gc29mdHdhcmUgY29tcGF0aWJsZSB3aXRoICJ0aSx0cGQxMnMwMTUiLiBUaHVzIHdlIG9u
+bHkgdXNlIHRoZQ0KPiA+IGxhdHRlciBkcml2ZXIuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBK
+YXNvbiBLcmlkbmVyIDxqZGtAdGkuY29tPg0KPiA+IFNpZ25lZC1vZmYtYnk6IENhbGViIFJvYmV5
+IDxjLXJvYmV5QHRpLmNvbT4NCj4gPiBDYzogUm9iZXJ0IE5lbHNvbiA8cm9iZXJ0Y25lbHNvbkBn
+bWFpbC5jb20+DQo+ID4NCj4gPiAtLS0NCj4gPiAgIGFyY2gvYXJtL2Jvb3QvZHRzL01ha2VmaWxl
+ICAgICAgICAgICAgICAgIHwgICAxICsNCj4gPiAgIGFyY2gvYXJtL2Jvb3QvZHRzL2FtNTcyOS1i
+ZWFnbGVib25lYWkuZHRzIHwgNzgyDQo+ICsrKysrKysrKysrKysrKysrKysrKysNCj4gPiAgIDIg
+ZmlsZXMgY2hhbmdlZCwgNzgzIGluc2VydGlvbnMoKykNCj4gPiAgIGNyZWF0ZSBtb2RlIDEwMDY0
+NCBhcmNoL2FybS9ib290L2R0cy9hbTU3MjktYmVhZ2xlYm9uZWFpLmR0cw0KPiA+DQo+ID4gZGlm
+ZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL01ha2VmaWxlIGIvYXJjaC9hcm0vYm9vdC9kdHMv
+TWFrZWZpbGUNCj4gPiBpbmRleCBiMjFiM2E2NDY0MWEuLmIxMTU0ZGJkYTczYyAxMDA2NDQNCj4g
+PiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9NYWtlZmlsZQ0KPiA+ICsrKyBiL2FyY2gvYXJtL2Jv
+b3QvZHRzL01ha2VmaWxlDQo+IA0KPiBbLi5dDQo+IA0KPiA+ICsNCj4gPiArJnVhcnQxIHsNCj4g
+PiArCXN0YXR1cyA9ICJva2F5IjsNCj4gPiArfTsNCj4gPiArDQo+ID4gKyZkYXZpbmNpX21kaW8g
+ew0KPiA+ICsJcmVzZXQtZ3Bpb3MgPSA8JmdwaW8yIDIzIEdQSU9fQUNUSVZFX0xPVz47DQo+ID4g
+KwlyZXNldC1kZWxheS11cyA9IDwyPjsNCj4gPiArDQo+ID4gKwlwaHkwOiBldGhlcm5ldC1waHlA
+MSB7DQo+ID4gKwkJcmVnID0gPDQ+Ow0KPiA+ICsJCWNvbXBhdGlibGUgPSAiZXRoZXJuZXQtcGh5
+LWlkMDA0ZC5kMDcyIiwNCj4gPiArCQkJImV0aGVybmV0LXBoeS1pZWVlODAyLjMtYzIyIjsNCj4g
+DQo+IFBscywgZG8gbm90IGlnbm9yZSBteSBjb21tZW50cy4NCj4gDQo+IEFib3ZlIGNvbXBhdGli
+bGUgc2hvdWxkIG5vdCBiZSByZXF1aXJlZC4NCg0KR3J5Z29yaSwgSSBhbSBzbyBzb3JyeSBhYm91
+dCB0aGlzIC0gSSBoYWQgZGVsZXRlZCB0aGlzLA0KYnV0IG11c3QgaGF2ZSBtYWRlIGEgbWlzdGFr
+ZSBpbiB0aGUgcmVzdWJtaXNzaW9uLiBJDQp3aWxsIGZpeCBpdCBpbW1lZGlhdGVseS4NCg0KDQo+
+IA0KPiA+ICsJCWVlZS1icm9rZW4tMTAwdHg7DQo+ID4gKwkJZWVlLWJyb2tlbi0xMDAwdDsNCj4g
+PiArCX07DQo+ID4gK307DQo+ID4gKw0KPiA+ICsmbWFjIHsNCj4gPiArCXNsYXZlcyA9IDwxPjsN
+Cj4gPiArCXN0YXR1cyA9ICJva2F5IjsNCj4gPiArfTsNCj4gDQo+IFBscywgbW92ZSBjcHN3IG5v
+ZGUgaGVyZQ0KDQpTYW1lIGFzIGFib3ZlLi4uIHRoaXMgbXVzdCBiZSB0aGUgd3JvbmcgZmlsZS4g
+SSBhcG9sb2dpemUuDQogDQoNCj4gDQo+ID4gKw0KPiA+ICsmb2NwIHsNCj4gPiArCXBydXNzMV9z
+aG1lbTogcHJ1c3Nfc2htZW1ANGIyMDAwMDAgew0KPiA+ICsJCXN0YXR1cyA9ICJva2F5IjsNCj4g
+PiArCQljb21wYXRpYmxlID0gInRpLHBydXNzLXNobWVtIjsNCj4gPiArCQlyZWcgPSA8MHg0YjIw
+MDAwMCAweDAyMDAwMD47DQo+ID4gKwl9Ow0KPiA+ICsNCj4gDQo+IFsuLl0NCj4gDQo+ID4gKw0K
+PiA+ICsmY3Bzd19lbWFjMCB7DQo+ID4gKwlwaHktaGFuZGxlID0gPCZwaHkwPjsNCj4gPiArCXBo
+eS1tb2RlID0gInJnbWlpIjsNCj4gPiArfTsNCj4gDQo+IE1vdmUgaXQgdXAsIHBscy4NCj4gDQo+
+IC0tDQo+IEJlc3QgcmVnYXJkcywNCj4gZ3J5Z29yaWkNCg==
