@@ -2,118 +2,164 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB95C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:09:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7695C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:10:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 319982067D
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:09:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="Sb4Rx4QI";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IilgPL0A"
+	by mail.kernel.org (Postfix) with ESMTP id 8AED22067D
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 21:10:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574370622;
+	bh=3AcIf3ak72WZOe4Y+EsIK3BMGHG7xj9GzBzRmC5CTgc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zbQkGSJXqPSZG+uOPOiwE3WRuJYP8OhM0/RlZWgdNEGon7efKJY0jFgGF/M++t160
+	 WzFoXII4td51PusJBumk+4aQDEDILULppfk/4fsYu/ZYmldmbDpXxVaA3vOCHQWqnc
+	 CT7lKlFnAEGbi9ZugeCPfr33JFijYHQii9BRR+bY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726765AbfKUVJn (ORCPT
+        id S1726869AbfKUVKV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 16:09:43 -0500
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:36547 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726293AbfKUVJm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 16:09:42 -0500
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 9A0B71835;
-        Thu, 21 Nov 2019 16:09:41 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Thu, 21 Nov 2019 16:09:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=
-        from:to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm2; bh=27hbmoeIqxabDlUJntEU4zb9PL
-        bVfwu+9iKmFJEM9FA=; b=Sb4Rx4QInA4iamfK6ROAyVi2hOx5lE9DTzJiBQye0o
-        FB+07rmWCb1OR5kNUFha8oXty/dgoYsOJ7VH02hXeKTwSaF/+Olp1byAOmmThLs6
-        tRENCbxQkWzyDZHlaUpYk+vbNyQ/j/FFhdrOxYFNS8Hk4N+uDoLzCPvABR/foB8C
-        ed1zPDWYaFOvIQMbx2Xm8be9IgBDFeF0oTzCIQY/G5GFwE42RdVJ60qgZPYSZ4/h
-        Hboy31tUMjPhi2j2zbLdcNjoU8N4TUQOFfmLWjX/fJyqbQyN+UEmfqzslIcKX/uJ
-        olyy8D4tjKWo1WEy74zt92ePPjsAmIa/nkXk/hJtmnzQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=27hbmoeIqxabDlUJn
-        tEU4zb9PLbVfwu+9iKmFJEM9FA=; b=IilgPL0AawnpMBPE3SEa02TXcETb75AxH
-        qGok+0p58FKL8CdG5SqvkzH+w/D2GnVncTDhuVCnnbLolcKuOPZN/W0iRorjrmXK
-        GOfK54/uAnWjMhMCcb7OdFcVbX6t6kWsUKZlrK9RqNFFHBjVFMcC3Fu2lo/sGBWB
-        EXC8EHJsIgh2Vp6cRgqzr34JNT6bTwCuwg5G+nJHVKOvmtKcOvTgWnz85J1ShOrA
-        c8WYoxuQwE8FYhA3zb3qpglSj4MbB7Xn58KznWLWE4rreJJpgxSP5redH8oGju11
-        bH/EwjMF06QuLGG0J/wTBEE92NUibpru/9ZhoAzBErtqaw1Sj7f6Q==
-X-ME-Sender: <xms:E_3WXVctaq-l-8ybDYRjQ2xC_8KK1vrfYWhrF7nesdItbLsZHmudqw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudehvddgudegkecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecufghrlhcuvffnffculdejtddmnecujfgurhephf
-    fvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeffrghnihgvlhcuighuuceougig
-    uhesugiguhhuuhdrgiihiieqnecukfhppeduieefrdduudegrddufedtrdduvdeknecurf
-    grrhgrmhepmhgrihhlfhhrohhmpegugihusegugihuuhhurdighiiinecuvehluhhsthgv
-    rhfuihiivgeptd
-X-ME-Proxy: <xmx:E_3WXdcq5V8A95Y0moLHK3M_gTpG-1nHNDXRjOEIQldW0rcXHIBY8g>
-    <xmx:E_3WXT8DbUbtTSmrCxc9dZiDQKY2OsYyyqMA2hbIJ3XClRQaGY_24g>
-    <xmx:E_3WXVMbCNj07A_CqDSShq-s_mk_PopJi3j3tZtcbat2wqke9kmIXQ>
-    <xmx:Ff3WXZIWvhbvRPjKWDqjESlYe_76uqaj6fY-WUl6gPo8bKl_O5mGBQ>
-Received: from dlxu-fedora-R90QNFJV.thefacebook.com (unknown [163.114.130.128])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 85F7880060;
-        Thu, 21 Nov 2019 16:09:38 -0500 (EST)
-From:   Daniel Xu <dxu@dxuuu.xyz>
-To:     adobriyan@gmail.com, christian@brauner.io,
-        akpm@linux-foundation.org, tglx@linutronix.de, mhocko@suse.com,
-        keescook@chromium.org, shakeelb@google.com, casey@schaufler-ca.com,
-        khlebnikov@yandex-team.ru, kent.overstreet@gmail.com,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Cc:     Daniel Xu <dxu@dxuuu.xyz>, dschatzberg@fb.com, htejun@fb.com,
-        dennis@kernel.org, kernel-team@fb.com
-Subject: [PATCH] proc: Make /proc/<pid>/io world readable
-Date:   Thu, 21 Nov 2019 13:09:09 -0800
-Message-Id: <20191121210909.15086-1-dxu@dxuuu.xyz>
-X-Mailer: git-send-email 2.21.0
+        Thu, 21 Nov 2019 16:10:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36118 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726293AbfKUVKV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 16:10:21 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3739D2067D;
+        Thu, 21 Nov 2019 21:10:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574370619;
+        bh=3AcIf3ak72WZOe4Y+EsIK3BMGHG7xj9GzBzRmC5CTgc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hoz9sgUScI5d6ZzJReoCFnjd4OVlS7NMRNckXpzkH2h/C3xcf/QieJJRx+DeaZF3d
+         Qv6K0bC64IxVriA8/nEcPRyWFCKLFdWrHMc8njj9HRNy1J0yeMZEBuFdxntdQvExf+
+         LaRpBoCn2Hg3EIb05gIz0cA3Fq2EPc07sj/JW+/A=
+Date:   Thu, 21 Nov 2019 22:10:17 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Rajat Jain <rajatja@google.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Frederick Lawler <fred@fredlawl.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Wong Vee Khee <vee.khee.wong@ni.com>,
+        Hui Chun Ong <hui.chun.ong@ni.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v7 4/5] PCI/ASPM: Add sysfs attributes for controlling
+ ASPM link states
+Message-ID: <20191121211017.GA854512@kroah.com>
+References: <b1c83f8a-9bf6-eac5-82d0-cf5b90128fbf@gmail.com>
+ <20191121204924.GA81030@google.com>
+ <CACK8Z6HTiMNOHx6favzWyN6ZbVD9d2WVmf6KTxt_n0O+EpJ97A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACK8Z6HTiMNOHx6favzWyN6ZbVD9d2WVmf6KTxt_n0O+EpJ97A@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-/proc/<pid>/io is currently only owner readable. This forces monitoring
-programs (such as atop) to run with elevated permissions to collect disk
-stats. Changing this file to world readable can add a measure of safety to
-userspace.
+On Thu, Nov 21, 2019 at 01:03:06PM -0800, Rajat Jain wrote:
+> Hi,
+> 
+> On Thu, Nov 21, 2019 at 12:49 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >
+> > [+cc Rafael, Mika, Wong, Hui, Rajat, Keith, LKML, original patch at [5]]
+> >
+> > On Sat, Oct 05, 2019 at 02:07:56PM +0200, Heiner Kallweit wrote:
+> >
+> > > +What:                /sys/bus/pci/devices/.../link_pm/clkpm
+> > > +             /sys/bus/pci/devices/.../link_pm/l0s_aspm
+> > > +             /sys/bus/pci/devices/.../link_pm/l1_aspm
+> > > +             /sys/bus/pci/devices/.../link_pm/l1_1_aspm
+> > > +             /sys/bus/pci/devices/.../link_pm/l1_2_aspm
+> > > +             /sys/bus/pci/devices/.../link_pm/l1_1_pcipm
+> > > +             /sys/bus/pci/devices/.../link_pm/l1_2_pcipm
+> > > +Date:                October 2019
+> > > +Contact:     Heiner Kallweit <hkallweit1@gmail.com>
+> > > +Description: If ASPM is supported for an endpoint, then these files
+> > > +             can be used to disable or enable the individual
+> > > +             power management states. Write y/1/on to enable,
+> > > +             n/0/off to disable.
+> >
+> > This is queued up for the v5.5 merge window, so if we want to tweak
+> > anything (path names or otherwise), now is the time.
+> >
+> > I think I might be inclined to change the directory from "link_pm" to
+> > "link", e.g.,
+> >
+> >   - /sys/bus/pci/devices/0000:00:1c.0/link_pm/clkpm
+> >   + /sys/bus/pci/devices/0000:00:1c.0/link/clkpm
+> >
+> > because there are other things that haven't been merged yet that could
+> > go in link/ as well:
+> >
+> >   * Mika's "link disable" control [1]
+> >   * Dilip's link width/speed controls [2,3]
+> >
+> > The max_link_speed, max_link_width, current_link_speed,
+> > current_link_width files could also logically be in link/, although
+> > they've already been merged at the top level.
+> >
+> > Rajat's AER statistics change [4] is also coming.  Those stats aren't
+> > link-related, so they wouldn't go in link/.  The current strawman is
+> > an "aer_stats" directory, but I wonder if we should make a more
+> > generic directory like "errors" that could be used for both AER and
+> > DPC and potentially other error-related things.
+> 
+> Sorry, I haven't been able to find time for it for some time. I doubt
+> if I'll be able to make it to 5.6 timeframe. Nevertheless...
+> 
+> >
+> > For example, we could have these link-related things:
+> >
+> >   /sys/.../0000:00:1c.0/link/clkpm            # RW ASPM stuff
+> >   /sys/.../0000:00:1c.0/link/l0s_aspm
+> >   /sys/.../0000:00:1c.0/link/...
+> >   /sys/.../0000:00:1c.0/link/disable          # RW Mika
+> >   /sys/.../0000:00:1c.0/link/speed            # RW Dilip's control
+> >   /sys/.../0000:00:1c.0/link/width            # RW Dilip's control
+> >   /sys/.../0000:00:1c.0/link/max_speed        # RO possible rework
+> >   /sys/.../0000:00:1c.0/link/max_width        # RO possible rework
+> >
+> > With these backwards compatibility symlinks:
+> >
+> >   /sys/.../0000:00:1c.0/max_link_speed     -> link/max_speed
+> >   /sys/.../0000:00:1c.0/current_link_speed -> link/speed
+> >
+> > Rajat's current patch puts the AER stats here at the top level:
+> >
+> >   /sys/.../0000:00:1c.0/aer_stats/fatal_bit4_DLP
+> >
+> > But maybe we could push them down like this:
+> >
+> >   /sys/.../0000:00:1c.0/errors/aer/stats/unc_04_dlp
+> >   /sys/.../0000:00:1c.0/errors/aer/stats/unc_26_poison_tlb_blocked
+> >   /sys/.../0000:00:1c.0/errors/aer/stats/cor_00_rx_err
+> >   /sys/.../0000:00:1c.0/errors/aer/stats/cor_15_hdr_log_overflow
+> 
+> How do we create sub-sub-sub directories in sysfs (errors/aer/stats)?
 
-Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
----
- fs/proc/base.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+You should not.
 
-diff --git a/fs/proc/base.c b/fs/proc/base.c
-index ebea9501afb8..1d1c1d680e16 100644
---- a/fs/proc/base.c
-+++ b/fs/proc/base.c
-@@ -3076,7 +3076,7 @@ static const struct pid_entry tgid_base_stuff[] = {
- 	REG("coredump_filter", S_IRUGO|S_IWUSR, proc_coredump_filter_operations),
- #endif
- #ifdef CONFIG_TASK_IO_ACCOUNTING
--	ONE("io",	S_IRUSR, proc_tgid_io_accounting),
-+	ONE("io",	S_IRUGO, proc_tgid_io_accounting),
- #endif
- #ifdef CONFIG_USER_NS
- 	REG("uid_map",    S_IRUGO|S_IWUSR, proc_uid_map_operations),
-@@ -3473,7 +3473,7 @@ static const struct pid_entry tid_base_stuff[] = {
- 	REG("fail-nth", 0644, proc_fail_nth_operations),
- #endif
- #ifdef CONFIG_TASK_IO_ACCOUNTING
--	ONE("io",	S_IRUSR, proc_tid_io_accounting),
-+	ONE("io",	S_IRUGO, proc_tid_io_accounting),
- #endif
- #ifdef CONFIG_USER_NS
- 	REG("uid_map",    S_IRUGO|S_IWUSR, proc_uid_map_operations),
--- 
-2.21.0
+> My understanding is that we can only create 1 subdirectory by using a
+> "named" attribute group. If we want more hierarchy, the "errors" and
+> the "aer" will need to be backed up by a kobject. Doable, but just
+> mentioning.
 
+Not doable, you break userspace tools as they will not "see" those
+directories or attributes.
+
+Keep it only 1 deep if at all possible please.
+
+thanks,
+
+greg k-h
