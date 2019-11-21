@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6CB3C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:49:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 468C5C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:49:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE71B208D4
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:49:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BBDE208A1
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 11:49:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574336988;
-	bh=ueWNsuTfkO93GpwiABTSPkL/u5WAIuE3ce00RdDBHLU=;
+	s=default; t=1574336992;
+	bh=YjLRpJ96k5R2QtyyqQSk8fMZ+8IBHYLrzEpFmmGfKw4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U5ONpr8NFw3/1SlffNMjpkonZvrG5AJaRNXc8Jq9extpSL2LkPGalfigAWM0KY1/p
-	 qX/zL9q74G1vMUAqazMUAYlhMaQZTR9Ma9RVyHFAGGnLo1D7wFQc971pmKkl7eEMyS
-	 9NxSH7+nhf9xcBNsITx9rDqqQRrWvxuSHTPtEwN0=
+	b=MSL3vBMJUMDo5yO+5uPzVq89clsHShAQgPl17nRSfsM4DrmmJmoaaFRtcHMPMJW5P
+	 BIUgE2pP2+/IaYbdHBqa+3PN0cZUEpdBQEW9uqq5aTRezbfyN6gRlNnl1mWbMvsZnz
+	 V5BlfE1Dw9ULzQrmIp9M26gpfSonRlWCTN75Kp9w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727172AbfKULtr (ORCPT
+        id S1727205AbfKULtv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 06:49:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39228 "EHLO mail.kernel.org"
+        Thu, 21 Nov 2019 06:49:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727047AbfKULto (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 06:49:44 -0500
+        id S1727149AbfKULtq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 06:49:46 -0500
 Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8D192133F;
-        Thu, 21 Nov 2019 11:49:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DADE2208A3;
+        Thu, 21 Nov 2019 11:49:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574336983;
-        bh=ueWNsuTfkO93GpwiABTSPkL/u5WAIuE3ce00RdDBHLU=;
+        s=default; t=1574336986;
+        bh=YjLRpJ96k5R2QtyyqQSk8fMZ+8IBHYLrzEpFmmGfKw4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w7yST8Ynr+/JBBdbGHY47s1B4OU5vot4tZeyGlN+2WrKEdde2bL0xf8H6c4IRdSxs
-         XBF6pawNV9ohxKBhANvbESRNxAtLC+KvZKqu1/J06IKSpg9hxOMoR93GheLu88/UqC
-         ttEkYlEo9QXGaujNEwkwBq9/FKAaKdvp1ilwWpaU=
+        b=rq6UzZLOj4j+o5Y888wbzDtXO1WUh085TsyeYxgsCHjAsLp3t+1/hM9kdMpDjC1qU
+         iHkCqSZp4MVycCJr68nzJocwKYI9XI7BvAVEW+mJJwupnIgGksU8eMozQG2vpda0qL
+         eKv7EDugQNsYP3OE8mCC5D4BiYCHdTRR1JpRWwIU=
 From:   Will Deacon <will@kernel.org>
 To:     iommu@lists.linuxfoundation.org, linux-kernel@vger.kernel.org
 Cc:     Will Deacon <will@kernel.org>,
@@ -52,9 +52,9 @@ Cc:     Will Deacon <will@kernel.org>,
         Robin Murphy <robin.murphy@arm.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Joerg Roedel <joro@8bytes.org>
-Subject: [PATCH v3 07/14] Revert "iommu/arm-smmu: Make arm-smmu-v3 explicitly non-modular"
-Date:   Thu, 21 Nov 2019 11:49:11 +0000
-Message-Id: <20191121114918.2293-8-will@kernel.org>
+Subject: [PATCH v3 08/14] Revert "iommu/arm-smmu: Make arm-smmu explicitly non-modular"
+Date:   Thu, 21 Nov 2019 11:49:12 +0000
+Message-Id: <20191121114918.2293-9-will@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191121114918.2293-1-will@kernel.org>
 References: <20191121114918.2293-1-will@kernel.org>
@@ -65,52 +65,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit c07b6426df922d21a13a959cf785d46e9c531941.
+This reverts commit addb672f200f4e99368270da205320b83efe01a0.
 
-Let's get the SMMUv3 driver building as a module, which means putting
+Let's get the SMMU driver building as a module, which means putting
 back some dead code that we used to carry.
 
 Signed-off-by: Will Deacon <will@kernel.org>
 ---
- drivers/iommu/arm-smmu-v3.c | 25 ++++++++++++++++---------
- 1 file changed, 16 insertions(+), 9 deletions(-)
+ drivers/iommu/arm-smmu.c | 32 +++++++++++++++++++-------------
+ 1 file changed, 19 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index 8da93e730d6f..2ad8e2ca0583 100644
---- a/drivers/iommu/arm-smmu-v3.c
-+++ b/drivers/iommu/arm-smmu-v3.c
-@@ -21,8 +21,7 @@
- #include <linux/io-pgtable.h>
- #include <linux/iommu.h>
+diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+index 7c503a6bc585..53bbe0663b9e 100644
+--- a/drivers/iommu/arm-smmu.c
++++ b/drivers/iommu/arm-smmu.c
+@@ -27,8 +27,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/io.h>
  #include <linux/iopoll.h>
 -#include <linux/init.h>
 -#include <linux/moduleparam.h>
 +#include <linux/module.h>
- #include <linux/msi.h>
  #include <linux/of.h>
  #include <linux/of_address.h>
-@@ -384,10 +383,6 @@
- #define MSI_IOVA_BASE			0x8000000
+ #include <linux/of_device.h>
+@@ -59,10 +58,6 @@
  #define MSI_IOVA_LENGTH			0x100000
  
+ static int force_stage;
 -/*
 - * not really modular, but the easiest way to keep compat with existing
-- * bootargs behaviour is to continue using module_param_named here.
+- * bootargs behaviour is to continue using module_param() here.
 - */
- static bool disable_bypass = 1;
- module_param_named(disable_bypass, disable_bypass, bool, S_IRUGO);
- MODULE_PARM_DESC(disable_bypass,
-@@ -3683,25 +3678,37 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
- 	return 0;
+ module_param(force_stage, int, S_IRUGO);
+ MODULE_PARM_DESC(force_stage,
+ 	"Force SMMU mappings to be installed at a particular stage of translation. A value of '1' or '2' forces the corresponding stage. All other values are ignored (i.e. no stage is forced). Note that selecting a specific stage will disable support for nested translation.");
+@@ -1878,6 +1873,7 @@ static const struct of_device_id arm_smmu_of_match[] = {
+ 	{ .compatible = "qcom,smmu-v2", .data = &qcom_smmuv2 },
+ 	{ },
+ };
++MODULE_DEVICE_TABLE(of, arm_smmu_of_match);
+ 
+ #ifdef CONFIG_ACPI
+ static int acpi_smmu_get_data(u32 model, struct arm_smmu_device *smmu)
+@@ -2165,12 +2161,12 @@ static int arm_smmu_legacy_bus_init(void)
  }
+ device_initcall_sync(arm_smmu_legacy_bus_init);
  
 -static void arm_smmu_device_shutdown(struct platform_device *pdev)
 +static int arm_smmu_device_remove(struct platform_device *pdev)
  {
  	struct arm_smmu_device *smmu = platform_get_drvdata(pdev);
  
- 	arm_smmu_device_disable(smmu);
-+
+ 	if (!smmu)
+-		return;
++		return -ENODEV;
+ 
+ 	if (!bitmap_empty(smmu->context_map, ARM_SMMU_MAX_CBS))
+ 		dev_err(&pdev->dev, "removing device with active domains!\n");
+@@ -2186,6 +2182,12 @@ static void arm_smmu_device_shutdown(struct platform_device *pdev)
+ 		clk_bulk_disable(smmu->num_clks, smmu->clks);
+ 
+ 	clk_bulk_unprepare(smmu->num_clks, smmu->clks);
 +	return 0;
 +}
 +
@@ -119,17 +135,18 @@ index 8da93e730d6f..2ad8e2ca0583 100644
 +	arm_smmu_device_remove(pdev);
  }
  
- static const struct of_device_id arm_smmu_of_match[] = {
- 	{ .compatible = "arm,smmu-v3", },
- 	{ },
- };
-+MODULE_DEVICE_TABLE(of, arm_smmu_of_match);
+ static int __maybe_unused arm_smmu_runtime_resume(struct device *dev)
+@@ -2235,12 +2237,16 @@ static const struct dev_pm_ops arm_smmu_pm_ops = {
  
  static struct platform_driver arm_smmu_driver = {
  	.driver	= {
- 		.name		= "arm-smmu-v3",
- 		.of_match_table	= of_match_ptr(arm_smmu_of_match),
--		.suppress_bind_attrs = true,
+-		.name			= "arm-smmu",
+-		.of_match_table		= of_match_ptr(arm_smmu_of_match),
+-		.pm			= &arm_smmu_pm_ops,
+-		.suppress_bind_attrs	= true,
++		.name		= "arm-smmu",
++		.of_match_table	= of_match_ptr(arm_smmu_of_match),
++		.pm		= &arm_smmu_pm_ops,
  	},
  	.probe	= arm_smmu_device_probe,
 +	.remove	= arm_smmu_device_remove,
@@ -138,7 +155,7 @@ index 8da93e730d6f..2ad8e2ca0583 100644
 -builtin_platform_driver(arm_smmu_driver);
 +module_platform_driver(arm_smmu_driver);
 +
-+MODULE_DESCRIPTION("IOMMU API for ARM architected SMMUv3 implementations");
++MODULE_DESCRIPTION("IOMMU API for ARM architected SMMU implementations");
 +MODULE_AUTHOR("Will Deacon <will.deacon@arm.com>");
 +MODULE_LICENSE("GPL v2");
 -- 
