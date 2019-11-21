@@ -2,128 +2,170 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8CCEC43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:55:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44A89C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:58:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1613206CC
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:55:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WU+cjX6P"
+	by mail.kernel.org (Postfix) with ESMTP id 19B55206CC
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 16:58:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574355511;
+	bh=uYGqcM4Rx/NAAfT79RP9GtfBihFEBXrM4EFf8wvu4VM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=btsz59C6E8RvX1E2GwVPTmsmMGUpV/S/1V9w1IJ4ityaOlt6mbu0+GLNgJ2RvYiUk
+	 WCDgWTJcXb6nytD55myF9IGj/JCZ7QoTQONOk3VeerfQ/g5zpYGaTHRsTzMM79nw2X
+	 Em3dsFwDr+d5grdXzn+H+QrawNpjijvkg3QCoqmI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727184AbfKUQz2 (ORCPT
+        id S1726716AbfKUQ6a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 11:55:28 -0500
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:47061 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726541AbfKUQz2 (ORCPT
+        Thu, 21 Nov 2019 11:58:30 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42074 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726279AbfKUQ63 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 11:55:28 -0500
-Received: by mail-yw1-f66.google.com with SMTP id i2so1442338ywg.13;
-        Thu, 21 Nov 2019 08:55:28 -0800 (PST)
+        Thu, 21 Nov 2019 11:58:29 -0500
+Received: by mail-wr1-f67.google.com with SMTP id a15so5294553wrf.9
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 08:58:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Wk5v7/X0jZcqwNwgZ9ExtYiD+9LZHDYkMo+MHCqNDlo=;
-        b=WU+cjX6PryvO660Dp27hixmMkHdbCRIqjno76TmdHV7r6IuoyDmFaqhHZkTInoHYrF
-         JpLn/zeD/HBavn8FzJbei5PE0ebQ8/QaFrPqWk966nVfzytXFqiatk8WQjirJBIIBBF6
-         I+vpnXXPljS702Z9/vKwWn0us+Rpw6sRRWaob7JDTzLVrLmMuir6hPpq4ksvufVzEmlv
-         7gLpToB17jQ3v/8pCqWOnCyZO5vT+ssAp1qvCGS8c6MH15WvBJRr4Yu6qlHHbDeUKIcH
-         hrmsBEwMGpcGbHgJAtLaWrFhEOB6xLYcFgS+qWkgnO3OsTbagyO7R4cUYOIIPV2bYD/F
-         FGlg==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=rs2UyyOfjk+a+uubCpA54vHU4bdaxT3WN2RGWCgoouA=;
+        b=j0NY1Y7fF3cmcF0j4/XqBAiSzPWlT94u4KZxOQ4SHd2gjiI01XbgtBNXJT6Ljy/utj
+         xFUHcENj/jnU4MquyJmcTyvQX8HTYrOIqzm0hv6oPR68tFwXxV85GR+v6lgAmSOsCNo9
+         2Q3xVhYZC/gBSYvnkx0OIJSo4/TbS/dpfr/5DWoohs4JZJn2p9Fl7kJ692QsZ/CXYVHD
+         IrNKPEgOpAD3qqPDbvRCGR5iNFfK8Djh5613qgfMfBpaHofWU36Dx8uTcahMErOaPzxl
+         y/Y0QqxJR8221w926USJfWjMzEHGW6cfES5S5VqR5jbadtHLK7TyCbJyIeImQFSQVt2C
+         uFNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Wk5v7/X0jZcqwNwgZ9ExtYiD+9LZHDYkMo+MHCqNDlo=;
-        b=C3pUs9b8cG8JMGuWbnGxLI7fzuz2fOd8iDZ+0O17Oc2KCVG0kam1JspMB+GaOI+dN7
-         FO54XdsJ1SY+1Q7bpCfbbG0j1UcA/kHywFI/Vdqgqlc30t3A77TzJsfSuBw6WNVHlNsr
-         q5hiEqRn+QVBOcdXMOf0WWqIC8+lABvDzOygni1EBh+sLVrG7refLngNCMNdA2wX6Q0E
-         JaDDAO8EdsK9AcoL+tO+Q5lhFrqjr+7BMvUUmVy6ApMgt+MgFn8actav7W2ot5nN4Hym
-         0rJpcxxIuw4x4EyPJH8/87SZTQzAz6DWbL5cVC2tA5Hct7/JqtCM+tmXdtLC/XY+sgV5
-         zDqA==
-X-Gm-Message-State: APjAAAXtG8NqT2ig54JARDIftErxVdFoJ7i5jUNj57IJyCCWyEtx6MNu
-        uM94yWv8y5ERb4/kwhb2qxE=
-X-Google-Smtp-Source: APXvYqytyN+7LvfvE4zxeWlee1iRxvOUrdscD+DO7/bs+Xm4INPKtvYH7u58ANm9NzkmLmS6xPUJYw==
-X-Received: by 2002:a0d:d204:: with SMTP id u4mr5836603ywd.199.1574355327542;
-        Thu, 21 Nov 2019 08:55:27 -0800 (PST)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id z14sm962522ywj.74.2019.11.21.08.55.26
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 21 Nov 2019 08:55:27 -0800 (PST)
-Subject: Re: [PATCH 1/2] of: overlay: fix properties memory leak
-To:     Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        pantelis.antoniou@konsulko.com, robh+dt@kernel.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Vincent Whitchurch <rabinv@axis.com>
-References: <20191118132809.30127-1-vincent.whitchurch@axis.com>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <53898749-ab88-19c3-77e7-6c81a8b0e8ee@gmail.com>
-Date:   Thu, 21 Nov 2019 10:55:26 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rs2UyyOfjk+a+uubCpA54vHU4bdaxT3WN2RGWCgoouA=;
+        b=PtDxxX6D3o8DbDVH7AkI3KdERVXghoFpJxI6JwzWmLpNEVU7WZYvx593xL3oAjEXQV
+         Dkgrk+tkZ4aULKUW5PN74qTfG67mWNCh5i1dBgfHqNbhHpg+r2OD6s5A2v800150Bsdo
+         xSONO4rAzhvqkBvd2X61MzGUO1dYGMVOzvkJlF8mWfoyInkxsi+T7hVpIP8wIcff9Ytk
+         yE4WV1qOj0AkOCeKeZTJ+S/u+RN3GfwPnvzf0bxc5W8fza2sLY6s6Jjhz63krXtiZZaf
+         lfn6fRZCywVSo4yN9nHcYr1ojbZpBAgpkgLQSKXwbSomMaJBHE5UjBz6pW5gIK4UjwSq
+         TWnw==
+X-Gm-Message-State: APjAAAU+gKT2vMMNI71BFDo0b0D3Kfju0Eb6g5dFZcGIVfE/8GJfcFzx
+        ZRwxIea8Tvc3+zOLqW58rgs=
+X-Google-Smtp-Source: APXvYqz2b1RTChhwZ/E0O2/jjFD7wt4Wq7OT288DvRDKp1fYKbE2p1NvPqgR7At48KxuK5fBTtqHEw==
+X-Received: by 2002:a5d:5308:: with SMTP id e8mr4517132wrv.77.1574355506478;
+        Thu, 21 Nov 2019 08:58:26 -0800 (PST)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id c11sm3770478wrv.92.2019.11.21.08.58.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Nov 2019 08:58:25 -0800 (PST)
+Date:   Thu, 21 Nov 2019 17:58:24 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Davidlohr Bueso <dave@stgolabs.net>, peterz@infradead.org,
+        bp@alien8.de, x86@kernel.org, linux-kernel@vger.kernel.org,
+        Davidlohr Bueso <dbueso@suse.de>
+Subject: [PATCH] x86/mm/pat: Simplify the free_memtype() control flow
+Message-ID: <20191121165824.GA12042@gmail.com>
+References: <20191021231924.25373-1-dave@stgolabs.net>
+ <20191021231924.25373-2-dave@stgolabs.net>
+ <alpine.DEB.2.21.1911201901270.29534@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20191118132809.30127-1-vincent.whitchurch@axis.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1911201901270.29534@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vincent,
 
-On 11/18/19 7:28 AM, Vincent Whitchurch wrote:
-> No changeset entries are created for #address-cells and #size-cells
-> properties, but the duplicated properies are never freed.  This results
-> in a memory leak which is detected by kmemleak:
+* Thomas Gleixner <tglx@linutronix.de> wrote:
+
+> On Mon, 21 Oct 2019, Davidlohr Bueso wrote:
+> >  int rbt_memtype_check_insert(struct memtype *new,
+> >  			     enum page_cache_mode *ret_type)
+> >  {
+> >  	int err = 0;
+> >  
+> >  	err = memtype_rb_check_conflict(&memtype_rbroot, new->start, new->end,
+> > -						new->type, ret_type);
+> > -
+> > -	if (!err) {
+> > -		if (ret_type)
+> > -			new->type = *ret_type;
+> > -
+> > -		new->subtree_max_end = new->end;
+> > -		memtype_rb_insert(&memtype_rbroot, new);
+> > -	}
+> > +					new->type, ret_type);
+> > +	if (err)
+> > +		goto done;
 > 
->  unreferenced object 0x85887180 (size 64):
->    backtrace:
->      kmem_cache_alloc_trace+0x1fb/0x1fc
->      __of_prop_dup+0x25/0x7c
->      add_changeset_property+0x17f/0x370
->      build_changeset_next_level+0x29/0x20c
->      of_overlay_fdt_apply+0x32b/0x6b4
->      ...
+> Please return err here. That goto is pointless.
 > 
-> Fixes: 6f75118800acf77f8 ("of: overlay: validate overlay properties #address-cells and #size-cells")
-> Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
-> ---
->  drivers/of/overlay.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> > +
+> > +	if (ret_type)
+> > +		new->type = *ret_type;
+> > +	memtype_interval_insert(new, &memtype_rbroot);
+> > +done:
+> >  	return err;
+> >  }
 > 
-> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-> index c423e94baf0f..5f8869e2a8b3 100644
-> --- a/drivers/of/overlay.c
-> +++ b/drivers/of/overlay.c
-> @@ -360,7 +360,7 @@ static int add_changeset_property(struct overlay_changeset *ovcs,
->  		pr_err("WARNING: memory leak will occur if overlay removed, property: %pOF/%s\n",
->  		       target->np, new_prop->name);
->  
-> -	if (ret) {
-> +	if (ret || !check_for_non_overlay_node) {
->  		kfree(new_prop->name);
->  		kfree(new_prop->value);
->  		kfree(new_prop);
+> Other than that.
 > 
+> Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
 
-Thanks for finding and proposing a fix for the memory leak.
+Thanks - I rebased the v2 version in x86/mm with this cleanup included.
 
-The proposed patch conveniently uses check_for_non_overlay_node
-which leads to a nice small patch.  But ends up adding an
-additional hidden meaning to the variable, resulting in more
-fragile code.
+Two days ago I noticed a similarly quirky control flow in free_memtype() 
+as well, and fixed it via the patch below.
 
-I will propose a different solution and ask you to test it
-to make sure it also solves the memory leak.
+	Ingo
 
--Frank
+==============>
+From: Ingo Molnar <mingo@kernel.org>
+Date: Tue, 19 Nov 2019 10:18:56 +0100
+Subject: [PATCH] x86/mm/pat: Simplify the free_memtype() control flow
+
+Simplify/streamline the quirky handling of the pat_pagerange_is_ram() logic,
+and get rid of the 'err' local variable.
+
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ arch/x86/mm/pat.c | 11 +++--------
+ 1 file changed, 3 insertions(+), 8 deletions(-)
+
+diff --git a/arch/x86/mm/pat.c b/arch/x86/mm/pat.c
+index ea7da7e62e17..af049920e59a 100644
+--- a/arch/x86/mm/pat.c
++++ b/arch/x86/mm/pat.c
+@@ -656,7 +656,6 @@ int reserve_memtype(u64 start, u64 end, enum page_cache_mode req_type,
+ 
+ int free_memtype(u64 start, u64 end)
+ {
+-	int err = -EINVAL;
+ 	int is_range_ram;
+ 	struct memtype *entry;
+ 
+@@ -671,14 +670,10 @@ int free_memtype(u64 start, u64 end)
+ 		return 0;
+ 
+ 	is_range_ram = pat_pagerange_is_ram(start, end);
+-	if (is_range_ram == 1) {
+-
+-		err = free_ram_pages_type(start, end);
+-
+-		return err;
+-	} else if (is_range_ram < 0) {
++	if (is_range_ram == 1)
++		return free_ram_pages_type(start, end);
++	if (is_range_ram < 0)
+ 		return -EINVAL;
+-	}
+ 
+ 	spin_lock(&memtype_lock);
+ 	entry = memtype_erase(start, end);
