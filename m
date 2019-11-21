@@ -2,156 +2,137 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A9EC432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF162C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:43:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E431F2068D
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:43:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="AbzwxoBX";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="FqWl+Mlk"
+	by mail.kernel.org (Postfix) with ESMTP id 862D1206CC
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:43:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1574369034;
+	bh=ChrVpGoTRwXTCb7c2TOAC5+U7iopPVBZfh55j1u0310=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yomhAlzISuQW9d7TkYhpur+9MJCnVYXcTElJ4HxJxtm2koIWOua8fFrMbDBb1QVnY
+	 adjXD9XPzBABVHe2Z08W9KfQUdmVXUeD/SD7l3zTGReS0aP0WF/9dmS58a4tvV8qqO
+	 c72NamztaG0Q0AEfyas4zk7LW7eDNZooAjQeg8ks=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbfKUUn1 (ORCPT
+        id S1727073AbfKUUnx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 15:43:27 -0500
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:32584 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726293AbfKUUn0 (ORCPT
+        Thu, 21 Nov 2019 15:43:53 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:37319 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726293AbfKUUnx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 15:43:26 -0500
-Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xALKf7Ng030552;
-        Thu, 21 Nov 2019 12:43:05 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=yYyfy7UfbCszm56xV+5yxCJXZw3PnJTLLeckLrQRDmg=;
- b=AbzwxoBXWSgkn2/FbeMFh+O7OdtavAh78NI08WfaTpp6svte9p5etSIxkZYyw3Ma3C79
- fMLAv4SzhApEBw7l+drDNawOXHxli70WvCWt3bxOuokQbjgSmaFRE+bgyvRAJydJ8cvr
- FyiYpUKZwODXoGD/ICLDEIPHkVpNOQPqUNo= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2wdjunyvv2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Thu, 21 Nov 2019 12:43:05 -0800
-Received: from ash-exhub202.TheFacebook.com (2620:10d:c0a8:83::6) by
- ash-exhub203.TheFacebook.com (2620:10d:c0a8:83::5) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 21 Nov 2019 12:43:03 -0800
-Received: from NAM05-CO1-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.36.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Thu, 21 Nov 2019 12:43:03 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QMRL8dvgdDWG+SEFlws099zooA+UC8T2UySjAYKNUrX7SUyVhhEmYfsWKH6Imdzmxdlo8edzzIMRc48p/W+Q1fyHFZ7PN5vY0yVVFId12X57a7Cjbsdwc2+5cd00s9N6E+VGZ8Qf7fuPKUkViDg2r7G6obgvm1L9Ujk1aXwj2qwDV6L0xdpLtQgf+d7qhB7T4z4momtbSVsLyh8fLMoXcqg5RlQhEw86y+/bP3E5n7M9bf/J3QUZNDgHiTHRkoKdjyD8UnPiwfTicEZqiiwmKxnnfI3S1qP3f1QrW1etMCVx9Qn4+T8dNf8BITes915uHc457jwUbzkzSl6us+oy4w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yYyfy7UfbCszm56xV+5yxCJXZw3PnJTLLeckLrQRDmg=;
- b=PpH4OHBUmnNTGFa6BBPgT9TwuF/6+7iBdNWetnDmjQJkaoSZ9NbZ8QhJue8L4EKh+/Xw/a9B5mF/fIA3GB2WhNza/o/XQsVtCHn+UaoZNV9D1DUhSZqKJjKcwIV2hAYzJh/bbda+EV+qDGISbuBeoUzWaLixzNWo+kR5vGSrPQlTPiJqKubci6b8f6mIehWfQFx87JfBr7vmYOE2Eh6WMI+8hTqWZDqaEDKxOV3yv63SbrnM1jr4X2hhX80csxwdY08FkPnVldGV/8cMizxT7L+qP31aYRHu06Z0OSPyiN0rvfJwUdqXt53hKaRLialWlXXS73dT2S3lSX5tQJE5Lg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yYyfy7UfbCszm56xV+5yxCJXZw3PnJTLLeckLrQRDmg=;
- b=FqWl+Mlkmn4AJwe1czosQsb2fnIBDGJb+U7f+DUWe4qVpjEWzGLZR5oGo1PWNLlun3+mjQ04ZGMnzPiugUlg+UFanYjHBxpr9a+8NhnjTKiX0ORaNyy/oGAOR3+txWqpxdh8iQPlWXlvj/xxhSyFlRWzIqBPiD1CM/nJ6qJPtpE=
-Received: from BYAPR15MB3479.namprd15.prod.outlook.com (20.179.57.24) by
- BYAPR15MB3304.namprd15.prod.outlook.com (20.179.58.16) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2474.19; Thu, 21 Nov 2019 20:43:02 +0000
-Received: from BYAPR15MB3479.namprd15.prod.outlook.com
- ([fe80::50e1:50f7:2d1c:d556]) by BYAPR15MB3479.namprd15.prod.outlook.com
- ([fe80::50e1:50f7:2d1c:d556%5]) with mapi id 15.20.2451.031; Thu, 21 Nov 2019
- 20:43:01 +0000
-From:   Rik van Riel <riel@fb.com>
-To:     Roman Gushchin <guro@fb.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-CC:     "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "hannes@cmpxchg.org" <hannes@cmpxchg.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "longman@redhat.com" <longman@redhat.com>,
-        "shakeelb@google.com" <shakeelb@google.com>,
-        "vdavydov.dev@gmail.com" <vdavydov.dev@gmail.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: Re: WARNING bisected (was Re: [PATCH v7 08/10] mm: rework non-root
- kmem_cache lifecycle management)
-Thread-Topic: WARNING bisected (was Re: [PATCH v7 08/10] mm: rework non-root
- kmem_cache lifecycle management)
-Thread-Index: AQHVoF1pVt08FQpSn0mTl/Eav2YKR6eV2PuAgAAAewCAAB1+AIAAINIA
-Date:   Thu, 21 Nov 2019 20:43:01 +0000
-Message-ID: <30a2e4babdcb22974a0a5ae8c5e764d951eef7dc.camel@fb.com>
-References: <20190611231813.3148843-9-guro@fb.com>
-         <20191121111739.3054-1-borntraeger@de.ibm.com>
-         <20191121165807.GA201621@localhost.localdomain>
-         <c6a2696b-6e35-de7c-8387-b21285b6776f@de.ibm.com>
-         <20191121184524.GA4758@localhost.localdomain>
-In-Reply-To: <20191121184524.GA4758@localhost.localdomain>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BN6PR17CA0043.namprd17.prod.outlook.com
- (2603:10b6:405:75::32) To BYAPR15MB3479.namprd15.prod.outlook.com
- (2603:10b6:a03:106::24)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c091:480::a26a]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5f101499-f109-46db-7b67-08d76ec3669a
-x-ms-traffictypediagnostic: BYAPR15MB3304:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR15MB33041C732BB35F7A76181E12A34E0@BYAPR15MB3304.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 0228DDDDD7
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(366004)(376002)(346002)(396003)(136003)(199004)(189003)(118296001)(66446008)(66946007)(66476007)(66556008)(64756008)(8936002)(11346002)(446003)(2616005)(6246003)(14454004)(6116002)(25786009)(4001150100001)(7416002)(81156014)(81166006)(6486002)(6436002)(8676002)(6512007)(229853002)(110136005)(4744005)(305945005)(7736002)(54906003)(478600001)(6506007)(256004)(52116002)(2906002)(76176011)(4326008)(316002)(386003)(99286004)(36756003)(102836004)(71190400001)(71200400001)(86362001)(46003)(186003)(5660300002);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB3304;H:BYAPR15MB3479.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: mfQ4hyYx6OTUR/Dh9m4aPp5IYVySMTOoDwndjjEre3GN/1FGVBeVp2Qy7siVzbTbm+LhDRasBhtvTmRW9pBSMpxrAPlCUr9cDQ2xVLBUwJBAq7Cupgkjy2Bo21g7E6cdW+fSVLa1WaFwELGCSdLqcJQsISVik+1i372n9N64BTIB5oF71ho9roECVLBXBxJHuc9kMMQYo703lKt8N3Zosj0G8Ebx2GA/k6Y2Gbdax3jo4j8x2ds/DxiGQ5DfkXFXnERe2WkBdzFcdexw4JFrQggWnzB+17SnEziAJykW++gGgrDZ50KzCGXZ0TbYH3tfNA6C01Od5AbL9e2gWxZiQGhlgWtIucijSAtXsJAWTZuwGisfGxGXNx0hBZaiomEFM75JD9Lk3Z+0qxUQmEa3/tVLKefa3ANENcclgOuknp7WmDIKbV+FpLSdezCH7EFX
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <20E83B82BFF3D4409CB703A480B74BCA@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 21 Nov 2019 15:43:53 -0500
+Received: by mail-ot1-f65.google.com with SMTP id d5so4224437otp.4;
+        Thu, 21 Nov 2019 12:43:52 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZlY1A8YgbiK+60pvRJ8DUoVbvF7KpED+RvNVlOCutDw=;
+        b=g1YcJRBDjxoNd2WGDbRAba/cyBuLWWmgudEDRgg+mzaJoavRwL6DfKDu3gwulH7NkM
+         RygfoTBcLRUc9vF2Ocv5IrzYQMDntBxYxDJsp2/PQac11OU5W2D9MXoKa8uuk6mlc3rw
+         6+iiJjiBnReLDkFlA4LNgN1AMkTcCUG8we70OGAhyusaxAqfTaKi9lNZqu7+PIGNAZ91
+         SLhc+j+l/f7pn6ZXjZHbl6WGznbAxYQvXMNdQGA9NFO8ebUaZBn5Onnjo2L8xCR6bV5e
+         szUvWJQYzxr/IcvJNnTy3gFTI59n8ETdY0e7DhMavyE2bVEi1XJDhidej2tsKXbyPZ7X
+         UgSw==
+X-Gm-Message-State: APjAAAX5yvqbMSrodWgLq3NHVUOtWe9gCi0eSDT2MaLeJ3GgFHiZJim1
+        9esJTVK6hDimmyMSUPZEWQ==
+X-Google-Smtp-Source: APXvYqz7zeXYFjWtkAp64VlSzXcHl1NJpaBwIHih5lkI+qSuWC4igd8Twoc2Iepnvc1i+AZuUUZQXg==
+X-Received: by 2002:a9d:6acf:: with SMTP id m15mr8235445otq.312.1574369032176;
+        Thu, 21 Nov 2019 12:43:52 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id a10sm1354822otf.72.2019.11.21.12.43.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Nov 2019 12:43:51 -0800 (PST)
+Date:   Thu, 21 Nov 2019 14:43:50 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Shiping Ji <shiping.linux@gmail.com>
+Cc:     bp@alien8.de, james.morse@arm.com, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mchehab@kernel.org, linux-edac@vger.kernel.org, sashal@kernel.org,
+        hangl@microsoft.com, lewan@microsoft.com, ruizhao@microsoft.com,
+        scott.branden@broadcom.com, yuqing.shen@broadcom.com,
+        ray.jui@broadcom.com, shji@microsoft.com, wangglei@gmail.com
+Subject: Re: [PATCH v7 1/2] dt-bindings: edac: arm-dmc520.txt
+Message-ID: <20191121204350.GA26174@bogus>
+References: <f947d821-8e67-dcc7-d753-5b04d099792d@gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5f101499-f109-46db-7b67-08d76ec3669a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Nov 2019 20:43:01.8191
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: sljGzrdD6UfepClnBFPmIIIfcwrqxVIgrCBeDWClTqEnDzG1K1Id0AElkjd9YKIZ
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3304
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-21_05:2019-11-21,2019-11-21 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 malwarescore=0
- suspectscore=0 mlxscore=0 clxscore=1011 impostorscore=0 mlxlogscore=999
- bulkscore=0 phishscore=0 priorityscore=1501 lowpriorityscore=0
- adultscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1911210172
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f947d821-8e67-dcc7-d753-5b04d099792d@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDE5LTExLTIxIGF0IDEzOjQ1IC0wNTAwLCBSb21hbiBHdXNoY2hpbiB3cm90ZToN
-Cj4gT24gVGh1LCBOb3YgMjEsIDIwMTkgYXQgMDU6NTk6NTRQTSArMDEwMCwgQ2hyaXN0aWFuIEJv
-cm50cmFlZ2VyDQo+IHdyb3RlOg0KPiA+IA0KPiA+IA0KPiA+IFllcywgcm1tb2QgaGFzIHRvIGJl
-IGNhbGxlZCBkaXJlY3RseSBhZnRlciB0aGUgZ3Vlc3Qgc2h1dGRvd24gdG8NCj4gPiBzZWUgdGhl
-IGlzc3VlLg0KPiA+IFNlZSBteSAybmQgbWFpbC4NCj4gDQo+IEkgc2VlLiBEbyB5b3Uga25vdywg
-d2hpY2gga21lbV9jYWNoZSBpdCBpcz8gSWYgbm90LCBjYW4geW91LCBwbGVhc2UsDQo+IGZpZ3Vy
-ZSBpdCBvdXQ/DQo+IA0KPiBJIHRyaWVkIHRvIHJlcHJvZHVjZSB0aGUgaXNzdWUsIGJ1dCB3YXNu
-J3Qgc3VjY2Vzc2Z1bCBzbyBmYXIuIFNvIEkNCj4gd29uZGVyDQo+IHdoYXQgY2FuIG1ha2UgeW91
-ciBjYXNlIHNwZWNpYWwuDQoNCkkgZG8gbm90IGtub3cgZWl0aGVyLCBidXQgaGF2ZSBhIGd1ZXNz
-Lg0KDQpNeSBndWVzcyB3b3VsZCBiZSB0aGF0IGVpdGhlciB0aGUgc2xhYiBvYmplY3Qgb3IgdGhl
-DQpzbGFiIHBhZ2UgaXMgUkNVIGZyZWVkLCBhbmQgdGhlIGttZW1fY2FjaGUgZGVzdHJ1Y3Rpb24N
-CmlzIGNhbGxlZCBiZWZvcmUgdGhhdCBSQ1UgY2FsbGJhY2sgaGFzIGNvbXBsZXRlZC4NCg0K
+On Sun, Nov 17, 2019 at 06:10:43PM -0800, Shiping Ji wrote:
+> This is the device tree bindings for new EDAC driver dmc520_edac.c.
+> 
+> Signed-off-by: Lei Wang <leiwang_git@outlook.com>
+> Reviewed-by: James Morse <james.morse@arm.com>
+> 
+> ---
+>      Changes in v7:
+>          - Added arm prefix to the interrupt-config property
+> 
+> ---
+>  .../devicetree/bindings/edac/arm-dmc520.txt   | 26 +++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/edac/arm-dmc520.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/edac/arm-dmc520.txt b/Documentation/devicetree/bindings/edac/arm-dmc520.txt
+> new file mode 100644
+> index 000000000000..476cf8b76f2a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/edac/arm-dmc520.txt
+> @@ -0,0 +1,26 @@
+> +* ARM DMC-520 EDAC node
+> +
+> +Required properties:
+> +- compatible  : "brcm,dmc-520", "arm,dmc-520".
+> +- reg   : Address range of the DMC-520 registers.
+> +- interrupts  : DMC-520 interrupt numbers. The example below specifies
+> +     two interrupt lines for dram_ecc_errc_int and
+> +     dram_ecc_errd_int.
+> +- arm,interrupt-config : This is an array of interrupt masks. For each of the
+> +     above interrupt line, add one interrupt mask element to
+> +     it. That is, there is a 1:1 mapping from each interrupt
+> +     line to an interrupt mask. An interrupt mask can represent
+> +     multiple interrupts being enabled. Refer to interrupt_control
+> +     register in DMC-520 TRM for interrupt mapping. In the example
+> +     below, the interrupt configuration enables dram_ecc_errc_int
+> +     and dram_ecc_errd_int. And each interrupt is connected to
+> +     a separate interrupt line.
+
+Looking at this again, I think I now understand what you are trying to 
+do. Your mask is just what interrupt line each one is. We have a 
+standard way of doing this either by using indices of 'interrupts' or 
+with interrupt-names. The latter probably works best in this case.
+
+You need to define *all* the interrupt-names:
+combined
+ram_ecc_errc
+ram_ecc_errd
+dram_ecc_errc
+dram_ecc_errd
+failed_access
+failed_prog
+link_err
+temperature_event
+arch_fsm
+phy_request
+
+I'm not sure if all the '*_oflow' interrupts should be listed too. It 
+doesn't seem all that useful to get a 2nd interrupt.
+
+Your node should list all that are hooked up in the h/w, not just the 
+ones you need for EDAC.
+
+Rob
