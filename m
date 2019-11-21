@@ -2,153 +2,147 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB82AC432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:27:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BFB6C43215
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:28:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9266C206CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:27:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VENeXGxA"
+	by mail.kernel.org (Postfix) with ESMTP id 3DDD2206CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 14:28:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbfKUO1l (ORCPT
+        id S1726968AbfKUO2Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 09:27:41 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:36684 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726689AbfKUO1g (ORCPT
+        Thu, 21 Nov 2019 09:28:24 -0500
+Received: from mout.kundenserver.de ([212.227.126.130]:35207 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726396AbfKUO2X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 09:27:36 -0500
-Received: by mail-qk1-f195.google.com with SMTP id d13so3196766qko.3;
-        Thu, 21 Nov 2019 06:27:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=3gwfygBNjto+s4EabazzGNb2PsGRdds8Ie+HhfI+rQM=;
-        b=VENeXGxAEt6U0bdDDFs3mDRxKrgnI2TOgZ2r4MYZOPJWcc/jD4zFtTws1kWBDdVknD
-         8vNk8OqAzTzepfWORFJVMBZaRfTOKCSylS2lKuzEIuIuneLpoFPy2+RqQ/sI0yO530DU
-         8hM4rUh9cQk+uLrbor8QpYavYidnYXx/OVmR6Q/oYBYRpTxf/dHoiPi2JR0NfarkIU5p
-         NwjbIVfg2Kd0T38vNZ5EVC5d8z+5tHGrDeWeN0g542DoYpogfjvHKAsZtG93E5BjZ5x6
-         rHe9XablMW+0KN3f4TceQcHJkN4mDPu6e05Glr97dULx6iP5rTCdKW56MCVhPTggX+Js
-         V40w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=3gwfygBNjto+s4EabazzGNb2PsGRdds8Ie+HhfI+rQM=;
-        b=dsshYGKiL7O6tLotkNESmdAxdN8K9TIUGpQEP9N4YQaQYbWiAWCnKCLG+nTCOBPqXC
-         tcgW7w+55/v/YKxI/2e5YMy3Wqr6lFibTqleafx54XNJYILWixougKZsm3sad8a4nBvI
-         SrGtDb+kt/MHg1pcSZjCkuTeN7QuMRGriOE6HVdEAmCPCVmuWvhbIEzmbpNbJG7anB+Y
-         fI4o4ITPb3T3TGBMdcyj6m0xfJVe/DkQU30KhbOA6gaf90jb7Kjm2RFEkr5PdqdCbPfB
-         v4yLM/5bKDSgnwU1A7HBQXgqTvFc9/6CAwsghxVBtn5ZIc1DDSE7j5hm1JDlYlpMiiU8
-         zArQ==
-X-Gm-Message-State: APjAAAXqlIAK8RiLWOnJz8eySv4PTuCJ6/mwVULrl6/9fbWDGCQ3qQGt
-        eXr420OHUEbhMcs19vY7hww=
-X-Google-Smtp-Source: APXvYqzhsS4C6Nlwm46pupvpnhHdtO1KwhJgy7xUQZ+UqEpyTHx9KZ9N2fJbGYvfkAwDsjMYTPWcXg==
-X-Received: by 2002:a05:620a:1090:: with SMTP id g16mr7290769qkk.41.1574346454702;
-        Thu, 21 Nov 2019 06:27:34 -0800 (PST)
-Received: from localhost.localdomain ([72.53.229.209])
-        by smtp.gmail.com with ESMTPSA id l198sm1442931qke.70.2019.11.21.06.27.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Nov 2019 06:27:34 -0800 (PST)
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
-To:     Lee Jones <lee.jones@linaro.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Grigoryev Denis <grigoryev@fastwel.ru>,
-        Axel Lin <axel.lin@ingics.com>, Dan Murphy <dmurphy@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-leds@vger.kernel.org
-Subject: [PATCH v4 2/2] dt-bindings: mfd: update TI tps6105x chip bindings
-Date:   Thu, 21 Nov 2019 09:27:26 -0500
-Message-Id: <20191121142726.22856-3-TheSven73@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191121142726.22856-1-TheSven73@gmail.com>
-References: <20191121142726.22856-1-TheSven73@gmail.com>
+        Thu, 21 Nov 2019 09:28:23 -0500
+Received: from mail-qt1-f175.google.com ([209.85.160.175]) by
+ mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MhlbM-1hu2qb31Zg-00doDm; Thu, 21 Nov 2019 15:28:21 +0100
+Received: by mail-qt1-f175.google.com with SMTP id o11so3828152qtr.11;
+        Thu, 21 Nov 2019 06:28:21 -0800 (PST)
+X-Gm-Message-State: APjAAAVpE/RjHL+ncTjs8J92/qo5V8Y4lkqGlbPq37p3OVWARlA3KohO
+        XoqskO+3h16FUtM80skNMPwfCV718CVABjY2b8E=
+X-Google-Smtp-Source: APXvYqxB3fiYXtrETUp5EiMiQ9fb0AeisI+RwKyT7xggRKZinaPFWQOgz7hTMTjBH+1fCN1q48qajjrjZ95bUArYxrA=
+X-Received: by 2002:ac8:18eb:: with SMTP id o40mr2519477qtk.304.1574346500017;
+ Thu, 21 Nov 2019 06:28:20 -0800 (PST)
+MIME-Version: 1.0
+References: <20191108210236.1296047-1-arnd@arndb.de> <20191108210824.1534248-8-arnd@arndb.de>
+ <dd1a30609f05e800550097080c1d1b27065f91ff.camel@codethink.co.uk>
+In-Reply-To: <dd1a30609f05e800550097080c1d1b27065f91ff.camel@codethink.co.uk>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 21 Nov 2019 15:28:03 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a0VORzqLLTFpt9VYn_SONsve+-q0fTrZrPbLMpX9T6SBQ@mail.gmail.com>
+Message-ID: <CAK8P3a0VORzqLLTFpt9VYn_SONsve+-q0fTrZrPbLMpX9T6SBQ@mail.gmail.com>
+Subject: Re: [Y2038] [PATCH 08/23] y2038: ipc: remove __kernel_time_t
+ reference from headers
+To:     Ben Hutchings <ben.hutchings@codethink.co.uk>
+Cc:     y2038 Mailman List <y2038@lists.linaro.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        linux-mips@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:LnPyaKtdAcRIfsrfVOvLgTpY2NYcJVXxz9V2TfTsyIVjaxXXWXo
+ J0B/STj89T5mtEIVTc0DQpBVMrYNCU0NcRKyMbhUocUGEvCLRsv+tXSavgQ9f1ideIJ9QR/
+ Y5hh36oQ5DHX7KGoy+fvIxvqyEiOiRDO5LBnW77E+fjNVlQJvkzhlyATiPB5C1vEiZb5+oS
+ z+IMcyRaYAXzuuyPNj62w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:8A/19T5M7NU=:IiGojC9BupST0/of+E3q2T
+ awxsjk77FWMnOwQ4nks8TRVJzj8MaemtAxeTd5LZ6AU026M7mvm1hvPPHZ4QB1SOCc3AYUgwj
+ JPVxeNksokjiewTxADZhlkQvmoHlH8s8IySCW9mTS2t5RD8o/IIkeCztir/MtztaDyYhZGCEF
+ rJutdeF8yCwCOVEmI7Ryya6bzcLeLgOMSoT5Xc8Tr9ih6rF+jVFaOUAXQMQ6sS/CqZm07Z50W
+ 7mFRhVnGeKtcmbTcT0NTLP401mk/Y8oiEAIVOQBfgMLuw2i+hxNpBaSfN4BVM41IYS3h0x3HD
+ uGGmN8Xg4IinXM7DMSUMDAzn6EMtVtq/QLtMgQqKk3tDFwE1zBuRSd44KbYWGHF3Q5aMOUzd8
+ 9Sz0SWtwZrbXJw+mhMw8rLqVMwp4yN0nU2VyHFcMDvtMFQ3BNUPTwIen5wbxdh2wWV5N7roDc
+ doz4p7AZTAPDJskv5JNv1EKjjCl6xvoqQ7wnIp+Al8cIJxYnH6J4UDx5XPfdsrRS4pa+71lbm
+ EWW0/i/p7///JQKDcKCh7ZZ4LPUrE/h1kYwBQP1MHg5hYP9OpFlu0k36Uv+f4AIeXpq+0CrfQ
+ /bVHc+NPvKLBmPdC+v6whkNTSXKYLqce/eejLUwRvJjXDpqKQ00siEcCr21Vy62/XMUgoTMP0
+ ruAJ3GS2Boof4iy+ow6k+pyZug2crvFBwPmgP5Um5R8Hg5YP1dPhXvfbkPFqPAfvGwOvoplet
+ J2AWy7clG4cWvOnoOy52qSRXi9wlksgco1NEKVg+ITDnHMNlDT01gV4H6HNCGkOncaZ02mV1f
+ WoJKk4TZPuzgJh5AqeiuSTyXXyIiy919eAAca+VxYDVUHKVsaVa633SN22EcLEV1YskVIIOMm
+ T2iRBlyk5NdX4Xcg6V7A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver has been extended to optionally get its operational
-mode, regulator init data and led naming from the devicetree.
+On Wed, Nov 20, 2019 at 11:49 PM Ben Hutchings
+<ben.hutchings@codethink.co.uk> wrote:
+>
+> On Fri, 2019-11-08 at 22:07 +0100, Arnd Bergmann wrote:
+> [...]
+> > --- a/arch/x86/include/uapi/asm/sembuf.h
+> > +++ b/arch/x86/include/uapi/asm/sembuf.h
+> > @@ -21,9 +21,9 @@ struct semid64_ds {
+> >       unsigned long   sem_ctime;      /* last change time */
+> >       unsigned long   sem_ctime_high;
+> >  #else
+> > -     __kernel_time_t sem_otime;      /* last semop time */
+> > +     long            sem_otime;      /* last semop time */
+> >       __kernel_ulong_t __unused1;
+> > -     __kernel_time_t sem_ctime;      /* last change time */
+> > +     long            sem_ctime;      /* last change time */
+> >       __kernel_ulong_t __unused2;
+> >  #endif
+> >       __kernel_ulong_t sem_nsems;     /* no. of semaphores in array */
+> [...]
+>
+> We need to use __kernel_long_t here to do the right thing on x32.
 
-Tree: next-20191118
-Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
----
- .../devicetree/bindings/mfd/tps6105x.txt      | 47 ++++++++++++++++++-
- 1 file changed, 46 insertions(+), 1 deletion(-)
+Good catch, thanks for the review!
 
-diff --git a/Documentation/devicetree/bindings/mfd/tps6105x.txt b/Documentation/devicetree/bindings/mfd/tps6105x.txt
-index 93602c7a19c8..1fc9aa3ed882 100644
---- a/Documentation/devicetree/bindings/mfd/tps6105x.txt
-+++ b/Documentation/devicetree/bindings/mfd/tps6105x.txt
-@@ -7,11 +7,56 @@ Required properties:
- - compatible:		"ti,tps61050" or "ti,tps61052"
- - reg:			Specifies the I2C slave address
- 
--Example:
-+Optional sub-node:
-+
-+This subnode selects the chip's operational mode.
-+There can be at most one single available subnode.
-+
-+- regulator: presence of this sub-node puts the chip in regulator mode.
-+	see Documentation/devicetree/bindings/regulator/regulator.txt
-+
-+- led: presence of this sub-node puts the chip in led mode.
-+	Optional properties:
-+	- function : see Documentation/devicetree/bindings/leds/common.txt
-+	- color : see Documentation/devicetree/bindings/leds/common.txt
-+	- label : see Documentation/devicetree/bindings/leds/common.txt
-+			(deprecated)
-+
-+Example (GPIO operation only):
-+
-+i2c0 {
-+	tps61052@33 {
-+		compatible = "ti,tps61052";
-+		reg = <0x33>;
-+	};
-+};
-+
-+Example (GPIO + regulator operation):
- 
- i2c0 {
- 	tps61052@33 {
- 		compatible = "ti,tps61052";
- 		reg = <0x33>;
-+
-+		regulator {
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+			regulator-always-on;
-+		};
-+	};
-+};
-+
-+Example (GPIO + led operation):
-+
-+#include <dt-bindings/leds/common.h>
-+
-+i2c0 {
-+	tps61052@33 {
-+		compatible = "ti,tps61052";
-+		reg = <0x33>;
-+
-+		led {
-+			color = <LED_COLOR_ID_WHITE>;
-+		};
- 	};
- };
--- 
-2.17.1
+I applied the patch below now on top.
 
+       Arnd
+
+commit c7ebd8a1c1825c3197732ea692cf3dde34a644f5 (HEAD)
+Author: Arnd Bergmann <arnd@arndb.de>
+Date:   Thu Nov 21 15:25:04 2019 +0100
+
+    y2038: ipc: fix x32 ABI breakage
+
+    The correct type on x32 is 64-bit wide, same as for the other struct
+    members around it, so use  __kernel_long_t in place of the original
+    __kernel_time_t here, corresponding to the rest of the structure.
+
+    Fixes: caf5e32d4ea7 ("y2038: ipc: remove __kernel_time_t reference
+from headers")
+    Reported-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
+    Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+
+diff --git a/arch/x86/include/uapi/asm/sembuf.h
+b/arch/x86/include/uapi/asm/sembuf.h
+index 7c1b156695ba..20cab43c4b15 100644
+--- a/arch/x86/include/uapi/asm/sembuf.h
++++ b/arch/x86/include/uapi/asm/sembuf.h
+@@ -21,9 +21,9 @@ struct semid64_ds {
+        unsigned long   sem_ctime;      /* last change time */
+        unsigned long   sem_ctime_high;
+ #else
+-       long            sem_otime;      /* last semop time */
++       __kernel_long_t sem_otime;      /* last semop time */
+        __kernel_ulong_t __unused1;
+-       long            sem_ctime;      /* last change time */
++       __kenrel_long_t sem_ctime;      /* last change time */
+        __kernel_ulong_t __unused2;
+ #endif
+        __kernel_ulong_t sem_nsems;     /* no. of semaphores in array */
