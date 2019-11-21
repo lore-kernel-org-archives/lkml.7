@@ -2,106 +2,84 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83833C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:03:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC6D8C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:03:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46018208A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:03:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="FssLwQtJ"
+	by mail.kernel.org (Postfix) with ESMTP id AB3DE2089D
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 13:03:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbfKUNDF (ORCPT
+        id S1726905AbfKUNDo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 08:03:05 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:26611 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726293AbfKUNDE (ORCPT
+        Thu, 21 Nov 2019 08:03:44 -0500
+Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:39098 "EHLO
+        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726293AbfKUNDo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 08:03:04 -0500
-X-UUID: 1b33c3166c46481bb7e9762f99332aec-20191121
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=NsE4689yAaWq1T5b/skLebYVU2kKGZUndAF8Pm3G/5k=;
-        b=FssLwQtJ0KNeb9sizE3tAftLAkZ0tDyAgdj54n+V1McYT72q5bgXkUjmYn3XPEriUxNMQ94eGTYkKjOXPJxDMENJcDDHjaQ9c8G+5FOh+72A2LyFIC7oFT9MVzhyTmUOp210JMrny2Or2wTFfFY/Ny2ZB88tvanv/d3zGvATxuQ=;
-X-UUID: 1b33c3166c46481bb7e9762f99332aec-20191121
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
-        (envelope-from <walter-zh.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 302700734; Thu, 21 Nov 2019 21:02:58 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 21 Nov 2019 21:02:54 +0800
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 21 Nov 2019 21:02:51 +0800
-Message-ID: <1574341376.8338.4.camel@mtksdccf07>
-Subject: Re: [PATCH v4 1/2] kasan: detect negative size in memory operation
- function
-From:   Walter Wu <walter-zh.wu@mediatek.com>
-To:     Andrey Ryabinin <aryabinin@virtuozzo.com>
-CC:     Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <kasan-dev@googlegroups.com>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        <linux-mediatek@lists.infradead.org>
-Date:   Thu, 21 Nov 2019 21:02:56 +0800
-In-Reply-To: <040479c3-6f96-91c6-1b1a-9f3e947dac06@virtuozzo.com>
-References: <20191112065302.7015-1-walter-zh.wu@mediatek.com>
-         <040479c3-6f96-91c6-1b1a-9f3e947dac06@virtuozzo.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Thu, 21 Nov 2019 08:03:44 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;DS=|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07487;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0Tij7W01_1574341419;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0Tij7W01_1574341419)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 21 Nov 2019 21:03:39 +0800
+Subject: Re: [PATCH] mm: fix unsafe page -> lruvec lookups with cgroup charge
+ migration
+To:     Hugh Dickins <hughd@google.com>,
+        Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Michal Hocko <mhocko@suse.com>, Roman Gushchin <guro@fb.com>,
+        linux-mm@kvack.org, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com
+References: <20191120165847.423540-1-hannes@cmpxchg.org>
+ <alpine.LSU.2.11.1911201836220.1090@eggly.anvils>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <14b15e52-9fff-5497-d30c-2c7c4b99c35a@linux.alibaba.com>
+Date:   Thu, 21 Nov 2019 21:03:36 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:60.0)
+ Gecko/20100101 Thunderbird/60.9.1
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <alpine.LSU.2.11.1911201836220.1090@eggly.anvils>
+Content-Type: text/plain; charset=gbk
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDE5LTExLTIxIGF0IDE1OjI2ICswMzAwLCBBbmRyZXkgUnlhYmluaW4gd3JvdGU6
-DQo+IA0KPiBPbiAxMS8xMi8xOSA5OjUzIEFNLCBXYWx0ZXIgV3Ugd3JvdGU6DQo+IA0KPiA+IGRp
-ZmYgLS1naXQgYS9tbS9rYXNhbi9jb21tb24uYyBiL21tL2thc2FuL2NvbW1vbi5jDQo+ID4gaW5k
-ZXggNjgxNGQ2ZDZhMDIzLi40YmZjZTBhZjg4MWYgMTAwNjQ0DQo+ID4gLS0tIGEvbW0va2FzYW4v
-Y29tbW9uLmMNCj4gPiArKysgYi9tbS9rYXNhbi9jb21tb24uYw0KPiA+IEBAIC0xMDIsNyArMTAy
-LDggQEAgRVhQT1JUX1NZTUJPTChfX2thc2FuX2NoZWNrX3dyaXRlKTsNCj4gPiAgI3VuZGVmIG1l
-bXNldA0KPiA+ICB2b2lkICptZW1zZXQodm9pZCAqYWRkciwgaW50IGMsIHNpemVfdCBsZW4pDQo+
-ID4gIHsNCj4gPiAtCWNoZWNrX21lbW9yeV9yZWdpb24oKHVuc2lnbmVkIGxvbmcpYWRkciwgbGVu
-LCB0cnVlLCBfUkVUX0lQXyk7DQo+ID4gKwlpZiAoIWNoZWNrX21lbW9yeV9yZWdpb24oKHVuc2ln
-bmVkIGxvbmcpYWRkciwgbGVuLCB0cnVlLCBfUkVUX0lQXykpDQo+ID4gKwkJcmV0dXJuIE5VTEw7
-DQo+ID4gIA0KPiA+ICAJcmV0dXJuIF9fbWVtc2V0KGFkZHIsIGMsIGxlbik7DQo+ID4gIH0NCj4g
-PiBAQCAtMTEwLDggKzExMSw5IEBAIHZvaWQgKm1lbXNldCh2b2lkICphZGRyLCBpbnQgYywgc2l6
-ZV90IGxlbikNCj4gPiAgI3VuZGVmIG1lbW1vdmUNCj4gPiAgdm9pZCAqbWVtbW92ZSh2b2lkICpk
-ZXN0LCBjb25zdCB2b2lkICpzcmMsIHNpemVfdCBsZW4pDQo+ID4gIHsNCj4gPiAtCWNoZWNrX21l
-bW9yeV9yZWdpb24oKHVuc2lnbmVkIGxvbmcpc3JjLCBsZW4sIGZhbHNlLCBfUkVUX0lQXyk7DQo+
-ID4gLQljaGVja19tZW1vcnlfcmVnaW9uKCh1bnNpZ25lZCBsb25nKWRlc3QsIGxlbiwgdHJ1ZSwg
-X1JFVF9JUF8pOw0KPiA+ICsJaWYgKCFjaGVja19tZW1vcnlfcmVnaW9uKCh1bnNpZ25lZCBsb25n
-KXNyYywgbGVuLCBmYWxzZSwgX1JFVF9JUF8pIHx8DQo+ID4gKwkgICAgIWNoZWNrX21lbW9yeV9y
-ZWdpb24oKHVuc2lnbmVkIGxvbmcpZGVzdCwgbGVuLCB0cnVlLCBfUkVUX0lQXykpDQo+ID4gKwkJ
-cmV0dXJuIE5VTEw7DQo+ID4gIA0KPiA+ICAJcmV0dXJuIF9fbWVtbW92ZShkZXN0LCBzcmMsIGxl
-bik7DQo+ID4gIH0NCj4gPiBAQCAtMTE5LDggKzEyMSw5IEBAIHZvaWQgKm1lbW1vdmUodm9pZCAq
-ZGVzdCwgY29uc3Qgdm9pZCAqc3JjLCBzaXplX3QgbGVuKQ0KPiA+ICAjdW5kZWYgbWVtY3B5DQo+
-ID4gIHZvaWQgKm1lbWNweSh2b2lkICpkZXN0LCBjb25zdCB2b2lkICpzcmMsIHNpemVfdCBsZW4p
-DQo+ID4gIHsNCj4gPiAtCWNoZWNrX21lbW9yeV9yZWdpb24oKHVuc2lnbmVkIGxvbmcpc3JjLCBs
-ZW4sIGZhbHNlLCBfUkVUX0lQXyk7DQo+ID4gLQljaGVja19tZW1vcnlfcmVnaW9uKCh1bnNpZ25l
-ZCBsb25nKWRlc3QsIGxlbiwgdHJ1ZSwgX1JFVF9JUF8pOw0KPiA+ICsJaWYgKCFjaGVja19tZW1v
-cnlfcmVnaW9uKCh1bnNpZ25lZCBsb25nKXNyYywgbGVuLCBmYWxzZSwgX1JFVF9JUF8pIHx8DQo+
-ID4gKwkgICAgIWNoZWNrX21lbW9yeV9yZWdpb24oKHVuc2lnbmVkIGxvbmcpZGVzdCwgbGVuLCB0
-cnVlLCBfUkVUX0lQXykpDQo+ID4gKwkJcmV0dXJuIE5VTEw7DQo+ID4gIA0KPiANCj4gSSByZWFs
-aXplZCB0aGF0IHdlIGFyZSBnb2luZyBhIHdyb25nIGRpcmVjdGlvbiBoZXJlLiBFbnRpcmVseSBz
-a2lwcGluZyBtZW0qKCkgb3BlcmF0aW9uIG9uIGFueQ0KPiBwb2lzb25lZCBzaGFkb3cgdmFsdWUg
-bWlnaHQgb25seSBtYWtlIHRoaW5ncyB3b3JzZS4gU29tZSBidWdzIGp1c3QgZG9uJ3QgaGF2ZSBh
-bnkgc2VyaW91cyBjb25zZXF1ZW5jZXMsDQo+IGJ1dCBza2lwcGluZyB0aGUgbWVtKigpIG9wcyBl
-bnRpcmVseSBtaWdodCBpbnRyb2R1Y2Ugc3VjaCBjb25zZXF1ZW5jZXMsIHdoaWNoIHdvdWxkbid0
-IGhhcHBlbiBvdGhlcndpc2UuDQo+IA0KPiBTbyBsZXQncyBrZWVwIHRoaXMgY29kZSBhcyB0aGlz
-LCBubyBuZWVkIHRvIGNoZWNrIHRoZSByZXN1bHQgb2YgY2hlY2tfbWVtb3J5X3JlZ2lvbigpLg0K
-PiANCj4gDQpPaywgd2UganVzdCBuZWVkIHRvIGRldGVybWluZSB3aGV0aGVyIHNpemUgaXMgbmVn
-YXRpdmUgbnVtYmVyLiBJZiB5ZXMNCnRoZW4gS0FTQU4gcHJvZHVjZSByZXBvcnQgYW5kIGNvbnRp
-bnVlIHRvIGV4ZWN1dGUgbWVtKigpLiByaWdodD8NCg==
 
+> It like the way you've rearranged isolate_lru_page() there, but I
+> don't think it amounts to more than a cleanup.  Very good thinking
+> about the odd "lruvec->pgdat = pgdat" case tucked away inside
+> mem_cgroup_page_lruvec(), but actually, what harm does it do, if
+> mem_cgroup_move_account() changes page->mem_cgroup concurrently?
+
+Maybe the page could be added to root_mem_cgroup?
+
+> 
+> You say use-after-free, but we have spin_lock_irq here, and the
+> struct mem_cgroup (and its lruvecs) cannot be freed until an RCU
+> grace period expires, which we rely upon in many places, and which
+> cannot happen until after the spin_unlock_irq.
+> 
+> And the same applies in the pagevec_lru_move functions, doesn't it?
+> 
+> I think now is not the time for such cleanups. If this fits well
+> with Alex's per-lruvec locking (or represents an initial direction
+> that you think he should follow), fine, but better to let him take it
+> into his patchset in that case, than change the base unnecessarily
+> underneath him.
+> 
+> (It happens to go against my own direction, since it separates the
+> locking from the determination of lruvec, which I insist must be
+> kept together; but perhaps that won't be quite the same for Alex.)
+> 
+
+It looks like we share the same base.
+
+Before this patch, root memcg's lruvc lock could guards !PageLRU and it followings, But now, there are much holes in the wall. :)
+
+Thanks
+Alex
