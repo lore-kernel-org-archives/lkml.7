@@ -2,95 +2,128 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B96F9C432C3
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 15:26:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBF52C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 15:27:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9565220674
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 15:26:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C927420674
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 15:27:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727247AbfKUP05 (ORCPT
+        id S1726983AbfKUP1g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 10:26:57 -0500
-Received: from verein.lst.de ([213.95.11.211]:46733 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726563AbfKUP05 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 10:26:57 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 9128268BFE; Thu, 21 Nov 2019 16:26:50 +0100 (CET)
-Date:   Thu, 21 Nov 2019 16:26:50 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Jens Axboe <axboe@kernel.dk>, Joerg Roedel <joro@8bytes.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org,
-        iommu@lists.linux-foundation.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2] dma-mapping: treat dev->bus_dma_mask as a DMA limit
-Message-ID: <20191121152650.GA651@lst.de>
-References: <20191121092646.8449-1-nsaenzjulienne@suse.de> <20191121152457.GA525@lst.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191121152457.GA525@lst.de>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+        Thu, 21 Nov 2019 10:27:36 -0500
+Received: from mout.kundenserver.de ([212.227.17.10]:41955 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726546AbfKUP1f (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 10:27:35 -0500
+Received: from orion.localdomain ([95.115.120.75]) by mrelayeu.kundenserver.de
+ (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MJW18-1iITLJ3m6i-00JrJT; Thu, 21 Nov 2019 16:27:34 +0100
+From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     wsa@the-dreams.de, linux-i2c@vger.kernel.org
+Subject: [PATCH] drivers: i2c: introduce devm_i2c_add_adapter()
+Date:   Thu, 21 Nov 2019 16:27:16 +0100
+Message-Id: <20191121152716.23940-1-info@metux.net>
+X-Mailer: git-send-email 2.11.0
+X-Provags-ID: V03:K1:ET/rQWaaj+bqgKvzzHm7j0cGhbypk2slAUvAcx1PA1h6UOx75CS
+ 83ugTIkteaXVtIZ8MkFAQqji9tgVzfKMzE3jeJei1t5nUyPoS9evulJSKjo28CKUyeFIIjw
+ IJ8XEDVPRAhvsWLJoKtcA5SNkiGda7QLVhTdy5DHJDDgEef2SLC7RR0GJ0HQ7sI5SR9J4C4
+ FtXG3nM7l50b/N7BVPIbg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:eqiHgmuKDfY=:dcngmJbBwN6ZZbI2T8T+p2
+ /pQhvjNvZx6Cu/klqM/4P1KusslymmESqTZR4q1v3OKj4QWGIlogJvPVyLb1Z+skoGisWwjWa
+ Gk1fwghyyjxGGrGy4IImKTl+rCWTmSudPK7uN27MSo2eAJUqPI+xAVE2bg46x+Ep2r2vaAHHs
+ nCQ925PCFUsIF5gQr498o4utANXKMQslF+BGF54+gu9WH4hmZHYEWVlvgEMBKTFHHGCY8y108
+ Rj372EdfIMxNH++U7yTBsyturCDn+pso+5kYEudbNY8MfeCbtFXMUqgp6Vktkl95mTJQwoS0z
+ l2N46jw1NhIV0hX5L4sAuWu+s2ymoTJDwmGp1Uqbdja0RjDHba5jU3BoQJHCasnTpClqr9xFg
+ rodEzvb7RXjUWFDtnfwr4fLZ1XdISTGheRyFQbeYXIleWKz/QFxZ3cms/Nm2eWbUCz0euc+uj
+ +elDsd/Ranq0ik/0fLxcBzjcZoX6YH7FpSXUg12u5+/S2AVjoiwvETVIpkgPCkB5aGKSl4mB6
+ s0Q6U9xiVn9OYyoLWUaQ5quPYfWTBg1Q4inNnGy1gu5d1SR48BzeMIgyTQrHUKiJOd0Zua2GF
+ iK5x0qnGV8Mu28y7OchXT96DXr3cgcD9m1VFDWv7AFPfTjHwDLdn9PEQgSIIZg8evVMQM3jgB
+ 5j9JQWMd1C0vcxHcb0z5OfL6gQfeHbGhhDIqpy/tnjWVKQdwKstwYz4IJiErTjSFJ7faH1x8f
+ +QQIfw5emE/Vqt+KQpv5fG8pfbAgl6fyEX0ZMLM69Tnru4KEYUXADzPEwGiwfIYIYE3LsjJOZ
+ uaDygzLYLII4MBbRzsfm5YIk5EH+P8lhN36ChZ/d+18XI2FS0SgZS8196LB/IIO1NmCx91QZl
+ CxL+JCGvk66R3fok2Ntg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 04:24:57PM +0100, Christoph Hellwig wrote:
-> On Thu, Nov 21, 2019 at 10:26:44AM +0100, Nicolas Saenz Julienne wrote:
-> > Using a mask to represent bus DMA constraints has a set of limitations.
-> > The biggest one being it can only hold a power of two (minus one). The
-> > DMA mapping code is already aware of this and treats dev->bus_dma_mask
-> > as a limit. This quirk is already used by some architectures although
-> > still rare.
-> > 
-> > With the introduction of the Raspberry Pi 4 we've found a new contender
-> > for the use of bus DMA limits, as its PCIe bus can only address the
-> > lower 3GB of memory (of a total of 4GB). This is impossible to represent
-> > with a mask. To make things worse the device-tree code rounds non power
-> > of two bus DMA limits to the next power of two, which is unacceptable in
-> > this case.
-> > 
-> > In the light of this, rename dev->bus_dma_mask to dev->bus_dma_limit all
-> > over the tree and treat it as such. Note that dev->bus_dma_limit should
-> > contain the higher accesible DMA address.
-> > 
-> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> 
-> I've tentatively added this patch to the dma-mapping tree based on
-> Robins principal approval of the last version.  That way tomorrows
-> linux-next run should still pick it up.
+Introduce devm'ed version of i2c_add_adapter() which triggers
+i2c_del_adapter() to be called when parent device is removed.
 
-Actually.  This doesn't apply because the dma-mapping tree doesn't
-have you zone_dma_bits change.  I guess we'll need to wait for the
-next merge window, or maybe post rc1 if this happens to fix the
-powerpc problem that Christian reported.
+Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+---
+ drivers/i2c/i2c-core-base.c | 38 ++++++++++++++++++++++++++++++++++++++
+ include/linux/i2c.h         |  2 ++
+ 2 files changed, 40 insertions(+)
+
+diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+index 5f6a4985f2bc..bd713e451633 100644
+--- a/drivers/i2c/i2c-core-base.c
++++ b/drivers/i2c/i2c-core-base.c
+@@ -1452,6 +1452,44 @@ int i2c_add_adapter(struct i2c_adapter *adapter)
+ }
+ EXPORT_SYMBOL(i2c_add_adapter);
+ 
++static void devm_i2c_adapter_release(struct device *dev, void *res)
++{
++	i2c_del_adapter(*(struct i2c_adapter**)res);
++}
++
++/**
++ * devm_i2c_add_adapter - devm version of i2c_add_adapter()
++ * @adapter: the adapter to add
++ * @data: private data to attach (if non-NULL)
++ * Context: can sleep
++ */
++int devm_i2c_add_adapter(struct device *parent,
++			 struct i2c_adapter *adap,
++			 void *data)
++{
++	struct i2c_adapter **dr;
++	int rc;
++
++	dr = devres_alloc(devm_i2c_adapter_release, sizeof(*dr), GFP_KERNEL);
++	if (!dr)
++		return -ENOMEM;
++
++	rc = i2c_add_adapter(adap);
++	if (rc) {
++		devres_free(dr);
++		return rc;
++	}
++
++	if (data)
++		i2c_set_adapdata(adap, data);
++
++	*dr = adap;
++	devres_add(parent, dr);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(devm_i2c_add_adapter);
++
+ /**
+  * i2c_add_numbered_adapter - declare i2c adapter, use static bus number
+  * @adap: the adapter to register (with adap->nr initialized)
+diff --git a/include/linux/i2c.h b/include/linux/i2c.h
+index 1361637c369d..8dc07d03a502 100644
+--- a/include/linux/i2c.h
++++ b/include/linux/i2c.h
+@@ -834,6 +834,8 @@ static inline void i2c_mark_adapter_resumed(struct i2c_adapter *adap)
+  */
+ #if IS_ENABLED(CONFIG_I2C)
+ extern int i2c_add_adapter(struct i2c_adapter *adap);
++extern int devm_i2c_add_adapter(struct device *parent,
++				struct i2c_adapter *adap, void *data);
+ extern void i2c_del_adapter(struct i2c_adapter *adap);
+ extern int i2c_add_numbered_adapter(struct i2c_adapter *adap);
+ 
+-- 
+2.11.0
+
