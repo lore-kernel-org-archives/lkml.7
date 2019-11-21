@@ -2,164 +2,123 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 127B8C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 00:44:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5B34C432C3
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 00:48:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0B8020855
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 00:43:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97B1B20855
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 00:48:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z2jQgMma"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="GmQHdo3j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726664AbfKUAn6 (ORCPT
+        id S1726952AbfKUAsV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 19:43:58 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:42194 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726202AbfKUAn6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 19:43:58 -0500
-Received: by mail-oi1-f195.google.com with SMTP id o12so1582749oic.9;
-        Wed, 20 Nov 2019 16:43:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=5duga5hStByFIxQLF43Hvhp6L3zIT7bydBtcmTR/tNg=;
-        b=Z2jQgMmagOSywgBB1g5iBKgaB62SxXVn9HvxA4TtxuZrKXbOMqZUqr3DtxauiYDSlN
-         BYkT35Hc+jUN9XLFQn6JWhbNUelrm62kG2i9tIE4VXXY5kXS5B+TFmxplGVgOg5WZGxL
-         hrhs32e18U6DV8jaGp+0X2katGRzjXEB2RWmeCW3y1ihWRGaavq4um+cydwKTDxfSTDC
-         nrS79UORkjT9JA9140folZWP1QAh3sH9nR4t+jaOPo3QK/mRMh8/AagzcCiExuSddsS4
-         IxtLM8X4ZR6KJnCbn422LRGaOLR/BQ+r27/kTPnFjP3K3Pd2itpCq67taR3Qk0/QG23I
-         BRpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=5duga5hStByFIxQLF43Hvhp6L3zIT7bydBtcmTR/tNg=;
-        b=KPGV3prKDTWIP295tLh7FQhb76Qwf0PKxfOb2sIXuzROyK7JXgJW8DSXrDA7KdgVik
-         ePpweVIAMz5fNzFN+WTpi6vrnrZDUwDVn+7RAGFMOOkwEejIOlpDGhbEhITstxq/Yzke
-         313AOp+pTkMWJ7bMSE1ySNHtIdIGgOuq663KpgEaqJlc9+/NsFj0I2PmWvhDOCjBrNw1
-         VNC8gVRUEJGlpdDS0rPODc3mfmgGi/Qyr32MYOliRekXmsDn07Y4Sk7xUAmxCdYCr9mf
-         XbibNe1SiEjxum65DHWYh7sUEuTrR5LcBPtenMAlB80rIQAdrMJS7WAJhEzF0+Iomemv
-         X79w==
-X-Gm-Message-State: APjAAAU4zyDbWyFw69R3JG51w83P1pZhBS/Edq/dgiMYaX2sZbGv6Qza
-        Nx7IXg2t74FGDjKOSK8CR08j/xA48rDIvniR1jI=
-X-Google-Smtp-Source: APXvYqyIgj3f6exokWOiCedzvm8QAgFFlxitYlAX6t3TqpDAeoum3Jhy9OJKkCMSSCSK5Pl1VJ8UKJI5Jx1z5wjzZhI=
-X-Received: by 2002:aca:c50f:: with SMTP id v15mr5503455oif.5.1574297037472;
- Wed, 20 Nov 2019 16:43:57 -0800 (PST)
+        Wed, 20 Nov 2019 19:48:21 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:47009 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726293AbfKUAsV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 20 Nov 2019 19:48:21 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47JLX261zQz9sNx;
+        Thu, 21 Nov 2019 11:48:18 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1574297298;
+        bh=Eu663nPfTMySBSC5/BdH1LC8Obd3ZEPCoc8HFbZQc1Q=;
+        h=Date:From:To:Cc:Subject:From;
+        b=GmQHdo3jK9KAw2y7kpzVIu+Slphb1oneVrNSHv7MT2nTJDTYTeCbM0cktLI8nHByv
+         4XgtgPfMJv62mbnsQ1Ag0toHomJ78ZO2WMwUlGPnikJATvRo04ybiFAURmfOjiL3LR
+         gt4XCYnwJpz0RUueL0pbEv+uXg+Mtp3wUyiv1RmwSNcE5g2cvA31myzaNERZ2Ylsrw
+         fIqDQNgx32ZvBh0vk1ASQoTdip/L1lbNfqQQMKHjFu3eWWjNmivgXx/RXiw5qyv2EH
+         IOHHRdY84OLgHcOU9gAgpi5LibUhu7pG7dqTUCKeE6KoS8BVDOrspfbPD6vqKOgMR5
+         98qBZD21vO/6Q==
+Date:   Thu, 21 Nov 2019 11:48:17 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Julian Wiedmann <jwi@linux.ibm.com>
+Subject: linux-next: manual merge of the net-next tree with the net tree
+Message-ID: <20191121114817.4da07ad7@canb.auug.org.au>
 MIME-Version: 1.0
-References: <1574221329-12370-1-git-send-email-wanpengli@tencent.com>
- <61E34902-0743-4DAF-A7DF-94C0E51CDA08@oracle.com> <CA11DF59-9969-4E1C-AF8A-8102D2D9D8A9@oracle.com>
-In-Reply-To: <CA11DF59-9969-4E1C-AF8A-8102D2D9D8A9@oracle.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Thu, 21 Nov 2019 08:43:49 +0800
-Message-ID: <CANRm+CzCyauiJ9TGYxkLw61--WVT2L2ARj8JhedJN+ZhD64uKg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] KVM: VMX: FIXED+PHYSICAL mode single target IPI fastpath
-To:     Liran Alon <liran.alon@oracle.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; boundary="Sig_/oh3m/JgKtzHa+Mq3FQDd5L2";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 21 Nov 2019 at 07:55, Liran Alon <liran.alon@oracle.com> wrote:
->
->
->
-> > On 21 Nov 2019, at 1:36, Liran Alon <liran.alon@oracle.com> wrote:
-> >
-> >
-> >
-> >> On 20 Nov 2019, at 5:42, Wanpeng Li <kernellwp@gmail.com> wrote:
-> >>
-> >> From: Wanpeng Li <wanpengli@tencent.com>
-> >>
-> >> ICR and TSCDEADLINE MSRs write cause the main MSRs write vmexits in
-> >> our product observation, multicast IPIs are not as common as unicast
-> >> IPI like RESCHEDULE_VECTOR and CALL_FUNCTION_SINGLE_VECTOR etc.
-> >
-> > Have you also had the chance to measure non-Linux workloads. Such as Wi=
-ndows?
-> >
-> >>
-> >> This patch tries to optimize x2apic physical destination mode, fixed
-> >> delivery mode single target IPI. The fast path is invoked at
-> >> ->handle_exit_irqoff() to emulate only the effect of the ICR write
-> >> itself, i.e. the sending of IPIs.  Sending IPIs early in the VM-Exit
-> >> flow reduces the latency of virtual IPIs by avoiding the expensive bit=
-s
-> >> of transitioning from guest to host, e.g. reacquiring KVM's SRCU lock.
-> >> Especially when running guest w/ KVM_CAP_X86_DISABLE_EXITS capability
-> >> enabled or guest can keep running, IPI can be injected to target vCPU
-> >> by posted-interrupt immediately.
-> >
-> > May I suggest an alternative phrasing? Something such as:
-> >
-> > =E2=80=9C=E2=80=9D=E2=80=9D
-> > This patch introduce a mechanism to handle certain performance-critical=
- WRMSRs
-> > in a very early stage of KVM VMExit handler.
-> >
-> > This mechanism is specifically used for accelerating writes to x2APIC I=
-CR that
-> > attempt to send a virtual IPI with physical destination-mode, fixed del=
-ivery-mode
-> > and single target. Which was found as one of the main causes of VMExits=
- for
-> > Linux workloads.
-> >
-> > The reason this mechanism significantly reduce the latency of such virt=
-ual IPIs
-> > is by sending the physical IPI to the target vCPU in a very early stage=
- of KVM
-> > VMExit handler, before host interrupts are enabled and before expensive
-> > operations such as reacquiring KVM=E2=80=99s SRCU lock.
-> > Latency is reduced even more when KVM is able to use APICv posted-inter=
-rupt
-> > mechanism (which allows to deliver the virtual IPI directly to target v=
-CPU without
-> > the need to kick it to host).
-> > =E2=80=9C=E2=80=9D=E2=80=9D
-> >
-> >>
-> >> Testing on Xeon Skylake server:
-> >>
-> >> The virtual IPI latency from sender send to receiver receive reduces
-> >> more than 200+ cpu cycles.
-> >>
-> >> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> >> Cc: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com>
-> >> Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-> >> Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-> >> Cc: Liran Alon <liran.alon@oracle.com>
-> >> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> >
-> > I see you used the code I provided my reply to v2. :)
-> > I had only some very minor comments inline below. Therefore:
-> > Reviewed-by: Liran Alon <liran.alon@oracle.com>
->
-> Oh there is a small thing pointed by Sean I agree with (and missed in my =
-review) before this Reviewed-by can be given.
-> You should avoid performing accelerated WRMSR handling in case vCPU is in=
- guest-mode.
-> (From obvious reasons as L1 for example could intercept this WRMSR=E2=80=
-=A6)
+--Sig_/oh3m/JgKtzHa+Mq3FQDd5L2
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Yes, I add !is_guest_mode(vcpu) checking in v1, but careless lose it
-in further versions.
+Hi all,
 
-    Wanpeng
+Today's linux-next merge of the net-next tree got a conflict in:
+
+  drivers/s390/net/qeth_l2_main.c
+
+between commit:
+
+  c8183f548902 ("s390/qeth: fix potential deadlock on workqueue flush")
+
+from the net tree and commit:
+
+  9897d583b015 ("s390/qeth: consolidate some duplicated HW cmd code")
+
+from the net-next tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/s390/net/qeth_l2_main.c
+index 4bccdce19b5a,ae69c981650d..000000000000
+--- a/drivers/s390/net/qeth_l2_main.c
++++ b/drivers/s390/net/qeth_l2_main.c
+@@@ -802,14 -779,6 +784,7 @@@ static int qeth_l2_set_online(struct cc
+  		goto out_remove;
+  	}
+ =20
+- 	if (qeth_is_diagass_supported(card, QETH_DIAGS_CMD_TRAP)) {
+- 		if (card->info.hwtrap &&
+- 		    qeth_hw_trap(card, QETH_DIAGS_TRAP_ARM))
+- 			card->info.hwtrap =3D 0;
+- 	} else
+- 		card->info.hwtrap =3D 0;
+-=20
+ +	mutex_lock(&card->sbp_lock);
+  	qeth_bridgeport_query_support(card);
+  	if (card->options.sbp.supported_funcs)
+  		dev_info(&card->gdev->dev,
+
+--Sig_/oh3m/JgKtzHa+Mq3FQDd5L2
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3V3tEACgkQAVBC80lX
+0GwCXAf/aTWlvWU2Hfwv9UGOgT/7JXN9HDnUBSINFgcQXKrP2BdrBsyjM/+z7b49
+0e5i12Qjow4PPm7JPnCKmjKUOlQnL8GEqzu6ALZ5vMds5HA3/jYc16qj+Oouc6Jl
+okvEPEncgOmNKAB0KI8ojl8yVaeUvVPfLBcMbYaJLINpSsmEGU806nZD1gTQRrYi
+bZ4JhMLTmgIuOwGLae0MLLeYV8QxHv60EfC/lsltZcfew4hFpijUD6eSO/bTGG7q
+qK9Vmmwb58GfM+4qEJH/UkX3Jo3sIMIYCok06M86C0RbUKh3goKAc6rxv6YIL4gT
+Co8Au3WBEr+/DoRcq38gTsZxFCM7PQ==
+=a6kG
+-----END PGP SIGNATURE-----
+
+--Sig_/oh3m/JgKtzHa+Mq3FQDd5L2--
