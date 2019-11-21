@@ -2,169 +2,100 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2988C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:38:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4BACC432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:38:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AA122088F
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:38:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B972D2088F
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 10:38:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jIDkN6U9"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e1o3LIc0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbfKUKiV (ORCPT
+        id S1726947AbfKUKiZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 05:38:21 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:28530 "EHLO
+        Thu, 21 Nov 2019 05:38:25 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:40315 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726875AbfKUKiU (ORCPT
+        with ESMTP id S1726875AbfKUKiY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 05:38:20 -0500
+        Thu, 21 Nov 2019 05:38:24 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574332698;
+        s=mimecast20190719; t=1574332703;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:content-type:content-type:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=iIac5SPOmc9oxHIYzV9hFqqBc5xVMgS7zIDXwEB9xaw=;
-        b=jIDkN6U9JgqtI7VhOYQT4bv56VVXA4LtKvztwgjLNJUV6OOT3xqlDJeN4wIkt0tArZOp42
-        4JdK564sAJu0fNFeCh1UzynYp+wGWrloAXeTODslVHnAi3EIOsokdQjmkJLi5bEb4w2oHP
-        A0id4RZp7YGOUhV1hUAbMnsEhcFTauI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-403-hrfRQkw1MkazqJtpqYN2wg-1; Thu, 21 Nov 2019 05:38:15 -0500
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 19AD06A6;
-        Thu, 21 Nov 2019 10:38:13 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-116-67.ams2.redhat.com [10.36.116.67])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7F6EE70537;
-        Thu, 21 Nov 2019 10:38:08 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id B0ADF17536; Thu, 21 Nov 2019 11:38:07 +0100 (CET)
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     intel-gfx@lists.freedesktop.org, Gerd Hoffmann <kraxel@redhat.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Huang Rui <ray.huang@amd.com>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 1/2] drm: call drm_gem_object_funcs.mmap with fake offset
-Date:   Thu, 21 Nov 2019 11:38:06 +0100
-Message-Id: <20191121103807.18424-2-kraxel@redhat.com>
-In-Reply-To: <20191121103807.18424-1-kraxel@redhat.com>
-References: <20191121103807.18424-1-kraxel@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-MC-Unique: hrfRQkw1MkazqJtpqYN2wg-1
+        bh=gcx4NotMnfWI8ryROCazs48WfO2wapfkiUCvjD+j/TI=;
+        b=e1o3LIc0pR4xQmVVnocnwRcPsw0qb9XhSrHgPuW7RzFZGZM2qCKUo8+mHALhiX2JESl719
+        +I7zEEW1UEK8DqHtTZBAJR28qm774CT1snd7UwEibf8Eah6Q/3LvR9NTsDs3TOrMTNdgG/
+        bBAaPNduYmYmNRCZ2vmXs14RGyD5w/0=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-372-jE8OmELBP8q1rx54WYz0wQ-1; Thu, 21 Nov 2019 05:38:21 -0500
+Received: by mail-wr1-f70.google.com with SMTP id c6so1810673wrm.18
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 02:38:21 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zCRBPyvdRSagG9bu6g7JLItNtcbbQJccmo18+XWsj1g=;
+        b=KqIoSCgRZ7NCiL26IJV9P99sSqqzdQ75izKMNEy83YIRI/hDDt/88Gne/yheg2H+6v
+         vuYXl5mRPmol+TFxC+z37wkx6AMHH2jgzj2thTvqUOFuXynjVYZN9YoIROrp339/8YMB
+         Yd811tW4C/4eCWWufZcWKRYRWL5X/piAZdQ8pb9+SgXGNfLfzoDxXMXIRUaE88IY/gju
+         u/f5rab7RVTHCBqCDR3B1T+ofRlFAps3y3rp1Di8TYYF92fMQYfCQdtF1oSNPYZ/fltv
+         2BJlCezMdZI+b7H4kMgp7n8xD2H9d5mL+MMA8X5kY3EqQ8mM1Myzcxdb18Ci8qQDr7uF
+         Jzkg==
+X-Gm-Message-State: APjAAAUmNjoCXMGpce+eckGvh+QsOT3r/HEcF3dzhqRkL2pB2PhMHkzK
+        Vl0X8CsBuYgdYx2vN0xpTEWaLphUYJEwTwlK9hnQaZEOww3xX3eR3NjnjnlDCDh3f8YIIRPe7gO
+        Hrv7OrPS0AcjmECpB7ASPOMtH
+X-Received: by 2002:adf:e803:: with SMTP id o3mr9693026wrm.326.1574332700003;
+        Thu, 21 Nov 2019 02:38:20 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyrXPnT74IzyupD1iCDtakTuMWQXc9sqwsiS9lodrPz+fHzBQXzWngw7Q9U6oB/kr7PmVmzpg==
+X-Received: by 2002:adf:e803:: with SMTP id o3mr9692996wrm.326.1574332699760;
+        Thu, 21 Nov 2019 02:38:19 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:71a5:6e:f854:d744? ([2001:b07:6468:f312:71a5:6e:f854:d744])
+        by smtp.gmail.com with ESMTPSA id w17sm2896352wrt.45.2019.11.21.02.38.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 Nov 2019 02:38:19 -0800 (PST)
+Subject: Re: [PATCH v7 3/9] mmu: spp: Add SPP Table setup functions
+To:     Yang Weijiang <weijiang.yang@intel.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jmattson@google.com,
+        sean.j.christopherson@intel.com
+Cc:     yu.c.zhang@linux.intel.com, alazar@bitdefender.com,
+        edwin.zhai@intel.com
+References: <20191119084949.15471-1-weijiang.yang@intel.com>
+ <20191119084949.15471-4-weijiang.yang@intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <5b0da087-8ce0-2b01-5a1a-4d8c5f319d33@redhat.com>
+Date:   Thu, 21 Nov 2019 11:38:18 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20191119084949.15471-4-weijiang.yang@intel.com>
+Content-Language: en-US
+X-MC-Unique: jE8OmELBP8q1rx54WYz0wQ-1
 X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The fake offset is going to stay, so change the calling convention for
-drm_gem_object_funcs.mmap to include the fake offset.  Update all users
-accordingly.
+On 19/11/19 09:49, Yang Weijiang wrote:
+> +static int is_spp_shadow_present(u64 pte)
+> +{
+> +=09return pte & PT_PRESENT_MASK;
+> +}
+> +
 
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
----
- include/drm/drm_gem.h                  | 4 +---
- drivers/gpu/drm/drm_gem.c              | 3 ---
- drivers/gpu/drm/drm_gem_shmem_helper.c | 3 +++
- drivers/gpu/drm/drm_prime.c            | 3 +++
- drivers/gpu/drm/ttm/ttm_bo_vm.c        | 7 -------
- 5 files changed, 7 insertions(+), 13 deletions(-)
+This should not be needed, is_shadow_present_pte works well for SPP PTEs
+as well (and in fact you're already using it here and there, so it's
+confusing to have both).
 
-diff --git a/include/drm/drm_gem.h b/include/drm/drm_gem.h
-index 97a48165642c..0b375069cd48 100644
---- a/include/drm/drm_gem.h
-+++ b/include/drm/drm_gem.h
-@@ -159,9 +159,7 @@ struct drm_gem_object_funcs {
- =09 *
- =09 * The callback is used by by both drm_gem_mmap_obj() and
- =09 * drm_gem_prime_mmap().  When @mmap is present @vm_ops is not
--=09 * used, the @mmap callback must set vma->vm_ops instead. The @mmap
--=09 * callback is always called with a 0 offset. The caller will remove
--=09 * the fake offset as necessary.
-+=09 * used, the @mmap callback must set vma->vm_ops instead.
- =09 */
- =09int (*mmap)(struct drm_gem_object *obj, struct vm_area_struct *vma);
-=20
-diff --git a/drivers/gpu/drm/drm_gem.c b/drivers/gpu/drm/drm_gem.c
-index 2f2b889096b0..56f42e0f2584 100644
---- a/drivers/gpu/drm/drm_gem.c
-+++ b/drivers/gpu/drm/drm_gem.c
-@@ -1106,9 +1106,6 @@ int drm_gem_mmap_obj(struct drm_gem_object *obj, unsi=
-gned long obj_size,
- =09=09return -EINVAL;
-=20
- =09if (obj->funcs && obj->funcs->mmap) {
--=09=09/* Remove the fake offset */
--=09=09vma->vm_pgoff -=3D drm_vma_node_start(&obj->vma_node);
--
- =09=09ret =3D obj->funcs->mmap(obj, vma);
- =09=09if (ret)
- =09=09=09return ret;
-diff --git a/drivers/gpu/drm/drm_gem_shmem_helper.c b/drivers/gpu/drm/drm_g=
-em_shmem_helper.c
-index 0810d3ef6961..a421a2eed48a 100644
---- a/drivers/gpu/drm/drm_gem_shmem_helper.c
-+++ b/drivers/gpu/drm/drm_gem_shmem_helper.c
-@@ -528,6 +528,9 @@ int drm_gem_shmem_mmap(struct drm_gem_object *obj, stru=
-ct vm_area_struct *vma)
- =09struct drm_gem_shmem_object *shmem;
- =09int ret;
-=20
-+=09/* Remove the fake offset */
-+=09vma->vm_pgoff -=3D drm_vma_node_start(&obj->vma_node);
-+
- =09shmem =3D to_drm_gem_shmem_obj(obj);
-=20
- =09ret =3D drm_gem_shmem_get_pages(shmem);
-diff --git a/drivers/gpu/drm/drm_prime.c b/drivers/gpu/drm/drm_prime.c
-index 0814211b0f3f..a9633bd241bb 100644
---- a/drivers/gpu/drm/drm_prime.c
-+++ b/drivers/gpu/drm/drm_prime.c
-@@ -714,6 +714,9 @@ int drm_gem_prime_mmap(struct drm_gem_object *obj, stru=
-ct vm_area_struct *vma)
- =09int ret;
-=20
- =09if (obj->funcs && obj->funcs->mmap) {
-+=09=09/* Add the fake offset */
-+=09=09vma->vm_pgoff +=3D drm_vma_node_start(&obj->vma_node);
-+
- =09=09ret =3D obj->funcs->mmap(obj, vma);
- =09=09if (ret)
- =09=09=09return ret;
-diff --git a/drivers/gpu/drm/ttm/ttm_bo_vm.c b/drivers/gpu/drm/ttm/ttm_bo_v=
-m.c
-index e6495ca2630b..3e8c3de91ae4 100644
---- a/drivers/gpu/drm/ttm/ttm_bo_vm.c
-+++ b/drivers/gpu/drm/ttm/ttm_bo_vm.c
-@@ -514,13 +514,6 @@ EXPORT_SYMBOL(ttm_bo_mmap);
- int ttm_bo_mmap_obj(struct vm_area_struct *vma, struct ttm_buffer_object *=
-bo)
- {
- =09ttm_bo_get(bo);
--
--=09/*
--=09 * FIXME: &drm_gem_object_funcs.mmap is called with the fake offset
--=09 * removed. Add it back here until the rest of TTM works without it.
--=09 */
--=09vma->vm_pgoff +=3D drm_vma_node_start(&bo->base.vma_node);
--
- =09ttm_bo_mmap_vma_setup(bo, vma);
- =09return 0;
- }
---=20
-2.18.1
+Paolo
 
