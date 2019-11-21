@@ -2,135 +2,82 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EAD1C43215
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 01:29:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4206C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 01:32:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 509C720878
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 01:29:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1D2F20878
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 01:32:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="VSgxdqIy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726573AbfKUB3x convert rfc822-to-8bit (ORCPT
+        id S1726568AbfKUBcH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 20 Nov 2019 20:29:53 -0500
-Received: from cnshjsmin05.app.nokia-sbell.com ([116.246.26.45]:46910 "EHLO
-        cnshjsmin05.nokia-sbell.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725819AbfKUB3w (ORCPT
+        Wed, 20 Nov 2019 20:32:07 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:36142 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725819AbfKUBcH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 20 Nov 2019 20:29:52 -0500
-X-AuditID: ac18929d-483ff700000014de-de-5dd5e88875a1
-Received: from CNSHPPEXCH1606.nsn-intra.net (Unknown_Domain [135.251.51.106])
-        (using TLS with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client did not present a certificate)
-        by cnshjsmin05.nokia-sbell.com (Symantec Messaging Gateway) with SMTP id E1.24.05342.888E5DD5; Thu, 21 Nov 2019 09:29:44 +0800 (HKT)
-Received: from CNSHPPEXCH1601.nsn-intra.net (135.251.51.101) by
- CNSHPPEXCH1606.nsn-intra.net (135.251.51.106) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 21 Nov 2019 09:29:44 +0800
-Received: from CNSHPPEXCH1601.nsn-intra.net ([135.251.51.101]) by
- CNSHPPEXCH1601.nsn-intra.net ([135.251.51.101]) with mapi id 15.01.1713.007;
- Thu, 21 Nov 2019 09:29:44 +0800
-From:   "Wang, Peng 1. (NSB - CN/Hangzhou)" <peng.1.wang@nokia-sbell.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-CC:     "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] watchdog: make DesignWare watchdog allow users to set
- bigger timeout value
-Thread-Topic: [PATCH] watchdog: make DesignWare watchdog allow users to set
- bigger timeout value
-Thread-Index: AdWfimD0awmuxWORQi2dTd1MQDV31P//8UQA//7z6PA=
-Date:   Thu, 21 Nov 2019 01:29:44 +0000
-Message-ID: <9128f42a3e4347f2adfccb8aa2833e2e@nokia-sbell.com>
-References: <13477f08400047c1b32030b2680a4241@nokia-sbell.com>
- <20191120171512.GA28255@roeck-us.net>
-In-Reply-To: <20191120171512.GA28255@roeck-us.net>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [135.251.51.115]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Wed, 20 Nov 2019 20:32:07 -0500
+Received: from [10.137.112.108] (unknown [131.107.174.108])
+        by linux.microsoft.com (Postfix) with ESMTPSA id B20AD20B7185;
+        Wed, 20 Nov 2019 17:32:06 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B20AD20B7185
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1574299926;
+        bh=aeBFIDmsoWny0EYr1/a2SoKWD35gPHAfNwnYfOwZy7Y=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=VSgxdqIy4KDeltAbZ9SUt6xRmyYcz3BkhjsQtC5Ai/DXDZ6w50YFDseA96Olnm/UX
+         dn2GPLUE1DKos9EyIOZANzpP5kpa8t1WPU9wxySlRHqbYfu1tf1oPy5w0AZLP5bLaN
+         x7Wdx4RK8aO2jvomC2xBu0tHWMYb7MVjx5U1zhlg=
+Subject: Re: [PATCH v8 2/5] IMA: Define an IMA hook to measure keys
+To:     Mimi Zohar <zohar@linux.ibm.com>,
+        Eric Snowberg <eric.snowberg@oracle.com>
+Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        keyrings@vger.kernel.org
+References: <20191118223818.3353-1-nramas@linux.microsoft.com>
+ <20191118223818.3353-3-nramas@linux.microsoft.com>
+ <ED63593E-BE9B-40B7-B7FD-9DE772DC2EB1@oracle.com>
+ <98eeec95-cc19-2900-b96e-eadaac1b4a68@linux.microsoft.com>
+ <1574299330.4793.158.camel@linux.ibm.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <21c08fdf-43d7-67e0-1cb5-66bdbce1b6ad@linux.microsoft.com>
+Date:   Wed, 20 Nov 2019 17:32:03 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprDIsWRmVeSWpSXmKPExsXS/ts4S7fjxdVYg6/fdC0u75rDZnFj3T52
-        iycLzzBZPH75j9mBxWPlmjWsHju/N7B7fN4kF8AcxWWTkpqTWZZapG+XwJXxr2cCS8Fj8YrF
-        y5qZGhiXCncxcnJICJhIPHv7lgXEFhI4xCTxZ5lWFyMXkP2XUWLnldNsEM4mRokrW7+xg1Sx
-        CbhLNG1axwZiiwioSTSfagErYhbYzSgxt/EN2ChhgUSJ6y/OM0EUJUncePifBcK2kvj86zpY
-        M4uAqsSsW4+BhnJw8ArYSXTdNIC4Ik3i9qteRhCbU8BI4urEnWBjGAVkJaY9ug9mMwuIS9x6
-        Mp8J4gMBiSV7zjND2KISLx//YwUZKSGgJNG3AapcR2LB7k9sELa2xLKFr8HKeQUEJU7OfMIy
-        gVFsFpKps5C0zELSMgtJywJGllWM0sl5xRlZxbmZeQamenn52ZmJusVJqTk5esn5uZsYgXG2
-        RmLS3B2MnZ3xhxgFOBiVeHgzNK7GCrEmlhVX5h5ilOBgVhLh3XP9SqwQb0piZVVqUX58UWlO
-        avEhRmkOFiVx3pbJC2OFBNITS1KzU1MLUotgskwcnFINjFaf7lw7uuci1125AOWbU69X1Hvv
-        nCOusUi47turuI0OTMUGJcseuSfI7XZQWRfWumhFa5bmTe6KPa7pjj1fr/6xt200X/jtl9Ps
-        zTyHSx5//1ffxvBNZ4ZdyI4GhQdNRsIS2U0bDAUm7ViyIbffymvDxZ0t0uvspq/62CeiuTHF
-        zlS9rqKOQ4mlOCPRUIu5qDgRAAFHRbOvAgAA
+In-Reply-To: <1574299330.4793.158.camel@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Guenter, 
+On 11/20/19 5:22 PM, Mimi Zohar wrote:
 
-Thank you for your time.
-- I will remove the unnecessary {}
-- wdd->max_hw_heartbeat_ms is the max timeout value which HW can support, this value is limited according to the input clock, say. It only supports 20 seconds, if users requires to set timeout to be say. 60 seconds, the watchdog device driver 'watchdog_dev.c' checks if wdd->timeout is bigger than wdd->max_hw_heartbeat_ms, if yes, watchdog_dev.c feeds the watchdog by a worker queue itself to help to feed the watchdog before 60 seconds elapse. Here the issue of dw_wdt.c is that, the original codes update wdd->timeout to the value which HW can support, which means if users requires 60 seconds to be the timeout, then dw_wdt.c updates the timeout value to 20 seconds, this makes the "feeding helper" mechanism in watchdog_dev.c not take effect. That's why I add this check.
-
-Thanks,
-Peng Wang
-
------Original Message-----
-From: Guenter Roeck [mailto:groeck7@gmail.com] On Behalf Of Guenter Roeck
-Sent: Thursday, November 21, 2019 1:15 AM
-To: Wang, Peng 1. (NSB - CN/Hangzhou) <peng.1.wang@nokia-sbell.com>
-Cc: wim@linux-watchdog.org; linux-watchdog@vger.kernel.org; linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] watchdog: make DesignWare watchdog allow users to set bigger timeout value
-
-On Wed, Nov 20, 2019 at 10:07:57AM +0000, Wang, Peng 1. (NSB - CN/Hangzhou) wrote:
-> From 1d051b7c081083751dc0bab97d3ab9efbba0f4a7 Mon Sep 17 00:00:00 2001
-> From: Peng Wang <peng.1.wang@nokia-sbell.com>
-> Date: Wed, 20 Nov 2019 15:12:59 +0800
-> Subject: [PATCH] watchdog: make DesignWare watchdog allow users to set 
-> bigger  timeout value
+>> I had the following check in process_buffer_measurement() as part of my
+>> patch, but removed it since it is being upstreamed separately (by Mimi)
+>>
+>>    if (!ima_policy_flag)
+>>    	return;
 > 
-> watchdog_dev.c provides means to allow users to set bigger timeout 
-> value than HW can support, make DesignWare watchdog align with this.
+> Did you post it as a separate patch?  I can't seem to find it.
 > 
-> Signed-off-by: Peng Wang <peng.1.wang@nokia-sbell.com>
-> ---
->  drivers/watchdog/dw_wdt.c | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/watchdog/dw_wdt.c b/drivers/watchdog/dw_wdt.c 
-> index fef7c61..8911e5e 100644
-> --- a/drivers/watchdog/dw_wdt.c
-> +++ b/drivers/watchdog/dw_wdt.c
-> @@ -113,8 +113,15 @@ static int dw_wdt_set_timeout(struct watchdog_device *wdd, unsigned int top_s)
->  	 */
->  	writel(top_val | top_val << WDOG_TIMEOUT_RANGE_TOPINIT_SHIFT,
->  	       dw_wdt->regs + WDOG_TIMEOUT_RANGE_REG_OFFSET);
-> -
-> -	wdd->timeout = dw_wdt_top_in_seconds(dw_wdt, top_val);
-> +    
-> +    /*
-> +     * In case users set bigger timeout value than HW can support,
-> +     * kernel(watchdog_dev.c) helps to feed watchdog before 
-> +     * wdd->timeout
-> +     */
-> +    if ( wdd->timeout * 1000 <= wdd->max_hw_heartbeat_ms ) {
-> +	    wdd->timeout = dw_wdt_top_in_seconds(dw_wdt, top_val);
-> +    }
+> Mimi
 
-{ } is unnecessary here. Also, the above code compares the _old_ timeout againt the maximum supported timeout, which doesn't look correct.
+No - I removed the above change from my patch since you mentioned it's 
+being upstreamed separately.
 
-Thanks,
-Guenter
+I didn't realize you wanted me to include the above change alone in a 
+separate patch (in my patch set). Sorry - I guess I misunderstood.
 
->  
->  	return 0;
->  }
-> --
-> 1.8.3.1
-> 
+I can do that when I send an update - I expect to by the end of this week.
+
+thanks,
+  -lakshmi
