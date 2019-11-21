@@ -2,130 +2,139 @@ Return-Path: <SRS0=lLEG=ZN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0E34C432C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:13:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3EB1C432C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:13:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C26E20672
-	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:13:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C22C20672
+	for <linux-kernel@archiver.kernel.org>; Thu, 21 Nov 2019 20:13:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ivm+77kB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbfKUUNZ (ORCPT
+        id S1727022AbfKUUN1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 21 Nov 2019 15:13:25 -0500
-Received: from mga01.intel.com ([192.55.52.88]:24544 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726541AbfKUUNZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 21 Nov 2019 15:13:25 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 21 Nov 2019 12:13:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,227,1571727600"; 
-   d="scan'208";a="216209902"
-Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by fmsmga001.fm.intel.com with ESMTP; 21 Nov 2019 12:13:24 -0800
-Date:   Thu, 21 Nov 2019 12:25:35 -0800
-From:   Fenghua Yu <fenghua.yu@intel.com>
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        David Laight <David.Laight@aculab.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
-Subject: Re: [PATCH v10 6/6] x86/split_lock: Enable split lock detection by
- kernel parameter
-Message-ID: <20191121202535.GC199273@romley-ivt3.sc.intel.com>
-References: <20191121185303.GB199273@romley-ivt3.sc.intel.com>
- <4BB1CB74-887B-4F40-B3B2-F0147B264C34@amacapital.net>
+        Thu, 21 Nov 2019 15:13:27 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:35142 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726541AbfKUUN0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 21 Nov 2019 15:13:26 -0500
+Received: by mail-qk1-f196.google.com with SMTP id i19so4273627qki.2
+        for <linux-kernel@vger.kernel.org>; Thu, 21 Nov 2019 12:13:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=L7kYoMVgzXrrlMqhKt4mkkLjEcR7Iirse1ze91WZ2es=;
+        b=Ivm+77kBP6dszmfwrcPYZpVNUzPEQ41aylYiP4xCZ5ljESqvBEFVvKTD2AEwmdOsL4
+         14ZKZEuU2lOHuPag2Cv7szEQeCTGabe+e3UHltjZORlPWrWo1hgPvhm2w3kHeP6nb+gi
+         o1TXg3NKP1VYP+fadqTqmMG9+StLeCRDU2dwzw91Rngm8de9h5b01xCy8fDo3OzvdGKc
+         7sHbPWh3oF83aJ8I6i1tNam8zl1lgPg1cwehgcJ5YHq3oa13BgDC4vjo5ndPqn8nrlOU
+         8scXT9s6A7/UyWL+yqZhVg+Lgl/0/1oPsHxN3/uHlqPYwTVN9cZ3becP/n2dC7RRMmDY
+         zfRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=L7kYoMVgzXrrlMqhKt4mkkLjEcR7Iirse1ze91WZ2es=;
+        b=p5ijoHiCrHsrBCMhdysm1r5GzCOaw5RkF/octygg3h4WL8G4UTynlL5uqEHeoeo8Fn
+         m5gWSBFcM2CU1/DpTdMdERtn4MfCRQke5rvF2NorVgGv+1qd+cmnyRRIkkoOwqTdrRKl
+         sxeXbX2GMwUH/qYNjm2cpFyUOiJBLXFUGZAOQ7aDahMWTyG4n0g++L7QdN8bc94izQzU
+         Ak7GNxM4V6pRdloufxPO87GRzV7vw0PbNsssmb0rK6LYJhQYveEPOr9bb9mwp5KPyc8x
+         dCSQW5F+FsqN27s3FKX1A2JVqbLs5K2+CDZ/2HDMiyQRClKyf/KNk/3ikJ1HwskM8KdC
+         N0Hw==
+X-Gm-Message-State: APjAAAWMA3nRsyu1LgQU3q+F5523DDx5egtLTlTkQ20HS1nabP3bcnGu
+        uz1TwvYDYtpFevgKMPLCEJg2L8SMPfiRou+thCurGw==
+X-Google-Smtp-Source: APXvYqwLvEyx2OYuY5lEgxSfNmvYOcfePTvN/jgculMxRa6kgYzB7S5fAyaH0IZgpTPo0C5Pc2siam/z5wfKTiRPtpY=
+X-Received: by 2002:a05:620a:14b9:: with SMTP id x25mr1608539qkj.8.1574367204856;
+ Thu, 21 Nov 2019 12:13:24 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4BB1CB74-887B-4F40-B3B2-F0147B264C34@amacapital.net>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <0000000000006e31980579315914@google.com> <000000000000a6993c0597cc8375@google.com>
+ <CALCETrVfWHPHiOmyJ9iDJDiCD3idPA4BdeM=4FUEO-uuxM07_g@mail.gmail.com>
+In-Reply-To: <CALCETrVfWHPHiOmyJ9iDJDiCD3idPA4BdeM=4FUEO-uuxM07_g@mail.gmail.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Thu, 21 Nov 2019 21:13:12 +0100
+Message-ID: <CACT4Y+YVfyb6VSiFALAJT-O0GAxsVRY0XafAyx1NM+bkGw9vCQ@mail.gmail.com>
+Subject: Re: INFO: task hung in __do_page_fault (2)
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     syzbot <syzbot+6b074f741adbd93d2df5@syzkaller.appspotmail.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Kees Cook <keescook@chromium.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        "Luis R. Rodriguez" <mcgrof@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 21, 2019 at 11:01:39AM -0800, Andy Lutomirski wrote:
-> 
-> > On Nov 21, 2019, at 10:40 AM, Fenghua Yu <fenghua.yu@intel.com> wrote:
-> > 
-> > ﻿On Thu, Nov 21, 2019 at 09:51:03AM -0800, Andy Lutomirski wrote:
-> >>> On Thu, Nov 21, 2019 at 9:43 AM David Laight <David.Laight@aculab.com> wrote:
-> >>> 
-> >>> From: Ingo Molnar
-> >>>> Sent: 21 November 2019 17:12
-> >>>> * Peter Zijlstra <peterz@infradead.org> wrote:
-> >>> ...
-> >>>>> This feature MUST be default enabled, otherwise everything will
-> >>>>> be/remain broken and we'll end up in the situation where you can't use
-> >>>>> it even if you wanted to.
-> >>>> 
-> >>>> Agreed.
-> >>> 
-> >>> Before it can be enabled by default someone needs to go through the
-> >>> kernel and fix all the code that abuses the 'bit' functions by using them
-> >>> on int[] instead of long[].
-> >>> 
-> >>> I've only seen one fix go through for one use case of one piece of code
-> >>> that repeatedly uses potentially misaligned int[] arrays for bitmasks.
-> >>> 
-> >> 
-> >> Can we really not just change the lock asm to use 32-bit accesses for
-> >> set_bit(), etc?  Sure, it will fail if the bit index is greater than
-> >> 2^32, but that seems nuts.
-> >> 
-> >> (Why the *hell* do the bitops use long anyway?  They're *bit masks*
-> >> for crying out loud.  As in, users generally want to operate on fixed
-> >> numbers of bits.)
-> > 
-> > We are working on a separate patch set to fix all split lock issues
-> > in atomic bitops. Per Peter Anvin and Tony Luck suggestions:
-> > 1. Still keep the byte optimization if nr is constant. No split lock.
-> > 2. If type of *addr is unsigned long, do quadword atomic instruction
-> >   on addr. No split lock.
-> > 3. If type of *addr is unsigned int, do word atomic instruction
-> >   on addr. No split lock.
-> > 4. Otherwise, re-calculate addr to point the 32-bit address which contains
-> >   the bit and operate on the bit. No split lock.
-> > 
-> > Only small percentage of atomic bitops calls are in case 4 (e.g. 3%
-> > for set_bit()) which need a few extra instructions to re-calculate
-> > address but can avoid big split lock overhead.
-> > 
-> > To get real type of *addr instead of type cast type "unsigned long",
-> > the atomic bitops APIs are changed to macros from functions. This change
-> > need to touch all architectures.
-> > 
-> 
-> Isn’t the kernel full of casts to long* to match the signature?  Doing this based on type seems silly to me. I think it’s better to just to a 32-bit operation unconditionally and to try to optimize it
->using b*l when safe.
+On Thu, Nov 21, 2019 at 7:01 PM Andy Lutomirski <luto@kernel.org> wrote:
+>
+> On Wed, Nov 20, 2019 at 11:52 AM syzbot
+> <syzbot+6b074f741adbd93d2df5@syzkaller.appspotmail.com> wrote:
+> >
+> > syzbot has bisected this bug to:
+> >
+> > commit 0161028b7c8aebef64194d3d73e43bc3b53b5c66
+> > Author: Andy Lutomirski <luto@kernel.org>
+> > Date:   Mon May 9 22:48:51 2016 +0000
+> >
+> >      perf/core: Change the default paranoia level to 2
+> >
+> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15910e86e00000
+> > start commit:   18d0eae3 Merge tag 'char-misc-4.20-rc1' of git://git.kerne..
+> > git tree:       upstream
+> > final crash:    https://syzkaller.appspot.com/x/report.txt?x=17910e86e00000
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=13910e86e00000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=342f43de913c81b9
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=6b074f741adbd93d2df5
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12482713400000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=158fd4a3400000
+> >
+> > Reported-by: syzbot+6b074f741adbd93d2df5@syzkaller.appspotmail.com
+> > Fixes: 0161028b7c8a ("perf/core: Change the default paranoia level to 2")
+> >
+> > For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+>
+> Hi syzbot-
+>
+> I'm not quite sure how to tell you this in syzbotese, but I'm pretty
+> sure you've bisected this wrong.  The blamed patch makes no sense.
 
-Actually we only find 8 places calling atomic bitops using type casting
-"unsigned long *". After above changes, other 8 patches remove the type
-castings and then split lock free in atomic bitops in the current kernel.
 
-To check type casting in new patches, we add checkpatch.pl to warn on
-any type casting on atomic bitops in new patches because the APIs are
-marocs and gcc doesn't warn/issue error on type casting.
+Hi Andy,
 
-Using b*l will change the 8 places as well plus a lot of other places
-where *addr is defined as "unsigned long *", right?
+Three is no way to tell syzbot about this, it does not have any way to
+use this information.
+You can tell this to other recipients, though, and for the record on
+the bug report email thread. For this you can use any free form.
 
-Thanks.
-
--Fenghua
-
+But what makes you think this is wrong?
+From everything I see this looks like amazingly precise bisection.
+The reproducer contains perf_event_open which seems to cause the hang
+(there is a number of reports where perf_event_open hangs kernel dead
+IIRC) _and_ it contains setresuid. Which makes good match for
+"perf/core: Change the default paranoia level to 2" (for unpriv
+users).
+The bisection log also looks perfectly correct to me: no unrelated
+kernel bugs were hit along the way; the crash was always reproduced
+100% reliably in all 10 runs; nothing else suspicious.
+I can totally imagine that your patch unmasked some latent bug, but
+it's not 100% obvious to me and in either case syzbot did the job as
+well as a robot could possibly do.
