@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C70D3C432C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:56:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32F12C432C0
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:56:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A8222082F
-	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:56:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F215A20659
+	for <linux-kernel@archiver.kernel.org>; Fri, 22 Nov 2019 05:56:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1574402182;
-	bh=ZfXiKwwqm2R4DXLa1XPSGYx1e1bjblTR5Y61Ob2UMiY=;
+	s=default; t=1574402188;
+	bh=BkoazdEEzRUfK/YqbmnC3e8JrOLV2b76BjnCxB4RQPc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dEKkhGv+KN3L52bUYmIBp7Rgt4HAnPIWUW8caIz/1jctqG+aqsXdNdxCC45wMKAnD
-	 oKgoySetUY24Awb5K74y/AigAd4n9y6lF7u1x8aTcaA/rbFZAFErr1+l1MZeEq3Ocq
-	 PQ0H7Qxrx45ZkjSKhrzJx8TOo9k2uzbnQwRmqFKU=
+	b=TgQajJDf1PWCDLDObLx0MbpMgPRhHjHRJqjmdnFJpFDHKgKjDaqoLASB3j8CI/wuA
+	 CtofpFe3Ob60PHrT9boxXJxCE7iFtBjTU9MVzrP6xr80CxwFeNG2KoSLvAi3c7GAo7
+	 M9HCudiRcN/7qOxLegcXNK+oTbCFkvVhhuTpqg9w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727282AbfKVF4V (ORCPT
+        id S1729148AbfKVF41 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 22 Nov 2019 00:56:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33970 "EHLO mail.kernel.org"
+        Fri, 22 Nov 2019 00:56:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727090AbfKVF4O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:56:14 -0500
+        id S1729075AbfKVF4R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:56:17 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4088A2072E;
-        Fri, 22 Nov 2019 05:56:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C029F20717;
+        Fri, 22 Nov 2019 05:56:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402173;
-        bh=ZfXiKwwqm2R4DXLa1XPSGYx1e1bjblTR5Y61Ob2UMiY=;
+        s=default; t=1574402176;
+        bh=BkoazdEEzRUfK/YqbmnC3e8JrOLV2b76BjnCxB4RQPc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HxwYBeCjoM1cuf6ZeZIQ6SC2qC3FwsoSjDwcuSO5eiUNeuWcbKYSiokqcuXrW+Jvw
-         MX6RhG25CR3P118uqsxeUJTWtzFqxl5TSzky2Bpt8edgAvS6gS3u4AOfmM+AXWIQ0x
-         hV6vDI5qsSsCn7mTfrLzIrqtT+EpEhd+qOvrweAw=
+        b=G7zX4+EiejRA/OrpoXkpr62tJD82OMJtZAYF3jCD096PBbK1p5nZMvK1kwDIddSmv
+         BJtQ4vLF8VQiBIRVvqzAFnhmH+ZX2+71pjtRsJFiZzo74M7QO2XMl60EoBsXLU/piU
+         BNRezXA0pW33mnTI9pRSYrcJT948eAX12H3UCKWY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Luca Coelho <luciano.coelho@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 025/127] iwlwifi: move iwl_nvm_check_version() into dvm
-Date:   Fri, 22 Nov 2019 00:54:03 -0500
-Message-Id: <20191122055544.3299-24-sashal@kernel.org>
+Cc:     Lepton Wu <ytht.net@gmail.com>, Jorgen Hansen <jhansen@vmware.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 028/127] VSOCK: bind to random port for VMADDR_PORT_ANY
+Date:   Fri, 22 Nov 2019 00:54:06 -0500
+Message-Id: <20191122055544.3299-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191122055544.3299-1-sashal@kernel.org>
 References: <20191122055544.3299-1-sashal@kernel.org>
@@ -59,128 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luca Coelho <luciano.coelho@intel.com>
+From: Lepton Wu <ytht.net@gmail.com>
 
-[ Upstream commit 64866e5da1eabd0c52ff45029b245f5465920031 ]
+[ Upstream commit 8236b08cf50f85bbfaf48910a0b3ee68318b7c4b ]
 
-This function is only half-used by mvm (i.e. only the nvm_version part
-matters, since the calibration version is irrelevant), so it's
-pointless to export it from iwlwifi.  If mvm uses this function, it
-has the additional complexity of setting the calib version to a bogus
-value on all cfg structs.
+The old code always starts from fixed port for VMADDR_PORT_ANY. Sometimes
+when VMM crashed, there is still orphaned vsock which is waiting for
+close timer, then it could cause connection time out for new started VM
+if they are trying to connect to same port with same guest cid since the
+new packets could hit that orphaned vsock. We could also fix this by doing
+more in vhost_vsock_reset_orphans, but any way, it should be better to start
+from a random local port instead of a fixed one.
 
-To avoid this, move the function to dvm and make a simple comparison
-of the nvm_version in mvm instead.
-
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: Lepton Wu <ytht.net@gmail.com>
+Reviewed-by: Jorgen Hansen <jhansen@vmware.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/dvm/main.c | 17 +++++++++++++++++
- .../wireless/intel/iwlwifi/iwl-eeprom-parse.c | 19 -------------------
- .../wireless/intel/iwlwifi/iwl-eeprom-parse.h |  5 ++---
- drivers/net/wireless/intel/iwlwifi/mvm/fw.c   |  4 +++-
- 4 files changed, 22 insertions(+), 23 deletions(-)
+ net/vmw_vsock/af_vsock.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/dvm/main.c b/drivers/net/wireless/intel/iwlwifi/dvm/main.c
-index 2acd94da9efeb..051a2fea95724 100644
---- a/drivers/net/wireless/intel/iwlwifi/dvm/main.c
-+++ b/drivers/net/wireless/intel/iwlwifi/dvm/main.c
-@@ -1229,6 +1229,23 @@ static int iwl_eeprom_init_hw_params(struct iwl_priv *priv)
- 	return 0;
- }
+diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
+index 1939b77e98b72..73eac97e19fb1 100644
+--- a/net/vmw_vsock/af_vsock.c
++++ b/net/vmw_vsock/af_vsock.c
+@@ -107,6 +107,7 @@
+ #include <linux/mutex.h>
+ #include <linux/net.h>
+ #include <linux/poll.h>
++#include <linux/random.h>
+ #include <linux/skbuff.h>
+ #include <linux/smp.h>
+ #include <linux/socket.h>
+@@ -487,9 +488,13 @@ static void vsock_pending_work(struct work_struct *work)
+ static int __vsock_bind_stream(struct vsock_sock *vsk,
+ 			       struct sockaddr_vm *addr)
+ {
+-	static u32 port = LAST_RESERVED_PORT + 1;
++	static u32 port = 0;
+ 	struct sockaddr_vm new_addr;
  
-+static int iwl_nvm_check_version(struct iwl_nvm_data *data,
-+				 struct iwl_trans *trans)
-+{
-+	if (data->nvm_version >= trans->cfg->nvm_ver ||
-+	    data->calib_version >= trans->cfg->nvm_calib_ver) {
-+		IWL_DEBUG_INFO(trans, "device EEPROM VER=0x%x, CALIB=0x%x\n",
-+			       data->nvm_version, data->calib_version);
-+		return 0;
-+	}
++	if (!port)
++		port = LAST_RESERVED_PORT + 1 +
++			prandom_u32_max(U32_MAX - LAST_RESERVED_PORT);
 +
-+	IWL_ERR(trans,
-+		"Unsupported (too old) EEPROM VER=0x%x < 0x%x CALIB=0x%x < 0x%x\n",
-+		data->nvm_version, trans->cfg->nvm_ver,
-+		data->calib_version,  trans->cfg->nvm_calib_ver);
-+	return -EINVAL;
-+}
-+
- static struct iwl_op_mode *iwl_op_mode_dvm_start(struct iwl_trans *trans,
- 						 const struct iwl_cfg *cfg,
- 						 const struct iwl_fw *fw,
-diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-eeprom-parse.c b/drivers/net/wireless/intel/iwlwifi/iwl-eeprom-parse.c
-index 3199d345b4274..92727f7e42db7 100644
---- a/drivers/net/wireless/intel/iwlwifi/iwl-eeprom-parse.c
-+++ b/drivers/net/wireless/intel/iwlwifi/iwl-eeprom-parse.c
-@@ -928,22 +928,3 @@ iwl_parse_eeprom_data(struct device *dev, const struct iwl_cfg *cfg,
- 	return NULL;
- }
- IWL_EXPORT_SYMBOL(iwl_parse_eeprom_data);
--
--/* helper functions */
--int iwl_nvm_check_version(struct iwl_nvm_data *data,
--			     struct iwl_trans *trans)
--{
--	if (data->nvm_version >= trans->cfg->nvm_ver ||
--	    data->calib_version >= trans->cfg->nvm_calib_ver) {
--		IWL_DEBUG_INFO(trans, "device EEPROM VER=0x%x, CALIB=0x%x\n",
--			       data->nvm_version, data->calib_version);
--		return 0;
--	}
--
--	IWL_ERR(trans,
--		"Unsupported (too old) EEPROM VER=0x%x < 0x%x CALIB=0x%x < 0x%x\n",
--		data->nvm_version, trans->cfg->nvm_ver,
--		data->calib_version,  trans->cfg->nvm_calib_ver);
--	return -EINVAL;
--}
--IWL_EXPORT_SYMBOL(iwl_nvm_check_version);
-diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-eeprom-parse.h b/drivers/net/wireless/intel/iwlwifi/iwl-eeprom-parse.h
-index b33888991b946..5545210151cd9 100644
---- a/drivers/net/wireless/intel/iwlwifi/iwl-eeprom-parse.h
-+++ b/drivers/net/wireless/intel/iwlwifi/iwl-eeprom-parse.h
-@@ -7,6 +7,7 @@
-  *
-  * Copyright(c) 2008 - 2014 Intel Corporation. All rights reserved.
-  * Copyright(c) 2015 Intel Mobile Communications GmbH
-+ * Copyright (C) 2018 Intel Corporation
-  *
-  * This program is free software; you can redistribute it and/or modify
-  * it under the terms of version 2 of the GNU General Public License as
-@@ -33,6 +34,7 @@
-  *
-  * Copyright(c) 2005 - 2014 Intel Corporation. All rights reserved.
-  * Copyright(c) 2015 Intel Mobile Communications GmbH
-+ * Copyright (C) 2018 Intel Corporation
-  * All rights reserved.
-  *
-  * Redistribution and use in source and binary forms, with or without
-@@ -121,9 +123,6 @@ struct iwl_nvm_data *
- iwl_parse_eeprom_data(struct device *dev, const struct iwl_cfg *cfg,
- 		      const u8 *eeprom, size_t eeprom_size);
+ 	vsock_addr_init(&new_addr, addr->svm_cid, addr->svm_port);
  
--int iwl_nvm_check_version(struct iwl_nvm_data *data,
--			  struct iwl_trans *trans);
--
- int iwl_init_sband_channels(struct iwl_nvm_data *data,
- 			    struct ieee80211_supported_band *sband,
- 			    int n_channels, enum nl80211_band band);
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
-index 534c0ea7b232e..78228f870f8f5 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/fw.c
-@@ -501,7 +501,9 @@ int iwl_run_init_mvm_ucode(struct iwl_mvm *mvm, bool read_nvm)
- 	if (mvm->nvm_file_name)
- 		iwl_mvm_load_nvm_to_nic(mvm);
- 
--	WARN_ON(iwl_nvm_check_version(mvm->nvm_data, mvm->trans));
-+	WARN_ONCE(mvm->nvm_data->nvm_version < mvm->trans->cfg->nvm_ver,
-+		  "Too old NVM version (0x%0x, required = 0x%0x)",
-+		  mvm->nvm_data->nvm_version, mvm->trans->cfg->nvm_ver);
- 
- 	/*
- 	 * abort after reading the nvm in case RF Kill is on, we will complete
+ 	if (addr->svm_port == VMADDR_PORT_ANY) {
 -- 
 2.20.1
 
